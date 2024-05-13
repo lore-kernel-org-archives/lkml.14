@@ -1,44 +1,34 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838D214830A
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2E91474CF;
+	Mon, 13 May 2024 09:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715591985; cv=none; b=QW6gSCrYdXO73t57h30i84U5YE2Oxv781PLhWGjEKNJKOJ8r4q1y9/p6AKBWWzqJRSNpSsl3JTCSbK4e6WwZJWaHShB93aw3xt0MG0B2BAHdMN6flkoa8oipgIsRkFqtjCtvHt2iFx4I7N+NmUbrJM+YXqxuTTOQyZvtQd3DVlA=
+	t=1715592147; cv=none; b=XXF1V1c+g855/EjAeli+YM4eqHu5I+vpz5JyfxLs/08y7Mw2g45Q2HmkEAFSSfKTtWkcmyyhDn670SUmXV4fEcvxQV+GuAAYwhYtCqck5MzAVCxlcsNrgyZFJmEemqfZk1LP5dS3LRePHnJ5sYBViT3VOA/SW14MXRmKcyfV6bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715591985; c=relaxed/simple;
-	bh=PjwBmQHTHh/yc6AW42sNAytsgWZr1G98mAsrKpYIuAc=;
+	s=arc-20240116; t=1715592147; c=relaxed/simple;
+	bh=5dfdm9Vk9P5CiArU2QhD4a6bzcQ7+TFM9CMFHzaxjVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l5k4wevRoLiPmIWZmIfnFVh8D/HIyPA2JJ8HYA0UXa6nnlwhbNNB89B7hQ8ezQgjb0Uk53wWvs1kEwpga4wCMnGzpND7IdHPIVyu8n1lVQAFCsSoiBSfNHomwOHvCJ9Dkqua0La7PL7/daN3x29UvveucW+2vYFlnQMRow48KUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1s6RqL-00069R-KZ; Mon, 13 May 2024 11:19:37 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sha@pengutronix.de>)
-	id 1s6RqK-0018sg-M6; Mon, 13 May 2024 11:19:36 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1s6RqK-009RDT-1v;
-	Mon, 13 May 2024 11:19:36 +0200
-Date: Mon, 13 May 2024 11:19:36 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] mtd: nand: mxc_nand: support software ECC
-Message-ID: <ZkHbKGAuBPN3KOVW@pengutronix.de>
-References: <20240508-mtd-nand-mxc-nand-exec-op-v2-0-6b7366b7831f@pengutronix.de>
- <20240508-mtd-nand-mxc-nand-exec-op-v2-3-6b7366b7831f@pengutronix.de>
- <20240513094217.4c1a0fc2@xps-13>
+	 Content-Type:Content-Disposition:In-Reply-To; b=G0mStU40oUPu6oE4iRUhoVvMNyQbzetzBJBaZCNGfYh57rvDbe6CdZPrUpmggGDTDJ9aU+sszjP7eNESSRfu7a20tzqV/U4609mOQCjo0NJCHlpYyhVvMrIr2NXFSkWG7kiDtxh50n2ta3Sa13tw+lW1rP5BWyjcMCSK0RJ/KT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B36B1007;
+	Mon, 13 May 2024 02:22:50 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D7353F762;
+	Mon, 13 May 2024 02:22:24 -0700 (PDT)
+Date: Mon, 13 May 2024 10:22:21 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Dominique Martinet <dominique.martinet@atmark-techno.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>
+Subject: Re: [PATCH 5.4 / 5.10] firmware: arm_scmi: Harden accesses to the
+ reset domains
+Message-ID: <ZkHbzRahnQgptrVr@bogus>
+References: <20240513003837.810709-1-dominique.martinet@atmark-techno.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,162 +37,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240513094217.4c1a0fc2@xps-13>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240513003837.810709-1-dominique.martinet@atmark-techno.com>
 
-On Mon, May 13, 2024 at 09:42:17AM +0200, Miquel Raynal wrote:
-> Hi Sascha,
-> 
-> s.hauer@pengutronix.de wrote on Wed, 08 May 2024 13:08:29 +0200:
-> 
-> > With these changes the driver can be used with software BCH ECC which
-> > is useful for NAND chips that require a stronger ECC than the i.MX
-> > hardware supports.
-> > 
-> > The controller normally interleaves user data with OOB data when
-> > accessing the NAND chip. With Software BCH ECC we write the data
-> > to the NAND in a way that the raw data on the NAND chip matches the
-> > way the NAND layer sees it. This way commands like NAND_CMD_RNDOUT
-> > work as expected.
-> > 
-> > This was tested on i.MX27 but should work on the other SoCs supported
-> > by this driver as well.
-> > 
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > ---
-> >  drivers/mtd/nand/raw/mxc_nand.c | 84 ++++++++++++++++++++++++++++++++++++-----
-> >  1 file changed, 75 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc_nand.c
-> > index 1e8b4553e03ba..7004fd57c80f7 100644
-> > --- a/drivers/mtd/nand/raw/mxc_nand.c
-> > +++ b/drivers/mtd/nand/raw/mxc_nand.c
-> > @@ -178,6 +178,7 @@ struct mxc_nand_host {
-> >  	int			used_oobsize;
-> >  	int			active_cs;
-> >  	unsigned int		ecc_stats_v1;
-> > +	unsigned int		column;
-> >  
-> >  	struct completion	op_completion;
-> >  
-> > @@ -1397,10 +1398,10 @@ static int mxcnd_attach_chip(struct nand_chip *chip)
-> >  	chip->ecc.bytes = host->devtype_data->eccbytes;
-> >  	host->eccsize = host->devtype_data->eccsize;
-> >  	chip->ecc.size = 512;
-> > -	mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
-> >  
-> >  	switch (chip->ecc.engine_type) {
-> >  	case NAND_ECC_ENGINE_TYPE_ON_HOST:
-> > +		mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
-> >  		chip->ecc.read_page = mxc_nand_read_page;
-> >  		chip->ecc.read_page_raw = mxc_nand_read_page_raw;
-> >  		chip->ecc.read_oob = mxc_nand_read_oob;
-> > @@ -1465,6 +1466,54 @@ static int mxcnd_setup_interface(struct nand_chip *chip, int chipnr,
-> >  	return host->devtype_data->setup_interface(chip, chipnr, conf);
-> >  }
-> >  
-> > +static void copy_page_to_sram(struct mtd_info *mtd)
-> > +{
-> > +	struct nand_chip *this = mtd_to_nand(mtd);
-> > +	struct mxc_nand_host *host = nand_get_controller_data(this);
-> > +	void *buf = host->data_buf;
-> > +	unsigned int n_subpages = mtd->writesize / 512;
-> > +	int oob_per_subpage, i;
-> > +
-> > +	/* mtd->writesize is not set during ident scanning */
-> > +	if (!n_subpages)
-> > +		n_subpages = 1;
-> > +
-> > +	oob_per_subpage = (mtd->oobsize / n_subpages) & ~1;
-> > +
-> > +	for (i = 0; i < n_subpages; i++) {
-> > +		memcpy16_toio(host->main_area0 + i * 512, buf, 512);
-> > +		buf += 512;
-> > +
-> > +		memcpy16_toio(host->spare0 + i * host->devtype_data->spare_len, buf,
-> > +			      oob_per_subpage);
-> > +		buf += oob_per_subpage;
-> > +	}
-> > +}
-> > +
-> > +static void copy_page_from_sram(struct mtd_info *mtd)
-> > +{
-> > +	struct nand_chip *this = mtd_to_nand(mtd);
-> > +	struct mxc_nand_host *host = nand_get_controller_data(this);
-> > +	void *buf = host->data_buf;
-> > +	unsigned int n_subpages = mtd->writesize / 512;
-> > +	int oob_per_subpage, i;
-> > +
-> > +	/* mtd->writesize is not set during ident scanning */
-> > +	if (!n_subpages)
-> > +		n_subpages = 1;
-> > +
-> > +	oob_per_subpage = (mtd->oobsize / n_subpages) & ~1;
-> > +
-> > +	for (i = 0; i < n_subpages; i++) {
-> > +		memcpy16_fromio(buf, host->main_area0 + i * 512, 512);
-> > +		buf += 512;
-> > +
-> > +		memcpy16_fromio(buf, host->spare0 + i * host->devtype_data->spare_len,
-> > +				oob_per_subpage);
-> > +		buf += oob_per_subpage;
-> > +	}
-> > +}
-> > +
-> >  static int mxcnd_exec_op(struct nand_chip *chip,
-> >  			 const struct nand_operation *op,
-> >  			 bool check_only)
-> > @@ -1496,8 +1545,11 @@ static int mxcnd_exec_op(struct nand_chip *chip,
-> >  			 */
-> >  			break;
-> >  		case NAND_OP_CMD_INSTR:
-> > -			if (instr->ctx.cmd.opcode == NAND_CMD_PAGEPROG)
-> > +			if (instr->ctx.cmd.opcode == NAND_CMD_PAGEPROG) {
-> > +				if (chip->ecc.engine_type != NAND_ECC_ENGINE_TYPE_ON_HOST)
-> > +					copy_page_to_sram(mtd);
-> >  				host->devtype_data->send_page(mtd, NFC_INPUT);
-> > +			}
-> 
-> Same as before: data moves should not happen here.
-> 
-> >  
-> >  			host->devtype_data->send_cmd(host, instr->ctx.cmd.opcode, true);
-> >  
-> > @@ -1506,6 +1558,8 @@ static int mxcnd_exec_op(struct nand_chip *chip,
-> >  			if (instr->ctx.cmd.opcode == NAND_CMD_STATUS)
-> >  				statusreq = true;
-> >  
-> > +			host->column = 0;
-> > +
-> 
-> This is risky but maybe this is the trick to get NAND_CMD_RNDOUT
-> working? If yes maybe it is worth separating from this patchset, if
-> possible, with a comment explaining what this is all about (the
-> controller's SRAM being some kind of 1:1 mapping with the NAND SRAM,
-> thus we need to write the data at the correct offset in the controller
-> SRAM, I guess?).
+On Mon, May 13, 2024 at 09:38:37AM +0900, Dominique Martinet wrote:
+> From: Cristian Marussi <cristian.marussi@arm.com>
+>
+> [ Upstream commit e9076ffbcaed5da6c182b144ef9f6e24554af268 ]
+>
+> Accessing reset domains descriptors by the index upon the SCMI drivers
+> requests through the SCMI reset operations interface can potentially
+> lead to out-of-bound violations if the SCMI driver misbehave.
+>
+> Add an internal consistency check before any such domains descriptors
+> accesses.
+>
+> Link: https://lore.kernel.org/r/20220817172731.1185305-5-cristian.marussi@arm.com
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
+> ---
+> This is the backport I promised for CVE-2022-48655[1]
+> [1] https://lkml.kernel.org/r/Zj4t4q_w6gqzdvhz@codewreck.org
+>
 
-I don't think it's possible to separate introducing the host->column
-variable to a separate patch, because this variable is only used with
-NAND_ECC_ENGINE_TYPE_SOFT and on the other hand NAND_ECC_ENGINE_TYPE_SOFT
-only works with this variable.
+The backport looks good and thanks for doing that. Sometimes since we
+know all the users are in the kernel, we tend to ignore the facts that
+they need to be backport as this was considered as theoretical issue when
+we pushed the fix. We try to keep that in mind and add fixes tag more
+carefully in the future. Thanks for your effort and bring this to our
+attention.
 
-Anyway, adding a description what this is all about is a good idea and
-I'll do this. In fact I already tried to add one when I found out that
-it's really hard to put it into words, so I sent without it ;)
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+Regards,
+Sudeep
