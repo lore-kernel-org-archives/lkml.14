@@ -1,78 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98830A3F;
-	Mon, 13 May 2024 12:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDB115099B
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715604254; cv=none; b=Ors9WQFe7soQrWR/uiGL0OLPctJaqvFLdR/QkxWj3cvYm/WTC3ELYp7lesZ5+7LrrqQXtUPbaqOqJDlmIez81m58WnO701mWNtmIvJo+ggjPPIYCqOQuXmdjqxt5rX96Bf/qrYkKSZl25lvESU3iPH+d5y4/p0ZLR9JRcUm4WXg=
+	t=1715604259; cv=none; b=dHHggqGRGta6aZ9CdywdtlsGOcCOfBofGtMD3jT9uWIKw+AjnBEJiFuPFKwUwnDazzJS3q0onr7iapivLghxycoks7vFSIBKMxz7+IgM77duu/6U8eLc3YfH4/MDRgDyXj8fmqsN05EfpmD0LHKYpwQ7iqKm0wiVvL0GFy7Q5Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715604254; c=relaxed/simple;
-	bh=/b03Zf1aRDdZv7Bhcjq4xGxDuP82x35zRerWPUH3wHs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VAlyK+f1v9uwlfkEmpERjS3Ti2cVxPP0L9liiaXZTVapNsOC9jbX6j/REc+rIrO0IiGZLzdH21+ZG8VpibX+w0D5TZ1MRpozkanzOLmScol27dJf2ZyN2wqwn9T9TbPNw2qOroivElTGvqL0gXeCtK4NItTObhbOl9l/GBesmWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D04781007;
-	Mon, 13 May 2024 05:44:36 -0700 (PDT)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA61E3F7A6;
-	Mon, 13 May 2024 05:44:08 -0700 (PDT)
-Message-ID: <9e845146-8a31-407c-a5ee-e2e32f1655e5@arm.com>
-Date: Mon, 13 May 2024 14:43:55 +0200
+	s=arc-20240116; t=1715604259; c=relaxed/simple;
+	bh=8KSUVzTvqxp7OIdS+GOnbv91geAiKRiZv1Q7eZCzMQc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IBrB4nW1bDM+P3an98D+dytbsuHODCHG8mDagCjj9WNeobMarA6X9+g9WfxEH45nEewGARy+fhZkxa5NwatGjr55At2YxE4CYRVdiVywRFAhVriBDn5oGbrHKtFwzMFFCkdOT6BZuArgZnwtt2qIwmQHPCUCw2Vs8me/x/tvLQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kL6heHlS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8PQOmpRe; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kL6heHlS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8PQOmpRe"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715604255;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oAB6AC0uf4kU0wwIw6N445hCMYVKJ7r1lOXf9S9Bb5c=;
+	b=kL6heHlSPMN/pHLoNZnqKMl30/S5c6EGVaohafb3ZLJrndk7gd3/VWYn5uZ8OL45HoZiMP
+	YTPtp8yQG9+LQCEa8uFjPBXUZMKGKpHAqB07i3LanfCAtgLtIh9NaIPyM7PnAEUVSmIlNt
+	oExT8knvUv0siYIwnr1SAMd3RUqGdF95IVYFRstmi3VJVbS4O0RlixfaJYX7CJrdA+3s7V
+	9UiGJczxrBP7Ojxm0XvQ/75cbhTzK923acjp83pMIpH+UXjqLkAWg4VtdehvDcbbH618ak
+	4il4PoaqgI5nr0Ei8SZ7g2EWNaWbaQUbyxNnqsinpo/jWMNxMqaI+3mqZLUBmg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715604255;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oAB6AC0uf4kU0wwIw6N445hCMYVKJ7r1lOXf9S9Bb5c=;
+	b=8PQOmpReg3DfXxCsRL+7m3s8iwztutKUd+RWc0d4ypaxfy6pMG9iUjllvTSzqaQCTGBu1X
+	ESvttDPH+iekbdDw==
+To: Dongli Zhang <dongli.zhang@oracle.com>, x86@kernel.org
+Cc: mingo@redhat.com, Borislavbp@alien8.de, dave.hansen@linux.intel.com,
+ hpa@zytor.com, joe.jin@oracle.com, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev
+Subject: Re: [PATCH 1/1] x86/vector: Fix vector leak during CPU offline
+In-Reply-To: <20240510190623.117031-1-dongli.zhang@oracle.com>
+References: <20240510190623.117031-1-dongli.zhang@oracle.com>
+Date: Mon, 13 May 2024 14:44:15 +0200
+Message-ID: <87msotnaow.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] sched: Consolidate cpufreq updates
-To: Qais Yousef <qyousef@layalina.io>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Juri Lelli <juri.lelli@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240512190018.531820-1-qyousef@layalina.io>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20240512190018.531820-1-qyousef@layalina.io>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 12/05/2024 21:00, Qais Yousef wrote:
+On Fri, May 10 2024 at 12:06, Dongli Zhang wrote:
+> The absence of IRQD_MOVE_PCNTXT prevents immediate effectiveness of
+> interrupt affinity reconfiguration via procfs. Instead, the change is
+> deferred until the next instance of the interrupt being triggered on the
+> original CPU.
+>
+> When the interrupt next triggers on the original CPU, the new affinity is
+> enforced within __irq_move_irq(). A vector is allocated from the new CPU,
+> but if the old vector on the original CPU remains online, it is not
+> immediately reclaimed. Instead, apicd->move_in_progress is flagged, and the
+> reclaiming process is delayed until the next trigger of the interrupt on
+> the new CPU.
+>
+> Upon the subsequent triggering of the interrupt on the new CPU,
+> irq_complete_move() adds a task to the old CPU's vector_cleanup list if it
+> remains online. Subsequently, the timer on the old CPU iterates over its
+> vector_cleanup list, reclaiming vectors.
+>
+> However, if the old CPU is offline before the interrupt triggers again on
+> the new CPU, irq_complete_move() simply resets both apicd->move_in_progress
+> and apicd->prev_vector to 0. Consequently, the vector remains unreclaimed
+> in vector_matrix, resulting in a CPU vector leak.
 
-[...]
+I doubt that.
 
-> @@ -4682,7 +4659,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  
->  	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
->  
-> -	cfs_rq_util_change(cfs_rq, 0);
-> +	cpufreq_update_util(rq_of(cfs_rq), 0);
+Any interrupt which is affine to an outgoing CPU is migrated and
+eventually pending moves are enforced:
 
-Isn't this slighlty different now?
+cpu_down()
+  ...
+  cpu_disable_common()
+    fixup_irqs()
+      irq_migrate_all_off_this_cpu()
+        migrate_one_irq()
+          irq_force_complete_move()
+            free_moved_vector();
 
-before:
+No?
 
-   if (&rq->cfs == cfs_rq) {
-       cpufreq_update_util(rq, ....)
-   }
+In fact irq_complete_move() should never see apicd->move_in_progress
+with apicd->prev_cpu pointing to an offline CPU.
 
-now:
+The CPU offline case in __vector_schedule_cleanup() should not even
+exist or at least just emit a warning.
 
-   cpufreq_update_util(rq_of(cfs_rq), ...)
+If you can trigger that case, then there is something fundamentally
+wrong with the CPU hotplug interrupt migration code and that needs to be
+investigated and fixed.
 
-You should get way more updates from attach/detach now.
+Thanks,
 
->  
->  	trace_pelt_cfs_tp(cfs_rq);
->  }
-
-[...]
+        tglx
 
