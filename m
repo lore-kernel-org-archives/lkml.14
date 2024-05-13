@@ -1,171 +1,65 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A00A1E497
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 14:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E4D1E497;
+	Mon, 13 May 2024 14:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715609411; cv=none; b=pLUPspOknSHMJ/LbYKibcNkvUJHCTgB74KRtMKel3NNEWZstFIx3Xu3XJGhco/AxI133ApW6V8dPXY/0DQ+h/tBoBBO2jLYk+zrscJxPyLpXrnek72+gLimaMyWQD95+uZ/2eDT8CiP1p+ouSYTDrGHM4FGRcJiZH8GiLSPxrvY=
+	t=1715609445; cv=none; b=L+uVPPc25QIqcOiwlDM7YdcNqQA1BqAtxjVQqwMXO+HKBCedN3j3oeIJc4pNtDZGOi2a7IKF27OKYmHOss1ChZreM1wCjGwxxTPc2O4zC9k+zNb7jSN/4ua3P4Fvn+cWLgUFR6FKZ72Cc3qBEtKQEfxgSfJG7fUJfxLIObjaoHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715609411; c=relaxed/simple;
-	bh=qOjzP0kyb4Onm7nt74kqRgFE7k/1ilB1V5UByHfoeHo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=BgWJT1HrLolkxUE4GEQfQbtfEckwkZ33N/dg3uRMpOsTjaY6bKrDqUZqPIym3WoV0aCWEwprVzoO2IYlvD3Wm1kQmRpNRU1yk08C3/PXc3n+BKSuODWxCbvFESpnCpjJl6cQDppQ4g045Q6wc+mBkarN06S+BpAV1gaR4xwNc+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VdLtt43G7z1HBj4;
-	Mon, 13 May 2024 22:08:38 +0800 (CST)
-Received: from dggpemm500022.china.huawei.com (unknown [7.185.36.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id E34961A016C;
-	Mon, 13 May 2024 22:10:00 +0800 (CST)
-Received: from [10.67.110.25] (10.67.110.25) by dggpemm500022.china.huawei.com
- (7.185.36.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 13 May
- 2024 22:10:00 +0800
-Message-ID: <1314703e-4251-f31f-3d43-ece5c1b68344@huawei.com>
-Date: Mon, 13 May 2024 22:10:00 +0800
+	s=arc-20240116; t=1715609445; c=relaxed/simple;
+	bh=ykcRxKTlU5dKa6wwwvG6QhhCGPAwN3uZbT/TRpn+jAU=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMCiGlgkUOwURADw7bnIUGy+XhBHHGrphjFlNltJ5XSMTBGsBupgkz/UrKAqQ2o9DxfQSOaXHHN1ZHa8loTL6XRA8TvBeAwArVJVeyezCN40w/6OGQfOODJXlSorq9/na0kDZgNiIMUcuSy9TdNNKI6RdX98LVvqrwr+xgNnKVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOtF1Klc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOtF1Klc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E52AC4AF0E;
+	Mon, 13 May 2024 14:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715609444;
+	bh=ykcRxKTlU5dKa6wwwvG6QhhCGPAwN3uZbT/TRpn+jAU=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=QOtF1KlcxDZs1fmPHALV0AAepTs2N0aXDoeoRyGlgBIjnGBtC6tCWIIzMWfFKRpjJ
+	 DEvc22c8Iz3E37LyWjIxbHbHWcotJWss12hwVDTKB+JLlisMRgEATqqpXCDneI6xFE
+	 s0vCvM/ovnVbGXRmfetcjwlFu8Bkix6Z432n1NkrkzuE/Xj/bJk0O6mhM1VxnAPjnx
+	 evSqIRqZBH9UtJq6NnjNfuOm4Xe5NoeUbSLyNYdN6rjA1h+3MNuAHmJrSTklqfRTx7
+	 toWLHVG9GufvbyTvaRr+bGxw+UaqJldsV4gUeHIcBs50VmVg204JBV8O6c7ddp9OLZ
+	 u7a8gjJCv9IWA==
+Date: Mon, 13 May 2024 16:10:40 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Wolfram Sang <wsa@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, Sai Pavan Boddu <sai.pavan.boddu@amd.com>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.9-rc8
+Message-ID: <xcvnd5wld2lobtol3xbx5ir5z7xohnv22xzhvnvijbhgssb4kg@4rovz5mdgal2>
+References: <pb7vi7igdvqo6jlyjrd2lhfgbrz2kx5nmmw36vcdy64ndwbs3r@e675jdrgq3lj>
+ <sadxp73tm5zhfgsv6ufroexcoq4cg4j4quljry4bsojkzniw4c@m5mhet2w5f5e>
+ <2mqgax6smctnfpkelum7sbz2ukqraankpudjig3sv7cwx2bgsi@tgslonensttd>
+ <20240513135914.ul6nrieeljeuo7rp@ninjato>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [bug report] WARNING: CPU: 0 PID: 49573 at kernel/sched/rt.c:802
- rq_offline_rt+0x24d/0x260
-From: "zhaowenhui (A)" <zhaowenhui8@huawei.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>, "open list:SCHEDULER"
-	<linux-kernel@vger.kernel.org>
-References: <47b4a790-9a27-2fc5-f2aa-f9981c6da015@huawei.com>
-In-Reply-To: <47b4a790-9a27-2fc5-f2aa-f9981c6da015@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500022.china.huawei.com (7.185.36.162)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240513135914.ul6nrieeljeuo7rp@ninjato>
 
+Hi Wolfram,
 
-
-在 2024/4/7 22:06, zhaowenhui (A) 写道:
-
-> More information:
-> 1. RT_RUNTIME_SHARE is enabled.
-> 2. We continuously create and remove cpu cgroups. We use cgexec to do 
-> some tasks like "tree" or "ps" in these cgroups and the rt_runtime_us in 
-> these cgroups are set to 2000~6000.
-> 3. There are frequent cpu offline/online operations, so it will trigger 
-> __disable_runtime.
+> > If you want I can include them in the merge window pull request,
+> > so that we fix also one of the two dependencies there. Then they
+> > would find their way to the stable kernels.
 > 
-> Every time we run these operations after reboot, this warning will 
-> happen easily.
-> 
+> I merged now the 6.9 request and the 6.10 one on top. All seems well.
+> Did I miss a dependency between the two?
 
---------reproduce shell scripts----------
-[1] on_off.sh
-#!/bin/bash
+No... all good here... there is no dependency between these two.
 
-let cpu_end=8
+I will send a 6.10 part 2 merge request in a few days.
 
-while true
-do
-         for i in `seq 0 $cpu_end`
-         do
-                 echo $i
-                 let j=i+1
-                 echo 0 > /sys/devices/system/cpu/cpu${i}/online
-                 echo 0 > /sys/devices/system/cpu/cpu${j}/online
-                 sleep 0.5
-                 echo 1 > /sys/devices/system/cpu/cpu${i}/online
-                 echo 1 > /sys/devices/system/cpu/cpu${j}/online
-         done
-done
-
-[2] rt_test.sh
-#!/bin/bsh
-# set -x
-
-name=test$$
-cpu_dir=/sys/fs/cgroup/cpu/$name
-mkdir $cpu_dir
-echo $rt_runtime_us > $cpu_dir/cpu.rt_runtime_us  &>/dev/null
-
-function cg_change_rt_runtime_us()
-{
-         while true
-         do
-                 let tmp=2+RANDOM%4
-                 let quota=tmp*1000
-                 echo $quota > $cpu_dir/cpu.rt_runtime_us
-         done
-}
-
-function rt_test1()
-{
-         while true
-         do
-                 cgexec -g cpu:/${name} chrt 20 tree /sys/fs/cgroup/cpu 
-&>/dev/null
-         done
-}
-
-function rt_test2()
-{
-         while true
-         do
-                 cgexec -g cpu:/${name} chrt 30 ps aux  &>/dev/null
-         done
-}
-
-rt_test1 &
-rt_test2 &
-cg_change_rt_runtime_us &> /dev/null &
-
-[3] start_repro.sh
-function set_env(){
-     echo RT_RUNTIME_SHARE > /sys/kernel/debug/sched/features
-     echo RT_RUNTIME_SHARE > /sys/kernel/debug/sched_features
-}
-
-function run_test(){
-     for i in 0 1
-     do
-         nohup sh rt_test.sh &
-         nohup sh rt_test.sh &
-         nohup sh rt_test.sh &
-         nohup sh rt_test.sh &
-     done
-
-     nohup sh on_off.sh &>/dev/null &
-
-}
-set_env
-run_test
-
---------reproduce shell scripts----------
-
-Running the start_repro.sh can easily reproduce this issue.
-And when I debug in __disable_runtime, I found that the rtrq have
-borrow some runtime, because rtrq->runtime is greater than 
-rtb->rt_runtime, but its span has only one cpu which is itself.
-[   43.686441] [__disable_runtime] begin, rq: ff3113087e5b4ec0 , cpu: 159
-[   43.686449] [__disable_runtime] rtrq: ff3112c9e9259800 , 
-rtrq->runtime :3037500
-[   43.686450] [__disable_runtime] rtb->period: 1000000000 , 
-rtb->rt_runtime: 3000000
-[   43.686451] [__disable_runtime] want original : -37500
-[   43.686451] [__disable_runtime] after get want, rtrq: 
-ff3112c9e9259800 , rtrq->runtime :3037500
-[   43.686453] [ERROR!] span have cpu: 159
-
-Do you have any idea about this? 😄
-
----
-Regards
-Zhao Wenhui
+Thanks,
+Andi
