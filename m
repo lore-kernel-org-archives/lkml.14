@@ -1,112 +1,105 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E98219E7;
-	Mon, 13 May 2024 09:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480B7148855
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715594148; cv=none; b=lrHFZIgufqKfWR2KV4XQPIstkH6zQAKaf8wI7+xKrr0DRHJTtUMsjbuB7kQa324vCbMxsLK5c+O3o5ezfkt2cTstDWQzMsqdH1/F0EK+Gvf1UQ/WnO4RfMoJDVHUCLsO9w5NVRUJbcQAzOdsz6JwqFk5TzihMB7R754mmO+AKKc=
+	t=1715594262; cv=none; b=OeibzzRZ/rhYt8EJ1L0z480dERi5IJ1x56suEVs8VLcUL2rhx+QawLZgn0nrMGS0Njs3mW6Faa2QrO8jdz8NIz7fKqYY+M6rrOaT/rmgmoFLB+PxL062DF5b/f6q6g/g+OYwNEZJDOD+1Rdh+gNdifzw/qrKaCmZe4ahb61Z58E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715594148; c=relaxed/simple;
-	bh=zlS6twK/Dl58Vu5VAcua0fVTm5IGTx2anPsS2Dxpav8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=b8YFq0xI2X8GD3xyGT2xvjGlXU9EZ30h8PaNFmZ74vVWnd43b+7IHGUVmqN8eDnuOzYZ8xQ3CQRENhO1SJ+AnkYKcjEBig+VN50/amzbzIhuSwynWcxyPir9Ab1VcjemrWl5V3LW+zzJF8UCt1iUnoqH0IicPuErjfcpujDnFq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BZEgnYu5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715594262; c=relaxed/simple;
+	bh=KB8ZPj7qGCmYVVnyX8xsYlo2d1oCfPT81GQMWTChos8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KBslzS2c8gCmX/B+B7YM0KHK4q8R79FCfe6Tm8FIylymP+031gr/BkRwrm5kJBRpT70s4FaxfTOxPs9TwqGRnWszqJUnaRh33byZDTLdsKPXXNotXcatUnZ7gOJLJ0TDo3qnp9SlX1HdZDJJzUErAyOVxid2DoNkGFx3vP62kJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=7vWJCs84; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BZEgnYu5"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44D09G2Y009113;
-	Mon, 13 May 2024 09:55:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=U2WX32G1rFMx1/6IKHQPtO9xARAWs9tEx1dIHWNfp54=; b=BZ
-	EgnYu5wtaG+ih6mDQcRwFZhDHCE9+LkSMr3+nTrbXFa4NvsrFnVjBWAZ35r4h6oG
-	AG4DST5a9SlFXfMX3zKzH7EmRSOiwzHghXcvh6MNU1xB1zrPFv38wDrnvQi7aPSJ
-	cstuFft/oi588KH2OIxNbRlLgxRZgo7cQeuIWYv6G1EOSEsPjntaHv5zht8f8oro
-	FP9oaZ1DimdBPPswATAkd7n1sXazrXXaDGYf4KyXMvgCuIiNJBgBuzU7S91/YuII
-	9441WGzOLmt94jPBR6Rb0e6ODeZF5XdrU0hHt8TOu2L4nWxAcPuiq28WjjhCDQn2
-	7exiyiePrMXKVeAeIVpA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y2125b3p1-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="7vWJCs84"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44D43m4I008069;
+	Mon, 13 May 2024 11:57:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=8EXwyohCc219RSXlxVFLCGJqw0He7msBPhrXvYeZ5H8=; b=7v
+	WJCs84Ks5uBCCgePSuhzXlirtx41xQQBGc4teUPK4tmPNqdQDL0Uyzelac38cyGC
+	iz0/g8LcVA5xrWhSLyNS65CLZ3YNP0ZTsmSSAti5ge2XP6UY8sQk/7XqujJuVNA3
+	osnaY1ZASGkihz+BP2fJbthsjuDmQL3lMxGQoeZxFTLYisI8uOhS2xjBnJbjFIyH
+	re3vZAYz+zFZV8r8gnjXxYrW5WvuHV/CaYgXSAFB9sKrLb4Qk4lUo3sb+O4fv0Dd
+	3Sq21XoTMznu+BBdpyrxDF+uAsNOue9rmIVYSQkCAi7HheMid67tw8XgjEo1PQ0e
+	QFTzqHPqV54tIYWBOM4A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y1y8n5sx2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:55:40 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44D9tcpU015241
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:55:38 GMT
-Received: from [10.251.44.40] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 13 May
- 2024 02:55:35 -0700
-Message-ID: <96a1e5a8-b887-4bb6-b79a-a4d4549c1415@quicinc.com>
-Date: Mon, 13 May 2024 12:55:34 +0300
+	Mon, 13 May 2024 11:57:22 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CB1564002D;
+	Mon, 13 May 2024 11:57:03 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1A7F3216611;
+	Mon, 13 May 2024 11:56:34 +0200 (CEST)
+Received: from localhost (10.48.87.205) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 13 May
+ 2024 11:56:33 +0200
+From: Patrick Delaunay <patrick.delaunay@foss.st.com>
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>
+CC: Marek Vasut <marex@denx.de>,
+        Patrick Delaunay
+	<patrick.delaunay@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v3 2/2] regulator: stm32-pwr: add support of STM32MP13
+Date: Mon, 13 May 2024 11:56:05 +0200
+Message-ID: <20240513115601.v3.2.I04ec53442753147c35efad1307b6ec133f53b471@changeid>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240513095605.218042-1-patrick.delaunay@foss.st.com>
+References: <20240513095605.218042-1-patrick.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] media: qcom: camss: Add per sub-device type
- resources
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, <rfoss@kernel.org>,
-        <todor.too@gmail.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
-        <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>,
-        <matti.lehtimaki@gmail.com>
-References: <20240411124543.199-1-quic_grosikop@quicinc.com>
- <20240411124543.199-2-quic_grosikop@quicinc.com>
- <f9afdda4-0921-4632-8e4a-e8157b685da1@linaro.org>
-Content-Language: en-US
-From: "Gjorgji Rosikopulos (Consultant)" <quic_grosikop@quicinc.com>
-In-Reply-To: <f9afdda4-0921-4632-8e4a-e8157b685da1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: mHPZmh5kXH2r6ID9jrhHU0_gdQtT8OJG
-X-Proofpoint-ORIG-GUID: mHPZmh5kXH2r6ID9jrhHU0_gdQtT8OJG
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-13_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=878 clxscore=1011 bulkscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405130061
 
+Add support of the new compatible "st,stm32mp13-pwr-reg" for STM32MP13.
 
+Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
+---
 
-On 5/11/2024 1:18 AM, Bryan O'Donoghue wrote:
-> On 11/04/2024 13:45, Gjorgji Rosikopulos wrote:
->> +        .type = CAMSS_SUBDEV_TYPE_CSIPHY,
-> 
-> As Matti pointed out to me on IRC, the .type value here isn't populated
-> in the rest of the 8280xp resources.
-> 
-> I completely missed that but, then again this appears to be a dead field
-> in this series so it makes no difference if it is populated.
-> 
-> I realise it is probably of use in code you _haven't_ yet published but,
-> for now I think we should drop this field, since its dead code.
+(no changes since v2)
 
-Yes that is correct i miss that as well.
+Changes in v2:
+- Add new compatible for STM32MP13 and change title after Rob remarks
+  V1: "ARM: st: use a correct pwr compatible for stm32mp15"
 
-> 
-> I'll send a fixup patch for this, I don't think there's a need for you
-> to send the whole series again.
+ drivers/regulator/stm32-pwr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thank you for this.
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index 85b0102fb9b1..b7aeef6e09e7 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -166,6 +166,7 @@ static int stm32_pwr_regulator_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id __maybe_unused stm32_pwr_of_match[] = {
+ 	{ .compatible = "st,stm32mp1,pwr-reg", },
++	{ .compatible = "st,stm32mp13-pwr-reg", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
+-- 
+2.25.1
 
-~Gjorgji
-
-> 
-> ---
-> bod
