@@ -1,253 +1,168 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D5F84D07;
-	Mon, 13 May 2024 23:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E081D2B9D9
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 23:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715642139; cv=none; b=fty4U/JMuryfcDUbvTHSb12YY43EbZ12hP0oDk7hgTK9zi4J5SnhIq0jMVCK4qshZ8Rf/WFGR8kQvOFK6CbWlvzi5evD4+kgEn4ND1TI6TiGXaLRzbFmzS+MsIyCDPJOpBqmrG1x57gb/ic03BrMzDkBDPNPcL/Lmmanae1u9uE=
+	t=1715642259; cv=none; b=HyBkZUnwVoMDTNcjithdnhNghR6Br5HvRMQO2AjrQySW9Bw4ovya/Wviyi2Fe+GeowyR2OrF3grPoMYEYo6UUii0DpZJOUdxFRNuOcxrsFANb4vQ6M5vSDz8DIJhyuM7Wqq6+Q5mLuogiLJVWd4yqFY3F2IB09QdFQ98CQ1/SQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715642139; c=relaxed/simple;
-	bh=loyZmoPtuDA5rMTG5lqXULUHGz/rf7HlgkI14OxieQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A7jEYQaNb4Zwa9seJPtCqeI98gO1FO5gickNzBn/JCWFw5dXa1lDcoD4QdV1Nt1iw+qI+8lwJ/xJxG2b0yk2aq3rkekQn/uyxP596RuCVYz9q4D6mNaO1F0ZEq9yX6RkQmjn3kf7mz9GvXMRPUMzfShALpD1M+oGmxjPZFTWSO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=KDb1W5zf; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1715642259; c=relaxed/simple;
+	bh=8sFnwkIDJcTw29YECKZQzjAe1IutNxyRQnDAajustyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NF4MqvmJv10NDydB7lBqldHlOo/nRCOjCC/cdFuOa7gQNtBz9l07ADKB6tA1WkcUWXlculxUX72oMAqYxfd13+0/Rr65ZxUoYj/GyBRmkUkLLM8Wk0M6Su00BSNa1AIvjUfNU214aR6CMwnDvuGBK8ygVAQVCAkpjKQQh+eOEbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=EuEuIpBZ; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="KDb1W5zf"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id AE06A87C75;
-	Tue, 14 May 2024 01:15:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1715642135;
-	bh=y94VBu3rZqXoPf5qJmghmwP/Qu0OecNomu4N18OPJk8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KDb1W5zfmoUzuqSNQmrm2kabFQTBN/gm1zuaeWYez5y7rFnL1dy6ic3sgUfoasrKc
-	 8TgdCpee1r/OJis2LcSjW34EIsKO9z1Zwy3Ydhcs0Z57pJZWqRrhp3Bt5xvlOZOjuS
-	 URdcvQ0pnhBVgsaSDE/WxfO4501H3T1IfT7pLNZPRabvHYdospTWpEHzDxaYGJqagG
-	 hMag83m+X0lzF89Q8mqru018k0xEvdOaxCulH69/72NQAx4Q/12NCgVs36jmld4YY0
-	 J2fVqAmI068QXmNd0DdlW05QcOME83EsHYZ3qy+Gy4fLP9gAOY64dOHoSiXIKe+vDh
-	 ah4FSmqSe7aeA==
-Message-ID: <2d213010-7aae-4f5a-8332-54d7e69b862c@denx.de>
-Date: Tue, 14 May 2024 00:33:23 +0200
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="EuEuIpBZ"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ed012c1afbso39989555ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1715642255; x=1716247055; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZDihUHCvdxt2IeYI4uIVgM+JJKGx/hS/rMFzo2PjzSM=;
+        b=EuEuIpBZYmjOoLdnMvVa3uy1KB0IgEYCeuiqFF+0+Zkv5cQqtQXcvO5EL2uDQ8wzV1
+         fhS9DCEoiJIIjYAilzkfk0i5oAnaInPW9NzcbO4wKcbh/Yp0AVXx57CyPtx1hC5phLI2
+         TXnkZ+wz2sMuZWGBXwMjK3eMqvW0F43+/zw17OLIwPPSVUx0necS8L7cu//Ekm+ApoZc
+         vwx/DfnBtwzt8NKQbVdP97AMevjMiq/Ke1aPGQjBdxO7q1x5lsoa7F9W5MwxVzWPcd0I
+         2DHOYq90qQXTcSqSWyhEFTqaA66SXYo6BzWjcmeSVjePePdOPS1abkWaSOid+LDnZqPz
+         3jVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715642255; x=1716247055;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZDihUHCvdxt2IeYI4uIVgM+JJKGx/hS/rMFzo2PjzSM=;
+        b=BAt0A54yN1VLeJtDajf0cNHsDCWdkuc1ACTrd8gf8SKxMJ3YcTfoGYEDbUxPz09PIt
+         BXiaO1vxYPfM/HdpxB4B+DotA53kOJo2I1fkEGMCDdn37G9RlAycxjK6yBcDhuGFLQyx
+         y2KOMRC00qdPu3Q5J5B2xzCau5Wf8HFcuclJFuRBDxpuJuAJi0Q7YRMyk9cNhTrdKsu2
+         NiOFVqgjGQRtiO0Nvik4Ckzu3hdUJqFMS5wYkfBs69SFifBGeryIpWNhEblRfKZKSOBs
+         a+JoIl14M6ei0nhPem0Gpox9L52ieF33Q+LiZ8P7PwDRn/9vTwPvA0ns78ErDV0V32Vk
+         10Wg==
+X-Gm-Message-State: AOJu0YzDIMoTQoBM2pRjsrkaxv+cJjxrQeZ5psrbCDpUHiYalPpK3Ke4
+	UXVoN0uBlvMrye4bFmp3p05W9S2L+GAY2N3/xRWbU+UlkJzwheencx02HmRS7eA=
+X-Google-Smtp-Source: AGHT+IFFnZRJTVRyntxhf+EtmWKMusVyx3nhf1DT07cytdA+foeNpy4zjVFTT8kJK0pZYdZPVfYy0A==
+X-Received: by 2002:a17:903:190:b0:1eb:d72e:82ae with SMTP id d9443c01a7336-1eefa03a3b3mr213467195ad.13.1715642255131;
+        Mon, 13 May 2024 16:17:35 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30ca3sm84929035ad.151.2024.05.13.16.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 16:17:34 -0700 (PDT)
+Date: Mon, 13 May 2024 16:17:32 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [ANNOUNCE] iporoute2 6.9 release
+Message-ID: <20240513161732.4a4dd47a@hermes.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-stm32: update config
- management for phy wo cristal
-To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
- <20240426125707.585269-6-christophe.roullier@foss.st.com>
- <b790f34e-8bfb-44f6-869d-798508008483@denx.de>
- <3137049f-eac8-4522-ad2e-b2b0d3537239@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <3137049f-eac8-4522-ad2e-b2b0d3537239@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 5/13/24 5:11 PM, Christophe ROULLIER wrote:
-> 
-> On 4/26/24 17:37, Marek Vasut wrote:
->> On 4/26/24 2:57 PM, Christophe Roullier wrote:
->>> Some cleaning because some Ethernet PHY configs do not need to add
->>> st,ext-phyclk property.
->>> Change print info message "No phy clock provided" only when debug.
->>>
->>> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
->>> ---
->>>   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 27 ++++++++++---------
->>>   1 file changed, 14 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c 
->>> b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
->>> index 7529a8d15492..e648c4e790a7 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
->>> @@ -55,17 +55,17 @@
->>>    *|         |        |      25MHz    |        50MHz 
->>> |                  |
->>>    * 
->>> ---------------------------------------------------------------------------
->>>    *|  MII    |     -   |     eth-ck    |          n/a | n/a        |
->>> - *|         |        | st,ext-phyclk | |             |
->>> + *|         |        |                 | |             |
->>>    * 
->>> ---------------------------------------------------------------------------
->>>    *|  GMII   |     -   |     eth-ck    |          n/a | n/a        |
->>> - *|         |        | st,ext-phyclk | |             |
->>> + *|         |        |               | |             |
->>>    * 
->>> ---------------------------------------------------------------------------
->>>    *| RGMII   |     -   |     eth-ck    |          n/a | eth-ck      |
->>> - *|         |        | st,ext-phyclk |                    | 
->>> st,eth-clk-sel or|
->>> + *|         |        |               |                    | 
->>> st,eth-clk-sel or|
->>>    *|         |        |               |                    | 
->>> st,ext-phyclk    |
->>>    * 
->>> ---------------------------------------------------------------------------
->>>    *| RMII    |     -   |     eth-ck    |        eth-ck | n/a        |
->>> - *|         |        | st,ext-phyclk | st,eth-ref-clk-sel 
->>> |             |
->>> + *|         |        |               | st,eth-ref-clk-sel 
->>> |             |
->>>    *|         |        |               | or st,ext-phyclk 
->>> |             |
->>>    * 
->>> ---------------------------------------------------------------------------
->>>    *
->>> @@ -174,23 +174,22 @@ static int stm32mp1_set_mode(struct 
->>> plat_stmmacenet_data *plat_dat)
->>>       dwmac->enable_eth_ck = false;
->>>       switch (plat_dat->mac_interface) {
->>>       case PHY_INTERFACE_MODE_MII:
->>> -        if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
->>> +        if (clk_rate == ETH_CK_F_25M)
->>
->> I see two problems here.
->>
->> First, according to the table above, in MII mode, clk_rate cannot be 
->> anything else but 25 MHz, so the (clk_rate == ETH_CK_F_25M) condition 
->> is always true. Why not drop that condition ?
-> Not agree, there is also "Normal" case MII (MII with quartz/cristal) 
-> (first column in the table above), so need to keep this test to check 
-> clk_rate 25MHz.
+This is regular release of iproute2 corresponding to the 6.9 kernel.
+Release is smaller than usual, usual documentation and bug fixes.
 
-What other rate is supported in the MII mode ? Isn't the rate always 25 
-MHz for MII , no matter whether it is generated by RCC or external Xtal ?
+Download:
+    https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-6.9.0.tar.=
+gz
 
->> The "dwmac->ext_phyclk" means "Ethernet PHY have no crystal", which 
->> means the clock are provided by the STM32 RCC clock IP instead, which 
->> means if the dwmac->ext_phyclk is true, dwmac->enable_eth_ck should be 
->> set to true, because dwmac->enable_eth_ck controls the enablement of 
->> these STM32 clock IP generated clock.
-> Right
->>
->> Second, as far as I understand it, there is no way to operate this IP 
->> with external clock in MII mode, so this section should always be only:
->>
->> dwmac->enable_eth_ck = true;
-> Not for case "Normal" MII :-)
+Repository for current release
+    https://github.com/shemminger/iproute2.git
+    git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
 
-What happens if that external clock source is not an xtal, but an 
-oscillator with its own driver described in DT, and enabled e.g. using 
-GPIO (that's compatible "gpio-gate-clock" for that oscillator) . Then 
-you do need to enable those clock even in the "normal" (with external 
-clock source instead of RCC clock source) MII case.
+And future release (net-next):
+    git://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git
 
->>>               dwmac->enable_eth_ck = true;
->>>           val = dwmac->ops->pmcsetr.eth1_selmii;
->>>           pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
->>>           break;
->>>       case PHY_INTERFACE_MODE_GMII:
->>>           val = SYSCFG_PMCR_ETH_SEL_GMII;
->>> -        if (clk_rate == ETH_CK_F_25M &&
->>> -            (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
->>> +        if (clk_rate == ETH_CK_F_25M)
->>>               dwmac->enable_eth_ck = true;
->>> -            val |= dwmac->ops->pmcsetr.eth1_clk_sel;
->>> -        }
->>>           pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
->>>           break;
->>>       case PHY_INTERFACE_MODE_RMII:
->>>           val = dwmac->ops->pmcsetr.eth1_sel_rmii | 
->>> dwmac->ops->pmcsetr.eth2_sel_rmii;
->>> -        if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
->>> +        if (clk_rate == ETH_CK_F_25M)
->>> +            dwmac->enable_eth_ck = true;
->>> +        if (clk_rate == ETH_CK_F_50M &&
->>>               (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
->>
->> This doesn't seem to be equivalent change to the previous code . Here, 
->> if the clock frequency is 25 MHz, the clock are unconditionally 
->> enabled. Before, the code enabled the clock only if clock frequency 
->> was 25 MHz AND one of the "dwmac->eth_ref_clk_sel_reg" or 
->> "dwmac->ext_phyclk" was set (i.e. clock provided by SoC RCC clock IP).
-> 
-> You are right, but in STM32MP15/MP13 reference manual it is write that 
-> we need to update SYSCFG (SYSCFG_PMCSETR) register only in "Ethernet 
-> 50MHz RMII clock selection":
-> 
-> Bit 17 ETH_REF_CLK_SEL: Ethernet 50MHz RMII clock selection.
-> 
->      Set by software.
-> 
->        0: Writing '0' has no effect, reading '0' means External clock is 
-> used. Need selection of AFMux. Could be used with all PHY
-> 
->        1: Writing '1' set this bit, reading '1' means Internal clock 
-> ETH_CLK1 from RCC is used regardless AFMux. Could be used only with RMII 
-> PHY
+Contributions:
 
-Look at this:
-"
-RM0436 Rev 6 Reset and clock control (RCC)
-Clock distribution for Ethernet (ETH)
-Figure 83. Peripheral clock distribution for Ethernet
-Page 575
-"
-See the mux at bottom left side in the PKCS group.
+Aahil Awatramani (1):
+      ip/bond: add coupled_control support
 
-I suspect that no matter whether the clock are 25 MHz or 50 MHz, they 
-enter this mux, the mux selects the clock source from either RCC or from 
-external oscillator, and therefore the original code was correct.
+Andrea Claudi (1):
+      man: fix typo in tc-mirred man page
 
->> I think it might make this code easier if you drop all of the 
->> frequency test conditionals, which aren't really all that useful, and 
->> only enable the clock if either dwmac->ext_phyclk / 
->> dwmac->eth_clk_sel_reg / dwmac->eth_ref_clk_sel_reg is set , because 
->> effectively what this entire convoluted code is implementing is "if 
->> (clock supplied by clock IP i.e. RCC) enable the clock()" *, right ?
->>
->> * And it is also toggling the right clock mux bit in PMCSETR.
->>
->> So, for MII this would be plain:
->> dwmac->enable_eth_ck = true;
->>
->> For GMII/RGMII this would be:
->> if (dwmac->ext_phyclk || dwmac->eth_clk_sel_reg)
->>   dwmac->enable_eth_ck = true;
->>
->> For RMII this would be:
->> if (dwmac->ext_phyclk || dwmac->eth_ref_clk_sel_reg)
->>   dwmac->enable_eth_ck = true;
->>
->> Maybe the clock frequency validation can be retained, but done 
->> separately?
-> As explained previously, need to keep check of clock frequency in this 
-> test.
+Ar=C4=B1n=C3=A7 =C3=9CNAL (1):
+      man: use clsact qdisc for port mirroring examples on matchall and mir=
+red
 
-I sent 5 patches which split this code up, you were on CC:
+Christian G=C3=B6ttsche (1):
+      ss: add option to suppress queue columns
 
-[net-next,RFC,PATCH 1/5] net: stmmac: dwmac-stm32: Separate out external 
-clock rate validation
+Date Huang (2):
+      bridge: vlan: fix compressvlans usage
+      bridge: vlan: fix compressvlans usage
 
-Maybe you can apply those, fix them up as needed, and then add this 
-series on top ? I think it would simplify this code a lot, since that 
-series splits up the clock rate validation / PMCR configuration / 
-external-internal clock selection into separate steps. What do you think ?
+David Ahern (2):
+      Update kernel headers
+      Update kernel headers
+
+Denis Kirjanov (7):
+      ifstat: convert sprintf to snprintf
+      nstat: constify name argument in generic_proc_open
+      nstat: use stack space for history file name
+      nstat: convert sprintf to snprintf
+      iproute2: move generic_proc_open into lib
+      ifstat: handle strdup return value
+      ifstat: don't set errno if strdup fails
+
+Jiayun Chen (1):
+      man: fix doc, ip link does support "change"
+
+Justin Iurman (2):
+      ip: ioam6: add monitor command
+      man8: ioam: add doc for monitor command
+
+Luca Boccassi (1):
+      man: fix typo found by Lintian
+
+Max Gautier (1):
+      arpd: create /var/lib/arpd on first use
+
+Quentin Deslandes (3):
+      ss: add support for BPF socket-local storage
+      ss: pretty-print BPF socket-local storage
+      ss: update man page to document --bpf-maps and --bpf-map-id=3D
+
+Stephen Hemminger (24):
+      netlink: display information from missing type extack
+      ifstat: support 64 interface stats
+      rt_names: whitespace cleanup
+      tc/action: remove trailing whitespace
+      tc: make qdisc_util arg const
+      tc: make filter_util args const
+      tc: make action_util arg const
+      tc: make exec_util arg const
+      README: add note about kernel version compatibility
+      netem: use 64 bit value for latency and jitter
+      tc: remove no longer used helpers
+      tc: support JSON for legacy stats
+      pedit: log errors to stderr
+      skbmod: support json in print
+      simple: support json output
+      tc-simple.8: take Jamal's prompt off examples
+      uapi: update headers
+      uapi: update vdpa.h
+      ila: allow show, list and lst as synonyms
+      mnl: initialize generic netlink version
+      use missing argument helper
+      uapi: update vdpa.h
+      uapi: spelling fix for xfrm.h
+      v6.9.0
+
+Victor Nogueira (3):
+      m_mirred: Allow mirred to block
+      tc: add NLM_F_ECHO support for actions
+      tc: Add NLM_F_ECHO support for filters
+
+Yedaya Katsman (2):
+      ip: Exit exec in child process if setup fails
+      ip: Add missing options to route get help output
+
+Yusuke Ichiki (1):
+      man: fix brief explanation of `ip netns attach NAME PID`
+
