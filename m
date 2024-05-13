@@ -1,128 +1,70 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx2.usergate.com (mx2.usergate.com [46.229.79.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A439914F133
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895B414F103;
+	Mon, 13 May 2024 12:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.229.79.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715603209; cv=none; b=Ac33/Yh4XWv59uOsup4qFdV30Pq3FVlIIEjJkko7HQFF/rjLNGLqSC9XFkRjAmRGbJEDpswi7cYIiEjlUNoD1Ky/MYSwBcVsCvlIMBSY81Sm274KBr0ZKm0qwimgWN8t+ugW0HTdUEc/lCcEHc//Gl9XjpW0yIfCyrB6n2+2TaM=
+	t=1715603242; cv=none; b=mLvKsiubRIZ8Tb8tGs3yLPHkFbbtIlkhFGqJAfc/EWV6cMlR4e+TBW7qQo5/g6NEoe9n8hKxAS5keFEhBTW8OqPERAQF/tGlgNi77wN5xrVtRL5f9T82YBMDxXgpodwOsS50B+HuUc1uIet/pgFgvwIVs6JGNiUTdNdYUvqlk+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715603209; c=relaxed/simple;
-	bh=QqDCC4k0NPdJbIRo5g2C9AZNgV71fSbSWfaOiOVXx8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZ/joQXCh5zs+AnRH76GIbj2z3oTDn4YfheTnM3Wr5HYwc78B1vd9MEouBJdZAJRRRqkew20j85TY3ehjRUdQQ3EH6LI7Eecv+z/KCT75ywKmt28xTCOrcEK6UgDShEN8hNL8ye9GpY5jJ99YfbUCpw4iGe4UlhgfjR0E8jKvGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1s6Ul4-0006Rd-I3; Mon, 13 May 2024 14:26:22 +0200
-Message-ID: <3ecbba68-d8c8-4700-b438-b47e9b8a4525@pengutronix.de>
-Date: Mon, 13 May 2024 14:26:20 +0200
+	s=arc-20240116; t=1715603242; c=relaxed/simple;
+	bh=oKiXlEtPAhBwR95eRclzYiHrEd8EvaNuezey49g8C9U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a0FPFQM2SiAPieINiiXbjINy1KdDVg/kuqjK8MNpf7AOp/H05h7imiqVyZ46VnQoK4JmFi9yEmvUcCc6T8C4lfzqQH150wAfg9H2WF8hHyp2YXOR97lPcJtK9iYeyrhtdESZjQjzaTo9q/eVTOaIng0UXpnvBSmCssqtlfM7aBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com; spf=pass smtp.mailfrom=usergate.com; arc=none smtp.client-ip=46.229.79.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usergate.com
+Received: from mail.usergate.com[192.168.90.36] by mx2.usergate.com with ESMTP id
+	 E1AB971BDF504F85A203326A77D2A618; Mon, 13 May 2024 18:56:57 +0700
+From: Aleksandr Aprelkov <aaprelkov@usergate.com>
+To: Hannes Reinecke <hare@suse.com>
+CC: Aleksandr Aprelkov <aaprelkov@usergate.com>,"James E.J. Bottomley" <jejb@linux.ibm.com>,"Martin K. Petersen" <martin.petersen@oracle.com>,<linux-scsi@vger.kernel.org>,<linux-kernel@vger.kernel.org>,<lvc-project@linuxtesting.org>
+Subject: [PATCH v2] scsi: aic7xxx: aic79xx: add scb NULL check in
+	 ahd_handle_msg_reject()
+Date: Mon, 13 May 2024 18:56:35 +0700
+Message-ID: <20240513115635.2507689-1-aaprelkov@usergate.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/17] clk: imx: imx8mp: fix clock tree update of TF-A
- managed clocks
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Abel Vesa <abelvesa@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
- Ye Li <ye.li@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>
-Cc: imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>,
- linux-kernel@vger.kernel.org, Zhipeng Wang <zhipeng.wang_1@nxp.com>,
- Abel Vesa <abel.vesa@linaro.org>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240510-imx-clk-v2-0-c998f315d29c@nxp.com>
- <20240510-imx-clk-v2-8-c998f315d29c@nxp.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <20240510-imx-clk-v2-8-c998f315d29c@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ESLSRV-EXCH-01.esafeline.com (192.168.90.36) To
+ nsk02-mbx01.esafeline.com (10.10.1.35)
+X-Message-Id: C5FD6731D51D499D83B2034DEBA6EB62
+X-MailFileId: 4187C307D2FD4A009E8A7EC63635124D
 
-Hello Peng,
+If ahd_get_scbptr() returns invalid scb_index then ahd_lookup_skb
+returns NULL. Later in function scb used without check then NULL
+pointer dereference can occur.
 
-The commit message looks eerily familiar ;)
-Small correction below.
+Add NULL scb check in else if statement so message gets rejected
 
-On 10.05.24 11:19, Peng Fan (OSS) wrote:
-> From: Zhipeng Wang <zhipeng.wang_1@nxp.com>
-> 
-> On the i.MX8M*, the TF-A exposes a SiP (Silicon Provider) service
-> for DDR frequency scaling. The imx8m-ddrc-devfreq driver calls the
-> SiP and then does clk_set_parent on the DDR muxes to synchronize
-> the clock tree.
-> 
-> since commit 936c383673b9 ("clk: imx: fix composite peripheral flags"),
-> these TF-A managed muxes have SET_PARENT_GATE set, which results
-> in imx8m-ddrc-devfreq's clk_set_parent after SiP failing with -EBUSY:
-> 
-> clk_set_parent(dram_apb_src, sys1_pll_40m);(busfreq-imx8mq.c)
-> 
-> This is safe to do, because updating the Linux clock tree to reflect
-> reality will always be glitch-free.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-This refers to the next sentence, thus swap position of this sentence
-with the next one:
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Aleksandr Aprelkov <aaprelkov@usergate.com>
+---
+v2: Removed "!= 0" check as Damien Le Moal <dlemoal@kernel.org>
+suggested
+ drivers/scsi/aic7xxx/aic79xx_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> commit 926bf91248dd
-> ("clk: imx8m: fix clock tree update of TF-A managed clocks") adds this
-> method and enables 8mm, 8mn and 8mq. i.MX8MP also needs it.
-s/this method/imx8m_clk_hw_fw_managed_composite which sets the SET_PARENT_GATE flag/
-
-> 
-> Another reason to this patch is that powersave image BT music
-> requires dram to be 400MTS, so clk_set_parent(dram_alt_src,
-> sys1_pll_800m); is required. Without this patch, it will not succeed.
-> 
-> Fixes: 936c383673b9 ("clk: imx: fix composite peripheral flags")
-> Signed-off-by: Zhipeng Wang <zhipeng.wang_1@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-With commit message adjusted:
-
-Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-
-Thanks,
-Ahmad
-
-> ---
->  drivers/clk/imx/clk-imx8mp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-> index 670aa2bab301..e561ff7b135f 100644
-> --- a/drivers/clk/imx/clk-imx8mp.c
-> +++ b/drivers/clk/imx/clk-imx8mp.c
-> @@ -551,8 +551,8 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
->  
->  	hws[IMX8MP_CLK_IPG_ROOT] = imx_clk_hw_divider2("ipg_root", "ahb_root", ccm_base + 0x9080, 0, 1);
->  
-> -	hws[IMX8MP_CLK_DRAM_ALT] = imx8m_clk_hw_composite("dram_alt", imx8mp_dram_alt_sels, ccm_base + 0xa000);
-> -	hws[IMX8MP_CLK_DRAM_APB] = imx8m_clk_hw_composite_critical("dram_apb", imx8mp_dram_apb_sels, ccm_base + 0xa080);
-> +	hws[IMX8MP_CLK_DRAM_ALT] = imx8m_clk_hw_fw_managed_composite("dram_alt", imx8mp_dram_alt_sels, ccm_base + 0xa000);
-> +	hws[IMX8MP_CLK_DRAM_APB] = imx8m_clk_hw_fw_managed_composite_critical("dram_apb", imx8mp_dram_apb_sels, ccm_base + 0xa080);
->  	hws[IMX8MP_CLK_VPU_G1] = imx8m_clk_hw_composite("vpu_g1", imx8mp_vpu_g1_sels, ccm_base + 0xa100);
->  	hws[IMX8MP_CLK_VPU_G2] = imx8m_clk_hw_composite("vpu_g2", imx8mp_vpu_g2_sels, ccm_base + 0xa180);
->  	hws[IMX8MP_CLK_CAN1] = imx8m_clk_hw_composite("can1", imx8mp_can1_sels, ccm_base + 0xa200);
-> 
-
+diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/aic79xx_core.c
+index 3e3100dbfda3..6bee62224d86 100644
+--- a/drivers/scsi/aic7xxx/aic79xx_core.c
++++ b/drivers/scsi/aic7xxx/aic79xx_core.c
+@@ -5577,7 +5577,7 @@ ahd_handle_msg_reject(struct ahd_softc *ahd, struct ahd_devinfo *devinfo)
+ 		       "Using asynchronous transfers\n",
+ 		       ahd_name(ahd), devinfo->channel,
+ 		       devinfo->target, devinfo->lun);
+-	} else if ((scb->hscb->control & SIMPLE_QUEUE_TAG) != 0) {
++	} else if (scb && (scb->hscb->control & SIMPLE_QUEUE_TAG)) {
+ 		int tag_type;
+ 		int mask;
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
 
