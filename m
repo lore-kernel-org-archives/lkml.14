@@ -1,143 +1,147 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536C2148853;
-	Mon, 13 May 2024 15:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD67154427
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615516; cv=none; b=LYmFm9GumvL2fXkJUC4Om7Q9oJ1MyIrda76qTWi9Ro8xdR4qHIW7pk3ly92MWYuqpey3cuqmVCtMAS9yZhCVBTSGmlKuosyt13T+q7v0+bu6cAHLs4q2KO8Fv9ALEn6qtcNgriI+NR14A0WA4cezYWHLGXJ5a+p032Y7GC06ni0=
+	t=1715615548; cv=none; b=AYdnLC9g8JhKRX0K4TrE3bC72IgKuaD6fDy/8mTrgDOWYLQoDpXOftSOOKd+MJ8rBdKc3G+x5MYn7Vn9AsS5SAifSPMdu+80MyuRFfqqu0U8lpyPRzEe8qKYl6H95OZ+Ju+ScTimhNk4So2Zixew9HLkEcUg2tYwuc3oAZh1SdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615516; c=relaxed/simple;
-	bh=3imVNZ8J43hY3SgwUsbOPr7mp+hW498mREULCZekQPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jIPrT+Yg6bvxlcB0EVOS49enScBzfU5EX/SYH2hZoYlgKvippBekBkXeegDI6F1gn0zLuYGcHJ8XsUZDErj4gQVzAPsrsGzANHm6m+wx17trTmsHEk6fVJnq1clzpwY/DJdpvhi/M4wskF7WGVHvhDYtE/SVi1DuIk6/1crU8yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5BdzkMv; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715615548; c=relaxed/simple;
+	bh=vkLE3ThAcRnXVsMhuA6mAajRU1E+VMOLAEmdSVnfxH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JhzOaDZqUaVLhLuQOZQcr0gae6TPQccYDvtRGi9oPD3LLT5o1LoL5eLw0l+MULDY8WqYK4qhyFdTyag2sgHSjmXwiAtbFSR1VSKEuXtTeVtkoeacIMI9E2rRPJS9cHJL/ccriHPI4m9LI3ahXIw213gWqEfYMr/keQ+rif03l6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F+MamYn0; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5BdzkMv"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f447976de7so3903326b3a.1;
-        Mon, 13 May 2024 08:51:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F+MamYn0"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-43dfe020675so808791cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715615514; x=1716220314; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C1wioqfQiuQuCuNYwlP+E5Wyu8F6jbMqAw/h0oL3eqU=;
-        b=E5BdzkMvItijxacNcTnQywLJQRhulPW/U18k+7mCsCFs/TRaR2d4S0ISuAC616Q7fY
-         /uKkANAOcAJQD7PJPqknoxwXOVoX2pjnRSCnaY2fX25ehE7ymzbOE9dv93mm9K0krfpX
-         UpAsX1JHodwqUvLA7eoWMkxRnw4X4zB+UOaudWml3J7ZmUZ7HBdPkzxx/ZxITOLyfzkh
-         xhHSBEcxqNnUn9Bahlr696fIOQ5SvS52woMbR9P3qsxoKNZHpEJ5uhqEFfa3rFmxkm6l
-         QJK4RiK5SvW7kqhFy/bEzmMGBGyIL7fLJ+cx6/Qk5J0jvu0NJ2ka2+Oc0XKZMYJ5Ocer
-         J3Lg==
+        d=google.com; s=20230601; t=1715615546; x=1716220346; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ab6Pb1Zn+PdwPKJ9a5mXYGSOH8gBv7qhSD/WUjQgp8s=;
+        b=F+MamYn0MdnBJXObBkqQnXQ4RCnjFunhfr06c/0pUakX23/zt2o6zMXFOXgfAai8/G
+         7tkbfOsxfSlqOM8ssZscPPwqneKRuOJysSibWyAHqRn2jZt6fBjqYxrUpLTY0rNGXnjE
+         oNLQZrjUByafq+mHyvF66ceGWEMGaOOzGsWJiIZMhsUULSY+q2o2gymM/BCbvDajVjLT
+         GsoctfbaIZwGeYr5nItl9D1g4S/zz4bZLGWFCx1i6/uX0t98sA0UZd2/0u0rHoEmNv7h
+         96biPQ2zyShMr0Y8R9H3Tsm5HxKOL3ud+1KyMzeY/S9bpNj9JiNwK38kVVsOP9Xt+Ggg
+         UJEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715615514; x=1716220314;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C1wioqfQiuQuCuNYwlP+E5Wyu8F6jbMqAw/h0oL3eqU=;
-        b=UKm/mLGR5UTZ63crCmM5hR+oJGqGPUgPS5mtv3hXf3DVUSctt4IzxKag4pK8Mszjlx
-         RzEVS9qnww8BFvvBWvc3TFgoy1ff+JBKXMVbGF4VUD5QjmqYnA3IyEPJ2wwCdRyaIe7h
-         MTt0ar2joumkf0RV7anXMbL9eK4RL6wiYHCQsQskSgfG3t9boeNn2oh9fBe2nUeIztZD
-         nybt+64kvx0BxVNYzlfYcsgbPB7OOwOOLFwdaXmKwYI2kdrXp05xYbvE27B89Xgvg0qX
-         70Ic0hkg1Kh2GIi91lnwwBxhrMoADHWtMzwkNqbptE5HoXdiZq+xhKshSSVwX2G4w/S1
-         OVPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzivmIuj7oXS5EHSwz1fBaqZ6f+G407ZkRrqXS4ZlM6wap5fQWx4CrTwnam3Im6ryv5xUqfDSIAi7mHjR1eMHa6PvqTlxWnhvLsIcD
-X-Gm-Message-State: AOJu0Yx+gltDMoEtICPnQN6ihKchyAWfIzTJ8mPCACOjHIuvN2eBNIDH
-	cPkRoB4XFG2r8P0fwa0abRyQVebZfNm2qIaiWRuki+flSKG3e1jbExSn7Q==
-X-Google-Smtp-Source: AGHT+IEDqMYogdWr3XOXh22OTvx+Uw4uVC3Zk4ODbviWxNXuhd9FThKOLXrM7kC6578pgduyhtA/Fw==
-X-Received: by 2002:a17:90a:d714:b0:2b8:f7c6:1581 with SMTP id 98e67ed59e1d1-2b8f7c615d5mr2619575a91.23.1715615514501;
-        Mon, 13 May 2024 08:51:54 -0700 (PDT)
-Received: from localhost ([2a00:79e1:2e00:1301:e1c5:6354:b45d:8ffc])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b628ea6ae7sm9906113a91.51.2024.05.13.08.51.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 08:51:53 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	Rob Clark <robdclark@chromium.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Connor Abbott <cwabbott0@gmail.com>,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm: Add obj flags to gpu devcoredump
-Date: Mon, 13 May 2024 08:51:47 -0700
-Message-ID: <20240513155150.166924-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.45.0
+        d=1e100.net; s=20230601; t=1715615546; x=1716220346;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ab6Pb1Zn+PdwPKJ9a5mXYGSOH8gBv7qhSD/WUjQgp8s=;
+        b=E1HinI73o07CXUIvSQnfwhTrbn+QAiZNe2w9uw2vN2F1RxSTCvzw9qjPSoIgZI0STX
+         zlGa5C1eZN6/TwTbCd3ZqXGXbPhYrCD8yEKlvjUGUmFrB6JtNkDDxxLZJPd3SJ2r7GFg
+         w4sm9PMr+yTcfRbt5BIqEju8JBEnkw8AbIoMwoasv/mjx8i2XBjc5QHKhx1OjkbtunEO
+         uqywhUAR9GwHT5KuXDGbSROoFm0xuS9Ld64/knPHN7YS+LHvo72EvGntDJjVjMvkaxAn
+         O+LCftr9k7lb8w7pgQq38vnJDDBsHnZGiWshwZVQptzlAJuMzpeAKxUzZ7rTt/m7RSGf
+         P1gg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/tNMLFFe9mLcqhb4Q4/O5A9JTlQeY0xoWF3mvmNEQiZxNhR+lxY9LThwjAFGVt7f4gWhl/b3/mmdpO1s0w77nr9qDo/PSngTIvtDO
+X-Gm-Message-State: AOJu0Ywp72O/FoayqIZ6uNrPAB/9lvhnSVfydRrIJw7Yj1vWp9QB5Tyu
+	olfrycdC2o+kLVTQAu8iyBA7EtQdN/3uM24aZcjvZj0/Whmk2QPIWxwVQvV8MlOUOLCsSV0Dxa0
+	o3A2GVCklzXTapGEAgJHGWfkY3GbP3y4gPnPd9KieLKl1uDSnGqix
+X-Google-Smtp-Source: AGHT+IFfwR81J/neIzXou87W+GV66GTPQOziuMfR6JAYbFA1015p3P3pBkkVmrfr+CcMuqrdlZNaiXRao+YFaGuMwyw=
+X-Received: by 2002:a05:622a:a490:b0:43e:e09:d346 with SMTP id
+ d75a77b69052e-43e0e09d358mr2510511cf.5.1715615545425; Mon, 13 May 2024
+ 08:52:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ZjssGrj+abyC6mYP@gmail.com> <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
+ <ZkG4LWr7w11wQ/PR@gmail.com>
+In-Reply-To: <ZkG4LWr7w11wQ/PR@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 13 May 2024 08:52:13 -0700
+Message-ID: <CAP-5=fVHrKcqwczoU1uMD4tP5DTVhfQ1T_hXnm_y5Ji3M6K_ag@mail.gmail.com>
+Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
+ vmlinux.h. Stop.
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Rob Clark <robdclark@chromium.org>
+On Sun, May 12, 2024 at 11:50=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Ian Rogers <irogers@google.com> wrote:
+>
+> > On Wed, May 8, 2024 at 12:39=E2=80=AFAM Ingo Molnar <mingo@kernel.org> =
+wrote:
+> > >
+> > >
+> > > So I've been getting this perf build failure for some time:
+> > >
+> > >   kepler:~/tip/tools/perf> make clean
+> > >   Makefile.perf:1149: *** Missing bpftool input for generating vmlinu=
+x.h.  Stop.
+> > >   make: *** [Makefile:90: clean] Error 2
+> > >
+> > > ... but if I clone a new repository, it works fine, until a point.
+> > >
+> > > 'make clean' doesn't work - and 'make mrproper' in the main kernel
+> > > directory doesn't clean up properly.
+> > >
+> > > Only if I do a brute-force:
+> > >
+> > >         rm -rf tools/
+> > >         git checkout HEAD -f
+> > >
+> > > does it get resolved.
+> > >
+> > > The failure condition triggers if I Ctrl-C the following build a coup=
+le of
+> > > times, without it being finished:
+> > >
+> > >
+> > >    cd tools/perf; make clean install
+> > >    ...
+> > >
+> > >    LD      util/perf-in.o
+> > >    LD      perf-in.o
+> > >    CC      pmu-events/pmu-events.o
+> > >  ^Cmake[3]: *** [pmu-events/Build:43: pmu-events/pmu-events.o] Interr=
+upt
+> > >  make[2]: *** [Makefile.perf:709: pmu-events/pmu-events-in.o] Interru=
+pt
+> > >  make[1]: *** [Makefile.perf:264: sub-make] Interrupt
+> > >  make: *** [Makefile:113: install] Interrupt
+> > >  kepler:~/tip> perfi
+> > >  Makefile.perf:1149: *** Missing bpftool input for generating vmlinux=
+.h.  Stop.
+> > >  make: *** [Makefile:90: clean] Error 2
+> >
+> > We have a checked-in vmlinux.h:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/bpf_skel/vmlinux/vmlinux.h?h=3Dperf-tools-next
+> > so this shouldn't have been a problem for a while. bpftool is no
+> > longer on that line:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n1149
+> > so I suspect if you use a newer tree then things will work.
+>
+> Was this regression fix propagated to v6.9 in time?
 
-When debugging faults, it is useful to know how the BO is mapped (cached
-vs WC, gpu readonly, etc).
+We switched to using the handwritten file in v6.4:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/t=
+ools/perf/util/bpf_skel/vmlinux.h?id=3Da887466562b425bd6183bf75b523c1477c9f=
+d22d
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 1 +
- drivers/gpu/drm/msm/msm_gpu.c           | 6 ++++--
- drivers/gpu/drm/msm/msm_gpu.h           | 1 +
- 3 files changed, 6 insertions(+), 2 deletions(-)
+Thanks,
+Ian
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index b7bbef2eeff4..d9ea15994ae9 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -887,6 +887,7 @@ void adreno_show(struct msm_gpu *gpu, struct msm_gpu_state *state,
- 			drm_printf(p, "  - iova: 0x%016llx\n",
- 				state->bos[i].iova);
- 			drm_printf(p, "    size: %zd\n", state->bos[i].size);
-+			drm_printf(p, "    flags: 0x%x\n", state->bos[i].flags);
- 			drm_printf(p, "    name: %-32s\n", state->bos[i].name);
- 
- 			adreno_show_object(p, &state->bos[i].data,
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index d14ec058906f..ceaee23a4d22 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -222,14 +222,16 @@ static void msm_gpu_crashstate_get_bo(struct msm_gpu_state *state,
- 		struct drm_gem_object *obj, u64 iova, bool full)
- {
- 	struct msm_gpu_state_bo *state_bo = &state->bos[state->nr_bos];
-+	struct msm_gem_object *msm_obj = to_msm_bo(obj);
- 
- 	/* Don't record write only objects */
- 	state_bo->size = obj->size;
-+	state_bo->flags = msm_obj->flags;
- 	state_bo->iova = iova;
- 
--	BUILD_BUG_ON(sizeof(state_bo->name) != sizeof(to_msm_bo(obj)->name));
-+	BUILD_BUG_ON(sizeof(state_bo->name) != sizeof(msm_obj->name));
- 
--	memcpy(state_bo->name, to_msm_bo(obj)->name, sizeof(state_bo->name));
-+	memcpy(state_bo->name, msm_obj->name, sizeof(state_bo->name));
- 
- 	if (full) {
- 		void *ptr;
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index 685470b84708..05bb247e7210 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -527,6 +527,7 @@ struct msm_gpu_submitqueue {
- struct msm_gpu_state_bo {
- 	u64 iova;
- 	size_t size;
-+	u32 flags;
- 	void *data;
- 	bool encoded;
- 	char name[32];
--- 
-2.45.0
-
+> Thanks,
+>
+>         Ingo
