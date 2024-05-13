@@ -1,72 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8B2D51A;
-	Mon, 13 May 2024 22:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0383B134BC
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 22:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715639902; cv=none; b=I98oSEWVCJAok1Na00vVjVghYsdcxYRrYbzClBGz1IJGFjWmGTKhkSQ2z57eJ18dj2OhUEfqdrUDqxlBwZW0f7XpRUdKLPEURVF0U6b3x2152IKz+HcFx/TdA2PAOvcYcPYBTdciM2mpmpWcPVshYP7GE6rY2xliAbbwg6T+51E=
+	t=1715639994; cv=none; b=J6VMRVJeqsEl93XQx9H8p5H+pF8NzDPIxJtUgqhM67FGMJb1DvbThr9+ETQhtHLD5wjBf+LKwqJ829QirH1DHp7xHOpF7I71wFGgtd1fVkgwKD3GOQ/3fSqBPYRkSg6LaqOXcYHKj8sSkjHbHPL1/S54pmZqDaBe84xJcmVGp7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715639902; c=relaxed/simple;
-	bh=6DkAFClS2Q1GXsiqXyDYj614/N1JxpW+Hir5QUpH7BM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=PApq7fDuiRTalSewVJNITOnA47VN2Bk+76H9dmoQ2CY5aBajvYK8VW8D71vI/hNb4XAGq9FS2RTUxodpFMGj79ThbSW5UmMOo2A5yr6xod2xjaECnYIHDVfUadWoAN8MaRzVlhSovu+x0Dv5yXIH7ztQCfYmmu7gN4+FK4jIbOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOrW61QH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715639994; c=relaxed/simple;
+	bh=BSN7Xy3cGgTmiOR56jzKBdth2uyQ80MxzKLMljOx1AM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VHZdisR/LZx/lqgekymNyK5QbnZbM1gwzc0jIiVc+eaLi10+1PwAoYgnJiN5tVbZiZeQB6CEygf4PO/VVjmM9fM+EhO9pK6F0IYOuSBTpsCe/ASUnukHIJjES4V2M50bj5wQRhlF1LjzjDgaT55kM8LnSp81f76Em0nWU6Kz/wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=UrytV0QK; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOrW61QH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F13AC113CC;
-	Mon, 13 May 2024 22:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715639902;
-	bh=6DkAFClS2Q1GXsiqXyDYj614/N1JxpW+Hir5QUpH7BM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=YOrW61QHCwu/altnJvtbslvrlhnDSYTeL7XnkrU4mu+s86Ar60lW/jiawmwGAstDq
-	 eM/ESUM6Os2L/z5g85YmOAwDM6FqUetAl7OaRXnhPu8pjkl4MdEuh7uCxQljhXMYSp
-	 KJs3xAjPD6Xt4r0w0INfM+tzv6s++PPS+fuLqF+M+nFiarXg54BQng8f0ZJPQzGGGj
-	 5WbcMEF1ZQlkcB/Be4sLiR4djeGmuqkLC+HqxFUobysSQBb5OFRzW8trx5PB2YP1iT
-	 OHJ/VTTkEeR4j2nIBAcH/NFbRGSMDs74IlnL6DtszceVu9lcuwhTjd+ZvASz0fPnID
-	 GdQJtAnE6C9KA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 44499C433F2;
-	Mon, 13 May 2024 22:38:22 +0000 (UTC)
-Subject: Re: [GIT PULL] Crypto Update for 6.10
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZkGN64ulwzPVvn6-@gondor.apana.org.au>
-References: <Yui+kNeY+Qg4fKVl@gondor.apana.org.au>
- <Yzv0wXi4Uu2WND37@gondor.apana.org.au>
- <Y5mGGrBJaDL6mnQJ@gondor.apana.org.au>
- <Y/MDmL02XYfSz8XX@gondor.apana.org.au>
- <ZEYLC6QsKnqlEQzW@gondor.apana.org.au>
- <ZJ0RSuWLwzikFr9r@gondor.apana.org.au>
- <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
- <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
- <ZfO6zKtvp2jSO4vF@gondor.apana.org.au> <ZkGN64ulwzPVvn6-@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZkGN64ulwzPVvn6-@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.10-p1
-X-PR-Tracked-Commit-Id: 13909a0c88972c5ef5d13f44d1a8bf065a31bdf4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 84c7d76b5ab6a52e1b3d8101b9f910c128dca396
-Message-Id: <171563990227.20499.13690225369013101385.pr-tracker-bot@kernel.org>
-Date: Mon, 13 May 2024 22:38:22 +0000
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="UrytV0QK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1715639986;
+	bh=BSN7Xy3cGgTmiOR56jzKBdth2uyQ80MxzKLMljOx1AM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=UrytV0QKWFlEdF+Hn8ySUdjdNjc7JvrK9YOERxx7rGXk68GXZs059H6agzVTj6mLr
+	 rrtXg3p5M0ENyH6WhUATfOY/fJecOYmF++Lx33NipqmDGsV1q+L+lg0gUa0BCVFe6S
+	 hIGrkMC/UdNWH9I5QvKGeYFWGtRx6ys4E8cGNy48=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id AE2A740A8F; Mon, 13 May 2024 15:39:46 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id AD19E4093E;
+	Mon, 13 May 2024 15:39:46 -0700 (PDT)
+Date: Mon, 13 May 2024 15:39:46 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+cc: Yang Shi <yang@os.amperecomputing.com>, catalin.marinas@arm.com, 
+    will@kernel.org, scott@os.amperecomputing.com, 
+    linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: mm: force write fault for atomic RMW
+ instructions
+In-Reply-To: <ea88e906-3219-48c0-884c-3bb13ca0d18f@arm.com>
+Message-ID: <ec207271-623a-f2c0-0adf-7ecbc47aa99b@gentwo.org>
+References: <20240507223558.3039562-1-yang@os.amperecomputing.com> <c9c3c0d5-bb61-4eed-8b89-b0341a2c6f5c@arm.com> <c1ba9ba3-b0d6-4c6c-d628-614751d737c2@gentwo.org> <ea88e906-3219-48c0-884c-3bb13ca0d18f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-The pull request you sent on Mon, 13 May 2024 11:50:03 +0800:
+On Thu, 9 May 2024, Anshuman Khandual wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git v6.10-p1
+>
+>>> Okay, I was about to ask, but is not calling get_user() for all data
+>>> read page faults increase the cost for a hot code path in general for
+>>> some potential savings for a very specific use case. Not sure if that
+>>> is worth the trade-off.
+>>
+>> The instruction is cache hot since it must be present in the cpu cache for the fault. So the overhead is minimal.
+>>
+>
+> But could not a pagefault_disable()-enable() window prevent concurring
+> page faults for the current process thus degrading its performance.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/84c7d76b5ab6a52e1b3d8101b9f910c128dca396
+The cpu is already executing a fault handler in kernel space. There cannot 
+be an additional user space fault since we do not execute that code 
+currently.
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
