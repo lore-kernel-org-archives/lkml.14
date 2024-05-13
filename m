@@ -1,210 +1,132 @@
-Received: from ms-10.1blu.de (ms-10.1blu.de [178.254.4.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFCB23CB;
-	Mon, 13 May 2024 16:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.4.101
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1C523CB
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715617518; cv=none; b=CR5jupuagMyRc7EwMC/TDdCDaiB5uCHiOaAjWsv+VcXnFkiVPifdOxSA/6+lWCng8+RCngY75FrCenK1ZVTaCU4hzqE7fkrpMCgbADBOgrYpA5cL2JtgQgkLE2TnfN7F3bwngs/HxM+UCiyH1lF/P9IaeEZUnklGwaAFAH3eYVU=
+	t=1715617625; cv=none; b=CqB9bjKNqAY8mBwc0drZyrI0mh95RaqLQA1GOXMmWlBCmuMZCU4xMXEgTs4BQoSYQ/fJMjuXkEFG8uVamyIlYeh3cbV7Ehjxo8Am/wYiWw5DT2dPUUJWHQBTZyf5xVtKUwTqbBcGe3Z8m84JBxoilvMFBbKPCHx0UceFfPj8tW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715617518; c=relaxed/simple;
-	bh=onmSAyOiUFMGRMabu5p+825ul4TqokXJE2w92iqKJ1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tx7Qc2fcCuCmhD7UdcALJNY2nRI8BjwZLSvfRaj52vHDdLogZOcBKrALxnxP7fgqKLaUUHiEwwdv/I4xmyLPQhoAwhtsP8FFIL1JDBDC7adlHb5f67XInwbWu5BpP9rb4dISaidBQjZKjG+5OkltjTcX2Z/3svNyYuQW7nBUVeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de; spf=pass smtp.mailfrom=mariuszachmann.de; arc=none smtp.client-ip=178.254.4.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mariuszachmann.de
-Received: from [2.211.228.80] (helo=marius.fritz.box)
-	by ms-10.1blu.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <mail@mariuszachmann.de>)
-	id 1s6YU7-004ry5-Rq;
-	Mon, 13 May 2024 18:25:07 +0200
-From: Marius Zachmann <mail@mariuszachmann.de>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Marius Zachmann <mail@mariuszachmann.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] hwmon: (corsair-cpro) Add firmware and bootloader information
-Date: Mon, 13 May 2024 18:23:29 +0200
-Message-ID: <20240513162328.17636-3-mail@mariuszachmann.de>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715617625; c=relaxed/simple;
+	bh=7+vf3fmiBijLlpMhFzlSmozqoIzUtpz0TVy+VS7XhDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KYzA/BE+YFx32jiKUpUUaAoSbyGe5gysJRoqdDJBri4y6Rqfd1utTejBiiCQa/6/yebr5GZWrpsE2wTQn2ywsOeJCRTcw9z7V3HvYpkn1AyNaB2pdxQd/tjhrAd1MYiWYpiGC/hklUpc50MoCx51kSs8tVbfA2iC9Gb7UgVC9yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bosc.ac.cn; spf=pass smtp.mailfrom=bosc.ac.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bosc.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bosc.ac.cn
+Received: from [172.38.8.164] (unknown [219.141.235.82])
+	by mail (Coremail) with SMTP id AQAAfwBH+dknP0JmjBV4AA--.42648S3;
+	Tue, 14 May 2024 00:26:17 +0800 (CST)
+Message-ID: <4b6e49ee-d2fd-4e54-88d5-ab06d8ebf644@bosc.ac.cn>
+Date: Tue, 14 May 2024 00:26:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Con-Id: 241080
-X-Con-U: 0-mail
+User-Agent: Mozilla Thunderbird
+Subject: Re: drm/bridge: adv7511: Attach next bridge without creating
+ connector
+To: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ dmitry.baryshkov@linaro.org, biju.das.jz@bp.renesas.com, aford173@gmail.com,
+ bli@bang-olufsen.dk, robh@kernel.org, jani.nikula@intel.com
+References: <20240513080243.3952292-1-victor.liu@nxp.com>
+Content-Language: en-US, en-AU
+From: Sui Jingfeng <suijingfeng@bosc.ac.cn>
+Organization: bosc
+In-Reply-To: <20240513080243.3952292-1-victor.liu@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAfwBH+dknP0JmjBV4AA--.42648S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF18XF1xtrWrJFWxCr4fAFb_yoW5Cw1rpF
+	W2qFZ0yryrXF13GayDAr1UCas8Z39rJFWrJFZF93yFva4xWF1DZrWqyr1rCFy7JFWUJ3WY
+	yr47JF18KF1kCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
+	c2xSY4AK67AK6r1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUsPl1DUUUU
+X-CM-SenderInfo: xvxlyxpqjiv03j6e02nfoduhdfq/
 
-Add support for reporting firmware and bootloader version using debugfs.
-Update documentation accordingly.
+Hi,
 
-Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
----
-Changes in v3:
-- use different debugfs directory name for each device
 
-Changes in v2:
-- better patch description
-- Documentation uses "Firmware version" and "Bootloader version"
-- removed conditional CONFIG_DEBUG_FS
-- get_fw_version gets called from ccp_debugfs_init
-- get_fw_version does print a hid_notice when an error occurs
-  instead of failing.
----
- Documentation/hwmon/corsair-cpro.rst |  8 ++++
- drivers/hwmon/corsair-cpro.c         | 71 ++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
+On 5/13/24 16:02, Liu Ying wrote:
+> The connector is created by either this ADV7511 bridge driver or
+> any DRM device driver/previous bridge driver, so this ADV7511
+> bridge driver should not let the next bridge driver create connector.
+> 
+> If the next bridge is a HDMI connector, the next bridge driver
+> would fail to attach bridge from display_connector_attach() without
+> the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag.
+> 
+> Add that flag to drm_bridge_attach() function call in
+> adv7511_bridge_attach() to fix the issue.
+> 
+> This fixes the issue where the HDMI connector bridge fails to attach
+> to the previous ADV7535 bridge on i.MX8MP EVK platform:
+> 
+> [    2.216442] [drm:drm_bridge_attach] *ERROR* failed to attach bridge /hdmi-connector to encoder None-37: -22
+> [    2.220675] mmc1: SDHCI controller on 30b50000.mmc [30b50000.mmc] using ADMA
+> [    2.226262] [drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@30800000/i2c@30a30000/hdmi@3d to encoder None-37: -22
+> [    2.245204] [drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@32c00000/dsi@32e60000 to encoder None-37: -22
+> [    2.256445] imx-lcdif 32e80000.display-controller: error -EINVAL: Failed to attach bridge for endpoint0
+> [    2.265850] imx-lcdif 32e80000.display-controller: error -EINVAL: Cannot connect bridge
+> [    2.274009] imx-lcdif 32e80000.display-controller: probe with driver imx-lcdif failed with error -22
+> 
+> Fixes: 14b3cdbd0e5b ("drm/bridge: adv7511: make it honour next bridge in DT")
+> Signed-off-by: Liu Ying <victor.liu@nxp.com>
+> ---
+>   drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> index dd21b81bd28f..66ccb61e2a66 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> @@ -953,7 +953,8 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge,
+>   	int ret = 0;
+>   
+>   	if (adv->next_bridge) {
+> -		ret = drm_bridge_attach(bridge->encoder, adv->next_bridge, bridge, flags);
+> +		ret = drm_bridge_attach(bridge->encoder, adv->next_bridge, bridge,
+> +					flags | DRM_BRIDGE_ATTACH_NO_CONNECTOR);
 
-diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-index 751f95476b57..15077203a2f8 100644
---- a/Documentation/hwmon/corsair-cpro.rst
-+++ b/Documentation/hwmon/corsair-cpro.rst
-@@ -39,3 +39,11 @@ fan[1-6]_target		Sets fan speed target rpm.
- pwm[1-6]		Sets the fan speed. Values from 0-255. Can only be read if pwm
- 			was set directly.
- ======================= =====================================================================
-+
-+Debugfs entries
-+---------------
-+
-+======================= ===================
-+firmware_version	Firmware version
-+bootloader_version	Bootloader version
-+======================= ===================
-diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-index 3e63666a61bd..f7d321d8676e 100644
---- a/drivers/hwmon/corsair-cpro.c
-+++ b/drivers/hwmon/corsair-cpro.c
-@@ -10,11 +10,13 @@
- 
- #include <linux/bitops.h>
- #include <linux/completion.h>
-+#include <linux/debugfs.h>
- #include <linux/hid.h>
- #include <linux/hwmon.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
-@@ -28,6 +30,8 @@
- #define LABEL_LENGTH		11
- #define REQ_TIMEOUT		300
- 
-+#define CTL_GET_FW_VER		0x02	/* returns the firmware version in bytes 1-3 */
-+#define CTL_GET_BL_VER		0x06	/* returns the bootloader version in bytes 1-2 */
- #define CTL_GET_TMP_CNCT	0x10	/*
- 					 * returns in bytes 1-4 for each temp sensor:
- 					 * 0 not connected
-@@ -78,6 +82,7 @@
- struct ccp_device {
- 	struct hid_device *hdev;
- 	struct device *hwmon_dev;
-+	struct dentry *debugfs;
- 	/* For reinitializing the completion below */
- 	spinlock_t wait_input_report_lock;
- 	struct completion wait_input_report;
-@@ -88,6 +93,8 @@ struct ccp_device {
- 	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
- 	DECLARE_BITMAP(fan_cnct, NUM_FANS);
- 	char fan_label[6][LABEL_LENGTH];
-+	u8 firmware_ver[3];
-+	u8 bootloader_ver[2];
- };
- 
- /* converts response error in buffer to errno */
-@@ -496,6 +503,66 @@ static int get_temp_cnct(struct ccp_device *ccp)
- 	return 0;
- }
- 
-+/* read firmware and bootloader version */
-+static void get_fw_version(struct ccp_device *ccp)
-+{
-+	int ret;
-+
-+	ret = send_usb_cmd(ccp, CTL_GET_FW_VER, 0, 0, 0);
-+	if (ret) {
-+		hid_notice(ccp->hdev, "Failed to read firmware version.\n");
-+	} else {
-+		ccp->firmware_ver[0] = ccp->buffer[1];
-+		ccp->firmware_ver[1] = ccp->buffer[2];
-+		ccp->firmware_ver[2] = ccp->buffer[3];
-+	}
-+
-+	ret = send_usb_cmd(ccp, CTL_GET_BL_VER, 0, 0, 0);
-+	if (ret) {
-+		hid_notice(ccp->hdev, "Failed to read bootloader version.\n");
-+	} else {
-+		ccp->bootloader_ver[0] = ccp->buffer[1];
-+		ccp->bootloader_ver[1] = ccp->buffer[2];
-+	}
-+}
-+
-+static int firmware_show(struct seq_file *seqf, void *unused)
-+{
-+	struct ccp_device *ccp = seqf->private;
-+
-+	seq_printf(seqf, "%d.%d.%d\n",
-+		   ccp->firmware_ver[0],
-+		   ccp->firmware_ver[1],
-+		   ccp->firmware_ver[2]);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(firmware);
-+
-+static int bootloader_show(struct seq_file *seqf, void *unused)
-+{
-+	struct ccp_device *ccp = seqf->private;
-+
-+	seq_printf(seqf, "%d.%d\n",
-+		   ccp->bootloader_ver[0],
-+		   ccp->bootloader_ver[1]);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(bootloader);
-+
-+static void ccp_debugfs_init(struct ccp_device *ccp)
-+{
-+	char name[32];
-+
-+	get_fw_version(ccp);
-+
-+	scnprintf(name, sizeof(name), "corsaircpro-%s", dev_name(&ccp->hdev->dev));
-+	ccp->debugfs = debugfs_create_dir(name, NULL);
-+	debugfs_create_file("firmware_version", 0444, ccp->debugfs, ccp, &firmware_fops);
-+	debugfs_create_file("bootloader_version", 0444, ccp->debugfs, ccp, &bootloader_fops);
-+}
-+
- static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
- {
- 	struct ccp_device *ccp;
-@@ -542,6 +609,9 @@ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 	ret = get_fan_cnct(ccp);
- 	if (ret)
- 		goto out_hw_close;
-+
-+	ccp_debugfs_init(ccp);
-+
- 	ccp->hwmon_dev = hwmon_device_register_with_info(&hdev->dev, "corsaircpro",
- 							 ccp, &ccp_chip_info, NULL);
- 	if (IS_ERR(ccp->hwmon_dev)) {
-@@ -562,6 +632,7 @@ static void ccp_remove(struct hid_device *hdev)
- {
- 	struct ccp_device *ccp = hid_get_drvdata(hdev);
- 
-+	debugfs_remove_recursive(ccp->debugfs);
- 	hwmon_device_unregister(ccp->hwmon_dev);
- 	hid_hw_close(hdev);
- 	hid_hw_stop(hdev);
+As a side note, I think, maybe you could do better in the future.
+
+If we know that the KMS display driver side has the HDMI connector
+already created for us, we should pass DRM_BRIDGE_ATTACH_NO_CONNECTOR
+from the root KMS driver side. Which is to forbidden all potential
+drm bridge drivers to create a connector in the middle.
+
+The KMS display driver side could parse the DT to know if there is
+a hdmi connector, or merely just hdmi connector device node, or
+something else.
+
+However, other maintainer and/or reviewer's opinion are of cause
+more valuable. I send a A-b because I thought the bug is urgency
+and it's probably more important to solve this bug first. And
+maybe you can Cc: <stable@vger.kernel.org> if you like.
+
+Thanks.
+
+>   		if (ret)
+>   			return ret;
+>   	}
+
 -- 
-2.45.0
+Best regards
+Sui Jingfeng
 
