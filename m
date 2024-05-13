@@ -1,289 +1,243 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454CA152525
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 10:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA6F1527A6;
+	Mon, 13 May 2024 10:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715596757; cv=none; b=rK9/EqYjaw7gLh8HqSpd0hsMXnbZh78dm6K8TjsKi2ptV8u/UfuLF1zqtChF0E9CkrBMd66ouxwbmbx90PWR54NtOO5CvMy/PBqKGJlxlxvr7XN8qU8MhOptt5EyESjvZlv/Mf6cDXbWsIwBRp3ZZRRmH+mS+bgW2/GARNc5TJA=
+	t=1715596761; cv=none; b=oEC/Az8/FUVubbUr9Et+obdX9J4g4DodazJvVcL4F72wc/ZrejnugbD2PeCxWu8L2Rl7LJx/9gmSI3qeF3fpWYOifYpmGgT77+yqN7YgPIA7Qg0yrNxTT4WIzDPNoJHTxN8Q8GrINuOxpuOXVoMV5zCzMNWoFOQVw4+QtgNVTb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715596757; c=relaxed/simple;
-	bh=bO77ZRGvWIEiIfC7TMwMEcW0RLLTSTMSPZNgoIU1nDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AxebfF6ymz9FP6iXXYPfW0lLOIoChWCsHkH/QtVcgw8jJ1Ip4vZOnL2ga0H/MzUb1lFmdLl4jOp5ZEh55NLKFR85KlMFdtvjcsyEJHQG1IIeWVOJ8/j6bYTs4hGOzkWtmyT1YawahjGdUVSG2u0PeCFSpiBLUQUyrvWhI2IgefE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hOxqNYRG; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715596761; c=relaxed/simple;
+	bh=IseBVxj7TxLQvtRm4JaluePpwuEWyzQwD7jXVspSW8Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=N4e9as4IJbCR+ER+B2UDHdecnaPNzWDK7OLCERgDr98c5xES073VokUrqLKUV1m/5gn8eHwP87DFAkP2fnQlB0vaOilFo/B7TizApLaW/DSq3hVMr7WLHovMzqsUtiJw+KNw3NWI9a1cIScp5J3Jt/KsqFoKn9fiFj37itoknGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GpbjqcSA; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hOxqNYRG"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7d9e70f388fso202337239f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 03:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715596754; x=1716201554; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=buebxfvhrKsxWwmHpN8HIqeIzqJ1dJvpRSV41poUdTw=;
-        b=hOxqNYRGSsHd+8FFhTIku1RhY9FhCGSRa0bPhuX07H2yzx0ybN6AvZqj4xjSskhP4h
-         8wdHeOAnb9ryI1saRG5rHj3h+H9ZGfGchb2P0hckXMwFzkDFFifivpgoDOTDUmuuXFR+
-         DUfkIflWS2TkjibMovVai8twPJzhm3ooGiBfQOsvccnrc4iPo6Rdqwt85i9x/tLyNKDi
-         vDeoltKJTcBqH+/NfvciEyQWxCD2nkEyT6Ip22QRZfgcvRcz4u3yfr01fmiAw8U4INTb
-         kFmvdjGA5DiZ5B/skVWYtRQu9ou25Tu0kmZbK1q++YW8IIemQgVOkQwSnwtMM0lJbwVo
-         RXPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715596754; x=1716201554;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=buebxfvhrKsxWwmHpN8HIqeIzqJ1dJvpRSV41poUdTw=;
-        b=Sul803UbXbzlcbPczvo4DK6ZwV9bLj8YhgVGFZFDLqqSxQUTGr9Ty2sZT+FmdppDrM
-         ClF5SstauTneGGmirXvuyPo2okTpatlLH5eqhUOxmjUDZpWt24DL3WfwdgsgHMSFZF6z
-         +VakgDuwnItUyDL1mO9t4NmPye5hzlSkyG8Ii5AzbPRR8U8DKBVYeV3ULQY3cX6cDk5C
-         Df7dpN7P7d7kZONpkKxxtnnWwTXG2Z+adQl/nlAbVaBdEmqiCoo0CrZz8zdH1JSXmwtW
-         o5fI5FwIwL6jJ3bb9SrCCvBtugFmE0Sx3g7mckWqyINB24je0slR8RibP/9i4gdTtNRf
-         np5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXphXqFWoZNPn2n1YzRViSa06sfypG26xAleqJOXrO4MgqBZJWONbuyCwBwPNnsJ6sB7hU12+Mjp69ESwNqgT/8mY2e1Pmz4N4wso/e
-X-Gm-Message-State: AOJu0YxR9lPIcnbbL0kQDhE5QbW9egb5qSdee9dZU1xyX90nY3cyH8dh
-	RzCO2CVXRN0OaHFxgrmHp0fhaW7Xv/Fq0fC4VaYu7n+j7xqo62HETNyvud5bSSybUKGLBxxpA7f
-	KM2fdxWMRCT1DK8sd9uEz86xU6Q2v80omszU1
-X-Google-Smtp-Source: AGHT+IGpxlYX8+VKGkmtPuAIMGxA5UAZbcx0MnAYFeFpA91msfpdz6rwOjVALAC61BpdL+rxCAb37kOiJezzIguf1p0=
-X-Received: by 2002:a5e:8e0b:0:b0:7de:e432:fd27 with SMTP id
- ca18e2360f4ac-7e1b5207a33mr1205090239f.13.1715596754196; Mon, 13 May 2024
- 03:39:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GpbjqcSA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715596760; x=1747132760;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=IseBVxj7TxLQvtRm4JaluePpwuEWyzQwD7jXVspSW8Q=;
+  b=GpbjqcSA1oTJUsYB8iT4CzSgZY2sDfnmf1+KOKIOvT3REZNcN6j1IzNs
+   aW+jZN5tGAYIDILdH7k+EG1bdcKKWuExv9vMEAMqwOZWg8AfCBG9XOMCA
+   qSav92A0Ngnp8O3jclGbml4J4HHR0ClM7whKUv1I3ZpXCCpsJxU8Z/UMz
+   qfzeHv7j051nHM02FuwY2HvAZeysPdyfY1zmjM6Q5EQJkTqSV5Drx/yNf
+   5F6oxa1B7B/RyZ7b18d6+dSZVXdIZMHI/O0zggAPFtjdms5NWm/rxbzGl
+   u4VFNs8jjO3XZ4drd5yeNcSbtGyAtA8+kLVB8Xay1S9NniHb+Tw+KvMgE
+   g==;
+X-CSE-ConnectionGUID: 1qTNattaSJiIwAyJLVdvAg==
+X-CSE-MsgGUID: KQYXtd9aRB6zObTqkp571A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="29039125"
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="29039125"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 03:39:18 -0700
+X-CSE-ConnectionGUID: La7vmDcuRxWg3TWG8mvhdg==
+X-CSE-MsgGUID: BjdCcZmkTfCuZkBZJA3emA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="61481793"
+Received: from inlubt0316.iind.intel.com ([10.191.20.213])
+  by fmviesa001.fm.intel.com with ESMTP; 13 May 2024 03:39:12 -0700
+From: lakshmi.sowjanya.d@intel.com
+To: tglx@linutronix.de,
+	jstultz@google.com,
+	giometti@enneenne.com,
+	corbet@lwn.net,
+	linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	andriy.shevchenko@linux.intel.com,
+	eddie.dong@intel.com,
+	christopher.s.hall@intel.com,
+	jesse.brandeburg@intel.com,
+	davem@davemloft.net,
+	alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com,
+	mcoquelin.stm32@gmail.com,
+	perex@perex.cz,
+	linux-sound@vger.kernel.org,
+	anthony.l.nguyen@intel.com,
+	peter.hilber@opensynergy.com,
+	pandith.n@intel.com,
+	subramanian.mohan@intel.com,
+	thejesh.reddy.t.r@intel.com,
+	lakshmi.sowjanya.d@intel.com
+Subject: [PATCH v8 09/12] timekeeping: Add function to convert realtime to base clock
+Date: Mon, 13 May 2024 16:08:10 +0530
+Message-Id: <20240513103813.5666-10-lakshmi.sowjanya.d@intel.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20240513103813.5666-1-lakshmi.sowjanya.d@intel.com>
+References: <20240513103813.5666-1-lakshmi.sowjanya.d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507155413.266057-1-panikiel@google.com> <20240507155413.266057-10-panikiel@google.com>
- <20240510212442.GA758313-robh@kernel.org>
-In-Reply-To: <20240510212442.GA758313-robh@kernel.org>
-From: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>
-Date: Mon, 13 May 2024 12:39:02 +0200
-Message-ID: <CAM5zL5qx06f7v-fEXRT1=dZ2s=Vo5eske2GrcMubf2ZuPFJ7mA@mail.gmail.com>
-Subject: Re: [PATCH v3 09/10] media: dt-bindings: Add Intel Displayport RX IP
-To: Rob Herring <robh@kernel.org>
-Cc: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
-	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
-	krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com, 
-	mchehab@kernel.org, mripard@kernel.org, tzimmermann@suse.de, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	chromeos-krk-upstreaming@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 10, 2024 at 11:24=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Tue, May 07, 2024 at 03:54:12PM +0000, Pawe=C5=82 Anikiel wrote:
-> > Add dt binding for the Intel Displayport receiver FPGA IP.
-> > It is a part of the DisplayPort Intel FPGA IP Core, and supports
-> > DisplayPort 1.4, HBR3 video capture and Multi-Stream Transport.
-> >
-> > The user guide can be found here:
-> > https://www.intel.com/programmable/technical-pdfs/683273.pdf
-> >
-> > Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
-> > ---
-> >  .../devicetree/bindings/media/intel,dprx.yaml | 172 ++++++++++++++++++
-> >  1 file changed, 172 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/intel,dprx.=
-yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/intel,dprx.yaml b/=
-Documentation/devicetree/bindings/media/intel,dprx.yaml
-> > new file mode 100644
-> > index 000000000000..01bed858f746
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/intel,dprx.yaml
-> > @@ -0,0 +1,172 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/intel,dprx.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Intel DisplayPort RX IP
-> > +
-> > +maintainers:
-> > +  - Pawe=C5=82 Anikiel <panikiel@google.com>
-> > +
-> > +description: |
-> > +  The Intel Displayport RX IP is a part of the DisplayPort Intel FPGA =
-IP
-> > +  Core. It implements a DisplayPort 1.4 receiver capable of HBR3 video
-> > +  capture and Multi-Stream Transport.
-> > +
-> > +  The IP features a large number of configuration parameters, found at=
-:
-> > +  https://www.intel.com/content/www/us/en/docs/programmable/683273/23-=
-3-20-0-1/sink-parameters.html
-> > +
-> > +  The following parameters have to be enabled:
-> > +    - Support DisplayPort sink
-> > +    - Enable GPU control
-> > +  The following parameters have to be set in the devicetree:
-> > +    - RX maximum link rate (using link-frequencies)
-> > +    - Maximum lane count (using data-lanes)
-> > +    - Support MST (using multi-stream-support)
-> > +    - Max stream count (inferred from the number of ports)
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: intel,dprx-20.0.1
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  ports:
-> > +    $ref: /schemas/graph.yaml#/properties/ports
-> > +
-> > +    properties:
-> > +      port@0:
-> > +        $ref: /schemas/graph.yaml#/$defs/port-base
-> > +        description: MST virtual channel 0 or SST main link
-> > +
-> > +        properties:
-> > +          endpoint:
-> > +            $ref: /schemas/media/video-interfaces.yaml#
-> > +
-> > +            properties:
-> > +              link-frequencies: true
-> > +
-> > +              data-lanes:
-> > +                minItems: 1
-> > +                maxItems: 4
-> > +
-> > +              multi-stream-support: true
-> > +
-> > +            required:
-> > +              - data-lanes
-> > +              - link-frequencies
-> > +
-> > +      port@1:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: MST virtual channel 0 or SST main link
->
-> How can port@0 also be "MST virtual channel 0 or SST main link"?
+From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 
-Sorry, I made a mistake. port@0 should be something like "Input port".
+PPS (Pulse Per Second) generates a hardware pulse every second based on
+CLOCK_REALTIME. This works fine when the pulse is generated in software
+from a hrtimer callback function.
 
->
-> > +
-> > +      port@2:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: MST virtual channel 1
-> > +
-> > +      port@3:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: MST virtual channel 2
-> > +
-> > +      port@4:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: MST virtual channel 3
-> > +
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    dp-receiver@c0062000 {
-> > +        compatible =3D "intel,dprx-20.0.1";
-> > +        reg =3D <0xc0062000 0x800>;
-> > +        interrupt-parent =3D <&dprx_mst_irq>;
-> > +        interrupts =3D <0 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +        ports {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            port@0 {
-> > +                reg =3D <0>;
-> > +                dprx_mst_in: endpoint {
-> > +                    remote-endpoint =3D <&dp_input_mst_0>;
-> > +                    data-lanes =3D <0 1 2 3>;
-> > +                    link-frequencies =3D /bits/ 64 <1620000000 2700000=
-000
-> > +                                                  5400000000 810000000=
-0>;
-> > +                    multi-stream-support;
-> > +                };
-> > +            };
-> > +
-> > +            port@1 {
-> > +                reg =3D <1>;
-> > +                dprx_mst_0: endpoint {
-> > +                    remote-endpoint =3D <&video_mst0_0>;
-> > +                };
-> > +            };
-> > +
-> > +            port@2 {
-> > +                reg =3D <2>;
-> > +                dprx_mst_1: endpoint {
-> > +                    remote-endpoint =3D <&video_mst1_0>;
-> > +                };
-> > +            };
-> > +
-> > +            port@3 {
-> > +                reg =3D <3>;
-> > +                dprx_mst_2: endpoint {
-> > +                    remote-endpoint =3D <&video_mst2_0>;
-> > +                };
-> > +            };
-> > +
-> > +            port@4 {
-> > +                reg =3D <4>;
-> > +                dprx_mst_3: endpoint {
-> > +                    remote-endpoint =3D <&video_mst3_0>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +  - |
-> > +    dp-receiver@c0064000 {
-> > +        compatible =3D "intel,dprx-20.0.1";
-> > +        reg =3D <0xc0064000 0x800>;
-> > +        interrupt-parent =3D <&dprx_sst_irq>;
-> > +        interrupts =3D <0 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +        ports {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            port@0 {
-> > +                reg =3D <0>;
-> > +                dprx_sst_in: endpoint {
-> > +                    remote-endpoint =3D <&dp_input_sst_0>;
-> > +                    data-lanes =3D <0 1 2 3>;
-> > +                    link-frequencies =3D /bits/ 64 <1620000000 2700000=
-000
-> > +                                                  5400000000 810000000=
-0>;
-> > +                };
-> > +            };
-> > +
-> > +            port@1 {
-> > +                reg =3D <1>;
-> > +                dprx_sst_0: endpoint {
-> > +                    remote-endpoint =3D <&video_sst_0>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > --
-> > 2.45.0.rc1.225.g2a3ae87e7f-goog
-> >
+For hardware which generates the pulse by programming a timer it's
+required to convert CLOCK_REALTIME to the underlying hardware clock.
+
+The X86 Timed IO device is based on the Always Running Timer (ART),
+which is the base clock of the TSC, which is usually the system
+clocksource on X86.
+
+The core code already has functionality to convert base clock timestamps
+to system clocksource timestamps, but there is no support for converting
+the other way around.
+
+Provide the required functionality to support such devices in a generic
+way to avoid code duplication in drivers:
+
+	1) ktime_real_to_base_clock() to convert a CLOCK_REALTIME
+	   timestamp to a base clock timestamp
+	2) timekeeping_clocksource_has_base() to allow drivers to
+	   validate that the system clocksource is based on a particular
+	   clocksource ID.
+
+Co-developed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Co-developed-by: Christopher S. Hall <christopher.s.hall@intel.com>
+Signed-off-by: Christopher S. Hall <christopher.s.hall@intel.com>
+Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+---
+ include/linux/timekeeping.h |  4 ++
+ kernel/time/timekeeping.c   | 86 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+
+diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+index b2ee182d891e..fc12a9ba2c88 100644
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -318,6 +318,10 @@ struct system_counterval_t {
+ 	bool			use_nsecs;
+ };
+ 
++extern bool ktime_real_to_base_clock(ktime_t treal,
++				     enum clocksource_ids base_id, u64 *cycles);
++extern bool timekeeping_clocksource_has_base(enum clocksource_ids id);
++
+ /*
+  * Get cross timestamp between system clock and device clock
+  */
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 92994450f268..326db459a2ea 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1229,6 +1229,64 @@ static bool convert_base_to_cs(struct system_counterval_t *scv)
+ 	return true;
+ }
+ 
++static bool convert_cs_to_base(u64 *cycles, enum clocksource_ids base_id)
++{
++	struct clocksource *cs = tk_core.timekeeper.tkr_mono.clock;
++	struct clocksource_base *base = cs->base;
++
++	/* Check whether base_id matches the base clock */
++	if (!base || base->id != base_id)
++		return false;
++
++	*cycles -= base->offset;
++	if (!convert_clock(cycles, base->denominator, base->numerator))
++		return false;
++	return true;
++}
++
++static bool convert_ns_to_cs(u64 *delta)
++{
++	struct tk_read_base *tkr = &tk_core.timekeeper.tkr_mono;
++
++	if (BITS_TO_BYTES(fls64(*delta) + tkr->shift) >= sizeof(*delta))
++		return false;
++
++	*delta = div_u64((*delta << tkr->shift) - tkr->xtime_nsec, tkr->mult);
++	return true;
++}
++
++/**
++ * ktime_real_to_base_clock() - Convert CLOCK_REALTIME timestamp to a base clock timestamp
++ * @treal:	CLOCK_REALTIME timestamp to convert
++ * @base_id:	base clocksource id
++ * @cycles:	pointer to store the converted base clock timestamp
++ *
++ * Converts a supplied, future realtime clock value to the corresponding base clock value.
++ *
++ * Return:  true if the conversion is successful, false otherwise.
++ */
++bool ktime_real_to_base_clock(ktime_t treal, enum clocksource_ids base_id, u64 *cycles)
++{
++	struct timekeeper *tk = &tk_core.timekeeper;
++	unsigned int seq;
++	u64 delta;
++
++	do {
++		seq = read_seqcount_begin(&tk_core.seq);
++		if ((u64)treal < tk->tkr_mono.base_real)
++			return false;
++		delta = (u64)treal - tk->tkr_mono.base_real;
++		if (!convert_ns_to_cs(&delta))
++			return false;
++		*cycles = tk->tkr_mono.cycle_last + delta;
++		if (!convert_cs_to_base(cycles, base_id))
++			return false;
++	} while (read_seqcount_retry(&tk_core.seq, seq));
++
++	return true;
++}
++EXPORT_SYMBOL_GPL(ktime_real_to_base_clock);
++
+ /**
+  * get_device_system_crosststamp - Synchronously capture system/device timestamp
+  * @get_time_fn:	Callback to get simultaneous device time and
+@@ -1340,6 +1398,34 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ }
+ EXPORT_SYMBOL_GPL(get_device_system_crosststamp);
+ 
++/**
++ * timekeeping_clocksource_has_base - Check whether the current clocksource
++ *     is based on given a base clock
++ * @id:		base clocksource ID
++ *
++ * Note:	The return value is a snapshot which can become invalid right
++ *		after the function returns.
++ *
++ * Return:	true if the timekeeper clocksource has a base clock with @id,
++ *		false otherwise
++ */
++bool timekeeping_clocksource_has_base(enum clocksource_ids id)
++{
++	unsigned int seq;
++	bool ret;
++
++	do {
++		seq = read_seqcount_begin(&tk_core.seq);
++		if (tk_core.timekeeper.tkr_mono.clock->base)
++			ret = (tk_core.timekeeper.tkr_mono.clock->base->id == id);
++		else
++			ret = false;
++	} while (read_seqcount_retry(&tk_core.seq, seq));
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(timekeeping_clocksource_has_base);
++
+ /**
+  * do_settimeofday64 - Sets the time of day.
+  * @ts:     pointer to the timespec64 variable containing the new time
+-- 
+2.35.3
+
