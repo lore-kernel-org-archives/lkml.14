@@ -1,148 +1,111 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172A814D2BF;
-	Mon, 13 May 2024 16:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8303139E
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715617790; cv=none; b=Fxh1T1ZI0rEr1wwTC7Dz53BbjdAPwJvgN/WUFrmIyyY8B+dU/Kdo/JfXZwfTSaxmWQcsf0o4IKTOnWSXiPVlt3Yh1YAb6iEzdN0UXip82LDH81qVEqm3CsdAaiapIHPxxw7pI5PP4wM+ZZwr0o/wYiGrl6Iq5Vujx6wew73By2w=
+	t=1715617832; cv=none; b=MXYwu7aMqVaZjmz2f/dB+SDFkysRLA0JznNqrFFZ6tRTyN/UectzJ2O26GYYiNduD94nhioArjMN46grINUvJcHihNEdZ2sSvcMx01en7yocjogreGtAwGFCMRxYs3NM54wrW4OYVH81JSLRdCJyuRyQFwRTFC4Sv1IsDr4w628=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715617790; c=relaxed/simple;
-	bh=P5p3YJgaSryQWCWTT7Yw2Cx0iDBf43rEw9xJhuxZSOQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LfmAw4G2LM0DhQRsGtJPOuZGbVvpc0Z6iGFEtGVdsAIowbAjX2OaASVA8WFNWXt/e28qYkiwqPtEWILj4TiAg5yQPJAtGNn9CaNIyyHezzb907+KtvW3P54sZ+RraONj7iALZx5dZUXf7Q2ZOBuvQNh0sfsRm/K3tHAj/jni4ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Z95o1QHt; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715617832; c=relaxed/simple;
+	bh=mqkpP5V4QVSA4anpQiHTHwlb/AKm98IPiclk2+ATzrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2ZOxHtwFYt9U6N0S4OFPk4Z6d4aPsvVicrfuNf9o5HV3qWM91dsj/AuLqdsWvqAJ6x//Mmv1h/l+l5uChP9waHpRmMwxAnHAriGmq+zWkUp0hCoi6S9NGXlPCWWkY2COhwlGyDfxUijhwJtMCPgDmCi59JYQoPGJZyjBm/PQ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZjckHrhJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Z95o1QHt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9CFD8C0006;
-	Mon, 13 May 2024 16:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715617784;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZjckHrhJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715617829;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rGyJ9+fBQ8mBfRdwi06YujJsGzmctZRxczZm1z9IHuM=;
-	b=Z95o1QHtJyY9muhfAuCZ77XJ226rG84KnkvCO51HCCcAH8QtwR8LrUwze8xucvkTSn3kr9
-	glKvgzCUnLPZHd+jsPt2KN46k2yEVoTojuspEdwubHLABSo3VwJ/yeWLyilLlQogCSHcFJ
-	3p2WqWYEPk84g3j0GXZk1Utpn/FplJW0lueaS3OpkaxQlfsmrMRnwpstio0hKOoR3NDZmq
-	S1BlxQLNyicprYr/JAOfNAlhs7ktuUOZVSFlZKgVbEjbhdq5+XMdRhfi0Bo2z8+E1VZHc0
-	QeBMLIDrSCHFobIiP9yjsvq2p/dKkIaASjakF0QWX8hcXi0BzWe8cxcWI6gjPg==
-From: Richard Genoud <richard.genoud@bootlin.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Esteban Blanc <eblanc@baylibre.com>,
-	linux-rtc@vger.kernel.org,
-	Lee Jones <lee@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Richard Genoud <richard.genoud@bootlin.com>
-Subject: [PATCH] rtc: tps6594: Add power management support
-Date: Mon, 13 May 2024 18:29:42 +0200
-Message-ID: <20240513162942.68484-1-richard.genoud@bootlin.com>
-X-Mailer: git-send-email 2.43.0
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v7uExH1cJ0oWpPOfrUmnPVpCEdXUh777q3puoMHm6fI=;
+	b=ZjckHrhJ3a/psZtPbH6gBKX0ZCg32aE4wUbnUrpDd/qBKpDu4X1z7wMjwPrdsoNWtzuLf2
+	JZjt1CzMfb8EqioBR0yCRJx/8LKDjsFmwaq9gMoOGBOESc4K5Yaj35jMMvIIvqgqhHoFHd
+	YKNxoKCfTUEHMRrcyS/JshMrZ2WT+ak=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-597-Q0iLV-uLPSO10HkIST7lFg-1; Mon,
+ 13 May 2024 12:25:28 -0400
+X-MC-Unique: Q0iLV-uLPSO10HkIST7lFg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9AFA1C05122;
+	Mon, 13 May 2024 16:25:27 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (unknown [10.39.193.86])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5563451BF;
+	Mon, 13 May 2024 16:25:22 +0000 (UTC)
+Date: Mon, 13 May 2024 12:25:19 -0400
+From: Phil Auld <pauld@redhat.com>
+To: Paul Sherwood <paul.sherwood@codethink.co.uk>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/deadline: Fix grammar and typos in comments
+Message-ID: <20240513162519.GC9998@lorien.usersys.redhat.com>
+References: <20240511082644.44757-1-paul.sherwood@codethink.co.uk>
+ <20240513135812.GA9998@lorien.usersys.redhat.com>
+ <ef7021835015a5bdd5bf5404ee712853@codethink.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: richard.genoud@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef7021835015a5bdd5bf5404ee712853@codethink.co.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Add power management support to the driver. This allows a SoC to wake
-from suspend using the nINT provided by the RTC.
-It takes care of the case when the interrupt has not been caught because
-the kernel has not yet woke up.
-(This is the case when only edges interrupt are caught)
+On Mon, May 13, 2024 at 04:19:10PM +0100 Paul Sherwood wrote:
+> On 2024-05-13 14:58, Phil Auld wrote:
+> > On Sat, May 11, 2024 at 09:26:44AM +0100 Paul Sherwood wrote:
+> > > - conjugate verb to match subject of sentence
+> > > - s/a entity/an entity/g
+> > > - s/this misbehave/this misbehaviour/
+> > > - a few typos
+> > > 
+> >   - not starting all the lines of a commit message with "-", priceless.
+> > 
+> > Plus, you're just repeating what's in the actual patch.
+> > 
+> > Otherwise, these changes themselves look good to me.
+> 
+> Thanks for the feedback - would you like me to re-submit without the
+> bullet-points, or without the text entirely?
+>
 
-Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
----
- drivers/rtc/rtc-tps6594.c   | 46 +++++++++++++++++++++++++++++++++++++
- include/linux/mfd/tps6594.h |  1 +
- 2 files changed, 47 insertions(+)
+Personally I'd rather a sentence or two saying something like
+"Fix some types and grammar issues in sched deadline comments."
+Or something.  I know that's basically same as the title, but
+that gets lost in the subject line, so maybe worded a little
+differently? For this it probably doesn't need much but does
+need something. 
 
-diff --git a/drivers/rtc/rtc-tps6594.c b/drivers/rtc/rtc-tps6594.c
-index 838ae8562a35..b769d120c624 100644
---- a/drivers/rtc/rtc-tps6594.c
-+++ b/drivers/rtc/rtc-tps6594.c
-@@ -415,6 +415,8 @@ static int tps6594_rtc_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return dev_err_probe(dev, irq, "Failed to get irq\n");
- 
-+	tps->irq_rtc = irq;
-+
- 	ret = devm_request_threaded_irq(dev, irq, NULL, tps6594_rtc_interrupt,
- 					IRQF_ONESHOT, TPS6594_IRQ_NAME_ALARM,
- 					dev);
-@@ -434,6 +436,49 @@ static int tps6594_rtc_probe(struct platform_device *pdev)
- 	return devm_rtc_register_device(rtc);
- }
- 
-+static int tps6594_rtc_resume(struct device *dev)
-+{
-+	struct tps6594 *tps = dev_get_drvdata(dev->parent);
-+	struct rtc_device *rtc_dev = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = regmap_test_bits(tps->regmap, TPS6594_REG_INT_STARTUP,
-+			       TPS6594_BIT_RTC_INT);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to read REG_INT_STARTUP: %d\n", ret);
-+		goto out;
-+	}
-+
-+	if (ret > 0) {
-+		/*
-+		 * If the alarm bit is set, it means that the IRQ has been
-+		 * fired. But, the kernel may not have woke up yet when it
-+		 * happened. So, we have to clear it.
-+		 */
-+		ret = regmap_write(tps->regmap, TPS6594_REG_RTC_STATUS,
-+				   TPS6594_BIT_ALARM);
-+		if (ret < 0)
-+			dev_err(dev, "error clearing alarm bit: %d", ret);
-+
-+		rtc_update_irq(rtc_dev, 1, RTC_IRQF | RTC_AF);
-+	}
-+out:
-+	disable_irq_wake(tps->irq_rtc);
-+
-+	return 0;
-+}
-+
-+static int tps6594_rtc_suspend(struct device *dev)
-+{
-+	struct tps6594 *tps = dev_get_drvdata(dev->parent);
-+
-+	enable_irq_wake(tps->irq_rtc);
-+
-+	return 0;
-+}
-+
-+SIMPLE_DEV_PM_OPS(tps6594_rtc_pm_ops, tps6594_rtc_suspend, tps6594_rtc_resume);
-+
- static const struct platform_device_id tps6594_rtc_id_table[] = {
- 	{ "tps6594-rtc", },
- 	{}
-@@ -444,6 +489,7 @@ static struct platform_driver tps6594_rtc_driver = {
- 	.probe		= tps6594_rtc_probe,
- 	.driver		= {
- 		.name	= "tps6594-rtc",
-+		.pm = pm_sleep_ptr(&tps6594_rtc_pm_ops),
- 	},
- 	.id_table = tps6594_rtc_id_table,
- };
-diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
-index 3f7c5e23cd4c..85933f1519c4 100644
---- a/include/linux/mfd/tps6594.h
-+++ b/include/linux/mfd/tps6594.h
-@@ -1011,6 +1011,7 @@ struct tps6594 {
- 	bool use_crc;
- 	struct regmap *regmap;
- 	int irq;
-+	int irq_rtc;
- 	struct regmap_irq_chip_data *irq_data;
- };
- 
+I'm not the one to merge it though so I don't know if the
+maintainer wanted to just fix it up at the time.   Just my
+opinion...
+
+
+For the changes themselves, fwiw,
+
+Reviewed-by: Phil Auld <pauld@redhat.com>
+
+
+
+Cheers,
+Phil
+
+> br
+> Paul
+> 
+
 -- 
-2.43.0
+ 
 
