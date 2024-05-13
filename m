@@ -1,143 +1,210 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms-10.1blu.de (ms-10.1blu.de [178.254.4.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57821155353
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFCB23CB;
+	Mon, 13 May 2024 16:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.4.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715617391; cv=none; b=H5HI2EiaYaCCWk8ylLHYeUkDOGsnJvMbHmDN6JE5HysMbVHdYvzpIGyPsmF8A0ZM7BlgFAj2JkVL6VQESlona/C+qXk3i4caV84BBq+NY+6xcn75fwM+z0EcdKh7UKQcjZc1B6or1RVGFWuTT3GgmcjPDfBt/sGrjj5PYgxoB1c=
+	t=1715617518; cv=none; b=CR5jupuagMyRc7EwMC/TDdCDaiB5uCHiOaAjWsv+VcXnFkiVPifdOxSA/6+lWCng8+RCngY75FrCenK1ZVTaCU4hzqE7fkrpMCgbADBOgrYpA5cL2JtgQgkLE2TnfN7F3bwngs/HxM+UCiyH1lF/P9IaeEZUnklGwaAFAH3eYVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715617391; c=relaxed/simple;
-	bh=1FpidKHpJ6tC6uWua0hdyTTUiPlb0a/PUWUSgSZ6jrA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Aef527b4OkaRYQOhlFvPGdTcW2GsgkjYUz/G6D6yKTaVlzSnwvw/hSUjxausBMPqe5yw8LWd0+tI1mD4KSeT37dizVwLBBgD4pAT97yw6/NpNiK9C8quchQNqwhJQWFAgTQsjLiFk/3uXt28tUbWib5tU48Q7o8tr2RZSfOGXVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OnqaZfKI; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnqaZfKI"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43dfe020675so830761cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715617389; x=1716222189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/fwn6UKi/1K0IWQMLBiFsBG9j5cvRpV6hNPVdi/9PdU=;
-        b=OnqaZfKIANEkjcrAuRT54/MUPnM95qMIMwJ+WoSxjgZTtKGaS6ZUeMBWPKv8jnL6l6
-         ZpVpm8lrBieXii+xIHSk6heqpWkI987e8ycp2PkKe+KjUXdELcoZBSpL7PQDsNzeN9T9
-         88neQzSprnH4GsAVf6C+sxIqHTivj5NnLa7tGZZiHZm9ymlvYwGI4OmkF/uXWD1NWpeZ
-         0HrZjfpRgE4VpboLlDa+ffNvanSJ9PrkhG1zN95DGFvZVkWUyHZ7lJ2uIW9lP91lETqx
-         gqYCLXRB3euuN+kcj6drVbcBI5y3Gnsj92fr8CDV6G8MQCSJj4siRJGNm9fvwVRYum+w
-         pI+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715617389; x=1716222189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/fwn6UKi/1K0IWQMLBiFsBG9j5cvRpV6hNPVdi/9PdU=;
-        b=QYALseXK3x4y7804FAe9MToUmmsMU2bqKxZHx327nOYLP3+SNRm6WsXJvpO8A7KJKT
-         JR+yAYaIg0aKT8+cYaKu9SatkTOLaTE2Dm8Wtk3mv7D34K5/CpYcBkADLdCkIo/ghfHZ
-         0SB3v5o7uAKWKvCRyNGTDAUiX/L/DjVNzkkbCKoALtLGochKXUflUYnBqWsw3HjJL7st
-         8SifzuXVrPumVwv2O/q+a6BnpfbH2W3SlxR/xYhr593X3jyLGd8DMnBkXv7xoHszG41f
-         WeTUGOe3fRoH3Y7KvkvxaRIwu2J7jhzb+9djVZCn77oMN8W6bg+EKXeeYNJM0Q2QqKN/
-         mkaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZr9cmAdSbQpUKadTs72WMehp33ZK67pYoMkklqruhXatqhIYbbd+qHz4s4lQA5KoV51mpAsuntikoe+eKVPPDPUvICMHLN1biJC1T
-X-Gm-Message-State: AOJu0YwKaDmFPqmuAuAC4H6SYdNprQeuXEC8IAkcRfnD2VjXdjxvIA6K
-	D89zqhHI0FSBUyZxJ/0EmgTiOvqdcFaQde+bMv5q4MU+ZVtOQ/1sBrNgih3/r/0HV4naYAACEXG
-	KuGJYSyOhE+10zdepi+2Z0am4CKoscWe2klbs
-X-Google-Smtp-Source: AGHT+IEN5gURnV/spOfCC6PRenvXXEfQixh++GvGxjfsy+XKRnlD1SHqctpBlOj0YTB0sRTHYkX2gGyvIHvTuKiSc2k=
-X-Received: by 2002:a05:622a:98f:b0:43c:554e:b81 with SMTP id
- d75a77b69052e-43e0a28c3c5mr5057731cf.23.1715617389221; Mon, 13 May 2024
- 09:23:09 -0700 (PDT)
+	s=arc-20240116; t=1715617518; c=relaxed/simple;
+	bh=onmSAyOiUFMGRMabu5p+825ul4TqokXJE2w92iqKJ1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tx7Qc2fcCuCmhD7UdcALJNY2nRI8BjwZLSvfRaj52vHDdLogZOcBKrALxnxP7fgqKLaUUHiEwwdv/I4xmyLPQhoAwhtsP8FFIL1JDBDC7adlHb5f67XInwbWu5BpP9rb4dISaidBQjZKjG+5OkltjTcX2Z/3svNyYuQW7nBUVeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de; spf=pass smtp.mailfrom=mariuszachmann.de; arc=none smtp.client-ip=178.254.4.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mariuszachmann.de
+Received: from [2.211.228.80] (helo=marius.fritz.box)
+	by ms-10.1blu.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <mail@mariuszachmann.de>)
+	id 1s6YU7-004ry5-Rq;
+	Mon, 13 May 2024 18:25:07 +0200
+From: Marius Zachmann <mail@mariuszachmann.de>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Marius Zachmann <mail@mariuszachmann.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] hwmon: (corsair-cpro) Add firmware and bootloader information
+Date: Mon, 13 May 2024 18:23:29 +0200
+Message-ID: <20240513162328.17636-3-mail@mariuszachmann.de>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502213507.2339733-1-irogers@google.com> <20240502213507.2339733-3-irogers@google.com>
- <fe41f9a7-5726-49d5-9bc6-70102d9680a1@infradead.org>
-In-Reply-To: <fe41f9a7-5726-49d5-9bc6-70102d9680a1@infradead.org>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 May 2024 09:22:57 -0700
-Message-ID: <CAP-5=fWHrX5AgH8=62f3=a-SSqUACXX1rkDZJ-WV1RcNieeHFA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] perf Document: Sysfs event names must be lower or
- upper case
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Con-Id: 241080
+X-Con-U: 0-mail
 
-On Sun, May 12, 2024 at 3:08=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
-> Hi,
->
-> On 5/2/24 2:35 PM, Ian Rogers wrote:
-> > To avoid directory scans in perf it is going to be assumed that sysfs
-> > event names are either lower or upper case.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > ---
-> >  .../ABI/testing/sysfs-bus-event_source-devices-events       | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-e=
-vents b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-> > index 77de58d03822..e7efeab2ee83 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-> > +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-events
-> > @@ -37,6 +37,12 @@ Description:       Per-pmu performance monitoring ev=
-ents specific to the running syste
-> >               performance monitoring event supported by the <pmu>. The =
-name
-> >               of the file is the name of the event.
-> >
-> > +             As performance monitoring event names are case
-> > +             insensitive in the perf tool, the perf tool only looks
-> > +             for lower or upper case event names in sysfs to avoid
-> > +             scanning the directory. It is therefore required the
-> > +             name of the event here is either lower or upper case.
-> > +
->
-> This is ambiguous to me. Is it clear to everyone else?
->
-> "for lower or upper case event names":
->
-> Is that a logical OR or an exclusive OR?
-> "AbC" contains lower case or upper case characters. :)
->
-> I think the code [static bool permitted_event_name()]
-> implements an exclusive OR.
-> The code also allows event names to contain numbers AFAICT.
-> The documentation doesn't mention this.
->
-> HTH.
->
-> >               File contents:
-> >
-> >                       <term>[=3D<value>][,<term>[=3D<value>]]...
+Add support for reporting firmware and bootloader version using debugfs.
+Update documentation accordingly.
 
-Sorry, this reads like a troll. Assuming good intentions, could you
-propose a fix in the form of a patch? When a word is made upper or
-lower case I believe it is generally assumed the operation applies to
-all characters within the word, but I'm happy to see ambiguity cleared
-up.
+Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+---
+Changes in v3:
+- use different debugfs directory name for each device
 
-Thanks,
-Ian
+Changes in v2:
+- better patch description
+- Documentation uses "Firmware version" and "Bootloader version"
+- removed conditional CONFIG_DEBUG_FS
+- get_fw_version gets called from ccp_debugfs_init
+- get_fw_version does print a hid_notice when an error occurs
+  instead of failing.
+---
+ Documentation/hwmon/corsair-cpro.rst |  8 ++++
+ drivers/hwmon/corsair-cpro.c         | 71 ++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
 
-> --
-> #Randy
-> https://people.kernel.org/tglx/notes-about-netiquette
-> https://subspace.kernel.org/etiquette.html
+diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
+index 751f95476b57..15077203a2f8 100644
+--- a/Documentation/hwmon/corsair-cpro.rst
++++ b/Documentation/hwmon/corsair-cpro.rst
+@@ -39,3 +39,11 @@ fan[1-6]_target		Sets fan speed target rpm.
+ pwm[1-6]		Sets the fan speed. Values from 0-255. Can only be read if pwm
+ 			was set directly.
+ ======================= =====================================================================
++
++Debugfs entries
++---------------
++
++======================= ===================
++firmware_version	Firmware version
++bootloader_version	Bootloader version
++======================= ===================
+diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+index 3e63666a61bd..f7d321d8676e 100644
+--- a/drivers/hwmon/corsair-cpro.c
++++ b/drivers/hwmon/corsair-cpro.c
+@@ -10,11 +10,13 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/completion.h>
++#include <linux/debugfs.h>
+ #include <linux/hid.h>
+ #include <linux/hwmon.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+@@ -28,6 +30,8 @@
+ #define LABEL_LENGTH		11
+ #define REQ_TIMEOUT		300
+ 
++#define CTL_GET_FW_VER		0x02	/* returns the firmware version in bytes 1-3 */
++#define CTL_GET_BL_VER		0x06	/* returns the bootloader version in bytes 1-2 */
+ #define CTL_GET_TMP_CNCT	0x10	/*
+ 					 * returns in bytes 1-4 for each temp sensor:
+ 					 * 0 not connected
+@@ -78,6 +82,7 @@
+ struct ccp_device {
+ 	struct hid_device *hdev;
+ 	struct device *hwmon_dev;
++	struct dentry *debugfs;
+ 	/* For reinitializing the completion below */
+ 	spinlock_t wait_input_report_lock;
+ 	struct completion wait_input_report;
+@@ -88,6 +93,8 @@ struct ccp_device {
+ 	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
+ 	DECLARE_BITMAP(fan_cnct, NUM_FANS);
+ 	char fan_label[6][LABEL_LENGTH];
++	u8 firmware_ver[3];
++	u8 bootloader_ver[2];
+ };
+ 
+ /* converts response error in buffer to errno */
+@@ -496,6 +503,66 @@ static int get_temp_cnct(struct ccp_device *ccp)
+ 	return 0;
+ }
+ 
++/* read firmware and bootloader version */
++static void get_fw_version(struct ccp_device *ccp)
++{
++	int ret;
++
++	ret = send_usb_cmd(ccp, CTL_GET_FW_VER, 0, 0, 0);
++	if (ret) {
++		hid_notice(ccp->hdev, "Failed to read firmware version.\n");
++	} else {
++		ccp->firmware_ver[0] = ccp->buffer[1];
++		ccp->firmware_ver[1] = ccp->buffer[2];
++		ccp->firmware_ver[2] = ccp->buffer[3];
++	}
++
++	ret = send_usb_cmd(ccp, CTL_GET_BL_VER, 0, 0, 0);
++	if (ret) {
++		hid_notice(ccp->hdev, "Failed to read bootloader version.\n");
++	} else {
++		ccp->bootloader_ver[0] = ccp->buffer[1];
++		ccp->bootloader_ver[1] = ccp->buffer[2];
++	}
++}
++
++static int firmware_show(struct seq_file *seqf, void *unused)
++{
++	struct ccp_device *ccp = seqf->private;
++
++	seq_printf(seqf, "%d.%d.%d\n",
++		   ccp->firmware_ver[0],
++		   ccp->firmware_ver[1],
++		   ccp->firmware_ver[2]);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(firmware);
++
++static int bootloader_show(struct seq_file *seqf, void *unused)
++{
++	struct ccp_device *ccp = seqf->private;
++
++	seq_printf(seqf, "%d.%d\n",
++		   ccp->bootloader_ver[0],
++		   ccp->bootloader_ver[1]);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(bootloader);
++
++static void ccp_debugfs_init(struct ccp_device *ccp)
++{
++	char name[32];
++
++	get_fw_version(ccp);
++
++	scnprintf(name, sizeof(name), "corsaircpro-%s", dev_name(&ccp->hdev->dev));
++	ccp->debugfs = debugfs_create_dir(name, NULL);
++	debugfs_create_file("firmware_version", 0444, ccp->debugfs, ccp, &firmware_fops);
++	debugfs_create_file("bootloader_version", 0444, ccp->debugfs, ccp, &bootloader_fops);
++}
++
+ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ {
+ 	struct ccp_device *ccp;
+@@ -542,6 +609,9 @@ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	ret = get_fan_cnct(ccp);
+ 	if (ret)
+ 		goto out_hw_close;
++
++	ccp_debugfs_init(ccp);
++
+ 	ccp->hwmon_dev = hwmon_device_register_with_info(&hdev->dev, "corsaircpro",
+ 							 ccp, &ccp_chip_info, NULL);
+ 	if (IS_ERR(ccp->hwmon_dev)) {
+@@ -562,6 +632,7 @@ static void ccp_remove(struct hid_device *hdev)
+ {
+ 	struct ccp_device *ccp = hid_get_drvdata(hdev);
+ 
++	debugfs_remove_recursive(ccp->debugfs);
+ 	hwmon_device_unregister(ccp->hwmon_dev);
+ 	hid_hw_close(hdev);
+ 	hid_hw_stop(hdev);
+-- 
+2.45.0
+
