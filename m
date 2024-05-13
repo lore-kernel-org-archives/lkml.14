@@ -1,107 +1,96 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D98D77F0B
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 19:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6D239FD8
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 19:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715629107; cv=none; b=AJQ0JrYKGJUyOlTWZEORPAHJVESHSwuYq4XKXgG0DqWVBdDDvAkLe2LHEceyoKS6ZaxPYNvd10fnV2+K0iBE0K8AN+ebmYwcaokHz6jF6J8+SFV+QpTMPSwLGih3ubvtS9FTstwLc+xPa/Sl+ftRNplhtpXf2d1CA0htdp5bNgA=
+	t=1715629249; cv=none; b=UazzRmTvUmjeHlbzD6TLBDgBjCiDYlnVp8GMHIht5fW2PveQ36htgNir0kuOrO2bQDR83qGk63QENZVXWOHjlL7f7qDKDCQr8hgHYARuXLoydoP/3CFoXhSzLEPtr7AywYZlY4LJzU0W9/H98tzya8/YPeRm5DvigwDyTGVylVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715629107; c=relaxed/simple;
-	bh=/yN0feXJSgkJ8KshAnEoW7muezpViHKCPQVfFwelGy0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=FLtL7G8qhsFV/htv/iUu5EbcO85Cn5/EG2bc/8WL45ityMnztci6/kXCKjBK61JLV8cVEh46+5+ndp88iTKqqvfIwBQkn1SZjpxo70CCo/ycrwM/CGRFB7vq8Qd0N0HQbVYn2vnq9Vxk0CBEMqxq+hEB+orjPkh8BJs2ESBqz5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kezNOi9u; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715629249; c=relaxed/simple;
+	bh=//NGOHTIP6HghHGerT7/lK4Uz6RPwCBltXnXUwVGkvM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PcuwHcSwnDhrR2gKqdQuJhxz41H+KP2tx/wwEMWgbqALz6RJBWkqNLnxFo+A+dfv1gsvM8iN2W8CStkzqy/cR2Jwo8nN0jUN7pXvBvLFNICATIi7s6h9SCubX6jvba+dIUNN2RGHDfCjMELUdBe6M2w7voBz5k84eNBgFWeuT1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X2/HHKJh; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kezNOi9u"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44DJ8WJk003283;
-	Mon, 13 May 2024 19:38:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=vgkF7qcOVafQ40ar+TMVWPZrx+hHUDzCAOxXY5A0EMc
-	=; b=kezNOi9upnMXGWtFnQkxxOqxB5UXJikXvqFRvJuadAzB7Q5AXQw3ryxP/dT
-	Rbr5UjjdZo7+eMupRMw3bm8XZNveaJHNGrBO1cKKftZDak/jiLVYX0Y8ps3LIgGp
-	JroztYVDTjo2ZvFFBr0NbOQTCJWFPkDM70MQBMXiSMQRTvO73zAenOUecCjeNwNU
-	pYHU78FBBeQQ3ye5wCYJGcudiFqxkjDsLD0QcHNICOHg3trGiD6s7gZNHMWTfUhO
-	F85kWFb2nwLVJqMUjCFRYWDWzCqqgU5ssXfcT8vmODxTOPxRw+uN5hzGvp+m+P3a
-	VHk8X1+9wwq3L8wmsqS5KhRPftg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y3j28h14x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 19:38:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44DJc3NK004093
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 19:38:05 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 13 May
- 2024 12:38:02 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 13 May 2024 12:37:39 -0700
-Subject: [PATCH 2/4] mm/dmapool: add MODULE_DESCRIPTION()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X2/HHKJh"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61bea0c36bbso95296617b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715629247; x=1716234047; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oVao59+8SWn5R7wq1a2EyacHCsnmokQY3DXiYJQLN0I=;
+        b=X2/HHKJh35SGbbfoCeEwrVgbdwXvMBSLfp0FDriUHjM33U+VBxcfE6aMi2QLaBCYk6
+         vqD6MIixzDIe9vqYGlrY4bNC8eDBcRtYr/pQwOq3pgW+pUsd8tBXqLRwhdfn7AF+uW8x
+         k7Qm75uQHgLcwCI/RiIy0MhufQUyUaY6NtlaflBU7Z8wmKOKSUUr795y5z9IuejnyS4o
+         vZsx9HDhwxl3z+lWVrJOlD3AHpBhup07by/z2/KwAF1aFaaYxbxt8NqcDvUivJuDrT/0
+         NmVPvAIuH4/RLJvhXkpR3fGMjHqnBjGilIFGo+2Iv+abbAyQHnGljcHON9N3TjdWzz38
+         GwHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715629247; x=1716234047;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oVao59+8SWn5R7wq1a2EyacHCsnmokQY3DXiYJQLN0I=;
+        b=UQzbNB+RLYq/sCy6oBbDVWGIt+w0eTtgOxtqr3KRRDbLXUiiWNAmfNAT6o6OpR9E+w
+         Qvx5nXRW3yl75X/hh+pXJ1ZxZb5R6sK9FlRBYzTC9C2Vu8ccnNkLiYMQpdShFTH7dpzp
+         Q+ZPkYfDvZEEqzLylLTAQzZW1iX6M97TqkMX9ECRgFRQtPemupo/7L2uic4CjSvNALBT
+         PuGCCGSYr176A98xYOFDH9CvqtMrgI3TItJHuVi3nYHHdCadR4W7a5XmtIwGxOGAXoDL
+         J1D0h3t18T7U0loCjoAn1OV56BgBQygJVcE2ejtVu1N8kDuXhFDf0Coyini4MLHHwFAq
+         v1Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCU47qZwr867SeDi/aOjZu6SiATGXQECRajwq2D73PJp9v6Kkg2Qsux3HFjk1mt+a76VyVFjeohCsLS1SjV29iYedLexoOD/5IjvS+JS
+X-Gm-Message-State: AOJu0YwtN1xnGktbMJnUPI578T5+vGuHAb2NcRVD0GNbdb+UnE06rgIg
+	xKPTLm2O+fBSRu/vDLzUSh+guKHKbW17SX2tvcetN0eXel7ObRuMspjOv212bByo2nHCrCXNi9S
+	HTQ==
+X-Google-Smtp-Source: AGHT+IHQJ6MAKEsQp7Jyujf1L79g5X9IUEtHDXgP8rtrY9IbuHK5YWHJ/ubuIU33ww2PXq/pEwLP75RZH3k=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:120f:b0:dcb:e982:4e40 with SMTP id
+ 3f1490d57ef6-dee4f38b7cbmr3058891276.12.1715629247216; Mon, 13 May 2024
+ 12:40:47 -0700 (PDT)
+Date: Mon, 13 May 2024 12:40:45 -0700
+In-Reply-To: <20240511020557.1198200-1-leobras@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240513-mm-md-v1-2-8c20e7d26842@quicinc.com>
-References: <20240513-mm-md-v1-0-8c20e7d26842@quicinc.com>
-In-Reply-To: <20240513-mm-md-v1-0-8c20e7d26842@quicinc.com>
-To: Miaohe Lin <linmiaohe@huawei.com>,
-        Naoya Horiguchi
-	<nao.horiguchi@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        "Sergey
- Senozhatsky" <senozhatsky@chromium.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <kasan-dev@googlegroups.com>, Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: IT9Nqciwh67l9pF9BwbpT2_gGImHBq_K
-X-Proofpoint-GUID: IT9Nqciwh67l9pF9BwbpT2_gGImHBq_K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-13_14,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- impostorscore=0 malwarescore=0 phishscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=872
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405130131
+Mime-Version: 1.0
+References: <20240511020557.1198200-1-leobras@redhat.com>
+Message-ID: <ZkJsvTH3Nye-TGVa@google.com>
+Subject: Re: [RFC PATCH 1/1] kvm: Note an RCU quiescent state on guest exit
+From: Sean Christopherson <seanjc@google.com>
+To: Leonardo Bras <leobras@redhat.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Fix the 'make W=1' warning:
+On Fri, May 10, 2024, Leonardo Bras wrote:
+> As of today, KVM notes a quiescent state only in guest entry, which is good
+> as it avoids the guest being interrupted for current RCU operations.
+> 
+> While the guest vcpu runs, it can be interrupted by a timer IRQ that will
+> check for any RCU operations waiting for this CPU. In case there are any of
+> such, it invokes rcu_core() in order to sched-out the current thread and
+> note a quiescent state.
+> 
+> This occasional schedule work will introduce tens of microsseconds of
+> latency, which is really bad for vcpus running latency-sensitive
+> applications, such as real-time workloads.
+> 
+> So, note a quiescent state in guest exit, so the interrupted guests is able
+> to deal with any pending RCU operations before being required to invoke
+> rcu_core(), and thus avoid the overhead of related scheduler work.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in mm/dmapool_test.o
+Are there any downsides to this?  E.g. extra latency or anything?  KVM will note
+a context switch on the next VM-Enter, so even if there is extra latency or
+something, KVM will eventually take the hit in the common case no matter what.
+But I know some setups are sensitive to handling select VM-Exits as soon as possible.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- mm/dmapool_test.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/dmapool_test.c b/mm/dmapool_test.c
-index 370fb9e209ef..54b1fd1ccfbb 100644
---- a/mm/dmapool_test.c
-+++ b/mm/dmapool_test.c
-@@ -144,4 +144,5 @@ static void dmapool_exit(void)
- 
- module_init(dmapool_checks);
- module_exit(dmapool_exit);
-+MODULE_DESCRIPTION("dma_pool timing test");
- MODULE_LICENSE("GPL");
-
--- 
-2.42.0
-
+I ask mainly because it seems like a no brainer to me to have both VM-Entry and
+VM-Exit note the context switch, which begs the question of why KVM isn't already
+doing that.  I assume it was just oversight when commit 126a6a542446 ("kvm,rcu,nohz:
+use RCU extended quiescent state when running KVM guest") handled the VM-Entry
+case?
