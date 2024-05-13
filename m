@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E28514659C;
-	Mon, 13 May 2024 06:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE1D14659C;
+	Mon, 13 May 2024 06:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715581745; cv=none; b=bsqV5nZVdriO2xW2+ysVn/80Nn37IK72W1/p6t0bzOlG8qgvYw3EaVTplcmKvyM6dFUvINd2MNrDuQgoAgQ1RVLZhWpn3FsZWYZ6Kxbe1TMv0WWbR2/pA20lz1m3eRLO/A2ePOdH+gYBjof2/qY+UxcyWm9PjTtEJJahBp5i5HY=
+	t=1715581762; cv=none; b=SPxcxyM6QB7BbuJsnFTbjzgq0A/6QdWRZhjisSQlH0YWnYHLuiXSgsekhStscDS/oenMC0NJ16wdI18+fBVrygf049wibrDA8LyKzfDyQQyxYS/Nyqt4lbZDH/BlfwlKMTE0zEeEOuNhtVpWwOTlEMgQcLy7o09P1Cku56TGr3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715581745; c=relaxed/simple;
-	bh=xeOMy3Lk1CjvWUsSxodspku39JSy9Brg2h2hu0ybUfI=;
+	s=arc-20240116; t=1715581762; c=relaxed/simple;
+	bh=K7+q6mEcm0MecmJSlBCIXqsx3wgnaExLsqGzVizM7Xo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qY1YqtmIEFxSSdi/7t12Y3gIaP8VO4iZP26ooAmqv/ktsccw8t2b19iX4BCY+d2lU8/GcHUEJF9+2UPHbvaKZQb7saveoOsy6vmKqpr7X77CdDpZa4J298WFGcQs10SdQKgkBItHmjEeuSFLQJ1ptPpjdPlm4dWhcUUasWkMVXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lwB/kgMz; arc=none smtp.client-ip=198.175.65.9
+	 In-Reply-To:Content-Type; b=itQUZ52xL4wLXKcH8Xft1dypKEi0u1OAarb4YkwzQx2FgUDeD3vF2a8tyz4UKkh8vtdZAAEVWCuk8H5qam3C123rj/lYJfVNEdMEEcHjtwk8dn+K95zHN5bsyYmcizjjHb/+atu7jGTTiVUYW3TV+mN9H+O/z7Qc22x/NwRs1qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnUOUzo2; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lwB/kgMz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnUOUzo2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715581744; x=1747117744;
+  t=1715581760; x=1747117760;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=xeOMy3Lk1CjvWUsSxodspku39JSy9Brg2h2hu0ybUfI=;
-  b=lwB/kgMzgJi37ofEe+cKAbmXszzQGNDZZg0EWad4E46Ol55ewm/geW52
-   LQQrrNR/Hnsxh4zcKL6MD8AQC8NIyL4cPIvGTvz5UAIM2SE+7/xJ8QZda
-   nuM9J6yt2ZBBww4xH6hrLMrt2SM7NUzJTWNMIdkQhbQXLAsXmSPq7jw4p
-   fKpogw26hxmG6adK2LIkn4wZF6daCxb573eO7qdQIhbshjP5uiEViOWKj
-   mdJViaGG2yuWxALhgBQBd+CP2bpPwgz+E3jT3OYnWsjL2m/7Le9jCOfbK
-   ZRTJXjdap0qtnoeH1cmPOTD0YKK5yttsbdW5Nwi4QUnCqDvW5Y6UWVpNh
+  bh=K7+q6mEcm0MecmJSlBCIXqsx3wgnaExLsqGzVizM7Xo=;
+  b=hnUOUzo2x4jMNABw42639RXHQAgDkiKsB/hgWlmRajPuHEOhtxjRETdb
+   6E8Q/HJfcZTIdrvptcde8QYL3dUm33x15waVQ0vpXUiLx1Fgd3yQrUuAY
+   QmDHtTQ5E7I0wYdmaOt40t49daw1OGBtIfqbD89LniDW44OODLNzvs/rH
+   k7asF4d8enWHehJw24RV5fps3Vaq1o20ER2r8FVm+1DRj9ruOhmyM5wY9
+   L1MOfguspv8W571cldqIoGAHf8+zh38BBwgfWNEnlJHflqEmUdcHGIOpm
+   GoDTQwIqJYdTYq93IsDSoMc+4HBssr7HH9XbRPwkZdpAvnxOhqITXVSDR
    A==;
-X-CSE-ConnectionGUID: U28JzG8yTZ+gziqkGAmahg==
-X-CSE-MsgGUID: H9ZJ01vcQpaWcpTeWZf1Og==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="34010183"
+X-CSE-ConnectionGUID: qaXgFiLhTBSut6dXHmBifw==
+X-CSE-MsgGUID: 5g9tkjAqQT2ZvwizQvkQUA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11655697"
 X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="34010183"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 23:28:32 -0700
-X-CSE-ConnectionGUID: PqRm72rRT/+QvRZBB9FihQ==
-X-CSE-MsgGUID: w4e0SKj8QougWlTr10Y+FA==
+   d="scan'208";a="11655697"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 23:29:19 -0700
+X-CSE-ConnectionGUID: iqHQaP97SoWQmYvu0WAhNQ==
+X-CSE-MsgGUID: 2F7NualDTfS34ToEW564sw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="30798384"
+   d="scan'208";a="30317533"
 Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.243.198]) ([10.125.243.198])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 23:28:24 -0700
-Message-ID: <4262412d-5e70-41ad-841f-f92aaa931a7d@intel.com>
-Date: Mon, 13 May 2024 14:28:22 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 23:29:18 -0700
+Message-ID: <e9b58170-8746-42b9-a4a5-413736d47a7d@intel.com>
+Date: Mon, 13 May 2024 14:29:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,43 +52,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/17] KVM: x86/mmu: Handle no-slot faults at the
- beginning of kvm_faultin_pfn()
+Subject: Re: [PATCH 16/17] KVM: x86/mmu: Initialize kvm_page_fault's pfn and
+ hva to error values
 To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
  kvm@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>,
- David Matlack <dmatlack@google.com>, Kai Huang <kai.huang@intel.com>
+Cc: Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>
 References: <20240507155817.3951344-1-pbonzini@redhat.com>
- <20240507155817.3951344-15-pbonzini@redhat.com>
+ <20240507155817.3951344-17-pbonzini@redhat.com>
 Content-Language: en-US
 From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20240507155817.3951344-15-pbonzini@redhat.com>
+In-Reply-To: <20240507155817.3951344-17-pbonzini@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 5/7/2024 11:58 PM, Paolo Bonzini wrote:
 > From: Sean Christopherson <seanjc@google.com>
 > 
-> Handle the "no memslot" case at the beginning of kvm_faultin_pfn(), just
-> after the private versus shared check, so that there's no need to
-> repeatedly query whether or not a slot exists.  This also makes it more
-> obvious that, except for private vs. shared attributes, the process of
-> faulting in a pfn simply doesn't apply to gfns without a slot.
+> Explicitly set "pfn" and "hva" to error values in kvm_mmu_do_page_fault()
+> to harden KVM against using "uninitialized" values.  In quotes because the
+> fields are actually zero-initialized, and zero is a legal value for both
+> page frame numbers and virtual addresses.  E.g. failure to set "pfn" prior
+> to creating an SPTE could result in KVM pointing at physical address '0',
+> which is far less desirable than KVM generating a SPTE with reserved PA
+> bits set and thus effectively killing the VM.
 > 
-> Opportunistically stuff @fault's metadata in kvm_handle_noslot_fault() so
-> that it doesn't need to be duplicated in all paths that invoke
-> kvm_handle_noslot_fault(), and to minimize the probability of not stuffing
-> the right fields.
-> 
-> Leave the existing handle behind, but convert it to a WARN, to guard
-> against __kvm_faultin_pfn() unexpectedly nullifying fault->slot.
-> 
-> Cc: David Matlack <dmatlack@google.com>
 > Signed-off-by: Sean Christopherson <seanjc@google.com>
 > Reviewed-by: Kai Huang <kai.huang@intel.com>
-> Message-ID: <20240228024147.41573-14-seanjc@google.com>
+> Message-ID: <20240228024147.41573-16-seanjc@google.com>
 > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
 Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 
+> ---
+>   arch/x86/kvm/mmu/mmu_internal.h | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+> index dfd9ff383663..ce2fcd19ba6b 100644
+> --- a/arch/x86/kvm/mmu/mmu_internal.h
+> +++ b/arch/x86/kvm/mmu/mmu_internal.h
+> @@ -307,6 +307,9 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>   		.req_level = PG_LEVEL_4K,
+>   		.goal_level = PG_LEVEL_4K,
+>   		.is_private = err & PFERR_PRIVATE_ACCESS,
+> +
+> +		.pfn = KVM_PFN_ERR_FAULT,
+> +		.hva = KVM_HVA_ERR_BAD,
+>   	};
+>   	int r;
+>   
 
