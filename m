@@ -1,128 +1,119 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759E640849;
-	Mon, 13 May 2024 18:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597081C6A4
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 18:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715625881; cv=none; b=VbR+/GYF0cDqEk2hArXK/hFEFd71qycf9sfX/t53YZqr+iIaYR1dhWs5fKdMpKyBxxuutCTOwJ+yDXxJ5WrCxw3qM2QPUvc3Cse9XRhZIysttS0ADDw7WxIrVA3+zSLdalYpet0YSorrxBDByr/51giWe3BMvyWZ3Ngz3aKEE2A=
+	t=1715626014; cv=none; b=bTRUw6d4oCY2JkJGsSCT0pgpYHIzOA3WSF4PwtpIHQavufKDzZsXhqP65uvF9l0PhrzXngnJtO6IYgaPDWXaFc6H2W/TZOpci74iJikMtIE10CnJgWJgpSZQgmJ46opd9v4PRjvZGX3OLGLT16hiGFyh9k3Rxqc4ozpXxN9zD2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715625881; c=relaxed/simple;
-	bh=V+isaCSZhCjRM6q/lNr4SqvHnAMAfUr4V2ylici215w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BSMD2pjONzrSNSiZu3XTM+7E6eeEW4SsjfVkuzI/pCrkcSsMO+O/txjFTR6IcBR3kl9wLwdRR4Ag5gWzPTczPMyAsimQ73hH+JAJtW8zWSe+CjLkdPdhFy4lVqwTURmyOx75DJ7DzZpwxUL8Z3voxtpu8dz/JsyTWuLe4opi3og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RyfEyhzi; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715626014; c=relaxed/simple;
+	bh=SisZcXZqgcbTdXFFIU8xWo+kq/drZzZdUZzdlkD8UKI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Sl7SiG0CBt3Q2c7R216jDvQQkzbZVgZ/Ey836Okampa+L4pZSloVPP+IpLUC1T9SQ3gtYC6XcDwie/y2TVQlyyaqXx25xh4W2XLhIgMk1whEOkgeIQj1tOjcCZFgBrBfOsTPqFq7kYo0hQyJOA3uwCFVT9TdzaKpL5KXb2nQSkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H0/WOs7K; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyfEyhzi"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41ff5e3dc3bso23688475e9.1;
-        Mon, 13 May 2024 11:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715625878; x=1716230678; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S7YHwZGAPlAJfMZbQVg4rYz7guv/kQNSmsLj5uQr7xE=;
-        b=RyfEyhzi6T162kF8oQO6oZkO4QR1Z/28PfbiOYZ+FdawSp3rBctuTaA35YJ7DIucme
-         R4SJoitrZOP8eLswacgbjaBwC6UqLfkIdMgYP93UW3vzv9Jj6OvZ4/jTwYbG5obMcznc
-         csNM95D+gwE2jizptx4BHEdPndmbmaxUbtDEQcvYWgAgxpBgAfdQwz9gpiQ3tuiCNaQM
-         v6HufRExb3nm3/e5dEXOCPcQ8YYa2e9DRTGsYqeBo1VN+xjG3+I8H4sRc42EGi+WKRrZ
-         +RPnw8TdxPSnd/B5UiehH9UqSsfy1pdgE9Pbx4H7YQ6HPqwWRuEL/4wSIcSbqXwgxqAO
-         zevQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H0/WOs7K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715626012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BVIn2rWOpVhbTil8h2wwg1NNh+EXi/kd2LlnyPlZrH8=;
+	b=H0/WOs7KcrLqhQSfg0gRMbrr6oZYMMiUpzEp6YKXl8Hfru2lzFUH7yFoJQF3SgpS9dmN57
+	50InJTsX9A0gqclQ8taEymZO1O83lmMKe9AsM/Ucw97EDwuCkFQ21k4bDoojDrXlLWIrqF
+	tx2s7HiL33ddxQNiUdxW3F58DqjrzlE=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-125-Pe6TrLu5MZKnZIUa5vvWwg-1; Mon, 13 May 2024 14:40:46 -0400
+X-MC-Unique: Pe6TrLu5MZKnZIUa5vvWwg-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-43e1af4fbc4so13629941cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:40:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715625878; x=1716230678;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S7YHwZGAPlAJfMZbQVg4rYz7guv/kQNSmsLj5uQr7xE=;
-        b=wDBGYQSFnP3kudJBHSLddmb/p47tllG23ro6h3UqNobFwnsuExjrF2rV0NNqdVnY8f
-         1UTZh4FVqdv1rNdQLV7YSjM9Falal6tbHx2xXWh1TAb3gzwKeXOANLfZ1ipezshSw9QR
-         dau9MMCe+LoLReVsorOlfN3SCt7yovRGnQ9hC+rEO1PRdPQy4vOlTnWSWa8i1qqbAd0r
-         4VzIAPfNpcKGlxB4OBJqKdN2C4wgbLWgSQYfk2xGcDO107ImhrJ+Zbu/0Sv1OKL+RAIm
-         khJ2bIXDIgM46YQ65XHF8TZQMVcB156u3OAecW5edvSVn9v5+WeuY90mEnOMQFXW909/
-         Ug2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUHFyGwgBWHg26G61L6L1bDy1QX+7IoD6By49rurb/N8kt0Ol0GXLyJ5jUw5wx2dKMGHAIRFvUjJomybEHNvgTiVFe6HhVVjd6SuTytXdFSPqWG/DYRlqUET5C4z6trMey4rcZvgqN2
-X-Gm-Message-State: AOJu0YyJysE+X1b9KJliNc8btvv7RKDiidqi0af5rsAD4YQMifc54slm
-	UWvxA06+8aX3r7hT2nCndwxy6mxuab+4vHpVeF0sUV1z1jZd87Am
-X-Google-Smtp-Source: AGHT+IF7zBTcIFLiTi46x3uVkADC+UX2XcNcYdPPZ8YgAghzbFRye/FiXNHlf9LviG5sOZkNNQzTbQ==
-X-Received: by 2002:a05:600c:1d21:b0:41b:97c5:ccc7 with SMTP id 5b1f17b1804b1-41fea9320bbmr69197895e9.8.1715625877429;
-        Mon, 13 May 2024 11:44:37 -0700 (PDT)
-Received: from [192.168.20.170] (57657817.unconfigured.pool.telekom.hu. [87.101.120.23])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce9426sm164700615e9.25.2024.05.13.11.44.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 11:44:36 -0700 (PDT)
-Message-ID: <01889053-bcf2-40cb-86ad-2f2bff56f24b@gmail.com>
-Date: Mon, 13 May 2024 20:44:33 +0200
+        d=1e100.net; s=20230601; t=1715625646; x=1716230446;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BVIn2rWOpVhbTil8h2wwg1NNh+EXi/kd2LlnyPlZrH8=;
+        b=iqX6Fs5OHMo5Ujhys3AFyT68di+WBnFspP9cLgAQVALUKgqSDTVrdwNhUub7DNDQeI
+         JinVtEnZENU8XnLHcByHMKmGwt1IAcrztN2LoWdjCslXEaxVRpfde9oS4BIQqm+3k7J1
+         hojUQ5mRnt+e/BpH6cOry6Wwon7iNK4yl/3Y98mxsGalXBWxV47QXr2E3i10jfk67b8D
+         CXcQqe11wVNOtWzUfpbQPOpeLB6O1dTKnBbsSP6kDID/YwZWS7oWppomIAzbCpKsxYqX
+         Nq1fzKBIm5FKYIhb66HxHfIUBox82f7Ri32sDqGToy5f6h10PTiIUo+f/32hf2EaW1jX
+         L1gA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0jBpadNi5Cjp8GI8T/tiIm/awTBxQdVauGWlGjuMIHE9xENBXgQGFjcA/4G4PbXpDw61sqQo3mMyT6FxiEeqPyMC1VVZBpa/tXb3s
+X-Gm-Message-State: AOJu0YzaxKv13dutSSo/YxAVphFAK6A8h6GYoVfU5gznQ6BFP7KrXoCm
+	F0drKOxwHKRFPcF7Ljq8twd+7CH89FOrP7CL3wHLbpbmD4MGmAjwbqFtu1Y2i2YMze3vHSudgPF
+	Nq4hK+tyjtJASojBSs2FuV3ZDula9iT8fBgp4aUDlHdgRRMkCSTBGUuwjkLty/A==
+X-Received: by 2002:ac8:7dd6:0:b0:43a:f7fb:bc4b with SMTP id d75a77b69052e-43dfdb0714amr109230421cf.14.1715625646259;
+        Mon, 13 May 2024 11:40:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGyEMwpDTnVPRtCr+Mg/v54BS100776/OI4rfOSjtaaCh2632huCZWaUGLfxNq0fFe9FHICXg==
+X-Received: by 2002:ac8:7dd6:0:b0:43a:f7fb:bc4b with SMTP id d75a77b69052e-43dfdb0714amr109230311cf.14.1715625645923;
+        Mon, 13 May 2024 11:40:45 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e1115dd3esm25071211cf.19.2024.05.13.11.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 11:40:45 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, "Paul E. McKenney"
+ <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Neeraj
+ Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes
+ <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
+ Feng <boqun.feng@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
+ <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>
+Subject: Re: [PATCH v2 27/27] context_tracking, rcu: Rename rcu_dyntick
+ trace event into rcu_watching
+In-Reply-To: <ZjuFUZXk4rYO4L2v@localhost.localdomain>
+References: <20240430091740.1826862-1-vschneid@redhat.com>
+ <20240430091740.1826862-28-vschneid@redhat.com>
+ <ZjuFUZXk4rYO4L2v@localhost.localdomain>
+Date: Mon, 13 May 2024 20:40:42 +0200
+Message-ID: <xhsmhr0e5h7x1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: qcom: apss-ipq-pll: remove 'config_ctl_hi_val' from
- Stromer pll configs
-Content-Language: hu
-To: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, Varadarajan Narayanan
- <quic_varada@quicinc.com>,
- Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
-References: <20240509-stromer-config-ctl-v1-1-6034e17b28d5@gmail.com>
- <baa81202-f129-4ec2-baca-6ca8b476a37d@linaro.org>
- <21cedacd-f454-4eb8-9b2b-33a14592a6c1@quicinc.com>
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <21cedacd-f454-4eb8-9b2b-33a14592a6c1@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-2024. 05. 10. 18:25 keltezéssel, Kathiravan Thirumoorthy írta:
-> 
-> 
-> On 5/10/2024 12:23 AM, Konrad Dybcio wrote:
->> On 9.05.2024 10:08 AM, Gabor Juhos wrote:
->>> Since the CONFIG_CTL register is only 32 bits wide in the Stromer
->>> and Stromer Plus PLLs , the 'config_ctl_hi_val' values from the
->>> IPQ5018 and IPQ5332 configurations are not used so remove those.
->>>
->>> No functional changes.
->>>
->>> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
->>> ---
+On 08/05/24 15:59, Frederic Weisbecker wrote:
+> Le Tue, Apr 30, 2024 at 11:17:31AM +0200, Valentin Schneider a =C3=A9crit=
+ :
+>> @@ -228,7 +228,7 @@ void noinstr ct_nmi_exit(void)
+>>      }
 >>
->> Hm, it sounds suspicious that we'd have these settings then.. Could somebody from
->> QC please confirm that everything's alright here?
-> 
-> 
-> I checked the HW doc and yes in both IPQ5018 and IPQ5332 CONFIG_CTL_U register
-> is not implemented. I see offset of CONFIG_CTL_U register is removed in the
-> change[1] by Gabor.
+>>      /* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+>> -	trace_rcu_dyntick(TPS("Startirq"), ct_nmi_nesting(), 0, ct_rcu_watchin=
+g());
+>> +	trace_rcu_watching(TPS("Endirq"), ct_nmi_nesting(), 0, ct_rcu_watching=
+());
+>
+> Ah the initial string was wrong and you're fixing it, right?
+>
+> Should be a seperate patch?
+>
 
-Thanks for confirming!
+No, I'm just creating confusion for everyone involved (including myself) :(
+Dynticks start when RCU stops watching, so the naming logic gets flipped on
+its head.
 
-> 
-> Given that, should we also drop the pll_has_64bit_config() if block from
-> clk_stromer_pll_configure function?
+If I take the original comment from
+bd2b879a1ca5 ("rcu: Add tracing to irq/NMI dyntick-idle transitions")
+"""
+as argument: "Start" for entering dyntick-idle mode, "Startirq" for
+entering it from irq/NMI
+"""
 
-If we can be sure, that there will be no Stromer PLLs which implements that
-register we can drop the check. Also, since the SUPPORTS_FSM_MODE flag is not
-set for any of the Stromer (Plus) Plls supported currently, the related check
-can be dropped as well.
+So here "Startirq" means "start dyntick mode from IRQ". With the name
+change, it should be "Endirq", since RCU stops watching, from IRQ...
 
-However I would keep that as is for now. I'm planning to remove the
-clk_stromer_pll_configure() function entirely but that needs a bunch of
-preparatory patches which I'm working on at the moment.
+I know, a lot of confusion for 0 functional change :(
 
-> 
-> Nevertheless, for this patch
-> 
-> Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-
-Thank you!
-
-Regards,
-Gabor
