@@ -1,102 +1,133 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875492EAF9;
-	Mon, 13 May 2024 18:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2D437153
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 18:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715626040; cv=none; b=KbyotiAG55rq+kNPh9NQ8oRukyXaRb17hZrumGGu+ANqmb7mpSnjEjwcMlLzBFYwzm9y9VOP8Yys9J+tYqP487LJ1w9SUO5HRl02r9jgd5u/0qiU1SiZDNDA54xlOIILt3dLIjfd8pNVx8fEQwc5DTB49htC/lKHDLwcQGusEH4=
+	t=1715626098; cv=none; b=RHYofGHR0dJzsuAbRKps/oZFNaxjYh3Pbo3FVct0XmJfguD/4CCJu1KcbuMHk43WTVeNNlnXTYq9ExIcigRwGmlI9TX4+a4TESNIz7sUU90gNvIRTjZY5AEF5m3U3CnI3XDXgkxhfUsLZYhYWf2XDFYSg7wub5yMJmGK2H7/HL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715626040; c=relaxed/simple;
-	bh=vLa9r7gEYQHbvTWv5xGb15CT21heekDIFFUmT7aBdq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qOl5jBjfpAFj8dcgafqi1VEq28Fe2z5HTbJvIsLUYfDJdTE11bSlMZmFeSFrMF55z8xd2dIwtBuxWhKG6YmmyvrxzQ0J42BHP+xPGrBmb9h+hKOfwRMPOCr0Qi63VOOd1CjyODcRU/1SjPBMdS75omkv/543wzi+JdeBhKtMLZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Cj9/Cz8c; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1715626098; c=relaxed/simple;
+	bh=6YuPwQ/qKNz8HYBBy+q1ODXRn/TuSyAWfvhMnueWmI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/9ja/u1d2FXtwe/wbjv1jz4dntZls/WU4fUYGCX2TsQAe25rThKxAaUL5U9xDTwBHhdsMapZsfp+uH1xGsrl/yhYidsRBMnBhV9Ah/UzH7H0pby+YpOmdChfEE1emP5Nct+ACQsWpIxvR15BxwUrzdMafMNKSdk5sSQtfyp+fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kQv2VY3r; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Cj9/Cz8c"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44DHhYQA014344;
-	Mon, 13 May 2024 18:47:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=ivk+y8EJmO2v0vPw4T0GwAz5Cxuq4eW7Wwl86rwxKb0=;
- b=Cj9/Cz8cvtJTx1jUC1UsFHuKMtSyEbFS5trLOQHTrcQtEch8MKWJc1IZnohCEqhKx9pB
- W43OIRAlZoSFZJGx776k0vuBsmieh2vgeNTX0hIcBn6sfrr5tLsuRLlxRIRfXvrA7UAS
- a4WTpArbWS0xxFh2zlomHL20VF+ePZGBKVJh1G2QHgkHJGsfamXOhvJXobBhqpzOzb7C
- JT1kbF+DmF4QBukc8x+mkJm4kvXeADhaA/9iTGXoM4VtN+10xRrA4McWQL8eIzUy5tW4
- DADVoIsv36uYw/6Tk0kC+54La/+zxgxkJ5x8VOD02pXhycHZeJuzqgGxJQJ/RXWlHR4x wA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3qgv051t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 May 2024 18:47:00 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44DI1lbr038367;
-	Mon, 13 May 2024 18:45:18 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3y24pv149k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 May 2024 18:45:18 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44DIjISH027732;
-	Mon, 13 May 2024 18:45:18 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3y24pv148x-1;
-	Mon, 13 May 2024 18:45:18 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
-        error27@gmail.com, harshit.m.mogalapalli@oracle.com
-Subject: [PATCH] iio: temperature: mlx90635: Fix ERR_PTR dereference in mlx90635_probe()
-Date: Mon, 13 May 2024 11:45:14 -0700
-Message-ID: <20240513184514.3200222-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kQv2VY3r"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f44b390d5fso4035203b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715626096; x=1716230896; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YMCvolyyAMKqM2SEdNiyJ59O3X5pzLBrCG8ngReTAYg=;
+        b=kQv2VY3rQSya4uXDs+ROzi24zH2iLgT/DDvwH/Ce3mPbBzuN22DIV9mdtqws4mVnkF
+         P5sC+oDe+Ml5DxmUH4o3P8IJZgV/rJ+eG96FU7wXhtSXiDahLE59Dp8yFDbNyUmQd8y+
+         xxDUqgkheyCv22+fYmBxae2dszVx7POHu11TI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715626096; x=1716230896;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YMCvolyyAMKqM2SEdNiyJ59O3X5pzLBrCG8ngReTAYg=;
+        b=Y6HGeDhdJJjsL43/L7cex0gcH/pvj17b6ibHe87ccowIwnZcP/18VPshoWu+tlXYqF
+         ljJ32NuKf05MUZXLWhpEpuwlpyZU2DoV5dMOYwjBRtMWTgOIrtA118SzD1c5ccxZTg+D
+         9V0WmdvL5by9rsH4uepjm4NicoIyWJ2FnDWji8Wt6Qq93qkGrDpCM0Komw2KUj1Yr8n6
+         5C5WeAGtG7v7WMaod7cPPteEW7EaIr1EblfBai50CoXth1t4LHStfWWq3SpqlNiZ/p9Z
+         0AaCYjyZJBjot7Qvi49+FyJtVazf1A6j/SxFHFGfrA64KD4vmQZrWGM9iGX0c3uYTsFK
+         WlWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXv7g+70bpuBVzZsm71wgMVa7DDe5ZP42epU7ZR3hGPTEhMA0pVB+huYSiTjCCRDxluMg4z26S2dhD9qTu0Ns0iH9y68z1LoYcVXe5S
+X-Gm-Message-State: AOJu0YzQqYEuQ/kbgbll6vuXN/tdZIPy7WoxNkY1dIN7qw4n6yuB2/Ny
+	5VUZomNGJM7DxK+CsYly9FyBOmRHTRHKM+RcdIU+PAXEDEzy5ywr/2ZnPsuV0g==
+X-Google-Smtp-Source: AGHT+IHQwdGR35u5IXK+H3e3GlXqBLLrEy3u5cdZwt6vW+ynInQiPgDptXNWJrBmTpcuZ0bqtBY4aw==
+X-Received: by 2002:a05:6a21:983:b0:1a7:a6f3:1827 with SMTP id adf61e73a8af0-1afde1b719fmr11220335637.46.1715626096189;
+        Mon, 13 May 2024 11:48:16 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a87bb1sm7697326b3a.87.2024.05.13.11.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 11:48:15 -0700 (PDT)
+Date: Mon, 13 May 2024 11:48:14 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Marco Elver <elver@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] kbuild: remove many tool coverage variables
+Message-ID: <202405131136.73E766AA8@keescook>
+References: <20240506133544.2861555-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-13_13,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405130126
-X-Proofpoint-GUID: bFDzWDMJpvIAmwyimUriWtgSZuMJkb_5
-X-Proofpoint-ORIG-GUID: bFDzWDMJpvIAmwyimUriWtgSZuMJkb_5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506133544.2861555-1-masahiroy@kernel.org>
 
-When devm_regmap_init_i2c() fails, ragmap_ee could be error pointer,
-instead of checking for IS_ERR(ragmap_ee), regmap is checked which looks
-like a copy paste error.
+In the future can you CC the various maintainers of the affected
+tooling? :)
 
-Fixes: a1d1ba5e1c28 ("iio: temperature: mlx90635 MLX90635 IR Temperature sensor")
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
-This is found using smatch, only compile tested.
----
- drivers/iio/temperature/mlx90635.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, May 06, 2024 at 10:35:41PM +0900, Masahiro Yamada wrote:
+> 
+> This patch set removes many instances of the following variables:
+> 
+>   - OBJECT_FILES_NON_STANDARD
+>   - KASAN_SANITIZE
+>   - UBSAN_SANITIZE
+>   - KCSAN_SANITIZE
+>   - KMSAN_SANITIZE
+>   - GCOV_PROFILE
+>   - KCOV_INSTRUMENT
+> 
+> Such tools are intended only for kernel space objects, most of which
+> are listed in obj-y, lib-y, or obj-m.
 
-diff --git a/drivers/iio/temperature/mlx90635.c b/drivers/iio/temperature/mlx90635.c
-index 1f5c962c1818..2b61489d5ee0 100644
---- a/drivers/iio/temperature/mlx90635.c
-+++ b/drivers/iio/temperature/mlx90635.c
-@@ -947,8 +947,8 @@ static int mlx90635_probe(struct i2c_client *client)
- 				     "failed to allocate regmap\n");
- 
- 	regmap_ee = devm_regmap_init_i2c(client, &mlx90635_regmap_ee);
--	if (IS_ERR(regmap))
--		return dev_err_probe(&client->dev, PTR_ERR(regmap),
-+	if (IS_ERR(regmap_ee))
-+		return dev_err_probe(&client->dev, PTR_ERR(regmap_ee),
- 				     "failed to allocate regmap\n");
- 
- 	mlx90635 = iio_priv(indio_dev);
+This is a reasonable assertion, and the changes really simplify things
+now and into the future. Thanks for finding such a clean solution! I
+note that it also immediately fixes the issue noticed and fixed here:
+https://lore.kernel.org/all/20240513122754.1282833-1-roberto.sassu@huaweicloud.com/
+
+> The best guess is, objects in $(obj-y), $(lib-y), $(obj-m) can opt in
+> such tools. Otherwise, not.
+> 
+> This works in most places.
+
+I am worried about the use of "guess" and "most", though. :) Before, we
+had some clear opt-out situations, and now it's more of a side-effect. I
+think this is okay, but I'd really like to know more about your testing.
+
+It seems like you did build testing comparing build flags, since you
+call out some of the explicit changes in patch 2, quoting:
+
+>  - include arch/mips/vdso/vdso-image.o into UBSAN, GCOV, KCOV
+>  - include arch/sparc/vdso/vdso-image-*.o into UBSAN
+>  - include arch/sparc/vdso/vma.o into UBSAN
+>  - include arch/x86/entry/vdso/extable.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
+>  - include arch/x86/entry/vdso/vdso-image-*.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
+>  - include arch/x86/entry/vdso/vdso32-setup.o into KASAN, KCSAN, UBSAN, GCOV, KCOV
+>  - include arch/x86/entry/vdso/vma.o into GCOV, KCOV
+>  - include arch/x86/um/vdso/vma.o into KASAN, GCOV, KCOV
+
+I would agree that these cases are all likely desirable.
+
+Did you find any cases where you found that instrumentation was _removed_
+where not expected?
+
+-Kees
+
 -- 
-2.39.3
-
+Kees Cook
