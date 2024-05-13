@@ -1,104 +1,112 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C12219E7;
-	Mon, 13 May 2024 09:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E98219E7;
+	Mon, 13 May 2024 09:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715594142; cv=none; b=dJlT2mWjqi9IODM4yHqua5SQmbsZpWHOuT6uGWpauLv2u0YEcn14Mes04xdpAcarpxTLORVT8oo94hWCXjOFtnoCrPYcHuQe1OWXTl0YZYmn8rFjpl2n798O8mOWens2fJiEB5vmjdH0i5y8RNRdk8vcUjf5UQRd+VGWFtJMSuo=
+	t=1715594148; cv=none; b=lrHFZIgufqKfWR2KV4XQPIstkH6zQAKaf8wI7+xKrr0DRHJTtUMsjbuB7kQa324vCbMxsLK5c+O3o5ezfkt2cTstDWQzMsqdH1/F0EK+Gvf1UQ/WnO4RfMoJDVHUCLsO9w5NVRUJbcQAzOdsz6JwqFk5TzihMB7R754mmO+AKKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715594142; c=relaxed/simple;
-	bh=AzFRCKPlN54IHQkn4IQjKlX2R9+TZTCVcPTOOYJgaeE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ULnx42Q6Y0uOqo7Rg5/g/9EozWao7G9+Fz0xCJhS/0XZa7NNN1DAyYR4VCRPhEjl7Geuzj+irDVJQysQP7MiJSMy/eUCKe0JMOqP3o0YJtsXl80aT00lxzaqqYGClj9M8qm0v+CNcXNo9hMfaUSbZ1UzajZKaTjrttI6Jbx0/iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=32l4m8S2; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715594148; c=relaxed/simple;
+	bh=zlS6twK/Dl58Vu5VAcua0fVTm5IGTx2anPsS2Dxpav8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=b8YFq0xI2X8GD3xyGT2xvjGlXU9EZ30h8PaNFmZ74vVWnd43b+7IHGUVmqN8eDnuOzYZ8xQ3CQRENhO1SJ+AnkYKcjEBig+VN50/amzbzIhuSwynWcxyPir9Ab1VcjemrWl5V3LW+zzJF8UCt1iUnoqH0IicPuErjfcpujDnFq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BZEgnYu5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="32l4m8S2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715594139;
-	bh=AzFRCKPlN54IHQkn4IQjKlX2R9+TZTCVcPTOOYJgaeE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=32l4m8S2naThXhPAWN6EXlSnoZ9zxuJOnqXFvJOcuUVH6He74yNjdFfVLx0Pn22tw
-	 oZizhqojp9tqc7sXSdqYJPElxkyXz0xR/l9OveTN+uyK6YCW1wqitul+XibhXrGDFp
-	 i+CrX1zaeblnSzMleXzhYT1zBZv/QtqVZbp9J3eKWvj+4i8sJpdbOhUcMdSNFj9NeQ
-	 V65lZfYlEOy196vCV1e0jA+7q0gtvuku0qbcE/nahArFN5WfakJc9KZAIm1u637nnh
-	 dVNVZZtz4gAUxkgOnZMeB6c4e5gN44GPu0tNYL6xQnLgtv/u7+raPKLWFae//rS7fE
-	 JwsHKcu5aHTjQ==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1F2F3378212F;
-	Mon, 13 May 2024 09:55:38 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Laura Nao <laura.nao@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"kernelci.org bot" <bot@kernelci.org>
-Subject: [PATCH] gpiolib: acpi: Move ACPI device NULL check to acpi_can_fallback_to_crs()
-Date: Mon, 13 May 2024 11:56:10 +0200
-Message-Id: <20240513095610.216668-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BZEgnYu5"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44D09G2Y009113;
+	Mon, 13 May 2024 09:55:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=U2WX32G1rFMx1/6IKHQPtO9xARAWs9tEx1dIHWNfp54=; b=BZ
+	EgnYu5wtaG+ih6mDQcRwFZhDHCE9+LkSMr3+nTrbXFa4NvsrFnVjBWAZ35r4h6oG
+	AG4DST5a9SlFXfMX3zKzH7EmRSOiwzHghXcvh6MNU1xB1zrPFv38wDrnvQi7aPSJ
+	cstuFft/oi588KH2OIxNbRlLgxRZgo7cQeuIWYv6G1EOSEsPjntaHv5zht8f8oro
+	FP9oaZ1DimdBPPswATAkd7n1sXazrXXaDGYf4KyXMvgCuIiNJBgBuzU7S91/YuII
+	9441WGzOLmt94jPBR6Rb0e6ODeZF5XdrU0hHt8TOu2L4nWxAcPuiq28WjjhCDQn2
+	7exiyiePrMXKVeAeIVpA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y2125b3p1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 May 2024 09:55:40 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44D9tcpU015241
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 May 2024 09:55:38 GMT
+Received: from [10.251.44.40] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 13 May
+ 2024 02:55:35 -0700
+Message-ID: <96a1e5a8-b887-4bb6-b79a-a4d4549c1415@quicinc.com>
+Date: Mon, 13 May 2024 12:55:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/8] media: qcom: camss: Add per sub-device type
+ resources
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, <rfoss@kernel.org>,
+        <todor.too@gmail.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
+        <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>,
+        <matti.lehtimaki@gmail.com>
+References: <20240411124543.199-1-quic_grosikop@quicinc.com>
+ <20240411124543.199-2-quic_grosikop@quicinc.com>
+ <f9afdda4-0921-4632-8e4a-e8157b685da1@linaro.org>
+Content-Language: en-US
+From: "Gjorgji Rosikopulos (Consultant)" <quic_grosikop@quicinc.com>
+In-Reply-To: <f9afdda4-0921-4632-8e4a-e8157b685da1@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: mHPZmh5kXH2r6ID9jrhHU0_gdQtT8OJG
+X-Proofpoint-ORIG-GUID: mHPZmh5kXH2r6ID9jrhHU0_gdQtT8OJG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-13_06,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=878 clxscore=1011 bulkscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405130061
 
-Following the relocation of the function call outside of
-__acpi_find_gpio(), move the ACPI device NULL check to
-acpi_can_fallback_to_crs().
 
-Signed-off-by: Laura Nao <laura.nao@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Closes: https://lore.kernel.org/all/20240426154208.81894-1-laura.nao@collabora.com/
-Fixes: 49c02f6e901c ("gpiolib: acpi: Move acpi_can_fallback_to_crs() out of __acpi_find_gpio()")
----
-v1: https://lore.kernel.org/all/20240509104605.538274-1-laura.nao@collabora.com/T/#u
----
- drivers/gpio/gpiolib-acpi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 553a5f94c00a..c7483cd800ee 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -939,7 +939,7 @@ static bool acpi_can_fallback_to_crs(struct acpi_device *adev,
- 				     const char *con_id)
- {
- 	/* Never allow fallback if the device has properties */
--	if (acpi_dev_has_props(adev) || adev->driver_gpios)
-+	if (!adev || acpi_dev_has_props(adev) || adev->driver_gpios)
- 		return false;
- 
- 	return con_id == NULL;
-@@ -978,10 +978,10 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
- 	}
- 
- 	/* Then from plain _CRS GPIOs */
--	if (!adev || !can_fallback)
--		return ERR_PTR(-ENOENT);
-+	if (can_fallback)
-+		return acpi_get_gpiod_by_index(adev, NULL, idx, info);
- 
--	return acpi_get_gpiod_by_index(adev, NULL, idx, info);
-+	return ERR_PTR(-ENOENT);
- }
- 
- struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
--- 
-2.30.2
+On 5/11/2024 1:18 AM, Bryan O'Donoghue wrote:
+> On 11/04/2024 13:45, Gjorgji Rosikopulos wrote:
+>> +        .type = CAMSS_SUBDEV_TYPE_CSIPHY,
+> 
+> As Matti pointed out to me on IRC, the .type value here isn't populated
+> in the rest of the 8280xp resources.
+> 
+> I completely missed that but, then again this appears to be a dead field
+> in this series so it makes no difference if it is populated.
+> 
+> I realise it is probably of use in code you _haven't_ yet published but,
+> for now I think we should drop this field, since its dead code.
 
+Yes that is correct i miss that as well.
+
+> 
+> I'll send a fixup patch for this, I don't think there's a need for you
+> to send the whole series again.
+
+Thank you for this.
+
+~Gjorgji
+
+> 
+> ---
+> bod
