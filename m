@@ -1,139 +1,115 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C2314F102;
-	Mon, 13 May 2024 11:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2782443AAB;
+	Mon, 13 May 2024 11:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715600718; cv=none; b=qIdiFVm8QQvMmIe9/eNwZyOE8ewbWIbxLHLadmLVMwfH6+k+zc16WEtRCFrkxY0sfmmb66sq3TUH4iamIZ5V8H5OBoYOrTe6NeI9Cu5AYQMLbkKSdfHBgDF0wCM5vGUW0C/ysxA+RryYq7U2QhXAO52YmfvpZ23RZpFE2P2qkG0=
+	t=1715600815; cv=none; b=gaRzZpE05y3rjKgl4Gxo/yu/hW5cKtaZVhKEWGWgSWu56fFcyl3FHBxxrFdZtSGUVVa+zT6dHpivHxB1xtgaMg+ln6DkuL6wtJVZYXXMRgmMzMwazTipbfB98gpX4RIzUJdwhTpdaXm+ZcRxkg508bSeBJnEBxVhk94kt1PSOXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715600718; c=relaxed/simple;
-	bh=eAyTMUMGGuqdLpsBgzQWqQ1HResoKyZy1l6rRRccU3g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acEYlAjWFqwwOLtgs0aUk0yH8Mc2qtM6sSWVLqtUc+MM3cZcvau2EixEYpW1WC0qBe0TjapZoxuoaspAlXghLvgSwyHUoseyTOzq6EfWL1P6kcdVvZNUCsSjIZUH4IRPZohhA57oQN7x7fjTjb4dfMEELidTzxd/incKvFI6H7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=h02zrtwJ; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1715600815; c=relaxed/simple;
+	bh=6Vt49lAt/fqxzVw18yAShVk5jwsZeYS5WMBMzeJouhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TE76UGGOrtMnZy9PIEoceGRCjUbHBeZCu5E8UxGdpTwaMIMN7cgxC2FHCZSbEtiOsiYH+0P9wUPM3XBGGcbih5QDU+TsGEjqENfYpsdk6c6mT2IzhmBtHvVfQzontfSYPgdgV5x8Y9nWfliPVMnA+e0k5hAo6HliIC12Ja8DQFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJV2SyBP; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="h02zrtwJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715600716; x=1747136716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eAyTMUMGGuqdLpsBgzQWqQ1HResoKyZy1l6rRRccU3g=;
-  b=h02zrtwJZyDDMuzOEnq/jEE9jZ2f+N0PnhzxjGCl05YUrAmpU14AyDVX
-   JQ76mnVd6HeKDdLOMiwiIiIjpvmZxkVmfiepKuGlNcY6zfZ+WRNFyxUos
-   R71tqeym9NSYkhbL6rxS/s6Nlqk3+KiuOscZQEu2An3r8W1RZNQOXUuOd
-   DPAAknzJXWwfYsXkW1LFZd8dQntremg8mCbYE0RTo8SdcQbUVn250+FCl
-   wA8j2WGSpuLTMgvbuTsxKDy4XEJUHzPUmnizeLCIavqlmNbJEuwIgpuhi
-   cjh6toa+hJ6wQPHrd/tX1iC2BJdY6mqL18epah7G3YVPEOc8zrl/3SSbn
-   Q==;
-X-CSE-ConnectionGUID: bvZzCf3dQ5+hvTmN+nHzBQ==
-X-CSE-MsgGUID: C9csftaRRSujjB9EEGCyAw==
-X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
-   d="scan'208";a="24493015"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 May 2024 04:44:09 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 13 May 2024 04:44:08 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 13 May 2024 04:44:08 -0700
-Date: Mon, 13 May 2024 13:44:07 +0200
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: Herve Codina <herve.codina@bootlin.com>
-CC: <UNGLinuxDriver@microchip.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Allan Nielsen
-	<allan.nielsen@microchip.com>, Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, <stable@vger.kernel.org>
-Subject: Re: [PATCH net v2] net: lan966x: remove debugfs directory in probe()
- error path
-Message-ID: <20240513114407.t2iqcx7txoxkbnlj@DEN-DL-M31836.microchip.com>
-References: <20240513111853.58668-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJV2SyBP"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59c0a6415fso1165281166b.1;
+        Mon, 13 May 2024 04:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715600811; x=1716205611; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9r/YihET62pp66VvT6dwJcRFRNIrAFiu1E7WWei/ujI=;
+        b=TJV2SyBPA420+T6Uyu+G8OYfNCVGURnkIH2pA/sQUdcoKq9n+HXj+VztGwvyrVS/t1
+         WS3kZqWrk+Abq9B0gvSyhHj0bgYhOvgtYnTm2CK52aEewVCA5XczG9RDHN2Osx9X+r6P
+         8rdPfm6FyYAO9duG4KMbQRYdMyNzzNAwxH6RrIO1qvh627imD4PvS7Y0Ce/exfRKefK9
+         n0LQD4tbeBukkOiBMC9wqG+gNRNiLYLJs0FR3uv9KLrBof/bgbUDuF4WQtz2CarNr6la
+         sb5snMt5hfzxYY+XSoacej3U6P4DWtIaSz6KmuPBVeERKMdW1fN0Shdkj/W6VWy+ImOg
+         cVEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715600811; x=1716205611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9r/YihET62pp66VvT6dwJcRFRNIrAFiu1E7WWei/ujI=;
+        b=dxmUoaPovLyYdg/rSdECLnBHeoV4mk7gbPsi2ffab9p32LxEBfTJexrEBglt4AElET
+         IAdLGtZqQO8KDFEQuGFRodDs9eJafuVEN1lfYPi/DzN1/6XVPsxFlR5wD/9Acnc1568m
+         jK2iAuwYM7fdXQMBV1Zb6COQtphy8Abeqpi9WYcw3qqkxPhTfTvu+VIzPc/724abXCXL
+         614fnntsZLKlML4CQjc2R40sIyxLp4Ohy1NRK4iQMQiO7xRPtDcZpBPXAZkwlCBbxnoX
+         xo/gFQb5CbFcF7bvHeCntAVKde4ytDl7auZGJecTsyO5KmSviA3jUzUo52OwP8TdWKe/
+         SUJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsmJ6KF5gzann5wEyIL7p37bA1Gs6FTfV70mt1R/xCHS0dGiirkV8M5pXzBVWfoiMUEB3UGNMdEAJ5QEO0lG2rYTh6AiXDNy3rG8aQ0kF52dsv0NEB1mHpye7nQrH4jvtTkhiZrDc7
+X-Gm-Message-State: AOJu0Yx9eqMmDn+0aLXzKaO3wmJIH0M5r1958PokOqjY399lLKR62i+U
+	nkprI/vURvrR5ixalLQmcXGZ9CZhwoPONnm3VwP+OoDO9L3WgtcJ8O79wWQSGBhGelDEK6hu5es
+	6uuEgTHdoP/jxESkhQK2zdiQMYrY=
+X-Google-Smtp-Source: AGHT+IFEA6ve/ilE4tQgCNvmXoFA3FyxxFEkTB2O7fYoLi+SZczszgJVcP+EP+ORiILF84jJvUdKuBsAhM3Q68FaPdQ=
+X-Received: by 2002:a17:906:a47:b0:a59:c52b:993d with SMTP id
+ a640c23a62f3a-a5a2d55aa31mr657895566b.20.1715600811171; Mon, 13 May 2024
+ 04:46:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20240513111853.58668-1-herve.codina@bootlin.com>
+References: <20240513102237.112376-1-didi.debian@cknow.org> <87a5kuez97.fsf@intel.com>
+In-Reply-To: <87a5kuez97.fsf@intel.com>
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date: Mon, 13 May 2024 13:46:39 +0200
+Message-ID: <CAKXUXMzw6_JnPxXfgU2tEU-VkU6E_=ee-V4MUzGX8MQCSXLuNA@mail.gmail.com>
+Subject: Re: [PATCH] docs: dev-tools: checkpatch: Add targets for checkpatch tags
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Diederik de Haas <didi.debian@cknow.org>, Dwaipayan Ray <dwaipayanray1@gmail.com>, 
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, May 13, 2024 at 1:18=E2=80=AFPM Jani Nikula <jani.nikula@linux.inte=
+l.com> wrote:
+>
+> On Mon, 13 May 2024, Diederik de Haas <didi.debian@cknow.org> wrote:
+> > Make the tags directly linkable by defining targets for them.
+> >
+> > Closes: https://lore.kernel.org/r/8090211.0vHzs8tI1a@bagend/
+> > Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+> > ---
+> >  Documentation/dev-tools/checkpatch.rst | 216 +++++++++++++++++++++++++
+> >  1 file changed, 216 insertions(+)
+> >
+> > diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev=
+-tools/checkpatch.rst
+> > index 127968995847..6499e29c3a19 100644
+> > --- a/Documentation/dev-tools/checkpatch.rst
+> > +++ b/Documentation/dev-tools/checkpatch.rst
+> > @@ -242,6 +242,8 @@ This section contains a description of all the mess=
+age types in checkpatch.
+> >  Allocation style
+> >  ----------------
+> >
+> > +  .. _alloc-array-args:
+> > +
+> >    **ALLOC_ARRAY_ARGS**
+>
+> Alternatively, you could just convert the definition lists into section
+> titles to make them implicit hyperlink targets. The rst stays cleaner
+> and there's no manual updating.
+>
 
-The 05/13/2024 13:18, Herve Codina wrote:
-> 
-> A debugfs directory entry is create early during probe(). This entry is
-> not removed on error path leading to some "already present" issues in
-> case of EPROBE_DEFER.
-> 
-> Create this entry later in the probe() code to avoid the need to change
-> many 'return' in 'goto' and add the removal in the already present error
-> path.
-> 
-> Fixes: 942814840127 ("net: lan966x: Add VCAP debugFS support")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Agree with Jani. It is important to check that the verbose option of
+the checkpatch still works. The script actually parses the
+documentation and then shows the relevant parts as verbose output to
+the user. It currently relies on the specific format, but it is not
+difficult to change that to use a different pattern, see sub load_docs
+in checkpatch.pl.
 
-This looks OK to me. As the debugfs_root is used inside lan966x_vcap_init
-which is called at the end of the probe.
+So, please make sure the current --verbose option in checkpatch.pl
+does not break.
 
-Reviewed-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Thanks,
 
-> ---
->  drivers/net/ethernet/microchip/lan966x/lan966x_main.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> index 2635ef8958c8..61d88207eed4 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> @@ -1087,8 +1087,6 @@ static int lan966x_probe(struct platform_device *pdev)
->         platform_set_drvdata(pdev, lan966x);
->         lan966x->dev = &pdev->dev;
-> 
-> -       lan966x->debugfs_root = debugfs_create_dir("lan966x", NULL);
-> -
->         if (!device_get_mac_address(&pdev->dev, mac_addr)) {
->                 ether_addr_copy(lan966x->base_mac, mac_addr);
->         } else {
-> @@ -1179,6 +1177,8 @@ static int lan966x_probe(struct platform_device *pdev)
->                 return dev_err_probe(&pdev->dev, -ENODEV,
->                                      "no ethernet-ports child found\n");
-> 
-> +       lan966x->debugfs_root = debugfs_create_dir("lan966x", NULL);
-> +
->         /* init switch */
->         lan966x_init(lan966x);
->         lan966x_stats_init(lan966x);
-> @@ -1257,6 +1257,8 @@ static int lan966x_probe(struct platform_device *pdev)
->         destroy_workqueue(lan966x->stats_queue);
->         mutex_destroy(&lan966x->stats_lock);
-> 
-> +       debugfs_remove_recursive(lan966x->debugfs_root);
-> +
->         return err;
->  }
-> 
-> --
-> 
-> This patch was previously sent as part of a bigger series:
->   https://lore.kernel.org/lkml/20240430083730.134918-9-herve.codina@bootlin.com/
-> As it is a simple fix, this v2 is the patch extracted from the series
-> and sent alone to net.
-> 
-> Changes v1 -> v2
->   Add 'Reviewed-by: Andrew Lunn <andrew@lunn.ch>'
-> 
-> 2.44.0
-
--- 
-/Horatiu
+Lukas
