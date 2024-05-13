@@ -1,211 +1,270 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689E2153BEF
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 14:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B77B153BC2;
+	Mon, 13 May 2024 14:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715609564; cv=none; b=RWUSDdWHyv8pu0Psr5MYNVl4Syv7FM9p6RgjfdmLa5lpaC1avH199x3Nuounq5YHZ87u4OzLRNQPgzxCRB3lXACpqWBr2p+BOok4I28RDu6jSK0mWjk3BynDTTVVrXy2TMGheUOTvYIDpUMRj4Gwep+7gL0jup8Qfzk60yH3gVw=
+	t=1715609575; cv=none; b=X9f3r6eKLcYsmU/coJacCbzc+x5HOx1IcXlosvk7mwUwrVMCcHopA/bevhvL7FBjKlTTyfjoOtJNTCwo/jDU8CR9MAaDnEE5SI3dPzaADuA8G397ZYqCz3hQ6QVK0pDw4fkS2tYFJPHBp63jAkble79RKOEbUgAS8s4z7UZDMdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715609564; c=relaxed/simple;
-	bh=JiVcnFkfIWkSPdEwVC1UflSAf1GtozE2Y1Cm4v16vng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ze3iH4RYWcoLLUXDRNlH8FVub08UzGnvI1fo7EHa/xEaSj4u7V86WeYsvoMIEOzGiCGonSNa5s64jJwZNHE9DQKvFdqGh+KchxVsAu85/jdmHt+iC4XRjmphOGU+o2Q+w7V2S2sSKifPsuwtuWCvjRxkbHxLK1HKAO9ztM0u35I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OA0/UwP/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715609575; c=relaxed/simple;
+	bh=JY0Jh1nGXThfUUI/y3r2QfEI7YEeWcOnksfR+kbVv2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQ2pz4mBq5fGDR9RD8HMu3bWcdXzk20zV35vFvQz17W62fyL/uV3+yN2SGZXmd52cbBaoZdhplcBstFmieQrygmzumUKTVFa5ulmZ6o2c5an33lt+7EwzLHKXXUuJ618WH1EIWhsa7sTXToTxaBHI15nKwkkS+j/CU2zi9yZR18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=neBeozcn; arc=none smtp.client-ip=148.163.152.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OA0/UwP/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715609560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0hdTKCCj04pt0LL0tQaS1Zpm2moBRFzHZ42+JJy4qmY=;
-	b=OA0/UwP/9LPTVLrWco82A6HM96qjnr0stAFh6Yl/4GKZmNQP2rZsZ0dLrP5BvnMaM+2hxd
-	gUYF5o5yu1odBMfIgNW6GyAM3Vw3i8gbgwO+Mmh10a9IoNe2zxrscoOtbRQwgQGcXNMXbM
-	jljXCAZW3LI4qYEVCex1vmsVEINdMBo=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-179-QYAO7JcaP7G6MQKot8xnJQ-1; Mon, 13 May 2024 10:09:28 -0400
-X-MC-Unique: QYAO7JcaP7G6MQKot8xnJQ-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2e3003fae2dso29075751fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:09:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715609367; x=1716214167;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0hdTKCCj04pt0LL0tQaS1Zpm2moBRFzHZ42+JJy4qmY=;
-        b=MuGbkjJF4W3kBPHuSPXC0WTlrxoISfoOab/Q8XXWTQjZTNpSejq2eTN74rZ3ZGxmSW
-         KJslJrbNJei6IeDFGlAWKcM2vMVgKGoUuUa7RoRGWeCZ9GVTa2Umqv/0ynqyMyYraDID
-         L9loSS3Bc+dcSfJMji4hxyCQ9rIqgH0/Colhrx7CJUfLXI3RcE66Aby2yKSwInzIXYI4
-         UudYIszFNqHS+ob06gJyTkJglPtwB9MCXMKRlrCRYZqMY7Zzk4ly293VVm32d+6PR9PW
-         KWErWdozu9nUe+O8+3zZHE3VcNZJrryWs/4jfyiSa+l8L50wAqXYX6MGqlXFXYiyE4ru
-         F/bw==
-X-Gm-Message-State: AOJu0Yy8lvZYsirdLfdDJQVge5FdbE+d7aV/uVbUa/vRVGAfO0rSrKjz
-	tMayMvdBe2QN9WTHPklR/QaYsRFHvTzbAvUjFUIUFUhOkhRPRpVMtQGsP2NyvNtdTJUcyozrrEk
-	OH1mxdFY+5cWj3vurisU/oi/8pWjoQVIzvyjxXT8ncqzKZ6fmph9gv7MmL9evgw==
-X-Received: by 2002:a2e:8e93:0:b0:2e4:3f51:33b0 with SMTP id 38308e7fff4ca-2e5204b1cfbmr71984341fa.43.1715609366763;
-        Mon, 13 May 2024 07:09:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYc4NyeiFOtQ9FRqCISBRDcQgtDXcycKDbhFuaaf0vBjBuIBl3TKYVNFG05aoTzOQFYvKXEQ==
-X-Received: by 2002:a2e:8e93:0:b0:2e4:3f51:33b0 with SMTP id 38308e7fff4ca-2e5204b1cfbmr71983771fa.43.1715609365237;
-        Mon, 13 May 2024 07:09:25 -0700 (PDT)
-Received: from [192.168.10.3] ([151.95.155.52])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-41fe1ab43casm76679955e9.1.2024.05.13.07.09.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 07:09:24 -0700 (PDT)
-Message-ID: <22def35f-5b8d-4424-a03b-c90e9174a14d@redhat.com>
-Date: Mon, 13 May 2024 16:09:22 +0200
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="neBeozcn"
+Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
+	by m0355090.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 44DE7I27028051;
+	Mon, 13 May 2024 14:12:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=DKIM202306; bh=jAlrK1NjXSMs9kVkong6
+	mvd2Doe1x42fAvz48hWlwp8=; b=neBeozcnPhs8500mQhkXFfN3n8VXhi60zMw1
+	5+CTdMB5vQOOZwEtcfZDWg6KQqgE4g2rcvifMNY3IqkROA/htLRZmKX1lrlKbjlM
+	Rl6DxnXubJVsQBZ+78kespL3O2CtjYAYuI4lJdj8kxVeYZWEqelOoDzqmFrme1m6
+	D4Bms7EzxnxVX4z4fZACkVB7DQEZhhrnQwO13gsfTO8ecIpipF74vAOaXN4XEUI7
+	oIQ/0SYaM2GbHXFYssYPLAEasytMkibyZa9zbVwY/XiKeVO75pI+Y0bR/O19lCn3
+	/aEOoGbhuwY+Lwwp2JKfnl954h+Y3nzB5RvlOBmdOv9CA2AWMg==
+Received: from ilclpfpp01.lenovo.com ([144.188.128.67])
+	by m0355090.ppops.net (PPS) with ESMTPS id 3y3mbeg0ak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 May 2024 14:12:32 +0000 (GMT)
+Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ilclpfpp01.lenovo.com (Postfix) with ESMTPS id 4VdLzM66JnzfBZq;
+	Mon, 13 May 2024 14:12:31 +0000 (UTC)
+Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: mbland)
+	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VdLzM2HDhz2VZ3C;
+	Mon, 13 May 2024 14:12:31 +0000 (UTC)
+Date: Mon, 13 May 2024 09:12:30 -0500
+From: Maxwell Bland <mbland@motorola.com>
+To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH bpf-next v4 2/3] arm64/cfi,bpf: Support kCFI + BPF on arm64
+Message-ID: <ub6a7msv36rhotqez3usccexkn7kdqqnsyklrnqy7znqas7fhe@cry4jnw3baky>
+References: <wtb6czzpvtqq23t4g6hf7on257dtxzdb4fa4nuq3dtq32odmli@xoyyrtthafar>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/core: Drop spinlocks on contention iff kernel is
- preemptible
-To: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
- Valentin Schneider <valentin.schneider@arm.com>,
- Marco Elver <elver@google.com>, Frederic Weisbecker <frederic@kernel.org>,
- David Matlack <dmatlack@google.com>
-References: <20240110214723.695930-1-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20240110214723.695930-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <wtb6czzpvtqq23t4g6hf7on257dtxzdb4fa4nuq3dtq32odmli@xoyyrtthafar>
+X-Proofpoint-ORIG-GUID: PzYlCMG9O9xD3Nr_8BrOUIm-qRX8w2ji
+X-Proofpoint-GUID: PzYlCMG9O9xD3Nr_8BrOUIm-qRX8w2ji
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-13_10,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ spamscore=0 malwarescore=0 phishscore=0 suspectscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405130089
 
-On 1/10/24 22:47, Sean Christopherson wrote:
-> Use preempt_model_preemptible() to detect a preemptible kernel when
-> deciding whether or not to reschedule in order to drop a contended
-> spinlock or rwlock.  Because PREEMPT_DYNAMIC selects PREEMPTION, kernels
-> built with PREEMPT_DYNAMIC=y will yield contended locks even if the live
-> preemption model is "none" or "voluntary".  In short, make kernels with
-> dynamically selected models behave the same as kernels with statically
-> selected models.
+From: Puranjay Mohan <puranjay12@gmail.com>
 
-Peter, looks like this patch fell through the cracks.  Could this be 
-applied for 6.10?
+Currently, bpf_dispatcher_*_func() is marked with `__nocfi` therefore
+calling BPF programs from this interface doesn't cause CFI warnings.
 
-There is a slightly confusing line in the commit message below, so that 
-it reads more like an RFC; but the patch fixes a CONFIG_PREEMPT_DYNAMIC 
-regression wrt static preemption models and has no functional change for 
-!CONFIG_PREEMPT_DYNAMIC.
+When BPF programs are called directly from C: from BPF helpers or
+struct_ops, CFI warnings are generated.
 
-> Somewhat counter-intuitively, NOT yielding a lock can provide better
-> latency for the relevant tasks/processes.  E.g. KVM x86's mmu_lock, a
-> rwlock, is often contended between an invalidation event (takes mmu_lock
-> for write) and a vCPU servicing a guest page fault (takes mmu_lock for
-> read).  For _some_ setups, letting the invalidation task complete even
-> if there is mmu_lock contention provides lower latency for *all* tasks,
-> i.e. the invalidation completes sooner *and* the vCPU services the guest
-> page fault sooner.
-> 
-> But even KVM's mmu_lock behavior isn't uniform, e.g. the "best" behavior
-> can vary depending on the host VMM, the guest workload, the number of
-> vCPUs, the number of pCPUs in the host, why there is lock contention, etc.
-> 
-> In other words, simply deleting the CONFIG_PREEMPTION guard (or doing the
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Implement proper CFI prologues for the BPF programs and callbacks and
+drop __nocfi for arm64. Fix the trampoline generation code to emit kCFI
+prologue when a struct_ops trampoline is being prepared.
 
-This should be "deleting the preempt_model_preemptible() guard" given 
-that the patch does delete CONFIG_PREEMPTION, and only leaves 
-preempt_model_preemptible() in place.
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+Minor fix of authorship attribution by adding "From:" tag.
 
-Thanks,
+ arch/arm64/include/asm/cfi.h    | 23 ++++++++++++++
+ arch/arm64/kernel/alternative.c | 54 +++++++++++++++++++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c   | 18 +++++++++--
+ 3 files changed, 93 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/include/asm/cfi.h
 
-Paolo
+diff --git a/arch/arm64/include/asm/cfi.h b/arch/arm64/include/asm/cfi.h
+new file mode 100644
+index 000000000000..670e191f8628
+--- /dev/null
++++ b/arch/arm64/include/asm/cfi.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ARM64_CFI_H
++#define _ASM_ARM64_CFI_H
++
++#ifdef CONFIG_CFI_CLANG
++#define __bpfcall
++static inline int cfi_get_offset(void)
++{
++	return 4;
++}
++#define cfi_get_offset cfi_get_offset
++extern u32 cfi_bpf_hash;
++extern u32 cfi_bpf_subprog_hash;
++extern u32 cfi_get_func_hash(void *func);
++#else
++#define cfi_bpf_hash 0U
++#define cfi_bpf_subprog_hash 0U
++static inline u32 cfi_get_func_hash(void *func)
++{
++	return 0;
++}
++#endif /* CONFIG_CFI_CLANG */
++#endif /* _ASM_ARM64_CFI_H */
+diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
+index 8ff6610af496..1715da7df137 100644
+--- a/arch/arm64/kernel/alternative.c
++++ b/arch/arm64/kernel/alternative.c
+@@ -13,6 +13,7 @@
+ #include <linux/elf.h>
+ #include <asm/cacheflush.h>
+ #include <asm/alternative.h>
++#include <asm/cfi.h>
+ #include <asm/cpufeature.h>
+ #include <asm/insn.h>
+ #include <asm/module.h>
+@@ -298,3 +299,56 @@ noinstr void alt_cb_patch_nops(struct alt_instr *alt, __le32 *origptr,
+ 		updptr[i] = cpu_to_le32(aarch64_insn_gen_nop());
+ }
+ EXPORT_SYMBOL(alt_cb_patch_nops);
++
++#ifdef CONFIG_CFI_CLANG
++struct bpf_insn;
++
++/* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
++extern unsigned int __bpf_prog_runX(const void *ctx,
++				    const struct bpf_insn *insn);
++
++/*
++ * Force a reference to the external symbol so the compiler generates
++ * __kcfi_typid.
++ */
++__ADDRESSABLE(__bpf_prog_runX);
++
++/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
++asm (
++"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
++"	.type	cfi_bpf_hash,@object				\n"
++"	.globl	cfi_bpf_hash					\n"
++"	.p2align	2, 0x0					\n"
++"cfi_bpf_hash:							\n"
++"	.word	__kcfi_typeid___bpf_prog_runX			\n"
++"	.size	cfi_bpf_hash, 4					\n"
++"	.popsection						\n"
++);
++
++/* Must match bpf_callback_t */
++extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
++
++__ADDRESSABLE(__bpf_callback_fn);
++
++/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
++asm (
++"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
++"	.type	cfi_bpf_subprog_hash,@object			\n"
++"	.globl	cfi_bpf_subprog_hash				\n"
++"	.p2align	2, 0x0					\n"
++"cfi_bpf_subprog_hash:						\n"
++"	.word	__kcfi_typeid___bpf_callback_fn			\n"
++"	.size	cfi_bpf_subprog_hash, 4				\n"
++"	.popsection						\n"
++);
++
++u32 cfi_get_func_hash(void *func)
++{
++	u32 hash;
++
++	if (get_kernel_nofault(hash, func - cfi_get_offset()))
++		return 0;
++
++	return hash;
++}
++#endif
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index 76b91f36c729..703247457409 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -17,6 +17,7 @@
+ #include <asm/asm-extable.h>
+ #include <asm/byteorder.h>
+ #include <asm/cacheflush.h>
++#include <asm/cfi.h>
+ #include <asm/debug-monitors.h>
+ #include <asm/insn.h>
+ #include <asm/patching.h>
+@@ -162,6 +163,12 @@ static inline void emit_bti(u32 insn, struct jit_ctx *ctx)
+ 		emit(insn, ctx);
+ }
+ 
++static inline void emit_kcfi(u32 hash, struct jit_ctx *ctx)
++{
++	if (IS_ENABLED(CONFIG_CFI_CLANG))
++		emit(hash, ctx);
++}
++
+ /*
+  * Kernel addresses in the vmalloc space use at most 48 bits, and the
+  * remaining bits are guaranteed to be 0x1. So we can compose the address
+@@ -337,6 +344,7 @@ static int build_prologue(struct jit_ctx *ctx, bool ebpf_from_cbpf,
+ 	 *
+ 	 */
+ 
++	emit_kcfi(is_main_prog ? cfi_bpf_hash : cfi_bpf_subprog_hash, ctx);
+ 	/* bpf function may be invoked by 3 instruction types:
+ 	 * 1. bl, attached via freplace to bpf prog via short jump
+ 	 * 2. br, attached via freplace to bpf prog via long jump
+@@ -1806,9 +1814,9 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 		jit_data->ro_header = ro_header;
+ 	}
+ 
+-	prog->bpf_func = (void *)ctx.ro_image;
++	prog->bpf_func = (void *)ctx.ro_image + cfi_get_offset();
+ 	prog->jited = 1;
+-	prog->jited_len = prog_size;
++	prog->jited_len = prog_size - cfi_get_offset();
+ 
+ 	if (!prog->is_func || extra_pass) {
+ 		int i;
+@@ -2072,6 +2080,12 @@ static int prepare_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
+ 	/* return address locates above FP */
+ 	retaddr_off = stack_size + 8;
+ 
++	if (flags & BPF_TRAMP_F_INDIRECT) {
++		/*
++		 * Indirect call for bpf_struct_ops
++		 */
++		emit_kcfi(cfi_get_func_hash(func_addr), ctx);
++	}
+ 	/* bpf trampoline may be invoked by 3 instruction types:
+ 	 * 1. bl, attached to bpf prog or kernel function via short jump
+ 	 * 2. br, attached to bpf prog or kernel function via long jump
+-- 
+2.34.1
 
-> opposite and removing contention yielding entirely) needs to come with a
-> big pile of data proving that changing the status quo is a net positive.
-> 
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: David Matlack <dmatlack@google.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   include/linux/sched.h | 14 ++++++--------
->   1 file changed, 6 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 03bfe9ab2951..51550e64ce14 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -2229,11 +2229,10 @@ static inline bool preempt_model_preemptible(void)
->    */
->   static inline int spin_needbreak(spinlock_t *lock)
->   {
-> -#ifdef CONFIG_PREEMPTION
-> +	if (!preempt_model_preemptible())
-> +		return 0;
-> +
->   	return spin_is_contended(lock);
-> -#else
-> -	return 0;
-> -#endif
->   }
->   
->   /*
-> @@ -2246,11 +2245,10 @@ static inline int spin_needbreak(spinlock_t *lock)
->    */
->   static inline int rwlock_needbreak(rwlock_t *lock)
->   {
-> -#ifdef CONFIG_PREEMPTION
-> +	if (!preempt_model_preemptible())
-> +		return 0;
-> +
->   	return rwlock_is_contended(lock);
-> -#else
-> -	return 0;
-> -#endif
->   }
->   
->   static __always_inline bool need_resched(void)
-> 
-> base-commit: cdb3033e191fd03da2d7da23b9cd448dfa180a8e
 
