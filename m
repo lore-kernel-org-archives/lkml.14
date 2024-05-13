@@ -1,40 +1,59 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB0F1474A0;
-	Mon, 13 May 2024 07:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52BB146A9D
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715587036; cv=none; b=IF0nOo0W7d3D3kqClvzCX7zHS3s7bY9bmoHBoyl9px0ocfY6m/bsHIbLIn8aTqH22p8A9xfbOp7+fTz7iIgsErH9bdNISP884yKF0Kn3+/MT+jhRI1yTf6ITMkl9y0VDyYuJ+Sv3o2TFZb4fiq/NkoMhq3vvH/QW5au+NRph4P8=
+	t=1715587179; cv=none; b=Ha2mBiy6sD8Y8smZShWGwOhC7hPiFBM2ObLdataHq+PE9qCLixZkVzQQTGc3CvqbzCnXZCfgrDTDQJ/L7mH0ZriEJInSwT0wVsPvtFvKdzuJFyZPANrSqaPuOLXXLCfPYVTrKjY/m8O46DBn2/aCZ61uuAVVAAye6qW/1gHi23k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715587036; c=relaxed/simple;
-	bh=b2qyThKrEXROa5UsqCfJs5RqQ6LvqWVkpGEAlf5h7zo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=YjkBVway6VVWvGq5Cn5VBXewdzbYEG69Vl4++Eo/HzhN3nxupUZaFW8sBWVWNFIv1nOl3kCrOwGTCqbaWK2a5gOUFS+NNeHbnRsOvN1iKTE5JB4kB/zp7iX03ZQuU6etgOMa3tv276tJ3BUenDH/lzpa3kltfyjS1R+rDz5pWWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=JD9XVGjf; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715587179; c=relaxed/simple;
+	bh=GFPwfFMhe5sT4S61UgnPsXXaA0PJ4X/HHal5OzoKZx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i6Gk2VgoAu2Y3p0IxC8YlsB5pPfDFjMnVy6zwXvn0RrWutS1s88dH8iBWM47QERrhF9kqwz32+NAVLG4uisU470Rp0GZg8qGdbSvtfyIkTIT8/V3iYmu5SdFRnFxA9Vp00xONaMPTVjgQPJQrMNPb8Xy77sVg2PUjpPzHmubo/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KTdARBuR; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="JD9XVGjf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715586792; x=1716191592; i=markus.elfring@web.de;
-	bh=afouwgxXsDL3wwqwmPj0DrSGZAI4iej4a0NwiQc/opQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=JD9XVGjfwWsXwGsMNEne9Laq2+6O9huzgUeHey/rSmtqC1sDyiZw0hxTqAFObbV6
-	 MhOQvONjmLNumTiKm+lnuBCEd6R7gZ9Lof7IV0AUm9mgQej4jJrb+HJmgARBhDnxs
-	 UKUYvPK8mHAGrcdbybejEcigTdtqxhpygmzq8lyi0HWWWpIx5W4pSA8AVNihKvso8
-	 1G69wmB5F0qWhJg/kIsjWAc3gQbgmPRva2bZmuO76XziGwH7a41vJlbWYnyuLjMPp
-	 Pe6kbekSxDg8YeYjFjkTnUkNnAi4sQTAuFhx3cxOsFIHT4+OGEDCcfe5ypdWY9yI6
-	 rNltlO36/0IrtKMeDg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M1JEu-1s9BNi2VuE-002mNB; Mon, 13
- May 2024 09:53:12 +0200
-Message-ID: <5dca19e5-6dd2-40f3-ae54-a4154e7d00be@web.de>
-Date: Mon, 13 May 2024 09:52:57 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KTdARBuR"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a599eedc8eeso971819566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 00:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1715587175; x=1716191975; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O5smVEjR/VVS0e2yObdThJN4tCbUbbAC8XLh8Tbaot0=;
+        b=KTdARBuR4AJkUzxsvx9ava5l6GhoNdIseaOa1swFbFjBuXaGIMaYZFu7baYzBvKU/K
+         y2RzUOOJnaK0i/rSxEd4u5oMJ79wBQMlEpNaX/SRDUL4CWwiISjhthGwLMQMmD3WmAa1
+         WBY6pC4SXdxeCIZTFjr03NrZjSGl2rBnz5GNzI1NEhpVE2TN3nLStMM03JBuR68ZvdBP
+         vNYgmAk1zs2HcWYm5lUiV0U83E5GcjS/RM3WFmN1TJ5bY26BZrsOMOXWZk72KhbDr6Xy
+         Lc494kVioiz6ZtRgvnasSSM1FIDiEqYLcproSQb84sX4t8qPBU98avLviFiKZZRJbHHi
+         FiTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715587175; x=1716191975;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O5smVEjR/VVS0e2yObdThJN4tCbUbbAC8XLh8Tbaot0=;
+        b=iDe0lZWYNJodDoUmOkHcw/5Ej5AMtCZZI0omgyK0+M/WNfpuLA0byntVFjj2hGE442
+         1m0BIog9vvWNyieoW5WjcmYnR7fcfAVdv1lL3PtxKFA078cgpk2g+vPdKJkd7v+ysKeS
+         uRMJ9WMka2qdR6XlI7nNbOMevj19XS2OD08iX/eVkIZDmTUGyiUN6Zu5JLMZaGsFLnyQ
+         dbx/DFpErQtwF94JhAmvHD1VX2DDul1/XNiOai8zWYv5DUdDHHR1rFlK9vfqHGm5nxul
+         H4TSnIte76h4LZESJeMfCyaMI9wlxis/liYxYnxRGDIvMOYo2SckVSRQ09C7Ps3whTaf
+         rIEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFxAkuG43vnIXHE1aXOl6usIFRgh7V/40GTqhDcbOlijAmGfDiBwhRvKSzhPX4d4FharH4c0RpvpE282VjnYq6TrPosGL2NMgn85CW
+X-Gm-Message-State: AOJu0YxvcdaSfUc8Rp8yRq9mv2BdxeRV9iJ1k3XYmj4uID3vX3xjTAcj
+	vZX52lDwUP3B7m9vcMWeWWu6yB5GMhRt6uspQ2VVVSksq5qRBhbTYntKIi3WuqA=
+X-Google-Smtp-Source: AGHT+IFPTr9tpemxyIWdG1g9bjPz3FBmkzUXW4eLPPKVth/o3VbHpxOnuWWpwypLDHy5PoSAIltx2A==
+X-Received: by 2002:a17:906:f111:b0:a5a:28cc:ff85 with SMTP id a640c23a62f3a-a5a2d58545amr563789566b.28.1715587175252;
+        Mon, 13 May 2024 00:59:35 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c? (p200300e5873ca5006aafb7a77c29ae5c.dip0.t-ipconnect.de. [2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b18110sm561472766b.225.2024.05.13.00.59.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 May 2024 00:59:34 -0700 (PDT)
+Message-ID: <55bbd23b-d851-4274-9511-c5a7af938a07@suse.com>
+Date: Mon, 13 May 2024 09:59:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,58 +61,170 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Kunwu Chan <chentao@kylinos.cn>, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Eduard Zingerman
- <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Song Liu <song@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Yonghong Song <yonghong.song@linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <kunwu.chan@linux.dev>,
- Kunwu Chan <kunwu.chan@hotmail.com>
-References: <20240510095803.472840-2-kunwu.chan@linux.dev>
-Subject: Re: [PATCH bpf-next v2 1/4] selftests/bpf: Add some null pointer
- checks
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240510095803.472840-2-kunwu.chan@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0qk556X1UoKRP1d2KUauvi0VtAOXwmbAC6L/EY2Q15ZO1iJRJbc
- d77Fky6GThq/k9gouG6fF5OqxAIIpSXeG10tGR0S5QoBNvLPYG2wQT6YO3Qk7igdkuqqk4e
- ZxadIQ1wbisRXc93q7N7bwqh9e3MLrHwwKhOfSrKXtiRMsMhq9LnbvOfH3WhhL6ElMcCmAA
- 4yvCu1pRWJJIOj6hMtH9Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ul5fiYkhqWw=;Diwge/DZwN1fc5Y2JRQzn3zMuVW
- 6Cl3u/3RgS0oPiw/6ht2sQxev4EFBdf+leywX1BBO6WQ4KcwZCzN7pABbqVbIvDXnCYRK3jLt
- /srMMw+mJm2Q0KQzj3cqZIBfAcIR/RI/3CYtNJ1IJgdBDB0S3tzDkPm00yzaeu2plrfyO5to1
- tjZkRH5y+o2S0fagXOUsyKmRtN8RJtcJGHWe0AxAqgnMKPQrkSZRZes6AqBpT9aXPu0MdQSbh
- Ff47a7jTW7SbeS5MQQZcvCfAuTDsbfdKUPbVJTFpV+dypRjBARI+34+d5l/eBx2hxDeXNoMR+
- FVjuKzc5yAt4XT3SBt1zO2wgoswdbZ7bRcks7qh82GJLu0Nju5IJdnYiP4Y+8yfnTrrL81Z6H
- xKqrkyDQxVECSsMovYbultCBK3fZcOAuUGmFyhtAy3JIuHb1pspU+070rD1SD3Ir84ec1DRIY
- IJssxTAaabqD0q/9pijMDbLe3re2HBZDgQ4fnjeJtZWTPwOjKJxMEgK3cO9mkitQMYaUVMMgd
- x6J2bl0jRz/rjHB9AMxRrkmJ8bF1dNF5c2mZS6+dtZBuwSs20+V46yg2lrYcDi7ch+uiDG5nt
- mFXko9o4+PQdZI6FaHuc9fpCedvn3p/tn9o6GsgKc5CeeC9wFZrTdn4dG8mNekPiqrKhElEmD
- LRV0TBl3B1AjVOE0p6dBbmlS39hSFpVdSvvFyRg+ty3otrdAWvyoAELJfKKMrMhc7flJW5muE
- CLW8Z+g1uQUCandg5gT04LzUiyNhbBXD1wd+ZK9eX9gcFVoUfIxyApw7OwfzTK/gTrxgl0z3a
- XOwM3SelmRf7DkjQbk5uWgcqzuqCSceiZbOsltYfgsFBw=
+Subject: Re: [RFC KERNEL PATCH v6 3/3] xen/privcmd: Add new syscall to get gsi
+ from irq
+To: "Chen, Jiqian" <Jiqian.Chen@amd.com>,
+ Stefano Stabellini <sstabellini@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "Huang, Ray" <Ray.Huang@amd.com>
+References: <20240419033616.607889-1-Jiqian.Chen@amd.com>
+ <20240419033616.607889-4-Jiqian.Chen@amd.com>
+ <79666084-fc2f-4637-8f0b-3846285601b8@suse.com>
+ <BL1PR12MB58493D17E23751A06FC931DDE7E72@BL1PR12MB5849.namprd12.prod.outlook.com>
+ <BL1PR12MB5849496A5B3148D162787961E7E22@BL1PR12MB5849.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <BL1PR12MB5849496A5B3148D162787961E7E22@BL1PR12MB5849.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> There is a 'malloc' call, which can be unsuccessful.
+On 13.05.24 09:47, Chen, Jiqian wrote:
+> Hi,
+> On 2024/5/10 17:06, Chen, Jiqian wrote:
+>> Hi,
+>>
+>> On 2024/5/10 14:46, Jürgen Groß wrote:
+>>> On 19.04.24 05:36, Jiqian Chen wrote:
+>>>> In PVH dom0, it uses the linux local interrupt mechanism,
+>>>> when it allocs irq for a gsi, it is dynamic, and follow
+>>>> the principle of applying first, distributing first. And
+>>>> the irq number is alloced from small to large, but the
+>>>> applying gsi number is not, may gsi 38 comes before gsi 28,
+>>>> it causes the irq number is not equal with the gsi number.
+>>>> And when passthrough a device, QEMU will use device's gsi
+>>>> number to do pirq mapping, but the gsi number is got from
+>>>> file /sys/bus/pci/devices/<sbdf>/irq, irq!= gsi, so it will
+>>>> fail when mapping.
+>>>> And in current linux codes, there is no method to translate
+>>>> irq to gsi for userspace.
+>>>>
+>>>> For above purpose, record the relationship of gsi and irq
+>>>> when PVH dom0 do acpi_register_gsi_ioapic for devices and
+>>>> adds a new syscall into privcmd to let userspace can get
+>>>> that translation when they have a need.
+>>>>
+>>>> Co-developed-by: Huang Rui <ray.huang@amd.com>
+>>>> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
+>>>> ---
+>>>>    arch/x86/include/asm/apic.h      |  8 +++++++
+>>>>    arch/x86/include/asm/xen/pci.h   |  5 ++++
+>>>>    arch/x86/kernel/acpi/boot.c      |  2 +-
+>>>>    arch/x86/pci/xen.c               | 21 +++++++++++++++++
+>>>>    drivers/xen/events/events_base.c | 39 ++++++++++++++++++++++++++++++++
+>>>>    drivers/xen/privcmd.c            | 19 ++++++++++++++++
+>>>>    include/uapi/xen/privcmd.h       |  7 ++++++
+>>>>    include/xen/events.h             |  5 ++++
+>>>>    8 files changed, 105 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+>>>> index 9d159b771dc8..dd4139250895 100644
+>>>> --- a/arch/x86/include/asm/apic.h
+>>>> +++ b/arch/x86/include/asm/apic.h
+>>>> @@ -169,6 +169,9 @@ extern bool apic_needs_pit(void);
+>>>>      extern void apic_send_IPI_allbutself(unsigned int vector);
+>>>>    +extern int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+>>>> +                    int trigger, int polarity);
+>>>> +
+>>>>    #else /* !CONFIG_X86_LOCAL_APIC */
+>>>>    static inline void lapic_shutdown(void) { }
+>>>>    #define local_apic_timer_c2_ok        1
+>>>> @@ -183,6 +186,11 @@ static inline void apic_intr_mode_init(void) { }
+>>>>    static inline void lapic_assign_system_vectors(void) { }
+>>>>    static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
+>>>>    static inline bool apic_needs_pit(void) { return true; }
+>>>> +static inline int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+>>>> +                    int trigger, int polarity)
+>>>> +{
+>>>> +    return (int)gsi;
+>>>> +}
+>>>>    #endif /* !CONFIG_X86_LOCAL_APIC */
+>>>>      #ifdef CONFIG_X86_X2APIC
+>>>> diff --git a/arch/x86/include/asm/xen/pci.h b/arch/x86/include/asm/xen/pci.h
+>>>> index 9015b888edd6..aa8ded61fc2d 100644
+>>>> --- a/arch/x86/include/asm/xen/pci.h
+>>>> +++ b/arch/x86/include/asm/xen/pci.h
+>>>> @@ -5,6 +5,7 @@
+>>>>    #if defined(CONFIG_PCI_XEN)
+>>>>    extern int __init pci_xen_init(void);
+>>>>    extern int __init pci_xen_hvm_init(void);
+>>>> +extern int __init pci_xen_pvh_init(void);
+>>>>    #define pci_xen 1
+>>>>    #else
+>>>>    #define pci_xen 0
+>>>> @@ -13,6 +14,10 @@ static inline int pci_xen_hvm_init(void)
+>>>>    {
+>>>>        return -1;
+>>>>    }
+>>>> +static inline int pci_xen_pvh_init(void)
+>>>> +{
+>>>> +    return -1;
+>>>> +}
+>>>>    #endif
+>>>>    #ifdef CONFIG_XEN_PV_DOM0
+>>>>    int __init pci_xen_initial_domain(void);
+>>>> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+>>>> index 85a3ce2a3666..72c73458c083 100644
+>>>> --- a/arch/x86/kernel/acpi/boot.c
+>>>> +++ b/arch/x86/kernel/acpi/boot.c
+>>>> @@ -749,7 +749,7 @@ static int acpi_register_gsi_pic(struct device *dev, u32 gsi,
+>>>>    }
+>>>>      #ifdef CONFIG_X86_LOCAL_APIC
+>>>> -static int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+>>>> +int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+>>>>                        int trigger, int polarity)
+>>>>    {
+>>>>        int irq = gsi;
+>>>> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+>>>> index 652cd53e77f6..f056ab5c0a06 100644
+>>>> --- a/arch/x86/pci/xen.c
+>>>> +++ b/arch/x86/pci/xen.c
+>>>> @@ -114,6 +114,21 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
+>>>>                     false /* no mapping of GSI to PIRQ */);
+>>>>    }
+>>>>    +static int acpi_register_gsi_xen_pvh(struct device *dev, u32 gsi,
+>>>> +                    int trigger, int polarity)
+>>>> +{
+>>>> +    int irq;
+>>>> +
+>>>> +    irq = acpi_register_gsi_ioapic(dev, gsi, trigger, polarity);
+>>>> +    if (irq < 0)
+>>>> +        return irq;
+>>>> +
+>>>> +    if (xen_pvh_add_gsi_irq_map(gsi, irq) == -EEXIST)
+>>>> +        printk(KERN_INFO "Already map the GSI :%u and IRQ: %d\n", gsi, irq);
+>>>> +
+>>>> +    return irq;
+>>>> +}
+>>>> +
+>>>>    #ifdef CONFIG_XEN_PV_DOM0
+>>>>    static int xen_register_gsi(u32 gsi, int triggering, int polarity)
+>>>>    {
+>>>> @@ -558,6 +573,12 @@ int __init pci_xen_hvm_init(void)
+>>>>        return 0;
+>>>>    }
+>>>>    +int __init pci_xen_pvh_init(void)
+>>>> +{
+>>>> +    __acpi_register_gsi = acpi_register_gsi_xen_pvh;
+>>>
+>>> No support for unregistering the gsi again?
+>> __acpi_unregister_gsi is set in function acpi_set_irq_model_ioapic.
+>> Maybe I need to use a new function to call acpi_unregister_gsi_ioapic and remove the mapping of irq and gsi from xen_irq_list_head ?
+> When I tried to support unregistering the gsi and removing the mapping during disable device,
+> I encountered that after running "xl pci-assignable-add 03:00.0", callstack pcistub_init_device->xen_pcibk_reset_device->pci_disable_device->pcibios_disable_device->acpi_pci_irq_disable->__acpi_unregister_gsi
+> removed the mapping, after that when user space called xen_gsi_from_irq to get gsi, it failed.
+> 
+> To cover above case, I want to change the implementation of xen_gsi_from_irq to pass sbdf to get the gsi instead of passing irq,
+> Because the sbdf and gsi of a device is unique and wiil not be changed even device is disabled or re-enabled.
+> 
+> Do you think this kind of change is acceptable?
 
-                  two calls?
+Yes, I think so.
 
 
-> This patch will add the malloc failure checking
-=E2=80=A6
-
-Please use imperative wordings for improved change descriptions also in yo=
-ur patches.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9#n94
-
-Regards,
-Markus
+Juergen
