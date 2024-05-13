@@ -1,112 +1,138 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2038.outbound.protection.outlook.com [40.92.21.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7138B15381E
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 14:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715609657; cv=none; b=jU72qCwGELn9sLPFY4NncXJ9QUv2RzAlLXalqlIrFXohzVN7qoT/nL6O2N8/ELb44GMsRgkz0C2Pb2RELdsr7EBzOYyo84vLymjRScsJfIWLr2lAk7hEOZfWkp8ZVGCJE7FbV0QFR/kJkYcXKvC8cD0Et7Cz0NBTK1mXQl8O3tA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715609657; c=relaxed/simple;
-	bh=FB9V+vs5E1VQUhmCPHB+F4habDJck32zqBLt199+I3Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B7iyLFcQR72R2kRkYgg/m0rvfEXX39Q3DTCtAb7YqyDKSWagvswkbCoTgYNpm96HWNflsYeVCDjxyhD/ivZh7iQFm7Bsfo20AJGes2o7VQJ62CspyhwurJEBUDRAEZe/qLZRiCRoTL9m7GmcMpFZdl3+Oyen0cNd2r8LKxrbmCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z93enhUc; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B6A153BC9
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 14:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715609661; cv=fail; b=TIChmZnMungIyT5ILAGvg7Vvk/pczkNqIeQcGZdWufnSyZnw85+p1scU8iro5WD/KqFnQrU1uHRNEpN+5P36tUJD+lLAcVmTnfw3P4YCtqT2JoZaFRgFRdxBCdgWX+RsH5AepF8ur9Xplvw0wFAjndBYZ7nvQKo4Du7TeUOy1dg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715609661; c=relaxed/simple;
+	bh=8r25WIQcmdAeXxBVBcNzIAEEsF/Vn9xAXbNZttDLgNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=L+5eK9x/3R6KNeHVGF1DCGGvsqp1l/8LB9CcuualHzdz5DxKs1c6KlXPgpPEQNRUhwVGK06j/sdKIxdXaOarQY2N2smJBYD2GMj9kZ9tYEV6EtWVTD7U4JuQptQFnVwM+h/Tl2sYSb2WvaBtSG4RlVVlgfRpPKZQRAoqg6SjgHg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=j0/0JuGI; arc=fail smtp.client-ip=40.92.21.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z93enhUc"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c9958a9485so923031b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715609654; x=1716214454; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2UOBn2IF+668KdrcZrqcrK14CUBpiCxB9sfNMBwRB7s=;
-        b=Z93enhUcs5q6v/kvwubU26jUlpt9p2dwds+1vZR8gA59/gBdWMBuMZD1ISXJcuiHJ5
-         N/2vjfRVI/uaaYEke6olAvOUmSVBbVBYSjDxOWKrJMNgHd3bQnB3O84ya2k9QQoBPCG9
-         5S7F24TctYrnjnomPyjVCwoAc41E8K9NZMybTtLDNHy6a8qe4NfLs5W5xMzmPcjo7zG6
-         nDysdj8izHJkmJ2e+KwFPQ9loPrL58c/NbBWflJjk3nV4BGYiP9zCzkc5I7dCmxBFUVr
-         qosV31JLKtd70CQgQm3SNvRl3MnjgO+nOhOSsKh9PY2KrxEZx1CpeTYXueKJzv6Ynkjp
-         d2+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715609654; x=1716214454;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2UOBn2IF+668KdrcZrqcrK14CUBpiCxB9sfNMBwRB7s=;
-        b=EhCpBjUthx2OWpdwyJhYEKX3KM8wxLJOsLyO5KjhGwbEycCemp0diNYhzrcEvPP/Fg
-         8HMfIFoTg7bN8T0xy/9JJsWv80PK9TxnxjF7TE5uuXQj1jmOEzPJOXCRhCBvWi5M+z1D
-         tN4Wvv+yudQlELSnWclmBX9e19SuDSamwC6OiUD2Kcs/7qAKns+7LrgBsb8Z7Z9hcRYe
-         lWza7ziAcw0v/RprTBJqfGdgzA3a4A76jt0PtImzjNJ3otgX159nfUHIiEQ5TPSQQuu8
-         U0Bi+Td7Fp9YUSDS9KXmxuOM8LhkV09xCWCMTCcFO5fVeUblGf0gAiYzCFKCrmekVqoq
-         Dlvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWI40tUloMISXrq84idST3h35UMQZaBnrRjPOUazg73h3xDJB0NFtrRoFZHiE5cnADcKSXaW/js9mPRF/fC7ZR7G5Po1HUu8uA/kC/G
-X-Gm-Message-State: AOJu0Yy1HuXUWzHG82YA/5QCxkAD+KMz4GC5p7/zNSRTCwXxkZqvWSDw
-	FzLqisJv1/Zz14+5rBG8K/9U9i8zephuwJdvr5ctbMSFvwnMwKaKveRZY/O/NrJSbQFD3uMl6NR
-	fwGEHyhN6zkapAib3ehfLLqxyOjuwYCT/kYj22G6qnIBEpb4QLxB7
-X-Google-Smtp-Source: AGHT+IGu6SKrlKrLBVpI5R4Fi+Tdpwzzi1hi7Ih528iP/NR27zuc68FroGIgKA8luFoPZtoMcHDGZD3nlymLqxVlv+E=
-X-Received: by 2002:a05:6808:358:b0:3c9:66dc:1a7a with SMTP id
- 5614622812f47-3c99707247emr10272851b6e.32.1715609654266; Mon, 13 May 2024
- 07:14:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="j0/0JuGI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D8sCZKWzyBULaRyul4huNRSB95MhReswHBKcYjgXtOYD3yGiD41/le77V2DIsEeUyF+sRjx3iW4TSnTwZq+os/K4GXSBlcIcAEhGL38a/nZ074Nj/jeeE6uVYtTO/j819lQNHHeNlreNg67lkUstHm6VUXNj0v60WH/noleOSoNz85zs0cUj9/fqn6CbHbExh0KK3JbAPY04+1xInbHArBNM4mkd9nwm3BmpRWcF/00D7gNTgchfBUUokLpUVdAKUQ7MeLSW/CbeJPVpwdb7a1Lv5jaqb9A38oCC25DGdlfb4kQi/q27H+FOggwOQlfs+1hqcYdI4wODnfm9B/QhkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+Ii9GsWnJ7D6mP1n2yJF+TxiwCJPferw8vPhzhtBwuE=;
+ b=divYYw/kKIHM5cFmE8yGTIAsGJgBIDsZLPvsbH31lZay2lyjrjxQRu+YMZ4+y0HqoyUui36ExAS6LJeIxYCYtX0O6OwWD4xCSyCbaMPmp25B2hlmZ31ndzwmxLakwDES9qam/mHWRdE4oxK1ZraKprm+LqD7gMzsK/hkUW/nPJltzVJv89gGRNdRLpciH8LOOw2yYRphmzJ3FjeacqLtmEqP79A8d0p9oxlMXJQJCxSu2kDbuuOHo5MNQT49L340kkc1NnC4oFwtUV51iRWUgAr266hEz83zZHXVS49kyTmelWj0yR+gdLMebceF/sLCNLmiWHLYq39j1Cm2Ebw/cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Ii9GsWnJ7D6mP1n2yJF+TxiwCJPferw8vPhzhtBwuE=;
+ b=j0/0JuGIGoDM2u85XK+1SCj6NILuIJMe93oko7glq3JX7ElwJuNwgww4Mxyb2kRFq3Z5HH1LKSnSnGvr5ZN7WPqXmjoTinVk+w2l5IOFO/s46lJivIwm1J1az/K/GPxk4h6y1YmHLk50MpXx9794biZ5NPv0sm01b7pwkOl48hfSmMo75oKF0Z2NZR70sfLvUlQf6eYHPHvCzgnaowHLt/vkK0FwqrdGn7QLQmCUbLr6imr2d+zFX3v7PWwfKkBL8npMpOV2d83GFKJie4gw7/JWwiJU349VkGHnvLhqL0W1hF9ZDrSXAb9X18J8FphEQUSN6wS8/rXS293/VRVOiA==
+Received: from BYAPR03MB4168.namprd03.prod.outlook.com (2603:10b6:a03:78::23)
+ by MW5PR03MB6982.namprd03.prod.outlook.com (2603:10b6:303:1a9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
+ 2024 14:14:17 +0000
+Received: from BYAPR03MB4168.namprd03.prod.outlook.com
+ ([fe80::b8b1:7fdc:95d4:238a]) by BYAPR03MB4168.namprd03.prod.outlook.com
+ ([fe80::b8b1:7fdc:95d4:238a%6]) with mapi id 15.20.7544.052; Mon, 13 May 2024
+ 14:14:16 +0000
+From: Jiasheng Jiang <jiashengjiangcool@outlook.com>
+To: jani.nikula@linux.intel.com,
+	joonas.lahtinen@linux.intel.com,
+	rodrigo.vivi@intel.com,
+	tursulin@ursulin.net,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	chris@chris-wilson.co.uk
+Cc: intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Jiasheng Jiang <jiashengjiangcool@outlook.com>
+Subject: [PATCH] drm/i915: Correct error handler
+Date: Mon, 13 May 2024 14:14:07 +0000
+Message-ID:
+ <BYAPR03MB4168F12A763386E1ADF8A8A7ADE22@BYAPR03MB4168.namprd03.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [9DNGlloOSkAg6/nouQhv1hukjZgaI1LQ]
+X-ClientProxiedBy: CH2PR10CA0025.namprd10.prod.outlook.com
+ (2603:10b6:610:4c::35) To BYAPR03MB4168.namprd03.prod.outlook.com
+ (2603:10b6:a03:78::23)
+X-Microsoft-Original-Message-ID:
+ <20240513141407.48770-1-jiashengjiangcool@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507093530.3043-1-urezki@gmail.com> <20240507093530.3043-26-urezki@gmail.com>
- <ZjpAsYJIfzYSKgdA@redhat.com> <4c9e89b5-c981-4809-8bc2-247563ce04e9@paulmck-laptop>
- <20240510131849.GB24764@redhat.com> <20240510135057.GC24764@redhat.com> <474ae55c-fe9e-4668-8f9b-23f819c76d10@paulmck-laptop>
-In-Reply-To: <474ae55c-fe9e-4668-8f9b-23f819c76d10@paulmck-laptop>
-From: Marco Elver <elver@google.com>
-Date: Mon, 13 May 2024 16:13:35 +0200
-Message-ID: <CANpmjNMUJ6UMwWAEHfm-7WZ=jKD56PH67Zp8dB6B=fEysiK=Hw@mail.gmail.com>
-Subject: Re: [PATCH 25/48] rcu: Mark writes to rcu_sync ->gp_count field
-To: paulmck@kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>, "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>, 
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Hillf Danton <hdanton@sina.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4168:EE_|MW5PR03MB6982:EE_
+X-MS-Office365-Filtering-Correlation-Id: 723e0260-b985-427f-2e54-08dc7356f933
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|3430499023|3420499023|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	E6k/P1HCG+Pyuaws5+Qrd0XbnxVsmLcy/UIDaNVgzwgs3Imvo2N91rkMy33xkra/fnq+Xjd45c/ybHXhvCwHnLAOKe1ZbQjURCV3e2Ol03yda44/Zd3vmNwVcQCFTTfH+bIhNS7APZ4A3PhW2d93lkAxPcOCM9xjvel34aX2cWd7YRFRofYLWUYGLX2l+K5zGD8gaRuenUlVkob8SS5QUnfQP7XbC8O7/nacTW25PdX00o9hBWGRi0cUy+P/CpBQtJ7iCGUIaTLoe4GS0sDv+oXrDOsXBKoPFhya6NhiuaxeEylOGgyC0MI1N2a7yxlBmj6gFlwfdSVin622pEw+HbEzYd+LJUCGVEdz3MBUGujZh66IZxu5KDGM63X5qFMuCTBgXD3MFsFeA58VEVPTL1bTmcFmHF4Q9QAvlmzIBKmhK3fKQWuI4IqYiHfqryswH96yJWzJKz1X+3/8N0PuLPYxl8TR+1EQ6RGCWVO8DYHGvj2/Z4AXUDWkoB/nDimnPEtJHZu0Yx+YfjdkLRM6Ogvtwhn57fV/ophvl7iHJn7sLpQhU9+pT37Gwbh0aCYsutSKfTJ/m0Uo3ZmuJ5TyA4HNHKATEXHDrgESlXX1K8VgAgN0bX8lkpwY6v17tXUs
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nDaCK/rZrZXPZ4aaEC2CSnRxrcI1ORh2xBmMxxj4MV8xceaWotk2Y9DkKCad?=
+ =?us-ascii?Q?8LdccdQLPCR04bWXj8B890mAlLGdZLJWp+L16yW5ftxH2CrV7oc2FCJhVPdg?=
+ =?us-ascii?Q?PJArRttO412Zqb2SnmTAMBJba0Aa3TKNcfuSkoLGHE2FNCgh8XeSY7WyMPDO?=
+ =?us-ascii?Q?qIDWxSrHRR07I4NnBtzZ41so6GPX2Xb0VwBeKse8d4yWYxC4EGJZmGqIP2Gm?=
+ =?us-ascii?Q?dlG6Z2hcg2jN8jtoqQxA35o4USXey1mZipAa8z/EgNb86fUe5mfiQVJMb/ey?=
+ =?us-ascii?Q?gFE82Z6alTIvTKlg5e+tX5hehP8pL7ri2gjid7uuV683HppwNBYjpktZjDc6?=
+ =?us-ascii?Q?9IhhUJSMkvAjAGDi7iAcQm49+RfT+qMRWbIh2BLUli86Dcj1ewriYFeOVSFH?=
+ =?us-ascii?Q?BaBJZP1CC+aLzZ80iDkqnrgYO/sJAfZBnUTPgPjc7E6uNSuGAF5p6cttZhYc?=
+ =?us-ascii?Q?lg4bM/TwP2JkNwPEVCp8UBNmfdW4gQ5bM15Czvavp0tBRWeDd4QqdnsmjZhA?=
+ =?us-ascii?Q?hFay/TGbfC9AYV4opaswz6cF2DhHJJKAmXV77mjjHfBuaF2TBQlP7DV03pec?=
+ =?us-ascii?Q?YXxYSfx4TPM/qSmRl0i2d60nkPwZO5+D4lYykc7bIUfjXG/AvGMa0xp0Pfbe?=
+ =?us-ascii?Q?XNjJJ8UDujHqwbz+qCfFM6emAIAIJuB+xFu3ISPQjdK1AA35k4V3j2MOWU3a?=
+ =?us-ascii?Q?00y4L7YGPsCD0KTre7O7bbXu8dO+t2NmWiTdL5JfbIzixQkPlsYpUP3Re+qf?=
+ =?us-ascii?Q?h8AKWoe7slzpAy63YVE179iyhcGKV3hqGngskGCUjEwwbghNHHxEqP10n40C?=
+ =?us-ascii?Q?me6iM6GeG0dGgh+ujh85YF53rF7u/02nwf0WcnvDCvgyKgvaQbYcE4zDnQyy?=
+ =?us-ascii?Q?1vabEK2gZnWjX4DLMYGivUfhcmoMrNeuyykNJBTmAsimXPQ6FIRzwI7EhFKY?=
+ =?us-ascii?Q?Hj8EUgnp6yQq/z+Y/zda8rX8h4UTCL5hEwP2JsNUeNNOplNNvPlxlj3vEf4f?=
+ =?us-ascii?Q?KT9/H5cEi8D+MyshsF3/hAmNGKCWsrWQ52NrFyqGlxYqkbLqSyk83pNRHrRy?=
+ =?us-ascii?Q?Q7UPgsSrEEz3+KTbloQuy20xSZ0+TJJjBTIg11lz2Ox8Ik6smJamlKe+dzUn?=
+ =?us-ascii?Q?o451xDVLzVFveDya2YJquQ5NK4DpCrMyJf6aGnJ4zHCKwmV88lZcax1syfwb?=
+ =?us-ascii?Q?v6eJn8KzvEsdFMBEhIZtUsn0F2p84S1DgEM8VgK+sG3YnJzyG/lxQ3nGirE5?=
+ =?us-ascii?Q?UYMaE1k/8FC8JvVg5ciO?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 723e0260-b985-427f-2e54-08dc7356f933
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB4168.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 14:14:16.7680
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR03MB6982
 
-On Fri, 10 May 2024 at 16:11, Paul E. McKenney <paulmck@kernel.org> wrote:
-[...]
-> > > Does this mean that KCSAN/etc treats the files in kernel/rcu/
-> > > differently than the "Rest of Kernel"? Or what?
-> > >
-> > > And how is it enforced?
-> >
-> > I can only find the strnstr(buf, "rcu") checks in skip_report(),
-> > but they only cover the KCSAN_REPORT_VALUE_CHANGE_ONLY case...
->
-> Huh, new one on me!  When I run KCSAN, I set CONFIG_KCSAN_STRICT=y,
-> which implies CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n, which should
-> prevent skip_report() from even being invoked.
+> On 5/11/2024 5:48 PM, Jiasheng Jiang wrote:
+>> Replace "slab_priorities" with "slab_dependencies" in the error handler to avoid memory leak.
+> 
+> Nice catch. I would make the subject more like:
+> 
+> drm/i915: Fix memory leak by correcting cache object name in error handler
+> 
+>>
+>> Fixes: 32eb6bcfdda9 ("drm/i915: Make request allocation caches global")
+> 
+> Also need Cc: <stable@vger.kernel.org> # v5.2+
+> 
+> With those:
+> 
+> Reviewed-by: Nirmoy Das <nirmoy.das@intel.com>
+> 
+> 
+> Nirmoy
 
-The strnstr hack goes back to the first version of KCSAN released in
-v5.8 [1]. It was added in response to Paul wanting the "stricter"
-treatment for RCU even while KCSAN was still in development, and back
-then syzbot was the first test system using KCSAN. Shortly after Paul
-added a KCSAN config for rcutorture with a laundry list of options to
-make KCSAN "strict" (before we eventually added CONFIG_KCSAN_STRICT
-which greatly simplified that).
+Thanks.
+I will submit a v2.
 
-While the strnstr(.., "rcu") rules are redundant when using the
-stricter rules (at least CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n is
-set), we're keeping the "rcu" special case around because there are
-test robots and fuzzers that use the default KCSAN config (unlike
-rcutorture). And because we know that RCU likes the stricter rules,
-the "value change only" filter is ignored in all KCSAN configs for
-rcu-related functions.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/kcsan/report.c?id=v5.8
-
-Back then syzbot occasionally reported RCU data races, but these days
-rcutorture probably finds all of them before syzbot ever gets its
-hands on new code.
-
-Thanks,
--- Marco
+- Jiasheng
