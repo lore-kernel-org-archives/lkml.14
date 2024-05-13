@@ -1,119 +1,116 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB4323CB
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EA314D2BF;
+	Mon, 13 May 2024 16:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715617320; cv=none; b=THz0ReFhB21tDqIpXX70FouZ4+WQeAicvufa0QJ32fn4szN515nzFlQZEh4sDjtJt3dV0b8JMcBgOTO/P8wIss3ic1p+mBsgpGeaofSJDGuFob7Xtvo75pSCJaseQvvZC0nd4in0LdMOm9ML8bYtRkEMKdo+ld0XS9puEDxR5wc=
+	t=1715617379; cv=none; b=azwCh2nESL2gmfy4BvgEsiqCEafnWGJhMxGTq+6mmmwmSjzKq5ehom1etCDLfyfsZHPqMozDWuHwBFLGW+v7EC800S/7QdxUfXARox02VMnrUKxN+T93fTCp64rHAAVUEYbGg0h0do+6erEuwW0lSssq2D0DGX4jjjpqn75yp6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715617320; c=relaxed/simple;
-	bh=L9lWyO8B48jFnwfohs/Hc0y5GdapgO297Chc8yYX3go=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cSjInxtSBmsmn+DMemKRDgJb3voouZQQ5lGU6rP2DCxB/nXeMArRB0ZRLQCJTmIokDbpyiHaVxDfftPPLhaI328WKj3VpmzHh+iA6id6QFvIxGNHoo2KzdfXFWcLOh4CXQIdX156c3UEF7oLb4M2fqqipmA9fwslD5P9DMq4oEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUfiKUER; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715617379; c=relaxed/simple;
+	bh=N2ATGd7KlEQx4kG5H+XRfUmL8uzdKU8CWZcVR4j/D6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bmuc3k4xzBg2yFl98zP3+P3X+G3Nye9y4yu0yS8HcxqSquoncPsU9bh0sdZy6/Lk40s8gBjolfqFKgbnwZrzxe3RrA4obxAXSJF8LwZvgKMQVWDH3TANAge3ndXur19YD+GQr2IK+j3ZJeuFlV0kP0L7DSkms67BMV2h0jG0z64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSuogmHR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUfiKUER"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51f174e316eso5449911e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715617317; x=1716222117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/kym98WMSrjbPIHX8NWni0cnKfqOVf0cSKMKErv+0E=;
-        b=LUfiKUERMtXLsM/hzUnWr+djFVXYch4EIvJWpHHsX0QctDuZSK6FmKMLzDskCA3Mif
-         MAUCnlkQzMTQC7elE/PFCwqPRXdFOjcgSoH7UhdDi8QXPBQkNv0SOqKoieOxQ01SVwbP
-         LFOwYIJp9Ile5ZGVfwO4ovlQGRLgbitr4pXaszgr7eGcDipc4gpRMtuo383t9OF8esRU
-         aBDmmeo5YN2J7uwBxIqsV02WVCGYy/+ya9orwHLRsres7Hmf2MFN8zz/x2iu6153TCUs
-         LFCYGUAQmh3df9O8C5I/g8j8Lfx2qmRnrsXqutcBazrgCUqfJEdHS5zGzy3GhPhUtoh5
-         3Kpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715617317; x=1716222117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/kym98WMSrjbPIHX8NWni0cnKfqOVf0cSKMKErv+0E=;
-        b=B7EUpPzMFTk1YaIWMmpPUIM14AkqO6OR1dJpXtDQ35vLBE6fIxA8mwVqTGMSdMxhcf
-         M3Ye1+EQAd7kdR5gm2nBKfr1pN4XtuHnfg8PXZHFSDcXY83oODbpO44S/0MdyNLv8/8l
-         +hzWcAyhejIcoS4B6OAYOSHaX+P48xW8p3lBB7jSLI1EiMQLk5ksJjREjZAkmqL0KCbg
-         +sjxN8neQ4SebT8DsE57mqYYKCu/PeTBNRo+vp9cHNZNKoq5nvRqusTCwU7DuDoL/BWN
-         nhlFXF8KtWBa04VBZkg4Fx7UJI/qPDyYzeB+g9kR+qjZOEFPKVxOC6UlmWot9lCvWV5E
-         abKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXcxhH409Nwda2E9/Uu2T5MSXODDcz68RFMoBuO7Nb0LfZ9r9CH5/vq591MZrdiWEfvxvO1l0QaALVwHqp52m6DlH7yzjw9WGuUgF4
-X-Gm-Message-State: AOJu0YxMM+XybC122SKo+DCo41Px7JvPnrr/d4Ul7dXJS21GYLg684TL
-	sCICXk8+MSB1RPumAC73m+bY0m9RjGbFLIiCPwum8EN2FnvhoWEELU989c0oW+HO0SoMtr3HHcm
-	08qxa2b1dH+oVnQ4fibjaTLsLavo=
-X-Google-Smtp-Source: AGHT+IGcwS8Pks6gzxlbLsjju7laLVvD2+f27UQGlta4edShlW0rkxYCYVD2J0JoLGnBF9UGzP9F0cVyTRXk0RAduNg=
-X-Received: by 2002:ac2:5b84:0:b0:51f:4096:dbca with SMTP id
- 2adb3069b0e04-5220ff72e46mr6673842e87.62.1715617317242; Mon, 13 May 2024
- 09:21:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSuogmHR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5479C113CC;
+	Mon, 13 May 2024 16:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715617378;
+	bh=N2ATGd7KlEQx4kG5H+XRfUmL8uzdKU8CWZcVR4j/D6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pSuogmHR4dnns/0HOj3omiIm8ZdqXO1qtQ/dZSU9ruI15Mx/CYiFcHWlChYkhBzfc
+	 hwd65xyvkBsO23iRMRAaiI+UP38hExb3xmvACAbl/9eREniNiq47jN7SJRHXko4Uoo
+	 rP5fAiHJeJsZqI2cjc7+fhsQKJuv80JBy0jeb5hzKXD88Djc+NwvTUOI84AjuWktCI
+	 pwRq1uKCqbHAuLh5cT3H8fA7eF/r5nHm+Wf7INM5pdQf77xapIFQqFywP2j+9/0cqu
+	 xtgL0tp9ywA2jEC7SQ2qBfT2Ne26/7D1wVRff+glJE/eMyaudWaR2+0rc/nD/xKjtA
+	 9rFcC2XOgUlCw==
+Date: Mon, 13 May 2024 17:22:54 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alina Yu <alina_yu@richtek.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	johnny_lai@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v3 6/6] regulator: dt-bindings: rtq2208: Add property to
+ get ldo of RTQ2208 is adjustable or not
+Message-ID: <20240513-tissue-repave-13d2e3bf88fd@spud>
+References: <cover.1715340537.git.alina_yu@richtek.com>
+ <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHx5RXBfazB62qpbGGK3_YjwCFbiJbEXrgo88V6qHFdTW1CdRQ@mail.gmail.com>
- <338daebd-b4af-4a0c-951a-ad7f86dc4646@gmail.com> <CAHx5RXAOKBGXRgC8pqEyY3MZGXxj0-vrwnqg_WZqKreYp18dAg@mail.gmail.com>
- <7efffaa0-6330-4b01-b3d2-63eb063cbbb0@gmail.com> <CAHx5RXD8qFmbEytrPcd40Pj0VRo7uOvZjucrMj6Xxqw73YyS1Q@mail.gmail.com>
- <212a9464-d52b-4730-95b9-5a0aebd38c91@gmail.com>
-In-Reply-To: <212a9464-d52b-4730-95b9-5a0aebd38c91@gmail.com>
-From: Stephen Langstaff <stephenlangstaff1@gmail.com>
-Date: Mon, 13 May 2024 17:21:45 +0100
-Message-ID: <CAHx5RXCWW5M-eW5v65bAkQWZemsU2NTvDv3jA9_XKz=+YP56Qg@mail.gmail.com>
-Subject: Re: drivers/net/dsa/dsa_loop_bdinfo.c build problems
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: andrew@lunn.ch, linux-kernel@vger.kernel.org, 
-	"OlteanV@gmail.com" <OlteanV@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0Rzf6EampsUN2LBy"
+Content-Disposition: inline
+In-Reply-To: <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
+
+
+--0Rzf6EampsUN2LBy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 4:50=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
-> Then dsa_loop_bdinfo is going to be built into your kernel image, and it
-> will register a mdio_board_info structure which will create fixed PHY
-> devices and it will assume that the DSA conduit network device name is
-> "eth0". If this is not correct for your system, that needs changing.
->
-> What are you trying to achieve? Can you be a tad more verbose about what
-> you have tried and what is not working?
+On Fri, May 10, 2024 at 08:06:25PM +0800, Alina Yu wrote:
+> Since there is no way to check is ldo is adjustable or not.
+> As discussing in v2 series, 'richtek,fixed-microvolt' is added for that.
+> user is supposed to know whether vout of ldo is adjustable.
+>=20
+> Signed-off-by: Alina Yu <alina_yu@richtek.com>
+> ---
+>  Documentation/devicetree/bindings/regulator/richtek,rtq2208.yaml | 8 +++=
++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/regulator/richtek,rtq2208.=
+yaml b/Documentation/devicetree/bindings/regulator/richtek,rtq2208.yaml
+> index 609c066..6212f44 100644
+> --- a/Documentation/devicetree/bindings/regulator/richtek,rtq2208.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/richtek,rtq2208.yaml
+> @@ -75,6 +75,13 @@ properties:
+>          description:
+>            regulator description for ldo[1-2].
+> =20
+> +        properties:
+> +          richtek,fixed-microvolt:
+> +            description: |
+> +              If it exists, the voltage is unadjustable.
+> +              There is no risk-free method for software to determine whe=
+ther the ldo vout is fixed or not.
+> +              Therefore, it can only be done in this way.
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -177,6 +184,7 @@ examples:
+>              };
+>            };
+>            ldo1 {
 
-Sure, sorry I was being a bit terse.
+> +            richtek,fixed-microvolt =3D <1200000>;
+>              regulator-min-microvolt =3D <1200000>;
+>              regulator-max-microvolt =3D <1200000>;
 
-In a 6.1.55 Linux kernel build, after a full make, if I touch a file
-marked as "=3Dy" in the .config (e.g. net/devres.c) I see that the
-compiler rebuilds the corresponding .o file, as expected:
+I'm dumb and this example seemed odd to me. Can you explain to me why
+it is not sufficient to set min-microvolt =3D=3D max-microvolt to achieve
+the same thing?
 
-user@machine:/opt/linux-imx$ touch net/devres.c
-user@machine:/opt/linux-imx$ make
-  CALL    scripts/checksyscalls.sh
-  CC      net/devres.o
-  AR      net/built-in.a
-...
+Cheers,
+Conor.
 
-If I do the same for drivers/net/dsa/dsa_loop_bdinfo.c nothing is rebuilt!
+--0Rzf6EampsUN2LBy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-user@machine:/opt/linux-imx$ touch drivers/net/dsa/dsa_loop_bdinfo.c
-user@machine:/opt/linux-imx$ make
-  CALL    scripts/checksyscalls.sh
-user@machine:/opt/linux-imx$
+-----BEGIN PGP SIGNATURE-----
 
-What I am trying to achieve is to use dsa_loop to connect a CPU
-running Linux to an Ethernet switch via a "conduit" Ethernet link
-(e.g. eth0) using the port-based Ethertype DSA (Marvell) frame tagging
-protocol, so that the Linux kernel will present the userspace with
-separate Ethernet links for each of the switch's user ports (e.g.
-lan1, lan2, lan3).
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkI+XgAKCRB4tDGHoIJi
+0teoAP0deskjwTQhQkwFkOEF3YwHdE/UPQPpoXblTyQcsq2YKAD+JWsBhF6E1eTE
+vJixXEaTaIbjTD3RYNjy9OvMwTWmWwY=
+=GwZ0
+-----END PGP SIGNATURE-----
 
-As I understand it this is usually done via a fixed phy-less conduit
-(e.g. xMII) and an MDIO link between the processor and the switch so
-that the processor can configure and control the physical user ports.
-
-I want to do some software development ahead of receiving the
-hardware, so I want to "fake" the MDIO link, or in some other way
-configure the kernel, such that it uses port-based EDSA frame tagging
-over an ordinary (PHY-equipped) Ethernet port and it looks to me like
-dsa_loop should be capable of doing this.
+--0Rzf6EampsUN2LBy--
