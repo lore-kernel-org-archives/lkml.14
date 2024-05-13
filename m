@@ -1,369 +1,208 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F212D058;
-	Mon, 13 May 2024 19:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7827A745E2;
+	Mon, 13 May 2024 19:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715628534; cv=none; b=JBIx+JzJa5lfgORwdyDMA0kZ08bskoSZ8uMtI8LePQnilnkFHfDaP0O5OcL3kxZaOrjgqcD+qcgQ+QC4Nu/KsVrHzGQzJnJ33OGvVBy2ohxUAg+rCtsE6ftxcSmLa+YuOt1Db+HXphMrpSljsMHNkysWPdl3UlZUqJJnqoG9Ofc=
+	t=1715628612; cv=none; b=NYcO5d1bRL/2iTVZZ+Kgz5YdC57JufmqaEpN1ZwZ4HtIY5JTxTHXRx48aBha8317E/UjTzNoxvrrb19FQMkSGuQ3EelD4epmDvt/ofy0LK1kUrbd5W/uWQ1zz89d69hDu6dfjEAM8zCL8UYmjp59jCXrKd4SDwRqxpXaB9SsxRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715628534; c=relaxed/simple;
-	bh=BJB+OEtAm/BTUbJ1V1X5RuWEchXVMXe4ENVOmrRtpBI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PDCbZ9rWo6hfV4w6swWdWjIJmlDBBA9Qm3R6ngLqmIrvHX/1qQqYkG1mX9vm5h5Aho0izbM96mc7TQ8zdO+upgyRFeMmFYIlh3M2OfPH53h0bxsuooZPc7QxBgunVFHusqjJw/GCMhnTVSgLgpvx5YHcQK8F4G1cUZHRR+t1YAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4DOgpBy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715628612; c=relaxed/simple;
+	bh=iThTAPThwTXWAZAmme59Q3SDkLqYOlftEs0Yr1QP0QE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5H2Tm6uynWmA9vvSXK47eCRo6NrugWaX/rAoVEqiGNMZoB+/yxmaMX68hXeZfCgRnJuNFEsjtuk9lTYEv14I9/PEvDUAXwCb2tcwi1e78G/hoG1JbWBRgd9Ep687c4SP77G5OnSIGJodkyUeD2NVxRMbofFVKzKJlxmFwqIAU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyGGm2RA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4DOgpBy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F1BC2BD11;
-	Mon, 13 May 2024 19:28:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyGGm2RA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9685C113CC;
+	Mon, 13 May 2024 19:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715628534;
-	bh=BJB+OEtAm/BTUbJ1V1X5RuWEchXVMXe4ENVOmrRtpBI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=q4DOgpByyxPUkjg1RdBLgtmsdKl5QVbGcti5wOuQzxPC78RqdKXZjs3FYSIhgolQp
-	 1WUXL3kzQGyi8Z/XCR4vWAPhrO2gcJxRv9cks8tlqDjer1S9I/ZuGH03/LuYfe8LEI
-	 hAVz5G9f6ZEjefyEzv4gTA1i5Phqo4gkZagXgy+cMCvzqIiF9BA3eubMKm9NzochSc
-	 qtjLj0t2iGhcm/qEZP5465aoxC+KbA7F0+8/vsuSHjWS9J1FdjnBaf6eW0GxWZH+17
-	 hZSMwdxOzTl9UXVCMbo3Qh/YaLn0LtIFfz+x1PVrKfwAWZqIz9VU0SQyRw+ROjP7Jd
-	 Wi+i/NGGpp7iw==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5b2b7af31d7so57213eaf.3;
-        Mon, 13 May 2024 12:28:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUhKDcpEm2RZiHwzxYeRwB+igCVmWu1eOL/p2ZnATLPu3GkkAPe5AoMptQkSNN+T5WL8+BtOWQ6ScqnOexVCSzRsyYdpTZlwochEt6FwlbaMqTZ/1EjjrrvmpCZmyHBx4gT3oF9ntXyEg==
-X-Gm-Message-State: AOJu0YyKzIrcaOc4HfIU7jLQRo2TKkEpOQqSP2EzGOfyakQN/SHXDVaO
-	QF4T+cUNsS1dOQvc88gT5qrrUQhg6O+yhAz+CFFHtuAyh8boHOWgmkdlaJXVGeS3xg3urD8tmWR
-	2FzKRS81pXW3rPZBV1dXCRBcbDdU=
-X-Google-Smtp-Source: AGHT+IF+XjprH6DnNec88uq3BucfPMXtCA6tSbM5DoaGv5kPcLabPRVbFgf26kxZnLQUNyVC4Gf77IdpguqbVejc7r8=
-X-Received: by 2002:a4a:d692:0:b0:5b2:f29:93f0 with SMTP id
- 006d021491bc7-5b2815e3c4dmr12334252eaf.0.1715628533014; Mon, 13 May 2024
- 12:28:53 -0700 (PDT)
+	s=k20201202; t=1715628612;
+	bh=iThTAPThwTXWAZAmme59Q3SDkLqYOlftEs0Yr1QP0QE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tyGGm2RAVP1mZAkKhfrfz4v417TAvlwbXuDJRuVh153vHpFC6PB0RLDWWzlsbaXFu
+	 1zb4h5e0mbfJ8mUcu7AJaVWLvTEHTOcYrNO2ke6CdBFjHDrzpv/bwnzeZrOdEwLkTl
+	 zfxzPjLeQPriqOai9sRB8GrtpyBbguwfrnQyWD37AohL9ney2Ulm4uEyQEjf5jiW4+
+	 Jil1524zA2Ugl5oTAg/JpetNOwClNUwd32HlPrjHmr9oIii9qAhlfdyk20c5FBSFX5
+	 Jn4NeuW9VckXfkTFDYoeIesS1qjTHo4KAfmjJCjQN3LxTzlRPHumEtdHbRGVTQLnBH
+	 jxe/Sx9N99J3w==
+Date: Mon, 13 May 2024 14:30:09 -0500
+From: Rob Herring <robh@kernel.org>
+To: Aradhya Bhatia <a-bhatia1@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Jyri Sarha <jyri.sarha@iki.fi>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Devicetree List <devicetree@vger.kernel.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Randolph Sapp <rs@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
+	Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
+Subject: Re: [PATCH 2/4] dt-bindings: display: ti: Add schema for AM625 OLDI
+ Transmitter
+Message-ID: <20240513193009.GA2986074-robh@kernel.org>
+References: <20240511193055.1686149-1-a-bhatia1@ti.com>
+ <20240511193055.1686149-3-a-bhatia1@ti.com>
+ <20240512193459.GF17158@pendragon.ideasonboard.com>
+ <e0433619-75c7-40bc-aafb-f0a875ea7dc3@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 13 May 2024 21:28:41 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hDjPb8n5wQODb==QMvp7ipEVpRoSqJ6pTii=_6XvRwEw@mail.gmail.com>
-Message-ID: <CAJZ5v0hDjPb8n5wQODb==QMvp7ipEVpRoSqJ6pTii=_6XvRwEw@mail.gmail.com>
-Subject: [GIT PULL] Power management updates for v6.10-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-Please pull from the tag
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-6.10-rc1
-
-with top-most commit de1c2722e07819c7ea65bb4bf37a2cfe2556095b
-
- Merge branches 'pm-em' and 'pm-docs'
-
-on top of commit dd5a440a31fae6e459c0d6271dddd62825505361
-
- Linux 6.9-rc7
-
-to receive power management updates for 6.10-rc1.
-
-These are mostly cpufreq updates, including a significant intel-pstate
-driver update and several amd-pstate improvements plus some updates of
-ARM cpufreq drivers, general fixes and cleanups.
-
-Also included are changes related to system sleep, power capping updates
-adding support for a new platform and a new hardware feature (among other
-things), a Samsung exynos-asv driver update allowing it to change its
-Energy Model after adjusting voltage, minor cpuidle and devfreq updates
-and a small documentation cleanup.
-
-Specifics:
-
- - Rework the handling of disabled turbo in the intel_pstate driver and
-   make it update the maximum CPU frequency consistently regardless of
-   the reason on top of a number of cleanups (Rafael Wysocki).
-
- - Add missing checks for NULL .exit() cpufreq driver callback to the
-   cpufreq core (Viresh Kumar).
-
- - Prevent pulicy->max from going above the frequency QoS maximum value
-   when cpufreq_frequency_table_verify() is used (Xuewen Yan).
-
- - Prevent a negative CPU number or frequency value from being printed
-   if they are really large (Joshua Yeong).
-
- - Update MAINTAINERS entry for amd-pstate to add two new submaintainers
-   and a designated reviewer (Huang Rui).
-
- - Clean up the amd-pstate driver and update its documentation (Gautham
-   Shenoy).
-
- - Fix the highest frequency issue in the amd-pstate driver which limits
-   performance (Perry Yuan).
-
- - Enable CPPC v2 for certain processors in the family 17H, as requested
-   by TR40 processor users who expect improved performance and lower
-   system temperature (Perry Yuan).
-
- - Change latency and delay values to be read from platform firmware
-   firstly for more accurate timing (Perry Yuan).
-
- - A new quirk is introduced for supporting amd-pstate on legacy
-   processors which either lack CPPC capability, or only only have CPPC
-   v2 capability (Perry Yuan).
-
- - Sun50i cpufreq: Add support for opp_supported_hw, H616 platform and
-   general cleanups (Andre Przywara, Martin Botka, Brandon Cheo Fusi,
-   Dan Carpenter, Viresh Kumar).
-
- - CPPC cpufreq: Fix possible null pointer dereference (Aleksandr
-   Mishin).
-
- - Eliminate uses of of_node_put() from cpufreq (Javier Carrasco,
-   Shivani Gupta).
-
- - brcmstb-avs: ISO C90 forbids mixed declarations (Portia Stephens).
-
- - mediatek cpufreq: Add support for MT7988A (Sam Shih).
-
- - cpufreq-qcom-hw: Add SM4450 compatibles in DT bindings (Tengfei Fan).
-
- - Fix struct cpudata::epp_cached kernel-doc in the intel_pstate cpufreq
-   driver (Jeff Johnson).
-
- - Fix kerneldoc description of ladder_do_selection() (Jeff Johnson).
-
- - Convert the cpuidle kirkwood driver to platform remove callback
-   returning void (Yangtao Li).
-
- - Replace deprecated strncpy() with strscpy() in the hibernation core
-   code (Justin Stitt).
-
- - Use %ps to simplify debug output in the core system-wide suspend and
-   resume code (Len Brown).
-
- - Remove unnecessary else from device_init_wakeup() and make
-   device_wakeup_disable() return void (Dhruva Gole).
-
- - Enable PMU support in the Intel TPMI RAPL driver (Zhang Rui).
-
- - Add support for ArrowLake-H platform to the Intel RAPL driver (Zhang
-   Rui).
-
- - Avoid explicit cpumask allocation on stack in DTPM (Dawei Li).
-
- - Make the Samsung exynos-asv driver update the Energy Model after
-   adjusting voltage on top of some preliminary changes of the OPP and
-   Enery Model generic code (Lukasz Luba).
-
- - Remove a reference to a function that has been dropped from the power
-   management documentation (Bjorn Helgaas).
-
- - Convert the platfrom remove callback to .remove_new for the
-   exyno-nocp, exynos-ppmu, mtk-cci-devfreq, sun8i-a33-mbus, and
-   rk3399_dmc devfreq drivers (Uwe Kleine-K=C3=B6nig).
-
- - Use DEFINE_SIMPLE_PM_OPS for exyno-bus.c driver (Anand Moon).
-
-Thanks!
-
-
----------------
-
-Aleksandr Mishin (1):
-      cppc_cpufreq: Fix possible null pointer dereference
-
-Anand Moon (1):
-      PM / devfreq: exynos: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
-
-Andre Przywara (2):
-      cpufreq: sun50i: Add support for opp_supported_hw
-      arm64: dts: allwinner: h616: enable DVFS for all boards
-
-Arnd Bergmann (1):
-      cpufreq: intel_pstate: hide unused intel_pstate_cpu_oob_ids[]
-
-Bjorn Helgaas (1):
-      Documentation: PM: Update platform_pci_wakeup_init() reference
-
-Brandon Cheo Fusi (1):
-      cpufreq: sun50i: Refactor speed bin decoding
-
-Dan Carpenter (1):
-      cpufreq: sun50i: fix error returns in dt_has_supported_hw()
-
-Dawei Li (1):
-      powercap: DTPM: Avoid explicit cpumask allocation on stack
-
-Dhruva Gole (2):
-      PM: wakeup: make device_wakeup_disable() return void
-      PM: wakeup: Remove unnecessary else from device_init_wakeup()
-
-Gautham R. Shenoy (3):
-      cpufreq: amd-pstate: Document *_limit_* fields in struct amd_cpudata
-      cpufreq: amd-pstate: Document the units for freq variables in amd_cpu=
-data
-      cpufreq: amd-pstate: Remove
-amd_get_{min,max,nominal,lowest_nonlinear}_freq()
-
-Huang Rui (1):
-      MAINTAINERS: cpufreq: amd-pstate: Add co-maintainers and reviewer
-
-Javier Carrasco (3):
-      cpupfreq: tegra124: eliminate uses of of_node_put()
-      cpufreq: dt: eliminate uses of of_node_put()
-      cpufreq: dt-platdev: eliminate uses of of_node_put()
-
-Jeff Johnson (2):
-      cpuidle: ladder: fix ladder_do_selection() kernel-doc
-      cpufreq: intel_pstate: fix struct cpudata::epp_cached kernel-doc
-
-Joshua Yeong (1):
-      cpufreq: Fix up printing large CPU numbers and frequency values
-
-Justin Stitt (1):
-      PM: hibernate: replace deprecated strncpy() with strscpy()
-
-Len Brown (1):
-      PM: sleep: Take advantage of %ps to simplify debug output
-
-Lukasz Luba (4):
-      OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
-      PM: EM: Refactor em_adjust_new_capacity()
-      PM: EM: Add em_dev_update_chip_binning()
-      soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
-
-Martin Botka (5):
-      firmware: smccc: Export revision soc_id function
-      cpufreq: dt-platdev: Blocklist Allwinner H616/618 SoCs
-      dt-bindings: opp: Describe H616 OPPs and opp-supported-hw
-      cpufreq: sun50i: Add H616 support
-      arm64: dts: allwinner: h616: Add CPU OPPs table
-
-Perry Yuan (8):
-      cpufreq: amd-pstate: Unify computation of
-{max,min,nominal,lowest_nonlinear}_freq
-      cpufreq: amd-pstate: Bail out if min/max/nominal_freq is 0
-      cpufreq: amd-pstate: get transition delay and latency value from
-ACPI tables
-      cppc_acpi: print error message if CPPC is unsupported
-      cpufreq: amd-pstate: Add quirk for the pstate CPPC capabilities missi=
-ng
-      cpufreq: amd-pstate: fix code format problems
-      cpufreq: amd-pstate: remove unused variable lowest_nonlinear_freq
-      cpufreq: amd-pstate: fix the highest frequency issue which
-limits performance
-
-Portia Stephens (1):
-      cpufreq: brcmstb-avs-cpufreq: ISO C90 forbids mixed declarations
-
-Rafael J. Wysocki (11):
-      cpufreq: intel_pstate: Drop redundant locking from
-intel_pstate_driver_cleanup()
-      cpufreq: intel_pstate: Simplify spinlock locking
-      cpufreq: intel_pstate: Wait for canceled delayed work to complete
-      cpufreq: intel_pstate: Get rid of unnecessary READ_ONCE() annotations
-      cpufreq: intel_pstate: Use __ro_after_init for three variables
-      cpufreq: intel_pstate: Fold intel_pstate_max_within_limits() into cal=
-ler
-      cpufreq: intel_pstate: Do not update global.turbo_disabled after
-initialization
-      cpufreq: intel_pstate: Rearrange show_no_turbo() and store_no_turbo()
-      cpufreq: intel_pstate: Read global.no_turbo under READ_ONCE()
-      cpufreq: intel_pstate: Replace three global.turbo_disabled checks
-      cpufreq: intel_pstate: Update the maximum CPU frequency consistently
-
-Sam Shih (1):
-      cpufreq: mediatek: Add support for MT7988A
-
-Shivani Gupta (1):
-      cpufreq: ti: Implement scope-based cleanup in ti_cpufreq_match_node()
-
-Tengfei Fan (1):
-      dt-bindings: cpufreq: cpufreq-qcom-hw: Add SM4450 compatibles
-
-Uwe Kleine-K=C3=B6nig (5):
-      PM / devfreq: exynos-nocp: Convert to platform remove callback
-returning void
-      PM / devfreq: exynos-ppmu: Convert to platform remove callback
-returning void
-      PM / devfreq: mtk-cci: Convert to platform remove callback returning =
-void
-      PM / devfreq: sun8i-a33-mbus: Convert to platform remove
-callback returning void
-      PM / devfreq: rk3399_dmc: Convert to platform remove callback
-returning void
-
-Viresh Kumar (2):
-      cpufreq: exit() callback is optional
-      cpufreq: sun50i: Fix build warning around snprint()
-
-Xuewen Yan (1):
-      cpufreq: Use a smaller freq for the policy->max when verify
-
-Yangtao Li (1):
-      cpuidle: kirkwood: Convert to platform remove callback returning void
-
-Zhang Rui (4):
-      powercap: intel_rapl: Add support for ArrowLake-H platform
-      powercap: intel_rapl: Sort header files
-      powercap: intel_rapl: Introduce APIs for PMU support
-      powercap: intel_rapl_tpmi: Enable PMU support
-
----------------
-
- .../bindings/cpufreq/cpufreq-qcom-hw.yaml          |   2 +
- .../opp/allwinner,sun50i-h6-operating-points.yaml  |  87 ++-
- Documentation/power/pci.rst                        |   2 +-
- MAINTAINERS                                        |   3 +
- .../dts/allwinner/sun50i-h616-bigtreetech-cb1.dtsi |   5 +
- .../boot/dts/allwinner/sun50i-h616-cpu-opp.dtsi    | 115 ++++
- .../dts/allwinner/sun50i-h616-orangepi-zero2.dts   |   5 +
- .../boot/dts/allwinner/sun50i-h616-x96-mate.dts    |   5 +
- arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi     |   8 +
- .../allwinner/sun50i-h618-longan-module-3h.dtsi    |   5 +
- .../dts/allwinner/sun50i-h618-orangepi-zero2w.dts  |   5 +
- .../dts/allwinner/sun50i-h618-orangepi-zero3.dts   |   5 +
- .../allwinner/sun50i-h618-transpeed-8k618-t.dts    |   5 +
- drivers/acpi/cppc_acpi.c                           |   4 +-
- drivers/base/power/main.c                          |   6 +-
- drivers/base/power/wakeup.c                        |  11 +-
- drivers/cpufreq/amd-pstate.c                       | 280 ++++++----
- drivers/cpufreq/brcmstb-avs-cpufreq.c              |   5 +-
- drivers/cpufreq/cppc_cpufreq.c                     |  14 +-
- drivers/cpufreq/cpufreq-dt-platdev.c               |  10 +-
- drivers/cpufreq/cpufreq-dt.c                       |  21 +-
- drivers/cpufreq/cpufreq.c                          |  11 +-
- drivers/cpufreq/freq_table.c                       |  12 +-
- drivers/cpufreq/intel_pstate.c                     | 173 +++---
- drivers/cpufreq/mediatek-cpufreq.c                 |  10 +
- drivers/cpufreq/sun50i-cpufreq-nvmem.c             | 209 +++++--
- drivers/cpufreq/tegra124-cpufreq.c                 |  19 +-
- drivers/cpufreq/ti-cpufreq.c                       |   4 +-
- drivers/cpuidle/cpuidle-kirkwood.c                 |   5 +-
- drivers/cpuidle/governors/ladder.c                 |   1 +
- drivers/devfreq/event/exynos-nocp.c                |   6 +-
- drivers/devfreq/event/exynos-ppmu.c                |   6 +-
- drivers/devfreq/exynos-bus.c                       |   9 +-
- drivers/devfreq/mtk-cci-devfreq.c                  |   6 +-
- drivers/devfreq/rk3399_dmc.c                       |   6 +-
- drivers/devfreq/sun8i-a33-mbus.c                   |   6 +-
- drivers/firmware/smccc/smccc.c                     |   1 +
- drivers/mmc/host/sdhci-pci-core.c                  |   2 +-
- drivers/opp/of.c                                   |  17 +-
- drivers/powercap/dtpm_cpu.c                        |   8 +-
- drivers/powercap/intel_rapl_common.c               | 607 +++++++++++++++++=
-+++-
- drivers/powercap/intel_rapl_tpmi.c                 |   3 +
- drivers/soc/samsung/exynos-asv.c                   |  10 +-
- include/linux/amd-pstate.h                         |  20 +-
- include/linux/energy_model.h                       |   5 +
- include/linux/intel_rapl.h                         |  32 ++
- include/linux/pm_opp.h                             |   8 +
- include/linux/pm_wakeup.h                          |  12 +-
- kernel/power/energy_model.c                        | 106 +++-
- kernel/power/hibernate.c                           |   2 +-
- 50 files changed, 1481 insertions(+), 438 deletions(-)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e0433619-75c7-40bc-aafb-f0a875ea7dc3@ti.com>
+
+On Mon, May 13, 2024 at 02:07:44PM +0530, Aradhya Bhatia wrote:
+> Hi Laurent,
+> 
+> Thank you for reviewing the patches!
+> 
+> On 13-May-24 01:04, Laurent Pinchart wrote:
+> > Hi Aradhya,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Sun, May 12, 2024 at 01:00:53AM +0530, Aradhya Bhatia wrote:
+> >> Add devicetree binding schema for AM625 OLDI Transmitters.
+> >>
+> >> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> >> ---
+> >>  .../bindings/display/ti/ti,am625-oldi.yaml    | 153 ++++++++++++++++++
+> >>  MAINTAINERS                                   |   1 +
+> >>  2 files changed, 154 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> >> new file mode 100644
+> >> index 000000000000..0a96e600bc0b
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> >> @@ -0,0 +1,153 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Texas Instruments AM625 OLDI Transmitter
+> >> +
+> >> +maintainers:
+> >> +  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> >> +  - Aradhya Bhatia <a-bhatia1@ti.com>
+> >> +
+> >> +description: |
+> >> +  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialized RGB
+> >> +  pixel data transmission between host and flat panel display over LVDS (Low
+> >> +  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to-1 data
+> >> +  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS output
+> >> +  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RGB or
+> >> +  padded and un-padded 18-bit RGB bus formats as input.
+> >> +
+> >> +properties:
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +    description: serial clock input for the OLDI transmitters
+> >> +
+> >> +  clock-names:
+> >> +    const: s_clk
+> >> +
+> >> +  ti,companion-oldi:
+> >> +    $ref: /schemas/types.yaml#/definitions/phandle
+> >> +    description:
+> >> +      phandle to companion OLDI transmitter. This property is mandatory for the
+> >> +      primarty OLDI TX if the OLDI TXes are expected to work either in dual-lvds
+> >> +      mode or in clone mode. This property should point to the secondary OLDI
+> >> +      TX.
+> >> +
+> >> +  ti,secondary-oldi:
+> >> +    type: boolean
+> >> +    description: Boolean property to mark an OLDI TX as secondary node.
+> >> +
+> >> +  ti,oldi-io-ctrl:
+> >> +    $ref: /schemas/types.yaml#/definitions/phandle
+> >> +    description:
+> >> +      phandle to syscon device node mapping OLDI IO_CTRL registers found in the
+> >> +      control MMR region. This property is needed for OLDI interface to work.
+> >> +
+> >> +  ports:
+> >> +    $ref: /schemas/graph.yaml#/properties/ports
+> >> +
+> >> +    properties:
+> >> +      port@0:
+> >> +        $ref: /schemas/graph.yaml#/properties/port
+> >> +        description: Parallel RGB input port
+> >> +
+> >> +      port@1:
+> >> +        $ref: /schemas/graph.yaml#/properties/port
+> >> +        description: LVDS output port
+> >> +
+> >> +    required:
+> >> +      - port@0
+> >> +      - port@1
+> >> +
+> >> +allOf:
+> >> +  - if:
+> >> +      properties:
+> >> +        ti,secondary-oldi: true
+> >> +    then:
+> >> +      properties:
+> >> +        ti,companion-oldi: false
+> >> +        ti,oldi-io-ctrl: false
+> >> +        clocks: false
+> >> +        clock-names: false
+> >> +
+> >> +    else:
+> >> +      required:
+> >> +        - ti,oldi-io-ctrl
+> >> +        - clocks
+> >> +        - clock-names
+> >> +
+> >> +required:
+> >> +  - reg
+> >> +  - ports
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> >> +
+> >> +    oldi_txes {
+> >> +        #address-cells = <1>;
+> >> +        #size-cells = <0>;
+> >> +        oldi: oldi@0 {
+> >> +            reg = <0>;
+> >> +            clocks = <&k3_clks 186 0>;
+> >> +            clock-names = "s_clk";
+> >> +            ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+> > 
+> > What bus does this device live on ? Couldn't the I/O register space be
+> > referenced by the reg property ?.
+> > 
+> 
+> These registers are a part of the system-controller register space
+> (ctrl_mmr0). The whole register set is owned by the main_conf[0]
+> devicetree node, with sub-nodes pointing to specific regions. That's why
+> I cannot reference these registers directly.
+
+Then what does 'reg' represent? Looks like you just made up an index. If 
+so, then this should probably be a child of &dss_oldi_io_ctrl instead. 
+Or it should just be merged into that node.
+
+Rob
