@@ -1,90 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBFC14C59D;
-	Mon, 13 May 2024 11:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5810914C584
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715599954; cv=none; b=Cd2KsA5noNMdENr+Z0WexqnixgQXJjZCugUGIJGPNUY0nDfj9Su3P6dwhQ/ORLJLZjqdJsiQ0VJ7ioOTtgKO1d+27bbu04Pgaq3GxnIjxiHr7AF/2dHi4dNmyRSU/4agnZKaaOGwwuwHsCvcJft2C+gTpL7vOT1DEg4Ut3Jzkvo=
+	t=1715599986; cv=none; b=Umt7wDCaYkPMLcFiyeeVLtNSTyAOICYyqeENx34FLwUpepJyevGKQSbs/FWitE51nr7msJ5VqHmgzMPRImBaobt+dJXV1b/c7m/2iqILeEtznqMp+wdb9RdVKj3DkbHLdiGdqASrbqlaSV1Do50ywc9DIXOYd6IO1aLphOE9NQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715599954; c=relaxed/simple;
-	bh=5Q7SvryTCkzI9i/Yhjm3yvtskbQvHGoyG+prJzmV6EA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eo7On/VamYK5pP9aZv5l2tiRycglpKh9+EKY5dlCh0f0noKaJ6z5tfej5XLdl1FmdmzyXun4cs2UegWSZkaYcm8NcXlFwJZVzjpUYDlAqwA9CwBCSRXN8h+jIhYlq2uBxqR+0Fkc9MAXKifY8MQ1NdaooOHiT2paDibC+CT2u00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qdlm8FPk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715599986; c=relaxed/simple;
+	bh=0k5DBiev6Hez4iRlP0Z+hV0EZ/1rw9D59hE5bmw14XQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbaKQ999v+iYf8GbDR7zL1bG544nwFBlgdaWzSR5HL4icjPwsY3gBPleNQksB1ezVvKZQ7GIwj/0cRoM929prBZ5aHIK6my+//V7npJ5woJ50sNh0X2xqMfTMu2skMWBjEgdx1h6Ung8+l5Y2T8fQzCq0EtmaSdw+JGhNSgicEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KekUXzHc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qdlm8FPk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C740C113CC;
-	Mon, 13 May 2024 11:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715599954;
-	bh=5Q7SvryTCkzI9i/Yhjm3yvtskbQvHGoyG+prJzmV6EA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qdlm8FPkdFGhDn47egt8X7tUXbgywLQZMqliFak8Bqx5vK/s4QUWAtE+8k5Vd3AJq
-	 vj7N3p1X1b7+aK3LYX9o8/jF2zcI+78oDC0vorFQaUfS+u5hjCN8urYZvDUTo5573W
-	 qa4kcDv7DZx/eo5xXJnrNCHIsLO3p2pgO1dwT6QI=
-Date: Mon, 13 May 2024 13:32:31 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: stable@vger.kernel.org, airlied@gmail.com, airlied@redhat.com,
-	daniel@ffwll.ch, dreaming.about.electric.sheep@gmail.com,
-	dri-devel@lists.freedesktop.org, kraxel@redhat.com,
-	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, spice-devel@lists.freedesktop.org,
-	tzimmermann@suse.de, virtualization@lists.linux.dev,
-	Anders Blomdell <anders.blomdell@gmail.com>,
-	David Wang <00107082@163.com>
-Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM
- ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM
- events:qxl_gc_work [qxl]
-Message-ID: <2024051324-unfitted-levitator-cae6@gregkh>
-References: <20240430061337.764633-1-00107082@163.com>
- <20240506143003.4855-1-00107082@163.com>
- <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
- <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
- <7e3fdac4-e0bc-42f4-9bb3-a6b16f323491@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KekUXzHc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715599984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=54evBAuhpnIbgDCbHAgBJwdKwEdND6gn70BNk2pLCuo=;
+	b=KekUXzHcLmvOQDNh7PXtS3qLl5XDYdKHpt8kcItRCBA90QLgDiuZ2fJD4ZcDG5DoqrYeTi
+	nTrGIbEyPiCREMOx8m1L8UxzwrfZgGPnHPck/a022rHgPAzvBxquKmOWNbKTsJQhYJzP0x
+	U47aZULiqyUcov2hBGBPKSMM8/kcR/s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-b22GMANPMli0g95TKxwUrg-1; Mon, 13 May 2024 07:27:02 -0400
+X-MC-Unique: b22GMANPMli0g95TKxwUrg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A3D328025F9;
+	Mon, 13 May 2024 11:27:01 +0000 (UTC)
+Received: from alecto.usersys.redhat.com (unknown [10.43.17.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6AC691C00A90;
+	Mon, 13 May 2024 11:27:00 +0000 (UTC)
+From: Artem Savkov <asavkov@redhat.com>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Artem Savkov <asavkov@redhat.com>,
+	Jan Stancek <jstancek@redhat.com>
+Subject: [PATCH bpf-next] bpftool: fix make dependencies for vmlinux.h
+Date: Mon, 13 May 2024 13:26:58 +0200
+Message-ID: <20240513112658.43691-1-asavkov@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e3fdac4-e0bc-42f4-9bb3-a6b16f323491@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Wed, May 08, 2024 at 02:51:10PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 08.05.24 14:35, Anders Blomdell wrote:
-> > On 2024-05-07 07:04, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 06.05.24 16:30, David Wang wrote:
-> >>>> On 30.04.24 08:13, David Wang wrote:
-> >>
-> >>>> And confirmed that the warning is caused by
-> >>>> 07ed11afb68d94eadd4ffc082b97c2331307c5ea and reverting it can fix.
-> >>>
-> >>> The kernel warning still shows up in 6.9.0-rc7.
-> >>> (I think 4 high load processes on a 2-Core VM could easily trigger
-> >>> the kernel warning.)
-> >>
-> >> Thx for the report. Linus just reverted the commit 07ed11afb68 you
-> >> mentioned in your initial mail (I put that quote in again, see above):
-> >>
-> >> 3628e0383dd349 ("Reapply "drm/qxl: simplify qxl_fence_wait"")
-> >> https://git.kernel.org/torvalds/c/3628e0383dd349f02f882e612ab6184e4bb3dc10
-> >>
-> >> So this hopefully should be history now.
-> >>
-> > Since this affects the 6.8 series (6.8.7 and onwards), I made a CC to
-> > stable@vger.kernel.org
-> 
-> Ohh, good idea, I thought Linus had added a stable tag, but that is not
-> the case. Adding Greg as well and making things explicit:
-> 
-> @Greg: you might want to add 3628e0383dd349 ("Reapply "drm/qxl: simplify
-> qxl_fence_wait"") to all branches that received 07ed11afb68d94 ("Revert
-> "drm/qxl: simplify qxl_fence_wait"") (which afaics went into v6.8.7,
-> v6.6.28, v6.1.87, and v5.15.156).
+With pre-generated vmlinux.h there is no dependency on neither vmlinux
+nor bootstrap bpftool. Define dependencies separately for both modes.
+This avoids needless rebuilds in some corner cases.
 
-Now queued up, thanks.
+Suggested-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Artem Savkov <asavkov@redhat.com>
+---
+ tools/bpf/bpftool/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-greg k-h
+diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+index dfa4f1bebbb31..ba927379eb201 100644
+--- a/tools/bpf/bpftool/Makefile
++++ b/tools/bpf/bpftool/Makefile
+@@ -204,10 +204,11 @@ ifeq ($(feature-clang-bpf-co-re),1)
+ 
+ BUILD_BPF_SKELS := 1
+ 
+-$(OUTPUT)vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL_BOOTSTRAP)
+ ifeq ($(VMLINUX_H),)
++$(OUTPUT)vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL_BOOTSTRAP)
+ 	$(QUIET_GEN)$(BPFTOOL_BOOTSTRAP) btf dump file $< format c > $@
+ else
++$(OUTPUT)vmlinux.h: $(VMLINUX_H)
+ 	$(Q)cp "$(VMLINUX_H)" $@
+ endif
+ 
+-- 
+2.44.0
+
