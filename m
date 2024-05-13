@@ -1,981 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6D71487E1;
-	Mon, 13 May 2024 11:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD4114C591;
+	Mon, 13 May 2024 11:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715599133; cv=none; b=hAEBRvZl4ciCN7bOU010vFf6QCcGJ4qv2DXsrBVT/PImvdEiWrPolC+KfQZy6RtI3fy9sbst4auPJs8/HLkfwdVLqMkpxzdc6t++6OOX/UsDZjEB9KIpTBKGaL4W/dBIuXKOn/HdiSvvTE0CwMDVCMjx6Sic+UuUW9A9OeOIlBg=
+	t=1715599141; cv=none; b=thsBUszX8D02joM94qRGZSS7s1t47PaGqBIbh6pYeagCDmx1He1QrrVXBIZ5Zb0BthgcSHfN4l5u1ZFF0V/LUOImZO7lgW1zQGDQIlRw92bvPhnm3+eyI1SWSqsyzuy5PSvBIeHLC2t2r3s27C8Gy+FUWKf2EI/GiqBAnFa0MPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715599133; c=relaxed/simple;
-	bh=9uxvQgxkZ6O07BLfji5yxOa/zo3RhB0GDev9WUZ6ANU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=j3S0SUB6rdMcWNKjDmSJnIItC/p6+g/u8vCtbcLvoDpakOJDIqylzXOqshXOqPlJGy+iNkB3DSDAx0X4Kmwx2K4cqyshNxncBjTmgyozJx5ZV0MybAbpGmj7xLqAGceZ8HlTCLje7TWJLJBErbTJXYaCgg9ShSUWvp0dIsaiUQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CAMNsSGS; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1715599141; c=relaxed/simple;
+	bh=Hq107+KzbP8LLfL/8/jiKEoxV4uQvEu20/9t6yULhgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rpFssj9aaXuKAnHi16PV8OtPHf6FM/lD90jaui4Ywc+Z0WFXK9SkUq54Ca/ruwgjLX1hovdri9oMC242/tLJq7CN6uk5c4l1aRy8wSoyCcG7BwEAfrcu+4bqJYhI0b+c4+Hz/8B8dm8VaMhttWB6rdKbgDtyZSD5qoxA35pit+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VXIz1x4z; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CAMNsSGS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VXIz1x4z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715599130; x=1747135130;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=9uxvQgxkZ6O07BLfji5yxOa/zo3RhB0GDev9WUZ6ANU=;
-  b=CAMNsSGS/7M8Upt3thMfP/AxZ8p1d5HDE05nr97iUX3AhsPkaz/axD8U
-   gq45Jrz2AIpFHuZZKh1W+LFIWPyNXuD/lyXZmUAfRCWfvXCwoL2juNFUR
-   fSx4r38/GTUiTNYgxkvxh0tFEUIqrICVm/sunlvyfuCBA2pFLFr/k5nnR
-   XFyITOl1ARctCkrhI4hnlB4mobbufL1O2MBqAkW6Rai0v7aBj02Nrxauf
-   vJ2h0QY6XAzbUuqC9LW8xMGAv+c1QwKs3/e20AM51aByj/dn0ceBrN8mU
-   3Fkp3KnX5eFXVOB1k5MnL19ySZclf5S+jxdgH17pE+Rm7FS3lM1RHzakD
-   g==;
-X-CSE-ConnectionGUID: fYmlz0h+R/aZX9vwWZLmRA==
-X-CSE-MsgGUID: 9sSFQebsRG6iIS25EgJlSw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="15320635"
+  t=1715599139; x=1747135139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Hq107+KzbP8LLfL/8/jiKEoxV4uQvEu20/9t6yULhgY=;
+  b=VXIz1x4zN7CGf108Oit/tDx6Ijfe5sFzd+w61hHKxRIV4S6fP0+YD+Sk
+   znr7WG2l1a9pZ2Ptr7AG+sOBXXvKvkVo29EKqxbU1QU5ktATAP0LTx5G+
+   Us+1fFuIfi6n0UBfQL+trogIwFfeyGfm5D+osC78wO9b4sE8N7GExDWJK
+   pQpAhfFnQQWF12EQiAPszWXoTBdgVtUyU65UP1RjAlZhdEySEwC9LE7nT
+   E/T9pb0mpRx1fjQUJUgyRw5HWFD+PDjNDEi/WQCRDsPzI6pteDLmZEwKO
+   q/05b6cKB28/mc3zbJqdmnZaFMjSs5PNpRVu9xKK8cKomEsnlf906pd/1
+   w==;
+X-CSE-ConnectionGUID: yrb9+5eXTO66xLQJviy6qw==
+X-CSE-MsgGUID: kBlGDfLdTtOA7uI8/s1QbQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11349939"
 X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
-   d="scan'208";a="15320635"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 04:18:35 -0700
-X-CSE-ConnectionGUID: 3IhjhgbYRqyjP11HFV15uQ==
-X-CSE-MsgGUID: zC2Nl4F+T8WiDMwQWFG72A==
+   d="scan'208";a="11349939"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 04:18:58 -0700
+X-CSE-ConnectionGUID: Em0EdL3kS+ebItk6iQqS3Q==
+X-CSE-MsgGUID: 2h063URmRbasVo6zRP4CkA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
-   d="scan'208";a="53522866"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.7])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 04:18:31 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Diederik de Haas <didi.debian@cknow.org>, Dwaipayan Ray
- <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Diederik de Haas
- <didi.debian@cknow.org>
-Subject: Re: [PATCH] docs: dev-tools: checkpatch: Add targets for checkpatch
- tags
-In-Reply-To: <20240513102237.112376-1-didi.debian@cknow.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240513102237.112376-1-didi.debian@cknow.org>
-Date: Mon, 13 May 2024 14:18:28 +0300
-Message-ID: <87a5kuez97.fsf@intel.com>
+   d="scan'208";a="61123834"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 04:18:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s6Thh-000000076l1-1gxQ;
+	Mon, 13 May 2024 14:18:49 +0300
+Date: Mon, 13 May 2024 14:18:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: lakshmi.sowjanya.d@intel.com
+Cc: tglx@linutronix.de, jstultz@google.com, giometti@enneenne.com,
+	corbet@lwn.net, linux-kernel@vger.kernel.org, x86@kernel.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org, eddie.dong@intel.com,
+	christopher.s.hall@intel.com, jesse.brandeburg@intel.com,
+	davem@davemloft.net, alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com, mcoquelin.stm32@gmail.com, perex@perex.cz,
+	linux-sound@vger.kernel.org, anthony.l.nguyen@intel.com,
+	peter.hilber@opensynergy.com, pandith.n@intel.com,
+	subramanian.mohan@intel.com, thejesh.reddy.t.r@intel.com
+Subject: Re: [PATCH v8 10/12] pps: generators: Add PPS Generator TIO Driver
+Message-ID: <ZkH3GP2b9WTz9W3W@smile.fi.intel.com>
+References: <20240513103813.5666-1-lakshmi.sowjanya.d@intel.com>
+ <20240513103813.5666-11-lakshmi.sowjanya.d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240513103813.5666-11-lakshmi.sowjanya.d@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 13 May 2024, Diederik de Haas <didi.debian@cknow.org> wrote:
-> Make the tags directly linkable by defining targets for them.
->
-> Closes: https://lore.kernel.org/r/8090211.0vHzs8tI1a@bagend/
-> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
-> ---
->  Documentation/dev-tools/checkpatch.rst | 216 +++++++++++++++++++++++++
->  1 file changed, 216 insertions(+)
->
-> diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev-tools/checkpatch.rst
-> index 127968995847..6499e29c3a19 100644
-> --- a/Documentation/dev-tools/checkpatch.rst
-> +++ b/Documentation/dev-tools/checkpatch.rst
-> @@ -242,6 +242,8 @@ This section contains a description of all the message types in checkpatch.
->  Allocation style
->  ----------------
->  
-> +  .. _alloc-array-args:
-> +
->    **ALLOC_ARRAY_ARGS**
+On Mon, May 13, 2024 at 04:08:11PM +0530, lakshmi.sowjanya.d@intel.com wrote:
+> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> 
+> The Intel Timed IO PPS generator driver outputs a PPS signal using
+> dedicated hardware that is more accurate than software actuated PPS.
+> The Timed IO hardware generates output events using the ART timer.
+> The ART timer period varies based on platform type, but is less than 100
+> nanoseconds for all current platforms. Timed IO output accuracy is
+> within 1 ART period.
+> 
+> PPS output is enabled by writing '1' the 'enable' sysfs attribute. The
+> driver uses hrtimers to schedule a wake-up 10 ms before each event
+> (edge) target time. At wakeup, the driver converts the target time in
+> terms of CLOCK_REALTIME to ART trigger time and writes this to the Timed
+> IO hardware. The Timed IO hardware generates an event precisely at the
+> requested system time without software involvement.
 
-Alternatively, you could just convert the definition lists into section
-titles to make them implicit hyperlink targets. The rst stays cleaner
-and there's no manual updating.
+...
 
-BR,
-Jani.
+> +static ssize_t enable_store(struct device *dev, struct device_attribute *attr, const char *buf,
+> +			    size_t count)
+> +{
+> +	struct pps_tio *tio = dev_get_drvdata(dev);
+> +	bool enable;
+> +	int err;
 
->      The first argument for kcalloc or kmalloc_array should be the
->      number of elements.  sizeof() as the first argument is generally
-> @@ -249,6 +251,8 @@ Allocation style
->  
->      See: https://www.kernel.org/doc/html/latest/core-api/memory-allocation.html
->  
-> +  .. _alloc-sizeof-struct:
-> +
->    **ALLOC_SIZEOF_STRUCT**
->      The allocation style is bad.  In general for family of
->      allocation functions using sizeof() to get memory size,
-> @@ -262,6 +266,8 @@ Allocation style
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#allocating-memory
->  
-> +  .. _alloc-with-multiply:
-> +
->    **ALLOC_WITH_MULTIPLY**
->      Prefer kmalloc_array/kcalloc over kmalloc/kzalloc with a
->      sizeof multiply.
-> @@ -272,16 +278,22 @@ Allocation style
->  API usage
->  ---------
->  
-> +  .. _arch-defines:
-> +
->    **ARCH_DEFINES**
->      Architecture specific defines should be avoided wherever
->      possible.
->  
-> +  .. _arch-include-linux:
-> +
->    **ARCH_INCLUDE_LINUX**
->      Whenever asm/file.h is included and linux/file.h exists, a
->      conversion can be made when linux/file.h includes asm/file.h.
->      However this is not always the case (See signal.h).
->      This message type is emitted only for includes from arch/.
->  
-> +  .. _avoid-bug:
-> +
->    **AVOID_BUG**
->      BUG() or BUG_ON() should be avoided totally.
->      Use WARN() and WARN_ON() instead, and handle the "impossible"
-> @@ -289,6 +301,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/process/deprecated.html#bug-and-bug-on
->  
-> +  .. _consider-kstrto:
-> +
->    **CONSIDER_KSTRTO**
->      The simple_strtol(), simple_strtoll(), simple_strtoul(), and
->      simple_strtoull() functions explicitly ignore overflows, which
-> @@ -298,6 +312,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
->  
-> +  .. _constant-conversion:
-> +
->    **CONSTANT_CONVERSION**
->      Use of __constant_<foo> form is discouraged for the following functions::
->  
-> @@ -334,6 +350,8 @@ API usage
->  
->      See: https://lore.kernel.org/lkml/1400106425.12666.6.camel@joe-AO725/
->  
-> +  .. _deprecated-api:
-> +
->    **DEPRECATED_API**
->      Usage of a deprecated RCU API is detected.  It is recommended to replace
->      old flavourful RCU APIs by their new vanilla-RCU counterparts.
-> @@ -342,6 +360,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/RCU/whatisRCU.html#full-list-of-rcu-apis
->  
-> +  .. _deprecated-variable:
-> +
->    **DEPRECATED_VARIABLE**
->      EXTRA_{A,C,CPP,LD}FLAGS are deprecated and should be replaced by the new
->      flags added via commit f77bf01425b1 ("kbuild: introduce ccflags-y,
-> @@ -360,6 +380,8 @@ API usage
->        2. https://lore.kernel.org/lkml/1313384834-24433-12-git-send-email-lacombar@gmail.com/
->        3. https://www.kernel.org/doc/html/latest/kbuild/makefiles.html#compilation-flags
->  
-> +  .. _device-attr-functions:
-> +
->    **DEVICE_ATTR_FUNCTIONS**
->      The function names used in DEVICE_ATTR is unusual.
->      Typically, the store and show functions are used with <attr>_store and
-> @@ -374,6 +396,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/driver-api/driver-model/device.html#attributes
->  
-> +  .. _device-attr-ro:
-> +
->    **DEVICE_ATTR_RO**
->      The DEVICE_ATTR_RO(name) helper macro can be used instead of
->      DEVICE_ATTR(name, 0444, name_show, NULL);
-> @@ -383,6 +407,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/driver-api/driver-model/device.html#attributes
->  
-> +  .. _device-attr-rw:
-> +
->    **DEVICE_ATTR_RW**
->      The DEVICE_ATTR_RW(name) helper macro can be used instead of
->      DEVICE_ATTR(name, 0644, name_show, name_store);
-> @@ -392,6 +418,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/driver-api/driver-model/device.html#attributes
->  
-> +  .. _device-attr-wo:
-> +
->    **DEVICE_ATTR_WO**
->      The DEVICE_AATR_WO(name) helper macro can be used instead of
->      DEVICE_ATTR(name, 0200, NULL, name_store);
-> @@ -401,6 +429,8 @@ API usage
->  
->      See: https://www.kernel.org/doc/html/latest/driver-api/driver-model/device.html#attributes
->  
-> +  .. _duplicated-sysctl-const:
-> +
->    **DUPLICATED_SYSCTL_CONST**
->      Commit d91bff3011cf ("proc/sysctl: add shared variables for range
->      check") added some shared const variables to be used instead of a local
-> @@ -419,6 +449,8 @@ API usage
->        1. https://lore.kernel.org/lkml/20190430180111.10688-1-mcroce@redhat.com/
->        2. https://lore.kernel.org/lkml/20190531131422.14970-1-mcroce@redhat.com/
->  
-> +  .. _enosys:
-> +
->    **ENOSYS**
->      ENOSYS means that a nonexistent system call was called.
->      Earlier, it was wrongly used for things like invalid operations on
-> @@ -426,15 +458,21 @@ API usage
->  
->      See: https://lore.kernel.org/lkml/5eb299021dec23c1a48fa7d9f2c8b794e967766d.1408730669.git.luto@amacapital.net/
->  
-> +  .. _enotsupp:
-> +
->    **ENOTSUPP**
->      ENOTSUPP is not a standard error code and should be avoided in new patches.
->      EOPNOTSUPP should be used instead.
->  
->      See: https://lore.kernel.org/netdev/20200510182252.GA411829@lunn.ch/
->  
-> +  .. _export-symbol:
-> +
->    **EXPORT_SYMBOL**
->      EXPORT_SYMBOL should immediately follow the symbol to be exported.
->  
-> +  .. _in-atomic:
-> +
->    **IN_ATOMIC**
->      in_atomic() is not for driver use so any such use is reported as an ERROR.
->      Also in_atomic() is often used to determine if sleeping is permitted,
-> @@ -445,6 +483,8 @@ API usage
->  
->      See: https://lore.kernel.org/lkml/20080320201723.b87b3732.akpm@linux-foundation.org/
->  
-> +  .. _lockdep:
-> +
->    **LOCKDEP**
->      The lockdep_no_validate class was added as a temporary measure to
->      prevent warnings on conversion of device->sem to device->mutex.
-> @@ -452,20 +492,28 @@ API usage
->  
->      See: https://lore.kernel.org/lkml/1268959062.9440.467.camel@laptop/
->  
-> +  .. _malformed-include:
-> +
->    **MALFORMED_INCLUDE**
->      The #include statement has a malformed path.  This has happened
->      because the author has included a double slash "//" in the pathname
->      accidentally.
->  
-> +  .. _use-lockdep:
-> +
->    **USE_LOCKDEP**
->      lockdep_assert_held() annotations should be preferred over
->      assertions based on spin_is_locked()
->  
->      See: https://www.kernel.org/doc/html/latest/locking/lockdep-design.html#annotations
->  
-> +  .. _uapi-include:
-> +
->    **UAPI_INCLUDE**
->      No #include statements in include/uapi should use a uapi/ path.
->  
-> +  .. _usleep-range:
-> +
->    **USLEEP_RANGE**
->      usleep_range() should be preferred over udelay(). The proper way of
->      using usleep_range() is mentioned in the kernel docs.
-> @@ -476,6 +524,8 @@ API usage
->  Comments
->  --------
->  
-> +  .. _block-comment-style:
-> +
->    **BLOCK_COMMENT_STYLE**
->      The comment style is incorrect.  The preferred style for multi-
->      line comments is::
-> @@ -500,12 +550,16 @@ Comments
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#commenting
->  
-> +  .. _data-race:
-> +
->    **DATA_RACE**
->      Applications of data_race() should have a comment so as to document the
->      reasoning behind why it was deemed safe.
->  
->      See: https://lore.kernel.org/lkml/20200401101714.44781-1-elver@google.com/
->  
-> +  .. _fsf-mailing-address:
-> +
->    **FSF_MAILING_ADDRESS**
->      Kernel maintainers reject new instances of the GPL boilerplate paragraph
->      directing people to write to the FSF for a copy of the GPL, since the
-> @@ -519,12 +573,16 @@ Comments
->  Commit message
->  --------------
->  
-> +  .. _bad-sign-off:
-> +
->    **BAD_SIGN_OFF**
->      The signed-off-by line does not fall in line with the standards
->      specified by the community.
->  
->      See: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#developer-s-certificate-of-origin-1-1
->  
-> +  .. _bad-stable-address-style:
-> +
->    **BAD_STABLE_ADDRESS_STYLE**
->      The email format for stable is incorrect.
->      Some valid options for stable address are::
-> @@ -536,17 +594,23 @@ Commit message
->  
->        stable@vger.kernel.org # version info
->  
-> +  .. _commit-comment-symbol:
-> +
->    **COMMIT_COMMENT_SYMBOL**
->      Commit log lines starting with a '#' are ignored by git as
->      comments.  To solve this problem addition of a single space
->      infront of the log line is enough.
->  
-> +  .. _commit-message:
-> +
->    **COMMIT_MESSAGE**
->      The patch is missing a commit description.  A brief
->      description of the changes made by the patch should be added.
->  
->      See: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
->  
-> +  .. _email-subject:
-> +
->    **EMAIL_SUBJECT**
->      Naming the tool that found the issue is not very useful in the
->      subject line.  A good subject line summarizes the change that
-> @@ -554,6 +618,8 @@ Commit message
->  
->      See: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
->  
-> +  .. _from-sign-off-mismatch:
-> +
->    **FROM_SIGN_OFF_MISMATCH**
->      The author's email does not match with that in the Signed-off-by:
->      line(s). This can be sometimes caused due to an improperly configured
-> @@ -566,6 +632,8 @@ Commit message
->        - The email subaddresses do not match.
->        - The email comments do not match.
->  
-> +  .. _missing-sign-off:
-> +
->    **MISSING_SIGN_OFF**
->      The patch is missing a Signed-off-by line.  A signed-off-by
->      line should be added according to Developer's certificate of
-> @@ -573,6 +641,8 @@ Commit message
->  
->      See: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
->  
-> +  .. _no-author-sign-off:
-> +
->    **NO_AUTHOR_SIGN_OFF**
->      The author of the patch has not signed off the patch.  It is
->      required that a simple sign off line should be present at the
-> @@ -582,6 +652,8 @@ Commit message
->  
->      See: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
->  
-> +  .. _diff-in-commit-msg:
-> +
->    **DIFF_IN_COMMIT_MSG**
->      Avoid having diff content in commit message.
->      This causes problems when one tries to apply a file containing both
-> @@ -590,6 +662,8 @@ Commit message
->  
->      See: https://lore.kernel.org/lkml/20150611134006.9df79a893e3636019ad2759e@linux-foundation.org/
->  
-> +  .. _gerrit-change-id:
-> +
->    **GERRIT_CHANGE_ID**
->      To be picked up by gerrit, the footer of the commit message might
->      have a Change-Id like::
-> @@ -599,6 +673,8 @@ Commit message
->  
->      The Change-Id line must be removed before submitting.
->  
-> +  .. _git-commit-id:
-> +
->    **GIT_COMMIT_ID**
->      The proper way to reference a commit id is:
->      commit <12+ chars of sha1> ("<title line>")
-> @@ -612,6 +688,8 @@ Commit message
->  
->      See: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
->  
-> +  .. _bad-fixes-tag:
-> +
->    **BAD_FIXES_TAG**
->      The Fixes: tag is malformed or does not follow the community conventions.
->      This can occur if the tag have been split into multiple lines (e.g., when
-> @@ -623,6 +701,8 @@ Commit message
->  Comparison style
->  ----------------
->  
-> +  .. _assign-in-if:
-> +
->    **ASSIGN_IN_IF**
->      Do not use assignments in if condition.
->      Example::
-> @@ -634,16 +714,22 @@ Comparison style
->        foo = bar(...);
->        if (foo < BAZ) {
->  
-> +  .. _bool-comparison:
-> +
->    **BOOL_COMPARISON**
->      Comparisons of A to true and false are better written
->      as A and !A.
->  
->      See: https://lore.kernel.org/lkml/1365563834.27174.12.camel@joe-AO722/
->  
-> +  .. _comparison-to-null:
-> +
->    **COMPARISON_TO_NULL**
->      Comparisons to NULL in the form (foo == NULL) or (foo != NULL)
->      are better written as (!foo) and (foo).
->  
-> +  .. _constant-comparison:
-> +
->    **CONSTANT_COMPARISON**
->      Comparisons with a constant or upper case identifier on the left
->      side of the test should be avoided.
-> @@ -652,6 +738,8 @@ Comparison style
->  Indentation and Line Breaks
->  ---------------------------
->  
-> +  .. _code-indent:
-> +
->    **CODE_INDENT**
->      Code indent should use tabs instead of spaces.
->      Outside of comments, documentation and Kconfig,
-> @@ -659,6 +747,8 @@ Indentation and Line Breaks
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#indentation
->  
-> +  .. _deep-indentation:
-> +
->    **DEEP_INDENTATION**
->      Indentation with 6 or more tabs usually indicate overly indented
->      code.
-> @@ -668,6 +758,8 @@ Indentation and Line Breaks
->  
->      See: https://lore.kernel.org/lkml/1328311239.21255.24.camel@joe2Laptop/
->  
-> +  .. _switch-case-indent-level:
-> +
->    **SWITCH_CASE_INDENT_LEVEL**
->      switch should be at the same indent as case.
->      Example::
-> @@ -691,6 +783,8 @@ Indentation and Line Breaks
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#indentation
->  
-> +  .. _long-line:
-> +
->    **LONG_LINE**
->      The line has exceeded the specified maximum length.
->      To use a different maximum line length, the --max-line-length=n option
-> @@ -703,6 +797,8 @@ Indentation and Line Breaks
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#breaking-long-lines-and-strings
->  
-> +  .. _long-line-string:
-> +
->    **LONG_LINE_STRING**
->      A string starts before but extends beyond the maximum line length.
->      To use a different maximum line length, the --max-line-length=n option
-> @@ -710,6 +806,8 @@ Indentation and Line Breaks
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#breaking-long-lines-and-strings
->  
-> +  .. _long-line-comment:
-> +
->    **LONG_LINE_COMMENT**
->      A comment starts before but extends beyond the maximum line length.
->      To use a different maximum line length, the --max-line-length=n option
-> @@ -717,12 +815,16 @@ Indentation and Line Breaks
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#breaking-long-lines-and-strings
->  
-> +  .. _split-string:
-> +
->    **SPLIT_STRING**
->      Quoted strings that appear as messages in userspace and can be
->      grepped, should not be split across multiple lines.
->  
->      See: https://lore.kernel.org/lkml/20120203052727.GA15035@leaf/
->  
-> +  .. _multiline-dereference:
-> +
->    **MULTILINE_DEREFERENCE**
->      A single dereferencing identifier spanned on multiple lines like::
->  
-> @@ -750,6 +852,8 @@ Indentation and Line Breaks
->      violation because it is much easier to read a dereferencing identifier
->      on a single line.
->  
-> +  .. _trailing-statements:
-> +
->    **TRAILING_STATEMENTS**
->      Trailing statements (for example after any conditional) should be
->      on the next line.
-> @@ -766,6 +870,8 @@ Indentation and Line Breaks
->  Macros, Attributes and Symbols
->  ------------------------------
->  
-> +  .. _array-size:
-> +
->    **ARRAY_SIZE**
->      The ARRAY_SIZE(foo) macro should be preferred over
->      sizeof(foo)/sizeof(foo[0]) for finding number of elements in an
-> @@ -775,10 +881,14 @@ Macros, Attributes and Symbols
->  
->        #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
->  
-> +  .. _avoid-externs:
-> +
->    **AVOID_EXTERNS**
->      Function prototypes don't need to be declared extern in .h
->      files.  It's assumed by the compiler and is unnecessary.
->  
-> +  .. _avoid-l-prefix:
-> +
->    **AVOID_L_PREFIX**
->      Local symbol names that are prefixed with `.L` should be avoided,
->      as this has special meaning for the assembler; a symbol entry will
-> @@ -791,12 +901,16 @@ Macros, Attributes and Symbols
->      the beginning or end of code regions via
->      `SYM_CODE_START_LOCAL`/`SYM_CODE_END`
->  
-> +  .. _bit-macro:
-> +
->    **BIT_MACRO**
->      Defines like: 1 << <digit> could be BIT(digit).
->      The BIT() macro is defined via include/linux/bits.h::
->  
->        #define BIT(nr)         (1UL << (nr))
->  
-> +  .. _const-read-mostly:
-> +
->    **CONST_READ_MOSTLY**
->      When a variable is tagged with the __read_mostly annotation, it is a
->      signal to the compiler that accesses to the variable will be mostly
-> @@ -805,6 +919,8 @@ Macros, Attributes and Symbols
->      const __read_mostly does not make any sense as const data is already
->      read-only.  The __read_mostly annotation thus should be removed.
->  
-> +  .. _date-time:
-> +
->    **DATE_TIME**
->      It is generally desirable that building the same source code with
->      the same set of tools is reproducible, i.e. the output is always
-> @@ -816,6 +932,8 @@ Macros, Attributes and Symbols
->  
->      See: https://www.kernel.org/doc/html/latest/kbuild/reproducible-builds.html#timestamps
->  
-> +  .. _define-arch-has:
-> +
->    **DEFINE_ARCH_HAS**
->      The ARCH_HAS_xyz and ARCH_HAVE_xyz patterns are wrong.
->  
-> @@ -827,9 +945,13 @@ Macros, Attributes and Symbols
->  
->      See: https://lore.kernel.org/lkml/CA+55aFycQ9XJvEOsiM3txHL5bjUc8CeKWJNR_H+MiicaddB42Q@mail.gmail.com/
->  
-> +  .. _do-while-macro-with-trailing-semicolon:
-> +
->    **DO_WHILE_MACRO_WITH_TRAILING_SEMICOLON**
->      do {} while(0) macros should not have a trailing semicolon.
->  
-> +  .. _init-attribute:
-> +
->    **INIT_ATTRIBUTE**
->      Const init definitions should use __initconst instead of
->      __initdata.
-> @@ -837,6 +959,8 @@ Macros, Attributes and Symbols
->      Similarly init definitions without const require a separate
->      use of const.
->  
-> +  .. _inline-location:
-> +
->    **INLINE_LOCATION**
->      The inline keyword should sit between storage class and type.
->  
-> @@ -854,6 +978,8 @@ Macros, Attributes and Symbols
->                ...
->        }
->  
-> +  .. _misplaced-init:
-> +
->    **MISPLACED_INIT**
->      It is possible to use section markers on variables in a way
->      which gcc doesn't understand (or at least not the way the
-> @@ -868,6 +994,8 @@ Macros, Attributes and Symbols
->  
->      See: https://lore.kernel.org/lkml/1377655732.3619.19.camel@joe-AO722/
->  
-> +  .. _multistatement-macro-use-do-while:
-> +
->    **MULTISTATEMENT_MACRO_USE_DO_WHILE**
->      Macros with multiple statements should be enclosed in a
->      do - while block.  Same should also be the case for macros
-> @@ -881,10 +1009,14 @@ Macros, Attributes and Symbols
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#macros-enums-and-rtl
->  
-> +  .. _prefer-fallthrough:
-> +
->    **PREFER_FALLTHROUGH**
->      Use the `fallthrough;` pseudo keyword instead of
->      `/* fallthrough */` like comments.
->  
-> +  .. _trailing-semicolon:
-> +
->    **TRAILING_SEMICOLON**
->      Macro definition should not end with a semicolon. The macro
->      invocation style should be consistent with function calls.
-> @@ -906,6 +1038,8 @@ Macros, Attributes and Symbols
->  
->      See: https://lore.kernel.org/lkml/1399671106.2912.21.camel@joe-AO725/
->  
-> +  .. _single-statement-do-while-macro:
-> +
->    **SINGLE_STATEMENT_DO_WHILE_MACRO**
->      For the multi-statement macros, it is necessary to use the do-while
->      loop to avoid unpredictable code paths. The do-while loop helps to
-> @@ -917,6 +1051,8 @@ Macros, Attributes and Symbols
->      the do-while loop is redundant. So remove the do-while loop for single
->      statement macros.
->  
-> +  .. _weak-declaration:
-> +
->    **WEAK_DECLARATION**
->      Using weak declarations like __attribute__((weak)) or __weak
->      can have unintended link defects.  Avoid using them.
-> @@ -925,15 +1061,21 @@ Macros, Attributes and Symbols
->  Functions and Variables
->  -----------------------
->  
-> +  .. _camelcase:
-> +
->    **CAMELCASE**
->      Avoid CamelCase Identifiers.
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#naming
->  
-> +  .. _const-const:
-> +
->    **CONST_CONST**
->      Using `const <type> const *` is generally meant to be
->      written `const <type> * const`.
->  
-> +  .. _const-struct:
-> +
->    **CONST_STRUCT**
->      Using const is generally a good idea.  Checkpatch reads
->      a list of frequently used structs that are always or
-> @@ -944,6 +1086,8 @@ Functions and Variables
->  
->      See: https://lore.kernel.org/lkml/alpine.DEB.2.10.1608281509480.3321@hadrien/
->  
-> +  .. _embedded-function-name:
-> +
->    **EMBEDDED_FUNCTION_NAME**
->      Embedded function names are less appropriate to use as
->      refactoring can cause function renaming.  Prefer the use of
-> @@ -952,6 +1096,8 @@ Functions and Variables
->      Note that this does not work with -f (--file) checkpatch option
->      as it depends on patch context providing the function name.
->  
-> +  .. _function-arguments:
-> +
->    **FUNCTION_ARGUMENTS**
->      This warning is emitted due to any of the following reasons:
->  
-> @@ -972,6 +1118,8 @@ Functions and Variables
->  
->           All arguments should have identifier names.
->  
-> +  .. _function-without-args:
-> +
->    **FUNCTION_WITHOUT_ARGS**
->      Function declarations without arguments like::
->  
-> @@ -981,22 +1129,30 @@ Functions and Variables
->  
->        int foo(void)
->  
-> +  .. _global-initialisers:
-> +
->    **GLOBAL_INITIALISERS**
->      Global variables should not be initialized explicitly to
->      0 (or NULL, false, etc.).  Your compiler (or rather your
->      loader, which is responsible for zeroing out the relevant
->      sections) automatically does it for you.
->  
-> +  .. _initialised-static:
-> +
->    **INITIALISED_STATIC**
->      Static variables should not be initialized explicitly to zero.
->      Your compiler (or rather your loader) automatically does
->      it for you.
->  
-> +  .. _multiple-assignments:
-> +
->    **MULTIPLE_ASSIGNMENTS**
->      Multiple assignments on a single line makes the code unnecessarily
->      complicated. So on a single line assign value to a single variable
->      only, this makes the code more readable and helps avoid typos.
->  
-> +  .. _return-parentheses:
-> +
->    **RETURN_PARENTHESES**
->      return is not a function and as such doesn't need parentheses::
->  
-> @@ -1010,6 +1166,8 @@ Functions and Variables
->  Permissions
->  -----------
->  
-> +  .. _device-attr-perms:
-> +
->    **DEVICE_ATTR_PERMS**
->      The permissions used in DEVICE_ATTR are unusual.
->      Typically only three permissions are used - 0644 (RW), 0444 (RO)
-> @@ -1017,10 +1175,14 @@ Permissions
->  
->      See: https://www.kernel.org/doc/html/latest/filesystems/sysfs.html#attributes
->  
-> +  .. _execute-permissions:
-> +
->    **EXECUTE_PERMISSIONS**
->      There is no reason for source files to be executable.  The executable
->      bit can be removed safely.
->  
-> +  .. _exported-world-writable:
-> +
->    **EXPORTED_WORLD_WRITABLE**
->      Exporting world writable sysfs/debugfs files is usually a bad thing.
->      When done arbitrarily they can introduce serious security bugs.
-> @@ -1030,10 +1192,14 @@ Permissions
->  
->      See: https://lore.kernel.org/linux-arm-kernel/cover.1296818921.git.segoon@openwall.com/
->  
-> +  .. _non-octal-permissions:
-> +
->    **NON_OCTAL_PERMISSIONS**
->      Permission bits should use 4 digit octal permissions (like 0700 or 0444).
->      Avoid using any other base like decimal.
->  
-> +  .. _symbolic-perms:
-> +
->    **SYMBOLIC_PERMS**
->      Permission bits in the octal form are more readable and easier to
->      understand than their symbolic counterparts because many command-line
-> @@ -1049,10 +1215,14 @@ Permissions
->  Spacing and Brackets
->  --------------------
->  
-> +  .. _assignment-continuations:
-> +
->    **ASSIGNMENT_CONTINUATIONS**
->      Assignment operators should not be written at the start of a
->      line but should follow the operand at the previous line.
->  
-> +  .. _braces:
-> +
->    **BRACES**
->      The placement of braces is stylistically incorrect.
->      The preferred way is to put the opening brace last on the line,
-> @@ -1073,6 +1243,8 @@ Spacing and Brackets
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
->  
-> +  .. _bracket-space:
-> +
->    **BRACKET_SPACE**
->      Whitespace before opening bracket '[' is prohibited.
->      There are some exceptions:
-> @@ -1089,6 +1261,8 @@ Spacing and Brackets
->  
->          = { [0...10] = 5 }
->  
-> +  .. _concatenated-string:
-> +
->    **CONCATENATED_STRING**
->      Concatenated elements should have a space in between.
->      Example::
-> @@ -1099,17 +1273,23 @@ Spacing and Brackets
->  
->        printk(KERN_INFO "bar");
->  
-> +  .. _else-after-brace:
-> +
->    **ELSE_AFTER_BRACE**
->      `else {` should follow the closing block `}` on the same line.
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
->  
-> +  .. _line-spacing:
-> +
->    **LINE_SPACING**
->      Vertical space is wasted given the limited number of lines an
->      editor window can display when multiple blank lines are used.
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#spaces
->  
-> +  .. _open-brace:
-> +
->    **OPEN_BRACE**
->      The opening brace should be following the function definitions on the
->      next line.  For any non-functional block it should be on the same line
-> @@ -1117,6 +1297,8 @@ Spacing and Brackets
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
->  
-> +  .. _pointer-location:
-> +
->    **POINTER_LOCATION**
->      When using pointer data or a function that returns a pointer type,
->      the preferred use of * is adjacent to the data name or function name
-> @@ -1129,11 +1311,15 @@ Spacing and Brackets
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#spaces
->  
-> +  .. _spacing:
-> +
->    **SPACING**
->      Whitespace style used in the kernel sources is described in kernel docs.
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#spaces
->  
-> +  .. _trailing-whitespace:
-> +
->    **TRAILING_WHITESPACE**
->      Trailing whitespace should always be removed.
->      Some editors highlight the trailing whitespace and cause visual
-> @@ -1141,6 +1327,8 @@ Spacing and Brackets
->  
->      See: https://www.kernel.org/doc/html/latest/process/coding-style.html#spaces
->  
-> +  .. _unnecessary-parentheses:
-> +
->    **UNNECESSARY_PARENTHESES**
->      Parentheses are not required in the following cases:
->  
-> @@ -1172,6 +1360,8 @@ Spacing and Brackets
->            &foo->bar
->            *foo->bar
->  
-> +  .. _while-after-brace:
-> +
->    **WHILE_AFTER_BRACE**
->      while should follow the closing bracket on the same line::
->  
-> @@ -1185,19 +1375,27 @@ Spacing and Brackets
->  Others
->  ------
->  
-> +  .. _config-description:
-> +
->    **CONFIG_DESCRIPTION**
->      Kconfig symbols should have a help text which fully describes
->      it.
->  
-> +  .. _corrupted-patch:
-> +
->    **CORRUPTED_PATCH**
->      The patch seems to be corrupted or lines are wrapped.
->      Please regenerate the patch file before sending it to the maintainer.
->  
-> +  .. _cvs-keyword:
-> +
->    **CVS_KEYWORD**
->      Since linux moved to git, the CVS markers are no longer used.
->      So, CVS style keywords ($Id$, $Revision$, $Log$) should not be
->      added.
->  
-> +  .. _default-no-break:
-> +
->    **DEFAULT_NO_BREAK**
->      switch default case is sometimes written as "default:;".  This can
->      cause new cases added below default to be defective.
-> @@ -1205,16 +1403,22 @@ Others
->      A "break;" should be added after empty default statement to avoid
->      unwanted fallthrough.
->  
-> +  .. _dos-line-endings:
-> +
->    **DOS_LINE_ENDINGS**
->      For DOS-formatted patches, there are extra ^M symbols at the end of
->      the line.  These should be removed.
->  
-> +  .. _dt-schema-binding-patch:
-> +
->    **DT_SCHEMA_BINDING_PATCH**
->      DT bindings moved to a json-schema based format instead of
->      freeform text.
->  
->      See: https://www.kernel.org/doc/html/latest/devicetree/bindings/writing-schema.html
->  
-> +  .. _dt-split-binding-patch:
-> +
->    **DT_SPLIT_BINDING_PATCH**
->      Devicetree bindings should be their own patch.  This is because
->      bindings are logically independent from a driver implementation,
-> @@ -1224,20 +1428,28 @@ Others
->  
->      See: https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
->  
-> +  .. _embedded-filename:
-> +
->    **EMBEDDED_FILENAME**
->      Embedding the complete filename path inside the file isn't particularly
->      useful as often the path is moved around and becomes incorrect.
->  
-> +  .. _file-path-changes:
-> +
->    **FILE_PATH_CHANGES**
->      Whenever files are added, moved, or deleted, the MAINTAINERS file
->      patterns can be out of sync or outdated.
->  
->      So MAINTAINERS might need updating in these cases.
->  
-> +  .. _memset:
-> +
->    **MEMSET**
->      The memset use appears to be incorrect.  This may be caused due to
->      badly ordered parameters.  Please recheck the usage.
->  
-> +  .. _not-unified-diff:
-> +
->    **NOT_UNIFIED_DIFF**
->      The patch file does not appear to be in unified-diff format.  Please
->      regenerate the patch file before sending it to the maintainer.
-> @@ -1245,6 +1457,8 @@ Others
->    **PRINTF_0XDECIMAL**
->      Prefixing 0x with decimal output is defective and should be corrected.
->  
-> +  .. _spdx-license-tag:
-> +
->    **SPDX_LICENSE_TAG**
->      The source file is missing or has an improper SPDX identifier tag.
->      The Linux kernel requires the precise SPDX identifier in all source files,
-> @@ -1252,5 +1466,7 @@ Others
->  
->      See: https://www.kernel.org/doc/html/latest/process/license-rules.html
->  
-> +  .. _typo-spelling:
-> +
->    **TYPO_SPELLING**
->      Some words may have been misspelled.  Consider reviewing them.
+(1)
+
+> +	err = kstrtobool(buf, &enable);
+> +	if (err)
+> +		return err;
+> +
+> +	guard(spinlock_irqsave)(&tio->lock);
+> +	if (enable && !tio->enabled) {
+
+> +		if (!timekeeping_clocksource_has_base(CSID_X86_ART)) {
+> +			dev_err(tio->dev, "PPS cannot be started as clock is not related to ART");
+
+Why not simply dev_err(dev, ...)?
+
+> +			return -EPERM;
+> +		}
+
+I'm wondering if we can move this check to (1) above.
+Because currently it's a good question if we are able to stop PPS which was run
+by somebody else without this check done.
+
+I.o.w. this sounds too weird to me and reading the code doesn't give any hint
+if it's even possible. And if it is, are we supposed to touch that since it was
+definitely *not* us who ran it.
+
+> +		pps_tio_direction_output(tio);
+> +		hrtimer_start(&tio->timer, first_event(tio), HRTIMER_MODE_ABS);
+> +		tio->enabled = true;
+> +	} else if (!enable && tio->enabled) {
+> +		hrtimer_cancel(&tio->timer);
+> +		pps_tio_disable(tio);
+> +		tio->enabled = false;
+> +	}
+> +	return count;
+> +}
+
+...
+
+> +static int pps_tio_probe(struct platform_device *pdev)
+> +{
+
+	struct device *dev = &pdev->dev;
+
+> +	struct pps_tio *tio;
+> +
+> +	if (!(cpu_feature_enabled(X86_FEATURE_TSC_KNOWN_FREQ) &&
+> +	      cpu_feature_enabled(X86_FEATURE_ART))) {
+> +		dev_warn(&pdev->dev, "TSC/ART is not enabled");
+
+		dev_warn(dev, "TSC/ART is not enabled");
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	tio = devm_kzalloc(&pdev->dev, sizeof(*tio), GFP_KERNEL);
+
+	tio = devm_kzalloc(dev, sizeof(*tio), GFP_KERNEL);
+
+
+> +	if (!tio)
+> +		return -ENOMEM;
+> +
+> +	tio->dev = &pdev->dev;
+
+	tio->dev = dev;
+
+> +	tio->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(tio->base))
+> +		return PTR_ERR(tio->base);
+
+> +	pps_tio_disable(tio);
+
+This...
+
+> +	hrtimer_init(&tio->timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
+> +	tio->timer.function = hrtimer_callback;
+> +	spin_lock_init(&tio->lock);
+
+> +	tio->enabled = false;
+
+...and this should go together, which makes me look at the enabled flag over
+the code and it seems there are a few places where you missed to sync it with
+the reality.
+
+I would think of something like this:
+
+	pps_tio_direction_output() ==> true
+	pps_tio_disable(tio) ==> false
+
+where "==> X" means assignment of enabled flag.
+
+And perhaps this:
+
+	tio->enabled = pps_generate_next_pulse(tio, expires + SAFE_TIME_NS);
+	if (!tio->enabled)
+		...
+
+But the above is just thinking out loudly, you may find the better approach(es).
+
+> +	platform_set_drvdata(pdev, tio);
+> +
+> +	return 0;
+> +}
 
 -- 
-Jani Nikula, Intel
+With Best Regards,
+Andy Shevchenko
+
+
