@@ -1,181 +1,65 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6DE52F9B
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245551FA1
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715584749; cv=none; b=D2CswLAcMi0jWv7uAzN59gRoIvT2hMLJAqzYHGtzrctyWh3cNacj0SycNuIsrHzCUQkUSlki/268ubfQXzuGmMF8h13ZFxFRBl29oI4Pod0PZ0D3EvFR35kznupWoyCoX/3W6TwzbFXP1MA/7vuIZkTbn4nJlwh3HyhpTV5j7bg=
+	t=1715585005; cv=none; b=ehJmYisJx2R4GbrBLte1iUsZOj8S7xb2feo6FGiWF6mA2W4xG+6dQJhQ3QnShkddGy2XLVlxDGGEB276wG19WgLXHRg+AtdpNt87/QyEt62U1iY4+4crnzgQNsIqKstpVkWoBVnG9QQe9XY0ED9gLdMUAbv2QxcRuIiTBJyOH5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715584749; c=relaxed/simple;
-	bh=BmHn0tMkwEItFmLVWvwuNaiHb85Rjfz5hQYkbffnsXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u/wPzJGxoBWvT+Ulnd5gKQM+pTylfi3cofA1dKdAqfOoYaYh80j5yeq5WlVx4wdJjtX9Iz0jh5JqMoWSxBgnhkiauXez/XT3B+8oRvpN9pyc6+9Cv+nxaWLHCGZJoH0gWrDpcA62B7ZEQ7KjJuBP0zPdEEs2SkHEtJxjFW3IHoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o8xjLf6l; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715585005; c=relaxed/simple;
+	bh=rQJujlGNHZ8JtOAZLkV2s1QCN6TXGMwoHchPCU8aLyo=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=S1YHB7ktxPCgDOnN2jZcnVpZzIFv2cuhh9eEba4JC4t95ATBJik0lqAjOGTlzHKfapRyYPgwuZCU4KrQXBQGP6xdOHkySuaToRmE0zq6JVVsAbIsNkV0EKCvXa5CJ2dpVyXm4foVMWzp27gPplYNOJ41Y5u+7TBEjlApZUDVkKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-x.org; spf=pass smtp.mailfrom=bit-x.org; dkim=pass (2048-bit key) header.d=bit-x.org header.i=@bit-x.org header.b=K1NvL5WX; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-x.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-x.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o8xjLf6l"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C0D062000B;
-	Mon, 13 May 2024 07:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715584744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MskvBFMd+qrWo6ZlXiGYpEMPTg9+CeZ7e/xPiSpgH0I=;
-	b=o8xjLf6la1MFScVJaaomzFUintfjoKeox0Jnm2kqn8DKwyzhVGO/4lF6NrUJRl5Z4I9q9J
-	oRy/I/rNdVwyXvzj7//rrtkDvyKXnzhZYaFAXrD/Zc83SprlwtntyjetidJko0cq7zSgLA
-	A5INzDQwCogSzlyjZ9dsZQulGyMwEG/1AdvAEYWldFX6VQluvq+yJXItvLq3N7mnCvFFF8
-	7Q6PHKNmlCpX6mcVvLVWeNPon/BLQipCED5qc1bCdOmHH0XUnrgN32iiJ430fU9Dd25hSW
-	9GY/Civp5NArumrtglL7+ebosj4k5+M7pjRlMb8YO+T//8bj/KIW34k0RlII+w==
-Date: Mon, 13 May 2024 09:19:02 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] mtd: nand: mxc_nand: implement exec_op
-Message-ID: <20240513091902.2c00d30a@xps-13>
-In-Reply-To: <20240508-mtd-nand-mxc-nand-exec-op-v2-2-6b7366b7831f@pengutronix.de>
-References: <20240508-mtd-nand-mxc-nand-exec-op-v2-0-6b7366b7831f@pengutronix.de>
-	<20240508-mtd-nand-mxc-nand-exec-op-v2-2-6b7366b7831f@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bit-x.org header.i=@bit-x.org header.b="K1NvL5WX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bit-x.org;
+	s=ds202404; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
+	MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6pnPQQmX7ZHdP6moaB8hDwI5scn9DEZ62685rUuHSCY=; b=K1NvL5WXoW0TmDLov5A5Gdzww8
+	xTTeOa2rgDhS82NuHV8isgegJkWePE1vhR3tRnDH992WxFubpOY4NYzmPd1YX2exzbri0feeTOrZs
+	jrnnPU6JKgaF+wD9EL6mJF+aZE7YfQozVTS4b+taIf5eXMC+82Ubw5BYn/hFyJnvi6K9S18Yqr9Lf
+	cTa24wJ2Cu7GW02mo6f8RV6ryL6bIctcGXghqklkBrYn4SR+tYw+Yq33DtzYp8n2wAMDlv5Z1obpW
+	IFQANf7dyK6TTYRipwUZf2uervMRlGScb177qdoWPltzg45ayTvJd+bjNx/0hc/z4uHctY93mzvmn
+	QxAjWAqg==;
+Received: from [2a02:fe1:7001:f100:5b8:9541:a8c0:9645] (port=60045)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <ywe_caerlyn@bit-x.org>)
+	id 1s6Q1o-006hsV-SH
+	for linux-kernel@vger.kernel.org;
+	Mon, 13 May 2024 09:23:20 +0200
+Message-ID: <664dd5bf-6bd8-42e7-98b8-eed814375884@bit-x.org>
+Date: Mon, 13 May 2024 09:23:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe_caerlyn@bit-x.org>
+Subject: Bit X, Mormon Fair Pay Philosophy (Compatible with Shia, Ibadi, Quran
+ Alone)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Sascha,
+Yes, the philosophical background is perfected, mormon based, and 
+compatible with Shia, Ibadi and Quran Alone.
 
-> @@ -1717,9 +1465,111 @@ static int mxcnd_setup_interface(struct nand_chip=
- *chip, int chipnr,
->  	return host->devtype_data->setup_interface(chip, chipnr, conf);
->  }
-> =20
-> +static int mxcnd_exec_op(struct nand_chip *chip,
-> +			 const struct nand_operation *op,
-> +			 bool check_only)
-> +{
-> +	struct mxc_nand_host *host =3D nand_get_controller_data(chip);
-> +	struct mtd_info *mtd =3D nand_to_mtd(chip);
-> +	int i, j, buf_len;
-> +	void *buf_read =3D NULL;
-> +	const void *buf_write =3D NULL;
-> +	const struct nand_op_instr *instr;
-> +	bool readid =3D false;
-> +	bool statusreq =3D false;
-> +
-> +	dev_dbg(host->dev, "%s: %d instructions\n", __func__, op->ninstrs);
+This is a wide basis for Fair Pay, and correct political measures.
 
-Maybe you want to get rid of this debug line.
+Further refined my summary on https://bit-x.org/BIT/BIT.html
 
-> +
-> +	if (check_only)
-> +		return 0;
-> +
-> +	for (i =3D 0; i < op->ninstrs; i++) {
-> +		instr =3D &op->instrs[i];
-> +
-> +		nand_op_trace("  ", instr);
-> +
-> +		switch (instr->type) {
-> +		case NAND_OP_WAITRDY_INSTR:
-> +			/*
-> +			 * NFC handles R/B internally. Therefore, this function
-> +			 * always returns status as ready.
+Hail Ol, The Grand, The Good.
 
-This is no longer a standalone function, maybe:
+The Light Be With You.
 
-"The controller handles the R/B pin internally, therefore there is
-nothing to do here."
-
-> +			 */
-> +			break;
-> +		case NAND_OP_CMD_INSTR:
-> +			if (instr->ctx.cmd.opcode =3D=3D NAND_CMD_PAGEPROG)
-> +				host->devtype_data->send_page(mtd, NFC_INPUT);
-> +
-> +			host->devtype_data->send_cmd(host, instr->ctx.cmd.opcode, true);
-> +
-> +			if (instr->ctx.cmd.opcode =3D=3D NAND_CMD_READID)
-> +				readid =3D true;
-> +			if (instr->ctx.cmd.opcode =3D=3D NAND_CMD_STATUS)
-> +				statusreq =3D true;
-> +
-> +			break;
-> +		case NAND_OP_ADDR_INSTR:
-> +			for (j =3D 0; j < instr->ctx.addr.naddrs; j++) {
-> +				bool islast =3D j =3D=3D instr->ctx.addr.naddrs - 1;
-> +				host->devtype_data->send_addr(host, instr->ctx.addr.addrs[j], islast=
-);
-> +			}
-> +			break;
-> +		case NAND_OP_DATA_OUT_INSTR:
-> +			buf_write =3D instr->ctx.data.buf.out;
-> +			buf_len =3D instr->ctx.data.len;
-> +
-> +			memcpy32_toio(host->main_area0, buf_write, buf_len);
-> +			if (chip->oob_poi)
-> +				copy_spare(mtd, false, chip->oob_poi);
-
-This copy should not be needed. It should be in your page accessors if
-needed.
-
-> +
-> +			break;
-> +		case NAND_OP_DATA_IN_INSTR:
-> +
-> +			buf_read =3D instr->ctx.data.buf.in;
-> +			buf_len =3D instr->ctx.data.len;
-> +
-> +			if (readid) {
-> +				host->devtype_data->send_read_id(host);
-> +				readid =3D false;
-> +
-> +				memcpy32_fromio(host->data_buf, host->main_area0, buf_len * 2);
-> +
-> +				if (chip->options & NAND_BUSWIDTH_16) {
-> +					u8 *bufr =3D buf_read;
-> +					u16 *bufw =3D host->data_buf;
-> +					for (j =3D 0; j < buf_len; j++)
-> +						bufr[j] =3D bufw[j];
-> +				} else {
-> +					memcpy(buf_read, host->data_buf, buf_len);
-> +				}
-> +				break;
-> +			}
-> +
-> +			if (statusreq) {
-> +				*(u8*)buf_read =3D host->devtype_data->get_dev_status(host);
-> +				statusreq =3D false;
-> +				break;
-> +			}
-> +
-> +			host->devtype_data->read_page(chip);
-> +
-> +			if (IS_ALIGNED(buf_len, 4)) {
-> +				memcpy32_fromio(buf_read, host->main_area0, buf_len);
-> +			} else {
-> +				memcpy32_fromio(host->data_buf, host->main_area0, mtd->writesize);
-> +				memcpy(buf_read, host->data_buf, buf_len);
-> +			}
-> +
-> +			break;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-Otherwise I'm very happy with the look.
-
-Thanks,
-Miqu=C3=A8l
+Ruhban,
+Ywe Cærlyn.
