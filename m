@@ -1,85 +1,115 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC0D15098C
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 13:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527CF15098C;
+	Mon, 13 May 2024 13:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715605975; cv=none; b=nv9M42D3yCO2IrNRqjmHmAunZ3racqu8rDibB3DChx0y64vSTpnyroJ32WvMUC2SyuJAod4Ja+7tl1cBXLbNDD058s11HfFSv7P5LKmc38l/aafSLPpMvbamI3Gq8FWy3foVFWXyAV5vREz5UAby68R5ZMntBB+ASOWAkU62om8=
+	t=1715606056; cv=none; b=ovcCEPqE2H4tXQY6HVK1Fomcz5Oj+/wvbXunj5hVdjxtyjFR1FNotrpwBB2WwOmEwFUAsnddmulMbTRm6bESMrRngGIhelJAU+GielxTRLpHVKSDp7kXVwTHQYCjaKwSM62Dm1ZH/Iao9RAudmRfLBPUCzSyc8eR4dwofweP7ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715605975; c=relaxed/simple;
-	bh=QIyA9kU3DXYufAzAbyQLvhbsunKTbVggA+xwxPHEB3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=slXWAwMjnvViNhWDDUh0sERcpe+/eslfFDG2V9BPKlPm7B53RXV9xNNMhF6hXww9tDWvQ2aBKHeLpqddfcYNwTMJfJ1yuh60p1o9FC25kPstUuf29pg0a0ZgoLkiT9eYM3d2BoJW/FQDFFWjE81lq33f52zA2V78Mj3lc2SA8ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=apbCsBl0; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1715606056; c=relaxed/simple;
+	bh=fZPA2U0w/NaPd1XPXrH9KUPReWy8Mu/+vRwHo8Emv3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Io6Fxech5otQMPL7jq5mkFRmdGwmLQEoHSKJfJn/QjRlKuxWL2JGn/hrKFHD37tGi3/Xv4wQmUHd02IzhH93pED/UwZvD8ZFipArubI9hjlbZ7OQfTY7i5b6t4Bz8eOe9T8g//OlgFCx1wc/8N/vaUbv9Fw/9wDTIOt1CNZAQIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HTAifjR8; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="apbCsBl0"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4VdKfR2Dh3zlgVnf;
-	Mon, 13 May 2024 13:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1715605964; x=1718197965; bh=CK/yTD4vsBE25iZLNTjIJQVN
-	n6zNelLGLfVBPKfwaCQ=; b=apbCsBl00eKoh96TCJA+4gFfsHjvC2MCRzFnHNjt
-	igYlO5msrwPg+wC8vWf1qPY/DOiw9OJ4Ky2aBN6iQ8/DCmz939vm4E0beYyLgbbX
-	0qRe61nDogYk5RF/Y9zTLl8X1WwMjAC7z7WaF/Vshag1ytEjhbot0pJ+8/y0qCZ0
-	S3/lr4lbr34hCcqJEIJNMv2f6C/or7FAFe9/q8n7JkknryhXufZdPyqFekY1u8CU
-	DE+xlyblECb+NRNCPeBAKvAAPI4BbzsAOMBOa84Z7OJhwEuYHkB/llQubhJCys7Q
-	ya4MzBzUFU5tdoxJyzCwQNtaAV1bzPN6Fcx3OHmauIuKzA==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id oJpwUKMiAjg5; Mon, 13 May 2024 13:12:44 +0000 (UTC)
-Received: from [172.20.0.79] (unknown [8.9.45.205])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4VdKfM5rYNzlgVnW;
-	Mon, 13 May 2024 13:12:43 +0000 (UTC)
-Message-ID: <c75bef55-f3f3-444f-9aa9-d646fd13f73d@acm.org>
-Date: Mon, 13 May 2024 07:12:42 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HTAifjR8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715606055; x=1747142055;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fZPA2U0w/NaPd1XPXrH9KUPReWy8Mu/+vRwHo8Emv3A=;
+  b=HTAifjR8rlutgfCDh22fQkiJbeyODvI8uAWfUVsVPT1OL4IsnP/Ncv33
+   jObe8GTaCmwILV8mXsrasEPbd/ehHtXOfLqL1ZVTkPQ3kK8acRV8f22pt
+   uaUyiJamNbRCBTaEapsY3spv0BwmzY0XTOUMY+AQGx7W5U3eo5K1Iq9pE
+   4SbOQGPkq0Ej+SHVQYyVWqhiMPzeoH7Gg9Cr0OWSwWdj/8gAym9RCFTI1
+   u6ti0+JSNIKKGjRPR29vYn5eomQbmqgb6/QL+5qjfLL8GDBgcgCW47u9l
+   XpwUAn28xoulJKD0IPXI4nEN7kG7B8KJ5CSNyYs1FNZ/CEKh9wQMP7dWI
+   Q==;
+X-CSE-ConnectionGUID: Dbt8KeG9SrCdSj4jWI6q3w==
+X-CSE-MsgGUID: CDp7fslAQ6yp4nLqLaCQrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11390399"
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="11390399"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 06:14:14 -0700
+X-CSE-ConnectionGUID: HrSYo+lVRL2UPrBM1JzUzw==
+X-CSE-MsgGUID: AhNYnZ1gQ/y065zn5CRwig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="30456394"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 06:14:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s6VVE-000000078wG-0cig;
+	Mon, 13 May 2024 16:14:04 +0300
+Date: Mon, 13 May 2024 16:14:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: Jani Nikula <jani.nikula@intel.com>, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, benjamin.gaignard@collabora.com,
+	sebastian.fricke@collabora.com, akpm@linux-foundation.org,
+	gregkh@linuxfoundation.org, adobriyan@gmail.com,
+	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com,
+	praneeth@ti.com, nm@ti.com, vigneshr@ti.com, a-bhatia1@ti.com,
+	j-luthra@ti.com, b-brnich@ti.com, detheridge@ti.com,
+	p-mantena@ti.com, vijayp@ti.com, andrzej.p@collabora.com,
+	nicolas@ndufresne.ca
+Subject: Re: [PATCH v7 6/8] math.h Add macros to round to closest specified
+ power of 2
+Message-ID: <ZkISG6p1tn9Do-xY@smile.fi.intel.com>
+References: <20240509183952.4064331-1-devarsht@ti.com>
+ <Zj42vTpyH71TWeTk@smile.fi.intel.com>
+ <87fruphf55.fsf@intel.com>
+ <5ebcf480-81c6-4c2d-96e8-727d44f21ca9@ti.com>
+ <ZkHWbS4raU_BPlpm@smile.fi.intel.com>
+ <6557050e-6b18-2628-cbab-1a811b2190ba@ti.com>
+ <ZkIG0-01pz632l4R@smile.fi.intel.com>
+ <d63ae19c-9316-3a4c-e9ed-1672ace068b6@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] nvme-pci: allow unmanaged interrupts
-To: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- tglx@linutronix.de, ming.lei@redhat.com, Keith Busch <kbusch@kernel.org>
-References: <20240510141459.3207725-1-kbusch@meta.com>
- <20240510141459.3207725-2-kbusch@meta.com> <20240510151047.GA10486@lst.de>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240510151047.GA10486@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d63ae19c-9316-3a4c-e9ed-1672ace068b6@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/10/24 08:10, Christoph Hellwig wrote:
-> On Fri, May 10, 2024 at 07:14:59AM -0700, Keith Busch wrote:
->> From: Keith Busch <kbusch@kernel.org>
->>
->> Some people _really_ want to control their interrupt affinity.
+On Mon, May 13, 2024 at 06:34:19PM +0530, Devarsh Thakkar wrote:
+> On 13/05/24 17:55, Andy Shevchenko wrote:
+> > On Mon, May 13, 2024 at 04:55:58PM +0530, Devarsh Thakkar wrote:
+> >> On 13/05/24 14:29, Andy Shevchenko wrote:
+> >>> On Sat, May 11, 2024 at 11:11:14PM +0530, Devarsh Thakkar wrote:
+> >>>> On 10/05/24 20:45, Jani Nikula wrote:
+
+[...]
+
+> > - align naming (with the existing round*() macros)
 > 
-> So let them argue why.  I'd rather have a really, really, really
-> good argument for this crap, and I'd like to hear it from the horses
-> mouth.
+> I think round_closest_up/round_closest_down align already and inspired by the
+> existing naming convention used for round*() and DIV_ROUND_CLOSEST() macros in
+> math.h as explained below (copied from my previous reply [1])
+> 
+> "Coming back to naming, this is as per existing convention used for naming
+> round_up, round_down (notice the `_` being used for macros working with pow of
+> 2) and DIV_ROUND_CLOSEST (notice the work `closest` used to specify the answer
+>  to be nearest to specified value)"
+> 
+> But do let me know if you have any other suggestions for naming?
 
-Performance can be increased by modifying the interrupt assignments
-carefully, especially in storage appliances that have to process a
-large number of network and storage interrupts. By carefully assigning
-interrupts the number of completions processed per interrupt can be
-increased and hence performance also increases. In 2014 I was working
-on a product that benefited from this approach.
+Just make sure that semantically the naming is aligned, that's it.
+If you think it's already done that way, fine!
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Bart.
 
