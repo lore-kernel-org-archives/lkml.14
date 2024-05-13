@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09306146D64
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740431474D1
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715586642; cv=none; b=ZJeOtF+VRsVu6neyHxZsBiBL6y32G0md2aL5hOGKJLTpRGu6YOpVz0zcPIBR/nHJnL5+j0RKnbHyns+O6zZSJcKnRQcARRZ4FBb9euWfgxskh0WH6VY6S/2CxBR10bMXURy06wVz26zOfxw5mndkpmk4HFyV1AMKaU+AsrglGPE=
+	t=1715586645; cv=none; b=leLQEtc9o+ACa0i0PsDDuTtLLcLyvlCbKPf4C3+UaaPpWo8nIicPD9hQjrZ0PJBIF9duC0skrCX+tRP0MhtTybiHoXXPIMNK9RYGgNDUTOq3gWNV6+VUcMFPCyDEz8V9OpauMhAUqBGE8G6fWM4HeeZ8p3tC5Sf5Q98oE6nCaSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715586642; c=relaxed/simple;
-	bh=W3Xf/YRK4t0P56bphLku13mwMBOBKsgILXEVbb87DhM=;
+	s=arc-20240116; t=1715586645; c=relaxed/simple;
+	bh=tkeF0pjGaCP8jQhPd6GYefneGTbz1FI3LYKKF0MTLKA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DU2WrY6XZYAFSkng4uGFz2VzIqcoIkoC1jBo1bLL7DfzpWjg36R4ChPhc13bxKSn8Wfxn9ItDAEWjtpRCUWSuFr2WrZBGdjacyB6yRDYiaenJ7zEX413NiP5mY8pXJbnGOjFrRqlnCPMwWnret3PiYRqPYbIIEJ+DZ2Mufyd0EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Cjh7zmu3; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=av/KRWI83Or4bAPMqBZU1X4HkOSEVnKWnNhb/GqV/qi2zHevHgpmEw1HicpQKct85Mselgyu+8evqbbCdlkvDkimtX5HTuPCzX0cr79kANAWQJxgsbmcge1gRuJSxYNtkvqGE6+zH26hREnskRbgy42Un31e2NXsTHIEd/zMoiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RN2oZoUe; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Cjh7zmu3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5F78620012;
-	Mon, 13 May 2024 07:50:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RN2oZoUe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0DBBC2000E;
+	Mon, 13 May 2024 07:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715586638;
+	t=1715586642;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JU70LQ2hauNfhx679Y3SR3BcbT+dXuqlkcXNRSkyY1c=;
-	b=Cjh7zmu3BTwrzc87Pw2SnvepT1rPC3FnIW4h6r/B8MikkP4QT71ySfXQZg+wIlcS4RQTTI
-	iWq0ub9y2oryHcY8ngwt4eADRFv87Adoxz/Dn+Bmf93lMVQcjdmbYNh55nHN2QPanltbv8
-	qztyIp8k3ZaTG1+Ytnu49xSgfgeWJlwbeiMqOcQMtIBGx7yHHFa3yMER81IKd7sTm4DAPB
-	tde+uiqgYrdg9UmurMwnrDVEUD8KWAbdNBOO/c3oGVks7fZQ82EVhZKFeGVmFOHxHBU4+8
-	apk8HXiveYH0ofMff8jLnhO+ZqimM6wmOpEoAA1YThO+bwb7fwYrR7pPb/f9bg==
+	bh=EU3ZyzvaLTmHpkvEEPcJRnaJvOGiAcMYcCExeDdlxX4=;
+	b=RN2oZoUe4K9Znng1skr3pgqWvyC6wWSGC/ymY7agSqTDnFTH6vYkAFkiIYPYesMy0Jd4M0
+	WKtPnaRr7Zn/MJi2Cn9+M1aa5QN4u5KNzyVluFws+IoG5FpZHepluUxRSog5mzMv/IBUmM
+	+4Pd73OiGbyqbcfsOx8T/OlY4m91PJu6R3C3LPSxelg3QGj9KpB9iD8wZ96C5X6Z11qdt5
+	jbLwu/D/1Wq21v7bK3vZhQ61SATeB4bwuhLlMXF1J9XbJCvX2AILhACxI92cwOm1zFTR9h
+	aeCANdKfXtjLnm6Js4jdDTOMNWsr9Cg+DmyxSPGdfhEbDlOtd8aJi2Ke07TKgg==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Mon, 13 May 2024 09:50:24 +0200
-Subject: [PATCH v7 03/17] drm/vkms: write/update the documentation for
- pixel conversion and pixel write functions
+Date: Mon, 13 May 2024 09:50:26 +0200
+Subject: [PATCH v7 05/17] drm/vkms: Add dummy pixel_read/pixel_write
+ callbacks to avoid NULL pointers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240513-yuv-v7-3-380e9ffec502@bootlin.com>
+Message-Id: <20240513-yuv-v7-5-380e9ffec502@bootlin.com>
 References: <20240513-yuv-v7-0-380e9ffec502@bootlin.com>
 In-Reply-To: <20240513-yuv-v7-0-380e9ffec502@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -60,213 +60,134 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>, 
  Pekka Paalanen <pekka.paalanen@collabora.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7606;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4683;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=W3Xf/YRK4t0P56bphLku13mwMBOBKsgILXEVbb87DhM=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmQcZCXpWRtCOjUWIqBERLeWRYUjINqH97RRji7
- fzwp9OqJ3SJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkHGQgAKCRAgrS7GWxAs
- 4ptlD/9SsyCNOuvOwScbDhd365u0uqBAEYqaizA0la6ObZaotMmZJ0fskiyhK/UsMZ7odaavNfM
- Rv9qKyYAUQxjb1vpsDRIhIxIJRjEXNUH68VIA4UPdSRul9Me3Tt4zyGDTwON6IlkISk4aDmHxSh
- 3IkHNj6HBIYbMzS5/BX9hBuJGENbJffo4oFZKlmDbX3NZIGiR2qwHFRLa4wGLSM2EYFf3zkcI20
- mJ0xXuo22BZrswF5WQHJfexgxWWwHwswBa4UWRud22susjG13QI4sZ1tX5NAuQh96R6RXdgmJWM
- wLaSCgwYLZWW+9ytMBO7NcxUxYZhJUcQxP4rSx/QMD35IQp5Rmtft66kGM68ZaUqxHQrVrV0mbn
- KAPSuERwI9my1wmpoYZusT+n5HtX0+L8eHdvAUp+bBHKGRFJqpOYqf4/wWv3MejbX4gsZ5ytzal
- ykG4ibY5G6bxjuHQvZfMUmFiL/8lYxeIKVHBLPc8aaGgt6fznAOwNs8XNIwqziDWmDjUHiq7gfq
- qXCQk3sn2bsO0A7mf4qdo9nK9gcwdg9JVdfXJ7aYpkYUZuQUdUSrH4YBu5BbBcIPYoV50wQjL6l
- BPpXIMWPy6K9wMMplEfmtm4ME8R/5qUrKDFiUcNn2TVTKYGSj/TOqgDexsJEI9vWA8lTfy0fbXc
- 2+tdrBgSNQUeyNg==
+ bh=tkeF0pjGaCP8jQhPd6GYefneGTbz1FI3LYKKF0MTLKA=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmQcZCr5f+bl1S1O2ZWbBLZfw0y6PIGn65vuTdK
+ aQ0meEYdo2JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkHGQgAKCRAgrS7GWxAs
+ 4li3D/99w64zsfOPagK10ROzEEAddeYT7EUteLyf5MRClyUvuCtTewyBGQD5ggaUgNkZs6PdR75
+ 4/sNAhpeAIUnZqbhX87x4nVjqeU0NBII7qERV5BNbvH7iyB7LbcnpWMDMwLkvobBE03tDq936px
+ 2xHTxzo+l5Y3UUhF3X8D3lbJsh3SRX7yILCh9TpE3X3P/KzQEzt9Tqvpy+M3qneliJr0fUyoLGq
+ +pXQ6Io2OTnnrctpR41wQj7YX5vXXUkjmGxwb82riZnMZBmG+FBXTjnSs8Yxpe3aKezIWU1BiVd
+ fx5wznOZ3Hb3cjHZovkzWuOPda4Ikhcuvw2VgDEh7MSU6clWnXkyAoBVuwuVsfsOMEcZRNn9l0/
+ GNDqck8IfouKZ+jqePMEtr9PfnsPo6gzlvVFtBaH/rFE3BWFIWmV7llASh/hJDZcI3kUP9KZeMf
+ hPygIvp+p8wwA9MiuIRrppYReU6d5sFDQy/MC9egOi7Rc6LH/Y1k5GFgAn4kVdZ7DXUyup7IKU3
+ yD4+EQFdze/QhgV1gJmOu1uEObi3C1ftdVZ6xC/zUCmPH4yOHaqOerHcYa09QOM9IlHeP90iqhb
+ 57E216zvHgUG4bmbK0bYFQUqSYeC0pCHBi+mmB5VfFe78/Q+gj49A0YmLDO4QOVwkvTC9Zevctj
+ siwRxmXBEmuh19w==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Add some documentation on pixel conversion functions.
-Update of outdated comments for pixel_write functions.
+Introduce two callbacks which does nothing. They are used in replacement
+of NULL and it avoid kernel OOPS if this NULL is called.
 
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+If those callback are used, it means that there is a mismatch between
+what formats are announced by atomic_check and what is realy supported by
+atomic_update.
+
 Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c |  7 ++++
- drivers/gpu/drm/vkms/vkms_drv.h      | 15 ++++++++-
- drivers/gpu/drm/vkms/vkms_formats.c  | 62 ++++++++++++++++++++++++++++++------
- 3 files changed, 74 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/vkms/vkms_formats.c | 45 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index c6d9b4a65809..da0651a94c9b 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -189,6 +189,13 @@ static void blend(struct vkms_writeback_job *wb,
- 
- 	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
- 
-+	/*
-+	 * The planes are composed line-by-line to avoid heavy memory usage. It is a necessary
-+	 * complexity to avoid poor blending performance.
-+	 *
-+	 * The function vkms_compose_row is used to read a line, pixel-by-pixel, into the staging
-+	 * buffer.
-+	 */
- 	for (size_t y = 0; y < crtc_y_limit; y++) {
- 		fill_background(&background_color, output_buffer);
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index b4b357447292..212f4ab6a71f 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -25,6 +25,17 @@
- 
- #define VKMS_LUT_SIZE 256
- 
-+/**
-+ * struct vkms_frame_info - structure to store the state of a frame
-+ *
-+ * @fb: backing drm framebuffer
-+ * @src: source rectangle of this frame in the source framebuffer, stored in 16.16 fixed-point form
-+ * @dst: destination rectangle in the crtc buffer, stored in whole pixel units
-+ * @map: see drm_shadow_plane_state@data
-+ * @rotation: rotation applied to the source.
-+ *
-+ * @src and @dst should have the same size modulo the rotation.
-+ */
- struct vkms_frame_info {
- 	struct drm_framebuffer *fb;
- 	struct drm_rect src, dst;
-@@ -49,9 +60,11 @@ struct vkms_writeback_job {
- };
- 
- /**
-- * vkms_plane_state - Driver specific plane state
-+ * struct vkms_plane_state - Driver specific plane state
-  * @base: base plane state
-  * @frame_info: data required for composing computation
-+ * @pixel_read: function to read a pixel in this plane. The creator of a vkms_plane_state must
-+ * ensure that this pointer is valid
-  */
- struct vkms_plane_state {
- 	struct drm_shadow_plane_state base;
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index d597c48452ac..f157c43da4d6 100644
+index 6b3e17374b19..c28c32b00e39 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -9,6 +9,18 @@
- 
- #include "vkms_formats.h"
- 
-+/**
-+ * pixel_offset() - Get the offset of the pixel at coordinates x/y in the first plane
-+ *
-+ * @frame_info: Buffer metadata
-+ * @x: The x coordinate of the wanted pixel in the buffer
-+ * @y: The y coordinate of the wanted pixel in the buffer
-+ *
-+ * The caller must ensure that the framebuffer associated with this request uses a pixel format
-+ * where block_h == block_w == 1.
-+ * If this requirement is not fulfilled, the resulting offset can point to an other pixel or
-+ * outside of the buffer.
-+ */
- static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
- {
- 	struct drm_framebuffer *fb = frame_info->fb;
-@@ -16,18 +28,22 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
- 	return fb->offsets[0] + (y * fb->pitches[0]) + (x * fb->format->cpp[0]);
+@@ -135,6 +135,21 @@ static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+ 	out_pixel->b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
  }
  
--/*
-- * packed_pixels_addr - Get the pointer to pixel of a given pair of coordinates
 +/**
-+ * packed_pixels_addr() - Get the pointer to the block containing the pixel at the given
-+ * coordinates
-  *
-  * @frame_info: Buffer metadata
-- * @x: The x(width) coordinate of the 2D buffer
-- * @y: The y(Heigth) coordinate of the 2D buffer
-+ * @x: The x (width) coordinate inside the plane
-+ * @y: The y (height) coordinate inside the plane
-  *
-  * Takes the information stored in the frame_info, a pair of coordinates, and
-  * returns the address of the first color channel.
-  * This function assumes the channels are packed together, i.e. a color channel
-  * comes immediately after another in the memory. And therefore, this function
-  * doesn't work for YUV with chroma subsampling (e.g. YUV420 and NV21).
++ * magenta_to_argb_u16() - pixel_read callback which always read magenta
 + *
-+ * The caller must ensure that the framebuffer associated with this request uses a pixel format
-+ * where block_h == block_w == 1, otherwise the returned pointer can be outside the buffer.
-  */
- static void *packed_pixels_addr(const struct vkms_frame_info *frame_info,
- 				int x, int y)
-@@ -52,6 +68,13 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
- 	return x;
- }
- 
-+/*
-+ * The following functions take pixel data from the buffer and convert them to the format
-+ * ARGB16161616 in out_pixel.
-+ *
-+ * They are used in the vkms_compose_row() function to handle multiple formats.
++ * This callback is used when an invalid format is requested for plane reading.
++ * It is used to avoid null pointer to be used as a function. In theory, this function should
++ * never be called, except if you found a bug in the driver/DRM core.
 + */
++static void magenta_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
++{
++	out_pixel->a = (u16)0xFFFF;
++	out_pixel->r = (u16)0xFFFF;
++	out_pixel->g = 0;
++	out_pixel->b = (u16)0xFFFF;
++}
 +
- static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
- {
- 	/*
-@@ -144,12 +167,11 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+ /**
+  * vkms_compose_row - compose a single row of a plane
+  * @stage_buffer: output line with the composed pixels
+@@ -237,6 +252,16 @@ static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
+ 	*pixel = cpu_to_le16(r << 11 | g << 5 | b);
  }
  
- /*
-- * The following  functions take an line of argb_u16 pixels from the
-- * src_buffer, convert them to a specific format, and store them in the
-- * destination.
-+ * The following functions take one &struct pixel_argb_u16 and convert it to a specific format.
-+ * The result is stored in @dst_pixels.
++/**
++ * argb_u16_to_nothing() - pixel_write callback with no effect
++ *
++ * This callback is used when an invalid format is requested for writeback.
++ * It is used to avoid null pointer to be used as a function. In theory, this should never
++ * happen, except if there is a bug in the driver
++ */
++static void argb_u16_to_nothing(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
++{}
++
+ /**
+  * vkms_writeback_row() - Generic loop for all supported writeback format. It is executed just
+  * after the blending to write a line in the writeback buffer.
+@@ -260,8 +285,10 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+ 
+ /**
+  * get_pixel_conversion_function() - Retrieve the correct read_pixel function for a specific
+- * format. The returned pointer is NULL for unsupported pixel formats. The caller must ensure that
+- * the pointer is valid before using it in a vkms_plane_state.
++ * format.
++ *
++ * If the format is not supported by VKMS a warning is emitted and a dummy "always read magenta"
++ * function is returned.
   *
-- * They are used in the `compose_active_planes` to convert and store a line
-- * from the src_buffer to the writeback buffer.
-+ * They are used in vkms_writeback_row() to convert and store a pixel from the src_buffer to
-+ * the writeback buffer.
+  * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
   */
- static void argb_u16_to_ARGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
- {
-@@ -215,6 +237,14 @@ static void argb_u16_to_RGB565(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
- 	*pixels = cpu_to_le16(r << 11 | g << 5 | b);
- }
- 
-+/**
-+ * vkms_writeback_row() - Generic loop for all supported writeback format. It is executed just
-+ * after the blending to write a line in the writeback buffer.
-+ *
-+ * @wb: Job where to insert the final image
-+ * @src_buffer: Line to write
-+ * @y: Row to write in the writeback buffer
-+ */
- void vkms_writeback_row(struct vkms_writeback_job *wb,
- 			const struct line_buffer *src_buffer, int y)
- {
-@@ -228,6 +258,13 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
- 		wb->pixel_write(dst_pixels, &in_pixels[x]);
- }
- 
-+/**
-+ * get_pixel_conversion_function() - Retrieve the correct read_pixel function for a specific
-+ * format. The returned pointer is NULL for unsupported pixel formats. The caller must ensure that
-+ * the pointer is valid before using it in a vkms_plane_state.
-+ *
-+ * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-+ */
- void *get_pixel_conversion_function(u32 format)
- {
- 	switch (format) {
-@@ -246,6 +283,13 @@ void *get_pixel_conversion_function(u32 format)
+@@ -284,18 +311,21 @@ pixel_read_t get_pixel_read_function(u32 format)
+ 		 * format must:
+ 		 * - Be listed in vkms_formats in vkms_plane.c
+ 		 * - Have a pixel_read callback defined here
++		 *
++		 * To avoid kernel crash, a dummy "always read magenta" function is used. It means
++		 * that during the composition, this plane will always be magenta.
+ 		 */
+ 		WARN(true,
+ 		     "Pixel format %p4cc is not supported by VKMS planes. This is a kernel bug, atomic check must forbid this configuration.\n",
+ 		     &format);
+-		return (pixel_read_t)NULL;
++		return &magenta_to_argb_u16;
  	}
  }
  
-+/**
-+ * get_pixel_write_function() - Retrieve the correct write_pixel function for a specific format.
-+ * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
-+ * pointer is valid before using it in a vkms_writeback_job.
-+ *
-+ * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-+ */
- void *get_pixel_write_function(u32 format)
- {
- 	switch (format) {
+ /**
+  * get_pixel_write_function() - Retrieve the correct write_pixel function for a specific format.
+- * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
+- * pointer is valid before using it in a vkms_writeback_job.
++ * If the format is not supported by VKMS a warning is emitted and a dummy "don't do anything"
++ * function is returned.
+  *
+  * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
+  */
+@@ -318,10 +348,13 @@ pixel_write_t get_pixel_write_function(u32 format)
+ 		 * format must:
+ 		 * - Be listed in vkms_wb_formats in vkms_writeback.c
+ 		 * - Have a pixel_write callback defined here
++		 *
++		 * To avoid kernel crash, a dummy "don't do anything" function is used. It means
++		 * that the resulting writeback buffer is not composed and can contains any values.
+ 		 */
+ 		WARN(true,
+ 		     "Pixel format %p4cc is not supported by VKMS writeback. This is a kernel bug, atomic check must forbid this configuration.\n",
+ 		     &format);
+-		return (pixel_write_t)NULL;
++		return &argb_u16_to_nothing;
+ 	}
+ }
 
 -- 
 2.43.2
