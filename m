@@ -1,65 +1,109 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4746E148853
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4BA154427;
+	Mon, 13 May 2024 15:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615469; cv=none; b=BXRw13UM5gQZCx2tI7v6rX4efVebopwfO0wlfq7ccd9SZUIHYKUxc28KHF29Xhg8jGXjl+A/Yx4xaZcWPZ49x+sAcLa0hfwGUhjhQPX1Hw/BhGyir6i+ecatmsPZMm6A8bOmkU3VlO/WuJFQAa6kUlAoK5ba6lZpCEhqe3EvAk4=
+	t=1715615516; cv=none; b=VDDRzd1PEfdU8Zak/hDmRhxw06D4wWcF05Wm0znB/quyxyBjsghdYQQu3wEeRWnK/9v9vYDMB26OD8Obq82dILynEmzNRPMjv1aGh/MWacCu4zCmpveZp+pNJMIqoF1lCpVryv8KCgtuwxt5qb/gBao/i8yRvC7FrNTSNJYy4mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615469; c=relaxed/simple;
-	bh=JJ0bDpp+2ly0j+2Il/m94d5l8HG2ea22zr+ewOV5QO4=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=bj8l3Kq/PdRPXGNuXyifVyGIfno/TBFOd3ymYtg3gvAXVQTY1mgMU6iOb8B2m6dZKatX7CMA71WAAp8leaFhz1vxKlqwK31coaYpVW/VUqvxCWffgbb5X8PeIpT+ZsYwpP0Qe28FptpVfMoJL4NwVcJha9iBLyXHpnxyJlFZzQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-x.org; spf=pass smtp.mailfrom=bit-x.org; dkim=pass (2048-bit key) header.d=bit-x.org header.i=@bit-x.org header.b=XS6GmiYr; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-x.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-x.org
+	s=arc-20240116; t=1715615516; c=relaxed/simple;
+	bh=8dI/ebZzuVSd46EGsZIVX9qJ10BBglNLC/rRfmEYLmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DpcYDoMo5duitDW/30wLvA0lwUaVfFb9bxHJ5cndJldlgboIZY3i0gVBbFoFCvWychsdD6RegTujWjWHZRUMZrSLxHXxbXR7EZcLAQE02icH/3ZWClJAyihq93wfMar1qDswxPsq93qZJlWiUXGKlOTEmrYcOE1jOxfKC3SWZx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+xo1SsW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-x.org header.i=@bit-x.org header.b="XS6GmiYr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bit-x.org;
-	s=ds202404; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
-	MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=N6nQqbqCCZPPGxfo7Eb1u8KoyCt8cX5NxFd+vLRkf94=; b=XS6GmiYrBjKobOpmtDFKVrZN+2
-	BGUc83Fz5revGOIVbgX2aOPFpTMqLLU849UAYS+e4xQGNrLZOqT7Nze2LiaaTKXkit5SGe5M8R1WP
-	p1+U19lkz3ZyVEaAQCgeZyBAouelAdniwsN0VQrPBqMI6uJLI/drRt/7BY5UCWY3PCHY1ozJrRITV
-	G9q66VlduKanvbr0yU5QPj6GZdXZwwSgzPTd14Sc7RNF0Suzyl4ECLI0EAlZ1LqHpYfChld3HsHeP
-	NEl/fAl5dYU6QDRBPBcKYYaldkjBo2f0ux8Zeq9CrvEpqfd5TgZy8ZhwdqcW+z+671YMX4ZFBc+jr
-	SRhuyZwA==;
-Received: from [2a02:fe1:7001:f100:7cf7:209a:3d9a:a84d] (port=50684)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <ywe_caerlyn@bit-x.org>)
-	id 1s6Xx3-00AqQQ-Kg
-	for linux-kernel@vger.kernel.org;
-	Mon, 13 May 2024 17:50:57 +0200
-Message-ID: <2fc679a9-e3f8-4faa-a248-eaa45d722047@bit-x.org>
-Date: Mon, 13 May 2024 17:50:57 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+xo1SsW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D99A7C32782;
+	Mon, 13 May 2024 15:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715615516;
+	bh=8dI/ebZzuVSd46EGsZIVX9qJ10BBglNLC/rRfmEYLmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K+xo1SsWE/bSPQ0qhDZl3DvC1o7yOyMUTU4WGKMMw/FO3pnCWbrlZFDwuuSn/ixji
+	 6O3XNwURKgOK0PBto6YvTInxCrvKfGp/2xLQDW+v1GAGT1xKCaq65/rwV8Uz7sTeLa
+	 Vs5Dpq9IL4kJzdber7Jfw8Sac8q/QVcTlGfy6n187TxwvfueliPoI8iEU6UjKTmN46
+	 4gcrFZ+OdtkjKShI5LVXWQq/kWVUSp2bDJhbLv4QW27GaeLo5MRskrNd4f4plkFS58
+	 z19rNBamJbmlCiwWn/MCfEgCxSB97G08ctY6DbU9wiLPCnL1qetM+/+/nxU8YTGYZg
+	 js9ynnN9rBvNQ==
+Date: Mon, 13 May 2024 10:51:54 -0500
+From: Rob Herring <robh@kernel.org>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com,
+	joel@jms.id.au, venture@google.com, yuenn@google.com,
+	benjaminfair@google.com, openbmc@lists.ozlabs.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v24 1/4] dt-bindings: reset: npcm: add clock properties
+Message-ID: <20240513155154.GA2595523-robh@kernel.org>
+References: <20240509192411.2432066-1-tmaimon77@gmail.com>
+ <20240509192411.2432066-2-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe_caerlyn@bit-x.org>
-Subject: The Vast X, a more intelligble name (was Bit X, Fair Pay, Low Jitter)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509192411.2432066-2-tmaimon77@gmail.com>
 
-I found a name of The Deity, demystifying The Computer Bit, and making 
-it more accessible to common people: It is about The Vast.
+On Thu, May 09, 2024 at 10:24:08PM +0300, Tomer Maimon wrote:
+> Adding 25MHz reference clock and clock-cell properties to NPCM reset
+> document due to the registration of the npcm8xx clock auxiliary bus device
+> in the NPCM reset driver
+> 
+> The NPCM8xx clock auxiliary bus device has been registered in the NPCM
+> reset driver because the reset and the clock share the same register
+> region.
 
-De-nerding things, and also encouraging an overall more intelligble 
-paradigm for the whole system.
-
-So the system is now planned as The Vast X, everything can be designed 
-according to The Vast. I am also moving domains to the-vast-x.net
-
-Auf Wiedersehen,
-Ywe.
+auxiliary bus is a Linux concept. The reasoning for this should be the 
+reset block also provides clocks.
 
 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../bindings/reset/nuvoton,npcm750-reset.yaml  | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml b/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
+> index d82e65e37cc0..18db4de13098 100644
+> --- a/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
+> +++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
+> @@ -21,6 +21,13 @@ properties:
+>    '#reset-cells':
+>      const: 2
+>  
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: specify external 25MHz referance clock.
 
+s/referance/reference/
+
+> +
+>    nuvoton,sysgcr:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description: a phandle to access GCR registers.
+> @@ -39,6 +46,17 @@ required:
+>    - '#reset-cells'
+>    - nuvoton,sysgcr
+>  
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - nuvoton,npcm845-reset
+> +then:
+> +  required:
+> +    - '#clock-cells'
+> +    - clocks
+
+New required properties are an ABI break. Please justify why that's okay 
+for this platform in the commit message (assuming that it is).
+
+Rob
