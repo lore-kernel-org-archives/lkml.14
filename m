@@ -1,153 +1,166 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712B91474BF
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D69147C8F
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715589564; cv=none; b=FXHpFdsSdBXrTOlKv6j85Frrnz7A/UySgLjb3Wem1wQACiUj7Aa+e7eghlxNOnmScEIdQYr6kevfjvgnZW5k2WhgGkcpEr6s+Qtx2KmaUuGTU7bRTsKmTzduPrTQiRVssrvTQMeUMhMIFLHeaQ1fPX1gYeSH3hqWjPrGO/CE2gQ=
+	t=1715589599; cv=none; b=s6SLWVK88PX6q+c/UV8d8rUzCsItVwh7lrg7uUiFVocrmn/3Kk8WT28Dx4s8RuuI4MhkUq/NxE2g2OzM0R2Bn2pwqjHWP60JpFkZWqpfwEsea7betKV1iflhuFN2JuUp6IL4+4HyvzUIY0oVsvOcTBH+ApfE9/xRfTBK47GVLeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715589564; c=relaxed/simple;
-	bh=xu3qLH3KAqGeXAe+wySJk/AxLkLnUen062a0S8lS+5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=M3GKYxKO835n79rbon7tgFGDrMP3TOek2H2zCQqScG0+W/sizbMPlMfz44OWbWuVYcJLu2Fp96IPBG+A2E35TTrPIBYwTvlc/8r3WgUk6ClPxOh9ziwtmY+j2vdJIbPCwtnb6jMVanjawjd0UQNCPB9w/Xa0wmBIKa0LkXIlyOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RuXY0wuo; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1715589599; c=relaxed/simple;
+	bh=NafnT6nxtfip1QG/byPJKrL48bOdfUlcszFB+gXZGRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RXtC60wy8KokgnjTuzVV2Xdcbe1ODdyxH74DEnoHtO8SuWnABbp5eDddU+4qWgpEVTJlaTmMGb+mJ5Ofb5Ff7rGXVU65UMODPJkomCqL4XjhuFY+HtZs8+i8ACnFxwnXKh8j86n7baJERzQRlq25TMQX9uyEDkng4g0urVFznrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hVGXIn4S; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RuXY0wuo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVGXIn4S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715589561;
+	s=mimecast20190719; t=1715589596;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PFXGqSIkyTAMybQe23aWDxPcyyUfYDtwAeH1eyZFLGs=;
-	b=RuXY0wuog7opMj/TIRzVzVsKJzOxpW3oWFI+L22xsxBVzYUezPuks9RKY2rtGVdedsj3wf
-	+OiJXA0QMN21PwIu6iqeuixhcB5MSx85LCPNGBu1XQElhXe2w9ja0Ra/rREP9zxdp8z8yT
-	w8mw9L0mx3E9G0VHLDsKsrRkz/YY7Uc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=NafnT6nxtfip1QG/byPJKrL48bOdfUlcszFB+gXZGRk=;
+	b=hVGXIn4S/exlX1urmj+PfuzWgXZkp9iMCjqmtseVX6ZczbcguadZIu8NTaQGWrGRhy1h2v
+	yASVuLhYl3s1TXM6kllaa10OFfcekjNh3qE0I71W0cB3it26p/bXnpLq70EVYdbBxr2JiJ
+	EWgx8PLWCwyi1GwsU3RyC4EJRoK3mNw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588--yeeYlKPMqOcMO2EM2vwEQ-1; Mon, 13 May 2024 04:39:20 -0400
-X-MC-Unique: -yeeYlKPMqOcMO2EM2vwEQ-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a59c0ecd59cso290094566b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:39:19 -0700 (PDT)
+ us-mta-462-g7u-hQicPg-DezHkK-QerA-1; Mon, 13 May 2024 04:39:50 -0400
+X-MC-Unique: g7u-hQicPg-DezHkK-QerA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-41fe6df6ef3so14287825e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:39:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715589559; x=1716194359;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PFXGqSIkyTAMybQe23aWDxPcyyUfYDtwAeH1eyZFLGs=;
-        b=RUDNl7sw6GXEytWhNgjPGBUgKgxAW3VJU9sSEwZoVm30I3K8LcxSgTwGTTxSU5kTy1
-         5h9ixqki3N195bjdA8v9Iid478lGkJasqbAdBGivHnJuKqMdyki4EI/fBnCDyO6RH+SN
-         veBpwLs0RkyzYBZa8LtNY0jgGwngaRvbAv9dEWBU727+y2uH6dKyBBPuy1ZzxxN2IDTc
-         L6snG9OjkgW9serDUTPweb9Ig0RF9BmuNmxeAarm86AQIorIc7mSWoep+Y/uoCZmu3K7
-         VXBEVIDAeh8S7SDR3lC/w+ODiQEIzQWMJ7RRx/JcW47L4OUo7fmrG0YckuBt7TX0y6GO
-         HbXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKMm0vxRkw8k2S7k2jrD+upHIfccaNaL4nW/oiJ+wN5NAqsNetW5F2JKU3b8tNMrsQT96eZN5W8JkPpVagWcorK9ksESoLyGEnbYQc
-X-Gm-Message-State: AOJu0YxXOVNkRiQkHZUqXbG6YBiJgfPx5JoXt2S280lgO/oW8H1WaZlA
-	2pJfE2n1zuP5tBQA0bqFg3ErpY1dxc7lzIopGIKlJOc5ELUXYld04NFm22wRNlN2fkFRiiqSJvC
-	QpJExynhdVqmwSJNLIu+GEUThhtQ7HrPhtOpfkKJL9GrLehEDRsuKHg3Kv4zfmQ==
-X-Received: by 2002:a17:906:66ca:b0:a59:c2c3:bb4c with SMTP id a640c23a62f3a-a5a2d675a9dmr803342066b.70.1715589558853;
-        Mon, 13 May 2024 01:39:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAYMUvPAgKG1/Dn2DN+IH/Xl+9GnDev7DUS8ig8zq3P229TKqP/dEy/Pr/PBub/ElY0kVDnw==
-X-Received: by 2002:a17:906:66ca:b0:a59:c2c3:bb4c with SMTP id a640c23a62f3a-a5a2d675a9dmr803340466b.70.1715589558430;
-        Mon, 13 May 2024 01:39:18 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17894da1sm565624066b.89.2024.05.13.01.39.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 01:39:18 -0700 (PDT)
-Message-ID: <2db5beba-500b-458e-9fc3-f05bb982172c@redhat.com>
-Date: Mon, 13 May 2024 10:39:17 +0200
+        d=1e100.net; s=20230601; t=1715589589; x=1716194389;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NafnT6nxtfip1QG/byPJKrL48bOdfUlcszFB+gXZGRk=;
+        b=st28+3yTBAbFt8sOGwQDjg8Qgggio3aYd22lAGHrkWHwmH3aI4yLhTuthSyhB6g0zO
+         ZvJ76md2rQtPi1HnEEK1+x0JeGh5pGFxaBqeYV8YQT+g2KCXf40Y1I4jkH4rgDbTa8kL
+         X05bcFWmU64PpgZNekjZxm4o2BXXcSZLqxS8rZ1ay/snHlbpO8DFyfzVFxIupfPrNZSn
+         kV+3jsJxePpq0RJRYlBjnpOiMEfJo3i0kvG81cIFaQzHkpuWYw6wN78kPCG0OoaKaJ9c
+         c1dPVK1nAvXONkBkIjircis1hpQVaXCHhpYcRMijh6SXlfxQ01TSz6eUt1k61LKt6vLI
+         i+rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxqXaO2js6t/HejWTv/Igp/yM9gZ9zz5i1X5tK+22a402Rr7h4rABFxj0J0wBSUNgzF/X4r2D4PgT/uXyIPP9/Ia7nHKKqfgj02SnU
+X-Gm-Message-State: AOJu0YwZtv/H+h+1Ek/nLP2DcktVPb88MIqfD1/U5HDi+Uypj7xNWIGf
+	XwFdK/owP6ySkjbIPBaH7503Kh0P4S5N6qfubH04PL4svpMIHGSAyBW5Nz8uBNdVjkNPg9iSPvc
+	suc9xYqF6w3Lqy3+QPdcH4LT/sHx5fSkY7zFDntldUFtn6tspEYcHdIZFuaQMzg==
+X-Received: by 2002:a05:600c:3caa:b0:41b:55b1:6cfc with SMTP id 5b1f17b1804b1-41feaa2f3a3mr60665345e9.1.1715589589263;
+        Mon, 13 May 2024 01:39:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSHY3Vs6wnO8Hqo+e75wM+DuYwRlx0w2YGHoHP++IqYSQpbYZoInfS6/LKCMB/0qMhU4uo5Q==
+X-Received: by 2002:a05:600c:3caa:b0:41b:55b1:6cfc with SMTP id 5b1f17b1804b1-41feaa2f3a3mr60665135e9.1.1715589588807;
+        Mon, 13 May 2024 01:39:48 -0700 (PDT)
+Received: from localhost ([2a01:e34:ec60:48a0:b89c:e3fb:cb18:893d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87b2648fsm185332075e9.7.2024.05.13.01.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 01:39:48 -0700 (PDT)
+Date: Mon, 13 May 2024 10:39:48 +0200
+From: Maxime Ripard <mripard@redhat.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Robert Mader <robert.mader@collabora.com>, 
+	Sebastien Bacher <sebastien.bacher@canonical.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Milan Zamazal <mzamazal@redhat.com>, 
+	Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
+Subject: Re: Safety of opening up /dev/dma_heap/* to physically present users
+ (udev uaccess tag) ?
+Message-ID: <20240513-delectable-busy-serval-fbe3fe@penduick>
+References: <bb372250-e8b8-4458-bc99-dd8365b06991@redhat.com>
+ <ojduxo54lpcbfg2wfuhqhy7k3phncamtklh65z7gvttcwztmhk@zkifewcy4ovi>
+ <3c0c7e7e-1530-411b-b7a4-9f13e0ff1f9e@redhat.com>
+ <e7ilwp3vc32xze3iu2ejgqlgz44codsktnvyiufjhuf2zxcnnf@tnwzgzoxvbg2>
+ <d2a512b2-e6b1-4675-b406-478074bbbe95@linaro.org>
+ <CAA8EJpr4bJUQt2T63_FZ=KHGEm4vixfpk3pMV9naABEONJfMmQ@mail.gmail.com>
+ <20240507184049.GC20390@pendragon.ideasonboard.com>
+ <CAA8EJpqLu5w7gnqtDyuDDQBd7AEROTd6LTYi8muzjToXmkKR3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: video: Use vendor backlight on Lenovo X1 Carbon.
-To: dengxiang <dengxiang@nfschina.com>, lenb@kernel.org, rafael@kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- wanghuiqiang@huawei.com, prime.zeng@hisilicon.com, tony.luck@intel.com
-References: <20240513033834.9174-1-dengxiang@nfschina.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240513033834.9174-1-dengxiang@nfschina.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi dengxiang,
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="qh6aaiqzlccizapn"
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpqLu5w7gnqtDyuDDQBd7AEROTd6LTYi8muzjToXmkKR3w@mail.gmail.com>
 
 
-On 5/13/24 5:38 AM, dengxiang wrote:
-> Lenovo X1 Carbon advertises both native and vendor backlight
-> control interfaces.But Linux defaults to picking the native ACPI
-> video backlight interface, which will make that the vendor
-> zx_backlight interface to not work.
+--qh6aaiqzlccizapn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A couple of remarks / questions:
+On Tue, May 07, 2024 at 10:59:42PM +0300, Dmitry Baryshkov wrote:
+> On Tue, 7 May 2024 at 21:40, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > On Tue, May 07, 2024 at 06:19:18PM +0300, Dmitry Baryshkov wrote:
+> > > On Tue, 7 May 2024 at 18:15, Bryan O'Donoghue wrote:
+> > > > On 07/05/2024 16:09, Dmitry Baryshkov wrote:
+> > > > > Ah, I see. Then why do you require the DMA-ble buffer at all? If =
+you are
+> > > > > providing data to VPU or DRM, then you should be able to get the =
+buffer
+> > > > > from the data-consuming device.
+> > > >
+> > > > Because we don't necessarily know what the consuming device is, if =
+any.
+> > > >
+> > > > Could be VPU, could be Zoom/Hangouts via pipewire, could for argume=
+nt
+> > > > sake be GPU or DSP.
+> > > >
+> > > > Also if we introduce a dependency on another device to allocate the
+> > > > output buffers - say always taking the output buffer from the GPU, =
+then
+> > > > we've added another dependency which is more difficult to guarantee
+> > > > across different arches.
+> > >
+> > > Yes. And it should be expected. It's a consumer who knows the
+> > > restrictions on the buffer. As I wrote, Zoom/Hangouts should not
+> > > require a DMA buffer at all.
+> >
+> > Why not ? If you want to capture to a buffer that you then compose on
+> > the screen without copying data, dma-buf is the way to go. That's the
+> > Linux solution for buffer sharing.
+>=20
+> Yes. But it should be allocated by the DRM driver. As Sima wrote,
+> there is no guarantee that the buffer allocated from dma-heaps is
+> accessible to the GPU.
 
-1. Looking at the strings you match on this is not for a Lenovo X1 Carbon,
-but rather for a Lenovo Kaitan model ?  So it seems that the commit message
-and the comment for the quirk need some work.
-	
-2. I have never heard of a zx_backlight interface before and there certainly
-is no upstream driver providing this. I believe you need to explain what
-is going on in a bit more detail here and then we can see if this really is
-the best way to fix this. It seems that these Lenovo Kaitan laptops are
-using Zhaoxin Kaixian x86 processors with integrate graphics. I would expect
-the zx_backlight interface to be provided by the driver for the Zhaoxin Kaixian
-integrated graphics in this case. And if that is the case then the integrated
-graphics driver should use BACKLIGHT_RAW (aka native) for the backlight type
-and with that change this quirk should not be necessary .
+And there is no guarantee that the buffer allocated from the GPU is
+accessible to the display engine. In practice, I've yet to see an issue
+with that assumption.
 
-3. Vendor specific backlight interfaces are normally only found on really
-old laptops. Since Windows XP laptops typically use the ACPI backlight
-interface and since Windows 8 they typically use the GPU's native
-backlight driver. So adding a quirk to use a vendor interface in 2024 is
-weird. Again can you explain in a lot more detail what is going on here,
-but I guess the backlight class device is provided by the driver for the
-integrated graphics and in that case the fix is to simply change the type
-of the backlight device registered by the igfx driver to BACKLIGHT_RAW.
+And there's the other elephant in the room that hasn't been addressed.
+Buffers typically allocated by the data-consuming frameworks are
+coherent buffers, which on arm/arm64 usually mean non-cacheable.
 
-4. You posted the same patch twice ?
+Performances are *terrible*. Meanwhile, dma-heaps and dma-buf provide
+cacheable buffers with a cache synchronization API, which allow to have
+it run much faster.
 
-Regards,
+Maxime
 
-Hans
+--qh6aaiqzlccizapn
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZkHR0wAKCRAnX84Zoj2+
+dmpnAYCn9sxfeRSm1Faf0OjKfvfKYpA6+XhCEJJVQzH6jGId/Sk32BahqCR3ZucO
+/1TsALQBf160+BzC2jF6k7Xud+ixD5QuBdXfxo6UziSenQ1ClVh2UFdyf0TG2Tzj
+I+TfIOqSEg==
+=cY/A
+-----END PGP SIGNATURE-----
 
-
-
-> 
-> Add a DMI quirk to force use of the vendor interface.
-> 
-> Signed-off-by: dengxiang <dengxiang@nfschina.com>
-> ---
->  drivers/acpi/video_detect.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-> index 2cc3821b2b16..e647186b4e83 100644
-> --- a/drivers/acpi/video_detect.c
-> +++ b/drivers/acpi/video_detect.c
-> @@ -875,6 +875,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
->  		DMI_MATCH(DMI_PRODUCT_NAME, "Mipad2"),
->  		},
->  	},
-> +	{
-> +	 .callback = video_detect_force_vendor,
-> +	 /* Lenovo X1 Carbon */
-> +	 .matches = {
-> +		DMI_MATCH(DMI_SYS_VENDOR, "KaiTian"),
-> +		DMI_MATCH(DMI_PRODUCT_NAME, "KaiTian X1 G1d"),
-> +		},
-> +	},
->  	{ },
->  };
->  
+--qh6aaiqzlccizapn--
 
