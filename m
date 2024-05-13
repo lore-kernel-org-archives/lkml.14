@@ -1,117 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC50147C7F
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAF9147C7F
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715589614; cv=none; b=p6hRdZlzeqP+dp92UGCR2xxSY4ksknl0hed4+IUkcb5YPxzTB9quRp2xsw1DRSixHcBUBtq05A5jhErmL/TVlVDCaYhg5HLUMMRQm1QwGgNEBVFysx2vjQEcWWThnqS18ZXPI6RW+QKbgTN/Qnqy9n8E7k/Yiu/gAytzP9gj1IA=
+	t=1715589663; cv=none; b=qBGaQS7g96dOOeV9xFREKor/yoNi7e5gPOEn1OLr2b9PFA5/ViUnO1KEu0cydDc8a3+sQrmsefuPZCjoZTj67kLhe9zpcLTMEbqEfBird6MtAu8N4pLavxp6zvXVL2v2pC4oFjOhVlrgZnzFRsmpXtzZ1EGvzB2pAgFJnMntOAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715589614; c=relaxed/simple;
-	bh=W7Upr80CUPRnv/2p62AHw64D2eAOW6aoxATj8eWlFyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=atztx2BslHBZrglyAboX2tf9h8qLkbCTquLOBozuAGZlz3uNBso9Bs8ZxhwbJjO2BhSbgIewwkqi04PQxCkNUt3eoIjl/DAhqm6JPRG3XsmpuMS8EcWSJN5/nvss7LrqpcDmL4YH02t7rJQJ0nSS+j8Vf3ERF1Na1H5RPKuGOVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Iy6isypS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715589663; c=relaxed/simple;
+	bh=6Qe+Z4SzpwQnD/xZduFUuZ+qeUgZmflyk3fkh5lZ93s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uu4LzNywYMI7ZCliGlerPit5BGgwLxgVh6qSfnn1Mhrr967abI8ZkvfQSgnf21T1MaAKngK9cbUvAUfH0DiQJ7WpoKb6Dn8DojwziPLBSxXevFWnwzGvsbUq+MDvmUfmHqT5Z+poJijziFXKZyOQ03mKi9CmY5AUiMEOqFjvGIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3VCcXT8/; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iy6isypS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715589612;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y9TfaHjT18CdtzvNmwQpp2X/7RmpdQsmO2fg/Q54E5g=;
-	b=Iy6isypSNr9VBkN1FPWAQ80+eSoyCIoxZb8omnyo2lmJx3MbN+vHVm6QJqD3LPvSj1Mi99
-	hCGBVlwJb3PPvnaWPStmemEuU7pr5DaKGG2prjFlbB2X35oiQhUAg5l5pKwJryiOjOeVXB
-	+hmYU1ZUeyru8JhcJM1ILX2urZ9ALVU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-5OsPxujyM4GbGF1I4fXupg-1; Mon, 13 May 2024 04:39:57 -0400
-X-MC-Unique: 5OsPxujyM4GbGF1I4fXupg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF80C800656;
-	Mon, 13 May 2024 08:39:56 +0000 (UTC)
-Received: from fedora (unknown [10.72.112.91])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6553540C5D0;
-	Mon, 13 May 2024 08:39:52 +0000 (UTC)
-Date: Mon, 13 May 2024 16:39:48 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Benjamin Meier <benjamin.meier70@gmail.com>
-Cc: hch@lst.de, kbusch@kernel.org, kbusch@meta.com,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	tglx@linutronix.de, ming.lei@redhat.com
-Subject: Re: [PATCH 2/2] nvme-pci: allow unmanaged interrupts
-Message-ID: <ZkHR1L/cJesDEn60@fedora>
-References: <20240510151047.GA10486@lst.de>
- <26d4ad30-c0fe-4286-9802-aa6afbd8074a@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3VCcXT8/"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-572f6c56cdaso14630a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715589660; x=1716194460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iSDRwv7jk6IAgHWtX5wD76uWRnyIu2E9jN3RV77i0HQ=;
+        b=3VCcXT8/uQ5qKRowowrKsBuK0rDnIpewljbIwCzj6lgnZfLB8UC/cfoxOzNo51+8Ln
+         PXWMN5w5mISm/Qiey2V9CxpgDNZ3128DDReiKBjTBwmARoaL2PpqjVr2/lFz2yxRwong
+         fLp3NsCTR+TzrLCtI0bLTdima0Pg9/RY7YP1shMX/+LTKgYetS++xOMzDJCd5Ubo5uMx
+         TbnjUoMM6hw4OI4vRpIkyUpb+S5dEYwoLBaXk7et8bkXR7avQ++1eQ5UCjZNDBtIEHB2
+         lwvf2eBKYLgAivaFOaL/yu2Dw4UYvQkWttdMsAwNvR1ue3tlvqsri9d1FGbBgdST41Pa
+         uh/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715589660; x=1716194460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iSDRwv7jk6IAgHWtX5wD76uWRnyIu2E9jN3RV77i0HQ=;
+        b=f5EigjT94FxN7jsnsDMsetpRis6pGxEwQOrn534dw5gHGeiyVNrA+qdYmSHGHTW9F7
+         IYOEDVufK83BT+R8kmi1agBHQCZ/k8wlJq5Q17Q1uOLIiHou56/+hZBO0VZdXuUxmtjR
+         9QBs6nJELGb7QxwaWJZ7RsL+XcmojhCJ30YkBbAJgj67bP7T48uX1EFS7uTxCP/3Dkq/
+         jrZriRPE2cbT9V5IpSqHfrQQLW1JInhOfeWfOVPY0tVEN2ROcBtXcxzJWxM/5UL5/ERt
+         v+y+K2EHxK5zKj1smTnoqdL31Au/wy/ke2OuTj9uBw7oM94irFffv8lExQ4uZH59KvBf
+         Oerg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQKsSclL+tfntju8kNPZEncfEnE0BWBoj4fY6ZsRfZYfU+lMaO6Uacert+In1vi0shqJldXQ8xdNLNDhx5oCgT26Y5e3RJEbe8NkQf
+X-Gm-Message-State: AOJu0YxKWEMy382EFAhdmFzi8F3GdLPKm3wzMJO6mHdGNAjFw75zHylc
+	TOMiGU/ZBn7lQKTskFAL2wJqOAVU0UjjJifP/MLTfmdkd7J67tdTJCOLzTjwAM4WAzVadAMLMqE
+	58XevE7eaXLhuf07p+Cfo+eUEskBjDzLYWYLN
+X-Google-Smtp-Source: AGHT+IG57BWFXudd7m8JcDciNBmtXJbh5+hfFHuyw1l+yn/mpSNaGi+yGRv/Cgp0O9O0ywU03d4iur9Dsc9F5E9hlnM=
+X-Received: by 2002:a05:6402:2153:b0:572:5597:8f89 with SMTP id
+ 4fb4d7f45d1cf-57443d30921mr260807a12.6.1715589660140; Mon, 13 May 2024
+ 01:41:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26d4ad30-c0fe-4286-9802-aa6afbd8074a@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+References: <20240513015127.961360-1-wei.fang@nxp.com> <CANn89i+EQDCFrhC3mN8g2k=KFpaKtrDusgaUo9zBvv0JCw8eYg@mail.gmail.com>
+ <PAXPR04MB85100C1A06253C0AE1EB36C288E22@PAXPR04MB8510.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB85100C1A06253C0AE1EB36C288E22@PAXPR04MB8510.eurprd04.prod.outlook.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 13 May 2024 10:40:46 +0200
+Message-ID: <CANn89i+0xtG5hg2LsGvNOueCAkOac_UccXWq-Eeqt1a40EkqBA@mail.gmail.com>
+Subject: Re: [PATCH net] net: fec: avoid lock evasion when reading pps_enable
+To: Wei Fang <wei.fang@nxp.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>, 
+	"pabeni@redhat.com" <pabeni@redhat.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
+	Clark Wang <xiaoning.wang@nxp.com>, 
+	"richardcochran@gmail.com" <richardcochran@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 09:33:27AM +0200, Benjamin Meier wrote:
-> > From: Christoph Hellwig <hch@lst.de>
+On Mon, May 13, 2024 at 9:53=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wrote:
+>
+> > -----Original Message-----
+> > From: Eric Dumazet <edumazet@google.com>
+> > Sent: 2024=E5=B9=B45=E6=9C=8813=E6=97=A5 15:29
+> > To: Wei Fang <wei.fang@nxp.com>
+> > Cc: davem@davemloft.net; kuba@kernel.org; pabeni@redhat.com; Shenwei
+> > Wang <shenwei.wang@nxp.com>; Clark Wang <xiaoning.wang@nxp.com>;
+> > richardcochran@gmail.com; andrew@lunn.ch; netdev@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; imx@lists.linux.dev
+> > Subject: Re: [PATCH net] net: fec: avoid lock evasion when reading pps_=
+enable
 > >
-> > So let them argue why.  I'd rather have a really, really, really
-> > good argument for this crap, and I'd like to hear it from the horses
-> > mouth.
-> 
-> I reached out to Keith to explore the possibility of manually defining
-> which cores handle NVMe interrupts.
-> 
-> The application which we develop and maintain (in the company I work)
-> has very high requirements regarding latency. We have some isolated cores
+> > On Mon, May 13, 2024 at 4:02=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wro=
+te:
+> > >
+> > > The assignment of pps_enable is protected by tmreg_lock, but the read
+> > > operation of pps_enable is not. So the Coverity tool reports a lock
+> > > evasion warning which may cause data race to occur when running in a
+> > > multithread environment. Although this issue is almost impossible to
+> > > occur, we'd better fix it, at least it seems more logically
+> > > reasonable, and it also prevents Coverity from continuing to issue wa=
+rnings.
+> > >
+> > > Fixes: 278d24047891 ("net: fec: ptp: Enable PPS output based on ptp
+> > > clock")
+> > > Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> > > ---
+> > >  drivers/net/ethernet/freescale/fec_ptp.c | 8 +++++---
+> > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
+> > > b/drivers/net/ethernet/freescale/fec_ptp.c
+> > > index 181d9bfbee22..8d37274a3fb0 100644
+> > > --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> > > +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> > > @@ -104,14 +104,16 @@ static int fec_ptp_enable_pps(struct
+> > fec_enet_private *fep, uint enable)
+> > >         struct timespec64 ts;
+> > >         u64 ns;
+> > >
+> > > -       if (fep->pps_enable =3D=3D enable)
+> > > -               return 0;
+> > > -
+> > >         fep->pps_channel =3D DEFAULT_PPS_CHANNEL;
+> > >         fep->reload_period =3D PPS_OUPUT_RELOAD_PERIOD;
+> >
+> > Why are these writes left without the spinlock protection ?
+> For fec driver, the pps_channel and the reload_period of PPS request
+> are always fixed, and they were also not protected by the lock in the
+> original code.
 
-Are these isolated cores controlled by kernel command line `isolcpus=`?
+If this is the case, please move this initialization elsewhere, so
+that we can be absolutely sure of the  claim.
 
-> and we run our application on those.
-> 
-> Our system is using kernel 5.4 which unfortunately does not support
-> "isolcpus=managed_irq". Actually, we did not even know about that
-> option, because we are focussed on kernel 5.4. It solves part
-> of our problem, but being able to specify where exactly interrupts
-> are running is still superior in our opinion.
-> 
-> E.g. assume the number of house-keeping cores is small, because we
-> want to have full control over the system. In our case we have threads
-> of different priorities where some get an exclusive core. Some other threads
-> share a core (or a group of cores) with other threads. Now we are still
-> happy to assign some interrupts to some of the cores which we consider as
-> "medium-priority". Due to the small number of non-isolated cores, it can
-
-So these "medium-priority" cores belong to isolated cpu list, you still expect
-NVMe interrupts can be handled on these cpu cores, do I understand correctly?
-
-If yes, I think your case still can be covered with 'isolcpus=managed_irq' which
-needn't to be same with cpu cores specified from `isolcpus=`, such as
-excluding medium-priority cores from 'isolcpus=managed_irq', and
-meantime include them in plain `isolcpus=`.
-
-> be tricky to assign all interrupts to those without a performance-penalty.
-> 
-> Given these requirements, manually specifying interrupt/core assignments
-> would offer greater flexibility and control over system performance.
-> Moreover, the proposed code changes appear minimal and have no
-> impact on existing functionalities.
-
-Looks your main concern is performance, but as Keith mentioned, the proposed
-change may degrade nvme perf too:
-
-https://lore.kernel.org/linux-nvme/Zj6745UDnwX1BteO@kbusch-mbp.dhcp.thefacebook.com/
-
-
-
-thanks,
-Ming
-
+I see fep->reload_period being overwritten in this file, I do not see
+clear evidence this is all safe.
