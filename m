@@ -1,375 +1,103 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CF739FF3;
-	Mon, 13 May 2024 18:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA0A2E631;
+	Mon, 13 May 2024 18:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715625294; cv=none; b=jD2VVHlzCVhQlcsJMb2W6kOg6VFwKY3+J9WHlwz0w3l7eKGw1glr5co72MFSbOAYRGnKavsN1RfP0wOxTfKTSNqSgQ8H6b8hNNleIrv/CG9Re1/+dIOzVKzhdzybQjN+8737JhZ1lkE5WMTpHwcNcSACQzsYQL/ZP+hQMYfrZf8=
+	t=1715625328; cv=none; b=IYby7TbTNFjVUhBQwADROvk27K64T2+oqbvGONBjLv5NwkrIwaYfrENOckQ8s3yLJh/THXs46pGck7WZvWNuFEYOvkSRfXU52Sj94VIoBsogU2sus8foGr08SzybwF7q+6qdbqYRFXv/fNFiIOJA6e2hL3DAz7Ps3pNXCsUJK4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715625294; c=relaxed/simple;
-	bh=5L4PF1MuN9FINDE53jZdA0iON6eF1VWsTsr6jnAvX6w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W4TCP5C426Ev8BC9CIzAzXbV/w9g9UlvlnXdxo1FnxcuyuAldLBhyQH2dH+DK2GwLIVWb+EuqW9dRz1k54OsFmnAgYQf7UxPz59yVNF21p4eZ/he7Clsqnu9YSkiLkpQZ5+XiCTRpW8xuB3x7wOr2axEh0FgtoqIsDM8na9Mkwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QCpqI7DP; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715625328; c=relaxed/simple;
+	bh=YKbPkKlqAwoRaNZqki6fpfGRkig5wtpfRBksExN/W+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GyEn7lw523Mjm3Sf1bd5N0EHQrexyruyxNfoM/BYPjTmgG7Gs6jwbgWSHSRt26O1vPCYBWHe2ZufXgxZ5337Py3OyYXI4/Wfe4kswyNKIZmV5vusSTW64ovuFGaiFuo+XCSDygThhL37V+DE6/9u/v2WWAibnKLO1Mkbw0PkeA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdUm4mLd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QCpqI7DP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 97BD31BF206;
-	Mon, 13 May 2024 18:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715625284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5WQQb0M41PALx6op11WqqbYKjYLuqaG49UCcL2xitrs=;
-	b=QCpqI7DPN/j0zrllSd2/kQbKrNSlMsDTeK/aCm7BX/M5fbPRW5ubU6Dc1YBwO9nihNvgrA
-	CH1cpnqogv4fbN5jcjgGZm7kqPiBOGAZa2bZtr2wpKutd0hRmLLrBC1Umd2mD5b5C8PLK1
-	M4Ejy2cK0s7ouOTCoae86nisjDhUYDP85wiVFjYF3KTWtDE3h1Qi2eyeVKkkwUOIi4J6d2
-	cirw1EFDhlX1eGBRjYPtd0XP6nJXXwNLs+a6mdxm7hG/vbU6IKMgzU8X+z8SMk+TMvUMsy
-	dLGfz+Qe817gdFQTyLyEB7uIHoG8FsiYVLd4Ysq20c5wmnBA+/mVf1LZ0s50qw==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Mon, 13 May 2024 20:34:16 +0200
-Subject: [PATCH v2 2/3] MIPS: mobileye: Add EyeQ6H device tree
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdUm4mLd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE3E4C113CC;
+	Mon, 13 May 2024 18:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715625328;
+	bh=YKbPkKlqAwoRaNZqki6fpfGRkig5wtpfRBksExN/W+4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kdUm4mLdt6zonDi2uj1fC/4yvUuFv7+8Yf1ocwHVZVTXuoGnZ1WetV+VPrITiJ00/
+	 0ArlywI8B0iDrEvkfZaMVc+Gd6cDtnD3nnlD2sT3ut3tfJ+gjzgtRXlvI0DhQ2N1Wb
+	 yRcv/KFQUloyZ6eDmhGQlKxZHP/TVwagCOVArll6rUlUWcaz2yxxjgcnvtwxkOtG8C
+	 4M1v47TFLU8EKmW9BDwdDkzpn29CqRZoCnXbFJH3G4t9zDP2r98iHWvQhPHHLPF9Qf
+	 ckas1s2zW6jNAP0wWeqNsNxt90ijUwYzEuz92SyUmAkM6vhY/naqjDZhZQfi9rX6eG
+	 9BobUVT2+XpDg==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: linux-integrity@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	stable@vger.kernel.org,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	keyrings@vger.kernel.org (open list:KEYS-TRUSTED),
+	linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] KEYS: trusted: Do not use WARN when encode fails
+Date: Mon, 13 May 2024 21:35:17 +0300
+Message-ID: <20240513183518.10922-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240513-eyeq6h-v2-2-ae8c1974b52b@bootlin.com>
-References: <20240513-eyeq6h-v2-0-ae8c1974b52b@bootlin.com>
-In-Reply-To: <20240513-eyeq6h-v2-0-ae8c1974b52b@bootlin.com>
-To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8481;
- i=gregory.clement@bootlin.com; h=from:subject:message-id;
- bh=5L4PF1MuN9FINDE53jZdA0iON6eF1VWsTsr6jnAvX6w=;
- b=owGbwMvMwCTIzSbRJ1JkfZXxtFoSQ5pTrP2mutCQppDOs2mqRUwGl0NT8l43luU0Tvxf4H+g5
- qWNz6KOWBYGQSYGWTFFFomVBWfEy/U9ttk1X4eZw8oEMoSBi1MAJtIRyzA/x1RjVx37mwdLDbtz
- zZiVDR4U+J5gmO9x5Tjv/hxBBpl8LobG21uPNUz8+hkA
-X-Developer-Key: i=gregory.clement@bootlin.com; a=openpgp;
- fpr=18A970CC17772F48B63E83D70B06188E14723BD5
-X-GND-Sasl: gregory.clement@bootlin.com
 
-EyeQ6H (or “High”) is an other SoC from Mobileye still based on the
-MIPS I6500 architecture as the EyeQ5. The 2 clusters of this SoC
-contains 4 cores which are capable of running 4 threads. Besides this,
-it features multiple controllers such as the classic UART, high speed
-I2C, SPI, as well as CAN-FD, PCIe Gen4, Octal/Quad SPI Flash
-interface, Gigabit Ethernet, MIPI CSI-2, MIPI DSI, and eMMC 5.1. It
-also includes a Hardware Security Module, Functional Safety Hardware,
-and video encoders and more.
+Error on asn1_encode_sequence() is handled with a WARN incorrectly
+because:
 
-This commit provides the initial device tree files with support for
-UART, GPIO and pinctrl, as well as fixed clocked.
+1. asn1_encode_sequence() is not an internal function (located
+   in lib/asn1_encode.c).
+2. Location on known, which makes the stack trace useless.
+3. Results a crash if panic_on_warn is set.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+It is also noteworthy that the use of WARN is undocumented, and it
+should be avoided unless there is carefully considered rationale to use
+it, which is now non-existent.
+
+Replace WARN with pr_err, and print the return value instead, which is
+only useful piece of information (and was not printed).
+
+Cc: stable@vger.kernel.org # v5.13+
+Fixes: f2219745250f ("security: keys: trusted: use ASN.1 TPM2 key format for the blobs")
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
- arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts        | 22 +++++
- .../boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi     | 52 ++++++++++++
- arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi       | 88 +++++++++++++++++++
- arch/mips/boot/dts/mobileye/eyeq6h.dtsi            | 98 ++++++++++++++++++++++
- 4 files changed, 260 insertions(+)
+ security/keys/trusted-keys/trusted_tpm2.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts b/arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts
-new file mode 100644
-index 000000000000..ebc0d363fbf8
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Copyright 2024 Mobileye Vision Technologies Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "eyeq6h.dtsi"
-+
-+/ {
-+	compatible = "mobileye,eyeq6-epm6", "mobileye,eyeq6";
-+	model = "Mobile EyeQ6H MP6 Evaluation board";
-+
-+	chosen {
-+		stdout-path = "serial0:921600n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x1 0x00000000 0x1 0x00000000>;
-+	};
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi b/arch/mips/boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi
-new file mode 100644
-index 000000000000..5fa99e06fde7
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Copyright 2023 Mobileye Vision Technologies Ltd.
-+ */
-+
-+#include <dt-bindings/clock/mobileye,eyeq5-clk.h>
-+
-+/ {
-+	xtal: clock-30000000 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <30000000>;
-+	};
-+
-+	pll_west: clock-2000000000-west {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <2000000000>;
-+	};
-+
-+	pll_cpu: clock-2000000000-cpu {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <2000000000>;
-+	};
-+
-+	/* pll-cpu derivatives */
-+	occ_cpu: clock-2000000000-occ-cpu {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_cpu>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+
-+	/* pll-west derivatives */
-+	occ_periph_w: clock-200000000 {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&pll_west>;
-+		#clock-cells = <0>;
-+		clock-div = <10>;
-+		clock-mult = <1>;
-+	};
-+	uart_clk: clock-200000000-uart {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&occ_periph_w>;
-+		#clock-cells = <0>;
-+		clock-div = <1>;
-+		clock-mult = <1>;
-+	};
-+
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi b/arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi
-new file mode 100644
-index 000000000000..a3d1b3684893
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Copyright 2024 Mobileye Vision Technologies Ltd.
-+ */
-+
-+/*
-+ * MUX register structure
-+ * bits    | field      | comment
-+ * [0]     | MUX_SEL    | 0 - GPIO, 1 - alternative func
-+ * [4]     | SW_LOOPBACK|
-+ * [5]     | SW_OUT_HZ  |
-+ * [7]     | DBG_IN     |
-+ * [11:8]  | DS         | drive strength
-+ * [13:12] | PUD        | pull-up/pull-down. 0, 3 - no, 1 - PD, 2 - PU
-+ * [14]    | OD         | Open drain
-+ * [15]    | ST_CFG     | Hysteretic input enable (Schmitt trigger)
-+ */
-+
-+&pinctrl_west {
-+	// TODO: use pinctrl-single,bias-pullup
-+	// TODO: use pinctrl-single,bias-pulldown
-+	// TODO: use pinctrl-single,drive-strength
-+	// TODO: use pinctrl-single,input-schmitt
-+
-+	i2c0_pins: i2c0-pins {
-+		pinctrl-single,pins = <
-+			0x000 0x200	// I2C0_SCL pin
-+			0x004 0x200	// I2C0_SDA pin
-+		>;
-+	};
-+	i2c1_pins: i2c1-pins {
-+		pinctrl-single,pins = <
-+			0x008 0x200	// I2C1_SCL pin
-+			0x00c 0x200	// I2C1_SDA pin
-+		>;
-+	};
-+	eth0_pins: eth0-pins {
-+		pinctrl-single,pins = <
-+			0x080 1		// GPIO_C4__SMA0_MDC pin
-+			0x084 1		// GPIO_C5__SMA0_MDIO pin
-+		>;
-+	};
-+	uart0_pins: uart0-pins {
-+		pinctrl-single,pins = <0x0a8 1>; // UART0 pin group
-+	};
-+	uart1_pins: uart1-pins {
-+		pinctrl-single,pins = <0x0a0 1>; // UART1 pin group
-+	};
-+	spi0_pins: spi0-pins {
-+		pinctrl-single,pins = <0x0ac 1>; // SPI0 pin group
-+	};
-+	spi1_pins: spi1-pins {
-+		pinctrl-single,pins = <0x0a4 1>; // SPI1 pin group
-+	};
-+};
-+
-+&pinctrl_east {
-+	i2c2_pins: i2c2-pins {
-+		pinctrl-single,pins = <
-+			0x000 0x200	// i2c2_SCL pin
-+			0x004 0x200	// i2c2_SDA pin
-+		>;
-+	};
-+	i2c3_pins: i2c3-pins {
-+		pinctrl-single,pins = <
-+			0x008 0x200	// i2c3_SCL pin
-+			0x00c 0x200	// i2c3_SDA pin
-+		>;
-+	};
-+	eth1_pins: eth1-pins {
-+		pinctrl-single,pins = <
-+			0x080 1	// GPIO_D4__SMA1_MDC pin
-+			0x084 1	// GPIO_D5__SMA1_MDIO pin
-+		>;
-+	};
-+	uart2_sel_pins: uart2-pins {
-+		pinctrl-single,pins = <0x0a4 1>; // UART2 pin group
-+	};
-+	uart3_pins: uart3-pins {
-+		pinctrl-single,pins = <0x09c 1>; // UART3 pin group
-+	};
-+	spi2_pins: spi2-pins {
-+		pinctrl-single,pins = <0x0a8 1>; // SPI2 pin group
-+	};
-+	spi3_pins: spi3-pins {
-+		pinctrl-single,pins = <0x0a0 1>; // SPI3 pin group
-+	};
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq6h.dtsi b/arch/mips/boot/dts/mobileye/eyeq6h.dtsi
-new file mode 100644
-index 000000000000..1db3c3cda2e3
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq6h.dtsi
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+/*
-+ * Copyright 2024 Mobileye Vision Technologies Ltd.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/mips-gic.h>
-+
-+#include "eyeq6h-fixed-clocks.dtsi"
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "img,i6500";
-+			reg = <0>;
-+			clocks = <&occ_cpu>;
-+		};
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	cpu_intc: interrupt-controller {
-+		compatible = "mti,cpu-interrupt-controller";
-+		interrupt-controller;
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart0: serial@d3331000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0 0xd3331000 0x0 0x1000>;
-+			reg-io-width = <4>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SHARED 43 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&occ_periph_w>, <&occ_periph_w>;
-+			clock-names = "uartclk", "apb_pclk";
-+		};
-+
-+		pinctrl_west: pinctrl@d3337000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xd3337000 0x0 0xb0>;
-+			#pinctrl-cells = <1>;
-+			pinctrl-single,register-width = <32>;
-+			pinctrl-single,function-mask = <0xffff>;
-+		};
-+
-+		pinctrl_east: pinctrl@d3357000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xd3357000 0x0 0xb0>;
-+			#pinctrl-cells = <1>;
-+			pinctrl-single,register-width = <32>;
-+			pinctrl-single,function-mask = <0xffff>;
-+		};
-+
-+		pinctrl_south: pinctrl@d8014000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xd8014000 0x0 0xf8>;
-+			#pinctrl-cells = <1>;
-+			pinctrl-single,register-width = <32>;
-+			pinctrl-single,function-mask = <0xffff>;
-+		};
-+
-+		gic: interrupt-controller@f0920000 {
-+			compatible = "mti,gic";
-+			reg = <0x0 0xf0920000 0x0 0x20000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+
-+			/*
-+			 * Declare the interrupt-parent even though the mti,gic
-+			 * binding doesn't require it, such that the kernel can
-+			 * figure out that cpu_intc is the root interrupt
-+			 * controller & should be probed first.
-+			 */
-+			interrupt-parent = <&cpu_intc>;
-+
-+			timer {
-+				compatible = "mti,gic-timer";
-+				interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-+				clocks = <&occ_cpu>;
-+			};
-+		};
-+	};
-+};
-+
-+#include "eyeq6h-pins.dtsi"
-
+diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
+index c8d8fdefbd8d..e31fe53822a1 100644
+--- a/security/keys/trusted-keys/trusted_tpm2.c
++++ b/security/keys/trusted-keys/trusted_tpm2.c
+@@ -39,6 +39,7 @@ static int tpm2_key_encode(struct trusted_key_payload *payload,
+ 	u8 *end_work = scratch + SCRATCH_SIZE;
+ 	u8 *priv, *pub;
+ 	u16 priv_len, pub_len;
++	int ret;
+ 
+ 	priv_len = get_unaligned_be16(src) + 2;
+ 	priv = src;
+@@ -80,8 +81,11 @@ static int tpm2_key_encode(struct trusted_key_payload *payload,
+ 	work1 = payload->blob;
+ 	work1 = asn1_encode_sequence(work1, work1 + sizeof(payload->blob),
+ 				     scratch, work - scratch);
+-	if (WARN(IS_ERR(work1), "BUG: ASN.1 encoder failed"))
+-		return PTR_ERR(work1);
++	if (IS_ERR(work1)) {
++		ret = PTR_ERR(work1);
++		pr_err("ASN.1 encode error %d\n", ret);
++		return ret;
++	}
+ 
+ 	return work1 - payload->blob;
+ }
 -- 
-2.43.0
+2.45.0
 
