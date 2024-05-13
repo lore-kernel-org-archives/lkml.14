@@ -1,138 +1,71 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2038.outbound.protection.outlook.com [40.92.21.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B6A153BC9
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 14:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715609661; cv=fail; b=TIChmZnMungIyT5ILAGvg7Vvk/pczkNqIeQcGZdWufnSyZnw85+p1scU8iro5WD/KqFnQrU1uHRNEpN+5P36tUJD+lLAcVmTnfw3P4YCtqT2JoZaFRgFRdxBCdgWX+RsH5AepF8ur9Xplvw0wFAjndBYZ7nvQKo4Du7TeUOy1dg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715609661; c=relaxed/simple;
-	bh=8r25WIQcmdAeXxBVBcNzIAEEsF/Vn9xAXbNZttDLgNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=L+5eK9x/3R6KNeHVGF1DCGGvsqp1l/8LB9CcuualHzdz5DxKs1c6KlXPgpPEQNRUhwVGK06j/sdKIxdXaOarQY2N2smJBYD2GMj9kZ9tYEV6EtWVTD7U4JuQptQFnVwM+h/Tl2sYSb2WvaBtSG4RlVVlgfRpPKZQRAoqg6SjgHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=j0/0JuGI; arc=fail smtp.client-ip=40.92.21.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9CC153819;
+	Mon, 13 May 2024 14:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715609693; cv=none; b=XKqiap8q9M8HU1g296VEqFm7MUXDCYRnc0xz4cb3MmgPz01l2TIt0DUZuLQCKh5IQdNqG3YKgLv0elK1+FUZ90hLOHxU64uDz+S2hNymlsYGGW2SidybwqfTiDEGvseDx9sC1F2ckKg0UGBTn8jAkH4eUgzmKEMsmSNTiJTFFqA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715609693; c=relaxed/simple;
+	bh=UPuauCYh36dyevJphL1EJxVRpRWQSPlcqWsuOaWqJYg=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=oULmEUDnlUJYRiXC8jkObsr5lqGX4J7na8IXBiMA8b4Wypnmy2gr84/zjUUd3yFkrLtZHL7LROTqp/0AkdCcRRrj+N5PSj2SzZ+ZnF3wLtGegNlkYqWtzxwqTOxbG+4JagNXQSBz1vWIuk9ofbyhyH/OcpSzYzvIU8TanCTrc9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUx2QbRK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="j0/0JuGI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D8sCZKWzyBULaRyul4huNRSB95MhReswHBKcYjgXtOYD3yGiD41/le77V2DIsEeUyF+sRjx3iW4TSnTwZq+os/K4GXSBlcIcAEhGL38a/nZ074Nj/jeeE6uVYtTO/j819lQNHHeNlreNg67lkUstHm6VUXNj0v60WH/noleOSoNz85zs0cUj9/fqn6CbHbExh0KK3JbAPY04+1xInbHArBNM4mkd9nwm3BmpRWcF/00D7gNTgchfBUUokLpUVdAKUQ7MeLSW/CbeJPVpwdb7a1Lv5jaqb9A38oCC25DGdlfb4kQi/q27H+FOggwOQlfs+1hqcYdI4wODnfm9B/QhkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+Ii9GsWnJ7D6mP1n2yJF+TxiwCJPferw8vPhzhtBwuE=;
- b=divYYw/kKIHM5cFmE8yGTIAsGJgBIDsZLPvsbH31lZay2lyjrjxQRu+YMZ4+y0HqoyUui36ExAS6LJeIxYCYtX0O6OwWD4xCSyCbaMPmp25B2hlmZ31ndzwmxLakwDES9qam/mHWRdE4oxK1ZraKprm+LqD7gMzsK/hkUW/nPJltzVJv89gGRNdRLpciH8LOOw2yYRphmzJ3FjeacqLtmEqP79A8d0p9oxlMXJQJCxSu2kDbuuOHo5MNQT49L340kkc1NnC4oFwtUV51iRWUgAr266hEz83zZHXVS49kyTmelWj0yR+gdLMebceF/sLCNLmiWHLYq39j1Cm2Ebw/cA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+Ii9GsWnJ7D6mP1n2yJF+TxiwCJPferw8vPhzhtBwuE=;
- b=j0/0JuGIGoDM2u85XK+1SCj6NILuIJMe93oko7glq3JX7ElwJuNwgww4Mxyb2kRFq3Z5HH1LKSnSnGvr5ZN7WPqXmjoTinVk+w2l5IOFO/s46lJivIwm1J1az/K/GPxk4h6y1YmHLk50MpXx9794biZ5NPv0sm01b7pwkOl48hfSmMo75oKF0Z2NZR70sfLvUlQf6eYHPHvCzgnaowHLt/vkK0FwqrdGn7QLQmCUbLr6imr2d+zFX3v7PWwfKkBL8npMpOV2d83GFKJie4gw7/JWwiJU349VkGHnvLhqL0W1hF9ZDrSXAb9X18J8FphEQUSN6wS8/rXS293/VRVOiA==
-Received: from BYAPR03MB4168.namprd03.prod.outlook.com (2603:10b6:a03:78::23)
- by MW5PR03MB6982.namprd03.prod.outlook.com (2603:10b6:303:1a9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
- 2024 14:14:17 +0000
-Received: from BYAPR03MB4168.namprd03.prod.outlook.com
- ([fe80::b8b1:7fdc:95d4:238a]) by BYAPR03MB4168.namprd03.prod.outlook.com
- ([fe80::b8b1:7fdc:95d4:238a%6]) with mapi id 15.20.7544.052; Mon, 13 May 2024
- 14:14:16 +0000
-From: Jiasheng Jiang <jiashengjiangcool@outlook.com>
-To: jani.nikula@linux.intel.com,
-	joonas.lahtinen@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	tursulin@ursulin.net,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	chris@chris-wilson.co.uk
-Cc: intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Jiasheng Jiang <jiashengjiangcool@outlook.com>
-Subject: [PATCH] drm/i915: Correct error handler
-Date: Mon, 13 May 2024 14:14:07 +0000
-Message-ID:
- <BYAPR03MB4168F12A763386E1ADF8A8A7ADE22@BYAPR03MB4168.namprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [9DNGlloOSkAg6/nouQhv1hukjZgaI1LQ]
-X-ClientProxiedBy: CH2PR10CA0025.namprd10.prod.outlook.com
- (2603:10b6:610:4c::35) To BYAPR03MB4168.namprd03.prod.outlook.com
- (2603:10b6:a03:78::23)
-X-Microsoft-Original-Message-ID:
- <20240513141407.48770-1-jiashengjiangcool@outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUx2QbRK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E431CC4AF10;
+	Mon, 13 May 2024 14:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715609693;
+	bh=UPuauCYh36dyevJphL1EJxVRpRWQSPlcqWsuOaWqJYg=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=kUx2QbRK0U2xWMPGy+9v/76znz5fhfdeGGXl8g4bm5sRXIPEVuPo1yvjLwIcedQdc
+	 qM9lJHG4GrWsNYcRX648GkGYJcxHZ5pHZrocQWl35aTA5TZXfLah5xHJ217FqqCYgT
+	 aEZNs2qSKFif6KmNkRx8KcN2yvHkPcuDIuBgmJzs9bNve2BoSiGyOekQP/BM6tBGzT
+	 TFL6/Jumm80F2Nwza/pWfbzcU+5i8oLXE9y1XFLeTKDjrIqhkSi8d6W1t/9Uga427y
+	 nNhKbegS6z/nZB2N1PeyqQJyuqiGMvvLRZc+QJMJUEVT6JTy5WxRkFw2jWvFeDWM78
+	 xbq5p+bwx4iHA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4168:EE_|MW5PR03MB6982:EE_
-X-MS-Office365-Filtering-Correlation-Id: 723e0260-b985-427f-2e54-08dc7356f933
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|3430499023|3420499023|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	E6k/P1HCG+Pyuaws5+Qrd0XbnxVsmLcy/UIDaNVgzwgs3Imvo2N91rkMy33xkra/fnq+Xjd45c/ybHXhvCwHnLAOKe1ZbQjURCV3e2Ol03yda44/Zd3vmNwVcQCFTTfH+bIhNS7APZ4A3PhW2d93lkAxPcOCM9xjvel34aX2cWd7YRFRofYLWUYGLX2l+K5zGD8gaRuenUlVkob8SS5QUnfQP7XbC8O7/nacTW25PdX00o9hBWGRi0cUy+P/CpBQtJ7iCGUIaTLoe4GS0sDv+oXrDOsXBKoPFhya6NhiuaxeEylOGgyC0MI1N2a7yxlBmj6gFlwfdSVin622pEw+HbEzYd+LJUCGVEdz3MBUGujZh66IZxu5KDGM63X5qFMuCTBgXD3MFsFeA58VEVPTL1bTmcFmHF4Q9QAvlmzIBKmhK3fKQWuI4IqYiHfqryswH96yJWzJKz1X+3/8N0PuLPYxl8TR+1EQ6RGCWVO8DYHGvj2/Z4AXUDWkoB/nDimnPEtJHZu0Yx+YfjdkLRM6Ogvtwhn57fV/ophvl7iHJn7sLpQhU9+pT37Gwbh0aCYsutSKfTJ/m0Uo3ZmuJ5TyA4HNHKATEXHDrgESlXX1K8VgAgN0bX8lkpwY6v17tXUs
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nDaCK/rZrZXPZ4aaEC2CSnRxrcI1ORh2xBmMxxj4MV8xceaWotk2Y9DkKCad?=
- =?us-ascii?Q?8LdccdQLPCR04bWXj8B890mAlLGdZLJWp+L16yW5ftxH2CrV7oc2FCJhVPdg?=
- =?us-ascii?Q?PJArRttO412Zqb2SnmTAMBJba0Aa3TKNcfuSkoLGHE2FNCgh8XeSY7WyMPDO?=
- =?us-ascii?Q?qIDWxSrHRR07I4NnBtzZ41so6GPX2Xb0VwBeKse8d4yWYxC4EGJZmGqIP2Gm?=
- =?us-ascii?Q?dlG6Z2hcg2jN8jtoqQxA35o4USXey1mZipAa8z/EgNb86fUe5mfiQVJMb/ey?=
- =?us-ascii?Q?gFE82Z6alTIvTKlg5e+tX5hehP8pL7ri2gjid7uuV683HppwNBYjpktZjDc6?=
- =?us-ascii?Q?9IhhUJSMkvAjAGDi7iAcQm49+RfT+qMRWbIh2BLUli86Dcj1ewriYFeOVSFH?=
- =?us-ascii?Q?BaBJZP1CC+aLzZ80iDkqnrgYO/sJAfZBnUTPgPjc7E6uNSuGAF5p6cttZhYc?=
- =?us-ascii?Q?lg4bM/TwP2JkNwPEVCp8UBNmfdW4gQ5bM15Czvavp0tBRWeDd4QqdnsmjZhA?=
- =?us-ascii?Q?hFay/TGbfC9AYV4opaswz6cF2DhHJJKAmXV77mjjHfBuaF2TBQlP7DV03pec?=
- =?us-ascii?Q?YXxYSfx4TPM/qSmRl0i2d60nkPwZO5+D4lYykc7bIUfjXG/AvGMa0xp0Pfbe?=
- =?us-ascii?Q?XNjJJ8UDujHqwbz+qCfFM6emAIAIJuB+xFu3ISPQjdK1AA35k4V3j2MOWU3a?=
- =?us-ascii?Q?00y4L7YGPsCD0KTre7O7bbXu8dO+t2NmWiTdL5JfbIzixQkPlsYpUP3Re+qf?=
- =?us-ascii?Q?h8AKWoe7slzpAy63YVE179iyhcGKV3hqGngskGCUjEwwbghNHHxEqP10n40C?=
- =?us-ascii?Q?me6iM6GeG0dGgh+ujh85YF53rF7u/02nwf0WcnvDCvgyKgvaQbYcE4zDnQyy?=
- =?us-ascii?Q?1vabEK2gZnWjX4DLMYGivUfhcmoMrNeuyykNJBTmAsimXPQ6FIRzwI7EhFKY?=
- =?us-ascii?Q?Hj8EUgnp6yQq/z+Y/zda8rX8h4UTCL5hEwP2JsNUeNNOplNNvPlxlj3vEf4f?=
- =?us-ascii?Q?KT9/H5cEi8D+MyshsF3/hAmNGKCWsrWQ52NrFyqGlxYqkbLqSyk83pNRHrRy?=
- =?us-ascii?Q?Q7UPgsSrEEz3+KTbloQuy20xSZ0+TJJjBTIg11lz2Ox8Ik6smJamlKe+dzUn?=
- =?us-ascii?Q?o451xDVLzVFveDya2YJquQ5NK4DpCrMyJf6aGnJ4zHCKwmV88lZcax1syfwb?=
- =?us-ascii?Q?v6eJn8KzvEsdFMBEhIZtUsn0F2p84S1DgEM8VgK+sG3YnJzyG/lxQ3nGirE5?=
- =?us-ascii?Q?UYMaE1k/8FC8JvVg5ciO?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 723e0260-b985-427f-2e54-08dc7356f933
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB4168.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 14:14:16.7680
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR03MB6982
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/2] wifi: ath12k: fix misspelling of "dma" in
+ num_rxmda_per_pdev
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: 
+ <20240504-ath12k_dp_rxdma_ring_sel_config_wcn7850-ret-v1-1-44d2843a2857@quicinc.com>
+References: 
+ <20240504-ath12k_dp_rxdma_ring_sel_config_wcn7850-ret-v1-1-44d2843a2857@quicinc.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
+ <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171560969001.1690511.12764694198482040352.kvalo@kernel.org>
+Date: Mon, 13 May 2024 14:14:51 +0000 (UTC)
 
-> On 5/11/2024 5:48 PM, Jiasheng Jiang wrote:
->> Replace "slab_priorities" with "slab_dependencies" in the error handler to avoid memory leak.
-> 
-> Nice catch. I would make the subject more like:
-> 
-> drm/i915: Fix memory leak by correcting cache object name in error handler
-> 
->>
->> Fixes: 32eb6bcfdda9 ("drm/i915: Make request allocation caches global")
-> 
-> Also need Cc: <stable@vger.kernel.org> # v5.2+
-> 
-> With those:
-> 
-> Reviewed-by: Nirmoy Das <nirmoy.das@intel.com>
-> 
-> 
-> Nirmoy
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
-Thanks.
-I will submit a v2.
+> The ath12k_hw_params member num_rxmda_per_pdev contains a misspelling
+> of "dma" so fix it.
+> 
+> No functional changes, compile tested only.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-- Jiasheng
+2 patches applied to ath-next branch of ath.git, thanks.
+
+ff5fa958d2fd wifi: ath12k: fix misspelling of "dma" in num_rxmda_per_pdev
+3b9344740843 wifi: ath12k: initialize 'ret' in ath12k_dp_rxdma_ring_sel_config_wcn7850()
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240504-ath12k_dp_rxdma_ring_sel_config_wcn7850-ret-v1-1-44d2843a2857@quicinc.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
