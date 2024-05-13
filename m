@@ -1,118 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDF51474BE;
-	Mon, 13 May 2024 07:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C49146A64
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715587183; cv=none; b=MQhrb2SHZ2BY/Pc6ve2f09v55qK+ycVA/bljHq7IsjI5SW2kZTig8a46lv9l2lvWnIuSNdETzeCg9ZxtyInC7GRzeuGhnqcjfV2CAA92SIAQ1r4mbbkzdIPeLv8Q+UL40lJ6vtueniTk3aGEw3X1YvwbQ9uHXUzNPoPU7VLWQXU=
+	t=1715587403; cv=none; b=Clf+XPWUXLmzpgB7NJWbpMsSATZ7JTupMKI29oD4pSdwI89vQy+QBww2tWl9MuNEfAsJCLUKH941B7kdp9PdI9qJ+I6d9IFaqDGUgnmBcmuGmK2+cGnYxj+3Ha6Tngnjxlc/oAf27NsDzwZAE+1igUwNGOvGmeHIQI5KCDMy0vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715587183; c=relaxed/simple;
-	bh=wvFY5C7KnIUWngjEubPKtJkMfV486jqserq7eRMaVVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qTry0u8CymCdGAuCI6R7Jl6OwNSJf0KzfdUGU393a5Z1J8ow+XWBVhy9VJdWK09QWlYEsePnqf+9wJtAfRKO1K/Tn/+94N2hlSLUGqmM7GJhZALws+0cTT79I05khbo/JO7430RHrnY51wwr2bGpfuvVdG2FR1zirt/nb2FNHOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4WPjdpA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715587403; c=relaxed/simple;
+	bh=23uWuj7ICqa3qQCSJxZ9h9ChpqiL/yGtIf1aTLfSpnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Trcmyb1Q5ulNNeHH4IM+WEMF864oOYnW7NAZkkbJM5VwfuKyOfTlGhSI/4Cmr23g+Y+59rsIOMWiC9y1AFCz3ZESOYGkSj4TvpGSXFL63dSjrYohH2pgi9kPil4W6kbGvy8Ba1tQaeMqSq7hITGFzh/Qya0TcyIkbf1MRCwK730=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jHiXjQ7t; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4WPjdpA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C86DDC32783;
-	Mon, 13 May 2024 07:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715587182;
-	bh=wvFY5C7KnIUWngjEubPKtJkMfV486jqserq7eRMaVVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s4WPjdpAVW+TxaxkAz6L/Rbf+aQyR+EQ5zHzk1w8QwUnm7ekYI9C5ISCzVfuekf20
-	 vGgRqORbQhiZvXcbiU72Hp/LNaSoiw2wTtoQUxdMqzY/pvRD52C4H+HO1sCk/ix5m6
-	 FGz23YHCLqmSxXfIDVdlAE4Ksi7xDBuq6UiTG3C+0Z5RFQwWU8NyPCAPCLq5E5AODj
-	 eNcff4Vb4JCZ97cyR47OM+vUQDReH/l7eA3teXH9JGMV4TKEf7bO33TtO55hgN4vnT
-	 krtYmP06detrmO9S/gKudLrWXS5TCKrTlEoyQkyuiu6AIPgkSchWjYW1RQClsYOdFX
-	 ZtxW1NSBxIptQ==
-Date: Mon, 13 May 2024 08:59:34 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Lee Jones <lee@kernel.org>,
-	UNGLinuxDriver@microchip.com,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
-	netdev@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: mfd: syscon: Add more simple compatibles
-Message-ID: <20240513-timing-snippet-38983a6b3e2f@spud>
-References: <20240510123018.3902184-1-robh@kernel.org>
- <20240513095504.37776289@xps-13>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHiXjQ7t"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59ce1e8609so877900366b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715587400; x=1716192200; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WnZ6trVhzdlXSKG3rKBrCEdLdkgOZsBK4FUKMxCUy7c=;
+        b=jHiXjQ7tmi1NqBaI3GUirUyVepKe+K3dKIz4N7lY2vzT0nuZMd2X+z5r4iTmZxcLHy
+         AgQohdjkGAhDw79lmkm3uJLsSnZxOc35sHBUlpxWLWJ3hVNbnMl7RgM1IB3joIFnlS+7
+         JdwZAejdfRTEUmd7kR4Es7jaXPje/KvGsEfH0x5jFbO/DoqbrbzRlrqP5+Mg+tORxJlX
+         Spc/XpZiBSJutFRs2rO/IoFY+/2hvGP4rAg44AMKHtkGpKAVA2L/+AJ1PkkZh09cNPJF
+         5misHSnHSoF0tt1kkKeqD72X3spvvUZAUOqeuvxvA21ua2XNnJNDYT/rjcckIafUCCGG
+         y7Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715587400; x=1716192200;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WnZ6trVhzdlXSKG3rKBrCEdLdkgOZsBK4FUKMxCUy7c=;
+        b=hT0VgQmJWBJGV43g+HsoPKSo7RNNztDxqWTv2uSSDQGlyhMpizOBOhZuhgM2pYvhUB
+         UZK1w778DbVHx+SqgU3U1NnvdyfDdoz6Rmz53kZAzdTEV8ABb/rftQ/RNzCVGU/nQO/2
+         l2eXw9Su16jpMtjHN3beb9m7tGKab6nCIgJ0n++ged255af5Sve0pM7fhH87QGehSLlT
+         oMqO5V4oe64n+lDBxqi/ruwCF8+kPMIi7zCUpUpKcWhl4BF7EJs+rMUV6gMeknFtccVx
+         61L2Bevn8vk0rPHRlwsgwepXraShW2GtdYWex9pUaP7783OO1EmxjP28wmgQrCuz5rsn
+         1cYA==
+X-Gm-Message-State: AOJu0Yya7VlRLxtKU8W6hvSp++FuKHZGcX2Jgh9MRbTZZXdcuR/B8sit
+	ui8jSitlLLABuie/YfDmr1HgD2vRfcKAibE5XHs5K8+a7JTBE5vh
+X-Google-Smtp-Source: AGHT+IG94D9DPyExALzgvsPjVqXg/C4+F3PXVM5MqYAZ6Xxfs8MPAM5TY6AhIDt6jLBUQMByxvJBkQ==
+X-Received: by 2002:a17:906:8315:b0:a59:c807:72d3 with SMTP id a640c23a62f3a-a5a2d1ddfebmr773843766b.17.1715587400101;
+        Mon, 13 May 2024 01:03:20 -0700 (PDT)
+Received: from gmail.com (1F2EF402.unconfigured.pool.telekom.hu. [31.46.244.2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17892444sm558300766b.76.2024.05.13.01.03.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 01:03:19 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 13 May 2024 10:03:17 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>
+Subject: [GIT PULL] x86/platform changes for v6.10
+Message-ID: <ZkHJRYpDIBpxWeyz@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ejuqGmZ1Bh+Fj8SZ"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240513095504.37776289@xps-13>
+Content-Transfer-Encoding: 8bit
 
 
---ejuqGmZ1Bh+Fj8SZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Linus,
 
-On Mon, May 13, 2024 at 09:55:04AM +0200, Miquel Raynal wrote:
-> Hi Rob,
->=20
-> robh@kernel.org wrote on Fri, 10 May 2024 07:30:14 -0500:
->=20
-> > Add another batch of various "simple" syscon compatibles which were
-> > undocumented or still documented with old text bindings. Remove the old
-> > text binding docs for the ones which were documented.
->=20
-> ...
->=20
-> >  .../devicetree/bindings/mtd/atmel-nand.txt    |  9 ------
->=20
-> I don't know how useful are these compatibles, but if I take the case
-> of atmel,sama5d3-nfc-io, it is only described in this file, while
-> several DTSI reference it. After this change they will no longer be
-> referenced at all but still in use. Is this intended? Shall these
-> compatibles be totally dropped from the device trees as well?
->=20
-> $ git grep -c atmel,sama5d3-nfc-io arch/
-> arch/arm/boot/dts/microchip/sama5d2.dtsi:1
-> arch/arm/boot/dts/microchip/sama5d3.dtsi:1
-> arch/arm/boot/dts/microchip/sama5d4.dtsi:1
-> arch/arm/boot/dts/microchip/sama7g5.dtsi:1
+Please pull the latest x86/platform Git tree from:
 
-atmel,sama5d3-nfc-io is added to the syscon yaml binding in this patch,
-so it's a move not a removal, no?
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-2024-05-13
 
---ejuqGmZ1Bh+Fj8SZ
-Content-Type: application/pgp-signature; name="signature.asc"
+   # HEAD: 801549ed6abe7586eb9ad0cf7147b0bef383ad22 x86/platform/olpc-xo1-sci: Convert to platform remove callback returning void
 
------BEGIN PGP SIGNATURE-----
+x86/platform changes for v6.10:
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkHIYQAKCRB4tDGHoIJi
-0kjhAQCywBkItTLslLEIC/Q3Nmz+t/xZFgyPQcDxhpgIFVh/xwD+L7u6ZYa12INM
-yYuvsouRgrYM7F0I+RsI2qBAfMNdDAw=
-=HwQ9
------END PGP SIGNATURE-----
+ - Improve the DeviceTree (OF) NUMA enumeration code to
+   address kernel warnings & mis-mappings on DeviceTree platforms.
 
---ejuqGmZ1Bh+Fj8SZ--
+ - Migrate x86 platform drivers to the .remove_new callback API
+
+ - Misc cleanups & fixes
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Saurabh Sengar (4):
+      x86/hyperv/vtl: Correct x86_init.mpparse.parse_smp_cfg assignment
+      x86/of: Set the parse_smp_cfg for all the DeviceTree platforms by default
+      x86/of: Map NUMA node to CPUs as per DeviceTree
+      x86/of: Change x86_dtb_parse_smp_config() to static
+
+Uwe Kleine-König (3):
+      x86/platform/iris: Convert to platform remove callback returning void
+      x86/platform/olpc-x01-pm: Convert to platform remove callback returning void
+      x86/platform/olpc-xo1-sci: Convert to platform remove callback returning void
+
+
+ arch/x86/hyperv/hv_vtl.c              |  1 -
+ arch/x86/include/asm/prom.h           |  9 ++-------
+ arch/x86/kernel/devicetree.c          | 24 ++++++++++++++----------
+ arch/x86/platform/ce4100/ce4100.c     |  1 -
+ arch/x86/platform/iris/iris.c         |  5 ++---
+ arch/x86/platform/olpc/olpc-xo1-pm.c  |  7 +++----
+ arch/x86/platform/olpc/olpc-xo1-sci.c |  5 ++---
+ 7 files changed, 23 insertions(+), 29 deletions(-)
