@@ -1,93 +1,107 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE114689;
-	Mon, 13 May 2024 14:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4601C01;
+	Mon, 13 May 2024 14:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715611946; cv=none; b=fBPfpIdX5axMn0ac1AN2cF+d0LMdgsYJTC6bNc6fkRHt4yg+HanFf5/ffmNJyescgPBANGVslh3O21MUFrE3nH1Ndv3CkCAMt1JwyyHE7VKjm52Zq/mF24IEBl496cMIGzXtLvkO9yTjYT7f7MBTUlTN6nKk0fk0MQkCpjkjzXU=
+	t=1715612039; cv=none; b=N21o0euDsU2eomTAe7NJa9cNFJKsVoEMjgCyRdHchBsbouwJuRYS/LMODax6PxK2xZ2D63zyIpsY5kkdp6zHkaauQQzDgd0Wa3mO51Mxkwje0A3Jf4dDZnvJQ9iSdKg3QKhEABlovrXgyzFutoOV3vxvagwIF2QsSIQI7uTTDEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715611946; c=relaxed/simple;
-	bh=dGPesChjn6zfCGN+uZgQZ6d6gonk0aHoo23Qown8aUw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aJveKTJg6ks4FZh28Va//5X0/C3ZkeDVhJDKMok8/ljOlDFBPXzcKxrjd0Bp31j9Ow6D8rsQcIsqt7M2/PENubIQ7bwuISZ5RCN/hnTdzdfKde/b1qL9zNEXLwfk2mQvE+Q/Eb1qMkefbAN1BMyOSRMnURQC6qfAVW6VhzrR6kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qW/lUqtX; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715612039; c=relaxed/simple;
+	bh=dLfguYFlEZM8pXj+gnfRKXow5bLqSaYtXraAJ28Xh+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V3AWRf9pwM3PZQdGvjqs4/WUcYV/MfCb6+Vlv70DsxNXsZ8r26PBe7AdtfVKzBeSxgA7XYS57x3G2IjTlA8GIyG3Vyxll77ZdDDhdFoo1nK7+cSPRci4M6ZL4JQGnJgegRwU28HxWw4+5rp4YdZryeXkzce4g6QYgaq2fD4oidU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiGMMNwS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qW/lUqtX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715611941;
-	bh=dGPesChjn6zfCGN+uZgQZ6d6gonk0aHoo23Qown8aUw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qW/lUqtX+1mZwPJhOnBSNA9bxBp3Wrew4U5lRRZuUEl/R0qI11+fDk3Glorw5HxMA
-	 GUnRqWAudolecol5X8Weo8OTh9fLBQgAX6BAIJyds/FKJCp9uheAfobi7I5to1nCpY
-	 aSKkXJZVP1uX5HYSOm5/wikVCvq1fSQWES3SCUIeZIkaTkKlw+66WVVUdjD+7W98UL
-	 YYLm2kyeMoReMZI1o3Kg9ZN98kRJcokYMDvgzfHkcSw56nD5VcD2wzE1eWuD2ubR23
-	 TvodC8+bZeW5qQxyuNimLx8Z9z25m5AQHwrSp+X7R3IvgF4ZmA1vRa0ONWpVtsFC91
-	 5lNfaJq23oiVA==
-Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6A2ED378216D;
-	Mon, 13 May 2024 14:52:20 +0000 (UTC)
-Message-ID: <8a6ec70f8054979db20fc7f62d12d4e4f5747324.camel@collabora.com>
-Subject: Re: [PATCH] media: verisilicon: Fix auxiliary buffers allocation
- size
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	ezequiel@vanguardiasur.com.ar, p.zabel@pengutronix.de, mchehab@kernel.org, 
-	heiko@sntech.de
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kernel@collabora.com
-Date: Mon, 13 May 2024 10:52:14 -0400
-In-Reply-To: <20240328093439.18712-2-benjamin.gaignard@collabora.com>
-References: <20240328093439.18712-1-benjamin.gaignard@collabora.com>
-	 <20240328093439.18712-2-benjamin.gaignard@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiGMMNwS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0372DC113CC;
+	Mon, 13 May 2024 14:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715612039;
+	bh=dLfguYFlEZM8pXj+gnfRKXow5bLqSaYtXraAJ28Xh+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XiGMMNwS0pqUaXc/XjsL9E0Ll3T4d4WZIAw1c8zOCWDCHCbkesjjdnlLtfqWR1f0N
+	 2NxNyqSTtyGAfD7QyxJlJ17wJF9rBsn4aWaUxr2CxUyfIx1OScZG6/okfkOnwUdbFN
+	 ZbryLIj8PRNzMSpzBTr4DqhdFnBgg9eEC35YCON7w403zoetxm21pUe1Yz+4NAY+Kr
+	 nzLZZAefzR9nluD7nQ+sUDQa/ubpKr17a+7pRv/G3XGdNoTFpFeTcd1nhLJLo4oOCg
+	 mkiZyqKU4dQZO1yagMaCcqgq+YnAI+iNOk9Ck7xs7NofaMpNhJ60h6JjM/t4oJO98H
+	 7bcI9oMtxAKYQ==
+Date: Mon, 13 May 2024 09:53:58 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 09/17] dt-bindings: interrupt-controller: Add support for
+ Microchip LAN966x OIC
+Message-ID: <20240513145358.GA2574205-robh@kernel.org>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+ <20240430083730.134918-10-herve.codina@bootlin.com>
+ <20240507152806.GA505222-robh@kernel.org>
+ <20240513143720.1174306a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240513143720.1174306a@bootlin.com>
 
-Le jeudi 28 mars 2024 =C3=A0 10:34 +0100, Benjamin Gaignard a =C3=A9crit=C2=
-=A0:
-> Use v4l2_av1_tile_info->tile_cols to know the number of colons
-> in the frame. This made auxiliary buffers meory size computation
-> more accurate.
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> Fixes: 727a400686a2 ("media: verisilicon: Add Rockchip AV1 decoder")
+On Mon, May 13, 2024 at 02:37:20PM +0200, Herve Codina wrote:
+> Hi Rob,
+> 
+> On Tue, 7 May 2024 10:28:06 -0500
+> Rob Herring <robh@kernel.org> wrote:
+> 
+> ...
+> > > +examples:
+> > > +  - |
+> > > +    interrupt-controller@e00c0120 {
+> > > +        compatible = "microchip,lan966x-oic";
+> > > +        reg = <0xe00c0120 0x190>;  
+> > 
+> > Looks like this is part of some larger block?
+> > 
+> 
+> According to the registers information document:
+>   https://microchip-ung.github.io/lan9662_reginfo/reginfo_LAN9662.html?select=cpu,intr
+> 
+> The interrupt controller is mapped at offset 0x48 (offset in number of
+> 32bit words).
+> -> Address offset: 0x48 * 4 = 0x120
+> -> size: (0x63 + 1) *  4 = 0x190
+> 
+> IMHO, the reg property value looks correct.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+What I mean is h/w blocks don't just start at some address with small 
+alignment. That wouldn't work from a physical design standpoint. The 
+larger block here is "CPU System Regs". The block as a whole should be 
+documented, but maybe that ship already sailed.
 
-> ---
->  .../media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c    | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_de=
-c.c b/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c
-> index cc4483857489..65e8f2d07400 100644
-> --- a/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c
-> +++ b/drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c
-> @@ -257,7 +257,8 @@ static int rockchip_vpu981_av1_dec_tiles_reallocate(s=
-truct hantro_ctx *ctx)
->  	struct hantro_dev *vpu =3D ctx->dev;
->  	struct hantro_av1_dec_hw_ctx *av1_dec =3D &ctx->av1_dec;
->  	struct hantro_av1_dec_ctrls *ctrls =3D &av1_dec->ctrls;
-> -	unsigned int num_tile_cols =3D 1 << ctrls->tile_group_entry->tile_col;
-> +	const struct v4l2_av1_tile_info *tile_info =3D &ctrls->frame->tile_info=
-;
-> +	unsigned int num_tile_cols =3D tile_info->tile_cols;
->  	unsigned int height =3D ALIGN(ctrls->frame->frame_height_minus_1 + 1, 6=
-4);
->  	unsigned int height_in_sb =3D height / 64;
->  	unsigned int stripe_num =3D ((height + 8) + 63) / 64;
+Also, here you call it the OIC, but the link above calls it the VCore 
+interrupt controller.
 
+Rob
