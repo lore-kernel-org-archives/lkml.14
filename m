@@ -1,192 +1,220 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158DF14AD02;
-	Mon, 13 May 2024 12:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B2614EC5E
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715602759; cv=none; b=Dw4L2E4FBoUZ7lmn99uK++3DQSbg2/2piWsrcYI7a8ytkv3W6N/ca5WBsyZBRVOCQBQVCgii2yuxdTQqkXeDB2r77t2mToIs1AA5n8UgTiYNe5Ob2rg7itiAqxtrfHwD77lDP7Yaej/O532XzQLu54FdmYfVkKa6WQRU9lc5AYU=
+	t=1715602936; cv=none; b=VB+mgyOCcspxDheNuWGUlTC27pUjbFpW4XXp3VCXj0YRCwnXmufCHnanRy9I+l3FiI1UhP8n3GQ8F/x5ckZ1BkeiEIJ8NRZbyc31w2zTh2HboaqKK0rxSzRSHS4FTsjlcQkLRYDVDq9v6ZBzhLLMy9KsfjDPJbrrYWUijVxdTOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715602759; c=relaxed/simple;
-	bh=kGwJDyXDTrdeGxyVauCIhfgu5eE81vJ3XmNmSQWsYaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bGZPQkva7ugm4ec6pNucbz+GWh1/3tQXSgZpHkns6/S/Kyle+hwoET3ofAHuumgTPh8NDdBsb4v6V86f9v5uKbo4zRw/FKJLHKH5Y8xh2xPv0sbhga6M0XPm5ZFax39rst2Nbwm6HDEu7nOwpnDDgvKY5JOJdn0MuxoFCMCNIbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VdJSL6SFTz4f3n6D;
-	Mon, 13 May 2024 20:18:58 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 00A3D1A01D2;
-	Mon, 13 May 2024 20:19:08 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g46BUJm8iY0Mg--.57325S5;
-	Mon, 13 May 2024 20:19:08 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next 1/2] blk-throttle: factor out a helper to get throtl_slice from tg
-Date: Mon, 13 May 2024 20:08:47 +0800
-Message-Id: <20240513120848.2828797-2-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240513120848.2828797-1-yukuai1@huaweicloud.com>
-References: <20240513120848.2828797-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1715602936; c=relaxed/simple;
+	bh=id3DevvPuhpaveGORwJ1ADXmEmKg9A1oHpKpWyZgLuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ehiCLyOjO1i5T9eVI4LW/VqVOGPtgkoUapUYY+I0by6uAfqkXQVlVHoyOFRhujE1YnhkpVjL9xkJ8vAmyNTQlnitF93AFrg6WtIWfBjVVLAklUEjSSBGKvs0dDX/TOBt/j2bbolIQPU9E7ztJmFiIyOYhdnkDknauUE29S4MU7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=alSM/Oca; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="alSM/Oca"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e2b468ea12so37173421fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 05:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1715602932; x=1716207732; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eVFGQiUl4f9vRRwJr1XvDEsFnHjYVxcSnOQ7oMZf/CQ=;
+        b=alSM/OcakQWC8YvyUIHYLbCX69uBLRyj0xaruGWjM8Iw+NXfQw+kAkiG0NTY/Xl8R6
+         tHhiLC6NzvZTcow1TphyMoZTZRuoiodqF00R1lemqqbzSLUvsFnyRGTScBaPH443Gym7
+         kPOWH8knHBFqpMY5zGm01oEsWaKD+P6OExaOc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715602932; x=1716207732;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eVFGQiUl4f9vRRwJr1XvDEsFnHjYVxcSnOQ7oMZf/CQ=;
+        b=aqSFrgxwXUfM1p0CGEkiJw9KJ2kJzfr9YgCmD0NH6N0zv7Pup3MctR2jzjE7huWlz1
+         Wiflpf45pqgqMoQhqhy29wJnQgVdZir5s6A6EoHb7/LAbzxjqynZlyW1VaA6uq1BjU0m
+         4h4Tm/f91xunuHzGhyYnMbaVPBQ7emWPiWP9//Bf94MNSbp/XbKcOWzUW8x3GngeFOhl
+         PBh39s2zkBCNqQk1aZTKlg7sLVn4IZJEaZW7AHjB3xRal1YWsI32nfWJtj8x+GMqq4b+
+         lXMsZzrlU5+Yi1fe8meO+nWnCwrGNbyNYJQ75Z7xlrSOYxvoM8d0n89U0i7/PaDIk9k+
+         hhVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvHwi3hHzmEtqE5WVzdiYzhOLGcXee/3PYPrfmA24YclgklnL3DaPhypzRWD9LucYZYIv+GXKRNzcTIQE0fR1BTybVp8sUhhNSFftw
+X-Gm-Message-State: AOJu0YwDanuVBr0ejHO3qoNPzWir1Rnl5kKX/Ae29XA8bZ+ju9KmXdgP
+	S7gXkXFCmz/wLg75xoCm4N1UGG8y68zmvQME51I1x7j3yh3sjhkVOG8a7zgDmnMUt1WDadqH7b5
+	jWFgPC/4pDGuCkUp7yVfI2URXEPFyZ1Zka9Ki
+X-Google-Smtp-Source: AGHT+IHb0pL1THp0q/JWWu+0YxijSDpZon98nIs4jsZ3y5hFR3bXE+IWnLAxA/+vVAY2Pj1ttu362GAGDYOSGPq3hLA=
+X-Received: by 2002:a2e:812:0:b0:2d4:535a:e7a with SMTP id 38308e7fff4ca-2e51b4784b6mr30680471fa.24.1715602932536;
+ Mon, 13 May 2024 05:22:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g46BUJm8iY0Mg--.57325S5
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF1DuFyfJF48Cr45XF4Utwb_yoW7XryxpF
-	WfAa1jqw45Jas7KFW5uwn0yay0kws7JryUJw13Xr4rCF13t3W8JFyDZryUAa4UAas7ua1S
-	y3Wqv345KF42yrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUqAp5UUUUU
-	=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20240513105446.297451-1-bbhushan2@marvell.com>
+In-Reply-To: <20240513105446.297451-1-bbhushan2@marvell.com>
+From: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
+Date: Mon, 13 May 2024 17:52:01 +0530
+Message-ID: <CAH-L+nO1up0OwYjiEjTw58a3az96EekXpQTZ7psxHFDYOdD=Ug@mail.gmail.com>
+Subject: Re: [net-next,v2 0/8] cn10k-ipsec: Add outbound inline ipsec support
+To: Bharat Bhushan <bbhushan2@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, sgoutham@marvell.com, 
+	gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	jerinj@marvell.com, lcherian@marvell.com, richardcochran@gmail.com
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000647586061854ef00"
 
-From: Yu Kuai <yukuai3@huawei.com>
+--000000000000647586061854ef00
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are no functional changes, prepare to use bigger slice in the case
-that iops limit is quite low in the next patch.
+On Mon, May 13, 2024 at 4:25=E2=80=AFPM Bharat Bhushan <bbhushan2@marvell.c=
+om> wrote:
+>
+> This patch series adds outbound inline ipsec support on Marvell
+> cn10k series of platform. One crypto hardware logical function
+> (cpt-lf) per netdev is required for inline ipsec outbound
+> functionality. Software prepare and submit crypto hardware
+> (CPT) instruction for outbound inline ipsec crypto mode offload.
+> The CPT instruction have details for encryption and authentication
+> Crypto hardware encrypt, authenticate and provide the ESP packet
+> to network hardware logic to transmit ipsec packet.
+>
+> First patch makes dma memory writable for in-place encryption,
+> Second patch moves code to common file, Third patch disable
+> backpressure on crypto (CPT) and network (NIX) hardware.
+> Patch four onwards enables inline outbound ipsec.
+>
+> v1->v2:
+>  - Fix compilation error to build driver a module
+>  - Use dma_wmb() instead of architecture specific barrier
+>  - Fix couple of other compilation warnings
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+Comments on V1 is not addressed.
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 80aaca18bfb0..69f1bb91ea78 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -489,6 +489,11 @@ static bool throtl_schedule_next_dispatch(struct throtl_service_queue *sq,
- 	return false;
- }
- 
-+static unsigned int tg_throtl_slice(struct throtl_grp *tg, int rw)
-+{
-+	return tg->td->throtl_slice;
-+}
-+
- static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
- 		bool rw, unsigned long start)
- {
-@@ -506,7 +511,7 @@ static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
- 	if (time_after(start, tg->slice_start[rw]))
- 		tg->slice_start[rw] = start;
- 
--	tg->slice_end[rw] = jiffies + tg->td->throtl_slice;
-+	tg->slice_end[rw] = jiffies + tg_throtl_slice(tg, rw);
- 	throtl_log(&tg->service_queue,
- 		   "[%c] new slice with credit start=%lu end=%lu jiffies=%lu",
- 		   rw == READ ? 'R' : 'W', tg->slice_start[rw],
-@@ -519,7 +524,7 @@ static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw,
- 	tg->bytes_disp[rw] = 0;
- 	tg->io_disp[rw] = 0;
- 	tg->slice_start[rw] = jiffies;
--	tg->slice_end[rw] = jiffies + tg->td->throtl_slice;
-+	tg->slice_end[rw] = jiffies + tg_throtl_slice(tg, rw);
- 	if (clear_carryover) {
- 		tg->carryover_bytes[rw] = 0;
- 		tg->carryover_ios[rw] = 0;
-@@ -534,7 +539,7 @@ static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw,
- static inline void throtl_set_slice_end(struct throtl_grp *tg, bool rw,
- 					unsigned long jiffy_end)
- {
--	tg->slice_end[rw] = roundup(jiffy_end, tg->td->throtl_slice);
-+	tg->slice_end[rw] = roundup(jiffy_end, tg_throtl_slice(tg, rw));
- }
- 
- static inline void throtl_extend_slice(struct throtl_grp *tg, bool rw,
-@@ -594,6 +599,7 @@ static u64 calculate_bytes_allowed(u64 bps_limit, unsigned long jiffy_elapsed)
- /* Trim the used slices and adjust slice start accordingly */
- static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
- {
-+	unsigned int slice;
- 	unsigned long time_elapsed;
- 	long long bytes_trim;
- 	int io_trim;
-@@ -616,10 +622,10 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
- 	 * is bad because it does not allow new slice to start.
- 	 */
- 
--	throtl_set_slice_end(tg, rw, jiffies + tg->td->throtl_slice);
-+	slice = tg_throtl_slice(tg, rw);
-+	throtl_set_slice_end(tg, rw, jiffies + slice);
- 
--	time_elapsed = rounddown(jiffies - tg->slice_start[rw],
--				 tg->td->throtl_slice);
-+	time_elapsed = rounddown(jiffies - tg->slice_start[rw], slice);
- 	if (!time_elapsed)
- 		return;
- 
-@@ -647,7 +653,7 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
- 
- 	throtl_log(&tg->service_queue,
- 		   "[%c] trim slice nr=%lu bytes=%lld io=%d start=%lu end=%lu jiffies=%lu",
--		   rw == READ ? 'R' : 'W', time_elapsed / tg->td->throtl_slice,
-+		   rw == READ ? 'R' : 'W', time_elapsed / slice,
- 		   bytes_trim, io_trim, tg->slice_start[rw], tg->slice_end[rw],
- 		   jiffies);
- }
-@@ -701,7 +707,7 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
- 	jiffy_elapsed = jiffies - tg->slice_start[rw];
- 
- 	/* Round up to the next throttle slice, wait time must be nonzero */
--	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
-+	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg_throtl_slice(tg, rw));
- 	io_allowed = calculate_io_allowed(iops_limit, jiffy_elapsed_rnd) +
- 		     tg->carryover_ios[rw];
- 	if (io_allowed > 0 && tg->io_disp[rw] + 1 <= io_allowed)
-@@ -730,9 +736,9 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
- 
- 	/* Slice has just started. Consider one slice interval */
- 	if (!jiffy_elapsed)
--		jiffy_elapsed_rnd = tg->td->throtl_slice;
-+		jiffy_elapsed_rnd = tg_throtl_slice(tg, rw);
- 
--	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
-+	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg_throtl_slice(tg, rw));
- 	bytes_allowed = calculate_bytes_allowed(bps_limit, jiffy_elapsed_rnd) +
- 			tg->carryover_bytes[rw];
- 	if (bytes_allowed > 0 && tg->bytes_disp[rw] + bio_size <= bytes_allowed)
-@@ -792,10 +798,10 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- 	if (throtl_slice_used(tg, rw) && !(tg->service_queue.nr_queued[rw]))
- 		throtl_start_new_slice(tg, rw, true);
- 	else {
--		if (time_before(tg->slice_end[rw],
--		    jiffies + tg->td->throtl_slice))
--			throtl_extend_slice(tg, rw,
--				jiffies + tg->td->throtl_slice);
-+		unsigned int slice = tg_throtl_slice(tg, rw);
-+
-+		if (time_before(tg->slice_end[rw], jiffies + slice))
-+			throtl_extend_slice(tg, rw, jiffies + slice);
- 	}
- 
- 	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
--- 
-2.39.2
+Also, please respect the 24h grace period when posting on netdev:
 
+https://elixir.bootlin.com/linux/latest/source/Documentation/process/mainta=
+iner-netdev.rst#L399
+>
+> Bharat Bhushan (8):
+>   octeontx2-pf: map skb data as device writeable
+>   octeontx2-pf: Move skb fragment map/unmap to common code
+>   octeontx2-af: Disable backpressure between CPT and NIX
+>   cn10k-ipsec: Initialize crypto hardware for outb inline ipsec
+>   cn10k-ipsec: Add SA add/delete support for outb inline ipsec
+>   cn10k-ipsec: Process inline ipsec transmit offload
+>   cn10k-ipsec: Allow inline ipsec offload for skb with SA
+>   cn10k-ipsec: Enable outbound inline ipsec offload
+>
+>  .../net/ethernet/marvell/octeontx2/af/mbox.h  |    4 +
+>  .../ethernet/marvell/octeontx2/af/rvu_nix.c   |   74 +-
+>  .../ethernet/marvell/octeontx2/nic/Makefile   |    1 +
+>  .../marvell/octeontx2/nic/cn10k_ipsec.c       | 1068 +++++++++++++++++
+>  .../marvell/octeontx2/nic/cn10k_ipsec.h       |  258 ++++
+>  .../marvell/octeontx2/nic/otx2_common.c       |   80 ++
+>  .../marvell/octeontx2/nic/otx2_common.h       |   25 +
+>  .../marvell/octeontx2/nic/otx2_dcbnl.c        |    3 +
+>  .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |   19 +-
+>  .../marvell/octeontx2/nic/otx2_txrx.c         |   65 +-
+>  .../marvell/octeontx2/nic/otx2_txrx.h         |    3 +
+>  .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |   10 +-
+>  12 files changed, 1563 insertions(+), 47 deletions(-)
+>  create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipse=
+c.c
+>  create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipse=
+c.h
+>
+> --
+> 2.34.1
+>
+>
+
+
+--=20
+Regards,
+Kalesh A P
+
+--000000000000647586061854ef00
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBWowggRSoAMCAQICDDfBRQmwNSI92mit0zANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODI5NTZaFw0yNTA5MTAwODI5NTZaMIGi
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xHzAdBgNVBAMTFkthbGVzaCBBbmFra3VyIFB1cmF5aWwxMjAw
+BgkqhkiG9w0BCQEWI2thbGVzaC1hbmFra3VyLnB1cmF5aWxAYnJvYWRjb20uY29tMIIBIjANBgkq
+hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnv1Reaeezfr6NEmg3xZlh4cz9m7QCN13+j4z1scrX+b
+JfnV8xITT5yvwdQv3R3p7nzD/t29lTRWK3wjodUd2nImo6vBaH3JbDwleIjIWhDXLNZ4u7WIXYwx
+aQ8lYCdKXRsHXgGPY0+zSx9ddpqHZJlHwcvas3oKnQN9WgzZtsM7A8SJefWkNvkcOtef6bL8Ew+3
+FBfXmtsPL9I2vita8gkYzunj9Nu2IM+MnsP7V/+Coy/yZDtFJHp30hDnYGzuOhJchDF9/eASvE8T
+T1xqJODKM9xn5xXB1qezadfdgUs8k8QAYyP/oVBafF9uqDudL6otcBnziyDBQdFCuAQN7wIDAQAB
+o4IB5DCCAeAwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZC
+aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJj
+YTIwMjAuY3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3Iz
+cGVyc29uYWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcC
+ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNV
+HR8EQjBAMD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNp
+Z24yY2EyMDIwLmNybDAuBgNVHREEJzAlgSNrYWxlc2gtYW5ha2t1ci5wdXJheWlsQGJyb2FkY29t
+LmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGP
+zzAdBgNVHQ4EFgQUI3+tdStI+ABRGSqksMsiCmO9uDAwDQYJKoZIhvcNAQELBQADggEBAGfe1o9b
+4wUud0FMjb/FNdc433meL15npjdYWUeioHdlCGB5UvEaMGu71QysfoDOfUNeyO9YKp0h0fm7clvo
+cBqeWe4CPv9TQbmLEtXKdEpj5kFZBGmav69mGTlu1A9KDQW3y0CDzCPG2Fdm4s73PnkwvemRk9E2
+u9/kcZ8KWVeS+xq+XZ78kGTKQ6Wii3dMK/EHQhnDfidadoN/n+x2ySC8yyDNvy81BocnblQzvbuB
+a30CvRuhokNO6Jzh7ZFtjKVMzYas3oo6HXgA+slRszMu4pc+fRPO41FHjeDM76e6P5OnthhnD+NY
+x6xokUN65DN1bn2MkeNs0nQpizDqd0QxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYD
+VQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25h
+bFNpZ24gMiBDQSAyMDIwAgw3wUUJsDUiPdpordMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
+AQkEMSIEIORnBzpuDjNlCkna+yv9DcQzKVDKj+1pufguM50LmEMtMBgGCSqGSIb3DQEJAzELBgkq
+hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDUxMzEyMjIxMlowaQYJKoZIhvcNAQkPMVwwWjAL
+BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
+9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBVAWxQewlh
+sNECFQXNPi8oFPTqPO4CroYeMieFUrk9GEcYSjD9uHga8WschIVsV0IWuIIwcQ54b6npGxxZDwVn
+wpuMg9VCziPu+r7Fz/fxZQvHbd/A8JpRAtgGjMq6CcmXQ7zktP38KJ40E4ulYIhj28QJbAMIgdHK
+QlOPtu0ejy0qUqkL3/r+xc5wKasi9nC9fv5ouEctrzTqedrvSEz2sNZzUaZhTiHsrd77kI6lAJtt
+LXtWc9kY9krEGcIZd4Jwa5JFemgsF74UAx1hsv+RebvAQp1ghTK0NCvEovMibhRYQL35PH5+AGzm
+xzxZEjTlTZU6J7Fl4Z7ZJPRrgsMr
+--000000000000647586061854ef00--
