@@ -1,291 +1,149 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40151147C63
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866021474AE
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715587998; cv=none; b=tKWRhZ9wSSaMHv9OH6/Sl7Wh2w5x2vB1Dy28RSw1oieFlFDuy4Q4JOeGiZb6v4fO6XsQHp3mlhjyAzloYn2n3z3bLUz09SCB2JzLC6oHMBf/VOcBPgK2K6rvwEEgBalpod8ullk93fZN6vX+EnG+63HvVaJjuvr/BCBdvpVMmf4=
+	t=1715588021; cv=none; b=kNpywk1J6kpn+qdGwHY9r927T8OvwldawWiwJfMT/mNWyohjRKWAULdCTXwHE9puAO87S2f3I1IcMjzvOWebwGXV4HbXJNB7KZP4r6hCeI5XXoADuZznZNYgKHQVopJKz0dArfbOkqc/TZaFHgbGk+I0sa+DZDaCjz6AghtPQqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715587998; c=relaxed/simple;
-	bh=8rQNnlpHNwSiby7H2KfOJ545BmEBEQbSDs3gFqf7ryE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bnI76sie5DpsfWocuzQAJ3rltHyNX4z/Z5scxxo1lZUgej+1BW8rvjsOlIXBanDFQcrh16gDhZd9HlB2YaknG9gv8C8LoJR6mq5nXtHENy1iioRuxwk9u6W3nbdUBH6OjC00dcpraOFYkLXtkglzN7fTiO5pJMY3u1+4Oz9yR6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tx5o+0Uv; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1715588021; c=relaxed/simple;
+	bh=YIQKqIOZYXmscTuG37vONw4ucUlU9ivu87HdRIb+1TM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lBQmr7xWtoJseLj9v1CfFVuZsOKiW54jPFFd+9JcuYH/2JZ3Hi+zGOWB27/iCQcFgaXIryLAP44lWaqNtbrefwvhCGMbtbNb1K24Z1S3JdF2AwKTL+auDIzmWaNEcrJGWuWnlGAdylIRdlZATWT2dLSq5/HqNepYTMhn70WCIwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VkHc7GBm; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tx5o+0Uv"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4200ee78f33so13396005e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:13:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkHc7GBm"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51f12ccff5eso5496146e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715587995; x=1716192795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KjI2GIzbNeY5mYmEJBzlwq8aj+x1UHEKf/2QoRMS7Cs=;
-        b=Tx5o+0UvrfIe/CofrsmD/lehG7oTjpJtTWWSlzySl7G/CygVmhWepYMiCkTHSVbYDj
-         Kl4fhlzkv6T9ByUwTK8aBQ5AHoYLsgrZ1frgggBpv3K2fx40iO+5QLJbFcoFEB8L8iST
-         cpxkLYyiTkJTOE3EOSOa5CiTfg0YsvgT9vNbtB9NS4cwImnOd46jwUnTzH4Vyp61IJtr
-         7xggBl5OPhGjeHquS+nx7xB7vFR/DKWBymjJb8NmIWKblc54eqmwRSD6l1/ZD1IjZG4O
-         CyGrUDe71qZ3P+jjFweP5OHNf7zcblIH6jsTpXunW7a3hZPXh46XLWMLwzwqXR2/6E4g
-         0uwg==
+        d=gmail.com; s=20230601; t=1715588018; x=1716192818; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=assM+6XN9OQmcsW1smWfiABOlVkB0BksIxd+LRgeZNE=;
+        b=VkHc7GBmD0M0WlMh1q8o3yi8S43nmRrND1r81DMs9pfH2U4n61VQ2GpYpiQZRatkBJ
+         nRLDwJRRx5qRvzWMfMXyDuQ5171nvECLWOuuA6+DmruNgLlq0a9NfLnDqG/M064/RVa4
+         7zwpq2J4UgiLXaOW2SFE0XKMMMUc8I9Kg8/in1+Gs0i6n5RM18nozUHWGAUAfTtWepvK
+         AJQqMFjuzSNtSGAg3eQ4Gs7ChFi1OIJcxRR1ZjKQHDMxIl6/nEeIYaVbYC7osLr9oGFV
+         UWAIEs8K7EElHHlHb6lw7HvDVepn8qu4LxPPpgpEE2HtPF86gJNPHHf/z7eYxt1JVBHE
+         vP3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715587995; x=1716192795;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KjI2GIzbNeY5mYmEJBzlwq8aj+x1UHEKf/2QoRMS7Cs=;
-        b=nBO7wJKgoUMxP/wWcdP/9twy6v8TpMuWQ15eIoXSeFJhs+Q8DjIsKq9P0UsdMS0bkh
-         nMd8GSd3syaDCv7hfGOMn+XiqcygGSF2MU8bmFMBBrT/sYkplJSp/+ANGA3BMoclmC8r
-         nZHsF46NNPmtGsVr9XjMu1DlbpJo1jEQJjYVFW1WYjL9m15vDW86MvVzAdSLsB362Pvs
-         AYKKw9SZIFYFyCNXCh4wYNye77V4fwpxPpbVaRmhjMVJcduJu1jlEjpf6+W4SyfPij1O
-         7kwtYDgrV1Wq67vHaTV+04W01uVP+QVk6YpUG/JgaI1ICLT5wBgf2EqiU2FDhD36zExT
-         dCiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpiIMaSJgK1Vw86yEvbDMVvH8ExsqX4nKSCSW1RgBs3dgU3rNwoGhTL8sYZxMdhV8e/Hr5qOYvIC9KbEagEwxDlLqQMJunkHqaxKgx
-X-Gm-Message-State: AOJu0YzPKWCyaMtkSu51tsg0yofuVlOhvSl4b71abo47V3XILd7HhbDy
-	bdarj6v1vcxHFUR6Ew0p/+TLJijw5VZ+nvWFo7xc3O0Qsze+AaqWFMgLNG5f/UY=
-X-Google-Smtp-Source: AGHT+IGTEXWrUQ7VGUcVeKG0+Ho7vHvmqvLjvCgT6L/7ToRERkrjvg7sB944hy/FRrFnxQ2sXbBaag==
-X-Received: by 2002:a05:600c:4fc9:b0:41c:1434:f571 with SMTP id 5b1f17b1804b1-41feac59deemr67598535e9.37.1715587994435;
-        Mon, 13 May 2024 01:13:14 -0700 (PDT)
-Received: from localhost.localdomain ([2001:b07:ac9:e686:c88b:6249:b2f4:9ae2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a77f8sm10399563f8f.54.2024.05.13.01.13.13
+        d=1e100.net; s=20230601; t=1715588018; x=1716192818;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=assM+6XN9OQmcsW1smWfiABOlVkB0BksIxd+LRgeZNE=;
+        b=SaASTzFUoLowrQ8xfEpSoRcXaHP399b5DnDD0uwNyiEDUUwGsmKdTiO4Avk/w2Jkco
+         FC+Sp8spUv4+eNQg7mwqQq0RE+LkeX4vq7e3JY5jNoVAyZ89MPxPGLK+0elad8xBQ9zJ
+         MMuaWZQK3YwKLA9Ls8S8KhV23KM2xg81hrXaUlzxtbCxyGiCd99GzGKvGuh8m8p9rq8q
+         mDZUHLirEVCtjLf132j2+QLusoxz4V27SH7oVjq0fH053J5OTTpcZoRIjq63SpUAfusr
+         4AdI+SFzXjypkwaXcRYw8UMXACj8aYWZqHj55gUr9cUpUDtIXicHwQS3I3tXJXZQ677w
+         wICQ==
+X-Gm-Message-State: AOJu0YxyflKg5kqGia3O4Tlog+0WOYuK3G5qWgrDt8mGJqjrKPiNHyZH
+	PQ/Ka6V60Ams2QwyO4AuTaYR4NizWPrOnXYsMeha3qih/1uG4+D4
+X-Google-Smtp-Source: AGHT+IFl65cs5IvrAeaP5LZlyKJA5ypbRuCysspOAhX1ptFvIebw8PC/avGl8sidACTxn2zXL8hywg==
+X-Received: by 2002:a05:6512:3b07:b0:51b:de3a:33ac with SMTP id 2adb3069b0e04-5221058453amr7105231e87.59.1715588017228;
+        Mon, 13 May 2024 01:13:37 -0700 (PDT)
+Received: from gmail.com (1F2EF402.unconfigured.pool.telekom.hu. [31.46.244.2])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c322be7sm5978831a12.80.2024.05.13.01.13.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 01:13:14 -0700 (PDT)
-From: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
-To: sudeep.holla@arm.com
-Cc: vincenzo.mezzela@gmail.com,
-	gregkh@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org,
-	skhan@linuxfoundation.org
-Subject: [PATCH 2/2 v4] drivers: arch_topology: use __free attribute instead of of_node_put()
-Date: Mon, 13 May 2024 10:13:04 +0200
-Message-Id: <20240513081304.499915-3-vincenzo.mezzela@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240513081304.499915-1-vincenzo.mezzela@gmail.com>
-References: <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
- <20240513081304.499915-1-vincenzo.mezzela@gmail.com>
+        Mon, 13 May 2024 01:13:36 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 13 May 2024 10:13:34 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	"H.J. Lu" <hjl.tools@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: [GIT PULL] x86/shstk change for v6.10
+Message-ID: <ZkHLrqO1HdfQb71Z@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Introduce the __free attribute for scope-based resource management.
-Resources allocated with __free are automatically released at the end of
-the scope. This enhancement aims to mitigate memory management issues
-associated with forgetting to release resources by utilizing __free
-instead of of_node_put().
+Linus,
 
-The declaration of the device_node used within the do-while loops is
-moved directly within the loop so that the resource is automatically
-freed at the end of each iteration.
+Please pull the latest x86/shstk Git tree from:
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
----
- drivers/base/arch_topology.c | 56 +++++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 30 deletions(-)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-shstk-2024-05-13
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 0115011b7a99..93c9f0499694 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/cacheinfo.h>
-+#include <linux/cleanup.h>
- #include <linux/cpu.h>
- #include <linux/cpufreq.h>
- #include <linux/device.h>
-@@ -513,10 +514,10 @@ core_initcall(free_raw_capacity);
-  */
- static int __init get_cpu_for_node(struct device_node *node)
- {
--	struct device_node *cpu_node;
- 	int cpu;
-+	struct device_node *cpu_node __free(device_node) =
-+		of_parse_phandle(node, "cpu", 0);
- 
--	cpu_node = of_parse_phandle(node, "cpu", 0);
- 	if (!cpu_node)
- 		return -1;
- 
-@@ -527,7 +528,6 @@ static int __init get_cpu_for_node(struct device_node *node)
- 		pr_info("CPU node for %pOF exist but the possible cpu range is :%*pbl\n",
- 			cpu_node, cpumask_pr_args(cpu_possible_mask));
- 
--	of_node_put(cpu_node);
- 	return cpu;
- }
- 
-@@ -538,11 +538,12 @@ static int __init parse_core(struct device_node *core, int package_id,
- 	bool leaf = true;
- 	int i = 0;
- 	int cpu;
--	struct device_node *t;
- 
- 	do {
- 		snprintf(name, sizeof(name), "thread%d", i);
--		t = of_get_child_by_name(core, name);
-+		struct device_node *t __free(device_node) =
-+			of_get_child_by_name(core, name);
-+
- 		if (!t)
- 			break;
- 
-@@ -555,10 +556,8 @@ static int __init parse_core(struct device_node *core, int package_id,
- 			cpu_topology[cpu].thread_id = i;
- 		} else if (cpu != -ENODEV) {
- 			pr_err("%pOF: Can't get CPU for thread\n", t);
--			of_node_put(t);
- 			return -EINVAL;
- 		}
--		of_node_put(t);
- 		i++;
- 	} while (1);
- 
-@@ -587,7 +586,6 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
- 	char name[20];
- 	bool leaf = true;
- 	bool has_cores = false;
--	struct device_node *c;
- 	int core_id = 0;
- 	int i, ret;
- 
-@@ -599,7 +597,9 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
- 	i = 0;
- 	do {
- 		snprintf(name, sizeof(name), "cluster%d", i);
--		c = of_get_child_by_name(cluster, name);
-+		struct device_node *c __free(device_node) =
-+			of_get_child_by_name(cluster, name);
-+
- 		if (!c)
- 			break;
- 
-@@ -607,7 +607,6 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
- 		ret = parse_cluster(c, package_id, i, depth + 1);
- 		if (depth > 0)
- 			pr_warn("Topology for clusters of clusters not yet supported\n");
--		of_node_put(c);
- 		if (ret != 0)
- 			return ret;
- 		i++;
-@@ -617,7 +616,9 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
- 	i = 0;
- 	do {
- 		snprintf(name, sizeof(name), "core%d", i);
--		c = of_get_child_by_name(cluster, name);
-+		struct device_node *c __free(device_node) =
-+			of_get_child_by_name(cluster, name);
-+
- 		if (!c)
- 			break;
- 
-@@ -625,21 +626,19 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
- 
- 		if (depth == 0) {
- 			pr_err("%pOF: cpu-map children should be clusters\n", c);
--			of_node_put(c);
- 			return -EINVAL;
- 		}
- 
- 		if (leaf) {
- 			ret = parse_core(c, package_id, cluster_id, core_id++);
-+			if (ret != 0)
-+				return ret;
- 		} else {
- 			pr_err("%pOF: Non-leaf cluster with core %s\n",
- 			       cluster, name);
--			ret = -EINVAL;
-+			return -EINVAL;
- 		}
- 
--		of_node_put(c);
--		if (ret != 0)
--			return ret;
- 		i++;
- 	} while (1);
- 
-@@ -652,19 +651,19 @@ static int __init parse_cluster(struct device_node *cluster, int package_id,
- static int __init parse_socket(struct device_node *socket)
- {
- 	char name[20];
--	struct device_node *c;
- 	bool has_socket = false;
- 	int package_id = 0, ret;
- 
- 	do {
- 		snprintf(name, sizeof(name), "socket%d", package_id);
--		c = of_get_child_by_name(socket, name);
-+		struct device_node *c __free(device_node) =
-+			of_get_child_by_name(socket, name);
-+
- 		if (!c)
- 			break;
- 
- 		has_socket = true;
- 		ret = parse_cluster(c, package_id, -1, 0);
--		of_node_put(c);
- 		if (ret != 0)
- 			return ret;
- 
-@@ -679,11 +678,11 @@ static int __init parse_socket(struct device_node *socket)
- 
- static int __init parse_dt_topology(void)
- {
--	struct device_node *cn, *map;
- 	int ret = 0;
- 	int cpu;
-+	struct device_node *cn __free(device_node) =
-+		of_find_node_by_path("/cpus");
- 
--	cn = of_find_node_by_path("/cpus");
- 	if (!cn) {
- 		pr_err("No CPU information found in DT\n");
+   # HEAD: 2883f01ec37dd8668e7222dfdb5980c86fdfe277 x86/shstk: Enable shadow stacks for x32
+
+Enable shadow stacks for x32.
+
+While we normally don't do such feature-enabling on 32-bit
+kernels anymore, this change is small, straightforward & tested on
+upstream glibc.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+H.J. Lu (1):
+      x86/shstk: Enable shadow stacks for x32
+
+
+ arch/x86/entry/syscalls/syscall_64.tbl | 2 +-
+ arch/x86/kernel/shstk.c                | 4 ++--
+ arch/x86/kernel/signal_64.c            | 6 ++++++
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 7e8d46f4147f..cc78226ffc35 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -374,7 +374,7 @@
+ 450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 451	common	cachestat		sys_cachestat
+ 452	common	fchmodat2		sys_fchmodat2
+-453	64	map_shadow_stack	sys_map_shadow_stack
++453	common	map_shadow_stack	sys_map_shadow_stack
+ 454	common	futex_wake		sys_futex_wake
+ 455	common	futex_wait		sys_futex_wait
+ 456	common	futex_requeue		sys_futex_requeue
+diff --git a/arch/x86/kernel/shstk.c b/arch/x86/kernel/shstk.c
+index 59e15dd8d0f8..6f1e9883f074 100644
+--- a/arch/x86/kernel/shstk.c
++++ b/arch/x86/kernel/shstk.c
+@@ -163,8 +163,8 @@ static int shstk_setup(void)
+ 	if (features_enabled(ARCH_SHSTK_SHSTK))
  		return 0;
-@@ -693,13 +692,15 @@ static int __init parse_dt_topology(void)
- 	 * When topology is provided cpu-map is essentially a root
- 	 * cluster with restricted subnodes.
- 	 */
--	map = of_get_child_by_name(cn, "cpu-map");
-+	struct device_node *map __free(device_node) =
-+		of_get_child_by_name(cn, "cpu-map");
+ 
+-	/* Also not supported for 32 bit and x32 */
+-	if (!cpu_feature_enabled(X86_FEATURE_USER_SHSTK) || in_32bit_syscall())
++	/* Also not supported for 32 bit */
++	if (!cpu_feature_enabled(X86_FEATURE_USER_SHSTK) || in_ia32_syscall())
+ 		return -EOPNOTSUPP;
+ 
+ 	size = adjust_shstk_size(0);
+diff --git a/arch/x86/kernel/signal_64.c b/arch/x86/kernel/signal_64.c
+index 23d8aaf8d9fd..8a94053c5444 100644
+--- a/arch/x86/kernel/signal_64.c
++++ b/arch/x86/kernel/signal_64.c
+@@ -315,6 +315,9 @@ int x32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs)
+ 
+ 	uc_flags = frame_uc_flags(regs);
+ 
++	if (setup_signal_shadow_stack(ksig))
++		return -EFAULT;
 +
- 	if (!map)
--		goto out;
-+		return ret;
+ 	if (!user_access_begin(frame, sizeof(*frame)))
+ 		return -EFAULT;
  
- 	ret = parse_socket(map);
- 	if (ret != 0)
--		goto out_map;
-+		return ret;
+@@ -377,6 +380,9 @@ COMPAT_SYSCALL_DEFINE0(x32_rt_sigreturn)
+ 	if (!restore_sigcontext(regs, &frame->uc.uc_mcontext, uc_flags))
+ 		goto badframe;
  
- 	topology_normalize_cpu_scale();
++	if (restore_signal_shadow_stack())
++		goto badframe;
++
+ 	if (compat_restore_altstack(&frame->uc.uc_stack))
+ 		goto badframe;
  
-@@ -709,14 +710,9 @@ static int __init parse_dt_topology(void)
- 	 */
- 	for_each_possible_cpu(cpu)
- 		if (cpu_topology[cpu].package_id < 0) {
--			ret = -EINVAL;
--			break;
-+			return -EINVAL;
- 		}
- 
--out_map:
--	of_node_put(map);
--out:
--	of_node_put(cn);
- 	return ret;
- }
- #endif
--- 
-2.34.1
-
