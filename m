@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BFFAD31;
-	Mon, 13 May 2024 01:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E365A935;
+	Mon, 13 May 2024 01:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715562767; cv=none; b=PLOMY2vN4s1JSBhYDGaz7DMQgpg/hINMhfx5djZ/99Te+V1MMFdUwXFF+lWfCpG8tcDuQC83o6JnZ4yIuRLGW7ZK6iRaeiNg6kV841vXsPQMkOK9zxSnn7c8BQRnuI0X3mGIX7lHDRqajaFE5ZyVNbui0qt15n4abguqFu8ILx4=
+	t=1715562767; cv=none; b=Vuwq8g1WxH7ym236Fg4N7d2KX+t+2EMx5mBdbTxCRSrZKUd0wjpwmQ2hxNlIDgLzVeDLi4SAtu/u3EZEWwpdwar6zePrrWxMXn+zfvZpjWrMkCVsWt+cHLSe+zEKZ8lQINPq6eJGnNnkY/7ljixcA6VGAhy57H6BeTMezI3WGJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715562767; c=relaxed/simple;
-	bh=ph6pyDJp1Q8793pUOXTnM343FcWHbxA0ThxDlcB6iz0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Eg+gkIsaG+OQbVu4A4agAiQ+4oBPjSEiOuZewpbj9w2t4+GmVdjgvupvX+eF9EBhSZBafYboP8DWGfYP14M3KpODKqgNWGaKNh6uBQd3QwthJZBr6tIBjR6RKtXECHEJWiqaAt75QJrBuixSPc8Y/6aQwmllEzCshRYjuK9OQ4Q=
+	bh=3BUffUtk+rpz0Bi8pK17Oy853PU6iqE64lDci9jr/Hw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aV/nS5EZ9bX/jU/HADFKt4re7Iz8oCtn8D9Be5QIXpqZpy0ZP9xIbSaCradtEnXF9fBznQT8hMurn7bs16x8LWxGeyge31Ch+z5sYC9t1v9zI6TlArm79s3gKs0S2fPPp+zjntwkzSbOlIVvwWb+CTQFo9pafhQfwoLEZLtReBY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxV_AFaUFmjv0LAA--.29710S3;
-	Mon, 13 May 2024 09:12:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax690DaUFmV1gcAA--.51334S4;
+	by gateway (Coremail) with SMTP id _____8AxR_AEaUFmhP0LAA--.29633S3;
 	Mon, 13 May 2024 09:12:36 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax690DaUFmV1gcAA--.51334S2;
+	Mon, 13 May 2024 09:12:35 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -25,12 +24,10 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] LoongArch: KVM: Add LBT feature detection with cpucfg
-Date: Mon, 13 May 2024 09:12:34 +0800
-Message-Id: <20240513011235.3233776-3-maobibo@loongson.cn>
+Subject: [PATCH 0/3] LoongArch: KVM: Add Binary Translation extension support
+Date: Mon, 13 May 2024 09:12:32 +0800
+Message-Id: <20240513011235.3233776-1-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240513011235.3233776-1-maobibo@loongson.cn>
-References: <20240513011235.3233776-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,37 +35,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax690DaUFmV1gcAA--.51334S4
+X-CM-TRANSID:AQAAf8Ax690DaUFmV1gcAA--.51334S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Loongson Binary Translation (LBT) feature is defined in register
-cpucfg2. Here LBT capability detection for VM is added.
+Loongson Binary Translation (LBT) is used to accelerate binary
+translation, which contains 4 scratch registers (scr0 to scr3), x86/ARM
+eflags (eflags) and x87 fpu stack pointer (ftop).
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Like FPU extension, here late enabling method is used for LBT. LBT context
+is saved/restored on vcpu context switch path.
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index d93ec21269da..b2856539368a 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -532,6 +532,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
- 			*v |= CPUCFG2_LSX;
- 		if (cpu_has_lasx)
- 			*v |= CPUCFG2_LASX;
-+		if (cpu_has_lbt_x86)
-+			*v |= CPUCFG2_X86BT;
-+		if (cpu_has_lbt_arm)
-+			*v |= CPUCFG2_ARMBT;
-+		if (cpu_has_lbt_mips)
-+			*v |= CPUCFG2_MIPSBT;
- 
- 		return 0;
- 	case LOONGARCH_CPUCFG3:
+Also this patch set BT capability detection, and BT register get/set
+interface for userspace vmm, so that vm supports migration with BT
+extension.
+
+Bibo Mao (3):
+  LoongArch: KVM: Add HW Binary Translation extension support
+  LoongArch: KVM: Add LBT feature detection with cpucfg
+  LoongArch: KVM: Add vm migration support for LBT feature
+
+ arch/loongarch/include/asm/kvm_host.h |   8 ++
+ arch/loongarch/include/asm/kvm_vcpu.h |  10 ++
+ arch/loongarch/include/uapi/asm/kvm.h |   7 ++
+ arch/loongarch/kvm/exit.c             |   9 ++
+ arch/loongarch/kvm/vcpu.c             | 168 +++++++++++++++++++++++++-
+ 5 files changed, 201 insertions(+), 1 deletion(-)
+
+base-commit: f4345f05c0dfc73c617e66f3b809edb8ddd41075
 -- 
 2.39.3
 
