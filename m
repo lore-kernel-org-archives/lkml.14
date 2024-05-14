@@ -1,149 +1,201 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C25B144D1D;
-	Tue, 14 May 2024 16:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCE417F38D
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 16:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715702971; cv=none; b=GvWX9Ii/QHh6VBbGqHIAocZ4/YujPuJve1LAU3/lOSCE9BBQGXINA8DsQTFiO72fgAEWOoo++jIOFzfEaVuwYS4nUlDRJk6FhbkK1Z8aSrhR1XzJ9wtUKxGkCo0R9Wk4RH9x//QMUj/BM2IP9bvoeswGgX9J1Y1IWIgDftXlKwk=
+	t=1715702979; cv=none; b=ILiEULXdy+9UcrzZh5gslwfshYy1ui0dqHao9k7IiBMsPdw1DerJpuM3+0MzMtL62Smsi4ynP5RS5qGfK84Wo/dAc5RRB1L8xzTqp3hvdQWlH3zEQlZbylfrsNVlwRw3GgNO3VgsGWvrr6rPAPIe1hMClMlxfq6IYbG+1vlfENI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715702971; c=relaxed/simple;
-	bh=Y1Mwj8megNCZsWB1w48yTX/5icYS88YG/kK7MZ59bQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZqDynExHnfyEJSujVuuP/XFPQ//7b+TUmrEfdYx/+nSpQuhW6b1/aAVs8MRBuLx7I5tYgX2oMG2BL5gc64GOHmbiGDpR4Uikqj4YY2voXjyKu7xAth/LtuVmJkXFFYnJnkNKNefSTz3FFSJqUgJyUa78wgc9qp/AZ20iT5jDm40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kZqUIftp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715702979; c=relaxed/simple;
+	bh=vhQydVTRtjxkPaHb5KfVHAR+hCQTbKZ2234Oroi1hkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i43dumGAen2Ct/Hbb+dm1iNSU5rLohPsuAasSWK6w7TzotUjLq8ReCIpM1reGU3RLUSHqXFGcqzHDLGfdAsAfQ18rSnz+hSsZPWVgJwGmVk9bqezeRZMX55dqsQzF7Gj5MZpCRD7DqBlCmBcVDLqEqhVI6qMQW4P6yk5SY4YocE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+/wsULA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kZqUIftp"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44EBoouE004502;
-	Tue, 14 May 2024 16:09:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=J7JjMDC3S88RacAOt3QR35v88E532gBPPTYjZONTdz0=; b=kZ
-	qUIftpXkW/9jevnwh3MltVe5PUe1IM647YDxJrPH7sPxOacCD+wROQwDDj7Xy1Ip
-	FDGOrYqmePBNqk33d8YQlqY5pH6Gj/JdibjnoJ27NB1BnCfa8WK20nGJCFctLwfR
-	cqXR4DV4Cv8p5GWyj7Tr8v9UPWOu+aNeEIvC68fdA/v7k7wC/d4an7uw0xP7cMeo
-	chc35NoQou5ITKoF0OLL+2dJVksB5uilGtJPYgjAAPdYGDmnXa3VpuP3kdJsJzHz
-	HKcjebPkowAaWyC9QbRZE9693yvBV9MJIsZjnu7mV9vy3San35QUdrmwYjNwurXM
-	CeNGOXDlZ+1eVmAMZViQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47eg8ph7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 16:09:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44EG96p4031675
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 16:09:06 GMT
-Received: from [10.216.38.99] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 May
- 2024 09:09:02 -0700
-Message-ID: <7ebbd655-6b70-41a0-a71d-61c3bf17d543@quicinc.com>
-Date: Tue, 14 May 2024 21:38:57 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+/wsULA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D778C2BD10;
+	Tue, 14 May 2024 16:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715702978;
+	bh=vhQydVTRtjxkPaHb5KfVHAR+hCQTbKZ2234Oroi1hkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f+/wsULAYEK1/fTo01gH+G2dGG4b99QqEId2LHiohLXde5DsJCjgTWg/AWDm66LfM
+	 EaCqJK35ynrCMgWiTpia/h1/YK0KGoGRRJgR2OmX/t2VOr6wleU9WSFt2kc8PCbvpZ
+	 4RJyETwgviu8wbqQ2KJzUjsMUTr7fYvM37QVJ6/WI1YfBhU8QuzHeLFMvpCSsJFIKa
+	 xwCIEy/2W2/BDleGrj1+E65oHoUV15Tovptz9a/UkfegFFqPfTVdFB5+xK1jgj9JQ8
+	 A4SgFBJ1lYT4nO28IeV3Xx/j7/66yzEHqZOyv861ONTGQ8o8B4uVPRsAYpiAQTSy+T
+	 dKUE0VN0ZRAVA==
+Date: Tue, 14 May 2024 16:09:36 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] f2fs: fix to avoid racing in between read and OPU dio
+ write
+Message-ID: <ZkOMwKAcKmEPQ4Xz@google.com>
+References: <20240510023906.281700-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: qcom: apss-ipq-pll: remove 'config_ctl_hi_val' from
- Stromer pll configs
-To: Gabor Juhos <j4g8y7@gmail.com>, Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Varadarajan Narayanan
-	<quic_varada@quicinc.com>,
-        Gokul Sriram Palanisamy
-	<quic_gokulsri@quicinc.com>
-References: <20240509-stromer-config-ctl-v1-1-6034e17b28d5@gmail.com>
- <baa81202-f129-4ec2-baca-6ca8b476a37d@linaro.org>
- <21cedacd-f454-4eb8-9b2b-33a14592a6c1@quicinc.com>
- <01889053-bcf2-40cb-86ad-2f2bff56f24b@gmail.com>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <01889053-bcf2-40cb-86ad-2f2bff56f24b@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: a1vMOgaOefm7xqfEaiWnv8KihpQvxE7l
-X-Proofpoint-ORIG-GUID: a1vMOgaOefm7xqfEaiWnv8KihpQvxE7l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-14_09,2024-05-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- malwarescore=0 phishscore=0 spamscore=0 mlxlogscore=751 lowpriorityscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405140112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510023906.281700-1-chao@kernel.org>
 
-
-
-On 5/14/2024 12:14 AM, Gabor Juhos wrote:
-> 2024. 05. 10. 18:25 keltezéssel, Kathiravan Thirumoorthy írta:
->>
->>
->> On 5/10/2024 12:23 AM, Konrad Dybcio wrote:
->>> On 9.05.2024 10:08 AM, Gabor Juhos wrote:
->>>> Since the CONFIG_CTL register is only 32 bits wide in the Stromer
->>>> and Stromer Plus PLLs , the 'config_ctl_hi_val' values from the
->>>> IPQ5018 and IPQ5332 configurations are not used so remove those.
->>>>
->>>> No functional changes.
->>>>
->>>> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
->>>> ---
->>>
->>> Hm, it sounds suspicious that we'd have these settings then.. Could somebody from
->>> QC please confirm that everything's alright here?
->>
->>
->> I checked the HW doc and yes in both IPQ5018 and IPQ5332 CONFIG_CTL_U register
->> is not implemented. I see offset of CONFIG_CTL_U register is removed in the
->> change[1] by Gabor.
+On 05/10, Chao Yu wrote:
+> If lfs mode is on, buffered read may race w/ OPU dio write as below,
+> it may cause buffered read hits unwritten data unexpectly, and for
+> dio read, the race condition exists as well.
 > 
-> Thanks for confirming!
+> Thread A			Thread B
+> - f2fs_file_write_iter
+>  - f2fs_dio_write_iter
+>   - __iomap_dio_rw
+>    - f2fs_iomap_begin
+>     - f2fs_map_blocks
+>      - __allocate_data_block
+>       - allocated blkaddr #x
+>        - iomap_dio_submit_bio
+> 				- f2fs_file_read_iter
+> 				 - filemap_read
+> 				  - f2fs_read_data_folio
+> 				   - f2fs_mpage_readpages
+> 				    - f2fs_map_blocks
+> 				     : get blkaddr #x
+> 				    - f2fs_submit_read_bio
+> 				IRQ
+> 				- f2fs_read_end_io
+> 				 : read IO on blkaddr #x complete
+> IRQ
+> - iomap_dio_bio_end_io
+>  : direct write IO on blkaddr #x complete
 > 
->>
->> Given that, should we also drop the pll_has_64bit_config() if block from
->> clk_stromer_pll_configure function?
-> 
-> If we can be sure, that there will be no Stromer PLLs which implements that
-> register we can drop the check. Also, since the SUPPORTS_FSM_MODE flag is not
-> set for any of the Stromer (Plus) Plls supported currently, the related check
-> can be dropped as well.
-> 
-> However I would keep that as is for now. I'm planning to remove the
-> clk_stromer_pll_configure() function entirely but that needs a bunch of
-> preparatory patches which I'm working on at the moment.
-> 
+> This patch introduces a new per-inode i_opu_rwsem lock to avoid
+> such race condition.
 
+Wasn't this supposed to be managed by user-land?
 
-It was Stephen's suggestion[1] to introduce the 
-clk_stromer_pll_configure() to avoid touching the 
-clk_alpha_pll_configure() which has been used by many PLLs. However if 
-we have a valid points to remove this API, then yes.
-
-[1] 
-https://lore.kernel.org/linux-arm-msm/fd150fa2b35e1e07808e3d1e67e1def7.sboyd@kernel.org/
-
-
->>
->> Nevertheless, for this patch
->>
->> Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
 > 
-> Thank you!
+> Fixes: f847c699cff3 ("f2fs: allow out-place-update for direct IO in LFS mode")
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+> v2:
+> - fix to cover dio read path w/ i_opu_rwsem as well.
+>  fs/f2fs/f2fs.h  |  1 +
+>  fs/f2fs/file.c  | 28 ++++++++++++++++++++++++++--
+>  fs/f2fs/super.c |  1 +
+>  3 files changed, 28 insertions(+), 2 deletions(-)
 > 
-> Regards,
-> Gabor
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 30058e16a5d0..91cf4b3d6bc6 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -847,6 +847,7 @@ struct f2fs_inode_info {
+>  	/* avoid racing between foreground op and gc */
+>  	struct f2fs_rwsem i_gc_rwsem[2];
+>  	struct f2fs_rwsem i_xattr_sem; /* avoid racing between reading and changing EAs */
+> +	struct f2fs_rwsem i_opu_rwsem;	/* avoid racing between buf read and opu dio write */
+>  
+>  	int i_extra_isize;		/* size of extra space located in i_addr */
+>  	kprojid_t i_projid;		/* id for project quota */
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 72ce1a522fb2..4ec260af321f 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -4445,6 +4445,7 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>  	const loff_t pos = iocb->ki_pos;
+>  	const size_t count = iov_iter_count(to);
+>  	struct iomap_dio *dio;
+> +	bool do_opu = f2fs_lfs_mode(sbi);
+>  	ssize_t ret;
+>  
+>  	if (count == 0)
+> @@ -4457,8 +4458,14 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>  			ret = -EAGAIN;
+>  			goto out;
+>  		}
+> +		if (do_opu && !f2fs_down_read_trylock(&fi->i_opu_rwsem)) {
+> +			f2fs_up_read(&fi->i_gc_rwsem[READ]);
+> +			ret = -EAGAIN;
+> +			goto out;
+> +		}
+>  	} else {
+>  		f2fs_down_read(&fi->i_gc_rwsem[READ]);
+> +		f2fs_down_read(&fi->i_opu_rwsem);
+>  	}
+>  
+>  	/*
+> @@ -4477,6 +4484,7 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>  		ret = iomap_dio_complete(dio);
+>  	}
+>  
+> +	f2fs_up_read(&fi->i_opu_rwsem);
+>  	f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>  
+>  	file_accessed(file);
+> @@ -4523,7 +4531,13 @@ static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>  	if (f2fs_should_use_dio(inode, iocb, to)) {
+>  		ret = f2fs_dio_read_iter(iocb, to);
+>  	} else {
+> +		bool do_opu = f2fs_lfs_mode(F2FS_I_SB(inode));
+> +
+> +		if (do_opu)
+> +			f2fs_down_read(&F2FS_I(inode)->i_opu_rwsem);
+>  		ret = filemap_read(iocb, to, 0);
+> +		if (do_opu)
+> +			f2fs_up_read(&F2FS_I(inode)->i_opu_rwsem);
+>  		if (ret > 0)
+>  			f2fs_update_iostat(F2FS_I_SB(inode), inode,
+>  						APP_BUFFERED_READ_IO, ret);
+> @@ -4748,14 +4762,22 @@ static ssize_t f2fs_dio_write_iter(struct kiocb *iocb, struct iov_iter *from,
+>  			ret = -EAGAIN;
+>  			goto out;
+>  		}
+> +		if (do_opu && !f2fs_down_write_trylock(&fi->i_opu_rwsem)) {
+> +			f2fs_up_read(&fi->i_gc_rwsem[READ]);
+> +			f2fs_up_read(&fi->i_gc_rwsem[WRITE]);
+> +			ret = -EAGAIN;
+> +			goto out;
+> +		}
+>  	} else {
+>  		ret = f2fs_convert_inline_inode(inode);
+>  		if (ret)
+>  			goto out;
+>  
+>  		f2fs_down_read(&fi->i_gc_rwsem[WRITE]);
+> -		if (do_opu)
+> +		if (do_opu) {
+>  			f2fs_down_read(&fi->i_gc_rwsem[READ]);
+> +			f2fs_down_write(&fi->i_opu_rwsem);
+> +		}
+>  	}
+>  
+>  	/*
+> @@ -4779,8 +4801,10 @@ static ssize_t f2fs_dio_write_iter(struct kiocb *iocb, struct iov_iter *from,
+>  		ret = iomap_dio_complete(dio);
+>  	}
+>  
+> -	if (do_opu)
+> +	if (do_opu) {
+> +		f2fs_up_write(&fi->i_opu_rwsem);
+>  		f2fs_up_read(&fi->i_gc_rwsem[READ]);
+> +	}
+>  	f2fs_up_read(&fi->i_gc_rwsem[WRITE]);
+>  
+>  	if (ret < 0)
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index daf2c4dbe150..b4ed3b094366 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1428,6 +1428,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>  	init_f2fs_rwsem(&fi->i_gc_rwsem[READ]);
+>  	init_f2fs_rwsem(&fi->i_gc_rwsem[WRITE]);
+>  	init_f2fs_rwsem(&fi->i_xattr_sem);
+> +	init_f2fs_rwsem(&fi->i_opu_rwsem);
+>  
+>  	/* Will be used by directory only */
+>  	fi->i_dir_level = F2FS_SB(sb)->dir_level;
+> -- 
+> 2.40.1
