@@ -1,156 +1,318 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C3DA21
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715645053; cv=none; b=ZOcwuixUXO4wUEJnjFi5P/BcWiz5pt1av+DRYPrIkCPvg9nDJxut6CsgGHlli4tMs5pqz+RkoBBGwFAQiYBWqe6y4LH6vMOlMES5nrnbq9xALQd2BjXywQMLzIYo6kg1ohxF37s03Onf7MhzK2LoFUmyS1gDEdF7EfdCrs0O7Ok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715645053; c=relaxed/simple;
-	bh=8wY1y0VlEXaKGXIlnRsLsv0pmH4Btpg3c+OsDGJ+dBw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I0E9CymaRFxSIM8LGZ3OhQJmpcUuSSAdYvDHXjD2MqWSTSxbtcRnMJO3apciGmQ6VOTW5y+NuBdN2JlouSHkbkTv7caTGd5R8x1LP9t0/Z8PGV5ZGgVgX+P4xVm5iCmkqOfduHL2GEjCcX4j6hPYcKTKkfI3zKYRtbShfqTbwDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=esl6Pb86; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF5C8473;
+	Tue, 14 May 2024 00:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715645063; cv=fail; b=j6N+g9xX1AKaQl98AXGFnITsktD/+pk6ufl9nSIp2FaMGAFV9pZAZe0kR29OgobXzOUaQ04N+jW0598N3RHum9tyEMFaiXRtayqR2MfStbNjOy6DIAjSS6RgQm8gmta9QTQVSBYU7D6OyUwg3AVqrYJhLr5M/S73cax0kPSmRj0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715645063; c=relaxed/simple;
+	bh=8xUpM5bn33zzA+aHrLuQVDyHisgsVffQRSrA7UXPjjk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=LFxUb1d+HQLc2DSqeMLQ5ddynOIRWWTo+X+XMhSZDz6tSbrq3Wdxf8KPrTz5rroN9iyyM/0h85FDV1O2Lv8A4TiDTt4G1t0uapojhrH3rP4dBoJce0vTzkvW6j4hZIJkLfLaXBt6WViiMWgMRt809tCzOEPDqq/A51A4wWNJmj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YydNCKcU; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cvCyhHzH; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="esl6Pb86"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715645050;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8qXWROXKG8a9e+WDVLQuvh7yEMpGdR+iDo+4e18bWFw=;
-	b=esl6Pb866gRioSSntOjpbz7hfIex4ubn0Pyrw4NmJG4kInnzen4LDwO6b0DDI94Npusjhp
-	svlHfupOYEfdyluNGAofbnfVrHQIRC4xt2BWurbGgmf92bylJPNfZ2hwQvKKiLQ1BP0zTt
-	fEfjth5RCFiGudnd+vs+kpomGwEKc1A=
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
- [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-448-ubakx6RRPZ-xYq5vTnYbsw-1; Mon, 13 May 2024 19:18:34 -0400
-X-MC-Unique: ubakx6RRPZ-xYq5vTnYbsw-1
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3c9a75ea4ccso1452330b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:18:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715642312; x=1716247112;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8qXWROXKG8a9e+WDVLQuvh7yEMpGdR+iDo+4e18bWFw=;
-        b=MWQcYQOFfvzIvayAeNPp/8Zkke3ugFDFBLGTQkCLLlwnLJk3m2WeIElFY73wjaKPg7
-         lc6PfvIQFMV7Gtqo+1xR3j+96wprwqsJjCDo93yIugqTzKgoyvYNnY6gATSOTxA2fqxl
-         9p5YWX9218IWVoDwFFXHD7S801HumBxWXCO6YovFwCn+5nb1SSQQy1EUcDitbtHMJTKW
-         1igIYTg0J2ggsdLx/n7Xm8HLX2O0L+4syuIJVqrnmSxWc3keklcohbVDgnaGuKylINus
-         XcvYFHuBxoRhSmnktKmnQRNKlDfq0ccg6JTYra1y/xRnZiUF6ElXqW41NeeIuwe/QjTG
-         if0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUCIDmUWJzBjqh85//YDh0SG1js+kOZD+ANiU0zxYOERdz65t98TsK5umXyLu5h8O1B9Ze6DnqC1sCLisL1WlmEIG6wpE7M3bUPcabI
-X-Gm-Message-State: AOJu0YxVFN6J72Po6jVcYHE3/eow40UbHylPPf2mc+82gmLA7PH9h7xv
-	e2xILlzbilAM/Bm1Pu7sXkeyB5/YjJaAmBVy4KkIt78gluMKl1fqTBbuNkZI4LudHVbJeh8mntQ
-	hNgNHBcqpXrIj6j1oZPk/qVCRjGyUYr/TM+WpaTYjy6OtmG/Kp5lbhxxSPQaNg9EL4niQMg==
-X-Received: by 2002:a05:6808:487:b0:3c9:6a55:5f1a with SMTP id 5614622812f47-3c9971dcf6cmr15061041b6e.49.1715642312114;
-        Mon, 13 May 2024 16:18:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5D72RC4LYRTNo2hkTuLtCqE64H9MkykuNQ8KmfYMOGK2wgXqYoc36FZMooj1/RkMQiX2r6Q==
-X-Received: by 2002:a05:6808:487:b0:3c9:6a55:5f1a with SMTP id 5614622812f47-3c9971dcf6cmr15061001b6e.49.1715642311411;
-        Mon, 13 May 2024 16:18:31 -0700 (PDT)
-Received: from emerald.lyude.net ([2600:4040:5c6c:a300::feb])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1d7068sm47662336d6.112.2024.05.13.16.18.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 16:18:30 -0700 (PDT)
-Message-ID: <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-From: Lyude Paul <lyude@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
-	 <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Date: Mon, 13 May 2024 19:18:29 -0400
-In-Reply-To: <87jzjxn6s5.ffs@tglx>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
-	 <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
-	 <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
-	 <87plumxz4x.ffs@tglx>
-	 <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
-	 <87le59vw1y.ffs@tglx>
-	 <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
-	 <87edautcmz.ffs@tglx>
-	 <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
-	 <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
-	 <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
-	 <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
-	 <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
-	 <87jzjxn6s5.ffs@tglx>
-Organization: Red Hat Inc.
-Content-Type: text/plain; charset="UTF-8"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YydNCKcU";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cvCyhHzH"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44DNhs02026990;
+	Tue, 14 May 2024 00:04:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : in-reply-to : references : date : message-id : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=6p3YluQOFlYFKWvfGwfkJV/wINV1i87K9gce7nlmCEQ=;
+ b=YydNCKcUKwGjaNOeU5c6Z8W0dEhMpgSrE+F1Digeani+RW57VAEF6+4obsWHxHTvQ4wB
+ khohH8w30b8K6vDGHmSz+NvXDKxPjSM/GmM0MfE7XsEKszisMBZhGf+U18RV/ZXcWCHk
+ OZ34M6FQ6nrQzaaAlWTwY+gAsRZpZwUQqufVCAau0MTPuNIPVv8TnCtiJe/Mx+PIJM7E
+ hBbRgoFzyj5QRdYYDrbucAFv/XL1xiKZSglFPPLMBUR7HbuJVrSaMkoDkl5+UNOseTp5
+ hVzqUqO6Xkp3Ggv8rfjsHETu0yQmM3gF8At48vUVdMxCiQ+nxdeWfzzMGg2hgZKseHKg 1A== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3t4f88rt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 00:04:16 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44DMFB2C019284;
+	Tue, 14 May 2024 00:04:16 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2041.outbound.protection.outlook.com [104.47.56.41])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y3r842m30-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 00:04:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mwRiqel4LuFbmKP1pY/ZAxDV0AAqGWzcAJZsUQ6tX97J4G4nfuW8X+E+9q6OU3fI4DKvZd8SJbi7bOgiFO8TFi9DNFYNyfDUWJbmghnyLS+22rnoQF/ipH19XKQkl1ijbxCyOHmZ+x5RDh/LDqubD9Pn/yJLvtHS4rEHBgrUzHejmY8qQX74abkXmHkUSQkDoYlp8JFvIMqyBv767Wn+4lYOFgOPELJEJ4Fd8nVw6STx4rU4VVJTmz1qu7eD36l7lbiPUExlR9ZWeK9u4vhJA893G1x6me7mrlQHcnBWEL0cK91yOhqxlyiDPDHqriQlQt8ITErMWZ3Gq4tuNNcRdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6p3YluQOFlYFKWvfGwfkJV/wINV1i87K9gce7nlmCEQ=;
+ b=iTdpagURnbBOLD4oJ5x3meYerM8jKKdiyUn2NmSZ3pR7pYPUEro5Vv32T6tiGnDpugxjl+rXDGFKQVPoz42wDFk+cegELUrapc++6khc4mWB+YzBL58L0PbTF6DlO9CwlVtVsYGPTDQ5wAfonhKURdI1dyMj5Rf5qXqISO6c58Vd5Ehbn/c1pSolIQi1gdHCEpYZy+C0ZvH79GFHfkMg/6sE2njUutCq98PqalEX/rkxbG2C44/DtKYqXJVyXrSi2NLOMkNHc02Y8FfoiuD9qxfpeTyj4Fyecz0GWJIgZ+647nvT5XVG6GSaXfQDOT4OWv9whUTssIuwvUtinTjaCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6p3YluQOFlYFKWvfGwfkJV/wINV1i87K9gce7nlmCEQ=;
+ b=cvCyhHzHOLniqv+gkDiM4XruM2FkfLQ6LJpK8EOABuoWVOOjVx17y5BWRncdOnyWT383ZBTBnebm1kTI7U9uhTdfh0CWq3DC/L6PRL8tu44Vt7ROJbHC1OBWpgKV3/AUoH4pUOKhMrQX3FkSpA17T0mgZEAov/l9zPKXbE+W/Dk=
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
+ by MW4PR10MB5809.namprd10.prod.outlook.com (2603:10b6:303:185::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Tue, 14 May
+ 2024 00:04:14 +0000
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca%3]) with mapi id 15.20.7544.052; Tue, 14 May 2024
+ 00:04:14 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] fsnotify: clear PARENT_WATCHED flags lazily
+In-Reply-To: <CAOQ4uxjKdkXLi6w2az9a3dnEkX1-w771ZUz1Lr2ToFFUGvf8Ng@mail.gmail.com>
+References: <20240510221901.520546-1-stephen.s.brennan@oracle.com>
+ <CAOQ4uxjKdkXLi6w2az9a3dnEkX1-w771ZUz1Lr2ToFFUGvf8Ng@mail.gmail.com>
+Date: Mon, 13 May 2024 17:04:12 -0700
+Message-ID: <87bk59gsxv.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+X-ClientProxiedBy: BYAPR08CA0061.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::38) To PH8PR10MB6597.namprd10.prod.outlook.com
+ (2603:10b6:510:226::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|MW4PR10MB5809:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb5d8127-69a7-4bb9-3f00-08dc73a963a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?Qzh1bU1IMTJuYXh6VkI4Qyt1alhJQWhOV2VnYjVDd2RTUzhzVHNqTUI5RWV4?=
+ =?utf-8?B?TElFMVBCZVFDbU85V2RJTFlEaFNFbytoNllXMkIxa2ZyRmRXWlIzaU5LVlpP?=
+ =?utf-8?B?MG9GY1NLMVp1TUtkMGpPQi9BNyt6U3gwQ1RFbWphb3RaWHhCLy9vaTc3VEc5?=
+ =?utf-8?B?OHBlU1p5dml2U01QQWNURXBxRGIrb01vWGhTZGxncWVmb1R6S203dG1lRXlI?=
+ =?utf-8?B?ZXJMUVNwcnFYa3VEMk5pMzBrVUVsMkcvYWFOQStwK3NVc3RvbXIwVVorUDVy?=
+ =?utf-8?B?cDJ1VXJCblF4N0JXS3NvblVNMVg1WktoTHZ1aUFRY0lPUmU2YzNWQTVCVzVo?=
+ =?utf-8?B?UEUyakVkcU9PSE1Uc2RrVWlqdFp1SnE4WWQvRktoaFRrR29zMFVSNDJHVktk?=
+ =?utf-8?B?eU1YdzAweXhZYStCbzBNUDJjUU9VUTd1VkJZSHFtbnh2K3BUWTZISE1kaEVr?=
+ =?utf-8?B?aHVaY011S2sxb2FyZWlyekZDcnQranFkekJTYXpaUEI4ODlCb0h3U3BmMVlB?=
+ =?utf-8?B?YjdkUTkyS1NjMFZZRnI5SktUQ1kxcGlPMUVKb2QwTFI4Z3BaalU3LzNYSTBU?=
+ =?utf-8?B?Mm9pUlN4TmFGUHpIdnJkUlZ2VUJrajBNQ3hEczl4d09jbk1Tb0pocEpQV2Rk?=
+ =?utf-8?B?aVlmN1RhQ00xZWVNL2U2aVdIWG50ZjBWR0FDS1lHeUhBUXBrcWQ5c3FOSmNN?=
+ =?utf-8?B?QThsMnpWeW9WTUtoemtlK3pOWHIyQzlVb3FqSXhvekVsOU1TSGFjNFFUZ0tp?=
+ =?utf-8?B?c1gzSncrYTVXZXczalc4ckc4b0FxSmpVd1R3bmowYk5wVFB6QW1TY3VtYjhu?=
+ =?utf-8?B?eWRYSzhQTnVCeWRzR3Fib09TUE5NWDlmVkhCcTlSY3pLUjdWdExyWXhuK1Rj?=
+ =?utf-8?B?WDlZTytrMGk4cDRTRFZrUzllMHFCdkc2UUdoZkl0TkZXSmpudFplY2tERGRE?=
+ =?utf-8?B?OVhpQXpsS2VZeWxaRFpTNmlEMFBVbWtBdXk5eTN1WWJLR0hJeFZ4cXdtLzh3?=
+ =?utf-8?B?YU9PZGJMRzNVT05mQ1lRREFFOFQzZzZXdk5LcWtwNDl1NEduMmFtajJCOUhO?=
+ =?utf-8?B?LzFTUXBWa1RPYUF5d2kvTEJndE5JaFVyNlN3NmZTYTRRMjhYeFNVc3hmNHph?=
+ =?utf-8?B?bDNlQkk2b2tOQytuUVR4L1lJVGJ6L044bS9jL2dYdnVNWk15WFRmWnVqeVZo?=
+ =?utf-8?B?UEZVcElKeWVJU2dVdHVZRTlKY0dJNWhjU2ltU05jWWdFbWZHUXFBV0dRK3dl?=
+ =?utf-8?B?NDRRRVB2bm1uN0huVHZjUmhiWUdUMU5qUGxJcTVQOFdsaDN2TWczMjBmN3hQ?=
+ =?utf-8?B?SXk0Rk9jWUpOZ1pNWjM5bmJmNWJ6ZVRubmF5UFZhc2xvRGlRb2pJTGpXMGx4?=
+ =?utf-8?B?WVIrMHYwMTRpa3FHdkNTOUZra1FLVE05dnBrdTFwT21XamFMS0hiS3NudUI3?=
+ =?utf-8?B?cnFML2t3ZnltR09mU2FOSzI3VXZuQlFUdHFRQnE5NUQyYXlXN0JDRDVkYkV2?=
+ =?utf-8?B?SzkxRVN6M2VMVUhYeTVyU3lHRFczRmgzZzdxQmlLVHRWRnRuRkFhUmJOcjVY?=
+ =?utf-8?B?YXd5MzExQmFtTnRtckNadXFveDk2NzdMRXI4SE44MFBGNU9Ka0JCWXAwRFd6?=
+ =?utf-8?Q?mcDTKMsgSv/nyN3ngLcFv1xA89UyY7D+N6xbgn4Of0Vs=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?dWF5U3dHenlUaE42OUFsMnNUQzdBeGh6TVprQWt1R1hwMlhMZ0tRUWZ4K0lr?=
+ =?utf-8?B?cGl2OGk3cDcxb3ZDUGdlYm1HdStyMy9oeGVMdDFOQ21ZcG1SWS9JdlRCdUJK?=
+ =?utf-8?B?aFk1enpMUVcrSEg0RFpsd0Q0YVJiRnIrT3djdHV5MkorUXBjMmlKNWZTQkJC?=
+ =?utf-8?B?eDg1WFpUMEo5MlN0b2RqSXROMEdzZzYraWRwT1dOYWEwNWFSNllhOFRaWENP?=
+ =?utf-8?B?bUNwdUhOUlNram1ZUmdGNnhEVVFjd0huMDh5b3BwdTViL0EyWmZCLzRrbXk3?=
+ =?utf-8?B?VndFTzJ3UUEwZUhpR0VsSW80Ym1hYmI1eDFwcjlsd09NR3NycllzaEVZUmRQ?=
+ =?utf-8?B?U2FGekxIK1BrTUV1OWZSN25Od3FIZXNTSGljSzR2Zm1veXYvQ2tFU1dnNCt4?=
+ =?utf-8?B?WnBkKzgyRzc5S3pkSE5JNTJQS29EbDEyamRzZmp6dlNWSFRKWlBSZGptYWJT?=
+ =?utf-8?B?cUZnMFlzV1hmRWZ3aUgxNnlvT0l0WnhVM1lOcHhUTlNNZ01HeFFkaUlhZUFR?=
+ =?utf-8?B?U2x2c3p0bG45c1QvR3pMeWNpT3pKcGF3dDBxR1lDbnhISXBpeDRwekVkdDJt?=
+ =?utf-8?B?SDYzc0lheUFVclRXdmNXRHVrRmhiSXUzN2xiY01VQUYwL0tTOVllam0rSWRq?=
+ =?utf-8?B?NytHeWpuWldndVdiU0J6SjFBQmpyWE1MYmRmdFBOOGI4M3lmOHZZRGVWSGp2?=
+ =?utf-8?B?cXE1RGxKNzBTaVdLVWloQkFEUVVnM1hGcnBvcGdSRTJCdzhCOWhManZnckZJ?=
+ =?utf-8?B?WVdxR0k1UVppTy8vV21iV0t0RDErQU9EbWxoV21JbWlyRi9TdUd3NzVlL3pv?=
+ =?utf-8?B?R1I5c3d5RDRvK2pHSWI2Y3loQTlQRndVOUFOOHJheXJYcUVzSGJNcUtHTWNy?=
+ =?utf-8?B?cXQ2QjBjVUkvVDNUWVZ4Z1g1aTN4MFIzY3VjcGJkdXlsRXkxWTNjM2J3eEgz?=
+ =?utf-8?B?OGwrT0hmd25iRkVMTVlXTWZ2MGlZQXkwS09zT2tWOXk1NnhRbmZEcEJPNWlB?=
+ =?utf-8?B?VUtsVlNHN1RaVDJjZk5wWGI5MDJKUWZqN0daaGQ4TitPQjNoR08zYU5Hc2V0?=
+ =?utf-8?B?aEYzUC9JNDlGYXM5MnRsYTFVYUNkMG9Uc3dDOFg0eXNUVlhUUnZNM1VieDJY?=
+ =?utf-8?B?SENxRm4vaFBrYk9rQTYrdklhdkFpNWZMbENmanlmOFRPcUZQMjRBMnNHS0xr?=
+ =?utf-8?B?NDR1RXJpYTliS2N0WHRheFhBZFpTSXErNXd6VHFSUi9aeEdvM2ZPTlFhaUhr?=
+ =?utf-8?B?Y1dKK0xDalBjVlNldFB3VStsbFF3aXR1M0ZsckJSYjVTNGVHZjk5dGNVOXc4?=
+ =?utf-8?B?SWZIUE1PU1Q4dGFQUWpYL3dNbzI4ZnU4RVRSVFNaNnc3SkZiN290T1hpOXhB?=
+ =?utf-8?B?UzUzTjUyZ3BTNXRoYlJQQzZNZFkyWVVUY3VtL0Y4RmsyUWRhK2YvcjFSNDNm?=
+ =?utf-8?B?L1lIUjZIMURNdVliS2VET1JiTTZDWFJrQzhZTm1MVzlpb0JDVmpBSmxGRFFk?=
+ =?utf-8?B?TW5KQitvUlZkd0t1TXVsZjNoQldYTVhpelA4UFZkeWx5VTJ1RlhVQUVGYXdj?=
+ =?utf-8?B?bGxMRUR3YlYrK1lTb1lQN1daZmtNd0dpdHlkN08vcHQ1dGJzVnhRUHc1dTdZ?=
+ =?utf-8?B?YkxJMWpkN1ZGTThMdGl0eW1JRFViTmlWT0ZFNG5STWpkbHdUYmRUSDNkTHBX?=
+ =?utf-8?B?QUYwaFE5Uk1LU1FucmN4WFhWVElTMzhWSGlJRFUwTEdsbHo5S3ZhK3NtMFFl?=
+ =?utf-8?B?L1U3emVIV3gwZ0lVWFVKYlRvYkUyeTNma0pPR094MUk3WmNOMnFCdnl0Wmd0?=
+ =?utf-8?B?UCtVT1ZWN3Q4NWRkeHNFTVVFY1Z2RElnUG9HWDBPWTRsRlVZcERFZEJkZVFy?=
+ =?utf-8?B?dW5KVjlXL3ZZNDRyMElPbnBhMkF5bXo4VkJIOVRibGNwV0trcXRrNmJaZkwr?=
+ =?utf-8?B?SGw1WG9oRWV0eFRmenp5R0RNNDZpY0Nybnh3SUt6Z1VhcVpRQ2t2SVZJNEdH?=
+ =?utf-8?B?eGVHQllwbnRGMEtERzRkMXNzMGtWcnowOVBBTkpxL3FTT3lYVUJNbkNtN0NV?=
+ =?utf-8?B?T3A4VGlQeHd3bVN5cHdMUmJNYnZ3ZHJCZ1E3Z2RpdFJwRkZTZEZMaHN6bElY?=
+ =?utf-8?B?T1hVUCtBWFJPUjVXdjV0K3NUVldRY1k3NDlXYmVoYkhXUzN2ajkveWNWZGln?=
+ =?utf-8?B?ZVp3c20ybngyejlUZXo5NEpnc0VQM1dpbE85VXlzb2MrNE4xM3d6WjVsSGxJ?=
+ =?utf-8?Q?vTWp5f8fj5Q+yu3ruDj3J649pLKlbYSXfvp8bfMiYE=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	rq2RZO2uXwGH8LxgErjIx/WLHNR81uTmoGVhfw3xGvLIoT75x4ghcMLV06LIYrqoJ6GQ4TzcxGGtbTeqK/yvVZTkTR16tPsjnhzuHOho6IyHdZ1qyuwFQs+ypcHXtqHpbMv6a8vnkpObP43/KRX+7LM5001HrQ2LqUG/TDDUWNcpXqAMemrJtz+QWj47jWQTHMbILQKVLvTRXrPa0EWsrK2TilLIGGLuqBui1Ec9iVaTZORNHXhSkbSeUesOIqAOCZlazq5127Fjun0qkX+dcQZeq4v4Q2fGvH50eQQba6xXqCGI6WjbBajpacCy3g6Z/o0rqMY37i7XWPIOhPbrYSeJWssiqG4wtsLE0Lsvr8xSPw1pjxz9PMhMr/I41uODsGxcod1tHOdCrx3oQVJIBgmyVDVO1kRfneq5bDwVRUaekTt8sR2Xy1Mk8UwwQCDGShjYQBLnBmSaIYYBjsQustAZ5Ik9egKDSyH6hLiXF+fmpf0weehZ784+oUo+3/KjpjnJz9OspP1HG9frzJr4CE1V843hGjM73/iF1/FTIx+g7DaMZ3SIXI0PR4YSHl85NkjVwDyy6warYy6jAlhjVmV9A9vzm9FqDHePnNXbskI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb5d8127-69a7-4bb9-3f00-08dc73a963a9
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2024 00:04:13.9697
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5ngM7c8V7mbh8gUDPPuNO1JXMT9vV3lfbt7juBR+iWpoHEimgFL9Su6rl7XnKSIB8LIFPvkTHzbbU4WJmLrbFpr9ybjQAEfmADiNuzY/2j4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5809
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-13_17,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405130165
+X-Proofpoint-ORIG-GUID: ZAFd65XRq7SPrQ7NUgAQ4wy7FHCP6HLD
+X-Proofpoint-GUID: ZAFd65XRq7SPrQ7NUgAQ4wy7FHCP6HLD
 
-On Mon, 2024-05-13 at 16:08 +0200, Thomas Gleixner wrote:
-> On Wed, May 08 2024 at 19:21, Lyude Paul wrote:
-> > Regarding the test results - I tried possible_cpus all the way up to 17
-> > and nothing got the machine to boot. However, possible_cpus=3D8
-> > intremap=3Doff did get the machine to boot successfully
->=20
-> Oh. That's interesting.
->=20
-> Does v6.9 (released yesterday) boot with just 'intremap=3Doff' too?
+Amir Goldstein <amir73il@gmail.com> writes:
 
-Yes - it still boots. As well I finally got the serial console adapter in, =
-but
-I don't see any additional output:
+> On Fri, May 10, 2024 at 6:21=E2=80=AFPM Stephen Brennan
+> <stephen.s.brennan@oracle.com> wrote:
+>>
+>> Hi Amir, Jan, et al,
+>
+> Hi Stephen,
+>
+>>
+>> It's been a while since I worked with you on the patch series[1] that ai=
+med to
+>> make __fsnotify_update_child_dentry_flags() a sleepable function. That w=
+ork got
+>> to a point that it was close to ready, but there were some locking issue=
+s which
+>> Jan found, and the kernel test robot reported, and I didn't find myself =
+able to
+>> tackle them in the amount of time I had.
+>>
+>> But looking back on that series, I think I threw out the baby with the
+>> bathwater. While I may not have resolved the locking issues associated w=
+ith the
+>> larger change, there was one patch which Amir shared, that probably reso=
+lves
+>> more than 90% of the issues that people may see. I'm sending that here, =
+since it
+>> still applies to the latest master branch, and I think it's a very good =
+idea.
+>>
+>> To refresh you, the underlying issue I was trying to resolve was when
+>> directories have many dentries (frequently, a ton of negative dentries),=
+ the
+>> __fsnotify_update_child_dentry_flags() operation can take a while, and i=
+t
+>> happens under spinlock.
+>>
+>> Case #1 - if the directory has tens of millions of dentries, then you co=
+uld get
+>> a soft lockup from a single call to this function. I have seen some case=
+s where
+>> a single directory had this many dentries, but it's pretty rare.
+>>
+>> Case #2 - suppose you have a system with many CPUs and a busy directory.=
+ Suppose
+>> the directory watch is removed. The caller will begin executing
+>> __fsnotify_update_child_dentry_flags() to clear the PARENT_WATCHED flag,=
+ but in
+>> parallel, many other CPUs could wind up in __fsnotify_parent() and decid=
+e that
+>> they, too, must call __fsnotify_update_child_dentry_flags() to clear the=
+ flags.
+>> These CPUs will all spin waiting their turn, at which point they'll re-d=
+o the
+>> long (and likely, useless) call. Even if the original call only took a s=
+econd or
+>> two, if you have a dozen or so CPUs that end up in that call, some CPUs =
+will
+>> spin a long time.
+>>
+>> Amir's patch to clear PARENT_WATCHED flags lazily resolves that easily. =
+In
+>> __fsnotify_parent(), if callers notice that the parent is no longer watc=
+hing,
+>> they merely update the flags for the current dentry (not all the other
+>> children). The __fsnotify_recalc_mask() function further avoids excess c=
+alls by
+>> only updating children if the parent started watching. This easily handl=
+es case
+>> #2 above. Perhaps case #1 could still cause issues, for the cases of tru=
+ly huge
+>> dentry counts, but we shouldn't let "perfect" get in the way of "good en=
+ough" :)
+>>
+>
+> The story sounds good :)
+> Only thing I am worried about is: was case #2 tested to prove that
+> the patch really imploves in practice and not only in theory?
+>
+> I am not asking that you write a test for this or even a reproducer
+> just evidence that you collected from a case where improvement is observe=
+d
+> and measurable.
 
-[    0.146896] printk: legacy console [tty0] enabled
-[    0.147433] printk: legacy console [ttyS0] enabled
-[    1.951453] ACPI: Core revision 20230628
-[    1.955466] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, =
-max_idle_ns: 133484873504 ns
-[    1.964698] APIC: Switch to symmetric I/O mode setup
-[    1.970973] AMD-Vi: Using global IVHD EFR:0xf77ef22294ada, EFR2:0x0
-[    1.978491] ..TIMER: vector=3D0x30 apic1=3D0 pin1=3D2 apic2=3D-1 pin2=3D=
--1
-[    1.996945] Kernel panic - not syncing: timer doesn't work through Inter=
-rupt-remapped IO-APIC
-[    2.005376] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.9.0Lyude-Test+ #=
-7
-[    2.012248] Hardware name: MSI MS-7A39/A320M GAMING PRO (MS-7A39), BIOS =
-1.I0 01/22/2019
-[    2.020160] Call Trace:
-[    2.022584]  <TASK>
-[    2.024666]  dump_stack_lvl+0x5d/0x80
-[    2.028499]  panic+0x118/0x2c8
-[    2.031522]  ? timer_irq_works+0x54/0xf0
-[    2.035408]  panic_if_irq_remap.cold+0x5/0x9
-[    2.039631]  setup_IO_APIC+0x398/0x860
-[    2.043475]  ? _raw_spin_unlock_irqrestore+0x1d/0x40
-[    2.048393]  ? clear_IO_APIC_pin+0x125/0x1e0
-[    2.052617]  apic_intr_mode_init+0xcc/0xe0
-[    2.056672]  x86_late_time_init+0x24/0x40
-[    2.060820]  start_kernel+0x8be/0x960
-[    2.064446]  x86_64_start_reservations+0x24/0x30
-[    2.069015]  x86_64_start_kernel+0x95/0xa0
-[    2.073069]  common_startup_64+0x13e/0x141
-[    2.077280]  </TASK>
-[    2.079447] ---[ end Kernel panic - not syncing: timer doesn't work thro=
-ugh Interrupt-remapped IO-APIC ]---
+I had not done so when you sent this, but I should have done it
+beforehand. In any case, now I have. I got my hands on a 384-CPU machine
+and extended my negative dentry creation tool so that it can run a
+workload in which it constantly runs "open()" followed by "close()" on
+1000 files in the same directory, per thread (so a total of 384,000
+files, a large but not unreasonable amount of dentries).
 
+Then I simply run "inotifywait /path/to/dir" a few times. Without the
+patch, softlockups are easy to reproduce. With the patch, I haven't been
+able to get a single soft lockup.
 
->=20
+https://github.com/brenns10/kernel_stuff/tree/master/negdentcreate
+
+    make
+    mkdir test
+
+    # create 384k files inside "test"
+    ./negdentcreate -p test -c 384000 -t 384 -o create
+
+    # start a loop opening and closing those files
+    negdentcreate -p test -c 384000 -t 384 -o open -l
+
+    # in another window:
+    inotifywait test
+
+Stephen
+
+>
 > Thanks,
->=20
->         tglx
->=20
-
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
-
+> Amir.
+>
+>> [1]: https://lore.kernel.org/all/20221013222719.277923-1-stephen.s.brenn=
+an@oracle.com/
+>>
+>> Amir Goldstein (1):
+>>   fsnotify: clear PARENT_WATCHED flags lazily
+>>
+>>  fs/notify/fsnotify.c             | 26 ++++++++++++++++++++------
+>>  fs/notify/fsnotify.h             |  3 ++-
+>>  fs/notify/mark.c                 | 32 +++++++++++++++++++++++++++++---
+>>  include/linux/fsnotify_backend.h |  8 +++++---
+>>  4 files changed, 56 insertions(+), 13 deletions(-)
+>>
+>> --
+>> 2.43.0
+>>
