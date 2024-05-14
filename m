@@ -1,132 +1,78 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C74125AC
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 04:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECED6156E4;
+	Tue, 14 May 2024 04:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715662135; cv=none; b=rCCevfH8Lx6+gXBvtvyhEvUJDpecShVue70MlhFQj5+CGcmsxuWbGQ4PWffULTfZqtlnvYDaZOosce9MX2RQ63k/fQ5WmPQHfTPHpFQzenJIUs3UOL9lGqTnwSafYuXpMSYY0zfoikgXHiM79LdFlyLno8gwU8xGcF5FiIw+fCM=
+	t=1715662270; cv=none; b=ivEWgb5P3SNh03No3iZRGkWGu5JURGJnH9t5jQmJlYx/YON8koXsuzVdaRxV0q+qpwNPm4R7RiUVfUCGZI/vuwJaj60Qr0TiSvnDP5a9sfeg2koVlP6a+051kb8ukcS1rXFQXBP228e2qBrxDsvIswQOe9pNfVTYCVa4QPU4bRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715662135; c=relaxed/simple;
-	bh=xA6emBQVwVuglSd8BdKXUOzTu+AXBbD0wHHpuBd1VRE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=ZU7RZ1pLpb5lh5QG31EMqyw/2zB3+pP/jgaxl472EQB5V1lkECz07OfFP7u1mVPqr3Hr4h/iy/5xiS5vnkvM4/XEQ7yGTHZqkuU9HaXXeDovmkdLfrWClqiOSguHJYlQBhkUvRLqPbDGneb0aFvCT+jIdXSyGopIDk9n8DGIXz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zu+u4Faw; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zu+u4Faw"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-43df9ac3ebcso1074521cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 21:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715662132; x=1716266932; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RXFf6Eq00urqf0wFdNRBo6rl3kq0as0cRcr6U5+BnfU=;
-        b=zu+u4FawyAFkqJeP3EkVra4NL2EvwFt4KNbJ/e2BsDn6fJvgqv6dKcDdeVyYsdV+We
-         3+Ndr83vGyHJiBx/ttxIVa+cpOuLtN5L/rBKL3yyjraYMbLja0xNLtf0VTeXyUaoOA7C
-         UjxzyvND6AhUfWQyRZlMAutwupsqZ4xo1FBzS7CMSYk5PrH5YWdKVHwcVpX685jdY6O8
-         4nVzsr1+09DrHr8jOqbX8HtZJbFIIbFK21JouWopQyuAy8nDzhVBjML1c+jvi4d1by0K
-         9Q+5S9F41xeaDvOxljocqCek3vB3xKrPcaYgz7UoggBRBH9GOjyTemMqK2bYHjV6S25j
-         MiFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715662132; x=1716266932;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RXFf6Eq00urqf0wFdNRBo6rl3kq0as0cRcr6U5+BnfU=;
-        b=Zy2ueJT1FYkmhC1BQI9hZNOJbg4F3RZXLw+aEwSQdaMTgIr9JoPm6XReWCx36YU/Wn
-         EayVgm0XUBisAfGRxUESni2dzFhlpQhV1nD/HR6dCj88Y1FZ84KPrftzWm34NK2Y9KYC
-         Abp38Ln3tjWs9Ur6vFj0w4Uvz/TF3yNeDxSqR7ud6MdI5F90tKttiwhj5UEl7bAEnYDe
-         2U/8LwCVkPvpjXKUo19PFIwm+fO48oFV1im6x77KatiK/iot3qS9fdmBT06qjx7cLhJq
-         bLxkNIMweBVvglyfjpgqiuSWn5hlvtCEnEm1AbILRIKT3EyqGY4wfvlU8L0jBeXNFNy0
-         1jnw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7A1wK0sn3SjZLReTgNrL6VrCBemyDV/BlQpEfrBpRU6IZgMLl8uliMH5xI3FNDTB8BBWcTw0Eq4pJnoVzkZX9r1HCPkgiDXT7idl3
-X-Gm-Message-State: AOJu0YxpQ1nqZAHt8hafuPJXo6a70Te4Gp/TwYC3Aa7sZgmSN+jSVwN2
-	SlJp/baW8aREqAFoQYbDgVZUJ64w0Gq3v3hOsCi9rh81tOo7W+uRu+wfPuCtQR4DNNOcDqH28lH
-	ylgqlpzs/7BcFciYB/Xwni4RcKMHiAN3qlKXL
-X-Google-Smtp-Source: AGHT+IEaJEKQvY6jBBoB4XoOHxarSpuByI4wdMGrcHyrxgOa4Qt93kUKoinfcp6O09S4vAXY3qaeTBVGvSvGAat8z7Q=
-X-Received: by 2002:a05:622a:4886:b0:43d:a002:b with SMTP id
- d75a77b69052e-43e0a1c2014mr6775881cf.9.1715662131679; Mon, 13 May 2024
- 21:48:51 -0700 (PDT)
+	s=arc-20240116; t=1715662270; c=relaxed/simple;
+	bh=tDPqBP4j+7ZARKmInSjhtsEAIUssFCy8qEGySeTizao=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=bf/Qm7mvAWlzs6FKwDA5LSyX2gg4YqUHuiXhut+JxY3phmuXSaVM6BB5SrhqOYnEbOsnUh+vQcHtYrgUY6R/aEhYRlswT8k5a8YG2xZfjhHyP1AmaPfRM4vw8dvDy4X2V6xnKzrPRf6ckiqDBGB76VqqR+vHcXY3e4ewEBFcR+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+From: Sam James <sam@gentoo.org>
+To: keescook@chromium.org
+Cc: chunkeey@gmail.com,chunkeey@googlemail.com,davem@davemloft.net,edumazet@google.com,helmut.schaa@googlemail.com,johannes@sipsolutions.net,kernel@quicinc.com,kuba@kernel.org,kvalo@kernel.org,linux-kernel@vger.kernel.org,linux-wireless@vger.kernel.org,netdev@vger.kernel.org,pabeni@redhat.com,pkshih@realtek.com,quic_jjohnson@quicinc.com,stf_xl@wp.pl,toke@toke.dk
+Subject: Re: [PATCH v2 2/2] mac80211: Use flexible array in struct
+ ieee80211_tim_ie
+In-Reply-To: <202308301529.AC90A9EF98@keescook>
+Organization: Gentoo
+Date: Tue, 14 May 2024 05:51:02 +0100
+Message-ID: <87jzjxgfnt.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510053705.2462258-1-irogers@google.com>
-In-Reply-To: <20240510053705.2462258-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 13 May 2024 21:48:40 -0700
-Message-ID: <CAP-5=fW_Ri1yOfq2QS1_NOV0+kNm+n+Vv03v3FjfbRet4Ztn7Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Event parsing fixes
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	James Clark <james.clark@arm.com>, Yang Jihong <yangjihong@bytedance.com>, 
-	Ze Gao <zegao2021@gmail.com>, Leo Yan <leo.yan@linux.dev>, Song Liu <song@kernel.org>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Kaige Ye <ye@kaige.org>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, May 9, 2024 at 10:38=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> For the default events, parse from strings rather than use pre-cooked
-> perf_event_attr. This fixes non-x86 heterogeneous CPUs where legacy
-> hardware events wouldn't be opened for all PMUs. v2 was previously
-> just patch 3 but it is extended in v3 to incorporate related fixes.
->
-> When a sysfs/json event is used in preference to a legacy event, allow
-> evsel__match to still function using a saved hardware config
-> number. This fixes hard coded metrics in stat-shadow for events like
-> "instructions" on Intel that have a sysfs file.
->
-> Fix/improve uniquifying event names fixing the test "102: perf stat
-> metrics (shadow stat) test:" that was broken by a formatting issue
-> when the sysfs instructions event was used.
->
-> Having evsel->pmu_name and evsel->pmu->name is confusing, get rid of
-> the former. Fix/improve evsel__sys_has_perf_metrics in the process.
->
-> Ian Rogers (5):
->   perf evsel: Add alternate_hw_config and use in evsel__match
->   perf stat: Uniquify event name improvements
->   perf stat: Remove evlist__add_default_attrs use strings
->   perf evsel x86: Make evsel__has_perf_metrics work for legacy events
->   perf evsel: Remove pmu_name
+I think I've just hit this, unless it's been fixed since and it's just
+similar.
 
-Hopefully the first 3 patches here can be a priority given the fixes.
+```
+[  291.051876] ================================================================================
+[  291.051892] UBSAN: array-index-out-of-bounds in /var/tmp/portage/sys-kernel/gentoo-kernel-6.6.30/work/linux-6.6/include/linux/ieee80211.h:4455:28
+[  291.051901] index 1 is out of range for type 'u8 [1]'
+[  291.051908] CPU: 2 PID: 627 Comm: kworker/2:3 Not tainted 6.6.30-gentoo-dist-hardened #1
+[  291.051917] Hardware name: ASUSTeK COMPUTER INC. UX305FA/UX305FA, BIOS UX305FA.216 04/17/2019
+[  291.051922] Workqueue: events cfg80211_wiphy_work [cfg80211]
+[  291.052082] Call Trace:
+[  291.052088]  <TASK>
+[  291.052096] dump_stack_lvl (lib/dump_stack.c:107) 
+[  291.052114] __ubsan_handle_out_of_bounds (lib/ubsan.c:218 (discriminator 1) lib/ubsan.c:348 (discriminator 1)) 
+[  291.052130] ieee80211_rx_mgmt_beacon (include/linux/ieee80211.h:4455 net/mac80211/mlme.c:6047) mac80211
+[  291.052354] ? check_preempt_wakeup (kernel/sched/fair.c:977 kernel/sched/fair.c:8226) 
+[  291.052368] ? check_preempt_curr (kernel/sched/core.c:2232) 
+[  291.052375] ? ttwu_do_activate (kernel/sched/core.c:3766 (discriminator 2) kernel/sched/core.c:3794 (discriminator 2)) 
+[  291.052383] ? __mutex_lock.constprop.0 (kernel/locking/mutex.c:489 kernel/locking/mutex.c:607 kernel/locking/mutex.c:747) 
+[  291.052393] ieee80211_sta_rx_queued_mgmt (net/mac80211/mlme.c:6288) mac80211
+[  291.052599] ? finish_task_switch.isra.0 (arch/x86/include/asm/paravirt.h:700 kernel/sched/sched.h:1386 kernel/sched/core.c:5138 kernel/sched/core.c:5256) 
+[  291.052613] ieee80211_iface_work (net/mac80211/iface.c:1602 net/mac80211/iface.c:1658) mac80211
+[  291.052792] ? __pm_runtime_suspend (drivers/base/power/runtime.c:1128) 
+[  291.052807] cfg80211_wiphy_work (include/net/cfg80211.h:5789 net/wireless/core.c:442) cfg80211
+[  291.052889] process_one_work (kernel/workqueue.c:2632) 
+[  291.052894] worker_thread (kernel/workqueue.c:2694 (discriminator 2) kernel/workqueue.c:2781 (discriminator 2)) 
+[  291.052897] ? __pfx_worker_thread (kernel/workqueue.c:2727) 
+[  291.052900] kthread (kernel/kthread.c:388) 
+[  291.052905] ? __pfx_kthread (kernel/kthread.c:341) 
+[  291.052909] ret_from_fork (arch/x86/kernel/process.c:153) 
+[  291.052913] ? __pfx_kthread (kernel/kthread.c:341) 
+[  291.052917] ret_from_fork_asm (arch/x86/entry/entry_64.S:314) 
+[  291.052922]  </TASK>
+[  291.052923]
+================================================================================
+```
 
-Thanks,
-Ian
+I can reproduce it fairly easily when changing wifi adapters and
+toggling connecting to an AP.
 
->  tools/perf/arch/x86/util/evlist.c |  74 +-------
->  tools/perf/arch/x86/util/evsel.c  |  35 +++-
->  tools/perf/builtin-diff.c         |   6 +-
->  tools/perf/builtin-stat.c         | 291 ++++++++++++------------------
->  tools/perf/tests/parse-events.c   |   2 +-
->  tools/perf/util/evlist.c          |  46 +----
->  tools/perf/util/evlist.h          |  12 --
->  tools/perf/util/evsel.c           |  28 ++-
->  tools/perf/util/evsel.h           |  22 +--
->  tools/perf/util/metricgroup.c     |   4 +-
->  tools/perf/util/parse-events.c    |  52 ++++--
->  tools/perf/util/parse-events.h    |   6 +
->  tools/perf/util/pmu.c             |   6 +-
->  tools/perf/util/pmu.h             |   2 +-
->  tools/perf/util/stat-display.c    | 101 ++++++++---
->  tools/perf/util/stat-shadow.c     |  14 +-
->  tools/perf/util/stat.c            |   2 +-
->  17 files changed, 305 insertions(+), 398 deletions(-)
->
-> --
-> 2.45.0.118.g7fe29c98d7-goog
->
+(It was a fun mini-adventure to get the trace usable and I should send
+some patches to decode_stacktrace.sh, I think...)
+
+thanks,
+sam
