@@ -1,129 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F742230C
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06022BCF7;
+	Tue, 14 May 2024 07:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715671493; cv=none; b=cySTKO2+T+KNkFT0jLoEJCgw5lL/3HED2VLJ0gCKvUL4XBZ1xxXVjBx0RbO7F6Z5vClFxAcHN4/uG/pYRl/Sn01tlrgmaBbTqUgN8Tj3NkoCKpKrh0VnJX6V3whkP7eiam39XG5Clg9ucd58PzRXRF9ldet1a0pHedn+zWpsf/A=
+	t=1715671501; cv=none; b=j306ipQIxkYnzD5AhZcwXxfUufya2j3hJYJi0EKCkXWqCJPIcE3bk89fc9qslriQ1xO+O+bZA22DwDdKBepb+r7/TRwTUeZnDz9R/qRvli14bE5Cmh4rsGQqy47+ME+W4LxfB2jeJcbpEHn/K+TOUA/9f2okJ7vS5mGrDvsTzuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715671493; c=relaxed/simple;
-	bh=GKU8aDad++UHg7ULCq5a+WASZrV1XSR5fQTRpdyDPAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KF3G36yS5r8c0ZNINJJ98lorR3TV++5iIVUsqcWmdG6bg33LJnoRWurgyTle9l7u0o3gPDsnSwLX2rqT60xvRDsk+nBs8DNYZE0vvz2kfReopZ7q3MtZ2XvBEw7p0YjCEFMqiyWS4EZpMvO2U1+UXdnhr8RBCihhIGGu7WVeC6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EZis6710; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715671501; c=relaxed/simple;
+	bh=2QQ1+Z8kEBrNJM3D0N/aUjBPhoFh6P09AjFDjptkjNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HWiQq2kYN5bj4ofgNOnpoxHq3PdZ02eCtDCl061Z66IA32SqEadbzlNsD/TdFx0SEcaTrTf/IaYfUnwDDeftHmuC+EBsZsp+PbCHj+hW3l2MrU0T1lVDwGnY9vGC2NbQztK+ct0+R6Qb5xrh7+QxSoLgoxC3b8MXL2O8eHvzOBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QC9pG9l2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EZis6710"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715671491;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ir9ch9TLrkkINczF+u09rhfqVntFlPUGfW92ABaqtP4=;
-	b=EZis6710d7TwB/U+iI/xTIyVzSBfB6ekYsEJtMQcVNNitFREeRr5G1S1gzmcMyCmsYy4gj
-	n73ZLJSNwltLMX8MApGm6pw3BCNikT7gBz37Y14RNslbtWyusLMy2QqUJYPF+eyncTPi0e
-	/qbPyFKw+OLq4txZ0in2PEU21bn1c6I=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-142-svXIcDRKNtyf-ftbWYgYUg-1; Tue, 14 May 2024 03:23:08 -0400
-X-MC-Unique: svXIcDRKNtyf-ftbWYgYUg-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-792c365cb16so603582685a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:23:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715671388; x=1716276188;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ir9ch9TLrkkINczF+u09rhfqVntFlPUGfW92ABaqtP4=;
-        b=Wek9PnpBDcnrKpRrXlEX9cJqUxANFGS921BqGh6hdzwwfsl2SsehxZcV6/Af3nHV0D
-         n1KWYcXwbc7SlGHr3q/qZX7YrrxV+gLJDvj6yI1SvR4ATlHfvCAxvfzdKDaHmJGr29HR
-         +qBJGuwQ2XDoYFh9AkiLjEVNsvhPoqKE67SQakynesL3sDCpjUQAXwq75IsdcSrVCOla
-         JsQvsdr9ohhrzGHa2O7PZzbL7knmWM0RGlBKy8K6S9ROO0Rb12sOeB8nuX/X2Al/1aSd
-         potAuPZN20C4cERfoOAXwbV+Qj2HSwPtKRB3+abdRMMPxCDI1DDhSPyiVVUPylWFA/dg
-         n5sA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3QpCX2Wv5vQla5an4h7JIThqdTUdXcOAscMG2D4esQx0b7WFuAiqsl9EzNkCIO1CABdRaYmuP55lc1sXtlgkEUfYsvh8Sata2QfLo
-X-Gm-Message-State: AOJu0Yw315mzXGUQChfr3U6qWz1XUUnxUw1FuZRU8FQwSZ9cxL+wlqsi
-	w+hWrkbPEVse291OsscOytcsnZZ00Y6SDCbIqSAIrFSle71nWF6/l9zJHrXrNqnYYJYWomQuMZE
-	ETirlcsjvXYEJkWpu3/oUkjEChQAZ3H6jb9h9drESmq8aSWZNOP8oYiUCIYG6LA==
-X-Received: by 2002:a05:6214:4309:b0:6a0:d21b:c914 with SMTP id 6a1803df08f44-6a168217e82mr153404496d6.51.1715671387989;
-        Tue, 14 May 2024 00:23:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIbQ2Xnzp0GccgqjWLFujOwJhCg38lH8DFppsuBR5FMZevyxek/6u2nIsapmQtCwGG2EXSrA==
-X-Received: by 2002:a05:6214:4309:b0:6a0:d21b:c914 with SMTP id 6a1803df08f44-6a168217e82mr153404396d6.51.1715671387689;
-        Tue, 14 May 2024 00:23:07 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1ccd4esm50917516d6.97.2024.05.14.00.23.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:23:07 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v3 5/6] KVM: arm64: rename functions for invariant sys regs
-Date: Tue, 14 May 2024 09:22:51 +0200
-Message-ID: <20240514072252.5657-6-sebott@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240514072252.5657-1-sebott@redhat.com>
-References: <20240514072252.5657-1-sebott@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QC9pG9l2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA150C4AF07;
+	Tue, 14 May 2024 07:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715671501;
+	bh=2QQ1+Z8kEBrNJM3D0N/aUjBPhoFh6P09AjFDjptkjNA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QC9pG9l2O+Fhq7wQjs3Pv8bojol55cWYFoO9yYWuNXNQZjP7k8c69nav347ZkCTpU
+	 JKWw3nVUR1Z+UDfE3ueQkcDc1oXk+fOeutLCeJmjCbIppiqsGrZk2vGk6Ud1PjUQCx
+	 ZE4FYW2Yosvnis7FuDZkA12bWBwW0UlrSje7+ZW0ForEre1znQcrRniiO//ib1BlBu
+	 HQ3Tmemsjcojm816qCVHSdrpXtllaW6qcsasUOVNho3jgS41MRsgF1dZlmrirF7kwB
+	 yFU6ElBtgqpZF3UKZq1G3gSOYLCpxRHYn/OsAIrWGNqcBU4v0SbxIKz89En9dmc1Kf
+	 PcJOGIkd4AP0Q==
+Message-ID: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
+Date: Tue, 14 May 2024 09:24:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ASoC: dt-bindings: ak4104: convert to dt schema
+To: Xiaxi Shen <shenxiaxi26@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, javier.carrasco.cruz@gmail.com,
+ skhan@linuxfoundation.org
+References: <20240514071143.438748-1-shenxiaxi26@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240514071143.438748-1-shenxiaxi26@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Invariant system id registers are populated with host values
-at initialization time using their .reset function cb.
+On 14/05/2024 09:11, Xiaxi Shen wrote:
+> Convert ak4104 binding to DT schema
+> 
+> Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
+> ---
+> Changes in v2:
+>  - Remove subsystem maintainers
+>  - Wrap lines at <80
+> 
+> Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
 
-These are currently called get_* which is usually used by
-the functions implementing the .get_user callback.
+Only one SoB.
 
-Change their function names to reset_* to reflect what they
-are used for.
+...
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/kvm/sys_regs.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> +title: AK4104 S/PDIF transmitter
+> +
+> +allOf:
+> +  - $ref: dai-common.yaml#
+> +
+> +maintainers:
+> +  - Daniel Mack <github@zonque.org>
+> +  - Xiaxi Shen <shenxiaxi26@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: asahi-kasei,ak4104
+> +
+> +  reg:
+> +    description: Chip select number on the SPI bus 
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: A regulator node providing between 2.7V and 3.6V.
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: Optional GPIO spec for the reset pin, deasserted 
+> +                  before communication starts.
+> +    
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vdd-supply
+> +
+> +additionalProperties: false
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 1b6ab483e21e..bae72a4ce72b 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -3795,8 +3795,8 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
-  */
- 
- #define FUNCTION_INVARIANT(reg)						\
--	static u64 get_##reg(struct kvm_vcpu *v,			\
--			      const struct sys_reg_desc *r)		\
-+	static u64 reset_##reg(struct kvm_vcpu *v,			\
-+			       const struct sys_reg_desc *r)		\
- 	{								\
- 		((struct sys_reg_desc *)r)->val = read_sysreg(reg);	\
- 		return ((struct sys_reg_desc *)r)->val;			\
-@@ -3808,9 +3808,9 @@ FUNCTION_INVARIANT(aidr_el1)
- 
- /* ->val is filled in by kvm_sys_reg_table_init() */
- static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
--	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
--	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
--	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
-+	{ SYS_DESC(SYS_MIDR_EL1), NULL, reset_midr_el1 },
-+	{ SYS_DESC(SYS_REVIDR_EL1), NULL, reset_revidr_el1 },
-+	{ SYS_DESC(SYS_AIDR_EL1), NULL, reset_aidr_el1 },
- };
- 
- static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
--- 
-2.42.0
+unevaluatedProperties instead, so the dai-cells will be allowed.
+
+> +
+> +examples:
+> +  - |
+> +   i2c {
+
+Indentation looks odd here. It should start with | above. See other files.
+
+Best regards,
+Krzysztof
 
