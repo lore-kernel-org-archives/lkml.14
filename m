@@ -1,79 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940B213AA4E
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BF258AC4;
+	Tue, 14 May 2024 10:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715681203; cv=none; b=gS8kXNsl89LiiujVfwnI/lvWr7pRi0ScR1Auq8kLtsRzzwpYu/aSVT+gqmbltuvou1oOyrV+Jftslps6R6FZD39Pzyoe1YmEtfMk5773VdtxkRtYs57aAXHT5X5c2pSoWgl0tAGMXWoNHcrQTBYix+lI+4qH5FBKgghOAZ12ac8=
+	t=1715681286; cv=none; b=o5g+z3a3k5lbUR513lL3tC4SCH4fv7SQIPZSdx+g3orQSFheKdxZ2kCQBC66XGufPhM2FfGAVKWLHtn7MQ/9gg/KgaLDOFQvtoqYHnUioHC7pBLCF/VhlNI68C/Y4C2IZ9SmQbknuIH3WzbP380N9Nl8qdRV7HKZFmyXdFNoOq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715681203; c=relaxed/simple;
-	bh=ZZGB3QQLbx9thwXnWrDjUTHhrcBF4DS6mic9U+ZCYqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DUmxtXmXlTlahIz8tGQP5ekIs3Zx4nyB9AfiLFAWIhYMgZjlmmmhjYn6cdZAfXZENqpiZC6LccPa2cbdW5xM5vCZJcSumKiAPpAuKt6W3d7vKOmfuKys+rWiSCDwWuIP/LV2OMN9/Wzm0Gi8A7VrGUGhz2NesVNVwo4fKyK21WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mMOcalef; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mMOcalef"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C607C2BD10;
-	Tue, 14 May 2024 10:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715681203;
-	bh=ZZGB3QQLbx9thwXnWrDjUTHhrcBF4DS6mic9U+ZCYqk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mMOcalef94Gh7a4egYXlueneWoXw30OU3pbBDxR3l8zG7ZbOpnl8fcldb62LJLynq
-	 YhMYcB6MpyGOdBELmjE1IOpVb8hUgk9JyeOcvI4VldNR3q7HWx+jJK1uVmOAb+Cbzv
-	 7275LoXGYGtdfnc0x9NNM0anf28AjFyyUjnWerr0=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: jfs-discussion@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	syzbot+9dfe490c8176301c1d06@syzkaller.appspotmail.com,
-	Dave Kleikamp <shaggy@kernel.org>
-Subject: [PATCH] jfs: xattr: fix buffer overflow for invalid xattr
-Date: Tue, 14 May 2024 12:06:34 +0200
-Message-ID: <2024051433-slider-cloning-98f9@gregkh>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715681286; c=relaxed/simple;
+	bh=SECeU/hWqv/TiUa66e4a5CsD04TBkyJmeXiGLL2YMfk=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=BvHXHo7ujonxC5LUXDLvRyoFvfdRA1OotRU5KnA6X/Yf+oWmsXyqQoHEWwwLYIiGfoRUrVXzbOZLEk0Z+ukzrgEhyvkNF+r3YtnwYZusLrrCBveT97m/AjatVaE1VJzAopHoi5LAPrwn1DRO3xYBrCj2SgaIJn/qAH46XrqCn8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EC3DD1A18FA;
+	Tue, 14 May 2024 11:53:01 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A4AE01A191F;
+	Tue, 14 May 2024 11:53:01 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 5D7F5180222C;
+	Tue, 14 May 2024 17:52:59 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: abelvesa@kernel.org,
+	peng.fan@nxp.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	marex@denx.de,
+	linux-clk@vger.kernel.org,
+	imx@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de,
+	shengjiu.wang@gmail.com
+Subject: [PATCH v3 4/6] clk: imx: clk-audiomix: Add CLK_SET_RATE_PARENT flags for clocks
+Date: Tue, 14 May 2024 17:33:28 +0800
+Message-Id: <1715679210-9588-5-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1715679210-9588-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1715679210-9588-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1239; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=ZZGB3QQLbx9thwXnWrDjUTHhrcBF4DS6mic9U+ZCYqk=; b=owGbwMvMwCRo6H6F97bub03G02pJDGnO5qv+b1nnWaSilLdEzibVtaXv8oadskYB7Qu7DRaG3 fGu5t/UEcvCIMjEICumyPJlG8/R/RWHFL0MbU/DzGFlAhnCwMUpABP5f4hhNrvzNc2T0jbeNbJv vpZpn7rxaeG72wwLdhQ2sfvOuvJ2L/dlsbrGm7/E79b3AwA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
 
-When an xattr size is not what is expected, it is printed out to the
-kernel log in hex format as a form of debugging.  But when that xattr
-size is bigger than the expected size, printing it out can cause an
-access off the end of the buffer.
+Add CLK_SET_RATE_PARENT flags that when the device driver sets the
+child clock rate, parent clock frequency can be refined accordingly.
 
-Fix this all up by properly restricting the size of the debug hex dump
-in the kernel log.
-
-Reported-by: syzbot+9dfe490c8176301c1d06@syzkaller.appspotmail.com
-Cc: Dave Kleikamp <shaggy@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- fs/jfs/xattr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/jfs/xattr.c b/fs/jfs/xattr.c
-index 0fb7afac298e..9987055293b3 100644
---- a/fs/jfs/xattr.c
-+++ b/fs/jfs/xattr.c
-@@ -557,9 +557,11 @@ static int ea_get(struct inode *inode, struct ea_buffer *ea_buf, int min_size)
+diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+index b381d6f784c8..466b5b0d665c 100644
+--- a/drivers/clk/imx/clk-imx8mp-audiomix.c
++++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+@@ -269,12 +269,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
+ 		if (sels[i].num_parents == 1) {
+ 			hw = devm_clk_hw_register_gate_parent_data(dev,
+-				sels[i].name, &sels[i].parent, 0,
++				sels[i].name, &sels[i].parent, CLK_SET_RATE_PARENT,
+ 				base + sels[i].reg, sels[i].shift, 0, NULL);
+ 		} else {
+ 			hw = devm_clk_hw_register_mux_parent_data_table(dev,
+ 				sels[i].name, sels[i].parents,
+-				sels[i].num_parents, 0,
++				sels[i].num_parents, CLK_SET_RATE_PARENT,
+ 				base + sels[i].reg,
+ 				sels[i].shift, sels[i].width,
+ 				0, NULL, NULL);
+@@ -317,7 +317,8 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
  
-       size_check:
- 	if (EALIST_SIZE(ea_buf->xattr) != ea_size) {
-+		int size = min_t(int, EALIST_SIZE(ea_buf->xattr), ea_size);
-+
- 		printk(KERN_ERR "ea_get: invalid extended attribute\n");
- 		print_hex_dump(KERN_ERR, "", DUMP_PREFIX_ADDRESS, 16, 1,
--				     ea_buf->xattr, ea_size, 1);
-+				     ea_buf->xattr, size, 1);
- 		ea_release(inode, ea_buf);
- 		rc = -EIO;
- 		goto clean_up;
+ 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
+-				       0, base + SAI_PLL_GNRL_CTL, 13,
++				       CLK_SET_RATE_PARENT,
++				       base + SAI_PLL_GNRL_CTL, 13,
+ 				       0, NULL);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -326,7 +327,8 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
+ 
+ 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
+-					       "sai_pll_out", 0, 1, 2);
++					       "sai_pll_out",
++					       CLK_SET_RATE_PARENT, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+ 		goto err_clk_register;
 -- 
-2.45.0
+2.34.1
 
