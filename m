@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7171B17F39F;
-	Tue, 14 May 2024 18:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70AA181B9C;
+	Tue, 14 May 2024 18:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715712117; cv=none; b=nv3NoIyagoIulD3c75BgnSLwBP0gzw2BHlescj1Cm2YOyPTPniRjFxRT5PBAU4dTXcFu+8p+PoWa09sRHbzO86cwuiUitt/bIa3vJ8IIfnt8x5J0hXtEhM6via/qfIhDgGCUVf4n/D6sBOPOt6abf5GQQXHc//jcHX9iekE07ps=
+	t=1715712119; cv=none; b=W2T29jwL4ItV8hGNJVQecHyiKfWOOArlAqXkPAHHVQtkeovvOiXpCCKru7HjHyzyJtULEbTar3JyyR3k4c28I/kpstwL5i/ZOwlLdp84RpJCmLqA0T/2xCLaN055+Z6KKxRMVWCFkOO+4JcCB4G449glXKqQp/3uF6oxojXMIbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715712117; c=relaxed/simple;
-	bh=y/wfQYC0hWA/b5ghXxQQdWgODen5WHjvJfDJZyDLPqo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=i2lP6Lw0mqjhm3EL6fXDw7xbBFps+sef7CYLioReAH/JGilBTSKILzoHbovkkOqyCp5kncjn9u+guIG2yDeF/GsEk37kD3INPxeYF1Rp6vzxugcYIaQn4w1a8EBT1jjAkQSGWa8pczHM9Rrm2a8t5m0I5YIk/TylFl9Y0rRr7QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5Uzhu9w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715712119; c=relaxed/simple;
+	bh=1kh35XskmiMKH/cxumaDajFCWX/O2Ot3u6gKjNAxahw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=M3dzdano82Vurvd86FTG4t1x6V76i0sc5jC/Rb+DFUp2w4Wzc6tr5DJIgSglw0exrER51hZt25iQGoXKBnHttMDusZ9Q72VBPZr3qEtMx017fIZlWoJ4kxOylyW8kEI+zW6km2lVByJ1MVEHZRCcxUVYKAGxIo7/321tULtJvsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q86/qKve; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5Uzhu9w"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 54667C4AF09;
-	Tue, 14 May 2024 18:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q86/qKve"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A36F7C2BD10;
+	Tue, 14 May 2024 18:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715712117;
-	bh=y/wfQYC0hWA/b5ghXxQQdWgODen5WHjvJfDJZyDLPqo=;
+	s=k20201202; t=1715712119;
+	bh=1kh35XskmiMKH/cxumaDajFCWX/O2Ot3u6gKjNAxahw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=l5Uzhu9wHXxaq+TPT7tx9kfXG5FIPJuEYglKHPKVBpjc9oXatf0TufeUa3PeBc+vU
-	 NFTrhespfRtBu0HDf8Bd8fXpJgoaNSinAMXt0olwPS8+rBx8XlN2apKWhDEOQwYCAK
-	 Z0aca8CX/hgnTOfGyCEDbu6ipkI65eD5xeil2qGo76OJYyQVEe23APmck1TBd1TSVX
-	 cdBzms8ICkPc2W8qELUElOyJ/1aPtid9vEpf3ThQ62lPxMv3vgqxus71RQudAk/7fl
-	 aXOKqVVBkbdCEH3ov7Gex0r2yF8ZNGnCDLk7TcczcgPo6Yy5UBD5H9JnTNVU3wsSVI
-	 zuwtwK6hlRGeQ==
+	b=Q86/qKveITjyWtKEvU5jigorenRST5RBL+9BQpK17jWO7U016zxHyYPsSmeVcv0g0
+	 LpAbT2dBcCMmbEefAFK2ZQOfkpquoxRemmPIwHTuZC4rWN9/fhCoRTVeROlteQ2gjj
+	 AGAYOEaHjiKN/0xqOb2YMPW7CzxPDhEqI3/y0ue6s8LhvloXGQtc7O1c/CS1uAiWG1
+	 fIL7oCEegCvR9BRvwK+ZAvpR2erk570a2YdQ3nM2J+6vabBF2gQhNWpXoIwcXzesyQ
+	 ITFI57Y0nWF3U6HOZBQf1GVGLYNqnox1WvSJd6Z12RLA/+TkmXAQZ8EB3gskOIFxVW
+	 GgzBgStkfpPDQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4BD32C3274D;
-	Tue, 14 May 2024 18:41:57 +0000 (UTC)
-Subject: Re: [GIT PULL] Kselftest update for Linux 6.10-rc1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9B187C43339;
+	Tue, 14 May 2024 18:41:59 +0000 (UTC)
+Subject: Re: [GIT PULL] OpenRISC updates for 6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <2312d569-3c4b-4685-9678-746ae811c38b@linuxfoundation.org>
-References: <2312d569-3c4b-4685-9678-746ae811c38b@linuxfoundation.org>
-X-PR-Tracked-List-Id: <linux-kselftest.vger.kernel.org>
-X-PR-Tracked-Message-Id: <2312d569-3c4b-4685-9678-746ae811c38b@linuxfoundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-next-6.10-rc1
-X-PR-Tracked-Commit-Id: 2c3b8f8f37c6c0c926d584cf4158db95e62b960c
+In-Reply-To: <ZkOEkhs_-wiwucSO@antec>
+References: <ZkOEkhs_-wiwucSO@antec>
+X-PR-Tracked-List-Id: <linux-openrisc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZkOEkhs_-wiwucSO@antec>
+X-PR-Tracked-Remote: https://github.com/openrisc/linux.git tags/for-linus
+X-PR-Tracked-Commit-Id: 4dc70e1aadfadf968676d983587c6f5d455aba85
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4b95dc87362aa57bdd0dcbad109ca5e5ef3cbb6c
-Message-Id: <171571211730.4202.6086721570364739143.pr-tracker-bot@kernel.org>
-Date: Tue, 14 May 2024 18:41:57 +0000
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, shuah <shuah@kernel.org>, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>
+X-PR-Merge-Commit-Id: 590103732442b4bb83886f03f2ddd39d129c3289
+Message-Id: <171571211963.4202.10926114607793169471.pr-tracker-bot@kernel.org>
+Date: Tue, 14 May 2024 18:41:59 +0000
+To: Stafford Horne <shorne@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux OpenRISC <linux-openrisc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 13 May 2024 11:38:51 -0600:
+The pull request you sent on Tue, 14 May 2024 16:34:42 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-next-6.10-rc1
+> https://github.com/openrisc/linux.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4b95dc87362aa57bdd0dcbad109ca5e5ef3cbb6c
+https://git.kernel.org/torvalds/c/590103732442b4bb83886f03f2ddd39d129c3289
 
 Thank you!
 
