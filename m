@@ -1,98 +1,107 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0277318131E;
-	Tue, 14 May 2024 20:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300EB18131A
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 20:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715717689; cv=none; b=o/u6/hQysg/1ScjKyGby9Ew8Wr+TUnKBNEadOXmjeA7J2EA6RtB0BP/b5J4jjHYxeLLrlX/557iuVfrr+xr0eTL7JSGItCbGKwCcyZRcL2gUflOQKVw8D1w5f2+Fvzh58ZQjY8pqiytUz3dkDVQcdeUqPclnECut+LVmmN1FGmI=
+	t=1715717976; cv=none; b=jmvSJ5/z6vCqJBJOwR7fw7Ipoduwh3LjPZ+yB5yjCtSNOSyrC3mP0Vmtg7aPhJ723UqhDLCgclblCtrhuSrvCiDewvQ33bsUdArLwwKtP6a2Px6zq9rWrTOO6PJinFxMFwII0nSAt5dLGMna5HOuwP3a7qeEBtjcE1k2TeaJ8as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715717689; c=relaxed/simple;
-	bh=qoYnJ6lUUZzta4RRGTWdO73OSuJNHfyk4iZIX7hypxY=;
+	s=arc-20240116; t=1715717976; c=relaxed/simple;
+	bh=VaHu7rKqUD82QxgHYz6hkdvHYjYa2IRHOTNhh/K5VCc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kvVueyZ1P/GzXPMwog7majiHT6xYvnqEbdhat75OuSZlr7WhuSfZgWChK1rlWoxTcQTVHr9evIKkiKWMDtGJz4G4eqlOEkZPOrv8HxMNOJ/rj6p8tYRHMgn/Y0j9KRltKuEfXoFvHxp7kQtqqCtgKKML55L1z+D5zYwVWmRIzD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+kf3OaN; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=j3qYxm2y2ABnTM7Sj64Y4GmO5UpW1jfk7Sc4IN3Jy7iaBLnoStkYUbvaPaGyVDRpWWJJpL3wX+bkO0zKwe5Q2zXyFI0Tx8Nbw3XZH2iAmDZMb6MEARCHfuP2fg0v0laqwPEPLG5LYZeKs08tElPnTvCGv5fr5+VT01tFILAhwUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0a1zuzJn; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+kf3OaN"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5a5c930cf6so61830366b.0;
-        Tue, 14 May 2024 13:14:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0a1zuzJn"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-622e32414ffso30440307b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 13:19:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715717686; x=1716322486; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bc4sGc3qRAwdao+8DdkMbvvomRi+vAtNgNPeosj6N2I=;
-        b=P+kf3OaNAMZUiZrVk5yF8IhIriCfzVUMD3kI+HyKtVtInVsj+RfXSOM4KK6TVEmlwy
-         QmSQpIX4uO0j+aKNTk9JxTkrOevmjC+UIfkkVujtOBlxHRnWZFIpNK8KRrCrE+hrAmWs
-         MzsoEKW82IYat9u+4g1yqQn6ztvitnhGkCQUnI+wc0iUtsf9tyzI7PcZJduT59FKj2Hu
-         Sp3uK507CTRnmmLI5hfKWvpjivZ24DIA4TvkZa7n5+3PpTk+Fp/waVSaFK+ovGag0xzy
-         mjQ8l5zmIhE5HPTab3nVpjkvKobRYn3xhLAFUs8m8hy1JcnudYStxNWGvfhJa6hDJb58
-         QysQ==
+        d=google.com; s=20230601; t=1715717973; x=1716322773; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8hb7xfSX/VQFjXuNhYy1AT8FiF40Meq6UrJ0Q9OaWSI=;
+        b=0a1zuzJnVTED5zaBjn+vneejEbKjifynYTHZTlnVvJKgSHH0FmJ1Bkn3TIS+l5/1Fr
+         7NbcjAvEqVEWRplugA6jaRTfJGfPU91IqxQ5ua1BqzAlAnXHIcZeQbwh36eH+HrY/GST
+         kZoW1w7PDM6ndbkwbCdg+S4B9E6WtIyn53TkzQSHwaMIMYnXC80MnnzqZhcWHH9emoyo
+         tE/Y2rNZCaH7VE/zEmxSMNyxI7x+qvLgApVmmo/zHocyfjYSqqNyW6Xnzfkdzi34Kf5+
+         tILMfTM8IjYU5bggzvkRUy7e6LTeKynROC0y2vUCYxU7CkBeXgiJsP2fo5ZBHNle3+Vf
+         lA0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715717686; x=1716322486;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bc4sGc3qRAwdao+8DdkMbvvomRi+vAtNgNPeosj6N2I=;
-        b=RzihMhbJPO0VtKnvRwRYGRA4Y0Eb4N1VGaE21iypS3QrIxVVo9Tfnw/MHukoNv/koq
-         HOsQY2nq0UmbLzt0ut0EV/DHw1hWz02AhEgV+O+25SIT+NRdIAjrAB1mE6ZrMugj6mty
-         QWj+e+H4SUPrM/adrvNgiDxPg6+hDLcshW+ygiuyCvT2netmJ0DlRxr2p8S/CorUlpwi
-         FtL5VIryLhqiiw1cFzxtjMSM198dLix/Q1NpN7VYmD5mRHo/zDWe3XgbP4Vilkb2BftR
-         Q5oguFh8Y4VYnmRiyCBbT0BKv6vDQZ+C1iLvkLIXVzrx/CqEvGSRg8RcGSEPjNdIHoRW
-         vx3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVXqA3OorHw7dfMC2dWSBGVtYZcavpC876Lv+UsFk0M9i54a2GCcKO+0RweOZAeHh/hPhaZqNy+3RFWRnnP2aNejSpIdmE7PAkjfDBJ
-X-Gm-Message-State: AOJu0YwPuTzEpz2xJ8pXoXcPPVsdxp+oqUYEDgxTPksltEZnUNXxj7JT
-	XDeKFVTr2mAEXRMWqv7Q35C0wIa7KZYqeAlN+/rO/dyj8SJdmT2VguGgIFN19nwlzFlEXqREMW1
-	XRXo5h84jkH+Vq4L+HtOibiPX0Tg=
-X-Google-Smtp-Source: AGHT+IFZQpyq/hBgNv523DGpBPGSrC757nSkUJYg1HKA/tgjfNnA2n+ypdhVxgI1eO0Ho/p+Z1a2vMJOK3A4TPyx7TI=
-X-Received: by 2002:a17:906:4f15:b0:a5a:89a3:323d with SMTP id
- a640c23a62f3a-a5a89a333a9mr182147066b.72.1715717686153; Tue, 14 May 2024
- 13:14:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715717973; x=1716322773;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8hb7xfSX/VQFjXuNhYy1AT8FiF40Meq6UrJ0Q9OaWSI=;
+        b=MhUWbQE3HG0lPhTK+89Xz17c/ArHYdeeqG1LcTxm6J+JKkfzcLEiAgAvVUBhou5JPS
+         g99ocg7fA1B0/dwFQI5qnqxfMHtXWeyyrpBaWXFCMFQRj+duWWLC7GEdoQanSAxs9qVr
+         AGn5Y1FpIP+GAMW3faudS6jX6HE8oB4GkyJSy3+Kv+LzJF++cg3hEs+nEDvgRg1biGGn
+         aiNZI3ININAI02qI7M39wmcEcXfh6iTvRr9EGl3kwORsThsYAjMx6O5AgWxPFH85oxyU
+         RnPoDwRxpF4nHC+bGuXZA2dA1MzAw0N1kU9i5JIvn29bNGwJxLxM4skFf6oP9nUeXLNB
+         rCTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+jMLWPihKRxJCU9uUiGAIasR9nC6blEe9S8Tq2AQSE8ebCOieOENMbf3yWlgwuZk2QJv1ue/d0KN1v2f8FJQyJYM9xJjCOuBAXTbO
+X-Gm-Message-State: AOJu0YwRXVYMlXaJNmV4XNxoQW5t1zZypd8vFn+dmHLET5KCqFTEbNLF
+	J9XGXIFBE7ptqkd/PZfUd/p6HVLjRJsVSQxbQoPip9QYmHMgB19miKRw7Od0+onhhe7Uma6Ou8O
+	ntAMfhi3cAd8MReXaugpZ3BZ70zbY3YQUIRVQIYjFz04Cs0zxcw==
+X-Google-Smtp-Source: AGHT+IF0OFILt+I7s+gtnueoup30JC7tJkxqSmt1mTfiiTyFdrB2xvE1WcfGDmSBB02xHb0OOmS8gf0eZcoIH22ncJ8=
+X-Received: by 2002:a05:690c:386:b0:614:74ba:f91c with SMTP id
+ 00721157ae682-622aff93dfamr216111377b3.19.1715717972903; Tue, 14 May 2024
+ 13:19:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514101032.219857983@linuxfoundation.org>
-In-Reply-To: <20240514101032.219857983@linuxfoundation.org>
-From: Allen <allen.lkml@gmail.com>
-Date: Tue, 14 May 2024 13:14:33 -0700
-Message-ID: <CAOMdWSLrThZj8SLZNBu-mnnyX_A19FswC5_P49bJ5Y9mMcOuXA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/301] 6.6.31-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, broonie@kernel.org
+References: <20240514163128.3662251-1-surenb@google.com> <202405140957.92089A615@keescook>
+In-Reply-To: <202405140957.92089A615@keescook>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 14 May 2024 13:19:19 -0700
+Message-ID: <CAJuCfpGjRtL4nrOp2fLVM2=Yfg2WH4DXjkTK-y_1q4uwAxFDHg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] lib: add version into /proc/allocinfo output
+To: Kees Cook <keescook@chromium.org>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, 
+	pasha.tatashin@soleen.com, vbabka@suse.cz, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 14, 2024 at 9:58=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Tue, May 14, 2024 at 09:31:28AM -0700, Suren Baghdasaryan wrote:
+> > Add version string and a header at the beginning of /proc/allocinfo to
+> > allow later format changes. Example output:
+> >
+> > > head /proc/allocinfo
+> > allocinfo - version: 1.0
+> > #     <size>  <calls> <tag info>
+> >            0        0 init/main.c:1314 func:do_initcalls
+> >            0        0 init/do_mounts.c:353 func:mount_nodev_root
+> >            0        0 init/do_mounts.c:187 func:mount_root_generic
+> >            0        0 init/do_mounts.c:158 func:do_mount_root
+> >            0        0 init/initramfs.c:493 func:unpack_to_rootfs
+> >            0        0 init/initramfs.c:492 func:unpack_to_rootfs
+> >            0        0 init/initramfs.c:491 func:unpack_to_rootfs
+> >          512        1 arch/x86/events/rapl.c:681 func:init_rapl_pmus
+> >          128        1 arch/x86/events/rapl.c:571 func:rapl_cpu_online
+> >
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+>
+> Ah yeah, good idea. (Do we have versioning like this anywhere else in
+> our /proc files? It seems a nice thing to add...)
+
+Yes, /proc/slabinfo has a similar header that includes a version number.
 
 >
-> This is the start of the stable review cycle for the 6.6.31 release.
-> There are 301 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 16 May 2024 10:09:32 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.31-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Compiled and booted on my x86_64 and ARM64 test systems. No errors or
-regressions.
+Thanks!
 
-Tested-by: Allen Pais <apais@linux.microsoft.com>
-
-Thanks.
+>
+> --
+> Kees Cook
