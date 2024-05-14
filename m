@@ -1,181 +1,171 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9911720;
-	Tue, 14 May 2024 07:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A2BD304
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715670722; cv=none; b=HWp0dsMdz4O87DIbTs1imLZv5KBD+Tg4C74i1n9oGmnPyg0mOpGPDhU4PVnv0fdPoeX2a2OFDb7CB875ChOkJ9jiPu3zO1xOVqImM9FOY1SzTyRnsVtwJrGYf8wXbHN6bDnp1tfXL3MUPxChX3CU3/aqxKOp7iy4PI5tMqRCUl8=
+	t=1715670849; cv=none; b=bSuAVDdEqX0P3DNot/n+zmB0cAgj3jDSnsHsXQVmlv7o9pMvnvac9zGP4sZ6ILH0rR9590LJlOJHryC9T+9VNfDEqRRKjV+oEmmGTz9xJo1tnrzBiwld0M/6QdCAwqiCocVCEpLXVVyQVUyGZgkCqCeTPKcwAlXB3Tv3amotmbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715670722; c=relaxed/simple;
-	bh=pcnYluDag238mmBsUKSC6PbYsfe7QbcseXtCxzyXERY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c0nFESfzhso/+8X7nd3TNJLsuSVHqAATxB8SKuk3lPGY06jaM2VD06+1+E5BxrzckM0wYpF8yMQ00ZaXo3HDC6Oa8BbSEJ+HSkV7JxvCAK4bJVLfr+FlTcqiV/4IU0MJtzOKn/Rlo424EtxpDQWvNDiSAxxSsYDxm3i+XjxR5fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGakXGiG; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1715670849; c=relaxed/simple;
+	bh=tTD0cWYej9ORsfWNkVQZqKAP4MKVnJ3cWaPkJ5aUSC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r+cvYZxNmHlaDI17nw4+fyf/7rJIdjvtSv0bLF7z7a/i/15hyQXrj7fbW7/76XMyocX3NuKkkiD50aKpdHKDioy5paSrlC5csvaPGz0zi58lCtu4ZlbZI4hxx9JSh85xtWxWA7xAbrVRhJVuG8qI//BNiyuJaFd3tWfzy0jDn0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kN+yilHE; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGakXGiG"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so30134385ad.1;
-        Tue, 14 May 2024 00:12:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kN+yilHE"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2df848f9325so66331191fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715670720; x=1716275520; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3uYIr3Ml2AVWzJhE/ggK+DKrQxQADQHuE7nOd7CrufI=;
-        b=FGakXGiGzuOcD3YDjVKFt/g02EXOOvakW/eoyuq3X3Jcrdn7i3mc4SHWiHP2Q/vphq
-         Tp5Bg0WrmXYkHpSKPPBxXUgB2EUJErmUgHLGXCMJJG7mhtmkpL7YGSv+u80JRzsbJyOO
-         M8lgnB4dq23USqxIChVoKF8cYw2xIXcVhHRR+FMi6IIQ/Qs74QUcNpaiLQOnaHuCtTTe
-         tqYDf9grdVK5V+tk59AmNvYI9YZyjiqzMTKrdv4opfqAldV8AsJouPCV0sz16clZ58FP
-         LPooSgH1l7fckNTSzRrtSZBnt20Ak50QPvf/dqWInNLh1qBl2uE6iO6e8JV6kQCyk0t8
-         Q30A==
+        d=gmail.com; s=20230601; t=1715670846; x=1716275646; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2M54heS1wREd+pPH9WixC6wnUwS8Se0aMuzWM9ii2oY=;
+        b=kN+yilHER0ahoesFqgwR4lyuRw7cG90CX6BzZgoj7WdllZBJtEfjhD7jHCdBHdORkH
+         OCSCz/OXusZwwuurO8z9j5f/nmnRRZRvedMenwtsym39Fp/XvUGVvLb+3Jdruh9DmLUk
+         MfPCX1VWPxWlks68JSuVcIe1pUXpFTlpjJZ/JYzS3QpG+5cgzcpdQsv4zTpPR6tlp36N
+         Mk/+cKbja6GbgnCuQYYeEFf6EQKZHTCUM8tD1orcyrvVt6KDoDGvCSvCxdBVDJIC8BRE
+         B3E/+q6GhsRp4G5KgOLfWwEsgEyUbGl5Upb7ftYKquLuJ2ViFIkZ+sHYjeb/QNyg6N4g
+         tWlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715670720; x=1716275520;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3uYIr3Ml2AVWzJhE/ggK+DKrQxQADQHuE7nOd7CrufI=;
-        b=Y6aGIIkE9sxQvPqm4eBF+FDU6+wjtCGNsg8YnnstooF/bLRM90B325W3TUCW8Q79JO
-         trf6rpM5z4mfxnN2LoPONFT+yUnoNHw2pd3wu5vbXhvErbBjTM9cS/WwsC5dXiS8sq2J
-         AVgPOjXPvmK7g8gkeVXemnLH0ZwxMpBQz9fLu2xk0DffWExo7ZaqGyFSnFmLfwPNIsCS
-         R+mxNurgCVcugF0GiiRQ/8sPDMyou7RVPTSZEgltYAQItO3cDO2YrnAMIeX6SmtkEg/l
-         1AGwpQAiWdClsJX/Q1N6R03qJCg0EbZn6hH4GrNMdzCvXeylDM9b7pHMi2rHh7d1jmjQ
-         PMlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJu61vjky6YVEBlhC/vV9jyT5EJKMVffHJ2Z1o+sKSXgk1uVrJRA38zzlwQPwOCRmbgjf2Drnul30Uj8LY1pwEeBwvII4d2DyPrzQS5ozLc8w3aR+ml5lJYYPOTg1xD5pjBMwa+Y11gyg=
-X-Gm-Message-State: AOJu0Yz3pHBx14Wu+6mEuoZkUmQKhUsli0yCWV7xVFcI4Z6nciDqEZTz
-	Zv/x9Fciq5LrKbQOU9E3LnFoZTYm7IYBXE8hOruDfHz19QPuvVFBIrKKMIxaeow=
-X-Google-Smtp-Source: AGHT+IHjy9RplyYNtkpgjstWh8etxT8+rKaKrPSFQtNG4FdFsK/ntTcQAtLDJAMGDRMI748GfeeLDw==
-X-Received: by 2002:a17:903:2d2:b0:1eb:1008:2dca with SMTP id d9443c01a7336-1ef43f4cf0cmr138053615ad.49.1715670719911;
-        Tue, 14 May 2024 00:11:59 -0700 (PDT)
-Received: from xiaxiShen-ThinkPad.gigstreem.net ([66.160.179.28])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf32f51sm93073275ad.154.2024.05.14.00.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:11:59 -0700 (PDT)
-From: Xiaxi Shen <shenxiaxi26@gmail.com>
-To: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org
-Cc: shenxiaxi26@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	javier.carrasco.cruz@gmail.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH v2] ASoC: dt-bindings: ak4104: convert to dt schema
-Date: Tue, 14 May 2024 00:11:43 -0700
-Message-Id: <20240514071143.438748-1-shenxiaxi26@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1715670846; x=1716275646;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2M54heS1wREd+pPH9WixC6wnUwS8Se0aMuzWM9ii2oY=;
+        b=GEQwr+c10LpzvwCC81IAy+Ml5zoSUO0of8i4wbZbtF6JYunN8lQ39kWRs+sViRNiwO
+         pcwNlZG8DkFRKVQ68d1U7A/L1flmE5Bvh3Gz21wl1ihn3rwBm0YiFhLeWy0JB5kaXLhW
+         Qh+eazmkjmp0MHVBt9uct48+x2Nq42bcZd/TBFhfYZHNYb1NrZgc8/M7aDRh+TRv+hTl
+         wwmgAujwLQTGqoZdJasZ2S4wAfksMntih0zgDxmV/tR3rMCmh/ffcpKtyD/MgFWuZgtP
+         QtzqdURJuW+ms6yiLJC5TGflw/nuKuFuNvTMjguPqFj6+ykNgUUpAV4fDD+4h8ezCEvJ
+         0aLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzrmZYcQSMCK1BAyr+rpdMIxm8mJcmnO0ZWrI3jl63apt3ezl9oC0oA+A7zsWBQHOPq14LLISrmWIK/Sc/Fh4BcJ/ekjDCeTRdwbvZ
+X-Gm-Message-State: AOJu0Yzzs58M5j97LI+s5kT03/cLfPQ1vRS3QsehrbkVDjRh2FPo2Df+
+	/jOf/M+3pIIfUkF2dLlYuqt8AewGncpmWJkWGAiWC+wr72ydWQJi
+X-Google-Smtp-Source: AGHT+IHE8uuq8d6lDEFbCFyjcSusLCXU1JAMQ2bNa5eUgRYG8g7FcxGtUq6r+vgq3L2G/+Ll89hBlA==
+X-Received: by 2002:a2e:914d:0:b0:2de:74b1:6007 with SMTP id 38308e7fff4ca-2e52039bd3emr92659281fa.36.1715670845980;
+        Tue, 14 May 2024 00:14:05 -0700 (PDT)
+Received: from ?IPV6:2001:b07:ac9:e686:5e62:2103:8d45:ece8? ([2001:b07:ac9:e686:5e62:2103:8d45:ece8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce24c0sm183119895e9.17.2024.05.14.00.14.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 00:14:05 -0700 (PDT)
+Message-ID: <8a0df605-463f-4d61-ad64-a39f3ebb3153@gmail.com>
+Date: Tue, 14 May 2024 09:14:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2 v4] drivers: arch_topology: introduce automatic
+ cleanup feature
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: gregkh@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
+ julia.lawall@inria.fr, linux-kernel@vger.kernel.org, rafael@kernel.org,
+ skhan@linuxfoundation.org
+References: <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
+ <20240513081304.499915-1-vincenzo.mezzela@gmail.com> <ZkHlHAj1aPEToEYO@bogus>
+Content-Language: en-US
+From: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+In-Reply-To: <ZkHlHAj1aPEToEYO@bogus>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Convert ak4104 binding to DT schema
 
-Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
----
-Changes in v2:
- - Remove subsystem maintainers
- - Wrap lines at <80
+On 13/05/24 12:02, Sudeep Holla wrote:
+> On Mon, May 13, 2024 at 10:13:02AM +0200, Vincenzo Mezzela wrote:
+>> This patch series introduces the automatic cleanup feature using the __free
+>> attribute. With this modification, resources allocated with __free are
+>> automatically released at the end of the scope.
+>>
+>> In some cases, modifying the structure of loops is necessary to utilize the
+>> __free attribute effectively. For example:
+>>
+>> ```
+>> struct device_node *t;
+>>
+>> do {
+>>      t = of_get_child_by_name(..);
+>>      if (t) {
+>>
+>>          // some code here
+>>
+>>          of_node_put(t);
+>>      }
+>>      i++;
+>>
+>> } while (t);
+>>
+>> //       ^
+>> //       |
+>> //  device_node here
+>> ```
+>>
+>> To use the __free attribute here, we need to move the declaration of the device_node
+>> within the loop, otherwise the automatic cleanup is called only at the end of the
+>> function, and not at end of each iteration of the loop, being it scope-based.
+>>
+>> However, moving the declaration of the device_node within the loop, we can no
+>> longer check the exit condition in the loop statement, being it outside
+>> the loop's scope.
+>>
+>> Therefore, this work is split into two patches. The first patch moves the exit
+>> condition of the loop directly within the loop's scope with an explicit break
+>> statement:
+>>
+>> ```
+>> struct device_node *t;
+>>
+>> do {
+>>      t = of_get_child_by_name(..);
+>>      if (!t)
+>>          break;
+>>
+>>      // some code here
+>>
+>>      of_node_put(t);
+>>      i++;
+>>
+>> } while (1);
+>> ```
+>> The second patch eliminates all of_node_put() calls, introducing the __free
+>> attribute to the device_node.
+>>
+>>
+>> changes in v2:
+>>      - check loop exit condition within the loop
+>>      - add cleanup.h header
+>>
+>> changes in v3:
+>>      - split patch in two
+>>      - fix misalignment
+>>      - fix checkpatch warnings
+>>      - replace break with return statement where possible
+>>
+>> changes in v4:
+>>      - fix commit subject
+>>      - fix coding style
+>>
+> Looks good now to me.
+>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> It is merge window now, so there is a chance that it may get lost. You
+> may have to post it again at -rc1. Greg can then pick it up for v6.11
+>
+> --
+> Regards,
+> Sudeep
 
-Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
----
- .../devicetree/bindings/sound/ak4104.txt      | 25 ----------
- .../bindings/sound/asahi-kasei,ak4104.yaml    | 49 +++++++++++++++++++
- 2 files changed, 49 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/ak4104.txt
- create mode 100644 Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
+Ok, perfect.
 
-diff --git a/Documentation/devicetree/bindings/sound/ak4104.txt b/Documentation/devicetree/bindings/sound/ak4104.txt
-deleted file mode 100644
-index ae5f7f057dc3..000000000000
---- a/Documentation/devicetree/bindings/sound/ak4104.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--AK4104 S/PDIF transmitter
--
--This device supports SPI mode only.
--
--Required properties:
--
--  - compatible : "asahi-kasei,ak4104"
--
--  - reg : The chip select number on the SPI bus
--
--  - vdd-supply : A regulator node, providing 2.7V - 3.6V
--
--Optional properties:
--
--  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
--		  deasserted before communication to the device starts.
--
--Example:
--
--spdif: ak4104@0 {
--	compatible = "asahi-kasei,ak4104";
--	reg = <0>;
--	spi-max-frequency = <5000000>;
--	vdd-supply = <&vdd_3v3_reg>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
-new file mode 100644
-index 000000000000..91b3a6817a85
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/asahi-kasei,ak4104.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AK4104 S/PDIF transmitter
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+
-+maintainers:
-+  - Daniel Mack <github@zonque.org>
-+  - Xiaxi Shen <shenxiaxi26@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: asahi-kasei,ak4104
-+
-+  reg:
-+    description: Chip select number on the SPI bus 
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: A regulator node providing between 2.7V and 3.6V.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Optional GPIO spec for the reset pin, deasserted 
-+                  before communication starts.
-+    
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+   i2c {
-+     #address-cells = <1>;
-+     #size-cells = <0>;
-+     codec@0 {
-+       compatible = "asahi-kasei,ak4104";
-+       reg = <0>;
-+       vdd-supply = <&vdd_3v3_reg>;
-+     };
-+   };
--- 
-2.34.1
+Thanks!
+
+
+Vincenzo
+
 
