@@ -1,100 +1,140 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD1D180A9C
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 19:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CF218131D;
+	Tue, 14 May 2024 19:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715716336; cv=none; b=fkxFIffT9Ln+bvGsIM6unhQ/xt1ndwAcXqXDGMrcwv3rgHj4UyljYaN9yedWrg+lcaQp86iDFok4R1ufEQG/KTvyU5VLnreeG8mG6lp1G+9MOxDy356OC3OEH7qSX5vTyX2ap8MODik3agPa8OqotwsUYcuOp7tCf6HYLeQv6E0=
+	t=1715716490; cv=none; b=WVm1aoAyRxmEF6YahMrITDc9TdD2DPQQcIb+O+P5Y3eUGsYB6NcgBdofI6FSdj/2vmeR8wl1tjQhspNIoA3IDAwZJ8Z4BgpsQsA0xWxOFhCL9GX2Nm063pHPvP6NqCwkTxtGBSN8U2UDCTKLrOqF601+NfCojQWwKyaH3lppF20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715716336; c=relaxed/simple;
-	bh=sZP6tHo+9CZUoeCNklvRvOlqbMBw89gzuROoS4J3Mzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rqSQokXdmrYVTU7WhV352/A4s2qHLeK83CUTx1i4ATNKdAp7BN0m8HDYc+OtX8KFGu/rQQ2TZinWpj9SdUIJCmMxo6a5iag6lEiUkNATk2tVjuhexQDLI1/niVofXsSEfCVaeB2GeQf5DyAsrOYumLDWFyDPQ7givSym61af/KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZfnpfGN8; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715716490; c=relaxed/simple;
+	bh=8SU/iENpN6Xx0OwWxYt2bSul9xedwDdanqRkSWI9w2Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=axv9yeeIU4BVbdbtklpUf0YwpxBHbQ5wPylK85p6Y1onTms1xA+xxOz2UvJn3cHYwmUrXiUiLo1bZG1+rKrH7M5Zb5RIoq/nTzdjwDow50ypjvLcBsZjV+S0npf79ZmIxF+mXsYPm51GZgf60tC8CVw8ZZKk8lFX0gZvsQI3uEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=quPeHa+D; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZfnpfGN8"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ed96772f92so48483545ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 12:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715716334; x=1716321134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xh5lqeIFxmDIv6drPBD1UeOlHcOcbwmzayc2S6c55cU=;
-        b=ZfnpfGN87jzG0rt/lfhe7vQg/eTCzaodROzOlcQIx6Vet6mWXxV+LrOwJQblYLeni/
-         dJGrz1RnoNb1mWjELi77HQlSyyf24fbpmVjwXGl052q2NvRXmG4e1GlPytFtJhtpAEx1
-         B0izW07S5S2J58Qg+Fj2123oqlSEPnqklv1WM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715716334; x=1716321134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xh5lqeIFxmDIv6drPBD1UeOlHcOcbwmzayc2S6c55cU=;
-        b=Vf0XhImmkyqLduS824jofAz5d6R5PzBbJdmsgDP2ehqlSy3pq07cqBrWIccFAtOr2S
-         JTTYAuqIRq3slPnOUOxhhACD6BKZ/ki/YMahmJwKyP+2aWcx3j4kpCHGHUdDVP+rhTFT
-         o0ygZfG74qzvz5DmBNft1eUf/yuMwNVdV9jthOSZDgjU99U9XnADXir0fgvGmt3ywM/3
-         nSMegLXmxYYYrHqBQFCtTyq1PWAfkYNaJDUJuqWg2sn7tYSE+yE2ioeEmJUqU04neDXh
-         w/Bq4VRQ75xSMTgddRTYuHyfW03EdzNU3fnRUd7NxJO6Drit6efzcNKuUgf44g+TXycm
-         Otig==
-X-Forwarded-Encrypted: i=1; AJvYcCWcl+kUO2wjLPrtIZ+vZaELNJzjS9tbsI/5lUGg2T4P6AIGX4VITIxYKZrtDFROCDUSxQertTNoyQYwyuXN7Kw5YEh43xJ83ORjbPVt
-X-Gm-Message-State: AOJu0Yz6Oi2vty5NtKPQiDUX50HfeMBImSH47gXrfMPdW3p+cclMn3bA
-	fMIl3dfVucLXuL8PxwMdmfgXmlnSjdRcP8ifPv8VMw2ysbJBd2+50uS+mibHiA==
-X-Google-Smtp-Source: AGHT+IE4USN+kE7T6RZD7G5inzqpecMh0wnrqgy4EQ6oLTRU7SRnjNyHXsSdHHrK+4e8wMQQLJM0Rg==
-X-Received: by 2002:a17:903:2290:b0:1e0:b2d5:5f46 with SMTP id d9443c01a7336-1ef440495b7mr159207695ad.46.1715716334549;
-        Tue, 14 May 2024 12:52:14 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c038c4csm104274535ad.226.2024.05.14.12.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 12:52:14 -0700 (PDT)
-Date: Tue, 14 May 2024 12:52:13 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: jeffxu@chromium.org, jannh@google.com, sroettger@google.com,
-	willy@infradead.org, gregkh@linuxfoundation.org,
-	torvalds@linux-foundation.org, usama.anjum@collabora.com,
-	corbet@lwn.net, Liam.Howlett@oracle.com, surenb@google.com,
-	merimus@google.com, rdunlap@infradead.org, jeffxu@google.com,
-	jorgelo@chromium.org, groeck@chromium.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-Message-ID: <202405141251.8E9580E@keescook>
-References: <20240415163527.626541-1-jeffxu@chromium.org>
- <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="quPeHa+D"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EJjwOV023527;
+	Tue, 14 May 2024 19:54:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=Surtr2BpZP7CJ3MaLpzg58YwcjcFGIXkZ4hi7cV1P9I=;
+ b=quPeHa+DdOVIUF8m+GmFsppgTCgfLqEJMWMsdT5Igr7QovTZ8FL2XfLCo64NGM8cQwYC
+ BUQWG8mkKFQ8HIgHw0TWnjynm+i1ZnNTOtQgbsj7hX0DfCH9nwgXHHwQsYVfhoQ+lNwj
+ 4oBeRWXYiiR/L3ZE7k3dm4dGibuLAOIBzrVLyB4pYrgq5Bp1Xamdq0wI4ELrPZaPsPR4
+ 4yrmEY8Ftx+eYXlqiXxIkEr5QK5aNwv0P/irorJEu4Jlp5tOoLsSksSL2rDl2idfHXv5
+ pAKc1sKrYS0i993q8Tzdy1+C4UTUu9IaAFpoNWivnaY4gsZEFzpvNxcTbOjxGpjiS2/V +g== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y4dpf045a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 19:54:40 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44EHbd2W018828;
+	Tue, 14 May 2024 19:54:39 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y2k0tfhpu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 19:54:39 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EJsatS27525792
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 19:54:38 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AED3858060;
+	Tue, 14 May 2024 19:54:36 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7A9C558063;
+	Tue, 14 May 2024 19:54:36 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.107.19])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 14 May 2024 19:54:36 +0000 (GMT)
+From: Eddie James <eajames@linux.ibm.com>
+To: linux-fsi@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eajames@linux.ibm.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+        robh@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au
+Subject: [PATCH v5 2/9] dt-bindings: fsi: Document the IBM SCOM engine
+Date: Tue, 14 May 2024 14:54:28 -0500
+Message-Id: <20240514195435.155372-3-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240514195435.155372-1-eajames@linux.ibm.com>
+References: <20240514195435.155372-1-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ymgI5bxXx9Pl-ltUt-JYp3VdwVXzoDow
+X-Proofpoint-GUID: ymgI5bxXx9Pl-ltUt-JYp3VdwVXzoDow
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_12,2024-05-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=963 suspectscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405140142
 
-On Tue, May 14, 2024 at 10:46:46AM -0700, Andrew Morton wrote:
-> On Mon, 15 Apr 2024 16:35:19 +0000 jeffxu@chromium.org wrote:
-> 
-> > This patchset proposes a new mseal() syscall for the Linux kernel.
-> 
-> I have not moved this into mm-stable for a 6.10 merge.  Mainly because
-> of the total lack of Reviewed-by:s and Acked-by:s.
+The SCOM engine provides an interface to the POWER processor PIB
+(Pervasive Interconnect Bus).
 
-Oh, I thought I had already reviewed it. FWIW, please consider it:
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/fsi/ibm,p9-scom.yaml  | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-scom.yaml
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-> The code appears to be stable enough for a merge.
-
-Agreed.
-
-> It's awkward that we're in conference this week, but I ask people to
-> give consideration to the desirability of moving mseal() into mainline
-> sometime over the next week, please.
-
-Yes please. :)
-
+diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-scom.yaml b/Documentation/devicetree/bindings/fsi/ibm,p9-scom.yaml
+new file mode 100644
+index 0000000000000..8cd14a70bedf9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/ibm,p9-scom.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/fsi/ibm,p9-scom.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: IBM FSI-attached SCOM engine
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description:
++  The SCOM engine is an interface to the POWER processor PIB (Pervasive
++  Interconnect Bus). This node will always be a child of an FSI CFAM node.
++
++properties:
++  compatible:
++    enum:
++      - ibm,p9-scom
++      - ibm,i2cr-scom
++
++  reg:
++    items:
++      - description: FSI slave address
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    scom@1000 {
++        compatible = "ibm,p9-scom";
++        reg = <0x1000 0x400>;
++    };
 -- 
-Kees Cook
+2.39.3
+
