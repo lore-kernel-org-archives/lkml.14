@@ -1,46 +1,47 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8841DFD1;
-	Tue, 14 May 2024 21:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAF2181B9F;
+	Tue, 14 May 2024 21:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715721207; cv=none; b=QJhJ2LlyjLng6ef+NhNGz9mI5HNAZ3CB0nrjmrvx5ygzGYuwmfeMJL1UCGh/COn7Pnd4Ej+pxUpVLMmzeXwnoAf+sRGbT4FJGa5p2wA0F/rAH4iyKK4bZGZqk10G2gjeOtVMBIoNa1kklzOiM/BDKZHtxx54VRxrRKEosyvxJ2s=
+	t=1715721209; cv=none; b=K0T66ILiZDLYgDQXx9BL3HR0RWSviKbNvjDfrcnZxOFeMXefrxIpwYaU6bBqbWX8ZxZQzBXWZlezr7rPojPjKYXNfRrWWZVaYfBjSi4ziUBlKnI1MO3NzXiMMjtCjNMRKPKzwpTDFy7ZNxKIELSMCBKvPRyZFucI4zAHqNCKV6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715721207; c=relaxed/simple;
-	bh=SqyRgN9yJXCB1hPDQDjovWg0409sYWzhdJrmQ7geNGI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=erPO1p5/6Hf7+QTRZdx9auVVQRtRmejUSxNb0Ll/OB4PQJnNn3XLYP7FeVytNx40ZKWP+56yS3DcADEjhutQlrjNJpg7cqacNYK9hwD5AhmySKqo8LNc4IBIskJckFcymeIzLsqGZY/0TpM0feOu7Bc/cb5I7rq/PdixqnGgPqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1715721209; c=relaxed/simple;
+	bh=ATU2S6O+geTsJNLo31fAURuI/xPsoz4iJgfbeBm3unQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sHbp+aWoR4Uyml5RDrqnC6HgCUhRWlSv59W+MVwlPDh8Zp03rUokAUUPdtLukg8+FExh4KuhSspKsq0kx1B+Uf2qfG3G1dFUpSedh16k3eBzd66gXpCxUmlFC1IPF7uscR6JDwVBeye79hgNgI+Eaaz0xbZcdnymQ4/mEpunzMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a5a5cb0e6b7so93175466b.1;
-        Tue, 14 May 2024 14:13:25 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-574b3d6c0f3so863369a12.0;
+        Tue, 14 May 2024 14:13:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715721204; x=1716326004;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FOzSOgRlo+lAzBfpBfmoCWLq0QIm4oZxY1op+56rTOY=;
-        b=S9vP8tbw763xkCHmSrA34CZbSMf5/DxJa+qJM13iIRZsdA36jRI7w+uF5WKjAIqk3t
-         owmqr900t86M7iV4k4MLeN7hqkF+OIabFiBueUQ1GqFdpDAE/pZvNQrfm2naYTv3ClfB
-         +Z+s8DEcevJ+w+tUdf50cZeEMEvQbD4tis0gJVEypay2/IC5gy5+V6hOqxVI+CvdKhVq
-         ej/F+tj6z4KSgghWaCtVKxX3nu/Nqh5WgVNbG9Typ8ve1tboEiuZmZYKztIXKgzNJ36t
-         dvRKVsn6Kc0cdh/zyiwSrQ4sc6c8f4motd7JxAZtZ/ARjA3txfk2ld3P72++SbUzzrvv
-         /O4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXc3ykT+Hp9Nxz9a5N5cs0slI2PY5UAE7UXtqJ+yAG7qMe/uzXDihiGOF28QsbrE0O4nap0GOKwWmT52o4vzZMuJGxB2wjUOmN1nyAMTf9ZrwFZ2xKOikb4L9+M33QKCjsMMpw4EYz50FY=
-X-Gm-Message-State: AOJu0YzD5dBXauA1FamzXrrsv7xCMzrgtA3s7psolWdGtOFoCZIESseH
-	7mcgJrxL7lJFI/tUQwOORVksc3CO5V41nUgrWmdXbTWA9mbhBY45
-X-Google-Smtp-Source: AGHT+IFXtjqFmKDi/x/JxbAEq/Dk4FVDC4BfQpl1suXQobDUiPFJAyK18Nzl48rdJkWxxoM/xlE7kA==
-X-Received: by 2002:a17:906:6b85:b0:a59:c319:f1dc with SMTP id a640c23a62f3a-a5a2d53af75mr925110266b.4.1715721204006;
-        Tue, 14 May 2024 14:13:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715721206; x=1716326006;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qJqWd7hRdu3vwGC2M3wXyvFbPBuQNHh/4xDSO54NfEk=;
+        b=pkjwdq9yPHYQGGpQoXekqV8TKcVbKsAAf/+FYOfluoIavDjhdcz+BaU59vgUk6M78O
+         gw0K88aYdpxm6JGbhUlSbDPiKgGsAxQ05mtmz8nwEDOThu/qy152VHjUvkh8ViI2xewN
+         DNijjNdthXQO9MijzQ9WAbAbIQJqEwKZPBpEqqB6JnQSw3ezGWyf6I+T0AcSf9YMgwEJ
+         mj9mg9InnZ0JC8TzDXFlAK7Vuywcvu6P0frzr67HuHm/tRti9bcSS1Pplt6sUt3pGB9/
+         fk1ldCRd4ZTpCv6Sq0YjT4ueBFbVv53c2BfdnreMS7wGIP05mHJBSwWmuqy0cMH8QUjz
+         IBkg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+hyIAV9uSxdvtC0M38cdnCo+zFI4pSVtzzFd4sPLI0O4C5obGD+OQzSjTMNur3V/ETzn5OCofuh32US2i34ootEWOmjPYuF2Na8TqZEkFfAIljrpR9GSXvW2Xth77Mp7nSRpd+nf7m/k=
+X-Gm-Message-State: AOJu0YzrYKAqKJi1vwBEf8va4WA7iCpN8CCBFim6xybM/S9ZHHxVa5kU
+	8V2qnNVMkv0FiNK0Z2QN23exc8v39zZtvQ7nBoMjnVrbV3a79l2W
+X-Google-Smtp-Source: AGHT+IFpV7ZGZeDVkBJZ7eaqU9QlSGuYXKp2pxmFrGrJA57g7SkleXtRHcItfTLGC3FGxh+mzkVX8g==
+X-Received: by 2002:a17:906:5655:b0:a59:8786:3850 with SMTP id a640c23a62f3a-a5a2d681266mr932535466b.72.1715721205747;
+        Tue, 14 May 2024 14:13:25 -0700 (PDT)
 Received: from [127.0.0.1] (p200300f6f718be00fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f718:be00:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a178a9d73sm760229766b.67.2024.05.14.14.13.23
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a178a9d73sm760229766b.67.2024.05.14.14.13.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 14:13:23 -0700 (PDT)
+        Tue, 14 May 2024 14:13:25 -0700 (PDT)
 From: Johannes Thumshirn <jth@kernel.org>
-Subject: [PATCH 0/2] btrfs: zoned: always set aside a zone for relocation
-Date: Tue, 14 May 2024 23:13:20 +0200
-Message-Id: <20240514-zoned-gc-v1-0-109f1a6c7447@kernel.org>
+Date: Tue, 14 May 2024 23:13:22 +0200
+Subject: [PATCH 2/2] btrfs: reserve new relocation zone after successful
+ relocation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,9 +50,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPDTQ2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDU0MT3ar8vNQU3fRkXaPkVHNLYxNTy9QkcyWg8oKi1LTMCrBR0bG1tQA
- OuPu6WgAAAA==
+Message-Id: <20240514-zoned-gc-v1-2-109f1a6c7447@kernel.org>
+References: <20240514-zoned-gc-v1-0-109f1a6c7447@kernel.org>
+In-Reply-To: <20240514-zoned-gc-v1-0-109f1a6c7447@kernel.org>
 To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
  David Sterba <dsterba@suse.com>
 Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, linux-btrfs@vger.kernel.org, 
@@ -59,32 +60,35 @@ Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, linux-btrfs@vger.kernel.org,
  Johannes Thumshirn <johannes.thumshirn@wdc.com>
 X-Mailer: b4 0.12.4
 
-For zoned filesytsems we heavily rely on relocation for garbage collecting
-as we cannot do any in-place updates of disk blocks.
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-But there can be situations where we're running out of space for doing the
-relocation.
+After we've committed a relocation transaction, we know we have just freed
+up space. Set it as hint for the next relocation.
 
-To solve this, always have a zone reserved for relocation.
-
-This is a subset of another approach to this problem I've submitted in 
-https://lore.kernel.org/r/20240328-hans-v1-0-4cd558959407@kernel.org
-
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
-Johannes Thumshirn (2):
-      btrfs: zoned: reserve relocation zone on mount
-      btrfs: reserve new relocation zone after successful relocation
+ fs/btrfs/relocation.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- fs/btrfs/disk-io.c    |  2 ++
- fs/btrfs/relocation.c |  4 ++++
- fs/btrfs/zoned.c      | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/btrfs/zoned.h      |  3 +++
- 4 files changed, 69 insertions(+)
----
-base-commit: d52875a6df98dc77933853e8427bd77f4598a9a7
-change-id: 20240514-zoned-gc-2ce793459eb7
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index 8b24bb5a0aa1..d943abf5cb33 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -3808,9 +3808,13 @@ static noinline_for_stack int relocate_block_group(struct reloc_control *rc)
+ 		err = PTR_ERR(trans);
+ 		goto out_free;
+ 	}
++
+ 	ret = btrfs_commit_transaction(trans);
+ 	if (ret && !err)
+ 		err = ret;
++
++	/* We know we have just freed space, set it as hint for the next relocation */
++	btrfs_reserve_relocation_zone(fs_info);
+ out_free:
+ 	ret = clean_dirty_subvols(rc);
+ 	if (ret < 0 && !err)
 
-Best regards,
 -- 
-Johannes Thumshirn <jth@kernel.org>
+2.35.3
 
