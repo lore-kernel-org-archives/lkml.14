@@ -1,92 +1,136 @@
-Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDD6181B93;
-	Tue, 14 May 2024 21:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CC9180A6A;
+	Tue, 14 May 2024 21:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715722131; cv=none; b=TXr/rVyYM4FTxZ9swnsnEDBrUSg0l7ys9WwOUuWSx81NpXwL1xWHQrotz9nP0GWZouTq0kyNBK3AIfmpiErQjFMB/qpF8VyAQKvRArt2vwA2cvnJ9PaehKntNlP0M2jZpFAqufTKfo1yVjBSz21mLladiGGtjakRxAVat+vxhyI=
+	t=1715722183; cv=none; b=EAZb45ibjzurI2tf70q7Ybmr7rjtwxZMjMmItfBcdervkkBaU7BRPnhp7ZAZMN/XlHCYOXpcS9hpTl6axMuRFz6OYfFydHfoeccT2nkkLeyMJhBuUMcUdfeGgrjSa04XD+k+Ay4V5DbRKF8WAyQ0AsaA5hxUIit7/yBAyguJuv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715722131; c=relaxed/simple;
-	bh=HlmV3fYfS862Gw2Y44V0T78NlarxsqVus5X9aOaYhbM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=IBwoMkmdklGneIfTo2OGspfr/D/0AuUXgPuiEt1rFcQ/SiLZwzM+W4AxjB4PvsME2I/hC6FkDjCCNTCe582Yh25bu9I0fiZXTyk38ib2t42ZKXEZHCxOthva1bZK65W87ezr8Sfcwb9yQI1908gLxaA51HzYsx7dnEpxwW6rhco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=oA3G1sZz; arc=none smtp.client-ip=80.12.242.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1715722183; c=relaxed/simple;
+	bh=Y+m1nbd28r9a7918tO34Pw+7ZflDLT2x0sc9gLxM79Q=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=U8ovaJsXiIrFjqHxdEHP3xb/J6e+CRy+1FloTgVoZxdfzJZbmBiUuaS0BD80TgvM0Ru7VGTrsRDDvqr3oxnkSW0QQwd+ynJL+9Z36LWmc3ishgCbdh1fy2X9qzE67lmeilJd7SxNGPNHTkvlEYbdeouPg5wDIOcKZihquDCIDTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tj7qo6Oq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="oA3G1sZz"
-Received: from [192.168.1.37] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 6z8usemhMGAMZ6z8us6Qwc; Tue, 14 May 2024 22:53:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1715719986;
-	bh=aLWlgahzJcaRGqUoakghQCTDX9EaszXl5pn3yfSS5as=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=oA3G1sZzCQhftt1mEv+keu25rsjPFSjtCQ9ned9HKtiM/yL6JVkKpoW45o0E5f2fj
-	 gEWLKMW/7Q692b2/vVAB6IM5e1mJVg79qaNCceq17RnEe7omto1u3Ow+d4RG4RoipT
-	 Aq5qqZFnOKLd/bMiho/vkF4OweOFJqOwVInw8+OaKmI9ibR34aEiB6QccmWTAj+RZC
-	 rIexraXe7uHNGSbE2ojyX4a+47UjKENSXbOvPVULZsGemzPGs86vjgZdnBw0tTDYRs
-	 6nkW+MuNc0b+dOWDRbJlJGlGnkmNTRX1EW7Pcpu6teGxXF6/7h248i2jbyzIeJ6EEg
-	 TJYe7foJbHwCA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 14 May 2024 22:53:06 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <9fb7adfc-701b-427c-a08e-a007e3159601@wanadoo.fr>
-Date: Tue, 14 May 2024 22:53:00 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tj7qo6Oq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47491C2BD10;
+	Tue, 14 May 2024 21:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715722182;
+	bh=Y+m1nbd28r9a7918tO34Pw+7ZflDLT2x0sc9gLxM79Q=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=tj7qo6OqQuXFdOdFZ1bi12ZdMFQ36pNjyngiRyzkjtqgMTgrAPBfYYo9cn1g0GmCq
+	 Ojop1qK+lr5KWo1zePIYi343Vr7czqA8sBS/DTXRsy2ZQxTKk8+UlQ+4ggwg2w6lQq
+	 tOHzWCvnQewAUise+RwW/gpoqKA/KHNDKqVD3f7UI7IWF9vnrlak3WhHoyGIZhpxOV
+	 l4j0P79xvLU5JLeKZ8HU+Bu7YuVqVT6dUV/C/AGi5Qe0I48zQzt7VQogogY96yp8Pq
+	 Kt4NqAFWtSGsT1r0u24xApI8REWXUrbC5s8FgZXOtHb3PgZzzWpeYqOKKkjgS75l8s
+	 F9lSpEr0HqWTA==
+Message-ID: <5c919f0d3d72fe1592a11c45545e8a60.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] sched/topology: optimize topology_span_sane()
-To: Yury Norov <yury.norov@gmail.com>
-References: <20240513220146.1461457-1-yury.norov@gmail.com>
- <20240513220146.1461457-3-yury.norov@gmail.com>
-Content-Language: en-MW
-Cc: anna-maria@linutronix.de, bristot@redhat.com, bsegall@google.com,
- cgroups@vger.kernel.org, dietmar.eggemann@arm.com, frederic@kernel.org,
- gregkh@linuxfoundation.org, hannes@cmpxchg.org, imran.f.khan@oracle.com,
- juri.lelli@redhat.com, leobras@redhat.com, linux-kernel@vger.kernel.org,
- lizefan.x@bytedance.com, longman@redhat.com, mgorman@suse.de,
- mingo@redhat.com, paulmck@kernel.org, peterz@infradead.org,
- rafael@kernel.org, riel@surriel.com, rostedt@goodmis.org,
- tglx@linutronix.de, tj@kernel.org, vincent.guittot@linaro.org,
- vschneid@redhat.com
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240513220146.1461457-3-yury.norov@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <b822c6a5488c4098059b6d3c35eecbbd.sboyd@kernel.org>
+References: <20240422232404.213174-1-sboyd@kernel.org> <CABVgOSmgUJp3FijpYGCphi1OzRUNvmYQmPDdL6mN59YnbkR2iQ@mail.gmail.com> <b822c6a5488c4098059b6d3c35eecbbd.sboyd@kernel.org>
+Subject: Re: [PATCH v4 00/10] clk: Add kunit tests for fixed rate and parent data
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, patches@lists.linux.dev, kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J . Wysocki <rafael@kernel.org>, Saravana Kannan <saravanak@google.com>, Daniel Latypov <dlatypov@google.com>, Christian Marangi <ansuelsmth@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <maxime@cerno.tech>
+To: David Gow <davidgow@google.com>, Rob Herring <robh@kernel.org>
+Date: Tue, 14 May 2024 14:29:40 -0700
+User-Agent: alot/0.10
 
-Le 14/05/2024 à 00:01, Yury Norov a écrit :
-> The function may call cpumask_equal with tl->mask(cpu) == tl->mask(i),
-> even though cpu != i. In such case, cpumask_equal() would always return
-> true, and we can proceed to the next CPU immediately.
-> 
-> Signed-off-by: Yury Norov <yury.norov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   kernel/sched/topology.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 99ea5986038c..eb9eb17b0efa 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -2360,7 +2360,7 @@ static bool topology_span_sane(struct sched_domain_topology_level *tl,
->   	 * breaks the linking done for an earlier span.
->   	 */
->   	for_each_cpu(i, cpu_map) {
-> -		if (i == cpu)
-> +		if (i == cpu || tl->mask(cpu) == tl->mask(i))
->   			continue;
->   		/*
->   		 * We should 'and' all those masks with 'cpu_map' to exactly
+Quoting Stephen Boyd (2024-05-02 18:27:42)
+> Quoting David Gow (2024-05-01 01:08:11)
+> >=20
+> > The other thing I've noted so far is that the
+> > of_apply_kunit_platform_device and of_overlay_apply_kunit_cleanup
+> > tests fail (and BUG() with a NULL pointer) on powerpc:
+> > > [15:18:51]     # of_overlay_apply_kunit_platform_device: EXPECTATION =
+FAILED at drivers/of/overlay_test.c:47
+> > > [15:18:51]     Expected pdev is not null, but is
+> > > [15:18:51] BUG: Kernel NULL pointer dereference at 0x0000004c
+>=20
+> This seems to be because pdev is NULL and we call put_device(&pdev->dev)
+> on it. We could be nicer and have an 'if (pdev)' check there. I wonder
+> if that fixes the other two below?
+>=20
+> ---8<---
+> diff --git a/drivers/of/overlay_test.c b/drivers/of/overlay_test.c
+> index 223e5a5c23c5..85cfbe6bb132 100644
+> --- a/drivers/of/overlay_test.c
+> +++ b/drivers/of/overlay_test.c
+> @@ -91,7 +92,8 @@ static void of_overlay_apply_kunit_cleanup(struct kunit=
+ *test)
+>         dev =3D bus_find_device(&platform_bus_type, NULL, kunit_compatibl=
+e,
+>                               of_overlay_bus_match_compatible);
+>         KUNIT_EXPECT_PTR_EQ(test, NULL, dev);
+> -       put_device(dev);
+> +       if (dev)
+> +               put_device(dev);
+>  }
 
-Hi,
+This last hunk isn't needed.
 
-does it make sense to pre-compute tl->mask(cpu) outside the for_each_cpu()?
+> =20
+>  static struct kunit_case of_overlay_apply_kunit_test_cases[] =3D {
+>=20
+> > > [15:18:51]     # of_overlay_apply_kunit_platform_device: try faulted:=
+ last line seen lib/kunit/resource.c:99
+> > > [15:18:51]     # of_overlay_apply_kunit_platform_device: internal err=
+or occurred preventing test case from running: -4
+> > > [15:18:51] [FAILED] of_overlay_apply_kunit_platform_device
+> >=20
+> > > [15:18:51] BUG: Kernel NULL pointer dereference at 0x0000004c
+> > > [15:18:51] note: kunit_try_catch[698] exited with irqs disabled
+> > > [15:18:51]     # of_overlay_apply_kunit_cleanup: try faulted: last li=
+ne seen drivers/of/overlay_test.c:77
+> > > [15:18:51]     # of_overlay_apply_kunit_cleanup: internal error occur=
+red preventing test case from running: -4
+> > > [15:18:51] [FAILED] of_overlay_apply_kunit_cleanup
+> >=20
+> > I've not had a chance to dig into it any further, yet, but it appears
+> > to work on all of the other architectures I tried.
+>=20
+> Cool. I don't know why powerpc doesn't make devices. Maybe it has a
+> similar design to sparc to create resources. I'll check it out.
+>=20
 
-CJ
+powerpc doesn't mark the root node with OF_POPULATED_BUS. If I set that
+in of_platform_default_populate_init() then the overlays can be applied.
+
+---8<----
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 389d4ea6bfc1..fa7b439e9402 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -565,6 +565,10 @@ static int __init of_platform_default_populate_init(vo=
+id)
+ 				of_platform_device_create(node, buf, NULL);
+ 		}
+=20
++		node =3D of_find_node_by_path("/");
++		if (node)
++			of_node_set_flag(node, OF_POPULATED_BUS);
++		of_node_put(node);
+ 	} else {
+ 		/*
+ 		 * Handle certain compatibles explicitly, since we don't want to create
+
+I'm guessing this is wrong though, because I see bunch of powerpc specific =
+code
+calling of_platform_bus_probe() which will set the flag on the actual platf=
+orm
+bus nodes. Maybe we should just allow overlays to create devices at the root
+node regardless? Of course, the flag doc says "platform bus created for
+children" and if we never populated the root then that isn't entirely accur=
+ate.
+
+Rob, can you point me in the right direction? Do we need to use simple-bus =
+in
+the test overlays and teach overlay code to populate that bus?
