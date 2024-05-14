@@ -1,126 +1,151 @@
-Received: from mail-41103.protonmail.ch (mail-41103.protonmail.ch [185.70.41.103])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88173433BE
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.41.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C87D531;
+	Tue, 14 May 2024 10:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715682349; cv=none; b=bwkYzfTXch7muX9SWqBKbBXUSWfRQB1POfpPLnlCRGCU9Dbv3cOFJsvtttFIzCQbmfYuQTinKyGR7sIATpdy9s08duM1vV5rSed7M0O9FRE7O6fyZ47buZWGG7KrYsaW5+EpEkff22ELga8CtApiD1kE2TgAMYLU53lEnHm45Io=
+	t=1715682815; cv=none; b=dnHUDkhko0LY6jCCLRyIHdEOtfLlEgCCVRPuP1wph09a/FA3M2OD7nAacYu+IWJERxFrhyNRWB+HflewX9/i224Cdy99fWYJza+h90gAXZSCEfVqP19NYnWcD+vJB9oF0q6/d7P8FpXKOxRiOQcrcnFxWFKFdkdE4frtHFbi7JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715682349; c=relaxed/simple;
-	bh=JDcLhSCJdrn8ZStEd9rRtRGA5OR51AVhThaD9Deeyrk=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qB/s5N6ixwIvPdtozAHcMx3epUpXv/brK9p5u1E7htX/9hqSlcQagtpY1vdT7kmo22NaXFqZG6M3QBxsgESzQ1ysIPLcwnv9xi82Ohq2XpOKSIc1IZ+ZuZ5PRSAh5ND9jx+WHJ+f3gM1HPD1U47zuMIIxpSCovedauY5suHWLYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=chr2+39c; arc=none smtp.client-ip=185.70.41.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1715682815; c=relaxed/simple;
+	bh=NCYPld70qYshmpCzGEhpslZFD4dlvSlpfznYMRZF0LA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WN5o0NB/HXk54ZxGbMuomBsdtyjynJT+F/OgGmlLQ+zv8nWW7A30n/4PPJHnh8Jctuijc9niXwg4lOi3US/jkJiifDYS88VlDCRvY2fP4remNufO0j74zGg7o2cGrOZdmjKG87qJBiBvy1RlYONnYRD17pXv+Zav575fc7xMz6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JkPugluX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="chr2+39c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1715682328; x=1715941528;
-	bh=R1qRONO5MU7vQIWaRDZy5P0Ke0gMSK5+59BZXhIZp+I=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=chr2+39crLvbp2O7tVV0J3qAPmkfjIviNI7jX4u0FNE5G8nw8guIXLjSNA2+H+NKk
-	 eH3fef4sP0PbeQxf+bo3rEI4fgmzXQcn2qk/oqlVhlMmEvYOsW0oEoI3uPxBed+PY+
-	 ysASk3HK68o7xzCLspiQS2GbMMjBMfAOZ+S/mdarw1CN64aWkOU6ziDfeBEfdASyUW
-	 xV1sh3uLecsdafYeT6cx9IlAGgIakLmSSSZwI0wwobCfggEZcyjAhK8SW9jtjcRZRA
-	 D4xAsDoKGxeM4jDwSYqDnupE9LtnM5IZpAVVLziuDJtLIOrw/750K33Snq72KGh9N5
-	 C2Pb8cICjoQSw==
-Date: Tue, 14 May 2024 10:25:24 +0000
-To: "marcel@holtmann.org" <marcel@holtmann.org>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>
-From: "SoloSaravanan@proton.me" <SoloSaravanan@proton.me>
-Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Bluetooth: btusb: Add device 13d3:3606 as MT7921 device
-Message-ID: <sp2Jnio8wbTlQGoA5ti6LOAwDtdur_uZqdZYbXJL8wXHF0h_GVTL8Fr_b9oqmYVl2y7jeT-CgNt5Neg-RWjyKs4LXfKsg_uN_YO0_NFOxmQ=@proton.me>
-Feedback-ID: 84438951:user:proton
-X-Pm-Message-ID: 430f707f918da3149934227d4b45508d9013ac00
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JkPugluX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01045C2BD10;
+	Tue, 14 May 2024 10:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715682814;
+	bh=NCYPld70qYshmpCzGEhpslZFD4dlvSlpfznYMRZF0LA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JkPugluXmDu6jINKTNGmZa2uLAALdZQAZwWg7Y55dEYGsQBYKVgK92c6SYi6aObpV
+	 8/7fqN8JddDKK4XpeAseWbnHOUKF8MlYy3WKFT1i6BxjvklOXUGSzkZu7+hr6J4YI4
+	 dfa7GR0oKSfgPQ+pBA2NrdYUEk9gPUgCjk17IxqE=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Mark Rutland <mark.rutland@arm.com>,
+	Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.8 118/336] selftests/ftrace: Fix event filter target_func selection
+Date: Tue, 14 May 2024 12:15:22 +0200
+Message-ID: <20240514101043.058135845@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240514101038.595152603@linuxfoundation.org>
+References: <20240514101038.595152603@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From 6c5cec6d7a84c140958786bcb082d94f1b147ece Mon Sep 17 00:00:00 2001
-From: SoloSaravanan <SoloSaravanan@proton.me>
-Date: Tue, 14 May 2024 15:01:29 +0530
-Subject: [PATCH] Bluetooth: btusb: Add device 13d3:3606 as MT7921 device
+6.8-stable review patch.  If anyone has any objections, please let me know.
 
-Add VendorID 13d3 & ProdID 3606 for MediaTek MT7921 USB Bluetooth chip.
+------------------
 
-T: Bus=3D03 Lev=3D01 Prnt=3D01 Port=3D09 Cnt=3D03 Dev#=3D 4 Spd=3D480 MxCh=
-=3D 0=20
-D: Ver=3D 2.10 Cls=3Def(misc ) Sub=3D02 Prot=3D01 MxPS=3D64 #Cfgs=3D 1=20
-P: Vendor=3D13d3 ProdID=3D3606 Rev=3D 1.00
-S: Manufacturer=3DMediaTek Inc.
-S: Product=3DWireless_Device
-S: SerialNumber=3D000000000
-C:* #Ifs=3D 3 Cfg#=3D 1 Atr=3De0 MxPwr=3D100mA
-A: FirstIf#=3D 0 IfCount=3D 3 Cls=3De0(wlcon) Sub=3D01 Prot=3D01=20
-I:* If#=3D 0 Alt=3D 0 #EPs=3D 3 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=
-=3Dbtusb=20
-E: Ad=3D81(I) Atr=3D03(Int.) MxPS=3D 16 Ivl=3D125us
-E: Ad=3D82(I) Atr=3D02(Bulk) MxPS=3D 512 Ivl=3D0ms
-E: Ad=3D02(O) Atr=3D02(Bulk) MxPS=3D 512 Ivl=3D0ms
-I:* If#=3D 1 Alt=3D 0 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=
-=3Dbtusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 0 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 0 Ivl=3D1ms
-I: If#=3D 1 Alt=3D 1 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-btusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 9 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 9 Ivl=3D1ms
-I: If#=3D 1 Alt=3D 2 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-btusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 17 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 17 Ivl=3D1ms
-I: If#=3D 1 Alt=3D 3 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-btusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 25 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 25 Ivl=3D1ms
-I: If#=3D 1 Alt=3D 4 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-btusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 33 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 33 Ivl=3D1ms
-I: If#=3D 1 Alt=3D 5 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-btusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 49 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 49 Ivl=3D1ms
-I: If#=3D 1 Alt=3D 6 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-btusb
-E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 63 Ivl=3D1ms
-E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 63 Ivl=3D1ms
-I:* If#=3D 2 Alt=3D 0 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=
-=3D(none)
-E: Ad=3D8a(I) Atr=3D03(Int.) MxPS=3D 64 Ivl=3D125us
-E: Ad=3D0a(O) Atr=3D03(Int.) MxPS=3D 64 Ivl=3D125us
-I: If#=3D 2 Alt=3D 1 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
-(none)
-E: Ad=3D8a(I) Atr=3D03(Int.) MxPS=3D 512 Ivl=3D125us
-E: Ad=3D0a(O) Atr=3D03(Int.) MxPS=3D 512 Ivl=3D125us
+From: Mark Rutland <mark.rutland@arm.com>
 
-Signed-off-by: SoloSaravanan <SoloSaravanan@proton.me>
+[ Upstream commit 8ecab2e64572f1aecdfc5a8feae748abda6e3347 ]
+
+The event filter function test has been failing in our internal test
+farm:
+
+| # not ok 33 event filter function - test event filtering on functions
+
+Running the test in verbose mode indicates that this is because the test
+erroneously determines that kmem_cache_free() is the most common caller
+of kmem_cache_free():
+
+  # # + cut -d: -f3 trace
+  # # + sed s/call_site=([^+]*)+0x.*/1/
+  # # + sort
+  # # + uniq -c
+  # # + sort
+  # # + tail -n 1
+  # # + sed s/^[ 0-9]*//
+  # # + target_func=kmem_cache_free
+
+... and as kmem_cache_free() doesn't call itself, setting this as the
+filter function for kmem_cache_free() results in no hits, and
+consequently the test fails:
+
+  # # + grep kmem_cache_free trace
+  # # + grep kmem_cache_free
+  # # + wc -l
+  # # + hitcnt=0
+  # # + grep kmem_cache_free trace
+  # # + grep -v kmem_cache_free
+  # # + wc -l
+  # # + misscnt=0
+  # # + [ 0 -eq 0 ]
+  # # + exit_fail
+
+This seems to be because the system in question has tasks with ':' in
+their name (which a number of kernel worker threads have). These show up
+in the trace, e.g.
+
+  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
+
+... and so when we try to extact the call_site with:
+
+  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
+
+... the 'cut' command will extrace the column containing
+'kmem_cache_free' rather than the column containing 'call_site=...', and
+the 'sed' command will leave this unchanged. Consequently, the test will
+decide to use 'kmem_cache_free' as the filter function, resulting in the
+failure seen above.
+
+Fix this by matching the 'call_site=<func>' part specifically to extract
+the function name.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index effa54629..65e4b7fc6 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -615,6 +615,9 @@ static const struct usb_device_id quirks_table[] =3D {
- =09{ USB_DEVICE(0x0e8d, 0x0608), .driver_info =3D BTUSB_MEDIATEK |
- =09=09=09=09=09=09     BTUSB_WIDEBAND_SPEECH |
- =09=09=09=09=09=09     BTUSB_VALID_LE_STATES },
-+=09{ USB_DEVICE(0x13d3, 0x3606), .driver_info =3D BTUSB_MEDIATEK |
-+=09=09=09=09=09=09     BTUSB_WIDEBAND_SPEECH |
-+=09=09=09=09=09=09     BTUSB_VALID_LE_STATES },
-=20
- =09/* MediaTek MT7922A Bluetooth devices */
- =09{ USB_DEVICE(0x0489, 0xe0d8), .driver_info =3D BTUSB_MEDIATEK |
---=20
-2.45.0
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+index 2de7c61d1ae30..3f74c09c56b62 100644
+--- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
++++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+@@ -24,7 +24,7 @@ echo 0 > events/enable
+ echo "Get the most frequently calling function"
+ sample_events
+ 
+-target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
++target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
+ if [ -z "$target_func" ]; then
+     exit_fail
+ fi
+-- 
+2.43.0
+
 
 
