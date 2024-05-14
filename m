@@ -1,205 +1,213 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6213213B59A
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1B35A0FE;
+	Tue, 14 May 2024 10:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715683169; cv=none; b=taxtlHk49nFAFPEAP9QzXNJvDrpcimglK8byDoMDAyXXd47hIRbU8qieuvrlRx6CJqjPJ0+o3heJ5J1JlnuWaSy+awZptQuP00M3MbNV8oDZBp4RUXGM5B2x+NQzNfbqvm/O6Qvt0oc6WzWP7Ttrt/pZzxtW3o4oo8GhAMYL4oo=
+	t=1715683293; cv=none; b=g8grSj/5ucY8IUI/cmfnsbLpage0JmjEPGV4pU0WN0I1UyIjJgZVUR76wyQTo38G+hjdyelzEKurh2en19RRSTav3GgCn98jLxSfWD0gPhNV89kCgei3UT4QD2jYExF2btwQYbc/sd7NssMd+LOx1mJ64XW2cUJbclhNw5FO4PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715683169; c=relaxed/simple;
-	bh=6UPQyeg0/NEklFVQsWYpVDYn6YwqQ616Kg0qAhdUXaQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=V3WtNPGa1WyEtzoMHFH1XoBwRaVT5f45MDZU/PdmFw76m9N6DdoGF6wpEr3a7xSlbR5zJiUU5uSmKKiH+KhamMABn0kgQ6ZiSicyycfUCCYCAGH0AXe8kAyg1JZeFRmlR1Mso1BLNbfG/cohGDd2ciltp3vqa0mzE9QenyiSh/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7e1db7e5386so298028039f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 03:39:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715683166; x=1716287966;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lPAYknr1g5jVKi+ThJU5ulKyp6rTzheR6mKSF8PP+pk=;
-        b=RfDdpP6Z5HAu3ceJBfctinNUNsnKDNglhfxQLDT7olUlcBsGoLqNr36KTU3PagMyTH
-         hXlFO1mvhf7WcVW2kWXQ+GB1KOJricD4XzwdDGs3R7k2Eh0O5C7h8X5Bi225889QyOhs
-         MJ2GbcDg1ORDnV1D+cg6NhhLOin2ov1EJV1nDfqI35TBT6APoHa4ITolgBxFneaoipD4
-         TK+PSwOz9Un9B0eHwe6x1hA3axUoWY4Q91LafEtgn+sbbGOYTODwkWA0Mp9yvhQDLQAO
-         r/6uRirpLLOBv1lZgE6yzIFwm5ngn4+Gc5kCIEt6jnN2w2ZDgTMHH+MVGixskUa865v9
-         8HuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwl7ZzqYrlheibuID3T+xJlb/UjZJsBI9EYrtXw/zKdrd9XVMqaJ/rkjUFXf7/L3FkgmyXfFNjRlcHM70XkSeg185n10owfL+ZmOkG
-X-Gm-Message-State: AOJu0YwUu5/Ya7eQeuAH0iPci2ZQ67SZRy/2L2SX3wpuLWSreWgoL6gu
-	puriwdwR6eduwKzJq4ax7sHmlJY2mozlxFQesjp8nLGp/t1vQWZd7M4QitTWULWj3ZCFyxXFbM8
-	/wm+SL5PQ5peT5CW/6NgIFHJoqbCWXQtWtfRSmeCgf8FCY5Z1TQ7GzfE=
-X-Google-Smtp-Source: AGHT+IGhBohnYpxANGC97Cdo3Ti41CFL8EhfzDHVZAoy0td1kuokLJE8mTFG9/f8ADdFOJMjP2QuWBgMmdVA47QZxwttQwHZCnZK
+	s=arc-20240116; t=1715683293; c=relaxed/simple;
+	bh=w7MCKplwmEPm2+rsZLZIRIf6nKYLrP/0X/bZOgC19tg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DoH18/SAYn9B20llLe0lm5zOG6XJHDSidcuHf1AQNpio7yMQqDJN31RgUiF03jefxyBuki/iT6lni1yTZLtr1d+qcwmZhQQBnuv9lpkeEEswpWg/o+7kk9/6X14Wk4PNNHc5ziVU+goHO9XotGf2NHhhC4OMhfc92ixpvJt0j00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0WNav8J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0WNav8J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36985C32781;
+	Tue, 14 May 2024 10:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715683292;
+	bh=w7MCKplwmEPm2+rsZLZIRIf6nKYLrP/0X/bZOgC19tg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B0WNav8JKqo/LYSDUidQdaEnaKUq2hTLXnSjeu2V+WuTi6M0ES4c4QMQ1JAgRx6tR
+	 AAnHtM9q+ko//a5UuoS3smR/4BwVKr8wfjGuIloc/bEcAunZm6IijJCHynOsqbxwGu
+	 8ncIIYTzruQuCuE0Ze0nXTK3vnkAuHf/Rza53sg5LnDOlnkiNHnmx7Wn9qrZR9dcOO
+	 1IKdtcnl9e7sgtreQP0SQB6BsZuiK8n7/HM+tqcliW6yEAGr9dUYD1ZTGXgAhs0Zn8
+	 vPNpDRK//q3m7315+CbSZxjMI9v6pp4lxE8u/Ei/rFNowXX+kIWH1r6QaUmhObj7hu
+	 J/F9oOfgLXeuQ==
+Date: Tue, 14 May 2024 11:41:25 +0100
+From: Simon Horman <horms@kernel.org>
+To: Bharat Bhushan <bbhushan2@marvell.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+	Geethasowjanya Akula <gakula@marvell.com>,
+	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
+	Hariprasad Kelam <hkelam@marvell.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Jerin Jacob <jerinj@marvell.com>,
+	Linu Cherian <lcherian@marvell.com>,
+	"richardcochran@gmail.com" <richardcochran@gmail.com>
+Subject: Re: [EXTERNAL] Re: [net-next,v2 3/8] octeontx2-af: Disable
+ backpressure between CPT and NIX
+Message-ID: <20240514104125.GD2787@kernel.org>
+References: <20240513105446.297451-1-bbhushan2@marvell.com>
+ <20240513105446.297451-4-bbhushan2@marvell.com>
+ <20240513161447.GR2787@kernel.org>
+ <SN7PR18MB53149716909DE5993145509AE3E32@SN7PR18MB5314.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8917:b0:488:9fae:e95c with SMTP id
- 8926c6da1cb9f-48958e02868mr1453317173.4.1715683166680; Tue, 14 May 2024
- 03:39:26 -0700 (PDT)
-Date: Tue, 14 May 2024 03:39:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b2883b0618679d34@google.com>
-Subject: [syzbot] [bcachefs?] general protection fault in __bch2_insert_snapshot_whiteouts
-From: syzbot <syzbot+1c9fca23fe478633b305@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN7PR18MB53149716909DE5993145509AE3E32@SN7PR18MB5314.namprd18.prod.outlook.com>
 
-Hello,
+On Tue, May 14, 2024 at 06:39:45AM +0000, Bharat Bhushan wrote:
+> Please see inline
+> 
+> > -----Original Message-----
+> > From: Simon Horman <horms@kernel.org>
+> > Sent: Monday, May 13, 2024 9:45 PM
+> > To: Bharat Bhushan <bbhushan2@marvell.com>
+> > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Sunil Kovvuri
+> > Goutham <sgoutham@marvell.com>; Geethasowjanya Akula
+> > <gakula@marvell.com>; Subbaraya Sundeep Bhatta <sbhatta@marvell.com>;
+> > Hariprasad Kelam <hkelam@marvell.com>; davem@davemloft.net;
+> > edumazet@google.com; kuba@kernel.org; pabeni@redhat.com; Jerin Jacob
+> > <jerinj@marvell.com>; Linu Cherian <lcherian@marvell.com>;
+> > richardcochran@gmail.com
+> > Subject: [EXTERNAL] Re: [net-next,v2 3/8] octeontx2-af: Disable backpressure
+> > between CPT and NIX
+> > 
+> > 
+> > ----------------------------------------------------------------------
+> > On Mon, May 13, 2024 at 04:24:41PM +0530, Bharat Bhushan wrote:
+> > > NIX can assert backpressure to CPT on the NIX<=>CPT link.
+> > > Keep the backpressure disabled for now. NIX block anyways
+> > > handles backpressure asserted by MAC due to PFC or flow
+> > > control pkts.
+> > >
+> > > Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
+> > 
+> > ...
+> > 
+> > > diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+> > b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+> > 
+> > ...
+> > 
+> > > @@ -592,8 +596,16 @@ int rvu_mbox_handler_nix_bp_disable(struct rvu
+> > *rvu,
+> > >  	bp = &nix_hw->bp;
+> > >  	chan_base = pfvf->rx_chan_base + req->chan_base;
+> > >  	for (chan = chan_base; chan < (chan_base + req->chan_cnt); chan++) {
+> > > -		cfg = rvu_read64(rvu, blkaddr,
+> > NIX_AF_RX_CHANX_CFG(chan));
+> > > -		rvu_write64(rvu, blkaddr, NIX_AF_RX_CHANX_CFG(chan),
+> > > +		/* CPT channel for a given link channel is always
+> > > +		 * assumed to be BIT(11) set in link channel.
+> > > +		 */
+> > > +		if (cpt_link)
+> > > +			chan_v = chan | BIT(11);
+> > > +		else
+> > > +			chan_v = chan;
+> > 
+> > Hi Bharat,
+> > 
+> > The chan_v logic above seems to appear twice in this patch.
+> > I'd suggest adding a helper.
+> 
+> Will fix in next version.
+> 
+> > 
+> > > +
+> > > +		cfg = rvu_read64(rvu, blkaddr,
+> > NIX_AF_RX_CHANX_CFG(chan_v));
+> > > +		rvu_write64(rvu, blkaddr, NIX_AF_RX_CHANX_CFG(chan_v),
+> > >  			    cfg & ~BIT_ULL(16));
+> > >
+> > >  		if (type == NIX_INTF_TYPE_LBK) {
+> > 
+> > ...
+> > 
+> > > diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> > b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> > > index 7ec99c8d610c..e9d2e039a322 100644
+> > > --- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> > > +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+> > > @@ -1705,6 +1705,31 @@ int otx2_nix_config_bp(struct otx2_nic *pfvf,
+> > bool enable)
+> > >  }
+> > >  EXPORT_SYMBOL(otx2_nix_config_bp);
+> > >
+> > > +int otx2_nix_cpt_config_bp(struct otx2_nic *pfvf, bool enable)
+> > > +{
+> > > +	struct nix_bp_cfg_req *req;
+> > > +
+> > > +	if (enable)
+> > > +		req = otx2_mbox_alloc_msg_nix_cpt_bp_enable(&pfvf-
+> > >mbox);
+> > > +	else
+> > > +		req = otx2_mbox_alloc_msg_nix_cpt_bp_disable(&pfvf-
+> > >mbox);
+> > > +
+> > > +	if (!req)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	req->chan_base = 0;
+> > > +#ifdef CONFIG_DCB
+> > > +	req->chan_cnt = pfvf->pfc_en ? IEEE_8021QAZ_MAX_TCS : 1;
+> > > +	req->bpid_per_chan = pfvf->pfc_en ? 1 : 0;
+> > > +#else
+> > > +	req->chan_cnt =  1;
+> > > +	req->bpid_per_chan = 0;
+> > > +#endif
+> > 
+> > IMHO, inline #ifdefs reduce readability and reduce maintainability.
+> > 
+> > Would it be possible to either:
+> > 
+> > 1. Include the pfc_en field in struct otx2_nic and make
+> >    sure it is set to 0 if CONFIG_DCB is unset; or
+> > 2. Provide a wrapper that returns 0 if CONFIG_DCB is unset,
+> >    otherwise pfvf->pfc_en.
+> > 
+> > I suspect 1 will have little downside and be easiest to implement.
+> 
+> pfc_en is already a field of otx2_nic but under CONFIG_DCB. Will fix by adding a wrapper function like:
 
-syzbot found the following issue on:
+Thanks. Just to clarify, my first suggestion was to move
+pfc_en outside of CONFIG_DCB in otx2_nic.
 
-HEAD commit:    75fa778d74b7 Add linux-next specific files for 20240510
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=131c3100980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccdd3ebd6715749a
-dashboard link: https://syzkaller.appspot.com/bug?extid=1c9fca23fe478633b305
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13e892e4980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118d0fb8980000
+> 
+> static bool is_pfc_enabled(struct otx2_nic *pfvf)
+> {
+> #ifdef CONFIG_DCB
+>         return pfvf->pfc_en ? true : false;
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ad9391835bcf/disk-75fa778d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d827b3da9a26/vmlinux-75fa778d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f32f0182388/bzImage-75fa778d.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/056346e690a7/mount_0.gz
+FWIIW, I think this could also be:
 
-The issue was bisected to:
+	return !!pfvf->pfc_en;
 
-commit f7643bc9749f270d487c32dc35b578575bf1adb0
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Wed Apr 17 05:26:02 2024 +0000
+> #endif
+>         return false;
+> }
 
-    bcachefs: make btree read errors silent during scan
+Also, I do wonder if the following can work:
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=100ed95c980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=120ed95c980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=140ed95c980000
+	return IS_ENABLED(CONFIG_DCB) && pfvf->pfc_en;
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1c9fca23fe478633b305@syzkaller.appspotmail.com
-Fixes: f7643bc9749f ("bcachefs: make btree read errors silent during scan")
+> 
+> Using same like..
+> ...
+>         if (is_pfc_enabled(pfvf)) {
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 1 PID: 5094 Comm: syz-executor156 Not tainted 6.9.0-rc7-next-20240510-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-RIP: 0010:bch2_snapshot_has_children fs/bcachefs/snapshot.h:184 [inline]
-RIP: 0010:__bch2_insert_snapshot_whiteouts+0x306/0x15e0 fs/bcachefs/btree_update.c:135
-Code: fb 0f 86 c2 11 00 00 e8 28 d9 7c fd 49 6b c7 38 49 8d 5c 04 18 48 8d 7b 14 48 89 f8 48 c1 e8 03 49 bc 00 00 00 00 00 fc ff df <42> 0f b6 04 20 84 c0 0f 85 3d 12 00 00 44 8b 7b 14 48 83 c3 18 48
-RSP: 0018:ffffc900037be0c0 EFLAGS: 00010203
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffff8880296b0000
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000014
-RBP: ffffc900037be420 R08: ffffffff841942f8 R09: 1ffffffff25f64b0
-R10: dffffc0000000000 R11: fffffbfff25f64b1 R12: dffffc0000000000
-R13: ffffc900037be380 R14: ffffffff84194214 R15: 00000000ffffffff
-FS:  000055555dcea380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000559e8263e0b0 CR3: 000000006fca6000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_insert_snapshot_whiteouts fs/bcachefs/btree_update.h:95 [inline]
- bch2_trans_update_extent_overwrite+0xfd6/0x3710 fs/bcachefs/btree_update.c:218
- bch2_trans_update_extent fs/bcachefs/btree_update.c:318 [inline]
- bch2_trans_update+0x186f/0x2550 fs/bcachefs/btree_update.c:514
- bch2_extent_update+0x43c/0xbb0 fs/bcachefs/io_write.c:325
- bch2_write_index_default fs/bcachefs/io_write.c:374 [inline]
- __bch2_write_index+0xee9/0x2190 fs/bcachefs/io_write.c:527
- bch2_write_data_inline fs/bcachefs/io_write.c:1551 [inline]
- bch2_write+0xf4d/0x1670 fs/bcachefs/io_write.c:1619
- closure_queue include/linux/closure.h:269 [inline]
- closure_call include/linux/closure.h:402 [inline]
- bch2_writepage_do_io fs/bcachefs/fs-io-buffered.c:460 [inline]
- bch2_writepages+0x27d/0x380 fs/bcachefs/fs-io-buffered.c:652
- do_writepages+0x359/0x870 mm/page-writeback.c:2634
- filemap_fdatawrite_wbc+0x125/0x180 mm/filemap.c:397
- __filemap_fdatawrite_range mm/filemap.c:430 [inline]
- file_write_and_wait_range+0x1aa/0x290 mm/filemap.c:788
- bch2_fsync+0x93/0x130 fs/bcachefs/fs-io.c:197
- generic_write_sync include/linux/fs.h:2794 [inline]
- bch2_buffered_write fs/bcachefs/fs-io-buffered.c:1128 [inline]
- bch2_write_iter+0x262e/0x2840 fs/bcachefs/fs-io-buffered.c:1136
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0xa72/0xc90 fs/read_write.c:590
- ksys_write+0x1a0/0x2c0 fs/read_write.c:643
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbe67e38979
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd7ce752c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007fbe67e8104b RCX: 00007fbe67e38979
-RDX: 000000000000000b RSI: 0000000020000680 RDI: 0000000000000004
-RBP: 00007fbe67ebe610 R08: 00007ffd7ce75498 R09: 00007ffd7ce75498
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffd7ce75488 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_snapshot_has_children fs/bcachefs/snapshot.h:184 [inline]
-RIP: 0010:__bch2_insert_snapshot_whiteouts+0x306/0x15e0 fs/bcachefs/btree_update.c:135
-Code: fb 0f 86 c2 11 00 00 e8 28 d9 7c fd 49 6b c7 38 49 8d 5c 04 18 48 8d 7b 14 48 89 f8 48 c1 e8 03 49 bc 00 00 00 00 00 fc ff df <42> 0f b6 04 20 84 c0 0f 85 3d 12 00 00 44 8b 7b 14 48 83 c3 18 48
-RSP: 0018:ffffc900037be0c0 EFLAGS: 00010203
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffff8880296b0000
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000014
-RBP: ffffc900037be420 R08: ffffffff841942f8 R09: 1ffffffff25f64b0
-R10: dffffc0000000000 R11: fffffbfff25f64b1 R12: dffffc0000000000
-R13: ffffc900037be380 R14: ffffffff84194214 R15: 00000000ffffffff
-FS:  000055555dcea380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000002000193c CR3: 000000006fca6000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	fb                   	sti
-   1:	0f 86 c2 11 00 00    	jbe    0x11c9
-   7:	e8 28 d9 7c fd       	call   0xfd7cd934
-   c:	49 6b c7 38          	imul   $0x38,%r15,%rax
-  10:	49 8d 5c 04 18       	lea    0x18(%r12,%rax,1),%rbx
-  15:	48 8d 7b 14          	lea    0x14(%rbx),%rdi
-  19:	48 89 f8             	mov    %rdi,%rax
-  1c:	48 c1 e8 03          	shr    $0x3,%rax
-  20:	49 bc 00 00 00 00 00 	movabs $0xdffffc0000000000,%r12
-  27:	fc ff df
-* 2a:	42 0f b6 04 20       	movzbl (%rax,%r12,1),%eax <-- trapping instruction
-  2f:	84 c0                	test   %al,%al
-  31:	0f 85 3d 12 00 00    	jne    0x1274
-  37:	44 8b 7b 14          	mov    0x14(%rbx),%r15d
-  3b:	48 83 c3 18          	add    $0x18,%rbx
-  3f:	48                   	rex.W
+If so, perhaps this can work:
 
+	if (IS_ENABLED(CONFIG_DCB) && pfvf->pfc_en) {
+		...
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>                 req->chan_cnt = IEEE_8021QAZ_MAX_TCS;
+>                 req->bpid_per_chan = 1;
+>         } else {
+>                 req->chan_cnt = 1;
+>                 req->bpid_per_chan = 0;
+>         }
+> ...
