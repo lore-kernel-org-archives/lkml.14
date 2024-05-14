@@ -1,146 +1,123 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D2E1448E7;
-	Tue, 14 May 2024 13:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CB71448E4;
+	Tue, 14 May 2024 13:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715694806; cv=none; b=Hw8nMYMxWSC9l5Gy6ps8YlRHiHQTZ/Vo2ZgshD9ntMw9sxqx9ltOmqG6dcDKTiCulB1cW5+nBugXj3UuKGz26UsXM/GrjwbG9aABHsZVQ1zLFNAi7aWNxvk9Sxpaey46yBWugps9YYvHrOqpTCXlR0C4mGeaVfOPVd/gbOQcRF4=
+	t=1715694805; cv=none; b=uYbSUIYo2aXx5/ukNAX0H7qPbW3eZ8dYw61MkDg1ErlSAYXvS04/lorgcz9L9DUOU0321uAffGXs3Iq48c7cAdBabOdnZHs/bEL6nZQ8a5WMa+kQYUS6wMR0hBkM1U6nQ9byIhJCpNHcDUeqbSluncpZpMMOeIs2kcFNGXgtQkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715694806; c=relaxed/simple;
-	bh=O8hFA/T2LaGjTwRIMxIxq5cA/Tjjnvrs75x/Pq5EtTY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=sLgncJhf6xTVMhTDjvZhSa7noLTdsijarwdnw0R74tqksbf5rmK1100dqk6UB2TzMmXTLJ9hBSRIYpEvFHeR5bseKRN/pcsKqbhdmDbOZzgE7IN/w60YpbFcCOrjTZQmubSKt+Zet/dfhvLGFWzMlssXm+55bIsr6JzMm3BDAvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VdyVY5hNnz4f3m7d;
-	Tue, 14 May 2024 21:53:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E7B351A0199;
-	Tue, 14 May 2024 21:53:19 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP2 (Coremail) with SMTP id Syh0CgBXfA_ObENm1cfPMw--.37697S3;
-	Tue, 14 May 2024 21:53:19 +0800 (CST)
-Subject: Re: [PATCH v2 2/9] jbd2: remove unused return info from
- jbd2_journal_write_metadata_buffer
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- jack@suse.com
-References: <20240514112438.1269037-1-shikemeng@huaweicloud.com>
- <20240514112438.1269037-3-shikemeng@huaweicloud.com>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <25ddaf34-bd98-2783-f7b3-42ea86d11b3d@huaweicloud.com>
-Date: Tue, 14 May 2024 21:53:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1715694805; c=relaxed/simple;
+	bh=dr9TXOrtnoHYX8KZZqpHd8BZAYxFhyNVAMV1RhuSDXc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NFz2fbnsL0YUS7YYWn6QTN/jMQ9mb4kRdsdTkfYRc+DGZL5YO1zPwmBR68SMCgZ/rExC/6ABd8cXn39r2NKuBejeTv/DMNkkCKIIfAXNoDSMFuifCVsGET8Ac/yB1RKFl6DmNNKgrohduGduldUiD14jDLXJ8FBlgfV1zTILZiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mZfwvQwv; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mZfwvQwv"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EDaZ0q005782;
+	Tue, 14 May 2024 13:53:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=QICXyD0cR3LQEfx/tMfWRDGF0Q6fAIZIgFy/7ObjIYc=;
+ b=mZfwvQwvDa/i7rBP1NeyFHndVsoaNa2E1BXZNHVqsagidjrvpuhXXMOREsO90LFufoIC
+ o+b284A3Yp9vVFhR2ezGH0sbcguPl4bAmgzmj1GXd7XPczoMYhLwuar2C2nCQMOLZB9F
+ 3hZ9o+eezErrJfRwn9i8sGAL3KgcptODnYeKivlk+F8IavtvjePygMyl0i46Avy7qJMa
+ ECSsFv/mjpdnOMmLPug2HiB5dr5Cak5WsJJG3qiFFn1jygbnFgziPvNTsz23x3n2IkF2
+ uI77o11V96uk2F7fn6nCVIFkV88BJh2lRxDJd9i3bX/G650nB2fUukSk3t45C8TY46e9 CQ== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y48dng4x6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 13:53:17 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44EBxvws002288;
+	Tue, 14 May 2024 13:53:16 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2m0p5prr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 13:53:16 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EDrBSm46006560
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 13:53:13 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E5A292004B;
+	Tue, 14 May 2024 13:53:10 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7B55820049;
+	Tue, 14 May 2024 13:53:09 +0000 (GMT)
+Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.ibm.com.com (unknown [9.171.90.14])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 14 May 2024 13:53:09 +0000 (GMT)
+From: Krishna Kumar <krishnak@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mahesh@linux.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
+Subject: [PATCH v2 0/2] PCI hotplug driver fixes
+Date: Tue, 14 May 2024 19:22:57 +0530
+Message-ID: <20240514135303.176134-1-krishnak@linux.ibm.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240514112438.1269037-3-shikemeng@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgBXfA_ObENm1cfPMw--.37697S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF1fWw1furWfXw1rZF1UWrg_yoW5JryUpr
-	95Ca4rAr90vry0yF1xXF4UJFWjgFWUuFyjkr1qk3Z5JayfXwn2gF1Iyr13Kr4jyF93Cw48
-	AF1UCa4kGw4Yv3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbWCJP
-	UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FYRf0mz2Pwj9CUdx0_2lpbJkEnaXE9zZ
+X-Proofpoint-GUID: FYRf0mz2Pwj9CUdx0_2lpbJkEnaXE9zZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_07,2024-05-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=930 clxscore=1015
+ impostorscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405140098
 
-On 2024/5/14 19:24, Kemeng Shi wrote:
-> The done_copy_out info from jbd2_journal_write_metadata_buffer is not
-> used. Simply remove it.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 
-Thanks, looks good to me.
+The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
+addresses below two issues.
 
-Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
+1. Kernel Crash during hot unplug of bridge/switch slot.
 
-> ---
->  fs/jbd2/commit.c  | 10 +++++-----
->  fs/jbd2/journal.c |  9 +++------
->  2 files changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-> index 5e122586e06e..67077308b56b 100644
-> --- a/fs/jbd2/commit.c
-> +++ b/fs/jbd2/commit.c
-> @@ -353,7 +353,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
->  	struct buffer_head *descriptor;
->  	struct buffer_head **wbuf = journal->j_wbuf;
->  	int bufs;
-> -	int flags;
-> +	int escape;
->  	int err;
->  	unsigned long long blocknr;
->  	ktime_t start_time;
-> @@ -661,10 +661,10 @@ void jbd2_journal_commit_transaction(journal_t *journal)
->  		 */
->  		set_bit(BH_JWrite, &jh2bh(jh)->b_state);
->  		JBUFFER_TRACE(jh, "ph3: write metadata");
-> -		flags = jbd2_journal_write_metadata_buffer(commit_transaction,
-> +		escape = jbd2_journal_write_metadata_buffer(commit_transaction,
->  						jh, &wbuf[bufs], blocknr);
-> -		if (flags < 0) {
-> -			jbd2_journal_abort(journal, flags);
-> +		if (escape < 0) {
-> +			jbd2_journal_abort(journal, escape);
->  			continue;
->  		}
->  		jbd2_file_log_bh(&io_bufs, wbuf[bufs]);
-> @@ -673,7 +673,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
->                     buffer */
->  
->  		tag_flag = 0;
-> -		if (flags & 1)
-> +		if (escape)
->  			tag_flag |= JBD2_FLAG_ESCAPE;
->  		if (!first_tag)
->  			tag_flag |= JBD2_FLAG_SAME_UUID;
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 207b24e12ce9..2dca2f613a8e 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -316,11 +316,8 @@ static void journal_kill_thread(journal_t *journal)
->   *
->   * Return value:
->   *  <0: Error
-> - * >=0: Finished OK
-> - *
-> - * On success:
-> - * Bit 0 set == escape performed on the data
-> - * Bit 1 set == buffer copy-out performed (kfree the data after IO)
-> + *  =0: Finished OK without escape
-> + *  =1: Finished OK with escape
->   */
->  
->  int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
-> @@ -455,7 +452,7 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
->  	set_buffer_shadow(bh_in);
->  	spin_unlock(&jh_in->b_state_lock);
->  
-> -	return do_escape | (done_copy_out << 1);
-> +	return do_escape;
->  }
->  
->  /*
-> 
+2. DPC-Support Enablement - Previously, when we do a hot-unplug
+operation on a bridge slot, all the ports and devices behind the
+bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
+operation on the same bridge slot, all the ports and devices behind the
+bridge would not get hot-plugged/online. In this case, Only the first
+port of the bridge gets enabled and the remaining port/devices remain
+unplugged/offline.  After the fix, The hot-unplug and hot-plug
+operations on the slot associated with the bridge started behaving
+correctly and became in sync. Now, after the hot plug operation on the
+same slot, all the bridge ports and devices behind the bridge become
+hot-plugged/online/restored in the same manner as it was before the
+hot-unplug operation.
+
+Krishna Kumar (2):
+  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
+  powerpc: hotplug driver bridge support
+
+ arch/powerpc/include/asm/ppc-pci.h |  4 ++++
+ arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
+ arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
+ drivers/pci/hotplug/pnv_php.c      |  3 +--
+ 4 files changed, 39 insertions(+), 5 deletions(-)
+
+Changelog:
+==========
+v2: 14 May 2024
+  - Used of_property_read_u32() in place of of_get_property() and
+    of_read_number(). [patch2]
+  - Removed some unnecessary variable and changed the function return
+    type from void* to void. [patch2]
+  - Removed the export declaration of
+    pci_traverse_sibling_nodes_and_scan_slot() as its not needed.
+    [patch2]
+-- 
+2.45.0
 
