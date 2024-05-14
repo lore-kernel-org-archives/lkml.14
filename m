@@ -1,118 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE77262BD
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 15:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0558E17EBBB
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 15:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715701147; cv=none; b=creZZ1teyN22blAo46E+lb5XunMT7AbFPzaWRTPIKT+swfAwCU7q3JpLDUUNiPAwIplZs3X9MPnkaLEZoO2+s/mM0DXKIj0lYVZqNJPn/941JprhcMEICThQLcVcEhqHhxw0LtnEnMtSonXqUA2JfsRdTGNz9JUiGiw2vt0JZUY=
+	t=1715701149; cv=none; b=jtmIKfMh6IW75OC5XYvbmmxnqnNT/9nxVCaTh8kQtF06OHxCssF1vH5h1hs2wNshov26oK7vHZe6yXquUSkX79lUi5LO8Jz8S6r6jLTnWNdYY2yK+jL7vqMQHdjZSyCRSpPRs1ru2gP4AylKij6LfsOXk8qac7bneAzmiR4GWHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715701147; c=relaxed/simple;
-	bh=iAbHNd7mgRq7oUO67Du6wjpeeQPoT8tIG4U0JNdY+v8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hBBO5diX1jMqyGJmoq1bvwfqRuWJftXd0n9Rvsfp7cLeyyDHqfgc0OV+qxhvoPP2mN8dSLfiZcTNBQK6MZQTcaO43n1VuixShSOQQ7ppy3jeZSHdsaUtMehftc7Axd8GeG7tOSpm99rNMKHWLPBywjRT1qjROn/k6SVFdnIe6e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HDXcR84n; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715701149; c=relaxed/simple;
+	bh=ErRx23DPSPLAwdljs0/tvOWY83daNfEDyClGFeMkYK4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O9/CLmPwMM+OKIiFM9cYYHa8ymuu6FHD6Ljkw8KPw/D39JOFX+wXQnbWrZ9qjw8b9tVqF9M1cjgSJEhzlgVD3pXaxJSHlj92sJ2qUdXsbj5CdrapcnIy+pwSx6zJFOxoreK2S7Lo9cbvqqNuSiHo+n2XKb5Y5OKcFI890nbtpOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Xebpp9ow; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDXcR84n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715701144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rbW4AqFrMaISOC2LX0H+2PlSbMomBOm3GeVdMfM6+Gc=;
-	b=HDXcR84n96di2IvP6v7EiFNh+3w4wRwtDsF+hye6mCVolJen/G10axtvjMWRm8YwMX1o0j
-	OK+9G+3i6DIm6MkkncXw2wQoJtHwLxiMq5wy0EGrfhlz6M3vdPXODE5eTwd6Vk85qnQz+E
-	/oNmAaCYOYcmL8HtE4LHqlnGqSsztq8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-597-1wqNPDgLOj2EtuL7c10lWg-1; Tue, 14 May 2024 11:38:47 -0400
-X-MC-Unique: 1wqNPDgLOj2EtuL7c10lWg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a5a8f3bc8e0so24309566b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:38:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Xebpp9ow"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-61f2dc31be4so4659531a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1715701147; x=1716305947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LBawWwjcxALOoVHPnP/xkOR0sFQUYdbuftVX1+1xI+c=;
+        b=Xebpp9owF2Y0a6ZdSXrRLBjCBpcDBumNmc9190FVtZKtR8qmo28RCXHX41Jgu1oNXC
+         Uo8EMuyAHrKp4lRBInxsSetRR7cxx5GRJDdoypTFzO2sRatRdcecuW8Vabq+bfPJS3SZ
+         nmzaRTTkcRwgLTEIm4q6Hl3/ul5h3Orxbv+uSDOJEL0xwo613a87bkWko3Aj+iLQ04b5
+         0rLAPfet464O3eiN6ME+udYV30cu6R16WvhddmgjRRWBSjNmU8oVkXdRpC6kid/xiE3i
+         PtLoUzQUC40nyNZ+xeQHe3Z9o6sxNBQJPG8kmeZehp+2K2NXoAn8YcKMlT+1fb+0m9ff
+         aDhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715701126; x=1716305926;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rbW4AqFrMaISOC2LX0H+2PlSbMomBOm3GeVdMfM6+Gc=;
-        b=HNPu3Fr6SjXyaKmqr2CgK1HTqKqDBac+ptlh+Pdr0oZy0+apvspMtznxIs5R92doBj
-         bNwueW8La4gHjycEiOx4+RfGrIbMa/u/6WF8ckRaaM0Cgc3wc5bzqkdPmRxlTZ00oQpS
-         FyUBoiwyzLE7ExV3ez1vlglEsDNV3sUpoYSbxfImElkXIX/2ZF9Bq/C2asQe6ntcU1YQ
-         RQtImEvGlsouPDjGk6/nwudUw8zR16VH7uiyMVvIuRPynTasqRrR53pAxZPr3k+gibh8
-         HAq63tnkY0H3VKliAK8vDO/QiwW6GeaUPafNIsvmRHysaX4vn+QYs8nOJ0CkaCRSZ5xz
-         yO6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVtZmrWVdMkKbnIP3i9rchz2Fys6ONk3VUP/+t2hRx+4rkrS8+AJsAbshrLXPCziOBsVF/kWF+qHx1qqRdUPu1cxulK+lW4dMmHIhkW
-X-Gm-Message-State: AOJu0Yzf02ADhYP1cg4TycK26fsrvUHjRytjmsJioBFIUz9q7xyesZi7
-	L3i1iR9AH8mMvqkqlMgMhtbQVC4ULDQclpryFSd3Wu9jo196Dpj2Z1ztH6ZceI9dGV6HH5lDbfo
-	JZYJmBEF+cKPDoF/XjtuyCi7l3AtxqWTMM44HQ0tgvTtO83UBhvpe5UClqwg5Sg==
-X-Received: by 2002:a17:906:8315:b0:a5a:d6c:a30b with SMTP id a640c23a62f3a-a5a2d65f265mr915834366b.58.1715701126596;
-        Tue, 14 May 2024 08:38:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpzNVie/tGXiTgKB6/FpHbCOQeaspSL5sLUiSvss9/S6ulsnG3niwPgLtjnNrjiabiLgi7TA==
-X-Received: by 2002:a17:906:8315:b0:a5a:d6c:a30b with SMTP id a640c23a62f3a-a5a2d65f265mr915833766b.58.1715701126281;
-        Tue, 14 May 2024 08:38:46 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c80f4sm743539866b.142.2024.05.14.08.38.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 08:38:45 -0700 (PDT)
-Message-ID: <d2d71851-691f-45cf-9d52-1d16ede09b2b@redhat.com>
-Date: Tue, 14 May 2024 17:38:45 +0200
+        d=1e100.net; s=20230601; t=1715701147; x=1716305947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LBawWwjcxALOoVHPnP/xkOR0sFQUYdbuftVX1+1xI+c=;
+        b=rwyCA73SXzP3TFGqIIh0f3JrKMxMzc3gRdXdIqOEkp2J3EWaJrT/JpiAQohmv7Yit/
+         LHuRLFLxYChIVp9Ln+3mAghAYqTxOu6byOp/iAEXt7sNUNvRL9+6gWmVLqeX1XCQ38ZD
+         BDlbQ+Mn8n/qfv+B438sYGfj8snyyKmU+OWmwZnATtX1fbdPt2GFgCDvlKn/V3hLZMWW
+         fLmwZW9H07gnzByiyBJOqoKkhDgKiJYdzRfZpAXde2FU00pN1sG+K+vmT3jSndDqjcpT
+         LD0TM5dtqaax9lvUqOtExPctAMf4bQZTxK4eOj9RGXnHr/zZrjct7lqK3vY2zz/xoR/5
+         jTlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPOL7FrXIrphTJFdOd+gCBJLnJXkleXChGBAYv1D14r0zdGizlzGoJ9lN+52CtMezkih+Tj7G2hjookcoUZ430eswmEnohN2FyfTj0
+X-Gm-Message-State: AOJu0YxPqKyYfZSBSW3IdXwKkFL+sSkeGxsp1S4j3IGgZWmkU/FY/rtL
+	MKg+wSTFM62W6xSA8NY6KVDW3hJFN4qbXYmMoKOYplG2/QCVddr1j52YvfIjwhwYmJzNFflczUL
+	4YpkTy8UjmVWhC8EJMoHydMG96idLj4UJbKcbXg==
+X-Google-Smtp-Source: AGHT+IHSk3WRMmWu9wJcWqIf1E5fJGz8RUBTaPj3qnqLT5iMFXiBsjcAdOI+LzUzZnBUyAsuXCIieK429Oq/rLRZqXY=
+X-Received: by 2002:a17:90b:1809:b0:2b8:ab23:f2aa with SMTP id
+ 98e67ed59e1d1-2b8ab23f513mr12114313a91.1.1715701147211; Tue, 14 May 2024
+ 08:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: ipu-bridge: fix error code in ipu_bridge_init()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
- Bingbu Cao <bingbu.cao@intel.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <f468c4ac-0629-41b5-b5d1-e26f70e44800@moroto.mountain>
- <ZkN2Ow6hASmKvHlz@kekkonen.localdomain> <ZkOBaUW1uLw6ildS@smile.fi.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZkOBaUW1uLw6ildS@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240503221634.44274-1-ignat@cloudflare.com> <CALrw=nGhgRrhJ5mWWC6sV2WYWoijvD9WgFzMfOe6mHmqnza-Hw@mail.gmail.com>
+ <D18XXJ373C2V.2M6AOMKD1B89W@kernel.org> <CALrw=nHGLN=dn3fbyAcXsBufw0tAWUT1PKVHDK5RZkHcdd3CUw@mail.gmail.com>
+ <D19CUF0H9Q3S.3L5Y5S9553S5@kernel.org> <CALrw=nEZ07U9VhbGsnpchOYw1icUZCnuoHHXkJLzhFqSPe9_fQ@mail.gmail.com>
+ <3bfcacf38d4f5ab5c8008f2d7df539012940222e.camel@HansenPartnership.com>
+In-Reply-To: <3bfcacf38d4f5ab5c8008f2d7df539012940222e.camel@HansenPartnership.com>
+From: Ignat Korchagin <ignat@cloudflare.com>
+Date: Tue, 14 May 2024 16:38:55 +0100
+Message-ID: <CALrw=nE-t6ZWCvPm=3XS_=-UM9D=mMaXL2GOw-QL5GOLtbcHmA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] TPM derived keys
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, 
+	David Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, serge@hallyn.com, linux-integrity@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, May 14, 2024 at 4:30=E2=80=AFPM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Tue, 2024-05-14 at 14:11 +0100, Ignat Korchagin wrote:
+> >   * if someone steals one of the disks - we don't want them to see it
+> > has encrypted data (no LUKS header)
+>
+> What is the use case that makes this important?  In usual operation
+> over the network, the fact that we're setting up encryption is easily
+> identifiable to any packet sniffer (DHE key exchanges are fairly easy
+> to fingerprint), but security relies on the fact that even knowing that
+> we're setting up encryption, the attacker can't gain access to it.  The
+> fact that we are setting up encryption isn't seen as a useful thing to
+> conceal, so why is it important for your encrypted disk use case?
 
-On 5/14/24 5:21 PM, Andy Shevchenko wrote:
-> On Tue, May 14, 2024 at 02:33:31PM +0000, Sakari Ailus wrote:
->> On Fri, May 10, 2024 at 06:43:31PM +0300, Dan Carpenter wrote:
-> 
-> ...
-> 
->> Neither IPU3-CIO2 or IPU6 ISYS drivers should be of any functional use
->> without sensors. But the power states of the devices could be affected by
->> this: the drivers should power off these devices but without drivers they
->> maybe left powered on. I haven't made any measurements though.
-> 
-> FWIW, Hans mentioned AtomISPv2 case with somewhat 7W consumption on top of
-> the idling machine. That's why we have a stub driver in PDx86 exactly for
-> the purpose of turning it off when not used.
+In some "jurisdictions" authorities can demand that you decrypt the
+data for them for "reasons". On the other hand if they can't prove
+there is a ciphertext in the first place - it makes their case harder.
 
-I'm not sure if I ever mentioned the 7W, that seems a lot. But in
-the atomisp case the SoC will never reach S0i3 when the ISP is not
-properly turned off. And in this case the ISP is special and just letting
-PCI / ACPI put it in D3 is not enough it needs some special writes on
-the IO-Sideband-Fabric to be turned off.
-
-I don't know if something similar applies to the IPU3 / IPU6, but
-the bridge code is used by the atomisp code now too. So at a minimum
-if an error gets returned when there are no sensors then this must be unique
-enough that the atomisp code can check for it. Maybe -ENODEV ?
-
-Regards,
-
-Hans
-
-
+> James
+>
