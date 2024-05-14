@@ -1,154 +1,276 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58BE12D761
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 09:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D22212E1D9;
+	Tue, 14 May 2024 09:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715679213; cv=none; b=L+f83EkWc2sCod/ByvmsgPSF+wjzRdErv4LSfnoqETBa0KOFaeihkgpcmv+oj82ux4usJwjmtr5pu040aD6grBopEgiBy/7Y6zYhzbdQYUqkPJBZ4eFOIfhJjotsUx99Ea9zKS0F7YEZ+Ypjj3hMmYP+qMNPNjBafTO4/hUugN4=
+	t=1715679227; cv=none; b=H+QTbJFNGwNPG5BfS/GXcFlv/JoFxIQ2w3k4tf7qMsh9ToBtbEabley9o3IQPTz5F5yuCcVDyIh9mW68SkVd2Uf7zRsdEcu2De7r3lgghyyg23Tq9g7RBOvz8DoclFBTUYWoAzOEW9anvWZ1Wq/oufMU9cRl72s7u1EBJd4w/tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715679213; c=relaxed/simple;
-	bh=kURtlY5cDvzhTq9BlSF93mSqPcR3Ib3pu/yxpA7syRo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Vqm9GBiL4boc1tYaIKGIe2RtcDbAfUUGesh92Qv1Il9em7iMBwekrqvzWdkvZ5y5KvZCfAJfmtdvSF5O1ISsnZYnUUcFevqPrG4uUo//eZoOAe1Rc9RYhaf6DkwAHHCbVsFDDsbDJOeqjPpMuo1WgG/XRoxZXL/gbcdeBqckNic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7e1c22e7280so484822139f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 02:33:31 -0700 (PDT)
+	s=arc-20240116; t=1715679227; c=relaxed/simple;
+	bh=5QLuxRfvd+1qGhx8UXztidmfANvVUZa2jZmUkoA1gN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kkn1x+M3b6isVx1o5ma1pTrWiPJhe5sORJWI7vjr8jGZ42RqBa0EyIjAHt9fFHYsHmMoi3TxbCOSADUSwdL3e9SRRuEPjJuKaQcz4bMt0WpiX8YD8KDxLgPIn7dXM4BJ4DyyxdosAV3F9ClPYL+5OlkyE76uWGuO8b3jbbX8QGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJYez1Q7; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJYez1Q7"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59a609dd3fso915775866b.0;
+        Tue, 14 May 2024 02:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715679224; x=1716284024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vvhQQXLlY1q374hvVcmmTIItYN4TuVcT0kU+Q8i1yh4=;
+        b=dJYez1Q7M1DrmNee8QWMjUzQXdOlcmv7bW26TOqRouPUgiKC/3UsPDDN0yRckGRxpS
+         x1DFskcki5As3RRu6fyOrrK51EHIpCe6SzRu/N7lJQr0JQ719zSjP5yTlwqq5lv6VKIn
+         74ncJyyLmhoMFx0GoV/b9L4J3vtEpiCygT6pBZZr7kKgXdSF238xrUjxQI/8bfOw2DBi
+         pIho3bHBMQhqEkMLf7MgcyJ3n8EAxP/8Ct8NKv8GCYSFYJ+3vbD4u1p0stcjr6NzTCri
+         oLImo4MhOWAQ6xibnhbT18gVyTsl+rOed9N7Mf/K6EzqzOWW3Oi1lWVupjLE0GT7ZERR
+         xtwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715679211; x=1716284011;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kAB1jUJaPwwIIZCl7ic94AmiI9/S/BxVDLghu+WIUYQ=;
-        b=ObcgyFHENZ3chRyZ1oEiPFgNvFJw9svqY6rByR7vV98/bzZOxvt1/q/EVPscUiNrty
-         Z+lD/+2PvnT8F0XtTooKpUp/wlccN+3tDWNcBR4D432zLi5QHIOUEdZJdhAmdTb1w1Ud
-         4e7UjkPbdALLsl6DQZ1rdiuM00ffDshoaFB1VXPnmDLWHOVREWo2+y1VkzvNsgE9C2oD
-         ezz3a6uM6q7ETbCrCs5ZOgDP/MsiCqxQHVRpZBXzLrHvYagHr5bWgmZx/y0CGoX/m8dF
-         gtv27k3wHiMVZDwAMyBhR2o+O8LVYHgeZ0WppsSvBsBJ/6yjmsB5nUl3KfOWfSfKLaSs
-         dYHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxcgpEkpW8Z2HUcxbPmB5GfVJGyr3GYKFiiFuP8Ged/BsZPuQ8q1MlgfVrcy7D2c7rM0exp4Ra8IhGyed/+Tdr8bcOwNu9zAqTrB+d
-X-Gm-Message-State: AOJu0YwrPbWNQfZB+V4jFoVxpI1bqwywD3Pm9I0git1AQRkBLbsqOr+y
-	Idw+rnHthVUu4yVNRDNB5aWN+YWnu8GU3Z+8sdLA7OCTUAehk50vu6y3JQMIeFGfZWY4ViTamd9
-	eNbVdnB992k0qIf8J46z/oUMFkBgsmKW2x5fdcMEMlpqq1gforcqOMc8=
-X-Google-Smtp-Source: AGHT+IHlE7LVzAW3RsUeVHqIZ0qSn+eH++WU1uD97Wi3J9INxjWyaSgSR1m8nYkrFV6eioFLo/H805lpgzqGGPAr+GrTioa0vAGc
+        d=1e100.net; s=20230601; t=1715679224; x=1716284024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vvhQQXLlY1q374hvVcmmTIItYN4TuVcT0kU+Q8i1yh4=;
+        b=MW0OmhU+0v1agUTmVW3+/i3vx3QmPlJ0E2FkhczLA7tmaGXKjH9Hbq8gMqXi/tTnRx
+         r5MfhpXB6K/qe74xXcOY2XUyYOlaod+fWEEl09Mq8y3YAIgUoVeItbxqqanrXv17uRSB
+         U/VtciHqG7dvPvqWvvOH7QRq4NmJO0VyEMTXVsfU1mZsbaPlcS62aytbqzuEhxeCwSz6
+         ns5Q5wAwf0dEb3OLjGXGiLPWmy7PS9p2sv3sKlO1fR5p787i8auvt53gEpablbXTNE2s
+         70SABc0t0Lx8ojMU0vFAVe1d9DpNFqc1goZKG60P7b3FtuJtoPdWwakccQZhZ9fXR/SY
+         UQnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDi/e7xkVb78XXZE2uuQhTPO57WUFtWDsJcQ1c7rK/x3iKiivaaahfQEvg5r6CRS8Vw0XK6sz3JxeZKEARGkj+edwKMwXalMSu9S4dGa9pGp1yAhSllYT2rG9GM2+1aF2f0vsjL4TKm8x+
+X-Gm-Message-State: AOJu0YyH4IFIdPRUndDzL23/pfWCtoKFxykSXG7dDVVd7K5ExawdQdEy
+	xYSHWT1faNq0RPKV4FMMsDONpYnaOt5myYf8b3P7h+n+sPtuEMjBHoUtR3YmZ89fqWpiKN5/LUf
+	ohosg3/UxO5MDWW6C2b004og4uOA=
+X-Google-Smtp-Source: AGHT+IEVr8pA7N5wJSBHLEqP9NWjrznEty63oLQWCi+u8xtGKtUtLPA0gdZgWyYzApBwpPnW8e3VakFkKun0zaUnXb4=
+X-Received: by 2002:a17:906:d10e:b0:a59:9fcb:e9ac with SMTP id
+ a640c23a62f3a-a5a2d1afc74mr1013075566b.11.1715679223622; Tue, 14 May 2024
+ 02:33:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:48f:b0:7de:e172:3d4e with SMTP id
- ca18e2360f4ac-7e1b5208481mr66921939f.3.1715679211020; Tue, 14 May 2024
- 02:33:31 -0700 (PDT)
-Date: Tue, 14 May 2024 02:33:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ebf2e0061866b102@google.com>
-Subject: [syzbot] [bcachefs?] UBSAN: shift-out-of-bounds in bch2_sb_dev_has_data
-From: syzbot <syzbot+249018ea545364f78d04@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <ZkLv3wn62jqMVpSF@archie.me> <CAHp75VcjeJ5oZy2JjbyrKn+GVvixJKmfh3Yj1p-HxcJHrm0Wzg@mail.gmail.com>
+ <606328522.1205749.1715678929830@mail.yahoo.com>
+In-Reply-To: <606328522.1205749.1715678929830@mail.yahoo.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 14 May 2024 12:33:07 +0300
+Message-ID: <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com>
+Subject: Re: [regression] [bisected] commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0
+ corrupts data sent via pseudoterminal device
+To: Vadym Krevs <vkrevs@yahoo.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux Serial <linux-serial@vger.kernel.org>, 
+	Gilles Buloz <gilles.buloz@kontron.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, May 14, 2024 at 12:28=E2=80=AFPM Vadym Krevs <vkrevs@yahoo.com> wro=
+te:
+>
+> It's a standard setup for an out-of-the box default install of openSUSE 1=
+5.5 with KDE. All tests done in Konsole with bash as shell.
+>
+> stty -a -F /dev/pts/1
+> speed 38400 baud; rows 57; columns 217; line =3D 0;
+> intr =3D ^C; quit =3D ^\; erase =3D ^?; kill =3D ^U; eof =3D ^D; eol =3D =
+<undef>; eol2 =3D <undef>; swtch =3D <undef>; start =3D ^Q; stop =3D ^S; su=
+sp =3D ^Z; rprnt =3D ^R; werase =3D ^W; lnext =3D ^V; discard =3D ^O; min =
+=3D 1; time =3D 0;
+> -parenb -parodd -cmspar cs8 -hupcl -cstopb cread -clocal -crtscts
+> -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon i=
+xoff -iuclc -ixany -imaxbel iutf8
+> opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 v=
+t0 ff0
+> isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -echop=
+rt echoctl echoke -flusho -extproc
 
-syzbot found the following issue on:
+Thank you!
 
-HEAD commit:    cf87f46fd34d Merge tag 'drm-fixes-2024-05-11' of https://g..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=162f8fbc980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
-dashboard link: https://syzkaller.appspot.com/bug?extid=249018ea545364f78d04
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13a40d04980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=102e5b70980000
+Yeah. SW flow control is enabled, but I don't see which character is
+being used for that. Anyway, let's give Ilpo a chance to look into
+this.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9c147953fc8e/disk-cf87f46f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a55c9d1f91fc/vmlinux-cf87f46f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f8dab47ae8c2/bzImage-cf87f46f.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/2c5c030a256e/mount_0.gz
+> On Tuesday, 14 May 2024 at 10:11:11 BST, Andy Shevchenko <andy.shevchenko=
+@gmail.com> wrote:
+> On Tue, May 14, 2024 at 8:00=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.c=
+om> wrote:
 
-The issue was bisected to:
+> > <vkrevs@yahoo.com> reported on Bugzilla
+> > (https://bugzilla.kernel.org/show_bug.cgi?id=3D218834) pseudoterminal d=
+ata
+> > corruption regression. He wrote:
+> >
+> > > Hello. There appears to be a regression in pseudoterminal support int=
+roduced by commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0.
+> > >
+> > > We have a wrapper program that uses a pseudoterminal to transform dat=
+a fed into input/read from output of a child process. Transformed data is w=
+ritten to the master device, the child process, whose stdin/stdout are mapp=
+ed to the slave device, reads data from parent by reading from its stdin, p=
+rocesses that data and sends it back to parent by writing the response to i=
+ts stdout, and then data from the child process is read by the wrapper from=
+ pseudoterminal master descriptor.
+> > >
+> > > This used to work fine on various Linux distros such as Amazon Linux2=
+, SLES 12/15, openSUSE 15, RHEL 8/9 with pre 6.0 kernels. However, running =
+our regression suite on Amazon Linux 2023 which uses a 6.x kernel revealed =
+regression. Sometimes, when a lot of data is written by the parent process =
+into the master device's descriptor, some data is lost or corrupted when th=
+e child process is reading it from the slave device's descriptor. We've ver=
+ified that this is a kernel regression introduced via commit 6bb6fa6908ebd3=
+cb4e14cd4f0ce272ec885d2eb0 by performing kernel bisection as described in h=
+ttps://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html#=
+introguide-bissbs. Bisection was performed using openSUSE 15.5 in VirtualBo=
+x (so the kernels had the tainted flag set) but the issue can also be repro=
+duced outside of VirtualBox.
+> > >
+> > > Bisection logs and a repro test case used to perform bisection are in=
+ the repro+bisect.zip attachment.
+> > >
+> > > ---------------------------------------------------------------------=
+--------------
+> > > The test script, ptybug.sh, pipes a large plain text file containing =
+1027800 plain text records separated by newlines into the wrapper program. =
+Each record is a 0-padded record number padded with spaces to 80 bytes.
+> > >
+> > > The wrapper program sends the unmodified data read from its stdin to =
+the child program via a pseudoterminal, reads the output from the child and=
+ prints it on its stdout. Wrapper's stdout is redirected to a file which is=
+ then compared with expected output.
+> > >
+> > > The child process reads exactly 1000000 records from its stdin, strip=
+s off trailing whitespace, and prints the record on its stdout.
+> > >
+> > > Both the wrapper and the child process mirror the data written into t=
+he pseudoterminal master descriptor/read from the pseudoterminal slave desc=
+riptor into separate files - which are identical on kernels prior to commit=
+ 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0 and which differ on kernels that =
+include that commit.
+> > >
+> > > ---------------------------------------------------------------------=
+--------------
+> > > How to reproduce:
+> > >
+> > > tar xvf repro+bisect.tar.zstd
+> > > cd repro
+> > > ./ptybug.sh
+> > >
+> > > Expected output (on 5.19.0-rc1* kernels prior to commit 6bb6fa6908ebd=
+3cb4e14cd4f0ce272ec885d2eb0)
+> > > rm -f ptybug ptybug_child gen  *.o
+> > > cc    ptybug.c  -o ptybug
+> > > cc    ptybug_child.c  -o ptybug_child
+> > > cc    gen.c  -o gen
+> > > Test run 1 ...
+> > > Test run 2 ...
+> > > Test run 3 ...
+> > > Test run 4 ...
+> > > Test run 5 ...
+> > > PASS
+> > >
+> > > Actual/bad output (on 5.19.0-rc1* starting from commit 6bb6fa6908ebd3=
+cb4e14cd4f0ce272ec885d2eb0 and later kernels, including latest)
+> > > rm -f ptybug ptybug_child gen  *.o
+> > > cc    ptybug.c  -o ptybug
+> > > cc    ptybug_child.c  -o ptybug_child
+> > > cc    gen.c  -o gen
+> > > Test run 1 ...
+> > > FAIL Actual and expected output does not match (gen1027800)
+> > > FAIL
+> > >
+> > >
+> > > To see the difference between data written by the master into the pse=
+udoterminal master descriptor and data read by the child from the pseudoter=
+minal slace descriptor (stripping off trailing spaces) run:
+> > > diff -u gen1027800_sysin.txt.nospace gen1027800_a_out.txt.copy |more
+> > >
+> > > One possible output is below (every time you run this on a kernel sta=
+rting from commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0 the results are =
+sligtly different). As you can see lines corresponding to records 17861-178=
+62 have been erroneourly replaced with lines 17858-17859, and so on.
+> > >
+> > > --- gen1027800_expected.txt    2024-04-26 14:39:22.287121535 +0100
+> > > +++ gen1027800_a_out.txt.copy  2024-05-13 15:52:48.915952662 +0100
+> > > @@ -17858,8 +17858,8 @@
+> > >  000000000000017858
+> > >  000000000000017859
+> > >  000000000000017860
+> > > -000000000000017861
+> > > -000000000000017862
+> > > +000000000000017858
+> > > +000000000000017859
+> > >  000000000000017863
+> > >  000000000000017864
+> > >  000000000000017865
+> > > @@ -51261,7 +51261,7 @@
+> > >  000000000000051261
+> > >  000000000000051262
+> > >  000000000000051263
+> > > -000000000000051264
+> > > +0000000000000512651264
+> > >  000000000000051265
+> > >  000000000000051266
+> > >  000000000000051267
+> > > @@ -104576,9 +104576,9 @@
+> > >  000000000000104576
+> > >  000000000000104577
+> > >  000000000000104578
+> > > -000000000000104579
+> > > -000000000000104580
+> > > -000000000000104581
+> > > +000000000000104576
+> > > +000000000000104577
+> > > +000000000000104578
+> > >  000000000000104582
+> > >  000000000000104583
+> > >  000000000000104584
+> > > @@ -110897,8 +110897,8 @@
+> > >  000000000000110897
+> > >  000000000000110898
+> > >  000000000000110899
+> > > -000000000000110900
+> > > -000000000000110901
+> > > +000000000000110898
+> > > +000000000000110899
+> > >  000000000000110902
+> > >  000000000000110903
+> > >  000000000000110904
+> > > @@ -279673,9 +279673,9 @@
+> > >  000000000000279673
+> > >  000000000000279674
+> > >  000000000000279675
+> > > -000000000000279676
+> > > -000000000000279677
+> > > -000000000000279678
+> >
+> > See Bugzilla link for the reproducer mentioned.
+> >
+> > IMO, this is quite different from the case fixed by 56c14fb4086b2d ("tt=
+y: Fix
+> > lookahead_buf crash with serdev").
+>
+>
+> What's the output of `stty -a -F /dev/...` (dunno if you can do it on
+> pty, but at least control tty can do it)?
+> Or can you share the pty configuration done for this? (I haven't
+> looked into any shared code, maybe it's already there)
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
 
-commit 03ef80b469d5d83530ce1ce15be78a40e5300f9b
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Sat Sep 23 22:41:51 2023 +0000
 
-    bcachefs: Ignore unknown mount options
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13d673d4980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=103673d4980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17d673d4980000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+249018ea545364f78d04@syzkaller.appspotmail.com
-Fixes: 03ef80b469d5 ("bcachefs: Ignore unknown mount options")
-
-loop0: detected capacity change from 0 to 32768
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/replicas.c:1010:20
-shift exponent 155 is too large for 32-bit type 'int'
-CPU: 0 PID: 5075 Comm: syz-executor397 Not tainted 6.9.0-rc7-syzkaller-00183-gcf87f46fd34d #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
- bch2_sb_dev_has_data+0x22a/0x5f0 fs/bcachefs/replicas.c:1010
- member_to_text+0xcb/0x1030 fs/bcachefs/sb-members.c:163
- bch2_sb_members_v1_to_text+0x1aa/0x2f0 fs/bcachefs/sb-members.c:317
- bch2_sb_field_validate+0x1f7/0x2d0 fs/bcachefs/super-io.c:1228
- bch2_sb_validate+0x9b6/0xe10 fs/bcachefs/super-io.c:460
- __bch2_read_super+0xc9a/0x1460 fs/bcachefs/super-io.c:822
- bch2_fs_open+0x246/0xdf0 fs/bcachefs/super.c:2052
- bch2_mount+0x71d/0x1320 fs/bcachefs/fs.c:1903
- legacy_get_tree+0xee/0x190 fs/fs_context.c:662
- vfs_get_tree+0x90/0x2a0 fs/super.c:1779
- do_new_mount+0x2be/0xb40 fs/namespace.c:3352
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f16b990d8ba
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdd930ef68 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffdd930ef80 RCX: 00007f16b990d8ba
-RDX: 0000000020011a00 RSI: 0000000020011a40 RDI: 00007ffdd930ef80
-RBP: 0000000000000004 R08: 00007ffdd930efc0 R09: 00000000000119f3
-R10: 0000000001200014 R11: 0000000000000282 R12: 0000000001200014
-R13: 00007ffdd930efc0 R14: 0000000000000003 R15: 0000000001000000
- </TASK>
----[ end trace ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--=20
+With Best Regards,
+Andy Shevchenko
