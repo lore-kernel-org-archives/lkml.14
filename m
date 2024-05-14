@@ -1,269 +1,130 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD46225A8;
-	Tue, 14 May 2024 08:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AEA1F956;
+	Tue, 14 May 2024 08:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715676763; cv=none; b=PgnMoEhMwHkFJUDeHtE15obKqkVID04xstfYqR+nLzfJ6tvsru5EfxU/lHeFupwCTAmz/kPoT0wOVglIys155mkw0OIJVH0Hkbn+vUplFjVv3l1oqmSeW9cTY6LVlDNAD86aVjttfTW7ucoDp+Prwofr24k0mWFljQkB0NbxenI=
+	t=1715676790; cv=none; b=svG0mAcejzWvxfeJag5R1Zx5hafLA9LDSg3D8pv0PgZi2Cu0gS/5iS5WfCKE3g5WYD11Lj5KR2twy3GqiZA+q1JjBrP6BTnXOOoMOT1prcRT0lVvCiGx6pG1+8FFirLiAZ/hnLkpZHx2h2EidRhq43OIyicbvdI/JpTgv0/L04E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715676763; c=relaxed/simple;
-	bh=VnwPN1HC0Qg3a/FfvSmXTWKLTyLbOBEkoZkWOJT5MY8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JWamixnO7VLij+0cK9tsY7eURNmhCAQaJ7DadaJl2sYEI5W69jkvqKaPEgSNttyXFBt0HdrybwUctVvfVTZ81t5Wzv4k2WQ+kI3IRWyJ+zytHOxskovBQuvvBCF4/jQ5orAZXlLrHl0yfRgpWuTahc0j1X4JtSX49UAjRaf58XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vdqqg3llsz4f3jLc;
-	Tue, 14 May 2024 16:52:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 0DCBD1A016E;
-	Tue, 14 May 2024 16:52:37 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgBnOBFTJkNmDmeDMg--.26345S3;
-	Tue, 14 May 2024 16:52:36 +0800 (CST)
-Subject: Re: [PATCH md-6.10 3/9] md: add new helpers for sync_action
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240509011900.2694291-1-yukuai1@huaweicloud.com>
- <20240509011900.2694291-4-yukuai1@huaweicloud.com>
- <CALTww2-RPH_eYBumjxhHLkj7J2tfHskTYNif93Hwn5ksCN0+kA@mail.gmail.com>
- <06211ae2-9b5f-10c7-7953-9d79d2eacc67@huaweicloud.com>
- <CALTww28LM_b6SMC-vLY3y7R3ZD9z80H+2vZCXMzmAwnoEH-eMA@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <2d457d0f-8bb5-39cb-0b8a-0bfdde1f560f@huaweicloud.com>
-Date: Tue, 14 May 2024 16:52:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1715676790; c=relaxed/simple;
+	bh=eCDgIANrV2Ry8CTSW1FqYJGO3DG4PwyKhu8pftQM/EY=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jN9xDdp2dyAS80StiiSoFAsWY76BVldHxfTZD4NDYAX4xwywoGp+TaaptTc7wBZqVcgjknuiBn+gldZGksd6G7XXuUfkQdHlby/5Qinkdj90mVhO16FBV/qY2ILu2hQFgVXuWxbU3fuIxKf17lMQfcmDGAyhEAumXDhTqUQ+Aws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXgITPmR; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXgITPmR"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41f9ce16ed8so53234765e9.0;
+        Tue, 14 May 2024 01:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715676787; x=1716281587; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6os4V1/Q9TcK/b6z23wU1+fo1ih8KsdRnIutef+IK7w=;
+        b=bXgITPmRKCvEizJwZ+zPb1IFoh6E0seQqmiMPIm7Y12jjhyDx731dCrCsRBBFpuIUJ
+         tBz/Po0Q1NeqAleHp6CryWmdenmrJkmM7vncj/XwAinZ5Ge+aEgfBbGVnJ678dzmDUWk
+         Ol40rX64zHBU95WCob+X2m4yEWfw8iU5v6idVJsQEbEJ/f9V1WMtRFl7l0RgA2z6i/xf
+         wU6OnkE7if2qpEc9BEnrV7G83lavO32Znhv7rENrDUatGMJoqTI0eKDfkDGW/zU++8Jv
+         a4mVraqOb3wDGceq642C/qIYiL623mEvfJdW/oq2OhadzUhot+L8ksTKk3yMICLDzoU8
+         ppyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715676787; x=1716281587;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6os4V1/Q9TcK/b6z23wU1+fo1ih8KsdRnIutef+IK7w=;
+        b=mcPBK7SyireE6kK+e/FPn/HhD8cDNJkNhGcIjS4EEvJVvuvy3mbWLqD69aYck/dBY+
+         kmA6qEkp3xJSzqAkiuSGcQAyabbL4qH4rPqnHB4zjbe4Af+8LhLcdIlZdpIikBPfwLmn
+         wSyCFBMiIyM4dMAFN9Oj/FrwZlbpFYaWS7VzfL0hnEn4LiKKG7SldSQfbXuSqaGKnUNO
+         LPAm07YsyHpLWxqlL7kmsii67Xa+OW02HJQGCd7pYzc/DCVp9PiuR5mQJUtgyNSF+aHf
+         gGD2j/0O+p/J+n+qJgkXlPtQg4RjzNRY2mjzyOUYyf2zM0vnPdE/j3KaANyfM9ORWJmL
+         5w9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXNg4AZqxL2hXkzyzWHkgOGcsjlM2c5XSOkPDPqJO2xuBhmOCqFnMJUVmu92GA6X/Jb3SuWhtIsl0vm1V1ntUKHmZasp+9sK356FKj1fyDUe7YIWNiLWFwrImfXe6xVSlGrRYcU3rnHcgl3U0RlNZJPJtDCATWikjc5zro31xUCLQ==
+X-Gm-Message-State: AOJu0YxbMNjsiugHXn9UH/JHfGKu6ytj7taIggYgsUoxaF5z+//pgABq
+	iv5PQNqm0dqh5tX1DOqlGKhZTUaodkJsHrzoAyJ71Xs3kKwwgwIU
+X-Google-Smtp-Source: AGHT+IHAvFzWFhgQ/VN6ZJiA5ZuX3Pxcdma5FjQzZ20e8KiQpCEEVFzLvEKrCeDcZi5az6cFqcLoiA==
+X-Received: by 2002:a05:600c:68c3:b0:41b:c24c:8a79 with SMTP id 5b1f17b1804b1-41feaa443dfmr103835945e9.19.1715676786763;
+        Tue, 14 May 2024 01:53:06 -0700 (PDT)
+Received: from [10.16.124.60] ([212.227.34.98])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee92c7sm191249465e9.34.2024.05.14.01.53.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 01:53:06 -0700 (PDT)
+From: Zhu Yanjun <zyjzyj2000@gmail.com>
+X-Google-Original-From: Zhu Yanjun <yanjun.zhu@linux.dev>
+Message-ID: <38a5ccc6-d0bc-41e0-99de-fe7902b1951f@linux.dev>
+Date: Tue, 14 May 2024 10:53:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALTww28LM_b6SMC-vLY3y7R3ZD9z80H+2vZCXMzmAwnoEH-eMA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] rds: rdma: Add ability to force GFP_NOIO
+To: =?UTF-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, rds-devel@oss.oracle.com
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>,
+ Allison Henderson <allison.henderson@oracle.com>,
+ Manjunath Patil <manjunath.b.patil@oracle.com>,
+ Mark Zhang <markzhang@nvidia.com>, Chuck Lever <chuck.lever@oracle.com>,
+ Shiraz Saleem <shiraz.saleem@intel.com>, Yang Li <yang.lee@linux.alibaba.com>
+References: <20240513125346.764076-1-haakon.bugge@oracle.com>
+Content-Language: en-US
+In-Reply-To: <20240513125346.764076-1-haakon.bugge@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBnOBFTJkNmDmeDMg--.26345S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xw4fuw4kCrWUGFW3KF17ZFb_yoW7Kw47pF
-	W0yFn8Zr4UXry7Jr12q3WDta9ayr1IqryUXry3Ga48J3ZxKFn3G3WUJF17Cryvyr15uryj
-	vrWDGFW3uF4YyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+On 13.05.24 14:53, Håkon Bugge wrote:
+> This series enables RDS and the RDMA stack to be used as a block I/O
+> device. This to support a filesystem on top of a raw block device
 
+This is to support a filesystem ... ?
 
-在 2024/05/14 16:40, Xiao Ni 写道:
-> On Tue, May 14, 2024 at 3:39 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> Hi,
->>
->> 在 2024/05/14 14:52, Xiao Ni 写道:
->>> On Mon, May 13, 2024 at 5:31 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>>>
->>>> From: Yu Kuai <yukuai3@huawei.com>
->>>>
->>>> The new helpers will get current sync_action of the array, will be used
->>>> in later patches to make code cleaner.
->>>>
->>>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>>> ---
->>>>    drivers/md/md.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++
->>>>    drivers/md/md.h |  3 +++
->>>>    2 files changed, 67 insertions(+)
->>>>
->>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
->>>> index 00bbafcd27bb..48ec35342d1b 100644
->>>> --- a/drivers/md/md.c
->>>> +++ b/drivers/md/md.c
->>>> @@ -69,6 +69,16 @@
->>>>    #include "md-bitmap.h"
->>>>    #include "md-cluster.h"
->>>>
->>>> +static char *action_name[NR_SYNC_ACTIONS] = {
->>>> +       [ACTION_RESYNC]         = "resync",
->>>> +       [ACTION_RECOVER]        = "recover",
->>>> +       [ACTION_CHECK]          = "check",
->>>> +       [ACTION_REPAIR]         = "repair",
->>>> +       [ACTION_RESHAPE]        = "reshape",
->>>> +       [ACTION_FROZEN]         = "frozen",
->>>> +       [ACTION_IDLE]           = "idle",
->>>> +};
->>>> +
->>>>    /* pers_list is a list of registered personalities protected by pers_lock. */
->>>>    static LIST_HEAD(pers_list);
->>>>    static DEFINE_SPINLOCK(pers_lock);
->>>> @@ -4867,6 +4877,60 @@ metadata_store(struct mddev *mddev, const char *buf, size_t len)
->>>>    static struct md_sysfs_entry md_metadata =
->>>>    __ATTR_PREALLOC(metadata_version, S_IRUGO|S_IWUSR, metadata_show, metadata_store);
->>>>
->>>> +enum sync_action md_sync_action(struct mddev *mddev)
->>>> +{
->>>> +       unsigned long recovery = mddev->recovery;
->>>> +
->>>> +       /*
->>>> +        * frozen has the highest priority, means running sync_thread will be
->>>> +        * stopped immediately, and no new sync_thread can start.
->>>> +        */
->>>> +       if (test_bit(MD_RECOVERY_FROZEN, &recovery))
->>>> +               return ACTION_FROZEN;
->>>> +
->>>> +       /*
->>>> +        * idle means no sync_thread is running, and no new sync_thread is
->>>> +        * requested.
->>>> +        */
->>>> +       if (!test_bit(MD_RECOVERY_RUNNING, &recovery) &&
->>>> +           (!md_is_rdwr(mddev) || !test_bit(MD_RECOVERY_NEEDED, &recovery)))
->>>> +               return ACTION_IDLE;
->>>
->>> Hi Kuai
->>>
->>> Can I think the above judgement cover these two situations:
->>> 1. The array is readonly / readauto and it doesn't have
->>> MD_RECOVERY_RUNNING. Now maybe it has MD_RECOVERY_NEEDED, it means one
->>> array may want to do some sync action, but the array state is not
->>> readwrite and it can't start.
->>> 2. The array doesn't have MD_RECOVERY_RUNNING and MD_RECOVERY_NEEDED
->>>
->>>> +
->>>> +       if (test_bit(MD_RECOVERY_RESHAPE, &recovery) ||
->>>> +           mddev->reshape_position != MaxSector)
->>>> +               return ACTION_RESHAPE;
->>>> +
->>>> +       if (test_bit(MD_RECOVERY_RECOVER, &recovery))
->>>> +               return ACTION_RECOVER;
->>>> +
->>>> +       if (test_bit(MD_RECOVERY_SYNC, &recovery)) {
->>>> +               if (test_bit(MD_RECOVERY_CHECK, &recovery))
->>>> +                       return ACTION_CHECK;
->>>> +               if (test_bit(MD_RECOVERY_REQUESTED, &recovery))
->>>> +                       return ACTION_REPAIR;
->>>> +               return ACTION_RESYNC;
->>>> +       }
->>>> +
->>>> +       return ACTION_IDLE;
->>>
->>> Does it need this? I guess it's the reason in case there are other
->>> situations, right?
->>
->> Yes, we need this, because they are many places to set
->> MD_RECOVERY_NEEDED, while there are no sync action actually, this case
->> is 'idle'.
+> which uses RDS and the RDMA stack as the network transport layer.
 > 
-> To be frank, the logic in action_show is easier to understand than the
-> logic above. I have taken more than half an hour to think if the logic
-> here is right or not. In action_show, it only needs to think when it's
-> not idle and it's easy.
+> Under intense memory pressure, we get memory reclaims. Assume the
+> filesystem reclaims memory, goes to the raw block device, which calls
+> into RDS, which calls the RDMA stack. Now, if regular GFP_KERNEL
+> allocations in RDS or the RDMA stack require reclaims to be fulfilled,
+> we end up in a circular dependency.
 > 
-> Now this patch logic needs to think in the opposite direction: when
-> it's idle. And it returns ACTION_IDLE at two places which means it
-> still needs to think about when it has sync action. So it's better to
-> keep the original logic in action_show now. It's just my 2 cents
-> point.
-
-Hi,
-
-but the logical is exactlly the same as action_show(), and there are
-no functional changes. I just remove the local variable and return
-early, because I think code is cleaner this way...
-
-action_show:
-
-char *type = "idle"
-
-if (test_bit() || xxx) {
-
-  if (xxx)
-   type ="reshape"
-  else if(xxx)
-   type ="resync/check/repair"
-  else if(xxx)
-   type = "recover"
-  else if (xxx)
-   type = "reshape"
-  -> else is idle
-}
--> else is idle
-
-The above two place are corresponding to the new code to return
-ACTION_IDLE.
-
-Thanks,
-Kuai
-
+> We break this circular dependency by:
 > 
-> Best Regards
-> Xiao
+> 1. Force all allocations in RDS and the relevant RDMA stack to use
+>     GFP_NOIO, by means of a parenthetic use of
+>     memalloc_noio_{save,restore} on all relevant entry points.
 > 
->>
->> Thanks,
->> Kuai
->>
->>>
->>> Regards
->>> Xiao
->>>
->>>> +}
->>>> +
->>>> +enum sync_action md_sync_action_by_name(char *page)
->>>> +{
->>>> +       enum sync_action action;
->>>> +
->>>> +       for (action = 0; action < NR_SYNC_ACTIONS; ++action) {
->>>> +               if (cmd_match(page, action_name[action]))
->>>> +                       return action;
->>>> +       }
->>>> +
->>>> +       return NR_SYNC_ACTIONS;
->>>> +}
->>>> +
->>>> +char *md_sync_action_name(enum sync_action action)
->>>> +{
->>>> +       return action_name[action];
->>>> +}
->>>> +
->>>>    static ssize_t
->>>>    action_show(struct mddev *mddev, char *page)
->>>>    {
->>>> diff --git a/drivers/md/md.h b/drivers/md/md.h
->>>> index 2edad966f90a..72ca7a796df5 100644
->>>> --- a/drivers/md/md.h
->>>> +++ b/drivers/md/md.h
->>>> @@ -864,6 +864,9 @@ extern void md_unregister_thread(struct mddev *mddev, struct md_thread __rcu **t
->>>>    extern void md_wakeup_thread(struct md_thread __rcu *thread);
->>>>    extern void md_check_recovery(struct mddev *mddev);
->>>>    extern void md_reap_sync_thread(struct mddev *mddev);
->>>> +extern enum sync_action md_sync_action(struct mddev *mddev);
->>>> +extern enum sync_action md_sync_action_by_name(char *page);
->>>> +extern char *md_sync_action_name(enum sync_action action);
->>>>    extern bool md_write_start(struct mddev *mddev, struct bio *bi);
->>>>    extern void md_write_inc(struct mddev *mddev, struct bio *bi);
->>>>    extern void md_write_end(struct mddev *mddev);
->>>> --
->>>> 2.39.2
->>>>
->>>
->>> .
->>>
->>
->>
+> 2. Make sure work-queues inherits current->flags
+>     wrt. PF_MEMALLOC_{NOIO,NOFS}, such that work executed on the
+>     work-queue inherits the same flag(s).
 > 
-> .
+> Håkon Bugge (6):
+>    workqueue: Inherit NOIO and NOFS alloc flags
+>    rds: Brute force GFP_NOIO
+>    RDMA/cma: Brute force GFP_NOIO
+>    RDMA/cm: Brute force GFP_NOIO
+>    RDMA/mlx5: Brute force GFP_NOIO
+>    net/mlx5: Brute force GFP_NOIO
+> 
+>   drivers/infiniband/core/cm.c                  | 15 ++++-
+>   drivers/infiniband/core/cma.c                 | 20 ++++++-
+>   drivers/infiniband/hw/mlx5/main.c             | 22 +++++--
+>   .../net/ethernet/mellanox/mlx5/core/main.c    | 14 ++++-
+>   include/linux/workqueue.h                     |  2 +
+>   kernel/workqueue.c                            | 17 ++++++
+>   net/rds/af_rds.c                              | 60 ++++++++++++++++++-
+>   7 files changed, 138 insertions(+), 12 deletions(-)
+> 
+> --
+> 2.39.3
 > 
 
