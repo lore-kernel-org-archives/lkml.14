@@ -1,151 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1035F9F5;
-	Tue, 14 May 2024 07:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556C6101E2;
+	Tue, 14 May 2024 07:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715670629; cv=none; b=TowYw8xPk2HlZAtoKMhHAITiZ4MXXmIsZBnCtcsQDbq/xTNDxTELoBIpQVsDb0oKGDex3qsB2JHFyZYwyNPukNKIc8YsDKOAgbuW1U1jL6Fq3A+NbbSlSdlnB6wkJBuZ1vo27HRMBif8O49TK+b8Pe/I+uuaMVmh0cI5jixyUIk=
+	t=1715670720; cv=none; b=r2ZckNskKkNpe4ePZSW+m32F/FoJMF+iQ1zzZ8w3nem+1zQ9yygSHKXR/AEjjNZZhb4M/0gh03ETZQYg/STXTfRzqebTJ1W/4/6MmuZ3KZkm39SuaNghzQCGGctQNT3lVCUSRODOWJXeqh8h8VwYcrapEfE38R67rNX1B0R96NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715670629; c=relaxed/simple;
-	bh=zdNUasxvJx2ymttYyTXszLP8zbd0eSQT87cFGXnRuu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gyTZA+EqiJlDppmzAX5FbSEOZ4LRUCeuzXMVss+XwaoV6oG4Bfp40r9Y7uTdbvkQXQuOnDOk3XVnpUVI7EeP/vh0Fl8Z90zKTqa73iZ+ZD6B419ZqQY7PR9+aWFydiTHvX4jj9lamu5952lu3MsofDG8Ctpyrm/DHIM4uOAGPAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C2FTA2Ds; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715670720; c=relaxed/simple;
+	bh=cOSULAH4zzj+lhfrDKtfR0j2wL6IkR4iwlPXlD5K3cQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RKcWKnz5ECPGgQLmMnftPFY+2eWBlFq6AbnTsC7h3SJ0uinDCfcqNaaZ96TOxJTUGJh5xGhK2mtaG5rMyFe/8fKH/wJjUgEgTD1l5Y1XdrZ/zfNjh1oUOGHas8IfAxMF3oUtCYgHFTgT08GtEVcauLPnTEgMqwsawhbjlAcPngY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=biuGn+mP; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C2FTA2Ds"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715670627; x=1747206627;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zdNUasxvJx2ymttYyTXszLP8zbd0eSQT87cFGXnRuu8=;
-  b=C2FTA2DsCTC+EfeHkrpwCwWQqC/yLmlUN4Hi3MIG0/tb4pU11A+iW9dZ
-   4BttdP28dJlFcHGaLILBnNbBW+m5QgsRMHRknQLfwLcsMm9w4TFzsofY5
-   4MareU1u0QvNrw/fdyuQ+qGmvX4Qgf9tH3JFea9h7KmwDALRQPs5SsT0g
-   VOerXv86n+sK+zGbNHqDS7jcyNnt6p5h8JC/I+kNTJNihtizhJg8etRf9
-   TblV858V3B2O7jQXYAUz3w6gKC83dt26Dw4+ZdQAgdT9rueYs3qIYKFdc
-   A7i1C2D64fjpWe2zMV3A17W7OlvtIBkWefk5z02dNwz0A/dpAc0nEKBvw
-   A==;
-X-CSE-ConnectionGUID: 5tWW/wQgSzaJm0h75tSRbA==
-X-CSE-MsgGUID: bShBIFGeSq+NCO2PjIQfCQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="23039888"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="23039888"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:10:26 -0700
-X-CSE-ConnectionGUID: yByfDjycSuy9TW0L2BpcbA==
-X-CSE-MsgGUID: zGLPV32cQqC5arFh/tkN2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="30540229"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 14 May 2024 00:10:24 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s6mIn-000BDb-2l;
-	Tue, 14 May 2024 07:10:21 +0000
-Date: Tue, 14 May 2024 15:09:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Richard Genoud <richard.genoud@bootlin.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: oe-kbuild-all@lists.linux.dev, Esteban Blanc <eblanc@baylibre.com>,
-	linux-rtc@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Richard Genoud <richard.genoud@bootlin.com>
-Subject: Re: [PATCH] rtc: tps6594: Add power management support
-Message-ID: <202405141408.o5jSp8nU-lkp@intel.com>
-References: <20240513162942.68484-1-richard.genoud@bootlin.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="biuGn+mP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1715670715;
+	bh=q4Eq0wErkTh7xJD9VaK0xWBmBA3aSLZdJ2laHtxhuZQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=biuGn+mPkhwhapJcxJyBbPbYH7py3jf7xfxNokxOykvc5TDn6tH/GXGD/n4SXCa1c
+	 UsbX4aqlO9DyDR3U+tv+RT4PizODLBYPkGQf+QbunG7uSEjupIkTEW4Q7m9q4moWyY
+	 25tW4LB391yCvHHkktie/QQ2CkvN4UoPd59lSsXVCWOwM9HoXdOdamWQMK18tYetCb
+	 YGV0BvV+09KpVfj+3/KhWTfuWsvYXD2VNqm0FeZ0fSwyGuFzsIhXsmKCTWi+ihq/G1
+	 9tUDJob5bG+uW92tnUCLyBhaj6srxTiBCrsm05QQZ4e6JLxI22bnmZPEMI/wqBIY9C
+	 o+FQZCX1hUPkw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VdnbZ1cl6z4wcg;
+	Tue, 14 May 2024 17:11:54 +1000 (AEST)
+Date: Tue, 14 May 2024 17:11:53 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Adam Nelson <adnelson@amd.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Dave Airlie <airlied@redhat.com>, DRI
+ <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the amdgpu tree
+Message-ID: <20240514171153.73fed88f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240513162942.68484-1-richard.genoud@bootlin.com>
+Content-Type: multipart/signed; boundary="Sig_/+u=ZZSyRVBxUYE6NB+F+=EG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Richard,
+--Sig_/+u=ZZSyRVBxUYE6NB+F+=EG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build warnings:
+Hi all,
 
-[auto build test WARNING on abelloni/rtc-next]
-[also build test WARNING on lee-mfd/for-mfd-next lee-leds/for-leds-next lee-mfd/for-mfd-fixes linus/master v6.9 next-20240513]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+After merging the amdgpu tree, today's linux-next build (htmldocs)
+produced this warning:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Genoud/rtc-tps6594-Add-power-management-support/20240514-003053
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
-patch link:    https://lore.kernel.org/r/20240513162942.68484-1-richard.genoud%40bootlin.com
-patch subject: [PATCH] rtc: tps6594: Add power management support
-config: sparc-randconfig-r081-20240514 (https://download.01.org/0day-ci/archive/20240514/202405141408.o5jSp8nU-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240514/202405141408.o5jSp8nU-lkp@intel.com/reproduce)
+drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:580: warning: Function paramete=
+r or struct member 'program_3dlut_size' not described in 'mpc_funcs'
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405141408.o5jSp8nU-lkp@intel.com/
+Introduced by commit
 
-All warnings (new ones prefixed by >>):
+  9de99fa8c1ea ("drm/amd/display: Fix 3dlut size for Fastloading on DCN401")
 
->> drivers/rtc/rtc-tps6594.c:471:12: warning: 'tps6594_rtc_suspend' defined but not used [-Wunused-function]
-     471 | static int tps6594_rtc_suspend(struct device *dev)
-         |            ^~~~~~~~~~~~~~~~~~~
->> drivers/rtc/rtc-tps6594.c:439:12: warning: 'tps6594_rtc_resume' defined but not used [-Wunused-function]
-     439 | static int tps6594_rtc_resume(struct device *dev)
-         |            ^~~~~~~~~~~~~~~~~~
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/+u=ZZSyRVBxUYE6NB+F+=EG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-vim +/tps6594_rtc_suspend +471 drivers/rtc/rtc-tps6594.c
+-----BEGIN PGP SIGNATURE-----
 
-   438	
- > 439	static int tps6594_rtc_resume(struct device *dev)
-   440	{
-   441		struct tps6594 *tps = dev_get_drvdata(dev->parent);
-   442		struct rtc_device *rtc_dev = dev_get_drvdata(dev);
-   443		int ret;
-   444	
-   445		ret = regmap_test_bits(tps->regmap, TPS6594_REG_INT_STARTUP,
-   446				       TPS6594_BIT_RTC_INT);
-   447		if (ret < 0) {
-   448			dev_err(dev, "failed to read REG_INT_STARTUP: %d\n", ret);
-   449			goto out;
-   450		}
-   451	
-   452		if (ret > 0) {
-   453			/*
-   454			 * If the alarm bit is set, it means that the IRQ has been
-   455			 * fired. But, the kernel may not have woke up yet when it
-   456			 * happened. So, we have to clear it.
-   457			 */
-   458			ret = regmap_write(tps->regmap, TPS6594_REG_RTC_STATUS,
-   459					   TPS6594_BIT_ALARM);
-   460			if (ret < 0)
-   461				dev_err(dev, "error clearing alarm bit: %d", ret);
-   462	
-   463			rtc_update_irq(rtc_dev, 1, RTC_IRQF | RTC_AF);
-   464		}
-   465	out:
-   466		disable_irq_wake(tps->irq_rtc);
-   467	
-   468		return 0;
-   469	}
-   470	
- > 471	static int tps6594_rtc_suspend(struct device *dev)
-   472	{
-   473		struct tps6594 *tps = dev_get_drvdata(dev->parent);
-   474	
-   475		enable_irq_wake(tps->irq_rtc);
-   476	
-   477		return 0;
-   478	}
-   479	
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZDDrkACgkQAVBC80lX
+0GyqCgf/VFfLdp98m5K+WU7fJxZcASt+J6wP+15TofuJCL18DX0Xc+j/OP3VpJF8
+qYIYl0Y1GrUl4CHkU5QiZdeewp1ySblDNZ9xWr2glb9K+B1LghtAA3uJ9Wddsm5D
+OTB+l0uCXJWalJEa1BxhCwbQ0TARo+tegwLMX70PiyTff84D1OaB2jlp1w7V9Xgt
+YUGCw2+uVIv52gcYb4Q2m35PUErlzEXAuhr745ucoZhc8fPbX3Oas97xSTYKWdaJ
+fvZxlE8A4sMRx3Rr8fal4QyQxBfOjm4TKygsHUsDefX8rMbTnUimFznQeeIKTXed
+iGEQ1DG0JLhaDdixBwWOoKurPQJKjA==
+=BWnx
+-----END PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--Sig_/+u=ZZSyRVBxUYE6NB+F+=EG--
