@@ -1,28 +1,37 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6C557880;
-	Tue, 14 May 2024 09:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357A357880;
+	Tue, 14 May 2024 09:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715680106; cv=none; b=f6vu/R8UEMRT3pYhbiKh1GcBzj9CeEhEq60pj/ofqzfBF2t87pVeSq2o7xwryz9dyCDYkTenetwNRkZ7+qQ9OS/4H75abcoBCsAZm4rEGLrdBG1GAcfx+iai5hTXMzupn+sQUbeM6VDme4q6oMh8honAN9KdAWAYkTwnyVLBuro=
+	t=1715680119; cv=none; b=mIx0JwavA5+i1SW79t6FML+d0JPRRyOMFdgJT/ER/5/JomLn2ktx6hojqK3HNNqaxHXhqIWB0FURJzfJdu31W83OS44p8F6nx1V6COLE1aNqW6TQy2U+r0Pn0LiwP7cGjop/K43hnbxvaqkM4mDUIJOj7/h+nhVJabxXHGgPNqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715680106; c=relaxed/simple;
-	bh=hk2QxtvkTlDVBYcg1+ezs1QsfrM4jY5sDpRXMmVDJ94=;
+	s=arc-20240116; t=1715680119; c=relaxed/simple;
+	bh=OftvRN5FYOGb0QnfwZasmhuCm52IoMGg8swzhWcgK/0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I2AzZ4IeuvCr50+DiZpUP6COpjV/Mp7042+aff1dU5zqsvfzGN+Vzrv8cwMF7eA8TozVJ3VjT12ocPzsBxn3IsoB3YTPi35cGVUUh2s54BHCHoiaI0bu/tESrioleUb9pDBE0OKtIE2KHM+kM7XN0pWJLMz16rpsoUKcs02LGf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.56] (g56.guest.molgen.mpg.de [141.14.220.56])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D731A61E5FE06;
-	Tue, 14 May 2024 11:20:06 +0200 (CEST)
-Message-ID: <5d7f5918-d821-4757-bce9-2fede79d7fe4@molgen.mpg.de>
-Date: Tue, 14 May 2024 11:20:06 +0200
+	 In-Reply-To:Content-Type; b=Z5ZxU3CyjklcKyG4KouedCmsJbEkJqZwWJPDkZUzodQ4NuWmd1XB/ZqmThG2TYrON9t1XPRSIPGjI3ODnYf9YwSvW+xQO4jD3xsqD5sLz3gRqoFlmMcy2NHrIKEBciv8Ais7Ff5txxs3b9bEPEKBq5PpPTIuuRdv4yPMfnVjP8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kGzY9Grk; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kGzY9Grk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=OftvRN5FYOGb0QnfwZasmhuCm52IoMGg8swzhWcgK/0=; t=1715680117;
+	x=1716112117; b=kGzY9Grk6KEhop/IWLfdCtviAVSYObF4RDzRK8WGDttEmW0ipHbWLcgsqk5El
+	Ywfj8LnMtDxg0/2AUlnsolzYvJjkq2rATS7tJT0ZDtZSmYyztGfZUMjCo/LDgpRMWkhXQh6kfYKSy
+	n9Wp5RAMbUyXh4eew5gEL3J4Z9Phwbse7EMwMMoxc83mH4C5R+tVYMKfM4pWhUmV6CMLEE0mw8lgf
+	ANXnE2QmRrZcGaya05MLub5kJ1mcHdg2wX7U6ga6b5UfP6jlmUbhmqJc9egkGxoNWcNZZd/lS9nig
+	z8GxBZVWREFkqMmfcoBm4RQqVNP6zqcmHAtQlQ4vElwKDEngCg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s6olk-0001jy-TO; Tue, 14 May 2024 11:48:24 +0200
+Message-ID: <ce8b63da-8bc0-456d-8fff-23e937871246@leemhuis.info>
+Date: Tue, 14 May 2024 11:48:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,217 +39,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] Bluetooth: btnxpuart: Enable status prints for
- firmware download
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- amitkumar.karwar@nxp.com, rohit.fule@nxp.com, sherry.sun@nxp.com,
- ziniu.wang_1@nxp.com, haibo.chen@nxp.com, LnxRevLi@nxp.com,
- guillaume.legoupil@nxp.com, salim.chebbo@nxp.com
-References: <20240514091444.1508033-1-neeraj.sanjaykale@nxp.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240514091444.1508033-1-neeraj.sanjaykale@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: Regression of e1000e (I219-LM) from 6.1.90 to 6.6.30
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>, intel-wired-lan@lists.osuosl.org,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ lukas.probsthain@googlemail.com
+References: <ZkHSipExKpQC8bWJ@archie.me>
+ <b2897fda-08e8-40de-b78a-86e92bde41db@lunn.ch>
+ <56463a97-eb90-4884-b2f5-c165f6c3516a@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <56463a97-eb90-4884-b2f5-c165f6c3516a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715680118;2a0210a5;
+X-HE-SMSGID: 1s6olk-0001jy-TO
 
-Dear Neeraj,
+On 14.05.24 06:34, Bagas Sanjaya wrote:
+> On 5/14/24 00:17, Andrew Lunn wrote:
+>> On Mon, May 13, 2024 at 03:42:50PM +0700, Bagas Sanjaya wrote:
+>>>
+>>> <lukas.probsthain@googlemail.com> reported on Bugzilla
+>>> (https://bugzilla.kernel.org/show_bug.cgi?id=218826) regression on his Thinkpad
+>>> T480 with Intel I219-LM:
 
+Bagas, why did you start forwarding these bugs by mail yourself again
+after we had agreed you forward them to me, so I can handle it from there?
 
-Thank you for the patch.
+Yes, you forwarded that particular bug to me a few days ago and I didn't
+do anything. But that was on purpose: I usually wait at least two
+working days before doing so, as some subsystem are active in bugzilla
+and might feel annoyed by starting a separate thread on the mailing list.
 
-Am 14.05.24 um 11:14 schrieb Neeraj Sanjay Kale:
-> This enables prints for firmware download which can help automation
-> tests to verify firmware download functionality.
+Side note: you also apparently make it not obvious enough that you are
+just forwarding the bug, as both here and in the other bug your
+forwarded today the developer apparently thought it was a bug you face.
 
-Please paste the old and new log messages to the commit message.
+Please lets avoid all of that again and switch back to the model we
+agreed on a few months ago.
 
-> A new flag BTNXPUART_FW_DOWNLOAD_ABORT is added which handles the
-> situation where driver is removed while firmware download is in
-> progress.
+>>>> After updating from kernel version 6.1.90 to 6.6.30, the e1000e driver exhibits a regression on a Lenovo Thinkpad T480 with an Intel I219-LM Ethernet controller.
+>>
+>> Could you try a git bisect between these two kernel versions? You
+>> might be able to limit it to drivers/net/ethernet/intel/e1000e, which
+>> only had around 15 patches.
+>
+> The BZ reporter (Cc'ed) says that bisection is in progress. You may
+> want to log in to BZ to reach him.
 
-Could this be a separate patch?
+Side note: you should not assume every developer has a BZ account (or is
+willing to create one).
 
-> This also adds a check before freeing the rx->skb in flush and close
-> functions to handle the kernel crash seen in case of firmware download
-> timeout.
-
-Please make this a separate commit with a Fixes: tag.
-
-
-Kind regrads,
-
-Paul
-
-
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> Tested-by: Guillaume Legoupil <guillaume.legoupil@nxp.com>
-> ---
-> v2: Handle firmware download abort scenario. (Guillaume Legoupil)
-> v3: Minor corrections. Add details to commit message.
-> ---
->   drivers/bluetooth/btnxpuart.c | 67 +++++++++++++++++++++++------------
->   1 file changed, 45 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-> index 0b93c2ff29e4..7aed5298ee6f 100644
-> --- a/drivers/bluetooth/btnxpuart.c
-> +++ b/drivers/bluetooth/btnxpuart.c
-> @@ -29,6 +29,7 @@
->   #define BTNXPUART_CHECK_BOOT_SIGNATURE	3
->   #define BTNXPUART_SERDEV_OPEN		4
->   #define BTNXPUART_IR_IN_PROGRESS	5
-> +#define BTNXPUART_FW_DOWNLOAD_ABORT	6
->   
->   /* NXP HW err codes */
->   #define BTNXPUART_IR_HW_ERR		0xb0
-> @@ -159,6 +160,7 @@ struct btnxpuart_dev {
->   	u8 fw_name[MAX_FW_FILE_NAME_LEN];
->   	u32 fw_dnld_v1_offset;
->   	u32 fw_v1_sent_bytes;
-> +	u32 fw_dnld_v3_offset;
->   	u32 fw_v3_offset_correction;
->   	u32 fw_v1_expected_len;
->   	u32 boot_reg_offset;
-> @@ -550,6 +552,7 @@ static int nxp_download_firmware(struct hci_dev *hdev)
->   	nxpdev->fw_v1_sent_bytes = 0;
->   	nxpdev->fw_v1_expected_len = HDR_LEN;
->   	nxpdev->boot_reg_offset = 0;
-> +	nxpdev->fw_dnld_v3_offset = 0;
->   	nxpdev->fw_v3_offset_correction = 0;
->   	nxpdev->baudrate_changed = false;
->   	nxpdev->timeout_changed = false;
-> @@ -564,14 +567,23 @@ static int nxp_download_firmware(struct hci_dev *hdev)
->   					       !test_bit(BTNXPUART_FW_DOWNLOADING,
->   							 &nxpdev->tx_state),
->   					       msecs_to_jiffies(60000));
-> +
-> +	release_firmware(nxpdev->fw);
-> +	memset(nxpdev->fw_name, 0, sizeof(nxpdev->fw_name));
-> +
->   	if (err == 0) {
-> -		bt_dev_err(hdev, "FW Download Timeout.");
-> +		bt_dev_err(hdev, "FW Download Timeout. offset: %d",
-> +				nxpdev->fw_dnld_v1_offset ?
-> +				nxpdev->fw_dnld_v1_offset :
-> +				nxpdev->fw_dnld_v3_offset);
->   		return -ETIMEDOUT;
->   	}
-> +	if (test_bit(BTNXPUART_FW_DOWNLOAD_ABORT, &nxpdev->tx_state)) {
-> +		bt_dev_err(hdev, "FW Download Aborted");
-> +		return -EINTR;
-> +	}
->   
->   	serdev_device_set_flow_control(nxpdev->serdev, true);
-> -	release_firmware(nxpdev->fw);
-> -	memset(nxpdev->fw_name, 0, sizeof(nxpdev->fw_name));
->   
->   	/* Allow the downloaded FW to initialize */
->   	msleep(1200);
-> @@ -693,7 +705,7 @@ static int nxp_request_firmware(struct hci_dev *hdev, const char *fw_name)
->   	if (!strlen(nxpdev->fw_name)) {
->   		snprintf(nxpdev->fw_name, MAX_FW_FILE_NAME_LEN, "%s", fw_name);
->   
-> -		bt_dev_dbg(hdev, "Request Firmware: %s", nxpdev->fw_name);
-> +		bt_dev_info(hdev, "Request Firmware: %s", nxpdev->fw_name);
->   		err = request_firmware(&nxpdev->fw, nxpdev->fw_name, &hdev->dev);
->   		if (err < 0) {
->   			bt_dev_err(hdev, "Firmware file %s not found", nxpdev->fw_name);
-> @@ -781,7 +793,7 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev, struct sk_buff *skb)
->   	}
->   
->   	if (!len) {
-> -		bt_dev_dbg(hdev, "FW Downloaded Successfully: %zu bytes",
-> +		bt_dev_info(hdev, "FW Download Complete: %zu bytes",
->   			   nxpdev->fw->size);
->   		if (nxp_data->helper_fw_name && !nxpdev->helper_downloaded) {
->   			nxpdev->helper_downloaded = true;
-> @@ -934,7 +946,7 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
->   	}
->   
->   	if (req->len == 0) {
-> -		bt_dev_dbg(hdev, "FW Downloaded Successfully: %zu bytes",
-> +		bt_dev_info(hdev, "FW Download Complete: %zu bytes",
->   			   nxpdev->fw->size);
->   		clear_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
->   		wake_up_interruptible(&nxpdev->fw_dnld_done_wait_q);
-> @@ -954,8 +966,9 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
->   		goto free_skb;
->   	}
->   
-> -	serdev_device_write_buf(nxpdev->serdev, nxpdev->fw->data + offset -
-> -				nxpdev->fw_v3_offset_correction, len);
-> +	nxpdev->fw_dnld_v3_offset = offset - nxpdev->fw_v3_offset_correction;
-> +	serdev_device_write_buf(nxpdev->serdev, nxpdev->fw->data +
-> +				nxpdev->fw_dnld_v3_offset, len);
->   
->   free_skb:
->   	kfree_skb(skb);
-> @@ -1037,7 +1050,7 @@ static int nxp_setup(struct hci_dev *hdev)
->   		if (err < 0)
->   			return err;
->   	} else {
-> -		bt_dev_dbg(hdev, "FW already running.");
-> +		bt_dev_info(hdev, "FW already running.");
->   		clear_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
->   	}
->   
-> @@ -1253,8 +1266,10 @@ static int btnxpuart_close(struct hci_dev *hdev)
->   	ps_wakeup(nxpdev);
->   	serdev_device_close(nxpdev->serdev);
->   	skb_queue_purge(&nxpdev->txq);
-> -	kfree_skb(nxpdev->rx_skb);
-> -	nxpdev->rx_skb = NULL;
-> +	if (!IS_ERR_OR_NULL(nxpdev->rx_skb)) {
-> +		kfree_skb(nxpdev->rx_skb);
-> +		nxpdev->rx_skb = NULL;
-> +	}
->   	clear_bit(BTNXPUART_SERDEV_OPEN, &nxpdev->tx_state);
->   	return 0;
->   }
-> @@ -1269,8 +1284,10 @@ static int btnxpuart_flush(struct hci_dev *hdev)
->   
->   	cancel_work_sync(&nxpdev->tx_work);
->   
-> -	kfree_skb(nxpdev->rx_skb);
-> -	nxpdev->rx_skb = NULL;
-> +	if (!IS_ERR_OR_NULL(nxpdev->rx_skb)) {
-> +		kfree_skb(nxpdev->rx_skb);
-> +		nxpdev->rx_skb = NULL;
-> +	}
->   
->   	return 0;
->   }
-> @@ -1385,16 +1402,22 @@ static void nxp_serdev_remove(struct serdev_device *serdev)
->   	struct btnxpuart_dev *nxpdev = serdev_device_get_drvdata(serdev);
->   	struct hci_dev *hdev = nxpdev->hdev;
->   
-> -	/* Restore FW baudrate to fw_init_baudrate if changed.
-> -	 * This will ensure FW baudrate is in sync with
-> -	 * driver baudrate in case this driver is re-inserted.
-> -	 */
-> -	if (nxpdev->current_baudrate != nxpdev->fw_init_baudrate) {
-> -		nxpdev->new_baudrate = nxpdev->fw_init_baudrate;
-> -		nxp_set_baudrate_cmd(hdev, NULL);
-> +	if (is_fw_downloading(nxpdev)) {
-> +		set_bit(BTNXPUART_FW_DOWNLOAD_ABORT, &nxpdev->tx_state);
-> +		clear_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
-> +		wake_up_interruptible(&nxpdev->check_boot_sign_wait_q);
-> +		wake_up_interruptible(&nxpdev->fw_dnld_done_wait_q);
-> +	} else {
-> +		/* Restore FW baudrate to fw_init_baudrate if changed.
-> +		 * This will ensure FW baudrate is in sync with
-> +		 * driver baudrate in case this driver is re-inserted.
-> +		 */
-> +		if (nxpdev->current_baudrate != nxpdev->fw_init_baudrate) {
-> +			nxpdev->new_baudrate = nxpdev->fw_init_baudrate;
-> +			nxp_set_baudrate_cmd(hdev, NULL);
-> +		}
-> +		ps_cancel_timer(nxpdev);
->   	}
-> -
-> -	ps_cancel_timer(nxpdev);
->   	hci_unregister_dev(hdev);
->   	hci_free_dev(hdev);
->   }
+Ciao, Thorsten
