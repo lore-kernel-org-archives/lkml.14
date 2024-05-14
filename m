@@ -1,65 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2E4617C2
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 03:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBFB17C2;
+	Tue, 14 May 2024 03:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715657141; cv=none; b=jPr0it6+eMa6LnYMR/44KUugOyPtEFHZGBDqzSK2Lb/9n3A23t0AgPWbj1T/WS+diRjhBfkkq+pMYkNiorrskNw7grk0NgTG2uUq5frI8MRqxK1Yrp5CZl37brCs+jJSH44eJt1GuK/a/jKFKCnWCAtoO61qnD0r/bT+5xS5KBY=
+	t=1715657500; cv=none; b=Xk0Z45jE/xnPqPXSVp4x9L+RvmicsuM6Y+9GPWn0AB3xmXc3JcmPxA880CJaG3ayYdIrczwQUVYCgj9Vum/vcL13VutE56Q2CC1o7dXOV9CfLctBqbChkgO9tOiPNyr1+EEqZdKwt+nMtEQ9thqa71uMzEcdyPS8NmSNIfJg6zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715657141; c=relaxed/simple;
-	bh=jk63Rm7ks9AdRCHsNPN6oDJWZW1fBSt+HTwGGngaXvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VlZCu78bVl2+Vwhg9Mz/HwESWw+4EhwMKOwtyFCPpD2WRY6SM55DbzLiEq9c+9ioQDithw3s/cVnq/PbtdM2Fsytyv5k1imYB0hMSe69WkRNpfP1xtvkmgERnUEh3ycJOnQ4oiqFu/hKY8dht2bvGp9qyz2eDf3vH4d/VDmSoEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 788891007;
-	Mon, 13 May 2024 20:26:01 -0700 (PDT)
-Received: from [10.163.35.194] (unknown [10.163.35.194])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA3373F762;
-	Mon, 13 May 2024 20:25:33 -0700 (PDT)
-Message-ID: <3ade5078-0105-4d10-86d2-02806d48fbd0@arm.com>
-Date: Tue, 14 May 2024 08:55:43 +0530
+	s=arc-20240116; t=1715657500; c=relaxed/simple;
+	bh=C5xYCfcQWl/XWOBVZGHYyJOwt9SRH8lTLVBSQ+N8FN8=;
+	h=From:To:Subject:Date:Message-Id; b=HzOyPbMVtif1DD3Ffbl/KunyU8FVDOoNH12F4MRdyK1g2fr2I/Q5SPO4kz/xksBH9fmSXxzvy7SAFgeQNoZPJiJlwycoQGvHwUgXFuXUUaVar/K4PVPqiAmK3+daATLgp04tLU2R3jDsJHvPepi6mlhdkPv/MayflSW6IJhAf1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 262E12017DC;
+	Tue, 14 May 2024 05:31:31 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D01162017D7;
+	Tue, 14 May 2024 05:31:30 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id AABC3180226C;
+	Tue, 14 May 2024 11:31:28 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shengjiu.wang@gmail.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 0/2] ASoC: fsl_xcvr: Support i.MX95 platform
+Date: Tue, 14 May 2024 11:12:07 +0800
+Message-Id: <1715656329-8061-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/rmap: optimize folio_move_anon_rmap()
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>,
- Chen Taotao <chentt10@chinatelecom.cn>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240512123555.8358-1-chentt10@chinatelecom.cn>
- <7a4d4992-4c8a-43b9-8c41-a938bc3cec67@redhat.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <7a4d4992-4c8a-43b9-8c41-a938bc3cec67@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+On i.MX95 wakeup domain, there is one instance of Audio XCVR
+supporting SPDIF mode with a connection to the Audio XCVR physical
+interface.
 
+changes in v2:
+- Merge patch 1&2, 3&4 from v1 together.
+- Add more comments in commit message
+- Add constaint for clocks used on i.mx95
+- Add 'select SND_SOC_FSL_UTILS' for compiling issue.
 
-On 5/13/24 21:07, David Hildenbrand wrote:
-> On 12.05.24 14:35, Chen Taotao wrote:
->> When a folio belongs exclusively to one process after a COW event,
->> folio_move_anon_rmap() always moves the folio into the anon_vma
->> belongs only to this process.
->>
->> However, if the folio already belongs to the anon_vma of the this
->> process, we don't need to move it again. In this case, we first
->> check if the folio already belongs to the anna_vma of the this
->> process, and only move it if it does not.
->>
->> The above changes may improve the performance of vm faults in some
->> scenarios, because the performance loss caused by WRITE_ONCE() is
->> much more than the performance loss caused by add a judgment.
-> 
-> Please proof that by real numbers. I don't think it will make a real difference, and we likely don't want that change.
+Shengjiu Wang (2):
+  ASoC: dt-bindings: fsl,xcvr: Add compatible string for i.MX95
+  ASoC: fsl_xcvr: Add support for i.MX95 platform
 
-Agreed, only scenarios when pre-condition check makes any sense is
-if subsequent actions are expensive such as writing into registers
-etc. But in this case both 'if' and 'WRITE_ONCE' statements are of
-comparable cost, hence adding additional conditional check is only
-going to increase the cost on average i.e when both gets executed.
+ .../devicetree/bindings/sound/fsl,xcvr.yaml   |  55 ++++++--
+ sound/soc/fsl/Kconfig                         |   1 +
+ sound/soc/fsl/fsl_xcvr.c                      | 128 ++++++++++++------
+ sound/soc/fsl/fsl_xcvr.h                      |  91 +++++++++++++
+ 4 files changed, 222 insertions(+), 53 deletions(-)
+
+-- 
+2.34.1
+
