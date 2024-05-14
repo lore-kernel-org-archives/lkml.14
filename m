@@ -1,64 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEF45B1FB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B181217EBBD
 	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 16:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715703297; cv=none; b=Tc3qvo4a1oSIzkssXQKOOdhBwHFoPv4Ovh0NppIO05xmtTyTjufACaeTc3tSXQQ8ZaRV6/IF1ShobDZ4VAGvy/+mhmS3UHl+dnkui77qxIeFAXEu2gIhb85eo42qMO16pmpZqppkIFjWUcTfdKsSO0lFppmFRqw/DKSoiXgmx0M=
+	t=1715703297; cv=none; b=HlNduO3tcS8+6sghiEwTQiay6SAp3sxLMhLBd268ePR3HrzHH0KkYKMcb3n9lcn6cYKBHdNF9J5arPP2ntAL0y1k07oPrSLklXf7rpg1KD1cZGirHgcqFSN8PaMXsbalCZjcyVuoEn6D2VLU6slyn0hWSgqcTalqzFT8hNgA19s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715703297; c=relaxed/simple;
-	bh=OGpJLE/d7lmQD/l1DIBMPMRQRRcls6gFoJ4WHiI00HA=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=owlQShWNpjO+CtkYVh9ay/CVsc+BwC8EdZtM/xa67xwB7RaAoqQrn8l3P5VzZkVJU0YV4YZ6XNqau2sD+VzH1Cd+ZIsc9EytWioeXgTWZ7D/gQjguyxOVJu/nzCUezcE2yf56HxEPJRD95hq05eHMyXP+YMxykNrri1dpzcc89s=
+	bh=xpNUKXxZg5qc/m0w5UgHuX1xFL6MNEp0QCdXc0cQBDo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=uPnv+GDBM0NLNS+HqORsgd22/37I0DejxJXGs+tbc0O6q74MdRvcj21vrST2xmLQ0Kw2fMhXdoCPdibsR+DSW9U7i8jZsZUYtY3tyruflc7fuJlX/12bdXwv1uQQZDWTShyi2ubar4+KvQQT0HnuRx+LkuLAIc/9s+4hoMEfmpw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597EDC2BD10;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC69C4AF09;
 	Tue, 14 May 2024 16:14:57 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s6uoD-00000003t2U-4497;
-	Tue, 14 May 2024 12:15:21 -0400
-Message-ID: <20240514161438.134250861@goodmis.org>
+	id 1s6uoE-00000003t3U-1G0w;
+	Tue, 14 May 2024 12:15:22 -0400
+Message-ID: <20240514161522.157427484@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 14 May 2024 12:14:38 -0400
+Date: Tue, 14 May 2024 12:14:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 0/7] tracing: Various clean ups and fixes
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Chris Mason <clm@fb.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [for-next][PATCH 2/7] ftrace: Use asynchronous grace period for register_ftrace_direct()
+References: <20240514161438.134250861@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-This is some clean ups and fixes for this merge window.
+From: "Paul E. McKenney" <paulmck@kernel.org>
+
+When running heavy test workloads with KASAN enabled, RCU Tasks grace
+periods can extend for many tens of seconds, significantly slowing
+trace registration.  Therefore, make the registration-side RCU Tasks
+grace period be asynchronous via call_rcu_tasks().
+
+Link: https://lore.kernel.org/linux-trace-kernel/ac05be77-2972-475b-9b57-56bef15aa00a@paulmck-laptop
+
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: Alexei Starovoitov <ast@kernel.org>
+Reported-by: Chris Mason <clm@fb.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ftrace.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 3951c0d0ec63..f9223513414a 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5366,6 +5366,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+ 	}
+ }
+ 
++static void register_ftrace_direct_cb(struct rcu_head *rhp)
++{
++	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
++
++	free_ftrace_hash(fhp);
++}
++
+ /**
+  * register_ftrace_direct - Call a custom trampoline directly
+  * for multiple functions registered in @ops
+@@ -5464,10 +5471,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+  out_unlock:
+ 	mutex_unlock(&direct_mutex);
+ 
+-	if (free_hash && free_hash != EMPTY_HASH) {
+-		synchronize_rcu_tasks();
+-		free_ftrace_hash(free_hash);
+-	}
++	if (free_hash && free_hash != EMPTY_HASH)
++		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
+ 
+ 	if (new_hash)
+ 		free_ftrace_hash(new_hash);
+-- 
+2.43.0
 
 
-Dr. David Alan Gilbert (2):
-      ftrace: Remove unused list 'ftrace_direct_funcs'
-      ftrace: Remove unused global 'ftrace_direct_func_count'
-
-Hao Ge (1):
-      eventfs: Fix a possible null pointer dereference in eventfs_find_events()
-
-Paul E. McKenney (1):
-      ftrace: Use asynchronous grace period for register_ftrace_direct()
-
-Thorsten Blum (1):
-      tracing: Improve benchmark test performance by using do_div()
-
-Yuran Pereira (1):
-      ftrace: Replaces simple_strtoul in ftrace
-
-Zheng Yejian (1):
-      ftrace: Fix possible use-after-free issue in ftrace_location()
-
-----
- fs/tracefs/event_inode.c       |  7 ++---
- include/linux/ftrace.h         |  3 --
- kernel/trace/fgraph.c          | 11 -------
- kernel/trace/ftrace.c          | 68 ++++++++++++++++++++++--------------------
- kernel/trace/trace_benchmark.c |  2 +-
- 5 files changed, 39 insertions(+), 52 deletions(-)
