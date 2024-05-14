@@ -1,111 +1,145 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC05417EBAA
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 15:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A6C17EBAA;
+	Tue, 14 May 2024 15:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715702220; cv=none; b=e8nUa8aZ2TQGKWpRwdM31KlneP6WUIjibO3mFkncssoe7ucXKS/7dOCLX38D1xrTPMpQd2arussgea1WiaSLPRrfJlJ89HykoZQXRAiUcDbKVAgkPJX4UxJ7dT9rNWIBE4CqbyK8/y/dZ8kSPZi2uRlBIiBMDWqhCHcKalzXI48=
+	t=1715702254; cv=none; b=PgDDt6V1La9m7Pg/XkNlYiHTwHimwI2+/CNWBZu8LXgrCdOjnnbpwPg/EPP7I1ArfvLOtXLtvHtfvCekctltl3mNjcjI03vdvW1Vd4BShZiYG2Lc+ulNmxJrKp/6SpTFtAL3/1D0V72fV3cStNeosquUidp5vpTIMDLFIFeQLGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715702220; c=relaxed/simple;
-	bh=YA6pyQiLLslarUnTKZZJMUBTQqHbLA/4c4NUOUNEKQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G3MdD6AIji2urKyz++uqhaRc/48Y49wZ/1gFZe1fir5f++sTHhCWc9vklKagpKDNAH0z6X50KWKsIhah/oOVoBOtYWQg5C9FNdbVarbB3pRgpXrdO+JeGmcGFPBGopvTzqpvuFOfZtOZCRdXAsHlzdIMEicUjzswK8vT3/0D7Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=BEZfi27Z; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1715702254; c=relaxed/simple;
+	bh=7vQ9caJ69PPA/iWpxP0PVdG/Xnyf24O2zVxjSm9eec0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=asedzKwJ8iF1eOh3iECzKZrqAvDHsaf0MJErPcvJZnhWDyIcIcPbOrXa1h0vOxGcfwq3WYHMG8X0P4x59qjCW5i/gKcdWC2MVOrFYPLWMPmLNFY4zLj6iML++oCB7VGB9OAC+VPV2UJ85P7fk2K1qkVMA8zRySMciaUVgRPfih4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dqU/sBjS; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="BEZfi27Z"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-23f9c2f1df6so3558730fac.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:56:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqU/sBjS"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-34d8d11a523so3650309f8f.2;
+        Tue, 14 May 2024 08:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1715702218; x=1716307018; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e6MGF0tcuYUW8jKv8L9+C0X+Q6Jb+20y5kn9DK3CWgc=;
-        b=BEZfi27ZDNKXrOlGC6H4b2KBKrmFzURdAkcRuh/XjsLwUc1u/nlgbuHz1XLw2voJs8
-         gl1DyRl9q+MqTFU8WdiJwQitgc7JBW7qOdDnrqNK+Y3drR53XdeiODHqylIMO/GizBNx
-         6Qjr8mB05vCGnwWxfu6D4tUt/Za8dNP2ahsacSmufIedPFfL18JkC9Ps9DjHuEMgndZc
-         DIAbaA+JjLP65q3yxB/JSy/wY1fud3CtylOUudGF0Aw00l5vlsHgxSxMD6bvVi8ANvBS
-         Xwh1OMp6EcqBxbK448NnZ/7iHF6dhq1j9+03QmiyK1N9TVfl5ZXRDXgUuk1rDGxm2Thh
-         TwSQ==
+        d=gmail.com; s=20230601; t=1715702251; x=1716307051; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T+d4421rpsL7HiUws1Ztdbm4DVzL1jztBkW9+LQ+UBo=;
+        b=dqU/sBjSwLu4bozDDv2XKBuqOl8eeZ+3hp2B4XnRatnNrIVuWow/8w1/b20UMc5vG9
+         uyJc0Jyr0A0fUDN/2UYa9eLtOQs9G10nQIfz+8C6o+g8xUYPR7d29TRLJGgJofiSnl7L
+         nQ0FwOVRb3a/0qBp1OwPapDuonBup8t2zP4xqi9wwO2852/YFjBB03w+B1vmoclsQf+j
+         UstRiJ74Qb+tiimw7tlTEYZ5V438JMDuQx16oNOPCV2QpgWnJTallS/8T7G2I2RRNuzu
+         A+EN6bsGiA7cYNO7gRPBXmaEA3wG1Um9oXXXQGVsfWvNhSF0PFttkFowvfxZLmV4UWoJ
+         Tkyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715702218; x=1716307018;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e6MGF0tcuYUW8jKv8L9+C0X+Q6Jb+20y5kn9DK3CWgc=;
-        b=xIt1q1FQFsbWyiBcOBE22XrFmt+FghPv4uGPuevf22IamU+UvzvFmQAY7iTBEn5XgK
-         CyWaO+Eb8+RLL69GkPPm/vIVjPjhb5fMNeot/Se/CCvyi1000oMrKhgvO7tK+wml5dG/
-         zRydTQo9OoATuGXrT8RtM3goeYN1htw9mZ8hwDAHn8ejgDQ1Cjo6qiDd6U1u0eG4i9Bz
-         QjzDkF1AWTXf1UvgpVChWx8mS11kj1HtBLFKE6iaNJykTC/p/2DYO8VEAJROkqAathpI
-         nO3J8udJ6W6b7RV3ZPEQaInLmZH1hqwDSAD1zse/0vJz2dlLR72u6XVx7hCKz+89UPul
-         8oYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLR3YUO3JOtm+mvLPB8l4KANJyXKQnzvg3jvg/mM7Ctrenm05De/of/p7TZ4OA8O8ItPpSUYbVgeOlO/0xdXrr4WqcYrPpgvbQ/Dop
-X-Gm-Message-State: AOJu0YxGyGup1vX2LlO+GFBkwlERMMJ3YZmQ/H6WJTyAoFsQ196mC0sl
-	35qkCZy1ag5Uth4xzzMNcbacGBn3jlCEfirJCdgAIAumH65CuIQbA84lxQXEwdZHebEIHqwdRDx
-	jEvrgUPGEvSz/DG92tHFkrUlXP2lIstJxyWnjZA==
-X-Google-Smtp-Source: AGHT+IEQ/4e3Xdlw5o+oGBoYc/qjPodJ1x+HDfCTQwbUcL2+yeysXxIOfH8cuC7q3IN5+SY5krebRZTNRqtrnD1+EdY=
-X-Received: by 2002:a05:6870:9722:b0:22e:8ca0:36ba with SMTP id
- 586e51a60fabf-24172bd7029mr15691437fac.22.1715702217977; Tue, 14 May 2024
- 08:56:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715702251; x=1716307051;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=T+d4421rpsL7HiUws1Ztdbm4DVzL1jztBkW9+LQ+UBo=;
+        b=uupcYeRcfrI3YEzv51OkDY3M4UXuGpV5bGPWlsz2TWWGxVZ/1am0Lc5B8SqFQ4/r5M
+         QAgjylRk764qqgSesqajSOwEkUqJ51OqGpst9DsAJ5tL0KIesDcyIjQ2tKbToC6DJraJ
+         zJCqBkXL7oV6bYWkTPM/2ozhGOPL817WXNXwJqkU44PVF6kU55VmU3zeYY6p7fAbF1Sh
+         4ZZCM3eje51uG1efFzRNamNE+s/KcL517ZilY8lWP0EQAAn3YkkTSkivt60bLmdZtoK3
+         zxZrECXBDr0pgm7mBGfY0mwEZ5W82E7RXTmtfW0RBawnMVxJPU975IQpyZZF2RxUm+gv
+         1i8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUap3VSv6HTQF2yDeTOgGFNlMuT6uY5xLevdpqs+YebtwPK2vTIvlzlvjsfKaGoS2xqN2fplzad/BRXb2PGGrakOwRYSZudULcHgLxbEGGRQghNS2ruvMYTNqqTfxI4txF4hZFaIdF9IVTyoaWntVTjsjsXf8e4NGKTg79ppz+OxQCoxKOp
+X-Gm-Message-State: AOJu0YzyGbJAlcncBZrkdQQ9bDnJq63YxnL9B/uMCm2Sicqlwt6q5c1d
+	69XqDKh7GzDuv5JgZcqNO+BTZ+OjB4d66KyAO2FVxiOvWS+AKSko
+X-Google-Smtp-Source: AGHT+IGfTM40WEprBTch2H967ZRRzRzKTT0rxn3GV9l1lNsS/HTRokQXI1/DIIFxF4ck9xhTstklVQ==
+X-Received: by 2002:a5d:6451:0:b0:34e:34c5:2312 with SMTP id ffacd0b85a97d-3504aa62fd3mr9068696f8f.59.1715702250770;
+        Tue, 14 May 2024 08:57:30 -0700 (PDT)
+Received: from debian ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbc082sm14042487f8f.107.2024.05.14.08.57.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 08:57:30 -0700 (PDT)
+Message-ID: <8e0b027d-4d30-4f0f-82ef-113287f17c6a@gmail.com>
+Date: Tue, 14 May 2024 17:56:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514153532.3622371-1-surenb@google.com>
-In-Reply-To: <20240514153532.3622371-1-surenb@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 14 May 2024 09:56:20 -0600
-Message-ID: <CA+CK2bCmy1PhDgDvEX2Pg=_HvLLD2msJmTV_rgMxifbd-y1wRA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] lib: add version into /proc/allocinfo output
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, vbabka@suse.cz, 
-	keescook@chromium.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v10 2/3] net: gro: move L3 flush checks to
+ tcp_gro_receive and udp_gro_receive_segment
+To: Jakub Kicinski <kuba@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ willemdebruijn.kernel@gmail.com, dsahern@kernel.org,
+ alexander.duyck@gmail.com, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20240509190819.2985-1-richardbgobert@gmail.com>
+ <20240509190819.2985-3-richardbgobert@gmail.com>
+ <CAMuHMdXFJwxexojG+41ppD=2EmyXsVM6bwh+-cxCxfSsM_yJiw@mail.gmail.com>
+ <20240514071407.257c0003@kernel.org>
+From: Richard Gobert <richardbgobert@gmail.com>
+In-Reply-To: <20240514071407.257c0003@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 14, 2024 at 9:35=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> Add version string at the beginning of /proc/allocinfo to allow later
-> format changes. Exampe output:
->
-> > head /proc/allocinfo
-> allocinfo - version: 1.0
->            0        0 init/main.c:1314 func:do_initcalls
->            0        0 init/do_mounts.c:353 func:mount_nodev_root
->            0        0 init/do_mounts.c:187 func:mount_root_generic
->            0        0 init/do_mounts.c:158 func:do_mount_root
->            0        0 init/initramfs.c:493 func:unpack_to_rootfs
->            0        0 init/initramfs.c:492 func:unpack_to_rootfs
->            0        0 init/initramfs.c:491 func:unpack_to_rootfs
->          512        1 arch/x86/events/rapl.c:681 func:init_rapl_pmus
->          128        1 arch/x86/events/rapl.c:571 func:rapl_cpu_online
+Jakub Kicinski wrote:
+> On Tue, 14 May 2024 14:13:21 +0200 Geert Uytterhoeven wrote:
+>> On Thu, May 9, 2024 at 9:09 PM Richard Gobert <richardbgobert@gmail.com> wrote:
+>>> {inet,ipv6}_gro_receive functions perform flush checks (ttl, flags,
+>>> iph->id, ...) against all packets in a loop. These flush checks are used in
+>>> all merging UDP and TCP flows.
+>>>
+>>> These checks need to be done only once and only against the found p skb,
+>>> since they only affect flush and not same_flow.
+>>>
+>>> This patch leverages correct network header offsets from the cb for both
+>>> outer and inner network headers - allowing these checks to be done only
+>>> once, in tcp_gro_receive and udp_gro_receive_segment. As a result,
+>>> NAPI_GRO_CB(p)->flush is not used at all. In addition, flush_id checks are
+>>> more declarative and contained in inet_gro_flush, thus removing the need
+>>> for flush_id in napi_gro_cb.
+>>>
+>>> This results in less parsing code for non-loop flush tests for TCP and UDP
+>>> flows.
+>>>
+>>> To make sure results are not within noise range - I've made netfilter drop
+>>> all TCP packets, and measured CPU performance in GRO (in this case GRO is
+>>> responsible for about 50% of the CPU utilization).
+>>>
+>>> perf top while replaying 64 parallel IP/TCP streams merging in GRO:
+>>> (gro_receive_network_flush is compiled inline to tcp_gro_receive)
+>>> net-next:
+>>>         6.94% [kernel] [k] inet_gro_receive
+>>>         3.02% [kernel] [k] tcp_gro_receive
+>>>
+>>> patch applied:
+>>>         4.27% [kernel] [k] tcp_gro_receive
+>>>         4.22% [kernel] [k] inet_gro_receive
+>>>
+>>> perf top while replaying 64 parallel IP/IP/TCP streams merging in GRO (same
+>>> results for any encapsulation, in this case inet_gro_receive is top
+>>> offender in net-next)
+>>> net-next:
+>>>         10.09% [kernel] [k] inet_gro_receive
+>>>         2.08% [kernel] [k] tcp_gro_receive
+>>>
+>>> patch applied:
+>>>         6.97% [kernel] [k] inet_gro_receive
+>>>         3.68% [kernel] [k] tcp_gro_receive
+>>>
+>>> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>  
+>>
+>> Thanks for your patch, which is now commit 4b0ebbca3e167976 ("net: gro:
+>> move L3 flush checks to tcp_gro_receive and udp_gro_receive_segment")
+>> in net-next/main (next-20240514).
+>>
+>> noreply@ellerman.id.au reports build failures on m68k, e.g.
+>> http://kisskb.ellerman.id.au/kisskb/buildresult/15168903/
+>>
+>>     net/core/gro.c: In function ‘dev_gro_receive’:
+>>     ././include/linux/compiler_types.h:460:38: error: call to
+>> ‘__compiletime_assert_654’ declared with attribute error: BUILD_BUG_ON
+>> failed: !IS_ALIGNED(offsetof(struct napi_gro_cb, zeroed), sizeof(u32))
+> 
+> Hi Richard, any chance of getting this fixed within the next 2 hours?
+> I can't send the net-next PR if it doesn't build on one of the arches..
 
-It would be also useful to add a header line:
-
-$ head /proc/allocinfo
-allocinfo - version: 1.0
-# <size> <calls> <tag>
-            0        0 init/main.c:1314 func:do_initcalls
-            0        0 init/do_mounts.c:353 func:mount_nodev_root
-            0        0 init/do_mounts.c:187 func:mount_root_generic
-            0        0 init/do_mounts.c:158 func:do_mount_root
-...
-
-This would be the same as in /proc/slabinfo:
-$ sudo head /proc/slabinfo
-slabinfo - version: 2.1
-# name            <active_objs> <num_objs> <objsize> <objperslab>
-<pagesperslab> : tunables <limit> <batchcount> <sharedfactor> :
-slabdata <active_slabs> <num_slabs> <sharedavail>
-pid_3               2730   2730    192   42    2 : tunables    0    0
-  0 : slabdata     65     65      0
-..
-
-Pasha
+Hi Jakub and Geert,
+I'm only seeing this mail now, sorry for the late response.
+I can fix this within the next two hours, would you prefer a standalone 
+patch or should I add it to this patch series?
