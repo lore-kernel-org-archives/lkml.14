@@ -1,194 +1,237 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F6517F36C
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 16:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260022E644
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 16:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715703582; cv=none; b=i+3DpxFiAzZgZWSvmeIr95FG0ESUnDsk9WeYno1/YcdltWsPLqKR0070xYcicsYyDj/4UhP+OQV17c3yBxeSHcyhbF+mPbU/lFB3s79w+ZgPaCrM2btSjD/3hb/Cohb6PavYcRpqCk5uwARrILwFp3zs69Hy/PzcmPv1Cm9VCUU=
+	t=1715703614; cv=none; b=C+UL5gbjYCyH7iLdXd4f25ysF07kjojPVIQsAL2gQ6ik+2BnhSb5xVQz9mlloB5ug+UT+lmTQDqpYVsEj/5ZaZ7HoF3zeAY5lMKAV+d0VJ35fH/2buQwbXiBh1CRjDV9EkiFJMRi0lWH74Kib9v2u70QRKiSmO1gN0ZdnpC/7oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715703582; c=relaxed/simple;
-	bh=XX6+dxVy+4o/yd6QLiRr3wWYuJ71u2GdWgHbNNXLIVE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XPVf/lsiZixCeP2NObJhFN84Y1oanS5H0+fYfDhSGIhQfTD3YohFx82KTSGET4HYK1wM9H+E+EXIJT7SCP1wLe+hBZqbqe+CPq9qAAqyR8Uus9RTrVoxAza6ah+3aqSnp5FXH9q2K9BOjn3y6QNPS/MXfOO6VduYgH/iTrm5mCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7e1c22e7280so529870539f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 09:19:40 -0700 (PDT)
+	s=arc-20240116; t=1715703614; c=relaxed/simple;
+	bh=sBddaltgijYxOlwTiY8lIxG5A8nnnzWqjBV9WdsiQ4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FC+0DcQEKWaLVjPTwmLaLH7nLCTZl83XWVczJPHsARKGqcyyPuE1qO+MZLCWNTAalcbUWWSdGel7QgN0yR77fvO7AvU47G7updIwI2oFm7x7Vh4Y3ZjjYooP8lQcu4jV2hqFMkJrJqgryz8wB0FWoDVwAbf4c4M1CKSNKhE3aVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=dlA82Jfx; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dlA82Jfx"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5b27ad74c40so2915597eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 09:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1715703611; x=1716308411; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UYXKNdfSmwQhSg5U5ughUywC3JHzrWvrSGmvFe4e+Pw=;
+        b=dlA82JfxV3uUeESaoUAG3OLMuleLyhcSUE/0Pzq/T3G1xGYcGtmQOxtAyiOEsc5/eT
+         t8AzzwaG9lHvyInBxQRKqfWQ+mntGfB5zGZWtnzT4FR/dEbRvPTRTDl33/cRxcOULlaF
+         Qkz6Wnb0oM3smBIuORdl3M1fchFyKGt1zzU2A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715703580; x=1716308380;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MO/4TFXTo82vRQIeR2AHB5QsAO4BJa3Ijz/+ShqFgUA=;
-        b=P4DrP/igrbif1YokS5INd3rhcuDXnGSH3kuFkZ7rL+143AS8lWT0PAPsB35k7ppp3t
-         ujCPGkypgNv+nDLZQsIS7Vgg1HGWjlN4gwgmVQRfPpeyYvFiJMxp8W3i06nyaJP8Jxq9
-         nEu5RdTzd2d86bomOTY+0kFcm2l9Pg88uNYTK4fp9qPqJkeDyUt/oAHneIWioT3OxgC+
-         H3acSY7rd0cLqbglZqLUCe0ynL2NIuaRnI0onxd/313cGb18EFMvaDDZFh9A35zMorqo
-         Wi7J2kdnhYCEXqBc3s2aGdewMyEeaegkUjECIVOtPnz8MjXRO+Ym4cHokuvzf46KK2gd
-         fVUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIxeZzm8OAEDR4hDlvoDINDUChRg7VEOJO7Ig2hEXdHLZ+0xPcXTMoSprClzwLhvAMsqilICBQPnZ+tUS2PpDCCLUP1A1HzZPlUWyd
-X-Gm-Message-State: AOJu0YxoJMKzCxOb0xKlaijmdsqWO67rmbHj4cK1CaqZJkn0I0tGt5FF
-	KhYYaHrOImT1f57wytcf8n8DiPVicCdPZ4W4A6b8Sp7+lYXBE2p22agGRbkofa7ggzxsfm1IY3C
-	YWM5qUCXvAL5+2FBm7/LQnp+gLLoNYNFkV0toLRLOCrjcquBc4Y28vgk=
-X-Google-Smtp-Source: AGHT+IHEx2XMewJWlxwYR3zxerwTCvuWGfabY4D2C6mCWTnC33WIcQWz3ePSksg6efCeDrv4hRPMkdpsaQoXJBV+NgqT3fYnNwtN
+        d=1e100.net; s=20230601; t=1715703611; x=1716308411;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UYXKNdfSmwQhSg5U5ughUywC3JHzrWvrSGmvFe4e+Pw=;
+        b=BGTSrewd43NoT5lCHTt00EW4SheTtqaCG8GZ9c8g12iaIKZuMAgKHSpAXZ0b6o1JkV
+         iHnaZD6+ltKmwNqmz+xnhg6j1OdnbmIEtnFvBsOHEs8ZN4UgW3WTx9/coAUbTnBgq2/U
+         6ngUhNz37jbH93466FUxgRLMWteSXkCERJBi177daUWMsC6p+QtxWnkARXobufZFhako
+         CPWjm8aHxhPIOS1rcJDvukmTC2vnYN9rPj1md2fcLVSVQodyoFXQImcESWctnZcZSJA8
+         t4NaiJaBNxykfpPTPR1EvI9T4HKfYmdB7bpucKzrcf1eR94/XSSOap9zvvIJ3f15fw8C
+         n/6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXwmRALwFm5w/kkx9o9FbVVLWYOQDW65qByY+0oypcWAyTUKDfB9d4qCTJlico4TPKNRIaTjln8wGOBwhtwiMtzxRjoichcl3GwaqHT
+X-Gm-Message-State: AOJu0Yw1Z7pM8y26yuuEF2rFPUmOSBirrwJ38SGAKcQeRh4Ov1US/fee
+	CJQ3nIQn6TDMEtZPXt5Nsu5majWRR7EFvwyFYJQZSL/RjF+qQ6aJCn8rzicxGQ==
+X-Google-Smtp-Source: AGHT+IE2BLWE5ABAZRECtE1xjBTuI1pAPZhcbzCeFfxHlrxH+2pdv4W1Pr8uQB73yE3jmNcWbOcjqQ==
+X-Received: by 2002:a05:6871:6aa:b0:22e:bcfd:deb0 with SMTP id 586e51a60fabf-24172e41c70mr15883818fac.41.1715703611230;
+        Tue, 14 May 2024 09:20:11 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43df77e0c77sm68208541cf.96.2024.05.14.09.20.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 09:20:10 -0700 (PDT)
+Message-ID: <b422f395-7554-4596-b779-268718b34383@broadcom.com>
+Date: Tue, 14 May 2024 09:20:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8305:b0:488:59cc:eb5b with SMTP id
- 8926c6da1cb9f-48958afa76fmr917085173.3.1715703580239; Tue, 14 May 2024
- 09:19:40 -0700 (PDT)
-Date: Tue, 14 May 2024 09:19:40 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000070b5f806186c5eb0@google.com>
-Subject: [syzbot] [crypto?] [bcachefs?] general protection fault in crypto_skcipher_encrypt
-From: syzbot <syzbot+2e3cb81b5d1fe18a374b@syzkaller.appspotmail.com>
-To: davem@davemloft.net, herbert@gondor.apana.org.au, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] mailbox: Make BCM2835_MBOX default to ARCH_BCM2835
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Maximilian Luz <luzmaximilian@gmail.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Johan Hovold <johan+linaro@kernel.org>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>
+References: <20240513235234.1474619-1-florian.fainelli@broadcom.com>
+ <20240513235234.1474619-2-florian.fainelli@broadcom.com>
+ <20240514-amiable-unequal-d4133956c80c@spud>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20240514-amiable-unequal-d4133956c80c@spud>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000004e332806186c6012"
 
-Hello,
+--0000000000004e332806186c6012
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot found the following issue on:
+On 5/14/24 05:29, Conor Dooley wrote:
+> On Mon, May 13, 2024 at 04:52:32PM -0700, Florian Fainelli wrote:
+>> This driver is depended on by CONFIG_FIRMWARE_RASPBERRYPI which provides
+>> a number of essential services, including but not limited to a Linux
+>> common clock framework provider. Make sure that enable
+>> CONFIG_ARCH_BCM2835 does enable the corresponding mailbox driver.
+>>
+>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>> ---
+>>   drivers/mailbox/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+>> index 42940108a187..2b4cde562a90 100644
+>> --- a/drivers/mailbox/Kconfig
+>> +++ b/drivers/mailbox/Kconfig
+>> @@ -109,6 +109,7 @@ config ALTERA_MBOX
+>>   config BCM2835_MBOX
+>>   	tristate "BCM2835 Mailbox"
+>>   	depends on ARCH_BCM2835
+>> +	default ARCH_BCM2835
+> 
+> This is just "default y", since I doubt ARCH_BCM2835 can be a module?
 
-HEAD commit:    75fa778d74b7 Add linux-next specific files for 20240510
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=17c88d24980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccdd3ebd6715749a
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e3cb81b5d1fe18a374b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d3705c980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109afc20980000
+Right, although I intend to also add COMPILE_TEST, by then, it might be 
+preferable to have it "default ARCH_BCM2835".
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ad9391835bcf/disk-75fa778d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d827b3da9a26/vmlinux-75fa778d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f32f0182388/bzImage-75fa778d.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/94099facd0b3/mount_0.gz
+> 
+> If so, patch 2 could also just be "default y" and I think patch 3 can
+> have the same logic applied to it, given you're defaulting it to a
+> dependency also?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2e3cb81b5d1fe18a374b@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 32768
-bcachefs (loop0): mounting version 1.7: mi_btree_bitmap opts=metadata_checksum=none,data_checksum=none,nojournal_transaction_names
-bcachefs (loop0): recovering from clean shutdown, journal seq 10
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 1 PID: 5093 Comm: syz-executor398 Not tainted 6.9.0-rc7-next-20240510-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-RIP: 0010:crypto_skcipher_alg include/crypto/skcipher.h:375 [inline]
-RIP: 0010:crypto_skcipher_encrypt+0x45/0x130 crypto/skcipher.c:637
-Code: 21 fd 49 8d 5e 40 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 69 2c 87 fd 48 8b 1b 48 8d 7b 18 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 05 e8 4f 2c 87 fd 4c 8b 7b 18 48 83 c3 04 48 89
-RSP: 0018:ffffc900024fdd98 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: 0000000000000008 RCX: ffff88802a9d1e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000020
-RBP: ffffc900024fe330 R08: ffffc900024fde9f R09: 0000000000000000
-R10: ffffc900024fde90 R11: fffff5200049fbd4 R12: dffffc0000000000
-R13: dffffc0000000000 R14: ffffc900024fde60 R15: 1ffff9200049fbc4
-FS:  000055557e03c380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000002c426000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_encrypt_sg fs/bcachefs/checksum.c:108 [inline]
- do_encrypt+0x66b/0x7d0 fs/bcachefs/checksum.c:150
- gen_poly_key fs/bcachefs/checksum.c:191 [inline]
- bch2_checksum+0x1f8/0x730 fs/bcachefs/checksum.c:227
- bch2_btree_node_read_done+0x1a3a/0x6770 fs/bcachefs/btree_io.c:1069
- btree_node_read_work+0x68b/0x1260 fs/bcachefs/btree_io.c:1340
- bch2_btree_node_read+0x2467/0x2a40
- __bch2_btree_root_read fs/bcachefs/btree_io.c:1764 [inline]
- bch2_btree_root_read+0x61e/0x970 fs/bcachefs/btree_io.c:1788
- read_btree_roots+0x22d/0x7b0 fs/bcachefs/recovery.c:472
- bch2_fs_recovery+0x2346/0x3700 fs/bcachefs/recovery.c:800
- bch2_fs_start+0x356/0x5b0 fs/bcachefs/super.c:1031
- bch2_fs_open+0xa8d/0xdf0 fs/bcachefs/super.c:2123
- bch2_mount+0x71d/0x1320 fs/bcachefs/fs.c:1917
- legacy_get_tree+0xee/0x190 fs/fs_context.c:662
- vfs_get_tree+0x90/0x2a0 fs/super.c:1780
- do_new_mount+0x2be/0xb40 fs/namespace.c:3352
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f72c7b448ba
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffde59ed9d8 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffde59ed9f0 RCX: 00007f72c7b448ba
-RDX: 0000000020011a00 RSI: 0000000020011a40 RDI: 00007ffde59ed9f0
-RBP: 0000000000000004 R08: 00007ffde59eda30 R09: 00000000000119f1
-R10: 0000000001200014 R11: 0000000000000282 R12: 0000000001200014
-R13: 00007ffde59eda30 R14: 0000000000000003 R15: 0000000001000000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:crypto_skcipher_alg include/crypto/skcipher.h:375 [inline]
-RIP: 0010:crypto_skcipher_encrypt+0x45/0x130 crypto/skcipher.c:637
-Code: 21 fd 49 8d 5e 40 48 89 d8 48 c1 e8 03 42 80 3c 20 00 74 08 48 89 df e8 69 2c 87 fd 48 8b 1b 48 8d 7b 18 48 89 f8 48 c1 e8 03 <42> 80 3c 20 00 74 05 e8 4f 2c 87 fd 4c 8b 7b 18 48 83 c3 04 48 89
-RSP: 0018:ffffc900024fdd98 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: 0000000000000008 RCX: ffff88802a9d1e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000020
-RBP: ffffc900024fe330 R08: ffffc900024fde9f R09: 0000000000000000
-R10: ffffc900024fde90 R11: fffff5200049fbd4 R12: dffffc0000000000
-R13: dffffc0000000000 R14: ffffc900024fde60 R15: 1ffff9200049fbc4
-FS:  000055557e03c380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000002c426000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	21 fd                	and    %edi,%ebp
-   2:	49 8d 5e 40          	lea    0x40(%r14),%rbx
-   6:	48 89 d8             	mov    %rbx,%rax
-   9:	48 c1 e8 03          	shr    $0x3,%rax
-   d:	42 80 3c 20 00       	cmpb   $0x0,(%rax,%r12,1)
-  12:	74 08                	je     0x1c
-  14:	48 89 df             	mov    %rbx,%rdi
-  17:	e8 69 2c 87 fd       	call   0xfd872c85
-  1c:	48 8b 1b             	mov    (%rbx),%rbx
-  1f:	48 8d 7b 18          	lea    0x18(%rbx),%rdi
-  23:	48 89 f8             	mov    %rdi,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 80 3c 20 00       	cmpb   $0x0,(%rax,%r12,1) <-- trapping instruction
-  2f:	74 05                	je     0x36
-  31:	e8 4f 2c 87 fd       	call   0xfd872c85
-  36:	4c 8b 7b 18          	mov    0x18(%rbx),%r15
-  3a:	48 83 c3 04          	add    $0x4,%rbx
-  3e:	48                   	rex.W
-  3f:	89                   	.byte 0x89
+Right.
+-- 
+Florian
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--0000000000004e332806186c6012
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIKtOPiQ5+eQI89aB
+bxSBr68QHnx7A5YRbTmdxEpdw8pOMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDUxNDE2MjAxMVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCujj4rlpnMB4v/j8XygzMa+zsx52o4Ncr+
+wGfYS4RJ7BYcm3z2+ZK54f4hrRd4ZoB1Ye73A77z/V/pgVsJ//emlOLiMP0KQ92LMElWeZAfgWAu
+kpF8j7MTzzx7FS7qjL2udwvmTut+x+hbEZOSLJAwToTqFsX+J5gOr1r1wHS4doR2zIpxc/Ygrvox
+gEZPxcP9DVb9ejpghmp7fGNbYk1n3jHRGxjI0HEmj9eRBZZGQWiZ3FTo4gw1NwJwsi9KEUW/btor
+CmlpHRkLI3GCNeWXgPLgrQDjLAdApQjK9+tVdxiM69BplY+MtcknXMkLlTqlfdqBqJKMAXGn023y
+jqPY
+--0000000000004e332806186c6012--
