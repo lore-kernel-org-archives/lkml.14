@@ -1,151 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC96113B287;
-	Tue, 14 May 2024 11:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AF02B9AD;
+	Tue, 14 May 2024 11:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715684979; cv=none; b=Ldm7auyCKDdrARj5AgkzoXGsHVFYvkYta+TYXUuyPraVhadBjY6PD2vX0df4HtZSt0B2W20yNJTfdE2GxDiv/xogRfvqgD0YaS3VTSlUx601NCcUBOC+0ZoWrGELTjRIamxIwVr7A18DfGe2kqBfCzPbsMdDhq1oiH7GKV0cUHY=
+	t=1715685090; cv=none; b=bu8at+9LwatWLM2Ov8PgJL87luyxJyRZv5cDhizT0oEXKtXbUA0Ur8GlZTfwT0c4fCiCoJLXzmwf52eUy6EcaErXeuadzFn6PHlmaxvR6K7iN3Cc6K4yFNltwTZ5gEftKrjyPDHLLqqDWwKUNNAWzy42kyRdl4jY4RIwxRq7rU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715684979; c=relaxed/simple;
-	bh=Eb4+G+aHG2Vm3e3joQm1/LUC2P6jFfU1JpRJhMDV0UU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jjUtHb79eAwwM2yn+8q0MehlhnHMCaxTEkWObUGnGMV3dRvae8KgIkwy7IYddiZaJb5bGYMoTpQd5gttxVLHT0/RgVllIqSFCuTmTMrJW9X9FO1llAei2ooiXpaEQcASGKJvcoUEwQbdSGunFCkLQcBt5BVFeRBc9gI3ECBIznw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zBFdNruK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715685090; c=relaxed/simple;
+	bh=KVxauejPvzJyYfFFOTtFe4fgmJL7fCO6DpO6baFN0Pc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SMsmsqzeny5clH+4KNkAEf+tzEhGnTEGBhAlrpnPJ8ds5BsWNgE0/Vd8iUor8YLR4PQTWyYXoMZu+qeztSBiEdeeNQAGfJo67TNqZgIeUVw21+di7MNOh5QQptKkuNjrKFJEnwZ3us56NFwVbVyiRLXpxNOhogkoSmrVxccPx5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QcynIji5; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zBFdNruK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E00C2BD10;
-	Tue, 14 May 2024 11:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715684979;
-	bh=Eb4+G+aHG2Vm3e3joQm1/LUC2P6jFfU1JpRJhMDV0UU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=zBFdNruKfagjLlrNQIjHDwJW8akndQYTS7s2XRDE0sKBz+TH42qeTn6v/zlqqtp/n
-	 BuoGUq6cAxV4bEA8EBiZxUKT0ekM5G8k/2wZZBM+P4yiTKSUecFcC2YXMAmu5Sthip
-	 Oo3FbofbC3kT3aUxwOWhn3Pe6DpAAA9TMSX781JA=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Mark Rutland <mark.rutland@arm.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 116/301] selftests/ftrace: Fix event filter target_func selection
-Date: Tue, 14 May 2024 12:16:27 +0200
-Message-ID: <20240514101036.629901920@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240514101032.219857983@linuxfoundation.org>
-References: <20240514101032.219857983@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcynIji5"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a59a934ad50so5943566b.1;
+        Tue, 14 May 2024 04:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715685087; x=1716289887; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WMZS59XPLiwO3KU38pBXDe0DPh6/r3MnqwWDc7YDc7k=;
+        b=QcynIji5UB9REepE497ALPH8ZE5QqdS3/0YECmfuZZ4lR308exRGSDC96yW7W2enQX
+         a7GjDQEmgmsn02SbR9HGkqLHKIook1+ntZcEn2qeNVJIO9fkkLdN4d1oVz4EoioakKbu
+         tVFmH5IU+vb8yVZIeVXAh71uie9UqQWtTNpN6bUakvvNfy25Lj1jekKRCpKvmp8L/Vyu
+         uFd473PGM6Y+cA/732QtS4Urm2ds5/6x5Yrs4nBebHR7u5IyCKdmCgvgnkUTjSY8qXn/
+         56u8l1Qb5bKrTj4Bm+XrPOVlRnRf2G5Y09mar5xE5UEWWa7u0c7vVf0Vl4T2ftigwV5k
+         t/+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715685087; x=1716289887;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WMZS59XPLiwO3KU38pBXDe0DPh6/r3MnqwWDc7YDc7k=;
+        b=iZfTshXBpKWtAamHqvMJRV/sBfkVuzCJ/lcLmjdsu1umKa5fPpZDPkirirVPTV49VL
+         XiltUTe44VH2yrsA3PgBSrjzKLlLnq7FPT92LsXqo6Ut+LCl/bFGGbAv5NJw2soVLweg
+         /HvxodjLuz5vZZczAHlSeEImVmgNgJF1HlCpDnVdenHBiGF1IvhrlAlltWR0z9OeMv/Q
+         ifDV/xJ9xjueML/g0ho5256ESNq3HOsreI0i4jkdS/d/D1RHNe0qRt6T0E/68nkgchaF
+         wuMN6uts32Io/sMIk06RZvxYlfB1PhSIUwz0AyXvKZDrno4v+F52mMZfEuHbcEWVmdNd
+         rX0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUL9Mt0khbf+eLIdZTpJqr5PYTclf5R7VlCuUnDeB2s2bex6jz8EYygroNzF6AxiyJZuOhYpuHZKuFZSzyx4FuN4JhP5eN6MQA+gKwDNcE/ZTn0bGPgS4cJGxq2HvyQnsbfJPsHAW1OOg==
+X-Gm-Message-State: AOJu0YyZBaOidu+H1hXQ76bfLp6wjeElAN5lo0Cne0M5AvP6TW0XtJ0A
+	Rf+Rn0M7eqlLv5lLGR8cOEzdr5m9BZ49Nf3ZrKNZ8A9c3IGZwCsr
+X-Google-Smtp-Source: AGHT+IHGVdfiDH0W0ZEt67IjZyymiDzBJpktNaocdRBB84h8WvjuC+dAQjmnH+C4qaK7GsEnZSwP+Q==
+X-Received: by 2002:a17:907:3609:b0:a5a:8849:2205 with SMTP id a640c23a62f3a-a5a884925ffmr87208566b.42.1715685086926;
+        Tue, 14 May 2024 04:11:26 -0700 (PDT)
+Received: from andrea (host-79-8-228-115.business.telecomitalia.it. [79.8.228.115])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a5c033afasm360911066b.156.2024.05.14.04.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 04:11:26 -0700 (PDT)
+Date: Tue, 14 May 2024 13:11:22 +0200
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	puranjay12@gmail.com
+Subject: Re: [PATCH] tools/memory-model: Add atomic_andnot() with its variants
+Message-ID: <ZkNG2uZEiF1S6M7z@andrea>
+References: <20240514094633.48067-1-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514094633.48067-1-puranjay@kernel.org>
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+> C andnot
+> 
+> {
+> atomic_t u = ATOMIC_INIT(7);
+> }
+> 
+> P0(atomic_t *u)
+> {
+> 
+>         r0 = atomic_fetch_andnot(3, u);
+>         r1 = READ_ONCE(*u);
+> }
+> 
+> exists (0:r0=7 /\ 0:r1=4)
 
-------------------
+Fair enough for the changelog.  If/when submitting proper tests, please
+check their format using klitmus7 (besides herd7); say,
 
-From: Mark Rutland <mark.rutland@arm.com>
+  $ mkdir mymodule
+  $ klitmus7 -o mymodule <.litmus file>
+  $ cd mymodule ; make
+  $ sudo sh run.sh
 
-[ Upstream commit 8ecab2e64572f1aecdfc5a8feae748abda6e3347 ]
-
-The event filter function test has been failing in our internal test
-farm:
-
-| # not ok 33 event filter function - test event filtering on functions
-
-Running the test in verbose mode indicates that this is because the test
-erroneously determines that kmem_cache_free() is the most common caller
-of kmem_cache_free():
-
-  # # + cut -d: -f3 trace
-  # # + sed s/call_site=([^+]*)+0x.*/1/
-  # # + sort
-  # # + uniq -c
-  # # + sort
-  # # + tail -n 1
-  # # + sed s/^[ 0-9]*//
-  # # + target_func=kmem_cache_free
-
-... and as kmem_cache_free() doesn't call itself, setting this as the
-filter function for kmem_cache_free() results in no hits, and
-consequently the test fails:
-
-  # # + grep kmem_cache_free trace
-  # # + grep kmem_cache_free
-  # # + wc -l
-  # # + hitcnt=0
-  # # + grep kmem_cache_free trace
-  # # + grep -v kmem_cache_free
-  # # + wc -l
-  # # + misscnt=0
-  # # + [ 0 -eq 0 ]
-  # # + exit_fail
-
-This seems to be because the system in question has tasks with ':' in
-their name (which a number of kernel worker threads have). These show up
-in the trace, e.g.
-
-  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
-
-... and so when we try to extact the call_site with:
-
-  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
-
-... the 'cut' command will extrace the column containing
-'kmem_cache_free' rather than the column containing 'call_site=...', and
-the 'sed' command will leave this unchanged. Consequently, the test will
-decide to use 'kmem_cache_free' as the filter function, resulting in the
-failure seen above.
-
-Fix this by matching the 'call_site=<func>' part specifically to extract
-the function name.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 2de7c61d1ae30..3f74c09c56b62 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -24,7 +24,7 @@ echo 0 > events/enable
- echo "Get the most frequently calling function"
- sample_events
- 
--target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
-+target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
- if [ -z "$target_func" ]; then
-     exit_fail
- fi
--- 
-2.43.0
+Documentation/litmus-tests/ provides some examples litmus tests.
 
 
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+
+  Andrea
