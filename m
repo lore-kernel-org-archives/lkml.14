@@ -1,246 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F151E134A5
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6C0101E2;
+	Tue, 14 May 2024 07:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715671746; cv=none; b=YlxUEyiX1jJcBxNwX7mOaWyyN8nTg/Dr/ZEhhVs6nVGXJgwX4uK3/q4XswTKQ+e2b4q6Nb3dCy7Nm5YM2z+8oyMhXfNZAs8/Z0UM9mjGG67P6rtNZWHJj1EsmyvdcIN7hNiB8ySe5FTdYGug/RaM92mXegTzvS2YMP8N76ABoB0=
+	t=1715671939; cv=none; b=RGxIwEt/gd7Wt71XEWpQ1tiOcOcLi29Jwgm9opDzn2/Ev6aT7yhDg0kduPtuNgpea38V5x4SU+PkUjrnO/eSGyhKif6Na1MMnAp7Qx7dGh+lmStmLw7NCkxjmPvhgW773hDh0NVtBYpe5GT9OB4y7FeVvO1P84y3fVmQCxxzd2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715671746; c=relaxed/simple;
-	bh=SplUyiceO33acZVUSNIv+R1LEcFl7TGSw9aJpGoYgm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=br++bR5R/s+FElXAfBUccXEvc2av1QVeiWUgLj/9D/0hlshweIgeVlTz6QYYnJzr6E67ffqL2bR+NxL+Ah2ZIiyBqKdmDWxDQFD8/qoHw7nf04iknxLi+Xm5wY57eeONh9pTPUcfxVp9qvfQV6BxIOfKsUhKAyb/+0QiIqR6rFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZwVDpqbN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZwVDpqbN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715671744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rb7KafJV7I3Bq8cEiRTMNitbrzaJJX9E0+TIJqM8O5c=;
-	b=ZwVDpqbNRM42gMwolQ4bN0d8K6TI6ddKG8GqFDzhofQN9RZ8v4Y/LTU0DXrXk4VTdQ8MrK
-	7wA8Zf6R1iCmAw8gHOIFDOx7khb+BiVifeCH6unNcKxX2Lv0lM1uUuQw6QJeZMObQXLOlG
-	s/L74ObpKDo6fqSr2jb+skY0f0Eox6Y=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-I5w7gbb1MDiaYX_RaI3T1Q-1; Tue, 14 May 2024 03:23:00 -0400
-X-MC-Unique: I5w7gbb1MDiaYX_RaI3T1Q-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-69b6fe789e9so45448796d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:23:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715671380; x=1716276180;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rb7KafJV7I3Bq8cEiRTMNitbrzaJJX9E0+TIJqM8O5c=;
-        b=YQKsziiGvo7Eg4Rph6aKQqkTjMtP1vBbLTrbtiHdL12BV8kMk60SKRq9VRMM0SpM6D
-         nnEDvb9P+mi4/bEislmxgHiMhWXH60s2LSO3hX0wFiMH0EOR9c7YGVdlTIW+zTWx8QrL
-         LwglEkDkhVxCMtZd9M3FoaCflpINqdSUQeBdxc9jB0mAEGB6jYCphladWhTMTsQesRM8
-         D8e3X5KzEUfTyk3RjIAsvuk1bJ0xzEiQQBZU4rXhRpnTz8FGhaA9iLTD69fOyUZOHEkP
-         zGd5PVeS9D7DzyIoNRe4bNtRdUydRzk6hJNw9jltTSP3wsKuJTeS8CuBrnmTGRPliOYe
-         h2Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUIqSaDTg4fwkvQPoOXC5VrlWnWYc+E6PPVbo/QudN1t/HRLnBi2R8FqA7g3P13C6GbSJ7IAn0sG/CTEP7Wn703qKuxA31MrZAbeSKs
-X-Gm-Message-State: AOJu0YzcdA/L+j1gW50P0TC7U2IAkadWAerYihzow0VBWK59mWqDndFB
-	BamjK8GnjE/6qoX5KIqH8783glGCNlrELucbklej/ET0femGH1CVFmMZFFgxXF5dDKiU/1UJP3t
-	m9JAma09yzSUdTtVr1LFe1zHEs06aYSykIk6hx0PzNGbBXfP8lRts+O0b8Yv+1w==
-X-Received: by 2002:a05:6214:5b81:b0:6a0:c151:6283 with SMTP id 6a1803df08f44-6a16838986fmr165997566d6.56.1715671379854;
-        Tue, 14 May 2024 00:22:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdX4p3qfLGGnIV/WfSKOJPR1Byzbb/+g2h6nrg91L5/ZNPPFTPTSZHsAztlmX12uE60Uj70Q==
-X-Received: by 2002:a05:6214:5b81:b0:6a0:c151:6283 with SMTP id 6a1803df08f44-6a16838986fmr165997406d6.56.1715671379502;
-        Tue, 14 May 2024 00:22:59 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1ccd4esm50917516d6.97.2024.05.14.00.22.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:22:58 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v3 1/6] KVM: arm64: unify code to prepare traps
-Date: Tue, 14 May 2024 09:22:47 +0200
-Message-ID: <20240514072252.5657-2-sebott@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240514072252.5657-1-sebott@redhat.com>
-References: <20240514072252.5657-1-sebott@redhat.com>
+	s=arc-20240116; t=1715671939; c=relaxed/simple;
+	bh=FPn+wnAGRWQktpQrV94x0y/Pcc2VTrrAFwhpsP2KZFA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pOdxjoOM5CIGrfUgJSFFU5FxCCjI2/DO2mdEQPt+WIoLcnjLCHwj6qO7ehLAIDiu9XVal0OogTp1scp8zOwmiSJhl1T4p/zDOAJ8ZzbdSnc4YYKsXszZ0qX5GOZP3oPYxivn+leTGgzbG58rlczjWr489iqoD9U999EK1Wu9EVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VdnYw6gCSz9v7JW;
+	Tue, 14 May 2024 15:10:28 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id AF418140419;
+	Tue, 14 May 2024 15:32:06 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwAXUCRnE0NmIbQfCA--.1339S2;
+	Tue, 14 May 2024 08:32:05 +0100 (CET)
+Message-ID: <0fbd907e411a10386bdef679864dd3d84f0fa3ad.camel@huaweicloud.com>
+Subject: Re: [PATCH 0/3] kbuild: remove many tool coverage variables
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Kees Cook <keescook@chromium.org>, Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Alexander Potapenko <glider@google.com>, Andrey Konovalov
+ <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, Vincenzo
+ Frascino <vincenzo.frascino@arm.com>, Marco Elver <elver@google.com>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Peter Oberparleiter <oberpar@linux.ibm.com>,  Johannes Berg
+ <johannes@sipsolutions.net>, kasan-dev@googlegroups.com,
+ linux-hardening@vger.kernel.org
+Date: Tue, 14 May 2024 09:31:47 +0200
+In-Reply-To: <202405131136.73E766AA8@keescook>
+References: <20240506133544.2861555-1-masahiroy@kernel.org>
+	 <202405131136.73E766AA8@keescook>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwAXUCRnE0NmIbQfCA--.1339S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw18Kw1fCF15ur4UGw45ZFb_yoW5GFWfpr
+	WrJ3WqkFWY9r10yF9Ikw1IqF1Sk397uF1Ygr909rW5AF1j9r1vvrs5trs8Z34DCws2y3W0
+	yrW7XFZavr4jvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQADBF1jj51HGAAAs1
 
-There are 2 functions to calculate traps via HCR_EL2:
-* kvm_init_sysreg() called via KVM_RUN (before the 1st run or when
-  the pid changes)
-* vcpu_reset_hcr() called via KVM_ARM_VCPU_INIT
+On Mon, 2024-05-13 at 11:48 -0700, Kees Cook wrote:
+> In the future can you CC the various maintainers of the affected
+> tooling? :)
+>=20
+> On Mon, May 06, 2024 at 10:35:41PM +0900, Masahiro Yamada wrote:
+> >=20
+> > This patch set removes many instances of the following variables:
+> >=20
+> >   - OBJECT_FILES_NON_STANDARD
+> >   - KASAN_SANITIZE
+> >   - UBSAN_SANITIZE
+> >   - KCSAN_SANITIZE
+> >   - KMSAN_SANITIZE
+> >   - GCOV_PROFILE
+> >   - KCOV_INSTRUMENT
+> >=20
+> > Such tools are intended only for kernel space objects, most of which
+> > are listed in obj-y, lib-y, or obj-m.
+>=20
+> This is a reasonable assertion, and the changes really simplify things
+> now and into the future. Thanks for finding such a clean solution! I
+> note that it also immediately fixes the issue noticed and fixed here:
+> https://lore.kernel.org/all/20240513122754.1282833-1-roberto.sassu@huawei=
+cloud.com/
 
-To unify these 2 and to support traps that are dependent on the
-ID register configuration, move the code from vcpu_reset_hcr()
-to sys_regs.c and call it via kvm_init_sysreg().
+Yes, this patch set fixes the issue too.
 
-We still have to keep the non-FWB handling stuff in vcpu_reset_hcr().
-Also the initialization with HCR_GUEST_FLAGS is kept there but guarded
-by !vcpu_has_run_once() to ensure that previous calculated values
-don't get overwritten.
+Tested-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-While at it rename kvm_init_sysreg() to kvm_calculate_traps() to
-better reflect what it's doing.
+Now UBSAN complains about misaligned address, such as:
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/include/asm/kvm_emulate.h | 40 +++++++---------------------
- arch/arm64/include/asm/kvm_host.h    |  2 +-
- arch/arm64/kvm/arm.c                 |  2 +-
- arch/arm64/kvm/sys_regs.c            | 34 +++++++++++++++++++++--
- 4 files changed, 43 insertions(+), 35 deletions(-)
+[    0.150000][    T1] UBSAN: misaligned-access in kernel/workqueue.c:5514:=
+3
+[    0.150000][    T1] member access within misaligned address 0000000064c3=
+6f78 for type 'struct pool_workqueue'
+[    0.150000][    T1] which requires 512 byte alignment
+[    0.150000][    T1] CPU: 0 PID: 1 Comm: swapper Not tainted 6.9.0-dont-u=
+se-00003-g3b621c71dc5e #2244
 
-diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-index 501e3e019c93..84dc3fac9711 100644
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -69,39 +69,17 @@ static __always_inline bool vcpu_el1_is_32bit(struct kvm_vcpu *vcpu)
- 
- static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
- {
--	vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
--	if (has_vhe() || has_hvhe())
--		vcpu->arch.hcr_el2 |= HCR_E2H;
--	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN)) {
--		/* route synchronous external abort exceptions to EL2 */
--		vcpu->arch.hcr_el2 |= HCR_TEA;
--		/* trap error record accesses */
--		vcpu->arch.hcr_el2 |= HCR_TERR;
--	}
-+	if (!vcpu_has_run_once(vcpu))
-+		vcpu->arch.hcr_el2 = HCR_GUEST_FLAGS;
- 
--	if (cpus_have_final_cap(ARM64_HAS_STAGE2_FWB)) {
--		vcpu->arch.hcr_el2 |= HCR_FWB;
--	} else {
--		/*
--		 * For non-FWB CPUs, we trap VM ops (HCR_EL2.TVM) until M+C
--		 * get set in SCTLR_EL1 such that we can detect when the guest
--		 * MMU gets turned on and do the necessary cache maintenance
--		 * then.
--		 */
-+	/*
-+	 * For non-FWB CPUs, we trap VM ops (HCR_EL2.TVM) until M+C
-+	 * get set in SCTLR_EL1 such that we can detect when the guest
-+	 * MMU gets turned on and do the necessary cache maintenance
-+	 * then.
-+	 */
-+	if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
- 		vcpu->arch.hcr_el2 |= HCR_TVM;
--	}
--
--	if (cpus_have_final_cap(ARM64_HAS_EVT) &&
--	    !cpus_have_final_cap(ARM64_MISMATCHED_CACHE_TYPE))
--		vcpu->arch.hcr_el2 |= HCR_TID4;
--	else
--		vcpu->arch.hcr_el2 |= HCR_TID2;
--
--	if (vcpu_el1_is_32bit(vcpu))
--		vcpu->arch.hcr_el2 &= ~HCR_RW;
--
--	if (kvm_has_mte(vcpu->kvm))
--		vcpu->arch.hcr_el2 |= HCR_ATA;
- }
- 
- static inline unsigned long *vcpu_hcr(struct kvm_vcpu *vcpu)
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 8170c04fde91..212ae77eefaf 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -1122,7 +1122,7 @@ int __init populate_nv_trap_config(void);
- bool lock_all_vcpus(struct kvm *kvm);
- void unlock_all_vcpus(struct kvm *kvm);
- 
--void kvm_init_sysreg(struct kvm_vcpu *);
-+void kvm_calculate_traps(struct kvm_vcpu *);
- 
- /* MMIO helpers */
- void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 9996a989b52e..6b217afb4e8e 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -797,7 +797,7 @@ int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
- 	 * This needs to happen after NV has imposed its own restrictions on
- 	 * the feature set
- 	 */
--	kvm_init_sysreg(vcpu);
-+	kvm_calculate_traps(vcpu);
- 
- 	ret = kvm_timer_enable(vcpu);
- 	if (ret)
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 22b45a15d068..41741bf4d2b2 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -4041,11 +4041,33 @@ int kvm_vm_ioctl_get_reg_writable_masks(struct kvm *kvm, struct reg_mask_range *
- 	return 0;
- }
- 
--void kvm_init_sysreg(struct kvm_vcpu *vcpu)
-+static void vcpu_set_hcr(struct kvm_vcpu *vcpu)
- {
- 	struct kvm *kvm = vcpu->kvm;
- 
--	mutex_lock(&kvm->arch.config_lock);
-+	if (has_vhe() || has_hvhe())
-+		vcpu->arch.hcr_el2 |= HCR_E2H;
-+	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN)) {
-+		/* route synchronous external abort exceptions to EL2 */
-+		vcpu->arch.hcr_el2 |= HCR_TEA;
-+		/* trap error record accesses */
-+		vcpu->arch.hcr_el2 |= HCR_TERR;
-+	}
-+
-+	if (cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
-+		vcpu->arch.hcr_el2 |= HCR_FWB;
-+
-+	if (cpus_have_final_cap(ARM64_HAS_EVT) &&
-+	    !cpus_have_final_cap(ARM64_MISMATCHED_CACHE_TYPE))
-+		vcpu->arch.hcr_el2 |= HCR_TID4;
-+	else
-+		vcpu->arch.hcr_el2 |= HCR_TID2;
-+
-+	if (vcpu_el1_is_32bit(vcpu))
-+		vcpu->arch.hcr_el2 &= ~HCR_RW;
-+
-+	if (kvm_has_mte(vcpu->kvm))
-+		vcpu->arch.hcr_el2 |= HCR_ATA;
- 
- 	/*
- 	 * In the absence of FGT, we cannot independently trap TLBI
-@@ -4054,6 +4076,14 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
- 	 */
- 	if (!kvm_has_feat(kvm, ID_AA64ISAR0_EL1, TLB, OS))
- 		vcpu->arch.hcr_el2 |= HCR_TTLBOS;
-+}
-+
-+void kvm_calculate_traps(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+
-+	mutex_lock(&kvm->arch.config_lock);
-+	vcpu_set_hcr(vcpu);
- 
- 	if (cpus_have_final_cap(ARM64_HAS_HCX)) {
- 		vcpu->arch.hcrx_el2 = HCRX_GUEST_FLAGS;
--- 
-2.42.0
+But I guess this is for a separate thread.
+
+Thanks
+
+Roberto
+
+> > The best guess is, objects in $(obj-y), $(lib-y), $(obj-m) can opt in
+> > such tools. Otherwise, not.
+> >=20
+> > This works in most places.
+>=20
+> I am worried about the use of "guess" and "most", though. :) Before, we
+> had some clear opt-out situations, and now it's more of a side-effect. I
+> think this is okay, but I'd really like to know more about your testing.
+>=20
+> It seems like you did build testing comparing build flags, since you
+> call out some of the explicit changes in patch 2, quoting:
+>=20
+> >  - include arch/mips/vdso/vdso-image.o into UBSAN, GCOV, KCOV
+> >  - include arch/sparc/vdso/vdso-image-*.o into UBSAN
+> >  - include arch/sparc/vdso/vma.o into UBSAN
+> >  - include arch/x86/entry/vdso/extable.o into KASAN, KCSAN, UBSAN, GCOV=
+, KCOV
+> >  - include arch/x86/entry/vdso/vdso-image-*.o into KASAN, KCSAN, UBSAN,=
+ GCOV, KCOV
+> >  - include arch/x86/entry/vdso/vdso32-setup.o into KASAN, KCSAN, UBSAN,=
+ GCOV, KCOV
+> >  - include arch/x86/entry/vdso/vma.o into GCOV, KCOV
+> >  - include arch/x86/um/vdso/vma.o into KASAN, GCOV, KCOV
+>=20
+> I would agree that these cases are all likely desirable.
+>=20
+> Did you find any cases where you found that instrumentation was _removed_
+> where not expected?
+>=20
+> -Kees
+>=20
 
