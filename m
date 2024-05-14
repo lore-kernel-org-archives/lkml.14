@@ -1,149 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D67D5A0F9;
-	Tue, 14 May 2024 17:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC055A0F9;
+	Tue, 14 May 2024 17:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715708748; cv=none; b=PHj437TJ03Z0kWdWcsuDv8sWdicLFaEDWWTvXWwXu4ZaHu7vKulqdmpflrFNHfgSWNm9TDgGfdDLgKqtq1qkR2FDuQD7Kpce4UEYzmy/fuA2tQLwL3uGAe3Sjo0oOE5fneyAyqIq9zLO0ZVpmIYtp50XcH4f0YdnDLVSA4nD7/o=
+	t=1715708808; cv=none; b=DC4PaGOKtmmb2lWyKrdVCW0GHm5ocUwvLyCdR4hzN4mrq3GuZvCHjjqjJTBWa9sWMj7d9a3NE08g2mv/mn4BqcPjH/OhtEmYPkrgtAtX9/g27Qs9F/Cb3fwlrx5+CcThVoQIbc9ytAESJxy2ndIWDv0mQA5YFSGRTnIjlFYEE4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715708748; c=relaxed/simple;
-	bh=FOjLC9GTIUd1WGRSxLT8Kv9gyt6FdbEbbp3ZmLp/5Pw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a0JLYv3//AGLVFq+PR2RHGbsw4khfILjB/7YuSDT9S/MZUcQseqcThIgaDUUZU159SchypuYkDgRVXfH0GH3xaLiwyjRDAU4Xul0Br5ttVzYMdI12UeJ05U4ve+GBI0FE3qUngXIqTYmrSfYRMj88GWKdHsWGAdxRvCQIxMbQdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKImCysY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715708808; c=relaxed/simple;
+	bh=pf3snsT4ApUggqxUuq5WXr4dWvJsY8A0cMtELbN6iyw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=N6jB7q4Ehxj0gef+CFI84OHGGd2u1RC3KPHHmxwH6YpB5M7sQDyLY+91HiiQj6DOwUHLpJMQ0L9xr0gBE4l5eMcSUPvtgX71qsuLfqOH6kMQl1sGqK2F9YAoVE/ZNfcIZSEXq8JHSL7IEWJ4CqyluRZWvTN6cri8ckij9XUrUX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Yc1eIr/5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKImCysY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99583C4AF0B;
-	Tue, 14 May 2024 17:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715708747;
-	bh=FOjLC9GTIUd1WGRSxLT8Kv9gyt6FdbEbbp3ZmLp/5Pw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VKImCysY3bcey58jwKO+qoQW0bnHVN/etyfwMudeR25DbYzK3YhTvWmr+708I78H5
-	 D+awgxvAly3K1xsLtDkDRg63v4rcI0H6IsJD5h45j8oGdQwqlDINPektsflqTDqMwe
-	 ECiDPAgaAkZgANH/wGE68CXphZKkSwNH6rjkwMQCeuKa9J1eoYRzu0bWrProSMYzrL
-	 d3U1BghkuKONFSdgXJpIBALNCuhKOBXlAendOTCxizkioLVt7hv7tFgHrf6u05wvY8
-	 6P70X6yHq3fs19WW6xZDGI4g8LAgCiKineGFS9Nql2tCuIequp45hrqIUz32/yGau7
-	 dd5V/fRiJ9FEA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f12ccff5eso8138918e87.1;
-        Tue, 14 May 2024 10:45:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVz4iirYGHdGthKxNWTgMmc8yYskotFiN2d/SsMDqL2qgeP8+MTylczpxR3z1yAd9ZKMNi/nFrfIgREKGhtWA7kaIYuXiPcDItMTDgRNsdlXXeX4Ane+ufLj7ThegIsMoA3vXIUbBbli+ZwzCB+xHWyJPNnnpYO5AzqjAdw5G1YEvGEoAMhF3pqcvHZP0yZzjA2VPTRsBBUrgaKSX5IX5ZFdCU=
-X-Gm-Message-State: AOJu0YzFYFBJiGGQ8A34d7mU3V7uSDiNgZeFqgIQBc8y8AOlXiSFZwZ0
-	a7b+6/iaHyqiaBseUzBB9aqrVci6pL65UIClQUCqzyYDdkFLVNdRuDT7DiXClUZOSu7ITe85Lf4
-	+tr00S3Y/0q+U0fg6GKZ4GVlng90=
-X-Google-Smtp-Source: AGHT+IFNbI6Bd5BRsGSVHMrS8noqYrRTepjcaaqy5bW0mLMfJcq2tUemTq2/g8JEYAe2AL1nwXz7wo3BaTt9cfiD81I=
-X-Received: by 2002:a05:6512:b15:b0:51a:ca75:9ffe with SMTP id
- 2adb3069b0e04-5221057b50bmr12345399e87.42.1715708746044; Tue, 14 May 2024
- 10:45:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Yc1eIr/5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B082CC2BD10;
+	Tue, 14 May 2024 17:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1715708807;
+	bh=pf3snsT4ApUggqxUuq5WXr4dWvJsY8A0cMtELbN6iyw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Yc1eIr/5mrQpnqcpaIGwTMHtbnLOFYPLR2tOanTod3JH8rW5KkZOPwwLHdSGt8lXJ
+	 OIygOx/TZA9ysjw8XzqPaVjlozr0S8wX4sEa10bzBrJG2Uc5tGix+gvH1xBLzy2ZRP
+	 c7oXQDmeEFMcA3hKNhiBK19J9Q4n6iAyNWGKRRVI=
+Date: Tue, 14 May 2024 10:46:46 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: jeffxu@chromium.org
+Cc: keescook@chromium.org, jannh@google.com, sroettger@google.com,
+ willy@infradead.org, gregkh@linuxfoundation.org,
+ torvalds@linux-foundation.org, usama.anjum@collabora.com, corbet@lwn.net,
+ Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
+ rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+ groeck@chromium.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ pedro.falcato@gmail.com, dave.hansen@intel.com,
+ linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+Message-Id: <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+In-Reply-To: <20240415163527.626541-1-jeffxu@chromium.org>
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240511-ath10k-snoc-dep-v1-1-9666e3af5c27@linaro.org> <12a208d7-f36b-4953-abff-323a15452b3c@quicinc.com>
-In-Reply-To: <12a208d7-f36b-4953-abff-323a15452b3c@quicinc.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 15 May 2024 02:45:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASyBNbxm-e+iZ=7pOJg-a-Zm84O6RNcqiUjZQH7f9r3Lw@mail.gmail.com>
-Message-ID: <CAK7LNASyBNbxm-e+iZ=7pOJg-a-Zm84O6RNcqiUjZQH7f9r3Lw@mail.gmail.com>
-Subject: Re: [PATCH] wifi: ath10k: fix QCOM_RPROC_COMMON dependency
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Kalle Valo <kvalo@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, Stephen Boyd <swboyd@chromium.org>, 
-	Rakesh Pillai <quic_pillair@quicinc.com>, linux-wireless@vger.kernel.org, 
-	ath10k@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 14, 2024 at 11:43=E2=80=AFPM Jeff Johnson <quic_jjohnson@quicin=
-c.com> wrote:
->
-> On 5/11/2024 3:49 AM, Dmitry Baryshkov wrote:
-> > If ath10k_snoc is built-in, while Qualcomm remoteprocs are built as
-> > modules, compilation fails with:
-> >
-> > /usr/bin/aarch64-linux-gnu-ld: drivers/net/wireless/ath/ath10k/snoc.o: =
-in function `ath10k_modem_init':
-> > drivers/net/wireless/ath/ath10k/snoc.c:1534: undefined reference to `qc=
-om_register_ssr_notifier'
-> > /usr/bin/aarch64-linux-gnu-ld: drivers/net/wireless/ath/ath10k/snoc.o: =
-in function `ath10k_modem_deinit':
-> > drivers/net/wireless/ath/ath10k/snoc.c:1551: undefined reference to `qc=
-om_unregister_ssr_notifier'
-> >
-> > Add corresponding dependency to ATH10K_SNOC Kconfig entry so that it's
-> > built as module if QCOM_RPROC_COMMON is built as module too.
-> >
-> > Fixes: 747ff7d3d742 ("ath10k: Don't always treat modem stop events as c=
-rashes")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  drivers/net/wireless/ath/ath10k/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/net/wireless/ath/ath10k/Kconfig b/drivers/net/wire=
-less/ath/ath10k/Kconfig
-> > index e6ea884cafc1..4f385f4a8cef 100644
-> > --- a/drivers/net/wireless/ath/ath10k/Kconfig
-> > +++ b/drivers/net/wireless/ath/ath10k/Kconfig
-> > @@ -45,6 +45,7 @@ config ATH10K_SNOC
-> >       depends on ATH10K
-> >       depends on ARCH_QCOM || COMPILE_TEST
-> >       depends on QCOM_SMEM
-> > +     depends on QCOM_RPROC_COMMON || QCOM_RPROC_COMMON=3Dn
-> >       select QCOM_SCM
-> >       select QCOM_QMI_HELPERS
-> >       help
-> >
-> > ---
-> > base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
-> > change-id: 20240511-ath10k-snoc-dep-862a9da2e6bb
->
-> I see how this fixes the problem, but this doesn't seem like an ideal
-> solution. The fact that the *_ssr_notifier() functions are correctly prot=
-ected
-> by conditional compilation ideally should mean that clients don't need to=
- call
-> call out this as a dependency. Otherwise, it would mean we'd need to do t=
-his
-> for all feature flags.
+On Mon, 15 Apr 2024 16:35:19 +0000 jeffxu@chromium.org wrote:
 
+> This patchset proposes a new mseal() syscall for the Linux kernel.
 
-It depends on if qcom_common.c is optional for ath10k_snoc.
+I have not moved this into mm-stable for a 6.10 merge.  Mainly because
+of the total lack of Reviewed-by:s and Acked-by:s.
 
-If it is optional, this patch is correct.
+The code appears to be stable enough for a merge.
 
+It's awkward that we're in conference this week, but I ask people to
+give consideration to the desirability of moving mseal() into mainline
+sometime over the next week, please.
 
-If it is mandatory
-depends on QCOM_RPROC_COMMON
-
-
->
-> +linux-kbuild just to make sure there isn't a better approach.
-
-
-Commit 28d49e171676afb7df7f47798391364af9abed7f suggested
-
-  depends on BAR || !BAR
-
-but
-
-  depends on BAR || BAR=3Dn
-
-works equivalently.
-
-
-
->
-> /jeff
->
->
-
-
---=20
-Best Regards
-Masahiro Yamada
