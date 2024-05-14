@@ -1,97 +1,127 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from mail-40130.protonmail.ch (mail-40130.protonmail.ch [185.70.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E91764CCC;
-	Tue, 14 May 2024 10:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BCA64CCC;
+	Tue, 14 May 2024 10:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715681287; cv=none; b=Fa5RZAOkveMdiIMzRI4/whnjMQW+6i/AHwsXV3basJidtGy5hK66pbwVkJpkVnaPFFT87y7J8+yjG8m6vTJsHV84z7ZAk8/WflllJwaieNtgZ89kSiKpJej1J27xpdiYhhQCTh3tUzNelY3lTK31gOy+Z1nLh2uBTORWI9ewy9M=
+	t=1715681302; cv=none; b=ARBOJRmpSfxF2GhMxgibbKwz2OXfU7NuR9VQQoTRUCI19yD/90KXH/cdBvYrH2YghtYUFPbmCutrA8IsAObcF6tV+UjyP1z17dJFzDs2Kuncl+npCEATf4nLJn1Zg3nPZ/OodEj0PEFNJFRX9roYYUJzPGOOo0D9tGNLS+S00ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715681287; c=relaxed/simple;
-	bh=xjDz2Izt0vEcEs30HE8QpAJZW65ZIRs1wI1ol9QNFdU=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=HNqH4sM5gDYYTzUqqhYAScmi0SwklvMLjWdess8tyO4wPyHxaE6i1dgTX4haH5jBpYgNkQzWhltS9/JsxQfpMNHCvx0UcZKi7AczJ68CWFVz2jO4V9QW6RMZSIzu63ys+RkrFXHSyNV0r1c9JXkMJUOZyrHeekuvE44EiiYxAlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 38CCD1A1D45;
-	Tue, 14 May 2024 11:53:05 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E53A51A1910;
-	Tue, 14 May 2024 11:53:04 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 93FDF180222F;
-	Tue, 14 May 2024 17:53:02 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	marex@denx.de,
-	linux-clk@vger.kernel.org,
-	imx@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de,
-	shengjiu.wang@gmail.com
-Subject: [PATCH v3 6/6] arm64: dts: imx8mp: Add reset-controller sub node for audio_blk_ctrl
-Date: Tue, 14 May 2024 17:33:30 +0800
-Message-Id: <1715679210-9588-7-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1715679210-9588-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1715679210-9588-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1715681302; c=relaxed/simple;
+	bh=QyKYD3PwPSFlPeTWf1A6/mdsJu/IVZlMnqS0/afEXBA=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=huUI9fyTh5yHg44kXyQsULDqS/RtId4bQbvnWf9OMTPJYpmc0zxaEaCIUFwfut/T/MayGZ7ilt4XrPbDeJXpoMGYzXGcDPC38Z6TkB5k4SAO1I3lr4qTiI1TF/mKF3E90nH/zXU29mhOj3GgBD+mwxA7fd/cPUXD4ucE8ycHRIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=IkZtOLmk; arc=none smtp.client-ip=185.70.40.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="IkZtOLmk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1715681292; x=1715940492;
+	bh=pDQ/GZuN6/xzmKr4VIr850YYvdaKXfcBGi96KdzKmCs=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=IkZtOLmkcBx1CuMDvnT4u5THBvtDjLxi5uL5N9xM3lWpy/X2S6Lau3LNPzfodDras
+	 zIJexQyRrWhfd+fWQPANY4nsrYGZ3FoL38tEwMU/KEVQjJvZNRGlk69yokNgiW8lPG
+	 /NIbM289FXLpq9ltjROYy2nYFgwKzLT6GmOPY0qSx/hCeXZqYptHDmRwECp+5EuY5B
+	 uhnrNd8UKvsoFHsrAGOx0r3Jgx2N32cg+LPG5QyGl530fsKk6Z4YpYANtu1C1xi0nj
+	 9fYlnRcB+wReQj3vmz6CXdgLm3WRBSdXPdDBu56XYEmvACli58kuiaK4P4Gz8wBMMa
+	 mI+Ae52wWREBQ==
+Date: Tue, 14 May 2024 10:08:06 +0000
+To: "marcel@holtmann.org" <marcel@holtmann.org>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>
+From: "SoloSaravanan@proton.me" <SoloSaravanan@proton.me>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] Bluetooth: btusb: Add device 13d3:3606 as MT7921 device
+Message-ID: <JXwMChGqaA3oLmTz9wy26FlzjhHGqOWSO0HRbgYAeoy7jX3jcAaHmbwR6Dl-aMdkPzhdHO_kgV4MqoYahTdhn39W_GCOo-GbP1kU0C6kx2o=@proton.me>
+Feedback-ID: 84438951:user:proton
+X-Pm-Message-ID: a01415225bb1c36746ba7ebddec821c4357c5703
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The Audio Block Control contains clock distribution and gating
-controls, as well as reset handling to several of the AUDIOMIX
-peripherals. Especially the reset controls for Enhanced Audio
-Return Channel (EARC) PHY and Controller
+From 6c5cec6d7a84c140958786bcb082d94f1b147ece Mon Sep 17 00:00:00 2001
+From: SoloSaravanan <SoloSaravanan@proton.me>
+Date: Tue, 14 May 2024 15:01:29 +0530
+Subject: [PATCH] Bluetooth: btusb: Add device 13d3:3606 as MT7921 device
 
-Add reset-controller sub-node for audio_blk_ctrl.
+Add VendorID 13d3 & ProdID 3606 for MediaTek MT7921 USB Bluetooth chip.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+The information in /sys/kernel/debug/usb/devices about the Bluetooth device=
+ is listed as the below.
+
+T: Bus=3D03 Lev=3D01 Prnt=3D01 Port=3D09 Cnt=3D03 Dev#=3D 4 Spd=3D480 MxCh=
+=3D 0 D: Ver=3D 2.10 Cls=3Def(misc ) Sub=3D02 Prot=3D01 MxPS=3D64 #Cfgs=3D =
+1 P: Vendor=3D13d3 ProdID=3D3606 Rev=3D 1.00
+S: Manufacturer=3DMediaTek Inc.
+S: Product=3DWireless_Device
+S: SerialNumber=3D000000000
+C:* #Ifs=3D 3 Cfg#=3D 1 Atr=3De0 MxPwr=3D100mA
+A: FirstIf#=3D 0 IfCount=3D 3 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 I:* If#=3D=
+ 0 Alt=3D 0 #EPs=3D 3 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3Dbtusb E: =
+Ad=3D81(I) Atr=3D03(Int.) MxPS=3D 16 Ivl=3D125us
+E: Ad=3D82(I) Atr=3D02(Bulk) MxPS=3D 512 Ivl=3D0ms
+E: Ad=3D02(O) Atr=3D02(Bulk) MxPS=3D 512 Ivl=3D0ms
+I:* If#=3D 1 Alt=3D 0 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=
+=3Dbtusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 0 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 0 Ivl=3D1ms
+I: If#=3D 1 Alt=3D 1 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+btusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 9 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 9 Ivl=3D1ms
+I: If#=3D 1 Alt=3D 2 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+btusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 17 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 17 Ivl=3D1ms
+I: If#=3D 1 Alt=3D 3 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+btusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 25 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 25 Ivl=3D1ms
+I: If#=3D 1 Alt=3D 4 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+btusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 33 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 33 Ivl=3D1ms
+I: If#=3D 1 Alt=3D 5 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+btusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 49 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 49 Ivl=3D1ms
+I: If#=3D 1 Alt=3D 6 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+btusb
+E: Ad=3D83(I) Atr=3D01(Isoc) MxPS=3D 63 Ivl=3D1ms
+E: Ad=3D03(O) Atr=3D01(Isoc) MxPS=3D 63 Ivl=3D1ms
+I:* If#=3D 2 Alt=3D 0 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=
+=3D(none)
+E: Ad=3D8a(I) Atr=3D03(Int.) MxPS=3D 64 Ivl=3D125us
+E: Ad=3D0a(O) Atr=3D03(Int.) MxPS=3D 64 Ivl=3D125us
+I: If#=3D 2 Alt=3D 1 #EPs=3D 2 Cls=3De0(wlcon) Sub=3D01 Prot=3D01 Driver=3D=
+(none)
+E: Ad=3D8a(I) Atr=3D03(Int.) MxPS=3D 512 Ivl=3D125us
+E: Ad=3D0a(O) Atr=3D03(Int.) MxPS=3D 512 Ivl=3D125us
+
+Signed-off-by: SoloSaravanan <SoloSaravanan@proton.me>
 ---
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 459c4a54d30e..f94702ad4210 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -1565,7 +1565,7 @@ sdma2: dma-controller@30e10000 {
- 			};
- 
- 			audio_blk_ctrl: clock-controller@30e20000 {
--				compatible = "fsl,imx8mp-audio-blk-ctrl";
-+				compatible = "fsl,imx8mp-audio-blk-ctrl", "syscon", "simple-mfd";
- 				reg = <0x30e20000 0x10000>;
- 				#clock-cells = <1>;
- 				clocks = <&clk IMX8MP_CLK_AUDIO_ROOT>,
-@@ -1582,6 +1582,11 @@ audio_blk_ctrl: clock-controller@30e20000 {
- 				assigned-clocks = <&clk IMX8MP_AUDIO_PLL1>,
- 						  <&clk IMX8MP_AUDIO_PLL2>;
- 				assigned-clock-rates = <393216000>, <361267200>;
-+
-+				audio_blk_ctrl_rst: reset-controller {
-+					compatible = "fsl,imx8mp-audiomix-reset";
-+					#reset-cells = <1>;
-+				};
- 			};
- 		};
- 
--- 
-2.34.1
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index effa54629..65e4b7fc6 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -615,6 +615,9 @@ static const struct usb_device_id quirks_table[] =3D {
+ =09{ USB_DEVICE(0x0e8d, 0x0608), .driver_info =3D BTUSB_MEDIATEK |
+ =09=09=09=09=09=09     BTUSB_WIDEBAND_SPEECH |
+ =09=09=09=09=09=09     BTUSB_VALID_LE_STATES },
++=09{ USB_DEVICE(0x13d3, 0x3606), .driver_info =3D BTUSB_MEDIATEK |
++=09=09=09=09=09=09     BTUSB_WIDEBAND_SPEECH |
++=09=09=09=09=09=09     BTUSB_VALID_LE_STATES },
+=20
+ =09/* MediaTek MT7922A Bluetooth devices */
+ =09{ USB_DEVICE(0x0489, 0xe0d8), .driver_info =3D BTUSB_MEDIATEK |
+--=20
+2.45.0
+
 
