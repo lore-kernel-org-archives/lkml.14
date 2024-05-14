@@ -1,293 +1,409 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392BD125A9
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBAA17577
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715673401; cv=none; b=Uq3DHEreFuz1+KEyR/W3jyuB/wBT4OqjX6zjUrV6z/3cG3y43jqR3Ub44DLY+Lu2wBrlaXQjv1p1NOrdFe8Ki/oPYDOfGYCvMYsqK44lACyQXXqHLnnaoKJJC0nJ7qegGCqrk3oul/QBFE4CR1W0aK7K29fp8KsA2/AUMfnthdY=
+	t=1715673696; cv=none; b=EUqaKOmQ5bGH808zy6YMB82fc79VfoG7FE75Fp5bHeWFKlN+ofsAJR0IBiY2NkN47/MfkqPcZ1hV+1Z2urjl2yyYErtdaNTJYKl7+Cn5Z0XPuZFhZpuw+ClLQ8MHgeC28mNV5MHuMduNPJVNktjnFgNjPc3P5rxqV0gANHjLjfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715673401; c=relaxed/simple;
-	bh=wGSRt3if0X9kZ/HrVq/Ne0TEuyWI+bHUBEXOAVzB/s0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f4VTJQROGTrpaIDX6580Q5GI2zpEZuxNsisWmdI5MV7Er40SXeWtaDrXPSGWY5kKeK2dj//NgYQfcKIRUQoA39MXpA3jzvcL1So9i3zVNMXrYpbBV7NhhZg0VDPMUKT3nSTwABOGmU3IgFiOdUaioH4qVmQsbNkbAW2ydgObPDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aUxqIK1N; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715673696; c=relaxed/simple;
+	bh=Bn43btKuiH6buNWIn4YsAt+J+q3EmB8CcDq/4sdW4Cs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=WqsKBilntZghNnqx+1AwkK11jPsh1Weq0d0VPkeB0ysA7XZYVBNtYU+eAx8tN0BdeV+uPFUP40qbDpiKsliLkLUA3qOdUHIXKkpcYxmhl5xvChum4tPUsXr3HsvmpdznARwTbn4EftRIzW0EKpBLKkKogPyR4FDqNlUoqU2E+Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JcbfG/Ub; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUxqIK1N"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52232d0e5ceso3985698e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715673397; x=1716278197; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uza+DRQEYzKLrkq1gsfl6buXfasHa8vc5/WNhhyABXo=;
-        b=aUxqIK1NA2YxaSiRs2zfhua8VDrnlB8a98MKHXsLQ8yVTW0Xi1FWwvTfvtqqjwO4jk
-         ubXGqwx1CMoo48E/z+9ppzVulO988KrxA4+qT1fXs8PvdReqjuw7QqoK4YegjG1IqE3m
-         czDf5IbflZBA5lFoV2mscBuFFR4Yb9hT0WUpzL8U0mVvgXH382lhQ51SCD7JZnn1H3hG
-         aPdwIrlRqYqevd6idppXB98u5/bZqkHSlGEglRI4LHqPvSJCT0b8XsysPYwmDF9W4NCa
-         lL4vMQugNUE0aHUxI4OczPnRadsGb1/Zf8Vsb7qKLr5x4uvLBIZJvPuSuswo2q0QKwWD
-         2RZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715673397; x=1716278197;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uza+DRQEYzKLrkq1gsfl6buXfasHa8vc5/WNhhyABXo=;
-        b=jR05qdcckRVQw/3mTUcBrnvDk1h8URvmvR+IBAN1FdOtgBwm1EtmNmdum4j3wCdKVu
-         XyF0ipneZseV1v0zK626/DZHEUGVMjUm4Pf5I0RMTU70dlovw6KvwPSqAXaYU0TbPCFR
-         W5iJA3oFMeOQJbuEgJhA/urTnkh2VyelFOrk8TezfXcAUDl2X0qzcJGlcVRnzb2Y93W6
-         4sCawc86okabA/gq+aBoQk9besdGcURnsRIJzkvULnfS4i0wCogMQ3kxxwWfGZSDrhov
-         9pYu4xqvFuzciVQaOgi36y7SXQaGgBcOqPwCpHqzvI2HdEmvQpa/rsBQpcTMRR8EFQZ3
-         l3kw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcLy7XuzEuqke6KmRbZarMkqhWbXtZPSZuXi2FlXZURfNtGCt+Ue4s5MFqzK5MGlX1o6h649IEqPjz3KyWVDzbHafbh18ejN8ouBYn
-X-Gm-Message-State: AOJu0YwNswqtOmROnTYjARnY+H0k8FnR5bMbJRgYVw2WrU/VgxSTlGeq
-	2QtLp4Jr0DQCXud9aEOojYDTDOue1Fb5qWqUk1M4uJ5ysXO/hx7kLZcDr1L5BOg=
-X-Google-Smtp-Source: AGHT+IHesTPiCLOrFGmj/XeJY8txNyCoHRBfg4rInYPaTIZWhF0vQM5h4nqBOehbNTcISungq1+O7w==
-X-Received: by 2002:a05:6512:ba7:b0:51a:e21c:109c with SMTP id 2adb3069b0e04-5220fb7741dmr10969488e87.14.1715673397323;
-        Tue, 14 May 2024 00:56:37 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d8da1sm2039100e87.233.2024.05.14.00.56.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:56:36 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 14 May 2024 10:56:36 +0300
-Subject: [PATCH] Revert "drm/msm/dpu: drop
- dpu_encoder_phys_ops.atomic_mode_set"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JcbfG/Ub"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240514080130epoutp0113c8bff4fb15b9a05b1bb03d2ec2376e~PTCG1Ft0l2366623666epoutp01Z
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:01:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240514080130epoutp0113c8bff4fb15b9a05b1bb03d2ec2376e~PTCG1Ft0l2366623666epoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1715673690;
+	bh=BX6SHsh56ZWjckh1DjCA23/Y4maEzBj6vKCsZkwt7mY=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=JcbfG/UbJlh4iSzF4LU74KqnKVmweVQ0+BZ/vj99+gjUQcYLxeq2ALyOuZFxHemMa
+	 I6TZ0/UIhen66v/F8+4bpA3c1Pow6gG3XaKI9C/bEch8UBHsd1iD//nppxfeVrrqFA
+	 poRY4bd//2Z7yKylynbjCJf5DlbLo8qXQqcBieXY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240514080130epcas5p2df08c4c811618847f9d97fbcca0cbc58~PTCGUmth90805408054epcas5p26;
+	Tue, 14 May 2024 08:01:30 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Vdphm0ptjz4x9Q0; Tue, 14 May
+	2024 08:01:28 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A0.0B.08600.75A13466; Tue, 14 May 2024 17:01:28 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240514080007epcas5p2b597ff212998cfe8a59332a8b320ec60~PTA48BUQG0233102331epcas5p2d;
+	Tue, 14 May 2024 08:00:07 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240514080007epsmtrp23e7f4e3b8417840e9b98e7077eeab1ee~PTA46KFxc1048410484epsmtrp2Q;
+	Tue, 14 May 2024 08:00:07 +0000 (GMT)
+X-AuditID: b6c32a44-921fa70000002198-3b-66431a57c2f6
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	55.83.08390.60A13466; Tue, 14 May 2024 17:00:06 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240514080005epsmtip134f7e78f00960d45feb422a8149ea24f~PTA3e2VPp0969409694epsmtip1t;
+	Tue, 14 May 2024 08:00:05 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org, peiwei.li@samsung.com, joshi.k@samsung.com,
+	kundan.kumar@samsung.com, anuj20.g@samsung.com, ruyi.zhang@samsung.com,
+	wenwen.chen@samsung.com, xiaobing.li@samsung.com, cliang01.li@samsung.com,
+	hexue <xue01.he@samsung.com>
+Subject: [PATCH v4] io_uring: releasing CPU resources when polling
+Date: Tue, 14 May 2024 15:59:59 +0800
+Message-Id: <20240514075959.734682-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCJsWRmVeSWpSXmKPExsWy7bCmpm6ElHOawfzpTBZNE/4yW8xZtY3R
+	YvXdfjaL038fs1i8az3HYnH0/1s2i1/ddxkttn75ympxedccNotnezktvhz+zm5xdsIHVoup
+	W3YwWXS0XGa06Lpwis2B32PnrLvsHpfPlnr0bVnF6PF5k1wAS1S2TUZqYkpqkUJqXnJ+SmZe
+	uq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QnUoKZYk5pUChgMTiYiV9O5ui/NKS
+	VIWM/OISW6XUgpScApMCveLE3OLSvHS9vNQSK0MDAyNToMKE7IwVXW/ZCxa4Vyx7cJGtgfGa
+	ZRcjJ4eEgInEm2nH2UFsIYHdjBITlkd2MXIB2Z8YJeYdOMsG4XxjlFjbMYkVpuN+y0sWiMRe
+	RokPP6YzQjg/GCU2H77KBlLFJqAksX/LB0YQW0RAWGJ/RytYB7PAdiaJd6u2AiU4OIQFnCSe
+	T88GqWERUJWYeWoZ2B28AlYSsx5MZILYJi9xs2s/M0RcUOLkzCcsIDYzULx562xmkJkSAo0c
+	Eh9PfWOBaHCR+Le6nRHCFpZ4dXwLO4QtJfH53V42CDtfYvL39VA1NRLrNr+D6rWW+HdlDwvI
+	bcwCmhLrd+lDhGUlpp5axwSxl0+i9/cTqNt4JXbMg7GVJJYcWQE1UkLi94RF0NDykNj+8TML
+	JHxjJd6fa2WbwCg/C8k7s5C8Mwth8wJG5lWMkqkFxbnpqcmmBYZ5qeXwiE3Oz93ECE6uWi47
+	GG/M/6d3iJGJg/EQowQHs5IIr0OhfZoQb0piZVVqUX58UWlOavEhRlNgGE9klhJNzgem97yS
+	eEMTSwMTMzMzE0tjM0Mlcd7XrXNThATSE0tSs1NTC1KLYPqYODilGpguBcxfo7i0eGrbxHZm
+	a5MrZqbLc5u9OnxlLptvqch3vbH8xsQb+70kvWtVE/ZYpRTdFf4Y2NocxFtXtNFi+uRIZwa2
+	3+v/BgqfUMm488WE6f9b2xur5BaemMgSMGO1Zq5tyOUXM/Y+0TS3N5E323LeNeRqyrJvbKwL
+	TWp9v4bOP/7F95I6j7/aR9mLhppScdtDV+65phcx6/YHl6kOtxev+Lh0WWB5/b69os5tsnOt
+	5bMW2+xtsDkQcZ1JhNfv4KkJyt8bvGfc3JDzwj3Ij9f5Wc8ED7mtKQeX6nyYdG6OekvRm4bD
+	6R/uOav/bzGvM402l/5nzH8h9nfBnp+LgjkmLLiosrkjINKwWmzVhjwlluKMREMt5qLiRABr
+	grHjNwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrALMWRmVeSWpSXmKPExsWy7bCSnC6blHOawfr7ZhZNE/4yW8xZtY3R
+	YvXdfjaL038fs1i8az3HYnH0/1s2i1/ddxkttn75ympxedccNotnezktvhz+zm5xdsIHVoup
+	W3YwWXS0XGa06Lpwis2B32PnrLvsHpfPlnr0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJXxoqu
+	t+wFC9wrlj24yNbAeM2yi5GTQ0LAROJ+y0uWLkYuDiGB3YwS+7adY4ZISEjsePSHFcIWllj5
+	7zk7RNE3Romz054zgSTYBJQk9m/5wAhiiwAV7e9oBZvELHCUSWJ601OgBAeHsICTxPPp2SA1
+	LAKqEjNPLWMHsXkFrCRmPZjIBLFAXuJm135miLigxMmZT1hAbGagePPW2cwTGPlmIUnNQpJa
+	wMi0ilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjONC1tHYw7ln1Qe8QIxMH4yFGCQ5m
+	JRFeh0L7NCHelMTKqtSi/Pii0pzU4kOM0hwsSuK83173pggJpCeWpGanphakFsFkmTg4pRqY
+	qhYH1Dh8rlj8bHGCqu19hsweUf/LkwVlI5zeFP8P4r1Rk8wZHJd3u5XpSvmpCdZBxgtXaTG6
+	rrghZnPq+YqTi58taI9esefkrBD1yOvSfEaljflVG75POib54fzyQ9KNb67xW1bkrLTt8eVq
+	8vggf1Nrnoj9k0ti+26EzrnBuvj5z98XFaZFHtrwX8lpafsTMcduC7WSXRVfxE3vffl+pMhv
+	Q4LnjwOR53yj/NV3/s/i9vL7bMdypO/M3WrGUyeX2apuEUpb3l71TM6Bk+cHc9LLnw4TIuYd
+	v3l75e/pua88l0hXft2dHehrJnD0s4L4LNGcC/Huv+Zpxs/+Zsmzan3S4+2M87kXlfB+SNUr
+	VGIpzkg01GIuKk4EAKXYkEHjAgAA
+X-CMS-MailID: 20240514080007epcas5p2b597ff212998cfe8a59332a8b320ec60
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240514-dpu-revert-ams-v1-1-b13623d6cd5f@linaro.org>
-X-B4-Tracking: v=1; b=H4sIADMZQ2YC/x2MQQqAIBAAvyJ7bkHFoPpKdDDdag+ZaEUg/T3pO
- DAzBTIlpgyDKJDo5sxHqKAaAW6zYSVkXxm01Ea2yqCPF1aR0ol2z9gbJe3sFJHpoEYx0cLPPxy
- n9/0Ay+O6hGAAAAA=
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9165;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=wGSRt3if0X9kZ/HrVq/Ne0TEuyWI+bHUBEXOAVzB/s0=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmQxk0a2SxIbI7dBbA9fHx50oakngD5BMVk4a0R
- wL8deRB19SJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkMZNAAKCRCLPIo+Aiko
- 1TkDCACaT3qZx+22q1Gtb9GUurVjUlraTv3WBRiAzomJ9LA7qxEpNv8wVPtMauouhCRQmWnrfP8
- qJJxpR6NxW4pi4mmGif1rq/Hza6uz2Mw6FEc8iYoFVoKd2oMw8USG36rh4utp2eX120v1RL/1vy
- rYmhb+FnfOvY22HEB76t2h0XvmrRKlXC98HcBEz3uhQBFf2jbMXktjJa53uEPj0UN470zFk1QFc
- xH1In87JRr5W34bw1YG2AITaLxlh7NHBImw8hsEnN7RTkXtnVxBkkq+0BliIwox1V2g/ZEvy6xq
- mgE/qFjJxYo4gfE/VbriaEaSTUJ3mvFaLNChjswsgLwXTtFr
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240514080007epcas5p2b597ff212998cfe8a59332a8b320ec60
+References: <CGME20240514080007epcas5p2b597ff212998cfe8a59332a8b320ec60@epcas5p2.samsung.com>
 
-In the DPU driver blank IRQ handling is called from a vblank worker and
-can happen outside of the irq_enable / irq_disable pair. Revert commit
-d13f638c9b88 ("drm/msm/dpu: drop dpu_encoder_phys_ops.atomic_mode_set")
-to fix vblank IRQ assignment for CMD DSI panels.
+This patch is intended to release the CPU resources of io_uring in
+polling mode. When IO is issued, the program immediately polls for
+check completion, which is a waste of CPU resources when IO commands
+are executed on the disk.
 
-Fixes: d13f638c9b88 ("drm/msm/dpu: drop dpu_encoder_phys_ops.atomic_mode_set")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  2 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |  5 ++++
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   | 32 ++++++++++++----------
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   | 13 +++++++--
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    | 11 +++++++-
- 5 files changed, 46 insertions(+), 17 deletions(-)
+I add the hybrid polling feature in io_uring, enables polling to
+release a portion of CPU resources without affecting block layer.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 119f3ea50a7c..a7d8ecf3f5be 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1200,6 +1200,8 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 		phys->hw_ctl = to_dpu_hw_ctl(hw_ctl[i]);
- 
- 		phys->cached_mode = crtc_state->adjusted_mode;
-+		if (phys->ops.atomic_mode_set)
-+			phys->ops.atomic_mode_set(phys, crtc_state, conn_state);
- 	}
- }
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-index 002e89cc1705..30470cd15a48 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-@@ -69,6 +69,8 @@ struct dpu_encoder_phys;
-  * @is_master:			Whether this phys_enc is the current master
-  *				encoder. Can be switched at enable time. Based
-  *				on split_role and current mode (CMD/VID).
-+ * @atomic_mode_set:		DRM Call. Set a DRM mode.
-+ *				This likely caches the mode, for use at enable.
-  * @enable:			DRM Call. Enable a DRM mode.
-  * @disable:			DRM Call. Disable mode.
-  * @control_vblank_irq		Register/Deregister for VBLANK IRQ
-@@ -93,6 +95,9 @@ struct dpu_encoder_phys;
- struct dpu_encoder_phys_ops {
- 	void (*prepare_commit)(struct dpu_encoder_phys *encoder);
- 	bool (*is_master)(struct dpu_encoder_phys *encoder);
-+	void (*atomic_mode_set)(struct dpu_encoder_phys *encoder,
-+			struct drm_crtc_state *crtc_state,
-+			struct drm_connector_state *conn_state);
- 	void (*enable)(struct dpu_encoder_phys *encoder);
- 	void (*disable)(struct dpu_encoder_phys *encoder);
- 	int (*control_vblank_irq)(struct dpu_encoder_phys *enc, bool enable);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-index 489be1c0c704..95cd39b49668 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-@@ -142,6 +142,23 @@ static void dpu_encoder_phys_cmd_underrun_irq(void *arg)
- 	dpu_encoder_underrun_callback(phys_enc->parent, phys_enc);
- }
- 
-+static void dpu_encoder_phys_cmd_atomic_mode_set(
-+		struct dpu_encoder_phys *phys_enc,
-+		struct drm_crtc_state *crtc_state,
-+		struct drm_connector_state *conn_state)
-+{
-+	phys_enc->irq[INTR_IDX_CTL_START] = phys_enc->hw_ctl->caps->intr_start;
-+
-+	phys_enc->irq[INTR_IDX_PINGPONG] = phys_enc->hw_pp->caps->intr_done;
-+
-+	if (phys_enc->has_intf_te)
-+		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_intf->cap->intr_tear_rd_ptr;
-+	else
-+		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_pp->caps->intr_rdptr;
-+
-+	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
-+}
-+
- static int _dpu_encoder_phys_cmd_handle_ppdone_timeout(
- 		struct dpu_encoder_phys *phys_enc)
- {
-@@ -280,14 +297,6 @@ static void dpu_encoder_phys_cmd_irq_enable(struct dpu_encoder_phys *phys_enc)
- 					  phys_enc->hw_pp->idx - PINGPONG_0,
- 					  phys_enc->vblank_refcount);
- 
--	phys_enc->irq[INTR_IDX_CTL_START] = phys_enc->hw_ctl->caps->intr_start;
--	phys_enc->irq[INTR_IDX_PINGPONG] = phys_enc->hw_pp->caps->intr_done;
--
--	if (phys_enc->has_intf_te)
--		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_intf->cap->intr_tear_rd_ptr;
--	else
--		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_pp->caps->intr_rdptr;
--
- 	dpu_core_irq_register_callback(phys_enc->dpu_kms,
- 				       phys_enc->irq[INTR_IDX_PINGPONG],
- 				       dpu_encoder_phys_cmd_pp_tx_done_irq,
-@@ -318,10 +327,6 @@ static void dpu_encoder_phys_cmd_irq_disable(struct dpu_encoder_phys *phys_enc)
- 	dpu_core_irq_unregister_callback(phys_enc->dpu_kms, phys_enc->irq[INTR_IDX_UNDERRUN]);
- 	dpu_encoder_phys_cmd_control_vblank_irq(phys_enc, false);
- 	dpu_core_irq_unregister_callback(phys_enc->dpu_kms, phys_enc->irq[INTR_IDX_PINGPONG]);
--
--	phys_enc->irq[INTR_IDX_CTL_START] = 0;
--	phys_enc->irq[INTR_IDX_PINGPONG] = 0;
--	phys_enc->irq[INTR_IDX_RDPTR] = 0;
- }
- 
- static void dpu_encoder_phys_cmd_tearcheck_config(
-@@ -698,6 +703,7 @@ static void dpu_encoder_phys_cmd_init_ops(
- 		struct dpu_encoder_phys_ops *ops)
- {
- 	ops->is_master = dpu_encoder_phys_cmd_is_master;
-+	ops->atomic_mode_set = dpu_encoder_phys_cmd_atomic_mode_set;
- 	ops->enable = dpu_encoder_phys_cmd_enable;
- 	ops->disable = dpu_encoder_phys_cmd_disable;
- 	ops->control_vblank_irq = dpu_encoder_phys_cmd_control_vblank_irq;
-@@ -736,8 +742,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_cmd_init(struct drm_device *dev,
- 
- 	dpu_encoder_phys_cmd_init_ops(&phys_enc->ops);
- 	phys_enc->intf_mode = INTF_MODE_CMD;
--	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
--
- 	cmd_enc->stream_sel = 0;
- 
- 	if (!phys_enc->hw_intf) {
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index ef69c2f408c3..636a97432d51 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -356,6 +356,16 @@ static bool dpu_encoder_phys_vid_needs_single_flush(
- 	return phys_enc->split_role != ENC_ROLE_SOLO;
- }
- 
-+static void dpu_encoder_phys_vid_atomic_mode_set(
-+		struct dpu_encoder_phys *phys_enc,
-+		struct drm_crtc_state *crtc_state,
-+		struct drm_connector_state *conn_state)
-+{
-+	phys_enc->irq[INTR_IDX_VSYNC] = phys_enc->hw_intf->cap->intr_vsync;
-+
-+	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
-+}
-+
- static int dpu_encoder_phys_vid_control_vblank_irq(
- 		struct dpu_encoder_phys *phys_enc,
- 		bool enable)
-@@ -699,6 +709,7 @@ static int dpu_encoder_phys_vid_get_frame_count(
- static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
- {
- 	ops->is_master = dpu_encoder_phys_vid_is_master;
-+	ops->atomic_mode_set = dpu_encoder_phys_vid_atomic_mode_set;
- 	ops->enable = dpu_encoder_phys_vid_enable;
- 	ops->disable = dpu_encoder_phys_vid_disable;
- 	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
-@@ -737,8 +748,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_vid_init(struct drm_device *dev,
- 
- 	dpu_encoder_phys_vid_init_ops(&phys_enc->ops);
- 	phys_enc->intf_mode = INTF_MODE_VIDEO;
--	phys_enc->irq[INTR_IDX_VSYNC] = phys_enc->hw_intf->cap->intr_vsync;
--	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
- 
- 	DPU_DEBUG_VIDENC(phys_enc, "created intf idx:%d\n", p->hw_intf->idx);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-index d3ea91c1d7d2..356dca5e5ea9 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-@@ -404,6 +404,15 @@ static void dpu_encoder_phys_wb_irq_disable(struct dpu_encoder_phys *phys)
- 		dpu_core_irq_unregister_callback(phys->dpu_kms, phys->irq[INTR_IDX_WB_DONE]);
- }
- 
-+static void dpu_encoder_phys_wb_atomic_mode_set(
-+		struct dpu_encoder_phys *phys_enc,
-+		struct drm_crtc_state *crtc_state,
-+		struct drm_connector_state *conn_state)
-+{
-+
-+	phys_enc->irq[INTR_IDX_WB_DONE] = phys_enc->hw_wb->caps->intr_wb_done;
-+}
-+
- static void _dpu_encoder_phys_wb_handle_wbdone_timeout(
- 		struct dpu_encoder_phys *phys_enc)
- {
-@@ -640,6 +649,7 @@ static bool dpu_encoder_phys_wb_is_valid_for_commit(struct dpu_encoder_phys *phy
- static void dpu_encoder_phys_wb_init_ops(struct dpu_encoder_phys_ops *ops)
- {
- 	ops->is_master = dpu_encoder_phys_wb_is_master;
-+	ops->atomic_mode_set = dpu_encoder_phys_wb_atomic_mode_set;
- 	ops->enable = dpu_encoder_phys_wb_enable;
- 	ops->disable = dpu_encoder_phys_wb_disable;
- 	ops->wait_for_commit_done = dpu_encoder_phys_wb_wait_for_commit_done;
-@@ -685,7 +695,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_wb_init(struct drm_device *dev,
- 
- 	dpu_encoder_phys_wb_init_ops(&phys_enc->ops);
- 	phys_enc->intf_mode = INTF_MODE_WB_LINE;
--	phys_enc->irq[INTR_IDX_WB_DONE] = phys_enc->hw_wb->caps->intr_wb_done;
- 
- 	atomic_set(&wb_enc->wbirq_refcount, 0);
- 
+The CPU optimization in peak workload of patch is tested as follows:
+  set 8 poll queues
+  all CPU utilization of original polling is 100% for per CPU, after
+  optimization, the CPU utilization drop a lot (per CPU);
+
+   read(128k, QD64, 1Job)     37%   write(128k, QD64, 1Job)     40%
+   randread(4k, QD64, 16Job)  52%   randwrite(4k, QD64, 16Job)  12%
+
+  Compared to original polling, the optimised performance reduction
+  with peak workload within 1%.
+
+   read  0.29%     write  0.51%    randread  0.09%    randwrite  0%
+
+Signed-off-by: hexue <xue01.he@samsung.com>
 
 ---
-base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
-change-id: 20240514-dpu-revert-ams-9410abc1ee48
 
-Best regards,
+changes:
+v3:
+ - Simplified the patch comments
+
+v2:
+ - extend hybrid poll to async polled io
+
+v1:
+ - initial version
+---
+ include/linux/io_uring_types.h |  14 ++++
+ include/uapi/linux/io_uring.h  |   1 +
+ io_uring/io_uring.c            |   4 +-
+ io_uring/io_uring.h            |   3 +
+ io_uring/rw.c                  | 115 ++++++++++++++++++++++++++++++++-
+ 5 files changed, 135 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
+index 854ad67a5f70..3a75b9904326 100644
+--- a/include/linux/io_uring_types.h
++++ b/include/linux/io_uring_types.h
+@@ -224,6 +224,11 @@ struct io_alloc_cache {
+ 	size_t			elem_size;
+ };
+ 
++struct iopoll_info {
++	long		last_runtime;
++	long		last_irqtime;
++};
++
+ struct io_ring_ctx {
+ 	/* const or read-mostly hot data */
+ 	struct {
+@@ -421,6 +426,7 @@ struct io_ring_ctx {
+ 	unsigned short			n_sqe_pages;
+ 	struct page			**ring_pages;
+ 	struct page			**sqe_pages;
++	struct xarray		poll_array;
+ };
+ 
+ struct io_tw_state {
+@@ -571,6 +577,12 @@ static inline void io_kiocb_cmd_sz_check(size_t cmd_sz)
+ )
+ #define cmd_to_io_kiocb(ptr)	((struct io_kiocb *) ptr)
+ 
++struct hy_poll_time {
++	int		poll_state;
++	struct timespec64		iopoll_start;
++	struct timespec64		iopoll_end;
++};
++
+ struct io_kiocb {
+ 	union {
+ 		/*
+@@ -641,6 +653,8 @@ struct io_kiocb {
+ 		u64			extra1;
+ 		u64			extra2;
+ 	} big_cqe;
++	/* for hybrid iopoll */
++	struct hy_poll_time		*hy_poll;
+ };
+ 
+ struct io_overflow_cqe {
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 7a673b52827b..0038cdfec18f 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -198,6 +198,7 @@ enum {
+  * Removes indirection through the SQ index array.
+  */
+ #define IORING_SETUP_NO_SQARRAY		(1U << 16)
++#define IORING_SETUP_HY_POLL	(1U << 17)
+ 
+ enum io_uring_op {
+ 	IORING_OP_NOP,
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index cd9a137ad6ce..2c14768bbe27 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -311,6 +311,7 @@ static __cold struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
+ 		goto err;
+ 
+ 	ctx->flags = p->flags;
++	xa_init(&ctx->poll_array);
+ 	atomic_set(&ctx->cq_wait_nr, IO_CQ_WAKE_INIT);
+ 	init_waitqueue_head(&ctx->sqo_sq_wait);
+ 	INIT_LIST_HEAD(&ctx->sqd_list);
+@@ -2921,6 +2922,7 @@ static __cold void io_ring_ctx_free(struct io_ring_ctx *ctx)
+ 	kfree(ctx->cancel_table_locked.hbs);
+ 	kfree(ctx->io_bl);
+ 	xa_destroy(&ctx->io_bl_xa);
++	xa_destroy(&ctx->poll_array);
+ 	kfree(ctx);
+ }
+ 
+@@ -4050,7 +4052,7 @@ static long io_uring_setup(u32 entries, struct io_uring_params __user *params)
+ 			IORING_SETUP_SQE128 | IORING_SETUP_CQE32 |
+ 			IORING_SETUP_SINGLE_ISSUER | IORING_SETUP_DEFER_TASKRUN |
+ 			IORING_SETUP_NO_MMAP | IORING_SETUP_REGISTERED_FD_ONLY |
+-			IORING_SETUP_NO_SQARRAY))
++			IORING_SETUP_NO_SQARRAY | IORING_SETUP_HY_POLL))
+ 		return -EINVAL;
+ 
+ 	return io_uring_create(entries, &p, params);
+diff --git a/io_uring/io_uring.h b/io_uring/io_uring.h
+index d5495710c178..72d6a4c3b46d 100644
+--- a/io_uring/io_uring.h
++++ b/io_uring/io_uring.h
+@@ -125,6 +125,9 @@ static inline void io_req_task_work_add(struct io_kiocb *req)
+ 	__io_req_task_work_add(req, 0);
+ }
+ 
++/* if sleep time less than 1us, then do not do the schedule op */
++#define MIN_SCHETIME 1000
++
+ #define io_for_each_link(pos, head) \
+ 	for (pos = (head); pos; pos = pos->link)
+ 
+diff --git a/io_uring/rw.c b/io_uring/rw.c
+index d5e79d9bdc71..29c7ce23ed71 100644
+--- a/io_uring/rw.c
++++ b/io_uring/rw.c
+@@ -713,6 +713,46 @@ static bool need_complete_io(struct io_kiocb *req)
+ 		S_ISBLK(file_inode(req->file)->i_mode);
+ }
+ 
++void init_hybrid_poll(struct io_ring_ctx *ctx, struct io_kiocb *req)
++{
++	/*
++	 * In multiple concurrency, a thread may operate several files
++	 * under different file systems, the inode numbers may be
++	 * duplicated. Each device has a different IO command processing
++	 * capability, so using device number to record the running time
++	 * of device
++	 */
++	u32 index = req->file->f_inode->i_rdev;
++	struct iopoll_info *entry = xa_load(&ctx->poll_array, index);
++	struct hy_poll_time *hpt = kmalloc(sizeof(struct hy_poll_time), GFP_KERNEL);
++
++	/* if alloc fail, go to regular poll */
++	if (!hpt) {
++		ctx->flags &= ~IORING_SETUP_HY_POLL;
++		return;
++	}
++	hpt->poll_state = 0;
++	req->hy_poll = hpt;
++
++	if (!entry) {
++		entry = kmalloc(sizeof(struct iopoll_info), GFP_KERNEL);
++		if (!entry) {
++			ctx->flags &= ~IORING_SETUP_HY_POLL;
++			return;
++		}
++		entry->last_runtime = 0;
++		entry->last_irqtime = 0;
++		xa_store(&ctx->poll_array, index, entry, GFP_KERNEL);
++	}
++
++	/*
++	 * Here we need nanosecond timestamps, some ways of reading
++	 * timestamps directly are only accurate to microseconds, so
++	 * there's no better alternative here for now
++	 */
++	ktime_get_ts64(&hpt->iopoll_start);
++}
++
+ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
+ {
+ 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
+@@ -750,6 +790,8 @@ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
+ 		kiocb->ki_flags |= IOCB_HIPRI;
+ 		kiocb->ki_complete = io_complete_rw_iopoll;
+ 		req->iopoll_completed = 0;
++		if (ctx->flags & IORING_SETUP_HY_POLL)
++			init_hybrid_poll(ctx, req);
+ 	} else {
+ 		if (kiocb->ki_flags & IOCB_HIPRI)
+ 			return -EINVAL;
+@@ -1118,6 +1160,75 @@ void io_rw_fail(struct io_kiocb *req)
+ 	io_req_set_res(req, res, req->cqe.flags);
+ }
+ 
++void io_delay(struct hy_poll_time *hpt, struct iopoll_info *entry)
++{
++	struct hrtimer_sleeper timer;
++	struct timespec64 tc, oldtc;
++	enum hrtimer_mode mode;
++	ktime_t kt;
++	long sleep_ti;
++
++	if (hpt->poll_state == 1)
++		return;
++
++	if (entry->last_runtime <= entry->last_irqtime)
++		return;
++
++	/*
++	 * Avoid excessive scheduling time affecting performance
++	 * by using only 25 per cent of the remaining time
++	 */
++	sleep_ti = (entry->last_runtime - entry->last_irqtime) / 4;
++
++	/*
++	 * If the time available for sleep is too short, i.e. the
++	 * totle running time and the context switching loss time
++	 * are very close to each other, the scheduling operation
++	 * is not performed to avoid increasing latency
++	 */
++	if (sleep_ti < MIN_SCHETIME)
++		return;
++
++	ktime_get_ts64(&oldtc);
++	kt = ktime_set(0, sleep_ti);
++	hpt->poll_state = 1;
++
++	mode = HRTIMER_MODE_REL;
++	hrtimer_init_sleeper_on_stack(&timer, CLOCK_MONOTONIC, mode);
++	hrtimer_set_expires(&timer.timer, kt);
++	set_current_state(TASK_UNINTERRUPTIBLE);
++	hrtimer_sleeper_start_expires(&timer, mode);
++
++	if (timer.task)
++		io_schedule();
++
++	hrtimer_cancel(&timer.timer);
++	mode = HRTIMER_MODE_ABS;
++	__set_current_state(TASK_RUNNING);
++	destroy_hrtimer_on_stack(&timer.timer);
++
++	ktime_get_ts64(&tc);
++	entry->last_irqtime = tc.tv_nsec - oldtc.tv_nsec - sleep_ti;
++}
++
++int io_uring_hybrid_poll(struct io_kiocb *req,
++				struct io_comp_batch *iob, unsigned int poll_flags)
++{
++	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
++	struct io_ring_ctx *ctx = req->ctx;
++	struct hy_poll_time *hpt = req->hy_poll;
++	u32 index = req->file->f_inode->i_rdev;
++	struct iopoll_info *entry = xa_load(&ctx->poll_array, index);
++	int ret;
++
++	io_delay(hpt, entry);
++	ret = req->file->f_op->iopoll(&rw->kiocb, iob, poll_flags);
++
++	ktime_get_ts64(&hpt->iopoll_end);
++	entry->last_runtime = hpt->iopoll_end.tv_nsec - hpt->iopoll_start.tv_nsec;
++	return ret;
++}
++
+ int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
+ {
+ 	struct io_wq_work_node *pos, *start, *prev;
+@@ -1145,7 +1256,9 @@ int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
+ 		if (READ_ONCE(req->iopoll_completed))
+ 			break;
+ 
+-		if (req->opcode == IORING_OP_URING_CMD) {
++		if (ctx->flags & IORING_SETUP_HY_POLL) {
++			ret = io_uring_hybrid_poll(req, &iob, poll_flags);
++		} else if (req->opcode == IORING_OP_URING_CMD) {
+ 			struct io_uring_cmd *ioucmd;
+ 
+ 			ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.40.1
 
