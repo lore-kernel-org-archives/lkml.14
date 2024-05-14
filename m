@@ -1,94 +1,272 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFF1125A9
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail.kernel-space.org (mail.kernel-space.org [195.201.34.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1D617C77;
+	Tue, 14 May 2024 08:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.34.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715673870; cv=none; b=XfCw5xyKiRZJ+TanNHLST5mOLXJx1Rvc8xKS4qkDvr39rLQ1sGEnB5dk213OOK1NwFFlb4LecmXKAwQPy5IujrJ4UX2juTkg+Ifgv5K11cj8RmIA8PWeepaDbpilZJxmTks0me9JrQWAPTG6OvCz23awN2eaeR3aghw2VXByhHY=
+	t=1715673869; cv=none; b=FnjzPxDxBYhli2hPsNIAxfurlMy5Wz4Gf+YaXibWcJ9yfuTMvfOXwh5DI1UJbcIX+P5XNGJw9oDHu+4QZs8bbN4IQyg1uzKIErbt2u5PKG9nwQAYxmddKVlWs4ZPCjG2tSmlrfBiiM5SmoOQCy73o3UUM5BtVzFmJQN6tTV+JUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715673870; c=relaxed/simple;
-	bh=wLm0Vj2eXCxBqcyOp4WaiFBvPsGqeQBJRznZMy7avE8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DHt9hKMsi6qJS9XnefW5RYR9PdZydaPqiS5rUcthPpXQK/E5fpw1yPjgC8D5bIuNN9j3g9VS8t7k4CpszW0nba1DyjLt9l+Q+mEy/lOiuOpDHPLy+m7N9cgMm17wwrNSxkckfOK+kljOpyc5ClqxBTDstkP990R/WxrpS1ODnF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=RG06WhbQ; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1715673869; c=relaxed/simple;
+	bh=MnavwG4xDe+bT4+m8GUFgKzjxbVWJw55qnBENhgJS0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qQE8OibYSkUed8nyuzauQWYW/8GI0hEr/0DwgODilpzbqirHtHL1W55kRSRyDWAb+QIi1N+U7xEHjgj2yXTSmDRRNKd6epXhjQLbHIh1KlfwHphqrs6GIwKOWErP7E4wS70Me80FrykgKT3lhPUI7ZygLPsWE5wvb1tJSlVhzhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernel-space.org; spf=pass smtp.mailfrom=kernel-space.org; dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b=0LsLUgiA; dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b=x9uFUQS4; arc=none smtp.client-ip=195.201.34.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernel-space.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel-space.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="RG06WhbQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=LcoPi
-	PQ2cDUD3ccUoUxr3vfIIU5y5RPZcbdajwyHnz0=; b=RG06WhbQC0xG44q2ERcuC
-	kLGOl2gXC1yqM69A9+g8+n2ej7v/Qr1Utb5Nd4M99JL864bVd9aPT9/FTLLYFkH6
-	sAbzLcJURcIahfkRARXHhhDmjOlIQPHjdNrjzruAzM32eOFYkf/CDOKv3bxHUDXo
-	xPFSZGDS4jwVyHo0hlScEw=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g3-2 (Coremail) with SMTP id _____wDnbyXAGkNmjzzvEQ--.15827S4;
-	Tue, 14 May 2024 16:03:13 +0800 (CST)
-From: ran xiaokai <ranxiaokai627@163.com>
-To: shy828301@gmail.com
-Cc: akpm@linux-foundation.org,
-	david@redhat.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	willy@infradead.org,
-	xu.xin16@zte.com.cn,
-	ziy@nvidia.com
-Subject: Re:  [PATCH linux-next] mm/huge_memory: mark racy access on huge_anon_orders_always
-Date: Tue, 14 May 2024 08:03:12 +0000
-Message-Id: <20240514080312.661480-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAHbLzkqg=+Dq40-He5ZBCnzrXEJaBUfXtb2jjBoDKERpM-C07w@mail.gmail.com>
-References: <CAHbLzkqg=+Dq40-He5ZBCnzrXEJaBUfXtb2jjBoDKERpM-C07w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b="0LsLUgiA";
+	dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b="x9uFUQS4"
+Received: from kernel-space.org (localhost [127.0.0.1])
+	by kernel-space.org (OpenSMTPD) with ESMTP id 4843119d;
+	Tue, 14 May 2024 07:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=kernel-space.org; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=s1; bh=ca
+	B5PwAVnllql880/2faREzf2Ig=; b=0LsLUgiAZbsT7UjlYhX67sWHogfPBaoFAV
+	VKo6wbZyR1SAtA+ecojae0TgNq1Vmroif1x5M1p4Bz0ZcxCmR7npQqcsumsjQMqy
+	FAtWqZUYOlGZGD4R4HJlRW73a5B2xd4zxtXBnwwirTJJnWUXqUmqkLnLqJPBtEQA
+	jrbCEwprc=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=kernel-space.org; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; q=dns; s=s1; b=
+	afULTwWiVL1PXZxYXhzIFxGe9Q4UA8RjXOAi+kLxw5+uZmq7WGvaVB5rpZr6nTHb
+	iSLejFPX1x+YIHqsFVI+fabNOdkQUNKNK8ScnGTthRASLod3uDYAu8tzLVpMQuKV
+	Pj4X5Bbwh21k5CnAfvkjRazh7Am7UzfQ2jEPveoiTrw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel-space.org;
+	s=s1; t=1715673395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cVfJiralSHBKIpiyuDV08+v4xxv00fj5z+EYp8KEzMQ=;
+	b=x9uFUQS4YkhuSngcZiX5OrkWmQ4LWw3Cly9Yhsir+BX0rxEfMm0vTdFL0LwRWaoTpBcyMP
+	skgLMtymBLzgHo6SDLYMDG4K4XsAJ/3CKLzAAAcaz0nzxC/kdVAf52wRqDxlTxBjSfaV9t
+	Z8uY3yr835+iEhfcqOTnqREVOFXG+n8=
+Received: from [192.168.0.2] (host-79-16-6-145.retail.telecomitalia.it [79.16.6.145])
+	by kernel-space.org (OpenSMTPD) with ESMTPSA id 5a079902 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Tue, 14 May 2024 07:56:35 +0000 (UTC)
+Message-ID: <bd538260-2403-4912-961c-549c74aead76@kernel-space.org>
+Date: Tue, 14 May 2024 09:57:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dmaengine: fsl-edma: merge mcf-edma into fsl-edma
+ driver
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+ "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
+ <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>,
+ Greg Ungerer <gerg@linux-m68k.org>,
+ linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <20240509193517.3571694-1-Frank.Li@nxp.com>
+ <CAMuHMdVB2PrkxDMoo0y1y6SLj-yuW5o+PJ+sQn2VtB2yrXzkbw@mail.gmail.com>
+Content-Language: en-US
+From: Angelo Dureghello <angelo@kernel-space.org>
+In-Reply-To: <CAMuHMdVB2PrkxDMoo0y1y6SLj-yuW5o+PJ+sQn2VtB2yrXzkbw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnbyXAGkNmjzzvEQ--.15827S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cw1kWr4DKr1xZF17tFykGrg_yoW8XF13pF
-	97GF1xCa48Zr9IkrW2ya17AryrXrZxGa4Uur1Sg3ZFyasxtr1vvr18Z34ak3Z8Zr9Fya1S
-	9Fy7Was5Can8XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3-BiUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbB0gTeTGWXxu8VaAAAsi
 
->>
->> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->>
->> huge_anon_orders_always and huge_anon_orders_always are accessed
->> lockless, it is better to use the READ_ONCE() wrapper.
->> This is not fixing any visible bug, hopefully this can cease some
->> KCSAN complains in the future.
+Hi,
+
+On 13/05/24 8:12 PM, Geert Uytterhoeven wrote:
+> CC coldfire
 >
-> A little bit confused here. Did you see complaints from KCSAN?
-
-Not yet.
-The only written access to huge_anon_orders_always is when
-changing the mTHP sysfs "enabled" knob, I think peple do not
-change the mTHP settings frequently.
-But the possibility is not zero, please refer to the cgroup related knobs,
-I think  wde'd better do the same and this annotation wont lead to any performance issue, right?
-
->> Also do that for huge_anon_orders_madvise.
+> On Thu, May 9, 2024 at 9:35 PM Frank Li <Frank.Li@nxp.com> wrote:
+>> MCF eDMA are almost the same as FSL eDMA driver. Previously link to two
+>> kernel modules, fsl-edma.ko and mcf-edma.ko. These are not problem because
+>> mcf-edma is for m68k ARCH and FSL eDMA is for arm/arm64 ARCH. But often
+>> build both at PPC ARCH. It also makes sense to build two drivers at the
+>> same time. It causes many build warning because share a fsl-edma-common.o.
+>> such as:
 >>
->> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+>>     powerpc64le-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-common.o' being placed in section `.stubs'
+>>     powerpc64le-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-trace.o' being placed in section `.stubs'
+>>
+>> Merge mcf-edma into fsl-edma driver. So use one driver (fsl-edma.ko) for
+>> MCF and FSL eDMA.
+>>
+>> mcf-edma.ko should be replaced by fsl-edma.ko in modules, minimizing user
+>> space impact because MCF eDMA remains confined to legacy ColdFire mcf5441x
+>> production and mcf5441x has been in production for at least a decade and
+>> NXP has long ceased ColdFire development.
+
+when i developed mcf-edma, i tried to modify fsl-edma first. Modules are
+similar but there are various edma IP versions, and i remember minimal
+differences in the CF version too, some register bits and, of course,
+endianness.
+
+If a merge is possible, welcome, i have here mcf5441x, can give a try to
+this patch as soon as i can.
+
+
+>> Update Kconfig to make MCF_EDMA as feature of FSL_EDMA and change Makefile
+>> to link mcl-edma-main.o to fsl-edma.o.
+>>
+>> Create a common module init/exit functions, which call original's
+>> fsl-edma-init[exit]() and mcf-edma-init[exit]().
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202405082029.Es9umH7n-lkp@intel.com/
+>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 >> ---
->>  include/linux/huge_mm.h | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>   drivers/dma/Kconfig           |  8 ++++----
+>>   drivers/dma/Makefile          |  5 ++---
+>>   drivers/dma/fsl-edma-common.c | 28 ++++++++++++++++++++++++++++
+>>   drivers/dma/fsl-edma-common.h |  5 +++++
+>>   drivers/dma/fsl-edma-main.c   |  6 ++----
+>>   drivers/dma/mcf-edma-main.c   |  6 ++----
+>>   6 files changed, 43 insertions(+), 15 deletions(-)
 >>
->> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->> index de0c89105076..6573430ea600 100644
->> --- a/include/linux/huge_mm.h
->> +++ b/include/linux/huge_mm.h
->> @@ -122,8 +122,8 @@ static inline bool hugepage_flags_enabled(void)
->>          * So we don't need to look at huge_anon_orders_inherit.
->>          */
->>         return hugepage_global_enabled() ||
->> -              huge_anon_orders_always ||
->> -              huge_anon_orders_madvise;
->> +                       READ_ONCE(huge_anon_orders_always) ||
->> +                       READ_ONCE(huge_anon_orders_madvise);
->>  }
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 002a5ec806207..45110520f6e68 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -393,14 +393,14 @@ config LS2X_APB_DMA
+>>            It does not support memory to memory data transfer.
 >>
->>  static inline int highest_order(unsigned long orders)
+>>   config MCF_EDMA
+>> -       tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
+>> +       bool "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
+>>          depends on M5441x || COMPILE_TEST
+>>          select DMA_ENGINE
+>>          select DMA_VIRTUAL_CHANNELS
+>>          help
+>> -         Support the Freescale ColdFire eDMA engine, 64-channel
+>> -         implementation that performs complex data transfers with
+>> -         minimal intervention from a host processor.
+>> +         Support the Freescale ColdFire eDMA engine in FSL_EDMA driver,
+>> +         64-channel implementation that performs complex data transfers
+>> +         with minimal intervention from a host processor.
+>>            This module can be found on Freescale ColdFire mcf5441x SoCs.
+>>
+>>   config MILBEAUT_HDMAC
+>> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+>> index 802ca916f05f5..0000922c7cbfe 100644
+>> --- a/drivers/dma/Makefile
+>> +++ b/drivers/dma/Makefile
+>> @@ -33,11 +33,10 @@ obj-$(CONFIG_DW_EDMA) += dw-edma/
+>>   obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
+>>   fsl-edma-trace-$(CONFIG_TRACING) := fsl-edma-trace.o
+>>   CFLAGS_fsl-edma-trace.o := -I$(src)
+>> +mcf-edma-main-$(CONFIG_MCF_EDMA) := mcf-edma-main.o
+>>   obj-$(CONFIG_FSL_DMA) += fsldma.o
+>> -fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
+>> +fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y} ${mcf-edma-main-y}
+>>   obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
+>> -mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
+>> -obj-$(CONFIG_MCF_EDMA) += mcf-edma.o
+>>   obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
+>>   obj-$(CONFIG_FSL_RAID) += fsl_raid.o
+>>   obj-$(CONFIG_HISI_DMA) += hisi_dma.o
+>> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+>> index 3af4307873157..ac04a2ce4fa1f 100644
+>> --- a/drivers/dma/fsl-edma-common.c
+>> +++ b/drivers/dma/fsl-edma-common.c
+>> @@ -888,4 +888,32 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
+>>          }
+>>   }
+>>
+>> +static int __init fsl_edma_common_init(void)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = fsl_edma_init();
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +#ifdef CONFIG_MCF_EDMA
+>> +       ret = mcf_edma_init();
+>> +       if (ret)
+>> +               return ret;
+>> +#endif
+>> +       return 0;
+>> +}
+>> +
+>> +subsys_initcall(fsl_edma_common_init);
+>> +
+>> +static void __exit fsl_edma_common_exit(void)
+>> +{
+>> +       fsl_edma_exit();
+>> +
+>> +#ifdef CONFIG_MCF_EDMA
+>> +       mcf_edma_exit();
+>> +#endif
+>> +}
+>> +module_exit(fsl_edma_common_exit);
+>> +
+>>   MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+>> index ac66222c16040..dfbdcc922ceea 100644
+>> --- a/drivers/dma/fsl-edma-common.h
+>> +++ b/drivers/dma/fsl-edma-common.h
+>> @@ -488,4 +488,9 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan);
+>>   void fsl_edma_cleanup_vchan(struct dma_device *dmadev);
+>>   void fsl_edma_setup_regs(struct fsl_edma_engine *edma);
+>>
+>> +int __init fsl_edma_init(void);
+>> +void __exit fsl_edma_exit(void);
+>> +int __init mcf_edma_init(void);
+>> +void __exit mcf_edma_exit(void);
+>> +
+>>   #endif /* _FSL_EDMA_COMMON_H_ */
+>> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+>> index 391e4f13dfeb0..a1c3c4ed869c5 100644
+>> --- a/drivers/dma/fsl-edma-main.c
+>> +++ b/drivers/dma/fsl-edma-main.c
+>> @@ -724,17 +724,15 @@ static struct platform_driver fsl_edma_driver = {
+>>          .remove_new     = fsl_edma_remove,
+>>   };
+>>
+>> -static int __init fsl_edma_init(void)
+>> +int __init fsl_edma_init(void)
+>>   {
+>>          return platform_driver_register(&fsl_edma_driver);
+>>   }
+>> -subsys_initcall(fsl_edma_init);
+>>
+>> -static void __exit fsl_edma_exit(void)
+>> +void __exit fsl_edma_exit(void)
+>>   {
+>>          platform_driver_unregister(&fsl_edma_driver);
+>>   }
+>> -module_exit(fsl_edma_exit);
+>>
+>>   MODULE_ALIAS("platform:fsl-edma");
+>>   MODULE_DESCRIPTION("Freescale eDMA engine driver");
+>> diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-main.c
+>> index 78c606f6d0026..d97991a1e9518 100644
+>> --- a/drivers/dma/mcf-edma-main.c
+>> +++ b/drivers/dma/mcf-edma-main.c
+>> @@ -284,17 +284,15 @@ bool mcf_edma_filter_fn(struct dma_chan *chan, void *param)
+>>   }
+>>   EXPORT_SYMBOL(mcf_edma_filter_fn);
+>>
+>> -static int __init mcf_edma_init(void)
+>> +int __init mcf_edma_init(void)
+>>   {
+>>          return platform_driver_register(&mcf_edma_driver);
+>>   }
+>> -subsys_initcall(mcf_edma_init);
+>>
+>> -static void __exit mcf_edma_exit(void)
+>> +void __exit mcf_edma_exit(void)
+>>   {
+>>          platform_driver_unregister(&mcf_edma_driver);
+>>   }
+>> -module_exit(mcf_edma_exit);
+>>
+>>   MODULE_ALIAS("platform:mcf-edma");
+>>   MODULE_DESCRIPTION("Freescale eDMA engine driver, ColdFire family");
+>> --
+>> 2.34.1
+
+Regards,
+angelo
+
 
