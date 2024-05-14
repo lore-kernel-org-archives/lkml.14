@@ -1,99 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAD917BB3E;
-	Tue, 14 May 2024 15:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FA36D1A7;
+	Tue, 14 May 2024 15:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715700071; cv=none; b=sn38KgCO8R0xSSHH2C0jmNHzHvSShD5+iBq2nnn+1x8UZX5cZLltRDG1jBXN7BUbnlk5fv+GM1pbWhS760Auoe7I86x7fp5YFQNY63RLw8QeKCgF74TDHBxnvrxl2C7CqZttiohy9l3bt2/oUwJy0bEsoCWxGeZUAb1hbhoejmk=
+	t=1715700080; cv=none; b=iJ3+rPvZOCFDG/dxSbkwDn9Gv3TU1UdOWmJv5U2w3DP6duueVxugsGzDnhK0jTJL2vuW7V+ayW5aBQFFzEGKCZjpNF8i8L2hVi8/QTY4j1DTflmUaqxjLfPemE7EvcIplUwdblicT1O5udLmr2pU+uyjinuhsxDhbDrGbYdSPRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715700071; c=relaxed/simple;
-	bh=dt6KEmyr9WRZ3KLJyEpAgM2p7Pm++GEzc+zDaBvA6zQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=iiL50xiCQtunagbXf3juYp2zhBc1wXXNYrOKFlkHSfE7j054zxgDlewhK9LLMRjI3SmIMqDVcvwPqnHZbHLI4H+y1mZZwzrvhihXGPwjTKiqI3gwsXlqiyYT7aBwG41LLTrXPZgR6AbWc5ssAoQC41qWqBwQzO5/G1TjqeaenTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1+G9nnn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715700080; c=relaxed/simple;
+	bh=AvI5hbrvPA4iuIG9qxPDacNYxMQQhFyv9cCcqxA3glY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8OwG4QtDuwswFuCqLn2ZyMeDwR4dFgVLmMYNRgaz4E9YAJz9yxrMbbuSGsaqjqctTjEa375TDLQDc3+sWHWVWfLYUxWU3eagU3emdSqrZ99sBF1k+UDunAKlFrgFH+ZpG9XtPAZT/8v7FqW/mpCLAEGK/8dAHcbomGYuv0VGdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hn2yuupi; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1+G9nnn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574E7C2BD10;
-	Tue, 14 May 2024 15:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715700070;
-	bh=dt6KEmyr9WRZ3KLJyEpAgM2p7Pm++GEzc+zDaBvA6zQ=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=f1+G9nnnE8FAgaxfw8WydJ+Y7C7L37+Bd1CM7qPsgqRfl70d4tJqauhYT6eHp1aLx
-	 56iT8WXsRM/esL2uSR6g9Gtgje1guV1y1hy6jKTTt6ckodDZUreWijv/2KsM/NAW/k
-	 4Pwxc/qqIOLdSAy6dZ6iemzPQfP0aaYZqtQCBqe0Lcz3brc63KgqOnQn18kkkStME6
-	 2CWgqxfAxH7twA1OMS8Ok3+wZcoc0Rtw1DWtW2heEJihz7w1P1MbW+O9pUxWQ+ljXJ
-	 /p9ni7DpHzxO3FkSRlaCGgz9BlrIiMyuPvvnT/dQJs+9R9UyRX4ktkHKVeVw6A9bo7
-	 vueoEP0E33wfQ==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hn2yuupi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715700079; x=1747236079;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AvI5hbrvPA4iuIG9qxPDacNYxMQQhFyv9cCcqxA3glY=;
+  b=hn2yuupiByIsU8zjqy5cSgrAZmfznU6BkNPCt+aa5A5hdKulpRFIJIW6
+   EWBQhoqTxWMi9CegM9wLdMZInPmJN3AALmfPF6IkIIiQBEfF/3D6jD6VY
+   kBzAUsm2f3mlp7xIfdauEmtwMkMkyvJjw1lPqrjm46FDAIfO4hszb/Scb
+   EwzhWJPw3pINMUtSTJSlyhemWOSH9o+hCuuIS6O47/Unvuy1UBEhOlprw
+   KZaJlghhdn97bgcsoi7eVw3FViKnPDdfl9c3dm0sl7LOFw8gwCP0Re1f8
+   riq39hlMOLUvxAN8zc4KLsIwtaFULjhc4gzRummGmkET8MqsY/JwOTEA/
+   g==;
+X-CSE-ConnectionGUID: JudtloilTP6o5GGo6RkjRw==
+X-CSE-MsgGUID: tZ5vDcpzTRWgtncY/d9hqg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11858340"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="11858340"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 08:21:18 -0700
+X-CSE-ConnectionGUID: aU9mjho7QRWjI4OzxI/h2g==
+X-CSE-MsgGUID: EH+yz+mZR8mcu1GxZnVK6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="31264554"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 08:21:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s6txp-00000007ThE-1tgY;
+	Tue, 14 May 2024 18:21:13 +0300
+Date: Tue, 14 May 2024 18:21:13 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] media: ipu-bridge: fix error code in ipu_bridge_init()
+Message-ID: <ZkOBaUW1uLw6ildS@smile.fi.intel.com>
+References: <f468c4ac-0629-41b5-b5d1-e26f70e44800@moroto.mountain>
+ <ZkN2Ow6hASmKvHlz@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 14 May 2024 18:21:06 +0300
-Message-Id: <D19GWXHYP2VC.1OY7BOW5LNXVF@kernel.org>
-Cc: "James Bottomley" <James.Bottomley@hansenpartnership.com>, "Mimi Zohar"
- <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
- <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- <serge@hallyn.com>, <linux-integrity@vger.kernel.org>,
- <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel-team@cloudflare.com>
-Subject: Re: [RFC PATCH 0/2] TPM derived keys
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Ignat Korchagin"
- <ignat@cloudflare.com>
-X-Mailer: aerc 0.17.0
-References: <20240503221634.44274-1-ignat@cloudflare.com>
- <CALrw=nGhgRrhJ5mWWC6sV2WYWoijvD9WgFzMfOe6mHmqnza-Hw@mail.gmail.com>
- <D18XXJ373C2V.2M6AOMKD1B89W@kernel.org>
- <CALrw=nHGLN=dn3fbyAcXsBufw0tAWUT1PKVHDK5RZkHcdd3CUw@mail.gmail.com>
- <D19CUF0H9Q3S.3L5Y5S9553S5@kernel.org>
- <CALrw=nEZ07U9VhbGsnpchOYw1icUZCnuoHHXkJLzhFqSPe9_fQ@mail.gmail.com>
- <D19F74M6B8UC.2VEOOZHGOS87V@kernel.org>
- <D19FUGDA2CUO.16EF7U9ZEZ4SD@kernel.org>
-In-Reply-To: <D19FUGDA2CUO.16EF7U9ZEZ4SD@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkN2Ow6hASmKvHlz@kekkonen.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue May 14, 2024 at 5:30 PM EEST, Jarkko Sakkinen wrote:
-> On Tue May 14, 2024 at 5:00 PM EEST, Jarkko Sakkinen wrote:
-> > On Tue May 14, 2024 at 4:11 PM EEST, Ignat Korchagin wrote:
-> > > For example, a cheap NAS box with no internal storage (disks connecte=
-d
-> > > externally via USB). We want:
-> > >   * disks to be encrypted and decryptable only by this NAS box
-> >
-> > So how this differs from LUKS2 style, which also systemd supports where
-> > the encryption key is anchored to PCR's? If I took hard drive out of my
-> > Linux box, I could not decrypt it in another machine because of this.
->
-> Maybe you could replace the real LUKS2 header with a dummy LUKS2
-> header, which would need to be able the describe "do not use this" and
-> e.g. SHA256 of the actual header. And then treat the looked up header as
-> the header when the drive is mounted.
->
-> LUKS2 would also need to be able to have pre-defined (e.g. kernel
-> command-line or bootconfig) small internal storage, which would be
-> also encrypted with TPM's PRCs containing an array of LUKS2 header
-> and then look up that with SHA256 as the key.
->
-> Without knowing LUKS2 implementation to me these do not sound reaching
-> the impossible engineer problems so maybe this would be worth of
-> investigating...
+On Tue, May 14, 2024 at 02:33:31PM +0000, Sakari Ailus wrote:
+> On Fri, May 10, 2024 at 06:43:31PM +0300, Dan Carpenter wrote:
 
-Or why you could not just encrypt the whole header with another key
-that is only in that device? Then it would appear as random full
-length.
+...
 
-I.e. unsealing
+> Neither IPU3-CIO2 or IPU6 ISYS drivers should be of any functional use
+> without sensors. But the power states of the devices could be affected by
+> this: the drivers should power off these devices but without drivers they
+> maybe left powered on. I haven't made any measurements though.
 
-1. Decrypt LUKS2 header with TPM2 key
-2. Use the new resulting header as it was in the place of encrypted
-   stored to the external drive.
-3. Decrypt key from the LUK2S header etc.
+FWIW, Hans mentioned AtomISPv2 case with somewhat 7W consumption on top of
+the idling machine. That's why we have a stub driver in PDx86 exactly for
+the purpose of turning it off when not used.
 
-?
+Hans may correct me if I'm wrong in numbers or elsewhere.
 
-BR, Jarkko
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
