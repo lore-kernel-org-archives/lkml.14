@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C142FEDC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1474115CE;
 	Tue, 14 May 2024 01:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715648429; cv=none; b=GWn+sfoZMr08Wvlf1RG8bO/C7JyBtOaYm7rvEbh3y5oxU63D+EYe2iq7j1UMvO0mbIZ7JsNXm9nSS2dX2d0O/P1QmHb2R7Tgnbn8drAn8WIIlm3hqXfEsEzo7UD9EagrYboknW0lBaa9rXSuUUVfYwiDdh8xO+cLP/z49ZJP2UU=
+	t=1715648430; cv=none; b=h71Js85x0JvIjhKhcJbNazCmmRn+vULpJNbccICXBLLAgiZOnrExZivHsgvkxTwxbuU0cG63jnnxus/Vo86MAPs9jztDnqwvBS7rnYtOwqDdNVL35ehxFmyplBxKJvf8lOrtPzpcfZsq5T3rzbNhnuqeGtkzmc/65iiCJLTMiM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715648429; c=relaxed/simple;
-	bh=E5AY8dfKlOU1rOU80YnyA0n26lpjKt6Wld2wUg4Wwas=;
+	s=arc-20240116; t=1715648430; c=relaxed/simple;
+	bh=tex67ROWkh4NHwRY33hOc+4fTpPBuNxAxyVsPksJt+8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Kkk7+CHzFh2sRL8TrdSjgv4dzyJK4YjEVSXl/+6pFHWyzuDT8VFNkXA8eRNDuyFixbEi/AwU5X9zRJZnh+mY0sj54XGEDHSDBEc837FHIn1LR9SPi8v3e0jI5YmQpJX2W3ZmYjNGJ0rTGc4viLhpG7O8hASDFWGKLU3+v8ZxXAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUHaHtSP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XKjn1RS9oulKJa5eUdkhIZakDOnt2Db3Kr9dMO1SlYBabkz8PBd4kco2w2n/fKWPSpeqWHXnIRT9QpJV3ndQRIb0wByu/uthF1QA1tSgmZD2k1InlZZVv8C4ipbKcpRthDTa0Bxt5wHGS4N6R1ec1TgTPhx5qxXjG1iE5x6EsII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGE1wHwa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUHaHtSP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 418A7C32782;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGE1wHwa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A4B56C4AF0A;
 	Tue, 14 May 2024 01:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715648429;
-	bh=E5AY8dfKlOU1rOU80YnyA0n26lpjKt6Wld2wUg4Wwas=;
+	bh=tex67ROWkh4NHwRY33hOc+4fTpPBuNxAxyVsPksJt+8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pUHaHtSP4HIltHGM0u7E5/7IB0rDPt9DB7zWnDsiPUOiloWFJjzDjw5Sq9yZgRI8f
-	 QhMDzt+exPKpDYWomMTPxAvPiEpj7+hp5Y8NrhP0x0JwqRfq/uE5DcMespnkKbCTDx
-	 GegOLB4s2AUzT90BHqyprF8bOWHjZv0cWHi4t9NrVz4T5w2jhz0mWDri9J2kkMq+kC
-	 OWc11fTAxIhi+CmEbkFH1NULrbzV0TQtWKDEGrWmoKvLr0AcH5x1hvBS+lbv6q+izx
-	 S96ea2deDI+Ua1w1PnsjvESR7DxcJwpfj4EQ2kgEQBAh0AXilo0Fgy1fWlE3/+Dj07
-	 bUIDNtDLQKjaA==
+	b=tGE1wHwavggZavCmGTnx5msI7xOUslc0bp0dW48tmm6zZo0xgP+lE//lcsOscCdlz
+	 f83uKG0CxpPDFhM2UL6GMEbIhychYBELNM0J9K+VO63JkXayas5dA6UyAZ0IC2Bv9o
+	 m1ota997x9ZwsFbAWesfloUcc23tGhiz8FL/zNxwka8i5JYQmqUy/VY5vcbTwpql1e
+	 Tf0ZZQegypp5g4LWxWYYf2PkFvvoryPjD+UpmzM5rctMDbPgLFXMqAEPP4XEv3ti6m
+	 4eKnimz9XNUAVhxivW5xsyRQSNboNCidFYwZLUk6smEZqtL5IlpBoxz55edkO008t0
+	 6fwMRl9iMahLw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 298C6C433F2;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9A4F5C43443;
 	Tue, 14 May 2024 01:00:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,39 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: fec: remove .ndo_poll_controller to avoid deadlocks
+Subject: Re: [PATCH] net: prestera: Add flex arrays to some structs
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171564842916.4255.8652669521897481692.git-patchwork-notify@kernel.org>
+ <171564842962.4255.15459497362848751312.git-patchwork-notify@kernel.org>
 Date: Tue, 14 May 2024 01:00:29 +0000
-References: <20240511062009.652918-1-wei.fang@nxp.com>
-In-Reply-To: <20240511062009.652918-1-wei.fang@nxp.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, shenwei.wang@nxp.com, xiaoning.wang@nxp.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
+References: <AS8PR02MB7237E8469568A59795F1F0408BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB7237E8469568A59795F1F0408BE12@AS8PR02MB7237.eurprd02.prod.outlook.com>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: taras.chornyi@plvision.eu, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, keescook@chromium.org,
+ gustavoars@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+ morbo@google.com, justinstitt@google.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sat, 11 May 2024 14:20:09 +0800 you wrote:
-> There is a deadlock issue found in sungem driver, please refer to the
-> commit ac0a230f719b ("eth: sungem: remove .ndo_poll_controller to avoid
-> deadlocks"). The root cause of the issue is that netpoll is in atomic
-> context and disable_irq() is called by .ndo_poll_controller interface
-> of sungem driver, however, disable_irq() might sleep. After analyzing
-> the implementation of fec_poll_controller(), the fec driver should have
-> the same issue. Due to the fec driver uses NAPI for TX completions, the
-> .ndo_poll_controller is unnecessary to be implemented in the fec driver,
-> so fec_poll_controller() can be safely removed.
+On Sun, 12 May 2024 18:10:27 +0200 you wrote:
+> The "struct prestera_msg_vtcam_rule_add_req" uses a dynamically sized
+> set of trailing elements. Specifically, it uses an array of structures
+> of type "prestera_msg_acl_action actions_msg".
+> 
+> The "struct prestera_msg_flood_domain_ports_set_req" also uses a
+> dynamically sized set of trailing elements. Specifically, it uses an
+> array of structures of type "prestera_msg_acl_action actions_msg".
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] net: fec: remove .ndo_poll_controller to avoid deadlocks
-    https://git.kernel.org/netdev/net/c/c2e0c58b25a0
+  - net: prestera: Add flex arrays to some structs
+    https://git.kernel.org/netdev/net-next/c/86348d217661
 
 You are awesome, thank you!
 -- 
