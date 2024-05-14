@@ -1,98 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FC16D1B4;
-	Tue, 14 May 2024 10:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5201346542;
+	Tue, 14 May 2024 10:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715683595; cv=none; b=ebl81oE9puI6D8Xe+6x9PKN/QiScty1ixMf7rKobzEPWaode8QUA/xOQyi+3xPkcOat6UE/jPk5kFRwP+AgcayFQM8cW9xEXSANSG50KC46qyIFL6QeuRunGcuNSWYfPzqOdxcOWgO3Xu2h23n+Fid2Z9kvJt5o+31jEdNo2K7k=
+	t=1715683677; cv=none; b=GL1YCCaNpwKaA/SL6s0u5k4bQIf5Xyygj63bMw1c7R60Azd1LMxmsTe36k/qULSq5pDSJrz9Ji/oekmr6NBamc3FQxKJ+7QknOpmB4H0EzQ/Hp/qNahqlEBK4aaIgMfgYB2O+a9YmiTvJhSq5MsXYRPnPh1V2KyyaPHmDp67V+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715683595; c=relaxed/simple;
-	bh=DHFuiyL6T5J2md2p75u4E5Jz8QSMYKiBIleKiS1nJh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZU1528G/m2+5s2lJPkHO+m+uXCj9ZzGqmNs2zLxkpunD5AGpHNPLSmjBSwwECM4PCnYTcw/lvl1u93Rd75u8P2QUz/YWuB0djvZfHrGgjFwXmH6vmt/Schw60Ejc4GuP3z4feLfLEcUT3kikjJWy9kxfLJ2LMNZe1ucT8QgeRZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4e/0vTo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715683677; c=relaxed/simple;
+	bh=yHGgknwXW0O8OB9OmVvJHciQo5Z0+ha+LxvoCItjQ/g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kFEjS9vqZTZxHn3wVbLsASVshBqrLeuCPMbuesh9+YWpXRX3BnHTU8AIwWR2exvl6zkuDJrP4Dr4wxz4MovPNDz2fTut3G7xfND/fxw1JbLHpBL2dJx0Zs0TaAxGjexyGaJfqwo1ioNYumgaQSy011HqwHnplGGk9L6Wol8vhZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=lPPws2YO; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4e/0vTo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14BE6C2BD10;
-	Tue, 14 May 2024 10:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715683595;
-	bh=DHFuiyL6T5J2md2p75u4E5Jz8QSMYKiBIleKiS1nJh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R4e/0vToJzWnMNABYFEb4mmjwzdFvt8whPVkDhVQGVZsd1pCwDU5fO/OnKDblY/i3
-	 88Sm+EYr5yGI0aO4xWDXQ1dfL7KZ+Vq6/YhRZhOIJCCCBx+oaXk5ADEFadUSOvIZJp
-	 Mizuyt+YaWqmabrF+GUHajeM8UubkHt2uxD+WOayb5bD4WgWHLZO9Krv9XIurhl7ql
-	 30/NPnQpZPKzIECZ8fvkVPCHDM5b2d/YQT6yQq7BJo22H/wGq38yxAlfhsHV3qEKY5
-	 3YhljaB8T2eZ4XVEugsVw/z/DhtdTK0k2lkcy3ER60Lfp+nJv1cr0pEy+0AN6XrQ4J
-	 MvA4WPFkgVsbQ==
-Date: Tue, 14 May 2024 11:46:26 +0100
-From: Simon Horman <horms@kernel.org>
-To: Bharat Bhushan <bbhushan2@marvell.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-	Geethasowjanya Akula <gakula@marvell.com>,
-	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-	Hariprasad Kelam <hkelam@marvell.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	Jerin Jacob <jerinj@marvell.com>,
-	Linu Cherian <lcherian@marvell.com>,
-	"richardcochran@gmail.com" <richardcochran@gmail.com>
-Subject: Re: [EXTERNAL] Re: [net-next,v2 5/8] cn10k-ipsec: Add SA add/delete
- support for outb inline ipsec
-Message-ID: <20240514104626.GE2787@kernel.org>
-References: <20240513105446.297451-1-bbhushan2@marvell.com>
- <20240513105446.297451-6-bbhushan2@marvell.com>
- <20240513165133.GS2787@kernel.org>
- <SN7PR18MB531442D0D88031D320F3372BE3E32@SN7PR18MB5314.namprd18.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lPPws2YO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1715683675; x=1747219675;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yHGgknwXW0O8OB9OmVvJHciQo5Z0+ha+LxvoCItjQ/g=;
+  b=lPPws2YO5DyhHK/TOvDRDak5gPVeUE1uskagvuF3KJU6l0k0UDNi1h8/
+   pnjqisg87nA2uwlaVHHbkFSIczNozkdmWuWY8y7sXbziHaXHa/SAjJIPZ
+   Up101TR18ksLS0aGgjbLCbrPLh4Q34M+DzS23Mp2Cz4jC9DgVX6m9V5Gl
+   QL3d6q3jXTkZTClwtLv+SiODzocoGL6AEHASiRHTJBYA4d0Q21oeZg1Gz
+   Cj2FHyTOAbFvpsmD2o/nC8blwuIYb95yuNzRCcoFFecrAC/wpLB5ZTCx5
+   bVCjPwY4NDePKL+5vQ6fsehdV4zJPIuyw4niG9A2+d+Pbdn0prJLid2P3
+   A==;
+X-CSE-ConnectionGUID: N9mxCvhER5eXal035+dGRg==
+X-CSE-MsgGUID: xjBThKMUSH2OGeJyx9odVg==
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="24661010"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 May 2024 03:45:53 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 14 May 2024 03:44:56 -0700
+Received: from Lily.microchip.com (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Tue, 14 May 2024 03:44:54 -0700
+From: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
+To: Mark Brown <broonie@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Conor Dooley
+	<conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>,
+	<valentina.fernandezalanis@microchip.com>,
+	<prajna.rajendrakumar@microchip.com>
+Subject: [PATCH v2 1/3] spi: dt-bindings: Add num-cs property for mpfs-spi
+Date: Tue, 14 May 2024 11:45:06 +0100
+Message-ID: <20240514104508.938448-2-prajna.rajendrakumar@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240514104508.938448-1-prajna.rajendrakumar@microchip.com>
+References: <20240514104508.938448-1-prajna.rajendrakumar@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN7PR18MB531442D0D88031D320F3372BE3E32@SN7PR18MB5314.namprd18.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, May 14, 2024 at 06:52:38AM +0000, Bharat Bhushan wrote:
-> Please see inline
-> 
-> > -----Original Message-----
-> > From: Simon Horman <horms@kernel.org>
+The PolarFire SoC SPI "hard" controller supports eight CS lines, out of
+which only one CS line is physically wired. The default value of
+'num-cs' was never set and it did not didn't impose a maximum value.
 
-...
+To reflect this hardware limitation in the device tree, the binding
+enforces that the 'num-cs' property cannot exceed 1 unless additional
+CS lines are explicitly defined using GPIO descriptors.
 
-> > > +static const struct xfrmdev_ops cn10k_ipsec_xfrmdev_ops = {
-> > > +	.xdo_dev_state_add	= cn10k_ipsec_add_state,
-> > > +	.xdo_dev_state_delete	= cn10k_ipsec_del_state,
-> > > +};
-> > > +
-> > 
-> > cn10k_ipsec_xfrmdev_ops is unused.
-> > Perhaps it, along with it's callbacks,
-> > should be added by the function that uses it?
-> 
-> I wanted to enable ipsec offload in last patch of the series 
-> ("[net-next,v2 8/8] cn10k-ipsec: Enable outbound inline ipsec offload")
+Fixes: 2da187304e55 ("spi: add bindings for microchip mpfs spi")
+Signed-off-by: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
+---
+ .../bindings/spi/microchip,mpfs-spi.yaml      | 29 +++++++++++++++++--
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-I appreciate the patchset being split up like this.
+diff --git a/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml b/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
+index 74a817cc7d94..ffa8d1b48f8b 100644
+--- a/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
++++ b/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
+@@ -13,9 +13,6 @@ description:
+ maintainers:
+   - Conor Dooley <conor.dooley@microchip.com>
+ 
+-allOf:
+-  - $ref: spi-controller.yaml#
+-
+ properties:
+   compatible:
+     oneOf:
+@@ -43,6 +40,32 @@ required:
+   - interrupts
+   - clocks
+ 
++allOf:
++  - $ref: spi-controller.yaml#
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: microchip,mpfs-spi
++    then:
++      properties:
++        num-cs:
++          default: 1
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: microchip,mpfs-spi
++      not:
++        required:
++          - cs-gpios
++    then:
++      properties:
++        num-cs:
++          maximum: 1
++
+ unevaluatedProperties: false
+ 
+ examples:
+-- 
+2.25.1
 
-> Is it okay to set xfrmdev_ops in this patch without setting NETIF_F_HW_ESP (below two lines of last patch)
-> +	/* Set xfrm device ops */
-> +	netdev->xfrmdev_ops = &cn10k_ipsec_xfrmdev_ops;
-> 
-> Last patch will set below flags.
-> +	netdev->hw_features |= NETIF_F_HW_ESP;
-> +	netdev->hw_enc_features |= NETIF_F_HW_ESP;
-> +
-
-IMHO, yes, something like that would be fine, as long as it leads to a
-working system (with a feature not enabled).  Perhaps it would be good to
-include a comment in the code about this to make it clear what is going on.
-
-...
