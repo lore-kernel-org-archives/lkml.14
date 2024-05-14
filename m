@@ -1,145 +1,197 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD58320F;
-	Tue, 14 May 2024 12:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3381E495;
+	Tue, 14 May 2024 12:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715688147; cv=none; b=jhahq9AROjxjgMb6w0xLpygAO+8XdPNcYMNs4S2w1iwcxu61MFUcvzAW8G0yhUCxZKBO52JY00KGuBIOq6Q0vq/Vd/89Y2GPBk2FWR/BNQUvAuzWtAaRuZSzJArvTcIIjVce2hfTAzbzWOfCs/z4eZDD0nTtERNpO/PHNhOkPmQ=
+	t=1715688185; cv=none; b=WDLJXgz/G/FRXMl1cNpoQhD4jn535Ws3NI1sQoCwuQCoj7PXmsKMeHaGiZBVgETIrW9NJctPL0+m3Bu9j9MnBZd8nCAInoc3FdbI/WNF0kH06dZGcuISByKxbkmH2n0ynkpxQyyPQiGw3mRWiR+N7vukadegcqHBDqWbl0BtHwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715688147; c=relaxed/simple;
-	bh=eQWBu0tglvdwToFXPXiES44baSHQMkMNMSe8uLGsxKk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BnsZJPUN/J2Gn3T25HI7d5IHZRapzowemSfkcZz1BjC0C+oPVTPh9ZY63gVfgPWa1/EUHHDrLEzihMnTcOPRX/kHiHLuXej3tmRAOZobwkb+JCW/XuTxRelngOjui0OXCC5z7Pmw95MX4/ui+9UfFAA6438R3QriS/D7J7/3dcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HC+UB9dJ; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1715688185; c=relaxed/simple;
+	bh=wfB2mKHPuCWXD3WMqn1LnQDGPgLOMfvVFoA6sonOh7U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WvA5aOXJhsKvv9JqfwbCnK4IiRgKTd5Ng1BI6q64QONdNsjRbI907m2c7vtdXp2dlEky0cFgJXZW8plIaAJPq/i7MGbC1GQNMI/l0LFt+Z8NInJAxpx5ar19TNaxhLWJXI2uuWGrp/KDEnXIqd9wdcuf+RkxVDAV7TZaq6p65Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcgI53FU; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HC+UB9dJ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41fc2f7fbb5so30184475e9.1;
-        Tue, 14 May 2024 05:02:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcgI53FU"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-34d7b0dac54so3128150f8f.0;
+        Tue, 14 May 2024 05:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715688144; x=1716292944; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=m5CJDmbvNdlQXtrA3K64KhqOlnBIFGsKlxJNYRs4nGU=;
-        b=HC+UB9dJNuosu6x53ONo5LeyaF+tDbvrreHl4NLlAghGbLUsyERVdLMIe3NUvTH2or
-         SsVYdU/S6SdQ6/Fc5Gs3la7TAGIbWVNWqkZ2tqs+IKcOCmBtIniMkNhDkHcIJHskMA57
-         sQkoLKslJRIPvqATfeM7mcqQugOB1UUdLB0kd4Sa8d07lxAB+YMaxdEOuIrs5asMbQmX
-         87nHv3R8QJV3OcSjpKHGvPZSfmjqJq1vwQWitnqNghijiVla+0MzC+F2SdtxXgeP7BxQ
-         mEhp5kRYFJvxs/omtthK/03Jht8rmJc0Yz4yuGM8RlNdYUJDMqx/QOSXgmMxzOPqCH9h
-         JdDQ==
+        d=gmail.com; s=20230601; t=1715688182; x=1716292982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B2KfUj4bYwfq/u5ssBZOFZbC05yNdBoV5Drtl5Y/vl0=;
+        b=JcgI53FUGjuv3uIWeOZ0bXihKlpOvD141FmAW1p+23h6FGhV6Ps04OQAM/Tl4AA6oA
+         y2hLQg13U4xbjMfGIGewihqlKykOKB1beZa9fi6YljeyuztALbDlsl4u8GvVlx/e9aTE
+         ivOrkWWLvhmg0kj3fkHCBLhthA4698TB28Be9zcEJwXG2a4QZeqWJbWQuuNOeEzWFEZX
+         9epJlvPCyL+qqV4D1mdOFZwV0rEGAY+vse4X8rY1uM32A82ZKnGiQ1wE6VOtWr2QZ5qc
+         vOfO6QPpsX7tN1uUYRE8xLWlRjZ5Nl+UGQhSLISL8UmA5WLe4RpFtHCEFno8Xy8bH7sO
+         hv3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715688144; x=1716292944;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m5CJDmbvNdlQXtrA3K64KhqOlnBIFGsKlxJNYRs4nGU=;
-        b=E2KPgk4cNC+EAHMhAlCgErNNVFdwXDB/SlEoUQZyu9WpcALZwmwszoo3xw63etx4pT
-         KgWuj4s3Euq4lkmvoIOWGo5XMtZ4JRUXeuxz5Ra5Dr9kKAgCPk9ke6yRKgeiyFa3KYnp
-         kWRfSyqpGFyNZYYyq10b2QDGcZefItOfY3tiTlPLbl9jQ5RTo16E9M03ELF+YYoVZWXz
-         RBOpdFMY60B2gakZ6HZHkZuHYr0TKMwuLapHBV3RROIxsWQbktQ5OfdbAoSFbjRv+hAv
-         88DCbbjXHzrhGhGcgP5PGVU1dMvUfBGwigiG0hkozofSe2WaozGSSJ+MZH42o9bGQ6nJ
-         /Zzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQcZdRYOylfse088log+VJa8rIkDQ6m4AqUvioqOIBeNkHrUsPhDEB3F6Yx7URVT4RxphouCQAjdpJIx/9RsZhrFracG4A+VPBSDhnGAB0gtRvS/EjQdU4D55MDvvdp3zrI9FnH+mQwntral2jucRymc+o0Ox7prpk3TUa4z3Qcw==
-X-Gm-Message-State: AOJu0YzHjnxWVGmKMwF1krV58btv8ctwXTBnGh9/8NzkYKOWKNHtZZ4C
-	6d7tDrR3yfxEHtz7Tzyh1CrpzV2TASvuVMQ1oIh3jxggOinUI+i9M+J8jflT
-X-Google-Smtp-Source: AGHT+IFfNsOQLgwhYmj9CSA0qSFQUwPiRB0XLgEJpw+K3tmAOT3zAjRISWx8+qT7Rz/U/EK+pk/IuQ==
-X-Received: by 2002:a05:600c:3b0a:b0:41c:73d:63b3 with SMTP id 5b1f17b1804b1-41fea92927amr113248675e9.3.1715688144282;
-        Tue, 14 May 2024 05:02:24 -0700 (PDT)
-Received: from [10.16.124.60] ([212.227.34.98])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce24c0sm192641965e9.17.2024.05.14.05.02.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 05:02:23 -0700 (PDT)
-Message-ID: <54d14e4e-63e7-4bce-866f-0e2f2c801232@gmail.com>
-Date: Tue, 14 May 2024 14:02:22 +0200
+        d=1e100.net; s=20230601; t=1715688182; x=1716292982;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B2KfUj4bYwfq/u5ssBZOFZbC05yNdBoV5Drtl5Y/vl0=;
+        b=tEhG9wlW9kWbkZ1nx9OWgih/SSiIvdYl+IyeFFRGshfHSTGKhH26lqZAquM0AyM1wB
+         6XvWfgOFkmezNpW0z3jjgHTOWvJarery6KVVRnixfZiZtqbHt1kHZZItRJQzFwQK9o7R
+         sQej53rwc4wTk9LYML4mdfeIUhoHbzl7OhTyazVQsq7Mao6G1eL14YAhOkErxIKtRMEI
+         A3M+Q91+oPBowMjJJqw5YkEwdsd6Cjq5QWgS8Xb1oTPd4lBaYKon/lJrsvyzDObPpPJe
+         wN29EX+TUvgGQR54mJ1Go/DH3yqP4KpkDMOkuL7gbME73WC2dlLI1xW0b32MykJtTzXI
+         sD2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUpm16gdyxml8FBua1RkkqjcmwHTYynWvnTUZrJXbqO566nFFui7T829ZzNWfQl2ITsIfdSnGy6HSl4p0WVWzDwOe9s3tl2HQenQxRDrBnQevsRWlFkHO8N6669DaoIgBJFDYx3E0CeukTlYlupcK0IFZ2Fkjw3G4MQivtUwM3w8LXdSg==
+X-Gm-Message-State: AOJu0Yzr2vE2U0hKqpCWV/9A2csjnBAmjvnwvVv+GJ1kIgHboQkpJTYJ
+	5I7kFF0VhjEze50dSCXC51xvXNos4MCSPLcEoBSS0lFpZg/Fx0jA
+X-Google-Smtp-Source: AGHT+IGPjeDgGY1ZUzEDiTDWKFp8huqXg7ba38Vr79bPmiDIa6TUTGAafUfs5ySqWC2iH4GG6/N5kA==
+X-Received: by 2002:a05:6000:bc7:b0:34c:fd92:3359 with SMTP id ffacd0b85a97d-350499a97f1mr11260676f8f.21.1715688181942;
+        Tue, 14 May 2024 05:03:01 -0700 (PDT)
+Received: from spiri.. ([2a02:2f08:a105:8300:5179:8171:3530:3b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896a06sm13593927f8f.27.2024.05.14.05.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 05:03:01 -0700 (PDT)
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
+To: michael.hennerich@analog.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	andy@kernel.org,
+	nuno.sa@analog.com,
+	marcelo.schmitt@analog.com,
+	bigunclemax@gmail.com,
+	dlechner@baylibre.com,
+	okan.sahin@analog.com,
+	fr0st61te@gmail.com,
+	alisa.roman@analog.com,
+	marcus.folkesson@gmail.com,
+	schnelle@linux.ibm.com,
+	liambeguin@gmail.com
+Subject: [PATCH v8 0/6] iio: adc: ad7192: Add AD7194 support
+Date: Tue, 14 May 2024 15:02:16 +0300
+Message-Id: <20240514120222.56488-1-alisa.roman@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] rds: rdma: Add ability to force GFP_NOIO
-From: Zhu Yanjun <zyjzyj2000@gmail.com>
-To: =?UTF-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, rds-devel@oss.oracle.com
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>,
- Allison Henderson <allison.henderson@oracle.com>,
- Manjunath Patil <manjunath.b.patil@oracle.com>,
- Mark Zhang <markzhang@nvidia.com>, Chuck Lever <chuck.lever@oracle.com>,
- Shiraz Saleem <shiraz.saleem@intel.com>, Yang Li <yang.lee@linux.alibaba.com>
-References: <20240513125346.764076-1-haakon.bugge@oracle.com>
- <38a5ccc6-d0bc-41e0-99de-fe7902b1951f@linux.dev>
-Content-Language: en-US
-In-Reply-To: <38a5ccc6-d0bc-41e0-99de-fe7902b1951f@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Dear maintainers,
 
+Thank you all for the feedback!
 
-On 14.05.24 10:53, Zhu Yanjun wrote:
-> On 13.05.24 14:53, Håkon Bugge wrote:
->> This series enables RDS and the RDMA stack to be used as a block I/O
->> device. This to support a filesystem on top of a raw block device
-> 
-> This is to support a filesystem ... ?
+I am submitting the upgraded series of patches for the ad7192 driver.
 
-Sorry. my bad. I mean, normally rds is used to act as a communication 
-protocol between Oracle databases. Now in this patch series, it seems 
-that rds acts as a communication protocol to support a filesystem. So I 
-am curious which filesystem that rds is supporting?
+Please consider applying in order.
 
-Thanks a lot.
-Zhu Yanjun
+Thank you!
 
-> 
->> which uses RDS and the RDMA stack as the network transport layer.
->>
->> Under intense memory pressure, we get memory reclaims. Assume the
->> filesystem reclaims memory, goes to the raw block device, which calls
->> into RDS, which calls the RDMA stack. Now, if regular GFP_KERNEL
->> allocations in RDS or the RDMA stack require reclaims to be fulfilled,
->> we end up in a circular dependency.
->>
->> We break this circular dependency by:
->>
->> 1. Force all allocations in RDS and the relevant RDMA stack to use
->>     GFP_NOIO, by means of a parenthetic use of
->>     memalloc_noio_{save,restore} on all relevant entry points.
->>
->> 2. Make sure work-queues inherits current->flags
->>     wrt. PF_MEMALLOC_{NOIO,NOFS}, such that work executed on the
->>     work-queue inherits the same flag(s).
->>
->> Håkon Bugge (6):
->>    workqueue: Inherit NOIO and NOFS alloc flags
->>    rds: Brute force GFP_NOIO
->>    RDMA/cma: Brute force GFP_NOIO
->>    RDMA/cm: Brute force GFP_NOIO
->>    RDMA/mlx5: Brute force GFP_NOIO
->>    net/mlx5: Brute force GFP_NOIO
->>
->>   drivers/infiniband/core/cm.c                  | 15 ++++-
->>   drivers/infiniband/core/cma.c                 | 20 ++++++-
->>   drivers/infiniband/hw/mlx5/main.c             | 22 +++++--
->>   .../net/ethernet/mellanox/mlx5/core/main.c    | 14 ++++-
->>   include/linux/workqueue.h                     |  2 +
->>   kernel/workqueue.c                            | 17 ++++++
->>   net/rds/af_rds.c                              | 60 ++++++++++++++++++-
->>   7 files changed, 138 insertions(+), 12 deletions(-)
->>
->> -- 
->> 2.39.3
->>
-> 
+v7 -> v8
+  - patch3: use MILLI
+  - patch3: add blank line before switch for readibility
+  - patch3: add comment to clarify that aincom adds offset only to
+    pseudo-differential inputs
+  - patch4: single -> single-ended
+  - patch4: reinforce requirements by binding
+  - patch6: use device_for_each_child_node_scoped
+  - patch6: channels templates for AD7194 are const now
+  - patch6: remove update_scan_mode callback function for AD7194
+  - patch6: add sigma_delta_info to chip_info (explanation in the commit 
+    message)
+  - patch6: use different macros for single-ended and differential channels
+
+v6 -> v7
+  - patch1: move mutex lock and unlock to protect whole switch statement
+  - patch3: use NANO from units.h
+  - patch3: add comment
+  - patch3: use dev_err_probe
+  - patch4: new patch to add single-channel property
+  - patch5: modify maximum number of channels to include single-ended channels
+  - patch5: add single-channel property to bindings for single-ended channels
+  - patch5: modify example to include single-channel property
+  - patch5: modify channel pattern to "^channel@[0-9a-f]+$"
+  - patch5: modify required properties for channel node
+  - patch6: add function to validate ain channel
+  - patch6: remove function to parse one channel
+  - patch6: single-ended channels are now also configured in the devicetree
+  - patch6: modified some names to reflect the changes
+
+v5 -> v6
+  - protect ad7192_update_filter_freq_avail with lock
+  - better bindings description for AINCOM
+  - the pseudo-differential channels are no longer configured as differential
+    when aincom supply is not present in devicetree, in this case the offset for
+    the channels is set to 0
+  - because of the above change, there is no longer a need for multiple channel
+    options
+  - correct channels regex in bindings
+  - no need to move chip_info anymore
+  - change names to ad7194_parse_channel/s
+  - add else statement to highlight parse_channels effect
+
+v4 -> v5
+  - add aincom supply as discussed previously
+    https://lore.kernel.org/all/CAMknhBF5mAsN1c-194Qwa5oKmqKzef2khXnqA1cSdKpWHKWp0w@mail.gmail.com/#t
+  - ad7194 differential channels are now dynamically configured in the
+    devicetree
+
+v3 -> v4
+  - drop device properties patch, changes already applied to tree
+  - change bindings and driver such that for AD7194 there are 16
+    differential channels, by default set to AINx - AINCOM, which can be
+    configured in devicetree however the user likes
+  - corrected mistake regarding positive and negative channel macros:
+    subtract 1 from the number corresponding to AIN input
+
+v2 -> v3
+  - add precursor patch to simply functions to only pass
+    ad7192_state
+  - add patch to replace custom attribute
+  - bindings patch: correct use of allOf and some minor changes to
+    the ad7194 example
+  - add ad7194 patch:
+    - use "ad7192 and similar"
+    - ad7194 no longer needs attribute group
+    - use callback function in chip_info to parse channels
+    - move struct ad7192_chip_info
+    - change position of parse functions
+  - drop clock bindings patch
+
+v1 -> v2
+  - new commit with missing documentation for properties
+  - add constraint for channels in binding
+  - correct pattern for channels
+  - correct commit message by adding "()" to functions
+  - use in_range
+  - use preferred structure in Kconfig
+
+Kind regards,
+
+Alisa-Dariana Roman (6):
+  iio: adc: ad7192: Use standard attribute
+  dt-bindings: iio: adc: ad7192: Add aincom supply
+  iio: adc: ad7192: Add aincom supply
+  dt-bindings: iio: adc: Add single-channel property
+  dt-bindings: iio: adc: ad7192: Add AD7194 support
+  iio: adc: ad7192: Add AD7194 support
+
+ .../devicetree/bindings/iio/adc/adc.yaml      |  19 ++
+ .../bindings/iio/adc/adi,ad7192.yaml          |  95 ++++++
+ drivers/iio/adc/Kconfig                       |  11 +-
+ drivers/iio/adc/ad7192.c                      | 272 ++++++++++++++----
+ 4 files changed, 346 insertions(+), 51 deletions(-)
 
 -- 
-Best
+2.34.1
+
