@@ -1,69 +1,62 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE77B181BB0
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014F9180A77;
+	Tue, 14 May 2024 21:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715723118; cv=none; b=oFNejv4Edx5iZgOotVuXnavaUWpy1VyCWybcVDdgcLNZEgaV6T5GG+aXirCTvLRjpEEgdxQdQsrkim0y+PS6Dpd5hoUIVJn1qMv+wsG413lwSfuKBmMHdaunTlUxK6zfyAcaE3kW/uC1etOr+WnLQ7clp1vX2qA33WY/8oCxST4=
+	t=1715723169; cv=none; b=ctLcyD7o2DFeW5CqPNDThUmmnn33Rp42Gc47gwyG5w50QpPwJ38c0sODMm/m4iT40BjEdzdc1UANT2+HCRzZzaf4ShWxJpKHgWccUa6BREVHrJIhgMZu4yl97WUeZsMIPxLWgUS6otl2ZkE41F2Fdzxo5IXinJmW0fVCsbKisSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715723118; c=relaxed/simple;
-	bh=tziv604qZlibS++2mEJNNkzIBE7jl7XamSsnA5/dX+A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fbhV+xASOBV1EWSK2habtoCRIKLgvuux4SawQXX78xaszM/st2057TcsHmAUHfBHCTBlhsRIKD4AHov6prtEOKIlCd8LL5Hqw/xE3Dm5VKYZh5A7CQ+LOYb+TFQSu5zjHXfgmIJmE5q3lIzRLqXz5xCM03WXyCleETViqnDcO/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=ZB7mZQEk; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="ZB7mZQEk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:To:From:Cc:Sender;
-	bh=OhI+HzqmcnuBP2LdgO9mbsFMxHDT6dqpMeBbtQADdAM=; b=ZB7mZQEkZXm39446UFhUrUHC/a
-	tFfgZLNOdVYfsmbdy4yDO6IaVDeKNyTFEGjY0xpdJELNngKwyoYdXORxsrLQKyzBnUXLc0jY0NfHF
-	v1ZfnARI9O5+nZmX7RIF4w7KRKiVUGIv8+U1E7vbGUxvu0eQfY+UYjo0cD/+0vZyBhCgs8Bd4MrL6
-	jW0jWeu1d+U8GJrFp1qgnWwfbDGk72IPsB1IIK8OJutb8jVr4tQqQiYjqC88ei3keA3hcUukXBLrG
-	6k8LoTY4x9VbCv1wdwslxokoeIm015PqVlCejKE2Qt7e5nVlblwMa0yWTm4hcdIw8l3mkLh2uB/i1
-	UnuCEZZg==;
-Received: from [10.69.139.17] (helo=watership.localnet)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1s6zxS-004lFj-17;
-	Tue, 14 May 2024 16:45:14 -0500
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: linux-kernel@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject:
- Re: [PATCH] misc: ntsync: mark driver as "broken" to prevent from building
-Date: Tue, 14 May 2024 16:45:13 -0500
-Message-ID: <12433821.O9o76ZdvQC@watership>
-In-Reply-To: <2024051450-abrasion-swizzle-550b@gregkh>
-References: <2024051450-abrasion-swizzle-550b@gregkh>
+	s=arc-20240116; t=1715723169; c=relaxed/simple;
+	bh=tA0JXE2hoL6cfxV24wwc92Ng3pYIs8abpFOuRnVXY1A=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=f50cqnDPUsJWKwy9shL5Ue2Wk+gfwmwLNiBf0TK2KK+A0AklYo5/WIYJZAHbTZ5jWxYtXiJ1F9apIBlDP0y70CJPupKlWTwEeYS3LcsfKRmQ2FgAkerHQXL1zKwWDePRrCJJCcGqghSPHHlmf3WCTL63I4Ntyj6RF/pdWZelPv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 2B44792009C; Tue, 14 May 2024 23:38:19 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 2116892009B;
+	Tue, 14 May 2024 22:38:19 +0100 (BST)
+Date: Tue, 14 May 2024 22:38:19 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    Nick Desaulniers <ndesaulniers@google.com>, 
+    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+    linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    llvm@lists.linux.dev, Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 6/8] MIPS: Limit MIPS_MT_SMP support by ISA reversion
+In-Reply-To: <20240202-llvm-msym32-v1-6-52f0631057d6@flygoat.com>
+Message-ID: <alpine.DEB.2.21.2405142235100.45291@angie.orcam.me.uk>
+References: <20240202-llvm-msym32-v1-0-52f0631057d6@flygoat.com> <20240202-llvm-msym32-v1-6-52f0631057d6@flygoat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 
-On Tuesday, May 14, 2024 2:16:51=E2=80=AFAM CDT Greg Kroah-Hartman wrote:
-> The ntsync code is only partially enabled in the kernel at this point in
-> time, creating the device node and that's about it.  Don't confuse
-> systems that expect to see a working ntsync interface by teasing it with
-> this basic structure at this point in time, so mark the code as "broken"
-> so that it is not built and enabled just yet.
->=20
-> Once the rest of the code is accepted, this will be reverted so that the
-> driver can be correctly built and used, but for now, this is the safest
-> way forward.
+On Fri, 2 Feb 2024, Jiaxun Yang wrote:
 
-Reviewed-by: Elizabeth Figura <zfigura@codeweavers.com>
+> MIPS MT ASE is only available on ISA between Release 1 and Release 5.
 
-=2D-
+ R2+ only actually, as also evident from Kconfig...
 
-I was even thinking of suggesting something like this myself. Sorry for
-taking so long to get the rest of the patches into acceptable shape...
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -2171,7 +2171,8 @@ config CPU_R4K_CACHE_TLB
+>  config MIPS_MT_SMP
+>  	bool "MIPS MT SMP support (1 TC on each available VPE)"
+>  	default y
+> -	depends on SYS_SUPPORTS_MULTITHREADING && !CPU_MIPSR6 && !CPU_MICROMIPS
+> +	depends on TARGET_ISA_REV > 0 && TARGET_ISA_REV < 6
+> +	depends on SYS_SUPPORTS_MULTITHREADING && !CPU_MICROMIPS
+>  	select CPU_MIPSR2_IRQ_VI
+>  	select CPU_MIPSR2_IRQ_EI
+                   ^^^^^^
+ ... here.  I wish people looked beyond the line they change, sigh...
 
-
+  Maciej
