@@ -1,93 +1,83 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497551E504;
-	Tue, 14 May 2024 19:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3276E181334;
+	Tue, 14 May 2024 19:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715713638; cv=none; b=JkYoPwB6UXKJCgRjvJ+Ogj1j3B/0V9x05mpgoxm/oB0gI+n3Xs8MRTP+HzsLDnOYbqvtd1m9JL2eYJAc74HLWMvs49oJgUIJpFAy5VDYGivp13Sf58ZGSSH3OJ9yyx8246Oiosxzb6290oK5KMfuyaLUga2YJHceHf0g3Onmgp8=
+	t=1715713662; cv=none; b=Ent6coGtWNtYN0B/FobG6QW2u05depDh5ACw+wYDTKGiPE57U753BXsLKyFHV96Wd/hWvOlC0aadcpoGeApVVeV60fpx41B45WRg68vHcDxOT7uM8ujXNjFI9J8AGJw5by/yvIZWnniKQNi8CYBZ85gAayQQ+2XLYO/kIZVGsyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715713638; c=relaxed/simple;
-	bh=OApaGFXz5UPRbxRAK2WugT1zcfKuYHqKyoDQHaiRW2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G952zDfdZ+rW94JF6tDimsLaSTCvlT8K5WV8tGWBAo2pCBNAj4LYH7Af49StHTaHyk50xZZksc7So7Yjhhttcqsp4G1MfshRdG31yiIgjCnQY6pnOwjOjb5ad/LdJPPTPLHHSvIPssEwcjgKL4Ptlreo0lEL0fcTARA6qjYQy7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/N/kmuT; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715713662; c=relaxed/simple;
+	bh=GPfOGPBwuJ7d6QGXIRtIUDFcv8BCupl/0fECOFpb2B8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nh1l0oQ3AgkTDeLjTXuo605UHF6DSz5Q9FdoQdoKMbgEdSck/IcMd3iYG1I4ZY1E6qV068jBEYBo9ifndzcoZ+S5Ec/ff0rEtjeELUBEcB7mTm4gSgQOxjVvHYcfMB5fMm0/K28qqHerp9V9x0e/8fwC4xkelD419zaVwoiKZ2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFbQGN0H; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/N/kmuT"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-420104e5390so33479355e9.1;
-        Tue, 14 May 2024 12:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715713635; x=1716318435; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9C37JUp/tUGIFgetRggFquZfpmUvmzoZNupVvwtMS08=;
-        b=Q/N/kmuTZCHgi/AzRU/HHNeAPBc73sBkQszEFkjhWsPaXcAQZtSUiSt2GqYajxwrax
-         PsjOXbBEgcNHkIDRBy4yrPDHDOTp+mfdBCP65HKDkzbIKBH0OWkhQKia8wWbbsEcF8vZ
-         TYT0ci6CumsQ4dAN44dIgmhL6EHkp1d7AfXRXYhPU3sb/rAdLesE/IKqxEfpJCMGu137
-         cEZpSA03B0MuOiGq3iqMhjT1ud++ougy8BUJbm/hPxnlnCpFME7WK69Ke3b/hzsiF1Ud
-         1LVm2mFrIBDiaVZIrsICxry2uwPpQLPnpR1nhLDfZVKevtDiBRlvvMG7CtdhaH7e/m1c
-         YTFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715713635; x=1716318435;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9C37JUp/tUGIFgetRggFquZfpmUvmzoZNupVvwtMS08=;
-        b=cKBgztb3d8Af7N9B4zE0BWH4lDkPCX4bn0d19ibbwveDEiElolKfMtv8YShrFrn6ba
-         n6DytZN7ZBfavbhTuMJVGLbw1NoNH15FywWWAQNgg2D9iAy9pSf6jpPL/H3JBzEdGN0i
-         cjbpi/r2v2VS4QnWc4/6fS64nLj8hBSXfim2XJFgC8mt6+gmkJG+xqIgMzdRd9iUc9Pp
-         mA5/bphNei2/MtHM104A+ijay8vEInaUOH19VMWmOyATGgzeESa4GvJx/NdqSepZu182
-         23ol1XRlRJKDBcKXZuMzRzwVyUr9FicOD/LtlsOijVBrFgMyt+Y0cT8hfR5Nx8qAs+es
-         YK3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTY8+QVSLU3mKDmK9uVIfm7UI9rE5mGZjMfh/aWoq07WUY/G5OxEDO8CfDlwYr7d6pkz05Ex1RHq/+LJEHXvpU9EJ2p2JllSZv1GV15XywuNeHsdX9BcNrTjJ73sNDrYBHjmrCxFlDitbshqnJKdw59NafG26EkNmH8PQUoclf1g==
-X-Gm-Message-State: AOJu0YwkY3IjNruG6Ti2JS3+sseQXa5ZSJxHPrDzBd75zEpyTAN2E7c0
-	bfHGI4aUoiWl4GCfCLGnezSYnVna4XyYAHPCXgnSoHpeoeaI5c2b
-X-Google-Smtp-Source: AGHT+IFieuF5kHfIADXEBCRvrZT7p5csOnvYzKzG9wCrW48WSlAkIZN/CXeoYGWzQdt30DQQpKv1KQ==
-X-Received: by 2002:a05:600c:4f04:b0:420:1508:f0ae with SMTP id 5b1f17b1804b1-4201508f2edmr70658025e9.10.1715713635448;
-        Tue, 14 May 2024 12:07:15 -0700 (PDT)
-Received: from [172.27.21.185] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4201088fe8csm123126825e9.32.2024.05.14.12.07.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 12:07:15 -0700 (PDT)
-Message-ID: <d57d65b5-6ecf-48b3-a6de-4b1e2f5c643b@gmail.com>
-Date: Tue, 14 May 2024 22:07:12 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFbQGN0H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715713660; x=1747249660;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GPfOGPBwuJ7d6QGXIRtIUDFcv8BCupl/0fECOFpb2B8=;
+  b=aFbQGN0HGvKJYlZ4Y1uJK57fYYdMWDA9bpkURw4Qtp8Fw7NOBDEifnTv
+   R1nagvar3Nxius1o4TUGDRyED3WTTFY8RZ2xqUlBozQTsVu6xcm32D6YJ
+   3IwoNL3VnKKIB9SR0EGzqY51Gp0L+0SU8pEMQJr59w+cDpea0Bz2aBq/j
+   i8avbTmSPg89sggvWCKYsBmK3CNheUfkbpcjebAaTnug1MsYKqq2yr/D5
+   RuHBbj7/PGXo7tW84YnsaAAqugfxeu79PiDgAhtaPGaKZ1vrzd9re1ZIH
+   behrFTxcuOtBMQoVesQf7UC3C7Usmrm590xdTLiY846QXFClWvNVuFsQm
+   Q==;
+X-CSE-ConnectionGUID: p2nIZ09xReacCVE/6GK+4Q==
+X-CSE-MsgGUID: OwS+ZH60Tjm+4SKkBlZeuA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11570863"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="11570863"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 12:07:39 -0700
+X-CSE-ConnectionGUID: +gQC/yFeTI6PruSHGMDMTQ==
+X-CSE-MsgGUID: csmr+VY/REy7uDGOODztNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="61604414"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 14 May 2024 12:07:37 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3BEC6452; Tue, 14 May 2024 22:07:35 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Vamshi Gajjela <vamshigajjela@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v1 0/2] serial: 8250_dw: Fix console on Intel Galileo
+Date: Tue, 14 May 2024 22:05:52 +0300
+Message-ID: <20240514190730.2787071-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 3/3] net/mlx4: support per-queue statistics
- via netlink
-To: Joe Damato <jdamato@fastly.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: mkarsten@uwaterloo.ca, nalramli@fastly.com,
- Tariq Toukan <tariqt@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- "open list:MELLANOX MLX4 core VPI driver" <linux-rdma@vger.kernel.org>
-References: <20240513172909.473066-1-jdamato@fastly.com>
- <20240513172909.473066-4-jdamato@fastly.com>
-Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20240513172909.473066-4-jdamato@fastly.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Console on Intel Galileo is broken. Here is the fix and one revert that
+I prefer to have as part of the fix to prevent similar mistakes from
+being made.
 
+Andy Shevchenko (2):
+  serial: 8250_dw: Don't use struct dw8250_data outside of 8250_dw
+  serial: 8250_dw: Revert "Move definitions to the shared header"
 
-On 13/05/2024 20:29, Joe Damato wrote:
-> Make mlx4 compatible with the newly added netlink queue stats API.
-> 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> Tested-by: Martin Karsten <mkarsten@uwaterloo.ca>
-> ---
->   .../net/ethernet/mellanox/mlx4/en_netdev.c    | 73 +++++++++++++++++++
->   1 file changed, 73 insertions(+)
+ drivers/tty/serial/8250/8250_dw.c    | 36 ++++++++++++++++++++++++++--
+ drivers/tty/serial/8250/8250_dwlib.c |  3 +--
+ drivers/tty/serial/8250/8250_dwlib.h | 33 +------------------------
+ 3 files changed, 36 insertions(+), 36 deletions(-)
 
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
