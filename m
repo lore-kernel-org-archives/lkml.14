@@ -1,295 +1,293 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEE1ED8
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB941869
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715646510; cv=none; b=Rodh9OdL3FL80UP64mXOIrIhwISMkfsvjst8przp/1Ch+yj6SqSuLM/0lQmrOYlykBhKVlVv+wPTGUPTcrVjVClaCHdHgFnBXRmCS1lwzSHuT6Gn93cW3lfW9pGJCxV+UK6zu8AyQIuewixGXWJX4/ewpPyKl63yRcddSqvpGGQ=
+	t=1715646513; cv=none; b=sNDzVjUWsncennX5zBkDSsi+MzFWQUUYDAA77zGQ5KhxpxgXX+IahbAuazmNS1zMB+Z+uGX5g9eWSNvRIhGQTr3rnd+VboFYf6251n3kj/70Y17UImW/HFXUD3dPyZbQ3Bz1I3CcSh86LU4s44TCTXQ8rD9utJ9maSfCnVCPYy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715646510; c=relaxed/simple;
-	bh=Qdk1rUb0lcu0MLuAs3C0m38lHdMFLjgGckJx++x9bCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iXuG9CWgD1NJEqXDYck8rOqRhxbac1M02dBuXRM2jFsKWGOxZokPfe1Fw5mD4qnNOK+LGbnS1yi0XWwzWdjfX7dBXLJ+vtvdIb1CIhPxvFCpd7T6Sll2ejA3IhorHw6wt2tEzEfbKPUpx2NYfEjRZw+wKP9HZsIdCFO0lEUG3AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oGvgpSZj; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715646513; c=relaxed/simple;
+	bh=2XAXI/NIOGGn+CKQib3Ud247MltyKS7rdmpk2qYDLXs=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=LAoWRlQ7KzdJDaZTUT0jepQVSWrhRvjM6YqeHNdQL8khVFdEiypif00JM+KbK3JfYau8p/CMALlWCw/Kc9TNA+vhJ02hPSysMpw35Y4GuqCBLWOGoCNLkI4+SMcM/4iF2JVXSh6y8LI5nYi1IrrBMwSo2PxZp9y4GLzAtGCuOzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FSLkVRcs; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oGvgpSZj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715646509; x=1747182509;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Qdk1rUb0lcu0MLuAs3C0m38lHdMFLjgGckJx++x9bCs=;
-  b=oGvgpSZjDdremUnDyVkSMdIz41lHyqL5mKNzvvFZOEbfGK5orr15fO84
-   EnPC4A3DmcKJKo0Wy8s8c6P+r2aehhQg/BoQCNVkN0aQdRWr0qLzyT4U4
-   jIFUT0xW0edFT5ZGOPpgIEsDLu4To7Uqye8M41F1pE8BY8fDezgyfgTDF
-   Vv83XOzDmqJoe/oJgM019MTE4hGcAFAgKktHeJdO9AKaKDWeuTLC2Idgu
-   pKwKoF3dpC+tf/5HsAilLHSVuHIf3DLTbaNCzYVaTQXrCZUfZS7JTEvrk
-   iQI2EI5Y75Z5GEdqGHcH3Lb5HUaCYG50L+Yw6k/XIkTTJtiDYXLDXihPy
-   A==;
-X-CSE-ConnectionGUID: BHuqfBi8RPucWEIM3zrXPA==
-X-CSE-MsgGUID: +SkwGrsATe61RbgCdIVupw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="11820787"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="11820787"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 17:28:28 -0700
-X-CSE-ConnectionGUID: W+7yzYiLTK+jBeVd0+KGXg==
-X-CSE-MsgGUID: FioQHKtFRy2N4mJwafYy0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="31056292"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 17:28:27 -0700
-Date: Mon, 13 May 2024 17:28:26 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v17 8/9] x86/resctrl: Sub NUMA Cluster detection and
- enable
-Message-ID: <ZkKwKlo7JlbjUEjr@agluck-desk3>
-References: <20240503203325.21512-1-tony.luck@intel.com>
- <20240503203325.21512-9-tony.luck@intel.com>
- <570e0c1d-8df8-45c6-a9a8-972e1ff2cf66@intel.com>
- <ZkJLO-fNXVxdm6Bb@agluck-desk3>
- <fc2de5b4-8a38-4041-9f61-d1bcdf810317@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FSLkVRcs"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be3f082b0so86695747b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 17:28:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715646511; x=1716251311; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x8lh3KbE0/fEXElvACYYQQAv22H8HgUlGcjaTiRjDdY=;
+        b=FSLkVRcsinCMQ5+up/GgGAzp60L9GT0kktqdKgYg7ogvOBZ6qq2j+P1vFQp0CR+7sK
+         9c12WDOxgC+pMBKgFmuSaI0KrRykidIkt2VUVWnAd2bX0RnZaegzf2PK/kqFCJT1H5b/
+         gJTvGDAYVa5OrlJYspHof8hjzXvD3tBP6pDgGccqr38apyMGVmJAZYWsAXY04SKYVMcM
+         BfRVEdJ214TLyCybed+/gOKGlohiEWK1nnrZsvZNUjZaSbz9QHISXWb1X8Wo9uzy1Dzs
+         UIkph5XRd5qiDwH497okW5mjRyRit1iRzqaSsgT5QIYWYf1AsgPMYN+JKN8oZ6CoxtZS
+         EHCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715646511; x=1716251311;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x8lh3KbE0/fEXElvACYYQQAv22H8HgUlGcjaTiRjDdY=;
+        b=IP/5814Wga8jAIw1a6ckx2TQcFotdS3hJ4Yl0mHOFuLx8jRhmngmVfMJkdV0Y07KSy
+         0anwrFU4sPEOeoU15timZYLHAVfRu5qLKGHoO1mARZIClbPUui2pjVgw61dHVSpnDDjm
+         MIhhucg1/b0UcmmcUy0XXfEelJZlDvRY9ph4K47CN3obcMx7S0gsSPXugCV8pLVYaLZV
+         eYO8wLk8Tj0gI7+MxdOUtRouhCpgb9M6WqEDz2seS6eRvbFB2kSO+l+11ijUOSKB0Ljk
+         owY0BagOomIyQR1xziyzpoeP+ldsA/5u/CYUWAIt8GyXAOwCTcWoBZWWBYpIKLzqkgjm
+         WabQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX32KQ1HmX/e15EuBH5xM/zrcD2UqTHJLwIaiC3fILuvGd1hBtWL+KwMYszEBUzILfkfTKBVnCNYZjFsF+Pc2eoWQlDnj3KOJJQ1tUs
+X-Gm-Message-State: AOJu0YyLUp96zpSPdciDZwmxnptTYfL9Alag/7wblgv3z8BLOQJSi9im
+	6/c1ypriz4kqHD1pIlQldqBS388mLRd1BDjWuEVKbhbr5F+11/yOCYTHD5ZP6XQrYlRsmRGKV/2
+	wXyucWg==
+X-Google-Smtp-Source: AGHT+IFaIojszq5ATydBFCXcwuPqNlZ+m4KY7jTWj6GHtvpAP5G+VY4ApNYOxGTqwqMiJvyHfuDfww1xR+mv
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6e66:3031:b400:2dc8])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1205:b0:de5:60b6:fb9 with SMTP id
+ 3f1490d57ef6-dee4f334d41mr1021375276.1.1715646510837; Mon, 13 May 2024
+ 17:28:30 -0700 (PDT)
+Date: Mon, 13 May 2024 17:28:16 -0700
+In-Reply-To: <20240514002817.2896240-1-irogers@google.com>
+Message-Id: <20240514002817.2896240-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc2de5b4-8a38-4041-9f61-d1bcdf810317@intel.com>
+Mime-Version: 1.0
+References: <20240514002817.2896240-1-irogers@google.com>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v5 1/2] perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu
+From: Ian Rogers <irogers@google.com>
+To: Tuan Phan <tuanphan@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Bhaskara Budiredla <bbudiredla@marvell.com>, 
+	Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 13, 2024 at 11:53:26AM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 5/13/2024 10:17 AM, Tony Luck wrote:
-> > On Fri, May 10, 2024 at 02:24:49PM -0700, Reinette Chatre wrote:
-> >> Hi Tony,
-> >>
-> >> On 5/3/2024 1:33 PM, Tony Luck wrote:
-> >>> There isn't a simple hardware bit that indicates whether a CPU is
-> >>> running in Sub NUMA Cluster (SNC) mode. Infer the state by comparing
-> >>> the ratio of NUMA nodes to L3 cache instances.
-> >>>
-> >>> When SNC mode is detected, reconfigure the RMID counters by updating
-> >>> the MSR_RMID_SNC_CONFIG MSR on each socket as CPUs are seen.
-> >>>
-> >>> Clearing bit zero of the MSR divides the RMIDs and renumbers the ones
-> >>> on the second SNC node to start from zero.
-> >>>
-> >>> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> >>> ---
-> >>>  arch/x86/include/asm/msr-index.h   |   1 +
-> >>>  arch/x86/kernel/cpu/resctrl/core.c | 119 +++++++++++++++++++++++++++++
-> >>>  2 files changed, 120 insertions(+)
-> >>>
-> >>> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> >>> index e72c2b872957..ce54a1ffe1e5 100644
-> >>> --- a/arch/x86/include/asm/msr-index.h
-> >>> +++ b/arch/x86/include/asm/msr-index.h
-> >>> @@ -1165,6 +1165,7 @@
-> >>>  #define MSR_IA32_QM_CTR			0xc8e
-> >>>  #define MSR_IA32_PQR_ASSOC		0xc8f
-> >>>  #define MSR_IA32_L3_CBM_BASE		0xc90
-> >>> +#define MSR_RMID_SNC_CONFIG		0xca0
-> >>>  #define MSR_IA32_L2_CBM_BASE		0xd10
-> >>>  #define MSR_IA32_MBA_THRTL_BASE		0xd50
-> >>>  
-> >>> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> >>> index a949e69308cd..6a1727ea1dfe 100644
-> >>> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> >>> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> >>> @@ -21,7 +21,9 @@
-> >>>  #include <linux/err.h>
-> >>>  #include <linux/cacheinfo.h>
-> >>>  #include <linux/cpuhotplug.h>
-> >>> +#include <linux/mod_devicetable.h>
-> >>>  
-> >>> +#include <asm/cpu_device_id.h>
-> >>>  #include <asm/intel-family.h>
-> >>>  #include <asm/resctrl.h>
-> >>>  #include "internal.h"
-> >>> @@ -746,11 +748,42 @@ static void clear_closid_rmid(int cpu)
-> >>>  	      RESCTRL_RESERVED_CLOSID);
-> >>>  }
-> >>>  
-> >>> +/*
-> >>> + * The power-on reset value of MSR_RMID_SNC_CONFIG is 0x1
-> >>> + * which indicates that RMIDs are configured in legacy mode.
-> >>> + * This mode is incompatible with Linux resctrl semantics
-> >>> + * as RMIDs are partitioned between SNC nodes, which requires
-> >>> + * a user to know which RMID is allocated to a task.
-> >>> + * Clearing bit 0 reconfigures the RMID counters for use
-> >>> + * in Sub NUMA Cluster mode. This mode is better for Linux.
-> >>> + * The RMID space is divided between all SNC nodes with the
-> >>> + * RMIDs renumbered to start from zero in each node when
-> >>> + * couning operations from tasks. Code to read the counters
-> >>> + * must adjust RMID counter numbers based on SNC node. See
-> >>> + * __rmid_read() for code that does this.
-> >>> + */
-> >>> +static void snc_remap_rmids(int cpu)
-> >>> +{
-> >>> +	u64 val;
-> >>> +
-> >>> +	/* Only need to enable once per package. */
-> >>> +	if (cpumask_first(topology_core_cpumask(cpu)) != cpu)
-> >>> +		return;
-> >>> +
-> >>> +	rdmsrl(MSR_RMID_SNC_CONFIG, val);
-> >>> +	val &= ~BIT_ULL(0);
-> >>> +	wrmsrl(MSR_RMID_SNC_CONFIG, val);
-> >>> +}
-> >>> +
-> >>>  static int resctrl_arch_online_cpu(unsigned int cpu)
-> >>>  {
-> >>>  	struct rdt_resource *r;
-> >>>  
-> >>>  	mutex_lock(&domain_list_lock);
-> >>> +
-> >>> +	if (snc_nodes_per_l3_cache > 1)
-> >>> +		snc_remap_rmids(cpu);
-> >>> +
-> >>>  	for_each_capable_rdt_resource(r)
-> >>>  		domain_add_cpu(cpu, r);
-> >>>  	mutex_unlock(&domain_list_lock);
-> >>> @@ -990,11 +1023,97 @@ static __init bool get_rdt_resources(void)
-> >>>  	return (rdt_mon_capable || rdt_alloc_capable);
-> >>>  }
-> >>>  
-> >>> +/* CPU models that support MSR_RMID_SNC_CONFIG */
-> >>> +static const struct x86_cpu_id snc_cpu_ids[] __initconst = {
-> >>> +	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X, 0),
-> >>> +	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, 0),
-> >>> +	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X, 0),
-> >>> +	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X, 0),
-> >>> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X, 0),
-> >>> +	{}
-> >>> +};
-> >>> +
-> >>> +/*
-> >>> + * There isn't a simple hardware bit that indicates whether a CPU is running
-> >>> + * in Sub NUMA Cluster (SNC) mode. Infer the state by comparing the
-> >>> + * ratio of NUMA nodes to L3 cache instances.
-> >>> + * It is not possible to accurately determine SNC state if the system is
-> >>> + * booted with a maxcpus=N parameter. That distorts the ratio of SNC nodes
-> >>> + * to L3 caches. It will be OK if system is booted with hyperthreading
-> >>> + * disabled (since this doesn't affect the ratio).
-> >>> + */
-> >>> +static __init int snc_get_config(void)
-> >>> +{
-> >>> +	unsigned long *node_caches;
-> >>> +	int mem_only_nodes = 0;
-> >>> +	int cpu, node, ret;
-> >>> +	int num_l3_caches;
-> >>> +	int cache_id;
-> >>> +
-> >>> +	if (!x86_match_cpu(snc_cpu_ids))
-> >>> +		return 1;
-> >>> +
-> >>> +	node_caches = bitmap_zalloc(num_possible_cpus(), GFP_KERNEL);
-> >>> +	if (!node_caches)
-> >>> +		return 1;
-> >>> +
-> >>> +	cpus_read_lock();
-> >>> +
-> >>> +	if (num_online_cpus() != num_present_cpus())
-> >>> +		pr_warn("Some CPUs offline, SNC detection may be incorrect\n");
-> >>> +
-> >>> +	for_each_node(node) {
-> >>> +		cpu = cpumask_first(cpumask_of_node(node));
-> >>> +		if (cpu < nr_cpu_ids) {
-> >>> +			cache_id = get_cpu_cacheinfo_id(cpu, 3);
-> >>> +			if (cache_id != -1)
-> >>> +				set_bit(cache_id, node_caches);
-> >>> +		} else {
-> >>> +			mem_only_nodes++;
-> >>> +		}
-> >>> +	}
-> >>> +	cpus_read_unlock();
-> >>> +
-> >>> +	num_l3_caches = bitmap_weight(node_caches, num_possible_cpus());
-> >>> +	kfree(node_caches);
-> >>> +
-> >>> +	if (!num_l3_caches)
-> >>> +		goto insane;
-> >>> +
-> >>> +	/* sanity check #1: Number of CPU nodes must be multiple of num_l3_caches */
-> >>> +	if ((nr_node_ids - mem_only_nodes) % num_l3_caches)
-> >>> +		goto insane;
-> >>> +
-> >>> +	ret = (nr_node_ids - mem_only_nodes) / num_l3_caches;
-> >>> +
-> >>> +	/* sanity check #2: Only valid results are 1, 2, 3, 4 */
-> >>> +	switch (ret) {
-> >>> +	case 1:
-> >>> +		break;
-> >>> +	case 2:
-> >>> +	case 3:
-> >>> +	case 4:
-> >>> +		pr_info("Sub-NUMA cluster detected with %d nodes per L3 cache\n", ret);
-> >>> +		rdt_resources_all[RDT_RESOURCE_L3].r_resctrl.mon_scope = RESCTRL_NODE;
-> >>> +		break;
-> >>> +	default:
-> >>> +		goto insane;
-> >>> +	}
-> >>> +
-> >>> +	return ret;
-> >>> +insane:
-> >>> +	pr_warn("SNC insanity: CPU nodes = %d num_l3_caches = %d\n",
-> >>> +		(nr_node_ids - mem_only_nodes), num_l3_caches);
-> >>> +	return 1;
-> >>> +}
-> >>
-> >> I find it confusing how dramatically this SNC detection code changed without
-> >> any explanations. This detection seems to match the SNC detection code from v16 but
-> >> after v16 you posted a new SNC detection implementation that did SNC detection totally
-> >> differently [1] from v16. Instead of keeping with the "new" detection this implements
-> >> what was in v16. Could you please help me understand what motivated the different
-> >> implementations and why the big differences?
-> > 
-> > Reinette,
-> > 
-> > Do you like the detection code in that version? You didn't make any
-> > comments about it.
-> 
-> It was a drop-in replacement for a portion that was not relevant to the
-> architecture discussion that I focused on ... hence my surprise that it
-> just came and went without any comment.
+The mrvl_ddr_pmu is uncore and has a hexadecimal address suffix while
+the previous PMU sorting/merging code assumes uncore PMU names start
+with uncore_ and have a decimal suffix. Because of the previous
+assumption it isn't possible to wildcard the mrvl_ddr_pmu.
 
-So it will be back again when I post v18 as it is somewhat simpler
-(doesn't rely on allocating a bitmap to count L3 cache instances).
+Modify pmu_name_len_no_suffix but also remove the suffix number out
+argument, this is because we don't know if a suffix number of say 100
+is in hexadecimal or decimal. As the only use of the suffix number is
+in comparisons, it is safe there to compare the values as hexadecimal.
 
-I'll update comments in that patch, in the code, and in the change
-log in the cover letter.
+Only allow hexadecimal suffixes to be greater than length 2 (ie 3 or
+more) so that S390's cpum_cf PMU doesn't lose its suffix.
 
-> > I switched back to the v16 code because that had survived review before
-> > and I just wanted to make the modifications to add both per-L3 and
-> > per-SNC node monitoring files.
-> > 
-> > I can pull that into the next iteration if you want.
-> 
-> It is not clear to me why you switched back and forth between the detection
-> algorithms. I expect big changes to be accompanied with explanation of what changed,
-> why one is better than the other, or if they are considered "similar", what
-> are the pros/cons. Am I missing something so obvious that causes you to think
-> the work does not need the explanation I asked your help with?
+Change the return type of pmu_name_len_no_suffix to size_t to
+workaround GCC incorrectly determining the result could be negative.
 
-The change deserved some comments when it suddenly appeared. One of the
-many issues with my detour from the progression. It disappeared because
-I reverted to the previously reviewed version.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmu.c  | 17 +++++------
+ tools/perf/util/pmus.c | 67 ++++++++++++++++++++++++------------------
+ tools/perf/util/pmus.h |  7 ++++-
+ 3 files changed, 53 insertions(+), 38 deletions(-)
 
-> Reinette
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 888ce9912275..f359354070fa 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1788,10 +1788,10 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
+ 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
+ {
+ 	struct parse_events_term *term;
+-	int pmu_name_len = skip_duplicate_pmus
+-		? pmu_name_len_no_suffix(pmu->name, /*num=*/NULL)
+-		: (int)strlen(pmu->name);
+-	int used = snprintf(buf, len, "%.*s/%s", pmu_name_len, pmu->name, alias->name);
++	size_t pmu_name_len = skip_duplicate_pmus
++		? pmu_name_len_no_suffix(pmu->name)
++		: strlen(pmu->name);
++	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
+ 
+ 	list_for_each_entry(term, &alias->terms.terms, list) {
+ 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
+@@ -1828,13 +1828,12 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 	pmu_aliases_parse(pmu);
+ 	pmu_add_cpu_aliases(pmu);
+ 	list_for_each_entry(event, &pmu->aliases, list) {
+-		size_t buf_used;
+-		int pmu_name_len;
++		size_t buf_used, pmu_name_len;
+ 
+ 		info.pmu_name = event->pmu_name ?: pmu->name;
+ 		pmu_name_len = skip_duplicate_pmus
+-			? pmu_name_len_no_suffix(info.pmu_name, /*num=*/NULL)
+-			: (int)strlen(info.pmu_name);
++			? pmu_name_len_no_suffix(info.pmu_name)
++			: strlen(info.pmu_name);
+ 		info.alias = NULL;
+ 		if (event->desc) {
+ 			info.name = event->name;
+@@ -1859,7 +1858,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 		info.encoding_desc = buf + buf_used;
+ 		parse_events_terms__to_strbuf(&event->terms, &sb);
+ 		buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
+-				"%.*s/%s/", pmu_name_len, info.pmu_name, sb.buf) + 1;
++				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, sb.buf) + 1;
+ 		info.topic = event->topic;
+ 		info.str = sb.buf;
+ 		info.deprecated = event->deprecated;
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index b9b4c5eb5002..63b9cf9ccfa7 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -40,31 +40,52 @@ static bool read_sysfs_all_pmus;
+ 
+ static void pmu_read_sysfs(bool core_only);
+ 
+-int pmu_name_len_no_suffix(const char *str, unsigned long *num)
++size_t pmu_name_len_no_suffix(const char *str)
+ {
+ 	int orig_len, len;
++	bool has_hex_digits = false;
+ 
+ 	orig_len = len = strlen(str);
+ 
+-	/* Non-uncore PMUs have their full length, for example, i915. */
+-	if (!strstarts(str, "uncore_"))
+-		return len;
+-
+-	/*
+-	 * Count trailing digits and '_', if '_{num}' suffix isn't present use
+-	 * the full length.
+-	 */
+-	while (len > 0 && isdigit(str[len - 1]))
++	/* Count trailing digits. */
++	while (len > 0 && isxdigit(str[len - 1])) {
++		if (!isdigit(str[len - 1]))
++			has_hex_digits = true;
+ 		len--;
++	}
+ 
+ 	if (len > 0 && len != orig_len && str[len - 1] == '_') {
+-		if (num)
+-			*num = strtoul(&str[len], NULL, 10);
+-		return len - 1;
++		/*
++		 * There is a '_{num}' suffix. For decimal suffixes any length
++		 * will do, for hexadecimal ensure more than 2 hex digits so
++		 * that S390's cpum_cf PMU doesn't match.
++		 */
++		if (!has_hex_digits || (orig_len - len) > 2)
++			return len - 1;
+ 	}
++	/* Use the full length. */
+ 	return orig_len;
+ }
+ 
++int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name)
++{
++	unsigned long lhs_num = 0, rhs_num = 0;
++	size_t lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name);
++	size_t rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name);
++	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
++			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
++
++	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
++		return ret;
++
++	if (lhs_pmu_name_len + 1 < strlen(lhs_pmu_name))
++		lhs_num = strtoul(&lhs_pmu_name[lhs_pmu_name_len + 1], NULL, 16);
++	if (rhs_pmu_name_len + 1 < strlen(rhs_pmu_name))
++		rhs_num = strtoul(&rhs_pmu_name[rhs_pmu_name_len + 1], NULL, 16);
++
++	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
++}
++
+ void perf_pmus__destroy(void)
+ {
+ 	struct perf_pmu *pmu, *tmp;
+@@ -167,20 +188,10 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
+ static int pmus_cmp(void *priv __maybe_unused,
+ 		    const struct list_head *lhs, const struct list_head *rhs)
+ {
+-	unsigned long lhs_num = 0, rhs_num = 0;
+ 	struct perf_pmu *lhs_pmu = container_of(lhs, struct perf_pmu, list);
+ 	struct perf_pmu *rhs_pmu = container_of(rhs, struct perf_pmu, list);
+-	const char *lhs_pmu_name = lhs_pmu->name ?: "";
+-	const char *rhs_pmu_name = rhs_pmu->name ?: "";
+-	int lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name, &lhs_num);
+-	int rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name, &rhs_num);
+-	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
+-			lhs_pmu_name_len < rhs_pmu_name_len ? lhs_pmu_name_len : rhs_pmu_name_len);
+-
+-	if (lhs_pmu_name_len != rhs_pmu_name_len || ret != 0 || lhs_pmu_name_len == 0)
+-		return ret;
+ 
+-	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
++	return pmu_name_cmp(lhs_pmu->name ?: "", rhs_pmu->name ?: "");
+ }
+ 
+ /* Add all pmus in sysfs to pmu list: */
+@@ -300,11 +311,11 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+ 		pmu_read_sysfs(/*core_only=*/false);
+ 		pmu = list_prepare_entry(pmu, &core_pmus, list);
+ 	} else
+-		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", NULL);
++		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+ 
+ 	if (use_core_pmus) {
+ 		list_for_each_entry_continue(pmu, &core_pmus, list) {
+-			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", /*num=*/NULL);
++			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+ 
+ 			if (last_pmu_name_len == pmu_name_len &&
+ 			    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
+@@ -316,7 +327,7 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+ 		pmu = list_prepare_entry(pmu, &other_pmus, list);
+ 	}
+ 	list_for_each_entry_continue(pmu, &other_pmus, list) {
+-		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "", /*num=*/NULL);
++		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+ 
+ 		if (last_pmu_name_len == pmu_name_len &&
+ 		    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
+@@ -566,7 +577,7 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
+ 			.long_string = STRBUF_INIT,
+ 			.num_formats = 0,
+ 		};
+-		int len = pmu_name_len_no_suffix(pmu->name, /*num=*/NULL);
++		int len = pmu_name_len_no_suffix(pmu->name);
+ 		const char *desc = "(see 'man perf-list' or 'man perf-record' on how to encode it)";
+ 
+ 		if (!pmu->is_core)
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index 9d4ded80b8e9..bdbff02324bb 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -2,10 +2,15 @@
+ #ifndef __PMUS_H
+ #define __PMUS_H
+ 
++#include <stdbool.h>
++#include <stddef.h>
++
+ struct perf_pmu;
+ struct print_callbacks;
+ 
+-int pmu_name_len_no_suffix(const char *str, unsigned long *num);
++size_t pmu_name_len_no_suffix(const char *str);
++/* Exposed for testing only. */
++int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name);
+ 
+ void perf_pmus__destroy(void);
+ 
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
--Tony
