@@ -1,136 +1,109 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90AF17F387;
-	Tue, 14 May 2024 15:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932681459E4;
+	Tue, 14 May 2024 15:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715700265; cv=none; b=SwK8X0S6Heq58XjrsVkZoHQDCQF3EcUcMxIFBAFKwlg3RXqpDdTY20xr8+mbSKskPxcWyqFHJWvFZJRLZtRDckyvahEp7dv8EXC9uj9JDU8WdQLWBBopd1zoJepbCCxaR0yqRT3micXsQYq/czCrug8HJmqWHVTeGx7sGfyhoco=
+	t=1715700378; cv=none; b=nj98AyK7LkRpZwvoLw7h5AS6Vetldb4AuNBr0wLsrV4YWzpuDE3lh9DXYhSRuktPV95OWNph4mqKAqMSTndi0X47DnUZIqF33jxMa/rBEvGD2SoSih4nWwg/yJwLnJTejJPX5qywxaPZIDigxmVEmTb5kJgnu9SLCGKGqixXwD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715700265; c=relaxed/simple;
-	bh=p7nTz/Irz77RiCSjoigxmGbDz02q1CnibFJajp5cPw4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=beQQc+i2TeelctHN/agtTK1iXmyCN/ScAHiBkS8jSsv9tlXB2F+4ignaIplNzc700nYv/4BlcP/yfvhAajsGCVdz1AedpEX0mvJnN4k+iVwZwYQNYTP7HwQvbgO3tRvYsLImtPyVEGvIi2DKVUMPgEn0Arv8ajDbcqVSlKFYBzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tV5Hda4A; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715700378; c=relaxed/simple;
+	bh=9KMbCQl0+iQEOyt5weo+F3V77somwAtxeW8gev83MFI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZaKwx6+KBmBQ709PkE+SBmV+Uzr3Wyz/bnIsQD4ViiHh7qLdHPENJle2z3Hy/PzGCgCe9T4aRKBtR6GmqUCKtMJCWP8t0Y+uGZUQIzWjP3oL8QZxJhoFoi1YS/aDomZPh9791QiiLPB5OYNdKHxu20B/XKPmhxIfQwI+55+8YQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZSQRfD3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tV5Hda4A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715700262;
-	bh=p7nTz/Irz77RiCSjoigxmGbDz02q1CnibFJajp5cPw4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tV5Hda4AXXSV+gBLPGXMrdFGL33+gcnuSGI60CBLFQtOcWSaYTb6XDVRRmGy4DC0E
-	 08XVWtEfv8Unohji+Dqq4bAHaP2tmtAJMuAnPGHSFOHpmbjAA8rsGbveIBC14tUv9y
-	 7uFM+yfjX/p8jWMKLEi/e9CXy3IBXc/IKg0WqXq3EowUuanIJZkCyjWfd8yr39kIG7
-	 XT2tsD6I6RZ6bCCa3bc9g6V6lMmvQLE03pNbrU/XP9C9iat4iqBmSc4uYU8irRpcfn
-	 zFZcoZwSWXhU7f098rg64RxI0HHBz+kyPTx1e62LNMDWfyH6PUOZ6vpopQCMLIQm2b
-	 1HmBeCp4zPvJQ==
-Received: from arisu.hitronhub.home (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 98D883782198;
-	Tue, 14 May 2024 15:24:18 +0000 (UTC)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: [PATCH 3/3] dt-bindings: display: vop2: Add VP clock resets
-Date: Tue, 14 May 2024 11:19:47 -0400
-Message-ID: <20240514152328.21415-4-detlev.casanova@collabora.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240514152328.21415-1-detlev.casanova@collabora.com>
-References: <20240514152328.21415-1-detlev.casanova@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZSQRfD3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D816FC32781;
+	Tue, 14 May 2024 15:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715700378;
+	bh=9KMbCQl0+iQEOyt5weo+F3V77somwAtxeW8gev83MFI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=bZSQRfD3b3TmCGmAoNlZP5Z+ti6zRY1bqgMeBI/7dcb1Vkxn0iM8re+TS+Y6IAB4e
+	 YsufHqfDR3/7v+GtCiiZxlY0QN7/ZmTHR0AheCQAX9/sOMwyIFcE7oIuiw9buZy0Ah
+	 qFDwoRQNjXJ7sDKot19XBwyO8RxEufqGNWrocmxJ8Nsxz37SGuRyhKcLKuMXB8hEuc
+	 Pj+747hIVMeDxN2+1JyI/zWLmZW8BzjRVONbq8VZlhBU7VLGAJi9VhNbHptRwmASUC
+	 C86rnMhHXjFIC+QTKvnzESbG1WVTFnxejqvfDeo5D0s9sO3Wt1j95TEUGCJnBoyHns
+	 FCgnCFifkMHQQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 14 May 2024 18:26:14 +0300
+Message-Id: <D19H0UVF3R0O.3N4GLZWFRZ2DO@kernel.org>
+Cc: "James Bottomley" <James.Bottomley@hansenpartnership.com>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ <serge@hallyn.com>, <linux-integrity@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <kernel-team@cloudflare.com>
+Subject: Re: [RFC PATCH 0/2] TPM derived keys
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Ignat Korchagin"
+ <ignat@cloudflare.com>
+X-Mailer: aerc 0.17.0
+References: <20240503221634.44274-1-ignat@cloudflare.com>
+ <CALrw=nGhgRrhJ5mWWC6sV2WYWoijvD9WgFzMfOe6mHmqnza-Hw@mail.gmail.com>
+ <D18XXJ373C2V.2M6AOMKD1B89W@kernel.org>
+ <CALrw=nHGLN=dn3fbyAcXsBufw0tAWUT1PKVHDK5RZkHcdd3CUw@mail.gmail.com>
+ <D19CUF0H9Q3S.3L5Y5S9553S5@kernel.org>
+ <CALrw=nEZ07U9VhbGsnpchOYw1icUZCnuoHHXkJLzhFqSPe9_fQ@mail.gmail.com>
+ <D19F74M6B8UC.2VEOOZHGOS87V@kernel.org>
+ <D19FUGDA2CUO.16EF7U9ZEZ4SD@kernel.org>
+ <D19GWXHYP2VC.1OY7BOW5LNXVF@kernel.org>
+In-Reply-To: <D19GWXHYP2VC.1OY7BOW5LNXVF@kernel.org>
 
-Add the documentation for VOP2 video ports reset clocks.
-One reset can be set per video port.
+On Tue May 14, 2024 at 6:21 PM EEST, Jarkko Sakkinen wrote:
+> On Tue May 14, 2024 at 5:30 PM EEST, Jarkko Sakkinen wrote:
+> > On Tue May 14, 2024 at 5:00 PM EEST, Jarkko Sakkinen wrote:
+> > > On Tue May 14, 2024 at 4:11 PM EEST, Ignat Korchagin wrote:
+> > > > For example, a cheap NAS box with no internal storage (disks connec=
+ted
+> > > > externally via USB). We want:
+> > > >   * disks to be encrypted and decryptable only by this NAS box
+> > >
+> > > So how this differs from LUKS2 style, which also systemd supports whe=
+re
+> > > the encryption key is anchored to PCR's? If I took hard drive out of =
+my
+> > > Linux box, I could not decrypt it in another machine because of this.
+> >
+> > Maybe you could replace the real LUKS2 header with a dummy LUKS2
+> > header, which would need to be able the describe "do not use this" and
+> > e.g. SHA256 of the actual header. And then treat the looked up header a=
+s
+> > the header when the drive is mounted.
+> >
+> > LUKS2 would also need to be able to have pre-defined (e.g. kernel
+> > command-line or bootconfig) small internal storage, which would be
+> > also encrypted with TPM's PRCs containing an array of LUKS2 header
+> > and then look up that with SHA256 as the key.
+> >
+> > Without knowing LUKS2 implementation to me these do not sound reaching
+> > the impossible engineer problems so maybe this would be worth of
+> > investigating...
+>
+> Or why you could not just encrypt the whole header with another key
+> that is only in that device? Then it would appear as random full
+> length.
+>
+> I.e. unsealing
+>
+> 1. Decrypt LUKS2 header with TPM2 key
+> 2. Use the new resulting header as it was in the place of encrypted
+>    stored to the external drive.
+> 3. Decrypt key from the LUK2S header etc.
 
-Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
----
- .../display/rockchip/rockchip-vop2.yaml       | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Maybe something like:
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-index 2531726af306b..941fd059498d4 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-@@ -65,6 +65,22 @@ properties:
-       - const: dclk_vp3
-       - const: pclk_vop
- 
-+  resets:
-+    minItems: 3
-+    items:
-+      - description: Pixel clock reset for video port 0.
-+      - description: Pixel clock reset for video port 1.
-+      - description: Pixel clock reset for video port 2.
-+      - description: Pixel clock reset for video port 3.
-+
-+  reset-names:
-+    minItems: 3
-+    items:
-+      - const: dclk_vp0
-+      - const: dclk_vp1
-+      - const: dclk_vp2
-+      - const: dclk_vp3
-+
-   rockchip,grf:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-@@ -128,6 +144,11 @@ allOf:
-         clock-names:
-           minItems: 7
- 
-+        resets:
-+          minItems: 4
-+        reset-names:
-+          minItems: 4
-+
-         ports:
-           required:
-             - port@0
-@@ -183,6 +204,12 @@ examples:
-                               "dclk_vp0",
-                               "dclk_vp1",
-                               "dclk_vp2";
-+                resets = <&cru SRST_VOP0>,
-+                         <&cru SRST_VOP1>,
-+                         <&cru SRST_VOP2>;
-+                reset-names = "dclk_vp0",
-+                              "dclk_vp1",
-+                              "dclk_vp2";
-                 power-domains = <&power RK3568_PD_VO>;
-                 iommus = <&vop_mmu>;
-                 vop_out: ports {
--- 
-2.43.2
+1. Asymmetric for LUKS2 (just like it is)
+2. Additional symmetric key, which is created as non-migratable and stored
+   to the TPM2 chip. This deciphers the header, i.e. takes the random
+   away.
 
+BR, Jarkko
