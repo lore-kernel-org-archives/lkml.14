@@ -1,214 +1,102 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453214A8F;
-	Tue, 14 May 2024 07:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE4B10949;
+	Tue, 14 May 2024 07:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715672416; cv=none; b=Xc/Sr2G3QiemvPuWbm8J+T3ikXYTHmxhFhxdGS5UrWyS/YydfwVuT9jh3AbTxDWsxPBgYWrAlD2Q9POiDYEZcAylcLYIqQnAvoxV7JTkrdg28gcAemJ/hT1upFJLWJAY+0b3V06iGer3/Ht2n5TyIWkHW32HeR/1aGQR0ofy/v4=
+	t=1715672594; cv=none; b=TQjPN7S/9ovXLldLWXRMrjQ/g+cDbhQ37Dsbvx6hkt0ur1PeLMCwPB1HlIINV9xTzw31V7F2nWaw8fIghm/xMJ17VzWk7oS5JQ5u2gxeBdGs71hK+gd983we8oMtrtAiaGKPMuIqyrWMFFF6tG5GWgOihzGD4hD5u2LqRovlj4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715672416; c=relaxed/simple;
-	bh=wmBYKPZic6o/3k1aA9E1qpLYMrpAVXLd4dEq/ZkqCGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7m6o9xcuMPlTxdlPE4Rx74klUaUwjrNhXdWKSBQUUyCEKpraSpH3/6hCwOZgiwfTttF5Iur+3Wj9YyX7ywx2oDopLdUhID7RedZ0MuzJKQKmuvAkdTk6+/1m6okU0/zWLkkZ4W4ZCCMRh3+pE6xDm8kaFgZ6YLoypWC9iH2Rts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M4oY5dsM; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715672594; c=relaxed/simple;
+	bh=xIgik0zA2zjBXDJKdFRqlH5x+cgMRBqk7Ror5EhZ4Ic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LbJOJgNEpHPUCIGto5Bm98OvMcNv6iYn6VXeGPmGO4E0mHt8way65NBaqcnsfafyfRwKujw/2Nl5CnQfVkJh9YG4ZlxmZjzRAKkYDZZSg/FC0kZFleZWR97yhi6int3BbH+esPzLaCaOdC9GJIpAK+K0mbuTDZWdP+NGbxmOPn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=gKLOAC5s; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4oY5dsM"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4302187c0so4288333b3a.1;
-        Tue, 14 May 2024 00:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715672414; x=1716277214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3YvLEqN9SF7GsP5Ax2ZZ6G4kMkxSvXwWE7lq39nUwFw=;
-        b=M4oY5dsMwocE7dvSdbdbOVgqXrZlKOWItwYbhkBwOcyG9VKS+hQ25Mcc9x5cgiDWNg
-         UJH8Dj8y4uJ8VHKrBRKrRee9CK9F1YMUwSdy9rZ5x+ivU/xEKtYHA/k2zhLNfab09qoI
-         KLSZy8n5U0LglITz51hCHpFEkHkJLXjmjcbzMz3IdPtkAsmWHM8scOvHSVzLMIOi9vyn
-         e6PUcajqwIWZzcGSPOaumnFkh+QcCdqW7cDc4tdfOXSicWOpLIuibrQAyg60/6ygk6FJ
-         Fi8Pk0yYf0WwZLU1AAAlIMe2j+ixNk0QWQFPExBMhtpmKgXmzwpgMyZ5L2c/uhho70Da
-         PzOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715672414; x=1716277214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3YvLEqN9SF7GsP5Ax2ZZ6G4kMkxSvXwWE7lq39nUwFw=;
-        b=fhC0zxT1N43mRIvvA3FM2QOnlVq97moOby4PxvCvbnq1FRYWVLHmv4uXHd4rW4Hjt6
-         LAhzrLrkgrPro6GX35qfZRomCTgwz4Oc9OcCzVaZUIX5BHLyBnDji+JH+Fjevlpvmn5M
-         SuMxbaOQTVtSuet6fjU0Mk+YGvr2luqGNIFh/C2bhceaS+B4vHwFmuwqfMhE/EJSjEfU
-         97xya0QcxgaHKiexVB+YJIuFHnqcUq0V6bADGLkZQlAkQ7nF3kWogJs2s/QngO9WzKGA
-         LlRNH2DTQbZLxAOHY4clbKkUvmBaGucuXBAfhRcj2xPLTevDM3/a76twvJIwc1v51myz
-         7gDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZLBrMIVnHkMsN4pQOdRyrQSLx2B1arr3GCbePzuF1UIJDZD+stFjkh/KB0p3qOsvUD0AQRp0DVMnBJw+D/PXC3L8M1fZT7HOi4OtpKpO3BQg4Ta720Ca90zyHOBDXg90rJav2dhjAaQ==
-X-Gm-Message-State: AOJu0Yw6Obfh4ScDpI6+ptxOPEpUEI3KtWbNAYxzvI9yEiARIWW6oKvi
-	ZXCmaP1jpEsj7p+dNo2bHBIBwD/cPSr31zo8JHAzN3Q4UnPIakuQ
-X-Google-Smtp-Source: AGHT+IGNqjEroFEESDPk+9hGlEurdGGZ2qzj8D2ekEtBC4a4gYh2e8R5zHqiPYEoJGR5nX/Za9xXlA==
-X-Received: by 2002:a05:6a20:4323:b0:1af:58f8:1190 with SMTP id adf61e73a8af0-1afde0d5a81mr17017732637.12.1715672414235;
-        Tue, 14 May 2024 00:40:14 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a81c8csm8501511b3a.70.2024.05.14.00.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:40:13 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 1E369183B228E; Tue, 14 May 2024 14:40:10 +0700 (WIB)
-Date: Tue, 14 May 2024 14:40:09 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Matthew Mirvish <matthew@mm12.xyz>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, Coly Li <colyli@suse.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the refactor-heap tree with the
- block tree
-Message-ID: <ZkMVWeGUb8OSiC4U@archie.me>
-References: <20240509152745.08af752f@canb.auug.org.au>
- <te64v6zwwor6jkco6uiu2zz7ern6ijhyu5okfvdz3bmj3w5qfp@mx4zdniwymqj>
- <Zj1RzZdtfL7UQax1@visitorckw-System-Product-Name>
- <buehluxvo234sj7onzl6wwjmuslmnkh7g6vnpru23kpti6qmpp@7nqak2ser7mw>
- <Zj2PX6Fy3BEnQc50@visitorckw-System-Product-Name>
- <20240510034618.GA3161190@mm12.xyz>
- <Zj3kowGa9XzJ0yak@visitorckw-System-Product-Name>
- <Zj/F/yf0ixB/eRX7@visitorckw-System-Product-Name>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="gKLOAC5s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715672580; x=1716277380; i=markus.elfring@web.de;
+	bh=xIgik0zA2zjBXDJKdFRqlH5x+cgMRBqk7Ror5EhZ4Ic=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=gKLOAC5srdxebxFMnFQrRFawlnUsEYlZIKY3gty8iTg2w7NQKqwErUosuK3jobaF
+	 RaVF5vr8MiOumQBiPJrw3+RayISaNmeD1V/TNH+PslAAW2Sz+U50jJho1TCBCazEv
+	 Vo4Lk+pDwTduJTI+VqviFz2Bpohd0uYClakZVJH4U1ivyu2loALDhBfBhMaL35E4y
+	 KJtkF8YJsQ+49uvxn5DJjvWwq1JjLZixEIcZVD5HjAc5IdYgz99Z0cqeY8zpBNist
+	 C8ffiSTxG6Kw0rO8f3RRJ3JUDeS7qpQAVnqMsiuWTBhJAEVpcJuGK5IG6KbLH5gtc
+	 xaTdwqNDI2t/8GiulA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MNfYN-1rv1OZ1mhv-00YRev; Tue, 14
+ May 2024 09:43:00 +0200
+Message-ID: <d18294d0-7274-4786-a443-24e7cb79c66d@web.de>
+Date: Tue, 14 May 2024 09:42:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="312VrB8j4PQGMpon"
-Content-Disposition: inline
-In-Reply-To: <Zj/F/yf0ixB/eRX7@visitorckw-System-Product-Name>
-
-
---312VrB8j4PQGMpon
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] aoe: fix the potential use-after-free problem in more
+ places
+To: Chun-Yi Lee <jlee@suse.com>, linux-block@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Chun-Yi Lee
+ <joeyli.kernel@gmail.com>, "David S . Miller" <davem@davemloft.net>,
+ Jens Axboe <axboe@kernel.dk>, Justin Sanders <justin@coraid.com>,
+ Kirill Korotaev <dev@openvz.org>, Nicolai Stange <nstange@suse.com>,
+ Pavel Emelianov <xemul@openvz.org>
+References: <20240514054214.924-1-jlee@suse.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240514054214.924-1-jlee@suse.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DGjkXyi2KlCMQRSTOVqzP8gfkfTT0kNd0N2Qw9GVKhXl4BSfnoz
+ gpJJnMvWxsX6OOjAgZ5DFSjNVaMlt3dVoghWEVr2yb2wQHaC1C62GRxAxs69smC1n4lhsxw
+ kFSG4ztiZG327F93i4a3ZjCEdL5j7hpklwaZiR75+KtbR9CEPxR8Xsw2T1XME838RIPo83j
+ KX6T95gIS9EzQ+SeWBtmg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uYv8A1Ly0n4=;IAiyijM2BQxduskgcWiCxwjQzA5
+ J3y/osG8FjbEpfV8qhdEGN+6Oj/0BeJxWIFJXB43L6Pb9c2FrFIgkEOd5Pn6cdpVhX9yg8SZL
+ o64LELRG1aY3rMG9u8cC6LOgbF8Ix80qB5POOgHtlcecLud5VJY6cjptLwcs8wARS85s0mOUL
+ 0837LdEJ1CIHA+U8Dw4cl1rGbF7r1EzNLKj9PPekzcZVE3EkqW4ctvkUIj9uAlyqfBTnSRSPl
+ NGI4nEJnTkp9AEsUzEIh+mMpsGaPwo4mFVi0Bx6lodDy3A4Ev0WTCiZVsXLofvXCxWxpUohCN
+ CUrUOOT7ffjQH2L6QpkEect0VEndv3wJJ7eaZINrCYOPvsQR2SEMfaLAS1bZUpNBXgP0qZPbS
+ afW2+E4C01Bx97TRoP0cSkKvlRkP4OC8If9U4hCmNrwzrxsqriZO4qO/VnTNVHMgZfQiyMaNq
+ 7o/AwMDedTfihGGO2i5+n+AegS+62/nxBv1FmZy4fyxIhiH7TuNPxtCTaA7yddnNdj4BKVg5b
+ qbwxNyrSzH5kopy+7gHVeCLdRLmzq8WzmzWuqYhTYszAeUTwRaYruhVAGdyAJueE0vUChf6xa
+ U14rqN6B6QXaP+KrljrzNqCYqjoG6XIv8O1YV44ehN50i5tJXdoOmYgfuDGfqRDnhT11E/ALK
+ 5GQ/AwdSqGtXpB6BPz0p0Vpty0kWpHVNFE5r9dr8+T0seDxOcRegSZotYgdUZuI4zQEG/P5Vl
+ lP7WZC49SGvxMMEftLBs486wbjv9F555Cz5ApLlFkFoZLwoouVP5VK1MctI2syLVTeTLKNQS1
+ wRwk6kC3WvGxEcKGSNX6zzRKovGQ0u8B+1oPxWr0xPvcM=
 
-On Sun, May 12, 2024 at 03:24:47AM +0800, Kuan-Wei Chiu wrote:
-> On Fri, May 10, 2024 at 05:11:02PM +0800, Kuan-Wei Chiu wrote:
-> > On Thu, May 09, 2024 at 11:46:18PM -0400, Matthew Mirvish wrote:
-> > > On Fri, May 10, 2024 at 11:07:11AM +0800, Kuan-Wei Chiu wrote:
-> > > > On Thu, May 09, 2024 at 07:16:31PM -0400, Kent Overstreet wrote:
-> > > > > On Fri, May 10, 2024 at 06:44:29AM +0800, Kuan-Wei Chiu wrote:
-> > > > > > On Thu, May 09, 2024 at 03:58:57PM -0400, Kent Overstreet wrote:
-> > > > > > > On Thu, May 09, 2024 at 03:27:45PM +1000, Stephen Rothwell wr=
-ote:
-> > > > > > > > Hi all,
-> > > > > > > >=20
-> > > > > > > > Today's linux-next merge of the refactor-heap tree got conf=
-licts in:
-> > > > > > > >=20
-> > > > > > > >   drivers/md/bcache/bset.c
-> > > > > > > >   drivers/md/bcache/bset.h
-> > > > > > > >   drivers/md/bcache/btree.c
-> > > > > > > >   drivers/md/bcache/writeback.c
-> > > > > > > >=20
-> > > > > > > > between commit:
-> > > > > > > >=20
-> > > > > > > >   3a861560ccb3 ("bcache: fix variable length array abuse in=
- btree_iter")
-> > > > > > > >=20
-> > > > > > > > from the block tree and commit:
-> > > > > > > >=20
-> > > > > > > >   afa5721abaaa ("bcache: Remove heap-related macros and swi=
-tch to generic min_heap")
-> > > > > > > >=20
-> > > > > > > > from the refactor-heap tree.
-> > > > > > > >=20
-> > > > > > > > Ok, these conflicts are too extensive, so I am dropping the=
- refactor-heap
-> > > > > > > > tree for today.  I suggest you all get together and sort so=
-mething out.
-> > > > > > >=20
-> > > > > > > Coli and Kuan, you guys will need to get this sorted out quic=
-k if we
-> > > > > > > want refactor-heap to make the merge window
-> > > > > >=20
-> > > > > > Hi Coli and Kent,
-> > > > > >=20
-> > > > > > If I understand correctly, the reported bug is because we attem=
-pted to
-> > > > > > point (heap)->data to a dynamically allocated memory , but at t=
-hat time
-> > > > > > (heap)->data was not a regular pointer but a fixed size array w=
-ith a
-> > > > > > length of MAX_BSETS.
-> > > > > >=20
-> > > > > > In my refactor heap patch series, I introduced a preallocated a=
-rray and
-> > > > > > decided in min_heap_init() whether the data pointer should poin=
-t to an
-> > > > > > incoming pointer or to the preallocated array. Therefore, I am
-> > > > > > wondering if my patch might have unintentionally fixed this bug?
-> > > > > >=20
-> > > > > > I am unsure how to reproduce the reported issue. Could you assi=
-st me in
-> > > > > > verifying whether my assumption is correct?
-> > > > >=20
-> > > > > This is a merge conflict, not a runtime. Can you rebase onto Coli=
-'s
-> > > > > tree? We'll have to retest.
-> > > >=20
-> > > > Oh, sorry for the misunderstanding I caused. When I mentioned "bug"=
- [1]
-> > > > earlier, I was referring to the bug addressed in
-> > > > 3a861560ccb3 ("bcache: fix variable length array abuse in btree_ite=
-r"),
-> > > > not a merge conflict.
-> > > >=20
-> > > > Here are the results after the rebase:
-> > > > https://github.com/visitorckw/linux.git refactor-heap
-> > > >=20
-> > > > [1]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2039368
-> > >=20
-> > > The ubuntu kernels build with UBSAN now, and the bug reported is just=
- a
-> > > UBSAN warning. The original implementation's iterator has a fixed size
-> > > sets array that is indexed out of bounds when the iterator is allocat=
-ed
-> > > on the heap with more space -- the patch restructures it a bit to hav=
-e a
-> > > single iterator type with a flexible array and then a larger "stack"
-> > > type which embeds the iterator along with the preallocated region.
-> > >=20
-> > > I took a brief look at the refactor-heap branch but I'm not entirely
-> > > sure what's going on with the new min heaps: in the one place where t=
-he
-> > > larger iterators are used (in bch_btree_node_read_done) it doesn't lo=
-ok
-> > > like the heap is ever initialized (perhaps since the old iter_init
-> > > wasn't used here because of the special case it got missed in the
-> > > refactor?) With the new heaps it should be fairly easy to fix though;
-> > > just change the fill_iter mempool to be allocating only the minheap d=
-ata
-> > > arrays and setup iter->heap.data properly with that instead.
-> >=20
-> > Thank you, Matthew.
-> > Not initializing the heap's data pointer was indeed my mistake.
-> > Following your advice, I made the following modifications to the code
-> > on the refactor-heap branch in my github repo. I hope this time it
-> > works well.
-> >
-> Should I resend it as a patch series?
+Please add a version identification to your patch subject.
 
-Go ahead.
 
---=20
-An old man doll... just what I always wanted! - Clara
+=E2=80=A6
+> This patch adds =E2=80=A6
 
---312VrB8j4PQGMpon
-Content-Type: application/pgp-signature; name="signature.asc"
+Please use imperative wordings for improved change descriptions also in yo=
+ur patches.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.9#n94
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkMVVAAKCRD2uYlJVVFO
-o4xpAQDcKGhTrKxpV8NOk9uCQIEYfiixEwNAetO//zNDgyWC3wD/SacWmXhwC6uq
-YKUG0mVu0I+GIuX7vPUQfOQsSAyfZQ8=
-=vAUY
------END PGP SIGNATURE-----
+> v2:
+> - Base on submitting-patches.rst document to improve patch description.
+=E2=80=A6
 
---312VrB8j4PQGMpon--
+* Was any information overlooked here?
+
+* Such version descriptions should be put behind a marker line.
+
+
+Regards,
+Markus
