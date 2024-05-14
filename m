@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D8C76035;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E067603F;
 	Tue, 14 May 2024 12:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715691218; cv=none; b=Up6+klPQW4lScGafFWkGnThoJ50MNaJQ0ULzpb5HFFw4R21z98PjM1WB5wIrhskb5LRCdXYucST6+7gdnz/hbgZKzhKk4j9amae3OwqrOtzddS0e9qGTc/smmSIWpu9v0Ye5qo/U2p2ItXWEVgrB0sb8eY32k1OJKi9cZHUsExs=
+	t=1715691218; cv=none; b=KxBKyyFb1qz3Z6COgtEPJJCCID3gdG6Svp4lOnEGOzFGSNlr+vynrcQjnmeZM4T28ImI9w3vf/zewyfJ2iwzwfDf6pZ/0XSCmLjAs5Bs4QBUciXhi/Hpkogfk/8tSbmJYGzPclUUS1waKSquOb+kdEAKarMeltH1HfJnr3fLJgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715691218; c=relaxed/simple;
-	bh=NRDTDHLUm7pZjnlC/jsn16oLYrs73tYuOYKYXva2V/Y=;
+	bh=KbrxBobCPNdYA9YZr6GfSsQNEx69sqbLVN8FdjTP6ls=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZZZ/b1cOnZu+OvRtzzDffsT80naqSAuM0DR8UHuDha3vcaoAwAovqsD2d77hJ8mh54N/VnMcAWWvazIiRpZ8hfw6JBNnSICY+9UYl6+ZCv+ic/sc7dZ2/l2tgJfRlq3wzA2QrhcNbwMLvOm7lAgktdsfrDhWacI84D07rdXlXuM=
+	 MIME-Version; b=f8Zpn6di1eVJVAfhoPlsKsSYbsZ+YiStESg3sLtm+339T19GJHJ8t6P/1tQcUday7PsKh+OGNYlAFx730PSf/a2bd+MwLX9PSvSO5Rt/9OmzP9QMSsy9cos8YDyv+6rgXNkje39BPvmQBmey7gw+geIWyTRstu376LiwQzWmaEQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vdx9T3zZrz4f3n5l;
-	Tue, 14 May 2024 20:53:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vdx9V0zdRz4f3n5t;
+	Tue, 14 May 2024 20:53:18 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id AAB1B1A1142;
-	Tue, 14 May 2024 20:53:27 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 4568F1A0181;
+	Tue, 14 May 2024 20:53:28 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP4 (Coremail) with SMTP id gCh0CgDHzG7EXkNmCyyLMw--.6596S7;
-	Tue, 14 May 2024 20:53:27 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgDHzG7EXkNmCyyLMw--.6596S9;
+	Tue, 14 May 2024 20:53:28 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: willy@infradead.org,
 	akpm@linux-foundation.org,
@@ -30,9 +30,9 @@ To: willy@infradead.org,
 Cc: linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] writeback: factor out wb_dirty_freerun to remove more repeated freerun code
-Date: Tue, 14 May 2024 20:52:51 +0800
-Message-Id: <20240514125254.142203-6-shikemeng@huaweicloud.com>
+Subject: [PATCH v2 7/8] writeback: factor out wb_dirty_exceeded to remove repeated code
+Date: Tue, 14 May 2024 20:52:53 +0800
+Message-Id: <20240514125254.142203-8-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20240514125254.142203-1-shikemeng@huaweicloud.com>
 References: <20240514125254.142203-1-shikemeng@huaweicloud.com>
@@ -43,10 +43,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHzG7EXkNmCyyLMw--.6596S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw1fXr18ZrWUKrW7Wr15urg_yoW5GFy5pF
-	WfAw4akr4DJr1IqrsxAF9FvFWftrsavrWfC34Uuwn3tw1fKr1Igry2yryrZFW2yFy7Jrs0
-	vFs0vF97G34UtFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgDHzG7EXkNmCyyLMw--.6596S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFWfZr4xKF4rJr4kJw4fZrb_yoW8KF47pF
+	ZrJw4Ik3yUJa1SgasxJFWDur43trs7JrWxJryUWw15ta13KF12gr92qFWFvr17ArZxJF4Y
+	vrZ5t34xGw18Kr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -62,93 +62,79 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxWw1fXr18ZrWUKrW7Wr15urg_yoW5GFy5pF
 	evJa73UjIFyTuYvjxUFgAwUUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Factor out wb_dirty_freerun to remove more repeated freerun code.
+Factor out wb_dirty_exceeded to remove repeated code
 
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 ---
- mm/page-writeback.c | 55 +++++++++++++++++++++++----------------------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+ mm/page-writeback.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index b7478eacd3ff..b9c8db7089ef 100644
+index 97ee5b32b4ef..0f1f3e179be2 100644
 --- a/mm/page-writeback.c
 +++ b/mm/page-writeback.c
-@@ -1746,6 +1746,27 @@ static void domain_dirty_freerun(struct dirty_throttle_control *dtc,
- 	dtc->freerun = dirty <= dirty_freerun_ceiling(thresh, bg_thresh);
+@@ -140,6 +140,7 @@ struct dirty_throttle_control {
+ 
+ 	unsigned long		pos_ratio;
+ 	bool			freerun;
++	bool			dirty_exceeded;
+ };
+ 
+ /*
+@@ -1775,6 +1776,13 @@ static void wb_dirty_freerun(struct dirty_throttle_control *dtc,
+ 		       dirty_freerun_ceiling(dtc->wb_thresh, dtc->wb_bg_thresh);
  }
  
-+static void wb_dirty_freerun(struct dirty_throttle_control *dtc,
-+			     bool strictlimit)
++static inline void wb_dirty_exceeded(struct dirty_throttle_control *dtc,
++				     bool strictlimit)
 +{
-+	dtc->freerun = false;
-+
-+	/* was already handled in domain_dirty_freerun */
-+	if (strictlimit)
-+		return;
-+
-+	wb_dirty_limits(dtc);
-+	/*
-+	 * LOCAL_THROTTLE tasks must not be throttled when below the per-wb
-+	 * freerun ceiling.
-+	 */
-+	if (!(current->flags & PF_LOCAL_THROTTLE))
-+		return;
-+
-+	dtc->freerun = dtc->wb_dirty <
-+		       dirty_freerun_ceiling(dtc->wb_thresh, dtc->wb_bg_thresh);
++	dtc->dirty_exceeded = (dtc->wb_dirty > dtc->wb_thresh) &&
++		((dtc->dirty > dtc->thresh) || strictlimit);
 +}
 +
  /*
   * balance_dirty_pages() must be called by processes which are generating dirty
   * data.  It looks at the number of dirty pages in the machine and will force
-@@ -1838,19 +1859,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
- 		 * Calculate global domain's pos_ratio and select the
- 		 * global dtc by default.
- 		 */
--		if (!strictlimit) {
--			wb_dirty_limits(gdtc);
--
--			if ((current->flags & PF_LOCAL_THROTTLE) &&
--			    gdtc->wb_dirty <
--			    dirty_freerun_ceiling(gdtc->wb_thresh,
--						  gdtc->wb_bg_thresh))
--				/*
--				 * LOCAL_THROTTLE tasks must not be throttled
--				 * when below the per-wb freerun ceiling.
--				 */
--				goto free_running;
--		}
-+		wb_dirty_freerun(gdtc, strictlimit);
-+		if (gdtc->freerun)
-+			goto free_running;
+@@ -1797,7 +1805,6 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 	long max_pause;
+ 	long min_pause;
+ 	int nr_dirtied_pause;
+-	bool dirty_exceeded = false;
+ 	unsigned long task_ratelimit;
+ 	unsigned long dirty_ratelimit;
+ 	struct backing_dev_info *bdi = wb->bdi;
+@@ -1866,9 +1873,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 		if (gdtc->freerun)
+ 			goto free_running;
  
- 		dirty_exceeded = (gdtc->wb_dirty > gdtc->wb_thresh) &&
- 			((gdtc->dirty > gdtc->thresh) || strictlimit);
-@@ -1865,20 +1876,10 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
- 			 * both global and memcg domains.  Choose the one
- 			 * w/ lower pos_ratio.
- 			 */
--			if (!strictlimit) {
--				wb_dirty_limits(mdtc);
+-		dirty_exceeded = (gdtc->wb_dirty > gdtc->wb_thresh) &&
+-			((gdtc->dirty > gdtc->thresh) || strictlimit);
 -
--				if ((current->flags & PF_LOCAL_THROTTLE) &&
--				    mdtc->wb_dirty <
--				    dirty_freerun_ceiling(mdtc->wb_thresh,
--							  mdtc->wb_bg_thresh))
--					/*
--					 * LOCAL_THROTTLE tasks must not be
--					 * throttled when below the per-wb
--					 * freerun ceiling.
--					 */
--					goto free_running;
--			}
-+			wb_dirty_freerun(mdtc, strictlimit);
-+			if (mdtc->freerun)
-+				goto free_running;
-+
- 			dirty_exceeded |= (mdtc->wb_dirty > mdtc->wb_thresh) &&
- 				((mdtc->dirty > mdtc->thresh) || strictlimit);
++		wb_dirty_exceeded(gdtc, strictlimit);
+ 		wb_position_ratio(gdtc);
+ 		sdtc = gdtc;
  
+@@ -1883,17 +1888,14 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+ 			if (mdtc->freerun)
+ 				goto free_running;
+ 
+-			dirty_exceeded |= (mdtc->wb_dirty > mdtc->wb_thresh) &&
+-				((mdtc->dirty > mdtc->thresh) || strictlimit);
+-
++			wb_dirty_exceeded(mdtc, strictlimit);
+ 			wb_position_ratio(mdtc);
+ 			if (mdtc->pos_ratio < gdtc->pos_ratio)
+ 				sdtc = mdtc;
+ 		}
+ 
+-		if (dirty_exceeded != wb->dirty_exceeded)
+-			wb->dirty_exceeded = dirty_exceeded;
+-
++		wb->dirty_exceeded = gdtc->dirty_exceeded ||
++				     (mdtc && mdtc->dirty_exceeded);
+ 		if (time_is_before_jiffies(READ_ONCE(wb->bw_time_stamp) +
+ 					   BANDWIDTH_INTERVAL))
+ 			__wb_update_bandwidth(gdtc, mdtc, true);
 -- 
 2.30.0
 
