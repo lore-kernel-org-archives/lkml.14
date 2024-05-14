@@ -1,173 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C73654903;
-	Tue, 14 May 2024 11:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC96113B287;
+	Tue, 14 May 2024 11:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715684597; cv=none; b=d/rf8LT1wv3KBkNwBpCsFPY4d1lVxPVouvuP9SvjTGbMZgEIO55ZAlzsLj2U33RALhgXP/5hzjJlJKiD9Jr1ZyprY6+/pEGE+Vaqdb/tuqGvHpu3EahCic29ekztTwlve0w3kuleYMHQ+jr8/Pb9CE5gLs/KkIZHNnxWM8uj9bY=
+	t=1715684979; cv=none; b=Ldm7auyCKDdrARj5AgkzoXGsHVFYvkYta+TYXUuyPraVhadBjY6PD2vX0df4HtZSt0B2W20yNJTfdE2GxDiv/xogRfvqgD0YaS3VTSlUx601NCcUBOC+0ZoWrGELTjRIamxIwVr7A18DfGe2kqBfCzPbsMdDhq1oiH7GKV0cUHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715684597; c=relaxed/simple;
-	bh=OywhrLKKbt4A6Kqnheggw+3eARBvAOlcXRI/HHo5cOM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Jrf7a+4bHr+opBmWfs1wlJyISeAWv3zbw/RODmtxe3R9r4FAWLJBm76/bzQc+8ZSyGfG3TgSWZmMjaxNoKrryA7/wl3Eht1kgeqOBtKv1ISEU4ZHC6pTBLh4vivN+gJO0uZVtXA95AHxgR/8z+6xlPZvIQNkvCwbIy4DwFHhx78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ld2aBmxS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715684979; c=relaxed/simple;
+	bh=Eb4+G+aHG2Vm3e3joQm1/LUC2P6jFfU1JpRJhMDV0UU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jjUtHb79eAwwM2yn+8q0MehlhnHMCaxTEkWObUGnGMV3dRvae8KgIkwy7IYddiZaJb5bGYMoTpQd5gttxVLHT0/RgVllIqSFCuTmTMrJW9X9FO1llAei2ooiXpaEQcASGKJvcoUEwQbdSGunFCkLQcBt5BVFeRBc9gI3ECBIznw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zBFdNruK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ld2aBmxS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715684596; x=1747220596;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=OywhrLKKbt4A6Kqnheggw+3eARBvAOlcXRI/HHo5cOM=;
-  b=ld2aBmxSs/pcTm8niDhkptd+6JppT1KxxoYqMTVI27VpPKw4msOAiZBp
-   DvwMOYuUEmXDI2K2nlGrvecWd7ZGRpdkxIboC4LTJBIJ6ZLbnhVeVgPKy
-   O9P40PNl2jP+97Hd0BZKilOSo1Hwy5+H0kg87xH3IfRAVAR/cgOPNTPxJ
-   TZWmqbuabdY9Y4EgcQtVMbi3TF7QrhYOq3cJ2xo67oX+7nmSo1DSE3S3d
-   84jxI2pIH+WQqY/X1VsK+NAtCWyYPwGR3bQ2xAu9G1+o7faeRZcmT7MAB
-   z0m/Pk+tks5Id2K0NosJzkFUD6E1TjiaiMGiF7qmQt4G3m6aAbw3g/GFL
-   w==;
-X-CSE-ConnectionGUID: 0YYnIOmsQoK0hSNZ5fLt8w==
-X-CSE-MsgGUID: JfPfVhlxRcqBBzOaxP7ujw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="15480891"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="15480891"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 04:03:15 -0700
-X-CSE-ConnectionGUID: v8GfHghzRg6zFCFOXcMzdw==
-X-CSE-MsgGUID: WVdmOsTXSlOqgfDU6iUY0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="35407856"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.94])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 04:03:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 14 May 2024 14:03:05 +0300 (EEST)
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-    Vadym Krevs <vkrevs@yahoo.com>
-cc: Bagas Sanjaya <bagasdotme@gmail.com>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    Linux Regressions <regressions@lists.linux.dev>, 
-    Linux Serial <linux-serial@vger.kernel.org>, 
-    Gilles Buloz <gilles.buloz@kontron.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [regression] [bisected] commit 6bb6fa6908ebd3cb4e14cd4f0ce272ec885d2eb0
- corrupts data sent via pseudoterminal device
-In-Reply-To: <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com>
-Message-ID: <6bfafddc-cf5b-4829-e09b-2622aaf83093@linux.intel.com>
-References: <ZkLv3wn62jqMVpSF@archie.me> <CAHp75VcjeJ5oZy2JjbyrKn+GVvixJKmfh3Yj1p-HxcJHrm0Wzg@mail.gmail.com> <606328522.1205749.1715678929830@mail.yahoo.com> <CAHp75VefMFJMAHrKmDf1joSkKOcaRMJWse8yM63Nt5v2W7w3Fw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zBFdNruK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E00C2BD10;
+	Tue, 14 May 2024 11:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715684979;
+	bh=Eb4+G+aHG2Vm3e3joQm1/LUC2P6jFfU1JpRJhMDV0UU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=zBFdNruKfagjLlrNQIjHDwJW8akndQYTS7s2XRDE0sKBz+TH42qeTn6v/zlqqtp/n
+	 BuoGUq6cAxV4bEA8EBiZxUKT0ekM5G8k/2wZZBM+P4yiTKSUecFcC2YXMAmu5Sthip
+	 Oo3FbofbC3kT3aUxwOWhn3Pe6DpAAA9TMSX781JA=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Mark Rutland <mark.rutland@arm.com>,
+	Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.6 116/301] selftests/ftrace: Fix event filter target_func selection
+Date: Tue, 14 May 2024 12:16:27 +0200
+Message-ID: <20240514101036.629901920@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240514101032.219857983@linuxfoundation.org>
+References: <20240514101032.219857983@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1185213448-1715683287=:1106"
-Content-ID: <62931513-71c6-d018-32cb-150e9a7156c3@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+6.6-stable review patch.  If anyone has any objections, please let me know.
 
---8323328-1185213448-1715683287=:1106
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <51f2e973-9ce1-a42f-8b7a-37cd5beb78bd@linux.intel.com>
+------------------
 
-On Tue, 14 May 2024, Andy Shevchenko wrote:
+From: Mark Rutland <mark.rutland@arm.com>
 
-> On Tue, May 14, 2024 at 12:28=E2=80=AFPM Vadym Krevs <vkrevs@yahoo.com> w=
-rote:
-> >
-> > It's a standard setup for an out-of-the box default install of openSUSE=
- 15.5 with KDE. All tests done in Konsole with bash as shell.
-> >
-> > stty -a -F /dev/pts/1
-> > speed 38400 baud; rows 57; columns 217; line =3D 0;
-> > intr =3D ^C; quit =3D ^\; erase =3D ^?; kill =3D ^U; eof =3D ^D; eol =
-=3D <undef>; eol2 =3D <undef>; swtch =3D <undef>; start =3D ^Q; stop =3D ^S=
-; susp =3D ^Z; rprnt =3D ^R; werase =3D ^W; lnext =3D ^V; discard =3D ^O; m=
-in =3D 1; time =3D 0;
-> > -parenb -parodd -cmspar cs8 -hupcl -cstopb cread -clocal -crtscts
-> > -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon=
- ixoff -iuclc -ixany -imaxbel iutf8
-> > opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0=
- vt0 ff0
-> > isig icanon iexten echo echoe echok -echonl -noflsh -xcase -tostop -ech=
-oprt echoctl echoke -flusho -extproc
->=20
-> Thank you!
->=20
-> Yeah. SW flow control is enabled, but I don't see which character is
-> being used for that. Anyway, let's give Ilpo a chance to look into
-> this.
+[ Upstream commit 8ecab2e64572f1aecdfc5a8feae748abda6e3347 ]
 
-Thanks a lot for pinpointing the commit with bisect. It turns out this=20
-is a quite bad corruption bug and I'm quite surprised I didn't see (or=20
-notice) it while testing the patch.
+The event filter function test has been failing in our internal test
+farm:
 
-Could you please test and confirm the patch below fixes the issue?
+| # not ok 33 event filter function - test event filtering on functions
 
---
-[PATCH] tty: n_tty: Fix buffer offsets when looked ahead is used
+Running the test in verbose mode indicates that this is because the test
+erroneously determines that kmem_cache_free() is the most common caller
+of kmem_cache_free():
 
-When lookahead has "consumed" some characters (la_count > 0),
-n_tty_receive_buf_standard() and n_tty_receive_buf_closing() for
-characters beyond the la_count are given wrong cp/fp offsets which
-leads to duplicating and losing some characters.
+  # # + cut -d: -f3 trace
+  # # + sed s/call_site=([^+]*)+0x.*/1/
+  # # + sort
+  # # + uniq -c
+  # # + sort
+  # # + tail -n 1
+  # # + sed s/^[ 0-9]*//
+  # # + target_func=kmem_cache_free
 
-If la_count > 0, correct buffer pointers and make count consistency too
-(the latter is not strictly necessary to fix the issue but seems more
-logical to adjust all variables immediately to keep state consistent).
+... and as kmem_cache_free() doesn't call itself, setting this as the
+filter function for kmem_cache_free() results in no hits, and
+consequently the test fails:
 
-Reported-by: Vadym Krevs <vkrevs@yahoo.com>
-Fixes: 6bb6fa6908eb ("tty: Implement lookahead to process XON/XOFF timely")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218834
-Cc: stable@vger.kernel.org
-Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+  # # + grep kmem_cache_free trace
+  # # + grep kmem_cache_free
+  # # + wc -l
+  # # + hitcnt=0
+  # # + grep kmem_cache_free trace
+  # # + grep -v kmem_cache_free
+  # # + wc -l
+  # # + misscnt=0
+  # # + [ 0 -eq 0 ]
+  # # + exit_fail
+
+This seems to be because the system in question has tasks with ':' in
+their name (which a number of kernel worker threads have). These show up
+in the trace, e.g.
+
+  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
+
+... and so when we try to extact the call_site with:
+
+  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
+
+... the 'cut' command will extrace the column containing
+'kmem_cache_free' rather than the column containing 'call_site=...', and
+the 'sed' command will leave this unchanged. Consequently, the test will
+decide to use 'kmem_cache_free' as the filter function, resulting in the
+failure seen above.
+
+Fix this by matching the 'call_site=<func>' part specifically to extract
+the function name.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_tty.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-index f252d0b5a434..5e9ca4376d68 100644
---- a/drivers/tty/n_tty.c
-+++ b/drivers/tty/n_tty.c
-@@ -1619,15 +1619,25 @@ static void __receive_buf(struct tty_struct *tty, c=
-onst u8 *cp, const u8 *fp,
- =09else if (ldata->raw || (L_EXTPROC(tty) && !preops))
- =09=09n_tty_receive_buf_raw(tty, cp, fp, count);
- =09else if (tty->closing && !L_EXTPROC(tty)) {
--=09=09if (la_count > 0)
-+=09=09if (la_count > 0) {
- =09=09=09n_tty_receive_buf_closing(tty, cp, fp, la_count, true);
--=09=09if (count > la_count)
--=09=09=09n_tty_receive_buf_closing(tty, cp, fp, count - la_count, false);
-+=09=09=09cp +=3D la_count;
-+=09=09=09if (fp)
-+=09=09=09=09fp +=3D la_count;
-+=09=09=09count -=3D la_count;
-+=09=09}
-+=09=09if (count > 0)
-+=09=09=09n_tty_receive_buf_closing(tty, cp, fp, count, false);
- =09} else {
--=09=09if (la_count > 0)
-+=09=09if (la_count > 0) {
- =09=09=09n_tty_receive_buf_standard(tty, cp, fp, la_count, true);
--=09=09if (count > la_count)
--=09=09=09n_tty_receive_buf_standard(tty, cp, fp, count - la_count, false);
-+=09=09=09cp +=3D la_count;
-+=09=09=09if (fp)
-+=09=09=09=09fp +=3D la_count;
-+=09=09=09count -=3D la_count;
-+=09=09}
-+=09=09if (count > 0)
-+=09=09=09n_tty_receive_buf_standard(tty, cp, fp, count, false);
-=20
- =09=09flush_echoes(tty);
- =09=09if (tty->ops->flush_chars)
---=20
-2.39.2
---8323328-1185213448-1715683287=:1106--
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+index 2de7c61d1ae30..3f74c09c56b62 100644
+--- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
++++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+@@ -24,7 +24,7 @@ echo 0 > events/enable
+ echo "Get the most frequently calling function"
+ sample_events
+ 
+-target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
++target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
+ if [ -z "$target_func" ]; then
+     exit_fail
+ fi
+-- 
+2.43.0
+
+
+
