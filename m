@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC351411D6
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3576144D34
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:25:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715696743; cv=none; b=n0B5h3CtkvIZ6wKBSRCqPMp4ZUSxLvqqo02TdZtJcaUURio70eLlhKdwaQQvJqI3JqI0dWZP3VwJJzfHSI9HcxE+hwmXySyknZQB8xm7fXJ6oApbhSZCReLjiEMnvO/z2q7F9PukYHeL97mMUBs5LolKPWRhiUES/+J4y2rWL9o=
+	t=1715696750; cv=none; b=PXOYGuCGCLjrYeU/HfnN6SYLpU7ttkVjw9Bo01zN+XKIjwWoGxEGKjeXyhNR9T89kw8wATf8IkN+WrN3q99xymnVr2dw4LYAz6DBairx3W+pMJRBcxByhM9rNZOiTWwg1o/+Dr6yftR9BIfZOOxdaqyqzcF7XQsrkCf2IG0d3IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715696743; c=relaxed/simple;
-	bh=qpMDWSd5i1y8+wMUWqd9FfvDaCJzMpbwK0VSUlHiSJ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j3vo/51Po4Cv+4Aom1VXvVgWLLs8rhtkcBTkMNxTVBBW+JxRi2UTxbXRM5EuNjlUi4SH3AGbY/VKdjZcFRVsvJWth0pcLuZBFrKNugCEfsBjRQ6hlDSE9bPz8DH2XXGO1rSHxZXTbt0gbbV0UYdSIfvo8FmG/AADud09aqWl+VA=
+	s=arc-20240116; t=1715696750; c=relaxed/simple;
+	bh=TIeV/E62DXbqh4pIU8p/hTVnaZWv3IIq7Aq4uMoPDQ8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ifFnBEx5tg1cNg+Y447FnZTsb/hVSfbFttHgkpE6GAjqmAHu4FBF+AiGFPmSxN0ywctLen7QPMYo6n1s4ZPA6FEL+avuLy6Y2mmm/9JNR0ri3zopKoIJfU5frQtDYv9WpxDOfrYacBxePSv7LKmVvS+RRMy09STZGLs2tPaNeJw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,20 +17,21 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1s6t5m-00044R-7m; Tue, 14 May 2024 16:25:22 +0200
+	id 1s6t5m-00044Q-7m; Tue, 14 May 2024 16:25:22 +0200
 Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1s6t5l-001N6Z-7C; Tue, 14 May 2024 16:25:21 +0200
+	id 1s6t5l-001N6a-7H; Tue, 14 May 2024 16:25:21 +0200
 Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
 	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1s6t5l-004mXh-0P;
+	id 1s6t5l-004mXh-0N;
 	Tue, 14 May 2024 16:25:21 +0200
 From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Tue, 14 May 2024 16:25:18 +0200
-Subject: [PATCH v3 2/3] mtd: nand: mxc_nand: implement exec_op
+Subject: [PATCH v3 0/3] mtd: nand: mxc_nand: Convert to exec_op
+Date: Tue, 14 May 2024 16:25:16 +0200
+Message-Id: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,19 +40,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240514-mtd-nand-mxc-nand-exec-op-v3-2-3e6f45fd3d82@pengutronix.de>
-References: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
-In-Reply-To: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAEx0Q2YC/43NTQ7CIBAF4KsY1mL4a0FX3sO4aGHasig0UAmm6
+ d2ldeHCxLiZzHvJfLOgCMFCRJfDggIkG613JfDjAemhcT1ga0pGjDBBBJV4nA12jTN4zPq9QAa
+ N/YS5anmriBZcSlTupwCdzbt9u5c82Dj78NxfJbq1/6iJYoINZVUtOqgEnK8TuP4xB+9sPhlAG
+ 53Yh6uI+sWxwtWt5HUZitPui1vX9QURKGfKFgEAAA==
 To: Miquel Raynal <miquel.raynal@bootlin.com>, 
  Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
 Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Sascha Hauer <s.hauer@pengutronix.de>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715696721; l=19485;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715696721; l=1577;
  i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=qpMDWSd5i1y8+wMUWqd9FfvDaCJzMpbwK0VSUlHiSJ8=;
- b=m3xUaax7R6OAyFSt3WBG9YyXjOhNzZkmNV5qys7t35EB43MTaj2KqGsMjGjYx8S1s6Mv6AHts
- 3jlK36rRE7kDQQODANjnsa+9ckUSRKFLMZ2EezeqoLZp3i/7EoQx2/r
+ bh=TIeV/E62DXbqh4pIU8p/hTVnaZWv3IIq7Aq4uMoPDQ8=;
+ b=QhR9nchAUId6bzTlNyM5dtiSW9Li0QNfunfyDmHWR3kV9eI/RJ78jyFv2dg0/4rCREoUokc3Z
+ trGaK23IwNCAbLO/YuI04XUY7D0GGLkYWbNIecXk4+Kv4bMEEoGkfY5
 X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
  pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -60,617 +61,42 @@ X-SA-Exim-Mail-From: s.hauer@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This converts the driver to the more modern exec_op which gets us rid
-of a bunch of legacy code. Tested on i.MX27 and i.MX25.
+This series converts the mxc_nand driver over to exec_op which gets
+us rid of a bunch of legacy code. The motivation for this series is
+a board that has a NAND chip connected that needs 4bit ECC whereas the
+i.MX27 hardware only supports 1Bit Hamming ECC. With this series the
+driver now supports software BCH ECC.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- drivers/mtd/nand/raw/mxc_nand.c | 468 ++++++++++++++--------------------------
- 1 file changed, 167 insertions(+), 301 deletions(-)
+Changes in v3:
+- use monolithic page read/write helpers
+- drop exec_op tracing debug functions
+- use nand_op_parser_exec_op()
+- move copy_spare() out of exec_op()
+- fix comment about NFC handling R/B internally
+- drop host->column. With using nand_op_parser_exec_op() we can forbid the core
+  to issue multiple reads after a command
+- Link to v2: https://lore.kernel.org/r/20240508-mtd-nand-mxc-nand-exec-op-v2-0-6b7366b7831f@pengutronix.de
 
-diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc_nand.c
-index 3fe0b471f4a2d..6f8b8f4b118ec 100644
---- a/drivers/mtd/nand/raw/mxc_nand.c
-+++ b/drivers/mtd/nand/raw/mxc_nand.c
-@@ -126,8 +126,7 @@ struct mxc_nand_host;
- 
- struct mxc_nand_devtype_data {
- 	void (*preset)(struct mtd_info *);
--	int (*read_page)(struct nand_chip *chip, void *buf, void *oob, bool ecc,
--			 int page);
-+	int (*read_page)(struct nand_chip *chip);
- 	void (*send_cmd)(struct mxc_nand_host *, uint16_t, int);
- 	void (*send_addr)(struct mxc_nand_host *, uint16_t, int);
- 	void (*send_page)(struct mtd_info *, unsigned int);
-@@ -182,8 +181,7 @@ struct mxc_nand_host {
- 
- 	struct completion	op_completion;
- 
--	uint8_t			*data_buf;
--	unsigned int		buf_start;
-+	void			*data_buf;
- 
- 	const struct mxc_nand_devtype_data *devtype_data;
- };
-@@ -285,63 +283,6 @@ static void copy_spare(struct mtd_info *mtd, bool bfrom, void *buf)
- 	}
- }
- 
--/*
-- * MXC NANDFC can only perform full page+spare or spare-only read/write.  When
-- * the upper layers perform a read/write buf operation, the saved column address
-- * is used to index into the full page. So usually this function is called with
-- * column == 0 (unless no column cycle is needed indicated by column == -1)
-- */
--static void mxc_do_addr_cycle(struct mtd_info *mtd, int column, int page_addr)
--{
--	struct nand_chip *nand_chip = mtd_to_nand(mtd);
--	struct mxc_nand_host *host = nand_get_controller_data(nand_chip);
--
--	/* Write out column address, if necessary */
--	if (column != -1) {
--		host->devtype_data->send_addr(host, column & 0xff,
--					      page_addr == -1);
--		if (mtd->writesize > 512)
--			/* another col addr cycle for 2k page */
--			host->devtype_data->send_addr(host,
--						      (column >> 8) & 0xff,
--						      false);
--	}
--
--	/* Write out page address, if necessary */
--	if (page_addr != -1) {
--		/* paddr_0 - p_addr_7 */
--		host->devtype_data->send_addr(host, (page_addr & 0xff), false);
--
--		if (mtd->writesize > 512) {
--			if (mtd->size >= 0x10000000) {
--				/* paddr_8 - paddr_15 */
--				host->devtype_data->send_addr(host,
--						(page_addr >> 8) & 0xff,
--						false);
--				host->devtype_data->send_addr(host,
--						(page_addr >> 16) & 0xff,
--						true);
--			} else
--				/* paddr_8 - paddr_15 */
--				host->devtype_data->send_addr(host,
--						(page_addr >> 8) & 0xff, true);
--		} else {
--			if (nand_chip->options & NAND_ROW_ADDR_3) {
--				/* paddr_8 - paddr_15 */
--				host->devtype_data->send_addr(host,
--						(page_addr >> 8) & 0xff,
--						false);
--				host->devtype_data->send_addr(host,
--						(page_addr >> 16) & 0xff,
--						true);
--			} else
--				/* paddr_8 - paddr_15 */
--				host->devtype_data->send_addr(host,
--						(page_addr >> 8) & 0xff, true);
--		}
--	}
--}
--
- static int check_int_v3(struct mxc_nand_host *host)
- {
- 	uint32_t tmp;
-@@ -763,18 +704,7 @@ static void mxc_nand_enable_hwecc_v3(struct nand_chip *chip, bool enable)
- 	writel(config2, NFC_V3_CONFIG2);
- }
- 
--/* This functions is used by upper layer to checks if device is ready */
--static int mxc_nand_dev_ready(struct nand_chip *chip)
--{
--	/*
--	 * NFC handles R/B internally. Therefore, this function
--	 * always returns status as ready.
--	 */
--	return 1;
--}
--
--static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
--				 bool ecc, int page)
-+static int mxc_nand_read_page_v1(struct nand_chip *chip)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
-@@ -782,15 +712,11 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- 	int i;
- 	unsigned int ecc_stats = 0;
- 
--	host->devtype_data->enable_hwecc(chip, ecc);
--
--	host->devtype_data->send_cmd(host, NAND_CMD_READ0, false);
--	mxc_do_addr_cycle(mtd, 0, page);
--
--	if (mtd->writesize > 512)
--		host->devtype_data->send_cmd(host, NAND_CMD_READSTART, true);
--
--	no_subpages = mtd->writesize >> 9;
-+	if (mtd->writesize)
-+		no_subpages = mtd->writesize >> 9;
-+	else
-+		/* READ PARAMETER PAGE is called when mtd->writesize is not yet set */
-+		no_subpages = 1;
- 
- 	for (i = 0; i < no_subpages; i++) {
- 		/* NANDFC buffer 0 is used for page read/write */
-@@ -807,181 +733,111 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- 
- 	host->ecc_stats_v1 = ecc_stats;
- 
--	if (buf)
--		memcpy32_fromio(buf, host->main_area0, mtd->writesize);
--	if (oob)
--		copy_spare(mtd, true, oob);
--
- 	return 0;
- }
- 
--static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
--				    void *oob, bool ecc, int page)
-+static int mxc_nand_read_page_v2_v3(struct nand_chip *chip)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
- 
--	host->devtype_data->enable_hwecc(chip, ecc);
--
--	host->devtype_data->send_cmd(host, NAND_CMD_READ0, false);
--	mxc_do_addr_cycle(mtd, 0, page);
--
--	if (mtd->writesize > 512)
--		host->devtype_data->send_cmd(host,
--				NAND_CMD_READSTART, true);
--
- 	host->devtype_data->send_page(mtd, NFC_OUTPUT);
- 
--	if (buf)
--		memcpy32_fromio(buf, host->main_area0, mtd->writesize);
--	if (oob)
--		copy_spare(mtd, true, oob);
--
- 	return 0;
- }
- 
- static int mxc_nand_read_page(struct nand_chip *chip, uint8_t *buf,
- 			      int oob_required, int page)
- {
-+	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	void *oob_buf;
- 	int ret;
- 
--	if (oob_required)
--		oob_buf = chip->oob_poi;
--	else
--		oob_buf = NULL;
-+	host->devtype_data->enable_hwecc(chip, true);
-+
-+	ret = nand_read_page_op(chip, page, 0, buf, mtd->writesize);
-+
-+	host->devtype_data->enable_hwecc(chip, false);
- 
--	ret = host->devtype_data->read_page(chip, buf, oob_buf, 1, page);
- 	if (ret)
- 		return ret;
- 
-+	if (oob_required)
-+		copy_spare(mtd, true, chip->oob_poi);
-+
- 	return host->devtype_data->get_ecc_status(chip);
- }
- 
- static int mxc_nand_read_page_raw(struct nand_chip *chip, uint8_t *buf,
- 				  int oob_required, int page)
- {
--	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	void *oob_buf;
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	int ret;
-+
-+	ret = nand_read_page_op(chip, page, 0, buf, mtd->writesize);
-+	if (ret)
-+		return ret;
- 
- 	if (oob_required)
--		oob_buf = chip->oob_poi;
--	else
--		oob_buf = NULL;
-+		copy_spare(mtd, true, chip->oob_poi);
- 
--	return host->devtype_data->read_page(chip, buf, oob_buf, 0, page);
-+	return 0;
- }
- 
- static int mxc_nand_read_oob(struct nand_chip *chip, int page)
--{
--	struct mxc_nand_host *host = nand_get_controller_data(chip);
--
--	return host->devtype_data->read_page(chip, NULL, chip->oob_poi, 0,
--					     page);
--}
--
--static int mxc_nand_write_page(struct nand_chip *chip, const uint8_t *buf,
--			       bool ecc, int page)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	int ret;
- 
--	host->devtype_data->enable_hwecc(chip, ecc);
--
--	host->devtype_data->send_cmd(host, NAND_CMD_SEQIN, false);
--	mxc_do_addr_cycle(mtd, 0, page);
--
--	memcpy32_toio(host->main_area0, buf, mtd->writesize);
--	copy_spare(mtd, false, chip->oob_poi);
-+	ret = nand_read_page_op(chip, page, 0, host->data_buf, mtd->writesize);
-+	if (ret)
-+		return ret;
- 
--	host->devtype_data->send_page(mtd, NFC_INPUT);
--	host->devtype_data->send_cmd(host, NAND_CMD_PAGEPROG, true);
--	mxc_do_addr_cycle(mtd, 0, page);
-+	copy_spare(mtd, true, chip->oob_poi);
- 
- 	return 0;
- }
- 
- static int mxc_nand_write_page_ecc(struct nand_chip *chip, const uint8_t *buf,
- 				   int oob_required, int page)
--{
--	return mxc_nand_write_page(chip, buf, true, page);
--}
--
--static int mxc_nand_write_page_raw(struct nand_chip *chip, const uint8_t *buf,
--				   int oob_required, int page)
--{
--	return mxc_nand_write_page(chip, buf, false, page);
--}
--
--static int mxc_nand_write_oob(struct nand_chip *chip, int page)
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	int ret;
- 
--	memset(host->data_buf, 0xff, mtd->writesize);
--
--	return mxc_nand_write_page(chip, host->data_buf, false, page);
--}
-+	if (oob_required)
-+		copy_spare(mtd, false, chip->oob_poi);
- 
--static u_char mxc_nand_read_byte(struct nand_chip *nand_chip)
--{
--	struct mxc_nand_host *host = nand_get_controller_data(nand_chip);
--	uint8_t ret;
-+	host->devtype_data->enable_hwecc(chip, true);
- 
--	/* Check for status request */
--	if (host->status_request)
--		return host->devtype_data->get_dev_status(host) & 0xFF;
-+	ret = nand_prog_page_op(chip, page, 0, buf, mtd->writesize);
- 
--	if (nand_chip->options & NAND_BUSWIDTH_16) {
--		/* only take the lower byte of each word */
--		ret = *(uint16_t *)(host->data_buf + host->buf_start);
-+	host->devtype_data->enable_hwecc(chip, false);
- 
--		host->buf_start += 2;
--	} else {
--		ret = *(uint8_t *)(host->data_buf + host->buf_start);
--		host->buf_start++;
--	}
--
--	dev_dbg(host->dev, "%s: ret=0x%hhx (start=%u)\n", __func__, ret, host->buf_start);
- 	return ret;
- }
- 
--/* Write data of length len to buffer buf. The data to be
-- * written on NAND Flash is first copied to RAMbuffer. After the Data Input
-- * Operation by the NFC, the data is written to NAND Flash */
--static void mxc_nand_write_buf(struct nand_chip *nand_chip, const u_char *buf,
--			       int len)
-+static int mxc_nand_write_page_raw(struct nand_chip *chip, const uint8_t *buf,
-+				   int oob_required, int page)
- {
--	struct mtd_info *mtd = nand_to_mtd(nand_chip);
--	struct mxc_nand_host *host = nand_get_controller_data(nand_chip);
--	u16 col = host->buf_start;
--	int n = mtd->oobsize + mtd->writesize - col;
--
--	n = min(n, len);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
- 
--	memcpy(host->data_buf + col, buf, n);
-+	if (oob_required)
-+		copy_spare(mtd, false, chip->oob_poi);
- 
--	host->buf_start += n;
-+	return nand_prog_page_op(chip, page, 0, buf, mtd->writesize);
- }
- 
--/* Read the data buffer from the NAND Flash. To read the data from NAND
-- * Flash first the data output cycle is initiated by the NFC, which copies
-- * the data to RAMbuffer. This data of length len is then copied to buffer buf.
-- */
--static void mxc_nand_read_buf(struct nand_chip *nand_chip, u_char *buf,
--			      int len)
-+static int mxc_nand_write_oob(struct nand_chip *chip, int page)
- {
--	struct mtd_info *mtd = nand_to_mtd(nand_chip);
--	struct mxc_nand_host *host = nand_get_controller_data(nand_chip);
--	u16 col = host->buf_start;
--	int n = mtd->oobsize + mtd->writesize - col;
--
--	n = min(n, len);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
- 
--	memcpy(buf, host->data_buf + col, n);
-+	memset(host->data_buf, 0xff, mtd->writesize);
-+	copy_spare(mtd, false, chip->oob_poi);
- 
--	host->buf_start += n;
-+	return nand_prog_page_op(chip, page, 0, host->data_buf, mtd->writesize);
- }
- 
- /* This function is used by upper layer for select and
-@@ -1360,107 +1216,6 @@ static void preset_v3(struct mtd_info *mtd)
- 	writel(0, NFC_V3_DELAY_LINE);
- }
- 
--/* Used by the upper layer to write command to NAND Flash for
-- * different operations to be carried out on NAND Flash */
--static void mxc_nand_command(struct nand_chip *nand_chip, unsigned command,
--			     int column, int page_addr)
--{
--	struct mtd_info *mtd = nand_to_mtd(nand_chip);
--	struct mxc_nand_host *host = nand_get_controller_data(nand_chip);
--
--	dev_dbg(host->dev, "mxc_nand_command (cmd = 0x%x, col = 0x%x, page = 0x%x)\n",
--	      command, column, page_addr);
--
--	/* Reset command state information */
--	host->status_request = false;
--
--	/* Command pre-processing step */
--	switch (command) {
--	case NAND_CMD_RESET:
--		host->devtype_data->preset(mtd);
--		host->devtype_data->send_cmd(host, command, false);
--		break;
--
--	case NAND_CMD_STATUS:
--		host->buf_start = 0;
--		host->status_request = true;
--
--		host->devtype_data->send_cmd(host, command, true);
--		WARN_ONCE(column != -1 || page_addr != -1,
--			  "Unexpected column/row value (cmd=%u, col=%d, row=%d)\n",
--			  command, column, page_addr);
--		mxc_do_addr_cycle(mtd, column, page_addr);
--		break;
--
--	case NAND_CMD_READID:
--		host->devtype_data->send_cmd(host, command, true);
--		mxc_do_addr_cycle(mtd, column, page_addr);
--		host->devtype_data->send_read_id(host);
--		host->buf_start = 0;
--		break;
--
--	case NAND_CMD_ERASE1:
--	case NAND_CMD_ERASE2:
--		host->devtype_data->send_cmd(host, command, false);
--		WARN_ONCE(column != -1,
--			  "Unexpected column value (cmd=%u, col=%d)\n",
--			  command, column);
--		mxc_do_addr_cycle(mtd, column, page_addr);
--
--		break;
--	case NAND_CMD_PARAM:
--		host->devtype_data->send_cmd(host, command, false);
--		mxc_do_addr_cycle(mtd, column, page_addr);
--		host->devtype_data->send_page(mtd, NFC_OUTPUT);
--		memcpy32_fromio(host->data_buf, host->main_area0, 512);
--		host->buf_start = 0;
--		break;
--	default:
--		WARN_ONCE(1, "Unimplemented command (cmd=%u)\n",
--			  command);
--		break;
--	}
--}
--
--static int mxc_nand_set_features(struct nand_chip *chip, int addr,
--				 u8 *subfeature_param)
--{
--	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	int i;
--
--	host->buf_start = 0;
--
--	for (i = 0; i < ONFI_SUBFEATURE_PARAM_LEN; ++i)
--		chip->legacy.write_byte(chip, subfeature_param[i]);
--
--	memcpy32_toio(host->main_area0, host->data_buf, mtd->writesize);
--	host->devtype_data->send_cmd(host, NAND_CMD_SET_FEATURES, false);
--	mxc_do_addr_cycle(mtd, addr, -1);
--	host->devtype_data->send_page(mtd, NFC_INPUT);
--
--	return 0;
--}
--
--static int mxc_nand_get_features(struct nand_chip *chip, int addr,
--				 u8 *subfeature_param)
--{
--	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	int i;
--
--	host->devtype_data->send_cmd(host, NAND_CMD_GET_FEATURES, false);
--	mxc_do_addr_cycle(mtd, addr, -1);
--	host->devtype_data->send_page(mtd, NFC_OUTPUT);
--	memcpy32_fromio(host->data_buf, host->main_area0, 512);
--	host->buf_start = 0;
--
--	for (i = 0; i < ONFI_SUBFEATURE_PARAM_LEN; ++i)
--		*subfeature_param++ = chip->legacy.read_byte(chip);
--
--	return 0;
--}
--
- /*
-  * The generic flash bbt descriptors overlap with our ecc
-  * hardware, so define some i.MX specific ones.
-@@ -1717,9 +1472,127 @@ static int mxcnd_setup_interface(struct nand_chip *chip, int chipnr,
- 	return host->devtype_data->setup_interface(chip, chipnr, conf);
- }
- 
-+static int mxcnd_do_exec_op(struct nand_chip *chip,
-+			    const struct nand_subop *op)
-+{
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	int i, j, buf_len;
-+	void *buf_read = NULL;
-+	const void *buf_write = NULL;
-+	const struct nand_op_instr *instr;
-+	bool readid = false;
-+	bool statusreq = false;
-+
-+	for (i = 0; i < op->ninstrs; i++) {
-+		instr = &op->instrs[i];
-+
-+		switch (instr->type) {
-+		case NAND_OP_WAITRDY_INSTR:
-+			/* NFC handles R/B internally, nothing to do here */
-+			break;
-+		case NAND_OP_CMD_INSTR:
-+			host->devtype_data->send_cmd(host, instr->ctx.cmd.opcode, true);
-+
-+			if (instr->ctx.cmd.opcode == NAND_CMD_READID)
-+				readid = true;
-+			if (instr->ctx.cmd.opcode == NAND_CMD_STATUS)
-+				statusreq = true;
-+
-+			break;
-+		case NAND_OP_ADDR_INSTR:
-+			for (j = 0; j < instr->ctx.addr.naddrs; j++) {
-+				bool islast = j == instr->ctx.addr.naddrs - 1;
-+				host->devtype_data->send_addr(host, instr->ctx.addr.addrs[j], islast);
-+			}
-+			break;
-+		case NAND_OP_DATA_OUT_INSTR:
-+			buf_write = instr->ctx.data.buf.out;
-+			buf_len = instr->ctx.data.len;
-+
-+			memcpy32_toio(host->main_area0, buf_write, buf_len);
-+
-+			host->devtype_data->send_page(mtd, NFC_INPUT);
-+
-+			break;
-+		case NAND_OP_DATA_IN_INSTR:
-+
-+			buf_read = instr->ctx.data.buf.in;
-+			buf_len = instr->ctx.data.len;
-+
-+			if (readid) {
-+				host->devtype_data->send_read_id(host);
-+				readid = false;
-+
-+				memcpy32_fromio(host->data_buf, host->main_area0, buf_len * 2);
-+
-+				if (chip->options & NAND_BUSWIDTH_16) {
-+					u8 *bufr = buf_read;
-+					u16 *bufw = host->data_buf;
-+					for (j = 0; j < buf_len; j++)
-+						bufr[j] = bufw[j];
-+				} else {
-+					memcpy(buf_read, host->data_buf, buf_len);
-+				}
-+				break;
-+			}
-+
-+			if (statusreq) {
-+				*(u8*)buf_read = host->devtype_data->get_dev_status(host);
-+				statusreq = false;
-+				break;
-+			}
-+
-+			host->devtype_data->read_page(chip);
-+
-+			if (IS_ALIGNED(buf_len, 4)) {
-+				memcpy32_fromio(buf_read, host->main_area0, buf_len);
-+			} else {
-+				memcpy32_fromio(host->data_buf, host->main_area0, mtd->writesize);
-+				memcpy(buf_read, host->data_buf, buf_len);
-+			}
-+
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+#define MAX_DATA_SIZE	(4096 + 512)
-+
-+static const struct nand_op_parser mxcnd_op_parser = NAND_OP_PARSER(
-+	NAND_OP_PARSER_PATTERN(mxcnd_do_exec_op,
-+			       NAND_OP_PARSER_PAT_CMD_ELEM(false),
-+			       NAND_OP_PARSER_PAT_ADDR_ELEM(true, 7),
-+			       NAND_OP_PARSER_PAT_CMD_ELEM(true),
-+			       NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
-+			       NAND_OP_PARSER_PAT_DATA_IN_ELEM(true, MAX_DATA_SIZE)),
-+	NAND_OP_PARSER_PATTERN(mxcnd_do_exec_op,
-+			       NAND_OP_PARSER_PAT_CMD_ELEM(false),
-+			       NAND_OP_PARSER_PAT_ADDR_ELEM(false, 7),
-+			       NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, MAX_DATA_SIZE),
-+			       NAND_OP_PARSER_PAT_CMD_ELEM(false),
-+			       NAND_OP_PARSER_PAT_WAITRDY_ELEM(true)),
-+	NAND_OP_PARSER_PATTERN(mxcnd_do_exec_op,
-+			       NAND_OP_PARSER_PAT_CMD_ELEM(false),
-+			       NAND_OP_PARSER_PAT_ADDR_ELEM(false, 7),
-+			       NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, MAX_DATA_SIZE),
-+			       NAND_OP_PARSER_PAT_CMD_ELEM(true),
-+			       NAND_OP_PARSER_PAT_WAITRDY_ELEM(true)),
-+	);
-+
-+static int mxcnd_exec_op(struct nand_chip *chip,
-+			 const struct nand_operation *op, bool check_only)
-+{
-+	return nand_op_parser_exec_op(chip, &mxcnd_op_parser,
-+				      op, check_only);
-+}
-+
- static const struct nand_controller_ops mxcnd_controller_ops = {
- 	.attach_chip = mxcnd_attach_chip,
- 	.setup_interface = mxcnd_setup_interface,
-+	.exec_op = mxcnd_exec_op,
- };
- 
- static int mxcnd_probe(struct platform_device *pdev)
-@@ -1752,13 +1625,6 @@ static int mxcnd_probe(struct platform_device *pdev)
- 
- 	nand_set_controller_data(this, host);
- 	nand_set_flash_node(this, pdev->dev.of_node);
--	this->legacy.dev_ready = mxc_nand_dev_ready;
--	this->legacy.cmdfunc = mxc_nand_command;
--	this->legacy.read_byte = mxc_nand_read_byte;
--	this->legacy.write_buf = mxc_nand_write_buf;
--	this->legacy.read_buf = mxc_nand_read_buf;
--	this->legacy.set_features = mxc_nand_set_features;
--	this->legacy.get_features = mxc_nand_get_features;
- 
- 	host->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(host->clk))
+Changes in v2:
+- Enable hw ecc only when needed and leave it disabled otherwise
+- Use untangled data/oob layout for software BCH ECC
+- Link to v1: https://lore.kernel.org/r/20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de
 
+---
+Sascha Hauer (3):
+      mtd: nand: mxc_nand: separate page read from ecc calc
+      mtd: nand: mxc_nand: implement exec_op
+      mtd: nand: mxc_nand: support software ECC
+
+ drivers/mtd/nand/raw/mxc_nand.c | 667 +++++++++++++++++++---------------------
+ 1 file changed, 314 insertions(+), 353 deletions(-)
+---
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+change-id: 20240417-mtd-nand-mxc-nand-exec-op-38b3b80c4377
+
+Best regards,
 -- 
-2.39.2
+Sascha Hauer <s.hauer@pengutronix.de>
 
