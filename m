@@ -1,90 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58263180A77
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E52181BA9
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715722926; cv=none; b=reXVKDvrUZ+783D9Qb5cpwVROqyFg9XpDo+hkGnTw9ZUvJuJepbXayZdiOpQbgHjO3ZqRDy092k+I1ycDfYWOww3XT59lLhAOmEDu5lPRynj21Mh09zg2y1HXNVcg2rNsAnBIVxlmkbXHgU+TvWWnUp+QPNcWKjx9YhImkp7DMk=
+	t=1715723087; cv=none; b=jaHMVMw5jaFGWLYj4UQagT8fCALkrLPF8JBuquLX2NtOpRjkbKRJkbf5qAcxkHl9FhHPtcRC6s4GBFszLqjWCr3QXd87HSCBlV84mH91rYy1NTFBFPoIY/tv3y1/SRpFMPP8XlNlgFWn70aYH0iP7fCjD5GSaOdppUtVbl8S/RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715722926; c=relaxed/simple;
-	bh=x41lt0y2/QQyRA72DsKY8/rDqXNocvlTMgmU6V5lH0I=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=u4xzqqyrYkbD3wJxXbdb+hidXZ/eKB/3pxLOxkvNEfheXngkODE1HPnnQE7cRA9+/6aZ8YDb/XVUmjMdx/lcdl5K++VL0Yj9JAHaSkgegLc/30hVWZ331RwIdK3jLZRwSZ6H0yGcEegBsrMtxoSdaDBawbe0WXS9H8L57YjNwzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=P5UIieNZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715723087; c=relaxed/simple;
+	bh=9mURX/IsecpeoCCUHl6C1Q1T9qB5xqW5iEwrP6X+3CE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=npY58CW6qFk05KeJlrc+hyXaEv6VLphBZo1qXzVuPU6UIWr2MjJQpB4+Y0nRII+kun7UY3y3sCOlBj8ZC1ToGWN0SmGWafld2X5A7FuDOD7E0WrcSsxTxBsanuC3cd3uJm1WutfzZZmzWO8mmK3CsbAv0ZhMm7dsEzL2847cwKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoT0Nr9W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="P5UIieNZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF82EC2BD10;
-	Tue, 14 May 2024 21:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1715722926;
-	bh=x41lt0y2/QQyRA72DsKY8/rDqXNocvlTMgmU6V5lH0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P5UIieNZ0IdpOVfPq5FxAu27iLPTufnjnFL1dLaAqkJ5lR/DYq1p6bfBWt8BHIQE9
-	 sSaZEkF6zWQ5F85/BD1R6J6tYPT0fmeTg5oG/UoG/ptjPj79piaR69ajMN1ZkF/s2Z
-	 xsWKJgYelqGa2xrkO8vGfVg0wQgYl8JqT0RpvEhI=
-Date: Tue, 14 May 2024 14:42:04 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yang Shi <shy828301@gmail.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>, nao.horiguchi@gmail.com,
- xuyu@linux.alibaba.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -rc7] mm/huge_memory: mark huge_zero_page reserved
-Message-Id: <20240514144204.88790f125b0275ef68acf6de@linux-foundation.org>
-In-Reply-To: <CAHbLzkq+NBjwjSvU1fQe56nLf5mmGp65TH8hDpb66EFLENctKA@mail.gmail.com>
-References: <20240511035435.1477004-1-linmiaohe@huawei.com>
-	<20240514141439.55fba39c81c1af55c9a100e1@linux-foundation.org>
-	<CAHbLzkq+NBjwjSvU1fQe56nLf5mmGp65TH8hDpb66EFLENctKA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoT0Nr9W"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 777BFC2BD10;
+	Tue, 14 May 2024 21:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715723087;
+	bh=9mURX/IsecpeoCCUHl6C1Q1T9qB5xqW5iEwrP6X+3CE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=OoT0Nr9Wujjv76JuwUlA8dOAjxlyCPY4rH3wbiXjs+Q2nIYWbSNytcP3/TIEcReD/
+	 pIWEu7aR8YzJI5ONY0oYotRBuv2qPmyRXJ87PlhAyfFvD5U3DFGCJIbGKl6yBewCVN
+	 eUaUEiUbRfKjfOIhGnBmYG4tHFT67ApUpQPSr1pzN7UFNChorEEFLlKSLY2vjidToj
+	 Oh3C1Xp3L8NBNk/j8gHnQWdsvgExveafM6CK7Nx9bf+CPyhUcxjLbqMIgY41+QGn+w
+	 Q2cN0lLL6y/QfJqV3HNC7qoFkFLD3qu8MN0Vx+bKGmKj3oI436ovDnecyIen5fNs2S
+	 0rizsYB5KaBug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 69508C433A2;
+	Tue, 14 May 2024 21:44:47 +0000 (UTC)
+Subject: Re: [GIT PULL] regmap updates for v6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <be1cf843f7131a702c3eebab6abaa82d.broonie@kernel.org>
+References: <be1cf843f7131a702c3eebab6abaa82d.broonie@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <be1cf843f7131a702c3eebab6abaa82d.broonie@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.10
+X-PR-Tracked-Commit-Id: 9b1fe0510494c989ab6a131ce8b97cdd02a1c869
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fffe418b2f97ebf1e65267852169a00c682152a5
+Message-Id: <171572308742.14334.6928944796168861592.pr-tracker-bot@kernel.org>
+Date: Tue, 14 May 2024 21:44:47 +0000
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On Tue, 14 May 2024 15:28:12 -0600 Yang Shi <shy828301@gmail.com> wrote:
+The pull request you sent on Mon, 13 May 2024 10:38:26 +0100:
 
-> On Tue, May 14, 2024 at 3:14 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Sat, 11 May 2024 11:54:35 +0800 Miaohe Lin <linmiaohe@huawei.com> wrote:
-> >
-> > > When I did memory failure tests recently, below panic occurs:
-> > >
-> > >  kernel BUG at include/linux/mm.h:1135!
-> > >  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> > >  CPU: 9 PID: 137 Comm: kswapd1 Not tainted 6.9.0-rc4-00491-gd5ce28f156fe-dirty #14
-> > >
-> > > ...
-> > >
-> > > --- a/mm/huge_memory.c
-> > > +++ b/mm/huge_memory.c
-> > > @@ -208,6 +208,7 @@ static bool get_huge_zero_page(void)
-> > >               __free_pages(zero_page, compound_order(zero_page));
-> > >               goto retry;
-> > >       }
-> > > +     __SetPageReserved(zero_page);
-> > >       WRITE_ONCE(huge_zero_pfn, page_to_pfn(zero_page));
-> > >
-> > >       /* We take additional reference here. It will be put back by shrinker */
-> > > @@ -260,6 +261,7 @@ static unsigned long shrink_huge_zero_page_scan(struct shrinker *shrink,
-> > >               struct page *zero_page = xchg(&huge_zero_page, NULL);
-> > >               BUG_ON(zero_page == NULL);
-> > >               WRITE_ONCE(huge_zero_pfn, ~0UL);
-> > > +             __ClearPageReserved(zero_page);
-> > >               __free_pages(zero_page, compound_order(zero_page));
-> > >               return HPAGE_PMD_NR;
-> > >       }
-> >
-> > This causes a bit of a mess when staged ahead of mm-stable.  So to
-> > avoid disruption I staged it behind mm-stable.  This means that when
-> > the -stable maintainers try to merge it, they will ask for a fixed up
-> > version for older kernels so you can please just send them this
-> > version.
-> 
-> Can you please drop this from mm-unstable since both I and David
-> nack'ed a similar patch in another thread.
-> https://lore.kernel.org/linux-mm/20240511032801.1295023-1-linmiaohe@huawei.com/
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.10
 
-That appears to link to the incorrect email thread?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fffe418b2f97ebf1e65267852169a00c682152a5
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
