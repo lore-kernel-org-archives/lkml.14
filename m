@@ -1,102 +1,87 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DCF17F378
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 22:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A11A181D1F
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 22:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715726925; cv=none; b=O0t3JAP+KgKhAhYvwKJ8Q7OBNewxllr9yn3a3Q9IG81HiJP3Xu/Murtd+iPlD1hDnHcACnRSiuMD758shpDlKOrxurslGgH7gvHBNuIs5WS50KhTp5A5BWuS7NhTIHCfejZyNWJ7QhTiWU6SeMmxDT3yTIt6xZPE96hz3fOEoY4=
+	t=1715726935; cv=none; b=hStN4n9m0U8s6CPEy1bgZQFJaVmKATyhLwYwykJ8n7fiw5KU+MM5hoXC2uKhFKgCCLyKy4T2dvqOAxSROzY9TpQ98HHN831/KHViazMbR7/hFpTErg+e4Ddy9BWzuK69km9t7ypxA3MI0VMbq9sbrRIyRb+8OI7vKTqhFedpsGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715726925; c=relaxed/simple;
-	bh=J7vPh0ZbPIZnc4W98FXR0VGHZuZYhbZC2ygC3LT6oBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TSFT8GmC1ZsJO+4l9C22aDKanC+8A1DT31pk90wYEWEEMQxFnZPb25hmLIxykhIPhDydg1it+eeLhaKzKxAb56bQKARKLLR+UgpDm+R5zoTJuQERxtPzhcOyA0bARNaWt1JP5nM/zuSFBoqPllisOqQposFbKznHQ1GnEFD/gPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KFjZjbH9; arc=none smtp.client-ip=209.85.215.169
+	s=arc-20240116; t=1715726935; c=relaxed/simple;
+	bh=0nhAafwxI5HWL8JnwaWyPULuU+OENNhkR2+xS32Iz2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e9E/FwyI/LVeoWTHgIW6NjSS15+SR8z9zT5q1QUzN8ztaUEX47lxpAap3Kd+5fo0IWv08CoeUB/dFtV2OGk1n8pmnj/pkm/ZxP/GF648UoyrMA0sQ+pk6/jQAgwnxJGOH9/rJ4d5LPEf3spvwPlGTD1R8ldwCdt7kK6aWU1WNMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EU402y/J; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KFjZjbH9"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-61eba9f9c5dso4646225a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 15:48:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EU402y/J"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f4472561f1so5620839b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 15:48:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715726922; x=1716331722; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7dEnatMats0sY9eR6iWDX8uys8lNwT71usJDglUkjFU=;
-        b=KFjZjbH9kgedpzd8DWp/husbn61V/lNXNlDfKResCDliU+375dKCXPSW7C7pVTdZDO
-         rAkDqVZBrtUl57x31u6v0OqIwuN1ZQqlRsL9yzkGwSvYTqlWHYb1LV1k9kqSXYRtgiIA
-         RaIbX3wvbub0PumdCh1Qu/OmgEMBc/w++qe20=
+        d=chromium.org; s=google; t=1715726933; x=1716331733; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GUJPFVJdz44IFmC7tap3c4+RPSoDFQyAX7g5ibPkXFE=;
+        b=EU402y/JKIyMJuAB2SE8tcVmdT2F5hPBKtJyOcXjOKjuC0bi1A+jvE3BTYF8SihD33
+         bOUs8cLbHJSVey7GGLQdKIevzMcEEmYsXn4AHOZiahg7p5gbWoEcA54SWJCXn2s/4NPK
+         0VwFCmJ2fNMkhgpbb9l81RK2iAZ2l7dgAPs0Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715726922; x=1716331722;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7dEnatMats0sY9eR6iWDX8uys8lNwT71usJDglUkjFU=;
-        b=hn5nacgcqu2rpoL69wbgOHDR3KVHZ6E8VH2pC7cuDYE3hWngNH0fGsBQCS+ivPyKER
-         r88/GR8uIKHABuEMuSOj3lI9CuTIeiuHoEX5GMwh0qGC7SrP1i9/65+6CsAKP9ap1tFC
-         WmiTJ5W0ws2b2fqmO2HOdnMkfLZvGvE4zkWvkZKtehDVCPx2QFe2kma2VUM9S6ryDrWL
-         r30sgj+W75uTOiMJsW9hkzRcIemI9fUEbtue6CsIz0X0avu6jLyyOi+8+XmGVcLA05hv
-         PN4fy9aUvuiKJ5MltApgSsnmBrvKiMvju/5NrOnHxvcsog9qGOZfLCBVim5hMbdEEpx/
-         l9uQ==
-X-Gm-Message-State: AOJu0YzYE7obz3H6gqua7WpxZ7rSxHPPuRKZCtAJOyK5dV7ttKJIxmNI
-	Vj3wJbvDa9YOoRqPoOd5ddd4CLXfg7w0GFGgN1MkFQIVOUpmETMuPEGRpg3BvA==
-X-Google-Smtp-Source: AGHT+IFNYthq6sGRj5beJQGDuOSDHf6eMfI+iPOay6PKYPk2IVvOV/nkNwPHeh6QcabowUJdNEzJDA==
-X-Received: by 2002:a17:90a:aa12:b0:2b1:6686:dd7b with SMTP id 98e67ed59e1d1-2b6ccb7e416mr12324060a91.33.1715726922083;
-        Tue, 14 May 2024 15:48:42 -0700 (PDT)
-Received: from localhost (4.198.125.34.bc.googleusercontent.com. [34.125.198.4])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2b671782d89sm10230359a91.55.2024.05.14.15.48.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 15:48:41 -0700 (PDT)
-From: Stephen Boyd <swboyd@chromium.org>
-To: Kees Cook <keescook@chromium.org>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>
-Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-security-module@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] loadpin: Prevent SECURITY_LOADPIN_ENFORCE=y without module decompression
-Date: Tue, 14 May 2024 15:48:38 -0700
-Message-ID: <20240514224839.2526112-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+        d=1e100.net; s=20230601; t=1715726933; x=1716331733;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GUJPFVJdz44IFmC7tap3c4+RPSoDFQyAX7g5ibPkXFE=;
+        b=daM0I3h/2lOygqDUlTmNzut2qSuvGWeKUA7cawZZc0tCPFe99YhIhc1wIi+8fyvQyb
+         SyJq+fZssQEOuY15MAPDoOa1HCV/aKqLdn6nqkddnSN7FaZWnE2BwhRRkrDBrHG+mFGo
+         pXypRj6bF0EPOxF9Hnf6nbhlW9A6dyWCQH/jMmQThF+Uc+CKHMvUThXN0MQ/wgaiOEKz
+         /erjRFS25vhMymJk9AzGfyw88dL7Xmm3o0I1mPAIEB3LSNqO3IiWcVuU9vCleEB992lH
+         R4UFfhgdjazal/JCzJlx3B/HMsLLieewPeIM1fU01PGX2HuK7p3Dls0GB00tYu/qOFLx
+         Ugzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVOAGmk9w+OaNr8Y/XN6ayA0m52HPB2G22O91MLCZuvCoPtDTLQRBOjBwqb3j6nbBoTV6nthCB/jbfEliLDAHF3YDAEJRojf01Or+w
+X-Gm-Message-State: AOJu0Yw6am1aa42KuI9ehG16oRBSDac55iu8ZCFxBSLLwZnoN8oJaaJL
+	Tn0gXVg6Q9sL7K0UmNv2XC8WTOuffIUlwkrTzzkTVuAcVuCVNZYqWo5aY0WsCA==
+X-Google-Smtp-Source: AGHT+IGU9RLXGa4w3EJiT/EMc0/Mkh53TeXUez1pHBLj1KnUfvY+4gA+rMJz4t5enAU3FThgSiFSvw==
+X-Received: by 2002:a05:6a20:244b:b0:1af:dd56:76f0 with SMTP id adf61e73a8af0-1afde0b7407mr22397136637.22.1715726932891;
+        Tue, 14 May 2024 15:48:52 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340a6327besm8838766a12.6.2024.05.14.15.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 15:48:52 -0700 (PDT)
+Date: Tue, 14 May 2024 15:48:51 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Uros Bizjak <ubizjak@gmail.com>,
+	linux-kernel@vger.kernel.org, kernel-team@android.com,
+	stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] locking/atomic: fix trivial typo in comment
+Message-ID: <202405141548.E76E681@keescook>
+References: <20240514224625.3280818-1-cmllamas@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514224625.3280818-1-cmllamas@google.com>
 
-If modules are built compressed, and LoadPin is enforcing by default, we
-must have in-kernel module decompression enabled (MODULE_DECOMPRESS).
-Modules will fail to load without decompression built into the kernel
-because they'll be blocked by LoadPin. Add a depends on clause to
-prevent this combination.
+On Tue, May 14, 2024 at 10:46:03PM +0000, Carlos Llamas wrote:
+> For atomic_sub_and_test() the @i parameter is the value to subtract, not
+> add. Fix the kerneldoc comment accordingly.
+> 
+> Fixes: ad8110706f38 ("locking/atomic: scripts: generate kerneldoc comments")
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Carlos Llamas <cmllamas@google.com>
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- security/loadpin/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks!
 
-diff --git a/security/loadpin/Kconfig b/security/loadpin/Kconfig
-index 6724eaba3d36..8c22171088a7 100644
---- a/security/loadpin/Kconfig
-+++ b/security/loadpin/Kconfig
-@@ -14,6 +14,9 @@ config SECURITY_LOADPIN
- config SECURITY_LOADPIN_ENFORCE
- 	bool "Enforce LoadPin at boot"
- 	depends on SECURITY_LOADPIN
-+	# Module compression breaks LoadPin unless modules are decompressed in
-+	# the kernel.
-+	depends on MODULE_COMPRESS_NONE || MODULE_DECOMPRESS
- 	help
- 	  If selected, LoadPin will enforce pinning at boot. If not
- 	  selected, it can be enabled at boot with the kernel parameter
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-base-commit: 4cece764965020c22cff7665b18a012006359095
 -- 
-https://chromeos.dev
-
+Kees Cook
