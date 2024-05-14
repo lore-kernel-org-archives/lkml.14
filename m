@@ -1,52 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C87D531;
-	Tue, 14 May 2024 10:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F9C134CFE
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715682815; cv=none; b=dnHUDkhko0LY6jCCLRyIHdEOtfLlEgCCVRPuP1wph09a/FA3M2OD7nAacYu+IWJERxFrhyNRWB+HflewX9/i224Cdy99fWYJza+h90gAXZSCEfVqP19NYnWcD+vJB9oF0q6/d7P8FpXKOxRiOQcrcnFxWFKFdkdE4frtHFbi7JU=
+	t=1715682852; cv=none; b=jBa389sZLpMWa2JmwepQ4DrGrUkG6EecIf0igljWLQCzAQmRHj+zqCmJJ/diFJp92T6q7YrnMW5AQ9/bD/HSJwx3vbDM35/Oty+6f5iM/oHZjI6OXOhnrRlBv628p2zIhpgXJ9HgEDdKBQvOksbBh9KbbC81cIqymzZ4yqZuvcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715682815; c=relaxed/simple;
-	bh=NCYPld70qYshmpCzGEhpslZFD4dlvSlpfznYMRZF0LA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WN5o0NB/HXk54ZxGbMuomBsdtyjynJT+F/OgGmlLQ+zv8nWW7A30n/4PPJHnh8Jctuijc9niXwg4lOi3US/jkJiifDYS88VlDCRvY2fP4remNufO0j74zGg7o2cGrOZdmjKG87qJBiBvy1RlYONnYRD17pXv+Zav575fc7xMz6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JkPugluX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JkPugluX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01045C2BD10;
-	Tue, 14 May 2024 10:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715682814;
-	bh=NCYPld70qYshmpCzGEhpslZFD4dlvSlpfznYMRZF0LA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JkPugluXmDu6jINKTNGmZa2uLAALdZQAZwWg7Y55dEYGsQBYKVgK92c6SYi6aObpV
-	 8/7fqN8JddDKK4XpeAseWbnHOUKF8MlYy3WKFT1i6BxjvklOXUGSzkZu7+hr6J4YI4
-	 dfa7GR0oKSfgPQ+pBA2NrdYUEk9gPUgCjk17IxqE=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Mark Rutland <mark.rutland@arm.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.8 118/336] selftests/ftrace: Fix event filter target_func selection
-Date: Tue, 14 May 2024 12:15:22 +0200
-Message-ID: <20240514101043.058135845@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240514101038.595152603@linuxfoundation.org>
-References: <20240514101038.595152603@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	s=arc-20240116; t=1715682852; c=relaxed/simple;
+	bh=aRk6NvPZjBiEJiRpLJXdgQJsFiOoBHTdq0kSIFpu1og=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D/XwNpYqAgR0R23Gm3zQxOvJ1eZ5/r/onzUvUr4buhw3mi4B1GSM+hZwLBCj+8CiqVvFv07avAahiybqFOZXMLCynPcd/JBcaFcqJXDcrqU3AOJeBlAvbWTIsn5pe4X549oInQni6Sraq4eUR9wRbu8EGhhG0yY9jXY6r38Lys0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1s6pTv-0006iz-Tn; Tue, 14 May 2024 12:34:03 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1s6pTv-001KzM-C5; Tue, 14 May 2024 12:34:03 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1s6pTv-003QYu-0p;
+	Tue, 14 May 2024 12:34:03 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] mtd: rawnand: make rawnand_check_data_only_read_support() work
+Date: Tue, 14 May 2024 12:33:55 +0200
+Message-Id: <20240514103355.817056-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,98 +45,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-6.8-stable review patch.  If anyone has any objections, please let me know.
+rawnand_check_data_only_read_support() calls nand_read_data_op() with a
+NULL pointer as buffer which will immediately return an error. Allow a
+NULL buffer pointer when check_only is requested. This should be safe to
+do as nand_read_data_op() has no business in touching the buffer in
+check_only mode.
 
-------------------
-
-From: Mark Rutland <mark.rutland@arm.com>
-
-[ Upstream commit 8ecab2e64572f1aecdfc5a8feae748abda6e3347 ]
-
-The event filter function test has been failing in our internal test
-farm:
-
-| # not ok 33 event filter function - test event filtering on functions
-
-Running the test in verbose mode indicates that this is because the test
-erroneously determines that kmem_cache_free() is the most common caller
-of kmem_cache_free():
-
-  # # + cut -d: -f3 trace
-  # # + sed s/call_site=([^+]*)+0x.*/1/
-  # # + sort
-  # # + uniq -c
-  # # + sort
-  # # + tail -n 1
-  # # + sed s/^[ 0-9]*//
-  # # + target_func=kmem_cache_free
-
-... and as kmem_cache_free() doesn't call itself, setting this as the
-filter function for kmem_cache_free() results in no hits, and
-consequently the test fails:
-
-  # # + grep kmem_cache_free trace
-  # # + grep kmem_cache_free
-  # # + wc -l
-  # # + hitcnt=0
-  # # + grep kmem_cache_free trace
-  # # + grep -v kmem_cache_free
-  # # + wc -l
-  # # + misscnt=0
-  # # + [ 0 -eq 0 ]
-  # # + exit_fail
-
-This seems to be because the system in question has tasks with ':' in
-their name (which a number of kernel worker threads have). These show up
-in the trace, e.g.
-
-  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
-
-... and so when we try to extact the call_site with:
-
-  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
-
-... the 'cut' command will extrace the column containing
-'kmem_cache_free' rather than the column containing 'call_site=...', and
-the 'sed' command will leave this unchanged. Consequently, the test will
-decide to use 'kmem_cache_free' as the filter function, resulting in the
-failure seen above.
-
-Fix this by matching the 'call_site=<func>' part specifically to extract
-the function name.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9f820fc0651c ("mtd: rawnand: Check the data only read pattern only once")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
+ drivers/mtd/nand/raw/nand_base.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 2de7c61d1ae30..3f74c09c56b62 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -24,7 +24,7 @@ echo 0 > events/enable
- echo "Get the most frequently calling function"
- sample_events
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+index d7dbbd469b892..a5e7d8deafbbe 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -2173,7 +2173,7 @@ EXPORT_SYMBOL_GPL(nand_reset_op);
+ int nand_read_data_op(struct nand_chip *chip, void *buf, unsigned int len,
+ 		      bool force_8bit, bool check_only)
+ {
+-	if (!len || !buf)
++	if (!len || (!buf && !check_only))
+ 		return -EINVAL;
  
--target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
-+target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
- if [ -z "$target_func" ]; then
-     exit_fail
- fi
+ 	if (nand_has_exec_op(chip)) {
 -- 
-2.43.0
-
-
+2.39.2
 
