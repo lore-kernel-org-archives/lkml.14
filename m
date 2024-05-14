@@ -1,57 +1,57 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40B51802D9
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B91181300
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715710620; cv=none; b=DaKPsLqm7qDbFB2jYC6hxCyzqRgMpq568lNVZh935EvisSHOmzaepeM88Pp0WJmKJlFpHdn+2Mk7VXNmezfxh0bw4N72foV9qYWymxDygkXOaMuW8mgV0S5sSLLBvDk1pVzIxjHr1YKf0R5UZR3AIyrejqk9Ngwg9HNkop+fru4=
+	t=1715710624; cv=none; b=jsysUxjOrxSn5LYAn3t2lW11eCf8VGJJFGmm547lKPovGKDQMOBlRCyeCLlfr8tUwkXTchu2IHMB/dpbnedO+hrzNeaMoRVeVPSC8Yqhk5/B5+Ewc9Ce5+UTKwpXsXX45KTq3qGC9KXJBNx5Ydn9FA/sj9hIhWBzxV7GBP8Uo50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715710620; c=relaxed/simple;
-	bh=xqKGWAgtGA4siy7e8KSIoLx0WpkJeCp7RU7dVQP5jUU=;
+	s=arc-20240116; t=1715710624; c=relaxed/simple;
+	bh=HoFwp2NvrZ/kgOo1bSjj3elxDpYa/qQz+6YWpjmIG1I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rShtgxRDdjp1irfHsVlczFOHMQz9c8vriDwlFTtd6oyUadxSmyaYyApMyRnqTsXUVZ257SHopenWyZvxgaVeIVffUsLhKsSE2MxqaK+iim56ZsSUkSpkTIf/XRqeydNGDpV1m9KV181YpNdAOvSSAYeUxHg5YcfCm7kQUCxuXe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pGsqD6Ho; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version:Content-Type; b=gg3AtD15JdXEnkQrrDdI1oexqp90nqf7NGdYVsrNkEqy6CbR46YZlzWf1HWRFUHDrTZdyLHQ3LjXEVzAiyshvAdYR1m3F/vjhcr1i69fGKXo+04/4kSe+fRLg/C3KZYF6SytZoTS6H47q1cDQ2Fe5CU1inHOb1hat8O+FXlw5lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ucYWv+1j; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pGsqD6Ho"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ee0132a6f3so44507725ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 11:16:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ucYWv+1j"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f0537e39b3so31920395ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 11:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715710618; x=1716315418; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715710622; x=1716315422; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k7DbOYQw6wGAC7oVGy2aNrGXdTZGg5i1YOO3NLqee2M=;
-        b=pGsqD6HoYmq5+eU8NQFz4ndfy6WqpG8hpVjw5Rk4p4KXCGW6in3zYqpbELatnNcDmv
-         4UHZcxJUoaoAPTEHpBKdWoz0Z9gX1cxq1Bkncp6LYFtf4uuUb/epa+mmJSl7HqIOyo90
-         H3loSxKdD2x8bRO1C3FBImbxLA0E/MJVFFHOwjnS1zoMdq4x7qST8GKcVqGyfYW8uWYV
-         9YBJ00GVN0wmoGibgBdttVw/P8S2IxCTI4YFrFHtx+oh3/IyhOaOjDdn1zvGbsD0I7n2
-         eJXtc9wUZSqP+bJTsX1W5F4bQW1sNId6LMg+vfg4i9VqDMgoNNFOJ0YBX7wDc+9h85+V
-         XRFg==
+        bh=sgmIcC/shr4A/zWz9MZMwn+W/sUs7tQkcY5o3763qNA=;
+        b=ucYWv+1jmxDPjywQ24MU5kxdUAHEq5A2D3GFLpXA6iCgjavaCvlOZadnSVHVR+ZlId
+         xR4iYK2X2hNmY6mFTkVTy5D8GwVHJWWTaA3RkKV3EkL28+vCXk9gg/sq8peduUWGBK6S
+         eafTmQ+npq8p7K4IKK0O2X7ddduOm4j3x2GDGoeZyVbLXRGHTs41DydhH0Owskc3vT1n
+         3VvikOSou/9of1rvh7kSXAtOT3X62LQ/eMZCBdj/Sxj8gzV9OR5+9BhqlR0DLmdaklJd
+         /drYocxRo88FjJFW0JSSeRwlGY9AP4wZM8ZXm/OxW2bzItIZBqzq6BR7urBO4MmorzJA
+         tivw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715710618; x=1716315418;
+        d=1e100.net; s=20230601; t=1715710622; x=1716315422;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k7DbOYQw6wGAC7oVGy2aNrGXdTZGg5i1YOO3NLqee2M=;
-        b=E3SbohPvp1Fgbw9pUHL0KDiEC4nx3X5/pcaC05++JHafgV36wTK4tsqtLfXJJBKrUg
-         gvLjiFoTbgqrnRR5Kx0d8yxNAPP9//qMSg7LF7oAfWB42O1SQV/qPhOBGYgre1sOIOr3
-         rWGEhNjQ09XZYydj2g8VgU5YS0QAOs9JVTrw8tJXu41zTJ3KS4R8jtpMlJ8ELK+x4Sqj
-         zxXsWxrKdsLwg9kNuQeQIqPC7ZEG/C7wbFgnIJnvjzuGF7oWi3r+uRNn3DSkYUD196z0
-         fwaUVsHvLKDLjVj/Iq7IMtEqkjX4yOGeHmUSoFpx5QJwVkpLcU71vW+SuCebI5YRLaAH
-         8j8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUP+WRk2gMhOs8MRLwokyCOeJ2fyV0oJ235Nd2xT1PVcTCoGLzbbRX3IIo/RDQaRBGKKZWVmMD8b/xPch2GQAJ04lQbIstLoqJsdTYF
-X-Gm-Message-State: AOJu0YxjsKlvN4KNugO0rd4DEsEl64D4aGPng6vG46pre02BUqbp8rBV
-	E554DaAzVzRo+KlOEsEFEBoXzlSV576pcXiflRUvEZayoyfESXTbO3M3elWTNQ0=
-X-Google-Smtp-Source: AGHT+IEKbsYXjzp5OQ52MR36EA9dJv4GSmr7vFxtaiiaJI3WpEWNM0nuvIFdO16ExPRHIttZk7AT8w==
-X-Received: by 2002:a17:902:b58e:b0:1e0:b87f:beb4 with SMTP id d9443c01a7336-1ef43d2e972mr126375195ad.30.1715710618003;
-        Tue, 14 May 2024 11:16:58 -0700 (PDT)
+        bh=sgmIcC/shr4A/zWz9MZMwn+W/sUs7tQkcY5o3763qNA=;
+        b=gkeRd2RL7ryJ8Ey5F7adSbwHXyPAoxrTX8SzJdkIrwjDqGW+ppKPSu300psaXKABgG
+         kHe38+U4OJIJkk3gEuoOjze9CPfPK5Fd9fF8XbAZ81swwbPh1PsFF8gw6/CNduMyYsHY
+         qHN9IPLx8TxSwRK3jOkNPJnbCHIXbaVpVOtqeoUkkYFkoXeMBLsGgH16B9e9czC1c2Gc
+         HrMH+dUlWBPxEnftHcRldDiRMABGliaGsK8azH1UAMDnN8HH6FvslzdOqBTD7JM1iFG7
+         D625R8x3XM9386l/jQs1oAobmxcGv8b+KGWyXtuBbeycTR66oPtRxfzDqINBRzY1l6P5
+         Y6jg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2SHNgj68iUAHITr6ABf8ArlDIG9ASBSEGF/rfut817k77otUEeLdKgPsrZYTWpK4d/FZdFzjZyampzEjVEFR3XKHlY9vsaVLT7Waq
+X-Gm-Message-State: AOJu0Yx5YxwLh8qsDuwp8f5UUaUE2zh8uALJRlcq35RmMoK6gJ73ebeB
+	4D6kg93ANnwjSdT3I5sBBQxmoSEk53/eaDXrYa9jECQVF6nmhs9yHC7msz51b7o=
+X-Google-Smtp-Source: AGHT+IFhpX4t56j2JQla2JooYLaxoSHy2mymfYJNtUfgW6LVrY1mnVzmPiLf9SE1+Xpp4mkUinMPlg==
+X-Received: by 2002:a17:902:fc4f:b0:1e8:c962:4f6e with SMTP id d9443c01a7336-1ef43d27f6fmr150703805ad.20.1715710622250;
+        Tue, 14 May 2024 11:17:02 -0700 (PDT)
 Received: from tjeznach.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad6386sm100993625ad.80.2024.05.14.11.16.56
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad6386sm100993625ad.80.2024.05.14.11.17.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 11:16:57 -0700 (PDT)
+        Tue, 14 May 2024 11:17:01 -0700 (PDT)
 From: Tomasz Jeznach <tjeznach@rivosinc.com>
 To: Joerg Roedel <joro@8bytes.org>,
 	Will Deacon <will@kernel.org>,
@@ -72,11 +72,10 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-kernel@vger.kernel.org,
 	linux@rivosinc.com,
 	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 1/7] dt-bindings: iommu: riscv: Add bindings for RISC-V IOMMU
-Date: Tue, 14 May 2024 11:16:13 -0700
-Message-Id: <167a11085179f0afe5c2694c4ce070c0a615df6b.1715708679.git.tjeznach@rivosinc.com>
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v5 3/7] iommu/riscv: Add RISC-V IOMMU PCIe device driver
+Date: Tue, 14 May 2024 11:16:15 -0700
+Message-Id: <7f6b1a277f9dd793704ddf1fa337ca3e78711942.1715708679.git.tjeznach@rivosinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1715708679.git.tjeznach@rivosinc.com>
 References: <cover.1715708679.git.tjeznach@rivosinc.com>
@@ -86,192 +85,179 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF8
 Content-Transfer-Encoding: 8bit
 
-Add bindings for the RISC-V IOMMU device drivers.
+Introduce device driver for PCIe implementation
+of RISC-V IOMMU architected hardware.
 
-Co-developed-by: Anup Patel <apatel@ventanamicro.com>
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+IOMMU hardware and system support for MSI or MSI-X is
+required by this implementation.
+
+Vendor and device identifiers used in this patch
+matches QEMU implementation of the RISC-V IOMMU PCIe
+device, from Rivos VID (0x1efd) range allocated by the PCI-SIG.
+
+MAINTAINERS | added iommu-pci.c already covered by matching pattern.
+
+Link: https://lore.kernel.org/qemu-devel/20240307160319.675044-1-dbarboza@ventanamicro.com/
+Co-developed-by: Nick Kossifidis <mick@ics.forth.gr>
+Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 Signed-off-by: Tomasz Jeznach <tjeznach@rivosinc.com>
 ---
- .../bindings/iommu/riscv,iommu.yaml           | 147 ++++++++++++++++++
- MAINTAINERS                                   |   7 +
- 2 files changed, 154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+ drivers/iommu/riscv/Kconfig     |   5 ++
+ drivers/iommu/riscv/Makefile    |   1 +
+ drivers/iommu/riscv/iommu-pci.c | 119 ++++++++++++++++++++++++++++++++
+ 3 files changed, 125 insertions(+)
+ create mode 100644 drivers/iommu/riscv/iommu-pci.c
 
-diff --git a/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-new file mode 100644
-index 000000000000..5d015eeb06d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
-@@ -0,0 +1,147 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iommu/riscv,iommu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RISC-V IOMMU Architecture Implementation
-+
-+maintainers:
-+  - Tomasz Jeznach <tjeznach@rivosinc.com>
-+
-+description: |
-+  The RISC-V IOMMU provides memory address translation and isolation for
-+  input and output devices, supporting per-device translation context,
-+  shared process address spaces including the ATS and PRI components of
-+  the PCIe specification, two stage address translation and MSI remapping.
-+  It supports identical translation table format to the RISC-V address
-+  translation tables with page level access and protection attributes.
-+  Hardware uses in-memory command and fault reporting queues with wired
-+  interrupt or MSI notifications.
-+
-+  Visit https://github.com/riscv-non-isa/riscv-iommu for more details.
-+
-+  For information on assigning RISC-V IOMMU to its peripheral devices,
-+  see generic IOMMU bindings.
-+
-+properties:
-+  # For PCIe IOMMU hardware compatible property should contain the vendor
-+  # and device ID according to the PCI Bus Binding specification.
-+  # Since PCI provides built-in identification methods, compatible is not
-+  # actually required. For non-PCIe hardware implementations 'riscv,iommu'
-+  # should be specified along with 'reg' property providing MMIO location.
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - qemu,riscv-iommu
-+          - const: riscv,iommu
-+      - items:
-+          - enum:
-+              - pci1efd,edf1
-+          - const: riscv,pci-iommu
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      For non-PCI devices this represents base address and size of for the
-+      IOMMU memory mapped registers interface.
-+      For PCI IOMMU hardware implementation this should represent an address
-+      of the IOMMU, as defined in the PCI Bus Binding reference.
-+
-+  '#iommu-cells':
-+    const: 1
-+    description:
-+      The single cell describes the requester id emitted by a master to the
-+      IOMMU.
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 4
-+    description:
-+      Wired interrupt vectors available for RISC-V IOMMU to notify the
-+      RISC-V HARTS. The cause to interrupt vector is software defined
-+      using IVEC IOMMU register.
-+
-+  msi-parent: true
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#iommu-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |+
-+    /* Example 1 (IOMMU device with wired interrupts) */
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    iommu1: iommu@1bccd000 {
-+        compatible = "qemu,riscv-iommu", "riscv,iommu";
-+        reg = <0x1bccd000 0x1000>;
-+        interrupt-parent = <&aplic_smode>;
-+        interrupts = <32 IRQ_TYPE_LEVEL_HIGH>,
-+                     <33 IRQ_TYPE_LEVEL_HIGH>,
-+                     <34 IRQ_TYPE_LEVEL_HIGH>,
-+                     <35 IRQ_TYPE_LEVEL_HIGH>;
-+        #iommu-cells = <1>;
-+    };
-+
-+    /* Device with two IOMMU device IDs, 0 and 7 */
-+    master1 {
-+        iommus = <&iommu1 0>, <&iommu1 7>;
-+    };
-+
-+  - |+
-+    /* Example 2 (IOMMU device with shared wired interrupt) */
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    iommu2: iommu@1bccd000 {
-+        compatible = "qemu,riscv-iommu", "riscv,iommu";
-+        reg = <0x1bccd000 0x1000>;
-+        interrupt-parent = <&aplic_smode>;
-+        interrupts = <32 IRQ_TYPE_LEVEL_HIGH>;
-+        #iommu-cells = <1>;
-+    };
-+
-+  - |+
-+    /* Example 3 (IOMMU device with MSIs) */
-+    iommu3: iommu@1bcdd000 {
-+        compatible = "qemu,riscv-iommu", "riscv,iommu";
-+        reg = <0x1bccd000 0x1000>;
-+        msi-parent = <&imsics_smode>;
-+        #iommu-cells = <1>;
-+    };
-+
-+  - |+
-+    /* Example 4 (IOMMU PCIe device with MSIs) */
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@30000000 {
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            reg = <0x0 0x30000000  0x0 0x1000000>;
-+            ranges = <0x02000000 0x0 0x41000000  0x0 0x41000000  0x0 0x0f000000>;
-+
-+            /*
-+             * The IOMMU manages all functions in this PCI domain except
-+             * itself. Omit BDF 00:01.0.
-+             */
-+            iommu-map = <0x0 &iommu0 0x0 0x8>,
-+                        <0x9 &iommu0 0x9 0xfff7>;
-+
-+            /* The IOMMU programming interface uses slot 00:01.0 */
-+            iommu0: iommu@1,0 {
-+               compatible = "pci1efd,edf1", "riscv,pci-iommu";
-+               reg = <0x800 0 0 0 0>;
-+               #iommu-cells = <1>;
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 28e20975c26f..7e090f878dc7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18957,6 +18957,13 @@ F:	arch/riscv/
- N:	riscv
- K:	riscv
+diff --git a/drivers/iommu/riscv/Kconfig b/drivers/iommu/riscv/Kconfig
+index 5dcc5c45aa50..c071816f59a6 100644
+--- a/drivers/iommu/riscv/Kconfig
++++ b/drivers/iommu/riscv/Kconfig
+@@ -13,3 +13,8 @@ config RISCV_IOMMU
  
-+RISC-V IOMMU
-+M:	Tomasz Jeznach <tjeznach@rivosinc.com>
-+L:	iommu@lists.linux.dev
-+L:	linux-riscv@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+ 	  Say Y here if your SoC includes an IOMMU device implementing
+ 	  the RISC-V IOMMU architecture.
 +
- RISC-V MICROCHIP FPGA SUPPORT
- M:	Conor Dooley <conor.dooley@microchip.com>
- M:	Daire McNamara <daire.mcnamara@microchip.com>
++config RISCV_IOMMU_PCI
++	def_bool y if RISCV_IOMMU && PCI_MSI
++	help
++	  Support for the PCIe implementation of RISC-V IOMMU architecture.
+diff --git a/drivers/iommu/riscv/Makefile b/drivers/iommu/riscv/Makefile
+index e4c189de58d3..f54c9ed17d41 100644
+--- a/drivers/iommu/riscv/Makefile
++++ b/drivers/iommu/riscv/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_RISCV_IOMMU) += iommu.o iommu-platform.o
++obj-$(CONFIG_RISCV_IOMMU_PCI) += iommu-pci.o
+diff --git a/drivers/iommu/riscv/iommu-pci.c b/drivers/iommu/riscv/iommu-pci.c
+new file mode 100644
+index 000000000000..0a60e068fdc9
+--- /dev/null
++++ b/drivers/iommu/riscv/iommu-pci.c
+@@ -0,0 +1,119 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/*
++ * Copyright © 2022-2024 Rivos Inc.
++ * Copyright © 2023 FORTH-ICS/CARV
++ *
++ * RISCV IOMMU as a PCIe device
++ *
++ * Authors
++ *	Tomasz Jeznach <tjeznach@rivosinc.com>
++ *	Nick Kossifidis <mick@ics.forth.gr>
++ */
++
++#include <linux/compiler.h>
++#include <linux/init.h>
++#include <linux/iommu.h>
++#include <linux/kernel.h>
++#include <linux/pci.h>
++
++#include "iommu-bits.h"
++#include "iommu.h"
++
++/* Rivos Inc. assigned PCI Vendor and Device IDs */
++#ifndef PCI_VENDOR_ID_RIVOS
++#define PCI_VENDOR_ID_RIVOS             0x1efd
++#endif
++
++#ifndef PCI_DEVICE_ID_RIVOS_IOMMU
++#define PCI_DEVICE_ID_RIVOS_IOMMU       0xedf1
++#endif
++
++static int riscv_iommu_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
++{
++	struct device *dev = &pdev->dev;
++	struct riscv_iommu_device *iommu;
++	int rc, vec;
++
++	rc = pcim_enable_device(pdev);
++	if (rc)
++		return rc;
++
++	if (!(pci_resource_flags(pdev, 0) & IORESOURCE_MEM))
++		return -ENODEV;
++
++	if (pci_resource_len(pdev, 0) < RISCV_IOMMU_REG_SIZE)
++		return -ENODEV;
++
++	rc = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
++	if (rc)
++		return dev_err_probe(dev, rc, "pcim_iomap_regions failed\n");
++
++	iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
++	if (!iommu)
++		return -ENOMEM;
++
++	iommu->dev = dev;
++	iommu->reg = pcim_iomap_table(pdev)[0];
++
++	pci_set_master(pdev);
++	dev_set_drvdata(dev, iommu);
++
++	/* Check device reported capabilities / features. */
++	iommu->caps = riscv_iommu_readq(iommu, RISCV_IOMMU_REG_CAP);
++	iommu->fctl = riscv_iommu_readl(iommu, RISCV_IOMMU_REG_FCTL);
++
++	/* The PCI driver only uses MSIs, make sure the IOMMU supports this */
++	switch (FIELD_GET(RISCV_IOMMU_CAP_IGS, iommu->caps)) {
++	case RISCV_IOMMU_CAP_IGS_MSI:
++	case RISCV_IOMMU_CAP_IGS_BOTH:
++		break;
++	default:
++		return dev_err_probe(dev, -ENODEV,
++				     "unable to use message-signaled interrupts\n");
++	}
++
++	/* Allocate and assign IRQ vectors for the various events */
++	rc = pci_alloc_irq_vectors(pdev, 1, RISCV_IOMMU_INTR_COUNT,
++				   PCI_IRQ_MSIX | PCI_IRQ_MSI);
++	if (rc <= 0)
++		return dev_err_probe(dev, -ENODEV,
++				     "unable to allocate irq vectors\n");
++
++	iommu->irqs_count = rc;
++	for (vec = 0; vec < iommu->irqs_count; vec++)
++		iommu->irqs[vec] = msi_get_virq(dev, vec);
++
++	/* Enable message-signaled interrupts, fctl.WSI */
++	if (iommu->fctl & RISCV_IOMMU_FCTL_WSI) {
++		iommu->fctl ^= RISCV_IOMMU_FCTL_WSI;
++		riscv_iommu_writel(iommu, RISCV_IOMMU_REG_FCTL, iommu->fctl);
++	}
++
++	return riscv_iommu_init(iommu);
++}
++
++static void riscv_iommu_pci_remove(struct pci_dev *pdev)
++{
++	struct riscv_iommu_device *iommu = dev_get_drvdata(&pdev->dev);
++
++	riscv_iommu_remove(iommu);
++}
++
++static const struct pci_device_id riscv_iommu_pci_tbl[] = {
++	{PCI_VENDOR_ID_RIVOS, PCI_DEVICE_ID_RIVOS_IOMMU,
++	 PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
++	{0,}
++};
++
++static struct pci_driver riscv_iommu_pci_driver = {
++	.name = KBUILD_MODNAME,
++	.id_table = riscv_iommu_pci_tbl,
++	.probe = riscv_iommu_pci_probe,
++	.remove = riscv_iommu_pci_remove,
++	.driver = {
++		.suppress_bind_attrs = true,
++	},
++};
++
++builtin_pci_driver(riscv_iommu_pci_driver);
 -- 
 2.34.1
 
