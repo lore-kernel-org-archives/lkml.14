@@ -1,308 +1,247 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B3117BD2
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9705820335
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715671688; cv=none; b=MBqoa1Qc28RHHl8NKmJYUx1YcgR/kgIgNJu6h7cFc2CNduhjY/3TpefSq6oUZTln5WIWwjU0s24zIwn3IwIerX5aOGmEvzT/Wie95Al3AHRDeuJKRsVGy84fT66YHxbZjG8ThCT9XhCRN1Lze+KutW8/zw3J6/Kes6LosDavl4s=
+	t=1715671703; cv=none; b=l6EepeRY7RUXKxhIMj3NJB3U9kHOy5QPtJ0kUeJjxPSPhGStfMfWKR7uLPHNMm6r9dFXqrYGR6AI9eZLLUSIMugkB1THqNsUDOJJSDtNZ7F07kWdGdGDwAqP6lyFsA9wLSeseSe2aqIiF9hgYB43BCWb25tVTdehnWDEvjQWJis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715671688; c=relaxed/simple;
-	bh=pdBP/poxNQkLoCpZlP6M+ozK0xi+66h+bhcdCKIIlcE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WmE0Put4QKrtMeq8QWqTG4gmUxidm7MkOkC2lB6SAwu7uL0+QKnEH1jZISlXroFl9o/EZUKphnKqFXwYgVTzJKXN8fOlYZ3Xs1YHDgCNF4Iqa41xDS856+b4q79BZXP0tqS1+dXe8hc74TbzA9QCNMHQk3mqzCxGhWtKfNN6dyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HsnkgtWf; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1715671703; c=relaxed/simple;
+	bh=/zbNmJnrBYof+TFZ1f9IC1pLr1xpwQrseSt/5531pW8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rTHMFbuxjED6x8OJ8ko1tfrlI8KtkxNoqIiSXikGcu6CCRsu9CE/c7w9UyYzQlFt+f2e3j7OpHguUwRxxrpH6ttc/GwKxbGUUeOtTih5AtbfS2rVM0INLHSjE/NA4VKdZLhAnCwzy9B+bjNanGGzfFvwN4cvJ5htSvBY/Lp5cHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VCRqifh/; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HsnkgtWf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VCRqifh/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715671685;
+	s=mimecast20190719; t=1715671699;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G/gMpEmtI+IAI1lEUeLeMcm+4WhBEW2fmE2xkm8KyS0=;
-	b=HsnkgtWfLaJUiuvaDbosuUK1q1zk7LT1kchu6i+xOiKtlPCre073qV6ujsUMScTDisRHrR
-	RGs8P51z9UUyx5YlcxRlTxdQwnt0/RrfmHG39/fQAI3TvIOpi6cIkMHLDMzt4Uz1RxQsgH
-	USNCWLKLL3HdZvzeEGueKmyCRCPMunQ=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=rCyrSqY6tNdEEVYrLErxV8jAv56KZFmfGB/kOU6LsTE=;
+	b=VCRqifh/L1XJjIDm/qMwJTeKqTFK3z4O7XkvrG+aoVIB4v1mxW/QNxiFqV5rc/rBOtUCK8
+	RZgUEUidRI4zKKpXk7Duw7TUjp8Hb/gsvpgLxlc9wNqYGlmVx+CknPlwghdP9cZ2mGg7bq
+	hUofz8daf0i0VLlRoHLzDu2rWH/7DF0=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-YCjYwyIZNeKtW8ejBJzPow-1; Tue, 14 May 2024 03:23:04 -0400
-X-MC-Unique: YCjYwyIZNeKtW8ejBJzPow-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6a1530209deso123553006d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:23:04 -0700 (PDT)
+ us-mta-80-fc11vSwsMI-j5RXQJORV9A-1; Tue, 14 May 2024 03:28:03 -0400
+X-MC-Unique: fc11vSwsMI-j5RXQJORV9A-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-61a9f6c869dso4499347a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:28:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715671384; x=1716276184;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G/gMpEmtI+IAI1lEUeLeMcm+4WhBEW2fmE2xkm8KyS0=;
-        b=TwzJAk+6KkHKSLj0M3ucrIpuCWVpOvebltuGNcbzCx/GCKEXGG0YB/x9gS1xUSFMVQ
-         CpnoO9DCyIJCQC8c/DZKOAK4txJDGv07Vq1RcVXk+0VLsNR4iitTbYWtRuqNXJn6Nwye
-         jgOUJ313aSWUeXJC1jEHFKHcq/KOH8s5gA81+3K6Xd8KLNf3wDk2dVo1SbKgDNm4alds
-         arbHl609pj0QWzdg0rF3v+eZ74sj/wZ8CzoiyrPbIkeeK4jfU21m5gy8gdpkzk9QV/DY
-         h2gI9s/3rzXxg3GLx5696a8C3qKru3eoScNLVZ62rB7l8OW0PnYDeGrmiAPv95b9tLW+
-         rkSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsbB5mCQT+IqQQHOIcekvDZiBl0td53Ne1QKw3zt2RQ9U3MmzYUd0ENovGGesIt7gnoEIf5Jn14DvEdy0CoNOYZs84fSMHRvb4PvdN
-X-Gm-Message-State: AOJu0Yxlw0J6tRLe3ButjDx7pbboHIrxFckqq/FLTYqlYRDFnspWZX1z
-	ySvGmsyLcmikweXgBzbOvwlMJPNdmt2cKOWYr3z08KOSnXqC/tvGMa6lmIE1sgVeXPL+9hDON4u
-	Jb/ztdBnBBqP52Tm2gzCIT93R3exZirtx3yB3LHzAWjTicdeJd1GskMexHTJ0ZA==
-X-Received: by 2002:a05:6214:4903:b0:6a0:e5cd:a66a with SMTP id 6a1803df08f44-6a16798b72cmr206212086d6.24.1715671383844;
-        Tue, 14 May 2024 00:23:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEJGrKm6swz5CxYuqHAR7YAvfD3qZgiXFXmXmEN+UZo19xxwFL5nUJkieiEsNX+PH4OW99qRg==
-X-Received: by 2002:a05:6214:4903:b0:6a0:e5cd:a66a with SMTP id 6a1803df08f44-6a16798b72cmr206211936d6.24.1715671383475;
-        Tue, 14 May 2024 00:23:03 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1ccd4esm50917516d6.97.2024.05.14.00.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:23:03 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v3 3/6] KVM: arm64: add emulation for CTR_EL0 register
-Date: Tue, 14 May 2024 09:22:49 +0200
-Message-ID: <20240514072252.5657-4-sebott@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240514072252.5657-1-sebott@redhat.com>
-References: <20240514072252.5657-1-sebott@redhat.com>
+        d=1e100.net; s=20230601; t=1715671682; x=1716276482;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rCyrSqY6tNdEEVYrLErxV8jAv56KZFmfGB/kOU6LsTE=;
+        b=QkKe9HflPOBdI+wz46vpHjV7mYrxXGYEx4bIb1j0dR+/MLiefr07bIqyLlDSq1WRLJ
+         3TXizXRlhOlM0JF9rtKHu6JPinlNNr/RDHBZ9OFANhiQGf0ZeyUdI+E1CIkWer6ZaSIx
+         JgtJ274kD8ep2wYLi6kuJ8csdib8XI2W/ry/8x/WdZOE+fh3TKLbrZfPbaNCn6jVcYh/
+         uflBUtL/SxQNuyCf5PsIR7traCFolt5Kgf/53RxH0IRr/WOh7byBBJpV/V5ZFnY4eIDg
+         sMiMcIehzm5P2J5FF9bUn4yOaR7EsxgC3phtQky1smHJyQBdzX15tmr3L8YBvNMga/vL
+         aWgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcMGRNaqSLS4UkeU3FC9X9oBalqkomNeTyno3m8ykCb0xKknVd+3PEl4A/8tlskL348xSdxY1HDyWV06m2I1KTbepM5z9SVa7p7Bp7
+X-Gm-Message-State: AOJu0YyDhPwAADK5HcMKUlQ89INC7vy1fqbapd6+alZ2HWjtNkmNlBmm
+	WO4iU1768KMzws1xjb2/Fl4tGArOGkIaXRaWLfb644dLvkNWiWotvktaIEnaG5r/YYddWcn4MQ+
+	GsNLoOJx4baKO78HW9s5GSRTf3Erv2I08NOuMJzQd4vDkP1VflOu+F7R0Su2pAA==
+X-Received: by 2002:a05:6a21:6802:b0:1af:9321:8ac3 with SMTP id adf61e73a8af0-1afde10debemr11738093637.36.1715671681831;
+        Tue, 14 May 2024 00:28:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHra1DAm/uRiLAzU5PNgm685JCcjDtOry36q06hMMN8aWCTMkQTvupLI92LgQ6KHGdt3jGnDw==
+X-Received: by 2002:a05:6a21:6802:b0:1af:9321:8ac3 with SMTP id adf61e73a8af0-1afde10debemr11738075637.36.1715671681472;
+        Tue, 14 May 2024 00:28:01 -0700 (PDT)
+Received: from [10.72.120.5] ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b62863cd9dsm10903410a91.12.2024.05.14.00.27.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 00:28:01 -0700 (PDT)
+Message-ID: <5a1ff1a3-3197-40b4-8b9c-f2ec567ff24e@redhat.com>
+Date: Tue, 14 May 2024 15:27:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH md-6.10 8/9] md: factor out helpers for different
+ sync_action in md_do_sync()
+To: Yu Kuai <yukuai1@huaweicloud.com>, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org
+Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com,
+ yangerkun@huawei.com
+References: <20240509011900.2694291-1-yukuai1@huaweicloud.com>
+ <20240509011900.2694291-9-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+In-Reply-To: <20240509011900.2694291-9-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-CTR_EL0 is currently handled as an invariant register, thus
-guests will be presented with the host value of that register.
 
-Add emulation for CTR_EL0 based on a per VM value. Userspace can
-switch off DIC and IDC bits and reduce DminLine and IminLine sizes.
+在 2024/5/9 上午9:18, Yu Kuai 写道:
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> Make code cleaner by replace if else if with switch, and it's more
+> obvious now what is doning for each sync_action. There are no
 
-When CTR_EL0 is changed validate that against CLIDR_EL1 and CCSIDR_EL1
-to make sure we present the guest with consistent register values.
-Changes that affect the generated cache topology values are allowed if
-they don't clash with previous register writes.
+Hi Kuai
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/kvm/sys_regs.c | 130 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 114 insertions(+), 16 deletions(-)
+type error s/doning/doing/g
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 0213c96f73f2..8e8acf3dd9bd 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -215,13 +215,8 @@ void vcpu_write_sys_reg(struct kvm_vcpu *vcpu, u64 val, int reg)
- /* CSSELR values; used to index KVM_REG_ARM_DEMUX_ID_CCSIDR */
- #define CSSELR_MAX 14
- 
--/*
-- * Returns the minimum line size for the selected cache, expressed as
-- * Log2(bytes).
-- */
--static u8 get_min_cache_line_size(struct kvm *kvm, bool icache)
-+static u8 __get_min_cache_line_size(u64 ctr, bool icache)
- {
--	u64 ctr = kvm->arch.ctr_el0;
- 	u8 field;
- 
- 	if (icache)
-@@ -240,6 +235,15 @@ static u8 get_min_cache_line_size(struct kvm *kvm, bool icache)
- 	return field + 2;
- }
- 
-+/*
-+ * Returns the minimum line size for the selected cache, expressed as
-+ * Log2(bytes).
-+ */
-+static u8 get_min_cache_line_size(struct kvm *kvm, bool icache)
-+{
-+	return __get_min_cache_line_size(kvm->arch.ctr_el0, icache);
-+}
-+
- /* Which cache CCSIDR represents depends on CSSELR value. */
- static u32 get_ccsidr(struct kvm_vcpu *vcpu, u32 csselr)
- {
-@@ -1880,6 +1884,45 @@ static int set_wi_reg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
- 	return 0;
- }
- 
-+static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding);
-+
-+static int validate_clidr_el1(u64 clidr_el1, u64 ctr_el0)
-+{
-+	u64 idc = !CLIDR_LOC(clidr_el1) ||
-+		  (!CLIDR_LOUIS(clidr_el1) && !CLIDR_LOUU(clidr_el1));
-+
-+	if ((clidr_el1 & CLIDR_EL1_RES0) || (!(ctr_el0 & CTR_EL0_IDC) && idc))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int validate_cache_top(struct kvm_vcpu *vcpu, u64 ctr_el0)
-+{
-+	const struct sys_reg_desc *clidr_el1;
-+	unsigned int i;
-+	int ret;
-+
-+	clidr_el1 = get_sys_reg_desc(SYS_CLIDR_EL1);
-+	if (!clidr_el1)
-+		return -ENOENT;
-+
-+	ret = validate_clidr_el1(__vcpu_sys_reg(vcpu, clidr_el1->reg), ctr_el0);
-+	if (ret)
-+		return ret;
-+
-+	if (!vcpu->arch.ccsidr)
-+		return 0;
-+
-+	for (i = 0; i < CSSELR_MAX; i++) {
-+		if ((FIELD_GET(CCSIDR_EL1_LineSize, get_ccsidr(vcpu, i)) + 4)
-+		    < __get_min_cache_line_size(ctr_el0, i & CSSELR_EL1_InD))
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static bool access_ctr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 		       const struct sys_reg_desc *r)
- {
-@@ -1890,6 +1933,55 @@ static bool access_ctr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 	return true;
- }
- 
-+static u64 reset_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd)
-+{
-+	vcpu->kvm->arch.ctr_el0 = read_sanitised_ftr_reg(SYS_CTR_EL0);
-+	return vcpu->kvm->arch.ctr_el0;
-+}
-+
-+static int get_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-+		   u64 *val)
-+{
-+	*val = vcpu->kvm->arch.ctr_el0;
-+	return 0;
-+}
-+
-+static int set_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-+		   u64 val)
-+{
-+	u64 ctr = vcpu->kvm->arch.ctr_el0;
-+	u64 writable_mask = rd->val;
-+	int ret;
-+
-+	if (val == ctr)
-+		return 0;
-+
-+	if (kvm_vm_has_ran_once(vcpu->kvm))
-+		return -EBUSY;
-+
-+	if ((ctr & ~writable_mask) != (val & ~writable_mask))
-+		return -EINVAL;
-+
-+	if (((ctr & CTR_EL0_DIC_MASK) < (val & CTR_EL0_DIC_MASK)) ||
-+	    ((ctr & CTR_EL0_IDC_MASK) < (val & CTR_EL0_IDC_MASK)) ||
-+	    ((ctr & CTR_EL0_DminLine_MASK) < (val & CTR_EL0_DminLine_MASK)) ||
-+	    ((ctr & CTR_EL0_IminLine_MASK) < (val & CTR_EL0_IminLine_MASK))) {
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&vcpu->kvm->arch.config_lock);
-+	ret = validate_cache_top(vcpu, val);
-+	if (ret) {
-+		mutex_unlock(&vcpu->kvm->arch.config_lock);
-+		return ret;
-+	}
-+
-+	vcpu->kvm->arch.ctr_el0 = val;
-+	mutex_unlock(&vcpu->kvm->arch.config_lock);
-+
-+	return 0;
-+}
-+
- static bool access_clidr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 			 const struct sys_reg_desc *r)
- {
-@@ -1959,10 +2051,9 @@ static u64 reset_clidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
- static int set_clidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
- 		      u64 val)
- {
--	u64 idc = !CLIDR_LOC(val) || (!CLIDR_LOUIS(val) && !CLIDR_LOUU(val));
- 	u64 ctr_el0 = vcpu->kvm->arch.ctr_el0;
- 
--	if ((val & CLIDR_EL1_RES0) || (!(ctr_el0 & CTR_EL0_IDC) && idc))
-+	if (validate_clidr_el1(val, ctr_el0))
- 		return -EINVAL;
- 
- 	__vcpu_sys_reg(vcpu, rd->reg) = val;
-@@ -2475,7 +2566,11 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
- 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
- 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
--	{ SYS_DESC(SYS_CTR_EL0), access_ctr },
-+	{ SYS_DESC(SYS_CTR_EL0), access_ctr, .reset = reset_ctr,
-+	  .get_user = get_ctr, .set_user = set_ctr, .val = (CTR_EL0_DIC_MASK |
-+							    CTR_EL0_IDC_MASK |
-+							    CTR_EL0_DminLine_MASK |
-+							    CTR_EL0_IminLine_MASK)},
- 	{ SYS_DESC(SYS_SVCR), undef_access },
- 
- 	{ PMU_SYS_REG(PMCR_EL0), .access = access_pmcr, .reset = reset_pmcr,
-@@ -3651,6 +3746,13 @@ static bool index_to_params(u64 id, struct sys_reg_params *params)
- 	}
- }
- 
-+static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding)
-+{
-+	struct sys_reg_params params = encoding_to_params(encoding);
-+
-+	return find_reg(&params, sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
-+}
-+
- const struct sys_reg_desc *get_reg_by_id(u64 id,
- 					 const struct sys_reg_desc table[],
- 					 unsigned int num)
-@@ -3704,18 +3806,11 @@ FUNCTION_INVARIANT(midr_el1)
- FUNCTION_INVARIANT(revidr_el1)
- FUNCTION_INVARIANT(aidr_el1)
- 
--static u64 get_ctr_el0(struct kvm_vcpu *v, const struct sys_reg_desc *r)
--{
--	((struct sys_reg_desc *)r)->val = read_sanitised_ftr_reg(SYS_CTR_EL0);
--	return ((struct sys_reg_desc *)r)->val;
--}
--
- /* ->val is filled in by kvm_sys_reg_table_init() */
- static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
- 	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
- 	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
- 	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
--	{ SYS_DESC(SYS_CTR_EL0), NULL, get_ctr_el0 },
- };
- 
- static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
-@@ -4083,6 +4178,9 @@ static void vcpu_set_hcr(struct kvm_vcpu *vcpu)
- 	 */
- 	if (!kvm_has_feat(kvm, ID_AA64ISAR0_EL1, TLB, OS))
- 		vcpu->arch.hcr_el2 |= HCR_TTLBOS;
-+
-+	if (kvm->arch.ctr_el0 != read_sanitised_ftr_reg(SYS_CTR_EL0))
-+		vcpu->arch.hcr_el2 |= HCR_TID2;
- }
- 
- void kvm_calculate_traps(struct kvm_vcpu *vcpu)
--- 
-2.42.0
+Regards
+
+Xiao
+
+> functional changes.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   drivers/md/md.c | 123 ++++++++++++++++++++++++++++--------------------
+>   1 file changed, 73 insertions(+), 50 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 2fc81175b46b..42db128b82d9 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -8928,6 +8928,77 @@ void md_allow_write(struct mddev *mddev)
+>   }
+>   EXPORT_SYMBOL_GPL(md_allow_write);
+>   
+> +static sector_t md_sync_max_sectors(struct mddev *mddev,
+> +				    enum sync_action action)
+> +{
+> +	switch (action) {
+> +	case ACTION_RESYNC:
+> +	case ACTION_CHECK:
+> +	case ACTION_REPAIR:
+> +		atomic64_set(&mddev->resync_mismatches, 0);
+> +		fallthrough;
+> +	case ACTION_RESHAPE:
+> +		return mddev->resync_max_sectors;
+> +	case ACTION_RECOVER:
+> +		return mddev->dev_sectors;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static sector_t md_sync_position(struct mddev *mddev, enum sync_action action)
+> +{
+> +	sector_t start = 0;
+> +	struct md_rdev *rdev;
+> +
+> +	switch (action) {
+> +	case ACTION_CHECK:
+> +	case ACTION_REPAIR:
+> +		return mddev->resync_min;
+> +	case ACTION_RESYNC:
+> +		if (!mddev->bitmap)
+> +			return mddev->recovery_cp;
+> +		return 0;
+> +	case ACTION_RESHAPE:
+> +		/*
+> +		 * If the original node aborts reshaping then we continue the
+> +		 * reshaping, so set again to avoid restart reshape from the
+> +		 * first beginning
+> +		 */
+> +		if (mddev_is_clustered(mddev) &&
+> +		    mddev->reshape_position != MaxSector)
+> +			return mddev->reshape_position;
+> +		return 0;
+> +	case ACTION_RECOVER:
+> +		start = MaxSector;
+> +		rcu_read_lock();
+> +		rdev_for_each_rcu(rdev, mddev)
+> +			if (rdev->raid_disk >= 0 &&
+> +			    !test_bit(Journal, &rdev->flags) &&
+> +			    !test_bit(Faulty, &rdev->flags) &&
+> +			    !test_bit(In_sync, &rdev->flags) &&
+> +			    rdev->recovery_offset < start)
+> +				start = rdev->recovery_offset;
+> +		rcu_read_unlock();
+> +
+> +		/* If there is a bitmap, we need to make sure all
+> +		 * writes that started before we added a spare
+> +		 * complete before we start doing a recovery.
+> +		 * Otherwise the write might complete and (via
+> +		 * bitmap_endwrite) set a bit in the bitmap after the
+> +		 * recovery has checked that bit and skipped that
+> +		 * region.
+> +		 */
+> +		if (mddev->bitmap) {
+> +			mddev->pers->quiesce(mddev, 1);
+> +			mddev->pers->quiesce(mddev, 0);
+> +		}
+> +		return start;
+> +	default:
+> +		return MaxSector;
+> +	}
+> +}
+> +
+>   #define SYNC_MARKS	10
+>   #define	SYNC_MARK_STEP	(3*HZ)
+>   #define UPDATE_FREQUENCY (5*60*HZ)
+> @@ -9046,56 +9117,8 @@ void md_do_sync(struct md_thread *thread)
+>   		spin_unlock(&all_mddevs_lock);
+>   	} while (mddev->curr_resync < MD_RESYNC_DELAYED);
+>   
+> -	j = 0;
+> -	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery)) {
+> -		/* resync follows the size requested by the personality,
+> -		 * which defaults to physical size, but can be virtual size
+> -		 */
+> -		max_sectors = mddev->resync_max_sectors;
+> -		atomic64_set(&mddev->resync_mismatches, 0);
+> -		/* we don't use the checkpoint if there's a bitmap */
+> -		if (test_bit(MD_RECOVERY_REQUESTED, &mddev->recovery))
+> -			j = mddev->resync_min;
+> -		else if (!mddev->bitmap)
+> -			j = mddev->recovery_cp;
+> -
+> -	} else if (test_bit(MD_RECOVERY_RESHAPE, &mddev->recovery)) {
+> -		max_sectors = mddev->resync_max_sectors;
+> -		/*
+> -		 * If the original node aborts reshaping then we continue the
+> -		 * reshaping, so set j again to avoid restart reshape from the
+> -		 * first beginning
+> -		 */
+> -		if (mddev_is_clustered(mddev) &&
+> -		    mddev->reshape_position != MaxSector)
+> -			j = mddev->reshape_position;
+> -	} else {
+> -		/* recovery follows the physical size of devices */
+> -		max_sectors = mddev->dev_sectors;
+> -		j = MaxSector;
+> -		rcu_read_lock();
+> -		rdev_for_each_rcu(rdev, mddev)
+> -			if (rdev->raid_disk >= 0 &&
+> -			    !test_bit(Journal, &rdev->flags) &&
+> -			    !test_bit(Faulty, &rdev->flags) &&
+> -			    !test_bit(In_sync, &rdev->flags) &&
+> -			    rdev->recovery_offset < j)
+> -				j = rdev->recovery_offset;
+> -		rcu_read_unlock();
+> -
+> -		/* If there is a bitmap, we need to make sure all
+> -		 * writes that started before we added a spare
+> -		 * complete before we start doing a recovery.
+> -		 * Otherwise the write might complete and (via
+> -		 * bitmap_endwrite) set a bit in the bitmap after the
+> -		 * recovery has checked that bit and skipped that
+> -		 * region.
+> -		 */
+> -		if (mddev->bitmap) {
+> -			mddev->pers->quiesce(mddev, 1);
+> -			mddev->pers->quiesce(mddev, 0);
+> -		}
+> -	}
+> +	max_sectors = md_sync_max_sectors(mddev, action);
+> +	j = md_sync_position(mddev, action);
+>   
+>   	pr_info("md: %s of RAID array %s\n", desc, mdname(mddev));
+>   	pr_debug("md: minimum _guaranteed_  speed: %d KB/sec/disk.\n", speed_min(mddev));
 
