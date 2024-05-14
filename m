@@ -1,96 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFDA1802BC
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB051802BC
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715709651; cv=none; b=J6yNxnAouHbdyitdzU05929YCz1a3DjrtjGnSzJXb5PwIj3VKTr3EOX04ZXy0hlsD7A/tUsc+id7WHUVYOou+lHNEXVI6fvbllHaMjEknDbVoyDm9T9bnZ+egYSx7pA58aCIgzN33sE9OBqTiiGwUSo0upHGqOUrKeih/MupBMY=
+	t=1715709657; cv=none; b=OJTJpWmwtBe+N/KaI1axNXvzqUgW1b1upCDE5fstmOox237x1IdFa9PF6GpHKHUfucuXUTIrL+fsGjDxT528kvUX4xW8gBFelJs90SKNsrjANVQWUIi2aXNjPXOArPiHI5vJL8vcg+dWHKEFqPdI1TuEOZQxwojhN+/CTegzuec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715709651; c=relaxed/simple;
-	bh=U1yWnXT2Sr4P5dC2uObQWu8ccCunhmR9/1rilnD2jBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aAVA+9y5rhrjUNtblc/S9PxwVnCOIRrqS3CGQOWhv5eUWlsTeUsVASWC7UJQxSyuvzC2JN4sUwq/kB2l9NQ3aV0lz9y/wZC5Lbd7mptnjbIy0CSGZerjyi9g3m+9ZsRJXKNTDDZ0gB9iAAfFiXPGsUUui2tRlToebRAJ6H5XirU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxWmw0Ta; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715709657; c=relaxed/simple;
+	bh=QpLFeA2HlNqOEmnHE/cIxn51kUcvHow4/it0St+9Ios=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X52gHrCrOz242gVyKVtZ4B0P+NEFEa5SMdzsMfkRKwIB03TKFjbGBB05EA7CrhXKLU/QVM/fyUBTYj0m8Vwq1dRZocD9MFxQ6sektpVKugGvOirCgjnbmUaF9h3QxYelsRqmFA2FkPxz6uEn1ae+G0cvjvSUbC0BoC1NpiXL494=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qsELbkk/; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxWmw0Ta"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA626C2BD10;
-	Tue, 14 May 2024 18:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715709651;
-	bh=U1yWnXT2Sr4P5dC2uObQWu8ccCunhmR9/1rilnD2jBg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oxWmw0TaAaRNZ3X0MvdRTyFoL/SoNARC5pKMO+sapb0WN1m8CtTZxnq1t8OBxWuNh
-	 aUEKCpfw2w+yQMts+xQAmxavfC3+OcRPzkOHL0pY1sdzCTmPVLUxiNihOToWv1IDDU
-	 Pm0ML4l645Qy3DVfZ134gtWjn2d6BKJpqkrNf5T5gnGSOTw5JpLVP/k/xHsYFawCdI
-	 qk2+3iyQ3EUSeGUEGpXfaC5NiEICBqoiZ+iS0eptPMwav5ZuC4u0wC71893Pu3l38X
-	 El+1yh4PAmN2S6lxHRodlnMMk0O/TuQ7tperO9IZ2KIbEb3ywXEYN9hKxGxIRhKpXw
-	 Rv+RswwYubt3w==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Greg Thelen <gthelen@google.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Tuan Phan <tuanphan@os.amperecomputing.com>
-Subject: [PATCH] perf/arm-dmc620: Fix lockdep assert in ->event_init()
-Date: Tue, 14 May 2024 11:00:50 -0700
-Message-ID: <20240514180050.182454-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qsELbkk/"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-572baf393ddso1760434a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 11:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715709653; x=1716314453; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SPFkuGbhnZyO2YuOasmxxVswDvCK0WBgSsmUFjTxFvY=;
+        b=qsELbkk/YNyiZCI+GNKMpfBlODtyqwmrZjQVHDWo+Otqb/UNbu+arQw2nc2ZaD4Ia/
+         is47yvxW7oWPA27ZeDuqxu4CLgsxY872KmDVdy0DVR1sgVwmotl72pPqzPj8LGnPO5o6
+         kfZGIjKc2S6NfaRBSIgpbntyY8FIPvOQMYpzm8JIkTt6lwSzHcfxlpOCGZqlwoX/srJ1
+         mBKSAKrr/DVQYPaQJgGc0BsNY/+MP+VAy4NzvyzF8cFV6NV72b3bHlIQp4/2CczVpi8L
+         BOUJM1MEVmBs+QUe/HVJQCnARJeIy4zlN3G12A0Q/JjdN+pg4NhqbgjadCIBUSbChP0Y
+         iUmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715709653; x=1716314453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SPFkuGbhnZyO2YuOasmxxVswDvCK0WBgSsmUFjTxFvY=;
+        b=VuXamrjwdjkOFjkq/vbyxaVRWXKnmITOueu+koUQAn+5G2lDvV+hGwE9x6Wiha+uwz
+         SmXpjLxCl83sAyb8iNX1ExWFumMw9ArkEDllM4R0kRMDoxJvp6CWgXvYK/3XkAdvivX1
+         Zi3He/cMpRbBrarYDfoSWnejRheniCrMr8ZKw4gqnnF0j7hpocKHQ+SWuqb+Nn6vwy2p
+         DCoec+vaT6n+rSatsOrQyS7kItWW/4B6a2Cq080Hr/yqzrqCUQ6Ld8Bm9I7daAuXg1xN
+         gPg2KLAcFZ+mG+6MrzBf4Y1kdul1r8EUS/zTJXeaYHDR+8UWjsQ42dWi8aNt6Kl+SRyb
+         fWOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUswKFjkT86KR/8wNjvQOKqsCRvpxN3WUVc6Pv3K1cpDlYKw3QpL//hZI55e4icGQwzN7PgAaWC0OXW1fL6sDwBQuRgB/nRtHAa0JW
+X-Gm-Message-State: AOJu0YwRV2WuJG3Sjz+qOnxSz3/fMr9nxPSeVL0JqvN8En4pFSrslfLi
+	RAtpKV3qry6/Ptj4vPueXLIhjlRLo/tlY0X4kWVnNfkxtig539XF73x5vPZrZirZRQq045/Vy/N
+	pw1TFm4Ix4/PVWuKe8irBaK5W5GhpMsHVuGRncw==
+X-Google-Smtp-Source: AGHT+IEav+Kv/bYUpFPfTWv7r39urrL/VjCf1N0diMj0Pjq5+EuaD+cN5qt0Ndddnyt68aDR99gcExBIUX9EIjG6mjI=
+X-Received: by 2002:aa7:d392:0:b0:572:7014:230a with SMTP id
+ 4fb4d7f45d1cf-573328e4ec7mr13569756a12.14.1715709653683; Tue, 14 May 2024
+ 11:00:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240514140446.538622-1-bjorn@kernel.org> <20240514140446.538622-7-bjorn@kernel.org>
+In-Reply-To: <20240514140446.538622-7-bjorn@kernel.org>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Tue, 14 May 2024 20:00:42 +0200
+Message-ID: <CAHVXubi6Hv_FCTi=a5FFoxqiUBucrX_NhVGBAWE6qXRXdzOYsA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/8] riscv: Enable memory hotplugging for RISC-V
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, David Hildenbrand <david@redhat.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	linux-riscv@lists.infradead.org, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Andrew Bresticker <abrestic@rivosinc.com>, 
+	Chethan Seshadri <Chethan.Seshadri@catalinasystems.io>, Lorenzo Stoakes <lstoakes@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Santosh Mamila <santosh.mamila@catalinasystems.io>, 
+	Sivakumar Munnangi <siva.munnangi@catalinasystems.io>, Sunil V L <sunilvl@ventanamicro.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-for_each_sibling_event() checks leader's ctx but it doesn't have the ctx
-yet if it's the leader.  Like in perf_event_validate_size(), we should
-skip checking siblings in that case.
+On Tue, May 14, 2024 at 4:05=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
+.org> wrote:
+>
+> From: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>
+> Enable ARCH_ENABLE_MEMORY_HOTPLUG and ARCH_ENABLE_MEMORY_HOTREMOVE for
+> RISC-V.
+>
+> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> ---
+>  arch/riscv/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 6bec1bce6586..b9398b64bb69 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -16,6 +16,8 @@ config RISCV
+>         select ACPI_REDUCED_HARDWARE_ONLY if ACPI
+>         select ARCH_DMA_DEFAULT_COHERENT
+>         select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATIO=
+N
+> +       select ARCH_ENABLE_MEMORY_HOTPLUG if SPARSEMEM && 64BIT && MMU
 
-Fixes: f3c0eba287049 ("perf: Add a few assertions")
-Reported-by: Greg Thelen <gthelen@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Tuan Phan <tuanphan@os.amperecomputing.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- drivers/perf/arm_dmc620_pmu.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+I think this should be SPARSEMEM_VMEMMAP here.
 
-diff --git a/drivers/perf/arm_dmc620_pmu.c b/drivers/perf/arm_dmc620_pmu.c
-index 8a81be2dd5ec..88c17c1d6d49 100644
---- a/drivers/perf/arm_dmc620_pmu.c
-+++ b/drivers/perf/arm_dmc620_pmu.c
-@@ -542,12 +542,16 @@ static int dmc620_pmu_event_init(struct perf_event *event)
- 	if (event->cpu < 0)
- 		return -EINVAL;
- 
-+	hwc->idx = -1;
-+
-+	if (event->group_leader == event)
-+		return 0;
-+
- 	/*
- 	 * We can't atomically disable all HW counters so only one event allowed,
- 	 * although software events are acceptable.
- 	 */
--	if (event->group_leader != event &&
--			!is_software_event(event->group_leader))
-+	if (!is_software_event(event->group_leader))
- 		return -EINVAL;
- 
- 	for_each_sibling_event(sibling, event->group_leader) {
-@@ -556,7 +560,6 @@ static int dmc620_pmu_event_init(struct perf_event *event)
- 			return -EINVAL;
- 	}
- 
--	hwc->idx = -1;
- 	return 0;
- }
- 
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+> +       select ARCH_ENABLE_MEMORY_HOTREMOVE if MEMORY_HOTPLUG
+>         select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+>         select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+>         select ARCH_HAS_BINFMT_FLAT
+> --
+> 2.40.1
+>
