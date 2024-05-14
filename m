@@ -1,166 +1,239 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DB46D1A7;
-	Tue, 14 May 2024 15:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF5A6D1A7;
+	Tue, 14 May 2024 15:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715699942; cv=none; b=KMkDEsxWDczmrm4jG7epTgVKygSrQrDA0zABQo1SHHZ+/3MKuGaP89FoQbVDNs4ZrUuijJJ4kfQggJZhOCdkPZvidcCTArvR1nkHM3aZpA8dXM+cLhATfPJ4/gDDgDvk0wRe1RvQ9iVxA9b2Sco7gujzbCJ/HTl4ngCUOD8wX4A=
+	t=1715700046; cv=none; b=iwnwIhQgIPTMmCavUMs7sDIfMnlsCCAeTT5i9vgKDcFWkhB5GN6b/AuLNJKHz45zgdPceC3bu0D0OLlU3v7oxZCpUNrCur+84ByxrmS2Z5kKBrCgJREJkk5Q8FxZd6X7fkSinJkI+6pMXSisf9L4WbH24tw35TlhJLSljhmvF1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715699942; c=relaxed/simple;
-	bh=JXROq6O+Dzwqo8N4KN5rAIu9jMja79JWlM4fwbIot2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=U1G5vlOgzbOPtne+0y1YMeW7UvqEIfq2YSvK4T9DA7RZfpNne48XwsjVHUpFgMbsHLhjJvNgc4DlkpzJa88QEnTwLFat0R/YryInEgpbDfochJ9y0cnyadc402glAzYuC0FU19Q/lNqBFOae6vkm1dbIpdMdPzc+B0EwwZwszHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KaEnBaLX; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1715700046; c=relaxed/simple;
+	bh=NeNVQHHReCk1fXQMowao8w+OSjaqPySyymV38Cw0MFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kMua5DRXOen++ZI/KAQwEwv5xnNLegK6vn0wFysKvinaV5iWdao+mp+ebfqbtnE83fzYrI303epq42ruzkmxJsSxlyZgt7R3FsTOfvrlziuW0N4ZW86u3GeF3jU9lwbj9XGjgtvbtPnusv8QPDuMExIPfd7odYVwv/9qf+w0GYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZHpHHZJH; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KaEnBaLX"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f08442b7bcso7637795ad.1;
-        Tue, 14 May 2024 08:19:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHpHHZJH"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f4178aec15so4882282b3a.0;
+        Tue, 14 May 2024 08:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715699941; x=1716304741; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h4GeLlZbJrhRPA2trbEECF1V8nbw1OgWT9lb2M4w+JI=;
-        b=KaEnBaLXl5ch0ktpAYSLvJXzpaYSlGdFS2PsPcYLEIkYI2YfNrf2Pr5G4mhP2L3kDx
-         59tDL9oDs2fd1PJM+SVHuIbJ3Na6j/1fmnJ7Rber5DBz+QlPA02QqrBUU/1ot14s4TYS
-         9a6vnKQFSaLBwx9gFN/rwLalWIkGj2QYOLVSakZ04x+24PWaVd/UKG9aHDT2QuzvnkZM
-         6Qx7yb8jj8QSSgvQHAHhNuF8EnbD+ILoXQ+ea0ERkEI8zXxOH/O3EiNE9ZCdVb91DDS0
-         KoQ7AwtxZ5F7JcvxzF/9B4fWV71Y/75J7yNQsshxRuhZ/5bEvvrRDhB/0vKSNj98Ihpu
-         mjOg==
+        d=gmail.com; s=20230601; t=1715700044; x=1716304844; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u4/NsG2e9hQsT5x13zx2ugASnyOpg+AKatsdShkRKb4=;
+        b=ZHpHHZJH34w2nRyM5MsoFXHFdYptV2yqZWmX9iEGdXFpm4ZclDfaba7D6j65tHWnmC
+         bUKhcxQSSm/AYiHZDXwczCfsVl843u9MYSg7KBe1XtxDuGGdA0MPp6xxKhdn897XB4DZ
+         EQDrffLF1uWx6rP6zBki+k6WdymB7A2TSStI3kC+40OwJQ9ilO2pnNIj4hjS1hXGnQ1G
+         RmQnzbJ/f3ZzLg9UVMDCDWtckv/vIVklNPvKAQD8Uc24FxVZhAuxblkeUsuHoQDVlR5v
+         5sxqEB/11qK6QiVBzSbgVhPjEg9DfCrb1Z4TPR0eDXN/JnDuHDC56MLp7zkUR11/ja0f
+         84ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715699941; x=1716304741;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h4GeLlZbJrhRPA2trbEECF1V8nbw1OgWT9lb2M4w+JI=;
-        b=N8+P/sQcrZGT0JPgLgpJaiZIAptF7IhJ0YWJE5aC6xBdE2qhcOrXr+gETMrJcU0r1T
-         eiaYRCBDqqVBNwOsDBkvxcm4FKrCcx6cruuVrWVNJde+g3C9fVWFvMnj93wsnZBSqhll
-         SfBT677VucW7k8acfFnteyySiOK8SeGU3/cEmfRfiWzpnN81JjHSu9O6xUlks7Y/jzPL
-         sudmMGdaFQJYpB0+EikQF8Fq4sq6KYG+xH8JBxI1klXg/XO9BPP43WlkNCqka5pRvgUo
-         QVZCCGeD0ydkwBf1RVpZ8WG8WRdGjNQIloB8gbpDo8QJKuASgdmpmblrwbk7ONurN1lc
-         /W/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWAmqmt37ZqjjDX0hE+Zy+2omhhrNXTzJoeAwyfNILV0eZbjC/eE4b0RXdAxL/wmnzuweBxlogd475oN2Y04R6UOI4Kokgzye6anXEEqmvsbkWcNSYha6Go2AJ9t0G9UimzYE83j3Qskeo=
-X-Gm-Message-State: AOJu0Yw6bIu7t4nnqUKMa6FUzSuHlEnwBDIOKH8MMz3k5I8sUFUktzY2
-	Of47/hq/b9w7BePngPxyFzMJlut5g+KVcAO5JIwgUHMc4V5aGPqT
-X-Google-Smtp-Source: AGHT+IFm8MKPfiycoB1goQ+HpoOa1qBMLv4wBkunNLhevPa2g5uhYi/Zl2t9RkAMvXiSpkPq5N58pA==
-X-Received: by 2002:a17:902:d48d:b0:1ec:4cd7:6c7c with SMTP id d9443c01a7336-1ef43e2a1dcmr190159345ad.40.1715699940517;
-        Tue, 14 May 2024 08:19:00 -0700 (PDT)
-Received: from linux-l9pv.suse ([124.11.22.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c035dd9sm98689985ad.201.2024.05.14.08.18.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2024 08:19:00 -0700 (PDT)
-From: Chun-Yi Lee <joeyli.kernel@gmail.com>
-X-Google-Original-From: Chun-Yi Lee <jlee@suse.com>
-To: Justin Sanders <justin@coraid.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
-	Pavel Emelianov <xemul@openvz.org>,
-	Kirill Korotaev <dev@openvz.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Markus Elfring <Markus.Elfring@web.de>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chun-Yi Lee <jlee@suse.com>
-Subject: [PATCH v2] aoe: fix the potential use-after-free problem in more places
-Date: Tue, 14 May 2024 23:18:54 +0800
-Message-Id: <20240514151854.13066-1-jlee@suse.com>
-X-Mailer: git-send-email 2.12.3
+        d=1e100.net; s=20230601; t=1715700044; x=1716304844;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4/NsG2e9hQsT5x13zx2ugASnyOpg+AKatsdShkRKb4=;
+        b=FZeAy6STLDaa0phmxiAA18QvxssKX11ZcXpXSgF/+gwcUEgsIOTPzR+nUcIaWvAVoy
+         cqsjM/3DlnHfXCF/vjA9nRuraXig1FRmUvHpqgimBC6HvM1tUw+e7IpYDV8q/GQH5bX4
+         /yjnh1YUzBUFG/ns88iwsujUhzUgJxWYddlodCxvkx6NQXgybKoqR3zAD3WKvn+OOx1a
+         qY24YvYqe7kU+w1FRCLddBtDjkVqyEoqaviCGKIjk59LdNPqd7BLwMG82gu9K+00u5RC
+         Od5xQ/Quyhiqppmna9LlXx2nqFAj1L5wdUFG9mP3upD891KHDqYp9ewqTEkHyxyu7hFN
+         4NYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWP8elB5SUMekXx8/m2Czug5mGwPL8105tjd8SXnJoeS3K+EaFKtrQLhHhg/x979RLBRpXmoUiXsEvjcXw43qA7szQpGm4CtLNRt+Dy
+X-Gm-Message-State: AOJu0Yw1uQcr/QtZBCMLZxBPYME8fOOZdeAdRDSv236bSb0Y1VIkRYHM
+	0qdUZ+QuZb12TMGwjd3uht3ZMpSuTNiau1aqTUbak1p0wWjwJ2/2
+X-Google-Smtp-Source: AGHT+IG77yWo2wfdiFl/I2nqVu2FaLBHKsUOwReTSe7Eby9x1bn5TBe9izjjEQTb8+eE+yNXs8UNTg==
+X-Received: by 2002:a05:6a21:3d85:b0:1af:d017:c13e with SMTP id adf61e73a8af0-1afde1c5528mr12491084637.41.1715700043596;
+        Tue, 14 May 2024 08:20:43 -0700 (PDT)
+Received: from ?IPV6:2402:e280:214c:86:b4e3:f8b3:da6:5062? ([2402:e280:214c:86:b4e3:f8b3:da6:5062])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a86fb3sm9201468b3a.86.2024.05.14.08.20.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 08:20:43 -0700 (PDT)
+Message-ID: <af208bb4-f02c-4535-a39e-dcdf91522f38@gmail.com>
+Date: Tue, 14 May 2024 20:50:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 linux-next] media: i2c: st-mipid02: replace
+ of_node_put() with __free
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ sylvain.petinot@foss.st.com, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
+ Julia Lawall <julia.lawall@inria.fr>
+References: <20240429163736.11544-1-prosunofficial@gmail.com>
+ <a688b2f2-d972-450a-9bec-2b506b58a21f@foss.st.com>
+Content-Language: en-US
+From: R Sundar <prosunofficial@gmail.com>
+In-Reply-To: <a688b2f2-d972-450a-9bec-2b506b58a21f@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-For fixing CVE-2023-6270, f98364e92662 ("aoe: fix the potential
-use-after-free problem in aoecmd_cfg_pkts") makes tx() do dev_put()
-instead of doing in aoecmd_cfg_pkts(). It avoids that the tx() runs
-into use-after-free.
+Hi,
 
-But Nicolai Stange found more places in aoe have potential use-after-free
-problem with tx(). e.g. revalidate(), aoecmd_ata_rw(), resend(), probe()
-and aoecmd_cfg_rsp(). Those functions also use aoenet_xmit() to push
-packet to tx queue. So they should also use dev_hold() to increase the
-refcnt of skb->dev.
+Thanks for the comments.
 
-This patch makes the above functions do dev_put() when the skb_clone()
-returns NULL.
+On 13/05/24 17:13, Benjamin Mugnier wrote:
+> Hi,
+> 
+> I took sometime to reflect on this. Currently I favor drivers consistency.
 
-Link: https://nvd.nist.gov/vuln/detail/CVE-2023-6270
-Fixes: f98364e92662 ("aoe: fix the potential use-after-free problem in aoecmd_cfg_pkts")
-Reported-by: Nicolai Stange <nstange@suse.com>
-Signed-off-by: Chun-Yi Lee <jlee@suse.com>
----
 
-v2:
-- Improve patch description
-    - Improved wording
-    - Add oneline summary of the commit f98364e92662
-- Used curly brackets in the if-else blocks.
+> Merging this patch as is would introduce some differences between the
+> vgxy61 and other drivers that follow the 'of_node_put' flow, which I
+> think is not an improvement.
+> 
 
- drivers/block/aoe/aoecmd.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+I checked st-vgxy61.c file, I didn't find of_node_put().
+Any file apart from this,  you want to see those changes? If yes let me 
+know, please.
+Meanwhile I am also looking into it.
 
-diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
-index cc9077b588d7..d1f4ddc57645 100644
---- a/drivers/block/aoe/aoecmd.c
-+++ b/drivers/block/aoe/aoecmd.c
-@@ -361,6 +361,7 @@ ata_rw_frameinit(struct frame *f)
- 	}
- 
- 	ah->cmdstat = ATA_CMD_PIO_READ | writebit | extbit;
-+	dev_hold(t->ifp->nd);
- 	skb->dev = t->ifp->nd;
- }
- 
-@@ -401,6 +402,8 @@ aoecmd_ata_rw(struct aoedev *d)
- 		__skb_queue_head_init(&queue);
- 		__skb_queue_tail(&queue, skb);
- 		aoenet_xmit(&queue);
-+	} else {
-+		dev_put(f->t->ifp->nd);
- 	}
- 	return 1;
- }
-@@ -483,10 +486,13 @@ resend(struct aoedev *d, struct frame *f)
- 	memcpy(h->dst, t->addr, sizeof h->dst);
- 	memcpy(h->src, t->ifp->nd->dev_addr, sizeof h->src);
- 
-+	dev_hold(t->ifp->nd);
- 	skb->dev = t->ifp->nd;
- 	skb = skb_clone(skb, GFP_ATOMIC);
--	if (skb == NULL)
-+	if (skb == NULL) {
-+		dev_put(t->ifp->nd);
- 		return;
-+	}
- 	f->sent = ktime_get();
- 	__skb_queue_head_init(&queue);
- 	__skb_queue_tail(&queue, skb);
-@@ -617,6 +623,8 @@ probe(struct aoetgt *t)
- 		__skb_queue_head_init(&queue);
- 		__skb_queue_tail(&queue, skb);
- 		aoenet_xmit(&queue);
-+	} else {
-+		dev_put(f->t->ifp->nd);
- 	}
- }
- 
-@@ -1395,6 +1403,7 @@ aoecmd_ata_id(struct aoedev *d)
- 	ah->cmdstat = ATA_CMD_ID_ATA;
- 	ah->lba3 = 0xa0;
- 
-+	dev_hold(t->ifp->nd);
- 	skb->dev = t->ifp->nd;
- 
- 	d->rttavg = RTTAVG_INIT;
-@@ -1404,6 +1413,8 @@ aoecmd_ata_id(struct aoedev *d)
- 	skb = skb_clone(skb, GFP_ATOMIC);
- 	if (skb)
- 		f->sent = ktime_get();
-+	else
-+		dev_put(t->ifp->nd);
- 
- 	return skb;
- }
--- 
-2.35.3
+This patch mainly reduce the goto error statements and increases 
+readability of the code.
+
+> Now, this patch is certainly good. Would it be possible to extend it to
+> all other drivers using the 'of_node_put' ?
+> 
+yes, people are working on it to replace of_node_put() in many places. 
+soon many patches can be expected to come in , for replacing of_node_put 
+with auto cleanup module.
+I am also adding these changes to few other files also.
+
+Thanks,
+
+> That would the consistency issue while improving code quality at the
+> same time.
+> 
+> Thank you.
+>  >
+> On 4/29/24 18:37, R Sundar wrote:
+>> Use the new cleanup magic to replace of_node_put() with
+>> __free(device_node) marking to auto release and to simplify the error
+>> paths.
+>>
+>> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+>> Signed-off-by: R Sundar <prosunofficial@gmail.com>
+>> ---
+>>
+>> Changes since v1 -
+>>
+>> - Added missed out __free() marking in mipid02_parse_tx_ep().
+>> - In mipid02_parse_tx_ep(), In error case, return value is always -EINVAL.  so
+>> sending the -EINVAL instead of ret variable value.
+>>
+>> Link to v1 - https://lore.kernel.org/all/20240427095643.11486-1-prosunofficial@gmail.com/#t
+>>
+>>   drivers/media/i2c/st-mipid02.c | 37 +++++++++-------------------------
+>>   1 file changed, 9 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+>> index f250640729ca..bd3cf94f8534 100644
+>> --- a/drivers/media/i2c/st-mipid02.c
+>> +++ b/drivers/media/i2c/st-mipid02.c
+>> @@ -715,31 +715,28 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
+>>   	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
+>>   	struct i2c_client *client = bridge->i2c_client;
+>>   	struct v4l2_async_connection *asd;
+>> -	struct device_node *ep_node;
+>>   	int ret;
+>>   
+>>   	/* parse rx (endpoint 0) */
+>> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
+>> -						0, 0);
+>> +	struct device_node *ep_node __free(device_node) =
+>> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 0, 0);
+>>   	if (!ep_node) {
+>>   		dev_err(&client->dev, "unable to find port0 ep");
+>> -		ret = -EINVAL;
+>> -		goto error;
+>> +		return -EINVAL;
+>>   	}
+>>   
+>>   	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
+>>   	if (ret) {
+>>   		dev_err(&client->dev, "Could not parse v4l2 endpoint %d\n",
+>>   			ret);
+>> -		goto error_of_node_put;
+>> +		return ret;
+>>   	}
+>>   
+>>   	/* do some sanity checks */
+>>   	if (ep.bus.mipi_csi2.num_data_lanes > 2) {
+>>   		dev_err(&client->dev, "max supported data lanes is 2 / got %d",
+>>   			ep.bus.mipi_csi2.num_data_lanes);
+>> -		ret = -EINVAL;
+>> -		goto error_of_node_put;
+>> +		return -EINVAL;
+>>   	}
+>>   
+>>   	/* register it for later use */
+>> @@ -750,7 +747,6 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
+>>   	asd = v4l2_async_nf_add_fwnode_remote(&bridge->notifier,
+>>   					      of_fwnode_handle(ep_node),
+>>   					      struct v4l2_async_connection);
+>> -	of_node_put(ep_node);
+>>   
+>>   	if (IS_ERR(asd)) {
+>>   		dev_err(&client->dev, "fail to register asd to notifier %ld",
+>> @@ -764,46 +760,31 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
+>>   		v4l2_async_nf_cleanup(&bridge->notifier);
+>>   
+>>   	return ret;
+>> -
+>> -error_of_node_put:
+>> -	of_node_put(ep_node);
+>> -error:
+>> -
+>> -	return ret;
+>>   }
+>>   
+>>   static int mipid02_parse_tx_ep(struct mipid02_dev *bridge)
+>>   {
+>>   	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_PARALLEL };
+>>   	struct i2c_client *client = bridge->i2c_client;
+>> -	struct device_node *ep_node;
+>>   	int ret;
+>>   
+>>   	/* parse tx (endpoint 2) */
+>> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
+>> -						2, 0);
+>> +	struct device_node *ep_node __free(device_node) =
+>> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 2, 0);
+>>   	if (!ep_node) {
+>>   		dev_err(&client->dev, "unable to find port1 ep");
+>> -		ret = -EINVAL;
+>> -		goto error;
+>> +		return -EINVAL;
+>>   	}
+>>   
+>>   	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
+>>   	if (ret) {
+>>   		dev_err(&client->dev, "Could not parse v4l2 endpoint\n");
+>> -		goto error_of_node_put;
+>> +		return -EINVAL;
+>>   	}
+>>   
+>> -	of_node_put(ep_node);
+>>   	bridge->tx = ep;
+>>   
+>>   	return 0;
+>> -
+>> -error_of_node_put:
+>> -	of_node_put(ep_node);
+>> -error:
+>> -
+>> -	return -EINVAL;
+>>   }
+>>   
+>>   static int mipid02_probe(struct i2c_client *client)
+> 
 
