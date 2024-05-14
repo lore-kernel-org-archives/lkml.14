@@ -1,63 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pb-smtp2.pobox.com (pb-smtp2.pobox.com [64.147.108.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2062180A72
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 17:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153311E481;
+	Tue, 14 May 2024 17:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.108.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715706187; cv=none; b=V/uFLVC1KUpgEvyjRsX7zN2bxBjzmJOW4LtapbSZLeiFFTPbZrMgn3troo3oKi9vL/fS+fUIvtSbYgVVC54t0vl18UnJpW6dQ0grgX33WZwWdIphXhzGtQ+ZqhJW5q7UPv1GZMyUUdrwf7UX2u+N98+XoGfXP6FF7MqqhhWoZyk=
+	t=1715706374; cv=none; b=khsPx7Z09prcdeVuAdNd17uVu1a9vezoV/WEnJ4gSmDim5NDyz+KDwcJvBCPqI7A4j9hzR/V1B77rww58qIeaNxMb8f/T6uVHupa8Yz4Us6oyXegMX/CxkRsZX6NEqnhKZsnxCbNwd1RwXHFH17QSXFxtN1WXyp7jlao8fRSxNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715706187; c=relaxed/simple;
-	bh=XZ8Q9khtBL8ZL4VJFdAPvZb6DhjdHFjCgKjn8RyMaXU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nIZSDcF2yuiVXT1PwTpJ5HJeycZC/rJWGwXlHms+3hgVudFaTHnGRp7bhhZSdt5fxQwLLmPIt69aNG1dZrowX6Z1L4XdFjySRW8oJChrSya0muJSOXFLu4r9ivTrUW60NYaa8qxDXJxufiJ3/7KzF4QSN4wN6x+brpQAMu4VCQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsCMBE6c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715706374; c=relaxed/simple;
+	bh=OlcChcA2au/wBXzMTkA1+TK5Grh+/q6FUIeZZ8fVvvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r3Bct62O9tmYPqmUXeNRa7JPiwZzu9q3/CKmByHT7YlUDeN44tEbBRICirhgo0SuVzwQjO21e3jrpshA7D4XznYF+ZKlQx3Mt1jpr/RLh7vUaJjdjTXbcFJYkrf1zH0Vj3gFg6ktJFcnqcfGqo6W96aZnXBHivpq67ugE6oFaQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com; spf=pass smtp.mailfrom=pobox.com; dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b=RG6JTOPZ; arc=none smtp.client-ip=64.147.108.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pobox.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsCMBE6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 942B3C4AF10;
-	Tue, 14 May 2024 17:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715706187;
-	bh=XZ8Q9khtBL8ZL4VJFdAPvZb6DhjdHFjCgKjn8RyMaXU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=EsCMBE6cpxNh4Fvrx9j1sOuj9Zb0sxfpb5GPH8/vLxMvWRQHnCYCteFtJK6Jq8O0p
-	 3uownThXxnxNTPr6wq1Dzxan74KzoUPVWWuQ7a3ps4m7fzObJ37h31XvbXcY0cDHjL
-	 Ttw4bkdq8qNtva8aS3p09hMdnQfcxfxRghnwS6Bevmd8OKIsbxCUF3+Xy62LxokeKG
-	 NXjpjfczWpgYTVcqrxZvK2bu+oervw2LZ15DbHTgEcbtdiyI7wvGqVIh/1ZdFebPeg
-	 a+U3zDBT7+HliPkT+aIRoeXP34rY1v6zsxCIGJR7qxEkXufVrCjXPwVC1/nr6VSm1k
-	 16eyJLQTkQJLQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D0C2C43339;
-	Tue, 14 May 2024 17:03:07 +0000 (UTC)
-Subject: Re: [GIT PULL] x86/sev for v6.10-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240513195935.GAZkJxJwqejWsDqPN3@fat_crate.local>
-References: <20240513195935.GAZkJxJwqejWsDqPN3@fat_crate.local>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240513195935.GAZkJxJwqejWsDqPN3@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip x86_sev_for_v6.10_rc1
-X-PR-Tracked-Commit-Id: e2f4c8c319abd1afbedb7a31877cb569265db1b4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 964bbdfdf01d9b365809726313da967cb1dafb96
-Message-Id: <171570618747.7410.11069690216025046856.pr-tracker-bot@kernel.org>
-Date: Tue, 14 May 2024 17:03:07 +0000
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="RG6JTOPZ"
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+	by pb-smtp2.pobox.com (Postfix) with ESMTP id 5B7352F749;
+	Tue, 14 May 2024 13:06:06 -0400 (EDT)
+	(envelope-from junio@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=pobox.com; h=from:to:cc
+	:subject:date:message-id:mime-version:content-type; s=sasl; bh=O
+	lcChcA2au/wBXzMTkA1+TK5Grh+/q6FUIeZZ8fVvvw=; b=RG6JTOPZJRyMhJfz7
+	eQx2wzenifCmJaEfYB2i64kmkWumHJRsiD3Y4PxTWWJ0isw6yT9GlaFzzYnyPUop
+	WfUFXzqDcivJ3FrxJa+BPG0+oTlNGS7FRdHLt1bf+ww7oFwNg1+rFYP0vTWMdIxj
+	GEFxLRTG3PnuENpTJ5hPcIgq6g=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+	by pb-smtp2.pobox.com (Postfix) with ESMTP id 507732F748;
+	Tue, 14 May 2024 13:06:06 -0400 (EDT)
+	(envelope-from junio@pobox.com)
+Received: from pobox.com (unknown [34.125.153.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 9D8242F747;
+	Tue, 14 May 2024 13:06:05 -0400 (EDT)
+	(envelope-from junio@pobox.com)
+From: Junio C Hamano <gitster@pobox.com>
+To: git@vger.kernel.org
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>,
+    git-packagers@googlegroups.com
+Subject: [ANNOUNCE] Git v2.45.1 and friends
+Date: Tue, 14 May 2024 10:06:04 -0700
+Message-ID: <xmqqv83g4937.fsf@gitster.g>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Pobox-Relay-ID:
+ 4025AFF6-1214-11EF-80E0-25B3960A682E-77302942!pb-smtp2.pobox.com
 
-The pull request you sent on Mon, 13 May 2024 21:59:35 +0200:
+A maintenance release Git v2.45.1, together with releases for older
+maintenance tracks v2.44.1, v2.43.4, v2.42.2, v2.41.1, v2.40.2, and
+v2.39.4, are now available at the usual places.  These are to address
+a handful of security issues.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip x86_sev_for_v6.10_rc1
+The tarballs are found at:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/964bbdfdf01d9b365809726313da967cb1dafb96
+    https://www.kernel.org/pub/software/scm/git/
 
-Thank you!
+The following public repositories all have a copy of the 'v2.45.1'
+tag, as well as the tags for older maintenance tracks listed above.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+  url = https://git.kernel.org/pub/scm/git/git
+  url = https://kernel.googlesource.com/pub/scm/git/git
+  url = git://repo.or.cz/alt-git.git
+  url = https://github.com/gitster/git
+
+The addressed issues are all listed in the release notes for Git
+2.39.4, attached below.
+
+Note: There is a regression for Git LFS users.  The defense-in-depth
+protection this update contains is at odds with the way Git LFS
+currently works when cloning a new repository that wants to use the
+post-checkout hook during the initial cloning.  The users can fix it
+after the fact by running `git lfs pull`, if the checkout stage is
+stopped, as a workaround.  The error message given after a failed
+clone also gives an alternative workaround to disable the added
+safety with the use of the GIT_CLONE_PROTECTION_ACTIVE environment
+variable that the users and the scripts can use.
+
+--------------------------------------------------
+Git v2.39.4 Release Notes
+=========================
+
+This addresses the security issues CVE-2024-32002, CVE-2024-32004,
+CVE-2024-32020 and CVE-2024-32021.
+
+This release also backports fixes necessary to let the CI builds pass
+successfully.
+
+Fixes since v2.39.3
+-------------------
+
+ * CVE-2024-32002:
+
+   Recursive clones on case-insensitive filesystems that support symbolic
+   links are susceptible to case confusion that can be exploited to
+   execute just-cloned code during the clone operation.
+
+ * CVE-2024-32004:
+
+   Repositories can be configured to execute arbitrary code during local
+   clones. To address this, the ownership checks introduced in v2.30.3
+   are now extended to cover cloning local repositories.
+
+ * CVE-2024-32020:
+
+   Local clones may end up hardlinking files into the target repository's
+   object database when source and target repository reside on the same
+   disk. If the source repository is owned by a different user, then
+   those hardlinked files may be rewritten at any point in time by the
+   untrusted user.
+
+ * CVE-2024-32021:
+
+   When cloning a local source repository that contains symlinks via the
+   filesystem, Git may create hardlinks to arbitrary user-readable files
+   on the same filesystem as the target repository in the objects/
+   directory.
+
+ * CVE-2024-32465:
+
+   It is supposed to be safe to clone untrusted repositories, even those
+   unpacked from zip archives or tarballs originating from untrusted
+   sources, but Git can be tricked to run arbitrary code as part of the
+   clone.
+
+ * Defense-in-depth: submodule: require the submodule path to contain
+   directories only.
+
+ * Defense-in-depth: clone: when symbolic links collide with directories, keep
+   the latter.
+
+ * Defense-in-depth: clone: prevent hooks from running during a clone.
+
+ * Defense-in-depth: core.hooksPath: add some protection while cloning.
+
+ * Defense-in-depth: fsck: warn about symlink pointing inside a gitdir.
+
+ * Various fix-ups on HTTP tests.
+
+ * Test update.
+
+ * HTTP Header redaction code has been adjusted for a newer version of
+   cURL library that shows its traces differently from earlier
+   versions.
+
+ * Fix was added to work around a regression in libcURL 8.7.0 (which has
+   already been fixed in their tip of the tree).
+
+ * Replace macos-12 used at GitHub CI with macos-13.
+
+ * ci(linux-asan/linux-ubsan): let's save some time
+
+ * Tests with LSan from time to time seem to emit harmless message that makes
+   our tests unnecessarily flakey; we work it around by filtering the
+   uninteresting output.
+
+ * Update GitHub Actions jobs to avoid warnings against using deprecated
+   version of Node.js.
+
+
