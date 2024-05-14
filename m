@@ -1,169 +1,200 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0E8144D0B
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07278144D0B
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715696679; cv=none; b=updQQqdzD3lTjpqqBQwym+oL9sxliz1SQnKbJ/Y2+6ZkoL9Kz+xw40FkAU6XqqcGW1gq7sprJAKeNaP4KZP3fVL1XIKd5OAw2zrH/nyhMMtY1FGN5FvIZtffadNp2p+v7r+jcyLcRXZ+EkwRG5ROZCsyctVKQbWfG7rmeTqDA8w=
+	t=1715696727; cv=none; b=f+cKdDWYDmF3xcWZTbYWdQGUbfH6wEWgbX1rVnLa7SxPzmGL+S7DRFi6FVrfOXAT0yb3pVEwOOUT0DjYLbkHPJpb25WTs3RWRrzngr+V3Bjh8ZRsbcNDIxJimNA74CI1K9WOl9Aj0BxIKfSqJYdGTXbJvcE4de356XBFmISccNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715696679; c=relaxed/simple;
-	bh=CAI/Q+O7gZEq9om/A/A7hRhXWyKZi5yJD6oSXYGsU3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FptxCyskR3tSoMmUI71ijnUZ2ecF6/AwrI3hfVYHwLXTOlkD/UkI0Lp09r3YlMbTkp+EBOEdUQW/1AwgwxO6tvxGWjL3v2c5E1PXL4g70s43NjH+OQMKDeIiBg1R+2tqQ8J0uY0Z64L7FFPGKU+0Q6ErEADSJTBJuhmMr1uCW70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ABDa9XQP; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ABDa9XQP"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44ECUkTN030352;
-	Tue, 14 May 2024 14:24:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=9Uk9sPwbu8Xnq7un5OWPPwl9F/6BF471v1lOmCrInZw=;
- b=ABDa9XQPQa0y2F0O+4I1YPYH5sHlUKApbZ/YR/vQAdrYO69VbZtIGh6VFhC++3wh47Fc
- /ZQN6ml/lvN6bx5WJVHeCEJkWhRy4Ev6+vtwY+L90ybhIft4PTwzB0RzX+sq0H9nG/IH
- d23kgI3SQX+rZJTF4ZbzNyuEO4s7Sl+CC+RqmGo7uG0AoFFJD6F01ntGrPsiZFh2uBd8
- 1z2CboxprAU5rJ4P2LU8dna48YwPlURw15L6TcReF7FEzQsQO3CVSk8IxjSwU++BCM56
- VcSL7yrM5szSEhxnk/lXZ1/QJZS3D6vMDrZeZiAb6B9UorXBP+zkW/+eji6clMivscrs JA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y44hrrttg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 14:24:07 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44EEO6XH012082;
-	Tue, 14 May 2024 14:24:07 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y44hrrttd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 14:24:06 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44EBV5l9020460;
-	Tue, 14 May 2024 14:24:06 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2kcyx046-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 14:24:06 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EEO3rg45547948
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 May 2024 14:24:05 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 639B75805D;
-	Tue, 14 May 2024 14:24:03 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B8EE58065;
-	Tue, 14 May 2024 14:23:59 +0000 (GMT)
-Received: from [9.79.191.48] (unknown [9.79.191.48])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 14 May 2024 14:23:59 +0000 (GMT)
-Message-ID: <e942abce-97ec-4bf1-8220-55bfed18c265@linux.ibm.com>
-Date: Tue, 14 May 2024 19:53:58 +0530
+	s=arc-20240116; t=1715696727; c=relaxed/simple;
+	bh=fFUDAF5lVPhHSvNzxUUCBmqbwiK0hi2y6kNbxl0InYA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=abRwIhAa2Tnh8y7Snq4AVkdHCZeJ1XUsj68d12dUMBXljM2BoG1hgD5tagr6ZGgF8ENctIuTTh9lyDa/3TLWRy5GX9Vn4/jVdC7WmyEmsU2OiFG52t673BlaIkkDItiLPpuSxtUouJf5ZugXdG0jue9rYALe+ivSo+3qvhj20Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1s6t5m-00044O-7m; Tue, 14 May 2024 16:25:22 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1s6t5l-001N6X-6h; Tue, 14 May 2024 16:25:21 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1s6t5l-004mXh-0Q;
+	Tue, 14 May 2024 16:25:21 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Tue, 14 May 2024 16:25:19 +0200
+Subject: [PATCH v3 3/3] mtd: nand: mxc_nand: support software ECC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH v3 1/1] sched: Report the different kinds of
- imbalances in /proc/schedstat
-To: Chen Yu <yu.c.chen@intel.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-        torvalds@linux-foundation.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, vincent.guittot@linaro.org,
-        gautham.shenoy@amd.com, kprateek.nayak@amd.com
-References: <20240514044445.1409976-1-swapnil.sapkal@amd.com>
- <20240514044445.1409976-2-swapnil.sapkal@amd.com>
- <ZkNHshuGhY6nBGmJ@chenyu5-mobl2>
-Content-Language: en-US
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-In-Reply-To: <ZkNHshuGhY6nBGmJ@chenyu5-mobl2>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: MZPGlk5qYo-ogM3PHwWoI8CpAWL1lwMR
-X-Proofpoint-ORIG-GUID: CE5G7ZNpD9lpW7oB8mWrKK6uytvsQ-JB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-14_07,2024-05-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 phishscore=0
- clxscore=1011 spamscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405140102
+Message-Id: <20240514-mtd-nand-mxc-nand-exec-op-v3-3-3e6f45fd3d82@pengutronix.de>
+References: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
+In-Reply-To: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715696721; l=5082;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=fFUDAF5lVPhHSvNzxUUCBmqbwiK0hi2y6kNbxl0InYA=;
+ b=tj+4TIwISXBORWmh2MPTpURPBXKBF+9LJxh4lMhXFqbOwW+GbhgFW330wF+Nw7AwulilNg3xE
+ GJVIJBKANLCBa9lJ/4sDYhcTtPGghY2dTCeqAy1aoVLkgpKM+QG8l28
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+With these changes the driver can be used with software BCH ECC which
+is useful for NAND chips that require a stronger ECC than the i.MX
+hardware supports.
 
+The controller normally interleaves user data with OOB data when
+accessing the NAND chip. With Software BCH ECC we write the data
+to the NAND in a way that the raw data on the NAND chip matches the
+way the NAND layer sees it. This way commands like NAND_CMD_RNDOUT
+work as expected.
 
-On 5/14/24 4:44 PM, Chen Yu wrote:
-> On 2024-05-14 at 04:44:45 +0000, Swapnil Sapkal wrote:
->> In /proc/schedstat, lb_imbalance reports the sum of imbalances
->> discovered in sched domains with each call to sched_balance_rq(), which is
->> not very useful because lb_imbalance does not mention whether the imbalance
->> is due to load, utilization, nr_tasks or misfit_tasks. Remove this field
->> from /proc/schedstat.
->>
->> Currently there is no field in /proc/schedstat to report different types
->> of imbalances. Introduce new fields in /proc/schedstat to report the
->> total imbalances in load, utilization, nr_tasks or misfit_tasks.
->>
->> Added fields to /proc/schedstat:
->>  	- lb_imbalance_load: Total imbalance due to load.
->> 	- lb_imbalance_util: Total imbalance due to utilization.
->> 	- lb_imbalance_task: Total imbalance due to number of tasks.
->> 	- lb_imbalance_misfit: Total imbalance due to misfit tasks.
->>
->> Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
->> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
->> ---
->>  Documentation/scheduler/sched-stats.rst | 121 ++++++++++++++----------
->>  include/linux/sched/topology.h          |   5 +-
->>  kernel/sched/fair.c                     |  21 +++-
->>  kernel/sched/stats.c                    |   7 +-
->>  4 files changed, 99 insertions(+), 55 deletions(-)
-> 
-> [...]
-> 
->> diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
->> index 78e48f5426ee..a02bc9db2f1c 100644
->> --- a/kernel/sched/stats.c
->> +++ b/kernel/sched/stats.c
->> @@ -151,11 +151,14 @@ static int show_schedstat(struct seq_file *seq, void *v)
->>  			seq_printf(seq, "domain%d %*pb", dcount++,
->>  				   cpumask_pr_args(sched_domain_span(sd)));
->>  			for (itype = 0; itype < CPU_MAX_IDLE_TYPES; itype++) {
->> -				seq_printf(seq, " %u %u %u %u %u %u %u %u",
->> +				seq_printf(seq, " %u %u %u %u %u %u %u %u %u %u %u",
->>  				    sd->lb_count[itype],
->>  				    sd->lb_balanced[itype],
->>  				    sd->lb_failed[itype],
->> -				    sd->lb_imbalance[itype],
->> +				    sd->lb_imbalance_load[itype],
->> +				    sd->lb_imbalance_util[itype],
->> +				    sd->lb_imbalance_task[itype],
->> +				    sd->lb_imbalance_misfit[itype],
->>  				    sd->lb_gained[itype],
->>  				    sd->lb_hot_gained[itype],
->>  				    sd->lb_nobusyq[itype],
-> 
-> Do we need to increase SCHEDSTAT_VERSION to 16?
+This was tested on i.MX27 but should work on the other SoCs supported
+by this driver as well.
 
-It's been increased already as part of below commit 
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/mtd/nand/raw/mxc_nand.c | 73 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 68 insertions(+), 5 deletions(-)
 
-commit 11b0bfa5d463b17cac5bf6b94fea4921713530c3
-Author: Ingo Molnar <mingo@kernel.org>
-Date:   Fri Mar 8 11:58:55 2024 +0100
+diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc_nand.c
+index 6f8b8f4b118ec..ae4cff2584a2d 100644
+--- a/drivers/mtd/nand/raw/mxc_nand.c
++++ b/drivers/mtd/nand/raw/mxc_nand.c
+@@ -1404,10 +1404,10 @@ static int mxcnd_attach_chip(struct nand_chip *chip)
+ 	chip->ecc.bytes = host->devtype_data->eccbytes;
+ 	host->eccsize = host->devtype_data->eccsize;
+ 	chip->ecc.size = 512;
+-	mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
+ 
+ 	switch (chip->ecc.engine_type) {
+ 	case NAND_ECC_ENGINE_TYPE_ON_HOST:
++		mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
+ 		chip->ecc.read_page = mxc_nand_read_page;
+ 		chip->ecc.read_page_raw = mxc_nand_read_page_raw;
+ 		chip->ecc.read_oob = mxc_nand_read_oob;
+@@ -1417,6 +1417,8 @@ static int mxcnd_attach_chip(struct nand_chip *chip)
+ 		break;
+ 
+ 	case NAND_ECC_ENGINE_TYPE_SOFT:
++		chip->ecc.write_page_raw = nand_monolithic_write_page_raw;
++		chip->ecc.read_page_raw = nand_monolithic_read_page_raw;
+ 		break;
+ 
+ 	default:
+@@ -1472,6 +1474,59 @@ static int mxcnd_setup_interface(struct nand_chip *chip, int chipnr,
+ 	return host->devtype_data->setup_interface(chip, chipnr, conf);
+ }
+ 
++static void copy_page_to_sram(struct mtd_info *mtd, const void *buf, int buf_len)
++{
++	struct nand_chip *this = mtd_to_nand(mtd);
++	struct mxc_nand_host *host = nand_get_controller_data(this);
++	unsigned int no_subpages = mtd->writesize / 512;
++	int oob_per_subpage, i;
++
++	oob_per_subpage = (mtd->oobsize / no_subpages) & ~1;
++
++	/*
++	 * During a page write the i.MX NAND controller will read 512b from
++	 * main_area0 SRAM, then oob_per_subpage bytes from spare0 SRAM, then
++	 * 512b from main_area1 SRAM and so on until the full page is written.
++	 * For software ECC we want to have a 1:1 mapping between the raw page
++	 * data on the NAND chip and the view of the NAND core. This is
++	 * necessary to make the NAND_CMD_RNDOUT read the data it expects.
++	 * To accomplish this we have to write the data in the order the controller
++	 * reads it. This is reversed in copy_page_from_sram() below.
++	 */
++	for (i = 0; i < no_subpages; i++) {
++		memcpy16_toio(host->main_area0 + i * 512, buf, 512);
++		buf += 512;
++
++		memcpy16_toio(host->spare0 + i * host->devtype_data->spare_len, buf,
++			      oob_per_subpage);
++		buf += oob_per_subpage;
++	}
++}
++
++static void copy_page_from_sram(struct mtd_info *mtd)
++{
++	struct nand_chip *this = mtd_to_nand(mtd);
++	struct mxc_nand_host *host = nand_get_controller_data(this);
++	void *buf = host->data_buf;
++	unsigned int no_subpages = mtd->writesize / 512;
++	int oob_per_subpage, i;
++
++	/* mtd->writesize is not set during ident scanning */
++	if (!no_subpages)
++		no_subpages = 1;
++
++	oob_per_subpage = (mtd->oobsize / no_subpages) & ~1;
++
++	for (i = 0; i < no_subpages; i++) {
++		memcpy16_fromio(buf, host->main_area0 + i * 512, 512);
++		buf += 512;
++
++		memcpy16_fromio(buf, host->spare0 + i * host->devtype_data->spare_len,
++				oob_per_subpage);
++		buf += oob_per_subpage;
++	}
++}
++
+ static int mxcnd_do_exec_op(struct nand_chip *chip,
+ 			    const struct nand_subop *op)
+ {
+@@ -1510,7 +1565,10 @@ static int mxcnd_do_exec_op(struct nand_chip *chip,
+ 			buf_write = instr->ctx.data.buf.out;
+ 			buf_len = instr->ctx.data.len;
+ 
+-			memcpy32_toio(host->main_area0, buf_write, buf_len);
++			if (chip->ecc.engine_type == NAND_ECC_ENGINE_TYPE_ON_HOST)
++				memcpy32_toio(host->main_area0, buf_write, buf_len);
++			else
++				copy_page_to_sram(mtd, buf_write, buf_len);
+ 
+ 			host->devtype_data->send_page(mtd, NFC_INPUT);
+ 
+@@ -1545,10 +1603,15 @@ static int mxcnd_do_exec_op(struct nand_chip *chip,
+ 
+ 			host->devtype_data->read_page(chip);
+ 
+-			if (IS_ALIGNED(buf_len, 4)) {
+-				memcpy32_fromio(buf_read, host->main_area0, buf_len);
++			if (chip->ecc.engine_type == NAND_ECC_ENGINE_TYPE_ON_HOST) {
++				if (IS_ALIGNED(buf_len, 4)) {
++					memcpy32_fromio(buf_read, host->main_area0, buf_len);
++				} else {
++					memcpy32_fromio(host->data_buf, host->main_area0, mtd->writesize);
++					memcpy(buf_read, host->data_buf, buf_len);
++				}
+ 			} else {
+-				memcpy32_fromio(host->data_buf, host->main_area0, mtd->writesize);
++				copy_page_from_sram(mtd);
+ 				memcpy(buf_read, host->data_buf, buf_len);
+ 			}
+ 
 
-    sched/debug: Increase SCHEDSTAT_VERSION to 16
-    
-    We changed the order of definitions within 'enum cpu_idle_type',
-    which changed the order of [CPU_MAX_IDLE_TYPES] columns in
-    show_schedstat().
+-- 
+2.39.2
 
-
-> 
-> thanks,
-> Chenyu
