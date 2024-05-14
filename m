@@ -1,135 +1,116 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE675225A8;
-	Tue, 14 May 2024 12:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908542B9B3;
+	Tue, 14 May 2024 12:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715689617; cv=none; b=f5s9VATRDI2eZSaBG0Ar27xXXH/PcFFsHTttLGyd83VgcrbX/Eefg1jHF8qmXVytHnFIC2RC0uc7Sf828kPF4LlxNOU+sKX8rRwaHpQAWoO2WO3ovU70wtIY931kXD5nopM/wBbtHJXFRWjbIAptQHW7OMny/f2UgGs8Ya0KCog=
+	t=1715689789; cv=none; b=qmSbLz98mbI30Cj5nwGMxcygP7ZdkVvcY5zj3Ieo13KqFZy9U/Iby1loruuzUC31IIwacoZdO9h2opDwB3mSqaaOmtC3wNcSvfnFRjWFzDHXJALYHrHSJM57OBk20RX/zjwm65409do09wfon54M/1TN1vgIZ/VrFm1AwwoiC+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715689617; c=relaxed/simple;
-	bh=xU1lG+LaTVYlDzKuYpkmb+8guhxZCCniE7IDWhABdcc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LUzwBjwEhnMcMVBw4CGKKei/ZLXBq/rk4potqs1YKTip6LAT9NbyrIXapOkkNzqQ5gGauj0dzd/F6kdcV0E6eAlxNRLOQMZgL22EaOUxqYeHRpyXMAJb+YJsMmE7pSWVyGnW7FJHMsyhS3EgQTUxQoUUTzUwH9E6zyzdbQuRQq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=TB1hUabf; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1715689789; c=relaxed/simple;
+	bh=6cPrpE0EOmonSqbDlomNuzEI4XBK54BEpKNy1lBWCU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqZ11bsga68dRKjbz145A6Wzr/7wygGggkXjldUO1XDHUf+oa1VEw81gRXmNJerF5S/yXk34jm8PslSmw8jMzYvEEEct4zZVckokuw5YFBWHOeW3piZnkCZxIJ+DfW4C/KpWzXmXIuJLihq1/G2+IHhJGxHLt8QYgUEqbGo0NUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qI0k5HvL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TB1hUabf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1715689616; x=1747225616;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jZ0aIN73vHSEd/w0f15GiiFOLZHUFBfpeWf82hZw6m8=;
-  b=TB1hUabfEMQWWWkY7MDUZt6vuCG9lhBXMqXoImr/Z60/35aBT1/Fur/6
-   kqrMQEFAv2gpbK0U30Eu5oAAHNC9uPvDS8d8DUvhFW7LrKYmORofdDBTd
-   wgqIuIEhJWDPY/NKILgkrSmRFtiHzDdr6Jki8oNgWLxQftRC+VNLfW60d
-   w=;
-X-IronPort-AV: E=Sophos;i="6.08,159,1712620800"; 
-   d="scan'208";a="401038834"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 12:26:52 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:16153]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.23.178:2525] with esmtp (Farcaster)
- id d2bd624b-9d24-4d18-9f3a-ab99477b65da; Tue, 14 May 2024 12:26:51 +0000 (UTC)
-X-Farcaster-Flow-ID: d2bd624b-9d24-4d18-9f3a-ab99477b65da
-Received: from EX19D002EUC003.ant.amazon.com (10.252.51.218) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 14 May 2024 12:26:50 +0000
-Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
- EX19D002EUC003.ant.amazon.com (10.252.51.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 14 May 2024 12:26:49 +0000
-Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
- (10.253.65.58) by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Tue, 14 May 2024 12:26:49
- +0000
-Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
-	id BBB5620AC2; Tue, 14 May 2024 12:26:48 +0000 (UTC)
-From: Hagar Hemdan <hagarhem@amazon.com>
-To:
-CC: Norbert Manthey <nmanthey@amazon.de>, Hagar Hemdan <hagarhem@amazon.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] gpio: prevent potential speculation leaks in gpio_device_get_desc()
-Date: Tue, 14 May 2024 12:26:01 +0000
-Message-ID: <20240514122601.15261-1-hagarhem@amazon.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qI0k5HvL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06663C2BD10;
+	Tue, 14 May 2024 12:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715689789;
+	bh=6cPrpE0EOmonSqbDlomNuzEI4XBK54BEpKNy1lBWCU4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qI0k5HvLfn1CfWJxRrdpit474Aa9aUxoOG7lKfDGJZ4mH86QzX3tmCOKcHdYhEspa
+	 Z81olAP9T5jKFCeYEubMWE6uWxP31811HsJnrqjSwJF9thfFSeATGhHwi4ckomsIch
+	 tO3lrlIV8++649cRA9gyRmBnhHTOunHMMw3OQLCy8EJFoPwXUqRwN3+xSorBEBpYl7
+	 vQD++G3Tkyx5/MrdedtUejyEoqkgfIVtYjOjefsyId/95tPIFGH2TDeK2jb9FjjF7S
+	 aqF84E3Z/R2vVis3YdJjmzv9+FOU/I6aVtD8FSdttZSNrNy3FP/GgTYISNilqIw26E
+	 iAKRAmiemJkLw==
+Date: Tue, 14 May 2024 13:29:43 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	"open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 1/3] mailbox: Make BCM2835_MBOX default to ARCH_BCM2835
+Message-ID: <20240514-amiable-unequal-d4133956c80c@spud>
+References: <20240513235234.1474619-1-florian.fainelli@broadcom.com>
+ <20240513235234.1474619-2-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZF82ErRhEId7DTVg"
+Content-Disposition: inline
+In-Reply-To: <20240513235234.1474619-2-florian.fainelli@broadcom.com>
 
-Users can call the gpio_ioctl() interface to get information about gpio
-chip lines.
-Lines on the chip are identified by an offset in the range
-of [0,chip.lines).
-Offset is copied from user and then used as an array index to get
-the gpio descriptor without sanitization.
 
-This change ensures that the offset is sanitized by
-using "array_index_nospec" to mitigate any possibility of speculative
-information leaks.
+--ZF82ErRhEId7DTVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
+On Mon, May 13, 2024 at 04:52:32PM -0700, Florian Fainelli wrote:
+> This driver is depended on by CONFIG_FIRMWARE_RASPBERRYPI which provides
+> a number of essential services, including but not limited to a Linux
+> common clock framework provider. Make sure that enable
+> CONFIG_ARCH_BCM2835 does enable the corresponding mailbox driver.
+>=20
+> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+>  drivers/mailbox/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 42940108a187..2b4cde562a90 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -109,6 +109,7 @@ config ALTERA_MBOX
+>  config BCM2835_MBOX
+>  	tristate "BCM2835 Mailbox"
+>  	depends on ARCH_BCM2835
+> +	default ARCH_BCM2835
 
-Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
-Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
----
-Only compile tested, no access to HW.
----
- drivers/gpio/gpiolib-cdev.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+This is just "default y", since I doubt ARCH_BCM2835 can be a module?
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 9dad67ea2597..215c03e6808f 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -20,6 +20,7 @@
- #include <linux/kfifo.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/nospec.h>
- #include <linux/overflow.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/poll.h>
-@@ -2170,7 +2171,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	lflags = eventreq.handleflags;
- 	eflags = eventreq.eventflags;
- 
--	desc = gpio_device_get_desc(gdev, offset);
-+	desc = gpio_device_get_desc(gdev,
-+				array_index_nospec(offset, gdev->ngpio));
- 	if (IS_ERR(desc))
- 		return PTR_ERR(desc);
- 
-@@ -2477,7 +2479,8 @@ static int lineinfo_get_v1(struct gpio_chardev_data *cdev, void __user *ip,
- 		return -EFAULT;
- 
- 	/* this doubles as a range check on line_offset */
--	desc = gpio_device_get_desc(cdev->gdev, lineinfo.line_offset);
-+	desc = gpio_device_get_desc(cdev->gdev,
-+				array_index_nospec(lineinfo.line_offset, cdev->gdev->ngpio));
- 	if (IS_ERR(desc))
- 		return PTR_ERR(desc);
- 
-@@ -2514,7 +2517,8 @@ static int lineinfo_get(struct gpio_chardev_data *cdev, void __user *ip,
- 	if (memchr_inv(lineinfo.padding, 0, sizeof(lineinfo.padding)))
- 		return -EINVAL;
- 
--	desc = gpio_device_get_desc(cdev->gdev, lineinfo.offset);
-+	desc = gpio_device_get_desc(cdev->gdev,
-+				array_index_nospec(lineinfo.offset, cdev->gdev->ngpio));
- 	if (IS_ERR(desc))
- 		return PTR_ERR(desc);
- 
--- 
-2.40.1
+If so, patch 2 could also just be "default y" and I think patch 3 can
+have the same logic applied to it, given you're defaulting it to a
+dependency also?
 
+Thanks,
+Conor.
+
+>  	help
+>  	  An implementation of the BCM2385 Mailbox.  It is used to invoke
+>  	  the services of the Videocore. Say Y here if you want to use the
+> --=20
+> 2.34.1
+>=20
+
+--ZF82ErRhEId7DTVg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkNZNwAKCRB4tDGHoIJi
+0g9yAQCQfW/zAiGbZezyBzVcnkHGAEnFDwul79aAYPQZhc0dGAD9H+asSEG/ICHL
+HtOFDWlh1G+Pmy1k37sMldVMk4wZfAI=
+=1AwS
+-----END PGP SIGNATURE-----
+
+--ZF82ErRhEId7DTVg--
