@@ -1,46 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE476311D;
-	Tue, 14 May 2024 11:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270B748CF2;
+	Tue, 14 May 2024 11:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715685887; cv=none; b=Kg5mrSPcsVmIL5IFnWo/7kMivs55IsHaZ0nEJjGeN1/6mcEyP7UMxreWIyhB+dOWLHkn8w9nW5dl6oDhm7I4srKy/aKSD1v5TLgUmLGGE1613KnJU/MMYf0uSm+r1pLw0mmdVlfqyTzyqaVtixv1TDpT/LIG/k8BMdi618H4+E8=
+	t=1715685919; cv=none; b=PJ9MZId37JcbF/q0EAzrKJgNvvGRjwYXnkbjrDgxSsnUOWX0FDcamtDo5EDQ5Tsb70V9Gar4YF8+AjIExtz3iJDZHsEy7hjF/47usvnN4PZoN6JXYMgKDf4vQr3oD61fa3xYLLNLhH2KXiHVyGFD7sGIPW1jnON3kM8uxARhJaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715685887; c=relaxed/simple;
-	bh=LXV+ZjnuDjyDDleo0LoYyUv1WccqMEPwcst/tiipykM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sxRcOq7skZLep//GTP1VXR7Mt8oePyxA0IWsB88u7BkSiY1caCAIf9QcS03x6Rjk+LLl1QW5gV4gsoF/NNABj18mTFjb8kcS1iBK2VIh0WU6UG/pz2IbaaIt/Tzhn+9XYjVvdWqa8qByZmkvPrfyAO4+PcfitKwioAwFOkHVCMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A12suBtl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A12suBtl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4BDEC2BD10;
-	Tue, 14 May 2024 11:24:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715685887;
-	bh=LXV+ZjnuDjyDDleo0LoYyUv1WccqMEPwcst/tiipykM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A12suBtlmZTpHrD5Azhe/DLDCkKtPsgttPoXSRecc/ZB5xfAEnZL2NCO/eXdddrXz
-	 iWTdBvQA6ulwZ07uIT01j5FkOSypdzbB8l5ZdT9Lo8FBvPATfVFXG+aYdIlxXFR8vL
-	 bZtWRnS9XqmE31pl9FX++BB2SSupZv6j4kjWF+po=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>,
-	Amit Sunil Dhamne <amitsd@google.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 6.6 237/301] usb: typec: tcpm: unregister existing source caps before re-registration
-Date: Tue, 14 May 2024 12:18:28 +0200
-Message-ID: <20240514101041.202661931@linuxfoundation.org>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240514101032.219857983@linuxfoundation.org>
-References: <20240514101032.219857983@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	s=arc-20240116; t=1715685919; c=relaxed/simple;
+	bh=JZ8hPgZYNySm6liu5QHHuI3IvzBQOuIu23k6l/4xmM4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hUpesLNQxw7RICwfcInU73t7Y9DyLt04oRM6WFo4dH20gkR3yPuWHJcsISTeNDZ5OGr0lNGf2vYqMH1A0rWf6+g8Wb2qZnafOWZqehtI/dHZbEDsgK1tJlA1/ej9QO3ejsfWakoQyK0MZSjD+4PqANoglAMaOrYMHc+Fx4/EVpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VdvCh5w4fz4f3jdL;
+	Tue, 14 May 2024 19:25:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 70DE81A0FD2;
+	Tue, 14 May 2024 19:25:13 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP3 (Coremail) with SMTP id _Ch0CgCHSKAXSkNm4rTMMQ--.61831S2;
+	Tue, 14 May 2024 19:25:13 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: tytso@mit.edu,
+	jack@suse.com,
+	yi.zhang@huaweicloud.com
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/9] A fix and some cleanups to jbd2
+Date: Tue, 14 May 2024 19:24:29 +0800
+Message-Id: <20240514112438.1269037-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,71 +39,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgCHSKAXSkNm4rTMMQ--.61831S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uryfAr1rAr47GF47Jr1kZrb_yoW8JFyUpF
+	yfKa1Syryvvry2qrsxZF4UW3y5Gr10kry7GwnFkF18Aw1UAr17uF1qyF18AryUXFZ3Ka10
+	qrykX3s5GF12kFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5WlkUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+v1->v2:
+-Collect RVB from Yi and Jan
+-remove rename "flags" to "escape" in patch 2/9
+-goto new copy_done tag in patch 4/9
+-add more comment in patch 5/9
 
-------------------
+Patch 1 fixes memleak in jbd2_journal_write_metadata_buffer.
+Patch 2-6 contain some cleanups to jbd2_journal_write_metadata_buffer().
+Patch 7-9 contain some cleanups to kjournald2()
+All tests in "kvm-xfstest smoke" survive. Please let me konw if more tests
+should be ran. Thanks.
 
-From: Amit Sunil Dhamne <amitsd@google.com>
+Kemeng Shi (9):
+  jbd2: avoid memleak in jbd2_journal_write_metadata_buffer
+  jbd2: remove unused return info from
+    jbd2_journal_write_metadata_buffer
+  jbd2: remove unnedded "need_copy_out" in
+    jbd2_journal_write_metadata_buffer
+  jbd2: jump to new copy_done tag when b_frozen_data is created
+    concurrently
+  jbd2: remove unneeded kmap to do escape in
+    jbd2_journal_write_metadata_buffer
+  jbd2: use bh_in instead of jh2bh(jh_in) to simplify code
+  jbd2: remove dead equality check of j_commit_[sequence/request] in
+    kjournald2
+  jbd2: remove dead check of JBD2_UNMOUNT in kjournald2
+  jbd2: remove unnecessary "should_sleep" in kjournald2
 
-commit 230ecdf71a644c9c73e0e6735b33173074ae3f94 upstream.
+ fs/jbd2/commit.c  | 10 ++++-----
+ fs/jbd2/journal.c | 54 ++++++++++++++++++-----------------------------
+ 2 files changed, 25 insertions(+), 39 deletions(-)
 
-Check and unregister existing source caps in tcpm_register_source_caps
-function before registering new ones. This change fixes following
-warning when port partner resends source caps after negotiating PD contract
-for the purpose of re-negotiation.
-
-[  343.135030][  T151] sysfs: cannot create duplicate filename '/devices/virtual/usb_power_delivery/pd1/source-capabilities'
-[  343.135071][  T151] Call trace:
-[  343.135076][  T151]  dump_backtrace+0xe8/0x108
-[  343.135099][  T151]  show_stack+0x18/0x24
-[  343.135106][  T151]  dump_stack_lvl+0x50/0x6c
-[  343.135119][  T151]  dump_stack+0x18/0x24
-[  343.135126][  T151]  sysfs_create_dir_ns+0xe0/0x140
-[  343.135137][  T151]  kobject_add_internal+0x228/0x424
-[  343.135146][  T151]  kobject_add+0x94/0x10c
-[  343.135152][  T151]  device_add+0x1b0/0x4c0
-[  343.135187][  T151]  device_register+0x20/0x34
-[  343.135195][  T151]  usb_power_delivery_register_capabilities+0x90/0x20c
-[  343.135209][  T151]  tcpm_pd_rx_handler+0x9f0/0x15b8
-[  343.135216][  T151]  kthread_worker_fn+0x11c/0x260
-[  343.135227][  T151]  kthread+0x114/0x1bc
-[  343.135235][  T151]  ret_from_fork+0x10/0x20
-[  343.135265][  T151] kobject: kobject_add_internal failed for source-capabilities with -EEXIST, don't try to register things with the same name in the same directory.
-
-Fixes: 8203d26905ee ("usb: typec: tcpm: Register USB Power Delivery Capabilities")
-Cc: linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Link: https://lore.kernel.org/r/20240424223227.1807844-1-amitsd@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/typec/tcpm/tcpm.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -2422,7 +2422,7 @@ static int tcpm_register_sink_caps(struc
- {
- 	struct usb_power_delivery_desc desc = { port->negotiated_rev };
- 	struct usb_power_delivery_capabilities_desc caps = { };
--	struct usb_power_delivery_capabilities *cap;
-+	struct usb_power_delivery_capabilities *cap = port->partner_source_caps;
- 
- 	if (!port->partner_pd)
- 		port->partner_pd = usb_power_delivery_register(NULL, &desc);
-@@ -2432,6 +2432,9 @@ static int tcpm_register_sink_caps(struc
- 	memcpy(caps.pdo, port->sink_caps, sizeof(u32) * port->nr_sink_caps);
- 	caps.role = TYPEC_SINK;
- 
-+	if (cap)
-+		usb_power_delivery_unregister_capabilities(cap);
-+
- 	cap = usb_power_delivery_register_capabilities(port->partner_pd, &caps);
- 	if (IS_ERR(cap))
- 		return PTR_ERR(cap);
-
+-- 
+2.30.0
 
