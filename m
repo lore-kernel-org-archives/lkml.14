@@ -1,79 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BC06D1A7;
-	Tue, 14 May 2024 14:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0D013DDDD
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715695228; cv=none; b=ZU9y/AKtfIBr8nQXz3ZNoLEThY/2nVetChZHhXH2Rc1QjtTO8eaIEKyJRqtcYGkgrv/IY8tmITnQbRr0kGqMJrOPHK2SznmEUDny32eFaTHsUI7pb72GVbV7k6qN63FLGualOigz/1LNAT031JVmSkpOlb1Cd6Qzyqu++bX0rDA=
+	t=1715695242; cv=none; b=Xo+MCe3YR4vkIYSzLfgCq79fv6xVQZJF8vOaX0+ZtmGN/ee/A+ZbXh2QtHV5bns1fAJFnvpV2ylTv+3lsXhGci4ICBHuKu2B6N8M0dPwJyVf2ws/k0xTS0+uvAVwwqlRTze0BS/p9afyqnHyKUkHVZnyXYVcFwjBbA1ExPhV+Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715695228; c=relaxed/simple;
-	bh=j0dzL0HrEyzT3iXZm85NNMPwglJU2P1cUebvjgEaIlY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=gvzDXc1cP2kugt/Ez2geCjxl6NvZceDmnfT/tX1wj3CWQssTtwZHcnK77nE1pA5DvbgSodJH5/ISpe+dmmwF67nzc+b6jhFgJgbsMo72fV/5R4EZONo3Fuhzue9hPiuJW7+ScAczC9e0N9dzkZrjVlwGps0jG1e7sPQiCjSXnbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZS7hjd5e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715695242; c=relaxed/simple;
+	bh=N8ye8kP7p0QXl90QBB1Ui1ORw3dVgGH0prC6aY8G1zI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IBnZ8SmRcPbl8v2Do8KmZUUNMxGXxiVa81hOBc8T+WMHfKnvLseWMJ1ke4zVUny4edFvfXFebqwapPSV6+zWolI0t0P+zVu2mXnaQMpFTPurUn1jEF+A03aQHxIEop40MT0Lf8aVqQI0mMARiuAbBMbZso01k22cH5HpST5vCkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flySvlIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZS7hjd5e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDBBC2BD10;
-	Tue, 14 May 2024 14:00:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flySvlIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1EE52C32781;
+	Tue, 14 May 2024 14:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715695227;
-	bh=j0dzL0HrEyzT3iXZm85NNMPwglJU2P1cUebvjgEaIlY=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ZS7hjd5ens9YbfEG+awL6UZghjnt5JHEcDclEDGEtOT9/K+oEoBtSu5N12Ue3xYCz
-	 sJE7HcNH58JhIReebqGvl4RXC8ZHbY8PcEMWZUTviUMlMga97xdN6rsGIUf3Uidpp0
-	 lpnvUiTOFDlLyRDiGnA81xS3TigtgWaKL4h3uSxtTSnDtTXOF4ZB8FP0Nkh3P0WIgI
-	 o2ke+DPxtYGoY24wSsKqSwWxqrJPu5axunilVi0fZO9wiWYZHHkmO1ABBxzpeZY5ef
-	 Q/sJpfgYsW0dxjokq97HJUE7ADRAfA3B7smB8Fd3KsTL8Ju6E+OKi1lu+NWKBGydhN
-	 SawgGBPqvWYJA==
+	s=k20201202; t=1715695242;
+	bh=N8ye8kP7p0QXl90QBB1Ui1ORw3dVgGH0prC6aY8G1zI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=flySvlIFxx028oqiyNIAiWkTN29fVn1UrZVagDmGmXIh+kDwmFGPN1xYTtFfgNq0U
+	 OnEiMqPKgiT7ing3LfQm0jBi2+vMyqtntWomEOs0oneNypxvK2jnDtk6Tedol8EJFC
+	 jqXE5I5lfKZNOr+rBHh1BV4o5JmTiJOZ2gjMwmS3oDF20QY042UzmzJj+CK9xXl0Ix
+	 vOh0tAXUIT6B06N2sl8pasATv+SozeVDHNYRBtW108K2oD0KSzY0bhOCg0uI0ktwWM
+	 bA0pAZR6noCawMI41/ip2rPoEy8UNpwL8wlq1Jn5GOfk/bISfzlIL/KkQ4gcNqi7pd
+	 WCfQ96XmYVeMQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0F5A4C43339;
+	Tue, 14 May 2024 14:00:42 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 14 May 2024 17:00:23 +0300
-Message-Id: <D19F74M6B8UC.2VEOOZHGOS87V@kernel.org>
-Cc: "James Bottomley" <James.Bottomley@hansenpartnership.com>, "Mimi Zohar"
- <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
- <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- <serge@hallyn.com>, <linux-integrity@vger.kernel.org>,
- <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel-team@cloudflare.com>
-Subject: Re: [RFC PATCH 0/2] TPM derived keys
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Ignat Korchagin" <ignat@cloudflare.com>
-X-Mailer: aerc 0.17.0
-References: <20240503221634.44274-1-ignat@cloudflare.com>
- <CALrw=nGhgRrhJ5mWWC6sV2WYWoijvD9WgFzMfOe6mHmqnza-Hw@mail.gmail.com>
- <D18XXJ373C2V.2M6AOMKD1B89W@kernel.org>
- <CALrw=nHGLN=dn3fbyAcXsBufw0tAWUT1PKVHDK5RZkHcdd3CUw@mail.gmail.com>
- <D19CUF0H9Q3S.3L5Y5S9553S5@kernel.org>
- <CALrw=nEZ07U9VhbGsnpchOYw1icUZCnuoHHXkJLzhFqSPe9_fQ@mail.gmail.com>
-In-Reply-To: <CALrw=nEZ07U9VhbGsnpchOYw1icUZCnuoHHXkJLzhFqSPe9_fQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v6 00/13] riscv: ASID-related and UP-related TLB flush
+ enhancements
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171569524205.4793.10651789416740480698.git-patchwork-notify@kernel.org>
+Date: Tue, 14 May 2024 14:00:42 +0000
+References: <20240327045035.368512-1-samuel.holland@sifive.com>
+In-Reply-To: <20240327045035.368512-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, alexghiti@rivosinc.com,
+ jszhang@kernel.org, cuiyunhui@bytedance.com
 
-On Tue May 14, 2024 at 4:11 PM EEST, Ignat Korchagin wrote:
-> For example, a cheap NAS box with no internal storage (disks connected
-> externally via USB). We want:
->   * disks to be encrypted and decryptable only by this NAS box
+Hello:
 
-So how this differs from LUKS2 style, which also systemd supports where
-the encryption key is anchored to PCR's? If I took hard drive out of my
-Linux box, I could not decrypt it in another machine because of this.
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
->   * if someone steals one of the disks - we don't want them to see it
-> has encrypted data (no LUKS header)
+On Tue, 26 Mar 2024 21:49:41 -0700 you wrote:
+> This series converts uniprocessor kernel builds to use the same TLB
+> flushing code as SMP builds, to take advantage of batching and existing
+> range- and ASID-based TLB flush optimizations. It optimizes out IPIs and
+> SBI calls based on the online CPU count, which also covers the scenario
+> where SMP was enabled at build time but only one CPU is present/online.
+> A final optimization is to use single-ASID flushes wherever possible, to
+> avoid unnecessary TLB misses for kernel mappings.
+> 
+> [...]
 
-So what happens when you reconnect?
+Here is the summary with links:
+  - [v6,01/13] riscv: Flush the instruction cache during SMP bringup
+    https://git.kernel.org/riscv/c/58661a30f1bc
+  - [v6,02/13] riscv: Factor out page table TLB synchronization
+    https://git.kernel.org/riscv/c/aaa56c8f378d
+  - [v6,03/13] riscv: Use IPIs for remote cache/TLB flushes by default
+    https://git.kernel.org/riscv/c/dc892fb44322
+  - [v6,04/13] riscv: mm: Broadcast kernel TLB flushes only when needed
+    https://git.kernel.org/riscv/c/038ac18aae93
+  - [v6,05/13] riscv: Only send remote fences when some other CPU is online
+    https://git.kernel.org/riscv/c/9546f00410ed
+  - [v6,06/13] riscv: mm: Combine the SMP and UP TLB flush code
+    https://git.kernel.org/riscv/c/c6026d35b6ab
+  - [v6,07/13] riscv: Apply SiFive CIP-1200 workaround to single-ASID sfence.vma
+    https://git.kernel.org/riscv/c/20e03d702e00
+  - [v6,08/13] riscv: Avoid TLB flush loops when affected by SiFive CIP-1200
+    https://git.kernel.org/riscv/c/d6dcdabafcd7
+  - [v6,09/13] riscv: mm: Introduce cntx2asid/cntx2version helper macros
+    https://git.kernel.org/riscv/c/74cd17792d28
+  - [v6,10/13] riscv: mm: Use a fixed layout for the MM context ID
+    https://git.kernel.org/riscv/c/f58e5dc45fa9
+  - [v6,11/13] riscv: mm: Make asid_bits a local variable
+    https://git.kernel.org/riscv/c/8d3e7613f97e
+  - [v6,12/13] riscv: mm: Preserve global TLB entries when switching contexts
+    https://git.kernel.org/riscv/c/8fc21cc672e8
+  - [v6,13/13] riscv: mm: Always use an ASID to flush mm contexts
+    https://git.kernel.org/riscv/c/daef19263fc1
 
-> Additionally we may want to SSH into the NAS for configuration and we
-> don't want the SSH server key to change after each boot (regardless if
-> disks are connected or not).
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Right, interesting use case. Begin before any technical jargon exactly
-with a great example like this. Then it is easier to start to anchoring
-stuff and not be misleaded.
 
-BR, Jarkko
