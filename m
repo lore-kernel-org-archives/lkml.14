@@ -1,89 +1,105 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DD12A8D7;
-	Tue, 14 May 2024 12:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B2847F5D;
+	Tue, 14 May 2024 12:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715691113; cv=none; b=bdHsAj5cV/tj2hXiuykFHm1l9+iBJHy3hc3gJ7piJ5YmoQ7jRi7GvorqIo9u845iumaFPPGoAdI8dAgdO+TDhR7RkLeEfQ6H/7Wm32/uNZJtdV2aqDSOIIPl64Kz1XATtrvoKrPCHAAU/29ZhZCXGjM6fPH90fJ3KqdfBcv9wtI=
+	t=1715691210; cv=none; b=G4T72LqqQvSxDao8v3mG1zu5u92iQb3rVSmUTqfiFPlJJfQ86BzjCsTMvmkjVpBJucPcaYoZPgD/pHqQNDOUKiR27lbFEXfmIXvMiEMmZaQD/Rx8mzaN1HEaq21UytY+rEy3NhT0lpwMOUSvv3NFO8iZao1ebFBIKcuFlmx/jGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715691113; c=relaxed/simple;
-	bh=aUbOwPaUPupYeFUaKwFn5yDwjguh9nzt7U4EFOp5KJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cCrwqHOVFJWy8ZkpTBeOCbRSPXuUkxkaPIleBm6hQyhZJQCwVgbXlGnbnxj0zQqg4Eq7BiMfZ9CrmXK+0wbVyDtckm3wd5oPl2CHnkd9YMksR5f/a4VZNUcYidbun1k14sIwurVQ2m1mFRIC/qOLr8luJjGh9k/dxMc2ZtqBDHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Vdx3d48ddzvXdj;
-	Tue, 14 May 2024 20:48:13 +0800 (CST)
-Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id 71F4C18007D;
-	Tue, 14 May 2024 20:51:41 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 14 May 2024 20:51:40 +0800
-Message-ID: <e0bc19d6-4a15-faa4-c8e1-163904276d5b@huawei.com>
-Date: Tue, 14 May 2024 20:51:39 +0800
+	s=arc-20240116; t=1715691210; c=relaxed/simple;
+	bh=d9o8QKhs7sNJnOQmrIGPwEGHrsAQnYKzrQ5PywCwwOc=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=cLGfrWezo4r8GT6mps2JpSq42BueVzQ0L5yYKEXYAVWkkvi2RJgwyxqT7wJJ94WQls8Rp8LdFe4uZHACPHcjv1PFkLTh9b/Btc1R73QH7GbYshCmbBBjH2/6FRTsSEpoXIckvV6CIP2Tt3a0R00mfuwwG9wY0FzEbSnZ5p2Ak7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVC/xxHh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVC/xxHh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C8BC2BD10;
+	Tue, 14 May 2024 12:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715691210;
+	bh=d9o8QKhs7sNJnOQmrIGPwEGHrsAQnYKzrQ5PywCwwOc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=ZVC/xxHhErj3khngq36QkWcuoZeQdbZ854YOGaYdI/ww0Lmu01b79S7yBLe2j0Mkt
+	 mRcIJSHVXgb43BFJMwyVMRp567Qft5A0NJKBqzy9JeCxlOWFFlqeAwpz38vkhoiMet
+	 sG/8MsnUiSYYEKg5Ox49AMxBICjZctdE4tGqlOVuUmnZBNcZ3qbnkgImZgwLPWJHqg
+	 FShjoGiX+Qxld3q7Uw+4RlEkfilmWsMdwDOIdePqe1/5Gq2zXOBO6EZxhzk8vgbARf
+	 pSYTcAlFCSKJCg/+MNteb7BSqTMuOp2wfcR6QzK42654+1Q5nSXgWVgmOLepTSZdSF
+	 hC5AGA3OBzoLQ==
+Date: Tue, 14 May 2024 07:53:28 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH 4/6] genirq: optimize irq_do_set_affinity()
-To: Yury Norov <yury.norov@gmail.com>, <linux-kernel@vger.kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Paul E. McKenney"
-	<paulmck@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Anna-Maria
- Behnsen <anna-maria@linutronix.de>, Ben Segall <bsegall@google.com>, Daniel
- Bristot de Oliveira <bristot@redhat.com>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Frederic Weisbecker <frederic@kernel.org>, Imran
- Khan <imran.f.khan@oracle.com>, Ingo Molnar <mingo@redhat.com>, Johannes
- Weiner <hannes@cmpxchg.org>, Juri Lelli <juri.lelli@redhat.com>, Leonardo
- Bras <leobras@redhat.com>, Mel Gorman <mgorman@suse.de>, Peter Zijlstra
-	<peterz@infradead.org>, Rik van Riel <riel@surriel.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, Vincent
- Guittot <vincent.guittot@linaro.org>, Waiman Long <longman@redhat.com>, Zefan
- Li <lizefan.x@bytedance.com>, <cgroups@vger.kernel.org>
-References: <20240513220146.1461457-1-yury.norov@gmail.com>
- <20240513220146.1461457-5-yury.norov@gmail.com>
-Content-Language: en-US
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20240513220146.1461457-5-yury.norov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500008.china.huawei.com (7.221.188.139)
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Marek Vasut <marex@denx.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, kernel@dh-electronics.com, 
+ linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, 
+ devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240514010706.245874-1-marex@denx.de>
+References: <20240514010706.245874-1-marex@denx.de>
+Message-Id: <171569116690.1193972.14506684066492342240.robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: imx8mp: Enable HDMI on i.MX8MP DHCOM PDK2
+ and PDK3
 
 
-
-On 2024/5/14 6:01, Yury Norov wrote:
-> If mask == desc->irq_common_data.affinity, copying one to another is
-> useless, and we can just skip it.
+On Tue, 14 May 2024 03:06:42 +0200, Marek Vasut wrote:
+> Enable HDMI output on i.MX8MP DHCOM PDK2 and PDK3. The I2C5 on PDK2 and
+> I2C mux port 1 on PDK3 respectively are used in regular I2C mode instead
+> of HDMI DDC mode to permit connection of other I2C devices on those buses.
+> The pinctrl_hdmi node is part of the SoM DTSI already.
 > 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Marek Vasut <marex@denx.de>
 > ---
->  kernel/irq/manage.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: imx@lists.linux.dev
+> Cc: kernel@dh-electronics.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  .../boot/dts/freescale/imx8mp-dhcom-pdk2.dts  | 39 +++++++++++++++++++
+>  .../boot/dts/freescale/imx8mp-dhcom-pdk3.dts  | 39 +++++++++++++++++++
+>  2 files changed, 78 insertions(+)
 > 
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index bf9ae8a8686f..ad9ed9fdf919 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -285,7 +285,8 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
->  	switch (ret) {
->  	case IRQ_SET_MASK_OK:
->  	case IRQ_SET_MASK_OK_DONE:
-> -		cpumask_copy(desc->irq_common_data.affinity, mask);
-> +		if (desc->irq_common_data.affinity != mask)
-> +			cpumask_copy(desc->irq_common_data.affinity, mask);
 
-It seems that mask is a pointer, shouldn't use "cpumask_equal"？
 
->  		fallthrough;
->  	case IRQ_SET_MASK_OK_NOCOPY:
->  		irq_validate_effective_affinity(data);
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y freescale/imx8mp-dhcom-pdk2.dtb freescale/imx8mp-dhcom-pdk3.dtb' for 20240514010706.245874-1-marex@denx.de:
+
+arch/arm64/boot/dts/freescale/imx8mp-dhcom-pdk2.dtb: hdmi@32fd8000: Unevaluated properties are not allowed ('ddc-i2c-bus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/display/bridge/fsl,imx8mp-hdmi-tx.yaml#
+arch/arm64/boot/dts/freescale/imx8mp-dhcom-pdk3.dtb: hdmi@32fd8000: Unevaluated properties are not allowed ('ddc-i2c-bus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/display/bridge/fsl,imx8mp-hdmi-tx.yaml#
+
+
+
+
+
