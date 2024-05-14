@@ -1,192 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBFC60BB6;
-	Tue, 14 May 2024 11:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44832D60A;
+	Tue, 14 May 2024 11:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715687096; cv=none; b=tedTU+vAcbCTHgyZSBgksYbPTMmO/9Y8pi5cT7RqKwrhHH5LMwkb/tbH7Nvcr4rnM1iuGtAFF0h8pJU1ynIS/fRUbROvxF/aT2q+w/8xkFqHrLu0h0ZKqMINcFA0P3JPyCi3cUb5atR/wHd3P38wKVT0ygF+IQgUDd3W9bi+lDc=
+	t=1715687138; cv=none; b=YT2VkdRdgk1oGCGMrKT7sLKrRhn/zdt9fHcaS9RifWUKS5Yx7FjLuI0YUMkmhGmBlRKsmjRSDoeHD23eGuuER+bc/Rdr5Xbjptm5x71AiyewP+/VWcVQg0fYMIJiP6r5G+kK01dmzLoeXkuADyzFIeqcLhMy/Fy89+06A6ZBHr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715687096; c=relaxed/simple;
-	bh=zMwTH5JexUfVSxwzoMsVvb2Y56k+vwlD+UGM3nXS0GI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmKoWFy2rpLShNPzL102RXR6kylBliUQPITGxkvDZC/NxZ7c1+SvIE6EBdEsSInqlxwH4PsBQ8NxchDh2BiNCfbkStTUd6h0KErfjYYvqPDEZ19q+XnktrQLIQZafrCc6dNy62mEmpY7xdCxjw+sIOEo9uaJJdbY8+iWmroBrxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZHlwbxq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715687138; c=relaxed/simple;
+	bh=EFlqffpxnfU78X2cw4fB5pPq1Xhi9I+3SMvezhCG00c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qv3H3cI3RyEBQGkJfXg8FvULnO6co6zTDeu5+x0zk5MC+HZ4Y6ehoOK7+u1Fh2PjZTD5xyB9L5mUiLomJyqEOfoPBdNsKTf17t2Mpcf9t+GJ7v6u7YSnTc6lKoF3waeLPCpjMEJ9fWv8klkTk+ZgpjjiWaGd8dE2piGmh7UjKX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BKhXwSbA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZHlwbxq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DC4DC32786;
-	Tue, 14 May 2024 11:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715687096;
-	bh=zMwTH5JexUfVSxwzoMsVvb2Y56k+vwlD+UGM3nXS0GI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LZHlwbxq5sUzTky2XhQkheoVyp6udbq4XNVTrh4Ss6Ljp4Kp64s5uVAv7yMlE6LEB
-	 q3t5QBwPk4gcPHDEv8t9AKWSUtFzWN9WF9aZjgdNCzNspew6f5lrw+MZyrFF1j4nxl
-	 3MPsg1eMjyN5hxRTegflL1H3IcBWlJVLLJi+ICAqr88gWWKUqi64PCjto/49YFnADz
-	 dY0u+HksRhWURAWEXXEej2xnvqWfnpzOSUQ6CNz4VNtOv/Ec3/x8SlmhxT9ZO7AJv+
-	 I4toNDaypJIcG7JxyKKfGebnzaksU0st8uFFM10nEA24zXwPZT4OCAAtNA4qZNEri3
-	 75cE3+Tdmpo8g==
-Date: Tue, 14 May 2024 12:44:51 +0100
-From: Simon Horman <horms@kernel.org>
-To: Anshumali Gaur <agaur@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Linu Cherian <lcherian@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Jerin Jacob <jerinj@marvell.com>, hariprasad <hkelam@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH] octeontx2-af: Add debugfs support to dump NIX TM topology
-Message-ID: <20240514114451.GF2787@kernel.org>
-References: <20240514095434.31445-1-agaur@marvell.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BKhXwSbA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39AC9C2BD10;
+	Tue, 14 May 2024 11:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715687137;
+	bh=EFlqffpxnfU78X2cw4fB5pPq1Xhi9I+3SMvezhCG00c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BKhXwSbAWOQZN7MogU6X78ZYQlk3eSEwu7aCxv5+So2b+oBfN7ZiHV5jLyBSE+aQ3
+	 FjADqtF3zu5J96zduo0Avq0BHygKy5qGPse9LDvE2Xy/F/bwEEZhQX7zdpghtqZSMe
+	 Rl13Wm9iRstL+pBpYN8PHCfsgTuZ65vPOLPuWhag=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Zack Rusin <zack.rusin@broadcom.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Maaz Mombasawala <maaz.mombasawala@broadcom.com>,
+	Martin Krastev <martin.krastev@broadcom.com>,
+	zdi-disclosures@trendmicro.com
+Subject: [PATCH 5.4 78/84] drm/vmwgfx: Fix invalid reads in fence signaled events
+Date: Tue, 14 May 2024 12:20:29 +0200
+Message-ID: <20240514100954.616028010@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240514100951.686412426@linuxfoundation.org>
+References: <20240514100951.686412426@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514095434.31445-1-agaur@marvell.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 14, 2024 at 03:24:34PM +0530, Anshumali Gaur wrote:
-> This patch adds support to dump NIX transmit queue topology.
-> There are multiple levels of scheduling/shaping supported by
-> NIX and a packet traverses through multiple levels before sending
-> the packet out. At each level, there are set of scheduling/shaping
-> rules applied to a packet flow.
-> 
-> Each packet traverses through multiple levels
-> SQ->SMQ->Tl4->Tl3->TL2->Tl1 and these levels are mapped in a parent-child
-> relationship.
-> 
-> This patch dumps the debug information related to all TM Levels in
-> the following way.
-> 
-> Example:
-> $ echo <nixlf> > /sys/kernel/debug/octeontx2/nix/tm_tree
-> $ cat /sys/kernel/debug/octeontx2/nix/tm_tree
-> 
-> A more desriptive set of registers at each level can be dumped
-> in the following way.
-> 
-> Example:
-> $ echo <nixlf> > /sys/kernel/debug/octeontx2/nix/tm_topo
-> $ cat /sys/kernel/debug/octeontx2/nix/tm_topo
-> 
-> Signed-off-by: Anshumali Gaur <agaur@marvell.com>
+5.4-stable review patch.  If anyone has any objections, please let me know.
 
-## Form letter - net-next-closed
+------------------
 
-(Adapted from text by Jakub)
+From: Zack Rusin <zack.rusin@broadcom.com>
 
-The merge window for v6.10 has begun and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations.
-We are currently accepting bug fixes only.
+commit a37ef7613c00f2d72c8fc08bd83fb6cc76926c8c upstream.
 
-Please repost when net-next reopens after May 27th.
+Correctly set the length of the drm_event to the size of the structure
+that's actually used.
 
-RFC patches sent for review only are welcome at any time.
+The length of the drm_event was set to the parent structure instead of
+to the drm_vmw_event_fence which is supposed to be read. drm_read
+uses the length parameter to copy the event to the user space thus
+resuling in oob reads.
 
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+Fixes: 8b7de6aa8468 ("vmwgfx: Rework fence event action")
+Reported-by: zdi-disclosures@trendmicro.com # ZDI-CAN-23566
+Cc: David Airlie <airlied@gmail.com>
+CC: Daniel Vetter <daniel@ffwll.ch>
+Cc: Zack Rusin <zack.rusin@broadcom.com>
+Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org> # v3.4+
+Reviewed-by: Maaz Mombasawala <maaz.mombasawala@broadcom.com>
+Reviewed-by: Martin Krastev <martin.krastev@broadcom.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20240425192748.1761522-1-zack.rusin@broadcom.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_fence.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-## End form letter
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fence.c
+@@ -1066,7 +1066,7 @@ static int vmw_event_fence_action_create
+ 	}
+ 
+ 	event->event.base.type = DRM_VMW_EVENT_FENCE_SIGNALED;
+-	event->event.base.length = sizeof(*event);
++	event->event.base.length = sizeof(event->event);
+ 	event->event.user_data = user_data;
+ 
+ 	ret = drm_event_reserve_init(dev, file_priv, &event->base, &event->event.base);
 
-Also, as this patch seems to be for net-next, please include that in the
-subject.
 
-	[PATCH net-next] ...
-
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c
-
-...
-
-> +/*dumps given tm_tree registers*/
-> +static int rvu_dbg_nix_tm_tree_display(struct seq_file *m, void *unused)
-> +{
-> +	int qidx, nixlf, rc, id, max_id = 0;
-> +	struct nix_hw *nix_hw = m->private;
-> +	struct rvu *rvu = nix_hw->rvu;
-> +	struct nix_aq_enq_req aq_req;
-> +	struct nix_aq_enq_rsp rsp;
-> +	struct rvu_pfvf *pfvf;
-> +	u16 pcifunc;
-> +
-> +	nixlf = rvu->rvu_dbg.nix_tm_ctx.lf;
-> +	id = rvu->rvu_dbg.nix_tm_ctx.id;
-> +
-> +	if (!rvu_dbg_is_valid_lf(rvu, nix_hw->blkaddr, nixlf, &pcifunc))
-> +		return -EINVAL;
-> +
-> +	pfvf = rvu_get_pfvf(rvu, pcifunc);
-> +	max_id = pfvf->sq_ctx->qsize;
-> +
-> +	memset(&aq_req, 0, sizeof(struct nix_aq_enq_req));
-> +	aq_req.hdr.pcifunc = pcifunc;
-> +	aq_req.ctype = NIX_AQ_CTYPE_SQ;
-> +	aq_req.op = NIX_AQ_INSTOP_READ;
-> +	seq_printf(m, "pcifunc is 0x%x\n", pcifunc);
-> +	for (qidx = id; qidx < max_id; qidx++) {
-> +		aq_req.qidx = qidx;
-> +		rc = rvu_mbox_handler_nix_aq_enq(rvu, &aq_req, &rsp);
-> +
-> +			/* Skip SQ's if not initialized */
-> +			if (!test_bit(qidx, pfvf->sq_bmap))
-> +				continue;
-
-nit: The indentation of the lines immediately above is not
-     consistent with the code around it.
-
-     Flagged by Smatch.
-
-> +
-> +		if (rc) {
-> +			seq_printf(m, "Failed to read SQ(%d) context\n",
-> +				   aq_req.qidx);
-> +			continue;
-> +		}
-> +		print_tm_tree(m, &rsp, aq_req.qidx);
-> +	}
-> +	return 0;
-> +}
-
-...
-
-> +/*dumps given tm_topo registers*/
-> +static int rvu_dbg_nix_tm_topo_display(struct seq_file *m, void *unused)
-> +{
-> +	struct nix_hw *nix_hw = m->private;
-> +	struct rvu *rvu = nix_hw->rvu;
-> +	struct nix_aq_enq_req aq_req;
-> +	struct nix_txsch *txsch;
-> +	int nixlf, lvl, schq;
-> +	u16 pcifunc;
-> +
-> +	nixlf = rvu->rvu_dbg.nix_tm_ctx.lf;
-> +
-> +	if (!rvu_dbg_is_valid_lf(rvu, nix_hw->blkaddr, nixlf, &pcifunc))
-> +		return -EINVAL;
-> +
-> +	memset(&aq_req, 0, sizeof(struct nix_aq_enq_req));
-> +	aq_req.hdr.pcifunc = pcifunc;
-> +	aq_req.ctype = NIX_AQ_CTYPE_SQ;
-> +	aq_req.op = NIX_AQ_INSTOP_READ;
-> +	seq_printf(m, "pcifunc is 0x%x\n", pcifunc);
-> +
-> +	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++) {
-> +		txsch = &nix_hw->txsch[lvl];
-> +			for (schq = 0; schq < txsch->schq.max; schq++) {
-> +				if (TXSCH_MAP_FUNC(txsch->pfvf_map[schq]) == pcifunc)
-> +					print_tm_topo(m, schq, lvl);
-
-Here too.
-
-> +		}
-> +	}
-> +	return 0;
-> +}
-
--- 
-pw-bot: changes-requested
