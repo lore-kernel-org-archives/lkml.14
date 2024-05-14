@@ -1,53 +1,59 @@
-Received: from mail.kernel-space.org (mail.kernel-space.org [195.201.34.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1D617C77;
-	Tue, 14 May 2024 08:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.34.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B2D125A9
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715673869; cv=none; b=FnjzPxDxBYhli2hPsNIAxfurlMy5Wz4Gf+YaXibWcJ9yfuTMvfOXwh5DI1UJbcIX+P5XNGJw9oDHu+4QZs8bbN4IQyg1uzKIErbt2u5PKG9nwQAYxmddKVlWs4ZPCjG2tSmlrfBiiM5SmoOQCy73o3UUM5BtVzFmJQN6tTV+JUI=
+	t=1715673995; cv=none; b=NZEPPOBezny5jSIq3bkCfp4mF5eLg7JXdRfSddNe7SK5UPw+e9Bn8KaCYQALjcI6B1T+d5v6tw817p1ySlhMhTI8uPF2157GdNMN6BsT5w4OrTVYuWK9aAxzWWbhlK7J/+13+dbshU0bzr2hBygM4ycg2qtDoin7xNCQx8S+u/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715673869; c=relaxed/simple;
-	bh=MnavwG4xDe+bT4+m8GUFgKzjxbVWJw55qnBENhgJS0M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQE8OibYSkUed8nyuzauQWYW/8GI0hEr/0DwgODilpzbqirHtHL1W55kRSRyDWAb+QIi1N+U7xEHjgj2yXTSmDRRNKd6epXhjQLbHIh1KlfwHphqrs6GIwKOWErP7E4wS70Me80FrykgKT3lhPUI7ZygLPsWE5wvb1tJSlVhzhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernel-space.org; spf=pass smtp.mailfrom=kernel-space.org; dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b=0LsLUgiA; dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b=x9uFUQS4; arc=none smtp.client-ip=195.201.34.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernel-space.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel-space.org
+	s=arc-20240116; t=1715673995; c=relaxed/simple;
+	bh=wa4C6Ee4ECOYeCIj8wjhLw3SuJWijNKeWZClb1WFn2U=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=djfIQf6g/euKLbyNT9A+NeHOqiP2eDKHy8UqqmqPGyWadXEeM1xP4uJJvn05aTQTQjpT9vAzeBFzRvLO0NIm1mHn/Wyz2+YhAnL0DtzZO6XtqFrUQNGDE6pS24DgcJ2kSIOLm7I6+LIHJz2CdC9dsOBsNUUXa2gy41yRXZ7VmME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=EW+TjDsH; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b="0LsLUgiA";
-	dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b="x9uFUQS4"
-Received: from kernel-space.org (localhost [127.0.0.1])
-	by kernel-space.org (OpenSMTPD) with ESMTP id 4843119d;
-	Tue, 14 May 2024 07:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=kernel-space.org; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=s1; bh=ca
-	B5PwAVnllql880/2faREzf2Ig=; b=0LsLUgiAZbsT7UjlYhX67sWHogfPBaoFAV
-	VKo6wbZyR1SAtA+ecojae0TgNq1Vmroif1x5M1p4Bz0ZcxCmR7npQqcsumsjQMqy
-	FAtWqZUYOlGZGD4R4HJlRW73a5B2xd4zxtXBnwwirTJJnWUXqUmqkLnLqJPBtEQA
-	jrbCEwprc=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=kernel-space.org; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; q=dns; s=s1; b=
-	afULTwWiVL1PXZxYXhzIFxGe9Q4UA8RjXOAi+kLxw5+uZmq7WGvaVB5rpZr6nTHb
-	iSLejFPX1x+YIHqsFVI+fabNOdkQUNKNK8ScnGTthRASLod3uDYAu8tzLVpMQuKV
-	Pj4X5Bbwh21k5CnAfvkjRazh7Am7UzfQ2jEPveoiTrw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel-space.org;
-	s=s1; t=1715673395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cVfJiralSHBKIpiyuDV08+v4xxv00fj5z+EYp8KEzMQ=;
-	b=x9uFUQS4YkhuSngcZiX5OrkWmQ4LWw3Cly9Yhsir+BX0rxEfMm0vTdFL0LwRWaoTpBcyMP
-	skgLMtymBLzgHo6SDLYMDG4K4XsAJ/3CKLzAAAcaz0nzxC/kdVAf52wRqDxlTxBjSfaV9t
-	Z8uY3yr835+iEhfcqOTnqREVOFXG+n8=
-Received: from [192.168.0.2] (host-79-16-6-145.retail.telecomitalia.it [79.16.6.145])
-	by kernel-space.org (OpenSMTPD) with ESMTPSA id 5a079902 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 14 May 2024 07:56:35 +0000 (UTC)
-Message-ID: <bd538260-2403-4912-961c-549c74aead76@kernel-space.org>
-Date: Tue, 14 May 2024 09:57:09 +0200
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="EW+TjDsH"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-420139ea1c4so2329345e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 01:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715673992; x=1716278792; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pjopg8Hd6ezoM2VPeWMeiUlmhpM5PP4esFYOJITTIpM=;
+        b=EW+TjDsHm2Pxm+1mvV9BATFejR590jZ9rWX5XYDjndrAu6rrUUgl+M+nGys1t37I57
+         IyrRyBL1Jkn46bIWrPdDhJKIs2EH8Se+/BEs26amQxTZJnAuvyEgwZ3B3NgyP/OmdI/V
+         WO0lAWP74Qd4tPq7B3DP6fUVIJdcxJz5xtjSUKV77YVrHN57TkTsqfSI2kfPCbb1xNhE
+         z96FgnoePIEwmB480adOdnnNii6OqgNr7wbqtfXGvhbE9bhNJWHmkOpxR8mn8R6yOkex
+         QXc30dy2J/8i3ppfBKIuw5s2nSGpQvnJLdC+v5ybk3bM/botPQjtgKmvWDTJ5TcBIQtC
+         AjWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715673992; x=1716278792;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pjopg8Hd6ezoM2VPeWMeiUlmhpM5PP4esFYOJITTIpM=;
+        b=DS0uuL4Iy0+a191pp9Syx6FPPlSCF++HugjuXqg7iZWHxIXVzgLbRcs8Yq6voeDJeL
+         mHM7Si/rwE3v4qdNj/Rr0qlLKhaZKlgES4IVlVNlVXSR9n8ty0ai6t5y+xTnCfvNOB90
+         TzGIMWDQhiATMmcf1WnseJgMI4y1o4iZfE+ukZDwSsM9P5cSv8WK6KmmN8x3Daojb67W
+         D6Y6d2xdVt94HJbY9GFj4tWE7Y7y6FuMdItlzOfzbT81dWtYqPAP9r/fVj6E19KAjRZm
+         A05pqP5RaFCGax2CuUw0avTJ+JsiFZpfu3hDMU7XtzVdz+e876P6wQ7DE4ma43NNwZQU
+         yk7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDwJ5lAq7bDll+wZ4FNJEhdsZZhB7mTiinDU4AdHqKKW/6VY4dC8R6WywefesHmmNleFJYVn5eR0tlbG1CMoNQ9spUwNt1zCuJrke+
+X-Gm-Message-State: AOJu0YyFizTLhqRZXzsa0ebdcI2gh7CrSg7ebyGAxCWqyhxkEgBdh3ea
+	5B7GdYf/wg6p13ObHmEWwIo6SCjYaoBNZ/5w99FUETXeJeyK5CO5poYhHTZIhhY=
+X-Google-Smtp-Source: AGHT+IHrTYyJeDAN6oeeNkuklJ3k4rzrTPEj0NJCPsHETslMiuk4YMPVJXS8JcMds7tACAEYtoHs+w==
+X-Received: by 2002:adf:ff92:0:b0:34d:8ccf:c9ce with SMTP id ffacd0b85a97d-3504a967162mr8354223f8f.5.1715673992206;
+        Tue, 14 May 2024 01:06:32 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:999:a3a0:1660:5f6e:2f9c:91b9? ([2a01:e0a:999:a3a0:1660:5f6e:2f9c:91b9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896b0bsm13038230f8f.46.2024.05.14.01.06.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 01:06:31 -0700 (PDT)
+Message-ID: <e33b8eba-85f0-44b7-8a6f-802a6979f6c8@rivosinc.com>
+Date: Tue, 14 May 2024 10:06:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,218 +61,175 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] dmaengine: fsl-edma: merge mcf-edma into fsl-edma
- driver
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
- "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
- <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>,
- Greg Ungerer <gerg@linux-m68k.org>,
- linux-m68k <linux-m68k@lists.linux-m68k.org>
-References: <20240509193517.3571694-1-Frank.Li@nxp.com>
- <CAMuHMdVB2PrkxDMoo0y1y6SLj-yuW5o+PJ+sQn2VtB2yrXzkbw@mail.gmail.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Subject: Re: [RFC PATCH 5/7] riscv: add double trap driver
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, Ved Shanbhogue <ved@rivosinc.com>
+References: <20240418142701.1493091-1-cleger@rivosinc.com>
+ <20240418142701.1493091-6-cleger@rivosinc.com>
+ <Ziw//90J0WfOY/tl@debug.ba.rivosinc.com>
 Content-Language: en-US
-From: Angelo Dureghello <angelo@kernel-space.org>
-In-Reply-To: <CAMuHMdVB2PrkxDMoo0y1y6SLj-yuW5o+PJ+sQn2VtB2yrXzkbw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <Ziw//90J0WfOY/tl@debug.ba.rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On 13/05/24 8:12 PM, Geert Uytterhoeven wrote:
-> CC coldfire
->
-> On Thu, May 9, 2024 at 9:35 PM Frank Li <Frank.Li@nxp.com> wrote:
->> MCF eDMA are almost the same as FSL eDMA driver. Previously link to two
->> kernel modules, fsl-edma.ko and mcf-edma.ko. These are not problem because
->> mcf-edma is for m68k ARCH and FSL eDMA is for arm/arm64 ARCH. But often
->> build both at PPC ARCH. It also makes sense to build two drivers at the
->> same time. It causes many build warning because share a fsl-edma-common.o.
->> such as:
->>
->>     powerpc64le-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-common.o' being placed in section `.stubs'
->>     powerpc64le-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-trace.o' being placed in section `.stubs'
->>
->> Merge mcf-edma into fsl-edma driver. So use one driver (fsl-edma.ko) for
->> MCF and FSL eDMA.
->>
->> mcf-edma.ko should be replaced by fsl-edma.ko in modules, minimizing user
->> space impact because MCF eDMA remains confined to legacy ColdFire mcf5441x
->> production and mcf5441x has been in production for at least a decade and
->> NXP has long ceased ColdFire development.
-
-when i developed mcf-edma, i tried to modify fsl-edma first. Modules are
-similar but there are various edma IP versions, and i remember minimal
-differences in the CF version too, some register bits and, of course,
-endianness.
-
-If a merge is possible, welcome, i have here mcf5441x, can give a try to
-this patch as soon as i can.
 
 
->> Update Kconfig to make MCF_EDMA as feature of FSL_EDMA and change Makefile
->> to link mcl-edma-main.o to fsl-edma.o.
+On 27/04/2024 01:59, Deepak Gupta wrote:
+> On Thu, Apr 18, 2024 at 04:26:44PM +0200, Clément Léger wrote:
+>> Add a small driver to request double trap enabling as well as
+>> registering a SSE handler for double trap. This will also be used by KVM
+>> SBI FWFT extension support to detect if it is possible to enable double
+>> trap in VS-mode.
 >>
->> Create a common module init/exit functions, which call original's
->> fsl-edma-init[exit]() and mcf-edma-init[exit]().
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202405082029.Es9umH7n-lkp@intel.com/
->> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
 >> ---
->>   drivers/dma/Kconfig           |  8 ++++----
->>   drivers/dma/Makefile          |  5 ++---
->>   drivers/dma/fsl-edma-common.c | 28 ++++++++++++++++++++++++++++
->>   drivers/dma/fsl-edma-common.h |  5 +++++
->>   drivers/dma/fsl-edma-main.c   |  6 ++----
->>   drivers/dma/mcf-edma-main.c   |  6 ++----
->>   6 files changed, 43 insertions(+), 15 deletions(-)
+>> arch/riscv/include/asm/sbi.h    |  1 +
+>> drivers/firmware/Kconfig        |  7 +++
+>> drivers/firmware/Makefile       |  1 +
+>> drivers/firmware/riscv_dbltrp.c | 95 +++++++++++++++++++++++++++++++++
+>> include/linux/riscv_dbltrp.h    | 19 +++++++
+>> 5 files changed, 123 insertions(+)
+>> create mode 100644 drivers/firmware/riscv_dbltrp.c
+>> create mode 100644 include/linux/riscv_dbltrp.h
 >>
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> index 002a5ec806207..45110520f6e68 100644
->> --- a/drivers/dma/Kconfig
->> +++ b/drivers/dma/Kconfig
->> @@ -393,14 +393,14 @@ config LS2X_APB_DMA
->>            It does not support memory to memory data transfer.
+>> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+>> index 744aa1796c92..9cd4ca66487c 100644
+>> --- a/arch/riscv/include/asm/sbi.h
+>> +++ b/arch/riscv/include/asm/sbi.h
+>> @@ -314,6 +314,7 @@ enum sbi_sse_attr_id {
+>> #define SBI_SSE_ATTR_INTERRUPTED_FLAGS_SPIE    (1 << 2)
 >>
->>   config MCF_EDMA
->> -       tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
->> +       bool "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
->>          depends on M5441x || COMPILE_TEST
->>          select DMA_ENGINE
->>          select DMA_VIRTUAL_CHANNELS
->>          help
->> -         Support the Freescale ColdFire eDMA engine, 64-channel
->> -         implementation that performs complex data transfers with
->> -         minimal intervention from a host processor.
->> +         Support the Freescale ColdFire eDMA engine in FSL_EDMA driver,
->> +         64-channel implementation that performs complex data transfers
->> +         with minimal intervention from a host processor.
->>            This module can be found on Freescale ColdFire mcf5441x SoCs.
+>> #define SBI_SSE_EVENT_LOCAL_RAS        0x00000000
+>> +#define SBI_SSE_EVENT_LOCAL_DOUBLE_TRAP    0x00000001
+>> #define SBI_SSE_EVENT_GLOBAL_RAS    0x00008000
+>> #define SBI_SSE_EVENT_LOCAL_PMU        0x00010000
+>> #define SBI_SSE_EVENT_LOCAL_SOFTWARE    0xffff0000
+>> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+>> index 59f611288807..a037f6e89942 100644
+>> --- a/drivers/firmware/Kconfig
+>> +++ b/drivers/firmware/Kconfig
+>> @@ -197,6 +197,13 @@ config RISCV_SSE_TEST
+>>       Select if you want to enable SSE extension testing at boot time.
+>>       This will run a series of test which verifies SSE sanity.
 >>
->>   config MILBEAUT_HDMAC
->> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
->> index 802ca916f05f5..0000922c7cbfe 100644
->> --- a/drivers/dma/Makefile
->> +++ b/drivers/dma/Makefile
->> @@ -33,11 +33,10 @@ obj-$(CONFIG_DW_EDMA) += dw-edma/
->>   obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
->>   fsl-edma-trace-$(CONFIG_TRACING) := fsl-edma-trace.o
->>   CFLAGS_fsl-edma-trace.o := -I$(src)
->> +mcf-edma-main-$(CONFIG_MCF_EDMA) := mcf-edma-main.o
->>   obj-$(CONFIG_FSL_DMA) += fsldma.o
->> -fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
->> +fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y} ${mcf-edma-main-y}
->>   obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
->> -mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
->> -obj-$(CONFIG_MCF_EDMA) += mcf-edma.o
->>   obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
->>   obj-$(CONFIG_FSL_RAID) += fsl_raid.o
->>   obj-$(CONFIG_HISI_DMA) += hisi_dma.o
->> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
->> index 3af4307873157..ac04a2ce4fa1f 100644
->> --- a/drivers/dma/fsl-edma-common.c
->> +++ b/drivers/dma/fsl-edma-common.c
->> @@ -888,4 +888,32 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
->>          }
->>   }
->>
->> +static int __init fsl_edma_common_init(void)
+>> +config RISCV_DBLTRP
+>> +    bool "Enable Double trap handling"
+>> +    depends on RISCV_SSE && RISCV_SBI
+>> +    default n
+>> +    help
+>> +      Select if you want to enable SSE double trap handler.
+>> +
+>> config SYSFB
+>>     bool
+>>     select BOOT_VESA_SUPPORT
+>> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+>> index fb7b0c08c56d..ad67a1738c0f 100644
+>> --- a/drivers/firmware/Makefile
+>> +++ b/drivers/firmware/Makefile
+>> @@ -18,6 +18,7 @@ obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
+>> obj-$(CONFIG_FW_CFG_SYSFS)    += qemu_fw_cfg.o
+>> obj-$(CONFIG_RISCV_SSE)        += riscv_sse.o
+>> obj-$(CONFIG_RISCV_SSE_TEST)    += riscv_sse_test.o
+>> +obj-$(CONFIG_RISCV_DBLTRP)    += riscv_dbltrp.o
+>> obj-$(CONFIG_SYSFB)        += sysfb.o
+>> obj-$(CONFIG_SYSFB_SIMPLEFB)    += sysfb_simplefb.o
+>> obj-$(CONFIG_TI_SCI_PROTOCOL)    += ti_sci.o
+>> diff --git a/drivers/firmware/riscv_dbltrp.c
+>> b/drivers/firmware/riscv_dbltrp.c
+>> new file mode 100644
+>> index 000000000000..72f9a067e87a
+>> --- /dev/null
+>> +++ b/drivers/firmware/riscv_dbltrp.c
+>> @@ -0,0 +1,95 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2023 Rivos Inc.
+>> + */
+> 
+> nit: fix copyright year
+>> +
+>> +#define pr_fmt(fmt) "riscv-dbltrp: " fmt
+>> +
+>> +#include <linux/cpu.h>
+>> +#include <linux/init.h>
+>> +#include <linux/riscv_dbltrp.h>
+>> +#include <linux/riscv_sse.h>
+>> +
+>> +#include <asm/sbi.h>
+>> +
+>> +static bool double_trap_enabled;
+>> +
+>> +static int riscv_sse_dbltrp_handle(uint32_t evt, void *arg,
+>> +                   struct pt_regs *regs)
 >> +{
->> +       int ret;
+>> +    __show_regs(regs);
+>> +    panic("Double trap !\n");
 >> +
->> +       ret = fsl_edma_init();
->> +       if (ret)
->> +               return ret;
->> +
->> +#ifdef CONFIG_MCF_EDMA
->> +       ret = mcf_edma_init();
->> +       if (ret)
->> +               return ret;
->> +#endif
->> +       return 0;
+>> +    return 0;
+> Curious:
+> Does panic return?
+> What's the point of returning from here?
+
+Hi Deepak,
+
+No, panic() does not return and indeed, the "return 0" is useless. It's
+a leftover of a previous implementation without panic in order to keep
+GCC mouth shut ;).
+
+> 
 >> +}
 >> +
->> +subsys_initcall(fsl_edma_common_init);
+>> +struct cpu_dbltrp_data {
+>> +    int error;
+>> +};
 >> +
->> +static void __exit fsl_edma_common_exit(void)
+>> +static void
+>> +sbi_cpu_enable_double_trap(void *data)
 >> +{
->> +       fsl_edma_exit();
+>> +    struct sbiret ret;
+>> +    struct cpu_dbltrp_data *cdd = data;
 >> +
->> +#ifdef CONFIG_MCF_EDMA
->> +       mcf_edma_exit();
->> +#endif
+>> +    ret = sbi_ecall(SBI_EXT_FWFT, SBI_EXT_FWFT_SET,
+>> +            SBI_FWFT_DOUBLE_TRAP_ENABLE, 1, 0, 0, 0, 0);
+>> +
+>> +    if (ret.error) {
+>> +        cdd->error = 1;
+>> +        pr_err("Failed to enable double trap on cpu %d\n",
+>> smp_processor_id());
+>> +    }
 >> +}
->> +module_exit(fsl_edma_common_exit);
 >> +
->>   MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
->> index ac66222c16040..dfbdcc922ceea 100644
->> --- a/drivers/dma/fsl-edma-common.h
->> +++ b/drivers/dma/fsl-edma-common.h
->> @@ -488,4 +488,9 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan);
->>   void fsl_edma_cleanup_vchan(struct dma_device *dmadev);
->>   void fsl_edma_setup_regs(struct fsl_edma_engine *edma);
->>
->> +int __init fsl_edma_init(void);
->> +void __exit fsl_edma_exit(void);
->> +int __init mcf_edma_init(void);
->> +void __exit mcf_edma_exit(void);
+>> +static int sbi_enable_double_trap(void)
+>> +{
+>> +    struct cpu_dbltrp_data cdd = {0};
 >> +
->>   #endif /* _FSL_EDMA_COMMON_H_ */
->> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
->> index 391e4f13dfeb0..a1c3c4ed869c5 100644
->> --- a/drivers/dma/fsl-edma-main.c
->> +++ b/drivers/dma/fsl-edma-main.c
->> @@ -724,17 +724,15 @@ static struct platform_driver fsl_edma_driver = {
->>          .remove_new     = fsl_edma_remove,
->>   };
->>
->> -static int __init fsl_edma_init(void)
->> +int __init fsl_edma_init(void)
->>   {
->>          return platform_driver_register(&fsl_edma_driver);
->>   }
->> -subsys_initcall(fsl_edma_init);
->>
->> -static void __exit fsl_edma_exit(void)
->> +void __exit fsl_edma_exit(void)
->>   {
->>          platform_driver_unregister(&fsl_edma_driver);
->>   }
->> -module_exit(fsl_edma_exit);
->>
->>   MODULE_ALIAS("platform:fsl-edma");
->>   MODULE_DESCRIPTION("Freescale eDMA engine driver");
->> diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-main.c
->> index 78c606f6d0026..d97991a1e9518 100644
->> --- a/drivers/dma/mcf-edma-main.c
->> +++ b/drivers/dma/mcf-edma-main.c
->> @@ -284,17 +284,15 @@ bool mcf_edma_filter_fn(struct dma_chan *chan, void *param)
->>   }
->>   EXPORT_SYMBOL(mcf_edma_filter_fn);
->>
->> -static int __init mcf_edma_init(void)
->> +int __init mcf_edma_init(void)
->>   {
->>          return platform_driver_register(&mcf_edma_driver);
->>   }
->> -subsys_initcall(mcf_edma_init);
->>
->> -static void __exit mcf_edma_exit(void)
->> +void __exit mcf_edma_exit(void)
->>   {
->>          platform_driver_unregister(&mcf_edma_driver);
->>   }
->> -module_exit(mcf_edma_exit);
->>
->>   MODULE_ALIAS("platform:mcf-edma");
->>   MODULE_DESCRIPTION("Freescale eDMA engine driver, ColdFire family");
->> --
->> 2.34.1
+>> +    on_each_cpu(sbi_cpu_enable_double_trap, &cdd, 1);
+>> +    if (cdd.error)
+>> +        return -1;
+> 
+> There is a bug here. If `sbi_cpu_enable_double_trap` failed on all cpus
+> but last cpu.
+> Then cdd.error would not record error and will be reflect as if double
+> trap was enabled.
 
-Regards,
-angelo
+cdd.error is only written in case of error by the per-cpu callbacks, so
+it is only set if enabled failed. Is there something I'm missing ?
 
+Thanks,
+
+Clément
+
+> 
+> Its less likely to happen that FW would return success for one cpu and
+> fail for others.
+> But there is non-zero probablity here.
+> 
 
