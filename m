@@ -1,27 +1,27 @@
 Received: from EX-PRD-EDGE02.vmware.com (ex-prd-edge02.vmware.com [208.91.3.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8D0180A61;
-	Tue, 14 May 2024 18:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA3E181BAA;
+	Tue, 14 May 2024 18:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.91.3.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715711792; cv=none; b=G0CaPIWhuOg0pTLzXx9v0V0mBTQo/T+yaVvJvrpliOICMwvU/tZq4fVVhRh87X62oiB5Xw07scoqG8JfWILRK/2DSk/cAF6IMYOpqhEOuO+IqP+iDVl7HoaJpDzvWmfVp+OxTWZDx+BgrJYhWJwnBpUEk6V2ok7wiWXgdriWZSM=
+	t=1715711795; cv=none; b=apmRpPsAVrh9UFCmv2W2nxzzmIp3oX5r/wj58KhzTmbsqpJHH2k03l1uLcihPTGCX10WhdRoANHp9ROo0WFnb+qMLPyPPvLEcTcS1Nxb1k0uqzTAT9YFEQklhuwHIBca+3sqDYLcRGhKwy6Qbgnt7Y4OTZwQ3IOiU+8QskUqQ2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715711792; c=relaxed/simple;
-	bh=fmNaQn/IwvJ2IsbnYJ+Za6oMl7krDzxwJu+FvRk4K3E=;
+	s=arc-20240116; t=1715711795; c=relaxed/simple;
+	bh=hSPREc8LOly3/w17MuuM5ilVI8Br+C9iCA2zy3DQJv0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cRoDYpx3kK0TQ3q5vFAcmSXIzt9lMSULilWsWLe3S+6D/SRl/XSs9WMEmEbvI6+UNMz5csyPIquFczTJGzLohH3XA0UC/htMdxpi8yrhd+ZXCA/Xubhvd1P8owPmUtyy0m75M7Tv0XnQuKfGjupfBM8S0wsJPBnPZsC5kEO581k=
+	 MIME-Version:Content-Type; b=Jx6gc8AjRmSz8X+NIVYpmk7XiW2/habalCSghSaa9sfquUWKWUYdY6gdk6WyfkowNnf4hOuFr2NGpVgR6yJ0UHOYgGXs0R/PNtU8pcT67wEqwM3kDEq0UToPBKOcxAY//u0gNIYV4BEWw/GvpO6St3J6FznuMsH3qF+xgrYMOyI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=broadcom.com; spf=pass smtp.mailfrom=vmware.com; arc=none smtp.client-ip=208.91.3.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vmware.com
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+Received: from sc9-mailhost1.vmware.com (10.113.161.71) by
  EX-PRD-EDGE02.vmware.com (10.188.245.7) with Microsoft SMTP Server id
- 15.1.2375.34; Tue, 14 May 2024 11:20:57 -0700
+ 15.1.2375.34; Tue, 14 May 2024 11:21:00 -0700
 Received: from htb-1n-eng-dhcp122.eng.vmware.com (unknown [10.172.6.252])
-	by sc9-mailhost3.vmware.com (Postfix) with ESMTP id C194F202C0;
-	Tue, 14 May 2024 11:21:05 -0700 (PDT)
+	by sc9-mailhost1.vmware.com (Postfix) with ESMTP id 7E0C820314;
+	Tue, 14 May 2024 11:21:08 -0700 (PDT)
 Received: by htb-1n-eng-dhcp122.eng.vmware.com (Postfix, from userid 0)
-	id BF697AECCE; Tue, 14 May 2024 11:21:05 -0700 (PDT)
+	id 7B96BAECCE; Tue, 14 May 2024 11:21:08 -0700 (PDT)
 From: Ronak Doshi <ronak.doshi@broadcom.com>
 To: <netdev@vger.kernel.org>
 CC: Ronak Doshi <ronak.doshi@broadcom.com>, Broadcom internal kernel review
@@ -29,9 +29,9 @@ CC: Ronak Doshi <ronak.doshi@broadcom.com>, Broadcom internal kernel review
 	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
 	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, open list
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 1/4] vmxnet3: prepare for version 9 changes
-Date: Tue, 14 May 2024 11:20:46 -0700
-Message-ID: <20240514182050.20931-2-ronak.doshi@broadcom.com>
+Subject: [PATCH net-next 4/4] vmxnet3: update to version 9
+Date: Tue, 14 May 2024 11:20:49 -0700
+Message-ID: <20240514182050.20931-5-ronak.doshi@broadcom.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20240514182050.20931-1-ronak.doshi@broadcom.com>
 References: <20240514182050.20931-1-ronak.doshi@broadcom.com>
@@ -43,109 +43,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Received-SPF: SoftFail (EX-PRD-EDGE02.vmware.com: domain of transitioning
- ronak.doshi@broadcom.com discourages use of 10.113.161.73 as permitted
+ ronak.doshi@broadcom.com discourages use of 10.113.161.71 as permitted
  sender)
 
-vmxnet3 is currently at version 7 and this patch initiates the
-preparation to accommodate changes for up to version 9. Introduced
-utility macros for vmxnet3 version 9 comparison and update Copyright
-information.
+With all vmxnet3 version 9 changes incorporated in the vmxnet3 driver,
+the driver can configure emulation to run at vmxnet3 version 9, provided
+the emulation advertises support for version 9.
 
 Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
 Acked-by: Guolin Yang <guolin.yang@broadcom.com>
 ---
- drivers/net/vmxnet3/Makefile          | 2 +-
- drivers/net/vmxnet3/vmxnet3_defs.h    | 2 +-
- drivers/net/vmxnet3/vmxnet3_drv.c     | 2 +-
- drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 +-
- drivers/net/vmxnet3/vmxnet3_int.h     | 8 +++++++-
- 5 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/net/vmxnet3/vmxnet3_drv.c | 46 ++++++++-------------------------------
+ drivers/net/vmxnet3/vmxnet3_int.h |  4 ++--
+ 2 files changed, 11 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/net/vmxnet3/Makefile b/drivers/net/vmxnet3/Makefile
-index f82870c10205..59ef494ce2e0 100644
---- a/drivers/net/vmxnet3/Makefile
-+++ b/drivers/net/vmxnet3/Makefile
-@@ -2,7 +2,7 @@
- #
- # Linux driver for VMware's vmxnet3 ethernet NIC.
- #
--# Copyright (C) 2007-2022, VMware, Inc. All Rights Reserved.
-+# Copyright (C) 2007-2024, VMware, Inc. All Rights Reserved.
- #
- # This program is free software; you can redistribute it and/or modify it
- # under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_defs.h b/drivers/net/vmxnet3/vmxnet3_defs.h
-index 41d6767283a6..67387bb7aa24 100644
---- a/drivers/net/vmxnet3/vmxnet3_defs.h
-+++ b/drivers/net/vmxnet3/vmxnet3_defs.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
 diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index 89ca6e75fcc6..b3f3136cc8be 100644
+index 2eaa9204c38e..aeb7a4a4be1c 100644
 --- a/drivers/net/vmxnet3/vmxnet3_drv.c
 +++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index 7e8008d5378a..471f91c4204a 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
+@@ -3952,7 +3952,7 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 	struct net_device *netdev;
+ 	struct vmxnet3_adapter *adapter;
+ 	u8 mac[ETH_ALEN];
+-	int size;
++	int size, i;
+ 	int num_tx_queues;
+ 	int num_rx_queues;
+ 	int queues;
+@@ -4019,42 +4019,14 @@ vmxnet3_probe_device(struct pci_dev *pdev,
+ 		goto err_alloc_pci;
+ 
+ 	ver = VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_VRRS);
+-	if (ver & (1 << VMXNET3_REV_7)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_7);
+-		adapter->version = VMXNET3_REV_7 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_6)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_6);
+-		adapter->version = VMXNET3_REV_6 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_5)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_5);
+-		adapter->version = VMXNET3_REV_5 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_4)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_4);
+-		adapter->version = VMXNET3_REV_4 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_3)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_3);
+-		adapter->version = VMXNET3_REV_3 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_2)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_2);
+-		adapter->version = VMXNET3_REV_2 + 1;
+-	} else if (ver & (1 << VMXNET3_REV_1)) {
+-		VMXNET3_WRITE_BAR1_REG(adapter,
+-				       VMXNET3_REG_VRRS,
+-				       1 << VMXNET3_REV_1);
+-		adapter->version = VMXNET3_REV_1 + 1;
+-	} else {
++	for (i = VMXNET3_REV_9; i >= VMXNET3_REV_1; i--) {
++		if (ver & (1 << i)) {
++			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_VRRS, 1 << i);
++			adapter->version = i + 1;
++			break;
++		}
++	}
++	if (i < VMXNET3_REV_1) {
+ 		dev_err(&pdev->dev,
+ 			"Incompatible h/w version (0x%x) for adapter\n", ver);
+ 		err = -EBUSY;
 diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
-index 915aaf18c409..2926dfe8514f 100644
+index 31e8db568db2..9f24d66dbb27 100644
 --- a/drivers/net/vmxnet3/vmxnet3_int.h
 +++ b/drivers/net/vmxnet3/vmxnet3_int.h
-@@ -1,7 +1,7 @@
+@@ -72,12 +72,12 @@
  /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2022, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2024, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-@@ -84,6 +84,8 @@
- 	#define VMXNET3_RSS
- #endif
+  * Version numbers
+  */
+-#define VMXNET3_DRIVER_VERSION_STRING   "1.7.0.0-k"
++#define VMXNET3_DRIVER_VERSION_STRING   "1.9.0.0-k"
  
-+#define VMXNET3_REV_9		8	/* Vmxnet3 Rev. 9 */
-+#define VMXNET3_REV_8		7	/* Vmxnet3 Rev. 8 */
- #define VMXNET3_REV_7		6	/* Vmxnet3 Rev. 7 */
- #define VMXNET3_REV_6		5	/* Vmxnet3 Rev. 6 */
- #define VMXNET3_REV_5		4	/* Vmxnet3 Rev. 5 */
-@@ -463,6 +465,10 @@ struct vmxnet3_adapter {
- 	(adapter->version >= VMXNET3_REV_6 + 1)
- #define VMXNET3_VERSION_GE_7(adapter) \
- 	(adapter->version >= VMXNET3_REV_7 + 1)
-+#define VMXNET3_VERSION_GE_8(adapter) \
-+	(adapter->version >= VMXNET3_REV_8 + 1)
-+#define VMXNET3_VERSION_GE_9(adapter) \
-+	(adapter->version >= VMXNET3_REV_9 + 1)
+ /* Each byte of this 32-bit integer encodes a version number in
+  * VMXNET3_DRIVER_VERSION_STRING.
+  */
+-#define VMXNET3_DRIVER_VERSION_NUM      0x01070000
++#define VMXNET3_DRIVER_VERSION_NUM      0x01090000
  
- /* must be a multiple of VMXNET3_RING_SIZE_ALIGN */
- #define VMXNET3_DEF_TX_RING_SIZE    512
+ #if defined(CONFIG_PCI_MSI)
+ 	/* RSS only makes sense if MSI-X is supported. */
 -- 
 2.11.0
 
