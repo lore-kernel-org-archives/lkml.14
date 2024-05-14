@@ -1,199 +1,86 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59371802C7
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA01180A63
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715710626; cv=none; b=eHy/azAQD+7OzdeQsbM+B1CRKkxRj4obm74+nm4NwMbqJE8bxIJV2JZdEKuQ+eQpsfoskxTCtGvUeIyzevf7RxJGsQTe3mtcuuHavDyTGzDPRrRcXWDNc9xKkLnFduyiGi+Gu8YFDlu7YNyEIXmHFYMnFsJVohSmbfBndcqdS4I=
+	t=1715710630; cv=none; b=CWm0mulDZJ+SlgspCfZ9o4QGuI9P1njbYQ9pUMM4YBGZWgHmthf2x9ki/iPvh2Z0BD4KDFTaxJchsTN34ReB1HLP1dmafCd6GbvoX8jJ+48dMmBcQIdamwMGnD652/h43j9KUZhv8MS++auqwRVN8uqWoxcdk7pYMRrehX4DPL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715710626; c=relaxed/simple;
-	bh=1ldkbdNjozovTFgJayE4MPhVnciMvoQfBKYgpqQwePk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LSwmVVw0CH4DtFf3/mhPA4mnFFKdJh7827OG3rgZRf3wEAqBKRHIZAZUeejuH1VbivbgIuRGY+acdh27S2g8vKbCJVjwbYVvQoztkoR8ABeo3DbPO0gu2r55DAMXfic0AuyuuXRRzymTkiHJLbHJN3W0LYMi4VPlXIcD/Z4owvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=OzXmyPit; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715710630; c=relaxed/simple;
+	bh=uzmplbv5D7iNpVC5UJ5KWf/1DYXGoJz78n4vD8h3RCI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ekDAZ/V5QN1GVfa8bIiQKYbwop2zstMXVpWPp0nzhD1g+clGPjFfGm4Xsxdgnx0UjlqCcjf166lENIuconztGWSbUcM7jmJDr9aR2jfZ/sPEwRujtM8UBsC/bdiDmdxY894jtNFlfM9H7gDLoW72DioofVeeOor1I9EymUJf6Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u38RF5v7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="OzXmyPit"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1ec4dc64c6cso42074935ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 11:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715710624; x=1716315424; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Ov4N0BiYWMCzHOD82syI7y8HSpVewpJ8aAIenCzP8c=;
-        b=OzXmyPityPnZtfUiNxMUqf1ObJT1NnkzNS7w8TzNUtTms3hExnn5iA3/mVJAcidWnd
-         pYVFzI5WJ7lT9rgViKdEXytlanKQYrloYKlnLYW6RoFlOqY7dWd7mWG1wGMMHN2j1RIA
-         8n9XtR8zm8ZZm5v3+cwr7+p2tAPLlPd0DVBAx5X1dgjo24vaqazveH+dVw7QhlUoFP0k
-         ZrGHuavZs8LgLC3HfGGFrUpS21hVdJt8I6SiiT0Q9qc9Al+EJVSq76VRnzG2dyCT9qq+
-         +EtMZ0TsKAoOk0+DtLaq7PNMn8pq1fUtYe0M1pNSyLaCz8eRuWN3Clgrg2meFuGibms2
-         4R5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715710624; x=1716315424;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Ov4N0BiYWMCzHOD82syI7y8HSpVewpJ8aAIenCzP8c=;
-        b=ICq8H0PJe95Ug3QIiDnFTkxiuQIxHOxS60ZAKyyYoZOCenYS1GLEGYWTFYPdY1nssZ
-         x+alAbSRtVMmFBAS3VOAasANHCsutLK3EPhlU7qfECxL0Adgd32JjyRAGEw3b2tx0ga4
-         T0P9XMBNGEyLLvt1vtjg7UngbcScdsL9UDChFDUX5vZiI1O8lvFZdYTgcYc+E2XEkFEA
-         w83JOjMvXlUpoIGL/c8qzHlkfJ6ZtaA4sN7WiWouWJ93ysw/m5eqJthy+vgdl/MQDOfL
-         ZVdgL6pW/Uacg8HpLVsPSpFg/I9EHsvGm1bPZGYD90gToR20QBjqHkwUjb4H0wHlHDbC
-         cu4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXsANn4Qt+anOAIGSzf/w3ihONfcGjkGXBo4M6uWsDxPjsk9I1+fAxryqav3UCmJdK7mFmbmXQzGv5MWiCrlnfcHWzs+54VlexrTCv/
-X-Gm-Message-State: AOJu0YyasA+iteLaYuhNGd6mjR0GIkYrx/Q7tx5Dwpwz4r3rExMM/oa/
-	Ue5nL3as51K1WP8W2+1toOxbtmA9PJo5IRUum77TK4BPmZS9i37n/9gDt3Wl+5o=
-X-Google-Smtp-Source: AGHT+IFJNfqQMUbFyTbFk6O7qQproU4On+Ok9bCbTsa1ZgcHcdnvAZUcFLklw8fSte40jza5wuIs+w==
-X-Received: by 2002:a17:902:ba8a:b0:1eb:acff:63bf with SMTP id d9443c01a7336-1ef43e26591mr125704035ad.37.1715710624155;
-        Tue, 14 May 2024 11:17:04 -0700 (PDT)
-Received: from tjeznach.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad6386sm100993625ad.80.2024.05.14.11.17.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 11:17:03 -0700 (PDT)
-From: Tomasz Jeznach <tjeznach@rivosinc.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Nick Kossifidis <mick@ics.forth.gr>,
-	Sebastien Boeuf <seb@rivosinc.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux@rivosinc.com,
-	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v5 4/7] iommu/riscv: Enable IOMMU registration and device probe.
-Date: Tue, 14 May 2024 11:16:16 -0700
-Message-Id: <518a4b0bf651707a9508c169fe3868e669ec2c6d.1715708679.git.tjeznach@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1715708679.git.tjeznach@rivosinc.com>
-References: <cover.1715708679.git.tjeznach@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u38RF5v7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144BBC32782;
+	Tue, 14 May 2024 18:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715710630;
+	bh=uzmplbv5D7iNpVC5UJ5KWf/1DYXGoJz78n4vD8h3RCI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=u38RF5v7U/Hj9CZLp1QiPYeERCnEJgoh07ZTr+NKJv4kYr6gTe+D0EMu11P6CY8WM
+	 /VfOglY7oR6cehdaIV8d5RfRqP3YkvRPS6ZuFytkN9ntM2JD3fnW9WVcVZX+YPfn1s
+	 V1JJgAkfMSmbtlqYqWLmuCpUHKlabxHwkmygy68bRl7MFYxLgZpGDfOSgKNIgHLLS6
+	 mJphqO0rTj088VEgKiFLU+djfgj7UyrKYsvnbKp7uj9Pp5HYfONWTVRtwLk6i+/rs7
+	 AKsfNR1dGyB4iibT2WBW09lq69oEBj3rFdo/HNilveyC2k1vfSie5VIQtaj4urzRoD
+	 5YC3msP+vLJjQ==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, David Hildenbrand <david@redhat.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Andrew Bresticker <abrestic@rivosinc.com>, Chethan
+ Seshadri <Chethan.Seshadri@catalinasystems.io>, Lorenzo Stoakes
+ <lstoakes@gmail.com>, Oscar Salvador <osalvador@suse.de>, Santosh Mamila
+ <santosh.mamila@catalinasystems.io>, Sivakumar Munnangi
+ <siva.munnangi@catalinasystems.io>, Sunil V L <sunilvl@ventanamicro.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 6/8] riscv: Enable memory hotplugging for RISC-V
+In-Reply-To: <CAHVXubi6Hv_FCTi=a5FFoxqiUBucrX_NhVGBAWE6qXRXdzOYsA@mail.gmail.com>
+References: <20240514140446.538622-1-bjorn@kernel.org>
+ <20240514140446.538622-7-bjorn@kernel.org>
+ <CAHVXubi6Hv_FCTi=a5FFoxqiUBucrX_NhVGBAWE6qXRXdzOYsA@mail.gmail.com>
+Date: Tue, 14 May 2024 20:17:05 +0200
+Message-ID: <87r0e4l0m6.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Advertise IOMMU device and its core API.
-Only minimal implementation for single identity domain type, without
-per-group domain protection.
+Alexandre Ghiti <alexghiti@rivosinc.com> writes:
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Tomasz Jeznach <tjeznach@rivosinc.com>
----
- drivers/iommu/riscv/iommu.c | 66 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+> On Tue, May 14, 2024 at 4:05=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
+el.org> wrote:
+>>
+>> From: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>>
+>> Enable ARCH_ENABLE_MEMORY_HOTPLUG and ARCH_ENABLE_MEMORY_HOTREMOVE for
+>> RISC-V.
+>>
+>> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>> ---
+>>  arch/riscv/Kconfig | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> index 6bec1bce6586..b9398b64bb69 100644
+>> --- a/arch/riscv/Kconfig
+>> +++ b/arch/riscv/Kconfig
+>> @@ -16,6 +16,8 @@ config RISCV
+>>         select ACPI_REDUCED_HARDWARE_ONLY if ACPI
+>>         select ARCH_DMA_DEFAULT_COHERENT
+>>         select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATI=
+ON
+>> +       select ARCH_ENABLE_MEMORY_HOTPLUG if SPARSEMEM && 64BIT && MMU
+>
+> I think this should be SPARSEMEM_VMEMMAP here.
 
-diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
-index 3c5a6b49669d..b8e0e4b62585 100644
---- a/drivers/iommu/riscv/iommu.c
-+++ b/drivers/iommu/riscv/iommu.c
-@@ -17,6 +17,7 @@
- #include <linux/init.h>
- #include <linux/iommu.h>
- #include <linux/kernel.h>
-+#include <linux/pci.h>
- 
- #include "iommu-bits.h"
- #include "iommu.h"
-@@ -36,6 +37,60 @@ static void riscv_iommu_disable(struct riscv_iommu_device *iommu)
- 	riscv_iommu_writel(iommu, RISCV_IOMMU_REG_PQCSR, 0);
- }
- 
-+static int riscv_iommu_attach_identity_domain(struct iommu_domain *iommu_domain,
-+					      struct device *dev)
-+{
-+	/* Global pass-through already enabled, do nothing for now. */
-+	return 0;
-+}
-+
-+static struct iommu_domain riscv_iommu_identity_domain = {
-+	.type = IOMMU_DOMAIN_IDENTITY,
-+	.ops = &(const struct iommu_domain_ops) {
-+		.attach_dev = riscv_iommu_attach_identity_domain,
-+	}
-+};
-+
-+static int riscv_iommu_device_domain_type(struct device *dev)
-+{
-+	return IOMMU_DOMAIN_IDENTITY;
-+}
-+
-+static struct iommu_group *riscv_iommu_device_group(struct device *dev)
-+{
-+	if (dev_is_pci(dev))
-+		return pci_device_group(dev);
-+	return generic_device_group(dev);
-+}
-+
-+static int riscv_iommu_of_xlate(struct device *dev, const struct of_phandle_args *args)
-+{
-+	return iommu_fwspec_add_ids(dev, args->args, 1);
-+}
-+
-+static struct iommu_device *riscv_iommu_probe_device(struct device *dev)
-+{
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-+	struct riscv_iommu_device *iommu;
-+
-+	if (!fwspec || !fwspec->iommu_fwnode->dev || !fwspec->num_ids)
-+		return ERR_PTR(-ENODEV);
-+
-+	iommu = dev_get_drvdata(fwspec->iommu_fwnode->dev);
-+	if (!iommu)
-+		return ERR_PTR(-ENODEV);
-+
-+	return &iommu->iommu;
-+}
-+
-+static const struct iommu_ops riscv_iommu_ops = {
-+	.of_xlate = riscv_iommu_of_xlate,
-+	.identity_domain = &riscv_iommu_identity_domain,
-+	.def_domain_type = riscv_iommu_device_domain_type,
-+	.device_group = riscv_iommu_device_group,
-+	.probe_device = riscv_iommu_probe_device,
-+};
-+
- static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
- {
- 	u64 ddtp;
-@@ -71,6 +126,7 @@ static int riscv_iommu_init_check(struct riscv_iommu_device *iommu)
- 
- void riscv_iommu_remove(struct riscv_iommu_device *iommu)
- {
-+	iommu_device_unregister(&iommu->iommu);
- 	iommu_device_sysfs_remove(&iommu->iommu);
- }
- 
-@@ -95,5 +151,15 @@ int riscv_iommu_init(struct riscv_iommu_device *iommu)
- 		return dev_err_probe(iommu->dev, rc,
- 				     "cannot register sysfs interface\n");
- 
-+	rc = iommu_device_register(&iommu->iommu, &riscv_iommu_ops, iommu->dev);
-+	if (rc) {
-+		dev_err_probe(iommu->dev, rc, "cannot register iommu interface\n");
-+		goto err_remove_sysfs;
-+	}
-+
- 	return 0;
-+
-+err_remove_sysfs:
-+	iommu_device_sysfs_remove(&iommu->iommu);
-+	return rc;
- }
--- 
-2.34.1
-
+Hmm, care to elaborate? I thought that was optional.
