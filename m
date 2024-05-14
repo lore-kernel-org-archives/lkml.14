@@ -1,318 +1,177 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814CF180A6C
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 19:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B62181318
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 20:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715716753; cv=none; b=aC43EdYtUAPCUVmVLaEwo8kVF8KZ7n6zhj0nbirQNlkYDU6ZLubm56gCbToNpITKYr+rhzreGzeNqevAvV+63ZhPL+DhF434liYwyOpvEZ3srVQSH/bQX9UtOtNxb5FCIAnHXQM2Bo0f/mzG4aLQ6jPIqQ8ZIGaI9LyEfHS6PlI=
+	t=1715716832; cv=none; b=W15oEZAVTa/PUTVJFIkBtSC5ec2+pmv6b1Cy16dYPoSH9DnxP1ognNjTpWHgJwnlKPfhL/eh9mSkBA/nfDdOKwOtp7CAHIUrlBiN/d16Mp9doBwI9gumFeOE8kGSqjNxhjtc9uX0O77jSD5U/k8+sHB8RoFjoXcAuSdcq3be2Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715716753; c=relaxed/simple;
-	bh=FfBq4QqQrtwuN3KM/MzvHW/lDpe+7StAMESrxCSJ2tE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=o5vnuUd6rdhzhYl3IWm7Yvc7mVHZgZoZyur7d4nQRa4EoXiRVPPzriZy0QdWf0f+IDtYHmlS6G5Nw4X3PU8B3uzDeb80iwpkklvNfNO4LUPqsNgBFH4nAuw2yB8bamygvh0rbjkMOEvy1qGIKjIpqsUK0R3P40N3IRPauMu9MXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=dmf7h2mk; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1715716832; c=relaxed/simple;
+	bh=F1BCusWVnox0inKiwWulDDxeUYd5ETJQa5nYC/mUo7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FlzOA9p13J4c3opHMXxBk8wuaGyCWaJtK0OscIXBb2ZGius6mH1DOxgTM6eKm1A0mHa7r+FIN6ru56NegkQdAvFFPZYUMQO4rJ1b8dBwsaoClFbaAUNCSajqc7jyFt5fLzzfHuAfH19wFbYiEp+xNt3CTmXHMif2fHMMoG8EkxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=uZQHp6bg; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="dmf7h2mk"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7fbe0aeec38so700479241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 12:59:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uZQHp6bg"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2b8fb581e77so686115a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 13:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1715716749; x=1716321549; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/xZ0WCMxWXf6SCbKz4ExR4IGiDhvg8ahEfUt+oFqQ+U=;
-        b=dmf7h2mkxz1kls4SmXQBin/9b5uMFiIFFc9g0mxgMRlbUA+oZQ9BfNhyxKRDXL0N0V
-         BpINKANCgANufRBdY8JOhXcHjnpvy2CG2ZWLumK4DQnWTFF+L0EXXVVTl4ftXmUmF/ac
-         yziiP37YeEGsCqvoLJZSAMlxtQJnHTtRK8/1kQjnLGl9I8rBufGlWT5AFUaj/an/giid
-         T7gznCbGyWU+6llel3zYAjJuiuWob1MdKHZLEYpfmufmmvUvl9r3i8r310XaWt0GNkgp
-         KzCC53J6aciHHdYR96vwuFSNm8gChYlerAz0I8zvV+dz3T3j4+0ci3HSCgwjR8ERGoKH
-         +t+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715716749; x=1716321549;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715716830; x=1716321630; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/xZ0WCMxWXf6SCbKz4ExR4IGiDhvg8ahEfUt+oFqQ+U=;
-        b=xLOFkZ/At/qeuuDOQnSXe2eTOsw/pFn+ixcFuSG/29S7ubT6FZfSWf1JG78e+CfBYO
-         nzesvsQwwU3M5InFk8WoU/KmmzxAzVeuRvUQtnLoQfmb4q8GkZRquPNToVGup7yxJEBa
-         dfylJDTvvdc2nb900vCgxCkGkPh2f9vKIJm3v4E/MxGsWZze0Dwoj5Qv4YnGvk4OlCcJ
-         ieT67o3QqDdtZZmoMDxDQ0B/rFmU9INsm5gA23towuU8CwZIwgC3yNV8F038fISetllr
-         c/wnXODskRo9i3UTLvIDyztsaVEz9hKzBvcC56F3FKMrjKLt+R12f/N366EAl1ThZaIF
-         xkKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhgZaBTZhkCcvfxyHTBD8r2Q7Q/ios5pj8dK3DmffvxRKL0lL4HswhfYdKugnPSMbPyEs4K3owLfesNskQaMxW6ybEX1tSm5pLfNvU
-X-Gm-Message-State: AOJu0YzqfpvmhZmt6cehlz5/EPPeBmKybg3Y7Q1iyHiivnftM8AGoQo3
-	TRTFgqecu8WxULVcmn/OTs559Inv2/56fk1sAYJP1i8WowgiOytH0jGIWSQAu+4=
-X-Google-Smtp-Source: AGHT+IG+IWhlEvoUTCqaHfj6q+ZQ4VlFYRPUioIxvLtt1oL0T/VaVy8uDa8faCwoKCS9gujmxh3OyQ==
-X-Received: by 2002:a05:6102:dd3:b0:47e:f679:51e2 with SMTP id ada2fe7eead31-48077dcae4cmr14690722137.10.1715716749407;
-        Tue, 14 May 2024 12:59:09 -0700 (PDT)
-Received: from nicolas-tpx395.lan ([2606:6d00:17:6448::7a9])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1d9161sm56391496d6.120.2024.05.14.12.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 12:59:08 -0700 (PDT)
-Message-ID: <0cc8518fc56ef8e8ca31b170314603a6ced04ee7.camel@ndufresne.ca>
-Subject: Re: [PATCH v3 4/4] media: chips-media: wave5: Support YUV422 raw
- pixel-formats on the encoder.
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: "jackson.lee" <jackson.lee@chipsnmedia.com>, Nas Chung
-	 <nas.chung@chipsnmedia.com>, "mchehab@kernel.org" <mchehab@kernel.org>, 
- "sebastian.fricke@collabora.com"
-	 <sebastian.fricke@collabora.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,  "lafley.kim"
- <lafley.kim@chipsnmedia.com>, "b-brnich@ti.com" <b-brnich@ti.com>, 
- "jackson.lee@chipnsmedia.com" <jackson.lee@chipnsmedia.com>
-Date: Tue, 14 May 2024 15:59:07 -0400
-In-Reply-To: <SE1P216MB1303BCEBEEFD39066A031C31ED182@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-References: <20240430013900.187-1-nas.chung@chipsnmedia.com>
-	 <20240430013900.187-5-nas.chung@chipsnmedia.com>
-	 <131cf8a5ac97ac800e19205c5d2b5359ac266de3.camel@ndufresne.ca>
-	 <SE1P216MB1303BCEBEEFD39066A031C31ED182@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+        bh=ll8ePMooaLJ++vSB+9syazdtLkK7b8/0TCj36hEfQbQ=;
+        b=uZQHp6bgXhVNv4WSPqVQvAiYLV3mF+NBc0Eiac6OZ/inaPjDmRqjOVmAbgvGCcbWSP
+         wTuX6JI/oeiW4Cgx5TrwyzkEEJwM962DpZ6X0Cwvxr0gzzTtPJeBStI754dEytgUv3BC
+         H5mvPBBnrmdkXJkr0XDJAyB23Xe1bAl1Ki6nc2kIziDDpmjsD2xvKnU9xYKD6XgjuHg9
+         WgKIkzJlskrafMzooda8nvLhVk3zOlFZinKclt/cjSO8fjjrVlIDtI+rpi5BkvInw/hw
+         I0KM7xMLpzbgS+ddFCk8X0zxdrlMD8S4jes6PhYm1lCIUueR2dK++Uncmmj3REjvKKPU
+         Vgvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715716830; x=1716321630;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ll8ePMooaLJ++vSB+9syazdtLkK7b8/0TCj36hEfQbQ=;
+        b=bg2A9QytJHm+u7dHlCT0+5YkGxjoeSuqenMtMDM6rMsadkQQ/vWqDMJ0YUPMP9DwnU
+         RljsnqVnnBLnXiDhoJ5JLbV0fdvqVjM+UFcQhL3IgfpDMalL1KJEMeeoungvF9OOeT/H
+         sbfZPy95hwzEXT6aUgsiOW4uYKoj9c6W998kz+2a43oh9tis5CjV1CqPvwHiLeD+mm3p
+         kZe8o/ErtXTZOh+3DlCLb3jrDGl7ozsBmh6s+Vu7kMZnmzWRPDE7mA+OoshauDB/c7Mp
+         TfxorNXOF6kBTKfblrlx862oogIAx59NlB5t7u1eiaN7vRTdj8bnFhP6p56JJz0D3jYS
+         zMyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLAmxMwOc9KRPxSsDC06irBo/a83Gr1c1n4ZJ4uH0bCxyRdGRJ6x4Oaf4FXWT5iCwrcaoHyZKy+tTzH4WxvkQ0GNGzm8SUTkBg8WeE
+X-Gm-Message-State: AOJu0Yz8i1ch9BKvvmz5MEzIBi7ulYpb+GJpkxEw95umFhGSpoz9AHjT
+	20JIAatS344YboB2q46d04yfdusw6FY4+LVMvukGyKSeafWcc/pQRatxqxFg8oM=
+X-Google-Smtp-Source: AGHT+IFnBHUUmMWtiYG9e/YiHxcQJT/qNVtzttvhR+ZqrEmfm+gaRsCol3BlyeJlD0TCv2qEnJ75gA==
+X-Received: by 2002:a05:6a00:8986:b0:6ec:ee44:17bb with SMTP id d2e1a72fcca58-6f4e0343824mr14250305b3a.2.1715716829950;
+        Tue, 14 May 2024 13:00:29 -0700 (PDT)
+Received: from [172.21.2.105] ([50.204.89.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a819e7sm9572850b3a.56.2024.05.14.13.00.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 13:00:29 -0700 (PDT)
+Message-ID: <593a98c9-baaa-496b-a9a7-c886463722e1@kernel.dk>
+Date: Tue, 14 May 2024 14:00:20 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Rust block device driver API and null block driver
+To: Andreas Hindborg <nmi@metaspace.dk>, Christoph Hellwig <hch@lst.de>,
+ Keith Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>,
+ Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>,
+ Ming Lei <ming.lei@redhat.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>,
+ Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>,
+ =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>,
+ Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>,
+ Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+ =?UTF-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>,
+ open list <linux-kernel@vger.kernel.org>,
+ "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+ "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+ "gost.dev@samsung.com" <gost.dev@samsung.com>
+References: <20240512183950.1982353-1-nmi@metaspace.dk>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240512183950.1982353-1-nmi@metaspace.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 5/12/24 12:39 PM, Andreas Hindborg wrote:
+> From: Andreas Hindborg <a.hindborg@samsung.com>
+> 
+> Hi All!
+> 
+> I am happy to finally send the first _non_ RFC patches for the Rust
+> block device API.
+> 
+> This series provides an initial Rust block layer device driver API,
+> and a very minimal null block driver to exercise the API. The driver
+> has only one mode of operation and cannot be configured.
+> 
+> These patches are an updated and trimmed down version of the v2 RFC
+> [1]. One of the requests for the v2 RFC was to split the abstractions
+> into smaller pieces that are easier to review. This is the first part
+> of the split patches.
+> 
+> A notable change in this patch set is that they no longer use the
+> `ref` field of the C `struct request` to manage lifetime of the
+> request structure.
+> 
+> The removed features will be sent later, as their dependencies land
+> upstream.
+> 
+> As mentioned before, I will gladly maintain this code if required.
 
-sorry for the delay
+With the following stipulations (and the kernel test bot issues sorted),
+I think we should give this a go. We already covered this today at
+LSFMM, but for the sake of others, here's how I see the rust support for
+the block side of things:
 
-Le jeudi 02 mai 2024 =C3=A0 04:55 +0000, jackson.lee a =C3=A9crit=C2=A0:
-> Hi Nicolas
->=20
-> > -----Original Message-----
-> > From: Nicolas Dufresne <nicolas@ndufresne.ca>
-> > Sent: Thursday, May 2, 2024 4:46 AM
-> > To: Nas Chung <nas.chung@chipsnmedia.com>; mchehab@kernel.org;
-> > sebastian.fricke@collabora.com
-> > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > hverkuil@xs4all.nl; lafley.kim <lafley.kim@chipsnmedia.com>; b-brnich@t=
-i.com;
-> > jackson.lee@chipnsmedia.com; jackson.lee <jackson.lee@chipsnmedia.com>
-> > Subject: Re: [PATCH v3 4/4] media: chips-media: wave5: Support YUV422 r=
-aw
-> > pixel-formats on the encoder.
-> >=20
-> > Hi Nas,
-> >=20
-> > Le mardi 30 avril 2024 =C3=A0 10:39 +0900, Nas Chung a =C3=A9crit=C2=A0=
-:
-> > > From: "Jackson.lee" <jackson.lee@chipsnmedia.com>
-> > >=20
-> > > Add support for the YUV422P, NV16, NV61, YUV422M, NV16M, NV61M raw pi=
-xel-
-> > formats to the Wave5 encoder.
-> > > All these formats have a chroma subsampling ratio of 4:2:2 and theref=
-ore
-> > require a new image size calculation as the driver previously only hand=
-led a
-> > ratio of 4:2:0.
-> >=20
-> > Same here, run check-patch, before sending your next version, it should=
- tell
-> > you that this message is not indented properly.
-> >=20
-> > >=20
-> > > Signed-off-by: Jackson.lee <jackson.lee@chipsnmedia.com>
-> > > Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
-> > > ---
-> > >  .../chips-media/wave5/wave5-vpu-enc.c         | 59 +++++++++++++++++=
---
-> > >  1 file changed, 54 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-> > > b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-> > > index 75d230df45f6..0d6bec4e28d1 100644
-> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-enc.c
-> > > @@ -66,6 +66,24 @@ static const struct vpu_format
-> > enc_fmt_list[FMT_TYPES][MAX_FMTS] =3D {
-> > >  			.v4l2_pix_fmt =3D V4L2_PIX_FMT_NV21M,
-> > >  			.v4l2_frmsize =3D &enc_frmsize[VPU_FMT_TYPE_RAW],
-> > >  		},
-> > > +		{
-> > > +			.v4l2_pix_fmt =3D V4L2_PIX_FMT_YUV422P,
-> > > +		},
-> > > +		{
-> > > +			.v4l2_pix_fmt =3D V4L2_PIX_FMT_NV16,
-> > > +		},
-> > > +		{
-> > > +			.v4l2_pix_fmt =3D V4L2_PIX_FMT_NV61,
-> > > +		},
-> > > +		{
-> > > +			.v4l2_pix_fmt =3D V4L2_PIX_FMT_YUV422M,
-> > > +		},
-> > > +		{
-> > > +			.v4l2_pix_fmt =3D V4L2_PIX_FMT_NV16M,
-> > > +		},
-> > > +		{
-> > > +			.v4l2_pix_fmt =3D V4L2_PIX_FMT_NV61M,
-> > > +		},
-> > >  	}
-> > >  };
-> > >=20
-> > > @@ -109,13 +127,30 @@ static int start_encode(struct vpu_instance *in=
-st,
-> > u32 *fail_res)
-> > >  	struct vb2_v4l2_buffer *dst_buf;
-> > >  	struct frame_buffer frame_buf;
-> > >  	struct enc_param pic_param;
-> > > -	u32 stride =3D ALIGN(inst->dst_fmt.width, 32);
-> > > -	u32 luma_size =3D (stride * inst->dst_fmt.height);
-> > > -	u32 chroma_size =3D ((stride / 2) * (inst->dst_fmt.height / 2));
-> > > +	u32 stride =3D inst->src_fmt.plane_fmt[0].bytesperline;
-> > > +	u32 luma_size =3D (stride * inst->src_fmt.height);
-> > > +	u32 chroma_size =3D 0;
-> > >=20
-> > >  	memset(&pic_param, 0, sizeof(struct enc_param));
-> > >  	memset(&frame_buf, 0, sizeof(struct frame_buffer));
-> > >=20
-> > > +	if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_YUV420 ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_YUV420M)
-> > > +		chroma_size =3D luma_size / 4;
-> > > +	else if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV12 ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV21 ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV12M ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV21M)
-> > > +		chroma_size =3D luma_size / 2;
-> > > +	else if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_YUV422P ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_YUV422M)
-> > > +		chroma_size =3D luma_size / 2;
-> > > +	else if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV16 ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV61 ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV16M ||
-> > > +		 inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV61M)
-> > > +		chroma_size =3D luma_size;
-> > > +
-> >=20
-> > I'm still unhappy to see all the supported format having to be listed a=
-gain
-> > here, this is error prone and a maintenance burden. In general, what I =
-would
-> > do is (and this is simplified to the subset of format we support):
-> >=20
-> > // might want to bug on that the info->pixel_encoding =3D=3D V4L2_PIXEL=
-_ENC_YUV
-> > // if you believe some RGB or bayer formats could be added in the futur=
-e and
-> > // want the devs to notice. I've ignored fractional bytes-per-pixel val=
-ues as
-> > // we don't use that, but another bugon if there is a chance the firmwa=
-re //
-> > will=C2=A0support more complex packing.
-> >=20
-> > info =3D v4l2_format_info(inst->src_fmt.pixelformat);
-> > if (info->mem_planes =3D=3D 1) {
-> > 	luma_size =3D stride * inst->dst_fmt.height;
-> > 	chroma_size =3D luma_size * info->bpp[1] / (info->hdiv * info->vdiv) }
-> > else {
-> > 	luma_size =3D inst->src_fmt.plane_fmt[0].sizeimage;
-> > 	chroma_size =3D inst->src_fmt.plane_fmt[1].sizeimage;
-> > }
-> >=20
-> > Or something similar that works ... (untested code above)
-> >=20
-> > >  	dst_buf =3D v4l2_m2m_next_dst_buf(m2m_ctx);
-> > >  	if (!dst_buf) {
-> > >  		dev_dbg(inst->dev->dev, "%s: No destination buffer found\n",
-> > > __func__); @@ -501,11 +536,15 @@ static int wave5_vpu_enc_s_fmt_out(s=
-truct
-> > file *file, void *fh, struct v4l2_form
-> > >  	}
-> > >=20
-> > >  	if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV12 ||
-> > > -	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV12M) {
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV12M ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV16 ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV16M) {
-> > >  		inst->cbcr_interleave =3D true;
-> > >  		inst->nv21 =3D false;
-> > >  	} else if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV21 ||
-> > > -		   inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV21M) {
-> > > +		   inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV21M ||
-> > > +		   inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV61 ||
-> > > +		   inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV61M) {
-> > >  		inst->cbcr_interleave =3D true;
-> >=20
-> > This can be simplified to (avoiding enumerating formats):
-> >=20
-> > 	inst->cbcr_interleave =3D (info->comp_planes =3D=3D 2) ? true : false;
-> >=20
-> > >  		inst->nv21 =3D true;
-> >=20
-> > Could be something to add into the info in the future, but for now this=
- is
-> > list of formats is needed. Would be a lot more efficient with a switch,=
- but
-> > not a hot path so not making this mandatory.
-> >=20
->=20
-> Switch(pixel_format) {
-> Case V4L2_PIX_FMT_NV21:
-> Case V4L2_PIX_FMT_NV21M:
-> Case V4L2_PIX_FMT_NV61:
-> Case V4L2_PIX_FMT_NV61M:
-> 	inst->nv21 =3D true;
-> Default:
-> 	inst->nv21 =3D false;
-> }
->=20
-> What you are saying is that to set the nv21 variable(using switch) ?
+I see rust support for the block layer as a two stage kind of thing.
+Stage 1 would be including this patchset. In stage 1, all fallout from
+block layer changes fall upon Andreas and group to fix. Under no
+circumstance will changes from other contributors be held up, or
+contributors be held accountable, for breakages of the block rust code.
+Should contributors wish to sort out these issues themselves, then they
+are of course free to do so, but it won't be something that gatekeeps
+other changes.
 
-Yes, it seems easier to maintain to me.
+This leaves existing contributors free to go about their usual business.
+Kernels that don't enable rust (which won't happen unless you're setup
+for it anyway) won't even see build breakages. We will see some noise
+from the kernel test bot on the list, which does worry me a little bit.
+Not because it'll mark the rust side as being broken, but because it'll
+cause more noise which may make us miss breakages that are ultimately
+more important. I don't think this is a big risk, just highlighting that
+it is indeed a risk and will cause some potential annoyances.
 
->=20
->=20
->=20
-> > >  	} else {
-> > > @@ -1102,6 +1141,16 @@ static void wave5_set_enc_openparam(struct
-> > enc_open_param *open_param,
-> > >  	u32 num_ctu_row =3D ALIGN(inst->dst_fmt.height, 64) / 64;
-> > >  	u32 num_mb_row =3D ALIGN(inst->dst_fmt.height, 16) / 16;
-> > >=20
-> > > +	if (inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_YUV422P ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV16 ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV61 ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_YUV422M ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV16M ||
-> > > +	    inst->src_fmt.pixelformat =3D=3D V4L2_PIX_FMT_NV61M)
-> > > +		open_param->src_format =3D FORMAT_422;
-> > > +	else
-> > > +		open_param->src_format =3D FORMAT_420;
-> >=20
-> > Can be simplified to:
-> >=20
-> > if (info->hdiv =3D=3D 2 && info->vdiv =3D=3D 2)
-> > 	open_param->src_format =3D FORMAT_422;
-> > else if (info->hdiv =3D=3D 2 && info->vdiv =3D=3D 1)
-> > 	open_param->src_format =3D FORMAT_420;
-> >=20
->=20
-> I think the above codes should be changed like below.(we should swap the =
-values of the src_format variable.)
->=20
->  if (info->hdiv =3D=3D 2 && info->vdiv =3D=3D 2)
->  	open_param->src_format =3D FORMAT_420;
->  else if (info->hdiv =3D=3D 2 && info->vdiv =3D=3D 1)
->  	open_param->src_format =3D FORMAT_422;
->=20
+In stage 1, block rust is just there to enable people to experiment and
+play with it, and continue to develop it. Right now Andreas has a very
+(VERY) basic null_blk driver, I think we should move towards a fully
+fledged implementation of that so we at least have _something_ to test.
+We really need to full API to be used and exposed, this is generic
+kernel requirement - we just don't merge code that has no users, ever.
+Since a more complete rust null blk driver does exist out of tree,
+perhaps we can get something more complete for v2 of this patchset? I
+would highly recommend that.
 
-Good catch.
+We may never exit stage 1, and I think during this particular stage, if
+things don't work out for whatever reason, the code can be removed
+again. As we have no critical drivers being rust exclusive at that
+point, it won't cause any issues yanking the code again. Moving into a
+stage 2 for block rust would mean that the rest of the kernel has fully
+adopted rust anyway, and being able (and willing) to write rust is just
+another part of the developer arsenal.
 
->=20
-> > > +
-> > >  	open_param->wave_param.gop_preset_idx =3D PRESET_IDX_IPP_SINGLE;
-> > >  	open_param->wave_param.hvs_qp_scale =3D 2;
-> > >  	open_param->wave_param.hvs_max_delta_qp =3D 10;
-> >=20
-> > regards,
-> > Nicolas
+I'd love to see the rust code moved to eg block/rust/, as I would
+greatly prefer to have it closer to the actual block code rather than
+sitting off in rust/kernel/block instead. I see this as a similar
+problem to having documentation away fro the actual code, it inevitably
+causes a drift between them. I understand from Andreas that this is
+actually something that is being worked on, and we can probably expect
+to see that in a cycle or two.
+
+tldr - as long as this doesn't encumer existing contributors, then I see
+absolutely no reason not to enable a rust playground for block drivers.
+
+-- 
+Jens Axboe
 
