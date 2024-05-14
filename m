@@ -1,193 +1,142 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E46D1A7
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B13C1448D9;
+	Tue, 14 May 2024 14:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715695784; cv=none; b=k27u9qauDFYuJ9GKc43Fa5SbDUtGshuDGxOq6UATNN1xVcmEUa4ECjURfqw12xq/2id0QQzmQVEDsoCEtlOa8KLnTCYGa9oLUVsOlLisUmADvmMw9719EVRM7p8cs3F0zMiN4NG489a+x20FqId3MqhEAnE+BMPwEiaz3aHjo40=
+	t=1715695810; cv=none; b=onN+VCCCYByVge14V0//NtScC2li7xFZqnAdCe8zcrtp/Anq/cH4C0c9/K2ZJ4ZmI2JRhTbyD8XMbnllUjeP+Xh/A/MFzRMEMBOu3lrDFDw/hWcs2mGvRghTdNawjR7uOqJnKJcTk3uy0PQgwDfeuA64++6FhG8Vk3kfB6xO6Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715695784; c=relaxed/simple;
-	bh=uFVLMc2dCPX3QA+rPjkxmWD9+AoFoVwbL5sdkWZ1yvg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VGHR9sW4Ht+ZPXfSnziM41Zuf1fdGa2jz1xJdw3wqFbHdYqZcB1X8CvJfM3tD8mXpA2HFux97nfZA5sFnJfnIBu0Fr8SNJQmb2GgUA3tw0Fi5zgkKJao0XHo4ypJn/zI8rJOAeQrb+3HpxxOPFJQWzZTepC6TM/7QtVLkjti7Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7e1bdfff102so484566139f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:09:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715695782; x=1716300582;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ow+va0NL09oHiLyUJDVqcOYGH0oFWbtP+DEeWNKHuPQ=;
-        b=T3In2aWZipQHW8snUmctq/M0uEu0IZaYLu7Wa1z8wls3awRYo2gmwjtihqsXjBCskw
-         OY2aiEeqC2xbW3meDfhnd53MTVu9Jx3DzpD1EVHAQXS8HH4NWPD6474Ihq8/agpvx6xa
-         AA6QenFRO+Z+InCXztVJYo1Nzp6Pokcvx/RnyXpJ1VdR0Tcsah/7mU6dSQNhaYgeF/cJ
-         JFHeTjGblc66GfKAoonjQYc/T6a9BVALhP1pzPVsoTe36RHtw2S0x6fRebfo2fJKsn91
-         BU0YUW06ZBD7ZXY3R7lQ9i0BHvogGJ9t2BhWjPEdct6upl9oDhZY8GgPbkNOdgvrF+iI
-         3rTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXER9ECVRF+UfzvW/BJh8tJOo3/F/kHd4nG0Yv730BDMJKX5JawKkLSfLaRcc1Gx8xHpy6l4EyCpg0omM823iCCUZnTjhHEVkcTmVIA
-X-Gm-Message-State: AOJu0YxPFl4u+FyrKrsAAXeObcSU5zvHK1yGPLMM+mZe9CjD9qwj7Aup
-	ZTT+4Sx+I5K1ZUM3cwJ9WO1t4t3h+j6SktOiRX+zomk2eqHU8+H6NurQU7ZstM1GeFX9NcVzV63
-	8wiMk6t9kmspPcArryyJk6Y7UpsVtS5cd7ew/g4bl/TonY/jwca5HrSk=
-X-Google-Smtp-Source: AGHT+IHnwsKU/9B2eiUzkrwUMRvpWyDkoKtbAkOFkgmDZbSBt/iz8MnYlWPso5djWSHdnaqPmDuNx3tEu1A4b5zvsO0zxUq0Se88
+	s=arc-20240116; t=1715695810; c=relaxed/simple;
+	bh=iWP8HSVSOriGJffY8FlJsZ27CjnV1fyLluT/GZJnVxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuTjd9FtLYbePXFfbNkRy6CcpeVFdkA741gABmiEpFxTUjEkgbcoi80+X5x+eq5u2dY+HZPD1XJrq00gwVCSqIMy5kTMNVG5WYsJkk+/52Op7XdTSdCrhSJQIcMucmwM6l1bf9WLjdHTd/FPh/6UjUdcPX2CwZKtUCBN72IUCVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=XrAYQPgy; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Z+ahYdDB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="XrAYQPgy";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Z+ahYdDB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DF27060CBA;
+	Tue, 14 May 2024 14:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715695801; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QyObfHROCQM34yYn3NOjoIfR1A4DlxepS3b18yjnmzo=;
+	b=XrAYQPgylTEL7g6Yo5/0DgxiLUTRWRRLkiGhCuK6M3u0Jh6IG/5CTKCMWRR+E8dRbQ+6RR
+	hG6t8+TeaIZ6MZT0xraGqIH/czDduJua5MQLpN/yTD7msrAl5QtPiubbmrLiuuPLb6O4Cs
+	ggx/XoJa1QHLVomm+XxUiabdGZRghW8=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715695800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QyObfHROCQM34yYn3NOjoIfR1A4DlxepS3b18yjnmzo=;
+	b=Z+ahYdDBy7cmu/gmrcLI/7WfPEw2IMCy7EqIruO2VnhI9pqPK0VZVAiFVhLrB3MjAiAaYM
+	xrMhaZsOhffmyJjSHwqXSk0gcz5v55/3zs3DlWvGZ/0TDCKuZ4iQmFBRHp76a7lAJGsaym
+	AaPTg+rL1UCibRfdv8ys7tjDaPIVBUk=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8D6FE137C3;
+	Tue, 14 May 2024 14:10:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Sg2vGbhwQ2Z6NwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Tue, 14 May 2024 14:10:00 +0000
+Date: Tue, 14 May 2024 16:09:58 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc: hannes@cmpxchg.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, akpm@linux-foundation.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] memcg: don't handle event_list for v2 when
+ offlining
+Message-ID: <ZkNwthw5vJrnQSLL@tiehlicka>
+References: <20240514131106.1326323-1-xiujianfeng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1609:b0:7da:bccd:c3e3 with SMTP id
- ca18e2360f4ac-7e1b519b30amr55912839f.1.1715695782650; Tue, 14 May 2024
- 07:09:42 -0700 (PDT)
-Date: Tue, 14 May 2024 07:09:42 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aaf7ec06186a8d13@google.com>
-Subject: [syzbot] [ext4?] KASAN: use-after-free Read in __ext4_check_dir_entry (2)
-From: syzbot <syzbot+11af34d3c0711f233fd4@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514131106.1326323-1-xiujianfeng@huawei.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.82
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.82 / 50.00];
+	BAYES_HAM(-2.02)[95.17%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-Hello,
+On Tue 14-05-24 13:11:06, Xiu Jianfeng wrote:
+> The event_list for memcg is only valid for v1 and not used for v2,
+> so it's unnessesary to handle event_list for v2.
 
-syzbot found the following issue on:
+You are right but the code as is works just fine. The list will be
+empty. It is true that we do not need to take event_list_lock lock but
+nobody should be using this lock anyway. Also the offline callback is
+not particularly hot path. So why do we want to change the code?
 
-HEAD commit:    448b3fe5a0ea Merge tag 'hwmon-for-v6.9-rc8' of git://git.k..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1797c7a8980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
-dashboard link: https://syzkaller.appspot.com/bug?extid=11af34d3c0711f233fd4
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=105badd4980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f14fa8980000
+> 
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> ---
+>  mm/memcontrol.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index d127c9c5fabf..4254f9cd05f4 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5881,12 +5881,14 @@ static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
+>  	 * Notify userspace about cgroup removing only after rmdir of cgroup
+>  	 * directory to avoid race between userspace and kernelspace.
+>  	 */
+> -	spin_lock_irq(&memcg->event_list_lock);
+> -	list_for_each_entry_safe(event, tmp, &memcg->event_list, list) {
+> -		list_del_init(&event->list);
+> -		schedule_work(&event->remove);
+> +	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys)) {
+> +		spin_lock_irq(&memcg->event_list_lock);
+> +		list_for_each_entry_safe(event, tmp, &memcg->event_list, list) {
+> +			list_del_init(&event->list);
+> +			schedule_work(&event->remove);
+> +		}
+> +		spin_unlock_irq(&memcg->event_list_lock);
+>  	}
+> -	spin_unlock_irq(&memcg->event_list_lock);
+>  
+>  	page_counter_set_min(&memcg->memory, 0);
+>  	page_counter_set_low(&memcg->memory, 0);
+> -- 
+> 2.34.1
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ccbdd58c1f3e/disk-448b3fe5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6786079c3170/vmlinux-448b3fe5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/496bdcf3d703/bzImage-448b3fe5.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/b2986628c43b/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+11af34d3c0711f233fd4@syzkaller.appspotmail.com
-
-EXT4-fs error (device loop0): make_indexed_dir:2282: inode #2: block 255: comm syz-executor396: bad entry in directory: rec_len is smaller than minimal - offset=0, inode=5120, rec_len=0, size=993 fake=0
-EXT4-fs warning (device loop0): dx_probe:832: inode #2: comm syz-executor396: Unrecognised inode hash code 49
-EXT4-fs warning (device loop0): dx_probe:965: inode #2: comm syz-executor396: Corrupt directory, running e2fsck is recommended
-==================================================================
-BUG: KASAN: use-after-free in __ext4_check_dir_entry+0x6fd/0x880 fs/ext4/dir.c:85
-Read of size 2 at addr ffff8880683ae003 by task syz-executor396/5071
-
-CPU: 0 PID: 5071 Comm: syz-executor396 Not tainted 6.9.0-rc7-syzkaller-00117-g448b3fe5a0ea #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- __ext4_check_dir_entry+0x6fd/0x880 fs/ext4/dir.c:85
- ext4_readdir+0x145d/0x3800 fs/ext4/dir.c:258
- iterate_dir+0x539/0x6f0 fs/readdir.c:110
- __do_sys_getdents64 fs/readdir.c:409 [inline]
- __se_sys_getdents64+0x20d/0x4f0 fs/readdir.c:394
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8311a13ed9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 11 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd43d6adc8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9
-RAX: ffffffffffffffda RBX: 00007ffd43d6ae10 RCX: 00007f8311a13ed9
-RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00007ffd43d6ae18 R08: 000055556bcad0c0 R09: 000055556bcad0c0
-R10: 000055556bcad0c0 R11: 0000000000000246 R12: 00007f8311a906a0
-R13: 00007ffd43d6ae10 R14: 0000000000000004 R15: 0000000000000003
- </TASK>
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x683ae
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: 0xffffffff()
-raw: 00fff00000000000 ffffea0001a0ebc8 ffff8880b9444570 0000000000000000
-raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as freed
-page last allocated via order 0, migratetype Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO), pid 5065, tgid -1706810074 (sftp-server), ts 5065, free_ts 54138803695
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1534
- prep_new_page mm/page_alloc.c:1541 [inline]
- get_page_from_freelist+0x3410/0x35b0 mm/page_alloc.c:3317
- __alloc_pages+0x256/0x6c0 mm/page_alloc.c:4575
- alloc_pages_mpol+0x3e8/0x680 mm/mempolicy.c:2264
- vma_alloc_folio+0xf3/0x1f0 mm/mempolicy.c:2303
- folio_prealloc+0x31/0x170
- alloc_anon_folio mm/memory.c:4375 [inline]
- do_anonymous_page mm/memory.c:4433 [inline]
- do_pte_missing mm/memory.c:3878 [inline]
- handle_pte_fault mm/memory.c:5300 [inline]
- __handle_mm_fault+0x3a03/0x7250 mm/memory.c:5441
- handle_mm_fault+0x27f/0x770 mm/memory.c:5606
- do_user_addr_fault arch/x86/mm/fault.c:1331 [inline]
- handle_page_fault arch/x86/mm/fault.c:1474 [inline]
- exc_page_fault+0x446/0x8a0 arch/x86/mm/fault.c:1532
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-page last free pid 5065 tgid 5065 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1141 [inline]
- free_unref_page_prepare+0x97b/0xaa0 mm/page_alloc.c:2347
- free_unref_folios+0x1f2/0xc10 mm/page_alloc.c:2536
- folios_put_refs+0x93a/0xa60 mm/swap.c:1034
- free_pages_and_swap_cache+0x2ea/0x690 mm/swap_state.c:329
- __tlb_batch_free_encoded_pages mm/mmu_gather.c:136 [inline]
- tlb_batch_pages_flush mm/mmu_gather.c:149 [inline]
- tlb_flush_mmu_free mm/mmu_gather.c:366 [inline]
- tlb_flush_mmu+0x3a3/0x680 mm/mmu_gather.c:373
- tlb_finish_mmu+0xd4/0x200 mm/mmu_gather.c:465
- exit_mmap+0x4bb/0xd60 mm/mmap.c:3280
- __mmput+0x115/0x3c0 kernel/fork.c:1346
- exit_mm+0x220/0x310 kernel/exit.c:569
- do_exit+0x99e/0x27e0 kernel/exit.c:865
- do_group_exit+0x207/0x2c0 kernel/exit.c:1027
- __do_sys_exit_group kernel/exit.c:1038 [inline]
- __se_sys_exit_group kernel/exit.c:1036 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1036
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff8880683adf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880683adf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8880683ae000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                   ^
- ffff8880683ae080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff8880683ae100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Michal Hocko
+SUSE Labs
