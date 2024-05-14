@@ -1,360 +1,230 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2062.outbound.protection.outlook.com [40.107.94.62])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2059.outbound.protection.outlook.com [40.107.7.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442884502B;
-	Tue, 14 May 2024 02:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E251CD2B;
+	Tue, 14 May 2024 02:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715655097; cv=fail; b=oCV/pCwkC/2mnFaA9ygO7FRStHEI5fJj2tGTdMoqbbG8ZbHkN3/8BYUwzSgT2YmiR7P/ux4Img+ol/CyeyGXktjPT5MEg5R9cRZ3rZ371vU73q7tuktGFAPtPsaapPFbMLF7d6WAP9jlhXIEFuDAsKstDCkmEOwAV4Ybv0zKD00=
+	t=1715655195; cv=fail; b=BB+NrZ3UBjMyo1hIE2qAWcosxQGHeONPbyT59GtqtSY0iWXyogzZqUASYOqh6AX//bWDmzI0T0DbSKwOXwM65xBvl9t5Tbtt18O8K4fONWW1yphq+xFZmLxlZw0UXVoq8qgpk5jjtjljgLeUle07ShmeoRRbv0XQu9VPmVi5x3c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715655097; c=relaxed/simple;
-	bh=M/lAj6snV4y/b8BumZYHy5/iZyAnVGcfGd64p4fovoU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HbCNJmCMi/WM5GreM8RZfdBYNU9hlqeK9YQHN/lsIdKhJOWl84z8+xIs6mL49Ap27Ya6kPAtE670Xyfz2kNyPlD9ogu/P5OpahxmE6pMazqt/71jbIaBkGWQJlzr+hvS/vA/8kvMk/boXSrUy/zGhPB2f61Kgkii+hbAttiAq6w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NMBgW5Dd; arc=fail smtp.client-ip=40.107.94.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1715655195; c=relaxed/simple;
+	bh=DxaPOmQqCPZ4YEkE86X3qM3J7PvJvkfckve5yw6dSXA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=b2ZTIUnKqGrMz/3vFRzFhpt1LytSiETmzHMfWnjFURn56Igca8SjQQadJsWpCb6LiAw/jT2d2aYJeBtHg2vpKTc81sLQKZU2kl/eBXEVW0tMWg/2fcf0LEO2BdwStvSA1DwhjUlShuPikOjsO0/o/IPwFX1HVdTkumqpblFi5WM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Z9E369+8; arc=fail smtp.client-ip=40.107.7.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NMBgW5Dd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z9E369+8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KYTPkQ9bws3GB3UR7HZ2I5jOZnlPSyX7Fyb0+FjlFMzpo8pFe6QwdTmdyNo3zQf1SYMPCcelMJB7uMkFqMuYf6uYHYtUmA2UqthNCpPAvY6nISjOqgTk5sZZ0j5b9kEFsfA5oVWU03HwQnr7xewTWdiRuSBqoluB5qEAwdb0qnPTnHNNOulDASCSaQu67DH4P5//pQSLaPkEx/woJf1Hpbd6OXL53g5QACe5k4QYRyobGeQ/CppkXaXB+heJFZuWVqhQl6UaaBR2mdcfKtOoKJjfwkC4DkDWEOKpVtzQ5K7p/iJpU4zw+3XZ0AqZUZuwvz1XBk6qP4k2NgGsgaLc5w==
+ b=RdnujDWMbIiUEWn6VsLmje6/72psqOfnS8vpw9vJD0tMfgpsrU+3U5q7U18s2CLJWvLmq/YFW4xLsK3/6gvcQzf7Q/wQu3xhcYoGM52sy1imyPZHN1HpdZ6APz5+U0bsWlA8u3UhBJ2RbIWN+rDbuUhIa0vOgL3aJqOO1h4l65hlcTDqSpRvEoJaQ5EMehKWcSwmq+IM7kyKIc86gg+c2c7ox14SxYOX0dfxjhJdX07ybF0BnFbHdoMomAyCqmTORXo3PqAKaApXCZq5ANAhBc82Fms3DRpzfLWWCTogJPNOx09c5Ih2Tq4H+I6bYZFU0/msNoECY60g5EqwL9V5Cw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GU69nuJcCyxNtjbPHQk+VW2PKqI+VS0fW6UPRashnmY=;
- b=b8g0YSo0+KBibl4e+/66oSJJqw6Y/7FXb2QftyOKGQPhINECtkDb7QgspdddopknoJztx7LKJyd9E1M7zb0nHqP7cDIDC4MgRVL5o+uKXMKwJy200/VeWCtbyy3E0OLExNFNDfZ+n51c1yIu1YyaKRx7y2n8PXZYZxpTn0jJQhsocm6ktyRf2tceMD065eNVWebEzIm+mygFkFwm+R9ocYO995whRTCJnTysfMjyByntxNpt6B2R9q9EJXOBfXBuhFpwkY22++ZPa4flMvS+54V+81rQOaF7sO7wSBt86n0cjJV13JBiZx+ppJwaV/Z8F7nZ5KJH964dOT8BqFwaug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=KJcT7rH+g7mFhto3uv9dw4tblF+am7as6L62JDX5NDw=;
+ b=kHDB5HjyRRy7Qn8znoNiCVsi4tZtm/y5duC72B9exDG31yUYXC/Iar8ocBdG2RjCOMi6zYmAwpO2cfKsaecPqEaQngDQLtTx+T297/DBot3pd1rbfm5TA/ijpS02IN528nyWaybGPkiyZZRFMm/ynWMTQek1vAlImhPmVk3Jivdmjd9Y8LYfGEdw5W+gXn3VTFoDWeTUt6sNup8WmLGY758TO9RuxWIBsPYQHxCxRJxSg5hoZMOAs4IxXhJm9my+RncrHR+WolDx5R+vfKKnu7NP60e6oL5L2Em7BSpy2wO1Mnxt9lRE/3D88U/t+73s/MwQNfyl9BmhEtPWjF+NKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GU69nuJcCyxNtjbPHQk+VW2PKqI+VS0fW6UPRashnmY=;
- b=NMBgW5DdZJVLI1ERyaqRGXQis/nQLf/5NspSnzA0VGZr1AwgKkdYlSYUtrhPl+BXCj6AMDQEtNB1l0lx2kTh8vAOlxSVaJCKJn7/RqxV3o5bWhmDh0esjFr3dq8/CqK6n4gPbmgZRUK9f/6kF8s7PQoHeZZeH6/j4W5sPRQ+r7M=
-Received: from MN2PR07CA0029.namprd07.prod.outlook.com (2603:10b6:208:1a0::39)
- by IA1PR12MB8358.namprd12.prod.outlook.com (2603:10b6:208:3fa::17) with
+ bh=KJcT7rH+g7mFhto3uv9dw4tblF+am7as6L62JDX5NDw=;
+ b=Z9E369+89jD2U3ET2lRG7emNtvJnfzkExQjAh7xxeHJdXRbKWa6Lrs3J8di0GAwFIlwuzveNPjfiDv3wdFLv7RafTRyHxeOYT/XFe8vIT0h4rfkkgG7EFps3Labr9DFBGYYtR0gO08hpm2qMuBqPbvO1NLELi6tAHO4f3QoM6WQ=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AM9PR04MB8115.eurprd04.prod.outlook.com (2603:10a6:20b:3e8::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Tue, 14 May
- 2024 02:51:32 +0000
-Received: from MN1PEPF0000F0E0.namprd04.prod.outlook.com
- (2603:10b6:208:1a0:cafe::5) by MN2PR07CA0029.outlook.office365.com
- (2603:10b6:208:1a0::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55 via Frontend
- Transport; Tue, 14 May 2024 02:51:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000F0E0.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7587.21 via Frontend Transport; Tue, 14 May 2024 02:51:32 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 13 May
- 2024 21:51:32 -0500
-Date: Mon, 13 May 2024 21:51:15 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <vkuznets@redhat.com>,
-	<jmattson@google.com>, <luto@kernel.org>, <dave.hansen@linux.intel.com>,
-	<slp@redhat.com>, <pgonda@google.com>, <peterz@infradead.org>,
-	<srinivas.pandruvada@linux.intel.com>, <rientjes@google.com>,
-	<dovmurik@linux.ibm.com>, <tobin@ibm.com>, <bp@alien8.de>, <vbabka@suse.cz>,
-	<kirill@shutemov.name>, <ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
-Subject: Re: [PATCH v15 19/20] KVM: SEV: Provide support for
- SNP_EXTENDED_GUEST_REQUEST NAE event
-Message-ID: <20240514025115.dkw3ysqrdbfaa2sg@amd.com>
-References: <20240501085210.2213060-1-michael.roth@amd.com>
- <20240501085210.2213060-20-michael.roth@amd.com>
- <ZkKmySIx_vn0W-k_@google.com>
+ 2024 02:53:10 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7544.052; Tue, 14 May 2024
+ 02:53:10 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Cristian Marussi <cristian.marussi@arm.com>, Guenter Roeck
+	<linux@roeck-us.net>
+CC: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, "groeck7@gmail.com"
+	<groeck7@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+	"jdelvare@suse.com" <jdelvare@suse.com>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V3] hwmon: scmi-hwmon: implement change_mode for thermal
+ zones
+Thread-Topic: [PATCH V3] hwmon: scmi-hwmon: implement change_mode for thermal
+ zones
+Thread-Index:
+ AQHaT1lW79cmzSPKCUytPMAjATcCq7DqF+KAgAAAz2CAAH0qAIAAHRkAgAACIICAAAtxAICr84uw
+Date: Tue, 14 May 2024 02:53:10 +0000
+Message-ID:
+ <DU0PR04MB94172D2602D32AF757A72CAF88E32@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20240125064422.347002-1-peng.fan@oss.nxp.com>
+ <b839f83f-c8c7-4fa8-8597-bdde1b40168a@roeck-us.net>
+ <DU0PR04MB9417DAD2DBB8820344FEFB07887A2@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <540cf4b3-ebf6-4a85-84c4-c012a69db416@roeck-us.net> <ZbKHpFRGoaQpWX16@pluto>
+ <da42560b-32b2-49c6-9aeb-b7fbd5b5577c@roeck-us.net> <ZbKTBmt_BP6JRLBj@pluto>
+In-Reply-To: <ZbKTBmt_BP6JRLBj@pluto>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|AM9PR04MB8115:EE_
+x-ms-office365-filtering-correlation-id: 7479d026-48c6-4db6-08eb-08dc73c0fd66
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ae028JHcNRVCmT2PfuIGt4adxukIredk1EhpHql4hNFPNjgWTprReBFadyBD?=
+ =?us-ascii?Q?YHbwXHjHt7pwesuWNjtl2AT5OFRWJch1fyqpwFLNA1A1DL2mimRHqqKokW5R?=
+ =?us-ascii?Q?2AjXRjd5Gd4mkTf6ri8LBZNi6kxC1gJnS/MvapT35W5Qxg0zezSE3eFUCKpQ?=
+ =?us-ascii?Q?9vZrByWLoBBfty5m0dJWlxLMxJ7YWdpk8QECZroOqqwHP0sz823gqpN2kB61?=
+ =?us-ascii?Q?b9S5WzU3jFDwo4NvWdydq60NsL2g6bn9xUo04SuV+h9h4ghw5VfbgTLwJNn5?=
+ =?us-ascii?Q?e8XshxkUOLkIDrXLs1JGls36OuTKMVuI32I5lEiCLIbbCGBPx/K4ravy8Vcw?=
+ =?us-ascii?Q?HfrqlGxIzoMxWtr4Po8ujhe1hv+yO+hELL79IdhDcmmNOBV1qWVz8Glugxll?=
+ =?us-ascii?Q?+Pqv2N9CYR4FVCV703I5AGQecOhTF1xo+EYxGpFMd+wJfOYNH/c55L04C6+n?=
+ =?us-ascii?Q?uI4iubde7xbrCyIoCzHEVerbD71ORbmDtVEkcl5L2VONiN2NvfSuPLeXPSVx?=
+ =?us-ascii?Q?GIPCsaBoEcTF8cnVbDGX41pD8t/rHcSW4iZMRpgp35ZOuOZKKRVpQiBWZZWC?=
+ =?us-ascii?Q?OCFA/88d9E5wA7wRpxi96MVjPzzGOX5mLzgkferYKkcGQj9+l6VBQS8w9FgD?=
+ =?us-ascii?Q?o9r2NNyjTbwPmhErDBKuJKBoLIwFNLh6bs3RxUlvtlrEYMCxQzG8LngzltLj?=
+ =?us-ascii?Q?wTiMBizi/AQgOPSsSRvc9i2l6yZwyXcME/YjTLVRUkym659+QuHMQaEJd1Fo?=
+ =?us-ascii?Q?0F2oipTHeGuBT2vC41FL6J1dqm+QvZx9HAYalilnCIvJWqje9dgscOArYq5G?=
+ =?us-ascii?Q?56leb7lGSrSAQYW6J140u1HmeUKgtNwPBxJY1ABPMTIPzKAXhQWf8Fbboqtg?=
+ =?us-ascii?Q?JLYw6/5FGEqjfhUn5Wp7vvDLvjkrkAp5kypwnRhwpFpVbVYozMdW07Z0LdTt?=
+ =?us-ascii?Q?xOpffN3rfue7QRH+rsUn4R8Wgk6GJJZLQampuJU0kl8FKVnb5YZvKzh/Wpk5?=
+ =?us-ascii?Q?jGvcruQ7KxRFt7yToLF1Hz7h/qUOH0z0CcxZiHWOfAVZxp5OdMcIicn25pmy?=
+ =?us-ascii?Q?GYwxPQ+ZBmfLK1424o5Lq5tr9wYR0LB8Aft93dk4qMiqlS34imDnZW/fcrXW?=
+ =?us-ascii?Q?qe2+aI12V+hA1YAHCod8NRDn2zRt3pHHcB+3kWx1wd05L0rYX1GPCNLDIg9Y?=
+ =?us-ascii?Q?ryFyL+VSAVjh3G5uLxjnlGhRq+I9jDF9iiqSu4ktpXheWoYUtiJWEBp1bGUb?=
+ =?us-ascii?Q?f2Zn9T0Vhw+6rOXIh0BBWIpTF/SkZ1USPgSSUUZJD6SXOE7Q1Q/4b5H40ol8?=
+ =?us-ascii?Q?vvfGse18qCdRXVmnRfQcPHKit3NJXERPdkYyZaW9BbQEtw=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?dr5PWF7yFB3+norYy849DZOhVSywvnw7E3Y7gyJfYA9qNd+NL4JUH168KFQj?=
+ =?us-ascii?Q?qCJMXzs5L2tKPya53QymOPD8sf3bbmmhSt7zmOprgFZW3dTdFPiEnOO1b/pX?=
+ =?us-ascii?Q?uRZlxQWHdS8QaGNXYDunonqGD3hnr8EHbHr3oYxQc3ViD5Tiw5VNacUEtx/T?=
+ =?us-ascii?Q?swVBgzcKGoqWvfO2MpDa6r2YBBiZT6ESdbx8c83IhJmJ+6P8Pt4PK9d+TL66?=
+ =?us-ascii?Q?Zh6KX4DBJywKFutbLdj0vG+ZC1kd7ZdEu95l4O8ZLW1LBIVFb3VZckuMSbWM?=
+ =?us-ascii?Q?Onn2rjM/QK3DtYLJDn4xi/JBvXbeqPNYgvEf1hZlkCCRG0MKdUmrmmEx47vu?=
+ =?us-ascii?Q?i+QtV036sbogPOUV2eoioJmeQc+i4CNLqvjw2+uMCk4xqI608idlEtaS0lkq?=
+ =?us-ascii?Q?iPjMOsUKUWfmVF3hYvhtOd2JPgEDqTUoUJVh2a7GeSXKt4BcwFvz+8lrgtpu?=
+ =?us-ascii?Q?J4V0ugIl2PPkckn08rkGlG1zP9XfsNSkYKEyj4DgH1u4LVeidmmV1LB2Uei3?=
+ =?us-ascii?Q?9r1gSabwOyNeD6i0W0pDwbq+Vo0gLGCftydk5UVsqJjzNG4zqMbucZKdiyCl?=
+ =?us-ascii?Q?Xn06JmA1Ril/wocO5Jn+Xha4azrWXvmh7FgwXuR1+7WuBLQsPzWQI1AT0qrf?=
+ =?us-ascii?Q?4EEop0ExY1DKU5pD5tpn3FFEbJQ59XK0CgZPwewq5RFgTHbPhxNc0bHUfc/5?=
+ =?us-ascii?Q?jJrKc7N32xUFwTVLeVbmPFJhdozJ+1msxcYVmw+/jR81Bn+5qhg3fkCwSjHK?=
+ =?us-ascii?Q?WY1aIFVBwGl5Fr56JH2//DiAZ3ZcFocHjNpAWbExJX9vF6KF2PYRFiWpUWpF?=
+ =?us-ascii?Q?HhEEKVRdwqO2gXW4kHYgAhMcamkUrkXToj1Cwh+Z6R1wQbfOclCOF7pMCYCU?=
+ =?us-ascii?Q?YaKzXG0cZNqE0e0Zp2plRj+G/aOtVVQ+d2F9bExZm8uXtWCB55VsjlJjsTcg?=
+ =?us-ascii?Q?IaZU6+nIDUOyZ0JwRU5sTrLdqmnGpLC1s/3ipVLx9ezHAsXmlWVfWOplD5Zq?=
+ =?us-ascii?Q?goZijF8etfFzHtRXKAfovTj9SQQXVZc0QtZDdXqP0VZv5mU3R1ms4UoWWH5S?=
+ =?us-ascii?Q?WUZzTwRnT0/wUa+ceAWs7BkPFkaaOTry36W4WWqjZITUx6TCCKsGAP4HAq0e?=
+ =?us-ascii?Q?Uxk6s+gFIESD5DDZrfgKYAFvhc+VZF3h89WNqcF5PIVyk0dgUekP60PyEWOK?=
+ =?us-ascii?Q?CZUWBVAGL4gFeJpuZjcOrrC8kJF5sk9BXoeI3+llxHTGudkxdVDm4tH4q+N7?=
+ =?us-ascii?Q?fM/MZgIH3n6tbah+1GyzJKLRwrSeD4VavuanC+MNTyNZhxg7baYHIWaS85oh?=
+ =?us-ascii?Q?ZHXzk52aYu/ND2QZPLpurUKyWbeYa41quFYXfILzK4/HocD+WRaoo2xldwiw?=
+ =?us-ascii?Q?D2OtA2Ll/ssEyUvK5p91zFkT44G0DljJOUx626TuAw2z6K/Wkz4kCFnuIQ+a?=
+ =?us-ascii?Q?LbCQr5ItXDZr1ESr9tMbqQyxCnsZ5cqFvONbcnVPfZormQRdZQQekx8FUx3E?=
+ =?us-ascii?Q?1JuV4N/tdOtRpuK5KL+eKNljwZ2fPLeuRAIb82kvDC5man8BYIaBRemS3vpE?=
+ =?us-ascii?Q?jZsxSUb29uUF1yerPJo=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZkKmySIx_vn0W-k_@google.com>
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E0:EE_|IA1PR12MB8358:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8670b248-83af-442d-9650-08dc73c0c369
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|36860700004|82310400017|7416005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gT0YALttxef1Ch8gAfa/Uj9NF8IE/o4JCQyx5YJ8Lgupzyi4WGyPofJAg7H9?=
- =?us-ascii?Q?xV+cel4PN+eujUccmF5ZjmTyT4VGy/WVAypRZn6GcDXFDPJUeX/zEUA9BgME?=
- =?us-ascii?Q?09CCW7veHKpJoIZDdw/ydIY9faI0M81/CqBrBjD8VbeMBRjoFekfAHKE77+C?=
- =?us-ascii?Q?vSIaxC1MfaYeiBWZ4d5qOa0nEJqijCiUF8KFlJ23eua6lgaEZaDyi3mnbxpo?=
- =?us-ascii?Q?gzbTta9hw6DJFpriyUUtITciUt2rNgH8HmuzNb7WDfxe6Sj1ZeoqkCTETdDp?=
- =?us-ascii?Q?f2Z2P2U+kGM563YkD/fPg/3rQnu+Fn9lxnxtb9CjkW7uKM+bqmP5UP5zQnOz?=
- =?us-ascii?Q?H2zcN/NCFlQcCzuGLXK4vO3dP8xzV64xhnxTwC0W3J1Bu1R+W+WT08JHGP+X?=
- =?us-ascii?Q?wbu0kuBwpegqlQIVZuFlNE8cZF4rjhBPZgJVw2BfJf8qyAs+q1gww/cOegEz?=
- =?us-ascii?Q?/YKAoRfs4Hx5k47nkUE2g9cDIUNm6feWe1tUUXWpFn3XIeAdGmwBQrEtyth9?=
- =?us-ascii?Q?bv14nKUhk85vmy8vDlctn8Dnx2aHmythd7CO2r4N+YbrSOEHsAErJyRXTErQ?=
- =?us-ascii?Q?kjpT07kcD0wgE2lbUXp96MS12sLSHrzXDb5WBdNDQYRjk0OcLSBA0RMAeXp5?=
- =?us-ascii?Q?4BGgVs0tvVlJpruB6FqsH6J9phhbiDa2pK/qi+FHxNn8MYFNTbpQShI1ePSD?=
- =?us-ascii?Q?qKGRhtOuy+iY10riIXe/448GXoSatIIa4eI6n+hWdXIBdkzKNK1soBzDl8kE?=
- =?us-ascii?Q?HAGV4QzMGz3WVWwHBlzgT0BJww4h2WPDXi6pnUTBONQPiSwaYSfTrd8VL1UF?=
- =?us-ascii?Q?rJVtGkYPfb7bv4uIPCVQkCcNbD1qOAma75WWh7w29th57fmLZV6vyyae/11v?=
- =?us-ascii?Q?gE2YZ877eXqogbQsw/jlRDDoKXtHQvTWCEOoKJyjFpiNhMefFI2vetNXS7vh?=
- =?us-ascii?Q?OX/oirkm9kgtIZoN1Y296FOMYFTcTpV68ttsxRC8+BV4DJ+v2t0CRvDD/Xfs?=
- =?us-ascii?Q?4gYPc8H7kvi2J5Trk0hZaJTlylP0o13qrds+Fa3tcj5xC5z4nqT0pYKq13b8?=
- =?us-ascii?Q?vCWOQgZDHRdqnfuybvTmbk8dRWpOKLUrqUC8KGJH86f/MViFiLVqENq9SO9I?=
- =?us-ascii?Q?3+upaNfrpYJzCEpwuykf+uHJNiznvmIawf/Py2yivTNZ28diVMgNTtzC0684?=
- =?us-ascii?Q?pyEnd8+vnsMA152YVronvLzg6DW0Do54iEV15/jcs/Mub0l94N8aXGzTR3fz?=
- =?us-ascii?Q?fsaKSdBsW+G460+KHpfwXWZpZHkwUQuBxFYg9p/XTECTiRKaJUK2pfiH44Ed?=
- =?us-ascii?Q?KEPb7nuvWaODvRPHjLQ1dWloNhTTcy/zzVWLPZrHZiZLx81rNDZt7T3hurJc?=
- =?us-ascii?Q?mUnQf1Em6O+BDkoAIh0VSgiLJM/O?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400017)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2024 02:51:32.8534
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7479d026-48c6-4db6-08eb-08dc73c0fd66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2024 02:53:10.1845
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8670b248-83af-442d-9650-08dc73c0c369
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E0.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8358
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K2H8daHNsQyirVkACOre8I0XspZF67yAeVmCEYekue1nTXiNTXiEw50vypolpEwwacpNt6O3MnBIRP4nvNUWvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8115
 
-On Mon, May 13, 2024 at 04:48:25PM -0700, Sean Christopherson wrote:
-> On Wed, May 01, 2024, Michael Roth wrote:
-> > Version 2 of GHCB specification added support for the SNP Extended Guest
-> > Request Message NAE event. This event serves a nearly identical purpose
-> > to the previously-added SNP_GUEST_REQUEST event, but allows for
-> > additional certificate data to be supplied via an additional
-> > guest-supplied buffer to be used mainly for verifying the signature of
-> > an attestation report as returned by firmware.
-> > 
-> > This certificate data is supplied by userspace, so unlike with
-> > SNP_GUEST_REQUEST events, SNP_EXTENDED_GUEST_REQUEST events are first
-> > forwarded to userspace via a KVM_EXIT_VMGEXIT exit structure, and then
-> > the firmware request is made after the certificate data has been fetched
-> > from userspace.
-> > 
-> > Since there is a potential for race conditions where the
-> > userspace-supplied certificate data may be out-of-sync relative to the
-> > reported TCB or VLEK that firmware will use when signing attestation
-> > reports, a hook is also provided so that userspace can be informed once
-> > the attestation request is actually completed. See the updates to
-> > Documentation/ for more details on these aspects.
-> > 
-> > Signed-off-by: Michael Roth <michael.roth@amd.com>
-> > ---
-> >  Documentation/virt/kvm/api.rst | 87 ++++++++++++++++++++++++++++++++++
-> >  arch/x86/kvm/svm/sev.c         | 86 +++++++++++++++++++++++++++++++++
-> >  arch/x86/kvm/svm/svm.h         |  3 ++
-> >  include/uapi/linux/kvm.h       | 23 +++++++++
-> >  4 files changed, 199 insertions(+)
-> > 
-> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> > index f0b76ff5030d..f3780ac98d56 100644
-> > --- a/Documentation/virt/kvm/api.rst
-> > +++ b/Documentation/virt/kvm/api.rst
-> > @@ -7060,6 +7060,93 @@ Please note that the kernel is allowed to use the kvm_run structure as the
-> >  primary storage for certain register types. Therefore, the kernel may use the
-> >  values in kvm_run even if the corresponding bit in kvm_dirty_regs is not set.
-> >  
-> > +::
-> > +
-> > +		/* KVM_EXIT_VMGEXIT */
-> > +		struct kvm_user_vmgexit {
-> 
-> LOL, it looks dumb, but maybe kvm_vmgexit_exit to avoid confusing about whether
-> the struct refers to host userspace vs. guest userspace?
-> 
-> Actually, I vote to punt on naming until more exits need to be kicked to userspace,
-> and just do (see below for details on how I got here):
-> 
-> 		/* KVM_EXIT_VMGEXIT */
-> 		struct {
-> 			__u64 exit_code;
-> 			union {
-> 				struct {
-> 					__u64 data_gpa;
-> 					__u64 data_npages;
-> 					__u64 ret;
-> 				} req_certs;
-> 			};
-> 		} vmgexit;
-> 
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS		1
-> > +			__u32 type; /* KVM_USER_VMGEXIT_* type */
-> 
-> Regardless of whether or not requesting a certificate is vendor specific enough
-> to justify its own exit reason, I don't think KVM should have a #VMGEXIT that
-> adds its own layer.  Structuring the user exit this way will make it weird and/or
-> difficult to handle #VMGEXITs that _do_ fit a generic pattern, e.g. a user might
-> wonder why PSC #VMGEXITs don't show up here.
-> 
-> And defining an exit reason that is, for all intents and purposes, a regurgitation
-> of the raw #VMGEXIT reason, but with a different value, is also confusing.  E.g.
-> it wouldn't be unreasonable for a reader to expect that "type" matches the value
-> defined in the GHCB (or whever the values are defined).
+> Subject: Re: [PATCH V3] hwmon: scmi-hwmon: implement change_mode for
+> thermal zones
+>=20
+> On Thu, Jan 25, 2024 at 08:16:45AM -0800, Guenter Roeck wrote:
+> > On 1/25/24 08:09, Cristian Marussi wrote:
+> >
+> > > Agreed, but it seems that indeed here the attempt is to make sure
+> > > that an accidentally disabled sensor is turned on.
+> > >
+> >
+> > From the patch:
+> >
+> > +static int scmi_hwmon_thermal_change_mode(struct
+> thermal_zone_device *tz,
+> > +					  enum thermal_device_mode
+> new_mode) {
+> > ...
+> > +	if (new_mode =3D=3D THERMAL_DEVICE_ENABLED)
+> > +		config |=3D SCMI_SENS_CFG_SENSOR_ENABLED_MASK;
+> > +	else
+> > +		config &=3D ~SCMI_SENS_CFG_SENSOR_ENABLED_MASK;
+> >
+> > This clearly contradicts your statement. It leaves the sensor in full
+> > control by the thermal subsystem. If the thermal subsystem decides to
+> > turn it off, it is turned off.
+>=20
+> Yes, indeed, and this is wrong as you explained; what I meant is that it =
+seems
+> to me now after this discussion, and from the commit message, that the
+> reason (and the aim of this patch) is different from how it achieves it (=
+as a
+> side effect)
+>=20
+> "The thermal sensors maybe disabled before kernel boot, so add
+> change_mode  for thermal zones to support configuring the thermal sensor =
+to
+> enabled  state. If reading the temperature when the sensor is disabled, t=
+here
+> will  be error reported."
+>=20
+> So when I said:
+>=20
+> > > Agreed, but it seems that indeed here the attempt is to make sure
+> > > that an accidentally disabled sensor is turned on.
+>=20
+> and
+>=20
+> >> In this case seems like the sensor is NOT supposed to be ever
+> >>disabled  (not even temporarily), it it just that you want to ensure
+> >>that is enabled, so I would say @Peng, should not that be done in the
+> >>fw  SCMI server ? (i.e. to turn on, early on, all those resources that
+> >>are
+> >>  exposed to the agent and meant to be always on)
+>=20
+> I implied to drop this patch and instead make sure the visible-and-always=
+-
+> enabled sensor is default-enabled by the SCMI server running in the firmw=
+are,
+> given that there won't be any need to ever disable it, from the hwmon
+> interface NOR from the thermal subsystem.
+>=20
+> Sorry if I have not been clear (but I maybe still well-wrong anyway :D)
 
-The type in this case is actually "extended guest request". You'd rightly
-pointed out that that is miles away from describing what KVM wants
-userspace to do, so I named it "request certificate". And now with PSC being
-handled as seperate KVM_HC_MAP_GPA_RANGE event with no exposure of GHCB/etc
-to userspace, it made further sense to not lean too heavily on the GHCB for
-defining the types.
+Sorry to bring back this old topic.
 
-But continuing to name it KVM_EXIT_VMGEXIT sort of goes against that
-decoupling, so I can see some potential for confusion there. KVM_EXIT_SNP is
-probably a better generic name for what this exit is meant to cover. But I'm
-not aware of anything specific that would involve requiring extending this in
-the near-term, though maybe there's some potential with live migration. So a
-renaming to something more generic and less specific to VMGEXIT/GHCB,
-like KVM_EXIT_SNP, or something more specific like KVM_EXIT_SNP_REQ_CERTS,
-both seem warranted, but I don't think moving to something more coupled to
-VMGEXIT/GHCB would provide much benefit long-term.
+The tempsensor is disabled at boot, I will check with FW owner to enable it
+by default. But the tempsensor will consume some power, if leaving
+it always enabled.
 
-> 
-> Ah, you copied what KVM does for Hyper-V and Xen emulation.  Hrm.  But only
-> partially.
-> 
-> Assuming it's impractical to have a generic user exit for this, and we think
-> there is a high likelihood of needing to punt more #VMGEXITs to userspace, then
-> we should more closely (perhaps even exactly) follow the Hyper-V and Xen models.
-> I.e. for all values and whanot that are controlled/defined by a third party
-> (Hyper-V, Xen, the GHCB, etc.) #define those values in a header that is clearly
-> "owned" by the third party.
-> 
-> E.g. IIRC, include/xen/interface/xen.h is copied verbatim from Xen documentation
-> (source?).  And include/asm-generic/hyperv-tlfs.h is the kernel's copy of the
-> TLFS, which dictates all of the Hyper-V hypercalls.
-> 
-> If we do that, then my concerns/objections largely go away, e.g. KVM isn't
-> defining magic values, there's less chance for confusion about what "type" holds,
-> etc.
-> 
-> Oh, and if we go that route, the sizes for all fields should follow the GHCB,
-> e.g. I believe the "type" should be a __u64.
-> 
-> > +			union {
-> > +				struct {
-> > +					__u64 data_gpa;
-> > +					__u64 data_npages;
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS_ERROR_INVALID_LEN   1
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS_ERROR_BUSY          2
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS_ERROR_GENERIC       (1 << 31)
-> 
-> Hopefully it won't matter, but are BUSY and GENERIC actually defined somewhere?
-> I don't see them in GHCB 2.0.
-
-BUSY is defined in 4.1.7:
-
-  It is not expected that a guest would issue many Guest Request NAE
-  events. However, access to the SNP firmware is a sequential and
-  synchronous operation. To avoid the possibility of a guest creating a
-  denial-of-service attack against the SNP firmware, it is recommended
-  that some form of rate limiting be implemented should it be detected
-  that a high number of Guest Request NAE events are being issued. To
-  allow for this, the hypervisor may set the SW_EXITINFO2 field to
-  0x0000000200000000, which will inform the guest to retry the request
-
-INVALID_LEN in 4.1.8.1:
-
-  The hypervisor must validate that the guest has supplied enough pages
-  to hold the certificates that will be returned before performing the SNP
-  guest request. If there are not enough guest pages to hold the certificate
-  table and certificate data, the hypervisor will return the required number
-  of pages needed to hold the certificate table and certificate data in the
-  RBX register and set the SW_EXITINFO2 field to 0x0000000100000000.
-
-and GENERIC chosen to provide an non-zero error code that doesn't
-conflict with that above (or future) GHCB-defined values. But KVM isn't
-trying to expose the actual GHCB details, like how these values are to be in
-the upper 32-bits of SW_EXITINFO2, it just re-uses the values to avoid
-purposefully obfuscating the GHCB return codes they relate to.
-
-> 
-> In a perfect world, it would be nice for KVM to not have to care about the error
-> codes.  But KVM disallows KVM_{G,S}ET_REGS for guest with protected state, which
-> means it's not feasible for userspace to set registers, at least not in any sane
-> way.
-> 
-> Heh, we could abuse KVM_SYNC_X86_REGS to let userspace specify RBX, but (a) that's
-> gross, and (b) KVM_SYNC_X86_REGS and KVM_SYNC_X86_SREGS really ought to be rejected
-> if guest state is protected.
-> 
-> > +					__u32 ret;
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS_FLAGS_NOTIFY_DONE	BIT(0)
-> 
-> This has no business being buried in a VMGEXIT_REQ_CERTS flags.  Notifying
-> userspace that KVM completed its portion of a userspace exit is completely generic.
-> 
-> And aside from where the notification flag lives, _if_ we add a notification
-> mechanism, it belongs in a separate patch, because it's purely a performance
-> optimization.  Userspace can use immediate_exit to force KVM to re-exit after
-> completing an exit.
-> 
-> Actually, I take that back, this isn't even an optimization, it's literally a
-> non-generic implementation of kvm_run.immediate_exit.
-
-Relying on a generic -EINTR response resulting from kvm_run.immediate_exit
-doesn't seem like a very robust way to ensure the attestation request
-was made to firmware. It seems fully possible that future code changes
-could result in EINTR being returned for other reasons. So how do you
-reliably detect that the EINTR is a result of immediate_exit being called
-after the attestation request is made to firmware? We could squirrel something
-away in struct kvm_run to probe for, but delivering another
-KVM_EXIT_SNP_REQ_CERT with an extra flag set seems to be reasonably
-userspace-friendly.
-
-> 
-> If this were an optimization, i.e. KVM truly notified userspace without exiting,
-> then it would need to be a lot more robust, e.g. to ensure userspace actually
-> received the notification before KVM moved on.
-
-Right, this does rely on exiting via , not userspace polling for flags or
-anything along that line.
-
-> 
-> > +					__u8 flags;
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS_STATUS_PENDING	0
-> > +  #define KVM_USER_VMGEXIT_REQ_CERTS_STATUS_DONE		1
-> 
-> This is also a weird reimplementation of generic functionality.  KVM nullifies
-> vcpu->arch.complete_userspace_io _before_ invoking the callback.  So if a callback
-> needs to run again on the next KVM_RUN, it can simply set complete_userspace_io
-> again.  In other words, literally doing nothing will get you what you want :-)
-
-We could just have the completion callback set complete_userspace_io
-again, but then you'd always get 2 userspace exit events per attestation
-request. There could be some userspaces that don't implement the
-file-locking scheme, in which case they wouldn't need the 2nd notification.
-That's why the KVM_USER_VMGEXIT_REQ_CERTS_FLAGS_NOTIFY_DONE flag is provided
-as an opt-in.
-
-The pending/done status bits are so userspace can distinguish between the
-start of a certificate request and the completion side of it after it gets
-bound a completed attestation request and the filelock can be released.
+Do we need to export a HWMON_T_ENABLE to temperature sensor if
+leaving thermal framework only reading temp?
 
 Thanks,
+Peng.
+>=20
+> Thanks,
+> Cristian
+>=20
 
-Mike
-
-> 
-> > +					__u8 status;
-> > +				} req_certs;
-> > +			};
-> > +		};
