@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A050180A94
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 17:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C76181B96
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 17:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715709222; cv=none; b=trN+K3QfVna5ME6yMv+kKpiqYbxkb2qrqTIKi0X1OrGJvrBhaulhM5rE/hNEW0RTTfRJZa/OWsMnaYzUyvEvJKq7a+hcsRxbfJBZeX+PERY1DtYAQMnuemHbYQ140D4146UFrP18+m7d3htb6oHPX8tp1Xhh07hl1/Kje2jeIlI=
+	t=1715709226; cv=none; b=elpzmMyF8XI6q43onSv3sPFhpTnfOLQ3phg4r+CGxP8y4wCSzEkhTlDQmFdqndK27+0MFG9yD6nlQefyEoB8AcI96VzfwP+d/sIVqc9fYN2WjGqnq2VWYlmP+jt3wgAjEkU+4qNenJTBWbXL3Hn2aFz4aPGS59yFgUW6L3l1zOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715709222; c=relaxed/simple;
-	bh=Q7hAj9aWN4FPMfURj721Lexj13X0WDjGnjxEI0jSZ8U=;
+	s=arc-20240116; t=1715709226; c=relaxed/simple;
+	bh=o5KUGg2KS1AmCQ0prYwGDR7DSjizqXsJpnTKNoT/JQk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-type; b=JW+18qfi8ZDcnYrtnPf3jo4Vl0Cx9iqCVPLblyHgR05x3H9gTn293QlFQ1wRgav7lqoJQTMfWDv9PVj3vxtQKe1HpnqirDB1zvPbrxcuNtYViBzBTAWwDzihEoUnlQzZxkV3+8M8Pjfuxa1sy7brcl2CPyWq1KOtirFGk8bG63w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UcNwWfqx; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-type; b=JR2Ei87ast0iwCz8L8XYtj0W1dBSgWPMhLQuMOKOGsdKVPizkwHGpc8bBAR2CW4gNDcNBXYvROGZRlWpzzfWOfVGckjpS8HVXC9Ije9ulSa2iGOcQ1RYs1c0LngI6fBk+HNKkHaoAJz619KngC4am0RKef+SYy75FGhXuS3V+Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AuTg8Jcn; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UcNwWfqx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AuTg8Jcn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715709219;
+	s=mimecast20190719; t=1715709223;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kumEGQnJWJG7jTUKOQ63w/Usm47ya7G4ljqiH1pkRFg=;
-	b=UcNwWfqxzLsF48IGyUEbDUNmxrAYNC0YtDS2DhudwB9vLTgIUERP1tvl7voWJY/o9486m0
-	T7d3tqoqYbl9vAO+zOQPfTNdOrQz2YxFQuMjrxP5OI0HBczn5qcpvkGJirY4QaUeYL8qWF
-	VIyG/g3tg9l59HWWvuX5Z8ae38jzmCE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-611-LtXqz-vqM1W_RfyGOHnoTA-1; Tue,
- 14 May 2024 13:53:34 -0400
-X-MC-Unique: LtXqz-vqM1W_RfyGOHnoTA-1
+	bh=spH1JDbuK4ZYnUhfY5CtXEY/+ATQ9QBw/vzumT0zZiI=;
+	b=AuTg8JcntBDfBpMc6naIYWpyguVZ0fhSv/BG3ON/ocEMmsuI4ksOjZxG5RKMzYMFhGA8zY
+	wS9DNKHNF09d5dn8IKiFx8CWptfEtpsh9iUX5hNPti59Iw8t6bj/KFw+qA7O15//eAPhb+
+	3C9QHTRY/MxUNvUtRqlg/9kj6E3PuH8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-587-vQ3kFgJwPRa0E5_slYnDiQ-1; Tue, 14 May 2024 13:53:30 -0400
+X-MC-Unique: vQ3kFgJwPRa0E5_slYnDiQ-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4983B38000A3;
-	Tue, 14 May 2024 17:53:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9514C101A54F;
+	Tue, 14 May 2024 17:53:29 +0000 (UTC)
 Received: from jmeneghi.bos.com (unknown [10.2.17.24])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2D843400EAF;
-	Tue, 14 May 2024 17:53:32 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 79D3E4B400E;
+	Tue, 14 May 2024 17:53:28 +0000 (UTC)
 From: John Meneghini <jmeneghi@redhat.com>
 To: tj@kernel.org,
 	josef@toxicpanda.com,
@@ -56,9 +56,9 @@ Cc: linux-block@vger.kernel.org,
 	jmeneghi@redhat.com,
 	jrani@purestorage.com,
 	randyj@purestorage.com
-Subject: [PATCH v4 4/6] block: track per-node I/O latency
-Date: Tue, 14 May 2024 13:53:20 -0400
-Message-Id: <20240514175322.19073-5-jmeneghi@redhat.com>
+Subject: [PATCH v4 1/6] nvme: multipath: Implemented new iopolicy "queue-depth"
+Date: Tue, 14 May 2024 13:53:17 -0400
+Message-Id: <20240514175322.19073-2-jmeneghi@redhat.com>
 In-Reply-To: <20240514175322.19073-1-jmeneghi@redhat.com>
 References: <20240514175322.19073-1-jmeneghi@redhat.com>
 Precedence: bulk
@@ -71,522 +71,182 @@ Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-From: Hannes Reinecke <hare@kernel.org>
+From: "Ewan D. Milne" <emilne@redhat.com>
 
-Add a new option 'BLK_NODE_LATENCY' to track per-node I/O latency.
-This can be used by I/O schedulers to determine the 'best' queue
-to send I/O to.
+The existing iopolicies are inefficient in some cases, such as
+the presence of a path with high latency. The round-robin
+policy would use that path equally with faster paths, which
+results in sub-optimal performance.
 
-Signed-off-by: Hannes Reinecke <hare@kernel.org>
-[jmeneghi: cleaned up checkpatch warnings and updated MAINTAINERS]
-Signed-off-by: John Meneghini <jmeneghi@redhat.com>
+The queue-depth policy instead sends I/O requests down the path
+with the least amount of requests in its request queue. Paths
+with lower latency will clear requests more quickly and have less
+requests in their queues compared to "bad" paths. The aim is to
+use those paths the most to bring down overall latency.
+
+This implementation adds an atomic variable to the nvme_ctrl
+struct to represent the queue depth. It is updated each time a
+request specific to that controller starts or ends.
+
+[edm: patch developed by Thomas Song @ Pure Storage, fixed whitespace
+      and compilation warnings, updated MODULE_PARM description, and
+      fixed potential issue with ->current_path[] being used]
+
+Tested-by: John Meneghini <jmeneghi@redhat.com>
+Co-developed-by: Thomas Song <tsong@purestorage.com>
+Signed-off-by: Thomas Song <tsong@purestorage.com>
+Signed-off-by: Ewan D. Milne <emilne@redhat.com>
 ---
- MAINTAINERS            |   1 +
- block/Kconfig          |   9 +
- block/Makefile         |   1 +
- block/blk-mq-debugfs.c |   2 +
- block/blk-nlatency.c   | 389 +++++++++++++++++++++++++++++++++++++++++
- block/blk-rq-qos.h     |   6 +
- include/linux/blk-mq.h |  11 ++
- 7 files changed, 419 insertions(+)
- create mode 100644 block/blk-nlatency.c
+ drivers/nvme/host/multipath.c | 59 +++++++++++++++++++++++++++++++++--
+ drivers/nvme/host/nvme.h      |  2 ++
+ 2 files changed, 58 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7c121493f43d..a4634365c82f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5405,6 +5405,7 @@ F:	block/bfq-cgroup.c
- F:	block/blk-cgroup.c
- F:	block/blk-iocost.c
- F:	block/blk-iolatency.c
-+F:	block/blk-nlatency.c
- F:	block/blk-throttle.c
- F:	include/linux/blk-cgroup.h
- 
-diff --git a/block/Kconfig b/block/Kconfig
-index d47398ae9824..d8edb4506769 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -185,6 +185,15 @@ config BLK_CGROUP_IOPRIO
- 	scheduler and block devices process requests. Only some I/O schedulers
- 	and some block devices support I/O priorities.
- 
-+config BLK_NODE_LATENCY
-+	bool "Track per-node I/O latency"
-+	help
-+	Enable per-node I/O latency tracking for multipathing. This uses the
-+	blk-nodelat latency tracker to provide latencies for each node, and schedules
-+	I/O on the path with the least latency for the submitting node. This can be
-+	used by I/O schedulers to determine the node with the least latency. Currently
-+	only supports nvme over fabrics devices.
-+
- config BLK_DEBUG_FS
- 	bool "Block layer debugging information in debugfs"
- 	default y
-diff --git a/block/Makefile b/block/Makefile
-index 168150b9c510..043d979de8fe 100644
---- a/block/Makefile
-+++ b/block/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_BLK_DEV_THROTTLING)	+= blk-throttle.o
- obj-$(CONFIG_BLK_CGROUP_IOPRIO)	+= blk-ioprio.o
- obj-$(CONFIG_BLK_CGROUP_IOLATENCY)	+= blk-iolatency.o
- obj-$(CONFIG_BLK_CGROUP_IOCOST)	+= blk-iocost.o
-+obj-$(CONFIG_BLK_NODE_LATENCY) += blk-nlatency.o
- obj-$(CONFIG_MQ_IOSCHED_DEADLINE)	+= mq-deadline.o
- obj-$(CONFIG_MQ_IOSCHED_KYBER)	+= kyber-iosched.o
- bfq-y				:= bfq-iosched.o bfq-wf2q.o bfq-cgroup.o
-diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-index 770c0c2b72fa..bc2541428e81 100644
---- a/block/blk-mq-debugfs.c
-+++ b/block/blk-mq-debugfs.c
-@@ -761,6 +761,8 @@ static const char *rq_qos_id_to_name(enum rq_qos_id id)
- 		return "latency";
- 	case RQ_QOS_COST:
- 		return "cost";
-+	case RQ_QOS_NLAT:
-+		return "node-latency";
- 	}
- 	return "unknown";
- }
-diff --git a/block/blk-nlatency.c b/block/blk-nlatency.c
-new file mode 100644
-index 000000000000..219c3f636d76
---- /dev/null
-+++ b/block/blk-nlatency.c
-@@ -0,0 +1,389 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Per-node request latency tracking.
-+ *
-+ * Copyright (C) 2023 Hannes Reinecke
-+ *
-+ * A simple per-node latency tracker for use by I/O scheduler.
-+ * Latencies are measures over 'win_usec' microseconds and stored per node.
-+ * If the number of measurements falls below 'lowat' the measurement is
-+ * assumed to be unreliable and will become 'stale'.
-+ * These 'stale' latencies can be 'decayed', where during each measurement
-+ * interval the 'stale' latency value is decreased by 'decay' percent.
-+ * Once the 'stale' latency reaches zero it will be updated by the
-+ * measured latency.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/blk_types.h>
-+#include <linux/slab.h>
-+
-+#include "blk-stat.h"
-+#include "blk-rq-qos.h"
-+#include "blk.h"
-+
-+#define NLAT_DEFAULT_LOWAT 2
-+#define NLAT_DEFAULT_DECAY 50
-+
-+struct rq_nlat {
-+	struct rq_qos rqos;
-+
-+	u64 win_usec;		/* latency measurement window in microseconds */
-+	unsigned int lowat;	/* Low Watermark latency measurement */
-+	unsigned int decay;	/* Percentage for 'decaying' latencies */
-+	bool enabled;
-+
-+	struct blk_stat_callback *cb;
-+
-+	unsigned int num;
-+	u64 *latency;
-+	unsigned int *samples;
-+};
-+
-+static inline struct rq_nlat *RQNLAT(struct rq_qos *rqos)
-+{
-+	return container_of(rqos, struct rq_nlat, rqos);
-+}
-+
-+static u64 nlat_default_latency_usec(struct request_queue *q)
-+{
-+	/*
-+	 * We default to 2msec for non-rotational storage, and 75msec
-+	 * for rotational storage.
-+	 */
-+	if (blk_queue_nonrot(q))
-+		return 2000ULL;
-+	else
-+		return 75000ULL;
-+}
-+
-+static void nlat_timer_fn(struct blk_stat_callback *cb)
-+{
-+	struct rq_nlat *nlat = cb->data;
-+	int n;
-+
-+	for (n = 0; n < cb->buckets; n++) {
-+		if (cb->stat[n].nr_samples < nlat->lowat) {
-+			/*
-+			 * 'decay' the latency by the specified
-+			 * percentage to ensure the queues are
-+			 * being tested to balance out temporary
-+			 * latency spikes.
-+			 */
-+			nlat->latency[n] =
-+				div64_u64(nlat->latency[n] * nlat->decay, 100);
-+		} else
-+			nlat->latency[n] = cb->stat[n].mean;
-+		nlat->samples[n] = cb->stat[n].nr_samples;
-+	}
-+	if (nlat->enabled)
-+		blk_stat_activate_nsecs(nlat->cb, nlat->win_usec * 1000);
-+}
-+
-+static int nlat_bucket_node(const struct request *rq)
-+{
-+	if (!rq->mq_ctx)
-+		return -1;
-+	return cpu_to_node(blk_mq_rq_cpu((struct request *)rq));
-+}
-+
-+static void nlat_exit(struct rq_qos *rqos)
-+{
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+
-+	blk_stat_remove_callback(nlat->rqos.disk->queue, nlat->cb);
-+	blk_stat_free_callback(nlat->cb);
-+	kfree(nlat->samples);
-+	kfree(nlat->latency);
-+	kfree(nlat);
-+}
-+
-+#ifdef CONFIG_BLK_DEBUG_FS
-+static int nlat_win_usec_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+
-+	seq_printf(m, "%llu\n", nlat->win_usec);
-+	return 0;
-+}
-+
-+static ssize_t nlat_win_usec_write(void *data, const char __user *buf,
-+			size_t count, loff_t *ppos)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+	char val[16] = { };
-+	u64 usec;
-+	int err;
-+
-+	if (blk_queue_dying(nlat->rqos.disk->queue))
-+		return -ENOENT;
-+
-+	if (count >= sizeof(val))
-+		return -EINVAL;
-+
-+	if (copy_from_user(val, buf, count))
-+		return -EFAULT;
-+
-+	err = kstrtoull(val, 10, &usec);
-+	if (err)
-+		return err;
-+	blk_stat_deactivate(nlat->cb);
-+	nlat->win_usec = usec;
-+	blk_stat_activate_nsecs(nlat->cb, nlat->win_usec * 1000);
-+
-+	return count;
-+}
-+
-+static int nlat_lowat_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+
-+	seq_printf(m, "%u\n", nlat->lowat);
-+	return 0;
-+}
-+
-+static ssize_t nlat_lowat_write(void *data, const char __user *buf,
-+			size_t count, loff_t *ppos)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+	char val[16] = { };
-+	unsigned int lowat;
-+	int err;
-+
-+	if (blk_queue_dying(nlat->rqos.disk->queue))
-+		return -ENOENT;
-+
-+	if (count >= sizeof(val))
-+		return -EINVAL;
-+
-+	if (copy_from_user(val, buf, count))
-+		return -EFAULT;
-+
-+	err = kstrtouint(val, 10, &lowat);
-+	if (err)
-+		return err;
-+	blk_stat_deactivate(nlat->cb);
-+	nlat->lowat = lowat;
-+	blk_stat_activate_nsecs(nlat->cb, nlat->win_usec * 1000);
-+
-+	return count;
-+}
-+
-+static int nlat_decay_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+
-+	seq_printf(m, "%u\n", nlat->decay);
-+	return 0;
-+}
-+
-+static ssize_t nlat_decay_write(void *data, const char __user *buf,
-+			size_t count, loff_t *ppos)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+	char val[16] = { };
-+	unsigned int decay;
-+	int err;
-+
-+	if (blk_queue_dying(nlat->rqos.disk->queue))
-+		return -ENOENT;
-+
-+	if (count >= sizeof(val))
-+		return -EINVAL;
-+
-+	if (copy_from_user(val, buf, count))
-+		return -EFAULT;
-+
-+	err = kstrtouint(val, 10, &decay);
-+	if (err)
-+		return err;
-+	if (decay > 100)
-+		return -EINVAL;
-+	blk_stat_deactivate(nlat->cb);
-+	nlat->decay = decay;
-+	blk_stat_activate_nsecs(nlat->cb, nlat->win_usec * 1000);
-+
-+	return count;
-+}
-+
-+static int nlat_enabled_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+
-+	seq_printf(m, "%d\n", nlat->enabled);
-+	return 0;
-+}
-+
-+static int nlat_id_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+
-+	seq_printf(m, "%u\n", rqos->id);
-+	return 0;
-+}
-+
-+static int nlat_latency_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+	int n;
-+
-+	if (!nlat->enabled)
-+		return 0;
-+
-+	for (n = 0; n < nlat->num; n++) {
-+		if (n > 0)
-+			seq_puts(m, " ");
-+		seq_printf(m, "%llu", nlat->latency[n]);
-+	}
-+	seq_puts(m, "\n");
-+	return 0;
-+}
-+
-+static int nlat_samples_show(void *data, struct seq_file *m)
-+{
-+	struct rq_qos *rqos = data;
-+	struct rq_nlat *nlat = RQNLAT(rqos);
-+	int n;
-+
-+	if (!nlat->enabled)
-+		return 0;
-+
-+	for (n = 0; n < nlat->num; n++) {
-+		if (n > 0)
-+			seq_puts(m, " ");
-+		seq_printf(m, "%u", nlat->samples[n]);
-+	}
-+	seq_puts(m, "\n");
-+	return 0;
-+}
-+
-+static const struct blk_mq_debugfs_attr nlat_debugfs_attrs[] = {
-+	{"win_usec", 0600, nlat_win_usec_show, nlat_win_usec_write},
-+	{"lowat", 0600, nlat_lowat_show, nlat_lowat_write},
-+	{"decay", 0600, nlat_decay_show, nlat_decay_write},
-+	{"enabled", 0400, nlat_enabled_show},
-+	{"id", 0400, nlat_id_show},
-+	{"latency", 0400, nlat_latency_show},
-+	{"samples", 0400, nlat_samples_show},
-+	{},
-+};
-+#endif
-+
-+static const struct rq_qos_ops nlat_rqos_ops = {
-+	.exit = nlat_exit,
-+#ifdef CONFIG_BLK_DEBUG_FS
-+	.debugfs_attrs = nlat_debugfs_attrs,
-+#endif
-+};
-+
-+u64 blk_nlat_latency(struct gendisk *disk, int node)
-+{
-+	struct rq_qos *rqos;
-+	struct rq_nlat *nlat;
-+
-+	rqos = nlat_rq_qos(disk->queue);
-+	if (!rqos)
-+		return 0;
-+	nlat = RQNLAT(rqos);
-+	if (node > nlat->num)
-+		return 0;
-+
-+	return div64_u64(nlat->latency[node], 1000);
-+}
-+EXPORT_SYMBOL_GPL(blk_nlat_latency);
-+
-+int blk_nlat_enable(struct gendisk *disk)
-+{
-+	struct rq_qos *rqos;
-+	struct rq_nlat *nlat;
-+
-+	/* Latency tracking not enabled? */
-+	rqos = nlat_rq_qos(disk->queue);
-+	if (!rqos)
-+		return -EINVAL;
-+	nlat = RQNLAT(rqos);
-+	if (nlat->enabled)
-+		return 0;
-+
-+	/* Queue not registered? Maybe shutting down... */
-+	if (!blk_queue_registered(disk->queue))
-+		return -EAGAIN;
-+
-+	nlat->enabled = true;
-+	memset(nlat->latency, 0, sizeof(u64) * nlat->num);
-+	memset(nlat->samples, 0, sizeof(unsigned int) * nlat->num);
-+	blk_stat_activate_nsecs(nlat->cb, nlat->win_usec * 1000);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(blk_nlat_enable);
-+
-+void blk_nlat_disable(struct gendisk *disk)
-+{
-+	struct rq_qos *rqos = nlat_rq_qos(disk->queue);
-+	struct rq_nlat *nlat;
-+
-+	if (!rqos)
-+		return;
-+	nlat = RQNLAT(rqos);
-+	if (nlat->enabled) {
-+		blk_stat_deactivate(nlat->cb);
-+		nlat->enabled = false;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(blk_nlat_disable);
-+
-+int blk_nlat_init(struct gendisk *disk)
-+{
-+	struct rq_nlat *nlat;
-+	int ret = -ENOMEM;
-+
-+	nlat = kzalloc(sizeof(*nlat), GFP_KERNEL);
-+	if (!nlat)
-+		return -ENOMEM;
-+
-+	nlat->num = num_possible_nodes();
-+	nlat->lowat = NLAT_DEFAULT_LOWAT;
-+	nlat->decay = NLAT_DEFAULT_DECAY;
-+	nlat->win_usec = nlat_default_latency_usec(disk->queue);
-+
-+	nlat->latency = kcalloc(nlat->num, sizeof(u64), GFP_KERNEL);
-+	if (!nlat->latency)
-+		goto err_free;
-+	nlat->samples = kcalloc(nlat->num, sizeof(unsigned int), GFP_KERNEL);
-+	if (!nlat->samples)
-+		goto err_free;
-+	nlat->cb = blk_stat_alloc_callback(nlat_timer_fn, nlat_bucket_node,
-+					   nlat->num, nlat);
-+	if (!nlat->cb)
-+		goto err_free;
-+
-+	/*
-+	 * Assign rwb and add the stats callback.
-+	 */
-+	mutex_lock(&disk->queue->rq_qos_mutex);
-+	ret = rq_qos_add(&nlat->rqos, disk, RQ_QOS_NLAT, &nlat_rqos_ops);
-+	mutex_unlock(&disk->queue->rq_qos_mutex);
-+	if (ret)
-+		goto err_free_cb;
-+
-+	blk_stat_add_callback(disk->queue, nlat->cb);
-+
-+	return 0;
-+
-+err_free_cb:
-+	blk_stat_free_callback(nlat->cb);
-+err_free:
-+	kfree(nlat->samples);
-+	kfree(nlat->latency);
-+	kfree(nlat);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(blk_nlat_init);
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 37245c97ee61..2fc11ced0c00 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -17,6 +17,7 @@ enum rq_qos_id {
- 	RQ_QOS_WBT,
- 	RQ_QOS_LATENCY,
- 	RQ_QOS_COST,
-+	RQ_QOS_NLAT,
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 5397fb428b24..9e36002d0831 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -17,6 +17,7 @@ MODULE_PARM_DESC(multipath,
+ static const char *nvme_iopolicy_names[] = {
+ 	[NVME_IOPOLICY_NUMA]	= "numa",
+ 	[NVME_IOPOLICY_RR]	= "round-robin",
++	[NVME_IOPOLICY_QD]      = "queue-depth",
  };
  
- struct rq_wait {
-@@ -79,6 +80,11 @@ static inline struct rq_qos *iolat_rq_qos(struct request_queue *q)
- 	return rq_qos_id(q, RQ_QOS_LATENCY);
+ static int iopolicy = NVME_IOPOLICY_NUMA;
+@@ -29,6 +30,8 @@ static int nvme_set_iopolicy(const char *val, const struct kernel_param *kp)
+ 		iopolicy = NVME_IOPOLICY_NUMA;
+ 	else if (!strncmp(val, "round-robin", 11))
+ 		iopolicy = NVME_IOPOLICY_RR;
++	else if (!strncmp(val, "queue-depth", 11))
++		iopolicy = NVME_IOPOLICY_QD;
+ 	else
+ 		return -EINVAL;
+ 
+@@ -43,7 +46,7 @@ static int nvme_get_iopolicy(char *buf, const struct kernel_param *kp)
+ module_param_call(iopolicy, nvme_set_iopolicy, nvme_get_iopolicy,
+ 	&iopolicy, 0644);
+ MODULE_PARM_DESC(iopolicy,
+-	"Default multipath I/O policy; 'numa' (default) or 'round-robin'");
++	"Default multipath I/O policy; 'numa' (default) , 'round-robin' or 'queue-depth'");
+ 
+ void nvme_mpath_default_iopolicy(struct nvme_subsystem *subsys)
+ {
+@@ -130,6 +133,7 @@ void nvme_mpath_start_request(struct request *rq)
+ 	if (!blk_queue_io_stat(disk->queue) || blk_rq_is_passthrough(rq))
+ 		return;
+ 
++	atomic_inc(&ns->ctrl->nr_active);
+ 	nvme_req(rq)->flags |= NVME_MPATH_IO_STATS;
+ 	nvme_req(rq)->start_time = bdev_start_io_acct(disk->part0, req_op(rq),
+ 						      jiffies);
+@@ -142,6 +146,8 @@ void nvme_mpath_end_request(struct request *rq)
+ 
+ 	if (!(nvme_req(rq)->flags & NVME_MPATH_IO_STATS))
+ 		return;
++
++	atomic_dec(&ns->ctrl->nr_active);
+ 	bdev_end_io_acct(ns->head->disk->part0, req_op(rq),
+ 			 blk_rq_bytes(rq) >> SECTOR_SHIFT,
+ 			 nvme_req(rq)->start_time);
+@@ -330,6 +336,40 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
+ 	return found;
  }
  
-+static inline struct rq_qos *nlat_rq_qos(struct request_queue *q)
++static struct nvme_ns *nvme_queue_depth_path(struct nvme_ns_head *head)
 +{
-+	return rq_qos_id(q, RQ_QOS_NLAT);
++	struct nvme_ns *best_opt = NULL, *best_nonopt = NULL, *ns;
++	unsigned int min_depth_opt = UINT_MAX, min_depth_nonopt = UINT_MAX;
++	unsigned int depth;
++
++	list_for_each_entry_rcu(ns, &head->list, siblings) {
++		if (nvme_path_is_disabled(ns))
++			continue;
++
++		depth = atomic_read(&ns->ctrl->nr_active);
++
++		switch (ns->ana_state) {
++		case NVME_ANA_OPTIMIZED:
++			if (depth < min_depth_opt) {
++				min_depth_opt = depth;
++				best_opt = ns;
++			}
++			break;
++
++		case NVME_ANA_NONOPTIMIZED:
++			if (depth < min_depth_nonopt) {
++				min_depth_nonopt = depth;
++				best_nonopt = ns;
++			}
++			break;
++		default:
++			break;
++		}
++	}
++
++	return best_opt ? best_opt : best_nonopt;
 +}
 +
- static inline void rq_wait_init(struct rq_wait *rq_wait)
+ static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
  {
- 	atomic_set(&rq_wait->inflight, 0);
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 89ba6b16fe8b..925e8c19bedb 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -1150,4 +1150,15 @@ static inline int blk_rq_map_sg(struct request_queue *q, struct request *rq,
- }
- void blk_dump_rq_flags(struct request *, char *);
+ 	return nvme_ctrl_state(ns->ctrl) == NVME_CTRL_LIVE &&
+@@ -338,15 +378,27 @@ static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
  
-+#ifdef CONFIG_BLK_NODE_LATENCY
-+int blk_nlat_enable(struct gendisk *disk);
-+void blk_nlat_disable(struct gendisk *disk);
-+u64 blk_nlat_latency(struct gendisk *disk, int node);
-+int blk_nlat_init(struct gendisk *disk);
-+#else
-+static inline int blk_nlat_enable(struct gendisk *disk) { return 0; }
-+static inline void blk_nlat_disable(struct gendisk *disk) {}
-+static inline u64 blk_nlat_latency(struct gendisk *disk, int node) { return 0; }
-+static inline int blk_nlat_init(struct gendisk *disk) { return -EOPNOTSUPP; }
-+#endif
- #endif /* BLK_MQ_H */
+ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
+ {
+-	int node = numa_node_id();
++	int iopolicy = READ_ONCE(head->subsys->iopolicy);
++	int node;
+ 	struct nvme_ns *ns;
+ 
++	/*
++	 * queue-depth iopolicy does not need to reference ->current_path
++	 * but round-robin needs the last path used to advance to the
++	 * next one, and numa will continue to use the last path unless
++	 * it is or has become not optimized
++	 */
++	if (iopolicy == NVME_IOPOLICY_QD)
++		return nvme_queue_depth_path(head);
++
++	node = numa_node_id();
+ 	ns = srcu_dereference(head->current_path[node], &head->srcu);
+ 	if (unlikely(!ns))
+ 		return __nvme_find_path(head, node);
+ 
+-	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
++	if (iopolicy == NVME_IOPOLICY_RR)
+ 		return nvme_round_robin_path(head, node, ns);
++
+ 	if (unlikely(!nvme_path_is_optimized(ns)))
+ 		return __nvme_find_path(head, node);
+ 	return ns;
+@@ -905,6 +957,7 @@ void nvme_mpath_init_ctrl(struct nvme_ctrl *ctrl)
+ 	mutex_init(&ctrl->ana_lock);
+ 	timer_setup(&ctrl->anatt_timer, nvme_anatt_timeout, 0);
+ 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
++	atomic_set(&ctrl->nr_active, 0);
+ }
+ 
+ int nvme_mpath_init_identify(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index f243a5822c2b..e7d0a56d35d4 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -354,6 +354,7 @@ struct nvme_ctrl {
+ 	size_t ana_log_size;
+ 	struct timer_list anatt_timer;
+ 	struct work_struct ana_work;
++	atomic_t nr_active;
+ #endif
+ 
+ #ifdef CONFIG_NVME_HOST_AUTH
+@@ -402,6 +403,7 @@ static inline enum nvme_ctrl_state nvme_ctrl_state(struct nvme_ctrl *ctrl)
+ enum nvme_iopolicy {
+ 	NVME_IOPOLICY_NUMA,
+ 	NVME_IOPOLICY_RR,
++	NVME_IOPOLICY_QD,
+ };
+ 
+ struct nvme_subsystem {
 -- 
 2.39.3
 
