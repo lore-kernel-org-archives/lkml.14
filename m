@@ -1,37 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34461292D2;
-	Tue, 14 May 2024 15:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56DB17EBA5;
+	Tue, 14 May 2024 15:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715701891; cv=none; b=G2WBfDAr6oiOXd1SWJ5IRt6IVtlLXhMQB7P/k8COhx064USESTx/IZW4m4M4ALLUiWrQaU9B7jNbR07pxAIXQUyRGAQvtUuE9KGY73plevj3oxWr8PlrTdE/FMPbq8DuF0xRw9daKrs4mVUKv6BFCUdBYVXqVxdVda0MNzxIsoI=
+	t=1715701892; cv=none; b=oFqTTuzecUgV8/URWzbSbBSSz3wWjtSiUsW/NuIAVMkTzuTmWzEoUdru2GsKg2ZyoW1yc7iJZjIZq7WBgl54sc5Ks1V/cUuGeC5ADmu8JugUvIECxGIQMp5TBkUfxtGhn3wQlr45PAGeRHVSbP5eGNpmcSQzNAC5Qcu8rChxNnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715701891; c=relaxed/simple;
-	bh=7qCZjVj0npclH05dgo5fA40AF1gLfoojNtKF6rHAMUo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cXdN23tsViqSYvnyxCv0xdPuNPx8pp9CYovHYzC8delv6NnuAZm/uQYBnDGRjODY8bCJpjtbDE0vse7j7suFg41SbSjuW86twg4/zONZ1l7u1TDq8MRiHt6MCZk+5mFkBYQXrTSMymcoooigm+3sphZsdjPwmZ04A4iQxOnUu1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B/90QdET; arc=none smtp.client-ip=217.70.183.197
+	s=arc-20240116; t=1715701892; c=relaxed/simple;
+	bh=XoA0b3u13bVRZxpHWJ41pkwszN/m5KwjeFNwYKuSfP0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uQeoYkkPut3rmZMzA9ZgiY2GKwXyhfsqepe0CU1mQ0KuXsvsT1V7HS5M4jmSsdNDtmqQVnXJjI+yrfyYljvkvnundnRJexQNjFloppUxo3KOfsbDdntgyzo9WtHEufGWFfoi0OoMT7FbD7sg8geT4SIGhDjLrip3AoY6STOjKx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QHKfaRwJ; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B/90QdET"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1C42C1C0005;
-	Tue, 14 May 2024 15:51:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QHKfaRwJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B17E11C0006;
+	Tue, 14 May 2024 15:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715701886;
+	t=1715701888;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Tfx7Bevqga7Dh0vC0Y7W7EThPtYYB7PnS/L6OwfxpZI=;
-	b=B/90QdETOpRS7TCwy23tkVC+xxteweiAReV6y77LZn492w00DQX7SEr6mPWuPF9fayl8mK
-	RK2f5eFcijo1aDOL76EUf9LyxN9LnQmyTgPV8CBMabf/gOFPjzHp0fsDwQ61Y98UOKg4/4
-	a3TmcUzfDVAyVeeT5lu+nk58xjnGyZbS4ADXAWIfsEUx3O0G8EtWu3YNZOhamDpTbnwnNE
-	clCxpB7FiGWV67JX0SanSFkeFFPHMqTP2p/4TbfjVNQS6cypDvV3ePAT6sczPfEod6/gww
-	ksrjmSuINP+sLPODcpq24KxWOlHRxSPDL/f0YFykT7e8e5yadlqmFyX/OckfzQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/q1zVDoqEbRtn4br8zecJV6ThTUPNCtWDfIqMVXyJZQ=;
+	b=QHKfaRwJsSXr4ytLxa3lq+qbaeXezirBmiMbFh9mcu1vWutVz8C52TDQD//FAYAuBrgizA
+	ugbclEjEOS72WV1ibmYdwwCzA+CYpGHuF8AcJoLjO+fZmEQv7dRqRNiHCgK02Uaz+zKJ/9
+	xxa+8hp0q4E4xLyHi/DFl578dMxg00gqtbOJWX7oeHVku03G/j1Ya+KN8kDRWQtxN+j31Q
+	PGuv+JcVmmkn79ulHyxEX3nXUNaZhT38C4KxCrZfrTjgEQGhRn/okFJouU5rMAzDnm5uRo
+	8nLGC6Y01vgwp8haTzRIdQEqPBJkIPlnSesB1LSFV2jPCCz/aKDvH/KCcxVobA==
 From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Subject: [PATCH v2 0/6] wifi: wilc1000: fix default mac address
-Date: Tue, 14 May 2024 17:51:18 +0200
-Message-Id: <20240514-mac_addr_at_probe-v2-0-afef09f1cd10@bootlin.com>
+Date: Tue, 14 May 2024 17:51:21 +0200
+Subject: [PATCH v2 3/6] wifi: wilc1000: set wilc_set_mac_address parameter
+ as const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,74 +42,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHaIQ2YC/22NQQqDMBBFryKzbkoypkq76j2KSCZJ60A1kkhoE
- e/e6LrL9+C/v0LykX2CW7VC9JkTh6kAniqwg5leXrArDCixVohKjMb2xrnYm6WfYyAvakuN1Jr
- wohyU3Rz9kz9H89EVHjgtIX6Pi6x2u9e01Kr9U8tKSNG0rrFXqski3SmE5c3T2YYRum3bfq9Ur
- 4e0AAAA
+Message-Id: <20240514-mac_addr_at_probe-v2-3-afef09f1cd10@bootlin.com>
+References: <20240514-mac_addr_at_probe-v2-0-afef09f1cd10@bootlin.com>
+In-Reply-To: <20240514-mac_addr_at_probe-v2-0-afef09f1cd10@bootlin.com>
 To: Ajay Singh <ajay.kathat@microchip.com>, 
  Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Heiko Thiery <Heiko.Thiery@kontron.com>, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, 
- Heiko Thiery <heiko.thiery@gmail.com>
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: alexis.lothore@bootlin.com
 
-This series aims to fix invalid mac address issue raised by Heiko Thiery 
-([1]). WILC1000 mac address is currently not set until device is opened, at
-which point firmware is loaded and started. This results in default mac
-address being 00:00:00:00:00:00.
+Any attempt to provide a const mac address to wilc_set_mac_address results
+in the following warning:
 
-This series, based on an initial patch from Ajay, reads the MAC address
-from chip eFuse whenever we set the first interface (at probe time). To do
-so, we need to ensure that any bus communication is properly initialized,
-so the first commits slightly rearrange/fix initialization/registration
-order to allow to read MAC address properly.
-Based on the tests I did during this series adjustments, there are still a
-few corner cased not properly handled, especially when dealing with two
-interfaces on top of the same wphy, but it fixes at least the user-facing
-mac address for those interfaces so user space network managers are not
-confused anymore.
+warning: passing argument 2 of 'wilc_set_mac_address' discards 'const'
+qualifier from pointer target type [-Wdiscarded-qualifiers]
+[...]
+drivers/net/wireless/microchip/wilc1000/hif.h:170:52: note: expected 'u8 *'
+{aka 'unsigned char *'} but argument is of type 'const unsigned char *'a
+int wilc_set_mac_address(struct wilc_vif *vif, u8 *mac_addr);
 
-[1] https://lore.kernel.org/netdev/CAEyMn7aV-B4OEhHR4Ad0LM3sKCz1-nDqSb9uZNmRWR-hMZ=z+A@mail.gmail.com/
+Instead of using an explicit cast each time we need provide a MAC address,
+set the function parameter as const
 
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
-Changes in v2:
-- add missing symbols export
-- declare new nv mac read helper at the bottom of file
-- collected Tested-By tag
-- Link to v1: https://lore.kernel.org/r/20240417-mac_addr_at_probe-v1-0-67d6c9b3bc2b@bootlin.com
+ drivers/net/wireless/microchip/wilc1000/hif.c    | 4 ++--
+ drivers/net/wireless/microchip/wilc1000/hif.h    | 2 +-
+ drivers/net/wireless/microchip/wilc1000/netdev.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
----
-Ajay Singh (1):
-      wifi: wilc1000: read MAC address from fuse at probe
+diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
+index 919de6ffb821..c6892b7e190f 100644
+--- a/drivers/net/wireless/microchip/wilc1000/hif.c
++++ b/drivers/net/wireless/microchip/wilc1000/hif.c
+@@ -1293,7 +1293,7 @@ int wilc_get_mac_address(struct wilc_vif *vif, u8 *mac_addr)
+ 	return result;
+ }
+ 
+-int wilc_set_mac_address(struct wilc_vif *vif, u8 *mac_addr)
++int wilc_set_mac_address(struct wilc_vif *vif, const u8 *mac_addr)
+ {
+ 	struct wid wid;
+ 	int result;
+@@ -1301,7 +1301,7 @@ int wilc_set_mac_address(struct wilc_vif *vif, u8 *mac_addr)
+ 	wid.id = WID_MAC_ADDR;
+ 	wid.type = WID_STR;
+ 	wid.size = ETH_ALEN;
+-	wid.val = mac_addr;
++	wid.val = (u8 *)mac_addr;
+ 
+ 	result = wilc_send_config_pkt(vif, WILC_SET_CFG, &wid, 1);
+ 	if (result)
+diff --git a/drivers/net/wireless/microchip/wilc1000/hif.h b/drivers/net/wireless/microchip/wilc1000/hif.h
+index 0d380586b1d9..96eeaf31d237 100644
+--- a/drivers/net/wireless/microchip/wilc1000/hif.h
++++ b/drivers/net/wireless/microchip/wilc1000/hif.h
+@@ -167,7 +167,7 @@ int wilc_add_rx_gtk(struct wilc_vif *vif, const u8 *rx_gtk, u8 gtk_key_len,
+ 		    u8 cipher_mode);
+ int wilc_set_pmkid_info(struct wilc_vif *vif, struct wilc_pmkid_attr *pmkid);
+ int wilc_get_mac_address(struct wilc_vif *vif, u8 *mac_addr);
+-int wilc_set_mac_address(struct wilc_vif *vif, u8 *mac_addr);
++int wilc_set_mac_address(struct wilc_vif *vif, const u8 *mac_addr);
+ int wilc_set_join_req(struct wilc_vif *vif, u8 *bssid, const u8 *ies,
+ 		      size_t ies_len);
+ int wilc_disconnect(struct wilc_vif *vif);
+diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
+index 166165ee7712..2ee3d9827826 100644
+--- a/drivers/net/wireless/microchip/wilc1000/netdev.c
++++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
+@@ -678,7 +678,7 @@ static int wilc_set_mac_addr(struct net_device *dev, void *p)
+ 	}
+ 	rcu_read_unlock();
+ 
+-	result = wilc_set_mac_address(vif, (u8 *)addr->sa_data);
++	result = wilc_set_mac_address(vif, addr->sa_data);
+ 	if (result)
+ 		return result;
+ 
 
-Alexis Lothoré (5):
-      wifi: wilc1000: set net device registration as last step during interface creation
-      wifi: wilc1000: register net device only after bus being fully initialized
-      wifi: wilc1000: set wilc_set_mac_address parameter as const
-      wifi: wilc1000: add function to read mac address from eFuse
-      wifi: wilc1000: make sdio deinit function really deinit the sdio card
-
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 10 ---
- drivers/net/wireless/microchip/wilc1000/fw.h       | 13 ++++
- drivers/net/wireless/microchip/wilc1000/hif.c      |  4 +-
- drivers/net/wireless/microchip/wilc1000/hif.h      |  2 +-
- drivers/net/wireless/microchip/wilc1000/netdev.c   | 72 ++++++++++++----------
- drivers/net/wireless/microchip/wilc1000/netdev.h   |  2 +
- drivers/net/wireless/microchip/wilc1000/sdio.c     | 71 ++++++++++++++++++++-
- drivers/net/wireless/microchip/wilc1000/spi.c      | 17 ++++-
- drivers/net/wireless/microchip/wilc1000/wlan.c     | 49 +++++++++++++++
- drivers/net/wireless/microchip/wilc1000/wlan.h     |  1 +
- 10 files changed, 193 insertions(+), 48 deletions(-)
----
-base-commit: cd546c1dc7164096520a97fbcaca0a063ef1d0a7
-change-id: 20231221-mac_addr_at_probe-3cb6044b251d
-
-Best regards,
 -- 
-Alexis Lothoré, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.44.0
 
