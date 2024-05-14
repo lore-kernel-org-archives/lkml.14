@@ -1,112 +1,87 @@
-Received: from mxout37.expurgate.net (mxout37.expurgate.net [194.37.255.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AD86BFA8;
-	Tue, 14 May 2024 12:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F262B47F5D;
+	Tue, 14 May 2024 12:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715690679; cv=none; b=sMhBvOewhx5IW92vwHv/KLFXg1wbyIJ7jvhuX1pZqXf5ZQ9npm6rXSLAfd5uqlMO4PHUDOtF7cuop5RST1cm72GuvvBJ6UIJk/Fz9WN6c3RFvbGaZoPCemrtDusfv+2+rJC5T+h2rHIZeBBe70U90hiavjGkGrrSkNA6Cx19BDM=
+	t=1715690750; cv=none; b=Zw3njXyTG56/3USY2WaUqN7AFUXhY01M6Bcw46pfarIx78Fenl5EzmlhdXZSGcn5ZRLqy6HrSfZwOnZPTLWkzLDGqGC1XTDBvKZOzvH5+0vYlVl+kmLKjYwDnmt9ZNXQpeHQvMEXZGGCQSVgpR5urfh7chg9gBVDmFWAYSCyUnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715690679; c=relaxed/simple;
-	bh=yTLW0IJRaUkMcye7x1q7XLp3U8fuID9lCwQ20A94yiY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IdRDiqll9EDeCuGDgOCUMSNnbibiKrphPSNMb1Zes9Q7iG4fkNZ323dkzEJ/QVbm3iXO94iBuRQAuHEVqXttIt2oZOqiEaJjhQqd2iLwZ5z7R4P38MJoiNYtXQjTHwSrBc2WHbCeh0HXbBMWfdN+/aXSiQ1tLXwT7D0/xGV6Zx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de; spf=pass smtp.mailfrom=brueckmann-gmbh.de; arc=none smtp.client-ip=194.37.255.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brueckmann-gmbh.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
-	id 1s6rGx-00HQk6-BC; Tue, 14 May 2024 14:28:47 +0200
-Received: from [217.239.223.202] (helo=zimbra.brueckmann-gmbh.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
-	id 1s6rGv-001xKj-Tw; Tue, 14 May 2024 14:28:45 +0200
-Received: from zimbra.brueckmann-gmbh.de (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPS id 3A336CA5AA8;
-	Tue, 14 May 2024 14:28:45 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTP id 353E7CA5AF6;
-	Tue, 14 May 2024 14:28:45 +0200 (CEST)
-Received: from zimbra.brueckmann-gmbh.de ([127.0.0.1])
- by localhost (zimbra.brueckmann-gmbh.de [127.0.0.1]) (amavis, port 10026)
- with ESMTP id nar3tVrW8P2h; Tue, 14 May 2024 14:28:45 +0200 (CEST)
-Received: from ew-linux.ew (unknown [10.0.11.14])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPSA id 1A1B8CA5AA8;
-	Tue, 14 May 2024 14:28:45 +0200 (CEST)
-From: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>,
-	MD Danish Anwar <danishanwar@ti.com>,
-	Ravi Gunasekaran <r-gunasekaran@ti.com>
-Subject: [PATCH 1/2] net: phy: dp83869: Add PHY ID for chip revision 3
-Date: Tue, 14 May 2024 14:27:27 +0200
-Message-Id: <20240514122728.1490156-1-thomas.gessler@brueckmann-gmbh.de>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715690750; c=relaxed/simple;
+	bh=wYe+IcdZ5sAPvomkLeOMajQNaay/H+daZsNnHYswfPw=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=B6QYAtYbvWnO7cL0p5vI4JmyEuaiG5ji7YR1R0aHwebD7DVdCg+yDzVjCinovR0ztAUEU0x+L4q8HpChbVUxH+plgPp6NDFKzt6z9HGulRxKBDd8fe5VGlEoZUZvJtFbZ7NXA8raU27WgbLNeJDXcsccGpvv/maS8bdN4jLfAHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhlRL33X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhlRL33X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C93C2BD10;
+	Tue, 14 May 2024 12:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715690749;
+	bh=wYe+IcdZ5sAPvomkLeOMajQNaay/H+daZsNnHYswfPw=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=OhlRL33X47dxZOmzQKr1jHTao8pWiTIsxT6CuVBAIy41IePXpyOV35qN2xZOsKA6T
+	 OTQVcNnSKAZJBWQ+vJkm5g8qclRctWA4rY7KMVFDHx0u5GmUzVqkw5GbFhHcHRc6pq
+	 veh2dHUQ1XNK79xiWmv2KNjbkpmGUiDbEQn4ZTBi6kBE1zwRX0uPx466F1FKfY/AVF
+	 JzfDRnpf57wQ3ZJ/Y5cPhx+8DOQNP5C1hDuFAWn1nd+8VAAVen9PJv9GGU0lyncZIr
+	 TUN9zKrkxU5CapT5zPKVCm8fQl1xMiFWeRZbjivHQyqcS3zwhfi61/sBT6SEPTj98K
+	 TBgHlkOHv5fTQ==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate: clean
-X-purgate-type: clean
-X-purgate-ID: 151534::1715689726-CD4998D1-EB8F54D6/0/0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/6] wifi: wilc1000: set net device registration as last
+ step during interface creation
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240417-mac_addr_at_probe-v1-1-67d6c9b3bc2b@bootlin.com>
+References: <20240417-mac_addr_at_probe-v1-1-67d6c9b3bc2b@bootlin.com>
+To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Cc: Ajay Singh <ajay.kathat@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?q?Al?=
+	=?utf-8?q?exis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171569074600.2017278.13914732662896657638.kvalo@kernel.org>
+Date: Tue, 14 May 2024 12:45:47 +0000 (UTC)
 
-The recent silicon revision 3 of the DP83869 has a different PHY ID
-which has to be added to the driver in order for the PHY to be detected.
-There appear to be no documented differences between the revisions,
-although there are some discussions in the TI forum about different
-behavior for some registers.
+Alexis Lothoré <alexis.lothore@bootlin.com> wrote:
 
-Signed-off-by: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
----
- drivers/net/phy/dp83869.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> net device registration is currently done in wilc_netdev_ifc_init but
+> other initialization operations are still done after this registration.
+> Since net device is assumed to be usable right after registration, it
+> should be the very last step of initialization.
+> 
+> Move netdev registration at the very end of wilc_netdev_ifc_init to let
+> this function completely initialize netdevice before registering it.
+> 
+> Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index d7aaefb5226b..d248a13c1749 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -15,7 +15,8 @@
-=20
- #include <dt-bindings/net/ti-dp83869.h>
-=20
--#define DP83869_PHY_ID		0x2000a0f1
-+#define DP83869REV1_PHY_ID	0x2000a0f1
-+#define DP83869REV3_PHY_ID	0x2000a0f3
- #define DP83561_PHY_ID		0x2000a1a4
- #define DP83869_DEVADDR		0x1f
-=20
-@@ -909,14 +910,16 @@ static int dp83869_phy_reset(struct phy_device *phy=
-dev)
- }
-=20
- static struct phy_driver dp83869_driver[] =3D {
--	DP83869_PHY_DRIVER(DP83869_PHY_ID, "TI DP83869"),
-+	DP83869_PHY_DRIVER(DP83869REV1_PHY_ID, "TI DP83869 Rev. 1"),
-+	DP83869_PHY_DRIVER(DP83869REV3_PHY_ID, "TI DP83869 Rev. 3"),
- 	DP83869_PHY_DRIVER(DP83561_PHY_ID, "TI DP83561-SP"),
-=20
- };
- module_phy_driver(dp83869_driver);
-=20
- static struct mdio_device_id __maybe_unused dp83869_tbl[] =3D {
--	{ PHY_ID_MATCH_MODEL(DP83869_PHY_ID) },
-+	{ PHY_ID_MATCH_MODEL(DP83869REV1_PHY_ID) },
-+	{ PHY_ID_MATCH_MODEL(DP83869REV3_PHY_ID) },
- 	{ PHY_ID_MATCH_MODEL(DP83561_PHY_ID) },
- 	{ }
- };
---=20
-2.34.1
+I see errors:
+
+ERROR: modpost: "wilc_load_mac_from_nv" [drivers/net/wireless/microchip/wilc1000/wilc1000-sdio.ko] undefined!
+ERROR: modpost: "wilc_netdev_ifc_init" [drivers/net/wireless/microchip/wilc1000/wilc1000-sdio.ko] undefined!
+ERROR: modpost: "wilc_load_mac_from_nv" [drivers/net/wireless/microchip/wilc1000/wilc1000-spi.ko] undefined!
+ERROR: modpost: "wilc_netdev_ifc_init" [drivers/net/wireless/microchip/wilc1000/wilc1000-spi.ko] undefined!
+make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Error 1
+make[1]: *** [/home/kvalo/projects/personal/wireless-drivers/src/wireless-next/Makefile:1871: modpost] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+
+6 patches set to Changes Requested.
+
+13633102 [1/6] wifi: wilc1000: set net device registration as last step during interface creation
+13633103 [2/6] wifi: wilc1000: register net device only after bus being fully initialized
+13633104 [3/6] wifi: wilc1000: set wilc_set_mac_address parameter as const
+13633105 [4/6] wifi: wilc1000: add function to read mac address from eFuse
+13633106 [5/6] wifi: wilc1000: make sdio deinit function really deinit the sdio card
+13633107 [6/6] wifi: wilc1000: read MAC address from fuse at probe
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240417-mac_addr_at_probe-v1-1-67d6c9b3bc2b@bootlin.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
