@@ -1,57 +1,57 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E8E1474C9;
-	Tue, 14 May 2024 13:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72D01465B1;
+	Tue, 14 May 2024 13:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715692670; cv=none; b=g+ypy/OmXuQsiAbv5ulFGg8N9VIYG+KRZvndkQ9i79QcJZAdcJGU7ifBKQM7ThfEwUCfFvAvCjSYluWntowolT6Ic5dZtYALMmZ9UIr4EvQvLYIlqJ0OS6AxeL4eCRd1qeS4hJiiLlKz38GzjJMSJSv3mnLQbg2BZiWnoquZq64=
+	t=1715692668; cv=none; b=pngYHNj7lO3uiPwyP8ZFz6gkXongHxLQ0dfPaWGMFuBgPfQw5l2gx5JSa2QuYWap7JdQKEvjjX1ittMy9r6LoFsLe/j/CExTX62gTVw9UWZnP2g/Hk1dBBk3c5vXxAR9k1vMrXJAIlblf0EYI6ECIZtu0po4BfEQUcmiwmhNcqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715692670; c=relaxed/simple;
-	bh=2dU2vW9r6+E0UljRNqvE72JR11F6DrWRygMa+KrItSo=;
+	s=arc-20240116; t=1715692668; c=relaxed/simple;
+	bh=96ZscxFcekwLOU1G/Ob62zVtXDhnn2IgCI17Vhgumoc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dm4gV92KPAax7KlOYv50nj4Wmf8hW8YFeckAERa0dGCPUuMgY2OaENEMx8sjQ42Wrlo3WNOiWgdbax8+Wvb4+6uRZcG/lh9vJ+g+pTGmBy7Ccg+RYrDb4kXQm2HSek6ofBfh8ur3kVruOJXuOIysXoo3d+pfa3K1CpesDAyBlyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SywO1aFs; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=pd7bVmAF8yXnNTOVOJ+nDkDJfUF//71r/QkDCZS0sz1ev1/M5hKlFKcsHgmFoMnnj7yWhAO5P4py+/xgW9b70EZ6LuAxJvQt8yHpxthOFNg+7PbXAzh06KY7AuUDveqcaNDwCaN9p9AbHyRvfpT549WZto1NuGkbiks940GJ+9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K9zodidV; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SywO1aFs"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ed96772f92so44793435ad.0;
-        Tue, 14 May 2024 06:17:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9zodidV"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1edfc57ac0cso44971395ad.3;
+        Tue, 14 May 2024 06:17:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715692668; x=1716297468; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715692666; x=1716297466; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Cb0aTJs1VPGRE71afQXU2F9h4FNf65p4Qc8Pwqu07To=;
-        b=SywO1aFsU1ntCX5e8ORE0EOS45Nelh14tSesra83fkLihVe3oVVh7oSPYTgkW2Q1C5
-         WJYcSCKuw861rM0/5GZqGyckBD2gEdl8ABNvE1VlbgmoZ9Hu0LpuLtoitY1R2r2jwdyP
-         cJOlzzvEL7V6PIWwTtD2/WM2nkeRR0MtrIDnQG1drPd5E2uPiQIMM9KSpTId4ww3hi+E
-         xRgBbtrCGKjqSRn9bWuUABTI6p+GcOCRssMrahhM55vl1mBBwAz4tQNZvkv2M8daI9iO
-         QnSwGluFPcaAn+jVRTZYzihb0o+MYx26WS3nVceL6Vln9pHDo3iTrBfWwYVrMCxR/MV+
-         ZzSg==
+        bh=kOZvxCrC9Itj0+EN+G6LfcoJOefBPRrAg+vdgGoRsY4=;
+        b=K9zodidVLgIpRMccRRzZUClO5LAvknM7h/RX2zX+b253d8TQs3Cs7sTxlFF6o0JyTP
+         dzj12QBckS4CtfecrKk6wapvYTtUQ2ucWdDThql2d4xi/UFUfXcz6Kr6Dh2RJKmGVUxW
+         QOXXYEUwO0EGfHh37L15M/xNSZUDL1TCJzIYc6IBk6wzGgLUQFUtn7aaJ5CIz5gre5nW
+         gZZ+i+BLsDYM7+kVuhFy+sokSOM0kezahnxxRM1u3sYAUTH8xZP+hejQtYRkIGj71doh
+         w1+Yo6Kom2bbxnEAUoI2Og9hBIrs3dSVeYhgayh6WzFySK3YN0zw2KAttawFTCIh2yvj
+         HAjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715692668; x=1716297468;
+        d=1e100.net; s=20230601; t=1715692666; x=1716297466;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Cb0aTJs1VPGRE71afQXU2F9h4FNf65p4Qc8Pwqu07To=;
-        b=JtvNr8P6yHeS//BhWLWH9syEe+Sby5aVFu6xpWGKNr2xz2EBs5b9iE1T+Myg72BLgg
-         G5RgGhq4dpRcIDuynpLcblAafv9U3363NI2g+QvCx2EUg7Uxl8/jeoPUHvFsuGUVT0np
-         BPncGn3qMzTVzqwChzw36kDA7uq1+/9tdzAIFCrOBlQQRcv5saIVT27O2b04Md2HMn49
-         rR5TjJvybr5WtuTwitC9VQ0/xhiimB6v5VdpYZ4vGRHCJ6AQpqBpBTC7/kL/L48mdtvi
-         s4G018LxwaYl9N//A3n9ZTpxmJn6iNbx+4r3olAUItBHt20+V5Ts+lAv6LG8Ur87krBR
-         0iwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUY9BOEPvlnQ2QMbc1Xo1uWt51rJtp8LpY0FGMy2XJKfEBS0UlzZm4GRx4OtWzH4PDUiOI5y3mmIqVEYqW7RbXeTRYN+b0ABevYbIRtVOjSYX3Ea1pFtTolzajhRAn7gdWAkBNz4c1j3QRgWLcjz1zR+PDjJE3mCrtRZN8gjmIk9ZqwWfiu6PTP9cGB
-X-Gm-Message-State: AOJu0YxSTJBQcRNWhE7HpIGf8NOQ9FvJPGvbLC7CWTKJ0Tdfb4GZskCJ
-	FllnYcQM25x3Uy3vnlhPpTJTYfn16v/rjoYWqTaiI1rXTYsMhgBG
-X-Google-Smtp-Source: AGHT+IHc29e6vne8CBHNjaXL31oZJLb84ryZavfdmGOgVfoH6/KYa3aqF7scyQY5CXTSy0i8uGudsg==
-X-Received: by 2002:a17:903:2290:b0:1e0:b2d5:5f46 with SMTP id d9443c01a7336-1ef440495b7mr146491315ad.46.1715692667893;
-        Tue, 14 May 2024 06:17:47 -0700 (PDT)
+        bh=kOZvxCrC9Itj0+EN+G6LfcoJOefBPRrAg+vdgGoRsY4=;
+        b=nxVgst9HXj8As6a2JilO4OZ6Gk4EIwrkFf8n1mHJja83tZxtxYSGwdQbUg1lIz5vNx
+         WkP4dvhO1e1bpPFMHJopIiNfmPCKyWnpHemZ8jXs6PTLLVEx1pwG6N6KqG/NCpQHWhik
+         /lGD3ErZrrjyECyXQxwF1lVIRm+ggJtiCS1wQWSOQEJn2Tm0COoLhHjm+aeniRmGfuDK
+         H8evdLDG0tT9XZbZE6OjQ7/ckx9MGI1HLkhWkX5oiuzE3u3+Fwws9WgKBa55l/vZyP3o
+         sDr+5lO1oqX7F8XeuRjkLjMJukBrNLSSf12AKgAGbN1jGOgbkAak1YiFQxqm5m5CB6il
+         hONw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPuKweJ+qbWCKJ9eoK0Acw61Ki005I25Y1MWOK2WtHN0u6A0pUesUWSgxh9H87mnfWfEnjotpWtRdmiPDpEv9qcTZgWAAmtbJ7zSKIkqC2YM69FsSD6tifrVjWe+4fm6ebI1sPmdQpzS0g7yfMJ6uyw88a47Z/qquP12Jb4WovPDrt8LfzLMgklyba
+X-Gm-Message-State: AOJu0YzN13I59dcqvA7rbmuc7yO7hT1dgJ2MAK1txrHI5Ltx9XF//lxk
+	DYRHvd8JrUtKdua4m9zUVSrNiEbXajmFPEjfmN6+wWRaB/wDgE7B
+X-Google-Smtp-Source: AGHT+IGyeBYMGLQBdDwZ1lWpcvuan3YvNcfX8WBE9Omp5M7OJ7qekVSXOf7kKkcIZstZ6T6aYUGr+A==
+X-Received: by 2002:a17:902:9a95:b0:1e4:7adf:b855 with SMTP id d9443c01a7336-1ef43e23223mr109980805ad.35.1715692665874;
+        Tue, 14 May 2024 06:17:45 -0700 (PDT)
 Received: from wedsonaf-dev.. ([50.204.89.32])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0b9d18a4sm97277335ad.56.2024.05.14.06.17.47
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0b9d18a4sm97277335ad.56.2024.05.14.06.17.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 06:17:47 -0700 (PDT)
+        Tue, 14 May 2024 06:17:45 -0700 (PDT)
 From: Wedson Almeida Filho <wedsonaf@gmail.com>
 To: Alexander Viro <viro@zeniv.linux.org.uk>,
 	Christian Brauner <brauner@kernel.org>,
@@ -63,9 +63,9 @@ Cc: Kent Overstreet <kent.overstreet@gmail.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: [RFC PATCH v2 09/30] rust: fs: generalise `File` for different file systems
-Date: Tue, 14 May 2024 10:16:50 -0300
-Message-Id: <20240514131711.379322-10-wedsonaf@gmail.com>
+Subject: [RFC PATCH v2 07/30] rust: fs: introduce `FileSystem::init_root`
+Date: Tue, 14 May 2024 10:16:48 -0300
+Message-Id: <20240514131711.379322-8-wedsonaf@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240514131711.379322-1-wedsonaf@gmail.com>
 References: <20240514131711.379322-1-wedsonaf@gmail.com>
@@ -79,159 +79,387 @@ Content-Transfer-Encoding: 8bit
 
 From: Wedson Almeida Filho <walmeida@microsoft.com>
 
-This is in preparation for allowing file operation implementations for
-different file systems.
+Allow Rust file systems to specify their root directory. Also allow them
+to create (and do cache lookups of) directory inodes. (More types of
+inodes are added in subsequent patches in the series.)
 
-Also add an unspecified file system so that users of the `File` type
-that don't care about the file system may continue to do so.
+The `inode::New` type ensures that a new inode is properly initialised
+before it is marked so. It also facilitates error paths by automatically
+marking inodes as failed if they're not properly initialised.
 
 Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
 ---
- rust/kernel/fs/file.rs  | 53 ++++++++++++++++++++++++++++-------------
- rust/kernel/fs/inode.rs |  1 -
- 2 files changed, 36 insertions(+), 18 deletions(-)
+ rust/helpers.c            |  11 ++++
+ rust/kernel/fs.rs         |  56 ++++++++-----------
+ rust/kernel/fs/inode.rs   | 111 +++++++++++++++++++++++++++++++++++++-
+ rust/kernel/fs/sb.rs      |  48 ++++++++++++++++-
+ samples/rust/rust_rofs.rs |  25 +++++++--
+ 5 files changed, 211 insertions(+), 40 deletions(-)
 
-diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-index 908e2672676f..b8386a396251 100644
---- a/rust/kernel/fs/file.rs
-+++ b/rust/kernel/fs/file.rs
-@@ -2,15 +2,18 @@
- 
- //! Files and file descriptors.
- //!
--//! C headers: [`include/linux/fs.h`](../../../../include/linux/fs.h) and
--//! [`include/linux/file.h`](../../../../include/linux/file.h)
-+//! This module allows Rust code to interact with and implement files.
-+//!
-+//! C headers: [`include/linux/fs.h`](srctree/include/linux/fs.h) and
-+//! [`include/linux/file.h`](srctree/include/linux/file.h)
- 
-+use super::{dentry::DEntry, inode::INode, FileSystem, UnspecifiedFS};
- use crate::{
-     bindings,
-     error::{code::*, Error, Result},
-     types::{ARef, AlwaysRefCounted, Opaque},
- };
--use core::ptr;
-+use core::{marker::PhantomData, ptr};
- 
- /// Flags associated with a [`File`].
- pub mod flags {
-@@ -95,6 +98,8 @@ pub mod flags {
-     pub const O_RDWR: u32 = bindings::O_RDWR;
+diff --git a/rust/helpers.c b/rust/helpers.c
+index c7fe6917251e..87301e1ace65 100644
+--- a/rust/helpers.c
++++ b/rust/helpers.c
+@@ -164,6 +164,17 @@ struct file *rust_helper_get_file(struct file *f)
  }
+ EXPORT_SYMBOL_GPL(rust_helper_get_file);
  
-+/// A file.
-+///
- /// Wraps the kernel's `struct file`.
- ///
- /// # Refcounting
-@@ -139,7 +144,7 @@ pub mod flags {
- /// * The Rust borrow-checker normally ensures this by enforcing that the `ARef<File>` from which
- ///   a `&File` is created outlives the `&File`.
- ///
--/// * Using the unsafe [`File::from_ptr`] means that it is up to the caller to ensure that the
-+/// * Using the unsafe [`File::from_raw`] means that it is up to the caller to ensure that the
- ///   `&File` only exists while the reference count is positive.
- ///
- /// * You can think of `fdget` as using an fd to look up an `ARef<File>` in the `struct
-@@ -154,20 +159,20 @@ pub mod flags {
- ///   closed.
- /// * A light refcount must be dropped before returning to userspace.
- #[repr(transparent)]
--pub struct File(Opaque<bindings::file>);
-+pub struct File<T: FileSystem + ?Sized = UnspecifiedFS>(Opaque<bindings::file>, PhantomData<T>);
++void rust_helper_i_uid_write(struct inode *inode, uid_t uid)
++{
++	i_uid_write(inode, uid);
++}
++EXPORT_SYMBOL_GPL(rust_helper_i_uid_write);
++
++void rust_helper_i_gid_write(struct inode *inode, gid_t gid)
++{
++	i_gid_write(inode, gid);
++}
++EXPORT_SYMBOL_GPL(rust_helper_i_gid_write);
  
- // SAFETY: By design, the only way to access a `File` is via an immutable reference or an `ARef`.
- // This means that the only situation in which a `File` can be accessed mutably is when the
- // refcount drops to zero and the destructor runs. It is safe for that to happen on any thread, so
- // it is ok for this type to be `Send`.
--unsafe impl Send for File {}
-+unsafe impl<T: FileSystem + ?Sized> Send for File<T> {}
+ struct dentry *rust_helper_dget(struct dentry *dentry)
+ {
+diff --git a/rust/kernel/fs.rs b/rust/kernel/fs.rs
+index 4f07da71e1ec..f32c2f89f781 100644
+--- a/rust/kernel/fs.rs
++++ b/rust/kernel/fs.rs
+@@ -9,7 +9,7 @@
+ use crate::error::{code::*, from_result, to_result, Error, Result};
+ use crate::types::Opaque;
+ use crate::{bindings, init::PinInit, str::CStr, try_pin_init, ThisModule};
+-use core::{ffi, marker::PhantomData, pin::Pin};
++use core::{ffi, marker::PhantomData, mem::ManuallyDrop, pin::Pin, ptr};
+ use macros::{pin_data, pinned_drop};
+ use sb::SuperBlock;
  
- // SAFETY: All methods defined on `File` that take `&self` are safe to call even if other threads
- // are concurrently accessing the same `struct file`, because those methods either access immutable
- // properties or have proper synchronization to ensure that such accesses are safe.
--unsafe impl Sync for File {}
-+unsafe impl<T: FileSystem + ?Sized> Sync for File<T> {}
+@@ -38,6 +38,12 @@ pub trait FileSystem {
  
--impl File {
-+impl<T: FileSystem + ?Sized> File<T> {
-     /// Constructs a new `struct file` wrapper from a file descriptor.
-     ///
-     /// The file descriptor belongs to the current process.
-@@ -187,15 +192,17 @@ pub fn fget(fd: u32) -> Result<ARef<Self>, BadFdError> {
-     ///
-     /// # Safety
-     ///
--    /// The caller must ensure that `ptr` points at a valid file and that the file's refcount is
--    /// positive for the duration of 'a.
--    pub unsafe fn from_ptr<'a>(ptr: *const bindings::file) -> &'a File {
-+    /// Callers must ensure that:
+     /// Initialises the new superblock.
+     fn fill_super(sb: &mut SuperBlock<Self>) -> Result;
++
++    /// Initialises and returns the root inode of the given superblock.
 +    ///
-+    /// * `ptr` is valid and remains so for the duration of 'a.
-+    /// * `ptr` has the correct file system type, or `T` is [`UnspecifiedFS`].
-+    pub unsafe fn from_raw<'a>(ptr: *const bindings::file) -> &'a Self {
-         // SAFETY: The caller guarantees that the pointer is not dangling and stays valid for the
-         // duration of 'a. The cast is okay because `File` is `repr(transparent)`.
-         //
-         // INVARIANT: The safety requirements guarantee that the refcount does not hit zero during
-         // 'a.
--        unsafe { &*ptr.cast() }
-+        unsafe { &*ptr.cast::<Self>() }
-     }
++    /// This is called during initialisation of a superblock after [`FileSystem::fill_super`] has
++    /// completed successfully.
++    fn init_root(sb: &SuperBlock<Self>) -> Result<dentry::Root<Self>>;
+ }
  
-     /// Returns a raw pointer to the inner C struct.
-@@ -215,20 +222,32 @@ pub fn flags(&self) -> u32 {
-         // TODO: Replace with `read_once` when available on the Rust side.
-         unsafe { core::ptr::addr_of!((*self.as_ptr()).f_flags).read_volatile() }
+ /// A file system that is unspecified.
+@@ -51,6 +57,10 @@ impl FileSystem for UnspecifiedFS {
+     fn fill_super(_: &mut SuperBlock<Self>) -> Result {
+         Err(ENOTSUPP)
      }
 +
-+    /// Returns the inode associated with the file.
-+    pub fn inode(&self) -> &INode<T> {
-+        // SAFETY: `f_inode` is an immutable field, so it's safe to read it.
-+        unsafe { INode::from_raw((*self.0.get()).f_inode) }
-+    }
-+
-+    /// Returns the dentry associated with the file.
-+    pub fn dentry(&self) -> &DEntry<T> {
-+        // SAFETY: `f_path` is an immutable field, so it's safe to read it. And will remain safe to
-+        // read while the `&self` is valid.
-+        unsafe { DEntry::from_raw((*self.0.get()).f_path.dentry) }
++    fn init_root(_: &SuperBlock<Self>) -> Result<dentry::Root<Self>> {
++        Err(ENOTSUPP)
 +    }
  }
  
- // SAFETY: The type invariants guarantee that `File` is always ref-counted. This implementation
- // makes `ARef<File>` own a normal refcount.
--unsafe impl AlwaysRefCounted for File {
-+unsafe impl<T: FileSystem + ?Sized> AlwaysRefCounted for File<T> {
-     fn inc_ref(&self) {
-         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
-         unsafe { bindings::get_file(self.as_ptr()) };
-     }
+ /// A registration of a file system.
+@@ -154,41 +164,18 @@ impl<T: FileSystem + ?Sized> Tables<T> {
  
--    unsafe fn dec_ref(obj: ptr::NonNull<File>) {
--        // SAFETY: To call this method, the caller passes us ownership of a normal refcount, so we
--        // may drop it. The cast is okay since `File` has the same representation as `struct file`.
--        unsafe { bindings::fput(obj.cast().as_ptr()) }
-+    unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-+        // SAFETY: The safety requirements guarantee that the refcount is nonzero.
-+        unsafe { bindings::fput(obj.as_ref().0.get()) }
-     }
- }
+             T::fill_super(new_sb)?;
  
+-            // The following is scaffolding code that will be removed in a subsequent patch. It is
+-            // needed to build a root dentry, otherwise core code will BUG().
+-            // SAFETY: `sb` is the superblock being initialised, it is valid for read and write.
+-            let inode = unsafe { bindings::new_inode(sb) };
+-            if inode.is_null() {
+-                return Err(ENOMEM);
+-            }
+-
+-            // SAFETY: `inode` is valid for write.
+-            unsafe { bindings::set_nlink(inode, 2) };
++            let root = T::init_root(new_sb)?;
+ 
+-            {
+-                // SAFETY: This is a newly-created inode. No other references to it exist, so it is
+-                // safe to mutably dereference it.
+-                let inode = unsafe { &mut *inode };
+-                inode.i_ino = 1;
+-                inode.i_mode = (bindings::S_IFDIR | 0o755) as _;
+-
+-                // SAFETY: `simple_dir_operations` never changes, it's safe to reference it.
+-                inode.__bindgen_anon_3.i_fop = unsafe { &bindings::simple_dir_operations };
+-
+-                // SAFETY: `simple_dir_inode_operations` never changes, it's safe to reference it.
+-                inode.i_op = unsafe { &bindings::simple_dir_inode_operations };
++            // Reject root inode if it belongs to a different superblock.
++            if !ptr::eq(root.super_block(), new_sb) {
++                return Err(EINVAL);
+             }
+ 
+-            // SAFETY: `d_make_root` requires that `inode` be valid and referenced, which is the
+-            // case for this call.
+-            //
+-            // It takes over the inode, even on failure, so we don't need to clean it up.
+-            let dentry = unsafe { bindings::d_make_root(inode) };
+-            if dentry.is_null() {
+-                return Err(ENOMEM);
+-            }
++            let dentry = ManuallyDrop::new(root).0.get();
+ 
+-            sb.s_root = dentry;
++            // SAFETY: The callback contract guarantees that `sb_ptr` is a unique pointer to a
++            // newly-created (and initialised above) superblock.
++            unsafe { (*sb_ptr).s_root = dentry };
+ 
+             Ok(0)
+         })
+@@ -253,7 +240,7 @@ fn init(module: &'static ThisModule) -> impl PinInit<Self, Error> {
+ ///
+ /// ```
+ /// # mod module_fs_sample {
+-/// use kernel::fs::{sb::SuperBlock, self};
++/// use kernel::fs::{dentry, inode::INode, sb::SuperBlock, self};
+ /// use kernel::prelude::*;
+ ///
+ /// kernel::module_fs! {
+@@ -270,6 +257,9 @@ fn init(module: &'static ThisModule) -> impl PinInit<Self, Error> {
+ ///     fn fill_super(_: &mut SuperBlock<Self>) -> Result {
+ ///         todo!()
+ ///     }
++///     fn init_root(_sb: &SuperBlock<Self>) -> Result<dentry::Root<Self>> {
++///         todo!()
++///     }
+ /// }
+ /// # }
+ /// ```
 diff --git a/rust/kernel/fs/inode.rs b/rust/kernel/fs/inode.rs
-index 4ccbb4145918..11df493314ea 100644
+index bcb9c8ce59a9..4ccbb4145918 100644
 --- a/rust/kernel/fs/inode.rs
 +++ b/rust/kernel/fs/inode.rs
-@@ -39,7 +39,6 @@ impl<T: FileSystem + ?Sized> INode<T> {
-     ///
-     /// * `ptr` is valid and remains so for the lifetime of the returned object.
-     /// * `ptr` has the correct file system type, or `T` is [`super::UnspecifiedFS`].
--    #[allow(dead_code)]
-     pub(crate) unsafe fn from_raw<'a>(ptr: *mut bindings::inode) -> &'a Self {
-         // SAFETY: The safety requirements guarantee that the cast below is ok.
-         unsafe { &*ptr.cast::<Self>() }
+@@ -7,8 +7,10 @@
+ //! C headers: [`include/linux/fs.h`](srctree/include/linux/fs.h)
+ 
+ use super::{sb::SuperBlock, FileSystem, Offset, UnspecifiedFS};
+-use crate::bindings;
+-use crate::types::{AlwaysRefCounted, Opaque};
++use crate::error::Result;
++use crate::types::{ARef, AlwaysRefCounted, Opaque};
++use crate::{bindings, block, time::Timespec};
++use core::mem::ManuallyDrop;
+ use core::{marker::PhantomData, ptr};
+ 
+ /// The number of an inode.
+@@ -76,3 +78,108 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+         unsafe { bindings::iput(obj.as_ref().0.get()) }
+     }
+ }
++
++/// An inode that is locked and hasn't been initialised yet.
++///
++/// # Invariants
++///
++/// The inode is a new one, locked, and valid for write.
++pub struct New<T: FileSystem + ?Sized>(
++    pub(crate) ptr::NonNull<bindings::inode>,
++    pub(crate) PhantomData<T>,
++);
++
++impl<T: FileSystem + ?Sized> New<T> {
++    /// Initialises the new inode with the given parameters.
++    pub fn init(mut self, params: Params) -> Result<ARef<INode<T>>> {
++        // SAFETY: This is a new inode, so it's safe to manipulate it mutably.
++        let inode = unsafe { self.0.as_mut() };
++        let mode = match params.typ {
++            Type::Dir => {
++                // SAFETY: `simple_dir_operations` never changes, it's safe to reference it.
++                inode.__bindgen_anon_3.i_fop = unsafe { &bindings::simple_dir_operations };
++
++                // SAFETY: `simple_dir_inode_operations` never changes, it's safe to reference it.
++                inode.i_op = unsafe { &bindings::simple_dir_inode_operations };
++
++                bindings::S_IFDIR
++            }
++        };
++
++        inode.i_mode = (params.mode & 0o777) | u16::try_from(mode)?;
++        inode.i_size = params.size;
++        inode.i_blocks = params.blocks;
++
++        inode.__i_ctime = params.ctime.into();
++        inode.__i_mtime = params.mtime.into();
++        inode.__i_atime = params.atime.into();
++
++        // SAFETY: inode is a new inode, so it is valid for write.
++        unsafe {
++            bindings::set_nlink(inode, params.nlink);
++            bindings::i_uid_write(inode, params.uid);
++            bindings::i_gid_write(inode, params.gid);
++            bindings::unlock_new_inode(inode);
++        }
++
++        let manual = ManuallyDrop::new(self);
++        // SAFETY: We transferred ownership of the refcount to `ARef` by preventing `drop` from
++        // being called with the `ManuallyDrop` instance created above.
++        Ok(unsafe { ARef::from_raw(manual.0.cast::<INode<T>>()) })
++    }
++}
++
++impl<T: FileSystem + ?Sized> Drop for New<T> {
++    fn drop(&mut self) {
++        // SAFETY: The new inode failed to be turned into an initialised inode, so it's safe (and
++        // in fact required) to call `iget_failed` on it.
++        unsafe { bindings::iget_failed(self.0.as_ptr()) };
++    }
++}
++
++/// The type of an inode.
++#[derive(Copy, Clone)]
++pub enum Type {
++    /// Directory type.
++    Dir,
++}
++
++/// Required inode parameters.
++///
++/// This is used when creating new inodes.
++pub struct Params {
++    /// The access mode. It's a mask that grants execute (1), write (2) and read (4) access to
++    /// everyone, the owner group, and the owner.
++    pub mode: u16,
++
++    /// Type of inode.
++    ///
++    /// Also carries additional per-type data.
++    pub typ: Type,
++
++    /// Size of the contents of the inode.
++    ///
++    /// Its maximum value is [`super::MAX_LFS_FILESIZE`].
++    pub size: Offset,
++
++    /// Number of blocks.
++    pub blocks: block::Count,
++
++    /// Number of links to the inode.
++    pub nlink: u32,
++
++    /// User id.
++    pub uid: u32,
++
++    /// Group id.
++    pub gid: u32,
++
++    /// Creation time.
++    pub ctime: Timespec,
++
++    /// Last modification time.
++    pub mtime: Timespec,
++
++    /// Last access time.
++    pub atime: Timespec,
++}
+diff --git a/rust/kernel/fs/sb.rs b/rust/kernel/fs/sb.rs
+index f48e0e2695fa..fa10f3db5593 100644
+--- a/rust/kernel/fs/sb.rs
++++ b/rust/kernel/fs/sb.rs
+@@ -6,9 +6,12 @@
+ //!
+ //! C headers: [`include/linux/fs.h`](srctree/include/linux/fs.h)
+ 
++use super::inode::{self, INode, Ino};
+ use super::FileSystem;
+-use crate::{bindings, types::Opaque};
+-use core::marker::PhantomData;
++use crate::bindings;
++use crate::error::{code::*, Result};
++use crate::types::{ARef, Either, Opaque};
++use core::{marker::PhantomData, ptr};
+ 
+ /// A file system super block.
+ ///
+@@ -60,4 +63,45 @@ pub fn set_magic(&mut self, magic: usize) -> &mut Self {
+         unsafe { (*self.0.get()).s_magic = magic as core::ffi::c_ulong };
+         self
+     }
++
++    /// Tries to get an existing inode or create a new one if it doesn't exist yet.
++    pub fn get_or_create_inode(&self, ino: Ino) -> Result<Either<ARef<INode<T>>, inode::New<T>>> {
++        // SAFETY: All superblock-related state needed by `iget_locked` is initialised by C code
++        // before calling `fill_super_callback`, or by `fill_super_callback` itself before calling
++        // `super_params`, which is the first function to see a new superblock.
++        let inode =
++            ptr::NonNull::new(unsafe { bindings::iget_locked(self.0.get(), ino) }).ok_or(ENOMEM)?;
++
++        // SAFETY: `inode` is a valid pointer returned by `iget_locked`.
++        unsafe { bindings::spin_lock(ptr::addr_of_mut!((*inode.as_ptr()).i_lock)) };
++
++        // SAFETY: `inode` is valid and was locked by the previous lock.
++        let state = unsafe { *ptr::addr_of!((*inode.as_ptr()).i_state) };
++
++        // SAFETY: `inode` is a valid pointer returned by `iget_locked`.
++        unsafe { bindings::spin_unlock(ptr::addr_of_mut!((*inode.as_ptr()).i_lock)) };
++
++        if state & u64::from(bindings::I_NEW) == 0 {
++            // The inode is cached. Just return it.
++            //
++            // SAFETY: `inode` had its refcount incremented by `iget_locked`; this increment is now
++            // owned by `ARef`.
++            Ok(Either::Left(unsafe { ARef::from_raw(inode.cast()) }))
++        } else {
++            // SAFETY: The new inode is valid but not fully initialised yet, so it's ok to create a
++            // `inode::New`.
++            Ok(Either::Right(inode::New(inode, PhantomData)))
++        }
++    }
++
++    /// Creates an inode with the given inode number.
++    ///
++    /// Fails with `EEXIST` if an inode with the given number already exists.
++    pub fn create_inode(&self, ino: Ino) -> Result<inode::New<T>> {
++        if let Either::Right(new) = self.get_or_create_inode(ino)? {
++            Ok(new)
++        } else {
++            Err(EEXIST)
++        }
++    }
+ }
+diff --git a/samples/rust/rust_rofs.rs b/samples/rust/rust_rofs.rs
+index 022addf68891..d32c4645ebe8 100644
+--- a/samples/rust/rust_rofs.rs
++++ b/samples/rust/rust_rofs.rs
+@@ -2,9 +2,9 @@
+ 
+ //! Rust read-only file system sample.
+ 
+-use kernel::fs::sb;
++use kernel::fs::{dentry, inode, sb::SuperBlock};
+ use kernel::prelude::*;
+-use kernel::{c_str, fs};
++use kernel::{c_str, fs, time::UNIX_EPOCH, types::Either};
+ 
+ kernel::module_fs! {
+     type: RoFs,
+@@ -18,8 +18,27 @@
+ impl fs::FileSystem for RoFs {
+     const NAME: &'static CStr = c_str!("rust_rofs");
+ 
+-    fn fill_super(sb: &mut sb::SuperBlock<Self>) -> Result {
++    fn fill_super(sb: &mut SuperBlock<Self>) -> Result {
+         sb.set_magic(0x52555354);
+         Ok(())
+     }
++
++    fn init_root(sb: &SuperBlock<Self>) -> Result<dentry::Root<Self>> {
++        let inode = match sb.get_or_create_inode(1)? {
++            Either::Left(existing) => existing,
++            Either::Right(new) => new.init(inode::Params {
++                typ: inode::Type::Dir,
++                mode: 0o555,
++                size: 1,
++                blocks: 1,
++                nlink: 2,
++                uid: 0,
++                gid: 0,
++                atime: UNIX_EPOCH,
++                ctime: UNIX_EPOCH,
++                mtime: UNIX_EPOCH,
++            })?,
++        };
++        dentry::Root::try_new(inode)
++    }
+ }
 -- 
 2.34.1
 
