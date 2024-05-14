@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650FB158213;
-	Tue, 14 May 2024 17:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A0117EBBD
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 17:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715706164; cv=none; b=BFv20DiZrL14nTf3LKcNATmHUSWylBJ7YBss+GRLewn21qi4FyqPE7ea+FssoqzVgyQYSIcVlMqqW7M4adI05d4jheGLiCD1KEr0BIKkYbxBqD2qxwli4B3o31dHY7VNpbPvGWznSnlLPzlvbGdZOxtp0JBDOSTiwlUvkyyKFQI=
+	t=1715706185; cv=none; b=CDZp1rLV16hY5jBYcT/d1o30MVDZnXnPRgjrxabeXEiaj62/q2RD7m48cGhsTl24ng8rsyWdkJJas3bcvYuSdHLeVa+jTWYiePq3q1nxDgBWbPhyfLHXhB0bhhzXFs+q+K7IwAvETmv1nu8jmMw8XgZbMPo9ODqH24ovz4Poedo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715706164; c=relaxed/simple;
-	bh=qfkTSjP/78j6zWhDn7n3i47GTQW7+iaS7wwXUJl6qW4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NlI9YQlM5wSRHabNtF14Zk64GpDSPy4YIU9++eu35ByAoGx3KMu5MYZyNOqIO1C6WJSNUNUNHMvmWDrbVR73m6Tks/YNqKadkNijRgBHHclKUZCKFn+Z91UqtlXUE1g3ylaUC3iRibRm6tv6utBZXyIAHY5MPN4xQJBR4lFAt1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2U6hYdU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715706185; c=relaxed/simple;
+	bh=mUMXijVvzhvQTlxk8XXuKAm6l5Awr3XyYmTCyqlqUEQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=C8CPrziMhQJMP2a2ItRxnrBzE0iz5GHeJIB6lTtZUSijWrsHwowa9ZR1FAwyguNDEsj+vYW3vRh1l4oOFuGvSBzvu1S64Zbz84hL1UhG8B/I2LkCUPpc1sIo78Te+4N0gF6lbq40SMtLVrF7BLs9Gx1KtVN759JJEWrzCoxhYAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2sEVCzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2U6hYdU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F1B3FC2BD10;
-	Tue, 14 May 2024 17:02:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2sEVCzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6009EC2BD10;
+	Tue, 14 May 2024 17:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715706164;
-	bh=qfkTSjP/78j6zWhDn7n3i47GTQW7+iaS7wwXUJl6qW4=;
+	s=k20201202; t=1715706185;
+	bh=mUMXijVvzhvQTlxk8XXuKAm6l5Awr3XyYmTCyqlqUEQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=p2U6hYdUd+hUznCnT8wrcCIOdTvh5dJi86IZKvG0oFUjQTpOVejFybpAXrv5ETn9+
-	 1QC8VGf5pRDPiEE/VAm1JV2b2j0qHRXRlAj9bynTGKxr4/63FYjBtkygs8cyYIzUDD
-	 I7Ace1AXrGHxgCohIVg7BqQTlVQOLKHPj0/WBybdaNSopdLySY0GWPGtFt6eG6jDTh
-	 CD2ZwKO1f0u+MAFzI4ox1O5Vv0vCYvYUJK3xDipE3nZ5mXa4bD0MwPkAVdpJiXOdIB
-	 1KOwP9V1ihuvESNRIT7n0W/kOqQc2n07Lc9QXnXnRONkjohy1qFZ/sewtIjttXM9NQ
-	 GUu+WWy5YEOHg==
+	b=O2sEVCzNYgedl74O6QINDffmlnCepvPbYp7B+rowmlorrLB/Y692onmB1SnpU0cOM
+	 Lwt64DjfVP8yTZ8Ic9GsF6jhy+LFbKYcpZgLYWEi++ko1xi+1YyZffYDxmBMdx2sNu
+	 DMxAB7iZEGasaaynipxxZRimBjLdFJji0sKO+89sOeWjmTO0LvNyC1MI9CmyPdGKYk
+	 JsU5z1DX7O9gkoDTY5ygBJ5paHZhlzMi7D5SX/ARGTUb65LJ+1oGRvPmiXFe9bV0IK
+	 u8WMcygHIw8TuhQTBe0cVL7Rh/8uFR9YLPjcVjgtEB/VnLdO4KfXl8mPrIPZ7A52dD
+	 gn0XeLz3o+tbQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E9FC0C43339;
-	Tue, 14 May 2024 17:02:43 +0000 (UTC)
-Subject: Re: [GIT PULL] EDAC updates for v6.10
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 55AAFC43339;
+	Tue, 14 May 2024 17:03:05 +0000 (UTC)
+Subject: Re: [GIT PULL] RAS update for v6.10-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240513091302.GAZkHZnuY3xHJWwzs-@fat_crate.local>
-References: <20240513091302.GAZkHZnuY3xHJWwzs-@fat_crate.local>
-X-PR-Tracked-List-Id: <linux-edac.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240513091302.GAZkHZnuY3xHJWwzs-@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac_updates_for_v6.10
-X-PR-Tracked-Commit-Id: e0d335077831196bffe6a634ffe385fc684192ca
+In-Reply-To: <20240513112018.GAZkH3coU6jUY3LE0s@fat_crate.local>
+References: <20240513112018.GAZkH3coU6jUY3LE0s@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240513112018.GAZkH3coU6jUY3LE0s@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip ras_core_for_v6.10_rc1
+X-PR-Tracked-Commit-Id: 108c6494bdf1dfeaefc0a506e2f471aa92fafdd6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eba77c0477312c7b614338b24a8cf533695d1257
-Message-Id: <171570616394.7410.273440332718137862.pr-tracker-bot@kernel.org>
-Date: Tue, 14 May 2024 17:02:43 +0000
+X-PR-Merge-Commit-Id: b4864f6565ab57d6418ec469330e320f77eeee95
+Message-Id: <171570618533.7410.3893366416169586811.pr-tracker-bot@kernel.org>
+Date: Tue, 14 May 2024 17:03:05 +0000
 To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-edac <linux-edac@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 13 May 2024 11:13:02 +0200:
+The pull request you sent on Mon, 13 May 2024 13:20:26 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac_updates_for_v6.10
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip ras_core_for_v6.10_rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eba77c0477312c7b614338b24a8cf533695d1257
+https://git.kernel.org/torvalds/c/b4864f6565ab57d6418ec469330e320f77eeee95
 
 Thank you!
 
