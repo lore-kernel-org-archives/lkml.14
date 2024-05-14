@@ -1,71 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CA113E88D;
-	Tue, 14 May 2024 10:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB296BFA8;
+	Tue, 14 May 2024 10:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715681616; cv=none; b=Exz7ZIm+N5XQ553W7AoWotSeOUBWWCJk+Pu6bb7JbChCPyBvUjvmocFQaMrtjBwQBxyDFKFVq3NBsRlaZa6VOzT+YBW9cbJ0lpkR7VB1BPE78ND62l48yOCTuOSN6ZkL9hVc1nHzibrE+QET37lSDdGW1TqQfPEzso8GlgBEZXI=
+	t=1715681670; cv=none; b=OhTpKZbm7xCdmvl8SzwlcyegzMK1JB+/XxD20DbBJcjF9sW7+I6QB7xW1TFzb7I5qrNqo6T5vMV3HVN9Pog64ZTZyRVR4fao5aB2TxFuQFt/c0fGpTC2NaQURP76z7sifLqcjHf4MR7ESj4KL8c1cndIPrJ/wQm0DioIlpalC4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715681616; c=relaxed/simple;
-	bh=yL094DOWhtq62H4wWeSvXEnUMe22E6zd1a/lZ+40r6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVAHnsa7O8xJv+106dv2daz97DnM+GMn4YUDz6IEsXxA25xPFwPuRjhkFhn6LWLrSr4qk9LshHTdgFS2HaONNeNrfiwT9SkdyMZCKKHC++AaROlxWeF8XmlyBzgBQfIiSZe709pvfA1cIu3S6vCZR3pqq1a/NBewluWN3C/CE+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=q8ykKTC6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715681670; c=relaxed/simple;
+	bh=AJTZYpaGAZvZ9qTcyVYkjf6UB4DVz5QNTtQh4NrqSHk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bikoC3MrnCBmifg8bBmL483PiLBCAlySlPcBpAEF/4GDaPt4I310DqZIlhO0wBkw/Kubti7nQHWgxiAar8JtNNg7d4Sr+50Ua62DhLF+H6d2xf35lCrWzM3Fe7lh7xa91Ewrpq8QNmMbeZGYrI3Yvvai4/qyX6tIRHh/jWW+fXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sLrLZOA2; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="q8ykKTC6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078A4C32781;
-	Tue, 14 May 2024 10:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715681616;
-	bh=yL094DOWhtq62H4wWeSvXEnUMe22E6zd1a/lZ+40r6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q8ykKTC6Q/q8G3qa3pg2fb+B9a/DuSZOqO+hJNM3esnSaoWWcFnVvqP/DxFn3SRBT
-	 lxzE83qxLmwZbYuM6kANJr2FsLUvZnVmxNUw9OVV4ZOI5iOUrLeFnwfiGJJlhhB0PS
-	 TGSyqPt7qHZ4iFzzih4BNmFm+SKQT9QxcRzf9Nc8=
-Date: Tue, 14 May 2024 12:12:26 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: syzbot <syzbot+9dfe490c8176301c1d06@syzkaller.appspotmail.com>
-Cc: jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, shaggy@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [jfs?] KASAN: slab-out-of-bounds Read in ea_get (2)
-Message-ID: <2024051411-malt-purse-7444@gregkh>
-References: <00000000000059b4d50617913536@google.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sLrLZOA2"
+Received: from [10.91.1.31] (unknown [149.14.240.163])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 159FA22A;
+	Tue, 14 May 2024 12:14:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1715681654;
+	bh=AJTZYpaGAZvZ9qTcyVYkjf6UB4DVz5QNTtQh4NrqSHk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sLrLZOA2CO694RBNyFaS7aT+ihrHBBoGdpMQMaByNMgcWlfR1s2e4rONXUFkFlYSN
+	 2iaAbH9rTbihLIk0fQY+qz/UwTjyb/pqNhEb1AUSJY3glGd3dl6WAX0h4X35CSbxQ+
+	 9Xa6AomL8g0r9MgmZKVT8vjG00ich9niDcwDQ6JA=
+Message-ID: <3ba30852-cb50-497e-8968-a29d0b9a1986@ideasonboard.com>
+Date: Tue, 14 May 2024 11:14:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000059b4d50617913536@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] media: ipu-bridge: fix error code in ipu_bridge_init()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bingbu Cao <bingbu.cao@intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <f468c4ac-0629-41b5-b5d1-e26f70e44800@moroto.mountain>
+ <Zj5DZ4ORVfeCZSsV@smile.fi.intel.com>
+Content-Language: en-US
+From: Dan Scally <dan.scally@ideasonboard.com>
+Autocrypt: addr=dan.scally@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <Zj5DZ4ORVfeCZSsV@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 03, 2024 at 11:51:33AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    6a71d2909427 Merge branch 'for-next/core' into for-kernelci
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17374a40980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=fca646cf17cc616b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9dfe490c8176301c1d06
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: arm64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f9a8a7180000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f932a0980000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/c77d21fa1405/disk-6a71d290.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/429fcd369816/vmlinux-6a71d290.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/d3d8a4b85112/Image-6a71d290.gz.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/ba0e4fef7b4b/mount_0.gz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9dfe490c8176301c1d06@syzkaller.appspotmail.com
+Hello
 
-Proposed fix sent here:
-	https://lore.kernel.org/r/2024051433-slider-cloning-98f9@gregkh
+On 10/05/2024 16:55, Andy Shevchenko wrote:
+> On Fri, May 10, 2024 at 06:43:31PM +0300, Dan Carpenter wrote:
+>> Return -EINVAL if "bridge->n_sensors == 0".  Don't return success.
+> LGTM, but I leave the main Q "Is it really the error case?" to the maintainers.
+> I would imagine the use case where either from the following may happen:
+> 1) the sensors are all new and not listed as supported;
+> 2) there no sensors connected for real.
+>
+> In both cases I don't see this as a critical error that we can't enumerate
+> the bridge itself.
+>
+I have no strong feelings on this really. The CIO2 driver, before the bridge was a thing, didn't 
+treat a lack of connected endpoints as an error case and still completed probe if the 
+cio2_parse_firmware() function doesn't find any connected endpoints...but perhaps it should have 
+behaved this way all along. Is there value in having the cio2 device probed, but useless? I can't 
+think of any at the moment.
+
+
+The patch contents themselves look good to me.
 
