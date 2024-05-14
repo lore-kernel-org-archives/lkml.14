@@ -1,133 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDC111711
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206EB22611;
+	Tue, 14 May 2024 07:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715671397; cv=none; b=qg2Rk15n26dPGYB21PctGBVMaKkobn7vZvsEjL5qZzp6SayvG3ba6Wrg4takfHjaTLRf7WmCSpM7+05QiZIY9pINc/dXw3siTt/eLRX8Ho2QbVCQUboRSNgU/5ufSPwLTvZ7kVHqj1oB+Wql/mH/Qnd0w+wXimSf/arOFkFmJQs=
+	t=1715671399; cv=none; b=dgp7Lng9vkMOHDPl9h14/9CEek/m/8AhF4Zgi7AoO95Tup6rqd5irGenDQDMQpHUFwjiEl/z7GIQyqydx3nEjoEYCk6HK8k3p+31fVerzbx0H5myQlSKo6DqJ13bXpr3uMkJQzwtnyRyefehN+Qnq3QkEU6AYBnXkvUVq37S+A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715671397; c=relaxed/simple;
-	bh=9MRXPzUlRAYo5pzAwRVOa5w1gi7ImIRMKYnxTgHh0GA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tH5CMxOCUb8pscdBmdVvweveEOQU2jnCAeJGBffoUiGmYYm9QpyyGVthpkTOEC+BrXNrobZEWqi9LBYJ0JwnHm+LURimbbzTRN/ngzSx4xzhb7B3GISUTVzG5/33UrZH1bGedAcREHKxGloYZabU5ea4ubbORZhdLDTy8G5pk78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jRhaniAq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715671399; c=relaxed/simple;
+	bh=r/iJwwjlTmvF5IR+bY064hfHnkla7DJQglYzNY1CROw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sRDaD4uTUnBrYL8tbF9YnCW2J3uG1oRQoGuaHL7zeGeu4uLpULe2M1DrciUuJAjrdgxSqK2Y8rosrWs6DiSX0Ot6rsh+aiaMYl4oIQG26Cjt6CMM3irOMAhFfnBZqui1QHkNuf6kkKWhsFw1I2iDHpOVBfCdNOom/RYpK2BGxgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XK1Uo2nc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jRhaniAq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715671394;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3QF2HJKGNlPys8wAxT2FA9PPh0N4R/xH1MiJB7dYGCs=;
-	b=jRhaniAqYUr8uaxUMamyibX43f84/RZCOpPZk2Lgos5V9hwK4SA6KFaUjiuklrmkg/+CFA
-	55m1OkMRo6H2nFkfHCcK6fIgIhLnoK/GfdyiFxSTYkp5qoBy/lS3cHN/FzLQtKLfSNchrM
-	DNkFc7A60XDwlx6w8ysgbEZYxofDX3s=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-295-Izvgee6_MGWnkexurWtlOA-1; Tue, 14 May 2024 03:22:58 -0400
-X-MC-Unique: Izvgee6_MGWnkexurWtlOA-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6a113df8f57so67315216d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:22:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715671378; x=1716276178;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3QF2HJKGNlPys8wAxT2FA9PPh0N4R/xH1MiJB7dYGCs=;
-        b=VVceTUyOBEAbVko/YgAtqlFrUYCZ1PYhpYyslTS4PKf15KC1cWDvMZcf613XUMr37n
-         DqMccAgu/GbUGjdK2MK1qgxRxn4FgFHnP4Wtx5Y3eVj5/2edQUImY8fOSlmyt3fb5ymA
-         eoQmynuJdCoW4RaQGk0AZlNglt/fVs9cTWYw3JZ6BXFChoQPzBsiSWsiRMvADAHABXkx
-         XT0yKyMtuWXCIT0NhBn6HhRg4Bshyr1xAsNx2B7gGxebxEfNB7yK6APeVQNLlLCiMbwN
-         tnz7zj3z7gYAw7IO9hiEFdgnQmMTf2cWg4EB9aPPNZY5wsGOfmTuYzswf+Qr9YUhoNTx
-         Dcow==
-X-Forwarded-Encrypted: i=1; AJvYcCWZjP8ltxSeHpwLLtf7SgqPQ3961RVPyLsoInRiKk3xtinDUaUxgRx7AG+sfOFuAK8aYJ3JADFfHPPTJ1o47LwwGswsTZN3uIEMO9Ro
-X-Gm-Message-State: AOJu0YxktUL5ba0UBKlKbR3Q5XHDLZ4+vRVT7cZnOb8m7iLgwk/4yVf2
-	/3zNx2N5HFi4+JoLKP7zEhqwzSeQgxZrEklYtOzAIea6wkevjuVGbf/nroTK324eknL2v6SUW/o
-	GQSZh0dZXdAlqbqZNFhXUiXTv/1m7ebU6sfI4143wgKC6SEbNcpYUlBQcE8LEvg==
-X-Received: by 2002:a05:6214:5909:b0:6a0:5a42:9626 with SMTP id 6a1803df08f44-6a1681a15e5mr141243556d6.31.1715671377734;
-        Tue, 14 May 2024 00:22:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGaEUQGOEUQFnDZDXr+zdvWksst8k/8OEPh2kWOkvqabpndfzr6LB5yQPavrrmvQuSu19lXtg==
-X-Received: by 2002:a05:6214:5909:b0:6a0:5a42:9626 with SMTP id 6a1803df08f44-6a1681a15e5mr141243316d6.31.1715671377176;
-        Tue, 14 May 2024 00:22:57 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1ccd4esm50917516d6.97.2024.05.14.00.22.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:22:56 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH v3 0/6] KVM: arm64: emulation for CTR_EL0
-Date: Tue, 14 May 2024 09:22:46 +0200
-Message-ID: <20240514072252.5657-1-sebott@redhat.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XK1Uo2nc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 80D89C4AF66;
+	Tue, 14 May 2024 07:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715671398;
+	bh=r/iJwwjlTmvF5IR+bY064hfHnkla7DJQglYzNY1CROw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=XK1Uo2ncNP1zh6y3yjqNyh46mh//XVRSQuNMISE1inNWZnWWOy1AcLXle8HcJl1cL
+	 iH0XRHBIF7We3ekhsuCpl/tQEegWvWZNuXouzjF3hVY8dnzET4918CkO8aw7dxJLjQ
+	 Mvlm/8xQMAcMnNZVkI81ISiCgcaRpzeKVr4H4qHs8RsZR+RysbCjAJ9EtpdaGV9AiS
+	 5MN0vY2VrnAXypjbF431VoT7Qrgz29i+3z45hToAVFaMc4ORnO+rM2oid6tacs0mbt
+	 BMtvpsfxl5pb7IV/qNg2qLFvhP3PvhTg0iu0ZGlOGDUP6x/+4wXeKTTDfxvYZv2/BI
+	 Z7qJal0ckf6LA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75861C04FFE;
+	Tue, 14 May 2024 07:23:18 +0000 (UTC)
+From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
+Date: Tue, 14 May 2024 10:22:51 +0300
+Subject: [PATCH v2 6/9] iio: adc: ad7173: Add ad7173_device_info names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240514-ad4111-v2-6-29be6a55efb5@analog.com>
+References: <20240514-ad4111-v2-0-29be6a55efb5@analog.com>
+In-Reply-To: <20240514-ad4111-v2-0-29be6a55efb5@analog.com>
+To: Ceclan Dumitru <dumitru.ceclan@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715671396; l=1239;
+ i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
+ bh=PqeTnj5w9/XrPfeAGecqWJITOQlmi0XSad6CyOICJio=;
+ b=5EmB4s4xRNoWeii1HzRetU0NZrVJYr0z8L4RtClGtisPJFdo5sZtmdPDFdLDUxxzYyPeA0Qio
+ ccQ28CIMpNXB0mTmg+X4S/OGoM3YwoBVgE4QS1NuSjrZFDVu11nkqeT
+X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
+ pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
+X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
+ with auth_id=140
+X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Reply-To: dumitru.ceclan@analog.com
 
-Hej folks,
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-I'm looking into supporting migration between 2 Ampere Altra (Max)
-machines (using Neoverse-N1). They are almost identical regarding
-their feature id register state except for CTR_EL0.DIC which is set
-on one machine but not the other.
+Add missing names from the device info struct for 3 models to ensure
+consistency with the rest of the models.
 
-CTR_EL0 is currently marked as invariant and migrating a VM between
-those 2 machines using qemu fails.
+Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+---
+ drivers/iio/adc/ad7173.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes RFC [0] -> V1 [1]:
- * store the emulated value per VM and not per VCPU
- * allow to change more values than just the DIC bit
- * only trap guest access to that reg when needed
- * make sure to not present the guest with an inconsistent register set
-Changes V1 -> V2 [2]:
- * implemented Marc's suggestion for keeping registers consistent while
-   not breaking userspace ABI / expectations (I hope correctly this time)
- * keep the shadowed value valid at all time
- * unify the code to setup traps
-Changes V2 -> V3:
- * rebased to kvm-arm-next (to include Olivers idreg fixes)
- * fixed VM ops trapping for non-FWB CPUs
- * fixed writable mask for CLIDR_EL1
- * re-added manual ctr validation (using arm64_check_features() had a
-   side effect with the way .reset is working for these registers)
- * added a testcase
-
-Thanks,
-Sebastian
-
-[0]: https://lore.kernel.org/all/20240318111636.10613-1-sebott@redhat.com/T/
-[1]: https://lore.kernel.org/lkml/20240405120108.11844-1-sebott@redhat.com/T/
-[2]: https://lore.kernel.org/lkml/20240426104950.7382-1-sebott@redhat.com/T/
-
-Sebastian Ott (6):
-  KVM: arm64: unify code to prepare traps
-  KVM: arm64: maintain per VM value for CTR_EL0
-  KVM: arm64: add emulation for CTR_EL0 register
-  KVM: arm64: show writable masks for feature registers
-  KVM: arm64: rename functions for invariant sys regs
-  KVM: selftests: arm64: Test writes to CTR_EL0
-
- arch/arm64/include/asm/kvm_emulate.h          |  40 +---
- arch/arm64/include/asm/kvm_host.h             |   4 +-
- arch/arm64/kvm/arm.c                          |   2 +-
- arch/arm64/kvm/sys_regs.c                     | 210 ++++++++++++++----
- .../selftests/kvm/aarch64/set_id_regs.c       |  16 ++
- 5 files changed, 197 insertions(+), 75 deletions(-)
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 1e9ba3070770..d965b66d4d5a 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -227,6 +227,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
+ 	},
+ 	[ID_AD7172_4] = {
++		.name = "ad7172-4",
+ 		.id = AD7172_4_ID,
+ 		.num_inputs = 9,
+ 		.num_channels = 8,
+@@ -272,6 +273,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
+ 	},
+ 	[ID_AD7175_8] = {
++		.name = "ad7175-8",
+ 		.id = AD7175_8_ID,
+ 		.num_inputs = 17,
+ 		.num_channels = 16,
+@@ -302,6 +304,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
+ 	},
+ 	[ID_AD7177_2] = {
++		.name = "ad7177-2",
+ 		.id = AD7177_ID,
+ 		.num_inputs = 5,
+ 		.num_channels = 4,
 
 -- 
-2.42.0
+2.43.0
+
 
