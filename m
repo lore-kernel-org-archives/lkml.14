@@ -1,167 +1,293 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2110.outbound.protection.partner.outlook.cn [139.219.17.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AB614A8F;
-	Tue, 14 May 2024 07:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.110
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715673363; cv=fail; b=FbdYz6WYhOV2+poQwaITRGoOn94ocAa/+rBUAnOcZqkqTQMEm8xuF7jqDwI12VgnZhAGWTmrUhI4D6BC5iplpVsQrRqG+HapfH76rNGrI344Vnykmwl0AQwpsk/ejE85zAWkgw0kdEyWzp+JsEFXvw8gXnqfW+BM43HedV2dpMk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715673363; c=relaxed/simple;
-	bh=RGT1pq/Lc7fDWRg+v92Tmk0gg/MiNxoA/r4Jwcdambk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SS4nd4D2zX6BBPG/O0lZcpJndajbs+S7FzJSu4Fz6f8A5YsYqoRdFY/AG/sj2yq2UuNuM6nE1p0EDWZaPqIBsiB/2ivhW9s/0PA8VDVQiTGJPXdqC2lkONlr0yNZCZ690oIqRFCmmcyc4zPYpde+zz99Ww//bLotwTgMKLhnUIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U7zJ7lQdRjnE4my57vK0e0FDK/F5cV0rkF28+R/OLMiMXpJuyBeqVcauQSFTd6FE+d9RRLy/2/pPlzlaTuQPqAY2qGhGQVziwTPN2ZCShJeSKSPmFNliHdOzVw5vyAnCljs/d12+aeHoVeQiLfIUpvL23k2j80kz4hqLFftCSWtt4dZDS4UOA1q1HEVbXnPGTTMcKx17RICuv/z5BcUawmB95afY669oLHToS1SUXRFa6bOjuUli5h0cfUAigsS+FFnvPoDaqN6nA47DTwiyBO1X1fTcp+McXDhGmhrhyAXZkLdvfjkAuEGYy494dWzvBQ4K6eK+rWTuKFvNF6fj6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RGT1pq/Lc7fDWRg+v92Tmk0gg/MiNxoA/r4Jwcdambk=;
- b=lcD+iBjxBdRmjELaTjEmRa+YBuE9qy3D/an3avIu/GfM4ZxpRz02rzqYIaypVxQBYdUezwaS9cV3nGtEXoNwJid4ZBt5ZAGSgFur++q4TZPkO+ycQhvUoSTJcWIiDIkfiHrp/VVj61FNjBDnWsuJfVZWXuy+t42k5Nmo6CZKRZHDPC0NPVu9cL496dZPRoao619fsZe3seLbUe/CKwYmk0jPEMc07zE/bJ1ByAmQUIC+QlnMs/8kKm3I8RFCymyPsn2Qs4mOFWvPz+M8VTmC9gh42rR+WVpH94UuODwhnnirgO1IkeawndQe0is2DwPaRNXW6d9A6GHjf/dIeedatA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1003.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:1::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33; Tue, 14 May
- 2024 07:40:18 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::e903:99a6:10b7:304d]) by
- NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
- with mapi id 15.20.7472.044; Tue, 14 May 2024 07:40:18 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Samuel Holland <samuel.holland@sifive.com>, Michael Turquette
-	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Conor Dooley
-	<conor@kernel.org>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Hal Feng
-	<hal.feng@starfivetech.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org"
-	<linux-clk@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject: RE: [PATCH v5 2/2] riscv: dts: starfive: visionfive-2: Fix lower rate
- of CPUfreq by setting PLL0 rate to 1.5GHz
-Thread-Topic: [PATCH v5 2/2] riscv: dts: starfive: visionfive-2: Fix lower
- rate of CPUfreq by setting PLL0 rate to 1.5GHz
-Thread-Index: AQHaoEtDhNqmQ3vYiEeZ0Ra2PPyT0rGSZqkAgAOc2gA=
-Date: Tue, 14 May 2024 07:40:18 +0000
-Message-ID:
- <NTZPR01MB0956F91D339E1012A4F5897B9FE32@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
-References: <20240507065319.274976-1-xingyu.wu@starfivetech.com>
- <20240507065319.274976-3-xingyu.wu@starfivetech.com>
- <b970012b-c078-4c8d-995d-e2789afa3e4c@sifive.com>
-In-Reply-To: <b970012b-c078-4c8d-995d-e2789afa3e4c@sifive.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NTZPR01MB0956:EE_|NTZPR01MB1003:EE_
-x-ms-office365-filtering-correlation-id: 8b47692f-cc6a-49bc-03b6-08dc73e91a60
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- x1TgGa0wAhzTmFdg/Shmgb2la/NLK8LkyCXJF4wVeht7iiMBlfRUGq08D6g3tOmPbXoTyEFGw2HBCJyKZFXaMLADxy8fX6StT+o9bWSgg/kG+6DYf+hET09k+PtddeKXx7iEHOn4tKsvZBTfuH97muCRwb3QKz7K+NF8fsc7M49+uRYcLChd1cRUsoMiA2CrkUS7Mal0zViqi88EbZyy5inOPZ+O7DAq0txgFygl7k+n6rnj6jKgZHaLKEL22Pvss8sDlc+3zBHnBWvt7mrrr7VY2u/PRTlsfeCnmdQYqExvpXzKdN+srNViRcbnWgI5s6fuZfsAUCAwW2DdpqOkrFTSlT65io/2re0pc33QeeEkjpg4I4b/UghNhyVRADrvc8ZVnEyyYrUJNHVjMVFvG0MFKeYMU+OI2dnryRZ4HVOPgeWXJqUbDJDPuqbNrckGGuE3P+/jN4fbDSdGy+OKtfwrE52dla75iapFZYUVyonlneFZ5KyyfK3N2jQKSppTu8AqJ62QqLpE03PCnU9U6CcGA4h3yIlZ4qxB6pc+vxUSPIxNELwhxI6UaHKIl/RYa8knsvhcpTUBQYJkwiYWSOAQ2V2V+9sZcCP6vB7GDpEBHpNS1XHhE6CL6WBeuty5
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(366007)(41320700004)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?aGtDUTFQVzJTcEsyN1RaV2QxaE9nOGJnMnR2bjVxVUphYlNDNUJPanU4RkxN?=
- =?utf-8?B?YVorM3N2UjRudXdHRVRESjQ2WWhQV1prSnFpQU9jWUtRYVY0REkrRytJSlZY?=
- =?utf-8?B?MFhScnFpS2VoelFzMWQxdi9BZ3d4SWVLQVI2cGN5TEtwMzRxTE9FRlB6d016?=
- =?utf-8?B?NU5vQnlwVmF0UlN1UzMxb05FeUJ1bWF3QUF0NmQvUGFkRlNxQTdhMW1ybHFU?=
- =?utf-8?B?MzBIeXBBemIzbzdDLzA1elhyR3RocEp6dE5YeTkzTkRXM2tqSEg1WXkzMmVS?=
- =?utf-8?B?TitqNlR1bG5xZDh1dFNDRVdnTjZUczA3cUNaZmlIZVlzU0s3anQwYktzVmNQ?=
- =?utf-8?B?MEJrQlBBTHhWTDBXZkg2U0dzL1lOMC9SWDZ1cnhlb3dRY3FtTVJFdW1LN3l1?=
- =?utf-8?B?NGpkajVpekdvYnVjS24vUzJUSmQwWWlXNS9CekE1NUZyK242c3FtZnJ3L0h3?=
- =?utf-8?B?Y0NQVzVmU1R4bDh4bkxuZmVvQjVTcE5kQUw2YURySkJEdEFueTNTSFRxdjZ2?=
- =?utf-8?B?bjNKNU1ZeXlOMVBKNEhZaWw1SUlCcDZidFRsbDJJS3NBMHFDMkZibVVyWGx0?=
- =?utf-8?B?UGhvMXhzOGoybGxjYlZtVlNsSStQOVNncHNrZWNJRlVUMmRuOFpBQ1ZGR1NH?=
- =?utf-8?B?V21UdDZrVHR6N0VBYU8ySUNxRGxXeXdjVkdJS25WSGYvOTU4MFlPRy9qYVZo?=
- =?utf-8?B?ckNrK0RmOFJZQmJycVFwZzVHNDF5UmNXMnlldmcyNS9iR3NEclh4Zk9sNDF1?=
- =?utf-8?B?Y09VNXNrd2VtY1JQeW96c3E3dkQwT05sSDQ5ZEQxOFhzZzFqMWRNb3hPeFFj?=
- =?utf-8?B?Q2M3cCtJWTFUamJQU2w1NEcwVTFDaU44S0NHRFlDbmZUK3dZR1IrOGxKMDE1?=
- =?utf-8?B?SXBEUUpXb2dtMGxPR09OdVA3NkJ4bG1rQ050cW1zbUNOQ2szZ3B1dHFKZUFF?=
- =?utf-8?B?M2M0MHNhakErY1VzVnpmNEhhUUNIV2k5NkpXWFl6dEJ2SXdBamoxdkJNcTdC?=
- =?utf-8?B?V2xDbGZuRWtqdHdWdnk1SittZ1U4RkRBWVhXWm9ZeUd4c2F5ZElDYmJDdEw2?=
- =?utf-8?B?NDcrQlgxSFZ0QlRhNjRKVUtwbjZZRmZLWDVoZE05YTNVSE5uaGlRLy9lTkMv?=
- =?utf-8?B?R1RleFFWbmdhV242eEZNUUs2bEpzcUlET2l1UFZtUzkwNXdsTmtJQkZWK1dk?=
- =?utf-8?B?a3NWOHdyQXlGQ2F2a3Jybm9Tam9ERERZNVlybkRqcW9kVHFyRDBrWW5WbEl2?=
- =?utf-8?B?RmdlV2JlSzR4a3B3aGNORG50Tk50VC91N3k1Vm53L3RJQkI1eDc3cENtR1RQ?=
- =?utf-8?B?L2lBaTBsUno0YVdxQXBoSHZJMjRzUUxMdEdYUjVUWDJaUHZjTVZUL3Nkdk92?=
- =?utf-8?B?c1NvMWtSTm83QWZYTlVQWTZEMEZ0MDJ3RWhtMEREOURPSWxWV2V1Mjg2aGhF?=
- =?utf-8?B?R0JZTVhRN3E4azhReXl3WEhPR2QrZ1NGUDRDSVU5SWZ2TW1vNU53UHVzWEVT?=
- =?utf-8?B?UkRCZlFFd0hndTNxZzBJTDBONjZIb2psQmhDc0VwSnBKQVNUZmw2dnhveERL?=
- =?utf-8?B?Z3dCZ2lFOVVmUkRBUDR5V1FoNWZSbU9IWkZBZ1ZXRDVUMHpCUVFOeXBCZjM5?=
- =?utf-8?B?aUp6cFlJTlhpWWMweDBuZUg3cDZIV0ZmU2RTTjlSN0ZSVzlaSnp6ZjVKN0hK?=
- =?utf-8?B?ZnZzZTloYkdMSGhvdXhoQ1JzNVRuOGEwU2kwclg0VnpVcEcvS3Bvcjh2QTgr?=
- =?utf-8?B?U2VCVzk2Sm5yNTZ1NFA4S0FWQVk0YzFGL2w5K0V1VmtpR0FEeGxyNng3UldR?=
- =?utf-8?B?M2lGQ2xndzN2amtPcEZ5dDVNNXZJSDYrNkZZZVJmVXBhKzFOZlh0VDRTWGJx?=
- =?utf-8?B?TWZnbjdOdHJGUTlNQ2hXNlJtaEw1MXVvcnUyWGNMajViU2pWcU44WGIyZG93?=
- =?utf-8?B?Nll2c0x4TGdLQ3hNZFBYazc0OHQrOTQ4TFJTMjJtV3pYYzhiUHRrRUJrZjdD?=
- =?utf-8?B?SlBTdlhuV3dqRTRMWGc5VTc4OU96TE5KcHRFQnpralhCSkgwbXF1NG9vYStz?=
- =?utf-8?B?ajg4ZEh1NjFDbzNQQlJBQUFlODhnQ3JEMHczMzN2Y3c5eXJMRm5GUlkrWnht?=
- =?utf-8?Q?VTE60bZZeenTBkbbmA5V7rnDC?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392BD125A9
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715673401; cv=none; b=Uq3DHEreFuz1+KEyR/W3jyuB/wBT4OqjX6zjUrV6z/3cG3y43jqR3Ub44DLY+Lu2wBrlaXQjv1p1NOrdFe8Ki/oPYDOfGYCvMYsqK44lACyQXXqHLnnaoKJJC0nJ7qegGCqrk3oul/QBFE4CR1W0aK7K29fp8KsA2/AUMfnthdY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715673401; c=relaxed/simple;
+	bh=wGSRt3if0X9kZ/HrVq/Ne0TEuyWI+bHUBEXOAVzB/s0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f4VTJQROGTrpaIDX6580Q5GI2zpEZuxNsisWmdI5MV7Er40SXeWtaDrXPSGWY5kKeK2dj//NgYQfcKIRUQoA39MXpA3jzvcL1So9i3zVNMXrYpbBV7NhhZg0VDPMUKT3nSTwABOGmU3IgFiOdUaioH4qVmQsbNkbAW2ydgObPDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aUxqIK1N; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aUxqIK1N"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52232d0e5ceso3985698e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715673397; x=1716278197; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uza+DRQEYzKLrkq1gsfl6buXfasHa8vc5/WNhhyABXo=;
+        b=aUxqIK1NA2YxaSiRs2zfhua8VDrnlB8a98MKHXsLQ8yVTW0Xi1FWwvTfvtqqjwO4jk
+         ubXGqwx1CMoo48E/z+9ppzVulO988KrxA4+qT1fXs8PvdReqjuw7QqoK4YegjG1IqE3m
+         czDf5IbflZBA5lFoV2mscBuFFR4Yb9hT0WUpzL8U0mVvgXH382lhQ51SCD7JZnn1H3hG
+         aPdwIrlRqYqevd6idppXB98u5/bZqkHSlGEglRI4LHqPvSJCT0b8XsysPYwmDF9W4NCa
+         lL4vMQugNUE0aHUxI4OczPnRadsGb1/Zf8Vsb7qKLr5x4uvLBIZJvPuSuswo2q0QKwWD
+         2RZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715673397; x=1716278197;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uza+DRQEYzKLrkq1gsfl6buXfasHa8vc5/WNhhyABXo=;
+        b=jR05qdcckRVQw/3mTUcBrnvDk1h8URvmvR+IBAN1FdOtgBwm1EtmNmdum4j3wCdKVu
+         XyF0ipneZseV1v0zK626/DZHEUGVMjUm4Pf5I0RMTU70dlovw6KvwPSqAXaYU0TbPCFR
+         W5iJA3oFMeOQJbuEgJhA/urTnkh2VyelFOrk8TezfXcAUDl2X0qzcJGlcVRnzb2Y93W6
+         4sCawc86okabA/gq+aBoQk9besdGcURnsRIJzkvULnfS4i0wCogMQ3kxxwWfGZSDrhov
+         9pYu4xqvFuzciVQaOgi36y7SXQaGgBcOqPwCpHqzvI2HdEmvQpa/rsBQpcTMRR8EFQZ3
+         l3kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcLy7XuzEuqke6KmRbZarMkqhWbXtZPSZuXi2FlXZURfNtGCt+Ue4s5MFqzK5MGlX1o6h649IEqPjz3KyWVDzbHafbh18ejN8ouBYn
+X-Gm-Message-State: AOJu0YwNswqtOmROnTYjARnY+H0k8FnR5bMbJRgYVw2WrU/VgxSTlGeq
+	2QtLp4Jr0DQCXud9aEOojYDTDOue1Fb5qWqUk1M4uJ5ysXO/hx7kLZcDr1L5BOg=
+X-Google-Smtp-Source: AGHT+IHesTPiCLOrFGmj/XeJY8txNyCoHRBfg4rInYPaTIZWhF0vQM5h4nqBOehbNTcISungq1+O7w==
+X-Received: by 2002:a05:6512:ba7:b0:51a:e21c:109c with SMTP id 2adb3069b0e04-5220fb7741dmr10969488e87.14.1715673397323;
+        Tue, 14 May 2024 00:56:37 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d8da1sm2039100e87.233.2024.05.14.00.56.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 00:56:36 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 14 May 2024 10:56:36 +0300
+Subject: [PATCH] Revert "drm/msm/dpu: drop
+ dpu_encoder_phys_ops.atomic_mode_set"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b47692f-cc6a-49bc-03b6-08dc73e91a60
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2024 07:40:18.6302
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H9mowPSfD0u+N1lxCW7w93Br8YDdk9RK/TL2o/YJ20NjiZiftcuYlgshyd3vWYN751uubTuLQSJYYS1KmL0yulvVjveZo8hUuZy46EBnLIg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1003
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240514-dpu-revert-ams-v1-1-b13623d6cd5f@linaro.org>
+X-B4-Tracking: v=1; b=H4sIADMZQ2YC/x2MQQqAIBAAvyJ7bkHFoPpKdDDdag+ZaEUg/T3pO
+ DAzBTIlpgyDKJDo5sxHqKAaAW6zYSVkXxm01Ea2yqCPF1aR0ol2z9gbJe3sFJHpoEYx0cLPPxy
+ n9/0Ay+O6hGAAAAA=
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9165;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=wGSRt3if0X9kZ/HrVq/Ne0TEuyWI+bHUBEXOAVzB/s0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmQxk0a2SxIbI7dBbA9fHx50oakngD5BMVk4a0R
+ wL8deRB19SJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkMZNAAKCRCLPIo+Aiko
+ 1TkDCACaT3qZx+22q1Gtb9GUurVjUlraTv3WBRiAzomJ9LA7qxEpNv8wVPtMauouhCRQmWnrfP8
+ qJJxpR6NxW4pi4mmGif1rq/Hza6uz2Mw6FEc8iYoFVoKd2oMw8USG36rh4utp2eX120v1RL/1vy
+ rYmhb+FnfOvY22HEB76t2h0XvmrRKlXC98HcBEz3uhQBFf2jbMXktjJa53uEPj0UN470zFk1QFc
+ xH1In87JRr5W34bw1YG2AITaLxlh7NHBImw8hsEnN7RTkXtnVxBkkq+0BliIwox1V2g/ZEvy6xq
+ mgE/qFjJxYo4gfE/VbriaEaSTUJ3mvFaLNChjswsgLwXTtFr
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-T24gMTIvMDUvMjAyNCAwMjo0NywgU2FtdWVsIEhvbGxhbmQgd3JvdGU6DQo+IA0KPiBPbiAyMDI0
-LTA1LTA3IDE6NTMgQU0sIFhpbmd5dSBXdSB3cm90ZToNCj4gPiBDUFVmcmVxIHN1cHBvcnRzIDQg
-Y3B1IGZyZXF1ZW5jeSBsb2FkcyBvbiAzNzUvNTAwLzc1MC8xNTAwTUh6Lg0KPiA+IEJ1dCBub3cg
-UExMMCByYXRlIGlzIDFHSHogYW5kIHRoZSBjcHUgZnJlcXVlbmN5IGxvYWRzIGJlY29tZQ0KPiA+
-IDMzMy81MDAvNTAwLzEwMDBNSHogaW4gZmFjdC4NCj4gPg0KPiA+IFRoZSBQTEwwIHJhdGUgc2hv
-dWxkIGJlIGRlZmF1bHQgc2V0IHRvIDEuNUdIeiBhbmQgc2V0IHRoZSBjcHVfY29yZQ0KPiA+IHJh
-dGUgdG8gNTAwTUh6IGluIHNhZmUuDQo+IAkNCj4gQ2FuIHRoaXMgYmUgYWNjb21wbGlzaGVkIGJ5
-IGluc3RlYWQgc2V0dGluZyB0aGUgQ0xLX1NFVF9SQVRFX1BBUkVOVCBmbGFnIG9uDQo+IHRoZSBD
-UFVfQ09SRSBjbG9jaz8gVGhhdCB3YXkgUExMMCBpcyBhdXRvbWF0aWNhbGx5IHNldCB3aGVuIGNw
-dWZyZXEgdHJpZXMgdG8NCj4gY2hhbmdlIHRoZSBDUFUgY29yZSBmcmVxdWVuY3kuIFRoZW4gdGhl
-cmUgaXMgbm8gRFQgY2hhbmdlIGFuZCBubyBjb21wYXRpYmlsaXR5DQo+IGlzc3VlLg0KPiANCj4g
-UmVnYXJkcywNCj4gU2FtdWVsDQoNClRoYW5rcyBmb3IgeW91ciBhZHZpY2UuIEJ1dCBjcHVmcmVx
-IHRyaWVzIHRvIGNoYW5nZSB0aGUgQ1BVIGNvcmUgcmF0ZSBhbmQgYWxzbw0KdGhlIFBMTDAgcmF0
-ZSB3aXRoIHRoZSBmbGFnIG9mIENMS19TRVRfUkFURV9QQVJFTlQgYW5kIHRoZSBQTEwwIHdpbGwg
-YmUNCmNoYW5nZWQgZnJlcXVlbnRseS4gSSB0aGluayBpdCBnb2VzIGFnYWluc3Qgb3VyIGludGVu
-dGlvbiBhbmQgdGhlIFBMTDAgcmF0ZSBzaG91bGQNCmJlIGZpeGVkIG9yIHJhcmVseSBjaGFuZ2Vk
-LiBUaGlzIGhlbHBzIHRvIHN0YWJpbGl6ZSB0aGUgc3lzdGVtLg0KDQpCZXN0IHJlZ2FyZHMsDQpY
-aW5neXUgV3UNCg0KPiANCj4gPiBGaXhlczogZTJjNTEwZDZkNjMwICgicmlzY3Y6IGR0czogc3Rh
-cmZpdmU6IEFkZCBjcHUgc2NhbGluZyBmb3IgSkg3MTEwDQo+ID4gU29DIikNCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBYaW5neXUgV3UgPHhpbmd5dS53dUBzdGFyZml2ZXRlY2guY29tPg0KPiA+IC0tLQ0K
-PiA+ICAuLi4vYm9vdC9kdHMvc3RhcmZpdmUvamg3MTEwLXN0YXJmaXZlLXZpc2lvbmZpdmUtMi5k
-dHNpICAgICB8IDYgKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL2FyY2gvcmlzY3YvYm9vdC9kdHMvc3RhcmZpdmUv
-amg3MTEwLXN0YXJmaXZlLXZpc2lvbmZpdmUtMi5kdHNpDQo+ID4gYi9hcmNoL3Jpc2N2L2Jvb3Qv
-ZHRzL3N0YXJmaXZlL2poNzExMC1zdGFyZml2ZS12aXNpb25maXZlLTIuZHRzaQ0KPiA+IGluZGV4
-IDQ1YjU4YjZmM2RmOC4uMjg5ODFiMjY3ZGU0IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcmlzY3Yv
-Ym9vdC9kdHMvc3RhcmZpdmUvamg3MTEwLXN0YXJmaXZlLXZpc2lvbmZpdmUtMi5kdHNpDQo+ID4g
-KysrIGIvYXJjaC9yaXNjdi9ib290L2R0cy9zdGFyZml2ZS9qaDcxMTAtc3RhcmZpdmUtdmlzaW9u
-Zml2ZS0yLmR0c2kNCj4gPiBAQCAtMzkwLDYgKzM5MCwxMiBAQCBzcGlfZGV2MDogc3BpQDAgew0K
-PiA+ICAJfTsNCj4gPiAgfTsNCj4gPg0KPiA+ICsmc3lzY3JnIHsNCj4gPiArCWFzc2lnbmVkLWNs
-b2NrcyA9IDwmc3lzY3JnIEpINzExMF9TWVNDTEtfQ1BVX0NPUkU+LA0KPiA+ICsJCQkgIDwmcGxs
-Y2xrIEpINzExMF9QTExDTEtfUExMMF9PVVQ+Ow0KPiA+ICsJYXNzaWduZWQtY2xvY2stcmF0ZXMg
-PSA8NTAwMDAwMDAwPiwgPDE1MDAwMDAwMDA+OyB9Ow0KPiA+ICsNCj4gPiAgJnN5c2dwaW8gew0K
-PiA+ICAJaTJjMF9waW5zOiBpMmMwLTAgew0KPiA+ICAJCWkyYy1waW5zIHsNCg0K
+In the DPU driver blank IRQ handling is called from a vblank worker and
+can happen outside of the irq_enable / irq_disable pair. Revert commit
+d13f638c9b88 ("drm/msm/dpu: drop dpu_encoder_phys_ops.atomic_mode_set")
+to fix vblank IRQ assignment for CMD DSI panels.
+
+Fixes: d13f638c9b88 ("drm/msm/dpu: drop dpu_encoder_phys_ops.atomic_mode_set")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  2 ++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |  5 ++++
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   | 32 ++++++++++++----------
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   | 13 +++++++--
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    | 11 +++++++-
+ 5 files changed, 46 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 119f3ea50a7c..a7d8ecf3f5be 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1200,6 +1200,8 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
+ 		phys->hw_ctl = to_dpu_hw_ctl(hw_ctl[i]);
+ 
+ 		phys->cached_mode = crtc_state->adjusted_mode;
++		if (phys->ops.atomic_mode_set)
++			phys->ops.atomic_mode_set(phys, crtc_state, conn_state);
+ 	}
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+index 002e89cc1705..30470cd15a48 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
+@@ -69,6 +69,8 @@ struct dpu_encoder_phys;
+  * @is_master:			Whether this phys_enc is the current master
+  *				encoder. Can be switched at enable time. Based
+  *				on split_role and current mode (CMD/VID).
++ * @atomic_mode_set:		DRM Call. Set a DRM mode.
++ *				This likely caches the mode, for use at enable.
+  * @enable:			DRM Call. Enable a DRM mode.
+  * @disable:			DRM Call. Disable mode.
+  * @control_vblank_irq		Register/Deregister for VBLANK IRQ
+@@ -93,6 +95,9 @@ struct dpu_encoder_phys;
+ struct dpu_encoder_phys_ops {
+ 	void (*prepare_commit)(struct dpu_encoder_phys *encoder);
+ 	bool (*is_master)(struct dpu_encoder_phys *encoder);
++	void (*atomic_mode_set)(struct dpu_encoder_phys *encoder,
++			struct drm_crtc_state *crtc_state,
++			struct drm_connector_state *conn_state);
+ 	void (*enable)(struct dpu_encoder_phys *encoder);
+ 	void (*disable)(struct dpu_encoder_phys *encoder);
+ 	int (*control_vblank_irq)(struct dpu_encoder_phys *enc, bool enable);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+index 489be1c0c704..95cd39b49668 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+@@ -142,6 +142,23 @@ static void dpu_encoder_phys_cmd_underrun_irq(void *arg)
+ 	dpu_encoder_underrun_callback(phys_enc->parent, phys_enc);
+ }
+ 
++static void dpu_encoder_phys_cmd_atomic_mode_set(
++		struct dpu_encoder_phys *phys_enc,
++		struct drm_crtc_state *crtc_state,
++		struct drm_connector_state *conn_state)
++{
++	phys_enc->irq[INTR_IDX_CTL_START] = phys_enc->hw_ctl->caps->intr_start;
++
++	phys_enc->irq[INTR_IDX_PINGPONG] = phys_enc->hw_pp->caps->intr_done;
++
++	if (phys_enc->has_intf_te)
++		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_intf->cap->intr_tear_rd_ptr;
++	else
++		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_pp->caps->intr_rdptr;
++
++	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
++}
++
+ static int _dpu_encoder_phys_cmd_handle_ppdone_timeout(
+ 		struct dpu_encoder_phys *phys_enc)
+ {
+@@ -280,14 +297,6 @@ static void dpu_encoder_phys_cmd_irq_enable(struct dpu_encoder_phys *phys_enc)
+ 					  phys_enc->hw_pp->idx - PINGPONG_0,
+ 					  phys_enc->vblank_refcount);
+ 
+-	phys_enc->irq[INTR_IDX_CTL_START] = phys_enc->hw_ctl->caps->intr_start;
+-	phys_enc->irq[INTR_IDX_PINGPONG] = phys_enc->hw_pp->caps->intr_done;
+-
+-	if (phys_enc->has_intf_te)
+-		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_intf->cap->intr_tear_rd_ptr;
+-	else
+-		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_pp->caps->intr_rdptr;
+-
+ 	dpu_core_irq_register_callback(phys_enc->dpu_kms,
+ 				       phys_enc->irq[INTR_IDX_PINGPONG],
+ 				       dpu_encoder_phys_cmd_pp_tx_done_irq,
+@@ -318,10 +327,6 @@ static void dpu_encoder_phys_cmd_irq_disable(struct dpu_encoder_phys *phys_enc)
+ 	dpu_core_irq_unregister_callback(phys_enc->dpu_kms, phys_enc->irq[INTR_IDX_UNDERRUN]);
+ 	dpu_encoder_phys_cmd_control_vblank_irq(phys_enc, false);
+ 	dpu_core_irq_unregister_callback(phys_enc->dpu_kms, phys_enc->irq[INTR_IDX_PINGPONG]);
+-
+-	phys_enc->irq[INTR_IDX_CTL_START] = 0;
+-	phys_enc->irq[INTR_IDX_PINGPONG] = 0;
+-	phys_enc->irq[INTR_IDX_RDPTR] = 0;
+ }
+ 
+ static void dpu_encoder_phys_cmd_tearcheck_config(
+@@ -698,6 +703,7 @@ static void dpu_encoder_phys_cmd_init_ops(
+ 		struct dpu_encoder_phys_ops *ops)
+ {
+ 	ops->is_master = dpu_encoder_phys_cmd_is_master;
++	ops->atomic_mode_set = dpu_encoder_phys_cmd_atomic_mode_set;
+ 	ops->enable = dpu_encoder_phys_cmd_enable;
+ 	ops->disable = dpu_encoder_phys_cmd_disable;
+ 	ops->control_vblank_irq = dpu_encoder_phys_cmd_control_vblank_irq;
+@@ -736,8 +742,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_cmd_init(struct drm_device *dev,
+ 
+ 	dpu_encoder_phys_cmd_init_ops(&phys_enc->ops);
+ 	phys_enc->intf_mode = INTF_MODE_CMD;
+-	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
+-
+ 	cmd_enc->stream_sel = 0;
+ 
+ 	if (!phys_enc->hw_intf) {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+index ef69c2f408c3..636a97432d51 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+@@ -356,6 +356,16 @@ static bool dpu_encoder_phys_vid_needs_single_flush(
+ 	return phys_enc->split_role != ENC_ROLE_SOLO;
+ }
+ 
++static void dpu_encoder_phys_vid_atomic_mode_set(
++		struct dpu_encoder_phys *phys_enc,
++		struct drm_crtc_state *crtc_state,
++		struct drm_connector_state *conn_state)
++{
++	phys_enc->irq[INTR_IDX_VSYNC] = phys_enc->hw_intf->cap->intr_vsync;
++
++	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
++}
++
+ static int dpu_encoder_phys_vid_control_vblank_irq(
+ 		struct dpu_encoder_phys *phys_enc,
+ 		bool enable)
+@@ -699,6 +709,7 @@ static int dpu_encoder_phys_vid_get_frame_count(
+ static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
+ {
+ 	ops->is_master = dpu_encoder_phys_vid_is_master;
++	ops->atomic_mode_set = dpu_encoder_phys_vid_atomic_mode_set;
+ 	ops->enable = dpu_encoder_phys_vid_enable;
+ 	ops->disable = dpu_encoder_phys_vid_disable;
+ 	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
+@@ -737,8 +748,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_vid_init(struct drm_device *dev,
+ 
+ 	dpu_encoder_phys_vid_init_ops(&phys_enc->ops);
+ 	phys_enc->intf_mode = INTF_MODE_VIDEO;
+-	phys_enc->irq[INTR_IDX_VSYNC] = phys_enc->hw_intf->cap->intr_vsync;
+-	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
+ 
+ 	DPU_DEBUG_VIDENC(phys_enc, "created intf idx:%d\n", p->hw_intf->idx);
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
+index d3ea91c1d7d2..356dca5e5ea9 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
+@@ -404,6 +404,15 @@ static void dpu_encoder_phys_wb_irq_disable(struct dpu_encoder_phys *phys)
+ 		dpu_core_irq_unregister_callback(phys->dpu_kms, phys->irq[INTR_IDX_WB_DONE]);
+ }
+ 
++static void dpu_encoder_phys_wb_atomic_mode_set(
++		struct dpu_encoder_phys *phys_enc,
++		struct drm_crtc_state *crtc_state,
++		struct drm_connector_state *conn_state)
++{
++
++	phys_enc->irq[INTR_IDX_WB_DONE] = phys_enc->hw_wb->caps->intr_wb_done;
++}
++
+ static void _dpu_encoder_phys_wb_handle_wbdone_timeout(
+ 		struct dpu_encoder_phys *phys_enc)
+ {
+@@ -640,6 +649,7 @@ static bool dpu_encoder_phys_wb_is_valid_for_commit(struct dpu_encoder_phys *phy
+ static void dpu_encoder_phys_wb_init_ops(struct dpu_encoder_phys_ops *ops)
+ {
+ 	ops->is_master = dpu_encoder_phys_wb_is_master;
++	ops->atomic_mode_set = dpu_encoder_phys_wb_atomic_mode_set;
+ 	ops->enable = dpu_encoder_phys_wb_enable;
+ 	ops->disable = dpu_encoder_phys_wb_disable;
+ 	ops->wait_for_commit_done = dpu_encoder_phys_wb_wait_for_commit_done;
+@@ -685,7 +695,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_wb_init(struct drm_device *dev,
+ 
+ 	dpu_encoder_phys_wb_init_ops(&phys_enc->ops);
+ 	phys_enc->intf_mode = INTF_MODE_WB_LINE;
+-	phys_enc->irq[INTR_IDX_WB_DONE] = phys_enc->hw_wb->caps->intr_wb_done;
+ 
+ 	atomic_set(&wb_enc->wbirq_refcount, 0);
+ 
+
+---
+base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
+change-id: 20240514-dpu-revert-ams-9410abc1ee48
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
