@@ -1,139 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1F9144D25
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 14:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46CD1448FF;
+	Tue, 14 May 2024 14:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715695509; cv=none; b=V+scSQC4DH0nkwln4WbInb/1yAQJMlYI7XyH5rfcYrInOafdAL2VsQcnEoO/YqlknSGaSzmiY+luBhwEJANRYqPK4ovS7sDk32l3KvJ5TgtfZsbNH2jOFRyE7iazztf7h1Xe6R5K5nY4aq7OtVy7LD0pjlJdjzwRjjEgfsXZ6DA=
+	t=1715695511; cv=none; b=DXVHJ+Vjg8wmIaGjaFmxh3glqLIMnSRGFNs1ogx4OxXcnM/uxysJ/3nyMVk7vtiNb3o2/k/QImnz/Dvo5sI20YUUGJ+shQtEkKcebedgWDMYm99XYXPd5enBAU2mNIKT0vgOQl1pl/ZOAf+26F2nEBqu2R6SjacpWI9gEhLBlxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715695509; c=relaxed/simple;
-	bh=oxMeKBSMHMQ7nR2cm5Yl3ZY7RY3tugjaWnxRJMQRo0c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PNxx9BzRSeq5yioWPdcc9iKAg8l0SYwdmX8TjtIjGCcEAUU2xZZicTwDdMtg898qhpu7ruAlsE0KqhDnHzJ9Vmg3uaUKkXR9arhTUq/ukWVbf+qgKOKXReaaAsC0FbkTiHJJKYbTDKoorAruJGB0PK10iQx5Wj19+W3VFG6lAys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYtSJeVM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715695511; c=relaxed/simple;
+	bh=pVor6w+gfuEq7q5W83Q0sFl6sZ7JG1Fvdsh5vj80d5Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VCIWJkkvOMhT0EBi/Ixc5a+Prk3j9RMLvH4yWvrIBHilk9IEz0ZCudEG8VHt7oFYWhIo3O4n+zNmWrVvQgDAy8Llk1IfevvngCXIe7sOMBuJvZ0PMJQqRjDyDSU4E+D8VPU6T0Yu6y5muUrRHJSJx661003ogQpW/QmTEOlCCKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fnpraNzr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYtSJeVM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BECB4C32781;
-	Tue, 14 May 2024 14:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715695509;
-	bh=oxMeKBSMHMQ7nR2cm5Yl3ZY7RY3tugjaWnxRJMQRo0c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rYtSJeVMCifMMvCoAZTlKZARdYfjyGb+3HXKoeh+9gLb/UkaJfTd3fdRakqc0wiiH
-	 xli61NfPUMpvvGx5MC2NpP4aFHaN7qIflyQLsdsGYfftEKuMMD4ZDdwSMxKUopldg2
-	 epoHMB0A0f3xCqgRT8XnILBwq4c/Qcf+I9hdtDNmbMUoN6M+E4TfZeNPnRXQe7VCEi
-	 mVVd21lXjUiNzuH2g3rQ4vZwbs8BiVsB38K+pOqnMbn3sV+WHj2eBwtH9deDcFJFka
-	 VMVpGHW1o/zEaD/fzjuO4Rbeu3m9Kilyv7C53dWfpR7M8Aa7K8gCfy9ZFkXpBtkQwB
-	 u0bIh5mMUxCRg==
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	David Hildenbrand <david@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-riscv@lists.infradead.org
-Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Andrew Bresticker <abrestic@rivosinc.com>,
-	Chethan Seshadri <Chethan.Seshadri@catalinasystems.io>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Santosh Mamila <santosh.mamila@catalinasystems.io>,
-	Sivakumar Munnangi <siva.munnangi@catalinasystems.io>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	virtualization@lists.linux-foundation.org
-Subject: [PATCH v2 1/8] riscv: mm: Pre-allocate vmemmap/direct map PGD entries
-Date: Tue, 14 May 2024 16:04:39 +0200
-Message-Id: <20240514140446.538622-2-bjorn@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240514140446.538622-1-bjorn@kernel.org>
-References: <20240514140446.538622-1-bjorn@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fnpraNzr"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44E8XmbZ003244;
+	Tue, 14 May 2024 14:05:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=6yAcoOMDxonW31p5ndUhwbJgh4bOiimX+ZhHTZ+gqI0=; b=fn
+	praNzrrVgLivM/MaT7SR6l0AEwEhIH7+c8XC+g/LYsLB7z+SR5+y0CbBB+SpVU/o
+	7tvu6dr+LuR/nisMea24vaQb3fylXN9Fy+3n5m1/vU9tydNxHQAuN/ySaPacZyBX
+	8i2uD0BgFwkGX4QyTxeKPoRg9W5wU7yoa7ZPNy0aQN4vjPjZTbCVmHTuOrPiJZib
+	djHGvtLNCNaMOhL7Aj4P31HFqtSnAwGnVfVPSJsXKJW02eCUMrF1vEvKEAacnur4
+	OOHmFQMUVZVX//x6bqI5ksKmXgEnScOnsPzBrbJwf++yycg6+QMEIayObkIClx54
+	M2E4TxbBww0CN+kOZf/g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y3j28k2sw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 14:05:02 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44EE51Bp000560
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 14:05:01 GMT
+Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 14 May 2024 07:04:56 -0700
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+To: <johan@kernel.org>
+CC: <andersson@kernel.org>, <andy.shevchenko@gmail.com>, <broonie@kernel.org>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <johan+linaro@kernel.org>, <konrad.dybcio@linaro.org>,
+        <krzk+dt@kernel.org>, <lee@kernel.org>, <lgirdwood@gmail.com>,
+        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_skakitap@quicinc.com>, <robh@kernel.org>, <swboyd@chromium.org>
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+Date: Tue, 14 May 2024 19:34:46 +0530
+Message-ID: <20240514140446.706847-1-quic_skakitap@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 5SEzk7F8cX03PJQoadk1GbX0kVuNZltc
+X-Proofpoint-GUID: 5SEzk7F8cX03PJQoadk1GbX0kVuNZltc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_07,2024-05-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 phishscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=827
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405140098
 
-From: Björn Töpel <bjorn@rivosinc.com>
-
-The RISC-V port copies the PGD table from init_mm/swapper_pg_dir to
-all userland page tables, which means that if the PGD level table is
-changed, other page tables has to be updated as well.
-
-Instead of having the PGD changes ripple out to all tables, the
-synchronization can be avoided by pre-allocating the PGD entries/pages
-at boot, avoiding the synchronization all together.
-
-This is currently done for the bpf/modules, and vmalloc PGD regions.
-Extend this scheme for the PGD regions touched by memory hotplugging.
-
-Prepare the RISC-V port for memory hotplug by pre-allocate
-vmemmap/direct map entries at the PGD level. This will roughly waste
-~128 worth of 4K pages when memory hotplugging is enabled in the
-kernel configuration.
-
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/include/asm/kasan.h | 4 ++--
- arch/riscv/mm/init.c           | 7 +++++++
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/include/asm/kasan.h b/arch/riscv/include/asm/kasan.h
-index 0b85e363e778..e6a0071bdb56 100644
---- a/arch/riscv/include/asm/kasan.h
-+++ b/arch/riscv/include/asm/kasan.h
-@@ -6,8 +6,6 @@
- 
- #ifndef __ASSEMBLY__
- 
--#ifdef CONFIG_KASAN
--
- /*
-  * The following comment was copied from arm64:
-  * KASAN_SHADOW_START: beginning of the kernel virtual addresses.
-@@ -34,6 +32,8 @@
-  */
- #define KASAN_SHADOW_START	((KASAN_SHADOW_END - KASAN_SHADOW_SIZE) & PGDIR_MASK)
- #define KASAN_SHADOW_END	MODULES_LOWEST_VADDR
-+
-+#ifdef CONFIG_KASAN
- #define KASAN_SHADOW_OFFSET	_AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
- 
- void kasan_init(void);
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 2574f6a3b0e7..5b8cdfafb52a 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -27,6 +27,7 @@
- 
- #include <asm/fixmap.h>
- #include <asm/io.h>
-+#include <asm/kasan.h>
- #include <asm/numa.h>
- #include <asm/pgtable.h>
- #include <asm/sections.h>
-@@ -1488,10 +1489,16 @@ static void __init preallocate_pgd_pages_range(unsigned long start, unsigned lon
- 	panic("Failed to pre-allocate %s pages for %s area\n", lvl, area);
- }
- 
-+#define PAGE_END KASAN_SHADOW_START
-+
- void __init pgtable_cache_init(void)
- {
- 	preallocate_pgd_pages_range(VMALLOC_START, VMALLOC_END, "vmalloc");
- 	if (IS_ENABLED(CONFIG_MODULES))
- 		preallocate_pgd_pages_range(MODULES_VADDR, MODULES_END, "bpf/modules");
-+	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG)) {
-+		preallocate_pgd_pages_range(VMEMMAP_START, VMEMMAP_END, "vmemmap");
-+		preallocate_pgd_pages_range(PAGE_OFFSET, PAGE_END, "direct map");
-+	}
- }
- #endif
--- 
-2.40.1
-
+> On Thu, May 09, 2024 at 03:07:02PM +0300, Andy Shevchenko wrote:=0D
+> > Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd kirjoitti:=0D
+> > > Quoting Johan Hovold (2024-05-06 08:08:29)=0D
+> > =0D
+> > ...=0D
+> > =0D
+> > > > +               BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) !=3D 1) ||=0D
+> > > =0D
+> > > This should be an && not || right?=0D
+> > =0D
+> > > > +                               (ARRAY_SIZE(nldo_ranges) !=3D 1));=
+=0D
+> > =0D
+> > In any case BUILD_BUG_ON() is not encouraged for such cases, it would b=
+e much=0D
+> > better to have a static_assert() near to one of those arrays.=0D
+> =0D
+> I think the reason it is placed here is that the above line reads:=0D
+> =0D
+> 	rdesc->n_linear_ranges =3D 1;=0D
+> =0D
+> and that would need to change if anyone expands the arrays.=0D
+=0D
+Correct. static_assert() cannot be used in the middle of code here, it can =
+only be used at the declarations part which doesn't serve the purpose.=0D
+So, BUILD_BUG_ON is the only way to go here.=
