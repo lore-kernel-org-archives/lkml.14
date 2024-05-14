@@ -1,80 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (msa-217.smtpout.orange.fr [193.252.23.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F921DFD1;
-	Tue, 14 May 2024 21:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C47114532B
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715720952; cv=none; b=LCS0GAuzUihOAZ21vH/2cwzUxA9ZhZTUTMfSqyUAap0c/ioZLES+k7wo8rG5eQRNW4Bmgky5AjGnj2npC51iYqGQmY/aIqZzvtHReK7y5eIj+n4LR4QbR2mknjkdCmB4GQKrW/6FjAoVAK8HYkm5a+3lPWIlcBhtixFRa6TgAK8=
+	t=1715721034; cv=none; b=JANLvABjl/83SvejabqK5fecDnXRR2JMCywCTzKb07vSp9U3/cdwai83ZJDQnWbZHCsmnOozoeVXY7XpzMkJ/Bz38nitp6o7OB6FmYH9vAXeEqXGx5A3QO2kc+erSoN0XxOWu/RBQCM1YE5O6fCPF/UiIuCcJoRG2eqNjcb2XIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715720952; c=relaxed/simple;
-	bh=iBQGtyPRNxJ3b5eCicElCWKrOiKS02iKAvulYWm1oUU=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=JIlrkKL/LaRQewntYGEyDj/vEoSY0eWpHAfAdR8aYhGNSlne5wvfYdHT/mZdiZNuFMIULhlRL739AIh6r4roi/R+1PyzmOgkuaXMBRaHoBYxMYx98IbFLd3UVuHxJw1JZXndXtGUDYc/EjkLFP+r6QufWF8sUTW3j1QnzHCi03Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geFwaALR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715721034; c=relaxed/simple;
+	bh=e2KLbrdsks+J6+1FvGS7oH2+UqSVRAnRmGXVo1hlsCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AU8BJaJnkmtB6UKCPTK95BJ0eY4oYAUHVgwshxF/36qFX98r5/ZLqiUkW3ql7PC9LeNRBGjkcqwyBQU+t/Oaq59TWHoVjhJwFO2C3QlRbyiWBn/19TRgcJtm3VxxGt9moU8UHxCpdUYu7X6Osy2XVLxrJscdGJf1PLSb4qrU0Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LwaIbRru; arc=none smtp.client-ip=193.252.23.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geFwaALR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE4BC2BD10;
-	Tue, 14 May 2024 21:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715720951;
-	bh=iBQGtyPRNxJ3b5eCicElCWKrOiKS02iKAvulYWm1oUU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=geFwaALR6vbhzVKzofNk1wS80bfk5LIQWAfWAgkQV6OL0DagMP9T+RwSQa2s0bz6N
-	 89LSgb4bi7I0aAtPTZMwye1uz3OMNaZja+SJaf+dki+W1UZC14FmzFuPbXRwBeHAFG
-	 sVZUuKIeSNTU0FmHftWNp50QfMXnv/CQBXommIolqyx3czSfcJnEWMDPQOPJd9y+t2
-	 jWVLHciqhkaiCdBtCoB1eLVOd3zfS4vvukwhXYTvw0ziGkgbrCEUNNefdofDyJTt54
-	 NkoEzS6VTHACXS/ONZ3OZf/+4dIjsVc00Pj7AMJx3dbXGU85MJlLT5zzdH0Q8Mh/Bx
-	 DkXZ1i3E8sX4Q==
-Message-ID: <b86c83a520f0c45a60249468fa92b1de.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LwaIbRru"
+Received: from [192.168.1.37] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 6ysXsio6Zfcja6ysXstlKb; Tue, 14 May 2024 22:36:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1715718967;
+	bh=nnkV8QffiL7l22gdgN3bgaCjV2cYw/rxwjbuLjaurWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=LwaIbRruVSX6cMoGHOexSQ95eEEW6+Ns/6TfRrTg9YY0DJgHDxcudQ6EhJH+zkiNR
+	 sAGNhJTxF7kxsGbmpTsCFbjDvzwBH2g4sd6WTUIdJjFOb53fQZ4TMBlwzDNTFhauFP
+	 W3yIeaq8DO2lRcZe3/2tJQGleSJnPOYcTMsaS3Jwpg8hM2VYd0fIfszwBJGIEHqNsO
+	 yFsAxV+pYpvOeG17rsas03P5Ey4Ec4zux5pgRkN1i3R2WsM2nviSB5pyfOG+0hdFsI
+	 zHnsH3Nbj6Sw8Wf1H8tIhM8Ot4TJp4Xnf10ULkPBQvHEK2Ou5Mu22xnY0kox1MXsJR
+	 IEfY7MAuwSjSQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 14 May 2024 22:36:06 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <d5f51c2e-daef-467d-9430-8c2d48819a56@wanadoo.fr>
+Date: Tue, 14 May 2024 22:35:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240514-campus-sibling-21cdf4c78366@spud>
-References: <1715679210-9588-1-git-send-email-shengjiu.wang@nxp.com> <1715679210-9588-4-git-send-email-shengjiu.wang@nxp.com> <20240514-campus-sibling-21cdf4c78366@spud>
-Subject: Re: [PATCH v3 3/6] dt-bindings: clock: imx8mp: Add reset-controller sub-node
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, marex@denx.de, linux-clk@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, shengjiu.wang@gmail.com
-To: Conor Dooley <conor@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>
-Date: Tue, 14 May 2024 14:09:09 -0700
-User-Agent: alot/0.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] binder: use bitmap for faster descriptor lookup
+To: Carlos Llamas <cmllamas@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+ Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
+ Tim Murray <timmurray@google.com>, Alice Ryhl <aliceryhl@google.com>,
+ John Stultz <jstultz@google.com>, Steven Moreland <smoreland@google.com>,
+ Nick Chen <chenjia3@oppo.com>
+References: <20240514160926.1309778-1-cmllamas@google.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240514160926.1309778-1-cmllamas@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Quoting Conor Dooley (2024-05-14 11:06:14)
-> On Tue, May 14, 2024 at 05:33:27PM +0800, Shengjiu Wang wrote:
-> > diff --git a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.ya=
-ml b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
-> > index 0a6dc1a6e122..a403ace4d11f 100644
-> > --- a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
-> > @@ -15,7 +15,10 @@ description: |
-> > =20
-> >  properties:
-> >    compatible:
-> > -    const: fsl,imx8mp-audio-blk-ctrl
-> > +    items:
-> > +      - const: fsl,imx8mp-audio-blk-ctrl
-> > +      - const: syscon
-> > +      - const: simple-mfd
-> > =20
-> >    reg:
-> >      maxItems: 1
-> > @@ -44,6 +47,11 @@ properties:
-> >        ID in its "clocks" phandle cell. See include/dt-bindings/clock/i=
-mx8mp-clock.h
-> >        for the full list of i.MX8MP IMX8MP_CLK_AUDIOMIX_ clock IDs.
-> > =20
-> > +  reset-controller:
-> > +    type: object
-> > +    $ref: /schemas/reset/fsl,imx8mp-audiomix-reset.yaml#
-> > +    description: The child reset devices of AudioMIX Block Control.
->=20
-> Why not just set #reset-cells =3D <1> in the existing node? IIRC it was
-> already suggested to you to do that and use auxdev to set up the reset
-> driver.
+Le 14/05/2024 à 18:09, Carlos Llamas a écrit :
+> When creating new binder references, the driver assigns a descriptor id
+> that is shared with userspace. Regrettably, the driver needs to keep the
+> descriptors small enough to accommodate userspace potentially using them
+> as Vector indexes. Currently, the driver performs a linear search on the
+> rb-tree of references to find the smallest available descriptor id. This
+> approach, however, scales poorly as the number of references grows.
+> 
+> This patch introduces the usage of bitmaps to boost the performance of
+> descriptor assignments. This optimization results in notable performance
+> gains, particularly in processes with a large number of references. The
+> following benchmark with 100,000 references showcases the difference in
+> latency between the dbitmap implementation and the legacy approach:
+> 
+>    [  587.145098] get_ref_desc_olocked: 15us (dbitmap on)
+>    [  602.788623] get_ref_desc_olocked: 47343us (dbitmap off)
+> 
+> Note the bitmap size is dynamically adjusted in line with the number of
+> references, ensuring efficient memory usage. In cases where growing the
+> bitmap is not possible, the driver falls back to the slow legacy method.
+> 
+> A previous attempt to solve this issue was proposed in [1]. However,
+> such method involved adding new ioctls which isn't great, plus older
+> userspace code would not have benefited from the optimizations either.
+> 
+> Link: https://lore.kernel.org/all/20240417191418.1341988-1-cmllamas@google.com/ [1]
 
-Yes, do that.
+...
+
+> +static int get_ref_desc_olocked(struct binder_proc *proc,
+> +				struct binder_node *node,
+> +				u32 *desc)
+> +{
+> +	struct dbitmap *dmap = &proc->dmap;
+> +	unsigned long *new, bit;
+> +	unsigned int nbits;
+> +
+> +	/* 0 is reserved for the context manager */
+> +	if (node == proc->context->binder_context_mgr_node) {
+> +		*desc = 0;
+> +		return 0;
+> +	}
+> +
+> +	if (unlikely(!dbitmap_enabled(dmap))) {
+> +		*desc = slow_desc_lookup_olocked(proc);
+> +		return 0;
+> +	}
+> +
+> +	if (dbitmap_get_first_zero_bit(dmap, &bit) == 0) {
+> +		*desc = bit;
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * The descriptors bitmap is full and needs to be expanded.
+> +	 * The proc->outer_lock is briefly released to allocate the
+> +	 * new bitmap safely.
+> +	 */
+> +	nbits = dbitmap_expand_nbits(dmap);
+> +	binder_proc_unlock(proc);
+> +	new = bitmap_zalloc(nbits, GFP_KERNEL | __GFP_ZERO);
+
+Hi,
+
+Nitpick: No need to __GFP_ZERO when using zalloc().
+
+CJ
+
+> +	binder_proc_lock(proc);
+> +	dbitmap_expand(dmap, new, nbits);
+> +
+> +	return -EAGAIN;
+> +}
+
+...
+
+> +#define NBITS_MIN	BITS_PER_TYPE(unsigned long)
+> +
+> +struct dbitmap {
+> +	unsigned int nbits;
+
+Should it be long (or unsigned long) to better match the bitmap API?
+
+(not sure if it can overflow in this use case, but at least for consistancy)
+
+> +	unsigned long *map;
+> +};
+
+...
+
+> +static inline unsigned int dbitmap_shrink_nbits(struct dbitmap *dmap)
+> +{
+> +	unsigned int bit;
+> +
+> +	if (dmap->nbits <= NBITS_MIN)
+> +		return 0;
+> +
+> +	bit = find_last_bit(dmap->map, dmap->nbits);
+
+find_last_bit() returns an unsigned long.
+
+(bitmap_get_first_zero_bit() below uses unsigned long)
+
+CJ
+
+> +	if (unlikely(bit == dmap->nbits))
+> +		return NBITS_MIN;
+> +
+> +	if (unlikely(bit <= (dmap->nbits >> 2)))
+> +		return dmap->nbits >> 1;
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static inline int
+> +dbitmap_get_first_zero_bit(struct dbitmap *dmap, unsigned long *bit)
+> +{
+> +	unsigned long n;
+> +
+> +	n = find_first_zero_bit(dmap->map, dmap->nbits);
+> +	if (unlikely(n == dmap->nbits))
+> +		return -ENOSPC;
+> +
+> +	*bit = n;
+> +	set_bit(n, dmap->map);
+> +
+> +	return 0;
+> +}
+
+...
+
