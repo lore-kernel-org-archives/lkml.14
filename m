@@ -1,274 +1,183 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2080.outbound.protection.outlook.com [40.107.117.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8509E53E30;
-	Tue, 14 May 2024 11:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715685610; cv=none; b=pSlkvp7QqrCOcaVKV8UajrJz50/xqd+TD1BjKc0aZQdknt6wTQr6JtUI9JV7CozAH3HrFBnlsTSLzvtU6aujmmo2k7AZfFzSDR3RSd4dt0cApbRWx4MOoLMM+qwBiBxTiGcNKghGoMOuPCbSsd5BNYWyig078fpSEWKTxFJWy0E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715685610; c=relaxed/simple;
-	bh=XyFKyyciBLAngkmK68/fR6eZNy1P+tJIELRli0u+emk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=IxWFcPbWnuC5uWjdvKcW0iB8lbcV8E9umQKOQJsMGowEdW3fmaHXK8VNu6YetfIavO5G+6tEUjdKv3mALBQWS/piqXnIXQOgRQZkxb40wtDdHZNqICK7qpUi2vKEoKueN/gmX+G5qzHN50sLQMegOXbENLdUyj43cpPySvrxEsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S5v6QpNc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD9612E1C9
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 11:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715685735; cv=fail; b=FcTG+p7lYqod41ehAPcN2LejznhxRcF8XIdJ/C+LoW2MmD40z8X0cKsAhziyDXpbAYMN6uxsIuTnxHaFhjOuj9fwJIZ8Uq26It9zlL4JG4QvoPM/qoiXpOgjIl22thSZfiYCWo6Z11FgFNMH6PTEDnWqcDHWQ3IOS0FYg6OZf+Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715685735; c=relaxed/simple;
+	bh=h8F3KuWgnRXgy+J/wGYrg0C1GkrAq53/kLLqy7/4iuo=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Tso3b/9jtKTGIdxqEDiu/qTLPCbrVJ+Sld+ZFWW7NePAqTLiQ9mHjXthK1hGo7LgupMctD+T0fSysbyCDf/UcteDNsttZPdPDr3F8dXVIhVTWjYt0YBxO2q5f6YGajMwzpsuLSShZJl7io4gGeBn+YpWKzS0NTWaW0WvMmjBBcY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=imI0bcqe; arc=fail smtp.client-ip=40.107.117.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S5v6QpNc"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44E849JD024016;
-	Tue, 14 May 2024 11:20:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=SVlVPEfTD6tQYDnw8/PDRROwMu37COEhPHGsPjiczE8=; b=S5
-	v6QpNc5J/S87wlPpBEYsCUpGKhSBFJufkWmrUbqUTqIfQu3BBDgSAJkfg3LxnDAh
-	kBm3a9/2SGaQrLzsgUbFZxYrDOdk1YA2wI6fg4+UAUqdM3sxxhyDS9j17sPJuQWM
-	zzL7db2Z7QCDihHpHvu0LN6mXVqgCtpYfoMSYBsYDKvMD+TSs3uDdlEl1ahHDoof
-	yPmOjVN8cwpjJFGAdHj41xUE87One225MOcBG3pyxCJTw2EqPhM+JumIV3lgwOL3
-	fFXnf3R4PtMoLFJcbMcqGX26MsG/nsN4NCmCKP3VNogjsHdsBtHhVutw1TYlUoUY
-	jnVugIsd++dCGZnpb1UA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y2125e2pp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 11:20:04 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44EBK2Of004764
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 11:20:02 GMT
-Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 May
- 2024 04:19:41 -0700
-Message-ID: <d113adc9-2192-44af-a5df-7bbaa6907ac8@quicinc.com>
-Date: Tue, 14 May 2024 16:49:06 +0530
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="imI0bcqe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aW72QvCPdg8kp4P+xjxSOYh9IQuvc0rceX9L5xQEZc+b1yTPcYP0crivuFOxFQ/7pH+o18xxmJNg7babzxXZYUwbI2VcGuS5NmGkwq95RqikwLDyvsdQ6L4Ew8hlSyvKHjnqSNlRFdKfsQM4Jk0UJB3PH+RYGBKoXxu0r0Xi2hhOnGcnkICJonvmnhHLDc3511fAtM8IbM9MrRSRLfmjnNVHGxyjwUNv4UShXbtxCjTjzDsyDiYPzMWsAZISOn4Xl2TZW+ruveZ5/Ab2thLg+YzAK/7Fy3PR0I4Tn675adgnAl33ZCieKEYAy29Mn0GeO4j5SdJnwEsmd/rpUSMVpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UKUeMqKhDmAJm6lCIEKlAHVC9sJOd9Q0r0e3I0j29uw=;
+ b=TUP1MMmb6OOCoJ1qz2R7Z82cDdSBscLC0Pm+fYUwR039H10UBD+25r+KrXEl6TRsndN7w1A+Lu+xvFc/izhLskJGTtULfAeoP06jU9zVTj5MtblNyKY6a0BNwHZLHI37zaCsDIV/mlFbxWBB92SaKNMmgUfAqtWeNfwEDIz/MXA2jRCCktYAlC9G7LKQbSOO+cuLkJJ26wnSXcEX265Ehj0q2kseg1KQr/mPEDyFJjt/95yJmFDS6No0HZplpdirhKCXuI8ufOpdWmwxxjjPnAIZOleTpyZvlTk058M/w9zT6Cfl4FJkm1ZM4CkwVhVxAqCOGpi7/ZkQwiWdZpzsdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UKUeMqKhDmAJm6lCIEKlAHVC9sJOd9Q0r0e3I0j29uw=;
+ b=imI0bcqeABOZB7RW2VRGIuvolGVBDJmkaJqn3X1sS9gn6fJRDfitD08dAE2p7I6X1h8Zqz06sTT0TTxT8c3sv6+K04bktJXP6gCJI4gRd9zGtRwDX2C3SmchYf7aW1Ef63h1XguYQob+bgtwQU5db5BDO2ey9GllGZ2irym4opbiGmrXszo1ztFO1fAlJHRRAeWkKHOyTDXo8i3e2pufw46YqoqG8I41XKEASQSztdNPjWOeE4fUbboTurxImYdjcq7EiD6xsk03ROfFwLYZWyCTCAzfwPSzhoQOlA0HSSHdqSnlp6Ezex18YyEFmMrmz2/FsD3+5onPVUjaaAVvdQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
+ by SEZPR06MB6040.apcprd06.prod.outlook.com (2603:1096:101:ec::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Tue, 14 May
+ 2024 11:22:10 +0000
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5]) by PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5%5]) with mapi id 15.20.7544.052; Tue, 14 May 2024
+ 11:22:10 +0000
+From: Wu Bo <bo.wu@vivo.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Wu Bo <wubo.oduw@gmail.com>,
+	Wu Bo <bo.wu@vivo.com>
+Subject: [PATCH] f2fs: initialize last_block_in_bio variable
+Date: Tue, 14 May 2024 05:35:29 -0600
+Message-Id: <20240514113529.1498545-1-bo.wu@vivo.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0017.apcprd02.prod.outlook.com
+ (2603:1096:4:194::17) To PSAPR06MB4486.apcprd06.prod.outlook.com
+ (2603:1096:301:89::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V4 2/5] mailbox: Add support for QTI CPUCP mailbox
- controller
-Content-Language: en-US
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, <sudeep.holla@arm.com>,
-        <cristian.marussi@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
-        <quic_kshivnan@quicinc.com>
-References: <20240422164035.1045501-1-quic_sibis@quicinc.com>
- <20240422164035.1045501-3-quic_sibis@quicinc.com>
- <d6052413-5706-446b-b508-2a5ed839acc4@linaro.org>
- <d5581614-71ad-5f7f-e948-bdbab3ef854e@quicinc.com>
-In-Reply-To: <d5581614-71ad-5f7f-e948-bdbab3ef854e@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: NJYgaQtE3hCQlT887lNeQ0fuDrv6fH5j
-X-Proofpoint-ORIG-GUID: NJYgaQtE3hCQlT887lNeQ0fuDrv6fH5j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-14_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405140079
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|SEZPR06MB6040:EE_
+X-MS-Office365-Filtering-Correlation-Id: cf6887d7-a4a5-453f-44d1-08dc74081877
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|366007|1800799015|52116005|376005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lbiPq0KGuxsTWcUgviXqRUsSGhO4QzIBI6yFs82NYg34qrBrdP4nBm2lYEpB?=
+ =?us-ascii?Q?/OARsslySMy8BGCz7i4wdG3PY7qYEVF4JvBcxXir6wSRWemNG9eLNheko2mi?=
+ =?us-ascii?Q?xq98q6VR9BsY4U6lVzvfgYTBDSzxTmwuCzanWm0T8Yx8dRccMYmtQvleIVeP?=
+ =?us-ascii?Q?FDFj3qvmNr53PwMS+JGVsjGaWjYC5AhK5iGib2sCajjbaBXowX9vbE13c7gh?=
+ =?us-ascii?Q?j5XYDIpq5tx2z5H2X5EOKY5WdYjtj1Y9joE6/W/csvz1W7SCFXtmJOIp5RD4?=
+ =?us-ascii?Q?5fRbkUrQSeHiAj3SkuB+gr9Mxm01Dsoz2yGqRhD4cknk8dy/8QCulivI0JZ8?=
+ =?us-ascii?Q?EkY1thn1BUNFApdKYBJ4Tv8qbqKfL7+B4A0defaWdIIvy8n88Q1F7CF+xDMK?=
+ =?us-ascii?Q?l8RUo4eA3NP5nVlMZZaAYKpLu4HdLOKqIPECAOWq9n82H+PyMtnVCYSdAEkx?=
+ =?us-ascii?Q?yyYi6wo0D8tkxsZh5+NCq70uPa/tUfVzP88ExV2GUkrlLuIRLP7LPaOMmTRy?=
+ =?us-ascii?Q?c+vS2VFzw2tt55g3mOp5w3rZwSctl01/9x03NAJkNuQWyOdoypwW+jA72q3W?=
+ =?us-ascii?Q?WBezqDU9h8lAO5VVjQxPAiEzB0UCOXiAnOmvmDzDNIWHvi1Eem2OzlrWC0WD?=
+ =?us-ascii?Q?0UTtmxMGSNZhDzrcR/6E3ZFvw9SliU9CRqE+kQHIgOjBGYAHUMCDTL6MuJm3?=
+ =?us-ascii?Q?09QlHgbp2I4e9c5pGg3hQsDx2+S977pDmgZ8DpZ5vE+JvpzOnQZp78uCumKN?=
+ =?us-ascii?Q?p8NdcJLSduTmjVJtGFd4LEu5W+xYgmgvaa/S4jOKzssEyom+oQDimPiKwlC4?=
+ =?us-ascii?Q?ZhPek5Na7MkyTwBKhmPuKwlQlD+SSiC4PBJAFyk6zvIey0ZGlgvfn95fBD7z?=
+ =?us-ascii?Q?dnRdQ/yAXxW6A88pT0Ng6p6Nd+JNDpUCA9LqdLLk82hPfb2Pre9PnpfxGXeu?=
+ =?us-ascii?Q?v61q4C26VepFuVSsW+a63/H0LK1gJiuMkF8ucorn8ciuGjkDE4odsqLtugW1?=
+ =?us-ascii?Q?dIgS0Qu1zpuMWpApoBafXYU0t+6l5mP36ZYjj0Je2uULswyLKWxlvOHwX0Dh?=
+ =?us-ascii?Q?FTzAlRQ+XZ0HG6alrY6c65YfM3WiXaENnCUWratQCDpL/MZy/1oXkq21UAuc?=
+ =?us-ascii?Q?nnAypwmb9HFRG3YxjVQXFDoyIoEpw+Jf3btZDSbiByXfdOI9qQWF0uKw7XPl?=
+ =?us-ascii?Q?iDNn2L5s2+DdltoptiBJO5g/bXwqn5O1I1YDcOuBTEEWzJe6QfKxZt2FD3/B?=
+ =?us-ascii?Q?Gd9KdPTEZuk4U4OxdtF4d9mmmwyMUnQUbfnXY4Ec8ykbfUavHzYnbqqPDBo9?=
+ =?us-ascii?Q?JcJWYt5yi8mFhqWjQdciBXzufuNpngoXiQi2/dIBwTnEjA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(52116005)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?x+inaD99V/T484TZzLppljuKX6R/kbuJKP61Ajh5T+hngcVtBPeReJi2esJQ?=
+ =?us-ascii?Q?ZWA3AcLZjdo7lRn/uuCbEbLY6U00wkaGkSnDbGJKh63IY/PlxkBntByR+Um6?=
+ =?us-ascii?Q?VejhZtije9z1JYh5XFyMnnH40DxHNJddp8EmeVpbc1VX0Z/F/ast/Rj+Nwcz?=
+ =?us-ascii?Q?04bY9UWBGEgP5p85g//lpEGOqQc903h2LCNmEysMTC/jT4+0ukaloeltV5Z3?=
+ =?us-ascii?Q?xyZPUx6FoZhnV0qBZ6hsvJpW0qfhoCJaE2NBOjs9HzO2g4qmBygGHwQBwcb9?=
+ =?us-ascii?Q?zAlMf9H1CmHAnbPx/zWA6mr2JZX6Y4I4s4GIMhEDMrqi5GOfx4tQz+a7uZ1n?=
+ =?us-ascii?Q?6lPIplh8RnRVFICmkteAFeUwTuHkmcRlXa+HKQw/MzXgCN/KaYciZDoYj38/?=
+ =?us-ascii?Q?vV/rtkKC2AUkTxUFXlNYzNcoWSujvOazn5AR6JlMQgt0h5EAJ9NitUelX+B5?=
+ =?us-ascii?Q?7GV62cJ0WtFNOaMS3evL2w0dJwaTimx7kdc9yn4059CQuxJTAcVn7IntB+Yh?=
+ =?us-ascii?Q?L4T8u+4PLvLGqS9JEPo2sD26rOh1ZK+7sNzTC1GAGNd+UoTDwXszJXyG01tC?=
+ =?us-ascii?Q?fVbG5PgfivB/1Our5MYMOd8bqpv6/lkbJW7ZTizd1fjJidDyZBl9lwivU7jW?=
+ =?us-ascii?Q?fbmZjSDinV9UbTWyw34Q4rH20b8NpLF15QDvs1h+DGfYKt+q9coGPOBpv2ow?=
+ =?us-ascii?Q?dCbsDCc5bc2e6kI3zgv5a+n5yam4svxZh5mho7Zv19brZWuwgwXdsBKJq2Bq?=
+ =?us-ascii?Q?nJb7ts0MA/ZvMwrjBq8jfmMlqZo6JNosEoo5jS7Nn6YTbxLqZRTJvxLELbk7?=
+ =?us-ascii?Q?m6GLSDqlTG6Ynsh1n9C6fKveYtKuIA/foA6C5mdtlixUTt5ROD+Scl+joLZR?=
+ =?us-ascii?Q?YOSV4Ese0hHHDD2g9l8ogSQTb1KCd7N6bT7kpEbwYYZKe94+Y0Tx7ALuIL3T?=
+ =?us-ascii?Q?YVLoe/GMwS7rOIpQh+2XsmZISyBkjHIQx9bAT8vIgPoeOI+WGoHiEQ0ZeLFv?=
+ =?us-ascii?Q?UJRxcOZy9AifI1dlLO3N4FA9jFI4Nap/R4sr+2DCHTPn2f6Xmh5yVHbc9R3G?=
+ =?us-ascii?Q?a5ZIfso8JFfBEwmvi7IzirU7bENzYYrO4ZEdbk1MJrh2Ep7Ic4PVj/POm3nA?=
+ =?us-ascii?Q?jNCSyxOZ35aFg+2ZWoKkRLBDHXQOwtNbPsVVictdEwsKc/hrFkbia0/ydzdP?=
+ =?us-ascii?Q?H9Wkrc19nJVmgLiqIxj48KfH7lHif5JQhFQmn2hJCZt6+H/ni6HwyU6jJGmW?=
+ =?us-ascii?Q?OnySgY0mxc2/EkremUkbTUGCzH+a2YOKZHPvU8JDVB7Yd4qHY81RDNmJjSHR?=
+ =?us-ascii?Q?0gEWOd71GcboY21tixya5bMGx4PdgLFayCeAnIDO7BuA+GmXbZFVOyK41H5T?=
+ =?us-ascii?Q?DESV4dlHRLOjNYn1SJNXeBXzZiMC//x0vMSzT8VujRw4noV1Vv2egSgv+p93?=
+ =?us-ascii?Q?V3JF0p3UEFDLbmIHRDzUApKOqYfmMsx3KKzayYRqPPkzuY7w1EZQOScaM7Pv?=
+ =?us-ascii?Q?BC4vP1PTvzkgMtDXlSgod5cQDw2NfHjyIV/gEQ+zsnO9ubCNCDwSjwmdiEEY?=
+ =?us-ascii?Q?MC0EVmE9Cnuk5uP6E5tNajqdkvgn/XA7U3gmv+2x?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf6887d7-a4a5-453f-44d1-08dc74081877
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2024 11:22:10.1047
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EAck1yrUI0R2RYffWpvuNp2Nmpwn2+lEjrtY0wzGi3Ir92UmkuxtlsvK0njHQDDBKvzKCLX/B5f4Xu2gklLVTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6040
 
+Initialize last_block_in_bio of struct f2fs_bio_info and clean up code.
 
+Signed-off-by: Wu Bo <bo.wu@vivo.com>
+---
+ fs/f2fs/data.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-On 4/23/24 22:40, Sibi Sankar wrote:
-> 
-> 
-> On 4/23/24 04:47, Konrad Dybcio wrote:
->>
->>
->> On 4/22/24 18:40, Sibi Sankar wrote:
->>> Add support for CPUSS Control Processor (CPUCP) mailbox controller,
->>> this driver enables communication between AP and CPUCP by acting as
->>> a doorbell between them.
->>>
->>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
->>> ---
->>
->> [...]
->>
->>> +
->>> +static int qcom_cpucp_mbox_send_data(struct mbox_chan *chan, void 
->>> *data)
->>> +{
->>> +    struct qcom_cpucp_mbox *cpucp = container_of(chan->mbox, struct 
->>> qcom_cpucp_mbox, mbox);
->>> +    unsigned long chan_id = channel_number(chan);
->>> +    u32 *val = data;
->>> +
->>> +    writel(*val, cpucp->tx_base + APSS_CPUCP_TX_MBOX_CMD(chan_id) + 
->>> APSS_CPUCP_MBOX_CMD_OFF);
->>
-> 
-> Hey Konrad,
-> 
-> Thanks for taking time to review the series.
-> 
->> Just checking in, is *this access only* supposed to be 32b instead of 
->> 64 like others?
-> 
-> yeah, the readl and writely in the driver were used intentionally.
-> 
->>
->> [...]
->>
->>> +
->>> +    writeq(0, cpucp->rx_base + APSS_CPUCP_RX_MBOX_EN);
->>> +    writeq(0, cpucp->rx_base + APSS_CPUCP_RX_MBOX_CLEAR);
->>> +    writeq(0, cpucp->rx_base + APSS_CPUCP_RX_MBOX_MAP);
->>
->> If these writes are here to prevent a possible interrupt storm type 
->> tragedy,
->> you need to read back these registers to ensure the writes have left 
->> the CPU
->> complex and reached the observer at the other end of the bus (not to be
->> confused with barriers which only ensure that such accesses are ordered
->> *when still possibly within the CPU complex*).
-> 
-> I couldn't find anything alluding to ^^. This sequence was just
-> meant to reset the mailbox. Looks like we do need to preserve the
-> ordering so relaxed read/writes aren't an option.
-> 
-> -Sibi
-> 
->>
->> Moreover, if the order of them arriving (en/clear/mask) doesn't 
->> matter, you
->> can add _relaxed for a possible nanosecond-order perf gain
->>
->>> +
->>> +    irq = platform_get_irq(pdev, 0);
->>> +    if (irq < 0)
->>> +        return irq;
->>> +
->>> +    ret = devm_request_irq(dev, irq, qcom_cpucp_mbox_irq_fn,
->>> +                   IRQF_TRIGGER_HIGH, "apss_cpucp_mbox", cpucp);
->>> +    if (ret < 0)
->>> +        return dev_err_probe(dev, ret, "Failed to register irq: 
->>> %d\n", irq);
->>> +
->>> +    writeq(APSS_CPUCP_RX_MBOX_CMD_MASK, cpucp->rx_base + 
->>> APSS_CPUCP_RX_MBOX_MAP);
->>
->> Similarly here, unless read back, we may potentially miss some 
->> interrupts if
->> e.g. a channel is opened and that write "is decided" (by the silicon) 
->> to leave
->> the internal buffer first
-> 
-> At this point in time we don't expect any interrupts. They are expected
-> only after channel activation. Also there were no recommendations for
-> reading it back here as well.
-> 
-> -Sibi
-> 
->>
->>
->>> +
->>> +    mbox = &cpucp->mbox;
->>> +    mbox->dev = dev;
->>> +    mbox->num_chans = APSS_CPUCP_IPC_CHAN_SUPPORTED;
->>> +    mbox->chans = cpucp->chans;
->>> +    mbox->ops = &qcom_cpucp_mbox_chan_ops;
->>> +    mbox->txdone_irq = false;
->>> +    mbox->txdone_poll = false;
->>
->> "false" == 0 is the default value (as you're using k*z*alloc)
->>
->>
->>> +
->>> +    ret = devm_mbox_controller_register(dev, mbox);
->>> +    if (ret)
->>> +        return dev_err_probe(dev, ret, "Failed to create mailbox\n");
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static const struct of_device_id qcom_cpucp_mbox_of_match[] = {
->>> +    { .compatible = "qcom,x1e80100-cpucp-mbox" },
->>> +    {}
->>> +};
->>> +MODULE_DEVICE_TABLE(of, qcom_cpucp_mbox_of_match);
->>> +
->>> +static struct platform_driver qcom_cpucp_mbox_driver = {
->>> +    .probe = qcom_cpucp_mbox_probe,
->>> +    .driver = {
->>> +        .name = "qcom_cpucp_mbox",
->>> +        .of_match_table = qcom_cpucp_mbox_of_match,
->>> +    },
->>> +};
->>> +module_platform_driver(qcom_cpucp_mbox_driver);
->>
->> That's turbo late. Go core_initcall.
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index bdbd4195cadc..50ceb25b341d 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -595,17 +595,20 @@ int f2fs_init_write_merge_io(struct f2fs_sb_info *sbi)
+ 			return -ENOMEM;
+ 
+ 		for (j = HOT; j < n; j++) {
+-			init_f2fs_rwsem(&sbi->write_io[i][j].io_rwsem);
+-			sbi->write_io[i][j].sbi = sbi;
+-			sbi->write_io[i][j].bio = NULL;
+-			spin_lock_init(&sbi->write_io[i][j].io_lock);
+-			INIT_LIST_HEAD(&sbi->write_io[i][j].io_list);
+-			INIT_LIST_HEAD(&sbi->write_io[i][j].bio_list);
+-			init_f2fs_rwsem(&sbi->write_io[i][j].bio_list_lock);
++			struct f2fs_bio_info *io = &sbi->write_io[i][j];
++
++			init_f2fs_rwsem(&io->io_rwsem);
++			io->sbi = sbi;
++			io->bio = NULL;
++			io->last_block_in_bio = 0;
++			spin_lock_init(&io->io_lock);
++			INIT_LIST_HEAD(&io->io_list);
++			INIT_LIST_HEAD(&io->bio_list);
++			init_f2fs_rwsem(&io->bio_list_lock);
+ #ifdef CONFIG_BLK_DEV_ZONED
+-			init_completion(&sbi->write_io[i][j].zone_wait);
+-			sbi->write_io[i][j].zone_pending_bio = NULL;
+-			sbi->write_io[i][j].bi_private = NULL;
++			init_completion(&io->zone_wait);
++			io->zone_pending_bio = NULL;
++			io->bi_private = NULL;
+ #endif
+ 		}
+ 	}
+-- 
+2.25.1
 
-Christian/Sudeep,
-
-Looks like making the cpucp mbox as part of the core initcall and having
-the vendor protocol as a module_scmi_driver causes a race as follows:
-
-scmi_core: SCMI protocol bus registered
-scmi_core: Requesting SCMI device (clocks) for protocol 14
-scmi_core: Registered new scmi driver scmi-clocks
-scmi_core: Requesting SCMI device (qcom_scmi_vendor_protocol) for 
-protocol 80
-scmi_core: Registered new scmi driver qcom-scmi-driver
-scmi_core: Requesting SCMI device (perf) for protocol 13
-scmi_core: Registered new scmi driver scmi-perf-domain
-scmi_core: Requesting SCMI device (genpd) for protocol 11
-scmi_core: Registered new scmi driver scmi-power-domain
-scmi_core: Requesting SCMI device (reset) for protocol 16
-scmi_core: Registered new scmi driver scmi-reset
-scmi_core: Requesting SCMI device (hwmon) for protocol 15
-scmi_core: Registered new scmi driver scmi-hwmon
-scmi_core: Requesting SCMI device (cpufreq) for protocol 13
-scmi_core: Registered new scmi driver scmi-cpufreq
-scmi_module: Registered SCMI Protocol 0x10
-scmi_module: Registered SCMI Protocol 0x14
-scmi_module: Registered SCMI Protocol 0x13
-scmi_module: Registered SCMI Protocol 0x11
-scmi_module: Registered SCMI Protocol 0x16
-scmi_module: Registered SCMI Protocol 0x15
-scmi_module: Registered SCMI Protocol 0x17
-scmi_module: Registered SCMI Protocol 0x12
-scmi_module: Registered SCMI Protocol 0x18
-scmi_module: Registered SCMI Protocol 0x19
-scmi_core: (scmi) Created SCMI device 'scmi_dev.1' for protocol 0x10 
-(__scmi_transport_device_tx_10)
-scmi_core: (scmi) Created SCMI device 'scmi_dev.2' for protocol 0x10 
-(__scmi_transport_device_rx_10)
-arm-scmi firmware:scmi: SCMI Notifications - Core Enabled.
-scmi_module: Found SCMI Protocol 0x10
-arm-scmi firmware:scmi: SCMI Protocol v2.0 'Qualcomm:' Firmware version 
-0x20000
-scmi_module: Found SCMI Protocol 0x13
-scmi_core: (scmi) Created SCMI device 'scmi_dev.3' for protocol 0x13 
-(cpufreq)
-scmi-perf-domain scmi_dev.4: Initialized 3 performance domains
-scmi_core: (scmi) Created SCMI device 'scmi_dev.4' for protocol 0x13 (perf)
-scmi_module: SCMI Protocol 0x80 not found!
-scmi_core: (scmi) Created SCMI device 'scmi_dev.5' for protocol 0x80 
-(qcom_scmi_vendor_protocol)
-scmi_module: Registered SCMI Protocol 0x80
-
-By the time the vendor protocol get's registered it's already reported
-as not found.
-
--Sibi
-
->>
->> Konrad
-> 
