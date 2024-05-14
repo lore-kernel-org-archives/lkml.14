@@ -1,115 +1,107 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DCD2B9D7;
-	Tue, 14 May 2024 18:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9982B9D7;
+	Tue, 14 May 2024 18:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715709673; cv=none; b=HmNxmqn7fGx+fs1pU6AJMr5j/23rBKinlXpxrgJr9HpUUNqLnXvIyGx7XurfVKt03kj/1hR61s2tM+nWuIZ44zx+xlI0m4xS67kcIVNScsngZuPO4XPxYRX8mMzJRl8q0CAdQ/EvaZaV6KPfqT7hgqnjYpWgzNZZAztRhAaTOY4=
+	t=1715709686; cv=none; b=qBxKBcd2VoF/yVYXM6M87YGQdMPvjbtcxYovWAfT96cunRY2m1q3irJECAaTjRZf1WNVtDo0Rr6QE5ABRoJlCuKgPvDw42ZB08w5RY4ey/TMTd//nWbWAMQ6UByOMxkLSzqgXfxH3VBYH2EywnDZP1K1fisIfxyelyLdGAIiy2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715709673; c=relaxed/simple;
-	bh=JdWsjA5RdkgocSrr5UydnbHjGNwJ5hVOhvCzcBJGcaU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K0+E2+V/n6LFubgQN19aLZ8EgMJl5+nTG4SqAmKuoDdEwuysCBlZI/3qsDzDVGqGOEz/iZpyZFNAtIsR+xLylPseKGKLrHIKLGYFz2zDq6Fr7LM8gt6+Z5t5n4T6tYuDi+nPj/sKEW2f7ynB7hqELT+effOstL6+nWYkrxRd2GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LiyRcJ/f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1715709686; c=relaxed/simple;
+	bh=Bc0wnqBHezPEtPKq9Cw+J6D4ZphM4Nqpns2kp7JEKHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kezz7jRLPBSRXTnVPnqxMzs/9ldmrCJAjL5p0PoZc3WvB0295Z8I93eSpLy1q/5RfYytFjBGI/JdDVIgBCkaKcmsJK0wbZzxG89FMaaJfSn+RgR9HH5LJC0xABlnO/AxnId40DlnAJ7yNIXlGbKh14uNLnp2g6lEwkXli02Q4dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVSAm+Q7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LiyRcJ/f"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44EBoZ65004198;
-	Tue, 14 May 2024 18:01:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=qcppdkim1; bh=DKWV1Y0CzS9bbYgyG8c5
-	nTh77jKTFAgVwlBqAJaLQX0=; b=LiyRcJ/f2V0dVcsH+CuDFQrZSO9+Oj3jsNcH
-	NHZyMSbn/VXF6CeNd90aY1EpOnwgytckBXR5kOLdjqKR1P6M5jzZ9r3XuGe4Zn8E
-	HKSaArYnNIcjng/7lYVC5/eHEwYVg+nf+Y3FsRxMDX9Nd110StNXwrAt75jjoNe6
-	FugCUzUklfu+Ldsj6Ai5C5aRMG2lAljLI9KiDMiH6RDR5SCxwFA7wYkVX3k5T2yd
-	D1aQAIQt+4LhqBXTD4O+wp1A00r8YprlHNe8WtDhGhqgKv2gXskYmmH9mKS8SLSV
-	7g9wlCRnc5deHgMHP4ZBxrkIAC+gSDWA/bO6JXaEBm7vkX/6UQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47eg8yd0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 18:01:05 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA02.qualcomm.com [127.0.0.1])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 44EI0NoT022370;
-	Tue, 14 May 2024 18:01:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 3y21rmbx6g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 18:01:03 +0000
-Received: from NALASPPMTA02.qualcomm.com (NALASPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44EI13m1023598;
-	Tue, 14 May 2024 18:01:03 GMT
-Received: from hu-devc-lv-u22-c.qualcomm.com (hu-uchalich-lv.qualcomm.com [10.81.89.1])
-	by NALASPPMTA02.qualcomm.com (PPS) with ESMTPS id 44EI13Qv023584
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 18:01:03 +0000
-Received: by hu-devc-lv-u22-c.qualcomm.com (Postfix, from userid 4184210)
-	id 43E635CE; Tue, 14 May 2024 11:01:03 -0700 (PDT)
-From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@quicinc.com
-Subject: [PATCH] firmware: qcom-scm: Remove QCOM_SMC_WAITQ_FLAG_WAKE_ALL
-Date: Tue, 14 May 2024 11:00:46 -0700
-Message-Id: <20240514180046.543763-1-quic_uchalich@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVSAm+Q7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8E1C2BD10;
+	Tue, 14 May 2024 18:01:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715709686;
+	bh=Bc0wnqBHezPEtPKq9Cw+J6D4ZphM4Nqpns2kp7JEKHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CVSAm+Q7jYM0tMpv4biueBN83sAVh5OHFylqNh5+9zQ+7+cMZg8Ntwyu2jg8qlKMa
+	 Du8JgN5ms8MXa0m+vB1PuwbNbRR5EbOuiGlfNZwd3UDv/xNIonLJ1s3nKtk5+WuO1n
+	 Bwx8LvTuk7H3kZeYRYs6C65w5MeUUIIXjNXqLJKrRsU4xqdesxJ1VYMO0BodazZFJi
+	 wEU9DVG84W3FixjeJu5b2dxl/Zhf4gtkOGjQR0d8xM6Q3jknGFkJ7DLkd2rGVvaE0S
+	 /wJt+J/i0x1WzmAVhLrKC1icMGahXzTyKYLsx3sW+HF2YCoom7dZJbIH1Olx/HdENk
+	 P9xE7vvmXUZsA==
+Date: Tue, 14 May 2024 19:01:21 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Alina Yu <alina_yu@richtek.com>, lgirdwood@gmail.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, johnny_lai@richtek.com,
+	cy_huang@richtek.com
+Subject: Re: [PATCH v3 6/6] regulator: dt-bindings: rtq2208: Add property to
+ get ldo of RTQ2208 is adjustable or not
+Message-ID: <20240514-plunging-chair-803d9e342e6f@spud>
+References: <cover.1715340537.git.alina_yu@richtek.com>
+ <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
+ <20240513-tissue-repave-13d2e3bf88fd@spud>
+ <d97752ed-4032-4681-b28f-17f149fdc3d4@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TNhuPX5eJ39dRjdANG4ECDCNUJA4FUys
-X-Proofpoint-ORIG-GUID: TNhuPX5eJ39dRjdANG4ECDCNUJA4FUys
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-14_10,2024-05-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- malwarescore=0 phishscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405140127
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="y6XnTRi+fElIVr2m"
+Content-Disposition: inline
+In-Reply-To: <d97752ed-4032-4681-b28f-17f149fdc3d4@sirena.org.uk>
 
-This flag was never supported by firmware, so remove it.
 
-Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
----
- drivers/firmware/qcom/qcom_scm.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+--y6XnTRi+fElIVr2m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index 68f4df7e6c3c..d511ede6f172 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -114,7 +114,6 @@ static const u8 qcom_scm_cpu_warm_bits[QCOM_SCM_BOOT_MAX_CPUS] = {
- };
- 
- #define QCOM_SMC_WAITQ_FLAG_WAKE_ONE	BIT(0)
--#define QCOM_SMC_WAITQ_FLAG_WAKE_ALL	BIT(1)
- 
- #define QCOM_DLOAD_MASK		GENMASK(5, 4)
- #define QCOM_DLOAD_NODUMP	0
-@@ -1793,9 +1792,8 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
- 			goto out;
- 		}
- 
--		if (flags != QCOM_SMC_WAITQ_FLAG_WAKE_ONE &&
--		    flags != QCOM_SMC_WAITQ_FLAG_WAKE_ALL) {
--			dev_err(scm->dev, "Invalid flags found for wq_ctx: %u\n", flags);
-+		if (flags != QCOM_SMC_WAITQ_FLAG_WAKE_ONE) {
-+			dev_err(scm->dev, "Invalid flags received for wq_ctx: %u\n", flags);
- 			goto out;
- 		}
- 
--- 
-2.34.1
+On Tue, May 14, 2024 at 11:34:29AM +0100, Mark Brown wrote:
+> On Mon, May 13, 2024 at 05:22:54PM +0100, Conor Dooley wrote:
+> > On Fri, May 10, 2024 at 08:06:25PM +0800, Alina Yu wrote:
+>=20
+> > > +            richtek,fixed-microvolt =3D <1200000>;
+> > >              regulator-min-microvolt =3D <1200000>;
+> > >              regulator-max-microvolt =3D <1200000>;
+>=20
+> > I'm dumb and this example seemed odd to me. Can you explain to me why
+> > it is not sufficient to set min-microvolt =3D=3D max-microvolt to achie=
+ve
+> > the same thing?
+>=20
+> This is for a special mode where the voltage being configured is out of
+> the range usually supported by the regulator, requiring a hardware
+> design change to achieve.  The separate property is because otherwise we
+> can't distinguish the case where the mode is in use from the case where
+> the constraints are nonsense, and we need to handle setting a fixed
+> voltage on a configurable regulator differently to there being a
+> hardware fixed voltage on a normally configurable regulator.
 
+Cool, I think an improved comment message and description would be
+helpful then to describe the desired behaviour that you mention here.
+The commit message in particular isn't great:
+| Since there is no way to check is ldo is adjustable or not.
+| As discussing in v2 series, 'richtek,fixed-microvolt' is added for that.
+| user is supposed to know whether vout of ldo is adjustable.
+
+It also doesn't seem like this sort of behaviour would be limited to
+Richtek either, should this actually be a common property in
+regulator.yaml w/o the vendor prefix?
+
+Cheers,
+Conor.
+
+--y6XnTRi+fElIVr2m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkOm8QAKCRB4tDGHoIJi
+0gEmAP4o7NTdR+NPyO2SBBx+xJS2PcXXapchLf9DJZ9ZomjMwwD5AX40LUjeIKEB
+aR0bZK9YX8u5pX0M5rhLdjRaYib3igU=
+=D1lw
+-----END PGP SIGNATURE-----
+
+--y6XnTRi+fElIVr2m--
