@@ -1,57 +1,57 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A3814F135;
-	Tue, 14 May 2024 13:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE921553B4;
+	Tue, 14 May 2024 13:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715692672; cv=none; b=s+IPEWT+yiM/tKxYIb2ZlzbzmVabf/Jy/e4a2cJ1ShOr+mEqGsWbYLDSJSeFAiyvYSmXImltprE0a4Q1MljdfmkIdcBphF8Ikbp91Q7t6JXwqS6SZR2mEPhRBbU2F4HIG9+R4D9Cx8czb1Us5pnuSYrpPWjAPzXcpFkfW8K1XUw=
+	t=1715692676; cv=none; b=tPI5hMZstuCGLlpEtIjugI+kCigqaxOKOvzxyWG3nTAkKTW9/lme574nw+P0Qz6SJA0WYjNmgbb0QrRagw+SA+oGhc47HkJ1/1GsvigPR/4+jRioPgstKeDaV7y6ZdB+CzNtRusiT2c/dGTFf6BlFS3kdI52SBpNYNoslJn1mbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715692672; c=relaxed/simple;
-	bh=lvShv7o989WUL7BP6s6yJWWP7E2ugWSm7FrWqYQBpeY=;
+	s=arc-20240116; t=1715692676; c=relaxed/simple;
+	bh=3Yd39esXT+u62EdLtna/vNE2HE8gT4z3hM3aUbO9QMk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fxf5g01J6/xk/JGRGxamoXK9WfUIO6t9FDmUOk8eqAQIh2hTnkXMMz+jQKdd3sN7awU7/SDGo7hZf781etYjvG83Xl7YpLp6kwq2HHzkdAjeiJun4LIDQbLZUN+iMNyb1K9N6tAahknmksjd2LRujPBv+5WWelGaVQQCNPcuX3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SWl1wlB5; arc=none smtp.client-ip=209.85.214.181
+	 MIME-Version; b=ptL7nkuLFNtHw8hnL8TkwrOAXsGFkLVjCoGdqKSo+jvU6CvAteEMKsozrg7ByitPLMDBZXT8PiO0Dk+jxNvPLSm1IhP6LJaBEDI6j9eDq9k6hxcxy0JGryfMRJ9YgLOiNyqfL5OoLeHAGNWYkcIuOH8HmAE5Wsk/iRbKuJW4mQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UOENLJ2e; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWl1wlB5"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so32609735ad.1;
-        Tue, 14 May 2024 06:17:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOENLJ2e"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so32610405ad.1;
+        Tue, 14 May 2024 06:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715692670; x=1716297470; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715692674; x=1716297474; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IcsGyGuiqU3jPIGnlfpE9jCbCuDL1CH0W6DIoxyhi2A=;
-        b=SWl1wlB5EJjAq+/vJrzDtX0Rib5ssvlRR/larl2ycSS6EnlRMxNL+zSmvSW/XAWlmy
-         DUCEIt3XkT7Sg4AsEfd6WPcS6TjDH/xyWsJwqXX7dbvR1Y0l8R4lD4Z9Z5AjC5qU6hDm
-         +G1HbEcMu8xQxl5qnyETLfdkTmTiA5l6Pukh/lvbi6c5oprWhuCV1wO6RUC3vSADSPMP
-         6uRAC1pSkR0MbDNN6pD+OY2zogZJG3zq0PLo6HrOW9mixMnPyQzx2km+06dU+fJB64PU
-         owqDms/KLjDN8ujtOiFY5I2XrzOUJzGDaeaBLpSV8ymRDkkSGT6ulfYkh0j0mYqCP+eq
-         Rfhg==
+        bh=LPU1PJsyXhU7+DXDV5zAoABFidh9cJJCkXkEr28GmXk=;
+        b=UOENLJ2e5G41UFgCyrHk7D1T7fwgcmlLGBAqN0Be8TV+t6Jx/uncEHN2SV/6oBwKeL
+         A/bTYQjUFQuqCMCxD39iK8sDJ57X7rEMF2w6TB7JtOlqGOBBdS+mBBugwLL87qKE9ZfS
+         krhr4TfSaGJus8MM7e7EAiJYKWBzHCJ6ayRHXL1coR1TK31QGmCuu7OedysolxpsPDzL
+         9TmodVv99jvulnnHw+YRmZHPwniXJ1mEnESorSgQVMvQgPBcU4amXzm54tVVjkwwtPM4
+         koU+EvuKQNwru7CDhE+Yk3IZPBN+cd3Ry4nMpYfC4MMXCCN1b74KGrTDfJhx7DbjR1B3
+         zuPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715692670; x=1716297470;
+        d=1e100.net; s=20230601; t=1715692674; x=1716297474;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IcsGyGuiqU3jPIGnlfpE9jCbCuDL1CH0W6DIoxyhi2A=;
-        b=qoIR7nr0qjuyiXzaukj0NawEi4oL0gnKHJRwylHFzILYyTw1re/ke2GRiocUuSmBZ0
-         jyKKzdvdBS0yihBXJHASXA6QRcAqMxjBzG2exeVl8a8JSs2iaMRVddcujcRWaGqUALfi
-         7g0NyL1MaYTxpKOHnVs+a5MOGyohXZgZF20ag0pNm98YbW4Jg3R6ZDuUBI8Noa/CcgbO
-         S2rnyUEddaPjrOhu7yJS4MxldY5xqZMQC/IYK0s2QN5AJif5L+bIzRRyMZ6hvI+P5UgM
-         27skWZ7yYxqYUbfQQv+uqvNk0ZgVSBTnTuRxIBKSwD2NpTQv8UHJTRUOAa/Nejyzdzqk
-         YKWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvSuw0qvSYV7wYRvadR1ad9WDSoGKJu7BVkVYyJAie+N3+qBJ7wp1QX/+v8izkeN6c8eUHiiwYbDBihL3J+9EQ5FApuV4eWHLYLuLwTLgk2l3NK/2MCf+IuedD7XsY+2Q2PBqiB/QvRzsGokAkjyL8ZGEMlFHaCHOkIpMN8q1M3gjvY2FEqL0OlFaY
-X-Gm-Message-State: AOJu0YyU8CdKsklR3lKpIKg36WPGO6NxAL3nsbp1d2Y8EK4jlUQNqN3g
-	DXHCgoGn7kCE6ne5gcPL38SgL+CQgkr3LK946R0JYh6lnqOe1JrA
-X-Google-Smtp-Source: AGHT+IGMv4o2rW6xKOQ5T8ig/4Rd5TSPWGzO+2tpLor2HW7gD3KrbE+1N7SdAEt/p3VRvshAcpZEew==
-X-Received: by 2002:a17:902:650d:b0:1eb:5c0f:6e78 with SMTP id d9443c01a7336-1ef43c0cf75mr111764415ad.11.1715692669968;
-        Tue, 14 May 2024 06:17:49 -0700 (PDT)
+        bh=LPU1PJsyXhU7+DXDV5zAoABFidh9cJJCkXkEr28GmXk=;
+        b=coSAHyXsyjNtIg8nlo9yXZnOp2QvoWQkSoBxTxVC118AZ3k1SxuYp/SxHls8Pjn2k9
+         cg62Zn13n40dchVDEBNcD54VCVHaShr7ZDNuGlzdYRzo0DGorqZzoOCtPAYSQ+StD6IZ
+         Fhhqbezls7mnZqQBpU43esfu9ZuTamKjuJNjt5QkF3owL1SlhkPe45jvBmiypZ4vcQIQ
+         trmjjuv+JadhtWG4Fy8KRQtt15lIjEB9vmc1aVq23pjAE/95wNDB5rZ87+hd1LZ4SyoL
+         jtua5xkpvihtNdZ+pulXyc/giOdEyo6pm3zHiiUuhqiujU1YfvFSSi+/OjHyhdRJ4VBe
+         rudQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqW5ao4UM+C9234peLwu17Y77/8Xa43NNfNw7c087DP/7EmtA2NyyosiFTlUWcMT3P4JIRDuMk7aM+VXNSM02Aem8Lakt9u/UIpf6rbh8SNSkuPur4yJNqanMSN12IoHuPsjAh+VoOYVVl0bXuevezSbe0QBnFHFq/Gf7z91SvvDPolkLW+ytj7ujf
+X-Gm-Message-State: AOJu0Yxq8qC6MxiOrIP4PXS71x/lr7XE32Q2efJ61MsiQ42PhA2bPO2h
+	lcw6X4UxMRej58HLoJrgmJqRfVLVt568+TRzSCvHEWxLowAg1R1h
+X-Google-Smtp-Source: AGHT+IGZgiXvKq66GWWkIsokJFEZ4y+wsWbeZwDVtxGtQYiDniSMBXMpzmoUlEnQkpk4DBvhoGWUiA==
+X-Received: by 2002:a17:902:da8e:b0:1e4:48a6:968b with SMTP id d9443c01a7336-1ef43c0cf05mr141137145ad.13.1715692673747;
+        Tue, 14 May 2024 06:17:53 -0700 (PDT)
 Received: from wedsonaf-dev.. ([50.204.89.32])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0b9d18a4sm97277335ad.56.2024.05.14.06.17.49
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0b9d18a4sm97277335ad.56.2024.05.14.06.17.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 06:17:49 -0700 (PDT)
+        Tue, 14 May 2024 06:17:53 -0700 (PDT)
 From: Wedson Almeida Filho <wedsonaf@gmail.com>
 To: Alexander Viro <viro@zeniv.linux.org.uk>,
 	Christian Brauner <brauner@kernel.org>,
@@ -63,9 +63,9 @@ Cc: Kent Overstreet <kent.overstreet@gmail.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: [RFC PATCH v2 11/30] rust: fs: introduce `file::Operations::read_dir`
-Date: Tue, 14 May 2024 10:16:52 -0300
-Message-Id: <20240514131711.379322-12-wedsonaf@gmail.com>
+Subject: [RFC PATCH v2 15/30] rust: fs: introduce `inode::Operations::lookup`
+Date: Tue, 14 May 2024 10:16:56 -0300
+Message-Id: <20240514131711.379322-16-wedsonaf@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240514131711.379322-1-wedsonaf@gmail.com>
 References: <20240514131711.379322-1-wedsonaf@gmail.com>
@@ -79,431 +79,254 @@ Content-Transfer-Encoding: 8bit
 
 From: Wedson Almeida Filho <walmeida@microsoft.com>
 
-Allows Rust file systems to report the contents of their directory
-inodes. The reported entries cannot be opened yet.
+Allow Rust file systems to create inodes that are children of a
+directory inode when they're looked up by name.
 
 Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
 ---
- rust/helpers.c            |  12 +++
- rust/kernel/fs/file.rs    | 176 ++++++++++++++++++++++++++++++++++++--
- rust/kernel/fs/inode.rs   |  31 +++++--
- samples/rust/rust_rofs.rs |  85 +++++++++++++++---
- 4 files changed, 279 insertions(+), 25 deletions(-)
+ rust/kernel/error.rs      |  1 -
+ rust/kernel/fs/dentry.rs  |  1 -
+ rust/kernel/fs/inode.rs   | 58 ++++++++++++++++++++++++-----
+ samples/rust/rust_rofs.rs | 77 +++++++++++++++++++++++++++++----------
+ 4 files changed, 105 insertions(+), 32 deletions(-)
 
-diff --git a/rust/helpers.c b/rust/helpers.c
-index 87301e1ace65..deb2d21f3096 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -195,6 +195,18 @@ unsigned long rust_helper_copy_to_user(void __user *to, const void *from,
- }
- EXPORT_SYMBOL_GPL(rust_helper_copy_to_user);
- 
-+void rust_helper_inode_lock_shared(struct inode *inode)
-+{
-+	inode_lock_shared(inode);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_inode_lock_shared);
-+
-+void rust_helper_inode_unlock_shared(struct inode *inode)
-+{
-+	inode_unlock_shared(inode);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_inode_unlock_shared);
-+
- /*
-  * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
-  * use it in contexts where Rust expects a `usize` like slice (array) indices.
-diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-index 67dd3ecf7d98..6d61723f440d 100644
---- a/rust/kernel/fs/file.rs
-+++ b/rust/kernel/fs/file.rs
-@@ -7,13 +7,13 @@
- //! C headers: [`include/linux/fs.h`](srctree/include/linux/fs.h) and
- //! [`include/linux/file.h`](srctree/include/linux/file.h)
- 
--use super::{dentry::DEntry, inode::INode, FileSystem, UnspecifiedFS};
-+use super::{dentry::DEntry, inode, inode::INode, inode::Ino, FileSystem, Offset, UnspecifiedFS};
- use crate::{
-     bindings,
--    error::{code::*, Error, Result},
--    types::{ARef, AlwaysRefCounted, Opaque},
-+    error::{code::*, from_result, Error, Result},
-+    types::{ARef, AlwaysRefCounted, Locked, Opaque},
- };
--use core::{marker::PhantomData, ptr};
-+use core::{marker::PhantomData, mem::ManuallyDrop, ptr};
- use macros::vtable;
- 
- /// Flags associated with a [`File`].
-@@ -275,10 +275,20 @@ fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
- pub trait Operations {
-     /// File system that these operations are compatible with.
-     type FileSystem: FileSystem + ?Sized;
-+
-+    /// Reads directory entries from directory files.
-+    ///
-+    /// [`DirEmitter::pos`] holds the current position of the directory reader.
-+    fn read_dir(
-+        _file: &File<Self::FileSystem>,
-+        _inode: &Locked<&INode<Self::FileSystem>, inode::ReadSem>,
-+        _emitter: &mut DirEmitter,
-+    ) -> Result {
-+        Err(EINVAL)
-+    }
- }
- 
- /// Represents file operations.
--#[allow(dead_code)]
- pub struct Ops<T: FileSystem + ?Sized>(pub(crate) *const bindings::file_operations, PhantomData<T>);
- 
- impl<T: FileSystem + ?Sized> Ops<T> {
-@@ -294,7 +304,11 @@ impl<T: Operations + ?Sized> Table<T> {
-                 read_iter: None,
-                 write_iter: None,
-                 iopoll: None,
--                iterate_shared: None,
-+                iterate_shared: if T::HAS_READ_DIR {
-+                    Some(Self::read_dir_callback)
-+                } else {
-+                    None
-+                },
-                 poll: None,
-                 unlocked_ioctl: None,
-                 compat_ioctl: None,
-@@ -321,7 +335,157 @@ impl<T: Operations + ?Sized> Table<T> {
-                 uring_cmd: None,
-                 uring_cmd_iopoll: None,
-             };
-+
-+            unsafe extern "C" fn read_dir_callback(
-+                file_ptr: *mut bindings::file,
-+                ctx_ptr: *mut bindings::dir_context,
-+            ) -> core::ffi::c_int {
-+                from_result(|| {
-+                    // SAFETY: The C API guarantees that `file` is valid for the duration of the
-+                    // callback. Since this callback is specifically for filesystem T, we know `T`
-+                    // is the right filesystem.
-+                    let file = unsafe { File::from_raw(file_ptr) };
-+
-+                    // SAFETY: The C API guarantees that this is the only reference to the
-+                    // `dir_context` instance.
-+                    let emitter = unsafe { &mut *ctx_ptr.cast::<DirEmitter>() };
-+                    let orig_pos = emitter.pos();
-+
-+                    // SAFETY: The C API guarantees that the inode's rw semaphore is locked in read
-+                    // mode. It does not expect callees to unlock it, so we make the locked object
-+                    // manually dropped to avoid unlocking it.
-+                    let locked = ManuallyDrop::new(unsafe { Locked::new(file.inode()) });
-+
-+                    // Call the module implementation. We ignore errors if directory entries have
-+                    // been succesfully emitted: this is because we want users to see them before
-+                    // the error.
-+                    match T::read_dir(file, &locked, emitter) {
-+                        Ok(_) => Ok(0),
-+                        Err(e) => {
-+                            if emitter.pos() == orig_pos {
-+                                Err(e)
-+                            } else {
-+                                Ok(0)
-+                            }
-+                        }
-+                    }
-+                })
-+            }
-         }
-         Self(&Table::<U>::TABLE, PhantomData)
+diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
+index bb13bd4a7fa6..15628d2fa3b2 100644
+--- a/rust/kernel/error.rs
++++ b/rust/kernel/error.rs
+@@ -129,7 +129,6 @@ pub fn to_errno(self) -> core::ffi::c_int {
      }
- }
-+
-+/// The types of directory entries reported by [`Operations::read_dir`].
-+#[repr(u32)]
-+#[derive(Copy, Clone)]
-+pub enum DirEntryType {
-+    /// Unknown type.
-+    Unknown = bindings::DT_UNKNOWN,
-+
-+    /// Named pipe (first-in, first-out) type.
-+    Fifo = bindings::DT_FIFO,
-+
-+    /// Character device type.
-+    Chr = bindings::DT_CHR,
-+
-+    /// Directory type.
-+    Dir = bindings::DT_DIR,
-+
-+    /// Block device type.
-+    Blk = bindings::DT_BLK,
-+
-+    /// Regular file type.
-+    Reg = bindings::DT_REG,
-+
-+    /// Symbolic link type.
-+    Lnk = bindings::DT_LNK,
-+
-+    /// Named unix-domain socket type.
-+    Sock = bindings::DT_SOCK,
-+
-+    /// White-out type.
-+    Wht = bindings::DT_WHT,
-+}
-+
-+impl From<inode::Type> for DirEntryType {
-+    fn from(value: inode::Type) -> Self {
-+        match value {
-+            inode::Type::Dir => DirEntryType::Dir,
-+        }
-+    }
-+}
-+
-+impl TryFrom<u32> for DirEntryType {
-+    type Error = crate::error::Error;
-+
-+    fn try_from(v: u32) -> Result<Self> {
-+        match v {
-+            v if v == Self::Unknown as u32 => Ok(Self::Unknown),
-+            v if v == Self::Fifo as u32 => Ok(Self::Fifo),
-+            v if v == Self::Chr as u32 => Ok(Self::Chr),
-+            v if v == Self::Dir as u32 => Ok(Self::Dir),
-+            v if v == Self::Blk as u32 => Ok(Self::Blk),
-+            v if v == Self::Reg as u32 => Ok(Self::Reg),
-+            v if v == Self::Lnk as u32 => Ok(Self::Lnk),
-+            v if v == Self::Sock as u32 => Ok(Self::Sock),
-+            v if v == Self::Wht as u32 => Ok(Self::Wht),
-+            _ => Err(EDOM),
-+        }
-+    }
-+}
-+
-+/// Directory entry emitter.
-+///
-+/// This is used in [`Operations::read_dir`] implementations to report the directory entry.
-+#[repr(transparent)]
-+pub struct DirEmitter(bindings::dir_context);
-+
-+impl DirEmitter {
-+    /// Returns the current position of the emitter.
-+    pub fn pos(&self) -> Offset {
-+        self.0.pos
-+    }
-+
-+    /// Emits a directory entry.
-+    ///
-+    /// `pos_inc` is the number with which to increment the current position on success.
-+    ///
-+    /// `name` is the name of the entry.
-+    ///
-+    /// `ino` is the inode number of the entry.
-+    ///
-+    /// `etype` is the type of the entry.
-+    ///
-+    /// Returns `false` when the entry could not be emitted, possibly because the user-provided
-+    /// buffer is full.
-+    pub fn emit(&mut self, pos_inc: Offset, name: &[u8], ino: Ino, etype: DirEntryType) -> bool {
-+        let Ok(name_len) = i32::try_from(name.len()) else {
-+            return false;
-+        };
-+
-+        let Some(actor) = self.0.actor else {
-+            return false;
-+        };
-+
-+        let Some(new_pos) = self.0.pos.checked_add(pos_inc) else {
-+            return false;
-+        };
-+
-+        // SAFETY: `name` is valid at least for the duration of the `actor` call.
-+        let ret = unsafe {
-+            actor(
-+                &mut self.0,
-+                name.as_ptr().cast::<i8>(),
-+                name_len,
-+                self.0.pos,
-+                ino,
-+                etype as _,
-+            )
-+        };
-+        if ret {
-+            self.0.pos = new_pos;
-+        }
-+        ret
-+    }
-+}
+ 
+     /// Returns the error encoded as a pointer.
+-    #[allow(dead_code)]
+     pub(crate) fn to_ptr<T>(self) -> *mut T {
+         // SAFETY: `self.0` is a valid error due to its invariant.
+         unsafe { bindings::ERR_PTR(self.0.into()) as *mut _ }
+diff --git a/rust/kernel/fs/dentry.rs b/rust/kernel/fs/dentry.rs
+index 6a36a48cd28b..c93debb70ea3 100644
+--- a/rust/kernel/fs/dentry.rs
++++ b/rust/kernel/fs/dentry.rs
+@@ -43,7 +43,6 @@ impl<T: FileSystem + ?Sized> DEntry<T> {
+     ///
+     /// * `ptr` must be valid for at least the lifetime of the returned reference.
+     /// * `ptr` has the correct file system type, or `T` is [`super::UnspecifiedFS`].
+-    #[allow(dead_code)]
+     pub(crate) unsafe fn from_raw<'a>(ptr: *mut bindings::dentry) -> &'a Self {
+         // SAFETY: The safety requirements guarantee that the reference is and remains valid.
+         unsafe { &*ptr.cast::<Self>() }
 diff --git a/rust/kernel/fs/inode.rs b/rust/kernel/fs/inode.rs
-index 11df493314ea..d84d8d2f7076 100644
+index 3d65b917af0e..c314d036c87e 100644
 --- a/rust/kernel/fs/inode.rs
 +++ b/rust/kernel/fs/inode.rs
 @@ -6,9 +6,9 @@
  //!
  //! C headers: [`include/linux/fs.h`](srctree/include/linux/fs.h)
  
--use super::{sb::SuperBlock, FileSystem, Offset, UnspecifiedFS};
-+use super::{file, sb::SuperBlock, FileSystem, Offset, UnspecifiedFS};
- use crate::error::Result;
--use crate::types::{ARef, AlwaysRefCounted, Opaque};
-+use crate::types::{ARef, AlwaysRefCounted, Lockable, Opaque};
+-use super::{file, sb::SuperBlock, FileSystem, Offset, UnspecifiedFS};
+-use crate::error::Result;
+-use crate::types::{ARef, AlwaysRefCounted, Lockable, Opaque};
++use super::{dentry, dentry::DEntry, file, sb::SuperBlock, FileSystem, Offset, UnspecifiedFS};
++use crate::error::{code::*, Result};
++use crate::types::{ARef, AlwaysRefCounted, Lockable, Locked, Opaque};
  use crate::{bindings, block, time::Timespec};
  use core::mem::ManuallyDrop;
  use core::{marker::PhantomData, ptr};
-@@ -78,6 +78,22 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-     }
+@@ -22,6 +22,14 @@
+ pub trait Operations {
+     /// File system that these operations are compatible with.
+     type FileSystem: FileSystem + ?Sized;
++
++    /// Returns the inode corresponding to the directory entry with the given name.
++    fn lookup(
++        _parent: &Locked<&INode<Self::FileSystem>, ReadSem>,
++        _dentry: dentry::Unhashed<'_, Self::FileSystem>,
++    ) -> Result<Option<ARef<DEntry<Self::FileSystem>>>> {
++        Err(ENOTSUPP)
++    }
  }
  
-+/// Indicates that the an inode's rw semapahore is locked in read (shared) mode.
-+pub struct ReadSem;
-+
-+unsafe impl<T: FileSystem + ?Sized> Lockable<ReadSem> for INode<T> {
-+    fn raw_lock(&self) {
-+        // SAFETY: Since there's a reference to the inode, it must be valid.
-+        unsafe { bindings::inode_lock_shared(self.0.get()) };
-+    }
-+
-+    unsafe fn unlock(&self) {
-+        // SAFETY: Since there's a reference to the inode, it must be valid. Additionally, the
-+        // safety requirements of this functino require that the inode be locked in read mode.
-+        unsafe { bindings::inode_unlock_shared(self.0.get()) };
-+    }
-+}
-+
- /// An inode that is locked and hasn't been initialised yet.
- ///
- /// # Invariants
-@@ -95,9 +111,6 @@ pub fn init(mut self, params: Params) -> Result<ARef<INode<T>>> {
+ /// A node (inode) in the file index.
+@@ -118,12 +126,7 @@ pub fn init(mut self, params: Params) -> Result<ARef<INode<T>>> {
+         // SAFETY: This is a new inode, so it's safe to manipulate it mutably.
          let inode = unsafe { self.0.as_mut() };
          let mode = match params.typ {
-             Type::Dir => {
--                // SAFETY: `simple_dir_operations` never changes, it's safe to reference it.
--                inode.__bindgen_anon_3.i_fop = unsafe { &bindings::simple_dir_operations };
+-            Type::Dir => {
+-                // SAFETY: `simple_dir_inode_operations` never changes, it's safe to reference it.
+-                inode.i_op = unsafe { &bindings::simple_dir_inode_operations };
 -
-                 // SAFETY: `simple_dir_inode_operations` never changes, it's safe to reference it.
-                 inode.i_op = unsafe { &bindings::simple_dir_inode_operations };
+-                bindings::S_IFDIR
+-            }
++            Type::Dir => bindings::S_IFDIR,
+         };
  
-@@ -126,6 +139,14 @@ pub fn init(mut self, params: Params) -> Result<ARef<INode<T>>> {
-         // being called with the `ManuallyDrop` instance created above.
+         inode.i_mode = (params.mode & 0o777) | u16::try_from(mode)?;
+@@ -148,6 +151,14 @@ pub fn init(mut self, params: Params) -> Result<ARef<INode<T>>> {
          Ok(unsafe { ARef::from_raw(manual.0.cast::<INode<T>>()) })
      }
-+
-+    /// Sets the file operations on this new inode.
-+    pub fn set_fops(&mut self, fops: file::Ops<T>) -> &mut Self {
+ 
++    /// Sets the inode operations on this new inode.
++    pub fn set_iops(&mut self, iops: Ops<T>) -> &mut Self {
 +        // SAFETY: By the type invariants, it's ok to modify the inode.
 +        let inode = unsafe { self.0.as_mut() };
-+        inode.__bindgen_anon_3.i_fop = fops.0;
++        inode.i_op = iops.0;
 +        self
 +    }
- }
- 
- impl<T: FileSystem + ?Sized> Drop for New<T> {
++
+     /// Sets the file operations on this new inode.
+     pub fn set_fops(&mut self, fops: file::Ops<T>) -> &mut Self {
+         // SAFETY: By the type invariants, it's ok to modify the inode.
+@@ -221,7 +232,11 @@ pub const fn new<U: Operations<FileSystem = T> + ?Sized>() -> Self {
+         struct Table<T: Operations + ?Sized>(PhantomData<T>);
+         impl<T: Operations + ?Sized> Table<T> {
+             const TABLE: bindings::inode_operations = bindings::inode_operations {
+-                lookup: None,
++                lookup: if T::HAS_LOOKUP {
++                    Some(Self::lookup_callback)
++                } else {
++                    None
++                },
+                 get_link: None,
+                 permission: None,
+                 get_inode_acl: None,
+@@ -247,6 +262,29 @@ impl<T: Operations + ?Sized> Table<T> {
+                 fileattr_get: None,
+                 get_offset_ctx: None,
+             };
++
++            extern "C" fn lookup_callback(
++                parent_ptr: *mut bindings::inode,
++                dentry_ptr: *mut bindings::dentry,
++                _flags: u32,
++            ) -> *mut bindings::dentry {
++                // SAFETY: The C API guarantees that `parent_ptr` is a valid inode.
++                let parent = unsafe { INode::from_raw(parent_ptr) };
++
++                // SAFETY: The C API guarantees that `dentry_ptr` is a valid dentry.
++                let dentry = unsafe { DEntry::from_raw(dentry_ptr) };
++
++                // SAFETY: The C API guarantees that the inode's rw semaphore is locked at least in
++                // read mode. It does not expect callees to unlock it, so we make the locked object
++                // manually dropped to avoid unlocking it.
++                let locked = ManuallyDrop::new(unsafe { Locked::new(parent) });
++
++                match T::lookup(&locked, dentry::Unhashed(dentry)) {
++                    Err(e) => e.to_ptr(),
++                    Ok(None) => ptr::null_mut(),
++                    Ok(Some(ret)) => ManuallyDrop::new(ret).0.get(),
++                }
++            }
+         }
+         Self(&Table::<U>::TABLE, PhantomData)
+     }
 diff --git a/samples/rust/rust_rofs.rs b/samples/rust/rust_rofs.rs
-index d32c4645ebe8..9da01346d8f8 100644
+index f4be5908369c..2a87e524e0e1 100644
 --- a/samples/rust/rust_rofs.rs
 +++ b/samples/rust/rust_rofs.rs
-@@ -2,9 +2,9 @@
+@@ -2,9 +2,11 @@
  
  //! Rust read-only file system sample.
  
--use kernel::fs::{dentry, inode, sb::SuperBlock};
-+use kernel::fs::{dentry, file, file::File, inode, inode::INode, sb::SuperBlock};
+-use kernel::fs::{dentry, file, file::File, inode, inode::INode, sb::SuperBlock, Offset};
++use kernel::fs::{
++    dentry, dentry::DEntry, file, file::File, inode, inode::INode, sb::SuperBlock, Offset,
++};
  use kernel::prelude::*;
--use kernel::{c_str, fs, time::UNIX_EPOCH, types::Either};
-+use kernel::{c_str, fs, time::UNIX_EPOCH, types::Either, types::Locked};
+-use kernel::{c_str, fs, time::UNIX_EPOCH, types::Either, types::Locked, user};
++use kernel::{c_str, fs, time::UNIX_EPOCH, types::ARef, types::Either, types::Locked, user};
  
  kernel::module_fs! {
      type: RoFs,
-@@ -14,6 +14,32 @@
-     license: "GPL",
- }
+@@ -39,8 +41,36 @@ struct Entry {
+ ];
  
-+struct Entry {
-+    name: &'static [u8],
-+    ino: u64,
-+    etype: inode::Type,
+ const DIR_FOPS: file::Ops<RoFs> = file::Ops::new::<RoFs>();
++const DIR_IOPS: inode::Ops<RoFs> = inode::Ops::new::<RoFs>();
+ 
+ struct RoFs;
++
++impl RoFs {
++    fn iget(sb: &SuperBlock<Self>, e: &'static Entry) -> Result<ARef<INode<Self>>> {
++        let mut new = match sb.get_or_create_inode(e.ino)? {
++            Either::Left(existing) => return Ok(existing),
++            Either::Right(new) => new,
++        };
++
++        match e.etype {
++            inode::Type::Dir => new.set_iops(DIR_IOPS).set_fops(DIR_FOPS),
++        };
++
++        new.init(inode::Params {
++            typ: e.etype,
++            mode: 0o555,
++            size: ENTRIES.len().try_into()?,
++            blocks: 1,
++            nlink: 2,
++            uid: 0,
++            gid: 0,
++            atime: UNIX_EPOCH,
++            ctime: UNIX_EPOCH,
++            mtime: UNIX_EPOCH,
++        })
++    }
 +}
 +
-+const ENTRIES: [Entry; 3] = [
-+    Entry {
-+        name: b".",
-+        ino: 1,
-+        etype: inode::Type::Dir,
-+    },
-+    Entry {
-+        name: b"..",
-+        ino: 1,
-+        etype: inode::Type::Dir,
-+    },
-+    Entry {
-+        name: b"subdir",
-+        ino: 2,
-+        etype: inode::Type::Dir,
-+    },
-+];
-+
-+const DIR_FOPS: file::Ops<RoFs> = file::Ops::new::<RoFs>();
-+
- struct RoFs;
  impl fs::FileSystem for RoFs {
      const NAME: &'static CStr = c_str!("rust_rofs");
-@@ -26,19 +52,50 @@ fn fill_super(sb: &mut SuperBlock<Self>) -> Result {
+ 
+@@ -50,28 +80,35 @@ fn fill_super(sb: &mut SuperBlock<Self>) -> Result {
+     }
+ 
      fn init_root(sb: &SuperBlock<Self>) -> Result<dentry::Root<Self>> {
-         let inode = match sb.get_or_create_inode(1)? {
-             Either::Left(existing) => existing,
--            Either::Right(new) => new.init(inode::Params {
--                typ: inode::Type::Dir,
--                mode: 0o555,
--                size: 1,
--                blocks: 1,
--                nlink: 2,
--                uid: 0,
--                gid: 0,
--                atime: UNIX_EPOCH,
--                ctime: UNIX_EPOCH,
--                mtime: UNIX_EPOCH,
--            })?,
-+            Either::Right(mut new) => {
-+                new.set_fops(DIR_FOPS);
-+                new.init(inode::Params {
-+                    typ: inode::Type::Dir,
-+                    mode: 0o555,
-+                    size: ENTRIES.len().try_into()?,
-+                    blocks: 1,
-+                    nlink: 2,
-+                    uid: 0,
-+                    gid: 0,
-+                    atime: UNIX_EPOCH,
-+                    ctime: UNIX_EPOCH,
-+                    mtime: UNIX_EPOCH,
-+                })?
-+            }
-         };
+-        let inode = match sb.get_or_create_inode(1)? {
+-            Either::Left(existing) => existing,
+-            Either::Right(mut new) => {
+-                new.set_fops(DIR_FOPS);
+-                new.init(inode::Params {
+-                    typ: inode::Type::Dir,
+-                    mode: 0o555,
+-                    size: ENTRIES.len().try_into()?,
+-                    blocks: 1,
+-                    nlink: 2,
+-                    uid: 0,
+-                    gid: 0,
+-                    atime: UNIX_EPOCH,
+-                    ctime: UNIX_EPOCH,
+-                    mtime: UNIX_EPOCH,
+-                })?
+-            }
+-        };
++        let inode = Self::iget(sb, &ENTRIES[0])?;
          dentry::Root::try_new(inode)
      }
  }
-+
+ 
 +#[vtable]
-+impl file::Operations for RoFs {
++impl inode::Operations for RoFs {
 +    type FileSystem = Self;
 +
-+    fn read_dir(
-+        _file: &File<Self>,
-+        inode: &Locked<&INode<Self>, inode::ReadSem>,
-+        emitter: &mut file::DirEmitter,
-+    ) -> Result {
-+        if inode.ino() != 1 {
-+            return Ok(());
++    fn lookup(
++        parent: &Locked<&INode<Self>, inode::ReadSem>,
++        dentry: dentry::Unhashed<'_, Self>,
++    ) -> Result<Option<ARef<DEntry<Self>>>> {
++        if parent.ino() != 1 {
++            return dentry.splice_alias(None);
 +        }
 +
-+        let pos = emitter.pos();
-+        if pos >= ENTRIES.len().try_into()? {
-+            return Ok(());
-+        }
-+
-+        for e in ENTRIES.iter().skip(pos.try_into()?) {
-+            if !emitter.emit(1, e.name, e.ino, e.etype.into()) {
-+                break;
++        let name = dentry.name();
++        for e in &ENTRIES {
++            if name == e.name {
++                let inode = Self::iget(parent.super_block(), e)?;
++                return dentry.splice_alias(Some(inode));
 +            }
 +        }
 +
-+        Ok(())
++        dentry.splice_alias(None)
 +    }
 +}
++
+ #[vtable]
+ impl file::Operations for RoFs {
+     type FileSystem = Self;
 -- 
 2.34.1
 
