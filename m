@@ -1,773 +1,404 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3278D17FF
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 02:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901BC17FF;
+	Tue, 14 May 2024 02:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715652193; cv=none; b=S75O3ByfitXbpCCkM/QQZOQRUBf6FQPyyXtl/oJzgnYqlSIj1qBjPnqErL3n1Cw0GK25BhUdNIb3Kl0/M30H3FObB8bKhtRXoMnhV9L/qT1clL6VqyjF/OQ4JM75HROsoL0A5PCKGIDoElOzPs6Ti3tpaztdWr3oU5ps+YfygXg=
+	t=1715652329; cv=none; b=qDKPRkN+N0m1iUz0pYuoZvXOyW4jdZQ8ISYEkxWuxTqD8fxQ34dUh2ZdblEIzdyY6z/8TuY7ztvKkQ32uyfPo7xBOooo5XQippMyONHgjV+rpL5MIEMuo1wjfUXRppaA8GJ973Lz58rHzGK8uhQg9P3r7aN3SlKxl46KfyovHgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715652193; c=relaxed/simple;
-	bh=ztQztVEAsLYY0jkIeXwRsOI3ugtrw2zLixrbiHOJZe8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AFl+f58URs4qPK+YJXFWypKakJprpVPm3ZZwApyR6igxwueQbo7aWYolQMtB/QWgvAZi7BfWZ/zkZP/D/aHYkuaHqQNhZvWCryjDwxqpWhVkz6ZVx8Zfcgc20dEMRSroixrNuwzuBYzFn6D9gBijyAH29MCRvQOrRTmwa5UvoDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h7kqacWU; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com
+	s=arc-20240116; t=1715652329; c=relaxed/simple;
+	bh=IGkETeGABm+TIa0iQTB6Fz1ARLWjcPwPnyTonhxV+DI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Lma/qbIddOmt2hpfLPFTWIh/kb/un4hExatJqaACSFdJTCvraI3SY4lx47pUmGkT/pWkOEUCFxttbj5NtcU8CH+FwipiMJkUK32hPhSojymWpwW4NhH4nEapCtTgvuZfyzHjKuMDKan7E+KMHG4mULZW44ZnzRbNT69q4Kk0Vzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KT4YYRTL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h7kqacWU"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be325413eso66082867b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 19:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715652189; x=1716256989; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2CILSZ0uaH9NdCYkm3r9ynyezJGNQ4maM6CJOkgWuPY=;
-        b=h7kqacWUHcEXEucIX9WUqNpoBp5eSiMIKyw0NyVXZblffNtrbHqIYWwf8NCUiBvM7M
-         ZVzfn7p33ROHU1042yLKOzapIsiVlkT+EBacWQtjrd4EzjWRgYTr9qdDhTFGgzXIJ7we
-         WkB0RfCej8+NgIwrWKoN7BZjTebJLXyWwTT6OttlJ8PJwaNxRLXM5rzIJOX/51DcFrEg
-         LCiTvhawUrAogo+Qz66Mpzs+fcSKBXXPpB5Ha5J2FPmMTZQPkUiniy8XHdaAvKA0JY2E
-         t9UnlKMSlgZ03i6M55lsR9uzzh9DGfp+XOLQwT1gZtC/DKh7mkFd780H5UsoOVHwkvsC
-         iLYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715652189; x=1716256989;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2CILSZ0uaH9NdCYkm3r9ynyezJGNQ4maM6CJOkgWuPY=;
-        b=PifFmxQGHn14XnIas/KSllThj6mBifNrK+CBatXePbdszep4NhuTHyy9zl0SSUVhmq
-         U0IIb23ngWH5waTpjEAulMThvS+ZQuNb6TUivO0QgX48Q6t3KhapA7NlkblF8Sjb2zJA
-         0i61Ce8GQfYnvjOjwJVPQNgIPiGZ52YT0RYFOTjPbyCtFEjiVXZrzU33odCTJuoO7RuA
-         ldY5tQED634Jx5BHgmbDzlSjXlHoEeDLKTh6ilFox4Xy8jwc0N1BUjvgjs74w0+3uqT6
-         5UZRIihmnMK99qvasb9FtUXjiWIFDzN6pbawGY8Zv4McRZI7aWJ5FQ2GYqPNwjzfU3sj
-         G7kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKSPPE/XN10uk13jlnTLvHv+Q9GI4UGsprxoUv12MYX740J5Vpv8nETOvCx3aJBVRjFqLiqtq/8R91tBDX/IDOkXPTNJqlgptVugw2
-X-Gm-Message-State: AOJu0YxLHOANzZNw5Jkd1PPzvAQEI28wzcNUOWjV3clEPNNCV2WxBAd7
-	+lq8oSZC0isoWDOBM7+NNFnRMk2iAzfhDYV+K3NV5p/MYpZEVLkFt+jI6JLqyU9//T89mP7O3xj
-	At9J0/Q==
-X-Google-Smtp-Source: AGHT+IEWtB+4/73l6vSM8tCV6D8XBpUnv0LMYl0bKkmcEoYg6wuA/fBaNuJBg4Q9guALsrY4eXPZh4P4kz4V
-X-Received: from yuanchu-desktop.svl.corp.google.com ([2620:15c:2a3:200:c98c:5a45:8674:49c2])
- (user=yuanchu job=sendgmr) by 2002:a05:690c:3804:b0:61b:32dc:881d with SMTP
- id 00721157ae682-622af8c8494mr31409317b3.3.1715652189206; Mon, 13 May 2024
- 19:03:09 -0700 (PDT)
-Date: Mon, 13 May 2024 19:03:00 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KT4YYRTL"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44DJ8VYx023869;
+	Tue, 14 May 2024 02:05:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=j0bvF67G05x02NhJMFacFGuxgG9HdtLgRHpYahSHjR4=; b=KT
+	4YYRTLNFkJArGzz/yzeV0e84I95oiGRbu15N/lE3Ud7xyv37dg5EWUTKUrx5Jv7Q
+	VyLOajtc/2LcMe5xLrtHOvn5ylyIdRXA07ihczy8uG2LEfFUOgQNz+lEWTD8fwKc
+	CMucrLmdL66qcJRrgqCzU54bcq6tVYUTPo0BD/lh1luvDFAue5SS1CsCK5NYFhKM
+	fDQ9EwJnJ9joHhe8VthZ/aEti6LkU6v9TgFD9f7yMyhyVy4NjYi0Gm1X0WIJrdxF
+	Z8Yl1Rk1t3mlCNXRDt1y9rB/MsQ+/9XPSsxb/98yO0/Mh/MwFT119+r7kULpedEs
+	s4qid3cL78d+tytEDxkA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y2125d097-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 02:05:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44E25BGO014103
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 02:05:11 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 13 May
+ 2024 19:05:02 -0700
+Message-ID: <0d263263-4fa9-489e-8d44-00d107743b56@quicinc.com>
+Date: Tue, 14 May 2024 10:05:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240514020301.1835794-1-yuanchu@google.com>
-Subject: [RFC PATCH v1 1/2] virt: memctl: control guest physical memory properties
-From: Yuanchu Xie <yuanchu@google.com>
-To: Wei Liu <liuwe@microsoft.com>, Rob Bradford <rbradford@rivosinc.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Dan Williams <dan.j.williams@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, virtualization@lists.linux.dev, 
-	dev@lists.cloudhypervisor.org, Yuanchu Xie <yuanchu@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/4] arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
+To: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>,
+        Trilok Soni
+	<quic_tsoni@quicinc.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <dmitry.baryshkov@linaro.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20240513090735.1666142-1-quic_tengfan@quicinc.com>
+ <20240513090735.1666142-3-quic_tengfan@quicinc.com>
+ <ce8bc51b-a8b3-259c-f70c-d240d7b166cc@quicinc.com>
+ <4fe74490-b4ee-4462-b225-caf2bc01cde7@quicinc.com>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <4fe74490-b4ee-4462-b225-caf2bc01cde7@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BhBvQJ5G0hGB9cHZL_99psyj7AjyR6mz
+X-Proofpoint-ORIG-GUID: BhBvQJ5G0hGB9cHZL_99psyj7AjyR6mz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-13_17,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405140014
 
-Memctl provides a way for the guest to control its physical memory
-properties, and enables optimizations and security features. For
-example, the guest can provide information to the host where parts of a
-hugepage may be unbacked, or sensitive data may not be swapped out, etc.
 
-Memctl allows guests to manipulate its gPTE entries in the SLAT, and
-also some other properties of the memory map the back's host memory.
-This is achieved by using the KVM_CAP_SYNC_MMU capability. When this
-capability is available, the changes in the backing of the memory region
-on the host are automatically reflected into the guest. For example, an
-mmap() or madvise() that affects the region will be made visible
-immediately.
 
-There are two components of the implementation: the guest Linux driver
-and Virtual Machine Monitor (VMM) device. A guest-allocated shared
-buffer is negotiated per-cpu through a few PCI MMIO registers, the VMM
-device assigns a unique command for each per-cpu buffer. The guest
-writes its memctl request in the per-cpu buffer, then writes the
-corresponding command into the command register, calling into the VMM
-device to perform the memctl request.
+On 5/14/2024 9:21 AM, Aiqun Yu (Maria) wrote:
+> 
+> 
+> On 5/14/2024 12:37 AM, Trilok Soni wrote:
+>> On 5/13/2024 2:07 AM, Tengfei Fan wrote:
+>>> QCS8550 is derived from SM8550. The differnece between SM8550 and
+>>
+>> spellcheck s/difference/difference
 
-The synchronous per-cpu shared buffer approach avoids the kick and busy
-waiting that the guest would have to do with virtio virtqueue transport.
+Typos wil be modified.
 
-We provide both kernel and userspace APIs
-Kernel API
-long memctl_vmm_call(__u64 func_code, __u64 addr, __u64 length, __u64 arg,
-		     struct memctl_buf *buf);
+>>
+>>> QCS8550 is QCS8550 doesn't have modem RF system. QCS8550 is mainly used
+>>> in IoT scenarios.
+>>
+>> IoT products and not scenarios.
 
-Kernel drivers can take advantage of the memctl calls to provide
-paravirtualization of kernel stacks or page zeroing.
+I will modify this description.
 
-User API
-From the userland, the memctl guest driver is controlled via ioctl(2)
-call. It requires CAP_SYS_ADMIN.
+>>
+>>> QCS8550 firmware has different memory map with SM8550 firmware.
+>>
+>> "QCS8550 firmware has different memory map compared to SM8550"
+>>
+>>
+>> The
+>>> memory map will be runtime added through bootloader.
 
-ioctl(fd, MEMCTL_IOCTL, union memctl_vmm *memctl_vmm);
+In the next version of the patch series, I will add "The" to make the 
+sentence's grammar more complete.
 
-Guest userland applications can tag VMAs and guest hugepages, or advise
-the host on how to handle sensitive guest pages.
+>>
+>>
+>>> There are 3 types of reserved memory regions here:
+>>> 1. Firmware related regions which aren't shared with kernel.
+>>>      The device tree source in kernel doesn't need to have node to indicate
+>>> the firmware related reserved information. OS bootloader conveys the
+>>
+>> Just "Bootloader conveys the information by updating devicetree at runtime" ?
 
-Supported function codes and their use cases:
-MEMCTL_FREE/REMOVE/DONTNEED/PAGEOUT. For the guest. One can reduce the
-struct page and page table lookup overhead by using hugepages backed by
-smaller pages on the host. These memctl commands can allow for partial
-freeing of private guest hugepages to save memory. They also allow
-kernel memory, such as kernel stacks and task_structs to be
-paravirtualized.
+I will modify this description.
 
-MEMCTL_UNMERGEABLE is useful for security, when the VM does not want to
-share its backing pages.
-The same with MADV_DONTDUMP, so sensitive pages are not included in a
-dump.
-MLOCK/UNLOCK can advise the host that sensitive information is not
-swapped out on the host.
+>>
+>>> information by update device tree in runtime.
+>>>      This will be described as: UEFI saves the physical address of the
+>>> UEFI System Table to dts file's chosen node. Kernel read this table and
+>>> add reserved memory regions to efi config table. Current reserved memory
+>>> region may have reserved region which was not yet used, release note of
+>>> the firmware have such kind of information.
+>>
+>> I understand what you are trying to explain below, but can we simplify further? I
+>> had to read multiple times to understand what you are trying to convey above.
+>>
+>>> 2. Firmware related memory regions which are shared with Kernel
+>>>      Each region has a specific node with specific label name for later
+>>> phandle reference from other driver dt node.
+> 
+> How about like this:
+>   2. Firmware related memory regions which are shared with Kernel
+> The device tree source in the kernel needs to include nodes that
+> indicate firmware-related shared information. A label name is suggested
+> because this type of shared information needs to be referenced by
+> specific drivers for handling purposes.
+> 
+>>> 3. PIL regions.
+>>
+>> Do we use the PIL - peripheral image loader in the upstream kernel or just remoteproc?
+>> I am fine w/ PIL if it is used at other places in Qualcomm remoteproc.
 
-MEMCTL_MPROTECT_NONE/R/W/RW. For guest stacks backed by hugepages, stack
-guard pages can be handled in the host and memory can be saved in the
-hugepage.
+We are only used for remoteproc in the upstream kernel, and I will 
+remove the description related to PIL.
 
-MEMCTL_SET_VMA_ANON_NAME is useful for observability and debugging how
-guest memory is being mapped on the host.
+>>
+>>>      PIL regions will be reserved and then assigned to subsystem firmware
+>>> later.
+>>> Here is a reserved memory map for this platform:
+>>> 0x100000000 +------------------+
+>>>              |                  |
+>>>              | Firmware Related |
+>>>              |                  |
+>>>   0xd4d00000 +------------------+
+>>>              |                  |
+>>>              | Kernel Available |
+>>
+>> What is "kernel available" means?
+> 
+> It means not reserved memory, normal available memory from kernel point
+> of view.
+> 
+>>
+>>>              |                  |
+>>>   0xa7000000 +------------------+
+>>>              |                  |
+>>>              |    PIL Region    |
+>>>              |                  |
+>>>   0x8a800000 +------------------+
+>>>              |                  |
+>>>              | Firmware Related |
+>>>              |                  |
+>>>   0x80000000 +------------------+
+>>
+>>> Note that:
+>>
+>> Do we need to write "Note that:" ?
 
-Sample program making use of MEMCTL_SET_VMA_ANON_NAME and
-MEMCTL_DONTNEED:
-https://github.com/Dummyc0m/memctl-set-anon-vma-name/tree/main
-https://github.com/Dummyc0m/memctl-set-anon-vma-name/tree/dontneed
+This "Note that:" will be removed.
 
-The VMM implementation is being proposed for Cloud Hypervisor:
-https://github.com/Dummyc0m/cloud-hypervisor/
+>>
+>>> 0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
+>>> it is available for kernel usage. This region is not suggested to be
+>>> used by kernel features like ramoops, suspend resume etc.
+>>>
+>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/qcs8550.dtsi | 169 ++++++++++++++++++++++++++
+>>>   1 file changed, 169 insertions(+)
+>>>   create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/qcs8550.dtsi b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
+>>> new file mode 100644
+>>> index 000000000000..a3ebf3d4e16d
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
+>>> @@ -0,0 +1,169 @@
+>>> +// SPDX-License-Identifier: BSD-3-Clause
+>>> +/*
+>>> + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+>>> + */
+>>> +
+>>> +#include "sm8550.dtsi"
+>>> +
+>>> +/delete-node/ &reserved_memory;
+>>> +
+>>> +/ {
+>>> +	reserved_memory: reserved-memory {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <2>;
+>>> +		ranges;
+>>> +
+>>> +
+>>> +		/* These are 3 types of reserved memory regions here:
+>>> +		 * 1. Firmware related regions which aren't shared with kernel.
+>>> +		 *     The device tree source in kernel doesn't need to have node to
+>>> +		 * indicate the firmware related reserved information. OS bootloader
+>>> +		 * conveys the information by update device tree in runtime.
+>>> +		 *     This will be described as: UEFI saves the physical address of
+>>> +		 * the UEFI System Table to dts file's chosen node. Kernel read this
+>>> +		 * table and add reserved memory regions to efi config table. Current
+>>> +		 * reserved memory region may have reserved region which was not yet
+>>> +		 * used, release note of the firmware have such kind of information.
+>>> +		 * 2. Firmware related memory regions which are shared with Kernel.
+>>> +		 *     Each region has a specific node with specific label name for
+>>> +		 * later phandle reference from other driver dt node.
+>>> +		 * 3. PIL regions.
+>>> +		 *     PIL regions will be reserved and then assigned to subsystem
+>>> +		 * firmware later.
+>>> +		 * Here is a reserved memory map for this platform:
+>>
+>> Just check the comment above and it will apply here.
 
-Cloud Hypervisor issue:
-https://github.com/cloud-hypervisor/cloud-hypervisor/issues/6318
+Sure, I will modify these according to the comments above.
 
-Signed-off-by: Yuanchu Xie <yuanchu@google.com>
----
- .../userspace-api/ioctl/ioctl-number.rst      |   2 +
- drivers/virt/Kconfig                          |   2 +
- drivers/virt/Makefile                         |   1 +
- drivers/virt/memctl/Kconfig                   |  10 +
- drivers/virt/memctl/Makefile                  |   2 +
- drivers/virt/memctl/memctl.c                  | 425 ++++++++++++++++++
- include/linux/memctl.h                        |  27 ++
- include/uapi/linux/memctl.h                   |  81 ++++
- 8 files changed, 550 insertions(+)
- create mode 100644 drivers/virt/memctl/Kconfig
- create mode 100644 drivers/virt/memctl/Makefile
- create mode 100644 drivers/virt/memctl/memctl.c
- create mode 100644 include/linux/memctl.h
- create mode 100644 include/uapi/linux/memctl.h
+>>
+>>> +		 * 0x100000000 +------------------+
+>>> +		 *             |                  |
+>>> +		 *             | Firmware Related |
+>>> +		 *             |                  |
+>>> +		 *  0xd4d00000 +------------------+
+>>> +		 *             |                  |
+>>> +		 *             | Kernel Available |
+>>> +		 *             |                  |
+>>> +		 *  0xa7000000 +------------------+
+>>> +		 *             |                  |
+>>> +		 *             |    PIL Region    |
+>>> +		 *             |                  |
+>>> +		 *  0x8a800000 +------------------+
+>>> +		 *             |                  |
+>>> +		 *             | Firmware Related |
+>>> +		 *             |                  |
+>>> +		 *  0x80000000 +------------------+
+>>> +		 * Note that:
+>>> +		 * 0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
+>>> +		 * it is available for kernel usage. This region is not suggested to
+>>> +		 * be used by kernel features like ramoops, suspend resume etc.
+>>> +		 */
+>>> +
+>>> +		/*
+>>> +		 * Firmware related regions, bootlader will possible reserve parts of
+>>
+>> spellcheck s/bootlader/bootloader
 
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index 457e16f06e04..789d1251c0be 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -368,6 +368,8 @@ Code  Seq#    Include File                                           Comments
- 0xCD  01     linux/reiserfs_fs.h
- 0xCE  01-02  uapi/linux/cxl_mem.h                                    Compute Express Link Memory Devices
- 0xCF  02     fs/smb/client/cifs_ioctl.h
-+0xDA  00     linux/memctl.h                                          Memctl Device
-+                                                                     <mailto:yuanchu@google.com>
- 0xDB  00-0F  drivers/char/mwave/mwavepub.h
- 0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
-                                                                      <mailto:aherrman@de.ibm.com>
-diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-index 40129b6f0eca..419496558cfc 100644
---- a/drivers/virt/Kconfig
-+++ b/drivers/virt/Kconfig
-@@ -50,4 +50,6 @@ source "drivers/virt/acrn/Kconfig"
- 
- source "drivers/virt/coco/Kconfig"
- 
-+source "drivers/virt/memctl/Kconfig"
-+
- endif
-diff --git a/drivers/virt/Makefile b/drivers/virt/Makefile
-index f29901bd7820..68e152e7cef1 100644
---- a/drivers/virt/Makefile
-+++ b/drivers/virt/Makefile
-@@ -10,3 +10,4 @@ obj-y				+= vboxguest/
- obj-$(CONFIG_NITRO_ENCLAVES)	+= nitro_enclaves/
- obj-$(CONFIG_ACRN_HSM)		+= acrn/
- obj-y				+= coco/
-+obj-$(CONFIG_MEMCTL)		+= memctl/
-diff --git a/drivers/virt/memctl/Kconfig b/drivers/virt/memctl/Kconfig
-new file mode 100644
-index 000000000000..981ed9b76f97
---- /dev/null
-+++ b/drivers/virt/memctl/Kconfig
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0
-+config MEMCTL
-+	tristate "memctl Guest Service Module"
-+	depends on KVM_GUEST && 64BIT
-+	help
-+	  memctl is a guest kernel module that allows to communicate
-+	  with hypervisor / VMM and control the guest memory backing.
-+
-+	  To compile as a module, choose M, the module will be called
-+	  memctl. If unsure, say N.
-diff --git a/drivers/virt/memctl/Makefile b/drivers/virt/memctl/Makefile
-new file mode 100644
-index 000000000000..410829a3c297
---- /dev/null
-+++ b/drivers/virt/memctl/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_MEMCTL)	:= memctl.o
-diff --git a/drivers/virt/memctl/memctl.c b/drivers/virt/memctl/memctl.c
-new file mode 100644
-index 000000000000..661a552f98d8
---- /dev/null
-+++ b/drivers/virt/memctl/memctl.c
-@@ -0,0 +1,425 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Control guest memory mappings
-+ *
-+ * Author: Yuanchu Xie <yuanchu@google.com>
-+ * Author: Pasha Tatashin <pasha.tatashin@soleen.com>
-+ */
-+#define pr_fmt(fmt) "memctl %s: " fmt, __func__
-+
-+#include <linux/spinlock.h>
-+#include <linux/cpumask.h>
-+#include <linux/percpu-defs.h>
-+#include <linux/percpu.h>
-+#include <linux/types.h>
-+#include <linux/gfp.h>
-+#include <linux/compiler.h>
-+#include <linux/fs.h>
-+#include <linux/sched/clock.h>
-+#include <linux/wait.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+#include <linux/proc_fs.h>
-+#include <linux/resource_ext.h>
-+#include <linux/memctl.h>
-+#include <linux/mutex.h>
-+#include <linux/pci.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+
-+#define PCI_VENDOR_ID_GOOGLE		0x1ae0
-+#define PCI_DEVICE_ID_GOOGLE_MEMCTL	0x0087
-+
-+#define MEMCTL_VERSION "0.01"
-+
-+enum memctl_transport_command {
-+	MEMCTL_TRANSPORT_RESET = 0x060FE6D2,
-+	MEMCTL_TRANSPORT_REGISTER = 0x0E359539,
-+	MEMCTL_TRANSPORT_READY = 0x0CA8D227,
-+	MEMCTL_TRANSPORT_DISCONNECT = 0x030F5DA0,
-+	MEMCTL_TRANSPORT_ACK = 0x03CF5196,
-+	MEMCTL_TRANSPORT_ERROR = 0x01FBA249,
-+};
-+
-+struct memctl_transport {
-+	union {
-+		struct {
-+			u64 buf_phys_addr;
-+		} reg;
-+		struct {
-+			u32 command;
-+			u32 _padding;
-+		} resp;
-+	};
-+	u32 command;
-+};
-+
-+struct memctl_percpu_channel {
-+	struct memctl_buf buf;
-+	u64 buf_phys_addr;
-+	u32 command;
-+};
-+
-+struct memctl {
-+	void __iomem *base_addr;
-+	/* cache the info call */
-+	struct memctl_vmm_info memctl_vmm_info;
-+	struct memctl_percpu_channel __percpu *pcpu_channels;
-+};
-+
-+static DEFINE_RWLOCK(memctl_lock);
-+static struct memctl *memctl __read_mostly;
-+
-+static void memctl_write_command(void __iomem *base_addr, u32 command)
-+{
-+	iowrite32(command,
-+		  base_addr + offsetof(struct memctl_transport, command));
-+}
-+
-+static u32 memctl_read_command(void __iomem *base_addr)
-+{
-+	return ioread32(base_addr + offsetof(struct memctl_transport, command));
-+}
-+
-+static void memctl_write_reg(void __iomem *base_addr, u64 buf_phys_addr)
-+{
-+	iowrite64_lo_hi(buf_phys_addr,
-+			base_addr + offsetof(struct memctl_transport,
-+					     reg.buf_phys_addr));
-+}
-+
-+static u32 memctl_read_resp(void __iomem *base_addr)
-+{
-+	return ioread32(base_addr +
-+			offsetof(struct memctl_transport, resp.command));
-+}
-+
-+static void memctl_send_request(struct memctl *memctl, struct memctl_buf *buf)
-+{
-+	struct memctl_percpu_channel *channel;
-+
-+	preempt_disable();
-+	channel = this_cpu_ptr(memctl->pcpu_channels);
-+	memcpy(&channel->buf, buf, sizeof(channel->buf));
-+	memctl_write_command(memctl->base_addr, channel->command);
-+	memcpy(buf, &channel->buf, sizeof(*buf));
-+	preempt_enable();
-+}
-+
-+static int __memctl_vmm_call(struct memctl_buf *buf)
-+{
-+	int err = 0;
-+
-+	if (!memctl)
-+		return -EINVAL;
-+
-+	read_lock(&memctl_lock);
-+	if (!memctl) {
-+		err = -EINVAL;
-+		goto unlock;
-+	}
-+	if (buf->call.func_code == MEMCTL_INFO) {
-+		memcpy(&buf->info, &memctl->memctl_vmm_info, sizeof(buf->info));
-+		goto unlock;
-+	}
-+
-+	memctl_send_request(memctl, buf);
-+
-+unlock:
-+	read_unlock(&memctl_lock);
-+	return err;
-+}
-+
-+/*
-+ * Used for internal kernel memctl calls, i.e. to better support kernel stacks,
-+ * or to efficiently zero hugetlb pages.
-+ */
-+long memctl_vmm_call(__u64 func_code, __u64 addr, __u64 length, __u64 arg,
-+		     struct memctl_buf *buf)
-+{
-+	buf->call.func_code = func_code;
-+	buf->call.addr = addr;
-+	buf->call.length = length;
-+	buf->call.arg = arg;
-+
-+	return __memctl_vmm_call(buf);
-+}
-+EXPORT_SYMBOL(memctl_vmm_call);
-+
-+static int memctl_init_info(struct memctl *dev, struct memctl_buf *buf)
-+{
-+	buf->call.func_code = MEMCTL_INFO;
-+
-+	memctl_send_request(dev, buf);
-+	if (buf->ret.ret_code)
-+		return buf->ret.ret_code;
-+
-+	/* Initialize global memctl_vmm_info */
-+	memcpy(&dev->memctl_vmm_info, &buf->info, sizeof(dev->memctl_vmm_info));
-+	pr_debug("memctl_vmm_info:\n"
-+		 "memctl_vmm_info.ret_errno = %u\n"
-+		 "memctl_vmm_info.ret_code = %u\n"
-+		 "memctl_vmm_info.big_endian = %llu\n"
-+		 "memctl_vmm_info.major_version = %u\n"
-+		 "memctl_vmm_info.minor_version = %u\n"
-+		 "memctl_vmm_info.page_size = %llu\n",
-+		 dev->memctl_vmm_info.ret_errno, dev->memctl_vmm_info.ret_code,
-+		 dev->memctl_vmm_info.big_endian,
-+		 dev->memctl_vmm_info.major_version,
-+		 dev->memctl_vmm_info.minor_version,
-+		 dev->memctl_vmm_info.page_size);
-+
-+	return 0;
-+}
-+
-+static int memctl_open(struct inode *inode, struct file *filp)
-+{
-+	struct memctl_buf *buf = NULL;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EACCES;
-+
-+	/* Do not allow exclusive open */
-+	if (filp->f_flags & O_EXCL)
-+		return -EINVAL;
-+
-+	buf = kzalloc(sizeof(struct memctl_buf), GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	/* Overwrite the misc device set by misc_register */
-+	filp->private_data = buf;
-+	return 0;
-+}
-+
-+static int memctl_release(struct inode *inode, struct file *filp)
-+{
-+	kfree(filp->private_data);
-+	filp->private_data = NULL;
-+	return 0;
-+}
-+
-+static long memctl_ioctl(struct file *filp, unsigned int cmd,
-+			 unsigned long ioctl_param)
-+{
-+	struct memctl_buf *buf = filp->private_data;
-+	int err;
-+
-+	if (cmd != MEMCTL_IOCTL_VMM)
-+		return -EINVAL;
-+
-+	if (copy_from_user(&buf->call, (void __user *)ioctl_param,
-+			   sizeof(struct memctl_buf)))
-+		return -EFAULT;
-+
-+	err = __memctl_vmm_call(buf);
-+	if (err)
-+		return err;
-+
-+	if (copy_to_user((void __user *)ioctl_param, &buf->ret,
-+			 sizeof(struct memctl_buf)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+static const struct file_operations memctl_fops = {
-+	.owner = THIS_MODULE,
-+	.open = memctl_open,
-+	.release = memctl_release,
-+	.unlocked_ioctl = memctl_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
-+};
-+
-+static struct miscdevice memctl_dev = {
-+	.minor = MISC_DYNAMIC_MINOR,
-+	.name = KBUILD_MODNAME,
-+	.fops = &memctl_fops,
-+};
-+
-+static int memctl_connect(struct memctl *memctl)
-+{
-+	int cpu;
-+	u32 cmd;
-+
-+	memctl_write_command(memctl->base_addr, MEMCTL_TRANSPORT_RESET);
-+	cmd = memctl_read_command(memctl->base_addr);
-+	if (cmd != MEMCTL_TRANSPORT_ACK) {
-+		pr_err("failed to reset device, cmd 0x%x\n", cmd);
-+		return -EINVAL;
-+	}
-+
-+	for_each_possible_cpu(cpu) {
-+		struct memctl_percpu_channel *channel =
-+			per_cpu_ptr(memctl->pcpu_channels, cpu);
-+
-+		memctl_write_reg(memctl->base_addr, channel->buf_phys_addr);
-+		memctl_write_command(memctl->base_addr,
-+				     MEMCTL_TRANSPORT_REGISTER);
-+
-+		cmd = memctl_read_command(memctl->base_addr);
-+		if (cmd != MEMCTL_TRANSPORT_ACK) {
-+			pr_err("failed to register pcpu buf, cmd 0x%x\n", cmd);
-+			return -EINVAL;
-+		}
-+		channel->command = memctl_read_resp(memctl->base_addr);
-+	}
-+
-+	memctl_write_command(memctl->base_addr, MEMCTL_TRANSPORT_READY);
-+	cmd = memctl_read_command(memctl->base_addr);
-+	if (cmd != MEMCTL_TRANSPORT_ACK) {
-+		pr_err("failed to ready device, cmd 0x%x\n", cmd);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int memctl_disconnect(struct memctl *memctl)
-+{
-+	u32 cmd;
-+
-+	memctl_write_command(memctl->base_addr, MEMCTL_TRANSPORT_DISCONNECT);
-+
-+	cmd = memctl_read_command(memctl->base_addr);
-+	if (cmd != MEMCTL_TRANSPORT_ERROR) {
-+		pr_err("failed to disconnect device, cmd 0x%x\n", cmd);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int memctl_alloc_percpu_channels(struct memctl *memctl)
-+{
-+	int cpu;
-+
-+	memctl->pcpu_channels = alloc_percpu_gfp(struct memctl_percpu_channel,
-+						 GFP_ATOMIC | __GFP_ZERO);
-+	if (!memctl->pcpu_channels)
-+		return -ENOMEM;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct memctl_percpu_channel *channel =
-+			per_cpu_ptr(memctl->pcpu_channels, cpu);
-+		phys_addr_t buf_phys = per_cpu_ptr_to_phys(&channel->buf);
-+
-+		channel->buf_phys_addr = buf_phys;
-+	}
-+	return 0;
-+}
-+
-+static int memctl_init(void __iomem *base_addr)
-+{
-+	struct memctl_buf *buf = NULL;
-+	struct memctl *dev = NULL;
-+	int err = 0;
-+
-+	err = misc_register(&memctl_dev);
-+	if (err)
-+		return err;
-+
-+	/* We take a spinlock for a long time, but this is only during init. */
-+	write_lock(&memctl_lock);
-+	if (WARN(READ_ONCE(memctl), "multiple memctl devices present")) {
-+		err = -EEXIST;
-+		goto fail_free;
-+	}
-+
-+	dev = kzalloc(sizeof(struct memctl), GFP_ATOMIC);
-+	buf = kzalloc(sizeof(struct memctl_buf), GFP_ATOMIC);
-+	if (!dev || !buf) {
-+		err = -ENOMEM;
-+		goto fail_free;
-+	}
-+
-+	dev->base_addr = base_addr;
-+
-+	err = memctl_alloc_percpu_channels(dev);
-+	if (err)
-+		goto fail_free;
-+
-+	err = memctl_connect(dev);
-+	if (err)
-+		goto fail_free;
-+
-+	err = memctl_init_info(dev, buf);
-+	if (err)
-+		goto fail_free;
-+
-+	WRITE_ONCE(memctl, dev);
-+	write_unlock(&memctl_lock);
-+	return 0;
-+
-+fail_free:
-+	write_unlock(&memctl_lock);
-+	kfree(dev);
-+	kfree(buf);
-+	misc_deregister(&memctl_dev);
-+	return err;
-+}
-+
-+static int memctl_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+{
-+	void __iomem *base_addr;
-+	int err;
-+
-+	err = pcim_enable_device(dev);
-+	if (err < 0)
-+		return err;
-+
-+	base_addr = pcim_iomap(dev, 0, 0);
-+	if (!base_addr)
-+		return -ENOMEM;
-+
-+	err = memctl_init(base_addr);
-+	if (err)
-+		pci_disable_device(dev);
-+
-+	return err;
-+}
-+
-+static void __exit memctl_pci_remove(struct pci_dev *_dev)
-+{
-+	int err;
-+	struct memctl *dev;
-+
-+	write_lock(&memctl_lock);
-+	dev = READ_ONCE(memctl);
-+	if (!dev) {
-+		err = -EINVAL;
-+		pr_err("cleanup called when uninitialized\n");
-+		write_unlock(&memctl_lock);
-+		return;
-+	}
-+
-+	/* disconnect */
-+	err = memctl_disconnect(dev);
-+	if (err)
-+		pr_err("device did not ack disconnect");
-+	/* free percpu channels */
-+	free_percpu(dev->pcpu_channels);
-+
-+	kfree(dev);
-+	WRITE_ONCE(memctl, NULL);
-+	write_unlock(&memctl_lock);
-+	misc_deregister(&memctl_dev);
-+}
-+
-+static const struct pci_device_id memctl_pci_id_tbl[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_GOOGLE, PCI_DEVICE_ID_GOOGLE_MEMCTL) },
-+	{ 0 }
-+};
-+MODULE_DEVICE_TABLE(pci, memctl_pci_id_tbl);
-+
-+static struct pci_driver memctl_pci_driver = {
-+	.name = "memctl",
-+	.id_table = memctl_pci_id_tbl,
-+	.probe = memctl_pci_probe,
-+	.remove = memctl_pci_remove,
-+};
-+module_pci_driver(memctl_pci_driver);
-+
-+MODULE_AUTHOR("Yuanchu Xie <yuanchu@google.com>");
-+MODULE_DESCRIPTION("memctl Guest Service Module");
-+MODULE_VERSION(MEMCTL_VERSION);
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/memctl.h b/include/linux/memctl.h
-new file mode 100644
-index 000000000000..5e1073134692
---- /dev/null
-+++ b/include/linux/memctl.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Kernel interface for /dev/memctl - memctl Guest Memory Service Module
-+ *
-+ * Copyright (c) 2021, Google LLC.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ */
-+
-+#ifndef _MEMCTL_H
-+#define _MEMCTL_H
-+
-+#include <uapi/linux/memctl.h>
-+#include <linux/errno.h>
-+
-+#ifdef CONFIG_MEMCTL
-+/* buf must be kzalloc'd */
-+long memctl_vmm_call(__u64 func_code, __u64 addr, __u64 length, __u64 arg,
-+		     struct memctl_buf *buf);
-+#else
-+static inline long memctl_vmm_call(__u64 func_code, __u64 addr, __u64 length,
-+				   __u64 arg, struct memctl_buf *buf)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_MEMCTL */
-+
-+#endif /* _MEMCTL_H */
-diff --git a/include/uapi/linux/memctl.h b/include/uapi/linux/memctl.h
-new file mode 100644
-index 000000000000..a7b9a4e65e51
---- /dev/null
-+++ b/include/uapi/linux/memctl.h
-@@ -0,0 +1,81 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Userspace interface for /dev/memctl - memctl Guest Memory Service Module
-+ *
-+ * Copyright (c) 2021, Google LLC.
-+ * Yuanchu Xie <yuanchu@google.com>
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ */
-+
-+#ifndef _UAPI_MEMCTL_H
-+#define _UAPI_MEMCTL_H
-+
-+#include <linux/wait.h>
-+#include <linux/types.h>
-+#include <asm/param.h>
-+
-+/* Contains the function code and arguments for specific function */
-+struct memctl_vmm_call {
-+	__u64 func_code;	/* memctl set function code */
-+	__u64 addr;		/* hyper. page size aligned guest phys. addr */
-+	__u64 length;		/* hyper. page size aligned length */
-+	__u64 arg;		/* function code specific argument */
-+};
-+
-+/* Is filled on return to guest from VMM from most function calls */
-+struct memctl_vmm_ret {
-+	__u32 ret_errno;	/* on error, value of errno */
-+	__u32 ret_code;		/* memctl internal error code, on success 0 */
-+	__u64 ret_value;	/* return value from the function call */
-+	__u64 arg0;		/* currently unused */
-+	__u64 arg1;		/* currently unused */
-+};
-+
-+/* Is filled on return to guest from VMM from MEMCTL_INFO function call */
-+struct memctl_vmm_info {
-+	__u32 ret_errno;	/* on error, value of errno */
-+	__u32 ret_code;		/* memctl internal error code, on success 0 */
-+	__u64 big_endian;	/* non-zero when hypervisor is big endian */
-+	__u32 major_version;	/* VMM memctl backend major version */
-+	__u32 minor_version;	/* VMM memctl backend minor version */
-+	__u64 page_size;	/* hypervisor page size */
-+};
-+
-+struct memctl_buf {
-+	union {
-+		struct memctl_vmm_call call;
-+		struct memctl_vmm_ret ret;
-+		struct memctl_vmm_info info;
-+	};
-+};
-+
-+/* The ioctl type, documented in ioctl-number.rst */
-+#define MEMCTL_IOCTL_TYPE		0xDA
-+
-+#define MEMCTL_IOCTL_VMM _IOWR(MEMCTL_IOCTL_TYPE, 0x00, struct memctl_buf)
-+
-+/* Get memctl_vmm_info, addr, length, and arg are ignored */
-+#define MEMCTL_INFO		0
-+
-+/* Memctl calls, memctl_vmm_return is returned */
-+#define MEMCTL_DONTNEED		1 /* madvise(addr, len, MADV_DONTNEED); */
-+#define MEMCTL_REMOVE		2 /* madvise(addr, len, MADV_MADV_REMOVE); */
-+#define MEMCTL_FREE		3 /* madvise(addr, len, MADV_FREE); */
-+#define MEMCTL_PAGEOUT		4 /* madvise(addr, len, MADV_PAGEOUT); */
-+
-+#define MEMCTL_UNMERGEABLE	5 /* madvise(addr, len, MADV_UNMERGEABLE); */
-+#define MEMCTL_DONTDUMP		6 /* madvise(addr, len, MADV_DONTDUMP); */
-+
-+#define MEMCTL_MLOCK		7 /* mlock2(addr, len, 0) */
-+#define MEMCTL_MUNLOCK		8 /* munlock(addr, len) */
-+
-+#define MEMCTL_MPROTECT_NONE	9 /* mprotect(addr, len, PROT_NONE) */
-+#define MEMCTL_MPROTECT_R	10 /* mprotect(addr, len, PROT_READ) */
-+#define MEMCTL_MPROTECT_W	11 /* mprotect(addr, len, PROT_WRITE) */
-+/* mprotect(addr, len, PROT_READ | PROT_WRITE) */
-+#define MEMCTL_MPROTECT_RW	12
-+
-+/* prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, addr, len, arg) */
-+#define MEMCTL_SET_VMA_ANON_NAME 13
-+
-+#endif /* _UAPI_MEMCTL_H */
+Typos wil be modified.
+
+>>
+>>> +		 * region from 0x80000000..0x8a800000.
+>>> +		 */
+>>> +		aop_image_mem: aop-image-region@81c00000 {
+>>> +			reg = <0x0 0x81c00000 0x0 0x60000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		aop_cmd_db_mem: aop-cmd-db-region@81c60000 {
+>>> +			compatible = "qcom,cmd-db";
+>>> +			reg = <0x0 0x81c60000 0x0 0x20000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		aop_config_mem: aop-config-region@81c80000 {
+>>> +			no-map;
+>>> +			reg = <0x0 0x81c80000 0x0 0x20000>;
+>>> +		};
+>>> +
+>>> +		smem_mem: smem-region@81d00000 {
+>>> +			compatible = "qcom,smem";
+>>> +			reg = <0x0 0x81d00000 0x0 0x200000>;
+>>> +			hwlocks = <&tcsr_mutex 3>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		adsp_mhi_mem: adsp-mhi-region@81f00000 {
+>>> +			reg = <0x0 0x81f00000 0x0 0x20000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		/* PIL region */
+>>> +		mpss_mem: mpss-region@8a800000 {
+>>> +			reg = <0x0 0x8a800000 0x0 0x10800000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		q6_mpss_dtb_mem: q6-mpss-dtb-region@9b000000 {
+>>> +			reg = <0x0 0x9b000000 0x0 0x80000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		ipa_fw_mem: ipa-fw-region@9b080000 {
+>>> +			reg = <0x0 0x9b080000 0x0 0x10000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		ipa_gsi_mem: ipa-gsi-region@9b090000 {
+>>> +			reg = <0x0 0x9b090000 0x0 0xa000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		gpu_micro_code_mem: gpu-micro-code-region@9b09a000 {
+>>> +			reg = <0x0 0x9b09a000 0x0 0x2000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		spss_region_mem: spss-region@9b100000 {
+>>> +			reg = <0x0 0x9b100000 0x0 0x180000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		spu_secure_shared_memory_mem: spu-secure-shared-memory-region@9b280000 {
+>>> +			reg = <0x0 0x9b280000 0x0 0x80000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		camera_mem: camera-region@9b300000 {
+>>> +			reg = <0x0 0x9b300000 0x0 0x800000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		video_mem: video-region@9bb00000 {
+>>> +			reg = <0x0 0x9bb00000 0x0 0x700000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		cvp_mem: cvp-region@9c200000 {
+>>> +			reg = <0x0 0x9c200000 0x0 0x700000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		cdsp_mem: cdsp-region@9c900000 {
+>>> +			reg = <0x0 0x9c900000 0x0 0x2000000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		q6_cdsp_dtb_mem: q6-cdsp-dtb-region@9e900000 {
+>>> +			reg = <0x0 0x9e900000 0x0 0x80000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		q6_adsp_dtb_mem: q6-adsp-dtb-region@9e980000 {
+>>> +			reg = <0x0 0x9e980000 0x0 0x80000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		adspslpi_mem: adspslpi-region@9ea00000 {
+>>> +			reg = <0x0 0x9ea00000 0x0 0x4080000>;
+>>> +			no-map;
+>>> +		};
+>>> +
+>>> +		/*
+>>> +		 * Firmware related regions, bootlader will possible reserve parts of
+>>
+>> Ditto.
+
+Typos wil be modified.
+
+>>
+>>> +		 * region from 0xd8000000..0x100000000.
+>>> +		 */
+>>> +		mpss_dsm_mem: mpss_dsm_region@d4d00000 {
+>>> +			reg = <0x0 0xd4d00000 0x0 0x3300000>;
+>>> +			no-map;
+>>> +		};
+>>> +	};
+>>> +};
+> 
+
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+Thx and BRs,
+Tengfei Fan
