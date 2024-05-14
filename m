@@ -1,99 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DF61E504;
-	Tue, 14 May 2024 19:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497551E504;
+	Tue, 14 May 2024 19:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715713361; cv=none; b=XnPsZRIJJjY2SMBYT4u/TgKyZN14TC9Y893LO2ZGMiBU6qeCmmPcmTPbV3rf9hATtqX0IDxbN0RitjlBQXwtasA/cFPHm+lAhXAu06oOe0ycFw4vQo/gqRQznBzFOgbo9I9CULd9tNO/aF3d/iPWQAS3GYf41coZhskkmX7xdbc=
+	t=1715713638; cv=none; b=JkYoPwB6UXKJCgRjvJ+Ogj1j3B/0V9x05mpgoxm/oB0gI+n3Xs8MRTP+HzsLDnOYbqvtd1m9JL2eYJAc74HLWMvs49oJgUIJpFAy5VDYGivp13Sf58ZGSSH3OJ9yyx8246Oiosxzb6290oK5KMfuyaLUga2YJHceHf0g3Onmgp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715713361; c=relaxed/simple;
-	bh=jxhYiv+J0iyFeK8LIFwYs1oTdF393tkXterG44SitaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOfrYmY8oHkezzdqQAiBP46NT7Barqf5Ie9WfJM25Ry+9kH5GXdhLDyRaKQ4HMLpeBWBuJddkPsuWZN1hCsN/gDYh5YOQX360hTZOYZQGSF7jUiinbOlcJJiqbnKJZDwWtJj2FUT7KqVWt/pH3X6YvpR+uTKgA9PpffejO36mEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qu0sGo/S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715713638; c=relaxed/simple;
+	bh=OApaGFXz5UPRbxRAK2WugT1zcfKuYHqKyoDQHaiRW2U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G952zDfdZ+rW94JF6tDimsLaSTCvlT8K5WV8tGWBAo2pCBNAj4LYH7Af49StHTaHyk50xZZksc7So7Yjhhttcqsp4G1MfshRdG31yiIgjCnQY6pnOwjOjb5ad/LdJPPTPLHHSvIPssEwcjgKL4Ptlreo0lEL0fcTARA6qjYQy7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/N/kmuT; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qu0sGo/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 334ECC2BD10;
-	Tue, 14 May 2024 19:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715713361;
-	bh=jxhYiv+J0iyFeK8LIFwYs1oTdF393tkXterG44SitaY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=qu0sGo/SOXkdmYDDFLiu/c4BkLi7e/hwMKaAJssv5GtJxVfoRdhQpXei2KHLDbWb0
-	 Ws7MEHdL6nziU6pdhumvzCxbb6BKHDfytpV/bMGe/II60T5U30mI9gGiRZbXVxigv2
-	 9klutUeql7Y5CZB6jtLHa2T95mSmbcuWc8MZbePGYh1H3WZ5AxBnnUbxPo7rZSLFu4
-	 d+6qIDewPuOuJE/3WDWDUFv7N9TfVJmfK9UzqyXPfYSkB1gcTKZ3WTOIpXoM/ez8W8
-	 nYB6tcLHRWPJXSBG+nsxq6DigVOKp92sE3nRb71LuV0gvL4CjeqgYJgKsCaBXSDvdc
-	 xolQYn0AprKUA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 81A4ACE098A; Tue, 14 May 2024 12:02:40 -0700 (PDT)
-Date: Tue, 14 May 2024 12:02:40 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Puranjay Mohan <puranjay@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	puranjay12@gmail.com
-Subject: Re: [PATCH] tools/memory-model: Add atomic_andnot() with its variants
-Message-ID: <aeba034f-142b-4d8f-9ea8-475f4dbaaf1c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240514094633.48067-1-puranjay@kernel.org>
- <ZkNG2uZEiF1S6M7z@andrea>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/N/kmuT"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-420104e5390so33479355e9.1;
+        Tue, 14 May 2024 12:07:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715713635; x=1716318435; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9C37JUp/tUGIFgetRggFquZfpmUvmzoZNupVvwtMS08=;
+        b=Q/N/kmuTZCHgi/AzRU/HHNeAPBc73sBkQszEFkjhWsPaXcAQZtSUiSt2GqYajxwrax
+         PsjOXbBEgcNHkIDRBy4yrPDHDOTp+mfdBCP65HKDkzbIKBH0OWkhQKia8wWbbsEcF8vZ
+         TYT0ci6CumsQ4dAN44dIgmhL6EHkp1d7AfXRXYhPU3sb/rAdLesE/IKqxEfpJCMGu137
+         cEZpSA03B0MuOiGq3iqMhjT1ud++ougy8BUJbm/hPxnlnCpFME7WK69Ke3b/hzsiF1Ud
+         1LVm2mFrIBDiaVZIrsICxry2uwPpQLPnpR1nhLDfZVKevtDiBRlvvMG7CtdhaH7e/m1c
+         YTFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715713635; x=1716318435;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9C37JUp/tUGIFgetRggFquZfpmUvmzoZNupVvwtMS08=;
+        b=cKBgztb3d8Af7N9B4zE0BWH4lDkPCX4bn0d19ibbwveDEiElolKfMtv8YShrFrn6ba
+         n6DytZN7ZBfavbhTuMJVGLbw1NoNH15FywWWAQNgg2D9iAy9pSf6jpPL/H3JBzEdGN0i
+         cjbpi/r2v2VS4QnWc4/6fS64nLj8hBSXfim2XJFgC8mt6+gmkJG+xqIgMzdRd9iUc9Pp
+         mA5/bphNei2/MtHM104A+ijay8vEInaUOH19VMWmOyATGgzeESa4GvJx/NdqSepZu182
+         23ol1XRlRJKDBcKXZuMzRzwVyUr9FicOD/LtlsOijVBrFgMyt+Y0cT8hfR5Nx8qAs+es
+         YK3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVTY8+QVSLU3mKDmK9uVIfm7UI9rE5mGZjMfh/aWoq07WUY/G5OxEDO8CfDlwYr7d6pkz05Ex1RHq/+LJEHXvpU9EJ2p2JllSZv1GV15XywuNeHsdX9BcNrTjJ73sNDrYBHjmrCxFlDitbshqnJKdw59NafG26EkNmH8PQUoclf1g==
+X-Gm-Message-State: AOJu0YwkY3IjNruG6Ti2JS3+sseQXa5ZSJxHPrDzBd75zEpyTAN2E7c0
+	bfHGI4aUoiWl4GCfCLGnezSYnVna4XyYAHPCXgnSoHpeoeaI5c2b
+X-Google-Smtp-Source: AGHT+IFieuF5kHfIADXEBCRvrZT7p5csOnvYzKzG9wCrW48WSlAkIZN/CXeoYGWzQdt30DQQpKv1KQ==
+X-Received: by 2002:a05:600c:4f04:b0:420:1508:f0ae with SMTP id 5b1f17b1804b1-4201508f2edmr70658025e9.10.1715713635448;
+        Tue, 14 May 2024 12:07:15 -0700 (PDT)
+Received: from [172.27.21.185] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4201088fe8csm123126825e9.32.2024.05.14.12.07.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 12:07:15 -0700 (PDT)
+Message-ID: <d57d65b5-6ecf-48b3-a6de-4b1e2f5c643b@gmail.com>
+Date: Tue, 14 May 2024 22:07:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZkNG2uZEiF1S6M7z@andrea>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 3/3] net/mlx4: support per-queue statistics
+ via netlink
+To: Joe Damato <jdamato@fastly.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: mkarsten@uwaterloo.ca, nalramli@fastly.com,
+ Tariq Toukan <tariqt@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ "open list:MELLANOX MLX4 core VPI driver" <linux-rdma@vger.kernel.org>
+References: <20240513172909.473066-1-jdamato@fastly.com>
+ <20240513172909.473066-4-jdamato@fastly.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20240513172909.473066-4-jdamato@fastly.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 14, 2024 at 01:11:22PM +0200, Andrea Parri wrote:
-> > C andnot
-> > 
-> > {
-> > atomic_t u = ATOMIC_INIT(7);
-> > }
-> > 
-> > P0(atomic_t *u)
-> > {
-> > 
-> >         r0 = atomic_fetch_andnot(3, u);
-> >         r1 = READ_ONCE(*u);
-> > }
-> > 
-> > exists (0:r0=7 /\ 0:r1=4)
-> 
-> Fair enough for the changelog.  If/when submitting proper tests, please
-> check their format using klitmus7 (besides herd7); say,
-> 
->   $ mkdir mymodule
->   $ klitmus7 -o mymodule <.litmus file>
->   $ cd mymodule ; make
->   $ sudo sh run.sh
-> 
-> Documentation/litmus-tests/ provides some examples litmus tests.
-> 
-> 
-> > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> 
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
 
-Queued and pushed, thank you both!
 
-Again, I will hold off pushing this until herd7 releases a version
-supporting this.
+On 13/05/2024 20:29, Joe Damato wrote:
+> Make mlx4 compatible with the newly added netlink queue stats API.
+> 
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> Tested-by: Martin Karsten <mkarsten@uwaterloo.ca>
+> ---
+>   .../net/ethernet/mellanox/mlx4/en_netdev.c    | 73 +++++++++++++++++++
+>   1 file changed, 73 insertions(+)
 
-							Thanx, Paul
+
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
