@@ -1,62 +1,46 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5201346542;
-	Tue, 14 May 2024 10:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A084D23;
+	Tue, 14 May 2024 10:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715683677; cv=none; b=GL1YCCaNpwKaA/SL6s0u5k4bQIf5Xyygj63bMw1c7R60Azd1LMxmsTe36k/qULSq5pDSJrz9Ji/oekmr6NBamc3FQxKJ+7QknOpmB4H0EzQ/Hp/qNahqlEBK4aaIgMfgYB2O+a9YmiTvJhSq5MsXYRPnPh1V2KyyaPHmDp67V+g=
+	t=1715683688; cv=none; b=jATgp7Y99BErp05o/0Qur5pQlqOTrm+T1KcaUZdLTND/z6FzZk913VW69o8Ndm7GGH7Snk1bxp7Pd8uHjZr4lbSL/8aENL+DvYsh32Lex6STsZsrYBogiKFnUZxNptgcZQ768N1aYHGo4JhksJmJhfRuDYZexgfb/KuouL4WPqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715683677; c=relaxed/simple;
-	bh=yHGgknwXW0O8OB9OmVvJHciQo5Z0+ha+LxvoCItjQ/g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kFEjS9vqZTZxHn3wVbLsASVshBqrLeuCPMbuesh9+YWpXRX3BnHTU8AIwWR2exvl6zkuDJrP4Dr4wxz4MovPNDz2fTut3G7xfND/fxw1JbLHpBL2dJx0Zs0TaAxGjexyGaJfqwo1ioNYumgaQSy011HqwHnplGGk9L6Wol8vhZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=lPPws2YO; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1715683688; c=relaxed/simple;
+	bh=JMWo4w7F3EPtehsG03RW5xqidd/t+WrU1yoW/MymqBY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gSaReuWDqN1LbXEPECn+0lIl59lLRxDXM8rYrRQGqjzVuNDrLuodX34h5bc5LOYiJEw1EBs8Y0+VDWxNfMUfHfiuaB1K1JG/VJAdTmhVmwpnDlOixuFVo7TLiXy4n0nCOpkl2btxbM/gAaOu/i6xzFTuHFi80zyV9nA01el5ARI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rz3kHAwf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lPPws2YO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715683675; x=1747219675;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yHGgknwXW0O8OB9OmVvJHciQo5Z0+ha+LxvoCItjQ/g=;
-  b=lPPws2YO5DyhHK/TOvDRDak5gPVeUE1uskagvuF3KJU6l0k0UDNi1h8/
-   pnjqisg87nA2uwlaVHHbkFSIczNozkdmWuWY8y7sXbziHaXHa/SAjJIPZ
-   Up101TR18ksLS0aGgjbLCbrPLh4Q34M+DzS23Mp2Cz4jC9DgVX6m9V5Gl
-   QL3d6q3jXTkZTClwtLv+SiODzocoGL6AEHASiRHTJBYA4d0Q21oeZg1Gz
-   Cj2FHyTOAbFvpsmD2o/nC8blwuIYb95yuNzRCcoFFecrAC/wpLB5ZTCx5
-   bVCjPwY4NDePKL+5vQ6fsehdV4zJPIuyw4niG9A2+d+Pbdn0prJLid2P3
-   A==;
-X-CSE-ConnectionGUID: N9mxCvhER5eXal035+dGRg==
-X-CSE-MsgGUID: xjBThKMUSH2OGeJyx9odVg==
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="24661010"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 May 2024 03:45:53 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 14 May 2024 03:44:56 -0700
-Received: from Lily.microchip.com (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 14 May 2024 03:44:54 -0700
-From: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
-To: Mark Brown <broonie@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Conor Dooley
-	<conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>,
-	<valentina.fernandezalanis@microchip.com>,
-	<prajna.rajendrakumar@microchip.com>
-Subject: [PATCH v2 1/3] spi: dt-bindings: Add num-cs property for mpfs-spi
-Date: Tue, 14 May 2024 11:45:06 +0100
-Message-ID: <20240514104508.938448-2-prajna.rajendrakumar@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240514104508.938448-1-prajna.rajendrakumar@microchip.com>
-References: <20240514104508.938448-1-prajna.rajendrakumar@microchip.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rz3kHAwf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088D3C2BD10;
+	Tue, 14 May 2024 10:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715683688;
+	bh=JMWo4w7F3EPtehsG03RW5xqidd/t+WrU1yoW/MymqBY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rz3kHAwfhkM9UgplMJjEe9pocJBKwlRlU4wgit50v1T6BZ8e9C+SxTNaq3k4rXDno
+	 5sgAGu/HCfzjvk+ZnmnYaZARhV+44mgXz/XM0R3/IFtKZ8vTwaKmltBEEYSfkLZTcr
+	 XeXmGnsUGqHPjiJt/ZSFxoxXWtq8R05LeaqITjbk=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Amit Sunil Dhamne <amitsd@google.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 6.8 257/336] usb: typec: tcpm: unregister existing source caps before re-registration
+Date: Tue, 14 May 2024 12:17:41 +0200
+Message-ID: <20240514101048.319410880@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240514101038.595152603@linuxfoundation.org>
+References: <20240514101038.595152603@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,69 +48,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-The PolarFire SoC SPI "hard" controller supports eight CS lines, out of
-which only one CS line is physically wired. The default value of
-'num-cs' was never set and it did not didn't impose a maximum value.
+6.8-stable review patch.  If anyone has any objections, please let me know.
 
-To reflect this hardware limitation in the device tree, the binding
-enforces that the 'num-cs' property cannot exceed 1 unless additional
-CS lines are explicitly defined using GPIO descriptors.
+------------------
 
-Fixes: 2da187304e55 ("spi: add bindings for microchip mpfs spi")
-Signed-off-by: Prajna Rajendra Kumar <prajna.rajendrakumar@microchip.com>
+From: Amit Sunil Dhamne <amitsd@google.com>
+
+commit 230ecdf71a644c9c73e0e6735b33173074ae3f94 upstream.
+
+Check and unregister existing source caps in tcpm_register_source_caps
+function before registering new ones. This change fixes following
+warning when port partner resends source caps after negotiating PD contract
+for the purpose of re-negotiation.
+
+[  343.135030][  T151] sysfs: cannot create duplicate filename '/devices/virtual/usb_power_delivery/pd1/source-capabilities'
+[  343.135071][  T151] Call trace:
+[  343.135076][  T151]  dump_backtrace+0xe8/0x108
+[  343.135099][  T151]  show_stack+0x18/0x24
+[  343.135106][  T151]  dump_stack_lvl+0x50/0x6c
+[  343.135119][  T151]  dump_stack+0x18/0x24
+[  343.135126][  T151]  sysfs_create_dir_ns+0xe0/0x140
+[  343.135137][  T151]  kobject_add_internal+0x228/0x424
+[  343.135146][  T151]  kobject_add+0x94/0x10c
+[  343.135152][  T151]  device_add+0x1b0/0x4c0
+[  343.135187][  T151]  device_register+0x20/0x34
+[  343.135195][  T151]  usb_power_delivery_register_capabilities+0x90/0x20c
+[  343.135209][  T151]  tcpm_pd_rx_handler+0x9f0/0x15b8
+[  343.135216][  T151]  kthread_worker_fn+0x11c/0x260
+[  343.135227][  T151]  kthread+0x114/0x1bc
+[  343.135235][  T151]  ret_from_fork+0x10/0x20
+[  343.135265][  T151] kobject: kobject_add_internal failed for source-capabilities with -EEXIST, don't try to register things with the same name in the same directory.
+
+Fixes: 8203d26905ee ("usb: typec: tcpm: Register USB Power Delivery Capabilities")
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Link: https://lore.kernel.org/r/20240424223227.1807844-1-amitsd@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../bindings/spi/microchip,mpfs-spi.yaml      | 29 +++++++++++++++++--
- 1 file changed, 26 insertions(+), 3 deletions(-)
+ drivers/usb/typec/tcpm/tcpm.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml b/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
-index 74a817cc7d94..ffa8d1b48f8b 100644
---- a/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
-@@ -13,9 +13,6 @@ description:
- maintainers:
-   - Conor Dooley <conor.dooley@microchip.com>
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -2435,7 +2435,7 @@ static int tcpm_register_sink_caps(struc
+ {
+ 	struct usb_power_delivery_desc desc = { port->negotiated_rev };
+ 	struct usb_power_delivery_capabilities_desc caps = { };
+-	struct usb_power_delivery_capabilities *cap;
++	struct usb_power_delivery_capabilities *cap = port->partner_source_caps;
  
--allOf:
--  - $ref: spi-controller.yaml#
--
- properties:
-   compatible:
-     oneOf:
-@@ -43,6 +40,32 @@ required:
-   - interrupts
-   - clocks
+ 	if (!port->partner_pd)
+ 		port->partner_pd = usb_power_delivery_register(NULL, &desc);
+@@ -2445,6 +2445,9 @@ static int tcpm_register_sink_caps(struc
+ 	memcpy(caps.pdo, port->sink_caps, sizeof(u32) * port->nr_sink_caps);
+ 	caps.role = TYPEC_SINK;
  
-+allOf:
-+  - $ref: spi-controller.yaml#
++	if (cap)
++		usb_power_delivery_unregister_capabilities(cap);
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: microchip,mpfs-spi
-+    then:
-+      properties:
-+        num-cs:
-+          default: 1
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: microchip,mpfs-spi
-+      not:
-+        required:
-+          - cs-gpios
-+    then:
-+      properties:
-+        num-cs:
-+          maximum: 1
-+
- unevaluatedProperties: false
- 
- examples:
--- 
-2.25.1
+ 	cap = usb_power_delivery_register_capabilities(port->partner_pd, &caps);
+ 	if (IS_ERR(cap))
+ 		return PTR_ERR(cap);
+
 
