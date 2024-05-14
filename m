@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16451802B6
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 17:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF43180A61
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 17:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715706186; cv=none; b=Uo7hotXeNbViNgyz8uaHTqLTrufDlIeWCShOPUT7oefz06b00peoWtpxI+G6p3LZxCxY/G5YiaYGnqY6uIhdWAUb3Wc/EOypzrXvONhYpOQC11Ih5IRc5ncf5iz2keoknReGJpMkalx+/2oPgDeoFVa3/CK8MRa8pcJMGa7TYFk=
+	t=1715706187; cv=none; b=evTNUm4Cn8tv0UOMG3VpBDpf8rWUPtlKkDQQpNs0yrkCjkpeugImOgG420ri+ho+7I8B/kBDYKQ8piCeP5TcojAOk9G4mtg4e/02HFTllwCP6CkrIE8WTyy75sbC5FY0kCuoDr9EOBHtMx77ZvhuYnm6WmlKfNmMrNkw276I00w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715706186; c=relaxed/simple;
-	bh=uVuLUzX5+DEYtNYoDJ6DK3zMte6pZoMQPjhXvDwP9ow=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NlVfBnzLeyiPGtzoBnBzjkPkEOh+3jN9qV/y+6NgEJqxexNz5X+vMcL1X9anB3bPgSORtn+x7cgxyIj0TVW1yT0Yf6u19mih/925iypmJQ5Xvnk8bIjB3mSA9opVDI9ykqoBAPM/9p3C08mrKHrWmL/b2nbqvviW3C38tT/jHbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQv+huue; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715706187; c=relaxed/simple;
+	bh=ErHpqK7us8CjYZwwGv+npPAXosQF/16hrPfLmcnziHk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HS1ZGl3Ti9At5EdZZedbTDxSxkVh4L4KMY4Od+29Hjq0YLEIWm4hzJCJMqaBm4dMnLxDfHynkJk2PvNjkW4jjP8WJ6HWiIwlpw3HJFEnoHgwwfynoelhI59wRbHmR59QURs0EEzG/c8kRO4EDzoTlxT86JxuUrT5X7PVstBsCnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZSLEhoj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQv+huue"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F5BFC4AF0A;
-	Tue, 14 May 2024 17:03:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZSLEhoj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CCF1C32782;
+	Tue, 14 May 2024 17:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715706186;
-	bh=uVuLUzX5+DEYtNYoDJ6DK3zMte6pZoMQPjhXvDwP9ow=;
+	s=k20201202; t=1715706187;
+	bh=ErHpqK7us8CjYZwwGv+npPAXosQF/16hrPfLmcnziHk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=OQv+huuesqh8hdo3RyM8BZ5K9lcpFLQ/XV3LqpURvp7SzPB4AA9DxOte8NBXRR5Z0
-	 12YxJyLhgIqbk83xYjpT8rHW06DjCoahlth3m6isb70F10o9HLrIN5cyG4rLR8Xn8o
-	 mOeI0hR7XFFCSi+knMbFYRBFUt8F2YqrLC5PKUSfZuXJ33FFcLg4wRamwvQoY1QRb6
-	 AHPeT7KHts6XvWGK0HjAL1tndvhI0NqpkqLlEV1d0txrYBUFKXS2rD9beu6YECUc4y
-	 u1cCvNgndl//c/o1KZAvRHFzJTaoqMkBdk65etcH0lDFeYOrvxGL4TP5BLUsuxiAru
-	 LZdKtgerBRGXg==
+	b=cZSLEhojJ09zwRZDiqzQ6HKjO3JqqzaiAM50h1RL1YjhZzuvl2ZvGFihE1v/JEUo/
+	 yj2I6V/k4t6bCOGrL/BDN/RNGPXmUKJ4qHqVLHFhQ0Nx/8t0rEKOyAwBxlQpEUaJ1u
+	 vl1PtlqDiNuh2oRpp/tkMbskDQ83yAlhTeMaplRzgJxwkkIuIEDisaivpYg3s4bVGp
+	 aAfbOtJExmMOdf4SPFYL0k4yak06vqdOY1a5CyipYO5ZzLwsvUKOVCSnaH1RKbbZ9j
+	 lIixaPl0psIv0i99EfQtIhn9zFTEr31OmDEP+oVrHxeGNRColTQGq7ClJefXwuUNAi
+	 fJ1XNbQkcSVTQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 76F65C1614E;
-	Tue, 14 May 2024 17:03:06 +0000 (UTC)
-Subject: Re: [GIT PULL] x86/cache for v6.10-rc1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3E0CEC1614E;
+	Tue, 14 May 2024 17:03:07 +0000 (UTC)
+Subject: Re: [GIT PULL] x86/apic for 6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240513182855.GAZkJb52i6WCWQpXA-@fat_crate.local>
-References: <20240513182855.GAZkJb52i6WCWQpXA-@fat_crate.local>
+In-Reply-To: <20240513194720.456299-1-dave.hansen@linux.intel.com>
+References: <20240513194720.456299-1-dave.hansen@linux.intel.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240513182855.GAZkJb52i6WCWQpXA-@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip x86_cache_for_v6.10_rc1
-X-PR-Tracked-Commit-Id: 931be446c6cbc15691dd499957e961f4e1d56afb
+X-PR-Tracked-Message-Id: <20240513194720.456299-1-dave.hansen@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_apic_for_6.10
+X-PR-Tracked-Commit-Id: 0049f04c7dfe977a0f8f6935071db3416e641837
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5186ba33234c9a90833f7c93ce7de80e25fac6f5
-Message-Id: <171570618647.7410.10590472490375651399.pr-tracker-bot@kernel.org>
-Date: Tue, 14 May 2024 17:03:06 +0000
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 61deafa9ecf3f6d00c570774b0b38f439be543ac
+Message-Id: <171570618724.7410.14167817563828079922.pr-tracker-bot@kernel.org>
+Date: Tue, 14 May 2024 17:03:07 +0000
+To: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: torvalds@linux-foundation.org, x86@kernel.org, linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 13 May 2024 20:28:55 +0200:
+The pull request you sent on Mon, 13 May 2024 12:47:20 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip x86_cache_for_v6.10_rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_apic_for_6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5186ba33234c9a90833f7c93ce7de80e25fac6f5
+https://git.kernel.org/torvalds/c/61deafa9ecf3f6d00c570774b0b38f439be543ac
 
 Thank you!
 
