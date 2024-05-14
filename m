@@ -1,200 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44331139D1D;
-	Tue, 14 May 2024 11:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C5513A275
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 11:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715686297; cv=none; b=cDt6r8NQ92+0hbSV4iCbUYtzleoxECLbUGbSrC+0uqAauwJcYSazz7X8rd2htusz6I8zOVtam9GI9gyn5CimbmV/+m/mowEBf7xY+EjdM4tByUV+0EwbnAsMbEpy7PF/X2hwk3g6j6FSX9DGuW02iGKOF5QspPUVUWr8VXfIs4w=
+	t=1715686301; cv=none; b=P5xl4mx5oUs+B0Lr9P+/apilTej+kUTclHb7GaEkC1gsRPYaXBqapWhSHD2w1VltALicUeR2ZYfCiGFbo255VisYzHpnSp1ANe/0GoB2t/0/mTEUqI6AGsYwTAHBgl1Kn/PVCFc6/FU6LHuBtVcB2MM8Mdd1jujREiXKHeyXGkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715686297; c=relaxed/simple;
-	bh=8lcN3GvS4xT+weTctxWkQ4vlzKc0rZNrscZi4UP5ads=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n4NKRXYJagRp30ipyEEUer2u9Q66+7cC9fDCZ1opTYh4qecyH8lNNECTuh4FJ48/0BAAgEynUI8xLk62FNb/qi8sT35O4MJQPneVN2A0FSwsxJqbdowY3VJoc3LO/fmJn/gZmzN2VbXsTmt2qSLtHVuM44YyjOPfqFnxMm6dnWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ghjH8XA/; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715686301; c=relaxed/simple;
+	bh=XhRGyln3sd8lONicUWHD3oNu6jfDpsgZZThQ5tswa48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RaPvZlduGYOf+QbCpbWySeSoDVd3HycWBre4wzF01BOHYNiLNIbU5DsDHVwrLKLgFh1NzY28x3d4raYVIbpE4W9jHB8E2KsSbLicl42c70pg8vcQPJ8j0u3GRlRW4oDFhg4EExdmHaB/Pd7ZYa/BeH4nYzPaMLM9ChskMCB4xrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b4WsIwr8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ghjH8XA/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715686295; x=1747222295;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8lcN3GvS4xT+weTctxWkQ4vlzKc0rZNrscZi4UP5ads=;
-  b=ghjH8XA/DirVTI/JO0O0HEVr69tRvi/PD4On+BwZRcCkZ/NFdWwej43D
-   uAW2ZxDGh2FxFTLdYLt9KDGb35BJ05QjiF3AOkYcv667VeDcQfb77hIoM
-   A2NiCNTaErt4nmHcAqKtmWS7PyfxVnD39+dJHvyQYspJ43edhP8qg7uZf
-   vl1CzP/c2w47EJJ0KtSj5ovkr8eo//QinTzVj3zFCdx69XBHkvAjs7Zm7
-   aYBLMrhvQB2lNKhxExkhvG6oneS96vKPdLACW/rj6gdg9aBH8LbAnNf9Q
-   NACa1ZlPskQoaE8tWMxX6LyBaf0l5/5a58liZkJ7Jg+/+ujrOUyPB8uge
-   Q==;
-X-CSE-ConnectionGUID: i0XkS730QLCpIWfTuJWlfA==
-X-CSE-MsgGUID: QeEVo/A1SJ+W0mgnKoDYzw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="11532837"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="11532837"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 04:31:34 -0700
-X-CSE-ConnectionGUID: JiaICyhjSFeSR+iLgSEnBQ==
-X-CSE-MsgGUID: CMV6tNX1TLm1mOr8TkQNkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="35179635"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.94])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 04:31:33 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 2/7] PCI: Move TLP Log handling to own file
-Date: Tue, 14 May 2024 14:31:04 +0300
-Message-Id: <20240514113109.6690-3-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240514113109.6690-1-ilpo.jarvinen@linux.intel.com>
-References: <20240514113109.6690-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b4WsIwr8"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EANCY7030176;
+	Tue, 14 May 2024 11:21:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=yXOdXwxnUSH4P8a7AOTpMor36F3JDzt6190nMqMER5k=;
+ b=b4WsIwr8zy19hJwwFMUUOO8FPazTRB/qxKEMKmax7SWjFgB55pJPn48OCp8Xjz0aCRV6
+ PFqEErF1Ts6j/z5WkeHDcsmoJw60AOP/vnTpCXYJcKdLxtEEXCvRN9iMWrZDMDpCiONv
+ DxT2ox9yzZNkkNJytUs6J2+I2QXrRDDfgR+R9K0C6t9kwsFI/BUiHrd9tl6/tO3ZbrCk
+ 3Va8UsSZn666yvBtpfPdW9ju9erjTOBu38xECGaWbnjWd+xwGuG9kNZ5Rxf7l3Kb45/W
+ CWUvDkkLwlB+wRXYKDeTrYqSBXQ9PC7V8g300yiz9p2yQM42qkw2KsXEHc9o5GjsxLxG Ew== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y4656g4ey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 11:21:55 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44EBLsSD022184;
+	Tue, 14 May 2024 11:21:54 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y4656g4ev-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 11:21:54 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44E8cclE006189;
+	Tue, 14 May 2024 11:21:53 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2mgmcxqq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 11:21:53 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EBLnTJ54001924
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 11:21:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9989F20043;
+	Tue, 14 May 2024 11:21:49 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5874E20040;
+	Tue, 14 May 2024 11:21:48 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.204.206.66])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 14 May 2024 11:21:48 +0000 (GMT)
+Date: Tue, 14 May 2024 16:51:41 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arch/powerpc: Remove the definition of unused cede
+ function
+Message-ID: <bbz5jnemmpzaz4577fured3vyettp677qgacvifgfgnq4nbeqi@gvqz4r4hc4jc>
+References: <20240514100507.271681-1-gautam@linux.ibm.com>
+ <vfx2z4dn6afpkl4z7ygewadw7mohfd7l3tfazdya4sbxniurkg@vrubq25slkvs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vfx2z4dn6afpkl4z7ygewadw7mohfd7l3tfazdya4sbxniurkg@vrubq25slkvs>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3bgrU1ZxcOf30zPoKAqInHN_9dgFBylG
+X-Proofpoint-ORIG-GUID: FiGjcpiVqSb0OJDqIa9WUvmLQP5-qZ19
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_06,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=403 suspectscore=0 malwarescore=0
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2405010000 definitions=main-2405140081
 
-TLP Log is PCIe feature and is processed only by AER and DPC.
-Configwise, DPC depends AER being enabled. In lack of better place, the
-TLP Log handling code was initially placed into pci.c but it can be
-easily placed in a separate file.
+On Tue, May 14, 2024 at 04:20:04PM GMT, Naveen N Rao wrote:
+> On Tue, May 14, 2024 at 03:35:03PM GMT, Gautam Menghani wrote:
+> > Remove extended_cede_processor() definition as it has no callers since
+> > commit 48f6e7f6d948("powerpc/pseries: remove cede offline state for CPUs")
+> 
+> extended_cede_processor() was added in commit 69ddb57cbea0 
+> ("powerpc/pseries: Add extended_cede_processor() helper function."), 
+> which also added [get|set]_cede_latency_hint(). Those can also be 
+> removed if extended_cede_processor() is no longer needed.
 
-Move TLP Log handling code to own file under pcie/ subdirectory and
-include it only when AER is enabled.
+Yes thanks for pointing it out, will remove them as well.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pci.c         | 27 ---------------------------
- drivers/pci/pci.h         |  2 +-
- drivers/pci/pcie/Makefile |  2 +-
- drivers/pci/pcie/tlp.c    | 39 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 41 insertions(+), 29 deletions(-)
- create mode 100644 drivers/pci/pcie/tlp.c
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 54ab1d6b8e53..2cc875f60fef 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1066,33 +1066,6 @@ static void pci_enable_acs(struct pci_dev *dev)
- 	pci_disable_acs_redir(dev);
- }
- 
--/**
-- * pcie_read_tlp_log - read TLP Header Log
-- * @dev: PCIe device
-- * @where: PCI Config offset of TLP Header Log
-- * @tlp_log: TLP Log structure to fill
-- *
-- * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
-- *
-- * Return: 0 on success and filled TLP Log structure, <0 on error.
-- */
--int pcie_read_tlp_log(struct pci_dev *dev, int where,
--		      struct pcie_tlp_log *tlp_log)
--{
--	int i, ret;
--
--	memset(tlp_log, 0, sizeof(*tlp_log));
--
--	for (i = 0; i < 4; i++) {
--		ret = pci_read_config_dword(dev, where + i * 4,
--					    &tlp_log->dw[i]);
--		if (ret)
--			return pcibios_err_to_errno(ret);
--	}
--
--	return 0;
--}
--
- /**
-  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
-  * @dev: PCI device to have its BARs restored
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 9c968df86a92..0e9917f8bf3f 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -419,9 +419,9 @@ struct aer_err_info {
- 
- int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
- void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
--#endif	/* CONFIG_PCIEAER */
- 
- int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
-+#endif	/* CONFIG_PCIEAER */
- 
- #ifdef CONFIG_PCIEPORTBUS
- /* Cached RCEC Endpoint Association */
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index 6461aa93fe76..591ef3177777 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -7,7 +7,7 @@ pcieportdrv-y			:= portdrv.o rcec.o
- obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o
- 
- obj-y				+= aspm.o
--obj-$(CONFIG_PCIEAER)		+= aer.o err.o
-+obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
- obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
- obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
-diff --git a/drivers/pci/pcie/tlp.c b/drivers/pci/pcie/tlp.c
-new file mode 100644
-index 000000000000..3f053cc62290
---- /dev/null
-+++ b/drivers/pci/pcie/tlp.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe TLP Log handling
-+ *
-+ * Copyright (C) 2024 Intel Corporation
-+ */
-+
-+#include <linux/aer.h>
-+#include <linux/pci.h>
-+#include <linux/string.h>
-+
-+#include "../pci.h"
-+
-+/**
-+ * pcie_read_tlp_log - read TLP Header Log
-+ * @dev: PCIe device
-+ * @where: PCI Config offset of TLP Header Log
-+ * @tlp_log: TLP Log structure to fill
-+ *
-+ * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
-+ *
-+ * Return: 0 on success and filled TLP Log structure, <0 on error.
-+ */
-+int pcie_read_tlp_log(struct pci_dev *dev, int where,
-+		      struct pcie_tlp_log *tlp_log)
-+{
-+	int i, ret;
-+
-+	memset(tlp_log, 0, sizeof(*tlp_log));
-+
-+	for (i = 0; i < 4; i++) {
-+		ret = pci_read_config_dword(dev, where + i * 4,
-+					    &tlp_log->dw[i]);
-+		if (ret)
-+			return pcibios_err_to_errno(ret);
-+	}
-+
-+	return 0;
-+}
--- 
-2.39.2
-
+Thanks,
+Gautam
