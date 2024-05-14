@@ -1,241 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2B666B5E;
-	Tue, 14 May 2024 10:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B80866B5E
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715681510; cv=none; b=Kbb4Sr2T5m8S1/Y6K7UgEhIIPRu5g8ldlBY/KMjVj54Nz0OeDYF49lu5q0qlE8GN5HLLMSfT8O2ZxuRdmeLS4sZGBzPOhTRI28RwaxwKI+xjAUPGsfu6GmeLnkaWS5xMvejya+9uDA1TVfWdsi0IgXea7XXCdJn63+gQaIfe7fk=
+	t=1715681526; cv=none; b=qe+JZxJZfmYjQxMRQxokSuTJ0CuL05lx7v2i1CZk3nX1AmL/OuuOxDZjtWhB+W711sHomo9169ve4JFPS2mhZk4eAH34xc34v0oZBvZmDYEbdFJHnnOEGJCO3D9M5N7RM9jhWAg21LeLvMb7+Yz9Jiz6EJcxjmlbCmt0J+OhOSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715681510; c=relaxed/simple;
-	bh=uKQmHevj9qgPxSEUKRxkpZkuCmA3D/KeuYFmxfhUbEU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pQSbp99hEzpgKGhlZw1ivsyJBUCI1FG/h5fJJ5FRh8VSy6cLQuL6Q03l3L0AtAWNor2Qf4rN2j830MffnNNb25/wEt9hLbVivxyJuKU+jStvoyGVwZk6wCiiD5d2ArDbGE+XcWbSBq9cwzNQKggpLEeO76hJudGEEmBIKowsDkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwnlICT/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715681526; c=relaxed/simple;
+	bh=vgcc5SNw8TCNHx4MBVO6dtvgRh+jHnOxOxGcXN1PKzQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tWt+2JyqR7pYnOfrEZugQ4Yqs22CRIxSUu2GL1a7YdPn1QUSaC8xLpDTbkmoCVdT0+YQ/xoMFgMEvRCdfXtT4tnwd8596LUuj/OdOBEZVGJz0bA7Qw+a4kaaMbY6nC3rmzm6lTMDu0a/6jee/kdqYrUhPPieQtm2rCeG7w1bQWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=A7lfD8OZ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwnlICT/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3FCC2BD10;
-	Tue, 14 May 2024 10:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715681509;
-	bh=uKQmHevj9qgPxSEUKRxkpZkuCmA3D/KeuYFmxfhUbEU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BwnlICT/+bN+Wr7PMITNaw/PGTvG98iAfF3073CDGjWzTxFnguKCoUtA8eTXz2KOM
-	 ENuMlXWyQygcaI/ixhkb6+WCFSt/hm7kH10vPV3yxjvvo/FpOXCG0dYynC3ijkdypp
-	 yxEpPGyAB1dg7ysEYIFwJlUK+I9MuUU7Owkr/8xSOEN+s8hMjCKttNonPQ70mKxVNm
-	 V50X2FosDN1QtiR5KwKHARb/QMQkjrQttsNfw6xa2ix+KDmzF33ioTz10Ui1H5G5BI
-	 tgaB3UGffX9PDbQ1cJ/7W27NkWTWIFAYeGKxD8FSEqkPGAS1hWQhslibLfpNopX2qf
-	 Y0YspErr7AQBg==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a59a9d66a51so1255312466b.2;
-        Tue, 14 May 2024 03:11:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXkJepZTmvoy8psnJNVwAXkR7OQ8P9WfLEOKyurYO1XJnOS8e/cQ3jpn7lJ1v9T8riNGzrZjYk6DZ29wzRGWix13egAgW9gE/j7T42ivGPoHfMpJL6wL3oxyCICZWqN37LYIIfBWKcFlA==
-X-Gm-Message-State: AOJu0YxNPe3OZQuT0pXsN5XNkAtScejXhH7rnozi3WDxuvp7t8/rI/Ce
-	zK8jCog7llDsFBARio76k/gPZ5hZBZIhGKaMeebSr2Fwa+YkaGeNZ8llDdd9AS8ZEqRu0UBsQAl
-	Ni4l4unhWUqYVvP4HM3IfwxLDHdg=
-X-Google-Smtp-Source: AGHT+IG2SJLZeJv9E723RPMYkjAggoAqnNUcuBjZL5KPzQ7ueRWKLf2UEtaPgF8M+K9KWHrfkkwXldPNn9gLjNl+WUk=
-X-Received: by 2002:a50:a40c:0:b0:56d:c928:ad76 with SMTP id
- 4fb4d7f45d1cf-5734d67e8d0mr8314326a12.26.1715681508279; Tue, 14 May 2024
- 03:11:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A7lfD8OZ"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EA2vr8006787;
+	Tue, 14 May 2024 10:05:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=gGxQ91Axlxx23byS5Dc2PLh8wMyfpqwYAXQ6C5lw/9c=;
+ b=A7lfD8OZI1loLA1j5kjbhnF7QF4MUkISm+EOPVZLjpDKUz0eUHYKOGPP9EgGoZMfhZGG
+ CUGYzcrQ6lLVs3a4o25lRLN5rxPQ7uYsDPa89kU+04nfA4Q5+HhLsDvdFH/HzKEBV7ex
+ hs/ZSX4FQxA3ACcbOSYtyfUiBwLj3ny3F9WyPEHTy4iE1vaUj2uDDBBoN418lsnWR8wC
+ 5bALS6LOHDaYxEncioJ11oWU20f0bsRhcxDfYOooO7ROFQn5zihrRqlgnkUllFQO0Y4J
+ kUaTV5MyTYqqn1/td01Jr7gmOQetFmKR11SQYZdO6NDg8kwnJtmHmo8zDCpsY4OgfL+y Ag== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y45urr09n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 10:05:19 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44EA5JHk010137;
+	Tue, 14 May 2024 10:05:19 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y45urr09j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 10:05:19 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44E9TM7Q029603;
+	Tue, 14 May 2024 10:05:18 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y2n7kmeft-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 10:05:18 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EA5CQK45547884
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 10:05:14 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C6B1A20075;
+	Tue, 14 May 2024 10:05:12 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 57C1F20071;
+	Tue, 14 May 2024 10:05:11 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 14 May 2024 10:05:11 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        naveen.n.rao@linux.ibm.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arch/powerpc: Remove the definition of unused cede function
+Date: Tue, 14 May 2024 15:35:03 +0530
+Message-ID: <20240514100507.271681-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514073232.3694867-1-chenhuacai@loongson.cn>
-In-Reply-To: <20240514073232.3694867-1-chenhuacai@loongson.cn>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 14 May 2024 18:11:36 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTUmpm+aTQL7gNyLEe57X=v-it3MT5TOCViCOEiEyraBA@mail.gmail.com>
-Message-ID: <CAJF2gTTUmpm+aTQL7gNyLEe57X=v-it3MT5TOCViCOEiEyraBA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add irq_work support via self IPIs
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: mbN2y1aKuSdvXTmoMoRmioguwuAxtATH
+X-Proofpoint-GUID: RKI_YwUqWiqI5eskDM1V7UKXBGt5gC5o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_04,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ lowpriorityscore=0 spamscore=0 impostorscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=598 adultscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405140071
 
-On Tue, May 14, 2024 at 3:32=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> Add irq_work support for LoongArch via self IPIs. This make it possible
-> to run works in hardware interrupt context, which is a prerequisite for
-> NOHZ_FULL.
->
-> Implement:
->  - arch_irq_work_raise()
->  - arch_irq_work_has_interrupt()
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/include/asm/hardirq.h  |  3 ++-
->  arch/loongarch/include/asm/irq_work.h | 10 ++++++++++
->  arch/loongarch/include/asm/smp.h      |  2 ++
->  arch/loongarch/kernel/paravirt.c      |  6 ++++++
->  arch/loongarch/kernel/smp.c           | 14 ++++++++++++++
->  5 files changed, 34 insertions(+), 1 deletion(-)
->  create mode 100644 arch/loongarch/include/asm/irq_work.h
->
-> diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/includ=
-e/asm/hardirq.h
-> index d41138abcf26..1d7feb719515 100644
-> --- a/arch/loongarch/include/asm/hardirq.h
-> +++ b/arch/loongarch/include/asm/hardirq.h
-> @@ -12,11 +12,12 @@
->  extern void ack_bad_irq(unsigned int irq);
->  #define ack_bad_irq ack_bad_irq
->
-> -#define NR_IPI 2
-> +#define NR_IPI 3
->
->  enum ipi_msg_type {
->         IPI_RESCHEDULE,
->         IPI_CALL_FUNCTION,
-> +       IPI_IRQ_WORK,
->  };
->
->  typedef struct {
-> diff --git a/arch/loongarch/include/asm/irq_work.h b/arch/loongarch/inclu=
-de/asm/irq_work.h
-> new file mode 100644
-> index 000000000000..d63076e9160d
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/irq_work.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_LOONGARCH_IRQ_WORK_H
-> +#define _ASM_LOONGARCH_IRQ_WORK_H
-> +
-> +static inline bool arch_irq_work_has_interrupt(void)
-> +{
-> +       return IS_ENABLED(CONFIG_SMP);
-I think it is "return true," or it will cause the warning.
+Remove extended_cede_processor() definition as it has no callers since
+commit 48f6e7f6d948("powerpc/pseries: remove cede offline state for CPUs")
 
-void __init tick_nohz_init(void)
-{
-        int cpu, ret;
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+---
+ arch/powerpc/include/asm/plpar_wrappers.h | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-        if (!tick_nohz_full_running)
-                return;
+diff --git a/arch/powerpc/include/asm/plpar_wrappers.h b/arch/powerpc/include/asm/plpar_wrappers.h
+index b3ee44a40c2f..6431fa1e1cb1 100644
+--- a/arch/powerpc/include/asm/plpar_wrappers.h
++++ b/arch/powerpc/include/asm/plpar_wrappers.h
+@@ -37,24 +37,6 @@ static inline long cede_processor(void)
+ 	return plpar_hcall_norets_notrace(H_CEDE);
+ }
+ 
+-static inline long extended_cede_processor(unsigned long latency_hint)
+-{
+-	long rc;
+-	u8 old_latency_hint = get_cede_latency_hint();
+-
+-	set_cede_latency_hint(latency_hint);
+-
+-	rc = cede_processor();
+-
+-	/* Ensure that H_CEDE returns with IRQs on */
+-	if (WARN_ON(IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG) && !(mfmsr() & MSR_EE)))
+-		__hard_irq_enable();
+-
+-	set_cede_latency_hint(old_latency_hint);
+-
+-	return rc;
+-}
+-
+ static inline long vpa_call(unsigned long flags, unsigned long cpu,
+ 		unsigned long vpa)
+ {
+-- 
+2.45.0
 
-        /*
-         * Full dynticks uses IRQ work to drive the tick rescheduling on sa=
-fe
-         * locking contexts. But then we need IRQ work to raise its own
-         * interrupts to avoid circular dependency on the tick.
-         */
-        if (!arch_irq_work_has_interrupt()) {
-                pr_warn("NO_HZ: Can't run full dynticks because arch
-doesn't support IRQ work self-IPIs\n");
-                cpumask_clear(tick_nohz_full_mask);
-                tick_nohz_full_running =3D false;
-                return;
-        }
-
-Others LGTM!
-
-Reviewed-by: Guo Ren <guoren@kernel.org>
-
-> +}
-> +
-> +#endif /* _ASM_LOONGARCH_IRQ_WORK_H */
-> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/as=
-m/smp.h
-> index 278700cfee88..50db503f44e3 100644
-> --- a/arch/loongarch/include/asm/smp.h
-> +++ b/arch/loongarch/include/asm/smp.h
-> @@ -69,9 +69,11 @@ extern int __cpu_logical_map[NR_CPUS];
->  #define ACTION_BOOT_CPU        0
->  #define ACTION_RESCHEDULE      1
->  #define ACTION_CALL_FUNCTION   2
-> +#define ACTION_IRQ_WORK                3
->  #define SMP_BOOT_CPU           BIT(ACTION_BOOT_CPU)
->  #define SMP_RESCHEDULE         BIT(ACTION_RESCHEDULE)
->  #define SMP_CALL_FUNCTION      BIT(ACTION_CALL_FUNCTION)
-> +#define SMP_IRQ_WORK           BIT(ACTION_IRQ_WORK)
->
->  struct secondary_data {
->         unsigned long stack;
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
-avirt.c
-> index 1633ed4f692f..4272d2447445 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -2,6 +2,7 @@
->  #include <linux/export.h>
->  #include <linux/types.h>
->  #include <linux/interrupt.h>
-> +#include <linux/irq_work.h>
->  #include <linux/jump_label.h>
->  #include <linux/kvm_para.h>
->  #include <linux/static_call.h>
-> @@ -97,6 +98,11 @@ static irqreturn_t pv_ipi_interrupt(int irq, void *dev=
-)
->                 info->ipi_irqs[IPI_CALL_FUNCTION]++;
->         }
->
-> +       if (action & SMP_IRQ_WORK) {
-> +               irq_work_run();
-> +               info->ipi_irqs[IPI_IRQ_WORK]++;
-> +       }
-> +
->         return IRQ_HANDLED;
->  }
->
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 0dfe2388ef41..7366de776f6e 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -13,6 +13,7 @@
->  #include <linux/cpumask.h>
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
-> +#include <linux/irq_work.h>
->  #include <linux/profile.h>
->  #include <linux/seq_file.h>
->  #include <linux/smp.h>
-> @@ -70,6 +71,7 @@ static DEFINE_PER_CPU(int, cpu_state);
->  static const char *ipi_types[NR_IPI] __tracepoint_string =3D {
->         [IPI_RESCHEDULE] =3D "Rescheduling interrupts",
->         [IPI_CALL_FUNCTION] =3D "Function call interrupts",
-> +       [IPI_IRQ_WORK] =3D "IRQ work interrupts",
->  };
->
->  void show_ipi_list(struct seq_file *p, int prec)
-> @@ -217,6 +219,13 @@ void arch_smp_send_reschedule(int cpu)
->  }
->  EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
->
-> +#ifdef CONFIG_IRQ_WORK
-> +void arch_irq_work_raise(void)
-> +{
-> +       mp_ops.send_ipi_single(smp_processor_id(), ACTION_IRQ_WORK);
-> +}
-> +#endif
-> +
->  static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
->  {
->         unsigned int action;
-> @@ -234,6 +243,11 @@ static irqreturn_t loongson_ipi_interrupt(int irq, v=
-oid *dev)
->                 per_cpu(irq_stat, cpu).ipi_irqs[IPI_CALL_FUNCTION]++;
->         }
->
-> +       if (action & SMP_IRQ_WORK) {
-> +               irq_work_run();
-> +               per_cpu(irq_stat, cpu).ipi_irqs[IPI_IRQ_WORK]++;
-> +       }
-> +
->         return IRQ_HANDLED;
->  }
->
-> --
-> 2.43.0
->
-
-
---=20
-Best Regards
- Guo Ren
