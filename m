@@ -1,125 +1,110 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417FF14A96
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8721B1CAB1;
+	Tue, 14 May 2024 08:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715675954; cv=none; b=hI5nl1kyiHwhlJZxl1n3SFqECv1rLuIQC4V3r4VcHse4basiNHtAvnvN/BgIGNFM1mu28pWjzD6+0g9zzlPorVHvkUBySmcIaKCJ/P/6/GMtqVaF2yzYrawQBLkPVkGmAFdPuX8G/RoFSJ2Q+hzqJd2xbDF9q2W/lL87SJ2X0yQ=
+	t=1715675969; cv=none; b=GoPQodPJ0J1rnz+n2B8AFAFSSEk4KQNNKjbbh2moYniR6aVss7gMbI6xKMhHWyEFBMvndg04IuD/gmMG4V3M4S1n55kGN2vjeJ6ftOCxNEXo3DCpYKaMMFYfzDEV3WQbf6vFT+6HK6h7AFz8aLifMMwrwkAM7gYMsGImCq6nqgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715675954; c=relaxed/simple;
-	bh=PpIsu2YQ8LKdplBvqSkaGF3UZwOWDSw318bSDid1J80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=THgQRLmhiQT9AV9fHJTEIMeC+XtR+OpFd0a5lfUWby3eod4jc02YmHGbFXXgHfBtmUi5egO59zmdtACvTDr5IoPPi+rVdEZZ05bFfXqurgoTLeo0YCkaWZgjXyq8KY01lKmgT0VFnKl/I7wBRNWFLiyytKh5fIUp+idSFCbbrbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=DD+1X918; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1715675969; c=relaxed/simple;
+	bh=Lj4Zx1rIkde5sg/gNvqusl6lGf0Bj0HmSnq3nSnra4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K236IlADBtBE7g52rkHfxyNoISPMZTu3fBjysIRgmtRqFagXCINoCE/qHdPgR8r14onOI1sUcKdaudoourPvR4LfkBM7bP0zdlGG9MCBULiNNEJ6WKLmQkT+n2oWfr47zm/llTu4fphqUTItjnKADGqkz6sUGjKU94Na87o0Apc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iHWYGS/f; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="DD+1X918"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-61bee45d035so54634407b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 01:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1715675952; x=1716280752; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a8OfBUMWw4vRfdJG5yIvPigGCabXSzHeeUlvg2+VyM8=;
-        b=DD+1X918NuP42LRHIK1ScvzkFyD26YyCHDwahJgRIRo4BTZeOuadliEZKoaRJmq6tT
-         4w6lloaJh+kE8GNXXrUItYqsIbEoEXLL++hRBGgLZmQRIuyxg5FEAvNFxc74O3tl13rZ
-         iODKCkY9MQC2vo0oDpAEilVnYL9DV1qkK36coNSW4ibBTrVULH5a0yg4U+uUI8BwNEoP
-         xwyXGUD85DJ6RvcgO7aihNJBXkAeWS1xPjQA98crvLb0jc9MxpJqC1xYHw6NScgOafff
-         Obg+c4Z/J8niUTB2o95IganJUwILzler4iYeS3EmWh5eLdrJtnDa78J7Bh5O4XWX4FbZ
-         h/JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715675952; x=1716280752;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a8OfBUMWw4vRfdJG5yIvPigGCabXSzHeeUlvg2+VyM8=;
-        b=tUTfRyqpAQY2xVj6+vE3Q1fuICO0xXQh2jsLIlOpRL1KKEiLL17as2mg7HhBxvGkm2
-         pJUu6/GYp/Nxe02gZvO6VjNjLpNLJYhJSaaNY6JK/y6R6YLILC6+GcgeLHcM89ZSD+nw
-         1vswKP9rHQWErQ9FkPMbhLjB67pTkKSyeIBU8ooV4DyBAk54eCp1IKhaoETaZXenHCFK
-         tQoyW8zpUvJpHCRVo6HUnENURwuXUd+GmbkkdeeZsLvhayj58tT4P4j7nCk81oyXnqXu
-         tH4lLmQUQ9PSv8If2NzQ7CigJGE1A2cUw/YsR/3GH5cUMZdm0Yf/F7kBwk8O9NJStQkT
-         yuFg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/uqH4PgekZGfeJsKBYvNE4sModAeCrOtKzAVR1Sw8LkRP1bRgkgtW+tIG20qaNCGQKv26o3nTCdGeO4X8H///nGJ10T5XtqS4tzQ6
-X-Gm-Message-State: AOJu0YwaJqWAk+xbOBbRtk4EPMTvkzMFyDadtErhkj03Ky4mBRKbMA7+
-	D7WiYkZNz3V1LgBg0b0hJKxDEXXIwTO+9zthq4PdncpSiPgSA1xVTNnzhj2ys/QRB+3Wsi0LHHH
-	MMasg5QjG+DLHmEC7rI+wZAJkbtiLFVdF6R/1gQ==
-X-Google-Smtp-Source: AGHT+IE+i8Kx49jNAKC7DYTOj53slCNQaVb4nzqYGYIRKTSSy6zLL/hu+hHyIeZlCKLoskbdnjTAh/+WvCzLiGlNKFg=
-X-Received: by 2002:a25:8b82:0:b0:deb:7eb7:c9ce with SMTP id
- 3f1490d57ef6-dee4f182a92mr9653925276.1.1715675952187; Tue, 14 May 2024
- 01:39:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iHWYGS/f"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44DJ8qGc009927;
+	Tue, 14 May 2024 08:39:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=arxYHOnh1XaXsKWitYbSPh3JP+VL4K7roRKT+z9yAvk=; b=iH
+	WYGS/fP4ybvaU1pJ9mWFebuzOLtVh67YFHDnjzxdG5Y0IgdD+eY2PdovIqln1/UP
+	+rzhB4rF82tsh2n3NQAB7xtosb7MW7RtcvkVOjx6sjp4h66WI8hnh4CQXCxfxcvC
+	CmpULWRep69fMuT7e5QhOYFnUtK442or25DJJRUtmGRY8Jt/lWFbX87y5OzXEPhZ
+	f3MTgSWvp9m8LGEAud1wjKzXNZWjIhh9mH2DPLMtYmNpVgx6paHc/dV254FwLrJ1
+	cRXrDWx5CGjxG3x9Wjx0m8tCxwF70pfu2Zzz45A3ARzMW3uYHk89N6vvemNWB11m
+	6wripzd1/8zpgv8MnDUQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y21eddk7b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 08:39:21 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44E8dKOU004132
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 08:39:20 GMT
+Received: from [10.251.44.40] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 May
+ 2024 01:39:17 -0700
+Message-ID: <d0b80f9a-9625-4151-8cb4-dd86c8325fd3@quicinc.com>
+Date: Tue, 14 May 2024 11:39:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219125350.4031370-1-patrick.rudolph@9elements.com>
- <ZkL2Sdf0NcqaZRZ4@surfacebook.localdomain> <CACRpkdbUye6RhbRNGn6sapARwVUyi5hKS-5VEVBr6ZR6W_KdQw@mail.gmail.com>
-In-Reply-To: <CACRpkdbUye6RhbRNGn6sapARwVUyi5hKS-5VEVBr6ZR6W_KdQw@mail.gmail.com>
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
-Date: Tue, 14 May 2024 10:39:00 +0200
-Message-ID: <CALNFmy33wMHBcoU9ei0vVsn0gUM7-0jdkDDq_Loa3=mMWXiWcw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cy8c95x0: Cache muxed registers
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, naresh.solanki@9elements.com, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/8] media: qcom: camss: Attach formats to VFE
+ resources
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Vladimir Zapolskiy
+	<vladimir.zapolskiy@linaro.org>,
+        <rfoss@kernel.org>, <todor.too@gmail.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
+        <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>
+References: <20240411124543.199-1-quic_grosikop@quicinc.com>
+ <20240411124543.199-3-quic_grosikop@quicinc.com>
+ <c76957b9-d57d-469d-87c8-c9f59b4462b0@linaro.org>
+ <9ac41841-9281-4867-a607-e3883f32db83@quicinc.com>
+ <55ce4e31-4134-40fe-8e94-28392863886a@linaro.org>
+From: "Gjorgji Rosikopulos (Consultant)" <quic_grosikop@quicinc.com>
+In-Reply-To: <55ce4e31-4134-40fe-8e94-28392863886a@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-sure can do that.
-Do you have an example where muxed registers are used in a regmap?
-Is there some documentation available explaining the existing
-mechanism? I'm not aware of anything.
-
-Regards,
-Patrick
-
-Patrick Rudolph
-B.Sc. Electrical Engineering
-System Firmware Developer
-
-9elements GmbH, Kortumstra=C3=9Fe 19-21, 44787 Bochum, Germany
-Email: patrick.rudolph@9elements.com
-Phone:  +49 234 68 94 188
-
-Sitz der Gesellschaft: Bochum
-Handelsregister: Amtsgericht Bochum, HRB 17519
-Gesch=C3=A4ftsf=C3=BChrung: Sebastian Deutsch, Eray Basar
-
-Datenschutzhinweise nach Art. 13 DSGVO
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: UoWX0jMuOaED5cQkLJYW1iH9fYbSAs7n
+X-Proofpoint-ORIG-GUID: UoWX0jMuOaED5cQkLJYW1iH9fYbSAs7n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_03,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=970 adultscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405140060
 
 
-On Tue, May 14, 2024 at 9:49=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Tue, May 14, 2024 at 7:27=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > Tue, Dec 19, 2023 at 01:53:49PM +0100, Patrick Rudolph kirjoitti:
-> > > Currently the port specific registers behind the PORTSEL mux aren't
-> > > cached in the regmap and thus the typical setup time for a single pin
-> > > on cy8c9560 is about 200msec on our system. The hotspot is the IRQ
-> > > (un)masking, which causes lots of R/W operations.
-> > >
-> > > Introduce a separate regmap for muxed registers and helper functions
-> > > to use the newly introduced regmap for muxed register access under
-> > > the i2c lock.
-> > >
-> > > With the new cache in place the typical pin setup time is reduced to
-> > > 20msec, making it about 10 times faster. As a side effect the system
-> > > boot time is also reduced by 50%.
-> >
-> > Interestingly that you have not Cc'ed me on your patches.
-> > This, btw, a good reinvetion of a wheel which regmap supports already.
->
-> Also sloppy reviewing from my side :(
->
-> Patrick can you look into making a patch on top of this
-> that switches the code to use the built-in caching in regmap
-> insted of rolling your own?
->
-> Yours,
-> Linus Walleij
+
+On 5/13/2024 8:36 PM, Bryan O'Donoghue wrote:
+> On 13/05/2024 16:35, Gjorgji Rosikopulos (Consultant) wrote:
+>> I agree but i would propose to have next series for cleanup up patches,
+>> Otherwise we will have to many changes across the files.
+> 
+> So, I missed these plats in the code, thanks for spotting.
+> 
+> I'd like to get the header SPDX and style stuff Vlad highlighted fixed
+> in a V4 of this series.
+> 
+> However given the amount of effort required to verify these changes, I'd
+> rather avoid data-structure and/or logic changes at this stage.
+
+I agree. V4 will contain only style stuff from Vlad and patch 3.1 with
+fix for csyphy type.
+
+~Gjorgji
+
+> 
+> ---
+> bod
