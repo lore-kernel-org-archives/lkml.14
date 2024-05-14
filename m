@@ -1,182 +1,140 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FB45CDF0
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0210157CAE
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 10:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715681066; cv=none; b=CEBuI3RpggW7q4DDwDpRXcDE0ewU+y/84YMxnWWYGHZqoMgAaGzHuylQ1CqAaNJ1WhxuqzL3u79CKsMs4ImRWuOjxVOw1z0rFNFTkRj99U+EMhTdF/AufcWtUt4BI+KAU3PXCTmwjK4oB5Ije0RKLYwIurmbwqw6KTdRVizqr4E=
+	t=1715681173; cv=none; b=ZVi8Cera8Y1Mo3y5IHLs2+ZRrNc1GVEdziweRyvgBUZKa3vtjKGN1+XwyY7G8KOwY3H3jol9YPKHLs7bGk+wEul8F0V9qFDXKEV9i2nM8MzsvjYwgzo1Q4Le+e7+W5ag8qgvx2q4Y5K2E/1IVtwSviKZVb7EJiOCsjJaEp+XyUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715681066; c=relaxed/simple;
-	bh=6OJIOyMTfIXgBoq0fS6wbecGUkAEW6z+MnJbYsQDwWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lp7Vxn/2Ylr3ygB5SQP6L+DyIXP3IPK0avnEbS6NezKL3vCy1HN8jwomkYdEzw0k5GVgxXQmKDGd1rN4m8kpbInnV1U23ptbM5AWJilnZL40hjhC3wkRwauii5oFYKT9yENs4hGD7E74Z2q36OJ77LHic5H7ORUsONDXGUPWjs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=bxMfk41b; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dyWZne+p; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1715681173; c=relaxed/simple;
+	bh=JJMnPw1emDY+HwY78xe2ASFo8bdc3Bqhb6kfo40H6t0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DQ0mpMIJTcaqu3GEj7oDexk0BwJpJ/DmuAugk0dg7cuAut7zpqDmHZZju5mci5fmTbqKrgPr18BcM8lkW/lwIc56SLfsWRK6PU7/pwX5aXX1KwcFu6LhiIewbu0MdETqVO5ngVf6JztcA5Hh6Ek84T2CYyRX4XhjncxIPgcsSBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=JIv1rqb1; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="bxMfk41b";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dyWZne+p"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id D2C8A1140183;
-	Tue, 14 May 2024 06:04:22 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 14 May 2024 06:04:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1715681062; x=1715767462; bh=BVpwueAcvJAsCC2GVmhfS
-	yVrFXijg21zaPEOzVgT+Pk=; b=bxMfk41bTjA8GQ/X4aLL9gKfd71TkusavooNK
-	DaajTMkPECc048g8xqaKkwqDOMqxJ9xC19Y7Sra+hzPnlAXwVwMcLcN+/eNElknJ
-	vkv08yfWxmdAG2VLQeD6L97n3BZMy0LvbYRbxDATmNsP6y+4H96Uo7lUHZakLY4a
-	xni8IslkUonEWfogpydPlQa0k+44YUS/fhvadxAZ/R4OAF1f3TkoDfX5nVHTXyf5
-	jKHd4bgaX7mN1dLki764JGfiJGcLyK5pFQw6ItIfha0+7RfEhTWdn0zUPXpzRTeN
-	X7jZ8BVl7YLPrJOEVkgAsg5ci2F4HdRs/tci6oXGbDEopuV5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1715681062; x=1715767462; bh=BVpwueAcvJAsCC2GVmhfSyVrFXijg21zaPE
-	OzVgT+Pk=; b=dyWZne+pFA0d8/PaQ14J+HpZ4LcWmxCQchZfXWsigEPT/kWh9Pb
-	WwsWAyAVYQgdXHK9C157SebIDNPGT5w4g7Nwtc7zTkFXZZ5c1wSmOquHLJWczomD
-	us14kw7SRB9jZRnWg32CviWtR3Abb4p05d8zuySNbWVnr/pqUAYRuM+9YjAJEvxa
-	CqCGz45W77RrEIplDklwU0Di7iJHFj+tydmAwWZfOmmglAymcktc7Qm6XDb2y09X
-	lHUKl0GuPhMYwD1QDhAJ6vmC19bNiHUfdYmSHO8GnxFLQzux6USEMxMTv6jwObG4
-	vd/FPSIcfqudKwjGloMDbG1DnVsQmHZ+4pg==
-X-ME-Sender: <xms:JjdDZmr8GJsVby9sK-lHkWQBo8Fp86B_bwjJALLlJK__49JnAwWVtg>
-    <xme:JjdDZkrRGGIi3s3bLet7bBcFEUNjXdWA5SdnajVfx36lWw-T1NhEsSG_0MjsoTXgA
-    JzPTudCIuCauvgWgHg>
-X-ME-Received: <xmr:JjdDZrPwMSTn_HTGf3bjz6LDeW-8o_gYjROEQ2-KLrmIV8JeD0VduZvzwASUP5JbrKemPLk2MWGSMYQ-cmt3FvgfcjaUwiBasdw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegiedgvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfggtggusehttdertd
-    dttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
-    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeetfeeiteefve
-    egvdfggeffheetleejkeekleeugeffffdtgfdtteetkeevvddvgfenucffohhmrghinhep
-    khgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:JjdDZl66a6tjqgQK3pq-opOznNYfAFF8N7LJO8_YERruYzsOrG7h2g>
-    <xmx:JjdDZl6SOlUnrskQtIWWDZNBH9qUObS5juM8vfluIvYznslevz48EQ>
-    <xmx:JjdDZlhi_9zfIT7AGcVfac1Gt5DfbRU2nxJ-iYVnnVMgh5ntqgs9xA>
-    <xmx:JjdDZv6A1fa4eQSE78wzUHh0bGwIUZSKKwiU0cGk40oNZOuzyUFzPA>
-    <xmx:JjdDZvm6YN_svNnIqEdOezVeAHyVis_I1hD4rbm418UCbmh4nkZNnUGi>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 14 May 2024 06:04:21 -0400 (EDT)
-Date: Tue, 14 May 2024 19:04:18 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net
-Subject: [GIT PULL] firewire updates for v6.10
-Message-ID: <20240514100418.GA198864@workstation.local>
-Mail-Followup-To: torvalds@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="JIv1rqb1"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2b33d011e5dso3635044a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 03:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1715681171; x=1716285971; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JJMnPw1emDY+HwY78xe2ASFo8bdc3Bqhb6kfo40H6t0=;
+        b=JIv1rqb1rvdYaUxCnNpMc9FPtDhIid1ji4rmyovP+X/GQTAOHCYRsPLOpJaz2obu2n
+         BS97JrPlcm6LK0E5B8vnJslMZgBHZrImpDilNKis3RbK6g57jRS0CJVnlqS+4fnV+1ZB
+         /H0wiLAiaokwVaMPHLh5UTPrSp0vMwG5WONeD/aR4wTK6GWbJ4pBk1oqXAnhg4QnAKWg
+         OGZO8lYQ1xGg5jBDyDXteqVq4oRj8larJjSBu+MGZTvRuj4OPqsLqKW/5MGkvX1vM+RL
+         k5feM2qnqIIPk5PNXOb8hYF9JR22/3OKxgGsbN9trPQEuPRGbGHPG0/oeAgAZPkYVzUL
+         8x4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715681171; x=1716285971;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JJMnPw1emDY+HwY78xe2ASFo8bdc3Bqhb6kfo40H6t0=;
+        b=skWhbHxMntvX7D9XpDi2mKCm7SCQNNwKHMWWqdArpcgWkewOU6rzEOq74/OSAr83SY
+         BVnNj20goYROntSL+DHoLuvLwzE7ySPbO7KcQOmu1URYMhgpPTouiTLwN4QjONKMXI1k
+         x1QUK1rIQUTUisbsfq1u4R5rw2RynPSsFGxphlCNsbOW7J033tHG3vJaf5VAR0md1mVN
+         tLdP4PcW6Kkd67qmU/LScXYvsPeFdY3HdLlzf60dguABPv9NyrcfgGPXwCgfGg484cP+
+         U8cGlQT7Q7XQ4cR118QWliBG2SYk7XfzODKGrk4Pcvdhw/XQn99+fHahfQsUozciCQnw
+         Jdzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVK47VhQC74Xw7W/Qh1lkQSW/AovOyjyRcDM5y+0P3Dn+QwnCl+vnJWRf8DEQ2ay3PznIdCSt2toOzoUlJIo/yzWc43W2c9Q8Kc7UZN
+X-Gm-Message-State: AOJu0YxM8xGaGYtSdWMcQOn8E5/25Io2C8HSROp9+tMDm0KPYmGHCmUz
+	qXiF2VaqgM9I2UjHfsmDwzbMHgb57r5RHP1sXMcQkMF7gzh/vKARS+WGZgE7cqleZ53aZcWFomw
+	bhkPERMQm2tUE/OinYdDZxdHZ1gT6n886gIe+xw==
+X-Google-Smtp-Source: AGHT+IHre9CZfrwCr+2Zr/doXN48B0LmWFsKXYVStPNCfzBqck4HKosJJb8s7ck5ghhRK6GFB6aXt07XzMJmGo22k+4=
+X-Received: by 2002:a17:90a:a108:b0:2b0:e497:56f2 with SMTP id
+ 98e67ed59e1d1-2b6c70faab7mr18694886a91.10.1715681171194; Tue, 14 May 2024
+ 03:06:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240503221634.44274-1-ignat@cloudflare.com> <CALrw=nGhgRrhJ5mWWC6sV2WYWoijvD9WgFzMfOe6mHmqnza-Hw@mail.gmail.com>
+ <D18XXJ373C2V.2M6AOMKD1B89W@kernel.org>
+In-Reply-To: <D18XXJ373C2V.2M6AOMKD1B89W@kernel.org>
+From: Ignat Korchagin <ignat@cloudflare.com>
+Date: Tue, 14 May 2024 11:05:59 +0100
+Message-ID: <CALrw=nHGLN=dn3fbyAcXsBufw0tAWUT1PKVHDK5RZkHcdd3CUw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] TPM derived keys
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	David Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, serge@hallyn.com, linux-integrity@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Tue, May 14, 2024 at 1:28=E2=80=AFAM Jarkko Sakkinen <jarkko@kernel.org>=
+ wrote:
+>
+> On Mon May 13, 2024 at 8:11 PM EEST, Ignat Korchagin wrote:
+> > On Fri, May 3, 2024 at 11:16=E2=80=AFPM Ignat Korchagin <ignat@cloudfla=
+re.com> wrote:
+> > I would like to point out to myself I was wrong: it is possible to ask
+> > the kernel to generate a trusted key inside the kernel locally with
+> > "keyctl add trusted kmk "new 32" @u"
+>
+> Not in a full-time kernel position ATM as I'm working as contract
+> researcher up until beginning of Oct (took some industry break after
+> a startup went down of business), so please, politely asking, write
+> a bit more compact descriptions ;-) I'm trying to find a new position by
+> the beginning of Oct but right now I'd appreciate a bit more thought out
+> text descriptions.
+>
+> I'm working out a small patch set with James Prestwood to add asymmetric
+> TPM2 keys based on his old patch set [1] but laid out on top of the
+> existing baseline.
+>
+> I did already the key type shenanigans etc. for it and James P is laying
+> his pre-existing RSA code and new ECDSA on top of that. So this will
 
-Please pull the updates for firewire subsystem to your tree.
+This is great. Perhaps we can finally have ECDSA software signature
+support as well, which I have been trying to get in for some time now
+[1]
 
-The following changes since commit dd5a440a31fae6e459c0d6271dddd62825505361:
+> give x.509 compatibility [2]. This patch set will be out soon and likely
+> part of 6.11 (or almost guaranteed as most of it is done).
+>
+> So by plain guess this might be along the lines what you might want?
 
-  Linux 6.9-rc7 (2024-05-05 14:06:01 -0700)
+I don't think so. I have seen this patchset, but unless the new
+version is fundamentally different, it looks to me that the asymmetric
+TPM keys are the same as trusted keys except they are asymmetric
+instead of being symmetric. That is, they are still of limited use on
+stateless systems and are subject to the same restrictions I described
+in my revised cover description.
 
-are available in the Git repository at:
+On top of that I'm not sure they would be widely used as "leaf" keys
+by applications, maybe more as root/intermediate keys in some kind of
+key hierarchy. TPMs are slow and I don't see a high-performance
+web-server, for example, using asymmetric TPM keys for TLS operations.
+Also, as we learned the hard way operating many TPMs in production,
+some TPMs are quite unreliable and fail really fast, if you "spam"
+them with a lot of crypto ops. I understand this is a HW/TPM vendor
+problem, but in practice we're trying to build systems, where TPM is
+used to protect/generate other keys, but most of the "leaf" crypto
+operations are done in software, so we don't make the TPM do too much
+crypto.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-updates-6.10
+Just to clarify - I'm not arguing about the usefulness of TPM
+asymmetric keys in the kernel. I would really want to see this
+building block available as well, but I think it just serves a
+different purpose/use case from what I'm trying to figure out in this
+RFC thread.
 
-for you to fetch changes up to 21151fd8f0ea5dcff27e8db25b65bf892d408bdc:
+> [1] https://lore.kernel.org/all/20200518172704.29608-1-prestwoj@gmail.com=
+/
+> [2] https://datatracker.ietf.org/doc/draft-woodhouse-cert-best-practice/
+>
+> BR, Jarkko
 
-  firewire: obsolete usage of *-objs in Makefile for KUnit test (2024-05-09 08:06:22 +0900)
-
-----------------------------------------------------------------
-firewire updates for v6.10
-
-During the development period of v6.8 kernel, it became evident that there
-was a lack of helper utilities to trace the initial state of bus, while
-investigating certain PHYs compliant with different versions of IEEE 1394
-specification.
-
-This series of changes includes the addition of tracepoints events,
-provided by 'firewire' subsystem. These events enable tracing of how
-firewire core functions during bus reset and asynchronous communication
-over IEEE 1394 bus.
-
-When implementing the tracepoints events, it was found that the existing
-serialization and deserialization helpers for several types of
-asynchronous packets are scattered across both firewire-core and
-firewire-ohci kernel modules. A set of inline functions is newly added
-to address it, along with some KUnit tests, serving as the foundation for
-the tracepoints events. This renders the dispersed code obsolete.
-
-The remaining changes constitute the final steps in phasing out the usage
-of deprecated PCI MSI APIs, in continuation from the previous version.
-
-----------------------------------------------------------------
-Adam Goldman (1):
-      firewire: core: option to log bus reset initiation
-
-Gustavo A. R. Silva (1):
-      firewire: Annotate struct fw_iso_packet with __counted_by()
-
-Takashi Sakamoto (27):
-      Revert "firewire: ohci: use devres for requested IRQ"
-      firewire: ohci: replace request_irq() with request_threaded_irq()
-      firewire: ohci: obsolete usage of deprecated API for MSI
-      firewire: ohci: use pci_irq_vector() to retrieve allocated interrupt line
-      firewire: core: add common inline functions to serialize/deserialize asynchronous packet header
-      firewire: core: replace local macros with common inline functions for asynchronous packet header
-      firewire: ohci: replace local macros with common inline functions for asynchronous packet header
-      firewire: ohci: replace hard-coded values with inline functions for asynchronous packet header
-      firewire: ohci: replace hard-coded values with common macros
-      firewire: core: obsolete tcode check macros with inline functions
-      firewire: core: add common macro to serialize/deserialize isochronous packet header
-      firewire: core: replace local macros with common inline functions for isochronous packet header
-      firewire: core: add support for Linux kernel tracepoints
-      firewire: core: add tracepoints events for asynchronous outbound request
-      firewire: core: add tracepoints event for asynchronous inbound response
-      firewire: core: add tracepoint event for asynchronous inbound request
-      firewire: core: add tracepoints events for asynchronous outbound response
-      firewire: core/cdev: add tracepoints events for asynchronous phy packet
-      firewire: core: add tracepoints event for asynchronous inbound phy packet
-      firewire: ohci: add bus-reset event for initial set of handled irq
-      firewire: ohci: obsolete OHCI_PARAM_DEBUG_BUSRESETS from debug module parameter
-      firewire: core: add tracepoints events for initiating bus reset
-      Revert "firewire: core: option to log bus reset initiation"
-      firewire: core: add tracepoint event for handling bus reset
-      firewire: core: fix type of timestamp for async_inbound_template tracepoints events
-      firewire: core: remove flag and width from u64 formats of tracepoints events
-      firewire: obsolete usage of *-objs in Makefile for KUnit test
-
- drivers/firewire/.kunitconfig                |   1 +
- drivers/firewire/Kconfig                     |  16 ++++++
- drivers/firewire/Makefile                    |   6 +-
- drivers/firewire/core-card.c                 |   7 +++
- drivers/firewire/core-cdev.c                 |   7 +++
- drivers/firewire/core-topology.c             |   3 +
- drivers/firewire/core-trace.c                |   5 ++
- drivers/firewire/core-transaction.c          | 251 ++++++++++++++++++++++++++++++++++++++++++----------------------------------------
- drivers/firewire/core.h                      |  21 ++++---
- drivers/firewire/ohci.c                      | 131 +++++++++++++++++++++++--------------------
- drivers/firewire/packet-header-definitions.h | 234 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/firewire/packet-serdes-test.c        | 582 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/firewire.h                     |   3 +-
- include/trace/events/firewire.h              | 348 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 14 files changed, 1420 insertions(+), 195 deletions(-)
- create mode 100644 drivers/firewire/core-trace.c
- create mode 100644 drivers/firewire/packet-header-definitions.h
- create mode 100644 drivers/firewire/packet-serdes-test.c
- create mode 100644 include/trace/events/firewire.h
-
-
-Regards
-
-Takashi Sakamoto
+[1] https://lore.kernel.org/lkml/20221014100737.94742-2-ignat@cloudflare.co=
+m/T/
