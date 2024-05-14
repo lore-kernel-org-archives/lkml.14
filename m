@@ -1,191 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CA31BC5C
-	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 06:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B653F182AE
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 06:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715667539; cv=none; b=fV3uFrR4Ha7GC6Jg2Pr2mOJkYUB/sbgtmoxddfxye1mmleHSyBJJ6Cjvc13LCxwPoCNCYkZZX3SjlOaA4PRpHhpNjEoUG57c5xcshcyNXCEXSKY4Pz/co/63fiCYtH1T94PSR1dOSba0jYqQvt3zZaiedAV0j0GOs37jxdn1Wis=
+	t=1715668020; cv=none; b=ga9vuWTylI7/atIRF2nSSgoVcPm6ZxbZLfOGEyaSNfKv3mlmwXcJbG0ni6eVL/m05VTOG7jTtq+l+q4LISsfk3jkVeBY+h/7+nkQD412yQjGzHBgpxBYnnUmWbfw1df5PqZXCA/+f5dDT1S5P9Zh7pSmaO6UtjjOm51P+I3mZ9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715667539; c=relaxed/simple;
-	bh=qEjGhlQZJJ90rSaBtG/Fvx7YJHzstZH0d56H+Ox7MCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ogVNEIZzz3McaUWV0RU+CjdUMbhJPf6TRfL1nyZIJL2OFDeccwPZ+qLaWQFM5JN/uZyUKBbnEHWzmIrbOBQvlzxelip8JcV1al7zlkilCCKcxtbHFHe7QGr+IsBtBL7qyVbuoTh1Y/8dhDVkrgJ1HT0F/MbOs9beBazdmXfW5IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b71O2ZLC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715668020; c=relaxed/simple;
+	bh=QE6Wti0b8XigHlbkBmJfp3gGZbpOAkkYLGDlVyAoFXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ldjUMloAQ0Wt6Ao6jUDc5CnJwkAZJx4Og/pw4dYvInN8paOt9R+apdDnt8GnpWOaB1olXASoABjYCK/w+vTW8dtoY5JhJkDc0TNO74lyJVmvwJJYCtbUgI70XSjRNNmGE4U/W6lsmOUCCahtEorDnuWx/BgHs/wRCqZWciE9W1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s46wcQxN; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b71O2ZLC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715667536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P6B0DumV2udlVipcUJf/RNNgM5snKSkCNhRyGCU8nt4=;
-	b=b71O2ZLCXtWo+BohKX4D/TbOFKPlCBdVN2zmbPW7xUKtYuAUtTvvQnyT47GL7MLFfrWATB
-	XABer9amOoY1oxFvtIsZRJvcsT7UJ3BIafJ+liBflAgGSidaHQk8Nm3inigs+co8ct8A9U
-	Xfx3AcByKgRKxjOCUiMJqK42GbRkN+Q=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-600-n-Occhu5Pm61jgUcE6V0_g-1; Tue, 14 May 2024 02:13:43 -0400
-X-MC-Unique: n-Occhu5Pm61jgUcE6V0_g-1
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6f46bf70fd3so2558570b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 23:13:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715667223; x=1716272023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P6B0DumV2udlVipcUJf/RNNgM5snKSkCNhRyGCU8nt4=;
-        b=N0ZxgJ/gRUEefPzRMOAzL2XDaA2M6XxrP7Mu6pfBRE1lkPr/qWg4+WXxl6xUnNYl4u
-         iqvjOeRZIyYfLZhr0Xynn2BCHa8iWNRLwL96n2gknLEzCV+usdPamEL4sCLneehzR2D6
-         nRluBoOdIUBcV0cMSeXvqXxG26sT9aWdzl7c2ntCCwEat2TH6uz7MJAr+oK1ku2zzlFQ
-         /jGV4P2xnEAu5UnrEBifgPo2YGOBpk3NQiS/wdGNnJ2HlGaeJk3n7dkQK4EU85k7EKMf
-         GqchbVC2Qx8y7I3t8QPeVWOzCMQy5nhyUgbqRF6BLC+cRvbJ9xyAFySWb0Qeji8c6iZg
-         RJGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdsevqvizUhqz6LhsIwqsVyYOefgePPOPAUSCIqSKpk2xFa0nAHiP5k+i8D1fHMB7NWVA5HQNudeMJ8NxWAwr3ixb6eSSEJsJTg8uE
-X-Gm-Message-State: AOJu0YzINBHZjWdbPHFJkPq04Ro31JL2mT8qdFhn/4CBnGpvEp6bHvI2
-	G7/eOGX8rfjLvoCN2YeV4hX1Pl38dicuriooDNqsBsn77mWc1/ah4JHucWSgLsPKuQ3J7qntr6u
-	6wDl7s0gGRvNaHml3ligx/ONWMWZeIW0UKzUfD4UuH4wHhqcw/2EE1LCpqOfD0lAWokAEKKtDp/
-	Ibjn20dOrM5bXlDQK6JE2OzXovstsis79bsTFo
-X-Received: by 2002:a05:6a21:19c:b0:1a3:df1d:deba with SMTP id adf61e73a8af0-1afde0dc95amr12474889637.31.1715667222724;
-        Mon, 13 May 2024 23:13:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/yVQHUfYGCuo3MWod5iRA3A17cM+ibG3X8Vh9ykLbjxo2us8ibYX8tJQ2E5RvUodUrPf4VNlb2IEhNNSuVBA=
-X-Received: by 2002:a05:6a21:19c:b0:1a3:df1d:deba with SMTP id
- adf61e73a8af0-1afde0dc95amr12474864637.31.1715667222322; Mon, 13 May 2024
- 23:13:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s46wcQxN"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1715668008; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Iaw3Fzp7EZ7n49UyApJLTDj5ana4lJ0BhvUxOfLYc/o=;
+	b=s46wcQxNX3hh7JnsZ/8BZpW9WOlkIncTCNcwWl16WHPulBkwICNF3MWw0NtlrlvHZFTSnraDYmxEULUxJT1S19ftOkVsztrfVhcw6DIkbSIWVopMMyG7xwtOihDETOaQ65FQEZaBsumMPuI+NFI3zejGrsji3wtBtnQo17hlCRA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0W6U.btc_1715668004;
+Received: from 30.97.56.67(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W6U.btc_1715668004)
+          by smtp.aliyun-inc.com;
+          Tue, 14 May 2024 14:26:46 +0800
+Message-ID: <2ec286a2-4620-4e6d-ad3d-9b4c0d9e1394@linux.alibaba.com>
+Date: Tue, 14 May 2024 14:26:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509011900.2694291-1-yukuai1@huaweicloud.com> <20240509011900.2694291-3-yukuai1@huaweicloud.com>
-In-Reply-To: <20240509011900.2694291-3-yukuai1@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Tue, 14 May 2024 14:13:30 +0800
-Message-ID: <CALTww28Qjce6jG+v6=8vubiBWoCt5=21_-VE6hgOMU2HZxnF=g@mail.gmail.com>
-Subject: Re: [PATCH md-6.10 2/9] md: add a new enum type sync_action
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org, 
-	dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v5 1/4] mm/rmap: remove duplicated exit code in
+ pagewalk loop
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: willy@infradead.org, sj@kernel.org, maskray@google.com, ziy@nvidia.com,
+ ryan.roberts@arm.com, david@redhat.com, 21cnbao@gmail.com, mhocko@suse.com,
+ fengwei.yin@intel.com, zokeefe@google.com, shy828301@gmail.com,
+ xiehuan09@gmail.com, libang.li@antgroup.com, wangkefeng.wang@huawei.com,
+ songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240513074712.7608-1-ioworker0@gmail.com>
+ <20240513074712.7608-2-ioworker0@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20240513074712.7608-2-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 13, 2024 at 6:19=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> In order to make code related to sync_thread cleaner in following
-> patches, also add detail comment about each sync action.
->
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+
+
+On 2024/5/13 15:47, Lance Yang wrote:
+> Introduce the labels walk_done and walk_done_err as exit points to
+> eliminate duplicated exit code in the pagewalk loop.
+> 
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
 > ---
->  drivers/md/md.h | 57 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 56 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 2a1cb7b889e5..2edad966f90a 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -34,6 +34,61 @@
->   */
->  #define        MD_FAILFAST     (REQ_FAILFAST_DEV | REQ_FAILFAST_TRANSPOR=
-T)
->
-> +/* Status of sync thread. */
-> +enum sync_action {
-> +       /*
-> +        * Represent by MD_RECOVERY_SYNC, start when:
-> +        * 1) after assemble, sync data from first rdev to other copies, =
-this
-> +        * must be done first before other sync actions and will only exe=
-cute
-> +        * once;
-> +        * 2) resize the array(notice that this is not reshape), sync dat=
-a for
-> +        * the new range;
-> +        */
-> +       ACTION_RESYNC,
-> +       /*
-> +        * Represent by MD_RECOVERY_RECOVER, start when:
-> +        * 1) for new replacement, sync data based on the replace rdev or
-> +        * available copies from other rdev;
-> +        * 2) for new member disk while the array is degraded, sync data =
-from
-> +        * other rdev;
-> +        * 3) reassemble after power failure or re-add a hot removed rdev=
-, sync
-> +        * data from first rdev to other copies based on bitmap;
-> +        */
-> +       ACTION_RECOVER,
-> +       /*
-> +        * Represent by MD_RECOVERY_SYNC | MD_RECOVERY_REQUESTED |
-> +        * MD_RECOVERY_CHECK, start when user echo "check" to sysfs api
-
-Same question with patch 01 here
-
-Regards
-Xiao
-
-> +        * sync_action, used to check if data copies from differenct rdev=
- are
-> +        * the same. The number of mismatch sectors will be exported to u=
-ser
-> +        * by sysfs api mismatch_cnt;
-> +        */
-> +       ACTION_CHECK,
-> +       /*
-> +        * Represent by MD_RECOVERY_SYNC | MD_RECOVERY_REQUESTED, start w=
-hen
-> +        * user echo "repair" to sysfs api sync_action, usually paired wi=
-th
-> +        * ACTION_CHECK, used to force syncing data once user found that =
-there
-> +        * are inconsistent data,
-> +        */
-> +       ACTION_REPAIR,
-> +       /*
-> +        * Represent by MD_RECOVERY_RESHAPE, start when new member disk i=
-s added
-> +        * to the conf, notice that this is different from spares or
-> +        * replacement;
-> +        */
-> +       ACTION_RESHAPE,
-> +       /*
-> +        * Represent by MD_RECOVERY_FROZEN, can be set by sysfs api sync_=
-action
-> +        * or internal usage like setting the array read-only, will forbi=
-d above
-> +        * actions.
-> +        */
-> +       ACTION_FROZEN,
-> +       /*
-> +        * All above actions don't match.
-> +        */
-> +       ACTION_IDLE,
-> +       NR_SYNC_ACTIONS,
-> +};
-> +
->  /*
->   * The struct embedded in rdev is used to serialize IO.
->   */
-> @@ -571,7 +626,7 @@ enum recovery_flags {
->         /* interrupted because io-error */
->         MD_RECOVERY_ERROR,
->
-> -       /* flags determines sync action */
-> +       /* flags determines sync action, see details in enum sync_action =
-*/
->
->         /* if just this flag is set, action is resync. */
->         MD_RECOVERY_SYNC,
-> --
-> 2.39.2
->
-
+>   mm/rmap.c | 40 +++++++++++++++-------------------------
+>   1 file changed, 15 insertions(+), 25 deletions(-)
+> 
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index e8fc5ecb59b2..ddffa30c79fb 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1679,9 +1679,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   			/* Restore the mlock which got missed */
+>   			if (!folio_test_large(folio))
+>   				mlock_vma_folio(folio, vma);
+> -			page_vma_mapped_walk_done(&pvmw);
+> -			ret = false;
+> -			break;
+> +			goto walk_done_err;
+>   		}
+>   
+>   		pfn = pte_pfn(ptep_get(pvmw.pte));
+> @@ -1719,11 +1717,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   			 */
+>   			if (!anon) {
+>   				VM_BUG_ON(!(flags & TTU_RMAP_LOCKED));
+> -				if (!hugetlb_vma_trylock_write(vma)) {
+> -					page_vma_mapped_walk_done(&pvmw);
+> -					ret = false;
+> -					break;
+> -				}
+> +				if (!hugetlb_vma_trylock_write(vma))
+> +					goto walk_done_err;
+>   				if (huge_pmd_unshare(mm, vma, address, pvmw.pte)) {
+>   					hugetlb_vma_unlock_write(vma);
+>   					flush_tlb_range(vma,
+> @@ -1738,8 +1733,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   					 * actual page and drop map count
+>   					 * to zero.
+>   					 */
+> -					page_vma_mapped_walk_done(&pvmw);
+> -					break;
+> +					goto walk_done;
+>   				}
+>   				hugetlb_vma_unlock_write(vma);
+>   			}
+> @@ -1811,9 +1805,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   			if (unlikely(folio_test_swapbacked(folio) !=
+>   					folio_test_swapcache(folio))) {
+>   				WARN_ON_ONCE(1);
+> -				ret = false;
+> -				page_vma_mapped_walk_done(&pvmw);
+> -				break;
+> +				goto walk_done_err;
+>   			}
+>   
+>   			/* MADV_FREE page check */
+> @@ -1852,23 +1844,17 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   				 */
+>   				set_pte_at(mm, address, pvmw.pte, pteval);
+>   				folio_set_swapbacked(folio);
+> -				ret = false;
+> -				page_vma_mapped_walk_done(&pvmw);
+> -				break;
+> +				goto walk_done_err;
+>   			}
+>   
+>   			if (swap_duplicate(entry) < 0) {
+>   				set_pte_at(mm, address, pvmw.pte, pteval);
+> -				ret = false;
+> -				page_vma_mapped_walk_done(&pvmw);
+> -				break;
+> +				goto walk_done_err;
+>   			}
+>   			if (arch_unmap_one(mm, vma, address, pteval) < 0) {
+>   				swap_free(entry);
+>   				set_pte_at(mm, address, pvmw.pte, pteval);
+> -				ret = false;
+> -				page_vma_mapped_walk_done(&pvmw);
+> -				break;
+> +				goto walk_done_err;
+>   			}
+>   
+>   			/* See folio_try_share_anon_rmap(): clear PTE first. */
+> @@ -1876,9 +1862,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   			    folio_try_share_anon_rmap_pte(folio, subpage)) {
+>   				swap_free(entry);
+>   				set_pte_at(mm, address, pvmw.pte, pteval);
+> -				ret = false;
+> -				page_vma_mapped_walk_done(&pvmw);
+> -				break;
+> +				goto walk_done_err;
+>   			}
+>   			if (list_empty(&mm->mmlist)) {
+>   				spin_lock(&mmlist_lock);
+> @@ -1918,6 +1902,12 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   		if (vma->vm_flags & VM_LOCKED)
+>   			mlock_drain_local();
+>   		folio_put(folio);
+> +		continue;
+> +walk_done_err:
+> +		ret = false;
+> +walk_done:
+> +		page_vma_mapped_walk_done(&pvmw);
+> +		break;
+>   	}
+>   
+>   	mmu_notifier_invalidate_range_end(&range);
