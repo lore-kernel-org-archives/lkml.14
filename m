@@ -1,295 +1,254 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815AD1799B;
-	Tue, 14 May 2024 08:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB1D182B5
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 08:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715675968; cv=none; b=DK09hllAhP/DeFW3EN1kW/z4pAdPryoYnL1yFduiwaipHTZA8nczoSMNlfqAiys2eWX2cG1av6fm5q1J9Tobjt8yDB4Fjmp77ksbRiFhY4jH/NG0F1BCTyAeIRM7JaNVVxtHSGvelv807J13D/HcLIVhJaX8oAKEXXm/e4kM5Ls=
+	t=1715676047; cv=none; b=pmsI/IC08GBvC/jMFuALX+WEo3CKxiO+of07Blyxcfl1th5+6IkMHIFXz5xde33iF6m3dpdUJGRpFWUu6KAW8BvyzEnWR/jMMQg0L2I+ivvtWaqYNe3Ce8tbpq1NHpxVU9uFiuKIhNTegOeRC7etIS3Y52+zQ75s1ik6xaKSGCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715675968; c=relaxed/simple;
-	bh=2XycVR45xKQGEy5c01ybn53EwoWGc4E2NoQNzJ4FvYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tAghx9DigQXDe88QCjNmut9hQfXFeKybAZpH2wKhsVlHo3D6kOFzgk/Jfh/uT3vmy3XlFCoEJZnga5NTPQuf/B12v1Kuv0vEETXQzybjO+FRv03QFEb0ZlS6cghqGkMEVWT9fCV0LLtu1oVP1D6D8XV0NW5dngYFO+Cz8Lcgf8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lnWDa536; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715676047; c=relaxed/simple;
+	bh=dFetEP4vkmRWLTuq1sqXsZFTQHPK5+caLDooAk7uDDQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Th5DZ2pHU3dzOzh96L6SIR2ey4DS0FxrEvK/BHMIVKO1z3Sm+/jiPdt4vaMqsoVATtUdzoxKtX3P4tUuJ33VICAdxZXWgfsMQaY3itUiqzIaDoiJ/WLGbn43u/hkzKM/YDyfFq10JoyaPtdh9c5usXa7R3vrcL+MZ/BuuPq+Pvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=evpJPZZd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lnWDa536"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44DJ8qGb009927;
-	Tue, 14 May 2024 08:39:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=W+cQzK1jV7GXUwc2V171zeRC9Hwm7VPkbzzlgUEJxjQ=; b=ln
-	WDa536xBLsio82+i8IHgpANcLLAcx3OKC5Sp4/05IHmCzVEXSXi0BD8hnumKV+Ef
-	4mdUBu04nsOX9k2megVmOTegd/WWGoCNisfSewWnaBdAf+vlRV/wt0PyIF4+j16v
-	kCbS2e6OSv0ToV86RY1L/n9TzaTLCmyOjzz6ZvzHSsoQhAev95dkAi8R3v+LZRhT
-	WPNQscWiiwIHMXnZW0glthKr+K+o2G6efmne6Zr2EgTLygsyA7lZUyX9x27svKO0
-	egzRzotUvQ/i4W5EIiaU8ocM7lrkMLKb7caAkJ6+hwYZ+IoGqaOub0DhVC+g8KtA
-	hdUBdM5ovR1p9y1LpxIw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y21eddk78-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 08:39:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44E8dFW7009982
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 08:39:15 GMT
-Received: from [10.110.76.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 May
- 2024 01:39:14 -0700
-Message-ID: <34743d0c-287f-be2a-847e-3a65eb4815fa@quicinc.com>
-Date: Tue, 14 May 2024 01:39:13 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evpJPZZd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715676044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XTDAkRQKfljadsK+bvkReAfKhEEpDm2v7Tj55z8J0R0=;
+	b=evpJPZZdXiElN69/iXhM/ymXVaIfrS8fSJSyF0qkD6qbiXclI1DvgbYiLZPvQ8775EWL1o
+	GI6OInsw5lfx+NSKvhrA76//Q64iUr0BUiX+ng+vZxMZs5sbHdPr6hQSkISl04l+XeeGeO
+	y4fxMYRtu74qyw+wK56GFWHgp8vVcec=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-630-3f2RUViQMgKyDquTAidueg-1; Tue, 14 May 2024 04:40:43 -0400
+X-MC-Unique: 3f2RUViQMgKyDquTAidueg-1
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6f4574f6bffso3999011b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 01:40:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715676042; x=1716280842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XTDAkRQKfljadsK+bvkReAfKhEEpDm2v7Tj55z8J0R0=;
+        b=asPIVocK7E/lwSb63o+t3e8qVO5fYta8tjff5a5MJgs/H8gpiaxqB4/KwQUrwXYam8
+         veIrg3d7HOAA2Ie03j2UH7wMBiMq4YL953wEqzR90DNTkbmTNbCiK12LFqiY93Q9ihrV
+         SaQl9rIYqmsBvucQOtGWjklXnH1m+YzLkb7Q1e9UHy8hZH7CsnO7iBX8foumORe62kea
+         WVcLxQIgKxp1WRWc6r59hbjBSx4tOgvTR1pUbK0xryAetOdGSlyDh/W8kOpdkzF5rK8X
+         SPCr8L3TgzzD4axbUR4EGbdm96CaUa52kbSi6p5nTjwNLYBMNA6qkgIHEE+yNcMOQfKx
+         tqEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKYa1x9ghyBwn2VGr2Vy6sAiuUqStGs/PbEPO207yATDch+efZcqy2i/Sd66uT5DkrIfApYCC8ngpl59d7/KHv0gnD6rWtHPWuPRlu
+X-Gm-Message-State: AOJu0YwikpQ5Rn5yAKL+Dft+Zq8hpanScIrY7zfnpb6HA3sx4doFN2Nb
+	Pcvrd+0TN1tzokPffNTbHvgP9kQ2JU9jiyli4dgpu5bumgpZq6RXl4iFmyPsyy6JvUxuqZdCYlf
+	Y9zCns2h1k/d2WkKJ+goBxVQzt/9mNVltmwe+P9ApX8J2YSfhgXPGuZd0Qt147foq3UIwqeRDO4
+	tao8nJOVZ7iWzCJS7j0xCPDk0az85cO6bc1srY
+X-Received: by 2002:a05:6a21:9209:b0:1af:f817:7c30 with SMTP id adf61e73a8af0-1aff8177ccemr4598293637.54.1715676041667;
+        Tue, 14 May 2024 01:40:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFk0+nnfe4H6D5lCU6UzBHKF4/CM04JrcTMJkYrIEBuYxkc9VBbcacfdhScATnxIPp80XWNGD6qidj2o+fQvyM=
+X-Received: by 2002:a05:6a21:9209:b0:1af:f817:7c30 with SMTP id
+ adf61e73a8af0-1aff8177ccemr4598261637.54.1715676040436; Tue, 14 May 2024
+ 01:40:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] Revert "drm/msm/dpu: drop
- dpu_encoder_phys_ops.atomic_mode_set"
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark
-	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240514-dpu-revert-ams-v1-1-b13623d6cd5f@linaro.org>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240514-dpu-revert-ams-v1-1-b13623d6cd5f@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: m7lMPOgT_FuV0DG9uxJClpePdwPWOyCm
-X-Proofpoint-ORIG-GUID: m7lMPOgT_FuV0DG9uxJClpePdwPWOyCm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-14_03,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405140060
+References: <20240509011900.2694291-1-yukuai1@huaweicloud.com>
+ <20240509011900.2694291-4-yukuai1@huaweicloud.com> <CALTww2-RPH_eYBumjxhHLkj7J2tfHskTYNif93Hwn5ksCN0+kA@mail.gmail.com>
+ <06211ae2-9b5f-10c7-7953-9d79d2eacc67@huaweicloud.com>
+In-Reply-To: <06211ae2-9b5f-10c7-7953-9d79d2eacc67@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Tue, 14 May 2024 16:40:28 +0800
+Message-ID: <CALTww28LM_b6SMC-vLY3y7R3ZD9z80H+2vZCXMzmAwnoEH-eMA@mail.gmail.com>
+Subject: Re: [PATCH md-6.10 3/9] md: add new helpers for sync_action
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org, 
+	dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+	"yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 14, 2024 at 3:39=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> Hi,
+>
+> =E5=9C=A8 2024/05/14 14:52, Xiao Ni =E5=86=99=E9=81=93:
+> > On Mon, May 13, 2024 at 5:31=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.co=
+m> wrote:
+> >>
+> >> From: Yu Kuai <yukuai3@huawei.com>
+> >>
+> >> The new helpers will get current sync_action of the array, will be use=
+d
+> >> in later patches to make code cleaner.
+> >>
+> >> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> >> ---
+> >>   drivers/md/md.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++=
+++
+> >>   drivers/md/md.h |  3 +++
+> >>   2 files changed, 67 insertions(+)
+> >>
+> >> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> >> index 00bbafcd27bb..48ec35342d1b 100644
+> >> --- a/drivers/md/md.c
+> >> +++ b/drivers/md/md.c
+> >> @@ -69,6 +69,16 @@
+> >>   #include "md-bitmap.h"
+> >>   #include "md-cluster.h"
+> >>
+> >> +static char *action_name[NR_SYNC_ACTIONS] =3D {
+> >> +       [ACTION_RESYNC]         =3D "resync",
+> >> +       [ACTION_RECOVER]        =3D "recover",
+> >> +       [ACTION_CHECK]          =3D "check",
+> >> +       [ACTION_REPAIR]         =3D "repair",
+> >> +       [ACTION_RESHAPE]        =3D "reshape",
+> >> +       [ACTION_FROZEN]         =3D "frozen",
+> >> +       [ACTION_IDLE]           =3D "idle",
+> >> +};
+> >> +
+> >>   /* pers_list is a list of registered personalities protected by pers=
+_lock. */
+> >>   static LIST_HEAD(pers_list);
+> >>   static DEFINE_SPINLOCK(pers_lock);
+> >> @@ -4867,6 +4877,60 @@ metadata_store(struct mddev *mddev, const char =
+*buf, size_t len)
+> >>   static struct md_sysfs_entry md_metadata =3D
+> >>   __ATTR_PREALLOC(metadata_version, S_IRUGO|S_IWUSR, metadata_show, me=
+tadata_store);
+> >>
+> >> +enum sync_action md_sync_action(struct mddev *mddev)
+> >> +{
+> >> +       unsigned long recovery =3D mddev->recovery;
+> >> +
+> >> +       /*
+> >> +        * frozen has the highest priority, means running sync_thread =
+will be
+> >> +        * stopped immediately, and no new sync_thread can start.
+> >> +        */
+> >> +       if (test_bit(MD_RECOVERY_FROZEN, &recovery))
+> >> +               return ACTION_FROZEN;
+> >> +
+> >> +       /*
+> >> +        * idle means no sync_thread is running, and no new sync_threa=
+d is
+> >> +        * requested.
+> >> +        */
+> >> +       if (!test_bit(MD_RECOVERY_RUNNING, &recovery) &&
+> >> +           (!md_is_rdwr(mddev) || !test_bit(MD_RECOVERY_NEEDED, &reco=
+very)))
+> >> +               return ACTION_IDLE;
+> >
+> > Hi Kuai
+> >
+> > Can I think the above judgement cover these two situations:
+> > 1. The array is readonly / readauto and it doesn't have
+> > MD_RECOVERY_RUNNING. Now maybe it has MD_RECOVERY_NEEDED, it means one
+> > array may want to do some sync action, but the array state is not
+> > readwrite and it can't start.
+> > 2. The array doesn't have MD_RECOVERY_RUNNING and MD_RECOVERY_NEEDED
+> >
+> >> +
+> >> +       if (test_bit(MD_RECOVERY_RESHAPE, &recovery) ||
+> >> +           mddev->reshape_position !=3D MaxSector)
+> >> +               return ACTION_RESHAPE;
+> >> +
+> >> +       if (test_bit(MD_RECOVERY_RECOVER, &recovery))
+> >> +               return ACTION_RECOVER;
+> >> +
+> >> +       if (test_bit(MD_RECOVERY_SYNC, &recovery)) {
+> >> +               if (test_bit(MD_RECOVERY_CHECK, &recovery))
+> >> +                       return ACTION_CHECK;
+> >> +               if (test_bit(MD_RECOVERY_REQUESTED, &recovery))
+> >> +                       return ACTION_REPAIR;
+> >> +               return ACTION_RESYNC;
+> >> +       }
+> >> +
+> >> +       return ACTION_IDLE;
+> >
+> > Does it need this? I guess it's the reason in case there are other
+> > situations, right?
+>
+> Yes, we need this, because they are many places to set
+> MD_RECOVERY_NEEDED, while there are no sync action actually, this case
+> is 'idle'.
 
+To be frank, the logic in action_show is easier to understand than the
+logic above. I have taken more than half an hour to think if the logic
+here is right or not. In action_show, it only needs to think when it's
+not idle and it's easy.
 
-On 5/14/2024 12:56 AM, Dmitry Baryshkov wrote:
-> In the DPU driver blank IRQ handling is called from a vblank worker and
-> can happen outside of the irq_enable / irq_disable pair. Revert commit
-> d13f638c9b88 ("drm/msm/dpu: drop dpu_encoder_phys_ops.atomic_mode_set")
-> to fix vblank IRQ assignment for CMD DSI panels.
-> 
+Now this patch logic needs to think in the opposite direction: when
+it's idle. And it returns ACTION_IDLE at two places which means it
+still needs to think about when it has sync action. So it's better to
+keep the original logic in action_show now. It's just my 2 cents
+point.
 
-Can you please explain the sequence of events causing an issue due to 
-moving the irq assignment to init and how is moving it back to modeset 
-helping?
+Best Regards
+Xiao
 
-> Fixes: d13f638c9b88 ("drm/msm/dpu: drop dpu_encoder_phys_ops.atomic_mode_set")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  2 ++
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |  5 ++++
->   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   | 32 ++++++++++++----------
->   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   | 13 +++++++--
->   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    | 11 +++++++-
->   5 files changed, 46 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 119f3ea50a7c..a7d8ecf3f5be 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -1200,6 +1200,8 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
->   		phys->hw_ctl = to_dpu_hw_ctl(hw_ctl[i]);
->   
->   		phys->cached_mode = crtc_state->adjusted_mode;
-> +		if (phys->ops.atomic_mode_set)
-> +			phys->ops.atomic_mode_set(phys, crtc_state, conn_state);
->   	}
->   }
->   
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> index 002e89cc1705..30470cd15a48 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-> @@ -69,6 +69,8 @@ struct dpu_encoder_phys;
->    * @is_master:			Whether this phys_enc is the current master
->    *				encoder. Can be switched at enable time. Based
->    *				on split_role and current mode (CMD/VID).
-> + * @atomic_mode_set:		DRM Call. Set a DRM mode.
-> + *				This likely caches the mode, for use at enable.
->    * @enable:			DRM Call. Enable a DRM mode.
->    * @disable:			DRM Call. Disable mode.
->    * @control_vblank_irq		Register/Deregister for VBLANK IRQ
-> @@ -93,6 +95,9 @@ struct dpu_encoder_phys;
->   struct dpu_encoder_phys_ops {
->   	void (*prepare_commit)(struct dpu_encoder_phys *encoder);
->   	bool (*is_master)(struct dpu_encoder_phys *encoder);
-> +	void (*atomic_mode_set)(struct dpu_encoder_phys *encoder,
-> +			struct drm_crtc_state *crtc_state,
-> +			struct drm_connector_state *conn_state);
->   	void (*enable)(struct dpu_encoder_phys *encoder);
->   	void (*disable)(struct dpu_encoder_phys *encoder);
->   	int (*control_vblank_irq)(struct dpu_encoder_phys *enc, bool enable);
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-> index 489be1c0c704..95cd39b49668 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-> @@ -142,6 +142,23 @@ static void dpu_encoder_phys_cmd_underrun_irq(void *arg)
->   	dpu_encoder_underrun_callback(phys_enc->parent, phys_enc);
->   }
->   
-> +static void dpu_encoder_phys_cmd_atomic_mode_set(
-> +		struct dpu_encoder_phys *phys_enc,
-> +		struct drm_crtc_state *crtc_state,
-> +		struct drm_connector_state *conn_state)
-> +{
-> +	phys_enc->irq[INTR_IDX_CTL_START] = phys_enc->hw_ctl->caps->intr_start;
-> +
-> +	phys_enc->irq[INTR_IDX_PINGPONG] = phys_enc->hw_pp->caps->intr_done;
-> +
-> +	if (phys_enc->has_intf_te)
-> +		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_intf->cap->intr_tear_rd_ptr;
-> +	else
-> +		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_pp->caps->intr_rdptr;
-> +
-> +	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
-> +}
-> +
->   static int _dpu_encoder_phys_cmd_handle_ppdone_timeout(
->   		struct dpu_encoder_phys *phys_enc)
->   {
-> @@ -280,14 +297,6 @@ static void dpu_encoder_phys_cmd_irq_enable(struct dpu_encoder_phys *phys_enc)
->   					  phys_enc->hw_pp->idx - PINGPONG_0,
->   					  phys_enc->vblank_refcount);
->   
-> -	phys_enc->irq[INTR_IDX_CTL_START] = phys_enc->hw_ctl->caps->intr_start;
-> -	phys_enc->irq[INTR_IDX_PINGPONG] = phys_enc->hw_pp->caps->intr_done;
-> -
-> -	if (phys_enc->has_intf_te)
-> -		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_intf->cap->intr_tear_rd_ptr;
-> -	else
-> -		phys_enc->irq[INTR_IDX_RDPTR] = phys_enc->hw_pp->caps->intr_rdptr;
-> -
->   	dpu_core_irq_register_callback(phys_enc->dpu_kms,
->   				       phys_enc->irq[INTR_IDX_PINGPONG],
->   				       dpu_encoder_phys_cmd_pp_tx_done_irq,
-> @@ -318,10 +327,6 @@ static void dpu_encoder_phys_cmd_irq_disable(struct dpu_encoder_phys *phys_enc)
->   	dpu_core_irq_unregister_callback(phys_enc->dpu_kms, phys_enc->irq[INTR_IDX_UNDERRUN]);
->   	dpu_encoder_phys_cmd_control_vblank_irq(phys_enc, false);
->   	dpu_core_irq_unregister_callback(phys_enc->dpu_kms, phys_enc->irq[INTR_IDX_PINGPONG]);
-> -
-> -	phys_enc->irq[INTR_IDX_CTL_START] = 0;
-> -	phys_enc->irq[INTR_IDX_PINGPONG] = 0;
-> -	phys_enc->irq[INTR_IDX_RDPTR] = 0;
->   }
->   
->   static void dpu_encoder_phys_cmd_tearcheck_config(
-> @@ -698,6 +703,7 @@ static void dpu_encoder_phys_cmd_init_ops(
->   		struct dpu_encoder_phys_ops *ops)
->   {
->   	ops->is_master = dpu_encoder_phys_cmd_is_master;
-> +	ops->atomic_mode_set = dpu_encoder_phys_cmd_atomic_mode_set;
->   	ops->enable = dpu_encoder_phys_cmd_enable;
->   	ops->disable = dpu_encoder_phys_cmd_disable;
->   	ops->control_vblank_irq = dpu_encoder_phys_cmd_control_vblank_irq;
-> @@ -736,8 +742,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_cmd_init(struct drm_device *dev,
->   
->   	dpu_encoder_phys_cmd_init_ops(&phys_enc->ops);
->   	phys_enc->intf_mode = INTF_MODE_CMD;
-> -	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
-> -
->   	cmd_enc->stream_sel = 0;
->   
->   	if (!phys_enc->hw_intf) {
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> index ef69c2f408c3..636a97432d51 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-> @@ -356,6 +356,16 @@ static bool dpu_encoder_phys_vid_needs_single_flush(
->   	return phys_enc->split_role != ENC_ROLE_SOLO;
->   }
->   
-> +static void dpu_encoder_phys_vid_atomic_mode_set(
-> +		struct dpu_encoder_phys *phys_enc,
-> +		struct drm_crtc_state *crtc_state,
-> +		struct drm_connector_state *conn_state)
-> +{
-> +	phys_enc->irq[INTR_IDX_VSYNC] = phys_enc->hw_intf->cap->intr_vsync;
-> +
-> +	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
-> +}
-> +
->   static int dpu_encoder_phys_vid_control_vblank_irq(
->   		struct dpu_encoder_phys *phys_enc,
->   		bool enable)
-> @@ -699,6 +709,7 @@ static int dpu_encoder_phys_vid_get_frame_count(
->   static void dpu_encoder_phys_vid_init_ops(struct dpu_encoder_phys_ops *ops)
->   {
->   	ops->is_master = dpu_encoder_phys_vid_is_master;
-> +	ops->atomic_mode_set = dpu_encoder_phys_vid_atomic_mode_set;
->   	ops->enable = dpu_encoder_phys_vid_enable;
->   	ops->disable = dpu_encoder_phys_vid_disable;
->   	ops->control_vblank_irq = dpu_encoder_phys_vid_control_vblank_irq;
-> @@ -737,8 +748,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_vid_init(struct drm_device *dev,
->   
->   	dpu_encoder_phys_vid_init_ops(&phys_enc->ops);
->   	phys_enc->intf_mode = INTF_MODE_VIDEO;
-> -	phys_enc->irq[INTR_IDX_VSYNC] = phys_enc->hw_intf->cap->intr_vsync;
-> -	phys_enc->irq[INTR_IDX_UNDERRUN] = phys_enc->hw_intf->cap->intr_underrun;
->   
->   	DPU_DEBUG_VIDENC(phys_enc, "created intf idx:%d\n", p->hw_intf->idx);
->   
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-> index d3ea91c1d7d2..356dca5e5ea9 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-> @@ -404,6 +404,15 @@ static void dpu_encoder_phys_wb_irq_disable(struct dpu_encoder_phys *phys)
->   		dpu_core_irq_unregister_callback(phys->dpu_kms, phys->irq[INTR_IDX_WB_DONE]);
->   }
->   
-> +static void dpu_encoder_phys_wb_atomic_mode_set(
-> +		struct dpu_encoder_phys *phys_enc,
-> +		struct drm_crtc_state *crtc_state,
-> +		struct drm_connector_state *conn_state)
-> +{
-> +
-> +	phys_enc->irq[INTR_IDX_WB_DONE] = phys_enc->hw_wb->caps->intr_wb_done;
-> +}
-> +
->   static void _dpu_encoder_phys_wb_handle_wbdone_timeout(
->   		struct dpu_encoder_phys *phys_enc)
->   {
-> @@ -640,6 +649,7 @@ static bool dpu_encoder_phys_wb_is_valid_for_commit(struct dpu_encoder_phys *phy
->   static void dpu_encoder_phys_wb_init_ops(struct dpu_encoder_phys_ops *ops)
->   {
->   	ops->is_master = dpu_encoder_phys_wb_is_master;
-> +	ops->atomic_mode_set = dpu_encoder_phys_wb_atomic_mode_set;
->   	ops->enable = dpu_encoder_phys_wb_enable;
->   	ops->disable = dpu_encoder_phys_wb_disable;
->   	ops->wait_for_commit_done = dpu_encoder_phys_wb_wait_for_commit_done;
-> @@ -685,7 +695,6 @@ struct dpu_encoder_phys *dpu_encoder_phys_wb_init(struct drm_device *dev,
->   
->   	dpu_encoder_phys_wb_init_ops(&phys_enc->ops);
->   	phys_enc->intf_mode = INTF_MODE_WB_LINE;
-> -	phys_enc->irq[INTR_IDX_WB_DONE] = phys_enc->hw_wb->caps->intr_wb_done;
->   
->   	atomic_set(&wb_enc->wbirq_refcount, 0);
->   
-> 
-> ---
-> base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
-> change-id: 20240514-dpu-revert-ams-9410abc1ee48
-> 
-> Best regards,
+>
+> Thanks,
+> Kuai
+>
+> >
+> > Regards
+> > Xiao
+> >
+> >> +}
+> >> +
+> >> +enum sync_action md_sync_action_by_name(char *page)
+> >> +{
+> >> +       enum sync_action action;
+> >> +
+> >> +       for (action =3D 0; action < NR_SYNC_ACTIONS; ++action) {
+> >> +               if (cmd_match(page, action_name[action]))
+> >> +                       return action;
+> >> +       }
+> >> +
+> >> +       return NR_SYNC_ACTIONS;
+> >> +}
+> >> +
+> >> +char *md_sync_action_name(enum sync_action action)
+> >> +{
+> >> +       return action_name[action];
+> >> +}
+> >> +
+> >>   static ssize_t
+> >>   action_show(struct mddev *mddev, char *page)
+> >>   {
+> >> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> >> index 2edad966f90a..72ca7a796df5 100644
+> >> --- a/drivers/md/md.h
+> >> +++ b/drivers/md/md.h
+> >> @@ -864,6 +864,9 @@ extern void md_unregister_thread(struct mddev *mdd=
+ev, struct md_thread __rcu **t
+> >>   extern void md_wakeup_thread(struct md_thread __rcu *thread);
+> >>   extern void md_check_recovery(struct mddev *mddev);
+> >>   extern void md_reap_sync_thread(struct mddev *mddev);
+> >> +extern enum sync_action md_sync_action(struct mddev *mddev);
+> >> +extern enum sync_action md_sync_action_by_name(char *page);
+> >> +extern char *md_sync_action_name(enum sync_action action);
+> >>   extern bool md_write_start(struct mddev *mddev, struct bio *bi);
+> >>   extern void md_write_inc(struct mddev *mddev, struct bio *bi);
+> >>   extern void md_write_end(struct mddev *mddev);
+> >> --
+> >> 2.39.2
+> >>
+> >
+> > .
+> >
+>
+>
+
