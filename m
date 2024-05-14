@@ -1,91 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1BC11717;
-	Tue, 14 May 2024 07:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F742230C
+	for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 07:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715671478; cv=none; b=KjA5Q/4F32DDrH+Ban5wG6gkiKhy5J2mNdmUVaJuxRikbQmRK+N2YQV4WAwiCCcfLHPsdexkNk8x0MR3PFEvusK6UWUae+Adx4F2qGNDt47ud648Segqc3LUWfx1yh/gJKTlK/xnVDFr8GAgI4vAbhu7v3NTZI42KZz+V0yjLpc=
+	t=1715671493; cv=none; b=cySTKO2+T+KNkFT0jLoEJCgw5lL/3HED2VLJ0gCKvUL4XBZ1xxXVjBx0RbO7F6Z5vClFxAcHN4/uG/pYRl/Sn01tlrgmaBbTqUgN8Tj3NkoCKpKrh0VnJX6V3whkP7eiam39XG5Clg9ucd58PzRXRF9ldet1a0pHedn+zWpsf/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715671478; c=relaxed/simple;
-	bh=h+u2Wm6oUPSgHkFoJjK1aRuxkFR0VPr3ulemXFqbNqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EvdKldfEZp3OyYIvef7Om7hSUj5Cl0qJKIkBuYw9gBCg+2fc0dTH1fExWg4gclmPiYAmWZlSfW2nqW+fv2cQhGkDRy0LohYbUV/DBEaN1LNxTE4rcWORlwVzX2nzsOUy1cLiCyc6TSb2JVIKG1kMXE0og7LC4Oj1J1eE6D1Lz4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=erVwi7SW; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715671493; c=relaxed/simple;
+	bh=GKU8aDad++UHg7ULCq5a+WASZrV1XSR5fQTRpdyDPAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KF3G36yS5r8c0ZNINJJ98lorR3TV++5iIVUsqcWmdG6bg33LJnoRWurgyTle9l7u0o3gPDsnSwLX2rqT60xvRDsk+nBs8DNYZE0vvz2kfReopZ7q3MtZ2XvBEw7p0YjCEFMqiyWS4EZpMvO2U1+UXdnhr8RBCihhIGGu7WVeC6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EZis6710; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="erVwi7SW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715671476; x=1747207476;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=h+u2Wm6oUPSgHkFoJjK1aRuxkFR0VPr3ulemXFqbNqM=;
-  b=erVwi7SWzEVDhN3FpF4WAta4gZYG6MFZDL8LuCYMESP6gzgstg+1U9Ps
-   W0k/aoyVgT/x1F8dnOLgEU852pLko+ru6WoVGijEDS+bxKDEcFeNf6MyY
-   /pWOgfDfm92/MmdyPncKkQtRiDWyGP+h1yrYJdaB6nWj8PUUPnogt34Je
-   LHPSdpSRyJ3nGb1RWEmdQOoy6W+DVVpNYdr9/J7KXSdFjckk7HiHlIO+7
-   eoT4IgCcfigbmU4UqgfpbB0v3rNz4NTgW1E+uCx8t8ekPvW72juxyIQmV
-   RefHiXLCpnTLtfkwKF/kB0OSNdrZ7FgAnIFearDczBd0VYKo3l2xyJnyV
-   w==;
-X-CSE-ConnectionGUID: kVQKqJgPRrGYDGUPomSJhg==
-X-CSE-MsgGUID: ZVcReVJxSHe7gBCsxcvjUQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="11488983"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="11488983"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:24:29 -0700
-X-CSE-ConnectionGUID: 4hN61N4NRaStSxwDU6v6Tg==
-X-CSE-MsgGUID: Bl6Ybfb1SUioI5nPBUkcZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="30638113"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.32.104]) ([10.94.32.104])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 00:24:20 -0700
-Message-ID: <e1110221-8b84-4364-bea9-e166ce859444@linux.intel.com>
-Date: Tue, 14 May 2024 09:24:19 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EZis6710"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715671491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ir9ch9TLrkkINczF+u09rhfqVntFlPUGfW92ABaqtP4=;
+	b=EZis6710d7TwB/U+iI/xTIyVzSBfB6ekYsEJtMQcVNNitFREeRr5G1S1gzmcMyCmsYy4gj
+	n73ZLJSNwltLMX8MApGm6pw3BCNikT7gBz37Y14RNslbtWyusLMy2QqUJYPF+eyncTPi0e
+	/qbPyFKw+OLq4txZ0in2PEU21bn1c6I=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-142-svXIcDRKNtyf-ftbWYgYUg-1; Tue, 14 May 2024 03:23:08 -0400
+X-MC-Unique: svXIcDRKNtyf-ftbWYgYUg-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-792c365cb16so603582685a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 00:23:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715671388; x=1716276188;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ir9ch9TLrkkINczF+u09rhfqVntFlPUGfW92ABaqtP4=;
+        b=Wek9PnpBDcnrKpRrXlEX9cJqUxANFGS921BqGh6hdzwwfsl2SsehxZcV6/Af3nHV0D
+         n1KWYcXwbc7SlGHr3q/qZX7YrrxV+gLJDvj6yI1SvR4ATlHfvCAxvfzdKDaHmJGr29HR
+         +qBJGuwQ2XDoYFh9AkiLjEVNsvhPoqKE67SQakynesL3sDCpjUQAXwq75IsdcSrVCOla
+         JsQvsdr9ohhrzGHa2O7PZzbL7knmWM0RGlBKy8K6S9ROO0Rb12sOeB8nuX/X2Al/1aSd
+         potAuPZN20C4cERfoOAXwbV+Qj2HSwPtKRB3+abdRMMPxCDI1DDhSPyiVVUPylWFA/dg
+         n5sA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3QpCX2Wv5vQla5an4h7JIThqdTUdXcOAscMG2D4esQx0b7WFuAiqsl9EzNkCIO1CABdRaYmuP55lc1sXtlgkEUfYsvh8Sata2QfLo
+X-Gm-Message-State: AOJu0Yw315mzXGUQChfr3U6qWz1XUUnxUw1FuZRU8FQwSZ9cxL+wlqsi
+	w+hWrkbPEVse291OsscOytcsnZZ00Y6SDCbIqSAIrFSle71nWF6/l9zJHrXrNqnYYJYWomQuMZE
+	ETirlcsjvXYEJkWpu3/oUkjEChQAZ3H6jb9h9drESmq8aSWZNOP8oYiUCIYG6LA==
+X-Received: by 2002:a05:6214:4309:b0:6a0:d21b:c914 with SMTP id 6a1803df08f44-6a168217e82mr153404496d6.51.1715671387989;
+        Tue, 14 May 2024 00:23:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIbQ2Xnzp0GccgqjWLFujOwJhCg38lH8DFppsuBR5FMZevyxek/6u2nIsapmQtCwGG2EXSrA==
+X-Received: by 2002:a05:6214:4309:b0:6a0:d21b:c914 with SMTP id 6a1803df08f44-6a168217e82mr153404396d6.51.1715671387689;
+        Tue, 14 May 2024 00:23:07 -0700 (PDT)
+Received: from rh.redhat.com (p200300c93f4cc600a5cdf10de606b5e2.dip0.t-ipconnect.de. [2003:c9:3f4c:c600:a5cd:f10d:e606:b5e2])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1ccd4esm50917516d6.97.2024.05.14.00.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 00:23:07 -0700 (PDT)
+From: Sebastian Ott <sebott@redhat.com>
+To: linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: [PATCH v3 5/6] KVM: arm64: rename functions for invariant sys regs
+Date: Tue, 14 May 2024 09:22:51 +0200
+Message-ID: <20240514072252.5657-6-sebott@redhat.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240514072252.5657-1-sebott@redhat.com>
+References: <20240514072252.5657-1-sebott@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] ASoC: Intel: avs: Constify struct snd_soc_tplg_ops
-Content-Language: en-US
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, lgirdwood@gmail.com,
- broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
- cezary.rojewski@intel.com, pierre-louis.bossart@linux.intel.com,
- peter.ujfalusi@linux.intel.com, yung-chuan.liao@linux.intel.com,
- ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
- srinivas.kandagatla@linaro.org, bgoswami@quicinc.com, daniel.baluta@nxp.com
-Cc: linux-sound@vger.kernel.org, alsa-devel@alsa-project.org,
- sound-open-firmware@alsa-project.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <f2f983e791d7f941a95556bb147f426a345d84d4.1715526069.git.christophe.jaillet@wanadoo.fr>
- <01de0157088de0475970c79738284d6c86d702fe.1715526069.git.christophe.jaillet@wanadoo.fr>
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <01de0157088de0475970c79738284d6c86d702fe.1715526069.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 5/13/2024 7:37 PM, Christophe JAILLET wrote:
-> Constifying "struct snd_soc_tplg_ops" moves some data to a read-only
-> section, so increase overall security.
-> 
-> On a x86_64, with allmodconfig:
-> Before:
->     text	   data	    bss	    dec	    hex	filename
->    28046	    794	      0	  28840	   70a8	sound/soc/intel/avs/topology.o
-> 
-> After:
->     text	   data	    bss	    dec	    hex	filename
->    28206	    614	      0	  28820	   7094	sound/soc/intel/avs/topology.o
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
+Invariant system id registers are populated with host values
+at initialization time using their .reset function cb.
 
-Reviewed-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+These are currently called get_* which is usually used by
+the functions implementing the .get_user callback.
+
+Change their function names to reset_* to reflect what they
+are used for.
+
+Signed-off-by: Sebastian Ott <sebott@redhat.com>
+---
+ arch/arm64/kvm/sys_regs.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 1b6ab483e21e..bae72a4ce72b 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -3795,8 +3795,8 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
+  */
+ 
+ #define FUNCTION_INVARIANT(reg)						\
+-	static u64 get_##reg(struct kvm_vcpu *v,			\
+-			      const struct sys_reg_desc *r)		\
++	static u64 reset_##reg(struct kvm_vcpu *v,			\
++			       const struct sys_reg_desc *r)		\
+ 	{								\
+ 		((struct sys_reg_desc *)r)->val = read_sysreg(reg);	\
+ 		return ((struct sys_reg_desc *)r)->val;			\
+@@ -3808,9 +3808,9 @@ FUNCTION_INVARIANT(aidr_el1)
+ 
+ /* ->val is filled in by kvm_sys_reg_table_init() */
+ static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
+-	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
+-	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
+-	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
++	{ SYS_DESC(SYS_MIDR_EL1), NULL, reset_midr_el1 },
++	{ SYS_DESC(SYS_REVIDR_EL1), NULL, reset_revidr_el1 },
++	{ SYS_DESC(SYS_AIDR_EL1), NULL, reset_aidr_el1 },
+ };
+ 
+ static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
+-- 
+2.42.0
 
