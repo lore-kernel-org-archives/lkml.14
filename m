@@ -1,68 +1,47 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F4C128379;
-	Wed, 15 May 2024 14:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A0213F006
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715781689; cv=none; b=qxwS6VT6nZgkQPU01ReOBljcOaHkm5qSHEtGBi+ndF9jrfxCQapZAfATap9k+TZ8JPPrmegbEynkHroZ437aKw4AS7R0AqSswmWcHLvOjGvK2rhiNo0baZG+1c/cCzhMFkmTe6sdQ9GKMhfy7Ju+rSFkEl44NiOn4W9eVSvnjF0=
+	t=1715781748; cv=none; b=dLCpKExDH5eHJbs8sHqxWz2+82Hrayc6wUkwtHoy5yuxYQaolf8BVQSOz7zatCatsd8N/7KifbI3Pa/WlJpfMRWWofm1A1RmEs5VS4ch1fPyVNWMyFeU+ktjNB6sNqCdzKmCoQ8vQ3IYhVv5ptkBGyQJnsEFlNboFue6R3gT2EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715781689; c=relaxed/simple;
-	bh=7+qaI3JiYI59CYRhmbzL8j7cV6PyJ9333GJlAGWXQQM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZxpaaONxq2ULF98zwoqv3NgAFyTfVaYDg/zWXnJeqnhTU24c/i+l4tNzViScxCBw5YEoK6jEZpcpGyH8vQB24mwM/G1S7f112bi9HlHJpWCoNQsR3Uw3YFvia2kb72SuIfYRGxAlFWtqNF+YJ6xg96xpXcKnC/BigMEwtUU8PeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=Td6C1HQc; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="Td6C1HQc"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 4A7719C5818;
-	Wed, 15 May 2024 09:54:21 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id fFMLMWQGlLgx; Wed, 15 May 2024 09:54:20 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id E10049C58EA;
-	Wed, 15 May 2024 09:54:19 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com E10049C58EA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1715781260; bh=9rD/3giniaHUn4tfYhFlufR+6C3wG/E6x6qDZI5qkbI=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=Td6C1HQca4ZqBgvcF6hj2mgY9wXFWGbiyXP/Yp4HUmYsTdKKQqcLMmlsWdK1i3+Fy
-	 x9z2MdmShQG3NlTVhIXzYiKWXiHiDoaOLMA3Ms26RXmTReq52KGGP9VZJTd6HVQ2Iv
-	 wybi9Od8okL9AGj4fkgwhLaXZ7reXVDGQw4vPkk0+G5ndH6RSOtr7D/59u3CBG9o7J
-	 9Nnu2XO88JxrkB3qxOnVYPvGvYQnm17cAxPbANDSvchiUFll5FneSheUsjUoVWvgoG
-	 OEzv3gqVB3YFlPLvFKm15XRs6G98kHvwNJej+xhjjtc+LCChJAfOiTPtC0Dgq7/X21
-	 8vbun28p1Pj9g==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 3sJiTzQkGwk9; Wed, 15 May 2024 09:54:19 -0400 (EDT)
-Received: from gerard.rennes.sfl (lmontsouris-657-1-69-118.w80-15.abo.wanadoo.fr [80.15.101.118])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id CEC679C5818;
-	Wed, 15 May 2024 09:54:17 -0400 (EDT)
-From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	s=arc-20240116; t=1715781748; c=relaxed/simple;
+	bh=PHeG/627dOPWa8LHTtWxDV007SWbZTNzDw4Wof0MrS0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B7yOCWTqbbvPtw58/+8yl9zS1t6w59da1UH3CPtG4KpB3Yo/aV8sACnMxapL1s+5GO4CqFdhhEVoCr/gsmoPDxd0nAM7iF/rxBsP4x+lYgeAi0ENdzjoEzcWxEoSipNvfqXVuQhE37nVuEg/A+TY18QkLSeJWBB6nUjqUjBah6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:b558:3285:d1a8:9c24])
+	by andre.telenet-ops.be with bizsmtp
+	id PS2G2C0091HiNV501S2Ge7; Wed, 15 May 2024 16:02:20 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s7FC8-007Obr-CA;
+	Wed, 15 May 2024 16:02:16 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s7FCy-004hZL-8O;
+	Wed, 15 May 2024 16:02:16 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Russell King <linux@armlinux.org.uk>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Kees Cook <keescook@chromium.org>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Stefan Wahren <wahrenst@gmx.net>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-Subject: [PATCHv4 0/9] ASoC: fsl-asoc-card: compatibility integration of a generic codec use case for use with S/PDIF controller
-Date: Wed, 15 May 2024 15:54:02 +0200
-Message-Id: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: Fix userspace enter on LPAE with CC_OPTIMIZE_FOR_SIZE=y
+Date: Wed, 15 May 2024 16:02:14 +0200
+Message-Id: <200d273a83906a68a1c4a9298c415980737be811.1715781469.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,117 +49,70 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=quoted-printable
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Booting an LPAE-enabled kernel built with CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+fails when starting userspace:
 
-This is the v4 of the series of patch aiming to make the machine driver
-"fsl-asoc-card" compatible with use cases where there is no real codec
-driver. It proposes to use the "spdif_receiver" and "spdif_transmitter"
-drivers instead of the dummy codec.
-This is a first step in using the S/PDIF controller with the ASRC.
+    Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
+    CPU: 1 PID: 1 Comm: init Tainted: G        W        N 6.9.0-rc1-koelsch-00004-g7af5b901e847 #1930
+    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+    Call trace:
+     unwind_backtrace from show_stack+0x10/0x14
+     show_stack from dump_stack_lvl+0x78/0xa8
+     dump_stack_lvl from panic+0x118/0x398
+     panic from do_exit+0x1ec/0x938
+     do_exit from sys_exit_group+0x0/0x10
+    ---[ end Kernel panic - not syncing: Attempted to kill init!  exitcode=0x00000004 ]---
 
-The five first patches add compatibility with the pair of codecs
-"spdif_receiver" and "spdif_transmitter" with a new compatible,
-"fsl,imx-audio-generic". Codec parameters are set with default values.
-Consequently, the driver is modified to work with multi-codec use cases.
-It can get 2 codecs phandles from the device tree, and the
-"fsl_asoc_card_priv" struct now has 2 "codec_priv" to store properties
-of both codecs. It is fixed to 2 codecs as only "fsl,imx-audio-generic"
-uses multiple codecs at the moment.
-However, the driver now uses "for_each_codecs" macros when possible to
-ease future implementations of multi-codec configurations.
+Add the missing memory clobber to cpu_set_ttbcr(), as suggested by
+Russell King.
 
-The three following patches add configuration options for the
-devicetree. They configure the CPU DAI when using
-"fsl,imx-audio-generic". These options are usually hard-coded in
-"fsl-asoc-card.c" for each audio codec. Because the generic codec could
-be used with other CPU DAIs than the S/PDIF controller, setting these
-parameters could be required.
-These new options try to follow the style of the simple-card driver:
-* standard TDM properties are used, as defined in "tdm-slot.txt".
-* the CPU DAI system-clock can be specified, allowing the codec to
-retrieve its frequency.
-* the CPU DAI system-clock direction can be specified through a new
-binding, the same way it is done in simple-card.
+Force inlining of uaccess_save_and_enable(), as suggested by Ard
+Biesheuvel.
 
-The last commit updates the DT bindings documentation and add a new
-example for the generic codec use case.
+The latter fixes booting on Koelsch.
 
-This series of patch was successfully built for arm64 and x86 on top of
-the latest=C2=A0"for-next" branch of the ASoC git tree on the 14th of May
-2024.
-These modifications have also been tested on an i.MX8MN evaluation
-board, with a linux kernel RT v6.1.26-rt8.
+Fixes: 7af5b901e84743c6 ("ARM: 9358/2: Implement PAN for LPAE by TTBR0 page table walks disablement")
+Closes: https://lore.kernel.org/r/CAMuHMdWTAJcZ9BReWNhpmsgkOzQxLNb5OhNYxzxv6D5TSh2fwQ@mail.gmail.com/
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Feel free to fold into the original commit.
 
-If you have any question or remark about these commits, don't hesitate
-to reply.
+Apparently the "From: Catalin Marinas <catalin.marinas@arm.com>" in
+https://lore.kernel.org/r/20240312-arm32-lpae-pan-v3-4-532647afcd38@linaro.org
+is not reflected in commit 7af5b901e84743c6?
+---
+ arch/arm/include/asm/proc-fns.h | 2 +-
+ arch/arm/include/asm/uaccess.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Best regards,
-Elinor Montmasson
-
-
-Changelog:
-v3 -> v4:
-* Use the standard TDM bidings, as defined in "tdm-slot.txt", for the
-new optional DT bindings setting the TDM slots number and width.
-* Use the clock DT bindings to optionally specify the CPU DAI system
-clock frequency, instead of a dedicated new binding.
-* Rename the new DT binding "cpu-sysclk-dir-out" to
-"cpu-system-clock-direction-out" to better follow the style of the
-simple-card driver.
-* Merge TX an RX bindings for CPU DAI system-clock, to better follow the
-style of the simple-card driver, and also as there was no use case in
-fsl-asoc-card where TX and RX settings had to be different.
-* Add the documentation for the new bindings in the new DT schema
-bindings documentation. Also add an example with the generic codec.
-* v3 patch series at :
-https://lore.kernel.org/alsa-devel/20231218124058.2047167-1-elinor.montmass=
-on@savoirfairelinux.com/
-
-v2 -> v3:
-* When the bitmaster or framemaster are retrieved from the device tree,
-the driver will now compare them with the two codecs possibly given in
-device tree, and not just the first codec.
-* Improve driver modifications to use multiple codecs for better
-integration of future multi-codec use cases:
-    * Use "for_each_codec" macros when possible.
-    * "fsl_asoc_card_priv" struct now has 2 "codec_priv" as the driver
-    can currently retrieve 2 codec phandles from the device tree.
-* Fix subject of patch 10/10 to follow the style of the subsystem
-* v2 patch series at:
-https://lore.kernel.org/alsa-devel/20231027144734.3654829-1-elinor.montmass=
-on@savoirfairelinux.com/
-
-v1 -> v2:
-* Replace use of the dummy codec by the pair of codecs spdif_receiver /
-spdif_transmitter.
-* Adapt how dai links codecs are used to take into account the
-possibility for multiple codecs per link.
-* Change compatible name.
-* Adapt driver to be able to register two codecs given in the device
-tree.
-* v1 patch series at:
-https://lore.kernel.org/alsa-devel/20230901144550.520072-1-elinor.montmasso=
-n@savoirfairelinux.com/
-
-
-Elinor Montmasson (9):
-  ASoC: fsl-asoc-card: add support for dai links with multiple codecs
-  ASoC: fsl-asoc-card: add second dai link component for codecs
-  ASoC: fsl-asoc-card: add compatibility to use 2 codecs in dai-links
-  ASoC: fsl-asoc-card: add new compatible for a generic codec use case
-  ASoC: fsl-asoc-card: set generic codec as clock provider
-  ASoC: fsl-asoc-card: add use of devicetree TDM slot properties
-  ASoC: fsl-asoc-card: add DT clock "cpu_sysclk" with generic codec
-  ASoC: fsl-asoc-card: add DT property "cpu-system-clock-direction-out"
-  ASoC: dt-bindings: fsl-asoc-card: add compatible for generic codec
-
- .../bindings/sound/fsl-asoc-card.yaml         |  96 +++++-
- sound/soc/fsl/fsl-asoc-card.c                 | 306 +++++++++++-------
- 2 files changed, 287 insertions(+), 115 deletions(-)
-
---=20
+diff --git a/arch/arm/include/asm/proc-fns.h b/arch/arm/include/asm/proc-fns.h
+index 9b3105a2a5e0691e..b4986a23d8528a50 100644
+--- a/arch/arm/include/asm/proc-fns.h
++++ b/arch/arm/include/asm/proc-fns.h
+@@ -187,7 +187,7 @@ static inline unsigned int cpu_get_ttbcr(void)
+ 
+ static inline void cpu_set_ttbcr(unsigned int ttbcr)
+ {
+-	asm("mcr p15, 0, %0, c2, c0, 2" : : "r" (ttbcr));
++	asm volatile("mcr p15, 0, %0, c2, c0, 2" : : "r" (ttbcr) : "memory");
+ }
+ 
+ #else	/*!CONFIG_MMU */
+diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+index 25d21d7d6e3efee0..6c9c16d767cfd5df 100644
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -47,7 +47,7 @@ static __always_inline void uaccess_restore(unsigned int flags)
+ 
+ #elif defined(CONFIG_CPU_TTBR0_PAN)
+ 
+-static inline unsigned int uaccess_save_and_enable(void)
++static __always_inline unsigned int uaccess_save_and_enable(void)
+ {
+ 	unsigned int old_ttbcr = cpu_get_ttbcr();
+ 
+-- 
 2.34.1
 
