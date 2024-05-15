@@ -1,102 +1,111 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E853A43144
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73C715623D
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715789145; cv=none; b=AytSZw8Tm251Kg1RNY6E7oLI+WnUzw84XuxbyGlmDo0C+HwUGP/T0fq2U4x9rdxnmaLsx5Jxtd6j4qBQzFpfV3W7Taleo93ul+D3kFtRy/EvLnhZ/OxkCXLd4LfM4c1onlrDelyYqqwv+zD8SjYQeDug2zAVhG0x9M0eBZxA5Pw=
+	t=1715789179; cv=none; b=HghsY4nRBjYA5Z2ba1of3MwbtJyKzfhd35cqK9GMaVkAP6AXrdBo2VG/dwr+X5UWJ6dlr1zExgYdA5dJ6qF/+pVS8jHOV9+1WViirFxdwezBqbo/n5mroxTOFWSLc26iWgNGgOnrAU7SoTwX5u+eqaE8B4IePWT3uRXJKwfr0jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715789145; c=relaxed/simple;
-	bh=hJHrdHj0cikWqaVWvyi6gHT8PuTbJVo4o4T87OWEoW0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ub2PkuMTthvON8iIioFjmVqCx3k2xqfqqt3NbF1YoSYk3IZZT4MZPK8zC78DmcovCaLWPtLZ8K38PNfjuK4J6fsVtjs/WWH8N201FePfwLlr6+1O/Lxj9i/bh0bvFPZuJK6NRI9gpj597c/4j3VezwID7MAq7uRqeIJCIUFxqlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IiIT5gZQ; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715789179; c=relaxed/simple;
+	bh=FVFAYxSz1OkRMYh28r8zsQNRYiUe+v6bzZjbGukXwFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6DRBYU9uGvlECrcRywLRnefvqhq/o6b5i9v5k9K14TfUzkEjzmfygN0f8yGum6ZHJ8nmA447gpm+fPV3bQQCTbhfd95sBm2XXnHGiKi0qODuI6fxixdRS50Mt0IXRJUP/87rag7RCjHrcWMFovtx0c45n9Hs0GLFuOpt2aaTd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/DKxUTj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IiIT5gZQ"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59a609dd3fso256980166b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 09:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715789142; x=1716393942; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=u2ehF00UkFVYae8eoKheTBkPEUp/ENYAZ+/DySjcSWU=;
-        b=IiIT5gZQcqzKMHpc/5W2YcOOu4OfnKolvmspj74yxAWqNITkfbkalSasme1ro4Y04/
-         XpW7WdYlyE51aHYUmCcNtloejCVXx/NJLDaWYO0Ja/fGofbf0QzrZlCp1xvk52trxioP
-         sDmCwmUj60J2pm5tTtb6kow47ES9pMVF005Lk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715789142; x=1716393942;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u2ehF00UkFVYae8eoKheTBkPEUp/ENYAZ+/DySjcSWU=;
-        b=Vo6lKeykpWx1oqqDoYcq78O++KjcYLQYTLluNGQhbrXc2AQbZt3MrACG2z34bRAsiX
-         rvgSaZ83ffeW2XaUKqxXwu36FgMOdzMInQ7ACRxaPFKf6jsVDAuYWQUgWFX/Jy/ae7HG
-         bBZN4rmAUPH7eW67NEDhnFQ2vTDSXjG3emYaJwVSFHRw5J4LFhyfn/j2OOGyhaZBEOc9
-         gIW4FKPAL5AUepuF7xrH+CGWTKO3Rdftwn7j+XquzhPhw4/Dnp1sTZBVbX/3rEyAfGdK
-         Hp1DhJWC3UaWSamTuOuGLLFvHR03t1ousupqogV5KMBscxEJtKY7HQ8LHYknD/lm5gYR
-         QFHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8wKoCAKWIltiPZUXMrc8NncylhGYQzxlhlLmoCwAbRdYcIdqK2s4V25COoCivBI6qf0VV7nuGNQYcMn2QXdQ6i1rDiHANvZGF/ngg
-X-Gm-Message-State: AOJu0Yy5+Pv4LgdbFuybSLqReDuY6cqeP4gkvOYf2DOQDAYqwjxYcUzF
-	5oKDgmu5JbJpWBfDakhKaJejFrlwjZOJasthXxEl9iOH+AD+k52Qj+pMF8sNStSYV9PBJoyZ2qp
-	BBbBXPw==
-X-Google-Smtp-Source: AGHT+IFAxvk5vDMDyx53gZuTXNocRJyu6JPOeCDOGPmqIurAqlrRjsvYQuL37DctI1wL7R54NzSy3g==
-X-Received: by 2002:a17:906:eb07:b0:a5c:dd2c:d95b with SMTP id a640c23a62f3a-a5cdd2cdbafmr64814466b.25.1715789142186;
-        Wed, 15 May 2024 09:05:42 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bea6557sm9258182a12.13.2024.05.15.09.05.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 May 2024 09:05:41 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a59a352bbd9so261952466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 09:05:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgCxC1kHtKDdYnk2FVCMaIE3XidhD5TzPxTQSHwZUOH2KhYtV8gi0xuMXIV6vzpbWtv/7Ekex43HtRcfmmk+BaXvYbw8YJh0Tvsd3w
-X-Received: by 2002:a17:907:25c1:b0:a59:9eee:b1cb with SMTP id
- a640c23a62f3a-a5a2d30be86mr1715412166b.35.1715789140754; Wed, 15 May 2024
- 09:05:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/DKxUTj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09665C116B1;
+	Wed, 15 May 2024 16:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715789178;
+	bh=FVFAYxSz1OkRMYh28r8zsQNRYiUe+v6bzZjbGukXwFI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V/DKxUTjDl9pXY58GoyNPDYosoEaoJP1PSw/3V5uG+PF/3CiGpqn0qul3RKw/kRHA
+	 nhmo5V1CFbqBh7fyp18Pr9m385imgdDqSVusBXYprh3fPUbFVCuNB6WZMyueod4Eno
+	 65YRqqUsBHEcH23XpuiQOtDIIHJ8vwFywBzaGSW4aMT0/7Q8ZLqijc84CgI4+avtH7
+	 hGZJessBR8wyKMF50z5gXE01sFQTW9W1UvtTrQlnfAJ2PERDk8VKO+nIilbv2fDJhH
+	 ytFD+8Si+6dzyeNcdHp4zPNQ5O+3FUv5ZdJ07RR+jeELxo5YtznsbVBHS8BmVn3DTh
+	 DS6AuVnG0MwDA==
+Date: Wed, 15 May 2024 17:06:14 +0100
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] RISC-V: fix Andes errata build issues
+Message-ID: <20240515-bobsled-corridor-a3f295972e98@spud>
+References: <20240515-shimmer-retake-37033de08096@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=whHsCLoBsCdv2TiaQB+2TUR+wm2EPkaPHxF=g9Ofki7AQ@mail.gmail.com>
- <20240515091727.22034-1-laoar.shao@gmail.com>
-In-Reply-To: <20240515091727.22034-1-laoar.shao@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 15 May 2024 09:05:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgcnsjRvJ3d_Pm6HZ+0Pf_er4Zt2T04E1TSCDywECSJJQ@mail.gmail.com>
-Message-ID: <CAHk-=wgcnsjRvJ3d_Pm6HZ+0Pf_er4Zt2T04E1TSCDywECSJJQ@mail.gmail.com>
-Subject: Re: [PATCH] vfs: Delete the associated dentry when deleting a file
-To: Yafang Shao <laoar.shao@gmail.com>, kernel test robot <oliver.sang@intel.com>
-Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	longman@redhat.com, viro@zeniv.linux.org.uk, walters@verbum.org, 
-	wangkai86@huawei.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="u8jT4CtR+31zyd66"
+Content-Disposition: inline
+In-Reply-To: <20240515-shimmer-retake-37033de08096@spud>
 
-Oliver,
- is there any chance you could run this through the test robot
-performance suite? The original full patch at
 
-    https://lore.kernel.org/all/20240515091727.22034-1-laoar.shao@gmail.com/
+--u8jT4CtR+31zyd66
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-and it would be interesting if the test robot could see if the patch
-makes any difference on any other loads?
+On Wed, May 15, 2024 at 05:02:28PM +0100, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Commit Fixes: 589e2fc85850 ("riscv: Convert xandespmu to use the vendor
+> extension framework") added includes for the new vendor_extensions.h
 
-Thanks,
-                     Linus
+This commit message is actually inaccurate, I'll spin out an immediate
+v2..
 
-On Wed, 15 May 2024 at 02:17, Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> Our applications, built on Elasticsearch[0], frequently create and delete
-> files. These applications operate within containers, some with a memory
-> limit exceeding 100GB. Over prolonged periods, the accumulation of negative
-> dentries within these containers can amount to tens of gigabytes.
->
-> Upon container exit, directories are deleted. However, due to the numerous
-> associated dentries, this process can be time-consuming. Our users have
-> expressed frustration with this prolonged exit duration, which constitutes
-> our first issue.
+> header in the T-Head and SiFive errata handling code but didn't do so
+> for Andes, resulting in allmodconfig build issues.
+>=20
+> Fixes: 589e2fc85850 ("riscv: Convert xandespmu to use the vendor extensio=
+n framework")
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> CC: Paul Walmsley <paul.walmsley@sifive.com>
+> CC: Palmer Dabbelt <palmer@dabbelt.com>
+> CC: Conor Dooley <conor.dooley@microchip.com>
+> CC: Charlie Jenkins <charlie@rivosinc.com>
+> CC: linux-riscv@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  arch/riscv/errata/andes/errata.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/riscv/errata/andes/errata.c b/arch/riscv/errata/andes/e=
+rrata.c
+> index a5d96a7a4682..fc1a34faa5f3 100644
+> --- a/arch/riscv/errata/andes/errata.c
+> +++ b/arch/riscv/errata/andes/errata.c
+> @@ -17,6 +17,7 @@
+>  #include <asm/processor.h>
+>  #include <asm/sbi.h>
+>  #include <asm/vendorid_list.h>
+> +#include <asm/vendor_extensions.h>
+> =20
+>  #define ANDES_AX45MP_MARCHID		0x8000000000008a45UL
+>  #define ANDES_AX45MP_MIMPID		0x500UL
+> --=20
+> 2.43.0
+>=20
+
+--u8jT4CtR+31zyd66
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkTddgAKCRB4tDGHoIJi
+0tagAP4quEfVezaSy0cvTJHJIIALZZzUPi+usFdsUiF6/NhBxwD/e2/+gbQRWRnq
+lrfOh9ipPvQ5CficGRd6P3fGzTxcGwU=
+=vIlF
+-----END PGP SIGNATURE-----
+
+--u8jT4CtR+31zyd66--
