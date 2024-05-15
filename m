@@ -1,50 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BDB155A43
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9929E5C8EF;
+	Wed, 15 May 2024 14:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715784204; cv=none; b=Ohm6RnWwtDrBopyFhKkKEBT6rq4qBt6nOgLyML5bFq2iehmdLwjv7eL+GihZWGVniZBOe1MFfFwH7zd02FMplm+6mGFUQhkoWZBWCspiENXtUESbBLSt92ze3hRpC7pATJ8JW0c1Mm9liLjaehK70bAKv7r+0+gYlAPMOEfKyBU=
+	t=1715784204; cv=none; b=BKkUyenRrVUjNECKVeG0O0B/mR+bdoyDB1ebuUTbWEKgyYuvgU0pAa9Fea0+nIdB+2g9ml9UqQUkNDfUhAI9ulfsgTwxgvaiXLhGKI3seML1NWncVSxxGiqFLIDUN9dtbQ2GOrf1WjWomI4wEgh4Ag2hyOWFCXiQFg9ywfgYMxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715784204; c=relaxed/simple;
-	bh=rEuS7Fi0Lvzvpv1WWBr1sdY3xojQBPz8s/YrwhEEJOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aYp2go7BGG9yhlF3aXO8HoKSYPohKRHzxBdFRGWKB5hJklxH1mLUAfCa32FFnz9mT9r5PIG/t4p8pMvwkj1JJkQ1qA3JIAMs3LvKivzZWInYpF10VkeTZD6y9yVhenkX4x4Y5PA5jxYJX3OB041l57gILFXUG5KiZcbmkpzaDpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diMDHaAT; arc=none smtp.client-ip=10.30.226.201
+	bh=sSweIfZc/Nl0B/cXGGt+iL39xKMZmHaxI4advJUinLc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=baWw4TOvC65w15bmh9TSmk2qFNXN85u/M6aPg3Y8tCO/i4+KKKT/49f0TMBK+fAQ1xK+CAZkaUJuD71JuigE2f5JXFL9WdOaMgYTFV3nB4vUm2wfGF4prMhMNNS0H7MQ6WyEU+070B2gJkh+L4KC/DDK/F20NcPIVy+nhn3fPWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKjQK4qu; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diMDHaAT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFB4C4AF0B;
-	Wed, 15 May 2024 14:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715784204;
-	bh=rEuS7Fi0Lvzvpv1WWBr1sdY3xojQBPz8s/YrwhEEJOA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=diMDHaATwzi4NBBG/2fL03CZHf/hX/TuU4nURsJgCvFEBa0EN+sthtVmkmTNgAt0T
-	 qFDy6S+snkE3FjzUVTFxyCTMLGAjQ9jL3b/W4a4MN2tIFR8Faly8lt1XZ2rrmTWuq+
-	 B5Zf+lY8fmRZkWRuPpvtpBx+sMpNcBBPcjkTc/cJ4xdl3RrJch1/Mia4MCcQ69vuHX
-	 AF8igkqQGfny5vgq0upSUvSO/8+lzujyQqXYuWsSKV8REpmLdG0J/HJ6E6Y6GRPhZT
-	 FFfEo8ceXKq63qHEn6Fdx0jY9pJMydSgd962SSiY/9+Z9rDntZBpPOWWptnO0PldAe
-	 wwgJEWa9AUrdg==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 2/4] task_work: Introduce task_work_cancel() again
-Date: Wed, 15 May 2024 16:43:09 +0200
-Message-ID: <20240515144311.16038-3-frederic@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240515144311.16038-1-frederic@kernel.org>
-References: <20240515144311.16038-1-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKjQK4qu"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-6f4472561f1so6295465b3a.0;
+        Wed, 15 May 2024 07:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715784202; x=1716389002; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4G+Y5nvwbauhCzcIUnrl6gTVirBiw0CfcC+eP4E+JY=;
+        b=gKjQK4quloa4QeQl3hdt9PWCoa5FkalcFfZwMspQRVANFLlfkjUJQTyVHDFWT1K2Js
+         IKKqxKNw7/AOBphu6cAXbGYWM8tvCt1DUHUwcMF2+Q9qqva6k0qUcJuOF/55JYHGx7Vi
+         yauBwCbgGmQb4N+GUk7EPmL5EQWWS/4McgOLIC/Ngll01MIZne15MhgBYP7Y9nIli2Oo
+         vuNYYnCXSlOSRWL7w86KYEy94jm+FduTA4H7L3F/xgkwOEu2rYeCX8Qqi25nVW+6wH8K
+         IHdfiiwOxIyNMCCqRltKwWNjrL9O9poPSUNjPVCgf4Qti/GTTQmLUHEyc9d6XRYWGAgl
+         ixfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715784202; x=1716389002;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y4G+Y5nvwbauhCzcIUnrl6gTVirBiw0CfcC+eP4E+JY=;
+        b=Mfl0ug6w48TPUITdaRnYiGUyzfS+2nmx4fgiLGXtvgx8goRIO3/6mHrdCsyNmHnt2w
+         Y8BTaa2s9MQ3TApmCPw9AoXN/6fdBp0byelOiV+L1rAbI7ibsiOz8EQ3g+u4Rt5dt22z
+         WItZRNFceVCSagIO4Om0GtPrKF+F/Yo/1WAnr8dIPJwGu2ASu9LY/NFUIOYzY6TqZpAU
+         hc1lMJZbx4m0ucGJwQLBy357nVvkaOwbtzIAJwN5GmDOqEfD3Fgl4aYWC17/YGkuP1hm
+         dYAMnF1Av8rJkWRZZftwVtGccMKzcECv4m47jKkSnDqjPDYX/hM79Rpn5dSXLn7slhM3
+         L6AA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaH5J0ujQMwf4GnkUds1Q+3UTOXLnRBpleJa4O0JG/tI/jix84Z/5GXVT4KsfLRWlauhNcU2Ac+1mhxQuAmlbwlq401p5uAEzgSamzm6a9DbZ+Lt1XVKoSAQT62QzcwYbo
+X-Gm-Message-State: AOJu0Yxq5/xb5hDDagksAE49m2YL2M+yptyqDuW4WlZ6+GL61s38pLMY
+	bcdwVoHxtnTiArNj5B/ADxLix9y2C9mwBrLFHWn4tSdBuqKDesLZV/SPGix8omADOw==
+X-Google-Smtp-Source: AGHT+IHNGYdvH5ayqVAJ5BS+H2gZS9Q3Q8lnah7Nad5QXmoDKOWPL1IsDABDlp6jEARUqVUK8bying==
+X-Received: by 2002:a05:6a20:3d88:b0:1af:cefe:9741 with SMTP id adf61e73a8af0-1afde0b6d8dmr24977788637.17.1715784201877;
+        Wed, 15 May 2024 07:43:21 -0700 (PDT)
+Received: from localhost.localdomain ([240e:604:203:6020:9881:7698:b1b3:f885])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2ae0d77sm11185155b3a.106.2024.05.15.07.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 07:43:21 -0700 (PDT)
+From: dracoding <dracodingfly@gmail.com>
+To: davem@davemloft.net,
+	kuba@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	kafai@fb.com,
+	songliubraving@fb.com,
+	yhs@fb.com,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Fred Li <dracodingfly@gmail.com>
+Subject: [PATCH] net: Fix the gso BUG_ON that treat the skb which head_frag is true as non head_frag
+Date: Wed, 15 May 2024 22:43:13 +0800
+Message-Id: <20240515144313.61680-1-dracodingfly@gmail.com>
+X-Mailer: git-send-email 2.32.1 (Apple Git-133)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,63 +77,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Re-introduce task_work_cancel(), this time to cancel an actual callback
-and not *any* callback pointing to a given function. This is going to be
-needed for perf events event freeing.
+From: Fred Li <dracodingfly@gmail.com>
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+The crashed kernel version is 5.16.20, and I have not test this patch
+because I dont find a way to reproduce it, and the mailine may be
+has the same problem.
+
+When using bpf based NAT, hits a kernel BUG_ON at function skb_segment(),
+BUG_ON(skb_headlen(list_skb) > len). The bpf calls the bpf_skb_adjust_room
+to decrease the gso_size, and then call bpf_redirect send packet out.
+
+call stack:
+...
+   [exception RIP: skb_segment+3016]
+    RIP: ffffffffb97df2a8  RSP: ffffa3f2cce08728  RFLAGS: 00010293
+    RAX: 000000000000007d  RBX: 00000000fffff7b3  RCX: 0000000000000011
+    RDX: 0000000000000000  RSI: ffff895ea32c76c0  RDI: 00000000000008c1
+    RBP: ffffa3f2cce087f8   R8: 000000000000088f   R9: 0000000000000011
+    R10: 000000000000090c  R11: ffff895e47e68000  R12: ffff895eb2022f00
+    R13: 000000000000004b  R14: ffff895ecdaf2000  R15: ffff895eb2023f00
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #9 [ffffa3f2cce08720] skb_segment at ffffffffb97ded63
+#10 [ffffa3f2cce08800] tcp_gso_segment at ffffffffb98d0320
+#11 [ffffa3f2cce08860] tcp4_gso_segment at ffffffffb98d07a3
+#12 [ffffa3f2cce08880] inet_gso_segment at ffffffffb98e6de0
+#13 [ffffa3f2cce088e0] skb_mac_gso_segment at ffffffffb97f3741
+#14 [ffffa3f2cce08918] skb_udp_tunnel_segment at ffffffffb98daa59
+#15 [ffffa3f2cce08980] udp4_ufo_fragment at ffffffffb98db471
+#16 [ffffa3f2cce089b0] inet_gso_segment at ffffffffb98e6de0
+#17 [ffffa3f2cce08a10] skb_mac_gso_segment at ffffffffb97f3741
+#18 [ffffa3f2cce08a48] __skb_gso_segment at ffffffffb97f388e
+#19 [ffffa3f2cce08a78] validate_xmit_skb at ffffffffb97f3d6e
+#20 [ffffa3f2cce08ab8] __dev_queue_xmit at ffffffffb97f4614
+#21 [ffffa3f2cce08b50] dev_queue_xmit at ffffffffb97f5030
+#22 [ffffa3f2cce08b60] __bpf_redirect at ffffffffb98199a8
+#23 [ffffa3f2cce08b88] skb_do_redirect at ffffffffb98205cd
+...
+
+The skb has the following properties:
+    doffset = 66
+    list_skb = skb_shinfo(skb)->frag_list
+    list_skb->head_frag = true
+    skb->len = 2441 && skb->data_len = 2250
+    skb_shinfo(skb)->nr_frags = 17
+    skb_shinfo(skb)->gso_size = 75
+    skb_shinfo(skb)->frags[0...16].bv_len = 125
+    list_skb->len = 125
+    list_skb->data_len = 0
+
+3962 struct sk_buff *skb_segment(struct sk_buff *head_skb,
+3963                             netdev_features_t features)
+3964 {
+3965         struct sk_buff *segs = NULL;
+3966         struct sk_buff *tail = NULL;
+...
+4181                 while (pos < offset + len) {
+4182                         if (i >= nfrags) {
+4183                                 i = 0;
+4184                                 nfrags = skb_shinfo(list_skb)->nr_frags;
+4185                                 frag = skb_shinfo(list_skb)->frags;
+4186                                 frag_skb = list_skb;
+
+After segment the head_skb's last frag, the (pos == offset+len), so break the
+while at line 4181, run into this BUG_ON(), not segment the head_frag frag_list
+skb.
+
+Since commit 13acc94eff122(net: permit skb_segment on head_frag frag_list skb),
+it is allowed to segment the head_frag frag_list skb.
+
+In commit 3dcbdb134f32 (net: gso: Fix skb_segment splat when splitting gso_size
+mangled skb having linear-headed frag_list), it is cleared the NETIF_F_SG if it
+has non head_frag skb. It is not cleared the NETIF_F_SG only with one head_frag
+frag_list skb.
+
+Signed-off-by: Fred Li <dracodingfly@gmail.com>
 ---
- include/linux/task_work.h |  1 +
- kernel/task_work.c        | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ net/core/skbuff.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/task_work.h b/include/linux/task_work.h
-index 23ab01ae185e..26b8a47f41fc 100644
---- a/include/linux/task_work.h
-+++ b/include/linux/task_work.h
-@@ -31,6 +31,7 @@ int task_work_add(struct task_struct *task, struct callback_head *twork,
- struct callback_head *task_work_cancel_match(struct task_struct *task,
- 	bool (*match)(struct callback_head *, void *data), void *data);
- struct callback_head *task_work_cancel_func(struct task_struct *, task_work_func_t);
-+bool task_work_cancel(struct task_struct *task, struct callback_head *cb);
- void task_work_run(void);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 001152c..d805a47 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -4070,7 +4070,7 @@ struct sk_buff *skb_segment(struct sk_buff *head_skb,
  
- static inline void exit_task_work(struct task_struct *task)
-diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 54ac24059daa..2134ac8057a9 100644
---- a/kernel/task_work.c
-+++ b/kernel/task_work.c
-@@ -136,6 +136,30 @@ task_work_cancel_func(struct task_struct *task, task_work_func_t func)
- 	return task_work_cancel_match(task, task_work_func_match, func);
- }
+ 		hsize = skb_headlen(head_skb) - offset;
  
-+static bool task_work_match(struct callback_head *cb, void *data)
-+{
-+	return cb == data;
-+}
-+
-+/**
-+ * task_work_cancel - cancel a pending work added by task_work_add()
-+ * @task: the task which should execute the work
-+ * @cb: the callback to remove if queued
-+ *
-+ * Remove a callback from a task's queue if queued.
-+ *
-+ * RETURNS:
-+ * True if the callback was queued and got cancelled, false otherwise.
-+ */
-+bool task_work_cancel(struct task_struct *task, struct callback_head *cb)
-+{
-+	struct callback_head *ret;
-+
-+	ret = task_work_cancel_match(task, task_work_match, cb);
-+
-+	return ret == cb;
-+}
-+
- /**
-  * task_work_run - execute the works added by task_work_add()
-  *
+-		if (hsize <= 0 && i >= nfrags && skb_headlen(list_skb) &&
++		if (hsize <= 0 && i >= nfrags && !list_skb->head_frag && skb_headlen(list_skb) &&
+ 		    (skb_headlen(list_skb) == len || sg)) {
+ 			BUG_ON(skb_headlen(list_skb) > len);
+ 
 -- 
-2.44.0
+1.8.3.1
 
