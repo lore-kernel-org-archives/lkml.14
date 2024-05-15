@@ -1,84 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4759D5684;
-	Wed, 15 May 2024 13:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BA78625C;
+	Wed, 15 May 2024 13:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715778733; cv=none; b=Op1ts+3Ji2sI4nm1xfb/oR3yaKO3c+f0/CZPTx9Ga/QNhjogHzRFUHGZFTx5zoCoKkb5hVpel/olrdkEKHP5s0QKj1vi/0LV83lGA47zUUKZyGIDAxQqQkxJySZV8KOj8Pg7fXz7+U3PIspz/fsGKFF/J+sQz/dYkV1hDYdbeME=
+	t=1715778738; cv=none; b=ofzmteHwoA2fEINAdKUD/AuneCw6P7WSsAExpTDhBDtQGsff7ECIf3/ZtNdG+oZBwVszjuvFh2+iTtyntnHMe2/CgEGinAtlQt+QnwG8omstr94sIeSNSqS9qMWeuH+PyUHAkvG0X4kSQLbUrHlIYnzfpgkzhHEP9qA/XDoz2qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715778733; c=relaxed/simple;
-	bh=Ya87/SS7ypILoGzc5H3cX5V3C38M9G0fWSR3Uh6LN9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QdHSU7DyhbNqgSoLodMirU66XuOKIoP+rQK3iEMsaqMlxYPfvioNYiIBgecFr0qLw6DiPHA9TUHg4SONxwY0yH5WLIV9ZLTKAdvfYrMU85U9KjVUgVLn39zoSeVjwlZSJLYCG5ekWuEb3L7fjyyL/WRI2ZzoS3MRrqQLSBoBLkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KujRl6ir; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KujRl6ir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715778732; x=1747314732;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ya87/SS7ypILoGzc5H3cX5V3C38M9G0fWSR3Uh6LN9k=;
-  b=KujRl6irgYv4H78DFy5K9/tKfLoLGQ3CcYZ06d77n38opHs1RJyEEL1g
-   FeNaUbJGHatx1sx34RRThMv8q4ukbbeac5zf85V4Lx9xzjmwVJSoC5i7Z
-   tpnw2kKMtG9FzSSxW2xoRzTk3rswM+NI5sC8+sSefNkTyGlqOW7xf601F
-   ugPeLUHNEd3O4mNWPb2wYdunKosGI3DuMp+bNp/4+dGceWIWFQjxl4SHq
-   fNc9tEIabTPTxoih4FRharCFm0yjSnWHNZIRqwqHL05yfpkCxxnMa9GTo
-   vsm2mMyMd5rceWAMl1lt87hOtbXoJjId4awwBaTAX28EbdR9kMToOcSKO
-   A==;
-X-CSE-ConnectionGUID: svOiIqIHQRCVlUIKeD2x+A==
-X-CSE-MsgGUID: Bb98QNv1QU6rnygAd7zd7g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="37205438"
-X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="scan'208";a="37205438"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 06:12:11 -0700
-X-CSE-ConnectionGUID: nqubSkUvRNiKPryFnJEuMA==
-X-CSE-MsgGUID: C4okDTneSE6NU9Br6QKa1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="scan'208";a="35595725"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.245.82.157])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 06:12:09 -0700
-Date: Wed, 15 May 2024 15:12:04 +0200
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: linan666@huaweicloud.com, song@kernel.org, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com,
- yangerkun@huawei.co, "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH] md: do not delete safemode_timer in mddev_suspend
-Message-ID: <20240515151204.0000113d@linux.intel.com>
-In-Reply-To: <33185f65-b657-b15b-ffa8-e35319fa0a5f@huaweicloud.com>
-References: <20240508092053.1447930-1-linan666@huaweicloud.com>
-	<33185f65-b657-b15b-ffa8-e35319fa0a5f@huaweicloud.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1715778738; c=relaxed/simple;
+	bh=/0KXK6PmkZcde0ubOE7xzi/16BLUawUejjdCW6lX7S4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EIZs/joK4wZXmTCOpt6a/uYYIX4WONor5vvYpUycmJET4+xLMlpdWQZ+RtZcqpLeNh/p/VRkSvGUOTaMohy2veO3bfOe1DDr22YGTbUJyOKX6mW3MZt90ohQLScSuK8V96FvTNX2Yicqo8xOolUKEgA7wSq93RwGzzMLuQQLK+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav113.sakura.ne.jp (fsav113.sakura.ne.jp [27.133.134.240])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 44FDC0M4081731;
+	Wed, 15 May 2024 22:12:00 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav113.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav113.sakura.ne.jp);
+ Wed, 15 May 2024 22:12:00 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav113.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 44FDC0JS081728
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 15 May 2024 22:12:00 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <8aa947c2-5373-4efd-83db-6a5f75069317@I-love.SAKURA.ne.jp>
+Date: Wed, 15 May 2024 22:12:00 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Linux kernel bug] INFO: task hung in blk_mq_get_tag
+To: Sam Sun <samsun1006219@gmail.com>
+Cc: Hillf Danton <hdanton@sina.com>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
+References: <CAEkJfYMhv8AxxHSVdPT9bCX1cJZXw39+bMFh=2N9uNOB4Hcr=w@mail.gmail.com>
+ <20240514103742.3137-1-hdanton@sina.com>
+ <CAEkJfYPH3SJ6J3kLSjMGqkWOzgbgKZV_f2Hq05cpZZv7RmhvOg@mail.gmail.com>
+ <cfe6b902-5e2d-415d-afeb-672cafd8d0b7@I-love.SAKURA.ne.jp>
+ <CAEkJfYOBnhVGNENZkkdoX1g+gE=eVNFwNRG6HwFUdCw2+Kda=Q@mail.gmail.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <CAEkJfYOBnhVGNENZkkdoX1g+gE=eVNFwNRG6HwFUdCw2+Kda=Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 9 May 2024 09:34:15 +0800
-Yu Kuai <yukuai1@huaweicloud.com> wrote:
+On 2024/05/15 21:46, Sam Sun wrote:
+>> What happens if you disable
+>>
+>>   sysfd = write(sysfd, input, hash - input + 1);
+>>
+>> line (i.e. stop updating sg_allow_dio value) in the reproducer?
+>>
+> 
+> I tried to change the value of /sys/module/sg/parameters/allow_dio to
+> 0 and remove write() call, both still triggers task hang report and
+> kernel panic. I think this write is not the call crashing the kernel.
+> 
 
-> However, since this behaviour is introduced since 2012, does anybody
-> really care about array status is 'active' instead of 'clean' while
-> there is no IO after suspend?
+Kernel panic by general protection fault upon calling trigger_all_cpu_backtrace() is
+a different bug. Please be sure to keep /proc/sys/kernel/hung_task_all_cpu_backtrace 0
+while investigating this hung task problem.
 
-It may cause rebuild after reboot (bad but we can live with it) or platform hang
-(this is bad). mdadm is waiting for transition to clean on shutdown if I
-remember correctly.
-Probably nobody tried that as we all know that Linux doesn't like suspending
-and this is rare to reboot platform just after suspend. Probably any write will
-fix it.
+This hung task problem happens without touching /sys/module/sg/parameters/allow_dio ,
+doesn't it?
 
-But this is all based on my knowledge, not tested or proved however I believe
-that it gives light where to look for problems if you want.
+scsi_rescan_device() is reliably printed when this hung task problem happens,
+isn't it?
 
-Mariusz
+Then, it is strange that scsi_rescan_device() is called despite the reproducer is
+almost no-op. Maybe you can trigger scsi_rescan_device() without using the reproducer.
+
+Can you simplify steps to reproduce? For example, doing a lot of write().
+
