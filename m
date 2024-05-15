@@ -1,104 +1,101 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF93946430
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 08:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8B22772A;
+	Wed, 15 May 2024 08:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715761800; cv=none; b=TRHnBQQrYYVtqVdDicQiPuyJNhVA3bOGtloZvqepSf5jHtjIM3BU6pvXIyJI7AmJo8bh91Q9/GaTjip7ZRVmcSLXHigeoccHLBZYXVvEMctYxqfoldXzqlqiTyqtj1ftwOQN/atqGMcQF7acye/jpW0Ok2i4rAMEYDY+audHqYw=
+	t=1715761972; cv=none; b=Ws22vvb/F8VzgdrBhWblXSL2wBKtycZ//YFOQJp3H94judmpHUjJU/LqgCrBIlhkorrmbl+ibbijR0oeMpMDT836o3hzPQeEbuNMLB6c5nd8FOsR4Due/IVHa9BERQuCgDMpmUBmdkNle81MDpYQP/v1nH5p/RFoGOOdcRUp8rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715761800; c=relaxed/simple;
-	bh=3sJKvBCoJaKkb2UJWlCMu8vxaDXyGjihMzp2hGE2ezY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hytujHKWmunkC7nFTOcj/3C3HYKjk627R+L4QGOmzND5F0z16urupRj34SrDSLvag8cggobmo0XvOxYfiMZ/BUbHzLeaXACEsflhrjvC8jXSEi5/SC2eokez1w8qOryAiyof697yuLZKsxmtapqWZgOXxI1q8XPuc/svLNwej1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cryptogams.org; spf=pass smtp.mailfrom=cryptogams.org; dkim=pass (2048-bit key) header.d=cryptogams.org header.i=@cryptogams.org header.b=EeMIzhhW; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cryptogams.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cryptogams.org
+	s=arc-20240116; t=1715761972; c=relaxed/simple;
+	bh=UqgOYwdEvMOrn7Hx47ilkz/xoSWwwVwXT1kxEU/Szgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6rNW6hdFBMgA/pS6/o7dBnjSOMOsr4llP2Be49lWTwn39QkocKhWbKh0G9CRMg0YauHS6okwGR0uDR0d4ZBEFYH5kJVOxVFmLHyUFkTfPo4ZuH5ZFo13daUV5imWsHYtzYeVmzU0kJbhotwfXcx9UnKlXXCF3X+fK7Zs1s6bnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n+m36Pp6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cryptogams.org header.i=@cryptogams.org header.b="EeMIzhhW"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e271acb015so85514711fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 01:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cryptogams.org; s=gmail; t=1715761797; x=1716366597; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kdZ6+CYbkRe4GWY6A69afts7kPSMUQxevIZoOvytkAk=;
-        b=EeMIzhhWQIPsSm5KFm17MA3Vj4U/+Hs/Wgd+g8qm2ZYT0wVYrw4CABaTCj3x/7FF/f
-         HRrMzpo5F70GxHwtL0YjUsuVQocmqykCvc5mXGX3oQ5YhTq+g02S3CZlKHxWk7+VUDnu
-         5cZQm+5JIpFLCbKoB5SPYU2Z5+BmtrB4XnTUsR45Wle9MX64eqYZzYTQV8gu2297cnRY
-         2uxF1v6eQWQawOqAakG+3zLlk6cCduv+zC5ta0LCBkmE5kd5zg4csWOMPXoJydPVjWWs
-         X2Hr0gPB4GsAI1HrtAaFl9Opvg7948F3Sb+TokvD8RlqKaKwA6Dr5glPG8Cdv4U43OF8
-         yNxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715761797; x=1716366597;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kdZ6+CYbkRe4GWY6A69afts7kPSMUQxevIZoOvytkAk=;
-        b=AhEdZBr0YPVM8FEEky1/WXY+J9nOHKSO5k2QQ89VOTwkIKsDsotqfsTOn93ohvs5wT
-         f2U9tuIqt6NhFIjaKWqeijnNBv5qLIgZO+0rcWbVFvqgEM6nzJgkalIsZFoHt9x4mdo3
-         Lf+wvnFd6hUjxTKx7WvqrdQAFVZq7/t38kyViI5P0OgyXxXUeytJAs2RQzJkVMbyyn9Y
-         nWHNKgv1IaZ66Arhsc/FkKoeqVKdQTrnNKk3tSqssXKr/OaeaF4BYsIFXvOBtFkeuo0J
-         JSwgjFr3b3uUClFFehg1Q8eag8aZoQs6/8OGXE+qXB+c4StfDcZPFaK8gQDvQkjzetYg
-         JSig==
-X-Forwarded-Encrypted: i=1; AJvYcCUPXv5ByLauC9HcS2x9/840ksIvAl3mY5uiUXWq/EFO2XxRKlq6bzj+SQsGrVFJ455x6bRQwxH9Uydy6V3cDrk0H1AyfOg5dAQ/pfMk
-X-Gm-Message-State: AOJu0YzW060nZYdFqtI+hStF+NQcv1HoGv4VSBirdtsok3lXzKOly/on
-	CNJQCE+F9RCbM/jzmIIFWyoWxsXcnv3wrhFp+FtvcgJfnJa+zHoA8NCI1ezP6OM=
-X-Google-Smtp-Source: AGHT+IGrFyIGNekgvi7YvLggWgiFyAjxsuUBqcC1ibM/CNjEyWzWGDg20jTRgwWYO3bbnH8X0/j41Q==
-X-Received: by 2002:a2e:a591:0:b0:2e2:9416:a649 with SMTP id 38308e7fff4ca-2e5205c3760mr106145011fa.53.1715761796962;
-        Wed, 15 May 2024 01:29:56 -0700 (PDT)
-Received: from [10.0.1.129] (c-922370d5.012-252-67626723.bbcust.telenor.se. [213.112.35.146])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e6a8a64d84sm8110551fa.76.2024.05.15.01.29.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 May 2024 01:29:56 -0700 (PDT)
-Message-ID: <847f2e4f-ace1-415d-b129-ed2751429eec@cryptogams.org>
-Date: Wed, 15 May 2024 10:29:56 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n+m36Pp6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QA0Z86REep+wCdmCQX+v/+bp3VyxCri5N4TpcnLcSGo=; b=n+m36Pp6kDfDmvRiAl/tSccNoX
+	9Cvz89UOpGuItPpAgrSs+t73IUNKLAfPMAyNwTImb2yOI6BpOgzHKoaq0ckUYG0kZbNOZJRTmaLta
+	fY6Vu+x/4qre2xlDxCzeZtVBHzfWxifGgUrDl4nAEkFYbdTtyoGgtNUfAQaek79N+9TuZl+4YQ861
+	IcAQSoCCeiMwT3VsS8XuSB7JGrSTzZsf3LoFdNmqR/2vC1UYmvaA64LGywy83Xkxcs+vGzabh0il0
+	T92WagyiD6Ugu/sc5YTuj5rIVaJtqB0hJCWe63k7ptUJfELMepm80C0OsWyPJRwgrhGXco02lgtfA
+	1x5w5+DA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7A3y-0000000A7MR-2Lht;
+	Wed, 15 May 2024 08:32:41 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 29FBF30068B; Wed, 15 May 2024 10:32:38 +0200 (CEST)
+Date: Wed, 15 May 2024 10:32:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Phil Auld <pauld@redhat.com>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+References: <20240514234112.792989-1-qyousef@layalina.io>
+ <20240514235851.GA6845@lorien.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] crypto: X25519 core functions for ppc64le
-To: Danny Tsen <dtsen@linux.ibm.com>, linux-crypto@vger.kernel.org
-Cc: herbert@gondor.apana.org.au, leitao@debian.org, nayna@linux.ibm.com,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- mpe@ellerman.id.au, ltcgcw@linux.vnet.ibm.com, dtsen@us.ibm.com
-References: <20240514173835.4814-1-dtsen@linux.ibm.com>
- <20240514173835.4814-3-dtsen@linux.ibm.com>
-Content-Language: en-US
-From: Andy Polyakov <appro@cryptogams.org>
-In-Reply-To: <20240514173835.4814-3-dtsen@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514235851.GA6845@lorien.usersys.redhat.com>
 
-Hi,
+On Tue, May 14, 2024 at 07:58:51PM -0400, Phil Auld wrote:
+> 
+> Hi Qais,
+> 
+> On Wed, May 15, 2024 at 12:41:12AM +0100 Qais Yousef wrote:
+> > rt_task() checks if a task has RT priority. But depends on your
+> > dictionary, this could mean it belongs to RT class, or is a 'realtime'
+> > task, which includes RT and DL classes.
+> > 
+> > Since this has caused some confusion already on discussion [1], it
+> > seemed a clean up is due.
+> > 
+> > I define the usage of rt_task() to be tasks that belong to RT class.
+> > Make sure that it returns true only for RT class and audit the users and
+> > replace them with the new realtime_task() which returns true for RT and
+> > DL classes - the old behavior. Introduce similar realtime_prio() to
+> > create similar distinction to rt_prio() and update the users.
+> 
+> I think making the difference clear is good. However, I think rt_task() is
+> a better name. We have dl_task() still.  And rt tasks are things managed
+> by rt.c, basically. Not realtime.c :)  I know that doesn't work for deadline.c
+> and dl_ but this change would be the reverse of that pattern.
 
-> +static void cswap(fe51 p, fe51 q, unsigned int bit)
-> +{
-> +	u64 t, i;
-> +	u64 c = 0 - (u64) bit;
-> +
-> +	for (i = 0; i < 5; ++i) {
-> +		t = c & (p[i] ^ q[i]);
-> +		p[i] ^= t;
-> +		q[i] ^= t;
-> +	}
-> +}
+It's going to be a mess either way around, but I think rt_task() and
+dl_task() being distinct is more sensible than the current overlap.
 
-The "c" in cswap stands for "constant-time," and the problem is that 
-contemporary compilers have exhibited the ability to produce 
-non-constant-time machine code as result of compilation of the above 
-kind of technique. The outcome is platform-specific and ironically some 
-of PPC code generators were observed to generate "most" 
-non-constant-time code. "Most" in sense that execution time variations 
-would be most easy to catch. One way to work around the problem, at 
-least for the time being, is to add 'asm volatile("" : "+r"(c))' after 
-you calculate 'c'. But there is no guarantee that the next compiler 
-version won't see through it, hence the permanent solution is to do it 
-in assembly. I can put together something...
+> > Move MAX_DL_PRIO to prio.h so it can be used in the new definitions.
+> > 
+> > Document the functions to make it more obvious what is the difference
+> > between them. PI-boosted tasks is a factor that must be taken into
+> > account when choosing which function to use.
+> > 
+> > Rename task_is_realtime() to task_has_realtime_policy() as the old name
+> > is confusing against the new realtime_task().
 
-Cheers.
+realtime_task_policy() perhaps?
 
