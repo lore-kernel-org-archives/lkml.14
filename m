@@ -1,218 +1,248 @@
-Received: from out0-221.mail.aliyun.com (out0-221.mail.aliyun.com [140.205.0.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC20C4879B;
-	Wed, 15 May 2024 07:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FDC482CD
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715759939; cv=none; b=pNDbTAXjS4c+k9q8LdJbpHQajstVT3qf1EH56Jid01G0PH62+LEnJ3k7WH04B21WpXBcSC1xmuX5TBxe7j8ZvdJMpIqCRMpi9iZ6C+5SC9yXyzIXCWUknyTcEUdg9fz1XiSe2P9pvARWab29STKl6SiyEd+CSNBNSNhnDyxRWTQ=
+	t=1715759956; cv=none; b=lerW/oqaqmc0VnbNH4odqZxTSdktCFT2Fqw0FuvAy97Pzndjz/kQQ06EdUxJo3oflKfgAkeWwJY5RJCNWEBvFjw+i96EI4UjB+2mTrnIIdwadr+Lw5erC45XLKDakALfnnNzmRpmmj1eLS9qf6y0HTaxuqubwYpd8TcUFV0TH3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715759939; c=relaxed/simple;
-	bh=JyAC/PWdE9ylEuXalxIwuA91LlSHQxAUpNeMRek+xAM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S7SFVZvgDu7Df5AhqoZybaisY+5h8f4zIr3FLUagTC7f7cYw5TbxgFxnoYwdtqBbpFcBCGuA75EdMNj3zMhSrOohTO1sUqfzucN6Z1DXFPPjmih4RchXFE4AHmP0JUV03HMzbWWMc5SVLfF5r5XlgR3JbYDzKDbRfMBMpEOpPHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=OaCNHnGk; arc=none smtp.client-ip=140.205.0.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1715759956; c=relaxed/simple;
+	bh=rE6QtgB4pJV8baaXT7OsQtNS6Jx+xpsopoS6BTg2kRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DK5fNez2fsHpj01uGYZFw9KM6zWOb0N9TZhcBQp9VTc6JW21Hveq+aIZq24tSWSmqAViAeEpyXtOECWEVO4X32l9hO2nSMo52CGyiROzI7iyCDUHGgcPAQpDO6mLiRaEj7KdSUFVatBfIRPECbx85GVFXbt3OeFgzUmlUxe3evo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=knHEnaMU; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="OaCNHnGk"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1715759933; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=hpx+4O6VSym8I2MXU0WRGTCsP3ZciqQA0E7w0LMWHlA=;
-	b=OaCNHnGkysPWV0X6xNXaaz7bKbwny0vegc/2goYtkOvucIJpzqhCfhZp/t86k5CPsnbTqgYkCkFNEFFeEb5JXpNTgd9xkvR0gBOe24/PIzEJutOEXPdJNGIzpFtHgTz53VSA9FV0TO3ezxOKU+Nyx4gjmll/kWh3n8qFbDx7U30=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R581e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047213;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.Xd0WWE._1715756252;
-Received: from localhost(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.Xd0WWE._1715756252)
-          by smtp.aliyun-inc.com;
-          Wed, 15 May 2024 14:57:38 +0800
-From: "Bojun Zhu" <zhubojun.zbj@antgroup.com>
-To: linux-kernel@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	jarkko@kernel.org,
-	dave.hansen@linux.intel.com
-Cc:  <reinette.chatre@intel.com>,
-  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>,
-  "Bojun Zhu" <zhubojun.zbj@antgroup.com>
-Subject: [RFC PATCH v3 0/1] x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid softlockup
-Date: Wed, 15 May 2024 14:55:20 +0800
-Message-Id: <20240515065521.67908-1-zhubojun.zbj@antgroup.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knHEnaMU"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4df4016b3c9so2232537e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715759952; x=1716364752; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=stvuLC23frfwxRFRW518FVRgKrESd+Az5OD98TQsSqo=;
+        b=knHEnaMUmFtWfPmfQmxZ0PyQHSg4SwuLXsPEEHAw8BizuBNCpcK0ksM0+r1GI8jEqm
+         esTnZn9ZcSIBiMoNNXkCq+3VIUn+1wTbNZBfDegoz0QM5z5GNV4IWKxUB2KPu6nztdAC
+         nDAe254SJ5fHitrKE9OsN31f8XtkYGPyRUNCSEpmhfjdzOh8cU0N8dxEEb8DK+4Qs3Ik
+         HcLns0Ct/9Y4c4WNQywIyTNDgcFO3PnB4PXAxZlHt9adgKI6aykjXglLGDUl1CE/Rc55
+         k2CIrJtlfR07HTejEiUhu/ad1bD68o+0hQDfHH6pkYGdcL6kcAIeKRijbFS+qTE/+wAF
+         0UkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715759952; x=1716364752;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=stvuLC23frfwxRFRW518FVRgKrESd+Az5OD98TQsSqo=;
+        b=L21k9SAiURHkrcEEsKXcgPD4M1zg7+wbFEVJdNRamfgz4XgL8SzrFzSqt9U7jo/Qah
+         YM0wNdDBymSOjXMU0V7WrzY2TmZvN9g8xU51QXVSR9fsN93PddwPWUUEMDIwPpqS1rT8
+         jZg969gr8bAI0R8ryv9/Cgd4GJVAIDgNzSR8IfgmoHmDum24WBQyAUb9HiABAbxYLIYE
+         WcO8LVTa/AiShlll75PwXGQntTrul1LyJS3hfA7VeA6nN4AVW6EhckncFwKCJPqDwGnV
+         rzqdph6ywvyRH9/0oqFbYPlGNWqNpq42BOmO6f/3CFEdV4lUPqSSJLbyEME8F9pf1YOR
+         gP+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWuYaEk5FTBC/umTKhoXh021KIiOxD9ZaSH/KRMG6jilhHsKO6cVXKk8ovyEBhF8wzcucQs89cMcE+9wX9rRZDnMaR+Z1xDwpBQso09
+X-Gm-Message-State: AOJu0YxCvallI82zx+YQeGmvaetcV2W8mGfMCH78p/mbqZr6ufE/xLka
+	vDPXThoC/YHqXr4TqbPvGnzqFjFMjk8vt337+QJvKAwIoGxn3uX/4UE21frE+kq/Sn3t3Upj3hZ
+	fKwQXMTf9IdaJcVGZ+/4fMHhMeMM3ilq7mfmr
+X-Google-Smtp-Source: AGHT+IFrk0jr8H15uv7ZhZdzYXIEBxJimfqRYa+asL8SJa1kirroYIbmvGHEcutKM8i1WDSp5mX2XcRA1m3SX+TWVAI=
+X-Received: by 2002:a05:6122:17a0:b0:4d4:eff:454 with SMTP id
+ 71dfb90a1353d-4df8829ce08mr13514421e0c.1.1715759952329; Wed, 15 May 2024
+ 00:59:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20240510141921.883231-1-leitao@debian.org> <ef8c5f6d-17e3-4504-8560-b970912b9eae@acm.org>
+ <de92101c-f9c4-4af4-95f4-19a6f59b636f@paulmck-laptop> <d037f37a-4722-4a1d-a282-63355a97a1a1@acm.org>
+ <c83d9c25-b839-4e31-8dd4-85f3cb938653@paulmck-laptop> <4d230bac-bdb0-4a01-8006-e95156965aa8@acm.org>
+ <447ad732-3ff8-40bf-bd82-f7be66899cee@paulmck-laptop> <ca7c2ef0-7e21-4fb3-ac6b-3dae652a7a0e@acm.org>
+ <59ec96c2-52ce-4da1-92c3-9fe38053cd3d@paulmck-laptop> <CANpmjNMj9r1V6Z63fcJxrFC1v4i2vUCEhm1HT77ikxhx0Rghdw@mail.gmail.com>
+ <dd251dba-0a63-4b57-a05b-bfa02615fae5@paulmck-laptop>
+In-Reply-To: <dd251dba-0a63-4b57-a05b-bfa02615fae5@paulmck-laptop>
+From: Marco Elver <elver@google.com>
+Date: Wed, 15 May 2024 09:58:35 +0200
+Message-ID: <CANpmjNMqRUNUs1mZEhrOSyK0Hk+PdGOi+VAs22qYD+1zTkwfhg@mail.gmail.com>
+Subject: Re: [PATCH] block: Annotate a racy read in blk_do_io_stat()
+To: paulmck@kernel.org
+Cc: Bart Van Assche <bvanassche@acm.org>, Breno Leitao <leitao@debian.org>, Jens Axboe <axboe@kernel.dk>, 
+	"open list:BLOCK LAYER" <linux-block@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi folks,
+On Wed, 15 May 2024 at 01:47, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Mon, May 13, 2024 at 10:13:49AM +0200, Marco Elver wrote:
+> > On Sat, 11 May 2024 at 02:41, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > [...]
+> > > ------------------------------------------------------------------------
+> > >
+> > > commit 930cb5f711443d8044e88080ee21b0a5edda33bd
+> > > Author: Paul E. McKenney <paulmck@kernel.org>
+> > > Date:   Fri May 10 15:36:57 2024 -0700
+> > >
+> > >     kcsan: Add example to data_race() kerneldoc header
+> > >
+> > >     Although the data_race() kerneldoc header accurately states what it does,
+> > >     some of the implications and usage patterns are non-obvious.  Therefore,
+> > >     add a brief locking example and also state how to have KCSAN ignore
+> > >     accesses while also preventing the compiler from folding, spindling,
+> > >     or otherwise mutilating the access.
+> > >
+> > >     [ paulmck: Apply Bart Van Assche feedback. ]
+> > >
+> > >     Reported-by: Bart Van Assche <bvanassche@acm.org>
+> > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > >     Cc: Marco Elver <elver@google.com>
+> > >     Cc: Breno Leitao <leitao@debian.org>
+> > >     Cc: Jens Axboe <axboe@kernel.dk>
+> > >
+> > > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> > > index c00cc6c0878a1..9249768ec7a26 100644
+> > > --- a/include/linux/compiler.h
+> > > +++ b/include/linux/compiler.h
+> > > @@ -194,9 +194,17 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+> > >   * This data_race() macro is useful for situations in which data races
+> > >   * should be forgiven.  One example is diagnostic code that accesses
+> > >   * shared variables but is not a part of the core synchronization design.
+> > > + * For example, if accesses to a given variable are protected by a lock,
+> > > + * except for diagnostic code, then the accesses under the lock should
+> > > + * be plain C-language accesses and those in the diagnostic code should
+> > > + * use data_race().  This way, KCSAN will complain if buggy lockless
+> > > + * accesses to that variable are introduced, even if the buggy accesses
+> > > + * are protected by READ_ONCE() or WRITE_ONCE().
+> > >   *
+> > > - * This macro *does not* affect normal code generation, but is a hint
+> > > - * to tooling that data races here are to be ignored.
+> > > + * This macro *does not* affect normal code generation, but is a hint to
+> > > + * tooling that data races here are to be ignored.  If code generation must
+> > > + * be protected *and* KCSAN should ignore the access, use both data_race()
+> >
+> > "code generation must be protected" seems ambiguous, because
+> > protecting code generation could mean a lot of different things to
+> > different people.
+> >
+> > The more precise thing would be to write that "If the access must be
+> > atomic *and* KCSAN should ignore the access, use both ...".
+>
+> Good point, and I took your wording, thank you.
+>
+> > I've also had trouble in the past referring to "miscompilation" or
+> > similar, because that also entirely depends on the promised vs.
+> > expected semantics: if the code in question assumes for the access to
+> > be atomic, the compiler compiling the code in a way that the access is
+> > no longer atomic would be a "miscompilation". Although is it still a
+> > "miscompilation" if the compiler generated code according to specified
+> > language semantics (say according to our own LKMM) - and that's where
+> > opinions can diverge because it depends on which side we stand
+> > (compiler vs. our code).
+>
+> Agreed, use of words like "miscompilation" can annoy people.  What
+> word would you suggest using instead?
 
-This is the third version of the patch to fix the softlockup in EDMM iotcl(=
-)[1][2].
+Not sure. As suggested above, I try to just stick to "atomic" vs
+"non-atomic" because that's ultimately the functional end result of
+such a miscompilation. Although I've also had people be confused as in
+"what atomic?! as in atomic RMW?!", but I don't know how to remove
+that kind of confusion.
 
-If we run an enclave equipped with large EPC(30G or greater on my platfrom)
-on the Linux with kernel preemptions disabled(by configuring
-"CONFIG_PREEMPT_NONE=3Dy"), we will get the following softlockup warning=20
-messages being reported in "dmesg" log:
+If, however, our intended model is the LKMM and e.g. a compiler breaks
+a dependency-chain, then we could talk about miscompilation, because
+the compiler violates our desired language semantics. Of course the
+compiler writers then will say that we try to do things that are
+outside any implemented language semantics the compiler is aware of,
+so it's not a miscompilation again. So it all depends on which side
+we're arguing for. Fun times.
 
-The EDMM's ioctl()s (sgx_ioc_enclave_{ modify_types | restrict_permissions =
-|  remove_pages})=20
-interface provided by kernel support batch changing attributes of enclave's=
- EPC.
-If userspace App requests kernel to handle too many EPC pages, kernel
-may stuck for a long time(with preemption disabled).
+> > > + * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
+> >
+> > Having more documentation sounds good to me, thanks for adding!
+> >
+> > This extra bit of documentation also exists in a longer form in
+> > access-marking.txt, correct? I wonder how it would be possible to
+> > refer to it, in case the reader wants to learn even more.
+>
+> Good point, especially given that I had forgotten about it.
+>
+> I don't have any immediate ideas for calling attention to this file,
+> but would the following update be helpful?
 
-The log is as follows:
+Mentioning __data_racy along with data_race() could be helpful, thank
+you. See comments below.
 
-------------[ cut here ]------------
-[  901.101294] watchdog: BUG: soft lockup - CPU#92 stuck for 23s! [occlum-r=
-un:4289]
-[  901.109617] Modules linked in: veth xt_conntrack xt_MASQUERADE nf_conntr=
-ack_netlink nfnetlink xfrm_user xfrm_algo iptable_nat nf_nat nf_conntrack n=
-f_defrag_ipv6 nf_defrag_ipv4 libcrc32c xt_addrtype iptable_filter br_netfil=
-ter bridge stp llc overlay nls_iso8859_1 intel_rapl_msr intel_rapl_common i=
-ntel_uncore_frequency intel_uncore_frequency_common i10nm_edac nfit binfmt_=
-misc ipmi_ssif x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm=
- crct10dif_pclmul polyval_clmulni polyval_generic ghash_clmulni_intel sha51=
-2_ssse3 sha256_ssse3 pmt_telemetry sha1_ssse3 pmt_class joydev intel_sdsi i=
-nput_leds aesni_intel crypto_simd cryptd dax_hmem cxl_acpi cmdlinepart rapl=
- cxl_core ast spi_nor intel_cstate drm_shmem_helper einj mtd drm_kms_helper=
- mei_me idxd isst_if_mmio isst_if_mbox_pci isst_if_common intel_vsec idxd_b=
-us mei acpi_ipmi ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_m=
-eter mac_hid sch_fq_codel msr parport_pc ppdev lp parport ramoops reed_solo=
-mon pstore_blk pstore_zone efi_pstore drm ip_tables x_tables
-[  901.109670]  autofs4 mlx5_ib ib_uverbs ib_core hid_generic usbhid hid se=
-s enclosure scsi_transport_sas mlx5_core pci_hyperv_intf mlxfw igb ahci psa=
-mple i2c_algo_bit i2c_i801 spi_intel_pci xhci_pci tls megaraid_sas dca spi_=
-intel crc32_pclmul i2c_smbus i2c_ismt libahci xhci_pci_renesas wmi pinctrl_=
-emmitsburg
-[  901.109691] CPU: 92 PID: 4289 Comm: occlum-run Not tainted 6.9.0-rc5 #3
-[  901.109693] Hardware name: Inspur NF5468-M7-A0-R0-00/NF5468-M7-A0-R0-00,=
- BIOS 05.02.01 05/08/2023
-[  901.109695] RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
-[  901.109701] Code: 48 c1 e6 05 48 89 d1 48 8d 5c 24 40 b8 0e 00 00 00 48 =
-2b 8e 70 8e 15 8b 48 c1 e9 05 48 c1 e1 0c 48 03 8e 68 8e 15 8b 0f 01 cf <a9=
-> 00 00 00 40 0f 85 b2 00 00 00 85 c0 0f 85 db 00 00 00 4c 89 ef
-[  901.109702] RSP: 0018:ffffad0ae5d0f8c0 EFLAGS: 00000202
-[  901.109704] RAX: 0000000000000000 RBX: ffffad0ae5d0f900 RCX: ffffad11dfc=
-0e000
-[  901.109705] RDX: ffffad2adcff81c0 RSI: 0000000000000000 RDI: ffff9a12f5f=
-4f000
-[  901.109706] RBP: ffffad0ae5d0f9b0 R08: 0000000000000002 R09: ffff9a1289f=
-57520
-[  901.109707] R10: 000000000000005d R11: 0000000000000002 R12: 00000006d8f=
-f2000
-[  901.109708] R13: ffff9a12f5f4f000 R14: ffffad0ae5d0fa18 R15: ffff9a12f5f=
-4f020
-[  901.109709] FS:  00007fb20ad1d740(0000) GS:ffff9a317fe00000(0000) knlGS:=
-0000000000000000
-[  901.109710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  901.109711] CR2: 00007f8041811000 CR3: 0000000118530006 CR4: 00000000007=
-70ef0
-[  901.109712] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
-00000
-[  901.109713] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 00000000000=
-00400
-[  901.109714] PKRU: 55555554
-[  901.109714] Call Trace:
-[  901.109716]  <IRQ>
-[  901.109718]  ? show_regs+0x67/0x70
-[  901.109722]  ? watchdog_timer_fn+0x1f3/0x280
-[  901.109725]  ? __pfx_watchdog_timer_fn+0x10/0x10
-[  901.109727]  ? __hrtimer_run_queues+0xc8/0x220
-[  901.109731]  ? hrtimer_interrupt+0x10c/0x250
-[  901.109733]  ? __sysvec_apic_timer_interrupt+0x53/0x130
-[  901.109736]  ? sysvec_apic_timer_interrupt+0x7b/0x90
-[  901.109739]  </IRQ>
-[  901.109740]  <TASK>
-[  901.109740]  ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[  901.109745]  ? sgx_enclave_restrict_permissions+0xba/0x1f0
-[  901.109747]  ? aa_file_perm+0x145/0x550
-[  901.109750]  sgx_ioctl+0x1ab/0x900
-[  901.109751]  ? xas_find+0x84/0x200
-[  901.109754]  ? sgx_enclave_etrack+0xbb/0x140
-[  901.109756]  ? sgx_encl_may_map+0x19a/0x240
-[  901.109758]  ? common_file_perm+0x8a/0x1b0
-[  901.109760]  ? obj_cgroup_charge_pages+0xa2/0x100
-[  901.109763]  ? tlb_flush_mmu+0x31/0x1c0
-[  901.109766]  ? tlb_finish_mmu+0x42/0x80
-[  901.109767]  ? do_mprotect_pkey+0x150/0x530
-[  901.109769]  ? __fget_light+0xc0/0x100
-[  901.109772]  __x64_sys_ioctl+0x95/0xd0
-[  901.109775]  x64_sys_call+0x1209/0x20c0
-[  901.109777]  do_syscall_64+0x6d/0x110
-[  901.109779]  ? syscall_exit_to_user_mode+0x86/0x1c0
-[  901.109782]  ? do_syscall_64+0x79/0x110
-[  901.109783]  ? syscall_exit_to_user_mode+0x86/0x1c0
-[  901.109784]  ? do_syscall_64+0x79/0x110
-[  901.109785]  ? free_unref_page+0x10e/0x180
-[  901.109788]  ? __do_fault+0x36/0x130
-[  901.109791]  ? do_pte_missing+0x2e8/0xcc0
-[  901.109792]  ? __pte_offset_map+0x1c/0x190
-[  901.109795]  ? __handle_mm_fault+0x7b9/0xe60
-[  901.109796]  ? __count_memcg_events+0x70/0x100
-[  901.109798]  ? handle_mm_fault+0x256/0x360
-[  901.109799]  ? do_user_addr_fault+0x3c1/0x860
-[  901.109801]  ? irqentry_exit_to_user_mode+0x67/0x190
-[  901.109803]  ? irqentry_exit+0x3b/0x50
-[  901.109804]  ? exc_page_fault+0x89/0x180
-[  901.109806]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  901.109807] RIP: 0033:0x7fb20b4315cb
-[  901.109810] Code: 0f 1e fa 48 8b 05 c5 78 0d 00 64 c7 00 26 00 00 00 48 =
-c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48=
-> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 95 78 0d 00 f7 d8 64 89 01 48
-[  901.109811] RSP: 002b:00007ffc0e7af718 EFLAGS: 00000246 ORIG_RAX: 000000=
-0000000010
-[  901.109812] RAX: ffffffffffffffda RBX: 0000000780000000 RCX: 00007fb20b4=
-315cb
-[  901.109813] RDX: 00007ffc0e7af720 RSI: 00000000c028a405 RDI: 00000000000=
-00005
-[  901.109814] RBP: 0000000000000005 R08: 0000000000000000 R09: 00007ffc0e7=
-af794
-[  901.109815] R10: 00007ffc0e7af7c8 R11: 0000000000000246 R12: 00000000c02=
-8a405
-[  901.109815] R13: 00007ffc0e7af720 R14: 0000000780000000 R15: 00007fb20b2=
-ea980
-[  901.109817]  </TASK>
-------------[ end trace ]------------
+Thanks,
+-- Marco
 
-We suggest to give up CPU in the ioctl() handler explicitly. I have attache=
-d a
-patch which can fix such issue.
+>                                                         Thanx, Paul
+>
+> ------------------------------------------------------------------------
+>
+> diff --git a/tools/memory-model/Documentation/access-marking.txt b/tools/memory-model/Documentation/access-marking.txt
+> index 65778222183e3..690dd59b7ac59 100644
+> --- a/tools/memory-model/Documentation/access-marking.txt
+> +++ b/tools/memory-model/Documentation/access-marking.txt
+> @@ -24,6 +24,12 @@ The Linux kernel provides the following access-marking options:
+>  4.     WRITE_ONCE(), for example, "WRITE_ONCE(a, b);"
+>         The various forms of atomic_set() also fit in here.
+>
+> +5.     ASSERT_EXCLUSIVE_ACCESS() and ASSERT_EXCLUSIVE_WRITER().
 
-Appreciate for all the review on previous versions.
-Thanks for your time!
+Perhaps worth mentioning, but they aren't strictly access-marking
+options. In the interest of simplicity could leave it out.
 
-Regards,
-Bojun
+> +6.     The volatile keyword, for example, "int volatile a;"
 
----
-v1 -> v2:
-  - Make the cond_resched() as a prefix op instead of a postfix op (Jarkko)
-  - Additionly check the pending signal at the begin of every for loop (Jar=
-kko)
-  - Introduce sgx_check_signal_and_resched() to wrap the pending check
-    and reschedule operations (Jarkko)
-  - Refine the trace log in commit() message (Kai)
+See below - I'm not sure we should mention volatile. It may set the
+wrong example.
 
-v2 -> v3:
-  - Set the default value of "ret" as "-ERESTARTSYS" to avoid redundantly c=
-heck
-    whether the current iteration is the first one (Dave)
+> +7.     __data_racy, for example "int __data_racy a;"
+> +
+>
+>  These may be used in combination, as shown in this admittedly improbable
+>  example:
+> @@ -205,6 +211,27 @@ because doing otherwise prevents KCSAN from detecting violations of your
+>  code's synchronization rules.
+>
+>
+> +Use of volatile and __data_racy
+> +-------------------------------
+> +
+> +Adding the volatile keyword to the declaration of a variable causes both
+> +the compiler and KCSAN to treat all reads from that variable as if they
+> +were protected by READ_ONCE() and all writes to that variable as if they
+> +were protected by WRITE_ONCE().
 
-[1] v1: https://lore.kernel.org/linux-sgx/20240423092550.59297-1-zhubojun.z=
-bj@antgroup.com/
-[2] v2: https://lore.kernel.org/linux-sgx/20240426141823.112366-1-zhubojun.=
-zbj@antgroup.com/
+"volatile" isn't something we encourage, right? In which case, I think
+to avoid confusion we should not mention volatile. After all we have
+this: Documentation/process/volatile-considered-harmful.rst
 
-Bojun Zhu (1):
-  x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid
-    softlockup
+> +Adding the __data_racy type qualifier to the declaration of a variable
+> +causes KCSAN to treat all accesses to that variable as if they were
+> +enclosed by data_race().  However, __data_racy does not affect the
+> +compiler, though one could imagine hardened kernel builds treating the
+> +__data_racy type qualifier as if it was the volatile keyword.
+> +
+> +Note well that __data_racy is subject to the same pointer-declaration
+> +rules as is the volatile keyword.  For example:
 
- arch/x86/kernel/cpu/sgx/ioctl.c | 40 +++++++++++++++++++++++----------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+To avoid referring to volatile could make it more general and say "..
+rules as other type qualifiers like const and volatile".
 
 
-base-commit: ed30a4a51bb196781c8058073ea720133a65596f
---=20
-2.25.1
-
+> +       int __data_racy *p; // Pointer to data-racy data.
+> +       int *__data_racy p; // Data-racy pointer to non-data-racy data.
+> +
+> +
+>  ACCESS-DOCUMENTATION OPTIONS
+>  ============================
+>
+> @@ -342,7 +369,7 @@ as follows:
+>
+>  Because foo is read locklessly, all accesses are marked.  The purpose
+>  of the ASSERT_EXCLUSIVE_WRITER() is to allow KCSAN to check for a buggy
+> -concurrent lockless write.
+> +concurrent write, whether marked or not.
+>
+>
+>  Lock-Protected Writes With Heuristic Lockless Reads
