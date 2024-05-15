@@ -1,46 +1,46 @@
 Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1117E5B5D6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111CE5B683;
 	Wed, 15 May 2024 09:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715766722; cv=none; b=e7moBkpUUiUWp6qY6NmJkLwymi5iw9uuUOZYL6mfRpnwlU3J8Zx0eQUXW3VReYlW22nPSCTxcdGSt2fmn5dNhdgjR3jFbnhpFg6gvlcUGzd2H3f7NgPz1Z6W9pUk3hajE9HSSxEF5I9ST+PvZmjSpLitHEWyFF/zYNPU347YPVw=
+	t=1715766722; cv=none; b=Jh0a4UGkWoHuiFk/8S19Uw5cE94/Ya6MjAn4M0mVLHx1c4eELqUw0TTXI/CYJqOwFC00Z70TMOzXUFu30783DhwIppT/fMYzU+rtV/4GQZs4WUtQskt5kcN/4PTry9vG9PYlWwoGgF3nbweSm1mo4m7W9HduPvoYGXllu5YPwHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715766722; c=relaxed/simple;
-	bh=qj1R5eJO3p+aabsA6F3lXYYvLPRW7n6uxg1v6l3qMTs=;
+	bh=GAMljtWFMLGLrSPhP+Mz0XyQoee70zzVFVB1uV5sYvA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qtw+ekUkwrHOWLlutEoFZdLSbS/qFH2Cg3KQigCLD2ErJWsIEoc7WAUsxGZ5/O7c7qJDgLwXxMxPtpDOXzdOQOq7OHrjM87/PF1qwxw1vfeWLE50JiQPOtYxyxQgrQR9sqhZvHPTkID9+o8DJZXN+JySeAFTXNWX0flolh/gQUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=m6XB5k5h; arc=none smtp.client-ip=198.47.19.141
+	 MIME-Version:Content-Type; b=B2g/+ERKNFHccoeF8ajnpwSmiFX9eb85M/8dt1N9nHUnOQtu44iRszyy4A8aYO3KyvhLFjPXwMV/gjoS44vBMSCNJYySoKj9oZFZA6uHBYg/Ud5pAHI1ITmQvd6/NGY8U7wfs4lvBRCahm5wwMczMXX7LiaqWvMSgrier54Vqqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gR2DiNFp; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m6XB5k5h"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44F9penh076984;
-	Wed, 15 May 2024 04:51:40 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gR2DiNFp"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44F9pitT076991;
+	Wed, 15 May 2024 04:51:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715766700;
-	bh=XcQ3QaG9B8vJcklidpDQC/jwyxQkCUMe2T5P2+EpVPo=;
+	s=ti-com-17Q1; t=1715766704;
+	bh=yetufM1FAv/L2GL3vhvpOOxJYCzRUUceyE4ftJf1svM=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=m6XB5k5hGjctT5ha+Yp+o15TDDuQCWIWke/lA/YxVSj/VsfvqLDzSEydD2Mk2LlEA
-	 zeBu2rVSeHaSNJSba8R5FRTvSBUZzY9lPNvo7Hf2BAUq1BOW+9Jk/WTQw0rqsBoKK5
-	 JPQ+P6vAO1PPwfk4IJywj+Eg/hw1Pjbiq+5AtH/c=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44F9pegQ121562
+	b=gR2DiNFpAe2ylHNreH7M9RuO7HqNpYYQclTcgXXXY4ZJxfhGYbfhn/Vx2k3FiJrqn
+	 5EPrGSLstItQjLPVirEGBm63Bkug/EMVTNMUwnI/Zk3i+g6Pne/5q0JaBJ+cso3Le/
+	 AtyW8kjQmPjYgZhvyDO6t96pTPJSQIq4B1xKtpH8=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44F9piIL057809
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 15 May 2024 04:51:40 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 15 May 2024 04:51:44 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 15
- May 2024 04:51:40 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 04:51:44 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 15 May 2024 04:51:40 -0500
+ Frontend Transport; Wed, 15 May 2024 04:51:43 -0500
 Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44F9pdiB125380;
-	Wed, 15 May 2024 04:51:39 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44F9pg67125457;
+	Wed, 15 May 2024 04:51:43 -0500
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>,
         Jessica Zhang
@@ -75,9 +75,9 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
         Devarsh Thakkar <devarsht@ti.com>, Jai Luthra
 	<j-luthra@ti.com>,
         Aradhya Bhatia <a-bhatia1@ti.com>
-Subject: [PATCH v3 3/6] dt-bindings: display: simple: Add Microtips & Lincolntech Dual-LVDS Panels
-Date: Wed, 15 May 2024 15:21:30 +0530
-Message-ID: <20240515095133.745492-4-a-bhatia1@ti.com>
+Subject: [PATCH v3 5/6] drm/panel: simple: Add Microtips Technology 13-101HIEBCAF0-C panel
+Date: Wed, 15 May 2024 15:21:32 +0530
+Message-ID: <20240515095133.745492-6-a-bhatia1@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240515095133.745492-1-a-bhatia1@ti.com>
 References: <20240515095133.745492-1-a-bhatia1@ti.com>
@@ -91,39 +91,68 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add the Microtips Technology USA's MF-101HIEBCAF0 10.1"[0] panel,
-MF-103HIEB0GA0 10.25"[1] panel, and Lincoln Technology Solutions'
-LCD185-101CT 10.1"[2] panel.
+Add support for Microtips Technology USA 13-101HIECAF0-C 10.1",
+1920x1200, 8-bit TFT LCD with LVDS interface, LED backlight and touch
+support (ILITEK 2511).
 
-Thes are all dual-lvds panels.
-
-Panel Links:
-[0]: https://simplespec.microtipsusa.com/uploads/spec/datasheetFile/2588/13-101HIEBCAF0-S_V1.1_20221104.pdf
-[1]: https://simplespec.microtipsusa.com/uploads/spec/datasheetFile/2660/13-103HIEB0GA0-S_V1.0_20211206.pdf
-[2]: https://lincolntechsolutions.com/wp-content/uploads/2023/04/LCD185-101CTL1ARNTT_DS_R1.3.pdf
+[0]: Panel Datasheet
+https://simplespec.microtipsusa.com/uploads/spec/datasheetFile/2588/13-101HIEBCAF0-S_V1.1_20221104.pdf
 
 Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
 ---
- .../display/panel/panel-simple-lvds-dual-ports.yaml         | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 32 ++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-lvds-dual-ports.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-lvds-dual-ports.yaml
-index 716ece5f3978..e78160d1aa24 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple-lvds-dual-ports.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple-lvds-dual-ports.yaml
-@@ -41,6 +41,12 @@ properties:
-       - auo,g190ean01
-         # Kaohsiung Opto-Electronics Inc. 10.1" WUXGA (1920 x 1200) LVDS TFT LCD panel
-       - koe,tx26d202vm0bwa
-+        # Lincoln Technology Solutions, LCD185-101CT 10.1" TFT 1920x1200
-+      - lincolntech,lcd185-101ct
-+        # Microtips Technology MF-101HIEBCAF0 10.1" WUXGA (1920x1200) TFT LCD panel
-+      - microtips,mf-101hiebcaf0
-+        # Microtips Technology MF-103HIEB0GA0 10.25" 1920x720 TFT LCD panel
-+      - microtips,mf-103hieb0ga0
-         # NLT Technologies, Ltd. 15.6" FHD (1920x1080) LVDS TFT LCD panel
-       - nlt,nl192108ac18-02d
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 10e974bffd28..3a0d8f0ff267 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -3055,6 +3055,35 @@ static const struct panel_desc logicpd_type_28 = {
+ 	.connector_type = DRM_MODE_CONNECTOR_DPI,
+ };
  
++static const struct drm_display_mode microtips_mf_101hiebcaf0_c_mode = {
++	.clock = 150275,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 32,
++	.hsync_end = 1920 + 32 + 52,
++	.htotal = 1920 + 32 + 52 + 24,
++	.vdisplay = 1200,
++	.vsync_start = 1200 + 24,
++	.vsync_end = 1200 + 24 + 8,
++	.vtotal = 1200 + 24 + 8 + 3,
++};
++
++static const struct panel_desc microtips_mf_101hiebcaf0_c = {
++	.modes = &microtips_mf_101hiebcaf0_c_mode,
++	.bpc = 8,
++	.num_modes = 1,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.delay = {
++		.prepare = 50,
++		.disable = 50,
++	},
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
++};
++
+ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.clock = 30400,
+ 	.hdisplay = 800,
+@@ -4694,6 +4723,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "logictechno,lttd800480070-l6wh-rt",
+ 		.data = &logictechno_lttd800480070_l6wh_rt,
++	}, {
++		.compatible = "microtips,mf-101hiebcaf0",
++		.data = &microtips_mf_101hiebcaf0_c,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
 -- 
 2.34.1
 
