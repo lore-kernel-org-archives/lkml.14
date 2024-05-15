@@ -1,97 +1,165 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA916A932
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 01:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3140979C8;
+	Wed, 15 May 2024 01:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715736134; cv=none; b=QJDBTcP9T17J3bE7zj7T+djuJ9PZF3x+UNSqaaVDH3x2pmO47HGgQixc0HmeeS/x5vcafZ4Zdlg86J3xwJMPr5/FVwFfJllG642+2Y2+E2bE0nty48hteL315sNqez2n8zCDUAifUuLD1uEjGy3KeAVPj1jnDO0Bv5zbdC1O4/c=
+	t=1715736317; cv=none; b=IwdCQw470jaGV+3kzuGSekIP5C/G/5wXRAaIYYrJ66PJb+oOd5Wd8bQycqA1gA86j8lc3hyuj6qnHl2x4faYP1RCby/+UCIf/cwtywtSY+jSiwcITljCIRv8YYS6tHH8ld1qrGlD0SJ+rDKTHme4XXwS/qHtOSM4sCrdlm4yHMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715736134; c=relaxed/simple;
-	bh=PjmdoL8aK6SpmWV+gcuuagXO08GZB4SplEuasH9OLnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4LAmAAs2hB4s/fztCMqMOyu19hrJAZlSqQMnwbgo4qKILxIn1I7yVv7TS0nC6gbxpIdU1s0v7welCgSc1ncxWXBORM/6loFeqofPjOOB/D0YK+SPm5rkw3pJFhZ3s/2q/jJRd66cTcdSE2CrRyFkO16mjH4KHf5ZiRjww9S8T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ASe7zdLS; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ASe7zdLS"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-de603e3072dso6988650276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715736131; x=1716340931; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PjmdoL8aK6SpmWV+gcuuagXO08GZB4SplEuasH9OLnY=;
-        b=ASe7zdLSA6BwDWb84ni3pLUF7iQ+z1sAxwlV0FQOGh3tspLa+sppejMt7N1fmaxGoc
-         y9nxGCWGjHBsKooPpmhqCyi03Ary3qmK9HyxlHmhDRbgDqlD+nYghiCk0p8kOTMYboAO
-         Dt8j/hXr/IyOiDDZeqenz5O4M7ZR2L2v4KqYQIZpQSeL5KMqZXZSQPAOK4/NcRmnDYtl
-         u7V5b0Ay2XYAZ8NExg01yOSBhw6WIbH2aBavWO2tr41lFSV20a9mrUIWTDcNX0/xCHGT
-         I+2N8BrB+ckevkHQg13wxUvNmLfs4Mr6rA79sjRYElo0Li/3a2JkhXIrYL0cne57T2hC
-         QMzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715736132; x=1716340932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PjmdoL8aK6SpmWV+gcuuagXO08GZB4SplEuasH9OLnY=;
-        b=YZ4lNNL1zTqv0yUgV8n0JF04kiqjZEVnqtlxBfvbQgM66kjM/VC1RDOQmQpL3IMDjr
-         FcXbSkntHRUPgMYDM4ZC2lNhYvgIqBXUssSZHz9XOLQ8JnS3OS01WnXY9DYtpk8HX1dK
-         FR7g7AtD/3KHSibynxs7JwuzkzWmhGQehopEFiL0Yeq9KXlhdbrz7HgG43EycqfL0SRW
-         56qCqiGjcyNqzbWPtK43p91iKafPhmgWGRu/hk0XumzyC1F54g5XEiOjoFFkaoBOqVM2
-         aVJbZ1Q8ZHNha43/KNSUBeghZW9rdSAjSuOMhG5VZQk1z4jpSj6GLaSN/F60VeMbxVz9
-         eCKg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5Hig7yBUtVjTEUbmmHYNhmCFfNmgMAouHFQv49dhV6oqrVjDhZ+oFD3yP7pitygdUXbxSFLCCZERKX6vYnIO1LTa67Ckw/f3GZ2WL
-X-Gm-Message-State: AOJu0YwPPdlW5hQV8C8fITqSa/WuOvHCplU2lofI5NXziypIq7ar3G2M
-	mYOn3vXwbhK64rVmojqveU9xGd/nex7cMl1/llbQVE4hV2qmuzu4WkrmoC2FVsaq7cH0MHPxZcj
-	NQG9FAuQlrt20rQA7TrhWhCnhpo7SrQTyS5xU
-X-Google-Smtp-Source: AGHT+IFWUUjU6sUNOq/Evye+BgmL3GiqmZBAyQyzUv6knnlnP8bIsfU6R8l0apQ6lQi0JL7TPW8eDB/LOqLphZSlreA=
-X-Received: by 2002:a25:b1a3:0:b0:dee:5cb6:483c with SMTP id
- 3f1490d57ef6-dee5cb64977mr12258845276.49.1715736131408; Tue, 14 May 2024
- 18:22:11 -0700 (PDT)
+	s=arc-20240116; t=1715736317; c=relaxed/simple;
+	bh=cxIwpQSHcfuYZZ9GvvSMLZ3wG9q7rFvAlf9yitR+PVo=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FvmOkqmofK3VTDrJkhHdi9IJNfGkRLg81dG1W6BtJwZiUEra2elIUeLq8tHge5MMsbgSPGVHsyJJPIoeSLe/RCqNG0dzq6PqDwf2El+TKtiX2fk/+rj7JflhI5TRUJofmKDEgQBxRgI8eHX1r5HLZKAb1SkW0oOkt0Z78xip74w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 44F1O5Om051360;
+	Wed, 15 May 2024 09:24:05 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VfFly3fXQz2QDRDk;
+	Wed, 15 May 2024 09:20:46 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 15 May 2024 09:24:03 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox
+	<willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+        Tejun Heo
+	<tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
+        Baolin Wang
+	<baolin.wang@linux.alibaba.com>, <linux-mm@kvack.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <cgroups@vger.kernel.org>, Zhaoyang Huang <huangzhaoyang@gmail.com>,
+        <steve.kang@unisoc.com>
+Subject: [RFC PATCH 1/2] block: introduce helper function to calculate bps budgt
+Date: Wed, 15 May 2024 09:23:49 +0800
+Message-ID: <20240515012350.1166350-2-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240515012350.1166350-1-zhaoyang.huang@unisoc.com>
+References: <20240515012350.1166350-1-zhaoyang.huang@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514020301.1835794-1-yuanchu@google.com> <2024051414-untie-deviant-ed35@gregkh>
-In-Reply-To: <2024051414-untie-deviant-ed35@gregkh>
-From: Yuanchu Xie <yuanchu@google.com>
-Date: Tue, 14 May 2024 18:21:57 -0700
-Message-ID: <CAJj2-QFnOjzwbsMrTcrzPsbCFchtJLM0hiJDbR-xe1HcmV+ytw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] virt: memctl: control guest physical memory properties
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Wei Liu <liuwe@microsoft.com>, Rob Bradford <rbradford@rivosinc.com>, 
-	"Theodore Ts'o" <tytso@mit.edu>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, virtualization@lists.linux.dev, 
-	dev@lists.cloudhypervisor.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 44F1O5Om051360
 
-On Tue, May 14, 2024 at 9:06=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, May 13, 2024 at 07:03:00PM -0700, Yuanchu Xie wrote:
-> > Memctl provides a way for the guest to control its physical memory
-> > properties, and enables optimizations and security features. For
-> > example, the guest can provide information to the host where parts of a
-> > hugepage may be unbacked, or sensitive data may not be swapped out, etc=
-.
-> >...
-> Pretty generic name for a hardware-specific driver :(
-It's not for real hardware btw. Its use case is similar to pvpanic
-where the device is emulated by the VMM. I can change the name if it's
-a problem.
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-> Yup, you write this to hardware, please use proper structures and types
-> for that, otherwise you will have problems in the near future.
-Thanks for the review and comments on endianness and using proper
-types. Will do.
+The 'over-sized' bio under blk throttle control will be delayed to
+launch which breaks original IO timing and have the immediate BW be
+not within the bps limit. Introduce a helper function to calculate block
+device's budgt which provide the allowed bytes for current bio.
 
-Thanks,
-Yuanchu
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+ block/blk-throttle.c       | 44 ++++++++++++++++++++++++++++++++++++++
+ include/linux/blk-cgroup.h | 10 +++++++++
+ 2 files changed, 54 insertions(+)
+
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index f4850a6f860b..41c75258183d 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -10,6 +10,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/bio.h>
+ #include <linux/blktrace_api.h>
++#include <linux/cgroup.h>
+ #include "blk.h"
+ #include "blk-cgroup-rwstat.h"
+ #include "blk-stat.h"
+@@ -2365,6 +2366,49 @@ void blk_throtl_bio_endio(struct bio *bio)
+ }
+ #endif
+ 
++unsigned long blk_throttle_budgt(struct block_device *bdev)
++{
++	struct request_queue *q = bdev_get_queue(bdev);
++	struct blkcg *blkcg;
++	struct blkcg_gq *blkg;
++	struct throtl_grp *tg;
++	long long bytes_allowed = 0;
++	unsigned long jiffy_elapsed, jiffy_elapsed_rnd;
++	u64 bps_limit;
++
++	if (!q)
++		return U64_MAX;
++
++	rcu_read_lock();
++	spin_lock_irq(&q->queue_lock);
++	blkcg =	css_to_blkcg(task_css(current, io_cgrp_id));
++	if (!blkcg)
++		goto out;
++
++	blkg = blkg_lookup(blkcg, q);
++	if (!blkg || !blkg_tryget(blkg))
++		goto out;
++
++	tg = blkg_to_tg(blkg);
++	bps_limit = tg_bps_limit(tg, READ);
++	if (bps_limit == U64_MAX)
++		goto out;
++
++	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[READ];
++	if (!jiffy_elapsed)
++		jiffy_elapsed_rnd = tg->td->throtl_slice;
++
++	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
++	bytes_allowed = calculate_bytes_allowed(bps_limit, jiffy_elapsed_rnd) +
++			tg->carryover_bytes[READ];
++	blkg_put(blkg);
++out:
++	spin_unlock_irq(&q->queue_lock);
++	rcu_read_unlock();
++	return bytes_allowed;
++}
++
++
+ int blk_throtl_init(struct gendisk *disk)
+ {
+ 	struct request_queue *q = disk->queue;
+diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+index dd5841a42c33..ba79fa464e0a 100644
+--- a/include/linux/blk-cgroup.h
++++ b/include/linux/blk-cgroup.h
+@@ -15,10 +15,12 @@
+  */
+ 
+ #include <linux/types.h>
++#include <linux/limits.h>
+ 
+ struct bio;
+ struct cgroup_subsys_state;
+ struct gendisk;
++struct block_device;
+ 
+ #define FC_APPID_LEN              129
+ 
+@@ -45,6 +47,14 @@ static inline struct cgroup_subsys_state *bio_blkcg_css(struct bio *bio)
+ }
+ #endif	/* CONFIG_BLK_CGROUP */
+ 
++#ifdef CONFIG_BLK_DEV_THROTTLING
++unsigned long blk_throttle_budgt(struct block_device *bdev);
++#else
++static inline unsigned long blk_throttle_budgt(struct block_device *bdev)
++{
++	return U64_MAX;
++}
++#endif
+ int blkcg_set_fc_appid(char *app_id, u64 cgrp_id, size_t app_id_len);
+ char *blkcg_get_fc_appid(struct bio *bio);
+ 
+-- 
+2.25.1
+
