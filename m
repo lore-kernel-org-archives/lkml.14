@@ -1,112 +1,112 @@
-Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD566EB53;
-	Wed, 15 May 2024 12:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC2A757F3
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 12:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715775647; cv=none; b=N6GY1coylB1dcMG1zDhLhX5hklDmzulnDFnL9ZYpn2fzdJAQcdSJ6wXg5wqzQG03ETobdRaR4/3f0qYWJCU8raAO3JBeG66Er7fiKc1to2et0ljExhkzq+NvHjV9Kg+iUNfVOHYICp+LZJEGBj8l6Dgfs4NAWnPnIKp9Kb/04xA=
+	t=1715775847; cv=none; b=nIfMQJZvAa0aHWSpooufM4/o1D52+Q4vmhx9PPzlkjIfKWwla6CBohk31ZtioQGdN6gbHEW/CYkQ7ImI0zLvsjvKqP3UEpDmWgsAXzUj5Rr62vdQqhojHcZnyd9DNxJaSxndLgBPlExz6bzVQWGQbioAvwGItjENmWJ2XwVYJtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715775647; c=relaxed/simple;
-	bh=/KIIAnKcW2LATTgVf8NIIEsGe9tGj9gkpnTjHQdczf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZB2a8Dm4nhfJ5BAvyacXMk7HmOLFzaXuAxmVYqk4YKybg6JOyh3qBV8ZfIAywcqFtIsX61hBGHE3MHgPRbY3KlTb3u2J6o1mrGh3N/wcassAA66vu+96jA5T6Gy6zsgFfQ+TDRtFdx5jmFhzII2SKi1cfzy6w3UOYwWRsHU+1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
-Received: from uucp by ganesha.gnumonks.org with local-bsmtp (Exim 4.94.2)
-	(envelope-from <laforge@gnumonks.org>)
-	id 1s7DEb-00D1eo-Ak; Wed, 15 May 2024 13:55:49 +0200
-Received: from laforge by localhost.localdomain with local (Exim 4.97)
-	(envelope-from <laforge@gnumonks.org>)
-	id 1s7DEV-00000003YLY-056H;
-	Wed, 15 May 2024 13:55:43 +0200
-Date: Wed, 15 May 2024 13:55:42 +0200
-From: Harald Welte <laforge@gnumonks.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wojciech Drewek <wojciech.drewek@intel.com>
-Subject: Re: [PATCH net-next v6 00/21] ice: add PFCP filter support
-Message-ID: <ZkSivjg7uZsA20ft@nataraja>
-References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
+	s=arc-20240116; t=1715775847; c=relaxed/simple;
+	bh=4+KfGkFHnXnfeiiqw1n5KZYFBRATt/3WBm0/6HQCsXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=OukFWsjNrUbK7WBoJUvwtBCwE2/v7a5QcoWsnjwUcHOX4xDEBUZzr0SEMbSStVdqNlDbEGkpytUYe8yD26/xYJkpai6gxaqQzyA2k4oZBwv9y1V+Kw3hmUEkKD9K7bQHUHnNeERCwnuKKTO6zS+XG/TIJF3VVgtLriyLhOh5Wbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=khh65UF6; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="khh65UF6"
+Received: from fedor-21d0 (unknown [5.228.116.47])
+	by mail.ispras.ru (Postfix) with ESMTPSA id E55E74076720;
+	Wed, 15 May 2024 12:15:10 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru E55E74076720
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1715775311;
+	bh=HDwiITVAhgMeGNymYNoEWwNrSE2oaf7c2NuxaCTQgOU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=khh65UF6Ts9c3SgqC/gXzjpuylzMFS5EN/Hl2V9m1ocmPgRSuBk+ItQQA2cHF3mQd
+	 vyfSbhxOfFwRUAZ0RCCgePdBsSvS9deKVxcB6+F0Qcc8+43pHrG1YPAy8VKJFepgWJ
+	 1oyICLIty80I7OBJlQJSuRw2M5u+eFDO7t4GvBmo=
+Date: Wed, 15 May 2024 15:14:59 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Xiang Chen <chenxiang66@hisilicon.com>, Barry Song <21cnbao@gmail.com>, 
+	Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Alexey Khoroshilov <khoroshilov@ispras.ru>, lvc-project@linuxtesting.org
+Subject: Re: [PATCH v2 1/4] dma-mapping: benchmark: fix up kthread-related
+ error handling
+Message-ID: <20240515-91223372820af49c191c67fc-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
+In-Reply-To: <11456e13-23f8-43f7-8ffd-cd4e4ff825d7@arm.com>
 
-Daer Alexander, Wojciech,
+Hi,
 
-forgive me for being late to the party, but I just saw the PFCP support
-hitting Linus'' git repo in 1b294a1f35616977caddaddf3e9d28e576a1adbc
-and was trying to figure out what it is all about.  Is there some kind
-of article, kernel documentation or other explanation about it?
+Thanks for review of the series!
 
-I have a prehistoric background in Linux kernel networking, and have
-been spending much of the last two decades in creating open source
-implemenmtations of 3GPP specifications.
+Robin Murphy wrote:
+> On 2024-05-04 12:47 pm, Fedor Pchelkin wrote:
+> > kthread creation failure is invalidly handled inside do_map_benchmark().
+> > The put_task_struct() calls on the error path are supposed to balance the
+> > get_task_struct() calls which only happen after all the kthreads are
+> > successfully created. Rollback using kthread_stop() for already created
+> > kthreads in case of such failure.
+> > 
+> > In normal situation call kthread_stop_put() to gracefully stop kthreads
+> > and put their task refcounts. This should be done for all started
+> > kthreads.
+> 
+> Although strictly there were two overlapping bugs here, I'd agree that 
+> it really doesn't seem worth the bother of trying to distinguish them. 
+> I'm far from a kthread expert, but as best I can tell this looks like it 
+> achieves a sensible final state. Modulo one nit below,
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> > Found by Linux Verification Center (linuxtesting.org).
+> > 
+> > Fixes: 65789daa8087 ("dma-mapping: add benchmark support for streaming DMA APIs")
+> > Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> > Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> > ---
+> >   kernel/dma/map_benchmark.c | 16 ++++++++++------
+> >   1 file changed, 10 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
+> > index 02205ab53b7e..2478957cf9f8 100644
+> > --- a/kernel/dma/map_benchmark.c
+> > +++ b/kernel/dma/map_benchmark.c
+> > @@ -118,6 +118,8 @@ static int do_map_benchmark(struct map_benchmark_data *map)
+> >   		if (IS_ERR(tsk[i])) {
+> >   			pr_err("create dma_map thread failed\n");
+> >   			ret = PTR_ERR(tsk[i]);
+> > +			while (--i >= 0)
+> > +				kthread_stop(tsk[i]);
+> 
+> I think this means we'd end up actually starting the threads purely to 
+> get them to see the KTHREAD_SHOULD_STOP flag and exit again? Not that 
+> I'm too fussed about optimising an unexpected error path, however I 
+> can't help but wonder if we might only need a put_task_struct() if we 
+> can safely assume that the threads have never been started at this point.
 
-So I'm very familiar with what PFCP is, and what it does, and how it is
-used as a protocol by the 3GPP control plane to control the user/data
-plane.
+The threads have been already started to the moment by
+kthread_create_on_node() but put to uninterruptible sleep: please see
+kthread() function. They just have to be explicitly awakened, find that
+the KTHREAD_SHOULD_STOP flag was set and perform do_exit() in order to
+terminate and release all resources. The thread_fn won't be executed in
+such case.
 
-Conceptually it seems very odd to me to have something like *pfcp
-net-devices*.  PFCP is just a control plane protocol, not a tunnel
-mechanism.
+I feel there is no more convenient way for doing this differently than
+calling kthread_stop(). And the comment for kthread_stop() actually implies
+that it is intended to work also just after kthread creation.
 
-From the Kconfig:
-
-> +config PFCP
-> +	tristate "Packet Forwarding Control Protocol (PFCP)"
-> +	depends on INET
-> +	select NET_UDP_TUNNEL
-> +	help
-> +	  This allows one to create PFCP virtual interfaces that allows to
-> +	  set up software and hardware offload of PFCP packets.
-
-I'm curious to understand why are *pfcp* packets hardware offloaded?
-PFCP is just the control plane, similar to you can consider netlink the
-control plane by which userspace programs control the data plane.
-
-I can fully understand that GTP-U packets are offloaded to kernel space or
-hardware, and that then some control plane mechanism like PFCP is needed
-to control that data plane.  But offloading packets of that control
-protocol?
-
-I also see the following in the patch:
-
-> +MODULE_DESCRIPTION("Interface driver for PFCP encapsulated traffic");
-
-PFCP is not an encapsulation protocol for user plane traffic.  It is not
-a tunneling protocol.  GTP-U is the tunneling protocol, whose
-implementations (typically UPFs) are remote-controlled by PFCP.
-
-> +	  Note that this module does not support PFCP protocol in the kernel space.
-> +	  There is no support for parsing any PFCP messages.
-
-If I may be frank, why do we introduce something called "pfcp" to the
-kernel, if it doesn't actually implement any of the PFCP specification
-3GPP TS 29.244 (which is specifying a very concrete protocol)?
-
-Once again, I just try to understand what you're trying to do here. It's
-very much within my professional field, but I somehow cannot align what
-I see within this patch set with my existing world view of what PFCP is
-and how it works.
-
-If anyone else has a better grasp of the architecture of this kernel
-PFCP support, or has any pointers, I'd be very happy to follow up
-on that.
-
-Thanks for your time,
-	Harald
-
--- 
-- Harald Welte <laforge@gnumonks.org>          https://laforge.gnumonks.org/
-============================================================================
-"Privacy in residential applications is a desirable marketing option."
-                                                  (ETSI EN 300 175-7 Ch. A6)
+Calling put_task_struct() in that place will hit WARN_ON(!tsk->exit_state).
+I'd say the last call to this function should be made after (or in result
+of) the do_exit().
