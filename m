@@ -1,86 +1,177 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66EBC38385;
-	Wed, 15 May 2024 03:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8338E38385
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 03:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715742848; cv=none; b=ULx1r9RpVRm2lDYhoLZu3c3eijKn7ECF9JLKo6XLbDbzakkewPsW8IedOTRUxaNNbOAvZOd3QqjRcBNnPk+KhwTBJuZCoLqUPpRMVNqJLlWJvUyTUKrYWLCNXohlJcl+owyH83PJYdOIguGLfsjEq90hcxzJOKxvK8cDdQ1fyo4=
+	t=1715742857; cv=none; b=ps6SnXvaX5VB+LzGAhTn9CA1v1oOO7FdKcyG6htnqmUmqO/5rTILFKHUG80z1c/2W5eOEgA9lzNt6YHADeNX1SuaMYnKa7XoipG8aNhhuX9iZG7z6tFSmtnfScXic2Y7oZi8w3TVThI8wmw3kwmenkeyk1rAIWJByWHpQlI7neI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715742848; c=relaxed/simple;
-	bh=nB1m7j2Q3vEqktywIoGVfNTqMXYMw9gbBScV7i4x0AE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K5IWINe3Bvxy+8GeP5La3r1srhnFtBODgDit+jlRdpk7XAiTa4muAuiQ9iLny1R7YM77Pejh50IQO+4gtP96kFEFwPtKF0uhdGmMBw4GjUwFq86UD1728ydU1EX3BaM3mByps/HHPFVchln3847CsilYzBs9AboKP0dw4HCvGuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 44F2wB5O001379;
-	Wed, 15 May 2024 04:58:11 +0200
-Date: Wed, 15 May 2024 04:58:11 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-        jeffxu@chromium.org, keescook@chromium.org, jannh@google.com,
-        sroettger@google.com, gregkh@linuxfoundation.org,
-        torvalds@linux-foundation.org, usama.anjum@collabora.com,
-        Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
-        rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
-        groeck@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        pedro.falcato@gmail.com, dave.hansen@intel.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-Message-ID: <20240515025811.GA1232@1wt.eu>
-References: <20240415163527.626541-1-jeffxu@chromium.org>
- <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
- <871q646rea.fsf@meer.lwn.net>
- <ZkPXcT_JuQeZCAv0@casper.infradead.org>
- <56001.1715726927@cvs.openbsd.org>
- <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
- <92453.1715730450@cvs.openbsd.org>
+	s=arc-20240116; t=1715742857; c=relaxed/simple;
+	bh=TUvjzLLBV5p6w6yO+WR7yOiWHvvv+8d3ODga/cU1Gpc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DtjxPD73rRbDvxK6tLznZLc0LeGs2Emsg2nwNsDgtrzEWgzUOzt6otd4sG/Olrtl4wpQzdZ9ze958208cYblFM0AfmZ1ygOAbibplvP4JrCxd+P6I6AvhIytHzAO0QzXa7YeVd18qGfmjwp4dbRa5RgLix/MnzuWpn/NRbbICGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Sm7Jg0zX; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Sm7Jg0zX"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1715742853; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=UJuzwdjUXcXXpYmOq4Y06/gX6rCmcwYb4f6sZ0kESE0=;
+	b=Sm7Jg0zX3Oy34tc8KZ3XQAHzCSvNgYqleesSL65IckWfyUQel41H3mtxsANPlM5xWUJB90RlNC1jUYb881El1QRXJAnMhmE4wRAQFqwNlLdy3wPvAkuUHW183Gz00FU+xqViO2nWRI56UpSz2amRk51xQ4AE9KowYx4sYd33+os=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W6WW.n8_1715742850;
+Received: from 30.97.56.58(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W6WW.n8_1715742850)
+          by smtp.aliyun-inc.com;
+          Wed, 15 May 2024 11:14:11 +0800
+Message-ID: <eca43fd2-e704-4696-932a-2d3b5f3d5cdf@linux.alibaba.com>
+Date: Wed, 15 May 2024 11:14:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92453.1715730450@cvs.openbsd.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/7] mm: shmem: add mTHP counters for anonymous shmem
+To: Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+ david@redhat.com, wangkefeng.wang@huawei.com, ying.huang@intel.com,
+ 21cnbao@gmail.com, ryan.roberts@arm.com, shy828301@gmail.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1715571279.git.baolin.wang@linux.alibaba.com>
+ <b9babe1857917ff217ed0988d95ba3468845479c.1715571279.git.baolin.wang@linux.alibaba.com>
+ <CAK1f24kfR-LOk_vvhBWddVnDdiDZYh8aZeknknWkhi7_5fhQ=A@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAK1f24kfR-LOk_vvhBWddVnDdiDZYh8aZeknknWkhi7_5fhQ=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 14, 2024 at 05:47:30PM -0600, Theo de Raadt wrote:
-> Andrew Morton <akpm@linux-foundation.org> wrote:
-> 
-> > > I worry that the non-atomicity will one day be used by an attacker.
-> > 
-> > How might an attacker exploit this?
-> 
-> Various ways which are going to be very application specific. Most ways
-> will depend on munmap / mprotect arguments being incorrect for some
-> reason, and callers not checking the return values.
-> 
-> After the system call, the memory is in a very surprising configuration.
-> 
-> Consider a larger memory region containing the following sections:
-> 
->   [regular memory]  [sealed memory]  [regular memory containing a secret]
-> 
-> unmap() gets called on the whole region, for some reason.  The first
-> section is removed.  It hits the sealed memory, and returns EPERM.  It does
-> not unmap the sealed reason, not the memory containing the secret.
 
-If we consider that the attack consists, for an attacker, in mseal()ing
-the beginning of an area to make sure to pin the whole area by making a
-future munmap() fail, maybe we could make munmap() not stop anymore on
-such errors and continue to unmap the rest of the area, for the purpose
-of not leaving such a theoretical attack vector work ? After all, munmap()
-currently skips wholes and continues to unmap the area. But then what
-would prevent the attacker from doing mseal() on the whole area in this
-case, to prevent it from being unmapped ?
 
-Wouldn't it be more effective to have a non-resettable prctl() allowing
-the application to prefer to be killed upon such an munmap() failure in
-order to stay consistent and more robust against such class of attacks?
+On 2024/5/14 22:49, Lance Yang wrote:
+> Hi Baolin,
+> 
+> On Mon, May 13, 2024 at 1:08 PM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>>
+>> Add mTHP counters for anonymous shmem.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>>   include/linux/huge_mm.h |  3 +++
+>>   mm/huge_memory.c        |  6 ++++++
+>>   mm/shmem.c              | 18 +++++++++++++++---
+>>   3 files changed, 24 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>> index b5339210268d..e162498fef82 100644
+>> --- a/include/linux/huge_mm.h
+>> +++ b/include/linux/huge_mm.h
+>> @@ -281,6 +281,9 @@ enum mthp_stat_item {
+>>          MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+>>          MTHP_STAT_ANON_SWPOUT,
+>>          MTHP_STAT_ANON_SWPOUT_FALLBACK,
+>> +       MTHP_STAT_FILE_ALLOC,
+>> +       MTHP_STAT_FILE_FALLBACK,
+>> +       MTHP_STAT_FILE_FALLBACK_CHARGE,
+>>          __MTHP_STAT_COUNT
+>>   };
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index d3080a8843f2..fcda6ae604f6 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -555,6 +555,9 @@ DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
+>>   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
+>>   DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
+>>   DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBACK);
+>> +DEFINE_MTHP_STAT_ATTR(file_alloc, MTHP_STAT_FILE_ALLOC);
+>> +DEFINE_MTHP_STAT_ATTR(file_fallback, MTHP_STAT_FILE_FALLBACK);
+>> +DEFINE_MTHP_STAT_ATTR(file_fallback_charge, MTHP_STAT_FILE_FALLBACK_CHARGE);
+>>
+>>   static struct attribute *stats_attrs[] = {
+>>          &anon_fault_alloc_attr.attr,
+>> @@ -562,6 +565,9 @@ static struct attribute *stats_attrs[] = {
+>>          &anon_fault_fallback_charge_attr.attr,
+>>          &anon_swpout_attr.attr,
+>>          &anon_swpout_fallback_attr.attr,
+>> +       &file_alloc_attr.attr,
+>> +       &file_fallback_attr.attr,
+>> +       &file_fallback_charge_attr.attr,
+>>          NULL,
+>>   };
+>>
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 8b020ff09c72..fd2cb2e73a21 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -1786,6 +1786,9 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+>>
+>>                          if (pages == HPAGE_PMD_NR)
+>>                                  count_vm_event(THP_FILE_FALLBACK);
+>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> +                       count_mthp_stat(order, MTHP_STAT_FILE_FALLBACK);
+>> +#endif
+> 
+> Seems like we don't need these conditional compilation directives here.
+> 
+> The THP_FILE_FALLBACK above will result in a compilation error if
+> CONFIG_TRANSPARENT_HUGEPAGE is not defined. So we don't
+> worry about that :)
+> 
+> See THP_FILE_FALLBACK in include/linux/vm_event_item.h.
+> 
+>>                          order = next_order(&suitable_orders, order);
+>>                  }
+>>          } else {
+>> @@ -1805,9 +1808,15 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+>>                  if (xa_find(&mapping->i_pages, &index,
+>>                                  index + pages - 1, XA_PRESENT)) {
+>>                          error = -EEXIST;
+>> -               } else if (pages == HPAGE_PMD_NR) {
+>> -                       count_vm_event(THP_FILE_FALLBACK);
+>> -                       count_vm_event(THP_FILE_FALLBACK_CHARGE);
+>> +               } else if (pages > 1) {
+>> +                       if (pages == HPAGE_PMD_NR) {
+>> +                               count_vm_event(THP_FILE_FALLBACK);
+>> +                               count_vm_event(THP_FILE_FALLBACK_CHARGE);
+>> +                       }
+>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> +                       count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK);
+>> +                       count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK_CHARGE);
+>> +#endif
+> 
+> As above.
+> 
+>>                  }
+>>                  goto unlock;
+>>          }
+>> @@ -2178,6 +2187,9 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+>>                  if (!IS_ERR(folio)) {
+>>                          if (folio_test_pmd_mappable(folio))
+>>                                  count_vm_event(THP_FILE_ALLOC);
+>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> +                       count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_ALLOC);
+>> +#endif
+> 
+> As above.
+> 
+> Perhaps we need to define MTHP_STAT_FILE_ALLOC and friends
+> using a same way as THP_FILE_ALLOC, set as '{ BUILD_BUG(); 0; }'
+> If CONFIG_TRANSPARENT_HUGEPAGE is not defined.
+> 
+> Likely:
+> 
+> #ifndef CONFIG_TRANSPARENT_HUGEPAGE
+> #define MTHP_STAT_FILE_ALLOC ({ BUILD_BUG(); 0; })
+> ...
+> #endif
 
-Willy
+This is not enough, and we should also define a dummy function for 
+count_mthp_stat() when CONFIG_TRANSPARENT_HUGEPAGE is not enabled. I was 
+also hesitant about doing this before, but adding macro controls seems 
+relatively simple:)
+
+Thanks for reviewing.
