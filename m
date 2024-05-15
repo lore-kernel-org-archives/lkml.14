@@ -1,123 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E716A40858;
-	Wed, 15 May 2024 18:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F11F54654;
+	Wed, 15 May 2024 18:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715797807; cv=none; b=qc5Z8XZfsPKziWKm939+ktqu3jGTcNOnmJtNBz+krmhKXG7kEwDQkVMRqRqcQEOP0XiiPz+AzZH0B69bhlCLsMDTRio+3DRxebvN2SoxZeWZ8a38a6TvwENIbieGRrzgEyAi6jIGOxQHbrLBi9IBTt5AyajKYdxWv3wYG2kcnLw=
+	t=1715797847; cv=none; b=QJ7G6Yey47EeJVGUKol/x0rH8I4RmJSPG1CB55s5/VL/MYCUiEngw2S/pN/R01aUJPcJPYxZHRlViJlaslpBNCzviUYvdm3ImGrSWHSN4486kOH6Ae8dnmW+KFbr5KvS99XNbCQiIqjfZZWYXKbLhghA4/QG3dFfgJQ91bPb9EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715797807; c=relaxed/simple;
-	bh=1H4ESRp4n7R82qzwLK63TMRqXzG39WJ6h6WdXq5tn0s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=jMGATuMuxe7H+Ef7KFJSoFBNBJf2iZoD7HgXEJUfcBH/VTQYEwIuduj1C5ny5VQ0ysNj0OBm8R4zCEEAes/3uKmkinu3HOKQAbrcIcGc9/F/oFOrYePAw85917gyfbgT/vMjMjgf3O9DbmxjtD9V10Y6sLB79ZH9Cfp4zmx+oI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vGG8OjSI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715797847; c=relaxed/simple;
+	bh=zPphWFwqaOTWGFAzeLRXiv8kIODySpaDn5j45el3tt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GwglUoskyTvEcDeobNvkjR8KVtousY3WYCPsgrsi8W9Neb7WhGSv8m2YtOsw0j0KuVpgo5h8qpvdMoCJpH6vrTO5fxGLrbt4/xG4IdjPAvfQuTQrOnTy8Q5vMnIcF1xMn3kuIJ1LkAHpVZvspdBYV2RJbbPa/lgNYeMrVDoy650=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fs5EHQGs; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGG8OjSI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E794C116B1;
-	Wed, 15 May 2024 18:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715797806;
-	bh=1H4ESRp4n7R82qzwLK63TMRqXzG39WJ6h6WdXq5tn0s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=vGG8OjSIeW781V5I1Mq1XjN20oayTbfZUcvX7gFmSBIIuMekeMdERoqa1JMDoOIgE
-	 xrftDrj7q8wQI5PJ6WPuR7cQ0BEYYhG2d1NgrIBgTLFYLnMCsyGjc76CjoWgbbsP2T
-	 aPD2hmz3zViJSH2iwzvzuYtAvB7j/9BaH3xYsrgqtAdT+jn8iBzXx7DdEXgcrw8KWR
-	 ykTrGGn6/oOtyOAR8Mm+QB5zQ2U07ttTk5Y4FJoj9ZwyqJAAWtAmGXSIsRXjxNKfum
-	 9naBJ+n07qxnNyK/y3DGPwI5aDiLGKwQjySQoaYYTdKR2eK97QjUnEaEtndpfNqyln
-	 xFM+cuR17Cm9Q==
-Date: Wed, 15 May 2024 11:30:06 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>, "Chaney, Ben" <bchaney@akamai.com>,
- Kees Cook <keescook@chromium.org>
-CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "Tottenham, Max" <mtottenh@akamai.com>, "Hunt, Joshua" <johunt@akamai.com>,
- "Galaxy, Michael" <mgalaxy@akamai.com>
-Subject: Re: Regression in 6.1.81: Missing memory in pmem device
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXE2ZvaKout=nSfv08Hn5yvf8SRGhQeTikZcUeQOmyDgnw@mail.gmail.com>
-References: <FA5F6719-8824-4B04-803E-82990E65E627@akamai.com> <CAMj1kXE2ZvaKout=nSfv08Hn5yvf8SRGhQeTikZcUeQOmyDgnw@mail.gmail.com>
-Message-ID: <742E72A5-4792-4B72-B556-22929BBB1AD9@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fs5EHQGs"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c9b94951d5so1032124b6e.3;
+        Wed, 15 May 2024 11:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715797844; x=1716402644; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M3fZRWZsu8lHo34cetgWPq75hTHkyfAQuDiVipVSsT0=;
+        b=fs5EHQGsXXyOvUV8SypDAijx6eFaAWnziYXMgU40pBf//AxtHFNuuxUBM2MnuQ2BeK
+         1V1cEceOl+g+9pd1cFYUClsw/SGwcTfWo04h6zVZeRXAAg0jKZskRTLaajBAe+DtZHr2
+         i2N8md024WFgRXwSM5EOijpe9i8Yt/GwpT8XwCGoSrLG1v+shBDcjqRrcQi2VWXyMZJ7
+         XSw0iVDuHQLokF1NsBrYiIfxfF8d+nWifENg9yoVTlbDQLnINW9nds+BbPSYLfX+iM1c
+         HPZ9JRB+oD+0yFolLHo7ajwysSNJa6Aw8XgtiEv8qGY0KfiTb6vVXWo3tZj0rj8/UnQd
+         XN/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715797844; x=1716402644;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=M3fZRWZsu8lHo34cetgWPq75hTHkyfAQuDiVipVSsT0=;
+        b=uH+iUpDFrqZ2PrhznABe4Ehuyp7LNOQvKziue6h9v70u1TXuZPcMEn0844UEYnOAgh
+         zfFD0GAcERoGtckWWbiIsGfQKElHs5CEo01WjiVR7qKB+lfPPqNzK/PKcgH8PGJrQR/f
+         j+wzKgfhd0LGFnKw4AexZ1Fx0pHsa4XtEP5X8dGfmSm5/A9apnFmv2XXs13A8431/fx+
+         ykdOius+0bL8VZ533V8umEWOAbGdmkuBZ0TXxUfXPJO0oRDN9/Rhg/2T5CqlaEFpfVT2
+         HCkp+Ri06vwnZDQZfzKQycaTXuO9/ggjqD6Mp7dRRKc7O78QUeJoGrof2aens6soHQMY
+         Iw/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwrQghLq2nu/KNuUgqSjkjC2saV3M5/CgAAIs/TLcstsSnK5QK2ZGNf5UTGJtn4q8WKr5p4Os6S4zYlFNFAurh0sreWkjplvd/Q5QQjIsug6wGUGdmPzrgiLJhl0F/CWHRZDy0LeMwKw2GW2egyBs=
+X-Gm-Message-State: AOJu0YynNMvS4x8yIj9vRm12OzXRbTnaJVj/UTxMOxL2PVucOw2fE3bJ
+	0P+naf5K8EwfvUq+YuiJw3Hklbl0ra6b3JA2zjJCg5CNI0d/jrar
+X-Google-Smtp-Source: AGHT+IFLLZodY9LgbwTN2BxPcRs1Kw01JxOK0LCD1TpFFbWHiroVI32ShR+CCM9J4fytt6jF+6uNjw==
+X-Received: by 2002:a05:6870:b296:b0:240:7904:f5b6 with SMTP id 586e51a60fabf-24172bd0727mr17765866fac.28.1715797844453;
+        Wed, 15 May 2024 11:30:44 -0700 (PDT)
+Received: from fionn.redhat.com ([74.12.5.183])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e25f3ec65sm28965351cf.81.2024.05.15.11.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 11:30:43 -0700 (PDT)
+Sender: John Kacur <jkacur@gmail.com>
+From: John Kacur <jkacur@redhat.com>
+To: Daniel Bristot de Oliveria <bristot@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	linux-trace-devel@vger.kernel.org
+Cc: John Kacur <jkacur@redhat.com>
+Subject: [PATCH v3 2/2] rtla: Documentation: Fix -t, --trace
+Date: Wed, 15 May 2024 14:30:24 -0400
+Message-ID: <20240515183024.59985-2-jkacur@redhat.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240515183024.59985-1-jkacur@redhat.com>
+References: <20240515183024.59985-1-jkacur@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+Move -t, --trace from common_options.rst to
+common_osnoise_options.rst and
+common_timerlat_options.rst
 
+so that it will appear in the man pages
 
-On May 15, 2024 10:42:49 AM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
->(cc Kees)
->
->On Wed, 15 May 2024 at 19:32, Chaney, Ben <bchaney@akamai=2Ecom> wrote:
->>
->> Hello,
->>                 I encountered an issue when upgrading to 6=2E1=2E89 fro=
-m 6=2E1=2E77=2E This upgrade caused a breakage in emulated persistent memor=
-y=2E Significant amounts of memory are missing from a pmem device:
->>
->> fdisk -l /dev/pmem*
->> Disk /dev/pmem0: 355=2E9 GiB, 382117871616 bytes, 746323968 sectors
->> Units: sectors of 1 * 512 =3D 512 bytes
->> Sector size (logical/physical): 512 bytes / 4096 bytes
->> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
->>
->> Disk /dev/pmem1: 25=2E38 GiB, 27246198784 bytes, 53215232 sectors
->> Units: sectors of 1 * 512 =3D 512 bytes
->> Sector size (logical/physical): 512 bytes / 4096 bytes
->> I/O size (minimum/optimal): 4096 bytes / 4096 bytes
->>
->>         The memmap parameter that created these pmem devices is =E2=80=
-=9Cmemmap=3D364416M!28672M,367488M!419840M=E2=80=9D, which should cause a m=
-uch larger amount of memory to be allocated to /dev/pmem1=2E The amount of =
-missing memory and the device it is missing from is randomized on each rebo=
-ot=2E There is some amount of memory missing in almost all cases, but not 1=
-00% of the time=2E Notably, the memory that is missing from these devices i=
-s not reclaimed by the system for general use=2E This system in question ha=
-s 768GB of memory split evenly across two NUMA nodes=2E
->>
->>         When the error occurs, there are also the following error messa=
-ges showing up in dmesg:
->>
->> [    5=2E318317] nd_pmem namespace1=2E0: [mem 0x5c2042c000-0x5ff7ffffff=
- flags 0x200] misaligned, unable to map
->> [    5=2E335073] nd_pmem: probe of namespace1=2E0 failed with error -95
->>
->>         Bisection implicates 2dfaeac3f38e4e550d215204eedd97a061fdc118 a=
-s the patch that first caused the issue=2E I believe the cause of the issue=
- is that the EFI stub is randomizing the location of the decompressed kerne=
-l without accounting for the memory map, and it is clobbering some of the m=
-emory that has been reserved for pmem=2E
->>
->
->Does using 'nokaslr' on the kernel command line work around this?
->
->I think in this particular case, we could just disable physical KASLR
->(but retain virtual KASLR) if memmap=3D appears on the kernel command
->line, on the basis that emulated persistent memory is somewhat of a
->niche use case, and physical KASLR is not as important as virtual
->KASLR (which shouldn't be implicated in this)=2E
+rtla-timerlat-hist.1
+rtla-timerlat-top.1
+rtla-osnoise-hist.1
+rtla-osnoise-top.1
 
-Yeah, that seems reasonable to me=2E As long as we put a notice to dmesg t=
-hat physical ASLR was disabled due to memmap's physical reservation=2E If t=
-his usage becomes more common, we should find a better way, though=2E=20
+Remove the equals ('=') sign and add a space.
 
-This reminds me a bit of the work Steve has been exploring:
-https://lore=2Ekernel=2Eorg/all/20240509163310=2E2aa0b2e1@rorschach=2Eloca=
-l=2Ehome/
+Signed-off-by: John Kacur <jkacur@redhat.com>
+---
+ Documentation/tools/rtla/common_options.rst          | 4 ----
+ Documentation/tools/rtla/common_osnoise_options.rst  | 4 ++++
+ Documentation/tools/rtla/common_timerlat_options.rst | 4 ++++
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
+index 7ac7b7581466..2dc1575210aa 100644
+--- a/Documentation/tools/rtla/common_options.rst
++++ b/Documentation/tools/rtla/common_options.rst
+@@ -14,10 +14,6 @@
+ 
+         Print debug info.
+ 
+-**-t**, **--trace**\[*=file*]
+-
+-        Save the stopped trace to [*file|osnoise_trace.txt*].
+-
+ **-e**, **--event** *sys:event*
+ 
+         Enable an event in the trace (**-t**) session. The argument can be a specific event, e.g., **-e** *sched:sched_switch*, or all events of a system group, e.g., **-e** *sched*. Multiple **-e** are allowed. It is only active when **-t** or **-a** are set.
+diff --git a/Documentation/tools/rtla/common_osnoise_options.rst b/Documentation/tools/rtla/common_osnoise_options.rst
+index f792ca58c211..d73de2d58f5f 100644
+--- a/Documentation/tools/rtla/common_osnoise_options.rst
++++ b/Documentation/tools/rtla/common_osnoise_options.rst
+@@ -25,3 +25,7 @@
+ 
+         Specify the minimum delta between two time reads to be considered noise.
+         The default threshold is *5 us*.
++
++**-t**, **--trace** \[*file*]
++
++        Save the stopped trace to [*file|osnoise_trace.txt*].
+diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
+index 090700a6ae9f..b12f232f7499 100644
+--- a/Documentation/tools/rtla/common_timerlat_options.rst
++++ b/Documentation/tools/rtla/common_timerlat_options.rst
+@@ -22,6 +22,10 @@
+         Save the stack trace at the *IRQ* if a *Thread* latency is higher than the
+         argument in us.
+ 
++**-t**, **--trace** \[*file*]
++
++        Save the stopped trace to [*file|osnoise_trace.txt*].
++
+ **--dma-latency** *us*
+         Set the /dev/cpu_dma_latency to *us*, aiming to bound exit from idle latencies.
+         *cyclictest* sets this value to *0* by default, use **--dma-latency** *0* to have
+-- 
+2.44.0
 
-
---=20
-Kees Cook
