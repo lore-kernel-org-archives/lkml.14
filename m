@@ -1,120 +1,190 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2F240861
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 23:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765AD3FE55;
+	Wed, 15 May 2024 23:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715814503; cv=none; b=sfgr1EHcXO7bvLXbiZ2iSW/6cgx7iRPqNfhnZ+Lzr8ZVBgoD0piVjFjOqAmWGW3HcjYP7JHD04DLdps3hsra748Xo/AyBrBtXVL3tdeFaH8dixz/HaG1Ygn6o0MFf/ZRUdUSzSYE6e9YCmxcdYq2NvUUSfQSnAqU2Tg1Ok+Pz5g=
+	t=1715814629; cv=none; b=UQ+O7JorX7v4rxDdydINV6JyIqluIHKPWuGZxbS2ABKjtju0KIQoxEI5+nOvCs+je0IMg8z7KW4s4jZYcZP0XllEh8p5+wKvsSgazfdVcpRGCba1BTfzWc6A0UxSSiKPfh96eysNGAChHEWJhsqTWgItd25m5PfXLM0VfHye+hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715814503; c=relaxed/simple;
-	bh=xDFUM0sIcSy0DOZxqgnugThNR7lVLaZaiQ6S4YAD66o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvWAj8fN0QQJMycAB/O2TlXAmuwymp6s5oEz9PG4hoCu3cUCZQ+7dT/t1dTJmzF8Kug7Xp2geATLNvpwaBvJMFTasIYcziUD9t72fDBsHgcgrDQFvkIXyJZv5rhEQBG5XK3De/yROtiNxCF15tlB69YS4351FpAvqmOpYD6j9wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pN4tAHtK; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715814629; c=relaxed/simple;
+	bh=Zz68c0r5mB2HJA3QHS2x1gOeC+u9VHtVrSEwwbMzEME=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=g3FJQmt9G/C8ftIGtHp7pvtKGlPNR3SaY0KzCqw+MEl6cAJwMDtUr31cW6JnNt2N5pZA4vsSoEkv2VVl6sTj0jB90JEYnCscje0Ow7mRgrzZeCh6ncyivK4DJ+ox5g2DITJ70P/iOzvy7rfYwvH4/aWQ++TJRXE1Fo1wwUd6Bfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aBV6qp/t; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pN4tAHtK"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f4e59081e6so4424691b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715814500; x=1716419300; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ke/O00Y/Kjm74N+9XrjAq0nbRjFhCTAJyeNXJqA3ng8=;
-        b=pN4tAHtKTaowkNW2IzLKHu4stbPP7AQZH/b7bNMltUj3UtSXCXZLWMX0ijcWoKuLcB
-         A4BEbPvv0nQz3nyC2zDC/D95hpMPexMv/Jds+flu28etBUMMM+JR5A8v6GmUcrASKPbV
-         Ywaz2tLHRbhitzcZw2eUWNt53bH/XeujPTNnfn1tgxx3+eJcKvAlv2EkYg98eUmp7GsR
-         INq4mpkHMvKhwwe0+AcvmU71Kme76jj1RbaTtPwNYRBFkalZ7ENbV/ijiPUBHfwcJhPN
-         GmkukInO/L4yISvaoWg4DrtavzhHBHuXI+8R54HLHHo+chD0JWeV8LFDyfaEHVs/79fi
-         jmjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715814500; x=1716419300;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ke/O00Y/Kjm74N+9XrjAq0nbRjFhCTAJyeNXJqA3ng8=;
-        b=XuWwBibiFbnht7s93kFmsjwBmoPaIyZuaXucqVHBajmi1hm8bX9p6/dABjv/iJqNJG
-         fbDRAxUUJyPDoAKcXJxABBs/Ym0yKudgmEPJcATYZ61sGQHZUClbA7rGAgpMPMRD3bPl
-         aR9AIRKgmGu+bDpHkJ4dI76yAb9jJVETBOJm5VxuRogrIGDYmLGr7RbPeTWHEWEaYXin
-         KPCrBE5GPQFjBNzyZIuOK2Z0LAV+19CX9cNIw0ndfZW4m1LyQmE9vjSVVk/rrpiyT9Fz
-         MU4YhvahaSJuFt3Pp0jRLsM/EvTXCB69cADMNaxWkVbkU0CYvHMGWfLAafXWtEx2tW5q
-         NvYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDrxJCbuSFnyWG4/k8KvO5xvDyfs4p9fYgUpKLr8WnSHC0gPq7cKBb57qsAFLXcbFJzY/NULhBKi6UK0C8p8sgqs7tQ9kPxGIouIxR
-X-Gm-Message-State: AOJu0Yx3vtlrZsHEX9Cay/F5tPDbdOXo3j8vlXuPnoJTqL5QgIF/yVfv
-	DOrX//YNMOfZIF1mIp2E+quH5kHrQlyQ+cJmPjLxsAhy5K1aPwgFNKNGD7Og4hk=
-X-Google-Smtp-Source: AGHT+IHTKntYjRB2czmnJQoB0Xk0pGWlCXePk30+bd9e9xQZBoHIBEfG3OP/NhLnJ8eL/896yjKHZg==
-X-Received: by 2002:a05:6a00:174c:b0:6e7:b3c4:43a4 with SMTP id d2e1a72fcca58-6f4e035d2e8mr22362801b3a.25.1715814500626;
-        Wed, 15 May 2024 16:08:20 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:144c:7973:ee0f:85cd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b2f9eesm11664479b3a.212.2024.05.15.16.08.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 16:08:19 -0700 (PDT)
-Date: Wed, 15 May 2024 16:08:17 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Jessica Clarke <jrtc27@jrtc27.com>
-Cc: Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Palmer Dabbelt <palmer@sifive.com>,
-	linux-riscv <linux-riscv@lists.infradead.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH 0/2] riscv: Allow vlenb to be probed from DT
-Message-ID: <ZkVAYeNnvj99YHXt@ghost>
-References: <20240515-add_vlenb_to_dt-v1-0-4ebd7cba0aa1@rivosinc.com>
- <A9EDD470-B8EC-4644-82A0-7444729EF885@jrtc27.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aBV6qp/t"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44FK5r7b007487;
+	Wed, 15 May 2024 23:10:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=kAZI2h+kQAy/9os7bUIy5NuQ21T7ryEOiCZ/BvXPBOs
+	=; b=aBV6qp/tiTW1uhGHhBZhhOY1erx/eClIgbK69U1xOz+isLEMkSfcr+9Q3Co
+	ofJ7PZ5ECyS5ixUJ7YngiHzW8T1MzoK6r5AusPCsfDdPgq8Zt+qeeYe7Ak5cRX3k
+	b3BxX37ol/PrSQQSPrWNIt5eHQoRpX81yFbUKGq9zWHbfEQnhJpzkjmaOZxkOcVp
+	nT4M/sjEEgc/j2t9C0QwTN8ZQcI93VvG2LHK/LQD3bpAtcUG+xojseV8By5n+ks9
+	63XMjW2OfSYcKLZeD06MBExJgHrrLQZlfKXnNtgCC9Ay5H41tUecwFKX+1ODbW3F
+	UdTeCZv40l/6m/5YtmloslciuIA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47f443pt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 May 2024 23:10:07 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44FNA6n5008254
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 May 2024 23:10:06 GMT
+Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 15 May 2024 16:10:05 -0700
+From: Elliot Berman <quic_eberman@quicinc.com>
+Date: Wed, 15 May 2024 16:09:44 -0700
+Subject: [PATCH v3 1/4] dt-bindings: power: reset: Convert mode-.*
+ properties to array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <A9EDD470-B8EC-4644-82A0-7444729EF885@jrtc27.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240515-arm-psci-system_reset2-vendor-reboots-v3-1-16dd4f9c0ab4@quicinc.com>
+References: <20240515-arm-psci-system_reset2-vendor-reboots-v3-0-16dd4f9c0ab4@quicinc.com>
+In-Reply-To: <20240515-arm-psci-system_reset2-vendor-reboots-v3-0-16dd4f9c0ab4@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Yan
+	<andy.yan@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "Mark
+ Rutland" <mark.rutland@arm.com>,
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
+CC: Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Melody Olvera
+	<quic_molvera@quicinc.com>,
+        Shivendra Pratap <quic_spratap@quicinc.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli
+	<florian.fainelli@broadcom.com>,
+        <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        Elliot Berman <quic_eberman@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: GaYIvjh5J8B_prHUQHBuuggWYDfWxDdp
+X-Proofpoint-ORIG-GUID: GaYIvjh5J8B_prHUQHBuuggWYDfWxDdp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-15_14,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 bulkscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405150164
 
-On Wed, May 15, 2024 at 11:25:16PM +0100, Jessica Clarke wrote:
-> On 15 May 2024, at 22:50, Charlie Jenkins <charlie@rivosinc.com> wrote:
-> > 
-> > The kernel currently requires all harts to have the same value in the
-> > vlenb csr that is present when a hart supports vector. In order to read
-> > this csr, the kernel needs to boot the hart. Adding vlenb to the DT will
-> > allow the kernel to detect the inconsistency early and not waste time
-> > trying to boot harts that it doesn't support.
-> 
-> That doesn’t seem sufficient justification to me. If it can be read
-> from the hardware, why should we have to put it in the FDT? The whole
-> point of the FDT is to communicate the hardware configuration that
-> isn’t otherwise discoverable.
+PSCI reboot mode will map a mode name to multiple magic values instead
+of just one. Convert the mode-.* property to an array. Users of the
+reboot-mode schema will need to specify the maxItems of the mode-.*
+properties. Existing users will all be 1.
 
-Yes you are correct in that vlenb is discoverable on any conforming
-chip. However, the motivation here is for making decisions about how to
-boot a hart before it is booted. By placing it in the device tree, we
-are able to disable vector before the chip is booted instead of trying
-to boot the chip with vector enabled only to disable it later. In both
-cases when there is different vlenb on different harts, all harts still
-boot and the outcome is that vector is disabled. The difference is that
-with the DT entry, no vector setup code needs to be ran on a booting
-hart when the outcome will be that vector is not enabled.
+Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+---
+ .../devicetree/bindings/power/reset/nvmem-reboot-mode.yaml |  4 ++++
+ .../devicetree/bindings/power/reset/qcom,pon.yaml          |  4 ++++
+ .../devicetree/bindings/power/reset/reboot-mode.yaml       | 14 ++++++++++++--
+ .../bindings/power/reset/syscon-reboot-mode.yaml           |  4 ++++
+ 4 files changed, 24 insertions(+), 2 deletions(-)
 
-> 
-> As for T-HEAD stuff, if they need it they can have a custom property.
-> Though naively I’d assume there’s a way to avoid it still...
+diff --git a/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml
+index 627f8a6078c2..03b3b9be36de 100644
+--- a/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml
++++ b/Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.yaml
+@@ -30,6 +30,10 @@ properties:
+ 
+ allOf:
+   - $ref: reboot-mode.yaml#
++  - patternProperties:
++      "^mode-.*$":
++        items:
++          maxItems: 1
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.yaml b/Documentation/devicetree/bindings/power/reset/qcom,pon.yaml
+index fc8105a7b9b2..95964e04d5d6 100644
+--- a/Documentation/devicetree/bindings/power/reset/qcom,pon.yaml
++++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.yaml
+@@ -68,6 +68,10 @@ allOf:
+     then:
+       allOf:
+         - $ref: reboot-mode.yaml#
++        - patternProperties:
++            "^mode-.*$":
++              items:
++                maxItems: 1
+ 
+       properties:
+         reg:
+diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+index ad0a0b95cec1..feb70609bb5f 100644
+--- a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
++++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+@@ -28,13 +28,23 @@ description: |
+ 
+ properties:
+   mode-normal:
+-    $ref: /schemas/types.yaml#/definitions/uint32
++    $ref: "#/patternProperties/^mode-.*$"
+     description:
+       Default value to set on a reboot if no command was provided.
+ 
+ patternProperties:
+   "^mode-.*$":
+-    $ref: /schemas/types.yaml#/definitions/uint32
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    # Limit to 1 outer cell, e.g. no mode-normal = <0>, <1>;
++    maxItems: 1
++    # Note: to reference this schema, the allOf should include hint about
++    # maxItems for the inner cell
++    # allOf:
++    # - $ref: /schemas/power/reset/reboot-mode.yaml#
++    # - patternProperties:
++    #     "^mode-.*$":
++    #       items:
++    #         maxItems: 1
+ 
+ additionalProperties: true
+ 
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+index b6acff199cde..bf6d68355e7f 100644
+--- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
++++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+@@ -31,6 +31,10 @@ properties:
+ 
+ allOf:
+   - $ref: reboot-mode.yaml#
++  - patternProperties:
++      "^mode-.*$":
++        items:
++          maxItems: 1
+ 
+ unevaluatedProperties: false
+ 
 
-T-Head does not expose vlenb on all of their chips so I do not know of
-any other way of getting the vlenb without having it be provided in a
-DT. That was the motivation for this patch in the first place, but
-making this available to all vendors allows optimizations to happen
-during boot.
+-- 
+2.34.1
 
-- Charlie
-
-> 
-> Jess
-> 
