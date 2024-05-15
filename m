@@ -1,127 +1,126 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9054D58E;
-	Wed, 15 May 2024 07:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DD52EAF7
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715756951; cv=none; b=a0orZw1Y0PoJbeAjRxes7Sf5GFkbaPUp3S3DerH+x8bRbi6A6wMGpRNeIB2uOWXy7xnfMATpk2FXOPNa5ZEnBn9fT5fg9DVLSSpFshxEDYSPhJPfq5PhNunUFIP55RUQe35bb1XW5T6vqvSvSNFKpNoY3JD9dRDCR1+fnjFxhAc=
+	t=1715757246; cv=none; b=V8hH7upf3idhBkzGhNW591dkRQrRpz/sjEnYsC0mkHCEQlTKZ3YGthPKGfDxr6nK8B51keooY5zQ9bTXGWm2/aGpdps5u6sepkBCSV6Fh70Xjc5tsasKnh2gZt02C8w0ca7zIK7z8UL2yTsFw3WPWiN5owHbuYFWLYb9ILAe/eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715756951; c=relaxed/simple;
-	bh=TlijGYMDNzqIG7iiD3qAFvS5QTO9ino5t7xI4ecx6I0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V0ikw83z1+g0pey37ZUAThfoKMjb5Jl+dL3ZwY/D3an0qlKX5oUIwldCPV2VKlYrTI2pQ/30tt6+xGOuZ8Q5S91qiQv5LeoJC8VhlBzL++UaAR4y3DTniPH1wmmoLeLc3MCVH64m4JV4BKysgug8H4lXbeMSufVxUG0Yufpp0eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=wAOE8lha; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1715757246; c=relaxed/simple;
+	bh=rs+cCu7FGv218rbM0FagCL1EvTBNiFY6mnPjzvJWqJA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MPU48+o5qvwhHwLPKHt62j67oarrxUaX6uTTLUIp/hITBIcenR8WQCV8n92irwfClnlcbKbVuANTxvo6GWB+WnRNvTJDI820RzEliKKRtv8N43riSxpiWUUn7PMEOmAv1uI39vqhCY3BTD41mt5J167UKPdv5jRZW7c7o/SVonE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=fotcWryP reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="wAOE8lha"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 1F238881C8;
-	Wed, 15 May 2024 09:09:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1715756947;
-	bh=qZEnpACq0iHTaacG6FZZEyfsiJPcBQ6mk9fV3PhjltU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=wAOE8lhaMKWtilGri2uI01elUkjYFpu3dtgegVDoPB01RXTQCESJCG3cHfUMuHJtP
-	 MY6X1Phy8qI9b8a/Cf79fUpmxkQj1UI3F9iZDaVkj8YOsOlehw2tMJ/5eu5LCWOc3R
-	 6o3IkRJhXZDT1jmP/p69xOrN9X+pyDrre09E/3ElcwR+geJ+tz0CUOXrp1kNaJYR4X
-	 Qtk5WAauBxJnuiT2NXq6bX0PLz7npt1UeR3UO3B7qtfxmcyKWrXrtnjQQDoVcIUXnQ
-	 NkuVgz0insnprJYDBELK12tVtNM9cA8U9VmLpW+fV9MTxw2b6wCe7KiOmCrtgo7mUT
-	 1ibyO98tfce4Q==
-Date: Wed, 15 May 2024 09:09:04 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Paolo Abeni
- <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, Oleksij
- Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com, Ravi
- Gunasekaran <r-gunasekaran@ti.com>, Simon Horman <horms@kernel.org>, Nikita
- Zhandarovich <n.zhandarovich@fintech.ru>, Murali Karicheri
- <m-karicheri2@ti.com>, Arvid Brodin <Arvid.Brodin@xdin.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, "Ricardo B. Marliere" <ricardo@marliere.net>,
- Casper Andersson <casper.casan@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: hsr: Setup and delete proxy prune timer only when
- RedBox is enabled
-Message-ID: <20240515090904.477c6b5f@wsk>
-In-Reply-To: <20240515064139.-B-_Hf0_@linutronix.de>
-References: <20240514091306.229444-1-lukma@denx.de>
-	<20240515064139.-B-_Hf0_@linutronix.de>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="fotcWryP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=ite.com.tw; s=dkim;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IIoHEBypBuUFVSchJJMBHvhvDg18qPviVNpAw4yV414=;
+  b=fotcWryPYXAiRMMzAgON0/KnphtNA2Bo/uekT9uU/LNbm2LyvlfGuIED
+   aSzy26n4dpCKOsELBR6QzGe/ByAtDJWsp84ySsziEUnFqjVK+oZiTM5D5
+   hn7leqoSyUXNGR35V1PS6PF8mShfXZv33bl3PkJgeZXdmbCcGjfW0BFuK
+   y+kJGkc22edmo4KoQKk2Z/Q9cNTPAl3tfSWdNgIAUrgg6IDWs38M9zXwY
+   WlYtIFz92rwMEZ6++I8Iv+AbsVP2i6JQEbpVsaTRMyc19xd5CQ65ROr6n
+   IE84JUDse6b2qMNtYuJXvjrwgZ68ePr6rf8KqUJdfS6+estBYU7VnHDjM
+   A==;
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 15 May 2024 15:12:46 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
+	by mse.ite.com.tw with ESMTP id 44F7Chec099689;
+	Wed, 15 May 2024 15:12:43 +0800 (GMT-8)
+	(envelope-from kuro.chung@ite.com.tw)
+Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 15 May 2024 15:12:42 +0800
+From: kuro <kuro.chung@ite.com.tw>
+To:
+CC: Allen Chen <allen.chen@ite.com.tw>, Pin-yen Lin <treapking@chromium.org>,
+        Kuro Chung <kuro.chung@ite.com.tw>,
+        Kenneth Haung <kenneth.hung@ite.com.tw>,
+        Kuro <kuro.chung@ite.corp-partner.google.com>,
+        "open list:DRM DRIVERS"
+	<dri-devel@lists.freedesktop.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 0/1] drm/bridge: it6505: fix hibernate to resume no display issue
+Date: Wed, 15 May 2024 15:23:27 +0800
+Message-ID: <20240515072328.1010920-1-kuro.chung@ite.com.tw>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7vQ_Gdg_fcDO5+YKl6phDUR";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP:
+	A11021EA28A7D463AE6B142DA2BD4517620255AADFE51846BCE361304E44381F2002:8
+X-MAIL:mse.ite.com.tw 44F7Chec099689
 
---Sig_/7vQ_Gdg_fcDO5+YKl6phDUR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Kuro <kuro.chung@ite.corp-partner.google.com>
 
-Hi Sebastian,
+New patch description for v8 patch 
 
-> On 2024-05-14 11:13:06 [+0200], Lukasz Majewski wrote:
-> > The timer for removing entries in the ProxyNodeTable shall be only
-> > active when the HSR driver works as RedBox (HSR-SAN).
-> >=20
-> > Moreover, the obsolete del_timer_sync() is replaced with
-> > timer_delete_sync().
-> >=20
-> > This patch improves fix from commit 3c668cef61ad
-> > ("net: hsr: init prune_proxy_timer sooner") as the prune node
-> > timer shall be setup only when HSR RedBox is supported in the node.
-> > =20
->=20
-> Is it problematic to init/ delete the timer in non-redbox mode? It
-> looks easier and it is not a hotpath.
+	resolve merge conflict
 
-My concern is only with resource allocation - when RedBox is not
-enabled the resources for this particular, not used timer are allocated
-anyway.
+New patch description for v7 patch
 
-If this can be omitted - then we can drop the patch.
+        modify code from
+        it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x02); to
+        it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, TX_FIFO_RESET); for macro define
 
->=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
->=20
-> Sebastian
+New patch description for v6 patch
+
+        remove the unrelated patch change (split into anoter patch)
+        remove extra line
+
+New patch description for v5 patch
+
+        after customer feedback and test finished, update again, kernel build pass.
+
+New patch description for v4 patch
+
+        update by reviewer Pin-yen Lin comment, remove function it6505_irq_video_fifo_error/it6505_irq_io_latch_fifo_overflow
+        update by reviewer Pin-yen Lin comment, update Signed-off-by column
+
+New patch description for v3 patch
+
+        update upstream MAINTAINERS mail list
+
+New patch description for v2 patch
+
+        Missing declaration for i variable in function it6505_irq_video_error_handler
+        , add it by this patch
+
+Origianl description for v1 patch
+
+        drm/bridge: it6505: fix hibernate to resume no display issue
+
+        ITE added a FIFO reset bit for input video. When system power resume,
+        the TTL input of it6505 may get some noise before video signal stable
+        and the hardware function reset is required.
+        But the input FIFO reset will also trigger error interrupts of output module rising.
+        Thus, it6505 have to wait a period can clear those expected error interrupts
+        caused by manual hardware reset in one interrupt handler calling to avoid interrupt looping.
 
 
+Kuro Chung (1):
+  drm/bridge: it6505: fix hibernate to resume no display issue
 
+ drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
+ 1 file changed, 49 insertions(+), 24 deletions(-)
 
-Best regards,
+-- 
+2.25.1
 
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/7vQ_Gdg_fcDO5+YKl6phDUR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmZEX5AACgkQAR8vZIA0
-zr1lTAgA2ENishaKFuCVLs+wjmiwd631kRvCT/CrhFlZee0BvnKzZt8kCInlqXHz
-87nox73yEmt+X7K5j+IvZCWLgJlrlhkqmeJRfubl4/9p7XfAraK5z+jrCt3PlhRQ
-gsNSMHRcthViR7aluoVSbWWjuYH04CjKejrW1fxIm8BHVOVFMI2WU/dnm0UCTetM
-19XhJ4MK+u9+doa9jGekd1CHv39U67jx7bhkOx0FR6j1P1/ye0cg5JOUKP+CwLos
-auEtJMO9taESL6ptJB0JOmNLycJXD9HROgpALwSkgBZ/VAfvfaes0Y8u4G7EIfW8
-P2+Tl9nI+DLm2OjU3V7IMXrQnO6ARg==
-=Dwv4
------END PGP SIGNATURE-----
-
---Sig_/7vQ_Gdg_fcDO5+YKl6phDUR--
