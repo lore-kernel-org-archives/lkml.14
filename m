@@ -1,115 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBE85EE67;
-	Wed, 15 May 2024 10:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964B45FB87
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715770160; cv=none; b=QfyQtAMUZ+3QPlI6kdlMn6mKDTDDVc67DabQFpeMBQxmJICb3IOkmlvdalaMSbpH5XtaP8CEebP3ErGtLj+mKXjTGojXJT4lGmxW0/VL68kpqyBD0zmRH+hNI7P1M4mMqkJOB2C1+BkEzsw2IXb4xHntjEBWQC77U7Bt0mKofYU=
+	t=1715770327; cv=none; b=IV4dd7enuE3Q9nOoryTlXZeTghDpnyQKuRz72fJ5BBmg9iNc9j9PRBe/vtu4Pipefg24EdjZxASuz/jZ/dbACg/hPwN4LDeivP3jdtpKuO0GqnWtbBkknRizQ2yu48xEsHk1cSnLDXA8FwYcWMOgliezf0Wy7wNg6m4dLiJcF18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715770160; c=relaxed/simple;
-	bh=eZAyx5iTU3+yTtK+BTheHtFXAm3+sugNJ4tGK3cekzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lmvts8uhQdj6rBdb5PXh5rDkbmPfwS1h8tkuxdUXraomFwH3u8l5miBWencLvPhoPzBqDUYmJdl4m+MzDcdY5nAZb7DL0N/CO1BDtvcNXzHGJ8Qc4LqI1U5id18i3zcouqTe1h0AFKLLeGbHrzxu6IhBp7hPWuZ+XblnF1UOzd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfjiadzY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715770327; c=relaxed/simple;
+	bh=Amxzkpd0XRX4qZOytRPaUSydb/KElzd8Fly+25Pwt8w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=F1gMH1B/esPMcjPLHYJGIJ/EAWn6C+jOViDelZL+reMw/a1DzXnlScJWkcP41vbKR+RxixnVRk/34qELDAjFY6QTCRBE8YCdD4W6x18kU4/3me95MMhYcGSXm7qASpwtdpP5dEBRCRzeteY7gQINuuNaBCo1EJkKxu1FvkY47f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=OCTHiuq0; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfjiadzY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F07C116B1;
-	Wed, 15 May 2024 10:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715770160;
-	bh=eZAyx5iTU3+yTtK+BTheHtFXAm3+sugNJ4tGK3cekzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TfjiadzYc0Ni5F6hqm5RXpiqACkDCI7cbL0UjZMj9KOLXCmvOHqK3PRXKUuKPP0yz
-	 s3x5bzvQAwrfFpt3JgrxhF3zRilfLHC9QGhk16hUznJyKA2Q8jGAMUgBXGSh+m7Z91
-	 DDhFiKzURsSbxqPAMcISjvO+J9a8Y6t/x/M0tikzAISNbeBGlHrtXXGEbzXB+Qb0mv
-	 MeMpcmjjvKfgN3u0xX2ROzZulbOeuuzWx2pLirrHJgbqNc4pht8lq9kFV0gCOgFJO+
-	 d7brvsm80y5ZM9n277aL2YQq1fD9qcaNXAji6M0W7g6eFfkLlFpTeShX/QcvSuH9xj
-	 C0BQGsnG4Q3ig==
-Date: Wed, 15 May 2024 11:49:16 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ronak Doshi <ronak.doshi@broadcom.com>
-Cc: netdev@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 4/4] vmxnet3: update to version 9
-Message-ID: <20240515104916.GG154012@kernel.org>
-References: <20240514182050.20931-1-ronak.doshi@broadcom.com>
- <20240514182050.20931-5-ronak.doshi@broadcom.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="OCTHiuq0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1715769986;
+	bh=Amxzkpd0XRX4qZOytRPaUSydb/KElzd8Fly+25Pwt8w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=OCTHiuq0xcxXDzWFNb2YzidBdd/UCbfzGmEDoMNiByUGDHctOQz+x2vbobzPv095/
+	 In1Ipl7jSdqwZ2ZYyDz4PDkyVFsC77QgxCXQ4G2/TAhJNyVAaw9FFyw37m6wqtXo28
+	 CVMBsa76/VYUDfZIOiR32EXgvcv3C9D3SLd3MsYY=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 741E866433;
+	Wed, 15 May 2024 06:46:09 -0400 (EDT)
+Message-ID: <32e53b74f382f691fb8f60d68b093901964bd1c9.camel@xry111.site>
+Subject: Re: [PATCH v9 1/2] x86/mm: Don't disable PCID if "incomplete Global
+ INVLPG flushes" is fixed by microcode
+From: Xi Ruoyao <xry111@xry111.site>
+To: Dave Hansen <dave.hansen@linux.intel.com>, Michael Kelley
+	 <mhklinux@outlook.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>,  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin"
+ <hpa@zytor.com>, x86@kernel.org, linux-kernel@vger.kernel.org, Sean
+ Christopherson <seanjc@google.com>, Andrew Cooper
+ <andrew.cooper3@citrix.com>
+Date: Wed, 15 May 2024 18:46:04 +0800
+In-Reply-To: <20240418205414.67735-1-xry111@xry111.site>
+References: <20240418205414.67735-1-xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514182050.20931-5-ronak.doshi@broadcom.com>
 
-On Tue, May 14, 2024 at 11:20:49AM -0700, Ronak Doshi wrote:
-> With all vmxnet3 version 9 changes incorporated in the vmxnet3 driver,
-> the driver can configure emulation to run at vmxnet3 version 9, provided
-> the emulation advertises support for version 9.
-> 
-> Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
-> Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+Hi,
 
-...
+Linux 6.9 is released.  Is this suitable as 6.10 material or do I need
+to update something?
 
-> @@ -4019,42 +4019,14 @@ vmxnet3_probe_device(struct pci_dev *pdev,
->  		goto err_alloc_pci;
->  
->  	ver = VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_VRRS);
-> -	if (ver & (1 << VMXNET3_REV_7)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_7);
-> -		adapter->version = VMXNET3_REV_7 + 1;
-> -	} else if (ver & (1 << VMXNET3_REV_6)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_6);
-> -		adapter->version = VMXNET3_REV_6 + 1;
-> -	} else if (ver & (1 << VMXNET3_REV_5)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_5);
-> -		adapter->version = VMXNET3_REV_5 + 1;
-> -	} else if (ver & (1 << VMXNET3_REV_4)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_4);
-> -		adapter->version = VMXNET3_REV_4 + 1;
-> -	} else if (ver & (1 << VMXNET3_REV_3)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_3);
-> -		adapter->version = VMXNET3_REV_3 + 1;
-> -	} else if (ver & (1 << VMXNET3_REV_2)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_2);
-> -		adapter->version = VMXNET3_REV_2 + 1;
-> -	} else if (ver & (1 << VMXNET3_REV_1)) {
-> -		VMXNET3_WRITE_BAR1_REG(adapter,
-> -				       VMXNET3_REG_VRRS,
-> -				       1 << VMXNET3_REV_1);
-> -		adapter->version = VMXNET3_REV_1 + 1;
-> -	} else {
-> +	for (i = VMXNET3_REV_9; i >= VMXNET3_REV_1; i--) {
-> +		if (ver & (1 << i)) {
-> +			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_VRRS, 1 << i);
-
-nit: Please consider using the BIT() macro.
-
-> +			adapter->version = i + 1;
-> +			break;
-> +		}
+On Fri, 2024-04-19 at 04:54 +0800, Xi Ruoyao wrote:
+> Per the "Processor Specification Update" documentations referred by the
+> intel-microcode-20240312 release note, this microcode release has fixed
+> the issue for all affected models.
+>=20
+> So don't disable PCID if the microcode is new enough.=C2=A0 The precise
+> minimum microcode revision fixing the issue is provided by engineer from
+> Intel.
+>=20
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Michael Kelley <mhklinux@outlook.com>
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+> Link: https://lore.kernel.org/all/168436059559.404.13934972543631851306.t=
+ip-bot2@tip-bot2/
+> Link: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files=
+/releases/tag/microcode-20240312
+> Link: https://cdrdv2.intel.com/v1/dl/getContent/740518=C2=A0# RPL042, rev=
+. 13
+> Link: https://cdrdv2.intel.com/v1/dl/getContent/682436=C2=A0# ADL063, rev=
+. 24
+> Link: https://lore.kernel.org/all/20240325231300.qrltbzf6twm43ftb@desk/
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+> =C2=A0arch/x86/mm/init.c | 34 ++++++++++++++++++++++------------
+> =C2=A01 file changed, 22 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+> index 679893ea5e68..c318cdc35467 100644
+> --- a/arch/x86/mm/init.c
+> +++ b/arch/x86/mm/init.c
+> @@ -261,33 +261,43 @@ static void __init probe_page_size_mask(void)
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> -#define INTEL_MATCH(_model) { .vendor=C2=A0 =3D X86_VENDOR_INTEL,	\
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .family=C2=A0 =3D 6,			\
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .model =3D _model,			\
+> -			=C2=A0=C2=A0=C2=A0 }
+> +#define INTEL_MATCH(_model, _fixed_microcode)	\
+> +	{					\
+> +	=C2=A0 .vendor	=3D X86_VENDOR_INTEL,	\
+> +	=C2=A0 .family	=3D 6,			\
+> +	=C2=A0 .model	=3D _model,		\
+> +	=C2=A0 .driver_data	=3D _fixed_microcode,	\
 > +	}
-> +	if (i < VMXNET3_REV_1) {
->  		dev_err(&pdev->dev,
->  			"Incompatible h/w version (0x%x) for adapter\n", ver);
->  		err = -EBUSY;
+> +
+> =C2=A0/*
+> =C2=A0 * INVLPG may not properly flush Global entries
+> - * on these CPUs when PCIDs are enabled.
+> + * on these CPUs when PCIDs are enabled and the
+> + * microcode is not updated to fix the issue.
+> =C2=A0 */
+> =C2=A0static const struct x86_cpu_id invlpg_miss_ids[] =3D {
+> -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE=C2=A0=C2=A0 ),
+> -	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
+> -	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
+> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE=C2=A0 ),
+> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
+> -	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
+> +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x2e),
+> +	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x42c),
+> +	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x11),
+> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x118),
+> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4117),
+> +	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x2e),
+> =C2=A0	{}
+> =C2=A0};
+> =C2=A0
+> =C2=A0static void setup_pcid(void)
+> =C2=A0{
+> +	const struct x86_cpu_id *invlpg_miss_match;
+> +
+> =C2=A0	if (!IS_ENABLED(CONFIG_X86_64))
+> =C2=A0		return;
+> =C2=A0
+> =C2=A0	if (!boot_cpu_has(X86_FEATURE_PCID))
+> =C2=A0		return;
+> =C2=A0
+> -	if (x86_match_cpu(invlpg_miss_ids)) {
+> +	invlpg_miss_match =3D x86_match_cpu(invlpg_miss_ids);
+> +
+> +	if (invlpg_miss_match &&
+> +	=C2=A0=C2=A0=C2=A0 boot_cpu_data.microcode < invlpg_miss_match->driver_=
+data) {
+> =C2=A0		pr_info("Incomplete global flushes, disabling PCID");
+> =C2=A0		setup_clear_cpu_cap(X86_FEATURE_PCID);
+> =C2=A0		return;
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
