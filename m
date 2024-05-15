@@ -1,110 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED023374D1;
-	Wed, 15 May 2024 07:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35884D9E0;
+	Wed, 15 May 2024 07:55:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715759688; cv=none; b=neGbr6iHMk8kibbJKMTGNt3gRCLlBY6zXf3UYl7zoD2+f3hqMzXbHE0qQyYti1AWn2lhqrANG+hqpeUHWSF+SMx13gA7LA2T5YFOWoJt0PS1G+hODbJceRblhzGcQAlR0sP5m06vTMXtqDvg1O40Z3++WEKFKnYlkXXxl0GiAY0=
+	t=1715759708; cv=none; b=EyTk77GKf25sI/ubpUwhkQz3oEOrBnPQmY6uHn4BWFa2E/VNmrieN5cKvf3nWqlnSJ+6G9YEkGan4cztpumV6lrf9Uz+zsRLQvTQ1nnqwG7VEHXbXLW+lAZ1XNDeMTU/ndH2jGE0wcsIwHfyE/Gur7gmT7FGCt3yGXXwxNc5N6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715759688; c=relaxed/simple;
-	bh=zihY7Bcw/EswAtMwn0KVvYNpBlL/LMvWlPjfCHumeYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M85JTL47/rQGqSayPPcgBtP1lbQ6MCQ+eihLeDQTcTC/mo1Oh5NfHNhDeqgPGNChINTmI9BtrCHDZWZnZzsmEWCgaFZio1hy9HGHrv8mhPF7wnJSOKFXefD154DkCeCCa0bKhPgL5L84rf8y/i8jdYU5BW060SF718zhnNUnvhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7lEh7Cl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715759708; c=relaxed/simple;
+	bh=UjJSeKkiJ6B2n4MFcDvDqQ9b3pUnSfpg0nvBsiXT9f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ueuiTDxscywuFgdXhiEnjOTVOuGXAJsSKp8tc821KFgX4C6oxwlNMwPASVpj0jeJqEGg1HeAW9pgDOzNwK1P69Kb0Acf2BZXfGm/4doehn2XNWAzFs6H1W4rFL5VlgmBZAYueb9q8Ocy/1fRDkwg6WubpLPHMtLE19A5mFfLeyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yXhoC09w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7lEh7Cl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32487C116B1;
-	Wed, 15 May 2024 07:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715759687;
-	bh=zihY7Bcw/EswAtMwn0KVvYNpBlL/LMvWlPjfCHumeYY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c7lEh7ClFb+A2IBNrtfDlwG+6A0ENnO4V3DYwMNNIh4WQUyajLx4IW2ISyw4dRhVU
-	 50iri1fAIrno5JqVoMPzDj+mHv9jTw1lrEbTa4lTYq/vcydV7A6BPnryYiYqzfZ4VN
-	 IFJ4j05dJiek1a8X6k4nyCWWYbEeMJxUCmNnLrqiR7gm0pURxce2Ht4qeeDTgzpcYB
-	 3Mvye1XeLKY0glNQhVhfP5SzeIowuqiCRhn3AuuK5/3VoVODFjE5mbNof5jdXwdVA3
-	 vXkaRPVYceeVMdnfYsXTcJZVuYd86JS39mDPoEl2UIIIbPu16qiCW7bdNrOemvsRox
-	 MGII/roNrL0UA==
-Message-ID: <ee193525-ea10-4006-a86e-977e2f0352ea@kernel.org>
-Date: Wed, 15 May 2024 09:54:43 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yXhoC09w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47C8C116B1;
+	Wed, 15 May 2024 07:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715759708;
+	bh=UjJSeKkiJ6B2n4MFcDvDqQ9b3pUnSfpg0nvBsiXT9f4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yXhoC09wWCMu0z0EhcGr/f3e5LyIvQJxBoS982DJtYGH8H6QGprJhiSY20Db0wI3K
+	 eT03k5hbhv0A+gE/TOA5OKPR0e/HGJwufx6loQNiNS8IG2LzfGp3j9Sf+1nynrnM7A
+	 BMQU+KN9GolLaaN5bSEO3BDGjyf/OcFp7cVsf6ZM=
+Date: Wed, 15 May 2024 09:55:05 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Martin Faltesek <mfaltesek@google.com>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Darren Kenny <darren.kenny@oracle.com>
+Subject: Re: [PATCH 5.15 000/168] 5.15.159-rc1 review
+Message-ID: <2024051551-turret-distance-49d6@gregkh>
+References: <20240514101006.678521560@linuxfoundation.org>
+ <5beea8ed-b92b-4bee-b77b-4a3d57a5c001@oracle.com>
+ <CAOiWkA8SNRbCPZ_gHQRczZovokZbFSJXQc1vUmtD0quZV9tp0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ASoC: dt-bindings: ak4104: convert to dt schema
-To: Xiaxi Shen <shenxiaxi26@gmail.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, javier.carrasco.cruz@gmail.com,
- skhan@linuxfoundation.org
-References: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
- <20240515064139.456735-1-shenxiaxi26@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240515064139.456735-1-shenxiaxi26@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOiWkA8SNRbCPZ_gHQRczZovokZbFSJXQc1vUmtD0quZV9tp0Q@mail.gmail.com>
 
-On 15/05/2024 08:41, Xiaxi Shen wrote:
-> Convert ak4104 binding to DT schema
+On Tue, May 14, 2024 at 07:36:24PM -0500, Martin Faltesek wrote:
+> Build failure on arm:
 > 
-> Changes in v3:
->  - Use unevaluatedProperties instead
->  - Fix indentations in the example
+> In file included from drivers/iommu/mtk_iommu_v1.c:22:
+> drivers/iommu/mtk_iommu_v1.c:579:25: error: 'mtk_iommu_v1_of_ids'
+> undeclared here (not in a function); did you mean 'mtk_iommu_of_ids'?
+>   579 | MODULE_DEVICE_TABLE(of, mtk_iommu_v1_of_ids);
+>       |                         ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/module.h:244:15: note: in definition of macro
+> 'MODULE_DEVICE_TABLE'
+>   244 | extern typeof(name) __mod_##type##__##name##_device_table
+>          \
+>       |               ^~~~
+> ./include/linux/module.h:244:21: error:
+> '__mod_of__mtk_iommu_v1_of_ids_device_table' aliased to undefined
+> symbol 'mtk_iommu_v1_of_ids'
+>   244 | extern typeof(name) __mod_##type##__##name##_device_table
+>          \
+>       |                     ^~~~~~
+> drivers/iommu/mtk_iommu_v1.c:579:1: note: in expansion of macro
+> 'MODULE_DEVICE_TABLE'
+>   579 | MODULE_DEVICE_TABLE(of, mtk_iommu_v1_of_ids);
+>       | ^~~~~~~~~~~~~~~~~~~
+> make[2]: *** [scripts/Makefile.build:289: drivers/iommu/mtk_iommu_v1.o] Error 1
+> make[1]: *** [scripts/Makefile.build:552: drivers/iommu] Error 2
+> 
+> This is from patch:
+> 
+> bce893a92324  krzk@kernel.org           2024-05-14  iommu: mtk: fix
+> module autoloading
+> 
+> +MODULE_DEVICE_TABLE(of, mtk_iommu_v1_of_ids);
+> 
+> should be, I think:
+> 
+> +MODULE_DEVICE_TABLE(of, mtk_iommu_of_ids);
+> 
 
-I think you got already feedback about this - changelog goes to
-changelog section, so ---.
+Good catch, now fixed up.  I'll push out a -rc2 with this in it.
 
-I really suggest using b4 for contributions. It makes things much
-easier. Alternatively patman.
-
-Best regards,
-Krzysztof
-
+greg k-h
