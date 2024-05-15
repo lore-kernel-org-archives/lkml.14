@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB76313F441;
-	Wed, 15 May 2024 14:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC02128374;
+	Wed, 15 May 2024 14:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715782894; cv=none; b=H9zFsSc96Q1JdkGAyI0g+KuuCjsrBwIzDaVqjyyf0CWieoPklAAWo5l3lY1bCKgc8Bi2FnyK6ynY+nKKnKUIEuKnOnRldjn8VNvWDBldFOskIQ17bmAGXG475EYwyzLNMy8V7ssE26pLXESAmo/r740RnfRvK/45ERHG9FXhB9s=
+	t=1715782943; cv=none; b=My5MG/+zZgTWznqrON6VtFbyQMIyxGNzCZ9YQmYEpqkxvu4q5oouYWbQb/oLO8T/yQvvJelVkWCteu/30fGr41rMM2qgA3oDKkRZzB2Z0wrQoDAHB+oOsaC1+8bWZl/RxQxXSVgXnZ+G7iZiHvrDqWonzclAd2pegU4vEdHzvkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715782894; c=relaxed/simple;
-	bh=JlHkZlCGxF2J0ZVd7aN1EZ6olzqE0j6kpdnQtKdlAr4=;
+	s=arc-20240116; t=1715782943; c=relaxed/simple;
+	bh=IYa8U3GwTT6emlBqHWo5mWIUbSrmH2NUdPO0Of/UvTk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NpCXlaIf2D0ycex7f7O6A2HpDyuXN02Gnl4m7KGMLR9+t/FqD7qZ7bbPmrXv0EMaVzPekLPP4ADFi9v6JXw9OfFEbbnibPfexy2P1h+UPJqQXV7eJ5nEJ/rPpGLqCqtzpk2Cek2HTgmNyqIvA5pR6jIiBR5wMe8Svh1N7KRlz94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTLMUM7O; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lVBL7gbYuJic5L52HgXurxgGHZtEVudYs1gCaIIFngj3sMn/SQ7B1t9nOvOtU4IWmtqqc8nWUnhtgz23u0N+FLWTjthqJH4SEBvzg6ihio5FWtQZbLaVytHjiKJHLezgYNySlrNwVNRlZmSF7tdg/Z0Yipd9FiQc7IVyI4Pv4Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CueoZhB2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTLMUM7O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DDB8C4AF63;
-	Wed, 15 May 2024 14:21:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CueoZhB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF0BC116B1;
+	Wed, 15 May 2024 14:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715782893;
-	bh=JlHkZlCGxF2J0ZVd7aN1EZ6olzqE0j6kpdnQtKdlAr4=;
+	s=k20201202; t=1715782943;
+	bh=IYa8U3GwTT6emlBqHWo5mWIUbSrmH2NUdPO0Of/UvTk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KTLMUM7OnwSyBc+xykMMGBSoBgF+w1Mh00qo+Ilho/vAqCRvSpYQHpx68ro+Xq/wG
-	 4bKq2GYMKHjaQlIsKbZ8yzk1kBm7PGjcFQOh0777sU6XBxXCu84ZreOu3iWKQ7vZ05
-	 HzPAT9anGctxTfjw3O2KXFp/xHB50KEDCJE7H3R/pM4RBVo5tFtir5ZbbJORshZLf/
-	 /N/J/m8mvyti9gao7g8IEt4U/tRvtLEfI7k885LRobX+6snelPE2NvWtsqQ+F3s6WP
-	 EpDc16FLTNsERTtbDVFnl3UW23xk1CBPMeNHdbQoDBv0F7PqnymT2g9vYARfEdYSzD
-	 OVEQGSA+n8OcA==
-Message-ID: <79cffe2d-a4cd-4717-9e20-64b0d22f9125@kernel.org>
-Date: Wed, 15 May 2024 16:21:29 +0200
+	b=CueoZhB2zuuGwLARJMmvT6lzIV9pb4IWmO3syNwwkyLYfCqzWvzHWUe5tmQaK8N2b
+	 bA6SGbE3v1U3+VL1radDeRqtjTyFHZ85n0PN+bob4zqVdsNpefqV2P+/536RZe2scF
+	 +6W/KbwrcNATWV4M0KDpzL1pxCccXzdWlagdRN0R0b+pXA683vjjAFVwUyBy7IPrqx
+	 zQBhNQwpYFYdDMUBosVdSDWfFo0aJjnVfZKeH791NoIvME9t5X9Jw7sH1x0zuFO8xc
+	 GkLIDGgOCtPekJRh255BXM0E+/dOZgFW9Yk0J7cOzHULSMmALYbXGdA2iv4bKClr+J
+	 FaKjtsMkpNpqQ==
+Message-ID: <89359317-8f96-4781-924c-93cac1e0c443@kernel.org>
+Date: Wed, 15 May 2024 16:22:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 8/9] dt-bindings: fsi: Document the AST2700 FSI master
-To: Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, robh@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au
-References: <20240514195435.155372-1-eajames@linux.ibm.com>
- <20240514195435.155372-9-eajames@linux.ibm.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: sdhci-msm: Document the SDX75
+ compatible
+To: Naina Mehta <quic_nainmeht@quicinc.com>, ulf.hansson@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konrad.dybcio@linaro.org, bhupesh.sharma@linaro.org
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20240515120958.32032-1-quic_nainmeht@quicinc.com>
+ <20240515120958.32032-2-quic_nainmeht@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,16 +89,34 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240514195435.155372-9-eajames@linux.ibm.com>
+In-Reply-To: <20240515120958.32032-2-quic_nainmeht@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 14/05/2024 21:54, Eddie James wrote:
-> Add the appropriate compatible string.
+On 15/05/2024 14:09, Naina Mehta wrote:
+> Document the compatible for SDHCI on SDX75 SoC.
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
+> ---
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+---
+
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
+
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
 
 Best regards,
 Krzysztof
