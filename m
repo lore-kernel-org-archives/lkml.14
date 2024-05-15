@@ -1,135 +1,122 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F4136AF2;
-	Wed, 15 May 2024 17:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3735438DE9
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715792829; cv=none; b=pEwVuBFtZdoW6jJ7fluocvqc4tPxK/d6RI7k9+iGM2Qu/rrUhIQKejrti18W5GZhksiBnvVv3oyXbVJyzCx9gr2ZsQKArPXNhyEeUHmOlE8qyMGUCHG0zbLpf2Gh75F/+dpxOkI1ywhLsDblUB169RlT1qgCMavj+bOLzMz8EFk=
+	t=1715793150; cv=none; b=JCH73hl1sZ2kXemwD4fv3XoNI2D2dQWAXND4YaoiT8wDd3WMxlnlUDtKmE6bFN/fVcq5HLR9gtdZpzIGS9cj0x7oXqYvEpAzDt3dQrdHACh6M2E3XGJzBzw0Y/MDoUHpdrYjnXMcQyqwTfaWBYpP8j+QG7CrQqUwiyOc2N+L71w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715792829; c=relaxed/simple;
-	bh=qrQZyAZgVUPNCUW1pRjCklM+vCSso8Xl/qKciw6A6yI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Ypq+sZcK6XX0zGTCS83WQddEd+bQLOPxBAutFjXzyj9F62ZbcLWkau1OH5hpNOeuEkYSVme6AAdEQjwxEBGxFqDl7PU2w6Tq0DS5bNr80LEtnc97rSc7PAaA/8asQT/Ut8giHLOY/hf/GaIfoe8SRetc9WKYYPUhlbDZegTy5Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=g8RggYc6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gEJmMGqI; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1715793150; c=relaxed/simple;
+	bh=PFgxIB1YPLSdg2W7I438r4ndLIqIln1z0HvRj4J4qqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cl8a4+julYYUsddqelCHU8Et5ztTIQX3tW8r6leR4WowHUZHX//eDitbqEm60PMoDD7hoh7srq3h69qZ/NQY8IwuTskZrBkh8Xsm5Oce3jcXtd7OBCJ3ZRBdZQhbtQLfv/8G+YnAw4Ifw7oywgFg+IMNFC64p1huE7ExsML1J3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=os8QrypA; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="g8RggYc6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gEJmMGqI"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id D24D0114009B;
-	Wed, 15 May 2024 13:07:05 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Wed, 15 May 2024 13:07:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1715792825; x=1715879225; bh=HKJnf18XpQ
-	XKeOps2EokRjX0aTuUxsmfspin9xKrYJ4=; b=g8RggYc683ErxmYGBSnT+1TSbg
-	62L7reQ6vrBgaG3zc7XQ8TSmSVpE26e9xtnEplG7mbpv72DU+Z5pBT1Zk5FnZdwJ
-	kXaRUhMlmWWPVMabMLbzQTgFT0a4BpPhSXgkFXaChEKsoZDNsRK++Zn0c+zUFLDB
-	uXXP1HNmoE52Qsyzl/bHORFzpJKltXCmSM3iHRyoH3jJSH0wBhT/u8azMuyHconl
-	dDxNAM76HRir08I68Czux94bkzVD33Iry14JR83f9wEfJZVxEC1OSFdEGAt0e1yV
-	39DYBACQ6cfA+Gi//yetv+KbfZCp57OV4AGB9pXNt2zr/YxZktffbyY5MTQw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715792825; x=1715879225; bh=HKJnf18XpQXKeOps2EokRjX0aTuU
-	xsmfspin9xKrYJ4=; b=gEJmMGqIzymlt1Mqii6T1fe4NHLrxfF14/db6NYPFALb
-	5gyvxwtFeQkRME7FUhwIvJhQNOWcpkRc/Kj4SUU7+oUQFHBHL4SXkPPYAy+KTN6W
-	Z3QdO1TcgjioR4Dj8Zigfe+w59MIFW9iyt7e6rxy0z+J2yMUenfgonbHLvKiwYS1
-	MQyAKVjAaGCjMIKDEgLb9XBkY0zbmOfFqSa54bW3p0OJUGPJlcLNRXWsRw+DlFjx
-	FOg1lqBAvWTCL0TNIkjZbAUEnnsPL70tceeU0CYzniUvzEq7x1rCvjiYQuPBwKId
-	zwA9DwVacsRDRcaDAD6VRoBxiyiifBG0Fv1qpVbUIQ==
-X-ME-Sender: <xms:uOtEZsP6IrdcEd_QZB2V7Nmx0WGkbCPHQUC8BoDWOPXLPlqwD_x7SA>
-    <xme:uOtEZi8T6vTT4Z1JAAUuNGzxHK2U9rCJJwH0vI0_F2ZdbsjbXvtkeRExK8RJu6tUn
-    gucXa4xzUjaRBbfl0Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegkedguddtgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfn
-    hihnughonhcuufgrnhgthhgvfdcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqne
-    cuggftrfgrthhtvghrnhepfeekieeggedvuedtjeelffetgeelgeeludffjefhkedvudeh
-    gefffeehtefftdetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
-X-ME-Proxy: <xmx:uOtEZjS9mv1AbjhKoDIacsZrxYfa5Csl1BpPXbSiU51uS7K1IaRU1g>
-    <xmx:uOtEZkuzssn7KkGMrON6YTv1IUp9rpE9vvv14PtvKEeA_xyHyszrJg>
-    <xmx:uOtEZkd9k_2i_zXvnru75XFSWAr2mCgypnuWGSmeYYTBre0gYdE_oA>
-    <xmx:uOtEZo29tArsmLFZq5M_f3sFmJmFCI1LKId6aksU6xpcMz6vQV0PVA>
-    <xmx:uetEZo9tbCjTiqnkqQYPQDaid74lluakjbi_UnFrNC34jgj9dc3aEGVq>
-Feedback-ID: i1719461a:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 1D106C60097; Wed, 15 May 2024 13:07:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-456-gcd147058c-fm-hotfix-20240509.001-g0aad06e4
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="os8QrypA"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34e0d47bd98so4642410f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715793147; x=1716397947; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNosG3ckDHB8NLVJ2gGvIoo4Er1X+7+xgehDnbjd6jc=;
+        b=os8QrypAOGFUEvSmqTbU6IVOP6d5jIztE10CDXdEhhdN4o3ePI0BGrfiP11iJd8CIJ
+         30rpzHtxM8JoRm1AUY1gAey/bAp5dl5Cxle+qQx/KcCFx+SIaqh7meqBoLYgJk0r6M9+
+         +AgcOqPp7bQCQeZsSX9ng8QJSL/QAI0PZFEmN6ShU/R2OX/lT0cHvLv3vW1Azaym41UE
+         H+tsXezBuQLFNeCnUimjV9r2vM0cK+wiDwxo8Iu1YFnClBixIyMLbLMCiQV9qcnMHimT
+         HocFr+9vZ2fXetYL1gYpgCgTxwAyS+pNmKPWjiSj0x1ehpjWVvk6E17rd2SGOcRXb4Bp
+         +FpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715793147; x=1716397947;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aNosG3ckDHB8NLVJ2gGvIoo4Er1X+7+xgehDnbjd6jc=;
+        b=ajRaj8qe3s2mDKANvVzOAsKWOIBJ3tht1zUEydlJF4afHawR0tTyVbDE37zpdVAmMs
+         gvtkzeS4I7F79HOKK9gsGwkhMV6OA24+W/1fSzo/qxnOCI8MMRTzzc3GinseFmsxwMSE
+         ZR/BmbJy0fXnGCth5KXpOe/1jVXTedA8CJlP+Zgyui/o4XSrENMBnZ8QIbthWInZ+OLG
+         0ODo4hSQ0cnIAajC4g8E3bmW6MaMN3ccCzsoHYwqfu+LCbSs4ORJs0TfdPkteuHj7s9C
+         2ivYlD/huAbWSxkvDmeAYfH7PhWETjVgCfB6IA4ppo4Fnhs/Oim9AmkQS8SmFVAjc91d
+         yRRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTXD66aRA4St7Gfk/B1IAUTiE44oMBvRM3A4UHRvNdTkyGaPBm0BQzjnJRnzX+7yZTEcxiww9f7R+M/s56CeJQsGqZzFdJtb0dAeFl
+X-Gm-Message-State: AOJu0YzDpArB7IP3PQLJc+v4Bl2vKJgZiNUCcDajONghPxx8cJyinb4c
+	b+TrOnZVGNgc/hXUKm/PiaO//H88IM4W+5g7+QoD01rKLl/teihSL0lbBj7vvmY=
+X-Google-Smtp-Source: AGHT+IFLKOGooEzh5kgxSU0G+WqjP7c8Us/ACZAVQOeBbdHE4Nu/p8dE0Q5EYbLnc34bRxIqp6xGpA==
+X-Received: by 2002:a05:6000:930:b0:351:d383:6325 with SMTP id ffacd0b85a97d-351d38363cfmr598051f8f.12.1715793147224;
+        Wed, 15 May 2024 10:12:27 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a780fsm16840240f8f.59.2024.05.15.10.12.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 10:12:26 -0700 (PDT)
+Date: Wed, 15 May 2024 18:12:24 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Phil Auld <pauld@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240515171224.wbjlke6uavhig2dl@airbuntu>
+References: <20240514234112.792989-1-qyousef@layalina.io>
+ <20240514235851.GA6845@lorien.usersys.redhat.com>
+ <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+ <20240515112050.GA25724@lorien.usersys.redhat.com>
+ <20240515120613.m6ajyxyyxhat7eb5@airbuntu>
+ <20240515125049.GA29065@lorien.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <2419538f-199c-4404-9af4-e17259e09cf4@app.fastmail.com>
-In-Reply-To: <c927c490-bc22-45d9-87e4-4156746547f9@gmx.de>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <20240511023726.7408-4-lsanche@lyndeno.ca>
- <c927c490-bc22-45d9-87e4-4156746547f9@gmx.de>
-Date: Wed, 15 May 2024 11:06:43 -0600
-From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: "Armin Wolf" <W_Armin@gmx.de>
-Cc: "Mario Limonciello" <mario.limonciello@amd.com>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- srinivas.pandruvada@linux.intel.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "kernel test robot" <lkp@intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
- "Yijun Shen" <Yijun.Shen@dell.com>, "Matthew Garrett" <mjg59@srcf.ucam.org>,
- "Heiner Kallweit" <hkallweit1@gmail.com>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Vegard Nossum" <vegard.nossum@oracle.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v6 2/2] platform/x86: dell-laptop: Implement platform_profile
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240515125049.GA29065@lorien.usersys.redhat.com>
 
+On 05/15/24 08:50, Phil Auld wrote:
 
+> > > My point was just to call it rt_task() still. 
+> > 
+> > It is called rt_task() still. I just added a new realtime_task() to return true
+> > for RT and DL. rt_task() will return true only for RT now.
+> > 
+> > How do you see this should be done instead? I'm not seeing the problem.
+> >
+> 
+> Right, sorry. I misread your commit message completely and then all the
+> places where you changed rt_task() to realtime_task() fit my misreading.
+> 
+> rt_task() means rt class and realtime_task does what rt_task() used to do.
+> That's how I would do it, too :)
 
-On Sun, May 12, 2024, at 12:05 PM, Armin Wolf wrote:
-> Am 11.05.24 um 04:36 schrieb Lyndon Sanche:
->
+Ah, I see. I updated the commit message to hopefully read better :)
 
->> +static int thermal_init(void)
->> +{
->> +	int ret;
->> +	int supported_modes;
->> +
->> +	/* If thermal commands not supported, exit without error */
->> +	if (!dell_laptop_check_supported_cmds(CLASS_INFO))
->> +		return 0;
->> +
->> +	/* If thermal modes not supported, exit without error */
->> +	ret = thermal_get_supported_modes(&supported_modes);
->> +	if (ret < 0)
->> +		return ret;
->
-> Hi,
->
-> the function dell_smbios_error() says that when a specific functionality is
-> not supported, -ENXIO is returned.
->
-> Please treat this as "no thermal modes supported", since checking if CLASS_INFO
-> is supported is not enough (CLASS_INFO is also used by other functionality like
-> rfkill, so machines might support CLASS_INFO but not USTT).
->
-> Thanks,
-> Armin Wolf
->
+"""
+    I define the usage of rt_task() to be tasks that belong to RT class.
+    Make sure that it returns true only for RT class and audit the users and
+    replace the ones required the old behavior with the new realtime_task()
+    which returns true for RT and DL classes. Introduce similar
+    realtime_prio() to create similar distinction to rt_prio() and update
+    the users that required the old behavior to use the new function.
+"""
 
-Armin:
+> Reviewed-by: Phil Auld <pauld@redhat.com>
 
-Thank you for this. I will include this in the next revision.
+Thanks for having a look!
 
-Thanks,
+Cheers
 
-Lyndon
+--
+Qais Yousef
