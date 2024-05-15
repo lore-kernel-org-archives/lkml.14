@@ -1,128 +1,142 @@
-Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5530313F450;
-	Wed, 15 May 2024 14:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C27513F450
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715783160; cv=none; b=TmB9IxIC0GQCLVWB8lMUprWmFQUM1x7r4pBmmjSCPY+hz8S2PcbMqG3Z/u9dO2f0GJUC1opOJGe/x4Nqg3j57/Fg3WJgtm8dA6Alt7c8C5X+PCb+wCfbHogX/4v0TEv55UxhEzPdTWfY/La+MQ0Q29qR6QkZ1BmPUWF6rypFUJ4=
+	t=1715783215; cv=none; b=CfCy4wrbEnF83BlE8jOjvDCkE7BsPV5y0E5K9AibHKLMe9bihKXtA5K4Lqlp5/zIZy0KbgxqYXlFx141uqbmI69SmXRIxaGa/lQexOjxOxt8fWM8L4+aNqwubam7CkmK80rO2Pt/mBCoNFh2zL9QMrgRnLuA1DBNhTMe9lWYT+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715783160; c=relaxed/simple;
-	bh=v0x+DpEEQ/CULK66tGCdFakqHf6CBwbzeJc6dtqG+8g=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=QnMUR+EaR3BH+RtPT2xS0Gaxb5BS54Rn3LnH+HjO5OPhEwDyDHum0RUPGDD7TBzFri1XYI2qoZKYs5gdKjamOi2vlSFsyojTw2qUjx0mhK8ipMYKBz6Dx3rcLZluMkOWJRNn+EketzZdrlGqVh8MTnb7W5BEFQhzuawx+L43xns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qUW0E3IH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JbiCqNfi; arc=none smtp.client-ip=64.147.123.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1715783215; c=relaxed/simple;
+	bh=IzXwnDzL5EFdH3+0tvu4yNaXUaqrwXNLa6apbrChqOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b5hxTHSryGRYqSVCxme4TgXsa8xX1pU36hG1NVns00mBAoQUEMP3OO+su9tH8fcjxNwQNcWWt6LcqICTfZkyRS9IBwhEeRZYi7MswjJtuMkfFC6pC6/GvUY/pduSQCBZUAIbFzj9pG66R6PiaIQt/FYYlzC931Xsi05EMbJHz8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nh9yFLRi; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qUW0E3IH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JbiCqNfi"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id BD2AF1C0011F;
-	Wed, 15 May 2024 10:25:56 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 15 May 2024 10:25:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1715783156;
-	 x=1715869556; bh=VYHmieqUmmpUUBGaoj5sdegT+mtMw56IFZEbX0OZWos=; b=
-	qUW0E3IHNV0pMPfRqgt3mn0hnA8AU1orLPsgNR0eNOGBxcuNTg3SL/qTJRCCP6kP
-	Xui8DnRR4yqxxl3JMLgAvGSiWr0XrOolLOQyp86RNtqeEb9fw5wu0y+nDO1OsTVi
-	2T7DqYFoxMQa2FCkCyJ/1yRHcRCPGTR8eSeFUb9jVU2aIcFl0zaaUbNfINpOcC4Q
-	59M8mVWNVfZLFsb/QXGUevN391ZYCw/b+voZqxwrn0tZlfI/uLHdtn6sLk52fZgS
-	nECiNlthidEQb4PpjMg0QEp50ubzSOXXLTUbfkvto3CAY82cWNuQVCQLjHi/qDcL
-	ncIiJVj/+E/IJRUKXRQilw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715783156; x=
-	1715869556; bh=VYHmieqUmmpUUBGaoj5sdegT+mtMw56IFZEbX0OZWos=; b=J
-	biCqNfiVIax+RcCdhhNfmby2OPYHVF7LWKY7r6n8K/T+KRi7Uh52540l96Ad+XiO
-	ERixAx5aV4eQ7LI0sLf7BDSyvDo86KCXkaCw3DH5wzobEo5eq50pDoLYBFnhOWat
-	e9S0D5m3ZiBtSDvE2D0+YSL/3uoiJa5jQpIREvianAscw3E1P/d8m6vskqoeYuWM
-	2pkcqursle3l1LSA1uP3e9X5miby8ZHOG/6aN3NKP7TOUO/wWkmT12itJsHYiAC3
-	iDtzW2VBOE93gSQIm8EZatH2OoZiGriTMfiGB4iT7PkaZlqq9ca+rD62Au3n+ClU
-	e3EYrozltGACD81fU3zDQ==
-X-ME-Sender: <xms:88VEZoTdUKmTrcPG2c6voHcpRiC-Od89384GN0_rJhqWAq8ka4QnuA>
-    <xme:88VEZlwFGbQHWrqAmxTghND0O3mPmrBXy9jDUbdA1F18l8XwLZ2b3KcEGUnYPODUy
-    dSKRIWVMQGga_J_Dl4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegkedgjeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:88VEZl1IqNmRq9DlG7cKJVIOlix6oQfEknqQ_DlZAfuNbc1WYoKevA>
-    <xmx:88VEZsDJSX4kacEqo1M0zNJLMWLI9XtdAensOXh6WAW3n3pPu8ssVw>
-    <xmx:88VEZhgr8cnFpel30Fg1F9ZA9AnYr_rlZmwe9OI2YxqSqIXPUXKQOg>
-    <xmx:88VEZoqFbbPnfc9LPvtAMDO6BWdU08Lv0xMMide6EtGiYKki_jfVfw>
-    <xmx:9MVEZsoO-OoTCATxnm_eq2u9bS3zpPI2lvIwcqnhyQvjkC-iYO468hVA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 23041B6008D; Wed, 15 May 2024 10:25:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-455-g0aad06e44-fm-20240509.001-g0aad06e4
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nh9yFLRi"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41fd5dc03easo42867865e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715783212; x=1716388012; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzXwnDzL5EFdH3+0tvu4yNaXUaqrwXNLa6apbrChqOA=;
+        b=Nh9yFLRi7p2qYkqiC6u6wCpamkhJjaAPJYoZ0oGJ5IqN+58y4CJw8TUrNpT41BZJuh
+         M+rVFa9SiXSdMWUHRN+5ePX/Jxzk+Rc34pi8c2lBF8rTIsfDCmmIddVNxrdvFBiOSxXX
+         iWoGElvRClelRKi/4GEg8PPRDMmFdGHpQHoa/3hy4dL46rlfmV+U96mp11csSkrYjSx2
+         NDVnBBE9RImzcYBVt8bP36wGFFPMILkgt/C8dRQAqsksRAnl8oGC8PCOCNtnfxddJXSC
+         1v4hGke1eKs/uhjKt1VAEVa9GGG9+i0QmT/5E4B/YuUXIz5gBXyRIDcThAlABGTQ929U
+         5Nhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715783212; x=1716388012;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzXwnDzL5EFdH3+0tvu4yNaXUaqrwXNLa6apbrChqOA=;
+        b=KFFD+gWGGxRSft+zC022qeZSE3LcJC9TvkfO+en9kZqSAC6fIoLDThk1NiJIISij1H
+         vaQEnqPH+odFiQRZwB0hKA3bSPoCwNJabgAlrECsKh+5VLE3o2zV5CBo7na1USpIRJwG
+         SpkUF4Mp2AVcI89nFMQBKFsVez27HBrFnlWX5tW09fxTe6uNYGOD5FQnNUPGhtH1Uqfc
+         3rzQFoTf85SO1EgG2UgNFQyywNR429j6HWTx+dSY173NFZ7f/VGGcblp2c3ZnbELh+4o
+         aQTyNtw8OTnuN0olAFdwPvNSa57eKXyrWHEF8kuoDEDbN/WIrkWoE24kdD1m34tGIXzE
+         qKCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOO6uJLsR60DxiW4eIX/H7LZ/d7zglZple8faXO+jRVmRsU1r/G5Byu+0ARDiptRRY9PCbll3yagOzI3TUvlU7yzh4O1qRF8jn6o0M
+X-Gm-Message-State: AOJu0YzqSV/fduLmMGIml6uZ+ir4idJoKx0TjfooW0/OjR+s15SAxkKU
+	P3hRb3LLNbAFvpTUqSOhOdxp0YAV0f2Nh2O8NXuulw/HJ3bs6hr90Uu5ts2uMzQ=
+X-Google-Smtp-Source: AGHT+IHRhmKOWpAr1PEsZht6byVh+04sk43uEaa1/eURhjKKvtgGcPggxS0xWe9o9pAJ1aXL3ORwtw==
+X-Received: by 2002:a05:600c:1794:b0:41e:454b:2f7 with SMTP id 5b1f17b1804b1-41feab40be5mr116658465e9.23.1715783211968;
+        Wed, 15 May 2024 07:26:51 -0700 (PDT)
+Received: from [10.91.0.75] ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee92bcsm234751905e9.36.2024.05.15.07.26.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 May 2024 07:26:51 -0700 (PDT)
+Message-ID: <ce793976-c6ca-4547-aa5b-8845c7fe90f8@linaro.org>
+Date: Wed, 15 May 2024 16:26:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ebf493ee-1e8b-426d-bcf4-d8e17d10844a@app.fastmail.com>
-In-Reply-To: <3937d6b1-119b-195e-8b9b-314a0bfbeaeb@loongson.cn>
-References: <20240511100157.2334539-1-chenhuacai@loongson.cn>
- <f92e23be-3f3f-4bc6-8711-3bcf6beb7fa2@app.fastmail.com>
- <3937d6b1-119b-195e-8b9b-314a0bfbeaeb@loongson.cn>
-Date: Wed, 15 May 2024 14:25:28 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
- stable@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Convert the Broadcom OTP memory controller to newer DT
+ schema. Created DT schema based on the .txt file which had `compatible`,
+ `reg` `brcm,ocotp-size` as the required properties.
+To: Pratik Farkase <pratikfarkase94@gmail.com>
+Cc: Pratik Farkase <pratik.farkase@wsisweden.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240515140731.63927-1-pratik.farkase@wsisweden.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240515140731.63927-1-pratik.farkase@wsisweden.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 15, 2024, at 09:30, maobibo wrote:
-> On 2024/5/11 =E4=B8=8B=E5=8D=888:17, Arnd Bergmann wrote:
->> On Sat, May 11, 2024, at 12:01, Huacai Chen wrote:
->>=20
->> Importantly, we can't just add fstatat64() on riscv32 because
->> there is no time64 version for it other than statx(), and I don't
->> want the architectures to diverge more than necessary.
-> yes, I agree. Normally there is newfstatat() on 64-bit architectures b=
-ut=20
-> fstatat64() on 32-bit ones.
->
-> I do not understand why fstatat64() can be added for riscv32 still.
-> 32bit timestamp seems works well for the present, it is valid until
-> (0x1UL << 32) / 365 / 24 / 3600 + 1970 =3D=3D 2106 year. Year 2106 sho=
-uld
-> be enough for 32bit system.
+On 15/05/2024 16:07, Pratik Farkase wrote:
+> Signed-off-by: Pratik Farkase <pratik.farkase@wsisweden.com>
 
-There is a very small number of interfaces for which we ended up
-not using a 64-bit time_t replacement, but those are only for
-relative times, not epoch based offsets. The main problems
-here are:
+That's not a proper commit... Read introduction to Git how to create
+commits.
 
-- time_t is defined to be a signed value in posix, and we need
-  to handle file timestamps before 1970 in stat(), so changing
-  this one to be unsigned is not an option.
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-- A lot of products have already shipped that will have to
-  be supported past 2038 on existing 32-bit hardware. We
-  cannot regress on architectures that have already been
-  fixed to support this.=20
+Code itself looked good.
 
-- file timestamps can also be set into the future, so applications
-  relying on this are broken before 2038.
+Best regards,
+Krzysztof
 
-      Arnd
