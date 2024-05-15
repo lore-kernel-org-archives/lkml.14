@@ -1,160 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99739FD4;
-	Wed, 15 May 2024 17:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7723032A
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715794333; cv=none; b=ABoYvjQNFfvxT0nYQ5i+w9kajei1gLKrWMUbFE0VqDbW95ADQAFZUfnPoGFe1GrJyV7lGMYvoL0nbQFqIUykaZ7V9+5OpySZjfv3SwS2+RZJrepA8/sDiH9Nb3EeOVeiyQ4umfbzyb74jah+S48SEzghSz12hPCaG4yNbmIkUxo=
+	t=1715794368; cv=none; b=DciR8s1XBB2EtHWWM59O1bo9/8AIWAXDOaJ1lPkEnPytxvsrCTx8HejGGNVKRXbJEGDbuGkykV+MphqRpS1Ng07e2cS9I8DTdaiO/VecKUOp/ih6Yscdr2zaBlYHR+ccAQoteghte0VQr1mpFbeYbKinsNW1ilmZrfrMush4BC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715794333; c=relaxed/simple;
-	bh=H4tvcfjLPDJCNINCPIawFegvFWsr8Silcf/tixLHyQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=larMtPzZj8F8Mb3OcJc1ZL8a0KcnWZRJxvSCd2/eQExcPVRhUh0trSxwLxUqsonFQvAVhc4j2fCTpkN85PnHDmkjdqTnJ/xJwM5sFRenRbwKuesgGfmm2C6BxBRRzfo9qZ5bD3HfA5jMR/cZdrdk8iHBG5WxyENoeQSUVHtqQz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nIiXdbvw; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715794368; c=relaxed/simple;
+	bh=kiBu9aDX7EL9QTt1G+6SJu1okG8LZwH7rPudLYo5UBA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k0P9Peda4KiOJd3bR99SlgU4HwXLtA8Q5xFWs+Ps0KkiKJDM9qDDbJSamRHSlWBFXYe6mOU9VL/xMoDo7lDktq31j0T/3rtCButJANSyQMi6rXDhAMYlOnvf+hVnVq0GbAKWxwimMSQHVSh/AmFPy6Ho5nG5Tq6ufEyc4pyxeOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QG4m/p0r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nIiXdbvw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715794331; x=1747330331;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H4tvcfjLPDJCNINCPIawFegvFWsr8Silcf/tixLHyQc=;
-  b=nIiXdbvw/SY2u8uaE4/L4UvhcwAGmrevpY2zl0OBPtbSTStRPhn8IRr0
-   75NBNI/WgMB+etHNlCu0X+EYXmv2YwmLViqvJ2mzkwkC1ulHA3t2jahzu
-   +0SwMV3Bb9kTWIJUxsog9PhWcYHln2lp6GsZyv5PmytfM/X01GszkAVds
-   TbBwZT4yLzHDJqR1ofT+AFtbeGC8fyly5iLY7bKQ++Gqt9SGprXl38kRm
-   DrmrPdbjixYIpOGRuACwTFOXjp8BHDMROWBj1Mb8SE2JeqTL6R9SqAxd5
-   XYbl9WUHJZqDn8Bjh93n05ytrnwA7klGWDkzsVDEZ6VA3IsOpXodhRFTH
-   w==;
-X-CSE-ConnectionGUID: jPP9+nZnSQS770cDgKk8ag==
-X-CSE-MsgGUID: p51zKm/hRFO7l8IPkc809g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11987937"
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="11987937"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 10:32:10 -0700
-X-CSE-ConnectionGUID: K5pXOraDRJ27Jk68iw1uUQ==
-X-CSE-MsgGUID: cy365DZqQ/GzGoKi0US3zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="35681840"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 10:32:10 -0700
-Date: Wed, 15 May 2024 10:32:09 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	Xiaoyao Li <xiaoyao.li@intel.com>,
-	Binbin Wu <binbin.wu@linux.intel.com>, rick.p.edgecombe@intel.com
-Subject: Re: [PATCH 2/7] KVM: x86/mmu: Replace hardcoded value 0 for the
- initial value for SPTE
-Message-ID: <20240515173209.GD168153@ls.amr.corp.intel.com>
-References: <20240507154459.3950778-1-pbonzini@redhat.com>
- <20240507154459.3950778-3-pbonzini@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QG4m/p0r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715794366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K3zrJi+7L7SmSVpO4sJC/EifqPPPG8oHimbPsdQiY8I=;
+	b=QG4m/p0rSw5KL7Zk7vTtoGkiT/YjVWX2YlpkPiyYtdtfF/txWVGhntCWNLvPX9T7hHCynX
+	VIJzDU4pgaSJkZGxpDEZm4q962L0vKvU032+WcJ3gr3tDrwxndOuFO7muSy8fYxwtHtHkk
+	XBoe5SWpyjRb8+E667GtFppshVUQcz4=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-230-dRY6s8-qMZyw8X6nMuC-Vg-1; Wed, 15 May 2024 13:32:34 -0400
+X-MC-Unique: dRY6s8-qMZyw8X6nMuC-Vg-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-792ff352462so69698285a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:32:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715794354; x=1716399154;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K3zrJi+7L7SmSVpO4sJC/EifqPPPG8oHimbPsdQiY8I=;
+        b=nFd0hotZk2O0Mv5a79bRFvrInv9T5OnQNapsqkHnvu/dGnZYkB/EH6mx3bxbauDT1I
+         0To++JA6UcU1OKSYsfb3VR3m+n2w3M550vgiCfGi6gaiWyCn/KpfdpcDGm578O/IBrKf
+         LdZRBi99pVuaU6XyCnbsKb9FUOFhcwWXGl8dzIwuz4K0WRIudiWAc5r6uCgeNwsNCHKv
+         CKmxQchvQpWhaYCNAR3zIzKD+oWxxSDm64ONN2B3p4IDVVSHcy2BvOHpHycDQN6L4Dge
+         IFUmHEVndfn3epakZqZGbY2+jjbfaiBhQmgqi0xAav0lmvRGhBELt2nsRChuvywfJAkp
+         mb+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUN8ap2rDgm09Il8yGe5Jtu8pN5DAU5bR8xVlUfcjp5LQpPqk3840OEarlzr1UucW9Uph0ttJXTYKkjuLaAPGg057qlB9/e/TAPhNK4
+X-Gm-Message-State: AOJu0YzAXbI7mpHCmHsrUuCzLGELKmtjv4Tbju3jnHLhO9jaFqmR6c+t
+	g7RQuC4Zb4l+InDD5Z3TW5YVyE1DyfxpediTtYFO49foMoYLjmWIK7+5wLGmckvbSVLEIKISJHL
+	QjBfxLYOLueWOdmncxSGMIA0qF+MlfegeQGzWsU6Pi1ft2BObf3DbChcN/GRgsg==
+X-Received: by 2002:a05:620a:4946:b0:790:e6bf:23c8 with SMTP id af79cd13be357-792c757421bmr1697142685a.15.1715794354095;
+        Wed, 15 May 2024 10:32:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGhuFXJCFrAqP1KpGavlBwSPWZKTHyKGVO9HIx7RJlDer6r8nEi85JyvPgFGo7LrS4jndsTSg==
+X-Received: by 2002:a05:620a:4946:b0:790:e6bf:23c8 with SMTP id af79cd13be357-792c757421bmr1697139985a.15.1715794353706;
+        Wed, 15 May 2024 10:32:33 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf27f99dsm703976085a.37.2024.05.15.10.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 10:32:32 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, "Paul E . McKenney"
+ <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Joel Fernandes
+ <joel@joelfernandes.org>, Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 0/6] rcu: Remove several redundant memory barriers
+In-Reply-To: <20240515125332.9306-1-frederic@kernel.org>
+References: <20240515125332.9306-1-frederic@kernel.org>
+Date: Wed, 15 May 2024 19:32:30 +0200
+Message-ID: <xhsmhjzjvgevl.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240507154459.3950778-3-pbonzini@redhat.com>
+Content-Type: text/plain
 
-On Tue, May 07, 2024 at 11:44:54AM -0400,
-Paolo Bonzini <pbonzini@redhat.com> wrote:
+On 15/05/24 14:53, Frederic Weisbecker wrote:
+> Reviewing Valentin's patchset made me stare at some memory barriers
+> on the way.
 
-> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> index c6192a52bd31..f5401967897a 100644
-> --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> @@ -603,7 +603,7 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
->  	 * here since the SPTE is going from non-present to non-present.  Use
->  	 * the raw write helper to avoid an unnecessary check on volatile bits.
->  	 */
-> -	__kvm_tdp_mmu_write_spte(iter->sptep, 0);
-> +	__kvm_tdp_mmu_write_spte(iter->sptep, SHADOW_NONPRESENT_VALUE);
->  
->  	return 0;
->  }
-> @@ -740,8 +740,8 @@ static void __tdp_mmu_zap_root(struct kvm *kvm, struct kvm_mmu_page *root,
->  			continue;
->  
->  		if (!shared)
-> -			tdp_mmu_iter_set_spte(kvm, &iter, 0);
-> -		else if (tdp_mmu_set_spte_atomic(kvm, &iter, 0))
-> +			tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
-> +		else if (tdp_mmu_set_spte_atomic(kvm, &iter, SHADOW_NONPRESENT_VALUE))
->  			goto retry;
->  	}
->  }
-> @@ -808,8 +808,8 @@ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
->  	if (WARN_ON_ONCE(!is_shadow_present_pte(old_spte)))
->  		return false;
->  
-> -	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte, 0,
-> -			 sp->gfn, sp->role.level + 1);
-> +	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte,
-> +			 SHADOW_NONPRESENT_VALUE, sp->gfn, sp->role.level + 1);
->  
->  	return true;
->  }
-> @@ -843,7 +843,7 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
->  		    !is_last_spte(iter.old_spte, iter.level))
->  			continue;
->  
-> -		tdp_mmu_iter_set_spte(kvm, &iter, 0);
-> +		tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
->  
->  		/*
->  		 * Zappings SPTEs in invalid roots doesn't require a TLB flush,
-> -- 
-> 2.43.0
+Sorry not sorry? :-)
 
-I missed one conversion.  Here is the fix.  I found this during reviewing
-TDX TDP MMU changes at [1].
+> Here is some removal proposal. Some may be beneficial on
+> runtime (fqs snapshot with potentially as many smp_mb() as the number
+> of online CPUs for each GP). Some happen on more rare path. In any
+> case they clarify code reviews so we don't stumble upon mysterious
+> barriers.
+>
+> Thanks.
+>
+> Frederic Weisbecker (6):
+>   rcu: Remove full ordering on second EQS snapshot
+>   rcu: Remove superfluous full memory barrier upon first EQS snapshot
+>   rcu/exp: Remove superfluous full memory barrier upon first EQS
+>     snapshot
+>   rcu: Remove full memory barrier on boot time eqs sanity check
+>   rcu: Remove full memory barrier on RCU stall printout
+>   rcu/exp: Remove redundant full memory barrier at the end of GP
+>
+>  .../Tree-RCU-Memory-Ordering.rst              |  6 +++---
+>  kernel/rcu/tree.c                             | 21 +++++++------------
+>  kernel/rcu/tree_exp.h                         | 16 +++++++++++---
+>  kernel/rcu/tree_stall.h                       |  4 ++--
+>  4 files changed, 26 insertions(+), 21 deletions(-)
+>
+> --
+> 2.44.0
 
-[1] https://lore.kernel.org/kvm/20240515005952.3410568-11-rick.p.edgecombe@intel.com/
-
-Paolo, how do you want me to proceed? I can send a updated patch or you can
-directly fix the patch in kvm-coco-queue.  I'm fine with either way.
-
-
-From 7910130c0a3f2c5d814d6f14d663b4b692a2c7e4 Mon Sep 17 00:00:00 2001
-Message-ID: <7910130c0a3f2c5d814d6f14d663b4b692a2c7e4.1715793643.git.isaku.yamahata@intel.com>
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-Date: Wed, 15 May 2024 10:19:08 -0700
-Subject: [PATCH] fixup! KVM: x86/mmu: Replace hardcoded value 0 for the
- initial value for SPTE
-
----
- arch/x86/kvm/mmu/tdp_mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 1259dd63defc..36539c1b36cd 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -626,7 +626,7 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
- 	 * SPTEs.
- 	 */
- 	handle_changed_spte(kvm, iter->as_id, iter->gfn, iter->old_spte,
--			    0, iter->level, true);
-+			    SHADOW_NONPRESENT_VALUE, iter->level, true);
- 
- 	return 0;
- }
-
-base-commit: 698ca1e403579ca00e16a5b28ae4d576d9f1b20e
--- 
-2.43.2
-
-
-
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
