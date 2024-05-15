@@ -1,150 +1,108 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BD558235
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 09:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453414C61C
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 09:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715765481; cv=none; b=hdHVYCQweD1uBS6gIVQv0L8FRketYjS28cAI2XqOJp7xvO2uJdgWPrDgT5/7mBrwDdPVLure3NlKdDbsIoBuyp57FMtCOpV9Gry5uY9rVVp8HYeiWMDblOJDFMDhsjPucVmPjg+sRRW0RpDeKCJo1PFFlg8Gfp7SwuhGT16g7p8=
+	t=1715765564; cv=none; b=PCHKthRmAztvgs1OWXpAxrs6mnz3YVB7+3WBd85eBoYJroHKjK2IwC7oePpqCNoB+KOO7jtst910xkN8ncCq3yWNLlvg3bVP6O8GQHK1CgZQyBOPd7X0lsqMnKnUCZBZ1xH8AsITisu6vk/b6uis5b4yDGtik8mi+E40U16mqcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715765481; c=relaxed/simple;
-	bh=Hzey0cCbkFphYgF1vjC3+uado6EHXgaj7zoOaR/Cr6Y=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=HC00YVlKsE6fhJcvCjrNsI20osiBXm1bn+2Gb5FTkBa1D6Nerd0MDkVl18e/X5emCpdDIAEmiuGhElF4mH2AXdYpkzkupjUXSM88ll6hJ8yyblEfTVnZSHvjCA6vXUJczHRl2cRN9s9yiY8AI631BP5S+23cbLhp0vTu7MzeuOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=tM4U3c0J; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1715765564; c=relaxed/simple;
+	bh=I9Njt+qSZitDC1cyvp2ud8/Ev+h1Ulu3Mosrsc2hC/4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=heiD7qDHKyYk4DQOKjGLCng7uyF82X3mTx7CkRmTBcFgNfFOWOMTakeEE0xB3czaTBhaxLFrZA57tvviXTbL6m2fX76zw+XCWLPreuM/3NNV8Gk5EWTOzmwiuXWmK4Ukl7+oSyz+AO8TRPuTWSCwz2r0BMm1XLxuodAXAU/JFLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cS3yVULo; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="tM4U3c0J"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42017f8de7aso19932285e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 02:31:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cS3yVULo"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-41ffb6bc28fso23317765e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 02:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715765478; x=1716370278; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6G3NLZQ7adr3CERsJjkdE8ocBCFRaDGrcowv5jfCJI=;
-        b=tM4U3c0JxvGQ7SFj/SFxTA3SSdGTxMRZr/7efww4CJJWT3Yp1xwziIhMlszRN65cS/
-         vPM/o3qfJELoc3dRn3Y0EfLYDTE0HNsnsuyv1Ojowsz+r9hL2SYFSX0OO9jxppWjf0Y5
-         mnh9KapMUSxsTU1+B2yu3zQIQyNcYkBOXNUrIvKortuTS6gUmkbjMMoVK7vMxN+c0LGM
-         xgAqwhZmh/G3wwrWlQ1CHFL6UCY9t/tCTEwjkmYEXrE7WaQfHH2khnNezULElvjQCDc8
-         e9vevuTz/eL02K5Hhu7TtNkNSTPFuE7Plcyyu9V84YgqWHS/sI2/zmUk8Rrg9pk2nAJx
-         3AbQ==
+        d=google.com; s=20230601; t=1715765562; x=1716370362; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nEflG7FT4wfp5aRRf/eaCxI+2fXY/+QXyFHn23LNuwA=;
+        b=cS3yVULoeD1Iw7sOuiXbesKqxYDwUqtZtKBRGiQCPpgSBY53W3n1e8NM0K9RfFNxDG
+         6ChYBxfJ6cBZPzl2WnOaN6bbtPhjnWSQ4Z6gd9v7Ykc4Le1SesJISJit+JOG9p5VMRV0
+         XJv4ZhN4gjL+9IKbISgljsB+FZ182BoQbq6YTBhYxOfz3R1dEm7IK/0VPNqFPtuq0pEo
+         7mv9sI5Suc+j5qaiOzroUGbauKbo+t7GvbkxlXsPYniCKcUNlobB/r0rPnJfdk+mUCGj
+         2N6A4PyznJ4ND6nRMS0CRiI8RcCAj9631U1R58ji6c+QzUlDX5IA83g9tAOVRJl9FUUv
+         QzGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715765478; x=1716370278;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W6G3NLZQ7adr3CERsJjkdE8ocBCFRaDGrcowv5jfCJI=;
-        b=IeuU63YbBZRSuDr+bftLe5W+klauT/An7Lkg9X2o7/aUPxy2RbzYKFfyWUnDkf00uf
-         WD8cVRoNUw1izyYPeElhVCjH0qfOjGzjiyHGxsXxLK24wBbAHJ31WQd9PpEGhib/xG4s
-         b3EbwG1iU5g1MgMSNd/YBkPVz6E52m8D0/nvfbOJKbs/OlKABlW8L0K8tahn1F7vdpu2
-         x6NhK4jqMWU7TW899h8ZV8dyxxiLg3uYsTb79APoiSxKudjE2XZ4jbil+sFavjeLhKAn
-         bGCK6qSi3KyWozrCgXTl/6dVZh/KqqM8Nhtv7Rxmw7biJ4r+AJV8eDTTL8WTGNl5ZRF6
-         H/LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9PLPRW3LlLij19TfQ/80b3/q6/Os9ZgPcMoisTj4iiqp0aCWmsF5axxoAmSCzDTST4zDI2IbyM474OgmoHNpnpeRK12J1lNhE03Mv
-X-Gm-Message-State: AOJu0YwivfanohkwTuAuOGCzqgz8TLaCz9HRHsw0ABgqTPjIfF2sr03g
-	vRwCrVP0ex955EYWp3rWTHKUudTcn8yeM15zlpA1QYcwZ0oOXlVENTgz7di8XMD1PZxEzCuRg3X
-	4
-X-Google-Smtp-Source: AGHT+IEWq6C+Q69fwOKt2Hhmyp59PTVplWyL7OAWiHlAN1uxl4iQWE0fRjH5iltmnd9peTcPahGTlw==
-X-Received: by 2002:a05:600c:46d0:b0:41b:d08d:dce4 with SMTP id 5b1f17b1804b1-41feaa2f3c4mr133082205e9.5.1715765478259;
-        Wed, 15 May 2024 02:31:18 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:aa3:5c01:b167:7b8d:34fb:4ec8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42010ca475asm146321755e9.16.2024.05.15.02.31.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2024 02:31:17 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+        d=1e100.net; s=20230601; t=1715765562; x=1716370362;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nEflG7FT4wfp5aRRf/eaCxI+2fXY/+QXyFHn23LNuwA=;
+        b=r1Yf89uA0u15psCHH+7T7ScmC3D/MAPvZdYdNCZIhZnw9CxbfNix8/AI1NPDnRfvjb
+         7WLHGyMfZqHtQFsgDiPRp/C06UwUhG1gVcWvAiDsuqTvzlFhrx06OtqXPbo/ha4F+jSU
+         8cXBKc22rKf3hhxPTneV/LsH0mtIs0wAQC+f99NOZc2cEko3HfSWjO0+HYKdZIrKHUUW
+         TxLVObYeKwQOjO08gNGcp52mw/+0e153/XxWj2vMvJIi+aZM06+j5A5fcR6hcE9jwjwN
+         q/RlSf3fBci+3E2YAW8VY3V9P1O3VY6rXJJdLBVOw8vloivJZpNl1ir9yOk45XnB6RQi
+         OwgA==
+X-Gm-Message-State: AOJu0YxFg2AgWzbml4vTedoTAvWAg3jO66bxGT9OO6MraaElxuYTEMQ1
+	Jdn7Kp0joqDRDcFL6iYAokdjhnxbtniERm2mYipYPw1+v7NG3gjy7diDoiGw39FvKeSL6kFcbEe
+	VjJ2zGmHHksEOcI5KY9pKiIV7XRjXlmuKt5zxFRRs49HSZRhAhCp9Z2A+lEbTLZ0Bw/HGtC9rjL
+	20NqC2ApidbV8nDQh1mUQ5B9a0+TmYgA==
+X-Google-Smtp-Source: AGHT+IH1gSBqvp7AKGZ667U3ixsabHSvj9QhU4Yt6ofdfYCD3Ty+ONz0FDjbciuxrugmAaUEJQIwKs+Q
+X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
+ (user=ardb job=sendgmr) by 2002:a05:600c:5101:b0:41f:9ffd:fd26 with SMTP id
+ 5b1f17b1804b1-41fea526b2bmr978075e9.0.1715765561622; Wed, 15 May 2024
+ 02:32:41 -0700 (PDT)
+Date: Wed, 15 May 2024 11:32:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] drm: Combine identical if/elif code blocks
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <60613D48-7C93-4B9F-894C-CE70E5F8D123@toblux.com>
-Date: Wed, 15 May 2024 11:31:06 +0200
-Cc: David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <227C6981-AFFC-4E0E-A95F-BF8979D5AD2A@toblux.com>
-References: <20240513212836.292589-3-thorsten.blum@toblux.com>
- <CAB3Z9RJ+VVAvVfKWF2LCzH3288vi6CF7uv+g+qbeu_L0c_k0Nw@mail.gmail.com>
- <60613D48-7C93-4B9F-894C-CE70E5F8D123@toblux.com>
-To: Luc Ma <onion0709@gmail.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1426; i=ardb@kernel.org;
+ h=from:subject; bh=VGmtaanEnV9/j3ToAO2iBPI8VwmtRdsDGLxG+F/6uRw=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIc2l0ah7Q/TfAPlntz67F+4KWR3145TsE7mzmheEFnBE7
+ 38n4728o5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEyE7SHDX5ETXGZm8s5nRU8J
+ s2s47Fq0nN9kA4OKHuOH44YNT1PVlRkZpljpSt38/y2vs2HLPQGH9VXuX2d8X8wyP2zK88dbDqx m4wUA
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240515093233.3698988-2-ardb+git@google.com>
+Subject: [PATCH] x86/boot: Avoid global attribute in early memory mappings
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 15. May 2024, at 11:22, Thorsten Blum <thorsten.blum@toblux.com> =
-wrote:
-> On 15. May 2024, at 09:43, Luc Ma <onion0709@gmail.com> wrote:
->> On Tue, 14 May 2024 at 19:37, Thorsten Blum =
-<thorsten.blum@toblux.com> wrote:
->>>=20
->>> Merge the identical if/elif code blocks and remove the following two
->>> warnings reported by make includecheck:
->>>=20
->>>      asm/ioctl.h is included more than once
->>>      linux/types.h is included more than once
->>>=20
->>> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
->>> ---
->>> include/uapi/drm/drm.h | 8 +-------
->>> 1 file changed, 1 insertion(+), 7 deletions(-)
->>>=20
->>> diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
->>> index 16122819edfe..315af7b19c97 100644
->>> --- a/include/uapi/drm/drm.h
->>> +++ b/include/uapi/drm/drm.h
->>> @@ -35,13 +35,7 @@
->>> #ifndef _DRM_H_
->>> #define _DRM_H_
->>>=20
->>> -#if defined(__KERNEL__)
->>> -
->>> -#include <linux/types.h>
->>> -#include <asm/ioctl.h>
->>> -typedef unsigned int drm_handle_t;
->>> -
->>> -#elif defined(__linux__)
->>=20
->> I think it is intentionally like that. Please see
->> https://patchwork.freedesktop.org/patch/78747/
->=20
-> Thank you for the link.
->=20
-> Does anyone know if the reason for the change from 2016 ("make
-> headers_install can't handle fancy conditions, ...") is still valid?
->=20
-> Other headers use the same #if directive:
->=20
-> fs/ext4/ext4.h:948:#if defined(__KERNEL__) || defined(__linux__)
-> include/uapi/sound/asound.h:11:#if defined(__KERNEL__) || =
-defined(__linux__)
->=20
-> And there are many others using similar conditions:
->=20
-> arch/arm/include/uapi/asm/swab.h:27:#if !defined(__KERNEL__) || =
-__LINUX_ARM_ARCH__ < 6
-> arch/sparc/include/uapi/asm/signal.h:92:#if defined(__KERNEL__) || =
-defined(__WANT_POSIX1B_SIGNALS__)
-> arch/sparc/include/uapi/asm/termios.h:8:#if defined(__KERNEL__) || =
-defined(__DEFINE_BSD_TERMIOS)
-> include/uapi/linux/soundcard.h:1040:#if !defined(__KERNEL__) || =
-defined(USE_SEQ_MACROS)
-> include/uapi/linux/stat.h:7:#if defined(__KERNEL__) || =
-!defined(__GLIBC__) || (__GLIBC__ < 2)
-> include/uapi/sound/asound.h:11:#if defined(__KERNEL__) || =
-defined(__linux__)
-> ...
->=20
-> Thanks,
-> Thorsten
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Re-sending this to linux-kernel@vger.kernel.org because the mailing list
-somehow got lost in Luc's reply.=
+The decompressor uses the __PAGE_KERNEL_LARGE_EXEC template to create
+page table entries, and this includes the 'G' global bit. Global
+mappings are a performance optimization that requires more elaborate TLB
+maintenance, which the decompressor does not implement, and so global
+mappings are disabled entirely, by clearing CR4.PGE in the startup code.
+
+Since global mappings are not used, it is better to avoid setting the
+bit altogether, so clear it from the 'flag' variable used to populate
+page table entries.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/x86/boot/compressed/ident_map_64.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index dfb9c2deb77c..e24fedf1e36b 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -121,6 +121,12 @@ void initialize_identity_maps(void *rmode)
+ 	mapping_info.page_flag = __PAGE_KERNEL_LARGE_EXEC | sme_me_mask;
+ 	mapping_info.kernpg_flag = _KERNPG_TABLE;
+ 
++	/*
++	 * Entries with the G bit require more elaborate TLB maintenance,
++	 * so avoid them for these early mappings.
++	 */
++	mapping_info.page_flag &= ~_PAGE_GLOBAL;
++
+ 	/*
+ 	 * It should be impossible for this not to already be true,
+ 	 * but since calling this a second time would rewind the other
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
