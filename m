@@ -1,152 +1,259 @@
-Received: from smtpout146.security-mail.net (smtpout146.security-mail.net [85.31.212.146])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D644213F00B
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.146
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715784307; cv=fail; b=UMT7VndKJ++TN1NF3N0q6LjhudBNxG+oDTLLOOSWHbT3mEqG31F4kXrgK6Kk3IAT93AKyyilYJOZn7uJPOuFaLBGOhbgmaWwalH4gG7Imn2nCEnSJWoNW12ptXgVTnIRRe0xRtB/065ZCFCInCeP3I0NRqFK7SsklS1q1N6IB4g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715784307; c=relaxed/simple;
-	bh=IGd4ClDhPi36L6nEfn9iP1a1kK4ikMUMr61c56debq4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uhQnQqMyV6ex2gy5jRXlFJqgn8N8sbn9UFp9Ck3bda+36754eCcO8Jbo2AmOSrYtpnzs4HH6dEoBYm531o7Rp/hxhmxjlaomuyzrbruiKzEgGSTO9bccq7gSsC+SyFR5f+CDSG5mgUwdxoR1Aw/5XjqyF4swVAupfU3rDo84pUY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=Pgud1Hmz; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=YaQhe8x4 reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743411553B7
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715784329; cv=none; b=kKDwsLmnsrgp9o9yQv1iMz94vcGXD13gzyWiEihMc6r6M629xHEZ7SL1Yn+C4u0vEJDxXt/zZ0Rg2RypTMkN4MR190rslZjRx9Z7AfbH6npksEU2q6XW712I2cOa6GbxpiMUgrLvNHE7mOuWYJNE89sqddnYPIbA2ZByyXYDw4I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715784329; c=relaxed/simple;
+	bh=2Kzr253EOYcdr/NLYkrqCk7ba+nkUa/bWa0gDeg+MdQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=vD9Zt5Rm8CMoCMpiXqOvGeg/AVRXDfiieior+yy9o+qtUj6uSjsEViX8xHOQMxVmRq9a7sYlcRXwCGZbpVPcW30GOn+vN5Xysjv5ugtqIbM/pyejkXfLRddC9dygsNRTfiGkZjwzICCrIxMZ4J1ZE4PoZkzHvvPwm+nqZioi3wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QH3m7Vwt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="Pgud1Hmz";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="YaQhe8x4"
-Received: from localhost (fx601.security-mail.net [127.0.0.1])
-	by fx601.security-mail.net (Postfix) with ESMTP id 857FC349873
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:41:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
-	s=sec-sig-email; t=1715784083;
-	bh=IGd4ClDhPi36L6nEfn9iP1a1kK4ikMUMr61c56debq4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Pgud1Hmz/z1iczGhTP8R31KVHaFXq368adA7+ediVudBREejpt7lU6rGijynOJngE
-	 vKzETFDI3/YsAe+K9YiKKlJ5aoDOiauvIwnSh2L2c8ikdlcicL+dZQUkdLAY4qxJv6
-	 w+WW5fS10LRGBwMfucvkd5q7GdbkzCaOuMbgLC9g=
-Received: from fx601 (fx601.security-mail.net [127.0.0.1]) by
- fx601.security-mail.net (Postfix) with ESMTP id 3FAB934984A; Wed, 15 May
- 2024 16:41:23 +0200 (CEST)
-Received: from PA5P264CU001.outbound.protection.outlook.com
- (mail-francecentralazlp17010003.outbound.protection.outlook.com
- [40.93.76.3]) by fx601.security-mail.net (Postfix) with ESMTPS id
- 5F67B349848; Wed, 15 May 2024 16:41:22 +0200 (CEST)
-Received: from PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:14b::6)
- by PARP264MB5419.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:3f0::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.27; Wed, 15 May
- 2024 14:41:21 +0000
-Received: from PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
- ([fe80::7a6f:1976:3bf3:aa39]) by PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
- ([fe80::7a6f:1976:3bf3:aa39%4]) with mapi id 15.20.7587.026; Wed, 15 May
- 2024 14:41:21 +0000
-X-Virus-Scanned: E-securemail
-Secumail-id: <4e72.6644c992.5cf91.0>
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i/8mgNwHok5uOENK8I0Ih+m2gsIbRVYOe5vv5kIt6QCEnkqxkTDnFgX8eIkv2suG0MzZsXETU/ZORrYSaEgyviGMDG2mVegkCByjMHDm4zdjnCDnOcEhtIhMhdqJWpRtj8I6NUppyazAnK7txtSqlig3jDTujyY/AxTINEjnVUj7mC3ERgAxEPNF37CKMFUkwFHE58fMv9S/BWtWwVgJbsTrIpQ9M2Zy84thdsijCWuW3wANilzneLNSQltTZZVChoEeS4EnTi6ZlgN2QurEACv4AvTxsdnMAH084zU3eKFwJegbA2eIw+Pja1sLStYanVWXwesoJg79T7aJ8a8WTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microsoft.com; s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7vwT+TxOsx1r8ChwwqD3xvT2FJImA5lTBvAQ7+6rMkQ=;
- b=m5ENid1yK0GVBcQV3ErrdtdDd7HYGz/9V++P+U4Eg+RrZ8mbEYZ+9R3lB1gahRvRnCSKHVZy4dlStE+dtTkx/eVQxUWUvHlPB6V9t0I6L9GkWQqpAhHVMiUikH3dhZhceDZk00QVI4935o44vFXx0JBJs/zaqa7lCFXJp12BDDPJs0ZBj9o4l/uzc4HoI59aAXYyWjPjifARq0juyJsCLArFyPmq/31AfaYKsYqKbwFj0hISuf3CYS//00IHdLey2t63T0SBpmnAnBnPB8IAtgOPKIpyUWXbEVyuU92YUk/h5cbfxkOUPHJtQEtYkSNeOs3kTbhpKvPHK9uoAHf31A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
- header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7vwT+TxOsx1r8ChwwqD3xvT2FJImA5lTBvAQ7+6rMkQ=;
- b=YaQhe8x4X9R4eNKMJFQPEKBieEzhQbjKVwtLrzjtZSKt4hky3UuhAEhghhwr+9EOSMsb/IaXptFlAGCHaTywCDxvAlRcC9P8EreWVgUA/y+qskxj9b/KX3n8E2pm6+tB712Sf4QQUaK4k74RCFCCqU+WzHLFliJFRRp/2N51cyG+MzSmk8i9NY8yKOcjAO53OSK2syLUhpPGY6im/qSp3QovNUPwBUaxRk8oSy9T7hQL7D9qnILn9k82thB/Mv0o4nczldJJVR/tinshLQgpyElk7PqQDyOIuMJw9wNFJINlOIrAgvUzXJLul1wNpkqyzsnvYO5TMbwuFmrsoE/gJw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kalrayinc.com;
-Message-ID: <550d76ee-a783-4662-b16f-b29713a0d6cc@kalrayinc.com>
-Date: Wed, 15 May 2024 16:41:19 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/236] 6.1.91-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240514101020.320785513@linuxfoundation.org>
-Content-Language: en-us, fr
-From: Yann Sionneau <ysionneau@kalrayinc.com>
-In-Reply-To: <20240514101020.320785513@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PR1P264CA0046.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:2cb::17) To PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:14b::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QH3m7Vwt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715784326;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LdrmuWBoEpOfgUpQ2v1u7u6A9FgqhZDeoL40Chq+dcE=;
+	b=QH3m7VwtIEXkzyURrzhrvWi9wcUu1v2DWFbg4zXEF4TQyuz9d++A1ZigOpJZzR0M3cBtsn
+	lyT/+kqpTmpn6zzDHLP+dvj5PhMflcCH9NPOyDeit8mjfiGkt3z8b3Wi/QdgzClCS+DeAS
+	FmPzeB5B1h4nTKhx2gOezGEl6RPm1FM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-97-LC3Xf_FYNqmjBacUeHImxA-1; Wed, 15 May 2024 10:45:13 -0400
+X-MC-Unique: LC3Xf_FYNqmjBacUeHImxA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-41fffe9849bso21084945e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:45:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715784312; x=1716389112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LdrmuWBoEpOfgUpQ2v1u7u6A9FgqhZDeoL40Chq+dcE=;
+        b=rDdKXdDK5pJ/XaVNIogyHRgEpYqxpml6GZtORunTHflR/pVigD7LOJrefch1ejRuxi
+         O6Y0GE2CLKRcHkemD4HM/+vezaJyqaaQep58twxWk7rmjCh8QpHGUbXd0HqSs4fIusuv
+         AQ5DB2gDFf8165lbn0KWxaGpgS/2PIJCNIweTkdpqfMDb1aUY52gDIi1AZtD1pOn5kj7
+         hQL2ptW0/kpN6D61XPV/48khXVbe94LH0lt/+v//+8c5qNbMMXCAZfveSWJxJdp3pE+k
+         x7Aat9vLwfdsVh9/ZqpT4LQvYPYAkmQxTW0LbYLre+M/ul/WmQ1Du6dlBCXAlpDGe5f+
+         Q1Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzniTNptwO4La2cFkYGZHKN82+d5Vey2szjlsTiMh0yL8MbF1UPK3H6XjvALP6xAg7Gyrz5jgLuifbBZ+Sj8OqOULexP6TicrKpNhM
+X-Gm-Message-State: AOJu0YzNuW+vwQOYuoB0SggXzs44f/DxzxU7GdVvFKEHBm/cQOT3TrqJ
+	c8jjkj9BkEa6LXTTv5xSvusgvdOqAi5fKj4jbr1kpwR/2JPu0DzMegWLgUQD/rQyPfTfyEfVb/4
+	GLL3toLsAcdnF37H8WsbjBrgZ/yBT7ep0xfj6HF9MnVAnea5HRxpAyVO4fmMgqQ==
+X-Received: by 2002:a05:600c:4e88:b0:420:1551:96ab with SMTP id 5b1f17b1804b1-42015519952mr71004225e9.10.1715784311735;
+        Wed, 15 May 2024 07:45:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHWZcHQ7HI53rjrQdcpiZFHaMFqKuGxfRGvmqHYTAW48AeZ9TtGLYJqRhaNP8tu9rlc5rpjPg==
+X-Received: by 2002:a05:600c:4e88:b0:420:1551:96ab with SMTP id 5b1f17b1804b1-42015519952mr71003965e9.10.1715784311091;
+        Wed, 15 May 2024 07:45:11 -0700 (PDT)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b895731sm16785379f8f.42.2024.05.15.07.45.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 07:45:10 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Devarsh Thakkar <devarsht@ti.com>, Maxime Ripard <mripard@kernel.org>
+Cc: jyri.sarha@iki.fi, tomi.valkeinen@ideasonboard.com, airlied@gmail.com,
+ daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+ kristo@kernel.org, praneeth@ti.com, a-bhatia1@ti.com, j-luthra@ti.com
+Subject: Re: [RFC PATCH 2/3] drm/tidss: Add support for display sharing
+In-Reply-To: <03e2d653-731c-bb30-321b-b5477d7b82b2@ti.com>
+References: <20240116134142.2092483-1-devarsht@ti.com>
+ <20240116134142.2092483-3-devarsht@ti.com>
+ <vgfzhamtiwkpdyk5ndagsb63subclinotoe6tsi3wu6z7454ec@igxfzjc5gyqm>
+ <88018f5f-a7db-7278-e5c3-bb1dbf0e3f14@ti.com>
+ <qiqrhpqtnox47wj6az7t3fjp4vc6k32fw42tp5slqggrhe6utb@i7lkpaf3v3od>
+ <2f4cf2a7-ce7a-bb34-f722-7e66ea41def7@ti.com>
+ <20240314-hospitable-attractive-cuttlefish-a2f504@houat>
+ <03e2d653-731c-bb30-321b-b5477d7b82b2@ti.com>
+Date: Wed, 15 May 2024 16:45:09 +0200
+Message-ID: <87ikzf16dm.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PR0P264MB3481:EE_|PARP264MB5419:EE_
-X-MS-Office365-Filtering-Correlation-Id: 526a4ade-4788-4db2-ea51-08dc74ed166e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|7416005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info: Apu9yK2J6aDNv0KDzLItCx+uOt9i9d3DCaQ7PXvMK4fNsLZi2Slj0Z2lSCDpUpIrrwF5jHnzdh7uP6hlsSrWPk1kfFdV+5IpQOj6wf/6Z5LyZB+6r2Jj8FGCZe+x5zjEUFE2q7cAvDcVTgPsmD4nA0CAjWE4a/zgEaz+KD76fT7J1esJuL0JVDiYchqOcDebXKajApr0nsjmbWEFsXCsRwlvC6oruTXo9/DySvE4CSbRpJeDI1Pj3mGbnOVQmfk8K7yYo4HNAcnOR5lr/UyUzKhZh0bmKMTnNDiqjOQcrtMqI9+4MceSvb6KxIxGq3OrHZYTf+FOrJynvziQ5retSzlu2lyO/sEq+rgbagnLMNSDL0I/kfx+grwvio7rgZjrgs5sACq7NPhK0Z5q6rySY5D1bL3B1dPp2DFFoYWP49WBYgLPe70JxMpK8mB9fkJYLY5oXtaxz/TmcNBPDVnonWFxiQIOyUbecBJlfYDTpCnqZnEs71Wp3wtn3fMa6IW5r9vEproUjk1zvQBte9IgnOuY5FbvfTMsVGofPyT0b1jZpnuEEh6zs38GWfj/JfXJ2c8OKqlS+243FUuVYi3ksnR4uC9gA4cITxpUiDGDHLXExdG0rvxY7C//EmZlIROFZmohN48t6Nfe02w3rnfsvGUPBFExpllXIEfKONGcOwwTisWlIh6MAB4S2mJKd8Sd2Z41Jk8d3eBXLWadVfIGIdbKR4+SJmoBS0QUW8NEqF35bPaK9gZ9MAT0km2cMv/SnUnV9C0MPHPuZhPH2uvI+lYZcsZtwKaA+pz3LLM77PP5EkD1SXcQ33mCHVSmlE+RoErN1PFAvqQuyMaaGRXxhyEsmpuoEuzkjIQwHS+9MFeAgkpVz3egl7HvUqCt6Qu54BXZ4N3SUzY28teZK0nwXvMj3b1j02THXCV9tWtl/+Pp8OIwA8LYIku+q1hvBNvuR4e
- lhxCEeo8DgSenD6CIh67zUKW+DK1y5sIqacVuiM+TOqSsqNfevUZt3KWVK9JQVEB+3dvAQNN50H9/DtSz7Gv/Kbgmfets6PAVJ7ZePFfNDdVKNr7zJW1NHhtYAsJ3i56Uq11LxxjjeDx1ZJQKkT4L8dTpgCMmjCYoZ4hySi9O+Tm42Y5yScx0ynENBH2Gi4PuOpEDqSNuXOkSCRDQWi8QParhAHde8y9t3cLpyGGFbgih2hR2P1ZUGDsaXv1fkHqZnCOuA+aAm9HurPit+ldqsFqA4FiN/hzf+ddXAiE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: Ny+RlaU1AXr0uuMLElndJFlN2Dz/3ZjUEKv45ltkJo6KWPhOIZIWAVtjj6eU4/bdcL3kELyecz9wpyvXr77LDv7sw9vUUrOUEuea2AWjgueE27SdMMwPmXoMi4LdFNwojEdEvooI63wB7wvAd1jvKLv2mWULQVqqhUg36hEQbNDEevXNa/SmTuvjRfFW7mytkIPJ18k7L+3MEf63E+JV0fOiRxCTr7VicIt6C780Jyl9DatHR/9V5pAJ+SsJ6nvOG52XSL0FJMphGAt/6FjlrzCL2FumlYJHpaSnztfgOfb5ZX7xFtBnDG7aooBb/8LXihUZyHUIEW9pf3UuNH/DI7WZrIt4bdjFibLNfK/juc6JEjCpGYc/vWc6h7IUjVM9/7Y4mEwWtDSNuhvwWTIdcMlB1r/9ek06gpXSV+pzmltKyfIK4+2CIsQm8nZB3fYur5o8w13yWkbXkII6GEixuLr/vTNncmI7wPhyrbb49UpHseNNQn4hn5ygTq17PQr24lifLshEXPzlxvGp/wjlnsmE5zmh0A0stRtXrdWENZDyvBC/+YatlohJOIigCIMTJ1WDR3oP8PlzL8hXZRe63YO9N5KrMdHIXP7lTFwVX8XGWTQCXd1XwApdbceixHMGl5FVPBLBO/K83rbPA5G3PRTqjxvBQP6qyjeAnsJJmLVaBj1cC1ao//n02qocwtGZqDw+mE8iZ4UuzQy073hWc6TWLRra0Q1lo0txCjryj/PrtEK68Ve93Z7BpB/BNNWfMCDzRVMmNCaxRSdxcJt5Lg8Ci1Q+GEZKo0gHZEir3XFx2BcH9vj4UT1l5jX8n0A/o6mWvpQTxfFCJE854M/YUZ9yG89qhcBLISdAZEYh9DXUJLKuW10BVsMbVI4ktO3XGAa3CPSTuGHtldHfR0/0GFJI8wlcCES8WZfDiIabwuWNQv4VUY+97IgI9+QpOTrh
- 6ctTHe0IkNWPExpcFeKwos/BQ5OosBy/KNmPMR56A2at8p5exf56h+hBqJNV8uQnMdlErdP7JHY9v/k44NajeJIezJLzC7PXxHXOcb3vTRmhb7TTecW4wOm17K6NGb2RtfUAkU9tl13FHLzNRF5j8gr3rfyB4ZY6p8sfm/kAj7fuLCg75YNRmMX9wBjkVWPbj2DlPUt4SxmV6sO2KHNHhYJCk9EyWz1iaWuVql0VMc0fiM3rp67aJCTrveDOKw2xtuVBjMziivg2UPkUe+wHLbLVlsbJxnrz91RL4yX3QdNVzQ9UCg6TmxGy9uFYTUCLbOOfsIALMUFM1x9mOrkVEAa7H56BOKKwXElLeD3voQznoqcobeXa07sKCvbsxUBwLvAQFFjGnlgdHFMPjl2qIKIZRriN/NPgZhUTGbhOX3nDbxmKIMCTeN8eDpqH0iNfUcGBsOIOZHu7sukXFU/Ii7Xg7t5viYlvKeGtYEO3eJB7aUAQ42ErtwuQ+jAEZzki4TfnbdEcHQ4Uvte9RePqiRoCtFAURueQp3s/l8sBWwle3ak9v0VDN9eoFvE4cCkMBYcV45AVaToqPpdwvTx2/A3xwcUZVu3YhrHjZ3xHvpsMNwq0t8+Dptu/Wd+pXMq+Y7g454GrnuCu2EJA1Vc1+JwALRXup2Y9Jbw0s64i+L4EtcPI30zL2+z0A6AJFSTRA0u8TOvvMCK0x0HDCf1Hdw==
-X-OriginatorOrg: kalrayinc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 526a4ade-4788-4db2-ea51-08dc74ed166e
-X-MS-Exchange-CrossTenant-AuthSource: PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 14:41:21.5182
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JOXMAX5Lfrh/uYaUkp1KWC+Z7pNNwieI0uCd1RHeITTRMVR8RxfMlzccSlWdvqhUi1iSSBI9VNnbDU2jxcB7rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PARP264MB5419
-X-ALTERMIMEV2_out: done
+Content-Type: text/plain
 
-Hi Greg,
+Devarsh Thakkar <devarsht@ti.com> writes:
 
-On 14/05/2024 12:16, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.91 release.
-> There are 236 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hello Devarsh and Maxime,
+
+> Hi Maxime,
 >
-> Responses should be made by Thu, 16 May 2024 10:09:32 +0000.
-> Anything received after that time might be too late.
+> On 14/03/24 20:04, Maxime Ripard wrote:
+>> Hi,
+>> 
+>> On Wed, Feb 14, 2024 at 09:17:12PM +0530, Devarsh Thakkar wrote:
+>>> On 13/02/24 19:34, Maxime Ripard wrote:
+>>>> On Thu, Feb 08, 2024 at 06:26:17PM +0530, Devarsh Thakkar wrote:
+>>>>> On 26/01/24 17:45, Maxime Ripard wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> Thanks a lot for working on that.
+>>>>>>
+>>>>>> On Tue, Jan 16, 2024 at 07:11:41PM +0530, Devarsh Thakkar wrote:
+>>>>>>> Display subsystem present in TI Keystone family of devices supports sharing
+>>>>>>> of display between multiple hosts as it provides separate register space
+>>>>>>> (common* region) for each host to programming display controller and also a
+>>>>>>> unique interrupt line for each host.
+>>>>>>>
+>>>>>>> This adds support for display sharing, by allowing partitioning of
+>>>>>>> resources either at video port level or at video plane level as
+>>>>>>> described below :
+>>>>>>>
+>>>>>>> 1) Linux can own (i.e have write access) completely one or more of video
+>>>>>>> ports along with corresponding resources (viz. overlay managers,
+>>>>>>> video planes) used by Linux in context of those video ports.
+>>>>>>> Even if Linux is owning
+>>>>>>> these video ports it can still share this video port with a remote core
+>>>>>>> which can own one or more video planes associated with this video port.
+>>>>>>>
+>>>>>>> 2) Linux owns one or more of the video planes with video port
+>>>>>>> (along with corresponding overlay manager) associated with these planes
+>>>>>>> being owned and controlled by a remote core. Linux still has read-only
+>>>>>>> access to the associated video port and overlay managers so that it can
+>>>>>>> parse the settings made by remote core.
+>>>>>>
+>>>>>> So, just to make sure we're on the same page. 1) means Linux drives the
+>>>>>> whole display engine, but can lend planes to the R5? How does that work,
+>>>>>> is Linux aware of the workload being there (plane size, format, etc) ?
+>>>>>>
+>>>>>
+>>>>> Well, there is no dynamic procedure being followed for lending. The
+>>>>> partitioning scheme is decided and known before hand, and the remote
+>>>>> core firmware updated and compiled accordingly, and similarly the
+>>>>> device-tree overlay for Linux is also updated with partitioning
+>>>>> information before bootup.
+>>>>>
+>>>>> What would happen here is that Linux will know before-hand this
+>>>>> partitioning information via device-tree properties and won't enumerate
+>>>>> the plane owned by RTOS, but it will enumerate the rest of the display
+>>>>> components and initialize the DSS, after which user can load the DSS
+>>>>> firmware on remote core and this firmware will only have control of
+>>>>> plane as it was compiled with that configuration.
+>>>>
+>>>> Right. If the RTOS is in control of a single plane, how it is expected
+>>>> to deal with Linux shutting the CRTC down, or enforcing a configuration
+>>>> that isn't compatible with what the RTOS expects (like a plane with a
+>>>> higher zpos masking its plane), what is the mechanism to reconcile it?
+>>>>
+>>>
+>>> Just for the note, for this "RTOS control single plane" mode, we don't have a
+>>> firmware available to test (right now we are only supporting example for "RTOS
+>>> controlling the display mode" as shared here [1]) and hence this is not
+>>> validated but the idea was to keep dt-bindings generic enough to support them
+>>> in future and that's why I referred to it here.
+>>>
+
+
+If I understand you correctly, for now the only real use case is when the
+the RTOS owns / manages the complete display pipeline and Linux can only
+own video planes.
+
+The opposite is supported by the DSS hardware (thanks to its feature that
+allows partitioning the register space and having multiple per-host IRQs) 
+but it's not a real use case yet. The reason why this case is added to the
+DT binding is as you said for flexiblity and make the design future-proof.
+
+>>> separate irq
+>>> Coming back to your questions, with the current scheme the Linux (tidss) would
+>>> be expected to make sure the CRTC being shared with RTOS is never shutdown and
+>>> the RTOS plane should never gets masked.
+>> 
+>> I'm probably missing something then here, but if the Linux side of
+>> things is expected to keep the current configuration and keep it active
+>> for it to work, what use-case would it be useful for?
+>> 
 >
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.91-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
+> It's just one of the partitioning possibilities that I mentioned here, that
+> Linux is in control of DSS as a whole and the user want the other host (be it
+> RTOS or any other core) to control a single plane. For e.g it could be Linux
+> (with GPU rendering) displaying the graphics and RTOS overlaying a real time
+> clock or any other signs which need to be displayed in real-time.
+> But more than the use-case this is inspired by the fact that we want to be
+> flexible and support in the linux driver whatever partitioning scheme
+> possibilities are there which are supported in hardware and we let user decide
+> on the partitioning scheme.
 >
-> thanks,
 
-I tested 6.1.91-rc1 (21f6332eaf4ea) on Kalray kvx arch (not upstream yet) and everything looks good!
+A possible use case here could be if Linux is safer than the other host
+owning a single plane, right? Then in that case the RTOS could fail but
+the display pipeline won't be teared down.
 
-It ran on real hw (k200, k200lp and k300 boards), on qemu as well as on our internal instruction set simulator (ISS).
+That is, if your safety tell-tales would be driven by Linux and having
+other OS dislay the GPU-rendered QT based application on another plane.
 
-Tests were run on several interfaces/drivers (usb, qsfp ethernet, eMMC, PCIe endpoint+RC, SPI, remoteproc, uart, iommu). LTP and uClibc-ng testsuites are also run without any regression.
+But as said, for now that's a theorethical use case since the one you
+mentioned is the opposite.
 
-Everything looks fine to us.
+[....]
 
-Tested-by: Yann Sionneau <ysionneau@kalrayinc.com>
+>>>
+>>>> It's not just about interrupts, it's also about how your arbitrate
+>>>> between what Linux wants and what the RTOS wants. Like if the RTOS still
+>>>> wants to output something but Linux wants to disable it, how do you
+>>>> reconcile the two?
+>>>>
+>>>
+>>> The scheme involves static partitioning of display resource which are assigned
+>>> compile-time to RTOS and Linux. Here the RTOS firmware is compiled with
+>>> specific ownership/display resources as desired by user and this assignment
+>>> stays intact.
+>>>
+>>> If there is a more complex use-case which requires dynamic
+>>> assignment/arbitration of resources then I agree those require some sort of
+>>> IPC scheme but this is not what we target with these series. This series is
+>>> simply to support static partitioning feature (separate register space,
+>>> separate irq, firewalling support etc) of TI DSS hardware across the multiple
+>>> hosts and there are use-cases too for which this scheme suffices.
+>> 
+>> I think you're right and we have a misunderstanding. My initial
+>> assumption was that it was to prevent the Linux side of sides from
+>> screwing up the output if it was to crash.
+>> 
+>> But it looks like it's not the main point of this series, so could you
+>> share some use-cases you're trying to address?
+>> 
+>
+> The end use-case we have demonstrated right now with this series is a
+> proof-of-concept display cluster use-case where RTOS boots early on MCU core
+> (launched at bootloader stage) and initializes the display (using the global
+> common0 register space and irq) and starts displaying safety tell-tales on one
+> plane, and once Linux boots up on application processor,
+> Linux (using common1 register space and irq) controls the other plane with GPU
+> rendering using a QT based application. And yes, we also support the scenario
+> where Linux crashes but RTOS being the DSS master and in control of DSS power,
+> clock domain and global register space is not impacted by the crash.
+
+You mention 2 scenarios but are actually the same? Or did I misunderstand?
+
+In both cases the RTOS own the display pipeline and Linux can just display
+using a single plane.
+
+That's why I think that agree with Maxime, that a fwkms could be a simpler
+solution to your use case instead of adding all this complexity to the DSS
+driver. Yes, I understand the HW supports all this flexibility but there's
+no real use case yet (you mentioned that don't even have firmware for this
+single plane owned by the RTOS in the R5F case).
+
+The DT binding for a fwkms driver would be trivial, in fact maybe we might
+even leverage simpledrm for this case and not require a new driver at all.
 
 -- 
+Best regards,
 
-Yann
-
-
-
-
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
