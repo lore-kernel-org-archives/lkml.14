@@ -1,68 +1,97 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4A54A23;
-	Wed, 15 May 2024 00:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6824663B8;
+	Wed, 15 May 2024 01:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715734635; cv=none; b=f5vUrc4L69taWfK34tWNqfz2Mj2a3E+7a4QfyFDi8WavIiudvsUZsLn/wM/yUollD4hMNVd5oC3b4TdxyfwktyFafU+8Pj55ohgEn7ZB8bjd95DMh7D41z1r+NPl14N6FYxnl+35kEecSc5VYfPtfWIZUQ8XvDmN4wchJCSngkM=
+	t=1715734805; cv=none; b=YUNHGD8og+tcEnKzKXC09vufLMdR2N8SQOOTWjUmISSkZBhjU21Y9n5ybHCjtdZY/VkyOAyZnBXfpbuStXIGnPMgFWWeVQTx4wwdJpvHYOVMUlfPCyOmesIVrI2aHX3oHAY1nDC3f8ukD/EjM+QrAYG4bWf6dZCqULwviocGFws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715734635; c=relaxed/simple;
-	bh=Tp+H0K5QBoSVdZXwfKgYZIjpg1XuSAWBXwAx1DzF8sA=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=VlBDmx7VEe8N9PHNwg0+o9Lwe4gxc4+YzCkmwSjCnsGuhStqcSXHtNV6SDRd+oWyW1RwKyv5FlXRmbML4DQ4rc3t+2GFA2P86KDvWoVNjL/TXHxhp20FwBHd9pMUIBcX+HKmm/9ow7om2a5+RBg8JWFWIXeTOpf+Oc9rSG5mWpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=lxaPLprY; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1715734805; c=relaxed/simple;
+	bh=NOIn7RE8N6eSPebGTNu70aoSxUhtM1LX0A/8k2eeXGI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XssR43L1yukfVvFGUNwzjTaSEAD+yaxx5cBR52AegL1q1jsTtT+s5h21LVa6mdaRf/jiMF01Hp0YxuFOyrXeUgsb5xHWYKMmdEGBLfBKJsCigBomQhQy7t3P1IM0S8t504HgmjiGpF6EHRjpoisoEaBEbpygqBN4HYrZvf5njc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c2Il3iH8; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="lxaPLprY"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=Tp+H0K5QBo
-	SVdZXwfKgYZIjpg1XuSAWBXwAx1DzF8sA=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=lxaPLprYzJ00fSaQHk9PaY/XjyG/TOiry
-	J4aaFgmXuVu9/f7WAP4UTqygXQYY60grub5GX6StNo9F20PFWuVvzlLNAFKEKNuObq0gH4
-	gPVJaTyi/52KYiWEhrtOpmxprKp0rlqHFgbrvpP0A4PganEEqosTTvlIZYDN2GYsh0kQOh
-	Kjz1mRunyAOmb9+lxOz2/YkF/7FGyUAcdwO+7ai1fU1MU3XRP4QWjUuYye9/BJ2qgCBQJm
-	x5RiA8+29lUIceuRq9Gz3Uj8Dgke64xBlqTn5sNUFK/PibzPIjqM7HwzRYS8IRvCuvZtm7
-	uWpIpZ52XSRNhrZreWzkAG/KtWo/g==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 4b91908f;
-	Tue, 14 May 2024 18:57:12 -0600 (MDT)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Matthew Wilcox <willy@infradead.org>,
-    Jonathan Corbet <corbet@lwn.net>,
-    Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    gregkh@linuxfoundation.org, usama.anjum@collabora.com,
-    Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
-    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-In-reply-to: <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
-References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org> <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org> <56001.1715726927@cvs.openbsd.org> <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
-Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
-   message dated "Tue, 14 May 2024 17:43:47 -0700."
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2Il3iH8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715734804; x=1747270804;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NOIn7RE8N6eSPebGTNu70aoSxUhtM1LX0A/8k2eeXGI=;
+  b=c2Il3iH8pSSw6ST5m/y95THhP2I/mhb++tMxqyGDoE3f9sEFjzc14w0D
+   N2axObumd2Cv2AKfeqFNdqQiCAogUfoo0rOHi2jeapr2zzNVfFsRgZU1H
+   lgWZD6rSI1JcELrn0/Y9KQFbd3n6HJ4ftYv3hS1KZqrtYOIsXtPAfr3zB
+   2v32FJKeuaL6wvL8K1I4nYcOV9d2wBEKvDKqjl7JQhN8myBQsYz1DRllc
+   ary9qf4fD6zu5LnNbagQBMby0T2quuL+A1fDvVOKl1+zxRC1xqyAZolIh
+   nSou3neZvJUIaQ3VPq+FSH+HbBbEx5g7vlNZjwOtzbf3l/61niH4YsDbi
+   A==;
+X-CSE-ConnectionGUID: 2yVU9zoXTOyvi/TqDbC+pA==
+X-CSE-MsgGUID: YgB9XT5GRC6W2OGcQppilw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11613923"
+X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
+   d="scan'208";a="11613923"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:02 -0700
+X-CSE-ConnectionGUID: oX4pbqPATUi5iDkIAyxSTA==
+X-CSE-MsgGUID: 9m3mAfm4TRGlrKTvwfq0YQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
+   d="scan'208";a="30942704"
+Received: from oyildiz-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.51.34])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:01 -0700
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	isaku.yamahata@gmail.com,
+	erdemaktas@google.com,
+	sagis@google.com,
+	yan.y.zhao@intel.com,
+	dmatlack@google.com,
+	rick.p.edgecombe@intel.com
+Subject: [PATCH 01/16] KVM: x86: Add a VM type define for TDX
+Date: Tue, 14 May 2024 17:59:37 -0700
+Message-Id: <20240515005952.3410568-2-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
+References: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <28994.1715734632.1@cvs.openbsd.org>
-Date: Tue, 14 May 2024 18:57:12 -0600
-Message-ID: <16982.1715734632@cvs.openbsd.org>
+Content-Transfer-Encoding: 8bit
 
-> > I worry that the non-atomicity will one day be used by an attacker.
-> 
-> Blah blah blah. That's a made-up scare tactic if I ever heard one.
-> It's unworthy of you.
+Add a VM type define for TDX.
 
-Let's wait and see.
+Future changes will need to lay the ground work for TDX support by
+making some behavior conditional on the VM being a TDX guest.
 
-(Linus, don't be a jerk)
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+---
+TDX MMU Part 1:
+ - New patch, split from main series
+---
+ arch/x86/include/uapi/asm/kvm.h | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 988b5204d636..4dea0cfeee51 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -922,5 +922,6 @@ struct kvm_hyperv_eventfd {
+ #define KVM_X86_SEV_VM		2
+ #define KVM_X86_SEV_ES_VM	3
+ #define KVM_X86_SNP_VM		4
++#define KVM_X86_TDX_VM		5
+ 
+ #endif /* _ASM_X86_KVM_H */
+-- 
+2.34.1
 
