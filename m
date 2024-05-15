@@ -1,82 +1,234 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FF55E060
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0C457CB5
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715768013; cv=none; b=piYcsU2oNFsudGVd2x6SMGMNjlnwRNiCBwcixrEd9h1BSga3S/gxs8iJ/zD6ifwflyhhb/ATJmoFum9nl1iDoSN7B5D5kWvIwj4L042YvqIUKUt2uh+1JPZLToDsae4Td5gjLV+Nqp9P7huu6+dMcIUi0H6Vztaenq/zrZ48OoA=
+	t=1715768082; cv=none; b=CB+ZygltgKVv5d/od+lLVxKZ53mhDsmrUeFT/9U9n6aqciu3ePgcFsQGOWomRg59SAifEFosE7bsoTSkVnoxjVX/uDH3TuD/KsMiyJiqpZ9Dd2oxka4dh0u7Hmkf0sDeprS3XTiiDGje/roEO9kfhab2x9T3K7GJ+YmANSLShdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715768013; c=relaxed/simple;
-	bh=R6J+n8cvzciTSGKGyfNyOmGXlBPHb1xLPxZyrsPKKGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsG22Qyw2DttIK7Zn7kwA6SoHMCj0zb7oBEjssXPDZ82Elp++7AOAUkvJMijWKoDK7XawPz1nex3rSHKO15LWB6jOlgZE79Ip1mVq1IF02dP/hN9LQLjOjrfZQF/Zh7N8asrjo7qkaQYBlivqofmij4BpRtpfo9OsWWmH13gV8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bBwWGOTa; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1715768082; c=relaxed/simple;
+	bh=5wtdxMtUjgkHkKK7sTxUtfYaL6yVZ/kWJBpAoHlaM3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uwt1Rvs1sFb+ppTlNZPBqnru7fn0uBMHDSL4F8cjIPd6svPk9/QFxt4VCLcIJcs00Y4c5zgZCDWLSt1TfCrLLG0967WIb8sNY+90S7gcYv3kE1CZ2v0Q+Rtrib7NsgoA1ZFwVi5PhF5MlcAYruCJgbUnMjsuVeEj7rSg6Ww5TtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rrRGK/os; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bBwWGOTa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=yn9PlzEiI+jV2QEzgMElYky/iSJE+k1yDY6cuWJfOs4=; b=bBwWGOTal7ohbcYX6S0ZTRpfjn
-	Vs1kwtXl5DQxomNJruot7h/WB0xz0G8hX9LNt49xlJ5NAYYkTj5tCzLDEZH/qKZwv6tNfHyS0hycU
-	i2UR7sg5WUMxxsZP3u4VpYn4svMno+yfC9DVGXAPl040gKoB+83oGmQIFmbudvfal8Q+eOGIsKnCs
-	0bXICyZw5c0ZNWzqV4evWdHe3m/5IBN9+ARZVfj62+ezYJLWW3rkJ++6MGGkteWgwLkmKPTjdCifb
-	rNm10OKs7etrvF2qCNisr8W4jazXuCXdfI3kPGEnXOty6Dtik9CiGfViE5pScLOmdny+umRd1ygp3
-	jQ3LpAng==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s7BdE-000000053lQ-3b0U;
-	Wed, 15 May 2024 10:13:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DDD583005E3; Wed, 15 May 2024 12:13:05 +0200 (CEST)
-Date: Wed, 15 May 2024 12:13:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mike Galbraith <efault@gmx.de>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
-	wuyun.abel@bytedance.com, tglx@linutronix.de
-Subject: Re: [RFC][PATCH 10/10] sched/eevdf: Use sched_attr::sched_runtime to
- set request/slice suggestion
-Message-ID: <20240515101305.GG40213@noisy.programming.kicks-ass.net>
-References: <20240405102754.435410987@infradead.org>
- <20240405110010.934104715@infradead.org>
- <22b6408d96ce3913121a4a1b80f343657d1f66ae.camel@gmx.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rrRGK/os"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-47f02dfe3adso1907664137.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 03:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715768080; x=1716372880; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lXGxS8kWCZgF4bWh/7xTUx4JaoOaC7zO0XIHLxVCXBQ=;
+        b=rrRGK/osAh5Jzex3pKDnFt0BmhYUuAUNPCrqYoF/f19lrnjMABJaimajEbZ7HweWrs
+         MaOH6evmsamc3bSHF7WK/wlIMJs6roj1XPPsfo9XNf0UhuUvIdUxd5az4qcAzt3+n5M/
+         EgHOC+fTteXkSZynkrx4zG6ksjF7oo07dtPa7qaeqEJIYie+Ym/muCwEDw0oA2FwhKAK
+         gOTYuiEjwSs5dUnKRCW5hwJyHBws1WgFXTREylfJ30eeeHNXDLrHLaEv2LHQWxHjpSXj
+         BMEhvFy2yew5pPoFhlUFH7uAIj8CV9oVoofgXKxZeKUGBQY86QHhruxCzchvyn31jeC3
+         lmyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715768080; x=1716372880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lXGxS8kWCZgF4bWh/7xTUx4JaoOaC7zO0XIHLxVCXBQ=;
+        b=A3rhEY6ruXPasvj+bMVJQIfmSUBka1IzcC6thWhwZ5RFOcWJrYmne88ncGXUYzbFz8
+         UVMHrw8RBm5cg0C8U83I/l+9LNbNxdG/KjMOxFdmnRJLLtJInelB0smUM1wM3tTD9VNg
+         G+ACvvmb12l9+x3Hw5U0qWhR8D/18oXUr2pXCPYcwsb00pAnIFkqc8bj9a5ZtIbyW+qQ
+         JIOUGqGatoBWbD8Rq7Teq6ngYVFlpPPDpDwBHU5Wf6IdZ32cO32Nc73Gklw4PP4tLCI1
+         VWpIq6XWwLhVJyn21IV1ofTC4nHBeQK0fmUCLPMoii1Z5gIxT6iQSJh1KTbRge+rvOF3
+         aAGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1Ref1fhYMwv2NcA0+OQ7DMkuldXTDi8lzZkq2iApUvBrP9OHXISDMeu9dPMFcFfW5Xif1vKGdmDRhL9L0ZsgCOioDXFA6YCidpjTR
+X-Gm-Message-State: AOJu0YxZQirc2WrbKDL+xTD8YugaoZ5nXRUq/9seC4WHlx1JKbfN/X6h
+	8AvYBb2BIVohTDgOPquXSJcU67i7p+9i4Zt+xI1nEN4EjOy8iFu/Ng8q4GwWXybN7oskDO617+T
+	z9YBykMUKP169qPhTXrk4eR8L6Q+Ntr721V0Krg==
+X-Google-Smtp-Source: AGHT+IEVpMhmub5m6a9M/m2evfzG91ZJZ2NOQ5D/LOxy9Bt9jbhdLVIAkRrHrJ+bK1yW4lSYjjuYxperSFLER0epIyE=
+X-Received: by 2002:a05:6102:26c6:b0:47f:fe4:a38c with SMTP id
+ ada2fe7eead31-48077db7149mr15601912137.1.1715768080002; Wed, 15 May 2024
+ 03:14:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <22b6408d96ce3913121a4a1b80f343657d1f66ae.camel@gmx.de>
+References: <20240514100957.114746054@linuxfoundation.org>
+In-Reply-To: <20240514100957.114746054@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 15 May 2024 12:14:28 +0200
+Message-ID: <CA+G9fYsUEuzptCHsdpz53kefAzJRD3Hp-2nfn4f_osXkwQnOqA@mail.gmail.com>
+Subject: Re: [PATCH 5.10 000/111] 5.10.217-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 07, 2024 at 07:34:54AM +0200, Mike Galbraith wrote:
-> On Fri, 2024-04-05 at 12:28 +0200, Peter Zijlstra wrote:
-> > 
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -7812,7 +7823,9 @@ static int __sched_setscheduler(struct t
-> >          * but store a possible modification of reset_on_fork.
-> >          */
-> >         if (unlikely(policy == p->policy)) {
-> > -               if (fair_policy(policy) && attr->sched_nice != task_nice(p))
-> > +               if (fair_policy(policy) &&
-> > +                   (attr->sched_nice != task_nice(p) ||
-> > +                    (attr->sched_runtime && attr->sched_runtime != p->se.slice)))
-> >                         goto change;
-> 
-> Can we make that only look at attr->sched_runtime != p->se.slice? 
-> Doing so lets you clear a custom slice by.. clearing it.. rather than
-> making tools rummage about for the proper value to overwrite.
+On Tue, 14 May 2024 at 13:47, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.10.217 release.
+> There are 111 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 16 May 2024 10:09:32 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.10.217-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.10.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Duh yes. Seems I already did the right thing in __setscheduler_params()
-for that.
 
-Done.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build
+* kernel: 5.10.217-rc1
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-5.10.y
+* git commit: dc5817072861cb3cb0d4af7f071afc3a69abd690
+* git describe: v5.10.216-112-gdc5817072861
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10=
+.216-112-gdc5817072861
+
+## Test Regressions (compared to v5.10.216)
+
+## Metric Regressions (compared to v5.10.216)
+
+## Test Fixes (compared to v5.10.216)
+
+## Metric Fixes (compared to v5.10.216)
+
+## Test result summary
+total: 72324, pass: 57510, fail: 1877, skip: 12891, xfail: 46
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 103 total, 103 passed, 0 failed
+* arm64: 30 total, 30 passed, 0 failed
+* i386: 25 total, 25 passed, 0 failed
+* mips: 22 total, 22 passed, 0 failed
+* parisc: 3 total, 0 passed, 3 failed
+* powerpc: 23 total, 23 passed, 0 failed
+* riscv: 9 total, 9 passed, 0 failed
+* s390: 9 total, 9 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 27 total, 27 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-android
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-drivers-dma-buf
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-filesystems-epoll
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-ir
+* kselftest-kcmp
+* kselftest-kexec
+* kselftest-kvm
+* kselftest-lib
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-memory-hotplug
+* kselftest-mincore
+* kselftest-mount
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-forwarding
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-pid_namespace
+* kselftest-pidfd
+* kselftest-proc
+* kselftest-pstore
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-splice
+* kselftest-static_keys
+* kselftest-sync
+* kselftest-sysctl
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-watchdog
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* log-parser-boot
+* log-parser-test
+* ltp-cap_bounds
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-crypto
+* ltp-cve
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-io
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-securebits
+* ltp-smoke
+* ltp-smoketest
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
