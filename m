@@ -1,424 +1,245 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94226214E
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715757453; cv=none; b=u46LpLCiyDgn3MovnZDBSn0dAYqGBHPt4at8QozkHAilVELqwRR3CpHS6afI0R7fx2LZL5GAac1U6My9cU7vo3hQpFcRnQDUjNUVisDz3ZH0uihI9D6NkorpgaRCX453r/lIwVr9C8Yq9euV9wBvoFndBoPJp+95dcOLBzNL2x0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715757453; c=relaxed/simple;
-	bh=dGZx0+acqv0CZi2wH7InQ4R8O8AcdvZYdUe91hxxiWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nSN0JJuL4+kqD8wkwQ/xsxDn3US7SofLsmP7QM+ZHA21D5QV0FQmIj0XWdmLrAQzNWcbgtH4C23NYrXOFYCTdUdJbLdiQj8U6F1Ei2QojuTR+fWJOTyCkDeMdcXnQJPSJILG84T1UejYi/fmWt4QW4yCuDMGkytWaW3xOcw241I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XYhwxIUM; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB2563CAC
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715757454; cv=fail; b=q7lQA/fm4h/XlLFEms4+/AvE6E0DWTo/L3VrLDtOwqdvMRZ436Wcgk5u0/aJDeoV4tG5ECo9x6q3Fx1QLjjaMY15wBtPPzBERUa7wuYU+aYIt5oeVYVxpn/8hkkcbgODd2WvnHNAph/NGmTD+/meR2ZI/O584dzc/KnmnDPegvE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715757454; c=relaxed/simple;
+	bh=yZMlAUGhhxiq0q2SfxQ6gh3TtSyOY+v7FhOu+Ar45kg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NnyUO2VRNpDkFbKNynSBKmooxpTng1AC++inHeMKgdPVCt9QvgQCg8pMVOeG6zk0sxE3DZdddnr6y/80C+Fv7WjEqSmGq2X2gxgonp5QVGkixA+yopEVzOL3SkZfaY+MbheUzCtS2hlR9sDPVqNb+4QynVofgwKRg0051/tyb1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A2z4goFS; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XYhwxIUM"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d3907ff128so5438413a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715757451; x=1716362251; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/z5a3E5tjsWd2v3yZqDEd2ZFUX29EqdmRojLDBz4OHQ=;
-        b=XYhwxIUM8or1FxDmvVN5glOWFu63z/QCHG1Ml26EstgH79SW1uXwEBvolud6QX6cdr
-         2+dXRPM+1lza3dA2tPVvNhIQrMIsTCCoKiEZOzBED75+gaQ1/9SWjjsxVuJV0tQVwQOQ
-         n0dmXtvze4CwhLT/6loisp/6N0yo4cD6NuT5s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715757451; x=1716362251;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/z5a3E5tjsWd2v3yZqDEd2ZFUX29EqdmRojLDBz4OHQ=;
-        b=SsyUmZAvdXD9Kq961OW7wD6wb3sK+TQ6UH0TJ0OHIv+922Yn5uflpoMtVpFb9r+3Jv
-         jNhnU0cep4YpB5uM8SmYnb4cD0voOsixG8LQgmZpGxiez3Pyegs9HfnCHzK6n8fofY3C
-         qny6fxh/R0WY2nCCvzoa9nEH0nKTOlK+ax+EUOWRjAjVktTzcmAxMJfHdfU0WJKMRIA5
-         Bp+8vYVcq5uf4y3RIgIH4kUsAYMfFsQeBcU9L1yuTjvflYHPFDOqXKDeYZPGJRyW01fP
-         YIFLE2842ySmW77PsQVx+sn2V4VmVz5mPa6jWhtvDjNXmEsOJVrlNVBCZFNZaeq3o3b8
-         hzeA==
-X-Gm-Message-State: AOJu0Ywdcce0l3qmD1PVA04BSeljbXadAdq/MvcId2NUxpBkdLtIC1NR
-	wrGJp3f/WaPWgJEkRnBNDQJDJyPyveawcQwo8HbiKrPtgML58PIzZeih8sPFXAE5VQRNTHjz5YU
-	=
-X-Google-Smtp-Source: AGHT+IGv1Omsyk9TRAdIngjWvd5a6uW973xBM8/wHVw3kf6S3NTLue+rsCGPi9x1UgDL0rvIAAuHOQ==
-X-Received: by 2002:a05:6a20:f38f:b0:1aa:a6cc:39c5 with SMTP id adf61e73a8af0-1afde0824f6mr18701539637.7.1715757451053;
-        Wed, 15 May 2024 00:17:31 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:111d:a618:3172:cd5b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c136d53sm110941605ad.254.2024.05.15.00.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 00:17:30 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Nick Terrell <terrelln@fb.com>
-Subject: [PATCHv4 14/21] lib/zstd: export API needed for dictionary support
-Date: Wed, 15 May 2024 16:12:51 +0900
-Message-ID: <20240515071645.1788128-15-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240515071645.1788128-1-senozhatsky@chromium.org>
-References: <20240515071645.1788128-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A2z4goFS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715757453; x=1747293453;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=yZMlAUGhhxiq0q2SfxQ6gh3TtSyOY+v7FhOu+Ar45kg=;
+  b=A2z4goFSGEV0+ytvnMuXH+aAf64Kyqc9sTaxMKqMTTwvzVG0XUgednGQ
+   rgnjxyRhWFbP4w29alxuP5+jXSVlsrKerH0Kc/+Aq4DoNA8Hxyv9WxtHc
+   YB1Bf/imN2rFRIi+rj3Roo+iVTgSqo4WYiZWwHQ+LLqF+n5lOACuii1pw
+   B5jFxyvlFSIp0Q1rJIi0emuGzGvwhmazeLd90n+Woj2W5s0M37/Qrm9qb
+   0ZPpuqmJB+HNEiSYVD/E6mZ6u7NlqMdyHjkrAVVu2wyVcAZKi8ixwxiku
+   9M0cDoqyfEXtsoLKqKZVGh5aG9qxg/y+GGfSJr0PfirjvyUYTyaARxrvl
+   Q==;
+X-CSE-ConnectionGUID: zCNLXWaERfe/hnhjjsWznQ==
+X-CSE-MsgGUID: ao+nbxntQV+lUCpJx630uw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="22459306"
+X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
+   d="scan'208";a="22459306"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 00:17:32 -0700
+X-CSE-ConnectionGUID: IrzaBLs1S22P0lYfxkjvmw==
+X-CSE-MsgGUID: LVmcOcvCScONZ2cG8mXiig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
+   d="scan'208";a="61780459"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 May 2024 00:17:31 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 15 May 2024 00:17:31 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 15 May 2024 00:17:31 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 15 May 2024 00:17:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QRY5QfWGqbGXpG9r8Nx4ZlYdb+nejifsuTLDd4pvP4flRNhH4lXpOuhfh9uUjphRuTV1LEP+aENw7UpEKbyruqWqT/jUidsIp9qt5KZzWdfs3ybfUcWCJhx0BbF0eyOz5y9hmDcg2r5uJgDoby5nJYeAmsRnOpmkUe/LeSwupiB+SjZb1EqwZOUZfAIMuqGzgCcLU1vDTkywR4F4yC3WZCxAuUTVmaVwlKcQ+ZIDP6ZHgG+5hywYwS4jjKJY6iOMuCqimZ5t80HmyU6wGJLmwS4Tlsa7iNQhcAA31Nw7eG2nvqdDQp9mLy2KTJjqfE9uhqEaivtY0zEcxm4hQlESDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HsPJR72aT40xVCLq7fvAh5P94hgFZwqN0OauB19zJMw=;
+ b=Wvz1KieflO4TBjNJIy3wwmXlR3wPWuQaLjvcrQ8iG3thQLMiatTd6d9qdFkLGNKblZhrCnAoRXsw3+0oJSilV34rcfIKj63ueS7HjFb9pu5kIJHSid/sRvGZfQVlR7ePx8AsuXGOsd0gEmvjjfdwGJorEiTHOJkeJ32y3Pg1bJ9zJRvbAgY0QWWYP0CTKkQraaN0u/sA1JEhgF0tR32hJdLWvijiZCtI6TVofURaEsWgY0WUyUlb6sPFvueIWIwly3jcjx/LOnPp7nNrQw3Gv9o2wRopcJ1vbMxyVesRDbSjK9SFpmPoY1VdpG1iF7G39J+DsBhTG3q7rTpEoXubyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by BL1PR11MB5223.namprd11.prod.outlook.com (2603:10b6:208:31a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Wed, 15 May
+ 2024 07:17:29 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.7587.026; Wed, 15 May 2024
+ 07:17:29 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, Joerg
+ Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+	<robin.murphy@arm.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>, "Jacob
+ Pan" <jacob.jun.pan@linux.intel.com>, Joel Granados <j.granados@samsung.com>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"virtualization@lists.linux-foundation.org"
+	<virtualization@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: RE: [PATCH v5 1/9] iommu: Introduce domain attachment handle
+Thread-Topic: [PATCH v5 1/9] iommu: Introduce domain attachment handle
+Thread-Index: AQHamw76XegsRd/ffUStCLWsuFz9nbGX86hA
+Date: Wed, 15 May 2024 07:17:29 +0000
+Message-ID: <BN9PR11MB5276F0DAE4B5F63513C38A158CEC2@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240430145710.68112-1-baolu.lu@linux.intel.com>
+ <20240430145710.68112-2-baolu.lu@linux.intel.com>
+In-Reply-To: <20240430145710.68112-2-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|BL1PR11MB5223:EE_
+x-ms-office365-filtering-correlation-id: c053e132-dc8a-421d-1f0e-08dc74af1488
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|1800799015|7416005|376005|38070700009|921011;
+x-microsoft-antispam-message-info: =?us-ascii?Q?b81grwjmayJ1ouUUm4XIb+DDFEEfOrXp6PvF7TWQuIDnc/oiVQvJfCQLMNJn?=
+ =?us-ascii?Q?Yp333WQI4Lq61RiZed0IjEVzPaKZe8W6GGIpayN2nNMIJoVfhWPSQWYOk8BT?=
+ =?us-ascii?Q?VJitM2CijUG+xmdFSkcGHxxXBJGbLImHJWBEVqKETgEZ41sooCHln7PWVyLR?=
+ =?us-ascii?Q?VL57GeOD63wHQ3D+0v9pFdyKCmYepWFFOuopAYUYc0aECG8ExjpWeHPfQ7Pv?=
+ =?us-ascii?Q?FddkfKBnxULghmRKZVBLfv7ahsWZF51s0u0L//Mq60kb7gc4cv477bDYju0L?=
+ =?us-ascii?Q?EF5XEKtVeDWJBqirA4AqG/nu+E8j0BnhJQ3nb98hMO3iLqDyGVriS2n6gSrZ?=
+ =?us-ascii?Q?avD9ArLl/vKv8LQJVQiB2FDWir1HOsIsV4l9rw6h+o+Mnf0EYPtpsDJVMNZY?=
+ =?us-ascii?Q?sKoUcNDGumKbpxwX3hPTIybGQU0Nao1XnNwQD9Qi/L1lh1ckESNH2nqJ8BRW?=
+ =?us-ascii?Q?eLt+Np8p9mYmwi8JY8gZetWMj9DLxWLXHZTznRWC6Jm6Jy16pO7ZnCdroUkP?=
+ =?us-ascii?Q?4EZLVbQ0GVCKmL0Az3Hp3og89XLdIeBgPtpicNzqI9Td5LlHfO4J6qqx87XA?=
+ =?us-ascii?Q?p1/wMcNbTs11Wrbya2Ym0ES1wXCJdA4k6LKJRGw7cRU3waDuLiwsz8ULRHXD?=
+ =?us-ascii?Q?Bj54/EjFZOYNWx42Qe7dsDQ+AIGpvHkmeQFzlzYTqvosMjuVE7l1xlo+UnTk?=
+ =?us-ascii?Q?k4KFQ2ugCkfOzniQF/VL3sDhACB+nN0X3vJZFtlrT1bCb/bL9EfshrF8dMv7?=
+ =?us-ascii?Q?BPwW1KLDkk3EpsoY2r35UTB6+bMYSD1bjoyFkGZ9FdS2VYT6zrlNL9UXdO87?=
+ =?us-ascii?Q?6ReNItta0Sv3I4MS9TZ0BGOocmC6NjcTcrCAzLQAmHaV7rUU7FiiBqPc6vLe?=
+ =?us-ascii?Q?s49IilsRPBDK8JL9ymW6aA6/XC5pjFvGMEEm/SVMhT2CpmPmCXN+ZNg6qj1F?=
+ =?us-ascii?Q?qBZ/OXg2JJjsNUO+DQkzkA2R32P8HKe9eo3hYrQbgVUBAvEEkZYFHBBQjX2y?=
+ =?us-ascii?Q?32gPH2mf8fsZrbl5nJ8+7cV977NKm9n/W8LTYy6Zd5cWZH/DaAJnUI3/2ssC?=
+ =?us-ascii?Q?3rOaqO43Qn+gqS1Jh4+wF+YJjYxx2Vp/v2A9TnEpJJJwmHykB1ny/U/tVxFy?=
+ =?us-ascii?Q?IZib8Gq/gZX8OQ67F91h3IRkTwhmHwHXR7z5uEceCKNHQQYMYGSeB9AFIe/O?=
+ =?us-ascii?Q?SZXiXChqnMPHg/bcsb3GdzGKfzgyuR6WNH3H+/uJCB5tnIQrRG3xojJOkHJ5?=
+ =?us-ascii?Q?NVZN0PbQ3azn1LisanKUCnKPzVT08CyLsL206siD/CirY65x+r1dzzkIl+Vg?=
+ =?us-ascii?Q?o91nOCsStxomn/pGTPxKkDhlNnSdCIpzP4HN9fwzSJvvQBFoMy74OvYDLetu?=
+ =?us-ascii?Q?UNL91yg=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(38070700009)(921011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?yFRcmbPHLsR0nh9VLk+t8gNQ/E3jVEBDF1OHRvBDtGb6oi2W9WXe6mnvBiLj?=
+ =?us-ascii?Q?gflLhFefxbPOycMjzJhFq4ymP9epOPhtnsxQCmbHkTXysGyviytlWzLPkrR6?=
+ =?us-ascii?Q?Iessu3v6Ry0in6IBO/TxZOXyF/tUsr3ab2luXaherAatDk/9xtFOMg64z/Vx?=
+ =?us-ascii?Q?gXMWN+UUyFY/fOZS6muUUu0WEZqJFKMjdZeDeRC/hxmdesegvhCSHvT3Wylr?=
+ =?us-ascii?Q?y1Hm5jJYqzuol8ejfIZW0U3ZxUuiviPIwdh57dTSjkF/rnGql5biKUGlcRAk?=
+ =?us-ascii?Q?/idnPQmWEpk/0wouj8y4bwZ9DxELNwC076Wu1YB/f3mrlGR9j4CgdYkCzso3?=
+ =?us-ascii?Q?822XL2rXDbBCMDqL/K2uHDwk0t++xDmvcqAV4WMsv6StwQIpVPtQ346Zy7fZ?=
+ =?us-ascii?Q?5sO4elytGOvuYWFLnyPI7HX87WreO2Thg3K6W9btmmhr7vsnf6RlGQK7Myf4?=
+ =?us-ascii?Q?fXD7XExm3XFvAo9TaHzQenMasMjPscbu+kHrNNNXLN9viLDTC67LSJLA3v75?=
+ =?us-ascii?Q?n2eTBdHNvzPv5JNzhFv0nafNoeV8srYKWFnxdqdowVFwZpPoSCGP3lYKrZVA?=
+ =?us-ascii?Q?78wH4od0dCjiBsdSkSVPSCbqkCHevePatsfro5viqhtEE4Lb8A/AcS/zr8Dt?=
+ =?us-ascii?Q?SqEDc1DIf4ywIrkuJi54s10fK10wYGr3SW/1+WUf6EYpaZ5+ZkN2x665AiyT?=
+ =?us-ascii?Q?QjFFecbLxurO6YVAPeGGY2Fyl7QkivjU6UV2+HD4PbEtitZZgwLPXfEpa1g2?=
+ =?us-ascii?Q?fjR9If5ZzHJTHAr++fMnx47QD9DOycMQA8y5dL/34yEFJomkbfy6vYw8M/xz?=
+ =?us-ascii?Q?xfbfKmhxItBAwA97jukSukt7phAt7NidWZTH90IPa8vttohF41cye9ukPfMo?=
+ =?us-ascii?Q?2foIG8KyRt/yGfxUk3VXWb+y2qQn/THqs58DLsIUCsk3WmckGiO108PlRjZL?=
+ =?us-ascii?Q?bRJjRR1MJaxBPP4p9KEoFrp5upzCebpf6HtJ+Y350pVAUl2/H47jYhTKu42K?=
+ =?us-ascii?Q?qNizCFfBN6f4jKNnu32NDVDhuITHy1+VqiZ7thmJALiVyDAhk5FvEBqbiim2?=
+ =?us-ascii?Q?TWd/WlDYxJoFMxTKlVEWGgDo5U4lH+bx0GbDinVME0qN9ljMHj+dgg3rTUmR?=
+ =?us-ascii?Q?AaHx/+MBndcvVyNMmc224Sw/ODIg4MK+weomWbF2AdBsXR3OTlEoWn+5sP+Y?=
+ =?us-ascii?Q?MiJmM2v01cLnc9PZ3KyxvSN+5O2clIsyY1A0FyPvLxjDYfisThxZEPeDUHYb?=
+ =?us-ascii?Q?SnFNSt9GjqVAxHpKbBowC10Y2f3QCnHMkPeSL52FIer66AaEJwqfpkgUIGiJ?=
+ =?us-ascii?Q?2yHaosH68vm0cPBnd7R9L9rI1mJQjaa1SK+2V0TdhGm3kCGrujhHkifhAmXV?=
+ =?us-ascii?Q?opLPqsHxi/ypULOrrLPUEWhyKkDMC4rYQeDPH0dop7imM/MEWngAYRgfVKXk?=
+ =?us-ascii?Q?XkLEYyvnnitM6iiipuR47HMOJ+6zJZ4z+kBxb9BAHe/0kMdicrJagEQFobwL?=
+ =?us-ascii?Q?37rOq9xmIOfdnZ38yL8wuXQT7iRTtm0Atm84l4vOKhskXpH0DVyKUzFbc9Bo?=
+ =?us-ascii?Q?kP18YCvC22UjKmiiWI8KFK8ExJSaSEXLhdCDNdz6?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c053e132-dc8a-421d-1f0e-08dc74af1488
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2024 07:17:29.1709
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wv73bUZWN/QBnwh9g+flygScKjcLnCElFjg7ALUxZRZHwnVmHBR+G5XLBC2c0ORCDQ+w0PYMEbLLplRYVs6h0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5223
+X-OriginatorOrg: intel.com
 
-We need to export a number of API functions that enable
-advanced zstd usage - C/D dictionaries, dictionaries
-sharing between contexts, etc.
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Tuesday, April 30, 2024 10:57 PM
+>=20
+> +/* Add an attach handle to the group's pasid array. */
+> +static struct iommu_attach_handle *
+> +iommu_attach_handle_set(struct iommu_domain *domain,
+> +			struct iommu_group *group, ioasid_t pasid)
+> +{
+> +	struct iommu_attach_handle *handle;
+> +	void *curr;
+> +
+> +	handle =3D kzalloc(sizeof(*handle), GFP_KERNEL);
+> +	if (!handle)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	handle->domain =3D domain;
+> +	curr =3D xa_cmpxchg(&group->pasid_array, pasid, NULL, handle,
+> GFP_KERNEL);
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Nick Terrell <terrelln@fb.com>
----
- include/linux/zstd.h              | 165 ++++++++++++++++++++++++++++++
- lib/zstd/zstd_compress_module.c   |  52 ++++++++++
- lib/zstd/zstd_decompress_module.c |  38 +++++++
- 3 files changed, 255 insertions(+)
+this could be just xa_insert() which returns -EBUSY if the entry isn't NULL=
+.
 
-diff --git a/include/linux/zstd.h b/include/linux/zstd.h
-index f109d49f43f8..18260a354231 100644
---- a/include/linux/zstd.h
-+++ b/include/linux/zstd.h
-@@ -77,6 +77,30 @@ int zstd_min_clevel(void);
-  */
- int zstd_max_clevel(void);
- 
-+/**
-+ * zstd_default_clevel() - default compression level
-+ *
-+ * Return: Default compression level.
-+ */
-+int zstd_default_clevel(void);
-+
-+/**
-+ * struct zstd_custom_mem - custom memory allocation
-+ */
-+typedef ZSTD_customMem zstd_custom_mem;
-+
-+/**
-+ * struct zstd_dict_load_method - Dictionary load method.
-+ * See zstd_lib.h.
-+ */
-+typedef ZSTD_dictLoadMethod_e zstd_dict_load_method;
-+
-+/**
-+ * struct zstd_dict_content_type - Dictionary context type.
-+ * See zstd_lib.h.
-+ */
-+typedef ZSTD_dictContentType_e zstd_dict_content_type;
-+
- /* ======   Parameter Selection   ====== */
- 
- /**
-@@ -136,6 +160,19 @@ typedef ZSTD_parameters zstd_parameters;
- zstd_parameters zstd_get_params(int level,
- 	unsigned long long estimated_src_size);
- 
-+
-+/**
-+ * zstd_get_cparams() - returns zstd_compression_parameters for selected level
-+ * @level:              The compression level
-+ * @estimated_src_size: The estimated source size to compress or 0
-+ *                      if unknown.
-+ * @dict_size:          Dictionary size.
-+ *
-+ * Return:              The selected zstd_compression_parameters.
-+ */
-+zstd_compression_parameters zstd_get_cparams(int level,
-+	unsigned long long estimated_src_size, size_t dict_size);
-+
- /* ======   Single-pass Compression   ====== */
- 
- typedef ZSTD_CCtx zstd_cctx;
-@@ -180,6 +217,70 @@ zstd_cctx *zstd_init_cctx(void *workspace, size_t workspace_size);
- size_t zstd_compress_cctx(zstd_cctx *cctx, void *dst, size_t dst_capacity,
- 	const void *src, size_t src_size, const zstd_parameters *parameters);
- 
-+/**
-+ * zstd_create_cctx_advanced() - Create compression context
-+ * @custom_mem:   Custom allocator.
-+ *
-+ * Return:        NULL on error, pointer to compression context otherwise.
-+ */
-+zstd_cctx *zstd_create_cctx_advanced(zstd_custom_mem custom_mem);
-+
-+/**
-+ * zstd_free_cctx() - Free compression context
-+ * @cdict:        Pointer to compression context.
-+ *
-+ * Return:        Always 0.
-+ */
-+size_t zstd_free_cctx(zstd_cctx* cctx);
-+
-+/**
-+ * struct zstd_cdict - Compression dictionary.
-+ * See zstd_lib.h.
-+ */
-+typedef ZSTD_CDict zstd_cdict;
-+
-+/**
-+ * zstd_create_cdict_advanced() - Create compression dictionary
-+ * @dict:              Pointer to dictionary buffer.
-+ * @dict_size:         Size of the dictionary buffer.
-+ * @dict_load_method:  Dictionary load method.
-+ * @dict_content_type: Dictionary content type.
-+ * @custom_mem:        Memory allocator.
-+ *
-+ * Return:             NULL on error, pointer to compression dictionary
-+ *                     otherwise.
-+ */
-+zstd_cdict *zstd_create_cdict_advanced(const void *dict, size_t dict_size,
-+				       zstd_dict_load_method dict_load_method,
-+				       zstd_dict_content_type dict_content_type,
-+				       zstd_compression_parameters cparams,
-+				       zstd_custom_mem custom_mem);
-+
-+/**
-+ * zstd_free_cdict() - Free compression dictionary
-+ * @cdict:        Pointer to compression dictionary.
-+ *
-+ * Return:        Always 0.
-+ */
-+size_t zstd_free_cdict(zstd_cdict* cdict);
-+
-+/**
-+ * zstd_compress_using_cdict() - compress src into dst using a dictionary
-+ * @cctx:         The context. Must have been initialized with zstd_init_cctx().
-+ * @dst:          The buffer to compress src into.
-+ * @dst_capacity: The size of the destination buffer. May be any size, but
-+ *                ZSTD_compressBound(srcSize) is guaranteed to be large enough.
-+ * @src:          The data to compress.
-+ * @src_size:     The size of the data to compress.
-+ * @cdict:        The dictionary to be used.
-+ *
-+ * Return:        The compressed size or an error, which can be checked using
-+ *                zstd_is_error().
-+ */
-+size_t zstd_compress_using_cdict(zstd_cctx *cctx, void *dst,
-+	size_t dst_capacity, const void *src, size_t src_size,
-+	const zstd_cdict *cdict);
-+
- /* ======   Single-pass Decompression   ====== */
- 
- typedef ZSTD_DCtx zstd_dctx;
-@@ -220,6 +321,70 @@ zstd_dctx *zstd_init_dctx(void *workspace, size_t workspace_size);
- size_t zstd_decompress_dctx(zstd_dctx *dctx, void *dst, size_t dst_capacity,
- 	const void *src, size_t src_size);
- 
-+/**
-+ * struct zstd_ddict - Decompression dictionary.
-+ * See zstd_lib.h.
-+ */
-+typedef ZSTD_DDict zstd_ddict;
-+
-+/**
-+ * zstd_create_ddict_advanced() - Create decompression dictionary
-+ * @dict:              Pointer to dictionary buffer.
-+ * @dict_size:         Size of the dictionary buffer.
-+ * @dict_load_method:  Dictionary load method.
-+ * @dict_content_type: Dictionary content type.
-+ * @custom_mem:        Memory allocator.
-+ *
-+ * Return:             NULL on error, pointer to decompression dictionary
-+ *                     otherwise.
-+ */
-+zstd_ddict *zstd_create_ddict_advanced(const void *dict, size_t dict_size,
-+				       zstd_dict_load_method dict_load_method,
-+				       zstd_dict_content_type dict_content_type,
-+				       zstd_custom_mem custom_mem);
-+/**
-+ * zstd_free_ddict() - Free decompression dictionary
-+ * @dict:         Pointer to the dictionary.
-+ *
-+ * Return:        Always 0.
-+ */
-+size_t zstd_free_ddict(zstd_ddict *ddict);
-+
-+/**
-+ * zstd_create_dctx_advanced() - Create decompression context
-+ * @custom_mem:   Custom allocator.
-+ *
-+ * Return:        NULL on error, pointer to decompression context otherwise.
-+ */
-+zstd_dctx *zstd_create_dctx_advanced(zstd_custom_mem custom_mem);
-+
-+/**
-+ * zstd_free_dctx() -- Free decompression context
-+ * @dctx:         Pointer to decompression context.
-+ * Return:        Always 0.
-+ */
-+size_t zstd_free_dctx(zstd_dctx *dctx);
-+
-+/**
-+ * zstd_decompress_using_ddict() - decompress src into dst using a dictionary
-+ * @dctx:         The decompression context.
-+ * @dst:          The buffer to decompress src into.
-+ * @dst_capacity: The size of the destination buffer. Must be at least as large
-+ *                as the decompressed size. If the caller cannot upper bound the
-+ *                decompressed size, then it's better to use the streaming API.
-+ * @src:          The zstd compressed data to decompress. Multiple concatenated
-+ *                frames and skippable frames are allowed.
-+ * @src_size:     The exact size of the data to decompress.
-+ * @ddict:        The dictionary to be used.
-+ *
-+ * Return:        The decompressed size or an error, which can be checked using
-+ *                zstd_is_error().
-+ */
-+size_t zstd_decompress_using_ddict(zstd_dctx *dctx,
-+	void *dst, size_t dst_capacity, const void *src, size_t src_size,
-+	const zstd_ddict *ddict);
-+
-+
- /* ======   Streaming Buffers   ====== */
- 
- /**
-diff --git a/lib/zstd/zstd_compress_module.c b/lib/zstd/zstd_compress_module.c
-index 8ecf43226af2..a5edf59334df 100644
---- a/lib/zstd/zstd_compress_module.c
-+++ b/lib/zstd/zstd_compress_module.c
-@@ -66,6 +66,12 @@ int zstd_max_clevel(void)
- }
- EXPORT_SYMBOL(zstd_max_clevel);
- 
-+int zstd_default_clevel(void)
-+{
-+	return ZSTD_defaultCLevel();
-+}
-+EXPORT_SYMBOL(zstd_default_clevel);
-+
- size_t zstd_compress_bound(size_t src_size)
- {
- 	return ZSTD_compressBound(src_size);
-@@ -79,6 +85,13 @@ zstd_parameters zstd_get_params(int level,
- }
- EXPORT_SYMBOL(zstd_get_params);
- 
-+zstd_compression_parameters zstd_get_cparams(int level,
-+	unsigned long long estimated_src_size, size_t dict_size)
-+{
-+	return ZSTD_getCParams(level, estimated_src_size, dict_size);
-+}
-+EXPORT_SYMBOL(zstd_get_cparams);
-+
- size_t zstd_cctx_workspace_bound(const zstd_compression_parameters *cparams)
- {
- 	return ZSTD_estimateCCtxSize_usingCParams(*cparams);
-@@ -93,6 +106,36 @@ zstd_cctx *zstd_init_cctx(void *workspace, size_t workspace_size)
- }
- EXPORT_SYMBOL(zstd_init_cctx);
- 
-+zstd_cctx *zstd_create_cctx_advanced(zstd_custom_mem custom_mem)
-+{
-+	return ZSTD_createCCtx_advanced(custom_mem);
-+}
-+EXPORT_SYMBOL(zstd_create_cctx_advanced);
-+
-+size_t zstd_free_cctx(zstd_cctx *cctx)
-+{
-+	return ZSTD_freeCCtx(cctx);
-+}
-+EXPORT_SYMBOL(zstd_free_cctx);
-+
-+zstd_cdict *zstd_create_cdict_advanced(const void *dict, size_t dict_size,
-+				       zstd_dict_load_method dict_load_method,
-+				       zstd_dict_content_type dict_content_type,
-+				       zstd_compression_parameters cparams,
-+				       zstd_custom_mem custom_mem)
-+{
-+	return ZSTD_createCDict_advanced(dict, dict_size, dict_load_method,
-+					 dict_content_type, cparams,
-+					 custom_mem);
-+}
-+EXPORT_SYMBOL(zstd_create_cdict_advanced);
-+
-+size_t zstd_free_cdict(zstd_cdict *cdict)
-+{
-+	return ZSTD_freeCDict(cdict);
-+}
-+EXPORT_SYMBOL(zstd_free_cdict);
-+
- size_t zstd_compress_cctx(zstd_cctx *cctx, void *dst, size_t dst_capacity,
- 	const void *src, size_t src_size, const zstd_parameters *parameters)
- {
-@@ -101,6 +144,15 @@ size_t zstd_compress_cctx(zstd_cctx *cctx, void *dst, size_t dst_capacity,
- }
- EXPORT_SYMBOL(zstd_compress_cctx);
- 
-+size_t zstd_compress_using_cdict(zstd_cctx *cctx, void *dst,
-+	size_t dst_capacity, const void *src, size_t src_size,
-+	const ZSTD_CDict *cdict)
-+{
-+	return ZSTD_compress_usingCDict(cctx, dst, dst_capacity,
-+					src, src_size, cdict);
-+}
-+EXPORT_SYMBOL(zstd_compress_using_cdict);
-+
- size_t zstd_cstream_workspace_bound(const zstd_compression_parameters *cparams)
- {
- 	return ZSTD_estimateCStreamSize_usingCParams(*cparams);
-diff --git a/lib/zstd/zstd_decompress_module.c b/lib/zstd/zstd_decompress_module.c
-index 7d31518e9d5a..6a0f464609bc 100644
---- a/lib/zstd/zstd_decompress_module.c
-+++ b/lib/zstd/zstd_decompress_module.c
-@@ -44,6 +44,35 @@ size_t zstd_dctx_workspace_bound(void)
- }
- EXPORT_SYMBOL(zstd_dctx_workspace_bound);
- 
-+zstd_dctx *zstd_create_dctx_advanced(zstd_custom_mem custom_mem)
-+{
-+	return ZSTD_createDCtx_advanced(custom_mem);
-+}
-+EXPORT_SYMBOL(zstd_create_dctx_advanced);
-+
-+size_t zstd_free_dctx(zstd_dctx *dctx)
-+{
-+	return ZSTD_freeDCtx(dctx);
-+}
-+EXPORT_SYMBOL(zstd_free_dctx);
-+
-+zstd_ddict *zstd_create_ddict_advanced(const void *dict, size_t dict_size,
-+                                      zstd_dict_load_method dict_load_method,
-+                                      zstd_dict_content_type dict_content_type,
-+                                      zstd_custom_mem custom_mem)
-+{
-+	return ZSTD_createDDict_advanced(dict, dict_size, dict_load_method,
-+					 dict_content_type, custom_mem);
-+
-+}
-+EXPORT_SYMBOL(zstd_create_ddict_advanced);
-+
-+size_t zstd_free_ddict(zstd_ddict *ddict)
-+{
-+	return ZSTD_freeDDict(ddict);
-+}
-+EXPORT_SYMBOL(zstd_free_ddict);
-+
- zstd_dctx *zstd_init_dctx(void *workspace, size_t workspace_size)
- {
- 	if (workspace == NULL)
-@@ -59,6 +88,15 @@ size_t zstd_decompress_dctx(zstd_dctx *dctx, void *dst, size_t dst_capacity,
- }
- EXPORT_SYMBOL(zstd_decompress_dctx);
- 
-+size_t zstd_decompress_using_ddict(zstd_dctx *dctx,
-+	void *dst, size_t dst_capacity, const void* src, size_t src_size,
-+	const zstd_ddict* ddict)
-+{
-+	return ZSTD_decompress_usingDDict(dctx, dst, dst_capacity, src,
-+					  src_size, ddict);
-+}
-+EXPORT_SYMBOL(zstd_decompress_using_ddict);
-+
- size_t zstd_dstream_workspace_bound(size_t max_window_size)
- {
- 	return ZSTD_estimateDStreamSize(max_window_size);
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+> +	if (curr) {
+> +		kfree(handle);
+> +		return xa_err(curr) ? curr : ERR_PTR(-EBUSY);
 
+'curr' is not an error pointer. You need ERR_PTR(xa_err(curr)).
+
+>  int iommu_attach_group(struct iommu_domain *domain, struct
+> iommu_group *group)
+>  {
+> +	struct iommu_attach_handle *handle;
+>  	int ret;
+>=20
+>  	mutex_lock(&group->mutex);
+> +	handle =3D iommu_attach_handle_set(domain, group,
+> IOMMU_NO_PASID);
+> +	if (IS_ERR(handle)) {
+> +		ret =3D PTR_ERR(handle);
+> +		goto out_unlock;
+> +	}
+>  	ret =3D __iommu_attach_group(domain, group);
+> +	if (ret)
+> +		goto out_remove_handle;
+>  	mutex_unlock(&group->mutex);
+
+It's slightly better to set the handler after __iommu_attach_group().
+
+doing so is aligned to the sequence in iommu_group_replace_domain().
+
+> @@ -2211,13 +2307,33 @@ EXPORT_SYMBOL_GPL(iommu_attach_group);
+>  int iommu_group_replace_domain(struct iommu_group *group,
+>  			       struct iommu_domain *new_domain)
+>  {
+> +	struct iommu_domain *old_domain =3D group->domain;
+> +	struct iommu_attach_handle *handle;
+>  	int ret;
+>=20
+>  	if (!new_domain)
+>  		return -EINVAL;
+>=20
+> +	if (new_domain =3D=3D old_domain)
+> +		return 0;
+> +
+
+__iommu_group_set_domain() already does the check.
