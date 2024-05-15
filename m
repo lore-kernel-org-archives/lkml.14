@@ -1,140 +1,106 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EEB155747
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0388215574C
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715786379; cv=none; b=qaL7MKJM6Rb8mlxP/qRY2AGS0+gOMy3IRjaKdJtB2bqz1HDpitZ8s4OH3ZhmX+pZAim/6NiDXVilcnyZq+Wmt5TMhUYg/fZ/zFd7UYa/OxHhn9jTYBaEPUjPYKjIbDCsjXY7hEIDqGnToJqIO1SJUEy7b2i1bOCFQ+useTUmFU0=
+	t=1715786406; cv=none; b=Qs/7EWnIWVRbmRCiTC3JXebOz+K/AYBTcYBotDeoEQk9y7+x/ubE5Jdgm+X3MwNd0FuNz5lsmr33Kn/8XHhvAA6EOMoINa8eOljGYLQR5ua22nTb5DQN8QqbF78HGrIlO8HGZ/lzlNxIcPUPuBa1ih/IsdmeI2siD1gEDGFK0UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715786379; c=relaxed/simple;
-	bh=7GZ5WU+bZdC5Obs57lnNybBji5Soqql0MKxWRL80kLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sRMswD4w999BokfY1DwA23jiJRu8bE7eyc53Z4Ri1ZtkRW5SH1E0RJiQFC5QhT199YfGsAaDJ8DUHKFJfbY5cXNFy8+9dZiMcwUfZhg5b4UjVWX3n4rVpsmqTLGs75Fys5vQUduOSmExepC1A4tezqk0zMPYPN875fFgPYNFJ5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Wed, 15 May
- 2024 18:18:24 +0300
-Received: from [192.168.211.130] (10.0.253.138) by Ex16-01.fintech.ru
- (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Wed, 15 May
- 2024 18:18:24 +0300
-Message-ID: <ac84eefc-e024-40fb-a92d-3109f686d122@fintech.ru>
-Date: Wed, 15 May 2024 08:18:19 -0700
+	s=arc-20240116; t=1715786406; c=relaxed/simple;
+	bh=TNvTFxD0lNFbtP/hbUhnEE8TGogQNxPRZHVVwl0fwJ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=blp0bUx3SWteFYNX8WD8XPu9RQNKWjXCfNnIQ/2GeShgbJ46S50v2yNPchGbgrOdbHdWyssMIWnYWyqmwdNdXu/Wy1Lwg996dUnzfMatTLMrXCgw6qKYjn3VpzA7mCywVs6H0+mhh0WGqXlT47qi+sTmXnLwEJhuhz5zUD1kuIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XFxgfMP3; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XFxgfMP3"
+Message-ID: <2c15c859-6b2b-4979-8317-698bf6cc430c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715786402;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmD4Qw+Oobw3jODJD0oLXnLEGlKRGxu/voHJf2ZarqM=;
+	b=XFxgfMP3HPxLUow/pJcgRdJr6LVhiCG33NNCO9WQPk36A8Xk1FCTVDOgqDzgP73sAq7Rk4
+	IWgSOsYKCKHgsAJlBedjYqWBPhMdG2LvTfrpV7ilPe5Ka7/0t4xvR9XL/UOM3+xFbMTcgv
+	8RNIRLe1w9ETbdzwSueiZzzVYiP+/7E=
+Date: Wed, 15 May 2024 23:19:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] net/9p: fix uninit-value in p9_client_rpc()
-To: Eric Van Hensbergen <ericvh@kernel.org>
-CC: Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet
-	<asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>,
-	<v9fs@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>,
-	<syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com>
-References: <20240408141039.30428-1-n.zhandarovich@fintech.ru>
-Content-Language: en-US
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-In-Reply-To: <20240408141039.30428-1-n.zhandarovich@fintech.ru>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 0/2] drm/bridge: Add 'struct device *' field to the
+ drm_bridge structure
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240514154045.309925-1-sui.jingfeng@linux.dev>
+ <20240514-scarlet-corgi-of-efficiency-faf2bb@penduick>
+ <c44480ab-8d6b-4334-8eba-83db9b30ff1a@linux.dev>
+ <20240515-fair-satisfied-myna-480dea@penduick>
+ <d394ee32-4fa4-41a8-a5ca-c1c7f77f44d2@linux.dev>
+ <20240515-copper-chimpanzee-of-fortitude-ff3dab@penduick>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240515-copper-chimpanzee-of-fortitude-ff3dab@penduick>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+X-Migadu-Flow: FLOW_OUT
+
+Hi,
 
 
+On 5/15/24 22:58, Maxime Ripard wrote:
+> On Wed, May 15, 2024 at 10:53:00PM +0800, Sui Jingfeng wrote:
+>> On 5/15/24 22:30, Maxime Ripard wrote:
+>>> On Wed, May 15, 2024 at 12:53:33AM +0800, Sui Jingfeng wrote:
+>>>> On 2024/5/15 00:22, Maxime Ripard wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Tue, May 14, 2024 at 11:40:43PM +0800, Sui Jingfeng wrote:
+>>>>>> Because a lot of implementations has already added it into their drived
+>>>>>> class, promote it into drm_bridge core may benifits a lot. drm bridge is
+>>>>>> a driver, it should know the underlying hardware entity.
+>>>>> Is there some actual benefits, or is it theoretical at this point?
+>>>>
+>>>>
+>>>> I think, DRM bridge drivers could remove the 'struct device *dev'
+>>>> member from their derived structure. Rely on the drm bridge core
+>>>> when they need the 'struct device *' pointer.
+>>>
+>>> Sure, but why do we need to do so?
+>>>
+>>> The other thread you had with Jani points out that it turns out that
+>>> things are more complicated than "every bridge driver has a struct
+>>> device anyway", it creates inconsistency in the API (bridges would have
+>>> a struct device, but not other entities), and it looks like there's no
+>>> use for it anyway.
+>>>
+>>> None of these things are deal-breaker by themselves, but if there's only
+>>> downsides and no upside, it's not clear to me why we should do it at all.
+>>
+>> It can reduce boilerplate.
+> 
+> You're still using a conditional here.
 
-On 4/8/24 07:10, Nikita Zhandarovich wrote:
-> Syzbot with the help of KMSAN reported the following error:
-> 
-> BUG: KMSAN: uninit-value in trace_9p_client_res include/trace/events/9p.h:146 [inline]
-> BUG: KMSAN: uninit-value in p9_client_rpc+0x1314/0x1340 net/9p/client.c:754
->  trace_9p_client_res include/trace/events/9p.h:146 [inline]
->  p9_client_rpc+0x1314/0x1340 net/9p/client.c:754
->  p9_client_create+0x1551/0x1ff0 net/9p/client.c:1031
->  v9fs_session_init+0x1b9/0x28e0 fs/9p/v9fs.c:410
->  v9fs_mount+0xe2/0x12b0 fs/9p/vfs_super.c:122
->  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
->  vfs_get_tree+0xa7/0x570 fs/super.c:1797
->  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
->  path_mount+0x742/0x1f20 fs/namespace.c:3679
->  do_mount fs/namespace.c:3692 [inline]
->  __do_sys_mount fs/namespace.c:3898 [inline]
->  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
->  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
->  do_syscall_64+0xd5/0x1f0
->  entry_SYSCALL_64_after_hwframe+0x6d/0x75
-> 
-> Uninit was created at:
->  __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
->  __alloc_pages_node include/linux/gfp.h:238 [inline]
->  alloc_pages_node include/linux/gfp.h:261 [inline]
->  alloc_slab_page mm/slub.c:2175 [inline]
->  allocate_slab mm/slub.c:2338 [inline]
->  new_slab+0x2de/0x1400 mm/slub.c:2391
->  ___slab_alloc+0x1184/0x33d0 mm/slub.c:3525
->  __slab_alloc mm/slub.c:3610 [inline]
->  __slab_alloc_node mm/slub.c:3663 [inline]
->  slab_alloc_node mm/slub.c:3835 [inline]
->  kmem_cache_alloc+0x6d3/0xbe0 mm/slub.c:3852
->  p9_tag_alloc net/9p/client.c:278 [inline]
->  p9_client_prepare_req+0x20a/0x1770 net/9p/client.c:641
->  p9_client_rpc+0x27e/0x1340 net/9p/client.c:688
->  p9_client_create+0x1551/0x1ff0 net/9p/client.c:1031
->  v9fs_session_init+0x1b9/0x28e0 fs/9p/v9fs.c:410
->  v9fs_mount+0xe2/0x12b0 fs/9p/vfs_super.c:122
->  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
->  vfs_get_tree+0xa7/0x570 fs/super.c:1797
->  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
->  path_mount+0x742/0x1f20 fs/namespace.c:3679
->  do_mount fs/namespace.c:3692 [inline]
->  __do_sys_mount fs/namespace.c:3898 [inline]
->  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
->  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
->  do_syscall_64+0xd5/0x1f0
->  entry_SYSCALL_64_after_hwframe+0x6d/0x75
-> 
-> If p9_check_errors() fails early in p9_client_rpc(), req->rc.tag
-> will not be properly initialized. However, trace_9p_client_res()
-> ends up trying to print it out anyway before p9_client_rpc()
-> finishes.
-> 
-> Fix this issue by assigning default values to p9_fcall fields
-> such as 'tag' and (just in case KMSAN unearths something new) 'id'
-> during the tag allocation stage.
-> 
-> Reported-and-tested-by: syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com
-> Fixes: 348b59012e5c ("net/9p: Convert net/9p protocol dumps to tracepoints")
-> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-> ---
-> v2: change fc->tag init value from 0 to P9_NOTAG per Dominique
-> Martinet's <asmadeus@codewreck.org> helpful suggestion.
-> Link: https://lore.kernel.org/all/ZhNVMivKCCq6wir0@codewreck.org/
-> 
->  net/9p/client.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/9p/client.c b/net/9p/client.c
-> index f7e90b4769bb..b05f73c291b4 100644
-> --- a/net/9p/client.c
-> +++ b/net/9p/client.c
-> @@ -235,6 +235,8 @@ static int p9_fcall_init(struct p9_client *c, struct p9_fcall *fc,
->  	if (!fc->sdata)
->  		return -ENOMEM;
->  	fc->capacity = alloc_msize;
-> +	fc->id = 0;
-> +	fc->tag = P9_NOTAG;
->  	return 0;
->  }
->  
 
-Hi Dominique,
+It's for safety reason, prevent NULL pointer dereference.
+drm bridge can be seen as either a software entity or a device driver.
 
-Gentle ping on this issue as it is still open. Thanks in advance :)
+It's fine to pass NULL if specific KMS drivers intend to see
+drm bridge as a pure software entity, and for internal use only.
+Both use cases are valid.
 
-Regards,
-Nikita
+> 
+> Maxime
+
+-- 
+Best regards
+Sui
