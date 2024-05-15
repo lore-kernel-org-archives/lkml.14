@@ -1,57 +1,57 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6672F6E617
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931D66EB5B
 	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 04:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715748778; cv=none; b=Y4a2RR8zWzGaAZBpZoWGX4cVnX+sJOOftcYFzNrAiu66t23Na4ztNxWYGxv4jBmWc6Kc2YLN5MuhRkFQoEn3NySGE00EboOGE+iw/KxnSToOgG5xHro7kba4tNFJsqaDYsBYDPsAM64gZrPnzBMe7rBdQWqCN7XNCUpLWFCf/C0=
+	t=1715748778; cv=none; b=iF1H7MDFqFLizA+iCfNxitU+27DnaE/ISdUqzqt5jbaUUe55LjVauM43E4/ZRirhF2jZDKNVixJfZMG/MDzVCVfBkASQGvB+0lRwLSqnu60yxUuQ9uXM3vekoYu5phK6HL1nJRqK83svGt3g/2di6e/4DFf0bDsce4CxRZSqkg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715748778; c=relaxed/simple;
-	bh=x+7th958K+EtaVZNAuZ4f3J4B8F0FKqpXqhitiQlKQE=;
+	bh=nkptEJqOQE2+6wrLAUuYdfLGOOYUQC9bteAa4mWyU9s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=blZrFaVCPvdmlXikmjCtyz7aHqI07deyOIx8FjKoF04zolyrKgok6ww2zPK+XgLPIDCC28W/1QGfTfJa9oETOaNOGXPYVBkKDEh+IOLNH65wUEPef+Xyk419LMrdHXBhSjC57HaQhlY65YvQub9d/9IayVcCThlylRae0A7aV0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=gFwJvBud; arc=none smtp.client-ip=209.85.167.182
+	 MIME-Version; b=V5vvQlahdGL9RYJFv7DtcXQOhoG5uGrC3UNM16Ra6aTqt5iD3F0n3vQkMZY7kl0iXxTMIiY2nzlI+j5ZPfEvyzPZht4f34LQG0UMFd7YVmUC4LzGZrUQmoiEGUJ9GGSJ244+bLL6eIYXV2X1owOUaAIPcpq4QVZ5eXX0hHkamIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=Vh5AqTlI; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="gFwJvBud"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c9995562a0so2831250b6e.2
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="Vh5AqTlI"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f44bcbaae7so5699467b3a.2
         for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1715748775; x=1716353575; darn=vger.kernel.org;
+        d=darkphysics.net; s=google; t=1715748776; x=1716353576; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P5tTRlvba6F46bSw0/iKQNOrZ3zzLqHwL6ZR5s0u92w=;
-        b=gFwJvBud17XRfgk+BLZeJA3VIx8iE6DD6FKK3LMNFHrodTKObiXPF19DKMHS5lOmPB
-         qNs8+5gRYIThs3SoVepQ1WgAAzJSbreSHrqKZT+1ATfQYttbLqbXD8tAG7wNSX0Y88P2
-         PkOzlF6AZIrM7mxcWDEaUQCS6p93FdPHhdS2bR92KlHTTY3m0MaUemPPPFAVRCMvc5BP
-         +Nb5t7CxVcTD/ddz3/KBDlNZm7xb0zueL4x/Q41G3svp939n0zjFuFhezvFftTLFzWyL
-         h7a4Ds+ZYvg9BVJ7gIOHZZAAKtPkwSJ5myDKgjdYfwoZdTq8YOAvDCcLB8HOMerJikHg
-         ctNA==
+        bh=v/vMjY9MMZPdnh9VWVVbKPQx3shyavZBcDLjbDKqtMI=;
+        b=Vh5AqTlIxnsXGHkVvZbvKVhy3BwkOsPPhoBu/BnPsdpy6V5tFK+Er5O98zVOwvrT+G
+         bDvt87lW1KcfoX/yTBgDINA+z6mWj7pBP3ddU95lEUDT+RulRiPDHViPLjH9HO9qyEZ5
+         h2pKTuyuZVJwadJm7xvxcxSmNddebOuYIld2KCQYOtjhKIWMoM8q/aCDZxukczAeLOcx
+         iZoMDlObNrJAvs/EO7H8TlkBfhTYyTSiDQN/a3bqOWPVkcl+EK3ruOEoGwxQ4uolbdyq
+         PjfYnz0pEYw15g4tTIXEnKANYxe8vWbncRpEhOWqpf9XHW4Kf0cVRj1NMsuSwkI1egiU
+         q+BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715748775; x=1716353575;
+        d=1e100.net; s=20230601; t=1715748776; x=1716353576;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P5tTRlvba6F46bSw0/iKQNOrZ3zzLqHwL6ZR5s0u92w=;
-        b=ABsM7anJotny6u3VvQshKuX/3t5D+cnVz0vTRvY1ZS35qWA9KRpFLoJ5H6jroKJHdX
-         Vys31hCMqhWJqbFkFaODbuzdfe6/7Bs786dVX9HnMNOTpCg20h24ZLbaaKEpnQl5EbKD
-         JH4n0oZ5MwuDAIt4WQdQQwwdLAiIE2i+nH6wg0u22XgRBTmsaEr+bZEjq/SYg7seczTn
-         Gophy7gVXbESH8KSG1xM4eT1rK5I1D2QLVuTMI41vE67PLMtuOgGXH5SOR+zrbPv+pxv
-         GfDdhU9J4p+RWgVs2Hv2iwFNf6Yjp3CDKfSmIiSYzhty2PENQIbpQnafgxyiTWCcXGg8
-         8LBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUd5qLcBxya50kTbOW4XA05Vi1nRihhXWWj4tja7BP6HSPGZMKKOOYLBRv42Fhdtvma4ljevfr/2IrdydPRfxcy4LHQ420FmoMMZ2tb
-X-Gm-Message-State: AOJu0Ywe2e+Dt5QxCdWRZ3NiCI4kwF1HfvPpbsV/n27SydUfC6Py5QTY
-	kCqqgO1hk2qPvMxgkHXnzS/1w6v2aOBMMRciidhNqsqK5zHgfvk7lw/M4Bc1Oh0=
-X-Google-Smtp-Source: AGHT+IHYqmmOj/jm6/YE87uOWnTTJmdQU5S5Y09QrP2XqrtjcVjmfsAKRuT5+JOGOfU1YuvVdxDGCA==
-X-Received: by 2002:aca:2806:0:b0:3c9:66f2:69c0 with SMTP id 5614622812f47-3c9971d9509mr14382791b6e.55.1715748774095;
-        Tue, 14 May 2024 21:52:54 -0700 (PDT)
+        bh=v/vMjY9MMZPdnh9VWVVbKPQx3shyavZBcDLjbDKqtMI=;
+        b=ofqaT3iqGcLxqYhR18KnIwbVgzmhiliIoqvmeC4W4szHX/SGXmhg5IQv/K3f8GIGVD
+         mIncmT4dv+qq0lNVSlklAh4wlg9iwCUDW1lCOs/KMaRYwCtIGNm4woLaFgRGRY4sfoYk
+         9AM+pz0MINqKOVCS6Qbg9P5jbLIZRyRu5S7qX+AHL6K8zFZIijzIP9chP12jI4lg1kV1
+         igjc+VudP7MGy7e96/ok4H2OM5l7YpGldyNg6Z4HbBSn9kxBcm+eeLneF8X43CUq8Bki
+         Y3Lae39rBNzYg5zvtRvBI+AhMgAeNKyD1SKdEuyL0OXUKFphEQcXByI+ObzuZPLAK3KW
+         tZQA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9nt0dQSA0hpqw5h8nlJeMp9ytHB9LnlWXWg67Egs+rUEttjKdoZu+CtDlw9WwQkr0e5MummV7Q6j2Tp3HyIPUPCJCRus5JZ0va7cr
+X-Gm-Message-State: AOJu0YwuANV04LzdC23PUIkkGDTZ/VhgyDyeSYt1N7CIf9JxfXhVqdql
+	qZAn/2keIMRk/gMT69QOoZrj4NVMYv8kxoSghmZk+MUcsQCkeG7RlQyFiU8ErPM=
+X-Google-Smtp-Source: AGHT+IElzfY19fa8de6K/sc2J/9/ZZDO0caJ5RXxO9clQ88I9Nnd58mBxLMlN/it8652PIjWhC8irQ==
+X-Received: by 2002:a05:6a00:23d3:b0:6f3:ef3d:60f4 with SMTP id d2e1a72fcca58-6f4e03a2c5amr17680652b3a.33.1715748775937;
+        Tue, 14 May 2024 21:52:55 -0700 (PDT)
 Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a827fdsm10135035b3a.60.2024.05.14.21.52.53
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a827fdsm10135035b3a.60.2024.05.14.21.52.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 21:52:53 -0700 (PDT)
+        Tue, 14 May 2024 21:52:55 -0700 (PDT)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -59,9 +59,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 28/31] Staging: rtl8192e: Rename variable IsQoSDataFrame
-Date: Tue, 14 May 2024 21:52:25 -0700
-Message-Id: <20240515045228.35928-29-tdavies@darkphysics.net>
+Subject: [PATCH 31/31] Staging: rtl8192e: Rename variable bPktInBuf
+Date: Tue, 14 May 2024 21:52:28 -0700
+Message-Id: <20240515045228.35928-32-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240515045228.35928-1-tdavies@darkphysics.net>
 References: <20240515045228.35928-1-tdavies@darkphysics.net>
@@ -73,78 +73,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename variable IsQoSDataFrame to is_qos_data_frame
+Rename variable bPktInBuf to pkt_in_buf
 to fix checkpatch warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
- drivers/staging/rtl8192e/rtl819x_HTProc.c | 2 +-
- drivers/staging/rtl8192e/rtllib.h         | 2 +-
- drivers/staging/rtl8192e/rtllib_rx.c      | 2 +-
- drivers/staging/rtl8192e/rtllib_tx.c      | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/rtl8192e/rtl819x_TSProc.c |  8 ++++----
+ drivers/staging/rtl8192e/rtllib_rx.c      | 10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-index 9b0a981f6f22..36a734ded7dc 100644
---- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-@@ -625,7 +625,7 @@ EXPORT_SYMBOL(HT_update_self_and_peer_setting);
- u8 ht_c_check(struct rtllib_device *ieee, u8 *pFrame)
- {
- 	if (ieee->ht_info->current_ht_support) {
--		if ((IsQoSDataFrame(pFrame) && frame_order(pFrame)) == 1) {
-+		if ((is_qos_data_frame(pFrame) && frame_order(pFrame)) == 1) {
- 			netdev_dbg(ieee->dev, "HT CONTROL FILED EXIST!!\n");
- 			return true;
+diff --git a/drivers/staging/rtl8192e/rtl819x_TSProc.c b/drivers/staging/rtl8192e/rtl819x_TSProc.c
+index 9903fe3f3c77..7cdeca7ed8c2 100644
+--- a/drivers/staging/rtl8192e/rtl819x_TSProc.c
++++ b/drivers/staging/rtl8192e/rtl819x_TSProc.c
+@@ -18,7 +18,7 @@ static void RxPktPendingTimeout(struct timer_list *t)
+ 
+ 	unsigned long flags = 0;
+ 	u8 index = 0;
+-	bool bPktInBuf = false;
++	bool pkt_in_buf = false;
+ 
+ 	spin_lock_irqsave(&(ieee->reorder_spinlock), flags);
+ 	if (ts->rx_timeout_indicate_seq != 0xffff) {
+@@ -50,7 +50,7 @@ static void RxPktPendingTimeout(struct timer_list *t)
+ 				list_add_tail(&pReorderEntry->list,
+ 					      &ieee->RxReorder_Unused_List);
+ 			} else {
+-				bPktInBuf = true;
++				pkt_in_buf = true;
+ 				break;
+ 			}
  		}
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index ca69bb0965ba..e2695beaf582 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -340,7 +340,7 @@ enum rt_op_mode {
- #define	FC_QOS_BIT					BIT(7)
- #define is_data_frame(pdu)	(((pdu[0] & 0x0C) == 0x08) ? true : false)
- #define	is_legacy_data_frame(pdu)	(is_data_frame(pdu) && (!(pdu[0]&FC_QOS_BIT)))
--#define IsQoSDataFrame(pframe)			\
-+#define is_qos_data_frame(pframe)			\
- 	((*(u16 *)pframe&(IEEE80211_STYPE_QOS_DATA|RTLLIB_FTYPE_DATA)) ==	\
- 	(IEEE80211_STYPE_QOS_DATA|RTLLIB_FTYPE_DATA))
- #define frame_order(pframe)     (*(u16 *)pframe&IEEE80211_FCTL_ORDER)
+@@ -68,10 +68,10 @@ static void RxPktPendingTimeout(struct timer_list *t)
+ 			return;
+ 		}
+ 		rtllib_indicate_packets(ieee, ieee->stats_IndicateArray, index);
+-		bPktInBuf = false;
++		pkt_in_buf = false;
+ 	}
+ 
+-	if (bPktInBuf && (ts->rx_timeout_indicate_seq == 0xffff)) {
++	if (pkt_in_buf && (ts->rx_timeout_indicate_seq == 0xffff)) {
+ 		ts->rx_timeout_indicate_seq = ts->rx_indicate_seq;
+ 		mod_timer(&ts->rx_pkt_pending_timer,  jiffies +
+ 			  msecs_to_jiffies(ieee->ht_info->rx_reorder_pending_time)
 diff --git a/drivers/staging/rtl8192e/rtllib_rx.c b/drivers/staging/rtl8192e/rtllib_rx.c
-index fe72149aa81c..976e8b4da1d4 100644
+index 43e94af07e99..c17e7d3ca8c3 100644
 --- a/drivers/staging/rtl8192e/rtllib_rx.c
 +++ b/drivers/staging/rtl8192e/rtllib_rx.c
-@@ -1322,7 +1322,7 @@ static int rtllib_rx_infra_adhoc(struct rtllib_device *ieee, struct sk_buff *skb
+@@ -529,7 +529,7 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
+ 	u8 win_size = ht_info->rx_reorder_win_size;
+ 	u16 win_end = 0;
+ 	u8 index = 0;
+-	bool match_win_start = false, bPktInBuf = false;
++	bool match_win_start = false, pkt_in_buf = false;
+ 	unsigned long flags;
  
- 	/* Get TS for Rx Reorder  */
- 	hdr = (struct ieee80211_hdr *)skb->data;
--	if (ieee->current_network.qos_data.active && IsQoSDataFrame(skb->data)
-+	if (ieee->current_network.qos_data.active && is_qos_data_frame(skb->data)
- 		&& !is_multicast_ether_addr(hdr->addr1)) {
- 		TID = frame_qos_tid(skb->data);
- 		SeqNum = WLAN_GET_SEQ_SEQ(sc);
-diff --git a/drivers/staging/rtl8192e/rtllib_tx.c b/drivers/staging/rtl8192e/rtllib_tx.c
-index 1aeb207a3fee..b1bde5c0050a 100644
---- a/drivers/staging/rtl8192e/rtllib_tx.c
-+++ b/drivers/staging/rtl8192e/rtllib_tx.c
-@@ -275,7 +275,7 @@ static void rtllib_tx_query_agg_cap(struct rtllib_device *ieee,
+ 	netdev_dbg(ieee->dev,
+@@ -665,7 +665,7 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
+ 				netdev_err(ieee->dev,
+ 					   "%s(): Buffer overflow!\n",
+ 					   __func__);
+-				bPktInBuf = true;
++				pkt_in_buf = true;
+ 				break;
+ 			}
  
- 	if (!ht_info->current_ht_support || !ht_info->enable_ht)
- 		return;
--	if (!IsQoSDataFrame(skb->data))
-+	if (!is_qos_data_frame(skb->data))
- 		return;
- 	if (is_multicast_ether_addr(hdr->addr1))
- 		return;
-@@ -472,7 +472,7 @@ static u16 rtllib_query_seqnum(struct rtllib_device *ieee, struct sk_buff *skb,
+@@ -683,7 +683,7 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
+ 			list_add_tail(&pReorderEntry->list,
+ 				      &ieee->RxReorder_Unused_List);
+ 		} else {
+-			bPktInBuf = true;
++			pkt_in_buf = true;
+ 			break;
+ 		}
+ 	}
+@@ -707,10 +707,10 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
+ 			return;
+ 		}
+ 		rtllib_indicate_packets(ieee, ieee->prxb_indicate_array, index);
+-		bPktInBuf = false;
++		pkt_in_buf = false;
+ 	}
  
- 	if (is_multicast_ether_addr(dst))
- 		return 0;
--	if (IsQoSDataFrame(skb->data)) {
-+	if (is_qos_data_frame(skb->data)) {
- 		struct tx_ts_record *ts = NULL;
- 
- 		if (!rtllib_get_ts(ieee, (struct ts_common_info **)(&ts), dst,
+-	if (bPktInBuf && ts->rx_timeout_indicate_seq == 0xffff) {
++	if (pkt_in_buf && ts->rx_timeout_indicate_seq == 0xffff) {
+ 		netdev_dbg(ieee->dev, "%s(): SET rx timeout timer\n", __func__);
+ 		ts->rx_timeout_indicate_seq = ts->rx_indicate_seq;
+ 		spin_unlock_irqrestore(&ieee->reorder_spinlock, flags);
 -- 
 2.30.2
 
