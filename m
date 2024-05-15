@@ -1,58 +1,57 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60895605C6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD9E605BA
 	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 04:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715748772; cv=none; b=VK52LOsJ/cBvGOv8GkTIvqRbaZdlgUh42sTY5wKlhtZ/y5fca5J3akI9LcNpYMuENKWg4SgfpgTK4dcAcYbu0lXNoFIFtFm4pLdeR7QF0g9DYo7Pu45iqCYR6Uh0/gl9paBKIjKCHy09EHXcxWPj7jTVizFnG8B0tlDou3vg1n0=
+	t=1715748772; cv=none; b=ZHivbAgjY+ZKartLcjwjucmIYENAQVsnMS6HS+1ThfOI2wX/UIBhEymIYaRFfS5TmLsSovu9CGICIjAy2Dgew2QRlBmA0lScaSwwXNQ7Ls0rL9ZSv0xg2KdGA29skC/T1KWI3EIgBFeYSUZq6fm7AWs7rOhIlLDmyu2bdhxXB98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715748772; c=relaxed/simple;
-	bh=GixOz/jvSyY1xGeu+wIuKGXcSU1AOkbQd0Sx22xBEsE=;
+	bh=jeHwGwRspY2gSDSiW7bcMqqSAMEpU1ir/AH2Va5Ia+k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iqEwOIwGMiYamYs1VwQ5q5DGjMdyiplZn5BT5ZArH+UjpEV2xIqvOg7z0SvFd1x9adr6W/HtvQ3FF/tCKJDxc4DSPCDltbcUE3sFGV2jy4BauhFkV3+myr644DWq+K92YNeEaihGpLZdqo76mTugzrONfyDJQLb0jWJ5xvnIA/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=eCp56DOR; arc=none smtp.client-ip=209.85.167.172
+	 MIME-Version; b=oDcEV98/e7Up+KLv+nWGkpcPaz52FlhfnzwI2seNtK0VmeeQBQ15QYdmVQEpch1DhgqLUlUgZN0izjZS4ZcHzZuuZi4ksncchHECRLWHTSExHBGI2xvey1AITtno2Dvw8JG7TdCD6tSh4DAsPW6+uQI0ISZXVoT/bgfEepi+GZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=j2ru2M3X; arc=none smtp.client-ip=209.85.167.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="eCp56DOR"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c9a39dc36bso2069731b6e.0
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="j2ru2M3X"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c9b74043b1so690156b6e.1
         for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:52:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=darkphysics.net; s=google; t=1715748770; x=1716353570; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9uDJtT8U3aIB/5/8PG05/CwnNng1VTLjEW2PdQdEd1g=;
-        b=eCp56DORrdV2+hSy/VIXmerU8j0sfkTLhd50k2DEOTerUCbIriAZA87HecmHQRQAoQ
-         +18bd7qhGSa8Qobt3UcuQ4Ubl59T2dT8Ri+YYfFNHXslQXgGKvJfY+aIyZy74hE5A7gE
-         zML2smhM9TofT6EqIkEfHA/dyv9ofwBEEJOyjsoDdPMzusCsi1yfisehbjVT6DDMXUGM
-         szSrO2/ygnpru9dpVXo9gt3p0fiOQhS4LifnQmi70d7Kxcz06U9iGCnsMuQYcydtP4vh
-         fD0cb5Kt1pLeWXyqDJUy+mZiPcolE2aHS8j+ZgdB0E2gsFE3NIQWq9aPuFBx1NOoBSkp
-         5rdQ==
+        bh=hwhb6dTZ3C1pduwi/qMgE4+GQbsrnIG7yr+Npoq7eqo=;
+        b=j2ru2M3XQ0rOTwWUMbhZ2lSsrye/gA4CZuYK/+IkA6FNG3LwKWu6FY9UtWqRztlaxs
+         q2jFUf509Rrk2vtHc3Mz9rzgsrsIXO1gbCnVDXK20RkPdsZVjGIwIMtfuLMSk5wrYx82
+         +AqWvAAekqpEIqQ9A2f7Xso0PdfiG6GcChsRxDrMOlNeWFsJvWrgCiA5/8M84z4fv57G
+         YY5NFxoyb2WAEga5CcpdDhIxGDRMTFKkGF4skNkr4z2Op5QL6QlsMW0GLyMn+uqLNtfF
+         RC7qa3Z6Xu7LOP4G9axHtjf0tAeGTlhRqu1etSv9Zgj3aI30b7XjmYmcAOWNnhr2pYSE
+         TnLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1715748770; x=1716353570;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9uDJtT8U3aIB/5/8PG05/CwnNng1VTLjEW2PdQdEd1g=;
-        b=if0rxdy3TlJ3PfRRA+YYxhhcW+csx/zjRa2ZsetiOx6bkst1SWaECO31OJ3l++DG7y
-         +un5GQVDMYJZ8Vb7HXtnqw2d82tr3/HjM7DknLp5X9Q5km5LiteypMNgMhCEaOpBZp9N
-         AX/4jOTz3ZgTsNcLFT8CMhxFxWjDwKUbZFkevpTu9SNEL77eb9vRgfNVBnzaeswe2Tf2
-         kpgpp1PrgkdomAfJqB/4WIu1IKXB25hhsBaoz6xbpD7sQwYklk8Lrjv4LCg74UFOyh3D
-         e+dEsbcGN2kvmyW0HOzKr26buZ0HG+QLIWr4EyJ6TVU5liQ8EQtSgIWxko4Tapsh6HCE
-         koIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVV2FHz+R83d+3eIMaqovZo48fOsUFeSCRdIpj0eejFKvSr5XNKKqoxbqbVirnsQlMWsGvDcAntYvGM0m8RWmX3RwcxxcHL8VYSbJV
-X-Gm-Message-State: AOJu0YyZ1jcXKcUOD1BXB9sFdJw8uUxI+iR5U4mXWTgb0WVrjySMAdtU
-	ahYiLezr2664jECUbJeGhf+Z8x+4Zeenog7jFtWNyuChFvAkFcTdCyWPbco+TayNvu/asNTYxsN
-	m
-X-Google-Smtp-Source: AGHT+IGfgfDCeXzcG8iJkutFsBwkZ0a/02CQos8BCVqID1u3eOEBZBqu8PGwzUeaNpNc6ZT3IgA9ew==
-X-Received: by 2002:aca:230d:0:b0:3c9:6ef4:346d with SMTP id 5614622812f47-3c9971d531emr16043643b6e.49.1715748770502;
-        Tue, 14 May 2024 21:52:50 -0700 (PDT)
+        bh=hwhb6dTZ3C1pduwi/qMgE4+GQbsrnIG7yr+Npoq7eqo=;
+        b=T9fpIzkL6gz1lowNC7aTo2QSlVjCPHHvBJLejks50WDfGsys6Gg0nUwWQWlk0mK5dN
+         6Yp5v1SZQgp3owxW673XEHGOt4jwpvJEqqudMGlPgb0LKkCkbcawiZkJH4jzlRgALyCp
+         yESD+b7gWCKDbOLHZJgNqteN6+Vtf8M44vHRVTTunB4zPKzZDNr+cAadBNThlfXr8adT
+         gxVKB9plP1gcR+YV7P1R7bqemQSwgLh/9hVCQvwFn7lAKsSIy5rgCpK0zBUHWrOnhzya
+         44zUTIPkO0q/BbTAhx+gQAm/xG+UfXeIYVyMhmUv4nLCmus/MaP2fCkBLWoL8WeH+jCb
+         3ELQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8Xrcn3KjtZy228w3LbiqG80jcyNXaYYg0yv6Y7dLdfJubrtE5UmTpRS5TRROqlYTEU29GeXXsT30xflmesFigWr4W3qV9DuSDMOdz
+X-Gm-Message-State: AOJu0YzXdZ6wr0sxMVmtvCKNGP01+mKg2yEchgKAha76aha/UKZLxW5X
+	hiwT0Eh80HReXIr310gKtyXgOJAnzYxV2auKO2Yanh52kIT7qn5KK1aUcVk4fAU=
+X-Google-Smtp-Source: AGHT+IHt/YCmhxt/SaZFO/lhq5QXz83QsvoW3dfwRopaTVrCGTZvsqqqQtzcgIZIZCV6bMZ9j2/vCw==
+X-Received: by 2002:a05:6808:1a17:b0:3c9:9fda:37f1 with SMTP id 5614622812f47-3c99fda38cbmr14168972b6e.29.1715748769895;
+        Tue, 14 May 2024 21:52:49 -0700 (PDT)
 Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a827fdsm10135035b3a.60.2024.05.14.21.52.50
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a827fdsm10135035b3a.60.2024.05.14.21.52.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 21:52:50 -0700 (PDT)
+        Tue, 14 May 2024 21:52:49 -0700 (PDT)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -60,9 +59,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 23/31] Staging: rtl8192e: Rename variable bMatchWinStart
-Date: Tue, 14 May 2024 21:52:20 -0700
-Message-Id: <20240515045228.35928-24-tdavies@darkphysics.net>
+Subject: [PATCH 22/31] Staging: rtl8192e: Rename variable IsDataFrame
+Date: Tue, 14 May 2024 21:52:19 -0700
+Message-Id: <20240515045228.35928-23-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240515045228.35928-1-tdavies@darkphysics.net>
 References: <20240515045228.35928-1-tdavies@darkphysics.net>
@@ -74,45 +73,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename variable bMatchWinStart to match_win_start
+Rename variable IsDataFrame to is_data_frame
 to fix checkpatch warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
- drivers/staging/rtl8192e/rtllib_rx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8192e/rtllib.h    | 4 ++--
+ drivers/staging/rtl8192e/rtllib_rx.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
+index f69f4ca39fd5..0914ba37f42f 100644
+--- a/drivers/staging/rtl8192e/rtllib.h
++++ b/drivers/staging/rtl8192e/rtllib.h
+@@ -338,8 +338,8 @@ enum rt_op_mode {
+ #define RTLLIB_QCTL_TID	      0x000F
+ 
+ #define	FC_QOS_BIT					BIT(7)
+-#define IsDataFrame(pdu)	(((pdu[0] & 0x0C) == 0x08) ? true : false)
+-#define	is_legacy_data_frame(pdu)	(IsDataFrame(pdu) && (!(pdu[0]&FC_QOS_BIT)))
++#define is_data_frame(pdu)	(((pdu[0] & 0x0C) == 0x08) ? true : false)
++#define	is_legacy_data_frame(pdu)	(is_data_frame(pdu) && (!(pdu[0]&FC_QOS_BIT)))
+ #define IsQoSDataFrame(pframe)			\
+ 	((*(u16 *)pframe&(IEEE80211_STYPE_QOS_DATA|RTLLIB_FTYPE_DATA)) ==	\
+ 	(IEEE80211_STYPE_QOS_DATA|RTLLIB_FTYPE_DATA))
 diff --git a/drivers/staging/rtl8192e/rtllib_rx.c b/drivers/staging/rtl8192e/rtllib_rx.c
-index d4714e193df4..ffb1bbc01bc6 100644
+index f276e52aab08..d4714e193df4 100644
 --- a/drivers/staging/rtl8192e/rtllib_rx.c
 +++ b/drivers/staging/rtl8192e/rtllib_rx.c
-@@ -529,7 +529,7 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
- 	u8 win_size = ht_info->rx_reorder_win_size;
- 	u16 win_end = 0;
- 	u8 index = 0;
--	bool bMatchWinStart = false, bPktInBuf = false;
-+	bool match_win_start = false, bPktInBuf = false;
- 	unsigned long flags;
+@@ -881,7 +881,7 @@ static int rtllib_rx_check_duplicate(struct rtllib_device *ieee,
  
- 	netdev_dbg(ieee->dev,
-@@ -567,7 +567,7 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
- 	 */
- 	if (SN_EQUAL(SeqNum, ts->rx_indicate_seq)) {
- 		ts->rx_indicate_seq = (ts->rx_indicate_seq + 1) % 4096;
--		bMatchWinStart = true;
-+		match_win_start = true;
- 	} else if (SN_LESS(win_end, SeqNum)) {
- 		if (SeqNum >= (win_size - 1))
- 			ts->rx_indicate_seq = SeqNum + 1 - win_size;
-@@ -589,7 +589,7 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
- 	 * 2. All packets with SeqNum larger than or equal to
- 	 *	 WinStart => Buffer it.
- 	 */
--	if (bMatchWinStart) {
-+	if (match_win_start) {
- 		/* Current packet is going to be indicated.*/
- 		netdev_dbg(ieee->dev,
- 			   "Packets indication! IndicateSeq: %d, NewSeq: %d\n",
+ 	if (!ieee->ht_info->cur_rx_reorder_enable ||
+ 		!ieee->current_network.qos_data.active ||
+-		!IsDataFrame(skb->data) ||
++		!is_data_frame(skb->data) ||
+ 		is_legacy_data_frame(skb->data)) {
+ 		if (!ieee80211_is_beacon(hdr->frame_control)) {
+ 			if (is_duplicate_packet(ieee, hdr))
 -- 
 2.30.2
 
