@@ -1,125 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E020815622F
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E063E155A4F;
+	Wed, 15 May 2024 15:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715787831; cv=none; b=T1NgzF79UYzHS/hl0wtgsN5bo0F9fmNJll+z3GatV/AhVT40Fc6DBzfybET4htWFmi+DZaOP6uVVhNwddjcGM+xpOjnLPTrA9JFuD8Ro7NGg3gBUJzLjXNgdjXEIWo714O9k5CePVF7VFsq8BCWU9gFTdMalKLtqa7d+cI3BNFg=
+	t=1715787845; cv=none; b=AVvXx12K4ZAf8qP+iNhWuAGZKU20cnqzss+udY0zo0fpjNXgQ2A0DDIpXEUMU2sUPbu2bYynNZfjkEPOKXzjpPyu0V6V2CrHtVrY79DYAncVUv9oN1zrSWyeJIaheTfoTeBn5K3R7K8/qAouVq14nKKK+Rt61h1Xj9Cmei83qT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715787831; c=relaxed/simple;
-	bh=sVxFSbL3YtTiW/g14Gv6p0q8nZLKnH+spwUtKK9cJ9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k4DOpATJOHqs8ob665ErOmqjzxsRawrrPw33omF7Xs0AgBATIPh4ilk4pETinpYe/M5pircohQEZJ4JUGWwPScxHg2R53QonUvJDjtz/DIMHjEg67h8HmudOPhnX5sXu9wqF9CISwIxyvZvYs+p0s7fwkaiC3d2yeujm3c9ziGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WpSUaiWh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715787845; c=relaxed/simple;
+	bh=VyPLhSs86jn7k0Wyf379x2auUMCzO4Vjfb/ZY9fCbio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R5WNNnyjYs3uL9KC61TxvQvh1rBF1hAnfvc0Bsr5AmAvykgKyMsb045bl7PhFatXzMYw4E6OC92CrXLVc93VyzTcpSTrrwRkY/9Nf4aoIzeV+8YPvnwT3NJGn32pIZndBUJdr9s9P76POnsjgFprUrTDjc0QCZEHCOQsB/Zdg/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnAKmxkT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WpSUaiWh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715787829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sVxFSbL3YtTiW/g14Gv6p0q8nZLKnH+spwUtKK9cJ9A=;
-	b=WpSUaiWhKAH4YlO2TN4U5GV2ZiOwAX6EJALhDJPzwYScn5AOgYaTftWvnFb9ETzwMguiLA
-	IAUNFayzV9EQghWHX47AY1gsE/9+gTaex07noFs/V1BNTGNMii3nCLXDVwSFY9jmV7Cvej
-	womIBjDXieeX7r9tjQG4zqSxZA648fY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-WrPe04tvN8qa89qxw5DYcg-1; Wed, 15 May 2024 11:43:35 -0400
-X-MC-Unique: WrPe04tvN8qa89qxw5DYcg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 867498016E9;
-	Wed, 15 May 2024 15:43:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.39])
-	by smtp.corp.redhat.com (Postfix) with SMTP id C19983C27;
-	Wed, 15 May 2024 15:43:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 15 May 2024 17:42:08 +0200 (CEST)
-Date: Wed, 15 May 2024 17:42:03 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
-	"songliubraving@fb.com" <songliubraving@fb.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"andrii@kernel.org" <andrii@kernel.org>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-	"yhs@fb.com" <yhs@fb.com>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
-Message-ID: <20240515154202.GE6821@redhat.com>
-References: <20240507105321.71524-7-jolsa@kernel.org>
- <a08a955c74682e9dc6eb6d49b91c6968c9b62f75.camel@intel.com>
- <ZjyJsl_u_FmYHrki@krava>
- <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
- <Zj_enIB_J6pGJ6Nu@krava>
- <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
- <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
- <ZkKE3qT1X_Jirb92@krava>
- <20240515113525.GB6821@redhat.com>
- <0fa9634e9ac0d30d513eefe6099f5d8d354d93c1.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnAKmxkT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F4BC4AF07;
+	Wed, 15 May 2024 15:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715787844;
+	bh=VyPLhSs86jn7k0Wyf379x2auUMCzO4Vjfb/ZY9fCbio=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gnAKmxkTzT6ldywcJZfubR1DUiTiM0NOxYrwJhzFxh05H8QOY4OdGrKEIqlIHMqCd
+	 /LVt74c1vJnNflQwm2ucYNp5XbVhBA6gmODeNqHQ7jzuDCab+6DIs5xHJnXgmGOT6c
+	 YqGndBsR6mlpXiv02X91dy91QLK/luP7FYKBnlDMeYHcr8qPjGndMKN8DC3Dso6EFH
+	 lL+/CRVG2BZM8zLpsUF+XdZzyf/djL+l+Ix2ISoeYDNS/SwKR6GsV7mD9HMyIAtWWd
+	 4yvOfQed58rvMsn3CX12ytlOj2oImA/p4p4p8R3yh64dCUMRT+6aWvvFlWtWoUg0wS
+	 52FA/P7HUkp6w==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e0933d3b5fso104596471fa.2;
+        Wed, 15 May 2024 08:44:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVzffVV3smpeS7k5Dm+BeTu50AZ1P+JiGd+CcDEuWMnCacn/LQ5CgRT3iPWDF2VzZfUla0qOOuWBspQWBJwrrd5BtXun5i8TzyOX0hb/OZ37zREqevO40e8WX3duxlVUrg/+BzZHbMX05RWEoXYzm0=
+X-Gm-Message-State: AOJu0YzFxwFC/KedqSDgoQnyzL0VOhDYjti2PdzmOzEXyXiG+Sk0f2Rl
+	B8Vi5t9K6tUK0rAOk99BrGJvoDHOh6sFbkmW4soEd5JvJMW5KPcnJF49hZDjB0s58tGXj1we/qj
+	Yv4SZm67rh+zjTJWexAJ4I+UVnRI=
+X-Google-Smtp-Source: AGHT+IEG9Pi5RYQYmU94hJvMF0ljnnODEoOc6w+NP4apBt7czmZrR81mPLVgEe5NETinznGzePpXC2WPrvtBqgmsblE=
+X-Received: by 2002:a05:651c:23c:b0:2e0:e470:882f with SMTP id
+ 38308e7fff4ca-2e51ff5ffebmr112422491fa.28.1715787842865; Wed, 15 May 2024
+ 08:44:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fa9634e9ac0d30d513eefe6099f5d8d354d93c1.camel@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+References: <200d273a83906a68a1c4a9298c415980737be811.1715781469.git.geert+renesas@glider.be>
+In-Reply-To: <200d273a83906a68a1c4a9298c415980737be811.1715781469.git.geert+renesas@glider.be>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 15 May 2024 17:43:51 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEzmUFmYyHiT5h1ZT8v+nWiP_0_MMdtT0y8vsTC-drjNQ@mail.gmail.com>
+Message-ID: <CAMj1kXEzmUFmYyHiT5h1ZT8v+nWiP_0_MMdtT0y8vsTC-drjNQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Fix userspace enter on LPAE with CC_OPTIMIZE_FOR_SIZE=y
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Russell King <linux@armlinux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Kees Cook <keescook@chromium.org>, 
+	Russell King <rmk+kernel@armlinux.org.uk>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Stefan Wahren <wahrenst@gmx.net>, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 05/15, Edgecombe, Rick P wrote:
+On Wed, 15 May 2024 at 16:02, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 >
-> On Wed, 2024-05-15 at 13:35 +0200, Oleg Nesterov wrote:
-> >
-> > > I'm ok with not using optimized uretprobe when shadow stack is detected
-> > > as enabled and we go with current uretprobe in that case
-> >
-> > But how can we detect it? Again, suppose userspace does
+> Booting an LPAE-enabled kernel built with CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+> fails when starting userspace:
 >
-> the rdssp instruction returns the value of the shadow stack pointer. On non-
-> shadow stack it is a nop. So you could check if the SSP is non-zero to find if
-> shadow stack is enabled.
+>     Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
+>     CPU: 1 PID: 1 Comm: init Tainted: G        W        N 6.9.0-rc1-koelsch-00004-g7af5b901e847 #1930
+>     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+>     Call trace:
+>      unwind_backtrace from show_stack+0x10/0x14
+>      show_stack from dump_stack_lvl+0x78/0xa8
+>      dump_stack_lvl from panic+0x118/0x398
+>      panic from do_exit+0x1ec/0x938
+>      do_exit from sys_exit_group+0x0/0x10
+>     ---[ end Kernel panic - not syncing: Attempted to kill init!  exitcode=0x00000004 ]---
+>
+> Add the missing memory clobber to cpu_set_ttbcr(), as suggested by
+> Russell King.
+>
+> Force inlining of uaccess_save_and_enable(), as suggested by Ard
+> Biesheuvel.
+>
+> The latter fixes booting on Koelsch.
+>
+> Fixes: 7af5b901e84743c6 ("ARM: 9358/2: Implement PAN for LPAE by TTBR0 page table walks disablement")
+> Closes: https://lore.kernel.org/r/CAMuHMdWTAJcZ9BReWNhpmsgkOzQxLNb5OhNYxzxv6D5TSh2fwQ@mail.gmail.com/
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-But again, the ret-probed function can enable it before it returns? And we
-need to check if it is enabled on the function entry if we want to avoid
-sys_uretprobe() in this case. Although I don't understand why we want to
-avoid it.
+This works around what appears to be a compiler bug (see my reply to
+the other thread), and this change (the __always_inline in particular)
+seems to work around it, so
 
-> This would catch most cases, but I guess there is the
-> possibility of it getting enabled in a signal that hit between checking and the
-> rest of operation.
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-Or from signal handler.
 
-> Is this uretprobe stuff signal safe in general?
-
-In what sense?
-
-I forgot everything about this code but I can't recall any problem with signals.
-
-Except it doesn't support sigaltstack() + siglongjmp().
-
-Oleg.
-
+> ---
+> Feel free to fold into the original commit.
+>
+> Apparently the "From: Catalin Marinas <catalin.marinas@arm.com>" in
+> https://lore.kernel.org/r/20240312-arm32-lpae-pan-v3-4-532647afcd38@linaro.org
+> is not reflected in commit 7af5b901e84743c6?
+> ---
+>  arch/arm/include/asm/proc-fns.h | 2 +-
+>  arch/arm/include/asm/uaccess.h  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/include/asm/proc-fns.h b/arch/arm/include/asm/proc-fns.h
+> index 9b3105a2a5e0691e..b4986a23d8528a50 100644
+> --- a/arch/arm/include/asm/proc-fns.h
+> +++ b/arch/arm/include/asm/proc-fns.h
+> @@ -187,7 +187,7 @@ static inline unsigned int cpu_get_ttbcr(void)
+>
+>  static inline void cpu_set_ttbcr(unsigned int ttbcr)
+>  {
+> -       asm("mcr p15, 0, %0, c2, c0, 2" : : "r" (ttbcr));
+> +       asm volatile("mcr p15, 0, %0, c2, c0, 2" : : "r" (ttbcr) : "memory");
+>  }
+>
+>  #else  /*!CONFIG_MMU */
+> diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+> index 25d21d7d6e3efee0..6c9c16d767cfd5df 100644
+> --- a/arch/arm/include/asm/uaccess.h
+> +++ b/arch/arm/include/asm/uaccess.h
+> @@ -47,7 +47,7 @@ static __always_inline void uaccess_restore(unsigned int flags)
+>
+>  #elif defined(CONFIG_CPU_TTBR0_PAN)
+>
+> -static inline unsigned int uaccess_save_and_enable(void)
+> +static __always_inline unsigned int uaccess_save_and_enable(void)
+>  {
+>         unsigned int old_ttbcr = cpu_get_ttbcr();
+>
+> --
+> 2.34.1
+>
