@@ -1,90 +1,110 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEC342AAD;
-	Wed, 15 May 2024 07:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED023374D1;
+	Wed, 15 May 2024 07:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715759545; cv=none; b=VFitBySnrJdp5Z/HItbjwYODDmvkU0HKM2uSmaNDJBcTQgZBwJYMb/8gorfrrQcw6KtKILoIZ2HpfMYas33+z/TikXrYdKGvLOP0pJIv5pvEK4BoQW97RD5nPr0Emm8nl0fL4R/m9Pc45aQngXS7P6gX5VhSWpWlBBt//JI6lWY=
+	t=1715759688; cv=none; b=neGbr6iHMk8kibbJKMTGNt3gRCLlBY6zXf3UYl7zoD2+f3hqMzXbHE0qQyYti1AWn2lhqrANG+hqpeUHWSF+SMx13gA7LA2T5YFOWoJt0PS1G+hODbJceRblhzGcQAlR0sP5m06vTMXtqDvg1O40Z3++WEKFKnYlkXXxl0GiAY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715759545; c=relaxed/simple;
-	bh=EseU8l9i6FsdcgIhuNlxtMXNzYYXWc+xZzlPU9p9RDA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Dw+x1fR5L4OGXAjfsmY8tp7NK6mISF4FmQD23iqwcmxW6sZQZbcbOxTvvVw4KtXk2+Gp7OU+EAdKVdHZf6gU9ZIyltlwLSuA6Wwk7c7yRel3JbjBW3p7ByQi8HmcZImoAWBv8R4Pvro+ftVMhE0bvEr9dmHu1osXO7j5vrwD1Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=SmgL9IFq; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1715759688; c=relaxed/simple;
+	bh=zihY7Bcw/EswAtMwn0KVvYNpBlL/LMvWlPjfCHumeYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M85JTL47/rQGqSayPPcgBtP1lbQ6MCQ+eihLeDQTcTC/mo1Oh5NfHNhDeqgPGNChINTmI9BtrCHDZWZnZzsmEWCgaFZio1hy9HGHrv8mhPF7wnJSOKFXefD154DkCeCCa0bKhPgL5L84rf8y/i8jdYU5BW060SF718zhnNUnvhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7lEh7Cl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SmgL9IFq"
-X-UUID: f2f16930128d11efb92737409a0e9459-20240515
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+Kk+4ccaigRSqLMLy3uDs3B3e9ohN0+aD87eOWCOx5o=;
-	b=SmgL9IFq2Ru43vBV3kmX/sDe/qXSzHH8X6hknfXWr0a1+8WLEs0BRbGCCE1GP32Yvs/HlDboT5q4IJy79/NTU/oxe3J54EE3LBn/YMS6SQW/DqnmCGHIf8YE1K1MHpoa7n1EQvRglaRq7MdXAKcxgeS9ZQG95zihT50AGG9LM+Q=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:4ac413ad-28e7-4a18-815d-eae2a2a796df,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:82c5f88,CLOUDID:5a3a1dfc-ed05-4274-9204-014369d201e8,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: f2f16930128d11efb92737409a0e9459-20240515
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
-	(envelope-from <yenchia.chen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 410055962; Wed, 15 May 2024 15:37:14 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 15 May 2024 15:37:13 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 15 May 2024 15:37:13 +0800
-From: Yenchia Chen <yenchia.chen@mediatek.com>
-To: <stable@vger.kernel.org>
-CC: yenchia.chen <yenchia.chen@mediatek.com>, "David S. Miller"
-	<davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, Eric Dumazet <edumazet@google.com>, Sasha Levin
-	<sashal@kernel.org>, Simon Horman <horms@kernel.org>, Pedro Tammela
-	<pctammela@mojatatu.com>, Zhengchao Shao <shaozhengchao@huawei.com>, Ryosuke
- Yasuoka <ryasuoka@redhat.com>, Thomas Graf <tgraf@suug.ch>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 5.15 0/2] netlink, fix issues caught by syzbot
-Date: Wed, 15 May 2024 15:36:36 +0800
-Message-ID: <20240515073644.32503-1-yenchia.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7lEh7Cl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32487C116B1;
+	Wed, 15 May 2024 07:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715759687;
+	bh=zihY7Bcw/EswAtMwn0KVvYNpBlL/LMvWlPjfCHumeYY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c7lEh7ClFb+A2IBNrtfDlwG+6A0ENnO4V3DYwMNNIh4WQUyajLx4IW2ISyw4dRhVU
+	 50iri1fAIrno5JqVoMPzDj+mHv9jTw1lrEbTa4lTYq/vcydV7A6BPnryYiYqzfZ4VN
+	 IFJ4j05dJiek1a8X6k4nyCWWYbEeMJxUCmNnLrqiR7gm0pURxce2Ht4qeeDTgzpcYB
+	 3Mvye1XeLKY0glNQhVhfP5SzeIowuqiCRhn3AuuK5/3VoVODFjE5mbNof5jdXwdVA3
+	 vXkaRPVYceeVMdnfYsXTcJZVuYd86JS39mDPoEl2UIIIbPu16qiCW7bdNrOemvsRox
+	 MGII/roNrL0UA==
+Message-ID: <ee193525-ea10-4006-a86e-977e2f0352ea@kernel.org>
+Date: Wed, 15 May 2024 09:54:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ASoC: dt-bindings: ak4104: convert to dt schema
+To: Xiaxi Shen <shenxiaxi26@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, javier.carrasco.cruz@gmail.com,
+ skhan@linuxfoundation.org
+References: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
+ <20240515064139.456735-1-shenxiaxi26@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240515064139.456735-1-shenxiaxi26@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "yenchia.chen" <yenchia.chen@mediatek.com>
+On 15/05/2024 08:41, Xiaxi Shen wrote:
+> Convert ak4104 binding to DT schema
+> 
+> Changes in v3:
+>  - Use unevaluatedProperties instead
+>  - Fix indentations in the example
 
-Hi,
+I think you got already feedback about this - changelog goes to
+changelog section, so ---.
 
-We think 5.15.y could pick these commits.
+I really suggest using b4 for contributions. It makes things much
+easier. Alternatively patman.
 
-Below is the mainline commit:
-
-netlink: annotate lockless accesses to nlk->max_recvmsg_len
-[ Upstream commit a1865f2e7d10dde00d35a2122b38d2e469ae67ed ]
-
-netlink: annotate data-races around sk->sk_err
-[ Upstream commit d0f95894fda7d4f895b29c1097f92d7fee278cb2 ]
-
-Eric Dumazet (2):
-  netlink: annotate lockless accesses to nlk->max_recvmsg_len
-  netlink: annotate data-races around sk->sk_err
-
- net/netlink/af_netlink.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
--- 
-2.18.0
+Best regards,
+Krzysztof
 
