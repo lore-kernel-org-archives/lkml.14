@@ -1,186 +1,153 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D1215B159
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 21:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4BB1FC4
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 21:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715808210; cv=none; b=fy26RC7p6gqE+1YurLcn4EyAroNkwrQurpSJcBoFSsQMl2h1EiMgxzLlo177FnKtCCK8qrnrT/A9pEEKSpPo4EO/j2kiMHMR31yimq5J1gkUFsgmaiBDZYzI3CgZqvsB4Hg3bfTk/uUv+ECalSAq+lk61+PjGRK/9TEpXr8t0eo=
+	t=1715808391; cv=none; b=DotXaCuamZENGTcgizpLn7a/WaPgTnI5k3aHtNcSqLrrRoxMOqkW5QABJV6He2CKtp4IqGI1+PuDKheSxL4gWbGGtvy7uWoVfFdUM+SJ0yGsY/El7Xb5omDUxk6oVS9My5Z2+CrZzhrQEh13QuSsnOVXBK7aXF3MZEIIo2m2Gno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715808210; c=relaxed/simple;
-	bh=0bZrMTEzSJyGLU+1iaAm3gzS/iAMcqebq3Gza9P4igE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n0cVclx/mLqU70JFXBvBBIM9DhOovoLZR1VetwEx2isZOwYE1r42nMbBH/8gnabhHOGFEJAymnSOytxrPrXrW2mzIeZKArYZ61FLjPwBEviacKNXvdzRH2VVi2moVkNqXovHwrLroR/tZeiK/3yUSsvPIW6CrcVqpsP0WVOdr/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OhqQmlAx; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715808391; c=relaxed/simple;
+	bh=KgtJDY4MmMjQZ2oDl1XlntkBINAq3AfwA6pN/nCVnCQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qHsPJxvRGnomUBA/B3TYcn4R+DPKHJ2vnin+3uwMmL63VQjyx+vwJ+gX6sCnh7vD6wNOI6bmbCqjIR6YkD1sCaDPW6MPlad67hC4dQo6Bs0k6iwrAiCR4vhCN1MnBcB4EsA91V1j17pxpHndmoq4+RMC9OtagRAofr3+Lo71dsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fnpNW8x8; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OhqQmlAx"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-43dfe020675so2309951cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:23:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fnpNW8x8"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f472d550cbso5965308b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715808208; x=1716413008; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WD8+IMzeNqwu8PcRhXHvU51M3Wk2fj6yp4uWJzohC/s=;
-        b=OhqQmlAxc3+5TUmPzxP4nXhwdHXgbKN84b1u65IULV3wION6tUb2GwG8qY9LCYlIS0
-         9RhwtOn2ZGxReIE3KHFLzYfUE8XnFDTZRFG2BnDq4ECR+MZRJCTRrKAxoVVBPj1Fj575
-         s674B+WOiqdv3JoQgoCIobo7Y5YzqLHppoKOv9yPwcC53O5BAU0uJe2LyFfQvgOjbeD/
-         84THlWXPyZW8yswI7qCBr4pb3XpPjTv5rSERrQO/gQ1wXNMfi94SX75xg33Ge7K4Rh1G
-         524SwIArKqEL6JQf77DQa+FkLerrp0JFF6XOQv62kk+DsfUzgXbjQKbrseQ1/pnb8NwO
-         h6vw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715808388; x=1716413188; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4XbT7INwutGKZuD03WNtDt+9MBwCLATnSj4l3KyTbIE=;
+        b=fnpNW8x8Y/mDcZA9fCL1giWtRP4LoKPJNgsXJThPnWv+qFWpFqiy7mnqXs5YNRjLK9
+         imEW0r7ofJx0epyH2/RcA78ek+/P3EDH99pdBZusynFD8rAa/krdTVyc72VttW/+2uWJ
+         z1wJ8pqB+y1JDdp6JUIl3t12c9LJPkCfLDvLNHjOWIwhrsIV34we8POd7SZc7FEI1EsL
+         1xRg5FGRFDUdnrQTQ+QvxLFNC0gDGF3UklxlJaqq4lHaiOlJbYpN8F4rQ2KXC28Nmz2a
+         cLmWhN5hXDj5ffLmKLrzE6O2VKuCfUCf+iKs4R+NYQGEFFinHfHYwPxNluG8/LlB+xLK
+         k16A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715808208; x=1716413008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WD8+IMzeNqwu8PcRhXHvU51M3Wk2fj6yp4uWJzohC/s=;
-        b=FoSbqy3wnuqDZfLkrc6Fz/sp4G/N78b/qS7NBCAAP1AK6C+3SsO3u62co3Y3+33nyR
-         Jh70eX3gm1qhhTVWHRFKU8gnYNkI+NZ/0SNqWbTpntT+njCxTZ5dyouGf1dErh9xoSRw
-         MzcpHYfbJqeCvCHymmTkec2OpRSM0nlSsUbmfm3FBc+fg7KPXHbq22qUEVS9k8PCwvmO
-         75UaGn2Z6Y+idwoLx3isNsVpw3KNnVvgM2f27g3cjYTdNJnHbiyLkH4PvtRvatgBMqez
-         Fq29nPJkedOVnitKu0EuyxKQo5fV1DgsFHZkGa8C+NOOk0+iowWWjtZBoOklkt7go5gR
-         cpHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxhH2Af3KS4unG9dPWKBljtkNzj+noNhq97W7YaTIweXknhZzjBcvNrg8Ve2hdg1c5nHmRDMOBi8Wt3mOrxhXP7MTu9Qmm/EYwceey
-X-Gm-Message-State: AOJu0YzmeVjvZ4JfjfepTxXhYWd16xTUW7gQ3NxnZ1vTEj7E3Df09v4A
-	iS6Or2l/Ds7luyPb13yxjGc+95dnJFYy7WxsknC/ATg1nMwb2q1EtvF7Soy/b1rgrJDthsdT8k5
-	17ylADuJLq4Z/gzXuQN0aLW+0psMvGxtZAciby17Qm1NPuKIWKxBo
-X-Google-Smtp-Source: AGHT+IFue5emqn/LHFSNZRtEGFcdNSYph/nzud89n5KuMeGSGlxgBJoiiSYYM0QRBPNuiIt4RuBBVKxDfiozpMKM1TI=
-X-Received: by 2002:a05:622a:4108:b0:43a:b51c:46ca with SMTP id
- d75a77b69052e-43e0a2ea43fmr16263881cf.29.1715808202330; Wed, 15 May 2024
- 14:23:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715808388; x=1716413188;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4XbT7INwutGKZuD03WNtDt+9MBwCLATnSj4l3KyTbIE=;
+        b=XQs7n5YKVug3QJOf3xmN5DsUwOiaNYJm1qt+Gv6xPLajybam6LAy3LktkEdzGCv2hE
+         hSW07RzUjVxxxuqlhudNdes4o6np4Y4+yRrx0FMOUQPZiZatjvw3eZYwwVKLJ06v8lIn
+         tl56koZi/WOy0ec7atVAeRz009UFCVgsjzGf+FcAylBzgt9r+Ai3aS9IZWyfO60C3+a+
+         QYL4ZZPDfI1PrMw2M+l35jr2o8MaoTuwWgI3eA8nwIgrd7EUMwe+0YVIBnlC47E5qsOx
+         +Gnjt0lKx1KFdMOXXI1saoAS5TUTjYWl1giFpYxatbu9+IZB002pHwchGY+NARXG9u5a
+         ZDSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVD+IEtfCFISrhmfGvxKci0SwdVb3jhnCc8CVA0W3EbfQEVW4WZJBTLMfC2aO3/IcR4FSYyEsTWBLwxmXF1LYjI/Og2eGIVWfBfKctO
+X-Gm-Message-State: AOJu0YznxfuXy3Ma84CRCUUCfvTKr9rzg/a7rcPs76ArHN052IUovc/R
+	ivBmoOaEV9hv1BlTego8Zt2aK4GL7NQs3V1IGKv1kcbYYpmoELyJw44l215qwsc=
+X-Google-Smtp-Source: AGHT+IHCAPxdikYmujdZmy8dZ7oFs1KG2bKARYuL/xs52ASQFKHNbJ9CgqCWeRa/YbLbE0ZSup5txQ==
+X-Received: by 2002:a05:6a00:2e8f:b0:6f4:bbba:1155 with SMTP id d2e1a72fcca58-6f4e029a21emr27755612b3a.3.1715808388378;
+        Wed, 15 May 2024 14:26:28 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2b30sm11970243b3a.146.2024.05.15.14.26.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 14:26:27 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH 0/4] riscv: Separate vendor extensions from standard
+ extensions
+Date: Wed, 15 May 2024 14:26:12 -0700
+Message-Id: <20240515-support_vendor_extensions-v1-0-b05dd5ea7d8d@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515202915.16214-3-shresthprasad7@gmail.com>
-In-Reply-To: <20240515202915.16214-3-shresthprasad7@gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Wed, 15 May 2024 23:22:42 +0200
-Message-ID: <CAGETcx9Bq2=4OiqZndWaW+ZVcDv5sXOEpd2YHzZ_SYBxKf54dw@mail.gmail.com>
-Subject: Re: [PATCH][next] of: property: Remove calls to of_node_put
-To: Shresth Prasad <shresthprasad7@gmail.com>
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com, 
-	julia.lawall@inria.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHUoRWYC/x3MQQqDMBBG4avIrA1MUoXSq5Qiof7qbJIwoyKId
+ zft8i2+d5JBBUav5iTFLiY51fBtQ98lphlOxtoUOHTc+97ZVkrWddiRxqwDjhXph8zF+GQfGF1
+ 4MFVfFJMc//f7c103bFmr7msAAAA=
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715808387; l=3345;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=KgtJDY4MmMjQZ2oDl1XlntkBINAq3AfwA6pN/nCVnCQ=;
+ b=AxcTBgTejyl75LE7zsplxZGT/C+vsiy+w5Marj3ZYgRQqiAw+EW+/tLQzQtaZ5A3LuVAEm4gU
+ A6nqJX4xQAIBW4XHMWfOS5R96bGTC14zKzpldrvZJ/sYSfMIvanIxKJ
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Wed, May 15, 2024 at 10:35=E2=80=AFPM Shresth Prasad
-<shresthprasad7@gmail.com> wrote:
->
-> Add __free cleanup handler to some variable initialisations, which
-> ensures that the resource is freed as soon as the variable goes out of
-> scope. Thus removing the need to manually free up the resource using
-> of_node_put.
->
-> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
-> ---
-> I had submitted a similar patch a couple weeks ago addressing the same
-> issue, but as it turns out I wasn't thorough enough and had left a couple
-> instances.
->
-> I hope this isn't too big an issue.
+All extensions, both standard and vendor, live in one struct
+"riscv_isa_ext". There is currently one vendor extension, xandespmu, but
+it is likely that more vendor extensions will be added to the kernel in
+the future. As more vendor extensions (and standard extensions) are
+added, riscv_isa_ext will become more bloated with a mix of vendor and
+standard extensions.
 
-I didn't see the previous patch from a couple weeks ago, but this
-patch looks good.
+This also allows each vendor to be conditionally enabled through
+Kconfig.
 
-Reviewed-by: Saravana Kannan <saravanak@google.com>
+---
+This has been split out from the previous series that contained the
+addition of xtheadvector due to lack of reviews. The xtheadvector
+support will be posted again separately from this.
 
--Saravana
+The reviewed-bys on "riscv: Extend cpufeature.c to detect vendor extensions"
+and "riscv: Introduce vendor variants of extension helpers" have been
+dropped in this series. The majority of the code is the same in these
+patches, but thead-specific code is swapped out with andes-specific
+code. The changes are minimal, but I decided to drop the reviews in case
+I inadvertently introduced issues.
 
-> ---
->  drivers/of/property.c | 27 +++++++++++----------------
->  1 file changed, 11 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 17b294e16c56..96a74f6a8d64 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -773,15 +773,14 @@ EXPORT_SYMBOL(of_graph_get_port_parent);
->  struct device_node *of_graph_get_remote_port_parent(
->                                const struct device_node *node)
->  {
-> -       struct device_node *np, *pp;
-> +       struct device_node *pp;
->
->         /* Get remote endpoint node. */
-> -       np =3D of_graph_get_remote_endpoint(node);
-> +       struct device_node *np __free(device_node) =3D
-> +                           of_graph_get_remote_endpoint(node);
->
->         pp =3D of_graph_get_port_parent(np);
->
-> -       of_node_put(np);
-> -
->         return pp;
->  }
->  EXPORT_SYMBOL(of_graph_get_remote_port_parent);
-> @@ -835,17 +834,18 @@ EXPORT_SYMBOL(of_graph_get_endpoint_count);
->  struct device_node *of_graph_get_remote_node(const struct device_node *n=
-ode,
->                                              u32 port, u32 endpoint)
->  {
-> -       struct device_node *endpoint_node, *remote;
-> +       struct device_node *endpoint_node __free(device_node) =3D
-> +                           of_graph_get_endpoint_by_regs(node, port, end=
-point);
-> +
-> +       struct device_node *remote __free(device_node) =3D
-> +                           of_graph_get_remote_port_parent(endpoint_node=
-);
->
-> -       endpoint_node =3D of_graph_get_endpoint_by_regs(node, port, endpo=
-int);
->         if (!endpoint_node) {
->                 pr_debug("no valid endpoint (%d, %d) for node %pOF\n",
->                          port, endpoint, node);
->                 return NULL;
->         }
->
-> -       remote =3D of_graph_get_remote_port_parent(endpoint_node);
-> -       of_node_put(endpoint_node);
->         if (!remote) {
->                 pr_debug("no valid remote node\n");
->                 return NULL;
-> @@ -853,7 +853,6 @@ struct device_node *of_graph_get_remote_node(const st=
-ruct device_node *node,
->
->         if (!of_device_is_available(remote)) {
->                 pr_debug("not available for remote node\n");
-> -               of_node_put(remote);
->                 return NULL;
->         }
->
-> @@ -1064,19 +1063,15 @@ static void of_link_to_phandle(struct device_node=
- *con_np,
->                               struct device_node *sup_np,
->                               u8 flags)
->  {
-> -       struct device_node *tmp_np =3D of_node_get(sup_np);
-> +       struct device_node *tmp_np __free(device_node) =3D of_node_get(su=
-p_np);
->
->         /* Check that sup_np and its ancestors are available. */
->         while (tmp_np) {
-> -               if (of_fwnode_handle(tmp_np)->dev) {
-> -                       of_node_put(tmp_np);
-> +               if (of_fwnode_handle(tmp_np)->dev)
->                         break;
-> -               }
->
-> -               if (!of_device_is_available(tmp_np)) {
-> -                       of_node_put(tmp_np);
-> +               if (!of_device_is_available(tmp_np))
->                         return;
-> -               }
->
->                 tmp_np =3D of_get_next_parent(tmp_np);
->         }
-> --
-> 2.45.1
->
+The alternative patching code from "riscv: Introduce vendor variants of
+extension helpers" has been migrated to "riscv: Extend cpufeature.c to
+detect vendor extensions" such that the andes patching still works in
+that patch.
+
+I also fix a bug in this patch from the previous series that the Andes
+extensions were not being properly enabled due to the manual alternative
+patching not incrementing the id to be greater than
+RISCV_VENDOR_EXT_ALTERNATIVES_BASE. 
+
+To: Paul Walmsley <paul.walmsley@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+To: Albert Ou <aou@eecs.berkeley.edu>
+To: Conor Dooley <conor.dooley@microchip.com>
+To: Evan Green <evan@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+
+---
+Charlie Jenkins (4):
+      riscv: Extend cpufeature.c to detect vendor extensions
+      riscv: Add vendor extensions to /proc/cpuinfo
+      riscv: Introduce vendor variants of extension helpers
+      riscv: cpufeature: Extract common elements from extension checking
+
+ arch/riscv/Kconfig                               |   2 +
+ arch/riscv/Kconfig.vendor                        |  19 ++++
+ arch/riscv/errata/andes/errata.c                 |   3 +
+ arch/riscv/errata/sifive/errata.c                |   3 +
+ arch/riscv/errata/thead/errata.c                 |   3 +
+ arch/riscv/include/asm/cpufeature.h              |  96 ++++++++++------
+ arch/riscv/include/asm/hwcap.h                   |   1 -
+ arch/riscv/include/asm/vendor_extensions.h       | 103 +++++++++++++++++
+ arch/riscv/include/asm/vendor_extensions/andes.h |  19 ++++
+ arch/riscv/kernel/Makefile                       |   2 +
+ arch/riscv/kernel/cpu.c                          |  35 +++++-
+ arch/riscv/kernel/cpufeature.c                   | 135 +++++++++++++++++------
+ arch/riscv/kernel/vendor_extensions.c            |  56 ++++++++++
+ arch/riscv/kernel/vendor_extensions/Makefile     |   3 +
+ arch/riscv/kernel/vendor_extensions/andes.c      |  18 +++
+ drivers/perf/riscv_pmu_sbi.c                     |  11 +-
+ 16 files changed, 435 insertions(+), 74 deletions(-)
+---
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+change-id: 20240515-support_vendor_extensions-aa80120e4230
+-- 
+- Charlie
+
