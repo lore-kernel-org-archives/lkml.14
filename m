@@ -1,133 +1,218 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB82A482E9;
-	Wed, 15 May 2024 07:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from out0-221.mail.aliyun.com (out0-221.mail.aliyun.com [140.205.0.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC20C4879B;
+	Wed, 15 May 2024 07:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715759898; cv=none; b=I86FZU8xftwK2SLv+U+myEt85VV7ZvujBUry7E6fXt7jtf2lgWncYW0kv/fFO5CEotXXTdAvzBJUPV00XLU8tvQ/iBV3iD3hWn4CQqeTwLKz3KYMXBuRYhUb4hPtSaL+8pwXtrwDliPqFD/oQw+FY47tJidHL/2W2SXP+Dopy6g=
+	t=1715759939; cv=none; b=pNDbTAXjS4c+k9q8LdJbpHQajstVT3qf1EH56Jid01G0PH62+LEnJ3k7WH04B21WpXBcSC1xmuX5TBxe7j8ZvdJMpIqCRMpi9iZ6C+5SC9yXyzIXCWUknyTcEUdg9fz1XiSe2P9pvARWab29STKl6SiyEd+CSNBNSNhnDyxRWTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715759898; c=relaxed/simple;
-	bh=hJMKYClT3rIcCrTCK6ORUFF1P5fFlzLKjJG4W7J5QFo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=lCmJzlfXrz9QtV60ulBT6xZ7tHenOSZUaeEL5HHs8dhwSvS5qX6BRc5pQPjKDwGgXI6yXodGqia/xz+59gdpIyYheIN614f4L3AAZAICZB1ZzUZS6Xcbjr96ExhOrhP33F0Qk7kHcZrbrptMXhb/GdJvxea3017fafQvpK0haUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=bwIdvmve reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1715759939; c=relaxed/simple;
+	bh=JyAC/PWdE9ylEuXalxIwuA91LlSHQxAUpNeMRek+xAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S7SFVZvgDu7Df5AhqoZybaisY+5h8f4zIr3FLUagTC7f7cYw5TbxgFxnoYwdtqBbpFcBCGuA75EdMNj3zMhSrOohTO1sUqfzucN6Z1DXFPPjmih4RchXFE4AHmP0JUV03HMzbWWMc5SVLfF5r5XlgR3JbYDzKDbRfMBMpEOpPHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=OaCNHnGk; arc=none smtp.client-ip=140.205.0.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="bwIdvmve"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=MrGCgqKguiY7hQ9HCx9sc6Em/KsIRxXTbthTm4JpM3w=; b=b
-	wIdvmveH7dRBOheQkZ2ibyUbL1QZ4jKhXWhqk1WZAa093edVxyu4Z0gN5tAeOQQE
-	xeeijkedHo8ZaUClMN6SFhkFRebUc1P8fUavS1p4/c24mluDODkeNbM47ljG8W9h
-	buON4Z6Gi2XtzDP8mfOYwk2lUmJeaa5k78bfgPPSbQ=
-Received: from slark_xiao$163.com ( [223.104.68.205] ) by
- ajax-webmail-wmsvr-40-127 (Coremail) ; Wed, 15 May 2024 15:57:59 +0800
- (CST)
-Date: Wed, 15 May 2024 15:57:59 +0800 (CST)
-From: "Slark Xiao" <slark_xiao@163.com>
-To: "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
-Cc: loic.poulain@linaro.org, mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re:Re: Re:Re: [PATCH] bus: mhi: host: Add Foxconn SDX72 related
- support
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <20240515074315.GB2445@thinkpad>
-References: <20240510032657.789629-1-slark_xiao@163.com>
- <20240514143741.GA2306@thinkpad>
- <541de8e4.1600.18f79de44f3.Coremail.slark_xiao@163.com>
- <fc42977.1ac5.18f79eb945a.Coremail.slark_xiao@163.com>
- <20240515074315.GB2445@thinkpad>
-X-NTES-SC: AL_Qu2aB/uetkAs7yKQZ+kfm0kaj+c/WMGzu/8m3oFXO51wjA/p9R8Ab25qLX/Vwd6AAAyRtzG+XDNV0PRYYrFmXaQGNN5TjrI9qoCZ/7m7datPbg==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="OaCNHnGk"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1715759933; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=hpx+4O6VSym8I2MXU0WRGTCsP3ZciqQA0E7w0LMWHlA=;
+	b=OaCNHnGkysPWV0X6xNXaaz7bKbwny0vegc/2goYtkOvucIJpzqhCfhZp/t86k5CPsnbTqgYkCkFNEFFeEb5JXpNTgd9xkvR0gBOe24/PIzEJutOEXPdJNGIzpFtHgTz53VSA9FV0TO3ezxOKU+Nyx4gjmll/kWh3n8qFbDx7U30=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R581e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047213;MF=zhubojun.zbj@antgroup.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---.Xd0WWE._1715756252;
+Received: from localhost(mailfrom:zhubojun.zbj@antgroup.com fp:SMTPD_---.Xd0WWE._1715756252)
+          by smtp.aliyun-inc.com;
+          Wed, 15 May 2024 14:57:38 +0800
+From: "Bojun Zhu" <zhubojun.zbj@antgroup.com>
+To: linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	jarkko@kernel.org,
+	dave.hansen@linux.intel.com
+Cc:  <reinette.chatre@intel.com>,
+  "=?UTF-8?B?5YiY5Y+MKOi9qeWxuSk=?=" <ls123674@antgroup.com>,
+  "Bojun Zhu" <zhubojun.zbj@antgroup.com>
+Subject: [RFC PATCH v3 0/1] x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid softlockup
+Date: Wed, 15 May 2024 14:55:20 +0800
+Message-Id: <20240515065521.67908-1-zhubojun.zbj@antgroup.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4717acb4.7aa5.18f7b421477.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3f4AHa0RmpV4BAA--.2951W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiJR3fZGVOBNIhwAACsd
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: quoted-printable
 
-QXQgMjAyNC0wNS0xNSAxNTo0MzoxNSwgIk1hbml2YW5uYW4gU2FkaGFzaXZhbSIgPG1hbml2YW5u
-YW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPiB3cm90ZToKPk9uIFdlZCwgTWF5IDE1LCAyMDI0IGF0
-IDA5OjQzOjUzQU0gKzA4MDAsIFNsYXJrIFhpYW8gd3JvdGU6Cj4+IAo+PiBTZW5kIGFnYWluIHdp
-dGggdGV4dCBtb2RlLgo+PiBBdCAyMDI0LTA1LTE1IDA5OjI5OjIwLCAiU2xhcmsgWGlhbyIgPHNs
-YXJrX3hpYW9AMTYzLmNvbT4gd3JvdGU6Cj4+ID5BdCAyMDI0LTA1LTE0IDIyOjM3OjQxLCAiTWFu
-aXZhbm5hbiBTYWRoYXNpdmFtIiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+IHdy
-b3RlOgo+PiA+Pk9uIEZyaSwgTWF5IDEwLCAyMDI0IGF0IDExOjI2OjU3QU0gKzA4MDAsIFNsYXJr
-IFhpYW8gd3JvdGU6Cj4+ID4+PiBBbGlnbiB3aXRoIFFjb20gU0RYNzIsIGFkZCByZWFkeSB0aW1l
-b3V0IGl0ZW0gZm9yIEZveGNvbm4gU0RYNzIuCj4+ID4+PiBBbmQgYWxzbywgYWRkIGZpcmVob3Nl
-IHN1cHBvcnQgc2luY2UgU0RYNzIuCj4+ID4+PiAKPj4gPj4+IFNpZ25lZC1vZmYtYnk6IFNsYXJr
-IFhpYW8gPHNsYXJrX3hpYW9AMTYzLmNvbT4KPj4gPj4+IC0tLQo+PiA+Pj4gIGRyaXZlcnMvYnVz
-L21oaS9ob3N0L3BjaV9nZW5lcmljLmMgfCAzMSArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPj4gPj4+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQo+PiA+Pj4gCj4+ID4+
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMuYyBiL2RyaXZl
-cnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMKPj4gPj4+IGluZGV4IDA4ODQ0ZWU3OTY1NC4u
-MGZkOTRjMTkzZmM2IDEwMDY0NAo+PiA+Pj4gLS0tIGEvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNp
-X2dlbmVyaWMuYwo+PiA+Pj4gKysrIGIvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMu
-Ywo+PiA+Pj4gQEAgLTM5OSw2ICszOTksOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9jaGFu
-bmVsX2NvbmZpZyBtaGlfZm94Y29ubl9zZHg1NV9jaGFubmVsc1tdID0gewo+PiA+Pj4gIAlNSElf
-Q0hBTk5FTF9DT05GSUdfREwoMTMsICJNQklNIiwgMzIsIDApLAo+PiA+Pj4gIAlNSElfQ0hBTk5F
-TF9DT05GSUdfVUwoMzIsICJEVU4iLCAzMiwgMCksCj4+ID4+PiAgCU1ISV9DSEFOTkVMX0NPTkZJ
-R19ETCgzMywgIkRVTiIsIDMyLCAwKSwKPj4gPj4+ICsJTUhJX0NIQU5ORUxfQ09ORklHX1VMX0ZQ
-KDM0LCAiRklSRUhPU0UiLCAzMiwgMCksCj4+ID4+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19ETF9G
-UCgzNSwgIkZJUkVIT1NFIiwgMzIsIDApLAo+PiA+Pgo+PiA+PlRoaXMgbWVhbnMgU0RYNTUgaXMg
-YWxzbyBzdXBwb3J0aW5nIEZJUkVIT1NFIGNoYW5uZWxzLCB3aGljaCBpcyBub3QgdHJ1ZSBJCj4+
-ID4+YmVsaWV2ZS4KPj4gPkFjdHVhbGx5LCBJIGp1c3QgdmVyaWZpZWQgaXQgd2l0aCBteSBzZHg1
-NSBhbmQgdGhlIGFuc3dlciBpcyBZZXMuIFRoZXNlIGNoYW5uZWxzCj4+ID5hcmUgY29tbW9uIHNl
-dHRpbmdzIGZvciBRY29tIGRldmljZSB3aGljaCBzdXBwb3J0IFBDSWUgbW9kZS4gQlRXLCB0aGUK
-Pj4gPmRlZmF1bHQgc2V0dGluZ3Mgb2YgUWNvbSBhbmQgUXVlY3RlbCBzdXBwb3J0IGZpcmVob3Nl
-IGZvciB0aGVpciBzZHg1NSBwcm9kdWN0cy4KPj4gPj4KPj4gPj4+ICAJTUhJX0NIQU5ORUxfQ09O
-RklHX0hXX1VMKDEwMCwgIklQX0hXMF9NQklNIiwgMTI4LCAyKSwKPj4gPj4+ICAJTUhJX0NIQU5O
-RUxfQ09ORklHX0hXX0RMKDEwMSwgIklQX0hXMF9NQklNIiwgMTI4LCAzKSwKPj4gPj4+ICB9Owo+
-PiA+Pj4gQEAgLTQxOSw2ICs0MjEsMTYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfY29udHJv
-bGxlcl9jb25maWcgbW9kZW1fZm94Y29ubl9zZHg1NV9jb25maWcgPSB7Cj4+ID4+PiAgCS5ldmVu
-dF9jZmcgPSBtaGlfZm94Y29ubl9zZHg1NV9ldmVudHMsCj4+ID4+PiAgfTsKPj4gPj4+ICAKPj4g
-Pj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9jb250cm9sbGVyX2NvbmZpZyBtb2RlbV9mb3hj
-b25uX3NkeDcyX2NvbmZpZyA9IHsKPj4gPj4+ICsJLm1heF9jaGFubmVscyA9IDEyOCwKPj4gPj4+
-ICsJLnRpbWVvdXRfbXMgPSAyMDAwMCwKPj4gPj4+ICsJLnJlYWR5X3RpbWVvdXRfbXMgPSA1MDAw
-MCwKPj4gPj4+ICsJLm51bV9jaGFubmVscyA9IEFSUkFZX1NJWkUobWhpX2ZveGNvbm5fc2R4NTVf
-Y2hhbm5lbHMpLAo+PiA+Pj4gKwkuY2hfY2ZnID0gbWhpX2ZveGNvbm5fc2R4NTVfY2hhbm5lbHMs
-Cj4+ID4+PiArCS5udW1fZXZlbnRzID0gQVJSQVlfU0laRShtaGlfZm94Y29ubl9zZHg1NV9ldmVu
-dHMpLAo+PiA+Pj4gKwkuZXZlbnRfY2ZnID0gbWhpX2ZveGNvbm5fc2R4NTVfZXZlbnRzLAo+PiA+
-Pj4gK307Cj4+ID4+PiArCj4+ID4+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNpX2Rldl9p
-bmZvIG1oaV9mb3hjb25uX3NkeDI0X2luZm8gPSB7Cj4+ID4+PiAgCS5uYW1lID0gImZveGNvbm4t
-c2R4MjQiLAo+PiA+Pj4gIAkuY29uZmlnID0gJm1vZGVtX2ZveGNvbm5fc2R4NTVfY29uZmlnLAo+
-PiA+Pj4gQEAgLTQ0OCw2ICs0NjAsMTYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaGlfcGNpX2Rl
-dl9pbmZvIG1oaV9mb3hjb25uX3NkeDY1X2luZm8gPSB7Cj4+ID4+PiAgCS5zaWRlYmFuZF93YWtl
-ID0gZmFsc2UsCj4+ID4+PiAgfTsKPj4gPj4+ICAKPj4gPj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0
-IG1oaV9wY2lfZGV2X2luZm8gbWhpX2ZveGNvbm5fc2R4NzJfaW5mbyA9IHsKPj4gPj4+ICsJLm5h
-bWUgPSAiZm94Y29ubi1zZHg3MiIsCj4+ID4+PiArCS5lZGwgPSAicWNvbS9zZHg3Mm0veGJsX3Nf
-ZGV2cHJnX25zLm1lbGYiLAo+PiA+Pgo+PiA+PldoYXQgaXMgJy5tZWxmJz8gSXMgdGhlIGZpcm13
-YXJlIGF2YWlsYWJsZSBzb21ld2hlcmU/IERpZCB5b3UgcGxhbiB0byB1cHN0cmVhbQo+PiA+Pml0
-IHRvIGxpbnV4LWZpcm13YXJlPwo+PiA+Pgo+PiA+VGhpcyBmaWxlIHNpbWlsYXIgd2l0aCAiZWRs
-Lm1ibiIuIEluIFNEWDcyIHByb2R1Y3QsIHRoZSBkZWZhdWx0ICJlZGwiIGZpbGUgbmFtZSBpcwo+
-PiA+InhibF9zX2RldnByZ19ucy5tZWxmIi4gQ3VycmVudGx5IHdlIGRvbid0IHBsYW4gdG8gdXBz
-dHJlYW0gaXQgdG8gbGludXgtZmlybXdhcmUKPj4gPnNpbmNlIDIgcmVhc29uczogMTogd2Ugc2hh
-cmUgdGhlIHNhbWUgZm9sZCBuYW1lIHNkeDcybSB3aXRoIHFjb20gb3Igb3RoZXIgdmVuZG9ycwo+
-PiA+MjogdGhpcyBmaWxlIG1heSBiZSBjaGFuZ2VkIHNpbmNlIHNkeDcyIHByb2R1Y3Qgc3RpbGwg
-dW5kZXIgZGV2ZWxvcGluZyBpbiBvdXIgc2lkZS4gd2UKPj4gPm1heSBjaGFuZ2UgdGhlIGJhc2Ug
-bGluZSBhY2NvcmRpbmcgdG8gUUNPTSByZWxlYXNlLgo+PiA+Pi0gTWFuaQo+PiA+Pgo+PiBBbmQg
-SSB3YW50IHRvIHNheSwgdGhlIG9zIG9yIGRyaXZlciBjYW4ndCByZWNvdmVyIGRldmljZSB3aXRo
-IHRoaXMgImVkbCIgZmlsZSBvbmx5LiBUaGlzIGZpbGUKPj4gb25seSB1c2VkIHdoZW4gZGV2aWNl
-IG5lZWRzIHRvIGJlIGNoYW5nZWQgdG8gZmlyZWhvc2UgbW9kZS4gQWZ0ZXIgdGhhdCwgd2UgbmVl
-ZAo+PiBhIHRvb2wgYW5kIGEgY29tcGxldGUgZmlybXdhcmUgcGFja2FnZSB0byBkbyB0aGUgZmly
-ZWhvc2UgZG93bmxvYWQuIFVuZm9ydHVuYXRlbHksCj4+IHRoZXJlIGlzIG5vIG9wZW4gc291cmNl
-IHRvb2wgdG8gc3VwcG9ydCB0aGlzIGRvd25sb2FkLiBFdmVuIFFjb20gUENBVCB0b29sIG9ubHkK
-Pj4gc3VwcG9ydHMgdGhlaXIgb3duIFZJRC9QSUQgd2l0aCB0aGVpciBvd24gZHJpdmVyLiBTbyB0
-aGUgZnVuY3Rpb24gb2YgbWhpIGRyaXZlciBpczoKPj4gUHV0IGRldmljZSBpbnRvIGZpcmVob3Nl
-IG1vZGUgYW5kIGVudW1lcmF0ZSB0aGUgd3dhbjBmaXJlaG9zZTAgcG9ydC4gVGhlIHJlc3QKPj4g
-c2hhbGwgYmUgZG9uZSBieSBlbmR1c2VyIHRoZW1zZWx2ZXMuIAo+Cj5DYW4ndCB5b3UgdXNlIFFE
-TCB0b29sPyBodHRwczovL2dpdGh1Yi5jb20vbGludXgtbXNtL3FkbAo+Cj4tIE1hbmkKPgpOby4g
-V2UgdXNlZCB0aGlzIHRvb2wgZm9yIFVTQiBvbmx5LiBUaGlzIHRvb2wgZG9uJ3Qgc3VwcG9ydCBQ
-Q0lFIGRldmljZSBjdXJyZW50bHkuCnFkbCB3aWxsIGNhbGwgdGhlIGZ1bmN0aW9uIHVzYl9vcGVu
-IHRvIGdldCBkZXZpY2Ugbm9kZSBpbiAKL2Rldi9idXMvdXNiLiBCdXQgZm9yIFBDSUUgZGV2aWNl
-ICwgd2Ugd2lsbCBjb21tdW5pY2F0ZSBkZXZpY2Ugd2l0aCB3d2FuMGZpcmVob3NlMApwb3J0LiAK
-Pi0tIAo+4K6u4K6j4K6/4K614K6j4K+N4K6j4K6p4K+NIOCumuCupOCuvuCumuCuv+CuteCuruCv
-jQo=
+Hi folks,
+
+This is the third version of the patch to fix the softlockup in EDMM iotcl(=
+)[1][2].
+
+If we run an enclave equipped with large EPC(30G or greater on my platfrom)
+on the Linux with kernel preemptions disabled(by configuring
+"CONFIG_PREEMPT_NONE=3Dy"), we will get the following softlockup warning=20
+messages being reported in "dmesg" log:
+
+The EDMM's ioctl()s (sgx_ioc_enclave_{ modify_types | restrict_permissions =
+|  remove_pages})=20
+interface provided by kernel support batch changing attributes of enclave's=
+ EPC.
+If userspace App requests kernel to handle too many EPC pages, kernel
+may stuck for a long time(with preemption disabled).
+
+The log is as follows:
+
+------------[ cut here ]------------
+[  901.101294] watchdog: BUG: soft lockup - CPU#92 stuck for 23s! [occlum-r=
+un:4289]
+[  901.109617] Modules linked in: veth xt_conntrack xt_MASQUERADE nf_conntr=
+ack_netlink nfnetlink xfrm_user xfrm_algo iptable_nat nf_nat nf_conntrack n=
+f_defrag_ipv6 nf_defrag_ipv4 libcrc32c xt_addrtype iptable_filter br_netfil=
+ter bridge stp llc overlay nls_iso8859_1 intel_rapl_msr intel_rapl_common i=
+ntel_uncore_frequency intel_uncore_frequency_common i10nm_edac nfit binfmt_=
+misc ipmi_ssif x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm=
+ crct10dif_pclmul polyval_clmulni polyval_generic ghash_clmulni_intel sha51=
+2_ssse3 sha256_ssse3 pmt_telemetry sha1_ssse3 pmt_class joydev intel_sdsi i=
+nput_leds aesni_intel crypto_simd cryptd dax_hmem cxl_acpi cmdlinepart rapl=
+ cxl_core ast spi_nor intel_cstate drm_shmem_helper einj mtd drm_kms_helper=
+ mei_me idxd isst_if_mmio isst_if_mbox_pci isst_if_common intel_vsec idxd_b=
+us mei acpi_ipmi ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_m=
+eter mac_hid sch_fq_codel msr parport_pc ppdev lp parport ramoops reed_solo=
+mon pstore_blk pstore_zone efi_pstore drm ip_tables x_tables
+[  901.109670]  autofs4 mlx5_ib ib_uverbs ib_core hid_generic usbhid hid se=
+s enclosure scsi_transport_sas mlx5_core pci_hyperv_intf mlxfw igb ahci psa=
+mple i2c_algo_bit i2c_i801 spi_intel_pci xhci_pci tls megaraid_sas dca spi_=
+intel crc32_pclmul i2c_smbus i2c_ismt libahci xhci_pci_renesas wmi pinctrl_=
+emmitsburg
+[  901.109691] CPU: 92 PID: 4289 Comm: occlum-run Not tainted 6.9.0-rc5 #3
+[  901.109693] Hardware name: Inspur NF5468-M7-A0-R0-00/NF5468-M7-A0-R0-00,=
+ BIOS 05.02.01 05/08/2023
+[  901.109695] RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
+[  901.109701] Code: 48 c1 e6 05 48 89 d1 48 8d 5c 24 40 b8 0e 00 00 00 48 =
+2b 8e 70 8e 15 8b 48 c1 e9 05 48 c1 e1 0c 48 03 8e 68 8e 15 8b 0f 01 cf <a9=
+> 00 00 00 40 0f 85 b2 00 00 00 85 c0 0f 85 db 00 00 00 4c 89 ef
+[  901.109702] RSP: 0018:ffffad0ae5d0f8c0 EFLAGS: 00000202
+[  901.109704] RAX: 0000000000000000 RBX: ffffad0ae5d0f900 RCX: ffffad11dfc=
+0e000
+[  901.109705] RDX: ffffad2adcff81c0 RSI: 0000000000000000 RDI: ffff9a12f5f=
+4f000
+[  901.109706] RBP: ffffad0ae5d0f9b0 R08: 0000000000000002 R09: ffff9a1289f=
+57520
+[  901.109707] R10: 000000000000005d R11: 0000000000000002 R12: 00000006d8f=
+f2000
+[  901.109708] R13: ffff9a12f5f4f000 R14: ffffad0ae5d0fa18 R15: ffff9a12f5f=
+4f020
+[  901.109709] FS:  00007fb20ad1d740(0000) GS:ffff9a317fe00000(0000) knlGS:=
+0000000000000000
+[  901.109710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  901.109711] CR2: 00007f8041811000 CR3: 0000000118530006 CR4: 00000000007=
+70ef0
+[  901.109712] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000
+[  901.109713] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 00000000000=
+00400
+[  901.109714] PKRU: 55555554
+[  901.109714] Call Trace:
+[  901.109716]  <IRQ>
+[  901.109718]  ? show_regs+0x67/0x70
+[  901.109722]  ? watchdog_timer_fn+0x1f3/0x280
+[  901.109725]  ? __pfx_watchdog_timer_fn+0x10/0x10
+[  901.109727]  ? __hrtimer_run_queues+0xc8/0x220
+[  901.109731]  ? hrtimer_interrupt+0x10c/0x250
+[  901.109733]  ? __sysvec_apic_timer_interrupt+0x53/0x130
+[  901.109736]  ? sysvec_apic_timer_interrupt+0x7b/0x90
+[  901.109739]  </IRQ>
+[  901.109740]  <TASK>
+[  901.109740]  ? asm_sysvec_apic_timer_interrupt+0x1b/0x20
+[  901.109745]  ? sgx_enclave_restrict_permissions+0xba/0x1f0
+[  901.109747]  ? aa_file_perm+0x145/0x550
+[  901.109750]  sgx_ioctl+0x1ab/0x900
+[  901.109751]  ? xas_find+0x84/0x200
+[  901.109754]  ? sgx_enclave_etrack+0xbb/0x140
+[  901.109756]  ? sgx_encl_may_map+0x19a/0x240
+[  901.109758]  ? common_file_perm+0x8a/0x1b0
+[  901.109760]  ? obj_cgroup_charge_pages+0xa2/0x100
+[  901.109763]  ? tlb_flush_mmu+0x31/0x1c0
+[  901.109766]  ? tlb_finish_mmu+0x42/0x80
+[  901.109767]  ? do_mprotect_pkey+0x150/0x530
+[  901.109769]  ? __fget_light+0xc0/0x100
+[  901.109772]  __x64_sys_ioctl+0x95/0xd0
+[  901.109775]  x64_sys_call+0x1209/0x20c0
+[  901.109777]  do_syscall_64+0x6d/0x110
+[  901.109779]  ? syscall_exit_to_user_mode+0x86/0x1c0
+[  901.109782]  ? do_syscall_64+0x79/0x110
+[  901.109783]  ? syscall_exit_to_user_mode+0x86/0x1c0
+[  901.109784]  ? do_syscall_64+0x79/0x110
+[  901.109785]  ? free_unref_page+0x10e/0x180
+[  901.109788]  ? __do_fault+0x36/0x130
+[  901.109791]  ? do_pte_missing+0x2e8/0xcc0
+[  901.109792]  ? __pte_offset_map+0x1c/0x190
+[  901.109795]  ? __handle_mm_fault+0x7b9/0xe60
+[  901.109796]  ? __count_memcg_events+0x70/0x100
+[  901.109798]  ? handle_mm_fault+0x256/0x360
+[  901.109799]  ? do_user_addr_fault+0x3c1/0x860
+[  901.109801]  ? irqentry_exit_to_user_mode+0x67/0x190
+[  901.109803]  ? irqentry_exit+0x3b/0x50
+[  901.109804]  ? exc_page_fault+0x89/0x180
+[  901.109806]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  901.109807] RIP: 0033:0x7fb20b4315cb
+[  901.109810] Code: 0f 1e fa 48 8b 05 c5 78 0d 00 64 c7 00 26 00 00 00 48 =
+c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 95 78 0d 00 f7 d8 64 89 01 48
+[  901.109811] RSP: 002b:00007ffc0e7af718 EFLAGS: 00000246 ORIG_RAX: 000000=
+0000000010
+[  901.109812] RAX: ffffffffffffffda RBX: 0000000780000000 RCX: 00007fb20b4=
+315cb
+[  901.109813] RDX: 00007ffc0e7af720 RSI: 00000000c028a405 RDI: 00000000000=
+00005
+[  901.109814] RBP: 0000000000000005 R08: 0000000000000000 R09: 00007ffc0e7=
+af794
+[  901.109815] R10: 00007ffc0e7af7c8 R11: 0000000000000246 R12: 00000000c02=
+8a405
+[  901.109815] R13: 00007ffc0e7af720 R14: 0000000780000000 R15: 00007fb20b2=
+ea980
+[  901.109817]  </TASK>
+------------[ end trace ]------------
+
+We suggest to give up CPU in the ioctl() handler explicitly. I have attache=
+d a
+patch which can fix such issue.
+
+Appreciate for all the review on previous versions.
+Thanks for your time!
+
+Regards,
+Bojun
+
+---
+v1 -> v2:
+  - Make the cond_resched() as a prefix op instead of a postfix op (Jarkko)
+  - Additionly check the pending signal at the begin of every for loop (Jar=
+kko)
+  - Introduce sgx_check_signal_and_resched() to wrap the pending check
+    and reschedule operations (Jarkko)
+  - Refine the trace log in commit() message (Kai)
+
+v2 -> v3:
+  - Set the default value of "ret" as "-ERESTARTSYS" to avoid redundantly c=
+heck
+    whether the current iteration is the first one (Dave)
+
+[1] v1: https://lore.kernel.org/linux-sgx/20240423092550.59297-1-zhubojun.z=
+bj@antgroup.com/
+[2] v2: https://lore.kernel.org/linux-sgx/20240426141823.112366-1-zhubojun.=
+zbj@antgroup.com/
+
+Bojun Zhu (1):
+  x86/sgx: Explicitly give up the CPU in EDMM's ioctl() to avoid
+    softlockup
+
+ arch/x86/kernel/cpu/sgx/ioctl.c | 40 +++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 12 deletions(-)
+
+
+base-commit: ed30a4a51bb196781c8058073ea720133a65596f
+--=20
+2.25.1
+
