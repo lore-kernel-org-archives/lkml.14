@@ -1,129 +1,115 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCF13B1AC;
-	Wed, 15 May 2024 06:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 380603A29F;
+	Wed, 15 May 2024 06:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715753576; cv=none; b=aDLKLJt3C7/jAyxqTUvDT6OEpPShqs9A/mlkSSfkxIqUpldBIMdJ5OdeGEBvJqMXt82xcbdmn2Yie8KKJYiMb3Bj12Ji6zZWaxmPe4pSAu9ChShQaJBZdC2k5154bn6jt/K2dkdx8DgUMmNE9oUcnuFknINI5/0XhmntFVCvtzc=
+	t=1715753747; cv=none; b=AHChM/1PtCg5l9qnt4eMUfqf3ysXBSycmF63MRrLiB9j7YdbjeMfjFVVExR+8nNEAzvZgkfvRjFU0qqp2wWRn7qQQkdDwwsmRY7F34ROzvinvOwxk8hsNdWxjUAKmNDvps1nQYRiAsStxP+yex0vj1haH/g4DQc/v2aMFE5FMxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715753576; c=relaxed/simple;
-	bh=ST1KBgIBdQUGMWs9K1MnA4oRBE3vKwC0vJ3GkqMiD2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TgbNxLt6hFCQ8CSjWXcm+L9ohFyq/Dtj2u3fCKUtENGhHt0/onvTI+ypgjx30HqcpJmSrwwf5g+niQ9Yqh+IJcASFzVS6lR3gxVpeCQ6nVAb0G3YfFbBYO41pckDg4vPpgenmu3/2BQXvzcCXgi0gEzuFYqwuhVLDhv0EJUYyMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ivbAdywh; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=r4QALbQT reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ivbAdywh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="r4QALbQT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1715753573; x=1747289573;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ni1BtX8uUfNH+eqIsiz5T/zzcUFH/m6Iqk/eL5FxXCw=;
-  b=ivbAdywh4Flptes0Ou+Zo5Y77hJMfO5PoZ834GIYdP+FySiMW7N4MMBa
-   AoATROi5xYlVXTRhO75re/r9MntiN5ej8wbEGMWAu3+0BbXbM/asE61dV
-   x2dB63P+yG40UcBBFXkg9kHhAu2VkeE4JWWSj29fR8pekIjx577yFOtyL
-   C3wIuLvp6Aw18B5Oip/9onqH2Jffwgt1cZCq/yBXvLRbWdmH2FTYtJ5X+
-   WVNaik3OZhcpvXse3sJB+GfTLoAUDf5EhAOrtxfmzaJ6reBa5BICTRIvv
-   ABVkLzVFzKtiFcOTGzMQKxTqZU4rg7gLq+K1HhqEX4Lzy/PCydmAZMqt6
-   w==;
-X-CSE-ConnectionGUID: sSsNmdUXTuqGs3G2OXkj4w==
-X-CSE-MsgGUID: yzGRMvqBQUqlUMiIv32CiQ==
-X-IronPort-AV: E=Sophos;i="6.08,160,1712613600"; 
-   d="scan'208";a="36904601"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 15 May 2024 08:11:37 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2B3721712BF;
-	Wed, 15 May 2024 08:11:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1715753493;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=Ni1BtX8uUfNH+eqIsiz5T/zzcUFH/m6Iqk/eL5FxXCw=;
-	b=r4QALbQTiUzJGjSHwsQrHvJLIVFxpJ/jBUeoqAx8k8n9WYRaSOx6shLe55Yc0+1Dr8R6tG
-	VvTStgp8Vvsj0SgMHG+e+DlkOY+hUHUUEBZTZT9PYKBCgBiRU7vFEzCukZHJ+Bfb4wpQEf
-	/4V2rVBb//cd+sTH6qela5tc6Erw0ertc3SfKYXJy4/MTOUCPnYmysw72xn0lRGCKOT3X7
-	UexgKLtI3FMJSkIdJE8j6T43czpFD4ZLfVBxyIt4JQJiu7WTuH6XBBSA6cvpmf1c7dGIIS
-	BYuDzbmPn1TdToS58RT1lrenH7Ccwi3qqRmTh30o8mFvYVI6QnleX5R08asptA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>, Adam Ford <aford173@gmail.com>
-Cc: ulf.hansson@linaro.org, heiko@sntech.de, u.kleine-koenig@pengutronix.de, geert+renesas@glider.be, rafael@kernel.org, linux-pm@vger.kernel.org, abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev, shengjiu.wang@gmail.com, frank.li@nxp.com, mkl@pengutronix.de, linus.walleij@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pmdomain: imx: gpcv2: Add delay after power up handshake
-Date: Wed, 15 May 2024 08:11:35 +0200
-Message-ID: <9618306.DvuYhMxLoT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <CAHCN7xLoW2Nydhc3y-X1ieb7-UZTm=ap1O1eSLE31LawmfRZOg@mail.gmail.com>
-References: <1715396125-3724-1-git-send-email-shengjiu.wang@nxp.com> <CAHCN7xLoW2Nydhc3y-X1ieb7-UZTm=ap1O1eSLE31LawmfRZOg@mail.gmail.com>
+	s=arc-20240116; t=1715753747; c=relaxed/simple;
+	bh=5pN0Bv3ggxcBHrTLeGSKhEB6L3Vo7V64rQH/kwktpaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WJGpv7IBpyTPRgpXlw8guNJUpl37FnGFOUUAyMZ4FMiPpywDwOMQxqetrstGXjaW72dujYwse+0bNZWOrYvDlgmqoqneq/u1a3tOEjJrXV1qrVnCDYs7qfLPukJcWAcQugz20NU77pFPRVy7q1yEFcxQ8QrOminjUZEkLXtiYGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by mail.home.local (8.17.1/8.17.1/Submit) id 44F6EquX027885;
+	Wed, 15 May 2024 08:14:52 +0200
+Date: Wed, 15 May 2024 08:14:52 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Theo de Raadt <deraadt@openbsd.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+        jeffxu@chromium.org, keescook@chromium.org, jannh@google.com,
+        sroettger@google.com, gregkh@linuxfoundation.org,
+        usama.anjum@collabora.com, Liam.Howlett@oracle.com, surenb@google.com,
+        merimus@google.com, rdunlap@infradead.org, jeffxu@google.com,
+        jorgelo@chromium.org, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+Message-ID: <ZkRS3DJQWgUnEBKo@1wt.eu>
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+ <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+ <871q646rea.fsf@meer.lwn.net>
+ <ZkPXcT_JuQeZCAv0@casper.infradead.org>
+ <56001.1715726927@cvs.openbsd.org>
+ <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
+ <92453.1715730450@cvs.openbsd.org>
+ <20240515025811.GA1232@1wt.eu>
+ <CAHk-=wiW4V5HRQ5Jm_MnSMVTeivS_4kdm1dnc08d03UKzmyp+A@mail.gmail.com>
+ <CAHk-=wh_GHCwCiC-ZR=idjNEb0xZq20=fQnQxnjGkiq-ba5DLg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh_GHCwCiC-ZR=idjNEb0xZq20=fQnQxnjGkiq-ba5DLg@mail.gmail.com>
 
-Hi,
-
-Am Mittwoch, 15. Mai 2024, 00:08:21 CEST schrieb Adam Ford:
-> On Fri, May 10, 2024 at 10:15=E2=80=AFPM Shengjiu Wang <shengjiu.wang@nxp=
-=2Ecom> wrote:
+On Tue, May 14, 2024 at 09:14:37PM -0700, Linus Torvalds wrote:
+> On Tue, 14 May 2024 at 20:36, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 > >
-> > AudioMix BLK-CTRL on i.MX8MP encountered an accessing register issue
-> > after power up.
-> >
-> > [    2.181035] Kernel panic - not syncing: Asynchronous SError Interrupt
-> > [    2.181038] CPU: 1 PID: 48 Comm: kworker/u16:2 Not tainted 6.9.0-rc5=
-=2Dnext-20240424-00003-g21cec88845c6 #171
-> > [    2.181047] Hardware name: NXP i.MX8MPlus EVK board (DT)
-> > [    2.181050] Workqueue: events_unbound deferred_probe_work_func
-> > [    2.181064] Call trace:
-> > [...]
-> > [    2.181142]  arm64_serror_panic+0x6c/0x78
-> > [    2.181149]  do_serror+0x3c/0x70
-> > [    2.181157]  el1h_64_error_handler+0x30/0x48
-> > [    2.181164]  el1h_64_error+0x64/0x68
-> > [    2.181171]  clk_imx8mp_audiomix_runtime_resume+0x34/0x44
-> > [    2.181183]  __genpd_runtime_resume+0x30/0x80
-> > [    2.181195]  genpd_runtime_resume+0x110/0x244
-> > [    2.181205]  __rpm_callback+0x48/0x1d8
-> > [    2.181213]  rpm_callback+0x68/0x74
-> > [    2.181224]  rpm_resume+0x468/0x6c0
-> > [    2.181234]  __pm_runtime_resume+0x50/0x94
-> > [    2.181243]  pm_runtime_get_suppliers+0x60/0x8c
-> > [    2.181258]  __driver_probe_device+0x48/0x12c
-> > [    2.181268]  driver_probe_device+0xd8/0x15c
-> > [    2.181278]  __device_attach_driver+0xb8/0x134
-> > [    2.181290]  bus_for_each_drv+0x84/0xe0
-> > [    2.181302]  __device_attach+0x9c/0x188
-> > [    2.181312]  device_initial_probe+0x14/0x20
-> > [    2.181323]  bus_probe_device+0xac/0xb0
-> > [    2.181334]  deferred_probe_work_func+0x88/0xc0
-> > [    2.181344]  process_one_work+0x150/0x290
-> > [    2.181357]  worker_thread+0x2f8/0x408
-> > [    2.181370]  kthread+0x110/0x114
-> > [    2.181381]  ret_from_fork+0x10/0x20
-> > [    2.181391] SMP: stopping secondary CPUs
-> >
->=20
-> The imx8mp-beacon board suffers from this as well, and I can confirm
-> the patch also fixes it.  It might be a coincidence, but the etnaviv
-> NPU also enumerates more reliably now too.
+> > Guys, if you let untrusted code execute random system calls, the whole
+> > "look, now unmap() acts oddly" IS THE LEAST OF YOUR ISSUES.
 
-I had a similar local hack/workaround for NPU startup. This patch address
-both issues.
+I totally agree with this, I'm more speaking about a more general
+hardening measure, like what is commonly offered via prctl() and that,
+for example, manages to mitigate the consequences of a successful RCE.
 
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-=2D-=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-http://www.tq-group.com/
+> Side note: it doesn't even help to make things "atomic". munmap() acts
+> oddly whether it fals completely or whether it fails partially, and if
+> the user doesn't check the result, neither case is great.
 
+I don't find the "atomic" aspect that important either, however the
+munmap() man page says:
 
+  All  pages containing a part of the indicated range are un-
+  mapped, and subsequent references to these pages will generate SIGSEGV.
+  It  is  not an error if the indicated range does not contain any mapped
+  pages.
+
+This alone is an encouragement to not check the result. And BTW, what
+should one do to try to repair the situation after a failed munmap() ?
+It reads as "best effort" above: usually upon return, anything that
+could be unmapped was unmapped. That's how I'm reading it. I think it's
+a nice property that makes this syscall trustable by its users, and
+contrary to the atomic aspect I would find it nice if munmap() would
+properly unmap everything it can then return the error caused by the
+encounter of a sealed area. For me that's even the opposite of an
+atomic approach, it's really about making sure to best follow the
+developer's intent regardless of any obstacles.
+
+> If you want to have some "hardened mseal()", you make any attempt to
+> change a mseal'ed memory area be a fatal error. The whole "atomic or
+> not" is a complete red herring.
+
+Yep, agreed.
+
+> I'd certainly be ok with that. If the point of mseal is "you can't
+> change this mapping", then anybody who tries to change it is obviously
+> untrustworthy, and killing the whole thing sounds perfectly sane to
+> me.
+> 
+> Maybe that's a first valid use-case for the flags argument.
+
+That could be for that use case (developer doing mseal, attacker
+trying munmap), indeed, though that couldn't cover for the other
+way around (attacker doing mseal() in hope to make a future munmap()
+fail).
+
+That's what I like with prctl(), it offers the developer a panoply of
+options to decide when and how to lock down a process in order to
+mitigate consequences of exploited bugs.
+
+And it could be independent on this series, by essentially focusing on
+the ability to kill a process that fails to munmap() a sealed area. I.e.
+no need to that that property on the area itself, it's a matter of whether
+we consider the process sensitive enough or not.
+
+Willy
