@@ -1,86 +1,82 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C067155752;
-	Wed, 15 May 2024 15:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEF1155A26
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715786880; cv=none; b=UW2KwscL0dG6rl2DNLzb5V+m1zoWxFdmJOjcWnvVMtw+AMRrOlcdfQP4T7nUimwVMfyme7wF6lcvK1Q7EH6/WJqVN5wk+vkYPz47XnFPKW9Xd3t14J8SYQDpVHlZVM60c0kRVOf5VPQnVy/v8H/KB5x7rlz41GfN67f+cfK0wSs=
+	t=1715786890; cv=none; b=P/5TZNRKoAcW0A4lILxa6naL044uNSWwHAzU9DtFmXRhkYqMnzOHW3SFCLnyRno0zzASdgN8SXt3hVT+LaXJ7Fp93df7S0JhkSLHRL9wCVGhg+ZtEJw0eF+P5tlS7HH+yq/uzNGIda/tbVBwJ8lDkPYhiXp9cemashTuWy3f80s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715786880; c=relaxed/simple;
-	bh=g1lVgGrmRqhqbAzR7xXGynSAR7VP0f5zUHajn+I4RV4=;
+	s=arc-20240116; t=1715786890; c=relaxed/simple;
+	bh=C8kKQKOtylTtvVHkjEFur6xMaFsKzbM5ZDTUlRRicm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KupwPDNhLf20osNAV1QZi9E8nhZAVwlVxI+atz9q1WhSW+PxfWMSSPFDVJOc6/d2a/rnw2btQasn+llxfgLo3Anr2pQYPj9/olmy/+QHVQMtlo30Z0QiAtugBev7ekdjCvK4+3tD63q1gbkPUsdN3NEK3sV43QxbxfM1uH24+CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KH3fKfAn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iasrH6Zg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ommtw1sL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4OBcsZ8q; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=NaG8ENo+g/liCVbFxAVhMSriNP9xK/rwD/ryNVZWNFm+JyzgV3cBRBNQdH+CUywwLMRs1zMgG6M0Whvd9c2v2Ac83D9xHSld2jPoGFqji6EQip08CPFRibbZKl9OGaWEmQpcRMi8YTYj6pAYN1E0D5ddQNwPjONaSbGwiZTPpHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+mDcXJ3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KH3fKfAn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iasrH6Zg";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ommtw1sL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4OBcsZ8q"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+mDcXJ3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715786887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uInC5hWDwqGcx7P6rLG2USi6e9+2nLZVOslbhOtiZQ8=;
+	b=J+mDcXJ3v4GqpDrK2lt3set2yk+7qU/SWQ7+3uLApxCIhgemcp38lmbAEGoxTDBTK2101H
+	8HdsBMF6usqcaTulqAN/uhg8X6y8VGSah24DhKwTRyXMBIqNuYl/850iOMizQT2UHvk2y2
+	bvzd0AVG72+AAQ/jbCnuX4xaWsB9WPI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-OKrgi6wzN1OJxJUn5UMrTA-1; Wed,
+ 15 May 2024 11:27:42 -0400
+X-MC-Unique: OKrgi6wzN1OJxJUn5UMrTA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 778552084F;
-	Wed, 15 May 2024 15:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715786870;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
-	b=KH3fKfAnXVyJoPnin9E/o6QmbEItEcNCtKtaezQ5hnwhjVSnWlUwoM+KeS72MPUgqkf9OM
-	+CNTOY+ASyXP6cpbNc96QLaQavSX8TD+qLcjR2JCC7I1z5KY31/HnuuZB4HWVlmuw1GqS1
-	EIwgF+cN9ZbUJFl1iMG+OUq+Hma3vYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715786870;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
-	b=iasrH6Zgyi4ZolvQOwIaRAiHF42kARzVvsB/UfuNE+5ycs+lcbkAlR/GGX33yYu5TVVhVg
-	SPwZH+Nmfp/fOXDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715786869;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
-	b=Ommtw1sLkW83hf03hNwsIDnKfwdFjjBbhxcr15mpZ0wi3/Xr5FsHJe/E3ZN8Xp0NSrJdz4
-	7V2COIVVie3coYMM/LDI2cFk9TbbWM6DOlaO5ba+IXaZ0wqitRBmHnKdXyZB1QFJUCqc9V
-	zgRcUmd34YwcveEOt9+0Ys/21bstvbA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715786869;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
-	b=4OBcsZ8qOK+TuPtbKPczVjbx3NFXxGyvOP16yqldCMo8qmvCb6Jh8FsSRaQBOo3LGFxMIx
-	kckznFfvESJETRBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 585C2136A8;
-	Wed, 15 May 2024 15:27:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xX7gFHXURGYcDwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 15 May 2024 15:27:49 +0000
-Date: Wed, 15 May 2024 17:27:47 +0200
-From: David Sterba <dsterba@suse.cz>
-To: syzbot <syzbot+f7a41568dd5872d6ad52@syzkaller.appspotmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [btrfs?] possible deadlock in join_transaction
-Message-ID: <20240515152747.GM4449@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <0000000000001ac5ea061835f021@google.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4ABD71C0513F;
+	Wed, 15 May 2024 15:27:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.39])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 7395F3C27;
+	Wed, 15 May 2024 15:27:36 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 15 May 2024 17:26:15 +0200 (CEST)
+Date: Wed, 15 May 2024 17:26:09 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Deepak Gupta <debug@rivosinc.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"yhs@fb.com" <yhs@fb.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
+Message-ID: <20240515152609.GD6821@redhat.com>
+References: <ZjyJsl_u_FmYHrki@krava>
+ <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
+ <Zj_enIB_J6pGJ6Nu@krava>
+ <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
+ <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
+ <ZkKE3qT1X_Jirb92@krava>
+ <3e15152888d543d2ee4e5a1d75298c80aa946659.camel@intel.com>
+ <ZkQTgQ3aKU4MAjPu@debug.ba.rivosinc.com>
+ <20240515111919.GA6821@redhat.com>
+ <ZkTIU1QUAJF0f0KK@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,73 +85,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000001ac5ea061835f021@google.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: 1.23
-X-Spam-Level: *
-X-Spamd-Result: default: False [1.23 / 50.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=a450595960709c8];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	BAYES_HAM(-0.27)[73.86%];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[f7a41568dd5872d6ad52];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	SUBJECT_HAS_QUESTION(0.00)[]
+In-Reply-To: <ZkTIU1QUAJF0f0KK@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Sat, May 11, 2024 at 04:23:20PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    dccb07f2914c Merge tag 'for-6.9-rc7-tag' of git://git.kern..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17ad432f180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a450595960709c8
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f7a41568dd5872d6ad52
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: i386
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-dccb07f2.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/987455e5cf13/vmlinux-dccb07f2.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/327c390f753b/bzImage-dccb07f2.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+f7a41568dd5872d6ad52@syzkaller.appspotmail.com
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 6.9.0-rc7-syzkaller-00012-gdccb07f2914c #0 Not tainted
-> ------------------------------------------------------
-> kswapd0/110 is trying to acquire lock:
-> ffff888000c76380 (btrfs_trans_num_writers){++++}-{0:0}, at: join_transaction+0x430/0xf40 fs/btrfs/transaction.c:290
-> 
-> but task is already holding lock:
-> ffff88805a236610 (sb_internal#2){.+.+}-{0:0}, at: btrfs_commit_inode_delayed_inode+0x110/0x330 fs/btrfs/delayed-inode.c:1275
-> 
-> which lock already depends on the new lock.
+On 05/15, Jiri Olsa wrote:
+>
+> On Wed, May 15, 2024 at 01:19:20PM +0200, Oleg Nesterov wrote:
+> > Let me ask a couple of really stupid questions. What if the shadow stack
+> > is "shorter" than the normal stack? I mean,
+> >
+> > 	enable_shstk()
+> > 	{
+> > 		prctl(ARCH_SHSTK_SHSTK);
 
-Looks valid, though I haven't went through all the traces, there are
-some usual suspects like shrinkers, evict, iput, and in two threads (#4 and #0).
+I meant ARCH_SHSTK_ENABLE, of course
 
-Also this is on 6.9, so the recent addition of shrinker for extent_map
-is not relevant here.
+> > 	}
+> >
+> > what happens when enable_shstk() returns?
+>
+> I think it will crash, there's explanation in the comment in
+> tools/testing/selftests/x86/test_shadow_stack.c test
+
+OK, thanks...
+
+But test_shadow_stack.c doesn't do ARCH_PRCTL(ARCH_SHSTK_DISABLE) if
+all the tests succeed ? Confused but nevermind.
+
+> > And what is the purpose of fpregs_lock_and_load() ? Why do we need to
+> > fpregs_restore_userregs() in shstk_setup() and other places?
+> >
+> > Oleg.
+> >
+>
+
