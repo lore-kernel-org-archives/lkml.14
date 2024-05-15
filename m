@@ -1,57 +1,57 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1860620E6;
-	Wed, 15 May 2024 01:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B780D748A;
+	Wed, 15 May 2024 01:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715735305; cv=none; b=IXeViMAtGV/C1uQhgMrCoPVRd0052zuGuyaLjZDPCNqsIScHpdMvLXZgrDFZpK2qLVIq6X0SFyBCC9g12kcJ306KJF3isYupWY8Ab1bE7gFwied6ZwMiqQ9VbN7VgqqTu0YJJK1nytv4HrgSsvQ6QccU5vwmLqmbr9qvSuJ72s4=
+	t=1715735310; cv=none; b=QH5LMz5kuWoR1KtC5ug3OQtP5sgDc5JL5n0ikwLMSB7Q7DMDKwGVD4htLNv3GmOyxKP0puV1KFc6LLqs4G1j7y3KnIfM5bFk+zo4O3JtctvP1hcA/hISZ2ngzuOYYzi0wQWtakQtim/cCWA4BTdBEuaAo2w4aL3gOoEkxx2vv5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715735305; c=relaxed/simple;
-	bh=dT8ANgy09X7j18odK8IC61VYQ+K7a52NYm1T7TLwx1E=;
+	s=arc-20240116; t=1715735310; c=relaxed/simple;
+	bh=O4pErUei5BcDdY6rSN5JCE4HW0/7Ee1oOOLQEFOtl8U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QfAOOuZ6m3Wmi7fha1N9RqHHoFDNTVBeGag7MKf4I7fgUspHbjhghwRCUrS/g884VxeO9/CH/utEzW5mkmLPzcrQSDAa5syiAv+EymCMv1X7C7vjdrgyIC9CV653vnYzrwVKsQyABvLMIOy69Fm8eVi/Oqrim2Q3aF4dSI0l+QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S47n8/FF; arc=none smtp.client-ip=209.85.210.180
+	 MIME-Version; b=YCrcfFBcQ6dEvYwOst/dl9igKXlARptyRqxb8JqyxPhnk649G5kiwypYh6oEVRe3rbkbCT/3x46OsIbIzgWbj22ldI5bm5matdU9fJB7I0c/rEc7AMGfK9EAFhZnFKcTZip2x6s7xFtQaivnxHvcgS50heS+izeNw1OSHSZvRN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ho6QgxQT; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S47n8/FF"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f457853950so4802715b3a.0;
-        Tue, 14 May 2024 18:08:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho6QgxQT"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f45f1179c3so5905002b3a.3;
+        Tue, 14 May 2024 18:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715735302; x=1716340102; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715735307; x=1716340107; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c7cVoRg5XLbeO8AGfzjbDfQNTG72qZnwMnMRH7ezljE=;
-        b=S47n8/FF45dF39eVbU2zAzvrlDuyLR9UJ3gPl72JEm3W++Qk2ckLYbxg/0ay8UsVGR
-         taxSkjuFtV5ggFGc72ZQuAZC3J+s04kBtd00s+C9LBd6iULuW/mI4fovuosw6p22cW88
-         ho5rhNp7sd3l76PAQ2s3h5XwIV+vNgC3Zawou7J5/XImbj1yOxtdMOucXKS5wxuisb49
-         XyH6/vxgUkk34ic7HdI0SAIrMmoWx5PMZ2GEpvYcN0AYTH9cD8nBE9UoK9oiHFJ6tSop
-         Ba8jPt7+EQmivdjCxrar4/SJ9hr57WA+Aes9WMw/LfWN5NS6INWfY8JlSjs5Cy5SFJm8
-         nurQ==
+        bh=V+ayVbf+QMN56CDy4orfOWD3cBOJ6aQix+a9D8vn66o=;
+        b=ho6QgxQTsIUBD3zGGSjmBeTo4y6B3d2Ty3y1S24ostSGABSoo6ekj7fFgZNP+Qw1hn
+         EkD4YagvOBhukRanzL30SmnOJ/7mfhyeRB8+T6QLcBjxJVVzR84nqmsWjJkqd+PugR7N
+         FQLNttg4Zstj0GolBjpFYjWfrt/9K7QGAzmugfHA/rq39Srxk8fQrreGkN9vBZ5+cpS6
+         duO9/niRzTSMAbBx8A0Lp0PliRcBDVojPWXZDo74jW3Bhv9ziwuB94Sb18FQEVvFsP/o
+         OZMcbfIebsQJP08xodfHPtQiMWxv22N60mLtgpwTjboZoFOoYgelUu7mKEQTK6j53y58
+         igPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715735302; x=1716340102;
+        d=1e100.net; s=20230601; t=1715735307; x=1716340107;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c7cVoRg5XLbeO8AGfzjbDfQNTG72qZnwMnMRH7ezljE=;
-        b=CFlPaNq95TUIiwKc+qY3YwRCije++pRxVpCyLZykR72fGA4UG+c+T9dibAjqgt43Ta
-         icOlEBJa+LkiTZxmukSIeWVkgv3vJeoG2T2ZUA88NCR+CI4mpJoo2QByN9+e1wkYCbr5
-         yxrKGMHzPiCHBrHaU7MrIg2zAi4lDkC8MHWMXF14znziK3MOgloRnYIVUKo8RCDCq41Y
-         EvZqjAw8HXahrXq/F8DVId0a489uuOySeR9vjd51s5BCojuTVXHt0EyLc6EuZQcqk2kD
-         HFOD2L4/lzTztR9bLGU6s20p3QE99rxXTzPfE+RUKv3d5ubtMmSv09kNR/2n+2haGNvc
-         VNjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQewV3Ggga4/TYFO2olXNwqf4TDDEp2TogvW5ULxRjcXs03RfFmcoF3nV4E15AX++sBatE0xHfWE9DnelpWtm+vnWqsFWKbhJIZwoc
-X-Gm-Message-State: AOJu0YwaUP97LZmHDyjfKEZq6cj+8e6Rq76qk/iPhRp6MCiRqfzU9/EO
-	GQg4YtI6e3VA38Rj5HAHrpBaw8/AEC9kANjAQEMmoBPGcgDD49SkGNIhvPWQGkI=
-X-Google-Smtp-Source: AGHT+IFY4jTPkpJSgOMJ1ofHJHNHSJk7qB+CEBi9vn/qEzpmkAeFX89tuhzk3Yaa04nqSXvGJGQLzw==
-X-Received: by 2002:a17:902:d507:b0:1ec:7084:3d8d with SMTP id d9443c01a7336-1eefa03a4f8mr252551145ad.9.1715735302418;
-        Tue, 14 May 2024 18:08:22 -0700 (PDT)
+        bh=V+ayVbf+QMN56CDy4orfOWD3cBOJ6aQix+a9D8vn66o=;
+        b=QLUt3HIgEB9UQqBXsgM9ODDhXoa8TQl2C3H6sOq64c2ieDZZuNprcXu9HmIQZSx7m0
+         THRa12HEcRq16n0osao0MiCsmefS4mLsDVPXVlT/2Ib6ohcPCfRWiiEqwCPVZtjSV8+F
+         atxC1+2hEYsG9iWIjHDu1tNVdI35UtPI4uYmgjjCgJVKKY226UI1sv31aXLcZ2qLQSfc
+         1Obvbmy5aLnxVjjby+pfWDRZ+PpP+qLe/pjVvkR2fxMvQPWSVCkiqDpbwbMQ/YltdMl2
+         XB8vyiJnIYadsNAMyHeArEyCFIeB/D/cK2bxvQgqD6Ctj/BHZV/ToXkI0Y43uJ82sJqk
+         bhNw==
+X-Forwarded-Encrypted: i=1; AJvYcCU341DFvOPc8nKQAeU6UBxMhiJ5kOw7nTfkjGc353tNGZ2OceLPzJnCII8t8tQbwQcQKnQZQ/zTwFtQEt5m5tFDHqSotagmfmzQS4qy
+X-Gm-Message-State: AOJu0YxO3y+ATG7sSMjpQn1VBg7eEKnkAa81uaMja+DJwb1U+EDFpA6z
+	vYjBuZ8hBU1BV8jhORUzxy3rauSLhfcKdPMnVg+Mx/6zEjfknz2uWYT4Vnb2F/g=
+X-Google-Smtp-Source: AGHT+IH1JPc60P9dzDmwpW3nnKjvovvZmskyzzCFDMuzEZRQdR4tEyhx2/zrtE8LudcXR3vUP4MJGQ==
+X-Received: by 2002:a05:6a20:c909:b0:1ad:999b:de47 with SMTP id adf61e73a8af0-1afde1d7b38mr15188336637.51.1715735307307;
+        Tue, 14 May 2024 18:08:27 -0700 (PDT)
 Received: from server.ucalgary.ca (S0106f85e42401d5e.cg.shawcable.net. [174.0.240.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d16cfsm104973325ad.18.2024.05.14.18.08.20
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d16cfsm104973325ad.18.2024.05.14.18.08.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 18:08:22 -0700 (PDT)
+        Tue, 14 May 2024 18:08:26 -0700 (PDT)
 From: Abhinav Saxena <xandfury@gmail.com>
 To: linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc: Shuah Khan <shuah@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	Abhinav Saxena <xandfury@gmail.com>
-Subject: [RFC PATCH 1/4] selftests/binderfs: Run clang-format on binderfs test
-Date: Wed, 15 May 2024 01:08:02 +0000
-Message-Id: <20240515010805.605511-2-xandfury@gmail.com>
+Subject: [RFC PATCH 4/4] selftests/binderfs: Add missing a blank line after declarations
+Date: Wed, 15 May 2024 01:08:05 +0000
+Message-Id: <20240515010805.605511-5-xandfury@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240515010805.605511-1-xandfury@gmail.com>
 References: <20240515010805.605511-1-xandfury@gmail.com>
@@ -76,461 +76,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit adds some fixes towards making
-`filesystems/binderfs/binderfs_test.c` conform to the kernel coding
-standards, improving readability and maintainability.
+Adds a blank line after declarations and fixes some more formatting
+issues.
 
 Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
 ---
- .../filesystems/binderfs/binderfs_test.c      | 187 +++++++++++-------
- 1 file changed, 116 insertions(+), 71 deletions(-)
+ .../testing/selftests/filesystems/binderfs/binderfs_test.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-index 5f362c0fd890..447ec4296e69 100644
+index d5dba6c1e07f..d8a22b62dd89 100644
 --- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
 +++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
-@@ -41,15 +41,16 @@ static void change_mountns(struct __test_metadata *_metadata)
- 	int ret;
-
- 	ret = unshare(CLONE_NEWNS);
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to unshare mount namespace",
--			strerror(errno));
-+		       strerror(errno));
- 	}
-
- 	ret = mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, 0);
--	ASSERT_EQ(ret, 0) {
--		TH_LOG("%s - Failed to mount / as private",
--			strerror(errno));
-+	ASSERT_EQ(ret, 0)
-+	{
-+		TH_LOG("%s - Failed to mount / as private", strerror(errno));
- 	}
- }
-
-@@ -61,22 +62,25 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
- 	struct binderfs_device device = { 0 };
- 	struct binder_version version = { 0 };
- 	char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
--		device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
--	static const char * const binder_features[] = {
-+	     device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") +
-+			 BINDERFS_MAX_NAME];
-+	static const char *const binder_features[] = {
- 		"oneway_spam_detection",
- 		"extended_error",
- 	};
-
- 	change_mountns(_metadata);
-
--	EXPECT_NE(mkdtemp(binderfs_mntpt), NULL) {
-+	EXPECT_NE(mkdtemp(binderfs_mntpt), NULL)
-+	{
- 		TH_LOG("%s - Failed to create binderfs mountpoint",
--			strerror(errno));
-+		       strerror(errno));
- 		goto out;
- 	}
-
- 	ret = mount(NULL, binderfs_mntpt, "binder", 0, 0);
--	EXPECT_EQ(ret, 0) {
-+	EXPECT_EQ(ret, 0)
-+	{
- 		if (errno == ENODEV)
- 			SKIP(goto out, "binderfs missing");
- 		TH_LOG("%s - Failed to mount binderfs", strerror(errno));
-@@ -87,11 +91,13 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
-
- 	memcpy(device.name, "my-binder", strlen("my-binder"));
-
--	snprintf(device_path, sizeof(device_path), "%s/binder-control", binderfs_mntpt);
-+	snprintf(device_path, sizeof(device_path), "%s/binder-control",
-+		 binderfs_mntpt);
- 	fd = open(device_path, O_RDONLY | O_CLOEXEC);
--	EXPECT_GE(fd, 0) {
-+	EXPECT_GE(fd, 0)
-+	{
- 		TH_LOG("%s - Failed to open binder-control device",
--			strerror(errno));
-+		       strerror(errno));
- 		goto umount;
- 	}
-
-@@ -99,22 +105,24 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
- 	saved_errno = errno;
- 	close(fd);
- 	errno = saved_errno;
--	EXPECT_GE(ret, 0) {
-+	EXPECT_GE(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to allocate new binder device",
--			strerror(errno));
-+		       strerror(errno));
- 		goto umount;
- 	}
-
- 	TH_LOG("Allocated new binder device with major %d, minor %d, and name %s",
--		device.major, device.minor, device.name);
-+	       device.major, device.minor, device.name);
-
- 	/* success: binder device allocation */
-
--	snprintf(device_path, sizeof(device_path), "%s/my-binder", binderfs_mntpt);
-+	snprintf(device_path, sizeof(device_path), "%s/my-binder",
-+		 binderfs_mntpt);
- 	fd = open(device_path, O_CLOEXEC | O_RDONLY);
--	EXPECT_GE(fd, 0) {
--		TH_LOG("%s - Failed to open my-binder device",
--			strerror(errno));
-+	EXPECT_GE(fd, 0)
-+	{
-+		TH_LOG("%s - Failed to open my-binder device", strerror(errno));
- 		goto umount;
- 	}
-
-@@ -122,9 +130,10 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
- 	saved_errno = errno;
- 	close(fd);
- 	errno = saved_errno;
--	EXPECT_GE(ret, 0) {
-+	EXPECT_GE(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to open perform BINDER_VERSION request",
--			strerror(errno));
-+		       strerror(errno));
- 		goto umount;
- 	}
-
-@@ -133,23 +142,26 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
- 	/* success: binder transaction with binderfs binder device */
-
- 	ret = unlink(device_path);
--	EXPECT_EQ(ret, 0) {
--		TH_LOG("%s - Failed to delete binder device",
--			strerror(errno));
-+	EXPECT_EQ(ret, 0)
-+	{
-+		TH_LOG("%s - Failed to delete binder device", strerror(errno));
- 		goto umount;
- 	}
-
- 	/* success: binder device removal */
-
--	snprintf(device_path, sizeof(device_path), "%s/binder-control", binderfs_mntpt);
-+	snprintf(device_path, sizeof(device_path), "%s/binder-control",
-+		 binderfs_mntpt);
- 	ret = unlink(device_path);
--	EXPECT_NE(ret, 0) {
-+	EXPECT_NE(ret, 0)
-+	{
- 		TH_LOG("Managed to delete binder-control device");
- 		goto umount;
- 	}
--	EXPECT_EQ(errno, EPERM) {
-+	EXPECT_EQ(errno, EPERM)
-+	{
- 		TH_LOG("%s - Failed to delete binder-control device but exited with unexpected error code",
--			strerror(errno));
-+		       strerror(errno));
- 		goto umount;
- 	}
-
-@@ -159,9 +171,10 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
- 		snprintf(device_path, sizeof(device_path), "%s/features/%s",
- 			 binderfs_mntpt, binder_features[i]);
- 		fd = open(device_path, O_CLOEXEC | O_RDONLY);
--		EXPECT_GE(fd, 0) {
-+		EXPECT_GE(fd, 0)
-+		{
- 			TH_LOG("%s - Failed to open binder feature: %s",
--				strerror(errno), binder_features[i]);
-+			       strerror(errno), binder_features[i]);
- 			goto umount;
- 		}
- 		close(fd);
-@@ -172,12 +185,14 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
-
- umount:
- 	ret = umount2(binderfs_mntpt, MNT_DETACH);
--	EXPECT_EQ(ret, 0) {
-+	EXPECT_EQ(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to unmount binderfs", strerror(errno));
- 	}
- rmdir:
- 	ret = rmdir(binderfs_mntpt);
--	EXPECT_EQ(ret, 0) {
-+	EXPECT_EQ(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to rmdir binderfs mount", strerror(errno));
- 	}
- out:
-@@ -259,7 +274,8 @@ static int write_id_mapping(enum idmap_type type, pid_t pid, const char *buf,
- 			return -1;
-
- 		if (setgroups_fd >= 0) {
--			ret = write_nointr(setgroups_fd, "deny", sizeof("deny") - 1);
-+			ret = write_nointr(setgroups_fd, "deny",
-+					   sizeof("deny") - 1);
- 			close_prot_errno_disarm(setgroups_fd);
- 			if (ret != sizeof("deny") - 1)
- 				return -1;
-@@ -299,29 +315,34 @@ static void change_userns(struct __test_metadata *_metadata, int syncfds[2])
- 	close_prot_errno_disarm(syncfds[1]);
-
- 	ret = unshare(CLONE_NEWUSER);
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to unshare user namespace",
--			strerror(errno));
-+		       strerror(errno));
- 	}
-
- 	ret = write_nointr(syncfds[0], "1", 1);
--	ASSERT_EQ(ret, 1) {
-+	ASSERT_EQ(ret, 1)
-+	{
- 		TH_LOG("write_nointr() failed");
- 	}
-
- 	ret = read_nointr(syncfds[0], &buf, 1);
--	ASSERT_EQ(ret, 1) {
-+	ASSERT_EQ(ret, 1)
-+	{
- 		TH_LOG("read_nointr() failed");
- 	}
-
- 	close_prot_errno_disarm(syncfds[0]);
-
--	ASSERT_EQ(setid_userns_root(), 0) {
-+	ASSERT_EQ(setid_userns_root(), 0)
-+	{
- 		TH_LOG("setid_userns_root() failed");
- 	}
- }
-
--static void change_idmaps(struct __test_metadata *_metadata, int syncfds[2], pid_t pid)
-+static void change_idmaps(struct __test_metadata *_metadata, int syncfds[2],
-+			  pid_t pid)
- {
- 	int ret;
- 	char buf;
-@@ -330,24 +351,28 @@ static void change_idmaps(struct __test_metadata *_metadata, int syncfds[2], pid
- 	close_prot_errno_disarm(syncfds[0]);
-
- 	ret = read_nointr(syncfds[1], &buf, 1);
--	ASSERT_EQ(ret, 1) {
-+	ASSERT_EQ(ret, 1)
-+	{
- 		TH_LOG("read_nointr() failed");
- 	}
-
- 	snprintf(id_map, sizeof(id_map), "0 %d 1\n", getuid());
- 	ret = write_id_mapping(UID_MAP, pid, id_map, strlen(id_map));
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("write_id_mapping(UID_MAP) failed");
- 	}
-
- 	snprintf(id_map, sizeof(id_map), "0 %d 1\n", getgid());
- 	ret = write_id_mapping(GID_MAP, pid, id_map, strlen(id_map));
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("write_id_mapping(GID_MAP) failed");
- 	}
-
- 	ret = write_nointr(syncfds[1], "1", 1);
--	ASSERT_EQ(ret, 1) {
-+	ASSERT_EQ(ret, 1)
-+	{
- 		TH_LOG("write_nointr() failed");
- 	}
-
-@@ -365,7 +390,7 @@ static void *binder_version_thread(void *data)
- 	ret = ioctl(fd, BINDER_VERSION, &version);
- 	if (ret < 0)
- 		TH_LOG("%s - Failed to open perform BINDER_VERSION request\n",
--			strerror(errno));
-+		       strerror(errno));
-
- 	pthread_exit(data);
- }
-@@ -385,15 +410,18 @@ TEST(binderfs_stress)
- 	size_t len;
- 	struct binderfs_device device = { 0 };
- 	char binderfs_mntpt[] = P_tmpdir "/binderfs_XXXXXX",
--		device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") + BINDERFS_MAX_NAME];
-+	     device_path[sizeof(P_tmpdir "/binderfs_XXXXXX/") +
-+			 BINDERFS_MAX_NAME];
-
- 	ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to create socket pair", strerror(errno));
- 	}
-
- 	pid = fork();
--	ASSERT_GE(pid, 0) {
-+	ASSERT_GE(pid, 0)
-+	{
- 		TH_LOG("%s - Failed to fork", strerror(errno));
- 		close_prot_errno_disarm(syncfds[0]);
- 		close_prot_errno_disarm(syncfds[1]);
-@@ -406,47 +434,54 @@ TEST(binderfs_stress)
+@@ -433,6 +433,7 @@ TEST(binderfs_stress)
+ 		int i, j, k, nthreads;
+ 		pthread_attr_t attr;
+ 		pthread_t threads[DEFAULT_THREADS];
++
  		change_userns(_metadata, syncfds);
  		change_mountns(_metadata);
 
--		ASSERT_NE(mkdtemp(binderfs_mntpt), NULL) {
-+		ASSERT_NE(mkdtemp(binderfs_mntpt), NULL)
-+		{
- 			TH_LOG("%s - Failed to create binderfs mountpoint",
--				strerror(errno));
-+			       strerror(errno));
- 		}
-
- 		ret = mount(NULL, binderfs_mntpt, "binder", 0, 0);
--		ASSERT_EQ(ret, 0) {
-+		ASSERT_EQ(ret, 0)
-+		{
- 			TH_LOG("%s - Failed to mount binderfs, check if CONFIG_ANDROID_BINDERFS is enabled in the running kernel",
--				strerror(errno));
-+			       strerror(errno));
- 		}
-
- 		for (int i = 0; i < ARRAY_SIZE(fds); i++) {
--
- 			snprintf(device_path, sizeof(device_path),
- 				 "%s/binder-control", binderfs_mntpt);
- 			fd = open(device_path, O_RDONLY | O_CLOEXEC);
--			ASSERT_GE(fd, 0) {
-+			ASSERT_GE(fd, 0)
-+			{
- 				TH_LOG("%s - Failed to open binder-control device",
--					strerror(errno));
-+				       strerror(errno));
- 			}
-
- 			memset(&device, 0, sizeof(device));
- 			snprintf(device.name, sizeof(device.name), "%d", i);
- 			ret = ioctl(fd, BINDER_CTL_ADD, &device);
- 			close_prot_errno_disarm(fd);
--			ASSERT_EQ(ret, 0) {
-+			ASSERT_EQ(ret, 0)
-+			{
- 				TH_LOG("%s - Failed to allocate new binder device",
--					strerror(errno));
-+				       strerror(errno));
- 			}
-
- 			snprintf(device_path, sizeof(device_path), "%s/%d",
- 				 binderfs_mntpt, i);
- 			fds[i] = open(device_path, O_RDONLY | O_CLOEXEC);
--			ASSERT_GE(fds[i], 0) {
--				TH_LOG("%s - Failed to open binder device", strerror(errno));
-+			ASSERT_GE(fds[i], 0)
-+			{
-+				TH_LOG("%s - Failed to open binder device",
-+				       strerror(errno));
- 			}
- 		}
-
- 		ret = umount2(binderfs_mntpt, MNT_DETACH);
--		ASSERT_EQ(ret, 0) {
--			TH_LOG("%s - Failed to unmount binderfs", strerror(errno));
-+		ASSERT_EQ(ret, 0)
-+		{
-+			TH_LOG("%s - Failed to unmount binderfs",
-+			       strerror(errno));
- 			rmdir(binderfs_mntpt);
- 		}
-
-@@ -458,10 +493,12 @@ TEST(binderfs_stress)
- 		pthread_attr_init(&attr);
- 		for (k = 0; k < ARRAY_SIZE(fds); k++) {
- 			for (i = 0; i < nthreads; i++) {
--				ret = pthread_create(&threads[i], &attr, binder_version_thread, INT_TO_PTR(fds[k]));
-+				ret = pthread_create(&threads[i], &attr,
-+						     binder_version_thread,
-+						     INT_TO_PTR(fds[k]));
- 				if (ret) {
- 					TH_LOG("%s - Failed to create thread %d",
--						strerror(errno), i);
-+					       strerror(errno), i);
- 					break;
- 				}
- 			}
-@@ -472,7 +509,8 @@ TEST(binderfs_stress)
- 				ret = pthread_join(threads[j], &fdptr);
- 				if (ret)
- 					TH_LOG("%s - Failed to join thread %d for fd %d",
--						strerror(errno), j, PTR_TO_INT(fdptr));
-+					       strerror(errno), j,
-+					       PTR_TO_INT(fdptr));
- 			}
- 		}
- 		pthread_attr_destroy(&attr);
-@@ -486,7 +524,8 @@ TEST(binderfs_stress)
- 	change_idmaps(_metadata, syncfds, pid);
-
- 	ret = wait_for_pid(pid);
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("wait_for_pid() failed");
- 	}
- }
-@@ -494,10 +533,12 @@ TEST(binderfs_stress)
- TEST(binderfs_test_privileged)
+@@ -536,11 +537,11 @@ TEST(binderfs_test_privileged)
  {
  	if (geteuid() != 0)
--		SKIP(return, "Tests are not run as root. Skipping privileged tests");
-+		SKIP(return,
-+			   "Tests are not run as root. Skipping privileged tests");
+ 		SKIP(return,
+-			   "Tests are not run as root. Skipping privileged tests");
++		     "Tests are not run as root. Skipping privileged tests");
 
  	if (__do_binderfs_test(_metadata))
--		SKIP(return, "The Android binderfs filesystem is not available");
-+		SKIP(return,
-+			   "The Android binderfs filesystem is not available");
+ 		SKIP(return,
+-			   "The Android binderfs filesystem is not available");
++		     "The Android binderfs filesystem is not available");
  }
 
  TEST(binderfs_test_unprivileged)
-@@ -507,12 +548,14 @@ TEST(binderfs_test_unprivileged)
- 	pid_t pid;
-
- 	ret = socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0, syncfds);
--	ASSERT_EQ(ret, 0) {
-+	ASSERT_EQ(ret, 0)
-+	{
- 		TH_LOG("%s - Failed to create socket pair", strerror(errno));
- 	}
-
- 	pid = fork();
--	ASSERT_GE(pid, 0) {
-+	ASSERT_GE(pid, 0)
-+	{
- 		close_prot_errno_disarm(syncfds[0]);
- 		close_prot_errno_disarm(syncfds[1]);
- 		TH_LOG("%s - Failed to fork", strerror(errno));
-@@ -530,8 +573,10 @@ TEST(binderfs_test_unprivileged)
- 	ret = wait_for_pid(pid);
+@@ -576,7 +577,7 @@ TEST(binderfs_test_unprivileged)
  	if (ret) {
  		if (ret == 2)
--			SKIP(return, "The Android binderfs filesystem is not available");
--		ASSERT_EQ(ret, 0) {
-+			SKIP(return,
-+				   "The Android binderfs filesystem is not available");
-+		ASSERT_EQ(ret, 0)
-+		{
+ 			SKIP(return,
+-				   "The Android binderfs filesystem is not available");
++			     "The Android binderfs filesystem is not available");
+ 		ASSERT_EQ(ret, 0)
+ 		{
  			TH_LOG("wait_for_pid() failed");
- 		}
- 	}
 --
 2.34.1
 
