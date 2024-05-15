@@ -1,63 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E748414F78;
-	Wed, 15 May 2024 00:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4A54A23;
+	Wed, 15 May 2024 00:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715734396; cv=none; b=RGpLFYzz5zi2NyS4aftr43vVj+i3SgsMlIXgRTUxkaucmX8Vy1MLtgjodCI6o/yktEij5UDtRr/HJl7G//AzY+sNTDPe2Dlf8GfCvAL4BptYNsfM4iZGqTnIjExymI42p7zcKNqsjA7OAyXwQMI0PUgX1Z+viJ9nHD0+4hCeSfY=
+	t=1715734635; cv=none; b=f5vUrc4L69taWfK34tWNqfz2Mj2a3E+7a4QfyFDi8WavIiudvsUZsLn/wM/yUollD4hMNVd5oC3b4TdxyfwktyFafU+8Pj55ohgEn7ZB8bjd95DMh7D41z1r+NPl14N6FYxnl+35kEecSc5VYfPtfWIZUQ8XvDmN4wchJCSngkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715734396; c=relaxed/simple;
-	bh=G1/fcp9CcgD+8mTJO4TXV0MDZRtOnMzwSgnfShcptVA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ArIcy8OoIFSiPp3PTifQazt1mkpfxogaMZRlQwyoA+kzwqygGq8YoqRjf4n2gBUZXLm/xPGHqi5u5LfMYXC+IptQIKoawzmtLSWrC0KKRlkHGpAGAmDpMUOprGjMQCTUpk8qTtba1YIlp3K/FrVtDPnb0z5hYNbTFhKymt1yMoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWXTAoc3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715734635; c=relaxed/simple;
+	bh=Tp+H0K5QBoSVdZXwfKgYZIjpg1XuSAWBXwAx1DzF8sA=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=VlBDmx7VEe8N9PHNwg0+o9Lwe4gxc4+YzCkmwSjCnsGuhStqcSXHtNV6SDRd+oWyW1RwKyv5FlXRmbML4DQ4rc3t+2GFA2P86KDvWoVNjL/TXHxhp20FwBHd9pMUIBcX+HKmm/9ow7om2a5+RBg8JWFWIXeTOpf+Oc9rSG5mWpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=lxaPLprY; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWXTAoc3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4092C4AF07;
-	Wed, 15 May 2024 00:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715734395;
-	bh=G1/fcp9CcgD+8mTJO4TXV0MDZRtOnMzwSgnfShcptVA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=XWXTAoc319SWzYTp5pIuzvEWGhyeESj+UcX2v026v0vFjV6BWE4yo1XWMBdBfvQUo
-	 RuiHVVTG0oX4d5rrcVgLWuYSgCvpra1b9FXNcg/tFQ2TbXAbC7BTmF9OdxGVV0aHT6
-	 PIms+QLLmyebtdbxY/f9IafcdJFALQRfmuSaAydl+V09oKg2ALxn9HNFgBCr/eR6lP
-	 ULMnhyAEz13XQkOBn4ovYYUQcWL7yZ9E95Lt0jx5lxE19/W4A85oi+RNxOcK0mA8fc
-	 vmvauEkF53MFDKjwLlnFOVN6TW63kS9gP6ims1oZ3B7on/HSRZwWDihU0nUT3TkkAy
-	 x6FpYNPyCJqqg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BA576C433A2;
-	Wed, 15 May 2024 00:53:15 +0000 (UTC)
-Subject: Re: [GIT PULL] fscrypt update for 6.10
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240514165532.GA2965@sol.localdomain>
-References: <20240514165532.GA2965@sol.localdomain>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240514165532.GA2965@sol.localdomain>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/fs/fscrypt/linux.git tags/fscrypt-for-linus
-X-PR-Tracked-Commit-Id: 7f016edaa0f385da0c37eee1ebb64c7f6929c533
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fc883e7a500fcded49e5d295737c7af6ba9fe7b9
-Message-Id: <171573439575.24206.9425665902357369776.pr-tracker-bot@kernel.org>
-Date: Wed, 15 May 2024 00:53:15 +0000
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="lxaPLprY"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=Tp+H0K5QBo
+	SVdZXwfKgYZIjpg1XuSAWBXwAx1DzF8sA=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=lxaPLprYzJ00fSaQHk9PaY/XjyG/TOiry
+	J4aaFgmXuVu9/f7WAP4UTqygXQYY60grub5GX6StNo9F20PFWuVvzlLNAFKEKNuObq0gH4
+	gPVJaTyi/52KYiWEhrtOpmxprKp0rlqHFgbrvpP0A4PganEEqosTTvlIZYDN2GYsh0kQOh
+	Kjz1mRunyAOmb9+lxOz2/YkF/7FGyUAcdwO+7ai1fU1MU3XRP4QWjUuYye9/BJ2qgCBQJm
+	x5RiA8+29lUIceuRq9Gz3Uj8Dgke64xBlqTn5sNUFK/PibzPIjqM7HwzRYS8IRvCuvZtm7
+	uWpIpZ52XSRNhrZreWzkAG/KtWo/g==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 4b91908f;
+	Tue, 14 May 2024 18:57:12 -0600 (MDT)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Matthew Wilcox <willy@infradead.org>,
+    Jonathan Corbet <corbet@lwn.net>,
+    Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org,
+    keescook@chromium.org, jannh@google.com, sroettger@google.com,
+    gregkh@linuxfoundation.org, usama.anjum@collabora.com,
+    Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
+    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+In-reply-to: <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org> <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org> <56001.1715726927@cvs.openbsd.org> <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
+Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
+   message dated "Tue, 14 May 2024 17:43:47 -0700."
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28994.1715734632.1@cvs.openbsd.org>
+Date: Tue, 14 May 2024 18:57:12 -0600
+Message-ID: <16982.1715734632@cvs.openbsd.org>
 
-The pull request you sent on Tue, 14 May 2024 09:55:32 -0700:
+> > I worry that the non-atomicity will one day be used by an attacker.
+> 
+> Blah blah blah. That's a made-up scare tactic if I ever heard one.
+> It's unworthy of you.
 
-> https://git.kernel.org/pub/scm/fs/fscrypt/linux.git tags/fscrypt-for-linus
+Let's wait and see.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fc883e7a500fcded49e5d295737c7af6ba9fe7b9
+(Linus, don't be a jerk)
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
