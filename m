@@ -1,78 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C12C156C5B
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A83157483;
+	Wed, 15 May 2024 16:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715790156; cv=none; b=KTv6UogyEC2SLnC500aSOAukLE14III+m/jBdb9lCGRf0mteRDjewUfkNBEpmiiZO1Z1wrs8RSD880Ec8V5uhXaA64N4nmwxi78YLUhodI6dE4CiD/zplwKYcF5Vy69TatReCLn7AJfsnHZPOtd1P2n8UcbQZbcrt/8y49aYUH4=
+	t=1715790164; cv=none; b=t6ImHUbhP/zgtHfp8rx+6rKbG3MgUvJirD0Dt7CLYudm2/XC/S07AY6fjZjgz1OGYNCbtGDMRXcoc0uqn27Cq5UQxCl08mJdsPVg16AkXXebwrooliAr+YGUM60wExk5PA9Nknys/cQwpVNYyVqMOipOOixisnaqyfz4SQgcnQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715790156; c=relaxed/simple;
-	bh=1viUCWYrFo3uJS3ITlLVjLhbJegaUQZ/hfRHcrqV1Ds=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kwqw3w91npx3m9A35dvYlxSlO8dBcsRHGHIMP0NBQbwPp1xCfSoyuzgW1f8RPFmATJR1CF5oK8jKkg8+EpLyThuxbmDytXSgmSZ6CnupKL0+lh6d8YIxp+xrSxI80FWjQEbMOo1BDWHnPukygYU+C/NnodnQ8JpmUo6AeGayukA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibTtL+uL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715790164; c=relaxed/simple;
+	bh=WN8DihRxARtwB0QXAI21QNZOgP69HIDQZiVNqspTz2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QoyfndEJHZOikyLwcl1kiudCnmuh+wTTALmdNmYpvYWKTQYj8Yd4o7OyOshxbxo35yRDGlIL8zz/vB+ApW8aXvREQAOANaft2Mml0XgvSls8KZFBySc9/DxOgVO0QIPstJ2XyPfMeZq5WENleYvmwBIlWvQtrvF05HTFrgJ4HLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3qG4GvI; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibTtL+uL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D079C32789;
-	Wed, 15 May 2024 16:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715790156;
-	bh=1viUCWYrFo3uJS3ITlLVjLhbJegaUQZ/hfRHcrqV1Ds=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ibTtL+uLJranPiNsBTX+/GMRHyz2iKB/WQ8gLVpD71k1Hws4qZM+QoLzxv5PZXAn8
-	 9AoFHU2e/ic36BY5VFFU0Sp/hdqsckvYOD2VSdfyhGCWTslhpKt5hSiYKRH7mMRB6s
-	 9MxW0PV+vSnDyqI0pzQZAovZy9wkzvJ1ZL+f6tBKEIO2XRa0gjn6PatVtmDT8ItekS
-	 pN1G3M+K/+EVbNtwKUEAqvqOX7Y0KRrJSP2vMmcpyhhrvyqgbewkcppylYelYj8HI6
-	 YXpJ9izKrIIYLjscrL2AGowSIKtyfbU9QrshM0dDhMdXzEbrJP8+ITWeH+7zWmklMR
-	 HgGkTF8nCu5jA==
-From: Oded Gabbay <ogabbay@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Ofir Bitton <obitton@habana.ai>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-Subject: [PATCH 2/2] MAINTAINERS: update Xe driver maintainers
-Date: Wed, 15 May 2024 19:22:22 +0300
-Message-Id: <20240515162222.12958-3-ogabbay@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240515162222.12958-1-ogabbay@kernel.org>
-References: <20240515162222.12958-1-ogabbay@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3qG4GvI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715790162; x=1747326162;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WN8DihRxARtwB0QXAI21QNZOgP69HIDQZiVNqspTz2E=;
+  b=h3qG4GvIuwuTznH6wbwC7SnVqSV4Uf5n/1u0MyRrDdNBVsArjhGZncY7
+   P/p3ra1Nrvrdu7mpDO+cB61LYiKQcalpElZD2a64S/0ia9mjmIEj1BGrY
+   77dK6XkKWQYsseR/T45w4UdcfGsaZWljhK9+5mmakTVJ7uRPZsKOsDOtU
+   Z9oi72haWBW2fttfwUa5aCR/cfJG3B4LRVdr37MgNtkl6OXVLsmDqQIRc
+   toqUSX8ePs79k3lG1hVTm0zk2vssB8C3NxiEhGNUA3CZZkujZ7i8kg5e2
+   biNyruNa7fJmCzNDkGl77gEZfRmo7ga7PxT5xySpZM7MZhyFfIE9Cl6+T
+   Q==;
+X-CSE-ConnectionGUID: lIM9DzExRx2yK6XC8DZP4Q==
+X-CSE-MsgGUID: qZL6PBzhT52bCd7hZzhftg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11725989"
+X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
+   d="scan'208";a="11725989"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 09:22:42 -0700
+X-CSE-ConnectionGUID: 5zjQutRqRQCGQhImpc8BMg==
+X-CSE-MsgGUID: /1JC4d1CTfSCEMAzPJ34/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
+   d="scan'208";a="35655820"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 09:22:41 -0700
+Date: Wed, 15 May 2024 09:22:40 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>, pbonzini@redhat.com,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	isaku.yamahata@gmail.com, erdemaktas@google.com, sagis@google.com,
+	yan.y.zhao@intel.com, dmatlack@google.com, isaku.yamahata@intel.com,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH 08/16] KVM: x86/mmu: Bug the VM if kvm_zap_gfn_range() is
+ called for TDX
+Message-ID: <20240515162240.GC168153@ls.amr.corp.intel.com>
+References: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
+ <20240515005952.3410568-9-rick.p.edgecombe@intel.com>
+ <ZkTWDfuYD-ThdYe6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=true
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZkTWDfuYD-ThdYe6@google.com>
 
-Because I left Intel, I'm removing myself from the list
-of Xe driver maintainers.
+On Wed, May 15, 2024 at 08:34:37AM -0700,
+Sean Christopherson <seanjc@google.com> wrote:
 
-Signed-off-by: Oded Gabbay <ogabbay@kernel.org>
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index d5cf5b15a10e..808805b3478d 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -6528,8 +6528,17 @@ void kvm_zap_gfn_range(struct kvm *kvm, gfn_t gfn_start, gfn_t gfn_end)
+> >  
+> >  	flush = kvm_rmap_zap_gfn_range(kvm, gfn_start, gfn_end);
+> >  
+> > -	if (tdp_mmu_enabled)
+> > +	if (tdp_mmu_enabled) {
+> > +		/*
+> > +		 * kvm_zap_gfn_range() is used when MTRR or PAT memory
+> > +		 * type was changed.  TDX can't handle zapping the private
+> > +		 * mapping, but it's ok because KVM doesn't support either of
+> > +		 * those features for TDX. In case a new caller appears, BUG
+> > +		 * the VM if it's called for solutions with private aliases.
+> > +		 */
+> > +		KVM_BUG_ON(kvm_gfn_shared_mask(kvm), kvm);
+> 
+> Please stop using kvm_gfn_shared_mask() as a proxy for "is this TDX".  Using a
+> generic name quite obviously doesn't prevent TDX details for bleeding into common
+> code, and dancing around things just makes it all unnecessarily confusing.
+> 
+> If we can't avoid bleeding TDX details into common code, my vote is to bite the
+> bullet and simply check vm_type.
+
+TDX has several aspects related to the TDP MMU.
+1) Based on the faulting GPA, determine which KVM page table to walk.
+   (private-vs-shared)
+2) Need to call TDX SEAMCALL to operate on Secure-EPT instead of direct memory
+   load/store.  TDP MMU needs hooks for it.
+3) The tables must be zapped from the leaf. not the root or the middle.
+
+For 1) and 2), what about something like this?  TDX backend code will set
+kvm->arch.has_mirrored_pt = true; I think we will use kvm_gfn_shared_mask() only
+for address conversion (shared<->private).
+
+For 1), maybe we can add struct kvm_page_fault.walk_mirrored_pt
+        (or whatever preferable name)?
+
+For 3), flag of memslot handles it.
+
 ---
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5bd45a919aff..2469607ff5b7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10863,7 +10863,6 @@ F:	include/uapi/drm/i915_drm.h
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index aabf1648a56a..218b575d24bd 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1289,6 +1289,7 @@ struct kvm_arch {
+ 	u8 vm_type;
+ 	bool has_private_mem;
+ 	bool has_protected_state;
++	bool has_mirrored_pt;
+ 	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
+ 	struct list_head active_mmu_pages;
+ 	struct list_head zapped_obsolete_pages;
+@@ -2171,8 +2172,10 @@ void kvm_configure_mmu(bool enable_tdp, int tdp_forced_root_level,
  
- INTEL DRM XE DRIVER (Lunar Lake and newer)
- M:	Lucas De Marchi <lucas.demarchi@intel.com>
--M:	Oded Gabbay <ogabbay@kernel.org>
- M:	Thomas Hellström <thomas.hellstrom@linux.intel.com>
- L:	intel-xe@lists.freedesktop.org
- S:	Supported
+ #ifdef CONFIG_KVM_PRIVATE_MEM
+ #define kvm_arch_has_private_mem(kvm) ((kvm)->arch.has_private_mem)
++#define kvm_arch_has_mirrored_pt(kvm) ((kvm)->arch.has_mirrored_pt)
+ #else
+ #define kvm_arch_has_private_mem(kvm) false
++#define kvm_arch_has_mirrored_pt(kvm) false
+ #endif
+ 
+ static inline u16 kvm_read_ldt(void)
 -- 
-2.34.1
-
+2.43.2
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
