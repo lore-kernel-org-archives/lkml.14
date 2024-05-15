@@ -1,106 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203FA3C2F;
-	Wed, 15 May 2024 03:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66EBC38385;
+	Wed, 15 May 2024 03:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715742798; cv=none; b=Qy8zTuxSThhuTfwLeFiVVKB9Aj+7K/Wl6YsxN0+C9wamiAeArdxgM/2d/DOTxGvk7faE/hNvOXAr+ISKgpMjeokg0rlq6Cr/j9/t/z0CbD5JCkbQjuLAyJAZExuaZfpSbnZbMkNgjpUyPqbgjNBrsB5Tn21mx9EcdTlYCtE+gcc=
+	t=1715742848; cv=none; b=ULx1r9RpVRm2lDYhoLZu3c3eijKn7ECF9JLKo6XLbDbzakkewPsW8IedOTRUxaNNbOAvZOd3QqjRcBNnPk+KhwTBJuZCoLqUPpRMVNqJLlWJvUyTUKrYWLCNXohlJcl+owyH83PJYdOIguGLfsjEq90hcxzJOKxvK8cDdQ1fyo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715742798; c=relaxed/simple;
-	bh=uB9Hl02KjTkQ8kSDlHRuvYVYzS140KUlSV2TwxcCTHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q2cZIbdvQiuGmrMY3cahiJ4mDV395E70yWn207ZQxI9IfkzXkF7imQDCyUt8gN++Dih9Lzj5DvrSssyw9xLAitf+JXtrwR/PF9dQGuLfeY+jdBYozSQXgFxOBc7Pa22qSbSzITTcGzy3WQ/9FEaaApvgr2UqmqzrancpznYYQxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fL/D/gND; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fL/D/gND"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715742797; x=1747278797;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uB9Hl02KjTkQ8kSDlHRuvYVYzS140KUlSV2TwxcCTHM=;
-  b=fL/D/gNDmASB7QBYhTWvp9841ovn9ijEB751AO6DbExI0yScAIHm4dcd
-   jXkN7a0EnKLqShNcV0KylRJys6LYVey6kDW+5fv8qOdRojklbWGpZmcrm
-   jkKKj6ifPnD1T8cn4Mg3P7ZIQPZO0fFqkXrJn6G3sk8APagRoz7JUa9Nf
-   rHvlfVAOuR73On2y0SH4x+d5e0yHTpT7UGRirX9CUEmECiweb76F6ZCSb
-   9g1vRcabXQb8cbKIfE4YPLH53BSl2BMMOQwOaTFUinCT8G5hNu4iDE05r
-   OPR6/2bG8qYWZMMAxGZVpEH9NPqHNSf4IPNTMh8GSmhbrxz4cua3cTssH
-   g==;
-X-CSE-ConnectionGUID: DqM7hr9FSeKAgVS/0zmFlA==
-X-CSE-MsgGUID: jElZ4QA2R/a41a+ggQAEkw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="14713386"
-X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="14713386"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 20:13:16 -0700
-X-CSE-ConnectionGUID: 1Vaphy8DTH2zttEv04+Nig==
-X-CSE-MsgGUID: b75J+r8tT2qY1V7p85kAqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="35434310"
-Received: from zwan2-desk1.sh.intel.com ([10.239.160.154])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 20:13:14 -0700
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
-To: peterz@infradead.org
-Cc: kan.liang@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	x86@kernel.org,
-	Rui Zhang <rui.zhang@intel.com>,
-	Artem Bityutskiy <artem.bityutskiy@intel.com>,
-	Wendy Wang <wendy.wang@intel.com>
-Subject: [PATCH RESEND] perf/x86/intel/cstate: Add pkg C2 residency counter for Sierra Forest
-Date: Wed, 15 May 2024 11:21:58 +0800
-Message-ID: <20240515032158.12845-1-zhenyuw@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240506084806.495816-1-zhenyuw@linux.intel.com>
-References: <20240506084806.495816-1-zhenyuw@linux.intel.com>
+	s=arc-20240116; t=1715742848; c=relaxed/simple;
+	bh=nB1m7j2Q3vEqktywIoGVfNTqMXYMw9gbBScV7i4x0AE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5IWINe3Bvxy+8GeP5La3r1srhnFtBODgDit+jlRdpk7XAiTa4muAuiQ9iLny1R7YM77Pejh50IQO+4gtP96kFEFwPtKF0uhdGmMBw4GjUwFq86UD1728ydU1EX3BaM3mByps/HHPFVchln3847CsilYzBs9AboKP0dw4HCvGuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 44F2wB5O001379;
+	Wed, 15 May 2024 04:58:11 +0200
+Date: Wed, 15 May 2024 04:58:11 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Theo de Raadt <deraadt@openbsd.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+        jeffxu@chromium.org, keescook@chromium.org, jannh@google.com,
+        sroettger@google.com, gregkh@linuxfoundation.org,
+        torvalds@linux-foundation.org, usama.anjum@collabora.com,
+        Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
+        rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+        groeck@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        pedro.falcato@gmail.com, dave.hansen@intel.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+Message-ID: <20240515025811.GA1232@1wt.eu>
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+ <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+ <871q646rea.fsf@meer.lwn.net>
+ <ZkPXcT_JuQeZCAv0@casper.infradead.org>
+ <56001.1715726927@cvs.openbsd.org>
+ <20240514160150.3ed0fda8af5cbd2f17c625e6@linux-foundation.org>
+ <92453.1715730450@cvs.openbsd.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92453.1715730450@cvs.openbsd.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Package C2 residency counter is also available on Sierra Forest.
-So add it support in srf_cstates.
+On Tue, May 14, 2024 at 05:47:30PM -0600, Theo de Raadt wrote:
+> Andrew Morton <akpm@linux-foundation.org> wrote:
+> 
+> > > I worry that the non-atomicity will one day be used by an attacker.
+> > 
+> > How might an attacker exploit this?
+> 
+> Various ways which are going to be very application specific. Most ways
+> will depend on munmap / mprotect arguments being incorrect for some
+> reason, and callers not checking the return values.
+> 
+> After the system call, the memory is in a very surprising configuration.
+> 
+> Consider a larger memory region containing the following sections:
+> 
+>   [regular memory]  [sealed memory]  [regular memory containing a secret]
+> 
+> unmap() gets called on the whole region, for some reason.  The first
+> section is removed.  It hits the sealed memory, and returns EPERM.  It does
+> not unmap the sealed reason, not the memory containing the secret.
 
-Cc: Rui Zhang <rui.zhang@intel.com>
-Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
-Cc: Wendy Wang <wendy.wang@intel.com>
-Fixes: 3877d55a0db2 ("perf/x86/intel/cstate: Add Sierra Forest support")
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
----
- arch/x86/events/intel/cstate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+If we consider that the attack consists, for an attacker, in mseal()ing
+the beginning of an area to make sure to pin the whole area by making a
+future munmap() fail, maybe we could make munmap() not stop anymore on
+such errors and continue to unmap the rest of the area, for the purpose
+of not leaving such a theoretical attack vector work ? After all, munmap()
+currently skips wholes and continues to unmap the area. But then what
+would prevent the attacker from doing mseal() on the whole area in this
+case, to prevent it from being unmapped ?
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index e64eaa8dda5a..4cd36848cfff 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -64,7 +64,7 @@
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-- *						RPL,SPR,MTL
-+ *						RPL,SPR,MTL,SRF
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-@@ -683,7 +683,8 @@ static const struct cstate_model srf_cstates __initconst = {
- 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
- 				  BIT(PERF_CSTATE_CORE_C6_RES),
- 
--	.pkg_events		= BIT(PERF_CSTATE_PKG_C6_RES),
-+	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
-+				  BIT(PERF_CSTATE_PKG_C6_RES),
- 
- 	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
- };
--- 
-2.43.0
+Wouldn't it be more effective to have a non-resettable prctl() allowing
+the application to prefer to be killed upon such an munmap() failure in
+order to stay consistent and more robust against such class of attacks?
 
+Willy
