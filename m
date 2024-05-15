@@ -1,134 +1,206 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB1D43AA4;
-	Wed, 15 May 2024 07:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E387942061
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715757330; cv=none; b=jmLjixoqltouEXNSI15vgdaZWHUGR5N74zIHjrzhl76eZUESzzbn47ARHvj787OgiY2MzRk7HVfUo0HdqAeI9Juzj4dT9RKhVObwBrHM2ai4gWwXIWoXkjW1qe2BtljzU2t/gG5Z9/ygDB3uxLtGUEW26PE+ZpTHHeH5FB0gOsc=
+	t=1715757418; cv=none; b=MSeRvI0xLF6W8x5tyxvI98+SwZnWBEFYksYEm+lFI6BgXCfaVrMyzQlwOmgnd+yLB6DpR0AeTHOnMOSffW2sOrr11ZPXukM+qcn+qk8/gM4G750aq8yMN31n/gX7sloolyMAILV52HpfGhv/00MZZ3ZzQLuqFTh0JlnHtdzktCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715757330; c=relaxed/simple;
-	bh=MQDUZN0OMyoox6Z93YbNjehKhvRKHn2tu12DYd6IG4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ghFr2urQg1ppKa6+inJK5x5SI7qLFzU7y+gkq/i6o5o2QclGQlKc0EaCfFXwd7oNddrsmSjY8j++LOY8npricnCNHCe0PDi2WKCNka7duI5hUUYzbiTJjQsnYjecapxrdqlSwZ1byWBaNrsSNmutMPXPNj2W+PmZPMf+x9/6zCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=R2pLt/FY; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1715757418; c=relaxed/simple;
+	bh=nMfzBYy/IKnygvUg6mHmh2PasEXMAt0h0sN3MQ6jjpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o2nagdbCGddcS6nKwSWPKT5lyO9MTrnZ+diqo4HnHTasB0A8YeNZ1AyHKuwLhaL47q0xN1dBJeyEOTK3vcwFOHwhT5kFDnPFvq4btsa6lepzPE5e74m560FQeKbV4dMxQLGR9DyvjLvTAkMylsTZ6jlmWDBLeQ4UVKXnIoX4R04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nCH1ES/u; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="R2pLt/FY"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id E595E6356CD1;
-	Wed, 15 May 2024 09:15:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1715757325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MQDUZN0OMyoox6Z93YbNjehKhvRKHn2tu12DYd6IG4c=;
-	b=R2pLt/FYUh5KewsQxU5COKqCEmn9Ug1dJfcyz6XCkQVzGWAgY6RTxKZsQ1ubJWTjXFc4rB
-	JvAY6X3Y0cgHtC/c95eZQKKg50iKAHuomQrTPUjDcxcr+LwKJv9OHodC5nt453x7DZ74KX
-	Z3yaVPZmfRloZIom6ZcitNrAqAMcWLE=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
- Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Peter Chiu <chui-hao.chiu@mediatek.com>,
- StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-Date: Wed, 15 May 2024 09:15:12 +0200
-Message-ID: <2200096.irdbgypaU6@natalenko.name>
-In-Reply-To: <60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
-References:
- <6061263.lOV4Wx5bFT@natalenko.name> <2341660.ElGaqSPkdT@natalenko.name>
- <60fe8df750a74331b8a54a76d55d5e8349ac46b4.camel@sipsolutions.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nCH1ES/u"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ee0132a6f3so49757045ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715757416; x=1716362216; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aqYLcxQwayuywWH1rsCyBGByNQv01b0ugqtKkJ7GT30=;
+        b=nCH1ES/uKFmiBdaqV2bKVQvTJ343jBhcamlq2LFdfcGXOiTWek/7tM2KxpaHdXkcgY
+         M+mI8fo+hDhQ06SrQVhTasWMY7puUm1YcKWVCqZ8FdyCgdhTacisGxqTFVoH9tB65tGg
+         DA/N6U3JTH0+o/4dDGCYju9kEz0czi3LTSUss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715757416; x=1716362216;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aqYLcxQwayuywWH1rsCyBGByNQv01b0ugqtKkJ7GT30=;
+        b=AHHRnSQEJ4MHQDqlqpLN8e8fC83xRf6X+OPcVBHiAfroAFrFp9ErZSK9NwKYitkjwm
+         viuB3SRQQ0r1w3URJ0P8l9yXFLdBIe6aP1i4Za27biPGLiMh1RoH41G/Qqf7z6ldQcf2
+         XRzo8DVECv+jM89IkbuWw/TXdnnPrd5jSTl98poDM0weqevl5X18SGr8kqJk5wvHTNT7
+         a4pY336txizIbzxB0EFBottmNQKBh1YUnoHEvV7cZmmGV5zI59rMLvms9SbiX++SNfKm
+         R1RGhaNE7XpLgzZvcNcPWg4jTwqH3slkrtc39Hvix94B6Ti/Jd/wmaXzpFlGcM5U58N3
+         mFww==
+X-Gm-Message-State: AOJu0YwfccnB/ea76ChBCPK+a9kqGO9IbzLFvNlr+3E+9jpqSNeI+SpZ
+	Wbvrtsw5lFBErRPQ9F1rHfXtvy9D3nwJADYqYt/7r+M4ZzOjead1u1mt/REPabfFQfgIFshaNjw
+	=
+X-Google-Smtp-Source: AGHT+IFm/nXRy82CuAgQxP6v9tK0QrWnblDLayE/IvdgtiIEFVabYJ0aogguwVbyzlQiqncW5RLhBA==
+X-Received: by 2002:a17:902:dad2:b0:1eb:5293:dc37 with SMTP id d9443c01a7336-1ef43c0cf65mr170232545ad.10.1715757416182;
+        Wed, 15 May 2024 00:16:56 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:111d:a618:3172:cd5b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c136d53sm110941605ad.254.2024.05.15.00.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 00:16:55 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCHv4 00/21] zram: custom comp API and comp algorithms tunables
+Date: Wed, 15 May 2024 16:12:37 +0900
+Message-ID: <20240515071645.1788128-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart13529873.uLZWGnKmhe";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-
---nextPart13529873.uLZWGnKmhe
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: Re: [REGRESSION] MT7915E doesn't work any more with v6.9
-Date: Wed, 15 May 2024 09:15:12 +0200
-Message-ID: <2200096.irdbgypaU6@natalenko.name>
-MIME-Version: 1.0
-
-Hello Johannes.
-
-On st=C5=99eda 15. kv=C4=9Btna 2024 8:23:35, SEL=C4=8C Johannes Berg wrote:
-> On Wed, 2024-05-15 at 00:51 +0200, Oleksandr Natalenko wrote:
-> > Also /cc Johannes because of this commit:
-> >=20
-> > 6092077ad09ce wifi: mac80211: introduce 'channel request'
-> >=20
-> > On st=C5=99eda 15. kv=C4=9Btna 2024 0:43:40, SEL=C4=8C Oleksandr Natale=
-nko wrote:
-> > > Hello Felix, Lorenzo et al.
-> > >=20
-> > > With v6.9 kernel the following card:
-> > >=20
-> > > 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax P=
-CI Express Wireless Network Adapter [14c3:7915]
-> > >=20
-> > > doesn't work any more. Upon mt7915e module insertion the following sp=
-lat happens:
-> > >=20
->=20
-> 6.9 didn't get commit 2f7cf3b61d85 ("wifi: mt76: mt7915: add missing
-> chanctx ops")? Huh?
-
-Yes, you are right, this commit is not present in v6.9, and I can find it i=
-n the "next" branch only.
-
-I can also confirm this commit fixes the regression for me.
-
-Thank you.
-
-> johannes
->=20
+Content-Transfer-Encoding: 8bit
 
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart13529873.uLZWGnKmhe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+---8<---8<---
+This series contains important patches which we either can apply
+as is (if zram makes a switch to compression backends) or cherry-pick
+(if zram sticks to crypto API), as compression drivers/backends still
+need to be patches regardless of direction zram takes. Sending it out
+so that the patches don't get lost.
+---8<---8<---
 
------BEGIN PGP SIGNATURE-----
+This patch set moves zram from crypto API to a custom compression
+API which allows us to tune and configure compression algorithms,
+something that crypto API, unfortunately, doesn't support yet.
+Basically, this series brings back the bits of compression "backends"
+code that we had many years ago.
 
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmZEYQAACgkQil/iNcg8
-M0vELBAAtzFurVLA2p05EBkdZqnYzYFZSF1PqO+Gl9ycGnsEtOrfdBLnJX68Fe3Y
-2ALMWI/SiP+nY16RnLH74Zv1vZPZ4cCraP2RcsZx7foWX3/5Vp6HXZNCTft4mY/z
-ukh1bYGL22wgMYzcdxcsYzNWx8hPPBWtcQBLlI135gWwsFMWLceLqSxdSArycjjM
-RgmmKUYWC7hicfeQ2IusZ+KIETvOadet1mW5Jkgtb0Xl7BD2bdeWmTEaPudRye4/
-alYhrMEKUDWRr48uV5KohVlj4SR06t3RF2TVg9bGfupyhD80DRobXE2MqTsQ04ve
-2X9XeXPkfhVzo1MjZMqNhbln1tG1C9v3E+yQIqyZ4N9hrCZ4T6RMztz/OooHkNqq
-NfVnZFf59FTPfkd4kCb4gzJ6bcxT2DVnbnBndeGSQ3yh+4xA5uokbezQBUuw9ub/
-iVoPo6bTo15GE3uM47+LEGQcahYG6PC798n5megvVCuBepFvVEkOW4Tku6vI3rx+
-ox+NpWdgm7u0262OdwpMXBEQzj0aCJC8KafE9TmfAMF+5DNdD6r+gqR+4SL0A90l
-GJHudrVX0MD9ZixIq5Nc0rVpT2i167xZHgMfq24Uw04M2awxSZIb9oyEiwYCP9QL
-svxPKWThbWw8uZB2yWKDUqzotS1Xo6cYZEV/MrgN28czKZlvA0Q=
-=EtZ6
------END PGP SIGNATURE-----
+		Currently, zram supports a pretty decent number of comp backends:
+lzo, lzorle, lz4, lz4hc, 842, deflate, zstd
 
---nextPart13529873.uLZWGnKmhe--
+		At this point we handle 2 parameters: a compression level and
+a pre-trained compression dictionary. Which seems like a good enough
+start. The list will be extended in the future.
+
+Examples:
+
+- tunes compression level
+	echo "algo=zstd level=11" > /sys/block/zram0/comp_algorithm
+
+- uses a pre-trained dictionary and tunes compression level
+	echo "algo=zstd level=11 dict=/etc/dictionary" > /sys/block/zram0/comp_algorithm
+
+Benchmarks
+==========
+
+*** zstd
+/sys/block/zram0/mm_stat
+1750302720 504600204 514416640        0 514416640        1        0    34204    34204
+
+*** zstd level=5
+/sys/block/zram0/mm_stat
+1750331392 488449001 497905664        0 497905664        1        0    34204    34204
+
+*** zstd dict=/etc/dictionary
+/sys/block/zram0/mm_stat
+1750335488 464838883 474210304        0 474210304        1        0    34204    34204
+
+*** zstd level=5 dict=/etc/dictionary
+/sys/block/zram0/mm_stat
+1750319104 451907185 461299712        0 461299712        1        0    34204    34204
+
+*** lz4
+/sys/block/zram0/mm_stat
+1750319104 664253635 676859904        0 676859904        1        0    34288    34288
+
+*** lz4 dict=/etc/dictionary
+/sys/block/zram0/mm_stat
+1750319104 620602911 632705024        0 632705024        1        0    34288    34288
+
+*** lz4hc
+/sys/block/zram0/mm_stat
+1750315008 609004936 621092864        0 621092864        1        0    34288    34288
+
+*** lz4hc level=5 dict=/etc/dictionary
+/sys/block/zram0/mm_stat
+1750323200 501315128 511303680        0 511303680        1        0    34288    34288
 
 
+v4:
+-- fixed ZRAM=m build error (kernel test robot @intel)
+-- added compression level tunable to lz4
+-- export lz4hc symbol needed for dictionary support
+-- export advanced zstd API needed for dictionary support
+
+Sergey Senozhatsky (21):
+  zram: move from crypto API to custom comp backends API
+  zram: add lzo and lzorle compression backends support
+  zram: add lz4 compression backend support
+  zram: add lz4hc compression backend support
+  zram: add zstd compression backend support
+  zram: pass estimated src size hint to zstd
+  zram: add zlib compression backend support
+  zram: add 842 compression backend support
+  zram: check that backends array has at least one backend
+  zram: introduce zcomp_config structure
+  zram: extend comp_algorithm attr write handling
+  zram: support compression level comp config
+  zram: add support for dict comp config
+  lib/zstd: export API needed for dictionary support
+  zram: add dictionary support to zstd backend
+  zram: add config init/release backend callbacks
+  zram: share dictionaries between per-CPU contexts
+  zram: add dictionary support to lz4
+  lib/lz4hc: export LZ4_resetStreamHC symbol
+  zram: add dictionary support to lz4hc
+  Documentation/zram: add documentation for algorithm parameters
+
+ Documentation/admin-guide/blockdev/zram.rst |  38 +++-
+ drivers/block/zram/Kconfig                  |  76 +++++--
+ drivers/block/zram/Makefile                 |   8 +
+ drivers/block/zram/backend_842.c            |  79 +++++++
+ drivers/block/zram/backend_842.h            |  10 +
+ drivers/block/zram/backend_deflate.c        | 143 +++++++++++++
+ drivers/block/zram/backend_deflate.h        |  10 +
+ drivers/block/zram/backend_lz4.c            | 128 +++++++++++
+ drivers/block/zram/backend_lz4.h            |  10 +
+ drivers/block/zram/backend_lz4hc.c          | 128 +++++++++++
+ drivers/block/zram/backend_lz4hc.h          |  10 +
+ drivers/block/zram/backend_lzo.c            |  55 +++++
+ drivers/block/zram/backend_lzo.h            |  10 +
+ drivers/block/zram/backend_lzorle.c         |  55 +++++
+ drivers/block/zram/backend_lzorle.h         |  10 +
+ drivers/block/zram/backend_zstd.c           | 223 ++++++++++++++++++++
+ drivers/block/zram/backend_zstd.h           |  10 +
+ drivers/block/zram/zcomp.c                  | 155 +++++++-------
+ drivers/block/zram/zcomp.h                  |  42 +++-
+ drivers/block/zram/zram_drv.c               | 120 ++++++++++-
+ drivers/block/zram/zram_drv.h               |   1 +
+ include/linux/zstd.h                        | 165 +++++++++++++++
+ lib/lz4/lz4hc_compress.c                    |   1 +
+ lib/zstd/zstd_compress_module.c             |  52 +++++
+ lib/zstd/zstd_decompress_module.c           |  38 ++++
+ 25 files changed, 1466 insertions(+), 111 deletions(-)
+ create mode 100644 drivers/block/zram/backend_842.c
+ create mode 100644 drivers/block/zram/backend_842.h
+ create mode 100644 drivers/block/zram/backend_deflate.c
+ create mode 100644 drivers/block/zram/backend_deflate.h
+ create mode 100644 drivers/block/zram/backend_lz4.c
+ create mode 100644 drivers/block/zram/backend_lz4.h
+ create mode 100644 drivers/block/zram/backend_lz4hc.c
+ create mode 100644 drivers/block/zram/backend_lz4hc.h
+ create mode 100644 drivers/block/zram/backend_lzo.c
+ create mode 100644 drivers/block/zram/backend_lzo.h
+ create mode 100644 drivers/block/zram/backend_lzorle.c
+ create mode 100644 drivers/block/zram/backend_lzorle.h
+ create mode 100644 drivers/block/zram/backend_zstd.c
+ create mode 100644 drivers/block/zram/backend_zstd.h
+
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
