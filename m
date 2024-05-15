@@ -1,183 +1,108 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD7A3EA9B;
-	Wed, 15 May 2024 06:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5922945943;
+	Wed, 15 May 2024 06:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715755318; cv=none; b=Wn6NxzcQir0TRKRvO2F2zpOr5hhhau6fpRHhS+7p2NpA5+nW0a/ILD1lZGMaAc+TQGNwW0CDKUUz9fkcXltldkm6eBsoJ6gqoxr3kNMyAsTp+IPx5utiVYKLt22Saw2HGXxIFlDRv7HfBAC+lBOvbne+QOsJK29ZvUZT/ixJLwA=
+	t=1715755352; cv=none; b=HLDEqAQ1BS7Sr04PqJv0PuQvhfmXcMedZJSNRYmeJ9m2kA/VH9nVDBBWaHR5QHobCsl4IWL5OEgwHovJwQITPgC8Q2XpV/Cmp8eX7sd043r7I6rNR8LR+M3Y/uDLSP18OuA8dXssNPd6ZfK4xGrgjryVeFIadV8LUlcOE+MPbLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715755318; c=relaxed/simple;
-	bh=GJ6J9YyFmj5g0mLE7msIu5MKiPfm2okuFb6jCKJOrlM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IjhhOHYHg4Dv7NPPfuOFAC5jeZhSQZlZG5H/QlM5VkuT4dulHGFe7S8NLUkzqWFifL7V8+EXfUqnWXhl/mY/WsIIP8RBMkfGf9qZ04ohmJGS1hgo5SLzmxghqKlRaCVDM2jl+TqVirpQw29/U8xXIMoRyX2xX09t+vWaThBnfhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kurWJ3MS; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715755352; c=relaxed/simple;
+	bh=iMlYr0Ewm77pHtY7jXSiKck36oYwConGZ1b9AGzBtP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VZ6GiBq+o3KmhjF23ki9h/p+oixOXd42/3/oT7dpXfznsx6L3EPnAnhuNTJy8n4ApL3MjPHVRfriCHMPKbxzpg28jo0xDOTiU1Taqx3ARS6iB9V40/AeoXW2AIpqMcQAg868UP0UOFG2LdvTrbxoFa9cCAqNdnMqEMqjk1ZLw7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=AnV1AyPa; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kurWJ3MS"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ecddf96313so55199835ad.2;
-        Tue, 14 May 2024 23:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715755315; x=1716360115; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2vbAesE2cgL0USUqqC14KPMjK7GiW9OFjlcB1Mo1yRY=;
-        b=kurWJ3MS3zNIzyBVKFOT4KL9L3YcSiej077cQKz3QzSq8MzpgZxUSVVv9GL42SRofy
-         kM3SITdGtgo/uGBM+SSQ0sYNXdj1u63NSpcc4sGASDdv1xDd4NMSlVIbK+0SP0e63bs3
-         7Y1WxHQ9W8xiads3Bi3r4iMFQVXuhWpBfpL5BsF8oDYUrUPW7EdM6o3+fNAkHXWmfNjF
-         /iGOY6doQTsAKE97nLqKqqNG0upwn3jFR2ME3Mb4gt32obhNUckZYf3Fs71I5j616NQt
-         wyE5XMfesv0EPYtsVPE0rgtAza0U28KL7GpNoSxvCgDvyEGC24H0Ia/s0Xlsqf7qx8Yn
-         bLPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715755315; x=1716360115;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2vbAesE2cgL0USUqqC14KPMjK7GiW9OFjlcB1Mo1yRY=;
-        b=ivLDYqf8uK7+Yr4TgUxQTiepF/bJQei5a4FWzFRjLBJLk/fDkYRRfTF/pxXoqOhV/e
-         to93dgyKhBLBBcDyd3O8tByoSsAiwxp9YLFibtQhCuw1ruCB637V2mMDFYJEptDBbhpz
-         TBdKMLBNkP8VVsaRwfpoW9+Q34/dlYDueTjM5CQgef69rCUqXEbhqsK7J09rzc/gA1Ir
-         2kuzf4OVdju3BSTDCuN62VgyMByBr8oFNRmIXLi7+hzgGtkocoN93LWDrSiAT7pR06ub
-         PIqgKRt24bS15VVdLkvOMOV0qwy0x/cnuwEsCOP98EuMNC/zTS4bfJkG07xOHEq7uqXN
-         2odQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoMbv+GXzH/oLx4KSM7ViII0jzD3YMm0bpVX94zLQWJnk0QGz3B8nbalob2aqZ8BaW8TRFCDZYrBnfJB4I745JU25lA3ZMjhhqTr8tGkgBR7jYGmT96eEu4pluB7d+lSG1E2xCuBdXlZY=
-X-Gm-Message-State: AOJu0YxQzDvmyzXzSRteWGy4fFsGE5auWcQcB+IxFiR3LJc7Q4ee5YOI
-	4QTuUAqD/mr8U0qABoTnUUb6vm9lAIwtIHhnGH2120S01qglsSs3zze9Xkc9KeM=
-X-Google-Smtp-Source: AGHT+IE+WGr6yPwajwKZrvVsEuPpSp4fcpQ4EjJnE9CHFCSlun+DnehwrGK/Fql+9T0Sui9S+jpm/w==
-X-Received: by 2002:a17:902:ccc6:b0:1e9:470:87e3 with SMTP id d9443c01a7336-1ef43f4e323mr254736905ad.45.1715755315224;
-        Tue, 14 May 2024 23:41:55 -0700 (PDT)
-Received: from xiaxiShen-ThinkPad.gigstreem.net ([66.160.179.28])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f08c5f0294sm17177315ad.208.2024.05.14.23.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 23:41:54 -0700 (PDT)
-From: Xiaxi Shen <shenxiaxi26@gmail.com>
-To: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org
-Cc: shenxiaxi26@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	javier.carrasco.cruz@gmail.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH v3] ASoC: dt-bindings: ak4104: convert to dt schema
-Date: Tue, 14 May 2024 23:41:39 -0700
-Message-Id: <20240515064139.456735-1-shenxiaxi26@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
-References: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="AnV1AyPa"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44F05PSM029365;
+	Wed, 15 May 2024 08:42:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=/JIVYxvq9mCRglxSh2kdGVPT8AdWYNNp6KoGXjOv+kA=; b=An
+	V1AyPaWYFcTG7Q/oR5JcWofslVX6rydGTYF6mdkKpO+SzGiG0VDRj5MOUbry5yHL
+	y0ECkguVqBLqFqMeCxZhxgM75T4D5B/ioU81qZ9SILcNEX03dm3SK6sFIJ+ERDyd
+	XcK4PslZ8kg08z5l8/AYpS7sJ7e8pxd5CRIUq2wsrZXNJoKP/FgS2hGvFksGefNZ
+	g0hDlgY4M8xdZY4fNcHZvDkQw6fvgGLd6wUVMK2CtXEJ6XJBlcbqQwKvY4CG2V7U
+	EGls+Wnlu+vO0aCj9E8BYn+Ox2hMf1TsA+Rxlh2GXz2UvcJNqaykrOlcFBimDpL3
+	enZUVxQ808WhW+DLUSCA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y2kmhv6ux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 May 2024 08:42:12 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AD9214002D;
+	Wed, 15 May 2024 08:42:08 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5DC2A20DD93;
+	Wed, 15 May 2024 08:41:19 +0200 (CEST)
+Received: from [10.48.87.209] (10.48.87.209) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 15 May
+ 2024 08:41:18 +0200
+Message-ID: <73a9d56c-9e8d-4859-b3a2-dba1531b57e5@foss.st.com>
+Date: Wed, 15 May 2024 08:41:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] clk: stm32mp2: use of STM32 access controller
+To: Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>
+CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240419152723.570159-1-gabriel.fernandez@foss.st.com>
+ <20240419152723.570159-3-gabriel.fernandez@foss.st.com>
+ <332c845c17e24e2eb660e18680f2626f.sboyd@kernel.org>
+Content-Language: en-US
+From: Gabriel FERNANDEZ <gabriel.fernandez@foss.st.com>
+In-Reply-To: <332c845c17e24e2eb660e18680f2626f.sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-15_02,2024-05-14_01,2023-05-22_02
 
-Convert ak4104 binding to DT schema
 
-Changes in v3:
- - Use unevaluatedProperties instead
- - Fix indentations in the example
+On 5/8/24 00:02, Stephen Boyd wrote:
+> Quoting gabriel.fernandez@foss.st.com (2024-04-19 08:27:21)
+>> diff --git a/drivers/clk/stm32/clk-stm32mp25.c b/drivers/clk/stm32/clk-stm32mp25.c
+>> index 210b75b39e50..a37ee9f707e3 100644
+>> --- a/drivers/clk/stm32/clk-stm32mp25.c
+>> +++ b/drivers/clk/stm32/clk-stm32mp25.c
+>> @@ -4,7 +4,9 @@
+>>    * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com> for STMicroelectronics.
+>>    */
+>>   
+>> +#include <linux/bus/stm32_firewall_device.h>
+> I don't have this include. I either need a signed tag or this needs to
+> wait until next merge window.
 
-Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
----
- .../devicetree/bindings/sound/ak4104.txt      | 25 ----------
- .../bindings/sound/asahi-kasei,ak4104.yaml    | 49 +++++++++++++++++++
- 2 files changed, 49 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/ak4104.txt
- create mode 100644 Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
+Sorry for the delay, i was off.
 
-diff --git a/Documentation/devicetree/bindings/sound/ak4104.txt b/Documentation/devicetree/bindings/sound/ak4104.txt
-deleted file mode 100644
-index ae5f7f057dc3..000000000000
---- a/Documentation/devicetree/bindings/sound/ak4104.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--AK4104 S/PDIF transmitter
--
--This device supports SPI mode only.
--
--Required properties:
--
--  - compatible : "asahi-kasei,ak4104"
--
--  - reg : The chip select number on the SPI bus
--
--  - vdd-supply : A regulator node, providing 2.7V - 3.6V
--
--Optional properties:
--
--  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
--		  deasserted before communication to the device starts.
--
--Example:
--
--spdif: ak4104@0 {
--	compatible = "asahi-kasei,ak4104";
--	reg = <0>;
--	spi-max-frequency = <5000000>;
--	vdd-supply = <&vdd_3v3_reg>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
-new file mode 100644
-index 000000000000..86f6061d3c50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/asahi-kasei,ak4104.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AK4104 S/PDIF transmitter
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+
-+maintainers:
-+  - Daniel Mack <github@zonque.org>
-+  - Xiaxi Shen <shenxiaxi26@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: asahi-kasei,ak4104
-+
-+  reg:
-+    description: Chip select number on the SPI bus 
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: A regulator node providing between 2.7V and 3.6V.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Optional GPIO spec for the reset pin, deasserted 
-+                  before communication starts.
-+    
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        codec@0 {
-+            compatible = "asahi-kasei,ak4104";
-+            reg = <0>;
-+            vdd-supply = <&vdd_3v3_reg>;
-+        };
-+    };
--- 
-2.34.1
+I was based on tag next-20240419
+
+>>   #include <linux/clk-provider.h>
+>> +#include <linux/of_address.h>
+> What is this include for?
+
+yes #include <linux/io.h> is more appropriate.
 
