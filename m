@@ -1,146 +1,117 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB7339FE9;
-	Wed, 15 May 2024 05:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BAC39ACD
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 05:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715749635; cv=none; b=K5IFtjqDa9DHL7ymreO3RUL03e6nTBbfyimW1Ez8RBQr7hgBGGF3Okz0WuZ+El5fmHZgCK8Hos7jY0CtqgCj8SETS5SHfjFvDamtDovwrsqCsYopqxMmgYGHJ0Eap2kyA6Z5ebmp6zYQ4SKRaIENqauXBPfKsl+z5Rl4ANnKf2I=
+	t=1715749786; cv=none; b=Jq/p4BFKM30GKghuu18BQY2H6/NnYzSWjP5LDC8dQkw3YSC+9pYHvkY39o6pbIuM/3kHrIFk6GBVnFptNhjjeCvmRbeCJ7h3DZAuDgV1EsLQwGWT6IIQi0I+eUwO2Wy+77wpOxq1SRUm0H4YDlt1fyD+7cfNvewrDYp2/TedccQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715749635; c=relaxed/simple;
-	bh=B+ujLyhk9VYMb8Rvy3uR2OszmyIefiZFEh2clSlhLO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=F/+J4HOCTAnxoCd42XR6kcy8mJCBjt+JD6oLODsnpDg2J6252ipQSBNhLgFN3s2ePbg6sryDLR1phTpdh19LEoWznuyf2Dz4lTH/MS1249T+AFhO9MP0g8oZTae6ZZE2NL5cO5pyvRZ/TBucZW4NcbbCPUazE8yeFP1Wvhv9bhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BwNgg371; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715749786; c=relaxed/simple;
+	bh=PWr1eoNqTJuHMfIrKTjK0JxHOEZr8PegEGVOLzYxh8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AcVfiJhg7xmuoxMZJCJj6NUoXdbNqUVei9aj7VyERCsls0hIxZ3/l1OHGDVT0xs3dfloygZ/GyOw1HTlzNM21/AXinDfp8GhXbLXQsDInuwQVOioPeNJiczD5U2gkE3H5VblIr8FAb2Vzmnpbzp8bu7SqLRGFAzb+vEXUdx0qgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ej67GMLX; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BwNgg371"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44F56qja124834;
-	Wed, 15 May 2024 00:06:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715749613;
-	bh=lr7ZZX9mxqPIcMui9i6bdbeAkLlgyW616D+DtDq0tQ8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=BwNgg371V+3EN4fDtVfg0pehr5vy/SAAa99UL634VYHudr7nMcX8e/2xkUL+AiE+7
-	 jH8SX99G7N8n3+CBJcpS+xoeOcjx/wgzaIADMH86ulty0kp9NAsg/kwBDUTDL9Kk0v
-	 xFp1f4YL1nm8ipvRDzLVJYupmTTSNhjifSf5CxUY=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44F56q9K084315
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 15 May 2024 00:06:52 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 15
- May 2024 00:06:52 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 15 May 2024 00:06:52 -0500
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44F56ijO048285;
-	Wed, 15 May 2024 00:06:45 -0500
-Message-ID: <d8df8023-daac-380a-0591-59c920d6eacd@ti.com>
-Date: Wed, 15 May 2024 10:36:44 +0530
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ej67GMLX"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e6792ea67fso33638121fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 22:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1715749781; x=1716354581; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=975B1sVy32LTXzxsALukKLfSACwxUEyol/q8JnyOA4o=;
+        b=ej67GMLXY8Y51jLGong7n/KBK7cX/nzd0k4PgoxEeCn69smoXi1dDjTuytEIov8rmm
+         AmGUE9ZAqmO87ghfuvA7MHRjLiM9DoNE15HRFapLVka3yaA/EPyQcbwn3neYNB8n838l
+         hCu3Al+LNdIDI0G8t7a6OYoe+Nv4DgPwvcDH2lyzA5rEGksUMjVnpwJiaLUDTY6CYCsu
+         oGKUVO32NnaisJfn7T2B9Dnt5hityYs6KL8j0QvqLXDLwGHmfBpKg+L8cHJ8OSU44Ogt
+         ATLtESK7UB9fCiBZS5bii8h+gEIuPyvhRIOUwJ1mr830E4VcFV4temwpJ3a0ywQoh2SM
+         f+EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715749781; x=1716354581;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=975B1sVy32LTXzxsALukKLfSACwxUEyol/q8JnyOA4o=;
+        b=KX77q8ImK+XZKsu/sEVf2+JnHnCBaS4s4NOpyarFoemxpKoWYwRELi4jTgMgvWHf23
+         ZBU8Q4HOp640228lLfycMr4w6Gx8Pi2lYRVVXOl5q9WWKG7BDut7ovCgDdt/7QmYVVZm
+         kg1q2d/QEaSbUyGIDcvYNHh7n+m8zkdujWfbxD2PNe33QEuUOyZ1tAy+GV7whS25OXYW
+         wY2V9JNhML8ahZR5Ri96FSZdUDK/wCei6Q1yFn2yIo2T1hYwe/n8btaapOj+xfaMOPow
+         uHY4PYMY7j7P949N674m73J+ZHHoTtQ2oivPoXJDob94ONcf+E7xJn3jLW3NK+Ud+t34
+         HtJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVL6cD1y7MiC37IGPpxrh+LCySM4x8mzSApx4x5wZlB7YwolE8xpY9n7DMPihN/fyhYtSKa5mKybAaoB2csawBgST90LTQ5rBjpFpK5
+X-Gm-Message-State: AOJu0YxPX1FXaIiKd3MTT2UwdiTwZ6A+fi5zq5Ydse1F7c0FhgX/8mLs
+	Yj4GkWONxZutxobK0jbdVeSY3INgJOP4GM/vNmZB6EjnSnDLDN0WmANGMSupZAE=
+X-Google-Smtp-Source: AGHT+IGrUkRE45seMgtIIoE9PEoi8QF/KuINpSVm4YfmrAzeH/MZdLnoXwgGuJCSWjOgBpc2tUxYKw==
+X-Received: by 2002:a2e:84c9:0:b0:2d9:eb66:6d39 with SMTP id 38308e7fff4ca-2e51ff667d5mr92842571fa.19.1715749781375;
+        Tue, 14 May 2024 22:09:41 -0700 (PDT)
+Received: from linux-l9pv.suse ([124.11.22.254])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340a632608sm9175077a12.5.2024.05.14.22.09.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2024 22:09:40 -0700 (PDT)
+Date: Wed, 15 May 2024 13:09:32 +0800
+From: joeyli <jlee@suse.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Chun-Yi Lee <joeyli.kernel@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jens Axboe <axboe@kernel.dk>, Justin Sanders <justin@coraid.com>,
+	Kirill Korotaev <dev@openvz.org>, Nicolai Stange <nstange@suse.com>,
+	Pavel Emelianov <xemul@openvz.org>
+Subject: Re: [PATCH v2] aoe: fix the potential use-after-free problem in more
+ places
+Message-ID: <20240515050932.GG4433@linux-l9pv.suse>
+References: <20240514151854.13066-1-jlee@suse.com>
+ <e8331545-d261-44af-b500-93b90d77d8b7@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v7 7/8] media: imagination: Round to closest multiple for
- cropping region
-To: Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>
-CC: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <dri-devel@lists.freedesktop.org>, <laurent.pinchart@ideasonboard.com>,
-        <praneeth@ti.com>, <nm@ti.com>, <vigneshr@ti.com>, <a-bhatia1@ti.com>,
-        <j-luthra@ti.com>, <b-brnich@ti.com>, <detheridge@ti.com>,
-        <p-mantena@ti.com>, <vijayp@ti.com>, <andrzej.p@collabora.com>,
-        <p.zabel@pengutronix.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
-        <adobriyan@gmail.com>, <jani.nikula@intel.com>
-References: <20240509184001.4064820-1-devarsht@ti.com>
- <Zj447ePSnccbj76v@smile.fi.intel.com>
- <7e3ad816-6a2a-4e02-9b41-03a8562812ad@ti.com>
- <432f336e6d4b0666cfbb431591624d0e1fefd773.camel@ndufresne.ca>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <432f336e6d4b0666cfbb431591624d0e1fefd773.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <e8331545-d261-44af-b500-93b90d77d8b7@web.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 
-Hi Nicolas,
+Hi Markus,
 
-Thanks for the review.
-
-On 15/05/24 01:52, Nicolas Dufresne wrote:
-> Le samedi 11 mai 2024 à 22:38 +0530, Devarsh Thakkar a écrit :
->> Hi Andy,
->>
->> Thanks for the quick review.
->> On 10/05/24 20:40, Andy Shevchenko wrote:
->>> On Fri, May 10, 2024 at 12:10:01AM +0530, Devarsh Thakkar wrote:
->>>> If neither of the flags to round down (V4L2_SEL_FLAG_LE) or round up
->>>> (V4L2_SEL_FLAG_GE) are specified by the user, then round to nearest
->>>> multiple of requested value while updating the crop rectangle coordinates.
->>>>
->>>> Use the rounding macro which gives preference to rounding down in case two
->>>> nearest values (high and low) are possible to raise the probability of
->>>> cropping rectangle falling inside the bound region.
->>>
->>> This is arguable. How do we know that the bigger range is supported?
->>> The safest side is to go smaller than bigger.
->>>
->>
->> Yes and that's what the driver does when do when application passes
->>  while doing the selection. If application does not
->> specify explicitly whether to round down or round up the cropping
->> parameters requested by it (i.e app is neither passing V4L2_SEL_FLAG_LE
->> nor V4L2_SEL_FLAG_GE flags), then it is preferred by driver to round the
->> cropping parameters to nearest possible value by either rounding down or
->> rounding up to align with hardware requirements.
->>
->> For e.g. If requested width for cropping region is 127 and HW requires
->> width to be multiple of 64 then we would prefer to round it up to 128
->> rather than rounding down to a more distant value (i.e. 64), but if
->> requested cropping width is 129 then we would prefer to instead round it
->> down to 128. But if requested cropping width is 160 then there are two
->> nearest possible values 160 - 32 = 128 and 160 + 32 = 192 and in which
->> case we prefer the smaller value as you suggested and that's why the
->> driver uses round_closest_down.
->>
->> For any reason, if still the cropping rectangle falls beyond the bound
->> region, then driver will return out of range error (-ERANGE) to
->> application.
+On Tue, May 14, 2024 at 05:34:57PM +0200, Markus Elfring wrote:
+> I suggest to reconsider the version identification in this patch subject
+> once more.
 > 
-> I would appreciate if this change was based on specification text, meaning
-> improving the next if that behaviour is undefined. We might not be able to fix
-> it everywhere, but we can recommend something.
 > 
+> …
+> > This patch makes the above functions do …
+> 
+> Do you stumble still on wording challenges for improved change descriptions
+> in your patches?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9#n94
+> 
+> …
+> > ---
+> >
+> > v2:
+> > - Improve patch description
+> 
+> V3:
+> ???
+> 
+> V4:
+> ???
+> 
+> Would you like to include issue reporters in message recipient lists?
+> 
+> Regards,
+> Markus
 
-Yes, this change is based on specification text. This complies with the
-VIDIOC_G_SELECTION, VIDIOC_S_SELECTION ioctl description as documented in
-v4l uapi [1] which means driver should choose crop rectangle as close as
-possible if no flags are passed by user-space, as quoted below :
+I will wait more suggestion for code side and send new version.
 
-"``0`` - The driver can adjust the rectangle size freely and shall
- choose a crop/compose rectangle as close as possible to the requested
- one."
-
-If the user-space has specific requirement to either round down, round up or
-honor exact values, it should pass V4L2_SEL_FLAG_LE, V4L2_SEL_FLAG_GE or
-V4L2_SEL_FLAG_LE | V4L2_SEL_FLAG_GE flags respectively.
-
-[1]
-https://www.kernel.org/doc/Documentation/userspace-api/media/v4l/vidioc-g-selection.rst#:~:text=compose%20rectangle%20as-,close,-as%20possible%20to
-
-Regards
-Devarsh
+Thanks a lot!
+Joey Lee 
