@@ -1,110 +1,105 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347424316B
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 01:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4874F1FE;
+	Wed, 15 May 2024 01:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715737760; cv=none; b=RnRWcgz4qASBOxOR7pLHLg5+NXXihPsRjpNSzKSVohGM2gm10V/nCsDrppLNI7MZFAUhN4MhiibkZgZHMBs/XUGfFTFczpPomCjfKkBV/sCswThLi34xRoEQDTTUTblxyniinZ/AA+gAH80H/fg/UkXH4LkzAhXEHeZ4SkgrV80=
+	t=1715737779; cv=none; b=mKZpx7qzkfq36EW3JnvvdxEoQvZvUcX20Ce4YfjDiaXa3eNsVWK/vQjqsy46gTH4aKFxFv7t0j2H8ZCDguZMQ70S25h0HhQhWt9hK170PM8Xc7/GVWd/l7xI3lpdTVyvyXBzJSCfrnI1Toiq551VCwMEvZfmZCMkJ+4JoZc7Mjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715737760; c=relaxed/simple;
-	bh=fcC4jQN8Gab4+R53kJwjMJeFHnSY3XdoD/ZzuHnROcc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=KS5s2l3cMl+SrDhsdauI9kWPrU0wgwSIIyevlv/vSz9zmwmSuAesxcivS/kYH7izjJKYoXOS1ZzjZmETMQ/F7bA1GCaUvMGinS4FClap7TYoAefVroFKY/Y0/Hb9XX6UJgumY+oQHcsStZ12NwDV82n19aEiSpamSoX8B4rt2Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VfGHz47TNzvY1W;
-	Wed, 15 May 2024 09:45:03 +0800 (CST)
-Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 30B471804AA;
-	Wed, 15 May 2024 09:48:32 +0800 (CST)
-Received: from [10.173.135.154] (10.173.135.154) by
- canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 15 May 2024 09:48:31 +0800
-Subject: Re: [PATCH -rc7] mm/huge_memory: mark huge_zero_page reserved
-To: Yang Shi <shy828301@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-CC: <nao.horiguchi@gmail.com>, <xuyu@linux.alibaba.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240511035435.1477004-1-linmiaohe@huawei.com>
- <20240514141439.55fba39c81c1af55c9a100e1@linux-foundation.org>
- <CAHbLzkq+NBjwjSvU1fQe56nLf5mmGp65TH8hDpb66EFLENctKA@mail.gmail.com>
- <20240514144204.88790f125b0275ef68acf6de@linux-foundation.org>
- <CAHbLzkpQvr2K5yxwmtoHsj_UJ78ak=m-YdZxk=vpnPJ8iZdncw@mail.gmail.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <9e5e51d7-e5bf-8209-317e-6f03c548727f@huawei.com>
-Date: Wed, 15 May 2024 09:48:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1715737779; c=relaxed/simple;
+	bh=pvzjn5+bbR0c+haL5/MVAidccpj+9o808LC0Z+cMxlA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tex4lYlEszIWTCTVI+wzH5xocgkFIWTEGcbiJ9nlBz3+woT4MpjGBH6HjqIs5EFLfG5dtC9mXYcAEiXWJxPGs6rRtr7LKlUGDPTvXFOigop1oxXlguulHf3RnM4So45/a0sypBH/vxTvjydcdGHwaADISMH2A/nqNuYvEeLaYl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kk9X4Fsz; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kk9X4Fsz"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ee0132a6f3so48007805ad.0;
+        Tue, 14 May 2024 18:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715737743; x=1716342543; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5kQ1NfQplOskT4B5ZqgIky4P0ExeAiR7M84edP4J3wY=;
+        b=kk9X4Fszq0tV3IL+k7hTWhXPkHh4ka1Kljqs2c+Lds8YnVEw9tNRobHQ2NU0vpHIdq
+         V+nBJ6R1h1NSt0KTMEIT1DflD8LDCmSNxT4ch+/wT3+lGT4KyWshKLTKRwtK3q5n7mtc
+         mDeFUTc8lxxlhgTyBsh8iC+hQp4Xcdt44agxsCiihMt7Qp05TxHOuuB3fMQCt8YxE4Cq
+         J2v1fxh8BuXokHpR7K0R51MsizMWiZ303+ulKbv8yleGftn1nnoP/u2GE+BoovvJMnmL
+         zJknkt94W1TX1uT3nlhSyzVeQcHbc3X1vJa6SF/TjFJKJiEae1bjWRptI2YNyM6QeAAh
+         lsuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715737743; x=1716342543;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5kQ1NfQplOskT4B5ZqgIky4P0ExeAiR7M84edP4J3wY=;
+        b=czpqkvkef9etExJXPi44akYjMTI2WmpevDwBOTwSQySGLonH943GJVTrXJwP0gwtAn
+         VW25c6JAbTO4M0lfAyfgAi43W0Idok0j/rgDA58FSH5KOHouM4Q8tq5EwKx5JBj1mzZF
+         woIB6pkNVzWIW6wdFYw9eN/7ROn042x/CARlIb9lCdUmCfrk9AOSgvLIZX6rPfuOm88J
+         EP2ZuheLjwSCy9JuSDP7xfByvCltNv02D3VPEtmx4DHAV43wIICpnGT+0n1d+wgMyIAt
+         TQh5A8Fcxt94BK8bGhazfAfJa5cOf0ibmJ4yxPEJmK/fd99LGqAqEv0xO3Rb+G1Q+vnT
+         Juzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxJiood5vmHPTpnEhhHNYLYRAHVjTeJ/jr7JkYg7u5J40biI3mkEp4+aDgrpNaPVQRdPlOlS9jMsD8mDZK+RSvHlYBohkS8doELDm8Ptxcdl4osKudzF29g9p/yY+8K0/05DFhib366e4s09E=
+X-Gm-Message-State: AOJu0Yzh5BLrGxHk5XrKqbpT/EsyeSwrX6JumgIMkwOS2ybm6ySNcrOv
+	RGe8x1vtzIDXyMRxvoINV8QtMzP3aimDQieWKOU0hXemLALECqD6
+X-Google-Smtp-Source: AGHT+IEYhfu4JIQARBLlRTK82jbbq24FhpCzudO3FGRm+9VC8IHIV63l+67Dn1fzRpfFXaPAb+xLfQ==
+X-Received: by 2002:a17:902:82c8:b0:1ec:5f1f:364f with SMTP id d9443c01a7336-1ef43d18196mr132940295ad.26.1715737742825;
+        Tue, 14 May 2024 18:49:02 -0700 (PDT)
+Received: from localhost.localdomain ([190.196.103.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c160b1asm105738195ad.275.2024.05.14.18.49.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 18:49:02 -0700 (PDT)
+From: Camila Alvarez <cam.alvarez.i@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Brian Foster <bfoster@redhat.com>,
+	linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Camila Alvarez <cam.alvarez.i@gmail.com>,
+	syzbot+249018ea545364f78d04@syzkaller.appspotmail.com
+Subject: [PATCH] guard against unknown r->data_type in bch2_sb_dev_has_data()
+Date: Tue, 14 May 2024 21:47:22 -0400
+Message-Id: <20240515014720.2482142-1-cam.alvarez.i@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHbLzkpQvr2K5yxwmtoHsj_UJ78ak=m-YdZxk=vpnPJ8iZdncw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500002.china.huawei.com (7.192.104.244)
 
-On 2024/5/15 5:55, Yang Shi wrote:
-> On Tue, May 14, 2024 at 3:42 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->>
->> On Tue, 14 May 2024 15:28:12 -0600 Yang Shi <shy828301@gmail.com> wrote:
->>
->>> On Tue, May 14, 2024 at 3:14 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->>>>
->>>> On Sat, 11 May 2024 11:54:35 +0800 Miaohe Lin <linmiaohe@huawei.com> wrote:
->>>>
->>>>> When I did memory failure tests recently, below panic occurs:
->>>>>
->>>>>  kernel BUG at include/linux/mm.h:1135!
->>>>>  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
->>>>>  CPU: 9 PID: 137 Comm: kswapd1 Not tainted 6.9.0-rc4-00491-gd5ce28f156fe-dirty #14
->>>>>
->>>>> ...
->>>>>
->>>>> --- a/mm/huge_memory.c
->>>>> +++ b/mm/huge_memory.c
->>>>> @@ -208,6 +208,7 @@ static bool get_huge_zero_page(void)
->>>>>               __free_pages(zero_page, compound_order(zero_page));
->>>>>               goto retry;
->>>>>       }
->>>>> +     __SetPageReserved(zero_page);
->>>>>       WRITE_ONCE(huge_zero_pfn, page_to_pfn(zero_page));
->>>>>
->>>>>       /* We take additional reference here. It will be put back by shrinker */
->>>>> @@ -260,6 +261,7 @@ static unsigned long shrink_huge_zero_page_scan(struct shrinker *shrink,
->>>>>               struct page *zero_page = xchg(&huge_zero_page, NULL);
->>>>>               BUG_ON(zero_page == NULL);
->>>>>               WRITE_ONCE(huge_zero_pfn, ~0UL);
->>>>> +             __ClearPageReserved(zero_page);
->>>>>               __free_pages(zero_page, compound_order(zero_page));
->>>>>               return HPAGE_PMD_NR;
->>>>>       }
->>>>
->>>> This causes a bit of a mess when staged ahead of mm-stable.  So to
->>>> avoid disruption I staged it behind mm-stable.  This means that when
->>>> the -stable maintainers try to merge it, they will ask for a fixed up
->>>> version for older kernels so you can please just send them this
->>>> version.
->>>
->>> Can you please drop this from mm-unstable since both I and David
->>> nack'ed a similar patch in another thread.
->>> https://lore.kernel.org/linux-mm/20240511032801.1295023-1-linmiaohe@huawei.com/
->>
->> That appears to link to the incorrect email thread?
-> 
-> I meant that patch is actually same with this one. Just used folio
-> interface instead of page. I'm not sure why Miaohe posted two. Maybe
-> target to different version.
+Shift is perfomed only when the data type makes sense.
 
-Sorry for causing confusion. These two patches really target to different branch.
-This patch is for mainline and another one for mm-unstable.
-Thanks both.
-.
+Fix a missing guard on r->data_type being known.
+
+Reported-by: syzbot+249018ea545364f78d04@syzkaller.appspotmail.com
+Signed-off-by: Camila Alvarez <cam.alvarez.i@gmail.com>
+---
+ fs/bcachefs/replicas.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
+index 678b9c20e251..0fa91d0bf951 100644
+--- a/fs/bcachefs/replicas.c
++++ b/fs/bcachefs/replicas.c
+@@ -1006,14 +1006,14 @@ unsigned bch2_sb_dev_has_data(struct bch_sb *sb, unsigned dev)
+ 
+ 		for_each_replicas_entry(replicas, r)
+ 			for (i = 0; i < r->nr_devs; i++)
+-				if (r->devs[i] == dev)
++				if (r->devs[i] == dev && r->data_type < BCH_DATA_NR)
+ 					data_has |= 1 << r->data_type;
+ 	} else if (replicas_v0) {
+ 		struct bch_replicas_entry_v0 *r;
+ 
+ 		for_each_replicas_entry_v0(replicas_v0, r)
+ 			for (i = 0; i < r->nr_devs; i++)
+-				if (r->devs[i] == dev)
++				if (r->devs[i] == dev && r->data_type < BCH_DATA_NR)
+ 					data_has |= 1 << r->data_type;
+ 	}
+ 
+-- 
+2.34.1
 
