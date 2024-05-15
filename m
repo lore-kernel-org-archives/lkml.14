@@ -1,103 +1,106 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3990381AA
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 03:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203FA3C2F;
+	Wed, 15 May 2024 03:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715742644; cv=none; b=HtcIbi0kmDZ7e6oo2/ji8xJuGb/p7pPZfwMHkIm2rEJDwhnRXw9FVpSTO7GqgD2xUPu/EDASEJz6/40tn2K+7lFAHQKDj9tC5rRROLgxAnxYITubq3Py6ToNMpbR2RsEMc0vJkeCGe4MkgxivWuHR7yoynPIKD4Yxv2FQQR4ZFo=
+	t=1715742798; cv=none; b=Qy8zTuxSThhuTfwLeFiVVKB9Aj+7K/Wl6YsxN0+C9wamiAeArdxgM/2d/DOTxGvk7faE/hNvOXAr+ISKgpMjeokg0rlq6Cr/j9/t/z0CbD5JCkbQjuLAyJAZExuaZfpSbnZbMkNgjpUyPqbgjNBrsB5Tn21mx9EcdTlYCtE+gcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715742644; c=relaxed/simple;
-	bh=Ugc/5ryD8iJ6YmLDn4he7k2/Y6l2NsxOP4STVxtlRcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PxFRXc+KesEE6RkUXK7WFVMYM9ihHAKgWfgfJkHz81cIyKU+115V4vW2k8cpE0J0hipX7lBskqEbwMEbTL+EToariu8AWt59vlcQGUkCPsBK9Z+S57TDHggQmOjim9HXnmFrrzHJAu84AK9x0sPeZOygWumrr63I69fqMHhXhus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R+aydqCr; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715742798; c=relaxed/simple;
+	bh=uB9Hl02KjTkQ8kSDlHRuvYVYzS140KUlSV2TwxcCTHM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q2cZIbdvQiuGmrMY3cahiJ4mDV395E70yWn207ZQxI9IfkzXkF7imQDCyUt8gN++Dih9Lzj5DvrSssyw9xLAitf+JXtrwR/PF9dQGuLfeY+jdBYozSQXgFxOBc7Pa22qSbSzITTcGzy3WQ/9FEaaApvgr2UqmqzrancpznYYQxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fL/D/gND; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R+aydqCr"
-Message-ID: <150ccdc2-48c7-40ac-b027-e8f92e2a0500@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715742639;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eV2DcCFvjQwjt5xtoWQWY0rPJ2R7dBNba4dqmpplCv4=;
-	b=R+aydqCrMxtqn5feQlFGxwHN8aVQ7zW44AuJnCgpm8cMEnp4udyWYt/akmKLjP0X1US8ED
-	tefClwsErzA+irR5AJPtCdW36VXaV00G77i+Q2hRq2xWwz8lywubTC38z2EAPCflXiufPm
-	qKykHM1XJAMu/FMJmbmlB0m/XhavcmQ=
-Date: Wed, 15 May 2024 11:10:32 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fL/D/gND"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715742797; x=1747278797;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uB9Hl02KjTkQ8kSDlHRuvYVYzS140KUlSV2TwxcCTHM=;
+  b=fL/D/gNDmASB7QBYhTWvp9841ovn9ijEB751AO6DbExI0yScAIHm4dcd
+   jXkN7a0EnKLqShNcV0KylRJys6LYVey6kDW+5fv8qOdRojklbWGpZmcrm
+   jkKKj6ifPnD1T8cn4Mg3P7ZIQPZO0fFqkXrJn6G3sk8APagRoz7JUa9Nf
+   rHvlfVAOuR73On2y0SH4x+d5e0yHTpT7UGRirX9CUEmECiweb76F6ZCSb
+   9g1vRcabXQb8cbKIfE4YPLH53BSl2BMMOQwOaTFUinCT8G5hNu4iDE05r
+   OPR6/2bG8qYWZMMAxGZVpEH9NPqHNSf4IPNTMh8GSmhbrxz4cua3cTssH
+   g==;
+X-CSE-ConnectionGUID: DqM7hr9FSeKAgVS/0zmFlA==
+X-CSE-MsgGUID: jElZ4QA2R/a41a+ggQAEkw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="14713386"
+X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
+   d="scan'208";a="14713386"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 20:13:16 -0700
+X-CSE-ConnectionGUID: 1Vaphy8DTH2zttEv04+Nig==
+X-CSE-MsgGUID: b75J+r8tT2qY1V7p85kAqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
+   d="scan'208";a="35434310"
+Received: from zwan2-desk1.sh.intel.com ([10.239.160.154])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 20:13:14 -0700
+From: Zhenyu Wang <zhenyuw@linux.intel.com>
+To: peterz@infradead.org
+Cc: kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	x86@kernel.org,
+	Rui Zhang <rui.zhang@intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@intel.com>,
+	Wendy Wang <wendy.wang@intel.com>
+Subject: [PATCH RESEND] perf/x86/intel/cstate: Add pkg C2 residency counter for Sierra Forest
+Date: Wed, 15 May 2024 11:21:58 +0800
+Message-ID: <20240515032158.12845-1-zhenyuw@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240506084806.495816-1-zhenyuw@linux.intel.com>
+References: <20240506084806.495816-1-zhenyuw@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/ksm: fix possible UAF of stable_node
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>,
- Andrea Arcangeli <aarcange@redhat.com>, Stefan Roesch <shr@devkernel.io>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- zhouchengming@bytedance.com
-References: <20240513-b4-ksm-stable-node-uaf-v1-1-f687de76f452@linux.dev>
- <74a72eeb-122f-453e-baa7-63504e7c4bd8@redhat.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <74a72eeb-122f-453e-baa7-63504e7c4bd8@redhat.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 2024/5/15 04:46, David Hildenbrand wrote:
-> On 13.05.24 05:07, Chengming Zhou wrote:
->> The commit 2c653d0ee2ae ("ksm: introduce ksm_max_page_sharing per page
->> deduplication limit") introduced a possible failure case in the
->> stable_tree_insert(), where we may free the new allocated stable_node_dup
->> if we fail to prepare the missing chain node.
->>
->> Then that kfolio return and unlock with a freed stable_node set... And
->> any MM activities can come in to access kfolio->mapping, so UAF.
->>
->> Fix it by moving folio_set_stable_node() to the end after stable_node
->> is inserted successfully.
->>
->> Fixes: 2c653d0ee2ae ("ksm: introduce ksm_max_page_sharing per page deduplication limit")
->> Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
->> ---
->>   mm/ksm.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/ksm.c b/mm/ksm.c
->> index e1034bf1c937..a8b76af5cf64 100644
->> --- a/mm/ksm.c
->> +++ b/mm/ksm.c
->> @@ -2153,7 +2153,6 @@ static struct ksm_stable_node *stable_tree_insert(struct folio *kfolio)
->>         INIT_HLIST_HEAD(&stable_node_dup->hlist);
->>       stable_node_dup->kpfn = kpfn;
->> -    folio_set_stable_node(kfolio, stable_node_dup);
->>       stable_node_dup->rmap_hlist_len = 0;
->>       DO_NUMA(stable_node_dup->nid = nid);
->>       if (!need_chain) {
->> @@ -2172,6 +2171,8 @@ static struct ksm_stable_node *stable_tree_insert(struct folio *kfolio)
->>           stable_node_chain_add_dup(stable_node_dup, stable_node);
->>       }
->>   +    folio_set_stable_node(kfolio, stable_node_dup);
->> +
->>       return stable_node_dup;
-> 
-> Looks correct to me.
-> 
-> We might now link the node before the folio->mapping is set up. Do we care? Don't think so.
+Package C2 residency counter is also available on Sierra Forest.
+So add it support in srf_cstates.
 
-Yeah, it shouldn't be a problem, although it doesn't look very nice.
+Cc: Rui Zhang <rui.zhang@intel.com>
+Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
+Cc: Wendy Wang <wendy.wang@intel.com>
+Fixes: 3877d55a0db2 ("perf/x86/intel/cstate: Add Sierra Forest support")
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+---
+ arch/x86/events/intel/cstate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Another way to fix maybe "folio_set_stable_node(folio, NULL)" in the failure case,
-which is safe since we have held the folio lock.
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e64eaa8dda5a..4cd36848cfff 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -64,7 +64,7 @@
+  *			       perf code: 0x00
+  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
+  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
+- *						RPL,SPR,MTL
++ *						RPL,SPR,MTL,SRF
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
+  *			       perf code: 0x01
+@@ -683,7 +683,8 @@ static const struct cstate_model srf_cstates __initconst = {
+ 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
+ 				  BIT(PERF_CSTATE_CORE_C6_RES),
+ 
+-	.pkg_events		= BIT(PERF_CSTATE_PKG_C6_RES),
++	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
++				  BIT(PERF_CSTATE_PKG_C6_RES),
+ 
+ 	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
+ };
+-- 
+2.43.0
 
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> 
-
-Thanks.
