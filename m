@@ -1,74 +1,64 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E535BAFC;
-	Wed, 15 May 2024 11:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3985BAFC;
+	Wed, 15 May 2024 11:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715771217; cv=none; b=J9E1cb/aO7UR2RIuTQ3EAxRWm59oE7XMa4tUpYEvX1W9zH5NzEyNBP0A8MQioljF7+xj6hmmSTOdF9MgrWXQPnu/riogwM8VixWniqjWfc8yoi+nrgRrJN5z0pjQIMV7ADGjYSZMnzo9h+JTEtKjyUnW+QfxaDnmq2B4Ll58UtM=
+	t=1715771407; cv=none; b=NbkGOdqfq8hFSrIm9dKnQ0dVWuk35bZMcLO+fR2UJeEzgCKwSnsa7Cpm9mVe/0uUK8AKNySBYovlGJ+KNibrh2cGyRaAA034KNVi9jmrC8QqgO1hmQWpZPnMh/iirjoj191QmZ66ZFHbVStFVTsYtGOjnAi3IMOqZq80oixnvpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715771217; c=relaxed/simple;
-	bh=5whSzgE848s25eHm6MbF4welNqlW7UUI4lx7+7DRh2o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KdTxKmhNzFrvJOW34+FAJm9ARccYGpAPc04iD4uf/T+nTRjbjlQUnOukkDnfx2tzGAmiZFcWU6i8dKpLfTPoVKAqW7IGU34EqT/r3N3/FnYcY6b0icwbXw7jKUSiWvNDD8wf8HyGwL63umZPGYREeeps9apIUBC8aRltSQNv/LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav412.sakura.ne.jp (fsav412.sakura.ne.jp [133.242.250.111])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 44FADZci044451;
-	Wed, 15 May 2024 19:13:35 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav412.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp);
- Wed, 15 May 2024 19:13:35 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 44FADUNw044434
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 15 May 2024 19:13:35 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <09f1879e-3d38-4d84-b73c-fd1688d07ea4@I-love.SAKURA.ne.jp>
-Date: Wed, 15 May 2024 19:13:30 +0900
+	s=arc-20240116; t=1715771407; c=relaxed/simple;
+	bh=DaChnHbMuBT0EbeOyLIHANpkyNbg7flUDNy6OkASHSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WsyNHvMCm8HRVOpp9h1Wyb69cbI/4oDK4o0k7wWFU58iswVhZ/VlQvmJupoRKyW0pqB+FH5tlVmM+ABrxUUHh+v3UTWL+yHaSsOqe32y33uPvv3MRzWdNnbS8575RwqtGCYdR8FtSXg/cjT7PAY//rTTgKA1PRW53LHa2oZiel4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E049C116B1;
+	Wed, 15 May 2024 11:10:03 +0000 (UTC)
+Date: Wed, 15 May 2024 12:10:01 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Steven Price <steven.price@arm.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+	Sami Mujawar <sami.mujawar@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v2 13/14] arm64: rsi: Interfaces to query attestation
+ token
+Message-ID: <ZkSYCYOWxKSV9t8S@arm.com>
+References: <20240412084213.1733764-1-steven.price@arm.com>
+ <20240412084213.1733764-14-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux kernel bug] INFO: task hung in blk_mq_get_tag
-To: Hillf Danton <hdanton@sina.com>, Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, axboe@kernel.dk,
-        syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
-References: <CAEkJfYMhv8AxxHSVdPT9bCX1cJZXw39+bMFh=2N9uNOB4Hcr=w@mail.gmail.com>
- <20240514103742.3137-1-hdanton@sina.com>
- <20240514224117.3191-1-hdanton@sina.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20240514224117.3191-1-hdanton@sina.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412084213.1733764-14-steven.price@arm.com>
 
-On 2024/05/15 7:41, Hillf Danton wrote:
-> On Tue, 14 May 2024 20:07:34 +0800 Sam Sun <samsun1006219@gmail.com>
->>
->> I tried to run
->>
->> # echo 0 > /proc/sys/kernel/hung_task_all_cpu_backtrace
->>
->> before running the reproducer, the kernel stops panic. But still, even
->> if I terminate the execution of the reproducer, kernel continues
->> dumping task hung logs. After setting bung_task_all_cpu_backtrace back
->> to 1, it panic immediately during next dump. So I guess it is still a
->> task hung instead of general protection fault.
-> 
-> Given kworker/u10:2:53 blocked for more than 143 seconds, or the subject
-> line, how could it trigger gpf?
+On Fri, Apr 12, 2024 at 09:42:12AM +0100, Steven Price wrote:
+> diff --git a/arch/arm64/include/asm/rsi_cmds.h b/arch/arm64/include/asm/rsi_cmds.h
+> index b4cbeafa2f41..c1850aefe54e 100644
+> --- a/arch/arm64/include/asm/rsi_cmds.h
+> +++ b/arch/arm64/include/asm/rsi_cmds.h
+> @@ -10,6 +10,9 @@
+>  
+>  #include <asm/rsi_smc.h>
+>  
+> +#define GRANULE_SHIFT		12
+> +#define GRANULE_SIZE		(_AC(1, UL) << GRANULE_SHIFT)
 
-Since CONFIG_CMDLINE in the attached config file includes sysctl.kernel.hung_task_all_cpu_backtrace=1 ,
-khungtaskd calls trigger_all_cpu_backtrace() when a hung task is detected.
+The name is too generic and it goes into a header file. Also maybe move
+it to rsi.h, and use it for other definitions like rsi_config struct
+size and alignment.
 
-trigger_all_cpu_backtrace() is expected to be safe, but there seems a bug
-which is triggering a general protection fault.
-
+-- 
+Catalin
