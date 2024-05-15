@@ -1,106 +1,101 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994C95A4FD;
-	Wed, 15 May 2024 10:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911A45A7AB;
+	Wed, 15 May 2024 10:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715769749; cv=none; b=ae0AFYFighAF/8mY2LtWiI8xqXFsQdsJBKVAPu2bT2SJzUAPzRfuwu1xN2dkU84tnX3r3x87XPTep9Jv8ofGCQbgry7ZBzrcMMUbUudN9PaRQ2mdB7PnFOFEMQVksZI5ZY0QU0qpsf99FfBnGAQ8REHEchH4lnYiqYwCxvP/RWc=
+	t=1715769990; cv=none; b=cC01iWgmHAhhJ5+scMePEEMd1lrxb2rhBuSLpIPuuK9dhINbjxco3UGZWW8Rr9OLpAj3rViEU2ZZycziDzcAZh5uN9TKvNt9Jf2RjixMEMDN2JKOq+PDvsahu0Fp/7HMrFaKrU0cGxnDNw6wNWCDSCTTmKwFEZ6+ksbLGIyddUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715769749; c=relaxed/simple;
-	bh=Q8M0DjRqd2IFL7aXqcSjRkvvUTFONy9etfP0lzkfc4Y=;
+	s=arc-20240116; t=1715769990; c=relaxed/simple;
+	bh=/rLKChhWLP3moBzwPC9iIEN3AWU0pKFpfn1wMMxX0S8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MCBYsSFRANmF8vVbDNXWVDFBsxC8L18N7WPc2NrkgCbtVk2KcTKvjC8R1uzG3is86fPpldSYghiT5N1h7uBA+auLbDwDKgGoB5D4yPhGl/+SbCmrzVDtp9GPQFY4ifuTftKx1Er6PJ1Rdgz/XtqozF4DNYRMgmpyDxpfw7DSMqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NF9gzcOP; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=NeTbbZMLck6qAHdv43xmPadb9meWCLawIYxw1PsfgKGNtpr5H7bO2eQgVnk3BSiZkKPWOjzjH8mXwD1rrWBUAhel+TkWRUBvwkNkog0SorpC4ZqmkxlJBTHz1d9/m7bKvkSF2SmrGs6wcpKfc98cM4jW+IBNY4ypgEEwNX5bjSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCOCZHFj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NF9gzcOP"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 794B040E0177;
-	Wed, 15 May 2024 10:42:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DN6m_2lNWs-3; Wed, 15 May 2024 10:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1715769736; bh=yE3F00zgM8Ec+9gOT9ropjs1xEfw03srAD/IRCzOsCo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCOCZHFj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E89C116B1;
+	Wed, 15 May 2024 10:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715769990;
+	bh=/rLKChhWLP3moBzwPC9iIEN3AWU0pKFpfn1wMMxX0S8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NF9gzcOPp3NEXxQP1UT1pm+893enKzfIqMDg4FkR4pUW/VdY2DPBwvTsuAF9q2/yT
-	 cvemirL8rRWJ6epprTVOcMQLyuSdATdiS1B5sm7Uh4oeQrBiWWNaqXGPX2y04mV2B7
-	 IwUmmPMi3Wn0VURN0/J4Ivrk2PGNu5YZPXKUdbI10ZruZTrShRiYcPeKuQ+8Pm3KwJ
-	 fkiIQApQIwIPEuizLhxsaUQXWm/ZwZJZGAL7afibQBKpRP5pSea6d+LULH4M02XgAN
-	 eDXwLlq+RFaOVCQAGekgDJ3aGDgTCbOWeblnxc+IwFZnB/mUcwXo1ztBG8wstAmihh
-	 wAXZG3k7Hn78xuqNUN6b0pOukBQCMQbmzUeA45c2xvWj1c2Q7BTnZaKW57BzWDsbLc
-	 6k/H7I1PQOUssTSKSDxTryAvBdTsq6ELtEGefmisVxs888/HFTX1GkUfQiEZYH0jxi
-	 Vd4dlDKWRt/ZwziRTS033lDSDrFZAkshSAaRTjdeP3JClni+aL81VZKH86gtbiSW6n
-	 Z+d0vd0VuJj77aYXEAP3shLZYWnOA6FEiOs8/+eBDjbYbGhEsU0QEva8fJ5nXjL4aN
-	 x7w1U/pYSI6LuUDaKh/GScF6KHnUBNQDhwynqB3Z3GKewEOdm7W5u0ARbBAdOx4T3z
-	 AZrHBIBJn+8FGNYk19MVlGME=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DE9BD40E016A;
-	Wed, 15 May 2024 10:41:47 +0000 (UTC)
-Date: Wed, 15 May 2024 12:41:42 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Axel Rasmussen <axelrasmussen@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Helge Deller <deller@gmx.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Liu Shixin <liushixin2@huawei.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>, Peter Xu <peterx@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v2 1/1] arch/fault: don't print logs for pte marker
- poison errors
-Message-ID: <20240515104142.GBZkSRZsa3cxJ3DKVy@fat_crate.local>
-References: <20240510182926.763131-1-axelrasmussen@google.com>
- <20240510182926.763131-2-axelrasmussen@google.com>
+	b=NCOCZHFjGs+4hl9Elm+1KR5bv1Q8AlpOOFTS3ECufjk9GzxCMQyEHDHn0FZSPJq2G
+	 BUzhVOxsaNRS4hmgOZCulLJgX+tLj0iJoyFMJnRmS+9SXneipEf0UxTDWGFZy2lQuG
+	 ZmfDDUrMkngptubVOXcuCY3qD8/reCh7ItEVPnToWQIdzUhUQvZxbnYcAX00XnYWuJ
+	 M6gTivVLmqWrWlEiYS9J3WQskoQC6RT/BLbN69BcTybRuqsXBt3mj8xDku72RS4m9/
+	 /HkkSVYFFCsnRA+yRZNNivi/Qy/MY76KOeIYWQgtQUbnfnb6KNmMklZZSQbIhzCK3U
+	 U9I/RyD/jiLXg==
+Date: Wed, 15 May 2024 11:46:26 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ronak Doshi <ronak.doshi@broadcom.com>
+Cc: netdev@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/4] vmxnet3: add latency measurement support in
+ vmxnet3
+Message-ID: <20240515104626.GE154012@kernel.org>
+References: <20240514182050.20931-1-ronak.doshi@broadcom.com>
+ <20240514182050.20931-3-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240510182926.763131-2-axelrasmussen@google.com>
+In-Reply-To: <20240514182050.20931-3-ronak.doshi@broadcom.com>
 
-On Fri, May 10, 2024 at 11:29:26AM -0700, Axel Rasmussen wrote:
-> @@ -3938,7 +3938,7 @@ static vm_fault_t handle_pte_marker(struct vm_fault *vmf)
+On Tue, May 14, 2024 at 11:20:47AM -0700, Ronak Doshi wrote:
+> This patch enhances vmxnet3 to support latency measurement.
+> This support will help to track the latency in packet processing
+> between guest virtual nic driver and host. For this purpose, we
+> introduce a new timestamp ring in vmxnet3 which will be per Tx/Rx
+> queue. This ring will be used to carry timestamp of the packets
+> which will be used to calculate the latency.
+> 
+> Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+> Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+
+...
+
+> index b3f3136cc8be..74cb63e3d311 100644
+> --- a/drivers/net/vmxnet3/vmxnet3_drv.c
+> +++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+> @@ -143,6 +143,29 @@ vmxnet3_tq_stop(struct vmxnet3_tx_queue *tq, struct vmxnet3_adapter *adapter)
+>  	netif_stop_subqueue(adapter->netdev, (tq - adapter->tx_queue));
+>  }
 >  
->  	/* Higher priority than uffd-wp when data corrupted */
->  	if (marker & PTE_MARKER_POISONED)
-> -		return VM_FAULT_HWPOISON;
-> +		return VM_FAULT_HWPOISON | VM_FAULT_HWPOISON_SILENT;
+> +static u64
+> +vmxnet3_get_cycles(int pmc)
+> +{
+> +	u32 low, high;
+> +
+> +	asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (pmc));
+> +	return (low | ((u_int64_t)high << 32));
+> +}
 
-If you know here that this poisoning should be silent, why do you have
-to make it all complicated and propagate it into arch code, waste
-a separate VM_FAULT flag just for that instead of simply returning here
-a VM_FAULT_COMPLETED or some other innocuous value which would stop
-processing the fault?
+Hi Ronak,
 
--- 
-Regards/Gruss,
-    Boris.
+This seems to open-code the rdpmc macro.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+And it also seems to exclude compilation of this driver other than for x86.
+This seems undesirable as, in general, networking drivers are supposed to
+be architecture independent. I'd say, doubly so, for software devices.
+
+Moreover, rdpmc outside of x86 architecture-specific code seems highly
+unusual to me. So I wonder if there is a better approach to the problem at
+hand.
+
+If not, I would suggest making this feature optional and only compiled
+for x86. That might mean factoring it out into a different file. I'm
+unsure.
+
+If not, I think the driver's Kconfig needs to be updated to reflect
+that it can only be compiled for x86.
+
+...
