@@ -1,118 +1,138 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A0213F006
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AD06214D;
+	Wed, 15 May 2024 14:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715781748; cv=none; b=dLCpKExDH5eHJbs8sHqxWz2+82Hrayc6wUkwtHoy5yuxYQaolf8BVQSOz7zatCatsd8N/7KifbI3Pa/WlJpfMRWWofm1A1RmEs5VS4ch1fPyVNWMyFeU+ktjNB6sNqCdzKmCoQ8vQ3IYhVv5ptkBGyQJnsEFlNboFue6R3gT2EQ=
+	t=1715781888; cv=none; b=f0kXX0kbCgmr2XGWNfVmE1CSwuw50CYvAm0dm8l8IfctBStPDVNqpWDq+okgU/mnSJn1ag66S8MVrVVh/Y0BJ2BZrFQMeqhDBlgiCS7y3zZGXlZe6AmyiErNl3ifoH18mwJCFVV+Ek6gvhPcyCTalNUmrrLvrfCzPFpnOhfLuMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715781748; c=relaxed/simple;
-	bh=PHeG/627dOPWa8LHTtWxDV007SWbZTNzDw4Wof0MrS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B7yOCWTqbbvPtw58/+8yl9zS1t6w59da1UH3CPtG4KpB3Yo/aV8sACnMxapL1s+5GO4CqFdhhEVoCr/gsmoPDxd0nAM7iF/rxBsP4x+lYgeAi0ENdzjoEzcWxEoSipNvfqXVuQhE37nVuEg/A+TY18QkLSeJWBB6nUjqUjBah6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:b558:3285:d1a8:9c24])
-	by andre.telenet-ops.be with bizsmtp
-	id PS2G2C0091HiNV501S2Ge7; Wed, 15 May 2024 16:02:20 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1s7FC8-007Obr-CA;
-	Wed, 15 May 2024 16:02:16 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1s7FCy-004hZL-8O;
-	Wed, 15 May 2024 16:02:16 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Russell King <linux@armlinux.org.uk>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Kees Cook <keescook@chromium.org>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Stefan Wahren <wahrenst@gmx.net>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: Fix userspace enter on LPAE with CC_OPTIMIZE_FOR_SIZE=y
-Date: Wed, 15 May 2024 16:02:14 +0200
-Message-Id: <200d273a83906a68a1c4a9298c415980737be811.1715781469.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715781888; c=relaxed/simple;
+	bh=Is9J5YRpNzvklFE+cfQ23ylGaJ3nXqCLhHCxIrAy0f4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BpAEwhHXtgMQeJWvXRw0ezEYu/LT5OcgwXuuOFofMdjvTaJ5Nw2QPpLSzmUIyY1fWdoXzVz7KEn6//x3dhht+l/BY4Zqo6i+hPyD6S6oSdgfsLucSiIIhvyaZsPXube7zTTLI4b/MqxWjbYpfxh/d9SGhzPqbknJzvsgziOzr7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZwY79/UJ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZwY79/UJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715781887; x=1747317887;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Is9J5YRpNzvklFE+cfQ23ylGaJ3nXqCLhHCxIrAy0f4=;
+  b=ZwY79/UJODTXIOszgPAvXlQCE2CI+RHkktzaQ6hozv8XtIR+cj7P++B/
+   Ukrtl1Knv2Hvs2pxJeTPV+IbK8jdFBCe0siPMBEiTak303RVReFZFue3Y
+   alUfMac48hun+x0VO7EYb8ZhJzs6u8yXHzFShYmK1PSGVlezPS3YSVcjP
+   k+PEfkKj5vj2/npxoJdWCWZz/RIiwxNLfSHNNwffplHLM2tdllH5y2gzY
+   mxqaSRt0wuiz6wZqS/3QVwtgnhsXCOkTfYwyROZ6Rmfq84rN60fRJmilV
+   XWxA8tXBOVs/PbZZCGDhDCqmKh/nrntH3zzQ2NJJBEjhvEQ/Ac27yJFed
+   A==;
+X-CSE-ConnectionGUID: +MS07ncgTK6Y9I9m1WYj9g==
+X-CSE-MsgGUID: EM2rUlSOTAiVu94RnD8guw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23234031"
+X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
+   d="scan'208";a="23234031"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 07:04:44 -0700
+X-CSE-ConnectionGUID: ureli23YTFOv+UNUpcaPtw==
+X-CSE-MsgGUID: 4mxvp+5zQbCHGtglpG+BDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
+   d="scan'208";a="35778478"
+Received: from wtcline-desk12.amr.corp.intel.com (HELO [10.125.108.49]) ([10.125.108.49])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 07:04:42 -0700
+Message-ID: <4170720a-f7bb-484e-9235-a8720cec92c1@linux.intel.com>
+Date: Wed, 15 May 2024 09:04:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 00/16] Add audio support in v4l2 framework
+To: Jaroslav Kysela <perex@perex.cz>, Shengjiu Wang
+ <shengjiu.wang@gmail.com>,
+ =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Takashi Iwai <tiwai@suse.de>,
+ Sebastian Fricke <sebastian.fricke@collabora.com>,
+ Shengjiu Wang <shengjiu.wang@nxp.com>, sakari.ailus@iki.fi,
+ tfiga@chromium.org, m.szyprowski@samsung.com, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+ nicoleotsuka@gmail.com, lgirdwood@gmail.com, tiwai@suse.com,
+ alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+References: <1710834674-3285-1-git-send-email-shengjiu.wang@nxp.com>
+ <20240430082112.jrovosb6lgblgpfg@basti-XPS-13-9310>
+ <ZjEEKyvb02CWz3l4@finisterre.sirena.org.uk> <20240430172752.20ffcd56@sal.lan>
+ <ZjGhPz-bokg6ZbDJ@finisterre.sirena.org.uk> <87sez0k661.wl-tiwai@suse.de>
+ <20240502095956.0a8c5b26@sal.lan> <20240502102643.4ee7f6c2@sal.lan>
+ <ZjRCJ2ZcmKOIo7_p@finisterre.sirena.org.uk> <20240503094225.47fe4836@sal.lan>
+ <CAA+D8APfM3ayXHAPadHLty52PYE9soQM6o780=mZs+R4px-AOQ@mail.gmail.com>
+ <22d94c69-7e9f-4aba-ae71-50cc2e5dd8ab@xs4all.nl>
+ <51408e79-646d-4d23-bc5b-cd173d363327@linux.intel.com>
+ <CAA+D8AM7+SvXBi=LKRqvJkLsrYW=nkHTfFe957z2Qzm89bc48g@mail.gmail.com>
+ <cd71e8e8-b4dc-40ed-935e-a84c222997e6@linux.intel.com>
+ <CAA+D8AMpLB0N++_iLWLN_qettNz-gKGQz2c2yLsY8qSycibkYg@mail.gmail.com>
+ <2f771fe9-7c09-4e74-9b04-de52581133fd@linux.intel.com>
+ <CAA+D8AMJKPVR99jzYCR5EsbMa8P95jQrDL=4ayYMuz+Cu1d2mQ@mail.gmail.com>
+ <28d423b1-49d8-4180-8394-622b1afd9cd9@perex.cz>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <28d423b1-49d8-4180-8394-622b1afd9cd9@perex.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Booting an LPAE-enabled kernel built with CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-fails when starting userspace:
 
-    Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
-    CPU: 1 PID: 1 Comm: init Tainted: G        W        N 6.9.0-rc1-koelsch-00004-g7af5b901e847 #1930
-    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-    Call trace:
-     unwind_backtrace from show_stack+0x10/0x14
-     show_stack from dump_stack_lvl+0x78/0xa8
-     dump_stack_lvl from panic+0x118/0x398
-     panic from do_exit+0x1ec/0x938
-     do_exit from sys_exit_group+0x0/0x10
-    ---[ end Kernel panic - not syncing: Attempted to kill init!  exitcode=0x00000004 ]---
 
-Add the missing memory clobber to cpu_set_ttbcr(), as suggested by
-Russell King.
+On 5/9/24 06:13, Jaroslav Kysela wrote:
+> On 09. 05. 24 12:44, Shengjiu Wang wrote:
+>>>> mem2mem is just like the decoder in the compress pipeline. which is
+>>>> one of the components in the pipeline.
+>>>
+>>> I was thinking of loopback with endpoints using compress streams,
+>>> without physical endpoint, something like:
+>>>
+>>> compress playback (to feed data from userspace) -> DSP (processing) ->
+>>> compress capture (send data back to userspace)
+>>>
+>>> Unless I'm missing something, you should be able to process data as fast
+>>> as you can feed it and consume it in such case.
+>>>
+>>
+>> Actually in the beginning I tried this,  but it did not work well.
+>> ALSA needs time control for playback and capture, playback and capture
+>> needs to synchronize.  Usually the playback and capture pipeline is
+>> independent in ALSA design,  but in this case, the playback and capture
+>> should synchronize, they are not independent.
+> 
+> The core compress API core no strict timing constraints. You can
+> eventually0 have two half-duplex compress devices, if you like to have
+> really independent mechanism. If something is missing in API, you can
+> extend this API (like to inform the user space that it's a
+> producer/consumer processing without any relation to the real time). I
+> like this idea.
 
-Force inlining of uaccess_save_and_enable(), as suggested by Ard
-Biesheuvel.
+The compress API was never intended to be used this way. It was meant to
+send compressed data to a DSP for rendering, and keep the host processor
+in a low-power state while the DSP local buffer was drained. There was
+no intent to do a loop back to the host, because that keeps the host in
+a high-power state and probably negates the power savings due to a DSP.
 
-The latter fixes booting on Koelsch.
+The other problem with the loopback is that the compress stuff is
+usually a "Front-End" in ASoC/DPCM parlance, and we don't have a good
+way to do a loopback between Front-Ends. The entire framework is based
+on FEs being connected to BEs.
 
-Fixes: 7af5b901e84743c6 ("ARM: 9358/2: Implement PAN for LPAE by TTBR0 page table walks disablement")
-Closes: https://lore.kernel.org/r/CAMuHMdWTAJcZ9BReWNhpmsgkOzQxLNb5OhNYxzxv6D5TSh2fwQ@mail.gmail.com/
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Feel free to fold into the original commit.
+One problem that I can see for ASRC is that it's not clear when the data
+will be completely processed on the "capture" stream when you stop the
+"playback" stream. There's a non-zero risk of having a truncated output
+or waiting for data that will never be generated.
 
-Apparently the "From: Catalin Marinas <catalin.marinas@arm.com>" in
-https://lore.kernel.org/r/20240312-arm32-lpae-pan-v3-4-532647afcd38@linaro.org
-is not reflected in commit 7af5b901e84743c6?
----
- arch/arm/include/asm/proc-fns.h | 2 +-
- arch/arm/include/asm/uaccess.h  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/include/asm/proc-fns.h b/arch/arm/include/asm/proc-fns.h
-index 9b3105a2a5e0691e..b4986a23d8528a50 100644
---- a/arch/arm/include/asm/proc-fns.h
-+++ b/arch/arm/include/asm/proc-fns.h
-@@ -187,7 +187,7 @@ static inline unsigned int cpu_get_ttbcr(void)
- 
- static inline void cpu_set_ttbcr(unsigned int ttbcr)
- {
--	asm("mcr p15, 0, %0, c2, c0, 2" : : "r" (ttbcr));
-+	asm volatile("mcr p15, 0, %0, c2, c0, 2" : : "r" (ttbcr) : "memory");
- }
- 
- #else	/*!CONFIG_MMU */
-diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-index 25d21d7d6e3efee0..6c9c16d767cfd5df 100644
---- a/arch/arm/include/asm/uaccess.h
-+++ b/arch/arm/include/asm/uaccess.h
-@@ -47,7 +47,7 @@ static __always_inline void uaccess_restore(unsigned int flags)
- 
- #elif defined(CONFIG_CPU_TTBR0_PAN)
- 
--static inline unsigned int uaccess_save_and_enable(void)
-+static __always_inline unsigned int uaccess_save_and_enable(void)
- {
- 	unsigned int old_ttbcr = cpu_get_ttbcr();
- 
--- 
-2.34.1
-
+In other words, it might be possible to reuse/extend the compress API
+for a 'coprocessor' approach without any rendering to traditional
+interfaces, but it's uncharted territory.
