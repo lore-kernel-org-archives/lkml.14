@@ -1,106 +1,63 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C102C848;
-	Wed, 15 May 2024 01:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2F439ACD;
+	Wed, 15 May 2024 01:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715737702; cv=none; b=rFdN4/IcJYAstzNl1oJhNrNO4cVF58MDeILBsFNIs5F7lS4xJHFu4NX8ZrJzhN5VfOEy0jAtXxNi62RR4sv0e+FX4GNK4/JrrYJOPHYlVDesNp7XERF1PFkvcMMVQmH3pQRS8wddJ2IIrlkAtftcJnJBi8EbK/SWGLI1AH1AuaM=
+	t=1715737748; cv=none; b=gYxA/5Gm5w171nRVN+l0LYGz1uQPuDDdW0yTFMGkcd8AptDm8dmxWtlzaCXbyO4JGaggCw9kwH1Le/5huL76W6xVLE4UgtQgROOzwkmcVb2qIVwC9E44dHmnkTjT1rFYgOaCdVhOxWeBsTNQsPLKg9Tia+HqdzZxSnclC84Vumw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715737702; c=relaxed/simple;
-	bh=nwi7XSp87KyMBhuDwVzMUgWk96d9Z2Gf+1P/43zA+uU=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=QojHrjX3NS0irPja6JwjcDn8ukuAPS1uma0aarUXoS7U3dhM8VjzSjg5pbfJ/hw/ZgZuyr7FSgVYcr/yw8uGlbV5klkYAER8H2c24kFK9649NU7dMpOV5LbUwTpYOohHpyrx3R8TMDHmZFzd8S2Tmba2vWes90iD1kSQei99nRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=58HSJxwI; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1715737748; c=relaxed/simple;
+	bh=K67qoiLiuoJZYCrUnU6ml4nqPt6J/mHxM6sR9bPa088=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jZTt2tckuhe4hL9/YAdKpIMOfIcTDWoImoFkXL8ESDn4mkV0Rx3uIX+RB/7XaXWafXqD87FzvXkMge1+j2mjGRSAXZUzhYo+TV2IkeER/MLCY/l5fM+FY5yKVKN5zw7tF5vMBmFCVLR6UMkpj5gphQSFvxoHRCCA5WtEArYHEuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGnOOWtA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="58HSJxwI"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=nwi7XSp87K
-	yMBhuDwVzMUgWk96d9Z2Gf+1P/43zA+uU=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=58HSJxwIFFDunvAa6ffAS+xegRSfK9Kml
-	vIQU3QINWU0zu0uNNtl/ENkzETD9jZ0lhJ06nfZdsJes7RXcWA6OhA9yzOm7tnw8OBTYw2
-	nkhlSw6lB6LwhOXn2y0DPj+Iu9/Aq6Usg3TElJUvwWK9cZ3CdGHOTs55P7DYpnWVh7LocG
-	TnO4X+Hs1BUsMQAYK6Gffm4lLs1scWLFvnrAhO199CaYsqcXZFdp+k+ZN84LSLI1k6/2WQ
-	u3B1Ommwx+T/L3JIgcTsk8IM0iNy1iHRGpnBfBuIlnCWUEXEOB5vJR0nqyx0MJSkzcIocI
-	DW/cwgN0Gm7PWphRbO3/Y3uOveMEA==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 55a0975a;
-	Tue, 14 May 2024 19:47:46 -0600 (MDT)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Matthew Wilcox <willy@infradead.org>,
-    Jonathan Corbet <corbet@lwn.net>,
-    Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    gregkh@linuxfoundation.org, usama.anjum@collabora.com,
-    Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
-    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] Introduce mseal
-In-reply-to: <CAHk-=wi04ZCm3vTtkcVnAUdiOpX3a0hBZ-aQWONwCubOJQEdXw@mail.gmail.com>
-References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org> <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org> <56001.1715726927@cvs.openbsd.org> <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com> <16982.1715734632@cvs.openbsd.org> <CAHk-=wi04ZCm3vTtkcVnAUdiOpX3a0hBZ-aQWONwCubOJQEdXw@mail.gmail.com>
-Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
-   message dated "Tue, 14 May 2024 18:20:23 -0700."
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGnOOWtA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 896AEC2BD10;
+	Wed, 15 May 2024 01:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715737747;
+	bh=K67qoiLiuoJZYCrUnU6ml4nqPt6J/mHxM6sR9bPa088=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=sGnOOWtAxAWmOxCciFSSgUL9mshZ5JLJERVh5R3a6Tl9h+d4TSMCJWYh9iZvPWLPx
+	 HwGGC0/gnnK423o/361BPzFRMf2y9bt4pS51olJP6UAIPFLNqidSEnI9csXDXNa2hV
+	 I1m3Ta3N1CC/W0YgAQ7GRyrL4HNuxTsZLgWtmCLLZIBEc1sBvm9paFKEQxO2S4eHK0
+	 okrOxm1V5vUebt0fzLOPr1iMiubfFC+O5cOfugEZwO5HbSIidtMH3zJJhkXncAWaXo
+	 wDL2H8v+xyxcQEDfth3hrehoW3LaBkGJMHnm/MhZtD5XU2+LBoAS5fls7VVwJDpojM
+	 R7/vF8JpgSu6Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8087DC43339;
+	Wed, 15 May 2024 01:49:07 +0000 (UTC)
+Subject: Re: [GIT PULL] SCSI updates for the 6.9+ merge window
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <b34d2038bb6af20946d7ad4cb456cbca0a896cff.camel@HansenPartnership.com>
+References: <b34d2038bb6af20946d7ad4cb456cbca0a896cff.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-scsi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <b34d2038bb6af20946d7ad4cb456cbca0a896cff.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: 3668651def2c1622904e58b0280ee93121f2b10b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 113d1dd9c8ea2186d56a641a787e2588673c9c32
+Message-Id: <171573774751.23667.11017122750447395095.pr-tracker-bot@kernel.org>
+Date: Wed, 15 May 2024 01:49:07 +0000
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31351.1715737666.1@cvs.openbsd.org>
-Date: Tue, 14 May 2024 19:47:46 -0600
-Message-ID: <84192.1715737666@cvs.openbsd.org>
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+The pull request you sent on Tue, 14 May 2024 12:06:41 -0600:
 
-Regarding mprotect(), POSIX also says:
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-    An implementation may permit accesses other than those specified by
-    prot; however, no implementation shall permit a write to succeed where
-    PROT_WRITE has not been set or shall permit any access where PROT_NONE
-    alone has been set.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/113d1dd9c8ea2186d56a641a787e2588673c9c32
 
-When sealed memory is encountered in the middle of a range, an error
-will be returned (which almost noone looks at). Memory after the sealed
-region will not be fixed to follow this rule.
+Thank you!
 
-It may retain higher permission.
-
-> Maybe some atomicity rules have always been true for BSD, but they've
-> never been true for Linux, and while I don't know how authoritative
-> that opengroup thing is, it's what google found.
-
-It is not a BSD thing.  I searched many kernels.  I did not find the
-Linux behaviour anywhere else.
-
-> > (Linus, don't be a jerk)
-> 
-> I'm not the one who makes unsubstantiated statements and uses scare
-> tactics to try to make said arguments sound more valid than they are.
-> 
-> So keep your arguments real, please.
-
-
-CAN YOU PLEASE SHUT IT WITH THE PERSONAL ATTACKS?  ARE YOU SO INSECURE
-THAT YOU NEED TO TAKE A TECHNICAL DISCUSSION AND MAKE IT PERSONAL?
-
-
-In a new world of immutable / sealed memory, I believe there is a much
-bigger problem and I would appreciate if the Linux team would give it
-some consideration.
-
-mprotect and munmap (and other calls) can now fail, due to intentional
-address space manipulation requested by a process (previously).
-
-The other previous errors have been transient system effects, like ENOMEM.
-
-This EPERM with partial change is not transient.  A 5 line test program
-can show memory which is not released, or which memory will retain
-incorrect permissions.
-
-Have any of you written test programs?
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
