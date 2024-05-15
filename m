@@ -1,166 +1,148 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC92413F433;
-	Wed, 15 May 2024 14:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F8C13EFEC;
+	Wed, 15 May 2024 14:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715781606; cv=none; b=Vjeos/y3jx1GCQe7tFlrI+nz1J2tKcuZBBXTo8sZlLW+ifQmpxDO6YKcrQZYWO0HNjGsY/fzTANziSm3m569n78Oa8ET4SSuc43+xAEWBy40HoevAVxFr0WVwpWTwCawhO+7OJs9mMFDvyWoIJ0HHQ/5zqtzD3GM7brDcs5EsrQ=
+	t=1715781688; cv=none; b=FzDeeYnhFXwKX/S2BRYxXuBlt86l7As6/LnOgCufDydamhFG83HD8GOoeKEfUvGzK0ZENhyX+mVyD3WbeD+UizcDkoIWSYJv519wTLtzUmWo/X8jf7kLts7UwewtNy5POCWbDWl2NZHxeEiB2s7zZI40NOImf8XRQGxJaFO/O3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715781606; c=relaxed/simple;
-	bh=nNCvn+LTR3HF0HYu1Ms5WNy0wPxDZ1DGc/ApOSFNMas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Qx0K1H8OSIEy3159oNZ5uK9cyA5Nu9UNAVStkWUHLhBoaXHFbMwpvezC0hHIkDQwa2pnvUF6zjasZ04rgCcNSsyYEpEz/H6RwF/2ZktIYF/Lf+7+BHJVdSwmMYpc+rFUacYSMDPed6JjiZdusVnyahttLBaBDA/rlU1jpmu7u8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cX3oXw54; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715781688; c=relaxed/simple;
+	bh=xwRUh0Q2BEauu+Nl2a/vlTqpSIVntSobu/oSaitZYuQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fKM5r8bX/cPaojsNUc6yJXyuoVQmYMisOa56NsiFWTpxfxoMgP05z9tD7puIghgJ9HyoKvPtBhy8Bk2pyOYzWfeFHoZ6+KqXmDC5qPnNwRUZ0mIjVF405ehukrBahT7RhItI1dCRr8I4bGmAiI+KrhCTjSNrSVgC+WdVeOFVwL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=fUruR3hW; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cX3oXw54"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44F90cf6012347;
-	Wed, 15 May 2024 13:59:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=z5nmHfaq7fpNC+vzw2j6vpM0SSB3xUrKvCEz2G5i64A=; b=cX
-	3oXw548rkNZvsDHwyD8fsL+ePmfn4tSF8HZ40Bs5H7pjf6svQWECZ0dp9iYwu86R
-	6VDY5awiM6W2UINFqZQZcr2xe9CKk+C9aLdisS1/Kh3slEmyVjf4qCY4qUtX1sEu
-	4EGB0xiSANcf2mFzDQUYqByk9PHnDJ+mTn1mIydoEb6y4C8bAizg7UHT4m2hENoQ
-	YDfal4M/hkL40akKTGHzwMPPjXycj5EgwD4AxDWgDVOHyxG2hA6TElluW8Auq7wc
-	MD0VUeIN9DpKX/0dzVXGxtSiX9AhbnoCqpQxHM1e/bKfmqMsJq8FWz5Y/WrgVQUX
-	/Lb5H35kHp3Fyrw2B7EA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y3j28npx3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 13:59:40 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44FDxdTb015592
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 13:59:39 GMT
-Received: from [10.214.66.253] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 15 May
- 2024 06:59:33 -0700
-Message-ID: <0a867cd1-8d99-495e-ae7e-a097fc9c00e9@quicinc.com>
-Date: Wed, 15 May 2024 19:29:29 +0530
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="fUruR3hW"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id CAD0A9C58F5;
+	Wed, 15 May 2024 09:54:22 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id Vsvw-3Gl_yow; Wed, 15 May 2024 09:54:22 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id F3B129C58F1;
+	Wed, 15 May 2024 09:54:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com F3B129C58F1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1715781262; bh=/chpUC0ukdj/AkYVw/i/VbX5GAidH0oA2LX3Jzux/F4=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=fUruR3hWfJ3B2AU7MRup/BInecKGrZqxqzu0u7skxC3oxODqJFKJTES78g28qZjrV
+	 D3fhVpjgRpmYhPlugcWM3q9hh87WXH+ZH+3AAXMrQzRhadUd3h5vcF1M7ufHaQ9A7A
+	 LcbJKTLgT+3OsxoOmOZKdGrwpIdySqlZKjDHhc+wIeYYanPo+BF2mgo9Bn69eUq8CX
+	 X1SdSF3ue5LY1y+VktZKEKv4K6uYT304Y/Naxucn4ZWOTiuezh6Ge0AE5y7EPjvJwt
+	 zwDQqZzyipiVxncOHQKaOJ82VXt6HLqyE3ZZjl2T2/dbFueh/7+csp9yDn7tX97Yek
+	 P+xo17keh9A4g==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id XlufncGnrO2c; Wed, 15 May 2024 09:54:21 -0400 (EDT)
+Received: from gerard.rennes.sfl (lmontsouris-657-1-69-118.w80-15.abo.wanadoo.fr [80.15.101.118])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 02C819C58F5;
+	Wed, 15 May 2024 09:54:19 -0400 (EDT)
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Subject: [PATCHv4 1/9] ASoC: fsl-asoc-card: add support for dai links with multiple codecs
+Date: Wed, 15 May 2024 15:54:03 +0200
+Message-Id: <20240515135411.343333-2-elinor.montmasson@savoirfairelinux.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
+References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/5] iommu/arm-smmu: introduction of ACTLR for custom
- prefetcher settings
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Clark <robdclark@gmail.com>
-CC: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
-        <dmitry.baryshkov@linaro.org>, <jsnitsel@redhat.com>,
-        <quic_bjorande@quicinc.com>, <mani@kernel.org>,
-        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
-        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
-        <vladimir.oltean@nxp.com>, <quic_pkondeti@quicinc.com>,
-        <quic_molvera@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
- <20240123144543.9405-4-quic_bibekkum@quicinc.com>
- <CAF6AEGs3_wBNo58EbGicFoQuq8--fDohTGv1JSFgoViygLS5Lg@mail.gmail.com>
- <f2222714-1e00-424e-946d-c314d55541b8@quicinc.com>
- <51b2bd40-888d-4ee4-956f-c5239c5be9e9@linaro.org>
-Content-Language: en-US
-From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-In-Reply-To: <51b2bd40-888d-4ee4-956f-c5239c5be9e9@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: txihSruCNW1nVPzBJ-XNCpZsT7TjaDCy
-X-Proofpoint-GUID: txihSruCNW1nVPzBJ-XNCpZsT7TjaDCy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- impostorscore=0 malwarescore=0 phishscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405150098
+Content-Transfer-Encoding: quoted-printable
 
+Add support for dai links using multiple codecs for multi-codec
+use cases.
 
+Signed-off-by: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Co-authored-by: Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux=
+.com>
+---
+ sound/soc/fsl/fsl-asoc-card.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-On 5/10/2024 6:32 PM, Konrad Dybcio wrote:
-> On 10.05.2024 2:52 PM, Bibek Kumar Patro wrote:
->>
->>
->> On 5/1/2024 12:30 AM, Rob Clark wrote:
->>> On Tue, Jan 23, 2024 at 7:00 AM Bibek Kumar Patro
->>> <quic_bibekkum@quicinc.com> wrote:
->>>>
->>>> Currently in Qualcomm  SoCs the default prefetch is set to 1 which allows
->>>> the TLB to fetch just the next page table. MMU-500 features ACTLR
->>>> register which is implementation defined and is used for Qualcomm SoCs
->>>> to have a custom prefetch setting enabling TLB to prefetch the next set
->>>> of page tables accordingly allowing for faster translations.
->>>>
->>>> ACTLR value is unique for each SMR (Stream matching register) and stored
->>>> in a pre-populated table. This value is set to the register during
->>>> context bank initialisation.
->>>>
->>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
->>>> ---
-> 
-> [...]
-> 
->>>> +
->>>> +               for_each_cfg_sme(cfg, fwspec, j, idx) {
->>>> +                       smr = &smmu->smrs[idx];
->>>> +                       if (smr_is_subset(smr, id, mask)) {
->>>> +                               arm_smmu_cb_write(smmu, cbndx, ARM_SMMU_CB_ACTLR,
->>>> +                                               actlrcfg[i].actlr);
->>>
->>> So, this makes ACTLR look like kind of a FIFO.  But I'm looking at
->>> downstream kgsl's PRR thing (which we'll need to implement vulkan
->>> sparse residency), and it appears to be wanting to set BIT(5) in ACTLR
->>> to enable PRR.
->>>
->>>           val = KGSL_IOMMU_GET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR);
->>>           val |= FIELD_PREP(KGSL_IOMMU_ACTLR_PRR_ENABLE, 1);
->>>           KGSL_IOMMU_SET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR, val);
->>>
->>> Any idea how this works?  And does it need to be done before or after
->>> the ACTLR programming done in this patch?
->>>
->>> BR,
->>> -R
->>>
->>
->> Hi Rob,
->>
->> Can you please help provide some more clarification on the FIFO part? By FIFO are you referring to the storing of ACTLR data in the table?
->>
->> Thanks for pointing to the downstream implementation of kgsl driver for
->> the PRR bit. Since kgsl driver is already handling this PRR bit's
->> setting, this makes setting the PRR BIT(5) by SMMU driver redundant.
-> 
-> The kgsl driver is not present upstream.
-> 
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 5ddc0c2fe53f..8a2a6e5461dc 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -815,10 +815,10 @@ static int fsl_asoc_card_probe(struct platform_device=
+ *pdev)
+=20
+ 	/* Normal DAI Link */
+ 	priv->dai_link[0].cpus->of_node =3D cpu_np;
+-	priv->dai_link[0].codecs->dai_name =3D codec_dai_name;
++	priv->dai_link[0].codecs[0].dai_name =3D codec_dai_name;
+=20
+ 	if (!fsl_asoc_card_is_ac97(priv))
+-		priv->dai_link[0].codecs->of_node =3D codec_np;
++		priv->dai_link[0].codecs[0].of_node =3D codec_np;
+ 	else {
+ 		u32 idx;
+=20
+@@ -829,11 +829,11 @@ static int fsl_asoc_card_probe(struct platform_device=
+ *pdev)
+ 			goto asrc_fail;
+ 		}
+=20
+-		priv->dai_link[0].codecs->name =3D
++		priv->dai_link[0].codecs[0].name =3D
+ 				devm_kasprintf(&pdev->dev, GFP_KERNEL,
+ 					       "ac97-codec.%u",
+ 					       (unsigned int)idx);
+-		if (!priv->dai_link[0].codecs->name) {
++		if (!priv->dai_link[0].codecs[0].name) {
+ 			ret =3D -ENOMEM;
+ 			goto asrc_fail;
+ 		}
+@@ -844,13 +844,19 @@ static int fsl_asoc_card_probe(struct platform_device=
+ *pdev)
+ 	priv->card.num_links =3D 1;
+=20
+ 	if (asrc_pdev) {
++		int i;
++		struct snd_soc_dai_link_component *codec;
++		struct snd_soc_dai_link *link;
++
+ 		/* DPCM DAI Links only if ASRC exists */
+ 		priv->dai_link[1].cpus->of_node =3D asrc_np;
+ 		priv->dai_link[1].platforms->of_node =3D asrc_np;
+-		priv->dai_link[2].codecs->dai_name =3D codec_dai_name;
+-		priv->dai_link[2].codecs->of_node =3D codec_np;
+-		priv->dai_link[2].codecs->name =3D
+-				priv->dai_link[0].codecs->name;
++		link =3D &(priv->dai_link[2]);
++		for_each_link_codecs(link, i, codec) {
++			codec->dai_name =3D priv->dai_link[0].codecs[i].dai_name;
++			codec->of_node =3D priv->dai_link[0].codecs[i].of_node;
++			codec->name =3D priv->dai_link[0].codecs[i].name;
++		}
+ 		priv->dai_link[2].cpus->of_node =3D cpu_np;
+ 		priv->dai_link[2].dai_fmt =3D priv->dai_fmt;
+ 		priv->card.num_links =3D 3;
+--=20
+2.34.1
 
-Right kgsl is not present upstream, it would be better to avoid 
-configuring the PRR bit and can be handled by kgsl directly in downstream.
-
->> Thanks for bringing up this point.
->> I will send v10 patch series removing this BIT(5) setting from the ACTLR
->> table.
-> 
-> I think it's generally saner to configure the SMMU from the SMMU driver..
-
-Yes, agree on this. But since PRR bit is not directly related to SMMU
-configuration so I think it would be better to remove this PRR bit
-setting from SMMU driver based on my understanding.
-
-
-Thanks & regards,
-Bibek
-> 
-> Konrad
