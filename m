@@ -1,170 +1,87 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A0615B14E;
-	Wed, 15 May 2024 20:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E745A10B;
+	Wed, 15 May 2024 20:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715805333; cv=none; b=aDoGSUBhGVFsmMgQpyuBga88oIcZzG37SgXctVoksmNYDzVUkjBTxbedxDactg+Z5nX5gDXETFa0LvEiugsu1w2R8ZZ9IBJJmTEw79FXgV7ZcG8mmWsjrNhd2G6rR6PdMJrbpW6/ysLkVNkE5LvXRSZRt9CzC4Sh8TdwP5o1g9k=
+	t=1715805429; cv=none; b=XC+sRuJtHy1Ji0oWU4We6OSXGS/rOPsO95tiU/irsnCccoeJ9npJ3/rSDQFAGiq6/gblHGet60fv97Z11ttRU1jV9iuWmGg6JE8Bo0YWYjooGqiEu1PhS1O8hFS8tTJccI8Zdf0MkCeAF2EQmK7sx9bG0hrVT9hrGbukktGqoBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715805333; c=relaxed/simple;
-	bh=VbGJP2NaAz4tBqRFEIPiguZVuuL1Evp7KZQ6dB94Z3Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bWOIwOyVLfjxwlkgZPXom/ZHBuFarYUqkF1lwLfZANos2BvEhfuZdOhlBe/BsKtVYqy8pCQPmuJdbVwhZxgP/zZEsX4BRCsMSgN18ueGWMb5GGRXOAp9T/6tPID0e0uUnwnttgzt5YJnjlTRU6tsyp/eR7i6NulN7QAnm2VqAQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDClOATh; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715805429; c=relaxed/simple;
+	bh=sdz3zA2QNS5KCDlhoi4KnGrlOMS53U2mLcRDwFndvR8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=FZcf5eWBHYukahbZejF7n9B1NXjQCqYWlHTFGGyq0oMmaQJ/MBsJPv11d4zQYNKBSCH8Az3knQwsdLOj9F+9gKbrXpXO/oY4Z4/2s4ucMkA2rwqK4zQfjoKBAYPsnnGR0CvraiR6o/3VVfKUeZZIsGemCIRJc3XRd3yVzwMRnk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=vYdauxoZ; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDClOATh"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4ed9dc7beso3257313b3a.1;
-        Wed, 15 May 2024 13:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715805331; x=1716410131; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EhDrIIYuqrWkc8JCUvRQERr8uFUaepc3V2Gr+6xnLX4=;
-        b=dDClOATh6LxoRt6euC9hn3ObXHpBScNM6Qhj3zA04Lq/0Dj/1P/cLca3hRCFPy8KQP
-         n/5q89DZrmMws50grmEXZfy7FJ08OjM1KPiNK/O3B07IseNh1TEfj9G4CmmmryDTR0Yr
-         v0KqnYSRCp7t6CVvKlublPtf7B+Z19JFsVXB/gbdqmdako4Ve5I6Ob1UVv8qwABYAwn2
-         eurWwCj12GPsu3t1SwGgLnSj79f/RSN92577pP+2l/JxPKFNaZ/wtE6hHsP0bKxF9+iA
-         wPfMdqc+lAGGeDkIMDkVBBQsqh0fJrBwrrcRZ7Jzz2IfIpQbXkvnoz4HYvY8QgtTqWY0
-         R2lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715805331; x=1716410131;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EhDrIIYuqrWkc8JCUvRQERr8uFUaepc3V2Gr+6xnLX4=;
-        b=BM+WTbNQkqKsDceKrXrdpPZR6ytkd+n3CR8sFuSaWGTlpsL2fXifraJ+TDVAbcYRlr
-         gDhLIlLXYFYziOPgOV/kLceptyyxffW0Xfuf+XMVr6kqE2lacHYbyf62kizHBM94dpuj
-         GmexUXEvGE8UsjCQQUXtck52pLWU3KknONAvRjKwaTPLvWaMo2iwzaJuTYd+T0oSXHjz
-         QY8cq9Rs33qG1vZ/zzbnmJ2q4dEXzbvyHHHMDoK1AkivSgMX0yu9CFgT5kicVLG+fULm
-         qhzP4tm+OD9SYhbQmpwMKdvl1/LjZxgY0O81wdkPrQFiv5D7WhcpWFqShcrCGQAsfpy0
-         kQaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwK9B90Qdok1xFWx/V1wbfQMck9HcEaIF7HmCjUF5Da/KkB0f1UErKK6mfQ0cGBAdwkPZNlYIJTZK9t/xuPveH+sTEzwI/MbYeC9xm
-X-Gm-Message-State: AOJu0YzyWT/+QVGIy4+KBCV07OfQVBzfefDF3UzjEOI2RvIYIkpBbF3n
-	A4n9XjZVs1GOxD3jB8GgRTplZ4Np7NryekXm4sQpwlOxYGkAD4uf
-X-Google-Smtp-Source: AGHT+IF0o6WWf6UvTgF3lWv/RBGNu8xNI5DYiRd/Nmjl4X7DaPdiPg7wEsbu3KkqXkQYPdMRaVvzdw==
-X-Received: by 2002:a05:6a00:98d:b0:6f4:9fc7:d239 with SMTP id d2e1a72fcca58-6f4c9334e39mr31522883b3a.14.1715805331160;
-        Wed, 15 May 2024 13:35:31 -0700 (PDT)
-Received: from localhost.localdomain ([106.195.57.212])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a66691sm11892785b3a.16.2024.05.15.13.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 13:35:30 -0700 (PDT)
-From: Shresth Prasad <shresthprasad7@gmail.com>
-To: robh@kernel.org,
-	saravanak@google.com
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr,
-	Shresth Prasad <shresthprasad7@gmail.com>
-Subject: [PATCH][next] of: property: Remove calls to of_node_put
-Date: Thu, 16 May 2024 01:59:17 +0530
-Message-ID: <20240515202915.16214-3-shresthprasad7@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="vYdauxoZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715805425; x=1716410225; i=markus.elfring@web.de;
+	bh=sdz3zA2QNS5KCDlhoi4KnGrlOMS53U2mLcRDwFndvR8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=vYdauxoZ2l0R+13LAPojHUlUNojL5xXfUB965op6QLzdaaP9fho5DU1N4hnzl13W
+	 tF40NS4qcklm11RD6Juvgsr3w3hYFjcpqX+AxMZftEQyugojdC7fD41yZVo0yUCi5
+	 KtdYMAlxsXafU77pDKPtcRov6qS2qxoRs1zpinHTt+iyFQ2pP1T8YS1fE2MK2asOc
+	 p9Y75Se0CzwSHMzuJZH1FqSuGgdWEF9kDsocZdqS3Dj60q0bsPMCwd0HrPPj+yZVy
+	 U/S8+C0QROP84+rcrf/wtM/ScUEscc1nZFRloYczdqXAhZiGnaovyQWUui7u6CYA/
+	 ENiDu383iIjyrt8qBA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MElV3-1sN1Pa1w5b-00GH4W; Wed, 15
+ May 2024 22:31:01 +0200
+Message-ID: <fe55ddf4-b86f-4d9f-aac4-373c5f2a46ac@web.de>
+Date: Wed, 15 May 2024 22:30:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Sui Jingfeng <sui.jingfeng@linux.dev>, dri-devel@lists.freedesktop.org,
+ kernel-janitors@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Sui Jingfeng <suijingfeng@loongson.cn>
+References: <20240513001243.1739336-2-sui.jingfeng@linux.dev>
+Subject: Re: [PATCH 1/3] drm/loongson: Add helpers for creating subdevice
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240513001243.1739336-2-sui.jingfeng@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:w0F7NCoqBz6nd2t2/BLUjMjeh0EdR38pQr4i8RHXlrv9MsVW1ym
+ eqfZd01UP6inoqqkFcXgoH6gV/kkoOD3LH0MRqjuHlwCpBYBn7cicw663GLcGCNRF0rdXqT
+ +hxNNKu9EN0qhOLuFCH6Fglo8Hl0YuPoOPDcD+q3Kjkx9Q5H45n8E3ubw5YIyT5LLfcIe2b
+ Ib6t4olqGEvLcz9rwxHWQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hg4gcWxOf5Q=;fe9NF0WpG2V3r/gNoSHv5mNklxV
+ LhtyQ55wMFVyT5w71N4HHCY5B7CgbJx0el1jc96XlFUH5fqnd4r5bPbdSYQsS1r+SAenDdycj
+ BMhlqTJcTa33TQh2uYZzpEova5Pn0j8uxusvQnmYBLbR1cqLAN/4URb2OF4/uRLBZOxu7G7mw
+ XDVP7yXUlOhKc/xPGhsYNuMMbF0D8jlMbT5oAdtJ7i4CUb3wUll8f8cgYaw+ZAYCRdnUQTQF7
+ NET+oSzcZu2PT46SZrClxFB/0aEq3DvmSSfIaIfdjxwa9xleMlwtwCwK2oRfofd+lMrxjmjF0
+ phll674F79zSr6I4+5tUPaNIIBle6mq+3BxdO1rGhgwIFtnZpKhOZE144EJ9B6Ez+T0QgnkAH
+ VvGnTogvGqTjVk76ebUvDN7eAmYHuvpYck1jn1NaUDtY5a+Ec7CbLsoak9ZJG39T309LGbGou
+ x2KzSIPnH9V3M7prFFQ/OIwKmLLTZZA4cbVHjaMkd49AsY6I0+244oNk3TUellL5VaUwsNkKu
+ vLUZZ+vMz3+yJuASdbUcFUy+HudzUF4RWq5++exRWT8sbkNE5WhMGawICKy3Yg0yFypkBOLG/
+ iF6wcrwETlaNTr4XluuxuvX6s4MaM+WF92BeZHBHppD7XD+5Xne4olnwqG6vdxoIMJqvNXqAK
+ QPwZ5Od//oZH6R11XLHcVAQMar1zuV/C+JUEMZ4Ik6dpNzqI+3w0n3Ht0sZzeCW3Q32n2hBV7
+ /bUIOIKuz6yDe1UEPNxxs8NHZC8Ty2WrdRnXzutpSFLsOBcox/6nSBqP6o4Jx60Y3Z13RdxwN
+ BZ07MzO7fo7qo3iGlbsFL4XtmJ9yROLfqVaSxrVkf0uQ8=
 
-Add __free cleanup handler to some variable initialisations, which
-ensures that the resource is freed as soon as the variable goes out of
-scope. Thus removing the need to manually free up the resource using
-of_node_put.
+> In some display subsystems, the functionality of a PCI(e) device may too
+=E2=80=A6
+> of the functionality into child devices can helps to achieve better
+> modularity, eaiser for understand and maintain.
+>
+> Add the loongson_create_platform_device() function to pove the way =E2=
+=80=A6
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
----
-I had submitted a similar patch a couple weeks ago addressing the same 
-issue, but as it turns out I wasn't thorough enough and had left a couple
-instances.
+Please avoid typos in such a change description.
 
-I hope this isn't too big an issue.
----
- drivers/of/property.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 17b294e16c56..96a74f6a8d64 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -773,15 +773,14 @@ EXPORT_SYMBOL(of_graph_get_port_parent);
- struct device_node *of_graph_get_remote_port_parent(
- 			       const struct device_node *node)
- {
--	struct device_node *np, *pp;
-+	struct device_node *pp;
- 
- 	/* Get remote endpoint node. */
--	np = of_graph_get_remote_endpoint(node);
-+	struct device_node *np __free(device_node) =
-+			    of_graph_get_remote_endpoint(node);
- 
- 	pp = of_graph_get_port_parent(np);
- 
--	of_node_put(np);
--
- 	return pp;
- }
- EXPORT_SYMBOL(of_graph_get_remote_port_parent);
-@@ -835,17 +834,18 @@ EXPORT_SYMBOL(of_graph_get_endpoint_count);
- struct device_node *of_graph_get_remote_node(const struct device_node *node,
- 					     u32 port, u32 endpoint)
- {
--	struct device_node *endpoint_node, *remote;
-+	struct device_node *endpoint_node __free(device_node) =
-+			    of_graph_get_endpoint_by_regs(node, port, endpoint);
-+
-+	struct device_node *remote __free(device_node) =
-+			    of_graph_get_remote_port_parent(endpoint_node);
- 
--	endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
- 	if (!endpoint_node) {
- 		pr_debug("no valid endpoint (%d, %d) for node %pOF\n",
- 			 port, endpoint, node);
- 		return NULL;
- 	}
- 
--	remote = of_graph_get_remote_port_parent(endpoint_node);
--	of_node_put(endpoint_node);
- 	if (!remote) {
- 		pr_debug("no valid remote node\n");
- 		return NULL;
-@@ -853,7 +853,6 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
- 
- 	if (!of_device_is_available(remote)) {
- 		pr_debug("not available for remote node\n");
--		of_node_put(remote);
- 		return NULL;
- 	}
- 
-@@ -1064,19 +1063,15 @@ static void of_link_to_phandle(struct device_node *con_np,
- 			      struct device_node *sup_np,
- 			      u8 flags)
- {
--	struct device_node *tmp_np = of_node_get(sup_np);
-+	struct device_node *tmp_np __free(device_node) = of_node_get(sup_np);
- 
- 	/* Check that sup_np and its ancestors are available. */
- 	while (tmp_np) {
--		if (of_fwnode_handle(tmp_np)->dev) {
--			of_node_put(tmp_np);
-+		if (of_fwnode_handle(tmp_np)->dev)
- 			break;
--		}
- 
--		if (!of_device_is_available(tmp_np)) {
--			of_node_put(tmp_np);
-+		if (!of_device_is_available(tmp_np))
- 			return;
--		}
- 
- 		tmp_np = of_get_next_parent(tmp_np);
- 	}
--- 
-2.45.1
-
+Regards,
+Markus
