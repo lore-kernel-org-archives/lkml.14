@@ -1,60 +1,60 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A1C46430
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496D84CB5B
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715759156; cv=none; b=iViP7dNFQfVTk5hlzuA0BabJQdrwnlUSfM99/bqBV/buvvNDD5RVPfzPFUxPiMvsuhMiGRvk8wE3NU/T7gwiUZ5dqmHz7BkexOLoNlvS1XBPnroYTuDVLMLMCIVMKPVBaBop5KSa+N+yfOJWEtVcfW8v5GetmWpdZ+sB1o2CP0g=
+	t=1715759253; cv=none; b=b3Vm6EZpGH2ouipys2a5w5i2/tznilGYCLyuV525RdI9m7/o0h4kFVjjEqLltCpAp7EuI9PnbKTVg0K9TAAw8YaCmdNjA6rEXijDlxPZPfV58qcnKM6xf189Myi2+0YBoApZn9GPLmTM15vHsVnkr+8b+VPnXXGP31y1gExJFS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715759156; c=relaxed/simple;
-	bh=0YrnAwgsUMb4k9BI0AKc8V+PhChBiSKTgm7sM05EbDY=;
+	s=arc-20240116; t=1715759253; c=relaxed/simple;
+	bh=oTyV7UDhXConmMQHKJKF2WY7SMvTHvxxDnYW5I4nAXw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QDPj6Twie6+nxp4XwdRM48mHNCHUKfcle8BdB0DTZbBB+APip7QI60PkhKZmyWc+x8xyeyLjQRtKcuuf8+TZ8k1aG5tNeay4/fCIlfXvLM1sDo9b6c8mlhhj4wN7BApfxz1L+q+G6ELrN4X1vRD65Nhp79TzGEZrgSjnDEGVVjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H3rjvHly; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:Content-Type; b=lkCoj8JNIPSr+j0DO+oZX9DKyfYEq3Nx5VN21JxJqAuE1gAA00xvQuc5BKOBkT7KpW8cJhW9xc9HgWumKRfPrRhddK3Ge6HFHmwEKtDipncaLHxh4oW99PgvDsngU2rrZF+00pA3/0H7rhh+2MM90PMrjGHY67nyg8zB6AFUqs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YhS930mG; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3rjvHly"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41fd5dc03easo40135335e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:45:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YhS930mG"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-34da35cd01cso6041159f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:47:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715759152; x=1716363952; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715759251; x=1716364051; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gJc1oIlpeSOnv91+spz2NNBOOiNI4JHd9FLN4xXD2l8=;
-        b=H3rjvHlyOILHA+RYp2nugKKR0HimOYsOAhUMbbMRU7ftvjAszCDsFw9H7Jd/bIrTaL
-         fvtEZXrXBDo3Kj5PHHH1nw4jMPrOrHnFyhLYT8qpOWk5IsXDm2QdDT/UtDXtwFqW78Pn
-         lMnFvzEw3xtonQGOWscz2ckd7Su7ZqlTjHfhk4vKKN9kATcfIWT5mVYwdVcqMyjTdh7e
-         J4vrXt8PsSM+R9/NXIdJeot5iy3J6Opy/OMTtrJ/DuHAfryPCWVVxQ4Hg952aEDdyUjU
-         pBxTrMa4VGmJegmQp+ipDdcXzngSoPhGtFmVMCcEsWIhySXVoYISplsXLrkbsEC74Y10
-         Z97g==
+        bh=fbW14bg0Wumeh9jCsijMHeGxFGLGKw9Y+IaaoUwt+VY=;
+        b=YhS930mGPPsYF402D/mRTLnZQxzp3R2ZX78benJuCZj6jnGbTXDQObY0fwlb6KC2Fr
+         qhcqwJEWeuymvRalYPJyGwO1OpwJX0c7P8pFCJjUpm+Y+5zkitYfSvSQ0t4kX4gvBMD1
+         1RS2ITAk69NkimsM3XQ+0KG+0M4WQQWq4YxE6X1KdDgI7FqJ5E32sFOD2LYEZ/Jk6JRx
+         JUn6yeXCWh5vidsgZ0QAiNzWNTh6iwJ2WjdTYYJOY7h/SuUrBQniz1Gg21DZjMiS8YBD
+         y/kdZZ0BQ6YCvAThXvaqyHOCYfA2SkmUrbJJ5ZTe6LWYnr4GY+bS2YH4WoFSCzNWD+B+
+         axng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715759152; x=1716363952;
+        d=1e100.net; s=20230601; t=1715759251; x=1716364051;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gJc1oIlpeSOnv91+spz2NNBOOiNI4JHd9FLN4xXD2l8=;
-        b=l47L8oTk2YEOkEXIIgijujQfhz4wp15f2qslfKZHNBfOJnzMt0UjcU/PYf2Y1omA7U
-         OZ7m6pNKLLicBHIjvWTB42/gvaBGvrfZnA3mY2V7Oz03kDAG81x9g5DbC02CWfX7oNdE
-         PpYmrJYGfw7wdziHLn7bUhWVjgbX/QyKFrzTqcXmoYrIQr+X1SY+jYxPINYjXUL1IePv
-         BJ3LBEP2EgTTTLyqVmwfAW5ae+nLE4WEEwM9AQKIgaas25Suhmt7QIyncaUXCs6Yvx1H
-         Ycy3X6NM3lcELhgbGLLcj/xLbhisI3ftNT9GLjTJ2tajZjYB1lPfDJfqQclV17CxaMgg
-         rcJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMtUF21ZsmI2AFPFcJ94dBfAqqk9/8vRRe9DLBFNVWY2Pi2eXufn23gB3ZROnKdnlMQHesWFDgSF2W7o5bgyLfGre7EjFVIM6/ZwvW
-X-Gm-Message-State: AOJu0YzA1qGe3bnFQRlk3yUm6HpPnKlSW6l7ZPfqmJ1hYUlcs0gyqHBs
-	PJFu8b5mfw4ioq6E964LPWqpSU3LxVIzJAJeUvADCITsr7+dFjRHe0dSmjL/KP0=
-X-Google-Smtp-Source: AGHT+IE6IZTHpEuAB1euBtrOUTd06+4sZKXXDDpr4cYpl5F6QegKREkgEZ+vSJGT7IuE23K41PjIJQ==
-X-Received: by 2002:a05:600c:1f93:b0:420:1fd2:e611 with SMTP id 5b1f17b1804b1-4201fd2e636mr29111825e9.27.1715759151983;
-        Wed, 15 May 2024 00:45:51 -0700 (PDT)
+        bh=fbW14bg0Wumeh9jCsijMHeGxFGLGKw9Y+IaaoUwt+VY=;
+        b=LVD4e7AXcuVCQ2eFN3IEL3HnlGw6uSC6HRaZEr+uzdz4HBUcr0kgDpliTRSOLs08QE
+         VB9HHagcDBaV5BWGd2Q/9rz/zmkSq7KGDrIMW9z/hIHMsD1fIhcFLyg+X3ztOLphsz+C
+         cqDTwtYPuZUF54vR5dJKbdRu+lV9r4nfTSW+aRipK9FfXyfE9YcFhYlNe+j5PaVkSssr
+         GxUUkeWiOnRMyYOYdIjAj6jydc7dlD7wr6FOSy8nNaPDzYyUTebS8iuxzuKRhN1ZnbGv
+         n0R5xX+rMelY6SGMbZWiZpHh2VZVsnyjUUFP7ch6fXrC8igRdWJAXdAEP25fJu0Ogkw+
+         nVVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGSJFOzCaDY25Fm7PEPCRnYjKI92vVWE/U+ym3qiyOCqMaeOIbnkxwuJSd5OVksMLyAeuD9BTUt3FWfZJXDqlq/1TfH8Q0Bgf8mV0W
+X-Gm-Message-State: AOJu0YwjAnWf45JffS3Q935LDZgA4q3S2VD0n0b0OdM0GPsCi4diiGaJ
+	qcRWbnI38rpde+ySGZWduzdTJAeUn+yTe+4y/SNjNcdrTjGEqBb/KTY+0LeLuAs=
+X-Google-Smtp-Source: AGHT+IHMagoScq7U99hdVHkw1NBdhpBlZdJTQg/2XG8xtYlCfMWMq7GIe724Va2TIIkHo5+SH6EweQ==
+X-Received: by 2002:adf:eb49:0:b0:34c:f4c8:3af9 with SMTP id ffacd0b85a97d-3504aa63147mr12280225f8f.58.1715759250689;
+        Wed, 15 May 2024 00:47:30 -0700 (PDT)
 Received: from [10.91.0.75] ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbc334sm15620151f8f.103.2024.05.15.00.45.50
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b79bd7asm15561313f8f.17.2024.05.15.00.47.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 May 2024 00:45:51 -0700 (PDT)
-Message-ID: <1766fc9a-1d10-4c93-a9db-a7e0db8b01e7@linaro.org>
-Date: Wed, 15 May 2024 09:45:49 +0200
+        Wed, 15 May 2024 00:47:30 -0700 (PDT)
+Message-ID: <ea9ce984-8a07-47a8-9533-a6cea5b318b5@linaro.org>
+Date: Wed, 15 May 2024 09:47:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] arm64/hyperv: Support DeviceTree
+Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from
+ DeviceTree
 To: Roman Kisel <romank@linux.microsoft.com>, arnd@arndb.de,
  bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com,
  dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
@@ -74,7 +75,7 @@ To: Roman Kisel <romank@linux.microsoft.com>, arnd@arndb.de,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
 Cc: ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
 References: <20240514224508.212318-1-romank@linux.microsoft.com>
- <20240514224508.212318-2-romank@linux.microsoft.com>
+ <20240514224508.212318-6-romank@linux.microsoft.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -121,49 +122,82 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240514224508.212318-2-romank@linux.microsoft.com>
+In-Reply-To: <20240514224508.212318-6-romank@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/05/2024 00:43, Roman Kisel wrote:
-> The Virtual Trust Level platforms rely on DeviceTree, and the
-> arm64/hyperv code supports ACPI only. Update the logic to
-> support DeviceTree on boot as well as ACPI.
+> The vmbus driver uses ACPI for interrupt assignment on
+> arm64 hence it won't function in the VTL mode where only
+> DeviceTree can be used.
+> 
+> Update the vmbus driver to discover interrupt configuration
+> via DeviceTree.
 > 
 > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 > ---
->  arch/arm64/hyperv/mshyperv.c | 34 +++++++++++++++++++++++++++++-----
->  1 file changed, 29 insertions(+), 5 deletions(-)
+>  drivers/hv/vmbus_drv.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
 > 
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index b1a4de4eee29..208a3bcb9686 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -15,6 +15,9 @@
->  #include <linux/errno.h>
->  #include <linux/version.h>
->  #include <linux/cpuhotplug.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index e25223cee3ab..52f01bd1c947 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/syscore_ops.h>
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/pci.h>
+> +#include <linux/of_irq.h>
+>  #include <clocksource/hyperv_timer.h>
 >  #include <asm/mshyperv.h>
->  
->  static bool hyperv_initialized;
-> @@ -27,6 +30,29 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->  	return 0;
+>  #include "hyperv_vmbus.h"
+> @@ -2316,6 +2317,34 @@ static int vmbus_acpi_add(struct platform_device *pdev)
 >  }
+>  #endif
 >  
-> +static bool hyperv_detect_fdt(void)
+> +static int __maybe_unused vmbus_of_set_irq(struct device_node *np)
 > +{
-> +#ifdef CONFIG_OF
-> +	const unsigned long hyp_node = of_get_flat_dt_subnode_by_name(
-> +			of_get_flat_dt_root(), "hypervisor");
-
-Why do you add an ABI for node name? Although name looks OK, but is it
-really described in the spec that you depend on it? I really do not like
-name dependencies...
+> +	struct irq_desc *desc;
+> +	int irq;
+> +
+> +	irq = of_irq_get(np, 0);
 
 Where is the binding for this?
+
+> +	if (irq == 0) {
+> +		pr_err("VMBus interrupt mapping failure\n");
+> +		return -EINVAL;
+> +	}
+> +	if (irq < 0) {
+> +		pr_err("VMBus interrupt data can't be read from DeviceTree, error %d\n", irq);
+> +		return irq;
+> +	}
+> +
+> +	desc = irq_to_desc(irq);
+> +	if (!desc) {
+> +		pr_err("VMBus interrupt description can't be found for virq %d\n", irq);
+> +		return -ENODEV;
+> +	}
+> +
+> +	vmbus_irq = irq;
+> +	vmbus_interrupt = desc->irq_data.hwirq;
+> +	pr_debug("VMBus virq %d, hwirq %d\n", vmbus_irq, vmbus_interrupt);
+> +
+> +	return 0;
+> +}
+> +
+>  static int vmbus_device_add(struct platform_device *pdev)
+>  {
+>  	struct resource **cur_res = &hyperv_mmio;
+> @@ -2324,12 +2353,20 @@ static int vmbus_device_add(struct platform_device *pdev)
+>  	struct device_node *np = pdev->dev.of_node;
+>  	int ret;
+>  
+> +	pr_debug("VMBus is present in DeviceTree\n");
+
+Not related and not really helpful. Simple entry/exit tracking is
+provided already by tracing.
+
 
 Best regards,
 Krzysztof
