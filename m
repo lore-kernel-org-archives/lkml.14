@@ -1,139 +1,72 @@
-Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153D342061;
-	Wed, 15 May 2024 07:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6183A5661;
+	Wed, 15 May 2024 07:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715758498; cv=none; b=l5l02ae6uBLiiGSuqedtNsds/njp/KhNDoK49XI9t54JT72p7+gQmRYEBmf78Qr4ji8XCzqX7ShtUar2qJ8nkZIL9Nq+2q/bpz4eEaj0GKh7TWKCuySFsiX5LxhN06CQxN1cAruer833rXuIIYkylLy4LrteNBUoH7sHd5BX7mw=
+	t=1715758605; cv=none; b=FkRwCaJ85ygQfKeDoQz+BnLG6C6/slZNsROLNQjBo0UszZ+HH9HE9WXl1VvuPgGU72gfHWoeuI6nYi2PDs45x01reXabfNjT3v43HnIPnuZtxNSpC+rhruExVbZXFZai3kvCf676dGWwoXK/9bcn/sga/JgT+h4M1zqd0fdlLrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715758498; c=relaxed/simple;
-	bh=o0K8SOZhFFx3AbDud2mrFyHDdGrcVFTLMD9MdfObI+0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=T1gtPYyMWuNmwoPeuEV2b98s2GeOonp/ShQIUc2u7FNP49cB5wh8RzlzXo3eXHIob5nMBDUPqG9dzjwI7dhLw2Tb963e6bHUhn9zlVGvCdmZrYD6cjejcwqeqI5RLvqEYG/Xnsz1IDgt7jQB4FGRAfqYfhlYfy6J1yDmlL+Ndqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fBh8nkRi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AsX96VWV; arc=none smtp.client-ip=64.147.123.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1715758605; c=relaxed/simple;
+	bh=CefRu0Bn3G1FBcGR9MMrJgXqv9Ap5Ha9Zc0YkoqMsUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iIVV5eC4yP8OTzeN4ObsPPq18Fkuagi71vIv/o9YTZm1VnpkIG2GYMZ+Uj3dxlAr5bD7aY5h05C1BU+meEPkKJ5BzJbTIuJdlCMrC35RzCdIMcJGk/weFWXoJCazz63MvK35KlX93o3wKET1I6eGff3wnAYa/KBZPT3m5kwKzaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bkD/YtNE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fBh8nkRi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AsX96VWV"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 664B51C000EC;
-	Wed, 15 May 2024 03:34:53 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 15 May 2024 03:34:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1715758493; x=1715844893; bh=vYBANP9AhE
-	/d4SYDAtFqOYHR51zF89WgGBJY4yYfEbU=; b=fBh8nkRioN2mg4e68WVi/3USgv
-	+hXgKI9+wvlzhnDN/BsJAkWcdpd4vm8XxJ1ytSeV9eA5dJPGsYAHiwAWKBkiqI0o
-	Z/nnMXdhVsQeu31HeBjkvfsw4y90IS20zEd1XXS6LklsF5IhWirTXBibO9GGpTgO
-	OosXcJG1YXO9uhW/OiIwAwyLnwrbLzE+TxQA/ilRj2/eS/eK/TQ0iElSpEJfQx5Y
-	1kprX8MUZlkdQcPwZoG5tK67SyZ11d0Y+W+D3vzDK86aTsXACzwjRQBt6v2o8OKh
-	r0lyugNyjYdec86oSIv5CyPIKMxBXWEstiyFwNtQAKa/87HigMWHWSmotCrQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715758493; x=1715844893; bh=vYBANP9AhE/d4SYDAtFqOYHR51zF
-	89WgGBJY4yYfEbU=; b=AsX96VWVBUDft5ySkos/jCnMBF+Jq5h6nP2QvMhrDCL/
-	J27ZPMy9V8syoXKAfZN3bHQuKnpvYsBH7BfF81NGWq6bzD2/y+tM+zLjaZk8qh1K
-	78uckXnN7U6hMCOAMlC+rL3VxX2ikeqlmpUZx3hw1zRAu8toxyTAjgCZsfvc3SY/
-	BnfGNNpX17ggOEbdYUm5gmpyq703jVGoQPvs6QVDKKZFzr/NLZkUWWnC0k7lW4g7
-	9idkhMwYDmCMjSuLxKXqlkx8UaEsCUmC72B2YKc0wsUAnmYwGrq/G8Du5vrHHLuF
-	f4fV/bfY4HWal34oyDp92MK43avjyJTOfqfo3GId1w==
-X-ME-Sender: <xms:nGVEZrTWXeO-r8Q2ZkDMO7k0wgBnmpFJZfBVoLPZoN4K5RgUU9bF-Q>
-    <xme:nGVEZsw-wGtDI211XsS1nUc5k_52Ue7M9J3DuiTYGDWaZD_aJJTbfVPIm1zFmGZ--
-    egzIGyEPXDnfyvkTAg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegjedguddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:nGVEZg1dtlyn73t6SSZDCWleJ4f6fVHqNX91Oh4wgX-ZF2ZFc67Cnw>
-    <xmx:nGVEZrC4HqRqXaolYHiHL0fI16fXbFBLc-0kAJaKf34bECT17kXqmw>
-    <xmx:nGVEZkiHhpkzRvcSRDMRhoZ111s-M0KagK3KST73zwXZeDYopa2EBQ>
-    <xmx:nGVEZvrlGOP-h5H9ccuKDmycdu6Mh7YZOUX7FBImidU7sEv-K9wGTg>
-    <xmx:nWVEZrTJGabmz0WlGvhGr4yxxbHT4SGICnzcZ4SHDhWNLtrMqiCUSkAv>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E9B46B6008D; Wed, 15 May 2024 03:34:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-455-g0aad06e44-fm-20240509.001-g0aad06e4
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bkD/YtNE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CefRu0Bn3G1FBcGR9MMrJgXqv9Ap5Ha9Zc0YkoqMsUE=; b=bkD/YtNEYdQRG1Ym54cU6b+Wk3
+	/00CQhXbI8+/nXZM83gY+riXCUgBmyDhIRyNKzRo+pGuy5mJjHjgZ8nmq5m4esoVj6oibp+HAgZU4
+	RTQgb6RNZJYr23Xh6UM7uMCw2eb4tmIoDZD2BC7Iz0pp/Y8WHniefEv2fUXMoH7WiPznGz57Yx/Vh
+	W1vANy6uaWgMgYY5oOXBJyFifXNk7psgYoqk4eLIqeLRyk+d56sxx2VRkG15Q3CNW/K9ScsbYB5R4
+	k6BtyRFCM9vpJ7/2SzG+K6Apa3qka+PpztVrh2LCYxfU1dLgmJzbjbhl5Vkl1ZTaAeSuck/TdzmW/
+	qkk8MwhQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s79Bl-0000000A3Wl-0dEO;
+	Wed, 15 May 2024 07:36:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7178730068B; Wed, 15 May 2024 09:36:36 +0200 (CEST)
+Date: Wed, 15 May 2024 09:36:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <20240515073636.GY40213@noisy.programming.kicks-ass.net>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ace5ac5c-88d2-43be-9236-11d3913886b9@app.fastmail.com>
-In-Reply-To: <20240514102757.b7034966a58e6cf44d75dc7d@linux-foundation.org>
-References: <20240418-alice-mm-v6-0-cb8f3e5d688f@google.com>
- <20240418-alice-mm-v6-2-cb8f3e5d688f@google.com>
- <20240514102757.b7034966a58e6cf44d75dc7d@linux-foundation.org>
-Date: Wed, 15 May 2024 07:34:31 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andrew Morton" <akpm@linux-foundation.org>,
- "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Matthew Wilcox" <willy@infradead.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Kees Cook" <keescook@chromium.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Wedson Almeida Filho" <wedsonaf@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@samsung.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
- "Todd Kjos" <tkjos@android.com>, "Martijn Coenen" <maco@android.com>,
- "Joel Fernandes" <joel@joelfernandes.org>,
- "Carlos Llamas" <cmllamas@google.com>,
- "Suren Baghdasaryan" <surenb@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, "Christian Brauner" <brauner@kernel.org>
-Subject: Re: [PATCH v6 2/4] uaccess: always export _copy_[from|to]_user with
- CONFIG_RUST
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
 
+On Wed, May 08, 2024 at 04:47:25PM -0700, Linus Torvalds wrote:
+> For example, the most common case of overflow we've ever had has very
+> much been array indexing. Now, sometimes that has actually been actual
+> undefined behavior, because it's been overflow in signed variables,
+> and those are "easy" to find in the sense that you just say "no, can't
+> do that". UBSAN finds them, and that's good.
 
+We build with -fno-strict-overflow, which implies -fwrapv, which removes
+the UB from signed overflow by mandating 2s complement.
 
-On Tue, May 14, 2024, at 17:27, Andrew Morton wrote:
-> On Thu, 18 Apr 2024 08:59:18 +0000 Alice Ryhl <aliceryhl@google.com> wrote:
->
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> Rust code needs to be able to access _copy_from_user and _copy_to_user
->> so that it can skip the check_copy_size check in cases where the length
->> is known at compile-time, mirroring the logic for when C code will skip
->> check_copy_size. To do this, we ensure that exported versions of these
->> methods are available when CONFIG_RUST is enabled.
->> 
->> Alice has verified that this patch passes the CONFIG_TEST_USER_COPY test
->> on x86 using the Android cuttlefish emulator.
->> 
->>  ...
->>
->> -#ifdef INLINE_COPY_TO_USER
->>  static inline __must_check unsigned long
->> -_copy_to_user(void __user *to, const void *from, unsigned long n)
->> +_inline_copy_to_user(void __user *to, const void *from, unsigned long n)
->>  {
->
-> I think it would be helpful to have some comments in here describing
-> why we're doing this _inline_* thing.  What problem is it avoiding?
-
-How about
-
-/*
- * Architectures that #define INLINE_COPY_TO_USER use this function
- * directly in the normal copy_to_user(), the other ones go through
- * an extern _copy_to_user(), which expands the same code here.
- * Rust code always uses the extern definition.
- */
-
-       Arnd
+With the exception of an UBSAN bug prior to GCC-8, UBSAN will not, and
+should not, warn about signed overflow when using either of these flags.
