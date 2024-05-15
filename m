@@ -1,62 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CF56EB4C;
-	Wed, 15 May 2024 11:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C0157CA1;
+	Wed, 15 May 2024 11:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715771934; cv=none; b=NVD9/HQrH/EyP4DzPDEXBDM/uYqL2H2p0sNYCUBHgWEvS7ZXBOqm4zbLGKpbweaWa3IJ2Rj18XomUzoI69yL78YkzG8UdiHeYC+78ZWlDg0U6dv2byf+LOzK+ipf9Z8K45BRlIs7UcJNqdCn8G4evJQRVMElSwsaPPrqwPW0heo=
+	t=1715772043; cv=none; b=Od/GvrAPLE1sZ7BETtjHe/G2ylHZFvHGzx3d+zuxWJnT9WSyMYQzozBp8sZh1i7CKyu4/30qNTur06zX0vzrmJa2AWtd3iEFnnQaw8CEXjcDbT7BGQAHmJSxEp1Awq5f3JBVe6cehbP8MUy1N43WgPPtWKlE/dQQPQ5p0PGGO44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715771934; c=relaxed/simple;
-	bh=ypmQgTTVuA6yQFrlp0e3Jm4SgrVCOEzrzTi78+uItIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uoqUtjodN/JdWmUzlZNspl4x8MX80UUx32sEogWNnqH2n2+ghOpq8Fxk9Fe8bsv46Te6enYbx7IgvrNoXGl0igv9vY1k8z5Givunbnc/bbDY47g9olNbsUNr4cIrowTRjHnuRXdp0vbppBhhgVvbHFWdXMgOQn1VKaz5PwPfU0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D1Lhsq6u; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715772043; c=relaxed/simple;
+	bh=qQ6ByqmsI87UJ6a1/Qsz0KjSGLTYGPe8kDGDKnT6Wsc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jE4t7P7E4lhyMuXrfqdVPtaeNCDEYVeAm8ULd646pztKOlYnD6lC/gVVbYPuIgbJDGr0IGY82Ba3WAAIxuhNfRl19qGzR8MAL25jv3xRMH05MAEb7HNGa2qCU+RVjEHGB77VkYjST5MbI8ssvlZMrXO5q83X+7PS++r1Pq1+AiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQOPIcl6; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D1Lhsq6u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715771934; x=1747307934;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ypmQgTTVuA6yQFrlp0e3Jm4SgrVCOEzrzTi78+uItIs=;
-  b=D1Lhsq6uxOvKL/kyu1bEIiQZaRAnCchCOariTxK8B/3EzewyTMOFPKc7
-   4BLsB03Pq+pEV24rUcsxkWjZtvxjJSpA00HJQfmjFlkaJJMEDqe0l171S
-   jzZWrW7b3uWPVQYbNugfSxcpr3+hVePu5ewl1I6VeZIcLpPBKN21+mwsp
-   sP8RRjRqdguMW/4pgqOQZNFuTMm8vskeF136DMNYWbXEwJrwXVqeqEDQF
-   cTtuSMMU4x3A/TjchPhuwJBFRTvuMEMVGzKFT4EHbr/PUUHJnTtHs3P3k
-   kpy59WianpV/tnSvQ7SRYq3V/kCJizXe0mJEfAqkfOthzlbHaxsY8qgeg
-   A==;
-X-CSE-ConnectionGUID: nLyMdaVTR0uSGvIUFRHqBQ==
-X-CSE-MsgGUID: 99tsPHlWSw+BkIFwj07noA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="22399428"
-X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="scan'208";a="22399428"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 04:18:53 -0700
-X-CSE-ConnectionGUID: n7DBne7AT+GRpJ1utQrarQ==
-X-CSE-MsgGUID: wFklm+3eSeisovWVteQwhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="scan'208";a="31609018"
-Received: from unknown (HELO wieczorr-mobl1.intel.com) ([10.245.245.148])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 04:18:49 -0700
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: fenghua.yu@intel.com,
-	shuah@kernel.org,
-	reinette.chatre@intel.com
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	tony.luck@intel.com
-Subject: [PATCH v2 2/2] selftests/resctrl: Adjust SNC support messages
-Date: Wed, 15 May 2024 13:18:38 +0200
-Message-ID: <16764746e8f9f42cbd45d61210764a9b67085cbf.1715769576.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <cover.1715769576.git.maciej.wieczor-retman@intel.com>
-References: <cover.1715769576.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQOPIcl6"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-572c65cea55so3509437a12.0;
+        Wed, 15 May 2024 04:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715772040; x=1716376840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+m06lZ+9mZ5s12obwPdLvKcWcqk/GTf8FG1sxmRcMtU=;
+        b=RQOPIcl6JtusjSyaxRHYDlIRB5zMuxSf7v2gL/iNoGWo/kEaH1FgXNXRmYfzwMJdrr
+         XCkUnRtoPvouheL3gE6sBHBO+pk4lCQeKTG0sKB2kGfFU8gDDaDsVZAjK4c2sNIufdAA
+         BsVpPXE1EXP46j1kFuZGNWivAHtGVVm0pNTIYmSWZFD9dKAFhjwUoFppQlUEbSgURcdN
+         eiqIiOaN/f6/c+KdLImCmzei4SFcuT94wMYd2OC+Hc42JXTwN+LSWZRedFYpo8pOBlzW
+         S3AZ68/IlJ98Ie/8241if0uCmnx2O3ZL/lBTRAnBxxtO8NtS2qQm7A/Jemquz/iOitX/
+         2hHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715772040; x=1716376840;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+m06lZ+9mZ5s12obwPdLvKcWcqk/GTf8FG1sxmRcMtU=;
+        b=xUpgovtTA45xD7IGHEt22U8zv81NwSvN+8iCO9xrORcsBgjatl/S2+MaVekBATvjWS
+         PHSXljpPAH4JfjKixXGABt1808pucaAT9sFJgnCbNa36wILM+WPGNQg+x5Luyy1TzSfk
+         nPAijnGBEcI06qM7juR5/NrwlkV18ZoHStKr3/m/fsORP96CNMG/ecedKQbMAWzNzAQy
+         xZB1putC4PyJv4sJofXLPUZmLOIkYR5xYZr2rzRHZfrkmunUDFUUkq7b71CKZf3B0eKx
+         Arur+YWJM0MwSOhHb/7CL/Iko+ZibYbaTuNsj4cxFUFakAhyqEWEpSufMudxmZxCc3An
+         9FVg==
+X-Forwarded-Encrypted: i=1; AJvYcCURNs2A5APR/5yix+Ta78FwtwouRd/WfsbpMyJTo/+fI52Sj34jZeCPI54BfEzu8DRqX0gllDcg4G/vJSIa6xAJlNUFlsfEy0iNlE1lKcYMdD/9t1r0NqUaoAnDLDjJp8z/Ht5/bH1TbD6zBZk/i/JWm3aNzG9T3lf4mROqG7eWsE250w==
+X-Gm-Message-State: AOJu0YxM2MD3nioZlj9wrNmCK+X4mbqveunrd7ZnsNjDsWJ+yCH+Mg9j
+	w3OkdsA7u1wmr6jEMj1ns15SqM78JsJltaTwzU8jJUBW4hcp3gpV
+X-Google-Smtp-Source: AGHT+IGGrjPYUKCf6+BOtL9koMPG1xnm0qrc4o1TtWFemS/d4pZiF9rPdsuiukxqtZL+9UAS8m83Xw==
+X-Received: by 2002:a05:6402:1803:b0:572:a4eb:6678 with SMTP id 4fb4d7f45d1cf-5733294a944mr15206998a12.19.1715772039815;
+        Wed, 15 May 2024 04:20:39 -0700 (PDT)
+Received: from debian.fritz.box ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c2cb331sm8847633a12.67.2024.05.15.04.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 04:20:39 -0700 (PDT)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] pwm: add support for NXPs high-side switch MC33XS2410
+Date: Wed, 15 May 2024 13:20:32 +0200
+Message-Id: <20240515112034.298116-1-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,238 +72,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Resctrl selftest prints a message on test failure that Sub-Numa
-Clustering (SNC) could be enabled and points the user to check theirs BIOS
-settings. No actual check is performed before printing that message so
-it is not very accurate in pinpointing a problem.
+The MC33XS2410 is a four channel high-side switch. Featuring advanced
+monitoring and control function, the device is operational from 3.0 V to
+60 V. The device is controlled by SPI port for configuration.
 
-Figuring out if SNC is enabled is only one part of the problem, the
-other being whether the kernel supports it. As there is no easy
-interface that simply states SNC support in the kernel one can find that
-information by comparing L3 cache sizes from different sources. Cache
-size reported by /sys/devices/system/node/node0/cpu0/cache/index3/size
-will always show the full cache size even if it's split by enabled SNC.
-On the other hand /sys/fs/resctrl/size has information about L3 size,
-that with kernel support is adjusted for enabled SNC.
+Changes in V2:
+  - fix title in devicetree binding
+  - fix commit message in devicetree binding patch
+  - remove external clock from pwms and create clocks property
+  - switch to unevaluatedProperties: false
+  - add missing properties for complete example:
+    - pwm-names
+    - pwms
+    - interrupts
+    - clocks
 
-Add a function to find a cache size from /sys/fs/resctrl/size since
-finding that information from the other source is already implemented.
+Changes in V3:
+  - Add description of the general behaviour of the device (limitations)
+  - Drop unused defines
+  - Add ranges comments for defines with parameters
+  - Drop MC33XS2410_PERIOD_MAX, MC33XS2410_PERIOD_MIN defines
+  - Drop mc33xs2410_period variable
+  - Round down when calculating period and duty cycle
+  - Use switch instead of loop when calculating frequency
+  - Removed ret variable in mc33xs2410_pwm_get_freq
+  - Handle all accesses in a single call to spi_sync_transfer
+  - Fix comments in function mc33xs2410_pwm_get_period
+  - Fix call pwm_set_relative_duty_cycle(state, ret, 255), instead
+    pwm_set_relative_duty_cycle(state, val[1] + 1, 256);
+  - Use devm_pwmchip_alloc
+  - Fix typo s/Transitition/Transition/
+  - Drop driver_data
+  - Removed patch for direct inputs from series
+  - Tested with PWM_DEBUG enabled, didn't before !
 
-Add a function that compares the two cache sizes and use it to make the
-SNC support message more meaningful.
+Dimitri Fedrau (2):
+  dt-bindings: pwm: add support for MC33XS2410
+  pwm: add support for NXPs high-side switch MC33XS2410
 
-Add the SNC support message just after MBA's check_results() since MBA
-shares code with MBM and also can suffer from enabled SNC if there is no
-support in the kernel.
+ .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 +++++
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-mc33xs2410.c                  | 410 ++++++++++++++++++
+ 4 files changed, 541 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+ create mode 100644 drivers/pwm/pwm-mc33xs2410.c
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
-Changelog v2:
-- Move snc_ways() checks from individual tests into
-  snc_kernel_support().
-- Write better comment for snc_kernel_support().
-
- tools/testing/selftests/resctrl/cat_test.c  |  2 +-
- tools/testing/selftests/resctrl/cmt_test.c  |  6 +-
- tools/testing/selftests/resctrl/mba_test.c  |  2 +
- tools/testing/selftests/resctrl/mbm_test.c  |  4 +-
- tools/testing/selftests/resctrl/resctrl.h   |  5 +-
- tools/testing/selftests/resctrl/resctrlfs.c | 72 ++++++++++++++++++++-
- 6 files changed, 82 insertions(+), 9 deletions(-)
-
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index c7686fb6641a..722b4fcaf788 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -253,7 +253,7 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 		return ret;
- 
- 	/* Get L3/L2 cache size */
--	ret = get_cache_size(uparams->cpu, test->resource, &cache_total_size);
-+	ret = get_sys_cache_size(uparams->cpu, test->resource, &cache_total_size);
- 	if (ret)
- 		return ret;
- 	ksft_print_msg("Cache size :%lu\n", cache_total_size);
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index a44e6fcd37b7..0ff232d38c26 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -112,7 +112,7 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 	if (ret)
- 		return ret;
- 
--	ret = get_cache_size(uparams->cpu, "L3", &cache_total_size);
-+	ret = get_sys_cache_size(uparams->cpu, "L3", &cache_total_size);
- 	if (ret)
- 		return ret;
- 	ksft_print_msg("Cache size :%lu\n", cache_total_size);
-@@ -157,8 +157,8 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 		goto out;
- 
- 	ret = check_results(&param, span, n);
--	if (ret && (get_vendor() == ARCH_INTEL))
--		ksft_print_msg("Intel CMT may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
-+	if (ret && (get_vendor() == ARCH_INTEL) && !snc_kernel_support())
-+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
- 
- out:
- 	free(span_str);
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 5d6af9e8afed..74e1ebb14904 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -161,6 +161,8 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
- 		return ret;
- 
- 	ret = check_results();
-+	if (ret && (get_vendor() == ARCH_INTEL) && !snc_kernel_support())
-+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
- 
- 	return ret;
- }
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 3059ccc51a5a..e542938272f9 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -129,8 +129,8 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
- 		return ret;
- 
- 	ret = check_results(DEFAULT_SPAN);
--	if (ret && (get_vendor() == ARCH_INTEL))
--		ksft_print_msg("Intel MBM may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
-+	if (ret && (get_vendor() == ARCH_INTEL) && !snc_kernel_support())
-+		ksft_print_msg("Kernel doesn't support Sub-NUMA Clustering but it is enabled. Check BIOS configuration.\n");
- 
- 	return ret;
- }
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 3dd5d6779786..2bd7c3f71733 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -28,6 +28,7 @@
- #define RESCTRL_PATH		"/sys/fs/resctrl"
- #define PHYS_ID_PATH		"/sys/devices/system/cpu/cpu"
- #define INFO_PATH		"/sys/fs/resctrl/info"
-+#define SIZE_PATH		"/sys/fs/resctrl/size"
- 
- /*
-  * CPU vendor IDs
-@@ -165,12 +166,14 @@ unsigned long create_bit_mask(unsigned int start, unsigned int len);
- unsigned int count_contiguous_bits(unsigned long val, unsigned int *start);
- int get_full_cbm(const char *cache_type, unsigned long *mask);
- int get_mask_no_shareable(const char *cache_type, unsigned long *mask);
--int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size);
- int resource_info_unsigned_get(const char *resource, const char *filename, unsigned int *val);
-+int get_sys_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size);
-+int get_resctrl_cache_size(const char *cache_type, unsigned long *cache_size);
- void ctrlc_handler(int signum, siginfo_t *info, void *ptr);
- int signal_handler_register(const struct resctrl_test *test);
- void signal_handler_unregister(void);
- unsigned int count_bits(unsigned long n);
-+int snc_kernel_support(void);
- 
- void perf_event_attr_initialize(struct perf_event_attr *pea, __u64 config);
- void perf_event_initialize_read_format(struct perf_event_read *pe_read);
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index e4d3624a8817..88f97db72246 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -214,14 +214,14 @@ int snc_ways(void)
- }
- 
- /*
-- * get_cache_size - Get cache size for a specified CPU
-+ * get_sys_cache_size - Get cache size for a specified CPU
-  * @cpu_no:	CPU number
-  * @cache_type:	Cache level L2/L3
-  * @cache_size:	pointer to cache_size
-  *
-  * Return: = 0 on success, < 0 on failure.
-  */
--int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size)
-+int get_sys_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size)
- {
- 	char cache_path[1024], cache_str[64];
- 	int length, i, cache_num;
-@@ -273,6 +273,44 @@ int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size
- 	return 0;
- }
- 
-+/*
-+ * get_resctrl_cache_size - Get cache size as reported by resctrl
-+ * @cache_type:	Cache level L2/L3
-+ * @cache_size:	pointer to cache_size
-+ *
-+ * Return: = 0 on success, < 0 on failure.
-+ */
-+int get_resctrl_cache_size(const char *cache_type, unsigned long *cache_size)
-+{
-+	char line[256], cache_prefix[16], *stripped_line, *token;
-+	size_t len;
-+	FILE *fp;
-+
-+	strcpy(cache_prefix, cache_type);
-+	strncat(cache_prefix, ":", 1);
-+
-+	fp = fopen(SIZE_PATH, "r");
-+	if (!fp) {
-+		ksft_print_msg("Failed to open %s : '%s'\n",
-+			       SIZE_PATH, strerror(errno));
-+		return -1;
-+	}
-+
-+	while (fgets(line, sizeof(line), fp)) {
-+		stripped_line = strstr(line, cache_prefix);
-+
-+		if (stripped_line) {
-+			len = strlen(cache_prefix);
-+			stripped_line += len;
-+			token = strtok(stripped_line, ";");
-+			if (sscanf(token, "0=%lu", cache_size) <= 0)
-+				return -1;
-+		}
-+	}
-+	fclose(fp);
-+	return 0;
-+}
-+
- #define CORE_SIBLINGS_PATH	"/sys/bus/cpu/devices/cpu"
- 
- /*
-@@ -935,3 +973,33 @@ unsigned int count_bits(unsigned long n)
- 
- 	return count;
- }
-+
-+/**
-+ * snc_kernel_support - Compare system reported cache size and resctrl
-+ * reported cache size to get an idea if SNC is supported on the kernel side.
-+ *
-+ * Return: 0 if not supported, 1 if SNC is disabled or SNC is both enabled and
-+ * supported, < 0 on failure.
-+ */
-+int snc_kernel_support(void)
-+{
-+	unsigned long resctrl_cache_size, node_cache_size;
-+	int ret;
-+
-+	/* If SNC is disabled then its kernel support isn't important. */
-+	if (snc_ways() == 1)
-+		return 1;
-+
-+	ret = get_sys_cache_size(0, "L3", &node_cache_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = get_resctrl_cache_size("L3", &resctrl_cache_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (resctrl_cache_size == node_cache_size)
-+		return 1;
-+
-+	return 0;
-+}
 -- 
-2.45.0
+2.39.2
 
