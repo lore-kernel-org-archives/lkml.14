@@ -1,64 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B3C38FA3;
-	Wed, 15 May 2024 05:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393823B293
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 05:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715749561; cv=none; b=C6XafUAb2O8DYMHJrFGQb7iEKEcDmWl3EMnWoxSD7ugVjQUaukWqAwYZJWzQ5lPrLAIu2K/FLblSxUko3H6WgZrjUhvVmsj0zTCUAun1Lbod99OYO9Pnl6LbRDW+l+Cxf5WTIvVPv6haZfurB5xNbiidT4pNnDsKM5m4kQZBbG0=
+	t=1715749632; cv=none; b=XbLkmOgHp0zsXykFnd5KO+3cl4fseNS6X5ldMI38ExE+SNLi+hYUQT8gImgxso9SRBVCfFLfZ4vrcvPSZ424ygF4M+Z688kjw5fw1Fu0RUY48dmwUgMbDtVyYtZvn99nJoj5Ldho8JXymB5Vm/hZCACE9MVLO0Vcw8l8daGtEQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715749561; c=relaxed/simple;
-	bh=OzHSy/KSpuIOanBUBmL7ptmwmGssfiNVRIQKnLPo09Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=T2RhoN/f1L+UXndsyRGBqRhshjWudqwDxRybQ+/T5Rz9qnKmZ/0lhHnVp7A9V7GKepUXMRmjhNQDi7vVogAiGXa7DPj0uOb4ItuE0D9k5nC4lZ/gxaXtVusr3hLIJnU0tapPE4tGjqyGIlW2bRka5YmTg0t51FCyngiHb0ZrLEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492ABC116B1;
-	Wed, 15 May 2024 05:06:00 +0000 (UTC)
-Date: Wed, 15 May 2024 01:05:58 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] ring-buffer: Add cast to unsigned long addr passed to
- virt_to_page()
-Message-ID: <20240515010558.4abaefdd@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715749632; c=relaxed/simple;
+	bh=r22Ecb1HjRi1JsHgO9EEQEtHjCyx+qtUYvZ4+U2lkZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XJREEpOyYzGL8Hfo/N+hm+TviaxloswSuZhbrGLfaI144IT49fZ5K1xw42HSG8iW+FrR0wO+Feuvcx6NOD6Bd/xaU5nN54UMI46ML2z7ogsRDD5wZni3w3hLkYnpX5P4nuO+rHauWZgUg04Gjot6C9SGMobzXaQnnTXjqSrxHzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=beNLgZt/; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="beNLgZt/"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f43ee95078so6191581b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 22:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715749630; x=1716354430; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SzRi7BBK8Kzi4+jUS/kWK3iSCsA+f0xRAjzzQIW1Bf8=;
+        b=beNLgZt/Z4YnbdF1hqonNpAqwnD/RlOg1o8yS5D+erHXlqrlTjrxaPgRiEtX8y+Mue
+         kxU7pW/9S5k6sIO67Z5nNUoXc8HNpCHKxbL7ryucaocWTan8jdcjhV860KJVAQrbkT+x
+         iM1KbRwPFc9xwubKYxTgjuhN1ilP4m3qQXNuU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715749630; x=1716354430;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SzRi7BBK8Kzi4+jUS/kWK3iSCsA+f0xRAjzzQIW1Bf8=;
+        b=EvvL3/SrwwtfJ26HH07sDKROeOsUUo9FUf83+AjROftBjfCvJgDs2qIQv9ADkrkQdU
+         zEiwEaifH1SyLUd4wF28TxzLrmY3Ogz1+8SeLPTBTRHKrFwBNrN991Te4bpy3ke8NhYj
+         hHw5Jb0FTuZBC7ezWVEPTQZVxo0jK1i4akOyuXuq7jlOt2fDNCNgyxJ4lwaMhM63xfzv
+         joQ5m6Y+H/C2Qc04DIZq4b/RIBOcQPT4nL1iuid2ad8HjBA3kAKJ7hG4QrhO8KbRtKXH
+         rhcUicQQ5hXHCxkYnHzE3fwT26ih7ih3GF+kpd8npE7tfFpj/t5THj/Z3wEVquAcIn2N
+         omfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDSTC/vf0AJcGa0Iwz4rX5qkczbS8m0AYOf76CNQmgCpAHdPLiJOV346IXH8XRWklHY6DWfJB764S48XJB4BNbWCUCFaKnmPH4Di1X
+X-Gm-Message-State: AOJu0Ywm9/RAd9RG6E74Z89uo2QpHSpVnDAXTUhuJG+OWQ+Sw0HXVvVe
+	j53u7CeRAegOKAOz3+aUTUuzl3mgG6oLdhO16sfS9MJ4HIul5VoA51Rx5Ne5aw==
+X-Google-Smtp-Source: AGHT+IFzghujq4lUG5F8pX/TiqRbgCGgm0mozqz8fwsdeFoDVeXza7aCH/TT4k7CROrcXZWoBRaIoA==
+X-Received: by 2002:a05:6a00:4f86:b0:6f3:e6ac:1a3f with SMTP id d2e1a72fcca58-6f4e02ad970mr17673879b3a.11.1715749630446;
+        Tue, 14 May 2024 22:07:10 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:111d:a618:3172:cd5b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a663aesm10092200b3a.33.2024.05.14.22.07.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 22:07:09 -0700 (PDT)
+Date: Wed, 15 May 2024 14:07:05 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: kernel test robot <lkp@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org,
+	"linux-block@vger.kernel.org Nick Terrell" <terrelln@fb.com>
+Subject: Re: [PATCHv3 02/19] zram: add lzo and lzorle compression backends
+ support
+Message-ID: <20240515050705.GF950946@google.com>
+References: <20240508074223.652784-3-senozhatsky@chromium.org>
+ <202405091921.320BxOyE-lkp@intel.com>
+ <20240510053333.GJ8623@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510053333.GJ8623@google.com>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On (24/05/10 14:33), Sergey Senozhatsky wrote:
+> On (24/05/09 19:23), kernel test robot wrote:
+> > config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240509/202405091921.320BxOyE-lkp@intel.com/config)
+> [..]
+> > >> ERROR: modpost: "backend_lzorle" [drivers/block/zram/zram.ko] undefined!
+> > >> ERROR: modpost: "backend_lzo" [drivers/block/zram/zram.ko] undefined!
+> 
+> ... and that's how learned that my .config has ZRAM=y
 
-The sub-buffer pages are held in an unsigned long array, and when it is
-passed to virt_to_page() a cast is needed.
-
-Link: https://lore.kernel.org/all/20240515124808.06279d04@canb.auug.org.au/
-
-Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index a02c7a52a0f5..7345a8b625fb 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6283,7 +6283,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	}
- 
- 	while (p < nr_pages) {
--		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-+		struct page *page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
- 		int off = 0;
- 
- 		if (WARN_ON_ONCE(s >= nr_subbufs)) {
--- 
-2.43.0
-
+This has revealed several problems. First, lz4hc misses one symbol
+export, an easy fix. Second, zstd misses pretty much all of the
+advanced c/d dict, c/d ctx API that we need in order to use dicts
+in a module. I have fixes for both in v4 on this series (I'll Cc
+Nick on lz4/zstd patches). I think I'll just send out v4 today, simply
+because there are patches there that we can re-use even if we scratch
+zram backends and continue using crypto API.
