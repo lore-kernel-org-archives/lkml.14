@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735FB15D5A9
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 22:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEF515F3F6
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 22:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715811825; cv=none; b=W3idwu9W8w26N+N8qWKFCbIgOdk6nyuJq76CurH4lJpHdkWtDtA6Qw/vRbeIyiDpBF7RkGN+dWCm67r7tJn6KR0cp+P9j8tdRtHzEXJnCo1HmqDxS5YjBnQYAO3RMDmBajkH2f0m6lIbQqsn9P8lvM794qYf/vNQVUvPlR8JOBw=
+	t=1715811826; cv=none; b=BF/Al9NhJfqKNp6UT/OSAe+/y4yh+VqfO86XZsjz/jkeQbeMQ06J2G2c9qsTyVLJXMgQYsshRDlbC/V5iIDO25iXlVqvWRnPS9AtNHvABek9zLOmVwb2M8VO+SH6Cb8rd/WbSQs15ya4IW6GtjdDIxFMhy/W58NAuwxz/0+0BVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715811825; c=relaxed/simple;
-	bh=czKlljQin5GaFm+0xyDc9Vi3UAAxcA5z/t7zvNVeNeg=;
+	s=arc-20240116; t=1715811826; c=relaxed/simple;
+	bh=xZjqBCuTBBldbea6pHTW+ptVpegP77hRi5Pdpchcfvs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ef8LcVu0IATmmjYuxel046UIyrCywIFoUaAMtiPFiJDmR/XgMVlzn7yI3M2YWeYBLWp2axnDPLxKTx2qZD3Oi4SLkLinfCX2S59IxJe7Sv1UEz2sTPO0uT+WeMjp8E4I3W235JN4Qv0NWj/9wtIqNGoEu9gzX0c22MiiRBGVBS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=feFLF2Fa; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=nhGdMQDZvbqf2ZMsSQ/LJK4/Y/I+HMlSWu4qV+/uymAOU7YqrFhQITnkGmksVBx83y/kIOBJiksue281121Ye6LlQjiPvfol5GpyIkBfHvUJNBbPMP8cTaanEn6APJa0PmyH5q2tr9/jAW/ssdYrxN2xWmm9Iu1C57vrpNbgk0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AVfpRoSg; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="feFLF2Fa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AVfpRoSg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715811823; x=1747347823;
+  t=1715811824; x=1747347824;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=czKlljQin5GaFm+0xyDc9Vi3UAAxcA5z/t7zvNVeNeg=;
-  b=feFLF2FaNGyoqWSsUehC/d5IQbkASeyrNiV8yZBDJuLOMbZf39e03k3W
-   a4HisqVpoIYbvZVzA4YmBxvpGKGRANEnZYnX00M4SYJrP7xTt2lygVBHq
-   7Gjwfstn4SexvCFzLB9f0W1NgU+oCIsAKcJE5N1toKbVb6OYpMXI629YN
-   64xqYpJ+ovcC5uu2k6MYsLN3eIUYXnseH2CtL5Az9k3eGb1jj82pU6vzl
-   vWgmqtrsgA6Oq4IBmluiwz3hEWusH67JZ8rSkbzArmEmg2lhqfSMFLk3Y
-   wkrQ788SrGHtN71BUte6uWt/mugXKdbw1GILR50QdMPm1+OxuDBQkBul2
-   A==;
-X-CSE-ConnectionGUID: rucaQbfzTcCKwQtcKA6Smg==
-X-CSE-MsgGUID: IzF8R/H6RsG/PTvyYqwyZw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="15671703"
+  bh=xZjqBCuTBBldbea6pHTW+ptVpegP77hRi5Pdpchcfvs=;
+  b=AVfpRoSgMLT8d6WrTovlHXu3XflzhYYgAoYqbd/CjUXEP1tQANaDWDdh
+   EOI9I6s1OhW8flobcc/q9PM2pqSbfnja6LJEXtt82PwBpDcCzJCOHq1ym
+   iSC6dBpdgOhNGKmh5P1mzSw7PaWCX4KMyEvNZ6mhr+JomEOh++PzilTUX
+   nIThm3LWCJS1cH5DI+RIDgJbh7nOmqrXATsX4VD8C8zwb2EoNgl6UU7XO
+   He56QY0TAt0hLMP7497aaYTn3c3vkh5GTO9+J1lVqVRmLnsk0Sy+Kw1QK
+   tbSbRn72MXnTa7S4umn0cJw2ZBW+xraFsPOQ1yhjVIEi6EKzkbshW8xV3
+   g==;
+X-CSE-ConnectionGUID: 1ea8WIsjTly1ZitNMJPLug==
+X-CSE-MsgGUID: 6rlaIDJuQr22NbpoirlZqw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="15671728"
 X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="15671703"
+   d="scan'208";a="15671728"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 15:23:36 -0700
-X-CSE-ConnectionGUID: wQcXbIbCQlu9THH8nuwuIw==
-X-CSE-MsgGUID: tzW/IxadRhSXp+MSTRFJcg==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 15:23:37 -0700
+X-CSE-ConnectionGUID: lBBOznPzRu2o2+Nwf8Hq/Q==
+X-CSE-MsgGUID: XKlPT9SwSiurhNppnPBdgw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="35989187"
+   d="scan'208";a="35989193"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 15:23:36 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 15:23:37 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghua.yu@intel.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v18 13/17] x86/resctrl: Handle removing directories in Sub-NUMA (SNC) mode
-Date: Wed, 15 May 2024 15:23:21 -0700
-Message-ID: <20240515222326.74166-14-tony.luck@intel.com>
+Subject: [PATCH v18 15/17] x86/resctrl: Fix RMID reading sanity check for Sub-NUMA (SNC) mode
+Date: Wed, 15 May 2024 15:23:23 -0700
+Message-ID: <20240515222326.74166-16-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240515222326.74166-1-tony.luck@intel.com>
 References: <20240515222326.74166-1-tony.luck@intel.com>
@@ -70,92 +70,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In SNC mode there are multiple subdirectories in each L3 level monitor
-directory (one for each SNC node). If all the CPUs in an SNC node are
-taken offline, then just that SNC node directory must be removed. In
-non-SNC mode, or when the last SNC node directory is removed, also
-remove the L3 monitor directory.
+The sanity check that RMIDs are being read from a CPU listed in the
+the cpu_mask for the domain is incorrect when summing across multiple
+SNC domains. It is safe to read the RMID from any CPU that shares the
+same L3 cache instance.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 43 +++++++++++++++++++++-----
- 1 file changed, 36 insertions(+), 7 deletions(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index f0f468babdea..cac32ddd3afd 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3011,17 +3011,46 @@ static int mon_addfile(struct kernfs_node *parent_kn, const char *name,
-  * and monitor groups with given domain id.
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 668d2fdf58cd..e4b92c7af71d 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -15,6 +15,7 @@
+  * Software Developer Manual June 2016, volume 3, section 17.17.
   */
- static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
--					   unsigned int dom_id)
-+					   struct rdt_mon_domain *d)
- {
- 	struct rdtgroup *prgrp, *crgrp;
-+	struct rdt_mon_domain *dom;
-+	bool remove_all = true;
-+	struct kernfs_node *kn;
-+	char subname[32];
- 	char name[32];
  
-+	sprintf(name, "mon_%s_%02d", r->name, d->display_id);
-+	if (r->mon_scope != r->mon_display_scope) {
-+		int count = 0;
-+
-+		list_for_each_entry(dom, &r->mon_domains, hdr.list)
-+			if (d->display_id == dom->display_id)
-+				count++;
-+		if (count > 1) {
-+			remove_all = false;
-+			sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
-+		}
++#include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+ #include <linux/module.h>
+ #include <linux/sizes.h>
+@@ -281,8 +282,18 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+ 
+ 	resctrl_arch_rmid_read_context_check();
+ 
+-	if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
+-		return -EINVAL;
++	if (r->mon_scope == r->mon_display_scope) {
++		if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
++			return -EINVAL;
++	} else {
++		/*
++		 * SNC: OK to read events on any CPU sharing same L3
++		 * cache instance.
++		 */
++		if (d->display_id != get_cpu_cacheinfo_id(smp_processor_id(),
++							  r->mon_display_scope))
++			return -EINVAL;
 +	}
-+
- 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
--		sprintf(name, "mon_%s_%02d", r->name, dom_id);
--		kernfs_remove_by_name(prgrp->mon.mon_data_kn, name);
-+		if (remove_all) {
-+			kernfs_remove_by_name(prgrp->mon.mon_data_kn, name);
-+		} else {
-+			kn = kernfs_find_and_get_ns(prgrp->mon.mon_data_kn, name, NULL);
-+			if (kn)
-+				kernfs_remove_by_name(kn, subname);
-+		}
  
--		list_for_each_entry(crgrp, &prgrp->mon.crdtgrp_list, mon.crdtgrp_list)
--			kernfs_remove_by_name(crgrp->mon.mon_data_kn, name);
-+		list_for_each_entry(crgrp, &prgrp->mon.crdtgrp_list, mon.crdtgrp_list) {
-+			if (remove_all) {
-+				kernfs_remove_by_name(crgrp->mon.mon_data_kn, name);
-+			} else {
-+				kn = kernfs_find_and_get_ns(prgrp->mon.mon_data_kn, name, NULL);
-+				if (kn)
-+					kernfs_remove_by_name(kn, subname);
-+			}
-+		}
- 	}
- }
- 
-@@ -3111,8 +3140,8 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
- static void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
- 					   struct rdt_mon_domain *d)
- {
--	struct kernfs_node *parent_kn;
- 	struct rdtgroup *prgrp, *crgrp;
-+	struct kernfs_node *parent_kn;
- 	struct list_head *head;
- 
- 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
-@@ -3984,7 +4013,7 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
- 	 * per domain monitor data directories.
- 	 */
- 	if (resctrl_mounted && resctrl_arch_mon_capable())
--		rmdir_mondata_subdir_allrdtgrp(r, d->hdr.id);
-+		rmdir_mondata_subdir_allrdtgrp(r, d);
- 
- 	if (is_mbm_enabled())
- 		cancel_delayed_work(&d->mbm_over);
+ 	ret = __rmid_read(rmid, eventid, &msr_val);
+ 	if (ret)
 -- 
 2.44.0
 
