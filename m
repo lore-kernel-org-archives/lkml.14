@@ -1,139 +1,116 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A0E129A8E;
-	Wed, 15 May 2024 13:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E8084D0B
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 13:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715778140; cv=none; b=Us+t5EJEraJJ4FytJ1Ip8oKoSh4L9WPn5ioPvVteijlxmBtHfxG4UYTL8bUDQNDSWalvHEY5xiPubfy15cAu7PY77U3mqG/nrzFXhgBNDmgZo9OlaJQglyMUw3B5Qm30qQ93EF07j/8GuZZgt0zqzk3WcrGHppTzgD0NDZFFqiM=
+	t=1715778198; cv=none; b=e3ImMj1UNJAHnxzdQdcDKjEd1eYjOuUwQlIPy42R6e+6GYBJUyt2MbncnZCNavu9AxHz2dApwDnvibhYXPec+XwB+MxEB34r/lrPYUuNpv8Pl80DUWZzmBz+Zvj7kyupBt30M+0h/K1jngnmfk9RpJepC4ZRJqU+EVz7lHauQuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715778140; c=relaxed/simple;
-	bh=nflcIOvlerrwIrtNuVpU2TiKnKICjvGJg4o0sDMaUp0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eC4xwYQ6Igq9e+2uL27bBV6mDO95gIG7xfU4IAg738DQ9u2j+ZXcD8BN/QodZ9cpo5096yMjmiSfn25j3zqrKH3S82NUdlohDCjCY4usZTmYsnr03retegDsmmizkAg1uKyHrFFP2SKJ0nvISpYo/1oUIzooEtF88H0RDlehS1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VfYK76hDZz4f3k6L;
-	Wed, 15 May 2024 21:02:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7B32A1A0181;
-	Wed, 15 May 2024 21:02:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RFLskRmALLwMg--.18738S7;
-	Wed, 15 May 2024 21:02:09 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev,
-	dhowells@redhat.com,
-	jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com,
-	jefflexu@linux.alibaba.com,
-	zhujia.zj@bytedance.com,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	libaokun@huaweicloud.com,
-	yangerkun@huawei.com,
-	houtao1@huawei.com,
-	yukuai3@huawei.com,
-	wozizhi@huawei.com,
-	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v2 3/5] cachefiles: flush ondemand_object_worker during clean object
-Date: Wed, 15 May 2024 20:51:34 +0800
-Message-Id: <20240515125136.3714580-4-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240515125136.3714580-1-libaokun@huaweicloud.com>
-References: <20240515125136.3714580-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1715778198; c=relaxed/simple;
+	bh=rPRT0MsdY9af2mGauqLnrYy4g8q//Ph0rBvWLrVQuCs=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=bqNZfsR2DlIvt54EfnWMqzF2SJlJRPKZItAxRR8R3jVxfQiGYYTGJqS59Y3WKdmEWGxdgagoGHghFerzU0olzM02cpn+uUUwsatYK3+EOoM2vF5jixOcGpNbDLHrbhu+2t1apmm5nlPKdOIvCinfvqQLvwG1yrrWwHKFh19XuBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=T4S63KrV; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="T4S63KrV"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41fc2f7fbb5so37857585e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715778194; x=1716382994; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=vlvP4Aa3+nQGmGgcIFiojH5cc2twOueCv7IOqtUVD84=;
+        b=T4S63KrVY6EmtTcQeta10Gr6N72BYFfiSoNm9VRMGg/mXU5D2AWmeVk1+/7MXzXWl5
+         nUSWFTn4WpNmZseP+yz1B8lbsyC1WGa+GtH5NwoF8lIAMOU5i90wKMi2uqY8z0IfVDmE
+         2c7/TH6b9GNL8/w5B57HF56kba5SRmQ+AhI8X/vgqUQjNUZzVIJnEKp+0usTZKl7Qtt5
+         IcstSwE/hvsEXxd810PY7Jv+2qQVc5oFRbjeeD7YnuydQzmkwHsjx14Y70aSa5iHGXAW
+         L/fptVds/i3fyM6Wtl97TFLp7ncJ8BEdFZdiQybNuE0vU5ersBkcH8cfWObjay6kJPXR
+         A4zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715778194; x=1716382994;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vlvP4Aa3+nQGmGgcIFiojH5cc2twOueCv7IOqtUVD84=;
+        b=a4rR8jjxVFUxYjKPr1FxWHTBWTYFy+gYHnOe6sqxee/avpFXyf3MWirLa2o3xnuvhK
+         AFwP8EBdKneRwXkJ8ve+Nh+Iq0+AVa8Y8QrinlUBCQIh1UHHbsxcKR4G/f+iCdYI13gj
+         cF0kFtZYB27MsRnimTu7Q3U5ju8QCS2TVgBN05guKkqQ2BU0Qo2o8LERvbMGRdVAf3Mt
+         QVXOMLP0FyYvDE2KSgQRCdkJvtT+QJ65MYQo823teCffcE3zdJark/ERSJvDtNEoDK/U
+         NzXRVSv1e5wIhQvJYVyXSFNu6/jVs8ee6FoKcvDxkS9JSTrLCkDXQxNkrrO4OXN4Qv/v
+         Rb/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXvH4xOnMvHb+oLyDU8IEkZgaB6SR+zukxFUz9c2oqXGhv1yB+Q4yl496st4Soegvz6oXeODKlF6yB2YtPkCZwIny2Oq+gzChlbqr82
+X-Gm-Message-State: AOJu0YyZqDIYM5XnGbCGjKXzTZNTMHsBRpNQJMX6gvFWkI9ziwo7eEAm
+	9PN8PEf+bmgtK9GPnOqGUtTJAczA5Bi6OGmDrx84dN87/eneKPqy95qg0hBo7ac=
+X-Google-Smtp-Source: AGHT+IFd1u7hHWUOgkLnsccx8x9MoqmA5KeoD0+FaBvMmlYandqrEjUD4CsLZc7fApcCVFV1xfjlyg==
+X-Received: by 2002:a05:600c:4f06:b0:418:2981:c70f with SMTP id 5b1f17b1804b1-41fbcfb8473mr168925435e9.19.1715778194502;
+        Wed, 15 May 2024 06:03:14 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:2893:1a8f:5988:776a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe9011sm232644255e9.7.2024.05.15.06.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 06:03:13 -0700 (PDT)
+References: <87o79azh65.wl-kuninori.morimoto.gx@renesas.com>
+ <20240514143116.3824376-1-jbrunet@baylibre.com>
+ <46daae9b-10dc-4f49-8a25-c387d03ae87a@sirena.org.uk>
+ <87seyk2dmh.wl-kuninori.morimoto.gx@renesas.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH RFC] ASoC: amlogic: do not use dpcm_playback/capture flags
+Date: Wed, 15 May 2024 15:01:35 +0200
+In-reply-to: <87seyk2dmh.wl-kuninori.morimoto.gx@renesas.com>
+Message-ID: <1jpltnxm5r.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RFLskRmALLwMg--.18738S7
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4kur4fJF1DXFy7Zw1UKFg_yoW8uryUpF
-	WakFy7KrW8WF4UCrWkZFs5JryrK3ykZFnrWFyYvrZ8Ar90qr4rZr12y3ZxXF15Aw1SgrZr
-	tw4UCr9xt34qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
-	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
-	v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
-	x2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-	80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU
-	0xZFpf9x0JUPHUDUUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+Content-Type: text/plain
 
-From: Hou Tao <houtao1@huawei.com>
 
-When queuing ondemand_object_worker() to re-open the object,
-cachefiles_object is not pinned. The cachefiles_object may be freed when
-the pending read request is completed intentionally and the related
-erofs is umounted. If ondemand_object_worker() runs after the object is
-freed, it will incur use-after-free problem as shown below.
+On Tue 14 May 2024 at 23:11, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
 
-process A  processs B  process C  process D
+> Hi
+>
+>> > dpcm_playback/capture flags are being deprecated in ASoC.
+>> > Use playback/capture_only flags instead
+>> > 
+>> > Suggested-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> > ---
+>> > 
+>> > Following Kuninori's series, dpcm_playback/capture will be ignored.
+>> > However, properly disabling stream direction is important for Amlogic
+>> > audio drivers.
+>> > 
+>> > I'm not too sure how this should be applied to avoid breaking bisect,
+>> > before or after Kuninori's series. Maybe it should be merged into it ?
+>> 
+>> Probably better to integrate it I think?
+>
+> ASoC needs dpcm_xxx flag *before* my patch.
+> Your patch is replacing it to xxx_only flag, so it should be applied
+> *after* my patch. So integrate/merge is good idea, I think.
 
-cachefiles_ondemand_send_req()
-// send a read req X
-// wait for its completion
+Ok. Then I guess it is up to you and Mark.
+Please let me know if you need me for anything.
 
-           // close ondemand fd
-           cachefiles_ondemand_fd_release()
-           // set object as CLOSE
+Cheers
 
-                       cachefiles_ondemand_daemon_read()
-                       // set object as REOPENING
-                       queue_work(fscache_wq, &info->ondemand_work)
+>
+> Thank you for your help !!
+>
+> Best regards
+> ---
+> Renesas Electronics
+> Ph.D. Kuninori Morimoto
 
-                                // close /dev/cachefiles
-                                cachefiles_daemon_release
-                                cachefiles_flush_reqs
-                                complete(&req->done)
 
-// read req X is completed
-// umount the erofs fs
-cachefiles_put_object()
-// object will be freed
-cachefiles_ondemand_deinit_obj_info()
-kmem_cache_free(object)
-                       // both info and object are freed
-                       ondemand_object_worker()
-
-When dropping an object, it is no longer necessary to reopen the object,
-so use cancel_work_sync() to cancel or wait for ondemand_object_worker()
-to complete.
-
-Fixes: 0a7e54c1959c ("cachefiles: resend an open request if the read request's object is closed")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
----
- fs/cachefiles/ondemand.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index d24bff43499b..f6440b3e7368 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -589,6 +589,9 @@ void cachefiles_ondemand_clean_object(struct cachefiles_object *object)
- 		}
- 	}
- 	xa_unlock(&cache->reqs);
-+
-+	/* Wait for ondemand_object_worker() to finish to avoid UAF. */
-+	cancel_work_sync(&object->ondemand->ondemand_work);
- }
- 
- int cachefiles_ondemand_init_obj_info(struct cachefiles_object *object,
 -- 
-2.39.2
-
+Jerome
