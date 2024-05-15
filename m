@@ -1,121 +1,94 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313EB79C2;
-	Wed, 15 May 2024 01:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA7579C2
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 01:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715736318; cv=none; b=A08GPpkET3EE0eEG/lXtfRL+qTzPqN5A0lBW5dT2tXsg2It4Rd2SskyA1sC7sDD+kNMc/2wLfMsf72o0qTVLxGdTG2M8Sda3F4Q0IHQTTIbX2ze4GWP3wGyPuKIHe25x3Uev43uvjEMzDFZtw9RU2SE9848HuZYjSnVrsC83Els=
+	t=1715736367; cv=none; b=Cp4BLt/nPQ6dpt53888J99NjJ0gPgz2w5m7QbHRliXgYAx4boeOT6BxYAM4zKq1FOsCc8XVzJT7EvGPnYUWyYN7ojjVGv+vbSVATNAFj5AdDSthJk2CkHnp3E/Y0e+Q4v6pffoT1v9lALnrkPnPfcfOD2tNwFyoiA0ucyWr4pQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715736318; c=relaxed/simple;
-	bh=4s9NDPoOxitNkT6OaXSxKymih9MpTgrsHi49G1AA++Q=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ftsPbRAvEWHopsUz70ZIymfAwK0Ttwnz2HcPD3DV/M5p1PkCY+nbjmKx0vNVJOganYLfAHUEMoXHdW1+/+5+2Pk8ik9DB3ea5aHswAxMU9YzJiN6cyasH9NuXfIplFKTnHmktG11o5aQnXKP4G0g9l34MJePS5FkE+OJRSRqhNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 44F1O3vE051219;
-	Wed, 15 May 2024 09:24:03 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VfFlw2713z2QDRDl;
-	Wed, 15 May 2024 09:20:44 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 15 May 2024 09:24:00 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox
-	<willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo
-	<tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>, <linux-mm@kvack.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <cgroups@vger.kernel.org>, Zhaoyang Huang <huangzhaoyang@gmail.com>,
-        <steve.kang@unisoc.com>
-Subject: [RFC PATCH 0/2] introduce precised blk-throttle control
-Date: Wed, 15 May 2024 09:23:48 +0800
-Message-ID: <20240515012350.1166350-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1715736367; c=relaxed/simple;
+	bh=KqedpD8xfbv4Oo0MVIN2TL1Ut79j6Yz4AF0sCn9HRmE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=VbC6ExQrYkb0u6AlJqLKKXBSzuDTpDNwPYn18k8dGvUZcLVD/oe0JdCil9MFq34NzFGWyzklPRkvlvX+UouWfG0U6i64eUrEZuwODv30UNfnjnEXXpjNHtnbhq7RcK6zkAqDV2PhH/BleyeJxnZ7paCwCtXym0+0a+B60mF9OYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da4360bbacso770232539f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 18:26:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715736365; x=1716341165;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eu/7agIRsX16G/eKFz8gLh3sRtt5Oof3eN1Be02CY3o=;
+        b=mQ4/fDsueqif4d5sVd9RECQctIXGRp/XIAT7S871oIzp1b+f1vqegENIL8tXLYidZ3
+         3xXIGPlRzmqZ2tfOFngx1wY76DjartrwRGZOad6RfjQbRUY/B4n8nRAs4LIDQWGrWxoS
+         m9FYmbhkoawHoeM+k96GPQcn1NzLUY2pHDJHp7eESvWSUt2iXV/jMs6vdOhTpUQ6rqqh
+         oDIrxn4+gwz9iXC2Z7FvMdwakryIL0X0Wh1R2dRjANjxEmnrz9n/VuHtZqWCrZt+abe0
+         kJNBHuYSbndOnCiM2VA+uOR5TeujCfnpK3Jo8tzJ4OrbotQ2kfZFAq0wr5r6kzYWOotQ
+         lRwA==
+X-Gm-Message-State: AOJu0YwEHKcG9Acd89/OVEIWlq9chfOCe6XM3Ghj6GonflYDQWgiKVq5
+	+O6IG2Xv8Q0mgfHVwcXunobjyfUZ3082TfUN02Y5RAKFaeHUS/bbfOFHf8Giw7/Q61CIEaxgK6d
+	IPkLNuvkZbAbtsIpJm8b0oMm4Gr8XLRZ9b6lcS2pQXEmU7qgp1FJG47Q=
+X-Google-Smtp-Source: AGHT+IEcdj7ctieaYOLO+MpmoD3I8m0VzJwkbXy9pNnL4nc4cYJkopfXFvf0hUNfc/IsmAV+4uD5mgRLQVk8UZ8Zqg3yNlhQAnGy
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 44F1O3vE051219
+X-Received: by 2002:a05:6602:2ccd:b0:7e2:b00:222d with SMTP id
+ ca18e2360f4ac-7e20b0027aamr668339f.0.1715736365369; Tue, 14 May 2024 18:26:05
+ -0700 (PDT)
+Date: Tue, 14 May 2024 18:26:05 -0700
+In-Reply-To: <000000000000ebf2e0061866b102@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000096207606187400e6@google.com>
+Subject: Re: [syzbot] [PATCH] guard against unknown r->data_type in bch2_sb_dev_has_data()
+From: syzbot <syzbot+249018ea545364f78d04@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-There is always an error between blk-throttle's configuration and the
-real value which should be introduced by over-sized bio as there is no
-control on ra->size during readahead. This series patches would like to
-introduce the helper function to provide the bytes budgt and apply it
-on readahead.
+***
 
-Please find below for the fio test result on v6.6 which presents 2%-10%
-improvement for BW and lat. Besides, we can also observed stable BW
-instantaneous and lower stdev value during the test.
+Subject: [PATCH] guard against unknown r->data_type in bch2_sb_dev_has_data()
+Author: cam.alvarez.i@gmail.com
 
-blkio.throttle.read_bps_device = 1MB/s
-   before:  read: IOPS=223, BW=894KiB/s (915kB/s)(175MiB/200919msec)
-   after :  read: IOPS=239, BW=960KiB/s (983kB/s)(153MiB/163105msec)
+#syz test
+Shift is perfomed only when the data type makes sense.
 
-   before:  clat (usec): min=4, max=16795k, avg=4468.74, stdev=265746.14
-   after :  clat (usec): min=11, max=209193, avg=4105.22, stdev=27188.04
+Fix a missing guard on r->data_type being known.
 
-   before:  lat  (usec): min=6, max=16795k, avg=4470.57, stdev=265746.14
-   after :  lat  (usec): min=16, max=209197, avg=4120.03, stdev=27188.04
+Signed-off-by: Camila Alvarez <cam.alvarez.i@gmail.com>
+---
+ fs/bcachefs/replicas.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-blkio.throttle.read_bps_device = 10MB/s
-   before:  read: IOPS=2380, BW=9524KiB/s (9752kB/s)(1007MiB/108311msec)
-   after :  read: IOPS=2438, BW=9754KiB/s (9989kB/s)(1680MiB/176405msec)
-
-   before:  clat (usec): min=4, max=2494.6k, avg=412.72, stdev=25783.51
-   after :  clat (usec): min=4, max=201817, avg=399.58, stdev=8268.85
-
-   before:  lat  (usec): min=6, max=2494.6k, avg=414.48, stdev=25783.51
-   after :  lat  (usec): min=6, max=201819, avg=402.10, stdev=8268.85
-
-blkio.throttle.read_bps_device = 20MB/s
-fio ... -numjobs=8 ...
-
-    before : IOPS=37.9k, BW=148MiB/s (155MB/s)(11.6GiB/80333msec)
-    after  : IOPS=39.0k, BW=153MiB/s (160MB/s)(15.6GiB/104914msec)
-
-    before : clat (usec): min=4, max=1056.6k, avg=197.23, stdev=10080.69
-    after  : clat (usec): min=4, max=193481, avg=188.83, stdev=4651.29
-
-    before : lat (usec): min=5, max=1056.6k, avg=200.48, stdev=10080.76
-    after  : lat (usec): min=5, max=193483, avg=192.68, stdev=4651.87
-
-blkio.throttle.read_bps_device = 30MB/s
-fio ... -numjobs=8 ...
-
-    before : IOPS=57.2k, BW=224MiB/s (234MB/s)(15.6GiB/71561msec)
-    after  : IOPS=58.5k, BW=229MiB/s (240MB/s)(15.6GiB/69996msec)
-
-    before : clat (usec): min=4, max=1105.5k, avg=126.20, stdev=6419.22
-    after  : clat (usec): min=4, max=183956, avg=120.60, stdev=2957.28
-
-    before : lat (usec): min=5, max=1105.5k, avg=129.45, stdev=6419.29
-    after  : lat (usec): min=5, max=183958, avg=124.40, stdev=2958.18
-
-Zhaoyang Huang (2):
-  block: introduce helper function to calculate bps budgt
-  mm: introduce budgt control in readahead
-
- block/blk-throttle.c       | 44 ++++++++++++++++++++++++++++++++++++++
- include/linux/blk-cgroup.h | 10 +++++++++
- mm/readahead.c             | 33 ++++++++++++++++++++--------
- 3 files changed, 78 insertions(+), 9 deletions(-)
-
+diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
+index 678b9c20e251..0fa91d0bf951 100644
+--- a/fs/bcachefs/replicas.c
++++ b/fs/bcachefs/replicas.c
+@@ -1006,14 +1006,14 @@ unsigned bch2_sb_dev_has_data(struct bch_sb *sb, unsigned dev)
+ 
+ 		for_each_replicas_entry(replicas, r)
+ 			for (i = 0; i < r->nr_devs; i++)
+-				if (r->devs[i] == dev)
++				if (r->devs[i] == dev && r->data_type < BCH_DATA_NR)
+ 					data_has |= 1 << r->data_type;
+ 	} else if (replicas_v0) {
+ 		struct bch_replicas_entry_v0 *r;
+ 
+ 		for_each_replicas_entry_v0(replicas_v0, r)
+ 			for (i = 0; i < r->nr_devs; i++)
+-				if (r->devs[i] == dev)
++				if (r->devs[i] == dev && r->data_type < BCH_DATA_NR)
+ 					data_has |= 1 << r->data_type;
+ 	}
+ 
 -- 
-2.25.1
+2.34.1
 
