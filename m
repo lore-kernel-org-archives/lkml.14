@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C7D364AE;
-	Wed, 15 May 2024 01:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAED383BE;
+	Wed, 15 May 2024 01:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715734813; cv=none; b=WcZ2uI6wphBIhEUjjwFQQzY+812yYlP8aMLjZKcMgj/b4Y0ecjTaC2+2UE5sLqDEHB3z/MG5r0nIylx6ayhGMv4LsnsgfnJS8JmdCG3lf28bWFVz7Vod8EeqfOcmWFOODF3Ejmc+/whwLDS+ojh2dxOnXUIgjPFDBudnkAsfegg=
+	t=1715734815; cv=none; b=jAFp81kyV/2VTG1nVT1n2dIL4ewSSKjzeZ1+DZc4iMUWjqs3fQV1hT27EU7D/GnvFngRogoMVgzBjPquK5/sNkkJQhgkGbJ1wMHlSRlRL7fJ63E35ziaBgYvr/33EArwu6KYeR2kcTYYrYisQYArtcDc5TwuIF7r2zP+GrEyMWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715734813; c=relaxed/simple;
-	bh=hwT7Hnp4s9Rtxpw8GmgoIARXgPDTRvl14/AMhCiqMB0=;
+	s=arc-20240116; t=1715734815; c=relaxed/simple;
+	bh=YcYrPvm62cI+4A1/6iEWc+sBYrpX+wYdWWAThta5Qro=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LhHuIF/uawS0Q6EoO13WxzQEICcdE/KATpa7I+8ZE6qQWqB0plDMqi5ujg5GBbhBMNsegtSxMsZFwvzL7yJUvb+DwImhFZoZOtQh0Bm37TxnV5Wsi5cGjxT+GbIWHy3V22P+bgoXmdWGniqV8q+78u0Kky5UX+AT17FMA/QhAxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ilYMBWQp; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=mu+ejgMSIc0m3S1pwwvVtUgPgneshzVyRUhN4GxxtqajzXrT7bMsw+I+kgQbbYQrxuIf670X/HPvqkd3DigIf8eWNQ45oOS8tbLg6Co2WMrs2+qCpullv8tQKSkLirjS6UsuIY48TMg3EVGXMErngPn403vUppw5t1XUFX8Knts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N/832aU/; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ilYMBWQp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N/832aU/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715734812; x=1747270812;
+  t=1715734814; x=1747270814;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hwT7Hnp4s9Rtxpw8GmgoIARXgPDTRvl14/AMhCiqMB0=;
-  b=ilYMBWQpZp+ecPXQJNPTj3T1t9ErvQBDGfxncmpVPIWogmyfAavvmMqc
-   ZwvTqnO2fK1lVy1jbIhul2qXG7KOwdFefCVEKzct+IHT2VBctAM2pLsm3
-   kmMuTV4CDxs51SlgHwtgSHFGDxsyAOXvoKru4DJX01x/lBUsIkfobz5RK
-   pkucL9SPR5QOUj30hbC6ha+W9cavBSuFB7LCHr31ppmgxdQEb508G2sd7
-   u8zdsSZeemi28r3GHIwaClQVejCwUQmHaEzYG28eBxyD/TlfgsTGekd3g
-   RHsBH0BD1jhqZS2rkX81PAa+h2p9EkcXqZRebX47v3cMFD8g/haBPxmMx
-   g==;
-X-CSE-ConnectionGUID: 9xW0yRnRSxu/XRoz1glDsw==
-X-CSE-MsgGUID: XCMbw4nFS6yAZpDMY9CMkw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11613981"
+  bh=YcYrPvm62cI+4A1/6iEWc+sBYrpX+wYdWWAThta5Qro=;
+  b=N/832aU/jx5M5XU4K0OWyY7yufcqL8XkRl/GGhRZLBS2S+Y9bIiHMdOt
+   570c059o3WKshg50Ed9KC08TK5IKuteWXys+HGtV5zSiMhgo68sDyGANt
+   lTAY1Y14/jE3ipLboyeKr2s1HXKalQd3ZlpkxWNyH6Qtk07VQaMN9nFoP
+   KTpBj37RGNfjRBSgVT8Kt8W1IK+qP5YCzUHGidsoYXOhP5nwOJDpzUKOg
+   z8u5sZJOqRCPmTft2yfF8p/6DJ7QLFiaXCCqAGpk3EIUsfS/XrdGoV1xd
+   2R2LhL2UaEvVTXkR7Ub8yv61Lt4TgCO2wi8WOKdZqkKuBcaR8EtDen4Ah
+   w==;
+X-CSE-ConnectionGUID: 74Hcq4I6Qg6EDRa60m1qFQ==
+X-CSE-MsgGUID: rL4IxInCRKKRGbknql24oA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11613990"
 X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="11613981"
+   d="scan'208";a="11613990"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:07 -0700
-X-CSE-ConnectionGUID: TUPxIWNtQLi04SmwZHLs4g==
-X-CSE-MsgGUID: aLwVOWGzReuTVOfZnQUmNQ==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:08 -0700
+X-CSE-ConnectionGUID: kG7EbLaVSrepTn16J4iMxg==
+X-CSE-MsgGUID: 4BA517K8RgukFZNAhdnQcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="30942814"
+   d="scan'208";a="30942837"
 Received: from oyildiz-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.51.34])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:06 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:07 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 To: pbonzini@redhat.com,
 	seanjc@google.com,
@@ -54,9 +54,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yan.y.zhao@intel.com,
 	dmatlack@google.com,
 	rick.p.edgecombe@intel.com
-Subject: [PATCH 12/16] KVM: x86/tdp_mmu: Introduce KVM MMU root types to specify page table type
-Date: Tue, 14 May 2024 17:59:48 -0700
-Message-Id: <20240515005952.3410568-13-rick.p.edgecombe@intel.com>
+Subject: [PATCH 14/16] KVM: x86/tdp_mmu: Take root types for kvm_tdp_mmu_invalidate_all_roots()
+Date: Tue, 14 May 2024 17:59:50 -0700
+Message-Id: <20240515005952.3410568-15-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
 References: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
@@ -70,157 +70,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Define an enum kvm_tdp_mmu_root_types to specify the KVM MMU root type [1]
-so that the iterator on the root page table can consistently filter the
-root page table type instead of only_valid.
+Rename kvm_tdp_mmu_invalidate_all_roots() to
+kvm_tdp_mmu_invalidate_roots(), and make it enum kvm_tdp_mmu_root_types
+as an argument.
 
-TDX KVM will operate on KVM page tables with specified types.  Shared page
-table, private page table, or both.  Introduce an enum instead of bool
-only_valid so that we can easily enhance page table types applicable to
-shared, private, or both in addition to valid or not.  Replace
-only_valid=false with KVM_ANY_ROOTS and only_valid=true with
-KVM_ANY_VALID_ROOTS.  Use KVM_ANY_ROOTS and KVM_ANY_VALID_ROOTS to wrap
-KVM_VALID_ROOTS to avoid further code churn when shared and private are
-introduced.
+Have the callers only invalidate the required roots instead of all
+roots.
 
-Link: https://lore.kernel.org/kvm/ZivazWQw1oCU8VBC@google.com/ [1]
-Suggested-by: Sean Christopherson <seanjc@google.com>
+Suggested-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
 TDX MMU Part 1:
- - Newly introduced.
+ - New patch
 ---
- arch/x86/kvm/mmu/tdp_mmu.c | 39 +++++++++++++++++++-------------------
- arch/x86/kvm/mmu/tdp_mmu.h |  7 +++++++
- 2 files changed, 27 insertions(+), 19 deletions(-)
+ arch/x86/kvm/mmu/mmu.c     | 9 +++++++--
+ arch/x86/kvm/mmu/tdp_mmu.c | 5 +++--
+ arch/x86/kvm/mmu/tdp_mmu.h | 3 ++-
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 2506d6277818..338628094ad7 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -6414,8 +6414,13 @@ static void kvm_mmu_zap_all_fast(struct kvm *kvm)
+ 	 * write and in the same critical section as making the reload request,
+ 	 * e.g. before kvm_zap_obsolete_pages() could drop mmu_lock and yield.
+ 	 */
+-	if (tdp_mmu_enabled)
+-		kvm_tdp_mmu_invalidate_all_roots(kvm);
++	if (tdp_mmu_enabled) {
++		/*
++		 * The private page tables doesn't support fast zapping.  The
++		 * caller should handle it by other way.
++		 */
++		kvm_tdp_mmu_invalidate_roots(kvm, KVM_SHARED_ROOTS);
++	}
+ 
+ 	/*
+ 	 * Notify all vcpus to reload its shadow page table and flush TLB.
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index a0b7c43e843d..7af395073e92 100644
+index 8914c5b0d5ab..eb88af48c8f0 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.c
 +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -92,9 +92,10 @@ void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root)
- 	call_rcu(&root->rcu_head, tdp_mmu_free_sp_rcu_callback);
- }
+@@ -37,7 +37,7 @@ void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm)
+ 	 * for zapping and thus puts the TDP MMU's reference to each root, i.e.
+ 	 * ultimately frees all roots.
+ 	 */
+-	kvm_tdp_mmu_invalidate_all_roots(kvm);
++	kvm_tdp_mmu_invalidate_roots(kvm, KVM_ANY_ROOTS);
+ 	kvm_tdp_mmu_zap_invalidated_roots(kvm);
  
--static bool tdp_mmu_root_match(struct kvm_mmu_page *root, bool only_valid)
-+static bool tdp_mmu_root_match(struct kvm_mmu_page *root,
-+			       enum kvm_tdp_mmu_root_types types)
- {
--	if (only_valid && root->role.invalid)
-+	if ((types & KVM_VALID_ROOTS) && root->role.invalid)
- 		return false;
- 
- 	return true;
-@@ -102,17 +103,17 @@ static bool tdp_mmu_root_match(struct kvm_mmu_page *root, bool only_valid)
- 
- /*
-  * Returns the next root after @prev_root (or the first root if @prev_root is
-- * NULL).  A reference to the returned root is acquired, and the reference to
-- * @prev_root is released (the caller obviously must hold a reference to
-- * @prev_root if it's non-NULL).
-+ * NULL) that matches with @types.  A reference to the returned root is
-+ * acquired, and the reference to @prev_root is released (the caller obviously
-+ * must hold a reference to @prev_root if it's non-NULL).
-  *
-- * If @only_valid is true, invalid roots are skipped.
-+ * Roots that doesn't match with @types are skipped.
-  *
-  * Returns NULL if the end of tdp_mmu_roots was reached.
+ 	WARN_ON(atomic64_read(&kvm->arch.tdp_mmu_pages));
+@@ -1170,7 +1170,8 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
+  * Note, kvm_tdp_mmu_zap_invalidated_roots() is gifted the TDP MMU's reference.
+  * See kvm_tdp_mmu_alloc_root().
   */
- static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
- 					      struct kvm_mmu_page *prev_root,
--					      bool only_valid)
-+					      enum kvm_tdp_mmu_root_types types)
- {
- 	struct kvm_mmu_page *next_root;
- 
-@@ -133,7 +134,7 @@ static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
- 						   typeof(*next_root), link);
- 
- 	while (next_root) {
--		if (tdp_mmu_root_match(next_root, only_valid) &&
-+		if (tdp_mmu_root_match(next_root, types) &&
- 		    kvm_tdp_mmu_get_root(next_root))
- 			break;
- 
-@@ -158,20 +159,20 @@ static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
-  * If shared is set, this function is operating under the MMU lock in read
-  * mode.
-  */
--#define __for_each_tdp_mmu_root_yield_safe(_kvm, _root, _as_id, _only_valid)	\
--	for (_root = tdp_mmu_next_root(_kvm, NULL, _only_valid);		\
-+#define __for_each_tdp_mmu_root_yield_safe(_kvm, _root, _as_id, _types)	\
-+	for (_root = tdp_mmu_next_root(_kvm, NULL, _types);		\
- 	     ({ lockdep_assert_held(&(_kvm)->mmu_lock); }), _root;		\
--	     _root = tdp_mmu_next_root(_kvm, _root, _only_valid))		\
-+	     _root = tdp_mmu_next_root(_kvm, _root, _types))		\
- 		if (_as_id >= 0 && kvm_mmu_page_as_id(_root) != _as_id) {	\
- 		} else
- 
- #define for_each_valid_tdp_mmu_root_yield_safe(_kvm, _root, _as_id)	\
--	__for_each_tdp_mmu_root_yield_safe(_kvm, _root, _as_id, true)
-+	__for_each_tdp_mmu_root_yield_safe(_kvm, _root, _as_id, KVM_ANY_VALID_ROOTS)
- 
- #define for_each_tdp_mmu_root_yield_safe(_kvm, _root)			\
--	for (_root = tdp_mmu_next_root(_kvm, NULL, false);		\
-+	for (_root = tdp_mmu_next_root(_kvm, NULL, KVM_ANY_ROOTS);		\
- 	     ({ lockdep_assert_held(&(_kvm)->mmu_lock); }), _root;	\
--	     _root = tdp_mmu_next_root(_kvm, _root, false))
-+	     _root = tdp_mmu_next_root(_kvm, _root, KVM_ANY_ROOTS))
- 
- /*
-  * Iterate over all TDP MMU roots.  Requires that mmu_lock be held for write,
-@@ -180,18 +181,18 @@ static struct kvm_mmu_page *tdp_mmu_next_root(struct kvm *kvm,
-  * Holding mmu_lock for write obviates the need for RCU protection as the list
-  * is guaranteed to be stable.
-  */
--#define __for_each_tdp_mmu_root(_kvm, _root, _as_id, _only_valid)		\
-+#define __for_each_tdp_mmu_root(_kvm, _root, _as_id, _types)			\
- 	list_for_each_entry(_root, &_kvm->arch.tdp_mmu_roots, link)		\
- 		if (kvm_lockdep_assert_mmu_lock_held(_kvm, false) &&		\
- 		    ((_as_id >= 0 && kvm_mmu_page_as_id(_root) != _as_id) ||	\
--		     !tdp_mmu_root_match((_root), (_only_valid)))) {		\
-+		     !tdp_mmu_root_match((_root), (_types)))) {			\
- 		} else
- 
- #define for_each_tdp_mmu_root(_kvm, _root, _as_id)			\
--	__for_each_tdp_mmu_root(_kvm, _root, _as_id, false)
-+	__for_each_tdp_mmu_root(_kvm, _root, _as_id, KVM_ANY_ROOTS)
- 
- #define for_each_valid_tdp_mmu_root(_kvm, _root, _as_id)		\
--	__for_each_tdp_mmu_root(_kvm, _root, _as_id, true)
-+	__for_each_tdp_mmu_root(_kvm, _root, _as_id, KVM_ANY_VALID_ROOTS)
- 
- static struct kvm_mmu_page *tdp_mmu_alloc_sp(struct kvm_vcpu *vcpu)
- {
-@@ -1389,7 +1390,7 @@ bool kvm_tdp_mmu_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range,
+-void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
++void kvm_tdp_mmu_invalidate_roots(struct kvm *kvm,
++				  enum kvm_tdp_mmu_root_types types)
  {
  	struct kvm_mmu_page *root;
  
--	__for_each_tdp_mmu_root_yield_safe(kvm, root, range->slot->as_id, false)
-+	__for_each_tdp_mmu_root_yield_safe(kvm, root, range->slot->as_id, KVM_ANY_ROOTS)
- 		flush = tdp_mmu_zap_leafs(kvm, root, range->start, range->end,
- 					  range->may_block, flush);
- 
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
-index ac350c51bc18..30f2ab88a642 100644
+index 6a65498b481c..b8a967426fac 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.h
 +++ b/arch/x86/kvm/mmu/tdp_mmu.h
-@@ -19,6 +19,13 @@ __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
- 
- void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root);
- 
-+enum kvm_tdp_mmu_root_types {
-+	KVM_VALID_ROOTS = BIT(0),
-+
-+	KVM_ANY_ROOTS = 0,
-+	KVM_ANY_VALID_ROOTS = KVM_VALID_ROOTS,
-+};
-+
+@@ -35,7 +35,8 @@ static_assert(KVM_PRIVATE_ROOTS == (KVM_SHARED_ROOTS << 1));
  bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush);
  bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp);
  void kvm_tdp_mmu_zap_all(struct kvm *kvm);
+-void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm);
++void kvm_tdp_mmu_invalidate_roots(struct kvm *kvm,
++				  enum kvm_tdp_mmu_root_types types);
+ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm);
+ 
+ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
 -- 
 2.34.1
 
