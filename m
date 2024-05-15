@@ -1,78 +1,163 @@
-Received: from mxout37.expurgate.net (mxout37.expurgate.net [91.198.224.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325924AEDD;
-	Wed, 15 May 2024 07:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C7242072
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715757769; cv=none; b=KKPlggd2MPhjbI8EiP3I5cFb9AHAhRVbwXxEBd4lLk+5iNwbfBujhs1yTPWVjjjLC8vOCAfIFuit5eaYy/DkSC2rkLStJk+whjdt8APBhdDGU7noH2Xo6yJTOfyjDDeRta+6FEJSecj2pmOb/yA8XomNgEGCne+sqS3K9M6xfm8=
+	t=1715757997; cv=none; b=GP3NiZMYUinMnoI9N/hrkBcXVH12P4/n5dXkXaz49f/mOzYMsxbfLUGsqNDCDkMn/9igNu8CpIfT3mBRNJRwTngWCuhMFfqXcIZn2jtzdauRjvPvxgZPNLloL29ExvMaQ4ngG0acrR+RLewCH05+UixlHk0GbZXQrywi5DZVH8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715757769; c=relaxed/simple;
-	bh=MMJTxIse0XMR2yy8WVH7zqEil4nlE4hSMxlj11n2foc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ks7yy1+t4FiW1UsiVNPLcFV1GrUKN5bhsSFEBaDs8ST7nNAzVtl0tN+eVDngCjoIJ7mxdgyslAJVBNxSh6JPCv/stUUGbnxZ4JMnTDHMNl5HKT/Uo334sJ/torq3pj8ZSyJze5+n0qRm5z0w2p8O8RRYBgdiBTDUtSkcHreOWFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de; spf=pass smtp.mailfrom=brueckmann-gmbh.de; arc=none smtp.client-ip=91.198.224.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brueckmann-gmbh.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <gessler_t@brueckmann-gmbh.de>)
-	id 1s78hU-0025li-Fc; Wed, 15 May 2024 09:05:20 +0200
-Received: from [217.239.223.202] (helo=zimbra.brueckmann-gmbh.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <gessler_t@brueckmann-gmbh.de>)
-	id 1s78hT-00B0ZK-5Q; Wed, 15 May 2024 09:05:19 +0200
-Received: from zimbra.brueckmann-gmbh.de (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPS id 0A0ECCA5DDD;
-	Wed, 15 May 2024 09:05:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTP id EE310CA6122;
-	Wed, 15 May 2024 09:05:17 +0200 (CEST)
-Received: from zimbra.brueckmann-gmbh.de ([127.0.0.1])
- by localhost (zimbra.brueckmann-gmbh.de [127.0.0.1]) (amavis, port 10026)
- with ESMTP id j1AwKLY4gM0P; Wed, 15 May 2024 09:05:17 +0200 (CEST)
-Received: from [10.0.11.14] (unknown [10.0.11.14])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPSA id D325FCA5DDD;
-	Wed, 15 May 2024 09:05:17 +0200 (CEST)
-Date: Wed, 15 May 2024 09:04:27 +0200 (CEST)
-From: =?ISO-8859-15?Q?Thomas_Ge=DFler?= <gessler_t@brueckmann-gmbh.de>
-To: Andrew Lunn <andrew@lunn.ch>
-cc: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>, 
-    Heiner Kallweit <hkallweit1@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, MD Danish Anwar <danishanwar@ti.com>, 
-    Ravi Gunasekaran <r-gunasekaran@ti.com>
-Subject: Re: [PATCH 1/2] net: phy: dp83869: Add PHY ID for chip revision 3
-In-Reply-To: <b2db4e61-8bc1-4076-a2b9-7b6a028461aa@lunn.ch>
-Message-ID: <54725d-4c84-2a25-54bf-5a56aa17edc5@brueckmann-gmbh.de>
-References: <20240514122728.1490156-1-thomas.gessler@brueckmann-gmbh.de> <b2db4e61-8bc1-4076-a2b9-7b6a028461aa@lunn.ch>
+	s=arc-20240116; t=1715757997; c=relaxed/simple;
+	bh=pHIDXBNssCBc03cLf2WrSSXPNJV9C69TUOs58UGNXiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PPnO6AB0rfkAijycmBcuiCosq7GE5AH4G8u+J5Tc9FxbA8MadT1mm6Jmfsb7uChqxdPToRGyL/LiI03wx0OQF7ri9Us5qcGnSSTtE7q0cxJBlVpGYZSCNP2yhFnJ5/r2K1YrwCwf6AmOsc6dZYUuA7i7cVAfa6LaaJDlQ1DKCQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=ZmPZVsSp; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ZmPZVsSp"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f44b296e02so3834568b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1715757995; x=1716362795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZrvNGMUcH8kbhXEijiFcgBH5XmfO0e+fTQFgvwJdcDA=;
+        b=ZmPZVsSpAlOrLOzNVMuNGm3E1tubJAyWkLqcvdYvVAK7vZJzS3L6wQ6BuZZJROZPEe
+         Ha1THimHGr+6u/jjHA5oDXOQlp1pQBNi7VEeTlyceIccBGCUTm7g61bQaUlk1jE1Nsy4
+         9Se0qQqO1dqqSz3MVJQabkMV0Dv8m/z2AhYLSPG+GhSzuHUQoEL7xYwTOCJYV/SY93Xe
+         7mXuMw/xavBZwbEdo30lqLS4z5F6fAAIDL+MKF3rDSCA65OOuNXV9JdRKZdS5GiWxQal
+         AQjxAk68cu2Re4pM6zdLZFahaN+9sv6cwjHrkzqRtPl4MkCEzclOzihAxVs4L0ogHvB3
+         k2jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715757995; x=1716362795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZrvNGMUcH8kbhXEijiFcgBH5XmfO0e+fTQFgvwJdcDA=;
+        b=DL1lZ0Bb1mSwNvA3JjkUhoXUVniyMBLf9/vpR2+VB+pIwwEGeeJS/779ke3l7ZufOM
+         GpZEbc12Nq8qPOcziNNYLWMinxuKZHNrZ+i8kwqQbuqHuEtZ5xXp4LIzIpkhkya3/tGj
+         V1bQL5b1db2R0OeiHRv5q2R7bJ9MtrqBE9bL+hM8G8wHwTbn6/aeCBLJLRTgwlqDOZYk
+         6JB1c7m4WpBKcqE3AbiRxTp2QG6OHiFLt5DDzTb6WS7C65vNSmsGTAJCRaYSiPh3xpxA
+         nK/bNdB/Vw/FPbVKJjHqiN9VxYuc2SJn2vHVI4Xzc9Veq3IkENrILI14OYce/aNLuCu6
+         h3iA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbSG2Bu8E6SrXb2LWroi1idnwqzd/K9ljdKqOqFTPIFNePOMNqH7tqwohyOcML0MOguTS/pibKFVP9aa+4GegcvpgcGail67z+XKH+
+X-Gm-Message-State: AOJu0YzviR+EJEh6t1bAUCBW9Ci6xoOrZlYaUxCFYJHv21C77U57Q9yI
+	1sZIQH+XdYXlysK0xanPpjmD13JJUpJpY6wlacI0ee+bC1zJCuv7V6PJaTB0NLxXPAFyJNoWI5e
+	EzTkyrojzWhBhMwTU632907P0toyI90nyAZQwXg==
+X-Google-Smtp-Source: AGHT+IFkuxJNBNByOn4dn/O0DmpomBqME3HUvwwIwYCPNWgsW8k2PYZmU2A6Yq68xZdjZJus/8N9Nb7AiHdNU5pwdUo=
+X-Received: by 2002:a05:6a20:12d4:b0:1a5:6a85:8ce9 with SMTP id
+ adf61e73a8af0-1afde0a8da9mr16307857637.12.1715757994863; Wed, 15 May 2024
+ 00:26:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-ID: 151534::1715756719-A76F8356-60AE8429/0/0
+References: <20240503221634.44274-1-ignat@cloudflare.com> <20240503221634.44274-3-ignat@cloudflare.com>
+ <D19QW70177QG.2YC9XL0FT7VME@kernel.org>
+In-Reply-To: <D19QW70177QG.2YC9XL0FT7VME@kernel.org>
+From: Ignat Korchagin <ignat@cloudflare.com>
+Date: Wed, 15 May 2024 08:26:23 +0100
+Message-ID: <CALrw=nFsjiGTZDN3vYCN+GC9R3eQ3ix6_u2x0xo3jcpHqWjs3A@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KEYS: implement derived keys
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	David Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, serge@hallyn.com, linux-integrity@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Wed, May 15, 2024 at 12:10=E2=80=AFAM Jarkko Sakkinen <jarkko@kernel.org=
+> wrote:
+>
+> On Sat May 4, 2024 at 1:16 AM EEST, Ignat Korchagin wrote:
+> > Derived keys are similar to user keys, but their payload is derived fro=
+m the
+> > primary TPM seed and some metadata of the requesting process. This way =
+every
+>
+> What is exactly "some metadata"?
+>
+> > application can get a unique secret/key, which is cryptographically bou=
+nd to
+>
+> What is "cryptographically bound". Please go straight to the point and
+> cut out *all* white paper'ish phrases. We do not need it and will make
+> painful to backtrack this commit once in the mainline.
+>
+> > the TPM without the need to provide the key material externally (unlike=
+ trusted
+> > keys). Also, the whole key derivation process is deterministic, so as l=
+ong as
+>
+> Why trusted keys is inside braces. It is not important for the point
+> you are trying to make here?
+>
+> > the TPM is available, applications can always recover their keys, which=
+ may
+> > allow for easier key management on stateless systems.
+>
+> Please drop "stateless system" unless you provide a rigid definition
+> what it is. I have no idea what you mean by it. Probably not that
+> important, right?
+>
+> >
+> > In this implementation the following factors will be used as a key deri=
+vation
+> > factor:
+> >   * requested key length
+> >   * requesting process effective user id
+> >   * either the application executable path or the application integrity
+> >     metadata (if available)
+>
+> NAK for path for any possible key derivation. They are racy and
+> and ambiguous.
 
-On Tue, 14 May 2024, Andrew Lunn wrote:
-> As the name suggests, it matches on the model. The revision is
-> ignored. A mask is applied to ignore the lower nibble. So this change
-> looks pointless.
+Can you elaborate here? What kind of a problem you see specifically?
+(This is exactly what I want to get from this discussion)
 
-Ah, I see. I did not realize that the match ignores the lower bits. I was
-having trouble getting the driver to match when first experimenting with
-the chip and thought this was part of the problem. As it turns out, it now
-works without this patch.
+> This should have been in the beginning instead of "some data". What
+> other implementations exist. For me "this implementation" implies
+> that this one competing alternative to multiple implementations
+> of the same thing.
 
-Please disregard it.
+With "this implementation" I meant the current RFC patchset because I
+do expect there would be more iterations and just wanted to solicit
+comments.
 
-Thomas
+> I do not like this science/white paper style at all. Just express
+> short, open code everything right at start when you need and cut
+> extras like "stateless system" unless you can provide exact, sound
+> and unambiguous definiton of it.
+>
+> Just want to underline how this really needs a complete rewrite with
+> clear and concise explanation :-) This won't ever work.
+
+Understood.
+
+> >
+> > Key length is used so requests for keys with different sizes result in =
+keys
+> > with different cryptographic material.
+>
+> What is "key length"? Please refer the exact attribute.
+>
+> >
+> > User id is mixed, so different users get different keys even when execu=
+ting the
+>
+> First of all it would be more clear to just s/User id/UID/
+>
+> And make obvious whether we are talking about ruid or euid and how
+> this interacts with GIDs.
+>
+> I'll look at the code change next round if the commit message starts
+> making any sense.
+>
+> BR, Jarkko
+>
