@@ -1,87 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03341219E8;
-	Wed, 15 May 2024 12:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE291745D6;
+	Wed, 15 May 2024 12:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715775037; cv=none; b=jGfRLtSOQId2zwVDvmIEWrWvH+8zbRGQakPZuMBCnw6ffMqWElZucGnJO0y/WfBBafuqgtaJaq2MLm4et/uspQkEkX3ttAwQ1ImmpLShLfIVTeU8hZ6hGhW6tsbLYPjK2oWhtQlENr1l+YQnNpzo95DW3IhHIacyxnbLruHmbvY=
+	t=1715775040; cv=none; b=nvh4tL+VKGGwlv8qZLk414Vnm6WXUR/hcDMX5DjK8QsCktZrWviRhCBqE/KYPSQ/lasMAPBROx8H7RCudCzeSAuVLf6sgy8pvgZpyX8afXM+44g9ryJvha/8XxuFwkMbxvTKAJxApjstgTEmWvQ0mrLPRBJisz7O5pWLaW5BdT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715775037; c=relaxed/simple;
-	bh=qQxML4MZnARv3Z2b6FuMOQyd3ZUvitO3Ah4OB5i1l7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MWNMcP4CQf6dUyqHh+McgKm83d+DPDsr2qoOXG4cEjnSD2GPCL7PsTCXxBHpIb5HwC8NrzUka6qmYS/8QHJOGmue65orw/ZM2S+uhkOBijPIP9Gqq+7LKLv94F+xIVJGGyMv7Hm6qp/7IDq++wf2UjtUpWTx1KYqj8mQVGbGBKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTj5JXde; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715775040; c=relaxed/simple;
+	bh=yS2PU23pXmQPqFE4VDurztJhG/NvaNEsMT1SxfmCbn0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iBiqsbO6GVndWFKQSqlPDuuP/10rRypnU1xtWapZGP5N7aMEXIjXjmeyUCP33dS02xXUSannQVofJnSf1J41t7kd2levlBl4wANMHPvYRXauGSUJK+Bcs6GOvRmfDqsM9e69KLihvkErTO7orA5JIbC6hal9QcB3uLnQYao427c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=la1AVEWR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTj5JXde"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EC9C32786;
-	Wed, 15 May 2024 12:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715775036;
-	bh=qQxML4MZnARv3Z2b6FuMOQyd3ZUvitO3Ah4OB5i1l7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jTj5JXdexmn/0ahw3hCXJNgvnXtr4Daq0xkuiSbTdhtIBacxfCc70qmkOQ8F997rt
-	 LoA1OMQy028S/6Wyuyvae2Go6mTLz/jduzaWHSDWUFQya6Ie/FLZc9tVqmDjVKHSaj
-	 M39lkgwE08CmZ9D7YOmbDImx/+bKltLX0KNKMzUYTiHaxaiDWXBHSL/RGPflr+J9BR
-	 6GXsrw9B/+5v3sry6qQm4jK+xgwlr1RIwHE5PvBLwezfVDcd3VjZGZPW+qs3L5fau1
-	 0wErANretlJxfrtHGt0/IsMJZO2f3tG2Hh5qz4Jdvk0IQMcPKClDOodqvtJLKH/vHt
-	 epG1qQblSbHsQ==
-Date: Wed, 15 May 2024 13:10:31 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Alina Yu <alina_yu@richtek.com>, lgirdwood@gmail.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, johnny_lai@richtek.com,
-	cy_huang@richtek.com
-Subject: Re: [PATCH v3 6/6] regulator: dt-bindings: rtq2208: Add property to
- get ldo of RTQ2208 is adjustable or not
-Message-ID: <90d5efcc-e85a-4daa-81cb-a877c4b8fff6@sirena.org.uk>
-References: <cover.1715340537.git.alina_yu@richtek.com>
- <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
- <20240513-tissue-repave-13d2e3bf88fd@spud>
- <d97752ed-4032-4681-b28f-17f149fdc3d4@sirena.org.uk>
- <20240514-plunging-chair-803d9e342e6f@spud>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="la1AVEWR"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44F9165w011041;
+	Wed, 15 May 2024 12:10:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=ZfestWt94fmc/kUfm+t+
+	YdjZBbdJa5ANHwmQTdtlc6Y=; b=la1AVEWRGrkX7Q9IRkkQlTMUkaOXgy/xgvKV
+	95qPcZ9X9lMKzPrPRtrgNW5masg0BbpwcUpDgdm/1Pv2HjcOM9yniRkSJAbrOeA7
+	G49iTfC28HRvnzokn9H5r7gV7HulyHZKz3oXm+KRVvB3ZInDqOyBjimDyqcqkGx3
+	mT/45OTyVfTC5KCOIGI/uve1oIllu2kc5scLO+asG4d0O2tNlVV1fDhh71cNbBG3
+	nnHsPHDKAWo7HLcR+eacAj+pl/JNpQ1oT8wB558IZn7fbVJbcHa2HV3VIFxTop47
+	bqUijb6TNem2RolmB7VJWk9Eyr4BC48nOjsNn8cbGQsAnlSgzg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y3x51kw9j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 May 2024 12:10:29 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44FCASQb027651
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 May 2024 12:10:28 GMT
+Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 15 May 2024 05:10:25 -0700
+From: Naina Mehta <quic_nainmeht@quicinc.com>
+To: <ulf.hansson@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <bhupesh.sharma@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        Naina Mehta
+	<quic_nainmeht@quicinc.com>
+Subject: [PATCH 1/3] dt-bindings: mmc: sdhci-msm: Document the SDX75 compatible
+Date: Wed, 15 May 2024 17:39:56 +0530
+Message-ID: <20240515120958.32032-2-quic_nainmeht@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240515120958.32032-1-quic_nainmeht@quicinc.com>
+References: <20240515120958.32032-1-quic_nainmeht@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="QIiOGJPNoadFqFau"
-Content-Disposition: inline
-In-Reply-To: <20240514-plunging-chair-803d9e342e6f@spud>
-X-Cookie: Oh Dad!  We're ALL Devo!
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IBB-Rchfj8w199cVExAoro9w8LO87v_V
+X-Proofpoint-ORIG-GUID: IBB-Rchfj8w199cVExAoro9w8LO87v_V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-15_06,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
+ mlxscore=0 impostorscore=0 adultscore=0 clxscore=1015 mlxlogscore=996
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405150084
 
+Document the compatible for SDHCI on SDX75 SoC.
 
---QIiOGJPNoadFqFau
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Tue, May 14, 2024 at 07:01:21PM +0100, Conor Dooley wrote:
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+index c24c537f62b1..11979b026d21 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+@@ -51,6 +51,7 @@ properties:
+               - qcom,sdm845-sdhci
+               - qcom,sdx55-sdhci
+               - qcom,sdx65-sdhci
++              - qcom,sdx75-sdhci
+               - qcom,sm6115-sdhci
+               - qcom,sm6125-sdhci
+               - qcom,sm6350-sdhci
+--
+2.17.1
 
-> It also doesn't seem like this sort of behaviour would be limited to
-> Richtek either, should this actually be a common property in
-> regulator.yaml w/o the vendor prefix?
-
-It's a pretty weird thing for hardware to do - usually if the regulator
-is controllable it'll be qualified for use within whatever range it's
-variable over and not some other completely disjoint value.
-
---QIiOGJPNoadFqFau
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZEpjYACgkQJNaLcl1U
-h9AQaQf9FRIL97KP2WvU1BzIYHUi/ili3Tpv3U/mZScKR47EXY/gLSLeXyaPCI/u
-/NzQV7TeJZZ6UpLzBY23ynA0xGZXSBmTmIaGNCmlJf9nnZ0UAH7bLquHCJPB0NDd
-EsGzJTgNX5dOvZeFJ5eT9XIdabDxsWWsvotYIwW3TJmApBctw58wKRAfbwPs9Qms
-ra0bjrqcx5TXOYldAZw3Avaew6eJ6pHpL5zYGXFtUlMOO9BvpmjLoI4Y77pykYz1
-jlYBwmBEmAH4zTMSlOm9XqQcwCxEd+b9TAB1bxP9ZA1HsEq9PKffMQnMftxMtHjl
-R1NcFJ9kVFWWzMx/Ui8UCB6WaV9Pww==
-=4cJk
------END PGP SIGNATURE-----
-
---QIiOGJPNoadFqFau--
