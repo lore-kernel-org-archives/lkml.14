@@ -1,200 +1,162 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2137.outbound.protection.partner.outlook.cn [139.219.146.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A8263B9;
-	Wed, 15 May 2024 02:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.137
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715739842; cv=fail; b=bOlePS6yh7cZGNCHGbuyEAnfd5iqsE2wFfZbZye8/q1oX+lfbl0BlDiPCyazt0BNGHIm85AG00uCtG42S0B6as2iOUYheCqwYl/xqE8y2F/iSONhe4tp/L4hPP6NreaoolchX0yXx9VYTFEUyAQ4Ftd80qSYUjBifxWIXPqU/ts=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715739842; c=relaxed/simple;
-	bh=5IYkLseJvz19J9hXRlZ3rNQvRG/Jg2vmGfRjkJjt7Y0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QdtGnOvdFOmcxHxJlgVGkPdYa76AdC8hhiA5EF9mnCAf9n3cxr565hauYwG38ItpMCt1FKtM1KorgXe8w8yUBbhFndxr9hY9LB1zNoc6YK8S6TH0gQHGAMCY+WNjZlRHxdPtjV2XA8s6wskXcQPZnEJJMDr+FyrDVR7FDkykdM8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UfKegW3oePo1ggSmdca9j9PgtC8D0J9/IlW28+Pc0HQxBFX9889GnusFD0oO4K6ujjJsGPPs411ndrUig3XcJlwrrRcRirLzVL+2wCP0lLI14GtH1b5yOyx4lULdKg6ykyqporKmfFWo436PG/85GJao90eyNvkd9g2c6i/zfX9CZBfz2PwI6blE3ChRK4Ux3TskpkQSbryly7/O6mYnGBhzSS4RNdLAPMh9gE+uChb2GReK+NtfYM1jrsquVeKJLMd+aruYP8K7vXTCbK8OE+Q4Gboq6D3XWpsdi1EvKRcnSlZ8upkG+0Fagf2EfY8nRf3JIKf2y82Ug0sJFy938g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=juykI4KxJpPd+HSTYr18AIlTmvsWU2/XL7PboPIe8Dc=;
- b=Klpvrv6gnzNOttslvI6XXqUcb4sDco0FediEMdtm6nSwy4c38Cvyk7CvUyo5qDBnHSipJrHWeK/6OzkrP4OnnRXhfpgVH9LHjf/ww5kfRTdF+NLXM0cvBmUE6ts1BPraXpNOO1wutDVT5Ydaz0lkWATZOvPkLJ4SZe3v/quDuKx2loNgbAOTE9HOYUo8sF4ijGt8TSntEsNTSdv+hGHZBh/5TG3h+k5aXWNaI8BeyEd7qCHfq6NGBy/Hbp616tclfdVfUhRmh9mAFXYVaoGy/ucikcGivWh49hPQ/vfbvhKriRB/0088P13++Viv+Ak+tbJdgr+u34pt/0mE2ALwAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1002.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:b::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33; Wed, 15 May
- 2024 02:23:47 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::e903:99a6:10b7:304d]) by
- NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
- with mapi id 15.20.7472.044; Wed, 15 May 2024 02:23:47 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>
-CC: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
-	<sboyd@kernel.org>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Hal Feng <hal.feng@starfivetech.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v5 0/2] Add notifier for PLL0 clock and set it 1.5GHz on
-Thread-Topic: [PATCH v5 0/2] Add notifier for PLL0 clock and set it 1.5GHz on
-Thread-Index:
- AQHaoEtCPDK2HwhwXUSWjcDZE/pIQ7GQ+umAgABXAkCAAKg2gIAEWZ+wgAC+9gCAAIQbsA==
-Date: Wed, 15 May 2024 02:23:47 +0000
-Message-ID:
- <NTZPR01MB0956CF1AA9EA5A20A174FD8A9FEC2@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
-References: <20240507065319.274976-1-xingyu.wu@starfivetech.com>
- <20240510-unfounded-syrup-d1263d57d05a@spud>
- <NTZPR01MB0956D48361098E8AA4B3930A9FE02@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
- <20240511-unbiased-dainty-ccb5ece9b1b9@spud>
- <NTZPR01MB0956A7393097129D3CD048EB9FE32@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
- <20240514-congenial-smother-1e4b0fc6a5df@spud>
-In-Reply-To: <20240514-congenial-smother-1e4b0fc6a5df@spud>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NTZPR01MB0956:EE_|NTZPR01MB1002:EE_
-x-ms-office365-filtering-correlation-id: b2c51c7d-98e3-42a1-5224-08dc74860d1b
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- dM12cF7KI3pKWC0YB1+wvHJVT1dtjIqhwI8p9w+sssXLO1QPYFz0ue/GEKcWUhNzTjRZ+nzFXr9lCp/DtXj7nCBgctC7yAtRxVOvlhBFFkzd27XB3EHQ3SazLHhPw1MTMkPpb4MQt5M8bee6zZEvqNe1tpZofXbxm2QDjhYbykAIBndLwShmAH2n4NnfJK35pYCgTLv4djP32LJpnNYVdsAQImMGVClEz1spJASJGOrbB5UvdWN7a8/vKnbpY4bo4pgwrpeFbGTE9hrTBsdb2/JWGf9Bu5eqAfMQ+EhmRWkUEiXLxXXhaXhk7jHguTFs+YOCJSOxoep5e780aHhX5G4EcXTREBEwjUuPYKSNOVy7f/q5JJrd9OnfZnKPdnXHM3hMpB/ROKFTPolNjNUaOJo5mTB7r/ta15InNsVba1vliOEiG5vQ/lsP2cDjYMzFHhTB/LtC/wxxQLO5ibtvrQcFmUAswHy4PYtVkflW5t+q//zUlNqLA7KHd3/TIPdxC46d+9sfur0kA9/O+44EtmjTnipLkTwNANkWGWP4cnvvrLTzaUZLNYSLaKNSfCMx7N/QkXq05LN7KaMWu71UlFZBTOovjujQY2a5tXZ9YNv0r3mkc/Js84O8xxEEPaXP
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(41320700004)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ogPuLDcKEquOYoRpp1omm5qe+K4XtmbiH6L85hZqMSUDkFLJ0gdHGARkh0ST?=
- =?us-ascii?Q?+feJwKMDpEkkUHqeugg76x7wdND8hrWRcCGcYA1e9fUNBRGe4XOKkCK/1YmL?=
- =?us-ascii?Q?x/ijGgb8vVu0+lM6XJkcad0DoWzY2+4mPe0CzEZvtVEQ67yzJaNiIRXfz4ly?=
- =?us-ascii?Q?1Ab9LUXcA2PQ6CLVuXNLPF7jakrihDjccpRdXLPsiTdh8xKQE8yD/lJNzn9f?=
- =?us-ascii?Q?kiS3ACI5l32yD3m2fvJp+2thrghFXeC4LcOUEagFbxnWV5Irkoal99UJbIqz?=
- =?us-ascii?Q?CZOfnQ4PzY32DxKZFLwrw5H/gUAdt9/s/VzvL+yV+x5Z9Qr+vWuryZ4FoxFY?=
- =?us-ascii?Q?0FnvGe7ZlnrZZ63tjc43YSYVGtgy/91zt4gGPhc9tSDHqpHGLUhTmkVJPI4G?=
- =?us-ascii?Q?5TQLjMlGndFCoUpew87pPoYqxgp63Xoa7rCResBSXYENV9PawMbdaYvD3Uji?=
- =?us-ascii?Q?wZlEQs3cPTlOtPWEVNBTTBX5sxuAJ4mW3bzWxy6Lib+ENfCwIyWf7hg+Ti0y?=
- =?us-ascii?Q?FHL30p9J49cTXlQnGOVsuC7bE1KlJTkv2PTWXWCHdr/Fmp9qQJMfAAU9L7Ek?=
- =?us-ascii?Q?x1ZnWX7ROxWlfnNNT8o0GJzXNdvqEe65xXoZ5ywbw29NYIWE/nVoK36pMk/f?=
- =?us-ascii?Q?znPzyYK5bNOnGMVRfoyPOFqqxM9GtY7ChJaHk9nmrxnqW46yM6EBu4ObqkC/?=
- =?us-ascii?Q?HBfx8u5w2gWPY1hH3iIjZVWAjA5QLGZjSF8jf6edRQusZ7N+f/QwtynzIxZK?=
- =?us-ascii?Q?aIVSc8H6dlrJcKLFOHQx2avVqR3wRHOsIU5IeVlLVDUwIv+tFs293FuSwTyY?=
- =?us-ascii?Q?kZ7yMbZR2ibKn5WzV4GdLXId1KyKDZumIg+Ld4C55RPM/6p05ToMoxzNNQbe?=
- =?us-ascii?Q?7KIkDoY5R3f8nYOuD4G5RVD3kx+Dxc5cATUXxO2MM/CNNh8wiPaLtg3sqpKF?=
- =?us-ascii?Q?wngALbbTjRCCS+pcxyyI/C4mXiljZlqEcnf/4UqmX9Ib3WfJZrMhRN038in9?=
- =?us-ascii?Q?y1l12xTTlwKMUwPS0i4sIuFftvPFEwu5PalGv5zbx8U/fWF30rSzROoxqW0M?=
- =?us-ascii?Q?OG8W5GwferafH/E082mTfzVpWgUlb1hhxQdhOcXW/lCHlLmuciQVbFf43rhm?=
- =?us-ascii?Q?SAGR97eY7C95Ol0+mdrACQqUC67cJOw0jOJCsO2olUKBXSNVnPMuaV9ABocO?=
- =?us-ascii?Q?B02tccPmLXuDoFQiGjkAsGkAYLjp8Tjsqvlndxbl25MVrnNiDMYtHkCJoKyu?=
- =?us-ascii?Q?ZMAz4VOJAgaxn+2HPpzTgh2yGhkdxP3uIyCpAGlJSRr+a0BCtFwyc+GLI6Dc?=
- =?us-ascii?Q?7VndP0awnGvWBNumJmFWXddsH7SBTo7NfeorBtpn9kjgL2jG/BiGT6qPvdMP?=
- =?us-ascii?Q?Fucxq8PAXQRIAebn4tTJIFyU1FEhGmKfVCGtJXHPKxB57mqnVCG/SXTtiE6R?=
- =?us-ascii?Q?JCG3/ZVyewAwIrPFTZPY2WCdRzoLjI2j04TSeLTJJs+F/y+Mc+7qbXke2wy1?=
- =?us-ascii?Q?jxINluR2obToPE7pF+adke19xV2RGtqMxG3MSzE+8miTidHg11vWFQdUHyli?=
- =?us-ascii?Q?SWBbAK6lsKW5NAKT4etjirM08Fe0UHcBchjufahJ?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425C68820
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 02:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715740156; cv=none; b=QWL8IRanA+s1qzLIqKXuq0j7BtM90QF7OLe0z3Iedb6Q8MJ8LQdOlGd1vPPN3YV8xRGRlBLIGmCXmqu+zW0lx/Y4eI5wadPk3xGTiwuWsZCQRmopGvYrjzfuiDOcuIPGc/1NkrGM5kSjvRk2cE7hM7nJyOFg0WD9nW9d5aWdsjg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715740156; c=relaxed/simple;
+	bh=uIVALT8fMTxGKl7HLSAvodUgkyb/d8KBVovit9yBBdQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tyl1fGaFfYREoh2ng1buK1Nujd7OAKPJ+0X6UR+10xfiRUVG95MJEobXtU4KQ4UgTwX7jArHd5L+I6/eZHOnyirJdZxTaLEJPRExMTO3sKPvLqoEy+tPulUIUi4cUxhmGOb3eNWHFkwnCJXBzMDVEoiOUMfCggWEQBqQ1Ew3lAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=c+de57/h; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="c+de57/h"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a59a5f81af4so101847766b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 19:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715740152; x=1716344952; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HhWK/QjBhcq/4T9972QoRB3M6/JeMKBp9jipg24+Woc=;
+        b=c+de57/hq2U/+YBIWKXyyEmgcHoqbPUQMBjr9atZPLcDL5hk3DgPoFVY39W1Q8kGJQ
+         eTeN/wzXjI17cEZwYVs3+8Qzu+ZPLWIZ6Qs/mFAFthUPb/e9xjNu2x2GdQfLlOFeuJCI
+         Aq6rIRj8DKgjdUzEAoxhtFu2uqhwOHQipXccs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715740152; x=1716344952;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HhWK/QjBhcq/4T9972QoRB3M6/JeMKBp9jipg24+Woc=;
+        b=BOg0fyG6uBcAw1XNTru3RDirLBDCDVDkBA2upbsDt5pMY02ARWMzAgjgscFLD+Zz3X
+         Ty4ZO8HJISsXnGuytXNS4liJF8bM96c7tBx/gxL/TuZBeJ7MXRaFQfIbjemeLQ0sTH6U
+         ouoPqPwmkTZ80hlzbT6o5X9lrlUMBLvqRAzjX0umLV8s6R28X0IVBW4vvwRtJOzHMijQ
+         Ip8wVy9OQjvo57PLdSAvG7T4x2qR95jmGApyqWZa6O0tyaQw72TTnywMqAE5EiEY1KGO
+         FS5I1Btpn26GUU4iOhwWuRfZmFeiMoa3oyIuB2OLhO43Cl4qQNe90tuQkk2oA+CSh+Yn
+         Wv3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWU7M9mCeGBqTNElAmNcCLqGDLhjf7fmUQRXFEPUOrjDxmscP/LBTSAyO3j+vIax1e2NdeFtR41oEZXTBPHyiX8zXE4rFxQCOBI32Pd
+X-Gm-Message-State: AOJu0Yzvkmx2+Qi5LOZM9qBAPp8AY9gs11zIylXv/VuCPXCknEOv0l56
+	l6aVvUoDQ8MKdGkdyJz6udMRwNIwAoo3VjbgW4Jq2y1POONUb2uaRb/f/c2LvSeOk5fdWWikFhb
+	9zsppfA==
+X-Google-Smtp-Source: AGHT+IGDd4qfgG45fLbwmQIyDsy++B8lSPyEqm7V5gBvc9vclv/ntYQifvEm8U0poSdJEHYqTYHvFA==
+X-Received: by 2002:a17:906:d7b7:b0:a59:9c58:763f with SMTP id a640c23a62f3a-a5a2d5eeabbmr1017886966b.39.1715740152554;
+        Tue, 14 May 2024 19:29:12 -0700 (PDT)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781cd7asm802150866b.10.2024.05.14.19.29.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 19:29:11 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a5a2d0d8644so116212466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 19:29:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJnLd0aqp8RFGU9HLztvhAjRoqNqqMtt1rqsDwPZ6OnENb9Hzcf2Cmndt5n53oc3Uj5T/UN/dExDepn9Qu2PKal+8Y9MgTsYMSjFMT
+X-Received: by 2002:a17:907:7f08:b0:a5a:63bf:5175 with SMTP id
+ a640c23a62f3a-a5a63bf5227mr784689766b.10.1715740150546; Tue, 14 May 2024
+ 19:29:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2c51c7d-98e3-42a1-5224-08dc74860d1b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2024 02:23:47.3879
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UyVjhXhus+Kgyj53BnzJgu+11+S/IUuc97Ckp0rmMp4tUZi3nUbfpO4l4EK006b3/6VlhON6hMZYMdjq0FINQ7ki7DsfLmyvMbrMXAdrLdE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1002
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240514104646.e6af4292f19b834777ec1e32@linux-foundation.org>
+ <871q646rea.fsf@meer.lwn.net> <ZkPXcT_JuQeZCAv0@casper.infradead.org>
+ <56001.1715726927@cvs.openbsd.org> <CAHk-=wgsGCKvN0Db6ZRZqJwXQrmhZyWB6RmABaOp4DiZbXgNew@mail.gmail.com>
+ <16982.1715734632@cvs.openbsd.org> <CAHk-=wi04ZCm3vTtkcVnAUdiOpX3a0hBZ-aQWONwCubOJQEdXw@mail.gmail.com>
+ <84192.1715737666@cvs.openbsd.org>
+In-Reply-To: <84192.1715737666@cvs.openbsd.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 14 May 2024 19:28:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj=Yb1r_g=geQe8YDGv-TA-UQBQe6-OVhA8FOGjWKnQmA@mail.gmail.com>
+Message-ID: <CAHk-=wj=Yb1r_g=geQe8YDGv-TA-UQBQe6-OVhA8FOGjWKnQmA@mail.gmail.com>
+Subject: Re: [PATCH v10 0/5] Introduce mseal
+To: Theo de Raadt <deraadt@openbsd.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, jeffxu@chromium.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, gregkh@linuxfoundation.org, 
+	usama.anjum@collabora.com, Liam.Howlett@oracle.com, surenb@google.com, 
+	merimus@google.com, rdunlap@infradead.org, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 15/05/2024 02:08, Conor Dooley wrote:
->=20
-> On Tue, May 14, 2024 at 07:40:02AM +0000, Xingyu Wu wrote:
-> > On 11/05/2024 20:19, Conor Dooley wrote:
-> > >
-> > > On Sat, May 11, 2024 at 03:02:56AM +0000, Xingyu Wu wrote:
-> > > > On 11/05/2024 05:05, Conor Dooley wrote:
-> > > > >
-> > > > > On Tue, May 07, 2024 at 02:53:17PM +0800, Xingyu Wu wrote:
-> > > > > > This patch is to add the notifier for PLL0 clock and set the
-> > > > > > PLL0 rate to 1.5GHz to fix the lower rate of CPUfreq on the JH7=
-110 SoC.
-> > > > > >
-> > > > > > The first patch is to add the notifier for PLL0 clock. Setting
-> > > > > > the
-> > > > > > PLL0 rate need the son clock (cpu_root) to switch its parent
-> > > > > > clock to OSC clock and switch it back after setting PLL0 rate.
-> > > > > > It need to use the cpu_root clock from SYSCRG and register the
-> > > > > > notifier in the SYSCRG driver.
-> > > > > >
-> > > > > > The second patch is to set cpu_core rate to 500MHz and PLL0
-> > > > > > rate to 1.5GHz to fix the problem about the lower rate of
-> > > > > > CPUfreq on the visionfive board. The cpu_core clock rate is
-> > > > > > set to 500MHz first to ensure that the cpu frequency will not
-> > > > > > suddenly become high and the cpu voltage is not enough to
-> > > > > > cause a crash when the PLL0 is set
-> > > to 1.5GHz.
-> > > > > > The cpu voltage and frequency are then adjusted together by CPU=
-freq.
-> > > > >
-> > > > > Hmm, how does sequencing work here? If we split the patches
-> > > > > between trees it sounds like without the dts patch, the clock
-> > > > > tree would (or
-> > > > > could) crash, or mainline if the clock changes there before the
-> > > > > dts ones do. Am I misunderstanding that?
-> > > >
-> > > > Oh, I think you misunderstood it. Patch 1 (clock driver patch)
-> > > > does not cause the clock tree crash without the patch 2 (dts
-> > > > patch), and it just provides the correct flow of how to change the
-> > > > PLL0 rate. The patch 2 is to set the clock rate of cpu_core and
-> > > > PLL0 rate, which causes the crash without patch 1. Setting
-> > > > cpu_core rate is to avoid crashes by
-> > > insufficient cpu voltage when setting PLL0 rate.
-> > >
-> > > So is the problem in the other direction then? My dts tree will
-> > > crash if I apply the dts change without the clock patch?
-> >
-> > Sorry, I tested it and it could not crash using only dts patch. It can
-> > separate the patches and use it individually.
-> >
-> > > Additionally, what about U-Boot? Will it have problems if the dts is
-> > > imported there without changes to its clock driver?
-> > >
-> >
-> > It is not apply to U-Boot. In the U-Boot, the PLL0 rate should be 1GHz
-> > to for GMAC and PMIC to work. But now the PLL0 rate should be 1.5GHz in=
- the
-> Linux.
->=20
-> There's a push in U-Boot to move devicestrees to use "OF_UPSTREAM", which
-> means importing devicetrees directly from Linux and using them in U-Boot.=
- I
-> don't really want to merge a patch that would present U-Boot with a probl=
-em if
-> the VisionFive 2 moved to that model there.
->=20
-> Cheers,
-> Conor.
+On Tue, 14 May 2024 at 18:47, Theo de Raadt <deraadt@openbsd.org> wrote:
+>
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> Regarding mprotect(), POSIX also says:
+>
+>     An implementation may permit accesses other than those specified by
+>     prot; however, no implementation shall permit a write to succeed where
+>     PROT_WRITE has not been set or shall permit any access where PROT_NONE
+>     alone has been set.
 
-Would it be better  if I  change the rates of PLL0 and CPU core in the driv=
-er not dts,
-and avoid the dts of Linux and U-Boot being different?
+Why do you quote entirely irrelevant issues?
 
-Thanks,
-Xingyu Wu=20
+If the mprotect didn't succeed, then clearly the above is irrelevant.
+
+> When sealed memory is encountered in the middle of a range, an error
+> will be returned (which almost noone looks at). Memory after the sealed
+> region will not be fixed to follow this rule.
+>
+> It may retain higher permission.
+
+This is not in any way specific to mseal().
+
+Theo, you're making shit up.
+
+You claim that this is somehow new behavior:
+
+> The other previous errors have been transient system effects, like ENOMEM.
+
+but that's simply NOT TRUE. Try this:
+
+    #include <stdio.h>
+    #include <sys/mman.h>
+
+    int main(int argc, char **argv)
+    {
+        /* Just three pages for VM space allocation */
+        void *a = mmap(NULL, 3*4096, PROT_READ, MAP_PRIVATE |
+MAP_ANONYMOUS, -1, 0);
+
+        /* Make the second page a shared read mapping of stdin */
+        mmap(a+4096, 4096, PROT_READ, MAP_FIXED | MAP_SHARED, 0, 0);
+
+        /* Turn them all PROT_WRITE */
+        mprotect(a, 3*4096, PROT_WRITE);
+
+        fprintf(stderr, "Write to first page\n");
+        *(int *) (a+0) = 0;
+
+        fprintf(stderr, "Write to second page\n");
+        *(int *) (a+4096) = 0;
+
+        fprintf(stderr, "Write to third page\n");
+        *(int *) (a+2*4096) = 0;
+    }
+
+and what you will get (under Linux) is
+
+    $ ./a.out < ./a.out
+    Write to first page
+    Write to second page
+    Segmentation fault (core dumped)
+
+because that mprotect() will have returned EACCES on the shared
+mapping, but will have successfully made the first one writable.
+
+End result: this whole "transient system effects" is just not true.
+And "mseal()" isn't somethign new.
+
+If somebody makes random mprotect() calls, and doesn't check the
+result, they get exactly what they deserve. And mseal() isn't the
+issue - bad programming is.
+
+Anyway, you're just making things up for your nonexistent arguments. I'm done.
+
+            Linus
