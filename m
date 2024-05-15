@@ -1,127 +1,145 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC99127B69
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 13:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01A614AB4;
+	Wed, 15 May 2024 13:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715779056; cv=none; b=OPsDXgCDOJidhQdPulzt0pf5+ItBVVF2zEq9HkiUxx71EytuPzVLv0btKfntKTaFG13gJ67g39mcUGep7tCZJMtLBNu5GGJoE0AUnhRqFgbaTGIpxSmakExMeCdIpMPQQ0MEfVNUn7doykkuWspKnAX8q031PrzZrJbnENdnVXc=
+	t=1715779272; cv=none; b=ZrbiikPG3G0HKzhGwFc/yNiN+sczoo6/5KWV598fOWctAICro8yGEcQ6FQ06ijc5+jS7RJIYVZiJTAMzCGG7wwBOLxX4EqEhSyx7jQWZ7xaE45vJkPlzuf5GamhNe5WPnCxsCIBp6KYs8KxYn1u4A8UWD/5B5jWrwy0CDhUigCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715779056; c=relaxed/simple;
-	bh=IKDt0+fluY20ds2F3whtuDQEpT+RYSV83TYvQF9ISsU=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=T7f4QC7E+KzzJ5cb51V3q0IZ2xjEIFQofwPRq4arUY3Geg5UvFsc/nTuE4Ucl7pTtv2TX3s21QkI35rmyIaHJ2OIL4XdyMoFJsiCnSmho4E91S6xh0qBDz2l1+8T0xnVI0Xew8hGcPmItbZcvXs0HQK+hWe8OUeOstnY3YwHe14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=y8yWBySO; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1715779272; c=relaxed/simple;
+	bh=5Ag5vL9wO2ldtZ+Du1UJaAu+pkltrp0z0Af+UtXoOHk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nvjxcl5WIdMhKYo7fYWV114/A8GrZfCa3MY58L/FNTFpzCISoXV+MjpVDTI4nqwKtZnR/07mhO7n79YMmYyxM5uST7SDHcdjwn1Yj04f0YCYz2PIsqC9i0P0RokFTr3N+Aekvbz1mYYd4dCIebXEj1LLtaeLOhHXbfGdQ9fODw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wc6wZbSZ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="y8yWBySO"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-34db6a299b8so5096169f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715779053; x=1716383853; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wkq99nuMEm3sK6ZhmvF3R71byoY0ssDC9KdU6I8CK5A=;
-        b=y8yWBySODzKOrXTocmOTOkT9K7sz8VjJJdJUqW00F6S01xgEYlhaTyZo9X8xDvXXx8
-         kmUHdEA058pmcFnGYYIWwXTGPCDP81V4y7MnENqq5xpyOOsH0lGB/hXyEmfN0PsggY82
-         +illVCzmjdLWurdwn4Dald6+B/lnJz+b9mTR0bHZX3ebRbVRCYHSpG0bBl70Ny/zGMvl
-         PXslhgPemaDy1Xy/StcT3hYm8crnLeBSAKutFM88teBVqhlp9gqU+4ysnD/fCywXwrdP
-         VROEnKBDHQ1tpE8cpGk1KxN9HG28Qc3p7rvwa7FyTCZ9zMBFe9b9J5RfbYkAa8/sOGH8
-         PkMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715779053; x=1716383853;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wkq99nuMEm3sK6ZhmvF3R71byoY0ssDC9KdU6I8CK5A=;
-        b=Wvht/xna8HANYuMIntaaVYFKeHeezOv9vmIpgJ9lVgZDXgV6EH2EVgr6HZekqC3KAL
-         S35nyvxczu9k08JeDb8yCDdieTxEVjpQkqqzFVhVo2iy6zUgan6zDxovk1MtmM+mR1N0
-         tO2t5VqIHRnzzk6XQHiS8pLHFIvAlA+cQmq3JTLoP/F68cDi048tePA+gINEddlEB1CF
-         +iIk9w+lql3oZDeVYCVlXuRj2ECAE3YhTxP9sLbJgkIWP8mI0b4VIHkjBDaSixtlUwU/
-         j+J/jV8ZQFEJ3BPm/iju4H2EEH1x594rOy9Ot7zOIRxvbYV6BwTiJ5O6DZD3+IPOiGji
-         wIRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5lj4rHSKcFa3Z+OMmG+EX+IoncvVrlkkzvGF69mk12Q5337nkUni99WibeCFcfZZEonkdlPmUn3KnQbq682aWBNSARwg5/FkkTFRK
-X-Gm-Message-State: AOJu0YyBASHzVU1B1OUdKrScDjG51AkH+rxbnDoQntDtnfH4q+eJqKw3
-	4a0Gq0ndeZl8pnmu6OyALctT2MFwDlZRy/y6SeKxtJtxWwOu3fd9AjQxIsQL++I=
-X-Google-Smtp-Source: AGHT+IE4YYUxY5plTBCwY46ojRAymJdS+bbjFNA9B11hQIBGI59XYOMg6b3oSsFO4BCii/+Aekb4iA==
-X-Received: by 2002:adf:fe8c:0:b0:351:c7c7:985f with SMTP id ffacd0b85a97d-351c7c79963mr3745116f8f.53.1715779052826;
-        Wed, 15 May 2024 06:17:32 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:2893:1a8f:5988:776a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbbefdsm16424209f8f.94.2024.05.15.06.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 06:17:32 -0700 (PDT)
-References: <20240510090933.19464-1-ddrokosov@salutedevices.com>
- <20240510090933.19464-3-ddrokosov@salutedevices.com>
- <20240511-secret-barcode-e25c722ddf1d@spud>
- <20240513091735.l3uewwzfrdd6qwbl@CAB-WSD-L081021>
- <20240513-epic-magnifier-8dd83db81c4c@spud>
- <20240513183012.652mwhivasqihiqc@CAB-WSD-L081021>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Cc: Conor Dooley <conor@kernel.org>, neil.armstrong@linaro.org,
- jbrunet@baylibre.com, mturquette@baylibre.com, sboyd@kernel.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- khilman@baylibre.com, martin.blumenstingl@googlemail.com,
- jian.hu@amlogic.com, kernel@sberdevices.ru, rockosov@gmail.com,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/7] dt-bindings: clock: meson: a1: pll: introduce
- new syspll bindings
-Date: Wed, 15 May 2024 15:15:35 +0200
-In-reply-to: <20240513183012.652mwhivasqihiqc@CAB-WSD-L081021>
-Message-ID: <1jh6ezxlhw.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wc6wZbSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715779272; x=1747315272;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5Ag5vL9wO2ldtZ+Du1UJaAu+pkltrp0z0Af+UtXoOHk=;
+  b=Wc6wZbSZTmxv3WopMcv8G8AhYUzoLgswL+WChpc9wfFm83yQD5NxIQpR
+   sdc/+u1K0wlBKKtfsuKwASUXtcYD732YKpKNMhkLm8IMQXO4/k9wMFo5J
+   /VJ1fbSEwexDwZ2n6bJBJBWRikLMJ2/1y6KufvaKrfRDbqAe5dAXLQNS+
+   bPfnK5mJlyOaVT3g30Yb8irwldfnx0TY5H9cSr+/RcUx1l5USf7K84Ppr
+   VL1mcTQThICU+RPtulyPT0OJAwQuSaZ2CpuNOobF6ebluA0PJibPbTcjO
+   zBz8sk5SuEEARKkd08vAXdL0+N+/7JM4MlOCJRXATZaUMegSJwOVMEXjq
+   g==;
+X-CSE-ConnectionGUID: 7YO6rwSsTBCRPh03dschyA==
+X-CSE-MsgGUID: pMUwoIpiSbK+8laS51Lu7Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="15648212"
+X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
+   d="scan'208";a="15648212"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 06:21:03 -0700
+X-CSE-ConnectionGUID: lHsRm4bTQTywl6OdW4LCCQ==
+X-CSE-MsgGUID: RwgNCU6ZQ2G0Zz9hNDjskQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
+   d="scan'208";a="68510852"
+Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 06:21:02 -0700
+From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
+To: dave.hansen@linux.intel.com,
+	jarkko@kernel.org,
+	kai.huang@intel.com,
+	haitao.huang@linux.intel.com,
+	reinette.chatre@intel.com,
+	linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: mona.vij@intel.com,
+	kailun.qin@intel.com
+Subject: [PATCH v2 0/2] x86/sgx: Fix two data races in EAUG/EREMOVE flows
+Date: Wed, 15 May 2024 06:12:38 -0700
+Message-Id: <20240515131240.1304824-1-dmitrii.kuvaiskii@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
+Content-Transfer-Encoding: 8bit
 
+SGX runtimes such as Gramine may implement EDMM-based lazy allocation of
+enclave pages and may support MADV_DONTNEED semantics [1]. The former
+implies #PF-based page allocation, and the latter implies the usage of
+SGX_IOC_ENCLAVE_REMOVE_PAGES ioctl.
 
-On Mon 13 May 2024 at 21:30, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+EDMM-based lazy allocation and MADV_DONTNEED semantics provide
+significant performance improvement for some workloads that run on
+Gramine. For example, a Java workload with a 16GB enclave size has
+approx. 57x improvement in total runtime. Thus, we consider it important
+to permit these optimizations in Gramine. However, we observed hangs of
+applications (Node.js, PyTorch, R, iperf, Blender, Nginx) when run on
+Gramine with EDMM, lazy allocation and MADV_DONTNEED features enabled.
 
-> On Mon, May 13, 2024 at 04:48:33PM +0100, Conor Dooley wrote:
->> On Mon, May 13, 2024 at 12:18:02PM +0300, Dmitry Rokosov wrote:
->> > Hello Conor,
->> > 
->> > Thank you for quick review!
->> > 
->> > On Sat, May 11, 2024 at 02:08:03PM +0100, Conor Dooley wrote:
->> > > On Fri, May 10, 2024 at 12:08:54PM +0300, Dmitry Rokosov wrote:
->> > > > The 'syspll' PLL is a general-purpose PLL designed specifically for the
->> > > > CPU clock. It is capable of producing output frequencies within the
->> > > > range of 768MHz to 1536MHz.
->> > > > 
->> > > > The clock source sys_pll_div16, being one of the GEN clock parents,
->> > > > plays a crucial role and cannot be tagged as "optional". Unfortunately,
->> > > > it was not implemented earlier due to the cpu clock ctrl driver's
->> > > > pending status on the TODO list.
->> > > 
->> > > It's fine to not mark it optional in the binding, but it should be
->> > > optional in the driver as otherwise backwards compatibility will be
->> > > broken. Given this is an integral clock driver, sounds like it would
->> > > quite likely break booting on these devices if the driver doesn't treat
->> > > syspll_in as optional.
->> > > A lesson perhaps in describing the hardware entirely, even if the
->> > > drivers don't make use of all the information yet?
->> > 
->> > Yes, it's definitely the right lesson for me. However, without syspll or
->> > syspll_in, we cannot utilize CPU power management at all.
->> 
->> That's the status-quo, right? The incorrect dts would continue to not
->> support CPU power management and the new one with the correct description
->> would?
->
-> Hmmm, correct. Okay, I see, I will support sys_pll as optional
-> connection :)
+We wrote a trivial stress test to reproduce the hangs observed in
+real-world applications. The test stresses #PF-based page allocation and
+SGX_IOC_ENCLAVE_REMOVE_PAGES flows in the SGX driver:
 
-Again, the way controller is written, all inputs are actually optional.
-The controller does not error out if an input is missing, it behave as
-if the input is disconnected
+/* repeatedly touch different enclave pages at random and mix with
+ * madvise(MADV_DONTNEED) to stress EAUG/EREMOVE flows */
+static void* thread_func(void* arg) {
+    size_t num_pages = 0xA000 / page_size;
+    for (int i = 0; i < 5000; i++) {
+        size_t page = get_random_ulong() % num_pages;
+        char data = READ_ONCE(((char*)arg)[page * page_size]);
+
+        page = get_random_ulong() % num_pages;
+        madvise(arg + page * page_size, page_size, MADV_DONTNEED);
+    }
+}
+
+addr = mmap(NULL, 0xA000, PROT_READ | PROT_WRITE, MAP_ANONYMOUS, -1, 0);
+pthread_t threads[16];
+for (int i = 0; i < 16; i++)
+    pthread_create(&threads[i], NULL, thread_func, addr);
+
+This test uncovers two data races in the SGX driver. The remaining
+patches describe and fix these races.
+
+I performed several stress tests to verify that there are no other data
+races (at least with the test program above):
+
+- On Icelake server with 128GB of PRM, without madvise(). This stresses
+  the first data race. A Gramine SGX test suite running in the
+  background for additional stressing. Result: 1,000 runs without hangs
+  (result without the first bug fix: hangs every time).
+- On Icelake server with 128GB of PRM, with madvise(). This stresses the
+  second data race. A Gramine SGX test suite running in the background
+  for additional stressing. Result: 1,000 runs without hangs (result
+  with the first bug fix but without the second bug fix: hangs approx.
+  once in 50 runs).
+- On Icelake server with 4GB of PRM, with madvise(). This additionally
+  stresses the enclave page swapping flows. Two Gramine SGX test suites
+  running in the background for additional stressing of swapping (I
+  observe 100% CPU utilization from ksgxd which confirms that swapping
+  happens). Result: 1,000 runs without hangs.
+
+[1] https://github.com/gramineproject/gramine/pull/1513
+
+v1 -> v2:
+- No changes in code itself
+- Expanded cover letter
+- Added CPU1 vs CPU2 race scenarios in commit messages
+
+v1: https://lore.kernel.org/all/20240429104330.3636113-3-dmitrii.kuvaiskii@intel.com/
+
+Dmitrii Kuvaiskii (2):
+  x86/sgx: Resolve EAUG race where losing thread returns SIGBUS
+  x86/sgx: Resolve EREMOVE page vs EAUG page data race
+
+ arch/x86/kernel/cpu/sgx/encl.c  | 10 +++++++---
+ arch/x86/kernel/cpu/sgx/encl.h  |  3 +++
+ arch/x86/kernel/cpu/sgx/ioctl.c |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
 -- 
-Jerome
+2.34.1
+
