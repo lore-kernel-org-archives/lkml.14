@@ -1,268 +1,238 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445F85FB8B
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2EE59154;
+	Wed, 15 May 2024 10:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715768395; cv=none; b=UFcMig6Di+PgfevAUMt8FDOT/KnE37FMA9i+0AUBapxaZQZRPydAvintxfC+xPeeWsSw9evw9ZUgBweYxpS7jB8QOk7wS67ykPeK+Bqx2T51ZMwFgm5UVWFZVeyamClcyuiy0SSzJpSyfJVJNL24Nk2Xqy96IwX+3K/JPE/l48Q=
+	t=1715768525; cv=none; b=d3gOH7Q8zgyktqx81KxvDgpOCFC/3ZO2LUG8XJ9jlgwb9nTIwvA9772wughf14n9/nvh+mSTS0ebFldQzjotQ8jORSpk0bTbqdLYP1DHhpFf7RNFOUfznLnbBTfsF39g6G5C7iSlDftiCPVnQ83NfQJj7pq+MScFYr5WZvNTEsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715768395; c=relaxed/simple;
-	bh=+EMK6b7qfktIFvrX/yoLCEmiPgCxTGiziO7yYK3P3rU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LHRwecfeBD6AYxEOvf2MGQYFmZSllmXGXXppMWmfVi6o5QNi8H4YsT8BOwrLYaDVGXWnD000Q2sAKSzokIw9TJrVv7R/kTf6DZhqXzNeSOALIz8G9h58K/I00Xi/+aVeHfcdV/kCGbHergfwIiAZeeFaYSgKPub52Kjt1Hoh0WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=DK+gEtqm; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1715768525; c=relaxed/simple;
+	bh=Y8wkBdQIpbarQ9dWlIdQeb/smLJyFN68Qn7A2Lv4Sk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tcWe9Mqd+nBWc52TSZcOkqcaCt/cjpT2agrhxHpMXxN1gTCM/VwM/cqoXTWqpJC8OtLvHFVyC+TQs2JE/xBHqzVkCrjEr1YYhR6CNizdqZ8r2YIZRb1Ue4a/uw722NrKqQuH4icIDhjB+LZjOY6sm9ab017yVvu46+SOnI+B5yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=osfCs+ZD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7YEKYFmQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=osfCs+ZD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7YEKYFmQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="DK+gEtqm"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e69888a36so1432349a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 03:19:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1715768391; x=1716373191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fdHvJkxYgHA+IRrFREj5QbL1lv8V1e57nVmevFIQbVs=;
-        b=DK+gEtqmkb0jZ/CHh7UFa0VObjCqX95pEIy9AVKWg8R9+uBAQeX1wq1kySemn5w3pJ
-         0k9SCtvjvzqxKGOAZKIQaSUiQlw/2yQ4e13tjG9Q+SL1gECZK5IzNkOCLLXybSi6QDmr
-         yUqNDnXq7FbT9kkRg3qgpIOdVsAmgeGaSzsfm2qyrDNgDJTa1YPWz8fhKcqKqGLu5lZu
-         TaTYgVSAMqtgIczhmzHNK2pu1kQqag85ESBXKoX+eVPkXy2wAFkr9UQGJRkCh8bRVbnA
-         Pbz/mZLWkbtj2rebXLzLoMhm+rQiiremoorBu9eXu0nPNa7FIhkhLZ6OLaoOfcZuNqtJ
-         WOoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715768391; x=1716373191;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fdHvJkxYgHA+IRrFREj5QbL1lv8V1e57nVmevFIQbVs=;
-        b=GMZabEO+q2Mbd+bcTfHJLkaWpvtSxD3Qbw2K77VJFgITZxoKSp6AhCQzCa4zoq2kBW
-         eowjMIUV9XzLq2KgpblNVTnGk2LPsd6soG18hSe3EP6bvgS1rk4HxlMvgfNYg19Z+zP9
-         eE76ZpieUSg42I/zy+svYlKWDi7qxiNoY1lDu14ihfj0FltjlD0W6lnOOGG67wOdOU4s
-         h2hLLYvW97E3KRi546Dw8hrgwI71E1lBvw1eR0IIX3dENQaVQcloRx/X2vQjW7iEDN1k
-         1H04JmgkrC3emtmDyOG4+ZXu/gMi2++AJ2QQG2D6kAV7RYochVgpX/hLkMONYzumPoFH
-         r5IA==
-X-Forwarded-Encrypted: i=1; AJvYcCVD3yXqSVQmfj+Yy8roDczRDImIQCm+edXlpmpeywYS9600yCvvTXwY2Y8jLFSHGaDnU72h/i+EyjUh2vM5CBo7YZr2yIRycjGqF6EW
-X-Gm-Message-State: AOJu0YzNs9vcR8gyY9HDCrOp8tjACk1lErFAsktQanMVgU/TdT1z5kEC
-	CoI8GSg46H9EfHeZD6Obp86HChyFoSCo67EWLHvobMeBxwfY1Hu50AKTz5daeUs=
-X-Google-Smtp-Source: AGHT+IHWaSA/H+4L2d0rsT1ymvAysPmXQv4l8zitT6YQF2Rw+C8vn0POfuJW4lu+DIxHSNpoY53xBA==
-X-Received: by 2002:a50:d59d:0:b0:572:7e7e:4296 with SMTP id 4fb4d7f45d1cf-5734d5c152dmr11481093a12.3.1715768391400;
-        Wed, 15 May 2024 03:19:51 -0700 (PDT)
-Received: from [192.168.0.245] ([62.73.69.208])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574b18dff66sm6291338a12.27.2024.05.15.03.19.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 May 2024 03:19:50 -0700 (PDT)
-Message-ID: <f9a8f912-5cb7-4184-be2d-187052c04e2e@blackwall.org>
-Date: Wed, 15 May 2024 13:19:47 +0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="osfCs+ZD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7YEKYFmQ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="osfCs+ZD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7YEKYFmQ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 479BE2050B;
+	Wed, 15 May 2024 10:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715768522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bvnm5h9Dm1o+r/HqlbIr30i3nlCVPpxQO8iGYoJ/oZs=;
+	b=osfCs+ZDMySdssvcMGMbx0XH5WEA3dYR8XeMeO2WEbM+zOFp5pXTLthlcyjJwZTiDQaMaO
+	VRvf+xfkEhs8CjC/OHJBKTpTgYm96uvH6V9ZSyzJlnHYJlsrwXrmqSJf5ZkE7vsJZRkoRN
+	meER9rkMfyaCIwtzhdP0sqoekBwdiSc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715768522;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bvnm5h9Dm1o+r/HqlbIr30i3nlCVPpxQO8iGYoJ/oZs=;
+	b=7YEKYFmQ+oTHb7De1VDCZo6Q0SgjUQQpJNuv7sC0p34RRxzmqFebeTGRNwRitQER1MDXDT
+	JZD2wQKdQlPdaTBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715768522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bvnm5h9Dm1o+r/HqlbIr30i3nlCVPpxQO8iGYoJ/oZs=;
+	b=osfCs+ZDMySdssvcMGMbx0XH5WEA3dYR8XeMeO2WEbM+zOFp5pXTLthlcyjJwZTiDQaMaO
+	VRvf+xfkEhs8CjC/OHJBKTpTgYm96uvH6V9ZSyzJlnHYJlsrwXrmqSJf5ZkE7vsJZRkoRN
+	meER9rkMfyaCIwtzhdP0sqoekBwdiSc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715768522;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bvnm5h9Dm1o+r/HqlbIr30i3nlCVPpxQO8iGYoJ/oZs=;
+	b=7YEKYFmQ+oTHb7De1VDCZo6Q0SgjUQQpJNuv7sC0p34RRxzmqFebeTGRNwRitQER1MDXDT
+	JZD2wQKdQlPdaTBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C9992139B3;
+	Wed, 15 May 2024 10:22:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id C3aFLsiMRGZzXwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 15 May 2024 10:22:00 +0000
+Date: Wed, 15 May 2024 12:21:51 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Peter Xu <peterx@redhat.com>
+Cc: Axel Rasmussen <axelrasmussen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Helge Deller <deller@gmx.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Liu Shixin <liushixin2@huawei.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH v2 1/1] arch/fault: don't print logs for pte marker
+ poison errors
+Message-ID: <ZkSMv31Cwx080no7@localhost.localdomain>
+References: <20240510182926.763131-1-axelrasmussen@google.com>
+ <20240510182926.763131-2-axelrasmussen@google.com>
+ <Zj51rEwZeSK4Vr1G@x1n>
+ <ZkPJCc5N1Eotpa4u@localhost.localdomain>
+ <ZkPY4CSnZWZnxjTa@x1n>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 04/14] netdev: support binding dma-buf to
- netdevice
-From: Nikolay Aleksandrov <razor@blackwall.org>
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20240510232128.1105145-1-almasrymina@google.com>
- <20240510232128.1105145-5-almasrymina@google.com>
- <59b1ec87-03dc-4336-8ce1-cb97e5abb7d6@blackwall.org>
-Content-Language: en-US
-In-Reply-To: <59b1ec87-03dc-4336-8ce1-cb97e5abb7d6@blackwall.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkPY4CSnZWZnxjTa@x1n>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,linux-foundation.org,kernel.org,alien8.de,csgroup.eu,linux.intel.com,redhat.com,zytor.com,gmx.de,hansenpartnership.com,nvidia.com,huawei.com,infradead.org,ellerman.id.au,linux.dev,linux.ibm.com,gmail.com,linutronix.de,vger.kernel.org,kvack.org,lists.ozlabs.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	R_RATELIMIT(0.00)[to_ip_from(RLj6zumtikrrmnnbmzkety5zmd)]
 
-On 15/05/2024 13:01, Nikolay Aleksandrov wrote:
-> On 11/05/2024 02:21, Mina Almasry wrote:
->> Add a netdev_dmabuf_binding struct which represents the
->> dma-buf-to-netdevice binding. The netlink API will bind the dma-buf to
->> rx queues on the netdevice. On the binding, the dma_buf_attach
->> & dma_buf_map_attachment will occur. The entries in the sg_table from
->> mapping will be inserted into a genpool to make it ready
->> for allocation.
->>
->> The chunks in the genpool are owned by a dmabuf_chunk_owner struct which
->> holds the dma-buf offset of the base of the chunk and the dma_addr of
->> the chunk. Both are needed to use allocations that come from this chunk.
->>
->> We create a new type that represents an allocation from the genpool:
->> net_iov. We setup the net_iov allocation size in the
->> genpool to PAGE_SIZE for simplicity: to match the PAGE_SIZE normally
->> allocated by the page pool and given to the drivers.
->>
->> The user can unbind the dmabuf from the netdevice by closing the netlink
->> socket that established the binding. We do this so that the binding is
->> automatically unbound even if the userspace process crashes.
->>
->> The binding and unbinding leaves an indicator in struct netdev_rx_queue
->> that the given queue is bound, but the binding doesn't take effect until
->> the driver actually reconfigures its queues, and re-initializes its page
->> pool.
->>
->> The netdev_dmabuf_binding struct is refcounted, and releases its
->> resources only when all the refs are released.
->>
->> Signed-off-by: Willem de Bruijn <willemb@google.com>
->> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
->> Signed-off-by: Mina Almasry <almasrymina@google.com>
->>
->> ---
->>
->> v9: https://lore.kernel.org/all/20240403002053.2376017-5-almasrymina@google.com/
->> - Removed net_devmem_restart_rx_queues and put it in its own patch
->>   (David).
->>
->> v8:
->> - move dmabuf_devmem_ops usage to later patch to avoid patch-by-patch
->>   build error.
->>
->> v7:
->> - Use IS_ERR() instead of IS_ERR_OR_NULL() for the dma_buf_get() return
->>   value.
->> - Changes netdev_* naming in devmem.c to net_devmem_* (Yunsheng).
->> - DMA_BIDIRECTIONAL -> DMA_FROM_DEVICE (Yunsheng).
->> - Added a comment around recovering of the old rx queue in
->>   net_devmem_restart_rx_queue(), and added freeing of old_mem if the
->>   restart of the old queue fails. (Yunsheng).
->> - Use kernel-family sock-priv (Jakub).
->> - Put pp_memory_provider_params in netdev_rx_queue instead of the
->>   dma-buf specific binding (Pavel & David).
->> - Move queue management ops to queue_mgmt_ops instead of netdev_ops
->>   (Jakub).
->> - Remove excess whitespaces (Jakub).
->> - Use genlmsg_iput (Jakub).
->>
->> v6:
->> - Validate rx queue index
->> - Refactor new functions into devmem.c (Pavel)
->>
->> v5:
->> - Renamed page_pool_iov to net_iov, and moved that support to devmem.h
->>   or netmem.h.
->>
->> v1:
->> - Introduce devmem.h instead of bloating netdevice.h (Jakub)
->> - ENOTSUPP -> EOPNOTSUPP (checkpatch.pl I think)
->> - Remove unneeded rcu protection for binding->list (rtnl protected)
->> - Removed extraneous err_binding_put: label.
->> - Removed dma_addr += len (Paolo).
->> - Don't override err on netdev_bind_dmabuf_to_queue failure.
->> - Rename devmem -> dmabuf (David).
->> - Add id to dmabuf binding (David/Stan).
->> - Fix missing xa_destroy bound_rq_list.
->> - Use queue api to reset bound RX queues (Jakub).
->> - Update netlink API for rx-queue type (tx/re) (Jakub).
->>
->> RFC v3:
->> - Support multi rx-queue binding
->>
->> ---
->>  Documentation/netlink/specs/netdev.yaml |   4 +
->>  include/net/devmem.h                    | 111 +++++++++++
->>  include/net/netdev_rx_queue.h           |   2 +
->>  include/net/netmem.h                    |  10 +
->>  include/net/page_pool/types.h           |   5 +
->>  net/core/Makefile                       |   2 +-
->>  net/core/dev.c                          |   3 +
->>  net/core/devmem.c                       | 254 ++++++++++++++++++++++++
->>  net/core/netdev-genl-gen.c              |   4 +
->>  net/core/netdev-genl-gen.h              |   4 +
->>  net/core/netdev-genl.c                  | 105 +++++++++-
->>  11 files changed, 501 insertions(+), 3 deletions(-)
->>  create mode 100644 include/net/devmem.h
->>  create mode 100644 net/core/devmem.c
->>
-> [snip]
->> +/* Protected by rtnl_lock() */
->> +static DEFINE_XARRAY_FLAGS(net_devmem_dmabuf_bindings, XA_FLAGS_ALLOC1);
->> +
->> +void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding)
->> +{
->> +	struct netdev_rx_queue *rxq;
->> +	unsigned long xa_idx;
->> +	unsigned int rxq_idx;
->> +
->> +	if (!binding)
->> +		return;
->> +
->> +	if (binding->list.next)
->> +		list_del(&binding->list);
->> +
+On Tue, May 14, 2024 at 03:34:24PM -0600, Peter Xu wrote:
+> The question is whether we can't.
 > 
-> minor nit:
-> In theory list.next can still be != null if it's poisoned (e.g. after del). You can
-> use the list api here (!list_empty(&binding->list) -> list_del_init(&binding->list))
-> if you initialize it in net_devmem_bind_dmabuf(), then you'll also get nice list
-> debugging.
+> Now we reserved a swp entry just for hwpoison and it makes sense only
+> because we cached the poisoned pfn inside.  My long standing question is
+> why do we ever need that pfn after all.  If we don't need the pfn, we
+> simply need a bit in the pgtable entry saying that it's poisoned, if
+> accessed we should kill the process using sigbus.
 > 
+> I used to comment on this before, the only path that uses that pfn is
+> check_hwpoisoned_entry(), which was introduced in:
+> 
+> commit a3f5d80ea401ac857f2910e28b15f35b2cf902f4
+> Author: Naoya Horiguchi <nao.horiguchi@gmail.com>
+> Date:   Mon Jun 28 19:43:14 2021 -0700
+> 
+>     mm,hwpoison: send SIGBUS with error virutal address
+>     
+>     Now an action required MCE in already hwpoisoned address surely sends a
+>     SIGBUS to current process, but the SIGBUS doesn't convey error virtual
+>     address.  That's not optimal for hwpoison-aware applications.
+>     
+>     To fix the issue, make memory_failure() call kill_accessing_process(),
+>     that does pagetable walk to find the error virtual address.  It could find
+>     multiple virtual addresses for the same error page, and it seems hard to
+>     tell which virtual address is correct one.  But that's rare and sending
+>     incorrect virtual address could be better than no address.  So let's
+>     report the first found virtual address for now.
+> 
+> So this time I read more on this and Naoya explained why - it's only used
+> so far to dump the VA of the poisoned entry.
 
-On second thought nevermind this, sorry for the noise.
+Well, not really dumped, but we just pass the VA down the chain to the
+signal handler.
 
->> +	xa_for_each(&binding->bound_rxq_list, xa_idx, rxq) {
->> +		if (rxq->mp_params.mp_priv == binding) {
->> +			/* We hold the rtnl_lock while binding/unbinding
->> +			 * dma-buf, so we can't race with another thread that
->> +			 * is also modifying this value. However, the page_pool
->> +			 * may read this config while it's creating its
->> +			 * rx-queues. WRITE_ONCE() here to match the
->> +			 * READ_ONCE() in the page_pool.
->> +			 */
->> +			WRITE_ONCE(rxq->mp_params.mp_ops, NULL);
->> +			WRITE_ONCE(rxq->mp_params.mp_priv, NULL);
->> +
->> +			rxq_idx = get_netdev_rx_queue_index(rxq);
->> +
->> +			netdev_rx_queue_restart(binding->dev, rxq_idx);
->> +		}
->> +	}
->> +
->> +	xa_erase(&net_devmem_dmabuf_bindings, binding->id);
->> +
->> +	net_devmem_dmabuf_binding_put(binding);
->> +}
-> [snip]
-> 
-> Cheers,
->  Nik
-> 
+But on the question whether we need the pfn encoded, I am not sure
+actually.
+check_hwpoisoned_entry() checks whether the pfn where the pte sits is
+the same as the hwpoisoned one, so we know if the process has to be
+killed.
 
+Now, could we get away with using pte_page() instead of pte_pfn() in there, and
+passing the hwpoisoned page instead ot the pfn?
+I am trying to think of the implications, then we should not need the
+encoded pfn?
+
+
+> However what confused me is, if an entry is poisoned already logically we
+> dump that message in the fault handler not memory_failure(), which is:
+> 
+> MCE: Killing uffd-unit-tests:650 due to hardware memory corruption fault at 7f3589d7e000
+> 
+> So perhaps we're trying to also dump that when the MCEs (points to the same
+> pfn) are only generated concurrently?  I donno much on hwpoison so I cannot
+> tell, there's also implication where it's only triggered if
+> MF_ACTION_REQUIRED.  But I think it means hwpoison may work without pfn
+> encoded, but I don't know the implication to lose that dmesg line.
+
+Not necesarily concurrently, but simply if for any reason the page could
+not have been unmapped.
+Let us say you have ProcessA and ProcessB mapping the same page.
+We get an MCE for that page but we could not unmapped it, at least not
+from all processes (maybe just ProcessA).
+
+memory-failure code will mark it as hwpoison, now ProcessA faults it in
+and gets killed because we see that the page is hwpoisoned in the fault
+path, so we sill send VM_FAULT_HWPOISON all the way down till you see
+the:
+
+"MCE: Killing uffd-unit-tests:650 due to hardware memory corruption
+fault at 7f3589d7e000" from e.g: arch/x86/mm/fault.c:do_sigbus()
+
+Now, ProcessB still has the page mapped, so upon re-accessing it,
+it will trigger a new MCE event. memory-failure code will see that this
+page has already been marked as hwpoisoned, but since we failed to
+unmap it (otherwise no one should be re-accessing it), it goes: "ok,
+let's just kill everybody who has this page mapped".
+
+
+> We used to not dump error for swapin error.  Note that here what I am
+> saying is not that Axel is doing things wrong, but it's just that logically
+> swapin error (as pte marker) can also be with !QUIET, so my final point is
+> we may want to avoid having the assumption that "pte marker should always
+> be QUITE", because I want to make it clear that pte marker can used in any
+> form, so itself shouldn't imply anything..
+
+I think it would make more sense if we have a separate marker for swapin
+errors?
+I mean, deep down, they do not mean the same as poison, right?
+
+Then you can choose which events get to be silent because you do not
+care, and which ones need to scream loud.
+I think swapin errors belong to the latter. At least I a heads-up why a
+process is getting killed is appreciated, IMHO.
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
