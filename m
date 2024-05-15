@@ -1,87 +1,140 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DA740875;
-	Wed, 15 May 2024 07:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2E241760
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715756636; cv=none; b=FSCPhVKxCPswp/OJjsqR97XCW24iW1nyWo2a8lRwNxHshhmRlwfmjZoMnm1Pr/g4D2aGfEnI1z/+13ub4CPb1Scw307gkLrz1zcqbGzsiMKq1hr8dIjya0NJ6SYs2I+j1j/8A14Yp7eJG6oeg2tVNE6hyh8wcfkss041Mdvo+l4=
+	t=1715756744; cv=none; b=YcyFvUDn5574tF5N39QsQZNhzqBhkaea93Baf80h8YO2ZJbthuoyDo7ZJ0FyGXH5UvB61a+m72rE9iZZlcg8+9w2C0PkTeRRNvge6xV9ZU/ZZGrCNBWtajsSE/8cEizw3iOTwmMpIfirysAdcZgqtUOKUFSNrxEvbf6IUDaaW44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715756636; c=relaxed/simple;
-	bh=a23Cug9AhjPBfUeD7DrLjspv0v/fZFiP7FlrMUsN2eI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=V1fLZOgqnCTi0zmgY8uGXe0U/DykFcyI2e35Ib3W71gkRmH7n21PM1hiVwsybjWINDsPPP+CMn6szD3h1xltQxsArKCZrROFrB9KlHb579ffOtN4ItWujKwKsfBynzhHk/RhNGkSs3ZD7gz+XAXB0vnN2rJGYC3gxno8VUw5boE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZoC0D+wP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1715756744; c=relaxed/simple;
+	bh=RtKyoqiDLhVTAKC8deDb8sf4vqkR0RW+M2pcJe2zDNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WlIhoYXCCwvmiuhe9r5LtpQ7iVuHNCPZjeUzy4SJbrTLWiaTvr9rtgHVUQOaX7PW7wdHhxfec+82qkeGmvS7tsPCVAwdman/iEH7xeNjJdNHGOU+uR1Nw3P/nUNuff9T2KyRXS4vVtgW3nhKJDAl40Gb2Sj/KRYzMCKLiSRf1oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HIZkmPNZ; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZoC0D+wP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1715756630;
-	bh=r5Txr5FAnBYVorvwRI+NCbA8wrTB5FWCVzgZp/cBdz8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZoC0D+wPftfScTrINazpAMYzM8MYuf2G0L2s/3a5y5RjFQJjzbw3Uyka4irlxhLxl
-	 tCkfiB/3T3/qvCz9EWlC1F7RW91pjZ6xbwgqVbICmh/4FhHxPkYIq1b1oz5orMPH74
-	 t2XW7X4FRgTYgqaNb79lV1+b7oIP+20u3py0cfWUdMJ0kQdXw51QZvSG0iCf3LarDe
-	 DGS7PbfSe8kwcPt45UFbcl5D1Y436L4d/kUSLbN6k6ilQK7K5qgsGUvrmaWfpI/yPb
-	 IAdc+uMBAn0MD0BSF3tSMlxXW/M5TP+EOhjZO8LAksI13HCuUbts8MDchaKlKrkvW4
-	 5eZcT57KHL3Bg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VfPMp1MM3z4x1Q;
-	Wed, 15 May 2024 17:03:49 +1000 (AEST)
-Date: Wed, 15 May 2024 17:03:49 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Sterba <dsterba@suse.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the btrfs tree
-Message-ID: <20240515170349.76ed5933@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HIZkmPNZ"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42017f8de7aso19014385e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 00:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715756741; x=1716361541; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ntMSL/st0iLS0tnCXAPXzy7ZhcKJCMyFAGnRoDypkYA=;
+        b=HIZkmPNZ/yejRdoAx6tBdtuYpzfeaIRHuD3v5RdKFrEOA/ZZzqN2y/w0p/NcZdiwjp
+         OUoCiMQFvHI4dNNbTO1TmCl8CZ3iXTJFFdXzRNyd7iO2sls8Q0dLiAAqbtE5wW4Lhxqs
+         qY3RprLQQebc0ySSDenhzB5x4SL4vukhA0DRtOnppzLCd24ehUT7EPpArYRCFHe70YMT
+         Ravyl7+G6FJCOO0fRoLKhZctx2ARm+HcztRr3K0lOCjXgrGyjRfjJW4OIoV+b/UCxH0m
+         cXfeln6X8RogBZ8HYiEbHOxtqwFZ8ua1R6LOSv/KpegA7D9UYLHL3eG9cb+MhgOLR6a+
+         /M4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715756741; x=1716361541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ntMSL/st0iLS0tnCXAPXzy7ZhcKJCMyFAGnRoDypkYA=;
+        b=L2qNR7ZoPbegmRrxnsVJdrCC2C+ZHQ6wsfGqptjIJ7yZS1++fNpHhwJnkE6Em14ib0
+         9VfGQf2hdyQ1SAHt85JrSyxM5/zgx10nvH8E3Sjh+ofLDCq/qMn+FJurz3RQnpRfbLb1
+         FPocs3MF95ZS3cM9XHTb6oF9VcPdduPK+oSPuEtAcTvKatOmgvQDhYGEiNn20JCaBzwl
+         JENMLjMS0svlouRmE0fiKGCcXC1T3y75JyON43RNaE6VRNh1MSFg98/KUWW8IwZjdgC2
+         NJn/7s2tWMYUMYgkVYd4baJJIvi4uYpOGmoMcl99v44c8kS3sue9C1GyfdE4yy8tS46A
+         fOYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcyFWc+md+dOfgUHWkv/Ks1OKG0FTQgU1MHcvVNNpL1yyJcVsDQi6vO2e0YbCsVc9c/tXysoWSYGbxiBsuumnJpTp6P4fZjkgP4glS
+X-Gm-Message-State: AOJu0Yxkz0PCWvqsHUYcKJ+NXc8Extk4+BoL4pcNpEs2R7IAseomf5Rz
+	FCT5uBx9rpLhtcqRQggMg92jaPFihe1JOZiaeiPguZWFvm2wwpwnecVZDkJT5MQ=
+X-Google-Smtp-Source: AGHT+IG7fOzxfMdPYwa7Ec8fNnQWuOlyBziHShIetO8nEu6c++Wn3p0WJyf7YVbIYB9frPW8Z+99pw==
+X-Received: by 2002:a05:600c:4686:b0:419:d5cd:5ba with SMTP id 5b1f17b1804b1-41feaa2f45cmr97326285e9.7.1715756740631;
+        Wed, 15 May 2024 00:05:40 -0700 (PDT)
+Received: from localhost ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9292sm221053815e9.37.2024.05.15.00.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 00:05:40 -0700 (PDT)
+Date: Wed, 15 May 2024 09:05:37 +0200
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Tony Lindgren <tony@atomide.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Vignesh R <vigneshr@ti.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com,
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Subject: Re: [PATCH v5 05/11] PCI: cadence: Extract link setup sequence from
+ cdns_pcie_host_setup()
+Message-ID: <0bee2d4b-b190-4353-ab29-003364721a3c@suswa.mountain>
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-5-4b8c46711ded@bootlin.com>
+ <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
+ <56b2bbcb-7181-4640-93b3-0cf3e2029367@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/L1ZZfe2k_TQjc+/PbzgrEJO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56b2bbcb-7181-4640-93b3-0cf3e2029367@bootlin.com>
 
---Sig_/L1ZZfe2k_TQjc+/PbzgrEJO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 14, 2024 at 03:15:34PM +0200, Thomas Richard wrote:
+> On 4/16/24 16:16, Dan Carpenter wrote:
+> > On Tue, Apr 16, 2024 at 03:29:54PM +0200, Thomas Richard wrote:
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> index 5b14f7ee3c79..93d9922730af 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> @@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
+> >>  	return cdns_pcie_host_init_address_translation(rc);
+> >>  }
+> >>  
+> >> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+> >> +{
+> >> +	struct cdns_pcie *pcie = &rc->pcie;
+> >> +	struct device *dev = rc->pcie.dev;
+> >> +	int ret;
+> >> +
+> >> +	if (rc->quirk_detect_quiet_flag)
+> >> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> >> +
+> >> +	cdns_pcie_host_enable_ptm_response(pcie);
+> >> +
+> >> +	ret = cdns_pcie_start_link(pcie);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "Failed to start link\n");
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	ret = cdns_pcie_host_start_link(rc);
+> >> +	if (ret)
+> >> +		dev_dbg(dev, "PCIe link never came up\n");
+> > 
+> > If we're going to ignore this error the message should be a dev_err()
+> > at least.
+> 
+> Hello Dan,
+> 
+> In fact it could not be really an error.
+> If you physically don't have a device on the PCIe bus,
+> cdns_pcie_host_start_link() will not return 0.
+> 
+> So if we use dev_err(), we will always have the error if there is no
+> device on the PCIe bus.
 
-Hi all,
+Ah okay.  Thanks for looking at this.  It feels like maybe
+cdns_pcie_host_start_link() should just check for that at the start and
+return 0 instead of doing waiting 1 second and returning -ETIMEOUT.
+But I don't know this code well enough to say if that's even possible.
 
-The following commit is also in Linus Torvalds' tree as a different
-commit (but the same patch):
-
-  74a82505bc76 ("btrfs: qgroup: fix initialization of auto inherit array")
-
-This is commit
-
-  0e39c9e52447 ("btrfs: qgroup: fix initialization of auto inherit array")
-
-in Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/L1ZZfe2k_TQjc+/PbzgrEJO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZEXlUACgkQAVBC80lX
-0GyWSgf/QDJxwhSAfe3DC5UQ/glTYetA1yNn8qtCUuP7+wwWvUPC4QOgmaXOv9bD
-YDoNIqQEIFWdpTP57gyu7nZp5ObK2VJYSNxXQNIJ3EPFj2zWB0Pa+V/ulkAMMV+2
-e6uKnpXYwxdSBrcLD/JgkkSEuw0mi6PUpJWrsSUzFX5jcIljIzFqKhuC6TynpJyZ
-G/OLRctMwdqkCzu2a1WsF7ryZr1ErrbtsF3WgGvA+SzNEx2w8acdoq1hfnbGn6ku
-mMbD6Z98MPY6E7+xtNqgGB9vHc4C9BtpOiF19zb8Ok6uTBCLJJBuDPzlCERSNiAq
-+o0/13zwu9g4MoyOrQ9gxj8FhbsQjg==
-=suKi
------END PGP SIGNATURE-----
-
---Sig_/L1ZZfe2k_TQjc+/PbzgrEJO--
+regards,
+dan carpenter
