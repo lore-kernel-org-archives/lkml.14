@@ -1,93 +1,97 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8B28488
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 02:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D035BEBE;
+	Wed, 15 May 2024 03:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715741907; cv=none; b=oy6HMuL6SbCzcorGjUwgCB1AuKvrW3M9+H1fVWcI9qWMNupaHcDXYxFSh0DgJhdU1E/kj7EZS90Pwxy+Y8wF4aZTrFWr9N2o4MyYbQkesOXEez52CgQTh4X9T+MbDcBdC5eULycRMOoS5IOo+xn4XanMaOg4//hQH23Pnx0XaxQ=
+	t=1715742103; cv=none; b=Ex+nSlQaFKVOztMqzmf6bx5bycUX2J8OhtPLeF1uy9SKWkCpKIrQihWWuIQn9rcdxjIouo8bb5ROnZG9po7eNSKmHnoE/ilplhQ4JzpMaO5fOeXM5xwocru1ld2DlqPH9tTzEFamMA4Qf1efacRwfk+qx0T8BK7WK8xzES1utO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715741907; c=relaxed/simple;
-	bh=zeabJBIcDLE+2SfFAsuUcbl7VHyQVDsU/JmrINFi/Ps=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=tWaGPEqRU6ziokl1oI3HZXMsC6mNUK+6PLUlr48vzNEUOSRrfLg63DoqN1MKOd4BgqIiio4AlFvED1BeDLvOnCLLvGeypE8XSJeMIJIeD6mIFEZV7f6ubJZu/iaFrnEKoHFhGZEbmgYrpiUVHA6URqZP621gRXrty5m3NZLAIQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	s=arc-20240116; t=1715742103; c=relaxed/simple;
+	bh=TFpUKjm2KQMOFGqP3Ii1R6bJBU7YiuKVyiKvtntFSFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=G96ZbmcJLVqolik66fLY0Cb+/h+vKVe7juLT+pQw7yfgDwIJG81oG+HKQtLCI2w/51A7CeBujWkzhr/DxyYlSVByiy+C57FyaNFGL2mmO3hpaCL0sV4Y/PgUFZh8qtkuAtLMJwJwV27QY5uZuq5FaCre777sJslI0rnPH78MLv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QC9Qne1q; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QC9Qne1q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1715742100;
+	bh=BFkqFI5o0BLG54rrGKzsZF252OOPOBuIwFR06/FINbg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QC9Qne1qEAYOsOAhqxlrkr7BuJSvqCBNLeM8WiUrJcBjolj3xx89M2J/B6M8UuXC5
+	 GO27M5PhA2EOEH1Eqp7qtRiAKC2MZtprkYAMDzf1bJNICnghY8jbSWxzpHKKmKZ7rk
+	 g8+8Q5Y6IzRlECqOhHdWZKWAARhoqmQ5KPY9QhI61XVu1PMBbtTuR9HxzpkeveObn/
+	 civzBDIpYV3Mv1dCabxKsnnVwry690bFzlGZ8lTXwl2yvzGBEX/Udc7v2YOYCb9znR
+	 nq6Y9WHoZjnAcrAxi8pm37rZLcbWH6/kycQ5+cbi2HwFfSkhIJawRFSgU9kozKf/sP
+	 do1g5BGTLbCtw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VfHj316jTzCh0l
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:48:23 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VfHhv6kKDzBRHKQ
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:48:15 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VfHhl0cclz5R9kD;
-	Wed, 15 May 2024 10:48:07 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl1.zte.com.cn with SMTP id 44F2lr8a003023;
-	Wed, 15 May 2024 10:47:53 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 15 May 2024 10:47:54 +0800 (CST)
-Date: Wed, 15 May 2024 10:47:54 +0800 (CST)
-X-Zmail-TransId: 2afb6644225affffffff811-00028
-X-Mailer: Zmail v1.0
-Message-ID: <20240515104754889HqrahFPePOIE1UlANHVAh@zte.com.cn>
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VfJ0N0FwFz4wc8;
+	Wed, 15 May 2024 13:01:40 +1000 (AEST)
+Date: Wed, 15 May 2024 13:01:39 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5?=
+ =?UTF-8?B?xYRza2k=?= <kw@linux.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the devicetree tree
+Message-ID: <20240515130139.2da899c0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <akpm@linux-foundation.org>, <david@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <willy@infradead.org>, <ziy@nvidia.com>, <shy828301@gmail.com>
-Cc: <yang.yang29@zte.com.cn>, <ran.xiaokai@zte.com.cn>,
-        <lu.zhongjun@zte.com.cn>, <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?wqBbUEFUQ0ggdjJdIG1tL2h1Z2VfbWVtb3J5OiBtYXJrIHJhY3kgYWNjZXNzIG9uwqBodWdlX2Fub25fb3JkZXJzX2Fsd2F5cw==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 44F2lr8a003023
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 66442276.000/4VfHj316jTzCh0l
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/oU49Y5wj+bzkszgbDReCbsn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+--Sig_/oU49Y5wj+bzkszgbDReCbsn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-huge_anon_orders_always is accessed lockless, it is better
-to use the READ_ONCE() wrapper. This is not fixing any visible
-bug, hopefully this can cease some KCSAN complains in the future.
-Also do that for huge_anon_orders_madvise.
+Hi all,
 
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-Acked-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Lu Zhongjun <lu.zhongjun@zte.com.cn>
-Reviewed-by: xu xin <xu.xin16@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
----
- include/linux/huge_mm.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The following commits are also in the pci tree as different commits
+(but the same patches):
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index de0c89105076..cf7f671aa634 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -122,8 +122,8 @@ static inline bool hugepage_flags_enabled(void)
- 	 * So we don't need to look at huge_anon_orders_inherit.
- 	 */
- 	return hugepage_global_enabled() ||
--	       huge_anon_orders_always ||
--	       huge_anon_orders_madvise;
-+	       READ_ONCE(huge_anon_orders_always) ||
-+	       READ_ONCE(huge_anon_orders_madvise);
- }
+  15be4f7ce5de ("dt-bindings: Drop unnecessary quotes on keys")
+  28081ebd17fb ("dt-bindings: PCI: qcom,pcie-sm8350: Drop redundant 'oneOf'=
+ sub-schema")
+  649bad67d4b1 ("dt-bindings: PCI: microchip: increase number of items in r=
+anges property")
 
- static inline int highest_order(unsigned long orders)
--- 
-2.15.2
+These are commits
+
+  d7890a80e037 ("dt-bindings: Drop unnecessary quotes on keys")
+  301e978b9eb7 ("dt-bindings: PCI: qcom,pcie-sm8350: Drop redundant 'oneOf'=
+ sub-schema")
+  247edade4b4b ("dt-bindings: PCI: microchip: Increase number of items in r=
+anges property")
+
+in the pci tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oU49Y5wj+bzkszgbDReCbsn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZEJZMACgkQAVBC80lX
+0Gz8dAf+OBoYqX2Yi1xhE6Qg4aaIjOUvPPVaypzXJ76/1Q6VQkeSWOYULLokZVJp
+o3NF4BsbBY/LU9T/UuRiY0h6W0WI8fd5lDwzuuMY8uO2S2NGl30r74YX8qGWJlML
+D33e5/Q9eZoOoSjy3p5JJH3GLgylkMhYsekW22NOyrSQ3iq2FZEz/8tTItwhF/gI
+L5kiK2QTz8opBzXHlo2PUbFnyMCyStaG/aAZ5P/z1+j63YRmxN5SZykrg+jBR5ss
+/1hQOgZYBf6tKMnQ7cFDMLEFkvMFa7maqzZQEfzsNmSRFwnSr62rr0i/7eRuu1Yo
+hrVfjEeXd7mpyOGPLbceIDGzXrvq8A==
+=RhQz
+-----END PGP SIGNATURE-----
+
+--Sig_/oU49Y5wj+bzkszgbDReCbsn--
