@@ -1,159 +1,155 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809BF4EB3A
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9B247F69
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715794376; cv=none; b=pvopyk8dPunfKi4g0JB+hMCK+tsSiYkmeCk27MAjaeCxI/zqFkZ6FNpWDv3AAwfbKpxzGKZlNGf1iPzlvPSb8Cu54PlNFOyYROJf3N1H7MrSik+RmbTolWXbHfgFIzT1OQJBOiXGaSW26JvzL0HYfh1rcOU+QBNaBlaH3a1xFV4=
+	t=1715794400; cv=none; b=SZV27X+HPGjYxj2usJCGCWIHc7pB8UQrfU2z6VIGwWy4InKySMPXzSHfMql0QvqXvSU3bvu6bC2PpO/QMugU8fNseYAQGg84f6CK1EL7GRZ+CiorrmBFH4oe7QPQSl1S55oM60CvNNq3LMq5jV3friz8TWE9mYjT+nl745u1oC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715794376; c=relaxed/simple;
-	bh=qEcSw3lILLGvhKIjJLG6VoBEYR2tfcg32/p64k58ON8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NQ9M/5Y48T4dZ127Hy/hsoJyXJ4fWNgqpSBK8hvWd5A2cc6qBhA+ccAzQ4CsOsksCssaQ6TkCVPclrorVZHBEexNwelzZUMTOVmWMxF+eSPqhZoo3llnybm2R9O+/OV3s2h//LNDs4d2y1et0DAAFySLBfdcR06k+B0Kp4sbWeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nd/TQBXO; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1715794400; c=relaxed/simple;
+	bh=KQ7vgtIHJ0lCY1+lYQaLcR526DvemfZD38rR0OBQSp8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rT51Rr7I7bvDed0OCoAiLd2efTJN8uUzNdB1s6fi0oUc6+i2OjXfSesS+yXTRF81nU1OACy/vIYkWRHgF+J/Aj7us3VQdzorCc53tv4tAMz3TWIINkyAt6YDhu3AT5IL+ckdnyo67T2oRnnIV9ln5AYT4RAZyKExNS9DNkPyx24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HXebnCtB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nd/TQBXO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXebnCtB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715794373;
+	s=mimecast20190719; t=1715794397;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oOwdeJhBjSGNCAussjsFY04Bth4aIM7eWnKu5IfNLOU=;
-	b=Nd/TQBXOK7qs9Lal+vutoItKN2UwzAuNtihaTe9nkJvLQR1njhw8ObCVJGt7d4OM7+3w0Q
-	G4G0eiu8GBK/2rjXpO7CVyo3GScsLLt0FWry0nGCa7I2L6klkxvXXSByzihLMm/Hqi2qRS
-	L0pxSj3BC2KF++ag0qSQUrpeOBflEVg=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LfUbT0bqMFevfxtZ83fq1OENBuxrXgJtBQk+DKSrhj8=;
+	b=HXebnCtBqAbOpMjQP0jkMH6pqfR20DKuWjfUjcd+LA2+ErZ36yG1WsOnj6zxCp/9GfC7Fy
+	bOBPCwHz0cU973voDf2rMqJa6VOGb1MG29VaKJt+t3jsTgFBHwRSKzTwojc9UNr6ioofT8
+	y80KpiCOBYuBIn5WKZjHnsVZfkXtprQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-SpQ7e2JDPX6uSPnR_ErIZg-1; Wed, 15 May 2024 13:32:52 -0400
-X-MC-Unique: SpQ7e2JDPX6uSPnR_ErIZg-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-792cefecd00so940488785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:32:52 -0700 (PDT)
+ us-mta-353-Wn6veW2PP-e4X2kTZJk3uw-1; Wed, 15 May 2024 13:33:16 -0400
+X-MC-Unique: Wn6veW2PP-e4X2kTZJk3uw-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-351cb5b7649so1013801f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:33:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715794370; x=1716399170;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOwdeJhBjSGNCAussjsFY04Bth4aIM7eWnKu5IfNLOU=;
-        b=TSp/NHTxxJLB6QXnNPJCl/FFk7xmQt1kf0tnmU66auLNEvi7chDZs4CbGXJCWoz+CV
-         zccQkYH+3FyZMjbXhpdvmb2SQ2PgtLl1I9jlbSn8tQavSTKJalXSxef8DhwtjD3oIhfG
-         S7haOFGlPj2mbDd7+Mru2qC+n/7Y4IiL7s2NmAcwxHKJ6N08XYVnKmPsH5I58+NVv5wk
-         qkOfJqxW8JI7FFHFljHucMNceZscvsaPzMYCCB1Rvxz+IiGEN8QfFdKZpoCI1BEMYdOl
-         mR+IjPcKknRo6CoLUPGa0dBjbW4FNo9YEkto1Dk56ZTZcBUVmuahaHveQ/x1gYT2S/k2
-         0yUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUO9NXoP7b0zKeGXfOvNgsnjmqOnkQtjqKD4D7ucGv89EwuV3x4OiJdo642iPXqcv41iiUdoLElOw8KYOba6i26fb6ObtqM3zfyVhlJ
-X-Gm-Message-State: AOJu0YwJxs/g0xyVbPibBbMVnfq6JH607OAjXaQol22bHSyc0zkbMk5F
-	Yr5WijQXi1m1xsp3NWVTjil7AHzCti40w6iKJ2/MmWyvUfgVBlMkk41Ft/WZAkOSv78dl+HLkdO
-	4NcYEkubps1p217Dt9aWqrkniEIRWVMHIJsxTU+8OtgYaHeX7LGiVvInkmggEKA==
-X-Received: by 2002:a05:622a:109:b0:43a:3502:8446 with SMTP id d75a77b69052e-43dec39be29mr341473721cf.28.1715794370170;
-        Wed, 15 May 2024 10:32:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE3J4mJbmHn1T6bjHxpYTkK8dZATZQr5Sa13WzDnCmuqUStezho5/sEVpt2rJSDEKrAgOg5Bw==
-X-Received: by 2002:a05:622a:109:b0:43a:3502:8446 with SMTP id d75a77b69052e-43dec39be29mr341473421cf.28.1715794369830;
-        Wed, 15 May 2024 10:32:49 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e0e421dccsm54794051cf.53.2024.05.15.10.32.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 10:32:49 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>, "Paul E . McKenney"
- <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Joel Fernandes
- <joel@joelfernandes.org>, Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
- Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- rcu <rcu@vger.kernel.org>
-Subject: Re: [PATCH 1/6] rcu: Remove full ordering on second EQS snapshot
-In-Reply-To: <20240515125332.9306-2-frederic@kernel.org>
-References: <20240515125332.9306-1-frederic@kernel.org>
- <20240515125332.9306-2-frederic@kernel.org>
-Date: Wed, 15 May 2024 19:32:45 +0200
-Message-ID: <xhsmhikzfgev6.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1715794395; x=1716399195;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LfUbT0bqMFevfxtZ83fq1OENBuxrXgJtBQk+DKSrhj8=;
+        b=B5NWg5j4WeGk/rn8QGakUDCn87b2pe2FFjs/fs5vndikqD9OFGAL5dUMP4TY6zINdO
+         oT0jptGF4AKlb1F7XcHUl2NaA7ynNf+wP9juGqz2rbCiHFjNOSNgEzuJ0zXCeAU13nQN
+         lNQ2tq1ytHD8/5/2PWEi/zuGsjxbN6T8lWiZyIwReNZ4f+Ejyvyt6rvQ9q1j771Ld/Sv
+         xmZQVnzd7yrrHlBj9IsdpZZoaqJ118pBpQSw6ZaaOGKR9PsqT2+hbtYG//Z1nUcnB+LB
+         Rj4kz3fZnn4vBC4pamuH2VkrcvAZUBuF92HgK7cV4xiZ1D7Jd4L/NHXOs6iNXYKnlOhE
+         7BmA==
+X-Gm-Message-State: AOJu0YwbZ+hSWpt5hCp4Ig8dsadoZDYM/fHNhmSDeQd7f9nlYT7/E+zK
+	RzvFa5iX2sB+3IYfMbk8iSZiBKkacOE9HZWmecp+esxLSRgKk3vAcz5uXDaY6izouRlkBtX2RCp
+	bpqWNTjZDgBTga8Iu/b5obCUPuFRbkUPPMqw22aFpQqZeOgMeYUDi94gQ6rarqw==
+X-Received: by 2002:a05:600c:a46:b0:41f:f144:5623 with SMTP id 5b1f17b1804b1-41ff1445732mr130137655e9.14.1715794394970;
+        Wed, 15 May 2024 10:33:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEn29gC0xlHgiaGlcHKOXEBPkcWc5GqRKQ+sTlTUnbCHKlL078H8MP3ATQM4jwusDZdn2rlnw==
+X-Received: by 2002:a05:600c:a46:b0:41f:f144:5623 with SMTP id 5b1f17b1804b1-41ff1445732mr130137545e9.14.1715794394619;
+        Wed, 15 May 2024 10:33:14 -0700 (PDT)
+Received: from [192.168.10.81] ([151.95.155.52])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-41fccee92c7sm248384785e9.34.2024.05.15.10.33.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 May 2024 10:33:14 -0700 (PDT)
+Message-ID: <4d80cec1-9505-4a8c-8bd3-c996b5a42790@redhat.com>
+Date: Wed, 15 May 2024 19:33:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] KVM: x86/mmu: Replace hardcoded value 0 for the
+ initial value for SPTE
+To: Isaku Yamahata <isaku.yamahata@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Sean Christopherson <seanjc@google.com>, Xiaoyao Li <xiaoyao.li@intel.com>,
+ Binbin Wu <binbin.wu@linux.intel.com>, rick.p.edgecombe@intel.com
+References: <20240507154459.3950778-1-pbonzini@redhat.com>
+ <20240507154459.3950778-3-pbonzini@redhat.com>
+ <20240515173209.GD168153@ls.amr.corp.intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ xsEhBFRCcBIBDqDGsz4K0zZun3jh+U6Z9wNGLKQ0kSFyjN38gMqU1SfP+TUNQepFHb/Gc0E2
+ CxXPkIBTvYY+ZPkoTh5xF9oS1jqI8iRLzouzF8yXs3QjQIZ2SfuCxSVwlV65jotcjD2FTN04
+ hVopm9llFijNZpVIOGUTqzM4U55sdsCcZUluWM6x4HSOdw5F5Utxfp1wOjD/v92Lrax0hjiX
+ DResHSt48q+8FrZzY+AUbkUS+Jm34qjswdrgsC5uxeVcLkBgWLmov2kMaMROT0YmFY6A3m1S
+ P/kXmHDXxhe23gKb3dgwxUTpENDBGcfEzrzilWueOeUWiOcWuFOed/C3SyijBx3Av/lbCsHU
+ Vx6pMycNTdzU1BuAroB+Y3mNEuW56Yd44jlInzG2UOwt9XjjdKkJZ1g0P9dwptwLEgTEd3Fo
+ UdhAQyRXGYO8oROiuh+RZ1lXp6AQ4ZjoyH8WLfTLf5g1EKCTc4C1sy1vQSdzIRu3rBIjAvnC
+ tGZADei1IExLqB3uzXKzZ1BZ+Z8hnt2og9hb7H0y8diYfEk2w3R7wEr+Ehk5NQsT2MPI2QBd
+ wEv1/Aj1DgUHZAHzG1QN9S8wNWQ6K9DqHZTBnI1hUlkp22zCSHK/6FwUCuYp1zcAEQEAAc0j
+ UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT7CwU0EEwECACMFAlRCcBICGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRB+FRAMzTZpsbceDp9IIN6BIA0Ol7MoB15E
+ 11kRz/ewzryFY54tQlMnd4xxfH8MTQ/mm9I482YoSwPMdcWFAKnUX6Yo30tbLiNB8hzaHeRj
+ jx12K+ptqYbg+cevgOtbLAlL9kNgLLcsGqC2829jBCUTVeMSZDrzS97ole/YEez2qFpPnTV0
+ VrRWClWVfYh+JfzpXmgyhbkuwUxNFk421s4Ajp3d8nPPFUGgBG5HOxzkAm7xb1cjAuJ+oi/K
+ CHfkuN+fLZl/u3E/fw7vvOESApLU5o0icVXeakfSz0LsygEnekDbxPnE5af/9FEkXJD5EoYG
+ SEahaEtgNrR4qsyxyAGYgZlS70vkSSYJ+iT2rrwEiDlo31MzRo6Ba2FfHBSJ7lcYdPT7bbk9
+ AO3hlNMhNdUhoQv7M5HsnqZ6unvSHOKmReNaS9egAGdRN0/GPDWr9wroyJ65ZNQsHl9nXBqE
+ AukZNr5oJO5vxrYiAuuTSd6UI/xFkjtkzltG3mw5ao2bBpk/V/YuePrJsnPFHG7NhizrxttB
+ nTuOSCMo45pfHQ+XYd5K1+Cv/NzZFNWscm5htJ0HznY+oOsZvHTyGz3v91pn51dkRYN0otqr
+ bQ4tlFFuVjArBZcapSIe6NV8C4cEiSTOwE0EVEJx7gEIAMeHcVzuv2bp9HlWDp6+RkZe+vtl
+ KwAHplb/WH59j2wyG8V6i33+6MlSSJMOFnYUCCL77bucx9uImI5nX24PIlqT+zasVEEVGSRF
+ m8dgkcJDB7Tps0IkNrUi4yof3B3shR+vMY3i3Ip0e41zKx0CvlAhMOo6otaHmcxr35sWq1Jk
+ tLkbn3wG+fPQCVudJJECvVQ//UAthSSEklA50QtD2sBkmQ14ZryEyTHQ+E42K3j2IUmOLriF
+ dNr9NvE1QGmGyIcbw2NIVEBOK/GWxkS5+dmxM2iD4Jdaf2nSn3jlHjEXoPwpMs0KZsgdU0pP
+ JQzMUMwmB1wM8JxovFlPYrhNT9MAEQEAAcLBMwQYAQIACQUCVEJx7gIbDAAKCRB+FRAMzTZp
+ sadRDqCctLmYICZu4GSnie4lKXl+HqlLanpVMOoFNnWs9oRP47MbE2wv8OaYh5pNR9VVgyhD
+ OG0AU7oidG36OeUlrFDTfnPYYSF/mPCxHttosyt8O5kabxnIPv2URuAxDByz+iVbL+RjKaGM
+ GDph56ZTswlx75nZVtIukqzLAQ5fa8OALSGum0cFi4ptZUOhDNz1onz61klD6z3MODi0sBZN
+ Aj6guB2L/+2ZwElZEeRBERRd/uommlYuToAXfNRdUwrwl9gRMiA0WSyTb190zneRRDfpSK5d
+ usXnM/O+kr3Dm+Ui+UioPf6wgbn3T0o6I5BhVhs4h4hWmIW7iNhPjX1iybXfmb1gAFfjtHfL
+ xRUr64svXpyfJMScIQtBAm0ihWPltXkyITA92ngCmPdHa6M1hMh4RDX+Jf1fiWubzp1voAg0
+ JBrdmNZSQDz0iKmSrx8xkoXYfA3bgtFN8WJH2xgFL28XnqY4M6dLhJwV3z08tPSRqYFm4NMP
+ dRsn0/7oymhneL8RthIvjDDQ5ktUjMe8LtHr70OZE/TT88qvEdhiIVUogHdo4qBrk41+gGQh
+ b906Dudw5YhTJFU3nC6bbF2nrLlB4C/XSiH76ZvqzV0Z/cAMBo5NF/w=
+In-Reply-To: <20240515173209.GD168153@ls.amr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 15/05/24 14:53, Frederic Weisbecker wrote:
-> When the grace period kthread checks the extended quiescent state
-> counter of a CPU, full ordering is necessary to ensure that either:
->
-> * If the GP kthread observes the remote target in an extended quiescent
->   state, then that target must observe all accesses prior to the current
->   grace period, including the current grace period sequence number, once
->   it exits that extended quiescent state. Also the GP kthread must
->   observe all accesses performed by the target prior it entering in
->   EQS.
->
-> or:
->
-> * If the GP kthread observes the remote target NOT in an extended
->   quiescent state, then the target further entering in an extended
->   quiescent state must observe all accesses prior to the current
->   grace period, including the current grace period sequence number, once
->   it enters that extended quiescent state. Also the GP kthread later
->   observing that EQS must also observe all accesses performed by the
->   target prior it entering in EQS.
->
-> This ordering is explicitly performed both on the first EQS snapshot
-> and on the second one as well through the combination of a preceding
-> full barrier followed by an acquire read. However the second snapshot's
-> full memory barrier is redundant and not needed to enforce the above
-> guarantees:
->
->     GP kthread                  Remote target
->     ----                        -----
->     // Access prior GP
->     WRITE_ONCE(A, 1)
->     // first snapshot
->     smp_mb()
->     x = smp_load_acquire(EQS)
->                                // Access prior GP
->                                WRITE_ONCE(B, 1)
->                                // EQS enter
->                                // implied full barrier by atomic_add_return()
->                                atomic_add_return(RCU_DYNTICKS_IDX, EQS)
->                                // implied full barrier by atomic_add_return()
->                                READ_ONCE(A)
->     // second snapshot
->     y = smp_load_acquire(EQS)
->     z = READ_ONCE(B)
->
-> If the GP kthread above fails to observe the remote target in EQS
-> (x not in EQS), the remote target will observe A == 1 after further
-> entering in EQS. Then the second snapshot taken by the GP kthread only
-> need to be an acquire read in order to observe z == 1.
->
-> Therefore remove the needless full memory barrier on second snapshot.
->
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+On 5/15/24 19:32, Isaku Yamahata wrote:
+> Paolo, how do you want me to proceed? I can send a updated patch or you can
+> directly fix the patch in kvm-coco-queue.  I'm fine with either way.
 
-Still looking at the rest, but at least so far I'm convinced this one makes
-sense.
+I'll fix it, thanks!
 
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Paolo
 
+> From 7910130c0a3f2c5d814d6f14d663b4b692a2c7e4 Mon Sep 17 00:00:00 2001
+> Message-ID:<7910130c0a3f2c5d814d6f14d663b4b692a2c7e4.1715793643.git.isaku.yamahata@intel.com>
+> From: Isaku Yamahata<isaku.yamahata@intel.com>
+> Date: Wed, 15 May 2024 10:19:08 -0700
+> Subject: [PATCH] fixup! KVM: x86/mmu: Replace hardcoded value 0 for the
+>   initial value for SPTE
+> 
 > ---
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 5e6828132007..58415cdc54f8 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -325,7 +325,7 @@ static bool rcu_dynticks_in_eqs(int snap)
->   */
->  static bool rcu_dynticks_in_eqs_since(struct rcu_data *rdp, int snap)
->  {
-> -	return snap != rcu_dynticks_snap(rdp->cpu);
-> +	return snap != ct_dynticks_cpu_acquire(rdp->cpu);
->  }
->
->  /*
-> --
-> 2.44.0
+>   arch/x86/kvm/mmu/tdp_mmu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> index 1259dd63defc..36539c1b36cd 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> @@ -626,7 +626,7 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
+>   	 * SPTEs.
+>   	 */
+>   	handle_changed_spte(kvm, iter->as_id, iter->gfn, iter->old_spte,
+> -			    0, iter->level, true);
+> +			    SHADOW_NONPRESENT_VALUE, iter->level, true);
+>   
+>   	return 0;
+>   }
+> 
+> base-commit: 698ca1e403579ca00e16a5b28ae4d576d9f1b20e
+
 
