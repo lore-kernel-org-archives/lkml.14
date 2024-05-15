@@ -1,107 +1,115 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DE157333;
-	Wed, 15 May 2024 07:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA08755C3B;
+	Wed, 15 May 2024 07:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715757726; cv=none; b=E+TA5sGeNH5xmqadQozLVypxGf8ncmVTsyV0TYxAWJ1QQlJzuhVSUGjZrOiinrDhNBkC6wlHqyt/0c9VJe5AVgXC12d6NJmmsykhWGbmpXLpx43NAcOeb/szN/MAoavvd7Jyf/vFeEHhg6D7VN/WAkRZPY1FBVfSmQ4W1jIgLT4=
+	t=1715757767; cv=none; b=L/kifiqOTfr1JcXCsTl21uVY1CANSbPzcRBqEd+mMNP8iq5A93Zxa164eb8K1H9m5KErOS1M7isVtM0TczrWSZ3yZ5jaJz1j5J7tzsNMXjJIZ2qnXEO1E8MDj/ecfu8F59PeUUp7IsiR5cDjq+hXYTSha857SYfwK1f/3EBtR3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715757726; c=relaxed/simple;
-	bh=8rUH+otL33JPl6/eelDW+giyktscV7EVUM1KV0wegvg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g7KYT2xbwauQyhlwiZqYD7UNQf1+BBLr7k8mdBD61PKGLxXNI1xEiwqhNoibF0x40uJ/trvEmvzrCA5uvojNhEanWUU9Q24IcIKcNnf6zneguA8UP6HpILplNqEjBQf5eOUnfMvXD4B0U+C/2mlIVFXb9vpg5fnonU9X4SMZNQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=znL/rNIC; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1715757767; c=relaxed/simple;
+	bh=YYVK4RKso1daeoRIfgcpHOGP02pbyujQXd14HOeOJKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwQQkzwJzCmAR3cPVfWiaE+hREDhT7CQLieJpwJtPcK9RsButQjiDB79dPN1G1gNyHqwCwHdiD97l/RhoRc/KZQOWapB3nBZYQp/bn6zATzKgibV3jQewIomjpds00onCV+uMnNFkE/5o4mYuDlcBO0DIumCB7glcgMxtxEfoao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KEJ3pu+6; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="znL/rNIC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KEJ3pu+6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715757724; x=1747293724;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715757766; x=1747293766;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8rUH+otL33JPl6/eelDW+giyktscV7EVUM1KV0wegvg=;
-  b=znL/rNICLhUDzQYwEdv7R8UUShWnMxvgPb/o+5JtqLvfufK9lbrwOm6O
-   U3CFZKljz64+B5ib//+3R7axkuJgcWTNsWDs+9ueOycMUlN87WKjHo6ZC
-   6H++ZWXZf07smn6bsrpoQrgZnlSi82x80XU0UaeHz4F8pLvBIxxKDGgjx
-   3A/55kolpGiw4/zzH/YS/MiBtyU5qOF4x5RkTxJxlh4PS88P4PJLWKlp2
-   E3tJEhewU7nUPY2kELqgMtw3p6XmV3Faa0YMmhEAMgQjVqzFPCnG/8OmM
-   ha/wIobXbY7ehfyH3s6BX0ROroDNW8rEGBg0123j2uJ2O1lAVdWdU0nWX
-   w==;
-X-CSE-ConnectionGUID: xh7729e8TEGmLa/d6tPEtQ==
-X-CSE-MsgGUID: 4h9UeB2TTpyZiPvvgQObqg==
+  bh=YYVK4RKso1daeoRIfgcpHOGP02pbyujQXd14HOeOJKQ=;
+  b=KEJ3pu+6pf0suhfyABsfLe/8lx+3/Mjb1yV9RjD85hIB5opvtdkeGAPb
+   Z77HfUzMaKmQz6cy2oYb1nyN6aJVQBS9a9NXaO6fIAqAIUJbRQQpqLanY
+   CMyvUWmEMy2AraACaznz/BDxf7S2BRLk37S/fzO/fy2I5KtblCSf1ApiE
+   vsNqAIXy4zd4bLNKfOrr5ltaXCiXCCCXIIinrBbe+1Knt/78zAmwFsFQA
+   CYTrFQEDgCw+WWVwmoMNkqetQ5BLXGRATtifDe6Mh8muIbXD2awXgIZ1H
+   RMjpVbcKzapeeJRftoChcqH1lUsYQnj0Bkl0zG/JnfEXzPIYZrKk+3Fse
+   g==;
+X-CSE-ConnectionGUID: nTMNZKffRF+66z3RS+nGyA==
+X-CSE-MsgGUID: 5lLRZqrJSWSMF48jUWqA6g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11657742"
 X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="asc'?scan'208";a="255637101"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2024 00:22:03 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 15 May 2024 00:21:30 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Wed, 15 May 2024 00:21:28 -0700
-Date: Wed, 15 May 2024 08:21:14 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Joshua Yeong <joshua.yeong@starfivetech.com>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<conor@kernel.org>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <leyfoon.tan@starfivetech.com>,
-	<jeeheng.sia@starfivetech.com>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v4 0/2 RESEND] Add StarFive's StarLink Cache Controller
-Message-ID: <20240515-denture-matriarch-c775324379e5@wendy>
-References: <20240515050253.38061-1-joshua.yeong@starfivetech.com>
+   d="scan'208";a="11657742"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 00:22:45 -0700
+X-CSE-ConnectionGUID: HqIFPuDXQGKGnsQxC6Os6Q==
+X-CSE-MsgGUID: xxQiwBrtSf2Afa0HFCYydg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
+   d="scan'208";a="54163895"
+Received: from standuka-mobl.amr.corp.intel.com (HELO desk) ([10.209.83.91])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 00:22:46 -0700
+Date: Wed, 15 May 2024 00:22:31 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Kalle Valo <kvalo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+Message-ID: <20240515072231.z3wlyoblyc34ldmr@desk>
+References: <87o79cjjik.fsf@kernel.org>
+ <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+ <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+ <87h6f4jdrq.fsf@kernel.org>
+ <878r0djxgc.fsf@kernel.org>
+ <874jb0jzx5.fsf@kernel.org>
+ <feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Fy8jGRKT4POCemEl"
-Content-Disposition: inline
-In-Reply-To: <20240515050253.38061-1-joshua.yeong@starfivetech.com>
-
---Fy8jGRKT4POCemEl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
 
-On Wed, May 15, 2024 at 01:02:51PM +0800, Joshua Yeong wrote:
-> StarFive's StarLink Cache Controller flush/invalidates cache using non-
-> conventional RISC-V Zicbom extension instructions. This driver provides t=
-he
-> cache handling on StarFive RISC-V SoC.
->=20
-> Changes in v4:
-> - Move cache controller initialization to arch_initcall()
-> - Link to v3: https://lore.kernel.org/all/20240424075856.145850-1-joshua.=
-yeong@starfivetech.com/
+On Tue, May 14, 2024 at 09:10:07AM -0700, Dave Hansen wrote:
+> On 5/14/24 06:17, Kalle Valo wrote:
+> > The kernel we use in our ath11k testing has almost all kernel debug
+> > features enabled so I decided disable all of them, which unsurprisingly
+> > also fixed my suspend problems. So maybe this is something which happens
+> > only when MITIGATION_IBRS_ENTRY and some debug option from 'Kernel
+> > hacking' are both enabled?
+> 
+> I had my money on DEBUG_ENTRY, but it doesn't look like you ever had it
+> enabled.
+> 
+> I've got basically two theories:
+> 
+> One, the IBRS value is getting mucked up somewhere, either that %r15
+> value is getting stepped on or the per-cpu value is corrupt and the
+> WRMSR #GP's, causing the hang.
+> 
+> Two, IBRS_{ENTER,EXIT} is called in a "wrong" context somewhere.  Either
+> it is clobbering something it shouldn't or it is assuming something is
+> in place that is not (like a valid stack).
+> 
+> But the whole "'sudo shutdown -h now' then suspend somehow immediately
+> unstalls" thing is really perplexing.  I hope Pawan has some ideas.
 
-Why are you resending this? A resend with no context doesn't help me
-understand what you want done.
-There's been no action taken yet with the v4 that you had sent because
-there was not enough time between its arrival and when I had to send a
-PR with 6.10 material. Right now it is the merge window, so there's
-nothing that can be done here til that ends.
+Nothing promising yet. I now have the system with the same model, but the
+system is only booting in recovery mode with the config attached with the
+report.
 
-Cheers,
-Conor.
+Kalle, I wanted to try reverting the below commits:
 
---Fy8jGRKT4POCemEl
-Content-Type: application/pgp-signature; name="signature.asc"
+aa1567a7e644 ("intel_idle: Add ibrs_off module parameter to force-disable IBRS")
+1e4d3001f59f ("x86/entry: Harden return-to-user")
+c516213726fb ("x86/entry: Optimize common_interrupt_return()")
 
------BEGIN PGP SIGNATURE-----
+... but I haven't reproduced the issue yet.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkRiagAKCRB4tDGHoIJi
-0omXAP9pIXYi4n5B7Ijb7oNal5DySb2TUY6bM7EGDeulPWO70gEA3Yt4/qVY17Q/
-pqEiBG0Ji10JgU4wA+T6k4C4ckqfEwc=
-=ZhD4
------END PGP SIGNATURE-----
-
---Fy8jGRKT4POCemEl--
+FYI, cmdline "spectre_v2=off" should have the same effect as
+CONFIG_IBRS_ENTRY=n. Other interesting thing to try is cmdline
+"dis_ucode_ldr".
