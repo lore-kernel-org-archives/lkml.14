@@ -1,180 +1,165 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E537155723;
-	Wed, 15 May 2024 14:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956A45C8EF;
+	Wed, 15 May 2024 15:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715785164; cv=none; b=Ln2sMhUECeV1ui4ApOtRyNHhL6PNdeZiKk4bLxvp5g/KIogsN3SHUofDHTeA/+F16zdRP3sa1gvy9cV1RedgavZ53jbtTGhI1Jnn3iWt1Ak9bR8bgjtVUtc8KM0Z5TJIRxrs+ReztUsSHYhtJl+smRFrdZ7Uro75ypVk31lpc9Q=
+	t=1715785308; cv=none; b=ierG6GP2VXYZo7G+X4E3RP6laVCGAhlWriqTk7vUrNBBz9s5TEsnaCtRQtSJqdLi2ZUFruAfb3/XVgoGypOID5KYmEYNaLvx68MiTAd+r7DyTeSL5sR4alBJeXIwrG8xJvu1TjESweePDvUZeeuPeeJ0l456o+CoXnYTNB54Bkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715785164; c=relaxed/simple;
-	bh=dne70KVe5rvpkC5ZaTrqZsZ4NhyJhBOKmob9vFvZ0F0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gEvUk8NxZALy0UWb/zGxmkKEDhLSmjK5Swrm7wk40eY7tbO8QyexpzAaqzatSUNA5dzQdgWNvvj1MOBmftULIx1xtVuBRVBzjcY9OnLZYbDZuFJ1U1rRtdBou6dAAl/s9gh4JA8D4UytDIJZkAfVAiis7VNBmUmJ4w5Ae7lUu+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA8A81042;
-	Wed, 15 May 2024 07:59:44 -0700 (PDT)
-Received: from [10.57.5.6] (unknown [10.57.5.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA1753F7A6;
-	Wed, 15 May 2024 07:59:13 -0700 (PDT)
-Message-ID: <48c39306-c226-4e7f-a013-d679ca80157e@arm.com>
-Date: Wed, 15 May 2024 15:59:13 +0100
+	s=arc-20240116; t=1715785308; c=relaxed/simple;
+	bh=FJbNPnUkasyY9TzP1ZUPLSyD2EQcKz/cqB3DDwyBxrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ahi1Ewq7l7pT+PSTxymo4KKUmz1ssJZCMUyTi0Fy+UrVW9CUxG7PWaViguovr0sQsiluxGn8j7+U0Hnrx1poc7GZfdABC8NH0eYYm+MKfWC6jATVXq3Bfj3hipTAoPIL6ZZ2zWXfU3u7Hr6VkE+qXOEvUMy2Cb0/tX/N6qVMHEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p53Sex6r; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p53Sex6r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161AAC116B1;
+	Wed, 15 May 2024 15:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715785308;
+	bh=FJbNPnUkasyY9TzP1ZUPLSyD2EQcKz/cqB3DDwyBxrc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=p53Sex6r84tdCIPl4BKe8v4+wVZwH3i1kXGQA51tPbcxHNRCmfj9oqZqi7lh2w/gH
+	 ewnv8vMSNDJy3getAiNWy38VGTjrg/MlkVFW1YJawnKNtlpkJS8XfmbrfhRD8zoTLy
+	 WfNSjUfwLQE50KSnVCSVdlJ47EjbuIL6f9qo63pSeP1DJidSyASR0SCX1Nnp2kjq39
+	 7vpXxLoL5DqM815YWO1ptyStUCOEw2dfZNg9boTD0Cy/ziT9gWxUcpS7m5MOwZ2pn5
+	 sqpdbVruaMGa0bMrIaYkPKlMUnOFCoCrWX89rQvrbJjuoVmOVOKOzG3RjH4OsEkZyJ
+	 NKh/qad+ZenJg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 90968CE098A; Wed, 15 May 2024 08:01:37 -0700 (PDT)
+Date: Wed, 15 May 2024 08:01:37 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
+Cc: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	kernel-team@meta.com, mingo@kernel.org, stern@rowland.harvard.edu,
+	parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
+	boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+	j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH memory-model 2/4] Documentation/litmus-tests: Demonstrate
+ unordered failing cmpxchg
+Message-ID: <49f61e62-dbd8-449d-9166-11da43db76a6@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
+ <20240501232132.1785861-2-paulmck@kernel.org>
+ <c97f0529-5a8f-4a82-8e14-0078d4372bdc@huaweicloud.com>
+ <16381d02-cb70-4ae5-b24e-aa73afad9aed@huaweicloud.com>
+ <2a695f63-6c9a-4837-ac03-f0a5c63daaaf@paulmck-laptop>
+ <143273e9-1243-60bc-4fb0-eea6fb3de355@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] iommu/dma: Make limit checks self-contained
-To: Jon Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
- Christoph Hellwig <hch@lst.de>
-Cc: Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
- <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>,
- Matthew Rosato <mjrosato@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-acpi@vger.kernel.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <cover.1713523152.git.robin.murphy@arm.com>
- <e28a114243d1e79eb3609aded034f8529521333f.1713523152.git.robin.murphy@arm.com>
- <243d441d-dda8-442a-a495-83bf9725a14c@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <243d441d-dda8-442a-a495-83bf9725a14c@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <143273e9-1243-60bc-4fb0-eea6fb3de355@huaweicloud.com>
 
-Hi Jon,
-
-On 2024-05-14 2:27 pm, Jon Hunter wrote:
-> Hi Robin,
+On Wed, May 15, 2024 at 08:44:30AM +0200, Hernan Ponce de Leon wrote:
+> On 5/6/2024 8:00 PM, Paul E. McKenney wrote:
+> > On Mon, May 06, 2024 at 06:30:45PM +0200, Jonas Oberhauser wrote:
+> > > Am 5/6/2024 um 12:05 PM schrieb Jonas Oberhauser:
+> > > > Am 5/2/2024 um 1:21 AM schrieb Paul E. McKenney:
+> > > > > This commit adds four litmus tests showing that a failing cmpxchg()
+> > > > > operation is unordered unless followed by an smp_mb__after_atomic()
+> > > > > operation.
+> > > > 
+> > > > So far, my understanding was that all RMW operations without suffix
+> > > > (xchg(), cmpxchg(), ...) will be interpreted as F[Mb];...;F[Mb].
+> > > > 
+> > > > I guess this shows again how important it is to model these full
+> > > > barriers explicitly inside the cat model, instead of relying on implicit
+> > > > conversions internal to herd.
+> > > > 
+> > > > I'd like to propose a patch to this effect.
+> > > > 
+> > > > What is the intended behavior of a failed cmpxchg()? Is it the same as a
+> > > > relaxed one?
+> > 
+> > Yes, and unless I am too confused, LKMM currently does implement this.
+> > Please let me know if I am missing something.
+> > 
+> > > > My suggestion would be in the direction of marking read and write events
+> > > > of these operations as Mb, and then defining
+> > > > 
+> > > > (* full barrier events that appear in non-failing RMW *)
+> > > > let RMW_MB = Mb & (dom(rmw) | range(rmw))
+> > > > 
+> > > > 
+> > > > let mb =
+> > > >   ��� [M] ; fencerel(Mb) ; [M]
+> > > >   � | [M] ; (po \ rmw) ; [RMW_MB] ; po^? ; [M]
+> > > >   � | [M] ; po^? ; [RMW_MB] ; (po \ rmw) ; [M]
+> > > >   � | ...
+> > > > 
+> > > > The po \ rmw is because ordering is not provided internally of the rmw
+> > > 
+> > > (removed the unnecessary si since LKMM is still non-mixed-accesses)
+> > 
+> > Addition of mixed-access support would be quite welcome!
+> > 
+> > > This could also be written with a single rule:
+> > > 
+> > >       | [M] ; (po \ rmw) & (po^?; [RMW_MB] ; po^?) ; [M]
+> > > 
+> > > > I suspect that after we added [rmw] sequences it could perhaps be
+> > > > simplified [...]
+> > > 
+> > > No, my suspicion is wrong - this would incorrectly let full-barrier RMWs
+> > > act like strong fences when they appear in an rmw sequence.
+> > > 
+> > >   if (z==1)  ||  x = 2;     ||  xchg(&y,2)  || if (y==2)
+> > >     x = 1;   ||  y =_rel 1; ||              ||    z=1;
+> > > 
+> > > 
+> > > right now, we allow x=2 overwriting x=1 (in case the last thread does not
+> > > propagate x=2 along with z=1) because on power, the xchg might be
+> > > implemented with a sync that doesn't get executed until the very end
+> > > of the program run.
+> > > 
+> > > 
+> > > Instead of its negative form (everything other than inside the rmw),
+> > > it could also be rewritten positively. Here's a somewhat short form:
+> > > 
+> > > let mb =
+> > >       [M] ; fencerel(Mb) ; [M]
+> > >     (* everything across a full barrier RMW is ordered. This includes up to
+> > > one event inside the RMW. *)
+> > >     | [M] ; po ; [RMW_MB] ; po ; [M]
+> > >     (* full barrier RMW writes are ordered with everything behind the RMW *)
+> > >     | [W & RMW_MB] ; po ; [M]
+> > >     (* full barrier RMW reads are ordered with everything before the RMW *)
+> > >     | [M] ; po ; [R & RMW_MB]
+> > >     | ...
+> > 
+> > Does this produce the results expected by the litmus tests in the Linux
+> > kernel source tree and also those at https://github.com/paulmckrcu/litmus?
+> > 
+> > 							Thanx, Paul
 > 
-> On 19/04/2024 17:54, Robin Murphy wrote:
->> It's now easy to retrieve the device's DMA limits if we want to check
->> them against the domain aperture, so do that ourselves instead of
->> relying on them being passed through the callchain.
->>
->> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
->> Tested-by: Hanjun Guo <guohanjun@huawei.com>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   drivers/iommu/dma-iommu.c | 21 +++++++++------------
->>   1 file changed, 9 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
->> index a3039005b696..f542eabaefa4 100644
->> --- a/drivers/iommu/dma-iommu.c
->> +++ b/drivers/iommu/dma-iommu.c
->> @@ -660,19 +660,16 @@ static void iommu_dma_init_options(struct 
->> iommu_dma_options *options,
->>   /**
->>    * iommu_dma_init_domain - Initialise a DMA mapping domain
->>    * @domain: IOMMU domain previously prepared by iommu_get_dma_cookie()
->> - * @base: IOVA at which the mappable address space starts
->> - * @limit: Last address of the IOVA space
->>    * @dev: Device the domain is being initialised for
->>    *
->> - * @base and @limit + 1 should be exact multiples of IOMMU page 
->> granularity to
->> - * avoid rounding surprises. If necessary, we reserve the page at 
->> address 0
->> + * If the geometry and dma_range_map include address 0, we reserve 
->> that page
->>    * to ensure it is an invalid IOVA. It is safe to reinitialise a 
->> domain, but
->>    * any change which could make prior IOVAs invalid will fail.
->>    */
->> -static int iommu_dma_init_domain(struct iommu_domain *domain, 
->> dma_addr_t base,
->> -                 dma_addr_t limit, struct device *dev)
->> +static int iommu_dma_init_domain(struct iommu_domain *domain, struct 
->> device *dev)
->>   {
->>       struct iommu_dma_cookie *cookie = domain->iova_cookie;
->> +    const struct bus_dma_region *map = dev->dma_range_map;
->>       unsigned long order, base_pfn;
->>       struct iova_domain *iovad;
->>       int ret;
->> @@ -684,18 +681,18 @@ static int iommu_dma_init_domain(struct 
->> iommu_domain *domain, dma_addr_t base,
->>       /* Use the smallest supported page size for IOVA granularity */
->>       order = __ffs(domain->pgsize_bitmap);
->> -    base_pfn = max_t(unsigned long, 1, base >> order);
->> +    base_pfn = 1;
->>       /* Check the domain allows at least some access to the device... */
->> -    if (domain->geometry.force_aperture) {
->> +    if (map) {
->> +        dma_addr_t base = dma_range_map_min(map);
->>           if (base > domain->geometry.aperture_end ||
->> -            limit < domain->geometry.aperture_start) {
->> +            dma_range_map_max(map) < domain->geometry.aperture_start) {
->>               pr_warn("specified DMA range outside IOMMU capability\n");
->>               return -EFAULT;
->>           }
->>           /* ...then finally give it a kicking to make sure it fits */
->> -        base_pfn = max_t(unsigned long, base_pfn,
->> -                domain->geometry.aperture_start >> order);
->> +        base_pfn = max(base, domain->geometry.aperture_start) >> order;
->>       }
->>       /* start_pfn is always nonzero for an already-initialised domain */
->> @@ -1760,7 +1757,7 @@ void iommu_setup_dma_ops(struct device *dev, u64 
->> dma_base, u64 dma_limit)
->>        * underlying IOMMU driver needs to support via the dma-iommu 
->> layer.
->>        */
->>       if (iommu_is_dma_domain(domain)) {
->> -        if (iommu_dma_init_domain(domain, dma_base, dma_limit, dev))
->> +        if (iommu_dma_init_domain(domain, dev))
->>               goto out_err;
->>           dev->dma_ops = &iommu_dma_ops;
->>       }
+> I implemented in the dartagnan tool the changes proposed by Jonas (i.e.
+> changing the mb definition in the cat model and removing the fences that
+> were added programmatically).
 > 
+> I run this using the ~5K litmus test I have (it should include everything
+> from the source tree + the non-LISA ones from your repo). I also checked
+> with the version of qspinlock discussed in [1].
 > 
-> I have noticed some random test failures on Tegra186 and Tegra194 and 
-> bisect is pointing to this commit. Reverting this along with the various 
-> dependencies does fix the problem. On Tegra186 CPU hotplug is failing 
-> and on Tegra194 suspend is failing. Unfortunately, on neither platform 
-> do I see any particular crash but the boards hang somewhere.
+> I do get the expected results.
 
-That is... thoroughly bemusing :/ Not only is there supposed to be no 
-real functional change here - we should merely be recalculating the same 
-information from dev->dma_range_map that the callers were already doing 
-to generate the base/limit arguments - but the act of initially setting 
-up a default domain for a device behind an IOMMU should have no 
-connection whatsoever to suspend and especially not to CPU hotplug.
+Thank you very much, Hernan!!!  And good show, Puranjay!!!
 
-> If you have any ideas on things we can try let me know.
+							Thanx, Paul
 
-Since the symptom seems inexplicable, I'd throw the usual memory 
-debugging stuff like KASAN at it first. I'd also try 
-"no_console_suspend" to check whether any late output is being missed in 
-the suspend case (and if it's already broken, then any additional issues 
-that may be caused by the console itself hopefully shouldn't matter).
-
-For more base-covering, do you have the "arm64: Properly clean up 
-iommu-dma remnants" fix in there already as well? That bug has bisected 
-to patch #6 each time though, so I do still suspect that what you're 
-seeing is likely something else. It does seem potentially significant 
-that those Tegra platforms are making fairly wide use of dma-ranges, but 
-there's no clear idea forming out of that observation just yet...
-
-Thanks,
-Robin.
+> Hernan
+> 
+> [1] https://lkml.org/lkml/2022/8/26/597
+> 
