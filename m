@@ -1,131 +1,146 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BA7156F53
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1E128680
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715793800; cv=none; b=dYo3bcG8zVS2T853U2hX8shCviwoa8IObaC99D1G6gcVcf/uwbE9jFOGP3uAY5gx6+YYOcnV01X1a6BjHmBSZoyb3+4qShW7NBIjdJ51t8Ukiv1/20lTDu7tWa5SM6NykiX9VRbEqXoGfJ3Sos2GWOo5DBX5B4+z5IJzRZswb78=
+	t=1715794089; cv=none; b=FfwWUWKJBMPBJT3EUQqNskjLB4fuBEKiSkQSq/XgCj6OL0SxgQ3h0vN0H37ztPK+iJvkQT7yOIk9C+XxOxoFYA4h3FlNaSRG5csK4WuRo3OCbvbfeMdyt9Sw3FJV7X9Uo6cK5szD61lcXe/1K9So9tosMhrTirmAJ7WcmglpyLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715793800; c=relaxed/simple;
-	bh=Mmpk3cTXYb9Cytx2OXyWdNPcR2iwoJfjJ8SD4AaSDlM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fq4HwSpYwBDzzyMI+4UXnOV8b+v8wd5nuBflix6cA7tJqE8hN/UMr3Z+Ev8OCeQMx9UE7gC5h/S4HjY/6YqbhQJP23VvVcmyOYTSsvbVkBVUNQAGQJrE9/w/7ltnlYztvUcWuTvU00ooPOyC2IQw0sO37w2mBDfinzVLi2pPveQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wiVAIdKE; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
+	s=arc-20240116; t=1715794089; c=relaxed/simple;
+	bh=ft1sD1izv6Ls/5P8BGtMmhdC2q1GK6uXhKDCovZz960=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jK4XKSGe+cGyBdZap9jLjHf2LZnOFfUL83MyW5pg96iA7vMitv3Dzz+MHysAbIINEuONLnDObSD1qGvr7XYZUHiChXhaHC0aFmu93OnC6g5++7uN5Tyn2PLzOniGz+iqAJxpYzCKGMuI9RcIiN3L5pZh6hxy/uifPN4qPs523gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hmVbY18Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wiVAIdKE"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-41dc9c831acso38466745e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715793797; x=1716398597; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HVNMjO2akSMcTTiBfbdxnnFw0wMMSm8FW4gVmT1QRI=;
-        b=wiVAIdKEAU9n4Ac4/Fu8IcH5llGe9EE5a2z71co+UoqlwZDcvuBA2Gs5A61Fz6foGh
-         zTN4bLnrt2piQEAC0dPNQakXyoWTj8uwKJgurnGMLcOasJHMCtJzgdlAlU+v38f1+FwQ
-         pUxQUlwjzkKKnKDd/pYhJEY8kQ12fdMtiI933hQYPESdV6gM2cBGaH+js9EVbmrbWheY
-         xitpRJ9fnvuXR3999B/t6y31n4uKprk7k6JER3+q9W3/HUg/9o+kR0FtsQ9GA//ypb0q
-         N48ZrfTVB727pDNur+gXs8D78iw2vIfpv7a6BQCHePNJlmYg/kOrM1INpGLdC2Uzc5hR
-         AK6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715793797; x=1716398597;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HVNMjO2akSMcTTiBfbdxnnFw0wMMSm8FW4gVmT1QRI=;
-        b=SgSMh2VufTdt5suP4vrdqG96SszpDDlYQcegUzqKrY9f5A/XJkv1fhMGLFWp7+N5LO
-         XhPmc2bk+XEIQ1Uxja0Xs4Lf8IghFYdY0PZ15X7E9Sg6naXTvIg77sm3CYf5BfYAqVAf
-         Pwm1pZx5rfswzQvZv9/mDzfl8mXt7LrxC7L6rO04rtrJSv6NacgnZaYERx02RTb5Y/3x
-         oWsQxYVuFQ0+2mRv/OwesFGgiBdOlHWHW84Iqi1taolaB8pJdK7KDWxPSAqkzcYKJ7T5
-         ziBvk/6AXyav+OC5Wt37ubZfxDFgvhIs8GF+VWWHt3lZo0NnkpRoEySJTobRpJl1/pA1
-         umTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAQAhE5+8vXRWEah/HgOMFZntpMzD5nzJXu2w1VieiQkqNyHJg1QfGXQohUimZPgh/g3GM81clWkYEr/UrT4mc1n+IMymRrLQVLJ+e
-X-Gm-Message-State: AOJu0YxOpKsbT/O6NzDs+99m2wzbbZ97Fw7DB42LaViXu0O++xQekK0z
-	FRU+x+1uPEC4m9XozY0SoKg48RXEn6mW4djYFyxOapXs33mWYP2ITpUIZI3YLOMOaA2XvJu95s8
-	x0G0HfsJjKrJ8Ezbp3xVLj0L/dw==
-X-Google-Smtp-Source: AGHT+IF2+ZdhABrnKPyUROWJCaWhOUajRbqGLHWL21MZQxT/ip0TW6XIGdVRzaMZh4Ur0gPZC6lIS0u4//WU4M/kut0=
-X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
- (user=sebastianene job=sendgmr) by 2002:a05:600c:511d:b0:41e:8c00:94a4 with
- SMTP id 5b1f17b1804b1-41fead6accamr2395155e9.3.1715793797270; Wed, 15 May
- 2024 10:23:17 -0700 (PDT)
-Date: Wed, 15 May 2024 17:22:58 +0000
-In-Reply-To: <20240515172258.1680881-1-sebastianene@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hmVbY18Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715794086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QMSiG36nnnVfJyGDsOKUE/4DTzgz2zsSRWc8YHpsNRQ=;
+	b=hmVbY18Q2WZOSNaeCll1zsRPzHLakza7CRovapv9+NrXsYRSNxieLgltJ2iMU5ClXytLDm
+	WRfb1Fy77oIsq73NC0by24S4r4b1U/ot01tzwKKOTo1nSfA6FB9a5qlfYTqFseQjVM6Q8L
+	YKdtLrvp8XSmdrjdWdV8lfDKaQYgszs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-EhbJqplPOIKdf1_xzsVKhg-1; Wed,
+ 15 May 2024 13:28:05 -0400
+X-MC-Unique: EhbJqplPOIKdf1_xzsVKhg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 04C3D29ABA18;
+	Wed, 15 May 2024 17:28:05 +0000 (UTC)
+Received: from toolbox.redhat.com (unknown [10.45.226.11])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0636351BF;
+	Wed, 15 May 2024 17:28:03 +0000 (UTC)
+From: Michal Schmidt <mschmidt@redhat.com>
+To: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] bitfield.h: add FIELD_MAX_CONST
+Date: Wed, 15 May 2024 19:27:31 +0200
+Message-ID: <20240515172732.288391-1-mschmidt@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240515172258.1680881-1-sebastianene@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240515172258.1680881-5-sebastianene@google.com>
-Subject: [PATCH v2 4/4] KVM: arm64: Use FF-A 1.1 with pKVM
-From: Sebastian Ene <sebastianene@google.com>
-To: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org, 
-	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com, 
-	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
-	tabba@google.com, will@kernel.org, yuzenghui@huawei.com, 
-	lpieralisi@kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Sebastian Ene <sebastianene@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Now that the layout of the structures is compatible with 1.1 it is time
-to probe the 1.1 version of the FF-A protocol inside the hypervisor. If
-the TEE doesn't support it, it should return the minimum supported
-version.
+FIELD_MAX_CONST is like FIELD_MAX, but it can be used where statement
+expressions are forbidden. For example, using FIELD_MAX in a
+static_assert gives:
+  error: braced-group within expression allowed only inside a function
 
-Signed-off-by: Sebastian Ene <sebastianene@google.com>
+It can be used also in array declarations, where using FIELD_MAX would
+trigger a warning :
+  warning: ISO C90 forbids variable length array ‘buf’ [-Wvla]
+(It's a bit surprising, because despite the warning, gcc calculated
+the array size correctly at compile time.)
+
+A simplified example of what I actually want to use in a driver:
+  #define DATA_SIZE_M GENMASK(3, 0)
+  #define MAX_DATA_SIZE FIELD_MAX_CONST(DATA_SIZE_M)
+  static void f(void) {
+  	char buf[MAX_DATA_SIZE];
+  	/* ... */
+  }
+
+In the implementation, reuse the existing compile-time checks from
+FIELD_PREP_CONST.
+
+Signed-off-by: Michal Schmidt <mschmidt@redhat.com>
 ---
- arch/arm64/kvm/hyp/nvhe/ffa.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ include/linux/bitfield.h | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-index f9664c4a348e..bdd70eb4114e 100644
---- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-+++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-@@ -458,7 +458,7 @@ static __always_inline void do_ffa_mem_xfer(const u64 func_id,
- 	memcpy(buf, host_buffers.tx, fraglen);
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 63928f173223..50bbab317319 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -76,6 +76,16 @@
+ 					      (1ULL << __bf_shf(_mask))); \
+ 	})
  
- 	ep_mem_access = (void *)buf +
--			ffa_mem_desc_offset(buf, 0, FFA_VERSION_1_0);
-+			ffa_mem_desc_offset(buf, 0, hyp_ffa_version);
- 	offset = ep_mem_access->composite_off;
- 	if (!offset || buf->ep_count != 1 || buf->sender_id != HOST_FFA_ID) {
- 		ret = FFA_RET_INVALID_PARAMETERS;
-@@ -537,7 +537,7 @@ static void do_ffa_mem_reclaim(struct arm_smccc_res *res,
- 	fraglen = res->a2;
- 
- 	ep_mem_access = (void *)buf +
--			ffa_mem_desc_offset(buf, 0, FFA_VERSION_1_0);
-+			ffa_mem_desc_offset(buf, 0, hyp_ffa_version);
- 	offset = ep_mem_access->composite_off;
- 	/*
- 	 * We can trust the SPMD to get this right, but let's at least
-@@ -846,7 +846,7 @@ int hyp_ffa_init(void *pages)
- 	if (kvm_host_psci_config.smccc_version < ARM_SMCCC_VERSION_1_2)
- 		return 0;
- 
--	arm_smccc_1_1_smc(FFA_VERSION, FFA_VERSION_1_0, 0, 0, 0, 0, 0, 0, &res);
-+	arm_smccc_1_1_smc(FFA_VERSION, FFA_VERSION_1_1, 0, 0, 0, 0, 0, 0, &res);
- 	if (res.a0 == FFA_RET_NOT_SUPPORTED)
- 		return 0;
- 
-@@ -866,7 +866,11 @@ int hyp_ffa_init(void *pages)
- 	if (FFA_MAJOR_VERSION(res.a0) != 1)
- 		return -EOPNOTSUPP;
- 
--	hyp_ffa_version = FFA_VERSION_1_0;
-+	if (FFA_MINOR_VERSION(res.a0) < FFA_MINOR_VERSION(FFA_VERSION_1_1))
-+		hyp_ffa_version = res.a0;
-+	else
-+		hyp_ffa_version = FFA_VERSION_1_1;
++#define __BF_FIELD_CHECK_CONST(_mask, _val)				\
++	(								\
++		/* mask must be non-zero */				\
++		BUILD_BUG_ON_ZERO((_mask) == 0) +			\
++		/* check if value fits */				\
++		BUILD_BUG_ON_ZERO(~((_mask) >> __bf_shf(_mask)) & (_val)) + \
++		/* check if mask is contiguous */			\
++		__BF_CHECK_POW2((_mask) + (1ULL << __bf_shf(_mask)))	\
++	)
 +
- 	tx = pages;
- 	pages += KVM_FFA_MBOX_NR_PAGES * PAGE_SIZE;
- 	rx = pages;
+ /**
+  * FIELD_MAX() - produce the maximum value representable by a field
+  * @_mask: shifted mask defining the field's length and position
+@@ -89,6 +99,22 @@
+ 		(typeof(_mask))((_mask) >> __bf_shf(_mask));		\
+ 	})
+ 
++/**
++ * FIELD_MAX_CONST() - produce the maximum value representable by a field
++ * @_mask: shifted mask defining the field's length and position
++ *
++ * FIELD_MAX_CONST() returns the maximum value that can be held in
++ * the field specified by @_mask.
++ *
++ * Unlike FIELD_MAX(), it can be used where statement expressions can't.
++ * Error checking is less comfortable for this version.
++ */
++#define FIELD_MAX_CONST(_mask)						\
++	(								\
++		__BF_FIELD_CHECK_CONST(_mask, 0ULL) +			\
++		(typeof(_mask))((_mask) >> __bf_shf(_mask))		\
++	)
++
+ /**
+  * FIELD_FIT() - check if value fits in the field
+  * @_mask: shifted mask defining the field's length and position
+@@ -132,13 +158,7 @@
+  */
+ #define FIELD_PREP_CONST(_mask, _val)					\
+ 	(								\
+-		/* mask must be non-zero */				\
+-		BUILD_BUG_ON_ZERO((_mask) == 0) +			\
+-		/* check if value fits */				\
+-		BUILD_BUG_ON_ZERO(~((_mask) >> __bf_shf(_mask)) & (_val)) + \
+-		/* check if mask is contiguous */			\
+-		__BF_CHECK_POW2((_mask) + (1ULL << __bf_shf(_mask))) +	\
+-		/* and create the value */				\
++		__BF_FIELD_CHECK_CONST(_mask, _val) +			\
+ 		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
+ 	)
+ 
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.44.0
 
