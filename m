@@ -1,44 +1,44 @@
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEF1158DBC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA054158DCF;
 	Wed, 15 May 2024 18:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715799084; cv=none; b=hRIeCYtCUeCni5ZX3Bh0Oj8oWJPL7uh2+P97O7PaIpFshy5/KWoCTZduat2C7xjq5ZO4LZm8gRwrx3EOuoUtE0xlFD7ivBk7oTerM0Ndsn6fLSyKOkqCOyWjfAO2VylnFjpXYhG9V4tkIzGH1yvA1nx9kpFVALbHK1CHmSDehVg=
+	t=1715799084; cv=none; b=ms4U/vOXDCq8UAJ4yL2o68/9knHvHgclJDnGC5UHmmion7kK/FJXAQGT14VEOQTX6qDaJNYPfrTGFptAEU3FX67hEtBr3ECS7s7zfG6+4WHqiTmqZ+2/YFMSLAHCxKUhdqLnFMPytgFbXahJdFKlcS3MNBp3vpCdpXT8Nhoxg3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715799084; c=relaxed/simple;
-	bh=5AJ9Az0jH6thLKSUMJAMaGVEa07l9Uyn4Cv5T2FSOb4=;
+	bh=7Quj1jKN7W7Z2LOoywxjlY+O04XG7qbDXZRojsPpPvU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cRDAPBLWhJ2A1m8V97hXJRSs+zUPJd6bhRm9aHIxK8L5smX0fkIZ8aXe9sSrXm+6smYYBgGuT+lKGPwBVl3niRgdAPQ0O239jmP6PuNAk2zOShgcYRrr69ewU20dCY3wBrapHszt/cNXV+HsKScVbRyrJowysGT8E295BXDVPGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=t4v5tbr5; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=au+gUad8sVADE6nzCuY+aDrKWvcEs2RGeTqaeHLLxSAFzBRNPd853qm3Hb1hfeieUaIQfCosHYRTM1Ki4IK0e1MehBAP75NTKNrAmOnpzWEQ+h6e43lDsg8eLhAq92K3CaOlDr7HfeUilWmbZdgCGqxOHUZaZu+R33/iKyueav4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=c4p6wLPw; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="t4v5tbr5"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="c4p6wLPw"
 Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id EDF2F12002A;
-	Wed, 15 May 2024 21:51:13 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru EDF2F12002A
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 45DE312002F;
+	Wed, 15 May 2024 21:51:15 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 45DE312002F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715799073;
-	bh=QMAt1ZjzhOa+8fsvoVbTc9wPD8ylKr2Pv+Hu9aMn9q8=;
+	s=mail; t=1715799075;
+	bh=GVAW5JWcD01T1J+UtljJWyAOeYhpdOcLrFBEHbZTD0E=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=t4v5tbr54qe2OwX475AN7ahXxy0TnC3bb5p8iCnctvxdKFwGyjdq/AT5FlIpA/7bM
-	 F6ba+fuDekQozD8Dqq02Ta3+umyqi3Z6ou9L1BLWMsmLCSF84iUNTZa8ZWNdkcVwu1
-	 CH2KS7knzhP1Lh2UHaQr0SYsr322I+elPgSIfTymeJUzSuxLSWHTrTC+UNt+xYVmt/
-	 p3TsiIKDct37hMdEfW0YgW9nKJibc+Nl8mQjkoJ62O48mK4B9/m2W5CCfOaJ7e4TKE
-	 lQ86fcKTIGFYO7oWCCNbNvdvVriBXMD1KV9XPRR9OdHqDDxNzrP8TTeMopmmSeNOBV
-	 e9CXnrPqOe7Pw==
+	b=c4p6wLPwp+qppXMRa7k/HpOAs365SYc2QacSfhVG5r8Go0Arss4mAh37jJYiJ0swn
+	 0etdyIziGy9Ymm2aza/QVaLjWwYkF4qOUCQBbhhSDsoIFZc+G30msTXwUYQQiPwj28
+	 6g/MVGTBkoiyKqUlZdLBC7sMr0fKVhtJZavHlEhWyNSJ73rQ4XU1qNlsJSTHKJa5eS
+	 P902Sic9E2D0h+YxhFj5sJumYCMZk2onam/FxE4ut7ow5ewBmXJQuNtF4bkNNwZAT3
+	 ShRitzinb9BW2GmJ3g/SF0wqOH0Lr7hGOA03PPRuY72L0MKiCshFWMd5SDxfxEmH1c
+	 WEZdfsTUP0QCQ==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 15 May 2024 21:51:13 +0300 (MSK)
+	Wed, 15 May 2024 21:51:15 +0300 (MSK)
 Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 15 May 2024 21:51:13 +0300
+ 15.2.1118.40; Wed, 15 May 2024 21:51:14 +0300
 From: Dmitry Rokosov <ddrokosov@salutedevices.com>
 To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
 	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
@@ -49,9 +49,9 @@ CC: <jian.hu@amlogic.com>, <kernel@sberdevices.ru>, <rockosov@gmail.com>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, Dmitry Rokosov
 	<ddrokosov@salutedevices.com>
-Subject: [PATCH v3 2/7] dt-bindings: clock: meson: a1: pll: introduce new syspll bindings
-Date: Wed, 15 May 2024 21:47:25 +0300
-Message-ID: <20240515185103.20256-3-ddrokosov@salutedevices.com>
+Subject: [PATCH v3 4/7] dt-bindings: clock: meson: a1: peripherals: support sys_pll input
+Date: Wed, 15 May 2024 21:47:27 +0300
+Message-ID: <20240515185103.20256-5-ddrokosov@salutedevices.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240515185103.20256-1-ddrokosov@salutedevices.com>
 References: <20240515185103.20256-1-ddrokosov@salutedevices.com>
@@ -82,61 +82,61 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/15 13:12:00 #25231738
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-The 'syspll' PLL is a general-purpose PLL designed specifically for the
-CPU clock. It is capable of producing output frequencies within the
-range of 768MHz to 1536MHz.
-
-The 'syspll_in' source clock is an optional parent connection from the
-peripherals clock controller.
+The 'sys_pll' input is an optional clock that can be used to generate
+'sys_pll_div16', which serves as one of the sources for the GEN clock.
 
 Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 ---
- .../devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml   | 9 +++++++--
- include/dt-bindings/clock/amlogic,a1-pll-clkc.h          | 1 +
+ .../bindings/clock/amlogic,a1-peripherals-clkc.yaml      | 9 +++++++--
+ include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h  | 1 +
  2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-index a59b188a8bf5..c99274d2a9bd 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-+++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-@@ -26,11 +26,15 @@ properties:
-     items:
-       - description: input fixpll_in
-       - description: input hifipll_in
-+      - description: input syspll_in
-+    minItems: 2 # syspll_in is optional
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-peripherals-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-peripherals-clkc.yaml
+index 6d84cee1bd75..2568ad7dd0ac 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,a1-peripherals-clkc.yaml
++++ b/Documentation/devicetree/bindings/clock/amlogic,a1-peripherals-clkc.yaml
+@@ -30,6 +30,8 @@ properties:
+       - description: input fixed pll div7
+       - description: input hifi pll
+       - description: input oscillator (usually at 24MHz)
++      - description: input sys pll
++    minItems: 6 # sys_pll is optional
  
    clock-names:
      items:
-       - const: fixpll_in
-       - const: hifipll_in
-+      - const: syspll_in
-+    minItems: 2 # syspll_in is optional
+@@ -39,6 +41,8 @@ properties:
+       - const: fclk_div7
+       - const: hifi_pll
+       - const: xtal
++      - const: sys_pll
++    minItems: 6 # sys_pll is optional
  
  required:
    - compatible
-@@ -53,7 +57,8 @@ examples:
-             reg = <0 0x7c80 0 0x18c>;
-             #clock-cells = <1>;
-             clocks = <&clkc_periphs CLKID_FIXPLL_IN>,
--                     <&clkc_periphs CLKID_HIFIPLL_IN>;
--            clock-names = "fixpll_in", "hifipll_in";
-+                     <&clkc_periphs CLKID_HIFIPLL_IN>,
-+                     <&clkc_periphs CLKID_SYSPLL_IN>;
-+            clock-names = "fixpll_in", "hifipll_in", "syspll_in";
+@@ -65,9 +69,10 @@ examples:
+                      <&clkc_pll CLKID_FCLK_DIV5>,
+                      <&clkc_pll CLKID_FCLK_DIV7>,
+                      <&clkc_pll CLKID_HIFI_PLL>,
+-                     <&xtal>;
++                     <&xtal>,
++                     <&clkc_pll CLKID_SYS_PLL>;
+             clock-names = "fclk_div2", "fclk_div3",
+                           "fclk_div5", "fclk_div7",
+-                          "hifi_pll", "xtal";
++                          "hifi_pll", "xtal", "sys_pll";
          };
      };
-diff --git a/include/dt-bindings/clock/amlogic,a1-pll-clkc.h b/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
-index 2b660c0f2c9f..0dfc5e78a2d5 100644
---- a/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
-+++ b/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
-@@ -21,5 +21,6 @@
- #define CLKID_FCLK_DIV5		8
- #define CLKID_FCLK_DIV7		9
- #define CLKID_HIFI_PLL		10
-+#define CLKID_SYS_PLL		11
+diff --git a/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h b/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
+index 06f198ee7623..2ce1a06dc735 100644
+--- a/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
++++ b/include/dt-bindings/clock/amlogic,a1-peripherals-clkc.h
+@@ -164,5 +164,6 @@
+ #define CLKID_DMC_SEL		151
+ #define CLKID_DMC_DIV		152
+ #define CLKID_DMC_SEL2		153
++#define CLKID_SYS_PLL_DIV16	154
  
- #endif /* __A1_PLL_CLKC_H */
+ #endif /* __A1_PERIPHERALS_CLKC_H */
 -- 
 2.43.0
 
