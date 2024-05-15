@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBEB79C8;
-	Wed, 15 May 2024 01:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203E0107A6;
+	Wed, 15 May 2024 01:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715734808; cv=none; b=DchnOauOSx5Oj/40XJ8HH6pC1+BECVDdfk9evILnk2WG91qIfJuTA+SOeaOP20iWsedf9YmwwwRLaHzeM1XSktdZZOSKH2tMffclelXsBLfBqnQLvdmTjsqG1UAUIBepmyynb1oHfHs2vfjaSUbveElaBYzrVYMyPt38R8AYSZA=
+	t=1715734808; cv=none; b=Z54P11ETZ2eLP+QsmavJTNbjPiXDh8jCLL6ZV19V6lZEazCcXZZoo+DpbNmnVhmlFXk7ETslbXSgZcIaajncfYh9CMO5YheOV61oofWvTCkmaRSyvXlIXcijQr5zL8mQ5uUZYO9ycPcI3djP75nhffbPP7IcLDkttmgWgzTWXjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715734808; c=relaxed/simple;
-	bh=EiPyaz12Hs/yvu2vb2xAWA/RYdi5EWxAwUrWQYyN7dw=;
+	bh=3riEeBhx8HzcTBEGj7bVXK60LuEYP5+ldqG1Lza6N1w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=omXYjLZAJZNkVKgFuc27xWr/qpePJh5RuQC+A5VCpKBUiyTLGGRf0aBAWJoPmkXx9JJ10zEJ7V6TZ8sI6AJ0Hz3mSnbg1rwsedW+zT1UcUMN6CVBh0kzfo0CgyzkAdcS8s1Ae1mDg4JP04fr8NeNEWxTMviU3tpEed3kwtOa+Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ELClGgbz; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=u09Xs/CSPtiFaz3KO1b7K8AB+m7WuPqJv7PsYxRKhKeW4KeGwgoAI3Q7VmapigESVGbraxFkZyojKoAg32gXFoV/cZLK3mVc/hJkpMQ3VTsrbP44/GdQ3zHXoyYPkkxllM4wsolNwdHHd4dFtAWUen3j3mUTzbzDxyd8UH5iTFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kis8Slub; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ELClGgbz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kis8Slub"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715734805; x=1747270805;
+  t=1715734807; x=1747270807;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EiPyaz12Hs/yvu2vb2xAWA/RYdi5EWxAwUrWQYyN7dw=;
-  b=ELClGgbzEWPPrOQH8LYy5ogKNpc3jx+tSlMjye+JiqFExsvgHzzG5Ct9
-   qitUmcVoDVhkpetFmKXVQPz5vbo3K958kRmRMhGVT03kWxl2yOMXpRV1l
-   8LbUHuVOAbukSalUjQQG+pKGdz0qOk53LdC849VmgH4RwWTxnPM+c11ou
-   m9S6XowJ3sIy4Kexg/CBE4bx12e/9BNqlro6U4IbhtA6j4mgHkZFGQ+PL
-   wHHZ5P2WBZXY+5wXa8IAPV48xnOhAOvnlndsOA4s65ZWz6dVJMGh0TysD
-   dVgIKg510yGYw1RLTnUyDBprb/sYn7JLzwlRuHSPAPF4+93uxjxdsxfBv
-   A==;
-X-CSE-ConnectionGUID: JscFULhURNOu5LsnGHxd2A==
-X-CSE-MsgGUID: KLCznybqRSyZBVQ8OZh0XA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11613944"
+  bh=3riEeBhx8HzcTBEGj7bVXK60LuEYP5+ldqG1Lza6N1w=;
+  b=kis8SlubXlqWRPw0CjW3BqFRbt9q9lANPwWHjQHLqXv+zwwi1LeD8cEA
+   bUw/mYu3ki4UdgDngF8adGDq44jxibmZxuTzDesXM3Guvm9sJfNPwhjlR
+   ycpSza3zY6yoiw5w2NydDTFdxlAtaUAypqZskJGmzP4ALPvhB4cDOe+yy
+   nFKVv25BgudvMCW3EKpIIWHzj1/E78bp8Gc19Q3aDT++4fLeMrwtkTij5
+   BfwvYmsvNjIMh+STOuh6E75Kvejpcgu6UKVK2dWjxNR5aZiAWmdiCakLZ
+   HNefuZ3/x6vcmj85eLqEZ3eQvoD4ikx+57hHE3Q8OTduYLAFZpUt4UWK/
+   Q==;
+X-CSE-ConnectionGUID: Q1eCECccTP2qSzmiFe906g==
+X-CSE-MsgGUID: /g9g7oVwSbCnOhZA/HoWTg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="11613955"
 X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="11613944"
+   d="scan'208";a="11613955"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:04 -0700
-X-CSE-ConnectionGUID: 59cLFGsYRK+7uA0a878tEw==
-X-CSE-MsgGUID: G3nbzKu1SHaBw238yzeYqA==
+X-CSE-ConnectionGUID: hLuB4nMQRHKGeaLU1S3wxQ==
+X-CSE-MsgGUID: jkgl2X01RX2y2ngdP0369g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,160,1712646000"; 
-   d="scan'208";a="30942724"
+   d="scan'208";a="30942747"
 Received: from oyildiz-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.51.34])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:02 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 18:00:03 -0700
 From: Rick Edgecombe <rick.p.edgecombe@intel.com>
 To: pbonzini@redhat.com,
 	seanjc@google.com,
@@ -54,9 +54,9 @@ Cc: linux-kernel@vger.kernel.org,
 	yan.y.zhao@intel.com,
 	dmatlack@google.com,
 	rick.p.edgecombe@intel.com
-Subject: [PATCH 04/16] KVM: x86/mmu: Add address conversion functions for TDX shared bit of GPA
-Date: Tue, 14 May 2024 17:59:40 -0700
-Message-Id: <20240515005952.3410568-5-rick.p.edgecombe@intel.com>
+Subject: [PATCH 06/16] KVM: x86/mmu: Add a new is_private member for union kvm_mmu_page_role
+Date: Tue, 14 May 2024 17:59:42 -0700
+Message-Id: <20240515005952.3410568-7-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
 References: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
@@ -70,108 +70,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Introduce a "gfn_shared_mask" field in the kvm_arch structure to record GPA
-shared bit and provide address conversion helpers for TDX shared bit of
-GPA.
+Introduce a "is_private" member to the kvm_mmu_page_role union to identify
+SPTEs associated with the mirrored EPT.
 
-TDX designates a specific GPA bit as the shared bit, which can be either
-bit 51 or bit 47 based on configuration.
-
-This GPA shared bit indicates whether the corresponding physical page is
-shared (if shared bit set) or private (if shared bit cleared).
-
-- GPAs with shared bit set will be mapped by VMM into conventional EPT,
-  which is pointed by shared EPTP in TDVMCS, resides in host VMM memory
-  and is managed by VMM.
-- GPAs with shared bit cleared will be mapped by VMM firstly into a
-  mirrored EPT, which resides in host VMM memory. Changes of the mirrored
-  EPT are then propagated into a private EPT, which resides outside of host
-  VMM memory and is managed by TDX module.
-
-Add the "gfn_shared_mask" field to the kvm_arch structure for each VM with
-a default value of 0. It will be set to the position of the GPA shared bit
-in GFN through TD specific initialization code.
-
-Provide helpers to utilize the gfn_shared_mask to determine whether a GPA
-is shared or private, retrieve the GPA shared bit value, and insert/strip
-shared bit to/from a GPA.
+The TDX module maintains the private half of the EPT mapped in the TD in
+its protected memory. KVM keeps a copy of the private GPAs in a mirrored
+EPT tree within host memory, recording the root page HPA in each vCPU's
+mmu->private_root_hpa. This "is_private" attribute enables vCPUs to find
+and get the root page of mirrored EPT from the MMU root list for a guest
+TD. This also allows KVM MMU code to detect changes in mirrored EPT
+according to the "is_private" mmu page role and propagate the changes to
+the private EPT managed by TDX module.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Co-developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 ---
 TDX MMU Part 1:
- - Update commit log (Yan)
- - Fix documentation on kvm_is_private_gpa() (Binbin)
+- Remove warning and NULL check in is_private_sptep() (Rick)
+- Update commit log (Yan)
 
 v19:
-- Add comment on default vm case.
-- Added behavior table in the commit message
+- Fix is_private_sptep() when NULL case.
 - drop CONFIG_KVM_MMU_PRIVATE
-
-v18:
-- Added Reviewed-by Binbin
 ---
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/mmu.h              | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ arch/x86/include/asm/kvm_host.h | 13 ++++++++++++-
+ arch/x86/kvm/mmu/mmu_internal.h |  5 +++++
+ arch/x86/kvm/mmu/spte.h         |  5 +++++
+ 3 files changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index aabf1648a56a..d2f924f1d579 100644
+index d2f924f1d579..13119d4e44e5 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1519,6 +1519,8 @@ struct kvm_arch {
- 	 */
- #define SPLIT_DESC_CACHE_MIN_NR_OBJECTS (SPTE_ENT_PER_PAGE + 1)
- 	struct kvm_mmu_memory_cache split_desc_cache;
-+
-+	gfn_t gfn_shared_mask;
+@@ -351,7 +351,8 @@ union kvm_mmu_page_role {
+ 		unsigned ad_disabled:1;
+ 		unsigned guest_mode:1;
+ 		unsigned passthrough:1;
+-		unsigned :5;
++		unsigned is_private:1;
++		unsigned :4;
+ 
+ 		/*
+ 		 * This is left at the top of the word so that
+@@ -363,6 +364,16 @@ union kvm_mmu_page_role {
+ 	};
  };
  
- struct kvm_vm_stat {
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 3c7a88400cbb..dac13a2d944f 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -321,4 +321,37 @@ static inline gpa_t kvm_translate_gpa(struct kvm_vcpu *vcpu,
- 		return gpa;
- 	return translate_nested_gpa(vcpu, gpa, access, exception);
++static inline bool kvm_mmu_page_role_is_private(union kvm_mmu_page_role role)
++{
++	return !!role.is_private;
++}
++
++static inline void kvm_mmu_page_role_set_private(union kvm_mmu_page_role *role)
++{
++	role->is_private = 1;
++}
++
+ /*
+  * kvm_mmu_extended_role complements kvm_mmu_page_role, tracking properties
+  * relevant to the current MMU configuration.   When loading CR0, CR4, or EFER,
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 706f0ce8784c..b114589a595a 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -145,6 +145,11 @@ static inline int kvm_mmu_page_as_id(struct kvm_mmu_page *sp)
+ 	return kvm_mmu_role_as_id(sp->role);
  }
-+
-+/*
-+ *			default or SEV-SNP	TDX: where S = (47 or 51) - 12
-+ * gfn_shared_mask	0			S bit
-+ * is_private_gpa()	always false		true if GPA has S bit clear
-+ * gfn_to_shared()	nop			set S bit
-+ * gfn_to_private()	nop			clear S bit
-+ *
-+ * fault.is_private means that host page should be gotten from guest_memfd
-+ * is_private_gpa() means that KVM MMU should invoke private MMU hooks.
-+ */
-+static inline gfn_t kvm_gfn_shared_mask(const struct kvm *kvm)
+ 
++static inline bool is_private_sp(const struct kvm_mmu_page *sp)
 +{
-+	return kvm->arch.gfn_shared_mask;
++	return kvm_mmu_page_role_is_private(sp->role);
 +}
 +
-+static inline gfn_t kvm_gfn_to_shared(const struct kvm *kvm, gfn_t gfn)
+ static inline bool kvm_mmu_page_ad_need_write_protect(struct kvm_mmu_page *sp)
+ {
+ 	/*
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index 5dd5405fa07a..d0df691ced5c 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -265,6 +265,11 @@ static inline struct kvm_mmu_page *root_to_sp(hpa_t root)
+ 	return spte_to_child_sp(root);
+ }
+ 
++static inline bool is_private_sptep(u64 *sptep)
 +{
-+	return gfn | kvm_gfn_shared_mask(kvm);
++	return is_private_sp(sptep_to_sp(sptep));
 +}
 +
-+static inline gfn_t kvm_gfn_to_private(const struct kvm *kvm, gfn_t gfn)
-+{
-+	return gfn & ~kvm_gfn_shared_mask(kvm);
-+}
-+
-+static inline bool kvm_is_private_gpa(const struct kvm *kvm, gpa_t gpa)
-+{
-+	gfn_t mask = kvm_gfn_shared_mask(kvm);
-+
-+	return mask && !(gpa_to_gfn(gpa) & mask);
-+}
-+
- #endif
+ static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
+ {
+ 	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
 -- 
 2.34.1
 
