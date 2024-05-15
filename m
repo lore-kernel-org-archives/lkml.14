@@ -1,193 +1,260 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2062.outbound.protection.outlook.com [40.92.23.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059C674407
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 13:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715780344; cv=none; b=Ll2GE05D5WWsIQ3xxAoGWFwsr5U1Y/mYAOb8VqiZPh9wp+lZfp78ESD8ajeUqfwKrZBw6mA035QbIv8lyVog40SBVFeV2ohshu6z7fzb+zstrf9jvnbdL4SazHY5kznvzYmPATbFPce/8JDQVEK0XRC2fDMUwvFVrdpVqufX9pY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715780344; c=relaxed/simple;
-	bh=+q68qLffCQ8ohP1Ct5Wt6hlG+Spc5lOHshUFKXtvOYo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QIaNyvfBmwy+JNENWvVWdJf76hkE0DO/mZ1wCKUGyyVeda+u/bMlgmvWr5eR+3e6nKIodgpKFUtc02BKeryc/M0UhhrWWMjECAvllOYT2K+nIS9gsErb+hSmkau8ojqi51WhY7NWKpuoltW+Aw41ZC0i1NOy+xWCTeJQ3UNWb9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3YSJsm81; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BE374407;
+	Wed, 15 May 2024 13:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715780375; cv=fail; b=MES7EFNcTmHzOWvDPMFFR3uiSvHcjk7GQU07ku8cnhWIrLuwboTxzauFRtx8g7+r/pDlaSD2plcaNYAYnfHkjxxSN0irJKlpS/XqDDf4YVHfJyJ5LBzSEBPE+FrIKvYK7E6URHuELYSA94AAcRw8uHDPNjqbqu5Y1DVchR5ciS8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715780375; c=relaxed/simple;
+	bh=/y0wDufxejP41cALddHP+/QYQI8G09SD/cz4PbFbHqs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=b1J1qDwO30yKLI+hHE2bxWoRlYzfMo/6KRFA9AeRksYC1XssUj82VcgxwlOs5DuhQiLBvYVhnMcucD9oDjTZMUPBSuq1AzoqFy5l4WGpEH0E6+BlQEEPnnXi6E2Zt3rbBaOAH5/+TRAF7JKQrhLquiKr6JehtdZ5wftvgbvVFnQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=FcmLRaxD; arc=fail smtp.client-ip=40.92.23.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3YSJsm81"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f49fc7b5e6so7682084b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715780341; x=1716385141; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPBzW+amWPhjwlTP5JQYyMHPSoVaeIQN8RijRrwrY5o=;
-        b=3YSJsm81lk/qVXDvbiqWMoNcXjgMsVWuwbljSGZBzxqMw6SDftGTBJ5DOgw2BMzsYF
-         B1BfLlqvaA0sgeu6TPpj2mjQYDxCr1BNnG+vPeXZggm3C61XQTjH+2D+tzB0GlvxG/8M
-         2c4pv7k7CwAfVMYvWBXTCj/4ZrzWhn0L4osEmkQCVkTLjAcpWzEd9caedXji15DfvDf9
-         yV1+vVmQHgvbF8mfhvn1HEXk71gdAthgokowTp0o07q0G1Ih03fzzwWqrlpBS0gpT9OA
-         7pKBOQge1QKIFDLlVplNuy4mR6l3Ynt0bCSLLcObueMECULWI//DzYri0bGFw1Tou4oK
-         LDyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715780341; x=1716385141;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPBzW+amWPhjwlTP5JQYyMHPSoVaeIQN8RijRrwrY5o=;
-        b=d3Xj5VZXVE7951q2vYFz4uLx+GOOnGoYjUfgYd+OHupz1vsGbopuk+lrhTgqcqEFiB
-         NM9/atX8eHGtfQ3nT+t+6i6izr1Le19u+Vy99NH2ilCZ8oTrTC5+9K1f9omMcel3pO0u
-         Bw86mmiu6XbRt8shBThCUR24Le2Q5lWnP4fIWW5B69CG0YLMb4PprcxRFsV3n8YBzAgz
-         9x7QkJFhcn3yxV2VTjlNxmn+pXrKd4Sd0QCAVGB30FkjIOy9JC6SZkGIGmj2jZIMMl3H
-         wwWIQ7ecEPhDmaKPP5QoqFzmhufkZOi/TRvllJ1wwVbVmprZCrfs2zGBaGqatyjd6B+V
-         OGDw==
-X-Gm-Message-State: AOJu0YwbDVX/klpYGrUMc4oPSdL9+RQqHUMkmC8fgMdDpYZFyL0D8veN
-	7TmvsyCrmHKQ4YmYMRV4ReaZb7cbCDHDXx9AK7hWThQe8UU8ow6I8aFhfbfmrD05kS0R77VoJ8A
-	82nA+Mf6PkQ==
-X-Google-Smtp-Source: AGHT+IHjhWzgWKKbS0lhm52/3G5+5pjlBVgo1aud6No+Ix3PvQKS9gPnNT9c5Qwzn6hh0RU/XCeI9fRNWs1Rrw==
-X-Received: from xllamas.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5070])
- (user=cmllamas job=sendgmr) by 2002:a05:6a00:98b:b0:6f3:ea4b:d1bf with SMTP
- id d2e1a72fcca58-6f4e01b8428mr956707b3a.0.1715780341237; Wed, 15 May 2024
- 06:39:01 -0700 (PDT)
-Date: Wed, 15 May 2024 13:37:10 +0000
-In-Reply-To: <ZkRuMcao7lusrypL@J2N7QTR9R3>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="FcmLRaxD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jqwjmZwi7ovC2MII451yT6PhppqSQJ7Wl/ZNoGcBMY5AZNv+TkCxUo5zT13IgO0TFkaTiKIXFXI8pkEDBVxn18QiacKfGTt1HaiQ2+S4aYvtr4momdMHOr1owuuNHnQ1NzJ0i4NqlEbj1+Ss9U0EXoTipWgzhAF3SOFHeletAryeTmhSIbq0OjatyPERjtyBsj28uNwlm+sTyNd1EKWGFm/7Vuhw4c7YTBDFTxuZOexra5AWzgwTClt2jupHQg0mikaBwpoLbc38ANy7uoX1e4sYBb8LRW2y/z/Z+9G9KpizdG7I8ssTYXsZrvgsn5IqEjG6bQ+AbMdhrlI1qvGPig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YjkEUe8g+NJLsMfyRLshCucuVNiW8qsppnabSjxK1f0=;
+ b=eXAQf+aVH079Ks1U3bMljwl2/PIMOAIsSw3hM2s7bX1oX816DpsrL40goQ9N2HMapODgMVAXnVEZeGTy0zm8k8UTibq2c6L3D+bnvEYhPU8icu773CZepMFm9tOXj16+Dfzbph7YlhfWPDHbgrqozpqvuqjM/nNikTsR/RyKDog0yhYcPx82Ps3XgURNrDmRX68/JKGUSgyBGsxDGFk89YRq2JJadApBemo7k5o9gC+F+bUod44R1OOBcaxhWqMp3n9A/7KTnWqqKI/44lAu6bTySnWHfr5jORm4uBWwwhr9NUPhPZIF9hOuPScwfseih46g29AQyoebexL7Uwdyuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YjkEUe8g+NJLsMfyRLshCucuVNiW8qsppnabSjxK1f0=;
+ b=FcmLRaxDfMXo8RAwg5+scHPX4bpUlvt4uVrt0c+iN0kwIsY5/GjkFitqosNOiL1GVLaf2OoLMVSicrQWjlgotyIGWiRcf+remEyogC1n+5pt5rCALmhVSDi+Paze2H/vedjz7TxP0+csIVOARJ3ZC2GyxDTcdyfA1NMPh4rn8Moj8kIS69QQfI7H1wzr82UkqryBzCI/2yhhMRUp+Q2Ntc6Gj2RLQlUeLkise94tIADWKp2zFhFvP80U0XQ4/49hxpALKCNtzHNUsptDDeKtqnSs7o4rXadwPnl42Ah4TddFVbwodwci822VdJdLIP8oFHYzbnm9kFth7+XHFXvsjg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ0PR02MB8465.namprd02.prod.outlook.com (2603:10b6:a03:3f5::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Wed, 15 May
+ 2024 13:39:27 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7544.052; Wed, 15 May 2024
+ 13:39:27 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>, "kw@linux.com"
+	<kw@linux.com>, "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
+	<lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+CC: "ssengar@microsoft.com" <ssengar@microsoft.com>, "sunilmut@microsoft.com"
+	<sunilmut@microsoft.com>, "vdso@hexbites.dev" <vdso@hexbites.dev>
+Subject: RE: [PATCH v2 4/6] arm64/hyperv: Boot in a Virtual Trust Level
+Thread-Topic: [PATCH v2 4/6] arm64/hyperv: Boot in a Virtual Trust Level
+Thread-Index: AQHaplCUXamnIjdmx0+xkzDtTqaEOLGXkUyw
+Date: Wed, 15 May 2024 13:39:27 +0000
+Message-ID:
+ <SN6PR02MB415778D73832B587A2758BD0D4EC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240514224508.212318-1-romank@linux.microsoft.com>
+ <20240514224508.212318-5-romank@linux.microsoft.com>
+In-Reply-To: <20240514224508.212318-5-romank@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [5/owsNJv55iyx2TkjaEv2zQE53GhxZTM]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB8465:EE_
+x-ms-office365-filtering-correlation-id: 326f3352-0ca5-4672-1f9f-08dc74e47119
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199019|102099023|3412199016|440099019;
+x-microsoft-antispam-message-info:
+ 8ArvXz5fz+ZigIhBNRcFPYKfLBs9cb/5zw07FU+KhuVPT4f7nLC2bVXoBMd9qVj/DnCTI/uKuXiMMzDFCo3DyBo0AZZxUz4xYPRbKwHGn609ifmxn/jrYBge4H0Q/Exr5iWvZAz60Mhxv1SNnjaQ/AhGF5qWl94riWlqMiD8tfLMnFKQjpN26IXBJGxM1QZ52/cLhLsP6EVsoRN48XKQUbw1doSplyvCOAoWSBUcl9ZTRI7Np8A3n/CdMtSdkGQ9/dv+JYhcWTs5XtGZUmmF7IH1AT5y/am8VW/cgC/YTOu9HRw/+pGQNCpPsZiKVafAkLwaL8orLt267f7I2gWX6T/VYJ7s4+hczazl0PwS1lmGZMX7D0Z9JhIi6qHIaFRx/elIYntqymKrQZvyrSuQmdhlPkmR+GRccYanKh19OqveKU5qTa6PpWKmEv4uR5FtO3O7vZ0omW19ASbPiq40igx2hTkrkTzUYXtL+9uq2G4t1hQUASBeF2AKo3AXaSoGI/63iqN4gI8PmKym58D2A79nsj7IY/7K/+dEyVpstfb3eQiF9m9nQUUy0uTiZCJV
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?j4gCvWCN4n9cMAPJviCmnML3OCS2Jwimk1szV9CzGAjKSf3zEoJK2+Rqlsxf?=
+ =?us-ascii?Q?7+DxkEo6jAlIWqT21YNaKklitzp7E6gNDot7JUonkkyPEumnNLqfMnPyEjZp?=
+ =?us-ascii?Q?PFo9qdBCOQTumPHJVoSTzuYEpisfKagOSi9liSV6nsyLBgYT1UWAVbUIWSEZ?=
+ =?us-ascii?Q?XkuW4SxgOIjxV1+wJl+95upUeABSGRP4sI5RwvaZGZvgHRzYW8xdFCVDVKzx?=
+ =?us-ascii?Q?TjjdibtCLzNVXmZJNnOUaDtIEuSErYvSuzYrTdGYyWZzjSviRKaauJl6DFli?=
+ =?us-ascii?Q?3QxxRBWeKJQsIxSghtv4umeV05vAeolTFOUBqyHP94HixG+RFtN9B4aMPhaY?=
+ =?us-ascii?Q?n9KiVaFre/UY/iQD1Sq18moDFW7Sr7pokdEgCp2AR0Usa3hlyfbWxzSfSaLj?=
+ =?us-ascii?Q?ZRwN+iRFEJg58DEm40/NVhPh4kOzu4gr8PT/y4yrcf0wmJxUB6zjzOySK3gy?=
+ =?us-ascii?Q?X/3b0j3K2FEcJ1LxHGJM7G6PwAODqsjO10Q5m7/UzpKbzMRLRl2mTs6hPv+C?=
+ =?us-ascii?Q?DF9j4fkxuvm/BtuhUS9kfdFKbiM50/05SqJdAWYeLWGLeQ8jM4zHkWjQuhdB?=
+ =?us-ascii?Q?EeLr+zAAEaAV0avFaTyZf6gkbQTTfms7g4bIQpLk/R/+T8mlqPPD7+RPj5hk?=
+ =?us-ascii?Q?BvvioE4XsqVqGv9rg/mK33LzkxuomkSMWqq5ZC+9F1tWy0oNzXWF72uX79SS?=
+ =?us-ascii?Q?dAHxpEVLAt3KmTjpM4hLju8M/W+k1tmYoySMc26Yvx1TOQ3a3qIMpni5AwXs?=
+ =?us-ascii?Q?ItmG4dO9dXlHd3k6TEvMIJIPAPEzRl9G2e1TEUXkihw28rigeXakxcJ8i12d?=
+ =?us-ascii?Q?6CYivzvGgZ4Yvjz7iy6g26+AvbI0LrPruDKMJ2l2Vm4U0tBoZQ6wX9SfPQbF?=
+ =?us-ascii?Q?COcvYCLCGFW3kRyB2Y0fZNV/OLoADjNJHhx9C+T7iSIZpvef3fi9re6BX8PS?=
+ =?us-ascii?Q?EZJ2u6F+oYHQ7orYGi/7AvrOCdG/Efs2eJ8QZsvR4n+qnUYeQldE6Qmzhra3?=
+ =?us-ascii?Q?5ozytF1nlds/41Zki9ezi/NnHtORkPxFyaa4IdJF2plWffWVtvZzwnlR4klC?=
+ =?us-ascii?Q?rkYZlFAebajN69X2XrK4nJbuVSY4so3JvMUA5G2t3y3IJmi2Ov20aBbX+P+Q?=
+ =?us-ascii?Q?/kF5VlNiBJbZfRbmV95ErP8Oxnnpt9qEgCn7eGqNk7kvTYZnAyyt17BIwqxb?=
+ =?us-ascii?Q?w+BYloYp7SUakuleLfdZ0qI+xfU7idfWtxltjpkp7/w+jJT/Q8rdQuX6EJc?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <ZkRuMcao7lusrypL@J2N7QTR9R3>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240515133844.3502360-1-cmllamas@google.com>
-Subject: [PATCH v2] locking/atomic: scripts: fix ${atomic}_sub_and_test() kerneldoc
-From: Carlos Llamas <cmllamas@google.com>
-To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Carlos Llamas <cmllamas@google.com>, 
-	Uros Bizjak <ubizjak@gmail.com>, Nhat Pham <nphamcs@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 326f3352-0ca5-4672-1f9f-08dc74e47119
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2024 13:39:27.8526
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8465
 
-For ${atomic}_sub_and_test() the @i parameter is the value to subtract,
-not add. Fix the typo in the kerneldoc template and generate the headers
-with this update.
+From: Roman Kisel <romank@linux.microsoft.com> Sent: Tuesday, May 14, 2024 =
+3:44 PM
+>=20
+> To run in the VTL mode, Hyper-V drivers have to know what
+> VTL the system boots in, and the arm64/hyperv code does not
+> update the variable that stores the value.
+>=20
+> Update the variable to enable the Hyper-V drivers to boot
+> in the VTL mode and print the VTL the code runs in.
+>=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  arch/arm64/hyperv/Makefile        |  1 +
+>  arch/arm64/hyperv/hv_vtl.c        | 19 +++++++++++++++++++
+>  arch/arm64/hyperv/mshyperv.c      |  6 ++++++
+>  arch/arm64/include/asm/mshyperv.h |  8 ++++++++
+>  arch/x86/hyperv/hv_vtl.c          |  2 +-
+>  5 files changed, 35 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/hyperv/hv_vtl.c
+>=20
+> diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
+> index 87c31c001da9..9701a837a6e1 100644
+> --- a/arch/arm64/hyperv/Makefile
+> +++ b/arch/arm64/hyperv/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-y		:=3D hv_core.o mshyperv.o
+> +obj-$(CONFIG_HYPERV_VTL_MODE)	+=3D hv_vtl.o
+> diff --git a/arch/arm64/hyperv/hv_vtl.c b/arch/arm64/hyperv/hv_vtl.c
+> new file mode 100644
+> index 000000000000..9b44cc49594c
+> --- /dev/null
+> +++ b/arch/arm64/hyperv/hv_vtl.c
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2023, Microsoft, Inc.
+> + *
+> + * Author : Roman Kisel <romank@linux.microsoft.com>
+> + */
+> +
+> +#include <asm/mshyperv.h>
+> +
+> +void __init hv_vtl_init_platform(void)
+> +{
+> +	pr_info("Linux runs in Hyper-V Virtual Trust Level %d\n", ms_hyperv.vtl=
+);
+> +}
+> +
+> +int __init hv_vtl_early_init(void)
+> +{
+> +	return 0;
+> +}
+> +early_initcall(hv_vtl_early_init);
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index 208a3bcb9686..cbde483b167a 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -96,6 +96,12 @@ static int __init hyperv_init(void)
+>  		return ret;
+>  	}
+>=20
+> +	/* Find the VTL */
+> +	ms_hyperv.vtl =3D get_vtl();
+> +	if (ms_hyperv.vtl > 0) /* non default VTL */
+> +		hv_vtl_early_init();
 
-Fixes: ad8110706f38 ("locking/atomic: scripts: generate kerneldoc comments")
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: stable@vger.kernel.org
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Carlos Llamas <cmllamas@google.com>
----
+Since hv_vtl_early_init() doesn't do anything on arm64, is the above
+and the empty implementation of hv_vtl_early_init() really needed?
+I thought maybe a subsequent patch in this series would populate
+hv_vtl_early_init() to do something, but I didn't see such.  I realize
+the functions hv_vtl_init_platform() and hv_vtl_early_init() parallel
+equivalent functions on x86, but I'd say drop hv_vtl_early_init() on
+arm64 if it isn't needed.
 
-Notes:
-    v2: fix kerneldoc template instead, as pointed out by Mark
+Note too that the naming on the x86 side is arguably a bit messed
+up. hv_vtl_init_platform() runs *before* hv_vtl_early_init().  But
+typically in the Linux kernel, functions with "early init" in the name
+run very early in boot, and that's not the case here.  hv_vtl_init_platform=
+()
+is actually the function that runs very early in boot, but its name is
+set up to parallel ms_hyperv_init_platform(), which calls it.  On the
+x86 side, I'd would argue for renaming hv_vtl_init_platform() to
+hv_vtl_early_init(), and then hv_vtl_early_init() becomes hv_vtl_init().
+But that's probably a separate patch.  Here on arm64, perhaps all
+you need is hv_vtl_init().
 
- include/linux/atomic/atomic-arch-fallback.h | 6 +++---
- include/linux/atomic/atomic-instrumented.h  | 8 ++++----
- include/linux/atomic/atomic-long.h          | 4 ++--
- scripts/atomic/kerneldoc/sub_and_test       | 2 +-
- 4 files changed, 10 insertions(+), 10 deletions(-)
+Michael
 
-diff --git a/include/linux/atomic/atomic-arch-fallback.h b/include/linux/atomic/atomic-arch-fallback.h
-index 956bcba5dbf2..2f9d36b72bd8 100644
---- a/include/linux/atomic/atomic-arch-fallback.h
-+++ b/include/linux/atomic/atomic-arch-fallback.h
-@@ -2242,7 +2242,7 @@ raw_atomic_try_cmpxchg_relaxed(atomic_t *v, int *old, int new)
- 
- /**
-  * raw_atomic_sub_and_test() - atomic subtract and test if zero with full ordering
-- * @i: int value to add
-+ * @i: int value to subtract
-  * @v: pointer to atomic_t
-  *
-  * Atomically updates @v to (@v - @i) with full ordering.
-@@ -4368,7 +4368,7 @@ raw_atomic64_try_cmpxchg_relaxed(atomic64_t *v, s64 *old, s64 new)
- 
- /**
-  * raw_atomic64_sub_and_test() - atomic subtract and test if zero with full ordering
-- * @i: s64 value to add
-+ * @i: s64 value to subtract
-  * @v: pointer to atomic64_t
-  *
-  * Atomically updates @v to (@v - @i) with full ordering.
-@@ -4690,4 +4690,4 @@ raw_atomic64_dec_if_positive(atomic64_t *v)
- }
- 
- #endif /* _LINUX_ATOMIC_FALLBACK_H */
--// 14850c0b0db20c62fdc78ccd1d42b98b88d76331
-+// b565db590afeeff0d7c9485ccbca5bb6e155749f
-diff --git a/include/linux/atomic/atomic-instrumented.h b/include/linux/atomic/atomic-instrumented.h
-index debd487fe971..9409a6ddf3e0 100644
---- a/include/linux/atomic/atomic-instrumented.h
-+++ b/include/linux/atomic/atomic-instrumented.h
-@@ -1349,7 +1349,7 @@ atomic_try_cmpxchg_relaxed(atomic_t *v, int *old, int new)
- 
- /**
-  * atomic_sub_and_test() - atomic subtract and test if zero with full ordering
-- * @i: int value to add
-+ * @i: int value to subtract
-  * @v: pointer to atomic_t
-  *
-  * Atomically updates @v to (@v - @i) with full ordering.
-@@ -2927,7 +2927,7 @@ atomic64_try_cmpxchg_relaxed(atomic64_t *v, s64 *old, s64 new)
- 
- /**
-  * atomic64_sub_and_test() - atomic subtract and test if zero with full ordering
-- * @i: s64 value to add
-+ * @i: s64 value to subtract
-  * @v: pointer to atomic64_t
-  *
-  * Atomically updates @v to (@v - @i) with full ordering.
-@@ -4505,7 +4505,7 @@ atomic_long_try_cmpxchg_relaxed(atomic_long_t *v, long *old, long new)
- 
- /**
-  * atomic_long_sub_and_test() - atomic subtract and test if zero with full ordering
-- * @i: long value to add
-+ * @i: long value to subtract
-  * @v: pointer to atomic_long_t
-  *
-  * Atomically updates @v to (@v - @i) with full ordering.
-@@ -5050,4 +5050,4 @@ atomic_long_dec_if_positive(atomic_long_t *v)
- 
- 
- #endif /* _LINUX_ATOMIC_INSTRUMENTED_H */
--// ce5b65e0f1f8a276268b667194581d24bed219d4
-+// 8829b337928e9508259079d32581775ececd415b
-diff --git a/include/linux/atomic/atomic-long.h b/include/linux/atomic/atomic-long.h
-index 3ef844b3ab8a..f86b29d90877 100644
---- a/include/linux/atomic/atomic-long.h
-+++ b/include/linux/atomic/atomic-long.h
-@@ -1535,7 +1535,7 @@ raw_atomic_long_try_cmpxchg_relaxed(atomic_long_t *v, long *old, long new)
- 
- /**
-  * raw_atomic_long_sub_and_test() - atomic subtract and test if zero with full ordering
-- * @i: long value to add
-+ * @i: long value to subtract
-  * @v: pointer to atomic_long_t
-  *
-  * Atomically updates @v to (@v - @i) with full ordering.
-@@ -1809,4 +1809,4 @@ raw_atomic_long_dec_if_positive(atomic_long_t *v)
- }
- 
- #endif /* _LINUX_ATOMIC_LONG_H */
--// 1c4a26fc77f345342953770ebe3c4d08e7ce2f9a
-+// eadf183c3600b8b92b91839dd3be6bcc560c752d
-diff --git a/scripts/atomic/kerneldoc/sub_and_test b/scripts/atomic/kerneldoc/sub_and_test
-index d3760f7749d4..96615e50836b 100644
---- a/scripts/atomic/kerneldoc/sub_and_test
-+++ b/scripts/atomic/kerneldoc/sub_and_test
-@@ -1,7 +1,7 @@
- cat <<EOF
- /**
-  * ${class}${atomicname}() - atomic subtract and test if zero with ${desc_order} ordering
-- * @i: ${int} value to add
-+ * @i: ${int} value to subtract
-  * @v: pointer to ${atomic}_t
-  *
-  * Atomically updates @v to (@v - @i) with ${desc_order} ordering.
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+> +
+> +	hv_vtl_init_platform();
+>  	ms_hyperv_late_init();
+>=20
+>  	hyperv_initialized =3D true;
+> diff --git a/arch/arm64/include/asm/mshyperv.h
+> b/arch/arm64/include/asm/mshyperv.h
+> index a975e1a689dd..4a8ff6be389c 100644
+> --- a/arch/arm64/include/asm/mshyperv.h
+> +++ b/arch/arm64/include/asm/mshyperv.h
+> @@ -49,6 +49,14 @@ static inline u64 hv_get_msr(unsigned int reg)
+>  				ARM_SMCCC_OWNER_VENDOR_HYP,	\
+>  				HV_SMCCC_FUNC_NUMBER)
+>=20
+> +#ifdef CONFIG_HYPERV_VTL_MODE
+> +void __init hv_vtl_init_platform(void);
+> +int __init hv_vtl_early_init(void);
+> +#else
+> +static inline void __init hv_vtl_init_platform(void) {}
+> +static inline int __init hv_vtl_early_init(void) { return 0; }
+> +#endif
+> +
+>  #include <asm-generic/mshyperv.h>
+>=20
+>  #endif
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> index 92bd5a55f093..ae3105375a12 100644
+> --- a/arch/x86/hyperv/hv_vtl.c
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -19,7 +19,7 @@ static struct real_mode_header hv_vtl_real_mode_header;
+>=20
+>  void __init hv_vtl_init_platform(void)
+>  {
+> -	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+> +	pr_info("Linux runs in Hyper-V Virtual Trust Level %d\n", ms_hyperv.vtl=
+);
+>=20
+>  	x86_platform.realmode_reserve =3D x86_init_noop;
+>  	x86_platform.realmode_init =3D x86_init_noop;
+> --
+> 2.45.0
+>=20
 
