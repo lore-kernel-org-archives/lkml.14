@@ -1,58 +1,57 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB283D3BF
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 04:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B319241A91
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 04:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715748762; cv=none; b=FtXsbAvCFllV73Cb3wK1OUZjT/eZ3Tb4uc+/dLDBB4V+8p+hV7+a/xu5V8LmDVYrm/UhPJF8zbSm8jCsogiuMiJa40iauaWZlpYY0Enr3B3EzWhEuiq3Xar029a5iO+kgtn/Nah0uV6dkmNjEkanB1ouKmKPpkZuSO1ttcsGBqk=
+	t=1715748764; cv=none; b=TB4X+7cvMeZYu4Ibu6L9X0VvPhlCLx2BZhuc/5bXthk68NBauf6Q05cQ2er0PHeh/QnzZenGOH8odakovsoJ9b7OYvS3DnKmZ27Y3s3AVyzRvSj5O8lmCZvg6A+nhQUqRkJfXJ3pe3ZNVIRSFGDhMRpg26OIxllBMnJmCwISem8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715748762; c=relaxed/simple;
-	bh=IiCfIcPfdct1tRc1QEwBDItQrFk8/iTPGsEHpxX+aug=;
+	s=arc-20240116; t=1715748764; c=relaxed/simple;
+	bh=G4Wl0EW7TkdNWDaEvnSEH82i035fcRPaWk9aCJ5U+Xg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J+OvMsyawPzg7z/MAuY90dXjdcs78RxvKDM1YFCRCoQF5GviwZtb/jhg1NTI7603LA9Q92Akjtmas6NA6pk8CGaa6bpJ4xzDDWoJudiEeGAz1kdfAHrnSdZGtojkeF178STuzIDmDaLqsG5QmK/UaK8dAmwOr/wr2l+D4gbJ9fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=DfF5Z0Wb; arc=none smtp.client-ip=209.85.167.173
+	 MIME-Version; b=YmvhTENAkPmt8ht+IegqwBsUhhH/J/2HLgpg70urtjQNJIuHST+PeJS5sTVKcX8v1+iDiaY9OmH9Ej4OL8+tF+AIHPVi9rJ2kwLJ+wPVFfqBZ8MBM9mtLP2vX7vLCoE2OFa3IGI4GIMilnFHsM+jX2H48zLW3BpZ5++40UGrIPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=g5sMK1H8; arc=none smtp.client-ip=209.85.161.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="DfF5Z0Wb"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c9b94951d5so589738b6e.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:52:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="g5sMK1H8"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5b295d6b7fbso2446265eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 21:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1715748760; x=1716353560; darn=vger.kernel.org;
+        d=darkphysics.net; s=google; t=1715748762; x=1716353562; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X3J9d19BBdCUNbsHdCNFFy7/2dgsskyle09cVkBE7Rg=;
-        b=DfF5Z0Wb1tliOM2kbzfIXu2IRElYhv/eiK11csoSTmCp07oNd6BUSA5et8sdyu6hp/
-         03mgLSA9YsigpRG1Xr33+8owUFHZsGzPeV5a6vo0LBDOa8QAkIt1ABMHPtam/bKSLTJa
-         FoEkRpDueKbfiXUVP9wJwDfn/NF+/JZ/JlpXUmCBL/9Ln0eEpvzWiHmFvJw0QryQ4l4a
-         edxWmbUmX/8adixplFPxpLrw/u3SljDYi6dTfROK0ZlOSQDed3AMEw/HFmhGHt8BXzLr
-         jN2QuHGifJpgal17mRwAbRvY9/DKxrpVM7hUb1XkYcjIBkd5nYTEdsIq68d5qbWKpBKE
-         XAfA==
+        bh=3v6sT1qmzrcclK3POxawe36qikIVYRE9ws3li7lPq08=;
+        b=g5sMK1H8Ua2LM1X+XzcBf4SLpdkNYOHEE+cG92mTiGFywDJzmvKFKhnemvaLp11ccC
+         S//mOXjCnOTD5+MyOnvIeGdsvUTx5IFnEvpvTrUl5Jb6QpOKIwqjyp1Om4BY5oIiI/fI
+         gqVE2SNmijv3C6ARwaEuacn9IELgrhEi2F2k8CRTazqj8Pdty/tby4Y2GAd++Vp4HhUM
+         /HRPK7snM6Xb7cNl1i+lYjIN4XD6iftpf4Ki+Y3oy/3JXSUThEc57LcI2sVZxJRSy/Um
+         PNOsBOoJQOgOxIF0+q6PfMWfvUv15l+LuJp0+63tgwhZl4Egrj9Wtw3RWVUe2BYrETMv
+         66gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715748760; x=1716353560;
+        d=1e100.net; s=20230601; t=1715748762; x=1716353562;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=X3J9d19BBdCUNbsHdCNFFy7/2dgsskyle09cVkBE7Rg=;
-        b=DzbzzGvw3tL10bDRDmaBJX9yF6n3hE7de7x90aJ65TDfWuPD+II3f5KqTXLPyL8sbF
-         mL0DNpvekVUCm6oARi6wsVpHGxoMDWvVWsVdpnjPkiT64q0psjxeendO7p4tYVhZoLIL
-         DTNpBZ6N9ZAIOo5ruJIoyJURM9h125lTTfiPYzYismqW2fWBu4oAPqNybvCIovU9J03j
-         ztbe1P7DkUWK8GoiqduEjhnRnS5qih6J7259TV0ojhZJ7iO+Q4U9OVRQTySfEP5iAFWs
-         +r810RDMfbL0LD485UMW/wb90kNb5va9da40lptRGImSkQrKae3OcTayZQSL7SOW3kH6
-         MfEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDxjxDidofAT+UXGEJN/0qWGJMGODjYcpmVozHaeJuVdA+8H+60f1bWlrZ/rxehg294C8D3gI0Z/b1pgVO0CtAmR9YL3IeJXwabiXj
-X-Gm-Message-State: AOJu0YyElC5JTGXH9y1s5EYTEh7FqlSKJiPNmYxOIC7tyo3AteORVcOx
-	VbuUsDATihaZJQ6k4xg14xkF15YdzoCVDQRZ4cy3SXKzWQzf+hiGrQKYWCgIfne3dx1/KPjaPcX
-	n
-X-Google-Smtp-Source: AGHT+IHA8WlMRLFaio5MReMR2UzSmY2IeFqtsVVmmSP4eZkT7ywqMi0MQpyya3/ZXC/g7YVyl/2hQA==
-X-Received: by 2002:a54:4484:0:b0:3c8:2c20:718c with SMTP id 5614622812f47-3c99702a852mr14038489b6e.2.1715748760241;
-        Tue, 14 May 2024 21:52:40 -0700 (PDT)
+        bh=3v6sT1qmzrcclK3POxawe36qikIVYRE9ws3li7lPq08=;
+        b=tdfotYCQg+ASgEf9Pz3y2miRBAWGk1QYQRt54kXCNNDUjn60tY/I4VuH3cyrkq6+b5
+         PM2zCLBl/z2YvJETXCF6QK87ln7AMQEn5Dz7Vly4uETkYrmqhbTVxrjds28J58Shorgd
+         C3QV499bqIqKtnwqfsGIorHVzhEdlNiYg9QhYRLMJzXWAoybxwEOB4z7T3fSz7+JIr0p
+         fM5mnUyitm11mujI304g0pOazfJ4Mzbv8kpWcf6cq0ur6h1yHiUzyBtbRDncpApMXnOG
+         N+OilafSD5DEmVQJlx/MarCUo+m47Ft2lvKVFzvl9F39c9em7vgxeUj5DLpOg9DafTfd
+         WYKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWxrZG7KpKcnk+aeksrmaKe8h6vkbzx2YkZQ6f6RTCCurScz3Wx5A1n130MroYXU8jUELPn7QDjhKq94m/+9o5FA8OHn0MmYp9lqxE
+X-Gm-Message-State: AOJu0Yz8daT76XHOX1bgLdfCGn+MT4CefFO5uFtbNX7HmJu79H2t791l
+	Naqgj7ojOu5D8/16HXoP5bhC+khidagsxxSYLtzpGtjM6efFebKxOXyjukg1ZGw=
+X-Google-Smtp-Source: AGHT+IEro0x8SgQC8g7l1699kTobqLsA4XG9sl4xwdXejRWKjL8eEnw+X9b+m908k1fuIELveG67Gw==
+X-Received: by 2002:a05:6870:7b52:b0:239:701f:fc32 with SMTP id 586e51a60fabf-24172a23544mr17003915fac.9.1715748761893;
+        Tue, 14 May 2024 21:52:41 -0700 (PDT)
 Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a827fdsm10135035b3a.60.2024.05.14.21.52.39
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a827fdsm10135035b3a.60.2024.05.14.21.52.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 21:52:39 -0700 (PDT)
+        Tue, 14 May 2024 21:52:41 -0700 (PDT)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -60,9 +59,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 08/31] Staging: rtl8192e: Rename variable elementID
-Date: Tue, 14 May 2024 21:52:05 -0700
-Message-Id: <20240515045228.35928-9-tdavies@darkphysics.net>
+Subject: [PATCH 10/31] Staging: rtl8192e: Rename variable rtllib_rx_InfraAdhoc
+Date: Tue, 14 May 2024 21:52:07 -0700
+Message-Id: <20240515045228.35928-11-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240515045228.35928-1-tdavies@darkphysics.net>
 References: <20240515045228.35928-1-tdavies@darkphysics.net>
@@ -74,41 +73,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename variable elementID to element_id
+Rename variable rtllib_rx_InfraAdhoc to rtllib_rx_infra_adhoc
 to fix checkpatch warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
- drivers/staging/rtl8192e/rtllib.h    | 2 +-
- drivers/staging/rtl8192e/rtllib_rx.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8192e/rtllib_rx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index 3722fc0cae1d..4645fe803a15 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -728,7 +728,7 @@ union frameqos {
- #define QOS_VERSION_1		   1
- 
- struct rtllib_qos_information_element {
--	u8 elementID;
-+	u8 element_id;
- 	u8 length;
- 	u8 qui[QOS_OUI_LEN];
- 	u8 qui_type;
 diff --git a/drivers/staging/rtl8192e/rtllib_rx.c b/drivers/staging/rtl8192e/rtllib_rx.c
-index 19cb717df3bb..76389aef53ee 100644
+index 108fe1520cf9..ea8cab9707bc 100644
 --- a/drivers/staging/rtl8192e/rtllib_rx.c
 +++ b/drivers/staging/rtl8192e/rtllib_rx.c
-@@ -1456,7 +1456,7 @@ static u8 qos_oui[QOS_OUI_LEN] = { 0x00, 0x50, 0xF2 };
- static int rtllib_verify_qos_info(struct rtllib_qos_information_element
- 				     *info_element, int sub_type)
+@@ -1223,7 +1223,7 @@ static void rtllib_rx_indicate_pkt_legacy(struct rtllib_device *ieee,
+ 	kfree(rxb);
+ }
+ 
+-static int rtllib_rx_InfraAdhoc(struct rtllib_device *ieee, struct sk_buff *skb,
++static int rtllib_rx_infra_adhoc(struct rtllib_device *ieee, struct sk_buff *skb,
+ 		 struct rtllib_rx_stats *rx_stats)
  {
--	if (info_element->elementID != QOS_ELEMENT_ID)
-+	if (info_element->element_id != QOS_ELEMENT_ID)
- 		return -1;
- 	if (info_element->qui_subtype != sub_type)
- 		return -1;
+ 	struct net_device *dev = ieee->dev;
+@@ -1431,7 +1431,7 @@ int rtllib_rx(struct rtllib_device *ieee, struct sk_buff *skb,
+ 
+ 	switch (ieee->iw_mode) {
+ 	case IW_MODE_INFRA:
+-		ret = rtllib_rx_InfraAdhoc(ieee, skb, rx_stats);
++		ret = rtllib_rx_infra_adhoc(ieee, skb, rx_stats);
+ 		break;
+ 	case IW_MODE_MONITOR:
+ 		ret = rtllib_rx_monitor(ieee, skb, rx_stats);
 -- 
 2.30.2
 
