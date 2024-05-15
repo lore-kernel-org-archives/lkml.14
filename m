@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C573B38DE9;
-	Wed, 15 May 2024 17:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B8A156657
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715793608; cv=none; b=YAM2080RH+xjkTiQPdfK8+NG9t31BxU6Oup2xt377hbPZfjTCgASBK8KYFxC/MQBZgTcNr27GfJ0UoAj9hesgA0BVw/DPc28pEg6v+GYnKsc3ZZcqd1eF3OVOxkoD9EL8QGpwNmAGggvVnlA9GLwG2ud6aq9MMwIju6dRz2OOqY=
+	t=1715793613; cv=none; b=nAOXSHBOw12byHUj3Pg2eNt9/Ebik767bkLdmrwcQcJITMI8ZUi5fZAqILLjL60mAXBNmcgazAJVC8K5K3BUG1NzR1aoyr69lBrYIcWfnbxG7vol1iqkKwDim7/q9RGC9qacSowHbVCCV5MY6YU5A6mPbEL9GvCpoJrMWOxgWTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715793608; c=relaxed/simple;
-	bh=PDCAtBJJsZQWI8/lbOPR4SI5lHA/YI+4rWdxytXXhOU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EaFFHMSvjlg+QVvrBg8GXcdF8Pfpa259ITlJxRvRqzzpIi3oBdhla+QNByTZJRGShHcMzXOygSl3ybgw/gag2kqF/cQ5SM46pL36CN1kAKpaQE1a1DFChiDPZ4rllRVyEy2Ut9Fl0kWs2AJhBnnYzYSzk8N0kA04ApnZkhhJAQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgkRZbAX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715793613; c=relaxed/simple;
+	bh=evynaZF+OdsmiraBszgjNj6hgX4XcROF8T2Q9yrv3ds=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YUW5oTalq/QFM+WxH+/lXfG0Po6CYscvxluBZcODvJ1EuNmjQQ3orcETdEfPN4gFlOK5qRGw04R/l8fKLt7vI3eKlHLuJ/LjDPx8uy5tdXw2cZr6W/N9DqMqqvb3QgDwh+TUAtobWJ+hCfbH41rv9EA5CCtPvTBtUiDITqjs5/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcpyKTRE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgkRZbAX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A67DDC32781;
-	Wed, 15 May 2024 17:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcpyKTRE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 11947C116B1;
+	Wed, 15 May 2024 17:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715793608;
-	bh=PDCAtBJJsZQWI8/lbOPR4SI5lHA/YI+4rWdxytXXhOU=;
+	s=k20201202; t=1715793613;
+	bh=evynaZF+OdsmiraBszgjNj6hgX4XcROF8T2Q9yrv3ds=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JgkRZbAX4kvSb7xoc+rJJ0TMuV4TlT++0qO92dvZfePlL/6cX9Avk9ZQj8CtQKzld
-	 C5Q+zI/zQ1OT9Fed8fPjDzmb1o0+G8Q+SYdy2CAfdhy7YMV3X0VL0RBKqpiTbvAa0b
-	 E+3s7oO3FD30PmCx6JjkR/rIs+Rp52Mqgx3BrQdYpGXd5GKvbaDBRi9wTN+mkMU8Ul
-	 ufplTTEqh7E84Zz19fCi2t9HjxOyQQOne0eFFjSsl0ZnucNBDIDAH5nHlTEGxYxT4d
-	 1ws3GKYJLrv6TkK/cV4ASgrUg8bM6/D4/ADnGVjwI5cAhjvnCqxm8uqEdjEVZE0lpZ
-	 zrGardYxftOEw==
+	b=GcpyKTRExXUD57W/csLHMlk4AGhEijnP+27w4WQJR7tz2emsnDW5BV+zMOwsvoVMG
+	 mvIQ7lUYTtp76Og/PumJYFICR8zqoYHM5jVmPyzHNgNy4+ENGmyCjqEo7EX6kTXSjM
+	 kRw9ouHmguxOYzWxgp+d04Bl3SYx/DzVzLVEuEFZ/eqlb1WUI4A92/RQ9gJaT9i7G2
+	 c7dEbSNmH0ro51Bdr5OBLxhRD/i54tRDkoKJ5LyhrfprgU5XJDlB0RXLO5PdybzyxH
+	 bi09YQ7OEMJzdvHUBTCqL31ozDMuqepV6l2Dv4w0m7sPJcjSEN3ZRtknPf5m1xvDcz
+	 I/Ch3QIDTpgog==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 91FADC43332;
-	Wed, 15 May 2024 17:20:08 +0000 (UTC)
-Subject: Re: [GIT PULL] fbdev fixes and cleanups for v6.10-rc1
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 08C2EC433A2;
+	Wed, 15 May 2024 17:20:13 +0000 (UTC)
+Subject: Re: [git pull] drm for 6.10-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZkTQ9JoGXFwuMzZS@carbonx1>
-References: <ZkTQ9JoGXFwuMzZS@carbonx1>
-X-PR-Tracked-List-Id: <linux-fbdev.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZkTQ9JoGXFwuMzZS@carbonx1>
-X-PR-Tracked-Remote: http://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git tags/fbdev-for-6.10-rc1
-X-PR-Tracked-Commit-Id: ce4a7ae84a58b9f33aae8d6c769b3c94f3d5ce76
+In-Reply-To: <CAPM=9tw-53PCvveRcdLUUQ+mjq2X2er5zp6n1KeE8Nu8x=VP2g@mail.gmail.com>
+References: <CAPM=9tw-53PCvveRcdLUUQ+mjq2X2er5zp6n1KeE8Nu8x=VP2g@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9tw-53PCvveRcdLUUQ+mjq2X2er5zp6n1KeE8Nu8x=VP2g@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2024-05-15
+X-PR-Tracked-Commit-Id: 275654c02f0ba09d409c36d71dc238e470741e30
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d34672777da3ea919e8adb0670ab91ddadf7dea0
-Message-Id: <171579360857.17791.12648387199973228616.pr-tracker-bot@kernel.org>
-Date: Wed, 15 May 2024 17:20:08 +0000
-To: Helge Deller <deller@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+X-PR-Merge-Commit-Id: db5d28c0bfe566908719bec8e25443aabecbb802
+Message-Id: <171579361303.17791.11513989633899043227.pr-tracker-bot@kernel.org>
+Date: Wed, 15 May 2024 17:20:13 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 15 May 2024 17:12:52 +0200:
+The pull request you sent on Wed, 15 May 2024 16:20:56 +1000:
 
-> http://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git tags/fbdev-for-6.10-rc1
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2024-05-15
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d34672777da3ea919e8adb0670ab91ddadf7dea0
+https://git.kernel.org/torvalds/c/db5d28c0bfe566908719bec8e25443aabecbb802
 
 Thank you!
 
