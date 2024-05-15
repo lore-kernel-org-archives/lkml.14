@@ -1,129 +1,157 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670CC1591EC
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 21:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC931591EC
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 21:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715809457; cv=none; b=GOOujOu1XyqdGcjM2AdOoo1Gz+GnfStmWrTzHLrYES5LqnSROBNmYgPIvyPPj1SYlOFRjE+4WDPTJtPFkUAW/Goc27vqVDvXMf4koWt/CnXtPGfnQMNnma/Sb18XPMoBuQgj3croTytaO7tWqXXrcxrQNbBO5NmqxYhjRBlNWIc=
+	t=1715809523; cv=none; b=IROWThsoShRdgooj7cSloCm4iDQfGCogxkSqhVjty3ZRfUrQxyJB/4SbqLlDnYzbJ9xLM8w6nk/oIPQN/jqPFoWSPb2KJIWlW/MRTV1LJP06Omt9TxYfSucSQP8HpAwoqtelgy1xpI8iisjmVF7WaPK6MKOj+O578yG9VCvGE8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715809457; c=relaxed/simple;
-	bh=ApuZNMJslBQLqy7HHjl6yRMqhIQCdRkH2uclIOB/2f4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OknnGqz2g8mvOlYPpfz5wNlv5d7XwfOyb++ZVxQ33UBgOaonBhSwI/PKEknEAwpjdv1g7330Am5eaaTSXiovEBJ2esnIIM/C/oJ2CsfXF87Sd+oKfCoF00A/566ztPJ4AsD+orxavMhi0OXekGGfgf6Nf2g+huCsJSW66M7P+n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CPWJlKnv; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715809523; c=relaxed/simple;
+	bh=rWVXe8EK8zuor5fASSIBJOrz7ixoDWOPIz67x1T8VEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQF8VoNPEz26yR5ulfJYKXZwseTBSFwBAWDjejrEhafF1DbfC4BxLJs8Xr2B41hDbo674r1IVnsS5ZlYSyz3rKEi6Yf4nn+zfelBUoZjfkI/HhyJiaJFSct85WdoFxw7y7U7+Ev62NNM7QTxNRbKZ9rAEMij5RtoFPnK9UM8j7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ferroamp.se; spf=pass smtp.mailfrom=ferroamp.se; dkim=pass (2048-bit key) header.d=ferroamp-se.20230601.gappssmtp.com header.i=@ferroamp-se.20230601.gappssmtp.com header.b=kMnOfE9x; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ferroamp.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ferroamp.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CPWJlKnv"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-481f046f077so1373499137.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:44:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ferroamp-se.20230601.gappssmtp.com header.i=@ferroamp-se.20230601.gappssmtp.com header.b="kMnOfE9x"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51f40b5e059so91625e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715809453; x=1716414253; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2LhmIS1ZUKIMCKnNa20yLc90W6YIAkEHSgeorRThhcY=;
-        b=CPWJlKnv4hEUzsibh2z3eYSklUuazrA7HT/mMDX//byKQpVsmJ3ca/2etSMEP5m4xJ
-         D3R7IcOkdO3GDUSi/OpLs1mHpckh92WvRLHg9QKQbV/ifJzOM5FgqN98q037PEw9fsBI
-         KgcM7zEvCSakt6Hav4xl6kiytdOs8DrcrVaII=
+        d=ferroamp-se.20230601.gappssmtp.com; s=20230601; t=1715809520; x=1716414320; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XjmRDxQfwrSVo7FgVNJ9NzsqQ8BDBTlwFbjqeW7nvHk=;
+        b=kMnOfE9xoPQaoYOQRSstkYToyB6e0gEVuvN5aRaSYcOXe8yiwaP2euFBnZIcx8FUug
+         wl0y8q0EkPMTDEf/7uS1ofaRlOhMLfgCs+qqNWMqtRA99W/MklfJStSOQyIb4s3jFz0r
+         DBhFoXe2tNBQwgNVd75Z15U7zbI4D68dUddk6s7juyUUstmF9PM7GLaO4SYppihA6SJp
+         +9lk7OPv0uovqmMXD5VvcJWPEPnaqC0K9iPgFkFpj/24XVyX/7JN0B3pl/XxPudsfaxO
+         S9tvHVvoHspNa8HIYPD7xnhDZ/2QzPiRLs/g5crWZI8wppbLRkLjVY+P9bCEhNhTeVuB
+         UbFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715809453; x=1716414253;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2LhmIS1ZUKIMCKnNa20yLc90W6YIAkEHSgeorRThhcY=;
-        b=wUJHcDqh+6xQkkuFLwXmyvt5LFRYlG9tseGxhaZRuAXEUCYhzrWYKPaKbUSfodaN3j
-         6qwuY//zcpssnuudF5/ANr7V1lDa0pfn11OTUMr/MfQ2aliYDSmhbcnCVbAN2Cw3oBkr
-         yr92KJJs+VND2b5w8+6VHih8sJwjwEEOeIJmEVBypUgf5YpY1wu/Y9KirfWEWp9lANr6
-         MjjZeRCPKZbozDTnT05T+8CgNKUcD3XKLuFE9IFoIUwhabWb/qRJMPY7VsKUy/Bhx58T
-         Ep04YINV0I9BGAjZdYvYHRCwROfHMIg67nka+4qcabHRgnhA5ffvZuEqbyytni6ovSJu
-         Ar6g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3K1OMjGTmZT76wSKC8ZsxP22UhmdWlxmRrYVmYoxEC6okkZv/zWZI8OusS8Ar1r0nJdx0EKl2wS8zwp3e/Bwokd8sV9mpGwj2U0MR
-X-Gm-Message-State: AOJu0Yyx8QHoi8fnl+8BxkZJZWYnVY8+vGVG/QklBMhlPKADPhxaI4n9
-	eDQ3ZJMiWA56NYiPfzdDCEvRo3BG1wbaESeHWbLRbiRW8TpPmU6Zdba3xeSiXi7RG8iOYSKA1rM
-	tqK0P7z0U5nK17OyBjbKuKghQzm/TadwfjmzK
-X-Google-Smtp-Source: AGHT+IGH16ZmySUrlqY8aaHs9apVSVlN1Qm8fPJYMVvOFAgI7l+LReVhDSnkNZV7XZ+ktVhsQMcI+Rmk16oMO2qRKfA=
-X-Received: by 2002:a05:6102:dcf:b0:47c:5dad:a01f with SMTP id
- ada2fe7eead31-48077dff8b5mr18693854137.10.1715809453364; Wed, 15 May 2024
- 14:44:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715809520; x=1716414320;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XjmRDxQfwrSVo7FgVNJ9NzsqQ8BDBTlwFbjqeW7nvHk=;
+        b=oT3sQSoMB+pU7baaOqMTzkzRXMTrciKj+Q/3yd0I7YLb3DC1JnU/cSm4xKHhgXyesN
+         OHfzkKWMzoQhCqsodTgCvthTWN2XxzavFUc7CX0ESwH5XNnOKwVdqqvWr14531OlafhJ
+         icXy6VXPEkQa12NOanO1sCqu87CKDioVT8fZp3k5h/MBOOuiv/ac0YUBxdkNYsyJpPy1
+         kru+0lvJTFbUMQfh0X2+m3dDaHz9qeKMF8+8pnDI6zV7I2bZ3caGvF28bBaWSj78BHGC
+         gkdG0I2xpEzGr3KIzws2cMaQmB/52LUdHdEDSTyQ7wnpaBwKHcG0U/jHT72W42infbSb
+         5K0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWy5s3V55uIaMdbFV3f04ENL5NpHvQaplcTeRgiyp2J5M3hf5c9ZSuhbMzBISP+TEpmG1Ld83wyKuSV9pKJVu2jXTA7tCmOlm2BffWu
+X-Gm-Message-State: AOJu0Yzvl9r55LDEmFfV4YeVquTLWUD9cemfBsRzesUJrBZirqnLRjLO
+	kFKx5pgJWrAFCR6gUFZMI/D6pDHOkIk+C8DFELYVFXWlEM4LXX74u3pWq0r+pHE=
+X-Google-Smtp-Source: AGHT+IEnYE9TDIr0bsxv8FHQ2ZX4z1MlzqN0fUSdhL1PVlWbtVNLfhI90eUHt9V5HsojMo9Ofq9YGQ==
+X-Received: by 2002:a05:6512:3ee:b0:51b:518e:5679 with SMTP id 2adb3069b0e04-5220fb74281mr10650877e87.18.1715809517579;
+        Wed, 15 May 2024 14:45:17 -0700 (PDT)
+Received: from minibuilder (c188-149-135-220.bredband.tele2.se. [188.149.135.220])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f35ba41fsm2636895e87.114.2024.05.15.14.45.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 14:45:16 -0700 (PDT)
+Date: Wed, 15 May 2024 23:45:15 +0200
+From: =?iso-8859-1?Q?Ram=F3n?= Nordin Rodriguez <ramon.nordin.rodriguez@ferroamp.se>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Piergiorgio Beruto <Pier.Beruto@onsemi.com>,
+	"Parthiban.Veerasooran@microchip.com" <Parthiban.Veerasooran@microchip.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"saeedm@nvidia.com" <saeedm@nvidia.com>,
+	"anthony.l.nguyen@intel.com" <anthony.l.nguyen@intel.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"Horatiu.Vultur@microchip.com" <Horatiu.Vultur@microchip.com>,
+	"ruanjinjie@huawei.com" <ruanjinjie@huawei.com>,
+	"Steen.Hegelund@microchip.com" <Steen.Hegelund@microchip.com>,
+	"vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>,
+	"UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+	"Thorsten.Kummermehr@microchip.com" <Thorsten.Kummermehr@microchip.com>,
+	Selvamani Rajagopal <Selvamani.Rajagopal@onsemi.com>,
+	"Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+	"benjamin.bigler@bernformulastudent.ch" <benjamin.bigler@bernformulastudent.ch>
+Subject: Re: [PATCH net-next v4 05/12] net: ethernet: oa_tc6: implement error
+ interrupts unmasking
+Message-ID: <ZkUs6-QC8RypslF0@minibuilder>
+References: <ZjKJ93uPjSgoMOM7@builder>
+ <b7c7aad7-3e93-4c57-82e9-cb3f9e7adf64@microchip.com>
+ <ZjNorUP-sEyMCTG0@builder>
+ <ae801fb9-09e0-49a3-a928-8975fe25a893@microchip.com>
+ <fd5d0d2a-7562-4fb1-b552-6a11d024da2f@lunn.ch>
+ <BY5PR02MB678683EADBC47A29A4F545A59D1C2@BY5PR02MB6786.namprd02.prod.outlook.com>
+ <ZkG2Kb_1YsD8T1BF@minibuilder>
+ <708d29de-b54a-40a4-8879-67f6e246f851@lunn.ch>
+ <ZkIakC6ixYpRMiUV@minibuilder>
+ <81170ef6-2b16-4d7f-85b1-4c3fecdc8853@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+Y6NJFyi6e7ype6dTAjxsy5aC80NdVOt+Vg-a0O0y_JsfwSGg@mail.gmail.com>
- <Zi0VLrvUWH6P1_or@wunner.de> <CA+Y6NJE8hA+wt+auW1wJBWA6EGMc6CGpmdExr3475E_Yys-Zdw@mail.gmail.com>
- <ZjsKPSgV39SF0gdX@wunner.de> <20240510052616.GC4162345@black.fi.intel.com>
- <CA+Y6NJF2Ex6Rwxw0a5V1aMY2OH4=MP5KTtat9x9Ge7y-JBdapw@mail.gmail.com>
- <20240511043832.GD4162345@black.fi.intel.com> <20240511054323.GE4162345@black.fi.intel.com>
- <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
- <ZkUcihZR_ZUUEsZp@wunner.de> <ZkUgX_bslFMbL5c-@wunner.de>
-In-Reply-To: <ZkUgX_bslFMbL5c-@wunner.de>
-From: Esther Shimanovich <eshimanovich@chromium.org>
-Date: Wed, 15 May 2024 17:44:02 -0400
-Message-ID: <CA+Y6NJGemB2Jue6hK766571AxxFSZKissRFt4C9y994xRQ2_MQ@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <81170ef6-2b16-4d7f-85b1-4c3fecdc8853@lunn.ch>
 
-> Hm, why would I have to distinguish between the two?
->
-> I distinguish between Thunderbolt PCIe Adapters on the root switch
-> and ones on non-root switches.  The latter are attached Device Routers,
-> the former is the Host Router.  I just set the ones on the former to
-> external_facing, fixed and trusted.  Everything downstream is untrusted
-> and removable.
+> > Good input. I'll add some instrumentation/stats for how many jiffies
+> > have elapsed between releases of the worker thread and for the irq
+> > handler. I can probably find a gpio to toggle as well if it's really
+> > tight timings.
+> 
+> What might be more interesting is the interrupt status registers. Is
+> there a bit always set which the driver is not clearly correctly?
+> 
 
-Thanks for the explanation. I'll try adding the kernel config and
-command line parameters you mentioned, and share any additional debug
-info I find.
-What I did previously was use a pr_info line inside the tb_pci_fixup
-function. That's how I knew that the function wasn't visited.
+Ah great point, I'll dump the irq status registers when things go awry.
 
-I am testing on ChromeOS on a non-ChromeBook so there might be some
-additional security settings that prevent the Thunderbolt driver from
-being loaded. I remember running into them when I first tried to debug
-this.
-That may be what is preventing your patch from working as intended on
-my device. I will have to look into what could be causing that.
+> You can try printing the values. But that might upset the timing so
+> you cannot reproduce the issue.
+> 
+> If the printk() does upset the timing, what i have done before is
+> allocate an array of u32 values. Write the interrupt status into it,
+> looping around when you get to the end of the array. And then use
+> debugfs_create_u32_array() to export the array in /sys/kernel/debugfs.
+> Trigger the problem and then look at the values.
 
-On Wed, May 15, 2024 at 4:51=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
-e:
->
-> Hm, re-reading your e-mail I'm irritated that you're referring to
-> "that patch" (singular).  You need at least these five commits:
->
->   thunderbolt: Move struct tb_cm to tb.h
->   thunderbolt: Obtain PCIe Device/Function number from DROM
->   thunderbolt: Obtain PCIe Device/Function number via Router Operation
->   thunderbolt: Associate PCI devices with PCIe Adapters
->   thunderbolt: Mark PCIe Adapters on root switch as non-removable
->
-> on this branch:
->
->   https://github.com/l1k/linux/commits/thunderbolt_associate_v1
+Good tip, sounds like the exact strategy I need. Appreciate the hands on
+suggestions!
 
-I should have specified "patch series" instead of patch. I did include
-all of your patches, and I used that branch you linked earlier!
-git log --pretty=3Dshort --oneline
-2e83bc05d285 (HEAD -> integration) thunderbolt: Do not bind to Host
-Interface exposed by Device Router
-01782fd462f2 thunderbolt: Mark PCIe Adapters on Root Switch as non-removabl=
-e
-814d0a7b0da8 thunderbolt: Associate PCI devices with PCIe Adapters
-06b2f200532f thunderbolt: Obtain PCIe Device/Function number via
-Router Operation
-03d532c8a59f thunderbolt: Obtain PCIe Device/Function number from DROM
-d710d8b828c5 thunderbolt: Move struct tb_cm to tb.h
+> 
+> > > Is this your dual device board? Do you have both devices on the same
+> > > SPI bus? Do they share interrupt lines?
+> > > 
+> > 
+> > It's on the dual device board, the macphys are using separate spi buses,
+> > one chip shares the bus with another spi device, but the other is the
+> > only tenant on the bus.
+> > 
+> > No device shares an irq line.
+> 
+> I was just wondering how your setup differs so you can trigger the
+> issue, but others have not been able to reproduce it. It might be
+> another clue as to what is going on. I don't think you need to do
+> anything with respect to this, its just information to keep in mind.
+> 
 
-I very much appreciate your help with this! I am happy to dig deeper
-to figure out what is going on, I just wanted to share where I was so
-that I could get additional support, and be guided in the right
-direction. Thank you!
+My typical setup is weird for sure, I skip the initramfs and load a
+kernel and dtb into ram (which means I don't have DMA, due to missing fw),
+but I'm in the habit of occasionally flashing and running a 'normal system'
+every once in a while for verifcation.
+
+I can't think of anything on top of my head that would set my system in
+a unique position. But since I don't get the failure when I have a UDP
+multicast running I'm guessing different networking daemons might affect
+things, in this case we're running systemd-networkd and I manually set
+an ipv4 address on the interfaces.
+
+R
