@@ -1,170 +1,164 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AD1155A26
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0A155A26;
+	Wed, 15 May 2024 16:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715789602; cv=none; b=af4J0UHHOrVYNAL3h120ls9w682oqhzPqhQwqEuwF5ji7fy1udPyvJiILnpdOb+Zy1WmBkGWTsvSdx8mYK72TvyZOhq2f/eS5Ig4pKkktg7sQUTPutRzT1eEQI2CHcaOD/J2zdtxURLvbDa9HAChVB7Hn+gTQIAdhGWWqL4dyJM=
+	t=1715789750; cv=none; b=bwqMxDeLSISdezuvvwGb7fdXQh6I+iEdywKUnkoBUgCi0UeG0zk4BWDEd8iXUD2eKVeeTE+rYDNw4C3b8DJEN5RX4FblT9flORu8UNWDjUkZGJBeNQFOYa8r4imG10c1dbepIpsBYw20GhX0iH9UeMtjRVM1zJzK/XY5g5GX3/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715789602; c=relaxed/simple;
-	bh=LPWYGZi2qu4grv+vKX4R0WYcKLAEh5q7hotDBiOim2Q=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cdI6sDFQttbYVkWaHbT5WPjgYYiAPPngcXpTQV1LJFXNh8tG4mC78HY0pwO3UWkMlkBKGfuIb86v9xHIPrNe4zrf9hihXMrFDKxXFhrwt7tWyUTBiEnrm8IQXHgNY2Q6Ml6iUNkUc+Vt8qZuTsMRPqbswHjfb1hWgyC3OumOvJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jhkzwcKF; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715789750; c=relaxed/simple;
+	bh=fCrm3kzOE+zio8J9d8t20yvZ3OY1Oo8ur1Y2bhn0lLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bAmKBtmzpIH3HXukmlE/pnItUcMPovwxvEuN8pZHdLjueZ6tvFw2uM6ReywhXcgykMapa6u8halq5vXxPZ9ZGCR4OT0Jh+GiBICBVPCpd1e2Ka0S3wNy2Hez4vur/WUX/VFiFghtLYpmZnVw+1CVrGBBd1Vwo9sfI8AipZa2jcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zbKH+RMK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kK1Wxx5y; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=anl80dIj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xZzorhKN; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jhkzwcKF"
-Message-ID: <83f4289d-3e73-49fb-9be4-93961d3e051b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715789594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zbKH+RMK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kK1Wxx5y";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="anl80dIj";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xZzorhKN"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0ED7333D32;
+	Wed, 15 May 2024 16:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715789741;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XazfpVPfcDOApsPFU0sOqvvodW8BpouJZj2Cr99EhUI=;
-	b=jhkzwcKFIoDNq5ipKNVZPeC0TfQReLUhzU23hRg63kZIH0HsR2VPpBTKKlBfxJWpOJ03UP
-	bv52oBlESxVQk5BYsFFQ1iQAC1F0aIOY558XgXy4HfqonZ0rpRyfhLHThQIj/MOg3P9o06
-	lgvuaCZcfnVZjJdC9qlQ2iipWx4hdv0=
-Date: Thu, 16 May 2024 00:13:03 +0800
+	bh=mQ7gK1lBQmlsoTMc1I2R4fLUioA9nrB0M5WFq7R60E4=;
+	b=zbKH+RMKkyJKXwK58MczrOc3F2+jf+CTPRXi2ghzcMZMeo7VcX3Liqn7ro3miP7KYcrUXM
+	MYPkND/TvNxxKUYVfrahwWsUrGZdEQWFRzH2jjoMxVrukS1NepbQO6NK8OQprX2k9uh2B4
+	Nfy0dDZ28i1qJ55JzAzILGRGNvc+mTE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715789741;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mQ7gK1lBQmlsoTMc1I2R4fLUioA9nrB0M5WFq7R60E4=;
+	b=kK1Wxx5yAGe24p6Z6ifaHRO8Z/jMBCgZO7P0UhqNdU1pTcUibyAB049W+JyGkr/nevcJYr
+	/mbbN6DDt1qkkSAA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715789739;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mQ7gK1lBQmlsoTMc1I2R4fLUioA9nrB0M5WFq7R60E4=;
+	b=anl80dIjfsxyjIbj6aThW8jiHNmVIkBlj+IAnAxGuXnAOmMNVxjkMIoRE0xhBJrKFpi2fl
+	lisAl2Furjy5aeaW6chHK8G/AO2mw8zWw/Hf3ENkCtZ9Erv+25+TB0SCZPuy+8OcZXoJRR
+	y05KfRZjG66ntQtul0hWzUkgRQI6wc8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715789739;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mQ7gK1lBQmlsoTMc1I2R4fLUioA9nrB0M5WFq7R60E4=;
+	b=xZzorhKNHZLsTGeeiuu4kw0FpxSLyG95eiuxQJEoc7nwKyZCwBqv44HajvQw/KEVxSC+Gf
+	VBOtASO1+IESzcBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1D6C1372E;
+	Wed, 15 May 2024 16:15:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id X5OxNqrfRGYaFAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 15 May 2024 16:15:38 +0000
+Date: Wed, 15 May 2024 18:15:37 +0200
+From: David Sterba <dsterba@suse.cz>
+To: syzbot <syzbot+c92c93d1f1aaaacdb9db@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maz@kernel.org, oleg@redhat.com,
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: kernel BUG at fs/inode.c:LINE! (2)
+Message-ID: <20240515161537.GP4449@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240515161314.GO4449@twin.jikos.cz>
+ <0000000000007147c206188065ca@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: Re: drm/bridge: adv7511: Attach next bridge without creating
- connector
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, andrzej.hajda@intel.com,
- neil.armstrong@linaro.org, rfoss@kernel.org, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- dmitry.baryshkov@linaro.org, biju.das.jz@bp.renesas.com, aford173@gmail.com,
- bli@bang-olufsen.dk, robh@kernel.org, jani.nikula@intel.com
-References: <20240513080243.3952292-1-victor.liu@nxp.com>
- <4b6e49ee-d2fd-4e54-88d5-ab06d8ebf644@bosc.ac.cn>
- <20240514151211.GG32013@pendragon.ideasonboard.com>
-Content-Language: en-US, en-AU
-In-Reply-To: <20240514151211.GG32013@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000007147c206188065ca@google.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: 0.27
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.27 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	BAYES_HAM(-1.23)[89.45%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[c92c93d1f1aaaacdb9db];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[appspotmail.com:email,syzkaller.appspot.com:url,imap1.dmz-prg2.suse.org:helo,suse.cz:replyto]
 
-Hi,
-
-
-On 5/14/24 23:12, Laurent Pinchart wrote:
-> Hello,
+On Wed, May 15, 2024 at 09:13:17AM -0700, syzbot wrote:
+> > On Fri, Aug 28, 2020 at 06:18:17AM -0700, syzbot wrote:
+> >> Hello,
+> >> 
+> >> syzbot found the following issue on:
+> >> 
+> >> HEAD commit:    d012a719 Linux 5.9-rc2
+> >> git tree:       upstream
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=15aa650e900000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=c92c93d1f1aaaacdb9db
+> >> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ecb939900000
+> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140a19a9900000
+> >> 
+> >> The issue was bisected to:
+> >> 
+> >> commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
+> >> Author: Marc Zyngier <maz@kernel.org>
+> >> Date:   Wed Aug 19 16:12:17 2020 +0000
+> >> 
+> >>     epoll: Keep a reference on files added to the check list
+> >> 
+> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16a50519900000
+> >> final oops:     https://syzkaller.appspot.com/x/report.txt?x=15a50519900000
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=11a50519900000
+> >> 
+> >> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> >> Reported-by: syzbot+c92c93d1f1aaaacdb9db@syzkaller.appspotmail.com
+> >> Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
+> >> 
+> >> ------------[ cut here ]------------
+> >> kernel BUG at fs/inode.c:1668!
+> >
+> > #syz set subsystem: fs
 > 
-> On Tue, May 14, 2024 at 12:26:15AM +0800, Sui Jingfeng wrote:
->> On 5/13/24 16:02, Liu Ying wrote:
->>> The connector is created by either this ADV7511 bridge driver or
->>> any DRM device driver/previous bridge driver, so this ADV7511
->>> bridge driver should not let the next bridge driver create connector.
->>>
->>> If the next bridge is a HDMI connector, the next bridge driver
->>> would fail to attach bridge from display_connector_attach() without
->>> the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag.
-> 
-> In theory we could have another HDMI-to-something bridge connected to
-> the ADV7511 output, and that bridge could create a connector. However,
-> before commit 14b3cdbd0e5b the adv7511 driver didn't try to attach to
-> the next bridge, so it's clear that no platform support in mainline had
-> such a setup. It should be safe to set DRM_BRIDGE_ATTACH_NO_CONNECTOR
-> unconditionally here.
+> The specified label "subsystem" is unknown.
+> Please use one of the supported labels.
 
-
-But what if there is a drm bridge prior to adv7511 but after the KMS
-engine? Even though we are still safe if it doesn't create connector
-by obeying modern rule.
-
-
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> 
->>>
->>> Add that flag to drm_bridge_attach() function call in
->>> adv7511_bridge_attach() to fix the issue.
->>>
->>> This fixes the issue where the HDMI connector bridge fails to attach
->>> to the previous ADV7535 bridge on i.MX8MP EVK platform:
->>>
->>> [    2.216442] [drm:drm_bridge_attach] *ERROR* failed to attach bridge /hdmi-connector to encoder None-37: -22
->>> [    2.220675] mmc1: SDHCI controller on 30b50000.mmc [30b50000.mmc] using ADMA
->>> [    2.226262] [drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@30800000/i2c@30a30000/hdmi@3d to encoder None-37: -22
->>> [    2.245204] [drm:drm_bridge_attach] *ERROR* failed to attach bridge /soc@0/bus@32c00000/dsi@32e60000 to encoder None-37: -22
->>> [    2.256445] imx-lcdif 32e80000.display-controller: error -EINVAL: Failed to attach bridge for endpoint0
->>> [    2.265850] imx-lcdif 32e80000.display-controller: error -EINVAL: Cannot connect bridge
->>> [    2.274009] imx-lcdif 32e80000.display-controller: probe with driver imx-lcdif failed with error -22
->>>
->>> Fixes: 14b3cdbd0e5b ("drm/bridge: adv7511: make it honour next bridge in DT")
->>> Signed-off-by: Liu Ying <victor.liu@nxp.com>
->>> ---
->>>    drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->>> index dd21b81bd28f..66ccb61e2a66 100644
->>> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->>> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->>> @@ -953,7 +953,8 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge,
->>>    	int ret = 0;
->>>    
->>>    	if (adv->next_bridge) {
->>> -		ret = drm_bridge_attach(bridge->encoder, adv->next_bridge, bridge, flags);
->>> +		ret = drm_bridge_attach(bridge->encoder, adv->next_bridge, bridge,
->>> +					flags | DRM_BRIDGE_ATTACH_NO_CONNECTOR);
->>
->> As a side note, I think, maybe you could do better in the future.
->>
->> If we know that the KMS display driver side has the HDMI connector
->> already created for us, we should pass DRM_BRIDGE_ATTACH_NO_CONNECTOR
->> from the root KMS driver side. Which is to forbidden all potential
->> drm bridge drivers to create a connector in the middle.
-> 
-> That's the recommended way for new drivers. Using the
-> drm_bridge_connector helper handles all this for you.
-> 
->> The KMS display driver side could parse the DT to know if there is
->> a hdmi connector, or merely just hdmi connector device node, or
->> something else.
-> 
-> No, that would violate the basic principle of not peeking into the DT of
-> devices you know nothing about. The display engine driver can't walk the
-> pipeline in DT and expect to understand all the DT nodes on the path,
-> and what their properties mean.
-> 
-
-The (next) bridge at the remote port is not necessary a display bridge.
-Or it is a bridge from the perspective of hardware viewpoint, but under
-controlled by a more complex foreign driver which generic drm bridge
-driver has no authority to attach.
-
-> What KMS drivers should do is to use the drm_bridge_connector helper.
-> Calling drm_bridge_connector_init() will create a connector for a chain
-> of bridges. The KMS driver should then attach to the first bridge with
-> DRM_BRIDGE_ATTACH_NO_CONNECTOR, unconditionally.
->
-
-OK, thanks for teaching us the modern way to use drm_bridge_connector
-helper, also thanks Ying for providing the patch.
-
-
->> However, other maintainer and/or reviewer's opinion are of cause
->> more valuable. I send a A-b because I thought the bug is urgency
->> and it's probably more important to solve this bug first. And
->> maybe you can Cc: <stable@vger.kernel.org> if you like.
->>
->>>    		if (ret)
->>>    			return ret;
->>>    	}
->
-
--- 
-Best regards
-Sui
+#syz set subsystems: fs
