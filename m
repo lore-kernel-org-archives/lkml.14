@@ -1,28 +1,28 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC36464CEC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC34364CE9;
 	Wed, 15 May 2024 08:56:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715763404; cv=none; b=tPuq9C9pQUtL85gAS8ojW98p5n9oWwPK18OaNpleScJ1a5DyM1+T4KPVt90FOH8+riSWVlJjmXWzS1n2kTfGhzEst5b+kNEWzRch2pf2E6tJNA05mxq+688gJoFL3onani0vy+2aoNug+rBg327O6jcp7MYSIatcguI3qehrjRo=
+	t=1715763404; cv=none; b=qDP7Pd5jVxKtnPu5ISoSvZsaphI7QMzuHIh5V5QQUWKphAmk71t/FBguwpR1n6+9vwp1MHdW1shUluRxRT9dhZ+PrC5CNPsBdKeL1Hr4KFj1Tuec8GyVUzkqNUR2XPp6mVNb8WO6cR3GI6EMmkEz7X+xhp7hbgCeNkSqd/6STmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715763404; c=relaxed/simple;
-	bh=nPGj+eXrL4wd4L1QUzJZmkRm8MiQ3mKxd+HmmLJ9Z9I=;
+	bh=AQ8ktDzdQMJg/pb81tfKaiuoqBc6b2XAJKQhfCwijao=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U5MW5FzvjlPM2E+1sCKLLiet9o8F2AoGiI6JMoPMMgm2yGRf0NQK1czi6512W+txIwv6UR0do1e7GS6a+6U+NRX7cVNvbEreIB62HFNyD/oU6/SD+zZCBqqA1XMSd254Iv6pJDf5sWPZGGORhRWKHugBpBoXp6YR8P7tZ5b3e9I=
+	 MIME-Version; b=Sg8ADsiMGCAnC/YDLPL9lv1i4VWNZ5ynSCCOPMPw/m+a1kvrrgCFRUK1qSmTmqp7/Y10JhDx9XDYQx6uy7JdKObGn5j9uJmzkeXiWHEZ0Cbco/jKXNqegJqIg5q8m/dVoshAmS24K/eYbDgcV4LUhUJ3iNsrn/NTwisvAG7w/Sw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VfRsl2cThz4f3jJB;
-	Wed, 15 May 2024 16:56:27 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VfRsj4TjHz4f3jXb;
+	Wed, 15 May 2024 16:56:25 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 08B8C1A0FE2;
-	Wed, 15 May 2024 16:56:36 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 490B51A017F;
+	Wed, 15 May 2024 16:56:34 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxC7eERm68LgMg--.42328S14;
-	Wed, 15 May 2024 16:56:35 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxC7eERm68LgMg--.42328S11;
+	Wed, 15 May 2024 16:56:34 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev,
 	dhowells@redhat.com,
@@ -39,9 +39,9 @@ Cc: hsiangkao@linux.alibaba.com,
 	yukuai3@huawei.com,
 	wozizhi@huawei.com,
 	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v2 10/12] cachefiles: Set object to close if ondemand_id < 0 in copen
-Date: Wed, 15 May 2024 16:45:59 +0800
-Message-Id: <20240515084601.3240503-11-libaokun@huaweicloud.com>
+Subject: [PATCH v2 07/12] cachefiles: add spin_lock for cachefiles_ondemand_info
+Date: Wed, 15 May 2024 16:45:56 +0800
+Message-Id: <20240515084601.3240503-8-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240515084601.3240503-1-libaokun@huaweicloud.com>
 References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
@@ -52,10 +52,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxC7eERm68LgMg--.42328S14
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zry8Wry8Jr4Utr4xtr4UCFg_yoW8Cw4kpF
-	WakFW3Kry8Wr129r97Jw1kJ3yrC3ykZFnrW39Yq348Arn8XrZ5Zr17tryUZF1UZ3yftr43
-	tr18Kr9Iga4qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgDHlxC7eERm68LgMg--.42328S11
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFy5Zr18tFyxWr48WFyUJrb_yoWruryxpF
+	WayFy3KryxWF1IgrZ7JFs5JrWrA348ZFnFgw1aq34rAr98ZryrZr1UtryxZFy5A34aqrsx
+	tw18Casrt34qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -66,62 +66,135 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Zry8Wry8Jr4Utr4xtr4UCFg_yoW8Cw4kpF
 	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
 	kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
 	Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0
 	I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
 	Ja73UjIFyTuYvjfUYGYpUUUUU
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-From: Zizhi Wo <wozizhi@huawei.com>
+From: Baokun Li <libaokun1@huawei.com>
 
-If copen is maliciously called in the user mode, it may delete the request
-corresponding to the random id. And the request may have not been read yet.
+The following concurrency may cause a read request to fail to be completed
+and result in a hung:
 
-Note that when the object is set to reopen, the open request will be done
-with the still reopen state in above case. As a result, the request
-corresponding to this object is always skipped in select_req function, so
-the read request is never completed and blocks other process.
+           t1             |             t2
+---------------------------------------------------------
+                            cachefiles_ondemand_copen
+                              req = xa_erase(&cache->reqs, id)
+// Anon fd is maliciously closed.
+cachefiles_ondemand_fd_release
+  xa_lock(&cache->reqs)
+  cachefiles_ondemand_set_object_close(object)
+  xa_unlock(&cache->reqs)
+                              cachefiles_ondemand_set_object_open
+                              // No one will ever close it again.
+cachefiles_ondemand_daemon_read
+  cachefiles_ondemand_select_req
+  // Get a read req but its fd is already closed.
+  // The daemon can't issue a cread ioctl with an closed fd, then hung.
 
-Fix this issue by simply set object to close if its id < 0 in copen.
+So add spin_lock for cachefiles_ondemand_info to protect ondemand_id and
+state, thus we can avoid the above problem in cachefiles_ondemand_copen()
+by using ondemand_id to determine if fd has been closed.
 
-Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
 ---
- fs/cachefiles/ondemand.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/cachefiles/internal.h |  1 +
+ fs/cachefiles/ondemand.c | 35 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 35 insertions(+), 1 deletion(-)
 
+diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+index 7745b8abc3aa..45c8bed60538 100644
+--- a/fs/cachefiles/internal.h
++++ b/fs/cachefiles/internal.h
+@@ -55,6 +55,7 @@ struct cachefiles_ondemand_info {
+ 	int				ondemand_id;
+ 	enum cachefiles_object_state	state;
+ 	struct cachefiles_object	*object;
++	spinlock_t			lock;
+ };
+ 
+ /*
 diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 3a36613e00a7..a511d0a89109 100644
+index 898fab68332b..d04ddc6576e3 100644
 --- a/fs/cachefiles/ondemand.c
 +++ b/fs/cachefiles/ondemand.c
-@@ -182,6 +182,7 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 	xas_store(&xas, NULL);
- 	xa_unlock(&cache->reqs);
+@@ -16,13 +16,16 @@ static int cachefiles_ondemand_fd_release(struct inode *inode,
+ 	struct cachefiles_object *object = file->private_data;
+ 	struct cachefiles_cache *cache = object->volume->cache;
+ 	struct cachefiles_ondemand_info *info = object->ondemand;
+-	int object_id = info->ondemand_id;
++	int object_id;
+ 	struct cachefiles_req *req;
+ 	XA_STATE(xas, &cache->reqs, 0);
  
-+	info = req->object->ondemand;
- 	/* fail OPEN request if copen format is invalid */
- 	ret = kstrtol(psize, 0, &size);
- 	if (ret) {
-@@ -201,7 +202,6 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+ 	xa_lock(&cache->reqs);
++	spin_lock(&info->lock);
++	object_id = info->ondemand_id;
+ 	info->ondemand_id = CACHEFILES_ONDEMAND_ID_CLOSED;
+ 	cachefiles_ondemand_set_object_close(object);
++	spin_unlock(&info->lock);
+ 
+ 	/* Only flush CACHEFILES_REQ_NEW marked req to avoid race with daemon_read */
+ 	xas_for_each_marked(&xas, req, ULONG_MAX, CACHEFILES_REQ_NEW) {
+@@ -127,6 +130,7 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+ {
+ 	struct cachefiles_req *req;
+ 	struct fscache_cookie *cookie;
++	struct cachefiles_ondemand_info *info;
+ 	char *pid, *psize;
+ 	unsigned long id;
+ 	long size;
+@@ -185,6 +189,33 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
  		goto out;
  	}
  
--	info = req->object->ondemand;
- 	spin_lock(&info->lock);
- 	/*
- 	 * The anonymous fd was closed before copen ? Fail the request.
-@@ -241,6 +241,11 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
++	info = req->object->ondemand;
++	spin_lock(&info->lock);
++	/*
++	 * The anonymous fd was closed before copen ? Fail the request.
++	 *
++	 *             t1             |             t2
++	 * ---------------------------------------------------------
++	 *                             cachefiles_ondemand_copen
++	 *                             req = xa_erase(&cache->reqs, id)
++	 * // Anon fd is maliciously closed.
++	 * cachefiles_ondemand_fd_release
++	 * xa_lock(&cache->reqs)
++	 * cachefiles_ondemand_set_object_close(object)
++	 * xa_unlock(&cache->reqs)
++	 *                             cachefiles_ondemand_set_object_open
++	 *                             // No one will ever close it again.
++	 * cachefiles_ondemand_daemon_read
++	 * cachefiles_ondemand_select_req
++	 *
++	 * Get a read req but its fd is already closed. The daemon can't
++	 * issue a cread ioctl with an closed fd, then hung.
++	 */
++	if (info->ondemand_id == CACHEFILES_ONDEMAND_ID_CLOSED) {
++		spin_unlock(&info->lock);
++		req->error = -EBADFD;
++		goto out;
++	}
+ 	cookie = req->object->cookie;
+ 	cookie->object_size = size;
+ 	if (size)
+@@ -194,6 +225,7 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+ 	trace_cachefiles_ondemand_copen(req->object, id, size);
+ 
+ 	cachefiles_ondemand_set_object_open(req->object);
++	spin_unlock(&info->lock);
  	wake_up_all(&cache->daemon_pollwq);
  
  out:
-+	spin_lock(&info->lock);
-+	/* Need to set object close to avoid reopen status continuing */
-+	if (info->ondemand_id == CACHEFILES_ONDEMAND_ID_CLOSED)
-+		cachefiles_ondemand_set_object_close(req->object);
-+	spin_unlock(&info->lock);
- 	complete(&req->done);
- 	return ret;
+@@ -596,6 +628,7 @@ int cachefiles_ondemand_init_obj_info(struct cachefiles_object *object,
+ 		return -ENOMEM;
+ 
+ 	object->ondemand->object = object;
++	spin_lock_init(&object->ondemand->lock);
+ 	INIT_WORK(&object->ondemand->ondemand_work, ondemand_object_worker);
+ 	return 0;
  }
 -- 
 2.39.2
