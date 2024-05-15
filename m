@@ -1,165 +1,126 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1188B4C62E;
-	Wed, 15 May 2024 08:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE64048CF2;
+	Wed, 15 May 2024 08:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715760400; cv=none; b=Qe97Mu+6R47RSngnBB/jErRbu7Gr3R754IL6HvFWzCgXkWwN/E5Sedwm4OQxjB67uOpcTFJdHeXkz3GBBtQJLgUHd3azgQrQQCQJx64OZwDYqD7rTCU8pBtTTzTHSICAbJEda/86JcoG6KpVWrPtwpcNf35vy59+jx6KX1N4Y4w=
+	t=1715760427; cv=none; b=B4YtYm2ELmtLWZMxRtz689Y/OJI4XEn2OznZh+EXKw3Pb/HQFly6VFTLMZyFaJ0W6p38sPRsqTDmjvorO6+TX0OYN+kJbnUv8Pampl+61d1T1sxa3hB9B4vrKzMBteaK9/zZp5dQcxCk8xBRgBsoE8RYAQ0Y+7cMl/7e6mF10Sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715760400; c=relaxed/simple;
-	bh=h0Sqhr4ifyZrC1b5lPNa6Gyug/wpM7myXaQxIuh3AZ4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqC11zrJcf19aZ6ktVGTNzOAAHSpsxEaeKL9zmcYHU63b8ffQdT6O4g3SwoP5TOefiN8NpechCAuu0psOoQI0JvtKK1pm83Xw0pBVYNsjIdW/ruYsXV1E8jE9GXnL4fPQsxajz/nP4Cu9uPmtqQSgQlf0kW4AUHsjf7gk1clDf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=nzUFl2Kx; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1715760427; c=relaxed/simple;
+	bh=WNVyqa42/alA+Bn0BpZU+B2peWyI39m7/6hWHeDqloM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vEdha95inDVmApd1xyNFegro+W9Y1tPBuRigFMV8lnb2Q+ZgYv+x9naqxKNgfgRXBCcIDs9y7whEcxgrN/0Am8krMND48kwevT2UMNOeZopnj2cqi6Tg94qTjlIUTnM9Zq4ebCHzBILLkBAnK4HwP+BIAbAd1724cYrFy2Ifhjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQHLSgBZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nzUFl2Kx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715760398; x=1747296398;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h0Sqhr4ifyZrC1b5lPNa6Gyug/wpM7myXaQxIuh3AZ4=;
-  b=nzUFl2KxHPlZyCxSu7RzeKN3iZy4YGBVDp/ohKEDRKIQu/j1Ia1QrFby
-   QCCdAQBsllYyRSV8S2wOBdj1Sf7aScUsbByFWD45upZr2UyUF2nvJTJF1
-   nztaDtcXU09yEpBEfHk/BwGMqlF9PVEmH4aZKpQbTh/CEMBYFksafRB31
-   uSRXnVH8k+mtOtVnfcRE9YufAkfLArWa8+SMJa2APjtKkWcAX4oVMMQWW
-   LcOpBp/mGajcFORdRfsw6ngR6V3Crtm8SenK9rzOG6GcBrt501SxkzfhX
-   IfFA8k/GEKMLWVLPwihI+amyN8Oxu4NJ8K08MkiGMa1plI42ELgz7IQCL
-   g==;
-X-CSE-ConnectionGUID: EvxhA01VQR6BcbhVcVTEIw==
-X-CSE-MsgGUID: gMj862SdQQKslckEPmEeNQ==
-X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="asc'?scan'208";a="25383960"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2024 01:06:37 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 15 May 2024 01:06:22 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Wed, 15 May 2024 01:06:20 -0700
-Date: Wed, 15 May 2024 09:06:06 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Alina Yu <alina_yu@richtek.com>
-CC: Conor Dooley <conor@kernel.org>, Mark Brown <broonie@kernel.org>,
-	<lgirdwood@gmail.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<johnny_lai@richtek.com>, <cy_huang@richtek.com>
-Subject: Re: [PATCH v3 6/6] regulator: dt-bindings: rtq2208: Add property to
- get ldo of RTQ2208 is adjustable or not
-Message-ID: <20240515-wrinkle-engross-ab6b089baae3@wendy>
-References: <cover.1715340537.git.alina_yu@richtek.com>
- <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
- <20240513-tissue-repave-13d2e3bf88fd@spud>
- <d97752ed-4032-4681-b28f-17f149fdc3d4@sirena.org.uk>
- <20240514-plunging-chair-803d9e342e6f@spud>
- <20240515073830.GA12525@linuxcarl2.richtek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQHLSgBZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC11C32781;
+	Wed, 15 May 2024 08:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715760427;
+	bh=WNVyqa42/alA+Bn0BpZU+B2peWyI39m7/6hWHeDqloM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iQHLSgBZpjr61hrkhjVNESHcwwTTOl3FhgtmOKBKDRwR8koKIKIqisV5k/HRt1PR8
+	 n3hkcVt2N2UKVWMjY3xts04UD1p4ftU/wncoEHqtDYrw834lpzevN1GDpKOtM4tj2c
+	 Sxa6LQPSwBwZgLIYUkIxi3O670LzRAS6yILrzOasQZLPuxnoFGqkBa4ctZ9bfI8NWH
+	 +QQ2hJ/ATVaXkfZ/FqHqIf14dcJbf+wnL3wd5CNjwloEHw79nBt+8hfHkfP2J9JaBk
+	 LiOcwBjfFSPH/PfR2nE9Fe8jt5CFyb9nnszYGHRHt9udExTlO0TYw5LQSJmhX0VXoO
+	 p/DyZwRbR5rKQ==
+Message-ID: <5eb29310-04d1-442d-bcc6-968fcba2077e@kernel.org>
+Date: Wed, 15 May 2024 10:07:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0FcHBb/wqZoBsRLq"
-Content-Disposition: inline
-In-Reply-To: <20240515073830.GA12525@linuxcarl2.richtek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] iio:proximity:hx9031as: Add TYHX HX9031AS/HX9023S
+ sensor driver
+To: Yasin Lee <yasin.lee.x@outlook.com>, jic23@kernel.org
+Cc: andy.shevchenko@gmail.com, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nuno.a@analog.com, swboyd@chromium.org,
+ u.kleine-koenig@pengutronix.de, yasin.lee.x@gmail.com
+References: <20240511170143.7ca6a410@jic23-huawei>
+ <20240514202540.341103-1-yasin.lee.x@outlook.com>
+ <SN7PR12MB810161203706CD288923AB1DA4E32@SN7PR12MB8101.namprd12.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <SN7PR12MB810161203706CD288923AB1DA4E32@SN7PR12MB8101.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---0FcHBb/wqZoBsRLq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 14/05/2024 22:25, Yasin Lee wrote:
+> From: Yasin Lee <yasin.lee.x@gmail.com>
+> 
+> A SAR sensor from NanjingTianyihexin Electronics Ltd.
+> 
+> The device has the following entry points:
+> 
+> Usual frequency:
+> - sampling_frequency
+> 
+> Instant reading of current values for different sensors:
+> - in_proximity0_raw
+> - in_proximity1_raw
+> - in_proximity2_raw
+> - in_proximity3_raw
+> - in_proximity4_raw
+> and associated events in events/
+> 
+> Signed-off-by: Yasin Lee <yasin.lee.x@gmail.com>
+> ---
+>  .../ABI/testing/sysfs-bus-iio-hx9031as        |   11 +
+>  drivers/iio/proximity/Kconfig                 |   12 +
+>  drivers/iio/proximity/Makefile                |    1 +
+>  drivers/iio/proximity/hx9031as.c              | 1379 +++++++++++++++++
 
-On Wed, May 15, 2024 at 03:38:30PM +0800, Alina Yu wrote:
-> On Tue, May 14, 2024 at 07:01:21PM +0100, Conor Dooley wrote:
-> > On Tue, May 14, 2024 at 11:34:29AM +0100, Mark Brown wrote:
-> > > On Mon, May 13, 2024 at 05:22:54PM +0100, Conor Dooley wrote:
-> > > > On Fri, May 10, 2024 at 08:06:25PM +0800, Alina Yu wrote:
-> > >=20
-> > > > > +            richtek,fixed-microvolt =3D <1200000>;
-> > > > >              regulator-min-microvolt =3D <1200000>;
-> > > > >              regulator-max-microvolt =3D <1200000>;
-> > >=20
-> > > > I'm dumb and this example seemed odd to me. Can you explain to me w=
-hy
-> > > > it is not sufficient to set min-microvolt =3D=3D max-microvolt to a=
-chieve
-> > > > the same thing?
-> > >=20
-> > > This is for a special mode where the voltage being configured is out =
-of
-> > > the range usually supported by the regulator, requiring a hardware
-> > > design change to achieve.  The separate property is because otherwise=
- we
-> > > can't distinguish the case where the mode is in use from the case whe=
-re
-> > > the constraints are nonsense, and we need to handle setting a fixed
-> > > voltage on a configurable regulator differently to there being a
-> > > hardware fixed voltage on a normally configurable regulator.
-> >=20
-> > Cool, I think an improved comment message and description would be
-> > helpful then to describe the desired behaviour that you mention here.
-> > The commit message in particular isn't great:
-> > | Since there is no way to check is ldo is adjustable or not.
-> > | As discussing in v2 series, 'richtek,fixed-microvolt' is added for th=
-at.
-> > | user is supposed to know whether vout of ldo is adjustable.
-> >=20
-> > It also doesn't seem like this sort of behaviour would be limited to
-> > Richtek either, should this actually be a common property in
-> > regulator.yaml w/o the vendor prefix?
-> >=20
-> > Cheers,
-> > Conor.
->=20
->=20
-> Hi Conor,
->=20
->=20
-> Should I update v4 to fix the commit message ?
-> I will modify it as follows.
->=20
->=20
-> There are two types of LDO VOUT: fixed voltage mode and adjustable voltag=
-e mode.
->=20
-> As the fixed voltage for the LDO is outside the range of the adjustable v=
-oltage mode,
-> the constraints for this scenario are not suitable to represent both mode=
-s.
+That's like third patchset called v1. First was not even built...
+Version your patches properly, provide changelog.
 
-That's definitely an improvement, yes. The property description could
-also do with an update to explain that this is for a situation where the
-fixed voltage is out of the adjustable range, it doesn't mention that at
-all right now.
+Best regards,
+Krzysztof
 
-> In version 3, a property has been added to specify the fixed voltage.
-
-Don't refer to previous versions of the patchset in your commit message,
-that doesn't help people reading a commit log in the future etc. If
-there's some relevant information in a previous version patchset, put it
-in the commit message directly.
-
-Cheers,
-Conor.
-
---0FcHBb/wqZoBsRLq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkRs7gAKCRB4tDGHoIJi
-0vH7AQD9Pv88a/PkA91egE2kjvXH7h48NPsjCN8xwJ8vNsM5XgEAuD17AiUn8eu7
-CNpGygjTUdxaBxaAC0nC6jR2+XMgXwg=
-=ELYJ
------END PGP SIGNATURE-----
-
---0FcHBb/wqZoBsRLq--
