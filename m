@@ -1,105 +1,160 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF184C3CD
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE9E36AF2
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715793155; cv=none; b=gXYx/7cYn2OIlgO40dN3qxqGlPJCm6vGFq/FTmAONozK7y2LqG30o5uCQm9rv21nNEymmlvBtzM0SsBfd4lNlN29qg3G+pCpD1eQYRV+klbGFZY6MlcETPwqOefP4CLZd1QY5MO8cW1hh0VM4qK4xtbtcOz3ofhK6Gu4FYdCMok=
+	t=1715793211; cv=none; b=OtCK2BmvuJ4YyKk4OtUnEcKKFgYKwBSG/WIlqpF6DJ2jivYdrVgu8rAERuCbCPGmHWSlhRhnWdlBUG9WDnSN4EMedLgOm/opO13Oy9Y3YoIoUqi5iRAFACdtuLW/xnMjW/USEsCVwtiym37dvN/VrsMhPHo1kH8Ikaip6b4jc70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715793155; c=relaxed/simple;
-	bh=sFdFO/3PseRV0I24tfvAl/Tu3SeNdZ+dYLb3bjXAJu8=;
+	s=arc-20240116; t=1715793211; c=relaxed/simple;
+	bh=cvIV6f3GkDNs0QXxlEwPSB7F2//s6+TIdkMo1948Phs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QWsRfcOTdRbYBOt/Wpm2rd1qyrE2qlgshoE8CZ+Cw4q4hnM8aS+LkbLDw1KxjoshcXwhjzo6tpf07MugOVsGIug1lUOf7f21Z2NMm0WnDWwXXAX9JmzWSNKuWr0nTbKAmH1STV/gbH01Wu5GnrF2jcqxCeKonOYhPuvPbBIofjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QSIZ8j2a; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=TZ62y/W3fseDialChrN1f01hKkm8oMSQlNOy6hoGtQHBV9I9T9xvOLGggYpCg2tjUHz55Tu8f26bLXlAdGAtHwXSFkdASO1fD3eVBPsEKYc3B+5FE2Jnp6latX4vl1YTmkgonFun1D8HWI62s/7EXnR/Ur4EtHvf9B8juI+NgAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lRLO2TL4; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QSIZ8j2a"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-23f9d07829bso3425451fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:12:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lRLO2TL4"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e576057c2bso74585821fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715793152; x=1716397952; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1715793208; x=1716398008; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sFdFO/3PseRV0I24tfvAl/Tu3SeNdZ+dYLb3bjXAJu8=;
-        b=QSIZ8j2aBzKVx6dFzUgfgxy4FxbPy1RzZSOEF/YtKW5zI2kRPd9V9sXohfMKvvfGnh
-         LIAUgBErOhh9hf3cRKmJ1+CU/v6SuBPWFzseVylOOzQSCUiwEIZ2YAmjbqcr5EGHovNV
-         PglXLUOMIKQXEVZb7WgTrELqyRLZEwPJuH7TBACQb9UMCBcvYp3M9yWB3/vUduOwqVek
-         SMzSFUplHOgX7RvyTB5JlDn9Qt5/1/nElbYNG9wl5GEx/T1Q7xVU37CBEb/+wbPONmV0
-         g8VLgj3E5xsZuWd+DtjDvl4TEy0pmuMro5lqnnOuOnr+ymxbu1bOuA8lXIz7DYTqj0QX
-         UdQg==
+        bh=nG8JDEZluA+U+D68g8z0TeZdm/BEqT6rREHFgTIhPW4=;
+        b=lRLO2TL4neNYn3MR4tadXjLoCHx8YLpBoVc+hSH7+Ha3t4iIMGtaoXE+gHFxk7uPMM
+         Bj1gVBe79RzIshkP0Bv0YEeteZyDOVoxENabG2J+L2cPFi8mhmQkzvfVw9kH3+yuRmlr
+         LLNzIsMv7kqYhZUIjtJ2BFW2PTRqggKxQrePJbp47r0ryxx1YKSIjGsxN/Q7cUcZjJOX
+         3Aa4GJHkMR6EcPnoX0laDBo4Zja6qSyHL7J6TaYHouSU1oqGwNUEngIT/TloPPGZAsF9
+         suFTz6/Y1GH1A/GtjLkI5FfohO9DuRP7iNB3NHGPpv0sOzGafFahHnj1pkvUzyg1xxSQ
+         /gGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715793152; x=1716397952;
+        d=1e100.net; s=20230601; t=1715793208; x=1716398008;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sFdFO/3PseRV0I24tfvAl/Tu3SeNdZ+dYLb3bjXAJu8=;
-        b=buvEF7EUNWEc3kHl4oz1LmYEM1DkagOFPt1x3eACDMvsR5AEu/tYd85fRPFOZLP+/y
-         O8ENQmWmUUgoB6ZLtjZ4NiQF0DGDcIcvnN3Tw0XN3pUCD9yzKNi0yc1Fxaek1qS+KFcD
-         RDcpuIs3GK+Ehvj+FQPIKfODd8rwuaHNk4RUnDftgVlQofEcvL/LWn2ak9M76crsFqU7
-         kUZ4nq0xQO3Yqnh5e7i0RzL8CxLGTS1vPULjXRmca4IEO0oseRuRFiJ9iLIHD/QSks/W
-         JLIy2GjWfNgzEWkyEszZAguZaaCeH+JT3cBiTCRS8uaA85hVsu8Elv4zlD5XPIDmhKbH
-         cMTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkTzjVxcAHDgAdX/UhkqpPCV3RuoWANUEaqGE79UPvEkkEQUPgnVAM+XCT1Ft/vrbqLndj4ttyRXV6jBtt2iu9CcjXN58dKWoHVetd
-X-Gm-Message-State: AOJu0Yy6lM192svla7jBlRA8zZYDZUWI/htqqVyRlLbq9P+Cxy/gTX81
-	1H318GeHcZGVhRjPiz0zc6Jc1pAmEDcFz0rVOgbLsGvDWzgEk9U4wSu6sbk5/vglkawOlCqyjlf
-	Bb7f7ja7hhS9+zG0w5dbch9Lg7L3gCuHWin4p
-X-Google-Smtp-Source: AGHT+IHdPnCg97tJxWZG1Gb/DpWshKQCgosn26p/oXEI08Q9kC9bnAhNtdBzk1KnL1lvOIiK1jkJOT92D0YO6qHuMVs=
-X-Received: by 2002:a05:6870:1690:b0:23c:ee0a:260f with SMTP id
- 586e51a60fabf-24172a23552mr18594820fac.3.1715793152544; Wed, 15 May 2024
- 10:12:32 -0700 (PDT)
+        bh=nG8JDEZluA+U+D68g8z0TeZdm/BEqT6rREHFgTIhPW4=;
+        b=eV7ssAseNK18tJg85rB0n8qwWmIXmgUEmfpSI69XUwWW9NIcWGWAiEuaCx/Khdv0Ha
+         6Qu8K3f7KOSUo3ZbDXNjA9m7f/MQlTtlJNmXYCN1rIi2QLFFbWCEEvIN23mhpMkZafUd
+         zlOEri7obDoEJL2lwBwpZ1ZAG1xmhc6PEcsbPPRcd+lVsBZhow+Z4ljb4V28RtFVoCpz
+         BEnQTGz9bVlU6wd3uqOo9PDLlGOXhfDGUDfGDdU0qeTOU6kBcSfCeXmvbRAV57hXGgco
+         +PyTcAWPDm0dUI8cywK31GoZtehfOaogpOvC3JdWId1Pqnlx3YF2jEt/euvww/nrvpvO
+         I7LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdVCueQEXnk06noJQ4lV12qq0DO4kNj+VndGJMkTzTS25kAs4jwvEXqWkieyg8Gu9/l5A9/iyP2d1+q0TaUgZWmyYPdqIiZCjuRIoA
+X-Gm-Message-State: AOJu0YyPG6VEjMGSbyyfhOsN/1Xk0vNoULP1trjSf0FWAkeb2pP8SfKw
+	y3hVcbtXxLLUOde/5BX7ru7/uqhJfOsaP2OyhO7FeEVeM/RPZE7eiyG7+9LDDiZojqlFsTLPLWD
+	/ABlH+d1Vd8snsJJnDff/9vt1hblzmtkjTQ+p9w==
+X-Google-Smtp-Source: AGHT+IHfmskTbYDtGDQ4I7DObIPA2665F5KMdb6W8Wv/V4mAtLm81tAYf7jnYNcndFdsqSurRzjwAe2PkfScQpV143U=
+X-Received: by 2002:a2e:7a0e:0:b0:2e2:466b:1a56 with SMTP id
+ 38308e7fff4ca-2e52039e2c3mr125315251fa.53.1715793207549; Wed, 15 May 2024
+ 10:13:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
- <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
- <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <20240515073636.GY40213@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240515073636.GY40213@noisy.programming.kicks-ass.net>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 15 May 2024 10:12:20 -0700
-Message-ID: <CAFhGd8qKObvqbLJWvkG+Wfuy0gpWiTsSmFrBO-NzC-akB6bhzA@mail.gmail.com>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook <keescook@chromium.org>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20240515-zen-calculate-289cfb90cd65@spud> <mhng-10b71228-cf3e-42ca-9abf-5464b15093f1@palmer-ri-x1c9>
+In-Reply-To: <mhng-10b71228-cf3e-42ca-9abf-5464b15093f1@palmer-ri-x1c9>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Wed, 15 May 2024 22:43:14 +0530
+Message-ID: <CAK9=C2UkTD0hYymjow-yHHfBDh4CtRv-G2BPt=ncstLRmpYgyg@mail.gmail.com>
+Subject: Re: riscv: irq-riscv-imsic-early.c:52:9: error: too many arguments to
+ function 'riscv_ipi_set_virq_range'
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Conor Dooley <conor@kernel.org>, naresh.kamboju@linaro.org, 
+	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	tglx@linutronix.de, anders.roxell@linaro.org, dan.carpenter@linaro.org, 
+	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
-
-On Wed, May 15, 2024 at 12:36=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
+On Wed, May 15, 2024 at 10:36=E2=80=AFPM Palmer Dabbelt <palmer@dabbelt.com=
+> wrote:
 >
-> On Wed, May 08, 2024 at 04:47:25PM -0700, Linus Torvalds wrote:
-> > For example, the most common case of overflow we've ever had has very
-> > much been array indexing. Now, sometimes that has actually been actual
-> > undefined behavior, because it's been overflow in signed variables,
-> > and those are "easy" to find in the sense that you just say "no, can't
-> > do that". UBSAN finds them, and that's good.
+> On Wed, 15 May 2024 07:36:33 PDT (-0700), Conor Dooley wrote:
+> > Palmer,
+> > This is the issue I point out to you on the call earlier:
 >
-> We build with -fno-strict-overflow, which implies -fwrapv, which removes
-> the UB from signed overflow by mandating 2s complement.
+> Ya, thanks, I just hit it.  Looks like it's a semantic conflict between
+> 21a8f8a0eb35 ("irqchip: Add RISC-V incoming MSI controller early
+> driver") and dc892fb44322 ("riscv: Use IPIs for remote cache/TLB flushes
+> by default").  I think all we need is
+>
+> diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/ir=
+q-riscv-imsic-early.c
+> index 886418ec06cb..4fbb37074d29 100644
+> --- a/drivers/irqchip/irq-riscv-imsic-early.c
+> +++ b/drivers/irqchip/irq-riscv-imsic-early.c
+> @@ -49,7 +49,7 @@ static int __init imsic_ipi_domain_init(void)
+>                 return virq < 0 ? virq : -ENOMEM;
+>
+>         /* Set vIRQ range */
+> -       riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
+> +       riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI);
+>
+>         /* Announce that IMSIC is providing IPIs */
+>         pr_info("%pfwP: providing IPIs using interrupt %d\n", imsic->fwno=
+de, IMSIC_IPI_ID);
+>
+> as a conflict resolution, which IIUC should happen when Linus merges my
+> next PR.  So I'll try and remember to call that out.
 
-FWIW,
+Yes, your conflict resolution is correct.
 
-Clang-19 allows -fwrapv and -fsanitize=3Dsigned-integer-overflow to work
-together [1]
-
-And the sanitizer was re-introduced with Commit 557f8c582a9ba8ab
-("ubsan: Reintroduce signed overflow sanitizer").
+Thanks,
+Anup
 
 >
-> With the exception of an UBSAN bug prior to GCC-8, UBSAN will not, and
-> should not, warn about signed overflow when using either of these flags.
-
-[1]: https://clang.llvm.org/docs/ReleaseNotes.html#sanitizers
-
-Thanks
-Justin
+> >
+> > On Wed, May 15, 2024 at 04:18:58PM +0200, Naresh Kamboju wrote:
+> >> The riscv builds failed on Linux next-20240515 tag due to following bu=
+ild
+> >> warnings / errors with gcc-13 and clang toolchain.
+> >>
+> >> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >>
+> >> Build Log:
+> >> -----
+> >> drivers/irqchip/irq-riscv-imsic-early.c: In function 'imsic_ipi_domain=
+_init':
+> >> drivers/irqchip/irq-riscv-imsic-early.c:52:9: error: too many
+> >> arguments to function 'riscv_ipi_set_virq_range'
+> >>    52 |         riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
+> >>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
+> >> In file included from include/linux/smp.h:119,
+> >>                  from include/linux/lockdep.h:14,
+> >>                  from include/linux/spinlock.h:63,
+> >>                  from include/linux/sched.h:2142,
+> >>                  from include/linux/ratelimit.h:6,
+> >>                  from include/linux/dev_printk.h:16,
+> >>                  from include/linux/device.h:15,
+> >>                  from include/linux/node.h:18,
+> >>                  from include/linux/cpu.h:17,
+> >>                  from drivers/irqchip/irq-riscv-imsic-early.c:8:
+> >> arch/riscv/include/asm/smp.h:52:6: note: declared here
+> >>    52 | void riscv_ipi_set_virq_range(int virq, int nr);
+> >>       |      ^~~~~~~~~~~~~~~~~~~~~~~~
+> >>
+> >> metadata:
+> >>   git_describe: next-20240515
+> >>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+> >>   git_sha: 82d92a9a1b9ea0ea52aff27cddd05009b4edad49
+> >>   git_short_log: 82d92a9a1b9e ("Add linux-next specific files for 2024=
+0515")
+> >>
+> >> Links:
+> >>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202=
+40515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/details/
+> >>  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2gUiKdxX7qM2=
+7ritMJT5pRyZhyi/
+> >>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202=
+40515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/history/
+> >>
+> >> --
+> >> Linaro LKFT
+> >> https://lkft.linaro.org
+> >>
