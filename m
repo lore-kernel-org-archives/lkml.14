@@ -1,25 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A469E54645;
-	Wed, 15 May 2024 10:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD0F5A116
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715767247; cv=none; b=GTJKhnKvfpaQ/GnH2LPX4PS/WuJi/fPDQVDb/GTBum0Dhp2B3YqEn44b8BJ1yQSrpDJbOeSFYBS2R8EkpSltYiPTcTe2j3jUw3XT1BVtgceuQGVbTtdrLzOvKIgv0Ok24B2gtUDFN5Xh5LaIHihJiVuBCG9J7ZmO791+Ml1riq4=
+	t=1715767280; cv=none; b=k81FWi39sz8/xKhSWmxlJcKdqZpksvBSxE9iZxVTgzzSNJBAfnLC3QqJ1t/6z7fzIvqRFVInFIkhcVtzTAI+is67EfvBlDfAKrV14C0Aw+e7yDSlPXGam69sIqsWok0x85lNLqe/mcIn64kYDysJMJIrm4Vh9X6yMF/GRE9dlXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715767247; c=relaxed/simple;
-	bh=UP6ARF9IZdzS2kDPVK4Ew0G7gxoE0lxuEJNvLxI+258=;
+	s=arc-20240116; t=1715767280; c=relaxed/simple;
+	bh=tFC4Uagubb4eoXf9w6qPRw0dVqgXqCUj9Gg59g6y8cY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ikqv8lUb4tdXnS9TIFL0V87jnW2ocqhqaSZXP9y9v0G/WMYGAhuuAEV/A/2YnUJhBNbUWEojLSWKbu1UeGd6fqs/qfZEEXXvegEE+IkpZjQ7E+xI6pmwSs1HcO5b5x6mKzSIu/62bfO5P85NrkqphQVb5Y4o9ZZMY8MQ95XEo/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BB0E1007;
-	Wed, 15 May 2024 03:01:09 -0700 (PDT)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B6EF3F762;
-	Wed, 15 May 2024 03:00:42 -0700 (PDT)
-Message-ID: <09717ad7-2a4b-486c-a4f5-e3f09a212add@arm.com>
-Date: Wed, 15 May 2024 12:00:40 +0200
+	 In-Reply-To:Content-Type; b=MOmJQKdpMgDE7jT7G1iec5HPeeTVt04cQ6TiEJDzol7FSQl8KT1+DuKWKi31wFDmzhFyQCANmX4AwDDQ0adSUnYjMMnPwkjdc51xB3Y/jj/3OSeXG6Yu6ro4cjhL0yqrpLlMRndMy8IZ5+8Ge/pMvAGMbzD9JA5bZza0SQQ1tpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=K1RcWlVF; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="K1RcWlVF"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51fdc9af005so10730151e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 03:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1715767277; x=1716372077; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ukpqZZkZ02pF7RH8XXzq5qjyGt8/k5nmv3oeZg4UY0I=;
+        b=K1RcWlVF7Y7Z2kmuv2U08evyQJO5O88iW/TZktke7hjOwzENLKqs6pqbtoMo/mQXpd
+         NWEsVJGSfsXVHn5TJi6teJ3btLF0MQLm92TBGcVx8KVaBDA3iVt3I1PoIx8ORd3xiPWh
+         9vsj7EzFcg7il8x3V7bH1W6VDWR2CGNzqXMnOpqDQ7OlrIXCvfIGFcil+drnBNad9TKX
+         rGjUD6RLAyHJc115+6GwEi6eL5LFoDqAqsNngvXRyA4AjD68zW6rZyVN0MHtVWHfuIwT
+         F7kRt5KReQfMK+DCwYtTNTiVEWm6sN6HEQGdlXjULZNKkBOsEYFsjFNNmv79oR9saiB9
+         sqVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715767277; x=1716372077;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ukpqZZkZ02pF7RH8XXzq5qjyGt8/k5nmv3oeZg4UY0I=;
+        b=BUnXdG1fgY7kO9MneyEV+8tD5RhgyTsCadcJB1D6OybUHDkbXKi/yUa6RAxnLzn/PS
+         u+Bv8rvh4IBCW6t4TkPPj1LkxA/0OOMVx/F4MG3jsZv9aI+So/X/+BnbQy00bKtnZAV0
+         vCHRT/5iMEc6KtKKX+xG0gtIPuhkC76jEl5AKzuBojB59dNuKUVMSkyG/hV665pC9SlM
+         OOviFG10z6nVqazlSGx81s1SCv6RKeyWAI3vQU/rSp+DBMGBqrLsnJGL58J8SgG+6cCB
+         akn0IJgfgmYuFV4rVsshsn641/gJQgln4j+DAGRagFNE77a106pKA8QtTEVn0TbE6EOm
+         ZpHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgGKBuSfvC9cr7pGbFU8SNKdA75ZxrLR0h6D/Zkl6A0LD2yEQjQLlq8DMGUZ1VuRrZ2Z8LmAh4p6oCsgR9EXjMfCXyb5DRWRNzU68k
+X-Gm-Message-State: AOJu0Yx3Sv0b/ot4mlx2Mo3XOPtbCFd1oAI2bjVej69IngbZb9+DJ+G3
+	hSNtGltSE2l3/ZpVbGsMpacurEF+xs4EBfwY0grURZOtIdz9iLZ0NDYYJ/N5s58=
+X-Google-Smtp-Source: AGHT+IFdKwRcFcJDPoxpjnHjRZfubVEt9+BPb8Ln+L2DQVxYwERLJdr4JLAoMMUPEl1bmgBYy5XENg==
+X-Received: by 2002:a05:6512:3e17:b0:51d:605e:f0ce with SMTP id 2adb3069b0e04-52210278698mr17687805e87.50.1715767276761;
+        Wed, 15 May 2024 03:01:16 -0700 (PDT)
+Received: from [192.168.0.245] ([62.73.69.208])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01724sm837186066b.162.2024.05.15.03.01.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 May 2024 03:01:16 -0700 (PDT)
+Message-ID: <59b1ec87-03dc-4336-8ce1-cb97e5abb7d6@blackwall.org>
+Date: Wed, 15 May 2024 13:01:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,90 +61,202 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] sched: Consolidate cpufreq updates
-To: Qais Yousef <qyousef@layalina.io>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240512190018.531820-1-qyousef@layalina.io>
- <9e845146-8a31-407c-a5ee-e2e32f1655e5@arm.com>
- <20240513220903.no2j6zl4tk7lr6um@airbuntu>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH net-next v9 04/14] netdev: support binding dma-buf to
+ netdevice
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
+ <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
+ Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240510232128.1105145-1-almasrymina@google.com>
+ <20240510232128.1105145-5-almasrymina@google.com>
 Content-Language: en-US
-In-Reply-To: <20240513220903.no2j6zl4tk7lr6um@airbuntu>
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20240510232128.1105145-5-almasrymina@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 14/05/2024 00:09, Qais Yousef wrote:
-> On 05/13/24 14:43, Dietmar Eggemann wrote:
->> On 12/05/2024 21:00, Qais Yousef wrote:
->>
->> [...]
->>
->>> @@ -4682,7 +4659,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->>>  
->>>  	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
->>>  
->>> -	cfs_rq_util_change(cfs_rq, 0);
->>> +	cpufreq_update_util(rq_of(cfs_rq), 0);
->>
->> Isn't this slighlty different now?
->>
->> before:
->>
->>    if (&rq->cfs == cfs_rq) {
->>        cpufreq_update_util(rq, ....)
->>    }
->>
->> now:
->>
->>    cpufreq_update_util(rq_of(cfs_rq), ...)
->>
->> You should get way more updates from attach/detach now.
+On 11/05/2024 02:21, Mina Almasry wrote:
+> Add a netdev_dmabuf_binding struct which represents the
+> dma-buf-to-netdevice binding. The netlink API will bind the dma-buf to
+> rx queues on the netdevice. On the binding, the dma_buf_attach
+> & dma_buf_map_attachment will occur. The entries in the sg_table from
+> mapping will be inserted into a genpool to make it ready
+> for allocation.
 > 
-> Yes, well spotted!
+> The chunks in the genpool are owned by a dmabuf_chunk_owner struct which
+> holds the dma-buf offset of the base of the chunk and the dma_addr of
+> the chunk. Both are needed to use allocations that come from this chunk.
 > 
-> Looking at the path more closely, I can see this is called from
-> enqueue_task_fair() path when a task migrates to new CPU. And when
-> attach_task_cfs_rq() which is called when we switch_to_fair(), which I already
-> cover in the policy change for the RUNNING task, or when
-> task_change_group_fair() which what I originally understood Vincent was
-> referring to. I moved the update to this function after the detach/attach
-> operations with better guards to avoid unnecessary update.
+> We create a new type that represents an allocation from the genpool:
+> net_iov. We setup the net_iov allocation size in the
+> genpool to PAGE_SIZE for simplicity: to match the PAGE_SIZE normally
+> allocated by the page pool and given to the drivers.
+> 
+> The user can unbind the dmabuf from the netdevice by closing the netlink
+> socket that established the binding. We do this so that the binding is
+> automatically unbound even if the userspace process crashes.
+> 
+> The binding and unbinding leaves an indicator in struct netdev_rx_queue
+> that the given queue is bound, but the binding doesn't take effect until
+> the driver actually reconfigures its queues, and re-initializes its page
+> pool.
+> 
+> The netdev_dmabuf_binding struct is refcounted, and releases its
+> resources only when all the refs are released.
+> 
+> Signed-off-by: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+> 
+> v9: https://lore.kernel.org/all/20240403002053.2376017-5-almasrymina@google.com/
+> - Removed net_devmem_restart_rx_queues and put it in its own patch
+>   (David).
+> 
+> v8:
+> - move dmabuf_devmem_ops usage to later patch to avoid patch-by-patch
+>   build error.
+> 
+> v7:
+> - Use IS_ERR() instead of IS_ERR_OR_NULL() for the dma_buf_get() return
+>   value.
+> - Changes netdev_* naming in devmem.c to net_devmem_* (Yunsheng).
+> - DMA_BIDIRECTIONAL -> DMA_FROM_DEVICE (Yunsheng).
+> - Added a comment around recovering of the old rx queue in
+>   net_devmem_restart_rx_queue(), and added freeing of old_mem if the
+>   restart of the old queue fails. (Yunsheng).
+> - Use kernel-family sock-priv (Jakub).
+> - Put pp_memory_provider_params in netdev_rx_queue instead of the
+>   dma-buf specific binding (Pavel & David).
+> - Move queue management ops to queue_mgmt_ops instead of netdev_ops
+>   (Jakub).
+> - Remove excess whitespaces (Jakub).
+> - Use genlmsg_iput (Jakub).
+> 
+> v6:
+> - Validate rx queue index
+> - Refactor new functions into devmem.c (Pavel)
+> 
+> v5:
+> - Renamed page_pool_iov to net_iov, and moved that support to devmem.h
+>   or netmem.h.
+> 
+> v1:
+> - Introduce devmem.h instead of bloating netdevice.h (Jakub)
+> - ENOTSUPP -> EOPNOTSUPP (checkpatch.pl I think)
+> - Remove unneeded rcu protection for binding->list (rtnl protected)
+> - Removed extraneous err_binding_put: label.
+> - Removed dma_addr += len (Paolo).
+> - Don't override err on netdev_bind_dmabuf_to_queue failure.
+> - Rename devmem -> dmabuf (David).
+> - Add id to dmabuf binding (David/Stan).
+> - Fix missing xa_destroy bound_rq_list.
+> - Use queue api to reset bound RX queues (Jakub).
+> - Update netlink API for rx-queue type (tx/re) (Jakub).
+> 
+> RFC v3:
+> - Support multi rx-queue binding
+> 
+> ---
+>  Documentation/netlink/specs/netdev.yaml |   4 +
+>  include/net/devmem.h                    | 111 +++++++++++
+>  include/net/netdev_rx_queue.h           |   2 +
+>  include/net/netmem.h                    |  10 +
+>  include/net/page_pool/types.h           |   5 +
+>  net/core/Makefile                       |   2 +-
+>  net/core/dev.c                          |   3 +
+>  net/core/devmem.c                       | 254 ++++++++++++++++++++++++
+>  net/core/netdev-genl-gen.c              |   4 +
+>  net/core/netdev-genl-gen.h              |   4 +
+>  net/core/netdev-genl.c                  | 105 +++++++++-
+>  11 files changed, 501 insertions(+), 3 deletions(-)
+>  create mode 100644 include/net/devmem.h
+>  create mode 100644 net/core/devmem.c
+> 
+[snip]
+> +/* Protected by rtnl_lock() */
+> +static DEFINE_XARRAY_FLAGS(net_devmem_dmabuf_bindings, XA_FLAGS_ALLOC1);
+> +
+> +void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding)
+> +{
+> +	struct netdev_rx_queue *rxq;
+> +	unsigned long xa_idx;
+> +	unsigned int rxq_idx;
+> +
+> +	if (!binding)
+> +		return;
+> +
+> +	if (binding->list.next)
+> +		list_del(&binding->list);
+> +
 
-Yeah, all !root cfs_rq attach or detach wouldn't change anything since
-the util_avg wouldn't have propagated to the root cfs_rq yet. So
-sugov_get_util() wouldn't see a difference.
+minor nit:
+In theory list.next can still be != null if it's poisoned (e.g. after del). You can
+use the list api here (!list_empty(&binding->list) -> list_del_init(&binding->list))
+if you initialize it in net_devmem_bind_dmabuf(), then you'll also get nice list
+debugging.
 
-Yes, enqueue_entity() sets DO_ATTACH unconditionally.
+> +	xa_for_each(&binding->bound_rxq_list, xa_idx, rxq) {
+> +		if (rxq->mp_params.mp_priv == binding) {
+> +			/* We hold the rtnl_lock while binding/unbinding
+> +			 * dma-buf, so we can't race with another thread that
+> +			 * is also modifying this value. However, the page_pool
+> +			 * may read this config while it's creating its
+> +			 * rx-queues. WRITE_ONCE() here to match the
+> +			 * READ_ONCE() in the page_pool.
+> +			 */
+> +			WRITE_ONCE(rxq->mp_params.mp_ops, NULL);
+> +			WRITE_ONCE(rxq->mp_params.mp_priv, NULL);
+> +
+> +			rxq_idx = get_netdev_rx_queue_index(rxq);
+> +
+> +			netdev_rx_queue_restart(binding->dev, rxq_idx);
+> +		}
+> +	}
+> +
+> +	xa_erase(&net_devmem_dmabuf_bindings, binding->id);
+> +
+> +	net_devmem_dmabuf_binding_put(binding);
+> +}
+[snip]
 
-And dequeue_entity() sets DO_DETACH for a migrating (!wakeup migrating)
-task.
+Cheers,
+ Nik
 
-For a wakeup migrating task we have remove_entity_load_avg() but this
-can't remove util_avg from the cfs_rq. This is deferred to
-update_cfs_rq_load_avg() in update_load_avg() or __update_blocked_fair().
-
-And switched_{to,from}_fair() (check_class_changed()) and
-task_change_group_fair() are the other 2 users of
-{attach,detach}_entity_load_avg(). (plus online_fair_sched_group() for
-attach).
-
-> I understood this will lead to big change and better apply immediately vs
-> wait for the next context switch. But I'll ask the question again, can we drop
-> this and defer to context switch?
-
-Hard to say really, probably we can. All benchmarks with score numbers
-will create plenty of context switches so you wont see a diff. And for
-more lighter testcases you would have to study the differences in trace
-files and reason about the implications of potentially kick CPUfreq a
-little bit later.
-
-[...]
