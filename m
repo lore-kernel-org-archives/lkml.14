@@ -1,159 +1,89 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EB1156653
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A977155723
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 16:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715788729; cv=none; b=l1RWwRPvx6tLqIpjZyh9a9tvf6uNNp2mVsYmGJBBxAZ5KD5Dyys9zUsG5YCcf3JEGm3F0ttp21BRTcMI+PlPzf4rtrju9ltwfgGUkXSrX3lBcaI+jLkoY+BGstcWaurCs/Dv15TjDyG4F4bmIm2Xo+nce6nXqxhw7w1Wh+FcVDA=
+	t=1715788840; cv=none; b=UFtNaVYyLxAILbyRt2RobShrLrKH7BwTVK4bfG691fulaFuL4oZQDlHDUQAQ/UO5bfbxMOaHyednEX3spT1vlgDNiZSiZ0mKzOG++WfUY+5Ks/a1Q7lx7D0kX6SH34rgpnQ96zGGII/OL+fL88PDCB9jttqxtnXg0+2+InVmTjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715788729; c=relaxed/simple;
-	bh=pGEkzf1qcpDKbJPPzrmpblwq6zQnfwhuHrqMW2Q8p3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PUeNBQT49ptcTcqTIIi59zO68rbZH8IaU4n0m10+yBm9KHNtgfWrn9HJ0i4k/+7iWEVFc0fBsh+bXCTNHljxj6GY0HPSZL6KR7udaW/8Bbv7SM5xiq+0uxCJDPsJ5mBjxh7Prr+k1fzpn7yVHlxpQrtoF14l6hFoaBIih3uCuII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NAsBbdQT; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715788840; c=relaxed/simple;
+	bh=vSZLadVXxqpR4dC7K/Hoqnf7AMMN3R3Jvpg2OocRMww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=blaK+4Z6CE2llFD3amWBqapXyUjHOM52e6BKb46IV8D8sTvMBTeQLjxNiVUyw1rRIJtyeZFFqIV17wyNDYQBRdrOhj6bsq9YJmUQwkX7gDiCsl1/ccMclAH3IoGY9gWyBpv4XrhKf8keEUzNgyxdMtJNd079cpJ5jUBklHwOGyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UUYPQmb4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAsBbdQT"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-574bf7ab218so2163626a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 08:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715788726; x=1716393526; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6iRHbyNTGvr9sjRduejmHoKiGmzFnKEKB6uzL8EQKYw=;
-        b=NAsBbdQTcdQhwAGLBtlhNfK09LweAKI7klmAVqVsriAPvuA9vfqjmUSQPiWve2ls8X
-         n97YSM47IakOn1puzdjHvMSrkQx+NjfNkpMqqbPcInoY7RytG36yWMWWlw4Tm2sk+Lhg
-         pWwVff+/cAZcnB/n3XIUKQfaDWj3cmvEN7MoBp5Pbc+DEOTLzek9yAmMW6w84okShdIc
-         /Q6lXgKxWJ2qFnVy5mP6NfKRsoVF1GxjR6FyLFDIY18RmidAnhp1dpgquZwHdZaTOr0R
-         1pd+rNBN92iVfQR1N4aL7zQegaB7cA4QblztVFjZ4ZrgauhdUzuQlR8an0NstzdEVeP0
-         npmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715788726; x=1716393526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6iRHbyNTGvr9sjRduejmHoKiGmzFnKEKB6uzL8EQKYw=;
-        b=c59br9af9lqUd6atUqxbb+DUnxYJjOGOdmVYAoPTq4IXw8lNJGq6xK6zGazZnNoxtx
-         +ISfKVldJu77ZBbUZCX5e0gf1od93eIGObx50hLnF0kSd8QFm0RRilafRsJ0RgwdIUyn
-         i+bhdyQDCg5DR2gxk2BY94nmJUvQCyNtiRc5jintd5OtWDO4EsoN56KurqXKaxAOspr0
-         6NwTclqvDwzvc4RXuH4nRlKEu8ekrQoeBqb8ifKtlZH2uUvjB8nZ8ZRBYV4nzQ/6c7++
-         VKznHXDByuvQ4K56tfXpYtmhMHuRj8SYf0QKJlVaXQgV6DIpO6uBLlZ4gT21kUyCZgsq
-         lD4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVskd3iE96SiB+qEk4Aoj7djXGxJBEXasJCWiRKRhVmPSNaPBxlRFFc84878FU+YhQ7NKwXTmPBlwMETcuHLkP9omQp5olF1J+YD16X
-X-Gm-Message-State: AOJu0Yyxwl6H3ycgRMyhQmyh/CCU6WIjlH2UAvsGGQ9FIdJiAoDLhHOK
-	uoC6Fcfyjstfrxq3t/CmUlGVJaH6Zfga1WputBQy1pLru/4DaG+oKcNP3nG9At7LD78Mk1kyOUa
-	v7udODfxsgLE+0MWPa2J0imxAf+s=
-X-Google-Smtp-Source: AGHT+IEWavW0b5hH9Os46OQ//THLw953i+0xH4jkXXGxq/ZWERzJILGCxJY2Bdd4m6uSBXvQUtJ4tkMu+D5/qpgWivc=
-X-Received: by 2002:a50:d684:0:b0:572:a13c:30ca with SMTP id
- 4fb4d7f45d1cf-5734d5de823mr11907722a12.20.1715788725606; Wed, 15 May 2024
- 08:58:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UUYPQmb4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715788837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yt8DsUxFz497IwJBgOgaEyff2Zjn77BCwz7q5rgLuW0=;
+	b=UUYPQmb43gGEIB73cLv6xi2HguMjnwwuH9btCbhiMePrqEy0l8nxTvKX0YWhkpsEPj6VPd
+	mBK8CSujQ2IrETl52WhHYVOc/ihFL+f9XjM3zMEVtyuzEnQ2FC3CT80XDJwj1n1bnN6wvQ
+	hF3BAdhiOLrINc1hJFLFZsoVGiKF/0s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-7hRf04vjNHiCrAOya3-RTw-1; Wed, 15 May 2024 12:00:29 -0400
+X-MC-Unique: 7hRf04vjNHiCrAOya3-RTw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C15B98025FC;
+	Wed, 15 May 2024 16:00:28 +0000 (UTC)
+Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (bmarzins-01.fast.eng.rdu2.dc.redhat.com [10.6.23.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC6F2C15BB1;
+	Wed, 15 May 2024 16:00:28 +0000 (UTC)
+Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.2/8.17.1) with ESMTPS id 44FG0S7l119889
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 15 May 2024 12:00:28 -0400
+Received: (from bmarzins@localhost)
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.2/8.17.2/Submit) id 44FG0Sq3119888;
+	Wed, 15 May 2024 12:00:28 -0400
+Date: Wed, 15 May 2024 12:00:28 -0400
+From: Benjamin Marzinski <bmarzins@redhat.com>
+To: Yang Yang <yang.yang@vivo.com>
+Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+        Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] dm: support retrieving struct dm_target from struct
+ dm_dev
+Message-ID: <ZkTcHCM49DDqhaYD@redhat.com>
+References: <20240514090445.2847-1-yang.yang@vivo.com>
+ <20240514090445.2847-4-yang.yang@vivo.com>
+ <ZkTXzG1yrPmW64Z6@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515023607.870022-1-linmiaohe@huawei.com>
-In-Reply-To: <20240515023607.870022-1-linmiaohe@huawei.com>
-From: Yang Shi <shy828301@gmail.com>
-Date: Wed, 15 May 2024 09:58:32 -0600
-Message-ID: <CAHbLzkrO9-yWRFrWoE0idWwMffkBWNSku6iO2vdPLCpWAY7wQg@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/huge_memory: don't unpoison huge_zero_folio
-To: Miaohe Lin <linmiaohe@huawei.com>
-Cc: akpm@linux-foundation.org, nao.horiguchi@gmail.com, xuyu@linux.alibaba.com, 
-	david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkTXzG1yrPmW64Z6@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Tue, May 14, 2024 at 8:39=E2=80=AFPM Miaohe Lin <linmiaohe@huawei.com> w=
-rote:
->
-> When I did memory failure tests recently, below panic occurs:
->
->  kernel BUG at include/linux/mm.h:1135!
->  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
->  CPU: 9 PID: 137 Comm: kswapd1 Not tainted 6.9.0-rc4-00491-gd5ce28f156fe-=
-dirty #14
->  RIP: 0010:shrink_huge_zero_page_scan+0x168/0x1a0
->  RSP: 0018:ffff9933c6c57bd0 EFLAGS: 00000246
->  RAX: 000000000000003e RBX: 0000000000000000 RCX: ffff88f61fc5c9c8
->  RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff88f61fc5c9c0
->  RBP: ffffcd7c446b0000 R08: ffffffff9a9405f0 R09: 0000000000005492
->  R10: 00000000000030ea R11: ffffffff9a9405f0 R12: 0000000000000000
->  R13: 0000000000000000 R14: 0000000000000000 R15: ffff88e703c4ac00
->  FS:  0000000000000000(0000) GS:ffff88f61fc40000(0000) knlGS:000000000000=
-0000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 000055f4da6e9878 CR3: 0000000c71048000 CR4: 00000000000006f0
->  Call Trace:
->   <TASK>
->   do_shrink_slab+0x14f/0x6a0
->   shrink_slab+0xca/0x8c0
->   shrink_node+0x2d0/0x7d0
->   balance_pgdat+0x33a/0x720
->   kswapd+0x1f3/0x410
->   kthread+0xd5/0x100
->   ret_from_fork+0x2f/0x50
->   ret_from_fork_asm+0x1a/0x30
->   </TASK>
->  Modules linked in: mce_inject hwpoison_inject
->  ---[ end trace 0000000000000000 ]---
->  RIP: 0010:shrink_huge_zero_page_scan+0x168/0x1a0
->  RSP: 0018:ffff9933c6c57bd0 EFLAGS: 00000246
->  RAX: 000000000000003e RBX: 0000000000000000 RCX: ffff88f61fc5c9c8
->  RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff88f61fc5c9c0
->  RBP: ffffcd7c446b0000 R08: ffffffff9a9405f0 R09: 0000000000005492
->  R10: 00000000000030ea R11: ffffffff9a9405f0 R12: 0000000000000000
->  R13: 0000000000000000 R14: 0000000000000000 R15: ffff88e703c4ac00
->  FS:  0000000000000000(0000) GS:ffff88f61fc40000(0000) knlGS:000000000000=
-0000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 000055f4da6e9878 CR3: 0000000c71048000 CR4: 00000000000006f0
->
-> The root cause is that HWPoison flag will be set for huge_zero_folio
-> without increasing the folio refcnt. But then unpoison_memory() will
-> decrease the folio refcnt unexpectly as it appears like a successfully
-> hwpoisoned folio leading to VM_BUG_ON_PAGE(page_ref_count(page) =3D=3D 0)
-> when releasing huge_zero_folio.
->
-> Skip unpoisoning huge_zero_folio in unpoison_memory() to fix this issue.
-> We're not prepared to unpoison huge_zero_folio yet.
->
-> Fixes: 478d134e9506 ("mm/huge_memory: do not overkill when splitting huge=
-_zero_page")
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> Cc: <stable@vger.kernel.org>
+On Wed, May 15, 2024 at 11:42:04AM -0400, Benjamin Marzinski wrote:
+> When a target calls dm_get_device(), if it adds a new table device to
+> t->devices, then it's the first target in this table to use that device.
+> If flush_pass_around is set for this target, then it also sets
+> sends_pass_around_flush. In __send_empty_flush() if the table has
+> flush_pass_around set, when you iterate through the devices, you only
 
-Reviewed-by: Yang Shi <shy828301@gmail.com>
+Err, "When you iterate through the *targets*, you only ..." In this
+method you don't iterate through the list of devices (which is supposed
+to be protected by t->devices_lock).
 
-> ---
-> v2:
->  Change to simply check for the huge zero page. Thanks.
-> ---
->  mm/memory-failure.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 16ada4fb02b7..68bc8d7ff53d 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -2558,6 +2558,12 @@ int unpoison_memory(unsigned long pfn)
->                 goto unlock_mutex;
->         }
->
-> +       if (is_huge_zero_folio(folio)) {
-> +               unpoison_pr_info("Unpoison: huge zero page is not support=
-ed %#lx\n",
-> +                                pfn, &unpoison_rs);
-> +               goto unlock_mutex;
-> +       }
-> +
->         if (folio_test_slab(folio) || folio_test_pgtable(folio) ||
->             folio_test_reserved(folio) || folio_test_offline(folio))
->                 goto unlock_mutex;
-> --
-> 2.33.0
->
+> call __send_empty_flush_bios() for the ones with sends_pass_around_flush
+> set.
+> 
+> Or am I overlooking something?
+> 
+> -Ben
+
