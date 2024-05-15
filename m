@@ -1,80 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D214A58AC3;
-	Wed, 15 May 2024 12:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8540F2CCD0
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 12:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715774600; cv=none; b=UQ1xti6rwQKDx9D10Qo7vqwHpXfhJu2pUyA+CvS4abwIluFCmf9XfM69z1bBqkxfFSCHJyae+cepjwDaDwcv3Q8yTN0u4u69TTQa9LxNAvmYg+nPhmyL69BM99EPf+Gg+ln9D7pn0HH+PCkOZQ5bU8fSXnAkowaExZ6pcngiIG0=
+	t=1715774778; cv=none; b=RNwpc5QegBZR7Y3k410+hzDTyP4mXvH1AF93765ZFGMxkFW9/7UdD5gOUrJNRSZmY4PmWafFSTSJvn4sxqHJMLQcWjfTLTARz2NHO9p2kQeo6BgDIfKw9GMOWk4HluK/JgNpGEPUd5RjGr69d8Yxid7eaUR+3b5iRewvAs33pvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715774600; c=relaxed/simple;
-	bh=kfxt6JsqCE1IzZSlDw/+iyGpDKdZQRGvvHfBK97525Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=dGBzZG6F1mkO3RtxOipafTZCZPJLINTEEfMQa3VEsey6DTx2QPgWkyCiVUhcUSxqSERPsRidWWEhra38VncSpu0u6Ady1RXSk4aiMbWFOh2wdt+3LsEfaUHYcOYH7p+Q0ALAJrs32camPgi1hSVPH+wXWr/qTeevVy/QZHRiB+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWm0WQZG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715774778; c=relaxed/simple;
+	bh=Wf4PtMcK4TWbBm/o2EnpN3Y26qLxkxka0G6bwrOg3aA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YKH0e/q7YZ6Nsg9WBprWzP51xOGDdeDbFReD4hdKqUt/UjaKGSXxXZcdebg0syq6XXMRWhe0ieYSIBZWHbZuPdXvxLatlaaY6yPkq2XfSQlw6ykMgMQ12sbSdRPpDHHJZLIyGBzo0E0PgesQ7lSsMPVzZ4WC79CKvKieFqFX8Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=u6H+7BQb; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWm0WQZG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F27BC4AF07;
-	Wed, 15 May 2024 12:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715774599;
-	bh=kfxt6JsqCE1IzZSlDw/+iyGpDKdZQRGvvHfBK97525Y=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=tWm0WQZGtAjM8hMW47UD5kIiDpCVHnZyLFQ9wltS1Ljao2EyCXRroQV8DQooL3ub2
-	 Sq1F+0qxhn0u7tfXKNXYBoXbmaEEQHU5MpbxT3kujk0r8CU7QRP0mlprMV51COSh9T
-	 k7Muo8iDAC41WaqgvYYXMXgGEItOV9MI9ZhHgAa4NSPXcAiZu+nW9aBO35YIX6xAE2
-	 UC7nz1kUYDJdxbFGYgAldS24sd4eiDGYa7dR0eXxr9++V37bW61z60um1vgdwRTvlN
-	 M3UMbRejCh2dIlzH1luw0TtNALBQFK5MSV+rBTZSclsTm3FEMDFc9MucC3Z72zUvQQ
-	 p5KWr2DOaS6QA==
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="u6H+7BQb"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41fd5dc0508so45556045e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 05:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715774775; x=1716379575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rJYF6H91YS9YSoXm+Tl9JERoBMf7eBC9ZSy+O3IfVoo=;
+        b=u6H+7BQb9llJ+GoUyqhx9nL12eq1QZTpEYwVKf4L6Kk8pxybMMa6wGPamt1Bg1ep4d
+         C/lsdKjdJeZdXwMLWp5fxgO6nHcC9zVgGTXn9zymZ6xqiiOGQW4rrxGI9jgMEd1nbgYA
+         3zZ5OzYV1RLUm4QAEl4pAqnDflIDLagY3fotksWvN5G5S8JQRnwavg71k78sQdNQSyGG
+         eNyDwXYPYfDTTtrAth6G5gdKHPHtbfOX2QJbdr59n1S9no5Kz15fhFmCr3jnxK5+YEqu
+         ve6MqQrYhJPoB6C1CRuR5F1dkin6pAE07+u2g+nP8Yhoa3ZGe855d6flwjmZT/e1NoCt
+         ZGUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715774775; x=1716379575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rJYF6H91YS9YSoXm+Tl9JERoBMf7eBC9ZSy+O3IfVoo=;
+        b=sIutzkaz718BQv40C6I8N9fQN1xfkvGpJwbW6lqltLr5ESel5MKP01pW1tIbHgR4az
+         Zd9iKLxQUpi+PGiMyV5xbWuWLY+mW/nsTiCa0H8n6C7w55qPkUsyIZSXY1tBGgo6Wm/p
+         uONnIiu0+TMPRKtV1szLUDmToP03JXBfHCzifVDB8tCTZoqOTfcOxUJpobkFEmPBeWRP
+         U6Ly1awKSPd/VsqSTqj61klu9faA/xQfj//hSHG0RzJrtjKjUTKBSgMvS9tTF9nbmyo5
+         nhTX11mtJepnEffN/C8DEYtpx//VLib6EYqxY7SFdimopMNukDgpYbI1QHnNYCPeKEhW
+         dGqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVM6a2KYcal0fyuEiSkwLJ9tqmEo62vHt3/16UeAvWITVAjOS2BMjP3r1hZMWcWH26Ypytt07jCO28FfriPu5L95Mo+LGuSJ6dmgy6I
+X-Gm-Message-State: AOJu0YyXt5p3DC08P0kCEg4g9pZhCnxQOhRU8SR11f4AUID9+fQuuIeF
+	8T2GtDtF1ugisykjAnzw7cpm0Ib8d7s3Inxk6M7QihmBL+F8k0J8bj2+RK1hyqs=
+X-Google-Smtp-Source: AGHT+IFLpgfv8/Esnolm22txMsxpEfskLJZ4i6egdOEr6U9kJff2jGBqFVP62Bj1ZgVi3f/r+yf4Tg==
+X-Received: by 2002:a05:600c:2187:b0:419:ec38:f34b with SMTP id 5b1f17b1804b1-41feaa439d6mr115391895e9.20.1715774774868;
+        Wed, 15 May 2024 05:06:14 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87d20488sm266011555e9.25.2024.05.15.05.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 05:06:14 -0700 (PDT)
+Date: Wed, 15 May 2024 13:06:13 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Phil Auld <pauld@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240515120613.m6ajyxyyxhat7eb5@airbuntu>
+References: <20240514234112.792989-1-qyousef@layalina.io>
+ <20240514235851.GA6845@lorien.usersys.redhat.com>
+ <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+ <20240515112050.GA25724@lorien.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 15 May 2024 15:03:15 +0300
-Message-Id: <D1A7BZNCNPW8.281BRWPJVW0JX@kernel.org>
-Cc: "James Bottomley" <James.Bottomley@hansenpartnership.com>, "Mimi Zohar"
- <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
- <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
- <serge@hallyn.com>, <linux-integrity@vger.kernel.org>,
- <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel-team@cloudflare.com>
-Subject: Re: [RFC PATCH 2/2] KEYS: implement derived keys
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Ignat Korchagin"
- <ignat@cloudflare.com>
-X-Mailer: aerc 0.17.0
-References: <20240503221634.44274-1-ignat@cloudflare.com>
- <20240503221634.44274-3-ignat@cloudflare.com>
- <D19QW70177QG.2YC9XL0FT7VME@kernel.org>
- <D19RM0OV7YUW.1ZEI72XQUREMQ@kernel.org>
- <CALrw=nEnqBCBQKhK9ACc7tbicqkXaDD+Bjc1d90xizMvbb--oA@mail.gmail.com>
- <D1A79NQ33IGG.OYIRO9S4YWZS@kernel.org>
-In-Reply-To: <D1A79NQ33IGG.OYIRO9S4YWZS@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240515112050.GA25724@lorien.usersys.redhat.com>
 
-On Wed May 15, 2024 at 3:00 PM EEST, Jarkko Sakkinen wrote:
-> I did as much clarification as I possibly can.
->
-> Also, if you look at confidential computing platforms there's exactly
-> two assets that they use lock into machine:
->
-> - Binary
-> - CPU material
->
-> Only carved into stone immutable material for key derivation.
->
-> You can use mm_struct->exe_file binary if that will work out for you.
-> I'm done with this version.
+On 05/15/24 07:20, Phil Auld wrote:
+> On Wed, May 15, 2024 at 10:32:38AM +0200 Peter Zijlstra wrote:
+> > On Tue, May 14, 2024 at 07:58:51PM -0400, Phil Auld wrote:
+> > > 
+> > > Hi Qais,
+> > > 
+> > > On Wed, May 15, 2024 at 12:41:12AM +0100 Qais Yousef wrote:
+> > > > rt_task() checks if a task has RT priority. But depends on your
+> > > > dictionary, this could mean it belongs to RT class, or is a 'realtime'
+> > > > task, which includes RT and DL classes.
+> > > > 
+> > > > Since this has caused some confusion already on discussion [1], it
+> > > > seemed a clean up is due.
+> > > > 
+> > > > I define the usage of rt_task() to be tasks that belong to RT class.
+> > > > Make sure that it returns true only for RT class and audit the users and
+> > > > replace them with the new realtime_task() which returns true for RT and
+> > > > DL classes - the old behavior. Introduce similar realtime_prio() to
+> > > > create similar distinction to rt_prio() and update the users.
+> > > 
+> > > I think making the difference clear is good. However, I think rt_task() is
+> > > a better name. We have dl_task() still.  And rt tasks are things managed
+> > > by rt.c, basically. Not realtime.c :)  I know that doesn't work for deadline.c
+> > > and dl_ but this change would be the reverse of that pattern.
+> > 
+> > It's going to be a mess either way around, but I think rt_task() and
+> > dl_task() being distinct is more sensible than the current overlap.
+> >
+> 
+> Yes, indeed.
+> 
+> My point was just to call it rt_task() still. 
 
-Pretty good case for having SGX, TDX and SNP in something else than just
-Xeon's and EPYC's ;-)
+It is called rt_task() still. I just added a new realtime_task() to return true
+for RT and DL. rt_task() will return true only for RT now.
 
-But yeah within time limits I have I've used more quota for this
-than I should have.
-
-I look at +1 (if there is one).
-
-BR, Jarkko
+How do you see this should be done instead? I'm not seeing the problem.
