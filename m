@@ -1,63 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD3315B10E
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 20:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E757739AEB
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 20:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715805014; cv=none; b=Vjx9acg7IjOd0DwVYGaYFXrW0uwxkGJEGq7cOXuUV8BWSoyeOU5rsuPvZjzuF/WBMvaDRb/wtgbCKFKUycfryOh+cu9pGXlst/tXRp6S4r40QPN+FNFPf561pB3iEHj6Wu2mkAzNlPIgwQVyes2//W7YsXqjC+lvje8aN/Lk+7U=
+	t=1715805149; cv=none; b=nriI16Jx+qzJjyzDb5Dx4KbK867/2laiQDs5gYcrwD2PzupjFHRP4GJuhKeAxv2XC1hYnJ1EBLI2ovWtTD272LmOr6YqOOTkWDXPtul/Y56V0rN+IqsgMqvoz3gPArtdijvAsP0mxEn+5/p+25KhazaOgkcy0gX4akyMBLv8nng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715805014; c=relaxed/simple;
-	bh=DZ3BE/RIybkiKYm8T63PJsTaaiBkTlq4AGG+AIS2YpI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MdgGiguC591J0JY9vyJ2iyKO+1zzD564pHUzZPdUVkcreiVKBl3lNxvHLeF0RyDTRojdKTCaKKORQ7QidhgMc6sjonqsMXEUgqi1p1RkWNqyQQfKQiFjM7tDe6D73RM4/t9cV+Ybyc109iHVYBNQIYwONKG2P1qPg4/mBsx1fs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pc1czd5u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715805149; c=relaxed/simple;
+	bh=iyv87Dbnyu7gm4af/LI0TOX4gLeF6QvKnfsIZOOyrfc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Hr0F38RtrR2TTBjKGMzIRGqSyi4gapgPMuFzNBqHXUouFNZBWf00XKmH6GYt9kbKpIuwmufYKM55nT7mpWm2Nl2yK4W3vSmwP82CUWfLS1d3+/PaWlK4ysP0y5rkdgPKy4JH+laM/kiIhyQ+bG5K5eaLs6HyeVTbcE1M8uGthX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IoC4VFaV; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pc1czd5u"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A8A23C116B1;
-	Wed, 15 May 2024 20:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715805013;
-	bh=DZ3BE/RIybkiKYm8T63PJsTaaiBkTlq4AGG+AIS2YpI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pc1czd5uNRdCY+6oK4f1Y8gq5w1oN1g7koiY17HJXFeu8a3XBQkPuiMK+zDvZ8rzJ
-	 Y9Mer4gpy6zgCc4aT9RCDp2V98xMv30ufJlqqXgt0eBGYAzP2imR4uwxR5hLALzJSZ
-	 DuebbM6aR1nC0cvdhbgvEw+GpiET30UW+SM8DguFd6btB71lpPTmgs64teYzwsb6iB
-	 /vV+GjYVQdktWJ8YFGyfj5wPex5Qnoiq1bfMEQNyWBy4izpIc0PN1LB8sU3fIlBctE
-	 GHgfVRuQOdflq5td3+gyyIbV25xmeHT1ZF3QsxEOL6GP/lrc58t/9IF3ISGwnENTcs
-	 gb/8xstu9cFUQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9D6DDC43336;
-	Wed, 15 May 2024 20:30:13 +0000 (UTC)
-Subject: Re: [GIT PULL] printk for 6.10
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZkSgkFYVXTxJB9Fm@pathway.suse.cz>
-References: <ZkSgkFYVXTxJB9Fm@pathway.suse.cz>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZkSgkFYVXTxJB9Fm@pathway.suse.cz>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.10
-X-PR-Tracked-Commit-Id: dafc2d0f1bb9bb865a8420f77de56bafd8881cc5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a19264d0868dfd65d7222b37ffe41068b53d473a
-Message-Id: <171580501363.10831.12449241232353363179.pr-tracker-bot@kernel.org>
-Date: Wed, 15 May 2024 20:30:13 +0000
-To: Petr Mladek <pmladek@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Jan Kara <jack@suse.cz>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IoC4VFaV"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f446a1ec59so6968365b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 13:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715805146; x=1716409946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iyv87Dbnyu7gm4af/LI0TOX4gLeF6QvKnfsIZOOyrfc=;
+        b=IoC4VFaVrOG9IwUtxlTf5JQhRfjVAINdoFMaz2K6UvhWAZaGiWDmBx7t5fZQyuYCnw
+         cwFP1+Sfgf9abXcU4uYL0yISHzKKG/IdIJe4U0dvVGzIX4MD9fmH0Dg5bxuDS9DHvNlL
+         KlT5Iaz1KjBHhHpiOfQrZzn3eAv7mPADawJZeV2tMMYA1UEHuZiJdVwbSvBkiAinsbrG
+         6fD8RqoYI7ZP+1p5/rcLleSTBA6EqC0nV2aWhqYQ1owIpvlkHcBMTHfrpI8YlR4N1Zia
+         DPmP8ZAUkw+CKu9y+agPDM+5zMurYcsKCkOmQJz1pLhZt24Vh4vRXJM1DrZHnPmPMzdq
+         Wmdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715805146; x=1716409946;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iyv87Dbnyu7gm4af/LI0TOX4gLeF6QvKnfsIZOOyrfc=;
+        b=LYxS+RgXVMpByf6eh1DxmfMFiixER6p3WkLGvd+7vgnr9Gr+P0p7sqWW1qHvMx/YJ2
+         f5w6G42hk5Is2/puGY+eSJe4818ruEQDQCSbgq+qTrivCx5J0m/Vu9UzV5zP7zytPJLL
+         Xkt3sipHG05T/k7LH1gJseujgiJkKjqq4UHntq5irmOOyyKz0RNKh+5usSRUR/V4miRI
+         4emX6huyttOq4xHtT3wEY2TYZk9+t2j60H9vxbfAeMVOA6O/CLAV58RRgFabcB44TGD2
+         NMSk61E2WFLRIGGD12ccCuXgYQ/Loo+9D9n1ZRspJh6lnhYYk8g6poovROJLdVsGcJA2
+         h5aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGaZcqn+FLSBR7ZM/UqjaGBdwrExEpckrIm+YzUcuOfdE0yoUBo0O0n/RclSuJbR8M3GTG65vm/w9DSbOwle+xULB79I7VtaEZPIXu
+X-Gm-Message-State: AOJu0YwnWMn0ri1jIuVmGeJFt2/bqldNPpBAeAlGcmJDodLN3iTsUi2g
+	CId8kzlicfTNMm2gCmd66/LBsJjr9zS8vlQkkqCovI+h3sgBhSOnPploXu98KcNWqh8uKITfvEF
+	28g==
+X-Google-Smtp-Source: AGHT+IECDBDOitjYW0H0HtQ+B5fogjE5oB/VbBha173B4uff3BsqArnMeFZozd93oJEEJOGvPRJpNAKBnf4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:1d26:b0:6ea:baf6:57a3 with SMTP id
+ d2e1a72fcca58-6f4e0431a08mr1169393b3a.6.1715805145969; Wed, 15 May 2024
+ 13:32:25 -0700 (PDT)
+Date: Wed, 15 May 2024 13:32:24 -0700
+In-Reply-To: <20240514.mai3Ahdoo2qu@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20240503131910.307630-1-mic@digikod.net> <20240503131910.307630-4-mic@digikod.net>
+ <ZjTuqV-AxQQRWwUW@google.com> <20240506.ohwe7eewu0oB@digikod.net>
+ <ZjmFPZd5q_hEBdBz@google.com> <20240507.ieghomae0UoC@digikod.net>
+ <ZjpTxt-Bxia3bRwB@google.com> <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com> <20240514.mai3Ahdoo2qu@digikod.net>
+Message-ID: <ZkUb2IWj4Z9FziCb@google.com>
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+From: Sean Christopherson <seanjc@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, 
+	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
+	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
+	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
+	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
+	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
+	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
+	virtualization@lists.linux-foundation.org, x86@kernel.org, 
+	xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Wed, 15 May 2024 13:46:24 +0200:
+On Tue, May 14, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> On Fri, May 10, 2024 at 10:07:00AM +0000, Nicolas Saenz Julienne wrote:
+> > Development happens
+> > https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
+> > branch, but I'd advice against looking into it until we add some order
+> > to the rework. Regardless, feel free to get in touch.
+>=20
+> Thanks for the update.
+>=20
+> Could we schedule a PUCK meeting to synchronize and help each other?
+> What about June 12?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.10
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a19264d0868dfd65d7222b37ffe41068b53d473a
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+June 12th works on my end.
