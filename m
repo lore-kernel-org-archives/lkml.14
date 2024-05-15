@@ -1,106 +1,124 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A26A13F439
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AA913F43D;
+	Wed, 15 May 2024 14:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715782752; cv=none; b=TixQLqB5wXcdSKzxO+5DJhgkRwwNvMhJ55M4C0hDpdmk3H6ZyW346koNKpi5GxkWTZcXlFnepaZlqR9KQBd1icpbbx22dlCPnfoL7T16m+c4FrlxkiBP/2VD0hr1ETVYuQKvMpg0qtpdvC0k23QgViWuxoPObf24FjtJ100hK3c=
+	t=1715782787; cv=none; b=X0DZWsHnzDnICUSfW03QNWnl7gB2UFnNm+tzHR4TuGYe6CtEoogDTYXHu8Q+EjFKovpm/IAZEKtZXCmSkp8lqgqDH53GiWzjLZ4c6FnN/UnjMqmK1V6AUNeWhP0ZfkwLGIvJPBhGmHl04mcTbyMJcI1zpw1m6O1WCVaHsiehvlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715782752; c=relaxed/simple;
-	bh=iy7dLAEaL4vVGSeorVmj9DuvDO3ifOspxvrna6sksIs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=M/3i0Zx1oIx+TWJF/lrhbrSHkka9u8utXeEl4ihIstf4lEP3RV64Y8LGaNMWQnMksM2JNd2yAXKUji1Kwex1BmbuwbsdIFs6C+r3k9rGrrc787EaohhIJ6QWGEyf8yBv1iSl+sn3zuapuwbNbC7cRYKeY9IGc7K2NF4/NgjWJbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wY3kWIk+; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715782787; c=relaxed/simple;
+	bh=e+p8RDk6UwCW/o9hvuO0idARqRopXax2P77SzHlLk1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=II4DrTic6Z/EYda95fl52PbPhinqkYHfZ/dmXDB2je5I0KPIEkAOmh2YHt5wsv5P/zOnbs7vrZePVzdhsSBJ3y5YmQhbRFhbwmRP4fZekYUxQjmI3xW8fuZtz4HCEh2OoHDQ7UJWwm3GKzxzV6ygT6304stST3NgwyAxYDbxiMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=INEPCQmx; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wY3kWIk+"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6f0e7af802eso3120969a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715782750; x=1716387550; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a9+nEjIRGhMjrhSd4waxnxR1U1OPOKlFj61G/GYKSuU=;
-        b=wY3kWIk+yY5BF8JTjsJrRWMrLO75oAJtuQQcZGR7pkg7nw1WKyjF7pekoLidw6B4BP
-         KbH51L0UU0BbgfD9SCNbkDqCG8K/mJ+Te0KIRP/zzHKW7QED9PLm89XbapSX31RETnbV
-         P5uIVCRzcmLiIQkl3HOX6wYGZAjX5BSBbh6ER0BxY4W/BMPXK97SuogXX9ic0QTz/ehN
-         f9JORBrec9A3cysfUQWgtyY/VoJYOWgUJbteJ63UEi7jzmTF1b1tAtxstwGYReuQwnD/
-         o3OPb3qVCre2ABM8j2FFA0VJZUtHPaI6kHmUvx6bTOm/tkJruUKrqjosO+x+ibF7ncth
-         sOtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715782750; x=1716387550;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a9+nEjIRGhMjrhSd4waxnxR1U1OPOKlFj61G/GYKSuU=;
-        b=MFFeW6adzwDbljt7Mz6nGJClMnIwZuchKkargIwL7vGJB5Q+vO/y8M1LKEB08Yv/Cx
-         MUYUWtkDdBmNeBfYxRWgEF108BzsF1Qj3WOP3rgLWVC/LixwN9EZTnY4nHYjYy/q1S/Z
-         qmr2685AhA/9j2Uuuf0q0T7jX4WUEhDOfCMcrUEt0CDcA+D/Ovtomz0y3XhHuYgRjEAP
-         ylVJxzVYxRNmZKRO8m2zxY0CgomjpnmVVFdsMn3LcLHHHy0u7Ywt93LBsOZ9w1TmA5kG
-         64gyPwA1LQdYrMcXfXvOgVPdn3T8gUPrepkORgF0PuDcaLPQHbzkKU2QUSH3t5VBVwpi
-         Lfsg==
-X-Gm-Message-State: AOJu0YyQg9+LH6gh2qEGPpm3wxjG4dE+ecZbYSokBfE445EI6t+7g5EH
-	monlaGSO/z9h9RwcpnseBn+pD2mEpXgAdEdWYMxPgMYNM5Eywn1rk+F/mDt62Un1upAppCVjqZV
-	HUC6fPvEcJrioh099aMF3JRXQgLPItIMUIkqQ1WGwF/sHuMdn2k5O0kC1
-X-Google-Smtp-Source: AGHT+IH/7/dqPY9r1lhR5haX5AIQ/98Ll9YuM9T0D4wFA2HFYmBB4m8nfB/jKUjlQdttEXRU3o5RpwBPOQ1s/m/TNvM=
-X-Received: by 2002:a05:6808:2d9:b0:3c8:65ee:6795 with SMTP id
- 5614622812f47-3c99704cfbdmr14936618b6e.22.1715782749719; Wed, 15 May 2024
- 07:19:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="INEPCQmx"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44F7nnaT008005;
+	Wed, 15 May 2024 12:53:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=uCYHK17hrJDOfXBR96uhZxWSEWnjI89SyGP2oY566u4=;
+ b=INEPCQmxH/ndA0QPvint7zqkUM0BXXaa/DAo/6BOkmwm/B47MYt+xft2oqKQeiNxHxUe
+ XSDtnfreq8R2lJpYMFAVwX34WAl1rnR21JZT+16Wem4QHqteSHuTBkejE65EzK5HcmeA
+ Vhd23WTnUe1voEEZSGrC7uoyllBqi890u271pR6ZPUfeQzcv4L/Vi/vbWdZpQvbLpgXH
+ j2JAisKK0CaQsVXsjlVsn7CGVpxt315KZ95jO6QB5F07+eG5X9wdyNZ7cPT8tJF8WNVj
+ h2gdFQPpQo6jwXefKtXzcx6zcbCtSVz8A5Xzd18xlumLRcWnef6gkn0JOwU3Wy7iVM2g cQ== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3txc2xxf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 May 2024 12:53:49 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44FC60pr038324;
+	Wed, 15 May 2024 12:53:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3y24pxgugg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 May 2024 12:53:48 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44FCmlrX038458;
+	Wed, 15 May 2024 12:53:47 GMT
+Received: from lab61.no.oracle.com (lab61.no.oracle.com [10.172.144.82])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3y24pxgud9-1;
+	Wed, 15 May 2024 12:53:47 +0000
+From: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
+To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Allison Henderson <allison.henderson@oracle.com>,
+        Manjunath Patil <manjunath.b.patil@oracle.com>,
+        Mark Zhang <markzhang@nvidia.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH v2 0/6] rds: rdma: Add ability to force GFP_NOIO
+Date: Wed, 15 May 2024 14:53:36 +0200
+Message-Id: <20240515125342.1069999-1-haakon.bugge@oracle.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 15 May 2024 16:18:58 +0200
-Message-ID: <CA+G9fYtDtgb8zNGfDQPS2u_n_45rDiDgJR6ud3uuxkJBR0rUzA@mail.gmail.com>
-Subject: riscv: irq-riscv-imsic-early.c:52:9: error: too many arguments to
- function 'riscv_ipi_set_virq_range'
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-riscv <linux-riscv@lists.infradead.org>
-Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-15_06,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405150090
+X-Proofpoint-GUID: 0CdHtR4Rw4q5f5UdYabwerpWAtTHmgJV
+X-Proofpoint-ORIG-GUID: 0CdHtR4Rw4q5f5UdYabwerpWAtTHmgJV
 
-The riscv builds failed on Linux next-20240515 tag due to following build
-warnings / errors with gcc-13 and clang toolchain.
+This series enables RDS and the RDMA stack to be used as a block I/O
+device. This to support a filesystem on top of a raw block device
+which uses RDS and the RDMA stack as the network transport layer.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Under intense memory pressure, we get memory reclaims. Assume the
+filesystem reclaims memory, goes to the raw block device, which calls
+into RDS, which calls the RDMA stack. Now, if regular GFP_KERNEL
+allocations in RDS or the RDMA stack require reclaims to be fulfilled,
+we end up in a circular dependency.
 
-Build Log:
------
-drivers/irqchip/irq-riscv-imsic-early.c: In function 'imsic_ipi_domain_init':
-drivers/irqchip/irq-riscv-imsic-early.c:52:9: error: too many
-arguments to function 'riscv_ipi_set_virq_range'
-   52 |         riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~
-In file included from include/linux/smp.h:119,
-                 from include/linux/lockdep.h:14,
-                 from include/linux/spinlock.h:63,
-                 from include/linux/sched.h:2142,
-                 from include/linux/ratelimit.h:6,
-                 from include/linux/dev_printk.h:16,
-                 from include/linux/device.h:15,
-                 from include/linux/node.h:18,
-                 from include/linux/cpu.h:17,
-                 from drivers/irqchip/irq-riscv-imsic-early.c:8:
-arch/riscv/include/asm/smp.h:52:6: note: declared here
-   52 | void riscv_ipi_set_virq_range(int virq, int nr);
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~
+We break this circular dependency by:
 
-metadata:
-  git_describe: next-20240515
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 82d92a9a1b9ea0ea52aff27cddd05009b4edad49
-  git_short_log: 82d92a9a1b9e ("Add linux-next specific files for 20240515")
+1. Force all allocations in RDS and the relevant RDMA stack to use
+   GFP_NOIO, by means of a parenthetic use of
+   memalloc_noio_{save,restore} on all relevant entry points.
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/details/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2gUiKdxX7qM27ritMJT5pRyZhyi/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240515/testrun/23894295/suite/build/test/gcc-13-lkftconfig/history/
+2. Make sure work-queues inherits current->flags
+   wrt. PF_MEMALLOC_{NOIO,NOFS}, such that work executed on the
+   work-queue inherits the same flag(s).
+
+Håkon Bugge (6):
+  workqueue: Inherit NOIO and NOFS alloc flags
+  rds: Brute force GFP_NOIO
+  RDMA/cma: Brute force GFP_NOIO
+  RDMA/cm: Brute force GFP_NOIO
+  RDMA/mlx5: Brute force GFP_NOIO
+  net/mlx5: Brute force GFP_NOIO
+
+ drivers/infiniband/core/cm.c                  | 15 ++++-
+ drivers/infiniband/core/cma.c                 | 20 ++++++-
+ drivers/infiniband/hw/mlx5/main.c             | 22 +++++--
+ .../net/ethernet/mellanox/mlx5/core/main.c    | 14 ++++-
+ include/linux/workqueue.h                     |  2 +
+ kernel/workqueue.c                            | 21 +++++++
+ net/rds/af_rds.c                              | 59 ++++++++++++++++++-
+ 7 files changed, 141 insertions(+), 12 deletions(-)
 
 --
-Linaro LKFT
-https://lkft.linaro.org
+2.45.0
+
