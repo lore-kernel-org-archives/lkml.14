@@ -1,143 +1,183 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F453C488
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD7A3EA9B;
+	Wed, 15 May 2024 06:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715755303; cv=none; b=rv+2tODS8FNihTivA1pRnU9w4Byb5VUHaCBtCNu21YyWGkOEJaJfIkDqfryHqGD684Z1eQDHTpMirMVbE0JbseT6J9kJQ6evh+1rergLCO8YA0/HPT3kIPE0dzJcAOPSn7QGpPig3ZU9NDbvEG1ABfXhlTsmOCLHNtycOWVmdvg=
+	t=1715755318; cv=none; b=Wn6NxzcQir0TRKRvO2F2zpOr5hhhau6fpRHhS+7p2NpA5+nW0a/ILD1lZGMaAc+TQGNwW0CDKUUz9fkcXltldkm6eBsoJ6gqoxr3kNMyAsTp+IPx5utiVYKLt22Saw2HGXxIFlDRv7HfBAC+lBOvbne+QOsJK29ZvUZT/ixJLwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715755303; c=relaxed/simple;
-	bh=TJKrpcrkUxV5ZjMdLlFyHc7tyMjEZpRrDQ7anUNUSxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AMVrJfGO97tlJAVfZyvoUqVzePPZ3ci2ZQP5yXMwmI1zCQAX/owH46rxPjjxWJCEgdCVoQ7asF/gYur00VKlFwCbuUok602zRyHm3c38/oQwMGkBaBR1UHv5OqviRVY7hAsegWMuhABPJB97zGerL+m+A550YMSHnIa7+1PD+3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=mBAkrGGB; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1715755318; c=relaxed/simple;
+	bh=GJ6J9YyFmj5g0mLE7msIu5MKiPfm2okuFb6jCKJOrlM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IjhhOHYHg4Dv7NPPfuOFAC5jeZhSQZlZG5H/QlM5VkuT4dulHGFe7S8NLUkzqWFifL7V8+EXfUqnWXhl/mY/WsIIP8RBMkfGf9qZ04ohmJGS1hgo5SLzmxghqKlRaCVDM2jl+TqVirpQw29/U8xXIMoRyX2xX09t+vWaThBnfhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kurWJ3MS; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="mBAkrGGB"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44F056TZ012890;
-	Wed, 15 May 2024 08:40:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=grZoncYN/Ex6YBE6MWMsZg3hoMkBe2yN4z13XwIKYPs=; b=mB
-	AkrGGBA18gIrlZuvQmXNp+jkBFd/Ny1YXK83q03Q/JTRfAIhLZF24O0vxgOAthnz
-	YpgtayqGlszvQD0STawOg0Hs04I2Vzo0F0iA7jnyXrQsJ9fnHXT8yJD6FLzwscgy
-	GbNrcFpyE4Xm/XCLSWS/vlGQFi1JbTVcEhvm4ukk0HZPoiF9QwKywqdlQk+SGV6y
-	IQuC9c8UrCuCcLh0Z+teECj+Ntxa89V4xGcDuiHfxzfSiTOM5jRethunhQ9CV0Xo
-	DOb8x8dHxrT7QzrPjjPAhnOh+suDdQibNMgTBh9k9JpUQ1UkpX0LRR49ePaFAInK
-	4lDJGc4oC67xjHGoIFJw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y1yjbe0u8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 08:40:48 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C5C5740044;
-	Wed, 15 May 2024 08:40:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 52EA920DD93;
-	Wed, 15 May 2024 08:39:51 +0200 (CEST)
-Received: from [10.252.19.151] (10.252.19.151) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 15 May
- 2024 08:39:50 +0200
-Message-ID: <b58c9073-02c6-4b5e-9082-fb11f388842d@foss.st.com>
-Date: Wed, 15 May 2024 08:39:49 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kurWJ3MS"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1ecddf96313so55199835ad.2;
+        Tue, 14 May 2024 23:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715755315; x=1716360115; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2vbAesE2cgL0USUqqC14KPMjK7GiW9OFjlcB1Mo1yRY=;
+        b=kurWJ3MS3zNIzyBVKFOT4KL9L3YcSiej077cQKz3QzSq8MzpgZxUSVVv9GL42SRofy
+         kM3SITdGtgo/uGBM+SSQ0sYNXdj1u63NSpcc4sGASDdv1xDd4NMSlVIbK+0SP0e63bs3
+         7Y1WxHQ9W8xiads3Bi3r4iMFQVXuhWpBfpL5BsF8oDYUrUPW7EdM6o3+fNAkHXWmfNjF
+         /iGOY6doQTsAKE97nLqKqqNG0upwn3jFR2ME3Mb4gt32obhNUckZYf3Fs71I5j616NQt
+         wyE5XMfesv0EPYtsVPE0rgtAza0U28KL7GpNoSxvCgDvyEGC24H0Ia/s0Xlsqf7qx8Yn
+         bLPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715755315; x=1716360115;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2vbAesE2cgL0USUqqC14KPMjK7GiW9OFjlcB1Mo1yRY=;
+        b=ivLDYqf8uK7+Yr4TgUxQTiepF/bJQei5a4FWzFRjLBJLk/fDkYRRfTF/pxXoqOhV/e
+         to93dgyKhBLBBcDyd3O8tByoSsAiwxp9YLFibtQhCuw1ruCB637V2mMDFYJEptDBbhpz
+         TBdKMLBNkP8VVsaRwfpoW9+Q34/dlYDueTjM5CQgef69rCUqXEbhqsK7J09rzc/gA1Ir
+         2kuzf4OVdju3BSTDCuN62VgyMByBr8oFNRmIXLi7+hzgGtkocoN93LWDrSiAT7pR06ub
+         PIqgKRt24bS15VVdLkvOMOV0qwy0x/cnuwEsCOP98EuMNC/zTS4bfJkG07xOHEq7uqXN
+         2odQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoMbv+GXzH/oLx4KSM7ViII0jzD3YMm0bpVX94zLQWJnk0QGz3B8nbalob2aqZ8BaW8TRFCDZYrBnfJB4I745JU25lA3ZMjhhqTr8tGkgBR7jYGmT96eEu4pluB7d+lSG1E2xCuBdXlZY=
+X-Gm-Message-State: AOJu0YxQzDvmyzXzSRteWGy4fFsGE5auWcQcB+IxFiR3LJc7Q4ee5YOI
+	4QTuUAqD/mr8U0qABoTnUUb6vm9lAIwtIHhnGH2120S01qglsSs3zze9Xkc9KeM=
+X-Google-Smtp-Source: AGHT+IE+WGr6yPwajwKZrvVsEuPpSp4fcpQ4EjJnE9CHFCSlun+DnehwrGK/Fql+9T0Sui9S+jpm/w==
+X-Received: by 2002:a17:902:ccc6:b0:1e9:470:87e3 with SMTP id d9443c01a7336-1ef43f4e323mr254736905ad.45.1715755315224;
+        Tue, 14 May 2024 23:41:55 -0700 (PDT)
+Received: from xiaxiShen-ThinkPad.gigstreem.net ([66.160.179.28])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f08c5f0294sm17177315ad.208.2024.05.14.23.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 23:41:54 -0700 (PDT)
+From: Xiaxi Shen <shenxiaxi26@gmail.com>
+To: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Cc: shenxiaxi26@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	javier.carrasco.cruz@gmail.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH v3] ASoC: dt-bindings: ak4104: convert to dt schema
+Date: Tue, 14 May 2024 23:41:39 -0700
+Message-Id: <20240515064139.456735-1-shenxiaxi26@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
+References: <ab4186fa-5a2f-4f97-9aa7-75a6c55bc142@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/stm: dsi: relax mode_valid clock tolerance
-To: Sean Nyekjaer <sean@geanix.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Robert Foss
-	<rfoss@kernel.org>,
-        Antonio Borneo <antonio.borneo@foss.st.com>
-CC: <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240322104732.2327060-1-sean@geanix.com>
- <lkrxoqhcitmvjvzslhx6mrdjaa6lpxtpmdjt7wwollm6z4h65q@jk5esjje6ppy>
-Content-Language: en-US
-From: Yannick FERTRE <yannick.fertre@foss.st.com>
-In-Reply-To: <lkrxoqhcitmvjvzslhx6mrdjaa6lpxtpmdjt7wwollm6z4h65q@jk5esjje6ppy>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_02,2024-05-14_01,2023-05-22_02
+Content-Transfer-Encoding: 8bit
 
-Hi Sean,
+Convert ak4104 binding to DT schema
 
-thanks for your patch.
+Changes in v3:
+ - Use unevaluatedProperties instead
+ - Fix indentations in the example
 
-Tested-by: Yannick Fertre <yannick.fertre@foss.st.com>
+Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
+---
+ .../devicetree/bindings/sound/ak4104.txt      | 25 ----------
+ .../bindings/sound/asahi-kasei,ak4104.yaml    | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/ak4104.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
 
-I think that a helper could be useful in simplifying this part.
-This might be reworked when a new helper will be implemented.
+diff --git a/Documentation/devicetree/bindings/sound/ak4104.txt b/Documentation/devicetree/bindings/sound/ak4104.txt
+deleted file mode 100644
+index ae5f7f057dc3..000000000000
+--- a/Documentation/devicetree/bindings/sound/ak4104.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-AK4104 S/PDIF transmitter
+-
+-This device supports SPI mode only.
+-
+-Required properties:
+-
+-  - compatible : "asahi-kasei,ak4104"
+-
+-  - reg : The chip select number on the SPI bus
+-
+-  - vdd-supply : A regulator node, providing 2.7V - 3.6V
+-
+-Optional properties:
+-
+-  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
+-		  deasserted before communication to the device starts.
+-
+-Example:
+-
+-spdif: ak4104@0 {
+-	compatible = "asahi-kasei,ak4104";
+-	reg = <0>;
+-	spi-max-frequency = <5000000>;
+-	vdd-supply = <&vdd_3v3_reg>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
+new file mode 100644
+index 000000000000..86f6061d3c50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/asahi-kasei,ak4104.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AK4104 S/PDIF transmitter
++
++allOf:
++  - $ref: dai-common.yaml#
++
++maintainers:
++  - Daniel Mack <github@zonque.org>
++  - Xiaxi Shen <shenxiaxi26@gmail.com>
++
++properties:
++  compatible:
++    const: asahi-kasei,ak4104
++
++  reg:
++    description: Chip select number on the SPI bus 
++    maxItems: 1
++
++  vdd-supply:
++    description: A regulator node providing between 2.7V and 3.6V.
++
++  reset-gpios:
++    maxItems: 1
++    description: Optional GPIO spec for the reset pin, deasserted 
++                  before communication starts.
++    
++required:
++  - compatible
++  - reg
++  - vdd-supply
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        codec@0 {
++            compatible = "asahi-kasei,ak4104";
++            reg = <0>;
++            vdd-supply = <&vdd_3v3_reg>;
++        };
++    };
+-- 
+2.34.1
 
-Best regards
-
-
-On 4/22/24 16:05, Sean Nyekjaer wrote:
-> On Fri, Mar 22, 2024 at 11:47:31AM +0100, Sean Nyekjaer wrote:
->> When using the DSI interface via DSI2LVDS bridge, it seems a bit harsh
->> to reguire the requested and the actual px clock to be within
->> 50Hz. A typical LVDS display requires the px clock to be within +-10%.
->>
->> In case for HDMI .5% tolerance is required.
->>
->> Fixes: e01356d18273 ("drm/stm: dsi: provide the implementation of mode_valid()")
->> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
->> ---
-> Any feedback on this?
->
->>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 7 +++----
->>   1 file changed, 3 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> index d5f8c923d7bc..97936b0ef702 100644
->> --- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> @@ -322,8 +322,6 @@ dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mbps,
->>   	return 0;
->>   }
->>   
->> -#define CLK_TOLERANCE_HZ 50
->> -
->>   static enum drm_mode_status
->>   dw_mipi_dsi_stm_mode_valid(void *priv_data,
->>   			   const struct drm_display_mode *mode,
->> @@ -375,9 +373,10 @@ dw_mipi_dsi_stm_mode_valid(void *priv_data,
->>   		/*
->>   		 * Filter modes according to the clock value, particularly useful for
->>   		 * hdmi modes that require precise pixel clocks.
->> +		 * Check that px_clock is within .5% tolerance.
->>   		 */
->> -		if (px_clock_hz < target_px_clock_hz - CLK_TOLERANCE_HZ ||
->> -		    px_clock_hz > target_px_clock_hz + CLK_TOLERANCE_HZ)
->> +		if (px_clock_hz < mult_frac(target_px_clock_hz, 995, 1000) ||
->> +		    px_clock_hz > mult_frac(target_px_clock_hz, 1005, 1000))
->>   			return MODE_CLOCK_RANGE;
->>   
->>   		/* sync packets are codes as DSI short packets (4 bytes) */
->> -- 
->> 2.44.0
->>
