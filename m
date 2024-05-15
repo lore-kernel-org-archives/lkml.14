@@ -1,177 +1,279 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1607E3BBD4
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C415B3A8E4
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715753200; cv=none; b=CtLaFDDRMivM+82VgFS9gALJ1piK8mq5dTnwM6h/cfW8J9HZmWGcTvYGo3sQO5nFEeNIpO+/w7lgb38q528BouUhNDXiysOXXIhiiRhqnGKhQkA58cQsw8K5p3WuM73W0d0ksAr23bI3/0j/kli2Kb4WQ4m1VixfwlNFq3/JpQM=
+	t=1715753221; cv=none; b=OoYFT6r8bIMRBnEvoZuEu8UTgEiiCQB5w7DZaNAVP/nFGNVMgMbHBhVxo6tdQTZOKuCg3snDwbQVYBpyFZ6pW2CBYc/HODKPcglaKKr35BqD8pjWtOW5hXCs7YOCMtiKW6GkrWthyfpvjz2rf6x+1l4kxt4xIxdX5dp9tXBB5fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715753200; c=relaxed/simple;
-	bh=FlIMro9fYHrIHzodGeEZAOYgcX95iofZaz0NigQDKVk=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version:
-	 References; b=UCXJgU7uJLk6IRupfHnbcVdFuglRHSUcfV6PIkw3lZrEVQDgrKXpxQs4/DmOElD7gMzZucN/6kROGV7pQVH738qCZdFY1ceuZ1qKQ89sXWSlJzmTBuA6z+cRS5NM8F+ji2k6ow9Xc4NrBY+pqgLZQOH2HLExMTS/LTHEv2pwrG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qorcBNvu; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1715753221; c=relaxed/simple;
+	bh=kUL4zZYBA6Zz37ENPOn7eSbSBL2HQB6Dt7zdYhhamFc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BtQ1IksZjV6rErwZ4myy3DR1wMuZYcNG/HNljd8HMMoA5t56BcwEDdeSjiznS8Lc9+4Pc92IK//lm0uMjdpkQBmsORTgqWG+rqyXEr/BQBq+D/u+Ofiju0yd8AYQkQkJQSj6H77ENmHdo9t5gW1WBnsfJ0ko6TpncUyL2UBnYlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z5Q9dPtn; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qorcBNvu"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240515055724euoutp012366a6b95e64ac78ccb7f37eb47a8992~Pk-Cfeenh1532015320euoutp01M
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 05:57:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240515055724euoutp012366a6b95e64ac78ccb7f37eb47a8992~Pk-Cfeenh1532015320euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1715752644;
-	bh=FlIMro9fYHrIHzodGeEZAOYgcX95iofZaz0NigQDKVk=;
-	h=From:To:CC:Subject:Date:References:From;
-	b=qorcBNvur3YVWTbSrc0YoFD4k5UkKq5+IclXWc4D3rcuCi09CMMLv9+/wjwMkx8nF
-	 i5K8OUp0HKBJKK4ZnkwkT+VKDrJDo+P5tb4cCB+8yMt1QPreeo2PK3OBaiH4V3M7ms
-	 BzL+/QIlep+gS5djRlkTldobroxialMzCN2gbOBo=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240515055724eucas1p123d43735df756c930df03a15b9aaaa4c~Pk-CGVGgP2569225692eucas1p1P;
-	Wed, 15 May 2024 05:57:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 54.BC.09624.4CE44466; Wed, 15
-	May 2024 06:57:24 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240515055723eucas1p11bf14732f7fac943e688369ff7765f79~Pk-BBeao52507525075eucas1p17;
-	Wed, 15 May 2024 05:57:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240515055723eusmtrp1998995defe173d8fde8f92b5cd4e1f29~Pk-A7fuAI0390703907eusmtrp1n;
-	Wed, 15 May 2024 05:57:23 +0000 (GMT)
-X-AuditID: cbfec7f2-bfbff70000002598-42-66444ec4ca43
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id C8.16.08810.2CE44466; Wed, 15
-	May 2024 06:57:22 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240515055722eusmtip1230ca867291aac95f529f95e11eb5d21~Pk-As6CJR0512305123eusmtip1r;
-	Wed, 15 May 2024 05:57:22 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) with Microsoft SMTP
-	Server (TLS) id 15.0.1497.2; Wed, 15 May 2024 06:57:22 +0100
-Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
-	([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Wed, 15 May
-	2024 06:57:22 +0100
-From: Daniel Gomez <da.gomez@samsung.com>
-To: "hughd@google.com" <hughd@google.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "willy@infradead.org" <willy@infradead.org>,
-	"jack@suse.cz" <jack@suse.cz>, "mcgrof@kernel.org" <mcgrof@kernel.org>
-CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-xfs@vger.kernel.org"
-	<linux-xfs@vger.kernel.org>, "djwong@kernel.org" <djwong@kernel.org>,
-	"Pankaj Raghav" <p.raghav@samsung.com>, "dagmcr@gmail.com"
-	<dagmcr@gmail.com>, "yosryahmed@google.com" <yosryahmed@google.com>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
-	"ritesh.list@gmail.com" <ritesh.list@gmail.com>,
-	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"david@redhat.com" <david@redhat.com>, "chandan.babu@oracle.com"
-	<chandan.babu@oracle.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "brauner@kernel.org" <brauner@kernel.org>,
-	Daniel Gomez <da.gomez@samsung.com>
-Subject: [PATCH 00/12] [LSF/MM/BPF RFC] shmem/tmpfs: add large folios
- support
-Thread-Topic: [PATCH 00/12] [LSF/MM/BPF RFC] shmem/tmpfs: add large folios
-	support
-Thread-Index: AQHapozAuvAdxOGSXU+H5bqWWoTmfw==
-Date: Wed, 15 May 2024 05:57:21 +0000
-Message-ID: <20240515055719.32577-1-da.gomez@samsung.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E28FC395BDDC1A43BF00B739EDFE2D8A@scsc.local>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z5Q9dPtn"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-43dfe020675so1814701cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 23:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715753219; x=1716358019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sw46tNmLyy6/gqhuKbv79aER+4CQjoFXDtqPExJDGXQ=;
+        b=Z5Q9dPtniOh6Uq2JbA8QW55FIASwF+jIR6xza9a23e1XGBGV3P9UFx9aSlt0m9S8A2
+         0ib7VJwtu3pSsbvrnACx3crX3xF4hSS1NeodyFvdoQmmekZKWv8qU2KRJKaCBG3VMd1S
+         lBvWAqkIOddBcbrqNFpMsvVOBjv+Uyv+PA0LpIQ1f5yMQAQltuuN8uwIh479NOU0tUm/
+         3UgcT/LldOatiHXqz+90t0BqEdheiqQ5t2Nm976BY2IyrWdJONA1uY7HKUqSYdKbq3TY
+         oaSBfZ1l/imeXLctcVY3prPO25Fwwj8xXTaHbhnmxLG3rbEDTwFvV2dPBfXnyZAr7bJo
+         P+DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715753219; x=1716358019;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sw46tNmLyy6/gqhuKbv79aER+4CQjoFXDtqPExJDGXQ=;
+        b=kemIAJIZCuQLrpxyG9YpFWMbqwjdJWos+31YPzhuX1X4DCgDztai1c2wNszFEXdFcL
+         DhcjA0Y97g8bDhk3jjU9oueYG2C6tgQV6ajBdZMMyRHxDXFOJn05eP5UWFU98lZZpmB4
+         OPZ0psFv/VaykRbj3h8NM+1aqOM3aDeR8jH3EzP2cCfpvcI+Bdc9XPTrdyxhLrcaNPta
+         ItGH+NsGFS2M4uQn4T3M5ld6jaAFkG3N3mQWR86KIX7+iOT9ppVXWqMtdNIviclGlmwv
+         lUsPnPWd5QA615G/GCrmr/Yk8sXFNH6R988vO2DNAOpM3Al8bWfssiglUxhIole756jv
+         BAUw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOEB3j5o/4Vo2yfqSOoILfzuP4N/BfnKjEokgips5wyBEklWPyKW5E3IPWoL9KSLzkkpUsrdyXDb+S7ayIJKjqv2jsamQLLlKQH2L7
+X-Gm-Message-State: AOJu0Ywr/DGp/JrmiybhykbdjwINp+JAhaatrDxcHOQbt4Lv3Bc9p8sG
+	j0OOQtfsyRZ5kk0zSXLINx8CmtagUpmvxrOxM7tmRWRITqLTLx1jxrDR1vXmd+ZHM0oEblLjdj1
+	m0hS4I0eF+wnIWOkKoTiULolQqsfOfhLxidXb
+X-Google-Smtp-Source: AGHT+IGMu7jEqAfsDU1Uer1R6+MjwPSUeYmT6edhDvNSUzQjbN/bHVLcoORZTgm810sR6j/aC2DogtZJd7HemIH0eYk=
+X-Received: by 2002:a05:622a:2291:b0:437:986d:86f4 with SMTP id
+ d75a77b69052e-43e09555a24mr8295751cf.22.1715753218537; Tue, 14 May 2024
+ 23:06:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7djP87pH/FzSDGZ95raYs34Nm8X/vccY
-	LV4f/sRocemonMXZvt9sFl/X/2K2uPyEz+Lppz4Wi9nTm5ksLu+aw2Zxb81/Votdf3awW+x7
-	vZfZ4saEp4wWB091sFv8/gGU3b4r0kHQY+esu+weCzaVemxeoeWxaVUnm8emT5PYPU7M+M3i
-	sfOhpcfkG8sZPT4+vcXi8X7fVTaPMwuOsHt83iQXwBPFZZOSmpNZllqkb5fAlTG/8RlzwR2x
-	iju9L1gaGCeIdTFyckgImEic6bvM0sXIxSEksIJR4vzqp2wQzhdGiT+btjNDOJ8ZJU48nwtU
-	xgHW0ni5AqRbSGA5o8S988JwNWc6O6BGnWGU2P5+CROEs5JR4vL9dhaQFjYBTYl9JzexgyRE
-	BG4zSjw9dQbMYRY4ySrxZ/NOsCphAX+Jtcv3MoPYIgIhEr3PXrFC2HoSa9suMoHYLAKqEvc7
-	b7GB2LwClhIvH04Cq2EUkJV4tPIXO4jNLCAucevJfCaIVwUlFs3ewwxhi0n82/WQDcLWkTh7
-	/QkjhG0gsXXpPhYIW1li/bs2JpCfmYGuXr9LH2KkpcS6/48ZIWxFiSndD9khThCUODnzCVTr
-	Ti6Ju9cqIWwXiWMHz0PFhSVeHd/CDmHLSJye3MMygVF7FpJLZyFsm4Vk2ywk22Yh2baAkXUV
-	o3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYPo8/e/4px2Mc1991DvEyMTBeIhRgoNZSYRX
-	JM05TYg3JbGyKrUoP76oNCe1+BCjNAeLkjivaop8qpBAemJJanZqakFqEUyWiYNTqoGpWZHT
-	+7PNtMxOrVkbxW1uMj7/wS2v6u8hWTL1oumyGe2RbBPbv0n9XzXF+IAY++pTp3MFJ26b1HM3
-	5PJDnZTLG/2iVJUPGMclNR7Qv9N5zjzkULvFaZ87LJ/Yw43PhRzIDJ1/xfAGl079kQpe53t/
-	9HWTt82w9qx8Gnihv23dLaXP7anNU70FvoV29crpL1Lh3DBVjqmjbfaust7fmwR/tz7ou5Te
-	YC7cFOAY+v117Py0iZenh7G87rHtm8a0rczp1saTomcEFyUqFovZRju2mVvcy1VOeJ65l63Z
-	q7+Ts761me3SSqHwzZWn7nv93vC2t9fJyNhvhsJdO0lRTU8Jnje7p2bOl+Va2G3KocRSnJFo
-	qMVcVJwIAO4ExIgOBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFKsWRmVeSWpSXmKPExsVy+t/xu7qH/FzSDOY+tbSYs34Nm8X/vccY
-	LV4f/sRocemonMXZvt9sFl/X/2K2uPyEz+Lppz4Wi9nTm5ksLu+aw2Zxb81/Votdf3awW+x7
-	vZfZ4saEp4wWB091sFv8/gGU3b4r0kHQY+esu+weCzaVemxeoeWxaVUnm8emT5PYPU7M+M3i
-	sfOhpcfkG8sZPT4+vcXi8X7fVTaPMwuOsHt83iQXwBOlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hp
-	oWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5eglzG/8RlzwR2xiju9L1gaGCeIdTFycEgImEg0
-	Xq7oYuTiEBJYyiixeP0y5i5GTqC4jMTGL1dZIWxhiT/XuthAbCGBj4wSn1ewQzScYZToPXuO
-	GcJZySjxfPMdRpAqNgFNiX0nN4FViQjcZpR4euoMmMMscJJV4sDpz+wgu4UFfCV+3vQBaRAR
-	CJFo7bnMBmHrSaxtu8gEYrMIqErc77wFFucVsJR4+XAS2EmMArISj1b+YgexmQXEJW49mc8E
-	caqAxJI956FeEJV4+fgf1As6EmevP2GEsA0kti7dxwJhK0usf9fGBHIOM9DR63fpQ4y0lFj3
-	/zEjhK0oMaX7ITvECYISJ2c+YZnAKDULyeZZCN2zkHTPQtI9C0n3AkbWVYwiqaXFuem5xYZ6
-	xYm5xaV56XrJ+bmbGIGJbtuxn5t3MM579VHvECMTB+MhRgkOZiURXpE05zQh3pTEyqrUovz4
-	otKc1OJDjKbAEJrILCWanA9MtXkl8YZmBqaGJmaWBqaWZsZK4ryeBR2JQgLpiSWp2ampBalF
-	MH1MHJxSDUyHGi7umvXpRTFjOovJrZbXdzckuThvmC8yqXLygZb8fzHnhLpzw+0e2fzWYPc6
-	cH/TqhlSVcXXZ3Cs433se/3PylOL3tczimtJfVvXe1dk9oLDP38XPolbLMzGkfZ/wWPRFQl+
-	i94w2Dv7PMl8+++WX1mImIZRc+L2dOFeTsnd/ZdCg60Zen5tV75456Da/aDwibJMaZ+2qZ3K
-	N5h1PXJ+zsawlweXHmW9IcT5rGvWwv1TOzRq1dT3a89O5qje/Jrznd5+bm4WFmPVSRe2aDjv
-	Fzh7wznw+FrrSd0+K44/4r8YOmPd7eoTzVs2v1pzc9m5A/a375zJ5Dtnbrbo7+p576cfmKT9
-	aOedbovbL3LZLJVYijMSDbWYi4oTAeKajqn9AwAA
-X-CMS-MailID: 20240515055723eucas1p11bf14732f7fac943e688369ff7765f79
-X-Msg-Generator: CA
-X-RootMTR: 20240515055723eucas1p11bf14732f7fac943e688369ff7765f79
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240515055723eucas1p11bf14732f7fac943e688369ff7765f79
-References: <CGME20240515055723eucas1p11bf14732f7fac943e688369ff7765f79@eucas1p1.samsung.com>
+References: <20240329191224.1046866-1-weilin.wang@intel.com>
+ <20240329191224.1046866-3-weilin.wang@intel.com> <CAM9d7cjBfTM2bjkrvN5XWcXJ=OyBOU06fBN=+eWnDSdP2dkD4A@mail.gmail.com>
+ <CO6PR11MB56351C2AB4BE15C5371E29C2EE3F2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cjORNS9h7v6p2fg8OXsZMpeBODzTSCQNZ5zAea-baFKNQ@mail.gmail.com>
+ <CO6PR11MB5635C7D8C91FEDA17EC4BCDEEE112@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7chSCQViX=VjgqdVn5un0J5MpGsGDGncUyY-K4=oPvvfQA@mail.gmail.com>
+ <CO6PR11MB56359754A01778EA3EA53981EE102@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cj2Zmd_FMBzf=H6K6jRmYLYuR6mpcyhC0_neTvur0=pyw@mail.gmail.com> <CO6PR11MB5635CC88D0855FA485C383A9EEEC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB5635CC88D0855FA485C383A9EEEC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 14 May 2024 23:06:47 -0700
+Message-ID: <CAP-5=fV_mco8cf4yf0VUTGnpNUmQx-VA0S8TpbekAa83c3u5WQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SW4gcHJlcGFyYXRpb24gZm9yIHRoZSBMU0YvTU0vQlBGIDIwMjQgZGlzY3Vzc2lvbiBbMV0sIHRo
-ZSBwYXRjaGVzIGJlbG93IGFkZA0Kc3VwcG9ydCBmb3IgbGFyZ2UgZm9saW9zIGluIHNobWVtIGZv
-ciB0aGUgd3JpdGUgYW5kIGZhbGxvY2F0ZSBwYXRocy4NCg0KWzFdIGh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2FsbC80a3RwYXl1NjZub2tsbGxwZHBzcGEzdm01Z2JtYjVib3hza2NqMnE2cW43bWQz
-cHd3dEBrdmx1NjRwcXdqemwvDQp0ZXN0DQoNClRoaXMgdmVyc2lvbiBpbmNsdWRlcyBwZXItYmxv
-Y2sgdXB0b2RhdGUgdHJhY2tpbmcgcmVxdWlyZWQgZm9yIGxzZWVrIHdoZW4NCmVuYWJsaW5nIHN1
-cHBvcnQgZm9yIGxhcmdlIGZvbGlvcy4gSW5pdGlhbGx5LCB0aGlzIGZlYXR1cmUgd2FzIGludHJv
-ZHVjZWQgdG8NCmFkZHJlc3MgbHNlZWsgZnN0ZXN0cyAoc3BlY2lmaWNhbGx5IGdlbmVyaWMvMjg1
-IGFuZCBnZW5lcmljLzQzNikgZm9yIGh1Z2UgcGFnZXMuDQpIb3dldmVyLCBpdCB3YXMgc3VnZ2Vz
-dGVkIHRoYXQsIGZvciBUSFAsIHRoZSB0ZXN0IHNob3VsZCBiZSBhZGFwdGVkIHRvIFBBR0VfU0la
-RQ0KYW5kIFBNRF9TSVpFLiBOZXZlcnRoZWxlc3MsIHdpdGggYXJiaXRyYXJ5IGZvbGlvIG9yZGVy
-cyB3ZSByZXF1aXJlIHRoZSBsb3dlc3QNCmdyYW51bGFyaXR5IHBvc3NpYmxlLiBUaGlzIHRvcGlj
-IHdpbGwgYmUgcGFydCBvZiB0aGUgZGlzY3Vzc2lvbiBpbiB0b21vcnJvdydzDQpzZXNzaW9uLg0K
-DQpGc3Rlc3RzIGV4cHVuZ2VzIHJlc3VsdHMgY2FuIGJlIGZvdW5kIGluIGtkZXZvcHMnIHRyZWU6
-DQpodHRwczovL2dpdGh1Yi5jb20vbGludXgta2Rldm9wcy9rZGV2b3BzL3RyZWUvbWFpbi93b3Jr
-Zmxvd3MvZnN0ZXN0cy9leHB1bmdlcy82LjkuMC1zaG1lbS1sYXJnZS1mb2xpb3Mtd2l0aC1ibG9j
-ay10cmFja2luZy90bXBmcw0KaHR0cHM6Ly9naXRodWIuY29tL2xpbnV4LWtkZXZvcHMva2Rldm9w
-cy90cmVlL21haW4vd29ya2Zsb3dzL2ZzdGVzdHMvZXhwdW5nZXMvNi44LjAtc2htZW0tbGFyZ2Ut
-Zm9saW9zLXdpdGgtYmxvY2stdHJhY2tpbmcvdG1wZnMNCg0KRGFuaWVsDQoNCkRhbmllbCBHb21l
-eiAoMTEpOg0KICBzaG1lbTogYWRkIHBlci1ibG9jayB1cHRvZGF0ZSB0cmFja2luZyBmb3IgbGFy
-Z2UgZm9saW9zDQogIHNobWVtOiBtb3ZlIGZvbGlvIHplcm8gb3BlcmF0aW9uIHRvIHdyaXRlX2Jl
-Z2luKCkNCiAgc2htZW06IGV4aXQgc2htZW1fZ2V0X2ZvbGlvX2dmcCgpIGlmIGJsb2NrIGlzIHVw
-dG9kYXRlDQogIHNobWVtOiBjbGVhcl9oaWdocGFnZSgpIGlmIGJsb2NrIGlzIG5vdCB1cHRvZGF0
-ZQ0KICBzaG1lbTogc2V0IGZvbGlvIHVwdG9kYXRlIHdoZW4gcmVjbGFpbQ0KICBzaG1lbTogY2hl
-Y2sgaWYgYSBibG9jayBpcyB1cHRvZGF0ZSBiZWZvcmUgc3BsaWNlIGludG8gcGlwZQ0KICBzaG1l
-bTogY2xlYXIgdXB0b2RhdGUgYmxvY2tzIGFmdGVyIFBVTkNIX0hPTEUNCiAgc2htZW06IGVuYWJs
-ZSBwZXItYmxvY2sgdXB0b2RhdGUNCiAgc2htZW06IGFkZCBvcmRlciBhcmcgdG8gc2htZW1fYWxs
-b2NfZm9saW8oKQ0KICBzaG1lbTogYWRkIGZpbGUgbGVuZ3RoIGFyZyBpbiBzaG1lbV9nZXRfZm9s
-aW8oKSBwYXRoDQogIHNobWVtOiBhZGQgbGFyZ2UgZm9saW8gc3VwcG9ydCB0byB0aGUgd3JpdGUg
-YW5kIGZhbGxvY2F0ZSBwYXRocw0KDQpQYW5rYWogUmFnaGF2ICgxKToNCiAgc3BsaWNlOiBkb24n
-dCBjaGVjayBmb3IgdXB0b2RhdGUgaWYgcGFydGlhbGx5IHVwdG9kYXRlIGlzIGltcGwNCg0KIGZz
-L3NwbGljZS5jICAgICAgICAgICAgICB8ICAxNyArLQ0KIGZzL3hmcy9zY3J1Yi94ZmlsZS5jICAg
-ICB8ICAgNiArLQ0KIGZzL3hmcy94ZnNfYnVmX21lbS5jICAgICB8ICAgMyArLQ0KIGluY2x1ZGUv
-bGludXgvc2htZW1fZnMuaCB8ICAgMiArLQ0KIG1tL2todWdlcGFnZWQuYyAgICAgICAgICB8ICAg
-MyArLQ0KIG1tL3NobWVtLmMgICAgICAgICAgICAgICB8IDQ0MSArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrLS0tLS0NCiBtbS91c2VyZmF1bHRmZC5jICAgICAgICAgfCAgIDIgKy0N
-CiA3IGZpbGVzIGNoYW5nZWQsIDQxNyBpbnNlcnRpb25zKCspLCA1NyBkZWxldGlvbnMoLSkNCg0K
-LS0gDQoyLjQzLjANCg==
+On Tue, May 14, 2024 at 10:57=E2=80=AFPM Wang, Weilin <weilin.wang@intel.co=
+m> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Wednesday, April 24, 2024 11:50 AM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record =
+when
+> > perf stat needs to get retire latency value for a metric.
+> >
+> > On Wed, Apr 24, 2024 at 10:08=E2=80=AFAM Wang, Weilin <weilin.wang@inte=
+l.com>
+> > wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Namhyung Kim <namhyung@kernel.org>
+> > > > Sent: Tuesday, April 23, 2024 4:06 PM
+> > > > To: Wang, Weilin <weilin.wang@intel.com>
+> > > > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > > > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Moln=
+ar
+> > > > <mingo@redhat.com>; Alexander Shishkin
+> > > > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>;=
+ Hunter,
+> > > > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.=
+com>;
+> > > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Tay=
+lor,
+> > Perry
+> > > > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>;
+> > Biggers,
+> > > > Caleb <caleb.biggers@intel.com>
+> > > > Subject: Re: [RFC PATCH v6 2/5] perf stat: Fork and launch perf rec=
+ord
+> > when
+> > > > perf stat needs to get retire latency value for a metric.
+> > > >
+> > > > On Tue, Apr 23, 2024 at 3:16=E2=80=AFPM Wang, Weilin <weilin.wang@i=
+ntel.com>
+> > > > wrote:
+> > > > > > > > > -static int __run_perf_record(void)
+> > > > > > > > > +static int __run_perf_record(const char **record_argv)
+> > > > > > > > >  {
+> > > > > > > > > +       int i =3D 0;
+> > > > > > > > > +       struct tpebs_event *e;
+> > > > > > > > > +
+> > > > > > > > >         pr_debug("Prepare perf record for retire_latency\=
+n");
+> > > > > > > > > +
+> > > > > > > > > +       record_argv[i++] =3D "perf";
+> > > > > > > > > +       record_argv[i++] =3D "record";
+> > > > > > > > > +       record_argv[i++] =3D "-W";
+> > > > > > > > > +       record_argv[i++] =3D "--synth=3Dno";
+> > > > > > > > > +
+> > > > > > > > > +       if (stat_config.user_requested_cpu_list) {
+> > > > > > > > > +               record_argv[i++] =3D "-C";
+> > > > > > > > > +               record_argv[i++] =3D stat_config.user_req=
+uested_cpu_list;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       if (stat_config.system_wide)
+> > > > > > > > > +               record_argv[i++] =3D "-a";
+> > > > > > > > > +
+> > > > > > > > > +       if (!stat_config.system_wide
+> > > > > > && !stat_config.user_requested_cpu_list)
+> > > > > > > > {
+> > > > > > > > > +               pr_err("Require -a or -C option to run sa=
+mpling.\n");
+> > > > > > > > > +               return -ECANCELED;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       list_for_each_entry(e, &stat_config.tpebs_events,=
+ nd) {
+> > > > > > > > > +               record_argv[i++] =3D "-e";
+> > > > > > > > > +               record_argv[i++] =3D e->name;
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       record_argv[i++] =3D "-o";
+> > > > > > > > > +       record_argv[i++] =3D PERF_DATA;
+> > > > > > > > > +
+> > > > > > > > >         return 0;
+> > > > > > > > >  }
+> > > > > > > >
+> > > > > > > > Still I think it's weird it has 'perf record' in perf stat =
+(despite the
+> > > > > > > > 'perf stat record').  If it's only Intel thing and we don't=
+ have a plan
+> > > > > > > > to do the same on other arches, we can move it to the arch
+> > > > > > > > directory and keep the perf stat code simple.
+> > > > > > >
+> > > > > > > I'm not sure what is the proper way to solve this. And Ian me=
+ntioned
+> > > > > > > that put code in arch directory could potentially cause other=
+ bugs.
+> > > > > > > So I'm wondering if we could keep this code here for now. I c=
+ould
+> > work
+> > > > > > > on it later if we found it's better to be in arch directory.
+> > > > > >
+> > > > > > Maybe somewhere in the util/ and keep the main code minimal.
+> > > > > > IIUC it's only for very recent (or upcoming?) Intel CPUs and we
+> > > > > > don't have tests (hopefully can run on other arch/CPUs).
+> > > > > >
+> > > > > > So I don't think having it here would help fixing potential bug=
+s.
+> > > > >
+> > > > > Do you mean by creating a new file in util/ to hold this code?
+> > > >
+> > > > Yeah, maybe util/intel-tpebs.c (if it's better than arch/x86/...) ?
+> > > >
+> > > > >
+> > > > > Yes, this feature is for very recent Intel CPUs. It should only b=
+e triggered if
+> > > > > a metric uses event(s) that has the R modifier in the formula.
+> > > >
+> > > > Can we have a test with a fake metric so that we can test
+> > > > the code on non-(or old-)Intel machines?
+> > >
+> > > All the existing metrics in non-(or old-)Intel CPUs should work as us=
+ual. So I
+> > think
+> > > existing metric tests should work for it.
+> > >
+> > > If we want to add a fake metric uses the :R modifier for those platfo=
+rms, the
+> > metric
+> > > should either fail (if the fake metric uses an event not exist on the=
+ test
+> > platform) or
+> > > return all 0 retire latency data.
+> > >
+> > > So, I'm not quite sure what we want the fake metric to test for. Mayb=
+e we
+> > could
+> > > continue using existing metric tests to ensure all the defined metric=
+s work
+> > correctly
+> > > in each machine under test?
+> >
+> > I think it's ok to return all 0 retire latency for fake tPEBS metrics.
+> > It's just to verify the background record + report logic works ok.
+>
+> Hi Namhyung,
+>
+> After think more about how TPEBS and metrics work, I feel should discuss =
+more
+> about defining a fake TPEBS metric in unsupported platforms.
+> If we'd like a add fake metrics, where should we define and store these m=
+etrics?
+> Should we add this type of metrics for every platform? All the official m=
+etrics
+> we publish are defined by architect and stored in JSON files under separa=
+te
+> directories for each platform. I think it is not a good idea to place fak=
+e metrics
+> together with real metrics. Could you please let me know if there is any =
+other
+> method to define fake metrics for testing?
+
+We do put fake events/metrics in the "test" arch:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
+
+It is something of a pain bringing things here over to the
+NO_JEVENTS=3D1 (ie no python) empty-pmu-events.c file. I agree on not
+wanting to pollute real metrics with test metrics, we currently just
+use the test metrics to fake up some expression parsing tests:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/tests/pmu-events.c#n811
+
+Thanks,
+Ian
+
+> Thanks,
+> Weilin
+>
+> >
+> > Thanks,
+> > Namhyung
