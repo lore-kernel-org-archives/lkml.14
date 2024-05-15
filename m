@@ -1,113 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E805A13FD63
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F43713FD61
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 14:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715783217; cv=none; b=gXdUXJT/T0DPs3uTZx87f4fuQmOFJ/Q9lE7S123fofu6+OMpNP37se5lpHNith0C95vxXDFMTSLHaiNEO+3hUW0JgV19rbPIlY4p6gWZglwIVbgqkpDIiP9aG55JYp9DbxI7PvD9yTwiIwJNjbATAyfkwjeVPdjEGjN6mciXG3s=
+	t=1715783285; cv=none; b=gDVKAFpXssuKP/PCQbSkDXDKRfH8jZFRaQ3kGM8pfE3bzjTr1Hiq4mpZ3KOZpwdWxALGBw67Xu1+HCNqeEBONJZD3RII5pd91uQOhQ+ShkvFk2/wQqRe2Ry/zIIBojaUYEg0Za3anyAm/+EaMQgPw8t7iSMNMSaI0GDsKIeQe4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715783217; c=relaxed/simple;
-	bh=3/kkrVAGWdyljIyHay2GaPkAwneBSvii/bd21+FNYVI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cMNIkpcVF6KxKzIGMsUq5Wih816CMcCWRw8r1ZvY2R/WGys4X9CNVa1BwSx19YLxf45UfDO3cFV2qgDUcFIR0pbhEqxeeB3q0QEj2ze1fPuO1nUaY9i9EjRrxg2ohFk2VNQcPih13vLvO0Qdgh4uzdXy5lcQdB+mc3qS6SFGsx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CFBIA5Ip; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715783285; c=relaxed/simple;
+	bh=HG2E5ZzzY3Lbc+03GvuD+dWOrLJSMoB11TmWujlsBcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=X/VhkM6pm8aOkL3uHalvaXMC39UKWxxbp62i9KBhRA0kPPT3ZV4Qv4E6uqxo3wc4IopuURpXAfEXpBUuPI27rojEGJ6k9FO9csPjSXPf2ZYMdXCYJp11xMFIWB0KZlnE9si3s2zcqFjhX29ZGWvnJCnpZxvuL9xAQy0o5cbT55o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hN4+gtRn; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CFBIA5Ip"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715783214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dr9mNswvcvBd9WqlAZgQGwBLXCaYq7xTM96/AZTgX+A=;
-	b=CFBIA5IpuMKFC3hoT8whw9jfEFZRy2NddSELjLPzsidnB0ArIizHlOIsaQUtbqEMnZ77Vl
-	QVTm/Ci/F+CTfxagcqrgZYmv4/AenvvWNWvBUbXTRXL5Qqf+5BXtHUzVVDR7T2u7JE+a9K
-	uxKDGqQzynLjneGwWSlFo4+GAet3ahE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-IMkfSYF_MDGVrIvfYLsGcw-1; Wed, 15 May 2024 10:26:34 -0400
-X-MC-Unique: IMkfSYF_MDGVrIvfYLsGcw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5501585A58C;
-	Wed, 15 May 2024 14:26:32 +0000 (UTC)
-Received: from [10.22.33.50] (unknown [10.22.33.50])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 15ACC28AA;
-	Wed, 15 May 2024 14:26:32 +0000 (UTC)
-Message-ID: <11b8c1e4-45a7-4895-a1f3-6626744cee1e@redhat.com>
-Date: Wed, 15 May 2024 10:26:31 -0400
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hN4+gtRn"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41fd5dc0480so43451235e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 07:28:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715783282; x=1716388082; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zpkv1XFXbjz013sYUtzM2chC9OslxeXahIcL6Fre16A=;
+        b=hN4+gtRnXBGvlljPGLcDjVg6FAOiWTkPvxVoQdoQ2gWyl2vSjVlAQR2TF49uQzPP29
+         FZ4HvxvpEyOcKe4nrdnkpdNso/Ge5OwUmBflPVBh8brpRYOI3OqxiU5PQbfUsdmYsBVn
+         +/zNoVBOT4NcWUuezkIA3QcHNCkOYArsbg+e3xHS48JrrFKgoVQj3+0x17cOWJnfrqr0
+         EA006MQLYDYCSVe2fGLqyAqUt0j/9cIE+L2bpzU1ZIu1hKiD6yeMttlS5vcz6rWI4k6L
+         Xx9vS6dSST3Luo2unIN8NvZsmUJuae0GLMHIaK8MpvxC+zkrbmgbqZDAo0Jz+OzzM45j
+         HQ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715783282; x=1716388082;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zpkv1XFXbjz013sYUtzM2chC9OslxeXahIcL6Fre16A=;
+        b=sTibxp8yfXIeVDnxBDpfRUJpsaWp/BNEtdfYxz5vViSIovNd3b+GKn0xUt0xfUcv6n
+         wpSG9r2+IZVEUs4fasuJlrMmVGnk2t692zPU73EppvEGNlh6AIqt4TOlp9gVhTl3Y9M+
+         Hzgz8SCzwA8vXXPKnlwbJX7QZpx93+yu/WTgTFv27jD1zgsK/5tgThWtGwGcw2BVnncR
+         u5+TZORszs9JiIHwNCXPKkK3LjSxfwxe2Hwm5KCRmZbh4R3Txxby0s39iWIywIFlNub4
+         2IWBjw8p9RuvwDM1Nz1GPF4udH0TX+pTptIl/k34ru/DzmHQEG4wRzfFT14EZO0pBd9Q
+         I0ig==
+X-Forwarded-Encrypted: i=1; AJvYcCW9d76mYs1aUZZlD3p6g0Nikvnh5/LvxuR0wOYQ7AZNcP4aeMIDIwxOujrCtoU6sBstkBLPFiOnzLHTY9johed6ICe8hr7A63gLHzPJ
+X-Gm-Message-State: AOJu0YzfRIoIUVIMdQp5RVC8gdxIJKTxqTLVCUk87w+5BVtIuc8Vsaa3
+	aXt2E6ErkFlWWK3PGDDsGTLhkPYXA/7LzINC1u6VCmn4j5KSOVqblphyA8bGlHLRr0gSkZhOmkY
+	Z
+X-Google-Smtp-Source: AGHT+IEpa3TUE9I1rxGs398WImHaUYEZ/FcJ/c2lRyyHuQn6Pe5/4WN9tj8KS+nu2zboruPUmw5DXg==
+X-Received: by 2002:a05:600c:4689:b0:420:509:714f with SMTP id 5b1f17b1804b1-4200509728bmr104553345e9.14.1715783281672;
+        Wed, 15 May 2024 07:28:01 -0700 (PDT)
+Received: from localhost ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42014f563adsm122363295e9.38.2024.05.15.07.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 07:28:01 -0700 (PDT)
+Date: Wed, 15 May 2024 16:28:00 +0200
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, srinivas.kandagatla@linaro.org,
+	broonie@kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, perex@perex.cz,
+	tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org,
+	neil.armstrong@linaro.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/2] ASoC: codecs: lpass-macro: add helpers to get codec
+ version
+Message-ID: <d77a7d51-8357-4cc0-b233-be2e18d16908@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: cgroup io.stat propagation regression
-From: Waiman Long <longman@redhat.com>
-To: Dan Schatzberg <schatzberg.dan@gmail.com>, Tejun Heo <tj@kernel.org>
-Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <ZkO6l/ODzadSgdhC@dschatzberg-fedora-PF3DHTBV>
- <3ed32279-904a-411d-91a4-a62f4ca2dde2@redhat.com>
-Content-Language: en-US
-In-Reply-To: <3ed32279-904a-411d-91a4-a62f4ca2dde2@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510175835.286775-2-srinivas.kandagatla@linaro.org>
 
+Hi,
 
-On 5/14/24 23:59, Waiman Long wrote:
-> On 5/14/24 15:25, Dan Schatzberg wrote:
->> Hi Waiman,
->>
->> I've noticed that on recent kernels io.stat metrics don't propagate
->> all the way up the hierarchy. Specifically, io.stat metrics of some
->> leaf cgroup will be propagated to the parent, but not its grandparent.
->>
->> For a simple repro, run the following:
->>
->> systemd-run --slice test-test dd if=/dev/urandom of=/tmp/test bs=4096 
->> count=1
->>
->> Then:
->>
->> cat /sys/fs/cgroup/test.slice/test-test.slice/io.stat
->>
->> Shows the parent cgroup stats and I see wbytes=4096 but the 
->> grandparent cgroup:
->>
->> cat /sys/fs/cgroup/test.slice/io.stat
->>
->> shows no writes.
->>
->> I believe this was caused by the change in "blk-cgroup: Optimize
->> blkcg_rstat_flush()". When blkcg_rstat_flush is called on the parent
->> cgroup, it exits early because the lockless list is empty since the
->> parent cgroup never issued writes itself (e.g. in
->> blk_cgroup_bio_start). However, in doing so it never propagated stats
->> to its parent.
->>
->> Can you confirm if my understanding of the logic here is correct and
->> advise on a fix?
->
-> Yes, I believe your analysis is correct. Thanks for spotting this 
-> iostat propagation problem.
->
-> I am working on a fix to address this problem and will post a patch 
-> once I have finished my testing.
+kernel test robot noticed the following build warnings:
 
-Actually, I can only reproduce the issue with a 3-level 
-(child-parent-grandparent) cgroup hierarchy below the root cgroup. The 
-dd command is run test.slice/test-test.slice. So both test.slice/io.stat 
-and test.slice/test-test.slice/io.stat are properly updated.
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Cheers,
-Longman
+url:    https://github.com/intel-lab-lkp/linux/commits/srinivas-kandagatla-linaro-org/ASoC-codecs-lpass-macro-add-helpers-to-get-codec-version/20240511-020042
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+patch link:    https://lore.kernel.org/r/20240510175835.286775-2-srinivas.kandagatla%40linaro.org
+patch subject: [PATCH 1/2] ASoC: codecs: lpass-macro: add helpers to get codec version
+config: sparc-randconfig-r081-20240512 (https://download.01.org/0day-ci/archive/20240512/202405120735.qbbiUPaX-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 13.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202405120735.qbbiUPaX-lkp@intel.com/
+
+smatch warnings:
+sound/soc/codecs/lpass-va-macro.c:1485 va_macro_set_lpass_codec_version() error: uninitialized symbol 'version'.
+
+vim +/version +1485 sound/soc/codecs/lpass-va-macro.c
+
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1464  static void va_macro_set_lpass_codec_version(struct va_macro *va)
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1465  {
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1466  	int core_id_0 = 0, core_id_1 = 0, core_id_2 = 0, version;
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1467  
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1468  	regmap_read(va->regmap, CDC_VA_TOP_CSR_CORE_ID_0, &core_id_0);
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1469  	regmap_read(va->regmap, CDC_VA_TOP_CSR_CORE_ID_1, &core_id_1);
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1470  	regmap_read(va->regmap, CDC_VA_TOP_CSR_CORE_ID_2, &core_id_2);
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1471  
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1472  	if ((core_id_0 == 0x01) && (core_id_1 == 0x0F))
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1473  		version = LPASS_CODEC_VERSION_2_0;
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1474  	if ((core_id_0 == 0x02) && (core_id_1 == 0x0E))
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1475  		version = LPASS_CODEC_VERSION_2_1;
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1476  	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && (core_id_2 == 0x50 || core_id_2 == 0x51))
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1477  		version = LPASS_CODEC_VERSION_2_5;
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1478  	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && (core_id_2 == 0x60 || core_id_2 == 0x61))
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1479  		version = LPASS_CODEC_VERSION_2_6;
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1480  	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && (core_id_2 == 0x70 || core_id_2 == 0x71))
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1481  		version = LPASS_CODEC_VERSION_2_7;
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1482  	if ((core_id_0 == 0x02) && (core_id_1 == 0x0F) && (core_id_2 == 0x80 || core_id_2 == 0x81))
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1483  		version = LPASS_CODEC_VERSION_2_8;
+
+Uninitialized on else path.
+
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1484  
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10 @1485  	lpass_macro_set_codec_version(version);
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1486  
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1487  	dev_info(va->dev, "LPASS Codec Version %s\n",
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1488  			lpass_macro_get_codec_version_string(version));
+787a4e6d2bc156 Srinivas Kandagatla 2024-05-10  1489  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
