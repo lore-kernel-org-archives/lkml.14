@@ -1,121 +1,167 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2063A1AC
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD8F3C488
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715754043; cv=none; b=B7TMMHN4slckOYhLS8DnUo577LG1FjguFc8enRH9GGItszanTWbeQlSZiGrXjf9YoFcEHMNn4kFeXq6YTNaKe8ft6Iwcr/08wbXiYeXmkxRiGDtLaMfHxj7zTqEXqFcz+G1kTqEQt0RCphd3WyYm6HxFHC3znm3l8FM6U7BJaK8=
+	t=1715754086; cv=none; b=G0mABWUUv71+6UFsfDy0jaxgHu3uYDylJpEIIPZ7oOxPfdU44woPCmOyqOnPuHATgNXU27nyB0vRua0oD3HirQjQUtWkBvHZ3FrJOXMQVUOiYJ7C5YaN31OWT2/VJl2AwR+iC7gBNdbSRJynxLQGxmWYNmxZJhzcNp6TdCLl3Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715754043; c=relaxed/simple;
-	bh=s3hMnneki/xCehK7eUpMW9xHCWCBE5YEqu/0puPv3OU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hKCu9YxbIJhNL6fJJiLDO3ATyXbi3fmWERDzLsXryb1R7uPJIyf8lWjIF2+zdRs993Qge8ZJlBl9KgdvfVvm59YY4bfTLS3BZdbCyK7UcpP6zE/4Rfo178uMdhMhYiWCwLY+OuZ1ci/aaNswpt/HG5v9HVJDJfBg8q5tDblSoqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ODHdMt68; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1715754086; c=relaxed/simple;
+	bh=kcQJvLCc1/I2+fl8rDk29nGaXS9kvZzyvViOdGCrMAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e0EZCbZZ/iENHvj9n67feHwzTfJp0QYjIYNpxoB5Hb7GlZs/3UROtx0+WnXYBEz23mhfXdtuzbY72Gul9TMKjeTeSaTpSOVUUKlRymVrvRz9TJFTNsi1U1/C/LT0FgA+0UQZ1hS27aJAs78p9MfH06cwYMhpTpnLZuaecBgHAIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Ao+R/+i6; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ODHdMt68"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2b6208c88dcso5022198a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 23:20:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Ao+R/+i6"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7e1b887c488so158339039f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2024 23:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1715754040; x=1716358840; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1715754084; x=1716358884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bPp84dK/TP4O+E01WOilhkZ88ufy3AD5Z9rfCYlBsMk=;
-        b=ODHdMt68OGUskTUciLb/ixSXlQoVGuneYEgjU15VUuPu/bwS+SsbrIphDOzchBBfbL
-         eZbBJs80UqDwxJWtu0zvtS+FAVGlfGwRLVrMcNETYR0sgZkFTneFrDvGsmB8LmjYcnkV
-         k9XLaC/7aJX3BVkI9DqYunJLHP0n1bwhnc42X4Q/6Eu2cINw0ZzAq5ior0s9nDXrbz/u
-         Ew298HUloXAubJ/juq2eGL8nxxL3/DoCfs0hUy0R/eyDGjB6L+zu9+j3NOICeksBJTXV
-         SaxHyMzsAUh/OwWgOF4e0S5QkGl2kdi13nGxV+ofS4IWpxEd3k4LRyO4WITZUpFNJa1L
-         SOpQ==
+        bh=pewL15YSqYyntUzZ2YESL84hcx8HG85YGqfAIHHWdj8=;
+        b=Ao+R/+i6Qa7XP5HRhcm4D1cueKOHXeIy9I4EoO6b5srOFqlnJt5PQQypmSL6jqJ/BS
+         h2dJYYjDahqeUaOpqE66CVN/adaH7oLwU4M+Re6ESrrikxu/UasMYxrd8n04E+gc6ECY
+         TecwGoyeY4KSWcD1WygOmFAZnRqByaDmJHO1ycSf0Fibpk8GktwRf9QiO84LjIrCyNMD
+         pZZInTy7peah/wJQh9uMlW3mc+nsA1p+cPldMFuX1A5MpL0kyQytc6mN5O9LmExdFd/K
+         4QqvfTRuydVL0i9JR1OHzkwRlfqUbizFdF0/6ptnJJY8BnANfh3oAlPyIXIXUjeBKz7m
+         Yl6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715754040; x=1716358840;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715754084; x=1716358884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bPp84dK/TP4O+E01WOilhkZ88ufy3AD5Z9rfCYlBsMk=;
-        b=nL92gYFR9LhgkS5JSKwMdGX23CEQ1v5ar0hNSpOcvXv+oyWJFguFS73eRdH6z4nbKy
-         LEyXJFw72mpIwzs/Xjft5cI1nurjgQuc+LnnWwTFY4bMwwois2qpbF5Mlyk6WEALo0Z1
-         eUzgxwsQc9SZr3jRKUk1V5roRp0Jyb9GA55JbigdzUNhITQVVlbgR9lwfNbE5/Jm47iJ
-         wHUwanMpl0WVvO/fNdVmsfx/vQEXvjPOCMSj+Nn4Z9uFGG29r2hD2mL+uv+1DkIf+tyx
-         QFflBEFuy3ujOFEmjed2dT6VYY9HjIm6L4milNIew95p5A0dj5MsUDIizBr9Avrms/tA
-         dmcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXHO+POS/rG13K8X9ToPQ+bsvpS0rS0pbsXAaTynkzBhZbRM1lmtwKPo324PZYj+xWxNr+ZDuFdKzGrUgkHzsAkHwA49flWK8bfJfgr
-X-Gm-Message-State: AOJu0YwtArNYlo2IxaflUmfRGbeTZ5FNfmXuoGIvbRIVM3aAff6lA4lo
-	w/bhY61wofkhrEHFRnDQEhhH6P6hzzQu6FfxN5qddW949k9SKl4W9YL31tII4d9U/0JgxQNGLTe
-	6
-X-Google-Smtp-Source: AGHT+IEkUavsy1YWv/qicLKe9PIwCoSOIz69b8mCVNDFboxtIWn5GXanEy1bkFItdVpeqmQyZYp7vw==
-X-Received: by 2002:a17:90a:a586:b0:2b6:2067:dd15 with SMTP id 98e67ed59e1d1-2b6ccef5ebamr13087553a91.40.1715754040500;
-        Tue, 14 May 2024 23:20:40 -0700 (PDT)
-Received: from GQ6QX3JCW2.bytedance.net ([203.208.189.13])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b671782d7bsm11948761a91.51.2024.05.14.23.20.38
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 14 May 2024 23:20:40 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: lizhe.67@bytedance.com
-Cc: juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org
-Subject: Re: sched/isolation: Fix CPU affinity issues for several task
-Date: Wed, 15 May 2024 14:20:34 +0800
-Message-ID: <20240515062034.61601-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240430033948.12165-1-lizhe.67@bytedance.com>
-References: <20240430033948.12165-1-lizhe.67@bytedance.com>
+        bh=pewL15YSqYyntUzZ2YESL84hcx8HG85YGqfAIHHWdj8=;
+        b=fy2oC4kYB+ps1xjlby/J8QqQ/C8DQFnWUjgtHxILkVlDOf60Kqm7OF7+DXgu0DIW2b
+         io7wCvZECfIll5TsFuGrQm8niNiRdBDtY1iDhLF4A6OZl/yLIpEDtPvCEjVBYfN8XrmZ
+         zqKJp1rFi0sxNGBHhP83zci2zuaFEZJDo8FDF4tbc90fULKhV4e9aMUmqoaZfjkq62k2
+         jdBH9StGWs3hciv+fbCc03I4KDrYX92sLSjG3jA9RDpnpqgpRNEGSCzkJ5BEBQdZDveQ
+         JZ7Ga95Gjgj3gtdNJ+Kh8mLKpkYjVmOSJw5bsnJGnh2kzHqQjKLSthMNXtGIyNJCL2Qy
+         1+GA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQJqxoy20rJeYh6Vgobext8bsTGn+ahgRUnv/uFXjhuAKqidtr1kDAjsEiB8cz7WAXcsUHddj4w1uPv2q+a2CLhv/KhKf2bZoO1H13
+X-Gm-Message-State: AOJu0YzOauh+N+AzXdG8aTsluC7SC46L75IlMyGlChyhEumCA9DO+ewC
+	bSrpZs4Zi46b9UXeTjk0lxrfwkj1QMFfBWNWBALmwne+JJmR4ZU8LuorGxaKW9TuIJi18RSFRZg
+	6/yaXPSwDcuDtCljo6FQM8Jd8Od/Ga335xx8T8g==
+X-Google-Smtp-Source: AGHT+IHj1X7ctGdv9YJkalDZLMbFRUyxyYp6gndkUfhYp5Mhxyh+tcKm4XPw8K1pSADIXlV0LoBEwCYK5xLJibmm7LI=
+X-Received: by 2002:a05:6e02:b49:b0:36b:aae:613 with SMTP id
+ e9e14a558f8ab-36cc1319624mr127252835ab.10.1715754084373; Tue, 14 May 2024
+ 23:21:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <PH7PR20MB4962C6D8FD6989BC79F9483FBB1D2@PH7PR20MB4962.namprd20.prod.outlook.com>
+ <IA1PR20MB4953F852CB7A9C5FE45E18EBBB1D2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <CAAhSdy2uSAA4TLmCvjuLsZT26wJyCQ0L61m5vg3BbBCSvHxVqg@mail.gmail.com>
+In-Reply-To: <CAAhSdy2uSAA4TLmCvjuLsZT26wJyCQ0L61m5vg3BbBCSvHxVqg@mail.gmail.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 15 May 2024 11:51:12 +0530
+Message-ID: <CAAhSdy2Fsu8PJH_+cPsFWQ8HmuPr_Ym-_YjnLKWtCqBLWTZ5kA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: hwmon: Add Sophgo SG2042 external
+ hardware monitor support
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-hwmon@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Apr 2024 17:44:27 +0800, Li Zhe wrote:
+On Wed, May 15, 2024 at 11:49=E2=80=AFAM Anup Patel <anup@brainfault.org> w=
+rote:
+>
+> On Sun, May 5, 2024 at 6:48=E2=80=AFAM Inochi Amaoto <inochiama@outlook.c=
+om> wrote:
+> >
+> > Due to the design, Sophgo SG2042 use an external MCU to provide
+> > hardware information, thermal information and reset control.
+> >
+> > Add bindings for this monitor device.
+> >
+> > Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+>
+> LGTM.
+>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+>
+> Applied this patch to the riscv/opensbi repo.
 
->If the parameter of cmdline "nohz_full=" contains cpu 0, the cpu affinity
->of the kernel thread "kthreadd", "rcu_sched", "rcuos%d", "rcuog%d" will
->always be 0x01, that is, these threads can only run on cpu 0. This is
->obviously not in line with the original design.
->
->The root cause of this problem is that variables 'cpu_valid_mask' in
->functions __set_cpus_allowed_ptr_locked only contain cpu 0 before smp
->initialization is completed. If we call set_cpus_allowed_ptr and pass in a
->cpumask that does not contain cpu 0, the function call will return failure.
->Thread "kthreadd" and "rcu_sched" call the function set_cpus_allowed_ptr
->early in the system startup. Thread "rcuos%d" and "rcuog%d" inherit the
->wrong cpu affinity of "kthreadd".
->
->I tried to fix this problem by adapting the function set_cpus_allowed_ptr,
->but the variable task_struct->cpus_ptr will be referenced or modified in the
->scheduled process, which seems to make it more difficult to fix this problem
->by adapting the function set_cpus_allowed_ptr. So this patch clear cpu 0 from
->nohz_full range to fix this problem.
->
->Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->---
-> kernel/sched/isolation.c | 7 +++++++	
-> 1 file changed, 7 insertions(+)
->
->diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
->index 5891e715f00d..7b9bcfcd3c55 100644
->--- a/kernel/sched/isolation.c
->+++ b/kernel/sched/isolation.c
->@@ -152,6 +152,13 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
-> 	if (cpumask_empty(non_housekeeping_mask))
-> 		goto free_housekeeping_staging;
-> 
->+	if ((flags & HK_FLAG_KTHREAD) &&
->+		cpumask_test_cpu(smp_processor_id(), non_housekeeping_mask)) {
->+		pr_warn("Housekeeping: Clearing cpu %d from nohz_full range\n", smp_processor_id());
->+		__cpumask_set_cpu(smp_processor_id(), housekeeping_staging);
->+		__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
->+	}
->+
-> 	if (!housekeeping.flags) {
-> 		/* First setup call ("nohz_full=" or "isolcpus=") */
-> 		enum hk_type type;
+Sorry, for the noise. Please ignore.
 
-Friendly ping. Could somebody give me some advice?
+Regards,
+Anup
+
+>
+> Thanks,
+> Anup
+>
+> > ---
+> >  .../hwmon/sophgo,sg2042-hwmon-mcu.yaml        | 43 +++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/sophgo,sg20=
+42-hwmon-mcu.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmo=
+n-mcu.yaml b/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mc=
+u.yaml
+> > new file mode 100644
+> > index 000000000000..f0667ac41d75
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.y=
+aml
+> > @@ -0,0 +1,43 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/hwmon/sophgo,sg2042-hwmon-mcu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sophgo SG2042 onboard MCU support
+> > +
+> > +maintainers:
+> > +  - Inochi Amaoto <inochiama@outlook.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: sophgo,sg2042-hwmon-mcu
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#thermal-sensor-cells":
+> > +    const: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#thermal-sensor-cells"
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/thermal/thermal-sensor.yaml#
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        hwmon@17 {
+> > +            compatible =3D "sophgo,sg2042-hwmon-mcu";
+> > +            reg =3D <0x17>;
+> > +            #thermal-sensor-cells =3D <1>;
+> > +        };
+> > +    };
+> > --
+> > 2.45.0
+> >
+> >
