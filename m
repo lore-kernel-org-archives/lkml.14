@@ -1,256 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E013BBEA
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 20:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC07B3BBEA;
+	Wed, 15 May 2024 20:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715806510; cv=none; b=lhc4MHa1QlcZI6c6IN+EhiU5NDCsT5NzhHb0a3TVZZXy0BPq2ouTkTZ5Zn+o5PxrHgcLA+NOjWjFjWvF3OwZwo1h9moDQzU8OdQhNu87HIXD47shVUkbVvJ2S/wxnDaOUEEsYZ7eK7BlBZYbGGuDsHHLwLmzaadfKYcIxpV0uxY=
+	t=1715806549; cv=none; b=JSAbrrI45Kl+AN+L5x6FuaQUamuDvLA2oGDbNhTkK7eIWIutkvgJk7Wm6HEVS3nN+7ox+lKPAosmYqKaDWeFuokvpcobfLpbygurRQWBmXMEQ/hXbVpkeDsiW3kqZaDwLz0Pu1oKSmiN3EvAv/J3n1mQjVrG6c3bM6orS9v4r/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715806510; c=relaxed/simple;
-	bh=A1iyLn9KO+A4gGfOcq+/F+lKzEft5zuQ6Rog9nWIJF4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=YCt09io3y0QX9Hc0zqNp3SNnqham600DugCktBv1sN5gvYkrPvtIcW5HkMuq7hWGOHo+f+7IDQO2WPfig9DpON8U+HQVgrgIBa9k8k4LSk9n6GslFHjrMJ+0gevqzkW2ioZlUylk24Izts+L/BUS0A6EX5ftTs1q7xHTBVtZ6j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nNRtIV7d; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715806549; c=relaxed/simple;
+	bh=AAeXwwHWMP0eHtZAb20qWMKLq5n94EYBqJos5Y7FBEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tno2Y4jqDCznrRJPnLcGvto5bsDUzxIYv/o5BFMY/VbXXQAhyy9znqUTxW9kWbAv9M9BZkI1KTfDpK9xmsChinn658ahm5o2doe7mR0bMF6N0GSBm6sjYnkWbwR/wdTk1Tm+bQoXXOKVrwS3qVSH3+yQhXhZrV/Zz/yUTXKtj5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/U46up4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nNRtIV7d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715806508; x=1747342508;
-  h=date:from:to:cc:subject:message-id;
-  bh=A1iyLn9KO+A4gGfOcq+/F+lKzEft5zuQ6Rog9nWIJF4=;
-  b=nNRtIV7dX98BR2xazt2F0U/6vhv3nufHg8u5wfY7W3PLoniA3fHSoGtr
-   dfSFYJzAbPrzUi/LdkCyH9Uvbkh3P31c5q0sODma76DgErnTyu7OlTg11
-   zDbjHRuZcdgl2eQdanq7IcHSakuh7bc4TdMx2IylQExpMbW4PcWLgEqIp
-   9xznIxV6Ojd6E8cvzhgl0HXH6Cvp0i2Q1yORJKUk5hoPRKBmu9roTgqu1
-   xbpJJWf+hOQ34T89vl6E6kNHpTfrFFe5up+O/RgWJR3s6shCqvye91BwM
-   2DuB09MrNa1ETl3Ji8dZQpHLm978xFQ52oIyZ8UiRbEQrA1BPqbb2YIl6
-   Q==;
-X-CSE-ConnectionGUID: a63a1bejTzOQq03t8Bz5wg==
-X-CSE-MsgGUID: 9trr73hyTOOP/kzEy0U+5A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11753489"
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="11753489"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 13:55:07 -0700
-X-CSE-ConnectionGUID: VxsXJl3IQteLoggfszgt2A==
-X-CSE-MsgGUID: 75w5mRHDQ5Wmzym5LZvxsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="31760513"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 15 May 2024 13:55:06 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s7LeR-000DG9-1o;
-	Wed, 15 May 2024 20:55:03 +0000
-Date: Thu, 16 May 2024 04:54:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- e5bc44e47c531860be96ac615314b1ab23d5aa2b
-Message-ID: <202405160442.x3ARq5LI-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/U46up4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A379C116B1;
+	Wed, 15 May 2024 20:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715806549;
+	bh=AAeXwwHWMP0eHtZAb20qWMKLq5n94EYBqJos5Y7FBEA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=d/U46up4/1F7xAwdTRSJTYMeQ0ft+y0RZ8yEnDsVnOWx+XUXmNLq2ZaTcS0PwJi21
+	 Is92bD6XPKbod2xd710vZHuXroJBdnqCE0oG33ui/DUsPLCbd4c4Cp9PWNZl/nUcrj
+	 xm0WCopuH4JLUcRkkbgoymeB+Nh2zNH8zj0zXBRIyFtVutNG5YpWo/a4L+m1OHjdnp
+	 0t7bGloxDN3jh2OUCoQOjD+rKKaVlksAjgQH2/psvco2L3HLNQSqgCS8Wq87rUXFyI
+	 gN03XVNbAohU4I6fVzPVuWD1LJnR8QiZAITxgfqIXKJB1mPC6+y4j6dGIYyej7/+re
+	 GSDrse3kZS56g==
+Date: Wed, 15 May 2024 15:55:47 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc: rick.wertenbroek@heig-vd.ch, dlemoal@kernel.org, stable@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip-ep: Remove wrong mask on subsys_vendor_id
+Message-ID: <20240515205547.GA2137633@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403144508.489835-1-rick.wertenbroek@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
-branch HEAD: e5bc44e47c531860be96ac615314b1ab23d5aa2b  arch/topology: Fix variable naming to avoid shadowing
+On Wed, Apr 03, 2024 at 04:45:08PM +0200, Rick Wertenbroek wrote:
+> Remove wrong mask on subsys_vendor_id. Both the Vendor ID and Subsystem
+> Vendor ID are u16 variables and are written to a u32 register of the
+> controller. The Subsystem Vendor ID was always 0 because the u16 value
+> was masked incorrectly with GENMASK(31,16) resulting in all lower 16
+> bits being set to 0 prior to the shift.
+> 
+> Remove both masks as they are unnecessary and set the register correctly
+> i.e., the lower 16-bits are the Vendor ID and the upper 16-bits are the
+> Subsystem Vendor ID.
+> 
+> This is documented in the RK3399 TRM section 17.6.7.1.17
+> 
+> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> Cc: stable@vger.kernel.org
 
-elapsed time: 723m
+Applied to pci/controller/rockchip by Krzysztof, but his outgoing mail
+queue got stuck.  I added Damien's Reviewed-by.  Trying to squeeze
+into v6.9.
 
-configs tested: 179
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240515   gcc  
-arc                   randconfig-002-20240515   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              alldefconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                        clps711x_defconfig   clang
-arm                                 defconfig   clang
-arm                       multi_v4t_defconfig   clang
-arm                             pxa_defconfig   gcc  
-arm                   randconfig-001-20240515   clang
-arm                   randconfig-002-20240515   gcc  
-arm                   randconfig-003-20240515   clang
-arm                   randconfig-004-20240515   gcc  
-arm                           sama7_defconfig   clang
-arm                         vf610m4_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240515   gcc  
-arm64                 randconfig-002-20240515   clang
-arm64                 randconfig-003-20240515   clang
-arm64                 randconfig-004-20240515   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240515   gcc  
-csky                  randconfig-002-20240515   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240515   clang
-hexagon               randconfig-002-20240515   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240515   gcc  
-i386         buildonly-randconfig-002-20240515   gcc  
-i386         buildonly-randconfig-003-20240515   gcc  
-i386         buildonly-randconfig-004-20240515   gcc  
-i386         buildonly-randconfig-005-20240515   gcc  
-i386         buildonly-randconfig-006-20240515   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240515   clang
-i386                  randconfig-002-20240515   gcc  
-i386                  randconfig-003-20240515   gcc  
-i386                  randconfig-004-20240515   gcc  
-i386                  randconfig-005-20240515   clang
-i386                  randconfig-006-20240515   gcc  
-i386                  randconfig-011-20240515   clang
-i386                  randconfig-012-20240515   gcc  
-i386                  randconfig-013-20240515   clang
-i386                  randconfig-014-20240515   gcc  
-i386                  randconfig-015-20240515   gcc  
-i386                  randconfig-016-20240515   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240515   gcc  
-loongarch             randconfig-002-20240515   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                     loongson1b_defconfig   clang
-mips                        qi_lb60_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240515   gcc  
-nios2                 randconfig-002-20240515   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240515   gcc  
-parisc                randconfig-002-20240515   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      arches_defconfig   gcc  
-powerpc                       holly_defconfig   clang
-powerpc                 mpc837x_rdb_defconfig   gcc  
-powerpc               randconfig-001-20240515   clang
-powerpc               randconfig-002-20240515   clang
-powerpc               randconfig-003-20240515   gcc  
-powerpc64             randconfig-001-20240515   gcc  
-powerpc64             randconfig-002-20240515   clang
-powerpc64             randconfig-003-20240515   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                    nommu_virt_defconfig   clang
-riscv                 randconfig-001-20240515   clang
-riscv                 randconfig-002-20240515   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240515   clang
-s390                  randconfig-002-20240515   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                    randconfig-001-20240515   gcc  
-sh                    randconfig-002-20240515   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240515   gcc  
-sparc64               randconfig-002-20240515   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240515   gcc  
-um                    randconfig-002-20240515   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240515   gcc  
-x86_64       buildonly-randconfig-002-20240515   gcc  
-x86_64       buildonly-randconfig-003-20240515   clang
-x86_64       buildonly-randconfig-004-20240515   clang
-x86_64       buildonly-randconfig-005-20240515   clang
-x86_64       buildonly-randconfig-006-20240515   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240515   gcc  
-x86_64                randconfig-002-20240515   clang
-x86_64                randconfig-003-20240515   clang
-x86_64                randconfig-004-20240515   clang
-x86_64                randconfig-005-20240515   clang
-x86_64                randconfig-006-20240515   clang
-x86_64                randconfig-011-20240515   clang
-x86_64                randconfig-012-20240515   clang
-x86_64                randconfig-013-20240515   gcc  
-x86_64                randconfig-014-20240515   gcc  
-x86_64                randconfig-015-20240515   clang
-x86_64                randconfig-016-20240515   clang
-x86_64                randconfig-071-20240515   gcc  
-x86_64                randconfig-072-20240515   gcc  
-x86_64                randconfig-073-20240515   gcc  
-x86_64                randconfig-074-20240515   clang
-x86_64                randconfig-075-20240515   clang
-x86_64                randconfig-076-20240515   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240515   gcc  
-xtensa                randconfig-002-20240515   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/pci/controller/pcie-rockchip-ep.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index c9046e97a1d2..37d4bcb8bd5b 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -98,10 +98,9 @@ static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+>  
+>  	/* All functions share the same vendor ID with function 0 */
+>  	if (fn == 0) {
+> -		u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
+> -			       (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16;
+> -
+> -		rockchip_pcie_write(rockchip, vid_regs,
+> +		rockchip_pcie_write(rockchip,
+> +				    hdr->vendorid |
+> +				    hdr->subsys_vendor_id << 16,
+>  				    PCIE_CORE_CONFIG_VENDOR);
+>  	}
+>  
+> -- 
+> 2.25.1
+> 
