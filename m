@@ -1,156 +1,154 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A3F1591EC;
-	Wed, 15 May 2024 21:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7635A155A57;
+	Wed, 15 May 2024 21:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715809532; cv=none; b=PTZsex0EzKbFdXXYcJhUHHB1/saJvjQR65QGklzyjjEGbdg0Ksmi0t8tZMXHPEtvHE+nfM/il/IdTdYpvJ0qIl2epvDcgBrwymzx6je+KxUBNMWk5qCjX+ehpTqJfNAc3Smj0NveD0gQ8Q+VRRws4yv4kQfMeVyk/oNcX9gdfcU=
+	t=1715809665; cv=none; b=ObYAMIL8I+b2zP2K/lt8OwTbPI7U0Fhb1AIhRHpis0CxwqBCLmtzXJ70fzGjPHXu0c5BjEKhOSV2hcKLz9ZkxcMR0s8I/u7Qg3XapVkd7p5+/pRkXb13VkRqjD1KDdGNcfa+umv6DyGdkAZSMq0AfS5geB5UW7txSngZ6N14HKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715809532; c=relaxed/simple;
-	bh=yhT8qH87UFLaU0oO9HTe6eN8eKuVid3cRTVIc+jIXAs=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=VtG3pbbmcBRQx1HHLPYcw6UX8l21N6Q0TI48vf5lGFmzI6pSYHjb6OCDi0F7xaGItasSE+nD6W9s77vlA1ZDRTstlxVR4DzRusv5P7dqGePqwM/XTIiNKgZLlF5/KC2LcxK9gxu+JMwjdW+zYRP1zmDmVoDlMQyI6rpnN2w1+Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ERT99NLN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MgOwK9gW; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1715809665; c=relaxed/simple;
+	bh=LI9hUjH7t7Zwg5fteMpc579qcbztQeCkUGV2aMfslG4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hj9blkDOWyMmYlIUtXfXqlFfKK0ZwZvgkQMHMS45bN4Upba+0GylVmz90Zo79HtiYMw+LMG5IRZkktaxVumA2otwEQ1oGRSDqtgxenlNw1UyXv7+Ncmh4Cd89cwZkMubZ8fVQhDZBdeIpnURSAd7GeOS75sKGHHoXGqI43UdGMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mc4aGt07; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ERT99NLN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MgOwK9gW"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id D8BAF1800132;
-	Wed, 15 May 2024 17:45:29 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Wed, 15 May 2024 17:45:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1715809529;
-	 x=1715895929; bh=DYfY0QLhy4/rRWL7kh0u1T/d2BAKUWKyXAVHHKbZmaw=; b=
-	ERT99NLNvaEezIzDDFT0UXdcx7BbZrozkgm/DkZWKZPaFV8X2xCknjdLXZ++Yqw3
-	EASsxozJqSkUSk30OPe1EU05gfmT9YHuDo1VDohHmW46QSj8BPz2WDyvnLlPKB5S
-	rrkSiI9hldImW0vLrX0MSzBhqPzK229MLjgjTAWbIq0NrNvTlhnCAAMJk8/8gkP6
-	DjNfFoL3fk0kysHYEMyAQHA57gWJ/+aJsUePENc8pJxm6OYI8XHxUvd5crB5O9qy
-	Vr1dKnUWLhrYvFChKZ9a0m1NBrASAQZ3T0C+7sWTlXY6y9NYYdyX3MiwCDrxBpae
-	LHVkXUQ2skkaJgSgxL3H3A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715809529; x=
-	1715895929; bh=DYfY0QLhy4/rRWL7kh0u1T/d2BAKUWKyXAVHHKbZmaw=; b=M
-	gOwK9gW26E5deyuZdMckL0EHDqzk3qsrTm+f1m93fehvBwejE2fj7SYkakM5me7P
-	PFFFsPxaI3ucuzvKoh54GO91v426XAUnyKRMwFwYlOUjk6MVLyEaTXGRw4LfPriB
-	FxSBYe4YxurBUY2FXR7OyOBmFkg1lV/1YccJJwwq3EPu09zA/p+19lZ2JAhFLFdy
-	pFwuj9pAF/81//9q8L5ZYORBYz5McAT4tJ01xB6m9MwT6u7ITFxRnQo8/55i7fy7
-	p38aCy/zuXIylUskZAn/9groJVPY/nklfSx7cE2LugbvA3zjJ4M04APU5+cPEl7E
-	jnTpF6PQVwEAIGQmL9B3g==
-X-ME-Sender: <xms:-SxFZmLJbFR0nWQw2kNTOOGUcFn4KYJtr2WH83zzJJ0A5tFxLE97Ww>
-    <xme:-SxFZuLmjZn3itRQkRvsbv2CE46zFkyWDgUMkT4UxBYR7G69AP0e8t19wz__lXAed
-    Zp7k6xM0ovAO3QZ6BE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegledgtdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpeejuddtuefhvdejvefgheduiedtheeigfevleehffdu
-    udelhfekiefhheduhefgveenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgig
-    uhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:-SxFZmuykqqzXTbCa4HPtnYlXjtt0mN8Ex5UAbbDIC5RJXtpTTZPeg>
-    <xmx:-SxFZraFSfajIxYvKtjwR7FE6441EkFEXucinRsBjWKDNKrA-Nzynw>
-    <xmx:-SxFZtY2ez9qpnea6HDOpQTDQkFdD578P7gyd3U1rpm4Aj1LV6Cq-Q>
-    <xmx:-SxFZnA56Vy738mX7sTA1VUdGVOFoTkpWPTIoX4HxY09bFn9sibgiw>
-    <xmx:-SxFZvl_Qw_W4r3XPZe9UdcMK3N3r3_UKLs8VLkCi7AeAlpZKqM2yOWv>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 353AE36A0077; Wed, 15 May 2024 17:45:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-456-gcd147058c-fm-hotfix-20240509.001-g0aad06e4
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc4aGt07"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ee0132a6f3so58108465ad.0;
+        Wed, 15 May 2024 14:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715809664; x=1716414464; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hHyY+0tQ9MhTq4Mfna+AwPPphiWbhqwRtp6sEgx3Jm4=;
+        b=Mc4aGt07xojTOmZlLTz0vVXrf8tJipTgehaPJGZxSqR60KPF858CLNRv02dkobXsH+
+         eKRUYiiRaK8IFKv8J+18oHwL3YHfc1EcXWqm27Tu1xRXqXqqvRJTBZJiDgVhODXa9Sya
+         Oj/xKwBI0L1FKwXYUdUIi0KAvg1wJXylnGqlQiNjSdsQP7ZGcFKct49GnFckn1M1OYtZ
+         dfw3FyjG54LM9MJtTSGm1LzIeyvKCz3pAQum0XHcqnB9NxCtwIJjEsDgRxPmLb3NkO+/
+         k3FP2+lsKaiUF2cB22IbzgLxoUFU45uwlblvhniLNCEuw5+JUkYTDH27mDJzAIPSHB/y
+         vm9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715809664; x=1716414464;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hHyY+0tQ9MhTq4Mfna+AwPPphiWbhqwRtp6sEgx3Jm4=;
+        b=Hv2kbf2UO/mUQnlwztYlhIM0GqnnYLVNqf/Og350yt7d/JHLeCV+0hx6HTLVWSIawI
+         1IbpwpIImxbi5GcdjHPO/B2nkd/LlBPMCdYYXiR9obWWjlVFVcjN6IyMDgai8dj4W0ck
+         y3FmLZVixwAQn8+SOHQzEVNBOrabrnVCbwHD5tGv74h1QH1FMrGzD20HXYaCT5xvuYtb
+         mU6dl/qjC4rKtevyr7udl0Z8pPbt0JdVe2R11CgYKZDTvCYVgpIvJ4EgJERpRj0rUtep
+         STSHlRORmWDTOH3NUuJzYxYFyTqj/gQxaPWBcZTcieP537nMQeVaZd4zVBIr1VARw6p0
+         MXmA==
+X-Forwarded-Encrypted: i=1; AJvYcCV79GfBOh5W7Gjir3XYPAopRljYhE/LEzyIVZ1m25eKRq5R5SA2R3ElDsSTolz94il5jkqd4TY2S9Qm4rPE2G67Z8SWs4rAQfz6YyRcx5lQ5OPsSdZLY/hn49QF9nuqGC9c2mt+y/k5g3oyijFBTIpn
+X-Gm-Message-State: AOJu0YwRAWmLU3aQC0JcppwIEWFFI0GT8zlc/o6WpVvxftW2vEqoqVWD
+	foJufgmqCtChCnVFgqiJAr6EAnbrEWG3/DwAQlfSqlEPOS9NdEILuqd7TA==
+X-Google-Smtp-Source: AGHT+IHjeD8CJAQCCw3yV5Si0QDfL1HUwUh69c0XMShDCcTHA3OtcBSrwulp8CfschFn1fvYHO7yPQ==
+X-Received: by 2002:a17:903:32cc:b0:1f0:9395:7525 with SMTP id d9443c01a7336-1f0939576e5mr27236765ad.1.1715809663294;
+        Wed, 15 May 2024 14:47:43 -0700 (PDT)
+Received: from krava ([50.204.89.30])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c136d13sm123766515ad.242.2024.05.15.14.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 14:47:42 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 15 May 2024 15:47:40 -0600
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Ubisectech Sirius <bugreport@ubisectech.com>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>, ast <ast@kernel.org>,
+	daniel <daniel@iogearbox.net>, andrii <andrii@kernel.org>
+Subject: Re: WARNING: kmalloc bug in bpf_uprobe_multi_link_attach
+Message-ID: <ZkUtfIROG6-FBI7-@krava>
+References: <da22ddaf-384f-4a38-8338-decbfdb929fc.bugreport@ubisectech.com>
+ <CAADnVQJndMkNh4X-w0520B8PVN122h8XKQxE4g4LmDTKyWd=0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <61445fe0-9137-44a6-ab36-ffb8985254df@app.fastmail.com>
-In-Reply-To: <31769e8d-ab52-4f4c-84ca-2f546287d006@kernel.org>
-References: <20240513-boston-syscon-v1-0-93ff557d3548@flygoat.com>
- <20240513-boston-syscon-v1-1-93ff557d3548@flygoat.com>
- <c7317ea0-fcd6-40e0-9d90-bb1ff349c0e0@kernel.org>
- <31769e8d-ab52-4f4c-84ca-2f546287d006@kernel.org>
-Date: Wed, 15 May 2024 22:44:28 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: syscon: Add img,boston-platform-regs
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJndMkNh4X-w0520B8PVN122h8XKQxE4g4LmDTKyWd=0Q@mail.gmail.com>
+
+On Wed, May 15, 2024 at 02:30:37PM -0700, Alexei Starovoitov wrote:
+> On Tue, May 14, 2024 at 12:33 AM Ubisectech Sirius
+> <bugreport@ubisectech.com> wrote:
+> >
+> > Hello.
+> > We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7.  Attached to the email were a PoC file of the issue.
+> 
+> Jiri,
+> 
+> please take a look.
+> 
+> > Stack dump:
+> >
+> > loop3: detected capacity change from 0 to 8
+> > MTD: Attempt to mount non-MTD device "/dev/loop3"
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 1 PID: 10075 at mm/util.c:632 kvmalloc_node+0x199/0x1b0 mm/util.c:632
+
+hi,
+this should be already fixed via:
+  https://lore.kernel.org/bpf/20231215100708.2265609-2-houtao@huaweicloud.com/
+
+original report was in here:
+  https://lore.kernel.org/bpf/CABOYnLwwJY=yFAGie59LFsUsBAgHfroVqbzZ5edAXbFE3YiNVA@mail.gmail.com/
+
+the fix should be in v6.7, can you check if your kernel has:
+  8b2efe51ba85 bpf: Limit the number of uprobes when attaching program to multiple uprobes
+
+thanks,
+jirka
 
 
-
-=E5=9C=A82024=E5=B9=B45=E6=9C=8814=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8A=E5=
-=8D=8810:11=EF=BC=8CKrzysztof Kozlowski=E5=86=99=E9=81=93=EF=BC=9A
-> On 14/05/2024 11:08, Krzysztof Kozlowski wrote:
->> On 13/05/2024 20:58, Jiaxun Yang wrote:
->>> This compatible has been used in arch/mips/boot/dts/img/boston.dts
->>> for a while but never documented properly.
->>>
->>> Add it to simple syscon binding.
->>>
->>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>> ---
->>>  Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
->>=20
->> It is documented in clock/img,boston-clock.txt. Please fix/convert/wo=
-rk
->> on that.
->
-> No, that's different device.
->
-> Anyway, this is wrong - does no work with your second patch. Please te=
-st
-> them before sending.
-
-Hi Krzysztof,
-
-Do you mind telling dumb as me how to test bindings properly?
-
-I tried to run make check_dtbs after applying this patch and that's all
-the warnings I got:
-```
-arch/mips/boot/dts/img/boston.dtb: Warning (interrupt_map): Failed prere=
-quisite 'interrupt_provider'
-/home/flygoat/linux-next/arch/mips/boot/dts/img/boston.dtb: /: 'model' i=
-s a required property
-        from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/mips/boot/dts/img/boston.dtb: /: failed to match any schema with co=
-mpatible: ['img,boston']
-arch/mips/boot/dts/img/boston.dtb: /cpus/cpu@0: failed to match any sche=
-ma with compatible: ['img,mips']
-arch/mips/boot/dts/img/boston.dtb: /system-controller@17ffd000/clock: fa=
-iled to match any schema with compatible: ['img,boston-clock']
-/home/flygoat/linux-next/arch/mips/boot/dts/img/boston.dtb: uart@17ffe00=
-0: $nodename:0: 'uart@17ffe000' does not match '^serial(@.*)?$'
-        from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
-```
-
-I think there is no new warning introduced by this patch.
-Did I miss anything here?
-
-Thanks
-- Jiaxun
->
-> You need proper, dedicated schema.
->
-> Best regards,
-> Krzysztof
-
---=20
-- Jiaxun
+> > Modules linked in:
+> > CPU: 1 PID: 10075 Comm: syz-executor.3 Not tainted 6.7.0 #2
+> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> > RIP: 0010:kvmalloc_node+0x199/0x1b0 mm/util.c:632
+> > Code: 02 1d 00 eb aa e8 a7 49 c6 ff 41 81 e5 00 20 00 00 31 ff 44 89 ee e8 36 45 c6 ff 45 85 ed 0f 85 1b ff ff ff e8 88 49 c6 ff 90 <0f> 0b 90 e9 dd fe ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
+> > RSP: 0018:ffffc90002007b60 EFLAGS: 00010212
+> > RAX: 00000000000023e4 RBX: 0000000000000400 RCX: ffffc90003aaa000
+> > RDX: 0000000000040000 RSI: ffffffff81c3acc8 RDI: 0000000000000005
+> > RBP: 00000037ffffcec8 R08: 0000000000000005 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > R13: 0000000000000000 R14: 00000000ffffffff R15: ffff88805ff6e1b8
+> > FS:  00007fc62205f640(0000) GS:ffff88807ec00000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000001b2e026000 CR3: 000000005f338000 CR4: 0000000000750ef0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > PKRU: 55555554
+> > Call Trace:
+> >  <TASK>
+> >  kvmalloc include/linux/slab.h:738 [inline]
+> >  kvmalloc_array include/linux/slab.h:756 [inline]
+> >  kvcalloc include/linux/slab.h:761 [inline]
+> >  bpf_uprobe_multi_link_attach+0x3fe/0xf60 kernel/trace/bpf_trace.c:3239
+> >  link_create kernel/bpf/syscall.c:5012 [inline]
+> >  __sys_bpf+0x2e85/0x4e00 kernel/bpf/syscall.c:5453
+> >  __do_sys_bpf kernel/bpf/syscall.c:5487 [inline]
+> >  __se_sys_bpf kernel/bpf/syscall.c:5485 [inline]
+> >  __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5485
+> >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> >  do_syscall_64+0x43/0x120 arch/x86/entry/common.c:83
+> >  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+> > RIP: 0033:0x7fc62128fd6d
+> > Code: c3 e8 97 2b 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+> > RSP: 002b:00007fc62205f028 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> > RAX: ffffffffffffffda RBX: 00007fc6213cbf80 RCX: 00007fc62128fd6d
+> > RDX: 0000000000000040 RSI: 00000000200001c0 RDI: 000000000000001c
+> > RBP: 00007fc6212f14cd R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> > R13: 000000000000000b R14: 00007fc6213cbf80 R15: 00007fc62203f000
+> >  </TASK>
+> >
+> > Thank you for taking the time to read this email and we look forward to working with you further.
+> >
+> >
+> >
