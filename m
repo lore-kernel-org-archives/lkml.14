@@ -1,291 +1,172 @@
-Received: from mail.kernel-space.org (mail.kernel-space.org [195.201.34.187])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2042.outbound.protection.outlook.com [40.107.255.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3EE495CB;
-	Wed, 15 May 2024 08:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.34.187
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715761109; cv=none; b=M0/5TX4j27zEK5E2kQAd4z0yo4fSizhWnwqUErTAwBqjdcJSWBRNTlulzWCG7zaVhgN/+8T7Om0IvsKlDGIGkRhLrwt9afoPMaKemKzDvWApXbFk3SzCB/zvkLlor5vr5W3Kf6uCGwSouiRvlNfMoK5sunouyWXfBep5awii7xw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715761109; c=relaxed/simple;
-	bh=DuYzdQ4ozjzwNMHsNhG1o4oV3Dk1UgDXVGvCW21lIrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K0tCnA4kwfIgBXvid4ddZcMO+7hogoZtg5t8yW+ifvl/sIFhWCZI/+WOX1Y2G4YdLlDmEEu0nZF1efl+m1cPzh/OEgSmzD3I8VjWZ4Galbp99C0sRXmnY2jYiyEz8m5LICY5B5ZaJtUaR0Yrxu6QTwQwaXR+yWXoPdJ+EiBGIl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernel-space.org; spf=pass smtp.mailfrom=kernel-space.org; dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b=iz4yb1kT; dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b=gRY85KDA; arc=none smtp.client-ip=195.201.34.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernel-space.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel-space.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5FE495CB
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 08:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715761143; cv=fail; b=kD8wB/h3cnIsMhil04sMRSfiPFNAzhKDTfUf36ZpvY9SoTzb0anDynHgavfp7qAcs8MA66uowtbEodfth37frGR9aQd4Il2PUxEE0YLS1+RaLsUAyr33UxGlMc5kPGS2gXXuGSJ3tolM9nL5JZB68ISKKajtAC6OaBCmt1Llubw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715761143; c=relaxed/simple;
+	bh=goq9FJJADDPVc9N6gqvoxl19lEkJBBqL4D/jbukQG6w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sNbF3vMXv205Ami+eed2gAbhMH12eX32wr7wZJ4GNx9w8Wtb/QFFMPeSqWjCkCMv0RZrOVQJ2rUUUSTADcX/wBhfFlVmQhuHC2oOYFhCwPCgFt0SZoQgCvOPhW34atteTTPuOqF/RrgEY3wOInPS/TbBFx89E75274NJxlkVcLA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=Nx7FRiyg; arc=fail smtp.client-ip=40.107.255.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b="iz4yb1kT";
-	dkim=pass (1024-bit key) header.d=kernel-space.org header.i=@kernel-space.org header.b="gRY85KDA"
-Received: from kernel-space.org (localhost [127.0.0.1])
-	by kernel-space.org (OpenSMTPD) with ESMTP id c3490496;
-	Wed, 15 May 2024 08:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=kernel-space.org; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=s1; bh=sM
-	N8lvPPVflPnoZoJveKf8Q1ADo=; b=iz4yb1kT/R5n218pcQTbTv7zNhMJhaIZF2
-	Hey1fHzjt0wJQHEfVNCHfYQHc2ZokHQYp/QFKnFRLFxlWQ9rXr3+jzoSChiNGGrJ
-	zi3x6vCHegOR/YhX1O14CBoBfVL/UWOWVbajWciUAS38GwITBA76x6dguz95Z5zq
-	26y3K8BeI=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=kernel-space.org; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; q=dns; s=s1; b=
-	gvbuRt+0x7h/mpjd8uXfXhWtqWk0nTsXE5btV7YKh6sK3otblK47/LkWxVfkFR1v
-	qfvn0/G+OrtWp+kvcWPDppR9FEYdzaYl3fwi7Ms+JLMRVNn3UpLFEnBuSOYgNrrM
-	Mu8baNBTaoXLsOw8UHhY3tao0xeLBHyuCri7WI6ldG4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel-space.org;
-	s=s1; t=1715761023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dxVOup/aVv/MpYJYTFVG9d1ZR33d+RcbxnWYhtAFX2Y=;
-	b=gRY85KDAmNWKDoNuYm2yHHGm2JW7H3sZ7khqKkOM3xnsjYzHEjOQSps9dSCXSruOnhBkpv
-	MuytPo/DSoDMrEZUe7jSfEdIirpbwwi4INWmZ5i9B9QeNtUf5B40FSce4oaKE7tZ57P+1q
-	ChPsBvEZ0gm26ySmPs2gKJYwNKzEZCs=
-Received: from [192.168.0.2] (host-79-16-6-145.retail.telecomitalia.it [79.16.6.145])
-	by kernel-space.org (OpenSMTPD) with ESMTPSA id 8ac6b507 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 15 May 2024 08:17:03 +0000 (UTC)
-Message-ID: <04720832-afc4-44a7-be90-22fe582df45c@kernel-space.org>
-Date: Wed, 15 May 2024 10:17:41 +0200
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="Nx7FRiyg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GSeB+s2VTOqOYVFza1RwVKg/NnZIk4M1sjcRFYszZOOOomvdq+Bg1Nyjw5gWzoq//N2p4sF95z0QA7fqajq3qkfftTeSERjqi0qlKp3TU+/Q9r8EYm87hSOi07xg4XtKICP+PCDn5IWSwMhAt3Hl98+kxA9o+R6fn+3/Fq4TfMzhbaIf/JFmrozfqUTl2e0WqJDYUPfPPdl2Ap7Ei6IQ6CoGPoxCTskIV0ilp5lpWjYA83yIgJ62ZMJBFG9+Hy6uNr2c2c+fvmCjKAAe5zZT3BbaNNDSCOqQbYf/qe8SLaYwRNNTbnHTf5Il54RHt6IgiBxqr36zw40zTHFxUG9r3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CbFyjNVGelCwLfedlifeGWAHCQ8q1btaMqi6L1e6Fag=;
+ b=NLkb9j86AWxOZ3QCnP90i9FLT6scW6f+jzbFEGWXoFSwNEUQ2JkDMtvtCjewfYUdBTfUL3p4z6auw241U0a69NXvNpxT8Sr1D7cR5fCn8FR+JFeSnKTIGdYEkyhQDDchn6Y7A0y5SI6SVDK96LeBboXlBEi1+pYFOTJD+dNDLxS0pnOm9YA9rGA0BlvK/S/1fUrQGBkJpCHG5avYtw8U/ClFUWbWHStEZKllhUJFKTFn7KCSebsEUH6Z0ee7+8voTmy7CAcWJBhbEz7zoHIt+9SslBTbxh+KU9Jj8XdSz6skwIbjWwBjvGxFuchqPvamyzzNTBGNWK5DLS5U3xDjvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CbFyjNVGelCwLfedlifeGWAHCQ8q1btaMqi6L1e6Fag=;
+ b=Nx7FRiygVvhHqupFeJx641KBnecwNwcadbbN6VtWyvc422P5Yh3GO5Q9ihUJRZYc+xX+U9w/Nmh+3vbm5bx8WOjQpwluBaaStYhriEDNVCm5m8/4Lo4qYaKNj8/QMnBHgyjuCcT8U0F3aICCSyNNubRXSWt+CEn8s8rRU8pmp7GVoP1lSerrBTOGMrqcegPb9ivRSikVgkl543bpJF19tLpMYCGSNs71J6zQVfcD/RsyjUwPjYDd9w2zvftoY7B6Oc+OZvOeONFTqXyegLadp9krg8dNt+Qou2KXYriuIzsPA1g37fTzZ4wljtFFbftUkpKCoAKibwq+qHh3F26fIw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
+ by SI2PR06MB5044.apcprd06.prod.outlook.com (2603:1096:4:1a7::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Wed, 15 May
+ 2024 08:18:58 +0000
+Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5]) by PSAPR06MB4486.apcprd06.prod.outlook.com
+ ([fe80::43cb:1332:afef:81e5%5]) with mapi id 15.20.7587.026; Wed, 15 May 2024
+ 08:18:58 +0000
+From: Wu Bo <bo.wu@vivo.com>
+To: chao@kernel.org
+Cc: jaegeuk@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] f2fs: fix to avoid racing in between read and OPU dio write
+Date: Wed, 15 May 2024 02:32:19 -0600
+Message-Id: <20240515083219.1601289-1-bo.wu@vivo.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240510023906.281700-1-chao@kernel.org>
+References: <20240510023906.281700-1-chao@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR04CA0001.apcprd04.prod.outlook.com
+ (2603:1096:4:197::12) To PSAPR06MB4486.apcprd06.prod.outlook.com
+ (2603:1096:301:89::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] dmaengine: fsl-edma: merge mcf-edma into fsl-edma
- driver
-To: Frank Li <Frank.li@nxp.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Vinod Koul <vkoul@kernel.org>,
- "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
- <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>,
- Greg Ungerer <gerg@linux-m68k.org>,
- linux-m68k <linux-m68k@lists.linux-m68k.org>
-References: <20240509193517.3571694-1-Frank.Li@nxp.com>
- <CAMuHMdVB2PrkxDMoo0y1y6SLj-yuW5o+PJ+sQn2VtB2yrXzkbw@mail.gmail.com>
- <bd538260-2403-4912-961c-549c74aead76@kernel-space.org>
- <ZkOOSRMxX8MAO/3W@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Angelo Dureghello <angelo@kernel-space.org>
-In-Reply-To: <ZkOOSRMxX8MAO/3W@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|SI2PR06MB5044:EE_
+X-MS-Office365-Filtering-Correlation-Id: c39aba8d-0796-4560-0434-08dc74b7ab21
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|52116005|1800799015|366007|376005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3ee4fU4J1uZSje5YKH2d1MUi7e38J7XSvz7ciDCyQvR8Ql0x0Tojky0wvVrX?=
+ =?us-ascii?Q?5CyV6qM1/vjG+JrSqmp6mLph0HmpmsE91wePlDuVbWpo+244Zh9452gc26Wh?=
+ =?us-ascii?Q?AJg8hbCna1VlvPPdajRnGEoacc5yalnUQ8Y2C2Tcd5ZRLnKG25NSbU+RiKTa?=
+ =?us-ascii?Q?6ou0qTsT41L9ibgwaakuB1WhTJ5JvLhUhL31/VAViT1fwPLP+RvD6PTHQLIo?=
+ =?us-ascii?Q?CSVSfbhlmd7p3hSji7JLBXfhBgPhrNes6oWFfzPb9prYhVIwh0Un+qCBfVzY?=
+ =?us-ascii?Q?h0uXjHHAADikSSow1g5E0wX/QHG5o5oabo/3EwF6QBieIJUt/1Xh/uA5l8OD?=
+ =?us-ascii?Q?ciZiLebD1FHnSzOdYPtGiMh7Q9wCkkprY+apEoXnj2QEbfjTjHG1GinqpV0N?=
+ =?us-ascii?Q?z2N+fd48x1kmWvoOcIInTgvkMSUZJ9vhYaKzK+Sjx7yYulhNrFQzvG7Woxae?=
+ =?us-ascii?Q?msf3Ui0KSo6u6ZQBdzFldZR5HSgLKuB4xPMb8uJcOqWTvZ2IUvq5YzlrKmZ6?=
+ =?us-ascii?Q?bTVtU5Rmi1AvqXIWdOs5MLm7WiG7sukRumt5IYleMkhlvnLM4hQfN6Z9VcKO?=
+ =?us-ascii?Q?afKMG6jxq4YxI7s7uLNUC7ZgdN+jerxeGFMADKaMiwVRUCaWHI9oBt+4fM6w?=
+ =?us-ascii?Q?8c+PVXA+iBN7YFuEPD/tcEkP/HLlnm0eufBhHGa7KQNyN7MMA9Qfo5p+nx+U?=
+ =?us-ascii?Q?BOOe0J6DhqomirWunoFCcb/vFOAOO4rZgzfaOReelBdU2gJjsPSSuMZBo/0v?=
+ =?us-ascii?Q?pws71KprqTxSVouZQbd4e9Vf0TfqQ75x2ZOEue+QDwkM5w4Fm/0/afkQ2HKo?=
+ =?us-ascii?Q?c+A9by46KsE9g66sVIeD+TKo4MJ3ay3Iv/CIjFruonRE2uFT4UHpOqEG0Ssb?=
+ =?us-ascii?Q?bAVtE2cu6FNAHAVNZAGdl2ppz8bZ+QUn3D5uiiDojfC6fq5+LR9/pb1Alz68?=
+ =?us-ascii?Q?UkJhvCc5MyjATKGoCIZIykf5XtqtTvjR/L2Eu9atcesVbOGqeTLDBwkS3Als?=
+ =?us-ascii?Q?cQGW9LBSUtb5ui28+tQeHocR3mrvnnNrOGqe7yijc4Dl9mb91DzT7jy0nsoO?=
+ =?us-ascii?Q?C6cyltebkRSzVLZEfDEOUfaoFPB9K5oMwLvQ/uGVWydWG8vQN/9DMm1OVfxZ?=
+ =?us-ascii?Q?0BfasQjgtcf07yGoWE9Afsh+8QJ3A6xe9TPPyT9jv1HKlp2CsXPv3SUOw3tf?=
+ =?us-ascii?Q?FdGHKm/MXGOuUelIpQXO2/b/c2ttkBvaKre1z4hyZ0G2BMuUorNTM72GsuDn?=
+ =?us-ascii?Q?SQ/JdXba/3L8WDCUoCO3AWsgmbcCKkSvnMXUYOlar5uRwYDHf+bOH0Aw/4x2?=
+ =?us-ascii?Q?mcaLthrzSjDm+en8n73bqXbIRPlDmRRQWOpKFNKkMy4n0w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(366007)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7Fpy1A5edgFvgx/7NkzNUhsBP/IBM+wtUCTsql+nYFnPulJf56A6ZpebgGV7?=
+ =?us-ascii?Q?asWMBgPbHhyLdTitivVyEs1L7nphATsMNnHV7ihm8ZcfNbdLhFnQSqAE7ETm?=
+ =?us-ascii?Q?dtQX4fsuShM0qRleYzUbtTdjr11aoABswjs3JWNxQmoeB8ntabBL89eSHbhz?=
+ =?us-ascii?Q?yFkA1+tNAP3z/D/aB5nMu0OAnRwpDzKQBrC+Ap2kTquyL2IP26cojSycJoO+?=
+ =?us-ascii?Q?Qob1jYOWgdGAJqT4U9tf8od8t2ZqIjN8YITtypS8ZMK3N/0iTsFPpC0iYfnh?=
+ =?us-ascii?Q?TN4+LfTKNSUyG8Y94CmFTBCUbvUdVMdSR1B2Yz8q93IF8Fz9N9rcA672K5v+?=
+ =?us-ascii?Q?U+W9ZIYytJt1+5+2/bXmH2Zuz+q23u041rOaufRDVcgg6qcykRcODI3wzx9j?=
+ =?us-ascii?Q?3kyZDc5GrCIl/EtGTR1pkqMe6+HZmW0KpZM3jUvvyyNAawARH7m9yaH2G9QY?=
+ =?us-ascii?Q?gZuj9gr/0pf+HFh2SeUgMWPjk3dfKpQw12t1uZAEJ78xS3yj0amWxwneES8/?=
+ =?us-ascii?Q?2AMN8ZdjMNwSSK9tLRJS0JDeAJODZlCzRcev7mBVvrWdIxSrkMBrlSDQ1RQi?=
+ =?us-ascii?Q?axmdy/2REX1YF6PMc+eve0r2dR9Yn5bRwvYyBBBp0zdKIV5rkXFzayYyiUpi?=
+ =?us-ascii?Q?lp2EionLKrpoiF8uf+cvEJ7mc3aBL+wYLdkEPv55mVOOi/L/ugxUB4CDyZhP?=
+ =?us-ascii?Q?MqMuXcmwLmN2xTPP14ktpter8kkURFO5w7EMEw/Gi/i2C56ocQRmI60TqPBE?=
+ =?us-ascii?Q?xTDuITiu7cM+dK19/kEGdD96B6BxckFMZ15NtjNpABSwcjGGv4V4nXxIFsXe?=
+ =?us-ascii?Q?btNflT7NSne2B1B+oKDwMklTO8KKJ8cD5TBLVla83G7EUmCftcGEqURD+wZH?=
+ =?us-ascii?Q?bZOVWlWjZ/m3E8kW/yJ06MiyegYGWcP4dFBfrB55qYNi7BPl0DU2iUCDqPGh?=
+ =?us-ascii?Q?OBOX/4GBU9EO5jnHsvuTGfaL9gZ6FrPwfw3botb2E9achv1yVOJwE5MKXvP4?=
+ =?us-ascii?Q?Dekdn3admifRuUMFOfiFHLF16ajqaGo8GzoKU4ERtA/85qRHmSmcdZhJ+aZ+?=
+ =?us-ascii?Q?3GICh4k5tGZjWVupxQ+U1PTskwNfCT+2Hge6YjZ+yrJZPVM6wIY7fYEGyO45?=
+ =?us-ascii?Q?QEQBvRq/KMO7zHX9JXTx8HMR7ZjybNCmUGvA95cikw0ns4Av0hwqZa7IDXoN?=
+ =?us-ascii?Q?v7UiW7OgpZuCwtUK5fknRT8Ja9yfMuxp3TgMNC8cDQUYUhEjdKNqwE1BvUS6?=
+ =?us-ascii?Q?Zm4RJHZ25GCKZFYD7uCrsD9MplDJ0PHmEtSOcV/2AFBYP4/609oJspt7y/Cz?=
+ =?us-ascii?Q?1nW1rseSZIciEhbw+B6Ijj9qYk2ohJjRrvlJ5kLdkEFMXhPS7HWIVgr48rk/?=
+ =?us-ascii?Q?bKjH1eX0INNSGPfxGPYIJbuzCQpxpp1saMjWWwVsT2ilRLmCehEi6YM+7m5w?=
+ =?us-ascii?Q?UzwGDDaS06eHajVeobomeqRxiPM7g2I7Oq9IKtioxY4pSeKMbdLSKKXNqwDk?=
+ =?us-ascii?Q?BVJx+5GS6CD4xh5lxxoIf4iWPcfMQ/hYb3Mm+vMkFmp0HMhHs9NwMZPJ/HJi?=
+ =?us-ascii?Q?f9Xuhy+gjs+gks4aMdx724T260y6PGy5VmXgmGeW?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c39aba8d-0796-4560-0434-08dc74b7ab21
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 08:18:58.2302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ABc+2a7k5c3oupb8qj/foDiIhE5Db9XzLCW53eoy/NKR6LHBNaHJ/YAHaBf9zY1NnWqh6/GDn8aTJRH/eY84Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5044
 
-Hi,
-
-On 14/05/24 6:16 PM, Frank Li wrote:
-> On Tue, May 14, 2024 at 09:57:09AM +0200, Angelo Dureghello wrote:
->> Hi,
->>
->> On 13/05/24 8:12 PM, Geert Uytterhoeven wrote:
->>> CC coldfire
->>>
->>> On Thu, May 9, 2024 at 9:35 PM Frank Li <Frank.Li@nxp.com> wrote:
->>>> MCF eDMA are almost the same as FSL eDMA driver. Previously link to two
->>>> kernel modules, fsl-edma.ko and mcf-edma.ko. These are not problem because
->>>> mcf-edma is for m68k ARCH and FSL eDMA is for arm/arm64 ARCH. But often
->>>> build both at PPC ARCH. It also makes sense to build two drivers at the
->>>> same time. It causes many build warning because share a fsl-edma-common.o.
->>>> such as:
->>>>
->>>>      powerpc64le-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-common.o' being placed in section `.stubs'
->>>>      powerpc64le-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-trace.o' being placed in section `.stubs'
->>>>
->>>> Merge mcf-edma into fsl-edma driver. So use one driver (fsl-edma.ko) for
->>>> MCF and FSL eDMA.
->>>>
->>>> mcf-edma.ko should be replaced by fsl-edma.ko in modules, minimizing user
->>>> space impact because MCF eDMA remains confined to legacy ColdFire mcf5441x
->>>> production and mcf5441x has been in production for at least a decade and
->>>> NXP has long ceased ColdFire development.
->> when i developed mcf-edma, i tried to modify fsl-edma first. Modules are
->> similar but there are various edma IP versions, and i remember minimal
->> differences in the CF version too, some register bits and, of course,
->> endianness.
->>
->> If a merge is possible, welcome, i have here mcf5441x, can give a try to
->> this patch as soon as i can.
-> Thanks. I am not sure if recent eDMAv3 and eDMAv5 patch impact mcf5441.
-> eDMAv3 is quite big change. If you can test on mcf5441x, can I send to you
-> a futher clean up for mcf5441x?
-
-
-sure
-
-
-> This patch are just simple glue two
-> driver together to avoid a build warning.
-
-
-
->>
->>>> Update Kconfig to make MCF_EDMA as feature of FSL_EDMA and change Makefile
->>>> to link mcl-edma-main.o to fsl-edma.o.
->>>>
->>>> Create a common module init/exit functions, which call original's
->>>> fsl-edma-init[exit]() and mcf-edma-init[exit]().
->>>>
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>> Closes: https://lore.kernel.org/oe-kbuild-all/202405082029.Es9umH7n-lkp@intel.com/
->>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
->>>> ---
->>>>    drivers/dma/Kconfig           |  8 ++++----
->>>>    drivers/dma/Makefile          |  5 ++---
->>>>    drivers/dma/fsl-edma-common.c | 28 ++++++++++++++++++++++++++++
->>>>    drivers/dma/fsl-edma-common.h |  5 +++++
->>>>    drivers/dma/fsl-edma-main.c   |  6 ++----
->>>>    drivers/dma/mcf-edma-main.c   |  6 ++----
->>>>    6 files changed, 43 insertions(+), 15 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->>>> index 002a5ec806207..45110520f6e68 100644
->>>> --- a/drivers/dma/Kconfig
->>>> +++ b/drivers/dma/Kconfig
->>>> @@ -393,14 +393,14 @@ config LS2X_APB_DMA
->>>>             It does not support memory to memory data transfer.
->>>>
->>>>    config MCF_EDMA
->>>> -       tristate "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
->>>> +       bool "Freescale eDMA engine support, ColdFire mcf5441x SoCs"
->>>>           depends on M5441x || COMPILE_TEST
->>>>           select DMA_ENGINE
->>>>           select DMA_VIRTUAL_CHANNELS
->>>>           help
->>>> -         Support the Freescale ColdFire eDMA engine, 64-channel
->>>> -         implementation that performs complex data transfers with
->>>> -         minimal intervention from a host processor.
->>>> +         Support the Freescale ColdFire eDMA engine in FSL_EDMA driver,
->>>> +         64-channel implementation that performs complex data transfers
->>>> +         with minimal intervention from a host processor.
->>>>             This module can be found on Freescale ColdFire mcf5441x SoCs.
->>>>
->>>>    config MILBEAUT_HDMAC
->>>> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
->>>> index 802ca916f05f5..0000922c7cbfe 100644
->>>> --- a/drivers/dma/Makefile
->>>> +++ b/drivers/dma/Makefile
->>>> @@ -33,11 +33,10 @@ obj-$(CONFIG_DW_EDMA) += dw-edma/
->>>>    obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
->>>>    fsl-edma-trace-$(CONFIG_TRACING) := fsl-edma-trace.o
->>>>    CFLAGS_fsl-edma-trace.o := -I$(src)
->>>> +mcf-edma-main-$(CONFIG_MCF_EDMA) := mcf-edma-main.o
->>>>    obj-$(CONFIG_FSL_DMA) += fsldma.o
->>>> -fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
->>>> +fsl-edma-objs := fsl-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y} ${mcf-edma-main-y}
->>>>    obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
->>>> -mcf-edma-objs := mcf-edma-main.o fsl-edma-common.o ${fsl-edma-trace-y}
->>>> -obj-$(CONFIG_MCF_EDMA) += mcf-edma.o
->>>>    obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
->>>>    obj-$(CONFIG_FSL_RAID) += fsl_raid.o
->>>>    obj-$(CONFIG_HISI_DMA) += hisi_dma.o
->>>> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
->>>> index 3af4307873157..ac04a2ce4fa1f 100644
->>>> --- a/drivers/dma/fsl-edma-common.c
->>>> +++ b/drivers/dma/fsl-edma-common.c
->>>> @@ -888,4 +888,32 @@ void fsl_edma_setup_regs(struct fsl_edma_engine *edma)
->>>>           }
->>>>    }
->>>>
->>>> +static int __init fsl_edma_common_init(void)
->>>> +{
->>>> +       int ret;
->>>> +
->>>> +       ret = fsl_edma_init();
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>> +#ifdef CONFIG_MCF_EDMA
->>>> +       ret = mcf_edma_init();
->>>> +       if (ret)
->>>> +               return ret;
->>>> +#endif
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +subsys_initcall(fsl_edma_common_init);
->>>> +
->>>> +static void __exit fsl_edma_common_exit(void)
->>>> +{
->>>> +       fsl_edma_exit();
->>>> +
->>>> +#ifdef CONFIG_MCF_EDMA
->>>> +       mcf_edma_exit();
->>>> +#endif
->>>> +}
->>>> +module_exit(fsl_edma_common_exit);
->>>> +
->>>>    MODULE_LICENSE("GPL v2");
->>>> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
->>>> index ac66222c16040..dfbdcc922ceea 100644
->>>> --- a/drivers/dma/fsl-edma-common.h
->>>> +++ b/drivers/dma/fsl-edma-common.h
->>>> @@ -488,4 +488,9 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan);
->>>>    void fsl_edma_cleanup_vchan(struct dma_device *dmadev);
->>>>    void fsl_edma_setup_regs(struct fsl_edma_engine *edma);
->>>>
->>>> +int __init fsl_edma_init(void);
->>>> +void __exit fsl_edma_exit(void);
->>>> +int __init mcf_edma_init(void);
->>>> +void __exit mcf_edma_exit(void);
->>>> +
->>>>    #endif /* _FSL_EDMA_COMMON_H_ */
->>>> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
->>>> index 391e4f13dfeb0..a1c3c4ed869c5 100644
->>>> --- a/drivers/dma/fsl-edma-main.c
->>>> +++ b/drivers/dma/fsl-edma-main.c
->>>> @@ -724,17 +724,15 @@ static struct platform_driver fsl_edma_driver = {
->>>>           .remove_new     = fsl_edma_remove,
->>>>    };
->>>>
->>>> -static int __init fsl_edma_init(void)
->>>> +int __init fsl_edma_init(void)
->>>>    {
->>>>           return platform_driver_register(&fsl_edma_driver);
->>>>    }
->>>> -subsys_initcall(fsl_edma_init);
->>>>
->>>> -static void __exit fsl_edma_exit(void)
->>>> +void __exit fsl_edma_exit(void)
->>>>    {
->>>>           platform_driver_unregister(&fsl_edma_driver);
->>>>    }
->>>> -module_exit(fsl_edma_exit);
->>>>
->>>>    MODULE_ALIAS("platform:fsl-edma");
->>>>    MODULE_DESCRIPTION("Freescale eDMA engine driver");
->>>> diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-main.c
->>>> index 78c606f6d0026..d97991a1e9518 100644
->>>> --- a/drivers/dma/mcf-edma-main.c
->>>> +++ b/drivers/dma/mcf-edma-main.c
->>>> @@ -284,17 +284,15 @@ bool mcf_edma_filter_fn(struct dma_chan *chan, void *param)
->>>>    }
->>>>    EXPORT_SYMBOL(mcf_edma_filter_fn);
->>>>
->>>> -static int __init mcf_edma_init(void)
->>>> +int __init mcf_edma_init(void)
->>>>    {
->>>>           return platform_driver_register(&mcf_edma_driver);
->>>>    }
->>>> -subsys_initcall(mcf_edma_init);
->>>>
->>>> -static void __exit mcf_edma_exit(void)
->>>> +void __exit mcf_edma_exit(void)
->>>>    {
->>>>           platform_driver_unregister(&mcf_edma_driver);
->>>>    }
->>>> -module_exit(mcf_edma_exit);
->>>>
->>>>    MODULE_ALIAS("platform:mcf-edma");
->>>>    MODULE_DESCRIPTION("Freescale eDMA engine driver, ColdFire family");
->>>> --
->>>> 2.34.1
->> Regards,
->> angelo
->>
-Regards,
-angelo
-
-
+On Fri, May 10, 2024 at 10:39:06AM +0800, Chao Yu wrote:
+> If lfs mode is on, buffered read may race w/ OPU dio write as below,
+> it may cause buffered read hits unwritten data unexpectly, and for
+> dio read, the race condition exists as well.
+> 
+> Thread A			Thread B
+> - f2fs_file_write_iter
+>  - f2fs_dio_write_iter
+>   - __iomap_dio_rw
+>    - f2fs_iomap_begin
+>     - f2fs_map_blocks
+>      - __allocate_data_block
+>       - allocated blkaddr #x
+>        - iomap_dio_submit_bio
+> 				- f2fs_file_read_iter
+> 				 - filemap_read
+> 				  - f2fs_read_data_folio
+> 				   - f2fs_mpage_readpages
+> 				    - f2fs_map_blocks
+> 				     : get blkaddr #x
+> 				    - f2fs_submit_read_bio
+> 				IRQ
+> 				- f2fs_read_end_io
+> 				 : read IO on blkaddr #x complete
+> IRQ
+> - iomap_dio_bio_end_io
+>  : direct write IO on blkaddr #x complete
+> 
+Looks like every COW filesystem would meet this situation. What's the solution
+of other FS?
+> This patch introduces a new per-inode i_opu_rwsem lock to avoid
+> such race condition.
+> 
