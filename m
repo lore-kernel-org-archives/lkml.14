@@ -1,90 +1,125 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2487317C;
-	Wed, 15 May 2024 12:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB56219E8;
+	Wed, 15 May 2024 12:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715775045; cv=none; b=lU8vgs0s/BaP/r9EA6ZB+6XBEZ69jmwvjxZCMZ5gKiKLP1s+Is5rkmWnqDca2pSifSRONxEdMpTm5NyViK5w0YIDEBr1XFfEZYJEZz0GU26QSAs/8gMJihUm2l8uiDSwv+n0NXi0o124xsLKBG8Nzf5r2Lt2tapO34YngMyN/DQ=
+	t=1715775092; cv=none; b=ZIK/9unn4QJqQheqQ48VUZqvSctmwfIO4e9WzGltHkr/BB27wD+iSBNFvojWPrVoOcXxFfjCqWzgHQuGcQ1GfKKkL+OkxcF/9qGsEO0xaED7oz3MnEnm5Qqxwj26NB374z1lDPUwKyyutDFJv6NPEX3PSUfKvHYEEUeE1yYrsc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715775045; c=relaxed/simple;
-	bh=pJqvjsgCvNBkKyzYsgEoP0V2lPFJZrSdd7i0P9EDSt0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ir8mfexq85VfUWvs/yW94H4fwEg+l2/qBHkfnedKJMDRBDZyjUQkaLXYKFi1Ov04uy4tIQBkkume+SxiOK3D/N1mTgz6drCsNTjG8jbv52oJCH2H5rW4GiwUTsY7B69AMEUmVj32fh7hRQz44rKplKrjommjJmHCoNCRm/RP9mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CA89P5O5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715775092; c=relaxed/simple;
+	bh=TRsDlL8sCyl98mO7vQCQry7hPCiEZjBcOThVQmDnsAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDMRAkTfBLnagQIrOj92uiiylA5vevadQpULak3PxHLWocV5ZoDCcQNYQqAe3IPmPxz0zhHcdqPBCilsROUCsWhjw0gycLrQHn2XHKZ55rVLcRAvKySlEyq+UZbAquYVgug5Hw/6Vcrv+feK7wypUiTWLWcH4utQUgOZjjLFOJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmXbYVAD; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CA89P5O5"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44F90XOe007493;
-	Wed, 15 May 2024 12:10:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=xEF+xDSBfTCHhiYaODH9Zu9Pp0jwfoPRn50l2ESd8fA=; b=CA
-	89P5O5VHLBw8cJIdFacZ8WKVzv/BafF9cPRBAambzhOPSUa6nc1o4r/SKE5FdiHf
-	rZggD+q5bAkEg9ekLX8eRBWeIQhckzQRCnGVvDraHX9uwrvhnKMAjJiBIp5HkCMS
-	/mnh/c//ZXL3Xr34IonKNTb/ahVFExaI+Xd02thFTqVoD8ZWezVmP1kfafStKQBL
-	F94jtpAOki3+HcEG9/isL2WFjN/Bxs7BZEqP9G/4kn5HITyGL9F5h1zh6mH66H4z
-	BySjJWo91WrWZLaE7Meqe+y3s0HJ/mXhVkn+JO+OzC9imGtGCSPgluDnCCr16bEg
-	/n9H7kjiIqYVb0w/nx4A==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47f42q7d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 12:10:27 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44FCAO2G022765
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 12:10:24 GMT
-Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 15 May 2024 05:10:20 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-To: <ulf.hansson@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <bhupesh.sharma@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        Naina Mehta
-	<quic_nainmeht@quicinc.com>
-Subject: [PATCH 0/3] Add SDHCI support for SDX75 SoC
-Date: Wed, 15 May 2024 17:39:55 +0530
-Message-ID: <20240515120958.32032-1-quic_nainmeht@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmXbYVAD"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f4ed9dc7beso2867310b3a.1;
+        Wed, 15 May 2024 05:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715775090; x=1716379890; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uRO1GLnelDCAkzspkfFkF5Khl58EqY3Lr1TOrAInGvA=;
+        b=gmXbYVADnOoQlMaDrdYfLO1IDK0Lx+34fQAv94a1XUPqn9EvsquYyXFZrKyUNnGc6l
+         EX2FzsMEmf/wGwhffT06nQKmBq8ZM96RYQRAiGoDN5i+rJx2/bi9rZUukxxUTZi01a9i
+         kvmR1eohvrQ+60LNJr9nkajBSfbkzvYQx4oA2pbOw6a+O5xkS9QcA65emHfnJt04Zba7
+         Z7baC9Tf2PMmzqDwmSDSDj0c6BgExKsymKi98d6l9WlqFxsFfZz4b7pFnfkiom+wciL+
+         wyS4dtA8IycFTsi1joCIBBsVlVKuXQVD8VtxvOlOrhjxpXWO78dZ2OwNNdwY2sJ9sClo
+         SzZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715775090; x=1716379890;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uRO1GLnelDCAkzspkfFkF5Khl58EqY3Lr1TOrAInGvA=;
+        b=UnwD0Ok+lin9CLXvvjscV4y5xB6k4nccDHiazCu3jZZD+4Un2z+ykRPIqZx8N0q5vR
+         qlYKEZOYg6Y81DWBcGxH/VbDapDqShmVW54Bkb630NBHb0wDowno4CFWIq93z8c0Hccf
+         RZwFq+7sAiZrNQBY1/4TSJT276Jg3oepr9b/Cpc6UNbgZYKmMN0H9zccsmFrxCW16NgV
+         9VEVWv25PwQfKVtPPPVpyqsEibGHDCwvYTkQwZj/Lo93OV+dKgNUh/n5XLW24O1rmZwV
+         Hf9ZRR+XGrQi9243kpE4GN+7z1cza+Rn1nqODpBrV2uNW/fytIx6nnCsqEZfdUQ9ts3i
+         0nng==
+X-Forwarded-Encrypted: i=1; AJvYcCXYHiWJW0nmGNV0/pZneMbZmn51nhFOgtZeARvXtP0W7du6a88yA+9+Rs/Rcnwa3//+p4i2xelELfjw5qZDon45Pe+hHumNvCnJEOaBFtt8yIKGnzx/TeACvH4yc0DUBJCIOLAo1Fuaaag22L3njPYQYPw3eN5JF9p58P6Aum3YtaGsYucCyjERUTz/MDhHEeSeLNgDVhy/R+Ho
+X-Gm-Message-State: AOJu0YwbPHEg9Ho082cUHsZtj9xRCHpngTaVJ8P/rzZyRtYTKRsuEv58
+	K4nlW5rG2Ml6MMcCIlWV8RggD2x0Tgxa72oZq5m3eflYX2zUuSlZnEmAlQ==
+X-Google-Smtp-Source: AGHT+IHG7hHxrV/oUj7QxhLr2TFdf3HfhAtMErEVrrunpdY238v3hTNUjjGBpDRhqlnNkn7dL17tRg==
+X-Received: by 2002:a05:6a00:984:b0:6f3:e6c3:eadf with SMTP id d2e1a72fcca58-6f4df44ca45mr25106612b3a.15.1715775090173;
+        Wed, 15 May 2024 05:11:30 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f66897e209sm3228060b3a.136.2024.05.15.05.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 05:11:29 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 04746187C5760; Wed, 15 May 2024 19:11:25 +0700 (WIB)
+Date: Wed, 15 May 2024 19:11:25 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com
+Subject: Re: [PATCH V1 7/9] PCI/TPH: Add TPH documentation
+Message-ID: <ZkSmbZr_9hFj4kZi@archie.me>
+References: <20240509162741.1937586-1-wei.huang2@amd.com>
+ <20240509162741.1937586-8-wei.huang2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9pyKq2YjbFl6FZBU8xxNWWVMCLdjkkXm
-X-Proofpoint-ORIG-GUID: 9pyKq2YjbFl6FZBU8xxNWWVMCLdjkkXm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_06,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 bulkscore=0 clxscore=1011 malwarescore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 suspectscore=0 mlxlogscore=873
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405150084
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vG4xZd3V2A4WD42D"
+Content-Disposition: inline
+In-Reply-To: <20240509162741.1937586-8-wei.huang2@amd.com>
 
-Add SDHC instance for supporting SD card on SDX75 SoC.
 
-Naina Mehta (3):
-  dt-bindings: mmc: sdhci-msm: Document the SDX75 compatible
-  arm64: dts: qcom: sdx75: Add SDHCI node
-  arm64: dts: qcom: sdx75-idp: add SDHCI for SD Card
+--vG4xZd3V2A4WD42D
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../devicetree/bindings/mmc/sdhci-msm.yaml    |  1 +
- arch/arm64/boot/dts/qcom/sdx75-idp.dts        | 45 ++++++++++
- arch/arm64/boot/dts/qcom/sdx75.dtsi           | 89 +++++++++++++++++++
- 3 files changed, 135 insertions(+)
+On Thu, May 09, 2024 at 11:27:39AM -0500, Wei Huang wrote:
+> +:Copyright: |copy| 2024 Advanced Micro Devices, Inc.
+> +:Authors: - Eric van Tassell <eric.vantassell@amd.com>
+> +          - Wei Huang <wei.huang2@amd.com>
 
---
-2.17.1
+You can directly embed copyright symbol without having to pull in <isonum.t=
+xt>:
 
+---- >8 ----
+diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
+index ea9c8313f3e4f8..d7043fb0b71b3a 100644
+--- a/Documentation/PCI/tph.rst
++++ b/Documentation/PCI/tph.rst
+@@ -5,7 +5,7 @@ TPH Support
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+=20
+-:Copyright: |copy| 2024 Advanced Micro Devices, Inc.
++:Copyright: =C2=A9 2024 Advanced Micro Devices, Inc.
+ :Authors: - Eric van Tassell <eric.vantassell@amd.com>
+           - Wei Huang <wei.huang2@amd.com>
+=20
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--vG4xZd3V2A4WD42D
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkSmbQAKCRD2uYlJVVFO
+o2/fAQDWwU+Co9SFTXcGix+apuCZ0tAf7zDMA5Y56ZXlRYlm1gD/VpD3ni4CLkMP
+Iq5VgmqCFz0/e1qtYk4/CevT7Ltelg8=
+=6Crw
+-----END PGP SIGNATURE-----
+
+--vG4xZd3V2A4WD42D--
