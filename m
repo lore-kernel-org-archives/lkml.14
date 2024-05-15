@@ -1,115 +1,112 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567C213F430
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 19:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74061158DD5;
+	Wed, 15 May 2024 19:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715800321; cv=none; b=pUz8OCYWyfK4g7uw5Fba6Dlt7ChesBDaLGE7XgbLOX/jElCecDen1N7oDMbLzSuH8uStOiEaos6908kROGJYCE9LuumINgR77x8OjW8HvZyoY+iizPT8H92EtwnwjwruzXj9qRpgtO7Nqxzi7jQI91E5ZXxTgh1aqjfNCP6z7Es=
+	t=1715800457; cv=none; b=L4Dna3P1RLE087U4ptE8L8MnEko2iRBjJZExTAfBEbzuO+y7v/YoN4DSfcEx3sRS40e8ZbDJiTsubMBAr0pl6udzlGTipp3bNnKr72VCxsHgdx23oeYz3ZgP/tlaihpWVVzGL86h42DvSSMJu6LoQ61BiPRCYiNdOHdzJI8CuGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715800321; c=relaxed/simple;
-	bh=4oB1JXBLHcvFES9rbzP9mVt+itHaSCvKneEGCnD+In8=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=k6I3+fL22HzuLL6yq+XgQX3NAvJz1kzUrkjzoUC09mkYemvfRG2Rj1h4RFA2i44az4KLwOHRJBLsoq/nVA6RJV0VS6bZhYBIHzT8AqfNQ9hvoUVjOEMu71aO0fzx1tmSISbxgsfFV5vx+l7q11cM2Wu4mDMGoEQ6C95I6pI9Jbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Zhd3P+oD; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1715800457; c=relaxed/simple;
+	bh=GQZ9Je+l+3DtSIEv/ZsJFs5g6JhcmSivLOzNUVOFScc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WUC4ogfF8VLo3YnpeQwl2u50GANa5T+CQnco+gonfzyPRJ7HQeHG/HsZK+b1nlVjI8SRJAIYOs/YTltgtxHH9QITbZtPspgmOIMrL/vCSyAFb/4UmeDWJbXbrXZvckZD6X7XCJVjq9Ub+fBcGJ3P8B5lVhrz5A1WLA6ZAWZVr4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=icYLDU+c; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Zhd3P+oD"
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id 7GcQsBEEBJXoq7K18sWjxi; Wed, 15 May 2024 19:10:22 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 7K17sKqeSe3YN7K17sfxq0; Wed, 15 May 2024 19:10:22 +0000
-X-Authority-Analysis: v=2.4 cv=RunDLjmK c=1 sm=1 tr=0 ts=6645089e
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6JpUg3wSLY7qGu7ALhdgxvJ1xbPGhzqxXEzKie5Iu7Y=; b=Zhd3P+oDn1trGPQiF2hyhQ0JyS
-	kbqx/OzRm2Bm2T/Ugl2DFpS4BguG5ecH33fxhvB+QGDnHJ5SSbYb10zd8d4sLEO8RkM8K1CmXKbzV
-	t8Z19Pa+WmonC2hhpCFyQNbeJri4USjNw/O8dNdFysGhw65moG5MhGxPCFKnvigrNxMzk7vbXBM0S
-	2gfiDiCf2Mr4jod4zy/+coTDVrSGazeOcKZSDiUgWKJ/E+Ffq/x1ouQTt4sx95hUiTgfWRInmzAoS
-	z4iXmIZbfuwHa/D4aAVo8aHzaiVEx8C3SHvQ/H6c5rqAFroN66O8G24DvJ9BV+gjcvqAXWLmhZKHH
-	V81tt2wQ==;
-Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:35806 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1s7K14-002UIk-35;
-	Wed, 15 May 2024 13:10:19 -0600
-Subject: Re: [PATCH 5.15 000/168] 5.15.159-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240515082414.316080594@linuxfoundation.org>
-In-Reply-To: <20240515082414.316080594@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <fbbc9d23-1111-ee31-8558-93beed611668@w6rz.net>
-Date: Wed, 15 May 2024 12:10:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="icYLDU+c"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 4E16F120027;
+	Wed, 15 May 2024 22:14:13 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4E16F120027
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1715800453;
+	bh=gQ9FhGrXLgPhVgt8ePrWVQvsA5pd7mfVzSDQoNepqLM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=icYLDU+chBIYEWWsiKjXoRD7inzLyvwiQd6rqBmzGBH4owKV9kSOKj8RCfmguHlWH
+	 xJhq6Isgwhr1s59kpPM3qQpBlefdVVLkMvKH2vjCnPytHhGTOS6fniXSBiDTTMocHl
+	 N+wR3gGmraGu/t/PTq0KPw4+IHsc+mRuRVcbDrJevjZAHk8jPVPnorGY9pnvXxvGhZ
+	 HupS/7ZvvBDCansAnft3JqUYJXBVsyPnwalMXTEzZZqZIkIv9raAJ0C6FvwMmq7WlI
+	 GdnDQ56Qbp3BFVUJOBcXR6zNd80df6Zl84HIQ9CICK85th1x4+d7RSKfEL68l/qm7x
+	 M6utaLGAa0XZw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Wed, 15 May 2024 22:14:12 +0300 (MSK)
+Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 15 May 2024 22:14:12 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <khilman@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>
+CC: <kernel@salutedevices.com>, <rockosov@gmail.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Dmitry Rokosov
+	<ddrokosov@salutedevices.com>
+Subject: [PATCH v3 1/4] arm64: dts: amlogic: a1: add new syspll_in input for clkc_pll controller
+Date: Wed, 15 May 2024 22:13:50 +0300
+Message-ID: <20240515191405.25395-2-ddrokosov@salutedevices.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240515191405.25395-1-ddrokosov@salutedevices.com>
+References: <20240515191405.25395-1-ddrokosov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 98.207.139.8
-X-Source-L: No
-X-Exim-ID: 1s7K14-002UIk-35
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:35806
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 23
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNEwH9/cs+qy8Ujcr//jdZOR/mnx5LBwNkapuwicr+uXAmBGe8TmcgJgkkFztx/riqACYsQUaeVzz9vsddbkwyS+xKW4f9aqbO+lIrwQp0KRcA9GM2+N
- p5lZjRqiyKP4yAgeMS9mLR7eY3zPhlxUJ6fF+nyhJjrUyUMl3ll8SIF24g/0IUHWPJF2hj3e3eMiWOAde3+1lO6kvTMh+b+eciE=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185260 [May 15 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/15 13:12:00 #25231738
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 5/15/24 1:27 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.159 release.
-> There are 168 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 17 May 2024 08:23:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.159-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Input clock 'syspll_in' is needed for the 'sys_pll' clock and is
+inherited from the Peripherals Clock Controller.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Tested-by: Ron Economos <re@w6rz.net>
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 93b85b26199c..feed2bd7ae48 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -889,8 +889,10 @@ clkc_pll: pll-clock-controller@7c80 {
+ 				reg = <0 0x7c80 0 0x18c>;
+ 				#clock-cells = <1>;
+ 				clocks = <&clkc_periphs CLKID_FIXPLL_IN>,
+-					 <&clkc_periphs CLKID_HIFIPLL_IN>;
+-				clock-names = "fixpll_in", "hifipll_in";
++					 <&clkc_periphs CLKID_HIFIPLL_IN>,
++					 <&clkc_periphs CLKID_SYSPLL_IN>;
++				clock-names = "fixpll_in", "hifipll_in",
++					      "syspll_in";
+ 			};
+ 
+ 			sd_emmc: sd@10000 {
+-- 
+2.43.0
 
