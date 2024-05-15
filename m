@@ -1,258 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1599482E2
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 08:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1188B4C62E;
+	Wed, 15 May 2024 08:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715760395; cv=none; b=hgxCaRsYE0v+w6JXdwW9mfsP13pd6TzzzAfmzk/bEgYhEB0JK7mBpWAbm4DFs5mAFRvNobFTuZxNY3g1c0gDebhFS+dtHWc0sQQwfSf3K9tfLk0je6jtixHZ4cuFc/0R8kQKQ1v4LQ3OtzeaVUnNWyAC8CzUpv966OO5vuoRPG4=
+	t=1715760400; cv=none; b=Qe97Mu+6R47RSngnBB/jErRbu7Gr3R754IL6HvFWzCgXkWwN/E5Sedwm4OQxjB67uOpcTFJdHeXkz3GBBtQJLgUHd3azgQrQQCQJx64OZwDYqD7rTCU8pBtTTzTHSICAbJEda/86JcoG6KpVWrPtwpcNf35vy59+jx6KX1N4Y4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715760395; c=relaxed/simple;
-	bh=8TEZnE7WTbCwNYaVReSh+zDJq6bUMG18a220RPIgjYg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XyucRZhJDnXlzmdbOJ+u8qannGxqaAS5FOcWI5p0lZzXoBYAGuJaguor5DjAClvTyVRvT+AqvLWlzvyffreLY6kDYrJhMdI7Ch+RP0s87n0N1WJOZdGA4nbrcSFAOlo191+066CdYTU5feqstzVP5NfFSrT2DGb5Z+nNn6pUbpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOx750UP; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715760400; c=relaxed/simple;
+	bh=h0Sqhr4ifyZrC1b5lPNa6Gyug/wpM7myXaQxIuh3AZ4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqC11zrJcf19aZ6ktVGTNzOAAHSpsxEaeKL9zmcYHU63b8ffQdT6O4g3SwoP5TOefiN8NpechCAuu0psOoQI0JvtKK1pm83Xw0pBVYNsjIdW/ruYsXV1E8jE9GXnL4fPQsxajz/nP4Cu9uPmtqQSgQlf0kW4AUHsjf7gk1clDf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=nzUFl2Kx; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOx750UP"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nzUFl2Kx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715760394; x=1747296394;
-  h=date:from:to:cc:subject:message-id;
-  bh=8TEZnE7WTbCwNYaVReSh+zDJq6bUMG18a220RPIgjYg=;
-  b=JOx750UPCEgEay5MWc9ONWNd7/cdswTY88dh9ic9y3GWlTyOB1sEn5Ii
-   Faxhw5VHsM48qMlalpc2cyrH3PXxiLxBZDotKmpxeL4tpTsd96BeIHJv3
-   5GpqqKlxePWUFF5TxVCatp5cY7uyEBTXtfJLHgd9htP+tcIKOO1vwytaY
-   IPHQ4CeJurc1RE52NUI8DyjOVjtbLeNQqabhXjgNI1hZDuprCyH/ro+MR
-   O87sAHAwFvdPan111tSj1yzF5NIkAvNBiCja3a+gm2xqT7bBMdGs+g6n9
-   sPxMJVie7gzV+GPpoZ2cYI6f7jKG7pKrL0M5nn+YgTR2s10Z8ddVWRlnf
-   A==;
-X-CSE-ConnectionGUID: BXwEKGaOQMmsIBwzGdu+6g==
-X-CSE-MsgGUID: LgQBdArNQwiL2P6WqO7sdw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11073"; a="15616161"
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1715760398; x=1747296398;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h0Sqhr4ifyZrC1b5lPNa6Gyug/wpM7myXaQxIuh3AZ4=;
+  b=nzUFl2KxHPlZyCxSu7RzeKN3iZy4YGBVDp/ohKEDRKIQu/j1Ia1QrFby
+   QCCdAQBsllYyRSV8S2wOBdj1Sf7aScUsbByFWD45upZr2UyUF2nvJTJF1
+   nztaDtcXU09yEpBEfHk/BwGMqlF9PVEmH4aZKpQbTh/CEMBYFksafRB31
+   uSRXnVH8k+mtOtVnfcRE9YufAkfLArWa8+SMJa2APjtKkWcAX4oVMMQWW
+   LcOpBp/mGajcFORdRfsw6ngR6V3Crtm8SenK9rzOG6GcBrt501SxkzfhX
+   IfFA8k/GEKMLWVLPwihI+amyN8Oxu4NJ8K08MkiGMa1plI42ELgz7IQCL
+   g==;
+X-CSE-ConnectionGUID: EvxhA01VQR6BcbhVcVTEIw==
+X-CSE-MsgGUID: gMj862SdQQKslckEPmEeNQ==
 X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="scan'208";a="15616161"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 01:06:33 -0700
-X-CSE-ConnectionGUID: EtK60DveROSqYVGJirw1Lg==
-X-CSE-MsgGUID: fLvw+V6qQxqX1zPaXB/fbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,161,1712646000"; 
-   d="scan'208";a="35514026"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 15 May 2024 01:06:32 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s79eg-000Cbz-0r;
-	Wed, 15 May 2024 08:06:30 +0000
-Date: Wed, 15 May 2024 16:06:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2024.05.11a] BUILD SUCCESS
- f842f3076c93f9a97f1aeabcea6e568f33929892
-Message-ID: <202405151625.luPFi94S-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="asc'?scan'208";a="25383960"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2024 01:06:37 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 15 May 2024 01:06:22 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Wed, 15 May 2024 01:06:20 -0700
+Date: Wed, 15 May 2024 09:06:06 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Alina Yu <alina_yu@richtek.com>
+CC: Conor Dooley <conor@kernel.org>, Mark Brown <broonie@kernel.org>,
+	<lgirdwood@gmail.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<johnny_lai@richtek.com>, <cy_huang@richtek.com>
+Subject: Re: [PATCH v3 6/6] regulator: dt-bindings: rtq2208: Add property to
+ get ldo of RTQ2208 is adjustable or not
+Message-ID: <20240515-wrinkle-engross-ab6b089baae3@wendy>
+References: <cover.1715340537.git.alina_yu@richtek.com>
+ <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
+ <20240513-tissue-repave-13d2e3bf88fd@spud>
+ <d97752ed-4032-4681-b28f-17f149fdc3d4@sirena.org.uk>
+ <20240514-plunging-chair-803d9e342e6f@spud>
+ <20240515073830.GA12525@linuxcarl2.richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0FcHBb/wqZoBsRLq"
+Content-Disposition: inline
+In-Reply-To: <20240515073830.GA12525@linuxcarl2.richtek.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.05.11a
-branch HEAD: f842f3076c93f9a97f1aeabcea6e568f33929892  rcu-tasks: Remove open-coded one-byte cmpxchg() emulation
+--0FcHBb/wqZoBsRLq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 727m
+On Wed, May 15, 2024 at 03:38:30PM +0800, Alina Yu wrote:
+> On Tue, May 14, 2024 at 07:01:21PM +0100, Conor Dooley wrote:
+> > On Tue, May 14, 2024 at 11:34:29AM +0100, Mark Brown wrote:
+> > > On Mon, May 13, 2024 at 05:22:54PM +0100, Conor Dooley wrote:
+> > > > On Fri, May 10, 2024 at 08:06:25PM +0800, Alina Yu wrote:
+> > >=20
+> > > > > +            richtek,fixed-microvolt =3D <1200000>;
+> > > > >              regulator-min-microvolt =3D <1200000>;
+> > > > >              regulator-max-microvolt =3D <1200000>;
+> > >=20
+> > > > I'm dumb and this example seemed odd to me. Can you explain to me w=
+hy
+> > > > it is not sufficient to set min-microvolt =3D=3D max-microvolt to a=
+chieve
+> > > > the same thing?
+> > >=20
+> > > This is for a special mode where the voltage being configured is out =
+of
+> > > the range usually supported by the regulator, requiring a hardware
+> > > design change to achieve.  The separate property is because otherwise=
+ we
+> > > can't distinguish the case where the mode is in use from the case whe=
+re
+> > > the constraints are nonsense, and we need to handle setting a fixed
+> > > voltage on a configurable regulator differently to there being a
+> > > hardware fixed voltage on a normally configurable regulator.
+> >=20
+> > Cool, I think an improved comment message and description would be
+> > helpful then to describe the desired behaviour that you mention here.
+> > The commit message in particular isn't great:
+> > | Since there is no way to check is ldo is adjustable or not.
+> > | As discussing in v2 series, 'richtek,fixed-microvolt' is added for th=
+at.
+> > | user is supposed to know whether vout of ldo is adjustable.
+> >=20
+> > It also doesn't seem like this sort of behaviour would be limited to
+> > Richtek either, should this actually be a common property in
+> > regulator.yaml w/o the vendor prefix?
+> >=20
+> > Cheers,
+> > Conor.
+>=20
+>=20
+> Hi Conor,
+>=20
+>=20
+> Should I update v4 to fix the commit message ?
+> I will modify it as follows.
+>=20
+>=20
+> There are two types of LDO VOUT: fixed voltage mode and adjustable voltag=
+e mode.
+>=20
+> As the fixed voltage for the LDO is outside the range of the adjustable v=
+oltage mode,
+> the constraints for this scenario are not suitable to represent both mode=
+s.
 
-configs tested: 181
-configs skipped: 3
+That's definitely an improvement, yes. The property description could
+also do with an update to explain that this is for a situation where the
+fixed voltage is out of the adjustable range, it doesn't mention that at
+all right now.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> In version 3, a property has been added to specify the fixed voltage.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240515   gcc  
-arc                   randconfig-002-20240515   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                           h3600_defconfig   gcc  
-arm                       netwinder_defconfig   gcc  
-arm                   randconfig-001-20240515   clang
-arm                   randconfig-002-20240515   gcc  
-arm                   randconfig-003-20240515   clang
-arm                   randconfig-004-20240515   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240515   gcc  
-arm64                 randconfig-002-20240515   clang
-arm64                 randconfig-003-20240515   clang
-arm64                 randconfig-004-20240515   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240515   gcc  
-csky                  randconfig-002-20240515   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240515   clang
-hexagon               randconfig-002-20240515   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240515   gcc  
-i386         buildonly-randconfig-002-20240515   gcc  
-i386         buildonly-randconfig-003-20240515   gcc  
-i386         buildonly-randconfig-004-20240515   gcc  
-i386         buildonly-randconfig-005-20240515   gcc  
-i386         buildonly-randconfig-006-20240515   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240515   clang
-i386                  randconfig-002-20240515   gcc  
-i386                  randconfig-003-20240515   gcc  
-i386                  randconfig-004-20240515   gcc  
-i386                  randconfig-005-20240515   clang
-i386                  randconfig-006-20240515   gcc  
-i386                  randconfig-011-20240515   clang
-i386                  randconfig-012-20240515   gcc  
-i386                  randconfig-013-20240515   clang
-i386                  randconfig-014-20240515   gcc  
-i386                  randconfig-015-20240515   gcc  
-i386                  randconfig-016-20240515   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240515   gcc  
-loongarch             randconfig-002-20240515   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5407c3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           gcw0_defconfig   clang
-mips                            gpr_defconfig   clang
-mips                      maltasmvp_defconfig   gcc  
-mips                          rm200_defconfig   gcc  
-mips                        vocore2_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240515   gcc  
-nios2                 randconfig-002-20240515   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240515   gcc  
-parisc                randconfig-002-20240515   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                    gamecube_defconfig   clang
-powerpc                  mpc866_ads_defconfig   clang
-powerpc               randconfig-001-20240515   clang
-powerpc               randconfig-002-20240515   clang
-powerpc               randconfig-003-20240515   gcc  
-powerpc64             randconfig-001-20240515   gcc  
-powerpc64             randconfig-002-20240515   clang
-powerpc64             randconfig-003-20240515   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240515   clang
-riscv                 randconfig-002-20240515   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240515   clang
-s390                  randconfig-002-20240515   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                    randconfig-001-20240515   gcc  
-sh                    randconfig-002-20240515   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                      rts7751r2d1_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc64_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240515   gcc  
-sparc64               randconfig-002-20240515   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240515   gcc  
-um                    randconfig-002-20240515   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240515   gcc  
-x86_64       buildonly-randconfig-002-20240515   gcc  
-x86_64       buildonly-randconfig-003-20240515   clang
-x86_64       buildonly-randconfig-004-20240515   clang
-x86_64       buildonly-randconfig-005-20240515   clang
-x86_64       buildonly-randconfig-006-20240515   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240515   gcc  
-x86_64                randconfig-002-20240515   clang
-x86_64                randconfig-003-20240515   clang
-x86_64                randconfig-004-20240515   clang
-x86_64                randconfig-005-20240515   clang
-x86_64                randconfig-006-20240515   clang
-x86_64                randconfig-011-20240515   clang
-x86_64                randconfig-012-20240515   clang
-x86_64                randconfig-013-20240515   gcc  
-x86_64                randconfig-014-20240515   gcc  
-x86_64                randconfig-015-20240515   clang
-x86_64                randconfig-016-20240515   clang
-x86_64                randconfig-071-20240515   gcc  
-x86_64                randconfig-072-20240515   gcc  
-x86_64                randconfig-073-20240515   gcc  
-x86_64                randconfig-074-20240515   clang
-x86_64                randconfig-075-20240515   clang
-x86_64                randconfig-076-20240515   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240515   gcc  
-xtensa                randconfig-002-20240515   gcc  
+Don't refer to previous versions of the patchset in your commit message,
+that doesn't help people reading a commit log in the future etc. If
+there's some relevant information in a previous version patchset, put it
+in the commit message directly.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Conor.
+
+--0FcHBb/wqZoBsRLq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkRs7gAKCRB4tDGHoIJi
+0vH7AQD9Pv88a/PkA91egE2kjvXH7h48NPsjCN8xwJ8vNsM5XgEAuD17AiUn8eu7
+CNpGygjTUdxaBxaAC0nC6jR2+XMgXwg=
+=ELYJ
+-----END PGP SIGNATURE-----
+
+--0FcHBb/wqZoBsRLq--
