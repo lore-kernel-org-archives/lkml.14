@@ -1,82 +1,161 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6FB62A02
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C067155752;
+	Wed, 15 May 2024 15:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715786635; cv=none; b=fN2SiyAaLb764HVhdigu7VR8Pe+PQZBqcHJC5r48314tZar0RupV37+rieKumlYUUXgREFLmvgnxxEN6xsN9+H0BBGciJ/UvZkUEgP4cva51CAuGKao8Bz3LgjvUIvg9M5pNHDqU3xojxc7yTaf7P+RQf0XGo6lGLl4NF9IC514=
+	t=1715786880; cv=none; b=UW2KwscL0dG6rl2DNLzb5V+m1zoWxFdmJOjcWnvVMtw+AMRrOlcdfQP4T7nUimwVMfyme7wF6lcvK1Q7EH6/WJqVN5wk+vkYPz47XnFPKW9Xd3t14J8SYQDpVHlZVM60c0kRVOf5VPQnVy/v8H/KB5x7rlz41GfN67f+cfK0wSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715786635; c=relaxed/simple;
-	bh=kU5haLDUlfgVHXQJnqJgdAkMMg41tQYnmCEL6k+6oDU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=haBBB5eTOK9t/OIMN7F+K067i7l5KuO/+5OQfCdhgu/ek7GA9ZocFlP3FYVwxSrm/ndns3TaBIpQ0HMILEGFs3kEmZmIDQYxpY61NctVhW2SRCbuhgtst9sZi6mXKVYtJg7ABjKRoFAcI40c2j8QwB8eRf+PSWHVMvUkkR0QFR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tw1B7+sV; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1715786880; c=relaxed/simple;
+	bh=g1lVgGrmRqhqbAzR7xXGynSAR7VP0f5zUHajn+I4RV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KupwPDNhLf20osNAV1QZi9E8nhZAVwlVxI+atz9q1WhSW+PxfWMSSPFDVJOc6/d2a/rnw2btQasn+llxfgLo3Anr2pQYPj9/olmy/+QHVQMtlo30Z0QiAtugBev7ekdjCvK4+3tD63q1gbkPUsdN3NEK3sV43QxbxfM1uH24+CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KH3fKfAn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iasrH6Zg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ommtw1sL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4OBcsZ8q; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tw1B7+sV"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc647f65573so14989597276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 08:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715786633; x=1716391433; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/vj1A9ui2SaRE/HWTW3nQNHcmp/FHeI/IPRLs6zsaMw=;
-        b=tw1B7+sVFtLjslTi3HDAnFYd1iIy8cvWIarH4hCGkD6J92zscbjwLbuYGsatzPX5Cj
-         KEnvLeIfSFgkSvKV/HiWjOFpFi2a2ELVLN+x2CHivUe0BjRn17aRRVqZhpcWFL8W2dOH
-         57hVo9YNpfD4+ecY6Hpd1KsqbLuUezwfptRqO0sBtYHIHW4kt1Rm5bWrpIh4Y5enZHRj
-         jrBrr512YcD2J/cKhbaENhvJu5cozKwDZqy6jk3e1vr/LEESnTO9bJg3nN3t/IEvy9v1
-         +dabm4c3g/Qgu+DT9rjQrBCLZ2Y9mwgcT8pj9dFyQJzs8pm1I5UO78yQq7XZno5j/13N
-         bM2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715786633; x=1716391433;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/vj1A9ui2SaRE/HWTW3nQNHcmp/FHeI/IPRLs6zsaMw=;
-        b=TJiMXHdV2vlH5wajGuYaWsH1DqcNZaV2k/vEOIgBAtayrIfUnqh1R5Ckwrz02suv1g
-         IKlGyaJhjha62JBO8SaVMmPYq2KA4u4iYz5cwZGL8FoX/CTBHscn7G9qgw/hIFtnRZSF
-         fNFGPngsF9jQR0Jzqy2Y3p4MDoYHZ3ehJSSpZI5qGXk01dvu0fleWB2PDWwL+1Bx/ovh
-         gBqPlZ921eZbo056s7sjH964wFxriwAzmmbcXwNT+qcYwkBi6g1vWPtnwBS547MrOM5l
-         EvzkSC52EtsxcdNxxs/aKCBNAN1TOe16Tzyvi6iNpLSaeOcStEGMPb4GI6t4Fi5zqAYu
-         w3Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9JqHscdCclpFgNj5fPSWf6Vi0aRsjVx0A4QiswmJv3guKGuqKEjNBFBlOUZB8i9YtH7tZZ/xDjbs/nilqIM0ktZ7R7sPpw3uhyb/Z
-X-Gm-Message-State: AOJu0YyeOyEJLCGJQOr1II5pk6kT7ZUpV8y4IsQVxZUjWkhhFeopnmFx
-	lH88EeQg21dlqbYkAtFBvaaI6Jm0DxOf35AeFIlGMFWXJdIEyHPWijPUlCD8s369Y+pHkS2KvWH
-	qTQ==
-X-Google-Smtp-Source: AGHT+IHYglKVcDSO/IWQfJ8xI8dVwMGpQ0/ErI/yxeFoh8tCkNXcyH0VPfrlyu4AmFvEBSdW3dgM2ePXTNA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:100f:b0:dee:5d43:a0f3 with SMTP id
- 3f1490d57ef6-dee5d43c91fmr3707898276.6.1715786633444; Wed, 15 May 2024
- 08:23:53 -0700 (PDT)
-Date: Wed, 15 May 2024 08:23:51 -0700
-In-Reply-To: <5547dd176122865e6a13b61829aa9c4b6cc21ff3.camel@cyberus-technology.de>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KH3fKfAn";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iasrH6Zg";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ommtw1sL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4OBcsZ8q"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 778552084F;
+	Wed, 15 May 2024 15:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715786870;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
+	b=KH3fKfAnXVyJoPnin9E/o6QmbEItEcNCtKtaezQ5hnwhjVSnWlUwoM+KeS72MPUgqkf9OM
+	+CNTOY+ASyXP6cpbNc96QLaQavSX8TD+qLcjR2JCC7I1z5KY31/HnuuZB4HWVlmuw1GqS1
+	EIwgF+cN9ZbUJFl1iMG+OUq+Hma3vYI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715786870;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
+	b=iasrH6Zgyi4ZolvQOwIaRAiHF42kARzVvsB/UfuNE+5ycs+lcbkAlR/GGX33yYu5TVVhVg
+	SPwZH+Nmfp/fOXDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715786869;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
+	b=Ommtw1sLkW83hf03hNwsIDnKfwdFjjBbhxcr15mpZ0wi3/Xr5FsHJe/E3ZN8Xp0NSrJdz4
+	7V2COIVVie3coYMM/LDI2cFk9TbbWM6DOlaO5ba+IXaZ0wqitRBmHnKdXyZB1QFJUCqc9V
+	zgRcUmd34YwcveEOt9+0Ys/21bstvbA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715786869;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t134jEfnBj2jr8XB1K6GdCjxt6Dl3/mJ1ThDTNYqYBA=;
+	b=4OBcsZ8qOK+TuPtbKPczVjbx3NFXxGyvOP16yqldCMo8qmvCb6Jh8FsSRaQBOo3LGFxMIx
+	kckznFfvESJETRBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 585C2136A8;
+	Wed, 15 May 2024 15:27:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xX7gFHXURGYcDwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 15 May 2024 15:27:49 +0000
+Date: Wed, 15 May 2024 17:27:47 +0200
+From: David Sterba <dsterba@suse.cz>
+To: syzbot <syzbot+f7a41568dd5872d6ad52@syzkaller.appspotmail.com>
+Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [btrfs?] possible deadlock in join_transaction
+Message-ID: <20240515152747.GM4449@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <0000000000001ac5ea061835f021@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240508132502.184428-1-julian.stecklina@cyberus-technology.de> <5547dd176122865e6a13b61829aa9c4b6cc21ff3.camel@cyberus-technology.de>
-Message-ID: <ZkTGhmfF-FYisKL_@google.com>
-Subject: Re: [PATCH] KVM: x86: add KVM_RUN_X86_GUEST_MODE kvm_run flag
-From: Sean Christopherson <seanjc@google.com>
-To: Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Cc: "corbet@lwn.net" <corbet@lwn.net>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"x86@kernel.org" <x86@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Thomas Prescher <thomas.prescher@cyberus-technology.de>, 
-	"mingo@redhat.com" <mingo@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000001ac5ea061835f021@google.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: 1.23
+X-Spam-Level: *
+X-Spamd-Result: default: False [1.23 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=a450595960709c8];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	BAYES_HAM(-0.27)[73.86%];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[f7a41568dd5872d6ad52];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	SUBJECT_HAS_QUESTION(0.00)[]
 
-On Wed, May 15, 2024, Julian Stecklina wrote:
-> Hey Sean,
+On Sat, May 11, 2024 at 04:23:20PM -0700, syzbot wrote:
+> Hello,
 > 
-> does this this patch go into the right direction?
+> syzbot found the following issue on:
+> 
+> HEAD commit:    dccb07f2914c Merge tag 'for-6.9-rc7-tag' of git://git.kern..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17ad432f180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a450595960709c8
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f7a41568dd5872d6ad52
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: i386
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-dccb07f2.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/987455e5cf13/vmlinux-dccb07f2.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/327c390f753b/bzImage-dccb07f2.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+f7a41568dd5872d6ad52@syzkaller.appspotmail.com
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 6.9.0-rc7-syzkaller-00012-gdccb07f2914c #0 Not tainted
+> ------------------------------------------------------
+> kswapd0/110 is trying to acquire lock:
+> ffff888000c76380 (btrfs_trans_num_writers){++++}-{0:0}, at: join_transaction+0x430/0xf40 fs/btrfs/transaction.c:290
+> 
+> but task is already holding lock:
+> ffff88805a236610 (sb_internal#2){.+.+}-{0:0}, at: btrfs_commit_inode_delayed_inode+0x110/0x330 fs/btrfs/delayed-inode.c:1275
+> 
+> which lock already depends on the new lock.
 
-At a glance, yes.  We're in a "quite period" until 6.10-rc1, so it'll be a few
-weeks before I take a closer look at this (or really anything that's destined
-for 6.11 or later).
+Looks valid, though I haven't went through all the traces, there are
+some usual suspects like shrinkers, evict, iput, and in two threads (#4 and #0).
+
+Also this is on 6.9, so the recent addition of shrinker for extent_map
+is not relevant here.
