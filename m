@@ -1,172 +1,203 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235556A005;
-	Wed, 15 May 2024 11:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715772251; cv=fail; b=SrNhRhAWiUFvlejBVjwnDoQJ2E/RfBACLMaR14Py+2S1hnHdhOdftHkd8QfbHrJhiQbIV+Fh5iL19ROSBT/sodowg/3cpLDQk9xJuqp8W7dAQLkayjjb0I9w0WoWNwFeq1hvWPM7SqW7METwxzp+4VSgSuJyvpkWpoI7YAxyFmE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715772251; c=relaxed/simple;
-	bh=DMO3F6aCNQtwyjXnpWpKK3y5VEszzdlulV5ahxO3lxw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E0UyAPLL3XDZVreGZGVjulSH20Q0UiR4WcAcw4II3vxhiYLPqD7GmOR6XPWLdYlaJ62s1QLs6jyc7GwiHiuWP+BhpMc2ljRIiB9T8/x5cKzsKYkA4poIfHB07B4DGf4J5tqkM3H2ESZ2oUAPi1IpibWcYSwByTLXpMhTYXf3CEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3AyuV5Ne; arc=fail smtp.client-ip=40.107.236.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F5871747;
+	Wed, 15 May 2024 11:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715772253; cv=none; b=VSds3sK+asxelEY29y1RvLtK9sn8BfXITTEqBPV1FE2bIWTXzXYhFf09Vb29swmHOdt+hqt+Y0M3m8CsGCOV7K0rO2nYbgmeh82NCY+kigwJo6HUBCykxwxsbsCBJYtmLdk9KRT+nG4L4Y6c2OAVUZDnjZA9bZNIpM5e8zcgmGE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715772253; c=relaxed/simple;
+	bh=JmM7aYnnJjcrkHzmzFH5/xKHUI5D8NfX9C+EUZsvlBU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HdfcZnkkrQPbqm3MOTjPrfIsyPq0150BJf3C6CHKVc9BmqnaEsHE0XX3PiiEf1PX9f6onkRwcT3f90GiwvdsefZ3xLWVJ80sUKugWug0znsLPf3JA99KO3iy7wqRkRsRRrdyLX9lBvDXn9Byn35ft6d6anZoU0a3dfhbMrgGegI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=A4juQ7iQ; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3AyuV5Ne"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TKWVVKa6p+TRYGU3C1Zxpa2/bWi/LzgFL2JglhwTfu99NVRVPrJ2rrXENiL6yKPh88mZm0i4D3tgA+Pt9TMtUbZ03zyZJdqeLkp4g9s3h/VTpD+q2+whrkwFZ6T7roFbf2N8+suOoBqv97d/ki+RrsmTorFZgbF3Sc0EKu2meIQ0VCf6yPxxz1cf5n23h4OxcpfLEqB2FEPwR/rmNGnghf8E3bYGRyTBsmgZb2a3Un4RykKOS1fDhuxHiziq0Duid3w5yyZDFAr0buMM008L18C/kbOzNbUTnt/VFRSiwoPHn2wvmhX7aP+ttG3KJ1HMBZd5BjXazf/DreCU9cReaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IxS50D6WIV2nsBUdq+i3kGRHpg5tcqiBPMMnzq6/a1s=;
- b=nnSoNb6gKTF8asqnX3lR+8rbC5IMdV4/dlzl6CD9fBiPyk0lBu94x1g9tMZAISKzB7cwDLh6qGDvQxNxAA/4yGt+iDV6039CKnlpM1sg9b8XhKGBztGj8aJgikBpI1pop28p7bzJk3zNMKpsp3VFnXaiAIA3AW3a8vbprVxRq+LAc8GXb3B6eNFgPIk27pw4KkQDS9F9EL3Pgt+CiMdLwxlhBxOogqwSyqk08nYTb6iusT9fLAQ8aOokWK3YLHjoj2iwx4vdGN0HDQVDqast+vLilpffM1dpyyX2JsNo46LRQC3S2s0gPoPj9+6h+QDSqVgfiV+KfQ/8QxiVjEmpBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IxS50D6WIV2nsBUdq+i3kGRHpg5tcqiBPMMnzq6/a1s=;
- b=3AyuV5NeJqlnyKFw6jGLKTYWtGxY8rzrCiniUNziwZXfMcUcvcL4ktw5KaZ4m9JqflrtszPtp26IBWzbeXykQ49uPexRohGugTETgHkHdehQt1gytFjhZL4Q8NM2pnH9UGhZlvaSNjag6GABuEDvKC9i4Q3vyzNLHtnMVKoH16o=
-Received: from SJ0PR03CA0010.namprd03.prod.outlook.com (2603:10b6:a03:33a::15)
- by IA0PR12MB8976.namprd12.prod.outlook.com (2603:10b6:208:485::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.27; Wed, 15 May
- 2024 11:24:06 +0000
-Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
- (2603:10b6:a03:33a:cafe::74) by SJ0PR03CA0010.outlook.office365.com
- (2603:10b6:a03:33a::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.26 via Frontend
- Transport; Wed, 15 May 2024 11:24:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7587.21 via Frontend Transport; Wed, 15 May 2024 11:24:05 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 15 May
- 2024 06:24:04 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 15 May
- 2024 06:24:04 -0500
-Received: from xsjarunbala50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 15 May 2024 06:24:04 -0500
-From: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-To: <michal.simek@amd.com>, <gregkh@linuxfoundation.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Jay Buddhabhatti <jay.buddhabhatti@amd.com>, <stable@vger.kernel.org>
-Subject: [PATCH v3] drivers: soc: xilinx: check return status of get_api_version()
-Date: Wed, 15 May 2024 04:23:45 -0700
-Message-ID: <20240515112345.24673-1-jay.buddhabhatti@amd.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="A4juQ7iQ"
+X-UUID: a456353812ad11ef8065b7b53f7091ad-20240515
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=VT/s+h1Cq+YzYYbCVYx249Bu2mXtGqq6RR2QY3C1tCU=;
+	b=A4juQ7iQYHA1HOowFi69TeuWfoZFLWgdo4ZZSXAz74cNsCDdxcEJxDq/h4xnxp6o/tDVjkdz8xGLfCjnwdcnxurs0lqvPnPaPAHRNtigZmLnY8tTenMOu9L7uE51ddvrlRknh6NE822/DpvrOigJMg+pqoKws4pW5TA0dH2iO1g=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:9cd6fc51-4e32-4c12-8482-4d4f5e87c883,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:82c5f88,CLOUDID:89776387-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a456353812ad11ef8065b7b53f7091ad-20240515
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+	(envelope-from <yong.wu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 808891972; Wed, 15 May 2024 19:24:06 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 15 May 2024 19:24:04 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 15 May 2024 19:24:03 +0800
+From: Yong Wu <yong.wu@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, <christian.koenig@amd.com>, Sumit Semwal
+	<sumit.semwal@linaro.org>, Andrew Morton <akpm@linux-foundation.org>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+	<tjmercier@google.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linaro-mm-sig@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>,
+	Vijayanand Jitta <quic_vjitta@quicinc.com>, Joakim Bech
+	<joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, "Pavel
+ Machek" <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>, Pekka Paalanen
+	<ppaalanen@gmail.com>, <willy@infradead.org>, Logan Gunthorpe
+	<logang@deltatee.com>, Daniel Vetter <daniel@ffwll.ch>,
+	<jianjiao.zeng@mediatek.com>, <kuohong.wang@mediatek.com>,
+	<youlin.pei@mediatek.com>
+Subject: [PATCH v5 3/9] lib/scatterlist: Add sg_dup_table
+Date: Wed, 15 May 2024 19:23:02 +0800
+Message-ID: <20240515112308.10171-4-yong.wu@mediatek.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240515112308.10171-1-yong.wu@mediatek.com>
+References: <20240515112308.10171-1-yong.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: jay.buddhabhatti@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|IA0PR12MB8976:EE_
-X-MS-Office365-Filtering-Correlation-Id: b43c727c-c2ea-4e6c-5093-08dc74d187d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|1800799015|376005|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jR6o3yCRnoZm/noWQ7Ji3GxZNYY9gFRhCeS+1mKvMaoLjHDQ+pqPoZu/JZsr?=
- =?us-ascii?Q?qF5V5MvxUi8YEEixkH6xDzCmEsOmZkRS/hZE08duwV+lZIMutUCXbwbrhE1x?=
- =?us-ascii?Q?ZpgpvVY5Lics8e+C3nruyVv7vl3AJi9+4B+pEUdsFO3I+Txu55mcc2u4pQKK?=
- =?us-ascii?Q?TMRlil0wzPbjnWD6slstYdVGvw5/2T1IHX21zJdu+ub2RBSqz1k3JgHfmevU?=
- =?us-ascii?Q?/MXVHpAQ1LGd0mW8RmGkmdB5BlZV58W+KGvRnZmxONxMJjU34dz0XXDAtvKw?=
- =?us-ascii?Q?9Gcc6AJoqsyLvxzTyWjL1ZpFXJ6nl7vk9x4uo0hJYyamvh8iV7GjAYd4qWfv?=
- =?us-ascii?Q?YbozqzmNubruPWkUX0TsDZ88ZS0Y3BAuiC/+4R0rmXwqOyDRSel/SxUG83qK?=
- =?us-ascii?Q?tjPGiNn+Z2SWt+KXLDUDahw06g0YFfvYuKLYV428zK2ckcE02AM3bLLFB9YY?=
- =?us-ascii?Q?nFNbp11Zd6Sn7kBhcG7QpdwFHkXOug8UK1BR3RW2dMarXYcjvWQatTHxeq50?=
- =?us-ascii?Q?ayc4FldughaTmErNWJ6iSQjcTnmGMmNcv7nSq6MLxxUXtllF24yzLU6fWQhg?=
- =?us-ascii?Q?de4vEpFhVii56XIBtuzNpUhcyBS89YcDlX1zAKBcoWJlcA/ae9ZtIFvVCweQ?=
- =?us-ascii?Q?xphFlPlCBHsMy393SaK0j6mH5kqk3f5+jInY7OODoWiL2MxUAzZdMralFFC/?=
- =?us-ascii?Q?kRzZFvwL0I/xO6iFPAkJsGDEND6ckU9cpq5CgvQj7wUr5ol41XGcgSoaVAED?=
- =?us-ascii?Q?3swj+NXl0TF3QstMZeH50FlU7Cql+XFLrRITbHMvx7L+6VcItUqPEuyNj1lO?=
- =?us-ascii?Q?TeTOSpUvNBymJouBP7FExg/stUhGSZ5yFLRQoohKQZ52idQ8+mNZHPG2mvXh?=
- =?us-ascii?Q?AJG2iu7sii9wN5KoR0roEvrwLqtlZQ/v6zRI0wLVQa8Z4reU0BhDbQc2qKgI?=
- =?us-ascii?Q?5zA3HA44E2KPSfS+lUVZGYAYlzUuhZs86+cTlJ5pCjczA/GQ7+Sv9kyKYLDJ?=
- =?us-ascii?Q?Ccgeeu81JYxVPGE4SyqrKszVosYwjvQkfHLTjeRrVHbtJArrkuWZZw0xyNTN?=
- =?us-ascii?Q?/Z89ZqaCdrl0joCssVxlO+Rf9JY4AaNaUjQuRbQ/RVTogQqoGrn0VyU9voY0?=
- =?us-ascii?Q?0qThhpePOqAy3PgAh4l2HnNJkZR6qX2D/ifjnffUYnLXWutvrZ4efFbBvI4e?=
- =?us-ascii?Q?Mbio2XwQMv3VfmDElJ3AoBjgdUgLFyxNQN+zVo7C5Qq5vf91c+JQpGEnUH3r?=
- =?us-ascii?Q?ZLTHs1cvsHRCkqKGsKbpDHpQhb8XEbY/jgGUOh87fNMR25nO0XGCdyYBQ3QY?=
- =?us-ascii?Q?MRk1JeeTRTasNVTQQGAQWYhS1EhMiSiL9bNZwWCS+ij09A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(1800799015)(376005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 11:24:05.4383
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b43c727c-c2ea-4e6c-5093-08dc74d187d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8976
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.271200-8.000000
+X-TMASE-MatchedRID: Eu5iVMCjEvmiwkztVCsqbz9B1SHosSXQsuIso71Vk6IaIkPr5OoG5XB4
+	4IkzjfYyThbvLLI8RvNq7k1NHAqvK5sYdIGP6PlZuIwLnB3Aqp0oUVkB7ifJnriBTLMkgNsWlS9
+	xDwj9R9hTNzcLY8ZQFvjW/vDq1F1wuR5n9WRcv4rr/EBmiNuXt5dhffisWXfHjNnoU1fopos/8y
+	JL1KErHcb+TbMWrxk0gDLqnrRlXrZ8nn9tnqel2MprJP8FBOIaDBbGvtcMofw/pG1Fl9oluDzNl
+	sSO6mpKWiEvKz7iFFVM/CORY37OFUbCDlF3ki+qXeVIMojsyVXps0pE8ve9V/hhuo7ryYdpuDSe
+	sCd4STviw6uxviJP8r9tsSiUciBlQ5zsaM5qada/lr1yYih0SylGctXaTCsu
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.271200-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: E051011996F3694BAAD156BFFC0CB68A4FCCAD6201235414943C12123678785E2000:8
+X-MTK: N
 
-Currently return status is not getting checked for get_api_version
-and because of that for x86 arch we are getting below smatch error.
+Prepare for the restricted heap to reuse, move it out from system_heap.c.
+To keep the function name consistent, rename it to sg_dup_table.
 
-    CC      drivers/soc/xilinx/zynqmp_power.o
-drivers/soc/xilinx/zynqmp_power.c: In function 'zynqmp_pm_probe':
-drivers/soc/xilinx/zynqmp_power.c:295:12: warning: 'pm_api_version' is
-used uninitialized [-Wuninitialized]
-    295 |         if (pm_api_version < ZYNQMP_PM_VERSION)
-        |            ^
-    CHECK   drivers/soc/xilinx/zynqmp_power.c
-drivers/soc/xilinx/zynqmp_power.c:295 zynqmp_pm_probe() error:
-uninitialized symbol 'pm_api_version'.
-
-So, check return status of pm_get_api_version and return error in case
-of failure to avoid checking uninitialized pm_api_version variable.
-
-Fixes: b9b3a8be28b3 ("firmware: xilinx: Remove eemi ops for get_api_version")
-Signed-off-by: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-Cc: stable@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 ---
-V1: https://lore.kernel.org/lkml/20240424063118.23200-1-jay.buddhabhatti@amd.com/
-V2: https://lore.kernel.org/lkml/20240509045616.22338-1-jay.buddhabhatti@amd.com/
-V2->V3: Added stable tree email in cc
-V1->V2: Removed AMD copyright
----
- drivers/soc/xilinx/zynqmp_power.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma-buf/heaps/system_heap.c | 27 +--------------------------
+ include/linux/scatterlist.h         |  2 ++
+ lib/scatterlist.c                   | 26 ++++++++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
-index 965b1143936a..b82c01373f53 100644
---- a/drivers/soc/xilinx/zynqmp_power.c
-+++ b/drivers/soc/xilinx/zynqmp_power.c
-@@ -190,7 +190,9 @@ static int zynqmp_pm_probe(struct platform_device *pdev)
- 	u32 pm_api_version;
- 	struct mbox_client *client;
+diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
+index 9076d47ed2ef..204e55f92330 100644
+--- a/drivers/dma-buf/heaps/system_heap.c
++++ b/drivers/dma-buf/heaps/system_heap.c
+@@ -54,31 +54,6 @@ static gfp_t order_flags[] = {HIGH_ORDER_GFP, HIGH_ORDER_GFP, LOW_ORDER_GFP};
+ static const unsigned int orders[] = {8, 4, 0};
+ #define NUM_ORDERS ARRAY_SIZE(orders)
  
--	zynqmp_pm_get_api_version(&pm_api_version);
-+	ret = zynqmp_pm_get_api_version(&pm_api_version);
-+	if (ret)
-+		return ret;
+-static struct sg_table *dup_sg_table(struct sg_table *table)
+-{
+-	struct sg_table *new_table;
+-	int ret, i;
+-	struct scatterlist *sg, *new_sg;
+-
+-	new_table = kzalloc(sizeof(*new_table), GFP_KERNEL);
+-	if (!new_table)
+-		return ERR_PTR(-ENOMEM);
+-
+-	ret = sg_alloc_table(new_table, table->orig_nents, GFP_KERNEL);
+-	if (ret) {
+-		kfree(new_table);
+-		return ERR_PTR(-ENOMEM);
+-	}
+-
+-	new_sg = new_table->sgl;
+-	for_each_sgtable_sg(table, sg, i) {
+-		sg_set_page(new_sg, sg_page(sg), sg->length, sg->offset);
+-		new_sg = sg_next(new_sg);
+-	}
+-
+-	return new_table;
+-}
+-
+ static int system_heap_attach(struct dma_buf *dmabuf,
+ 			      struct dma_buf_attachment *attachment)
+ {
+@@ -90,7 +65,7 @@ static int system_heap_attach(struct dma_buf *dmabuf,
+ 	if (!a)
+ 		return -ENOMEM;
  
- 	/* Check PM API version number */
- 	if (pm_api_version < ZYNQMP_PM_VERSION)
+-	table = dup_sg_table(&buffer->sg_table);
++	table = sg_dup_table(&buffer->sg_table);
+ 	if (IS_ERR(table)) {
+ 		kfree(a);
+ 		return -ENOMEM;
+diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+index a6ad9018eca0..53a4cdc11f4f 100644
+--- a/include/linux/scatterlist.h
++++ b/include/linux/scatterlist.h
+@@ -538,6 +538,8 @@ size_t sg_pcopy_to_buffer(struct scatterlist *sgl, unsigned int nents,
+ size_t sg_zero_buffer(struct scatterlist *sgl, unsigned int nents,
+ 		       size_t buflen, off_t skip);
+ 
++struct sg_table *sg_dup_table(struct sg_table *table);
++
+ /*
+  * Maximum number of entries that will be allocated in one piece, if
+  * a list larger than this is required then chaining will be utilized.
+diff --git a/lib/scatterlist.c b/lib/scatterlist.c
+index 7bc2220fea80..3efcf728c13b 100644
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -1100,6 +1100,32 @@ size_t sg_zero_buffer(struct scatterlist *sgl, unsigned int nents,
+ }
+ EXPORT_SYMBOL(sg_zero_buffer);
+ 
++struct sg_table *sg_dup_table(struct sg_table *table)
++{
++	struct sg_table *new_table;
++	int ret, i;
++	struct scatterlist *sg, *new_sg;
++
++	new_table = kzalloc(sizeof(*new_table), GFP_KERNEL);
++	if (!new_table)
++		return ERR_PTR(-ENOMEM);
++
++	ret = sg_alloc_table(new_table, table->orig_nents, GFP_KERNEL);
++	if (ret) {
++		kfree(new_table);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	new_sg = new_table->sgl;
++	for_each_sgtable_sg(table, sg, i) {
++		sg_set_page(new_sg, sg_page(sg), sg->length, sg->offset);
++		new_sg = sg_next(new_sg);
++	}
++
++	return new_table;
++}
++EXPORT_SYMBOL(sg_dup_table);
++
+ /*
+  * Extract and pin a list of up to sg_max pages from UBUF- or IOVEC-class
+  * iterators, and add them to the scatterlist.
 -- 
-2.17.1
+2.25.1
 
