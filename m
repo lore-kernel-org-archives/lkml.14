@@ -1,93 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61163155A52;
-	Wed, 15 May 2024 16:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE31F156230;
+	Wed, 15 May 2024 16:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715789078; cv=none; b=jP42h4w05qz0S/VcFf+eXl3JiyHp2ceoNf2bp2FocvjoOc7NTmav2Za5pNVKWuovkksqj/kwAmpIfuis8x4XVAx71O7kN7GL5hlZ5DWWo5unNDCXA3dZu0/mxV0a3VuSnraU0sadguZaP/1rPwK+zGipuNgsPv8N61yyuLJito0=
+	t=1715789095; cv=none; b=OczOJo4lCs0JXWHcVr4gXqDcHQK5eBcK1cwaIRHMeilKQd2/JDAk5LbUIFiN4tBEqjupXx/gtyc3TmYm2yk5I9KHtitjMlJp7F9KsAVKshjqPPIkf0+3UNAaPGe9POgm2T0fqZugmAGfM3eNsOdye1GSuTOvVx/199/agKlfYy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715789078; c=relaxed/simple;
-	bh=XUNB3rc6qOB6hmGzG/aYjOt9XKcCt6Cs/MYeTHAvKNs=;
+	s=arc-20240116; t=1715789095; c=relaxed/simple;
+	bh=kycUkpRBcEikOS2uUOytIdiW0vootLzo+kRSUZqPy74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OtDtMHScAjIGUEl5RxX85FfymD3Ut3qtOY2TqmdlX5adzbnkBnafUFEEoS0t3Suucj2FbOOzHEG49LTz1j8g2s8qhPvYVDRZ2Fo0u2l/P1XPHLN6NwzWyup9zCx9Tu3UGzOPLLGjtvO9rPDzlG7AVCq3ktpPubUukugkvW+n62M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=seLoGa36; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpYCrJOPxRWOiSKwaW6iFmh3kvcSNhHOgZu/tLyknD1f9qZLtSLBAnbigJwBsaVKZeka7A7oWUsitj3SPhNo3Q0VCRHInf4KMZhdSwHRRe+R+Pjts0I/Y1Kkpjqh1IbIERFMSmuYb306E28riC7MhSxubYONr6it66fIvru9TKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCcSlwu0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="seLoGa36"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D1AC32786;
-	Wed, 15 May 2024 16:04:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCcSlwu0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E32CDC116B1;
+	Wed, 15 May 2024 16:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715789077;
-	bh=XUNB3rc6qOB6hmGzG/aYjOt9XKcCt6Cs/MYeTHAvKNs=;
+	s=k20201202; t=1715789094;
+	bh=kycUkpRBcEikOS2uUOytIdiW0vootLzo+kRSUZqPy74=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=seLoGa36mHd6Zu2k/lRfyaOspM3ci/EWSH4XR8EiPlgcmV2NSG/5ZWlrP+0iNhQYW
-	 ekGemx9eQiUeZJHrNnSgRHsDAoyi4GCTaiL8cXy8keS2khA7aBc7X44re5R8AcdKCW
-	 cwqt+qR3MRdfOW8/w0EKDYW90OmCtQAPFWF89XnlItLUfkV3RWLnprFUZWnC1wTCxI
-	 yMPnz/JEv7hz9pRSmJtIfnfE80YLXdz8i6+9OVR4rfO8MfFVF/ZYIBzYmT1wunOpW2
-	 N67wdP1+z4PX5aH7Tm/FX9NOr6FTyNJ6kVUZiZFIG2TBrMo8hcus84v04IqSIXeO6t
-	 d/t9GtaZnfk4g==
-Date: Wed, 15 May 2024 17:04:32 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Alina Yu <alina_yu@richtek.com>,
-	Conor Dooley <conor.dooley@microchip.com>, lgirdwood@gmail.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, johnny_lai@richtek.com,
-	cy_huang@richtek.com
-Subject: Re: [PATCH v3 6/6] regulator: dt-bindings: rtq2208: Add property to
- get ldo of RTQ2208 is adjustable or not
-Message-ID: <35bfdfa3-0b4d-4457-988f-1f861dc5c125@sirena.org.uk>
-References: <cover.1715340537.git.alina_yu@richtek.com>
- <6a3a90d9aa2022dfb92e124e417f3e72c2f28b0b.1715340537.git.alina_yu@richtek.com>
- <20240513-tissue-repave-13d2e3bf88fd@spud>
- <d97752ed-4032-4681-b28f-17f149fdc3d4@sirena.org.uk>
- <20240514-plunging-chair-803d9e342e6f@spud>
- <20240515073830.GA12525@linuxcarl2.richtek.com>
- <20240515-wrinkle-engross-ab6b089baae3@wendy>
- <20240515090229.GA15889@linuxcarl2.richtek.com>
- <20240515-gigantic-justifier-1fa140b59de6@spud>
+	b=GCcSlwu0Q1/BIvPguL9ykFpvGDB2rB0mNxZugMR4JErdsSybEMwsnH+kD4jm55LOV
+	 S57Vv9wDidtYn/yVdM6wZD0NURFEddwGlz3slZ02HIR/giNMbynTMgxVnCVGW6WSbF
+	 ICWck8njLb+XWO79UraQpW/k6zSJDzw3CefFySezm7wWZVhw2Cqk1WsB60ixo7rrwK
+	 yK+IPO3c1UTjfm1S2w3SIAsOR+notDXFoyRpbxX/mYAhE1Nj0LWepFnsw52LJDWASe
+	 Uvnh/kNRZQpy0gzQo1refhavCN8Hk8CljYYjQhj1gzZdzFBCc2eyxkGQkK9RD5Wcj6
+	 6htRJ70HCYbGg==
+Date: Wed, 15 May 2024 17:04:48 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>,
+	abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, marex@denx.de, linux-clk@vger.kernel.org,
+	imx@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de
+Subject: Re: [PATCH v3 3/6] dt-bindings: clock: imx8mp: Add reset-controller
+ sub-node
+Message-ID: <20240515-unbundle-bubble-8623b495a4f1@spud>
+References: <1715679210-9588-1-git-send-email-shengjiu.wang@nxp.com>
+ <1715679210-9588-4-git-send-email-shengjiu.wang@nxp.com>
+ <20240514-campus-sibling-21cdf4c78366@spud>
+ <b86c83a520f0c45a60249468fa92b1de.sboyd@kernel.org>
+ <CAA+D8ANTdvQJVtniyMtqjnJdT4qX+LDGjVuFO6H0RSO+GDw+ng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="9AcE8zRTsKNaksUc"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GkjvzzTYbAGBWol4"
 Content-Disposition: inline
-In-Reply-To: <20240515-gigantic-justifier-1fa140b59de6@spud>
-X-Cookie: When in doubt, lead trump.
+In-Reply-To: <CAA+D8ANTdvQJVtniyMtqjnJdT4qX+LDGjVuFO6H0RSO+GDw+ng@mail.gmail.com>
 
 
---9AcE8zRTsKNaksUc
-Content-Type: text/plain; charset=us-ascii
+--GkjvzzTYbAGBWol4
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 15, 2024 at 04:51:30PM +0100, Conor Dooley wrote:
+On Wed, May 15, 2024 at 10:47:57AM +0800, Shengjiu Wang wrote:
+> On Wed, May 15, 2024 at 5:09=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> w=
+rote:
+> >
+> > Quoting Conor Dooley (2024-05-14 11:06:14)
+> > > On Tue, May 14, 2024 at 05:33:27PM +0800, Shengjiu Wang wrote:
+> > > > diff --git a/Documentation/devicetree/bindings/clock/imx8mp-audiomi=
+x.yaml b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> > > > index 0a6dc1a6e122..a403ace4d11f 100644
+> > > > --- a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> > > > +++ b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> > > > @@ -15,7 +15,10 @@ description: |
+> > > >
+> > > >  properties:
+> > > >    compatible:
+> > > > -    const: fsl,imx8mp-audio-blk-ctrl
+> > > > +    items:
+> > > > +      - const: fsl,imx8mp-audio-blk-ctrl
+> > > > +      - const: syscon
+> > > > +      - const: simple-mfd
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > > @@ -44,6 +47,11 @@ properties:
+> > > >        ID in its "clocks" phandle cell. See include/dt-bindings/clo=
+ck/imx8mp-clock.h
+> > > >        for the full list of i.MX8MP IMX8MP_CLK_AUDIOMIX_ clock IDs.
+> > > >
+> > > > +  reset-controller:
+> > > > +    type: object
+> > > > +    $ref: /schemas/reset/fsl,imx8mp-audiomix-reset.yaml#
+> > > > +    description: The child reset devices of AudioMIX Block Control.
+> > >
+> > > Why not just set #reset-cells =3D <1> in the existing node? IIRC it w=
+as
+> > > already suggested to you to do that and use auxdev to set up the reset
+> > > driver.
+> >
+> > Yes, do that.
+>=20
+> Can I know why sub nodes can't be used? the relationship of parent and
+> child devices looks better with sub nodes.
 
-> BTW, you should probably change the example so that the voltage you add
-> there is actually outside of the range, rather than identical to one of
-> the range's constraints :)
+That's pretty subjective. I don't think it looks better to have a clock
+node that is also a syscon with a reset child node as it is rather
+inconsistent.
+>=20
+> A further question is can I use the reset-ti-syscon? which is a generic r=
+eset
+> device for SoCs.  with it I don't even need to write a new reset device d=
+river.
+> it is more simple.
 
-No, that'd be invalid - the constraints need to include a value offered
-by the regulator, in this case the one fixed voltage.  For a fixed
-voltage regulator it's probably better to just not specify a voltage
-range since it can't be changed anyway.
+That is for a TI SoC. You're working on an imx. I don't think that you
+should be using that...
 
---9AcE8zRTsKNaksUc
+--GkjvzzTYbAGBWol4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZE3Q8ACgkQJNaLcl1U
-h9AV3wf+MxjUh6NJfNfEd9wJkPBg8mAS+DXWvNUXl2n5keniDabcCVvRGAZaMZdj
-rFVyMN3fVa8b6mie+s7cSANggS4z1b5H/qgxfF+2QvNWBGu4hYY2Ra7W0knaPrWn
-NRNZtZ4T3DhtwipASAGFxAoTMWQjjhr7UqTvRrI8gGVmy245cucMzIFgU+nPkGxI
-gkjuppfEegKWldrDA0IRVsOIOiqBgkGwgJzb10rT77o3WZtRxXmuivJ4b3z9h20Z
-bldpjd8xbqDYvFOIdKrdGUB4z6RPn5WjnYcLQLaXX8rpVmOBFzcyNwPRzgd7Jttr
-cBVqx2YZ6YtkpoGoprELrskI/k+/Dg==
-=svLP
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkTdIAAKCRB4tDGHoIJi
+0m6SAP9agCG57rgGJON9yd0a66dM6NoL7HfdAEzVst0qNsrwUwD+PuKQSxOna4Jj
+BC+nCXgi21EE+l22nlaOgorkcGibTA4=
+=3gXG
 -----END PGP SIGNATURE-----
 
---9AcE8zRTsKNaksUc--
+--GkjvzzTYbAGBWol4--
