@@ -1,128 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7107715575A
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 15:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5A215573D;
+	Wed, 15 May 2024 15:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715785652; cv=none; b=HgE5T3iEnzzf4qeVUp5JPOUxQDW2YKoORnI+Haiqmrphsm7QyFF+xak8MDCRt8J3eYfJfSQWKW0OfPNXKAemDExqSYem3tugY0phrwEzKf5fOxm862UV4fJjV8WQ3d3ZSSKYvV85ygfkvGEpDF0C+MavXQzHxREL/FKXAirEMDc=
+	t=1715785689; cv=none; b=qCFLfsdsuCDFwazeDoKUVrM70NhKEXpRyWYLgMRpgwRjy14h0pDvAG0PSMkWW1otXSvwz1V5tW9LcwpLWL2fipjhlwvMJEIo0NFcrMM1hRZjx7TK+iP8Csj/RYzaaqW4D1oHeaDuatXhj/twL4wpQGvAMkatIgs0g7Td1McmJzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715785652; c=relaxed/simple;
-	bh=nB/Wx+bzRLvAZM9HJrayest7/Jl5WbZCbrJZngd9CQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQ0sPXv05FWsSgy/u8lX3q6uzWOnQvpGB1VEh9Grl8n392C4HVV2O/++5YMaH5g2bDQdfs9P72SKJVMo+5YEw2in5I+wkFhvUs8OC+XdtSMegDl4yqZ+PBz5Malr11Y+/1OczQVV67Q7pNGt8hOAog984FxwZ3ooHI3+faUiHQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPheoGjh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715785689; c=relaxed/simple;
+	bh=J6MPXBTlWKwxGO96Tz96YxtwSODWhWwkjd44N0B7Qz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CfnQ00ZCKWcn1OUdkM4p/UP46vn/A7rEbzyR+THxaykUqY7Jn28ch7VcTc4BUr9GGsWc2RzjxnhmlreD8XC3vsCzZN/ONmY9M+7wtwegG5OLDLHwwwQ4FX3wTUUaMhrUGnKShOjnkyv3Er8qFo33EGTDS3ZJb1P/6EgqJzbTwYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEkraM2V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPheoGjh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715785649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dbrWi8lbFLyv72mKMlVkkmYPCKHUduDQsR6vbInAIJA=;
-	b=EPheoGjhsoxt2GgmJ7fSQdoEdn+TY+HqDZU4zuaT+XZ0esVq1l8G7I4AN1Ghy1WXXUICXU
-	ytMWhTzDM7KqXvjgsMW6LGcybbu/P/jdZTAGUMA6MoeAMmx568uBUtHDtt1kXKuyYtNHQi
-	amOf1sRLb6tPhPMUnd2M5YKRRtRdIp0=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-5uLGBt_aNpu_e5hE9NM4zA-1; Wed, 15 May 2024 11:07:17 -0400
-X-MC-Unique: 5uLGBt_aNpu_e5hE9NM4zA-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2e482d3d843so67359211fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 08:07:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715785635; x=1716390435;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dbrWi8lbFLyv72mKMlVkkmYPCKHUduDQsR6vbInAIJA=;
-        b=geaUdL8OLL0xx6WYu4L2fvMQtJqyeTOGe1ffcKGaTyNqCZPvrqkBN90doB6wrvYmaH
-         9ULDd3LxoyJPDmOUXumrwciYfZxGno/TxHGvYHW6MssbipP0lUpdnjrlleoBsSrTSgsr
-         +eIuDhrUlITdnpIhUNZSAIB6XB9WfQGLb+3/umSCfEQ19+W8VY6KETU7HDyY9MooObaz
-         /HiKm9QVJeOF7gWtjoh8OkVQRNPK8b9n6Q2WLpQ0pepXiEOAgpvpqLMFody4zGpm4A49
-         EBHpXbWs+v0/GBgMrpHJrWmXb+SqnEbEOdlwXH6pZ080dJ3w1AWwPcQ7760ONAj3c8UE
-         3aQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5QVokOw1/kSQv8kO4cSS9VPWn4sMNnO/6eqka3ywNOaSQeN8d+9lHoDOvA/wqMb8GRefovjdVzIFZkTfXBHzhtiH5ohfCBFoqE50/
-X-Gm-Message-State: AOJu0Yw+ihG5fbE2KDSNyMMC5pF2rOtLMlC02aLMyKEQ+c9nMEt3qEcJ
-	pu5XCpcqNfCaBesHC2/okTOqk9DWjhXtDDTVc5BwQM2ragF/p1qqBPQ/zOeJlo7l1TiTDkmXpAr
-	AKaiL3AJI2bdvzAPiqovvDS8AxTCbZjdMB7l3dJ3+Ajr408fbUb8ugDrxey2T2NYi792zCQ==
-X-Received: by 2002:a2e:7c0d:0:b0:2e3:7121:aba6 with SMTP id 38308e7fff4ca-2e5205c61a3mr133092391fa.46.1715785635203;
-        Wed, 15 May 2024 08:07:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEA2MjU83PmPbl4SP+crO3lzmgqKP48+f4i5kvUwU7C8/1az1QdYe3lnvRKkMDiMLe7dIqRJw==
-X-Received: by 2002:a2e:7c0d:0:b0:2e3:7121:aba6 with SMTP id 38308e7fff4ca-2e5205c61a3mr133092081fa.46.1715785634668;
-        Wed, 15 May 2024 08:07:14 -0700 (PDT)
-Received: from redhat.com ([2a02:14f:175:c01e:6df5:7e14:ad03:85bd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b79bccesm16825319f8f.5.2024.05.15.08.07.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 08:07:13 -0700 (PDT)
-Date: Wed, 15 May 2024 11:07:10 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net-next] virtio_net: Fix error code in
- __virtnet_get_hw_stats()
-Message-ID: <20240515110626-mutt-send-email-mst@kernel.org>
-References: <3762ac53-5911-4792-b277-1f1ead2e90a3@moroto.mountain>
- <20240512115645-mutt-send-email-mst@kernel.org>
- <1682873e-eb14-48e4-9ac6-c0a69ea62959@suswa.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEkraM2V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E368C116B1;
+	Wed, 15 May 2024 15:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715785689;
+	bh=J6MPXBTlWKwxGO96Tz96YxtwSODWhWwkjd44N0B7Qz4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZEkraM2VY2lnWkM5470A9PJIsWMVF2+t5KtDIOkU/Z4ZPqeEHP8qG6kSknFc56Ver
+	 q2Kw7CV5UVmUdgq2L0iSTPMWJDiH6ZK/gBuzMWbZep4YpmhyLCCP3i9NoMbxMMwLzc
+	 KsZs4DWUCCOGWREjW2OSeKjcaluJffWvpZOwrOuhYw9qvuPc3ygrI+24B1qNoXKiJh
+	 nAbeUAzr8brSC5BTs87Q5JKuyZsP5vM0xjJkZKXUe7hwdXdybf8l4k7kncFcypucQ/
+	 BQeMesu90MVB1AqY2qC3RueXeMwfN2ty0+TFiChF0JzzN7KPHDMF3XwJzLlUDdrtnn
+	 wLyMVabTfQhwA==
+From: Borislav Petkov <bp@kernel.org>
+To: KVM <kvm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [PATCH] KVM: Unexport kvm_debugfs_dir
+Date: Wed, 15 May 2024 17:08:04 +0200
+Message-ID: <20240515150804.9354-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1682873e-eb14-48e4-9ac6-c0a69ea62959@suswa.mountain>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 15, 2024 at 04:50:48PM +0200, Dan Carpenter wrote:
-> On Sun, May 12, 2024 at 12:01:55PM -0400, Michael S. Tsirkin wrote:
-> > On Fri, May 10, 2024 at 03:50:45PM +0300, Dan Carpenter wrote:
-> > > The virtnet_send_command_reply() function returns true on success or
-> > > false on failure.  The "ok" variable is true/false depending on whether
-> > > it succeeds or not.  It's up to the caller to translate the true/false
-> > > into -EINVAL on failure or zero for success.
-> > > 
-> > > The bug is that __virtnet_get_hw_stats() returns false for both
-> > > errors and success.  It's not a bug, but it is confusing that the caller
-> > > virtnet_get_hw_stats() uses an "ok" variable to store negative error
-> > > codes.
-> > 
-> > The bug is ... It's not a bug ....
-> > 
-> > I think what you are trying to say is that the error isn't
-> > really handled anyway, except for printing a warning,
-> > so it's not a big deal.
-> > 
-> > Right?
-> > 
-> 
-> No, I'm sorry, that was confusing.  The change to __virtnet_get_hw_stats()
-> is a bugfix but the change to virtnet_get_hw_stats() was not a bugfix.
-> I viewed this all as really one thing, because it's cleaning up the
-> error codes which happens to fix a bug.  It seems very related.  At the
-> same time, I can also see how people would disagree.
-> 
-> I'm traveling until May 23.  I can resend this.  Probably as two patches
-> for simpler review.
-> 
-> regards,
-> dan carpenter
->  
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-Yea, no rush - bugfixes are fine after 23. And it's ok to combine into
-one - we don't want inconsistent code - just please write a clear
-commit log message.
+After
 
+  faf01aef0570 ("KVM: PPC: Merge powerpc's debugfs entry content into generic entry")
 
+kvm_debugfs_dir is not used anywhere else outside of kvm_main.c
+
+Unexport it and make it static.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ include/linux/kvm_host.h | 2 --
+ virt/kvm/kvm_main.c      | 3 +--
+ 2 files changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 48f31dcd318a..c8bc33aab26a 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1959,8 +1959,6 @@ struct _kvm_stats_desc {
+ 			HALT_POLL_HIST_COUNT),				       \
+ 	STATS_DESC_IBOOLEAN(VCPU_GENERIC, blocking)
+ 
+-extern struct dentry *kvm_debugfs_dir;
+-
+ ssize_t kvm_stats_read(char *id, const struct kvm_stats_header *header,
+ 		       const struct _kvm_stats_desc *desc,
+ 		       void *stats, size_t size_stats,
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index ff0a20565f90..382e2ab14137 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -110,8 +110,7 @@ static struct kmem_cache *kvm_vcpu_cache;
+ static __read_mostly struct preempt_ops kvm_preempt_ops;
+ static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_running_vcpu);
+ 
+-struct dentry *kvm_debugfs_dir;
+-EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
++static struct dentry *kvm_debugfs_dir;
+ 
+ static const struct file_operations stat_fops_per_vm;
+ 
 -- 
-MST
+2.43.0
 
