@@ -1,322 +1,240 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D626EB55;
-	Wed, 15 May 2024 11:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715772331; cv=none; b=L8m1Eh8dOwyqYj9IAhgI4MsmzOii0UYlM0uPkplAYGWfmTFXxO8GgefnysU/ZwWck64DW0SSWNjE4rEEUnorD7Tk+xn+ED8Wgkl/BhSZHUSyQ6zLSurryAMcZ9GBgtxbroWvjZHR7jQYCWBzoSVCbtMTUXWdjcKCCowDMum9R9I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715772331; c=relaxed/simple;
-	bh=0LqFjAIjsAuQUoO9CBziVYMXRN16bN6eWv52dYNZA04=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cU5truB72YW63x+IfwXWtVOOE8YJzeeWO+vlXgsr0QP8kEmx8/wpG/BhWKq8Tj1Db8Efxa559+5LBrgk0209wzWUq70/+io/zH5VPElU8mH2itb+KQ/Pkqq4rAeM9/55/egi41xZyPeEeoYLMCWuxKfgPUu28wyH9jk+kXdwucU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=XTraS+Ia; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC7433DC;
+	Wed, 15 May 2024 11:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715772669; cv=fail; b=G3Y60bwuDUiexNq5Jv9Y32s0XYs7BnBZpUMw/Z3GSQF42EitGzhTPSLFFbKanLuLHqLhw+Y+ixGN3yvBg6Sq5do5jg2KOiP/RGIKd2UcJFGy1f3kmLpX4UTWQ2U1ZmBXkgsZ0c9Kzky9WCfbaN8oNVWFMmjpxIdinkvEffy25h4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715772669; c=relaxed/simple;
+	bh=+3hNia/XDXiOlD+o3S2rrVj8PA6I2dlPB/mbcFusBHA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Iom6Sr92qmSyer5BKuY711rNGXywO4QFsx6FGwjFWuzTdxU2+fi3FEej9UWRsNHfQ/m1+sYdDiM7YZodn9ThZC1Rtj9RXknW/2dajGV+einz6djJEkRb98oKLXPS1+95g2BzSuUNPsWIrsjYp35Vj4TOmvq02AKlS63ZdVd4wLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oCaeWDFO; arc=fail smtp.client-ip=40.107.243.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XTraS+Ia"
-X-UUID: d119445c12ad11efb92737409a0e9459-20240515
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=pRII+MwEMjc7IBIb7T65bLDNnOYGy8L1r5/7E1ySfEk=;
-	b=XTraS+Ia6U18kmDn890Uqw9sPEXJ3+G4x6Z4OJ9YFg2lLlvgPEoe4++0PR+c03dyKyqhMYz+VY56NyruHhFskQFY42k1jFiHTACtCglSm/Ws38y9HGTZcz3mLa3px67WfHumiqlHs6HYMJq8Z8NBDsplHWxfc/o9ZcI+EkdHJSk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:ffd7906c-23c2-49b4-90b3-c4a06efc92bb,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:82c5f88,CLOUDID:bb2ce383-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: d119445c12ad11efb92737409a0e9459-20240515
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <yong.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 75818985; Wed, 15 May 2024 19:25:21 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 15 May 2024 19:25:20 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 15 May 2024 19:25:19 +0800
-From: Yong Wu <yong.wu@mediatek.com>
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, <christian.koenig@amd.com>, Sumit Semwal
-	<sumit.semwal@linaro.org>, Andrew Morton <akpm@linux-foundation.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
-	<tjmercier@google.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linaro-mm-sig@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>,
-	Vijayanand Jitta <quic_vjitta@quicinc.com>, Joakim Bech
-	<joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, Pavel
- Machek <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>, Pekka Paalanen
-	<ppaalanen@gmail.com>, <willy@infradead.org>, Logan Gunthorpe
-	<logang@deltatee.com>, Daniel Vetter <daniel@ffwll.ch>,
-	<jianjiao.zeng@mediatek.com>, <kuohong.wang@mediatek.com>,
-	<youlin.pei@mediatek.com>
-Subject: [PATCH v5 9/9] dma_buf: heaps: restricted_heap_mtk: Add a new CMA heap
-Date: Wed, 15 May 2024 19:23:08 +0800
-Message-ID: <20240515112308.10171-10-yong.wu@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240515112308.10171-1-yong.wu@mediatek.com>
-References: <20240515112308.10171-1-yong.wu@mediatek.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oCaeWDFO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FdQ43rGjRvd7UCU/CeyTUy92vIzjeNndW3PqLgTKJ8C4PcHObhfM4AmL+O/yu/Y8LrizBZyfobL8VSM5UPmuDn5AthdKnC2xscZjrmJ2/xoc3GlffiEBHJbnnLxZtx/0xFVgDW5XEoKa+EOMv1JN4WnpVTzntu4/nZLz27IJRAnIaTggGmJrJ3xLpl4Qs/u4Qy1NV4Xv4FNUt2hXWKieQBX29jvR7MzAcV7f9HfiZOVMiBRmL8J3L5j+na/BUDUF+ThQVgNcUaB01aCuwEuxmvBP8j23BiLRYVR/cLAPG7+FRW9HUfUppZ/FmfJXBm580YjRTWqQ0Aj44v2OEF3Trg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FJ5t6EZOKVkCJLxAaGW86LUg4sVpOuMr3itWthGnbF8=;
+ b=LEAFDBZU92pcUW9h7x1hBsoRjcMG1FvCIFRq7kDo7Sq40LeHMHgCOktfuijgUvWOGbnuSJz0CatzeOP6hzIETpn+UoKajqYCt/bwjaRNkhkiGVToGcg8vNxNfD9cfVCijBj4gmf0QjVSma0cMXDKR6fhzYJhkM8urrEjj0qZA7HOYd4G+c6i4QeEvH+y0WQG3e7syuprE+Bq7amv1/s5wI6qmVPhp8LATSe42pz2ffuozSAI4hucl/HG6yNsxtGUxGWh2APZkpQcoEP2gXUeibmbPE/qO3ovFa5JeRELfcqAl9qrrB7dQaPUcEK8WHlVDXu2Qphh3/0FxnaoTgSvKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FJ5t6EZOKVkCJLxAaGW86LUg4sVpOuMr3itWthGnbF8=;
+ b=oCaeWDFOXAfkzw6hBLMq9OcE4suXmORWLbjyRGEmVSfJ1l2m1tXzev2Zk/hORasMAImVrtLZWeBf3PBzi/qEUO9QvX1yCgoAmr6r5Gr/beIeeROZhkBPwl2QnmM98dib4GyhwzW0Pxqfu1gXBzhr6uBRjtLhJdZPBUMC17PlheI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5286.namprd12.prod.outlook.com (2603:10b6:208:31d::6)
+ by CH3PR12MB7571.namprd12.prod.outlook.com (2603:10b6:610:147::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.27; Wed, 15 May
+ 2024 11:31:05 +0000
+Received: from BL1PR12MB5286.namprd12.prod.outlook.com
+ ([fe80::295:5055:c88b:cddd]) by BL1PR12MB5286.namprd12.prod.outlook.com
+ ([fe80::295:5055:c88b:cddd%5]) with mapi id 15.20.7587.025; Wed, 15 May 2024
+ 11:31:05 +0000
+Message-ID: <269884a8-da86-4cb5-b4eb-2827578608d4@amd.com>
+Date: Wed, 15 May 2024 17:00:57 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] sbrmi: Add support for APML protocols
+To: Lee Jones <lee@kernel.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Naveen Krishna Chatradhi <nchatrad@amd.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Akshay Gupta <Akshay.Gupta@amd.com>,
+ arnd@arndb.de, gregkh@linuxfoundation.org
+References: <20240502220554.2768611-1-nchatrad@amd.com>
+ <20240502220554.2768611-2-nchatrad@amd.com>
+ <dd4ef0b6-8272-40b6-9a50-edbeec14d5e4@roeck-us.net>
+ <8cf0d519-ae6c-4ed0-899e-899f67479052@amd.com>
+ <488e8eed-e0f0-4055-b43c-5422b6302632@roeck-us.net>
+ <20240515103217.GA6035@google.com>
+Content-Language: en-US
+From: "Chatradhi, Naveen Krishna" <naveenkrishna.chatradhi@amd.com>
+In-Reply-To: <20240515103217.GA6035@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PEPF00000180.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c04::50) To BL1PR12MB5286.namprd12.prod.outlook.com
+ (2603:10b6:208:31d::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5286:EE_|CH3PR12MB7571:EE_
+X-MS-Office365-Filtering-Correlation-Id: c006c197-3464-40f0-5dbf-08dc74d281e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SEpQYU1nc1NQYk5OQzFISmlCM1NtdWxWRDhtUDhGYkZKOVpDMWJycFBTNEM4?=
+ =?utf-8?B?eTFmOU5FRVptS2RFLytKTW42NUtFRDdyOUxtdjNHQ21CdkxZNHo2ckNscW9K?=
+ =?utf-8?B?Tk9BbEMyVG1FNEdYRFVTZmFaT2RGelVIUEx3eGJXYWRWVitiODhEc2lzWEZq?=
+ =?utf-8?B?d1NjY3dSTGFXY2UzVmh4a2RWQitzSXJSYk9VUEV5RFFEeDVKbEkzS2ZNY2kr?=
+ =?utf-8?B?UE10Y3kxVnRFM1ljZlB0WU1tVlZPZS9PUjdFOEdqZ3RYUEN0VzN1OUdNQUdM?=
+ =?utf-8?B?Z2FxdGZjdWorNlFrWnV3N2xvd1RLb2xwc3VrcHJOOWRGWWpSc2NGT0RGZUZl?=
+ =?utf-8?B?dWJSZ0xzT2xudEpBMkF4U3lHNnVwb25ZN3pJc2ltVG9COHVVRDJlYzJ4d1Bk?=
+ =?utf-8?B?ODQxRGVndTZHek9iMEE3Tkp6V1dadFlCTS9OZStUMFYweXdNakxndmNVN0pZ?=
+ =?utf-8?B?L1VObTZiMGFJbFAzdmdZbGRCK2ZybHFaRnA5VytmdnBtczdGS1QxZTlNKzdp?=
+ =?utf-8?B?dWx6NC9LL3BTMmxacWIvSldFWkgxR2FTUjdNdE9VcHp2ckdUVDNYTUhhNDFq?=
+ =?utf-8?B?OHluc3pPR094T1h5UTBxdC9McDVyWUVkTlZXd3hyaldtbmxRM3RiejRHZThw?=
+ =?utf-8?B?QlBjSWd5cjBNNytTWjhiaCtiTEl1QmNaYzE0NnBGZ1V5UGtybWd2cGgvblpI?=
+ =?utf-8?B?MFBYS25rekdKNnpPS1dTWkpubEJnTEVNNC92UXJVM0ZTOGhMQkhQQzdLaWEv?=
+ =?utf-8?B?S3JFak1oT1NvWS8rd0pOZENLckxRaGxXc1ZnYXRkYzh5Qi9CaFpJbTJmMEVo?=
+ =?utf-8?B?NG4reFd1VDJJQ1BFbnAwWlpsNXE2bFdSdHpzajJWdEhiTXBFbFY5emtTN3Fp?=
+ =?utf-8?B?QzdCTVRFS0NpblVpZnBXcEc2Rm93VnV5ZkQ2SG42Qm9qSEg5QlRpL29lQ2l1?=
+ =?utf-8?B?MVJSVlZSZmFtVU50VEJpNU5xdXNLYXVPd1hKYkZzckFQUFJHbXUzQW5UK3Vo?=
+ =?utf-8?B?NXo3RkRXakQ2eVB1UjZ3a1RST0VESnMvdnVxbXlOYjZJRnBWR096a1FTK05C?=
+ =?utf-8?B?Z1hibmlJUTJzOUhFSlJmU0RndG5YT2czeHVBU3ZxK1JYU2FkN2l6VGthNnl3?=
+ =?utf-8?B?VEVnSzdnKzZ2TkFBTEFNUTJUdkV1VWJkSlcyS0lSd0M0Snl2NkVsd0RQN1Iy?=
+ =?utf-8?B?MEVPYnd6TTYxUlhEM3JsU2Y0RHgwY1hodWZ4TmpQbjBXTGtZYlg3bVhJdzJa?=
+ =?utf-8?B?Z0h6Zk9DVVp1RCs1MGpjTk9qMG1vaDZVelhhT2NZL29ycXR6WmRJSkhLeHQ3?=
+ =?utf-8?B?b0FRcDRIZzFua012S3pJelVSbFZVazEyOXEzUjBqc1E4SUprUUxVUDVXVVFH?=
+ =?utf-8?B?QlJaM0daRjdUQ3FmS3lQVmxQWSthbkdvbXYzSFlxTHBoK3kzMFl5NzJGQ1BW?=
+ =?utf-8?B?Snp4TU1VcjRrMmMrNlliRVJNOHhHMW91U0hzVENqUFVPZ0VVb0grQ29yNTlv?=
+ =?utf-8?B?NEF2bGdyN05hU3Yvem43VURuK21IMFM1TnNvdzJQejV3L3N5Q0lrYmx3eWNv?=
+ =?utf-8?B?SFg5eUdRZkdINjFXdC9FTXF0cENQQmZDUnp3Y2x4SzRncWg2OVNnK3drdzRI?=
+ =?utf-8?B?WFJCR1Nqc3l1TVQ2cXg2OElDaFhiOXBaYzFsbnJ0QjN4RFBRL0pUMy9zUStR?=
+ =?utf-8?B?QTRCV1ZDSVB2Z0l6Uk9Ya3JzaFZRd3ZaN3BmRXNQL2pHQklRNDI1ejNnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5286.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TTZNbEJmaWJ6bjZLMjJKVUplcmhFVU5xUlVvb1htYnRKTUJYTFRXYWdaWU01?=
+ =?utf-8?B?Yi9iQXlkem9PZ2ZJRExKdVMrL01XZ1ByWWlucWxtVnBZa29zOEVMS2tLOHlO?=
+ =?utf-8?B?M1B3RFNQZmtlS1ZRZ3FVZEZyNi9sdm9ucFJYRnZ0b1ZHUUJxMTBQNHM2YzA4?=
+ =?utf-8?B?b1NiOG1VSzNNbnlDdWUwbW5IZllTZVEwTDFaQjYzQW9TbVhjOENCeTUzazVV?=
+ =?utf-8?B?ZXVBVWd2N0lHaTJjK3pJQXJxb1NTU2Z3OEEyVjJhYmNvR0NMQ1lsOEM5L2Nz?=
+ =?utf-8?B?ZUpIZ0VOUnlzT3lwUTdoQ0pRQXZTRnBubGFuRENiejdBRWtwWEZRcEF6OGJt?=
+ =?utf-8?B?TkNBcm9pRUwzN0lVUUxYUTVMSVNvL2xzYzdkZi9sV3QxVVl5SStrT3gyWlRo?=
+ =?utf-8?B?UTNKMks0WjkydC82ZmtxRGwyQlRYZFN2NURwaU05eHU2VWN0ekhPK1BCTk9v?=
+ =?utf-8?B?R3RpblBJUGJ2RG5YaDNLWnRoY1ZUSGhCbzNkeUdQb0JISTZlYW9ScVhTQWVl?=
+ =?utf-8?B?MUJqQ3ppeUZGUHdkcWhIOHd6eU5uQ0NTWm5jc3VkMW1GeDZiczV5VkkrS1VN?=
+ =?utf-8?B?Z2syREgxZTBrSzM0MFkvVDlSdEpKRTFBdTRFUkVIaUtzVmhmVHpUbmJnSEw4?=
+ =?utf-8?B?RGhKVjFjdXZvOThqOHJhSWhland6aHdva2pmU0xmbGVWZk50WDZlV25zdVRn?=
+ =?utf-8?B?WGd3ZU84eDN6L0plTnptNG1CaEhDNkNyVXQyRzJGZkZCNXI1ZE05NUd4OXdw?=
+ =?utf-8?B?NHRDQVAxckJZOGZROWJtSDJCaXdrelVscmFiK0FPdmJHRUtTd3YxUG0xZVBL?=
+ =?utf-8?B?ZkF5RlB5YktCd213bDljMHI4QnUyT2JZKzhXRkxMUzRudW5Dc3hZRWZTODlX?=
+ =?utf-8?B?NGUzMzc2dTBOaSt5MTZOU0NIRDJwWjBwR0ZYc3NZa3dLRWc1QWNveERzempx?=
+ =?utf-8?B?Y2JDUGJzL0o1UmFRT1lTS01mMEhWaTYwT1VjSVB5bzl3Vk1RVFUzYUlpUGFO?=
+ =?utf-8?B?c2cyQm5oNnZNdjhWMTQ2Vk15RFUxK0c3NUhaczVPbkZaMm44R2x0OXhiZkFB?=
+ =?utf-8?B?UXdYeFhuTStxWFFFTHZkRnNicUZWSFYvSitGS3Y3WDU3NFNDYml3M24vZG9G?=
+ =?utf-8?B?eWNCY0wxbk5kTmNFRXN6QXBiWUh0aTNEOTAySElqbStvaHZpdmdwOFJMMzNw?=
+ =?utf-8?B?UnF2NVlveElYVnRRR1Z6a0N1d1VjY0FmRU1Pdjh4WFYxRDh2aTB0elc5NC9Y?=
+ =?utf-8?B?WVZuY2QzaFB5ZHR4M1BhcmRjanFVdHM5ZXV4YWR2Q05ERVVrYVZxMkFWTHVY?=
+ =?utf-8?B?TW41UGFDciswWEg0bzZuSU91bmtqby9QNEN4eWV4RGgxaExDcGdBUkxrTk0y?=
+ =?utf-8?B?bFJVYlRXNDdLMnNVTkdNbjgrUTJPMXdkL3kwYnBBSkRyZ1drMkpDWmx1S3dy?=
+ =?utf-8?B?amk4aVZyaVdmMURzTHRzY01WTUFoYVZuMXNjREt2REZONml3L0FpdkJ0Wkla?=
+ =?utf-8?B?Nyt4YldSZHAzOXRVU2wxZk5DY3pyNVk0M3JsTmM0VURxVkpoSGNleFZHKzBw?=
+ =?utf-8?B?dFVXdVFEdXZGWVVaUzdEeTBIZWZXdko1UWt6OVRIZTZWbFh4Y09TRmJNWmN4?=
+ =?utf-8?B?RERhdGFkSlJ1Zk5JT09INEtkazFlMlIweEhrZitiL3lNRk5PWktjM2R4TlFS?=
+ =?utf-8?B?WWVrTVhXNW9mcVZtWElqYzNNeitQYU5lT2xjMVBweiszd2R6K0Z5bU5lS2Rk?=
+ =?utf-8?B?bkNNc29RMkYvTVc4dlpTTEhlVERqWlkwZlZuOWlYWllKVHE5SDQ1WTBaMWI0?=
+ =?utf-8?B?Y2JibW5Hd2lueDd3TCs2MUhtdUxQRDR2WHp5cExHNmJwUDF4enp2OGpXbzdy?=
+ =?utf-8?B?SHF5ZzFZRzROQW5ZRUU1aHFmSHpUSTBQZ081b2FCaTNTcWtad2QzS21EMEFO?=
+ =?utf-8?B?YU5TM1c2S3NMYTlDNGtTekpQZXBKZEZVVnVnaFcxdFg4bWY4dUZNTytkT2x5?=
+ =?utf-8?B?Tm9MSHV1MW1jenZsUUNMdjFWZ1JUSkpJcGs3RU1NY3BzR3dwYXdrSWFxTE1x?=
+ =?utf-8?B?WmxNZkVkamdGd1NOWS9MWkc4UkZIN01HNWt3dVRpaU1kcWQ5NVcxdVo4cmRP?=
+ =?utf-8?Q?UW6Cs/tjxwl1+Bwe0DJgdj1j2?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c006c197-3464-40f0-5dbf-08dc74d281e2
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5286.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2024 11:31:05.4094
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 78CBtMeduirvqKyQXfvDC551jEYzKooJ9PmGBDprndTx0qUpFB/UsfdECQXq2YGrAemx4EMVDiYWfWGzuLPidg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7571
 
-Create a new MediaTek CMA heap from the CMA reserved buffer.
 
-In this heap, When the first allocating buffer, use cma_alloc to prepare
-whole the CMA range, then send its range to TEE to protect and manage.
-For the later allocating, we just adds the cma_used_size.
+On 5/15/2024 4:02 PM, Lee Jones wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> On Tue, 14 May 2024, Guenter Roeck wrote:
+>
+>> On 5/14/24 12:15, Chatradhi, Naveen Krishna wrote:
+>>> + @Misc and @MFD maintainers in CC
+>>>
+>>> Hi
+>>>
+>>> On 5/3/2024 3:56 AM, Guenter Roeck wrote:
+>>>> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>>>>
+>>>>
+>>>> On 5/2/24 15:05, Naveen Krishna Chatradhi wrote:
+>>>>> From: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+>>>>>
+>>>>> The present sbrmi module only support reporting power. However, AMD data
+>>>>> center processors support various system management functionality
+>>>>> Out-of-band over Advanced Platform Management Link APML.
+>>>>>
+>>>>> Register a miscdevice, which creates a device /dev/sbrmiX with an IOCTL
+>>>>> interface for the user space to invoke the following protocols.
+>>>>>     - Mailbox read/write (already defined in sbrmi_mailbox_xfer())
+>>>>>     - CPUID read
+>>>>>     - MCAMSR read
+>>>>>
+>>>> This is not hardware monitoring functionality and would have to reside
+>>>> elsewhere, outside the hwmon subsystem.
+>>> I thought as much, please provide your opinion on the following approach.
+>>>
+>>> Background: Present sbrmi under hwmon subsystem is probed as an i2c driver and reports power.
+>>>
+>>> However, APML interface defines few other protocols to support OOB system management functionality.
+>>>
+>>> As adding the core functionality of the APML interface in drivers/hwmon/sbrmi is not the correct approach.
+>>>
+>>> We would like do the following
+>>>
+>>> 1. Move the i2c client probe, misc device registration and rmi_mailbox_xfer() function to a drivers/misc.
+>>>
+>>> 2. Add an MFD device with a cell, which probes the hwmon/sbrmi and continues to report power using the symbols exported by the misc/sbrmi.
+>>>
+>> afaik mfd API function must not be used outside drivers/mfd. The mfd maintainer
+>> is (or at least used to be) pretty strict on that. The core code of a
+>> multi-function device might better be implemented in drivers/mfd, with
+>> drivers in drivers/misc (for the misc device) and drivers/hwmon/ (for
+>> hwmon functionality). The misc and hwmon drivers could then communicate
+>> with the core using regmap.
 
-When SVP done, cma_release will release the buffer, then kernel may
-reuse it.
+Thanks Guenter, for the inputs.
 
-For the "CMA" restricted heap, "struct cma *cma" is a common property,
-not just for MediaTek, so put it into "struct restricted_heap" instead of
-our private data.
+> Yes, please only use the MFD API from drivers/mfd.
+>
+> There are 'offenders' that slipped by me, but in general if you need to
+> create an MFD then it should be located in the MFD subsystem.
+Thanks Lee, how about
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
----
- drivers/dma-buf/heaps/Kconfig               |   2 +-
- drivers/dma-buf/heaps/restricted_heap.h     |   4 +
- drivers/dma-buf/heaps/restricted_heap_mtk.c | 121 +++++++++++++++++++-
- 3 files changed, 123 insertions(+), 4 deletions(-)
+1. Move the i2c client probe, misc device registration and rmi_mailbox_xfer() function from existing hwmon/sbrmi.c to a drivers/mfd (Instead of drivers/misc)
 
-diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-index 84f748fb2856..58903bc62ac8 100644
---- a/drivers/dma-buf/heaps/Kconfig
-+++ b/drivers/dma-buf/heaps/Kconfig
-@@ -24,7 +24,7 @@ config DMABUF_HEAPS_RESTRICTED
- 
- config DMABUF_HEAPS_RESTRICTED_MTK
- 	bool "MediaTek DMA-BUF Restricted Heap"
--	depends on DMABUF_HEAPS_RESTRICTED && TEE=y
-+	depends on DMABUF_HEAPS_RESTRICTED && DMA_CMA && TEE=y
- 	help
- 	  Enable restricted dma-buf heaps for MediaTek platform. This heap is backed by
- 	  TEE client interfaces. If in doubt, say N.
-diff --git a/drivers/dma-buf/heaps/restricted_heap.h b/drivers/dma-buf/heaps/restricted_heap.h
-index 8cb9211093c5..7dec4b8a471b 100644
---- a/drivers/dma-buf/heaps/restricted_heap.h
-+++ b/drivers/dma-buf/heaps/restricted_heap.h
-@@ -23,6 +23,10 @@ struct restricted_heap {
- 
- 	const struct restricted_heap_ops *ops;
- 
-+	struct cma		*cma;
-+	unsigned long		cma_paddr;
-+	unsigned long		cma_size;
-+
- 	void			*priv_data;
- };
- 
-diff --git a/drivers/dma-buf/heaps/restricted_heap_mtk.c b/drivers/dma-buf/heaps/restricted_heap_mtk.c
-index e571eae719e0..6d8119828485 100644
---- a/drivers/dma-buf/heaps/restricted_heap_mtk.c
-+++ b/drivers/dma-buf/heaps/restricted_heap_mtk.c
-@@ -6,9 +6,11 @@
-  */
- #define pr_fmt(fmt)     "rheap_mtk: " fmt
- 
-+#include <linux/cma.h>
- #include <linux/dma-buf.h>
- #include <linux/err.h>
- #include <linux/module.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/slab.h>
- #include <linux/tee_drv.h>
- #include <linux/uuid.h>
-@@ -25,6 +27,13 @@ enum mtk_secure_mem_type {
- 	 * management is inside the TEE.
- 	 */
- 	MTK_SECURE_MEMORY_TYPE_CM_TZ	= 1,
-+	/*
-+	 * MediaTek dynamic chunk memory carved out from CMA.
-+	 * In normal case, the CMA could be used in kernel; When SVP start, we will
-+	 * allocate whole this CMA and pass whole the CMA PA and size into TEE to
-+	 * protect it, then the detail memory management also is inside the TEE.
-+	 */
-+	MTK_SECURE_MEMORY_TYPE_CM_CMA	= 2,
- };
- 
- /* This structure also is synchronized with tee, thus not use the phys_addr_t */
-@@ -40,7 +49,8 @@ enum mtk_secure_buffer_tee_cmd {
- 	 * [in]  value[0].a: The buffer size.
- 	 *       value[0].b: alignment.
- 	 * [in]  value[1].a: enum mtk_secure_mem_type.
--	 * [inout]
-+	 * [inout] [in]  value[2].a: pa base in cma case.
-+	 *               value[2].b: The buffer size in cma case.
- 	 *         [out] value[2].a: entry number of memory block.
- 	 *                           If this is 1, it means the memory is continuous.
- 	 *               value[2].b: buffer PA base.
-@@ -73,6 +83,9 @@ struct mtk_restricted_heap_data {
- 
- 	const enum mtk_secure_mem_type mem_type;
- 
-+	struct page		*cma_page;
-+	unsigned long		cma_used_size;
-+	struct mutex		lock; /* lock for cma_used_size */
- };
- 
- static int mtk_tee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
-@@ -173,6 +186,10 @@ static int mtk_tee_restrict_memory(struct restricted_heap *rheap, struct restric
- 	params[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
- 	params[1].u.value.a = data->mem_type;
- 	params[2].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT;
-+	if (rheap->cma && data->mem_type == MTK_SECURE_MEMORY_TYPE_CM_CMA) {
-+		params[2].u.value.a = rheap->cma_paddr;
-+		params[2].u.value.b = rheap->cma_size;
-+	}
- 	params[3].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
- 	ret = mtk_tee_service_call(data->tee_ctx, data->tee_session,
- 				   MTK_TZCMD_SECMEM_ZALLOC, params);
-@@ -265,6 +282,48 @@ mtk_restricted_memory_free(struct restricted_heap *rheap, struct restricted_buff
- {
- }
- 
-+static int mtk_restricted_memory_cma_allocate(struct restricted_heap *rheap,
-+					      struct restricted_buffer *buf)
-+{
-+	struct mtk_restricted_heap_data *data = rheap->priv_data;
-+	int ret = 0;
-+	/*
-+	 * Allocate CMA only when allocating buffer for the first time, and just
-+	 * increase cma_used_size at the other time, Actually the memory
-+	 * allocating is within the TEE.
-+	 */
-+	mutex_lock(&data->lock);
-+	if (!data->cma_used_size) {
-+		data->cma_page = cma_alloc(rheap->cma, rheap->cma_size >> PAGE_SHIFT,
-+					   get_order(PAGE_SIZE), false);
-+		if (!data->cma_page) {
-+			ret = -ENOMEM;
-+			goto out_unlock;
-+		}
-+	} else if (data->cma_used_size + buf->size > rheap->cma_size) {
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
-+	data->cma_used_size += buf->size;
-+
-+out_unlock:
-+	mutex_unlock(&data->lock);
-+	return ret;
-+}
-+
-+static void mtk_restricted_memory_cma_free(struct restricted_heap *rheap,
-+					   struct restricted_buffer *buf)
-+{
-+	struct mtk_restricted_heap_data *data = rheap->priv_data;
-+
-+	mutex_lock(&data->lock);
-+	data->cma_used_size -= buf->size;
-+	if (!data->cma_used_size)
-+		cma_release(rheap->cma, data->cma_page,
-+			    rheap->cma_size >> PAGE_SHIFT);
-+	mutex_unlock(&data->lock);
-+}
-+
- static int mtk_restricted_heap_init(struct restricted_heap *rheap)
- {
- 	struct mtk_restricted_heap_data *data = rheap->priv_data;
-@@ -286,21 +345,77 @@ static struct mtk_restricted_heap_data mtk_restricted_heap_data = {
- 	.mem_type		= MTK_SECURE_MEMORY_TYPE_CM_TZ,
- };
- 
-+static const struct restricted_heap_ops mtk_restricted_heap_ops_cma = {
-+	.heap_init		= mtk_restricted_heap_init,
-+	.alloc			= mtk_restricted_memory_cma_allocate,
-+	.free			= mtk_restricted_memory_cma_free,
-+	.restrict_buf		= mtk_tee_restrict_memory,
-+	.unrestrict_buf		= mtk_tee_unrestrict_memory,
-+};
-+
-+static struct mtk_restricted_heap_data mtk_restricted_heap_data_cma = {
-+	.mem_type		= MTK_SECURE_MEMORY_TYPE_CM_CMA,
-+};
-+
- static struct restricted_heap mtk_restricted_heaps[] = {
- 	{
- 		.name		= "restricted_mtk_cm",
- 		.ops		= &mtk_restricted_heap_ops,
- 		.priv_data	= &mtk_restricted_heap_data,
- 	},
-+	{
-+		.name		= "restricted_mtk_cma",
-+		.ops		= &mtk_restricted_heap_ops_cma,
-+		.priv_data	= &mtk_restricted_heap_data_cma,
-+	},
- };
- 
-+static int __init mtk_restricted_cma_init(struct reserved_mem *rmem)
-+{
-+	struct restricted_heap *rheap = mtk_restricted_heaps, *rheap_cma = NULL;
-+	struct mtk_restricted_heap_data *data;
-+	struct cma *cma;
-+	int ret, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mtk_restricted_heaps); i++, rheap++) {
-+		data = rheap->priv_data;
-+		if (data->mem_type == MTK_SECURE_MEMORY_TYPE_CM_CMA) {
-+			rheap_cma = rheap;
-+			break;
-+		}
-+	}
-+	if (!rheap_cma)
-+		return -EINVAL;
-+
-+	ret = cma_init_reserved_mem(rmem->base, rmem->size, 0, rmem->name,
-+				    &cma);
-+	if (ret) {
-+		pr_err("%s: %s set up CMA fail. ret %d.\n", __func__, rmem->name, ret);
-+		return ret;
-+	}
-+
-+	rheap_cma->cma = cma;
-+	rheap_cma->cma_paddr = rmem->base;
-+	rheap_cma->cma_size = rmem->size;
-+	return 0;
-+}
-+
-+RESERVEDMEM_OF_DECLARE(restricted_cma, "mediatek,dynamic-restricted-region",
-+		       mtk_restricted_cma_init);
-+
- static int mtk_restricted_heap_initialize(void)
- {
- 	struct restricted_heap *rheap = mtk_restricted_heaps;
-+	struct mtk_restricted_heap_data *data;
- 	unsigned int i;
- 
--	for (i = 0; i < ARRAY_SIZE(mtk_restricted_heaps); i++, rheap++)
--		restricted_heap_add(rheap);
-+	for (i = 0; i < ARRAY_SIZE(mtk_restricted_heaps); i++, rheap++) {
-+		data = rheap->priv_data;
-+		if (data->mem_type == MTK_SECURE_MEMORY_TYPE_CM_CMA && !rheap->cma)
-+			continue;
-+		if (!restricted_heap_add(rheap))
-+			mutex_init(&data->lock);
-+	}
- 	return 0;
- }
- module_init(mtk_restricted_heap_initialize);
--- 
-2.25.1
+    a. Provide an ioctl interface through misc device node /dev/sbrmiX for the user space to invoke the following protocols.
+      - Mailbox xfer (already defined in sbrmi_mailbox_xfer())
+      - CPUID access
+      - MCAMSR access
 
+2. Add an MFD device with a cell, which probes the hwmon/sbrmi and continues to report power using the symbols exported by the mfd/sbrmi.
+
+>
+>> drivers/mailbox/ supports mailbox style communication. I don't know if that
+>> would apply to the mailbox functionality implemented here.
+I've explored that path, and APML mailbox does not fit well into the 
+design, we do not have a dedicated interrupt line as well.
+> --
+> Lee Jones [李琼斯]
+
+regards,
+
+Naveenk
+>
