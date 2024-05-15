@@ -1,133 +1,97 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C475660
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66534158855
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715795137; cv=none; b=a35Js6euX/LT1aW2qeuoto3AaUpJtLMCodAyjPh5BBKZ7D3sgXbTCvieQJ+1hYaak7gvIRM/9IaWlJt1TrAEoMkck2p1EYxjhHs0t4VmGhNCzSDM8RTd4B97vqlS/GOMcN7rHc5oC2Guf0BjDDd54SJbo7oLcVw3Iqqh716MMF8=
+	t=1715795247; cv=none; b=pwpQEM7SLWZUHkZL6i3KCgJqY35mc8q8Z5ILpfaCvr3cbmj5ETlj1bimTHmqAt6EvxDx0iKr28271ZE9WV9p/caQbnPYFm6gHeocEl1CjAir9TgPosjOGG5rKK28oBLPzZ3c0TQLf3N2Fb7UUHG0O1nw/ljdZXaAeKFZfS7Kz+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715795137; c=relaxed/simple;
-	bh=4/Ooyl624TPv9kwXfjH+lDC71HS+OXDH+JgzPAYD2uM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rSJJKQ3URqojPkph7HPhbNzJX56+igxKUBRTjKAQ6JtA0/tNCZNzK2Im3fKyQIrI3k3/rGP3SfNFhU6Pi+ygAMFrfAG8T/Rpb98pENq/UViz22aAMK74UPwnW5lTckK/w/xj7IPGtQ9Hp3eupsVPHyDLOKfyLrHfNVrwDCqOSno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uB9QVarF; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1715795247; c=relaxed/simple;
+	bh=/zCcP1X1di1bJ8igzkeKa8QLS6+W1fjEL6lp+hEgy6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ATjOHXwtBsyY17zhbJH6AiZbG+orfqas6Wf0A+hmCgvbICoUfQl4hhfWBmSqHfidUec1f3JGd6DiyfVKLMtgpT7hW8JZlmRuN+59ivBJCkY1Pi2uufG31yWCdsGUnyndm/S/7NEROJLl2nU0F9AgIjd7b6RoI7EsjVBKXRjBtrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xYahn0dK; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uB9QVarF"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f44dd41a5cso7042248b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:45:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xYahn0dK"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso28706a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:47:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715795135; x=1716399935; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Inmc+syrxkqK6aZQdAoIkvH5UOxtf+2Na/UaXVJLBFc=;
-        b=uB9QVarF9WLvj0e5WVOHnuGsT4TqCGGo5RmhUtWjXCWY1BVR6n5kkyJtwBRMnzM/MF
-         euunpYdjb1LA8eKBRVoFGytmRrXrX+i4tuDnPjUpxWqjm7TJY0BJfkxgBup+o6ZaflPZ
-         g7s21VvIlP93kTaDb4Fm6TQfmc5Y83UgJYI1UypSjOoq6lfKQoT9ksZmoZxfPdjH4qDO
-         OEaGdB71kyFqAPqPLmJKfV4BerByzLwgroow7UFyh08y2/UcN+bGHIxYpeat9sNnEXqc
-         dWqqPu4tOJ7OZaXC2hM5ttAgH3rCG1CFzuSHmLr8N5kT+3ITVRy17V77i5EPKBv3jkdv
-         JJ5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715795135; x=1716399935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1715795244; x=1716400044; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Inmc+syrxkqK6aZQdAoIkvH5UOxtf+2Na/UaXVJLBFc=;
-        b=j8NU2v1df1gIaumnja7Xlga/fTV2TvkXdXU6TjPryRmQ7FgWL7Z1YxhADpiElefeZx
-         nV6yjmLDBrDvEcK4jcfLY1b6JGC4iX5pzGL7CDud5IqjVX8x+mZzop0oIpIweAfK9LFG
-         2gIjPNnvXd2fJsFs+Np9Ih5jpuyH0brK26IueOZ9yH5/Pr6tY7KdKzHuy0j0MvR9Agl9
-         b1asJbfpJzfECvkCSkxFtfvI8+G+PA26Zznmd6/MNIhEaWmeHhnRw9G8BbwwmCb8jXqU
-         /OjABZ7yAjN9o4ZEJLUBmLcCODuc10M6js0BB5PdASgLV082X2EIC0bWrSFJqAaS/I2E
-         OQ2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUx11W9k2M4QuQNARHtE62vRQ5jHX5Ezs60FKQ4NxPpJQIzXAsZWMGgRqltsgXBOfXac5eP8ihX54DMI31TBfS+8PhMvMyck73p+VuU
-X-Gm-Message-State: AOJu0YyX+Ax+IXEELwzn8kJ3lXe+R3HLotP7dat65+vYRpBlkMTSahzE
-	GzXlb6Pcllso3T1y4wZELsNg/qWm8QcMc4qL4F2L2cBtD22/OYdEz7V+NYhRZw==
-X-Google-Smtp-Source: AGHT+IHqT+V07QT8d8OIJOetBXVRP2MvqJqTkiAGp4q63p16McqvNFOMMSJe88kfRvnGTsQMprg35Q==
-X-Received: by 2002:a05:6a00:270f:b0:6f6:7b6c:51f6 with SMTP id d2e1a72fcca58-6f67b6c5295mr995107b3a.24.1715795135090;
-        Wed, 15 May 2024 10:45:35 -0700 (PDT)
-Received: from google.com (57.92.83.34.bc.googleusercontent.com. [34.83.92.57])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a828e2sm11379011b3a.72.2024.05.15.10.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 10:45:34 -0700 (PDT)
-Date: Wed, 15 May 2024 17:45:31 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Yenchia Chen <yenchia.chen@mediatek.com>
-Cc: stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Sasha Levin <sashal@kernel.org>, Simon Horman <horms@kernel.org>,
-	Zhengchao Shao <shaozhengchao@huawei.com>,
-	Pedro Tammela <pctammela@mojatatu.com>,
-	Ryosuke Yasuoka <ryasuoka@redhat.com>, Thomas Graf <tgraf@suug.ch>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 5.15 2/2] netlink: annotate data-races around sk->sk_err
-Message-ID: <ZkT0u3RMc89Fe6PV@google.com>
-References: <20240515073644.32503-1-yenchia.chen@mediatek.com>
- <20240515073644.32503-3-yenchia.chen@mediatek.com>
+        bh=/zCcP1X1di1bJ8igzkeKa8QLS6+W1fjEL6lp+hEgy6k=;
+        b=xYahn0dKtXhY820/F6CDXFoP2gqTb3Hyfibp5IhGBY3fywmEfVxRVozqL6hItqnjnO
+         73RLzB7KCmKM0I3TXcX/6+7KP/ldHnAKgdM57sUa2XOpDyDsCQGCBT/QAhjBWCgfm/V9
+         u27KFFgy07GkEfUxR4YN+0E6bH0YfVYZKH4RG1WXz4bVxJAUJGSGaxXNh5IVF/r5F0Lr
+         7DyJouQ+vssBpPZW2Qlx/9mMMOVzgCu4C4UpFSti3OYZkOL/j5JYtOSOt6b6GhsTF1/t
+         jeuqic9Jwm+9EhQbl9/vwBfrxgxlRkOecOmKXKHIpZ6UHf4OnFBlF6olubIFhO5fAmzo
+         qTaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715795244; x=1716400044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/zCcP1X1di1bJ8igzkeKa8QLS6+W1fjEL6lp+hEgy6k=;
+        b=gSXLfHIgUiEBma9z2l5tZTrQ3qImBjQ8rQEL7YA8xkG99Af8RJ8H1TscvQsfHWn/sB
+         ndpA0XGmMvwrnJSrTkLeZbdVTlTYnX+fYIV0a8DEXisgbRLxfj7/UExh5Fjcxcbk+6o1
+         vYQsBKW6h+vfQU8iripIERY8UyVuVztZjAWwU/OBMe1imKXaQSNHT9ubDkcVAWeWyFUC
+         lxFLwIfPJANB65YUaH3mkbHWVBBggZQpFBD6nMkFfGETnPL+3zQlQ83SGEHqy7UcpbkQ
+         GVIFIhhnNlq9KPpQZjSaABTut24W6aap7sjxo/pGp9t8Dbno4/CO+mqCV9Pzp5AryO7H
+         ONTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1ScKodaqc1hs0JzilP1Ur52Q9Ik6qDhL7fSJXwcFDlQI9ymjw74i9vEu1NCo0O9IU7kPLXQNLOtGCVEYq3FEPizTey3qQzzSrRi+j
+X-Gm-Message-State: AOJu0YwBE8vp4a0HicKrVNe/u5Yr9eUZf7eP/VA+GM8EftZCFfq26ile
+	SBedPFpBiBx3hJhwbenL0TI0sHlCOORxQqt2yi8YQexQJgXvGeLfqDeFbAEDgSOw1S8xADMihB+
+	hEpXrORB7zZWfF5nwTpcxChodAPSN45hegdU=
+X-Google-Smtp-Source: AGHT+IGAXYIvp/5ckzCX34ddHzC1hiYy+B64kYba2ozl+yuCpUfE1UDiQpoL6EmGIVsWJBofAQCpERhDXWItJwqAXeM=
+X-Received: by 2002:a50:cb8c:0:b0:573:438c:778d with SMTP id
+ 4fb4d7f45d1cf-574ae3c1280mr810495a12.1.1715795243503; Wed, 15 May 2024
+ 10:47:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240515073644.32503-3-yenchia.chen@mediatek.com>
+References: <20240510191423.2297538-1-yabinc@google.com> <20240510191423.2297538-4-yabinc@google.com>
+ <CAM9d7chNz8-84m28q5qSLjUjZ=Ni1CA_JzbB_P+YJooLQd85YA@mail.gmail.com> <20240515085840.GD40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240515085840.GD40213@noisy.programming.kicks-ass.net>
+From: Yabin Cui <yabinc@google.com>
+Date: Wed, 15 May 2024 10:47:11 -0700
+Message-ID: <CALJ9ZPOr7Jg8Vic9Ap5+jYqJVaLeV3DEJm3dAGBCLB9DL5EusQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] perf/core: Check sample_type in perf_sample_save_brstack
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 15, 2024 at 03:36:38PM +0800, Yenchia Chen wrote:
-> From: Eric Dumazet <edumazet@google.com>
-> 
-> syzbot caught another data-race in netlink when
-> setting sk->sk_err.
-> 
-> Annotate all of them for good measure.
-> 
-> BUG: KCSAN: data-race in netlink_recvmsg / netlink_recvmsg
-> 
-> write to 0xffff8881613bb220 of 4 bytes by task 28147 on cpu 0:
-> netlink_recvmsg+0x448/0x780 net/netlink/af_netlink.c:1994
-> sock_recvmsg_nosec net/socket.c:1027 [inline]
-> sock_recvmsg net/socket.c:1049 [inline]
-> __sys_recvfrom+0x1f4/0x2e0 net/socket.c:2229
-> __do_sys_recvfrom net/socket.c:2247 [inline]
-> __se_sys_recvfrom net/socket.c:2243 [inline]
-> __x64_sys_recvfrom+0x78/0x90 net/socket.c:2243
-> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-> do_syscall_64+0x41/0xc0 arch/x86/entry/common.c:80
-> entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> 
-> write to 0xffff8881613bb220 of 4 bytes by task 28146 on cpu 1:
-> netlink_recvmsg+0x448/0x780 net/netlink/af_netlink.c:1994
-> sock_recvmsg_nosec net/socket.c:1027 [inline]
-> sock_recvmsg net/socket.c:1049 [inline]
-> __sys_recvfrom+0x1f4/0x2e0 net/socket.c:2229
-> __do_sys_recvfrom net/socket.c:2247 [inline]
-> __se_sys_recvfrom net/socket.c:2243 [inline]
-> __x64_sys_recvfrom+0x78/0x90 net/socket.c:2243
-> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-> do_syscall_64+0x41/0xc0 arch/x86/entry/common.c:80
-> entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> 
-> value changed: 0x00000000 -> 0x00000016
-> 
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 1 PID: 28146 Comm: syz-executor.0 Not tainted 6.6.0-rc3-syzkaller-00055-g9ed22ae6be81 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/06/2023
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Reported-by: syzbot <syzkaller@googlegroups.com>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> Link: https://lore.kernel.org/r/20231003183455.3410550-1-edumazet@google.com
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: yenchia.chen <yenchia.chen@mediatek.com>
-> ---
+On Wed, May 15, 2024 at 1:58=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Fri, May 10, 2024 at 02:29:58PM -0700, Namhyung Kim wrote:
+> > On Fri, May 10, 2024 at 12:14=E2=80=AFPM Yabin Cui <yabinc@google.com> =
+wrote:
+> > >
+> > > Check sample_type in perf_sample_save_brstack() to prevent
+> > > saving branch stack data when it isn't required.
+> > >
+> > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > > Signed-off-by: Yabin Cui <yabinc@google.com>
+> >
+> > It seems powerpc has the similar bug, then you need this:
+> >
+> > Fixes: eb55b455ef9c ("perf/core: Add perf_sample_save_brstack() helper"=
+)
+>
+> Is this really a bug? AFAICT it just does unneeded work, no?
 
-The conflict resolution looks good to me, thanks!
-
-Reviewed-by: Carlos Llamas <cmllamas@google.com>
+It's not a bug. As I replied to Namhyuang, the powerpc code checks
+sample_type before calling perf_sample_save_brstack().
