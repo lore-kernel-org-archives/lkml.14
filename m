@@ -1,329 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF5D39FD4
-	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E3B433BC
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 17:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715793789; cv=none; b=shAMoyJbWVMTUb9LjnCKzcbk053IkK0b0IdTMA1dsHNQ1vRKj9we1qlB/I2NwGQRmFLjKM9R2kpdi62y0eifxn5A9UtrAJaAOZutuS0HTQP4+VrTs4PxFQ8GFidzyQWTApbKjyPq8LYrltBjgKi7kQyhWOd9dI/Aq8VS0GKh/YY=
+	t=1715793793; cv=none; b=EdPIlDAN2lWBsIZtVlV/76E8/FKV5Lih/B3m98/zsMvqiEWDgqsbWKArrFmEvpaQ0Ei1sj5eZBY/eIfA7hLfZCdhipBYJ9hgba90sFTQqrZJBbH+nmYKSsJBU/WFOKayFnnrtrTaRVe7VQrnr5WKDUw4fi97qF9tRbq9ARJa8Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715793789; c=relaxed/simple;
-	bh=saOhvCKUEgcFey82Kci69bV1jdk4J6sSMDYGD2dNYlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hmqicMqtqaXeqCxAV4SB7CiIgTlKz+czLOtUiCv/EAvGhZk/yinqLTZZB7GW928P8jAE9gm3193ovKagp7eoojMcAb1eip6JSotzAhfgZorpK2jXJagWPHKbnrt5YimWNL2a6uzYh7WFhGCqFJcYjOlDGVmOCyAoxBL6XcIuoWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iWAu/hOS; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715793793; c=relaxed/simple;
+	bh=3Hey8yGfFDeNGoMd+KV/s1c9VtxcoIDls3Ojr/oIhm4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aYw+20mJRVb2rgwZjF5AbfPiQJcwymtDVP2tEp8VAqfe8iMynw9zjpLUrvtdTAMi5n9t3anA3ieSaNuuHHAEt12whow4a7fFii9kOWw66eZvzbG2L3ScK+rn7UVL2xRTkdOPuQJFmYnC8+0g/t5lyaxZeiRLCLnhpIlzCxnXXoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DV/jI6en; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iWAu/hOS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715793785; x=1747329785;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=saOhvCKUEgcFey82Kci69bV1jdk4J6sSMDYGD2dNYlc=;
-  b=iWAu/hOSZMdTtPmSfFrebAO45Pam9z+x+PQT59uWYVuVJFBzKUS68HGl
-   39hT/JZUOUxPX9FwBvT6lJeE+Elyc+R7sk5SeEr8OZ3CoBxD75uNPysWT
-   SP0bUhTYrSQGyVH91W8wO6QJxm1ZJX1eK2V9R7zXG9slR3JH0uyLcpxlg
-   5FPcXzbxxuBGP27kJTRYl74CKFVmVEF+igA6zOojFXqF0/2mqSKnJ0U4V
-   HXeOuA6mXSSjffoqwZ4BVob89rpaa5Rw4MtCMTap4fjYOgDOAf/4OcbBG
-   ht9R/bRYbPKc9vFyknA5pzf5E3u7OPwjog2s49ypK8Qp2Cqfe/5T0v/3h
-   w==;
-X-CSE-ConnectionGUID: JyYg/4tjSI+vXQuSPXOPwg==
-X-CSE-MsgGUID: phDIplfXRl6CsshCQ2RGXA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12034448"
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="12034448"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 10:23:04 -0700
-X-CSE-ConnectionGUID: XGC1ClPRSGaZRQaN91mZPw==
-X-CSE-MsgGUID: Q+zEai0zQxy9w+wTFGA7YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="36010447"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 10:23:04 -0700
-Date: Wed, 15 May 2024 10:23:02 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "Yu, Fenghua" <fenghua.yu@intel.com>,
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v17 7/9] x86/resctrl: Add new monitor files for Sub-NUMA
- cluster (SNC) monitoring
-Message-ID: <ZkTvdtzhlCg7SOQo@agluck-desk3>
-References: <20240503203325.21512-8-tony.luck@intel.com>
- <0178e84e-d55f-47bf-b8b0-58e05fcaa108@intel.com>
- <ZkJIZdU2knEUJN7Q@agluck-desk3>
- <f49931b0-d9bf-45f0-ab35-93b1a78f6b97@intel.com>
- <ZkKupOKRu5S7Rkgx@agluck-desk3>
- <2efcae46-736a-4809-8530-7dde3977f3ce@intel.com>
- <SJ1PR11MB60838E2DB2984EF95D34C692FCE32@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <b718c70b-21ea-4c4d-9ecf-387b8276a721@intel.com>
- <ZkPdPTbgH-0EpBc4@agluck-desk3>
- <666470f0-e8c0-423e-bcb3-ea16359f5cfd@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DV/jI6en"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-420151eb455so16431255e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 10:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715793788; x=1716398588; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9RvZSZw4jxBqtRsNUm11hD2fyY6WsB4is9eFDyT77bE=;
+        b=DV/jI6enesRbsGJhuV4zAzDQ7mm+gAXZQDSf8YVuMRGjxCgj4wDN/DhRiW+h8y64+K
+         zT1dZzF+oXkESnFRb4EItOjToYecXuQUAXymaKX/sv6VAHmQMea1m7VIcIfZOCeedYnc
+         FrRw4GdnNAl9zAjp/+mJ4JlWsa/akRK0LjzDK9ZlKkp5rSkQYWAszzSTcqevHMNC36zk
+         QbXbictKkLgDkl/ZG6njEbnH23a7E3LPWjzA5k0/taAHg/4kGZ8veLeTYoR/5gelWPy2
+         hjoK7VN+NPHwBCgsOqBa6XO8VhYGwSd+u41F/KbrDzEfOOxTddY18FQkhTaYWH5hGb8q
+         KRpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715793788; x=1716398588;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9RvZSZw4jxBqtRsNUm11hD2fyY6WsB4is9eFDyT77bE=;
+        b=GwN7uhol6n7TrWuuDfWKotjm8j6I0e1zBn2detoienc7T45M+JDZQyDR87hx7wi6Sh
+         vckLh+GL3Y0eSv8rU4Dtb9vMwZxmfSfHN7WLtK/6N3CxR139hx87Sm8kIppMB56XvwGt
+         YBNzpiA2n1b53/CzMI0XXL5+8etY23jBfFq0TB0axtm5a/8Jln53MQQlYAKZMM0Rjikf
+         HyAaTx1owyZY/RE/GomIu9t3949+4HqR14y/yaB5Ws8aF2GR5gPhCWlJWjDhqk/7+kC6
+         JDJds+rwpg5cDC9I3Yn2lgka7XOGzqITiW3wei0b4cbL33qMzwZ43B/J24CwvaUKDpPd
+         Z6PA==
+X-Forwarded-Encrypted: i=1; AJvYcCXijOJm6EVjN10R20T/V6E95sx3aQ9DtZ+56m9peYl9hzLk/5WklE2Jb2GKctPULfMw/9bd7GtRcn1mSyCW+2htXsTsfvW6IsZBM9LJ
+X-Gm-Message-State: AOJu0YyBpL1fn73j1Dk9FLWiTONwPECVSrd14Ys7/4W74qtKCdNLk1Fj
+	/yO+fBqjwXUzjKe8Ho3ehIs9abYtAvyg0aSbTsRULN3owo73up/GdJ1b6QCpO7kFiVVFa1yx80n
+	6aeKjJfn/pTqiCp0qzSjXiVWi1Q==
+X-Google-Smtp-Source: AGHT+IHARczV2e6GphBvu/GRT1dSaZeTKSmihgV/GKa3xOn2mh1vlMNsjz+sFoMVlqfAVVR0jb3CJk0/60m2L6gideM=
+X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
+ (user=sebastianene job=sendgmr) by 2002:a05:600c:3b86:b0:41f:9ffd:fd33 with
+ SMTP id 5b1f17b1804b1-41fea52ef1fmr737175e9.0.1715793787741; Wed, 15 May 2024
+ 10:23:07 -0700 (PDT)
+Date: Wed, 15 May 2024 17:22:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <666470f0-e8c0-423e-bcb3-ea16359f5cfd@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240515172258.1680881-1-sebastianene@google.com>
+Subject: [PATCH v2 0/4] KVM: arm64: pKVM host proxy FF-A fixes
+From: Sebastian Ene <sebastianene@google.com>
+To: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org, 
+	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com, 
+	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
+	tabba@google.com, will@kernel.org, yuzenghui@huawei.com, 
+	lpieralisi@kernel.org
+Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	Sebastian Ene <sebastianene@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 15, 2024 at 09:47:28AM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 5/14/2024 2:53 PM, Tony Luck wrote:
-> > On Tue, May 14, 2024 at 01:30:05PM -0700, Reinette Chatre wrote:
-> >> Hi Tony,
-> >>
-> >> On 5/14/2024 11:26 AM, Luck, Tony wrote:
-> >>>> On 5/13/2024 5:21 PM, Tony Luck wrote:
-> >>>>> On Mon, May 13, 2024 at 11:53:17AM -0700, Reinette Chatre wrote:
-> >>>>>> On 5/13/2024 10:05 AM, Tony Luck wrote:
-> >>>>>>> On Fri, May 10, 2024 at 02:24:13PM -0700, Reinette Chatre wrote:
-> >>>>>>> Thanks for the review. Detailed comments below. But overall I'm
-> >>>>>>> going to split patch 7 into a bunch of smaller changes, each with
-> >>>>>>> a better commit message.
-> >>>>>>>
-> >>>>>>>> On 5/3/2024 1:33 PM, Tony Luck wrote:
-> >>>>>>>>
-> >>>>>>>> (Could you please start the changelog with some context?)
-> >>>>>>>>
-> >>>>>>>>> Add a field to the rdt_resource structure to track whether monitoring
-> >>>>>>>>> resources are tracked by hardware at a different scope (NODE) from
-> >>>>>>>>> the legacy L3 scope.
-> >>>>>>>>
-> >>>>>>>> This seems to describe @mon_scope that was introduced in patch #3?
-> >>>>>>>
-> >>>>>>> Not really. Patch #3 made the change so that control an monitor
-> >>>>>>> functions can have different scope. That's still needed as with SNC
-> >>>>>>> enabled the underlying data collection is at the node level for
-> >>>>>>> monitoring, while control stays at the L3 cache scope.
-> >>>>>>>
-> >>>>>>> This new field describes the legacy scope of monitoring, so that
-> >>>>>>> resctrl can provide correctly scoped monitor files for legacy
-> >>>>>>> applications that aren't aware of SNC. So I'm using this both
-> >>>>>>> to indicate when SNC is enabled (with mon_scope != mon_display_scope)
-> >>>>>>> or disabled (when they are the same).
-> >>>>>>
-> >>>>>> This seems to enforce the idea that these new additions aim to be
-> >>>>>> generic on the surface but the only goal is to support SNC.
-> >>>>>
-> >>>>> If you have some more ideas on how to make this more generic and
-> >>>>> less SNC specific I'm all ears.
-> >>>>
-> >>>> It may not end up being totally generic. It should not pretend to be
-> >>>> when it is not. It makes the flows difficult to follow when there are
-> >>>> these unexpected checks/quirks in what claims to be core code.
-> >>>
-> >>> Do you want some sort of warning comments in pieces of code
-> >>> that are SNC specific?
-> >>
-> >> I cannot think now where warnings will be appropriate but if you
-> >> find instances then please do. To start the quirks can at least be
-> >> documented. For example, "Only user of <feature> is SNC, which does
-> >> not require <custom> so simplify by <describe shortcut> ..."
-> > 
-> > The main spot that triggered this line of discussion was changing the
-> > sanity check that operations to read monitors is being done from a
-> > CPU within the right domain. I've added a short comment on the new
-> > check:
-> > 
-> > -       if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
-> > +       /* Event counts can only be read from a CPU on the same L3 cache */
-> > +       if (d->display_id != get_cpu_cacheinfo_id(smp_processor_id(), r->mon_display_scope))
-> >                 return -EINVAL;
-> > 
-> > But my change embeds the assumption that monitor events are L3 scoped.
-> > 
-> > Should it be something like this (to keep the non-SNC case generic):
-> > 
-> > 	if (r->mon_scope == r->mon_display_scope) {
-> > 		if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
-> > 			return -EINVAL;
-> 
-> Yes, keeping this check looks good to me ...
-> 
-> > 	} else {
-> > 		/*
-> > 		 * SNC: OK to read events on any CPU sharing same L3
-> > 		 * cache instance.
-> > 		 */
-> > 		 if (d->display_id != get_cpu_cacheinfo_id(smp_processor_id(), r->mon_display_scope))
-> > 		 	return -EINVAL;
-> > 	}
-> 
-> ... while I remain unsure about where "display_id" fits in.
+Hello,
 
-See below.
 
-> > 
-> >>
-> >>>
-> >>>>
-> >>>>>>>>>         }
-> >>>>>>>>> +
-> >>>>>>>>> +       return 0;
-> >>>>>>>>> +}
-> >>>>>>>>> +
-> >>>>>>>>> +static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
-> >>>>>>>>> +                               struct rdt_mon_domain *d,
-> >>>>>>>>> +                               struct rdt_resource *r, struct rdtgroup *prgrp)
-> >>>>>>>>> +{
-> >>>>>>>>> +       struct kernfs_node *kn, *ckn;
-> >>>>>>>>> +       char name[32];
-> >>>>>>>>> +       bool do_sum;
-> >>>>>>>>> +       int ret;
-> >>>>>>>>> +
-> >>>>>>>>> +       do_sum = r->mon_scope != r->mon_display_scope;
-> >>>>>>>>> +       sprintf(name, "mon_%s_%02d", r->name, d->display_id);
-> >>>>>>>>> +       kn = kernfs_find_and_get_ns(parent_kn, name, NULL);
-> >>>>>>>>> +       if (!kn) {
-> >>>>>>>>> +               /* create the directory */
-> >>>>>>>>> +               kn = kernfs_create_dir(parent_kn, name, parent_kn->mode, prgrp);
-> >>>>>>>>> +               if (IS_ERR(kn))
-> >>>>>>>>> +                       return PTR_ERR(kn);
-> >>>>>>>>> +
-> >>>>>>>>> +               ret = rdtgroup_kn_set_ugid(kn);
-> >>>>>>>>> +               if (ret)
-> >>>>>>>>> +                       goto out_destroy;
-> >>>>>>>>> +               ret = mon_add_all_files(kn, d, r, prgrp, do_sum);
-> >>>>>>>>
-> >>>>>>>> This does not look right. If I understand correctly the private data
-> >>>>>>>> of these event files will have whichever mon domain came up first as
-> >>>>>>>> its domain id. That seems completely arbitrary and does not reflect
-> >>>>>>>> accurate state for this file. Since "do_sum" is essentially a "flag"
-> >>>>>>>> on how this file can be treated, can its "dom_id" not rather be
-> >>>>>>>> the "monitor scope domain id"? Could that not help to eliminate
-> >>>>>>>
-> >>>>>>> You are correct that this should be the "monitor scope domain id" rather
-> >>>>>>> than the first SNC domain that appears. I'll change to use that. I don't
-> >>>>>>> think it helps in removing the per-domain display_id.
-> >>>>>>
-> >>>>>> Wouldn't the file metadata then be the "display_id"?
-> >>>>>
-> >>>>> Yes. The metadata is the display_id for files that need to sum across
-> >>>>> SNC nodes, but the domain id for ones where no summation is needed.
-> >>>>
-> >>>> Right ... and there is a "sum" flag to tell which is which?
-> >>>
-> >>> Yes. sum==0 means the domid field is the one and only domain to
-> >>> report for this resctrl monitor file. sum==1 means the domid field is
-> >>> the display_id - all domains with this display_id must be summed to
-> >>> provide the result to present to the user.
-> >>>
-> >>> I've tried to capture that in the kerneldoc comment for struct mon_event.
-> >>> Here's what I'm planning to include in v18 (Outlook will probably mangle
-> >>> the formatting ... just imagine that the text lines up neatly):
-> >>>
-> >>> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-> >>> index 49440f194253..3411557d761a 100644
-> >>> --- a/arch/x86/kernel/cpu/resctrl/internal.h
-> >>> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-> >>> @@ -132,14 +132,19 @@ struct mon_evt {
-> >>>   *                     as kernfs private data
-> >>>   * @rid:               Resource id associated with the event file
-> >>>   * @evtid:             Event id associated with the event file
-> >>> - * @domid:             The domain to which the event file belongs
-> >>> + * @sum:               Set when event must be summed across multiple
-> >>> + *                     domains.
-> >>> + * @domid:             When @sum is zero this is the domain to which
-> >>> + *                     the event file belongs. When sum is one this
-> >>> + *                     is the display_id of all domains to be summed
-> >>
-> >> Here is where I would like to understand why it cannot just be
-> >> "When sum is one this is the domain id of the scope at which (for which?)
-> >> the events must be summed." Although, you already mentioned this will be
-> >> clear in next posting.
-> >>
-> >>>   * @u:                 Name of the bit fields struct
-> >>>   */
-> >>>  union mon_data_bits {
-> >>>         void *priv;
-> >>>         struct {
-> >>>                 unsigned int rid                : 10;
-> >>> -               enum resctrl_event_id evtid     : 8;
-> >>> +               enum resctrl_event_id evtid     : 7;
-> >>> +               unsigned int sum                : 1;
-> >>>                 unsigned int domid              : 14;
-> >>>         } u;
-> >>>  };
-> >>>
-> >>> -Tony
-> > 
-> > Maybe an example might help. Assume an SNC system with two sockets,
-> > three SNC nodes per socket, only supporting monitoring. The only domain
-> > list created by resctrl is the mon_domains list on the RDT_RESOURCE_L3
-> > resource. And it looks like this (with "disply_list" abbreviated to
-> > "dspl" to keep the picture small):
-> > 
-> > 
-> >        <------ SNC NODES ON SOCKET 0 ----->   <------ SNC NODES ON SOCKET 1 ------>
-> > ----> +----------+ +----------+ +----------+ +----------+ +----------+ +----------+
-> >       | id = 0   | | id = 1   | | id = 2   | | id = 3   | | id = 4   | | id = 5   |
-> >       |          | |          | |          | |          | |          | |          |
-> >       | dspl = 0 | | dspl = 0 | | dspl = 0 | | dspl = 1 | | dspl = 1 | | dspl = 1 |
-> >       |          | |          | |          | |          | |          | |          |
-> >       +----------+ +----------+ +----------+ +----------+ +----------+ +----------+
-> > 
-> > Reading the per-SNC node monitor values looks just the same as the
-> > non-SNC case. The struct rmid_read passed across the smp_call*() has
-> > the resource, domain, event, and reading the counters is essentially
-> > unchanged.
-> > 
-> > Reading a file to sum event counts for SNC nodes on socket 1 needs to
-> > find each of the "struct rdt_mon_domain" that are part of socket 1.
-> > I'm doing that with meta data in the file that says sum=1 (need to add
-> > up something) and domid=1 (the things to be added are those with
-> > display_id = 1). So the code reads:
-> > 
-> > 	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
-> > 		if (d->display_id == rr->d->display_id) {
-> > 			... call stuff to read and sum for domain "d"
-> > 		}
-> > 	}
-> > 
-> > The display_id is "the domain id of the scope at which (for which?)
-> > the events must be summed." in your text above.
-> 
-> My point remains that it is not clear (to me) why it is required to
-> carry the display_id around.
-> 
->  	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
-> 		/* determine @id of @d at rr->r->mon_display_scope */
->  		if (id == domid) {
->  			... call stuff to read and sum for domain "d"
->  		}
->  	}
+This series contains some small fixes for the host pKVM proxy code. I included
+some of the patches that I already sent on the list as part of this series
+to make it easier to keep track of them.
 
-That "determine @id of @d at rr->r->mon_display_scope" is:
+I verified the functionality with OPTEE as a TEE-OS.
 
-	display_id = get_domain_id_from_scope(cpumask_first(rr->d->hdr.cpu_mask), rr->r->mon_display_scope);
-	if (display_id < 0) {
-		take some error action
-	}
+Changelog:
+ 
+v1 -> v2:
 
-So it certainly isn't *required* to carry display_id around. But doing
-so makes the code simpler. I could bury the long line into a helper
-macro/function. But I can't bury the error check.
+* applied the feedback received from Will on the FFA_VERSION patch:
+  The spec requires that no other calls to be issued prior to the FFA
+  version negotiation and the current change reflects this. After the
+  version negotiation phase is complete with Trustzone we will just
+  return the hypervisor version.
 
-I'd also need to change get_domain_id_from_scope() from "static" to
-global so it can be used in other files besides core.c
+* corrected some mistakes on the FFA_PARTITION_INFO_GET patch:
+  - don't trim the number of bytes copied from the hypervisor buffer
+  - introduce FFA_1_0_PARTITON_INFO_SZ definition
+  - simplify the logic when the input flag is specified 
 
-Note that there are several places where I need to use display_id,
-computing it at run time in each place, but it seems so much easier to
-do it once at domain creation time.
+* collected the Ack from Will and embbeded it in the commit - Thanks Will ! 
 
-> 
-> Reinette
+v1:
 
--Tony
+* previously posted FFA_PARTITION_INFO_GET patch here:
+https://lore.kernel.org/kvmarm/20240411133249.2134696-1-sebastianene@google.com/
+ -> minor changes from the previous version, look for the current
+    ffa_version in the host_buffer structure
+
+* previously posted "Fix the identification range for the FF-A smcs" here:
+https://lore.kernel.org/kvmarm/20240322124303.309423-1-sebastianene@google.com/
+
+Thank you,
+Sebastian
+
+Sebastian Ene (4):
+  KVM: arm64: Trap FFA_VERSION host call in pKVM
+  KVM: arm64: Add support for FFA_PARTITION_INFO_GET
+  KVM: arm64: Fix the identification range for the FF-A smcs
+  KVM: arm64: Use FF-A 1.1 with pKVM
+
+ arch/arm64/kvm/hyp/include/nvhe/ffa.h |   2 +-
+ arch/arm64/kvm/hyp/nvhe/ffa.c         | 183 +++++++++++++++++++++-----
+ include/linux/arm_ffa.h               |   3 +
+ 3 files changed, 154 insertions(+), 34 deletions(-)
+
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
