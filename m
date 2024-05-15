@@ -1,90 +1,238 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6BB3BBDE;
-	Wed, 15 May 2024 06:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2295F3BBDE
+	for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 06:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715755042; cv=none; b=Dzz8oH4QrUo+JXoRwCOKbfJpNUMjoiApBIOyzI+wXADodwmW/cIWfoNpxhjjdpEf57zv6ewKudfIeD8X3bLYvvYpIHSeCQmUPHANMqbZKaCCitAdqkjjRGyNHRiTOiH37xSwLtnQ49bVAFPIYvyVcThm1ZRyzt2c+HPZZMSSlvw=
+	t=1715755124; cv=none; b=YdlUwkujM7L7fsfNP7rdSlpJp47MmrxP/kMoP1jW1E6NeGjzyE/hFIpWqBCtflKMIe1eJ3THHkh+LROItosSkZrcKyIPtUsq0QCu6SPLxo1xFmsJFm0kqZ2OAg+zGRYD9FfSF9fbQFi2k6cS18YowUgGwisV7DqXZLPwrBPy9SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715755042; c=relaxed/simple;
-	bh=eI/hWvYVZn6xmfG6Gso863cUJUBDV94QsvI0YUUona8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UF3IA20+A3qPMacwVOO658yuoMSXYWU5BTDQarIyF1uWQmO0bZRZBIm6PBwgr3o13kZvOknS/kbO6j9divMTwboz01ogS+CDRW5+Yj9Xi+3fpJuBtkyuem1Ucqb9SvGjQx1RHdArzM1h0McM2opt4XYzp75UxyRHBKAfchBHWs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VOfzYxkU; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1715755124; c=relaxed/simple;
+	bh=DUBK5FSNdWNxIcO5szuLJHHIpvf4ofWE4u9LBUSeSS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zei1EyFWvyJnkjBj5KzL0n6NiyzO8dM+TF14pzZHjuVd7WKc05aTuDpvhFo6/Kx2hLbYIpoF1sfmd3sVfRywyhuZoYF+UhkqUjeXwvetWJ4tQGeHFtCrtSdAk95C8nJ13Z3Q0rd0ZS8FrjL/d7lvHY9zPVXuJ31Xc6oDgNNoN4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kw38awke; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VOfzYxkU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1715755034;
-	bh=APVgJNHkw0GoLhqndKWu3Ob2mj6Ex2bkWrznWolFk9I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VOfzYxkU9QsPDnTAGPXwpAfe7vwu78Gb/aJSI8aJq00t536XlyBsOOvr4P3Btg3j0
-	 89gHmbFlZ8uhm3SQ7Hsrjl7MgB185+6GqryyarVPHgoSCcgnTTVucJR7XMLp9SdyfU
-	 UMxrqKSXkcLdeLfFQHhi7n4hyk+j+QPQ5n63RCqUDHv19Yj/5rKD8tqtvi6u35qPrC
-	 B5WHQfEa8v2IZY/aort8uG7qZdNLNgQxlQRNi1vKxQidE1CjFOo0WHR4q3/rf1Q5AB
-	 TsU1oSaVIaINYa2Z2qxz56KgJtU9G/q1p7LIRj14oxKm92QFC8yxBusMw3Mro9UHLw
-	 fI7hrdrySdLpw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VfNn563BFz4x1C;
-	Wed, 15 May 2024 16:37:13 +1000 (AEST)
-Date: Wed, 15 May 2024 16:37:08 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Michael Ellerman <mpe@ellerman.id.au>, PowerPC
- <linuxppc-dev@lists.ozlabs.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the powerpc tree
-Message-ID: <20240515163708.3380c4d1@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kw38awke"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A090DC116B1;
+	Wed, 15 May 2024 06:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715755123;
+	bh=DUBK5FSNdWNxIcO5szuLJHHIpvf4ofWE4u9LBUSeSS0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kw38awkeWt7DClqOHsChHLNDfetR+rpkBv+orOciCmrKvdkwDHPf7OujHxpx2EKAj
+	 98n7e5GAEVyEPuQ4kPOaU7KbCmX3XVZfVe9MdfDgqUX5Jwh8RtKbV7TzGC5tV8yYCl
+	 QGgb/n8B3o8SXbNkOQiKagom5oRlwAHyuxtY/GZXLjpxsT0psyK/GgVVCsWmKQ/zAm
+	 viUXgxZZFYISGJgASO4r+dhIncFalX47rtSeXV0hN2cVrN/+qdWvdM6Xyz2ssN9bGR
+	 KBY+PmXmx/50GaUpkAiREXmC75q3ufVZbxCFjS3B9ZAPXIkAmVvV9kM85q0nIJJXG/
+	 9/9OIG00LuvQw==
+Message-ID: <efae597c-d334-498b-9050-1a21bf40e21d@kernel.org>
+Date: Wed, 15 May 2024 14:38:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zfARr8Q8f9AC2zPVlVguGjo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] f2fs: fix to avoid racing in between read and OPU dio
+ write
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20240510023906.281700-1-chao@kernel.org>
+ <ZkOMwKAcKmEPQ4Xz@google.com>
+ <fc0d8b1f-0c54-4447-8ceb-3722645f71c2@kernel.org>
+ <ZkQ9Uo5713Xpr2n7@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <ZkQ9Uo5713Xpr2n7@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/zfARr8Q8f9AC2zPVlVguGjo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2024/5/15 12:42, Jaegeuk Kim wrote:
+> On 05/15, Chao Yu wrote:
+>> On 2024/5/15 0:09, Jaegeuk Kim wrote:
+>>> On 05/10, Chao Yu wrote:
+>>>> If lfs mode is on, buffered read may race w/ OPU dio write as below,
+>>>> it may cause buffered read hits unwritten data unexpectly, and for
+>>>> dio read, the race condition exists as well.
+>>>>
+>>>> Thread A                      Thread B
+>>>> - f2fs_file_write_iter
+>>>>    - f2fs_dio_write_iter
+>>>>     - __iomap_dio_rw
+>>>>      - f2fs_iomap_begin
+>>>>       - f2fs_map_blocks
+>>>>        - __allocate_data_block
+>>>>         - allocated blkaddr #x
+>>>>          - iomap_dio_submit_bio
+>>>>                                 - f2fs_file_read_iter
+>>>>                                  - filemap_read
+>>>>                                   - f2fs_read_data_folio
+>>>>                                    - f2fs_mpage_readpages
+>>>>                                     - f2fs_map_blocks
+>>>>                                      : get blkaddr #x
+>>>>                                     - f2fs_submit_read_bio
+>>>>                                 IRQ
+>>>>                                 - f2fs_read_end_io
+>>>>                                  : read IO on blkaddr #x complete
+>>>> IRQ
+>>>> - iomap_dio_bio_end_io
+>>>>    : direct write IO on blkaddr #x complete
+>>>>
+>>>> This patch introduces a new per-inode i_opu_rwsem lock to avoid
+>>>> such race condition.
+>>>
+>>> Wasn't this supposed to be managed by user-land?
+>>
+>> Actually, the test case is:
+>>
+>> 1. mount w/ lfs mode
+>> 2. touch file;
+>> 3. initialize file w/ 4k zeroed data; fsync;
+>> 4. continue triggering dio write 4k zeroed data to file;
+>> 5. and meanwhile, continue triggering buf/dio 4k read in file,
+>> use md5sum to verify the 4k data;
+>>
+>> It expects data is all zero, however it turned out it's not.
+> 
+> Can we check outstanding write bios instead of abusing locks?
 
-Hi all,
+I didn't figure out a way to solve this w/o lock, due to:
+- write bios can be issued after outstanding write bios check condition,
+result in the race.
+- once read() detects that there are outstanding write bios, we need to
+delay read flow rather than fail it, right? It looks using a lock is more
+proper here?
 
-After merging the powerpc tree, today's (it may have been yesterday's)
-linux-next build (powerpc allyesconfig) produced this warning:
+Any suggestion?
 
-WARNING: modpost: vmlinux: section mismatch in reference: fadump_setup_para=
-m_area+0x200 (section: .text.fadump_setup_param_area) -> memblock_phys_allo=
-c_range (section: .init.text)
+Thanks,
 
-Introduced by commit
-
-  683eab94da75 ("powerpc/fadump: setup additional parameters for dump captu=
-re kernel")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zfARr8Q8f9AC2zPVlVguGjo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZEWBQACgkQAVBC80lX
-0GxS1Af/bFHD2LbuYbe9OcFIUFDiT1c4qaIJtvj5nf8ARrtDwlnxoW5GI4SintL2
-ZYIdWZnvw/RrWob7XRUIg6PcK6IDXhwh30a1jz6aEyv+m/MojjIeJpOH4wominkz
-tAqSiic+yThBgF0AQQ4tKvlabR1ObtiPd053OkvKiQHuuZBpSkTbG6QgK+3LeV+s
-AUZLJe549U7xwnLz1f9ToSvt/qNewXiOy9jBF4uu5q/zuzUkq5wAQdNU01VlqGmS
-ADUXyiNLTnUJxwnwoe/itnqlgdFl4tB28KXr7zv6T0IKfFwOK2KovnL/wAZLd/bj
-Ih9EZ1K/MhyqVmEX04xjz2/r8+eFRw==
-=oatL
------END PGP SIGNATURE-----
-
---Sig_/zfARr8Q8f9AC2zPVlVguGjo--
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Fixes: f847c699cff3 ("f2fs: allow out-place-update for direct IO in LFS mode")
+>>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>>> ---
+>>>> v2:
+>>>> - fix to cover dio read path w/ i_opu_rwsem as well.
+>>>>    fs/f2fs/f2fs.h  |  1 +
+>>>>    fs/f2fs/file.c  | 28 ++++++++++++++++++++++++++--
+>>>>    fs/f2fs/super.c |  1 +
+>>>>    3 files changed, 28 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>> index 30058e16a5d0..91cf4b3d6bc6 100644
+>>>> --- a/fs/f2fs/f2fs.h
+>>>> +++ b/fs/f2fs/f2fs.h
+>>>> @@ -847,6 +847,7 @@ struct f2fs_inode_info {
+>>>>         /* avoid racing between foreground op and gc */
+>>>>         struct f2fs_rwsem i_gc_rwsem[2];
+>>>>         struct f2fs_rwsem i_xattr_sem; /* avoid racing between reading and changing EAs */
+>>>> +     struct f2fs_rwsem i_opu_rwsem;  /* avoid racing between buf read and opu dio write */
+>>>>
+>>>>         int i_extra_isize;              /* size of extra space located in i_addr */
+>>>>         kprojid_t i_projid;             /* id for project quota */
+>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>> index 72ce1a522fb2..4ec260af321f 100644
+>>>> --- a/fs/f2fs/file.c
+>>>> +++ b/fs/f2fs/file.c
+>>>> @@ -4445,6 +4445,7 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>         const loff_t pos = iocb->ki_pos;
+>>>>         const size_t count = iov_iter_count(to);
+>>>>         struct iomap_dio *dio;
+>>>> +     bool do_opu = f2fs_lfs_mode(sbi);
+>>>>         ssize_t ret;
+>>>>
+>>>>         if (count == 0)
+>>>> @@ -4457,8 +4458,14 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>                         ret = -EAGAIN;
+>>>>                         goto out;
+>>>>                 }
+>>>> +             if (do_opu && !f2fs_down_read_trylock(&fi->i_opu_rwsem)) {
+>>>> +                     f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>> +                     ret = -EAGAIN;
+>>>> +                     goto out;
+>>>> +             }
+>>>>         } else {
+>>>>                 f2fs_down_read(&fi->i_gc_rwsem[READ]);
+>>>> +             f2fs_down_read(&fi->i_opu_rwsem);
+>>>>         }
+>>>>
+>>>>         /*
+>>>> @@ -4477,6 +4484,7 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>                 ret = iomap_dio_complete(dio);
+>>>>         }
+>>>>
+>>>> +     f2fs_up_read(&fi->i_opu_rwsem);
+>>>>         f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>>
+>>>>         file_accessed(file);
+>>>> @@ -4523,7 +4531,13 @@ static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>         if (f2fs_should_use_dio(inode, iocb, to)) {
+>>>>                 ret = f2fs_dio_read_iter(iocb, to);
+>>>>         } else {
+>>>> +             bool do_opu = f2fs_lfs_mode(F2FS_I_SB(inode));
+>>>> +
+>>>> +             if (do_opu)
+>>>> +                     f2fs_down_read(&F2FS_I(inode)->i_opu_rwsem);
+>>>>                 ret = filemap_read(iocb, to, 0);
+>>>> +             if (do_opu)
+>>>> +                     f2fs_up_read(&F2FS_I(inode)->i_opu_rwsem);
+>>>>                 if (ret > 0)
+>>>>                         f2fs_update_iostat(F2FS_I_SB(inode), inode,
+>>>>                                                 APP_BUFFERED_READ_IO, ret);
+>>>> @@ -4748,14 +4762,22 @@ static ssize_t f2fs_dio_write_iter(struct kiocb *iocb, struct iov_iter *from,
+>>>>                         ret = -EAGAIN;
+>>>>                         goto out;
+>>>>                 }
+>>>> +             if (do_opu && !f2fs_down_write_trylock(&fi->i_opu_rwsem)) {
+>>>> +                     f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>> +                     f2fs_up_read(&fi->i_gc_rwsem[WRITE]);
+>>>> +                     ret = -EAGAIN;
+>>>> +                     goto out;
+>>>> +             }
+>>>>         } else {
+>>>>                 ret = f2fs_convert_inline_inode(inode);
+>>>>                 if (ret)
+>>>>                         goto out;
+>>>>
+>>>>                 f2fs_down_read(&fi->i_gc_rwsem[WRITE]);
+>>>> -             if (do_opu)
+>>>> +             if (do_opu) {
+>>>>                         f2fs_down_read(&fi->i_gc_rwsem[READ]);
+>>>> +                     f2fs_down_write(&fi->i_opu_rwsem);
+>>>> +             }
+>>>>         }
+>>>>
+>>>>         /*
+>>>> @@ -4779,8 +4801,10 @@ static ssize_t f2fs_dio_write_iter(struct kiocb *iocb, struct iov_iter *from,
+>>>>                 ret = iomap_dio_complete(dio);
+>>>>         }
+>>>>
+>>>> -     if (do_opu)
+>>>> +     if (do_opu) {
+>>>> +             f2fs_up_write(&fi->i_opu_rwsem);
+>>>>                 f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>> +     }
+>>>>         f2fs_up_read(&fi->i_gc_rwsem[WRITE]);
+>>>>
+>>>>         if (ret < 0)
+>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>> index daf2c4dbe150..b4ed3b094366 100644
+>>>> --- a/fs/f2fs/super.c
+>>>> +++ b/fs/f2fs/super.c
+>>>> @@ -1428,6 +1428,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>>>>         init_f2fs_rwsem(&fi->i_gc_rwsem[READ]);
+>>>>         init_f2fs_rwsem(&fi->i_gc_rwsem[WRITE]);
+>>>>         init_f2fs_rwsem(&fi->i_xattr_sem);
+>>>> +     init_f2fs_rwsem(&fi->i_opu_rwsem);
+>>>>
+>>>>         /* Will be used by directory only */
+>>>>         fi->i_dir_level = F2FS_SB(sb)->dir_level;
+>>>> --
+>>>> 2.40.1
