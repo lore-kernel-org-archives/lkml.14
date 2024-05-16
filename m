@@ -1,134 +1,242 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2055.outbound.protection.outlook.com [40.107.22.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0275320C;
-	Thu, 16 May 2024 02:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715826623; cv=none; b=sohsqQJ0thzmQ0CajHpL3cLSgXgaWInPHt5yHU/wHhPG66VpFt9f7OMBZRGqQtyurusrTJ5dwEjXGDeGwMT2BSfMEBv7yle5amMcm3PZNOSpXogZCcVOP8JGuQSxl8ZPrjc6ZIELBvxXAoh3UCHtMErO3LYn04T5D/yu4YsbcrQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715826623; c=relaxed/simple;
-	bh=luuZCOwHRQzcsKdhemBb69s42Jy1t33jiaLSTq1qmrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Q5bREzB58fOmSZRU8fFgi0syBYbuAJ9FMNpIByPks8B7JfmUczxKpEAG3w3V3KwEym8pM9O4ls3/tefMRVIHfgNP2Fbbu21ik0TcoeG+ZXJ+im/+HPeXztD8lC/gIpztVx9WRKsbtOAEehucQy5HFVht6LlmukebfGaRRWix8lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fmEo1gSu; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B790E15A4;
+	Thu, 16 May 2024 02:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715826814; cv=fail; b=gYeXpk3SotzLEJkTNqolqWtKuJhfdhhAze7UjRwnJ4602XPsKBLStcKYki3MJw43OWbOgcGvKX0v/rv0UGNG68F+qnq1B4H8WqZALuIGfNxwZkNSslcJuZGkpUx9f02XFvHO7FdTzM3GG0cvm7MsGfs3KG2JmMMHWYCqxy3hZSk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715826814; c=relaxed/simple;
+	bh=4lxeozeRqq8v0PY7hdbhSYc2MiUUADAbU2jsYtxsaAg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fG35nOfou06m8I8463OOQ0yvN4nQ5AOQdBezrDRiJZEAJ5jFwYdiPMGkYKFwyeWzETurJUTI9WwMGdDAmljDrPydV93C5ud7uxWyMCAYXIkbxrnBw6vUpm0BY8QO7WRSfQOH+pO1NJAw6M//fGN38GyCWKkTSHT6pxw+uSNa9BY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=NP/JPOrp; arc=fail smtp.client-ip=40.107.22.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmEo1gSu"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6f0f728d373so2862143a34.0;
-        Wed, 15 May 2024 19:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715826621; x=1716431421; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S3HxxeZ7mdHwDKn/7AQjzq+Cq5PG4lChvk4r41U5858=;
-        b=fmEo1gSuX1Xv8Ud55q8VFFvnPJrsgQsgITZB3XFvxDqGwNm0jZ9+Jmk7mJT5avud8G
-         L3E8nrSpCRXnWLu/wJOp5srKtT4n+9GkPHnuoSnBBQR7+LAEbQcJRyoSAAr0gWIXR9Eo
-         vr7bRnFnFVfi8nV3NfFi/dpjEUA+dkxNlQB5KsvnnKUPFGP2bSmM/1Z5lPiseFZT5nw+
-         ddUtckKTf83MbKZLg2qj1Td5njZk5fIHqu2VY+hk+GqJemBbmtt2IwEdMpBSKuO89c5K
-         TgQmx93XJVYP0tmXq35KUg0tgE1oEZr9YRJxQNJ085JPL2VcHMHjh+epKCijwt/umBb6
-         VmvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715826621; x=1716431421;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S3HxxeZ7mdHwDKn/7AQjzq+Cq5PG4lChvk4r41U5858=;
-        b=JW9fPoYhychNaaV80aip8uV0a7FzfguN+bnJJlszboe+XYUxlq1HzKTtHq0j2F84Lb
-         20R0Kxp8TsYr8OKonKC6HydI+hRHdYxprV1dB0WouUZIZuO3VxP3ppWPA5ZXCX0DC8W4
-         Pm7LoQO74t7/I8YbsWhVTNbtzSa98H4NeGZS55E7IJ03qQWVu3Qj6+Z+6DaEQ7V6fpNv
-         j6dzJZVv1N9Hn340iBcSN7dWxMvSBs6DdnqbMjBIc4UNRcS8DDdpRMiwKB930Ia9fz6b
-         04CiVTER6n+fmqbOr/w1LMalhcp+dk8qc9lzuvrIVPcmsItePgyD4ggbCUW71EfZmXQy
-         uqlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ymq5zde05+dq3P6Dt2nK9hHOZVQUlcYMx5HQK76ASReQYaMWFVTY0hMsMncZCfm2N0tggeK/y/BIWGF2J88d6Qie5oq/ba5NfR3F1OkeOYVUAT/QA/k2QXWQQg733Tn1pPj0b120
-X-Gm-Message-State: AOJu0Yx52DZVpmtoPj2322tU/eFq5aLZK8rWCvbEyv4VP8CVGy/GmmPJ
-	ojnABzcj4a2nNrYEsbEHxCG4krq73SmLIGz2UkoQpFCT7QTgQms1
-X-Google-Smtp-Source: AGHT+IH2iA6yNkrsVaY3XeU7OEvrXCvN9AWyyvM6DuW9wN2hXlgxsVnnbClBjcPlY6k+FYVy0uUNyg==
-X-Received: by 2002:a05:6870:7096:b0:23d:49b4:6788 with SMTP id 586e51a60fabf-24172aa2c2dmr25778539fac.21.1715826620560;
-        Wed, 15 May 2024 19:30:20 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2ade2c9sm11827127b3a.125.2024.05.15.19.30.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 19:30:19 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D409E186C082D; Thu, 16 May 2024 09:30:16 +0700 (WIB)
-Date: Thu, 16 May 2024 09:30:16 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Power Management <linux-pm@vger.kernel.org>,
-	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-	Petri Kaukasoina <petri.kaukasoina@tuni.fi>
-Subject: Fwd: Kernel panic in 6.9.0 after changes in kernel/power/swap.c
-Message-ID: <ZkVvuKHV-jdOMnB1@archie.me>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NP/JPOrp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i6mBmtGIE+Pb1GallzwCaXJzub5YRTbgMUV5PVU2btCwa5hwz9rHt1jjvaQF8ZBfrhivLoF1b8G+CH10UL4qsQLwLsRMCaARVid2vhlZXWswpyxv+Ir7pwRoDzyM7+KApjYEnDh/1Ajsy7yoQEwIrTI7jRhoZ5EW6Xa46y1PtkprZ7TuulYTuJ+CajN34cJoA48QCly5O9UmYEripmphJVtssoojYKdy6uQqUYQgv98ne8NjAjv5C9SYxEk3Cm5MndYkdLVfLp/hOjWz6qrnwjgQhHaWinqCwnXDso6u8sguIlhjWuV/DLBMwS1UNIJ/ua1ymF9GcZURXs8QJcmF2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2ncfduEuJJcLjr53ev9LfIprVAExvcTrapQOovP+awA=;
+ b=IHF+cpUTGqTI72o0VWO4Oz1lq0SDnhbAytAckSx/A4vLr1FTMrSNmzTrfD6XmpFS6ET6Cc0ljGKJ3VKzWZYT5K21TdUznu1rI2w8h/7eUeDiXSxqb7ZmfqYbUqoat183EDOKFZAYAAF2CWQ7AXEAQHyewI4/lVrbZuZaLcTl/bCss4WSz5MRpHC6YqbYcdOfOkunM3EGdUsR+mPAR0+SAIpg8u08+AU4YBJc6BJ/A8kURKw7MWdb0Xy2CrR0QW8PhkC1uZsxhL3jWenHbTq3Xi/XmysFOQTmwBYI6sve83zs0OakChFhGmH0h1kjobOFBR8SXZ2hE+MlTeFYAPsrCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2ncfduEuJJcLjr53ev9LfIprVAExvcTrapQOovP+awA=;
+ b=NP/JPOrpLEL6d8a8CXkry+2w4Mn4l2AEe3uS5upquZIT5nN4yUY+Bv8I8JGsvfoIgakZEeciAjfe7Da1U1qAhcesc+3KZiB/G+Z6z6n6PrWRwCUI6NgXl9oit7MLu2INo+d+F7DDtsad7MZthqHnrsRRjZu/mOaUofX44DYkegk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by AS8PR04MB7814.eurprd04.prod.outlook.com (2603:10a6:20b:2a1::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Thu, 16 May
+ 2024 02:33:29 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.7587.028; Thu, 16 May 2024
+ 02:33:28 +0000
+Message-ID: <15511740-ceba-42c6-abf5-b74a757a2930@nxp.com>
+Date: Thu, 16 May 2024 10:33:44 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] drm/panel: simple: Add Microtips Technology
+ MF-103HIEB0GA0 panel
+To: Aradhya Bhatia <a-bhatia1@ti.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
+ Devicetree List <devicetree@vger.kernel.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Jai Luthra <j-luthra@ti.com>
+References: <20240515095133.745492-1-a-bhatia1@ti.com>
+ <20240515095133.745492-7-a-bhatia1@ti.com>
+Content-Language: en-US
+From: Liu Ying <victor.liu@nxp.com>
+In-Reply-To: <20240515095133.745492-7-a-bhatia1@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0019.apcprd02.prod.outlook.com
+ (2603:1096:3:17::31) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OHWfg0fovwQn+CBZ"
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AS8PR04MB7814:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53cdb9a1-e5cc-47a2-54f0-08dc755091ee
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230031|376005|366007|1800799015|7416005|921011;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?Y0FOU0UxMEE5RmRqQ2Zta0VNOElRWEdBeVBXL2pKSENWdFJ4K1R1dEhoa2pr?=
+ =?utf-8?B?eVlVZFBCQU5JZU0vUTV4aFREQ0NEbnA0c2ZNYlgrdmNkdkltZFRWeU5oZkdm?=
+ =?utf-8?B?dXVUbkNTOEV0YitxMHNOU3Y3UWxvcXlmSmFsUURiQjVBZmJmU1FlL3k3Z2t0?=
+ =?utf-8?B?dytMdk04VkhFZFluN3FPTzlST1RxWHZpaEZ3bzg2Qm1ROWUyR0JNR080VG1i?=
+ =?utf-8?B?Mnh4VVdueXNNVHNkcFdVS0FsN2IyMW1xMmlnU0Q3cHM2Y3UyY1BQR0dKWEpI?=
+ =?utf-8?B?MktIOTljR1JqOENuMXFIWFpQSmlwZ0t1RzB5cXFJcDVaYmJyZTd1M2RFMFZy?=
+ =?utf-8?B?THJ2QjJUSjJWaDNnY0hYcERJbzdQLzNmeFBLMmY2dkVyYm1Zb3NwYlVGOFpZ?=
+ =?utf-8?B?L2hvVUdnM0IxeWtjeDk0c2ZKeS9NYkw2V2t5dmJ2YXpZaHVxclR2SC9lbmd5?=
+ =?utf-8?B?MzNlTmVqNkZNL2hRaGtkbzc2NXhvRlZTL05FemVJT1k1L3RjSnROdTNiMjNK?=
+ =?utf-8?B?R1FiL0Q5S0FzWWtNN0dURWNCd2lkcU5KeXNaTGQxR3JlU3lxaWhJeDNuSlZv?=
+ =?utf-8?B?R0U3V0JpeUNUdWpPZXJ3N3JIWDVmTllzbWdFZlNmVmRXZUlDWlZ4TVlFOFlQ?=
+ =?utf-8?B?bVlTbUR6Nk9Gd0NwenM5UjJLTi8wVzBQWnJQRUdFYTZoOCtHRmpOa3ZQb25X?=
+ =?utf-8?B?SXRicytBbHN0QXk3V1krY1hFbzUwenlDY0JFUnZIb0ZmaC9JalFCM3VRYUhj?=
+ =?utf-8?B?Um1ER1ZTdFVxVHgwMXRZQWJwQUpHS1B1OGZJdWZDQ0toUXBLZzg1VW9odVZl?=
+ =?utf-8?B?MlhxS2gyUEkxVEtnZTFsNkNwL1E0TytJZ1M5QWFlUityYS9Jb1RUcmVxcUs3?=
+ =?utf-8?B?OTZVK2JZemcxTVJ5TDB5eG1MRjYwN0k5bGJjQjZZZTkwU3ovWE5HU0tRS2la?=
+ =?utf-8?B?bU90OHllQUxhaFRhUDNFcDBobk93T293b21PLy90ZE1qTG83MURJVTZONjRE?=
+ =?utf-8?B?K1F2S2ovOGZxdHYwcmtYNXNmRkw1S2RHNzlLMzdaSFFCTm5KM0srampXOFMy?=
+ =?utf-8?B?NU1YWUVoS1ZoeVM2ejlpZ01RYmhDSHZUSmZWa01PWXR3WFBwNWNYZk5XYlhu?=
+ =?utf-8?B?UzE4UkZIcnVZK3FSSVZRdU1xeXpCL1MvelllUEJkUEhvQWxnTFVUOXJWWUJT?=
+ =?utf-8?B?VFlxdzNsWmZrTWhiWXN0cTRGWFpDcHZDRU91cm5WdHorNTZRTGlUZWxNRnpT?=
+ =?utf-8?B?SzlQSDlsc2hmL0JmRkpQRkRObHZIejh0MG1veC9qcFJHNUN5V3ppMHRTeFBC?=
+ =?utf-8?B?UEppQnkzVkxHK2FaS1pOeDRIK3BIeWxuckJxcnlOa2NjOVYyaHB0QU03dnZo?=
+ =?utf-8?B?cmpEUGFMbGpaS2NwWU1WczNPbmZrVkJ0V0VtL2owUktoUlBkczhsa0ZFNmJz?=
+ =?utf-8?B?eFh4OVZhZ1dSSnRXSURsRUdSM2xBMUVNaFhYTUZoQ09Ya2FXNUJzTi9QVjdD?=
+ =?utf-8?B?OGpacEJidlR0anA0ZkN6M1U3cWNaMkZjK3FjbXJ6Rm5SZ0YzRndFTW5VQjBs?=
+ =?utf-8?B?NkxXNittQ0JyOW93MmN0bjBMM3ZuNDU2OW9CTTV6ZC82TFdYOFptUmIwY240?=
+ =?utf-8?B?dmlSa2VDRXY5UWJXMGpwUnBPa1lXb1h3dzFtVnNZY2hqVDF3TlVVWmZwRC93?=
+ =?utf-8?B?SDQ4TzZSQVZUaGJPZVF4cUlvTE5SK2FLbXM1c1NHdGk2c2w0akJDZjFBPT0=?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?bTdTa0t6enJjN3ducjh1czNka0I2Q1dZUkh4RWtONk92T3pIQ1pVWjMrTVBl?=
+ =?utf-8?B?cGxOWWV5Y2NKeEhibE45UlJmZXBHVzBBYzNHRFlhU3V4aldaeUJYa0xJOE9J?=
+ =?utf-8?B?dkxGcGpZZTZCT0pIRlFIQUdobTIvTWVLaG5mZHl0d3J3YVBYWTlvcXpiblJN?=
+ =?utf-8?B?L3lXRDJud281UVAwNTBzNEFnYXA4UHVleDFyMEJGQzdmWTRUdytDNVFPR3RL?=
+ =?utf-8?B?UGpMdEtkNjJHVXN1Ri9SVzNBeHpGcXRRU0JBMzJOV01hOUNJenlHVVNCOWVH?=
+ =?utf-8?B?cDd0ZDRSUjJaZVJxTjlMVDIxYkx6ekkvKzVUMG9VUUdVQWs1NjVsUi9lbldm?=
+ =?utf-8?B?b1hkbk1xQXlQVHVWeUZBaitVV1pTa1YyTFVEaXlXc1JrbldpYlJZWW9aYldx?=
+ =?utf-8?B?SHVQMFpVRFdZTDdFN2s1THNMSnRsdjVrdm4zd2RwNHZ6YnIzOTQxNzU2STBh?=
+ =?utf-8?B?STNxczBwU2ZXbFdmdnc4ME5zRk84RDRkcDdSMWF6b3pmbTcyTjdLNDJxRDZW?=
+ =?utf-8?B?UVlnZlFnRGdCZTJLZTBld3pzWHZjalVDQ1VvZEo3MzRBMk8vemFUaVQ4bGtC?=
+ =?utf-8?B?YTFvT3crOEVjMWhQbW12MFZONnlsTjFVcmRqOHpjeWcrUVYwcW0rNktoUWdY?=
+ =?utf-8?B?SlFGYXA5dDZTb2V1TG4yeVBBREdxZDVLMEprZmtIOVN3Z1VBQTBmMTdaSjhj?=
+ =?utf-8?B?YWIzRjFLd2l4QmRZQzROSWdxV0twd0FGbEZMUHIxdkg4cVBhWXZoNnZHZHhB?=
+ =?utf-8?B?UHhSSHZvQzgwYzNiWm5mMHVHdDZaWXl3YXhReEoxb2t0dTVaMitMRmxsNDc2?=
+ =?utf-8?B?SEhGZFF6TVFzd0tTbFZyMkhMQnF0VnN4WjRFRjY4aXR0ZEtpdE9ITDY1b0tr?=
+ =?utf-8?B?MEtDNGJ2a0xBZWY2NFhCbnUxRWMyY3JuTmFjcDJEYkZwUHlXZnJJaWVyWjg3?=
+ =?utf-8?B?NitHQllxQk11TTQ5WUtMWDBDWEFtZ3J1YXVlMEtMdFNONks0ZFMyU3lDa3ds?=
+ =?utf-8?B?RGF3bzk4MWNjZW1lMiswQ3VCc2dSTitjWU1yWEVkUGFGM0tvYWJ6Wmo5dHBq?=
+ =?utf-8?B?TSsyZXpuUFJtcDJFWGprSGJ4VFlGREk5RUpXNCtXbVJlV2c4OVZVdk1aZC9w?=
+ =?utf-8?B?engrWHBlUFIxbUVyNXJOSmptcnpvNlJaclhxTTRrNXliaFpBbTdwQTVQYmdS?=
+ =?utf-8?B?TElrY1pqNzA1ZUIrMDVadGtITVBiN3dkdHh2NzZvMGVmNWs3SG1zd0JyOFVq?=
+ =?utf-8?B?N2RsMEVrU0k2QkNRZmxzOHhQcHJ1NmtOb012RnJwY01QWTAwbFVKRUtxRE9G?=
+ =?utf-8?B?RjNMZGZpOEhaakFTTHlKNWlDSGhET3Z0amJ0NlpsSE00eWRMa0ZNK3lsVDNn?=
+ =?utf-8?B?azM4dE5SdC9FYndsZnpoUnY3Nnpkc01mMUJXVzQrUHhEWUZEbWtaZmxZY3ZB?=
+ =?utf-8?B?MGhJTVdxOXFLY29Rdm1CMFB5TmZrUFJudlRHUm4xNlZCQmc2SzBiZFVBaDlZ?=
+ =?utf-8?B?ZlBBdGwwaHlNLy96U2pmWElZUmRRWHNodVkzTlRFTzUzT0Jaa08wdmRlbW1J?=
+ =?utf-8?B?cDFJRFg0QmhrTldMRVRaNnFTNU9ZcWFEeWlheFV3OVhqRytPVGZTcnhTMWFJ?=
+ =?utf-8?B?Y0szTWo0MDhkWGJiQmNuSndHSUR6cW1zcVY1UHZWaFArV0hvaGJlYUFQZi96?=
+ =?utf-8?B?dG1qcXc5TjU4REdKWFhKbDdzYnB3THorck1sTnl2bGxNbHJPU1ZTV2pGMVEy?=
+ =?utf-8?B?cjdOdUtCN3dXdHNDbjE4d0RtTUVGMHdlRWlrWEd0S3lIbmU4NnpnRm13RVUw?=
+ =?utf-8?B?NFJQRnFXaDVac0NmalZqemZBZG9peVJzWkNON2VTcnN3QmNmdXBMMXc1UUQz?=
+ =?utf-8?B?OUc4TDdWZTdUZzNZd21sMkdudDN3UU9uczV4dzhFeXVpaFJzVVBGMWo3b1p2?=
+ =?utf-8?B?ekRDQWlKekk5S2FPalRVeE5rT1FGbHlaelR2VTlUand5ZkRRVFlmUWRmWHBa?=
+ =?utf-8?B?aHRHSmttekJDWXhkUXBJbnBKc0ZpOWdTQ0trdFlvOWpBakhjVkIzb2QreldT?=
+ =?utf-8?B?QW9PKzNZYzAxZExkRzhubE9aNElwRXJLRmxISVhnbUcxWGdtU05ncjNvdVhw?=
+ =?utf-8?Q?MkjJb0Qp3WBfnpBGRFoy52M0a?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53cdb9a1-e5cc-47a2-54f0-08dc755091ee
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2024 02:33:28.8972
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D7YdLP5urQlYIznOEpDN2nekFEzB9cKHk2TcnIl2Id0U/bBg2dZGPl+T/80TCMBIRpZMs4JnhYXtnpg+JB5uBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7814
 
+On 5/15/24 17:51, Aradhya Bhatia wrote:
+> Add support for Microtips Technology USA MF-103HIEB0GA0 10.25"[0],
+> 1920x720, 8-bit TFT LCD with LVDS interface. Its a Dual-LVDS Panel and
+> does not support touch.
+> 
+> [0]: Panel Datasheet
+> https://simplespec.microtipsusa.com/uploads/spec/datasheetFile/2660/13-103HIEB0GA0-S_V1.0_20211206.pdf
+> 
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 32 ++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 
---OHWfg0fovwQn+CBZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Like my comments for patch 3/6, this panel is not simple enough
+for this driver.
 
-Hi,
+Regards,
+Liu Ying
 
-Petri Kaukasoina <petri.kaukasoina@tuni.fi> reported on Bugzilla
-(https://bugzilla.kernel.org/show_bug.cgi?id=3D218845) VFS kernel panic
-regression when reading hibernation image. He wrote:
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 3a0d8f0ff267..1b0a6b4e034c 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -3084,6 +3084,35 @@ static const struct panel_desc microtips_mf_101hiebcaf0_c = {
+>  	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+> +static const struct drm_display_mode microtips_mf_103hieb0ga0_mode = {
+> +	.clock = 93301,
+> +	.hdisplay = 1920,
+> +	.hsync_start = 1920 + 72,
+> +	.hsync_end = 1920 + 72 + 72,
+> +	.htotal = 1920 + 72 + 72 + 72,
+> +	.vdisplay = 720,
+> +	.vsync_start = 720 + 3,
+> +	.vsync_end = 720 + 3 + 3,
+> +	.vtotal = 720 + 3 + 3 + 2,
+> +};
+> +
+> +static const struct panel_desc microtips_mf_103hieb0ga0 = {
+> +	.modes = &microtips_mf_103hieb0ga0_mode,
+> +	.bpc = 8,
+> +	.num_modes = 1,
+> +	.size = {
+> +		.width = 244,
+> +		.height = 92,
+> +	},
+> +	.delay = {
+> +		.prepare = 50,
+> +		.disable = 50,
+> +	},
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+> +};
+> +
+>  static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+>  	.clock = 30400,
+>  	.hdisplay = 800,
+> @@ -4726,6 +4755,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "microtips,mf-101hiebcaf0",
+>  		.data = &microtips_mf_101hiebcaf0_c,
+> +	}, {
+> +		.compatible = "microtips,mf-103hieb0ga0",
+> +		.data = &microtips_mf_103hieb0ga0,
+>  	}, {
+>  		.compatible = "mitsubishi,aa070mc01-ca1",
+>  		.data = &mitsubishi_aa070mc01,
 
-> 6.9.0 crashes on boot while 6.8.0 is ok.
->=20
-> Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block=
-(8,1)
->=20
-> bisect result:
->=20
-> 4379f91172f39d999919c8e8b2b5e1d665d8972d is the first bad commit
-> commit 4379f91172f39d999919c8e8b2b5e1d665d8972d
-> Author: Christian Brauner <brauner@kernel.org>
-> Date:   Tue Jan 23 14:26:23 2024 +0100
->=20
->     power: port block device access to file
->    =20
->     Link: https://lore.kernel.org/r/20240123-vfs-bdev-file-v2-6-adbd023e1=
-9cc@kernel.org
->     Reviewed-by: Christoph Hellwig <hch@lst.de>
->     Reviewed-by: Jan Kara <jack@suse.cz>
->     Signed-off-by: Christian Brauner <brauner@kernel.org>
->=20
->  kernel/power/swap.c | 28 ++++++++++++++--------------
->=20
-> 6.9.0 with only this reverted did not compile. This has something to do w=
-ith reading a hibernation image from disk. I use a swap file, not a partiti=
-on. The system was not hibernated, though. After I removed resume=3D and re=
-sume_offset=3D from the kernel command line, even 6.9.0 boots without panic.
->=20
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---OHWfg0fovwQn+CBZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkVvswAKCRD2uYlJVVFO
-o/SxAP4sikhakMMJf5TMjw7SN2qc2KZ893jwWhW0TXgeTMCRqgD+MpgwZ0zPaRfe
-EbWTwhe0+C4ChDxW8nBIE+Nf24OQNQE=
-=8S11
------END PGP SIGNATURE-----
-
---OHWfg0fovwQn+CBZ--
