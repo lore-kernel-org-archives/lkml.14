@@ -1,118 +1,146 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8A42D054;
-	Thu, 16 May 2024 08:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1722D054
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715849537; cv=none; b=qsLhu7XDXfKpV4d3tnEzSE8OcgTFN/NG4iz4Ex26DH0yrCN3s8yUsFyshRIpQ7PQaDp++viW1SYDtMeNZKkBs2DKllT1uJN3Gt/4q11EBEXS2xVJxb1YXZXV6p1dPoo1Wd+U5P+7gxsv1wS146Tm3j7DkhFnTA5TiCHpG70y4nk=
+	t=1715849578; cv=none; b=AUGM0bws4ON09r4uBbp9/thsnsKDow5q5DTtXSjevAneT2CpSFAfzVuvFqVQ2bryvt2ux7V4pymNDqGTmWpvZbnoGpWMvTMw/eUGMX0O7/GKAYCqGSNIb23L8pxDCxDQ2Oy4sNBNun3TmzPHKlRA9sF43OB9R6/5Ja9lv4iNX+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715849537; c=relaxed/simple;
-	bh=EPyGLyG+K4E+o1cu+2hycPZHn68duC90xuBVoJXjJzY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fLxgNd+XMo0ElFr2SV8gcvrYDP8UHNVrfQWy+mHFT2xe1XWVaTXX5Zaq6OpRO2EmBrGAuKpDSO33d76NRfIRlS6SphqwcnyJw4DT7Ovus6+Nh/4m3sc9gYQqySfJX4fgA6alDHj5BBDeqEs7Q6KERgd5ADsO29+sS1pBIhH6u9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Vg3LZ40zSz9v7Hm;
-	Thu, 16 May 2024 16:35:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 37875140628;
-	Thu, 16 May 2024 16:52:04 +0800 (CST)
-Received: from [10.221.98.131] (unknown [10.221.98.131])
-	by APP1 (Coremail) with SMTP id LxC2BwCnmhMqyUVmGfBGCA--.55916S2;
-	Thu, 16 May 2024 09:52:03 +0100 (CET)
-Message-ID: <a9bf972c-b5ee-f1c2-36bf-30ba62f419d7@huaweicloud.com>
-Date: Thu, 16 May 2024 10:44:05 +0200
+	s=arc-20240116; t=1715849578; c=relaxed/simple;
+	bh=SOFhZnbfrK+W7JMH+7jBr4uwGqHGYwqfkagAeEIjSZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fpaQI1DbmafDEtnRTWmJtk3D1Pn9GmE1xdHRAWzVuIdIO8hWcxDuPxMUVQ0A3+hzFKYuT/v59m8cerxaTQgkr04zSx83UnUCNTr+bqv9fMw321LzGVfyy1svR+057USeFooC9WATt4NFq68xpGk9d3cDMN+AktIgnb7k1ZGy1XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DdZW3PWR; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdZW3PWR"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51f72a29f13so608329e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 01:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715849574; x=1716454374; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hBwoMBMjGCQnPXLlZjoQkBMRf+vVLmRtklv2WaJZwac=;
+        b=DdZW3PWRDQH2KbUxeR2xGq14lrFJWTiqvt6OlhmF/1e1FRxFryUhmzcuXtbjt10BfW
+         OD2etdukVOuO8hGC/GIVEgptdDfAA+hLk5gDRfg0s0M4Xk9LJp5974jzGZqcK+XRX8Z7
+         lMmvdsoq3r4cjvFIgD05ufNFpUHD0HRlVLKkxI03QGe5UI3FTlyUqNLW8L5xyyAvurik
+         Rcd963Urpm+eGJYuXlL4aJC3pQR4QR2RLLzFZgIrqzyVQFvimiwiaMZXJghvmPpYF9AN
+         A3LrZcajemrEmzLcFxbM8FTzU9OIRevxd5qsSxS0Zd2iUzH2Tm0qO7/o4jaiv2WcRYkx
+         CnNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715849574; x=1716454374;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hBwoMBMjGCQnPXLlZjoQkBMRf+vVLmRtklv2WaJZwac=;
+        b=tzRrgzYQJjZHGmM2CugdI9RRhTLxTDFdLRGqxDsjz6GBzPMGzN9rcZiXfZ2rOPX44U
+         RAe6cviWPRJO7FoRB5K4oX4gv+YAt2N/QPQEY8cbNl0IMSDCuCBLpM04i+H3jTA3z6tr
+         59Cni50ytfH8+CJyoH3sWJX/Qd4xZvbCbGyBeOv0TUAIUT7Hqbgpk6+tPY2kXSsdAqmn
+         LWBabs/7S9DpR8kJDjbDLJjtzAE578yuqXH2Ljg/0tWV2OJrUNdV3sUJlbKCOAsDQIlD
+         CemXacFbU8D3x/eGMhjPdwNxktjr3JbJcfnRGT6iLfoYVCtnqOpoeHNnr/F1GdC9isVn
+         8bIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWrwKSRJUWcvqs2NVJebHE4IWOs3fdirDD4PiQqjJsvmT5KdrQLr+9AMCSaJ7otu0UyLp8LzC616ggxvrOQl+BbtPdwiqLyR3VVvqs4
+X-Gm-Message-State: AOJu0YwhetZRAJDjBrVcd+aGy+ISmcaNlNcgD5F5suJeQlNyBT/xbRhB
+	ITzx+vsc43pratsrVLC7l+L9uuVQkCOj/KoiMEFaPrM/RdmrQvD/
+X-Google-Smtp-Source: AGHT+IH8VouB3CIfDnBkNK3EUXkmukrlv5aRxQqWostKxuKkCIpXNP5gADPPJIWM+DVZeX1YV1cQsw==
+X-Received: by 2002:ac2:490b:0:b0:522:3817:6d4c with SMTP id 2adb3069b0e04-52238176e26mr9277531e87.68.1715849571976;
+        Thu, 16 May 2024 01:52:51 -0700 (PDT)
+Received: from fedora ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d33f5sm2907563e87.133.2024.05.16.01.52.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 01:52:51 -0700 (PDT)
+Date: Thu, 16 May 2024 11:52:44 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] regulator: misc fixes
+Message-ID: <cover.1715848512.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: LKMM: Making RMW barriers explicit
-To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>,
- Alan Stern <stern@rowland.harvard.edu>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, kernel-team@meta.com, parri.andrea@gmail.com,
- boqun.feng@gmail.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
- Joel Fernandes <joel@joelfernandes.org>
-References: <72c804c8-2511-4349-a823-bc1de8bb729e@rowland.harvard.edu>
- <e030f7a4-97e7-4e91-bbae-230ee5c97763@huaweicloud.com>
-Content-Language: en-US
-From: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
-In-Reply-To: <e030f7a4-97e7-4e91-bbae-230ee5c97763@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwCnmhMqyUVmGfBGCA--.55916S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF4kZw1rJry5JFW3tw17Awb_yoW8ArWfpF
-	sxC3yvkr4DJ393uwnrZr47XryFqan3JrW8Jr93Wws3Aas8KF1xKFs8tayj9FZxXrs7uF42
-	qr1aqas8u3WDZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: xkhu0tnqos00pfhgvzhhrqqx5xdzvxpfor3voofrz/
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZrHgggBSNMa7JqiA"
+Content-Disposition: inline
 
-On 5/16/2024 10:31 AM, Jonas Oberhauser wrote:
-> 
-> 
-> Am 5/16/2024 um 3:43 AM schrieb Alan Stern:
->> Hernan and Jonas:
->>
->> Can you explain more fully the changes you want to make to herd7 and/or
->> the LKMM?  The goal is to make the memory barriers currently implicit in
->> RMW operations explicit, but I couldn't understand how you propose to do
->> this.
->>
->> Are you going to change herd7 somehow, and if so, how?  It seems like
->> you should want to provide sufficient information so that the .bell
->> and .cat files can implement the appropriate memory barriers associated
->> with each RMW operation.  What additional information is needed?  And
->> how (explained in English, not by quoting source code) will the .bell
->> and .cat files make use of this information?
->>
->> Alan
-> 
-> 
-> I don't know whether herd7 needs to be changed. Probably, herd7 does the 
-> following:
-> - if a tag called Mb appears on an rmw instruction (by instruction I 
-> mean things like xchg(), atomic_inc_return_relaxed()), replace it with 
-> one of those things:
->    * full mb ; once (the rmw) ; full mb, if a value returning 
-> (successful) rmw
->    * once (the rmw)   otherwise
-> - everything else gets translated 1:1 into some internal representation
 
-This is my understanding from reading the source code of CSem.ml in 
-herd7's repo.
+--ZrHgggBSNMa7JqiA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, this is exactly what dartagnan is currently doing.
+This series adds couple of a bit unrelated fixes/improvements which I
+implemented while working to support yet another ROHM PMIC.
 
-> 
-> What I'm proposing is:
-> 1. remove this transpilation step,
-> 2. and instead allow the Mb tag to actually appear on RMW instructions
-> 3. change the cat file to explicitly define the behavior of the Mb tag 
-> on RMW instructions
+Patch1 addresses a potential problem where the voltage selector for
+pickable-ranges is used in same fashion as a 'apply-bit'. Eg, when a
+regulator voltage is changed so that also the range changes, the effect
+of the range and voltage selector change is not taken into account until
+the voltage selector is written to hardware. In such case caching the
+voltage-selector value will cause the voltage range change to not change
+the actual output voltage.
 
-These are the exact 3 things I changed in dartagnan for testing what 
-Jonas proposed.
+Patch2 is a fix to ROHM bd71818 and bd71879 low-power state specific
+voltage settings where some of the voltages were common to many states.
+The old behaviour was that changing voltage for one state caused it to
+change for all states. This had a potential impact of accidentally
+changing the runtime voltage when trying to configure voltage for a
+low-power state, potentially hurting the boot-up process.
 
-I am not sure if further changes are needed for herd7.
+Patch3 is just a minor print improvement to help pinpointing unsupported
+voltage in device-tree.
 
-Hernan
+Series is based on v6.9
 
+---
+
+Matti Vaittinen (3):
+  regulator: don't cache vsel to ensure voltage setting
+  regulator: bd71828: Don't overwrite runtime voltages
+  regulator: rohm-regulator: warn if unsupported voltage is set
+
+ drivers/regulator/bd71828-regulator.c | 58 +--------------------------
+ drivers/regulator/helpers.c           | 10 ++++-
+ drivers/regulator/rohm-regulator.c    |  4 ++
+ 3 files changed, 14 insertions(+), 58 deletions(-)
+
+
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+--=20
+2.44.0
+
+
+--=20
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =3D]=20
+
+--ZrHgggBSNMa7JqiA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmZFyVkACgkQeFA3/03a
+ocWj0ggAqjmxyioG5eZWDWnRZhhWTOz5qk97OpSSyrQvopNcnpHR6mKdeMFB2Qi9
+Xk2DpUH+FN6dNbEt5zXnYSMzWL7ohP2mOl65Ny1k/QnT7RuD2krxLENx93I7Ek4s
+/wfqBRNu2Hcw+9a2NYK1sumUz/H5o0vRgP3DzCbBhIh5JYO1ID4+bi7tHNm4Ufmj
+DOPzeDuocNNM/SuSoKbNDFjafAu1wzItMMSyUeFEem9lHa3iPbPNFEUWRQowaM6u
+oXzD+6cuWc+RuyvOn/Jvz/DEf3LfHadsm8jwI43PykE13s/MZHb7H7loyWrCe81e
+6lMERZMBvu0J7Wand14vHmOYSPQBXw==
+=29Zh
+-----END PGP SIGNATURE-----
+
+--ZrHgggBSNMa7JqiA--
