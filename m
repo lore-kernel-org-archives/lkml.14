@@ -1,111 +1,101 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0BF145B12;
-	Thu, 16 May 2024 12:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310DC145A06;
+	Thu, 16 May 2024 12:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715861466; cv=none; b=M46/SHhCQeiMmTJ9zO+4UKGLto9tDv2nqMIxgU7b/ZOobkVSSN/v+/nsQ61yxEmFak0m8EC7MmzqnC/Jb9Z95LCqnNOAOsrZY82QTdRqsudv29YFrZi1YRYwcxhO/RE1t3KCRqdsv+3m2jkOAoKSaW81V2OSDlYjXTd10u7HqYo=
+	t=1715861478; cv=none; b=N8e+DfsEPVKYITHXdaCxO+tWZGkVQoicepEQyS0b84MVZG//f1NOVrJDJP++yRJ7npwjUrQmke4qE76s7ziVYqmowJkQClyZSJn5lTQNRS/ctzhBkOddzzlc8RcBuHJ7/J5BLgWMcFmgLqvXKSw9hLOrRdMQ3y34QHe81UphAaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715861466; c=relaxed/simple;
-	bh=F6WO1aR+Qxv99DM4oHOPG9apgSeKLUE9nrEBhqRH5D0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TpCaYD7pTkNqqVkX1Baswo01pgj7eHsSPNWyiVS6Dm64tPJ5xjOW5g2sKP3YFXiTAjPN6y/62os6nWKIEYCZSJ7A7Eye0G/jazK7qGVOL1B63BZYSCt5xcRfDMKWs8GpIGmbaXtwXoKmJOdx+dTbrOIoP0mkJKPVYqeHVgZfAEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=ACnZW+Kc; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=DiNDXPGj; arc=none smtp.client-ip=35.157.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+	s=arc-20240116; t=1715861478; c=relaxed/simple;
+	bh=vzWty9Z112mKSwQmpKl9H1kFTMkTlX2pGHRLOpUzc/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=URDSjOkF1eXVuTQuYwEzPDldd8g+Xq6U5wZs7HRJWORej7VQkgBa2xxjeDeSOBA/PI9njQwaikK+zoyjcJ/Tgvxif/x4ZukvaS2Ot3KMWplfSYCACBoACplF0IMLl5IMuyPx+cZbIKwZcBf7oZc96vJm5xOBzIOdXPaHbJJzC0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFGv9a8x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="ACnZW+Kc";
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="DiNDXPGj"
-Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id B6CCF1F86;
-	Thu, 16 May 2024 11:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1715860392;
-	bh=GOGJaz9UJqKRi2i7pMYNMK4sWlylteCj88ffOeaMKGQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ACnZW+KcT0fYGBHLAlEIKlGjw8yCdUEqWqze1R37u3nNcT4VJ//Yv7b1W+srOZsZK
-	 Zcr5lSAXwf37mTjEQXkDRjgpRoRZGHLAnM2IKaeL7Zhyk1j2//kZPC0aRIMdj2PoE4
-	 zUpz4/MnQ2wZJCa7+LB3m524h6aUL47u7kqxgAYI=
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id D77FE21CF;
-	Thu, 16 May 2024 12:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1715860855;
-	bh=GOGJaz9UJqKRi2i7pMYNMK4sWlylteCj88ffOeaMKGQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=DiNDXPGjfoHIRP/89L7R2yge4Qse7mfKIBekMGUtGs85UsqSQZbAEuP3U+76jmvt+
-	 nChTzXKmco6hoaFshnnFBZEPIiEtYe6DIYX050Kt1bppcKQDNF2eH9odSAu/A9EysS
-	 zo5Y8lLSKqur84a9RuSJUqPSZVE+tXIBy940FFx0=
-Received: from ntfs3vm.paragon-software.com (192.168.211.154) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Thu, 16 May 2024 15:00:55 +0300
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To: <ntfs3@lists.linux.dev>
-CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	<stable@vger.kernel.org>
-Subject: [PATCH v2] fs/ntfs3: Fix case when index is reused during tree transformation
-Date: Thu, 16 May 2024 15:00:29 +0300
-Message-ID: <20240516120029.5113-1-almaz.alexandrovich@paragon-software.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423144155.10219-1-almaz.alexandrovich@paragon-software.com>
-References:
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFGv9a8x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE16C113CC;
+	Thu, 16 May 2024 12:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715861477;
+	bh=vzWty9Z112mKSwQmpKl9H1kFTMkTlX2pGHRLOpUzc/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MFGv9a8xqo8bIibuLTC9Sb22GP+YNQKltzSiK5BkAxKn0wNtLMgfSglvsKWq8NCFn
+	 2p66bCe8JEZjQtBko0q30KPK5AEzNRLzP8+9Ybw2o/zP2GFmWoqGXdtMT+7ullrGHM
+	 KsFRznanFdd7euh+hybdzmSQGcdITWEBsycbxu8GmiVmHbk/jrJXQUsgtR4MGWKPYi
+	 aeKu03Xzz8FiBxjPfCL5MqFn9JRzfSdeGQ3b3a2r9C+qwOjRBWfTQRJFP/nHf9LdVA
+	 Ujd3ycfgTKc6iR/hkJDzhkWpL6UkTirq8EiK1I5/EnNlQcy9QyxtdmikyTkTapXMno
+	 cU/ARVbKxuyEQ==
+Date: Thu, 16 May 2024 13:11:11 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCHv4 9/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
+ for generic codec
+Message-ID: <ce9a87c6-4a5c-4f0a-a8df-1fdce8c1f5df@sirena.org.uk>
+References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
+ <20240515135411.343333-10-elinor.montmasson@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XZeYRrKEjeLfbFL9"
+Content-Disposition: inline
+In-Reply-To: <20240515135411.343333-10-elinor.montmasson@savoirfairelinux.com>
+X-Cookie: I'm having a MID-WEEK CRISIS!
 
-In most cases when adding a cluster to the directory index,
-they are placed at the end, and in the bitmap, this cluster corresponds
-to the last bit. The new directory size is calculated as follows:
 
-	data_size = (u64)(bit + 1) << indx->index_bits;
+--XZeYRrKEjeLfbFL9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In the case of reusing a non-final cluster from the index,
-data_size is calculated incorrectly, resulting in the directory size
-differing from the actual size.
+On Wed, May 15, 2024 at 03:54:11PM +0200, Elinor Montmasson wrote:
 
-A check for cluster reuse has been added, and the size update is skipped.
+> Add documentation about new dts bindings following new support
+> for compatible "fsl,imx-audio-generic".
 
-Fixes: 82cae269cfa95 ("fs/ntfs3: Add initialization of super block")
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc: stable@vger.kernel.org
----
- fs/ntfs3/index.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+>    audio-codec:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description: The phandle of an audio codec
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      The phandle of an audio codec.
+> +      If using the "fsl,imx-audio-generic" compatible, give instead a pair of
+> +      phandles with the spdif_transmitter first (driver SPDIF DIT) and the
+> +      spdif_receiver second (driver SPDIF DIR).
+> +    items:
+> +      maxItems: 1
 
-diff --git a/fs/ntfs3/index.c b/fs/ntfs3/index.c
-index daabaad63aaf..14284f0ed46a 100644
---- a/fs/ntfs3/index.c
-+++ b/fs/ntfs3/index.c
-@@ -1533,6 +1533,11 @@ static int indx_add_allocate(struct ntfs_index *indx, struct ntfs_inode *ni,
- 		goto out1;
- 	}
- 
-+	if (data_size <= le64_to_cpu(alloc->nres.data_size)) {
-+		/* Reuse index. */
-+		goto out;
-+	}
-+
- 	/* Increase allocation. */
- 	err = attr_set_size(ni, ATTR_ALLOC, in->name, in->name_len,
- 			    &indx->alloc_run, data_size, &data_size, true,
-@@ -1546,6 +1551,7 @@ static int indx_add_allocate(struct ntfs_index *indx, struct ntfs_inode *ni,
- 	if (in->name == I30_NAME)
- 		i_size_write(&ni->vfs_inode, data_size);
- 
-+out:
- 	*vbn = bit << indx->idx2vbn_bits;
- 
- 	return 0;
--- 
-2.34.1
+This description (and the code) don't feel like they're actually generic
+- they're clearly specific to the bidrectional S/PDIF case.  I'd expect
+something called -generic to cope with single CODECs as well as double,
+and not to have any constraints on what those are.
 
+--XZeYRrKEjeLfbFL9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZF994ACgkQJNaLcl1U
+h9B7owf/abYbh4drI6QTSdLIrmNMdhFX4cLfs8jwRLolmoqXOy0BxV3+SchLf/aR
+T+1Cls7jAUyeAqoS8Z4NyDeCa/5Y17c7+QVmcgr53BmGgWjkKhxiyOjrl6q6gEXy
+VMZBcrNghdW1k5rzO3OCOiO38eFODTZ6RzBL0sh3iThDf+qQLKwgKWeZgL7tsuNz
+zJWwE0UVPkuiX9iR2pNWfWb0Q4VuEY9LieR9Onw5+rusb0xLF1PxGD6FaZIHLBBT
+CeeFfhBmLKorYQzK0o8oROWKEIx2o+HFCt/VO4aVmT+xFS5qK2wAOm4u/GtwnQLD
+6C87130dv/yD0+qYIIG6L3mTkpJ29A==
+=nO6y
+-----END PGP SIGNATURE-----
+
+--XZeYRrKEjeLfbFL9--
