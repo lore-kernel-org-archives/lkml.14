@@ -1,267 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A247136E30
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715848084; cv=none; b=nKNVj1xK/YvoiMuhwSz/iAGPNJOH86khU1JDo2U0+KFHU4+DcsSOahK7h7vdH0Dmw2rZl5gZvKDm0qKHHpTCMrAT1GPhCFJZLkTR+NAjHTnPcSLIn4t79pfhCHFiYTs5EYbq0xRA8Wn1tVT862FWSqfsXC8X+slm8+U+/WjBhEU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715848084; c=relaxed/simple;
-	bh=DzRqiyopQCPSUEogl1hvpC9bB/HSSmdYOAQIYfCYSf4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a6+aJLgz/O0+DnUyjBNwm25H01JwgdJny39FtB+gG6ShMJ4p1C2RmuPiqXNE+dAxcesf/bbO0RNDeEBRIeBZnQfmi89+OKXFQDbfVzjRjhhFheTWWPuilX/yRa6Ltuwfa6RqUVZXUZ6eVb2/G/rrPYzwy7eS4PIZk/PBfI2UyN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YI0w9796; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F08135A6E;
+	Thu, 16 May 2024 08:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715848090; cv=fail; b=GtOVDqvgSdOXoNTiBU/FnTlKehklaIqMtqEPHgxJI5RkHyIGAZCWWx+rQNXCXHN8sCORdBFi+zkjfwGKthaljc5EJhQkvGem5M+FzN/tgNuV17iynyjLgexwSlfWY//Bippa6JcRWTUYewwhinZnfuWfiHtqanFWXoiTVNISMgA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715848090; c=relaxed/simple;
+	bh=NyO7wvFC2EU1hQxK7+1Bk3YUdGd/WlTiVE6ggAnojFc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=il4CnE/3gDoSviwb8a5ynVZWIiu/domo6lAH7LVnqGs4Uf3qW9gEn7elvKqoYBqIjs+dDZ8CDAgJ/UPuGf7iOJbCSOOrM5LFplTCnEaJ5OdC+r7g/viX8N74YwS3Q9UP7mvs9ajhEsw9//1hdw/fOW9QKRUBc5dWnnIjQRheUm4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tAlw/lTu; arc=fail smtp.client-ip=40.107.243.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YI0w9796"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715848081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZqWsB5IdMykLWAZ521Ej0jBcJrrlt3K3Im7RGUwgYyw=;
-	b=YI0w9796y4G2XNRj6zqmTCCsuDHW4t7tly+07wqgQcNgKyVDid0RkQ4+jYK0gOl6XE6Ehu
-	SibwxTKdZyFr7w7yiHs1Fw8SMmmSoXSnWqXxqkQOcqbEePNIXNqErinWr2rPPo8/zM6+Su
-	6GkFqqHTZe2yWG2eF5XjWPQ8/NzlGJI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-xfOcnzhtP3aqU2DvDCGwOA-1; Thu, 16 May 2024 04:27:56 -0400
-X-MC-Unique: xfOcnzhtP3aqU2DvDCGwOA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BD3E58030A5;
-	Thu, 16 May 2024 08:27:55 +0000 (UTC)
-Received: from ksundara-mac.redhat.com (unknown [10.74.17.49])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E55115ADC40;
-	Thu, 16 May 2024 08:27:47 +0000 (UTC)
-From: Karthik Sundaravel <ksundara@redhat.com>
-To: jesse.brandeburg@intel.com,
-	wojciech.drewek@intel.com,
-	sumang@marvell.com,
-	jacob.e.keller@intel.com,
-	anthony.l.nguyen@intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	horms@kernel.org
-Cc: pmenzel@molgen.mpg.de,
-	jiri@resnulli.us,
-	michal.swiatkowski@linux.intel.com,
-	bcreeley@amd.com,
-	rjarry@redhat.com,
-	aharivel@redhat.com,
-	vchundur@redhat.com,
-	ksundara@redhat.com,
-	cfontain@redhat.com
-Subject: [PATCH iwl-next v10] ice: Add get/set hw address for VFs using devlink commands
-Date: Thu, 16 May 2024 13:57:33 +0530
-Message-Id: <20240516082733.35783-2-ksundara@redhat.com>
-In-Reply-To: <20240516082733.35783-1-ksundara@redhat.com>
-References: <20240516082733.35783-1-ksundara@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tAlw/lTu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NmGtpaKrJmVirgPlZSZnSrXw6eZWe1NvKIegMW+AacGdiauMaMJm7sC/RfpHNU7U56MFVnVA0mxMg2jzQamG/uiBR5+tjBKsZrwPHQNCk9r5aE/2Yqrocp9R8D3Z4WDhVzEVf6ltqWpi5QCxx43Y/Cv+/Vr6meM5y6pmxx0toqCHaB06698bWmpJV8QpGzrMLJWwjQZ6LTZM+/0nWis8+U7dOt16ucuSx3PfwmEdiukwKW8QKJfoG0ZVUVq+WkY2sthp1BlTYTOlTN1FHR+p8G5jMEn5uBpwRHh/E5p/JiQ7vu9M/qiWx/569yVp20E+85aaX101b8mtrNsT+2L0Yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p7Fu+tU5Pt9PnhwDSVrKMUpY5OTWe+nRtuogto8/wOo=;
+ b=GFEwNNpy98UTMf3fT+h9YB6czPPcALj6RGzdB5HyrB37SMDL4u2X/dJPRWhcXlh2vayUAJ6fK9NPtvXIGWnsvwhQ48phQC1j/AmQsikrA97Q7ZgCVhEHbGqC/FZ3XOifyf3SC4pEemw5Zt3ZXKJk7LTW2NWw21t8FHTxKtLeugtTmD83VO+hXlRnHDDIdprQ+1U9gY4icCG5HXU1LGCz/xYL+fMYbi7IHiOqYFo18JOA8GWG9srK+eX2s1isZwxxGH4nsjoCoMQInt2j5oWt1CQeF65GFF38uUGNttYNCdcZ2eM7wTmwCK1nMsmHt0fJ4QQTD6BLy/5tRjCCr4QypA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p7Fu+tU5Pt9PnhwDSVrKMUpY5OTWe+nRtuogto8/wOo=;
+ b=tAlw/lTu0pVhL1aPiuKofbyX6f1Cj1asUlZ7hgRRZdgTpp5eHEpgGfd12OgItF3Mqeo1r6ce0D/pFL74QMHDsDjo3g64L7dwd9XgDqx+qfsWYoz6JKo2vdYdc/QknW4BdbQ44Q6R6yWjWNlJJBXTR69jcS8aTKVuiw85+2dVJvg=
+Received: from CYYPR12MB8655.namprd12.prod.outlook.com (2603:10b6:930:c4::19)
+ by SN7PR12MB7936.namprd12.prod.outlook.com (2603:10b6:806:347::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Thu, 16 May
+ 2024 08:28:06 +0000
+Received: from CYYPR12MB8655.namprd12.prod.outlook.com
+ ([fe80::7fa2:65b3:1c73:cdbf]) by CYYPR12MB8655.namprd12.prod.outlook.com
+ ([fe80::7fa2:65b3:1c73:cdbf%6]) with mapi id 15.20.7587.026; Thu, 16 May 2024
+ 08:28:06 +0000
+From: "Yuan, Perry" <Perry.Yuan@amd.com>
+To: "zhida312@outlook.com" <zhida312@outlook.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+CC: Peng Ma <andypma@tencent.com>, "Huang, Ray" <Ray.Huang@amd.com>, "Shenoy,
+ Gautham Ranjal" <gautham.shenoy@amd.com>, "Limonciello, Mario"
+	<Mario.Limonciello@amd.com>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4] cpufreq: amd-pstate: fix the memory to free after epp
+ exist
+Thread-Topic: [PATCH v4] cpufreq: amd-pstate: fix the memory to free after epp
+ exist
+Thread-Index: AQHap1qvGXuCaEUBIUasGUJvhQIt37GZhtuw
+Date: Thu, 16 May 2024 08:28:06 +0000
+Message-ID:
+ <CYYPR12MB86551771F1670A5F9EAC47859CED2@CYYPR12MB8655.namprd12.prod.outlook.com>
+References:
+ <PUZPR01MB5120A03DFF0EA1CE70E7334E92ED2@PUZPR01MB5120.apcprd01.prod.exchangelabs.com>
+In-Reply-To:
+ <PUZPR01MB5120A03DFF0EA1CE70E7334E92ED2@PUZPR01MB5120.apcprd01.prod.exchangelabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=b373d80b-64e5-4a0a-8ea3-79a498f9ee7c;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2024-05-16T08:26:42Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CYYPR12MB8655:EE_|SN7PR12MB7936:EE_
+x-ms-office365-filtering-correlation-id: 9fb43a62-2411-4ffe-c968-08dc75821c9f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|1800799015|366007|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?YP6WZMw2XaSs3hdsukfYhYhwySpiJG1gboWSAbfyRJuXi/dDPXqnJZqxjNEp?=
+ =?us-ascii?Q?bTby1oJ31PcWVEchNxdWJv8Rt2uePGQrGBt2MX2VaJN4FBe4AACSfYl9iUra?=
+ =?us-ascii?Q?hfaW9wHwsk0WlA1IH2OD4b2ukeS/x0Bm9TLyaiX6idhFkmVjWZjNNCVvvcjv?=
+ =?us-ascii?Q?syiB2I4gcSlxtyxVjSzCkM6CXslL+UL//APC24jmscpcPX+K8lE9HJR5S9Mm?=
+ =?us-ascii?Q?zExrk4jGNIsC2wZPF+Jenm1P5pIJaGT6hTn4gWtgPCZhn59VjrlM3i4IlkUx?=
+ =?us-ascii?Q?TrsnGDzj6BQhtDf7ka+BUzfwN52nKu0LHo7qcvr97zjzSpXT2YGMxwxmYaaK?=
+ =?us-ascii?Q?TYOyMl0Vac5zcSej37oukC53mnwFk4OZJn7tQDhgjBubCG8MT5F/MIhr0B7B?=
+ =?us-ascii?Q?XheRIpJ2tAtyg0OckDv6zHDF8VHoSov9OvN1imHKLMP9vF719RFUaa71xI7G?=
+ =?us-ascii?Q?Gdj4wiyhVyKD+2aAA4KRBrBUCyNY766Q5N4iSMylJELyl0lWyxLlxMk+9fJu?=
+ =?us-ascii?Q?8WdhgscObyJPgOXjXbnDCWz+ofP0fdTSiwTGhmbkjQtTTJnPmxsY+Mkt2bIx?=
+ =?us-ascii?Q?2SNrjHfegNIgc/d8L1uRklul7fp8a0qj2i3KS/9RPFG09L/MqO0U/pR160PJ?=
+ =?us-ascii?Q?asGxyeOiDgwrW4Z2hleWu50/TiZPSHU71SjC7NCsN/QiyVrjZYgUdoRYNLh/?=
+ =?us-ascii?Q?d194I4D2nwPBslsrXb4GCiubLY+ZTuuRY7UKcsWG20CHdoxjeWQ093jauUlk?=
+ =?us-ascii?Q?VMh3LjljUN3kQBhR315IkMX/L609aYvLTU7PvPiE8M5JyN4fbEbRW0YoM+1r?=
+ =?us-ascii?Q?tzrAvpli5rcS7IfzmuY6vEFr0HnXp92igkJgNEAqSDcEDKGkuTJtD0uZY+ur?=
+ =?us-ascii?Q?Eig9Kdn1tgBPh0JCdjuGMNoNjzfxoN6+TO24NrSQ9/pKyNUKHzR0dN2LznhG?=
+ =?us-ascii?Q?g/I77+nZISTj4y8zAWZZROXAk3LBESpddboiiYprgSGugFXwq5PMtCi0GXd+?=
+ =?us-ascii?Q?3Xs1bwPL75hYaJoEszgPWlvXWG1IaYHWSufD82ICWc++6M0Cz/TdLoEUQxbL?=
+ =?us-ascii?Q?L4Kvrp8PMnN6I7EifU4IiUdcdyH9rf/sVSZrzEQB0f/WPmtEKHtfA/oHiB5L?=
+ =?us-ascii?Q?rAcwr7/CfcEjRu5DmIfcnkBpqpgi8vI20WtnXhix4dJycEpztw+0EDLOUWSo?=
+ =?us-ascii?Q?I0uElz0gIJD3gucgOE37a/uMPRWnmrPugN0+KbkHkf2CT+MtwK/ec4wFQH6T?=
+ =?us-ascii?Q?xM9R1/W12RhDm4lPv3ONjU8x6Hz9aoOe0hgcUcLIY+gzGaYmZMh72dd8IDT9?=
+ =?us-ascii?Q?4Hu8bkFbJnYlISB4g++Ke1el6PrYBB2GC2uPrHgsQvwkJg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8655.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?bpi9rJwIYQxiE+fHvD5pX/ep4UGZGHi/SxsUu1VUuMi+gliOBC6Kw17GYaV7?=
+ =?us-ascii?Q?GyDqS3EgKXGF0TUGKYrFQC9SBtQ/E1Hh+tPQP7Lw6WUW5Slf/rVx4FraEeNq?=
+ =?us-ascii?Q?tLRQGCri/cbLdJcFcfKHBHV+XHN5aFijcgA/djRdgzEzxRiz8Rx/E0mVPZIK?=
+ =?us-ascii?Q?0c07cmHju4RCCtPQ/LxVbVD0htqz4PIais2Ksy+wmbb82poUPKgzZdI59yz5?=
+ =?us-ascii?Q?13p6N+MmoxmS14u/hzKR9egKninmhuyE2dEQBbs8gngJlrtGfjjnvAWulmsO?=
+ =?us-ascii?Q?7R6wpUGm9F1cHIuJKWmF/zryewB5YNCBt/SOofsgmfg2hHUaUbLukVbViHS9?=
+ =?us-ascii?Q?nsVAYxAIRDGRa03EBiYu9BrIlQa1FB4QP4XNfyoYs0grtpRSPd9AaA9xCsVx?=
+ =?us-ascii?Q?rUq6MnKL6dCMCJMy5r0iwaT06uW5OW8+0299gyKWpUKAjqPeDjqwVghLD93V?=
+ =?us-ascii?Q?wBKJ9KzPv3TB9uJKin+uuOBMbNDUqJopVtVKyg/VmbxTIiEsTajNBDJ6CAZf?=
+ =?us-ascii?Q?seQ951a6Dt/DprBR4NaQARMwnL7XFO7jPBnfK1d5ihHxzRnuhRt76qpJd8XV?=
+ =?us-ascii?Q?ViWl68xndGwj+HBHO4pcQo66SRZ2c53pjwgATwM8QZ3XrNUk0NiqRX/qfYtq?=
+ =?us-ascii?Q?N1/75PRPoJZ7ZMa+/qbYKI9kbaRHqnTMX6mEg2YrWYML//azdhFywjJYEenc?=
+ =?us-ascii?Q?SFHfNFU/frFLXEzmf8ljbpe7hZy0Oly6sc/KZbn07gGWiLseYbbGUjYa5+zC?=
+ =?us-ascii?Q?TlFVqlA9apIQtcA6PzW7Helvu4jz3r58PvKqz2iYkFyp/RJ4HFk6a+m0P9mZ?=
+ =?us-ascii?Q?1QU3PznZxPaZlsAcHGezAaXFL6ULt5KUeBVooENRCX0BEvG7yWN3sgdYvIiZ?=
+ =?us-ascii?Q?SKBvFEGnnrqXJRQbsHzhh0M6cUqBGEz9Yy8w7xsQQGvDP8w68rZWAoVqHbwP?=
+ =?us-ascii?Q?d4WUe16/zgH/4iVZrzjri9whUqcrAsp2lufhmJ3m35tm19oRZDakn/ZKS9pw?=
+ =?us-ascii?Q?19ETFEBD9w1bfiORCzZdRbrOAwucx9NbO92HrsU5UoKVrHFoZJvmIaGFs6Rt?=
+ =?us-ascii?Q?Y3yR7HDd5Xdoxm+8OVrGj+Nl3HFX3Lfkh9g1ri8NwS4vji2JeZZex74n3AKb?=
+ =?us-ascii?Q?58CFuuGFLS2SX+hSHW8RXRhUTah31/MTdJVPwGdYt2fZRnG43QhRCx2NIETE?=
+ =?us-ascii?Q?9TJNwjnuCGlRViaSODmto9bPRRfe31wam2fZwvUHU3ngbanuk4Az4SpgnAFm?=
+ =?us-ascii?Q?uA6I7CbVXeWXuCz+VMJGR5xUUmrqDZEtch/18PXVrsCr6wZEAe9YlKnFAzHM?=
+ =?us-ascii?Q?+pXfP8guhPI7CP4aqUOWW8aON3s2nBy72ycJZTyXyttpPkrvVE6KF+dFYG8H?=
+ =?us-ascii?Q?LlfetgHWPW8f2HJ66HYPQ3BUPcEnJ7zenja/uustCTcjs1dgTJpUUo2zuJAn?=
+ =?us-ascii?Q?8IyZBTf2oWkmgDs6tXjYzWj1Xr7mn/rfPQz/4zqA2wCJa4Xgz1wW7evb9Wzw?=
+ =?us-ascii?Q?7NBG1lOIjqQ43b0v6tHich110wkgKCDYtwEGKW4YMrzXxktzB2e6nIOL8olI?=
+ =?us-ascii?Q?WoJ7oJGq+uAEqeGxjd4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8655.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9fb43a62-2411-4ffe-c968-08dc75821c9f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2024 08:28:06.5752
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6JYgam9pVE2UzAHIO6+sMioI+b/bnNyRTjHmNbYs3pscZu6Rpq09507qY+uebY/B/X8DyJicvMoLkjzbqc8pLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7936
 
-Changing the MAC address of the VFs is currently unsupported via devlink.
-Add the function handlers to set and get the HW address for the VFs.
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Signed-off-by: Karthik Sundaravel <ksundara@redhat.com>
----
- .../ethernet/intel/ice/devlink/devlink_port.c | 59 ++++++++++++++++++-
- drivers/net/ethernet/intel/ice/ice_sriov.c    | 34 ++++++++---
- drivers/net/ethernet/intel/ice/ice_sriov.h    |  8 +++
- 3 files changed, 91 insertions(+), 10 deletions(-)
+> -----Original Message-----
+> From: zhida312@outlook.com <zhida312@outlook.com>
+> Sent: Thursday, May 16, 2024 2:31 PM
+> To: rafael@kernel.org; viresh.kumar@linaro.org
+> Cc: Peng Ma <andypma@tencent.com>; Huang, Ray <Ray.Huang@amd.com>;
+> Shenoy, Gautham Ranjal <gautham.shenoy@amd.com>; Limonciello, Mario
+> <Mario.Limonciello@amd.com>; Yuan, Perry <Perry.Yuan@amd.com>; linux-
+> pm@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH v4] cpufreq: amd-pstate: fix the memory to free after epp
+> exist
+>
+> From: andypma <andypma.tencent.com>
+>
+> the cpudata memory from kzmalloc in epp init function is not free after e=
+pp
+> exist, so we should free it.
+>
+> Signed-off-by: Peng Ma <andypma@tencent.com>
+>
+> Changes from v3 to v4:
+>       update subject used git command "git format-patch -1 -v x"
+>
+> Changes from v2 to v3:
+>       update Signed-off-by to Peng Ma <andypma@tencent.com>.
+>       set a space between if and "(".
+>
+> Changes from v1 to v2:
+>       check whether it is empty before releasing
+>       set driver_data is NULL after free
+> ---
+>  drivers/cpufreq/amd-pstate.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index 6a342b0c0140..1b7e82a0ad2e 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -1441,6 +1441,13 @@ static int amd_pstate_epp_cpu_init(struct
+> cpufreq_policy *policy)
+>
+>  static int amd_pstate_epp_cpu_exit(struct cpufreq_policy *policy)  {
+> +     struct amd_cpudata *cpudata =3D policy->driver_data;
+> +
+> +     if (cpudata) {
+> +             kfree(cpudata);
+> +             policy->driver_data =3D NULL;
+> +     }
+> +
+>       pr_debug("CPU %d exiting\n", policy->cpu);
+>       return 0;
+>  }
+> --
+> 2.41.0
 
-diff --git a/drivers/net/ethernet/intel/ice/devlink/devlink_port.c b/drivers/net/ethernet/intel/ice/devlink/devlink_port.c
-index c9fbeebf7fb9..f5befce579e3 100644
---- a/drivers/net/ethernet/intel/ice/devlink/devlink_port.c
-+++ b/drivers/net/ethernet/intel/ice/devlink/devlink_port.c
-@@ -372,6 +372,62 @@ void ice_devlink_destroy_pf_port(struct ice_pf *pf)
- 	devl_port_unregister(&pf->devlink_port);
- }
- 
-+/**
-+ * ice_devlink_port_get_vf_fn_mac - .port_fn_hw_addr_get devlink handler
-+ * @port: devlink port structure
-+ * @hw_addr: MAC address of the port
-+ * @hw_addr_len: length of MAC address
-+ * @extack: extended netdev ack structure
-+ *
-+ * Callback for the devlink .port_fn_hw_addr_get operation
-+ * Return: zero on success or an error code on failure.
-+ */
-+static int ice_devlink_port_get_vf_fn_mac(struct devlink_port *port,
-+					  u8 *hw_addr, int *hw_addr_len,
-+					  struct netlink_ext_ack *extack)
-+{
-+	struct ice_vf *vf = container_of(port, struct ice_vf, devlink_port);
-+
-+	ether_addr_copy(hw_addr, vf->dev_lan_addr);
-+	*hw_addr_len = ETH_ALEN;
-+
-+	return 0;
-+}
-+
-+/**
-+ * ice_devlink_port_set_vf_fn_mac - .port_fn_hw_addr_set devlink handler
-+ * @port: devlink port structure
-+ * @hw_addr: MAC address of the port
-+ * @hw_addr_len: length of MAC address
-+ * @extack: extended netdev ack structure
-+ *
-+ * Callback for the devlink .port_fn_hw_addr_set operation
-+ * Return: zero on success or an error code on failure.
-+ */
-+static int ice_devlink_port_set_vf_fn_mac(struct devlink_port *port,
-+					  const u8 *hw_addr,
-+					  int hw_addr_len,
-+					  struct netlink_ext_ack *extack)
-+
-+{
-+	struct devlink_port_attrs *attrs = &port->attrs;
-+	struct devlink_port_pci_vf_attrs *pci_vf;
-+	struct devlink *devlink = port->devlink;
-+	struct ice_pf *pf;
-+	u16 vf_id;
-+
-+	pf = devlink_priv(devlink);
-+	pci_vf = &attrs->pci_vf;
-+	vf_id = pci_vf->vf;
-+
-+	return ice_set_vf_mac_fn(pf, vf_id, hw_addr);
-+}
-+
-+static const struct devlink_port_ops ice_devlink_vf_port_ops = {
-+	.port_fn_hw_addr_get = ice_devlink_port_get_vf_fn_mac,
-+	.port_fn_hw_addr_set = ice_devlink_port_set_vf_fn_mac,
-+};
-+
- /**
-  * ice_devlink_create_vf_port - Create a devlink port for this VF
-  * @vf: the VF to create a port for
-@@ -407,7 +463,8 @@ int ice_devlink_create_vf_port(struct ice_vf *vf)
- 	devlink_port_attrs_set(devlink_port, &attrs);
- 	devlink = priv_to_devlink(pf);
- 
--	err = devl_port_register(devlink, devlink_port, vsi->idx);
-+	err = devl_port_register_with_ops(devlink, devlink_port, vsi->idx,
-+					  &ice_devlink_vf_port_ops);
- 	if (err) {
- 		dev_err(dev, "Failed to create devlink port for VF %d, error %d\n",
- 			vf->vf_id, err);
-diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.c b/drivers/net/ethernet/intel/ice/ice_sriov.c
-index 067712f4923f..6aeaac1bc7a7 100644
---- a/drivers/net/ethernet/intel/ice/ice_sriov.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sriov.c
-@@ -1416,21 +1416,22 @@ ice_get_vf_cfg(struct net_device *netdev, int vf_id, struct ifla_vf_info *ivi)
- }
- 
- /**
-- * ice_set_vf_mac
-- * @netdev: network interface device structure
-+ * ice_set_vf_mac_fn
-+ * @pf: PF to be configure
-  * @vf_id: VF identifier
-  * @mac: MAC address
-  *
-  * program VF MAC address
-  */
--int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
-+int ice_set_vf_mac_fn(struct ice_pf *pf, u16 vf_id, const u8 *mac)
- {
--	struct ice_pf *pf = ice_netdev_to_pf(netdev);
-+	struct device *dev;
- 	struct ice_vf *vf;
- 	int ret;
- 
-+	dev = ice_pf_to_dev(pf);
- 	if (is_multicast_ether_addr(mac)) {
--		netdev_err(netdev, "%pM not a valid unicast address\n", mac);
-+		dev_err(dev, "%pM not a valid unicast address\n", mac);
- 		return -EINVAL;
- 	}
- 
-@@ -1459,13 +1460,13 @@ int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
- 	if (is_zero_ether_addr(mac)) {
- 		/* VF will send VIRTCHNL_OP_ADD_ETH_ADDR message with its MAC */
- 		vf->pf_set_mac = false;
--		netdev_info(netdev, "Removing MAC on VF %d. VF driver will be reinitialized\n",
--			    vf->vf_id);
-+		dev_info(dev, "Removing MAC on VF %d. VF driver will be reinitialized\n",
-+			 vf->vf_id);
- 	} else {
- 		/* PF will add MAC rule for the VF */
- 		vf->pf_set_mac = true;
--		netdev_info(netdev, "Setting MAC %pM on VF %d. VF driver will be reinitialized\n",
--			    mac, vf_id);
-+		dev_info(dev, "Setting MAC %pM on VF %d. VF driver will be reinitialized\n",
-+			 mac, vf_id);
- 	}
- 
- 	ice_reset_vf(vf, ICE_VF_RESET_NOTIFY);
-@@ -1476,6 +1477,21 @@ int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
- 	return ret;
- }
- 
-+/**
-+ * ice_set_vf_mac
-+ * @netdev: network interface device structure
-+ * @vf_id: VF identifier
-+ * @mac: MAC address
-+ *
-+ * program VF MAC address
-+ */
-+int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac)
-+{
-+	struct ice_pf *pf = ice_netdev_to_pf(netdev);
-+
-+	return ice_set_vf_mac_fn(pf, vf_id, mac);
-+}
-+
- /**
-  * ice_set_vf_trust
-  * @netdev: network interface device structure
-diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.h b/drivers/net/ethernet/intel/ice/ice_sriov.h
-index 8f22313474d6..085891a862f6 100644
---- a/drivers/net/ethernet/intel/ice/ice_sriov.h
-+++ b/drivers/net/ethernet/intel/ice/ice_sriov.h
-@@ -28,6 +28,7 @@
- #ifdef CONFIG_PCI_IOV
- void ice_process_vflr_event(struct ice_pf *pf);
- int ice_sriov_configure(struct pci_dev *pdev, int num_vfs);
-+int ice_set_vf_mac_fn(struct ice_pf *pf, u16 vf_id, const u8 *mac);
- int ice_set_vf_mac(struct net_device *netdev, int vf_id, u8 *mac);
- int
- ice_get_vf_cfg(struct net_device *netdev, int vf_id, struct ifla_vf_info *ivi);
-@@ -80,6 +81,13 @@ ice_sriov_configure(struct pci_dev __always_unused *pdev,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int
-+ice_set_vf_mac_fn(struct ice_pf __always_unused *pf,
-+		  u16 __always_unused vf_id, const u8 __always_unused *mac)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline int
- ice_set_vf_mac(struct net_device __always_unused *netdev,
- 	       int __always_unused vf_id, u8 __always_unused *mac)
--- 
-2.39.3 (Apple Git-146)
+Looks good now
 
+Reviewed-by: Perry Yuan <Perry.Yuan@amd.com>
+
+Thanks
+
+Regards.
+Perry
