@@ -1,99 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDADA14534B
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 11:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7704B1459E7;
+	Thu, 16 May 2024 11:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715858721; cv=none; b=s3mr9ogqtqZUBXri2adwPmN63m6FkQKgnbS9I3F9Hh3Zq3bs7etugvDjsmjKbVH9GYiM4ABkC3ZGp0oeyXEv89evbGoxIm+kFo8jQRP2+VU7eXNiDyXeNuyS++jqq6zXwwYgi+Ps3E8Q6GgylCrZHUqQ8nioirDOTUj2aF73aKA=
+	t=1715858852; cv=none; b=TCqacHq6oYveFSEUlQhjOH7QYOiboX9CCVn2AFOS9MFRqe6dPqLC0uzR0Ro5ICdApYkZh/uK8P0ELZeL3fYe8AlQrpRwQnovmsbepERk3Ko9J+ieoP7BWjx3/gGvumnEXccfBPxiyuvewK8g1Fqc6LSWPZzoSH3Z76//CVcKg/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715858721; c=relaxed/simple;
-	bh=Z3mpnLIUmt7AHRISjQddMdml+3gLRLCWGiU+qcDJh8g=;
+	s=arc-20240116; t=1715858852; c=relaxed/simple;
+	bh=XWllrDJgXCsAZy9Z5sDYfrb6ed2DyF9I1Pdx9ZRRR5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AAHrFa2RnkxlBORl8jVe6S/6alHMsmXWzWe9UvbxlZWr3Cc9Q/LqQy/VxHmbhVsCPHUvVc7i2RPewwbngCs7poZLimV2NonIcVvX5KzDn489fRlEOcrJSslmWhUKPDzUa4hbLYJlwSBmKsHkd9iUtvGIw8wVGWRt08nwd8Vp6m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHESXcPa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tJNZBe533gsuE5zK6DyAZQPb5jfhofPrdxaW6p7aInruPJb/OrqW9Q2qSCUIS4oSDSYhr7zGpzBaS/pumOwzQSU6frnQtP0Sd3xVkfrPnpRsP/eAuSbi1QpOe4nnI1qUVxq4k6s0KBwPGHntBwICsg1mp/8f/WgEwGJF2YWFmKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DazUIU2R; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHESXcPa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 071FFC32782;
-	Thu, 16 May 2024 11:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715858721;
-	bh=Z3mpnLIUmt7AHRISjQddMdml+3gLRLCWGiU+qcDJh8g=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DazUIU2R"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2F16227C;
+	Thu, 16 May 2024 13:27:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1715858840;
+	bh=XWllrDJgXCsAZy9Z5sDYfrb6ed2DyF9I1Pdx9ZRRR5A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NHESXcPat6gtqcuZi1lj1aZnOYsoBm2cW7PhCfJuGbmdmZJWkNQceN1sc87j49v3Z
-	 GGLKLPmqSPwFXOc5wq7XOeNBDbVwTy/K3IKx26eRKjJx5zffXf3oI/UcjSWJ7EW+QZ
-	 cMaASId65loQmqLIp+ImHpQuDsAtFPBAcu3SXyX5PUzxApkF2W88M6oNYx/SJ5REWz
-	 uNyaL1bTutiem6s8howHjAnknBBCbm/EDas/gIm9u7fCa7Jb2vHl8wRHoDvgHc12YU
-	 2Yk5n8SxW93BU64LckCwyh94pTKShGUh5jII0/z5N//LjrijG+6iQl2cesE2rIXp1f
-	 cqhwGfl+nhf3w==
-Date: Thu, 16 May 2024 13:25:18 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Yun Levi <ppbuk5246@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineeth@bitbyteword.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	anna-maria@linutronix.de, mingo@kernel.org, tglx@linutronix.de,
-	Markus.Elfring@web.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] time/tick-sched: idle load balancing when nohz_full
- cpu becomes idle.
-Message-ID: <ZkXtHv+fHUD2+lFJ@lothringen>
-References: <20240508172621.30069-1-ppbuk5246@gmail.com>
- <20240509092931.35209-2-ppbuk5246@gmail.com>
- <ZkU8lm2tjm_r9FpZ@pavilion.home>
- <20240516075628.GC22557@noisy.programming.kicks-ass.net>
- <CAM7-yPRHp3tiZjuBTesdRQoU8WJNg1scon_txS_6R-pZq9MXHw@mail.gmail.com>
- <20240516084911.GF22557@noisy.programming.kicks-ass.net>
+	b=DazUIU2RgiGQFEFJXxUSK4kgQ7916AjDz6UDMMDf0sUg66jj5Ief2/k3l4SiOJY1T
+	 rnHjgLlRS6wvNnIMFzrdrSkJHjaCdyXVUCwUf8P5s0pkAOp2ewDQr3QjnyAWqL8z+l
+	 1Zj0EfYQsxWsbAn5eGUALpLIoiKGKibN5/TJpyPQ=
+Date: Thu, 16 May 2024 14:27:20 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: nicolas.dufresne@collabora.corp-partner.google.com
+Cc: Maxime Ripard <mripard@redhat.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	Robert Mader <robert.mader@collabora.com>,
+	Sebastien Bacher <sebastien.bacher@canonical.com>,
+	Linux Media Mailing List <linux-media@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	linaro-mm-sig@lists.linaro.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Milan Zamazal <mzamazal@redhat.com>,
+	Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
+Subject: Re: Safety of opening up /dev/dma_heap/* to physically present users
+ (udev uaccess tag) ?
+Message-ID: <20240516112720.GA12714@pendragon.ideasonboard.com>
+References: <d2a512b2-e6b1-4675-b406-478074bbbe95@linaro.org>
+ <Zjpmu_Xj6BPdkDPa@phenom.ffwll.local>
+ <20240507183613.GB20390@pendragon.ideasonboard.com>
+ <4f59a9d78662831123cc7e560218fa422e1c5eca.camel@collabora.com>
+ <Zjs5eM-rRoh6WYYu@phenom.ffwll.local>
+ <20240513-heretic-didactic-newt-1d6daf@penduick>
+ <20240513083417.GA18630@pendragon.ideasonboard.com>
+ <c4db22ad94696ed22282bf8dad15088d94ade5d6.camel@collabora.com>
+ <20240514204223.GN32013@pendragon.ideasonboard.com>
+ <a3428b0c352c24d43a2d458d41819fbf4b6cce0f.camel@collabora.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240516084911.GF22557@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3428b0c352c24d43a2d458d41819fbf4b6cce0f.camel@collabora.corp-partner.google.com>
 
-On Thu, May 16, 2024 at 10:49:11AM +0200, Peter Zijlstra wrote:
-> On Thu, May 16, 2024 at 09:20:08AM +0100, Yun Levi wrote:
-> > > None of that HK nonsense is relevant. The NOHZ_FULL nonsense implies
-> > > single CPU partitions, and *that* should be avoiding any and all
-> > > load-balancing.
-> > 
-> > Do you mean.. tick_nohz_full cpu (non-HK-ticked cpu) shouldn't belong
-> > to any sched_domain?
-> 
-> AFAIK NOHZ_FULL still hard relies on the isolcpus garbage, so yeah, it
-> should be all single cpu partitions, which don't have a domain.
-> 
-> (this really should migrate to use cpusets partitions)
-> 
-> > > If there still is, that's a bug, but that's not related to HK goo.
-> > >
-> > > As such, I don't think the HK_TYPE_SCHED check in
-> > > nohz_balance_enter_idle() actually makes sense, the on_null_omain()
-> > > check a little below that should already take care of things, no?
-> > 
-> > IIUC,
-> > currently, whether cpu belongs on domain or null is determined by
-> > HK_DOMAIN_FLAGS
-> 
-> No! you can create NULL domains without any of the HK nonsense. Both
-> isolcpus and cpusets can create single CPU partitions.
-> 
-> > However, when "nohz_full=" is used, it still on HK_DOMAIN, so it
-> > belongs to sched_domain
-> > so, it couldn't be filtered out by on_null_domain().
-> > 
-> > unless "isolcpus=domain" or "isolcpus={cpu_list}", it's on null domain.
-> > with "isolcpus=tick", it participates sched_domain.
-> 
-> Frederic ?!? You can use nohz_full without isolcpus? That makes no
-> sense. If you do that you get to keep the pieces.
+Hi Nicolas,
 
-I fear you can yes, even though most users combine it with isolcpus. I
-know, that interface is terrible but it dates from times when we weren't
-sure about all the potential usecases of nohz_full. There was a possibility
-that HPC could just want to reduce ticks without all the hard and costly
-isolation around. But all the usecases I have witnessed so far in ten years
-involved wanting 0 noise after all...
+On Wed, May 15, 2024 at 01:43:58PM -0400, nicolas.dufresne@collabora.corp-partner.google.com wrote:
+> Le mardi 14 mai 2024 à 23:42 +0300, Laurent Pinchart a écrit :
+> > > You'll hit the same limitation as we hit in GStreamer, which is that KMS driver
+> > > only offer allocation for render buffers and most of them are missing allocators
+> > > for YUV buffers, even though they can import in these formats. (kms allocators,
+> > > except dumb, which has other issues, are format aware).
+> > 
+> > My experience on Arm platforms is that the KMS drivers offer allocation
+> > for scanout buffers, not render buffers, and mostly using the dumb
+> > allocator API. If the KMS device can scan out YUV natively, YUV buffer
+> > allocation should be supported. Am I missing something here ?
+> 
+> There is two APIs, Dumb is the legacy allocation API, only used by display
+
+Is it legacy only ? I understand the dumb buffers API to be officially
+supported, to allocate scanout buffers suitable for software rendering.
+
+> drivers indeed, and the API does not include a pixel format or a modifier. The
+> allocation of YUV buffer has been made through a small hack, 
+> 
+>   bpp = number of bits per component (of luma plane if multiple planes)
+>   width = width
+>   height = height * X
+> 
+> Where X will vary, "3 / 2" is used for 420 subsampling, "2" for 422 and "3" for
+> 444. It is far from idea, requires deep knowledge of each formats in the
+> application
+
+I'm not sure I see that as an issue, but our experiences and uses cases
+may vary :-)
+
+> and cannot allocate each planes seperatly.
+
+For semi-planar or planar formats, unless I'm mistaken, you can either
+allocate a single buffer and use it with appropriate offsets when
+constructing your framebuffer (with DRM_IOCTL_MODE_ADDFB2), or allocate
+one buffer per plane.
+
+> The second is to use the driver specific allocation API. This is then abstracted
+> by GBM. This allows allocating render buffers with notably modifiers and/or use
+> cases. But no support for YUV formats or multi-planar formats.
+
+GBM is the way to go for render buffers indeed. It has been designed
+with only graphics buffer management use cases in mind, so it's
+unfortunately not an option as a generic allocator, at least in its
+current form.
+
+-- 
+Regards,
+
+Laurent Pinchart
