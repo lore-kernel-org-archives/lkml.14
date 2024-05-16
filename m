@@ -1,225 +1,357 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712D28F66;
-	Thu, 16 May 2024 15:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874872; cv=fail; b=ZFf+fqLCnAKGUGyPmaV8BmF+ft66LFdTsR1+RVYYKkxT+Z9X1rB4pGpmnNo88N2ujQ8OrFzINiEiRjQVX5WUpwstA61xRkq5HgKKtW9c3Snjbe0nQ5sDB44NNUdVXgIhESFqb45fNhGglITSJ+dRNE1D8vxj7bn5Oa7WMHpM76c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874872; c=relaxed/simple;
-	bh=sA591uGqDSchZL4lZXCHVUiAiyS+XNPtR7Yg2pLiqvU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aU2df0NkU0RhbAdlMPOrS/bgzLTw6EQX9KueWKmMtA/3rP5Y+mhU818lbw9qaBzNB4sDj3TEoI2qDWWT+evozeeDoBAIFrxXyY6Wc1RhE9Chry7Hjgl3VGWip6JgxQ45eg9MCCn+hFOyepUJLi2CPMM5mE1l4j3slibe1P2gC3c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TC+8BgHN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WUJeIzGU; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TC+8BgHN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WUJeIzGU"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44GFJNaf018719;
-	Thu, 16 May 2024 15:49:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=sA591uGqDSchZL4lZXCHVUiAiyS+XNPtR7Yg2pLiqvU=;
- b=TC+8BgHNDyYTwSzFsvJz27Jm16z9gxnFDZ7yX8V7Z8yYMBf3AbURaYSMESbWKANqBpkR
- gv1KhGDD7JnaaCy1leQDjLwZPlk05Do1PKkOw2eGOLiuAGT54aPj1e23RbJcdLazXNqq
- bvM9D5KPx0oLiZF4e5Emfl+pnKZ+D4YhvqKyro9drjsD1wVIhTxcg97wTGJgMN1Mc1Rs
- I/cjDFfcKGlxBDt2cbmjshggEACZt/po9lCcHhW0IHErqcHRA2VmYqzvlW9CSUICUPk7
- CHyPmNAmf0zOgVITwjoO2WTdsbjE0HnwPEV0r86ww9ZMRGeVjiLVahHcdiroxjsEpG7P wA== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3tx37kaj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 May 2024 15:49:18 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44GElGIG005793;
-	Thu, 16 May 2024 15:49:18 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y1y4ada9y-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 May 2024 15:49:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ihNLUGeO59Tel4QfJEEkAbqx4G6LAiI2QZt90rBFurbO2M2t2KwWJyIwyLZrOomumaJNUz10elfLu202GaHIXd7f05jDo3WEkzweOCBUKRojov4T4bgTlOhfUaruXU7gTIoo9dnlMBuM0nMW7OQCxSZ/IBrvnooErUhc2JFBGi3NEucPLmmwqjDgFIfCFeU6LVMcnT6NBnxW/NlfOb9ezwGrYViE89kjj0ksIwDmgT8Ov40fL1b+4nSoTrUIRvqWkMLV2HwOZIMzaY/+/7HdNepsurmgbsTbAGyrawfHVjcS1wiGf/GHVL5BPjet2Za29eaXwlvQfgn4cyCrFhRfag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sA591uGqDSchZL4lZXCHVUiAiyS+XNPtR7Yg2pLiqvU=;
- b=GE8cCmD0FEmHkOqgj7YJqEDH/etw5ScRl6dGCj6aYn5JCX8MkEl14M4AH7FGgpm0YXwNnY24DpRglQLTJiZNb9jPICXQSWXNwokZiMnLiZQllhi6SSx8i4EzWBzshJsouxnCUCLzgFucgogMWP5CTaF9tREclFQ6LqMko9Ljabw/Zf1co0dDhzVjGRo5m/WDpR05/BuUN0OJM9H1FC3TQ4fbINWS9NLvibyuND/e0PdecXWRjIGTcg+p2ZYumF8HeSR6kDioSpGF20FqYENYepsQU1cJQmsiu5TTKSV6ldfTarzoBUzCveq+XCCgnTuQ5HcWBI4zla8zREl/2gLVPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sA591uGqDSchZL4lZXCHVUiAiyS+XNPtR7Yg2pLiqvU=;
- b=WUJeIzGUFcZr/Lf5mR+w3e3dRg+BF8DYVx0bwiAaR7flZkYT5vLeShqomQPNJ3XQD8EmJkFxvWry0cEW0tpuTvCWKGTwj9dY4fBzbkGpOocCXCFoWUUuASQqiyk45qoU9Axms8m1zDLi2AiPGow9Jvz5+IWZioPLFhR+P+kQIl4=
-Received: from PH0PR10MB5593.namprd10.prod.outlook.com (2603:10b6:510:f5::16)
- by SJ0PR10MB5549.namprd10.prod.outlook.com (2603:10b6:a03:3d8::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.25; Thu, 16 May
- 2024 15:49:15 +0000
-Received: from PH0PR10MB5593.namprd10.prod.outlook.com
- ([fe80::8518:ea67:dd0e:9836]) by PH0PR10MB5593.namprd10.prod.outlook.com
- ([fe80::8518:ea67:dd0e:9836%3]) with mapi id 15.20.7544.052; Thu, 16 May 2024
- 15:49:14 +0000
-From: Haakon Bugge <haakon.bugge@oracle.com>
-To: Zhu Yanjun <zyjzyj2000@gmail.com>
-CC: OFED mailing list <linux-rdma@vger.kernel.org>,
-        open list
-	<linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        Jason Gunthorpe
-	<jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Saeed Mahameed
-	<saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
-        "David S . Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Tejun Heo
-	<tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Allison Henderson
-	<allison.henderson@oracle.com>,
-        Manjunath Patil
-	<manjunath.b.patil@oracle.com>,
-        Mark Zhang <markzhang@nvidia.com>,
-        Chuck
- Lever III <chuck.lever@oracle.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Yang Li <yang.lee@linux.alibaba.com>
-Subject: Re: [PATCH v2 3/6] RDMA/cma: Brute force GFP_NOIO
-Thread-Topic: [PATCH v2 3/6] RDMA/cma: Brute force GFP_NOIO
-Thread-Index: AQHapsb3zA/Z31sN+0OQadFdGByD+7GZejWAgACJYYA=
-Date: Thu, 16 May 2024 15:49:14 +0000
-Message-ID: <236B9732-8264-454C-94BF-7C9D491D3A37@oracle.com>
-References: <20240515125342.1069999-1-haakon.bugge@oracle.com>
- <20240515125342.1069999-4-haakon.bugge@oracle.com>
- <82bf9e5f-b798-4d29-8473-c074a34f15b0@linux.dev>
-In-Reply-To: <82bf9e5f-b798-4d29-8473-c074a34f15b0@linux.dev>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3774.200.91.1.1)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR10MB5593:EE_|SJ0PR10MB5549:EE_
-x-ms-office365-filtering-correlation-id: 70220a3c-7418-448a-26df-08dc75bfbcf3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|366007|376005|7416005|1800799015|38070700009;
-x-microsoft-antispam-message-info: 
- =?utf-8?B?MUYzcnU3Z09hMmxYTm80ZWV1cEw0M3hnZGN5cnZtSTBZbTNPbVJEK21KZDJm?=
- =?utf-8?B?ZDdOb1I3b2NvcG1kYkE3QzJDNm9TNjlpV0RsU0gxRDJHVzJKRkdrU2pldzFG?=
- =?utf-8?B?OEsxTlQzazBsdmFSa050dVpaTERtcjMwbUZTaS9hL0d1M0ZUN2pMb3JsdVZ5?=
- =?utf-8?B?blNrczEvUXhKMmFVamZmbXhPSWxsMnRHWUtQTmtDVWlDdTdLUW1yM0NCWSth?=
- =?utf-8?B?a0tWWVNzR0phdnpHOHEycEpIeWxENHNQU00yREVaK0V2bzN0MllYWTg2MzFN?=
- =?utf-8?B?bVFpclp0SDAyeFQweUM1aXBDNk00akovMkpCejlyQnRobzVyTFNWbVpCYUZj?=
- =?utf-8?B?VDZsQy9ERU1seVZxWUtWSU95cnFRUm9NK2pCSzBSc3ZySEtsZGJUbXloaGNG?=
- =?utf-8?B?aXQ5ditQamhkSXpsNFQwd1B2WHkwdWZNdE1DZ1lGM2NDaGtSQTZmVU4reHIy?=
- =?utf-8?B?Z3o4SDNoNkFMQlZJQXM5VmtUUnBkU2R3ZXllZDR3S1FtUk9JK1VEeTlqbUVD?=
- =?utf-8?B?dzlaWUhHYklYaDhFa2NhWG5kQU1oU2F0czZoODFHRmFZWDZtb0ZIMzNQd3kr?=
- =?utf-8?B?UXBLajBOMVpQWkRadDZYaXlVaGVmM1p0aGI2S0M0ZlZNRmFoVlBzU24wSmdC?=
- =?utf-8?B?bnlWeHdoZ25KdFBVdzdzWmdDSEtRcFpuZ0prOHZLS0I4UVZoQXZNdmhrbnBT?=
- =?utf-8?B?UWZEbkJob0IyMUt1Tk9HckFoTU5ybkF4blhudWtMdnlpc1BjU1FzcjVoVGJl?=
- =?utf-8?B?OTRJeHdjSGlSVGlSdS9zSStWR2F6MUJrVVV2dkZwelZ0cXpGaFV5ZGZsZlQ4?=
- =?utf-8?B?KzJ5VjdPK0ZGV2VaNmZsS0VqaDQ1UldSVWExMEFWVU9maDhqV0dLcjcxWFhR?=
- =?utf-8?B?dWJUVkVUN2RLY0pkVFRCNTVkemE3WEN1WXlqVnpNeG53WGNnZUgrUVBFVUd1?=
- =?utf-8?B?Z2FjTTVmcnVZL3NSQkVGSStINVN1N3pHWnhUVXBiUDlSVmpsTU0wcFNINlFR?=
- =?utf-8?B?NGVaOUhaQXNPWFVGOE1Eb3Q5Y3RPTTdUbzRtU0ZpL1F4QU4rcTRKY1ZFenRI?=
- =?utf-8?B?MjZpM2dsQU1BMkM1aUFJd3RPSHpNWDFNRXY4T1FTcGZqUUpTcW5TL1pZeTdG?=
- =?utf-8?B?MGNTNkpYUis5MWJQeFBwaXFFQjc5dFFOS05zZkRLZGV0NkZIQmUya2s0S2FR?=
- =?utf-8?B?U3Bxb1hXNzV2S1ZzeE5paTBaQURrL3JGR2doRDVxR1ZxK0orMUtoMVp4TEx1?=
- =?utf-8?B?NVNUblI5ZWVRUHczZnRjRGgvVktZS3dkNCtLM1ArN2IwSDl0dk1YVFg0VlIw?=
- =?utf-8?B?cXJqRW1vdjloUGsvc1MvZXlpV3N4VUZaTFpmZEoxWGUyRjdEbTNHaWlxS05h?=
- =?utf-8?B?cHM0Zzk1ZjVvcUpaajBaaTV2SlV6SHdydVhiVEFjTjlhWDI1Q0JLOXc0VVc4?=
- =?utf-8?B?UzNhbjJ3KzJoTXZKSHpkOVhvYWxIanFpVWtEWjZ4WVl5UkdsakMxdVZMYno4?=
- =?utf-8?B?OSt0K1Q2UXdEbUtRYm40WGZBekh2MHhJUTJGUElqUmYyM1FCbEZWelBOYllP?=
- =?utf-8?B?Yyt6SUVnMjkveUs4TXo1YW1PVjhkcTNRYnpiL1FLSmVhLzNWVFVTdlRPS2U3?=
- =?utf-8?B?NENzdlFyb1cyM3Y1RVhkQXlRaEZzR2JBWWhHS3U2L0QwN0ZMRTRxcVMyRm5S?=
- =?utf-8?B?Qm55WklNTTJCM2xpNWRteFY2dXN4bjQ5OXpCR1ZqZis1Z1dYaXQ0TWN3PT0=?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5593.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?YzJzRTluMENtVDJIK1QyN243VmZzc1hTdzdXVFJBMDVZMDVtZFUyV3NtVXhX?=
- =?utf-8?B?Y05Vd2RPOFdWYjlNY3N4ZHhNVzRncStRaHV5cUNiZm54OUxkaEl3VTdQVHFU?=
- =?utf-8?B?TElGS2R6Mm9nVS9BbGNnSTVoVFhFSFIwTTZnU1cwcHZQTVhETE9xdFhOdmMx?=
- =?utf-8?B?ZE5BVlZDdEkzTDRaRUJUaEJwU1dNNVdKSmdWdm9TUHpmQmpNOUYvWWttL3ZD?=
- =?utf-8?B?bWQrbW93alF6UVM1d0hjek8vMmJpaTAxdFJ2Qlh0elJ0MGZ5eG85dEc3ZTg3?=
- =?utf-8?B?anBCZnVHcG5KVnE5Vk0wVFM0MzRIZWxIZnowZk9DSVBPMXZvc2g0UWY4Mm9E?=
- =?utf-8?B?UzNYTEY3SjE4OUYwUG8yNllPN0F5NGpFTWJRMUc2ZXBuZEE1eW4rYVNqVzBp?=
- =?utf-8?B?elpIaC9kTVZkTk45dEdibHdmS2taRmVSRkFhS2pyL2ljQUErd0NsaFNRR2Nz?=
- =?utf-8?B?a2xtUXcvaWV0T2pZTUlweDdjM3ZRYmN0eDMxNk55UHEyd1FsdGJjSXZrRUky?=
- =?utf-8?B?VC9XWUk4cG1tOWtxN0p3OHpjNHBOS3dvc2NUeTJzVTVoNFl1TXNYVk04NVhD?=
- =?utf-8?B?b0FGZnlxNThZNXA3TDZxNzZtKzR0YmxyNk5WUmxtdGZOdUhsWlVxL2ZuWEox?=
- =?utf-8?B?RGFLZGlqbjB1cFZNZVZRQk1HbllERkxGZ21NZjAvSjdhOUVJeWJRSU05VlVk?=
- =?utf-8?B?cnNsZ0hGRDdpdEZvVUtjbTVabFhCM05WVld2cVZKY3h4QU0waEZqRHI3VWtm?=
- =?utf-8?B?MFhEVko4QTlPTWN6VnZNQW5wQVREUE0rTjA0VC85L0RjSjBkTkp6NXA3RERj?=
- =?utf-8?B?OUtkeUNXaXZYWkNRQXBuUVpVVGgxTTdQMFBmcUw4b2tvSTNRTnljY0tVN3d4?=
- =?utf-8?B?RHVhZkJKY1ZlenErNE1JTVcyTE1YaTBFY0dtakpUYWg4ZDBBa29QN2tNZjY4?=
- =?utf-8?B?VUR0dnlCWGlQNlF2SG5PK0ozVXBTc1ROT2V1WTZaVk9qdXpUcmJZOTJIQ0lJ?=
- =?utf-8?B?bFE0anl5aEpJa01NNzRBOWlBK2ZCc1BLMWlaNGtOenJvMWVCbG1NYlFCSGEw?=
- =?utf-8?B?bXJUc3ZNRkZwbDBXK2p5elF0K0RHOXlnOURlUzNOQ1hRVUJFeVkvTlhlckRV?=
- =?utf-8?B?ZkkzYWE0TmoxMktLaG1TN25weFhtaVltWjlXYzFzMHhOOUphYm5rT1pFWEZU?=
- =?utf-8?B?aHo1c0VtZnZIODBBd3FpVXVFUGUzTVV0UUlTWDhQQmFaSFVUVGR5alZUMFNm?=
- =?utf-8?B?M2FZMFErNXh6TlIzZlU2TGpzK2lxY29NeitEek5pYU1LZExwKzhxUDlCZ09J?=
- =?utf-8?B?M3RMOXlLQkhrdkRMWEVyWEFlRm5VS0kwV0ZlbHhqeXlma0kzSVYrVXdzR0Y2?=
- =?utf-8?B?ZkdLWHpiaEdGSXpxcGxIUVQwc1pVWFZmUGhGUGhRK0FBRGhPQ25XTm9xZ2xP?=
- =?utf-8?B?WklPN0xJZzRjVjZ5Z2ttODd5UW5GQTJSQzFMMkh0RWxlRmtvVUlLT3JZZFY3?=
- =?utf-8?B?NjB6STZGWWNqVjZDVFJwZHEvcWpOck1ObDdTdi9ZMS9iajFtWWNjUzVmMVZZ?=
- =?utf-8?B?TVM5N1RNY2lvMnVZSkpTaTY2R2pRNml6d1FScThEUHJpM0RqdTdod2w2MlFZ?=
- =?utf-8?B?WTZCR25jaWJEUk5OSWhKWEpQd3RsYnZnejdNMkpKVzFlWUdSUWxKNW1WRnh2?=
- =?utf-8?B?ZjFHYnQvRWRFSGl6RmFJQ2FzbW8rM0gydlJ2V3R0VVRDQXVhVHg1dDlUblBR?=
- =?utf-8?B?U2JhSTVBcFpSS0VTMGQ4SzdUbmhzajBBTmYwdkRMSVVYaU5CR0hCZml5cXlE?=
- =?utf-8?B?VVQ0NnF6ODB0aWp6MFBONkFqMW40dXhobGp6NnZ3QVdYdEtQZG45NTdUU2kx?=
- =?utf-8?B?S054MFJyRG12a284QXJqNHFVd0ZxOXZOOE9sTEcvRmVZVlJoWVFLam1kZU5t?=
- =?utf-8?B?aHRUZnJNSG5lVFhXTXZOUEdGSWtzcUhGNGtZQ3BTRFUxTjNjV0hmN2ZLMlhh?=
- =?utf-8?B?S1ZCdTN4Ylp1NVFtb1kyVXpjUmtyNWtBWkJkM1RzREN5UkVNbWUyRkJ5a3cz?=
- =?utf-8?B?VWRPdHdrN09TeWN4SmRkSUtOdUtXUWxGVzczMnNKNDZNekhoK2dEWmZKWXBT?=
- =?utf-8?B?bHAvelN3M08vMUQ1Q0hCZUNuNEFWK2VwL0VDS1NMaUNPWDFhVE1qcFlVWUhX?=
- =?utf-8?B?bWc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0762E4DB59C5254FAAF0950A7AC53720@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A2A14D431
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715874891; cv=none; b=MZ+HqMvob33WD0XS87hA5O+MAfJddjAcQc4urXSgMAv8TmQ/jTFmd72HyMw7M7msHoOyLxlPQe2jbNKDsQmIZ8H+RNYVtXzPSJ6vlEZjcSPkZGfn5YFitiYxrH74HjeWTLpOMEPPZZTewrkq62Yx+RK/jsbfqfo/IZyIkYlEx3A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715874891; c=relaxed/simple;
+	bh=FOSXC2Q65VEvriAMezp3gL0yOoXg0gtxq3K2dr9Ma/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=F8kcs0JLvhnAheC4jVfPCetzUA/IMizWdKMw0/OYvUSloahm6U2uyia8HYQRh8HJ1MePYrYhDTGRgVEMjdnUst/fSKdiErYat3/Ptaczv2Ub8bGMYXry/DMHB+N8jBph3K8RLqZO6NPgBfhSpAKTnzV1K92u12SvIAwgLxu1OZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F9CDC113CC;
+	Thu, 16 May 2024 15:54:50 +0000 (UTC)
+Date: Thu, 16 May 2024 11:54:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, "Dr. David Alan Gilbert"
+ <linux@treblig.org>, Hao Ge <gehao@kylinos.cn>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Thorsten Blum <thorsten.blum@toblux.com>, Yuran
+ Pereira <yuran.pereira@hotmail.com>, Zheng Yejian <zhengyejian1@huawei.com>
+Subject: [GIT PULL] tracing: Cleanups for v6.10
+Message-ID: <20240516115449.32d6f2b0@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	y8C1lBv7wSZOSo3iOWUnEgfAOytCWsQPFo9ciWlxZvcwHYXT+Z/Fpl9BGWVeKJ4IsEEUiAly0yfzkLQ1mnRLa0K+Ca2M9EKGLW6ZgCzurqg4S8Zi5VbXZWMIq3INCElOZbAwaffxMvm7bsSde+Dr0304pkrnvDOljhz0uQjnoVOxnwEjCeR4rYHdJR9b1ARLZlLq+xcl1r7FUg8mD1XpVmqgG7+av+cQUF9S8UXSjja8jQ+aPTGAyAJgEY21c10jk4aZg7tftidNUbM2uZ2jEWCnm9FiBonAkBgb5bl0QgisYsSu8IxGMTr+ArTW5YwGpMvCU856CAYja1CNx3lEWftmpeNjB9VSNbbkurz3Snc255ikTNNs4wKw2m+m1WFqd6od0krXiIX9JtiT3TilggQYyXhsU8UTvZOQJ1vcS7JbSaDVUC66kdtrV79AfWUpqY8oRa+8KPma/K4H2tMDlT101cLzOWaLmkABA9Ns4PMQGlrAfQesef4wHWCUjvKuprxorJKLDvhbVb+xFsxjOWC3mpk6X7sVGppAIuEn6C6nUhCoE+a9wOpC42F7Rlf/wUqvWBBEL+EFzB0VcIE6JLB1K4D7E4AnmWRY5p4lRjo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5593.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70220a3c-7418-448a-26df-08dc75bfbcf3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2024 15:49:14.8717
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z/1ngJiRfEBMjntiqd34UEmuk3Wg5kcaTyvdKF5nzGCJFPbIlqbozx5cCtCAVABR8Nww2RF86uPCpC1BjOMTVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5549
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
- mlxlogscore=895 phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405160112
-X-Proofpoint-GUID: BlRORTjTn_zzQm_Zgo6LdOJpIC3NDKxj
-X-Proofpoint-ORIG-GUID: BlRORTjTn_zzQm_Zgo6LdOJpIC3NDKxj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-SGkgWWFuanVuLA0KDQoNCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
-cm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9jdW1lbnRhdGlvbi9wcm9jZXNzL21h
-aW50YWluZXItbmV0ZGV2LnJzdD9oPXY2LjkjbjM3Ng0KPiANCj4gIg0KPiBOZXRkZXYgaGFzIGEg
-Y29udmVudGlvbiBmb3Igb3JkZXJpbmcgbG9jYWwgdmFyaWFibGVzIGluIGZ1bmN0aW9ucy4NCj4g
-T3JkZXIgdGhlIHZhcmlhYmxlIGRlY2xhcmF0aW9uIGxpbmVzIGxvbmdlc3QgdG8gc2hvcnRlc3Qs
-IGUuZy46Og0KDQoiSW5maW5pYmFuZCBzdWJzeXN0ZW0iICE9IG5ldGRldiwgcmlnaHQ/DQoNCg0K
-VGh4cywgSMOla29uDQoNCg==
+
+
+Linus,
+
+tracing cleanups for v6.10:
+
+- Removed unused ftrace_direct_funcs variables
+
+- Fix a possible NULL pointer dereference race in eventfs
+
+- Update do_div() usage in trace event benchmark test
+
+- Speedup direct function registration with asynchronous RCU callback.
+  The synchronization was done in the registration code and this
+  caused delays when registering direct callbacks. Move the freeing
+  to a call_rcu() that will prevent delaying of the registering.
+
+- Replace simple_strtoul() usage with kstrtoul()
+
+
+Please pull the latest trace-v6.10 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-v6.10
+
+Tag SHA1: 7cb6620f9a48fbdda06bc070c3e6270a39edc76a
+Head SHA1: d4e9a968738bf66d3bb852dd5588d4c7afd6d7f4
+
+
+Dr. David Alan Gilbert (2):
+      ftrace: Remove unused list 'ftrace_direct_funcs'
+      ftrace: Remove unused global 'ftrace_direct_func_count'
+
+Hao Ge (1):
+      eventfs: Fix a possible null pointer dereference in eventfs_find_events()
+
+Paul E. McKenney (1):
+      ftrace: Use asynchronous grace period for register_ftrace_direct()
+
+Thorsten Blum (1):
+      tracing: Improve benchmark test performance by using do_div()
+
+Yuran Pereira (1):
+      ftrace: Replaces simple_strtoul in ftrace
+
+Zheng Yejian (1):
+      ftrace: Fix possible use-after-free issue in ftrace_location()
+
+----
+ fs/tracefs/event_inode.c       |  7 ++---
+ include/linux/ftrace.h         |  3 --
+ kernel/trace/fgraph.c          | 11 -------
+ kernel/trace/ftrace.c          | 68 ++++++++++++++++++++++--------------------
+ kernel/trace/trace_benchmark.c |  2 +-
+ 5 files changed, 39 insertions(+), 52 deletions(-)
+---------------------------
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index a878cea70f4c..0256afdd4acf 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -345,10 +345,9 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 		 * If the ei is being freed, the ownership of the children
+ 		 * doesn't matter.
+ 		 */
+-		if (ei->is_freed) {
+-			ei = NULL;
+-			break;
+-		}
++		if (ei->is_freed)
++			return NULL;
++
+ 		// Walk upwards until you find the events inode
+ 	} while (!ei->is_events);
+ 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 54d53f345d14..e3a83ebd1b33 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -83,7 +83,6 @@ static inline void early_trace_init(void) { }
+ 
+ struct module;
+ struct ftrace_hash;
+-struct ftrace_direct_func;
+ 
+ #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_MODULES) && \
+ 	defined(CONFIG_DYNAMIC_FTRACE)
+@@ -414,7 +413,6 @@ struct ftrace_func_entry {
+ };
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+-extern int ftrace_direct_func_count;
+ unsigned long ftrace_find_rec_direct(unsigned long ip);
+ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
+ int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
+@@ -426,7 +424,6 @@ void ftrace_stub_direct_tramp(void);
+ 
+ #else
+ struct ftrace_ops;
+-# define ftrace_direct_func_count 0
+ static inline unsigned long ftrace_find_rec_direct(unsigned long ip)
+ {
+ 	return 0;
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index c83c005e654e..a130b2d898f7 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -125,17 +125,6 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+ {
+ 	struct ftrace_graph_ent trace;
+ 
+-#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+-	/*
+-	 * Skip graph tracing if the return location is served by direct trampoline,
+-	 * since call sequence and return addresses are unpredictable anyway.
+-	 * Ex: BPF trampoline may call original function and may skip frame
+-	 * depending on type of BPF programs attached.
+-	 */
+-	if (ftrace_direct_func_count &&
+-	    ftrace_find_rec_direct(ret - MCOUNT_INSN_SIZE))
+-		return -EBUSY;
+-#endif
+ 	trace.func = func;
+ 	trace.depth = ++current->curr_ret_depth;
+ 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da1710499698..2308c0a2fd29 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1595,12 +1595,15 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+ {
+ 	struct dyn_ftrace *rec;
++	unsigned long ip = 0;
+ 
++	rcu_read_lock();
+ 	rec = lookup_rec(start, end);
+ 	if (rec)
+-		return rec->ip;
++		ip = rec->ip;
++	rcu_read_unlock();
+ 
+-	return 0;
++	return ip;
+ }
+ 
+ /**
+@@ -1614,25 +1617,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+  */
+ unsigned long ftrace_location(unsigned long ip)
+ {
+-	struct dyn_ftrace *rec;
++	unsigned long loc;
+ 	unsigned long offset;
+ 	unsigned long size;
+ 
+-	rec = lookup_rec(ip, ip);
+-	if (!rec) {
++	loc = ftrace_location_range(ip, ip);
++	if (!loc) {
+ 		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
+ 			goto out;
+ 
+ 		/* map sym+0 to __fentry__ */
+ 		if (!offset)
+-			rec = lookup_rec(ip, ip + size - 1);
++			loc = ftrace_location_range(ip, ip + size - 1);
+ 	}
+ 
+-	if (rec)
+-		return rec->ip;
+-
+ out:
+-	return 0;
++	return loc;
+ }
+ 
+ /**
+@@ -2538,7 +2538,6 @@ ftrace_find_unique_ops(struct dyn_ftrace *rec)
+ /* Protected by rcu_tasks for reading, and direct_mutex for writing */
+ static struct ftrace_hash __rcu *direct_functions = EMPTY_HASH;
+ static DEFINE_MUTEX(direct_mutex);
+-int ftrace_direct_func_count;
+ 
+ /*
+  * Search the direct_functions hash to see if the given instruction pointer
+@@ -4202,12 +4201,12 @@ static int
+ add_rec_by_index(struct ftrace_hash *hash, struct ftrace_glob *func_g,
+ 		 int clear_filter)
+ {
+-	long index = simple_strtoul(func_g->search, NULL, 0);
++	long index;
+ 	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
+ 
+ 	/* The index starts at 1 */
+-	if (--index < 0)
++	if (kstrtoul(func_g->search, 0, &index) || --index < 0)
+ 		return 0;
+ 
+ 	do_for_each_ftrace_rec(pg, rec) {
+@@ -5318,14 +5317,6 @@ ftrace_set_addr(struct ftrace_ops *ops, unsigned long *ips, unsigned int cnt,
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ 
+-struct ftrace_direct_func {
+-	struct list_head	next;
+-	unsigned long		addr;
+-	int			count;
+-};
+-
+-static LIST_HEAD(ftrace_direct_funcs);
+-
+ static int register_ftrace_function_nolock(struct ftrace_ops *ops);
+ 
+ /*
+@@ -5366,6 +5357,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+ 	}
+ }
+ 
++static void register_ftrace_direct_cb(struct rcu_head *rhp)
++{
++	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
++
++	free_ftrace_hash(fhp);
++}
++
+ /**
+  * register_ftrace_direct - Call a custom trampoline directly
+  * for multiple functions registered in @ops
+@@ -5464,10 +5462,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+  out_unlock:
+ 	mutex_unlock(&direct_mutex);
+ 
+-	if (free_hash && free_hash != EMPTY_HASH) {
+-		synchronize_rcu_tasks();
+-		free_ftrace_hash(free_hash);
+-	}
++	if (free_hash && free_hash != EMPTY_HASH)
++		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
+ 
+ 	if (new_hash)
+ 		free_ftrace_hash(new_hash);
+@@ -5817,9 +5813,8 @@ __setup("ftrace_graph_notrace=", set_graph_notrace_function);
+ 
+ static int __init set_graph_max_depth_function(char *str)
+ {
+-	if (!str)
++	if (!str || kstrtouint(str, 0, &fgraph_max_depth))
+ 		return 0;
+-	fgraph_max_depth = simple_strtoul(str, NULL, 0);
+ 	return 1;
+ }
+ __setup("ftrace_graph_max_depth=", set_graph_max_depth_function);
+@@ -6596,6 +6591,8 @@ static int ftrace_process_locs(struct module *mod,
+ 	/* We should have used all pages unless we skipped some */
+ 	if (pg_unuse) {
+ 		WARN_ON(!skipped);
++		/* Need to synchronize with ftrace_location_range() */
++		synchronize_rcu();
+ 		ftrace_free_pages(pg_unuse);
+ 	}
+ 	return ret;
+@@ -6809,6 +6806,9 @@ void ftrace_release_mod(struct module *mod)
+  out_unlock:
+ 	mutex_unlock(&ftrace_lock);
+ 
++	/* Need to synchronize with ftrace_location_range() */
++	if (tmp_page)
++		synchronize_rcu();
+ 	for (pg = tmp_page; pg; pg = tmp_page) {
+ 
+ 		/* Needs to be called outside of ftrace_lock */
+@@ -7142,6 +7142,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 	unsigned long start = (unsigned long)(start_ptr);
+ 	unsigned long end = (unsigned long)(end_ptr);
+ 	struct ftrace_page **last_pg = &ftrace_pages_start;
++	struct ftrace_page *tmp_page = NULL;
+ 	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
+ 	struct dyn_ftrace key;
+@@ -7183,12 +7184,8 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 		ftrace_update_tot_cnt--;
+ 		if (!pg->index) {
+ 			*last_pg = pg->next;
+-			if (pg->records) {
+-				free_pages((unsigned long)pg->records, pg->order);
+-				ftrace_number_of_pages -= 1 << pg->order;
+-			}
+-			ftrace_number_of_groups--;
+-			kfree(pg);
++			pg->next = tmp_page;
++			tmp_page = pg;
+ 			pg = container_of(last_pg, struct ftrace_page, next);
+ 			if (!(*last_pg))
+ 				ftrace_pages = pg;
+@@ -7205,6 +7202,11 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 		clear_func_from_hashes(func);
+ 		kfree(func);
+ 	}
++	/* Need to synchronize with ftrace_location_range() */
++	if (tmp_page) {
++		synchronize_rcu();
++		ftrace_free_pages(tmp_page);
++	}
+ }
+ 
+ void __init ftrace_free_init_mem(void)
+diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+index 811b08439406..e19c32f2a938 100644
+--- a/kernel/trace/trace_benchmark.c
++++ b/kernel/trace/trace_benchmark.c
+@@ -104,7 +104,7 @@ static void trace_do_benchmark(void)
+ 		stddev = 0;
+ 
+ 	delta = bm_total;
+-	delta = div64_u64(delta, bm_cnt);
++	do_div(delta, (u32)bm_cnt);
+ 	avg = delta;
+ 
+ 	if (stddev > 0) {
