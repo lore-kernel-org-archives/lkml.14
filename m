@@ -1,123 +1,95 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD86769D2B;
-	Thu, 16 May 2024 08:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A124120A;
+	Thu, 16 May 2024 08:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715846790; cv=none; b=ExeHYijwIiQrf69ji6P52qKTeC3udtOeOikXHhQFS9M1NzuzyvtayeQlBmexDH9/JPXDRzqZmfuf0+jfuNLNljVy3riGkYqkxItwboHOjsKC6gdAqaGTKxiPxXu8VHzL1is0tlfjh3WSVLqL3VItvF6BEuToIhxHDneMNYfvc0Y=
+	t=1715846798; cv=none; b=awuKunsgi9IbXNNXisFP5kpgAC5j+hVpzPMsAkK2bAftPLKdUCJ3fcWrZBSRa271qa1vAXBPkgpE0Tz5nP+cZxViRq4K7cYoKtDa2z1koM3jbS9dKrm116n3DfSlRhLGhyN67VNkg5HLHCP72ZUv14W4BFNZvBk8BnyvVKorzxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715846790; c=relaxed/simple;
-	bh=owQIT5HD7OJm8jW2vo7iEeB4HQZrjCDFv0xnzHggShY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fJr2VEi5hkdzfjArZ36cUwAquGl7U3U7MRCrVZUcPDfrQU05ubqMrtVl6S6O+PLPSTzDHt1igAx/bvZGNCllYPA519nCwOG3ic6KwEi5bCgrlTnRTwjaZWiugWv0+Q5FSIRoYO1eDOmHtIfClhY+EJZIlHQPaW0PyJzawCWXmQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=lHRcDfor; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1715846798; c=relaxed/simple;
+	bh=zmrYzsDBzvTZniaVCCeuBZSYiuTRObWwzzeoGzPyFQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hGz6Dxsw7YoZHIC+TU9P4ptBEV84OEduB+HlpAWAPa1MEuYcNQlZCfewNa5ckCEuOww6ueazUK+SjXJXQ7hXAIA7BJeYtTIdpwIM2T7qzpFKq/WPxk0vdptJ7CIbcKImyAQItQDRlXtAMcWvhIa0fFw45NnzgL26gGruuw5gMD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Udmyx05N; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lHRcDfor"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1715846788; x=1747382788;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2HnucdSCbwmmrq18H0sTxqOAmaX8YFcHdjs/KVqRrxo=;
-  b=lHRcDforotFU1Uqv1GBzrQGutIniwBTctJi4YI1lnmty+aIzfdd7NrEs
-   1xp175kfZ0U53xTcagJ663pv4yeh5oJP+MJiUf3WD5icH50e3iPMrMFfC
-   ylIU/zGbgwM/uKswuk+WPrZy9bBEo9M8dEd68Wxv+3vYycHcRZ3+GK60r
-   s=;
-X-IronPort-AV: E=Sophos;i="6.08,163,1712620800"; 
-   d="scan'208";a="89622299"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 08:06:25 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:39479]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.39.135:2525] with esmtp (Farcaster)
- id de62bcfb-7319-429d-bc38-d1d0827c5886; Thu, 16 May 2024 08:06:24 +0000 (UTC)
-X-Farcaster-Flow-ID: de62bcfb-7319-429d-bc38-d1d0827c5886
-Received: from EX19D002EUA004.ant.amazon.com (10.252.50.181) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 16 May 2024 08:06:23 +0000
-Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
- EX19D002EUA004.ant.amazon.com (10.252.50.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 16 May 2024 08:06:23 +0000
-Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
- (10.253.65.58) by mail-relay.amazon.com (10.252.134.102) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Thu, 16 May 2024 08:06:23
- +0000
-Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
-	id 169CC20AC1; Thu, 16 May 2024 08:06:23 +0000 (UTC)
-From: Hagar Hemdan <hagarhem@amazon.com>
-To:
-CC: Norbert Manthey <nmanthey@amazon.de>, Hagar Hemdan <hagarhem@amazon.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, David
- Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Sabrina
- Dubroca" <sd@queasysnail.net>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] net: esp: cleanup esp_output_tail_tcp() in case of unsupported ESPINTCP
-Date: Thu, 16 May 2024 08:03:09 +0000
-Message-ID: <20240516080309.1872-1-hagarhem@amazon.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Udmyx05N"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G5QUrZ015678;
+	Thu, 16 May 2024 08:06:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=EvtDLPUioGQv95bvrfcXzbPUlQC83IW0glY8CjGmWTY=; b=Ud
+	myx05NrrKbkJFGLEzZzURHVvM6Fc1pOGQASRp18jJZsTeE/yAqBlMh6X8M/+Z245
+	Xs+4DaMRG4qQlJfmGR10l5grCiqJkeV6CJG9iz8ZOanBnC+KUDzCc56lTQPN1peF
+	oaefIaIGmNBj1yprowkCu1Z4oqMIsHa0e4iUg5qQR3sI5lXZloHLlo8lw4a05wGQ
+	8R+k3FStWUFjmr9ftzfxf9xmsc0pOObuilhd+FXTASc/Tw/OEPLHI+BFgv0uIo4C
+	017imQotTGS+cszipyrSCyVtGy2Xj9KHRStYPFeblo0OnLQ70r6Q+P1g01lMoWRc
+	l0guDuVSUwqOhBVa4B1A==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y5c05rbsp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 08:06:21 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44G86LN9011028
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 08:06:21 GMT
+Received: from [10.216.55.40] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 16 May
+ 2024 01:06:17 -0700
+Message-ID: <20d7b8e9-ab72-6a4a-ea04-728cd289bf12@quicinc.com>
+Date: Thu, 16 May 2024 13:36:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 00/34] Qualcomm video encoder and decoder driver
+To: Hyunjun Ko <zzoon@igalia.com>, <quic_dikshita@quicinc.com>
+CC: <agross@kernel.org>, <andersson@kernel.org>, <bryan.odonoghue@linaro.org>,
+        <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <mchehab@kernel.org>, <quic_abhinavk@quicinc.com>,
+        <stanimir.k.varbanov@gmail.com>
+References: <1702899149-21321-1-git-send-email-quic_dikshita@quicinc.com>
+ <20240516075732.105878-1-zzoon@igalia.com>
+Content-Language: en-US
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20240516075732.105878-1-zzoon@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vg9UdyFDzi2gOuNGAtya5FVdAo57Ki2-
+X-Proofpoint-ORIG-GUID: vg9UdyFDzi2gOuNGAtya5FVdAo57Ki2-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-16_03,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 mlxlogscore=759 mlxscore=0 suspectscore=0 adultscore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405160056
 
-xmit() functions should consume skb or return error codes in error
-paths.
-When the configuration "CONFIG_INET_ESPINTCP" is not used, the
-implementation of the function "esp_output_tail_tcp" violates this rule.
-The function frees the skb and returns the error code.
-This change removes the kfree_skb from both functions, for both
-esp4 and esp6.
+Hi,
 
-This should not be reachable in the current code, so this change is just
-a cleanup.
+On 5/16/2024 1:27 PM, Hyunjun Ko wrote:
+> Hi,
+> 
+> Thanks for this series of patches. I successfully adjusted these patches and tried to test video features with gstreamer or ffmpeg.
+> But I found this provides staetful interfaces while I need stateless, which might cause an issue for my side..
+> 
+> My question is do you have any plan to implement stateless interfaces or already you have somewhere?
+There is no plan to implement stateless interfaces.
 
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
-
-Fixes: e27cca96cd68 ("xfrm: add espintcp (RFC 8229)")
-Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
----
- net/ipv4/esp4.c | 3 +--
- net/ipv6/esp6.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index d33d12421814..e73de3abe37c 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -238,8 +238,7 @@ static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
- #else
- static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
- {
--	kfree_skb(skb);
--
-+	WARN_ON(1);
- 	return -EOPNOTSUPP;
- }
- #endif
-diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
-index 7371886d4f9f..600402e54ccd 100644
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -255,8 +255,7 @@ static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
- #else
- static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
- {
--	kfree_skb(skb);
--
-+	WARN_ON(1);
- 	return -EOPNOTSUPP;
- }
- #endif
--- 
-2.40.1
-
+Regards,
+Vikash
