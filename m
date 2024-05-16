@@ -1,212 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D650AD271;
-	Thu, 16 May 2024 19:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F66A282E1
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 19:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715888532; cv=none; b=gPdg2flUWpPadvSI/ui0Lo/UeL1XyIzl1uW4ovfzi6x78sUtTuewwKBKAPZUy19gMPxTJor35pUYlQ+5S+vbOYop/5SqONg+6uP4/Wqowci/U0erAZrElP31WWB8hoxkj5uM90yOLDTej6Dq2soa2d4yXY/1j4RjWkUeku/phaY=
+	t=1715888941; cv=none; b=eJsNZhFutUBKSmZu0FkKACKx/pPHGH/r+qA2wtUJ+LJe43trjYUhXpW4eJo0tw1UsrU2mCYzjG3dG8IAB2j0dGvhRr/OyGxsbiq2KxP877lZOVPyJxlBwZC/sqvV8H5zH0tcyDX2oEaYZmA89bxh/m+rxPEswh/k8eNgAvh61DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715888532; c=relaxed/simple;
-	bh=aMfpaTppmylnv5JF/A7FOwPhC7HwUCujFk1v/GprbHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=udpS8V/H/gHuTiIeimswE9TnKCSIAhdenWv0JUoI2ggWYumIbXn3VmTPHvi2RkIMVP+wWXJibnqhLm32sqqu1cYMH1Kh+phhtgFLMq8q2Y05z35z8vRXhQ/4n4f4rBvM06ObpViUUSFzzMmuFhaLg0ab9oqr8HZGgRPbxq5nnCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHZcpbwR; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715888941; c=relaxed/simple;
+	bh=OnX7TnYfvl3uumb2LydyuGYxZJ5YcwNFgjrDTi8iz+g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FE794ZVjbXwtaZqFGpL1Wg1rvC9tF24o7K9qN6nWT48uoDNdy15xIZBQFLWtK0wb+KUwcQpPwd6R96KbuyV0YLpqEmMiLeZel+AIk9kfLLJ0PpRYH1dFRXIgMVnlAIwucYcaR8pySf5JcND0O5oykNV+sml04adRqVgh+/4zujM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YQ5yDQWv; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHZcpbwR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715888531; x=1747424531;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aMfpaTppmylnv5JF/A7FOwPhC7HwUCujFk1v/GprbHw=;
-  b=SHZcpbwRaDq+PZjWoRRl+Y1Z1ZT9C07YwMtQzJF9lFTckhaGuci2ne18
-   85AqFp1P5HlnkzO+SKKlyAw5oaaeyJZ8mtyRI1BSrO8pgfdovzSZn68SN
-   L2n6bpdDunmgbXy60FOIyQBWRvhV1moGW3E8ebus57e4FzHx5NyZgoTRV
-   avvpkkr1bhGyvM31XOD+wxIyOa1NfzZSsMf733+mVQwmpEnQwFFX4w72t
-   3FdXSkqX6Qo/wvaEVe9xowaQeIX3udBoQXtFC4nDFTgPaAM6nCdihwIMJ
-   TeRy9fhKQjhrvpj45v3nYgCepOpNfsiuumhS3bFkxCAHESv4cvRTg1EPy
-   Q==;
-X-CSE-ConnectionGUID: DviGObKXTM6A1jzmP3dbvw==
-X-CSE-MsgGUID: /hBFuJ25S2ahsCPOaQhGiA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11839164"
-X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
-   d="scan'208";a="11839164"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 12:42:10 -0700
-X-CSE-ConnectionGUID: i+ENKuZpR7qZB/pn19adww==
-X-CSE-MsgGUID: 2+txm3wORD68LYg6FzkX0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
-   d="scan'208";a="36285642"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 12:42:09 -0700
-Date: Thu, 16 May 2024 12:42:09 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"dmatlack@google.com" <dmatlack@google.com>,
-	"Zhao, Yan Y" <yan.y.zhao@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	isaku.yamahata@intel.com, isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH 10/16] KVM: x86/tdp_mmu: Support TDX private mapping for
- TDP MMU
-Message-ID: <20240516194209.GL168153@ls.amr.corp.intel.com>
-References: <20240515005952.3410568-1-rick.p.edgecombe@intel.com>
- <20240515005952.3410568-11-rick.p.edgecombe@intel.com>
- <12afae41-906c-4bb7-956a-d73734c68010@intel.com>
- <1d247b658f3e9b14cefcfcf7bca01a652d0845a0.camel@intel.com>
- <a08779dc-056c-421c-a573-f0b1ba9da8ad@intel.com>
- <588d801796415df61136ce457156d9ff3f2a2661.camel@intel.com>
- <021e8ee11c87bfac90e886e78795d825ddab32ee.camel@intel.com>
- <eb7417cccf1065b9ac5762c4215195150c114ef8.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQ5yDQWv"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-47eee2af758so4881320137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:48:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715888939; x=1716493739; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OnX7TnYfvl3uumb2LydyuGYxZJ5YcwNFgjrDTi8iz+g=;
+        b=YQ5yDQWvjZV9vZI77vEo0PtG4+3gXrJ9/uoY8K1KHwCwzlQAPQ9eCCAbY2ic3hc1cR
+         Ukg0GwhoqLDrAX/ZGkxFoCr9bJm2zQFTfeKt+QBM1Tf74Wil8n78iMYA6G++bYRAqQH7
+         5Kph3NGE+lLnwwBtKfWC+t7kisr15VkXIAIJIptQU02fdKV8vADxP0uDK68L5KOBvFmH
+         bbDy2pK23/iRy5SyvASoC6XVhBEB/zvgzD8f9tglNL0GPg/2GXxUAu/83YkV0qz/CGSy
+         FFWahm4QkDnEuOUDS2s4gPCLy4YipIZ0eEYHqJQeWpyeOg4ARZzzra9j8EkrVBNoU8hZ
+         bfMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715888939; x=1716493739;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OnX7TnYfvl3uumb2LydyuGYxZJ5YcwNFgjrDTi8iz+g=;
+        b=aR3nRs4Xs2RgNbErXB4NiKzcPBphNOKbXo+JWKwRHnUHc//TxR7a+FPfUWaWfRiCRC
+         1Nh5BBSNCVBUa+Yvvu3Jv6ay57OA9nvI5kQrfogUeKkABiPj33S0Abh7tMgIRD/QoOf6
+         qgSVZEKqEAKQ0xyk9j0+rQz78D8zoN1oLuxB0KpCCed3SSG/EHJdkp2p2SkRHIPpZGmG
+         Z1NTum/Nz39m5eyzok8j42MP0VQCjL83fX2HVyOTJZx5svhNt7yBowxN4kC0R8CWBF0j
+         GDNPyuNzIyFOyNB06qvKTgK6MPnuQD4XRPD2vsq+MCKYn2I78DKhoER8vQQPwSa3GEbG
+         544A==
+X-Forwarded-Encrypted: i=1; AJvYcCWp4dBtD2CJGwAL7JAl8tqKSKlXy8K54I9WcCTqczTTg5nWOMb9WVu3t+x5zwitp4gkccljQL+gLboHP4nwtd5PjMleIMkWDLtn612J
+X-Gm-Message-State: AOJu0YxqiGMYuXv/QQm2a48Bj53bSduiz/13YdJLV8+zv4aJ+8+zDxWj
+	vDYd22ZqmG4MZUeZU4zmyiKjjntyiDwBQ2Nti5vnkoHcOh7lkvtm/2a3xshQnM2EMl1KpQdxv81
+	AlDwjdhoPLpqIfLA/mAnV5VKZZSqdLTEO3myi
+X-Google-Smtp-Source: AGHT+IF4MCz5IrJ5BpbDJ2N7fvi58cP7oeWW87v31abeJJofLDv76BLf5VYJSRIBXM+DlfiDjV2yxEXxI8RcHWd8W/k=
+X-Received: by 2002:a05:6102:dd1:b0:480:70d2:34c9 with SMTP id
+ ada2fe7eead31-48070d242f7mr22514069137.15.1715888938839; Thu, 16 May 2024
+ 12:48:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eb7417cccf1065b9ac5762c4215195150c114ef8.camel@intel.com>
+References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <20240515073636.GY40213@noisy.programming.kicks-ass.net> <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
+ <20240516140951.GK22557@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240516140951.GK22557@noisy.programming.kicks-ass.net>
+From: Justin Stitt <justinstitt@google.com>
+Date: Thu, 16 May 2024 12:48:47 -0700
+Message-ID: <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 16, 2024 at 04:36:48PM +0000,
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
+Hi,
 
-> On Thu, 2024-05-16 at 13:04 +0000, Huang, Kai wrote:
-> > On Thu, 2024-05-16 at 02:57 +0000, Edgecombe, Rick P wrote:
-> > > On Thu, 2024-05-16 at 14:07 +1200, Huang, Kai wrote:
-> > > > 
-> > > > I meant it seems we should just strip shared bit away from the GPA in 
-> > > > handle_ept_violation() and pass it as 'cr2_or_gpa' here, so fault->addr 
-> > > > won't have the shared bit.
-> > > > 
-> > > > Do you see any problem of doing so?
-> > > 
-> > > We would need to add it back in "raw_gfn" in kvm_tdp_mmu_map().
-> > 
-> > I don't see any big difference?
-> > 
-> > Now in this patch the raw_gfn is directly from fault->addr:
-> > 
-> >         raw_gfn = gpa_to_gfn(fault->addr);
-> > 
-> >         tdp_mmu_for_each_pte(iter, mmu, is_private, raw_gfn, raw_gfn+1) {
-> >                 ...
-> >         }
-> > 
-> > But there's nothing wrong to get the raw_gfn from the fault->gfn.  In
-> > fact, the zapping code just does this:
-> > 
-> >         /*
-> >          * start and end doesn't have GFN shared bit.  This function zaps
-> >          * a region including alias.  Adjust shared bit of [start, end) if
-> >          * the root is shared.
-> >          */
-> >         start = kvm_gfn_for_root(kvm, root, start);
-> >         end = kvm_gfn_for_root(kvm, root, end);
-> > 
-> > So there's nothing wrong to just do the same thing in both functions.
-> > 
-> > The point is fault->gfn has shared bit stripped away at the beginning, and
-> > AFAICT there's no useful reason to keep shared bit in fault->addr.  The
-> > entire @fault is a temporary structure on the stack during fault handling
-> > anyway.
-> 
-> I would like to avoid code churn at this point if there is not a real clear
-> benefit.
-> 
-> One small benefit of keeping the shared bit in the fault->addr is that it is
-> sort of consistent with how that field is used in other scenarios in KVM. In
-> shadow paging it's not even the GPA. So it is simply the "fault address" and has
-> to be interpreted in different ways in the fault handler. For TDX the fault
-> address *does* include the shared bit. And the EPT needs to be faulted in at
-> that address.
-> 
-> If we strip the shared bit when setting fault->addr we have to reconstruct it
-> when we do the actual shared mapping. There is no way around that. Which helper
-> does it, isn't important I think. Doing the reconstruction inside
-> tdp_mmu_for_each_pte() could be neat, except that it doesn't know about the
-> shared bit position.
-> 
-> The zapping code's use of kvm_gfn_for_root() is different because the gfn comes
-> without the shared bit. It's not stripped and then added back. Those are
-> operations that target GFNs really.
-> 
-> I think the real problem is that we are gleaning whether the fault is to private
-> or shared memory from different things. Sometimes from fault->is_private,
-> sometimes the presence of the shared bits, and sometimes the role bit. I think
-> this is confusing, doubly so because we are using some of these things to infer
-> unrelated things (mirrored vs private).
+On Thu, May 16, 2024 at 7:09=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Thu, May 16, 2024 at 06:30:32AM -0700, Kees Cook wrote:
+> >
+> > I am a broken record. :) This is _not_ about undefined behavior.
+>
+> And yet you introduced CONFIG_UBSAN_SIGNED_WRAP... *UB*san, get it?
 
-It's confusing we don't check it in uniform way.
+We should think of UBSAN as an "Unexpected Behavior" Sanitizer. Clang
+has evolved to provide instrumentation for things that are not
+*technically* undefined behavior.
 
+Go to [1] and grep for some phrases like "not undefined behavior" and
+see that we have quite a few sanitizers that aren't *technically*
+handling undefined behavior.
 
-> My guess is that you have noticed this and somehow zeroed in on the shared_mask.
-> I think we should straighten out the mirrored/private semantics and see what the
-> results look like. How does that sound to you?
+>
+> > This is about finding a way to make the intent of C authors
+> > unambiguous. That overflow wraps is well defined. It is not always
+> > _desired_. C has no way to distinguish between the two cases.
+>
+> The current semantics are (and have been for years, decades at this
+> point) that everything wraps nicely and code has been assuming this. You
+> cannot just change this.
 
-I had closer look of the related code.  I think we can (mostly) uniformly use
-gpa/gfn without shared mask.  Here is the proposal.  We need a real patch to see
-how the outcome looks like anyway.  I think this is like what Kai is thinking
-about.
+Why not :>)
 
+Lots and lots of exploits are caused by unintentional arithmetic overflow [=
+2].
 
-- rename role.is_private => role.is_mirrored_pt
+>
+> So what you do is do a proper language extension and add a type
+> qualifier that makes overflows trap and annotate all them cases where
+> people do not expect overflows (so that we can put the
+> __builtin_*_overflow() things where the sun don't shine).
 
-- sp->gfn: gfn without shared bit.
+It is incredibly important that the exact opposite approach is taken;
+we need to be annotating (or adding type qualifiers to) the _expected_
+overflow cases. The omniscience required to go and properly annotate
+all the spots that will cause problems would suggest that we should
+just fix the bug outright. If only it was that easy.
 
-- fault->address: without gfn_shared_mask
-  Actually it doesn't matter much.  We can use gpa with gfn_shared_mask.
+I don't think we're capable of identifying every single problematic
+overflow/wraparound case in the kernel, this is pretty obvious
+considering we've had decades to do so. Instead, it seems much more
+feasible that we annotate (very, very minimally so as not to disrupt
+code readability and style) the spots where we _know_ overflow should
+happen.
 
-- Update struct tdp_iter
-  struct tdp_iter
-    gfn: gfn without shared bit
+[1]: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html#ubsan-chec=
+ks
+[2]: https://cwe.mitre.org/data/definitions/190.html
 
-    /* Add new members */
-
-    /* Indicates which PT to walk. */
-    bool mirrored_pt;
-
-    // This is used tdp_iter_refresh_sptep()
-    // shared gfn_mask if mirrored_pt
-    // 0 if !mirrored_pt
-    gfn_shared_mask
-
-- Pass mirrored_pt and gfn_shared_mask to
-  tdp_iter_start(..., mirrored_pt, gfn_shared_mask)
-
-  and update tdp_iter_refresh_sptep()
-  static void tdp_iter_refresh_sptep(struct tdp_iter *iter)
-        ...
-        iter->sptep = iter->pt_path[iter->level - 1] +
-                SPTE_INDEX((iter->gfn << PAGE_SHIFT) | iter->gfn_shared_mask, iter->level);
-
-  Change for_each_tdp_mte_min_level() accordingly.
-  Also the iteretor to call this.
-   
-  #define for_each_tdp_pte_min_level(kvm, iter, root, min_level, start, end)      \
-          for (tdp_iter_start(&iter, root, min_level, start,                      \
-               mirrored_root, mirrored_root ? kvm_gfn_shared_mask(kvm) : 0);      \
-               iter.valid && iter.gfn < kvm_gfn_for_root(kvm, root, end);         \
-               tdp_iter_next(&iter))
-
-- trace point: update to include mirroredd_pt. Or Leave it as is for now.
-
-- pr_err() that log gfn in handle_changed_spte()
-  Update to include mirrored_pt. Or Leave it as is for now.
-
-- Update spte handler (handle_changed_spte(), handle_removed_pt()...),
-  use iter->mirror_pt or pass down mirror_pt.
-
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+Thanks
+Justin
