@@ -1,132 +1,301 @@
-Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE71153BE6;
-	Thu, 16 May 2024 12:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B486015442B;
+	Thu, 16 May 2024 12:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715862105; cv=none; b=lD2ubQl6Khx7ESEXxTjOlMCGVbDvZYf8S7/ap2XjG2qT4n6Ytv+s/Ch8lk/aU3/9QY1Htd5M+hHSZ130MvYxEmg0oFBgzFLCK5IbUJ9CE60PpD+D7+pcVliZNjmJtizIlJbHFhHNdY0KDekOwvzX4x1Ys3sScJvvxX2pLO0QGVY=
+	t=1715862106; cv=none; b=KbwvIWP6tOcwH9JAyYkxCc50mpcdbcbp9+leBV/Hp7oVF/DHN7ucvLK4R6TrMDNn/BWK7CWgC4hoQH6kxIxVXgBPtSzAQrnbWzwW5jDJIsEbo3VeM+FEokENcEmD8ncGew/723n0SKkLoGRstHhwpxlu82ig2EAB/SA1c+gXXu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715862105; c=relaxed/simple;
-	bh=+7BssTnv+68bOZ5q3ot0qiGsFLEAd90nuvdNZe0Rb0k=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=S1TmefupnZf+kSVITMDffB+oir1UrBGVnYtUenIUbWBqjg542/1W2JHGcL+/qx6nM4T2+T4zZUN7bl3PIoulvPgHVijq1NSElZfUmHH04sNgGAc8NV0/J1qgKubqlcp6T1p/WVtrBZwGxLjlGX/gu4HDvf71JzqErFR+gZktMGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ef1CKfoP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VB0i3Ao2; arc=none smtp.client-ip=64.147.123.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1715862106; c=relaxed/simple;
+	bh=POoqwJAaQxn3x22ZMBVxXsOd70NLG3WdeA3iAjCHt/0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DFu6taa+PRTd/G9P5l+eG+xAu/tGH/+gHUca0FG40KHWc2itZTONxvrzmwUsuoWyoalBO1EtQa1f2s9aM0d9+r8ZDTew9SrZ/uEYoobIuq7WqtvUSZ+En8hpIu/rwdfN4zu3y/5aGlnwerTqFADe/Z/ko6cYbCeBeHbRHXslqB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Mj5HQDxA; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ef1CKfoP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VB0i3Ao2"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 345B718000DC;
-	Thu, 16 May 2024 08:21:42 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 16 May 2024 08:21:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1715862101;
-	 x=1715948501; bh=JB07t7U92/Km9cn+2ZZDcWR+tE9Cc5bAKmiQUlEOVO8=; b=
-	ef1CKfoPHAZFHIER7HGdOtz5L2VPfBDiBBAxao3eZcx/EBeZ1tyiHW+swv8xljOB
-	Z+ir3Icedkhgb+vTnVS9UK2/SaImNn+NWTrI4tV8gu8OvVh+ZBPwo3Oz4EZRZ+Yc
-	WI7Lhpqz1MscSghkOxwVK9ro8OqDHyK8QACTCPGsMm5gj+gxDcnHpSCfKjwQMeAh
-	D8kAfvu21KLLlpifCX745G0610rQq43ENWr8Bo/iOp8byI1CIEiDjDd+kfIsrOuy
-	dGdcS2VLnHypIIhJIoin6udxCmo/xapAb3UtTdC8nStCWeJC48LX+6WoVtTXtI19
-	aFDkJnzPQbDjzLKeJ7kjOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715862101; x=
-	1715948501; bh=JB07t7U92/Km9cn+2ZZDcWR+tE9Cc5bAKmiQUlEOVO8=; b=V
-	B0i3Ao2I/fonGzBEezRNwModrgAEfWc9we1yyKhn1v70JA1WiVvape/HlDrJPNia
-	8WkLzd5DnkpPY8TFi9Nh5C6W8uY1auFY1Jpc0A7JpYTv1aXIX2/9tbRaWr7Gh8vG
-	0fuPbLsulnFREXnvefYkMJvlE/wtTQWHPco85aKLRMgKVYfYDFJjq2YR71s3lPeJ
-	X6Nnxz3QcZfgIEGnLj1FaI+KxyzhI7MeXUH7fxPdEq5MrECovUScj/smucb46gS5
-	74KgfCwXYaqxVD0VHM7cDY/H8+PzD24klysiuuho7xC3oTalSGLpxixeJG1pJvzn
-	wDTbMTOGQzpgJlwhANr6Q==
-X-ME-Sender: <xms:VfpFZvvDYTyA8bI9a1dUTKheIHJ6636V5DFHwzFhsocJsYcorukb0A>
-    <xme:VfpFZgcQDikCMnDGf1wE9imBHfKBN8AnuIeOuLraCXRgSyH5qMw6Xsq35Q0Oz4QDI
-    0HNUZ3JgmHqs4PA2ys>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehuddggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpeekleevffehtdeigfekfefhffdtudffvdeuvedtffet
-    heeuiefhgfetleekleekjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdih
-    rghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:VfpFZix1N-0j7uNInqGUkVdfa82zBRv_A_xpm6wyLSEx2toXkMI6Mg>
-    <xmx:VfpFZuPXVUWdgQYTFEVj5gmo7Z9gB0lfFLXvIKqJWzagZ0U1RP3arw>
-    <xmx:VfpFZv-hCsEh7LI2m7jKEwcaGTGDQUYkmSKjp2NcRuvrDXE7EamfaQ>
-    <xmx:VfpFZuWvDLkxWV6GNcBkuaHZw4Y--L0BeOKpEO6_YDfo9rRosCYAWA>
-    <xmx:VfpFZgOqR165Rzyw1NwC-D10rgIBRmuyyP_AyCNdjJFYssPlabB-QlQe>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E729636A0074; Thu, 16 May 2024 08:21:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-456-gcd147058c-fm-hotfix-20240509.001-g0aad06e4
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Mj5HQDxA"
+X-UUID: d8dc2a98137e11efb92737409a0e9459-20240516
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PI5LYWDFa3Xh+ULRsBJwWNpeA7k6/6wT5lC8UfUZeuQ=;
+	b=Mj5HQDxAZuTmimUaj9h2WGgpo4hkYVULv6MkhNwk3rVeTZOZ9/Z82cKbRlhb3DwDf9F6R1o++CS7Lh9vhdGFan+zH6yiTybXaW6oiNKCywvkzciXmr+nFEMia4hAI+zV8qZqHsUsIq6Y59+qpGbSA+RUjDa75qOda7wMcVck8C4=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:a302eb41-b323-4d6b-a386-4b4652cf7ad8,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:82c5f88,CLOUDID:d509f083-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: d8dc2a98137e11efb92737409a0e9459-20240516
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+	(envelope-from <yunfei.dong@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1850721524; Thu, 16 May 2024 20:21:39 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 16 May 2024 20:21:37 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 16 May 2024 20:21:36 +0800
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+To: Jeffrey Kardatzke <jkardatzke@google.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
+	<nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, "Nicolas
+ Dufresne" <nicolas.dufresne@collabora.com>, Hans Verkuil
+	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Sebastian Fricke
+	<sebastian.fricke@collabora.com>, Tomasz Figa <tfiga@chromium.org>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, Marek Szyprowski
+	<m.szyprowski@samsung.com>
+CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
+	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
+ Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
+ . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH v6,21/24] media: mediatek: vcodec: move vdec init interface to setup callback
+Date: Thu, 16 May 2024 20:20:59 +0800
+Message-ID: <20240516122102.16379-22-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240516122102.16379-1-yunfei.dong@mediatek.com>
+References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <e2611415-410d-4b0d-bc35-604d08601b45@app.fastmail.com>
-In-Reply-To: <20240516115906.1224164-1-zhanggenjian@126.com>
-References: <20240516115906.1224164-1-zhanggenjian@126.com>
-Date: Thu, 16 May 2024 13:21:22 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: Genjian <zhanggenjian@126.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Huacai Chen" <chenhuacai@kernel.org>, ricardo@marliere.net
-Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org, "Genjian Zhang" <zhanggenjian@kylinos.cn>,
- k2ci <kernel-bot@kylinos.cn>
-Subject: Re: [PATCH 1/3] MIPS: Loongson64: include asm/bootinfo.h
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--2.649900-8.000000
+X-TMASE-MatchedRID: EBQtjOxmn4r/ybP4IWJkikKcYi5Qw/RVFpw9gj8mywrfUZT83lbkENro
+	EGQiudNyiYTHezvcK04K3OrJWcpBViwmW5mXIeVjzfqlpbtmcWi50iD18ixmy/gnJH5vm2+gZ2X
+	jE62VgUUNgIab5TqX5hvy10omRZrhqjvsBy5CHDuOjIrMSa2sR70cSmFxPxCimyiLZetSf8mfop
+	0ytGwvXiq2rl3dzGQ19+9ZqEp9FTjz9DKxlKhCG78gWoFlzzLGVZuVZ7f7lWbhEkeoeIwg0B4sl
+	satWGExKPNRvKIrtUNV4kc3YJMsq7Wgo76YKbQ9kPqqsVd3Lntpp55fZDlsr34cY/B7JqXaYZ1R
+	7NXn0MdBmmCXcKyFFJ6oP1a0mRIj
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--2.649900-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 648045179CC978A1303ED8D0794BE0745A7CE4E02B214625B79144D032F58A3B2000:8
+X-MTK: N
 
+Getting secure video playback (svp) flag when request output buffer, then
+calling init interface to init svp parameters in optee-os.
 
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+---
+ .../mediatek/vcodec/decoder/mtk_vcodec_dec.c  | 139 +++++++++++-------
+ 1 file changed, 89 insertions(+), 50 deletions(-)
 
-=E5=9C=A82024=E5=B9=B45=E6=9C=8816=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=E5=
-=8D=8812:59=EF=BC=8CGenjian=E5=86=99=E9=81=93=EF=BC=9A
-> From: Genjian Zhang <zhanggenjian@kylinos.cn>
->
-> build-warning is printed:
-> arch/mips/loongson64/dma.c:25:13: error: no previous prototype for=20
-> =E2=80=98plat_swiotlb_setup=E2=80=99 [-Werror=3Dmissing-prototypes]
->
-> Include the header to fix it.
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+index ebe21064616c..a07b6ba0ea82 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+@@ -184,6 +184,69 @@ void mtk_vcodec_dec_set_default_params(struct mtk_vcodec_dec_ctx *ctx)
+ 	q_data->bytesperline[1] = q_data->coded_width;
+ }
+ 
++static int mtk_vcodec_dec_init_pic_info(struct mtk_vcodec_dec_ctx *ctx, enum v4l2_buf_type type)
++{
++	const struct mtk_vcodec_dec_pdata *dec_pdata = ctx->dev->vdec_pdata;
++	struct mtk_q_data *q_data;
++	int ret;
++
++	if (!ctx->current_codec)
++		return 0;
++
++	if (V4L2_TYPE_IS_OUTPUT(type) && ctx->state == MTK_STATE_FREE) {
++		q_data = mtk_vdec_get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
++		if (!q_data)
++			return -EINVAL;
++
++		ret = vdec_if_init(ctx, q_data->fmt->fourcc);
++		if (ret) {
++			mtk_v4l2_vdec_err(ctx, "[%d]: vdec_if_init() fail ret=%d",
++					  ctx->id, ret);
++			return -EINVAL;
++		}
++		ctx->state = MTK_STATE_INIT;
++	}
++
++	if (!dec_pdata->uses_stateless_api)
++		return 0;
++
++	/*
++	 * If get pic info fail, need to use the default pic info params, or
++	 * v4l2-compliance will fail
++	 */
++	ret = vdec_if_get_param(ctx, GET_PARAM_PIC_INFO, &ctx->picinfo);
++	if (ret)
++		mtk_v4l2_vdec_err(ctx, "[%d]Error!! Get GET_PARAM_PICTURE_INFO Fail",
++				  ctx->id);
++
++	q_data = mtk_vdec_get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
++	if (q_data->fmt->num_planes == 1) {
++		q_data->sizeimage[0] = ctx->picinfo.fb_sz[0] + ctx->picinfo.fb_sz[1];
++		q_data->bytesperline[0] = ctx->picinfo.buf_w;
++	} else {
++		if (ctx->is_secure_playback)
++			q_data->sizeimage[0] = ctx->picinfo.fb_sz[0] + ctx->picinfo.fb_sz[1];
++		else
++			q_data->sizeimage[0] = ctx->picinfo.fb_sz[0];
++
++		q_data->bytesperline[0] = ctx->picinfo.buf_w;
++		q_data->sizeimage[1] = ctx->picinfo.fb_sz[1];
++		q_data->bytesperline[1] = ctx->picinfo.buf_w;
++	}
++
++	q_data->coded_width = ctx->picinfo.buf_w;
++	q_data->coded_height = ctx->picinfo.buf_h;
++
++	ctx->last_decoded_picinfo = ctx->picinfo;
++	mtk_v4l2_vdec_dbg(2, ctx,
++			  "[%d] init() plane:%d wxh=%dx%d pic wxh=%dx%d sz=0x%x_0x%x",
++			  ctx->id, q_data->fmt->num_planes,
++			  ctx->picinfo.buf_w, ctx->picinfo.buf_h,
++			  ctx->picinfo.pic_w, ctx->picinfo.pic_h,
++			  q_data->sizeimage[0], q_data->sizeimage[1]);
++	return 0;
++}
++
+ static int vidioc_vdec_qbuf(struct file *file, void *priv,
+ 			    struct v4l2_buffer *buf)
+ {
+@@ -479,17 +542,7 @@ static int vidioc_vdec_s_fmt(struct file *file, void *priv,
+ 		ctx->ycbcr_enc = pix_mp->ycbcr_enc;
+ 		ctx->quantization = pix_mp->quantization;
+ 		ctx->xfer_func = pix_mp->xfer_func;
+-
+ 		ctx->current_codec = fmt->fourcc;
+-		if (ctx->state == MTK_STATE_FREE) {
+-			ret = vdec_if_init(ctx, q_data->fmt->fourcc);
+-			if (ret) {
+-				mtk_v4l2_vdec_err(ctx, "[%d]: vdec_if_init() fail ret=%d",
+-						  ctx->id, ret);
+-				return -EINVAL;
+-			}
+-			ctx->state = MTK_STATE_INIT;
+-		}
+ 	} else {
+ 		ctx->capture_fourcc = fmt->fourcc;
+ 	}
+@@ -502,46 +555,11 @@ static int vidioc_vdec_s_fmt(struct file *file, void *priv,
+ 		ctx->picinfo.pic_w = pix_mp->width;
+ 		ctx->picinfo.pic_h = pix_mp->height;
+ 
+-		/*
+-		 * If get pic info fail, need to use the default pic info params, or
+-		 * v4l2-compliance will fail
+-		 */
+-		ret = vdec_if_get_param(ctx, GET_PARAM_PIC_INFO, &ctx->picinfo);
+-		if (ret) {
+-			mtk_v4l2_vdec_err(ctx, "[%d]Error!! Get GET_PARAM_PICTURE_INFO Fail",
+-					  ctx->id);
+-		}
+-
+-		ctx->last_decoded_picinfo = ctx->picinfo;
+-
+-		if (ctx->q_data[MTK_Q_DATA_DST].fmt->num_planes == 1) {
+-			ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
+-				ctx->picinfo.fb_sz[0] +
+-				ctx->picinfo.fb_sz[1];
+-			ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] =
+-				ctx->picinfo.buf_w;
+-		} else {
+-			ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
+-				ctx->picinfo.fb_sz[0];
+-			ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] =
+-				ctx->picinfo.buf_w;
+-			ctx->q_data[MTK_Q_DATA_DST].sizeimage[1] =
+-				ctx->picinfo.fb_sz[1];
+-			ctx->q_data[MTK_Q_DATA_DST].bytesperline[1] =
+-				ctx->picinfo.buf_w;
+-		}
+-
+-		ctx->q_data[MTK_Q_DATA_DST].coded_width = ctx->picinfo.buf_w;
+-		ctx->q_data[MTK_Q_DATA_DST].coded_height = ctx->picinfo.buf_h;
+-		mtk_v4l2_vdec_dbg(2, ctx,
+-				  "[%d] init() plane:%d wxh=%dx%d pic wxh=%dx%d sz=0x%x_0x%x",
+-				  ctx->id, pix_mp->num_planes,
+-				  ctx->picinfo.buf_w, ctx->picinfo.buf_h,
+-				  ctx->picinfo.pic_w, ctx->picinfo.pic_h,
+-				  ctx->q_data[MTK_Q_DATA_DST].sizeimage[0],
+-				  ctx->q_data[MTK_Q_DATA_DST].sizeimage[1]);
++		if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
++			ret = mtk_vcodec_dec_init_pic_info(ctx, f->type);
+ 	}
+-	return 0;
++
++	return ret;
+ }
+ 
+ static int vidioc_enum_framesizes(struct file *file, void *priv,
+@@ -722,7 +740,7 @@ int vb2ops_vdec_queue_setup(struct vb2_queue *vq, unsigned int *nbuffers,
+ {
+ 	struct mtk_vcodec_dec_ctx *ctx = vb2_get_drv_priv(vq);
+ 	struct mtk_q_data *q_data;
+-	unsigned int i;
++	unsigned int i, ret;
+ 
+ 	q_data = mtk_vdec_get_q_data(ctx, vq->type);
+ 
+@@ -731,6 +749,25 @@ int vb2ops_vdec_queue_setup(struct vb2_queue *vq, unsigned int *nbuffers,
+ 		return -EINVAL;
+ 	}
+ 
++	if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
++		if (vq->restricted_mem && !ctx->is_secure_playback) {
++			ret = mtk_vcodec_dec_optee_open(ctx->dev->optee_private);
++			if (ret) {
++				mtk_v4l2_vdec_err(ctx, "Failed to open decoder optee os");
++				return ret;
++			}
++			ctx->is_secure_playback = vq->restricted_mem;
++			mtk_v4l2_vdec_dbg(1, ctx, "Getting secure decoder mode:%d",
++					  ctx->is_secure_playback);
++		}
++
++		ret = mtk_vcodec_dec_init_pic_info(ctx, vq->type);
++		if (ret) {
++			mtk_v4l2_vdec_err(ctx, "Failed to init picture information");
++			return ret;
++		}
++	}
++
+ 	if (*nplanes) {
+ 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+ 			if (*nplanes != q_data->fmt->num_planes)
+@@ -980,6 +1017,7 @@ int mtk_vcodec_dec_queue_init(void *priv, struct vb2_queue *src_vq,
+ 	src_vq->lock		= &ctx->dev->dev_mutex;
+ 	src_vq->dev             = &ctx->dev->plat_dev->dev;
+ 	src_vq->allow_cache_hints = 1;
++	src_vq->allow_restricted_mem = 1;
+ 
+ 	ret = vb2_queue_init(src_vq);
+ 	if (ret) {
+@@ -996,6 +1034,7 @@ int mtk_vcodec_dec_queue_init(void *priv, struct vb2_queue *src_vq,
+ 	dst_vq->lock		= &ctx->dev->dev_mutex;
+ 	dst_vq->dev             = &ctx->dev->plat_dev->dev;
+ 	dst_vq->allow_cache_hints = 1;
++	dst_vq->allow_restricted_mem = 1;
+ 
+ 	ret = vb2_queue_init(dst_vq);
+ 	if (ret)
+-- 
+2.25.1
 
-Duplicated with my patch[1], but thanks for the patch anyway.
-
-Thanks
-[1]: https://lore.kernel.org/linux-mips/20240507-loongson64-warnings-v1-=
-2-2cad88344e9e@flygoat.com/
->
-> Reported-by: k2ci <kernel-bot@kylinos.cn>
-> Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
-> ---
->  arch/mips/loongson64/dma.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
-> index 8220a1bc0db6..5c5e524b9121 100644
-> --- a/arch/mips/loongson64/dma.c
-> +++ b/arch/mips/loongson64/dma.c
-> @@ -3,6 +3,7 @@
->  #include <linux/init.h>
->  #include <linux/swiotlb.h>
->  #include <boot_param.h>
-> +#include <asm/bootinfo.h>
->=20
->  dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
->  {
-> --=20
-> 2.25.1
-
---=20
-- Jiaxun
