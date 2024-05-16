@@ -1,342 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60826144D21;
-	Thu, 16 May 2024 09:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049014206C
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715852059; cv=none; b=nD3hUz5yw9kBcROKSMl+4TZCBjbFgjHT6auXm29FIcmJ1OwWvG9K21xRPj4qcnaOm69UHmaV5Q2p923y0kGHaqlj5WXVdTJjtj0Q2FOiuGJA6Jh28SgIUyISsrN7GNUtSkWEExSdv1Ow+LkhGJ8inf01oreyTfOjDVrg+3Iexqw=
+	t=1715852169; cv=none; b=BwB2HgKkvJguS0ipfSGHueheFfdiTpbx+iVjwdecWom2qclDHjinuLZkSl23oc44yUSMw7oVlS9YUOEsr1utEpvjtQr29VNBUaGJrm+Jf2DF0dAmkY51ql69UsjDw+aiWmocd8QaqdA/fiUhUcCsP4FFa1Fqc0oE8JKbTExUp08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715852059; c=relaxed/simple;
-	bh=z1bEIZI1MNH9EenT73hgXO8ZkeN9edr3Kn7/hFxax9s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jHxUgiMTZKui6/Y4mn2uK1TSyPFzw6OyRQ4jCIabVoc9OScXE2E2egzwkKkhWN8lJyhDv1V9dAMV8vdcqEdLbPnU6fCnxuGbzxETRUqWPFY4WAo3nmZG17ZHINZq2xNQCmvNGvJbJOYtSQ3Ruf52lbek5fe3pLglRC3GFXQ9VJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WwKTJGvM; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715852169; c=relaxed/simple;
+	bh=uCfkLZC4W23IMhkNSt5UjZZOZ8zoEycyPFMgOcCJxr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqAKrK2dTLo7vs8kO+suyWPAENA3HodzXunTQwWy9SGOsWJ0E5alsCd+JUefXHDF8K3fDMXbCVaaMzCrgEvFYkqaCymF1cXnR1Anwg13M1rIDqpbEHTFfJPhAm7ssLGpqDY/TTFIuevxrd2DthFsJND7sTrLC2R58N8BE/1wY3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NFZblfy3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WwKTJGvM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715852058; x=1747388058;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=z1bEIZI1MNH9EenT73hgXO8ZkeN9edr3Kn7/hFxax9s=;
-  b=WwKTJGvMoaUzp5sPvSHn5q9a0y7KZngHUGw7Q/nrIq8SGlv7nza46Dbz
-   yvIfsemrHUWje8//c23juv1aSa/neS7t0w3jr3zZct+aTsgEfu5MeqpI2
-   rpxOcYk5bXvhlRJVMtb5LqkYDF7x9A1XkrDPoHL30BMCGXRfY7ZXcUseC
-   GKQrIavVjxwkf8+ScaMV//jSwRTavTGHK3yJQWEp+7IQwtJJVtUQUMwMe
-   Du59dridf3ba9iQpbxQQgV1K7RRK94DRZX83zlp2GhQXXvPu/jYAMkwjA
-   WQR4mW3S1ZjyUr4Yr3nhkoQWzteskEKXDvABAal72Bx6OezjDGeosjE2/
-   A==;
-X-CSE-ConnectionGUID: KtqkfFNXScKEi1l3TUWgGQ==
-X-CSE-MsgGUID: FlRa8US+SQ+qF3IsKyCC7g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23355097"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="23355097"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:34:17 -0700
-X-CSE-ConnectionGUID: cgN1CT//SLyjTRQzX4ZGLg==
-X-CSE-MsgGUID: P/22DOGFQF6FiIs41t5lyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="31372510"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.108])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:34:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-pm@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v6 8/8] selftests/pcie_bwctrl: Create selftests
-Date: Thu, 16 May 2024 12:32:22 +0300
-Message-Id: <20240516093222.1684-9-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240516093222.1684-1-ilpo.jarvinen@linux.intel.com>
-References: <20240516093222.1684-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFZblfy3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715852166;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9UByR8P9Oho2soPbcOv2VtbjmixfuIwy3VhsBVqvGng=;
+	b=NFZblfy3xW+/05G+9hMuP8Cdjzo8SeNPw43FWvnTNs9gqa/mB8wnLHly1UMXB+suDQO/TB
+	GTTxIDJLX3kiJC/D2VaLBIVQpWJ3iatAhn9bFj96cxwnlTTPMVPGRqd/mOD8v/jYhFwwOU
+	PlT3GIvGFuqbCCH+YQKGhjyDs1Olpd4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-GgKswWIXM-OD4SoPgGOvQA-1; Thu, 16 May 2024 05:35:56 -0400
+X-MC-Unique: GgKswWIXM-OD4SoPgGOvQA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 10F98857A83;
+	Thu, 16 May 2024 09:35:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.2])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 02C76100046D;
+	Thu, 16 May 2024 09:35:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 16 May 2024 11:34:30 +0200 (CEST)
+Date: Thu, 16 May 2024 11:34:27 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrei Vagin <avagin@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Jens Axboe <axboe@kernel.dk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] seccomp: release task filters when the task exits
+Message-ID: <20240516093427.GA19105@redhat.com>
+References: <20240514175551.297237-1-avagin@google.com>
+ <20240514175551.297237-3-avagin@google.com>
+ <20240515125113.GC6821@redhat.com>
+ <CAEWA0a5dBvRwGAnztL56i=JV-WGGiaTd-GdJYdOxZmq1c+bdpg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEWA0a5dBvRwGAnztL56i=JV-WGGiaTd-GdJYdOxZmq1c+bdpg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Create selftests for PCIe BW control through the PCIe cooling device
-sysfs interface.
+(add lkml)
 
-First, the BW control selftest finds the PCIe Port to test with. By
-default, the PCIe Port with the highest Link Speed is selected but
-another PCIe Port can be provided with -d parameter.
+On 05/15, Andrei Vagin wrote:
+>
+> On Wed, May 15, 2024 at 5:52 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > Let me repeat I forgot everything about seccomp, but let me ask
+> > a couple of questions...
+>
+> It seems you still remember something:). Thank you for the feedback.
 
-The actual test steps the cur_state of the cooling device one-by-one
-from max_state to what the cur_state was initially. The speed change
-is confirmed by observing the current_link_speed for the corresponding
-PCIe Port.
+Just I am still remember how to use grep ;)
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/pcie_bwctrl/Makefile  |   2 +
- .../pcie_bwctrl/set_pcie_cooling_state.sh     | 122 ++++++++++++++++++
- .../selftests/pcie_bwctrl/set_pcie_speed.sh   |  67 ++++++++++
- 5 files changed, 193 insertions(+)
- create mode 100644 tools/testing/selftests/pcie_bwctrl/Makefile
- create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
- create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
+> > > @@ -2126,6 +2137,11 @@ static struct seccomp_filter *get_nth_filter(struct task_struct *task,
+> > >        */
+> > >       spin_lock_irq(&task->sighand->siglock);
+> > >
+> > > +     if (task->flags & PF_EXITING) {
+> > > +             spin_unlock_irq(&task->sighand->siglock);
+> > > +             return ERR_PTR(-EINVAL);
+> > > +     }
+> >
+> > Why do we need the PF_EXITING check here?
+> >
+> > This looks unnecessary even if get_nth_filter() could race with the
+> > exiting task, but this doesn't matter.
+> >
+> > This race is not possible, get_nth_filter() is only called from ptrace()
+> > paths, but the tracee can't stop in TASK_TRACED after exit_signals() which
+> > sets PF_EXITING.
+>
+> If we rely on using seccomp_get_filter only from ptrace, you are right.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3a94ae81b13f..5a3b69515256 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17106,6 +17106,7 @@ S:	Supported
- F:	drivers/pci/pcie/bwctrl.c
- F:	drivers/thermal/pcie_cooling.c
- F:	include/linux/pci-bwctrl.h
-+F:	tools/testing/selftests/pcie_bwctrl/
- 
- PCIE DRIVER FOR AMAZON ANNAPURNA LABS
- M:	Jonathan Chocron <jonnyc@amazon.com>
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index e1504833654d..ac0bc8af4123 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -65,6 +65,7 @@ TARGETS += net/openvswitch
- TARGETS += net/tcp_ao
- TARGETS += netfilter
- TARGETS += nsfs
-+TARGETS += pcie_bwctrl
- TARGETS += perf_events
- TARGETS += pidfd
- TARGETS += pid_namespace
-diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
-new file mode 100644
-index 000000000000..3e84e26341d1
---- /dev/null
-+++ b/tools/testing/selftests/pcie_bwctrl/Makefile
-@@ -0,0 +1,2 @@
-+TEST_PROGS = set_pcie_cooling_state.sh
-+include ../lib.mk
-diff --git a/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh b/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
-new file mode 100755
-index 000000000000..9df606552af3
---- /dev/null
-+++ b/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
-@@ -0,0 +1,122 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+SYSFS=
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+retval=0
-+skipmsg="skip all tests:"
-+
-+PCIEPORTTYPE="PCIe_Port_Link_Speed"
-+
-+prerequisite()
-+{
-+	local ports
-+
-+	if [ $UID != 0 ]; then
-+		echo $skipmsg must be run as root >&2
-+		exit $ksft_skip
-+	fi
-+
-+	SYSFS=`mount -t sysfs | head -1 | awk '{ print $3 }'`
-+
-+	if [ ! -d "$SYSFS" ]; then
-+		echo $skipmsg sysfs is not mounted >&2
-+		exit $ksft_skip
-+	fi
-+
-+	if ! ls $SYSFS/class/thermal/cooling_device* > /dev/null 2>&1; then
-+		echo $skipmsg thermal cooling devices missing >&2
-+		exit $ksft_skip
-+	fi
-+
-+	ports=`grep -e "^$PCIEPORTTYPE" $SYSFS/class/thermal/cooling_device*/type | wc -l`
-+	if [ $ports -eq 0 ]; then
-+		echo $skipmsg pcie cooling devices missing >&2
-+		exit $ksft_skip
-+	fi
-+}
-+
-+testport=
-+find_pcie_port()
-+{
-+	local patt="$1"
-+	local pcieports
-+	local max
-+	local cur
-+	local delta
-+	local bestdelta=-1
-+
-+	pcieports=`grep -l -F -e "$patt" /sys/class/thermal/cooling_device*/type`
-+	if [ -z "$pcieports" ]; then
-+		return
-+	fi
-+	pcieports=${pcieports//\/type/}
-+	# Find the port with the highest PCIe Link Speed
-+	for port in $pcieports; do
-+		max=`cat $port/max_state`
-+		cur=`cat $port/cur_state`
-+		delta=$((max-cur))
-+		if [ $delta -gt $bestdelta ]; then
-+			testport="$port"
-+			bestdelta=$delta
-+		fi
-+	done
-+}
-+
-+sysfspcidev=
-+find_sysfs_pci_dev()
-+{
-+	local typefile="$1/type"
-+	local pcidir
-+
-+	pcidir="$SYSFS/bus/pci/devices/`sed -e "s|^${PCIEPORTTYPE}_||g" $typefile`"
-+
-+	if [ -r "$pcidir/current_link_speed" ]; then
-+		sysfspcidev="$pcidir/current_link_speed"
-+	fi
-+}
-+
-+usage()
-+{
-+	echo "Usage $0 [ -d dev ]"
-+	echo -e "\t-d: PCIe port BDF string (e.g., 0000:00:04.0)"
-+}
-+
-+pattern="$PCIEPORTTYPE"
-+parse_arguments()
-+{
-+	while getopts d:h opt; do
-+		case $opt in
-+			h)
-+				usage "$0"
-+				exit 0
-+				;;
-+			d)
-+				pattern="$PCIEPORTTYPE_$OPTARG"
-+				;;
-+			*)
-+				usage "$0"
-+				exit 0
-+				;;
-+		esac
-+	done
-+}
-+
-+parse_arguments "$@"
-+prerequisite
-+find_pcie_port "$pattern"
-+if [ -z "$testport" ]; then
-+	echo $skipmsg "pcie cooling device not found from sysfs" >&2
-+	exit $ksft_skip
-+fi
-+find_sysfs_pci_dev "$testport"
-+if [ -z "$sysfspcidev" ]; then
-+	echo $skipmsg "PCIe port device not found from sysfs" >&2
-+	exit $ksft_skip
-+fi
-+
-+./set_pcie_speed.sh "$testport" "$sysfspcidev"
-+retval=$?
-+
-+exit $retval
-diff --git a/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh b/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
-new file mode 100755
-index 000000000000..584596949312
---- /dev/null
-+++ b/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
-@@ -0,0 +1,67 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+set -e
-+
-+TESTNAME=set_pcie_speed
-+
-+declare -a PCIELINKSPEED=(
-+	"2.5 GT/s PCIe"
-+	"5.0 GT/s PCIe"
-+	"8.0 GT/s PCIe"
-+	"16.0 GT/s PCIe"
-+	"32.0 GT/s PCIe"
-+	"64.0 GT/s PCIe"
-+)
-+
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+retval=0
-+
-+coolingdev="$1"
-+statefile="$coolingdev/cur_state"
-+maxfile="$coolingdev/max_state"
-+linkspeedfile="$2"
-+
-+oldstate=`cat $statefile`
-+maxstate=`cat $maxfile`
-+
-+set_state()
-+{
-+	local state=$1
-+	local linkspeed
-+	local expected_linkspeed
-+
-+	echo $state > $statefile
-+
-+	sleep 1
-+
-+	linkspeed="`cat $linkspeedfile`"
-+	expected_linkspeed=$((maxstate-state))
-+	expected_str="${PCIELINKSPEED[$expected_linkspeed]}"
-+	if [ ! "${expected_str}" = "${linkspeed}" ]; then
-+		echo "$TESTNAME failed: expected: ${expected_str}; got ${linkspeed}"
-+		retval=1
-+	fi
-+}
-+
-+cleanup_skip ()
-+{
-+	set_state $oldstate
-+	exit $ksft_skip
-+}
-+
-+trap cleanup_skip EXIT
-+
-+echo "$TESTNAME: testing states $maxstate .. $oldstate with $coolingdev"
-+for i in $(seq $maxstate -1 $oldstate); do
-+	set_state "$i"
-+done
-+
-+trap EXIT
-+if [ $retval -eq 0 ]; then
-+	echo "$TESTNAME [PASS]"
-+else
-+	echo "$TESTNAME [FAIL]"
-+fi
-+exit $retval
--- 
-2.39.2
+Plus it too does __get_seccomp_filter/__get_seccomp_filter, so I guess it
+should be safe without this check even if it could be used outside of ptrace.
+Just like proc_pid_seccomp_cache(), see below.
+
+> > > @@ -2494,6 +2510,11 @@ int proc_pid_seccomp_cache(struct seq_file *m, struct pid_namespace *ns,
+> > >       if (!lock_task_sighand(task, &flags))
+> > >               return -ESRCH;
+> > >
+> > > +     if (thread->flags & PF_EXITING) {
+> > > +             unlock_task_sighand(task, &flags);
+> > > +             return 0;
+> >
+> > Again, do we really need this check?
+> >
+> > It can race with the exiting task and (without this check) do
+> > __get_seccomp_filter(f) right before seccomp_filter_release()
+> > takes sighand->siglock. But why is it bad?
+>
+> I think you are right, this check isn't required.
+>
+> >
+> > OTOH. I guess proc_pid_seccomp_cache() is the only reason why
+> > seccomp_filter_release() takes ->siglock with your patch?
+>
+> seccomp_sync_threads and seccomp_can_sync_threads should be considered too.
+
+Yes. But we only need to consider them in the multi-thread case, right?
+In this case exit_signals() sets PF_EXITING under ->siglock, so they can't
+miss this flag, seccomp_filter_release() doesn't need to take siglock.
+
+> If we check PF_EXITING in all of them, we don't need to take ->siglock in
+> seccomp_filter_release. Does it sound right?
+
+The problem is a single-threaded exiting task. In this case exit_signals()
+sets PF_EXITING lockless. This means that in this case
+
+	- proc_pid_seccomp_cache() can't rely on the PF_EXITING check
+	  but it can be safely removed.
+
+	- seccomp_filter_release() needs to take ->siglock to avoid the
+	  race with proc_pid_seccomp_cache().
+
+And this chunk from your patch
+
+	 static void __seccomp_filter_orphan(struct seccomp_filter *orig)
+	 {
+	+       lockdep_assert_held(&current->sighand->siglock);
+	+
+
+looks unnecessary too, seccomp_filter_release() can just do
+
+	spin_lock_irq(siglock);
+	orig = tsk->seccomp.filter;
+	tsk->seccomp.filter = NULL;
+	spin_unlock_irq(siglock);
+
+	__seccomp_filter_release(orig);
+
+Right?
+
+Oleg.
 
