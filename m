@@ -1,93 +1,119 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA26143873
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E106614387B
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715853487; cv=none; b=QtUXJwdluBG0CaUc7eW/p/1PszJN8HfcZjebgf6Zgs+0SK9tQIQDuYx2mUif6lr35NH8QARsnCD+bxCZq3PUXbukczlgOtX8/n9mg4A9O/e8RODRlp+uRoigJ5YSy1hW4BkmL4IAM/5TywEZgQnv+EFmUYVWwYz2uwUv1Hu4J0k=
+	t=1715853500; cv=none; b=V8sfomZ7KIL4YQPB6odbG5O8eSEkJ0OHKmeMO/qoVKP0dOW6ENTr9dGKegaYmlcHVcCUa2ZNtjUOzlo2Z7jlREfu++eRBN20omxbUTT+HtAY564YNIq9teQUzzX+lkbbD2A4uHB9fcFVrIvOeF3Y3DMVnoTOF11SGCk38rTDS8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715853487; c=relaxed/simple;
-	bh=e4zUva1NbLzeDTbMv1G2fWvTO3gozXWsyNxWiitwoVo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ar+o1E1CFAdN74HN0AoJxtNz+ZHY5gLxOOPgBp3cJMhd4cU89LBH6dM7RKvv9u6ngC4HLJJleS7eXYOQUreexvtAq7NhC/7QY4Gh4AvXo8ct4DuKlbwhZWe+RGpwN8TGf3tjrqiKF6UEM4YDk1kcLQb8IErpUNiYig1XJ0tXofw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tdzq5yQj; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715853500; c=relaxed/simple;
+	bh=/Pkjo0O6kPrOQ+pSjbXZ0VxxK1MyzoODYOjlkXO8dN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MAZ42ZfSNqKeX6uRCaj2llzgj2eWF1U/Qtg9fAEpQBiP/eM0D/20bmCv72IzPmrpdxnS63t/W6ektknl2b6Q9vUjwVflClg29EvpGLhyKjnpbM3gf+NhTIr0fnftoNonMpOfyhAlrP/WglZ+VZH1a4QCEWwVaYQE9OF6vuH05u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=haXHGLgz; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tdzq5yQj"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G9vZq6009811;
-	Thu, 16 May 2024 04:57:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715853455;
-	bh=kOxhi1dJpm9sGXBMlq//0Hp1PjScXmo73Ad9n4+qow0=;
-	h=From:To:CC:Subject:Date;
-	b=tdzq5yQjXRGyjJuTZKGSO8EM82k08uWW6CkJQf5ybksaZ8VNaNZIW1qC4ZwKrszKs
-	 uLLEZf6bKbadr3bk1G/zFXw8q1kX+yn9mA3cqgVYQABLvaWgvIdP5TDpTeesBffhG1
-	 OqpmlRwrYoUNeJkl1EC0O80PKcBx4fK3QJYnrK50=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G9vZQT032139
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 16 May 2024 04:57:35 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 16
- May 2024 04:57:34 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 16 May 2024 04:57:34 -0500
-Received: from localhost (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G9vYAK096386;
-	Thu, 16 May 2024 04:57:34 -0500
-From: Bhavya Kapoor <b-kapoor@ti.com>
-To: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <u-kumar1@ti.com>, <nfraprado@collabora.com>, <m.szyprowski@samsung.com>,
-        <arnd@arndb.de>, <biju.das.jz@bp.renesas.com>,
-        <neil.armstrong@linaro.org>, <shawnguo@kernel.org>,
-        <konrad.dybcio@linaro.org>, <geert+renesas@glider.be>,
-        <krzysztof.kozlowski@linaro.org>, <quic_bjorande@quicinc.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>, <b-kapoor@ti.com>
-Subject: [PATCH] arm64: defconfig: Modify number of usable 8250 uart ports
-Date: Thu, 16 May 2024 15:27:33 +0530
-Message-ID: <20240516095733.276807-1-b-kapoor@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="haXHGLgz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B404C6000B;
+	Thu, 16 May 2024 09:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715853496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TU3V61Z0wIgectXTOIoDLF/0Qh2EeUmNqA0N7zoS8Fk=;
+	b=haXHGLgz3tHlAGjx+O1RqDE769xASBsIP31pnB6qeDP/6DRuA5rEgbCNRfKkoOuh2o8NCJ
+	cS9gdO6Y3agDJYU02S6GW66q/YtgfnGnupHOM92XlEN1JXXZmFPP7ZAbRgQgV9tqD8Y+42
+	XxoFhWhqQjWSV17YB+pD+PrHSYnxm7J/WKrQ81ahbzZ88hnQHRnB5yPlWapVNQ36OW8GWd
+	546YDtKUVZkgodHY01eVqBAyQe53oBoml+aDOhMbhQfYF+M+nYBY9tuLvloq2HAk4FXXtr
+	keK+xZncK/Mq/jdl8xhuWTo5zPGO7zn0IbG+KAV6YHlS2KdCCeo15mzntBlzvA==
+Date: Thu, 16 May 2024 11:58:12 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Richard
+ Weinberger <richard@nod.at>
+Subject: Re: [PATCH] mtd: rawnand: onfi: read parameter pages in one go
+Message-ID: <20240516115812.02908822@xps-13>
+In-Reply-To: <20240516101350.78e5ee29@xps-13>
+References: <20240514134140.1050141-1-s.hauer@pengutronix.de>
+	<20240516101350.78e5ee29@xps-13>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Jacinto SoCs have a total of 12 serial uart ports. But only 8 out
-of these 12 uarts can be used at a time.
 
-Thus, Modify maximum number of 8250 serial uart ports which can be
-supported as well as modify how many 8250 serial uart ports which
-we can use in the runtime to 12 for all the SoCs.
+miquel.raynal@bootlin.com wrote on Thu, 16 May 2024 10:13:50 +0200:
 
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
----
- arch/arm64/configs/defconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Hi Sascha,
+>=20
+> s.hauer@pengutronix.de wrote on Tue, 14 May 2024 15:41:40 +0200:
+>=20
+> > nand_read_data_op() is not supported by all NAND controllers.
+> > nand_change_read_column_op() is not supported or at least is hard to
+> > support by NAND controllers that use a different page layout than
+> > expected by the NAND core. =20
+>=20
+> I'm sorry but RNDOUT is not so hard to support, and I know no NAND
+> controller without this feature (I think even the first mxc controller
+> supports it?). However, the command does not exist on small page NANDs
+> (512 bytes).
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 57a9abe78ee4..c693736909bc 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -454,7 +454,8 @@ CONFIG_SERIO_AMBAKMI=y
- CONFIG_LEGACY_PTY_COUNT=16
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_NR_UARTS=8
-+CONFIG_SERIAL_8250_NR_UARTS=12
-+CONFIG_SERIAL_8250_RUNTIME_UARTS=12
- CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
- CONFIG_SERIAL_8250_BCM2835AUX=y
--- 
-2.34.1
+Nevermind, the ONFI spec (in all versions) states that RNDOUT are
+allowed during parameter page reads, regardless of the size of the chip
+(at least, that is not mentioned).
 
+> TBH I have never seen such a device myself, so I wonder
+> how spread they still are.
+>=20
+> What may not be supported however are the DATA_IN cycles.
+>=20
+> > Instead of relying on these functions
+> > just read the three parameter pages in one go. =20
+>=20
+> Bitflips in parameter pages are very rare, they are normally quite
+> robust. The proposed solution impacts *all* NANDs, because the I/O
+> chip speed is at its lowest. There is no reason in most cases to do
+> that.
+>=20
+> I agree there is a problem with the patch I proposed and we need to
+> settle. And we simply cannot make RNDOUT calls randomly here as long as
+> we want to support small page NANDs.
+>=20
+> I believe we should do something like:
+>=20
+> nand_read_param_page_op(0)
+> if (corrupted) {
+> 	if (supported.datain)
+> 		data_in(); /* this is faster */
+> 	else	=09
+> 		nand_read_param_page_op(1)
+
+This can't work, there is a single address byte. The parameter page
+being 256 bytes, we can't use the address parameter.
+
+So I'm sorry but the solutions are:
+- DATA_IN cycles (not always supported but the best)
+or if unsupported:
+- RNDOUT
+
+Re-reading the three pages would be slower and is not supported by all
+controllers anyway. Example of controller not supporting it: qcom [1].
+That's why I want the constraints to be fairly well described in the
+parser.
+
+[1] https://elixir.bootlin.com/linux/latest/source/drivers/mtd/nand/raw/qco=
+m_nandc.c#L2965
+
+Thanks,
+Miqu=C3=A8l
