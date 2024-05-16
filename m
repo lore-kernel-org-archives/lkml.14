@@ -1,97 +1,128 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495A24A11;
-	Thu, 16 May 2024 22:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8501A2C01;
+	Thu, 16 May 2024 22:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715899912; cv=none; b=D1fFLih+yyvax4G98o+6MiwKsdT1qyME8I1xUFk0ojl6hFMQIYRRJzmO5t++FlbPP7UwzK6xbxx9RxAymfQtJxEgyOuFHLLZmGfA6zFjXxPmNCOjZFoKKSn3yeQnRRnuyQFG/g3sQUciSeXjdNV5a2S/6+oeMNQxEIgGF4b3AjM=
+	t=1715900384; cv=none; b=ZCNwmmw2JxNYVgnw5njgKFc5k/rkie79nAtHarOzLx3PzQMc48bkbQ1a31m97iURXoTt/soLHyNFSsv2rULqTZlr12qKSH+8PEEcED0KptisjP5zroloRqgG69qdAuT092ELldGX4RhtBLG8/NFPxiugWtXl1Mbvpgcd/3s8oes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715899912; c=relaxed/simple;
-	bh=L7KhBLLyRFGTOe2L8CfKk/G01adXlvkwHXxoKyKvHqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kNO70RETm/lUjuN/DzPDkZ/H0RL/NMuc6BFaeeE102nB9n9A7GOx3cKYlmi7iGnXi6ZTf61d+0oPZx0tb4DuACAnUdYnyoMwIf+7lVAWAVnyby/tKFVliMp9KQ0Uan5P8lVfTaEPnRk0lJ2MbMTDdK+1p49P1+u8mLHBKhja+Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BZeedQll; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1715900384; c=relaxed/simple;
+	bh=Jjc+GJYzicTjx6js4GerbYp99kWiJrFUOJeZVVAgHEA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=PINZ8c5SXg/6yuSCszP0LbzXxjoOgToXG0ZJ+LJUDxW7MOEvJ3pJwg7cdpOiXIV2kSydejPeANSi3sVtLwVa+gbl3boquR7463v6FmYjHRRJXH/+di80gAyQChnQQOS//No406ynasDwaqPITo+KH/edPTL1RWWNviJZ6DQHiv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F6oNxWC+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BZeedQll"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ervmNo5biR+yzACnIdOD1iqbJR0q4reGPzHLBT50d6U=; b=BZeedQllwqeJtWefMp2XLpr1ZV
-	AYRIKZofAv8GgFgu0x9TAqjmSWWvWcJivA839poaN03gAEhGFWgYWsEZprq1l6VVsIrOR7qT/njIm
-	nr3stVho4FU+3xJHlBex8TUt3k5snuQuxjpFfAs2fTcNOJahtLqRe20Ga1TApIujH0Xc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s7jwg-00FXIE-G6; Fri, 17 May 2024 00:51:30 +0200
-Date: Fri, 17 May 2024 00:51:30 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: arnd@arndb.de, davem@davemloft.net, edumazet@google.com,
-	glaubitz@physik.fu-berlin.de, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, lkp@intel.com, netdev@vger.kernel.org,
-	nico@fluxnic.net, pabeni@redhat.com
-Subject: Re: [PATCH v3] net: smc91x: Fix pointer types
-Message-ID: <f192113c-9aee-47be-85f6-cd19fcb81a5e@lunn.ch>
-References: <0efd687d-3df5-49dd-b01c-d5bd977ae12e@lunn.ch>
- <20240516223004.350368-2-thorsten.blum@toblux.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F6oNxWC+"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GKNAhZ007332;
+	Thu, 16 May 2024 22:59:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=Ema2+2A9vujXjn0yFcon4n+NzkviWKE52u8O3MUlHwE
+	=; b=F6oNxWC+hp0VJ6CjvibKqboMLMJ7xBqwimqcbRdjK2MGS7FGVkBX9MnihdY
+	MgEAZShB8RfjhWD649NsNTbwOxPeiJZ6eE10baGSAaiiKz/StNqnAgz8HdBWZcBv
+	UiHWoUUAOT38qbP6F5z9PHXHNeK7foRH5En2RfC4v2OM+w/GHuxq7uOS3C2DW1xb
+	klBsRlCemm9yrRcuDMizyqhf4RFfZkHG3xid7OtzvbeqIf+Eo6wRF+peK7+1BjXe
+	JXjVYKaup2vkjSR2jxDzA7yEfIP80XY7daGuBN8y+toAv9aYQSjuZSS2cdwPooND
+	T0SCaECA2TG/1wijbPu4Iq6wZWQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47f46tq1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 22:59:09 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44GMx6K4012432
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 22:59:06 GMT
+Received: from hu-clew-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 16 May 2024 15:59:06 -0700
+From: Chris Lew <quic_clew@quicinc.com>
+Date: Thu, 16 May 2024 15:58:23 -0700
+Subject: [PATCH 5/7] dt-bindings: remoteproc: qcom,pas: Add hwlocks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516223004.350368-2-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240516-hwspinlock-bust-v1-5-47a90a859238@quicinc.com>
+References: <20240516-hwspinlock-bust-v1-0-47a90a859238@quicinc.com>
+In-Reply-To: <20240516-hwspinlock-bust-v1-0-47a90a859238@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Baolin Wang
+	<baolin.wang@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ingo
+ Molnar" <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Waiman Long
+	<longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+        Jonathan Corbet
+	<corbet@lwn.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Chris Lew <quic_clew@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715900345; l=824;
+ i=quic_clew@quicinc.com; s=20240508; h=from:subject:message-id;
+ bh=Jjc+GJYzicTjx6js4GerbYp99kWiJrFUOJeZVVAgHEA=;
+ b=xzKylqpOHoFsq+WH5F1VcT5ZBBSUftVR5DOi6x/eDdh53M9L28Z0uUCMfA2Kba58JK8k0g4LI
+ KNlskJ2vMmQByp0hvzE3BSh7EY0SflJfnxW/rZ9PHo6ZwDgynCLOJiT
+X-Developer-Key: i=quic_clew@quicinc.com; a=ed25519;
+ pk=lEYKFaL1H5dMC33BEeOULLcHAwjKyHkTLdLZQRDTKV4=
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 1lqfqvuSgY5gUydpbDu7lFNE6Ah42Gts
+X-Proofpoint-ORIG-GUID: 1lqfqvuSgY5gUydpbDu7lFNE6Ah42Gts
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 bulkscore=0 clxscore=1015 malwarescore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 mlxlogscore=897
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405160168
 
-On Fri, May 17, 2024 at 12:30:05AM +0200, Thorsten Blum wrote:
-> Use void __iomem pointers as parameters for mcf_insw() and mcf_outsw()
-> to align with the parameter types of readw() and writew() to fix the
-> following warnings reported by kernel test robot:
-> 
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse: warning: incorrect type in argument 1 (different address spaces)
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    expected void *a
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    got void [noderef] __iomem *
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse: warning: incorrect type in argument 1 (different address spaces)
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    expected void *a
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    got void [noderef] __iomem *
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse: warning: incorrect type in argument 1 (different address spaces)
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    expected void *a
-> drivers/net/ethernet/smsc/smc91x.c:590:9: sparse:    got void [noderef] __iomem *
-> drivers/net/ethernet/smsc/smc91x.c:483:17: sparse: warning: incorrect type in argument 1 (different address spaces)
-> drivers/net/ethernet/smsc/smc91x.c:483:17: sparse:    expected void *a
-> drivers/net/ethernet/smsc/smc91x.c:483:17: sparse:    got void [noderef] __iomem *
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202405160853.3qyaSj8w-lkp@intel.com/
-> Acked-by: Nicolas Pitre <nico@fluxnic.net>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> Changes in v2:
-> - Use lp->base instead of __ioaddr as suggested by Andrew Lunn. They are
->  essentially the same, but using lp->base results in a smaller diff
-> - Remove whitespace only changes as suggested by Andrew Lunn
-> - Preserve Acked-by: Nicolas Pitre tag (please let me know if you
->  somehow disagree with the changes in v2 or v3)
-> 
-> Changes in v3:
-> - Revert changing the macros as this is unnecessary. Neither the types
->   nor the __iomem attributes get lost across macro boundaries
-> - Preserve Reviewed-by: Andrew Lunn tag (please let me know if you
->   somehow disagree with the changes in v3)
+Add hwlocks property to describe the hwspinlock that remoteproc can try
+to bust on behalf of the remoteproc's smem.
 
-This fixes the warning, but we still have the macro accessing things
-not passed to them. If you are going to brother to fix the warnings,
-it would also be good to fix the bad practice. Please make a patchset
-to do this.
+Signed-off-by: Chris Lew <quic_clew@quicinc.com>
+---
+ Documentation/devicetree/bindings/remoteproc/qcom,pas-common.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It would also be good if you read:
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pas-common.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pas-common.yaml
+index 63a82e7a8bf8..483a8ff5f47e 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,pas-common.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,pas-common.yaml
+@@ -77,6 +77,9 @@ properties:
+       and devices related to the ADSP.
+     unevaluatedProperties: false
+ 
++  hwlocks:
++    maxItems: 1
++
+ required:
+   - clocks
+   - clock-names
 
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+-- 
+2.25.1
 
-	Andrew
