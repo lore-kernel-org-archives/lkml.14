@@ -1,75 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8149D14D2B3;
-	Thu, 16 May 2024 13:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC1E14D446;
+	Thu, 16 May 2024 13:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715866234; cv=none; b=LEaYEBiLTQDQAnvXm0En2QFJKnLvvTm/zBfN4pT6LtHJ6Y/8wBiZt7UJ/T/id0LwelL5P1Fq7o/jgiqSVNRx7IFxi0Qy5pC9CMAgAB6Drk23ZoA72ACxcuczGHuuDM4JezDWAQWbtAlwR2SiY4qdxUmBj7Uv+zKjju8jxR62PtM=
+	t=1715866237; cv=none; b=mfmFT5sjKdpvjgj2Oa0YwHxReFeskHsFvIBDaIIhJGz62ZjUUF4Ih8WiFRXRxPYwfc1ZEuon+GZ2rNYZXJKNL/o6U3z0fFaxB0MLb7qWz9C6dTEY1bJgW4M4XKcom6zvqU0kOl+CKNlsBR40JJEiryxcznXZPYb2orThnMhzur8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715866234; c=relaxed/simple;
-	bh=z8BnU2Is6DFB6KVcEKYw3pqMsABrzURYamS+ST69Qk0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ZItztftFVjxn/tMp3b9hZ4xEZnJP6wcl1Ji6HLngBKcVXGIHM2Q+JFNDwqunP44JLWwPd8hKahrUfpNYzSmbPa9ONg1oB6/ASUf2be5kXEIAS6Ennk32nUtD75E99y4jmv+OKysHAdGEyr7pVbyq+FyQxoTHIX+PUMwialGI+eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHwLq/uJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715866237; c=relaxed/simple;
+	bh=wyqwzplBP+XVgieQKpS9endqaVKStGMZs5g8jIJu0Wc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lMxMi/d9K2huj+mS4iT3gtsFxKoTQ9aRvxTtn8pgsbYL85eoFEWXDHWQ/zW3POZv41qwwT3+uT/CqAb+Yo3Vv0LeVSOLgL0j5LKMsSR+ZVPgv+xIKQ8+7of+BYm2hyscBdBAm5TD3a/sm736h4+6kAloJW98f1rvf7ggtBKSLdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JHhrBQLu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UYyQGWGQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JHhrBQLu; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UYyQGWGQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHwLq/uJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4131C113CC;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JHhrBQLu";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UYyQGWGQ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JHhrBQLu";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UYyQGWGQ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 036DF5C445;
+	Thu, 16 May 2024 13:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715866234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vXcaIUojiFzTn6/C8B2DBrSfDgG5AlW/ecRlVb4q+Eo=;
+	b=JHhrBQLuSwXo1lWexQlFVf86XG7bIaPsH8UQ1UJIScgYcE5BxlLcZ194cltsq/q2SUoXVF
+	qPti+nnUHrOocLupU6jF/EoVJB68wfeK8dTMLCOoYKyLQAfwaiuohQxKXX+vKD/1NVLEar
+	Szsqz/bUG4o1EQI4cQrQ9xmJmWhJ2Tw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715866234;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vXcaIUojiFzTn6/C8B2DBrSfDgG5AlW/ecRlVb4q+Eo=;
+	b=UYyQGWGQojMU525jhS1gYJFAl7q8DA04Nj5VBDkLVKz3c+WeO8dpQT7hIzGKxy/XeXbHiU
+	yoZpi9mpMU0YffCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715866234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vXcaIUojiFzTn6/C8B2DBrSfDgG5AlW/ecRlVb4q+Eo=;
+	b=JHhrBQLuSwXo1lWexQlFVf86XG7bIaPsH8UQ1UJIScgYcE5BxlLcZ194cltsq/q2SUoXVF
+	qPti+nnUHrOocLupU6jF/EoVJB68wfeK8dTMLCOoYKyLQAfwaiuohQxKXX+vKD/1NVLEar
+	Szsqz/bUG4o1EQI4cQrQ9xmJmWhJ2Tw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715866234;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vXcaIUojiFzTn6/C8B2DBrSfDgG5AlW/ecRlVb4q+Eo=;
+	b=UYyQGWGQojMU525jhS1gYJFAl7q8DA04Nj5VBDkLVKz3c+WeO8dpQT7hIzGKxy/XeXbHiU
+	yoZpi9mpMU0YffCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EBD6D13991;
 	Thu, 16 May 2024 13:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715866234;
-	bh=z8BnU2Is6DFB6KVcEKYw3pqMsABrzURYamS+ST69Qk0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=PHwLq/uJvoN0fU1gNykdMOT0phruqPrBSqb5l+yRgMUgegRuGl0R4RVb/VQNKldo1
-	 mkkrYXbLB3d90j6KBRyAiuzhzE+wD7cwQViOMeIvc+RIHQoh4CRKYXTMeLoYtm5TD9
-	 AOsZ4N23KBJIcUFYJtlyZfelrFo5K+/PtJG4THL+kze4j1SPTxfaW0h0xnSKkq198s
-	 JYKbDN/WqRLEdSEmlq8TnWU+BozS/3PKiVf7mdKMicq/hW3emTwXiRawbH4XAQIAjK
-	 Wc+YRgcTtWW2ykVjX2w7Pi/kOPaTnAIK+pItqhkJTz04bWGClvurKfg/r4q6DEohA1
-	 CxGmVALL3FaTg==
-Date: Thu, 16 May 2024 06:30:32 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-CC: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>,
- Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240515073636.GY40213@noisy.programming.kicks-ass.net>
-References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com> <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com> <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com> <20240515073636.GY40213@noisy.programming.kicks-ass.net>
-Message-ID: <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Rx6yOHkKRmZJCwAAD6G6ig
+	(envelope-from <lhruska@suse.cz>); Thu, 16 May 2024 13:30:33 +0000
+From: Lukas Hruska <lhruska@suse.cz>
+To: pmladek@suse.com,
+	mbenes@suse.cz,
+	jpoimboe@kernel.org
+Cc: joe.lawrence@redhat.com,
+	live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	mpdesouza@suse.com,
+	lhruska@suse.cz
+Subject: [PATCH v2 5/6] documentation: Update on livepatch elf format
+Date: Thu, 16 May 2024 15:30:08 +0200
+Message-ID: <20240516133009.20224-6-lhruska@suse.cz>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240516133009.20224-1-lhruska@suse.cz>
+References: <20240516133009.20224-1-lhruska@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -6.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.80 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,suse.com:email];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
 
+Add a section to Documentation/livepatch/module-elf-format.rst
+describing how klp-convert works for fixing relocations.
 
+Signed-off-by: Lukas Hruska <lhruska@suse.cz>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+---
+ Documentation/livepatch/module-elf-format.rst | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-On May 15, 2024 12:36:36 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
-rote:
->On Wed, May 08, 2024 at 04:47:25PM -0700, Linus Torvalds wrote:
->> For example, the most common case of overflow we've ever had has very
->> much been array indexing=2E Now, sometimes that has actually been actua=
-l
->> undefined behavior, because it's been overflow in signed variables,
->> and those are "easy" to find in the sense that you just say "no, can't
->> do that"=2E UBSAN finds them, and that's good=2E
->
->We build with -fno-strict-overflow, which implies -fwrapv, which removes
->the UB from signed overflow by mandating 2s complement=2E
+diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentation/livepatch/module-elf-format.rst
+index a03ed02ec57e..2aa9b11cd806 100644
+--- a/Documentation/livepatch/module-elf-format.rst
++++ b/Documentation/livepatch/module-elf-format.rst
+@@ -300,3 +300,70 @@ symbol table, and relocation section indices, ELF information is preserved for
+ livepatch modules and is made accessible by the module loader through
+ module->klp_info, which is a :c:type:`klp_modinfo` struct. When a livepatch module
+ loads, this struct is filled in by the module loader.
++
++6. klp-convert tool
++===================
++The livepatch relocation sections might be created using
++scripts/livepatch/klp-convert. It is called automatically during
++the build as part of a module post processing.
++
++The tool is not able to find the symbols and all the metadata
++automatically. Instead, all needed information must already be
++part of rela entry for the given symbol. Such a rela can
++be created easily by using KLP_RELOC_SYMBOL() macro after
++the symbol declaration.
++
++KLP_RELOC_SYMBOL causes that the relocation entries for
++the given symbol will be created in the following format::
++
++  .klp.sym.rela.lp_object.sym_object.sym_name,sympos
++  ^           ^ ^       ^ ^        ^ ^      ^   ^
++  |___________| |_______| |________| |______|   |
++       [A]         [B]        [C]       [D]    [E]
++
++[A]
++  The symbol name is prefixed with the string ".klp.sym.rela."
++
++[B]
++  The name of the object (i.e. "vmlinux" or name of module) which
++  is livepatched.
++
++[C]
++  The name of the object (i.e. "vmlinux" or name of module) to
++  which the symbol belongs follows immediately after the prefix.
++
++[D]
++  The actual name of the symbol.
++
++[E]
++  The position of the symbol in the object (as according to kallsyms)
++  This is used to differentiate duplicate symbols within the same
++  object. The symbol position is expressed numerically (0, 1, 2...).
++  The symbol position of a unique symbol is 0.
++
++Example:
++--------
++**Livepatch source code:**
++
++::
++
++  extern char *saved_command_line \
++                 KLP_RELOC_SYMBOL(vmlinux, vmlinux, saved_command_line, 0);
++
++**`readelf -r -W` output of compiled module:**
++
++::
++
++  Relocation section '.rela.text' at offset 0x32e60 contains 10 entries:
++      Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
++  ...
++  0000000000000068  0000003c00000002 R_X86_64_PC32          0000000000000000 .klp.sym.rela.vmlinux.vmlinux.saved_command_line,0 - 4
++  ...
++
++**`readelf -r -W` output of transformed module by klp-convert:**
++
++::
++
++  Relocation section '.klp.rela.vmlinux.text' at offset 0x5cb60 contains 1 entry:
++      Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
++      0000000000000068  0000003c00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.saved_command_line,0 - 4
+-- 
+2.45.0
 
-I am a broken record=2E :) This is _not_ about undefined behavior=2E
-
-This is about finding a way to make the intent of C authors unambiguous=2E=
- That overflow wraps is well defined=2E It is not always _desired_=2E C has=
- no way to distinguish between the two cases=2E
-
--Kees
-
---=20
-Kees Cook
