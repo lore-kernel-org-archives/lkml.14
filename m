@@ -1,143 +1,88 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07091E519;
-	Thu, 16 May 2024 17:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B73B14D457
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 17:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715880025; cv=none; b=jhBcvAFBMwd2Hf7e5uxjksawkbv12l2GjlWjl9GqzdBW3xYOXqx/Iccwhg6PyHL5uhLcQ8e+4XvjawDBQj8KbBbTH0QJZoVNykwmdgXrgZ0ABx4NxX/3O1otR07A/wRQhKfq7MxsJnAEp6410O5I1S3lNxSibru02xc2pAtIhRo=
+	t=1715880151; cv=none; b=KSzuGuc+e8vSO0ngb6wDQ7JwPonB7V0vbf7S7NtOL8iuytY0TUXUREVvWV/feactvRpUXc0XhuYNB00GkVpGYbPmASqKM6Anf3nncfX1IYhV+r77uAstu88ukl6ZL7ev7mVJlbBFNipovY5oxlFF4tdGW6Eys5e7mw1rICAseUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715880025; c=relaxed/simple;
-	bh=jKuBLxLiB/BSzgv0Cf5ZWG6LMDWfkmTlYFjooSwDuIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S/4VacIYjGiSguOTcNQdScgkWzRPF6nCjM+yIWwFB6Qnui/XHoAjYlRw+SmBOBTXBQhvUjpAKxWyTFQU7eBYuqxPJpaSif50lRfVBkyegXobhPHxYU1FCYXol6dSizSqWkxZmJmOKqg1f2I5/qrvnenZePGfqfEsalBxNjgVSVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Y8qaVhEV; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1715880151; c=relaxed/simple;
+	bh=HAUKL+JYIytkSwCm2DOlRIspWB4tp4heky9US31dOOQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ROuK0KMjLljJCEn3GJo+ySJkF/lmmHh9HxdNPNEdBnfkht22UtEG1HxIOJY7sp1BdAH+HlxVLLtBlNC/LtcGUSODph62pv2fDYaqeHJ8qx9p/TlA2t9TaGp34bywOTQng4wbtZ6tWPuCZE4dRL7P66MZ+9t9R/lAL/20YT9ksyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Bz5QkxYL; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Y8qaVhEV"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.1.0)
- id 361194f984dcb5b6; Thu, 16 May 2024 19:20:20 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id B082373AC72;
-	Thu, 16 May 2024 19:20:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1715880020;
-	bh=jKuBLxLiB/BSzgv0Cf5ZWG6LMDWfkmTlYFjooSwDuIM=;
-	h=From:To:Cc:Subject:Date;
-	b=Y8qaVhEVO6zoWKJCAlsq1EoIukydxyuFkkcD1IiRnJR2ZjZLjiqaV4PyV1vlH09Ey
-	 8tW2Zo74bb7L3klkbzzJwJRbcSNThwmACaj1lI7gEBHKvArkS0B624NoD3e1lGFZFL
-	 2WVdaxHfOpdLevMo92/a9UQwe1/syn3UJUEGDSfogHOZuGUrCnYJp+/GskXxZifReG
-	 v3nfl6rS5PlvqYUt2sQCAon5LHuHPowIkE3xO4HyfTahm5ygFdYGFdcr+PRBcQV92a
-	 WmVoZh8DHjoo7AkXmVj3QIsLJZIjJWx3TYAe5RKaf1f69RlwV59YahocVXEbmd6ArF
-	 h4M9D8At2oMjA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH v1] thermal: core: Fix the handling of invalid trip points
-Date: Thu, 16 May 2024 19:20:19 +0200
-Message-ID: <12441937.O9o76ZdvQC@kreacher>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Bz5QkxYL"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-572d2461001so3898691a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1715880149; x=1716484949; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HAUKL+JYIytkSwCm2DOlRIspWB4tp4heky9US31dOOQ=;
+        b=Bz5QkxYL53tx33bPsa3sO3lEJ15SbCQ5Rb4zORV1aSsSf/xaIxPZgv/1L8K9oGb4eQ
+         q0zT1P07Raw9XSyjYIyknK7qc2iy0wG0xan8310a+kzk6MH1qT9VC8GjAIpimCR3z8dm
+         QJrr9nfXjNYYiq3pS+27bAiP0ObzRcpBkn3w4ustekgh/03gElMMvEgHoUqZQD3aRlY5
+         2HBHK7B46FafJUIS08cRxj3TV8H2X970OfCKAHRMUzSSHRG/q5JAqWDVl9K7twcQW7Nv
+         BJDDpSFpoRESkXmfVWdqdodgG7fSPqC6Rz7NokAQ6lGUBDLsLUgmw7gfynG8kEMKE5ol
+         skkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715880149; x=1716484949;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HAUKL+JYIytkSwCm2DOlRIspWB4tp4heky9US31dOOQ=;
+        b=abxvjoqcpPe6i8I1cC+REKxvhgO2CCUKQnnAmz/oSpplLI6eOhD0zveJjWOw39pZgb
+         hq31KfAITeHPT0Qt9R8lta4you+AFUT8QPO6MdHkefLk2zJiYBwKX1XhGbRuPa7gXcyp
+         0sUQbletNeqMSPUi42pqH2kYQbS4TBIsH+axkIROz6IHguFzl+c0ztvTO2Ocg6ERBJ8+
+         emjfrTg7cWO0f8FKV/EvYgnPZfo04MyxO7mLDrNuq3TlDchZidV+PJx2RCQePFD5J7gn
+         qsBXw4F8DkKQtXeBjBIhPkHxF0i4q6XgUqGvyi+x0h2QpBQuwdRxElBx1dq9BuSHJ0Yk
+         aTgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmUp8LEHL92VSfZtKE5URBtWnJkGfH0SxDzORWWU9lOprSV9om5joqBrWZnCMlzJGOG/tEozmEyQ/hkG4JRmjiV+F5uuzZfLy3rUMW
+X-Gm-Message-State: AOJu0YyGSDhVkMai8IvZKxhZmRNwKmQQJ+6BlWydwNyFnli/cpH01ayQ
+	Sagu1wEpo0+XqytNFYwwlZjiD8PIGTO5CG6LNcBTL7JSxblTTVpenSjSLV3wZWA=
+X-Google-Smtp-Source: AGHT+IGyNgJXE1gh6QOSwbJEe8jOI9clq2LTrHyN9zq+JVSQiF4/sHiwyNAsZaIQmazyzrAjWKqNQg==
+X-Received: by 2002:aa7:d1d3:0:b0:574:eb26:74a with SMTP id 4fb4d7f45d1cf-574eb260839mr5431923a12.21.1715880148676;
+        Thu, 16 May 2024 10:22:28 -0700 (PDT)
+Received: from cloudflare.com ([2a09:bac5:5063:2387::38a:41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574ea09b972sm3742247a12.47.2024.05.16.10.22.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 10:22:28 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Feng Zhou <zhoufeng.zf@bytedance.com>
+Cc: edumazet@google.com,  ast@kernel.org,  daniel@iogearbox.net,
+  andrii@kernel.org,  martin.lau@linux.dev,  eddyz87@gmail.com,
+  song@kernel.org,  yonghong.song@linux.dev,  john.fastabend@gmail.com,
+  kpsingh@kernel.org,  sdf@google.com,  haoluo@google.com,
+  jolsa@kernel.org,  davem@davemloft.net,  dsahern@kernel.org,
+  kuba@kernel.org,  pabeni@redhat.com,  laoar.shao@gmail.com,
+  netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  bpf@vger.kernel.org,  yangzhenze@bytedance.com,
+  wangdongdong.6@bytedance.com
+Subject: Re: [PATCH bpf-next] bpf: tcp: Improve bpf write tcp opt performance
+In-Reply-To: <87wmnty8yd.fsf@cloudflare.com> (Jakub Sitnicki's message of
+	"Thu, 16 May 2024 19:15:22 +0200")
+References: <20240515081901.91058-1-zhoufeng.zf@bytedance.com>
+	<87seyjwgme.fsf@cloudflare.com>
+	<1803b7c0-bc56-46d6-835f-f3802b8b7e00@bytedance.com>
+	<87wmnty8yd.fsf@cloudflare.com>
+User-Agent: mu4e 1.12.4; emacs 29.1
+Date: Thu, 16 May 2024 19:22:27 +0200
+Message-ID: <87seyhy8mk.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdehuddguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeffffffkefgheehffelteeiveeffeevhfelteejvddvieejjeelvdeiheeuveeuffenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehsrhhinhhivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Type: text/plain
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, May 16, 2024 at 07:15 PM +02, Jakub Sitnicki wrote:
+> So in your workload bpf_skops_hdr_opt_len more times that you like.
 
-Commit 9ad18043fb35 ("thermal: core: Send trip crossing notifications
-at init time if needed") overlooked the case when a trip point that
-has started as invalid is set to a valid temperature later.  Namely,
-the initial threshold value for all trips is zero, so if a previously
-invalid trip becomes valid and its (new) low temperature is above the
-zone temperature, a spurious trip crossing notification will occur and
-it may trigger the WARN_ON() in handle_thermal_trip().
+Oops, I can't type any more at this hour. That should have said:
 
-To address this, set the initial threshold for all trips to INT_MAX.
-
-There is also the case when a valid writable trip becomes invalid that
-requires special handling.  First, in accordance with the change
-mentioned above, the trip's threshold needs to be set to INT_MAX to
-avoid the same issue.  Second, if the trip in question is passive and
-it has been crossed by the thermal zone temperature on the way up, the
-zone's passive count has been incremented and it is in the passive
-polling mode, so its passive count needs to be adjusted to allow the
-passive polling to be turned off eventually.
-
-Fixes: 9ad18043fb35 ("thermal: core: Send trip crossing notifications at init time if needed")
-Fixes: 042a3d80f118 ("thermal: core: Move passive polling management to the core")
-Reported-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/thermal/thermal_core.c |    9 ++++++++-
- drivers/thermal/thermal_trip.c |   18 ++++++++++++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
-
-Index: linux-pm/drivers/thermal/thermal_core.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_core.c
-+++ linux-pm/drivers/thermal/thermal_core.c
-@@ -1401,8 +1401,15 @@ thermal_zone_device_register_with_trips(
- 	tz->device.class = thermal_class;
- 	tz->devdata = devdata;
- 	tz->num_trips = num_trips;
--	for_each_trip_desc(tz, td)
-+	for_each_trip_desc(tz, td) {
- 		td->trip = *trip++;
-+		/*
-+		 * Mark all thresholds as invalid to start with even though
-+		 * this only matters for the trips that start as invalid and
-+		 * become valid later.
-+		 */
-+		td->threshold = INT_MAX;
-+	}
- 
- 	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
- 	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
-Index: linux-pm/drivers/thermal/thermal_trip.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_trip.c
-+++ linux-pm/drivers/thermal/thermal_trip.c
-@@ -137,6 +137,24 @@ void thermal_zone_set_trip_temp(struct t
- 	if (trip->temperature == temp)
- 		return;
- 
-+	if (temp == THERMAL_TEMP_INVALID) {
-+		struct thermal_trip_desc *td = trip_to_trip_desc(trip);
-+
-+		if (trip->type == THERMAL_TRIP_PASSIVE &&
-+		    tz->temperature >= td->threshold) {
-+			/*
-+			 * The trip has been crossed, so the thermal zone's
-+			 * passive count needs to be adjusted.
-+			 */
-+			tz->passive--;
-+			WARN_ON_ONCE(tz->passive < 0);
-+		}
-+		/*
-+		 * Invalidate the threshold to avoid triggering a spurious
-+		 * trip crossing notification when the trip becomes valid.
-+		 */
-+		td->threshold = INT_MAX;
-+	}
- 	WRITE_ONCE(trip->temperature, temp);
- 	thermal_notify_tz_trip_change(tz, trip);
- }
-
-
-
+... bpf_skops_hdr_opt_len *gets called* more times ...
