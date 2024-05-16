@@ -1,115 +1,104 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C604691;
-	Thu, 16 May 2024 03:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570FB4A11
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 03:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715829895; cv=none; b=k9jfR4AtqhgvyUBepivjmXez63yekR4Q065ogLgOoy0F+2QO/CJSo7GZp71WJiGKMZ0DLPBmnyNUe5JDjkFv1lfuAbsDQ48iTFk83Y9U+AaZnmRWqiwvV4RWOBYCzFapuFqXfoS1YZpTN4PHJr76A7BTNnCxiPpcvh6BIbJHGGE=
+	t=1715829896; cv=none; b=jAk8ZaV4HQQETFpa3ePFlL0+587NF3WR/WM5efFuGQq3ONzbSE6iEQd+8OCUSyUzdeLXiI7I32DlOToChRqfZSncEMTgM4gUmNPcXZA1nZQ2IYPz1vHbWStGpKPtICo5hc40nqq+3xYGU8CWAeW/z2H0s4r6IMcnGdc/ZgzBM5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715829895; c=relaxed/simple;
-	bh=VyZRyzgz+lvxv+iJdutjtuoLgIvp7PmL/x2td0AAlK4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i1eAZnyVcgV+evKw4E747SaqRKBc6+Zwczh9cPeormPrYKnMA2ZZfttuOa6mLJ6IcxKbs0vi0pj5IGL3MMrSPJ/SIGwoTUVVavyPoNOcIZvicfi2cCqkOVv0Bxvs21EnTAWQGLUpBK3u5BGK9uCDACW94Gs9eunfME0do5n1pgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AbXmAEcl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1715829896; c=relaxed/simple;
+	bh=bMJn9NymWE1wcW9+pBYiAojx2hakxFodH0+3w3Nt+aM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eAmzXa0/HAr2jt+Rga8iBgn3b8pAyRAv5uu1VSdkXklDAFtd/3cLYdXngGP2pRwCcOnIo+I9WZ56yzv9gJEadcSiNSsqMbOpOL868EUgyZJoQ+M6CAXZ/97QmpAkYlCnnxqEIZWGziD7q22CAiEflWYSstB7z/Yr9PQx3G4AIZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LIQXWnrd; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AbXmAEcl"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G0ssrW006911;
-	Thu, 16 May 2024 03:24:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=qcppdkim1; bh=6F29bxT
-	wNsCstBONutx5eWXtaUVwSbXLovHf+5bdANA=; b=AbXmAEclfDKpLNqxYsnt+aA
-	BniRLk+Wa0ilSkchcv9qUXco3UEDlZqEFMRsaWPZfCu//zP/pTaLAFg4WyhvYCKj
-	TalQzG01l9c17IaSGg/M9nQ8dHWlx7Q6QgM68J+SN0Pz8yfdsMCJGzX22ezn1PC1
-	fVmDvSwi/OQ44KF+r1nElVwWZQ02tPMg+0kYFeABEuO08OwJWU89thWSmrGPQCzz
-	O+37az881qFTwEzj8Ue3sCRa/hz3CnmbwUJtP07zst1B1a1hegBGWLt6E+anefKj
-	hW/JXi27MNS1b4s2uDkjFCwG5xOZTRAowxfsKxMjzM7wyJtV0KO6yFlq0CKsk1g=
-	=
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y45vbcmv5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 03:24:44 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 44G3Ob2M032169;
-	Thu, 16 May 2024 03:24:38 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3y4quybhju-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 03:24:38 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44G3Ob04032145;
-	Thu, 16 May 2024 03:24:37 GMT
-Received: from hu-devc-blr-u22-a.qualcomm.com (hu-devipriy-blr.qualcomm.com [10.131.37.37])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 44G3Obvs032138
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 03:24:37 +0000
-Received: by hu-devc-blr-u22-a.qualcomm.com (Postfix, from userid 4059087)
-	id 63B674199F; Thu, 16 May 2024 08:54:36 +0530 (+0530)
-From: devi priya <quic_devipriy@quicinc.com>
-To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, dmitry.baryshkov@linaro.org,
-        neil.armstrong@linaro.org, quic_msarkar@quicinc.com,
-        quic_qianyu@quicinc.com, abel.vesa@linaro.org, quic_cang@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: quic_devipriy@quicinc.com
-Subject: [PATCH V4 2/4] phy: qcom-qmp: Add missing offsets for Qserdes PLL registers.
-Date: Thu, 16 May 2024 08:54:34 +0530
-Message-Id: <20240516032436.2681828-3-quic_devipriy@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240516032436.2681828-1-quic_devipriy@quicinc.com>
-References: <20240516032436.2681828-1-quic_devipriy@quicinc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LIQXWnrd"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f44390e328so6996829b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 20:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715829893; x=1716434693; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GvhInJ4856b1IIVjw0V0q2o2QfuhRdBKnXnI7msgx4Q=;
+        b=LIQXWnrdLSbyp6ugZTKgY4vrs9zaU8nTWaQwVAqclcQeHjZ2ZgD6BVq/NDcPhJDm1u
+         b0z+k6OgSdOrfD5bQ3UVh/xQw5UOjZbl9FKEjuOwIHjVZmqM7RsiwOBjJW5pMraB8mJO
+         jXtCx25TZBoTjpPKyoqp1VhSXaps1HGsFijxA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715829893; x=1716434693;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GvhInJ4856b1IIVjw0V0q2o2QfuhRdBKnXnI7msgx4Q=;
+        b=erAsS897TNhOxcDmZdDAzCanu1M/Daf/9jegkDm3O3P4S/NNkCXqtJXMxD+WCBXaCd
+         7oWcgya4EcOKURG8OExiNZRmQEACTNXwSjTOrfpeQavaoHTF5XbkSk6l13Pnjtiizt9B
+         mgs7fis7DfkDUg65qgMY11IbSVH0RVOC7V672X6QW1JY/Ejt3nUIcYGJeDXV2Xz7IAuz
+         zuW+VUOEJr5ozLfE0D0UOnQ9337DyciZsDQB0Ccxn8tpxGhACPvYpxu/E50A5e4e2waJ
+         Xpg1xzHXJVVCrODAi0oCu3fqbibVedkN6DCAt7RlUDI3fcphYRLIvkEMrBWqH1ySmqPd
+         C4Fg==
+X-Gm-Message-State: AOJu0YxlazvjyB0KxVgZ6HrF5/MN7OPfE2iZUVZbQ5ObVKroWNd0h9Fo
+	G/X5UA4MzT1QPKbzjc44mNcBgLcjbFsWYK9lQXo6mRBezlxvz1ZWfPkbdX2FTA==
+X-Google-Smtp-Source: AGHT+IE0c2gaCVFed1poOXq7yqyITZhao0QJ81DW7vgQofPuvGffpJmw1ogDrhWksLnh6dydPd/suQ==
+X-Received: by 2002:a05:6a00:4b4c:b0:6f3:c10a:7bdd with SMTP id d2e1a72fcca58-6f4e02d36a4mr26254518b3a.18.1715829893603;
+        Wed, 15 May 2024 20:24:53 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2462sm12346867b3a.141.2024.05.15.20.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 20:24:53 -0700 (PDT)
+Date: Wed, 15 May 2024 20:24:52 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: linux-kernel@vger.kernel.org, nathan@kernel.org,
+	luc.vanoostenryck@gmail.com
+Subject: Re: thoughts wanted on dead code hunting?
+Message-ID: <202405152023.67ED1BD7@keescook>
+References: <Zjy82Ja6G2iIHl75@gallifrey>
+ <202405141706.1D5D26C@keescook>
+ <ZkVWCOZDb7iewLxL@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: drXw9aa8IYgUEVFeaKxEWK6LxmoLofEQ
-X-Proofpoint-ORIG-GUID: drXw9aa8IYgUEVFeaKxEWK6LxmoLofEQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_01,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
- adultscore=0 mlxlogscore=850 phishscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405160022
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkVWCOZDb7iewLxL@gallifrey>
 
-Add missing register offsets for Qserdes PLL.
+On Thu, May 16, 2024 at 12:40:40AM +0000, Dr. David Alan Gilbert wrote:
+> * Kees Cook (keescook@chromium.org) wrote:
+> > // Options: --recursive-includes
+> > @find@
+> > struct to_be_removed INSTANCE;
+> > struct to_be_removed *POINTER;
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-Signed-off-by: devi priya <quic_devipriy@quicinc.com>
----
- Changes in V4:
-	- Picked up the R-b tag
+Oops, I missed this line:
 
- drivers/phy/qualcomm/phy-qcom-qmp-qserdes-pll.h | 3 +++
- 1 file changed, 3 insertions(+)
+@@
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-pll.h b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-pll.h
-index ad326e301a3a..231e59364e31 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-pll.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-pll.h
-@@ -8,6 +8,9 @@
- 
- /* QMP V2 PHY for PCIE gen3 ports - QSERDES PLL registers */
- #define QSERDES_PLL_BG_TIMER				0x00c
-+#define QSERDES_PLL_SSC_EN_CENTER			0x010
-+#define QSERDES_PLL_SSC_ADJ_PER1			0x014
-+#define QSERDES_PLL_SSC_ADJ_PER2			0x018
- #define QSERDES_PLL_SSC_PER1				0x01c
- #define QSERDES_PLL_SSC_PER2				0x020
- #define QSERDES_PLL_SSC_STEP_SIZE1_MODE0		0x024
+> > 
+> > (
+> > *       INSTANCE
+> > |
+> > *       POINTER
+> > )
+> > 
+> > 
+> > (I bet this could be improved, but it should be a usable example.)
+> 
+> Hmm, now if I could use coccinelle it would be more tolerant of coding
+> style and slight variations than my script.
+> However, trying that tiny example, I get:
+>   File "play.cocci", line 10, column 1, charpos = 141
+>     around = '',
+>     whole content = )
+> 
+> so it seems to be objecting to something at the end of the file?
+
+Sorry, yes, missed the "@@" between the identifiers and the code pattern
+to match.
+
 -- 
-2.34.1
-
+Kees Cook
