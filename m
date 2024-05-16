@@ -1,170 +1,143 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2134.outbound.protection.partner.outlook.cn [139.219.146.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B784411
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 03:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715830596; cv=none; b=tosIdDRzzPDvM0BVnie9FQUCFkQlME+pAQ00L55ICUaQiWiR2K8xq1VRvfrMwd5E5H7Ni3oXi6DQJc4jPf5PsSlAtmK+suRMyWeBcvQ/c4QsboADoDnCNi13av1O70LQRe3eq0ibYLrmoeC3+OWCSMmyeGsR3Lcy8GRJnwZE+Oc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715830596; c=relaxed/simple;
-	bh=/O3JjSXdLRgsmm7VItmCafT7/DOhUzW48/cbes8EzX0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bsC0V/Yc/biYPtmPhlXHt696I8WHbsIhh2beaRQ+MYe+vh5Z4BcbKeMvw270/L235u65dboAYmWpTasCbwp9Mnc/jxyNE4J2ok13BuxX1l/dujlzwRWNpFqqKP4IycyHauwaGaLeEA2fKnmyJ6wPAO+II1PAWjw4Di+Cwkg/2ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6L2Vri1; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6L2Vri1"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6a077a861e7so54275286d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 20:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715830594; x=1716435394; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JWc8JJQxlxGEETOHoMDodWpK/v1HjwSNgwsdZCmzeV0=;
-        b=T6L2Vri1iCd0UzX4NKiimB88fvS07ohthxLL0ITDW+Ioc1nZUH8i1BXjeUXDXxm80c
-         oQKqRhr++oYSVQyFRR5u+S53sUR2uUjTH3QCtKcUDlws4uVxFIJVp28/xzZlFkOzZ6ya
-         SkpWnX0ZNaS6FnPyZz34lWz+Wtj7ZAZIc6NiD8N4wIxvsIjLq9AESnYqSvlREQUHlwn4
-         9tdzILgBnY8xh/I/DIuaMgotkJtoGciirowk3njFE2xsQ8vp2YvXjww0VtXCvfSSG6PE
-         moxcMjF4f9ZDJnjU3+hx0gyFqGqL07azdPdOpP3VRkUmSoZixaZ7d3bQKaevHj7bVrqX
-         xuJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715830594; x=1716435394;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JWc8JJQxlxGEETOHoMDodWpK/v1HjwSNgwsdZCmzeV0=;
-        b=GTOSf31/n/kWca79slFeK6aUaS29/ds3pRyPKP3rwwRoch35EWiqOFrhdPIf/FfEs4
-         8DM97QEMv4tumJTDeWXq0ngj9y/Wb/EFY2B6Sm7YJ2dmE+uJtbDSMReogFyIrbK26C0y
-         T5ixoXnaudBvLAt03y4mdYOsWuCpuGZKpHOw45dT8nHaQUVmGNdbNDstq12tbJmDiWpJ
-         2uLnA7iwR9cZnDnRkYNvPSNSR6CvBkzgnUItjrUEcDw35gQ9T2/u34QnltyNpciXX4iQ
-         6jjlt8gVrsX8e43B1R/hEbUIJh3kbDBOLrawD3CvgMvxAC/VZ9+GTaFXOx5hugNjExez
-         U47A==
-X-Forwarded-Encrypted: i=1; AJvYcCUrY5iO2lwDEtyonvgYGnKT7toMtKYBcmDY2sClZZVu5LJZFL9KGIw5x5N1MhTG5+6a3oGFE1x1BfZlroKa7RE/+BBDo9T/OomFYDba
-X-Gm-Message-State: AOJu0YzcESj2PFvDT73ZkdvZ3+4hLH5KT0suzvnfxB9u4ZI5cIG+NDBv
-	pkJpduHSkLobw1gwbZwjIAxEBSHaFRZfS9J++G6n/cB9SckawwAOagA72vEts53uY6wOavZFg6r
-	5jNTy3b5qmMn4fddSMC3n9nwWl8A=
-X-Google-Smtp-Source: AGHT+IHWOwFNDVSCskdy4Caj7SrKTUmz/j6xyhyvlFvAIJH32D+C3DzVnIl2uW9iwMKW8KwonaWTOxkRCPZK4xUq/oQ=
-X-Received: by 2002:a05:6214:5a07:b0:6a0:d3ef:2a7e with SMTP id
- 6a1803df08f44-6a16825bd31mr246840826d6.61.1715830594239; Wed, 15 May 2024
- 20:36:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6741829A9;
+	Thu, 16 May 2024 03:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715830687; cv=fail; b=sHyjIwieXrRx886KIQAgsxmK5K1Krp+WQ/zRmFH8e8By+OAagU4WWbBFJfQc7SE4UzzyUuKpAZFlRtE+ayEvRdCbuOgJqiWEMAbKpXNeofKtEh0Mt/kVBKHAN2Utr82XltUL4cqAy59t5t8PP8wC1WjYnRV6yB1kf5iNFBDmIlA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715830687; c=relaxed/simple;
+	bh=BkJ14CMcQphkmscFSi2q/oB6SeIh/XJSEUOIVquAWOc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uE26IlXgQ+iPW2yKLd+m5GidkZ2ZmD9qCs+KWan3EK96TvBmJq24zhJBJaj1o7+FpD5sqo1v4vdkkf7somTYUe7P7EvVPNT9Xpb+QRXKJcvF+NskTrYQaSxzgTYdojF0XNzHvDS/WG9K+YnEZi2mf02tBpa6T5X9QYPw9UDqHe4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PVz1+YfmXuKRYlQuh2Kf6AoWkRdltjsZahtqdGiDxEsOfPy5lnBfgS0j177CeSiWi7Op7FDreL7XljLd7B24EzOokUuq37vmoazUj8iFReyYgvVkRbzB41rEqfA4wrVGvG/yhemUhyEjjc/YP9CoaVlshFXJfvvfs3t/Ia4aSr43LaUdNIA4gDMeSPFeVyLYG2q1eStG9pbNxmUbS9ydKn1UwpbMQomiZtJYkNqbvntVvPQJQNINo+dwWFpQWmkbgidsCzMb2Yitm0EE6BHJ5gNaPEn1oDp/CgBAqhxJEgAl2tUKrcIY53fxdQBpd57caAqY2k+SqqANUKWVl//WjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BkJ14CMcQphkmscFSi2q/oB6SeIh/XJSEUOIVquAWOc=;
+ b=QkQ33pmTxjp7YcsoaZSJikrbx1hv9qtpReKAanOcj/ZLNZWDMFILDOV4oY4pMNfU1yC+buoWnFHDmWVizDrMjHjB+vabUk++iP+hbAkkowPX2b7MTXZ+qsqyvaGzU7pdNGT4AQb/rwDFwJDUmXyCAjc0GGgrH4l2E1sdKadZzLgWTANDsisa4ptOHZ32WIbUYDX4/8cYnvDPtO5Tqhx4m47I8JDvjXyGE46AGEZSrjrzuGw+92eLvJdEKrxuNDY1RvMOdn5qzhkdtdPWePjBQjNz4lr+FcXoc713t2X0zHykwhkVYBWhyOpoln0nd4x2T42HgHJj2UAn+iCzOfGcyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0861.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Thu, 16 May
+ 2024 03:22:55 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::418f:9f1c:7cfc:d62]) by SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::418f:9f1c:7cfc:d62%4]) with mapi id 15.20.7472.044; Thu, 16 May 2024
+ 03:22:54 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Hans
+ Verkuil <hverkuil-cisco@xs4all.nl>, Ming Qian <ming.qian@nxp.com>, Laurent
+ Pinchart <laurent.pinchart@ideasonboard.com>, Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Tomi Valkeinen
+	<tomi.valkeinen+renesas@ideasonboard.com>, Mingjia Zhang
+	<mingjia.zhang@mediatek.com>, Marvin Lin <milkfafa@gmail.com>
+CC: Jack Zhu <jack.zhu@starfivetech.com>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-staging@lists.linux.dev"
+	<linux-staging@lists.linux.dev>
+Subject:
+ =?gb2312?B?u9i4tDogW1BBVENIIHY0IDAwLzEzXSBBZGQgSVNQIDNBIGZvciBTdGFyRml2?=
+ =?gb2312?Q?e?=
+Thread-Topic: [PATCH v4 00/13] Add ISP 3A for StarFive
+Thread-Index: AQHahOSSW1bbawER3UK5wWwrskCi3LGZc20g
+Date: Thu, 16 May 2024 03:22:54 +0000
+Message-ID:
+ <SHXPR01MB0671B72EA791E1F66DB03310F2ED2@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
+References: <20240402100011.13480-1-changhuang.liang@starfivetech.com>
+In-Reply-To: <20240402100011.13480-1-changhuang.liang@starfivetech.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SHXPR01MB0671:EE_|SHXPR01MB0861:EE_
+x-ms-office365-filtering-correlation-id: 5f497bae-854c-4a3f-f7f3-08dc755779f5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 1SOlv072WBOZkpzYvx+AObzW7CE161zJcn8AsvE5hrGWoqAYyG/3T7tMRrHVsXKLLtGFleQq1z7+69+uh+8ziSeUR9yfBGnlDpCvKKdzO4r34RJOcudXN7ZMGt6/OjK97b6pjDlndHQhguJKCqRdjrPGVz4LyVXpP1XFHB9PsdJTt0W9DnH67YXNs0JdiTnQRzdVBUnfOCqxfw4qai+7e0B9Qa+fTmXimMVvZIycPAYFOmNxbqG36+q3WjcDfhkj+ivlC6PiPqo33WGw7aUNjLm9bJIB8lsBb8JdwRJsQZSufJ3lIhqyTO40q6mOQM7SM01bHv7Y+d0rhm68myauc83rcDZ0pEgOba7WAfzTEq0MLMVoFuy6jOsePJwTV5KothgeWmxvYjUrvn6JpOorr28+Fg5A6B/ePznS/C8hEqHcaBNV7thi1WTAiGVf2yH+ikRDiHFEI9D0wROw/3VMyjPe0AG8IALik/NVzbpVfgCt0Wt4jO93N6fogNr2nr+/NWU9P47WxCowIM2E54Yb4zOM2H+pFJ9S6zX+hfW+7GKOEK17HlCe9LlR7vv507cqv4jQfzFfune+h75cCiuOKOKLQJliV10a0KFX+skJqpFJFEn6b5O0teR+B2AaHEACIokQV1QkeAAjxgnKBG8WsQ==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(7416005)(366007)(41320700004)(1800799015)(921011)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?TncvU2NoUnZYYkkvMFQ5NktWV1o2RjJlaTcwR1VwMEN1ek1nRjBJUHUvR1JT?=
+ =?gb2312?B?eXN5NzBlQmUxbGdkd3hqcVVMUmJzK3RPQURFelVKeWlucHliNEVPemU2R28z?=
+ =?gb2312?B?SWpPQlErOVVKUXFHdHYrMlpZckVsWWk2Ny85d1l6dGs4ZEx2K3VnakpRQXQ3?=
+ =?gb2312?B?ZE55SU41aXVoTGJKMFF1a2dSZHlLVFRtYmNCcDIwaFlFcVczU0U3NzF0VlA4?=
+ =?gb2312?B?NXExeTlUVGdreHlqTFN4ODlvbUlCNzdLTmNGNnRhSVhpNmxtM0s0c3FndnpE?=
+ =?gb2312?B?ZXljMVk2d3pkTUw0SWRXczVyN255ZEdkMU0rVm03MHp2S0ZsQ2w0VitJQmMr?=
+ =?gb2312?B?U3hBZUd1cDJ0THJ4WTZMb2FFeDFxME5rTHBVMXdkVHk3STBTUVNzZ2tjTFkz?=
+ =?gb2312?B?aXZiczZITHpYTDVDL0c4RkNaNWNjRE5tV3BCTW1YcE1DM1lVK2hzWHpjNE1B?=
+ =?gb2312?B?MStzSmJ4dXhzSk90VUZYQjNhZXhlcDNKbmZ5WFUzVzhneUJzdmZHKzJ5T1lK?=
+ =?gb2312?B?V1JlYmVPV3didVVkUVZxa1BpZDhrTXVDVlR3N3hhWnhZNVRNRG90bEg2SE5o?=
+ =?gb2312?B?clJ4dDRTZm1yZzI3WTd6T0l3Uk1vK1N5NElGWUQwTFFYWGNLRHVNYTdEczlL?=
+ =?gb2312?B?VXVWTUttb3IvUkhuUGYyNWxsYnNTQzhOSTZQemJwaUcwSXVUQjA5ZnFURmdC?=
+ =?gb2312?B?ZGFsRkdVdWF6MzI3bnNRNzRNSEtZeDFLbnpnMXA4WXhUVjdtQUZNbUVHYzlX?=
+ =?gb2312?B?ZStWM1NCOUpvMHp6YjZrQ0U3MzhRdzVHdmxCUjA2NmhITDVKd0FrT2g1NUh4?=
+ =?gb2312?B?Sk9WaFhVb0lPOGhEM2VYVFJNbjBrVFNsV1pMdUd4Z3NPRXRrb0huVVNUcUMv?=
+ =?gb2312?B?ckZnL1IxVmxtVkhHQlpqSitNR3R1WmI0QlByMEQ2NTBPZFoxb1Nadzl6QU9h?=
+ =?gb2312?B?emtJcE15L3p0OFJidGpUR3NsdGYxNmNnVlpXOWlyd3pSbm8vdzE3S2U4anNR?=
+ =?gb2312?B?c1RxdlRMcnFZd0E4WTdYdW12SlRKUnkra0ZiU3lXMXBiZ01QZFY0bHEvbzZ5?=
+ =?gb2312?B?V21BT2x1WlZibUZVN0ovTEVBcU9HOUNGQmpTM012alhIdFhiZUlWTis1TnFZ?=
+ =?gb2312?B?M3RKVC8vUm1pa0Q4WGhGR0N3U0NuRHltT283YUx6TzhOckhRR3NxOWszU3di?=
+ =?gb2312?B?Y1Nkay9JNE1XeFVCTGhQcXJPYWNNNjRraGgxTHUzZXE2ZW9mZlhSNG9qZ1hY?=
+ =?gb2312?B?R2xuUE9OTHpaWmhRNFB4UmVQak04ekxzdklYWVRSR0lqdHFBdmFjY3liZVRM?=
+ =?gb2312?B?ZEpsMU11U3VnOUMvWWlPelI4a3hZVVVrVFAzamNwQndrMjliS2lWenBzdXVH?=
+ =?gb2312?B?b2V4cDRaOXptN09pOVlhMnRKTFVEckMwbmlhNlpYLzFWR1U4bGY0elM5ZDE3?=
+ =?gb2312?B?YW1zQ1JPMExSMUhCQzA5N3BSbnp5Wk9HVVR3bjZ6bElQU1VMQ2FZK0RPTWxB?=
+ =?gb2312?B?WTBvQzB6SGFid0k2bDdValk3VzUrc0wvbks2OG0wSldBWWpFQXk4YSszSWtu?=
+ =?gb2312?B?eU9NWUx5NDdSbWFPVFA2U1pwMm9WQzZpMmtpaDFpbm9WemMxSHVOVG5VdkEy?=
+ =?gb2312?B?ZFYwYmVPNTM4R2dQdEdsSFg4WWpsZjI5dlkwTmp4L2FZOUxqeTlPd0NKbXBl?=
+ =?gb2312?B?ZEg5OFN4NFZ1MU9kWWI1QW9MZVVhOWVpWGdnRmk1M0pLZmJRbUF5cDlmVDNW?=
+ =?gb2312?B?Rnk4WXZJTWpFSTl5ZWcrVU9oRUo4NFFDSGdYOHA3WkcxcUcrbWQ1bjg2Wk01?=
+ =?gb2312?B?OEtNMG5xcEJGUzVpWGxHV3ZMMHQ2U3B0VzdOZmZySlFuc1ArVzFpa0NWeGxS?=
+ =?gb2312?B?anI4QVloY0djdnNYWGFKemF3cFdxcXJmRmtDOExja0locWhhWWJubjhFNnh3?=
+ =?gb2312?B?SXlKK1EyQ3NQZnIxRGh0eUJ3RjRNVUdvVGpSR3hMQ1FWR2tPckcxbGJDK01H?=
+ =?gb2312?B?NmR6b2lQRERjcldvUFpoazJZamVkWi9OczA4VFY2ZDUzQWhjVkpVZm93YlU0?=
+ =?gb2312?B?YllWczhXSTJnUkY4M2Rhd3k2QmZjZmdmTVVwSFQ3NnZ1VVMydUdhU3RLMklv?=
+ =?gb2312?B?LzN6dGRPRUxmQzRiUVJrelpzeXY0SmtBVm5IOUk3QVNVU25Lc1FlVEp5Sml0?=
+ =?gb2312?B?Mmc9PQ==?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509034138.2207186-1-roman.gushchin@linux.dev> <jf44dfyaenz6xmn2hcodaginrshw5d5hfhmakdxtj4x6szk6b2@cr2rxamkgj2m>
-In-Reply-To: <jf44dfyaenz6xmn2hcodaginrshw5d5hfhmakdxtj4x6szk6b2@cr2rxamkgj2m>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Thu, 16 May 2024 11:35:57 +0800
-Message-ID: <CALOAHbC0AATe5iMAm84Y_obOs4ePZYEW3X2a2OmjTCt_A3xXMQ@mail.gmail.com>
-Subject: Re: [PATCH rfc 0/9] mm: memcg: separate legacy cgroup v1 code and put
- under config option
-To: Shakeel Butt <shakeel.butt@linux.dev>, Yosry Ahmed <yosryahmed@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Muchun Song <muchun.song@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, gthelen@google.coma, rientjes@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f497bae-854c-4a3f-f7f3-08dc755779f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2024 03:22:54.8075
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lesRa7K2STu64pl6ThFrxO6HDt2NVF+ZscbhEPlPJUC+zr/QpVihwNYus/PT9eC7AcV5Kato9/e+NadJBHruvhLAl+69mG5oduz2DzuAwSUxLFgGI3NxuPv25mqZ/Foc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0861
 
-On Thu, May 9, 2024 at 2:33=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.dev=
-> wrote:
->
-> On Wed, May 08, 2024 at 08:41:29PM -0700, Roman Gushchin wrote:
-> > Cgroups v2 have been around for a while and many users have fully adopt=
-ed them,
-> > so they never use cgroups v1 features and functionality. Yet they have =
-to "pay"
-> > for the cgroup v1 support anyway:
-> > 1) the kernel binary contains useless cgroup v1 code,
-> > 2) some common structures like task_struct and mem_cgroup have never us=
-ed
-> >    cgroup v1-specific members,
-> > 3) some code paths have additional checks which are not needed.
-> >
-> > Cgroup v1's memory controller has a number of features that are not sup=
-ported
-> > by cgroup v2 and their implementation is pretty much self contained.
-> > Most notably, these features are: soft limit reclaim, oom handling in u=
-serspace,
-> > complicated event notification system, charge migration.
-> >
-> > Cgroup v1-specific code in memcontrol.c is close to 4k lines in size an=
-d it's
-> > intervened with generic and cgroup v2-specific code. It's a burden on
-> > developers and maintainers.
-> >
-> > This patchset aims to solve these problems by:
-> > 1) moving cgroup v1-specific memcg code to the new mm/memcontrol-v1.c f=
-ile,
-> > 2) putting definitions shared by memcontrol.c and memcontrol-v1.c into =
-the
-> >    mm/internal.h header
-> > 3) introducing the CONFIG_MEMCG_V1 config option, turned on by default
-> > 4) making memcontrol-v1.c to compile only if CONFIG_MEMCG_V1 is set
-> > 5) putting unused struct memory_cgroup and task_struct members under
-> >    CONFIG_MEMCG_V1 as well.
-> >
-> > This is an RFC version, which is not 100% polished yet, so but it would=
- be great
-> > to discuss and agree on the overall approach.
-> >
-> > Some open questions, opinions are appreciated:
-> > 1) I consider renaming non-static functions in memcontrol-v1.c to have
-> >    mem_cgroup_v1_ prefix. Is this a good idea?
-> > 2) Do we want to extend it beyond the memory controller? Should
-> > 3) Is it better to use a new include/linux/memcontrol-v1.h instead of
-> >    mm/internal.h? Or mm/memcontrol-v1.h.
-> >
->
-> Hi Roman,
->
-> A very timely and important topic and we should definitely talk about it
-> during LSFMM as well. I have been thinking about this problem for quite
-> sometime and I am getting more and more convinced that we should aim to
-> completely deprecate memcg-v1.
->
-> More specifically:
->
-> 1. What are the memcg-v1 features which have no alternative in memcg-v2
-> and are blocker for memcg-v1 users? (setting aside the cgroup v2
-> structual restrictions)
->
-> 2. What are unused memcg-v1 features which we should start deprecating?
->
-> IMO we should systematically start deprecating memcg-v1 features and
-> start unblocking the users stuck on memcg-v1.
->
-> Now regarding the proposal in this series, I think it can be a first
-> step but should not give an impression that we are done. The only
-> concern I have is the potential of "out of sight, out of mind" situation
-> with this change but if we keep the momentum of deprecation of memcg-v1
-> it should be fine.
->
-> I have CCed Greg and David from Google to get their opinion on what
-> memcg-v1 features are blocker for their memcg-v2 migration and if they
-> have concern in deprecation of memcg-v1 features.
->
-> Anyone else still on memcg-v1, please do provide your input.
-
-Hi Shakeel,
-
-Hopefully I'm not too late.  We are currently using memcg v1.
-
-One specific feature we rely on in v1 is skmem accounting. In v1, we
-account for TCP memory usage without charging it to memcg v1, which is
-useful for monitoring the TCP memory usage generated by tasks running
-in a container. However, in memcg v2, monitoring TCP memory requires
-charging it to the container, which can easily cause OOM issues. It
-would be better if we could monitor skmem usage without charging it in
-the memcg v2, allowing us to account for it without the risk of
-triggering OOM conditions.
-
-
---=20
-Regards
-Yafang
+SGksIE1hdXJvLCBIYW5zIGFuZCBMYXVyZW50DQoNCj4gVGhpcyBzZXJpZXMgaW1wbGVtZW50cyB0
+aGUgSVNQIDNBIGZ1bmN0aW9uIHRvIHRoZSBDYW1lcmEgU3Vic3lzdGVtIG9uDQo+IFN0YXJGaXZl
+DQo+IEpINzExMCBTb0MuIFRoZSBzZXJpZXMgaGFzIGJlZW4gdGVzdGVkIG9uIHRoZSBWaXNpb25G
+aXZlIDIgYm9hcmQuIEl0IHNob3VsZA0KPiBiZSBhcHBsaWVkIGFmdGVyIHRoZSBwYXRjaCBbMV1b
+Ml06DQo+IFsxXToNCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjQwMzExMTIwMzA5
+LjUzODktMS1jaGFuZ2h1YW5nLmxpYW5nQHN0YXJmaQ0KPiB2ZXRlY2guY29tLw0KPiBbMl06DQo+
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI0MDMxMjAyNDUyMC4xMTAyMi0xLWNoYW5n
+aHVhbmcubGlhbmdAc3Rhcg0KPiBmaXZldGVjaC5jb20vDQo+IA0KDQpDdXJyZW50bHkgdGhlIHBh
+dGNoIFsxXVsyXSBoYWQgYmVlbiBhcHBsaWVkLiBJZiB5b3UgaGF2ZSBmcmVlIHRpbWUsIHlvdSBj
+YW4gc3RhcnQNCnRvIHJldmlldyB0aGlzIHNlcmllcy4gSSBhbSBsb29raW5nIGZvcndhcmQgdG8g
+eW91ciByZXNwb25zZS4NCg0KQmVzdCBSZWdhcmRzLA0KQ2hhbmdodWFuZw0KDQo=
