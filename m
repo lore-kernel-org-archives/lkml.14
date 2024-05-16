@@ -1,87 +1,121 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC137143895
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F276143895;
+	Thu, 16 May 2024 15:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874557; cv=none; b=c24+R/qivvayQn3bIeyV/0p9dvcOcfMVyE5VdZLCNTZ1YVh5X2Cpj+kPooxJp5cjytsZ2EBHBiGFfvZqbpz5/8G6Rs777mlIYqsZVFbbfHDszpuMP5xkReOJYeQQj5pb2zz9XSezHppJSEB6aL3/BCmOOG2pH2wzSZfCLACgkbQ=
+	t=1715874561; cv=none; b=AUZhVI25hM4Lp9HOLAogXXgeu/SyZSZj0agXVvi5/53SHuhS5ECz9COE7j8qPMEZEXaEt5bqZ5YVbdsyrT3Xx1LoKhAyLMRXeuNFlmRiwqmDMf5Mj8HEhpCCtWjiU6GRWbZhsQ/JJPqhT+QYmqO0+RBfSbyuukHTTB4TG4g9pd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874557; c=relaxed/simple;
-	bh=xFcKxnrqOdZ6PUt0MN/5m5P3hjOllGJtNyi6Y3cFKPo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=j1wrrd6W6McM7OQXtWmsf9jTEJb02GrVxJD/WQpPZtejBUKLjN3yZMnKsde3o2NJ5xwnTvQc3lyacoOqPdjDwOKS7rvCtTfj7TkGkQri40T1T9Li8zzKAGbq5kFzeTsFG4ghxMDdF81/6nLeak2yI0h9Lwxy5IDloR/Z6BDiUM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d9fde69c43so869480239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:49:15 -0700 (PDT)
+	s=arc-20240116; t=1715874561; c=relaxed/simple;
+	bh=wfc9VQJK5Afzwtxb9r3z+/jPpNeZSRtEpwlC9GhpOcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WKn8pjr6qPsfXtomm8LUU7Br7mH5C2Fg17TC1iEnigb6UosR0uPjqjsQ+8zfekiY8DoOeSuhuSO6oY8HbMt5ihQIiqV4RyPaDxjkpdYj/jG5BLNikSVyq5iOp5xW9vs3+50C/MIXmgOWThrGPkxGm/UdxLezJYgrqIYuY0nwckY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Py/wJti1; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py/wJti1"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so268851266b.0;
+        Thu, 16 May 2024 08:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715874558; x=1716479358; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XN0HWELzWPP6jJjK5+LZsOG8u3erO+3FSJ+XwrEDANI=;
+        b=Py/wJti1G1GCvO/vU7jytgNj71cbwYFPZ7GKOIBm+0g2/PRxuxLBbDOhTHc9Qxuv8/
+         dhqsgXcS3AeRPo8QSL85FcpbXYBFqJUb0fZ5/E01O3iz/7E9EW/NdngOyYB6ooCqjJ2j
+         UQQ5vPooyv2NRAEdB1Qjls/e8SynD0GyH+QydFJmfAlfCQXDCzuO5KxfDwF3YZe5oi43
+         nghzsevV6zBqBdTCmraEfgL6GDROnluJg2G57D6a9MHdWDUcfeu/K142eXlJ8Md9HNBO
+         SN4B1uZ11JR7CTJSYDlBowwtUPM+cI/rwkEySvgXFuhuABZm22iE26mRFmBaPQP6UFYx
+         nPEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715874555; x=1716479355;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uzybynlll8aTlRUTGkiirdKXhhmo+chE7YKKEdoW2Dg=;
-        b=YrOmzvLu1s8CVthmivt/TIZPdXWLHlevUY4oaLdeBNCjIyqesqahRB6KuJfZ5MvxmM
-         KMUfze4l8EWFSk7todapLvwOCHV/D5s2e8bxupSKxsN8bJ4CI2/eQrx+YOz7a8hKwE6d
-         oYldUFupNEmKRv39AQjXMLVXv+KUg0KINapEpXwLdG/s3p+2+8JFwF4kqEBHb7zo6/or
-         vvQaSytNpcudOAWnrJcH1TF0KmNmC5gQhnLca2aocV662YsM7YjmF6MaYQf9Kgaq8PES
-         vT/4wwSLdw8iCev2P18WRUhCX7b9hKRteFmf3WkmmRu7s9VvZRp+OMrIGrXimkWzt6JZ
-         uFeQ==
-X-Gm-Message-State: AOJu0YzQ5nAAPfSnxdTdJQiGXS96pfyvS41goSJnNl3DbxC8qLS5QYLI
-	3T6WPFMe8Thjj1JNpXE3B+2ZSy07OjKQ86qeV1W7EZFc/k1QffV+tEFRmzS8GAKrR1nITXtouBW
-	yGhMKydpF/aC4OFSXIBx6iTddpRJuOt3nUK4N1VLJ8qUV6vIhGRmO2R8=
-X-Google-Smtp-Source: AGHT+IH99AGHDkez492I2+Ury/bIa6UFSuDDUv7plK5Wuh3kReSs/83KqG4W7DDTh4mlRZrZZq08Dwtu5y89dKLBXLpe62ASJ/GF
+        d=1e100.net; s=20230601; t=1715874558; x=1716479358;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XN0HWELzWPP6jJjK5+LZsOG8u3erO+3FSJ+XwrEDANI=;
+        b=pMR9glBru33gSLwAMWsqgDaQMEdKip+E85pBxbOxyvlu0u0xLki5OTv4Idu0azvcvL
+         7xBGgQo6Bk+xKaaQVepyVpHToXsoGAUU3iSFfNbvzpJCOpyWakqY7Zt8IJv07/lIR6i1
+         Fu1RuvfGHm5rPTn8YSCs2EomiIbHDNHGQsKMW3nHc9eQhQO/ZZiJyNUVaBzpe+T9j/ft
+         mAbBYsDe7KFef/rYTGkR/PMbACd/2VyVyiRoX6b0uXteYrRRMZJ8vFVMpqkyquWChVHG
+         O/G+jQyMlqBBRs7UTYNBar+B9eqvAaFNhfkzep0MY7EMC3HNbi90PnEz3W57S7UJ3AcC
+         l20A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1ofcFQVWzWgtS0J9CQ2hgOO4mnl94r4fCHphyeGd9AtG4PKAXmeP3X6CNEMOVdKkrTAv/yyO3Dpl/xGzhvvYJsYDdpNqiZWHwPTORFw6x/6ms58SAfp0MLCbZxU+PB8LBoCbNPnFuwQ==
+X-Gm-Message-State: AOJu0Yy9Z83KC0OOgPll9HxznKvC9N8Xg0iv8gSHk1truAJ2fWTLgcCE
+	0OmdOowFe0mBTyOw/0Emr30PXoyPDJ9NZ3o6PR9Yjeyi83cnzqCH
+X-Google-Smtp-Source: AGHT+IERYx92Rlwx7iwIKLFWJU1Ps4oBdoBXeUTwYjOFi/cb0RLbPXfM/kqnvLGpNRDppH+Y+2YxUA==
+X-Received: by 2002:a17:906:3e4d:b0:a59:edbc:193d with SMTP id a640c23a62f3a-a5a2d65f29fmr1736318466b.55.1715874557589;
+        Thu, 16 May 2024 08:49:17 -0700 (PDT)
+Received: from localhost (host-95-246-50-43.retail.telecomitalia.it. [95.246.50.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d787sm1007125766b.11.2024.05.16.08.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 08:49:17 -0700 (PDT)
+From: Matteo Martelli <matteomartelli3@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Matteo Martelli <matteomartelli3@gmail.com>
+Subject: [PATCH v2 1/2] ASoC: es8311: dt-bindings: add everest es8311 codec
+Date: Thu, 16 May 2024 17:43:30 +0200
+Message-ID: <20240516154800.125284-2-matteomartelli3@gmail.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240516154800.125284-1-matteomartelli3@gmail.com>
+References: <20240516154800.125284-1-matteomartelli3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1351:b0:7cc:2522:f5fd with SMTP id
- ca18e2360f4ac-7e1b51a9835mr117464639f.1.1715874553556; Thu, 16 May 2024
- 08:49:13 -0700 (PDT)
-Date: Thu, 16 May 2024 08:49:13 -0700
-In-Reply-To: <0000000000007e4a2e0616fdde23@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003e82ae0618942dcd@google.com>
-Subject: Re: [syzbot] Test for 5681e40d297b30f5b513
-From: syzbot <syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+Add DT bindings documentation for the Everest-semi ES8311 codec.
 
-***
+Everest-semi ES8311 codec is a low-power mono audio codec with I2S audio
+interface and I2C control.
 
-Subject: Test for 5681e40d297b30f5b513
-Author: syoshida@redhat.com
+Signed-off-by: Matteo Martelli <matteomartelli3@gmail.com>
+---
+ .../devicetree/bindings/sound/everest,es8316.yaml          | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 71b1543c83d65af8215d7558d70fc2ecbee77dcf
-
-diff --git a/net/can/j1939/main.c b/net/can/j1939/main.c
-index a6fb89fa6278..7e8a20f2fc42 100644
---- a/net/can/j1939/main.c
-+++ b/net/can/j1939/main.c
-@@ -30,10 +30,6 @@ MODULE_ALIAS("can-proto-" __stringify(CAN_J1939));
- /* CAN_HDR: #bytes before can_frame data part */
- #define J1939_CAN_HDR (offsetof(struct can_frame, data))
+diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.yaml b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
+index b6079b3c440d..214f135b7777 100644
+--- a/Documentation/devicetree/bindings/sound/everest,es8316.yaml
++++ b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
+@@ -4,18 +4,21 @@
+ $id: http://devicetree.org/schemas/sound/everest,es8316.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
--/* CAN_FTR: #bytes beyond data part */
--#define J1939_CAN_FTR (sizeof(struct can_frame) - J1939_CAN_HDR - \
--		 sizeof(((struct can_frame *)0)->data))
--
- /* lowest layer */
- static void j1939_can_recv(struct sk_buff *iskb, void *data)
- {
-@@ -342,7 +338,7 @@ int j1939_send_one(struct j1939_priv *priv, struct sk_buff *skb)
- 	memset(cf, 0, J1939_CAN_HDR);
+-title: Everest ES8316 audio CODEC
++title: Everest ES8311 and ES8316 audio CODECs
  
- 	/* make it a full can frame again */
--	skb_put(skb, J1939_CAN_FTR + (8 - dlc));
-+	skb_put_zero(skb, 8 - dlc);
+ maintainers:
+   - Daniel Drake <drake@endlessm.com>
+   - Katsuhiro Suzuki <katsuhiro@katsuster.net>
++  - Matteo Martelli <matteomartelli3@gmail.com>
  
- 	canid = CAN_EFF_FLAG |
- 		(skcb->priority << 26) |
+ allOf:
+   - $ref: dai-common.yaml#
+ 
+ properties:
+   compatible:
+-    const: everest,es8316
++    enum:
++      - everest,es8311
++      - everest,es8316
+ 
+   reg:
+     maxItems: 1
+-- 
+2.45.0
 
