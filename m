@@ -1,51 +1,51 @@
-Received: from aer-iport-2.cisco.com (aer-iport-2.cisco.com [173.38.203.52])
+Received: from aer-iport-4.cisco.com (aer-iport-4.cisco.com [173.38.203.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238FC14533D;
-	Thu, 16 May 2024 19:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.38.203.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39C5156F29;
+	Thu, 16 May 2024 19:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.38.203.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886261; cv=none; b=ntavZk71l5vZN2+xP4Etqi1CdsnhZupcktyAtaGy5/cqOUYvokub2RKjYaXG3l7d1kM/BT5UlnWI7K+N4KtdmY0WDEzIZuUPFjTGYxhwCC8vPUiusKpgJ9ngUsmjvnufo4deZpD85b+URVZGMuJ+HcKywMxyRlcyLEdlX1+gGOA=
+	t=1715886263; cv=none; b=ngVcwjV8uUEcAvdUUzhP+kU2fvBgkvvoj/dOzaO+DsSssmgHf7RLlvP6fE+gljTtVpPySn3uaiFNGXdCF6yaaI6M4FF8zkKfw1i7sBHfryEyEsIaQcVwaRQ7u2xEcpFY89g4AZFiQs6PNwnAxbf50fnShvOukJ8FrDi2i3BHNF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715886261; c=relaxed/simple;
-	bh=ZW6e38D7V579eUYjN8wx+opoFbYZthAY3SWMwT68uA4=;
+	s=arc-20240116; t=1715886263; c=relaxed/simple;
+	bh=0lJ0FxB1P4rcK9zFSRBA5T+g6CrZ0Gf7SJqvtne45QA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pugBNa2FzupcRsLPcKLy3hnLTYmtJt8qKw8j1T2FxOG685ZL8m1kgJE89/xTu7pB72HS0YCZ4sY3+2zXW46NB7A+EALIbJDyg7uw1A0oj4hwyxrqhmQvYXxMWZfmpDUAJJXVTd6QpxuW7CSnd91V/zfCpDKB4y8TK1i6AK/imYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=j+WGEDmG; arc=none smtp.client-ip=173.38.203.52
+	 MIME-Version; b=Y0YChVzG+7YlkB/RruhQ8P4zdQh/8NLtREtAVi72qcclgvJyF0DQxfJwiU+POYC1N1uKoNa9SjKdfu6M3egmyGjppE/rZpVTh+ZoTBff+fr49kHSjQWmeuhrGervMP+FUOHRHpvZpPH1E3VuAxR0Ko+TqoA96COFPOhMzXkuoeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=Y45+4JjE; arc=none smtp.client-ip=173.38.203.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="j+WGEDmG"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Y45+4JjE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=6116; q=dns/txt; s=iport;
-  t=1715886258; x=1717095858;
+  d=cisco.com; i=@cisco.com; l=967; q=dns/txt; s=iport;
+  t=1715886261; x=1717095861;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gtETx0x72o83B4fsks8iN1y24qrMuZAVeU7lzntU45E=;
-  b=j+WGEDmGX/g0WHHUPLpaplSOlw/RrCGrvB+laRN4KNsM0qLD3kEVNTtN
-   q/qX355FuMLqwVxsCfesgXd9TJsf1SxBJGn7PEtPgkC/DdwnJ/IgWUuyZ
-   THQYE56PQ46kD/u6CZ3WM8yzqwGlXOnI5gLGV+gp+vt2V2HrZI8TKqqMW
-   0=;
-X-CSE-ConnectionGUID: HMe8tTQ/T8S85WGsTTj5nA==
-X-CSE-MsgGUID: 8UtqKVBVRKWMKr4vvm8D5Q==
+  bh=RM2bpcKeFIOuwJsUXBWZw4CVFhC5QI3+qCCBvqPUBZo=;
+  b=Y45+4JjEVPEgetC8nH5A6haMkizYINtaHu4gEwAurckM5okiDt6f9MGX
+   4hSirA1iB/qHoK8jYHnArjafGhS2YfzS2/jNhdcMHaMUhJUYcJf2b9jy0
+   VN0SHSofetW/JSq62Ycf6VFXjHDhFkSNn2hdeKmGh/+mXdEY1ytVaH8yp
+   Q=;
+X-CSE-ConnectionGUID: MAYFYa3ZSRKzGDsl4DkK+w==
+X-CSE-MsgGUID: XZR3mbPyTBmG61iWLKTEaQ==
 X-IronPort-AV: E=Sophos;i="6.08,165,1712620800"; 
-   d="scan'208";a="12416988"
-Received: from aer-iport-nat.cisco.com (HELO aer-core-5.cisco.com) ([173.38.203.22])
-  by aer-iport-2.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 19:04:16 +0000
+   d="scan'208";a="12379874"
+Received: from aer-iport-nat.cisco.com (HELO aer-core-11.cisco.com) ([173.38.203.22])
+  by aer-iport-4.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 19:04:19 +0000
 Received: from localhost (ams3-vpn-dhcp4879.cisco.com [10.61.83.14])
 	(authenticated bits=0)
-	by aer-core-5.cisco.com (8.15.2/8.15.2) with ESMTPSA id 44GJ4Fgt055638
+	by aer-core-11.cisco.com (8.15.2/8.15.2) with ESMTPSA id 44GJ4IDD020825
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 16 May 2024 19:04:16 GMT
+	Thu, 16 May 2024 19:04:18 GMT
 From: Ariel Miculas <amiculas@cisco.com>
 To: rust-for-linux@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         tycho@tycho.pizza, brauner@kernel.org, viro@zeniv.linux.org.uk,
         ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
         shallyn@cisco.com, Ariel Miculas <amiculas@cisco.com>
-Subject: [RFC PATCH v3 12/22] rust: file: Add support for reading files using their path
-Date: Thu, 16 May 2024 22:03:35 +0300
-Message-Id: <20240516190345.957477-13-amiculas@cisco.com>
+Subject: [RFC PATCH v3 14/22] rust: kernel: add from_iter_fallible for Vec<T>
+Date: Thu, 16 May 2024 22:03:37 +0300
+Message-Id: <20240516190345.957477-15-amiculas@cisco.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240516190345.957477-1-amiculas@cisco.com>
 References: <20240516190345.957477-1-amiculas@cisco.com>
@@ -58,180 +58,39 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Authenticated-User: amiculas@cisco.com
 X-Outbound-SMTP-Client: 10.61.83.14, ams3-vpn-dhcp4879.cisco.com
-X-Outbound-Node: aer-core-5.cisco.com
+X-Outbound-Node: aer-core-11.cisco.com
 
-Implement from_path, from_path_in_root_mnt, read_with_offset,
-read_to_end and get_file_size methods for a RegularFile newtype.
-`kernel_read_file` is used under the hood for reading files.
-
-These functions will be used for reading the PuzzleFS metadata files and
-the chunks in the data store.
+This function takes an iterator and creates a new vector with its
+elements. It is used in multiple places in the PuzzleFS code.
 
 Signed-off-by: Ariel Miculas <amiculas@cisco.com>
 ---
- rust/kernel/error.rs |   2 +-
- rust/kernel/file.rs  | 124 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 124 insertions(+), 2 deletions(-)
+ rust/kernel/alloc/vec_ext.rs | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index edada157879a..3cf916bc884f 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -263,7 +263,7 @@ pub fn to_result(err: core::ffi::c_int) -> Result {
- ///     from_err_ptr(unsafe { bindings::devm_platform_ioremap_resource(pdev.to_ptr(), index) })
- /// }
- /// ```
--pub(crate) fn from_err_ptr<T>(ptr: *mut T) -> Result<*mut T> {
-+pub fn from_err_ptr<T>(ptr: *mut T) -> Result<*mut T> {
-     // CAST: Casting a pointer to `*const core::ffi::c_void` is always valid.
-     let const_ptr: *const core::ffi::c_void = ptr.cast();
-     // SAFETY: The FFI function does not deref the pointer.
-diff --git a/rust/kernel/file.rs b/rust/kernel/file.rs
-index 99657adf2472..c381cc297f3a 100644
---- a/rust/kernel/file.rs
-+++ b/rust/kernel/file.rs
-@@ -5,11 +5,16 @@
- //! C headers: [`include/linux/fs.h`](../../../../include/linux/fs.h) and
- //! [`include/linux/file.h`](../../../../include/linux/file.h)
- 
-+use crate::alloc::flags::GFP_KERNEL;
-+use crate::alloc::vec_ext::VecExt;
- use crate::{
-     bindings,
--    error::{code::*, Error, Result},
-+    error::{code::*, from_err_ptr, Error, Result},
-+    mount::Vfsmount,
-+    str::CStr,
-     types::{ARef, AlwaysRefCounted, Opaque},
- };
-+use alloc::vec::Vec;
- use core::ptr;
- 
- /// Flags associated with a [`File`].
-@@ -164,6 +169,123 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+diff --git a/rust/kernel/alloc/vec_ext.rs b/rust/kernel/alloc/vec_ext.rs
+index 6ad0b6da45d3..cbc8b06183d7 100644
+--- a/rust/kernel/alloc/vec_ext.rs
++++ b/rust/kernel/alloc/vec_ext.rs
+@@ -132,6 +132,18 @@ fn resize(&mut self, new_len: usize, value: T, flags: Flags) -> Result<(), Alloc
+     {
+         self.resize_with(new_len, flags, || value.clone())
      }
++
++    /// See https://doc.rust-lang.org/std/vec/struct.Vec.html#examples-31
++    fn from_iter_fallible(
++        iter: impl Iterator<Item = T>,
++        flags: Flags,
++    ) -> Result<Vec<T>, AllocError> {
++        let mut vec = Vec::new();
++        for value in iter {
++            vec.push(value, flags)?;
++        }
++        Ok(vec)
++    }
  }
  
-+/// A newtype over file, specific to regular files
-+pub struct RegularFile(ARef<File>);
-+impl RegularFile {
-+    /// Creates a new instance of Self if the file is a regular file
-+    ///
-+    /// # Safety
-+    ///
-+    /// The caller must ensure file_ptr.f_inode is initialized to a valid pointer (e.g. file_ptr is
-+    /// a pointer returned by path_openat); It must also ensure that file_ptr's reference count was
-+    /// incremented at least once
-+    unsafe fn create_if_regular(file_ptr: *mut bindings::file) -> Result<RegularFile> {
-+        let file_ptr = ptr::NonNull::new(file_ptr).ok_or(ENOENT)?;
-+        // SAFETY: file_ptr is a NonNull pointer
-+        let inode = unsafe { core::ptr::addr_of!((*file_ptr.as_ptr()).f_inode).read() };
-+        // SAFETY: the caller must ensure f_inode is initialized to a valid pointer
-+        let inode_mode = unsafe { (*inode).i_mode as u32 };
-+        if bindings::S_IFMT & inode_mode != bindings::S_IFREG {
-+            return Err(EINVAL);
-+        }
-+        // SAFETY: the safety requirements state that file_ptr's reference count was incremented at
-+        // least once
-+        Ok(RegularFile(unsafe { ARef::from_raw(file_ptr.cast()) }))
-+    }
-+    /// Constructs a new [`struct file`] wrapper from a path.
-+    pub fn from_path(filename: &CStr, flags: i32, mode: u16) -> Result<Self> {
-+        // SAFETY: filename is a reference, so it's a valid pointer
-+        let file_ptr = unsafe {
-+            from_err_ptr(bindings::filp_open(
-+                filename.as_ptr().cast::<i8>(),
-+                flags,
-+                mode,
-+            ))?
-+        };
-+
-+        // SAFETY: `filp_open` initializes the refcount with 1
-+        unsafe { Self::create_if_regular(file_ptr) }
-+    }
-+
-+    /// Constructs a new [`struct file`] wrapper from a path and a vfsmount.
-+    pub fn from_path_in_root_mnt(
-+        mount: &Vfsmount,
-+        filename: &CStr,
-+        flags: i32,
-+        mode: u16,
-+    ) -> Result<Self> {
-+        let mnt = mount.get();
-+        // construct a path from vfsmount, see file_open_root_mnt
-+        let raw_path = bindings::path {
-+            mnt,
-+            // SAFETY: Vfsmount structure stores a valid vfsmount object
-+            dentry: unsafe { (*mnt).mnt_root },
-+        };
-+        let file_ptr = unsafe {
-+            // SAFETY: raw_path and filename are both references
-+            from_err_ptr(bindings::file_open_root(
-+                &raw_path,
-+                filename.as_ptr().cast::<i8>(),
-+                flags,
-+                mode,
-+            ))?
-+        };
-+        // SAFETY: `file_open_root` initializes the refcount with 1
-+        unsafe { Self::create_if_regular(file_ptr) }
-+    }
-+
-+    /// Read from the file into the specified buffer
-+    pub fn read_with_offset(&self, buf: &mut [u8], offset: u64) -> Result<usize> {
-+        // kernel_read_file expects a pointer to a "void *" buffer
-+        let mut ptr_to_buf = buf.as_mut_ptr() as *mut core::ffi::c_void;
-+        // Unless we give a non-null pointer to the file size:
-+        // 1. we cannot give a non-zero value for the offset
-+        // 2. we cannot have offset 0 and buffer_size > file_size
-+        let mut file_size = 0;
-+
-+        // SAFETY: 'file' is valid because it's taken from Self, 'buf' and 'file_size` are
-+        // references to the stack variables 'ptr_to_buf' and 'file_size'; ptr_to_buf is also
-+        // a pointer to a valid buffer that was obtained from a reference
-+        let result = unsafe {
-+            bindings::kernel_read_file(
-+                self.0 .0.get(),
-+                offset.try_into()?,
-+                &mut ptr_to_buf,
-+                buf.len(),
-+                &mut file_size,
-+                bindings::kernel_read_file_id_READING_UNKNOWN,
-+            )
-+        };
-+
-+        // kernel_read_file returns the number of bytes read on success or negative on error.
-+        if result < 0 {
-+            return Err(Error::from_errno(result.try_into()?));
-+        }
-+
-+        Ok(result.try_into()?)
-+    }
-+
-+    /// Allocate and return a vector containing the contents of the entire file
-+    pub fn read_to_end(&self) -> Result<Vec<u8>> {
-+        let file_size = self.get_file_size()?;
-+        let mut buffer = Vec::with_capacity(file_size, GFP_KERNEL)?;
-+        buffer.resize(file_size, 0, GFP_KERNEL)?;
-+        self.read_with_offset(&mut buffer, 0)?;
-+        Ok(buffer)
-+    }
-+
-+    fn get_file_size(&self) -> Result<usize> {
-+        // SAFETY: 'file' is valid because it's taken from Self
-+        let file_size = unsafe { bindings::i_size_read((*self.0 .0.get()).f_inode) };
-+
-+        if file_size < 0 {
-+            return Err(EINVAL);
-+        }
-+
-+        Ok(file_size.try_into()?)
-+    }
-+}
-+
- /// Represents the EBADF error code.
- ///
- /// Used for methods that can only fail with EBADF.
+ impl<T> VecExt<T> for Vec<T> {
 -- 
 2.34.1
 
