@@ -1,144 +1,231 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA98B145B3D
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FE9146A72
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715865048; cv=none; b=Mo1So89vjja6CG8LjqyhGnOhvZ5llOSLzfyV17euRpTUhOmorqyIibRkv3L0lSoOuKVPCDVptgpnozZNetynId1qnd5Amr/vt3TNILswd+f1lwEjd9aNLCThe0aSlPZwTMu3+9usAqG5BZJE84qrRvGSlPNQ9FXLUFE7zis6S8E=
+	t=1715865108; cv=none; b=b++/ckMhuDbNK9lrHzU+gqA+SF5GfUm9Ve34Dz4hpY8JjtE6cuC56oLmEw6T+JeyWbEGugHN2ELAGCh+75+TrhOYiVTybFFQT8dXQqw7IVQMCcIonbMmsXL5oyWyAJtIyfJlHQIKdEsOfduwoXTUF2VhpgVnsLCq9C/RBfCtL9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715865048; c=relaxed/simple;
-	bh=+qN5DxB61g3Rpzjt8cPs2wxxF/2JTkfmz6mnIXDsgT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nNaqrwyEXefxt279Hy/9k6qc2YlCqnll9p+nhhIRTtFSauiNdvBstcx+1yrYDPheblsz5vidDRRqjWILtamLjCaqznFpbRVh7ZqriiQRaLCL9UJ3yhdUdx+OXMEAEp2arBTwdL5wF6lMFnBKxgPu/9CaxhT29gfJN+TEXoCwdVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YelBLipc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715865108; c=relaxed/simple;
+	bh=Wi6fPWBM2N13lqz1ePjmrOpqRQ8zl8M+Hd0GZZShN44=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mItJRC6x2p99V5YqGMi+kMI2Hh21Mvj8qY9Ly9t24Z9U9sQHAP/MYoeHlDyjoDwCzrBqyuFKRW2qpUwQecqfZhZgGhaKXe7mz0w/Razhnkk+JLtcWct59rF68HnWIEBuaqzLqZ/OenEnnxoGaXWin8qDFIzbPDxu3/fGX87gcWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=HKkIiKKg; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YelBLipc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715865045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6MzQGMFLfrhhSl6bSyuFe86ROBiqTDOIvxRDFN1T/dk=;
-	b=YelBLipcYAjin2YZ0J2tgBxCFB2O25V1d9JywfucH141C2Ke4FZCPuWQ9ULguh18OFDsrB
-	psiOcScNLPGwUoOhu8bDINLNDm71YCCcakjyF4jbDdtq7MVnSpjc8p6fAgVIXO86N3Xksc
-	40wg23ikzmCvjEE3W5mnMLkQNnDaeEk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674-x07UT-oNMRe252-Bln2tow-1; Thu, 16 May 2024 09:10:44 -0400
-X-MC-Unique: x07UT-oNMRe252-Bln2tow-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CF3AC800074;
-	Thu, 16 May 2024 13:10:42 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.2])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 8DDD4200A0B4;
-	Thu, 16 May 2024 13:10:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 16 May 2024 15:09:17 +0200 (CEST)
-Date: Thu, 16 May 2024 15:09:14 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrei Vagin <avagin@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Jens Axboe <axboe@kernel.dk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] seccomp: release task filters when the task exits
-Message-ID: <20240516130913.GB19105@redhat.com>
-References: <20240514175551.297237-1-avagin@google.com>
- <20240514175551.297237-3-avagin@google.com>
- <20240515125113.GC6821@redhat.com>
- <CAEWA0a5dBvRwGAnztL56i=JV-WGGiaTd-GdJYdOxZmq1c+bdpg@mail.gmail.com>
- <20240516093427.GA19105@redhat.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HKkIiKKg"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6277a2bb35fso5282517b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1715865106; x=1716469906; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4V904prVi6oQ5IyZz7aDLXAgfOChEzLZtTfRAaiZkwU=;
+        b=HKkIiKKglEbZ0hNaJB/6vEr2kjrfTrAMUPaj+Ct9bWmyMQA8SkQKvrQg76KjBrhUDw
+         q8pq4iGam6QFNqGlYJ8XhdLlsbe8rwle8BtK8Yzs15RQbF855DfywMB7pBLjcnaj2wOl
+         rcktK0svtAULtALURw4vcFxNsJzMgU7QBe9+zLUlTZ+3n+Mxl55MoOIu3uNbJWmth10o
+         rYXY1FBNrUN1miG65K942JxmgsxAIQeibboAPzgXzJB2qYI5aq7GaJG1fSZkC/2DMdMY
+         q+PZrMLZtF1XCXtv6AwqUtmKFy/mVByqlYuE14B6xeelv2axt6X0fNVBPYacEP7tdK92
+         rx0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715865106; x=1716469906;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4V904prVi6oQ5IyZz7aDLXAgfOChEzLZtTfRAaiZkwU=;
+        b=vwxi4TRng2SY8mlWASWYu8/Ahi78uKXzCtTEriTSmwcbYY2jptMpcgWwJG1mMwRmge
+         8lCqf3rsUFaQxX620czKq7KAo8U4OMf4hc/2gHhRc6oIJf3B9YtZawFRHsjDDT8GmmOf
+         EFM/eo938i0o2DiSIoLCDwT70kefXkCN/4N8/S+tQvAE4YCOHnEnk34JH5gFOdFhMRlu
+         P2/eaQyBn1A1zMuOw+5Q5XfSMaldxwkggUmyBLqt2t6i8wZvfYAppByAf43aLe9CJrry
+         K0F4SL+TYM2iJTbrfXdEqbhJIxz0g5fP5+aj9kBUnizLswhapl0aH/cm2U7aS+hjprnx
+         OnSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTQ6W7BmRBMotWdRkkyqllLxqDby6N+s43u/aPJ/zA8qYEb7k2wafUebEpfvlVJlWxZERTEj5prjngGb9PsULwLM5iQuoMLzqCdIDo
+X-Gm-Message-State: AOJu0YymxWSjMj00R6k2MXuUhL1rVz7/+KI+RrEgWBDSzgTA5lKSItw1
+	hW196EL0ne/k+Tbimjg1pLuwtf9wmwJVAUVKkiNMpeum3j/tnDEmHr4MQwHmN95bbj30q7eky8R
+	ULKR4M0TLQzUKDofR5eF3CveV3Zn0EkIGAi3hRQ==
+X-Google-Smtp-Source: AGHT+IH5FRDo7BDlg+tWZAgAOlCiAfHazME5mq8JEMAmJ+ns26s+bWNHf5N3/miLQXMAqpV9jaca9Qw0iocuCcuU1Ac=
+X-Received: by 2002:a81:77c2:0:b0:618:9198:1a9b with SMTP id
+ 00721157ae682-622af7af307mr115191067b3.3.1715865105680; Thu, 16 May 2024
+ 06:11:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516093427.GA19105@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+References: <20240503-dev-charlie-support_thead_vector_6_9-v6-0-cb7624e65d82@rivosinc.com>
+ <20240503-dev-charlie-support_thead_vector_6_9-v6-3-cb7624e65d82@rivosinc.com>
+In-Reply-To: <20240503-dev-charlie-support_thead_vector_6_9-v6-3-cb7624e65d82@rivosinc.com>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Thu, 16 May 2024 21:11:33 +0800
+Message-ID: <CABgGipUJ1hk_N6Vka2j12o80bxpDbAadJVBHdoLncrQEaBPoaw@mail.gmail.com>
+Subject: Re: [PATCH v6 03/17] riscv: vector: Use vlenb from DT
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Palmer Dabbelt <palmer@rivosinc.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/16, Oleg Nesterov wrote:
+On Sat, May 4, 2024 at 2:21=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.co=
+m> wrote:
 >
-> On 05/15, Andrei Vagin wrote:
-> >
-> > seccomp_sync_threads and seccomp_can_sync_threads should be considered too.
+> If vlenb is provided in the device tree, prefer that over reading the
+> vlenb csr.
 >
-> Yes. But we only need to consider them in the multi-thread case, right?
-> In this case exit_signals() sets PF_EXITING under ->siglock, so they can't
-> miss this flag, seccomp_filter_release() doesn't need to take siglock.
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 
-Ah, no. seccomp_filter_release() does need to take ->siglock even if we
-forget about proc_pid_seccomp_cache().
+I agree with Conor that we need a mechanism to turn off v and all
+depending extensions with has_riscv_homogeneous_vlenb(). And that can
+come after this.
 
-Without siglock
+Thanks for adding the homogeneous vlen checking!
 
-	orig = tsk->seccomp.filter;
+Reviewed-by: Andy Chiu <andy.chiu@sifive.com>
 
-can leak into the critical section in exit_signals() (spin_unlock is the
-one-way barrier) and this LOAD can be reordered with "flags |= PF_EXITING".
-
-Hmm. I thought we have something smp_mb__after_unlock(), but it seems we
-don't. So we can't add a fast-path
-
-	if (!tsk->seccomp.filter)
-		return;
-
-check at the start of seccomp_filter_release().
-
-
-Cough... Now that I look at seccomp_can_sync_threads() I think it too
-doesn't need the PF_EXITING check.
-
-If it is called before seccomp_filter_release(), this doesn't really
-differ from the case when it is called before do_exit/exit_signals.
-
-If it is called after seccomp_filter_release(), then is_ancestor()
-must be true.
-
-But perhaps I missed something, I won't insist, up to you.
-
-> > If we check PF_EXITING in all of them, we don't need to take ->siglock in
-> > seccomp_filter_release. Does it sound right?
+> ---
+>  arch/riscv/include/asm/cpufeature.h |  2 ++
+>  arch/riscv/kernel/cpufeature.c      | 47 +++++++++++++++++++++++++++++++=
+++++++
+>  arch/riscv/kernel/vector.c          | 12 +++++++++-
+>  3 files changed, 60 insertions(+), 1 deletion(-)
 >
-> The problem is a single-threaded exiting task. In this case exit_signals()
-> sets PF_EXITING lockless. This means that in this case
+> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm=
+/cpufeature.h
+> index 347805446151..0c4f08577015 100644
+> --- a/arch/riscv/include/asm/cpufeature.h
+> +++ b/arch/riscv/include/asm/cpufeature.h
+> @@ -31,6 +31,8 @@ DECLARE_PER_CPU(struct riscv_cpuinfo, riscv_cpuinfo);
+>  /* Per-cpu ISA extensions. */
+>  extern struct riscv_isainfo hart_isa[NR_CPUS];
 >
-> 	- proc_pid_seccomp_cache() can't rely on the PF_EXITING check
-> 	  but it can be safely removed.
+> +extern u32 riscv_vlenb_of;
+> +
+>  void riscv_user_isa_enable(void);
 >
-> 	- seccomp_filter_release() needs to take ->siglock to avoid the
-> 	  race with proc_pid_seccomp_cache().
+>  #if defined(CONFIG_RISCV_MISALIGNED)
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 3ed2359eae35..6c143ea9592b 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -35,6 +35,8 @@ static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __r=
+ead_mostly;
+>  /* Per-cpu ISA extensions. */
+>  struct riscv_isainfo hart_isa[NR_CPUS];
 >
-> And this chunk from your patch
+> +u32 riscv_vlenb_of;
+> +
+>  /**
+>   * riscv_isa_extension_base() - Get base extension word
+>   *
+> @@ -648,6 +650,46 @@ static int __init riscv_isa_fallback_setup(char *__u=
+nused)
+>  early_param("riscv_isa_fallback", riscv_isa_fallback_setup);
+>  #endif
 >
-> 	 static void __seccomp_filter_orphan(struct seccomp_filter *orig)
-> 	 {
-> 	+       lockdep_assert_held(&current->sighand->siglock);
-> 	+
+> +static int has_riscv_homogeneous_vlenb(void)
+> +{
+> +       int cpu;
+> +       u32 prev_vlenb =3D 0;
+> +       u32 vlenb;
+> +
+> +       /* Ignore vlenb if vector is not enabled in the kernel */
+> +       if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+> +               return 0;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               struct device_node *cpu_node;
+> +
+> +               cpu_node =3D of_cpu_device_node_get(cpu);
+> +               if (!cpu_node) {
+> +                       pr_warn("Unable to find cpu node\n");
+> +                       return -ENOENT;
+> +               }
+> +
+> +               if (of_property_read_u32(cpu_node, "riscv,vlenb", &vlenb)=
+) {
+> +                       of_node_put(cpu_node);
+> +
+> +                       if (prev_vlenb)
+> +                               return -ENOENT;
+> +                       continue;
+> +               }
+> +
+> +               if (prev_vlenb && vlenb !=3D prev_vlenb) {
+> +                       of_node_put(cpu_node);
+> +                       return -ENOENT;
+> +               }
+> +
+> +               prev_vlenb =3D vlenb;
+> +               of_node_put(cpu_node);
+> +       }
+> +
+> +       riscv_vlenb_of =3D vlenb;
+> +       return 0;
+> +}
+> +
+>  void __init riscv_fill_hwcap(void)
+>  {
+>         char print_str[NUM_ALPHA_EXTS + 1];
+> @@ -671,6 +713,11 @@ void __init riscv_fill_hwcap(void)
+>                         pr_info("Falling back to deprecated \"riscv,isa\"=
+\n");
+>                         riscv_fill_hwcap_from_isa_string(isa2hwcap);
+>                 }
+> +
+> +               if (elf_hwcap & COMPAT_HWCAP_ISA_V && has_riscv_homogeneo=
+us_vlenb() < 0) {
+> +                       pr_warn("Unsupported heterogeneous vlen detected,=
+ vector extension disabled.\n");
+> +                       elf_hwcap &=3D ~COMPAT_HWCAP_ISA_V;
+> +               }
+>         }
 >
-> looks unnecessary too, seccomp_filter_release() can just do
+>         /*
+> diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+> index 6727d1d3b8f2..e04586cdb7f0 100644
+> --- a/arch/riscv/kernel/vector.c
+> +++ b/arch/riscv/kernel/vector.c
+> @@ -33,7 +33,17 @@ int riscv_v_setup_vsize(void)
+>  {
+>         unsigned long this_vsize;
 >
-> 	spin_lock_irq(siglock);
-> 	orig = tsk->seccomp.filter;
-> 	tsk->seccomp.filter = NULL;
-> 	spin_unlock_irq(siglock);
+> -       /* There are 32 vector registers with vlenb length. */
+> +       /*
+> +        * There are 32 vector registers with vlenb length.
+> +        *
+> +        * If the riscv,vlenb property was provided by the firmware, use =
+that
+> +        * instead of probing the CSRs.
+> +        */
+> +       if (riscv_vlenb_of) {
+> +               this_vsize =3D riscv_vlenb_of * 32;
+> +               return 0;
+> +       }
+> +
+>         riscv_v_enable();
+>         this_vsize =3D csr_read(CSR_VLENB) * 32;
+>         riscv_v_disable();
 >
-> 	__seccomp_filter_release(orig);
+> --
+> 2.44.0
 >
-> Right?
 >
-> Oleg.
-
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
