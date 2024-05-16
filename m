@@ -1,84 +1,106 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8C32137E;
-	Thu, 16 May 2024 06:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A4B2576F
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715839324; cv=none; b=aZHkrrW9yXUWRQApHLM4vphwReCYlbWsfzLvfoYoUfNS4Bnad1XTF3AtliwMRMIL9TZdKlhOkGK3CHeku0hh574xUBgRfvCFFs7rQFZybLDFpuiVPRDUc6IoR+FrZeJyp1NTD4EOoQ4LtocUeH6NY3F2kBBhYEdWa7BNQwXyjqE=
+	t=1715839339; cv=none; b=eOyA+Ic8HudD4XakKxmKb6dEu8AVkuU18LARJkxYzZjxqk7r3wfAZgs5bd/yV+RxnUwGIu7nfDUo02pMdMl0wLLKu2W3qGoBLbg05VYGExrEMlLhKNLN0WCAdOHPqsS+L6868aOyzJC51w+qLSLskPhK4tLyR0plEEfgd9Cn3Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715839324; c=relaxed/simple;
-	bh=8Yz8hdYO1zO5H+gdWNA7xLnI/GiTkNJbeKAXjlzwnzk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=urrdpKErgGaeIbzJbSWrP5GREKP6bu67NyCceyttMUtm8LDLUrnj5PLZwC5lVz5j+CBFY2Y8crmSK/O0aQvsJfnZcnlAM/goOSKC/3W96fMKoIwVrSipTjKsC6uSxVkZkyKqo6+c53R7zbY2DNUyt4HGVyzJtUfSzPRKKHORHlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=eyN+MCwh; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715839339; c=relaxed/simple;
+	bh=fMxF2StVs/M/aaHNKTnKzRqFLg6CcU30ETa1Rv+cqko=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P+HvuLHja3wvZWk+IqmzrL4l60EvsOe/gtM8pkEBFd/ZgOr4hKFbOqMARur25AoCaqiCFSJrGBTEbgtkC48e4krcfTQ5CzHB3eGmv40MO/AgtKeRYIBVD66eKBgVc2r8PiNOl1KKWfqHIVNUP/dFviUnK82iKUUA9pbi3avAnog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i81RDg9O; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="eyN+MCwh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715839283; x=1716444083; i=markus.elfring@web.de;
-	bh=Cyh+eg/yRQoUJohGczjwN4WgfqvUfMeQ6xYM9LQpmSM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=eyN+MCwhadgWF7AkhcROllHdp96/idsb7fQuCeahUz4X1pcYx8Lrvrndo4lCH8WK
-	 OHBGvrUzuGH6/uviHkA1Mr04siqg8WoJt2j2ZsaoNRqU2xioFOcPOHV6kjDbkEADr
-	 sWaJavXhxwl8xzgjncmvIp4ATu7Hp5MNau7QNCopjcNOr6JLbzh16nBBamx8/BSCK
-	 bfJCp1VR0FXIMGTWgeV7zNzIup+ta0NDhCYfWI6jDxS0InYm//VFOkZeMC2yrDzAP
-	 qvcWeKhkqh8dQYUAJLUeAjLiXArfnReNpgzmdaBKjfY1SUfcS4d+0VcGsPK0Frmh7
-	 Knp5DXs8IeZe257v7A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MI3tF-1sJqdQ35Xz-000szD; Thu, 16
- May 2024 08:01:23 +0200
-Message-ID: <68b2d167-6241-44af-b50a-feb4257e5a78@web.de>
-Date: Thu, 16 May 2024 08:01:07 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i81RDg9O"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df475159042so139787276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 23:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715839336; x=1716444136; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fMxF2StVs/M/aaHNKTnKzRqFLg6CcU30ETa1Rv+cqko=;
+        b=i81RDg9OTTrg7eIrBpaSUCZiDOcu38wt8Zv1o+2K+ZMatMToc6xffHXt18uJxr6qMJ
+         p1QXhloacffi41FpwHKM4DVn369p9/+c9F/6UsIClNGFL03EFcsGDYi3EmhVHqJwZVTf
+         IXXtH5h/39DQ3JYECUmwYl/iEUokAb7S4B0JwpyqbJTCQsmNyfw9iNQWQEpdntJO04eI
+         pzF5O0EADRR7x0byW7tx+I49uzPjepNcNuQSkAv3h+9sFE1tqSEXdPoD3KW1q2srkEsa
+         YjxVMX+2C6msc5bTvo6LM/ewIKDc/q9JzMWsZ4mNzY0q7zMvHF7xoFzCLxiATNZuwiF9
+         tN5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715839336; x=1716444136;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fMxF2StVs/M/aaHNKTnKzRqFLg6CcU30ETa1Rv+cqko=;
+        b=obtx7VhGlLlLO1qEOHbPS5BPmxSXJA+3j1D0NpScgFp9ZLuH8t3wUIcKaKYPE94j7u
+         naX/pSjxESz5GieSCVfXb64GTWtRG5Jiv4V1bfAm508GRFRzkPgup7dMYoI+hO6sZiN9
+         cKCvGSMi05zRxrMmiFnzwm0dyheBlidi26ypU29yvWmOKQ5K0doFLXmTPewwv4HeU9jb
+         24v8BbpKr6UG18c711lLsYKO/a37Si8Ltm/w6xJLztG0OfqEh3dqVpeegLHuLJiimt9Y
+         qtKnY3JKfby4bQZm6yinifzwDoV4g4+H6a/Gc6mbltmX3QPju0sXqTthMw22LJIp06Lk
+         vxaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBS3pRWArxbTSuy1jMY0zg1uyCyK9bI3sWxr8pXEPX0lgjg8koz2yRIKH/VP0WRP5v2dVZaJmXPYpzbfUi5Umr4olxsUY5mqPlxvCx
+X-Gm-Message-State: AOJu0YyN3sN/9fj5wcPzT+iJJfQri8D5mq9FrIcZVjJ3r6HNhzGP3Djz
+	4bc9PJPDikdQLACxSPJ+ZWRm7AC0+jBrvd6TV4rIWFsZgQdbBdn2zR4OJlkU+bAFRlwhMuyhuco
+	fhcwLeQvhwu+M5BSAAL7h34sDj2Wt77XvyJ65TQ==
+X-Google-Smtp-Source: AGHT+IHQRhJ5WdipOlFEPTE2IXtjwpxOJIa3F6UInY4NKv3hR6EY4LO3bbTRgZIjq/P9G1VVfPyvex/Mx0Vhj/yz1NA=
+X-Received: by 2002:a25:f505:0:b0:de6:d0a:ee3d with SMTP id
+ 3f1490d57ef6-dee4f1b7a13mr16047733276.30.1715839336505; Wed, 15 May 2024
+ 23:02:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Sui Jingfeng <sui.jingfeng@linux.dev>, dri-devel@lists.freedesktop.org,
- kernel-janitors@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Sui Jingfeng <suijingfeng@loongson.cn>
-References: <20240513001243.1739336-3-sui.jingfeng@linux.dev>
-Subject: Re: [PATCH 2/3] drm/loongson: Introduce component framework support
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240513001243.1739336-3-sui.jingfeng@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TaIRuGzWCIt3tYqyHddJHcD7QI6a0iTTV8jXc9ueJegtw2j5MEg
- nYPLHiwDo6jdy3YGU8XkshijPrVdV1WsKEHB8GDRC6x03m5ur9t2DlC2JvuzOi9Q5G3LiaN
- zDmIarFJ/Y5QJ7b/edk3MEbfiKJT/+raoY8RuKmH2NzqvakVvamhPZdW705v4tOBqdS2WVd
- J/jCz453Xh2mFc4bEEeag==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FVEYT3FbxY4=;tNVf7Y6TSTVEAMpSIU5NAdbOy6u
- PaQpOQ7d1Ixbm1+WQK3wUNYpulXmpRDZpsaD8ZKbKWALzgNAp6RCngttJrH/czd48VXpLiHx6
- XRMjCE4m6T658yi4i4ZXoZed/PtOFxjCqRWyZU/yVmX3bqS6JVpPTLvzvYqS/mf5FmVLUOYuE
- nVMdiqYw8pGhaPJOLp3DpUisfdqTGqLG4q+MH/WvQ/xXNlFJZolfDrLComS8aaPxFFndwbaus
- 8CVJHyRWrwHZOIudo7dGmroM2D1ix/YafcyXGyhhtJz6JANqmJcq1FXhjrTMmWBRcw9d4ou3o
- OKkHXJul4zs8OIZzHjlsO0LKuhVwOISGaVZ6/8QQGime9lw9bXphgPZhjeC92vppL7f0qzEJ+
- G6LT9E3qeT/xLaY+0377Abq3l8IE6Ngl2toI7J4+x33kYqa5SpEl5rwiQRWH1gSsSUTAKkOjy
- lc/FzJiq5dJhiDKuFNr1v1THHQkE1bvc213rFnj+CjQP+/lnLFNxSelm5/2CLatf+TPuUInwX
- fu7udLsTvDbdzZ56EnLdQlVARdpt/5nmSfG+8wTl3kqdlrtrn6A8t6aklLnBKIPAlWupmbCzG
- GVLab7fs1NuwUz/0nxzvagACquiQGPScrl07NG8jzL6/mwGCGSh6reEZUMDcg25PFXiodvOOR
- w6jRZANacKFdAKacMWZyGp3n2B0JrIrGkmsXIQHevR0sjCjGO3KzVyYpzCFkQEvLn6nou2qKY
- uq0O82yz55o2m4bjww+9G/o6ZGwwQRT0GunUE9iN5ETZNg7kMxpkBw72CcFPJTOpANxWmtbBc
- al/RSSajyeUyjyB6sM3EPCcGUHFaIl68qd5hE7mAs+VZ4=
+References: <20240515105446.3944629-1-sumit.garg@linaro.org>
+ <20240515105446.3944629-2-sumit.garg@linaro.org> <131345e4-7920-428c-85c8-0fc4f56ca84e@linaro.org>
+In-Reply-To: <131345e4-7920-428c-85c8-0fc4f56ca84e@linaro.org>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Thu, 16 May 2024 11:32:05 +0530
+Message-ID: <CAFA6WYO1r5VydNo3VkdQY4yrC9ppL3-ou15i=GOgaQtVvSw0bQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5 1/3] dt-bindings: vendor-prefixes: Add Schneider Electric
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, stephan@gerhold.net, 
+	caleb.connolly@linaro.org, neil.armstrong@linaro.org, 
+	dmitry.baryshkov@linaro.org, laetitia.mariottini@se.com, 
+	pascal.eberhard@se.com, abdou.saker@se.com, jimmy.lalande@se.com, 
+	benjamin.missey@non.se.com, daniel.thompson@linaro.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-=E2=80=A6
-> The idea is to devide the exterinal module dependent part =E2=80=A6
+Hi Krzysztof,
 
-                 divide | separate the external?
+On Wed, 15 May 2024 at 20:08, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 15/05/2024 12:54, Sumit Garg wrote:
+> > Add vendor prefix for Schneider Electric (https://www.se.com/).
+> >
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > ---
+>
+> Please do not resend regular patches during merge window. Nothing can
+> happen now, no one will pick it up, so probably you will need another
+> resend later. This just creates really unnecessary traffic on the
+> mailing lists.
 
-Please avoid typos in such a change description.
+You are right. I suppose the reason for my hurry is not to miss the
+next v6.11 release cycle as the v6.10 release cycle has already passed
+for this patchset to be picked up. It has nearly been 6 weeks since
+the original v5 patch-set [1] was posted and not being picked up even
+after it has gone through extensive review. I am really failing to
+understand the missing pieces or any unaddressed feedback to get this
+accepted.
 
-Regards,
-Markus
+However, as you have suggested I will resend again after the merge
+window closes.
+
+[1] https://lore.kernel.org/lkml/20240403043416.3800259-1-sumit.garg@linaro.org/
+
+-Sumit
