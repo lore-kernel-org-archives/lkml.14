@@ -1,274 +1,279 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF06156F28
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 18:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715885735; cv=none; b=sQXLTPl/vV2x+ipMXSbkYVGbwmX0czpj3KnuCzsCZRG2PdrHQP4iuakXGRooqSwCSKE7aQGQlsIiAtePlGRMj1kv1lS0MDJTxrjThH+ljPMJQCU8eg4yREC+3La7gs4vnJSA8lE/tVFUK8HiwrctqOhzKW7V6jRBmJTedvCCzKA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715885735; c=relaxed/simple;
-	bh=/tmkgM7KaC3CGulU3Fzx6rVAfGehu9zopbIqQeteXNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EoakE/08tP8errkJDjo1Tttk4PUYV7W/UsspwVRUynkIHdT82LrVfZJzrDq5He7ufrWUf+hedjALOEXAJY9aSs+jdGwkPmvJaOQcbhLGonSWfFrILmSt4L1/rQELEL2AWYzzqCt/2FST6MtL3chQFp3K8+ctLNDYV8kogEIBMII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lyp2inpZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A94CEDE;
+	Thu, 16 May 2024 18:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715885784; cv=fail; b=Mxt9bZe+d5M3B4OucRZC+miOu0+pguCiHaQQeb1ruxtWY0V/WtWTU2vdb9QyZXyXoKRhqPMlPLXRrN189JbMohLIcVKGKXd8d3lW752vqrnr69UTXIXYKpQw4BbiSjiob2Xake4flh+7EO/KzazoVQrvzWdmuE/miaPn9aceF+o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715885784; c=relaxed/simple;
+	bh=lwziwO4LZkNxb6IW5QwqS6PwMdIkOqId0cqKt40224A=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HDMRnaKRdMl3WE2D+9B0deQHwbgCxm/JdePdiu2BUkOAgDTGugq1U1OZy1s5mlHTHw/Ouv+H8MDVx5nEr5QtqZgEOibdWmzCXAOo0RN4gAdCAGc4ll+6wbUeWlQ8fN42q57HLiPBPO5BtAPGM/Un6OLE2UJMGx3OCq+Ow5j1wNE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ECtBA3Vf; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lyp2inpZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715885731;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CmAY6zq6VIlTkGG6Cuhy+C5anov3S7tUmGwPS9mMo4A=;
-	b=Lyp2inpZ4H9uDj9lFmv8qEhAh+N6x0v7aeVUJfXPYAWT61xmNwTueNh/GGDhV28MXgfaN8
-	ZEvVY1Da47fxWBZqdXDVj6ja8poi70rQPMTd/fcJTy7XoI90GM05c1S7COr70B4WpifoGG
-	PF9D2EOsrZAVrceyPW6GC/Xi8jg/sKY=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-364-RcPkgV6-P4CAWyTJr0YpAg-1; Thu, 16 May 2024 14:55:30 -0400
-X-MC-Unique: RcPkgV6-P4CAWyTJr0YpAg-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-62079696c58so148030367b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 11:55:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715885730; x=1716490530;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CmAY6zq6VIlTkGG6Cuhy+C5anov3S7tUmGwPS9mMo4A=;
-        b=W5SJ0sfOwsKWpX3qhEOsfAffXVp7bYrcnL7QyS5yTrQdNPihr8xB6eVxog7gkpcaFF
-         kYYaltYS3M8iUfi+mC70Zs9cKAaKdEXQ9wp58vs850/x7G6jiSdbEzKlXyKV5J01X99A
-         Mpl2OPrhL6fKPV61Lez6tlS0Qgsv5hskhkzPDK8nkmOVdBjReDUdOAA3Q82hCzmtMYFc
-         tmQsby7Dqk2Rtq6jPDTz5MAYTYEAEHxm1yqWNNZB6eLfPyAYlkuCtr0di1kwv1CTa7VG
-         PoxTKaCUr/4ub46ki6IB6G8rKRyIHlqtlWpmUR1obMdiJipMaeQvHaAIM+CiBgoPVAR+
-         yyPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcfW8q5snXbzmxl6vwowHeRU+dc/tXM3ICEZVsJKAh7nZeaSdcjeRo4wtDe9ZzNftNX9IsmV6DAEToVYdo47RPHcldaSSvQy4aftCt
-X-Gm-Message-State: AOJu0Yx7rP2U9+LM/RRVXjoiit2f/IaeuJcOBhqHBzAhu7vgeM5ZTk8C
-	ElfOIIodkOkx536O5vyDIkNewEikZYqDc9M1bX0lr3xUbVxggjxgNff3Up55B7dnCnfcxr0LqFb
-	DsGAcHWW84gX1nWnKTW7IodBHBKE08X4b+RCBtDzdONvvlkjYRhXmCQI3AoCV9Q==
-X-Received: by 2002:a81:7255:0:b0:61b:748:55a1 with SMTP id 00721157ae682-622b7fc3cc6mr192057867b3.13.1715885729574;
-        Thu, 16 May 2024 11:55:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8TupsclJxzsHmIxJ4Zn15yFfg0CAESxaQctdScpMnMdlxWZgL6tCJ8+eO1hMiO56rfRpr+A==
-X-Received: by 2002:a81:7255:0:b0:61b:748:55a1 with SMTP id 00721157ae682-622b7fc3cc6mr192057767b3.13.1715885729063;
-        Thu, 16 May 2024 11:55:29 -0700 (PDT)
-Received: from x1gen2nano ([2600:1700:1ff0:d0e0::33])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e184af783sm58780211cf.17.2024.05.16.11.55.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 11:55:28 -0700 (PDT)
-Date: Thu, 16 May 2024 13:55:26 -0500
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Will Deacon <will@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@chromium.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/adreno: De-spaghettify the use of memory barriers
-Message-ID: <5vyrmxvkurdstqfiatxfqcqljwyiswda2vpkea27ighb2eqbav@n24yzdykbc23>
-References: <20240508-topic-adreno-v1-1-1babd05c119d@linaro.org>
- <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
- <ae4a77wt3kc73ejshptldqx6ugzrqguyq7etbbu54y4avhbdlt@qyt4r6gma7ev>
- <20240516145005.gdksmvxp35m45ifh@hu-akhilpo-hyd.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ECtBA3Vf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715885782; x=1747421782;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=lwziwO4LZkNxb6IW5QwqS6PwMdIkOqId0cqKt40224A=;
+  b=ECtBA3VfsJlhC5N0piYj4IMyn/DnXCLiMcEkSp2f5AgoML3FQP2ap6hE
+   csF6fraj3wspPKMLDqJcsE5Zg/LkVxc+r18wktk8HunjOMWbWHn/1u5ZM
+   dRR4urSFpHGx9GF9eHWawPd4WTGWL8T4cVI6GRJMSBgHqmK5I9yTHUarg
+   q29POF0gX31fEPC4niWdWnQMfH7GmmYefdRjV2V7Rvh2HqMzLUHw5C4M3
+   LHZoFNiE8hmVoaWk+bMXZM8FWe+l9t39J2Gm5ZYZ56OFtxR73+teFs6Ui
+   z/sXBLWdUYR0yUoz56iivPhCgRyY8P7qLkxnyVRomGrz66rMbNwXhRVsT
+   Q==;
+X-CSE-ConnectionGUID: RVnPPc52QNa8Nu6HmU3FHg==
+X-CSE-MsgGUID: +xYpQaYNRNKVHV20fhkYsg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="22701886"
+X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
+   d="scan'208";a="22701886"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 11:56:21 -0700
+X-CSE-ConnectionGUID: jRl6TtMKRTyP5cuK/C0zZg==
+X-CSE-MsgGUID: A6IWBEJ8Q7CWhRIKfgLipQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
+   d="scan'208";a="32137797"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 May 2024 11:56:22 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 16 May 2024 11:56:21 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 16 May 2024 11:56:20 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 16 May 2024 11:56:20 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 16 May 2024 11:56:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E6eo5zFyMfASudIJdmyHZmV2tDXS+PBIfTN0T4sgFJjlXl58atj55kR53ONIMDHO2jUIrz+rQ5J/EUAkkMmp0xbzlOc8X/Cp/8P3MLAhM4DXQ6mnGjy7C/goruWL2ikwaNKRPyiDez+gORTOX+crejdx7ZX3M6s7RfZv5DX6+FwkUK8EC6nroE6n+lbNhYHYtd6no4e00UIpuTdZHxvlbZicepanvnSiGwjZMf8GGBVr9Puy+iiYbUQcsUXpG54DhgMRFKYyQdeq1q8mQ+SQfYrOCA+Y4TexCboMzmSYkhS07zCbqkcTS7LeFpDjPaRLbk+vWdduU4lY0rzWOG4X1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jey2+mAvgew40MD8VNLkE7EfJ/zTRUACN6apSOc0FUc=;
+ b=PFpg1/wvDBZjHmbGY0n04Nv1C4JbgEgIoIxmuUdNSdTlutiLYxx+9ms809Cyw/PLECZ5NHH/bgPQtVZbZKUiQ5MUix+/iHNZRe7jIrorpWLxn8DnCn1WK9f0sVYwtr2870pmY6VGK5Qwqyhg1dNVWGN2NUxUy9TRzFCsvr/AQU0ehJXSAVINCxcVnrvfubKVMbeEySjoPKkdQGgVLkjtF3YIqVE9VrR/XOc+ZfhBFVOMcJzJbXXNsrzgz9SNpBRh9v3RoIBYvwNynqBxU1RKC6Cjy/uFWk3aaJegHauIkWW2o3bsAPd4d30Qde7h56s0XqtedQInYLkTJ3PFF9v3kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ2PR11MB8500.namprd11.prod.outlook.com (2603:10b6:a03:574::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.27; Thu, 16 May
+ 2024 18:56:18 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7544.052; Thu, 16 May 2024
+ 18:56:18 +0000
+Date: Thu, 16 May 2024 11:56:15 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Borislav Petkov <bp@alien8.de>, Dan Williams <dan.j.williams@intel.com>
+CC: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Tony Luck
+	<tony.luck@intel.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+	<rostedt@goodmis.org>
+Subject: Re: [RFC PATCH v2 3/3] ACPI: extlog: Make print_extlog_rcd() log
+ unconditionally
+Message-ID: <664656cf7c59b_2c2629493@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240510112740.667445-1-fabio.m.de.francesco@linux.intel.com>
+ <7009544.jJDZkT8p0M@fdefranc-mobl3>
+ <20240510192556.GDZj50xFIWSqK2gzQR@fat_crate.local>
+ <2881368.Ex9A2HvPv6@fdefranc-mobl3>
+ <663e9bd4c2525_db82d29451@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240511130801.GBZj9tsenZ5SKXgRTm@fat_crate.local>
+ <6641548474088_3dce92942b@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240516095714.GCZkXYeiKbUk2QXoIO@fat_crate.local>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240516095714.GCZkXYeiKbUk2QXoIO@fat_crate.local>
+X-ClientProxiedBy: MW4PR03CA0084.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516145005.gdksmvxp35m45ifh@hu-akhilpo-hyd.qualcomm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB8500:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f6156d3-c7d8-445b-7ec3-08dc75d9deb7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5N77b9ZA76iJVj0/gJvMDAtpl2Y6UO3NUq/HYeF0sK2i5lzZ6Rv+7NZMtxZX?=
+ =?us-ascii?Q?GCIdC3uTUQqjuIcTgBMySHX98wB0EBLt/QV+1+YEbJqMokpQITzrx24YeEu6?=
+ =?us-ascii?Q?srYq12M8nqUHU/1FDGQ+zs9cnaBfR747MDASXhAPpIoPMXfuksH+CAfS7VK6?=
+ =?us-ascii?Q?Bv2SDMagLYN4dr9B33EUxCgXqb+kVvF/7FV7qTEWfoWlmdv3FMQL1487kxM/?=
+ =?us-ascii?Q?YXlVCg+OQYK8C3Vuhv8oaKgrO/k2l6HaOZReMunUheN5d2AdYKJ/ealbfmqf?=
+ =?us-ascii?Q?EgNkHNZDveXlYyQnsmJx0jPafY/e7EjCOlfRYjkltwErf5z71DI5SJ2CjD1/?=
+ =?us-ascii?Q?43Fov2iYf2T2bjc78JhzzetQshOJv7TwSJRNKkwgfRBg56Umr4xkQ6A8mngK?=
+ =?us-ascii?Q?ObUcTjZnoilaLdNus3HTnROn9iGLVYWKHefBWYM1ccfmuQzDcr/4x4YNyt/g?=
+ =?us-ascii?Q?rzjKsT7SCc93DGjuF0ZndCdkbg7Vxno7RLJMjQSioGvfoK88C11anV7vfofU?=
+ =?us-ascii?Q?tqfqYtn+000+SFynYxnv9at2ZDGO+PWpoSMOF6P5VMV/GcHE314Qh/7PjfEx?=
+ =?us-ascii?Q?uvs3rdSL6F3xfebeexEBu/t3W4QqDzCM+OkadWsmmwflp28SO8xvTcGK2e9o?=
+ =?us-ascii?Q?EbdSr/UPhIf1elhbmcEziqa/po5MZH2j98x14Bm8B5/Pyz2K5YpfSMfytW4E?=
+ =?us-ascii?Q?WgpPAKY31auTN1S3V+Mkg8wGdZibTaGl7Y9SQG771smLpHFr9JTL7E1+2vtN?=
+ =?us-ascii?Q?CVyAH40wZ229BDEqr+qWAjP5XVm+38aCMAx+qdCF66XkOOkR+gfIicNtHGyF?=
+ =?us-ascii?Q?EVuzs09MSxHYIRR5lX+kbY0V3V1RCQN06NTftOO2BINKTFtlayKXB5lfK99S?=
+ =?us-ascii?Q?e1Z5f0LjOvZUUFxX5+QBpBkxNaQ8IoBaKIbaRcxnXdQ3I+Niae57U8AWWb5P?=
+ =?us-ascii?Q?pvUuvt6YPqoNslo8DQbEZ9sgMFco0uVpFWFQx70Mkyz3tnhNf/2EkSeRf6Ld?=
+ =?us-ascii?Q?DGKNPr8Po/969iMYeEHGr5l/mYVOjBSqdJxTyoO5GdmeDBg/VcwxaynUGlOb?=
+ =?us-ascii?Q?Fr/ysp0vDq837CySrIbz04+eGT3BqDZJpVlZ1p9eFS06OoRb5g7DiFPqZP42?=
+ =?us-ascii?Q?ZwxWSsjM6HIqtockYMSuDXPpekmSXSMgWaoMSZYpb5KuqpHe61ErxulElrsS?=
+ =?us-ascii?Q?IAe+ZdFiTH+Q8FFTpJ86ZZ1HALcyaKGPC8ziMHoCzN1x5H/OpKpMWeCoY1ad?=
+ =?us-ascii?Q?XSFuXem72fugsqL1TYddhls9GhHGIgDY0SoaWVApBQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?e9zukV6BNAopPpj0ZJEB+8lt5E3/y/8x1Ri35bgKFsboDpWVL1uERzc/jBKJ?=
+ =?us-ascii?Q?IDqiSZ4KK+FBjO+EFhI7kqiEt3wJisvjbLVubpYyHyl3nCZ/KengTCzgxTQJ?=
+ =?us-ascii?Q?jGf7WZmflJjOT5WHXst5RY/S2SoRGWTEpcG+e/giSWMGOjU5zzx7DQMGm7c1?=
+ =?us-ascii?Q?ARhOLmaMuPBGCCNwDhHlhaCdgaDIZMke7DBkOPe74enG1iuykCBTydJTtSbQ?=
+ =?us-ascii?Q?T03HurJ8/npjZQ45/KL5OGlbD3kSR36TauFtydoViX0kUox1jkcpZ2Ifywjb?=
+ =?us-ascii?Q?9CnGn9zJPGV7/WcTpaeQVTBY3M+BNl/KoBvssushGm3/E0lPSOkT33kZ4i1a?=
+ =?us-ascii?Q?HeT/ap7pCBFCVr74KoV3Ym1Cc5PIww10Zms4oHPwiauQhIPvF/7YkMgKkqxG?=
+ =?us-ascii?Q?c3PdnDpRBYhM8yKLcXA3wkLKfCCKVIDr0GrFihDKlKwzUAYwTSi8m7vwm+o0?=
+ =?us-ascii?Q?i1SvR3j+tStSqD7+lWh7a+u1sRjiQ1iuDYOx2Shw3IhTsi8NHrGWPymlPTOW?=
+ =?us-ascii?Q?pRBmWiWcNlW+rnZMBsLC4oMLLmSa8ExXQVgljxGc3OwBX8spblZn0OEby84I?=
+ =?us-ascii?Q?BNZBZiQwBa/jqSjiLPDZu7KNYmJZHOlE58NG76uohBWcKTmCgFfvCeczn+hV?=
+ =?us-ascii?Q?EK6GU7+EWyixdutCWd6aajFUztD0Y3lEHsnL2ieGK4Ogd1MAaO/MaNPRcrc8?=
+ =?us-ascii?Q?uNQBlVPIyJwDt+/Pj4bnANyk7aweMA+LeEYhY3ylnJ+yvqIh+FSYzpzd2HWj?=
+ =?us-ascii?Q?nzt2E716KhS2mLB8pc6l6G1aIUqsHzM/al3OTq21vBrejOv61HlNx3ZFP4Yd?=
+ =?us-ascii?Q?pOk1iyvYTXkTLW21yzRIvnj5Mt6CcxP6Oha1FRnkVm5Vg6MiC97HPtOWDvKS?=
+ =?us-ascii?Q?etaQE7ij+wIuCZi6fzLCf/Jvhf3Cy4bN0LlcfFemNoW6PBtgwpEPRszN/SbH?=
+ =?us-ascii?Q?7VNcvfGLPpL/+KuYM8z5RPCq/5GY4LL1s6dZWI9HFeu3Rr20FP2GD5qNqCSA?=
+ =?us-ascii?Q?oMs8FDRRt6rlJoptbHtZt8yqdlyGh2PLhCf3FrFIXIqp3UUeIX2RnlWETDCm?=
+ =?us-ascii?Q?C8M34wAtGggZ3El+uner1vRk+kjYAt/4RGhY8LreG171gwEAwbAMw7MM3CV0?=
+ =?us-ascii?Q?kyB5oniTh3J8caPJNbrOarRqYVRe+3TlYPm6Ih2CqGryvqosmuDJQeRp21WK?=
+ =?us-ascii?Q?98zAVfcGQ+ejR9plmV1RTPN8jqdNdGLyAyr6MvGswlCn1tSIdIuRlXg1mJ7T?=
+ =?us-ascii?Q?AvZaZhTd91VfLBJgBuMZYv4f9QPEc8/e7ecwaAKRXxNrf8aQ7e0HYLVFc0Q+?=
+ =?us-ascii?Q?fUNd9Hi2lOj09e4BV27hvEiswTqWBEylJMkmc8vFNmxVM/3CmaeUywzl6iKF?=
+ =?us-ascii?Q?S+KHmXDrvMX/rfJVgTlk2q723Mv3LXggYkIf2yINvU1fYXDxWsS6wt3L0kJG?=
+ =?us-ascii?Q?Ei6jSVlBQcWGvXVwKFZPqLng9j9tRQPtzDBBE1Zv2qV5sQS5kLirD8oYOhGW?=
+ =?us-ascii?Q?4MEbS9XQOMQQGzFX0FhKzGm3GEpSFC6Z0AXLe7x7ZNtuxxxSRBQQAGhT2Uek?=
+ =?us-ascii?Q?QQJLFbdVVkMsRouum9G2K/4BX5oKv/OmH8B3J9Vu3XbhoLUUfjfCyLYaWOIn?=
+ =?us-ascii?Q?+A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f6156d3-c7d8-445b-7ec3-08dc75d9deb7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2024 18:56:18.6073
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TvQd+4u/fCOwN9Kbnn7b3MeH8NBfVvUSwENX4H6pZIxREOW66OyaS2Vu9sO2FH5rAOQhSpnYKeETrxGPupVMQQ+uJh3dshpds3k23CzMCFg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8500
+X-OriginatorOrg: intel.com
 
-On Thu, May 16, 2024 at 08:20:05PM GMT, Akhil P Oommen wrote:
-> On Thu, May 16, 2024 at 08:15:34AM -0500, Andrew Halaney wrote:
-> > On Wed, May 15, 2024 at 12:08:49AM GMT, Akhil P Oommen wrote:
-> > > On Wed, May 08, 2024 at 07:46:31PM +0200, Konrad Dybcio wrote:
-> > > > Memory barriers help ensure instruction ordering, NOT time and order
-> > > > of actual write arrival at other observers (e.g. memory-mapped IP).
-> > > > On architectures employing weak memory ordering, the latter can be a
-> > > > giant pain point, and it has been as part of this driver.
-> > > > 
-> > > > Moreover, the gpu_/gmu_ accessors already use non-relaxed versions of
-> > > > readl/writel, which include r/w (respectively) barriers.
-> > > > 
-> > > > Replace the barriers with a readback that ensures the previous writes
-> > > > have exited the write buffer (as the CPU must flush the write to the
-> > > > register it's trying to read back) and subsequently remove the hack
-> > > > introduced in commit b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt
-> > > > status in hw_init").
-> > 
-> > For what its worth, I've been eyeing (but haven't tested) sending some
-> > patches to clean up dsi_phy_write_udelay/ndelay(). There's no ordering
-> > guarantee between a writel() and a delay(), so the expected "write then
-> > delay" sequence might not be happening.. you need to write, read, delay.
-> > 
-> > memory-barriers.txt:
-> > 
-> > 	5. A readX() by a CPU thread from the peripheral will complete before
-> > 	   any subsequent delay() loop can begin execution on the same thread.
-> > 	   This ensures that two MMIO register writes by the CPU to a peripheral
-> > 	   will arrive at least 1us apart if the first write is immediately read
-> > 	   back with readX() and udelay(1) is called prior to the second
-> > 	   writeX():
-> > 
-> > 		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
-> > 		readl(DEVICE_REGISTER_0);
-> > 		udelay(1);
-> > 		writel(42, DEVICE_REGISTER_1); // ...at least 1us before this.
-> 
-> Yes, udelay orders only with readl(). I saw a patch from Will Deacon
-> which fixes this for arm64 few years back:
-> https://lore.kernel.org/all/1543251228-30001-1-git-send-email-will.deacon@arm.com/T/
-> 
-> But this is needed only when you write io and do cpuside wait , not when
-> you poll io to check status.
+[ add Steven for a "deprecate emitting hardware errors with explicit printk" discussion ]
 
-Sure, I'm just highlighting the bug in dsi_phy_write_*delay() functions
-here, which match the udelay case you mention.
-
+Borislav Petkov wrote:
+> On Sun, May 12, 2024 at 04:45:08PM -0700, Dan Williams wrote:
+> > Yes, my point though was that if it got deleted I doubt anyone would
+> > notice. rasdaemon explicitly does not check the return from
+> > open("daemon_active").
 > 
-> > 
-> > > > 
-> > > > Fixes: b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt status in hw_init")
-> > > > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > > > ---
-> > > >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c |  5 ++---
-> > > >  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 14 ++++----------
-> > > >  2 files changed, 6 insertions(+), 13 deletions(-)
-> > > 
-> > > I prefer this version compared to the v2. A helper routine is
-> > > unnecessary here because:
-> > > 1. there are very few scenarios where we have to read back the same
-> > > register.
-> > > 2. we may accidently readback a write only register.
-> > > 
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > > > index 0e3dfd4c2bc8..4135a53b55a7 100644
-> > > > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > > > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > > > @@ -466,9 +466,8 @@ static int a6xx_rpmh_start(struct a6xx_gmu *gmu)
-> > > >  	int ret;
-> > > >  	u32 val;
-> > > >  
-> > > > -	gmu_write(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, 1 << 1);
-> > > > -	/* Wait for the register to finish posting */
-> > > > -	wmb();
-> > > > +	gmu_write(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, BIT(1));
-> > > > +	gmu_read(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ);
-> > > 
-> > > This is unnecessary because we are polling on a register on the same port below. But I think we
-> > > can replace "wmb()" above with "mb()" to avoid reordering between read
-> > > and write IO instructions.
-> > 
-> > If I understand correctly, you don't need any memory barrier.
-> > writel()/readl()'s are ordered to the same endpoint. That goes for all
-> > the reordering/barrier comments mentioned below too.
-> > 
-> > device-io.rst:
-> > 
-> >     The read and write functions are defined to be ordered. That is the
-> >     compiler is not permitted to reorder the I/O sequence. When the ordering
-> >     can be compiler optimised, you can use __readb() and friends to
-> >     indicate the relaxed ordering. Use this with care.
-> > 
-> > memory-barriers.txt:
-> > 
-> >      (*) readX(), writeX():
-> > 
-> > 	    The readX() and writeX() MMIO accessors take a pointer to the
-> > 	    peripheral being accessed as an __iomem * parameter. For pointers
-> > 	    mapped with the default I/O attributes (e.g. those returned by
-> > 	    ioremap()), the ordering guarantees are as follows:
-> > 
-> > 	    1. All readX() and writeX() accesses to the same peripheral are ordered
-> > 	       with respect to each other. This ensures that MMIO register accesses
-> > 	       by the same CPU thread to a particular device will arrive in program
-> > 	       order.
-> > 
+> The intent was for userspace to open it and thus it'll increment
+> trace_count which then ras_userspace_consumers() reads...
 > 
-> In arm64, a writel followed by readl translates to roughly the following
-> sequence: dmb_wmb(), __raw_writel(), __raw_readl(), dmb_rmb(). I am not
-> sure what is stopping compiler from reordering  __raw_writel() and __raw_readl()
-> above? I am assuming iomem cookie is ignored during compilation.
-
-It seems to me that is due to some usage of volatile there in
-__raw_writel() etc, but to be honest after reading about volatile and
-some threads from gcc mailing lists, I don't have a confident answer :)
-
-> 
-> Added Will to this thread if he can throw some light on this.
-
-Hopefully Will can school us.
-
-> 
-> -Akhil
-> 
+> > I am also curious about the history here. This "daemon_active" scheme is
+> > an awkward way to detect that something is consuming the tracepoint. It
+> > was added on v4.0, but Steven had added "tracepoint_enabled()" back in
+> > v3.17:
 > > 
-> > > 
-> > > >  
-> > > >  	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_RSCC_CONTROL_ACK, val,
-> > > >  		val & (1 << 1), 100, 10000);
-> > > > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > > > index 973872ad0474..0acbc38b8e70 100644
-> > > > --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > > > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > > > @@ -1713,22 +1713,16 @@ static int hw_init(struct msm_gpu *gpu)
-> > > >  	}
-> > > >  
-> > > >  	/* Clear GBIF halt in case GX domain was not collapsed */
-> > > > +	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
-> > > 
-> > > We need a full barrier here to avoid reordering. Also, lets add a
-> > > comment about why we are doing this odd looking sequence.
-> > > 
-> > > > +	gpu_read(gpu, REG_A6XX_GBIF_HALT);
-> > > >  	if (adreno_is_a619_holi(adreno_gpu)) {
-> > > > -		gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
-> > > >  		gpu_write(gpu, REG_A6XX_RBBM_GPR0_CNTL, 0);
-> > > > -		/* Let's make extra sure that the GPU can access the memory.. */
-> > > > -		mb();
-> > > 
-> > > We need a full barrier here.
-> > > 
-> > > > +		gpu_read(gpu, REG_A6XX_RBBM_GPR0_CNTL);
-> > > >  	} else if (a6xx_has_gbif(adreno_gpu)) {
-> > > > -		gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
-> > > >  		gpu_write(gpu, REG_A6XX_RBBM_GBIF_HALT, 0);
-> > > > -		/* Let's make extra sure that the GPU can access the memory.. */
-> > > > -		mb();
-> > > 
-> > > We need a full barrier here.
-> > > 
-> > > > +		gpu_read(gpu, REG_A6XX_RBBM_GBIF_HALT);
-> > > >  	}
-> > > >  
-> > > > -	/* Some GPUs are stubborn and take their sweet time to unhalt GBIF! */
-> > > > -	if (adreno_is_a7xx(adreno_gpu) && a6xx_has_gbif(adreno_gpu))
-> > > > -		spin_until(!gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK));
-> > > > -
-> > > 
-> > > Why is this removed?
-> > > 
-> > > -Akhil
-> > > 
-> > > >  	gpu_write(gpu, REG_A6XX_RBBM_SECVID_TSB_CNTL, 0);
-> > > >  
-> > > >  	if (adreno_is_a619_holi(adreno_gpu))
-> > > > 
-> > > > ---
-> > > > base-commit: 93a39e4766083050ca0ecd6a3548093a3b9eb60c
-> > > > change-id: 20240508-topic-adreno-a2d199cd4152
-> > > > 
-> > > > Best regards,
-> > > > -- 
-> > > > Konrad Dybcio <konrad.dybcio@linaro.org>
-> > > > 
-> > > 
-> > 
+> > 7c65bbc7dcfa tracing: Add trace_<tracepoint>_enabled() function
 > 
+> Ha, I usually talk to Rostedt for all things tracepoint when wondering
+> how we could use them for RAS purposes but I haven't this time, it
+> seems.
+> 
+> > So even if non-rasdaemon userspace was watching the extlog tracepoints
+> > they would not fire because ras_userspace_consumers() prevents it.
+> >
+> > I am finding it difficult to see why ras_userspace_consumers() needs to
+> > continue to be maintained.
+> 
+> Well, you still need some functionality which tests whether a userspace
+> daemon consumes RAS events. Whether it is something cludgy like now or
+> something which checks whether all RAS tracepoints have been enabled,
+> something's gotta be there.
 
+Honest question, why? Lets deprecate that path. As an example, this
+extlog path has bit-rotted and not kept pace with the same level of
+error reporting that is available via ACPI GHES or OS native
+tracepoints.
+
+Given that is has not kept pace the next question is whether the kernel
+should bother to maintain the contract => "if nothing is watching
+tracepoints some subset (all?) hardware error messages will be reflected
+to the kernel log".
+
+I would point to tp_printk as a way to get tracepoints into the kernel
+log. If that is too coarse-grained a replacement for print_extlog_rcd()
+I would advocate spending time making tp_printk control more
+fine-grained rather than perpetuate this duplicated emission path for
+error info.
+
+Something like a new annotation for tracepoints marking them as "emit to
+kernel log if no-one is watching this high-priority trace event"?
+
+> > That would be odd since there is no ras_userspace_consumers() in the
+> > ACPI GHES path,
+> 
+> Probably because no one's using RAS daemon with GHES. I at least haven't
+> heard of anyone complaining about this yet...
+
+Well no, there is little to complain about in that path because that
+path does not play "is anybody watching" games. It always emits to the
+kernel log (subject to rate limiting) and then follows up with always
+emitting a tracepoint (subject to standard trace filtering).
+
+For CXL I asked that its events deprecate the kernel log path with the
+hope of not growing new userspace dependencies on kernel log parsing for
+newfangled CXL errors.
+
+[..]
+> > Would be great to hear from folks that have a reasons for kernel log
+> > message error reporting to continue.
+> 
+> Right, from my experience so far, you never hear anything. :-\
+> 
+> So if we do anything, it should be something simple and which works for
+> almost everyone.
+> 
+> With RAS, everyone does their own thing. And then there's the firmware
+> which claims that it can do better RAS but then f*cks up on basic things
+> like *actually* shipping a working EINJ or whatever implementation.
+
+*sad nod*
+
+> So in the end of the day it is, oh, we need our drivers in the OS
+> because we can't fix firmware. It is harder to fix it than *hardware*
+> :-P
+
+At least when the firmware gets out of the way Linux has a chance to
+solve user issues.
+
+> > Uniformity of error response to "fatal" events, but that is mainly a
+> > PCIe error handling concern not  CPU errors.
+> 
+> Sure, just make sure to keep it simple and generic.
+
+Yes, tracepoints feel simple and generic to me while kernel log messages
+with rate-limiting is already a lossy proposition.
