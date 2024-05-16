@@ -1,63 +1,66 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457AD17BA1
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 04:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7CB3B785
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 04:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715833203; cv=none; b=IBu1Pf5ATl4mXbVhzjJnUDUWQBL7j9vVw/DHn1+njnfbuc8HTkqF+fLbomCy3kNSIVeSvyg+gyc9OewHQaZzck6c7kK3Mr+Zq+5dKn46iaMkf0/q+LPSszW8CNs02ppVWLWDqCQzmhQliHW1JRCtfOg2P5lSNcfF37hehQLGcXo=
+	t=1715833208; cv=none; b=WpEoMcpgQ6xFH/PwKnT2dwIxmbIjooxWkW3MMjNnCm95thaJs8jM1XELwP7WuJqcRsj6Cf4T0Kecj9Tf8EyjmpZIFksOpdtCgzjvjf7KIck8mrv6m6cvxRyOYi7DjKDuIfQq73xcCBQxAzy0lVT7TPayvYTxhlcJU6T+B8J1oNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715833203; c=relaxed/simple;
-	bh=lHHwkYfHA8wjarLgp5Pin3R8Kdwmiap6eamnf3fEAj8=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=JZqIv7Yq6fUWC9ZPwEP1FiBEqBHWqxGJTFmc/MUkBwkPnxs0C5OF1kO9Wv90R9pDwHEhkzk4Ska/tAj+qGS2AoFv6Lo4I1QL5T20vI0fxN9qgu3EG6iCf6qXk6hEalHOPg2OMBCDrjUWrXVxYX+96h4ZCRn98GfidReLMwrQoaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PN9Pakz4; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1715833208; c=relaxed/simple;
+	bh=Nv+3HueaFBpq0ManiQPb2nzrakeW2xnnHkQ4j1i1l+g=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=HW83KWXl92hqIm9mdW8RpAAhscuWfi8Szw0Wc/MCYx/KWa+uhUqVSZ3s10pHszllVQsFeVdBkU8wk6jaiQk9Wpf/KK5SqcqGWVOG0oCOk5uI7XBOIu/Ce8lEtBCBTe1f1p5qVCXUQpe/02k1bwbSjSaNQhRAXfqNhxqteVQ3R2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BQVeyQJ7; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PN9Pakz4"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62035d9ecc4so144948867b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 21:20:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BQVeyQJ7"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be26af113so127790387b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 21:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715833201; x=1716438001; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NhvrEJQEtg7mfpXP1eaEk1iTrmpUehU3kjsviXcKots=;
-        b=PN9Pakz4SXgiav6BxBSqXt+qB/OAbcUzUB281zKhngB03cLS+oQ0j8QxbK9i91dprF
-         Mhs9LRH/zwdrijMPsG0FLAd4jCFZozqyGYPOKUjgA9YfSj6h+NbGv7xqDMIoRP4HxqUa
-         jJr37v6Kny0s5HSznqjAlThPODBrF+vJhBCx6xz+oarmpLucmADCVxkzp1+Sub4NuBlw
-         0xyV7+aNHDAF21dNo8r/PQFfq+jdTy5enYplpA5c5qhey6dr8OWCi8zAhfbIdsz31h+y
-         je1GdNI1aQRpRatMc8GzpAYLn9oBABRN2KBfz262BD+nx4NVIngsV+S9DKdq9tqT6OsP
-         P3Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715833201; x=1716438001;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1715833206; x=1716438006; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NhvrEJQEtg7mfpXP1eaEk1iTrmpUehU3kjsviXcKots=;
-        b=l++2Fl3nUGpp9gel3NOXDyUhIPbuXx7+mGmMn6qaPSLsG38rBS+n5o/ihAzvEyqXJN
-         pyMFytzwb9W4r0FarNU3lMl3gdTG14GH/NZDv5RSFW+M4eBRsCEqE66pZ1Ek1Z2mQmxs
-         fdkaQJeUt77DbF6FSlvKlThsgYKgw0/D7F5vUYPuEVGTcFrNvYqOWcGRd6IcQFeNlhvE
-         w/EOXuDamdSDYTZBUET23OUMVqZ5BmramR2hGXH5rxW8mwi2+0hs/wiIw4xYppq2sjry
-         Vt31R7s+b6xay/9q49nPNjpZw5ocMK/KHI1CN/SVzM2by5cGIO5bWqw9GhZhvgClrz6c
-         OAtA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYla/op9fPfhFPfIL0lx8GeFgOW2F1Fy/wwW+gMS0xTFuV0pVLGrz/4zjlm9CTn8oRK+tuavH8WQ2tnndxZA/LbCgTPWhu05KfeYDN
-X-Gm-Message-State: AOJu0Yw+cvMr1loDjkeVtQLk90jMzLJFs6rFxQN38Y/1uvWmDfsEeVgc
-	7Yl52UGA0SaG3Gh4swN2bJ/Y8zJQ1UXlqSwIg4YhC5jHJrzWMwoFbygk4FfU788pSu5eRw6qq0f
-	ZvfiYAw==
-X-Google-Smtp-Source: AGHT+IG7tjaXXbXKUovZxPYRnXIcz16bs4tMWPRVs26fsA8k2+yRtiUieQLjMyGUvC+JI76UlHP2+h+y5haK
+        bh=pHUNwY+jZJ4I56wa5Ovfy+1yS4DVUHS8CDe2LVh2L3Q=;
+        b=BQVeyQJ7XKXZrZXLL7X8iztvqNbOOpz254i+azpr1V5mrM40Y2f2U/wm/maoYh/TW5
+         ZGhciTehLCYUjfRIKf/BjUJVW1WFZMa0ovNSzfqpH+51P2f+pnxKBxKAB1R0U79oZOid
+         kPHQXY/sSKBkmjSIfCvyvZR0pZsMYReDkVbMilXAqltt6+mu4NeDlPosPFjHl+BUajVU
+         X7r1qmeupYBAk13WSzSlFwrnK/pJYZT2rF5GBVZ5W2h4Nd0OXG+PsvjjZ31X7cLFT9fc
+         C0VesNyDt77q7lwhgmtEGdZlm8ht5NXej0aLEc8NUWfGAI6oBLOMbW2L9Qh+s2MEodCO
+         9N8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715833206; x=1716438006;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pHUNwY+jZJ4I56wa5Ovfy+1yS4DVUHS8CDe2LVh2L3Q=;
+        b=jciGand078mQ6BqvV24wdjGpFBebHhbWx4avf5eIyFF0+7cwdF1xlW3t8/GIhlBwx8
+         LR9qFyPuaL5Pq9Hf/BWk6OfgmCCvWHRC8AQlw7bBHppDv0bqGTqzWvkXPDQO3b/l9V9S
+         XjHOeUN+tjrvbkzP1Y1Bgf+DOcRsMmtIK0wa6JubOb3TnnWt9uB/H8tTDdu/oPU+hdRy
+         1ptEOMSyRc7wQKKxI9XVzBG/Cbsl+/nbj6tcYivBthso5KMErfBy4A89tyXizsM6WCO9
+         Ri0lzi0zYNLUHJ3h2NFGAaWVjrcvzLCNYDzwIYqC/0F+14P2RcTw6cO5DA1DQgKy3m5W
+         fp/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVplFRLCyaYMxj0Y+kGjYRJTnQztu5ViryJvbWiG10W1U7TfWAUbxCzlsOJzs13DuDv6AQrcEGq0nnL4zCrYEcp7fFSoYuNGZnSpU2m
+X-Gm-Message-State: AOJu0YwwWUKOr32hYc97IgNEnUG+azVEM70bIQmwwrFrfBbBaoHIG2xl
+	C7+WVAeKNEuGP/3im526sgtSAcn5WdFOfE+Zwhm1/whZXMuOdA7cFxZt9NjRGe3jF5nt9O/i2CU
+	ljY/AVg==
+X-Google-Smtp-Source: AGHT+IEmsYfZ191hEn2qs6aItqv20l4B4aEnLGlOMnKMlr+RTXfnPSmdUNe5GTDQqUISBptTpjDFi2GkkTA9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bac3:cca1:c362:572])
- (user=irogers job=sendgmr) by 2002:a05:690c:668f:b0:61a:bda3:a78c with SMTP
- id 00721157ae682-622afd81d04mr45306547b3.0.1715833201091; Wed, 15 May 2024
- 21:20:01 -0700 (PDT)
-Date: Wed, 15 May 2024 21:19:45 -0700
-Message-Id: <20240516041948.3546553-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:3601:b0:61b:e6fb:9e08 with SMTP
+ id 00721157ae682-622b01333cbmr41173597b3.8.1715833206211; Wed, 15 May 2024
+ 21:20:06 -0700 (PDT)
+Date: Wed, 15 May 2024 21:19:47 -0700
+In-Reply-To: <20240516041948.3546553-1-irogers@google.com>
+Message-Id: <20240516041948.3546553-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240516041948.3546553-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Subject: [PATCH v1 0/3] Use BPF filters for a "perf top -u" workaround
+Subject: [PATCH v1 2/3] perf bpf filter: Add uid and gid terms
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,33 +73,92 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow uid and gid to be terms in BPF filters by first breaking the
-connection between filter terms and PERF_SAMPLE_xx values. Calculate
-the uid and gid using the bpf_get_current_uid_gid helper, rather than
-from a value in the sample. Allow filters to be passed to perf top, this allows:
+Allow the BPF filter to use the uid and gid terms determined by the
+bpf_get_current_uid_gid BPF helper. For example, the following will
+record the cpu-clock event system wide discarding samples that don't
+belong to the current user.
 
-$ perf top -e cycles:P --filter "uid == $(id -u)"
+$ perf record -e cpu-clock --filter "uid == $(id -u)" -a sleep 0.1
 
-to work as a "perf top -u" workaround, as "perf top -u" usually fails
-due to processes/threads terminating between the /proc scan and the
-perf_event_open.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-record.txt     | 2 +-
+ tools/perf/util/bpf-filter.c                 | 4 ++++
+ tools/perf/util/bpf-filter.l                 | 2 ++
+ tools/perf/util/bpf_skel/sample-filter.h     | 3 +++
+ tools/perf/util/bpf_skel/sample_filter.bpf.c | 4 ++++
+ 5 files changed, 14 insertions(+), 1 deletion(-)
 
-Ian Rogers (3):
-  perf bpf filter: Give terms their own enum
-  perf bpf filter: Add uid and gid terms
-  perf top: Allow filters on events
-
- tools/perf/Documentation/perf-record.txt     |  2 +-
- tools/perf/Documentation/perf-top.txt        |  4 ++
- tools/perf/builtin-top.c                     |  9 +++
- tools/perf/util/bpf-filter.c                 | 55 ++++++++++++----
- tools/perf/util/bpf-filter.h                 |  5 +-
- tools/perf/util/bpf-filter.l                 | 66 +++++++++----------
- tools/perf/util/bpf-filter.y                 |  7 +-
- tools/perf/util/bpf_skel/sample-filter.h     | 27 +++++++-
- tools/perf/util/bpf_skel/sample_filter.bpf.c | 67 +++++++++++++++-----
- 9 files changed, 172 insertions(+), 70 deletions(-)
-
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 6015fdd08fb6..059bc40c5ee1 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -200,7 +200,7 @@ OPTIONS
+ 	  ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
+ 	  code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
+ 	  p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
+-	  mem_dtlb, mem_blk, mem_hops
++	  mem_dtlb, mem_blk, mem_hops, uid, gid
+ 
+ 	The <operator> can be one of:
+ 	  ==, !=, >, >=, <, <=, &
+diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+index 7e8d179f03dc..c5d6c192d33a 100644
+--- a/tools/perf/util/bpf-filter.c
++++ b/tools/perf/util/bpf-filter.c
+@@ -80,6 +80,10 @@ static int check_sample_flags(struct evsel *evsel, struct perf_bpf_filter_expr *
+ 		CHECK_TERM(DATA_PAGE_SIZE);
+ 		CHECK_TERM(WEIGHT_STRUCT);
+ 		CHECK_TERM(DATA_SRC);
++	case PBF_TERM_UID:
++	case PBF_TERM_GID:
++		/* Not dependent on the sample_type as computed from a BPF helper. */
++		return 0;
+ 	case PBF_TERM_NONE:
+ 	default:
+ 		break;
+diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
+index 62c959813466..2a7c839f3fae 100644
+--- a/tools/perf/util/bpf-filter.l
++++ b/tools/perf/util/bpf-filter.l
+@@ -95,6 +95,8 @@ mem_lock	{ return sample_part(PBF_TERM_DATA_SRC, 5); }
+ mem_dtlb	{ return sample_part(PBF_TERM_DATA_SRC, 6); }
+ mem_blk		{ return sample_part(PBF_TERM_DATA_SRC, 7); }
+ mem_hops	{ return sample_part(PBF_TERM_DATA_SRC, 8); }
++uid		{ return sample(PBF_TERM_UID); }
++gid		{ return sample(PBF_TERM_GID); }
+ 
+ "=="		{ return operator(PBF_OP_EQ); }
+ "!="		{ return operator(PBF_OP_NEQ); }
+diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util/bpf_skel/sample-filter.h
+index 161d5ff49cb6..3e64ccacc5e5 100644
+--- a/tools/perf/util/bpf_skel/sample-filter.h
++++ b/tools/perf/util/bpf_skel/sample-filter.h
+@@ -34,6 +34,9 @@ enum perf_bpf_filter_term {
+ 	PBF_TERM_DATA_PAGE_SIZE,
+ 	PBF_TERM_WEIGHT_STRUCT,
+ 	PBF_TERM_DATA_SRC,
++	/* Terms computed from BPF helpers. */
++	PBF_TERM_UID,
++	PBF_TERM_GID,
+ };
+ 
+ /* BPF map entry for filtering */
+diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+index 8666c85e9333..da4b5eb7cce3 100644
+--- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
++++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+@@ -146,6 +146,10 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
+ 		}
+ 		/* return the whole word */
+ 		return kctx->data->data_src.val;
++	case PBF_TERM_UID:
++		return bpf_get_current_uid_gid() & 0xFFFFFFFF;
++	case PBF_TERM_GID:
++		return bpf_get_current_uid_gid() >> 32;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
