@@ -1,59 +1,70 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4341E491
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB671E491;
+	Thu, 16 May 2024 15:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715872801; cv=none; b=j/t74u+e1YtkAfxVnqy2KUyGMfExeXH75zy991QzFL6dU+cAEmkv94RkVgTgjdBPKn1BQ/xXXo/wTcoBI9RTO7F6t0/az/yC+El4zCWW6492ongaD/K5rGgCnlalKKzx4yjFeQhCzB7+/9OXK3CRTWv3XiKiUJ5xPSvoG0NqgKw=
+	t=1715872807; cv=none; b=tR/0pyr0xlIWa480O7R7H1K2cpMnFESQ/JAdV/8jP2uDTCWEBBuNBjCCthJWym1DmvFp6jNSd3dNJlSMXe8U+5+4pLfkqYA/K41Lm52tG4JvM5MG8q25A4jV4kNUi1HsOjh1AoQUiDse2XAC9wA4uKEo9QDJJSKxgedmpZhCeD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715872801; c=relaxed/simple;
-	bh=g4pCKFHtNv8tWxkrcOunRV36cnVd3ULvVwjtURKk6wk=;
+	s=arc-20240116; t=1715872807; c=relaxed/simple;
+	bh=cYcnc1cDXdLBNxwEdGaY2JFEk1/XkeENBGoZEZ/AD8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aqrJVyg19vT1GjA5xL8ltJFZZ8t1UdHUJr+GwwbfPQnXWByvXPOrRSd1h6LlnJOQxx2kVOEFB9ZOvBAZ0EtzgjBS1H7h/KjCWPhUMM7IAD45yU1MSnFzRdzIKsSCkqmV6wfj3Q9NZdxXn58KA4aKnbcXUuioFkuvAPrgLzL9HeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GU4NPhW0; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=r6D8f/VqTlXe5WD78oHBRza63obeoT017Dql63awKvroAstOS6OUFc+nj93p4fvO4ZuctHZ7VOdZFyq4diaZKgJXri9ROo2NNqEgy55QmXcjN92KL7kw8dZZbw1sEfk0X2Vzvpm2RliMqte01nkfk/EeB0dy03xWxS0jd+PG1Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m3XsSypE; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GU4NPhW0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vfRYymjV7A2ksiA1ifbCkQIzMUN+OUNKRWRmXGE/juQ=; b=GU4NPhW0NSrW3wS9kvVVbr9Ov6
-	kVillMd+D/CsiGg8X2K8B71+JW3sGmv6PWZOinBZISE1sr8ZCZQjy2JaBTg8l1H4zgU9I6TYW9PBC
-	4xohhmK5bfCpFeY6HZT/3kNatqA+HMqxNlAHP8jHUWQGIQrdEP6OEl0kyBPzfPKlbg2vFWMwhz92+
-	zYUeEbMa8P+0p7bcKxAUOoPLhRampjlERPb5Z0QwdphJnTz7sE4IOx2sWPJU+lboJWh992au7xL0W
-	HV5eNk0qMnOCJlQledOoGpFiSWpMx10J2UkapoopwLqj7yj3PvEmfM/myZ2rEptV4MR9oSMjbbxEs
-	D2EVAlEA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s7ctd-00000005Sgs-473N;
-	Thu, 16 May 2024 15:19:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4367330068B; Thu, 16 May 2024 17:19:53 +0200 (CEST)
-Date: Thu, 16 May 2024 17:19:53 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Yun Levi <ppbuk5246@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineeth@bitbyteword.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	anna-maria@linutronix.de, mingo@kernel.org, tglx@linutronix.de,
-	Markus.Elfring@web.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] time/tick-sched: idle load balancing when nohz_full
- cpu becomes idle.
-Message-ID: <20240516151953.GM22557@noisy.programming.kicks-ass.net>
-References: <ZkU8lm2tjm_r9FpZ@pavilion.home>
- <20240516075628.GC22557@noisy.programming.kicks-ass.net>
- <CAM7-yPRHp3tiZjuBTesdRQoU8WJNg1scon_txS_6R-pZq9MXHw@mail.gmail.com>
- <20240516084911.GF22557@noisy.programming.kicks-ass.net>
- <ZkXtHv+fHUD2+lFJ@lothringen>
- <CAM7-yPTSq0CSmRsTpeXwzhFk77gfwUK_LZKnbgo4NPk5zPCaAg@mail.gmail.com>
- <20240516140003.GJ22557@noisy.programming.kicks-ass.net>
- <ZkYW48dTX2FH5NaD@lothringen>
- <20240516144504.GL22557@noisy.programming.kicks-ass.net>
- <ZkYgG9KYMpUPeJsM@lothringen>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3XsSypE"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ec486198b6so63826715ad.1;
+        Thu, 16 May 2024 08:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715872805; x=1716477605; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+vRo+P5ZZ4maVeHMzz6DebiF8p8UkpivTYboSPvkAJM=;
+        b=m3XsSypE6oFH9jieul3kXY+7tpiDXTOpFaRG8tzCGGx3lxSkmEnC5dHHEaSE29K5Cm
+         QJtMSCPfuRkc/Usho9XSsLTR4kKBzScfgEOLJ+Nimm870x7bN1gIS96NJXtwYcB7HoY5
+         WZOD4kSBAy6L5Esc7cnlmzUZgn+Sb/4DA8wFiyZtLMH5ja83NETjLM8acn303J6QZ20N
+         pcvEjC5qa+o1eNHdUw2XVQ6G7mNEcemQ+gzFxDUhRKOgKyAwXrs0crP/1hnNzJoeaFQm
+         U9kq1cnSskfvhhZuLH2KsdqK8XyxaSrtWEybonugNR/+59ESx505MAkQKtoZmFoTbWvt
+         nOrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715872805; x=1716477605;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+vRo+P5ZZ4maVeHMzz6DebiF8p8UkpivTYboSPvkAJM=;
+        b=Lrm2l+Lntr6Hmj7VpiHpvHRMeKPDwZFG7/zjHeh6AGY4M+9vzVf93zG/1ahiOPZ4cb
+         wWLVq1cUBSq6EB3oC/b03j6/Td/eLOAh08Fjbdgtl287nivs+RnZpkabR/Tko8sG4OPn
+         la1lwZZd/vTFoPTn8G7TNOKXZIhqiM48CWDFDZjXYLFV5Fh5rSnt1vCp4gKIhEUiRUfo
+         gL0QpnlG/iZzOU/ouqV2SVwGsMC0Mw9DIUZH4Q7CwP7gjJ9USq5QKpA8vM338pOVDX8B
+         /Wgm29pWSPdlO/txbBDcQngGzgxaPaOXHyzYWxIqtvRmMuvlXHn5Gq+fTKnUCyuMyKVr
+         Gm1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVTKZ1z1hJbxuldgdj1wiJD3LsdPObM4M/uqhPQxTWbTCdPIQ3R8K6fmURgXyyMNK2zjgLhyFuRExfluwX1kqBDGeSSODsMdVcTqq57UfplDvawkyX6a94TLsdKnNBQ/041jEMvACuX5jonIwuUOAth/mqs/t6DhEWtoGGSZbrk+yTUsg==
+X-Gm-Message-State: AOJu0YxFaaewoycNd+EasCDaOLUDKoMmbl/Nzj4oM2XH2klbaeCJ3fmx
+	2gIImXbsJSs1GXzslzGQvgx3Lfs8cZDrJ7cql0hKw4y2duilsZnb
+X-Google-Smtp-Source: AGHT+IHRlEqJ8rEZ9MqTIWlHoh26EO9q+4Wr/NogN7TOAs7lsgMXfx3kkNBjEgQpJb//B1s6Zr/uaw==
+X-Received: by 2002:a17:902:f605:b0:1df:f681:3cd8 with SMTP id d9443c01a7336-1ef43d2e288mr242173465ad.12.1715872805445;
+        Thu, 16 May 2024 08:20:05 -0700 (PDT)
+Received: from rigel (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c036272sm139542175ad.188.2024.05.16.08.20.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 08:20:05 -0700 (PDT)
+Date: Thu, 16 May 2024 23:19:58 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>
+Subject: Re: [PATCH v1 1/1] gpio: Remove legacy API documentation
+Message-ID: <20240516151958.GA146240@rigel>
+References: <20240508101703.830066-1-andriy.shevchenko@linux.intel.com>
+ <ZkYQHnF76WLIf8-r@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,30 +73,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZkYgG9KYMpUPeJsM@lothringen>
+In-Reply-To: <ZkYQHnF76WLIf8-r@smile.fi.intel.com>
 
-On Thu, May 16, 2024 at 05:02:51PM +0200, Frederic Weisbecker wrote:
+On Thu, May 16, 2024 at 04:54:38PM +0300, Andy Shevchenko wrote:
+> On Wed, May 08, 2024 at 01:17:01PM +0300, Andy Shevchenko wrote:
+> > In order to discourage people to use old and legacy GPIO APIs
+> > remove the respective documentation completely. It also helps
+> > further cleanups of the legacy GPIO API leftovers, which is
+> > ongoing task.
+>
+> Bart, Linus, Kent, what do you think about this?
+>
 
-> > I'm confused, none of that makes sense. If you're part of a
-> > load-balancer, you're part of a load-balancer, no ifs buts or other
-> > nonsense.
-> > 
-> > idle load balancer is no different from regular load balancing.
-> > 
-> > Fundamentally, you can't disable the tick if you're part of a
-> > load-balance group, the load-balancer needs the tick.
-> > 
-> > The only possible way to use nohz_full is to not be part of a
-> > load-balancer, and the only way that is so is by having (lots of) single
-> > CPU partitions.
-> 
-> So you're suggesting that nohz_full should just be part of the whole
-> ilb machinery by default (that is, not fiddle with ilb internals) and
-> then it's up to CPU partitioning (through cpuset or isolcpus) to disable
-> ilb naturally. Right?
+I don't know enough about the situation to provide much of an opinion.
+I can say that generally speaking I'm not a fan of removing documentation
+for an API until the API itself has been completely removed.
 
-Yes, but stronger, as long as the CPU is part of a load-balance domain,
-it must not disable the tick while running anything.
+And from my experience users will just Google and find the docs from an
+old kernel anyway.  That point could be used to argue both for and
+against - if they can find it anyway there is no harm in removing it.
+But probably not much benefit either.
 
-that is, NOHZ_FULL must not become active unless it's running on a
-single CPU partition.
+Sorry - that probably doesn't help much.
+FWIW you can count me as indifferent.
+
+Cheers,
+Kent.
