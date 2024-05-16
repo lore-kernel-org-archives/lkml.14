@@ -1,135 +1,147 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from sonic310-30.consmr.mail.ne1.yahoo.com (sonic310-30.consmr.mail.ne1.yahoo.com [66.163.186.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2232157A53;
-	Thu, 16 May 2024 19:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD86156F55
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 19:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.186.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886440; cv=none; b=pHd2T977uXCkLabNamcHuSp+XmGlmmHcBy5mJ/Gi/TKHE3yodt1gkggfSqwCxDuGQerR5p+1NgzxwafRzJQostBMTdfBcgzOPAyd0soO8GP8G+/NzwIY0h2wM4pIhCOU/iKwNt/dilz6ypTWV7smblzyem6cUz3Ij7+N+8y1NlA=
+	t=1715886438; cv=none; b=LNoCClIOpPQ7Acir7U14r4CCe3B0eo0AT6sD/dJg+pOIzOONPh7PGoaY8YxMVde/W3izIx7LSXjHIWdrz47tl0zpXsD5es99+Phpd6PhPAc2afN13cQvxEQhMpI40BwZf5c4kTyshZ1j+NJ2JFeiozsG1fL+imApBJouILEsTyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715886440; c=relaxed/simple;
-	bh=MHoT4Jo3RAzz8eEtqv+1iklBPBBHf3L8xhNTgPY77mk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=b5LGj4UH74bPdvMDZ58/raUYdUo/fuDZgl74dhALsDgCBtQNA9fLy0EEItwKmHzRpHqZOEBRBWR4JZSVhZa8yRLM4PuyV6YT6V8YIrEEPgPG50fSqbcocZr1xxWk//7zV05crclIc1CknynM0vZXw+8VNPxWfDyq/z9XZILFWB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4202cea9a2fso6606215e9.3;
-        Thu, 16 May 2024 12:07:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715886437; x=1716491237;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TGl25VI/bdS9cA0cwaeR3veGamr8DGMylL6oozmJjQ8=;
-        b=Q3EfbISFKyD1A/FwAF8KVvvIJ6CxUPtTUfX/dayyD/Hmn9JkBUL3E+9krxTt12rHkr
-         Yy2CNf7o8XjBekzZ6X7rTwNc6MINBP8nIYy85GMijoTZ22vdmkzOjuzwzj75WKa3o5UH
-         D3Ilru+TG6N5a5IXgct1FDtGy0mwOys2fRnLp7VBy6Gqvmgsc2u1IoP1Xez7RRHjSXbB
-         Qk1tBKlONVnvKEUZYnNVySSUXnsh368G4SsYeixi/I9/tG5v4UoGysDnEDhZZyU97Xgf
-         kL87o30pH7FUQYAoterl5/HlGkrsZxOEFm/HNKmgiyNOZq8qqcv1rYbLgEIi/Y9mAWiE
-         cE8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVDPeNhvNFzTcUJnUajeOzqPuAmcz53AA1jzVo1Nd3GdnltCX1O0WMJGnQFpIriDHGumxJHg01KKWL6XRpzgMwd702CKGim93IYPO6Aen1PCkEkHHrQCCNdlB8cAj4dKjsqaPQxYA==
-X-Gm-Message-State: AOJu0Yx64P/eAkWtEVEomprRprqW1l9i7R0NDixlDaMJ9Ai5zb2nz/EV
-	g1zq89ZERPdOUnjFaanD0jiUolU441NbNaEwRk2iAk6VQmWMPwrL
-X-Google-Smtp-Source: AGHT+IHU5PR5Vspk+t1XLlDt07CkPjZ43WOOq9u4XxhlmWZ+EEOyNz1/pOKCz5lmgQmKNi0bY+Qa4A==
-X-Received: by 2002:a05:600c:5008:b0:41b:dca6:a3fa with SMTP id 5b1f17b1804b1-41fead6dc7amr143740775e9.39.1715886436833;
-        Thu, 16 May 2024 12:07:16 -0700 (PDT)
-Received: from costa-tp.redhat.com ([2a00:a040:1a3:c059:8b18:f13e:da9b:5a8e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9335sm275834155e9.29.2024.05.16.12.07.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 12:07:16 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: longman@redhat.com,
-	pauld@redhat.com,
-	juri.lelli@redhat.com,
-	prarit@redhat.com,
-	vschneid@redhat.com,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Yoann Congal <yoann.congal@smile.fr>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: [PATCH v1 0/7] sched: Adjust affinity according to change of housekeeping cpumask
-Date: Thu, 16 May 2024 22:04:30 +0300
-Message-ID: <20240516190437.3545310-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715886438; c=relaxed/simple;
+	bh=wxXjpMQ3CVgL6XhPOBwVDZJdQ+2ElLYlyyUvbGIHuVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UcVG6CT4s6JK9SExXzvMfX/3e0FWFH2SlI5ugkf0lg6Iz2ebW2mcxsBzesI1CY0udY//a8YDWkba8m5eNlYn27bUI864dEXlDTYUv5LbIbbmFOjZZCgBl3eMnT6N2C8V0M24YW2lX8mMs/Q+CRwdmFX0nLcAW2i5QzqlYuPL7us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=asqs+wVl; arc=none smtp.client-ip=66.163.186.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="asqs+wVl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1715886430; bh=yNlZ6SD8AV4L2IiFccQWOEbwRuaVS5TqhgBGaRz5hS0=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=asqs+wVlFKgk77FMOf8o18CsUL3aYTBEr8Vd2ExIMeEDlhUtTyVn6FpEax04DGIBxTM4FiRhBrBrKrod2qCpcRLQMH5Xik6+nvOo8VeUnkao2MdyeZSpPRAvEY+DnjOE19g5Z09M26OMo6cE4WhQM++b+zCf3lS4P0wx7xPy2Z2axd8LV9k8Es7U5ybr8t4PjYzdEKwBjK137knuIXtN37YbqXOYn70zGyGn1LH1Mxd+f9p6P8pfQ0DKNT5YytvWxc9PgFCbPqn4p/cq4bE4b8KMki8VVX2BBqF1TzUCkvfKGgyO5M8Xmj3ykQo+S4EzhA/wXZPnQOiThxYXYdWg9A==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1715886430; bh=xs+KbK7iZ6xb8mK5Dh8mGIcifqdDvmM0US8FwFZWRhp=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Jvvobh+sWltZLAmlyjFixKR9nDEbO65QdDjVDUTGfMzFheEcUgvTbJAGlkDWRpOcMbJurZ6TZ3klHhucFvCGdjrfD+TecXaZL/e1c8t84szXs6QX3AIQFiN/YriJe5dzeoxPKoEn0YdreICy965aWGPELwizkcB9A028DefgEVsxfp00zeTCSUfESNKfHIR1OJVvFLaBxkSdyd/LP2mJjNY1tasn7pdM9wKXU03+TeRqYOshOkq7yIBhNRol41OUnEWFAhe1zlfdYA7q7JwPiXGZGvS8U1K4wDAyoSKjqgSP5BMFPNU69Z5D70YxvqMLQHG64coP1JC2maU86x5GOQ==
+X-YMail-OSG: pZBMlF8VM1k2zM2XHcCduB696.Z_YU2fsX5EmVOh6R0JnHnJI8PWMIznjX5mEQf
+ Z7KMY55FzxPakQobR1lVZHHHQIJMqULL.t6gufmJ3RF.AxcHnD6yfDQcnTUvcXMXOCzClqORm3nE
+ qXIHnF3GPVG9vlAUMjqMyPvyeSQ32pD89D8Xwb3CeLnpvFETG38Hkz197lc2gXbD8LX1nmLBpz3s
+ xT5kAkiDVxum841pNFUhyTp5zijzlkLe7oq29Lty0y2zpZDR0anxz5d7Yhz6p0t7bul7wCvCEaH4
+ A05.R2OdXdTL0u2vIAHCVxmiseZZ2GuT91bBB04hZg_OK0Xv_Iptps9AseR4Z4lkulMSEMmagfAY
+ cSMJaiUxYJtG13KQzJYWaXs2jXDdR51dQLCIeRJh.GxIuMhXHuSjlA5QuZpmS_C_x6ntBfB.sVBh
+ t_qizro1_UYBlAJsEhIg9.mk9P6mqG665_DwmLzltxj8Dmj_wXSTH_l_dRvdmH8ZYbRg4kqMD4SC
+ 5s_OXQ8afqu0BTxo8s2DF_RlXtKROPwX.cvEikrOEi6vpOdN2sz6379Jr9.jdPlmBBMPOiaG4g1w
+ z6qNztXrLZyhrPJ6LF.mRrJluHf4eCte3M6qgG7rEvh86RBbvbzJLheb_0aoKr9QPkl59ISiwMQg
+ xO0ZXT2HDmW28eqbbqzL0CyzEmmyrCibk.KmRrObawRwrrwx8GstXlpb3M7JJDCE74rQtjY377GS
+ hjrO2B2lB1fLWscC_KUC7ktCdTMYhF6AyYGBr9k_pEZlxOrjggZ0Nvb0xFc_KjMifHLmRI7I75p.
+ xB_zEdlvr9typvSIIEFn_dPc3gJSHsFw6lnjCbofx3tMGUDSE2PqCJNLe7LPdBX908ITsQpw2xwy
+ pM9h.GYqw1HRkYiXaCB7siZmWx.w.mTSPADNytEBh3VFOl4nxOcvgSZycUuu6fsf3jEMqoH52Kgz
+ w45fCrQn_FP6PeOxWIs7ChQkHY7tydT0T5d_s1wsDfwsyvwzI.NArkFRgkFt_ai5eSssQ0aGPGEf
+ eTWKmGi3UUrjVTSsZAjDqN8wqpX1FzR_wjGeIQLtS76iUbkbDZfXQy6EBjeBW88SseUSTcNCE.b_
+ K5tRJkcq9tgFUmk7WRkFoGGQyrZ5g6r0mGt1RqqeqZkpxED85coDid8UCFXJGRDb9FyBsBjGsoQN
+ x3_5nXXcp3ZH64pfQCI7qy4wSEeuiuP36jxYhJO2M52yooM19CBMUR3pBhdw.mj7VeZWbVLNNDzL
+ 9qIvhALHLYMs4cuz6ILakLYRkVGiwMuD5IB4_as7DI1WMoMKQAZQAeUxllqsr2w_YRKlUueaBWr3
+ Rs9gNMDDcY3xZ0Vg_.j_hKZwen3JQw_XX7V0I01PGziLVP5o04Ec5SUj83.n24ivjg5qzcatSJn0
+ g1mpqL4qubfa0.yWBrcya.DOfbEy7gic3987u2YnV.3HzsYMTRw2Vnbm0d9OZV7oxRIDGLyoPWuq
+ bh8eBW4JO495aOJdUDOHykA240F2BHnpTN7fMs5d8WVF8oetz1SP9AwHZ0Oaqrw6ldxEsYLMsIC5
+ rTgTBt.XW6AH1TuzhNQ.N.QaK4aBsJgQTeHh2OlenGki1rx5o7lHBsHHYQjec50U0f0GCVJNw5N_
+ KwC9NqQmVFbnWgR5wvNrBLJ9Dn9DfqG0ygycdY7IXlph_csrhAwSW88CPA2KQ0Z9BHcU2aVzXQpa
+ ZodEMiLGQWfUWDYkOLCV2Fh7iJ0hIpxNCAOzX9KZbm.nKWi5LEncuAx1jMVtbMkSyYOVozma6Cw3
+ 6h.7UqmnD9kQZoLTThG2Br59eiaDyQPXTQvY5BlZRBXrtJ_GotWzuYiOp7SjvtV2F6A9jRda2IhW
+ x1JkE7n2AqqEo8mnE9hfaz686.PskkbnVK_4DIiuMgbHh8Q0G1R.1fgwlhkwzicxChyFh6APhA7v
+ hkDMBNiPSKl5u5SnrUrCYGUjKgLgCPTxpLPUkvpfU11YEhtLwDauceqASXpsF_FyEkzqLZhtCk.g
+ U2jrkSz43B4x9S6.AzXGQ9oJId195N7nTp_FmLe6kZkc1C.PfgsxMyXrDxBXjX0Ndg9rOTpMYZsK
+ TvLxMfChMzyr7o6zSoAZi4ylavGxrRaWz8Lo.KF8M1n6hCrAvn51JAng9DefzfNq3hIgyFV5LAyW
+ eAVF0Fq8shIwp6lfBaf_QCU8q1IH0mQIWRIkjqrLWH1lPP96E3X0XJYggw9G56RiDhVsEukEctkx
+ IWFGAOotXkWo1G6smNegb0DDYRoC7TPvsBpcehz3En506hKJloY67PpFivSixL1q5FWZUUw0hgMV
+ AiyASE4Mos9fT
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: cc1a172b-e4e9-4422-891f-00a5a4d558f7
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Thu, 16 May 2024 19:07:10 +0000
+Received: by hermes--production-gq1-59c575df44-94tst (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 8763c159b28ba26d1fa19a878a48be67;
+          Thu, 16 May 2024 19:07:08 +0000 (UTC)
+Message-ID: <2804dd75-50fd-481c-8867-bc6cea7ab986@schaufler-ca.com>
+Date: Thu, 16 May 2024 12:07:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
+To: Jonathan Calmels <jcalmels@3xx0.net>, brauner@kernel.org,
+ ebiederm@xmission.com, Luis Chamberlain <mcgrof@kernel.org>,
+ Kees Cook <keescook@chromium.org>, Joel Granados <j.granados@samsung.com>,
+ Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, David Howells <dhowells@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>
+Cc: containers@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ keyrings@vger.kernel.org
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20240516092213.6799-1-jcalmels@3xx0.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.22356 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-The housekeeping CPU masks, set up by the "isolcpus" and "nohz_full"
-boot command line options, are used at boot time to exclude selected
-CPUs from running some kernel housekeeping facilities to minimize
-disturbance to latency sensitive userspace applications such as DPDK.
+On 5/16/2024 2:22 AM, Jonathan Calmels wrote:
+> It's that time of the year again where we debate security settings for user
+> namespaces ;)
+>
+> I’ve been experimenting with different approaches to address the gripe
+> around user namespaces being used as attack vectors.
+> After invaluable feedback from Serge and Christian offline, this is what I
+> came up with.
+>
+> There are obviously a lot of things we could do differently but I feel this
+> is the right balance between functionality, simplicity and security. This
+> also serves as a good foundation and could always be extended if the need
+> arises in the future.
+>
+> Notes:
+>
+> - Adding a new capability set is far from ideal, but trying to reuse the
+>   existing capability framework was deemed both impractical and
+>   questionable security-wise, so here we are.
 
-However, these options can have negative consequences for "normal"
-workloads. Both nohz_full and rcu_nocbs can be applied to a subset of
-the CPUs on a server (so as to not impact the "normal" workloads), but
-they can only be changed with a reboot. This is a problem for
-containerized workloads running on OpenShift (i.e. kubernetes) where a
-mix of low latency and "normal" workloads can be created/destroyed
-dynamically and the number of CPUs allocated to each workload is often
-not known at boot time.
+I suggest that adding a capability set for user namespaces is a bad idea:
+	- It is in no way obvious what problem it solves
+	- It is not obvious how it solves any problem
+	- The capability mechanism has not been popular, and relying on a
+	  community (e.g. container developers) to embrace it based on this
+	  enhancement is a recipe for failure
+	- Capabilities are already more complicated than modern developers
+	  want to deal with. Adding another, special purpose set, is going
+	  to make them even more difficult to use.
 
-This series of patches is based on series
-"isolation: Exclude dynamically isolated CPUs from housekeeping masks"
-https://lore.kernel.org/lkml/20240229021414.508972-1-longman@redhat.com/
-Its purpose is to exclude dynamically isolated CPUs from some
-housekeeping masks so that subsystems that check the housekeeping masks
-at run time will not use those isolated CPUs.
-
-However, some of subsystems can use obsolete housekeeping CPU masks.
-Therefore, to prevent the use of these isolated CPUs, it is necessary to
-explicitly propagate changes of the housekeeping masks to all subsystems
-depending on the mask.
-
-Costa Shulyupin (7):
-  sched/isolation: Add infrastructure to adjust affinity for dynamic CPU
-    isolation
-  sched/isolation: Adjust affinity of timers according to change of
-    housekeeping cpumask
-  sched/isolation: Adjust affinity of hrtimers according to change of
-    housekeeping cpumask
-  sched/isolation: Adjust affinity of managed irqs according to change
-    of housekeeping cpumask
-  [NOT-FOR-MERGE] test timers affinity adjustment
-  [NOT-FOR-MERGE] test timers and hrtimers affinity adjustment
-  [NOT-FOR-MERGE] test managed irqs affinity adjustment
-
- include/linux/hrtimer.h  |   2 +
- include/linux/timer.h    |   2 +
- init/Kconfig             |   1 +
- kernel/cgroup/cpuset.c   |   3 +-
- kernel/sched/isolation.c | 119 +++++++++++++++++++++++++++++++++++++--
- kernel/time/hrtimer.c    |  81 ++++++++++++++++++++++++++
- kernel/time/timer.c      |  64 +++++++++++++++++++++
- tests/managed_irq.c      |  71 +++++++++++++++++++++++
- tests/timers.c           |  58 +++++++++++++++++++
- 9 files changed, 395 insertions(+), 6 deletions(-)
- create mode 100644 tests/managed_irq.c
- create mode 100644 tests/timers.c
-
--- 
-2.45.0
-
+> - We might want to add new capabilities for some of the checks instead of
+>   reusing CAP_SETPCAP every time. Serge mentioned something like
+>   CAP_SYS_LIMIT?
+>
+> - In the last patch, we could decide to have stronger requirements and
+>   perform checks inside cap_capable() in case we want to retroactively
+>   prevent capabilities in old namespaces, this might be an overreach though
+>   so I left it out.
+>
+>   I'm also not fond of the ulong logic for setting the sysctl parameter, on
+>   the other hand, the usermodhelper code always uses two u32s which makes it
+>   very confusing to set in userspace.
+>
+>
+> Jonathan Calmels (3):
+>   capabilities: user namespace capabilities
+>   capabilities: add securebit for strict userns caps
+>   capabilities: add cap userns sysctl mask
+>
+>  fs/proc/array.c                 |  9 ++++
+>  include/linux/cred.h            |  3 ++
+>  include/linux/securebits.h      |  1 +
+>  include/linux/user_namespace.h  |  7 +++
+>  include/uapi/linux/prctl.h      |  7 +++
+>  include/uapi/linux/securebits.h | 11 ++++-
+>  kernel/cred.c                   |  3 ++
+>  kernel/sysctl.c                 | 10 ++++
+>  kernel/umh.c                    | 16 +++++++
+>  kernel/user_namespace.c         | 83 ++++++++++++++++++++++++++++++---
+>  security/commoncap.c            | 59 +++++++++++++++++++++++
+>  security/keys/process_keys.c    |  3 ++
+>  12 files changed, 204 insertions(+), 8 deletions(-)
+>
