@@ -1,157 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFE6147C72
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 20:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA21282E1;
+	Thu, 16 May 2024 20:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715890189; cv=none; b=ZlXwyX2Jdswi5NFTb7Pcl5SWYDeoqf4LQLSLRDKD+/54VxpBRnxd+FiQFy+f0Hx/MZdfNUBPIcgs8EM7i+Aq2xNXwT8XBRfmoVAV4DVJFXy90+yxBEnoRCkVdmdcG6aZqEYg3iHU6QnGi/AeLRWBrgHgKlKx54/kfviSNUubtNA=
+	t=1715890238; cv=none; b=qnFHZ/QMrkfnc+StqIHCUxMqrFa4z6Y/UXtice0ZiwpAwEO9EHBL8wPQMU2F0Bz3KYIV6w2m40CdqbhchP43M4mLGqC30fdy3iHUxVzagvEgp+Y2adrq7rv5b7IboeqRpG4RtmCxslK5kDpQr+F/vLdQ3Vr0DWpUa3YdUCWptX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715890189; c=relaxed/simple;
-	bh=EUpklSxQlvL3tJx+fqvIYMYmd+ITdKsrjLKSxUT+MoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ukv/OfES8bHt3VpEQI/X+lX6ohFuQUYar/kSKfBmU9yiK5cqM7n+TugX/he3xt3JWZLwIycvjTTNHtHjVIaPTjMUBxSB+XrLnfQ05Q5vJ2cnm1g0x8LlxM4eGUueMHNXMXmF0BBx3CDyjXOHBroMbt02SNH3rj0UaKHCztYhJHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gnUI6+OC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gnUI6+OC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715890186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=enjpFwxkMXeucLrOY4GgEKclmokFGniBJ7j/L6UJXVo=;
-	b=gnUI6+OCf4VaoCIlLtfEDSy24gSS7ZoqwiRH/4Hurs1LgqHAmKg4Yhf8AmqOhD5k12UEft
-	3esxWUwnUifkDWqRLBCYKdXlkYuAvS85xvvEFdUd8bLkCd//KdtLeyuTjTr1saHcHPgk1u
-	XPjFxVY+NK5ZJg99un4dvhM9Pt89Qd0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-120-tBxs6JIdNQqniI-x0ABOzg-1; Thu,
- 16 May 2024 16:09:43 -0400
-X-MC-Unique: tBxs6JIdNQqniI-x0ABOzg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C670D3806711;
-	Thu, 16 May 2024 20:09:42 +0000 (UTC)
-Received: from RHTRH0061144.redhat.com (unknown [10.22.17.148])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D1BF9C15BB1;
-	Thu, 16 May 2024 20:09:41 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: netdev@vger.kernel.org
-Cc: dev@openvswitch.org,
-	linux-kernel@vger.kernel.org,
-	Pravin B Shelar <pshelar@ovn.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jesse Gross <jesse@nicira.com>,
-	Eelco Chaudron <echaudro@redhat.com>,
-	Ilya Maximets <i.maximets@ovn.org>,
-	Simon Horman <horms@ovn.org>,
-	Jaime Caamano <jcaamano@redhat.com>
-Subject: [PATCH v2 net] openvswitch: Set the skbuff pkt_type for proper pmtud support.
-Date: Thu, 16 May 2024 16:09:41 -0400
-Message-ID: <20240516200941.16152-1-aconole@redhat.com>
+	s=arc-20240116; t=1715890238; c=relaxed/simple;
+	bh=oq0QbdhJXYFWnQf/TURGQJ3Y2B7qCQ/gvzuj7VK1szQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTATXJoyJze1rnXcbbEbsBCmllyV+isqVkkAGz9/o2A3qylIeNMKL6ZbaUvXqSpWmJwJjLHhNNNBuhslqOALKqYDtlj2XvY8lG1p83rOXvRs9OsvMfMIpRBFlmvLUlN7ur/C51U31Y1jq7MWSzOGtpnDwccutKjHIx7QvqN+JWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 44GJS9sG015776;
+	Thu, 16 May 2024 14:28:10 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 44GJS6lh015769;
+	Thu, 16 May 2024 14:28:06 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Thu, 16 May 2024 14:28:06 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Andy Polyakov <appro@cryptogams.org>
+Cc: Danny Tsen <dtsen@linux.ibm.com>, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, dtsen@us.ibm.com, nayna@linux.ibm.com,
+        linux-kernel@vger.kernel.org, ltcgcw@linux.vnet.ibm.com,
+        leitao@debian.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/3] crypto: X25519 core functions for ppc64le
+Message-ID: <20240516192806.GM19790@gate.crashing.org>
+References: <20240514173835.4814-1-dtsen@linux.ibm.com> <20240514173835.4814-3-dtsen@linux.ibm.com> <847f2e4f-ace1-415d-b129-ed2751429eec@cryptogams.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <847f2e4f-ace1-415d-b129-ed2751429eec@cryptogams.org>
+User-Agent: Mutt/1.4.2.3i
 
-Open vSwitch is originally intended to switch at layer 2, only dealing with
-Ethernet frames.  With the introduction of l3 tunnels support, it crossed
-into the realm of needing to care a bit about some routing details when
-making forwarding decisions.  If an oversized packet would need to be
-fragmented during this forwarding decision, there is a chance for pmtu
-to get involved and generate a routing exception.  This is gated by the
-skbuff->pkt_type field.
+On Wed, May 15, 2024 at 10:29:56AM +0200, Andy Polyakov wrote:
+> >+static void cswap(fe51 p, fe51 q, unsigned int bit)
+> 
+> The "c" in cswap stands for "constant-time," and the problem is that 
+> contemporary compilers have exhibited the ability to produce 
+> non-constant-time machine code as result of compilation of the above 
+> kind of technique.
 
-When a flow is already loaded into the openvswitch module this field is
-set up and transitioned properly as a packet moves from one port to
-another.  In the case that a packet execute is invoked after a flow is
-newly installed this field is not properly initialized.  This causes the
-pmtud mechanism to omit sending the required exception messages across
-the tunnel boundary and a second attempt needs to be made to make sure
-that the routing exception is properly setup.  To fix this, we set the
-outgoing packet's pkt_type to PACKET_OUTGOING, since it can only get
-to the openvswitch module via a port device or packet command.
+This can happen with *any* comnpiler, on *any* platform.  In general,
+you have to write machine code if you want to be sure what machine code
+will eventually be executed.
 
-Even for bridge ports as users, the pkt_type needs to be reset when
-doing the transmit as the packet is truly outgoing and routing needs
-to get involved post packet transformations, in the case of
-VXLAN/GENEVE/udp-tunnel packets.  In general, the pkt_type on output
-gets ignored, since we go straight to the driver, but in the case of
-tunnel ports they go through IP routing layer.
+>  The outcome is platform-specific and ironically some 
+> of PPC code generators were observed to generate "most" 
+> non-constant-time code. "Most" in sense that execution time variations 
+> would be most easy to catch. One way to work around the problem, at 
+> least for the time being, is to add 'asm volatile("" : "+r"(c))' after 
+> you calculate 'c'. But there is no guarantee that the next compiler 
+> version won't see through it, hence the permanent solution is to do it 
+> in assembly. I can put together something...
 
-This issue is periodically encountered in complex setups, such as large
-openshift deployments, where multiple sets of tunnel traversal occurs.
-A way to recreate this is with the ovn-heater project that can setup
-a networking environment which mimics such large deployments.  We need
-larger environments for this because we need to ensure that flow
-misses occur.  In these environment, without this patch, we can see:
+Such tricks can help ameliorate the problem, sure.  But it is not a
+solution ever.
 
-  ./ovn_cluster.sh start
-  podman exec ovn-chassis-1 ip r a 170.168.0.5/32 dev eth1 mtu 1200
-  podman exec ovn-chassis-1 ip netns exec sw01p1 ip r flush cache
-  podman exec ovn-chassis-1 ip netns exec sw01p1 \
-         ping 21.0.0.3 -M do -s 1300 -c2
-  PING 21.0.0.3 (21.0.0.3) 1300(1328) bytes of data.
-  From 21.0.0.3 icmp_seq=2 Frag needed and DF set (mtu = 1142)
 
-  --- 21.0.0.3 ping statistics ---
-  ...
-
-Using tcpdump, we can also see the expected ICMP FRAG_NEEDED message is not
-sent into the server.
-
-With this patch, setting the pkt_type, we see the following:
-
-  podman exec ovn-chassis-1 ip netns exec sw01p1 \
-         ping 21.0.0.3 -M do -s 1300 -c2
-  PING 21.0.0.3 (21.0.0.3) 1300(1328) bytes of data.
-  From 21.0.0.3 icmp_seq=1 Frag needed and DF set (mtu = 1222)
-  ping: local error: message too long, mtu=1222
-
-  --- 21.0.0.3 ping statistics ---
-  ...
-
-In this case, the first ping request receives the FRAG_NEEDED message and
-a local routing exception is created.
-
-Tested-by: Jaime Caamano <jcaamano@redhat.com>
-Reported-at: https://issues.redhat.com/browse/FDP-164
-Fixes: 58264848a5a7 ("openvswitch: Add vxlan tunneling support.")
-Signed-off-by: Aaron Conole <aconole@redhat.com>
----
-v1->v2: Include a comment as requested by Eelco, and add some details about
-        bridge port packets.
-
- net/openvswitch/actions.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 6fcd7e2ca81fe..9642255808247 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -936,6 +936,12 @@ static void do_output(struct datapath *dp, struct sk_buff *skb, int out_port,
- 				pskb_trim(skb, ovs_mac_header_len(key));
- 		}
- 
-+		/* Need to set the pkt_type to involve the routing layer.  The
-+		 * packet movement through the OVS datapath doesn't generally
-+		 * use routing, but this is needed for tunnel cases.
-+		 */
-+		skb->pkt_type = PACKET_OUTGOING;
-+
- 		if (likely(!mru ||
- 		           (skb->len <= mru + vport->dev->hard_header_len))) {
- 			ovs_vport_send(vport, skb, ovs_key_mac_proto(key));
--- 
-2.45.0
-
+Segher
