@@ -1,138 +1,92 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BFE76C76;
-	Thu, 16 May 2024 08:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD40C76C76;
+	Thu, 16 May 2024 08:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715848055; cv=none; b=k6VBcxmthZa6n8HHxFU/5joIrZwcb04pXZ0vsSaB69CYP9m8rdLlxTBKIgEu5KpgIkEoG5NifCnrE0FbWimNC/1B8jF8VvhL4LpH9OmSvI1wtSvlmaFD2odvFqbu6lqVPDLh77i+ht1wREgACaM+U4lrz1Wq4VH1dELX7yKuTa0=
+	t=1715848060; cv=none; b=RvDc4oqlSnjVlynd59jXYHHQiaW5ixBahfTodPni30cmxMd5lemJEkZUv91RisdvnOpdNzajj9tzOkCeVV3Eo9w6Ir/UPNnElkVFa/0IhAb642YrF53f7SKm/Hu/XJ41YeFhmE3rl9Ql5rGB6/t8wuoTnHE7HL2YRgtOcBy6HCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715848055; c=relaxed/simple;
-	bh=Fa3tCa+nHTX5GaUek5DQjejgVE5UyfDOFzTBnbAZZgQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WYd1o5mteRp6hPuHUxqGHvKtTvmibBGabvja/ZMUscaNboOa1GEBO/2wazSZFvdK6MsI6FpFBNE7CKv6YnGzuJRD3OKIXda6L4nsTQXfMNIpDOXLye0lAoB4570oyWx/+c71BR/HEAlKygPT7WnFcj1W9WlrNRMiybkKZ/vJd1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vg39h3dg3z4f3jYN;
-	Thu, 16 May 2024 16:27:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 381E41A10BC;
-	Thu, 16 May 2024 16:27:29 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP2 (Coremail) with SMTP id Syh0CgAnmAttw0VmcIZ6NA--.39916S3;
-	Thu, 16 May 2024 16:27:27 +0800 (CST)
-Subject: Re: [PATCH] ext4/jbd2: drop jbd2_transaction_committed()
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- ritesh.list@gmail.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
- yukuai3@huawei.com
-References: <20240513072119.2335346-1-yi.zhang@huaweicloud.com>
- <20240515002513.yaglghza4i4ldmr5@quack3>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <f0eb115d-dd10-e156-9aed-65b7f479f008@huaweicloud.com>
-Date: Thu, 16 May 2024 16:27:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1715848060; c=relaxed/simple;
+	bh=9LRNAuur+huZKRDmejnPug6GuKAfA0xgXvFKeLB4wLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c3MY8r2X+bApFrF5Ii19k48KLfSWVgdYZsmxBwjqRgpjDC4G2whS2/PfHZZpE7pBo1V+Uw1DRSctGwyZpWgwws7adlCMvmMaRWlu+6EBwG24KBOooAu3PV7LdR+ZunUUuFP12mcVgQGTQCSyzTBpuuVb20gAQgCcYqLXm3hiP8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mU5Wpl8f; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mU5Wpl8f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40375C32789;
+	Thu, 16 May 2024 08:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715848059;
+	bh=9LRNAuur+huZKRDmejnPug6GuKAfA0xgXvFKeLB4wLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mU5Wpl8fCqZC6kZltsIgQeTYGjz4QB/WYbrXvz7R/+YdO0nxnKnRx2KdNJnYxLCs0
+	 zCLxREkNgG/FkZ1VQ84uTCOBuPLL0tGIH5PADs083gnXzlTc/MQKYaT9nyzs/iLGeY
+	 i0OiRL7ef/29o/JLkpJxgFJak0dQpyhCVpXjaDyNEyJebiTFeHVBSIHzt9tZAR71CC
+	 KQAithRyMZ+Qza+XemZzid9Is1m3GSkn2/8cpzwnuY9yxQbxH9O39ABXJ+S/a7vgQp
+	 W1iLGegicc2MvRaHMRaGhRkRTRUw24wzkArSJLTSR/4CcB8m/BboT57kW3qAty8UNi
+	 mavlwMDJmJAMQ==
+Date: Thu, 16 May 2024 09:27:33 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	maciej.fijalkowski@intel.com,
+	Magnus Karlsson <magnus.karlsson@gmail.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	igor.bagnucki@intel.com, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH iwl-net 2/3] ice: add flag to distinguish reset from
+ .ndo_bpf in XDP rings config
+Message-ID: <20240516082733.GD179178@kernel.org>
+References: <20240515160246.5181-1-larysa.zaremba@intel.com>
+ <20240515160246.5181-3-larysa.zaremba@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240515002513.yaglghza4i4ldmr5@quack3>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAnmAttw0VmcIZ6NA--.39916S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxArWxCw4fAr1xXry8Jw47Arb_yoW5Aw43pF
-	W0k3W2gr4kZ34I9r40qa17ZFW0yws5Ja48XrsxXwsaga1UG3s7KrW7tFyavFyDtFs5Ww4U
-	XF4S9rn7Kryj937anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUrR6zUUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240515160246.5181-3-larysa.zaremba@intel.com>
 
-On 2024/5/15 8:25, Jan Kara wrote:
-> On Mon 13-05-24 15:21:19, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> jbd2_transaction_committed() is used to check whether a transaction with
->> the given tid has already committed, it hold j_state_lock in read mode
->> and check the tid of current running transaction and committing
->> transaction, but holding the j_state_lock is expensive.
->>
->> We have already stored the sequence number of the most recently
->> committed transaction in journal t->j_commit_sequence, we could do this
->> check by comparing it with the given tid instead. If the given tid isn't
->> smaller than j_commit_sequence, we can ensure that the given transaction
->> has been committed. That way we could drop the expensive lock and
->> achieve about 10% ~ 20% performance gains in concurrent DIOs on may
->> virtual machine with 100G ramdisk.
->>
->> fio -filename=/mnt/foo -direct=1 -iodepth=10 -rw=$rw -ioengine=libaio \
->>     -bs=4k -size=10G -numjobs=10 -runtime=60 -overwrite=1 -name=test \
->>     -group_reporting
->>
->> Before:
->>   overwrite       IOPS=88.2k, BW=344MiB/s
->>   read            IOPS=95.7k, BW=374MiB/s
->>   rand overwrite  IOPS=98.7k, BW=386MiB/s
->>   randread        IOPS=102k, BW=397MiB/s
->>
->> After:
->>   verwrite:       IOPS=105k, BW=410MiB/s
->>   read:           IOPS=112k, BW=436MiB/s
->>   rand overwrite: IOPS=104k, BW=404MiB/s
->>   randread:       IOPS=111k, BW=432MiB/s
->>
->> CC: Dave Chinner <david@fromorbit.com>
->> Suggested-by: Dave Chinner <david@fromorbit.com>
->> Link: https://lore.kernel.org/linux-ext4/493ab4c5-505c-a351-eefa-7d2677cdf800@huaweicloud.com/T/#m6a14df5d085527a188c5a151191e87a3252dc4e2
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+On Wed, May 15, 2024 at 06:02:15PM +0200, Larysa Zaremba wrote:
+> Commit 6624e780a577 ("ice: split ice_vsi_setup into smaller functions")
+> has placed ice_vsi_free_q_vectors() after ice_destroy_xdp_rings() in
+> the rebuild process. The behaviour of the XDP rings config functions is
+> context-dependent, so the change of order has led to
+> ice_destroy_xdp_rings() doing additional work and removing XDP prog, when
+> it was supposed to be preserved.
 > 
-> I agree this is workable solution and the performance benefits are nice. But
-> I have some comments regarding the implementation:
+> Also, dependency on the PF state reset flags creates an additional,
+> fortunately less common problem:
 > 
->> @@ -3199,8 +3199,8 @@ static bool ext4_inode_datasync_dirty(struct inode *inode)
->>  	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
->>  
->>  	if (journal) {
->> -		if (jbd2_transaction_committed(journal,
->> -			EXT4_I(inode)->i_datasync_tid))
->> +		if (tid_geq(journal->j_commit_sequence,
->> +			    EXT4_I(inode)->i_datasync_tid))
+> * PFR is requested e.g. by tx_timeout handler
+> * .ndo_bpf() is asked to delete the program, calls ice_destroy_xdp_rings(),
+>   but reset flag is set, so rings are destroyed without deleting the
+>   program
+> * ice_vsi_rebuild tries to delete non-existent XDP rings, because the
+>   program is still on the VSI
+> * system crashes
 > 
-> Please leave the helper jbd2_transaction_committed(), just make the
-> implementation more efficient. 
-
-Sure.
-
-> Also accessing j_commit_sequence without any
-> lock is theoretically problematic wrt compiler optimization. You should have
-> READ_ONCE() there and the places modifying j_commit_sequence need to use
-> WRITE_ONCE().
+> With a similar race, when requested to attach a program,
+> ice_prepare_xdp_rings() can actually skip setting the program in the VSI
+> and nevertheless report success.
 > 
+> Instead of reverting to the old order of function calls, add an enum
+> argument to both ice_prepare_xdp_rings() and ice_destroy_xdp_rings() in
+> order to distinguish between calls from rebuild and .ndo_bpf().
+> 
+> Fixes: efc2214b6047 ("ice: Add support for XDP")
+> Reviewed-by: Igor Bagnucki <igor.bagnucki@intel.com>
+> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
 
-Thanks for pointing this out, but I'm not sure if we have to need READ_ONCE()
-here. IIUC, if we add READ_ONCE(), we could make sure to get the latest
-j_commit_sequence, if not, there is a window (it might becomes larger) that
-we could get the old value and jbd2_transaction_committed() could return false
-even if the given transaction was just committed, but I think the window is
-always there, so it looks like it is not a big problem, is that right?
-
-Thanks,
-Yi.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
