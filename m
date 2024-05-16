@@ -1,163 +1,89 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD6C145A1D
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB231143886;
+	Thu, 16 May 2024 13:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715867395; cv=none; b=kdduMuQLNaOBv399q1fxSeuVJ1TkHl++7uVEkIsPzjd0OhwHv5WJOiixJFdeGIrzxJQ7fo6t/vbg/NuhwP4/ifp2dBjgzeG04NdQVsCDBEbvI1maD2KZkAMMe5a3rIQHMZX2wel9NQMtIUd5vJb/r4GAMKfQuSzn0ha8mwO4aM0=
+	t=1715867686; cv=none; b=ngpmMeTcfgkZQ5LXwxS7/CvhKQNGTKIEGRYuEPtSwgjOBYzGPktoF8TbPRKFWa/tQs6NEjnXESuCfFhIdcBg9Fot3p4bTnHUZyMqW/RlpIfe+0l8FIsZFnwjsE+rzkCoNuVHWJKK+FO7aiMmxBXbQI5//1Nf+BgAjVco1XYDemM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715867395; c=relaxed/simple;
-	bh=F23kPmSKo4nuPfv8aCwqUfEkCmnyZcNsw+mnflyY+fA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TvrLOP9urjzU+QDHP2zINqULaS+bmoRuM6+lVB2sNC2WP2aiGPMzGgzuL93gRmmjlnkbbJDHbDnRFng3jyKGlwdPilNKQl/oy8vQuCwjeKcRsBB7LXmUlXp4L/Yov0mkRKGQR4YIPWyAnnQpkFN9RFO02UTGgxVzzor+24A/4do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M5/vsaRc; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715867686; c=relaxed/simple;
+	bh=+/sGHoVHNh7aDbg74jwHs3yv+dQdkDY6SZT5+s9g1/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SMfu6Xz9xkxzVffYX5i3/85B8ZYsxv36Y+Dx+9UuvvH7QGCK0oepxL8iZvG0FcOKJPemKEbpBsP93KBZ1eGhyprm62c+WYXjmrEMZeBstqM8HI+8qjl7uREj8JYgaBBCzXVEww+bD8feRvjaOsjuI7i8daxRqXJpHqB1zlT1VWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gz1BKpbF; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M5/vsaRc"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7e1cd52db2eso37618139f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715867392; x=1716472192; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vE+d7Cw90alIT6F0UkuVj3O7o7Oab4n1TKo1NXh8d0Y=;
-        b=M5/vsaRcOYGvGeq5Q5m5WA5aRdu3xRjUkcE8vz4Uw8K89M8+vMRcNtmWbuNYSn8oo+
-         IEvE7uEM2/kULz0s6WfV3boAM+LoY8if1HBXUDOnJdLE1jovur29WeUgdTV8eL5VX2gG
-         a81F5THEcP4h0ywhZFPWdQggRYU2D4uyTr1Gg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715867392; x=1716472192;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vE+d7Cw90alIT6F0UkuVj3O7o7Oab4n1TKo1NXh8d0Y=;
-        b=bWdqbdcSP0AK8lEK5cXxgCK2nGkivnFhmt3n06WnpQlGq6yQZZIzhSgfGHdm3Emntk
-         ZL8+z5J0UXFGuJgHHv97t8EQWP0OpVcS7dCykS25kI1vP5bi7rjuTEKxxGtbIsRFTn4v
-         wUTjvZ4r01vIuOS5dmBXxTfpcEX5Xp5W2NXPxxQhSR2uZQxu+YqlqtEI/kgBHQz7SrZv
-         1GemCaCVi89wIxU5mczpGcq3F6yg5zMydO4SH3gz7xuIwBXKVZChdNSeWO3MXA0+5ph0
-         v+qvQDGQYX6nrk323sd4VSAoEuOu6QR96FLLrCzz67CT0BuRHJLyi9JHF1wbHREI/gc2
-         A7RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlw2OE/4aO7JUTsqrpTkfdb4E2D69N9kJfvvZ5yYCMSXS4Gxe7/G89gEUadM9JVkG3CCUc7uJi8ewcmnMygeb2voJfTEptVdlbkwly
-X-Gm-Message-State: AOJu0YzcdVKUs0D7TmiQNN1w8qlfTfQifTS6vkp1UjV/TiXwF9r2Ok24
-	KRYLUx9wkp0Q0Cxuu9BUeU88ssIrMwPqfYLxm6CASPvaPf8aNBR4WFBDNic/4+B7UsupMCHZIbM
-	=
-X-Google-Smtp-Source: AGHT+IFAXkHdBLdZOBlZn1rmIvu2ol1RBXZJaGECzAQKJEXkT2AfTFI3KoRlbTbdM4zoye+oKBLAiA==
-X-Received: by 2002:a05:6602:14d:b0:7e1:b3fa:6470 with SMTP id ca18e2360f4ac-7e1b52205abmr1889725439f.19.1715867392559;
-        Thu, 16 May 2024 06:49:52 -0700 (PDT)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-7e1b6bd33casm356985539f.55.2024.05.16.06.49.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 May 2024 06:49:52 -0700 (PDT)
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-36db330403fso36085ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:49:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXrtu43yhf68yP92nQVAEjKal1Aa5Fg4m1ElcH7VQ5+QeMFCMnFrEkT1ei9IUyh156piK0qwf/JEraHwrXR9l04b4x5Coj/KYIEYSuX
-X-Received: by 2002:a05:622a:5a8c:b0:43e:398a:b0c0 with SMTP id
- d75a77b69052e-43e398ab190mr5529521cf.12.1715867022285; Thu, 16 May 2024
- 06:43:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gz1BKpbF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715867685; x=1747403685;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+/sGHoVHNh7aDbg74jwHs3yv+dQdkDY6SZT5+s9g1/M=;
+  b=gz1BKpbFnY+FmpztnptLByZKBe35QeEkuqbrYQLryDhx+tCELy/lGT8y
+   SxExYcCfhy9dDDHZBHTT5HOBF2/u1ffyhtxu4VeGAedYZBGYW3p9JcUBF
+   9rNf7/YrmIzL6McB212cWA0mREaRiBEghG7sm8qgxtExVwW4wugxQJXrf
+   j/XlZEfwerp6+lOMXLpUhON3RHdSZfF1kTIKFurc3fDc3NEyeDGmrfnlu
+   RqcktvScs2oE49NKb76bO/W7WRxoRhzcZynIfLXldeCtM9ggq49aPyel+
+   lf8FQzCEs+3ezc6mhD/CNKv/xzB1DWbjn5Bw9jwMykmFUK0FxOfSTzcPA
+   w==;
+X-CSE-ConnectionGUID: lyYJu9U7Qn2pUv7O/peESQ==
+X-CSE-MsgGUID: ByKj6GvsSJCaHnqMHd5Mug==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12190229"
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="12190229"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 06:54:44 -0700
+X-CSE-ConnectionGUID: pBlz2EjuTyyvjt6hpl+yQA==
+X-CSE-MsgGUID: L/cy23MOSQK7TU5pBtUfEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="36214456"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 06:54:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s7bZ8-000000084Xq-1boe;
+	Thu, 16 May 2024 16:54:38 +0300
+Date: Thu, 16 May 2024 16:54:38 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vegard Nossum <vegard.nossum@oracle.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>
+Subject: Re: [PATCH v1 1/1] gpio: Remove legacy API documentation
+Message-ID: <ZkYQHnF76WLIf8-r@smile.fi.intel.com>
+References: <20240508101703.830066-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515014643.2715010-1-yangcong5@huaqin.corp-partner.google.com>
- <20240515014643.2715010-4-yangcong5@huaqin.corp-partner.google.com>
- <0fcdb0ac-2e4a-44b2-a5d6-a67a1d747df8@linaro.org> <CAD=FV=XkBkQUN-93eQDKZcw_66uSeNBBhbiq2hRLcFN+Ck71RQ@mail.gmail.com>
- <CAHwB_N+foZpCjqUy0dJdS2wBbUjHVRQQP0p7S_eTG1Yrh0bgPw@mail.gmail.com> <7b488473-7fd1-4f4f-8c32-72e84420b478@linaro.org>
-In-Reply-To: <7b488473-7fd1-4f4f-8c32-72e84420b478@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 16 May 2024 06:43:25 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W6mkTwAp6qMVYbPFDYBroAW19-qgvct1dw11ksaW3cYw@mail.gmail.com>
-Message-ID: <CAD=FV=W6mkTwAp6qMVYbPFDYBroAW19-qgvct1dw11ksaW3cYw@mail.gmail.com>
-Subject: Re: [v7 3/7] arm64: defconfig: Enable HIMAX_HX83102 panel
-To: neil.armstrong@linaro.org
-Cc: cong yang <yangcong5@huaqin.corp-partner.google.com>, sam@ravnborg.org, 
-	daniel@ffwll.ch, linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
-	robh+dt@kernel.org, conor+dt@kernel.org, airlied@gmail.com, 
-	dmitry.baryshkov@linaro.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	xuxinxiong@huaqin.corp-partner.google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240508101703.830066-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
+On Wed, May 08, 2024 at 01:17:01PM +0300, Andy Shevchenko wrote:
+> In order to discourage people to use old and legacy GPIO APIs
+> remove the respective documentation completely. It also helps
+> further cleanups of the legacy GPIO API leftovers, which is
+> ongoing task.
 
-On Wed, May 15, 2024 at 11:55=E2=80=AFPM <neil.armstrong@linaro.org> wrote:
->
-> On 16/05/2024 08:43, cong yang wrote:
-> > Hi:
-> >
-> > If it is determined that a separately patch needs to be sent, then I
-> > will remove this patch in V8 series?
-> >
-> > Doug Anderson <dianders@chromium.org> =E4=BA=8E2024=E5=B9=B45=E6=9C=881=
-6=E6=97=A5=E5=91=A8=E5=9B=9B 05:28=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> >>
-> >> Hi,
-> >>
-> >> On Wed, May 15, 2024 at 2:16=E2=80=AFPM <neil.armstrong@linaro.org> wr=
-ote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> On 15/05/2024 03:46, Cong Yang wrote:
-> >>>> DRM_PANEL_HIMAX_HX83102 is being split out from DRM_PANEL_BOE_TV101W=
-UM_NL6.
-> >>>> Since the arm64 defconfig had the BOE panel driver enabled, let's al=
-so
-> >>>> enable the himax driver.
-> >>>>
-> >>>> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-> >>>> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> >>>> ---
-> >>>>    arch/arm64/configs/defconfig | 1 +
-> >>>>    1 file changed, 1 insertion(+)
-> >>>>
-> >>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defco=
-nfig
-> >>>> index 2c30d617e180..687c86ddaece 100644
-> >>>> --- a/arch/arm64/configs/defconfig
-> >>>> +++ b/arch/arm64/configs/defconfig
-> >>>> @@ -864,6 +864,7 @@ CONFIG_DRM_PANEL_BOE_TV101WUM_NL6=3Dm
-> >>>>    CONFIG_DRM_PANEL_LVDS=3Dm
-> >>>>    CONFIG_DRM_PANEL_SIMPLE=3Dm
-> >>>>    CONFIG_DRM_PANEL_EDP=3Dm
-> >>>> +CONFIG_DRM_PANEL_HIMAX_HX83102=3Dm
-> >>>>    CONFIG_DRM_PANEL_ILITEK_ILI9882T=3Dm
-> >>>>    CONFIG_DRM_PANEL_MANTIX_MLAF057WE51=3Dm
-> >>>>    CONFIG_DRM_PANEL_RAYDIUM_RM67191=3Dm
-> >>>
-> >>> You should probably sent this one separately since only an ARM SoC ma=
-intainer
-> >>> can apply this, probably via the qcom tree.
-> >>
-> >> Really? I always kinda figured that this was a bit like MAINTAINERS
-> >> where it can come through a bunch of different trees. Certainly I've
-> >> landed changes to it before through the drm-misc tree. If that was
-> >> wrong then I'll certainly stop doing it, of course.
->
-> Yeah we usually don't mess with arch specific defconfig from drm tree
+Bart, Linus, Kent, what do you think about this?
 
-In general I agree that makes sense. In this case, though, the new
-config symbol was introduced in the previous patch and split off an
-existing symbol. Updating "all" of the configs (AKA just arm64) that
-had the old symbol to also have the new symbol seems like the nice
-thing to do and it feels like it makes sense to land in the same tree
-that did the "split" just to cause the least confusion to anyone
-affected.
+If there is a positive consensus, I would even dare to go for v6.10-rc2
+with it.
 
-In any case, if it's going to land in some other tree then I guess the
-question is whether it needs to wait a few revisions to land there or
-if it should land right away. Nobody would get a compile error if it
-landed in a different tree right away since unknown config symbols are
-silently ignored, but it feels a little weird to me.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-...of course, I'm also OK just dropping the config patch. I personally
-don't use the upstream "defconfig". It just seemed courteous to update
-it for those who do.
 
--Doug
