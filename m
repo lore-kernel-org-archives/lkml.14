@@ -1,278 +1,120 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0669145A1D;
-	Thu, 16 May 2024 12:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EE8146D55
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715862085; cv=none; b=ij9+vy8NJD/EPJsODcKAPhk7xhajapvk60P9caqngXomrK021LloHoljW8ie6xacS0A3f85CzoE0/xuf7enEZWuGcrKSSxzGVA5tP2vmCm7MEoG6aIHe8GpO6ZYKJT35JdQv4i4n7UhHPrN0YB4pZms36quuIgygFLEQzBwu4WA=
+	t=1715862087; cv=none; b=iVoL2pQOXSadjKfam7PbR+qG3Pym0mUx+nBpAaEoYONVaRP4nrmx4qw4lQiX+mF3qpOuRdH2cmruBWggCwN/nz5i5+fa841AeM/soA0ljq3wAefD9nKsNl2Jd9boM+LpaG2+qp0HaZgRnTxkDtd+ZXkfz0uqsOOWA4kPfEHWwVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715862085; c=relaxed/simple;
-	bh=lbbNaKO6PbxN88yPgdCDkXeB4qlOAOD5AXGN302bQPE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RVUsUgYLxRnOg7YVpTkVFaInWR8LOFKOfduCLDBje5NTLAuJG3XX8N35ELn0yJoi5KFqid1+9AhOWlWZqPQXrUqJZ5iMz+A1LhdX1Cb16Iuh48q7kBOEBPYPu466dGJuaravaR3k9f5zi3yWsLMHzrcUXRX+juFioU+hLvF0FHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=KOcPOdFe; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1715862087; c=relaxed/simple;
+	bh=j7MY69Or72NZH1eJL++77Z7Jpgc6pYvPCJ1p9zrSjHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=of/V7ADjuP2yZLj9Jj2CXE9cX6fnljScjuk3t3+xyLILjYiFR1uPh0VJEQFKaZ3T1aLSZPogdqLZ01/Y8TFaa3IVB2S33i4dDz//Up4cOFAIOXaTlDukxpQJ1zA9PLGpcrSbJcOTuZiDjOd1oKMamzDu3E06SxUsqP+otp2+Ezg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vgGTqowU; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KOcPOdFe"
-X-UUID: cc7605a8137e11efb92737409a0e9459-20240516
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3mN2fLq/jknwxdCirQZ8h3ADw1ezytG2RrBDiDF2Oj4=;
-	b=KOcPOdFe9gm9yB6qyreaTdKvlY3s3mzYMrBHntGFBfSq3szRqC0Iw38tu1CHo3jf5PrG5l9L1FInJLIvE4ZXdYZ46WhJm8R9E3QLxTiSWmdMDw48k7Cb+Az5CQzVYHpeQx8ASYJh47M3usCGlOzH0HivErmQFMuiNHhaKmfcNuM=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:e8e04974-0b82-4f1a-8597-e0929a38a974,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:82c5f88,CLOUDID:dc1fd792-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: cc7605a8137e11efb92737409a0e9459-20240516
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 265477984; Thu, 16 May 2024 20:21:18 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 16 May 2024 20:21:17 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 16 May 2024 20:21:16 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: Jeffrey Kardatzke <jkardatzke@google.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, "Nicolas
- Dufresne" <nicolas.dufresne@collabora.com>, Hans Verkuil
-	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Sebastian Fricke
-	<sebastian.fricke@collabora.com>, Tomasz Figa <tfiga@chromium.org>, "Mauro
- Carvalho Chehab" <mchehab@kernel.org>, Marek Szyprowski
-	<m.szyprowski@samsung.com>
-CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
-	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
-	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
- . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v6,07/24] dma-heap: Provide accessors so that in-kernel drivers can allocate dmabufs from specific heaps
-Date: Thu, 16 May 2024 20:20:45 +0800
-Message-ID: <20240516122102.16379-8-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240516122102.16379-1-yunfei.dong@mediatek.com>
-References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vgGTqowU"
+X-Envelope-To: victor.liu@nxp.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715862082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1XgBn1TBqz7ORvcVHfiGE+49CtbrApfFFA6HF8M1gK8=;
+	b=vgGTqowUZ01AfguD1IRFKwkyFnyMeeoLcPLh8UatHjG9CjwLbQ6kYvCVzPYxQqzmSTVtEf
+	OxXdH5sv6pOld9UPYVWpFG5eiQ5byvM6babc1xl/3BYE7+tahw8PZLVjT9VqDXgjkVkO3b
+	fY2R1seKDJwuBBtcoWMWIY5T1PKHfEs=
+X-Envelope-To: dri-devel@lists.freedesktop.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: andrzej.hajda@intel.com
+X-Envelope-To: neil.armstrong@linaro.org
+X-Envelope-To: rfoss@kernel.org
+X-Envelope-To: laurent.pinchart@ideasonboard.com
+X-Envelope-To: jonas@kwiboo.se
+X-Envelope-To: jernej.skrabec@gmail.com
+X-Envelope-To: maarten.lankhorst@linux.intel.com
+X-Envelope-To: mripard@kernel.org
+X-Envelope-To: tzimmermann@suse.de
+X-Envelope-To: airlied@gmail.com
+X-Envelope-To: daniel@ffwll.ch
+X-Envelope-To: biju.das.jz@bp.renesas.com
+X-Envelope-To: dmitry.baryshkov@linaro.org
+X-Envelope-To: u.kleine-koenig@pengutronix.de
+X-Envelope-To: aford173@gmail.com
+X-Envelope-To: jani.nikula@intel.com
+X-Envelope-To: bli@bang-olufsen.dk
+Message-ID: <ed550fa2-4616-4708-8ec8-c008ee51fc6f@linux.dev>
+Date: Thu, 16 May 2024 20:21:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--7.817000-8.000000
-X-TMASE-MatchedRID: qPZlTxuLTeftt0HEL3BUV4lD2T5imTkJ2qBSQHAh8pg0QmmUihPzrFJS
-	0b8z/9TB8AyWk2NFMNbijpjet3oGSJCoy9iDotiwNNHZMWDTEbe4UO5+xwKkcStjI02a+7m1J7o
-	vlkPXpS3VaZR68ynk9lCRaYaDm6fHBCaQyxlaPkG3D7EeeyZCMzGZtPrBBPZrEvoxTu3fj1tEe5
-	BdjBKTALjfysYMcGyRGce8edCRlYkmcsJib2IjaaOuVibdZNTv7yWPaQc4INQOkJQR4QWbsG+3c
-	txX3zZNo2jEjZ+uot1HVle6mAl0da+/EguYor8cFEUknJ/kEl7dB/CxWTRRu9bFCwAgdKkSZVhc
-	Zw1+0o4U24haPFkSUhqL6AAGbHEsKH3Be5ENxfV32uEPMy/F85RMZUCEHkRt
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--7.817000-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	B05BE9A084C6E79A300EE59DB9F2350863A9B78A9FE89CF540FF27CE85EAB6142000:8
-X-MTK: N
+Subject: Re: [PATCH] drm/bridge: adv7511: Exit interrupt handling when
+ necessary
+To: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ biju.das.jz@bp.renesas.com, dmitry.baryshkov@linaro.org,
+ u.kleine-koenig@pengutronix.de, aford173@gmail.com, jani.nikula@intel.com,
+ bli@bang-olufsen.dk
+References: <20240516101006.2388767-1-victor.liu@nxp.com>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240516101006.2388767-1-victor.liu@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: John Stultz <jstultz@google.com>
+Hi,
 
-This allows drivers who don't want to create their own
-DMA-BUF exporter to be able to allocate DMA-BUFs directly
-from existing DMA-BUF Heaps.
 
-There is some concern that the premise of DMA-BUF heaps is
-that userland knows better about what type of heap memory
-is needed for a pipeline, so it would likely be best for
-drivers to import and fill DMA-BUFs allocated by userland
-instead of allocating one themselves, but this is still
-up for debate.
+On 5/16/24 18:10, Liu Ying wrote:
+> Commit f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
+> fails to consider the case where adv7511->i2c_main->irq is zero, i.e.,
+> no interrupt requested at all.
+> 
+> Without interrupt, adv7511_wait_for_edid() could return -EIO sometimes,
+> because it polls adv7511->edid_read flag by calling adv7511_irq_process()
+> a few times, but adv7511_irq_process() happens to refuse to handle
+> interrupt by returning -ENODATA.  Hence, EDID retrieval fails randomly.
+> 
+> Fix the issue by checking adv7511->i2c_main->irq before exiting interrupt
+> handling from adv7511_irq_process().
+> 
+> Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
+> Signed-off-by: Liu Ying <victor.liu@nxp.com>
 
-Signed-off-by: John Stultz <jstultz@google.com>
-Signed-off-by: T.J. Mercier <tjmercier@google.com>
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-[Yong: Fix the checkpatch alignment warning]
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
----
- drivers/dma-buf/dma-heap.c | 83 ++++++++++++++++++++++++++++++--------
- include/linux/dma-heap.h   |  6 +++
- 2 files changed, 73 insertions(+), 16 deletions(-)
+Acked-by: Sui Jingfeng <sui.jingfeng@linux.dev>
 
-diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-index 97025ee8500f..6efe833a4b10 100644
---- a/drivers/dma-buf/dma-heap.c
-+++ b/drivers/dma-buf/dma-heap.c
-@@ -51,12 +51,24 @@ static dev_t dma_heap_devt;
- static struct class *dma_heap_class;
- static DEFINE_XARRAY_ALLOC(dma_heap_minors);
- 
--static int dma_heap_buffer_alloc(struct dma_heap *heap, size_t len,
--				 unsigned int fd_flags,
--				 unsigned int heap_flags)
-+/**
-+ * dma_heap_buffer_alloc - Allocate dma-buf from a dma_heap
-+ * @heap:	DMA-Heap to allocate from
-+ * @len:	size to allocate in bytes
-+ * @fd_flags:	flags to set on returned dma-buf fd
-+ * @heap_flags: flags to pass to the dma heap
-+ *
-+ * This is for internal dma-buf allocations only. Free returned buffers with dma_buf_put().
-+ */
-+struct dma_buf *dma_heap_buffer_alloc(struct dma_heap *heap, size_t len,
-+				      unsigned int fd_flags,
-+				      unsigned int heap_flags)
- {
--	struct dma_buf *dmabuf;
--	int fd;
-+	if (fd_flags & ~DMA_HEAP_VALID_FD_FLAGS)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (heap_flags & ~DMA_HEAP_VALID_HEAP_FLAGS)
-+		return ERR_PTR(-EINVAL);
- 
- 	/*
- 	 * Allocations from all heaps have to begin
-@@ -64,9 +76,20 @@ static int dma_heap_buffer_alloc(struct dma_heap *heap, size_t len,
- 	 */
- 	len = PAGE_ALIGN(len);
- 	if (!len)
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
-+
-+	return heap->ops->allocate(heap, len, fd_flags, heap_flags);
-+}
-+EXPORT_SYMBOL_GPL(dma_heap_buffer_alloc);
- 
--	dmabuf = heap->ops->allocate(heap, len, fd_flags, heap_flags);
-+static int dma_heap_bufferfd_alloc(struct dma_heap *heap, size_t len,
-+				   unsigned int fd_flags,
-+				   unsigned int heap_flags)
-+{
-+	struct dma_buf *dmabuf;
-+	int fd;
-+
-+	dmabuf = dma_heap_buffer_alloc(heap, len, fd_flags, heap_flags);
- 	if (IS_ERR(dmabuf))
- 		return PTR_ERR(dmabuf);
- 
-@@ -104,15 +127,9 @@ static long dma_heap_ioctl_allocate(struct file *file, void *data)
- 	if (heap_allocation->fd)
- 		return -EINVAL;
- 
--	if (heap_allocation->fd_flags & ~DMA_HEAP_VALID_FD_FLAGS)
--		return -EINVAL;
--
--	if (heap_allocation->heap_flags & ~DMA_HEAP_VALID_HEAP_FLAGS)
--		return -EINVAL;
--
--	fd = dma_heap_buffer_alloc(heap, heap_allocation->len,
--				   heap_allocation->fd_flags,
--				   heap_allocation->heap_flags);
-+	fd = dma_heap_bufferfd_alloc(heap, heap_allocation->len,
-+				     heap_allocation->fd_flags,
-+				     heap_allocation->heap_flags);
- 	if (fd < 0)
- 		return fd;
- 
-@@ -205,6 +222,7 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
- {
- 	return heap->priv;
- }
-+EXPORT_SYMBOL_GPL(dma_heap_get_drvdata);
- 
- /**
-  * dma_heap_get_name - get heap name
-@@ -217,6 +235,7 @@ const char *dma_heap_get_name(struct dma_heap *heap)
- {
- 	return heap->name;
- }
-+EXPORT_SYMBOL_GPL(dma_heap_get_name);
- 
- /**
-  * dma_heap_add - adds a heap to dmabuf heaps
-@@ -307,6 +326,37 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
- 	kfree(heap);
- 	return err_ret;
- }
-+EXPORT_SYMBOL_GPL(dma_heap_add);
-+
-+/**
-+ * dma_heap_find - get the heap registered with the specified name
-+ * @name: Name of the DMA-Heap to find
-+ *
-+ * Returns:
-+ * The DMA-Heap with the provided name.
-+ *
-+ * NOTE: DMA-Heaps returned from this function MUST be released using
-+ * dma_heap_put() when the user is done to enable the heap to be unloaded.
-+ */
-+struct dma_heap *dma_heap_find(const char *name)
-+{
-+	struct dma_heap *h;
-+
-+	mutex_lock(&heap_list_lock);
-+	list_for_each_entry(h, &heap_list, list) {
-+		if (!kref_get_unless_zero(&h->refcount))
-+			continue;
-+
-+		if (!strcmp(h->name, name)) {
-+			mutex_unlock(&heap_list_lock);
-+			return h;
-+		}
-+		dma_heap_put(h);
-+	}
-+	mutex_unlock(&heap_list_lock);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(dma_heap_find);
- 
- static void dma_heap_release(struct kref *ref)
- {
-@@ -332,6 +382,7 @@ void dma_heap_put(struct dma_heap *heap)
- {
- 	kref_put(&heap->refcount, dma_heap_release);
- }
-+EXPORT_SYMBOL_GPL(dma_heap_put);
- 
- static char *dma_heap_devnode(const struct device *dev, umode_t *mode)
- {
-diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
-index d57593f8a1bc..3cbf9bff2346 100644
---- a/include/linux/dma-heap.h
-+++ b/include/linux/dma-heap.h
-@@ -46,6 +46,12 @@ const char *dma_heap_get_name(struct dma_heap *heap);
- 
- struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info);
- 
-+struct dma_heap *dma_heap_find(const char *name);
-+
- void dma_heap_put(struct dma_heap *heap);
- 
-+struct dma_buf *dma_heap_buffer_alloc(struct dma_heap *heap, size_t len,
-+				      unsigned int fd_flags,
-+				      unsigned int heap_flags);
-+
- #endif /* _DMA_HEAPS_H */
+
+> ---
+>   drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> index 6089b0bb9321..2074fa3c1b7b 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> @@ -479,7 +479,8 @@ static int adv7511_irq_process(struct adv7511 *adv7511, bool process_hpd)
+>   		return ret;
+>   
+>   	/* If there is no IRQ to handle, exit indicating no IRQ data */
+> -	if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+> +	if (adv7511->i2c_main->irq &&
+> +	    !(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+>   	    !(irq1 & ADV7511_INT1_DDC_ERROR))
+>   		return -ENODATA;
+>   
+
 -- 
-2.25.1
-
+Best regards
+Sui
