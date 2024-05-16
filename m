@@ -1,777 +1,94 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36BE14D44D;
-	Thu, 16 May 2024 15:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A614B978
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715872823; cv=none; b=A1osc9fEcuHWcNL75MDCAedHOYIy5xpQL05Q1EAxZKo2lBkU0SqAvtr+Jy8OoFBsPli4OXrKL4Q8uZvOUURjhBAjBPqCZeASS0s6RDgu5zTzFPgpejzgp7wfRXQ3w6vd5lC8Hmj19ngcVY8VwGVD+4Qr/QQnrFRO4TGnCW54yEc=
+	t=1715872841; cv=none; b=Bqdk2QBM9wSZRvJnvyrU30I+s69RQDdpZNmVhhCBZAYTvvx3Ne0nrUedA9GWN0873BtAJwaQ4AgAM9bI2pIlD7fks5eAknspf2Re6rv4/+p/GbVfTz5ltoic6oRAGTwmAVoOtQSUp1rxYGNWJZeEdT/TTnjUfJe9rKQ7PhOA1fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715872823; c=relaxed/simple;
-	bh=GJZo6LC0TIlKVXMfSs7y3jHjIIR/ltqBt59gttb/Lng=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UmSC1UVEHscWQ+Y707cJy0oipBMJgsMvGTu7JsAxpbYVkWe7siWQOQ2eYn8ZYdlgWfLoqZ6bMOTOoKE+z7W2bcKZTxIOryXcWTAfNyYwRQIpVXZ8auYHqKKXjUXKTpa7IPUUbwKbz0sJ2ZEY3UMw2+8ycgz2jgNW/koswHNp/Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nHG8zW/M; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1715872841; c=relaxed/simple;
+	bh=OrCRas2hNJaNPQ35bTqgoMcTF8XIvoPlwmK4bk8Nlew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BhbINBHL6KHG3B0gLfab2mtmh2Lg1/wZbV1/YTeAzwNiXS9yCUgLqdr/HQwNTfxrB75f7eP+r7lovq5EZfsU7eftvH1N1tx+iR1uNr7HdXwOAl4wRpQ4h8i6uL0fUKdGuV/r+sNHeaTbnBov1fD/mVfLDlA30uezkYZyN+zSClQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RSJihCiy; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nHG8zW/M"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44GFCSW0020411;
-	Thu, 16 May 2024 15:20:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=LkJSlaKBYhwSXIhNOTPJMexZEkDw/rimaHPLL4+H2E0=;
- b=nHG8zW/MJNGWONn4GaC9NfRjnkkp7EMEH9gPfT1J8WTPzqDy2XxkDYrijm5AyOKcX7/W
- 3QpxrRDBcKsveafoCeboUf+rmqaE/KxaEK+wA0bqKlQSC36JIS2hal2D7+EzGcbPKIsk
- chhJ6zZR2DFnQwIDvI44+JhU0fqLBSStzPIe/ygru5bSHx6mGgTCfMLryehPLu9D8vPP
- fzdkPpfJXuRiWDhKEoRBqONcFJFm4YYD8/FvB3NpmIYFsaqrRkcJDev8y12CmAoJtg4O
- QHr7ITLMg8d40yaVbNFY3zjrbQuHCAByN6J4vRvYsBkDtj2OsUYgMCoBG4+VRvj1/s9t uw== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y5mjy80h2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 15:20:05 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44GDdJpZ018828;
-	Thu, 16 May 2024 15:20:04 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y2k0ttv39-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 15:20:04 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44GFK1PW13894384
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 May 2024 15:20:03 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3269F58070;
-	Thu, 16 May 2024 15:20:01 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E59A15806E;
-	Thu, 16 May 2024 15:20:00 +0000 (GMT)
-Received: from ltcden12-lp3.aus.stglabs.ibm.com (unknown [9.40.195.53])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 16 May 2024 15:20:00 +0000 (GMT)
-From: Danny Tsen <dtsen@linux.ibm.com>
-To: linux-crypto@vger.kernel.org
-Cc: herbert@gondor.apana.org.au, leitao@debian.org, nayna@linux.ibm.com,
-        appro@cryptogams.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        ltcgcw@linux.vnet.ibm.com, dtsen@us.ibm.com,
-        Danny Tsen <dtsen@linux.ibm.com>
-Subject: [PATCH v2 1/3] crypto: X25519 low-level primitives for ppc64le.
-Date: Thu, 16 May 2024 11:19:55 -0400
-Message-Id: <20240516151957.2215-2-dtsen@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240516151957.2215-1-dtsen@linux.ibm.com>
-References: <20240516151957.2215-1-dtsen@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _5MqNfxYmmvl__I8yb-AjbjCARzOgVdU
-X-Proofpoint-ORIG-GUID: _5MqNfxYmmvl__I8yb-AjbjCARzOgVdU
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSJihCiy"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3c9995562fcso183442b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715872839; x=1716477639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xXJ7XR1WdxF2Wo/8p4xyU1APfl6J/Kw30C3weMxzlPI=;
+        b=RSJihCiybQyTvAkFO7OGq0NvabXmp7sVVnFYC0jFzzXf0wlK4r3mLap9smCAjbDQu2
+         vu264gVgp3wgoEi2lalq+MuKRljwLLVt09krUF7wvqMPGSGwtgDK7vP9S3Ki1N1CEfeW
+         64xV5FnjCYzVFyo6i+aYW9ynWVwoDnudOYVT1lPcguhibkTPjA4Ua/YieWS7mh69RA0K
+         c2jdbhBnJm9LfSnNcohOY2pEflSpBx81+Ar4MTsP7IPCR/XqrnhwY8Xa6ZTwBEY16/DG
+         gsLFcD3ahRrnIIoq5lwZlAZpcpGvztKzhEk8DveDt4UgRnXp8oVz2m1dLGw2uWASfwac
+         rvDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715872839; x=1716477639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xXJ7XR1WdxF2Wo/8p4xyU1APfl6J/Kw30C3weMxzlPI=;
+        b=wO7eMw7nX/qsqZT7ngRE9qlIc9RLflf7A9Bz8xdZQ/Lc9XI396j4vtiA1JwHV+Cbpy
+         VNXi5QJeZ/lcVFMKUOEp5xv9ojyy1bsVAZw+r2GAoc3zrW3EgayvaWjDUslK/Uheflrb
+         ECs25+mXhygVj6nrbU70hBRpWIWfdAFhWV+nOzE53IGQGPqqe39VcxUDq99kJI40xJXl
+         cGzwjPnruyIi/s8wmDXwcCXl8Y1qUGt9WSD22DGDZ8wjaow+grm1Ou/ek+ZlDBjAht2A
+         POEO8nVztcrjST1Y8I8A0CU5ikHZuduSMZaOeN29RHjE/yz0NU68wilKqfEHLvBXf42l
+         52QQ==
+X-Gm-Message-State: AOJu0Yz6yxAeJkmSnDE84zZOTnV+dnSLkxXHqWc1agTZIqci0euElU//
+	bgHVuUN/leq7aCOOmInVLkFaQWk99gMl+E8dKeVeSXDmTBaVAuhlOs774J8EoIGTdB2FICBDhzq
+	aKOTDfxLYX1HaCoOhJ35oiXuZPFLvAQ==
+X-Google-Smtp-Source: AGHT+IGyJC5AcCK5WQiHwTGi65KujR1xLgGkxjvhHmX85VosWDr+NS+LCw0ZYlL+aI4oVtpXUnFBES+nWnLwrEqBbao=
+X-Received: by 2002:a05:6808:60a:b0:3c9:6c1e:262f with SMTP id
+ 5614622812f47-3c99706cafemr18023700b6e.33.1715872839221; Thu, 16 May 2024
+ 08:20:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxlogscore=942 malwarescore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405160108
+References: <20240516141418.25345-1-jim.cromie@gmail.com> <4a77b3a77db293acba504914af220d8b8d644616.camel@perches.com>
+In-Reply-To: <4a77b3a77db293acba504914af220d8b8d644616.camel@perches.com>
+From: jim.cromie@gmail.com
+Date: Thu, 16 May 2024 09:20:12 -0600
+Message-ID: <CAJfuBxxEgCT+4SVAxoWb1xvAqhgij489=z+FH9iuXwYksm-RWA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] checkpatch: allow multi-statement declarative macros.
+To: Joe Perches <joe@perches.com>
+Cc: linux-kernel@vger.kernel.org, akpm@linuxfoundation.org, 
+	Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use the perl output of x25519-ppc64.pl from CRYPTOGAMs
-(see https://github.com/dot-asm/cryptogams/) and added four
-supporting functions, x25519_fe51_sqr_times, x25519_fe51_frombytes,
-x25519_fe51_tobytes and x25519_cswap.
+On Thu, May 16, 2024 at 8:43=E2=80=AFAM Joe Perches <joe@perches.com> wrote=
+:
+>
+> On Thu, 2024-05-16 at 08:14 -0600, Jim Cromie wrote:
+> > Declarative macros, which declare/define storage (at either file or
+> > function scope), cannot be wrapped in do-while statements.  So
+> > checkpatch advice is incorrect here.
+> >
+> > The code has an $exceptions regex which allows multiple statements
+> > based on the macro name, etc; /DECLARE_PER_CPU|DEFINE_PER_CPU/ are
+> > currently accepted, widen those to accept /DECLARE|DEFINE/.
+>
+> It seems this exempts too large a number of these macros
+>
+> $ git grep -P '^\s*\#\s*define\s+\w*(?:DECLARE|DEFINE)\w*'|wc -l
+> 5075
+>
 
-Signed-off-by: Danny Tsen <dtsen@linux.ibm.com>
----
- arch/powerpc/crypto/curve25519-ppc64le_asm.S | 671 +++++++++++++++++++
- 1 file changed, 671 insertions(+)
- create mode 100644 arch/powerpc/crypto/curve25519-ppc64le_asm.S
+wow, thats more than Id have thought.
 
-diff --git a/arch/powerpc/crypto/curve25519-ppc64le_asm.S b/arch/powerpc/crypto/curve25519-ppc64le_asm.S
-new file mode 100644
-index 000000000000..06c1febe24b9
---- /dev/null
-+++ b/arch/powerpc/crypto/curve25519-ppc64le_asm.S
-@@ -0,0 +1,671 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#
-+# This code is taken from CRYPTOGAMs[1] and is included here using the option
-+# in the license to distribute the code under the GPL. Therefore this program
-+# is free software; you can redistribute it and/or modify it under the terms of
-+# the GNU General Public License version 2 as published by the Free Software
-+# Foundation.
-+#
-+# [1] https://github.com/dot-asm/cryptogams/
-+
-+# Copyright (c) 2006-2017, CRYPTOGAMS by <appro@openssl.org>
-+# All rights reserved.
-+#
-+# Redistribution and use in source and binary forms, with or without
-+# modification, are permitted provided that the following conditions
-+# are met:
-+#
-+#       * Redistributions of source code must retain copyright notices,
-+#         this list of conditions and the following disclaimer.
-+#
-+#       * Redistributions in binary form must reproduce the above
-+#         copyright notice, this list of conditions and the following
-+#         disclaimer in the documentation and/or other materials
-+#         provided with the distribution.
-+#
-+#       * Neither the name of the CRYPTOGAMS nor the names of its
-+#         copyright holder and contributors may be used to endorse or
-+#         promote products derived from this software without specific
-+#         prior written permission.
-+#
-+# ALTERNATIVELY, provided that this notice is retained in full, this
-+# product may be distributed under the terms of the GNU General Public
-+# License (GPL), in which case the provisions of the GPL apply INSTEAD OF
-+# those given above.
-+#
-+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS
-+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+
-+# ====================================================================
-+# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
-+# project. The module is, however, dual licensed under OpenSSL and
-+# CRYPTOGAMS licenses depending on where you obtain it. For further
-+# details see https://www.openssl.org/~appro/cryptogams/.
-+# ====================================================================
-+
-+#
-+# ====================================================================
-+# Written and Modified by Danny Tsen <dtsen@us.ibm.com>
-+# - Added x25519_fe51_sqr_times, x25519_fe51_frombytes, x25519_fe51_tobytes
-+#   and x25519_cswap
-+#
-+# Copyright 2024- IBM Corp.
-+#
-+# X25519 lower-level primitives for PPC64.
-+#
-+
-+#include <linux/linkage.h>
-+
-+.text
-+
-+.align	5
-+SYM_FUNC_START(x25519_fe51_mul)
-+
-+	stdu	1,-144(1)
-+	std	21,56(1)
-+	std	22,64(1)
-+	std	23,72(1)
-+	std	24,80(1)
-+	std	25,88(1)
-+	std	26,96(1)
-+	std	27,104(1)
-+	std	28,112(1)
-+	std	29,120(1)
-+	std	30,128(1)
-+	std	31,136(1)
-+
-+	ld	6,0(5)
-+	ld	7,0(4)
-+	ld	8,8(4)
-+	ld	9,16(4)
-+	ld	10,24(4)
-+	ld	11,32(4)
-+
-+	mulld	22,7,6
-+	mulhdu	23,7,6
-+
-+	mulld	24,8,6
-+	mulhdu	25,8,6
-+
-+	mulld	30,11,6
-+	mulhdu	31,11,6
-+	ld	4,8(5)
-+	mulli	11,11,19
-+
-+	mulld	26,9,6
-+	mulhdu	27,9,6
-+
-+	mulld	28,10,6
-+	mulhdu	29,10,6
-+	mulld	12,11,4
-+	mulhdu	21,11,4
-+	addc	22,22,12
-+	adde	23,23,21
-+
-+	mulld	12,7,4
-+	mulhdu	21,7,4
-+	addc	24,24,12
-+	adde	25,25,21
-+
-+	mulld	12,10,4
-+	mulhdu	21,10,4
-+	ld	6,16(5)
-+	mulli	10,10,19
-+	addc	30,30,12
-+	adde	31,31,21
-+
-+	mulld	12,8,4
-+	mulhdu	21,8,4
-+	addc	26,26,12
-+	adde	27,27,21
-+
-+	mulld	12,9,4
-+	mulhdu	21,9,4
-+	addc	28,28,12
-+	adde	29,29,21
-+	mulld	12,10,6
-+	mulhdu	21,10,6
-+	addc	22,22,12
-+	adde	23,23,21
-+
-+	mulld	12,11,6
-+	mulhdu	21,11,6
-+	addc	24,24,12
-+	adde	25,25,21
-+
-+	mulld	12,9,6
-+	mulhdu	21,9,6
-+	ld	4,24(5)
-+	mulli	9,9,19
-+	addc	30,30,12
-+	adde	31,31,21
-+
-+	mulld	12,7,6
-+	mulhdu	21,7,6
-+	addc	26,26,12
-+	adde	27,27,21
-+
-+	mulld	12,8,6
-+	mulhdu	21,8,6
-+	addc	28,28,12
-+	adde	29,29,21
-+	mulld	12,9,4
-+	mulhdu	21,9,4
-+	addc	22,22,12
-+	adde	23,23,21
-+
-+	mulld	12,10,4
-+	mulhdu	21,10,4
-+	addc	24,24,12
-+	adde	25,25,21
-+
-+	mulld	12,8,4
-+	mulhdu	21,8,4
-+	ld	6,32(5)
-+	mulli	8,8,19
-+	addc	30,30,12
-+	adde	31,31,21
-+
-+	mulld	12,11,4
-+	mulhdu	21,11,4
-+	addc	26,26,12
-+	adde	27,27,21
-+
-+	mulld	12,7,4
-+	mulhdu	21,7,4
-+	addc	28,28,12
-+	adde	29,29,21
-+	mulld	12,8,6
-+	mulhdu	21,8,6
-+	addc	22,22,12
-+	adde	23,23,21
-+
-+	mulld	12,9,6
-+	mulhdu	21,9,6
-+	addc	24,24,12
-+	adde	25,25,21
-+
-+	mulld	12,10,6
-+	mulhdu	21,10,6
-+	addc	26,26,12
-+	adde	27,27,21
-+
-+	mulld	12,11,6
-+	mulhdu	21,11,6
-+	addc	28,28,12
-+	adde	29,29,21
-+
-+	mulld	12,7,6
-+	mulhdu	21,7,6
-+	addc	30,30,12
-+	adde	31,31,21
-+
-+.Lfe51_reduce:
-+	li	0,-1
-+	srdi	0,0,13
-+
-+	srdi	12,26,51
-+	and	9,26,0
-+	insrdi	12,27,51,0
-+	srdi	21,22,51
-+	and	7,22,0
-+	insrdi	21,23,51,0
-+	addc	28,28,12
-+	addze	29,29
-+	addc	24,24,21
-+	addze	25,25
-+
-+	srdi	12,28,51
-+	and	10,28,0
-+	insrdi	12,29,51,0
-+	srdi	21,24,51
-+	and	8,24,0
-+	insrdi	21,25,51,0
-+	addc	30,30,12
-+	addze	31,31
-+	add	9,9,21
-+
-+	srdi	12,30,51
-+	and	11,30,0
-+	insrdi	12,31,51,0
-+	mulli	12,12,19
-+
-+	add	7,7,12
-+
-+	srdi	21,9,51
-+	and	9,9,0
-+	add	10,10,21
-+
-+	srdi	12,7,51
-+	and	7,7,0
-+	add	8,8,12
-+
-+	std	9,16(3)
-+	std	10,24(3)
-+	std	11,32(3)
-+	std	7,0(3)
-+	std	8,8(3)
-+
-+	ld	21,56(1)
-+	ld	22,64(1)
-+	ld	23,72(1)
-+	ld	24,80(1)
-+	ld	25,88(1)
-+	ld	26,96(1)
-+	ld	27,104(1)
-+	ld	28,112(1)
-+	ld	29,120(1)
-+	ld	30,128(1)
-+	ld	31,136(1)
-+	addi	1,1,144
-+	blr
-+SYM_FUNC_END(x25519_fe51_mul)
-+
-+.align	5
-+SYM_FUNC_START(x25519_fe51_sqr)
-+
-+	stdu	1,-144(1)
-+	std	21,56(1)
-+	std	22,64(1)
-+	std	23,72(1)
-+	std	24,80(1)
-+	std	25,88(1)
-+	std	26,96(1)
-+	std	27,104(1)
-+	std	28,112(1)
-+	std	29,120(1)
-+	std	30,128(1)
-+	std	31,136(1)
-+
-+	ld	7,0(4)
-+	ld	8,8(4)
-+	ld	9,16(4)
-+	ld	10,24(4)
-+	ld	11,32(4)
-+
-+	add	6,7,7
-+	mulli	21,11,19
-+
-+	mulld	22,7,7
-+	mulhdu	23,7,7
-+	mulld	24,8,6
-+	mulhdu	25,8,6
-+	mulld	26,9,6
-+	mulhdu	27,9,6
-+	mulld	28,10,6
-+	mulhdu	29,10,6
-+	mulld	30,11,6
-+	mulhdu	31,11,6
-+	add	6,8,8
-+	mulld	12,11,21
-+	mulhdu	11,11,21
-+	addc	28,28,12
-+	adde	29,29,11
-+
-+	mulli	5,10,19
-+
-+	mulld	12,8,8
-+	mulhdu	11,8,8
-+	addc	26,26,12
-+	adde	27,27,11
-+	mulld	12,9,6
-+	mulhdu	11,9,6
-+	addc	28,28,12
-+	adde	29,29,11
-+	mulld	12,10,6
-+	mulhdu	11,10,6
-+	addc	30,30,12
-+	adde	31,31,11
-+	mulld	12,21,6
-+	mulhdu	11,21,6
-+	add	6,10,10
-+	addc	22,22,12
-+	adde	23,23,11
-+	mulld	12,10,5
-+	mulhdu	10,10,5
-+	addc	24,24,12
-+	adde	25,25,10
-+	mulld	12,6,21
-+	mulhdu	10,6,21
-+	add	6,9,9
-+	addc	26,26,12
-+	adde	27,27,10
-+
-+	mulld	12,9,9
-+	mulhdu	10,9,9
-+	addc	30,30,12
-+	adde	31,31,10
-+	mulld	12,5,6
-+	mulhdu	10,5,6
-+	addc	22,22,12
-+	adde	23,23,10
-+	mulld	12,21,6
-+	mulhdu	10,21,6
-+	addc	24,24,12
-+	adde	25,25,10
-+
-+	b	.Lfe51_reduce
-+SYM_FUNC_END(x25519_fe51_sqr)
-+
-+.align	5
-+SYM_FUNC_START(x25519_fe51_mul121666)
-+
-+	stdu	1,-144(1)
-+	std	21,56(1)
-+	std	22,64(1)
-+	std	23,72(1)
-+	std	24,80(1)
-+	std	25,88(1)
-+	std	26,96(1)
-+	std	27,104(1)
-+	std	28,112(1)
-+	std	29,120(1)
-+	std	30,128(1)
-+	std	31,136(1)
-+
-+	lis	6,1
-+	ori	6,6,56130
-+	ld	7,0(4)
-+	ld	8,8(4)
-+	ld	9,16(4)
-+	ld	10,24(4)
-+	ld	11,32(4)
-+
-+	mulld	22,7,6
-+	mulhdu	23,7,6
-+	mulld	24,8,6
-+	mulhdu	25,8,6
-+	mulld	26,9,6
-+	mulhdu	27,9,6
-+	mulld	28,10,6
-+	mulhdu	29,10,6
-+	mulld	30,11,6
-+	mulhdu	31,11,6
-+
-+	b	.Lfe51_reduce
-+SYM_FUNC_END(x25519_fe51_mul121666)
-+
-+.align	5
-+SYM_FUNC_START(x25519_fe51_sqr_times)
-+
-+	stdu	1,-144(1)
-+	std	21,56(1)
-+	std	22,64(1)
-+	std	23,72(1)
-+	std	24,80(1)
-+	std	25,88(1)
-+	std	26,96(1)
-+	std	27,104(1)
-+	std	28,112(1)
-+	std	29,120(1)
-+	std	30,128(1)
-+	std	31,136(1)
-+
-+	ld	7,0(4)
-+	ld	8,8(4)
-+	ld	9,16(4)
-+	ld	10,24(4)
-+	ld	11,32(4)
-+
-+	mtctr	5
-+
-+.Lsqr_times_loop:
-+	add	6,7,7
-+	mulli	21,11,19
-+
-+	mulld	22,7,7
-+	mulhdu	23,7,7
-+	mulld	24,8,6
-+	mulhdu	25,8,6
-+	mulld	26,9,6
-+	mulhdu	27,9,6
-+	mulld	28,10,6
-+	mulhdu	29,10,6
-+	mulld	30,11,6
-+	mulhdu	31,11,6
-+	add	6,8,8
-+	mulld	12,11,21
-+	mulhdu	11,11,21
-+	addc	28,28,12
-+	adde	29,29,11
-+
-+	mulli	5,10,19
-+
-+	mulld	12,8,8
-+	mulhdu	11,8,8
-+	addc	26,26,12
-+	adde	27,27,11
-+	mulld	12,9,6
-+	mulhdu	11,9,6
-+	addc	28,28,12
-+	adde	29,29,11
-+	mulld	12,10,6
-+	mulhdu	11,10,6
-+	addc	30,30,12
-+	adde	31,31,11
-+	mulld	12,21,6
-+	mulhdu	11,21,6
-+	add	6,10,10
-+	addc	22,22,12
-+	adde	23,23,11
-+	mulld	12,10,5
-+	mulhdu	10,10,5
-+	addc	24,24,12
-+	adde	25,25,10
-+	mulld	12,6,21
-+	mulhdu	10,6,21
-+	add	6,9,9
-+	addc	26,26,12
-+	adde	27,27,10
-+
-+	mulld	12,9,9
-+	mulhdu	10,9,9
-+	addc	30,30,12
-+	adde	31,31,10
-+	mulld	12,5,6
-+	mulhdu	10,5,6
-+	addc	22,22,12
-+	adde	23,23,10
-+	mulld	12,21,6
-+	mulhdu	10,21,6
-+	addc	24,24,12
-+	adde	25,25,10
-+
-+	# fe51_reduce
-+	li	0,-1
-+	srdi	0,0,13
-+
-+	srdi	12,26,51
-+	and	9,26,0
-+	insrdi	12,27,51,0
-+	srdi	21,22,51
-+	and	7,22,0
-+	insrdi	21,23,51,0
-+	addc	28,28,12
-+	addze	29,29
-+	addc	24,24,21
-+	addze	25,25
-+
-+	srdi	12,28,51
-+	and	10,28,0
-+	insrdi	12,29,51,0
-+	srdi	21,24,51
-+	and	8,24,0
-+	insrdi	21,25,51,0
-+	addc	30,30,12
-+	addze	31,31
-+	add	9,9,21
-+
-+	srdi	12,30,51
-+	and	11,30,0
-+	insrdi	12,31,51,0
-+	mulli	12,12,19
-+
-+	add	7,7,12
-+
-+	srdi	21,9,51
-+	and	9,9,0
-+	add	10,10,21
-+
-+	srdi	12,7,51
-+	and	7,7,0
-+	add	8,8,12
-+
-+	bdnz	.Lsqr_times_loop
-+
-+	std	9,16(3)
-+	std	10,24(3)
-+	std	11,32(3)
-+	std	7,0(3)
-+	std	8,8(3)
-+
-+	ld	21,56(1)
-+	ld	22,64(1)
-+	ld	23,72(1)
-+	ld	24,80(1)
-+	ld	25,88(1)
-+	ld	26,96(1)
-+	ld	27,104(1)
-+	ld	28,112(1)
-+	ld	29,120(1)
-+	ld	30,128(1)
-+	ld	31,136(1)
-+	addi	1,1,144
-+	blr
-+SYM_FUNC_END(x25519_fe51_sqr_times)
-+
-+.align	5
-+SYM_FUNC_START(x25519_fe51_frombytes)
-+
-+	li	12, -1
-+	srdi	12, 12, 13	# 0x7ffffffffffff
-+
-+	ld	5, 0(4)
-+	ld	6, 8(4)
-+	ld	7, 16(4)
-+	ld	8, 24(4)
-+
-+	srdi	10, 5, 51
-+	and	5, 5, 12	# h0
-+
-+	sldi	11, 6, 13
-+	or	11, 10, 11	# h1t
-+	srdi	10, 6, 38
-+	and	6, 11, 12	# h1
-+
-+	sldi	11, 7, 26
-+	or	10, 10, 11	# h2t
-+
-+	srdi	11, 7, 25
-+	and	7, 10, 12	# h2
-+	sldi	10, 8, 39
-+	or	11, 11, 10	# h3t
-+
-+	srdi	9, 8, 12
-+	and	8, 11, 12	# h3
-+	and	9, 9, 12	# h4
-+
-+	std	5, 0(3)
-+	std	6, 8(3)
-+	std	7, 16(3)
-+	std	8, 24(3)
-+	std	9, 32(3)
-+
-+	blr
-+SYM_FUNC_END(x25519_fe51_frombytes)
-+
-+.align	5
-+SYM_FUNC_START(x25519_fe51_tobytes)
-+
-+	ld	5, 0(4)
-+	ld	6, 8(4)
-+	ld	7, 16(4)
-+	ld	8, 24(4)
-+	ld	9, 32(4)
-+
-+	li	12, -1
-+	srdi	12, 12, 13	# 0x7ffffffffffff
-+
-+	# Full reducuction
-+	addi	10, 5, 19
-+	srdi	10, 10, 51
-+	add	10, 10, 6
-+	srdi	10, 10, 51
-+	add	10, 10, 7
-+	srdi	10, 10, 51
-+	add	10, 10, 8
-+	srdi	10, 10, 51
-+	add	10, 10, 9
-+	srdi	10, 10, 51
-+
-+	mulli	10, 10, 19
-+	add	5, 5, 10
-+	srdi	11, 5, 51
-+	add	6, 6, 11
-+	srdi	11, 6, 51
-+	add	7, 7, 11
-+	srdi	11, 7, 51
-+	add	8, 8, 11
-+	srdi	11, 8, 51
-+	add	9, 9, 11
-+
-+	and	5, 5, 12
-+	and	6, 6, 12
-+	and	7, 7, 12
-+	and	8, 8, 12
-+	and	9, 9, 12
-+
-+	sldi	10, 6, 51
-+	or	5, 5, 10	# s0
-+
-+	srdi	11, 6, 13
-+	sldi	10, 7, 38
-+	or	6, 11, 10	# s1
-+
-+	srdi	11, 7, 26
-+	sldi	10, 8, 25
-+	or	7, 11, 10	# s2
-+
-+	srdi	11, 8, 39
-+	sldi	10, 9, 12
-+	or	8, 11, 10	# s4
-+
-+	std	5, 0(3)
-+	std	6, 8(3)
-+	std	7, 16(3)
-+	std	8, 24(3)
-+
-+	blr
-+SYM_FUNC_END(x25519_fe51_tobytes)
-+
-+.align	5
-+SYM_FUNC_START(x25519_cswap)
-+
-+	li	7, 5
-+	neg	6, 5
-+	mtctr	7
-+
-+.Lswap_loop:
-+	ld	8, 0(3)
-+	ld	9, 0(4)
-+	xor	10, 8, 9
-+	and	10, 10, 6
-+	xor	11, 8, 10
-+	xor	12, 9, 10
-+	std	11, 0(3)
-+	addi	3, 3, 8
-+	std	12, 0(4)
-+	addi	4, 4, 8
-+	bdnz	.Lswap_loop
-+
-+	blr
-+SYM_FUNC_END(x25519_cswap)
--- 
-2.31.1
+> How about somehow limiting these exemptions more strictly?
 
+agreed.  I'll just add my 1 exceptional macro name.
+resending shortly.
