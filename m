@@ -1,100 +1,128 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8375E143754
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15375143754;
+	Thu, 16 May 2024 10:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715854075; cv=none; b=X2KKE0iAqy5uhcH9SpqpSSZijlKl4Dp8Ro5N3mpZAYc7pdKwxACSRhpNMlMxuZ7svr+/DFnB2iaZY2V2y44xEvTJ0EtZcIOiprNch9lJck+WFVgOcrOOhoj1+Wm1yezfrtZ/bTdbmvboAka1fXYQiZQcJYxN27nlXUa3PozNYAs=
+	t=1715854157; cv=none; b=R6MDBadY9ZpcyCkALOoookezeVc4Oqhmx0YhKPFCTqnsrW/4v3sSsBYVrvc4p07zonvYstLdOHsJ6CK+SwWerBS+a6JQnSFcFEnj2Ltvd7yhJTBUOMCuGFPwpwHc2N0NV+I9uxQlEI/rV0XoJYbxgW7zu7jfZpgoxPA9saT0SeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715854075; c=relaxed/simple;
-	bh=JNUgkW/lXjvm5PrcPhIAUFxjKFNX43vl7Pm5LKmpe24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Uh0HrGIvN8kGuLAYHXGqGdSZprnm2hAzP7QOVqZP5t8z06uDQt3JcQ5Kue7eadnipot8dToEaid697fDCslmvtrjAgqUi2UtYCy+cbF+zFyF9btln/Vd4CDNNq/amVpmQf7UBKl1dBX+9FIygQjO7VxrixcbVvNVd8mOD2xosTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XMB0JyKg; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715854157; c=relaxed/simple;
+	bh=F3slW8z/pG6jXGw2Nj66+rGuDpnvI8DlslsaiUUIUqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f8d2nBYTeKKwuvpGHyGE977/F0gP9Hz/KUs6FHDboVTfi+n5pxZvCAZ8w4EeIX4z4RgCkTlm7FdbVIS0cQqmOHX9Vd4Xrb7rJcIBt19v1pb9r6M791B6dlA7BCZBb1DMAzGg4Si5CgusAmR+6YxHGYRs5CRVuG7IQ4cDVx+8/XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8Sfsz2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XMB0JyKg"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44GA7P2w011742;
-	Thu, 16 May 2024 05:07:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715854045;
-	bh=QvlmKAAC50R3kqsGcxW7lyLx6cq4f8QASweZUfM85mE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=XMB0JyKgrypEB93WkESh50SvnhA0rJuC1tACjNCNhsr1C5bZ2cJmeaoVllt7mu703
-	 iHpuE2MMMHxBAAaIuEN178cKv6GzJ4WHFQe4EqNIAkYwW3jAZhRBIDXwjtwBa5uiLm
-	 c/Te1VW/9ekQy//h0Klqw0YjD31PYo5K6Wlj1OSQ=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44GA7Ple016486
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 16 May 2024 05:07:25 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 16
- May 2024 05:07:25 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 16 May 2024 05:07:25 -0500
-Received: from [10.24.68.216] (a0498981-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.216])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44GA7K2b114401;
-	Thu, 16 May 2024 05:07:21 -0500
-Message-ID: <110bdc3f-6605-42b1-92f1-e4773abdd310@ti.com>
-Date: Thu, 16 May 2024 15:37:20 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8Sfsz2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E5A7C4AF0A;
+	Thu, 16 May 2024 10:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715854156;
+	bh=F3slW8z/pG6jXGw2Nj66+rGuDpnvI8DlslsaiUUIUqg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q8Sfsz2iYbXDPx2R+fGgQk/+AusJBcYPcrvEHLkMgHbWUXyKKzNHdfI+kS7qpp/u5
+	 /IK3MsA2GTohcksDV9eGLmHJwUWUZ1DAA8Cw7FCKQIl4+vOA3HaBxsdn7O/ZmtDU3p
+	 6t0YrdFpcAjESfaGmY1SHQ1WEGnBlnnn2QQXlT697pn/QRpeZn9LDmJgBLCzUWhbN8
+	 IgnqsJE85stF+gbph7siYZTstzl7a43YHw+J/YlkLPSFk3UzezZzgo6kaHMYKWgZC3
+	 ZcmEVYFpj+/4zANNCohbsDeII+Vq0nCBX627a/xjaeYc/Cxs4uMg4W/xV5RzCqAtzY
+	 J87zLWi7KJ75Q==
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c99682a7cfso2195b6e.2;
+        Thu, 16 May 2024 03:09:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVnCZAL9A0kC4vMA1av0Q198mGh9j4OJQODtf24kg7bqfWJN8hKxkDE4zVsNAe/osKjLrmzBv4jEjDOYP4JOkwhENA1q4inEWj0C+pyacx+Cq540dcOtYSxSKay3Y1mQqO4yO0nj1jOXA==
+X-Gm-Message-State: AOJu0YwUHmhYQNp7U6GgG4pZlZVFmPzLH3vTQ954UCvMAY3nsS81zNBr
+	24g47tukwGuL/XsZbdI4CaV/oLK59fhNSVaVaFO4u57/eauep3IwjsBaj+kTys0giy+5XmQURt4
+	3DjR5oK+ldaiHbKleLj63g7yjgQ4=
+X-Google-Smtp-Source: AGHT+IHruOoabur5gc7PsQr1i3keJcLfUy3nS6jhBV1muFUchmQW5j7szKL2lb7hjI6a/JCA321moEBxskcKZhyST/g=
+X-Received: by 2002:a05:6870:96a5:b0:22e:6e96:ed41 with SMTP id
+ 586e51a60fabf-24172a337f1mr23246965fac.2.1715854155779; Thu, 16 May 2024
+ 03:09:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Modify number of usable 8250 uart ports
-To: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <u-kumar1@ti.com>, <nfraprado@collabora.com>, <m.szyprowski@samsung.com>,
-        <arnd@arndb.de>, <biju.das.jz@bp.renesas.com>,
-        <neil.armstrong@linaro.org>, <shawnguo@kernel.org>,
-        <konrad.dybcio@linaro.org>, <geert+renesas@glider.be>,
-        <krzysztof.kozlowski@linaro.org>, <quic_bjorande@quicinc.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>,
-        Bhavya Kapoor <b-kapoor@ti.com>
-References: <20240516095733.276807-1-b-kapoor@ti.com>
-Content-Language: en-US
-From: Bhavya Kapoor <b-kapoor@ti.com>
-In-Reply-To: <20240516095733.276807-1-b-kapoor@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <12437901.O9o76ZdvQC@kreacher> <5161bd95-d51e-49cc-bcbd-523fbb747e4b@redhat.com>
+ <CAJZ5v0gf-oLcjT8dxnpjAyVfpUep5ST2mHDJy2dySBGCJwjMxg@mail.gmail.com> <b53b4fe4-e3b7-4939-a8ea-9eb55f0bece6@redhat.com>
+In-Reply-To: <b53b4fe4-e3b7-4939-a8ea-9eb55f0bece6@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 16 May 2024 12:09:04 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i+ejMyj0j7RvVY7+g6eU8bQ9QLG=08fm78i9Ui1fEiVA@mail.gmail.com>
+Message-ID: <CAJZ5v0i+ejMyj0j7RvVY7+g6eU8bQ9QLG=08fm78i9Ui1fEiVA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] ACPI: EC: Install EC address space handler at the
+ namespace root
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <w_armin@gmx.de>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-On 16/05/24 3:27 pm, Bhavya Kapoor wrote:
-> Jacinto SoCs have a total of 12 serial uart ports. But only 8 out
-> of these 12 uarts can be used at a time.
+On Thu, May 16, 2024 at 11:50=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
+> wrote:
 >
-> Thus, Modify maximum number of 8250 serial uart ports which can be
-> supported as well as modify how many 8250 serial uart ports which
-> we can use in the runtime to 12 for all the SoCs.
+> Hi,
 >
-> Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-> ---
-
-rebased to next-20240516
-
->   arch/arm64/configs/defconfig | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> On 5/16/24 10:37 AM, Rafael J. Wysocki wrote:
+> > On Thu, May 16, 2024 at 10:35=E2=80=AFAM Hans de Goede <hdegoede@redhat=
+.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 5/15/24 9:39 PM, Rafael J. Wysocki wrote:
+> >>> Hi Everyone,
+> >>>
+> >>> This is an update of
+> >>>
+> >>> https://lore.kernel.org/linux-acpi/5787281.DvuYhMxLoT@kreacher/
+> >>>
+> >>> which was a follow up for the discussion in:
+> >>>
+> >>> https://lore.kernel.org/linux-acpi/CAJZ5v0hiXdv08PRcop7oSYqgr_g5rwzRT=
+j7HgdNCCGjXeV44zA@mail.gmail.com/T/#t
+> >>>
+> >>> Patch [1/2] has been updated to avoid possible issues related to
+> >>> systems with defective platform firmware and patch [2/2] is a resend
+> >>> with a couple of tags added.
+> >>
+> >> Thanks, the series looks good to me:
+> >>
+> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >>
+> >> for the series.
+> >>
+> >> I assume you are going to send this in as a fix for 6.10 ?
+> >
+> > Yes, I am.
+> >
+> >> In that case feel free to merge both patches through the
+> >> linux-pm tree.
+> >
+> > Thank you!
 >
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 57a9abe78ee4..c693736909bc 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -454,7 +454,8 @@ CONFIG_SERIO_AMBAKMI=y
->   CONFIG_LEGACY_PTY_COUNT=16
->   CONFIG_SERIAL_8250=y
->   CONFIG_SERIAL_8250_CONSOLE=y
-> -CONFIG_SERIAL_8250_NR_UARTS=8
-> +CONFIG_SERIAL_8250_NR_UARTS=12
-> +CONFIG_SERIAL_8250_RUNTIME_UARTS=12
->   CONFIG_SERIAL_8250_EXTENDED=y
->   CONFIG_SERIAL_8250_SHARE_IRQ=y
->   CONFIG_SERIAL_8250_BCM2835AUX=y
+> Hmm, I just realized that this:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x8=
+6.git/commit/?h=3Dfor-next&id=3Dc663b26972eae7d2a614f584c92a266fe9a2d44c
+>
+> Is part of the main pdx86 pull-request for 6.10 which I'm going to
+> send to Linus in the next 10 minutes or so. So that is going to
+> conflict with your 2/2.
+>
+> Options:
+>
+> a) You only send 1/2 upstream as a fix and I'll then send a rebased
+> 2/2 upstream as part of the first pdx86 pull-request.
+>
+> b) You merge the git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/plat=
+form-drivers-x86.git
+> platform-drivers-x86-v6.10-1 tag (which is the tag for the pull-request
+> I'm about to send to Linus) and rebase on top of that before sending
+> a pull-request for both to Linus.
+
+I would rather wait for Linus to merge your PR and merge my changes on
+top of his merge.
