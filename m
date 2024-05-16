@@ -1,54 +1,79 @@
-Received: from aer-iport-8.cisco.com (aer-iport-8.cisco.com [173.38.203.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7FD15820F;
-	Thu, 16 May 2024 19:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.38.203.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60412158D72;
+	Thu, 16 May 2024 19:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886464; cv=none; b=T/WqDmcfb4dDl3kYEzWlLM44M7Q/E4TGJ6uhq7nkLxy0ThEGfI7GLGknN2dkwsCxKhClyiK9qUV/H9nAOiuVbFeAzRRSw75CRiBsgIIWVJRMjfrPxJsdX50zp5PxbrCiFux9lUJ8qypugiSj6QLYkCpRZ27NOL5WacAVmXnMuoQ=
+	t=1715886467; cv=none; b=iyp6aSSdE6tqupwZD7mfE+MSUXMBwkt9DXvPeTID44CqXU6iKFklc+J26d9JuKT0XNgyVWYw+2rvM41qQwRI+KFF03A+vbbBDOrVF4xkPPeQdhDORiJG4DkM4KOn51p7gDEGvhFG+VuM1eyezzzFGembhZzvRRDbjnFEfSJD0ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715886464; c=relaxed/simple;
-	bh=MqQvAYPJnEbPgiMJ/KAsv+WELCKQHh977LECrhqpreU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MEgqz3MAsa8DW0thNqCsuVfyfroRMahZay7GBiLnZCGeaKbU0PpymPOtkLuk3m71Us0HxAA0lC5HWm/Sc17UYS59nG8HtAVHa6OIaXzWEE+WZ+zN72eDmIWVq0nU5O1rgQT02Z0FfUvu2ofKaZR6dAttqrklNwAz7etEXEaTVOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=Lqi5I+J7; arc=none smtp.client-ip=173.38.203.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Lqi5I+J7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=2431; q=dns/txt; s=iport;
-  t=1715886463; x=1717096063;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IsRVprSkTcedn+zbjClnxOQsSEIZcaVQUIwJQMEacFU=;
-  b=Lqi5I+J7p5BD3bJajeuIzqedcy7H3K15Zrb85zx96f4dTmh+tDeoi8qI
-   sJe2nXF1oH5jTqMz3Xji5Jj0S/FmJ5aQJlymHNNVAD/rc4eWCF9Nt7EzD
-   3/FZq5R/EV2nomvYvdbOMBr/3JM8ubZZtrueXo9enk05zrbaybczSNTNJ
-   Q=;
-X-CSE-ConnectionGUID: 3vlKbWuhRUSRVklW0FF6rQ==
-X-CSE-MsgGUID: e4J0BcmTTdyIH+jEv28DOg==
-X-IronPort-AV: E=Sophos;i="6.08,165,1712620800"; 
-   d="scan'208";a="9784124"
-Received: from aer-iport-nat.cisco.com (HELO aer-core-6.cisco.com) ([173.38.203.22])
-  by aer-iport-8.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 19:04:24 +0000
-Received: from localhost (ams3-vpn-dhcp4879.cisco.com [10.61.83.14])
-	(authenticated bits=0)
-	by aer-core-6.cisco.com (8.15.2/8.15.2) with ESMTPSA id 44GJ4OOw006188
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 16 May 2024 19:04:24 GMT
-From: Ariel Miculas <amiculas@cisco.com>
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tycho@tycho.pizza, brauner@kernel.org, viro@zeniv.linux.org.uk,
-        ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
-        shallyn@cisco.com, Ariel Miculas <amiculas@cisco.com>
-Subject: [RFC PATCH v3 19/22] Add borrow_mut implementation to a ForeignOwnable CString
-Date: Thu, 16 May 2024 22:03:42 +0300
-Message-Id: <20240516190345.957477-20-amiculas@cisco.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240516190345.957477-1-amiculas@cisco.com>
-References: <20240516190345.957477-1-amiculas@cisco.com>
+	s=arc-20240116; t=1715886467; c=relaxed/simple;
+	bh=EmFSx8/Ii7PDX25whTQOapn04D9/HEs4Zzlo9FTr/5A=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PnLvNplX5VozThf9gUVsy8UYK4Y8Gogo90Ytg1ExkR2w1k6Bi1ClpkIForkFtb/Rmi7FDlpsTReWrQIMI2P+AKwFA4tVFNWvcryQNjYVqLIlOxqcuV99nCKDTcJGo9snzjUF1/u1pOYYuRfce+HlcvESMELKQQwTcosSLEor6tU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42016c8daa7so33208275e9.2;
+        Thu, 16 May 2024 12:07:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715886464; x=1716491264;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=61LwWLE7vVj50HZOr0xZhY/e3UrTUHc9jD8In45+Uew=;
+        b=SCYCtO24VQHRUl/Z1D2vfoR3Xd+qjz7bCNLlux16gb++RFvygVgpMI/dSHhYRj+FJD
+         dRUAzao1z4cTAtubeZq2GWVjk/gaNenSU5HYu4K1odYoJ+qOHSF1HTT9Ilpyr7NKJUvD
+         R0Nm5VP5IneWoNr9j9J8hJRAm7tV081KPbKPgzek4XOLoIdM8tBGxGfH6uceulyQ214X
+         4KgSVuC405rUXDnt9INU6/1fPKqEH93hRrwloLM4ysOc9oCZ3xcqhlWCriFna7/HSvNy
+         tsY8yATMcVz5U0LV4J7rB91ekb3dmo8WGOW2YqDJ5j3TvPn79jaLZs5yqnXdAoifJ7OY
+         llGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSRlJM1mcBtnR15flDV1dr550aDIXdjJJht8t1jWr4WQydxnPl8ghzLmAJzvhzyF26HFeNXzOmpSF4a6yp7NKVInKIUfOAHsy3Zt3nId9oHPLL88vRBXFNzauxTisZMQ03EsUwFw==
+X-Gm-Message-State: AOJu0YyHryGzBM2baZXx6Bm1PPADyLJlx9pl2pQPM02sZlOTAf12M3zh
+	QaEza/Sxq2bFLWCHxrKGcFnxcQfEr1fAP8Nkrv9SG3pRHEL3MV+d
+X-Google-Smtp-Source: AGHT+IEBxb/kDHNUZLNkFrbcua9vIlbfeC4Qz918TjIq4cHJPBlssgEmoiIGckrGbwvB1Tfo4KE0bg==
+X-Received: by 2002:a05:600c:5487:b0:41b:851a:af43 with SMTP id 5b1f17b1804b1-41feaa38f9dmr133889165e9.11.1715886463488;
+        Thu, 16 May 2024 12:07:43 -0700 (PDT)
+Received: from costa-tp.redhat.com ([2a00:a040:1a3:c059:8b18:f13e:da9b:5a8e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9335sm275834155e9.29.2024.05.16.12.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 12:07:43 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: longman@redhat.com,
+	pauld@redhat.com,
+	juri.lelli@redhat.com,
+	prarit@redhat.com,
+	vschneid@redhat.com,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: [PATCH v1 1/7] sched/isolation: Add infrastructure to adjust affinity for dynamic CPU isolation
+Date: Thu, 16 May 2024 22:04:31 +0300
+Message-ID: <20240516190437.3545310-2-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240516190437.3545310-1-costa.shul@redhat.com>
+References: <20240516190437.3545310-1-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,67 +81,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Authenticated-User: amiculas@cisco.com
-X-Outbound-SMTP-Client: 10.61.83.14, ams3-vpn-dhcp4879.cisco.com
-X-Outbound-Node: aer-core-6.cisco.com
 
-Since the `borrow_mut` function was added to the ForeignOwnable trait,
-we need to implement it for each type that implements it.
+Introduce infrastructure function housekeeping_update() to change
+housekeeping_cpumask during runtime and adjust affinities of depended
+subsystems.
 
-Signed-off-by: Ariel Miculas <amiculas@cisco.com>
+Affinity adjustments of subsystems follow in subsequent patches.
+
+Parent patch:
+"sched/isolation: Exclude dynamically isolated CPUs from housekeeping masks"
+https://lore.kernel.org/lkml/20240229021414.508972-2-longman@redhat.com/
+
+Test example for cgroup2:
+
+cd /sys/fs/cgroup/
+echo +cpuset > cgroup.subtree_control
+mkdir test
+echo isolated > test/cpuset.cpus.partition
+echo $isolate > test/cpuset.cpus
+
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 ---
- rust/kernel/str.rs | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ kernel/sched/isolation.c | 48 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 43 insertions(+), 5 deletions(-)
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index c45612900fe2..b0a35d71bd49 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -197,6 +197,25 @@ pub unsafe fn from_char_ptr<'a>(ptr: *const core::ffi::c_char) -> &'a Self {
-         unsafe { Self::from_bytes_with_nul_unchecked(bytes) }
-     }
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 948b9ee0dc2cc..036e48f0e7d1b 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -116,6 +116,39 @@ static void __init housekeeping_setup_type(enum hk_type type,
+ 		     housekeeping_staging);
+ }
  
-+    /// Like from_char_ptr, but returns a mutable reference
-+    ///
-+    /// # Safety
-+    ///
-+    /// `ptr` must be a valid pointer to a `NUL`-terminated C string, and it must
-+    /// last at least `'a`. When `CStr` is alive, the memory pointed by `ptr`
-+    /// must not be mutated.
-+    #[inline]
-+    pub unsafe fn from_char_ptr_mut<'a>(ptr: *const core::ffi::c_char) -> &'a mut Self {
-+        // SAFETY: The safety precondition guarantees `ptr` is a valid pointer
-+        // to a `NUL`-terminated C string.
-+        let len = unsafe { bindings::strlen(ptr) } + 1;
-+        // SAFETY: Lifetime guaranteed by the safety precondition.
-+        let bytes = unsafe { core::slice::from_raw_parts_mut(ptr as _, len as _) };
-+        // SAFETY: As `len` is returned by `strlen`, `bytes` does not contain interior `NUL`.
-+        // As we have added 1 to `len`, the last byte is known to be `NUL`.
-+        unsafe { Self::from_bytes_with_nul_unchecked_mut(bytes) }
-+    }
++/*
++ * housekeeping_update - change housekeeping.cpumasks[type] and propagate the
++ * change.
++ *
++ * Assuming cpuset_mutex is held in sched_partition_write or
++ * cpuset_write_resmask.
++ */
++static int housekeeping_update(enum hk_type type, cpumask_var_t update)
++{
++	struct {
++		struct cpumask changed;
++		struct cpumask enable;
++		struct cpumask disable;
++	} *masks;
 +
-     /// Creates a [`CStr`] from a `[u8]`.
-     ///
-     /// The provided slice must be `NUL`-terminated, does not contain any
-@@ -901,6 +920,7 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
- 
- impl ForeignOwnable for CString {
-     type Borrowed<'a> = &'a CStr;
-+    type BorrowedMut<'a> = &'a mut CStr;
- 
-     fn into_foreign(self) -> *const core::ffi::c_void {
-         Box::into_raw(self.buf) as _
-@@ -910,6 +930,10 @@ unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> Self::Borrowed<'a> {
-         unsafe { CStr::from_char_ptr(ptr.cast::<core::ffi::c_char>()) }
-     }
- 
-+    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> Self::BorrowedMut<'a> {
-+        unsafe { CStr::from_char_ptr_mut(ptr.cast::<core::ffi::c_char>()) }
-+    }
++	masks = kmalloc(sizeof(*masks), GFP_KERNEL);
++	if (!masks)
++		return -ENOMEM;
 +
-     unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
-         // SAFETY: The safety requirements of this function satisfy those of `Self::borrow`.
-         let str = unsafe { Self::borrow(ptr) };
++	lockdep_assert_cpus_held();
++	cpumask_xor(&masks->changed, housekeeping_cpumask(type), update);
++	cpumask_and(&masks->enable, &masks->changed, update);
++	cpumask_andnot(&masks->disable, &masks->changed, update);
++	cpumask_copy(housekeeping.cpumasks[type], update);
++	housekeeping.flags |= BIT(type);
++	if (!static_branch_unlikely(&housekeeping_overridden))
++		static_key_enable_cpuslocked(&housekeeping_overridden.key);
++
++	kfree(masks);
++
++	return 0;
++}
++
+ static int __init housekeeping_setup(char *str, unsigned long flags)
+ {
+ 	cpumask_var_t non_housekeeping_mask, housekeeping_staging;
+@@ -314,9 +347,12 @@ int housekeeping_exlude_isolcpus(const struct cpumask *isolcpus, unsigned long f
+ 		/*
+ 		 * Reset housekeeping to bootup default
+ 		 */
+-		for_each_set_bit(type, &housekeeping_boot.flags, HK_TYPE_MAX)
+-			cpumask_copy(housekeeping.cpumasks[type],
+-				     housekeeping_boot.cpumasks[type]);
++		for_each_set_bit(type, &housekeeping_boot.flags, HK_TYPE_MAX) {
++			int err = housekeeping_update(type, housekeeping_boot.cpumasks[type]);
++
++			if (err)
++				return err;
++		}
+ 
+ 		WRITE_ONCE(housekeeping.flags, housekeeping_boot.flags);
+ 		if (!housekeeping_boot.flags &&
+@@ -344,9 +380,11 @@ int housekeeping_exlude_isolcpus(const struct cpumask *isolcpus, unsigned long f
+ 		cpumask_andnot(tmp_mask, src_mask, isolcpus);
+ 		if (!cpumask_intersects(tmp_mask, cpu_online_mask))
+ 			return -EINVAL;	/* Invalid isolated CPUs */
+-		cpumask_copy(housekeeping.cpumasks[type], tmp_mask);
++		int err = housekeeping_update(type, tmp_mask);
++
++		if (err)
++			return err;
+ 	}
+-	WRITE_ONCE(housekeeping.flags, housekeeping_boot.flags | flags);
+ 	excluded = true;
+ 	if (!static_branch_unlikely(&housekeeping_overridden))
+ 		static_key_enable_cpuslocked(&housekeeping_overridden.key);
 -- 
-2.34.1
+2.45.0
 
