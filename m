@@ -1,103 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63085147C75;
-	Thu, 16 May 2024 14:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0055E1487F2
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 14:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715868227; cv=none; b=KyTz2V+ZvKkVjwT/0N/v90iLw+yXs77HG08R4UvXGTg+o8qtDKHosgmUO5srbm38Ng/T/JVrmWuhyGliegC6oAn07zi7rXA5hB41pOCwvqAG6Nqc4WhpjGPFzXzCIEJFhptzBGXnITU8wK+6g65HczgtKSOc70hYeyU1bV6ZHyU=
+	t=1715868427; cv=none; b=YKDBNtOKvfZM73kQYAt6QDdjRW75zS0AvH+iV1aOgvjErSmx6vjmFAgGysq6AYC/UrwUrMxIIqRnHAtvlbNO5J5saConioCVRS2+5yrI2wyLuzz95RUl7IEgvAcq+GNXjqjymYVbrxWM7WaK0sQpqT7prlK2t+aGJ/79SJOEvkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715868227; c=relaxed/simple;
-	bh=btau07SULIoJqAYVzbVYOn4odv7J5jQdnBX5OjVK4G4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U1GIqgwE4Y02uBfsjeDm0ekVvfUnZtMGzRpJVLNl8By7ASkK96khoOMh3MELsdw2AazFkrVn2NY6Po9OuaqPVksoRQUyAVeu0hE1ck6VpJc3BpSQDkWc9QtRId127WJmX1f0ialfvuqIcSWZe1APaKX+rq1KOPabIA6QZXo2qDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Drw8Zuny; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715868427; c=relaxed/simple;
+	bh=tWr3SDz/keT0AUPlOI26qivjzXaj1FzjL66/DGqh04E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VHSkbw8Mv6tWy27SXVjROawPuyHEk9MXgl84Iu2ei06cfJYJC70qxyTrCvtgFtOYmmUM828+HWDbQRFWaGxAnBljgpkBZocOR2FFzT5xmg+xTx3q6V5X3QcZZj+CtoL80yDacIUeuBRNRPr/86+gJtu2akeokpU19HNRTkfctts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yba0bHa5; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Drw8Zuny"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98387C113CC;
-	Thu, 16 May 2024 14:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715868227;
-	bh=btau07SULIoJqAYVzbVYOn4odv7J5jQdnBX5OjVK4G4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Drw8ZunyLWTr0nM0rJ68C/Qs17bPqqTgPav4i1mGgj2/L27YwXmx4oZjSv7CNjyCi
-	 3ObhB/MpoSlxm0DigGTMGuE+plKFoNl91gH2B+GxdKDTGW8BwepQOCwBioUVFmvR6r
-	 VERV9RbO0dTwfKKr3htsi1Iblz3WALW6tUsRpmnyIjK03hmJbAPqSNYYVuN8RjdR5P
-	 dliR0k/KQ20XL1ccOSlhdwSWyUFhSE4umJB819p4TTpRcn7qavEJz0eCTRIOvREhwc
-	 NjGkrSaGwzOB0c8LknuaND4gAkoNrCqqthBLNN/vIivn3O7ADidW4SzXkDlJZivOm4
-	 7qhhsK0PS/1GA==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Thu, 16 May 2024 07:03:41 -0700
-Subject: [PATCH] x86/boot: Address clang -Wimplicit-fallthrough in
- vsprintf()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yba0bHa5"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b269686aso12123994276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 07:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715868425; x=1716473225; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cgdQVmJ7EdgxAUQ+Mn5lPrLPnO4lZEwTEM15imrbXrA=;
+        b=yba0bHa5am5fP5V616/M+WbhxwcDMo+NtPMCOrVpRyrspilC/XFfDk4xBrZvLGsWd+
+         fsxpgKIcffW6Gt3Eo52MpCteadFDr7YZ3Q7sZqCpw4sUc605ou7ETGWTxMSoIAP1AslZ
+         FvB+OlrpSnE5PkXRhtEqTa5ainnu7RCqjXxVI+2ncqAd+N8utOOPk+90WBqpE9rK7hYs
+         yxdZ4tG/qSTcYOU6n7qe7X+B9q/ew69wpqg9Q2yq2LJsYdgy+ImoyqBWayGqN2pLUu60
+         pZfjHeZk3b9xVolnkRdvc2wDlkB62L2wXXPtnDxJhX2PAfw7YfCG3POePFGjKaNhVNqp
+         z41Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715868425; x=1716473225;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cgdQVmJ7EdgxAUQ+Mn5lPrLPnO4lZEwTEM15imrbXrA=;
+        b=u4lX/g6bqT2CbdE5KP/ui146VS7XAPrslhBCC7Vp9e+4Nbre1LPo2RiVkwmBhVwsj7
+         2NEgF2wX6+nkI7yJ0u9vWXVT6oJsEbMt60qOGXYOwqZHQXDqO5RTg1S3b89w6o+x7D2c
+         3bjcECMtzU8ZynA4xBkTFOOko1gHlg0B1v7gP6rMm2I7xNpKSdEqLV81Kv0CfiyLFRPC
+         pw3X1jmj2IKz9YsEEw8rjwVIt49yqUsfWOXHnBZ55637w+BAn3XBaQ0HimcAlKVpCRgG
+         Le1nCKp/Ey6ed6kbPtD21SbBb830wSnQj9DdyCG6OwsfhPYgvzbB0nxnDMAKADbqWQud
+         Bf+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWfT5omDIqKjDbV0OvN6YMM2fTIRTJWByXFx1xhGsMe2aNSzJKOvQe0KDx6xVmCZCMNvtTVqOgmfrg6LJCZLyS17zCFm3mlofn4JqK
+X-Gm-Message-State: AOJu0YwHhqq9T7VUZ0ApLFMG7BIOlcGH0lzYAn9Svl5hD5sN92vPbSLv
+	GjPvVRn9lXloMKJFnaxJmCe1G66JNQ9m+2E9285K2pFN3RZBrzxmBKkcQ+vvcZEGBRm4L8aaAzO
+	fCQ==
+X-Google-Smtp-Source: AGHT+IEDBtrDbkovNrhAV/lyqKo9e3I9oLyUsaLll6pFh8+GoJQSddiJzF1Cv5ysvpR9u6J0VFHg196pMTA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1025:b0:de5:3003:4b83 with SMTP id
+ 3f1490d57ef6-dee4f4fbce6mr1659030276.8.1715868424907; Thu, 16 May 2024
+ 07:07:04 -0700 (PDT)
+Date: Thu, 16 May 2024 07:07:03 -0700
+In-Reply-To: <BN9PR11MB527614E72C1DF467FF3F4C948CED2@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240516-x86-boot-fix-clang-implicit-fallthrough-v1-1-04dc320ca07c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADwSRmYC/x2NwQqDMBBEf0X27IKRJmp/RTyY7WoWUiOJLYL47
- 116fMO8mQsKZ+ECz+qCzF8pkjYFU1dAYd5WRnkpQ9u0j8Yah2fv0Kd04CInUtQKynuPQqLRHOM
- RcvqsAReyNHhvhs5Z0LU9sxr/p3G67x8/+nHAeQAAAA==
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org
-Cc: Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
- kernel test robot <lkp@intel.com>, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1475; i=nathan@kernel.org;
- h=from:subject:message-id; bh=btau07SULIoJqAYVzbVYOn4odv7J5jQdnBX5OjVK4G4=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDGluQk73OprDal7ErGtaPL/fzVM1ew6D8kGH9DdR834W/
- HZbf2NqRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZiIHBfDP71rcTKm7x0Y2SX0
- I0s4zSc45au+t1qy/qCzwtG3pQteODIy/NsZvI1Z6vjeiqfiWrXB2x2l+cR1DM7/SDilMyVTit+
- WBQA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Mime-Version: 1.0
+References: <20240507061802.20184-1-yan.y.zhao@intel.com> <20240507061924.20251-1-yan.y.zhao@intel.com>
+ <BN9PR11MB5276DA8F389AAE7237C7F48E8CE42@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZjnwiKcmdpDAjMQ5@yzhao56-desk.sh.intel.com> <BN9PR11MB527614E72C1DF467FF3F4C948CED2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Message-ID: <ZkYTByuHu_IptChR@google.com>
+Subject: Re: [PATCH 1/5] x86/pat: Let pat_pfn_immune_to_uc_mtrr() check MTRR
+ for untracked PAT range
+From: Sean Christopherson <seanjc@google.com>
+To: Kevin Tian <kevin.tian@intel.com>
+Cc: Yan Y Zhao <yan.y.zhao@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com" <jgg@nvidia.com>, 
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"corbet@lwn.net" <corbet@lwn.net>, "joro@8bytes.org" <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>, 
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, 
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, Yi L Liu <yi.l.liu@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-After enabling -Wimplicit-fallthrough for the x86 boot code, clang
-warns:
++Tom
 
-  arch/x86/boot/printf.c:257:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-    257 |                 case 'u':
-        |                 ^
+On Thu, May 16, 2024, Kevin Tian wrote:
+> > From: Zhao, Yan Y <yan.y.zhao@intel.com>
+> > Sent: Tuesday, May 7, 2024 5:13 PM
+> > 
+> > On Tue, May 07, 2024 at 04:26:37PM +0800, Tian, Kevin wrote:
+> > > > From: Zhao, Yan Y <yan.y.zhao@intel.com>
+> > > > Sent: Tuesday, May 7, 2024 2:19 PM
+> > > >
+> > > > @@ -705,7 +705,17 @@ static enum page_cache_mode
+> > > > lookup_memtype(u64 paddr)
+> > > >   */
+> > > >  bool pat_pfn_immune_to_uc_mtrr(unsigned long pfn)
+> > > >  {
+> > > > -	enum page_cache_mode cm = lookup_memtype(PFN_PHYS(pfn));
+> > > > +	u64 paddr = PFN_PHYS(pfn);
+> > > > +	enum page_cache_mode cm;
+> > > > +
+> > > > +	/*
+> > > > +	 * Check MTRR type for untracked pat range since lookup_memtype()
+> > > > always
+> > > > +	 * returns WB for this range.
+> > > > +	 */
+> > > > +	if (x86_platform.is_untracked_pat_range(paddr, paddr + PAGE_SIZE))
+> > > > +		cm = pat_x_mtrr_type(paddr, paddr + PAGE_SIZE,
+> > > > _PAGE_CACHE_MODE_WB);
+> > >
+> > > doing so violates the name of this function. The PAT of the untracked
+> > > range is still WB and not immune to UC MTRR.
+> > Right.
+> > Do you think we can rename this function to something like
+> > pfn_of_uncachable_effective_memory_type() and make it work under
+> > !pat_enabled() too?
+> 
+> let's hear from x86/kvm maintainers for their opinions.
+> 
+> My gut-feeling is that kvm_is_mmio_pfn() might be moved into the
+> x86 core as the logic there has nothing specific to kvm itself. Also
+> naming-wise it doesn't really matter whether the pfn is mmio. The
+> real point is to find the uncacheble memtype in the primary mmu
+> and then follow it in KVM.
 
-Clang is a little more pedantic than GCC, which does not warn when
-falling through to a case that is just break or return. Clang's version
-is more in line with the kernel's own stance in deprecated.rst, which
-states that all switch/case blocks must end in either break,
-fallthrough, continue, goto, or return. Add the missing break to silence
-the warning.
+Yeaaaah, we've got an existing problem there.  When AMD's SME is enabled, KVM
+uses kvm_is_mmio_pfn() to determine whether or not to map memory into the guest
+as encrypted or plain text.  I.e. KVM really does try to use this helper to
+detect MMIO vs. RAM.  I highly doubt that actually works in all setups.
 
-Fixes: dd0716c2b877 ("x86/boot: Add a fallthrough annotation")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202405162054.ryP73vy1-lkp@intel.com/
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- arch/x86/boot/printf.c | 2 ++
- 1 file changed, 2 insertions(+)
+For SME, it seems like the best approach would be grab the C-Bit from the host
+page tables, similar to how KVM uses host_pfn_mapping_level().
 
-diff --git a/arch/x86/boot/printf.c b/arch/x86/boot/printf.c
-index c0ec1dc355ab..51dc14b714f6 100644
---- a/arch/x86/boot/printf.c
-+++ b/arch/x86/boot/printf.c
-@@ -254,6 +254,8 @@ int vsprintf(char *buf, const char *fmt, va_list args)
- 		case 'd':
- 		case 'i':
- 			flags |= SIGN;
-+			break;
-+
- 		case 'u':
- 			break;
- 
+SME aside, I don't have objection to moving kvm_is_mmio_pfn() out of KVM.
 
----
-base-commit: dd0716c2b87792ebea30864e7ad1df461d4c1525
-change-id: 20240516-x86-boot-fix-clang-implicit-fallthrough-fc5c9bb19765
+> from that point probably a pfn_memtype_uncacheable() reads clearer.
 
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
-
+or even just pfn_is_memtype_uc()?
