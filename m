@@ -1,165 +1,116 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EC4156F2D;
-	Thu, 16 May 2024 20:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278FB147C72
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 20:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715889970; cv=none; b=Udvl7lSwuG+ye6abcHSRMullUTLMuRtufTwt3HaIB1T+ktAQ/mefVUS0gOhalRXnY2AO2r5j2KODy5NBpSVPw6G0p8SIjTuSAg2QEVxQ62GoJbhAagITv/3VIIfybrWwIm9Ul+lyx2F0wa5OHEGbiAZ26eclWBa0YocEgKiz/LY=
+	t=1715890032; cv=none; b=Cfe3D20lMigvpqJfOe4ybZ+EJ/eOByF7QdMqNe1XvsB/Rjj4+BGyrz8If0SlkC/O0y4uIx2xcg8mq/Z2T6OYcQmuoky6EeDdUQ1HvmuADhL7exEg4KEQ9ms5FEc07ZMVpd8vIISIMIJOr3EXru38w7mgyLqyYqFF217K8sVwOIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715889970; c=relaxed/simple;
-	bh=55gTRHB9c4bCkwXx/S0L7qGd1+x76r/nb9xDfdC9hrc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hFIr3HU5QHNn1FHFM48oPPE1Yy4LeGVeOTz7/dodKEvCdtN22qx1RR3p4yUCP3Et+AosRMB0wgDSV1jd8QNYu7tKUzGgw144Fmx9bl9WrGcoP1XWvEwb/guGvdelW2dqW2CsomySnzu6vA5uPulyK/RQ27TVhly/PopnXR/ISjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPHV+nym; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715890032; c=relaxed/simple;
+	bh=PHM05l3dg41vpIlXCvO5miEj3ChNSyOJ7ppgPBZeDaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c1+GzClGNtz2bmMcV94vGyi+HnGBe6LDhezOGHWACz/FDgIpSu1aV7trZNHH3rdzTccXGDvfO0gHQUqv0KV3f2cUZvYknUH+vG0aa0pCfElynhorhejZpLqi8ETHaGHUn/Xm6ekRB78gKn5jW/5qnodmE0JP7t/JTerYyhVvVWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CQYkJvzj; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPHV+nym"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1ed41eb3382so62407775ad.0;
-        Thu, 16 May 2024 13:06:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CQYkJvzj"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ec92e355bfso81144915ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715889968; x=1716494768; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LQeZofPLv2uYbOMLS7VkNQBeTMAMV19SlyQflyRbY4Y=;
-        b=gPHV+nymY0nv2mTQaO+ZCEh4S6ZChpyTHX8JOr9xgiK6g/M/aFkytNBRwMUYFVI0cU
-         hf5JL4grPA9Bxvo3p2WWVdfS1kAhtwCAouTUdqIXjoLbAkjD37CJV6CR2t1senSlpCqZ
-         FI2pbblz9uUh1bt/ygkDL0/S5W2fNzTKD1CMXIoQZubHWSXrhMkrywD69108D1wS6YK8
-         pyMnk2sI02Wnz5Wz1SnobiuZJtVgcgcAFlS+Q3XjED44m/WWYFs2osy7yAhZYYQ6DQHX
-         2mbVwbsLgQ9r7/fiMfHKPsODrWwX3RkFtNDMIHrGYB2dE4KDbRBUac9XPzH6T/rvg5my
-         lJ3g==
+        d=chromium.org; s=google; t=1715890030; x=1716494830; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyG12zQ6p7/BXdJX9MxBxAQEGuyOmeFERaocoWUX2nM=;
+        b=CQYkJvzj284k/xT2T2CDg/po6QZTl01lbXDUhG3930Xfk0raFbhdPd1lTF1JuFav8s
+         ut/kJUneDemDBBi5q0V0ujIF+kn0tox6JYiVX6YHLpYiXNawZs73oclNmPqakFDghXyB
+         QWAvLJmx6pTkQgaTRpv6EDvYmPZHsszSIO07o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715889968; x=1716494768;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LQeZofPLv2uYbOMLS7VkNQBeTMAMV19SlyQflyRbY4Y=;
-        b=a5VG0hB1lskb+cZwzajRGpQ1hR04b86xr+MiQfmYu7+S7/+dgswUZzuJpyMiOQR19l
-         sOBbECvInHOKCs7+gZWBV6CU6FNLgFcLMrfk4Qqkbd8DSIq30alKPXOGbWig+yrnYxl+
-         SE9gUdECm2FSX29zXY6uP7aFo2EY1zdZfGQk2wjONXzh8MQtNFTVFPPYEWL1hDi6rLz3
-         Wol8qCKZZndOMYlgSEjRg+MxdOkfK+SROgL214BalIDhqvFOZr8dWOeZYLdarBjG3h9D
-         rsT7C4s1AThlwx0egON+7BXzUlPwaylhyXcIKIgZ7naDUfERKrBrJyCTsd4nB4jkPHsQ
-         dHxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjUwae0VHlKXJ+Vd0LT0CgCwH4Z+vf+Tukjqo1VyT/8kLHN2V2DvC2QHBrhFtD4MzVbXa4rpN7ppbzr5+V03e4kC74N/mLsgBSNbj5iyTCoE7mVUdj/oI5tpPrfloWLBTojgdXLgdJtUDvYPQ=
-X-Gm-Message-State: AOJu0YwvWrRovALOP8lQPVilfFhlcPaS/CNYcUBJPIuvncUFywq0jozT
-	oJVOfePjUei94llWk8Jynjs7vQ2frMnXSwD73LyV+c67auxiavsntT1mTnNl
-X-Google-Smtp-Source: AGHT+IGQdvPgqTzpk0WRuVzdLZsIt+PIefsocHXzFjrLAXub+kn/VbRC5GaMAeWVaox1/rcijULwdw==
-X-Received: by 2002:a17:902:8695:b0:1eb:85d:8973 with SMTP id d9443c01a7336-1ef4404cd5fmr228087965ad.58.1715889968418;
-        Thu, 16 May 2024 13:06:08 -0700 (PDT)
-Received: from localhost.localdomain ([187.120.157.23])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f0977e2316sm27310235ad.193.2024.05.16.13.06.04
+        d=1e100.net; s=20230601; t=1715890030; x=1716494830;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyG12zQ6p7/BXdJX9MxBxAQEGuyOmeFERaocoWUX2nM=;
+        b=s3Q8UFiUc19dhaoH/eEV6uDlu6bpQqsXwAA/kmdM5joZvGJS9hAwdCT0erZc7nCGCm
+         /ucxuXQGirHALg0LQMF6sNNuPdmOAwJipIDBe5DU6jcF6znN5100VGsih6FFe8ESXTKy
+         SEnhIkv2yKFJbCiHGXNfBxuuqTIi2uc/kb1K5rWK1uP2d4isySzPkTYvHyydP1BGrsls
+         b4ZHbG6pPZtJCUq1lPNbLJHJtu4EnB19f/Fs6NX17VO3mdSI/bH4PBWDA9rFYfh75FaU
+         FfAjcNHxrk0UggMe9+4mY/PIXuheqThcVB1ejfHE6I8wlo5zh1eERPHha66JWnPIQ586
+         3nlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwArHdEtpH1AF9qwjtfy8/z4a6rK1sb5OpGEEU3wnYVTSSjmr50Q9stxn9ho1YYRE2HMpxDimNtu0D8fHQrVJ89siLWy+yjOuqXj8W
+X-Gm-Message-State: AOJu0Ywrb1bPSNqD5hs9H9xIhX8VmcyBKKc8fZdzsivYJtiDq2tpsy6A
+	oSF3oP5IUhjYN1HXP3QQyJmf2Y9YcksLJPUQHsbJSg1q+bNs75cMEPurv0jMPA==
+X-Google-Smtp-Source: AGHT+IGTRclh1CigI5i708kRIjv4JGvkOMw+J0DApcHCOCHAenoDy7R8CP0aQXtDPKQhtOx2gDwoFg==
+X-Received: by 2002:a17:902:8542:b0:1e2:be4b:dd9f with SMTP id d9443c01a7336-1ef43d29670mr181010385ad.15.1715890030540;
+        Thu, 16 May 2024 13:07:10 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f096da40a4sm29452455ad.66.2024.05.16.13.07.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 13:06:08 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: miriam.rachel.korenblit@intel.com,
-	kvalo@kernel.org,
-	rafael.j.wysocki@intel.com,
-	daniel.lezcano@linaro.org,
-	johannes.berg@intel.com,
-	dmantipov@yandex.ru
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [thermal] adding check if the thermal firmware is running
-Date: Thu, 16 May 2024 17:05:53 -0300
-Message-ID: <20240516200555.33982-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.45.1
+        Thu, 16 May 2024 13:07:09 -0700 (PDT)
+Date: Thu, 16 May 2024 13:07:09 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <202405161254.D4F33F7@keescook>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <20240515073636.GY40213@noisy.programming.kicks-ass.net>
+ <25882715-FE44-44C0-BB9B-57F2E7D1F0F9@kernel.org>
+ <20240516140951.GK22557@noisy.programming.kicks-ass.net>
+ <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFhGd8qCCCrccQ2z5bjBD5YcMWHkym9aVz_qYkyyj662XEeHvA@mail.gmail.com>
 
-in the dmesg is showing the message "failed to read out thermal zone"
-as if the temperature read is failed by don't find the thermal zone.
+On Thu, May 16, 2024 at 12:48:47PM -0700, Justin Stitt wrote:
+> I don't think we're capable of identifying every single problematic
+> overflow/wraparound case in the kernel, this is pretty obvious
+> considering we've had decades to do so. Instead, it seems much more
+> feasible that we annotate (very, very minimally so as not to disrupt
+> code readability and style) the spots where we _know_ overflow should
+> happen.
 
-After researching and debugging, I see that this specific error is
-occurrence because the thermal try read the temperature when is started,
-but the firmware is not running yet.
+For the baby steps Linus wants, we can walk this path:
 
-For more legibiliti i create the NOTLOAD error code in the errno-base.h,
-and in the iwl_mvm_tzone_get_temp() on tt.c i check if firmware is
-running and I set the NOTLOAD code for ret variable and goto out.
+- Finish the *signed* integer overflow refactoring/annotation.
+  This is nearly done already, and every case we've found is either
+  a legitimate bug (thankfully rare), or happens in code that is
+  either accidentally correct (thanks to no UB), or the correctness is
+  very unclear. Refactoring these cases improves readability for
+  everyone and doesn't change the behavior.
 
-After this, in the update_temperature() in the thermal_code.c i received
-the return of thermal_zone_get_temp() and check if return is NOTLOAD,
-because if it is, I print the warning message "firmware yet not load"
-and return for caller
+- Begin *signed* integer implicit truncation refactoring/annotation.
+  As Linus suggested, dealing with this will catch a bunch of the flaws
+  we've seen recently. Handling the false positives here will need some
+  investigation and some compiler support, and that'll happen in
+  parallel.
 
-The thermal_core.c i think that is generic for any thermal drivers and
-not only used for tt.c of course.
-But if this ipotetic driver not check if firmware is running before read
-the temperature, the thermal_code.c is work as a before this change.
+- Tackle *unsigned* integer overflow on a per-type basis: we can start
+  with the place Linus called out: size_t. This will let us focus on the
+  first of the unsigned types that is not commonly wrapping, and is a
+  regular place that unexpected overflow gets the kernel into big
+  trouble.
 
-After this change, in my computer I compile and install kernel in /boot
-and in my dmesg the message "failed to read out thermal zone" is not
-show any more. In your place the warning messafe "Firmware yet not
-load" is showing.
+What we learn from these three steps should inform us what further steps
+down this path can look like.
 
-I would like to thank you in advance for any contribution, suggestion
-or criticism of my patch suggestion.
----
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 10 ++++++++--
- drivers/thermal/thermal_core.c              | 10 +++++++---
- include/uapi/asm-generic/errno-base.h       |  1 +
- 3 files changed, 16 insertions(+), 5 deletions(-)
+-Kees
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index 8083c4b2ab6b..dd5725db06d2 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -620,8 +620,14 @@ static int iwl_mvm_tzone_get_temp(struct thermal_zone_device *device,
- 
- 	mutex_lock(&mvm->mutex);
- 
--	if (!iwl_mvm_firmware_running(mvm) ||
--	    mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
-+	const int res = iwl_mvm_firmware_running(mvm);
-+
-+	if (!res) {
-+		ret = -NOTLOAD;
-+		goto out;
-+	}
-+
-+	if (mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
- 		ret = -ENODATA;
- 		goto out;
- 	}
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 34a31bc72023..4116d312d4a1 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -414,10 +414,14 @@ static void handle_thermal_trip(struct thermal_zone_device *tz,
- 
- static void update_temperature(struct thermal_zone_device *tz)
- {
--	int temp, ret;
--
--	ret = __thermal_zone_get_temp(tz, &temp);
-+	int temp;
-+	int ret = __thermal_zone_get_temp(tz, &temp);
- 	if (ret) {
-+		if (ret == -NOTLOAD) {
-+			pr_warn("Firmware yet not load");
-+			return;
-+		}
-+
- 		if (ret != -EAGAIN)
- 			dev_warn(&tz->device,
- 				 "failed to read out thermal zone (%d)\n",
-diff --git a/include/uapi/asm-generic/errno-base.h b/include/uapi/asm-generic/errno-base.h
-index 9653140bff92..8b92c41f7993 100644
---- a/include/uapi/asm-generic/errno-base.h
-+++ b/include/uapi/asm-generic/errno-base.h
-@@ -36,5 +36,6 @@
- #define	EPIPE		32	/* Broken pipe */
- #define	EDOM		33	/* Math argument out of domain of func */
- #define	ERANGE		34	/* Math result not representable */
-+#define	NOTLOAD		35	/* Firmware yet not load */
- 
- #endif
 -- 
-2.45.1
-
+Kees Cook
