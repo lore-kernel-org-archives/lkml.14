@@ -1,133 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F3127269
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:25:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D66038F86;
+	Thu, 16 May 2024 08:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715847911; cv=none; b=KVzHJyKXKmjFQhUeXQCHuXJaza/4C7UQG0bb1QLLJ4ATMgN0NrA9SojGl2iyj6AH/Enp/+curP2Kpxc5h38/QgBuEn8zUHQ1P4/mASyM0h9qSzqq33VZgQygeabXrmuXSJQUqiRmSa6R/oQCXScQxJNzHc89cPTWe4qlxqEa2+w=
+	t=1715848012; cv=none; b=rE9DOiLnE9ubakQvFUA1ZN9dVLTzIUH7iHjfayyn743gUdK2j6LD2RQiwJkmlJFLSfTSpOcN3+f2VC4u1bba8Wbo5Rs6zvduXD7PHkKvMSeVS9DHDYojWK4UZmoiqDNIwwJI0lLDWr/pTRA7QSrtpXQyTXkWZNI5wN7+nKp0oRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715847911; c=relaxed/simple;
-	bh=wQSeNVyD2+LGMI1KSxHgOvUM6yNAJ+OyWsiLwLfXdGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qzBtVkTGCyrneOXPHN7lTx+vapf6cuNplElkRtShrSHlngCnnxR+1uT0EeGcT7bMk5aAgJNBg5CpclfMk3HVnD+TC9V1FzMryGIbIIbPOPqoOOETjabgHGbM/u9yEpvn01C850sSJSPLtBDTq6PgBHRXLk7wcU6x3N+fr+uOjfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EO1cHYgc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715848012; c=relaxed/simple;
+	bh=WIoFwH8zB7Jl59HZ7oYwJwNcVULcP10JP5xKKdRoIzk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=rWyGyRvaMgsu8UMZ0YzsK4atjdMTMUNSPbUWdfjgFN0jujlaZZFzF7IgKAm4Bv2+1KEVvZTds87ZYw6ewb1rUzwA/bJDjFNRSNcv8DQ8sSmRH1pko/CLF0ZJTrntaEKrcT2g1cLFynAOq0MJWeYdfysaILzXhu7ZNo6QitSAam8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxI8gMgx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EO1cHYgc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 454F1C113CC;
-	Thu, 16 May 2024 08:25:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxI8gMgx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DAA7C113CC;
+	Thu, 16 May 2024 08:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715847910;
-	bh=wQSeNVyD2+LGMI1KSxHgOvUM6yNAJ+OyWsiLwLfXdGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EO1cHYgcSiyEgzOkCWNMhSk9JWysjcFy/0GEKirdIi1YG5LvOa9YIyrOSEjV8FQfh
-	 6QJdIrd4qD24cJQwdh3xVJ98gOd+lM8VXkLD5xMqY6dP44hbN79W87RoJtjjxWhkjK
-	 +EJZ9/yoZSARSObIcjh9HIYRmp0s+bruSbiUP/HikocggfO+2bSgrdVlbrxth1kltf
-	 0RxHcmkiOevML+ju4hsLjuIUU6QtE5mwmnSMNd2Dg2ScM06zJuo6YvAB725psvuyyE
-	 1/7E/5oO/LqIC87zin8OT1s2sX6o3ob57vgfV8zFFHkxqUSLnkKGWCFIGqKc07CChl
-	 jhAqfI+RxTpiQ==
-Date: Thu, 16 May 2024 10:25:07 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Sui Jingfeng <sui.jingfeng@linux.dev>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] drm/bridge: Add 'struct device *' field to the
- drm_bridge structure
-Message-ID: <20240516-intrepid-uptight-tench-0df95e@penduick>
-References: <20240514154045.309925-1-sui.jingfeng@linux.dev>
- <20240514-scarlet-corgi-of-efficiency-faf2bb@penduick>
- <c44480ab-8d6b-4334-8eba-83db9b30ff1a@linux.dev>
- <20240515-fair-satisfied-myna-480dea@penduick>
- <d394ee32-4fa4-41a8-a5ca-c1c7f77f44d2@linux.dev>
- <20240515-copper-chimpanzee-of-fortitude-ff3dab@penduick>
- <2c15c859-6b2b-4979-8317-698bf6cc430c@linux.dev>
+	s=k20201202; t=1715848011;
+	bh=WIoFwH8zB7Jl59HZ7oYwJwNcVULcP10JP5xKKdRoIzk=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=BxI8gMgxAB54Z/Lzl2eEiuuLAipJD0jCmNzMpUmypjQCeLCmTwPfTqYfwXQPbseOX
+	 G9TI6Sqpf6rlLLqBIJKuHHG4NrrfHAu/wTFh9YSY8MUSS5aRVOQcSTnAnDhROB2ZqZ
+	 lNenUAIGvgX3zKINmCVA5eopDspokXpbNS7XRbMUQczJbpejPgLsBs7VY2nNcRHQUS
+	 bS7tzd72HIKU82VM2zVE0kYOXws9gO2cYjLu3dq4Oi/zQkBiDH3sOqSQkgfCqD/eqU
+	 0/TIBmtb4wNaRdQcKO/CZzC31dGqOUxnZhjYy7ynXqVWXd2pDhonVS23a+maZqKId1
+	 FC9JqjYxt25Sw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="toq7dtu3l53x2mb5"
-Content-Disposition: inline
-In-Reply-To: <2c15c859-6b2b-4979-8317-698bf6cc430c@linux.dev>
-
-
---toq7dtu3l53x2mb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 16 May 2024 11:26:48 +0300
+Message-Id: <D1AXCT1OTHA9.2TJ6JYNJBBT44@kernel.org>
+Cc: <reinette.chatre@intel.com>, =?utf-8?b?5YiY5Y+MKOi9qeWxuSk=?=
+ <ls123674@antgroup.com>
+Subject: Re: [RFC PATCH v3 1/1] x86/sgx: Explicitly give up the CPU in
+ EDMM's ioctl() to avoid softlockup
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Haitao Huang" <haitao.huang@linux.intel.com>,
+ <linux-kernel@vger.kernel.org>, <linux-sgx@vger.kernel.org>,
+ <dave.hansen@linux.intel.com>, "Bojun Zhu" <zhubojun.zbj@antgroup.com>
+X-Mailer: aerc 0.17.0
+References: <20240515065521.67908-1-zhubojun.zbj@antgroup.com>
+ <20240515065521.67908-2-zhubojun.zbj@antgroup.com>
+ <op.2nt1vls9wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <op.2nt3fzsnwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <op.2nt3fzsnwjvjmi@hhuan26-mobl.amr.corp.intel.com>
 
-On Wed, May 15, 2024 at 11:19:58PM +0800, Sui Jingfeng wrote:
-> Hi,
->=20
->=20
-> On 5/15/24 22:58, Maxime Ripard wrote:
-> > On Wed, May 15, 2024 at 10:53:00PM +0800, Sui Jingfeng wrote:
-> > > On 5/15/24 22:30, Maxime Ripard wrote:
-> > > > On Wed, May 15, 2024 at 12:53:33AM +0800, Sui Jingfeng wrote:
-> > > > > On 2024/5/15 00:22, Maxime Ripard wrote:
-> > > > > > Hi,
-> > > > > >=20
-> > > > > > On Tue, May 14, 2024 at 11:40:43PM +0800, Sui Jingfeng wrote:
-> > > > > > > Because a lot of implementations has already added it into th=
-eir drived
-> > > > > > > class, promote it into drm_bridge core may benifits a lot. dr=
-m bridge is
-> > > > > > > a driver, it should know the underlying hardware entity.
-> > > > > > Is there some actual benefits, or is it theoretical at this poi=
-nt?
-> > > > >=20
-> > > > >=20
-> > > > > I think, DRM bridge drivers could remove the 'struct device *dev'
-> > > > > member from their derived structure. Rely on the drm bridge core
-> > > > > when they need the 'struct device *' pointer.
-> > > >=20
-> > > > Sure, but why do we need to do so?
-> > > >=20
-> > > > The other thread you had with Jani points out that it turns out that
-> > > > things are more complicated than "every bridge driver has a struct
-> > > > device anyway", it creates inconsistency in the API (bridges would =
-have
-> > > > a struct device, but not other entities), and it looks like there's=
- no
-> > > > use for it anyway.
-> > > >=20
-> > > > None of these things are deal-breaker by themselves, but if there's=
- only
-> > > > downsides and no upside, it's not clear to me why we should do it a=
-t all.
-> > >=20
-> > > It can reduce boilerplate.
-> >=20
-> > You're still using a conditional here.
+On Thu May 16, 2024 at 1:29 AM EEST, Haitao Huang wrote:
+> On Wed, 15 May 2024 16:55:59 -0500, Haitao Huang =20
+> <haitao.huang@linux.intel.com> wrote:
 >
-> It's for safety reason, prevent NULL pointer dereference.
-> drm bridge can be seen as either a software entity or a device driver.
->=20
-> It's fine to pass NULL if specific KMS drivers intend to see
-> drm bridge as a pure software entity, and for internal use only.
-> Both use cases are valid.
+> > On Wed, 15 May 2024 01:55:21 -0500, Bojun Zhu =20
+> > <zhubojun.zbj@antgroup.com> wrote:
+> >
+> >> EDMM's ioctl()s support batch operations, which may be
+> >> time-consuming. Try to explicitly give up the CPU as the prefix
+> >> operation at the every begin of "for loop" in
+> >> sgx_enclave_{ modify_types | restrict_permissions | remove_pages}
+> >> to give other tasks a chance to run, and avoid softlockup warning.
+> >>
+> >> Additionally perform pending signals check as the prefix operation,
+> >> and introduce sgx_check_signal_and_resched(),
+> >> which wraps all the checks.
+> >>
+> >> The following has been observed on Linux v6.9-rc5 with kernel
+> >> preemptions disabled(by configuring "PREEMPT_NONE=3Dy"), when kernel
+> >> is requested to restrict page permissions of a large number of EPC =20
+> >> pages.
+> >>
+> >>     ------------[ cut here ]------------
+> >>     watchdog: BUG: soft lockup - CPU#45 stuck for 22s!
+> >>     ...
+> >>     RIP: 0010:sgx_enclave_restrict_permissions+0xba/0x1f0
+> >>     ...
+> >>     Call Trace:
+> >>      sgx_ioctl
+> >>      __x64_sys_ioctl
+> >>      x64_sys_call
+> >>      do_syscall_64
+> >>      entry_SYSCALL_64_after_hwframe
+> >>     ------------[ end trace ]------------
+> >>
+> >> Signed-off-by: Bojun Zhu <zhubojun.zbj@antgroup.com>
+> >> ---
+> >>  arch/x86/kernel/cpu/sgx/ioctl.c | 40 +++++++++++++++++++++++---------=
+-
+> >>  1 file changed, 28 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c =20
+> >> b/arch/x86/kernel/cpu/sgx/ioctl.c
+> >> index b65ab214bdf5..6199f483143e 100644
+> >> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
+> >> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+> >> @@ -365,6 +365,20 @@ static int sgx_validate_offset_length(struct =20
+> >> sgx_encl *encl,
+> >>  	return 0;
+> >>  }
+> >> +/*
+> >> + * Check signals and invoke scheduler. Return true for a pending =20
+> >> signal.
+> >> + */
+> >> +static bool sgx_check_signal_and_resched(void)
+> >> +{
+> >> +	if (signal_pending(current))
+> >> +		return true;
+> >> +
+> >> +	if (need_resched())
+> >> +		cond_resched();
+> >> +
+> >> +	return false;
+> >> +}
+> >> +
+> >>  /**
+> >>   * sgx_ioc_enclave_add_pages() - The handler for =20
+> >> %SGX_IOC_ENCLAVE_ADD_PAGES
+> >>   * @encl:       an enclave pointer
+> >> @@ -409,7 +423,7 @@ static long sgx_ioc_enclave_add_pages(struct =20
+> >> sgx_encl *encl, void __user *arg)
+> >>  	struct sgx_enclave_add_pages add_arg;
+> >>  	struct sgx_secinfo secinfo;
+> >>  	unsigned long c;
+> >> -	int ret;
+> >> +	int ret =3D -ERESTARTSYS;
+> >> 	if (!test_bit(SGX_ENCL_CREATED, &encl->flags) ||
+> >>  	    test_bit(SGX_ENCL_INITIALIZED, &encl->flags))
+> >> @@ -432,15 +446,8 @@ static long sgx_ioc_enclave_add_pages(struct =20
+> >> sgx_encl *encl, void __user *arg)
+> >>  		return -EINVAL;
+> >> 	for (c =3D 0 ; c < add_arg.length; c +=3D PAGE_SIZE) {
+> >> -		if (signal_pending(current)) {
+> >> -			if (!c)
+> >> -				ret =3D -ERESTARTSYS;
+> >> -
+> >> +		if (sgx_check_signal_and_resched())
+> >>  			break;
+> >> -		}
+> >
+> > ERESTARTSYS is only appropriate if we have not EADDed any pages yet.
+> > If we got interrupted in the middle, we should return 0. User space =20
+> > would check the 'count' returned and decide to recall this ioctl() with=
+ =20
+> > 'offset'  reset to the next page, and adjust length.
+>
+> NVM, I misread it. ret will be changed to zero in subsequent iteration.
+>
+> Reviewed-by: Haitao Huang <haitao.huang@linux.intel.com>
 
-Sorry, I don't follow you. We can't NULL dereference a pointer that
-doesn't exist.
+Duh, and I responded too quickly. OK, I revisited the original
+patch and yes ret gets reseted. Ignore my previous response ;-)
 
-Please state why we should merge this series: what does it fix or
-improve, aside from the potential gain of making bridges declare one
-less pointer in their private structure.
+My tags still hold, sorry.
 
-Maxime
-
---toq7dtu3l53x2mb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZkXC4wAKCRAnX84Zoj2+
-duwLAYDJLwwZxC6nv2o6co5SHZA890EEJ4sBl7/6pKRAdMofidpb1VuuXsFJ6wuy
-1mwpPikBfjwAVJvlg/Adew0kmxARdh6BhgjhM8/XpUlkME8b39Me89obXMSOJ3U7
-iPUlp/ORmQ==
-=JFrx
------END PGP SIGNATURE-----
-
---toq7dtu3l53x2mb5--
+BR, Jarkko
