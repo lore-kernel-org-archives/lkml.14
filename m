@@ -1,118 +1,80 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E6415D5C3
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 17:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F1DE15E1F7;
+	Thu, 16 May 2024 17:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715881519; cv=none; b=Y77/TJLi2+FONQGZVmCShd0Yfv3PJr0W6By1bbZzjfwJRtdouMQyLU7bTKESke4VNiRlFJnj5ixOZXQETNTIguOcbsVBi3pIrK2aE6QRNJfGpfCfnID7wdPtI6ViSwzn4xHpeOzr+LY4NlRdK0k+aOn6qAgv7+/sFofo0zriQJ0=
+	t=1715881527; cv=none; b=hiLyFt8GvNTXe9oL1yFI8cmKzcqdjAZcPM9YzmlIFqq6E3X6efkwgKUnqL+zcUVYxmnYVUBu1OxqtlIZXXgVnd3BYvmf5o91FtCwKMuMkGngej3jVv4f3dki/aPMlMCyxqRhIEFE/CD5bfDcHen9ro7DBSFqWDorrmKfE59hXEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715881519; c=relaxed/simple;
-	bh=hGQelBUkaq/JZLSbxTsxKeLUlq22tohYzqKCLBLJTiU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lvT3mgftc57JQP0fQk2k3yBTcQVGIDmTUviUNn4yNZUcz/BPgMOm6/vfXycikY95F6b05aTwIpNJiird2CV0FbAg3uSgxK1DkdJSF9qj6s+glD54MXXTHl2GeZ7pPXROfFhU01U5jiq5T/Xc2sYdvlTMqBCwgzI0zUgMqYqhX74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSTI7V4D; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715881527; c=relaxed/simple;
+	bh=g6o3EwBKNsFLLeY+gE+r/nqycvOvQK858RQCuiiVY7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=unpMp4bmBHVp+2+/WpETSqkhrWF8aIhb1AlpNIM1aBOcpIwCIHi4dHYWtEKv4qjs/Uurlf/mrd62mcMJqwTPIj9CLq+KRHUCVaj2Qal1XUI/KVbP3B0JEu5mg1tC2cvOoe5Ze5FzCIWuYeTA8xeSn7ZIziCpbGAuNyrmzlKiTVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=gDcG1d1f; arc=none smtp.client-ip=212.27.42.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSTI7V4D"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7e1b4f96994so67090839f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715881517; x=1716486317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ukR4HOtDmG+aiLIkXxjNBu5JDcDw31zQRKh9uhizZeM=;
-        b=kSTI7V4DRLIQmmsPw/LcgWQ47FyLVY+4h07wKV6oSS5LEH+TV2jQxk47sgwm7eNOEC
-         JVbTlNT0jyXxXLI519Mg6E6TS1qSfmabmUsVEZHVpkxqxRI+MsDWWDjVbuEQFmRQuvcQ
-         fF6IUVdhwCd+Wdt08cc52Zu883kiQ8YeQyEqO2fBONJBJFI7VqqyGMapWhMU0CX6MR3B
-         tyaeZn6a6s9V4OWLfJ0T6pKuD1B21b3g6R/+Sy7qWfYrtADDOo3J2hmdjFsRFRroe5rE
-         VJpbzEvBUx5HIvNdwlSwYdJWKXpbRR536rKXVu3YFUmGD9jwj75nyGySY5piuCfRCsH2
-         8MBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715881517; x=1716486317;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ukR4HOtDmG+aiLIkXxjNBu5JDcDw31zQRKh9uhizZeM=;
-        b=oTexwPdo1PVUT9ajhuXvjnOZCCgUvfRqe/woNEMV6KT5ooo3iheGAds0enEs4HOTJ9
-         ECFZ4Ufzcg+kqv3RJLyKRK2s01bW9/hWZuVXCR2IuGjMVzjpVpf34cz82iQuJRo29nzt
-         +hu44fE/+v9n6lRHk40PrXZoc9bJZGljsCKRgvZTK8+8EKILCyYtOE0vwo7g+HCLzP0j
-         XiRl6t34jhtKEsuSr3mlXZ+O3uvH4Ob3maN4amb+dvDk9ika7433wwODLezl2iw1Xxxu
-         DYOk2KwoI+4e8E4uhdVcrWIE02jbRcaMJj3HbcaXmydOmM5/8RqNQYPEa9hfyO51zyHW
-         palA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9PiuKsHI00L2nO2m9d0yyuCyPWUNPsildwOtGW5qs0jhbYjMEk2YktlZ93XZhCzoLzzNS0wCc4VSZqOIP5dJ7RO4YVK0jpRwBI7rF
-X-Gm-Message-State: AOJu0YycCtuOxbG7jhY8GuQUvRoijpYq20khTUpCPXfUWTe273vdbItO
-	RRydfNqZ3XUql6RCHPEdyDsvVBSx8KZ7s+6sHV9XZYs/YLusTt9P
-X-Google-Smtp-Source: AGHT+IF+loahpwgX1qQzZzX7o852RXgHf2TH/P0vy4pdFWNAsBt/Ni5cQCu5Kzr6tBou3N9C6Q+Msw==
-X-Received: by 2002:a05:6602:1311:b0:7e1:896e:5065 with SMTP id ca18e2360f4ac-7e1b520203amr2097824439f.14.1715881517661;
-        Thu, 16 May 2024 10:45:17 -0700 (PDT)
-Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4893715057csm4273595173.80.2024.05.16.10.45.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 10:45:17 -0700 (PDT)
-From: Jim Cromie <jim.cromie@gmail.com>
-To: jbaron@akamai.com,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org
-Cc: ukaszb@chromium.org,
-	linux@rasmusvillemoes.dk,
-	joe@perches.com,
-	mcgrof@kernel.org,
-	daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com,
-	jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com,
-	seanpaul@chromium.org,
-	robdclark@gmail.com,
-	groeck@google.com,
-	yanivt@google.com,
-	bleung@google.com,
-	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v8-RESEND 33/33] drm-print: workaround compiler meh
-Date: Thu, 16 May 2024 11:43:57 -0600
-Message-ID: <20240516174357.26755-34-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240516174357.26755-1-jim.cromie@gmail.com>
-References: <20240516174357.26755-1-jim.cromie@gmail.com>
+	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="gDcG1d1f"
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 77A13838877;
+	Thu, 16 May 2024 19:45:10 +0200 (CEST)
+Received: from bender.morinfr.org (unknown [82.66.66.112])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id E01C52003DA;
+	Thu, 16 May 2024 19:44:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
+	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=DO00WEdXqFHQonuL0UPMB1TAl+thIt5qyy/212nRK3E=; b=gDcG1d1f2HM9W8Vm0kmbegGiSC
+	RNCJjYIBM6ZELYTfX3ixHaQzM0c+wLgyJ/F29JC6Pzssr9cQ7aqRhE7RjhevQZdOkkxBcrK99Qs1m
+	iEaTBoFdRKxumFArgvEHnlDceYXzfXictXGMi9DeX4Pc7hSenobNUfQb6H/OorahsUmE=;
+Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
+	(envelope-from <guillaume@morinfr.org>)
+	id 1s7fA2-006Qht-1D;
+	Thu, 16 May 2024 19:44:58 +0200
+Date: Thu, 16 May 2024 19:44:58 +0200
+From: Guillaume Morin <guillaume@morinfr.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: oleg@redhat.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, muchun.song@linux.dev
+Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
+Message-ID: <ZkZGGkxXNaF5JPQ5@bender.morinfr.org>
+References: <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
+ <ZilvOi7ceSXmwkNq@bender.morinfr.org>
+ <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
+ <Zip0fEliGeL0qmID@bender.morinfr.org>
+ <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
+ <Zirw0uINbP6GxFiK@bender.morinfr.org>
+ <385d3516-95bb-4ff9-9d60-ac4e46104130@redhat.com>
+ <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+ <8a7b9e65-b073-4132-9680-efc2b3af6af0@redhat.com>
+ <ZjMPtrsrUi8-QJ0G@bender.morinfr.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjMPtrsrUi8-QJ0G@bender.morinfr.org>
 
-For some reason I cannot grok, I get an unused variable 'category'
-warning/error, though the usage follows immediately.  This drops the
-local var and directly derefs in the macro-call, which somehow avoids
-the warning.
+On 02 May  5:59, Guillaume Morin wrote:
+>
+> On 30 Apr 21:25, David Hildenbrand wrote:
+> > > I tried to get the hugepd stuff right but this was the first I heard
+> > > about it :-) Afaict follow_huge_pmd and friends were already DTRT
+> > 
+> > I'll have to have a closer look at some details (the hugepd writability
+> > check looks a bit odd), but it's mostly what I would have expected!
+> 
+> Ok in the meantime, here is the uprobe change on your current
+> uprobes_cow trying to address the comments you made in your previous
+> message. Some of them were not 100% clear to me, so it's a best effort
+> patch :-) Again lightly tested
 
-commit 9fd6f61a297e ("drm/print: add drm_dbg_printer() for drm device specific printer")
-CC: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- drivers/gpu/drm/drm_print.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+David, have you had a chance to take a look at both patches?
 
-diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
-index efdf82f8cbbb..c400441cd77e 100644
---- a/drivers/gpu/drm/drm_print.c
-+++ b/drivers/gpu/drm/drm_print.c
-@@ -183,11 +183,10 @@ void __drm_printfn_dbg(struct drm_printer *p, struct va_format *vaf)
- {
- 	const struct drm_device *drm = p->arg;
- 	const struct device *dev = drm ? drm->dev : NULL;
--	enum drm_debug_category category = p->category;
- 	const char *prefix = p->prefix ?: "";
- 	const char *prefix_pad = p->prefix ? " " : "";
- 
--	if (!__drm_debug_enabled(category))
-+	if (!__drm_debug_enabled(p->category))
- 		return;
- 
- 	/* Note: __builtin_return_address(0) is useless here. */
 -- 
-2.45.0
-
+Guillaume Morin <guillaume@morinfr.org>
