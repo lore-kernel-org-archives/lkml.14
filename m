@@ -1,152 +1,141 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1AD14293;
-	Thu, 16 May 2024 09:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E1C143754;
+	Thu, 16 May 2024 10:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715853578; cv=none; b=URhgKnDj7C6e+u6qIOSH9WYxC4ntPAB3zK+b/E9J7O7X1iePAzBW7rXY5vFsoecr/y79XN6lw2CAr5QKGbDIWfCz4CMuacoo8dLwpO6+tDo/fLqWIjKf/ZGNjpBWf0pA5kqMKTLN7a2EnoEUVas6tuIXNXwxKo00oIIhsn9tClw=
+	t=1715853654; cv=none; b=Ai/VUEeWgW/jFXrBX0nlij+1tMERbCJZgobuVc5ja/IcPbr+S2RvDHHMslZMoRA7aZh/skP0p8Va0OHNfS+EiJRi1ETiAjr4bAvfir+symEoQtt8fEPf2Yb3qOeTMeqD5gqFCJN8D24oBqOED1C6JKqYQPCMOYBSBpT+lDKo6a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715853578; c=relaxed/simple;
-	bh=dK2WkFIc661KKKqOwvbtfh51Ajk+5fstyZfpRUmwN2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DB7zWJxUMACFXp/OostE/XDdixgx7qYzH8mzw15uwYFsqS2/1Rf8NYqsc05eN27RcXEkK4YzFvOxGn+ui+/m//puWZTKjxnw2reC5Se2psgnvBFJ4Dy2oCKEnoVJsAy1LysqL3XyFJA1t5xlk7RE3tmDqqRxfBNicM7x2mgyrrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qdf7UJxl; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715853654; c=relaxed/simple;
+	bh=8HXogCTpnJ/n4MmOkUeaDBlbudv84EkCG4VMtstjvmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M8S20Fn9c1gf09D4mGQQdH6egXhJW7TbtLxq8sXABnZ7YNyr5KFfnvZ9Sh1W4C/3LRLKCxVhgNZgmzM5UTIT3XGq3Nwn1p/WafRwYJFhQZ2XW4a4TnP1Gd85gtKi1IMlhmTvmSsTPN7x4rus7RFrBgxo86y9OH2isoKbTRQ3ZP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=jf2ezs57; arc=none smtp.client-ip=5.189.157.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qdf7UJxl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715853574;
-	bh=dK2WkFIc661KKKqOwvbtfh51Ajk+5fstyZfpRUmwN2M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qdf7UJxluJK7VRWEKILOAxaP85bTBG6aWspLroV80yixGNmF+YeHh3KaaEQ54GWC6
-	 MFF0PReIwv3Tb+NZgyCaVmHtAi2TIHYZT+rqfslChY2gL3EVI86K//FHPSmhH2y6Q+
-	 vVFgRpybXddrl63bTWXm80tWUPOem0I2PZuPyeBTtzYPePWnE+OthXuCDER7SRS7Tq
-	 ffehsgmYFMGtvzeASN5aAGEgVp4r1Xu3I4z+4NpQOMO61GgSYhxcUG6F4yXu5xOZfq
-	 efT0kxjT8MMuw2KFQu9vUPez1MN58/reCdKydoel5SrNhGiBH9FoOzAIFmZcpraHFk
-	 Qhs155mWVGxNA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BAD343780C13;
-	Thu, 16 May 2024 09:59:32 +0000 (UTC)
-Message-ID: <a1d91cee-e2e4-4310-a9b4-984626144ab2@collabora.com>
-Date: Thu, 16 May 2024 11:59:31 +0200
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="jf2ezs57"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=ZOdg+UxEX0UYoNsiLotMQ5sr/A6Ve75FAxdqq6STPCI=; b=jf2ezs57UCUKXx/sircGT0LdPB
+	xPAGh1Cdn6buWBed/Gmq53llWqOrzXwr6YpwqUJmZe8piJKAsd83YaiLwYX3Kk0onUrRGPqAqi/PC
+	RemYT6EInkg2heGsesVl2IYqK4++yNSRn1tDlq4PWnH8gjU2oxxOfkJx8cOetphZquu7H9anMmmRN
+	S3hpMj1iO3OTNJO7rr1VEFT7UOVo2C00Ww/K+gUe4tm5I3dfUaYSJkwg1YzUpaDcgvy6Kuxi7j1gF
+	erYjMVTKXn0T2+4pyYUW7gux2ILIinifaVkkOlz0Hwb79AECJfcKXmWBvg2W9Lq29bxmQpSZJ5Nrd
+	waUVEVDI2EC+jGF8N4vqqGLt5eWYJwOCacPF0uoG75HDzqY+uSOIFsJHS333CKGIOCpyz2EzbCGpU
+	oFdTjg4g2TSFsqda74wgDgF+DoYStG9b27WokFpXNKRgnjwKwf3XAfmSOEj6eQ0vhD48GCwSJNuXP
+	jZA04DmieDSfXMoYf5uLxoyVJ3LTOzW+vqta1qQCiVuUU+s7riCBxF4mzZBo/ShuMmX3oGFi46RqZ
+	ewzVO7F4Hui3Lq7iEDlDEZIbmO03oP92bnjPNVclpqryqdOANJpwiLmfOgwJ8HdpK/xR/ETXdt+dN
+	MNNh0XWEh6Dv4UTUzKQSjZOX4V2T96hP557JuU2FI=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: Eric Van Hensbergen <ericvh@kernel.org>,
+ Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+ Latchesar Ionkov <lucho@ionkov.net>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, v9fs@lists.linux.dev,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
+ syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com
+Subject: Re: [PATCH net v2] net/9p: fix uninit-value in p9_client_rpc()
+Date: Thu, 16 May 2024 11:27:21 +0200
+Message-ID: <1731146.XZuUqIVtO3@silver>
+In-Reply-To: <20240408141039.30428-1-n.zhandarovich@fintech.ru>
+References: <20240408141039.30428-1-n.zhandarovich@fintech.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/9] scatterlist: Add a flag for the restricted memory
-To: Yong Wu <yong.wu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, christian.koenig@amd.com,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- tjmercier@google.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Robin Murphy <robin.murphy@arm.com>,
- Vijayanand Jitta <quic_vjitta@quicinc.com>,
- Joakim Bech <joakim.bech@linaro.org>,
- Jeffrey Kardatzke <jkardatzke@google.com>, Pavel Machek <pavel@ucw.cz>,
- Simon Ser <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>,
- willy@infradead.org, Logan Gunthorpe <logang@deltatee.com>,
- Daniel Vetter <daniel@ffwll.ch>, jianjiao.zeng@mediatek.com,
- kuohong.wang@mediatek.com, youlin.pei@mediatek.com
-References: <20240515112308.10171-1-yong.wu@mediatek.com>
- <20240515112308.10171-3-yong.wu@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240515112308.10171-3-yong.wu@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Il 15/05/24 13:23, Yong Wu ha scritto:
-> Introduce a FLAG for the restricted memory which means the memory is
-> protected by TEE or hypervisor, then it's inaccessiable for kernel.
+On Monday, April 8, 2024 4:10:39 PM CEST Nikita Zhandarovich wrote:
+> Syzbot with the help of KMSAN reported the following error:
 > 
-> Currently we don't use sg_dma_unmark_restricted, thus this interface
-> has not been added.
+> BUG: KMSAN: uninit-value in trace_9p_client_res include/trace/events/9p.h:146 [inline]
+> BUG: KMSAN: uninit-value in p9_client_rpc+0x1314/0x1340 net/9p/client.c:754
+>  trace_9p_client_res include/trace/events/9p.h:146 [inline]
+>  p9_client_rpc+0x1314/0x1340 net/9p/client.c:754
+>  p9_client_create+0x1551/0x1ff0 net/9p/client.c:1031
+>  v9fs_session_init+0x1b9/0x28e0 fs/9p/v9fs.c:410
+>  v9fs_mount+0xe2/0x12b0 fs/9p/vfs_super.c:122
+>  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+>  vfs_get_tree+0xa7/0x570 fs/super.c:1797
+>  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+>  path_mount+0x742/0x1f20 fs/namespace.c:3679
+>  do_mount fs/namespace.c:3692 [inline]
+>  __do_sys_mount fs/namespace.c:3898 [inline]
+>  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+>  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+>  do_syscall_64+0xd5/0x1f0
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
 > 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Uninit was created at:
+>  __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
+>  __alloc_pages_node include/linux/gfp.h:238 [inline]
+>  alloc_pages_node include/linux/gfp.h:261 [inline]
+>  alloc_slab_page mm/slub.c:2175 [inline]
+>  allocate_slab mm/slub.c:2338 [inline]
+>  new_slab+0x2de/0x1400 mm/slub.c:2391
+>  ___slab_alloc+0x1184/0x33d0 mm/slub.c:3525
+>  __slab_alloc mm/slub.c:3610 [inline]
+>  __slab_alloc_node mm/slub.c:3663 [inline]
+>  slab_alloc_node mm/slub.c:3835 [inline]
+>  kmem_cache_alloc+0x6d3/0xbe0 mm/slub.c:3852
+>  p9_tag_alloc net/9p/client.c:278 [inline]
+>  p9_client_prepare_req+0x20a/0x1770 net/9p/client.c:641
+>  p9_client_rpc+0x27e/0x1340 net/9p/client.c:688
+>  p9_client_create+0x1551/0x1ff0 net/9p/client.c:1031
+>  v9fs_session_init+0x1b9/0x28e0 fs/9p/v9fs.c:410
+>  v9fs_mount+0xe2/0x12b0 fs/9p/vfs_super.c:122
+>  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+>  vfs_get_tree+0xa7/0x570 fs/super.c:1797
+>  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+>  path_mount+0x742/0x1f20 fs/namespace.c:3679
+>  do_mount fs/namespace.c:3692 [inline]
+>  __do_sys_mount fs/namespace.c:3898 [inline]
+>  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+>  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+>  do_syscall_64+0xd5/0x1f0
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> 
+> If p9_check_errors() fails early in p9_client_rpc(), req->rc.tag
+> will not be properly initialized. However, trace_9p_client_res()
+> ends up trying to print it out anyway before p9_client_rpc()
+> finishes.
+> 
+> Fix this issue by assigning default values to p9_fcall fields
+> such as 'tag' and (just in case KMSAN unearths something new) 'id'
+> during the tag allocation stage.
+> 
+> Reported-and-tested-by: syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com
+> Fixes: 348b59012e5c ("net/9p: Convert net/9p protocol dumps to tracepoints")
+> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 > ---
->   include/linux/scatterlist.h | 34 ++++++++++++++++++++++++++++++++++
->   1 file changed, 34 insertions(+)
+> v2: change fc->tag init value from 0 to P9_NOTAG per Dominique
+> Martinet's <asmadeus@codewreck.org> helpful suggestion.
+> Link: https://lore.kernel.org/all/ZhNVMivKCCq6wir0@codewreck.org/
 > 
-> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> index 77df3d7b18a6..a6ad9018eca0 100644
-> --- a/include/linux/scatterlist.h
-> +++ b/include/linux/scatterlist.h
-> @@ -282,6 +282,7 @@ static inline void sg_unmark_end(struct scatterlist *sg)
->   
->   #define SG_DMA_BUS_ADDRESS	(1 << 0)
->   #define SG_DMA_SWIOTLB		(1 << 1)
-> +#define SG_DMA_RESTRICTED	(2 << 1)
+>  net/9p/client.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-I think you wanted to write (1 << 2) here :-)
+Reviewed-by: Christian Schoenebeck <linux_oss@crudebyte.com>
 
-Cheers,
-Angelo
-
->   
->   /**
->    * sg_dma_is_bus_address - Return whether a given segment was marked
-> @@ -352,6 +353,31 @@ static inline void sg_dma_mark_swiotlb(struct scatterlist *sg)
->   	sg->dma_flags |= SG_DMA_SWIOTLB;
->   }
->   
-> +/**
-> + * sg_dma_mark_restricted - Mark the scatterlist for restricted buffer.
-> + * @sg:		SG entry
-> + *
-> + * Description:
-> + *   Marks a a scatterlist for the restricted buffer that may be inaccessiable
-> + *   in kernel if it is protected.
-> + */
-> +static inline void sg_dma_mark_restricted(struct scatterlist *sg)
-> +{
-> +	sg->dma_flags |= SG_DMA_RESTRICTED;
-> +}
-> +
-> +/**
-> + * sg_dma_is_restricted - Return whether the scatterlist was marked as restricted
-> + *                        buffer.
-> + * @sg:		SG entry
-> + *
-> + * Description:
-> + *   Returns true if the scatterlist was marked as restricted buffer.
-> + */
-> +static inline bool sg_dma_is_restricted(struct scatterlist *sg)
-> +{
-> +	return sg->dma_flags & SG_DMA_RESTRICTED;
-> +}
->   #else
->   
->   static inline bool sg_dma_is_bus_address(struct scatterlist *sg)
-> @@ -372,6 +398,14 @@ static inline void sg_dma_mark_swiotlb(struct scatterlist *sg)
->   {
->   }
->   
-> +static inline bool sg_dma_is_restricted(struct scatterlist *sg)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline void sg_dma_mark_restrited(struct scatterlist *sg)
-> +{
-> +}
->   #endif	/* CONFIG_NEED_SG_DMA_FLAGS */
->   
->   /**
+> diff --git a/net/9p/client.c b/net/9p/client.c
+> index f7e90b4769bb..b05f73c291b4 100644
+> --- a/net/9p/client.c
+> +++ b/net/9p/client.c
+> @@ -235,6 +235,8 @@ static int p9_fcall_init(struct p9_client *c, struct p9_fcall *fc,
+>  	if (!fc->sdata)
+>  		return -ENOMEM;
+>  	fc->capacity = alloc_msize;
+> +	fc->id = 0;
+> +	fc->tag = P9_NOTAG;
+>  	return 0;
+>  }
+>  
+> 
 
 
