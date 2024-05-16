@@ -1,182 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B9B1459E7;
-	Thu, 16 May 2024 10:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA8F143866
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715856292; cv=none; b=GTrfC85OyQgWryIwjB0bz6pz7pejACS490aUH8ltdurB0ePMDp47iMVrWh0mbhhgknBQBs763PlR6v5WSZHe//FqC9Z/KdwIJHaivaCMlQZCx/7i0aZnMT6c+V3psw8JGaO6zi8otTHvyHETafN0gh3jfiCVXtj7iIoQ72yH73Q=
+	t=1715856384; cv=none; b=Hd2cNXeBRdGAMW36+6zdxrkGHTnCha3fw51HGGdar1lnTYDNGxO2qN/XxelRARUgbDIP/3vG6Uj8ovpSximjNNbYgiS0lErzxhWm4U9rGPSDRoDg35A6fe1jXR3MibbyvIamMIbY+XayPeKYtCdFgceFOFU+bj+My7kOfWJ69cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715856292; c=relaxed/simple;
-	bh=qS3BQVM65ikytVxg+vUaAJl6zot53RNMbcABisDLmAo=;
+	s=arc-20240116; t=1715856384; c=relaxed/simple;
+	bh=QY0AeitsqqCxT+3ZJAW/jZAg5x1lur9Lmw+RgFWMNH8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YeLlobXaqiaAIeoxb9X/fc8dhh72b9SLSnrivPovUZXXfCgg6KHaCLb0/D7uivmuHoWeAppPXVtAH9q9kMRPfKFs6z3Xevp+kvySPgRazRGT0By/HMSUgLTJMK2dhtTfGCiBEYbY4AK+0ymlOfTbCa24w54Ki7OzLLFfVroMWig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MWCFE3h/; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OYHgk4JDiWtp8IG49FJIBViBVtCWH17aR5mjOyWyWOSlWJtbgStRqaPbFv3gdgTz7IAo0AViUSxOg7+PfwI/wzxNKJP5Zo1geSk3RmFXn6S51coOQ2Ug7OlPyBwXQgDU8GxT2E1cHQeQFqmZz2heLrTgaEWCEmn2+z574BL7aoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=SWrmU0Rd; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MWCFE3h/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715856290; x=1747392290;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qS3BQVM65ikytVxg+vUaAJl6zot53RNMbcABisDLmAo=;
-  b=MWCFE3h/HDtechq24Sd3F51aeTUVLTAScDhey8TcWbuu4a/7UxiISxml
-   /VBSpCaJY00wOEyKMmB8dCRnicEZN8c/YTPNmPtP7gkjdeU4OcDmn1Nhr
-   y7blHJrm++KhAFN34nvnD+L5N9WhCeFw3bsIQLegu8QSV59/vfZ+tZqbC
-   0XGd36gRHBdsK/07Q/wpqxDs/M5VKj3xRvwuE4TKqUR+Vh09/zfACuhBH
-   B1nmaiX+Uv61IbayaIw8IkTmRFDvG2ePK8iJYQz+MndjOsx/UZLYnIsvv
-   HHlh1mfEd5qPL/6A5ima1Tp6DFIRooFjvhskXfz1KUVMBqGZX+vUc1g32
-   w==;
-X-CSE-ConnectionGUID: /w7R8K5OTDeDrJqe2XoIdg==
-X-CSE-MsgGUID: Oz0HWs4cTNawcPedAV57ew==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23359552"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="23359552"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 03:44:50 -0700
-X-CSE-ConnectionGUID: wjKu3xKkQ3yH316fiCEIWA==
-X-CSE-MsgGUID: cNzrnd0JQN2kqljDpR/TxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="35822114"
-Received: from unknown (HELO mev-dev) ([10.237.112.144])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 03:44:48 -0700
-Date: Thu, 16 May 2024 12:44:13 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Harald Welte <laforge@gnumonks.org>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Wojciech Drewek <wojciech.drewek@intel.com>, netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Intel-wired-lan] [PATCH net-next v6 00/21] ice: add PFCP filter
- support
-Message-ID: <ZkXjfeLhB9T5MLfX@mev-dev>
-References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
- <ZkSivjg7uZsA20ft@nataraja>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="SWrmU0Rd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=sfAZnDr/F1j2PBMDkg6bGHqWdxY46sHH2KFN7kd5Q+M=; b=SWrmU0Rd04ldJWtx
+	rGBYzPzLRskEM4WaMyouHDDf83TFn7AHQoI4Il20LDhBI79LYDS/CoppJciRiqc9a8Zy/9iBKaVCw
+	I8D3C2MzatXyJZSmBp0e1tpaZJYn71TQDnSRSdqLgd2+MDyHFhnfbvj6eSF06YHjpwgZbWk7hXPUC
+	Bn1Igf15a3inK41UFkAc5n0siUc+GrRi5+SajQiFbgwBWzMyi9H19n4KkeQlg5TDUSFcZpSn1vHJS
+	JzgX3AqLHBmg9Xn/s5AFxk0hvlMWi+dhUDlnqFeFDgDG0h6Pl5ANphie8B/EuSGpZhnkxAamkeGj0
+	+OBTzX1cIgLPfCT45w==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1s7Ycm-001Cjz-1l;
+	Thu, 16 May 2024 10:46:12 +0000
+Date: Thu, 16 May 2024 10:46:12 +0000
+From: "Dr. David Alan Gilbert" <dave@treblig.org>
+To: sudipm.mukherjee@gmail.com
+Cc: arnd@arndb.de, linux-kernel@vger.kernel.org,
+	linux-parport@lists.infradead.org
+Subject: Re: [PATCH 0/3] parport: Cleanup some pre-devmodel code
+Message-ID: <ZkXj9Ip3DoUAe1wt@gallifrey>
+References: <20240502154823.67235-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZkSivjg7uZsA20ft@nataraja>
+In-Reply-To: <20240502154823.67235-1-linux@treblig.org>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 10:45:58 up 7 days, 22:00,  1 user,  load average: 0.05, 0.01, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Wed, May 15, 2024 at 01:55:42PM +0200, Harald Welte wrote:
-> Daer Alexander, Wojciech,
+* linux@treblig.org (linux@treblig.org) wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> There are some remenants of the pre-devmodel code
+> still in the parport drivers; try and clean some of them out.
 
-Hi Harald,
+Ping!
 
-> 
-> forgive me for being late to the party, but I just saw the PFCP support
-> hitting Linus'' git repo in 1b294a1f35616977caddaddf3e9d28e576a1adbc
-> and was trying to figure out what it is all about.  Is there some kind
-> of article, kernel documentation or other explanation about it?
-> 
-> I have a prehistoric background in Linux kernel networking, and have
-> been spending much of the last two decades in creating open source
-> implemenmtations of 3GPP specifications.
-> 
-> So I'm very familiar with what PFCP is, and what it does, and how it is
-> used as a protocol by the 3GPP control plane to control the user/data
-> plane.
-> 
-> Conceptually it seems very odd to me to have something like *pfcp
-> net-devices*.  PFCP is just a control plane protocol, not a tunnel
-> mechanism.
-> 
-> From the Kconfig:
-> 
-> > +config PFCP
-> > +	tristate "Packet Forwarding Control Protocol (PFCP)"
-> > +	depends on INET
-> > +	select NET_UDP_TUNNEL
-> > +	help
-> > +	  This allows one to create PFCP virtual interfaces that allows to
-> > +	  set up software and hardware offload of PFCP packets.
-> 
-> I'm curious to understand why are *pfcp* packets hardware offloaded?
-> PFCP is just the control plane, similar to you can consider netlink the
-> control plane by which userspace programs control the data plane.
-> 
-> I can fully understand that GTP-U packets are offloaded to kernel space or
-> hardware, and that then some control plane mechanism like PFCP is needed
-> to control that data plane.  But offloading packets of that control
-> protocol?
+Dave
 
-It is hard for me to answer your concerns, because oposite to you, I
-don't have any experience with telco implementations. We had client that
-want to add offload rule for PFCP in the same way as for GTP. Intel
-hardware support matching on specific PFCP packet parts. We spent some
-time looking at possible implementations. As you said, it is a little
-odd to follow the same scheme for GTP and PFCP, but it look for me like
-reasonable solution.
-
-The main idea is to allow user to match in tc flower on PFCP specific
-parts. To do that we need PFCP device (which is like dummy device for
-now, it isn't doing anything related to PFCP specification, only parsing).
-
-Do you have better idea for that?
-
+> This series should have no visible change, all the drivers
+> already use the devmodel, it's just removing the flags
+> that say that, and cleaning out no longer used function pointers.
+> (To me the most useful bit is removing the no longer used
+> 'attach' pointer, so if you've got code that's trying to use
+> it you'll get educated).
 > 
-> I also see the following in the patch:
+> Trivially tested in qemu, I can still write to the lp;
 > 
-> > +MODULE_DESCRIPTION("Interface driver for PFCP encapsulated traffic");
+> Also checked with grep -r 'struct parport_driver' . -A 9
+> to see if I've missed any.
 > 
-> PFCP is not an encapsulation protocol for user plane traffic.  It is not
-> a tunneling protocol.  GTP-U is the tunneling protocol, whose
-> implementations (typically UPFs) are remote-controlled by PFCP.
+> (I found this while dragging the out-of-tree ppscsi code
+> into working on head, so that I could use my prehistoric
+> HP PP scanner)
 > 
-
-Agree, it is done like that to simplify implementation and reuse kernel
-software stack.
-
-> > +	  Note that this module does not support PFCP protocol in the kernel space.
-> > +	  There is no support for parsing any PFCP messages.
+> Dave
 > 
-> If I may be frank, why do we introduce something called "pfcp" to the
-> kernel, if it doesn't actually implement any of the PFCP specification
-> 3GPP TS 29.244 (which is specifying a very concrete protocol)?
+> Dr. David Alan Gilbert (3):
+>   parport: Remove 'drivers' list
+>   parport: Remove attach function pointer
+>   parport: Remove parport_driver.devmodel
 > 
-> Once again, I just try to understand what you're trying to do here. It's
-> very much within my professional field, but I somehow cannot align what
-> I see within this patch set with my existing world view of what PFCP is
-> and how it works.
+>  drivers/ata/pata_parport/pata_parport.c  | 1 -
+>  drivers/auxdisplay/ks0108.c              | 1 -
+>  drivers/auxdisplay/panel.c               | 1 -
+>  drivers/char/lp.c                        | 1 -
+>  drivers/char/ppdev.c                     | 1 -
+>  drivers/i2c/busses/i2c-parport.c         | 1 -
+>  drivers/input/joystick/db9.c             | 1 -
+>  drivers/input/joystick/gamecon.c         | 1 -
+>  drivers/input/joystick/turbografx.c      | 1 -
+>  drivers/input/joystick/walkera0701.c     | 1 -
+>  drivers/input/serio/parkbd.c             | 1 -
+>  drivers/net/hamradio/baycom_epp.c        | 1 -
+>  drivers/net/hamradio/baycom_par.c        | 1 -
+>  drivers/net/plip/plip.c                  | 1 -
+>  drivers/parport/daisy.c                  | 1 -
+>  drivers/parport/share.c                  | 9 ---------
+>  drivers/pps/clients/pps_parport.c        | 1 -
+>  drivers/pps/generators/pps_gen_parport.c | 1 -
+>  drivers/scsi/imm.c                       | 1 -
+>  drivers/scsi/ppa.c                       | 1 -
+>  drivers/spi/spi-butterfly.c              | 1 -
+>  drivers/spi/spi-lm70llp.c                | 1 -
+>  include/linux/parport.h                  | 6 ------
+>  sound/drivers/mts64.c                    | 1 -
+>  sound/drivers/portman2x4.c               | 1 -
+>  25 files changed, 38 deletions(-)
 > 
-> If anyone else has a better grasp of the architecture of this kernel
-> PFCP support, or has any pointers, I'd be very happy to follow up
-> on that.
-
-This is the way to allow user to steer PFCP packet based on specific
-opts (type and seid) using tc flower. If you have better solution for
-that I will probably agree with you and will be willing to help you
-with better implementation.
-
-I assume the biggest problem here is with treating PFCP as a tunnel
-(done for simplification and reuse) and lack of any functionality of
-PFCP device (moving the PFCP specification implementation into kernel
-probably isn't good idea and may never be accepted).
-
-Offloading doesn't sound like problematic. If there is a user that want
-to use that (to offload for better performance, or even to steer between
-VFs based on PFCP specific parts) why not allow to do that?
-
-In your opinion there should not be the pfcp device in kernel, or the
-device should have more functionality (or any functionality, because now
-it is only parsing)?
-
-> 
-> Thanks for your time,
-> 	Harald
->
-
-Thanks,
-Michal
-
 > -- 
-> - Harald Welte <laforge@gnumonks.org>          https://laforge.gnumonks.org/
-> ============================================================================
-> "Privacy in residential applications is a desirable marketing option."
->                                                   (ETSI EN 300 175-7 Ch. A6)
+> 2.44.0
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
