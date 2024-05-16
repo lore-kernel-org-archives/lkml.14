@@ -1,80 +1,135 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED5A158847
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 19:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2232157A53;
+	Thu, 16 May 2024 19:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886348; cv=none; b=BQRFgBR0ZDMEukxt9y3dvy+lyw31rAj6Oa15HDFhRXuV0W7FIBDneFUqsEZsgGAnkdc9zXksbb2tu9009XxsAigcr73rfKa1OGeeuwbU3l3MwYIEx6dRb3jU9UJ/CkzQFDjobOwU/zgvrqJzrbs65xNvGYTZQo8iwehKS6i0/hg=
+	t=1715886440; cv=none; b=pHd2T977uXCkLabNamcHuSp+XmGlmmHcBy5mJ/Gi/TKHE3yodt1gkggfSqwCxDuGQerR5p+1NgzxwafRzJQostBMTdfBcgzOPAyd0soO8GP8G+/NzwIY0h2wM4pIhCOU/iKwNt/dilz6ypTWV7smblzyem6cUz3Ij7+N+8y1NlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715886348; c=relaxed/simple;
-	bh=H0Rlu7T3RgrJmIMBSQaKaUwNMaaEBGXcNd8GDQEoea0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oh+w916clHETdkagt7XYkBmoR2u6LKPRYhq5RnS7KP7Lg7611mOAEWQ+YbdohAqFu5tB1pOV9xPgaAadPExkP5JN7ovKVI3ij5HNqUyGfgKAsZMsZFw2Xt21jpxfAYPlZDYF5FrVJyN7VWSXHvJZbIJACU9s1foH8E/Yc8GIR1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jfksygcy; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1715886440; c=relaxed/simple;
+	bh=MHoT4Jo3RAzz8eEtqv+1iklBPBBHf3L8xhNTgPY77mk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=b5LGj4UH74bPdvMDZ58/raUYdUo/fuDZgl74dhALsDgCBtQNA9fLy0EEItwKmHzRpHqZOEBRBWR4JZSVhZa8yRLM4PuyV6YT6V8YIrEEPgPG50fSqbcocZr1xxWk//7zV05crclIc1CknynM0vZXw+8VNPxWfDyq/z9XZILFWB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfksygcy"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5a7d28555bso405003966b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:05:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715886345; x=1716491145; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H0Rlu7T3RgrJmIMBSQaKaUwNMaaEBGXcNd8GDQEoea0=;
-        b=jfksygcyo/DBplAECXXb+q10PQt9V486qrKOOo5FmftPrfV8T0QdHhEf0hU/FH+HAW
-         khfN4lvVZLnUAkgD7Jtyxg+/832bPv9vdxeaW6fSRtIC6Ll7Wsgrzin7kumimc64uKnD
-         eZ7Pirxt/hi1yy8MhS/O2j8Vs1pMZJrixtO2skLUJpIQeAEBBzgELAH9+u+cHyv9Ks4Z
-         7hDxOSCP0fEhc9Uq6syfVkek3KeO6WEAo4FfrgCLesYv763imTeGaDtJXJzJb6gzIUCh
-         kmzKAMuqiJ3YR1/6MVGzsj/nVFfOGrUxev4+V+Fez3S9SqmoG0Lxd9Qz8nA7i+Ae/4on
-         iD/w==
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4202cea9a2fso6606215e9.3;
+        Thu, 16 May 2024 12:07:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715886345; x=1716491145;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H0Rlu7T3RgrJmIMBSQaKaUwNMaaEBGXcNd8GDQEoea0=;
-        b=EIySCm0IrMRp4VAu0OUUUgdNzuV6HCUocU7yfqyAg7pZJRpr/OTpgAR0pAzckGwAIB
-         iO4yXbPoPlMYQ57c3ND5XQWoGNj3KcEPwv+cN3vteoRANx5zrcK4LOJGY/G+jFuOIhaK
-         rhH9gFrC5msvMpuK77YcKNJGAL3SnDSXSRal8hATRI81qhjEFi2QDBE58dxpjwxGgh8R
-         R5laNnzELpUA0w0yY2/PVMeTtVyXfQXHW2bLw+/f+6OaWshBEc5a7XYYbzTm7U7ey3sM
-         9L75WMsebMtNa2ywdSyS2doT9Rdj8HakRocfUAZILqYYpK1U1x2W3KIMUzOl6PyOSRpD
-         P+Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNLK+GrO6jsMix9dkr969kAsIVaTbYpA34wOM2LYT+bhwtFEHKuMD5H9qwJY67N8r2acwLiipIr9X9xly0vjlqYI7odE2SU0+zkdzE
-X-Gm-Message-State: AOJu0Yz1x1Nf2cvtPMBQvFFdNBQROElWULu2LR7c3jsWtcvb52t/PnvK
-	zugsvv+3OJqb1AsBIb0nNqJ2wnNaueMGmcUqC5PbuTzJBxW6/NLlOgPa
-X-Google-Smtp-Source: AGHT+IHV4zgBqPYSGcR0wfBH+SKzI7addG848AC+IwEJEiE+TDodxh4tOqDT2eE/7x188w9EhixXyQ==
-X-Received: by 2002:a17:907:1118:b0:a59:c5c2:a320 with SMTP id a640c23a62f3a-a5a2d581b19mr1308915666b.23.1715886345355;
-        Thu, 16 May 2024 12:05:45 -0700 (PDT)
-Received: from p183 ([46.53.249.88])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01968sm1013001566b.166.2024.05.16.12.05.44
+        d=1e100.net; s=20230601; t=1715886437; x=1716491237;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TGl25VI/bdS9cA0cwaeR3veGamr8DGMylL6oozmJjQ8=;
+        b=Q3EfbISFKyD1A/FwAF8KVvvIJ6CxUPtTUfX/dayyD/Hmn9JkBUL3E+9krxTt12rHkr
+         Yy2CNf7o8XjBekzZ6X7rTwNc6MINBP8nIYy85GMijoTZ22vdmkzOjuzwzj75WKa3o5UH
+         D3Ilru+TG6N5a5IXgct1FDtGy0mwOys2fRnLp7VBy6Gqvmgsc2u1IoP1Xez7RRHjSXbB
+         Qk1tBKlONVnvKEUZYnNVySSUXnsh368G4SsYeixi/I9/tG5v4UoGysDnEDhZZyU97Xgf
+         kL87o30pH7FUQYAoterl5/HlGkrsZxOEFm/HNKmgiyNOZq8qqcv1rYbLgEIi/Y9mAWiE
+         cE8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVDPeNhvNFzTcUJnUajeOzqPuAmcz53AA1jzVo1Nd3GdnltCX1O0WMJGnQFpIriDHGumxJHg01KKWL6XRpzgMwd702CKGim93IYPO6Aen1PCkEkHHrQCCNdlB8cAj4dKjsqaPQxYA==
+X-Gm-Message-State: AOJu0Yx64P/eAkWtEVEomprRprqW1l9i7R0NDixlDaMJ9Ai5zb2nz/EV
+	g1zq89ZERPdOUnjFaanD0jiUolU441NbNaEwRk2iAk6VQmWMPwrL
+X-Google-Smtp-Source: AGHT+IHU5PR5Vspk+t1XLlDt07CkPjZ43WOOq9u4XxhlmWZ+EEOyNz1/pOKCz5lmgQmKNi0bY+Qa4A==
+X-Received: by 2002:a05:600c:5008:b0:41b:dca6:a3fa with SMTP id 5b1f17b1804b1-41fead6dc7amr143740775e9.39.1715886436833;
+        Thu, 16 May 2024 12:07:16 -0700 (PDT)
+Received: from costa-tp.redhat.com ([2a00:a040:1a3:c059:8b18:f13e:da9b:5a8e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9335sm275834155e9.29.2024.05.16.12.07.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 12:05:44 -0700 (PDT)
-Date: Thu, 16 May 2024 22:05:42 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Edward Liaw <edliaw@google.com>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 45/66] selftests/proc: Drop define _GNU_SOURCE
-Message-ID: <4bbc6001-bafe-4db9-83fe-e03ddce1eb26@p183>
+        Thu, 16 May 2024 12:07:16 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: longman@redhat.com,
+	pauld@redhat.com,
+	juri.lelli@redhat.com,
+	prarit@redhat.com,
+	vschneid@redhat.com,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: [PATCH v1 0/7] sched: Adjust affinity according to change of housekeeping cpumask
+Date: Thu, 16 May 2024 22:04:30 +0300
+Message-ID: <20240516190437.3545310-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-> --- a/tools/testing/selftests/proc/proc-empty-vm.c
-> +++ b/tools/testing/selftests/proc/proc-empty-vm.c
+The housekeeping CPU masks, set up by the "isolcpus" and "nohz_full"
+boot command line options, are used at boot time to exclude selected
+CPUs from running some kernel housekeeping facilities to minimize
+disturbance to latency sensitive userspace applications such as DPDK.
 
-> -#undef _GNU_SOURCE
-> -#define _GNU_SOURCE
+However, these options can have negative consequences for "normal"
+workloads. Both nohz_full and rcu_nocbs can be applied to a subset of
+the CPUs on a server (so as to not impact the "normal" workloads), but
+they can only be changed with a reboot. This is a problem for
+containerized workloads running on OpenShift (i.e. kubernetes) where a
+mix of low latency and "normal" workloads can be created/destroyed
+dynamically and the number of CPUs allocated to each workload is often
+not known at boot time.
 
-No! Don't do this. It makes individual test program non-standalone.
+This series of patches is based on series
+"isolation: Exclude dynamically isolated CPUs from housekeeping masks"
+https://lore.kernel.org/lkml/20240229021414.508972-1-longman@redhat.com/
+Its purpose is to exclude dynamically isolated CPUs from some
+housekeeping masks so that subsystems that check the housekeeping masks
+at run time will not use those isolated CPUs.
 
-Right now you can copy it to some other machine which triggers test
-fauilure, compile and start debugging instead of remembering which
-stupid compile flags it requires.
+However, some of subsystems can use obsolete housekeeping CPU masks.
+Therefore, to prevent the use of these isolated CPUs, it is necessary to
+explicitly propagate changes of the housekeeping masks to all subsystems
+depending on the mask.
 
-NAK for /proc, sorry. I'd like to keep #define.
+Costa Shulyupin (7):
+  sched/isolation: Add infrastructure to adjust affinity for dynamic CPU
+    isolation
+  sched/isolation: Adjust affinity of timers according to change of
+    housekeeping cpumask
+  sched/isolation: Adjust affinity of hrtimers according to change of
+    housekeeping cpumask
+  sched/isolation: Adjust affinity of managed irqs according to change
+    of housekeeping cpumask
+  [NOT-FOR-MERGE] test timers affinity adjustment
+  [NOT-FOR-MERGE] test timers and hrtimers affinity adjustment
+  [NOT-FOR-MERGE] test managed irqs affinity adjustment
+
+ include/linux/hrtimer.h  |   2 +
+ include/linux/timer.h    |   2 +
+ init/Kconfig             |   1 +
+ kernel/cgroup/cpuset.c   |   3 +-
+ kernel/sched/isolation.c | 119 +++++++++++++++++++++++++++++++++++++--
+ kernel/time/hrtimer.c    |  81 ++++++++++++++++++++++++++
+ kernel/time/timer.c      |  64 +++++++++++++++++++++
+ tests/managed_irq.c      |  71 +++++++++++++++++++++++
+ tests/timers.c           |  58 +++++++++++++++++++
+ 9 files changed, 395 insertions(+), 6 deletions(-)
+ create mode 100644 tests/managed_irq.c
+ create mode 100644 tests/timers.c
+
+-- 
+2.45.0
+
