@@ -1,38 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E472146D51
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F45C1482EE
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:20:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715865616; cv=none; b=sYBFt+Ow5bImenKNbGZE4lec/XrzaoUMo1WtFAqRKOoJ3tPiNqQjJCvs0hbdDPWoxLCzG6wz5xk/UQEQvTmTZtxZNo5oxOMQmQ4z0n8m+fcEiAv2MU2JQPLhvBgeolvQg+EJxEsZjKknPxHZgQ19yrAN8TY5+/fY3LCIicC+I/w=
+	t=1715865614; cv=none; b=swDsvBfSva2TylffojysUL1fuC6mWLE8emUQZIa/iCfmkqcOYH/e5llCXTGLR7x9dLpfoUshZwM4KM3OV+KRxDIFTAahIbgT6qzx+N1CmbRpkYHxjbKYoqsuF/SPR5cPqhpPaBophzAhoQ75WR1ySneMF/XD/mH6qZvisYspeGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715865616; c=relaxed/simple;
-	bh=1OJ19Pl47nRtdHCzGqcZtNX9EYkZYfEVLt9EdjsyHOI=;
+	s=arc-20240116; t=1715865614; c=relaxed/simple;
+	bh=uCULzIdaIDCx7+tpjYQ+LGN7xyUdpe5Bnum1CiV04F4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sIFsvXiQ0rN/7cpkTHignjnGl8mvcr1Hs/5Gtjk880xRNlw1G9UiMfur6qtnclugAlsEayhqNT1gkn7maa3mzFWe7zFzF0coPOF6x6pLIzV+SPN/WKJzZHyu0QzoekBkDh+0VWCZWn2vs5mIFxdvJLRRhQdMxNh0DeWLKUyaNDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Z+ELg8JU; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=If/oCKZ7MNEiKhndzkwUoi+Tjj/nms4wzTuS6KB7wutHVrkn/C3hBGYItME8AbBMjQ5VHRxvLP2DiSWIe8Dzkydvxqh0mFqIXmdbGTEn5jS3Gslw9EEdonGzLLH5u/TVN7/mcWcIFCrXe5V/DF3PYCEvVkvnVVEaE9/GkopN4uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jQNNLi98; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Z+ELg8JU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 22C8E1C0003;
-	Thu, 16 May 2024 13:20:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jQNNLi98"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1B3DB1C0002;
+	Thu, 16 May 2024 13:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715865612;
+	t=1715865611;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Gxsky9In9MMh/e1w5QTvAWtdGDRX6UThnRqmblTzJ18=;
-	b=Z+ELg8JUhcl0r9jzdSzkiJrO+6Wea7A1CE1GDFSgg6pV0od+aA/OadiO6L16C4M5S4jPcJ
-	KeABzRoWSyn0ECqTLayKaVgUXu/MXpgKBtLxapYAJ4z/xS7oWLrPvuKGdHEdJB3KZKOrhy
-	lfgOZs8NU8/mUAUGgAbXq6/FU49hUwACV38/tnQM6Qg6q+fd5GmyTNU63fFKSNf8qAzOmL
-	NM9CsvR0EQUmfiiFMz17+XiG2wVC8BQH7oenKqa380IgoACucr0noTrjqASU2SOmakL+Ad
-	A75Dxlb/C+6xNeBGAU8PDsaa+GyIDZCOP56LUKprrikjq+AxFd2MMhUieZnbZQ==
+	bh=dVVNzD71BRBr1Ira+dygzJ5zR0gEVNOXZCcHVq69cws=;
+	b=jQNNLi98E7rDbnNC0s3annI3TUsONsdcMejjwKvcpwZAPvUbtftK1YDYeZfHzfCd9yEDOT
+	iMlVZd52tVpZZV7w+lx3NNZd8pZAb/3ytchJvGnyACW/yu5pPEmgVYYoyjT6UBWIE4rUsj
+	Yrp+rz/Nq3NTIdmJIKYynFP1//cdBW8ATX9C7d6kPdBn39UY8gvIHVtPesY+3bjXhOFXJc
+	arHcPOHhaKXH92Fy/syGaxdDZw5yacjIVaObzcpNRV85y1zHP029QM7jega2V+0vSEDxp3
+	xYeYJ3hCA2+bXWwx6/9K+OnALDkXkkQMJDs6HVZuZGvc58y/z/Ge2YHpQ3BTOQ==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Thu, 16 May 2024 15:20:07 +0200
-Subject: [PATCH 3/3] drm/vkms: Add support for XRGB2101010
+Date: Thu, 16 May 2024 15:20:05 +0200
+Subject: [PATCH 1/3] drm/vkms: Re-introduce line-by-line algorithm for
+ writeback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240516-writeback_line_by_line-v1-3-7b2e3bf9f1c9@bootlin.com>
+Message-Id: <20240516-writeback_line_by_line-v1-1-7b2e3bf9f1c9@bootlin.com>
 References: <20240516-writeback_line_by_line-v1-0-7b2e3bf9f1c9@bootlin.com>
 In-Reply-To: <20240516-writeback_line_by_line-v1-0-7b2e3bf9f1c9@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -54,83 +55,342 @@ To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2232;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12566;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=1OJ19Pl47nRtdHCzGqcZtNX9EYkZYfEVLt9EdjsyHOI=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRggHCQK7xwYqKIIeeA0rVmlaVziGdYQOydOcA
- acReLtoUVOJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYIBwAKCRAgrS7GWxAs
- 4lhOD/0Z3LDnJlwTF1nleuo7YXbCMUURCN8v3uFz4goGOoWXD40S2ebgWzUMZ/UlG/Z+NQjf/PD
- z2PgAunHRR1YtWBAjYLVe+5y0JG7BvcEzwEwO1IOLfik+yMQ5KSz1uGjGx1xVCG7I6ptYxMeRXU
- YeKoxs7aXkcZaQOWRpA9m/u/4pcF5belsn21W7mtq+KuOADpcPQ7aT58osDJAHSjyJFp7THD6h+
- EVO75UXYPza561UDcN2ZTTO6+Cp4ZF2KaqmQEMbo1AWuxvPkVxTeY0iz9cnGPuVOYjsm8dXC2si
- gjUTcfb8EdtditlCJQWZxVukITRR96SoY464F/NOy0Z7gzksY+5Szn/Zy12HRIW5DVoAhP/K3GK
- t7TW77RkJuWvTnoH6xTO1kUon782rI6da2dd3cKiomR6HVkzRwv59nTwd6AOZjKP8JWImiUp8Hn
- WS8wn/qBFgEKfJNB5RuGD26P9h0CfKmllT//R8Y6QVLLfv2GhZ6EGj8oCFOyhWRAmVZ+jBUq0DI
- Hf+NucgHuEkvxG5NvPhNQE+hwCJhS6yw2ByoUoKJpR9wzviDDzlswJVXwxqEBilnYdWxVoMcGa4
- lEE1LhVyfTzNnIoYH1GkAn0kf/CkAqSyuCRhQXp762rnCYQZSO9FUivTOsf+xiEzz6t6vDc3Y39
- q8KTiL51bBkGPng==
+ bh=uCULzIdaIDCx7+tpjYQ+LGN7xyUdpe5Bnum1CiV04F4=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRggHKN/oN/rKXFslhdV77kXQeoffiq+0kiIwF
+ Xn+Wn7h58iJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYIBwAKCRAgrS7GWxAs
+ 4gVcEAC2ZRJx+UKoIupRFt9NDcj/ZpDvkgpLmnKB4ppGgu53wPmSGncmHROqjTuENJc0+u2fTro
+ 8aHnkIcuakbj0yFtyhJ6LKxpv1zHEhLw2/tbAIBYwFYStqxHxcoU9hcj6xy7OSmDC34GULyE74B
+ eN3RgVPfVLQSjzt74Br+Xx8TxRp+dXdeY1rGkqshGGhC7TlhnjhuSGTFhGWvvzcvBl+0A5Lu5f8
+ KdSt+mWmhEgnCGdA9MWigyB1Xv9QLqymavwK9RnNheGjWCpDDQZ7y9bro77EcIGOm38SX0NSYTh
+ XXSdAH1ov1duEvn3aMgKM8HhUGVtSIBxLL1CoxDbiM8yH/fSQfTpUCJOL/ukcG2rpVRLgiKZ1Jp
+ UmInra5N5QYX/+wEks+OvtKfp5ymRGJj3RBpoxYrsGYu3hfmLODwOkk77lzzI8xH+39+5Dw1561
+ IB/SZw/6LjXPgfdeVkha4RPpiGy20NN2BgdhovLXOrkYZvi2UYHtZcCfHvWm/hwXKM7chQadya2
+ FNVjG60jdSOq7xppirDEM804xpq9k9VR7YtI5iAfW+cOPTslOR4ZK3nK86c1bBDmc+IOpYukw3i
+ 8nVC0gVXdfIO6iUV5HLuMtv74pUEd3aERCup/lpfdKCptmLJy2jbuG9xH/GXzvCYwcFHHp2IZiL
+ 79JjHQGTPUqe3bQ==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Thanks to the WRITE_LINE macro, adding the format XRGB210101010 is trivial.
+Re-introduce a line-by-line writeback algorithm for each pixel format.
+This allows more performance by not requiring an indirection per pixel
+write.
+
+Line-by-line writeback was introduced by [1] but rewritten back to
+pixel-by-pixel algorithm in [2]. At this time, nobody noticed the impact
+on performance, and it was merged.
+
+This patch is almost a revert of [2], but with some effort to avoid code
+duplication. Now only the loop is repeated, but it is required to have
+good performances.
+
+The performance gain is around 5 to 10%.
+
+[1]: https://lore.kernel.org/all/20211005201637.58563-7-igormtorrente@gmail.com/
+[2]: https://lore.kernel.org/all/20230515135204.115393-4-mcanal@igalia.com/
 
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_formats.c   | 12 ++++++++++++
- drivers/gpu/drm/vkms/vkms_writeback.c |  2 +-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_composer.c  |  18 +++++
+ drivers/gpu/drm/vkms/vkms_drv.h       |  20 +++--
+ drivers/gpu/drm/vkms/vkms_formats.c   | 139 +++++++++++++++++++++++++---------
+ drivers/gpu/drm/vkms/vkms_formats.h   |   2 +-
+ drivers/gpu/drm/vkms/vkms_writeback.c |   2 +-
+ 5 files changed, 137 insertions(+), 44 deletions(-)
 
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index 0f2b90234d3a..b3fe4e267c6b 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -178,6 +178,24 @@ static enum pixel_read_direction direction_for_rotation(unsigned int rotation)
+ 	return READ_LEFT_TO_RIGHT;
+ }
+ 
++/**
++ * Write a line to the writeback buffer
++ *
++ * @wb: Job where to insert the final image
++ * @src_buffer: Line to write
++ * @y: Row to write in the writeback buffer
++ */
++static void vkms_writeback_row(struct vkms_writeback_job *wb,
++			       const struct line_buffer *src_buffer, size_t y_start)
++{
++	struct vkms_frame_info *frame_info = &wb->wb_frame_info;
++	int x_start = frame_info->dst.x1;
++	int count = min_t(size_t, drm_rect_width(&frame_info->dst), src_buffer->n_pixels);
++
++	wb->pixel_write(wb, src_buffer->pixels, count, x_start, y_start);
++}
++
++
+ /**
+  * clamp_line_coordinates() - Compute and clamp the coordinate to read and write during the blend
+  * process.
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index 4a120ee6ce8e..f97813b9dca2 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -52,20 +52,25 @@ struct line_buffer {
+ 	struct pixel_argb_u16 *pixels;
+ };
+ 
++struct vkms_writeback_job;
+ /**
+- * typedef pixel_write_t - These functions are used to read a pixel from a
+- * &struct pixel_argb_u16, convert it in a specific format and write it in the @dst_pixels
+- * buffer.
++ * typedef pixel_write_line_t - These functions are used to read a pixel line from a
++ * struct pixel_argb_u16 buffer, convert it and write it in the @wb job.
+  *
+- * @out_pixel: destination address to write the pixel
+- * @in_pixel: pixel to write
++ * @wb: the writeback job to write the output of the conversion
++ * @in_pixels: Source buffer containing the line to convert
++ * @count: The width of a line
++ * @x_start: The x (width) coordinate in the destination plane
++ * @y_start: The y (height) coordinate in the destination plane
+  */
+-typedef void (*pixel_write_t)(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel);
++typedef void (*pixel_write_line_t)(struct vkms_writeback_job *wb,
++			      struct pixel_argb_u16 *in_pixels, int count, int x_start,
++			      int y_start);
+ 
+ struct vkms_writeback_job {
+ 	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
+ 	struct vkms_frame_info wb_frame_info;
+-	pixel_write_t pixel_write;
++	pixel_write_line_t pixel_write;
+ };
+ 
+ /**
+@@ -233,7 +238,6 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
+ /* Composer Support */
+ void vkms_composer_worker(struct work_struct *work);
+ void vkms_set_composer(struct vkms_output *out, bool enabled);
+-void vkms_writeback_row(struct vkms_writeback_job *wb, const struct line_buffer *src_buffer, int y);
+ 
+ /* Writeback */
+ int vkms_enable_writeback_connector(struct vkms_device *vkmsdev);
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index 51b1c04e6781..92f1b2f5a8dd 100644
+index 6e651f7e6997..c5cb2e45ddaf 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -642,6 +642,14 @@ static void argb_u16_to_RGB565(u8 *out_pixel, const struct pixel_argb_u16 *in_pi
+@@ -575,7 +575,7 @@ static void planar_yuv_read_line(const struct vkms_plane_state *plane, int x_sta
+  * The following functions take one &struct pixel_argb_u16 and convert it to a specific format.
+  * The result is stored in @out_pixel.
+  *
+- * They are used in vkms_writeback_row() to convert and store a pixel from the src_buffer to
++ * They are used in the `write_line` functions to convert and store a pixel from the src_buffer to
+  * the writeback buffer.
+  */
+ static void argb_u16_to_ARGB8888(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+@@ -642,40 +642,111 @@ static void argb_u16_to_RGB565(u8 *out_pixel, const struct pixel_argb_u16 *in_pi
  	*pixel = cpu_to_le16(r << 11 | g << 5 | b);
  }
  
-+static void argb_u16_to_XRGB2101010(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+-/**
+- * argb_u16_to_nothing() - pixel_write callback with no effect
++/*
++ * The following functions are write_line function for each pixel format supported by VKMS.
+  *
+- * This callback is used when an invalid format is requested for writeback.
+- * It is used to avoid null pointer to be used as a function. In theory, this should never
+- * happen, except if there is a bug in the driver
+- */
+-static void argb_u16_to_nothing(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
+-{}
+-
+-/**
+- * vkms_writeback_row() - Generic loop for all supported writeback format. It is executed just
+- * after the blending to write a line in the writeback buffer.
++ * They write a full line at index y. They must read data from the line src_pixels.
++ *
++ * The caller must ensure that count is not larger than the framebuffer and the src_pixels.
+  *
+- * @wb: Job where to insert the final image
+- * @src_buffer: Line to write
+- * @y: Row to write in the writeback buffer
++ * Those function are very similar, but it is required for performance reason. In the past, some
++ * experiment were done, and with a generic loop the performance are very reduced [1].
++ *
++ * [1]: https://lore.kernel.org/dri-devel/d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net/
+  */
+-void vkms_writeback_row(struct vkms_writeback_job *wb,
+-			const struct line_buffer *src_buffer, int y)
++
++static void ARGB8888_write_line(struct vkms_writeback_job *wb,
++				struct pixel_argb_u16 *src_pixels, int count, int x_start,
++				int y_start)
+ {
+-	struct vkms_frame_info *frame_info = &wb->wb_frame_info;
+-	int x_dst = frame_info->dst.x1;
+ 	u8 *dst_pixels;
+-	int rem_x, rem_y;
+ 
+-	packed_pixels_addr(frame_info, x_dst, y, 0, &dst_pixels, &rem_x, &rem_y);
+-	struct pixel_argb_u16 *in_pixels = src_buffer->pixels;
+-	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst), src_buffer->n_pixels);
++	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
+ 
+-	for (size_t x = 0; x < x_limit; x++, dst_pixels += frame_info->fb->format->cpp[0])
+-		wb->pixel_write(dst_pixels, &in_pixels[x]);
++	while (count) {
++		argb_u16_to_ARGB8888(dst_pixels, src_pixels);
++		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
++		src_pixels += 1;
++		count--;
++	}
+ }
+ 
++static void XRGB8888_write_line(struct vkms_writeback_job *wb,
++				struct pixel_argb_u16 *src_pixels, int count, int x_start,
++				int y_start)
 +{
-+	out_pixel[0] = (u8)(in_pixel->b & 0xFF);
-+	out_pixel[1] = (u8)((in_pixel->b >> 8) & 0x03) | (u8)((in_pixel->g << 2) & 0xFC);
-+	out_pixel[2] = (u8)((in_pixel->g >> 6) & 0x0F) | (u8)((in_pixel->r << 4) & 0xF0);
-+	out_pixel[3] = (u8)((in_pixel->r >> 4) & 0x3F);
++	u8 *dst_pixels;
++
++	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
++
++	while (count) {
++		argb_u16_to_XRGB8888(dst_pixels, src_pixels);
++		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
++		src_pixels += 1;
++		count--;
++	}
 +}
 +
- /**
-  * WRITE_LINE() - Generic generator for write_line functions
-  *
-@@ -688,6 +696,8 @@ WRITE_LINE(XRGB16161616_write_line, argb_u16_to_XRGB16161616)
- 
- WRITE_LINE(RGB565_write_line, argb_u16_to_RGB565)
- 
-+WRITE_LINE(XRGB2101010_write_line, argb_u16_to_XRGB2101010)
++static void ARGB16161616_write_line(struct vkms_writeback_job *wb,
++				    struct pixel_argb_u16 *src_pixels, int count, int x_start,
++				    int y_start)
++{
++	u8 *dst_pixels;
++
++	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
++
++	while (count) {
++		argb_u16_to_ARGB16161616(dst_pixels, src_pixels);
++		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
++		src_pixels += 1;
++		count--;
++	}
++}
++
++static void XRGB16161616_write_line(struct vkms_writeback_job *wb,
++				    struct pixel_argb_u16 *src_pixels, int count, int x_start,
++				    int y_start)
++{
++	u8 *dst_pixels;
++
++	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
++
++	while (count) {
++		argb_u16_to_XRGB16161616(dst_pixels, src_pixels);
++		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
++		src_pixels += 1;
++		count--;
++	}
++}
++
++static void RGB565_write_line(struct vkms_writeback_job *wb,
++			      struct pixel_argb_u16 *src_pixels, int count, int x_start,
++			      int y_start)
++{
++	u8 *dst_pixels;
++
++	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
++
++	while (count) {
++		argb_u16_to_RGB565(dst_pixels, src_pixels);
++		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
++		src_pixels += 1;
++		count--;
++	}
++}
++
++/**
++ * argb_u16_to_nothing() - pixel_write callback with no effect
++ *
++ * This callback is used when an invalid format is requested for writeback.
++ * It is used to avoid null pointer to be used as a function. In theory, this should never
++ * happen, except if there is a bug in the driver
++ */
++static void nothing_write_line(struct vkms_writeback_job *wb,
++			       struct pixel_argb_u16 *src_pixels, int count, int x_start,
++			       int y_start)
++{}
 +
  /**
-  * argb_u16_to_nothing() - pixel_write callback with no effect
+  * get_pixel_read_function() - Retrieve the correct read_line function for a specific
+  * format.
+@@ -936,25 +1007,25 @@ void get_conversion_matrix_to_argb_u16(u32 format,
+ }
+ 
+ /**
+- * get_pixel_write_function() - Retrieve the correct write_pixel function for a specific format.
++ * get_pixel_write_function() - Retrieve the correct write_line function for a specific format.
+  * If the format is not supported by VKMS a warning is emitted and a dummy "don't do anything"
+  * function is returned.
   *
-@@ -979,6 +989,8 @@ pixel_write_line_t get_pixel_write_line_function(u32 format)
- 		return &XRGB16161616_write_line;
+  * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
+  */
+-pixel_write_t get_pixel_write_function(u32 format)
++pixel_write_line_t get_pixel_write_line_function(u32 format)
+ {
+ 	switch (format) {
+ 	case DRM_FORMAT_ARGB8888:
+-		return &argb_u16_to_ARGB8888;
++		return &ARGB8888_write_line;
+ 	case DRM_FORMAT_XRGB8888:
+-		return &argb_u16_to_XRGB8888;
++		return &XRGB8888_write_line;
+ 	case DRM_FORMAT_ARGB16161616:
+-		return &argb_u16_to_ARGB16161616;
++		return &ARGB16161616_write_line;
+ 	case DRM_FORMAT_XRGB16161616:
+-		return &argb_u16_to_XRGB16161616;
++		return &XRGB16161616_write_line;
  	case DRM_FORMAT_RGB565:
- 		return &RGB565_write_line;
-+	case DRM_FORMAT_XRGB2101010:
-+		return &XRGB2101010_write_line;
+-		return &argb_u16_to_RGB565;
++		return &RGB565_write_line;
  	default:
  		/*
  		 * This is a bug in vkms_writeback_atomic_check. All the supported
+@@ -968,6 +1039,6 @@ pixel_write_t get_pixel_write_function(u32 format)
+ 		WARN(true,
+ 		     "Pixel format %p4cc is not supported by VKMS writeback. This is a kernel bug, atomic check must forbid this configuration.\n",
+ 		     &format);
+-		return &argb_u16_to_nothing;
++		return &nothing_write_line;
+ 	}
+ }
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
+index b4fe62ab9c65..b74142325399 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.h
++++ b/drivers/gpu/drm/vkms/vkms_formats.h
+@@ -7,7 +7,7 @@
+ 
+ pixel_read_line_t get_pixel_read_line_function(u32 format);
+ 
+-pixel_write_t get_pixel_write_function(u32 format);
++pixel_write_line_t get_pixel_write_line_function(u32 format);
+ 
+ void get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
+ 				       enum drm_color_range range,
 diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-index 53bddcf33eab..c86020ef667a 100644
+index c8582df1f739..f6ed3aa69af8 100644
 --- a/drivers/gpu/drm/vkms/vkms_writeback.c
 +++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -21,7 +21,7 @@ static const u32 vkms_wb_formats[] = {
- 	DRM_FORMAT_XRGB16161616,
- 	DRM_FORMAT_ARGB16161616,
- 	DRM_FORMAT_RGB565,
--	DRM_FORMAT_YUV422
-+	DRM_FORMAT_XRGB2101010,
- };
- 
- static const struct drm_connector_funcs vkms_wb_connector_funcs = {
+@@ -150,7 +150,7 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
+ 	crtc_state->wb_pending = true;
+ 	spin_unlock_irq(&output->composer_lock);
+ 	drm_writeback_queue_job(wb_conn, connector_state);
+-	active_wb->pixel_write = get_pixel_write_function(wb_format);
++	active_wb->pixel_write = get_pixel_write_line_function(wb_format);
+ 	drm_rect_init(&wb_frame_info->src, 0, 0, crtc_width, crtc_height);
+ 	drm_rect_init(&wb_frame_info->dst, 0, 0, crtc_width, crtc_height);
+ }
 
 -- 
 2.43.2
