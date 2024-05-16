@@ -1,73 +1,73 @@
 Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4B614659E;
-	Thu, 16 May 2024 12:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9040C1465B7;
+	Thu, 16 May 2024 12:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715862084; cv=none; b=oQteQGwB62MxwUE+yvrdneoTMDOYINqYDZ92g5QJAxO0JiZXutMc4vW0Ja5MS1Ci+XSRrNEjTaR/Czi2lUPj+9k/yHXtforhsIQF6vpY9sBndVN3FlM+J5MANSGOwJIhiKJZHLTcKVdGMWtbI5NBROEF3u6nEktQwI7aL4b+xZ0=
+	t=1715862085; cv=none; b=WNedHkGLubUfCtU79UPRRu59qxxYHc68EPGJxu3H37+uBWiBuva2zLwOcsaOYgmSccgFSYyWAaLAxgjcmpD/S5Hl00hXlm68jlkqUSdnXeeeVuNFiHGYZDbsBy+LiXOdXxWfv491i30ILVdDP/m5Rs0jTiR0hplw3Kd1vGfGT3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715862084; c=relaxed/simple;
-	bh=m3U8euoZMt4H9r5oczjhjVfeIdGb7f2UKfEwuwWQZMs=;
+	s=arc-20240116; t=1715862085; c=relaxed/simple;
+	bh=dG4eueiZho3Bbuor9tvBYSCq/CJA+vgtfb+W3WrCRzQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qalllbBw1fI8hp5BTgJjG4CnJdOmv999Ow3FiCK3m4G/kIZOYwRgwd9QVy/xiGFjLi56dd/ui+nAt4Ahdh7NLUZL5zMn3rMLGPgOVJOEphBkPBWaqXiOX6Za7cg0dg5Xb2de8qdOXC/VzRw9T8oNn/sNW1+f3gF5QT8C71xttag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=cZ2QUts7; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=M2MIDu8Ok/5yTvyQ90eBHrxQ6UAqUgeASf/GyqLd73b2fPE1HYDNN+5TdonhZBJr5ZKP2tGL4TEzZdetM9a8+lvssdgxwMGpxwKSM/syBk8FWcoMEPNX9VGrYnb5WMfOFoUzy8vF13QIH/UUhHoq9SMNioVxPqqLH9fKJD09GPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=m6i23MVV; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cZ2QUts7"
-X-UUID: c7db5e62137e11ef8065b7b53f7091ad-20240516
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="m6i23MVV"
+X-UUID: cace3bf8137e11ef8065b7b53f7091ad-20240516
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JcgzcwjR79GO/B9Bt02zMcJhSYP+1rHgGT3MDO93Xbk=;
-	b=cZ2QUts7WTVlpVT+/scVmlr6rGBAuXvitjPqDBEd5Z4Qty8sQ8vSP9+C6WjJ4aP/0UPn6LXJe250ZVpZPSVEIOR15bc5C72gyw1W0tCm3tJIscsozSUldK0w+TtPx3b5FNuQG/6b36VnvbEmnFR807N+UDwG7m7FJvDH2a45COY=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=lg3BoozHGWRiUOAxu3nPdHujCNdRypxAIve7i4hrzZ4=;
+	b=m6i23MVVXRNQcQNue7WyZ4WpxEVD8PyKWQsko4imhLnhkQugRTyhmBvvxMBi/OTchhzWIuVZw8kWwk6onaAw5pU80VtW+bqduGboT8x0vOIDjFWnKXf43o7dj46WvBAL26I31TrzUOBj2tLhmNDpoFkrixtH6NrVZAUym0mMxrU=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:e7a3ad8b-8210-45c8-bf8b-2e2a91c0678b,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:82c5f88,CLOUDID:4f537087-8d4f-477b-89d2-1e3bdbef96d1,B
+X-CID-O-INFO: VERSION:1.1.38,REQID:276084e1-0c38-48eb-a5e9-2d2b926f0228,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:aaa72cfc-ed05-4274-9204-014369d201e8,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
 	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c7db5e62137e11ef8065b7b53f7091ad-20240516
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
+X-UUID: cace3bf8137e11ef8065b7b53f7091ad-20240516
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
 	(envelope-from <yunfei.dong@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2066720893; Thu, 16 May 2024 20:21:11 +0800
+	with ESMTP id 1392140244; Thu, 16 May 2024 20:21:16 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 16 May 2024 20:21:09 +0800
+ 15.2.1118.26; Thu, 16 May 2024 20:21:14 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 16 May 2024 20:21:07 +0800
+ 15.2.1118.26 via Frontend Transport; Thu, 16 May 2024 20:21:13 +0800
 From: Yunfei Dong <yunfei.dong@mediatek.com>
 To: Jeffrey Kardatzke <jkardatzke@google.com>,
 	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, "Nicolas
- Dufresne" <nicolas.dufresne@collabora.com>, Hans Verkuil
+	<nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, Nicolas
+ Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
 	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
 	<benjamin.gaignard@collabora.com>, Sebastian Fricke
-	<sebastian.fricke@collabora.com>, Tomasz Figa <tfiga@chromium.org>, "Mauro
- Carvalho Chehab" <mchehab@kernel.org>, Marek Szyprowski
+	<sebastian.fricke@collabora.com>, Tomasz Figa <tfiga@chromium.org>, Mauro
+ Carvalho Chehab <mchehab@kernel.org>, Marek Szyprowski
 	<m.szyprowski@samsung.com>
-CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
-	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
-	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
- . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>, Hsin-Yi
+ Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>, Daniel
+ Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei Dong
+	<yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, Brian
+ Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
 	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
 	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v6,01/24] v4l2: add restricted memory flags
-Date: Thu, 16 May 2024 20:20:39 +0800
-Message-ID: <20240516122102.16379-2-yunfei.dong@mediatek.com>
+Subject: [PATCH v6,05/24] dma-buf: heaps: Deduplicate docs and adopt common format
+Date: Thu, 16 May 2024 20:20:43 +0800
+Message-ID: <20240516122102.16379-6-yunfei.dong@mediatek.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240516122102.16379-1-yunfei.dong@mediatek.com>
 References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
@@ -79,87 +79,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--4.149800-8.000000
-X-TMASE-MatchedRID: 5AYjULL74rYxaBEU4bKrV4SvKOGqLLPKK2i9pofGVStcU0dNErOD+mlF
-	7OhYLlctcYKRVYWgduVAw/iJrysrSm+IsUfG75P2joyKzEmtrEeQoBr+SFneJJj9R7obtcgyH5L
-	2GhBQtff4ei4a6fEfjpynPbWEKM6u8xjBEybW2by3HA8h5a0MOXnL427v8Q461gisw2JKo8lzN8
-	/snsNYn/j1N4/6HNKlsGRzEHTW2nEfE8yM4pjsDwtuKBGekqUpOlxBO2IcOBaDB3ZqEXAYAIp/8
-	8s6zH6CLMa1wLyvYEOVsCHg6a9VM9hNU8cP4jYh/G47AcAybTmwM6AJeCWlbm72iaFWNy7GB1UY
-	UHkmE/jiw6uxviJP8r9tsSiUciBlQ5zsaM5qada/lr1yYih0SylGctXaTCsu
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.149800-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	00C8DA871F738AAD29C7BF1F0BB062BED72FEA1C5C526C39E9A7696C95C2C6492000:8
 X-MTK: N
 
-From: Jeffrey Kardatzke <jkardatzke@google.com>
+From: "T.J. Mercier" <tjmercier@google.com>
 
-Adds a V4L2 flag which indicates that a queue is using restricted
-dmabufs and the corresponding capability flag.
+The docs for dma_heap_get_name were incorrect, and since they were
+duplicated in the header they were wrong there too.
 
-Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
+The docs formatting was inconsistent so I tried to make it more
+consistent across functions since I'm already in here doing cleanup.
+
+Remove multiple unused includes and alphabetize.
+
+Signed-off-by: T.J. Mercier <tjmercier@google.com>
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+[Yong: Just add a comment for "priv" to mute build warning]
 Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 ---
- include/media/videobuf2-core.h | 8 +++++++-
- include/uapi/linux/videodev2.h | 2 ++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ drivers/dma-buf/dma-heap.c | 27 +++++++++++++++------------
+ include/linux/dma-heap.h   | 21 +--------------------
+ 2 files changed, 16 insertions(+), 32 deletions(-)
 
-diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-index 955237ac503d..afd497e93a37 100644
---- a/include/media/videobuf2-core.h
-+++ b/include/media/videobuf2-core.h
-@@ -517,6 +517,9 @@ struct vb2_buf_ops {
-  *		->finish().
-  * @non_coherent_mem: when set queue will attempt to allocate buffers using
-  *		non-coherent memory.
-+ * @allow_restricted_mem: when set user-space can pass the %V4L2_MEMORY_FLAG_RESTRICTED
-+ *		flag to indicate the dma bufs are restricted.
-+ * @restricted_mem: when set queue will verify that the dma bufs are restricted.
-  * @lock:	pointer to a mutex that protects the &struct vb2_queue. The
-  *		driver can set this to a mutex to let the v4l2 core serialize
-  *		the queuing ioctls. If the driver wants to handle locking
-@@ -621,6 +624,8 @@ struct vb2_queue {
- 	unsigned int			uses_requests:1;
- 	unsigned int			allow_cache_hints:1;
- 	unsigned int			non_coherent_mem:1;
-+	unsigned int			allow_restricted_mem:1;
-+	unsigned int			restricted_mem:1;
+diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+index 84ae708fafe7..22f6c193db0d 100644
+--- a/drivers/dma-buf/dma-heap.c
++++ b/drivers/dma-buf/dma-heap.c
+@@ -7,17 +7,15 @@
+  */
  
- 	struct mutex			*lock;
- 	void				*owner;
-@@ -792,7 +797,8 @@ void vb2_core_querybuf(struct vb2_queue *q, struct vb2_buffer *vb, void *pb);
-  * @q:		pointer to &struct vb2_queue with videobuf2 queue.
-  * @memory:	memory type, as defined by &enum vb2_memory.
-  * @flags:	auxiliary queue/buffer management flags. Currently, the only
-- *		used flag is %V4L2_MEMORY_FLAG_NON_COHERENT.
-+ *		used flags are %V4L2_MEMORY_FLAG_NON_COHERENT and
-+ *		%V4L2_MEMORY_FLAG_RESTRICTED.
-  * @count:	requested buffer count.
+ #include <linux/cdev.h>
+-#include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/dma-buf.h>
++#include <linux/dma-heap.h>
+ #include <linux/err.h>
+-#include <linux/xarray.h>
+ #include <linux/list.h>
+-#include <linux/slab.h>
+ #include <linux/nospec.h>
+-#include <linux/uaccess.h>
+ #include <linux/syscalls.h>
+-#include <linux/dma-heap.h>
++#include <linux/uaccess.h>
++#include <linux/xarray.h>
+ #include <uapi/linux/dma-heap.h>
+ 
+ #define DEVNAME "dma_heap"
+@@ -28,9 +26,10 @@
+  * struct dma_heap - represents a dmabuf heap in the system
+  * @name:		used for debugging/device-node name
+  * @ops:		ops struct for this heap
+- * @heap_devt		heap device node
+- * @list		list head connecting to list of heaps
+- * @heap_cdev		heap char device
++ * @priv:		private data for this heap
++ * @heap_devt:		heap device node
++ * @list:		list head connecting to list of heaps
++ * @heap_cdev:		heap char device
   *
-  * Videobuf2 core helper to implement VIDIOC_REQBUF() operation. It is called
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index fe6b67e83751..89eb1a3c6555 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -1043,6 +1043,7 @@ struct v4l2_requestbuffers {
+  * Represents a heap of memory from which buffers can be made.
+  */
+@@ -193,11 +192,11 @@ static const struct file_operations dma_heap_fops = {
  };
  
- #define V4L2_MEMORY_FLAG_NON_COHERENT			(1 << 0)
-+#define V4L2_MEMORY_FLAG_RESTRICTED			(1 << 1)
- 
- /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
- #define V4L2_BUF_CAP_SUPPORTS_MMAP			(1 << 0)
-@@ -1054,6 +1055,7 @@ struct v4l2_requestbuffers {
- #define V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS		(1 << 6)
- #define V4L2_BUF_CAP_SUPPORTS_MAX_NUM_BUFFERS		(1 << 7)
- #define V4L2_BUF_CAP_SUPPORTS_REMOVE_BUFS		(1 << 8)
-+#define V4L2_BUF_CAP_SUPPORTS_RESTRICTED_MEM		(1 << 9)
+ /**
+- * dma_heap_get_drvdata() - get per-subdriver data for the heap
++ * dma_heap_get_drvdata - get per-heap driver data
+  * @heap: DMA-Heap to retrieve private data for
+  *
+  * Returns:
+- * The per-subdriver data for the heap.
++ * The per-heap data for the heap.
+  */
+ void *dma_heap_get_drvdata(struct dma_heap *heap)
+ {
+@@ -205,8 +204,8 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
+ }
  
  /**
-  * struct v4l2_plane - plane info for multi-planar buffers
+- * dma_heap_get_name() - get heap name
+- * @heap: DMA-Heap to retrieve private data for
++ * dma_heap_get_name - get heap name
++ * @heap: DMA-Heap to retrieve the name of
+  *
+  * Returns:
+  * The char* for the heap name.
+@@ -216,6 +215,10 @@ const char *dma_heap_get_name(struct dma_heap *heap)
+ 	return heap->name;
+ }
+ 
++/**
++ * dma_heap_add - adds a heap to dmabuf heaps
++ * @exp_info: information needed to register this heap
++ */
+ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ {
+ 	struct dma_heap *heap, *h, *err_ret;
+diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
+index 0c05561cad6e..fbe86ec889a8 100644
+--- a/include/linux/dma-heap.h
++++ b/include/linux/dma-heap.h
+@@ -9,14 +9,13 @@
+ #ifndef _DMA_HEAPS_H
+ #define _DMA_HEAPS_H
+ 
+-#include <linux/cdev.h>
+ #include <linux/types.h>
+ 
+ struct dma_heap;
+ 
+ /**
+  * struct dma_heap_ops - ops to operate on a given heap
+- * @allocate:		allocate dmabuf and return struct dma_buf ptr
++ * @allocate:	allocate dmabuf and return struct dma_buf ptr
+  *
+  * allocate returns dmabuf on success, ERR_PTR(-errno) on error.
+  */
+@@ -41,28 +40,10 @@ struct dma_heap_export_info {
+ 	void *priv;
+ };
+ 
+-/**
+- * dma_heap_get_drvdata() - get per-heap driver data
+- * @heap: DMA-Heap to retrieve private data for
+- *
+- * Returns:
+- * The per-heap data for the heap.
+- */
+ void *dma_heap_get_drvdata(struct dma_heap *heap);
+ 
+-/**
+- * dma_heap_get_name() - get heap name
+- * @heap: DMA-Heap to retrieve private data for
+- *
+- * Returns:
+- * The char* for the heap name.
+- */
+ const char *dma_heap_get_name(struct dma_heap *heap);
+ 
+-/**
+- * dma_heap_add - adds a heap to dmabuf heaps
+- * @exp_info:		information needed to register this heap
+- */
+ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info);
+ 
+ #endif /* _DMA_HEAPS_H */
 -- 
 2.25.1
 
