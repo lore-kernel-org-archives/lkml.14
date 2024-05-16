@@ -1,86 +1,146 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8A514B969
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E7514B06E
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715871745; cv=none; b=q1ko0fMcIjTpo+hH6IHtK2bBE71+6a4JaPm1oS8XMFQWwEwdT51QCsbRuc4qWdY2MRsEbacvChcasin4QsucfVKtNcN76pnGZa14rHnFA8OHA7FLvpPfD7JRXlDnrxLF3NoNv75t+G9Ahs7+iKrrmr+obL0VZ5RAbQ0h6o7iEU8=
+	t=1715871774; cv=none; b=SJ17q3wL/+2Zeqr6xzO4Axg6D7+QKeVLeWE5FceJ+zGDph0sRb6EDnp9vwEhNRf1spthEab6R6Clq2Wm+AbSd5eO6fODEkF16H7ZbCk60rZbRWJndWzHzLwgX5m67Z1BTKOuZHj0HqSDZHEL8aRPjt8/p+gmHtnlK6mrZzQVfKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715871745; c=relaxed/simple;
-	bh=gXoWBoXtXBpNI3VqUpla1J72BNbCAzZhjk4toEodcyM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=saQ/3R+3q6Qd2Ttpxz13SBTgJR6P5nGGGCl09Mr6BYNzcchez1ARpKUkuCJIo9+GGt/lCmYNEx4sb3EEh9roWrXV6iibIAupzZ9S3f54llrSdY1qEPjlVaKEGDtXF8OfKitrgcIE1xUdW4L16hV8LoVDUgxNdxbaNzYMCyRV6uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id ADD26140402;
-	Thu, 16 May 2024 14:43:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf07.hostedemail.com (Postfix) with ESMTPA id 57ECF20024;
-	Thu, 16 May 2024 14:43:19 +0000 (UTC)
-Message-ID: <4a77b3a77db293acba504914af220d8b8d644616.camel@perches.com>
-Subject: Re: [PATCH 1/1] checkpatch: allow multi-statement declarative
- macros.
-From: Joe Perches <joe@perches.com>
-To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org
-Cc: akpm@linuxfoundation.org, Andy Whitcroft <apw@canonical.com>, Dwaipayan
- Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date: Thu, 16 May 2024 07:43:18 -0700
-In-Reply-To: <20240516141418.25345-1-jim.cromie@gmail.com>
-References: <20240516141418.25345-1-jim.cromie@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1715871774; c=relaxed/simple;
+	bh=3YL+I6hux/NpvqfXdS1XbOhelN2JjPF4ue7vy8gKQ14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P7iEBaJ9W1oIC/npwuiqULVgBive03qUtvUoJpu5CoWyuHdLotReAEv6P2zqO7DQsmp6Z3rlMkKQyPED9+urbAA/A15tXEA5al12vRAflpx616gUtypKiJ0Du7K9KTL4kpjgwGiG6hqdo/Q0aDsAdZl26Xo+knmvS/LBnUkVxto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=slgMkKjV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="slgMkKjV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4C2CC113CC;
+	Thu, 16 May 2024 15:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715871774;
+	bh=3YL+I6hux/NpvqfXdS1XbOhelN2JjPF4ue7vy8gKQ14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=slgMkKjVSF53e6SmQkWF4tmoTH5HzedtUzudoMcxgxWX6+JLBmwfnwqQONPw1S9Kn
+	 PDGMtfzqOe4x+f7UZRM5YzytjplaklB1zv5Flx8LyZ9bLCOaM48jU5PdgPKyRJFjBO
+	 W3TYST++Hc1LZFVcANzCGTtgI4lFq3XMQVmFI9gp+tPYL/ag18UQ/lftMjCVY6OFgY
+	 2+KprQCUk12r2XzAEBKQ8fh888jz71lUJq8oIYPmPxIdRKeT8+CW1Lm42osmYiqvyh
+	 2VLbbwx0oVUADtgM8tb3gzCP57rY3T+pTXGm4s2e0qaKv329OG7cx1vHFVs6auXW8F
+	 Vxov3lsyNLVuQ==
+Date: Thu, 16 May 2024 17:02:51 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Yun Levi <ppbuk5246@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	anna-maria@linutronix.de, mingo@kernel.org, tglx@linutronix.de,
+	Markus.Elfring@web.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] time/tick-sched: idle load balancing when nohz_full
+ cpu becomes idle.
+Message-ID: <ZkYgG9KYMpUPeJsM@lothringen>
+References: <20240509092931.35209-2-ppbuk5246@gmail.com>
+ <ZkU8lm2tjm_r9FpZ@pavilion.home>
+ <20240516075628.GC22557@noisy.programming.kicks-ass.net>
+ <CAM7-yPRHp3tiZjuBTesdRQoU8WJNg1scon_txS_6R-pZq9MXHw@mail.gmail.com>
+ <20240516084911.GF22557@noisy.programming.kicks-ass.net>
+ <ZkXtHv+fHUD2+lFJ@lothringen>
+ <CAM7-yPTSq0CSmRsTpeXwzhFk77gfwUK_LZKnbgo4NPk5zPCaAg@mail.gmail.com>
+ <20240516140003.GJ22557@noisy.programming.kicks-ass.net>
+ <ZkYW48dTX2FH5NaD@lothringen>
+ <20240516144504.GL22557@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Stat-Signature: mju6c8wbgf6gfb8fgnwn6yu59ximhujy
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 57ECF20024
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+R8Vbk930gfY1y8+k6ZBXumRqXreZfIMw=
-X-HE-Tag: 1715870599-267049
-X-HE-Meta: U2FsdGVkX1/lzKfoZz+Vev/LZzjDmrVIIyqZEWkbWagL8BFFPHTu99DfYkPD4Yh36GbTWVPtnQdXK4xTzx/eIiV/353Rsygr0SUxRbpIKW4QqsWSVMKLFR4TDwdtOoBNVKNsBf0t+yrHr+W8R1ox5yaI2bpzLJsy7YWsd6q/eQnplrQh1y1RYWO/bk3UHoNbT9yzIWXTb1/7MfRe30VtM8Cgr2A33BjACX97lfwJ+Jam746oIFlhHBlSp5EZn5qWWAFHffN+TkphdmrJNGW3wr2mdW10sEU367lLZbbYtfHTojIzeVfDFwGfThX8wkj1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240516144504.GL22557@noisy.programming.kicks-ass.net>
 
-On Thu, 2024-05-16 at 08:14 -0600, Jim Cromie wrote:
-> Declarative macros, which declare/define storage (at either file or
-> function scope), cannot be wrapped in do-while statements.  So
-> checkpatch advice is incorrect here.
->=20
-> The code has an $exceptions regex which allows multiple statements
-> based on the macro name, etc; /DECLARE_PER_CPU|DEFINE_PER_CPU/ are
-> currently accepted, widen those to accept /DECLARE|DEFINE/.
+On Thu, May 16, 2024 at 04:45:04PM +0200, Peter Zijlstra wrote:
+> On Thu, May 16, 2024 at 04:23:31PM +0200, Frederic Weisbecker wrote:
+> > On Thu, May 16, 2024 at 04:00:03PM +0200, Peter Zijlstra wrote:
+> > > > If I make you annoyed I'm sorry in advance but let me clarify please.
+> > > > 
+> > > > 1. In case of none-HK-TICK-housekeeping cpu (a.k.a nohz_full cpu),
+> > > >     It should be on the null_domain. right?
+> > > > 
+> > > > 2. If (1) is true, when none-HK-TICK is set, should it set none-HK-DOMAIN
+> > > >     to prevent on any sched_domain (cpusets filter out none-HK-DOMAIN cpu)?
+> > > > 
+> > > > 3. If (1) is true, Is HK_SCHED still necessary? There seems to be no use case
+> > > >     and the check for this can be replaced by on_null_domain().
+> > > 
+> > > I've no idea about all those HK knobs, it's all insane if you ask me.
+> > > 
+> > > Frederic, afaict all the HK_ goo in kernel/sched/fair.c is total
+> > > nonsense, can you please explain?
+> > 
+> > Yes. Lemme unearth this patch:
+> > https://lore.kernel.org/all/20230203232409.163847-2-frederic@kernel.org/
+> 
+> AFAICT we need more cleanups.
 
-It seems this exempts too large a number of these macros
+Well, we need to start somewhere :-)
 
-$ git grep -P '^\s*\#\s*define\s+\w*(?:DECLARE|DEFINE)\w*'|wc -l
-5075
+> 
+> > Because all we need now is:
+> > 
+> > _ HK_TYPE_KERNEL_NOISE: nohz_full= or isolcpus=nohz
+> > _ HK_TYPE_DOMAIN: isolcpus=domain (or classic isolcpus= alone)
+> 
+> What does this do?
 
-How about somehow limiting these exemptions more strictly?
+So housekeeping_cpumask(HK_TYPE_KERNEL_NOISE) will return all
+the CPUs not in nohz_full=
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -5901,6 +5901,7 @@ sub process {
->  			}
->  		}
-> =20
-> +# except for declarative macros (whether file or function scope),
->  # multi-statement macros should be enclosed in a do while loop, grab the
->  # first statement and ensure its the whole macro if its not enclosed
->  # in a known good container
-> @@ -5958,8 +5959,8 @@ sub process {
->  				$Declare|
->  				module_param_named|
->  				MODULE_PARM_DESC|
-> -				DECLARE_PER_CPU|
-> -				DEFINE_PER_CPU|
-> +				DECLARE|
-> +				DEFINE|
->  				__typeof__\(|
->  				union|
->  				struct|
+That is, all the CPUs that do all the housekeeping work on behalf
+of nohz_full CPUs (unbound workqueues and timers, etc...).
+
+Then in a similar way housekeeping_cpumask(HK_TYPE_DOMAIN) are all
+the CPUs not in isolcpus= (on_null_domain()). Perhaps that one is
+confusing and we should just have a simple isolcpus_cpumask instead?
+
+> 
+> > _ HK_TYPE_MANAGED_IRQ: isolcpus=managed_irq
+> > 
+> > And that's it. Then let's remove HK_TYPE_SCHED that is unused. And then
+> > lemme comment the HK_TYPE_* uses within sched/* within the same
+> > patchset.
+> 
+> Please, I find this MISC and DOMAIN stuff confusing, wth does it do? It
+> can't possibly be right.
+
+MISC is actually part of what is going to become HK_TYPE_KERNEL_NOISE. It's
+an artificial microfeature but it's actually the same as _WORKQUEUE, _TICK, _RCU,
+_TIMER, etc... All of which intended to be merged together.
+
+> 
+> > Just a question, correct me if I'm wrong, we don't want nohz_full= to ever
+> > take the idle load balancer duty (this is what HK_TYPE_MISC prevents in
+> > find_new_ilb) because the nohz_full CPU going back to userspace concurrently
+> > doesn't want to be disturbed by a loose IPI telling it to do idle balancing. But
+> > we still want nohz_full CPUs to be part of nohz.idle_cpus_mask so that the
+> > idle balancing can be performed on them by a non isolated CPU. Right?
+> 
+> I'm confused, none of that makes sense. If you're part of a
+> load-balancer, you're part of a load-balancer, no ifs buts or other
+> nonsense.
+> 
+> idle load balancer is no different from regular load balancing.
+> 
+> Fundamentally, you can't disable the tick if you're part of a
+> load-balance group, the load-balancer needs the tick.
+> 
+> The only possible way to use nohz_full is to not be part of a
+> load-balancer, and the only way that is so is by having (lots of) single
+> CPU partitions.
+
+So you're suggesting that nohz_full should just be part of the whole
+ilb machinery by default (that is, not fiddle with ilb internals) and
+then it's up to CPU partitioning (through cpuset or isolcpus) to disable
+ilb naturally. Right?
+
+Thanks.
 
