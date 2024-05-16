@@ -1,38 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95575147C72
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959D428680
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715865613; cv=none; b=guiyqnrVqoKHp+cP74PinJKVdWEQZOdnuqlo+ZTK53SbtlvG7a+7P1hrliHRiZsIe4L/4HjHQ3PPxScyEWMatjTfOx0fU1Gz0xWtZYnrQ5FklWz1xwxRvBlxSA5fLMN+yrFTg9yY2ynFUfM7rG+JZUOfMLdOa8AKb96dL4wSqsw=
+	t=1715865615; cv=none; b=CIYba9PEykHTu0ca7Es4MkEBgLah1k9RAd0GC85vUMeNv7ZvHBX0tnFw4jVpt0OF2ma0YR040zTEN4kXV2T1eas8TsmlQVNHMNUjz9hBoM1tXdgGBjySPV9U+blPNm2NXbEYhyb5DEhhkxelj2rhzONo3CZZUkF2FuNR5NHnArI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715865613; c=relaxed/simple;
-	bh=Dpc70NziaxnrQCx0B5Ukpj1EKWrj914F9Ksg/Qy8Ihw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JvACUDxr5EkBgRXKdIgg6Ce/tgpo6PXYiXIJEG7nKyKJ6JFLb6lvwWTI/ecEVroYcP3ilWgM4gvqHVs+C2f1FtTCzvRMkLNyyvcjBMr4uSqiRPzYZTFiGhc8mBnCmCWHPgYNZ6nhiITw87VDU3rdO9lXI6ZvOn3uigcnF6K1Vzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E1AgNavO; arc=none smtp.client-ip=217.70.183.197
+	s=arc-20240116; t=1715865615; c=relaxed/simple;
+	bh=pfTkoBgjlZV1mUXh+KZ9TwNdpRxl8tkWgq6yTcOn4d8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jwUBeiS2PPm5HLPZGbgI4Z8XKhztgyC4TZCwx5bINzAg/F7oaQC7/xTsp+v8JADSPjkVSNOBpgMtBcXL6ldnA5iSAgmSp+XJpRhzsIue4X1dBjbnjbNZFBV+QbrS722Kg9olXw+EL0/T6PyXsn8Ke70erzsYtOOH4XXeH8YQcsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pFhhYY56; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E1AgNavO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 48FE01C0009;
-	Thu, 16 May 2024 13:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pFhhYY56"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 260321C000B;
+	Thu, 16 May 2024 13:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715865610;
+	t=1715865612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/ArYlTqNc6RWGmShff/lcwa9Oxf7clXXs2cm446Spw0=;
-	b=E1AgNavOJfLHySqAlFp8KUaKYZnT2tBfV1qO4l7MXGQjjGq0hiGoi3oulzjYJVeM0ya6O8
-	Kk7jxHzjM37NE9Y/fhJzHxoyWrisKR5M4/G4850+cC8rRGReok+GO84HF/jnmon1CP1FNZ
-	4h56Fp6jGbWW5v3+9Ro7uKt0RTqNLkBYK8O+jIoF0gVDqTv5JT9fqn8dLHwyuzrUwoJfvk
-	5Wd4nBn9FhKPGLI4Ijv+g7XOlOa12kNkxuN5+QvqZleRhAP5Y4IeuLubraCr15UTJOqp3a
-	z+N3mwOKrbpgY5lUea2AiCeTPqDJ1QGcMZBC5YOX90o57B8DBeZky758abZzjg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KMsWQ3QG6sIU4J0NROVXHEWz9Bkv1PYe3fq1YFNuAeM=;
+	b=pFhhYY561PU6uRcNspH+5xwkPAiFWwEKtKebOUoippnGl26wmUDIblBRXwwjlO2fxlJjx1
+	QsWlOxMqEW4+5D82yvka0oSVBfxwmWiBiPEw6ph0srkGUPwBc2G5wI87hEaD98P9t658cB
+	EDAPmMrnG6VVL24bDg0yH0lV5XIp7G3QAvEDvBytFTKUcT98+Fah8cTkH7wxNbySwNOYC/
+	IkXcw8bTveZXL2qWnQ8iZQ4KKx1c1gvueJ2hfrzRO0Z3UXjFu1QdEooTVxePerzLnInoHo
+	I3ePwzigmFdti2YjF8mHMKRfvqUaTPld9RxWsulvNQh4t6nF8kkyCtM9wq414Q==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: [PATCH 0/3] drm/vkms: Reimplement line-per-line pixel conversion
- for writeback
-Date: Thu, 16 May 2024 15:20:04 +0200
-Message-Id: <20240516-writeback_line_by_line-v1-0-7b2e3bf9f1c9@bootlin.com>
+Date: Thu, 16 May 2024 15:20:06 +0200
+Subject: [PATCH 2/3] drm/vkms: Add a macro for write_line functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAQIRmYC/x2MWwqAIBAArxL7nWBLVnSVCEnbaiksNHoQ3T3pa
- 5iPmQcCeaYAdfKAp4MDry5KliZgp86NJLiPDigxl4goTs87mc7OemFH2tw/RZWXqpDKZL2yEOP
- N08DXP27a9/0A6hJi8mgAAAA=
+Message-Id: <20240516-writeback_line_by_line-v1-2-7b2e3bf9f1c9@bootlin.com>
+References: <20240516-writeback_line_by_line-v1-0-7b2e3bf9f1c9@bootlin.com>
+In-Reply-To: <20240516-writeback_line_by_line-v1-0-7b2e3bf9f1c9@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
  Melissa Wen <melissa.srw@gmail.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
@@ -54,53 +54,184 @@ To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1159;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5335;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=Dpc70NziaxnrQCx0B5Ukpj1EKWrj914F9Ksg/Qy8Ihw=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRggHSLSv2AbYO8SVcpvFqYDZK0xI2Wn0i1gTB
- 68XbWyE6uiJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYIBwAKCRAgrS7GWxAs
- 4pY1D/9uuCQYR00dJIqjOdYWZe4UcthceV4K/kxpRCxeBNR4mgleY/t6rQvjrYH8wcWA62sUFYL
- ajkQuSQeL9MAEPQYJbnalmgdMK3IuQgZIEB6EQijAeCWfZztmJFvtewJx2Sl84k29JY0Mrto79g
- hkGsjXwvVWJJ8CMHh5zBvplyk5S+U33V3//zh3s6/QBklyt0hFwRCB3+4QBmXuvdZHctuKkVTF9
- rfPi+AhA1faT55RltIJ8FMFoo4m4QV6Uy5IvHSr0ZvrfXj7N+IkJCw6q/+i3yPDVZaRzXJ2745d
- xM3PIqkgavMz1oa4ae3GCkO3b68q9xe2HMqKra22S87kgWpj8ZEast1Nu1iqAlnBrnyk/PfXK1U
- KJ8hpXmMYuDmCP09vt1n0qjiNSpCDO7g/DcuRRyz0YzR2YEqQcIv3+iYn5bxtI/uIC0hy8NOy2r
- vG1/SVO6Q4qJqEkkME3FJpiMWKu4iy9cYnBrs5Lk0DD/dwKMEEBCAa1VrV5N+QCeYhv3ubNkZu3
- 48oyeZs7EXppT0d/JJ6dXksiUFWYXWAuZmaTBPX8xy7kjRXmZtQBKL/s4Tj3Hd1If7D/0BswqpS
- czcGGJtIXbne1oAwAUMwg1VjYTyORvKg/+1VH+eTSdG3AkhzWquCPsAbyLqVhf5BNXqfjqnRauV
- Nh6MwTZkreneDxw==
+ bh=pfTkoBgjlZV1mUXh+KZ9TwNdpRxl8tkWgq6yTcOn4d8=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRggHcGMuzS6tCLTSpG9oRNAAXh2NiM6anlmyy
+ 3JGkjeQOk2JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYIBwAKCRAgrS7GWxAs
+ 4oqXEACOnVN6dt8GqqGYL2tCiYkggjEU+ZSmObqSp3LieJm94ACkA84K8z+KeO/Xt+MDSg428dG
+ UxSyjdHPzppi1/zIa7larCQxI0u4mE5b5mvBELyFM4UF+3sPIFEWQa0frTns1mhDhAKrViFsCgI
+ AyskwcNfT6YLzClp++h/Jug0fPUxoSPj+uN3RSgImqFOLZfaQqQyCikm+mW5Y5C/sPbp68lkf2P
+ WxJqn5wiS6Jd5p4IX93mKCX71EUB3kXndewKWfqrGYhw5E3Smn3XEILmzMALRisYUmxeLnziGZu
+ a6m98NbskcKNyrpTyHmDE6e7lQA8szIUuG7NBGziFxWPqHwRYm3r4X5YZ6bS0GizgU3psnKm9ex
+ vom00jCfmYmP9WKefkZERyPXZ2pgrAjeaMuFMg6o6Fm2jstypH/6s82+R0GEq0pXtL+frnqAII2
+ tX3NbDJEF50hxC/fOzTkljT+MjuVd3k6UJ+/llCoSGxIETWorqQV10gMovRw7kcm/aNpr00dRz9
+ yeBd9Qr4O9UqtJG3LT9ETAzaywrhPjgUEhwnzZP0h1R473cj/zNpCXWDSdJIbNTMP1aaqPwTpfo
+ K0lL+HRg+C410b/c7QfPJ0+h8Y8YH36IFX1n5FoTV2/asbsiC/PhlGjPXqGaNGxV7V2h93uNfOD
+ x8HvjdH8vo/s5aw==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-This series re-introduce the line-by-line algorithm. This is simpler than 
-the read part because no rotation/translations are involved. 
-
-PATCH 1/2 is the re-introduction itself
-PATCH 2/2 is a proposition to avoid code repetition using a "big" macro.
-
-This series depends on [1].
-
-[1]: https://lore.kernel.org/all/20240516-b4-new-color-formats-v1-0-74cf9fe07317@bootlin.com/
+As stated in [2], the write_line functions are very similar and force code
+duplication. This patch add a macro to avoid code repetition.
 
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
-Louis Chauvet (3):
-      drm/vkms: Re-introduce line-by-line algorithm for writeback
-      drm/vkms: Add a macro for write_line functions
-      drm/vkms: Add support for XRGB2101010
+ drivers/gpu/drm/vkms/vkms_formats.c   | 107 ++++++++++------------------------
+ drivers/gpu/drm/vkms/vkms_writeback.c |   4 +-
+ 2 files changed, 33 insertions(+), 78 deletions(-)
 
- drivers/gpu/drm/vkms/vkms_composer.c  |  18 ++++++
- drivers/gpu/drm/vkms/vkms_drv.h       |  20 ++++---
- drivers/gpu/drm/vkms/vkms_formats.c   | 104 +++++++++++++++++++++++-----------
- drivers/gpu/drm/vkms/vkms_formats.h   |   2 +-
- drivers/gpu/drm/vkms/vkms_writeback.c |   6 +-
- 5 files changed, 105 insertions(+), 45 deletions(-)
----
-base-commit: 335e3c4175a113d1f5b089c4eb1738590d193fbc
-change-id: 20240222-writeback_line_by_line-8475605b1d5c
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index c5cb2e45ddaf..51b1c04e6781 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -642,6 +642,31 @@ static void argb_u16_to_RGB565(u8 *out_pixel, const struct pixel_argb_u16 *in_pi
+ 	*pixel = cpu_to_le16(r << 11 | g << 5 | b);
+ }
+ 
++/**
++ * WRITE_LINE() - Generic generator for write_line functions
++ *
++ * This generator can only be used for format with only one plane and block_w == block_h == 1
++ *
++ * @function_name: Name to use for the generated function
++ * @conversion_function: Fonction to use for the conversion from argb_u16 to the required format.
++ */
++#define WRITE_LINE(function_name, conversion_function)					\
++static void function_name(struct vkms_writeback_job *wb,				\
++			  struct pixel_argb_u16 *src_pixels, int count, int x_start,	\
++			  int y_start)							\
++{											\
++	u8 *dst_pixels;									\
++											\
++	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);	\
++											\
++	while (count) {									\
++		(conversion_function)(dst_pixels, src_pixels);				\
++		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];		\
++		src_pixels += 1;							\
++		count--;								\
++	}										\
++}
++
+ /*
+  * The following functions are write_line function for each pixel format supported by VKMS.
+  *
+@@ -655,85 +680,13 @@ static void argb_u16_to_RGB565(u8 *out_pixel, const struct pixel_argb_u16 *in_pi
+  * [1]: https://lore.kernel.org/dri-devel/d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net/
+  */
+ 
+-static void ARGB8888_write_line(struct vkms_writeback_job *wb,
+-				struct pixel_argb_u16 *src_pixels, int count, int x_start,
+-				int y_start)
+-{
+-	u8 *dst_pixels;
++WRITE_LINE(ARGB8888_write_line, argb_u16_to_ARGB8888)
++WRITE_LINE(XRGB8888_write_line, argb_u16_to_XRGB8888)
+ 
+-	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
++WRITE_LINE(ARGB16161616_write_line, argb_u16_to_ARGB16161616)
++WRITE_LINE(XRGB16161616_write_line, argb_u16_to_XRGB16161616)
+ 
+-	while (count) {
+-		argb_u16_to_ARGB8888(dst_pixels, src_pixels);
+-		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
+-		src_pixels += 1;
+-		count--;
+-	}
+-}
+-
+-static void XRGB8888_write_line(struct vkms_writeback_job *wb,
+-				struct pixel_argb_u16 *src_pixels, int count, int x_start,
+-				int y_start)
+-{
+-	u8 *dst_pixels;
+-
+-	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
+-
+-	while (count) {
+-		argb_u16_to_XRGB8888(dst_pixels, src_pixels);
+-		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
+-		src_pixels += 1;
+-		count--;
+-	}
+-}
+-
+-static void ARGB16161616_write_line(struct vkms_writeback_job *wb,
+-				    struct pixel_argb_u16 *src_pixels, int count, int x_start,
+-				    int y_start)
+-{
+-	u8 *dst_pixels;
+-
+-	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
+-
+-	while (count) {
+-		argb_u16_to_ARGB16161616(dst_pixels, src_pixels);
+-		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
+-		src_pixels += 1;
+-		count--;
+-	}
+-}
+-
+-static void XRGB16161616_write_line(struct vkms_writeback_job *wb,
+-				    struct pixel_argb_u16 *src_pixels, int count, int x_start,
+-				    int y_start)
+-{
+-	u8 *dst_pixels;
+-
+-	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
+-
+-	while (count) {
+-		argb_u16_to_XRGB16161616(dst_pixels, src_pixels);
+-		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
+-		src_pixels += 1;
+-		count--;
+-	}
+-}
+-
+-static void RGB565_write_line(struct vkms_writeback_job *wb,
+-			      struct pixel_argb_u16 *src_pixels, int count, int x_start,
+-			      int y_start)
+-{
+-	u8 *dst_pixels;
+-
+-	packed_pixels_addr_1x1(&wb->wb_frame_info, x_start, y_start, 0, &dst_pixels);
+-
+-	while (count) {
+-		argb_u16_to_RGB565(dst_pixels, src_pixels);
+-		dst_pixels += wb->wb_frame_info.fb->format->char_per_block[0];
+-		src_pixels += 1;
+-		count--;
+-	}
+-}
++WRITE_LINE(RGB565_write_line, argb_u16_to_RGB565)
+ 
+ /**
+  * argb_u16_to_nothing() - pixel_write callback with no effect
+diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
+index f6ed3aa69af8..53bddcf33eab 100644
+--- a/drivers/gpu/drm/vkms/vkms_writeback.c
++++ b/drivers/gpu/drm/vkms/vkms_writeback.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ 
+ #include <linux/iosys-map.h>
++#include <linux/media-bus-format.h>
+ 
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_edid.h>
+@@ -19,7 +20,8 @@ static const u32 vkms_wb_formats[] = {
+ 	DRM_FORMAT_XRGB8888,
+ 	DRM_FORMAT_XRGB16161616,
+ 	DRM_FORMAT_ARGB16161616,
+-	DRM_FORMAT_RGB565
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_YUV422
+ };
+ 
+ static const struct drm_connector_funcs vkms_wb_connector_funcs = {
 
-Best regards,
 -- 
-Louis Chauvet <louis.chauvet@bootlin.com>
+2.43.2
 
