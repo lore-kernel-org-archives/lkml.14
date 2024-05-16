@@ -1,91 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582E122075;
-	Thu, 16 May 2024 12:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687F4145B01;
+	Thu, 16 May 2024 12:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715861887; cv=none; b=RIlP3xvUhrLUyyM9bt6wDpTwjWouQvqmMKX+XEydNYy37qdaUZD8LjWjBXYpqUFnaOyMUHxKUXTbIQ79vb5nNV0ERpHa6Qhn8xYrFvp7GYIFgkaFGQV1oNVmvrlS8k74C/DgTn+LtZRbLCjHONZRBx1ulO2zsNGtCb1neXrqqTs=
+	t=1715861899; cv=none; b=KMvoOwqP9zW1TMgsmWxeea8GQlYSFwt6u4YFalNZTLhmRam6gBTmsevklBUSwZinXoE7JQZgefR+pAfuifLfYhxZ/qLdwB6ZYunm8TQ+1gSEVS8ezQi6DGcrqcGLy4tbmJa/uISQogX0qwRB1h+EQC2U0ie59mCfC90oqILUWf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715861887; c=relaxed/simple;
-	bh=xIBvgUA3GxPMhfgmzaW4zOWO/kjFOkYCDtn0FkIzZSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B7VDSViSnP8DqTfHlVSn83lCawXMNPl62x/6oWxHQUjuqMzEY0kHVgvk9VGusyb7peR1LI11vfhQ/YDpNRBFGiAEfxZo6HCbS/HDVwtR8qbyEeqdodYm4Xps4mPZXw73FuOkS9bk8oztB18ko3aWSwUVwbsaUmjI4OQTYWSXUJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ja4iCsqE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715861899; c=relaxed/simple;
+	bh=HFCQg3Sx4ZhEpDdFJ4Xk+JoGPY6Gfx1b4LEHhW4aXsA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oYFOLD2DEVsknwCqwvwm579S27PyqDQRof35SXxz/5H84EEXY91xrxP1RsfwF8W3R6PEgiB8Q5lgmeSQ4ZEHx36a0yHxU1s2KdAH6APX7emE0Ms0n0P9MgLZBXlv2aVfesVm8NA3x3L9EeKzOSWVpXBRz/8eXEN57N1v4Fmv+nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=LOffGyV7; arc=none smtp.client-ip=220.197.31.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ja4iCsqE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65724C113CC;
-	Thu, 16 May 2024 12:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715861887;
-	bh=xIBvgUA3GxPMhfgmzaW4zOWO/kjFOkYCDtn0FkIzZSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ja4iCsqEuuzYg8BupkdjBsN2Ry+ctT+W0pZt0icJqpavJRjyEC6s3v3vlQCfyK0s7
-	 ovL4vjFh28xGivUCIRHW7v71UTmnB8/VMhCRHqy/zbPf+IavRmmupIfw/iDfIjyDbT
-	 tVerabbA1NrsSPHh9hUvUoVLrdw0l6NscBct74hoGACqZ9RlRSY6Ev1cS/DTwXCXWK
-	 UZ9SfFemywcbXYcp+Oz60r3FmlZMW4QjeSivnTqEWV69XZeTPkFtCT71vmwnWxJODR
-	 dOHSH6To38jOcHOTrHNiWnN8LRAm0axg/+ZEQuQ/NxbNC1m6pIeJgL0VQ5aRt6MfQT
-	 nI4tl4RXT24YQ==
-Date: Thu, 16 May 2024 13:18:00 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCHv4 8/9] ASoC: fsl-asoc-card: add DT property
- "cpu-system-clock-direction-out"
-Message-ID: <20d8eb96-6346-4341-95ee-74729001c01a@sirena.org.uk>
-References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
- <20240515135411.343333-9-elinor.montmasson@savoirfairelinux.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="LOffGyV7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=c/c6UprRMJ+Pu2qhWWNi5OJ+tLUdGCPrD5YFgn6dxvw=;
+	b=LOffGyV73othVfZ2u6U7kpHvNHb8ueEpG5nSavtgJ1IQQKabg/Mqyca701W+E8
+	WCtLQeJdwM6X20TjKDQhRQtUVfXJIo1gJHA4pWS/kyG3KMDyTjeOFGpIWUDsfiIZ
+	xpzxkVKSAhzJaffaxpA/Ze+DebM2GWs94l3ha6forVCLg=
+Received: from localhost.localdomain (unknown [116.128.244.171])
+	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wDHD+tp9UVmXt_9Bw--.21873S6;
+	Thu, 16 May 2024 20:01:58 +0800 (CST)
+From: Genjian <zhanggenjian@126.com>
+To: tsbogend@alpha.franken.de,
+	chenhuacai@kernel.org,
+	jiaxun.yang@flygoat.com,
+	ricardo@marliere.net
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Genjian Zhang <zhanggenjian@kylinos.cn>,
+	k2ci <kernel-bot@kylinos.cn>
+Subject: [PATCH 3/3] MIPS: ip22-gio: Make ip22_gio_set_64bit() and ip22_gio_init() static
+Date: Thu, 16 May 2024 19:59:06 +0800
+Message-Id: <20240516115906.1224164-3-zhanggenjian@126.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240516115906.1224164-1-zhanggenjian@126.com>
+References: <20240516115906.1224164-1-zhanggenjian@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qyP2+HTgE4Ups3SO"
-Content-Disposition: inline
-In-Reply-To: <20240515135411.343333-9-elinor.montmasson@savoirfairelinux.com>
-X-Cookie: I'm having a MID-WEEK CRISIS!
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHD+tp9UVmXt_9Bw--.21873S6
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFyUAr48KrykGry8Kr1kuFg_yoW8JFy7pr
+	W0yFnrKFWjgFWDWFs5Cry8Xr4S9wn8ArWFvF4qk34IgF1rGFy3JF4rKr98Zr1UGrWUZ3Wr
+	XF1Fg3ZxKw4I9wUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UZAwsUUUUU=
+X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbiHhTgfmV20wENggABsb
 
+From: Genjian Zhang <zhanggenjian@kylinos.cn>
 
---qyP2+HTgE4Ups3SO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+These functions are used in only one file.
+Made them static to fix the following build error:
 
-On Wed, May 15, 2024 at 03:54:10PM +0200, Elinor Montmasson wrote:
-> Add new optional DT property "cpu-system-clock-direction-out" to set
-> sysclk direction as "out" for the CPU DAI when using the generic codec.
-> It is set for both Tx and Rx.
-> If not set, the direction is "in".
-> The way the direction value is used is up to the CPU DAI driver
-> implementation.
+arch/mips/sgi-ip22/ip22-gio.c:249:6: error: no previous prototype for ‘ip22_gio_set_64bit’ [-Werror=missing-prototypes]
+arch/mips/sgi-ip22/ip22-gio.c:398:12: error: no previous prototype for ‘ip22_gio_init’ [-Werror=missing-prototypes]
 
-This feels like we should be using the clock bindings to specify the
-clock input of whatever is using the output from the SoC, though that's
-a lot more work.
+Reported-by: k2ci <kernel-bot@kylinos.cn>
+Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
+---
+ arch/mips/sgi-ip22/ip22-gio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---qyP2+HTgE4Ups3SO
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/arch/mips/sgi-ip22/ip22-gio.c b/arch/mips/sgi-ip22/ip22-gio.c
+index a3cdcb289941..2738325e98dd 100644
+--- a/arch/mips/sgi-ip22/ip22-gio.c
++++ b/arch/mips/sgi-ip22/ip22-gio.c
+@@ -246,7 +246,7 @@ void gio_set_master(struct gio_device *dev)
+ }
+ EXPORT_SYMBOL_GPL(gio_set_master);
+ 
+-void ip22_gio_set_64bit(int slotno)
++static void ip22_gio_set_64bit(int slotno)
+ {
+ 	u32 tmp = sgimc->giopar;
+ 
+@@ -395,7 +395,7 @@ static struct resource gio_bus_resource = {
+ 	.flags = IORESOURCE_MEM,
+ };
+ 
+-int __init ip22_gio_init(void)
++static int __init ip22_gio_init(void)
+ {
+ 	unsigned int pbdma __maybe_unused;
+ 	int ret;
+-- 
+2.25.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZF+XcACgkQJNaLcl1U
-h9BOcAgAgLtirZZNkJCJym3Zg2exAkuMznCbG3vzhug2rdyPFeYCt7+q3uMqs9QL
-ehCjibTUMcmLCA4pJA5G6l+OS+Fy9fAuaZc3tIADu0AcarzVHsy96kWjlUnkJTTo
-IIcoydNZKalL0k4wMPB48k5pxCeo4eOjHql//4G+IauEcMgEOHbzwf+17CJPXsq1
-x3NqwVfmrKBUy8ze66Rxjis67wEhMd7360LCdRtiOZQIf/JEzKCV0v/s0UwhmHVP
-VR8c5o/YUpMNGefA317nPw8Tw9hVgqtLYV1hLwYn/C7QzIrIhGPn7m16h57m6IPz
-N8JFnC+MvXIZjtMWx00is/tRmxqM6g==
-=T9W3
------END PGP SIGNATURE-----
-
---qyP2+HTgE4Ups3SO--
