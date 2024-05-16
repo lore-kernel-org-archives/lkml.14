@@ -1,235 +1,131 @@
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92407138C;
-	Thu, 16 May 2024 02:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA8F1366
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 02:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715826236; cv=none; b=nhEXxKb/4rTYot5qqpvgYQwH3ApXyNjwoMS2x7GvbD1YKmPiRJgtmzcT7jrKmUCS16Lm6fhKowsj84y1closSbnI4e7OQ2OF1jbtO/wkVvlONfQJ8Hfg+THPnC2eU/Da2XDNpbF8iFEiOgETZpPCS2GYZv4RnsMqUzBE32Wg5d4=
+	t=1715826552; cv=none; b=iUN+wMiBX2jKMLpkoiCaHUQVr2+5ecL2XkMuSZ6kDBePt3dSy5v2VLGVDJYU6PIcUHooKNY+HC+dWhpurdf4eHOih0F3V60Eyx9misN4iVdlBAngAT03mCCr0CsIqvPa3D8B401W6ZvdzsH1LEiskvxp2mxLaBRWZ9rdH7Z2/Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715826236; c=relaxed/simple;
-	bh=tZTxUDrO6+scTAx+uDVEAq0hr1JWcYSzWeZKqIavQPI=;
-	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=OsL38RhQ2ozmDUyL//oaOn65Swo9WKkaROYVhzqHIzvVtuyk0I/Dr5i/djhKNSxRzc+CQnBkTeTqQyyZy0poa1zxQ6xvAsyNEp53IzlLTHqya094QyHwUKRxmuX5dlyLvm44gxpJXsUjlsF4srnK6UEUZp+VbtQuyKWJECg4M4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bXMjmNLJ; arc=none smtp.client-ip=203.205.221.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1715826552; c=relaxed/simple;
+	bh=IIkEL27j5qp0KhvU0CThyFm99wsNzwA4fdJ9xC6X5xo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MN6xTzqmHiG1UO+/edNIcbl0fJBxuUCeurcfyejnTKlFK49paJZvBHrRKBJqqHk+KGxgiubU5V3czph8TlELzY7yhQ2pcaVoKNIRQstuEZOnR9CTBgm/MbDHRbQec9HynpXt6ZNEcHm+eefVo8z4gYg60G3plz1JU2QyovqIthQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPAMiHZ+; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bXMjmNLJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1715826224; bh=QEXXJYEnjAu8uLTDWuS5qNbiA6rlse2sFQ8Jwz9c1tA=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=bXMjmNLJpwBOebkF3ggdwMXRSKnYpreRb5grIj+7V2ZNshgJd0IB3W0lE85irBpxc
-	 J6oiXlMNskePqXDLuDGb7+/g5Bj7VFD2wzlGmkKZ4L4CIYF6JmmHtuzWharOmCCl03
-	 c9z9ybZaVaRgJpH5LenqMp/B8cIz577qs6Js0IqE=
-Received: from smtpclient.apple ([2408:8207:18a0:162f:54a4:17b:b953:6b69])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 4583B20F; Thu, 16 May 2024 10:17:24 +0800
-X-QQ-mid: xmsmtpt1715825844t5xrgpdjz
-Message-ID: <tencent_15C2F112172FA62C64BB318B8F4330461B05@qq.com>
-X-QQ-XMAILINFO: NT7uTz3cNku2W+S/puWSJz9BQT5mEIKHIB5ASNdlPNgS7D9cgZB9zvUABdDdg8
-	 SiD/DNe4ZOMA2o+2fH2Jm0uJcnTg4v6BncUBixuS5hEQk6/R31+lWsMRioMYnYb9nVIEOU/GAk6p
-	 Air1Ch/aB7QNbmwlIg44NC0NdXIKBYz10HRENpnohO7dCTTf5BhSoBzyvSumK4WnZVBoOrQNFc9V
-	 n1xTxqYy3n60UDexk7gxJyZ8bFxfz8fDu4XBKSO/Lgv7wrFu90Oz325GBVW3JrvrKfbMBx9zXbwo
-	 SzfYrMFDDJL6kSG4ut3gxZZR/AjdftBH5R/1ZUGJf4s/6KSaIur0pvF6kh8psuJj2nXSy8KB/lMk
-	 vYGJ8QqsmZBRAb9WgxflQXfPytnn++M3S02G1tF5fn3KfVGuJLITrAQuApLM7qPJyMHeRPVJSLgR
-	 6gxT+lmEdUzCjmIi7lQF/CZCP0ZzNafUCws/5JgcsccqSPHh/udT5977J5380BX3Jmfq0r1VDfo/
-	 c8+ts1xcKTrRxHiapd6enc33f6gxYcAYTNb2St80ow2rcLFZdL44iBuIxQw50baA6Ughl+icR7F+
-	 FzxEicD9KjnkSQSJLPoC6jdX5T0adhtAbQvOPnmZh77SxibASYYj/8ir7HCW2lUVryGYGb/ozG22
-	 WU8GwrEWeZQJiEcsqmYDdKAxLK5/VgvDpSWVpIdC465RAW3seDAcDx4kaKBB/CQZUx1fT9QrvEc7
-	 ejruEEg31ZtpNcwQkzXS02u30sinxJP0gdDSsr9yhsJ/S9RAvvRwtR9FcDAi4CEZGwCe6OUyi6no
-	 TCvdGx1oTi0WSdOWdk34Mv0IOKDlvnrzZXdFrRQE3gNfM8X89Qq0IrunRV3QS0O6Qfw775aDbu2F
-	 sVMUrN4xiagVP+MtHzzaJPNso8mwANKQAEm4BlCxS/Xqs+ciP9AEJGQTtsjlMpxkpeTOLgnC2wbS
-	 PXHpe9bZUQiNFmPEx5+mh+aGaCbxOw4JhDdLXeTqBDjAc7YOe+vg==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPAMiHZ+"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f082d92864so25896585ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2024 19:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715826549; x=1716431349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ylKzb7dfxhYrNsu4O3QTBN7Pz1PLfr8QWuGfcHzgVrY=;
+        b=NPAMiHZ+mGrD84yyMgYbYbhb5qyCD/D8WqdMgd3rxu1RkbH2m+VVsG/ED08ZS0buLL
+         KNaopYowMp5NXGAGaIOACXVpK4uPAdfSXJCbEwSZzHkojsYJdIzZQTUX9ZTtqeF1diex
+         iUh5k6sI+r+4n8g0BnmK2/n4K0czvAZln3ctMLYA+gZVavQWX4KDu4om0uBjbRB6MdQ0
+         BLoHHic39PIoik3AQhrfE/CM2kgtKzihehrEb3JCX1twQ9vZ941pPoz3G83PSZQAsB2c
+         +5iftAU6Fird7fZ8MThu/tU8kfirpZiiirrC4TdSTHLcR90MEe+QtTLLsJrLqgeKW6HJ
+         j0Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715826549; x=1716431349;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ylKzb7dfxhYrNsu4O3QTBN7Pz1PLfr8QWuGfcHzgVrY=;
+        b=FQ1kAldSN7kF3xuhbhUcFBdBs4L32AtGjDKRFn2GyITvnJsx5xwI7y5H35KQpw1Bf4
+         g1Mz2DOk/mo1/rpZKVC1tuQG5TMJ4RktxDVRYJtEB6BuRCYCgWOBiBosBFcde8BahADY
+         zNLozlnhI3YDSJWUK82v/IiuHK1mn+qViaUPa7Isev8xqDXCjIW2xkjoelWt1ZkPS/Mu
+         A2w4V0d956ZHT20ST5MsxGnYaQaJb3FJ/oJMX7JGAeiZ2t2pMtuDm7NhKqwBUZKy3Q/x
+         r0AV/uELeYcdlHZe9gXR7rjry/+Ke2y/MRQRmdBSvO1gPHFePE27GMxAjkUpBdDeOJ9O
+         Nspg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhtBWCHOCpT9zURV5LPlTnqmVdrFsEAKXKCRB1oiA4jez/zgVOrTR1ZTbaTI9O7Q+BWDehrY/RaDCuxqCKcOUer72JHvfvZ93sGfTk
+X-Gm-Message-State: AOJu0YwC2RweRwPygme7fWyrVDVZRjCnTo9BcsGE5K9Om2bPe4m5qGlj
+	cWIhCZ3r0X0r/pmL+3Y8uY/BuiV4Q/zUjy+ZtTwDr+B6PNo8AweJ
+X-Google-Smtp-Source: AGHT+IFCDvih2Sq680TsFRlr89jhGuDy3ApG+kGUrzzeIRsdOeB48Bj+5o0oxG0AAySe6TyFzsu2ng==
+X-Received: by 2002:a17:902:7893:b0:1e2:9ddc:f72d with SMTP id d9443c01a7336-1ef43d2af36mr168568245ad.26.1715826549066;
+        Wed, 15 May 2024 19:29:09 -0700 (PDT)
+Received: from mari.. ([2804:431:cfd2:fcb9:74c9:b9d1:b3ec:e1e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bada405sm126405175ad.92.2024.05.15.19.29.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 19:29:08 -0700 (PDT)
+From: MarileneGarcia <marilene.agarcia@gmail.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Julia Lawall <julia.lawall@inria.fr>
+Cc: MarileneGarcia <marilene.agarcia@gmail.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 linux-next] nvmem: meson-efuse: Replacing the use of of_node_put to __free
+Date: Wed, 15 May 2024 23:28:38 -0300
+Message-Id: <20240516022838.8609-1-marilene.agarcia@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: linux-next: manual merge of the risc-v tree with Linus' tree
-From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <20240516093641.15695f18@canb.auug.org.au>
-Date: Thu, 16 May 2024 10:17:14 +0800
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul@pwsan.com>,
- Conor Dooley <conor.dooley@microchip.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Palmer Dabbelt <palmer@rivosinc.com>
-Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <05C255B1-9837-4B96-A2BE-3A2DCB959425@cyyself.name>
-References: <20240516093641.15695f18@canb.auug.org.au>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+Use __free for device_node values, and thus drop calls to
+of_node_put.
 
+The goal is to reduce memory management issues by using this
+scope-based of_node_put() cleanup to simplify function exit
+handling. When using __free a resource is allocated within a
+block, it is automatically freed at the end of the block.
 
-> On May 16, 2024, at 07:36, Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Hi all,
->=20
-> Today's linux-next merge of the risc-v tree got a conflict in:
->=20
->  arch/riscv/Makefile
->=20
-> between commit:
->=20
->  ef10bdf9c3e6 ("riscv: Kconfig.socs: Split ARCH_CANAAN and =
-SOC_CANAAN_K210")
->=20
-> from Linus' tree and commits:
->=20
->  3b938e231b66 ("riscv: merge two if-blocks for KBUILD_IMAGE")
->  c1f59d035966 ("riscv: make image compression configurable")
->=20
-> from the risc-v tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your =
-tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any =
-particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc arch/riscv/Makefile
-> index 0577d34fb1a7,321c057e2bdc..000000000000
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@@ -132,12 -136,20 +139,20 @@@ endi
->  CHECKFLAGS +=3D -D__riscv -D__riscv_xlen=3D$(BITS)
->=20
->  # Default target when executing plain make
-> - boot :=3D arch/riscv/boot
-> - ifeq ($(CONFIG_XIP_KERNEL),y)
-> - KBUILD_IMAGE :=3D $(boot)/xipImage
-> - else
-> - KBUILD_IMAGE :=3D $(boot)/Image.gz
-> + boot :=3D arch/riscv/boot
-> + boot-image-y :=3D Image
-> + boot-image-$(CONFIG_KERNEL_BZIP2) :=3D Image.bz2
-> + boot-image-$(CONFIG_KERNEL_GZIP) :=3D Image.gz
-> + boot-image-$(CONFIG_KERNEL_LZ4) :=3D Image.lz4
-> + boot-image-$(CONFIG_KERNEL_LZMA) :=3D Image.lzma
-> + boot-image-$(CONFIG_KERNEL_LZO) :=3D Image.lzo
-> + boot-image-$(CONFIG_KERNEL_ZSTD) :=3D Image.zst
-> + ifdef CONFIG_RISCV_M_MODE
-> -boot-image-$(CONFIG_ARCH_CANAAN) :=3D loader.bin
-> ++boot-image-$(CONFIG_ARCH_CANAAN_K210) :=3D loader.bin
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: MarileneGarcia <marilene.agarcia@gmail.com>
+---
 
-Oh, No.
+Changes since v2:
+The patch was updated.
+It was checked and there is a blank line after the last 
+variable declaration, it does not appear as an added line 
+because it already existed and it is not changed by these 
+changes.
 
-Here should be CONFIG_SOC_CANAAN_K210 not CONFIG_ARCH_CANAAN_K210 .
+Thanks
 
-The correct diff should be:
+ drivers/nvmem/meson-efuse.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --cc arch/riscv/Makefile
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@@ -132,12 -136,20 +139,20 @@@ endi
-  CHECKFLAGS +=3D -D__riscv -D__riscv_xlen=3D$(BITS)
- =20
-  # Default target when executing plain make
-- boot		:=3D arch/riscv/boot
-- ifeq ($(CONFIG_XIP_KERNEL),y)
-- KBUILD_IMAGE :=3D $(boot)/xipImage
-- else
-- KBUILD_IMAGE	:=3D $(boot)/Image.gz
-+ boot					:=3D arch/riscv/boot
-+ boot-image-y				:=3D Image
-+ boot-image-$(CONFIG_KERNEL_BZIP2)	:=3D Image.bz2
-+ boot-image-$(CONFIG_KERNEL_GZIP)	:=3D Image.gz
-+ boot-image-$(CONFIG_KERNEL_LZ4)		:=3D Image.lz4
-+ boot-image-$(CONFIG_KERNEL_LZMA)	:=3D Image.lzma
-+ boot-image-$(CONFIG_KERNEL_LZO)		:=3D Image.lzo
-+ boot-image-$(CONFIG_KERNEL_ZSTD)	:=3D Image.zst
-+ ifdef CONFIG_RISCV_M_MODE
- -boot-image-$(CONFIG_ARCH_CANAAN)	:=3D loader.bin
-++boot-image-$(CONFIG_SOC_CANAAN_K210)	:=3D loader.bin
-  endif
-+ boot-image-$(CONFIG_EFI_ZBOOT)		:=3D vmlinuz.efi
-+ boot-image-$(CONFIG_XIP_KERNEL)		:=3D xipImage
-+ KBUILD_IMAGE				:=3D $(boot)/$(boot-image-y)
- =20
-  libs-y +=3D arch/riscv/lib/
-  libs-$(CONFIG_EFI_STUB) +=3D =
-$(objtree)/drivers/firmware/efi/libstub/lib.a
-@@@ -154,20 -166,9 +169,9 @@@ endi
-  endif
- =20
-  vdso-install-y			+=3D =
-arch/riscv/kernel/vdso/vdso.so.dbg
- -vdso-install-$(CONFIG_COMPAT)	+=3D =
-arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg:../compat_vdso/compat_vds=
-o.so
- +vdso-install-$(CONFIG_COMPAT)	+=3D =
-arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
- =20
-- ifneq ($(CONFIG_XIP_KERNEL),y)
-- ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_CANAAN_K210),yy)
-- KBUILD_IMAGE :=3D $(boot)/loader.bin
-- else
-- ifeq ($(CONFIG_EFI_ZBOOT),)
-- KBUILD_IMAGE :=3D $(boot)/Image.gz
-- else
-- KBUILD_IMAGE :=3D $(boot)/vmlinuz.efi
-- endif
-- endif
-- endif
-- BOOT_TARGETS :=3D Image Image.gz loader loader.bin xipImage =
-vmlinuz.efi
-+ BOOT_TARGETS :=3D Image Image.gz Image.bz2 Image.lz4 Image.lzma =
-Image.lzo Image.zst loader loader.bin xipImage vmlinuz.efi
- =20
-  all:	$(notdir $(KBUILD_IMAGE))
-
-
->  endif
-> + boot-image-$(CONFIG_EFI_ZBOOT) :=3D vmlinuz.efi
-> + boot-image-$(CONFIG_XIP_KERNEL) :=3D xipImage
-> + KBUILD_IMAGE :=3D $(boot)/$(boot-image-y)
->=20
->  libs-y +=3D arch/riscv/lib/
->  libs-$(CONFIG_EFI_STUB) +=3D =
-$(objtree)/drivers/firmware/efi/libstub/lib.a
-> @@@ -154,20 -166,9 +169,9 @@@ endi
->  endif
->=20
->  vdso-install-y +=3D arch/riscv/kernel/vdso/vdso.so.dbg
-> -vdso-install-$(CONFIG_COMPAT) +=3D =
-arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg:../compat_vdso/compat_vds=
-o.so
-> +vdso-install-$(CONFIG_COMPAT) +=3D =
-arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
->=20
-> - ifneq ($(CONFIG_XIP_KERNEL),y)
-> - ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_CANAAN_K210),yy)
-> - KBUILD_IMAGE :=3D $(boot)/loader.bin
-> - else
-> - ifeq ($(CONFIG_EFI_ZBOOT),)
-> - KBUILD_IMAGE :=3D $(boot)/Image.gz
-> - else
-> - KBUILD_IMAGE :=3D $(boot)/vmlinuz.efi
-> - endif
-> - endif
-> - endif
-> - BOOT_TARGETS :=3D Image Image.gz loader loader.bin xipImage =
-vmlinuz.efi
-> + BOOT_TARGETS :=3D Image Image.gz Image.bz2 Image.lz4 Image.lzma =
-Image.lzo Image.zst loader loader.bin xipImage vmlinuz.efi
->=20
->  all: $(notdir $(KBUILD_IMAGE))
->=20
+diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+index 33678d0af2c2..52ed9a62ca5b 100644
+--- a/drivers/nvmem/meson-efuse.c
++++ b/drivers/nvmem/meson-efuse.c
+@@ -42,20 +42,19 @@ static int meson_efuse_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct meson_sm_firmware *fw;
+-	struct device_node *sm_np;
+ 	struct nvmem_device *nvmem;
+ 	struct nvmem_config *econfig;
+ 	struct clk *clk;
+ 	unsigned int size;
++	struct device_node *sm_np __free(device_node) =
++			of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
+ 
+-	sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
+ 	if (!sm_np) {
+ 		dev_err(&pdev->dev, "no secure-monitor node\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	fw = meson_sm_get(sm_np);
+-	of_node_put(sm_np);
+ 	if (!fw)
+ 		return -EPROBE_DEFER;
+ 
+-- 
+2.34.1
 
