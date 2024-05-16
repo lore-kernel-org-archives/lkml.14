@@ -1,47 +1,48 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84D814B97D;
-	Thu, 16 May 2024 15:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367D914D2A3;
+	Thu, 16 May 2024 15:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715873170; cv=none; b=F3OtpL1KiEb70YvGGI+kCHBY7a04bEmzY/z9ghrz2VMPjFUdY+LFAyxB/mKwtOKRWeUTu8WcjjFf3u7pDLNIFhrdgo/NRQqvuMhaOi9cRgPQYXpagTBxvY2C+h7XtmMsA2cCOKmBpMjFQUFAgrfiAO1wy5hlsxs49/2FCYdz/ZA=
+	t=1715873177; cv=none; b=pDL1MlDUliS/CBd+PI1KE+4HKQytJhGuC2nT7B1QchU+esRfhA9MioloCMPPm20TmKlhnfjJRtuKQ77CKgMt2FD0qnpkQRHb6KXt9E+Ris1rTp0X2Laox5s5VJgfNRyadt+qCOp1rrc4pwNOIfCMhya2Gk1TgqmiQdkvHeGjnJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715873170; c=relaxed/simple;
-	bh=s+kzo1mIt5kdmhmpjxm0dPVNjA4/CEZktTwadgjJf3k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nlxnx7eLSzdwGctqiCZmlas+ELQrCWo9yJk3ki6W51GFLSq3rCaEyrM3qqYD6vpunJTGhqVrzv/IsDkJ/GNeQipp5Jt7YkKr4NbHl885DWNzC0EC3dk11Ctz55Pm+wu/64Pra3G5nBv6RYrMhcg2Td1CIHDyXBuFKzwZGCOC+Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HA6G7zpz; arc=none smtp.client-ip=91.207.212.93
+	s=arc-20240116; t=1715873177; c=relaxed/simple;
+	bh=aXqDgEPjwHMD2PFCnGHgOg/xjWQI0U5DZ7CMG6pHtco=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T6lGv7+sxBGKIQ8ZauG3QIOmByixWEEzx2xBjjU8hALRw6CwGo8SiLzQ3Q6c7NEAOsmk5JnDV6PCeJ7B0813O6+B7LDl59Z3oKErSsR2CSsYhznNpOhFvQno0zpRS1J09ukOYAHahpHrBwIPT/aKy9mOzyvopicMIkAhULhLUhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=niiKBIZn; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HA6G7zpz"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GClMTs020009;
-	Thu, 16 May 2024 17:25:46 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="niiKBIZn"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GD5XZh009990;
+	Thu, 16 May 2024 17:26:01 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=PIIcNcm
-	lMr49S8y8EsAlKjuoQdNzfUVhtTNhE4eVCM4=; b=HA6G7zpz91xWiHvTJgyAUz6
-	yKa/upVMmzoRQyBtM3c7ZZVly/Kk29dChQh0z4D8osjh/8KuqmJfBIBLlbhVPr7x
-	Myw2raCpBlr2lnkwdTSHAOANqPygHm/7oDwJI/cDbXoP5B/zvbxiHDfM5WEBYGek
-	jGYXceuYaGRkLK34StoH+cp99P3ihAh3D63ncCsB3XA+xMIr99jX18HTF08GIbKT
-	etYR465hm1Rwd+oaJKDoUEg7jvqvwkpfwpT0iIHsGeQpcYd9ou7cA2iZIgeIlvq7
-	NGRlehJKiv8DOHbYmoK60Mb2HBk9H6XGFSE7xWWrWdysJZzP85Vo7n9JlHoVgVA=
-	=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=VDo9KLS5VfcqruiE4K9r2uLa3efLXIlw/R2YAL6iasM=; b=ni
+	iKBIZnvTl78+xl/TTrU62H2Hbu6SmGhK+S23XJ8pme/OnpxxyMyZViRbbsEB/f9p
+	9puVOvrbZsbomwWe4jFCKQhC/1kMafDn+MuJ/TiOTbCWrjf1MX0m9t82OtX6iMdG
+	HMShfIB2jsiChlhrwE2kx++IvhsapM0iLx3CE/7vpmQEtbZVm5XsLv9KBirCxDmx
+	+L89AMvFQMtaNg0GZiFm9XBYWrF0LRwfdNUO11yZuIT68ZbMdEs3HQe2OdJlZt5n
+	zXXwQ7kVeA1RsRLQwCBp5mzgc4una03MdOlSe8HAirBpGiuUpJN+MtitzuoWPXwT
+	NIsqQPmvjKDUyYtsAlwQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y4sxvp3mk-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y4sxv69p4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 17:25:46 +0200 (MEST)
+	Thu, 16 May 2024 17:26:01 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0AB324002D;
-	Thu, 16 May 2024 17:25:42 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8F01540045;
+	Thu, 16 May 2024 17:25:57 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3B0F4223650;
-	Thu, 16 May 2024 17:24:54 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B6D34223653;
+	Thu, 16 May 2024 17:24:56 +0200 (CEST)
 Received: from localhost (10.48.87.209) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 16 May
- 2024 17:24:53 +0200
+ 2024 17:24:56 +0200
 From: <gabriel.fernandez@foss.st.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -56,10 +57,12 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-clk@vger.kernel.org>
-Subject: [PATCH v2 0/3] Use STM32 access controller for STM32MP25 clocks
-Date: Thu, 16 May 2024 17:24:24 +0200
-Message-ID: <20240516152427.692374-1-gabriel.fernandez@foss.st.com>
+Subject: [PATCH v2 3/3] arm64: dts: st: enable STM32 access controller for RCC
+Date: Thu, 16 May 2024 17:24:27 +0200
+Message-ID: <20240516152427.692374-4-gabriel.fernandez@foss.st.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240516152427.692374-1-gabriel.fernandez@foss.st.com>
+References: <20240516152427.692374-1-gabriel.fernandez@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,31 +80,24 @@ X-Proofpoint-Virus-Version: vendor=baseguard
 From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 
 Use an STM32 access controller to filter the registration of clocks.
-Don't register a clock if this clock is secured or declared as shared (this
-clock is generally managed by the security world).
 
-This series depends on the stm32_firewall framework (merged since
-next-20240419) notably for the include file 'linux/bus/stm32_firewall_device.h'.
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+---
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2:
-  - rebased on next-20240514
-  - YAML patch was apllied on next
-  - use appropriate include
-  - manage the case if 'access-contoller' property is not present in the DT
-  - rename DT patch (RCC support part was merged)
-
-Gabriel Fernandez (3):
-  clk: stm32mp2: use of STM32 access controller
-  clk: stm32mp25: add security clocks
-  arm64: dts: st: enable STM32 access controller for RCC
-
- arch/arm64/boot/dts/st/stm32mp251.dtsi |   1 +
- drivers/clk/stm32/clk-stm32-core.c     |   2 +-
- drivers/clk/stm32/clk-stm32-core.h     |   2 +-
- drivers/clk/stm32/clk-stm32mp13.c      |   2 +-
- drivers/clk/stm32/clk-stm32mp25.c      | 516 +++++++++++++++----------
- 5 files changed, 325 insertions(+), 198 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index dcd0656d67a8..602d02efc202 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -441,6 +441,7 @@ rcc: clock-controller@44200000 {
+ 				<&scmi_clk CK_SCMI_TIMG2>,
+ 				<&scmi_clk CK_SCMI_PLL3>,
+ 				<&clk_dsi_txbyte>;
++				access-controllers = <&rifsc 156>;
+ 		};
+ 
+ 		exti1: interrupt-controller@44220000 {
 -- 
 2.25.1
 
