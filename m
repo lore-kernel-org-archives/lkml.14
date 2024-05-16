@@ -1,39 +1,38 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB6A146A86
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D759C145FE0
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715864721; cv=none; b=UN/N3NYxsjAPzaKxNlFdfXHUjziEtRZrCKytVYMvE20F3RdBllRBmqTip5JFYoVX19E0RsjUw/VY1E9ncuElpDGCK+vT7Lc9k6PrpycukB1KCS32TWGiwZa+32XGTInkurjoGm5ILFqWEHb+8NGNyiIgyysBKbpyqyUUEjKEBqw=
+	t=1715864722; cv=none; b=DzYwj7LHWuBSaybrf/BYbbeBUYyy0b/Bm05Li7ITumgfgOaYB3AnXzIXqO73wfss8HmQ9C3o+ThtVqUsvTSWcqedZrgJ6Yz2hMphnyybek5jlamON7ezGVxN83AqdvZL8+lyERmLVvO2sEYTAW/3MRrQ/8qX8PZnhdWts4OlKdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715864721; c=relaxed/simple;
-	bh=W3Xf/YRK4t0P56bphLku13mwMBOBKsgILXEVbb87DhM=;
+	s=arc-20240116; t=1715864722; c=relaxed/simple;
+	bh=dHZ1IzsxPVmyWWUeG+eZL7CVMTGSdI3sCjouIUqPt4A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gmwVoEqbrAYriIQcGY71C7nx24yGcf9s42SkpEJRGOSs/5BzJsSYtW4LemynLwLoBg6iwwerPI/1192jln6UaIRN6CijgolRBcs5ehv8heCKMRQCUAmMdAQPTVx8RWhMDWI9+wlfrp7jHrXggzw3HIKm0Csebevm8kX2GV5ZPGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C9sDAqaJ; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=W585IEcV8h8GaBztwIkJFmT/0aD6CFa/peSKd2U+ywYEsUROAvK/skIkwQUarg730SDTxlIhMLkvZzPpa14Y/Q3ofdMSAQH9yr29d1bDasKEFt1QETFmdTpI5anJklUuf3yyK7s2rkq8/KAjFjgLtgJIE/pJl1lYiHSCS7k8CuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m2JIY/T7; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C9sDAqaJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 984CBC000C;
-	Thu, 16 May 2024 13:05:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m2JIY/T7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 25B3FC0008;
+	Thu, 16 May 2024 13:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715864717;
+	t=1715864713;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JU70LQ2hauNfhx679Y3SR3BcbT+dXuqlkcXNRSkyY1c=;
-	b=C9sDAqaJdH1IBmwXWy93kmup61xsPZRYc4IE9phOlaaRV2cb8u2jYJikAPc5hWTH+bzRTx
-	FuoYcEiqT3CIEusFNME29gSuih4xqDqGYdhOr0PC7itlLqeNDUDPnu714TDLBgxKgZskFq
-	FEvSuwwfwdReABd1/xCpgGYFJESZEqamQR0aliYM7P6wcrBZzVwrro6VNNfxUd7LR1iSe5
-	7JNNi2VDuL7jiBF04hsZ3whGrnYHd47R3jWdpDK1Qz8tFBBVFHgOaIzAEnb2UU2vsmVz/8
-	ljcR3Y9oxXHjO9wLY6FBtIqV2JofS/qXh4H63qHLcplhFPZ0MQr78HWOOC9KVA==
+	bh=cX8s4dgS2RrTUUoJEi7rl/OnaPd6xhS+2Ny907fZNcM=;
+	b=m2JIY/T7P4Mo3hO1Egwg5xhLPVJ9N5aYi9iolTr24tTRAq+qfBCUeVkze9bJfVrsehNYEu
+	OKVeJqsfGmMiH0CDWgNXEa92F8maVYcc4gs5Jnwv2qfBPEOZTf+JUSSDWkdXW371x7r3A3
+	/eh4sLjzCfu/bVP3OA/REMdcQm3E6rGJMmN78R7Ua1YUEVvG8iXCqoZQEXOSFwb1922DNz
+	yrSG9EqieDNBU1NNSeIJY9QODnrxneQSK83TkNSGZ8tV4cBOg408hU7toBIBChkURaxdJB
+	nyFQG0XDoPkBi4CJg2phau/nhG1H9znb4EKxvXnSQqSPI676NlgyMHsZ3sFO+Q==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Thu, 16 May 2024 15:04:48 +0200
-Subject: [PATCH v8 03/17] drm/vkms: write/update the documentation for
- pixel conversion and pixel write functions
+Date: Thu, 16 May 2024 15:04:46 +0200
+Subject: [PATCH v8 01/17] drm/vkms: Code formatting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +40,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240516-yuv-v8-3-cf8d6f86430e@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240516-yuv-v8-1-cf8d6f86430e@bootlin.com>
 References: <20240516-yuv-v8-0-cf8d6f86430e@bootlin.com>
 In-Reply-To: <20240516-yuv-v8-0-cf8d6f86430e@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -58,215 +57,139 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>, 
- Pekka Paalanen <pekka.paalanen@collabora.com>
+ Pekka Paalanen <pekka.paalanen@collabora.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7606;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4941;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=W3Xf/YRK4t0P56bphLku13mwMBOBKsgILXEVbb87DhM=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRgSAwHdmeMySONtGUfTAx5G2kyu7h5HW0koGL
- CMJcwB0tPuJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYEgAAKCRAgrS7GWxAs
- 4rleEADXaL4rtS9H27rZ+nR5zw7H30tpf9+H0xzo7WRe4thUacmNDhvLVpxF3KOOpI6vJw8TMUK
- TuureaJ7pxZkJSm1iIhDS/zT2Ze1F/jjh2Qdoipcg9r+sA+WIuLB9B1wwYpobW5lcp3KzlMskcK
- buTGO04qxQ229YPH2UhGl4PH01CsB/KHP0DqTl+9cFH0Q7YHVqNOEmhQUiTDccDalI3HXVPVbj5
- VAvj9TTobCo7NWo+H0NBJpn6bvXcltTenBJLERUQ+6e/hmpqCXGWDRIWVCS071mTfaf172CcwVq
- 95Mr4rxz6+ImlLxjWHJZjqPdHUM1nFQM2qBK+z2NoCsWvZkSBiE1hROSdWsADJ0H9AFJGG/Gm/2
- pHT/o84oTSfRH1F9/uxDr0TE9O6+iFnWNu4wh/z/tCZVvUaNUMmyPBj88lWl88zqRYusvWby3Og
- IUsiA7RnFcA5nwq6u7GSIyDfDBQ/K7Fyh2eu0NjkjI3ac0e4vBFXXppstA9zDUBDVjY9g3oHJ/0
- SAlZ0Q4ey7k7paR8Cf5PMPrUOcDu6b7iMZLPONJKhKqjd/bEggZ5NAW48h2dXR+LyzhVrxPzmy9
- Q6sJs7Sn6rylrzWAblGQ2CEJeAHo4vP3/jXMimd0JZayRdTOsyHgqrKvTPg/0zOczeq5jPNazBr
- ylI0/zOQ8PnHG6A==
+ bh=dHZ1IzsxPVmyWWUeG+eZL7CVMTGSdI3sCjouIUqPt4A=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRgR/6/Zm7ZBcQgwSbwUMnOGne8K68WqJwdTX1
+ HwcrcGR2hKJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYEfwAKCRAgrS7GWxAs
+ 4qO1D/9/OLNkII9qvmj0+ylOy9YnvtlAzKN8jD39qkC/MG+rXBtdEMC/ENmIT7Q2S1Ru/7nk6Rf
+ z65cuZT5DBLJIbUq08EbaR+aXnsn8X7QJ1Ga9LsxrbDu3IjJRckSHaMB24VNA21YTvmo/TOjVyX
+ +z/jYC6qgkMG2sIMYAgtgOVjUYVNYQgI9g7TX+zmvSn8pe3iOSK6fIQTmggtmSNceb922gp6rKU
+ i2ehijYpakFQByZ7HL+gHbmSDo6iRkk1vfv5ZJwHK6i94y+9QQtd1RglAKMas2yQ1TzqzrMlieR
+ aR+MkMGD9Xm4jj99AkYCqimBUqDDVXjGZPHzFhqQzxyC0g+GysrC8OyRQ6tS3chw4y93HyzD8FM
+ 5NaO+iYZMatbeIU2qaT0JSfpoKgak2KUHtU0JsbxiOC5zrQmTGPqkok95ECKgb47lYQQ5xo8L7H
+ JyObt21EciR8A4TaxmEdmdBOafrgSqCgXQRm5CczvCqydRoeZcu6o+iYFN9TUEET/QJ8hy2yjGJ
+ LrvxGHotKhE6wa7+pQDt1awSlBFUUrj8uZ8mV5aML0qQqMk4nq3k8sod8EGPjmSlNmOgS93Jhlo
+ ck61p/+tKgw69sb/xZCBklF/bmTTkGOOn9r2xrLbw0vxVGolN+77LZWJdbm+0uLO2tnsDx7WFhX
+ zG0U+HzZQrjvdhA==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Add some documentation on pixel conversion functions.
-Update of outdated comments for pixel_write functions.
+Few no-op changes to remove double spaces and fix wrong alignments.
 
+Reviewed-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c |  7 ++++
- drivers/gpu/drm/vkms/vkms_drv.h      | 15 ++++++++-
- drivers/gpu/drm/vkms/vkms_formats.c  | 62 ++++++++++++++++++++++++++++++------
- 3 files changed, 74 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 10 +++++-----
+ drivers/gpu/drm/vkms/vkms_crtc.c     |  6 ++----
+ drivers/gpu/drm/vkms/vkms_drv.c      |  3 +--
+ drivers/gpu/drm/vkms/vkms_plane.c    |  8 ++++----
+ 4 files changed, 12 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index c6d9b4a65809..da0651a94c9b 100644
+index e7441b227b3c..c6d9b4a65809 100644
 --- a/drivers/gpu/drm/vkms/vkms_composer.c
 +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -189,6 +189,13 @@ static void blend(struct vkms_writeback_job *wb,
+@@ -96,7 +96,7 @@ static u16 lerp_u16(u16 a, u16 b, s64 t)
+ 	s64 a_fp = drm_int2fixp(a);
+ 	s64 b_fp = drm_int2fixp(b);
  
- 	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
+-	s64 delta = drm_fixp_mul(b_fp - a_fp,  t);
++	s64 delta = drm_fixp_mul(b_fp - a_fp, t);
  
-+	/*
-+	 * The planes are composed line-by-line to avoid heavy memory usage. It is a necessary
-+	 * complexity to avoid poor blending performance.
-+	 *
-+	 * The function vkms_compose_row is used to read a line, pixel-by-pixel, into the staging
-+	 * buffer.
-+	 */
- 	for (size_t y = 0; y < crtc_y_limit; y++) {
- 		fill_background(&background_color, output_buffer);
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index b4b357447292..212f4ab6a71f 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -25,6 +25,17 @@
- 
- #define VKMS_LUT_SIZE 256
- 
-+/**
-+ * struct vkms_frame_info - structure to store the state of a frame
-+ *
-+ * @fb: backing drm framebuffer
-+ * @src: source rectangle of this frame in the source framebuffer, stored in 16.16 fixed-point form
-+ * @dst: destination rectangle in the crtc buffer, stored in whole pixel units
-+ * @map: see drm_shadow_plane_state@data
-+ * @rotation: rotation applied to the source.
-+ *
-+ * @src and @dst should have the same size modulo the rotation.
-+ */
- struct vkms_frame_info {
- 	struct drm_framebuffer *fb;
- 	struct drm_rect src, dst;
-@@ -49,9 +60,11 @@ struct vkms_writeback_job {
- };
- 
- /**
-- * vkms_plane_state - Driver specific plane state
-+ * struct vkms_plane_state - Driver specific plane state
-  * @base: base plane state
-  * @frame_info: data required for composing computation
-+ * @pixel_read: function to read a pixel in this plane. The creator of a vkms_plane_state must
-+ * ensure that this pointer is valid
-  */
- struct vkms_plane_state {
- 	struct drm_shadow_plane_state base;
-diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index d597c48452ac..f157c43da4d6 100644
---- a/drivers/gpu/drm/vkms/vkms_formats.c
-+++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -9,6 +9,18 @@
- 
- #include "vkms_formats.h"
- 
-+/**
-+ * pixel_offset() - Get the offset of the pixel at coordinates x/y in the first plane
-+ *
-+ * @frame_info: Buffer metadata
-+ * @x: The x coordinate of the wanted pixel in the buffer
-+ * @y: The y coordinate of the wanted pixel in the buffer
-+ *
-+ * The caller must ensure that the framebuffer associated with this request uses a pixel format
-+ * where block_h == block_w == 1.
-+ * If this requirement is not fulfilled, the resulting offset can point to an other pixel or
-+ * outside of the buffer.
-+ */
- static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
+ 	return drm_fixp2int(a_fp + delta);
+ }
+@@ -302,8 +302,8 @@ static int compose_active_planes(struct vkms_writeback_job *active_wb,
+ void vkms_composer_worker(struct work_struct *work)
  {
- 	struct drm_framebuffer *fb = frame_info->fb;
-@@ -16,18 +28,22 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
- 	return fb->offsets[0] + (y * fb->pitches[0]) + (x * fb->format->cpp[0]);
+ 	struct vkms_crtc_state *crtc_state = container_of(work,
+-						struct vkms_crtc_state,
+-						composer_work);
++							  struct vkms_crtc_state,
++							  composer_work);
+ 	struct drm_crtc *crtc = crtc_state->base.crtc;
+ 	struct vkms_writeback_job *active_wb = crtc_state->active_writeback;
+ 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+@@ -328,7 +328,7 @@ void vkms_composer_worker(struct work_struct *work)
+ 		crtc_state->gamma_lut.base = (struct drm_color_lut *)crtc->state->gamma_lut->data;
+ 		crtc_state->gamma_lut.lut_length =
+ 			crtc->state->gamma_lut->length / sizeof(struct drm_color_lut);
+-		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length  - 1);
++		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length - 1);
+ 		crtc_state->gamma_lut.channel_value2index_ratio = drm_fixp_div(max_lut_index_fp,
+ 									       u16_max_fp);
+ 
+@@ -367,7 +367,7 @@ void vkms_composer_worker(struct work_struct *work)
+ 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
  }
  
--/*
-- * packed_pixels_addr - Get the pointer to pixel of a given pair of coordinates
-+/**
-+ * packed_pixels_addr() - Get the pointer to the block containing the pixel at the given
-+ * coordinates
-  *
-  * @frame_info: Buffer metadata
-- * @x: The x(width) coordinate of the 2D buffer
-- * @y: The y(Heigth) coordinate of the 2D buffer
-+ * @x: The x (width) coordinate inside the plane
-+ * @y: The y (height) coordinate inside the plane
-  *
-  * Takes the information stored in the frame_info, a pair of coordinates, and
-  * returns the address of the first color channel.
-  * This function assumes the channels are packed together, i.e. a color channel
-  * comes immediately after another in the memory. And therefore, this function
-  * doesn't work for YUV with chroma subsampling (e.g. YUV420 and NV21).
-+ *
-+ * The caller must ensure that the framebuffer associated with this request uses a pixel format
-+ * where block_h == block_w == 1, otherwise the returned pointer can be outside the buffer.
-  */
- static void *packed_pixels_addr(const struct vkms_frame_info *frame_info,
- 				int x, int y)
-@@ -52,6 +68,13 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
- 	return x;
- }
+-static const char * const pipe_crc_sources[] = {"auto"};
++static const char *const pipe_crc_sources[] = { "auto" };
  
-+/*
-+ * The following functions take pixel data from the buffer and convert them to the format
-+ * ARGB16161616 in out_pixel.
-+ *
-+ * They are used in the vkms_compose_row() function to handle multiple formats.
-+ */
-+
- static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
- {
- 	/*
-@@ -144,12 +167,11 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
- }
+ const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
+ 					size_t *count)
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 40b4d084e3ce..06e28305d660 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -188,8 +188,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+ 		return ret;
  
- /*
-- * The following  functions take an line of argb_u16 pixels from the
-- * src_buffer, convert them to a specific format, and store them in the
-- * destination.
-+ * The following functions take one &struct pixel_argb_u16 and convert it to a specific format.
-+ * The result is stored in @dst_pixels.
-  *
-- * They are used in the `compose_active_planes` to convert and store a line
-- * from the src_buffer to the writeback buffer.
-+ * They are used in vkms_writeback_row() to convert and store a pixel from the src_buffer to
-+ * the writeback buffer.
-  */
- static void argb_u16_to_ARGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
- {
-@@ -215,6 +237,14 @@ static void argb_u16_to_RGB565(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
- 	*pixels = cpu_to_le16(r << 11 | g << 5 | b);
- }
+ 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
+-		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
+-								  plane);
++		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+ 		WARN_ON(!plane_state);
  
-+/**
-+ * vkms_writeback_row() - Generic loop for all supported writeback format. It is executed just
-+ * after the blending to write a line in the writeback buffer.
-+ *
-+ * @wb: Job where to insert the final image
-+ * @src_buffer: Line to write
-+ * @y: Row to write in the writeback buffer
-+ */
- void vkms_writeback_row(struct vkms_writeback_job *wb,
- 			const struct line_buffer *src_buffer, int y)
- {
-@@ -228,6 +258,13 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
- 		wb->pixel_write(dst_pixels, &in_pixels[x]);
- }
+ 		if (!plane_state->visible)
+@@ -205,8 +204,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
  
-+/**
-+ * get_pixel_conversion_function() - Retrieve the correct read_pixel function for a specific
-+ * format. The returned pointer is NULL for unsupported pixel formats. The caller must ensure that
-+ * the pointer is valid before using it in a vkms_plane_state.
-+ *
-+ * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-+ */
- void *get_pixel_conversion_function(u32 format)
- {
- 	switch (format) {
-@@ -246,6 +283,13 @@ void *get_pixel_conversion_function(u32 format)
+ 	i = 0;
+ 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
+-		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
+-								  plane);
++		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+ 
+ 		if (!plane_state->visible)
+ 			continue;
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index 8dc9dc13896e..6860bee8e981 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -81,8 +81,7 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+ 	drm_atomic_helper_wait_for_flip_done(dev, old_state);
+ 
+ 	for_each_old_crtc_in_state(old_state, crtc, old_crtc_state, i) {
+-		struct vkms_crtc_state *vkms_state =
+-			to_vkms_crtc_state(old_crtc_state);
++		struct vkms_crtc_state *vkms_state = to_vkms_crtc_state(old_crtc_state);
+ 
+ 		flush_work(&vkms_state->composer_work);
  	}
- }
+diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+index e5c625ab8e3e..5a8d295e65f2 100644
+--- a/drivers/gpu/drm/vkms/vkms_plane.c
++++ b/drivers/gpu/drm/vkms/vkms_plane.c
+@@ -117,10 +117,10 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
+ 	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
+ 	drm_framebuffer_get(frame_info->fb);
+ 	frame_info->rotation = drm_rotation_simplify(new_state->rotation, DRM_MODE_ROTATE_0 |
+-						     DRM_MODE_ROTATE_90 |
+-						     DRM_MODE_ROTATE_270 |
+-						     DRM_MODE_REFLECT_X |
+-						     DRM_MODE_REFLECT_Y);
++									  DRM_MODE_ROTATE_90 |
++									  DRM_MODE_ROTATE_270 |
++									  DRM_MODE_REFLECT_X |
++									  DRM_MODE_REFLECT_Y);
  
-+/**
-+ * get_pixel_write_function() - Retrieve the correct write_pixel function for a specific format.
-+ * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
-+ * pointer is valid before using it in a vkms_writeback_job.
-+ *
-+ * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-+ */
- void *get_pixel_write_function(u32 format)
- {
- 	switch (format) {
+ 	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
+ 			drm_rect_height(&frame_info->rotated), frame_info->rotation);
 
 -- 
 2.43.2
