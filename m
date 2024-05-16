@@ -1,239 +1,155 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AA3146D59
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411351482E4;
+	Thu, 16 May 2024 13:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715866138; cv=none; b=BWzls1dP0dkALA8ScVUW7294/NGZmgtt+GKybjRH8ntve97VI1zB/PJsxSQkYdAizizyqxaw+1MFDuDljnCIGx/1Ehaqe3riWoqVkFwh5UDA4vLrjf8jHcNKsQ0djurJn8+y1my5ahtDMe3V2b6hdi/w4DeiIzn0rDONoCeZDEE=
+	t=1715866227; cv=none; b=Iv0CHL6QJGg211jr+i2RDaPoOE4ce088TDzJoir1yzZlXW2AsR601kvd0e1H7Dkz6wLSu9fs13dJNt9sW9cgs/6C9QcN4Cf1gtSqVLij9lzJzv9xRDc80BPTbVIU8ogFJyUkPuy/LkT/p0lHI8xV/rUFN/D+4xl+9m+LRMVrarE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715866138; c=relaxed/simple;
-	bh=iVUir/gLcWCFY7dIu7UsKZJERMiKnSaS2lO2UXu4iHw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eyHqJWKiDaH+APT6TSVhEWPghAYS4pybILPXfZUZedU6S5Vtz3j34nQlY6gzSQ3ckLVqjgZVew11fayTi8RY7TvaIgP6bi77jkC/EVVB39e6DCBxRbg/zFFlRejAbOF7s0268xFxip+fA2gideQ9qW5Eqzvmg3sFodrTUABHWGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BxZ/WkrZ; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BxZ/WkrZ"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c999556297so121302b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:28:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715866136; x=1716470936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YyjmRhpoF55A1ilLauDrV8RJGeR4fHgrsIYfzftwpR8=;
-        b=BxZ/WkrZoM5uq0BP7CCxgsnkH3udZBwn6fgak9j7p1JfFS4QvXADC4Zd0bTPWc+zQG
-         lQUpiaZohkzGzxgb480XOWV1dkM3MBrao+CFOYAN6wRBsX4sO4V+OewcnnZmGy56v/qa
-         fZAAaHM2QeLgB5/a70DufWp9JnltDnMLo1eH+dhBEMekKHQiSHOelwQgOmqMxJnPL0gg
-         WgErtCFwWCy6mpuU6pbPGOsrZSeKkqYxfcvyiStAp9j31yco/GX8YwEatTGWwsL+vXE8
-         GeHOK/ApXDv9PTBT29wWw9KXGWPoNcybvEFeP44QiiTfPBVPNKwxTCH3EDJ9/aEbvDUu
-         zprA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715866136; x=1716470936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YyjmRhpoF55A1ilLauDrV8RJGeR4fHgrsIYfzftwpR8=;
-        b=DtSyw8Euzn3l7XROh6p2s9+TVHswNFjskFG/455mt5LXNPd/PTqi2S1JXksL3QnNlp
-         GC8kpP2sGQ1GIF6mdEq99pLtU64b4vU2MbjlB5PBGIWMSCi8UXCBDZpN7JwdwNtFblbB
-         a/uDWnLCTPR+8qbiyS5mHDx3ySKgVBFvOeTaT89cUi76i2P5ODpwz6SkV7G5EXrDJAUn
-         0CTZo1zQ/QL+wzjPLU/xATcHXlA+gJLPZZAJLio9etQXkeI00i7ViWG1vrIg5v8vHNQj
-         SuenFjPtT8A9S6BlVmxqSiDMHCLad3j2RmokyBcK2E/D8KKICK64UaUNtSv7Ac/L+N6V
-         vZ2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCURqGNw1o/WuiEGk9Xs7TKuLLlcnzSLx+feCGGv4xaJapYG7J255KNHtOLJV7qHgQqf/SGIMro0k4nUq5cCYF3A/0j2EbaHbrBn/MxI
-X-Gm-Message-State: AOJu0YwGvdbF9yDESzJ2SrBnW/fIP2nk4LPtmFV2Wo7MgmW4hHZA8MJl
-	799h2PXCzx4yztL/ZvQ1sf2+i7IKYqvcARTVWRdnZm1xNdssVMLBsu+mUp8HHO862bBrC2KTZWO
-	DE5ai0yZCxFT7v5ZVzQX+Kc3I7V1N3pHJeVMM5Q==
-X-Google-Smtp-Source: AGHT+IGiDXIu9aT5ycgGSk1DcOOJljD4YmEWzmMpPQM/7ewodG0RpkcgZThKwoz+3zDRZzSyPgFIUFKOYR1Q3zrahnM=
-X-Received: by 2002:a05:6808:2006:b0:3c9:62e0:1d2b with SMTP id
- 5614622812f47-3c997039239mr25210018b6e.6.1715866134714; Thu, 16 May 2024
- 06:28:54 -0700 (PDT)
+	s=arc-20240116; t=1715866227; c=relaxed/simple;
+	bh=yqUPjCa6qT94bXk2HmJIf+EMfPI7fuUeq+yoIITcYSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E8B27Q4peiQY4cPKtikXvC4ytkOjkd/S7jcMX1tG/PT2Fiogm9wX9wk+8UUaWXRXP0r5ZTKQc7Z9DpbOfMwbcU0yqQZtNwfJ6Tv462HmR7umRhbWz2AG2HZCjcICD3pgfAa+QvoYPutMLdUXt6gbUBuipPZZs1AcZOWKlBOxenA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7F39A349E8;
+	Thu, 16 May 2024 13:30:23 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7183F13991;
+	Thu, 16 May 2024 13:30:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SVQmG28KRmYDCAAAD6G6ig
+	(envelope-from <lhruska@suse.cz>); Thu, 16 May 2024 13:30:23 +0000
+From: Lukas Hruska <lhruska@suse.cz>
+To: pmladek@suse.com,
+	mbenes@suse.cz,
+	jpoimboe@kernel.org
+Cc: joe.lawrence@redhat.com,
+	live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	mpdesouza@suse.com,
+	lhruska@suse.cz,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH v2 1/6] livepatch: Create and include UAPI headers
+Date: Thu, 16 May 2024 15:30:04 +0200
+Message-ID: <20240516133009.20224-2-lhruska@suse.cz>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240516133009.20224-1-lhruska@suse.cz>
+References: <20240516133009.20224-1-lhruska@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515082414.316080594@linuxfoundation.org>
-In-Reply-To: <20240515082414.316080594@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 16 May 2024 15:28:43 +0200
-Message-ID: <CA+G9fYupaeJ_kx+c1b+M92=q-+EVHLGh4Wud0WfJbi_EqYt-tA@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/168] 5.15.159-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: 7F39A349E8
 
-On Wed, 15 May 2024 at 10:28, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.159 release.
-> There are 168 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 17 May 2024 08:23:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.15.159-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Define klp prefixes in include/uapi/linux/livepatch.h, and use them for
+replacing hard-coded values in kernel/livepatch/core.c.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Lukas Hruska <lhruska@suse.cz>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+---
+ MAINTAINERS                    |  1 +
+ include/uapi/linux/livepatch.h | 15 +++++++++++++++
+ kernel/livepatch/core.c        |  5 +++--
+ 3 files changed, 19 insertions(+), 2 deletions(-)
+ create mode 100644 include/uapi/linux/livepatch.h
 
-## Build
-* kernel: 5.15.159-rc2
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.15.y
-* git commit: 1238a9b23a79317df7bcdecb6ef6d215d229ff3b
-* git describe: v5.15.158-169-g1238a9b23a79
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
-.158-169-g1238a9b23a79
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 28e20975c26f..130b8b0bd4f7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12614,6 +12614,7 @@ F:	Documentation/ABI/testing/sysfs-kernel-livepatch
+ F:	Documentation/livepatch/
+ F:	arch/powerpc/include/asm/livepatch.h
+ F:	include/linux/livepatch.h
++F:	include/uapi/linux/livepatch.h
+ F:	kernel/livepatch/
+ F:	kernel/module/livepatch.c
+ F:	samples/livepatch/
+diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
+new file mode 100644
+index 000000000000..e19430918a07
+--- /dev/null
++++ b/include/uapi/linux/livepatch.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++
++/*
++ * livepatch.h - Kernel Live Patching Core
++ *
++ * Copyright (C) 2016 Josh Poimboeuf <jpoimboe@redhat.com>
++ */
++
++#ifndef _UAPI_LIVEPATCH_H
++#define _UAPI_LIVEPATCH_H
++
++#define KLP_RELA_PREFIX		".klp.rela."
++#define KLP_SYM_PREFIX		".klp.sym."
++
++#endif /* _UAPI_LIVEPATCH_H */
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index ecbc9b6aba3a..8bde84d85263 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -20,6 +20,7 @@
+ #include <linux/completion.h>
+ #include <linux/memory.h>
+ #include <linux/rcupdate.h>
++#include <uapi/linux/livepatch.h>
+ #include <asm/cacheflush.h>
+ #include "core.h"
+ #include "patch.h"
+@@ -226,7 +227,7 @@ static int klp_resolve_symbols(Elf_Shdr *sechdrs, const char *strtab,
+ 
+ 		/* Format: .klp.sym.sym_objname.sym_name,sympos */
+ 		cnt = sscanf(strtab + sym->st_name,
+-			     ".klp.sym.%55[^.].%511[^,],%lu",
++			     KLP_SYM_PREFIX "%55[^.].%511[^,],%lu",
+ 			     sym_objname, sym_name, &sympos);
+ 		if (cnt != 3) {
+ 			pr_err("symbol %s has an incorrectly formatted name\n",
+@@ -305,7 +306,7 @@ static int klp_write_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
+ 	 * See comment in klp_resolve_symbols() for an explanation
+ 	 * of the selected field width value.
+ 	 */
+-	cnt = sscanf(shstrtab + sec->sh_name, ".klp.rela.%55[^.]",
++	cnt = sscanf(shstrtab + sec->sh_name, KLP_RELA_PREFIX "%55[^.]",
+ 		     sec_objname);
+ 	if (cnt != 1) {
+ 		pr_err("section %s has an incorrectly formatted name\n",
+-- 
+2.45.0
 
-## Test Regressions (compared to v5.15.158)
-
-## Metric Regressions (compared to v5.15.158)
-
-## Test Fixes (compared to v5.15.158)
-
-## Metric Fixes (compared to v5.15.158)
-
-## Test result summary
-total: 75453, pass: 60921, fail: 1828, skip: 12643, xfail: 61
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 101 total, 101 passed, 0 failed
-* arm64: 30 total, 30 passed, 0 failed
-* i386: 25 total, 25 passed, 0 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 23 total, 23 passed, 0 failed
-* riscv: 7 total, 7 passed, 0 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 5 total, 5 passed, 0 failed
-* x86_64: 27 total, 27 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-kvm
-* kselftest-lib
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* kvm-unit-tests
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-crypto
-* ltp-cve
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
