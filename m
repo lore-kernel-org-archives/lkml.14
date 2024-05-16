@@ -1,182 +1,183 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2055.outbound.protection.outlook.com [40.107.255.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0D61366
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 02:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715825554; cv=fail; b=P7RQGlqlWRnqklzoBgFuBHsizAd6Qv9abZz/lk80XnGDogmLQAT7VsmsLAUZLnVcvGLdCmqbbbH+eOntp5fNGWpzsmPDIXIqvuUGVXcrkNgmCGkz3jNrfttI3nLiZ6H3MuB2bAAcS0wmX+QsBYn5DgsNm31dsILYptaF7JJpBJw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715825554; c=relaxed/simple;
-	bh=HRBU9hwcF0B7XIAG9a34mK4X7oov3Pl1/J5aiWmkQ1I=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P31WrLNoBM7/EIZPQcBoNAh36fbP5msLaLgX6BANwXduYkjdQuulpQqgfhZf+Uo1I18nB0sSwdbedCNd4foe8H82++KPwsu9GVY8xZ/lD7fAV+gyfE9fKvIAAXyihinp+xZSxaV7Z0YY55mIoGZ81ds6n7b9Bf8JJ1czLFyr1VU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=a2PcGGnc; arc=fail smtp.client-ip=40.107.255.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EE21366;
+	Thu, 16 May 2024 02:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715825873; cv=none; b=LBY2YfYqgPLCp7FBd7mPhi73waNapCtFvD24qQgof43WeAwaSZSR/Nzh2IdEgcs1SEl4qOvEJMGx1th0lLZ9GRMG/Xd6QFhLytEyublOhXqi/Fn3x+bfbavJzhZ4CyT8+8JnflD7gLxUiZMJgs6MR6ogoSTeUbo3GMl16vOe/Eo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715825873; c=relaxed/simple;
+	bh=QDKrZ+eoc7syQo7mjbFONIZPwtCS41Fpew869d9ulNo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tl5i6aSPeuam2oNhKoSqQnA3kl/29Dl5GICh1CphQJ1rysrcjpDHtsf98+TDGFSrrmVL8dML/BtPXaV9DqA0FqtfOORsrkEGivZh+A8s5TCvGVlZHn6fPbGUEEQ/H3LvdQb2bcSamdCWAgJyVR4PJ60bBa1lNCHPFipLhnweBHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddKc7nli; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="a2PcGGnc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i1vFUvB//HI8VSmrHj7swF0DkXwCKWU+LUwm10mYOw5cq8jo1On1iPMFJP23URFczsD5VXCGwPPP5MyU2ZQmIyshhHiD0l+flUxXqiUKu7HIUmxzhx3ieiujKtvgoTwzXdtx5mq6kswUQEXAMVf5rYSmo1BguubuomHdAh4LPyguX8fxxrxVNieYEcq3SAh/z2kVaQ28po1xsbV6JKUWIQl8UxsMKT5SVRNGlxSCTDvivH1gY1dP1Engnyno/wlMBv3tkioBjq0Lml8VH2AxUYodCfJFeirsODy06vOvvjsm9X8vhU6zxGz2xcJ6kz81a1DtNUVPaUIvNgBPV6vbUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RDncA7JL+fHBgPPreoZiU/9mKgwsLEruoJ00xhctmFI=;
- b=kgAlPURzPxG3YWpepEUmg37ccAByxGW6RwS7Z2EZLeRIhp/OPLyaLdcIJMKDG50l5Pme8Dvt4mmQISCEutqzGbBeHYSNsfmkijEYBDho5INaZHCTuJV4Gn6A6OeioB7lYiKvCEZUUpKVedMvoueUAqEegSRD/vEd6W3fAN5/P96qfDjfEp57JE8ulett0fF5/qZnDyML2JsQrRZdDAs4WcXfbnFsrvo2jcuvwn6vhwrTOWFjKxlMJwNdWqByCMK2E9qCq/2xNXuFjXB+4FJqMI7mTdxquf4T0nxzYLt6RRSl2hoQgvN9hOAQmkhXC3le6Z+w/dbEJc6fakEfVaDuIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RDncA7JL+fHBgPPreoZiU/9mKgwsLEruoJ00xhctmFI=;
- b=a2PcGGncGnJ/naPjbG/hP+CvMEV2et7IsSR3hR/xHJeG0nW7B7JYhGT6C6gKe6ZhB7hXeSj9RSQEZ/UFtyv5puTahQX4yPyLZTJeBQX3LKUQMaGCGlo3KMMPkUykpR1wB4rkFfN16RsyWAgHCtT7YxZvOj2r317BQbEqdgeFI1bIFFT3Ng69cFpWVtnj+6RYUXVIjdTOWXUyzD7ddeh6FQYU18JuuoQzb3Gau4USkaxFdRfzj4aPc5K6iyMR5WPI+NcmaDLY14OC9J4Ix3GnZsQ1kfY0nGSdwfTVs6RiGH7gcRKp1l1SN1jlSlOCnFiM2pEtSvjjjwnboWm5sM8LGQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYSPR06MB6411.apcprd06.prod.outlook.com (2603:1096:400:42a::11)
- by PUZPR06MB6128.apcprd06.prod.outlook.com (2603:1096:301:116::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.26; Thu, 16 May
- 2024 02:12:29 +0000
-Received: from TYSPR06MB6411.apcprd06.prod.outlook.com
- ([fe80::8e76:5af3:e027:ccee]) by TYSPR06MB6411.apcprd06.prod.outlook.com
- ([fe80::8e76:5af3:e027:ccee%3]) with mapi id 15.20.7587.025; Thu, 16 May 2024
- 02:12:29 +0000
-Message-ID: <4971046c-213b-494b-bf4b-ebe3feaa03c1@vivo.com>
-Date: Thu, 16 May 2024 10:12:25 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] dm: support retrieving struct dm_target from struct
- dm_dev
-Content-Language: en-US
-To: Benjamin Marzinski <bmarzins@redhat.com>
-Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240514090445.2847-1-yang.yang@vivo.com>
- <20240514090445.2847-4-yang.yang@vivo.com> <ZkTXzG1yrPmW64Z6@redhat.com>
- <ZkTcHCM49DDqhaYD@redhat.com>
-From: YangYang <yang.yang@vivo.com>
-In-Reply-To: <ZkTcHCM49DDqhaYD@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR01CA0163.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::19) To TYSPR06MB6411.apcprd06.prod.outlook.com
- (2603:1096:400:42a::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddKc7nli"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D953C4AF07;
+	Thu, 16 May 2024 02:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715825873;
+	bh=QDKrZ+eoc7syQo7mjbFONIZPwtCS41Fpew869d9ulNo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ddKc7nlipscYnm+PMFC0DNsB3I73Xq1lLCRXd9ijw2MleCq55k/4F6SMcwNG253Y1
+	 qyR2MnPhkPAI74YwnO9QjSMVwjrq5+0J7U7XXIebW/EvmfDGErsDHx6AzIQs8n4n2q
+	 WEl9IqpQJkMVn3WI7I6lsD1WqwGGFrPqSwCBN3vKgb4CnnmSVmWyp8ez1s54TxuSuf
+	 amrM0BJh++S2p7+lKcKyOFIMWLW9UEXldUsu6u9QpQWaN/ehfr211FosPsPQA6t0YS
+	 x+s8wb43mfCME2m+Rxy9dTP5bz54I/4KKN/TM/lV7eZ3shbkBNAUwDIuRpLAE1niEj
+	 tBQI5Yj64p6dw==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51f71e4970bso261777e87.2;
+        Wed, 15 May 2024 19:17:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMOmqCpWsrMEamSFhYM1+rj4exny/zV7yAWZ3H1h4wwNgbw8/v6+l5pITXCcfE0+MXkYqla/5n/QxnsDbVBKHZR90aflJmpKkr5kUUzQfOz97LsHoU/gjct4r7e3BAuaH1NZ81bNwDEB5g
+X-Gm-Message-State: AOJu0YzIpTuHI+a8LMR4/zaXHLOUTJCnwmjQegCPawfr81gg9mu1e+42
+	c/rlI3333e8m6YVgCEgqQGsXTlHCG5o2iqKO+d74VtgDYqB09Pqsx1PV56vRHpuXt+EV74cUK6g
+	rOOPvfUXmKkz5ufJtq6EPSSed49Q=
+X-Google-Smtp-Source: AGHT+IH8pgR6wSD7iR30CYm4REYN+pY2+GnITsIcp+IsuTX3s23rze7v1IfJBQQ3FMWDfT/jq5pQtPnbjQzdXznjd4c=
+X-Received: by 2002:ac2:518d:0:b0:51c:d8f6:4e6f with SMTP id
+ 2adb3069b0e04-5220fd7bd61mr14260360e87.40.1715825871987; Wed, 15 May 2024
+ 19:17:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYSPR06MB6411:EE_|PUZPR06MB6128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 238e4c2d-bc8b-415b-724f-08dc754da362
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ejFaSGVHeTduUEg0a01kaW94R1hnK3EzNGF6VkxEQ2J6cW9SVkVxMnM3Ri9V?=
- =?utf-8?B?c2ZDb2QzTUpUNWc3QnBzT0c1dUlGWVhobHVUWEpRT0Z5Nkw4b1g0bmUwVkVZ?=
- =?utf-8?B?TGhhVkdSSnFOeE5oV3FGSHRoUW9ya1NEQTJmRndCTFZDQU0yS3JVYnIvaHUz?=
- =?utf-8?B?amVOd3NCUDBIWVg2a0xUZmRtRnRvcm9yRzZRR3NIM0VwUit0T0ZRTVczcXRo?=
- =?utf-8?B?MXlvV1dvRnNpaWEvSmRQT0NWM2JieUlqNWhyU0J0Z1JzdnkvUXNuaEJXMGZq?=
- =?utf-8?B?ekJUL2Y2S0cvMFIySGhDem1UUWN5ZC9FQmFuV1RaUnFHUnliOTZxU29lNXps?=
- =?utf-8?B?cURQbDcyTnZGd0xkN0ZvOVV4Ymt0d25tdlVMdWlzeUJGU1dFd1RJbjlQSW5K?=
- =?utf-8?B?L01nellzakFlWTVOUnB3d0NoOFE1TnR1UWZYQThoUmxHUC8rMnVucWFENDNk?=
- =?utf-8?B?TkdiMjZBNmlqZFJGakd4ZXhjb3pqOTN5UDQ1Y3JkQ0llU1ZTelF5Wlg5cXVZ?=
- =?utf-8?B?WkpIUjhpaXFlMjFFTFB1bndNZkNRN1BPTGpBdVBXU254RS9rR0hZS2t6dWZU?=
- =?utf-8?B?UU9OazAxUjJvcmFEMUhrWDFNTjM3cXpsWXVUUzMraEdIUG5pTTdDUnN2cTVH?=
- =?utf-8?B?V0N0UXBCVTljSndNMFBhU255amtGbWJJVGxOUk95am84M2pXMWoySG4ydkhh?=
- =?utf-8?B?MCtSaVU4OENkSUdxYkFkQnRyRnhmWUJpVkNVaUprWWh6VWpuK0tFM2NTZEdD?=
- =?utf-8?B?R09WN25ocUNmV2Z2SjJwRUEwaGZjR0NpZEZTT0NXKzBaVmhiLzB6MjM0ZnNY?=
- =?utf-8?B?NERocnI4VnFiOXBqUURMeW4rTUw0Nzk4TkRQbzJFbWRXb3JOODdmN2dkbFhG?=
- =?utf-8?B?MWdGRkNVRDk5M08wUU0rN1JPNWtNNWk2ZFhza0hnN2RkYk9xR0N6Vzh1dnhl?=
- =?utf-8?B?UmlESXpwY2d6czdhVkxoL0dZQUhZZEowVnZpdnR5dFRWd05rRW1mOS9ESWlt?=
- =?utf-8?B?aDVCWjNKREdkY3VVS1NWWFFNclh5QzgrYkVwcnpUWlRBUmVhSUI0SXVLNnJ0?=
- =?utf-8?B?NzFINmFFWjJIN3FrRVlkeUZJdTcwVE50dVVWdkF1aFBHK1dWR0lra2RPdkZE?=
- =?utf-8?B?S2ZjV3RTM3FyN2c1MnFqQ0VIRm9FMG8zaDZubWs1QnQ1bzBJZ3MzYTdrYzJs?=
- =?utf-8?B?RWxrRWZqV25MdkpHdWlOUmR2RjRFY20vQTZYU1QvQWNQZGdhazlCTE5DYitj?=
- =?utf-8?B?c2J5bllTSU9iVmRDNGl5QXhUazdKVEVSRVlMcWZVM2czZktjWWhSTHJyaEJV?=
- =?utf-8?B?Q0srQWJ1OVVEdjZPS3MzRUl4eVNRYzY5RGdCbHJkMHhERksrdHlTMnFvbWlE?=
- =?utf-8?B?aStTZnJ1c0tLSTdUTkhoeHFoL1p6Z1VKU1o0QTRnVW0zdTNaN2wxU3JWYU9P?=
- =?utf-8?B?aDlSSG1ocUpPZTFkMndYZkgyVGp4N0lVUDJJRUhhWlgrYWF1bjBXeGtGWG1a?=
- =?utf-8?B?aS9mcVhLeUt0RGczT0llR0ozRG1seVl5STJrMjE0VzdUNjVRU3pFSDNxMU1l?=
- =?utf-8?B?QkN4a05GSkxWQWw5SWlBL2tzcEFwK3dYdXI4L1cxK3lGek0xdmdOZVd3QjBu?=
- =?utf-8?B?OUE3SXI4UDFua3VlZ2xlbUhTSzllaHVVUHFjSy9hZ3MvdEpWQzYwcGlXNm9s?=
- =?utf-8?B?R2dNMVg5R3I3dHRNZzA3ZVpad1JZV2ZWU215MTZXTDhJNWpLSzBQVmNRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR06MB6411.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?STA2R0hTZVBmbk4weGl4M3pYcFFZYVpPYnlObGFYNFU0dTB3YzRBK0RQMHZS?=
- =?utf-8?B?YnFlS1VROEI5cStvRWE3QlpWTGN6cEVsWDN6Z2pXUjRwN1owZ2FWT1YxWVdJ?=
- =?utf-8?B?b3F1eGhva252cnN0eG5nYUZkK3gyMFNROHR6dUppS2ZTTWVOVUQ1UWJ3ZFJP?=
- =?utf-8?B?THhrQVYxTXpUWGhJUU1HSHNnRzNSaFBicWMxVnpRb1dSSmtwT1Vmc2ZZZGto?=
- =?utf-8?B?cmpwM2k0QTBlR0tzS085SlZ5dXEyNzhDUzM5UVNOWVNGUFIvTWF2SlRlV2pi?=
- =?utf-8?B?RGhaYWEzdmYvbW9WSEpDa1oyOU9RNzVpenkrWlF3TFRsbWpzUVVXcWR0MlRW?=
- =?utf-8?B?L1M2T2piOXZyMjI0T1lRd2puSmZMUk9uT1pINzNPZnBwWVJTMjloaFI2dllo?=
- =?utf-8?B?bWFqUS9DVCtubGdpNkJzMDcvZituQUlFRkRncllxRmdlSEVWWHNoMkhLTS9F?=
- =?utf-8?B?ckRQREJZTS9DZE1yb3JjTnRmd3c0cW1vZllFQzRhaFZyUXlVRVNTY0htb2dY?=
- =?utf-8?B?eHNyZU1KUFJjTHpDWXNDRXhPRmN2ckhSK1kvU3QxT1lPRzlsdHo3L3dJbVg0?=
- =?utf-8?B?QXNFNTh2TFdHV05tejhMSWJQMzYyV2lqSXZXN0dTK2hXTFFzdFdScnAwU3pD?=
- =?utf-8?B?TGRQMkpqVnlCQXcyM0lyamhaQTV5Wjl5NEpZOStmeGtPR3ViamxtMWwzOTJS?=
- =?utf-8?B?V1VQS01PNXp6NXV6a0t2TGpBWXNib0NvaVVXc0hrR001ZUZITUxjMXV6azlY?=
- =?utf-8?B?UXRocTFXVHpXSVB0eUNoYm9PdkRzc3pURk94a3UzelhDQ1ZJYnQrSmM1aVdQ?=
- =?utf-8?B?NWNQcEhBVmxLYzI3OVEzc3pLT2ROU01zTkx2WE9LYittRjdOTFFqVXNzMEdQ?=
- =?utf-8?B?SVM3YWEzRThTcWF0LzR4ZmxQRFJHTW1GbUVzaEh1N1hoTzl2YWV2UmRHc2NS?=
- =?utf-8?B?cUhPRTRlQUV1ZkJ5bUhrbVBISGdha09HNnV2ZGVNeGdHQnQ4SlVQZXNEL0Zx?=
- =?utf-8?B?VjdYL0w5YXZmYU5UOVJLVUVjSVRFSG0ybmxoR0ZpSzdhRlBQekQ4Q0c4bGo3?=
- =?utf-8?B?Q0pIOXRxcmNHYnBLR2JlS1VBaFdTdnRZdkVta3MxSVcrMHYwemQrRzhhNHlx?=
- =?utf-8?B?dmovN1NMY0RHczFBT2kxUnV5SkJxZ1pDU0lMQUJFL1lSQjAwZ0lyNVE3Y3dT?=
- =?utf-8?B?Um42M3FQWDh2b0JCWjVNdVovL0JpdVk4eW80TklYNDJkY1B0OXVQdTRQOUlW?=
- =?utf-8?B?WkJVZWJ2VHRDcXZzNFlaZXd5SWJUYWsweld3MW85cncwKzhKT0d4YjhYVEUv?=
- =?utf-8?B?NllQM2RKaXN3RkVSVThvTFVpbUZLbFNQbHNKNzV1YUxuZUtoaUVmMEpYRWxj?=
- =?utf-8?B?MTdHTk1ZOTJzc2UyZERwR1VvY0RMOHFFVEI5WnI4YmpBdUFLQzYxK1N6a0Vk?=
- =?utf-8?B?dDdyK3F1V2FibW9iOHdXTkMyZ2pGREJsa29HUjlHUXBoVW1zSXNtL2U5SjVh?=
- =?utf-8?B?TE5kNWcveDg2NnVLcXZJbWRacXJwU204K2l3RElOZW42MmdtSTNHWmR4OGI4?=
- =?utf-8?B?ZXBJcHRuZllrb3lEaVlDcjNGSDNQQzZJTWFSU3Z1QXpxeFJIZjM1c09EK0xp?=
- =?utf-8?B?NSs3Ym9VbXF4SzNhVDVTb25MbnVabG9JM3hrcnNnM1lTWnFERm4vTWIwdVpJ?=
- =?utf-8?B?NEthRmJpSUoxRTNmVmx4QSs1aCszdm9aMG5xbkhvTmNZeFRTRmIwWVJtZXhW?=
- =?utf-8?B?NkJ6cTBURGZpQkg5ZklIZUZpUHF1c0IyVEVSY3pvSVNRRUFEOXRaUndzYmVM?=
- =?utf-8?B?VTBnekdjbWczUXk4OVIzWkdsYzJKSHBWb0VIUFMyOW5qRU9TWXJ6ZGF0TUJh?=
- =?utf-8?B?MzVPUHREV2szMi9sb3RkYzI3bVBpeGpzVUJqOGU0SkN5WHlKU1NuYTRIM0Qv?=
- =?utf-8?B?UEViNWZPb1FsalliSnhsaDV2SW1qZmlDKzUzaXRTc0wxNkpJNUpCZW9JcDhq?=
- =?utf-8?B?Rm9yaytta3UzcXZ6ZGpqdDJSZ3Q4Zk05dWVUaWVIY0E0eTFSUVoxMnRaQmxK?=
- =?utf-8?B?bFZqMDFlQmM2S0l0eXN2T09QYUlpV1hNZTR3bUpKekRRd3BFeGtEZXIwRTJN?=
- =?utf-8?Q?xqVrI2OjFSzmyEfvJDMvSFEss?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 238e4c2d-bc8b-415b-724f-08dc754da362
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR06MB6411.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2024 02:12:29.5078
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uWat1srdjWteF7vHzxa7keKWEJNedIHBPfkCLz9yrUix/XYhDfEa4SiskQ77bnqGXwLIpJnjaB5gwimoOIKXnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB6128
+References: <212a9464-d52b-4730-95b9-5a0aebd38c91@gmail.com>
+ <CAHx5RXCWW5M-eW5v65bAkQWZemsU2NTvDv3jA9_XKz=+YP56Qg@mail.gmail.com>
+ <688e54ec-3b29-4e3b-a2c3-f2c83b9c97b7@lunn.ch> <CAHx5RXBFdzsgKXR94gdZd2b=uz8PJDg4OjLPJxKtsdhcjJq3Qw@mail.gmail.com>
+ <e307a237-68e3-40c9-be31-4fe3d560ada2@lunn.ch> <CAHx5RXCF0=Soz_k88RGvJFGrajaxn=mVnqpb99GAQ=b7XOcWiw@mail.gmail.com>
+ <732d8bb2-1d4f-4958-b130-0bd15a407271@gmail.com> <CAHx5RXDaweFTF_Qt0GdBH4nBeMqwL4VVto7xzHBvFgFL5n=Ebg@mail.gmail.com>
+ <c8c01e53-0a45-4319-88ff-bfb0caba150c@lunn.ch> <CAHx5RXDzN93WaYFe2bk6m2TmMC+A9vsmhodRFmZi17cFY5CrWQ@mail.gmail.com>
+ <949fcbea-23dc-44c1-9146-c358b15b9253@lunn.ch> <b7d6fdcb-4b01-4bc1-8e4b-3cf4ccb951e3@gmail.com>
+ <19db38dd-b265-45d3-af1c-85d4cb8d075a@gmail.com>
+In-Reply-To: <19db38dd-b265-45d3-af1c-85d4cb8d075a@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 16 May 2024 11:17:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS9dpp9aW-ESpJq8qaAffrQgUSnAFVVupPcnD3SP8eWZA@mail.gmail.com>
+Message-ID: <CAK7LNAS9dpp9aW-ESpJq8qaAffrQgUSnAFVVupPcnD3SP8eWZA@mail.gmail.com>
+Subject: Re: drivers/net/dsa/dsa_loop_bdinfo.c build problems
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Stephen Langstaff <stephenlangstaff1@gmail.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	OlteanV@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/5/16 0:00, Benjamin Marzinski wrote:
-> On Wed, May 15, 2024 at 11:42:04AM -0400, Benjamin Marzinski wrote:
->> When a target calls dm_get_device(), if it adds a new table device to
->> t->devices, then it's the first target in this table to use that device.
->> If flush_pass_around is set for this target, then it also sets
->> sends_pass_around_flush. In __send_empty_flush() if the table has
->> flush_pass_around set, when you iterate through the devices, you only
-> 
-> Err, "When you iterate through the *targets*, you only ..." In this
-> method you don't iterate through the list of devices (which is supposed
-> to be protected by t->devices_lock).
+On Thu, May 16, 2024 at 4:21=E2=80=AFAM Florian Fainelli <f.fainelli@gmail.=
+com> wrote:
+>
+> Adding Olek and Masahiro,
+>
+> On 5/14/24 21:05, Florian Fainelli wrote:
+> >
+> >
+> > On 5/14/2024 9:17 AM, Andrew Lunn wrote:
+> >> On Tue, May 14, 2024 at 05:08:24PM +0100, Stephen Langstaff wrote:
+> >>> On Tue, May 14, 2024 at 1:32=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> =
+wrote:
+> >>>
+> >>>> So try to making FIXED_PHY =3D m, and load it after dsa_loop_bdinfo.=
+ko.
+> >>>
+> >>> In my configuration FIXED_PHY is selected by several other modules:
+> >>>    =E2=94=82 Selected by [y]:
+> >>>    =E2=94=82   - FSL_DPAA_ETH [=3Dy] && NETDEVICES [=3Dy] && ETHERNET=
+ [=3Dy] &&
+> >>> NET_VENDOR_FREESCALE [=3Dy] && FSL_DPAA [=3Dy] && FSL_FMAN [=3Dy]
+> >>>    =E2=94=82   - FWNODE_MDIO [=3Dy] && NETDEVICES [=3Dy] && MDIO_DEVI=
+CE [=3Dy] &&
+> >>> (ACPI [=3Dy] || OF [=3Dy] || COMPILE_TEST [=3Dn])
+> >>>    =E2=94=82   - OF_MDIO [=3Dy] && NETDEVICES [=3Dy] && MDIO_DEVICE [=
+=3Dy] && OF [=3Dy]
+> >>> && PHYLIB [=3Dy]
+> >>>
+> >>> ...so it looks pretty tied up with the MDIO support which I guess I
+> >>> will need for the real PHY!
+> >>>
+> >>> If I sorted out building the dsa_loop_bdinfo.c code as a built-in do
+> >>> you think that would solve the ordering issue?
+> >
+> > I have re-created the issue with CONFIG_FIXED_PHY=3Dy and for a reason =
+I
+> > do not yet understand the following rule:
+> >
+> > obj-$(CONFIG_FIXED_PHY)                +=3D dsa_loop_bdinfo.o
+> >
+> > does not result in the kernel image containing the dsa_loop_bdinfo.o
+> > object symbols. I am fairly sure this worked when this was submitted
+> > back then, so give me a day or two to figure out why. AFAICT the make
+> > rule is simply not executed.
+>
+> Bisection landed on 227d72063fccb2d19b30fb4197fba478514f7d83 ("dsa:
+> simplify Kconfig symbols and dependencies") which appeared in v5.13 and
+> specifically this hunk being reverted back to how it was before gets us
+> the build results we want:
+>
+> diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+> index 7ffd2d03efaf..5da6424bc6f8 100644
+> --- a/drivers/net/Makefile
+> +++ b/drivers/net/Makefile
+> @@ -45,7 +45,7 @@ obj-$(CONFIG_ARCNET) +=3D arcnet/
+>   obj-$(CONFIG_DEV_APPLETALK) +=3D appletalk/
+>   obj-$(CONFIG_CAIF) +=3D caif/
+>   obj-$(CONFIG_CAN) +=3D can/
+> -obj-$(CONFIG_NET_DSA) +=3D dsa/
+> +obj-y +=3D dsa/
+>   obj-$(CONFIG_ETHERNET) +=3D ethernet/
+>   obj-$(CONFIG_FDDI) +=3D fddi/
+>   obj-$(CONFIG_HIPPI) +=3D hippi/
+>
+> Masahiro, for context in drivers/net/dsa/Makefile we have this bit:
+>
+> obj-$(CONFIG_NET_DSA_LOOP)      +=3D dsa_loop.o
+> ifdef CONFIG_NET_DSA_LOOP
+> obj-$(CONFIG_FIXED_PHY)         +=3D dsa_loop_bdinfo.o
+> endif
+>
+> whereby we want dsa_loop.o to follow the value of CONFIG_NET_DSA_LOOP,
+> and we want dsa_loop_bdinfo.o to be either built as a module or built
+> into the kernel and we want to follow the value of CONFIG_FIXED_PHY
+> because there is a functional dependency between the two objects.
+>
+> Prior to Olek's change this would work just fine because we would always
+> descend into drivers/net/dsa/ but after his change, and assuming that
+> CONFIG_NET_DSA=3Dm which is the case, then we no longer get
+> dsa_loop_bdinfo.o to be built at all when CONFIG_FIXED_PHY=3Dy.
+> Essentially only obj-m rules are being processed, obj-y rules are not.
+>
+> That does not really seem intuitive to me as to why any suggestions on
+> how to fix that, short of unconditionally descending into the tree like
+> we used to?
 
-I'm not very familiar with this area, I thought that the device list
-of an active table cannot be modified, so it doesn't need to be
-protected by t->devices_lock.
 
-> 
->> call __send_empty_flush_bios() for the ones with sends_pass_around_flush
->> set.
->>
->> Or am I overlooking something?
->>
->> -Ben
-> 
 
+"obj-m +=3D dsa/" means everything under dsa/ must be modular.
+
+
+
+If there is a built-in object under dsa/ with CONFIG_NET_DSA=3Dm,
+you cannot do  "obj-$(CONFIG_NET_DSA) +=3D dsa/".
+
+
+You need to change it back to "obj-y +=3D dsa/".
+
+
+>
+> Reproducer configuration available here:
+>
+> https://gist.github.com/ffainelli/2650a832803b502b94b2d247209f61b1
+>
+> rm drivers/net/dsa/*.o
+> ARCH=3Dx86 make drivers/net/dsa/
+> ls drivers/net/dsa/dsa_loop_bdinfo.o
+>
+> Thanks!
+> --
+> Florian
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
