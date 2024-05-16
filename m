@@ -1,107 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B61C14D452;
-	Thu, 16 May 2024 15:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AD98F66
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874119; cv=none; b=kFtWVSM4o5MC9XkUUJO60Qx4xZu8j+s9V0TJJLVHV13mfZhnyoDSI6TdtZzhHNyHvWGc36/Y5lqDIU2a9IePy2vGkxT/q4LbbXZ7RtM+B4mgxeeNRuMcUKom8OQr3QOyS0HThY0uXe5xwFnpagTHlJYpfvtDnBSgM28FlTlLky8=
+	t=1715874220; cv=none; b=kSd/jykUtzdSNVMfgfIeodsfmysjqukbH7b+vvgcItz58FbvhJBLl41ZSpeX7t+U9b4VcU57zzuT2YpueruqXwQPbxEgw8i88dy8PHluf8yeiCww3d1hbB1224xBx9rPvfxft+0fTrQK9n1LUe4YfKDbuo745T5S7hMw5xJ32Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874119; c=relaxed/simple;
-	bh=Hn7/vCbl6NJlnjzeYD+Ur3zP/ut2JNfZwZRZ8ytN7LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uw8Bkto6A84elmuKT80M244761LmbRkLv2PL2uRoPjbpb0J4u5XkTj47nvZn68ZeW1Pp0n4PnHYJeUQRnF/Z/MqgDdxyRjh4YzbtVpZkEUvyWtv9ZlHUxpCiKFuUthvBNe9kvB6Eze3c2SUKRIodsdWBAC83hfPNb8Qrg8OSCvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JdwgMiBf; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715874220; c=relaxed/simple;
+	bh=IoDvkvHXw1HR8wRbwehqcSi7peKYNyi9CZ1OaH+EN9E=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AT7+jviQqpSd0Ut8Cf1n2q7sjZRMTWI538N6qKrjDHxk5pQqUUzaN1DUSmZqLx5k4DMcbYxz36iNwqHltindz31Ajvxillp0Z7ffNH6q04OHuhQoo3R+8yU43s+DN6v3GuFYBL1zoG7f21C0A1ivr7cQLlEOsmWF9HHHoZWNBYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H1jWd0x/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JdwgMiBf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715874118; x=1747410118;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Hn7/vCbl6NJlnjzeYD+Ur3zP/ut2JNfZwZRZ8ytN7LI=;
-  b=JdwgMiBfiZLsBCPF7TphMK5Nvz1UQjXqOb/eWONagf3l/Q8lXYaR1jBp
-   /zgShH1SU73tvB33NLRUPYX0XAQBHmfy4B0Vh77CrpQZ0IdJrDQzQ2Rdv
-   3+3KeT1X0hG9yNgWV/1tvWJBKv/ZLkT5BIeXilC4AjISgPJXIzsZYB2Ye
-   3Lxez43TzlA+dshVaNTrRElVCos8FV5aUjRlKbynh6+YxIisMATl8mWP3
-   rtPzbLVmF4u7mGAmmtLAhfU7pFSs24/tNPabQy9nIaZdR3Lg+L0VuEFWN
-   zKqmqFi/zS6gpwLEDoJYqEx71rBovwPQC/gBC4jzu8tghI/UJddnkoxuY
-   Q==;
-X-CSE-ConnectionGUID: i+BGohMvSveJGos3VltXcQ==
-X-CSE-MsgGUID: eQklBbbwSJe3BzOQBbqf4g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23403787"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="23403787"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 08:41:57 -0700
-X-CSE-ConnectionGUID: UjuNcKFuSGGH3e6htSU5PQ==
-X-CSE-MsgGUID: h9KSI5c5Qzi2CoBjhYktow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="62301778"
-Received: from josephjo-mobl1.amr.corp.intel.com (HELO desk) ([10.212.146.49])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 08:41:57 -0700
-Date: Thu, 16 May 2024 08:41:50 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>
-Subject: Re: [regression] suspend stress test stalls within 30 minutes
-Message-ID: <20240516154150.46w4h2ro6sm5yyzx@desk>
-References: <878r0djxgc.fsf@kernel.org>
- <874jb0jzx5.fsf@kernel.org>
- <feaefaae-e25b-4a48-b6be-e20054f2c8df@intel.com>
- <20240515072231.z3wlyoblyc34ldmr@desk>
- <529C9374-DA6F-49C8-9B32-91741800F8E4@alien8.de>
- <20240515162747.6shmaoelc4mt7nro@desk>
- <878r0bhvjq.fsf@kernel.org>
- <20240516070315.swz2golcrfp3uvfd@desk>
- <20240516142513.qqy7wbmja5frizuj@desk>
- <ab00d8e5-8400-451e-9435-becb0b3fa80c@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H1jWd0x/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715874218;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W+3Q2pNlPjK1FF8Uf4iS6y9B02F58xnA/27DRhKkfIs=;
+	b=H1jWd0x/E7otnS3jZXQGQ3HI5HxPRb40XC4vPB5BaqOURpgIMAnhz2gCbCFLWl+mulxtUC
+	zc3izgdyzSfi+QpNCe1WsR/Z7pkdZ1I7NylIXI7k7/0gOMNxI+B1wHTQdr1qsrEaAX4xrs
+	6q51Whks/JhQ3CYmRXdQLzd680Q4GE0=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-149-BGT-_8W_NO2PuVVVk5HRWA-1; Thu, 16 May 2024 11:43:36 -0400
+X-MC-Unique: BGT-_8W_NO2PuVVVk5HRWA-1
+Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3c9992bad97so5394326b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:43:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715874216; x=1716479016;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W+3Q2pNlPjK1FF8Uf4iS6y9B02F58xnA/27DRhKkfIs=;
+        b=fiiwnpmxAOINtvdTSasJSgRMEV9h8XzcOtRObjKHAF1muiVr8TZ0YH8VLpH/z/4/os
+         7Rk0d9nwHGKNV/3f47jbltMA9W0TS2BxtVA/TxfUEhxNiUfMfVpNMw+Sb+wpmx58em8q
+         9a24V6TsJF40NBxQLpFqoOfD4TzUZl4aDB7A4AoJWyL+/UbaQnMn4dQqfTGwfYuE4wRd
+         G60tggFIp/bXyVAfcQXtecSVgpWc1M6V/QDsbsotAaIcgyAWoC696UHcKB4FsMyrPeIv
+         S8egjesLtOHTirclpnXr2tiBdY3C/qBITQTlwcP51Icn1SlLn8T4p490tfHmSVXOZks3
+         J8qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+D2dEUGctRLmXVdUl9U+S3Vzkcra/tM+1f1zCxNBNmHv5B6MnIdwWnQ97zM3Nlx2HzLAMV0DRpqBXSDYIXl/rpjpgMBlK26iLmIg8
+X-Gm-Message-State: AOJu0Yw/eO9RW9mcZ0lHNFPci+Y2fef71LaR0b0mSEe+9ZHhEb+QiWO6
+	v7kXr7/nt2Yyadac+THK52Gb6YOBNeQpxT3YHphfk43dYCFEh4FRf2mlJYwjbN8rTk83ZoVJoPX
+	xzo2RE9aClONg6A6a1pf81S/C51lH1BGce5limv689fZ/LuLMvbQSbjVnkF31aw==
+X-Received: by 2002:a05:6808:148f:b0:3c7:52da:2055 with SMTP id 5614622812f47-3c997035756mr27286627b6e.2.1715874215823;
+        Thu, 16 May 2024 08:43:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHOCCsTNyW+7WaF4mJb+63faC/dTk6Tdyxind5u+rzkVS12U49UBoYVqxzoUBzxfysS0QYUjw==
+X-Received: by 2002:a05:6808:148f:b0:3c7:52da:2055 with SMTP id 5614622812f47-3c997035756mr27286598b6e.2.1715874215414;
+        Thu, 16 May 2024 08:43:35 -0700 (PDT)
+Received: from localhost ([240d:1a:c0d:9f00:a03a:475d:8280:d9b7])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e3c475eb3sm12545921cf.82.2024.05.16.08.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 08:43:35 -0700 (PDT)
+Date: Fri, 17 May 2024 00:43:31 +0900 (JST)
+Message-Id: <20240517.004331.1678192397138539146.syoshida@redhat.com>
+To: ryasuoka@redhat.com
+Cc: horms@kernel.org, krzk@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] nfc: nci: Fix handling of zero-length payload
+ packets in nci_rx_work()
+From: Shigeru Yoshida <syoshida@redhat.com>
+In-Reply-To: <ZkXQ5h8fla1KhX6A@zeus>
+References: <20240515151757.457353-1-ryasuoka@redhat.com>
+	<20240516084348.GF179178@kernel.org>
+	<ZkXQ5h8fla1KhX6A@zeus>
+X-Mailer: Mew version 6.9 on Emacs 29.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ab00d8e5-8400-451e-9435-becb0b3fa80c@intel.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 16, 2024 at 07:32:54AM -0700, Dave Hansen wrote:
-> On 5/16/24 07:25, Pawan Gupta wrote:
-> > On Thu, May 16, 2024 at 12:03:22AM -0700, Pawan Gupta wrote:
-> >> I am running the suspend test now and will update in the morning if I
-> >> could reproduce the hang.
-> > Completed 500 suspend iterations, but the hang is not reproduced 🙁
-> > I have restarted the test.
-> > 
-> > BTW, could you please share your /proc/cmdline? Also, was there any
-> > workload running with the suspend test? If I could not reproduce it in the
-> > next run, I will run stress-ng with the suspend test.
+Hi Yasuoka-san,
+
+On Thu, 16 May 2024 18:24:54 +0900, Ryosuke Yasuoka wrote:
+> Thank you for your review and comment, Simon.
 > 
-> I'd suggest two things:
+> On Thu, May 16, 2024 at 09:43:48AM +0100, Simon Horman wrote:
+>> Hi Yasuoka-san,
+>> 
+>> On Thu, May 16, 2024 at 12:17:07AM +0900, Ryosuke Yasuoka wrote:
+>> > When nci_rx_work() receives a zero-length payload packet, it should
+>> > discard the packet without exiting the loop. Instead, it should continue
+>> > processing subsequent packets.
+>> 
+>> nit: I think it would be clearer to say:
+>> 
+>> ... it should not discard the packet and exit the loop. Instead, ...
 > 
->   * Run everything in tools/testing/selftests/x86 in a loop during the
->     suspend test.
->   * Run perf or something else to generate some NMIs.
-
-Will do.
-
-> Those will ensure the dark corners of the entry code are being
-> sufficiently prodded.
+> Great. I'll update commit msg like this.
 > 
-> I also have sneaking suspicion that microcode updates during resume are
-> the aggravating factor.
+>> > 
+>> > Fixes: d24b03535e5e ("nfc: nci: Fix uninit-value in nci_dev_up and nci_ntf_packet")
+>> > Closes: https://lore.kernel.org/lkml/20240428134525.GW516117@kernel.org/T/
+>> 
+>> nit: I'm not sure this Closes link is adding much,
+>>      there are more changes coming, right?
+> 
+> No. I just wanna show the URL link as a reference where this bug is
+> found. This URL discuss a little bit different topic as you know.
+> 
+> In the following discussion [1], Jakub pointed out that changing
+> continue statement to break is not related to the patch "Fix
+> uninit-value in nci_rw_work". So I posted this new small patch before
+> posting v5 patch for "Fix: uninit-value in nci_rw_work".
+> 
+> If Closes tag is not appropriate, I can remove this in this v2 patch.
+> What do you think?
 
-Lets see if Kalle is able to reproduce the hang with "dis_ucode_ldr".
+I think this patch, continuing the loop after freeing skb, came from
+the following discussion:
+
+https://lore.kernel.org/lkml/Zi-vGH1ROjiv1yJ2@zeus/
+
+In such a case, you can use Link: tag with the above URL and mention
+it in the change log like "As discussed [1], ...". But this patch
+small and clear, so I think the current change log is enough to convey
+the intent of the changes without external link.
+
+You may find the following document helpful:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9#n115
+
+Thanks,
+Shigeru
+
+> 
+> [1] https://lore.kernel.org/all/20240510190613.72838bf0@kernel.org/
+> 
+>> > Reported-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>> > ---
+>> >  net/nfc/nci/core.c | 3 +--
+>> >  1 file changed, 1 insertion(+), 2 deletions(-)
+>> > 
+>> > diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+>> > index b133dc55304c..f2ae8b0d81b9 100644
+>> > --- a/net/nfc/nci/core.c
+>> > +++ b/net/nfc/nci/core.c
+>> > @@ -1518,8 +1518,7 @@ static void nci_rx_work(struct work_struct *work)
+>> >  
+>> >  		if (!nci_plen(skb->data)) {
+>> >  			kfree_skb(skb);
+>> > -			kcov_remote_stop();
+>> > -			break;
+>> > +			continue;
+>> >  		}
+>> >  
+>> >  		/* Process frame */
+>> > -- 
+>> > 2.44.0
+>> > 
+>> > 
+>> 
+> 
+> Thank you for your help.
+> Ryosuke
+> 
+> 
+
