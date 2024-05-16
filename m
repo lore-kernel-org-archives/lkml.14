@@ -1,169 +1,121 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA48B642
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 03:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA87523A6;
+	Thu, 16 May 2024 03:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715829967; cv=none; b=WD+L2hu4YoFTp6mzBjWuATcHHLycVUCfddiXwBqB7UvbBmQwVz2Jovx36FStoxKtOkQfYOkogPOy+SB7BxoeCbSDXCdlWjJrGiv4JOTNMGdnR9OfimZPJNzjB+x/6xHKxxr6H72AwQQZM943X+Ua6ZpY4VXTgfSjfhsp1w5Y8vI=
+	t=1715830291; cv=none; b=BHQ1YjUSJ2YOphpsnn9rSUfM+ZswvXH+SFftcxfgEIxl6POidzhLk7aJ5ujoOjt7/dp0Cx2z66qZkCDX2wd2haQYONelebxEozcjS6ipkqTkXScXKq0QIZ4mcjvizGI1xXruyhJ/q0YPhm8H0Ql3WT8Dsu0XOy6bwisbvHpjmGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715829967; c=relaxed/simple;
-	bh=Fj9DFQbUIHz++fbxS9Gb93DcDizppZYPSDVmzUo6mYs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=bKwwpOreJHAE+4qLk4yewONgJzGr1PrSTIhe4N2/20szJ5SOkg6UuLrdTPABmrL1pKPUGc/PG7LPDZ3j+0+luvZEQFwiKpMyEGkqsE9LEriTzwiLvxBPLs/Ox+2GrCtlpscJXMWLh01UTNqxzpwi4+tJjgsmKFxEUxljuwoP8CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BHmfPTvS; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1715830291; c=relaxed/simple;
+	bh=6nIFCyTBysDjoWLfPU6KU5s1MlTbkpP/5bwNBnLHUxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuZ+ToWJJg7y6nOG8mOcb/aeGjkIAUzEoFWylYDce71xKYlnEc5gD1TR4KMg0KgcR8pQFtZsRixkruF7RvaCVg7plwQb+7B7yL5kTqMhYH7o4s1nVvPpU5Ih+gS4p8m6XcEpeANb6cRC4aP4p4x5Pg0rm+oFysmwGkU4REiqbOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I+bmX6qu; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BHmfPTvS"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240516032555epoutp030a9a18750b77321f5382de63660e608a~P2kDasjIq1689616896epoutp03S
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 03:25:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240516032555epoutp030a9a18750b77321f5382de63660e608a~P2kDasjIq1689616896epoutp03S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1715829955;
-	bh=RVQ/+Lsjjx2p15g745Qf4Umsx247PWwm8nk3ogxPp2I=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=BHmfPTvSadGgoo+ZzSbakfy7RaQKO+qhbLPKmwnikcYBYHyGL5NdODRQSXZXzUtSv
-	 5CJGSsegsfQK6/6IRsAalCgZzFktSA6cCtvG/zuI78GcL8h+0a+asWXpbfg+54v27d
-	 z3opoOb4Y6oWuOUPnMRgBMYt+MOG174a9p4dsya8=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240516032554epcas2p2d86e41d5685adb5bbf161c56cdec7939~P2kDGcvG50494604946epcas2p2b;
-	Thu, 16 May 2024 03:25:54 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4VfwTt0GNKz4x9Q0; Thu, 16 May
-	2024 03:25:54 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0A.31.09673.1CC75466; Thu, 16 May 2024 12:25:53 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240516032553epcas2p3b8f34d03f32cccccc628027fbe1e8356~P2kBzKd970613006130epcas2p3N;
-	Thu, 16 May 2024 03:25:53 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240516032553epsmtrp20d14534e6924a6ada1f43016c58e5e92~P2kBxuSeZ0411704117epsmtrp25;
-	Thu, 16 May 2024 03:25:53 +0000 (GMT)
-X-AuditID: b6c32a45-a89fa700000025c9-79-66457cc1670d
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	B3.B6.09238.1CC75466; Thu, 16 May 2024 12:25:53 +0900 (KST)
-Received: from localhost.dsn.sec.samsung.com (unknown [10.229.54.230]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240516032553epsmtip2a5cc07a4ec700d70fc0eb8cf97e19007~P2kBhReN12157021570epsmtip2Y;
-	Thu, 16 May 2024 03:25:53 +0000 (GMT)
-From: Minwoo Im <minwoo.im@samsung.com>
-To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Bart Van
-	Assche <bvanassche@acm.org>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, Joel Granados
-	<j.granados@samsung.com>, gost.dev@samsung.com, Minwoo Im
-	<minwoo.im@samsung.com>, Asutosh Das <quic_asutoshd@quicinc.com>
-Subject: [PATCH] ufs: mcq: Fix missing argument 'hba' in MCQ_OPR_OFFSET_n
-Date: Thu, 16 May 2024 12:14:05 +0900
-Message-Id: <20240516031405.586706-1-minwoo.im@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I+bmX6qu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715830290; x=1747366290;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6nIFCyTBysDjoWLfPU6KU5s1MlTbkpP/5bwNBnLHUxw=;
+  b=I+bmX6quc3YUH9Ntn0NHwkv8Fok9o6K/6DfbY6308BXUXLC98HrKidTa
+   DDcWTIJxTt8YsLZMG6RS+3UPdcQwdZlNF4LgW1V9OmyrvmRbBD9u9rylg
+   nsPArq9KAQ66VDyvwQg4LapPJrOjSJmo6CJaqv0IlFZqYPrHllpWPbGrI
+   VT5lbv5h2qGo6G2mMK2O7MctFWckjO93FCqtlLU9Y2VcETX3Jg6Q7lqxl
+   BhJWUz96D+qmWDyX3vsLBFMtLITTp3vSRRgs4QpmlOLhWXebz1k4Ictev
+   KZulfv9jtXaxhOH1JBkv7XKEbh6lcXI5TZtl+sPsyvrYDhLlG325dsLDE
+   w==;
+X-CSE-ConnectionGUID: Fn8U16i9TlSGqouH9j4GZw==
+X-CSE-MsgGUID: 3UVcfwqEQpmawZyFM00LeA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="15744027"
+X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
+   d="scan'208";a="15744027"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 20:31:29 -0700
+X-CSE-ConnectionGUID: 1v3OYIM+SeapcY81BgdmRg==
+X-CSE-MsgGUID: frZcW+IsRWGRidxMfJAYKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
+   d="scan'208";a="62119217"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 15 May 2024 20:31:27 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s7Rq0-000DZo-2b;
+	Thu, 16 May 2024 03:31:24 +0000
+Date: Thu, 16 May 2024 11:31:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ronak Doshi <ronak.doshi@broadcom.com>, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ronak Doshi <ronak.doshi@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/4] vmxnet3: add latency measurement support in
+ vmxnet3
+Message-ID: <202405161123.iWtQjhIw-lkp@intel.com>
+References: <20240514182050.20931-3-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmqe7BGtc0g00zrCwezNvGZvHy51U2
-	i2kffjJb3Dywk8li6f6HjBYb+zksLu+aw2bRfX0Hm8Xy4/+YLJ6dPsBssbBjLosDt8flK94e
-	0yadYvP4+PQWi8fEPXUefVtWMXp83iTn0X6gmymAPSrbJiM1MSW1SCE1Lzk/JTMv3VbJOzje
-	Od7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoQiWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJ
-	rVJqQUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsaktm62gvVCFW93d7M0MC7i72Lk5JAQ
-	MJGYt+krM4gtJLCDUeLtdYUuRi4g+xOjxOK3DxghnG+MEgsObmCF6fi05DozRGIvo8SmObOY
-	IJzfjBILe94zgVSxCahLNEx9xQKSEBF4zyhx//ZTdhCHWeAUo8Tn++2MIFXCAp4Sj1vug21n
-	EVCVmN2+gw3E5hWwlli0vYkFYp+8xP6DZ5kh4oISJ2c+AYszA8Wbt84Gu0NC4Cu7xNM365kh
-	Glwk1q1ZwAZhC0u8Or6FHcKWkvj8bi9UvFzi55tJjBB2hcTBWbeB4hxAtr3EtecpICazgKbE
-	+l36EFFliSO3oLbySXQc/ssOEeaV6GgTgpihLPHx0CGo/ZISyy+9htrjIXHxxGQ2SPDGSjx4
-	e4l1AqP8LCS/zELyyyyEvQsYmVcxiqUWFOempxYbFRjCIzU5P3cTIziRarnuYJz89oPeIUYm
-	DsZDjBIczEoivCJpzmlCvCmJlVWpRfnxRaU5qcWHGE2BoTuRWUo0OR+YyvNK4g1NLA1MzMwM
-	zY1MDcyVxHnvtc5NERJITyxJzU5NLUgtgulj4uCUamCasfF/UMOJ+59indzPCx5+Zigfk2Px
-	u/tU56F1ytcn28Wdk3+nNaNMSkZl14RzPbNr7y1s+XPpZrNc/CbWr1eblmfplez4ZOOpE8u/
-	aGsh140UG4MsTet7E1pmNJdsSxNbbbju1JO2NmeH9hcbK7svnVC8s3/tu+USTG6z3nnkeisH
-	njWpfnrw9/UzHvtep/+uzC16b51uIK0/6+Xkj1xOJyXufGj+x/XcwDjP4XDErJ3m069/nPTo
-	/U7rKf+P7L5nE7oube573Re73ITqGfbbVlSeV5mlOocv3W71bf9c07O6Ok8vmkv61X9lYfl3
-	MFvuSw8Pq+3muqQNJ8TjA/3dNMOjcpS7mZYnvj2p+fKSEktxRqKhFnNRcSIAltpcOC0EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsWy7bCSvO7BGtc0g8c9/BYP5m1js3j58yqb
-	xbQPP5ktbh7YyWSxdP9DRouN/RwWl3fNYbPovr6DzWL58X9MFs9OH2C2WNgxl8WB2+PyFW+P
-	aZNOsXl8fHqLxWPinjqPvi2rGD0+b5LzaD/QzRTAHsVlk5Kak1mWWqRvl8CVMamtm61gvVDF
-	293dLA2Mi/i7GDk5JARMJD4tuc7cxcjFISSwm1Hi9a+XLBAJSYl9p2+yQtjCEvdbjrBCFP1k
-	lDh9dCpYEZuAukTD1FdgtojAR0aJpReKQYqYBS4wSsz59IkZJCEs4CnxuOU+mM0ioCoxu30H
-	G4jNK2AtsWh7E9Q2eYn9B88yQ8QFJU7OfAIWZwaKN2+dzTyBkW8WktQsJKkFjEyrGCVTC4pz
-	03OTDQsM81LL9YoTc4tL89L1kvNzNzGCw1tLYwfjvfn/9A4xMnEwHmKU4GBWEuEVSXNOE+JN
-	SaysSi3Kjy8qzUktPsQozcGiJM5rOGN2ipBAemJJanZqakFqEUyWiYNTqoEp5HRZFcfmzclM
-	mzc7hB08xZnpqbmNw37ViYpHZ5fMXmTslM1XO1Hl8ku2p8blD3YWz58otaiq6MYJkdVme9Ke
-	HeRZZXl295eKfbNPWezmfJVWJ5X/T2XyntT/R38t/yA9mX1zm4WuBWfnbA7VBfws4ROVVha5
-	PuFr99L9Uv36n53E5RMyc6a5F8/Zke/TpXjOgeHYu18Z1qfbcy7azVCV+L3vsvubw3fkbvcx
-	zM/L3tC+ulP+/7o72czX+/enKCd2xuqZaQTcOX90Da/xyQ/aJwtYb8zUU3NI82CbI/vrSazY
-	m9qu/08C5hkqBp8yioh2uK4bMX21/tRiH4HXqisjv6158EJkTaB+hOQelaJNSizFGYmGWsxF
-	xYkAp+hCdN4CAAA=
-X-CMS-MailID: 20240516032553epcas2p3b8f34d03f32cccccc628027fbe1e8356
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240516032553epcas2p3b8f34d03f32cccccc628027fbe1e8356
-References: <CGME20240516032553epcas2p3b8f34d03f32cccccc628027fbe1e8356@epcas2p3.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514182050.20931-3-ronak.doshi@broadcom.com>
 
-The MCQ_OPR_OFFSET_n macro has taken 'hba' on the caller context
-without receiving 'hba' instance as an argument.  To prevent potential
-bugs in future use cases, this patch added an argument 'hba'.
+Hi Ronak,
 
-Fixes: 2468da61ea09 ("scsi: ufs: core: mcq: Configure operation and runtime interface")
-Cc: Asutosh Das <quic_asutoshd@quicinc.com>
-Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
----
- drivers/ufs/core/ufs-mcq.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index 768bf87cd80d..1cfdda9acb0a 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -231,7 +231,7 @@ int ufshcd_mcq_memory_alloc(struct ufs_hba *hba)
- 
- /* Operation and runtime registers configuration */
- #define MCQ_CFG_n(r, i)	((r) + MCQ_QCFG_SIZE * (i))
--#define MCQ_OPR_OFFSET_n(p, i) \
-+#define MCQ_OPR_OFFSET_n(hba, p, i) \
- 	(hba->mcq_opr[(p)].offset + hba->mcq_opr[(p)].stride * (i))
- 
- static void __iomem *mcq_opr_base(struct ufs_hba *hba,
-@@ -343,10 +343,10 @@ void ufshcd_mcq_make_queues_operational(struct ufs_hba *hba)
- 		ufsmcq_writelx(hba, upper_32_bits(hwq->sqe_dma_addr),
- 			      MCQ_CFG_n(REG_SQUBA, i));
- 		/* Submission Queue Doorbell Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_SQD, i),
-+		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(hba, OPR_SQD, i),
- 			      MCQ_CFG_n(REG_SQDAO, i));
- 		/* Submission Queue Interrupt Status Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_SQIS, i),
-+		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(hba, OPR_SQIS, i),
- 			      MCQ_CFG_n(REG_SQISAO, i));
- 
- 		/* Completion Queue Lower Base Address */
-@@ -356,10 +356,10 @@ void ufshcd_mcq_make_queues_operational(struct ufs_hba *hba)
- 		ufsmcq_writelx(hba, upper_32_bits(hwq->cqe_dma_addr),
- 			      MCQ_CFG_n(REG_CQUBA, i));
- 		/* Completion Queue Doorbell Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_CQD, i),
-+		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(hba, OPR_CQD, i),
- 			      MCQ_CFG_n(REG_CQDAO, i));
- 		/* Completion Queue Interrupt Status Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_CQIS, i),
-+		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(hba, OPR_CQIS, i),
- 			      MCQ_CFG_n(REG_CQISAO, i));
- 
- 		/* Save the base addresses for quicker access */
+[auto build test WARNING on net-next/main]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ronak-Doshi/vmxnet3-prepare-for-version-9-changes/20240515-023833
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240514182050.20931-3-ronak.doshi%40broadcom.com
+patch subject: [PATCH net-next 2/4] vmxnet3: add latency measurement support in vmxnet3
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240516/202405161123.iWtQjhIw-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240516/202405161123.iWtQjhIw-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405161123.iWtQjhIw-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In function 'vmxnet3_get_cycles',
+       inlined from 'vmxnet3_rq_rx_complete' at drivers/net/vmxnet3/vmxnet3_drv.c:1675:25:
+>> drivers/net/vmxnet3/vmxnet3_drv.c:151:9: warning: 'asm' operand 2 probably does not match constraints
+     151 |         asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (pmc));
+         |         ^~~
+   drivers/net/vmxnet3/vmxnet3_drv.c:151:9: error: impossible constraint in 'asm'
+   In function 'vmxnet3_get_cycles',
+       inlined from 'vmxnet3_tq_xmit.isra' at drivers/net/vmxnet3/vmxnet3_drv.c:1316:28:
+>> drivers/net/vmxnet3/vmxnet3_drv.c:151:9: warning: 'asm' operand 2 probably does not match constraints
+     151 |         asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (pmc));
+         |         ^~~
+
+
+vim +/asm +151 drivers/net/vmxnet3/vmxnet3_drv.c
+
+   145	
+   146	static u64
+   147	vmxnet3_get_cycles(int pmc)
+   148	{
+   149		u32 low, high;
+   150	
+ > 151		asm volatile("rdpmc" : "=a" (low), "=d" (high) : "c" (pmc));
+   152		return (low | ((u_int64_t)high << 32));
+   153	}
+   154	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
