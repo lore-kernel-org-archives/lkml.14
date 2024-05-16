@@ -1,101 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E36F12DDAF
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD86769D2B;
+	Thu, 16 May 2024 08:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715846689; cv=none; b=HGtri/8Rs1UQc87RMUFOWj95XihbMgaNK6wuhpOJWDhlBNDpSP6/j1C5ALCuHaJWu58329Ov30jGixkeihymVLsuU8Xbegl91Nb8eWdfrEdKznkpCl/tOYQlj0zXeTCzu7ISHIOEOQR8H8igjLPFW8MyqjwFPLhhipsUEc0YUvY=
+	t=1715846790; cv=none; b=ExeHYijwIiQrf69ji6P52qKTeC3udtOeOikXHhQFS9M1NzuzyvtayeQlBmexDH9/JPXDRzqZmfuf0+jfuNLNljVy3riGkYqkxItwboHOjsKC6gdAqaGTKxiPxXu8VHzL1is0tlfjh3WSVLqL3VItvF6BEuToIhxHDneMNYfvc0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715846689; c=relaxed/simple;
-	bh=2tXHTi0dLNSZyf6qV6/xdIj/MMJqYMPKAqzz1CzpkkQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tN74csV2A89pUDas8B7sR5G3cPHC5QctpaT6U0GPb+oNw8y+wwwjc9EVO2bbOc92BJ8aiZ2UG2ok6nAjXVtqJrqx6dvDgtHZCtGakbT/C98nygISZFhysXcNenhIKUIqIc6Gg/d3wLS0xfbvCwwps7aMNZNzF+GHSxcG8uvOxdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9KiKs33; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715846790; c=relaxed/simple;
+	bh=owQIT5HD7OJm8jW2vo7iEeB4HQZrjCDFv0xnzHggShY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fJr2VEi5hkdzfjArZ36cUwAquGl7U3U7MRCrVZUcPDfrQU05ubqMrtVl6S6O+PLPSTzDHt1igAx/bvZGNCllYPA519nCwOG3ic6KwEi5bCgrlTnRTwjaZWiugWv0+Q5FSIRoYO1eDOmHtIfClhY+EJZIlHQPaW0PyJzawCWXmQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=lHRcDfor; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9KiKs33"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715846687; x=1747382687;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=2tXHTi0dLNSZyf6qV6/xdIj/MMJqYMPKAqzz1CzpkkQ=;
-  b=M9KiKs33A6DMJ4IijbFOH/okBYWZVW6X2LXoxMyd+fwZGJWC1SgPC/n+
-   lT/YFJD6ArgAphjTk6OdyGP+KR2lhn9UelVfVifyS4AM3DqBhfPDY50kR
-   rhGWFQf0GzBES7ZQbyZohUjS2JBZUa2bOHRGLyf8MLAiUXpR7KC1Tk2Zk
-   wijgjqF6kzBF2OdMADBjwBExJdxLH16ns/ZdHpMSMjcCjprmxeC+ZCQqF
-   KiXjcXcdn3I2J7P9I0hJ4C9XfaMDhDzmIR+cCEvQy/77xGxf4IaZYpFAM
-   gaQxoF6126GeWNIaoax/PekaaxpsUxGCiqwQ8qj7Q5CBUC/rBH+l6yz3B
-   w==;
-X-CSE-ConnectionGUID: MoKln77PTP+BZ3tsUNPHbQ==
-X-CSE-MsgGUID: VP8O0IxwSk2Ea5JShMPu/Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="22613470"
-X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
-   d="scan'208";a="22613470"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 01:04:47 -0700
-X-CSE-ConnectionGUID: 9QUzi2JtTcG3QGDSVfTjzQ==
-X-CSE-MsgGUID: MHU8v8iiTRmi9b+L7Xo8ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
-   d="scan'208";a="31277273"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.208])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 01:04:44 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Dave Airlie
- <airlied@gmail.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel
- <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [git pull] drm for 6.10-rc1
-In-Reply-To: <CAHk-=whuCX-NAGOLzwn5sObPDJX-pdqamZ7YTpHFHODAMv4P+A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAPM=9tw-53PCvveRcdLUUQ+mjq2X2er5zp6n1KeE8Nu8x=VP2g@mail.gmail.com>
- <CAHk-=whxT8D_0j=bjtrvj-O=VEOjn6GW8GK4j2V+BiDUntZKAQ@mail.gmail.com>
- <CAPM=9tyOtH24Mw_2X+bgV9iChOQV3LtmRCoR5x6KXhSUD6FjUg@mail.gmail.com>
- <CAHk-=wh8DWSMrtuhZOzanfBCFcuJCihO9x7fkzx-dBhLddXF-Q@mail.gmail.com>
- <CAPM=9twCVkx9OqndCcvjjgx+P7ixBRwttiz25-R=bkycEo5vrQ@mail.gmail.com>
- <CAHk-=whuCX-NAGOLzwn5sObPDJX-pdqamZ7YTpHFHODAMv4P+A@mail.gmail.com>
-Date: Thu, 16 May 2024 11:04:40 +0300
-Message-ID: <87v83eb2sn.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lHRcDfor"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1715846788; x=1747382788;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2HnucdSCbwmmrq18H0sTxqOAmaX8YFcHdjs/KVqRrxo=;
+  b=lHRcDforotFU1Uqv1GBzrQGutIniwBTctJi4YI1lnmty+aIzfdd7NrEs
+   1xp175kfZ0U53xTcagJ663pv4yeh5oJP+MJiUf3WD5icH50e3iPMrMFfC
+   ylIU/zGbgwM/uKswuk+WPrZy9bBEo9M8dEd68Wxv+3vYycHcRZ3+GK60r
+   s=;
+X-IronPort-AV: E=Sophos;i="6.08,163,1712620800"; 
+   d="scan'208";a="89622299"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 08:06:25 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:39479]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.39.135:2525] with esmtp (Farcaster)
+ id de62bcfb-7319-429d-bc38-d1d0827c5886; Thu, 16 May 2024 08:06:24 +0000 (UTC)
+X-Farcaster-Flow-ID: de62bcfb-7319-429d-bc38-d1d0827c5886
+Received: from EX19D002EUA004.ant.amazon.com (10.252.50.181) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 16 May 2024 08:06:23 +0000
+Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
+ EX19D002EUA004.ant.amazon.com (10.252.50.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 16 May 2024 08:06:23 +0000
+Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
+ (10.253.65.58) by mail-relay.amazon.com (10.252.134.102) with Microsoft SMTP
+ Server id 15.2.1258.28 via Frontend Transport; Thu, 16 May 2024 08:06:23
+ +0000
+Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
+	id 169CC20AC1; Thu, 16 May 2024 08:06:23 +0000 (UTC)
+From: Hagar Hemdan <hagarhem@amazon.com>
+To:
+CC: Norbert Manthey <nmanthey@amazon.de>, Hagar Hemdan <hagarhem@amazon.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, David
+ Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Sabrina
+ Dubroca" <sd@queasysnail.net>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: esp: cleanup esp_output_tail_tcp() in case of unsupported ESPINTCP
+Date: Thu, 16 May 2024 08:03:09 +0000
+Message-ID: <20240516080309.1872-1-hagarhem@amazon.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-On Wed, 15 May 2024, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Wed, 15 May 2024 at 16:17, Dave Airlie <airlied@gmail.com> wrote:
->> AMDGPU, I915 and XE all have !COMPILE_TEST on their variants
->
-> Hmm.  It turns out that I didn't notice the AMDGPU one because my
-> Threadripper - that has AMDGPU enabled - I have actually turned off
-> EXPERT on, so it's hidden by that for me.
->
-> But yes, both of those should be "depends on !WERROR" too.
+xmit() functions should consume skb or return error codes in error
+paths.
+When the configuration "CONFIG_INET_ESPINTCP" is not used, the
+implementation of the function "esp_output_tail_tcp" violates this rule.
+The function frees the skb and returns the error code.
+This change removes the kfree_skb from both functions, for both
+esp4 and esp6.
 
-Fair enough. Honestly it just didn't occur to me.
+This should not be reachable in the current code, so this change is just
+a cleanup.
 
-The main goal here was to ensure the drm subsystem does not have any
-build warnings, but without halting CI on any non-drm warnings that
-might occasionally creep in and that we can't fix as quickly.
+This bug was discovered and resolved using Coverity Static Analysis
+Security Testing (SAST) by Synopsys, Inc.
 
-If there was a way to somehow limit WERROR by subdirectories, without
-config options, I'd love to ditch the config.
+Fixes: e27cca96cd68 ("xfrm: add espintcp (RFC 8229)")
+Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
+---
+ net/ipv4/esp4.c | 3 +--
+ net/ipv6/esp6.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-> Or maybe they should just go away entirely, and be subsumed by the
-> DRM_WERROR thing.
-
-For i915, this was the idea anyway, we just haven't gotten around to it
-yet.
-
-
-BR,
-Jani.
-
-
+diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
+index d33d12421814..e73de3abe37c 100644
+--- a/net/ipv4/esp4.c
++++ b/net/ipv4/esp4.c
+@@ -238,8 +238,7 @@ static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
+ #else
+ static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
+ {
+-	kfree_skb(skb);
+-
++	WARN_ON(1);
+ 	return -EOPNOTSUPP;
+ }
+ #endif
+diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
+index 7371886d4f9f..600402e54ccd 100644
+--- a/net/ipv6/esp6.c
++++ b/net/ipv6/esp6.c
+@@ -255,8 +255,7 @@ static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
+ #else
+ static int esp_output_tail_tcp(struct xfrm_state *x, struct sk_buff *skb)
+ {
+-	kfree_skb(skb);
+-
++	WARN_ON(1);
+ 	return -EOPNOTSUPP;
+ }
+ #endif
 -- 
-Jani Nikula, Intel
+2.40.1
+
