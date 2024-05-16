@@ -1,472 +1,165 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5876A165FDB;
-	Thu, 16 May 2024 18:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908B157496;
+	Thu, 16 May 2024 18:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715883609; cv=none; b=J40QAFvvGOZ7OSp5Dr9uPF390AdZfTCFybnSMqiphq6Ixad/yamQJ9oFuWRZAKGNtKPEgzFrdNNxmqJy8maTE4k5BG/EIhmm3PrK5XNeXnnAE5NUQdfj9eSIgMa4qe1T6bRuvE4o6vBvooX+xZ/97W9OsRlaRBo7ahzoZZmyNXI=
+	t=1715883676; cv=none; b=ItD9XWL046KG66LTx1U1euEz05ORB4iAW7PdBWtpRFsTgYadsf3Gm26fRwT0qzL1lUeXnNK4CzjH45iXyZ0YxzXD+OZmHl88lwkYAqBoSF3NkYj6wvEx0Gi4qT//u2ig9ZSwarUOS8DM3TUAqcDwvPTl0ej8+wyNfFyZEYWgg94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715883609; c=relaxed/simple;
-	bh=V7YtsL0df7QZ2fCW8ovj+jSPEIs0M575sgx8iNcYOWk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kptZ71eqdr8hoGWG8gvSbTj6KlsVrZmEZ/EoNfWjUkYtAZBsfP+WCGKKU0IJf5ztkviC6wmi+CLms3u8o2IkSC0C7vfy7cz2DKPbmTKl05MZmct+c7DLhgM3MX1at6Jki0o1dK1G3R3qw+koF990heEuQ2v0VBbb0yjdvSShw4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KAAEOMHx; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1715883676; c=relaxed/simple;
+	bh=x30ssAyOCyVVdjMVH1dprDFSGM0wJHE43G2Q53C4vIM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UoPyHgJ4le4nUXyPHQS82VqX5on0dTPNRYRDGDkiCf9Ffz4zXiNEEcVBCptPxJwN/9b8+MC6APR708OEUky0vkcMA8c04itYzBAQTFhUOJSzm8dZ5OwXdYsRXoS9dsMCmGQkncilPnYwRVPilyhSGiD6nbR/lHvL/Clt/rBUflg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WvrPgcwY; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KAAEOMHx"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44GHPT8N028543;
-	Thu, 16 May 2024 18:19:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=sExpzqDawVL7Dn962NZ99fpWpjztnGoo0REU8wYGdnY=;
- b=KAAEOMHxv246WxOQrRyEIoI/h6USV0nnwmoSXmL9hZWzPMxPn3QKeeaH5HCWkccciEiT
- ls3iQeZP/2X28Xw3k52pyE6rwqPvFwLCN9MErIaUWdhdF7EHLmU0UyG6Thgb9VALRxxP
- 6TyxSXe9YEDiS+Z/Rfik9YZN7H7ylIqkotzPJZ7zuKAQFx/+o1fPZCMwK5gd35hv8mnv
- v7ejz6KfNKvRJW3BJZbGQn42OXXdKwDPEeJqumYYav1Ua08e4YW99r0O8Pwwh3RkOq/b
- tKVoDB6ke3EJAtu2O8NgnuKExpLkQ1Wo8HpiYNGEkIyNPdS9sP7Mpe3YMYhVq357GsCp dA== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y5mce8frs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 18:19:20 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44GFouQm005504;
-	Thu, 16 May 2024 18:19:19 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y2nq331w5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 18:19:19 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44GIJHoh25690414
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 May 2024 18:19:19 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5EA85806E;
-	Thu, 16 May 2024 18:19:15 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61CC758088;
-	Thu, 16 May 2024 18:19:15 +0000 (GMT)
-Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.107.19])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 16 May 2024 18:19:15 +0000 (GMT)
-From: Eddie James <eajames@linux.ibm.com>
-To: linux-fsi@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org, broonie@kernel.org, andi.shyti@kernel.org,
-        joel@jms.id.au, alistair@popple.id.au, jk@ozlabs.org,
-        andrew@codeconstruct.com.au, linux-aspeed@lists.ozlabs.org,
-        eajames@linux.ibm.com
-Subject: [PATCH v3 27/40] i2c: fsi: Improve formatting
-Date: Thu, 16 May 2024 13:18:54 -0500
-Message-Id: <20240516181907.3468796-28-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240516181907.3468796-1-eajames@linux.ibm.com>
-References: <20240516181907.3468796-1-eajames@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WvrPgcwY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715883675; x=1747419675;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=x30ssAyOCyVVdjMVH1dprDFSGM0wJHE43G2Q53C4vIM=;
+  b=WvrPgcwY+lEpSrakyQNiXt2iBQvtBqd18AmH7q52VfBr8Lodr6DvUJBy
+   NbzHEGsGzUpKe27WV5ys34IZX+7tZpFm9KrEgjyaQ0NwOBjERPiqK2mRY
+   EW8QdWu6JzZUC3jHe99pFhWkg4Xk3H0k/a0jsYHXvci6JPYWc/OtAqBiv
+   Ig9roQLsM0KI782xG85vsULQbXLg09x2taznDS2n48avStQGtlpliATEI
+   2FGVH7EOe2bj48GP9k0xP2+7ttjKxq1rOOtlKigj+3+vZJkxLECcdNM3Z
+   +qs/wJc213hrnaS3rIFs0DBBWjdpTdG+1KAiYOPDLnGfzV6yqH83f2r84
+   A==;
+X-CSE-ConnectionGUID: 85TBpD4tSgGHSdWX82vdnw==
+X-CSE-MsgGUID: txpAQOWiQSeSaLOn6ZWjKQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="34538460"
+X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
+   d="scan'208";a="34538460"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 11:21:14 -0700
+X-CSE-ConnectionGUID: 3DytZcwnSZuwL3XZVEl0CA==
+X-CSE-MsgGUID: FENhqiQURM6Jm90jQkTTTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
+   d="scan'208";a="36262176"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.164]) ([10.125.108.164])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 11:21:14 -0700
+Message-ID: <8286f8b9-488c-418f-8bad-d23871a8afab@intel.com>
+Date: Thu, 16 May 2024 11:21:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: aqRpYjFwElhVD6tKl4zd51PHoqBqm-2N
-X-Proofpoint-ORIG-GUID: aqRpYjFwElhVD6tKl4zd51PHoqBqm-2N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 suspectscore=0 bulkscore=0
- mlxscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405160132
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] x86/cpu: Fix boot on Intel Quark X1000
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+ linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Adam Dunlap <acdunlap@google.com>,
+ stable@vger.kernel.org
+References: <20240516173928.3960193-1-andriy.shevchenko@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240516173928.3960193-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-No functional change. Remove holes in the master structure. Re-order
-local variables to look pretty. Remove some local variables in favor of
-using their containing structure.
+On 5/16/24 10:39, Andy Shevchenko wrote:
+> The initial change to set x86_virt_bits to the correct value straight
+> away broke boot on Intel Quark X1000 CPUs (which are family 5, model 9,
+> stepping 0)
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
-Changes since v2:
- - Add detail to commit message.
+Do you know what _actually_ broke?  Like was there a crash somewhere?
 
- drivers/i2c/busses/i2c-fsi.c | 125 +++++++++++++++++------------------
- 1 file changed, 60 insertions(+), 65 deletions(-)
+> With deeper investigation it appears that the Quark doesn't have
+> the bit 19 set in 0x01 CPUID leaf, which means it doesn't provide
+> any clflush instructions and hence the cache alignment is set to 0.
+> The actual cache line size is 16 bytes, hence we may set the alignment
+> accordingly. At the same time the physical and virtual address bits
+> are retrieved via 0x80000008 CPUID leaf.
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index 2404ace8c56fa..8fb5b51b74a4d 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -148,10 +148,10 @@
- 
- struct fsi_i2c_master {
- 	struct fsi_device	*fsi;
--	u8			fifo_size;
- 	struct list_head	ports;
- 	struct mutex		lock;
- 	u32			clock_div;
-+	u8			fifo_size;
- };
- 
- struct fsi_i2c_port {
-@@ -165,15 +165,14 @@ struct fsi_i2c_port {
- static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
- 			    u32 *data)
- {
--	int rc;
- 	__be32 data_be;
-+	int rc;
- 
- 	rc = fsi_device_read(fsi, reg, &data_be, sizeof(data_be));
- 	if (rc)
- 		return rc;
- 
- 	*data = be32_to_cpu(data_be);
--
- 	return 0;
- }
- 
-@@ -187,9 +186,11 @@ static int fsi_i2c_write_reg(struct fsi_device *fsi, unsigned int reg,
- 
- static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
- {
--	int rc;
--	u32 mode = I2C_MODE_ENHANCED, extended_status, watermark;
-+	u32 mode = I2C_MODE_ENHANCED;
-+	u32 extended_status;
- 	u32 interrupt = 0;
-+	u32 watermark;
-+	int rc;
- 
- 	/* since we use polling, disable interrupts */
- 	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_INT_MASK, &interrupt);
-@@ -215,9 +216,10 @@ static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
- 
- static int fsi_i2c_set_port(struct fsi_i2c_port *port)
- {
--	int rc;
- 	struct fsi_device *fsi = port->master->fsi;
--	u32 mode, dummy = 0;
-+	u32 dummy = 0;
-+	u32 mode;
-+	int rc;
- 
- 	rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
- 	if (rc)
-@@ -238,7 +240,6 @@ static int fsi_i2c_set_port(struct fsi_i2c_port *port)
- static int fsi_i2c_start(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 			 bool stop)
- {
--	struct fsi_i2c_master *i2c = port->master;
- 	u32 cmd = I2C_CMD_WITH_START | I2C_CMD_WITH_ADDR;
- 
- 	port->xfrd = 0;
-@@ -252,7 +253,7 @@ static int fsi_i2c_start(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 	cmd |= FIELD_PREP(I2C_CMD_ADDR, msg->addr);
- 	cmd |= FIELD_PREP(I2C_CMD_LEN, msg->len);
- 
--	return fsi_i2c_write_reg(i2c->fsi, I2C_FSI_CMD, &cmd);
-+	return fsi_i2c_write_reg(port->master->fsi, I2C_FSI_CMD, &cmd);
- }
- 
- static int fsi_i2c_get_op_bytes(int op_bytes)
-@@ -268,18 +269,17 @@ static int fsi_i2c_get_op_bytes(int op_bytes)
- static int fsi_i2c_write_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 			      u8 fifo_count)
- {
-+	int bytes_to_write = port->master->fifo_size - fifo_count;
-+	int bytes_remaining = msg->len - port->xfrd;
- 	int write;
- 	int rc;
--	struct fsi_i2c_master *i2c = port->master;
--	int bytes_to_write = i2c->fifo_size - fifo_count;
--	int bytes_remaining = msg->len - port->xfrd;
- 
- 	bytes_to_write = min(bytes_to_write, bytes_remaining);
- 
- 	while (bytes_to_write) {
- 		write = fsi_i2c_get_op_bytes(bytes_to_write);
- 
--		rc = fsi_device_write(i2c->fsi, I2C_FSI_FIFO,
-+		rc = fsi_device_write(port->master->fsi, I2C_FSI_FIFO,
- 				      &msg->buf[port->xfrd], write);
- 		if (rc)
- 			return rc;
-@@ -294,12 +294,11 @@ static int fsi_i2c_write_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 			     u8 fifo_count)
- {
--	int read;
--	int rc;
--	struct fsi_i2c_master *i2c = port->master;
--	int bytes_to_read;
- 	int xfr_remaining = msg->len - port->xfrd;
-+	int bytes_to_read;
- 	u32 dummy;
-+	int read;
-+	int rc;
- 
- 	bytes_to_read = min_t(int, fifo_count, xfr_remaining);
- 
-@@ -307,7 +306,7 @@ static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 		read = fsi_i2c_get_op_bytes(bytes_to_read);
- 
- 		if (xfr_remaining) {
--			rc = fsi_device_read(i2c->fsi, I2C_FSI_FIFO,
-+			rc = fsi_device_read(port->master->fsi, I2C_FSI_FIFO,
- 					     &msg->buf[port->xfrd], read);
- 			if (rc)
- 				return rc;
-@@ -316,8 +315,8 @@ static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 			xfr_remaining -= read;
- 		} else {
- 			/* no more buffer but data in fifo, need to clear it */
--			rc = fsi_device_read(i2c->fsi, I2C_FSI_FIFO, &dummy,
--					     read);
-+			rc = fsi_device_read(port->master->fsi, I2C_FSI_FIFO,
-+					     &dummy, read);
- 			if (rc)
- 				return rc;
- 		}
-@@ -330,85 +329,80 @@ static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 
- static int fsi_i2c_get_scl(struct i2c_adapter *adap)
- {
--	u32 stat = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	u32 stat;
- 
--	fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
-+	fsi_i2c_read_reg(port->master->fsi, I2C_FSI_STAT, &stat);
- 
- 	return !!(stat & I2C_STAT_SCL_IN);
- }
- 
- static void fsi_i2c_set_scl(struct i2c_adapter *adap, int val)
- {
--	u32 dummy = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	u32 dummy = 0;
- 
- 	if (val)
--		fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SCL, &dummy);
-+		fsi_i2c_write_reg(port->master->fsi, I2C_FSI_SET_SCL, &dummy);
- 	else
--		fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_SCL, &dummy);
-+		fsi_i2c_write_reg(port->master->fsi, I2C_FSI_RESET_SCL, &dummy);
- }
- 
- static int fsi_i2c_get_sda(struct i2c_adapter *adap)
- {
--	u32 stat = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	u32 stat;
- 
--	fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
-+	fsi_i2c_read_reg(port->master->fsi, I2C_FSI_STAT, &stat);
- 
- 	return !!(stat & I2C_STAT_SDA_IN);
- }
- 
- static void fsi_i2c_set_sda(struct i2c_adapter *adap, int val)
- {
--	u32 dummy = 0;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	u32 dummy = 0;
- 
- 	if (val)
--		fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SDA, &dummy);
-+		fsi_i2c_write_reg(port->master->fsi, I2C_FSI_SET_SDA, &dummy);
- 	else
--		fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_SDA, &dummy);
-+		fsi_i2c_write_reg(port->master->fsi, I2C_FSI_RESET_SDA, &dummy);
- }
- 
- static void fsi_i2c_prepare_recovery(struct i2c_adapter *adap)
- {
--	int rc;
--	u32 mode;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	u32 mode;
-+	int rc;
- 
--	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_MODE, &mode);
-+	rc = fsi_i2c_read_reg(port->master->fsi, I2C_FSI_MODE, &mode);
- 	if (rc)
- 		return;
- 
- 	mode |= I2C_MODE_DIAG;
--	fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
-+	fsi_i2c_write_reg(port->master->fsi, I2C_FSI_MODE, &mode);
- }
- 
- static void fsi_i2c_unprepare_recovery(struct i2c_adapter *adap)
- {
--	int rc;
--	u32 mode;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *i2c = port->master;
-+	u32 mode;
-+	int rc;
- 
--	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_MODE, &mode);
-+	rc = fsi_i2c_read_reg(port->master->fsi, I2C_FSI_MODE, &mode);
- 	if (rc)
- 		return;
- 
- 	mode &= ~I2C_MODE_DIAG;
--	fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
-+	fsi_i2c_write_reg(port->master->fsi, I2C_FSI_MODE, &mode);
- }
- 
- static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c,
- 			     struct fsi_i2c_port *port)
- {
-+	u32 dummy = 0;
-+	u32 stat;
- 	int rc;
--	u32 stat, dummy = 0;
- 
- 	/* force bus reset, ignore errors */
- 	i2c_recover_bus(&port->adapter);
-@@ -439,8 +433,9 @@ static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c,
- 
- static int fsi_i2c_reset_engine(struct fsi_i2c_master *i2c, u16 port)
- {
-+	u32 dummy = 0;
-+	u32 mode;
- 	int rc;
--	u32 mode, dummy = 0;
- 
- 	/* reset engine */
- 	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_I2C, &dummy);
-@@ -476,18 +471,17 @@ static int fsi_i2c_reset_engine(struct fsi_i2c_master *i2c, u16 port)
- 
- static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
- {
--	int rc;
--	unsigned long start;
-+	struct fsi_i2c_master *i2c = port->master;
- 	u32 cmd = I2C_CMD_WITH_STOP;
-+	unsigned long start;
- 	u32 stat;
--	struct fsi_i2c_master *i2c = port->master;
--	struct fsi_device *fsi = i2c->fsi;
-+	int rc;
- 
- 	rc = fsi_i2c_reset_engine(i2c, port->port);
- 	if (rc)
- 		return rc;
- 
--	rc = fsi_i2c_read_reg(fsi, I2C_FSI_STAT, &stat);
-+	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
- 	if (rc)
- 		return rc;
- 
-@@ -503,15 +497,14 @@ static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
- 		return 0;
- 
- 	/* write stop command */
--	rc = fsi_i2c_write_reg(fsi, I2C_FSI_CMD, &cmd);
-+	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_CMD, &cmd);
- 	if (rc)
- 		return rc;
- 
- 	/* wait until we see command complete in the master */
- 	start = jiffies;
--
- 	do {
--		rc = fsi_i2c_read_reg(fsi, I2C_FSI_STAT, &status);
-+		rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &status);
- 		if (rc)
- 			return rc;
- 
-@@ -527,8 +520,8 @@ static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
- static int fsi_i2c_handle_status(struct fsi_i2c_port *port,
- 				 struct i2c_msg *msg, u32 status)
- {
--	int rc;
- 	u8 fifo_count;
-+	int rc;
- 
- 	if (status & I2C_STAT_ERR) {
- 		rc = fsi_i2c_abort(port, status);
-@@ -576,9 +569,9 @@ static int fsi_i2c_handle_status(struct fsi_i2c_port *port,
- static int fsi_i2c_wait(struct fsi_i2c_port *port, struct i2c_msg *msg,
- 			unsigned long timeout)
- {
--	u32 status = 0;
--	int rc;
- 	unsigned long start = jiffies;
-+	u32 status;
-+	int rc;
- 
- 	do {
- 		rc = fsi_i2c_read_reg(port->master->fsi, I2C_FSI_STAT,
-@@ -608,13 +601,13 @@ static int fsi_i2c_wait(struct fsi_i2c_port *port, struct i2c_msg *msg,
- static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 			int num)
- {
--	int i, rc;
--	unsigned long start_time;
- 	struct fsi_i2c_port *port = adap->algo_data;
--	struct fsi_i2c_master *master = port->master;
-+	unsigned long start_time;
- 	struct i2c_msg *msg;
-+	int rc;
-+	int i;
- 
--	mutex_lock(&master->lock);
-+	mutex_lock(&port->master->lock);
- 
- 	rc = fsi_i2c_set_port(port);
- 	if (rc)
-@@ -635,7 +628,7 @@ static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	}
- 
- unlock:
--	mutex_unlock(&master->lock);
-+	mutex_unlock(&port->master->lock);
- 	return rc ? : num;
- }
- 
-@@ -681,8 +674,10 @@ static int fsi_i2c_probe(struct device *dev)
- 	struct fsi_i2c_master *i2c;
- 	struct fsi_i2c_port *port;
- 	struct device_node *np;
--	u32 port_no, ports, stat;
-+	u32 port_no;
-+	u32 ports;
- 	u32 lbus;
-+	u32 stat;
- 	int rc;
- 
- 	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
-@@ -752,14 +747,14 @@ static int fsi_i2c_probe(struct device *dev)
- 	}
- 
- 	dev_set_drvdata(dev, i2c);
--
- 	return 0;
- }
- 
- static int fsi_i2c_remove(struct device *dev)
- {
- 	struct fsi_i2c_master *i2c = dev_get_drvdata(dev);
--	struct fsi_i2c_port *port, *tmp;
-+	struct fsi_i2c_port *port;
-+	struct fsi_i2c_port *tmp;
- 
- 	list_for_each_entry_safe(port, tmp, &i2c->ports, list) {
- 		list_del(&port->list);
--- 
-2.39.3
+This seems to be saying that ->x86_clflush_size must come from CPUID.
+But there _are_ CPUID-independent defaults set in identify_cpu().  How
+do those fit in?
 
+> Note, we don't really care about the value of x86_clflush_size as it
+> is either used with a proper check for the instruction to be present,
+> or, like in PCI case, it assumes 32 bytes for all supported 32-bit CPUs
+> that have actually smaller cache line sizes and don't advertise it.
+
+Are you trying to say that having ->x86_clflush_size==0 is not fatal
+while having ->x86_cache_alignment==0 _is_ fatal?
+
+> The commit fbf6449f84bf ("x86/sev-es: Set x86_virt_bits to the correct
+> value straight away, instead of a two-phase approach") basically
+> revealed the issue that has been present from day 1 of introducing
+> the Quark support.
+
+How did it do that, exactly?  It's still not crystal clear.
+
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index be30d7fa2e66..2bffae158dd5 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -321,6 +321,15 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+>  #ifdef CONFIG_X86_64
+>  	set_cpu_cap(c, X86_FEATURE_SYSENTER32);
+>  #else
+> +	/*
+> +	 * The Quark doesn't have bit 19 set in 0x01 CPUID leaf, which means
+> +	 * it doesn't provide any clflush instructions and hence the cache
+> +	 * alignment is set to 0. The actual cache line size is 16 bytes,
+> +	 * hence set the alignment accordingly. At the same time the physical
+> +	 * and virtual address bits are retrieved via 0x80000008 CPUID leaf.
+> +	 */
+> +	if (c->x86 == 5 && c->x86_model == 9)
+> +		c->x86_cache_alignment = 16;
+
+What are the odds that another CPU has this issue?  I'm thinking we
+should just set a default in addition to hacking around this for Quark.
