@@ -1,135 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F8A142E75;
-	Thu, 16 May 2024 09:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F06142E75
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715850278; cv=none; b=ixnuLNljvQtIeab/0OhPIPxEvfHc2dycs3pBKxTDrHeYCe5t1uYMvb8LNl/JVLOwa/Ei9oVMzej+JmVWVgCImcki44vBCO7ENCCktCJx0icBDyKGyP0HkSnivdhTVkfcOH8pyJTW/0HKhTl2R/tfgUKq3G1CW64h2MAI6sNxH98=
+	t=1715850345; cv=none; b=EUhOLNpZrfdQZRqWrzK/BcLPbPldLfx6Xxun1wTWKqEmP1MhInD3uEEs9jmxfDsHy+R6RV2085GJkPk0j6pTuitXh6ltdPre8J0cMbM/QwaD/HPJ4ryRnw6eWCabxyNhxCV072VrymHXuhJ4xvNuS5y6sH4BA5AbnxSPLxVSmdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715850278; c=relaxed/simple;
-	bh=/7ZU5SWPryG28/JDJjQorPZqPib2O3IGB90+Qe8THyY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Derdwr49QIyWwQwep+lmvS3CsE0oRyFH/1kwBidaHnRDDwzvCPgMoyxWO2rTMsZxqKcxIR4rrGnspniO/4KEIeSx7gFQ2WnYqNv5fZcLGlGi8Tt/8nuyNoUE36b+teRDRDtSfzstjNFOr4OHysHmKfCPd9UOVufl899DML3gv7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beLa1hUk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715850345; c=relaxed/simple;
+	bh=RHSX2yKsuPqAL+lWO3G5kIbkjnDQKu9dA9oMc8iQu0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RVkI/NdAB7HHsa0ylq+ZA4TvQFyXSD6vjLHOFqaN6HnqQjGmKbCcuqxjvJe4av6DGvcPP3lYrm0jLMGJn0EF0O3RJondOAZ58AB7VeVd2NZoEJlalaLDg1khj6AjIPMzrut+wXTKxKyCwIogsAZpAcnjU+56Xg1iDVZ3JQY0IF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=p1CQuLpn; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beLa1hUk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7ABFC32789;
-	Thu, 16 May 2024 09:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715850277;
-	bh=/7ZU5SWPryG28/JDJjQorPZqPib2O3IGB90+Qe8THyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=beLa1hUkjo5E+6DNPm+9Cokg2HWoOeKFDfBE7O2zfs3H6V7HHghFIuQB5A7KR95z+
-	 plHUe0bD8pUe7dR0WlMrIrrO/VM+WjRL/UbMWGcztFIbeVAQBc0E7PFnz/mKZMf+rs
-	 Fe0K+WskqeAun5qWlTbe3yHN+cIeeUwwT3Bg7M4geuJVvkjH0P80LUNdtacG8D8epD
-	 fczn5ZhQ8hr7e/LcUhyY4JZ5o6RDqLXODpcu+3HJ3LAbJ84cO8fwC+kukzeh929vyq
-	 YrPhSGfkInHWeLlktaZ0Jia/UIXMLz/2cV+pWZ9ez/gf8aaH/F4TEdgq/yWAhzsAoe
-	 iOTFsAdtC837g==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b2e8d73bfcso382650eaf.1;
-        Thu, 16 May 2024 02:04:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUkCf77TNFTkdDNNr46FImmSQ9xWyYcSaj6YBA24aeT5N/kw4Qm5LZL0RR+bH/Dd9iAbS5JCSrEVq1mIiLMvzEyMNBVotpEUdVBBCPBrUVdfG0w0F05cqpNfr4GXJP0sIELiEAXs/4=
-X-Gm-Message-State: AOJu0YyyQZPuhPyjaK0EPgA8Znza5wK7CIRKaMD7cQNU/ZwZLl+mM8FV
-	aX2a6pVe+ZoXo9RgMS83bBRWBCZhbmnX6BZoBSC1ZD8ts6zaYMGIMXm6FQVEK1i2E/wYJGjInYy
-	jXbErdB8xO6q8vgz5W22thQ8yATw=
-X-Google-Smtp-Source: AGHT+IGVktTlkAlAt579AU1bpoblCiDv4Jhmu5uultBm9470EEpde8igEf9/i0o7iFtco8K170hIzVgrgMzS35qXRzg=
-X-Received: by 2002:a05:6870:ff83:b0:241:9bee:b6fe with SMTP id
- 586e51a60fabf-2419beec7d0mr17786411fac.2.1715850277022; Thu, 16 May 2024
- 02:04:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p1CQuLpn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=itjTlUPY9VTCjwdh1TN5R/QTu3m/DiLZSbOLn98mcqY=; b=p1CQuLpnmkX9AmcLKMNgmZamWh
+	mXXSnhlzPDEjNSgX4CcYRGKNxwNWZ/Ne3q8+iWjMuIrxlSzBPWzp3ykbsjfN1lh8yFpZ4zKxmXmwi
+	U4XypldYBaqZo5eElZdyq5pSQ6cxHl/mrv5kCaAL+KdUAXxHkqDu26Nl0uJiqKmq0jBTqtJY6kCy6
+	X0YmRQPYpX+4kdl6IOwqg47Mh3eAIszVcCoUgs228MJLrB2RcyHMmI8wcUUAnFSHVJ7pV1nSwY0rK
+	QSpwlXhRnXUuNCpKzKPiz6BZsBum1e+LS7b2XXU8tsVfnh5cUQPLXEiUkw52T8gWU0kUy+vQ7YIpI
+	CrpilRJg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7X3K-00000005O4T-0ZTu;
+	Thu, 16 May 2024 09:05:31 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A1C6B30068B; Thu, 16 May 2024 11:05:29 +0200 (CEST)
+Date: Thu, 16 May 2024 11:05:29 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 3/4] perf: Fix event leak upon exit
+Message-ID: <20240516090529.GH22557@noisy.programming.kicks-ass.net>
+References: <20240515144311.16038-1-frederic@kernel.org>
+ <20240515144311.16038-4-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <13518388.uLZWGnKmhe@kreacher> <3304112.44csPzL39Z@kreacher> <39e15eef-f7fd-4e16-bc74-7f1c6820fe6a@arm.com>
-In-Reply-To: <39e15eef-f7fd-4e16-bc74-7f1c6820fe6a@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 16 May 2024 11:04:25 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gZJE6jfa8_9LgDdjYotY+crLH1JJXHdAWREPz4SJ305A@mail.gmail.com>
-Message-ID: <CAJZ5v0gZJE6jfa8_9LgDdjYotY+crLH1JJXHdAWREPz4SJ305A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] thermal: sysfs: Trigger zone temperature updates
- on sysfs reads
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240515144311.16038-4-frederic@kernel.org>
 
-Hi Lukasz,
+On Wed, May 15, 2024 at 04:43:10PM +0200, Frederic Weisbecker wrote:
+> When a task is scheduled out, pending sigtrap deliveries are deferred
+> to the target task upon resume to userspace via task_work.
+> 
+> However failures while adding en event's callback to the task_work
+> engine are ignored. And since the last call for events exit happen
+> after task work is eventually closed, there is a small window during
+> which pending sigtrap can be queued though ignored, leaking the event
+> refcount addition such as in the following scenario:
+> 
+>     TASK A
+>     -----
+> 
+>     do_exit()
+>        exit_task_work(tsk);
+> 
+>        <IRQ>
+>        perf_event_overflow()
+>           event->pending_sigtrap = pending_id;
+>           irq_work_queue(&event->pending_irq);
+>        </IRQ>
+>     =========> PREEMPTION: TASK A -> TASK B
+>        event_sched_out()
+>           event->pending_sigtrap = 0;
+>           atomic_long_inc_not_zero(&event->refcount)
+>           // FAILS: task work has exited
+>           task_work_add(&event->pending_task)
+>        [...]
+>        <IRQ WORK>
+>        perf_pending_irq()
+>           // early return: event->oncpu = -1
+>        </IRQ WORK>
+>        [...]
+>     =========> TASK B -> TASK A
+>        perf_event_exit_task(tsk)
+>           perf_event_exit_event()
+>              free_event()
+>                 WARN(atomic_long_cmpxchg(&event->refcount, 1, 0) != 1)
+>                 // leak event due to unexpected refcount == 2
+> 
+> As a result the event is never released while the task exits.
 
-On Mon, May 13, 2024 at 9:11=E2=80=AFAM Lukasz Luba <lukasz.luba@arm.com> w=
-rote:
->
-> Hi Rafael,
->
-> On 5/10/24 15:13, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Reading the zone temperature via sysfs causes the driver callback to
-> > be invoked, but it does not cause the thermal zone object to be updated=
-.
-> >
-> > This is problematic if the zone temperature read via sysfs differs from
-> > the temperature value stored in the thermal zone object as it may cause
-> > the kernel and user space to act against each other in some cases.
-> >
-> > For this reason, make temp_show() trigger a zone temperature update if
-> > the temperature returned by thermal_zone_get_temp() is different from
-> > the temperature value stored in the thermal zone object.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >   drivers/thermal/thermal_core.c  |    2 +-
-> >   drivers/thermal/thermal_sysfs.c |    3 +++
-> >   2 files changed, 4 insertions(+), 1 deletion(-)
-> >
-> > Index: linux-pm/drivers/thermal/thermal_sysfs.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/thermal/thermal_sysfs.c
-> > +++ linux-pm/drivers/thermal/thermal_sysfs.c
-> > @@ -42,6 +42,9 @@ temp_show(struct device *dev, struct dev
-> >       if (ret)
-> >               return ret;
-> >
-> > +     if (temperature !=3D READ_ONCE(tz->temperature))
-> > +             thermal_zone_device_update(tz, THERMAL_EVENT_TEMP_SAMPLE)=
-;
->
-> That's a bit problematic because it will trigger
-> governor->manage()
->
-> In case of IPA governor we relay on constant polling
-> period. We estimate the past power usage and current
-> thermal budget, to derive the next period power budget
-> for devices. I don't know if the internal PID algorithm
-> will be resilient enough to compensate this asynchronous
-> trigger caused from user-space.
->
-> We choose the period to be at least 1 frame (e.g. ~16ms)
-> to have good avg usage of CPUs and GPU. TBH I don't know
-> what would happen if someone reads the temp after e.g. 1ms
-> of last IPA trigger, but some devices (e.g. GPU) wasn't
-> loaded in that last 1ms delta...
-> I'm a bit more relaxed about CPUs because we use utilization
-> signal from runqueues (like the TEO util gov). That's a moving
-> avg signal which should keep some history, like low-pass
-> filter, so information is more resilient in that case.
->
-> Could we think about that IPA constant period usage?
-> I think I understand the proposal of your patch.
-> We might add a filter inside IPA to ignore such async
-> triggers in the .manage() callback.
-> What do you think?
+Urgh...
 
-Thanks for pointing this out.
+> 
+> Fix this with appropriate task_work_add()'s error handling.
+> 
+> Fixes: 517e6a301f34 ("perf: Fix perf_pending_task() UaF")
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> ---
+>  kernel/events/core.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 724e6d7e128f..c1632e69c69d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2289,10 +2289,11 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
+>  		event->pending_sigtrap = 0;
+>  		if (state != PERF_EVENT_STATE_OFF &&
+>  		    !event->pending_work) {
+> -			event->pending_work = 1;
+> -			dec = false;
+> -			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+> -			task_work_add(current, &event->pending_task, TWA_RESUME);
+> +			if (task_work_add(current, &event->pending_task, TWA_RESUME) >= 0) {
 
-Actually, the target audience for this change are thermal zones that
-are not updated on a regular basis, so what about storing the last
-zone temperature update time in the zone object and only running an
-update from temp_show() if sufficient time has elapsed since the last
-update (say 1 sec)?
+AFAICT the thing is a return 0 on success -Efoo on fail, no? That is,
+should this not simply be '== 0' ?
+
+> +				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+> +				dec = false;
+> +				event->pending_work = 1;
+> +			}
+
+Also, do we want to write it like so and save an indent?
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2288,11 +2288,11 @@ event_sched_out(struct perf_event *event
+ 
+ 		event->pending_sigtrap = 0;
+ 		if (state != PERF_EVENT_STATE_OFF &&
+-		    !event->pending_work) {
++		    !event->pending_work &&
++		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
+ 			event->pending_work = 1;
+ 			dec = false;
+ 			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+-			task_work_add(current, &event->pending_task, TWA_RESUME);
+ 		}
+ 		if (dec)
+ 			local_dec(&event->ctx->nr_pending);
