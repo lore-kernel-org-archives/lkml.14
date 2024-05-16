@@ -1,78 +1,81 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2853814B95D;
-	Thu, 16 May 2024 19:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EF6156F5F;
+	Thu, 16 May 2024 19:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715889156; cv=none; b=J+CFAdFlxshNt4HPm79qUKfxfjAIyNKB8XdFsv5Tn7pe9xbBUBEWAJjlLmxD36hCz3aGwIFUbku/ViODLliQaS/Dzy6IWKGA1ZblriAJjZtlvY23kKRRB/wrJGs+iCuF+VnRocwU3W5pKQCCTolhNKJcGCSVKa90fS91IdGjKRY=
+	t=1715889219; cv=none; b=DiKKX9U/BFqFIhMZYb1zTpVsThWLjJ85bXJUcCLCFDqTQG5M+hGlvjiM10cPSkBRoVkdv09mEkBTwq1hJz2iqagIckaykBuuLcB78r1YzKFqsCu9aHKkFxYHwuGacoGO1kScKsoh6VCEoNKOs6sJPY+uQxSWiA0G3fpZfnXq1Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715889156; c=relaxed/simple;
-	bh=mia+mIXfeByfPzOjI+pmzibnMHWgK7mRmUIiOyT+wdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n/2yMTp00DQrIdMtKpW+uvayAM4wYDykKjiHtHctLcnUBeYSiHhHJDhCgSX7kDUFIUt701OwBp41piw95IrSab/ayKVpvubj15uP67LewJczxncQ03BtU29716v0f/Id7G9F3/wAEV6uj2JPLmsA7gZkE5odNFU60yKOjdjnqIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 44GJmEdc016902;
-	Thu, 16 May 2024 14:48:14 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 44GJmCLk016900;
-	Thu, 16 May 2024 14:48:12 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Thu, 16 May 2024 14:48:12 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Andy Polyakov <appro@cryptogams.org>, Danny Tsen <dtsen@linux.ibm.com>,
-        linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        dtsen@us.ibm.com, nayna@linux.ibm.com, linux-kernel@vger.kernel.org,
-        ltcgcw@linux.vnet.ibm.com, leitao@debian.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 1/3] crypto: X25519 low-level primitives for ppc64le.
-Message-ID: <20240516194812.GN19790@gate.crashing.org>
-References: <20240514173835.4814-1-dtsen@linux.ibm.com> <20240514173835.4814-2-dtsen@linux.ibm.com> <87a5kqwe59.fsf@mail.lhotse> <89e7b4b0-9804-41be-b9b1-aeba57cd3cc6@cryptogams.org> <875xvevu3h.fsf@mail.lhotse>
+	s=arc-20240116; t=1715889219; c=relaxed/simple;
+	bh=u/X9mTE0RnR0jAnqMb7OrzYVD/mhPsMuXwrlI1sa3pE=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=nFbkasDoYAA/54BCFWdbNShoiJ0Qk7i5xlmOGh3WSDt7y5cI16VPYneAIxbNWUlzj2PvjlFRIT5tn4gZYscXVw3iOHysDMvZ9NKmD5j/LwS3w/2BuM7sSBsDziOv1KWFz3xM+eT3j5rIxpkr1xvIzJfnk+pHsZK8P6rTHcm5mYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 3F6E737821B2;
+	Thu, 16 May 2024 19:53:34 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240514100957.114746054@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240514100957.114746054@linuxfoundation.org>
+Date: Thu, 16 May 2024 20:53:34 +0100
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>, "Gustavo Padovan" <gustavo.padovan@collabora.com>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875xvevu3h.fsf@mail.lhotse>
-User-Agent: Mutt/1.4.2.3i
+MIME-Version: 1.0
+Message-ID: <15786d-66466400-1-14833a60@186321255>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?5=2E10?= 000/111] 
+ =?utf-8?q?5=2E10=2E217-rc1?= review
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Tuesday, May 14, 2024 15:48 IST, Greg Kroah-Hartman <gregkh@linuxfou=
+ndation.org> wrote:
 
-On Thu, May 16, 2024 at 10:06:58PM +1000, Michael Ellerman wrote:
-> Andy Polyakov <appro@cryptogams.org> writes:
-> >>> +.abiversion	2
-> >>
-> >> I'd prefer that was left to the compiler flags.
-> >
-> > Problem is that it's the compiler that is responsible for providing this
-> > directive in the intermediate .s prior invoking the assembler. And there
-> > is no assembler flag to pass through -Wa.
-> 
-> Hmm, right. But none of our existing .S files include .abiversion
-> directives.
-> 
-> We build .S files with gcc, passing -mabi=elfv2, but it seems to have no
-> effect.
+> This is the start of the stable review cycle for the 5.10.217 release=
+.
+> There are 111 patches in this series, all will be posted as a respons=
+e
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Thu, 16 May 2024 10:09:32 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1=
+0.217-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
+.git linux-5.10.y
+> and the diffstat can be found below.
+>=20
 
-Yup.  You coulds include some header file, maybe?  Since you run the
-assembler code through the C preprocessor anyway, for some weird reason :-)
+KernelCI report for stable-rc/linux-5.10.y for this week.
 
-> But the actual code follows ELFv2, because we wrote it that way, and I
-> guess the linker doesn't look at the actual ABI version of the .o ?
+## stable-rc HEAD for linux-5.10.y:
+Date: 2024-05-15
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3Db060558757cd289ee28acda55141de096e699854
 
-It isn't a version.  It is an actual different ABI.
+## Build failures:
+No build failures seen for the stable-rc/linux-5.10.y commit head \o/
 
-GNU LD allows linking together whatever, yes.
+## Boot failures:
+No **new** boot failures seen for the stable-rc/linux-5.10.y commit hea=
+d \o/
 
-> Is .abiversion documented anywhere? I can't see it in the manual.
+Tested-by: kernelci.org bot <bot@kernelci.org>
 
-Yeah me neither.  https://sourceware.org/bugzilla/enter_bug.cgi ?
-A commandline flag (to GAS) would seem best?
+Thanks,
+Shreeya Patel
 
-
-Segher
