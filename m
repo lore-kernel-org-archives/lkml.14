@@ -1,165 +1,126 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D461E491;
-	Thu, 16 May 2024 15:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAEE148856
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715872530; cv=none; b=UklfUP9ylM1T3dH/r4oXubFiby5r58DcYFlNBNbwVB3WtuDJ8kq/JxRWEIN4G6Byzhcj9YxqwMSDQTgQlnH3j1meP/pVq7AQ27sHy7lHpZ03y03Lv/0OulijRSHiH91egu6QkWLht0H74CH2SyADuEPWUaJFMU/M+QdGHwOFdd8=
+	t=1715872615; cv=none; b=jjlLqwLqhMOanvIj5tPV97uzOAsWM6a9yJ29k56DiW97I+0Fau/h5aCZaYOViXYUCoEnnbEVHTRd0pOePeHYCPll/tLwBUqz9pC3w/Irdmt5nwrz5v31UEZpJzufw3t5T00znztF/4CuikTyit2ADns6Uct75+76b3X+ZwN8iuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715872530; c=relaxed/simple;
-	bh=x7DdXYnCzFVdBqewRXoNz1fX6UgbGzwW5h5AT+08kj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvih4nf8eQ5GajfEcqQ3JODltszQ1jGapOubEvFtkdV4shuGcpD5j63Ap5mSbsR9s+FJAmR5nI7ICHaDo6x+yuU5eFWDCmJmXNI32xVhfo3dEcBW0APrtYs7U+DriNKnE7KhoVo+/m9xUtVjvfJ0QFh4Oy5APQ0XoOu7eGug55w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bh/Lcs3B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=peqCUhu9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bh/Lcs3B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=peqCUhu9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1715872615; c=relaxed/simple;
+	bh=IaLO8A8eOYs5s/2/cuHYZ/9daRCUlFtjjAcRYjoYHbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CerhluSA1skvGpnTKqB4v34VgGbTwgGNj2NGWipehqu/R9wsZ1vCEagC/pi9qYxwVO6o9XOMSy9z4lZLgzsETMkehC0scQlEbVzqc3WW7tW3q9fhIrKSYl47U3aXlOjJM0Z4b0N2ZwKdQH4/16NK/jF4IpJhklETADYJ1CGvFWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LetnUTAp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bh/Lcs3B";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="peqCUhu9";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bh/Lcs3B";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="peqCUhu9"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C707734459;
-	Thu, 16 May 2024 15:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715872526;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LetnUTAp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715872613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=o0inhXTwA4YjeQwB4Bizlo9EYy4r9uL0TfMoT/ThxIc=;
-	b=bh/Lcs3BgoBJfFVid6PVFu9vMlzBqbXKo49X/ayUHr4WE2yFU1o2GSgMVJtxFJrlS38qGe
-	GqzZr9PEp+XzfMQv/DxYmh1SxR8YxUkcap6ELe770ZsOPO/22Uy5+pMYorxL2zriAsWohi
-	1ogbSjJAlPbNPWwlk9tAw8GBDMYdcBU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715872526;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o0inhXTwA4YjeQwB4Bizlo9EYy4r9uL0TfMoT/ThxIc=;
-	b=peqCUhu9XBMEmd/EnpR2cjB/JKlvmq7y/sTu7cphgaiTw+wO3RbT5WkrmMz7MnNjc0jvNm
-	v+CFs6rMareJ5mBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715872526;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o0inhXTwA4YjeQwB4Bizlo9EYy4r9uL0TfMoT/ThxIc=;
-	b=bh/Lcs3BgoBJfFVid6PVFu9vMlzBqbXKo49X/ayUHr4WE2yFU1o2GSgMVJtxFJrlS38qGe
-	GqzZr9PEp+XzfMQv/DxYmh1SxR8YxUkcap6ELe770ZsOPO/22Uy5+pMYorxL2zriAsWohi
-	1ogbSjJAlPbNPWwlk9tAw8GBDMYdcBU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715872526;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o0inhXTwA4YjeQwB4Bizlo9EYy4r9uL0TfMoT/ThxIc=;
-	b=peqCUhu9XBMEmd/EnpR2cjB/JKlvmq7y/sTu7cphgaiTw+wO3RbT5WkrmMz7MnNjc0jvNm
-	v+CFs6rMareJ5mBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A9216137C3;
-	Thu, 16 May 2024 15:15:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 3VkeKQ4jRmZNTQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 16 May 2024 15:15:26 +0000
-Date: Thu, 16 May 2024 17:15:24 +0200
-From: David Sterba <dsterba@suse.cz>
-To: syzbot <syzbot+89700d262ed1fb9f9351@syzkaller.appspotmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [btrfs?] kernel BUG in __set_extent_bit
-Message-ID: <20240516151524.GB4449@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <0000000000006deae405f1fac97a@google.com>
+	bh=4iOgbS6qeObzrg8GE2s02mcHzXvs1fEJ62WhOsFVoik=;
+	b=LetnUTApS9rOMinRA9PPN1FMqHsQVFOK3UQV1W/gtEN1pacN5tMikYZGHdbDvkpCOTCvm/
+	z5WcrdBvVNiUaf1wKWNWw4mg/Uf8qzlmCLr9lHb6NCUgdUFYdvpqX+jj0JGDm2Dul4sAbs
+	wKOeBW/oYzi9OQAp9BmAyy4+7D5+laQ=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-489-sRR66JinPoOqcl5mYgqB0Q-1; Thu, 16 May 2024 11:16:51 -0400
+X-MC-Unique: sRR66JinPoOqcl5mYgqB0Q-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5222c9b6fd4so6263458e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:16:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715872610; x=1716477410;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4iOgbS6qeObzrg8GE2s02mcHzXvs1fEJ62WhOsFVoik=;
+        b=qDjoyIXvFkGpWRlqT6NpFOQjyjPHd0mYiBTx7q/T5QLFqWUYGt6JzErIeIHhtVfTPX
+         8THkWcIn1192ZasIjB+pvko32Ggxg4gU+Lruedpije1ZGanfNrAZiO+FJu74WtVzKzEf
+         HVTqUr0ltRVuffV6VFTdvYkOy/aYCCN7uZyxnTLd8JMsrMyD+YYwHSExe07pIez0nXWM
+         BD/vTxrawaUWkjCcFgtymE8+I1/q2YFxqBEz6yLgslF6VsNWOOd7xucJLCMdgqaKpWum
+         AE4kSC34CuCcfJ7doTdHMmpolBOEJWRwbjuij3YVLwDJ6pf+JzhK3+7nxQ5FyT/zDcVz
+         tJsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWS/3ONAVnySx87wFgt7j+aZV4h0f2Yz5MCQQRuy7d1r0PDr86rNztPMUP5jVwA5WMQ8yeAWmmjeJuFxrC05WqmatJUVF8easa1RWre
+X-Gm-Message-State: AOJu0YyXONE81Wt17qgfcWmqs/5aT69Tp4F2gpMlCfIjacy/3yJuIF4b
+	SXP1ZN2Kx3OyLL8F9DhO6I4+dIkUWfxf9bZRUdd95ONPhm4Fv9+xoLqNh1+hhNwJBWibrry+XLa
+	LtNsNB3kYuo/keEohHmiTsL3z4BEJ16h/2z89lEonP86Iz/Ll8IgsPQqjvZlTZw==
+X-Received: by 2002:a05:6512:444:b0:51f:3e0c:ace3 with SMTP id 2adb3069b0e04-5220fd7c6bdmr16656964e87.16.1715872609954;
+        Thu, 16 May 2024 08:16:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGn+FVB1tK34ViV8+agUiDomeCaRnMnSEIgSm4pt/ya2IBcjeS4X3/vaKP4GVA4MVD2ub1n+A==
+X-Received: by 2002:a05:6512:444:b0:51f:3e0c:ace3 with SMTP id 2adb3069b0e04-5220fd7c6bdmr16656944e87.16.1715872609565;
+        Thu, 16 May 2024 08:16:49 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a60eabd3csm596814866b.108.2024.05.16.08.16.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 May 2024 08:16:49 -0700 (PDT)
+Message-ID: <b9a5068c-8760-4f92-8a1b-bd276532109d@redhat.com>
+Date: Thu, 16 May 2024 17:16:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000006deae405f1fac97a@google.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=2573056c6a11f00d];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[89700d262ed1fb9f9351];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Spam-Score: -1.50
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ACPI: video: Fix name collision with architecture's
+ video.o
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: lenb@kernel.org, arnd@arndb.de, chaitanya.kumar.borah@intel.com,
+ suresh.kumar.kurmi@intel.com, jani.saarinen@intel.com,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, linux-arch@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20240516124317.710-1-tzimmermann@suse.de>
+ <CAJZ5v0gw620SLfxM66FfVeWMTN=dSZZtpH-=mFT_0HsumT3SsA@mail.gmail.com>
+ <1850b44d-e468-44db-82b7-f57e77fe49ba@redhat.com>
+ <82731e7d-e34f-46c4-8f54-c5d7d3d60b5a@suse.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <82731e7d-e34f-46c4-8f54-c5d7d3d60b5a@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 11, 2023 at 02:51:47AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    358a161a6a9e Merge branch 'for-next/fixes' into for-kernelci
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12115e1c480000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2573056c6a11f00d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=89700d262ed1fb9f9351
-> compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
-> userspace arch: arm64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13abc0a6480000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1153e53c480000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/99d14e0f4c19/disk-358a161a.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/23275b612976/vmlinux-358a161a.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/ed79195fac61/Image-358a161a.gz.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/fdb7b054a0c8/mount_0.gz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+89700d262ed1fb9f9351@syzkaller.appspotmail.com
-> 
->  __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
->  invoke_syscall arch/arm64/kernel/syscall.c:52 [inline]
->  el0_svc_common+0x138/0x220 arch/arm64/kernel/syscall.c:142
->  do_el0_svc+0x48/0x140 arch/arm64/kernel/syscall.c:197
->  el0_svc+0x58/0x150 arch/arm64/kernel/entry-common.c:637
->  el0t_64_sync_handler+0x84/0xf0 arch/arm64/kernel/entry-common.c:655
->  el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:584
-> ------------[ cut here ]------------
-> kernel BUG at fs/btrfs/extent-io-tree.c:379!
+Hi,
 
-set_state_bits()
+On 5/16/24 5:11 PM, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 16.05.24 um 17:03 schrieb Hans de Goede:
+>> Hi,
+>>
+>> On 5/16/24 3:04 PM, Rafael J. Wysocki wrote:
+>>> CC Hans who has been doing the majority of the ACPI video work.
+>>>
+>>> On Thu, May 16, 2024 at 2:43 PM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>>> Commit 2fd001cd3600 ("arch: Rename fbdev header and source files")
+>>>> renames the video source files under arch/ such that they does not
+>>>> refer to fbdev any longer. The new files named video.o conflict with
+>>>> ACPI's video.ko module.
+>>> And surely nobody knew or was unable to check upfront that there was a
+>>> video.ko already in the kernel.
+>> Sorry, but nack for this change. I very deliberately kept the module-name
+>> as video when renaming the actual .c file from video.c to acpi_video.c
+>> because many people pass drivers/video/acpi_video.c module arguments
+>> on the kernel commandline using video.param=val .
+>>
+>> Try e.g. doing a duckduckgo search for 1 off:
+>>
+>> "video.only_lcd"
+>> "video.allow_duplicates"
+>> "video.brightness_switch_enabled"
+> 
+> Ok, that makes sense. I'll rename the other files.
 
-	ret = add_extent_changeset(state, bits_to_set, changeset, 1);
-	BUG_ON(ret < 0);
-	state->state |= bits_to_set;
+Great, thank you.
 
-ret is -ENOMEM (returned in register x1), known problem in general in
-the state helpers everywhere, it's hard to fix as there's little change
-of rollback.
+Regards,
+
+Hans
+
+
