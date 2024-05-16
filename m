@@ -1,49 +1,48 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0329143756;
-	Thu, 16 May 2024 09:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEE0143883;
+	Thu, 16 May 2024 09:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715851111; cv=none; b=SUMLSkSH6asEUnxxB9YA58HqSiHO4JAqyeMaFYr222eMYTt8kjeBo5tbuRjesGAFmG2svTN5z0/9vuZPlW5vrAycPsFeGgx9ftC8gKw2oIfHUJleUtKKvMxVgVM9mB1U8kmOOwW8lx5AnmygSbnSSjumQz3IKwR+itsLb69rhRo=
+	t=1715851115; cv=none; b=jIMMpKx8+wd9Iz6+lDFgdO7mSWzzId5rxuHdepfjHo4G7qJnuejG+9W2lhD3woNRer8YRhgoyhkk8C2ZMr+BebhGXyBdYbBfCevs/LA9j99Qg713l6V04GfTZSJTnsH7V+L8LEy1YspQqHp01U2jRAFA9rxHYnHYVRft1h8ExrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715851111; c=relaxed/simple;
-	bh=yooVkyDaL2ZL6kbFXQCdCRX/qDt6VZuPf6Q9SA2heEk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mMD+DqO8ciPoT41itTLrn39DKcHAgh0pB7E8F56QaXYph+uF7r0h+lHLpYzkSUD/hfb89tPOxOmTZCTQeMOQxn7zT1pRaA7eOffybgClz2Ld0omZcj4NY52kaGryVGhfOjt8+XxIucHPi30pk6/4OM1VomGqtm/UczjIdv1+ejg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BJ6ijVfB; arc=none smtp.client-ip=198.47.19.142
+	s=arc-20240116; t=1715851115; c=relaxed/simple;
+	bh=+xmkqYSCYHnosn2TGgTyqw4XPyycmmx3R2w24+K14dk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t+rO3WwJzYmQxbCdb8kw0TMuvXvunHpd2ejAaMCtHdQGl7eiEFJ8osqKs56jYhVVRuSVPrD4BMufLBMCeTJsu5pPx2CRp+axrpZrx+vEdXXLm/Orac2V5ViA0ioMDOqlpAnQ9bR//oCKQ73DIoY+KS3niIKtxKP4u/QoLr+eaHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kkZSSwwt; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BJ6ijVfB"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G9Hxma014151;
-	Thu, 16 May 2024 04:17:59 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kkZSSwwt"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G9HtNP127035;
+	Thu, 16 May 2024 04:17:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715851079;
-	bh=N8Ec913Pb8o5Y8U1og1INLrMIXbabvh3TuFbhbleDy8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=BJ6ijVfB9GOMeGEejdmAPltEQHXk8W34O/IFlkZDD/c45u7ISo60RTshrfoqZs/bU
-	 KUFeYT8YmXL9gGPAx+1TLLKkyH49WmOgKYPRZApToE/MCQQ6+5hK17piYSg1UJu9aJ
-	 WuHkumSCiW9v7RyEi4YmUweT6GkKpcod4601b6Pk=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G9Hxnp014952
+	s=ti-com-17Q1; t=1715851075;
+	bh=KvNnbS9FRbuAHdlS0fq7GDILSQs+EwKSdndASTjueQM=;
+	h=From:To:CC:Subject:Date;
+	b=kkZSSwwtywvvbc689n9Qj+qgt7x/uds36UIbSKK02826imNuELS6FCwrwQUUXymL9
+	 IZsF0OO5j68KQT6TBm6PBqQSZcI3r4+BIN5mzyiH6E1m962z8AwW4lFjfAnmZyJg6M
+	 9S2xRhYUlTR0U/uolyc9p+rbOGtMfedtmmWlPnEw=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G9HtW9009651
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 16 May 2024 04:17:59 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 16 May 2024 04:17:55 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 16
- May 2024 04:17:58 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ May 2024 04:17:54 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
  (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 16 May 2024 04:17:58 -0500
+ Frontend Transport; Thu, 16 May 2024 04:17:54 -0500
 Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G9HwBt038270;
-	Thu, 16 May 2024 04:17:58 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G9HsBY030491;
+	Thu, 16 May 2024 04:17:54 -0500
 Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44G9HvmF027568;
-	Thu, 16 May 2024 04:17:58 -0500
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44G9Hrk3027556;
+	Thu, 16 May 2024 04:17:54 -0500
 From: MD Danish Anwar <danishanwar@ti.com>
 To: Dan Carpenter <dan.carpenter@linaro.org>,
         Diogo Ivo
@@ -61,12 +60,10 @@ CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<vigneshr@ti.com>, <r-gunasekaran@ti.com>,
         Roger Quadros <rogerq@kernel.org>,
         MD Danish Anwar <danishanwar@ti.com>
-Subject: [RFC PATCH net-next 2/2] net: ti: icssg-prueth: Add multicast filtering support
-Date: Thu, 16 May 2024 14:47:52 +0530
-Message-ID: <20240516091752.2969092-3-danishanwar@ti.com>
+Subject: [RFC PATCH net-next 0/2] Add multicast filtering support for ICSSG driver
+Date: Thu, 16 May 2024 14:47:50 +0530
+Message-ID: <20240516091752.2969092-1-danishanwar@ti.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240516091752.2969092-1-danishanwar@ti.com>
-References: <20240516091752.2969092-1-danishanwar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,153 +74,49 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add multicast filtering support for ICSSG Driver.
+This series add multicast filtering support for ICSSG driver.
 
-Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
----
- drivers/net/ethernet/ti/icssg/icssg_config.c | 16 +++++--
- drivers/net/ethernet/ti/icssg/icssg_prueth.c | 50 ++++++++++++++++++--
- drivers/net/ethernet/ti/icssg/icssg_prueth.h |  3 ++
- 3 files changed, 62 insertions(+), 7 deletions(-)
+The patch 1/2 of the series introduces helper APIs needed to configure
+FDB tables maintained by firmware.
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_config.c b/drivers/net/ethernet/ti/icssg/icssg_config.c
-index 2213374d4d45..4e30bb995078 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_config.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_config.c
-@@ -318,17 +318,27 @@ static int prueth_emac_buffer_setup(struct prueth_emac *emac)
- 
- static void icssg_init_emac_mode(struct prueth *prueth)
- {
-+	u32 addr = prueth->shram.pa + VLAN_STATIC_REG_TABLE_OFFSET;
- 	/* When the device is configured as a bridge and it is being brought
- 	 * back to the emac mode, the host mac address has to be set as 0.
- 	 */
- 	u8 mac[ETH_ALEN] = { 0 };
-+	int i;
- 
- 	if (prueth->emacs_initialized)
- 		return;
- 
--	regmap_update_bits(prueth->miig_rt, FDB_GEN_CFG1,
--			   SMEM_VLAN_OFFSET_MASK, 0);
--	regmap_write(prueth->miig_rt, FDB_GEN_CFG2, 0);
-+	/* Set VLAN TABLE address base */
-+	regmap_update_bits(prueth->miig_rt, FDB_GEN_CFG1, SMEM_VLAN_OFFSET_MASK,
-+			   addr <<  SMEM_VLAN_OFFSET);
-+	/* Configure CFG2 register */
-+	regmap_write(prueth->miig_rt, FDB_GEN_CFG2, (FDB_PRU0_EN | FDB_PRU1_EN | FDB_HOST_EN));
-+
-+	prueth->vlan_tbl = prueth->shram.va + VLAN_STATIC_REG_TABLE_OFFSET;
-+	for (i = 0; i < SZ_4K - 1; i++) {
-+		prueth->vlan_tbl[i].fid = i;
-+		prueth->vlan_tbl[i].fid_c1 = 0;
-+	}
- 	/* Clear host MAC address */
- 	icssg_class_set_host_mac_addr(prueth->miig_rt, mac);
- }
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index 7c9e9518f555..bd343c4b6b57 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -417,6 +417,37 @@ const struct icss_iep_clockops prueth_iep_clockops = {
- 	.perout_enable = prueth_perout_enable,
- };
- 
-+static int icssg_prueth_mac_add_mcast(struct net_device *ndev, const u8 *addr)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	int port_mask = BIT(emac->port_id);
-+
-+	port_mask |= icssg_fdb_lookup(emac, addr, 0);
-+	icssg_fdb_add_del(emac, addr, 0, port_mask, true);
-+	icssg_vtbl_modify(emac, 0, port_mask, port_mask, true);
-+
-+	return 0;
-+}
-+
-+static int icssg_prueth_mac_del_mcast(struct net_device *ndev, const u8 *addr)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	int port_mask = BIT(emac->port_id);
-+	int other_port_mask;
-+
-+	other_port_mask = port_mask ^ icssg_fdb_lookup(emac, addr, 0);
-+
-+	icssg_fdb_add_del(emac, addr, 0, port_mask, false);
-+	icssg_vtbl_modify(emac, 0, port_mask, port_mask, false);
-+
-+	if (other_port_mask) {
-+		icssg_fdb_add_del(emac, addr, 0, other_port_mask, true);
-+		icssg_vtbl_modify(emac, 0, other_port_mask, other_port_mask, true);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * emac_ndo_open - EMAC device open
-  * @ndev: network adapter device
-@@ -526,6 +557,8 @@ static int emac_ndo_open(struct net_device *ndev)
- 
- 	prueth->emacs_initialized++;
- 
-+	__hw_addr_init(&emac->mcast_list);
-+
- 	queue_work(system_long_wq, &emac->stats_work.work);
- 
- 	return 0;
-@@ -578,6 +611,9 @@ static int emac_ndo_stop(struct net_device *ndev)
- 
- 	icssg_class_disable(prueth->miig_rt, prueth_emac_slice(emac));
- 
-+	__dev_mc_unsync(ndev, icssg_prueth_mac_del_mcast);
-+	__hw_addr_init(&emac->mcast_list);
-+
- 	atomic_set(&emac->tdown_cnt, emac->tx_ch_num);
- 	/* ensure new tdown_cnt value is visible */
- 	smp_mb__after_atomic();
-@@ -654,10 +690,15 @@ static void emac_ndo_set_rx_mode_work(struct work_struct *work)
- 		return;
- 	}
- 
--	if (!netdev_mc_empty(ndev)) {
--		emac_set_port_state(emac, ICSSG_EMAC_PORT_MC_FLOODING_ENABLE);
--		return;
--	}
-+	/* make a mc list copy */
-+
-+	netif_addr_lock_bh(ndev);
-+	__hw_addr_sync(&emac->mcast_list, &ndev->mc, ndev->addr_len);
-+	netif_addr_unlock_bh(ndev);
-+
-+	__hw_addr_sync_dev(&emac->mcast_list, ndev,
-+			   icssg_prueth_mac_add_mcast,
-+			   icssg_prueth_mac_del_mcast);
- }
- 
- /**
-@@ -746,6 +787,7 @@ static int prueth_netdev_init(struct prueth *prueth,
- 	SET_NETDEV_DEV(ndev, prueth->dev);
- 	spin_lock_init(&emac->lock);
- 	mutex_init(&emac->cmd_lock);
-+	__hw_addr_init(&emac->mcast_list);
- 
- 	emac->phy_node = of_parse_phandle(eth_node, "phy-handle", 0);
- 	if (!emac->phy_node && !of_phy_is_fixed_link(eth_node)) {
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-index 82bdad9702c3..0cad80a437e8 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-@@ -155,6 +155,9 @@ struct prueth_emac {
- 	unsigned int tx_ts_enabled : 1;
- 	unsigned int half_duplex : 1;
- 
-+	/* List for storing mutlicast addresses */
-+	struct netdev_hw_addr_list mcast_list;
-+
- 	/* DMA related */
- 	struct prueth_tx_chn tx_chns[PRUETH_MAX_TX_QUEUES];
- 	struct completion tdown_complete;
+Patch 2/2 introduces the support for multicast filtering.
+
+The driver will keep a copy of multicast addresses in emac->mcast_list.
+This list will be kept in sync with the netdev list and to add / del
+multicast address icssg_prueth_mac_add_mcast / icssg_prueth_mac_del_mcast
+APIs will be called.
+
+To add a mac_address for a port, driver need to call icssg_fdb_add_del()
+and pass the mac_address and BIT(port_id) to the API. The ICSSG firmware
+will then configure the rules and allow filtering.
+
+If a mac_address is added to port0 and the same mac_address needs to be
+added for port1, driver needs to pass BIT(port0) | BIT(port1) to the 
+icssg_fdb_add_del() API. If driver just pass BIT(port1) then the entry for
+port0 will be overwritten / lost. This is a design constraint on the
+firmware side.
+
+To overcome this in the driver, to add any mac_address for let's say portX
+driver first checks if the same mac_address is already added for any other
+port. If yes driver calls icssg_fdb_add_del() with BIT(portX) | 
+BIT(other_existing_port). If not, driver calls icssg_fdb_add_del() with 
+BIT(portX).
+
+The same thing is applicable for deleting mac_addresses as well. This
+logic is in icssg_prueth_mac_add_mcast / icssg_prueth_mac_del_mcast APIs.
+
+MD Danish Anwar (2):
+  net: ti: icssg-prueth: Add helper functions to configure FDB
+  net: ti: icssg-prueth: Add multicast filtering support
+
+ drivers/net/ethernet/ti/icssg/icssg_config.c | 186 ++++++++++++++++++-
+ drivers/net/ethernet/ti/icssg/icssg_config.h |  19 ++
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c |  50 ++++-
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h |  15 ++
+ 4 files changed, 263 insertions(+), 7 deletions(-)
+
+
+base-commit: 654de42f3fc6edc29d743c1dbcd1424f7793f63d
 -- 
 2.34.1
 
