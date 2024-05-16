@@ -1,96 +1,159 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF49D14E2F4
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1271F14D451;
+	Thu, 16 May 2024 15:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874613; cv=none; b=CIBOk+ppbmU2Wu/lXqY3vaOl1P8rTielnFYi0ATy+wPZQzrfgVBDa02S/uhEp34tl8puRjD4YHXmAHAOqQOAX5o+HkgRyQc0HPz2z9Pjx9Y5duPs4SDlGCMGFlgw+RxoUKxSaTS2T0V1k81Hna9PVfOP9PshJnuhAYJWMlws/Ec=
+	t=1715874769; cv=none; b=lzalbQu+lMWvgS4/hkpOHPG9wkI+2i8WGg8rvy6lJbU7ZRkO9L9ivPcPNYs6qYitr9gU4D0ZbWnXi2qaYbT7kdJeR/PrzWNykEPCEaaYYlGpNPsXCNiuFWAnq1CIxvNFZBug1882irsGH6prjT0ZWO8jyzNIltYEMOyEO3lBlKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874613; c=relaxed/simple;
-	bh=H+duG1DqueQNaiJfOJ95nAuqvRAmaRUvvu+Ramh+ZLQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oH8QxpGxyRjO2PYUnpmttLlQUbmbwni0ZoUxDLsTJ/UihVNNvssEdyAXmTM8wUPmXEDePh6M3AmCJs8mcGyhH5pKKBY3HKRdnxsZtE9s44Vm7v/bUa7OOiY5gHxoeYNyz4kM7evH+tNkKEMdK3CHw1U2LpD4zgAcvByDJvKEjXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fGkP5hdq; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1715874769; c=relaxed/simple;
+	bh=HBhJ5hQN2anJWMGUOx6Vs9sttUSnKDFudN14+RgVb6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RBHqLF8+stVNwMdylO/vsjoLDzqFk4/Qzta6c3mdljS7wTZ4mt4O0bCwBkyKc0gOQgYVXrPEO1ejPV6R9N0+9PDxNc/l4omA0suX+pU4AVie+Yi6X15GNz56wjTxBIjWkcV6xsv1CtC7t0iKRN9PDA0ESezTNge2gaaJcn9hmMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HNU4sLFE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WH2cdwZS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HNU4sLFE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WH2cdwZS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fGkP5hdq"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44GEOaWp017939;
-	Thu, 16 May 2024 15:49:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=2SJYwRvLgM1p+YuMewAtYH0X+LoPfzoPVQLGePMH2jw=;
- b=fGkP5hdq+qd7He736fxqmSqpcbmNzWZeu5w5ojNbP6O2qDZsVbCcxjk9rPntVUBM5aQB
- JWcYaP8PgAb94prS29FMneD3IJBSwjkxdKNiTM7MwM4CH3w9opTGHcLw3fYVC83aCSDJ
- GNV6gLOyJX6X0W6yzIm6rgBJZgwf5tDx3nHpLRg2n0qMbq8vwmdI77ZHDyzyaim/AxAU
- bo5HCVpa9yteGWaHdSbPb8LHZxR5SnVahKPZQSDi4TN1SHBZlzrKOJeCRU6dPYrzftmn
- KrQStvefzRnG/GNNoo8f7P3lZjRLBZMFAYy+FQouZbLnWNJiqh2KBFja7q54WR0SmQP8 rg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3t4ffryd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 May 2024 15:49:53 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44GF7l4C038472;
-	Thu, 16 May 2024 15:44:53 GMT
-Received: from lab61.no.oracle.com (lab61.no.oracle.com [10.172.144.82])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3y24q05rcf-1;
-	Thu, 16 May 2024 15:44:52 +0000
-From: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH] sched: Fix spelling error in comment
-Date: Thu, 16 May 2024 17:44:49 +0200
-Message-Id: <20240516154449.1154423-1-haakon.bugge@oracle.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HNU4sLFE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WH2cdwZS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HNU4sLFE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WH2cdwZS"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 036F234BAC;
+	Thu, 16 May 2024 15:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715874765;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N3UL2e/p1TdY/eJHhGlrzjKr52ojkTHWTdgQ0nWCJdk=;
+	b=HNU4sLFE6GCST/FRQieTgrdRy6N6gnbB8HkNPbVsr3F+ZhXdHkhhjUTKj+bY6VVQPL/fi3
+	GSHjicDQu4M9BSMiN/DYO80hJcv5kC9VZ5Bd8s1ndX5xPhPHOsOhD7SJbn6D0PjFxLPzmB
+	cuVjozp02h4LrfwfSTgJQSmolrhbNwM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715874765;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N3UL2e/p1TdY/eJHhGlrzjKr52ojkTHWTdgQ0nWCJdk=;
+	b=WH2cdwZSugluSKDDuxYXBvYOjKJoDvF3V3G4MG51OSmn2gveaeVQmki2OynYjlSRdOrHN4
+	1/oIZr1EPjQ+L5DQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=HNU4sLFE;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WH2cdwZS
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715874765;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N3UL2e/p1TdY/eJHhGlrzjKr52ojkTHWTdgQ0nWCJdk=;
+	b=HNU4sLFE6GCST/FRQieTgrdRy6N6gnbB8HkNPbVsr3F+ZhXdHkhhjUTKj+bY6VVQPL/fi3
+	GSHjicDQu4M9BSMiN/DYO80hJcv5kC9VZ5Bd8s1ndX5xPhPHOsOhD7SJbn6D0PjFxLPzmB
+	cuVjozp02h4LrfwfSTgJQSmolrhbNwM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715874765;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N3UL2e/p1TdY/eJHhGlrzjKr52ojkTHWTdgQ0nWCJdk=;
+	b=WH2cdwZSugluSKDDuxYXBvYOjKJoDvF3V3G4MG51OSmn2gveaeVQmki2OynYjlSRdOrHN4
+	1/oIZr1EPjQ+L5DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA95613991;
+	Thu, 16 May 2024 15:52:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iU8iNcwrRmZqDAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Thu, 16 May 2024 15:52:44 +0000
+Date: Thu, 16 May 2024 17:52:39 +0200
+From: David Sterba <dsterba@suse.cz>
+To: syzbot <syzbot+3706b1df47f2464f0c1e@syzkaller.appspotmail.com>
+Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] WARNING in btrfs_put_transaction
+Message-ID: <20240516155239.GF4449@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <000000000000d1495205eeb58712@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=934 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405160111
-X-Proofpoint-ORIG-GUID: 3CGYJ_gbo_9KH80SOPym7z_0FaUaA_gZ
-X-Proofpoint-GUID: 3CGYJ_gbo_9KH80SOPym7z_0FaUaA_gZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000d1495205eeb58712@google.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.58 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=8d01b6e3197974dd];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	BAYES_HAM(-0.71)[83.50%];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[3706b1df47f2464f0c1e];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[syzkaller.appspot.com:url]
+X-Rspamd-Queue-Id: 036F234BAC
+X-Spam-Flag: NO
+X-Spam-Score: 0.58
+X-Spamd-Bar: /
 
-Fix minor spelling error in comment.
+On Wed, Nov 30, 2022 at 11:58:38AM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    644e9524388a Merge tag 'for-v6.1-rc' of git://git.kernel.o..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=134bee03880000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8d01b6e3197974dd
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3706b1df47f2464f0c1e
+> compiler:       Debian clang version 13.0.1-++20220126092033+75e33f71c2da-1~exp1~20220126212112.63, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1476f2c3880000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e6e3c9880000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/0968428e17b4/disk-644e9524.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/fd4c3bfd0777/vmlinux-644e9524.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/ee4571f27f1c/bzImage-644e9524.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/68219d51df73/mount_0.gz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3706b1df47f2464f0c1e@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 3706 at fs/btrfs/transaction.c:132 btrfs_put_transaction+0x377/0x3d0
 
-Fixes: cfb837e84331 ("mm: document memalloc_noreclaim_save() and memalloc_pin_save()")
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
----
- include/linux/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That was an injected ENOMEM that then hit a transaction abort, we used
+to print a full trace on that but it's been silenced.
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 3c2abbc587b49..61a6019de06c6 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1633,7 +1633,7 @@ extern struct pid *cad_pid;
- #define PF_NOFREEZE		0x00008000	/* This thread should not be frozen */
- #define PF__HOLE__00010000	0x00010000
- #define PF_KSWAPD		0x00020000	/* I am kswapd */
--#define PF_MEMALLOC_NOFS	0x00040000	/* All allocations inherit GFP_NOFS. See memalloc_nfs_save() */
-+#define PF_MEMALLOC_NOFS	0x00040000	/* All allocations inherit GFP_NOFS. See memalloc_nofs_save() */
- #define PF_MEMALLOC_NOIO	0x00080000	/* All allocations inherit GFP_NOIO. See memalloc_noio_save() */
- #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
- 						 * I am cleaning dirty pages from some other bdi. */
--- 
-2.39.3
-
+#syz fix: btrfs: don't print stack trace when transaction is aborted due to ENOMEM
