@@ -1,297 +1,80 @@
-Received: from aer-iport-6.cisco.com (aer-iport-6.cisco.com [173.38.203.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484D41586DB;
-	Thu, 16 May 2024 19:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.38.203.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED5A158847
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 19:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886328; cv=none; b=VpeRX2+8Y68W97H1DJzVB1FgZRForVf3dYAm2Y/l79aGXf03WOWWbQUuWzr2mxIKlqJRzXPUjfVcbiLzA4jtiF85+m71F3zvKTlSAdDKIPR8Eyvys7oBYfIju5QFpxIzzW0Hw6MHhhIArDkRc4XM0SP58Izx1Bbj5FpMtApnp50=
+	t=1715886348; cv=none; b=BQRFgBR0ZDMEukxt9y3dvy+lyw31rAj6Oa15HDFhRXuV0W7FIBDneFUqsEZsgGAnkdc9zXksbb2tu9009XxsAigcr73rfKa1OGeeuwbU3l3MwYIEx6dRb3jU9UJ/CkzQFDjobOwU/zgvrqJzrbs65xNvGYTZQo8iwehKS6i0/hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715886328; c=relaxed/simple;
-	bh=ivMYgIYWIJYUOpRQp9sC48jKIyVBnsdndwyo/5V1fdw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZY0qpLU8OBym6+EbGpX8HxS7uuEuHsWGWCteR4S6Cwx0VS2kosGGUshvfJmpgcwoodcooIHlDy+KkPSCfUDK2es3Lq8oXLdsN+Kaji7qNI2kbc1R1LpPHotJhedXd8GV9Sb9t6QCtODoYcE/j472f6MZfATKLT3RVw767mB7XGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=QeEAS47O; arc=none smtp.client-ip=173.38.203.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1715886348; c=relaxed/simple;
+	bh=H0Rlu7T3RgrJmIMBSQaKaUwNMaaEBGXcNd8GDQEoea0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oh+w916clHETdkagt7XYkBmoR2u6LKPRYhq5RnS7KP7Lg7611mOAEWQ+YbdohAqFu5tB1pOV9xPgaAadPExkP5JN7ovKVI3ij5HNqUyGfgKAsZMsZFw2Xt21jpxfAYPlZDYF5FrVJyN7VWSXHvJZbIJACU9s1foH8E/Yc8GIR1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jfksygcy; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="QeEAS47O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfksygcy"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5a7d28555bso405003966b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=10222; q=dns/txt;
-  s=iport; t=1715886326; x=1717095926;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=r1r9rd3KeEvtlJHyqBIHLSruG9tMof1Km6W29D4ICag=;
-  b=QeEAS47ObBHz5ssKohIDUcnuIoi36QTrVGYGOTnnlgzy1lCZ1biXDbsB
-   aImmhATQcpLfuo84Ot9yeKSkh057dQg7knAYNCqreT8x/UG9djRCjbHsF
-   QgGCzm4M4J27gDedopZocUFcSBfv3l0gtIQz1Dy310Sjho2SCeMqUnRW+
-   0=;
-X-CSE-ConnectionGUID: RoOBx6bTTeS67jNRJTcCCg==
-X-CSE-MsgGUID: SM4doMEZR8O+f5sjHbTXBQ==
-X-IronPort-AV: E=Sophos;i="6.08,165,1712620800"; 
-   d="scan'208";a="10016315"
-Received: from aer-iport-nat.cisco.com (HELO aer-core-3.cisco.com) ([173.38.203.22])
-  by aer-iport-6.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 19:04:23 +0000
-Received: from localhost (ams3-vpn-dhcp4879.cisco.com [10.61.83.14])
-	(authenticated bits=0)
-	by aer-core-3.cisco.com (8.15.2/8.15.2) with ESMTPSA id 44GJ4Nig017911
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 16 May 2024 19:04:23 GMT
-From: Ariel Miculas <amiculas@cisco.com>
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        tycho@tycho.pizza, brauner@kernel.org, viro@zeniv.linux.org.uk,
-        ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
-        shallyn@cisco.com, Alice Ryhl <aliceryhl@google.com>,
-        Benno Lossin <benno.lossin@proton.me>,
-        Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Ariel Miculas <amiculas@cisco.com>
-Subject: [RFC PATCH v3 18/22] rust: add improved version of `ForeignOwnable::borrow_mut`
-Date: Thu, 16 May 2024 22:03:41 +0300
-Message-Id: <20240516190345.957477-19-amiculas@cisco.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240516190345.957477-1-amiculas@cisco.com>
-References: <20240516190345.957477-1-amiculas@cisco.com>
+        d=gmail.com; s=20230601; t=1715886345; x=1716491145; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H0Rlu7T3RgrJmIMBSQaKaUwNMaaEBGXcNd8GDQEoea0=;
+        b=jfksygcyo/DBplAECXXb+q10PQt9V486qrKOOo5FmftPrfV8T0QdHhEf0hU/FH+HAW
+         khfN4lvVZLnUAkgD7Jtyxg+/832bPv9vdxeaW6fSRtIC6Ll7Wsgrzin7kumimc64uKnD
+         eZ7Pirxt/hi1yy8MhS/O2j8Vs1pMZJrixtO2skLUJpIQeAEBBzgELAH9+u+cHyv9Ks4Z
+         7hDxOSCP0fEhc9Uq6syfVkek3KeO6WEAo4FfrgCLesYv763imTeGaDtJXJzJb6gzIUCh
+         kmzKAMuqiJ3YR1/6MVGzsj/nVFfOGrUxev4+V+Fez3S9SqmoG0Lxd9Qz8nA7i+Ae/4on
+         iD/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715886345; x=1716491145;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H0Rlu7T3RgrJmIMBSQaKaUwNMaaEBGXcNd8GDQEoea0=;
+        b=EIySCm0IrMRp4VAu0OUUUgdNzuV6HCUocU7yfqyAg7pZJRpr/OTpgAR0pAzckGwAIB
+         iO4yXbPoPlMYQ57c3ND5XQWoGNj3KcEPwv+cN3vteoRANx5zrcK4LOJGY/G+jFuOIhaK
+         rhH9gFrC5msvMpuK77YcKNJGAL3SnDSXSRal8hATRI81qhjEFi2QDBE58dxpjwxGgh8R
+         R5laNnzELpUA0w0yY2/PVMeTtVyXfQXHW2bLw+/f+6OaWshBEc5a7XYYbzTm7U7ey3sM
+         9L75WMsebMtNa2ywdSyS2doT9Rdj8HakRocfUAZILqYYpK1U1x2W3KIMUzOl6PyOSRpD
+         P+Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNLK+GrO6jsMix9dkr969kAsIVaTbYpA34wOM2LYT+bhwtFEHKuMD5H9qwJY67N8r2acwLiipIr9X9xly0vjlqYI7odE2SU0+zkdzE
+X-Gm-Message-State: AOJu0Yz1x1Nf2cvtPMBQvFFdNBQROElWULu2LR7c3jsWtcvb52t/PnvK
+	zugsvv+3OJqb1AsBIb0nNqJ2wnNaueMGmcUqC5PbuTzJBxW6/NLlOgPa
+X-Google-Smtp-Source: AGHT+IHV4zgBqPYSGcR0wfBH+SKzI7addG848AC+IwEJEiE+TDodxh4tOqDT2eE/7x188w9EhixXyQ==
+X-Received: by 2002:a17:907:1118:b0:a59:c5c2:a320 with SMTP id a640c23a62f3a-a5a2d581b19mr1308915666b.23.1715886345355;
+        Thu, 16 May 2024 12:05:45 -0700 (PDT)
+Received: from p183 ([46.53.249.88])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01968sm1013001566b.166.2024.05.16.12.05.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 12:05:44 -0700 (PDT)
+Date: Thu, 16 May 2024 22:05:42 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Edward Liaw <edliaw@google.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 45/66] selftests/proc: Drop define _GNU_SOURCE
+Message-ID: <4bbc6001-bafe-4db9-83fe-e03ddce1eb26@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-User: amiculas@cisco.com
-X-Outbound-SMTP-Client: 10.61.83.14, ams3-vpn-dhcp4879.cisco.com
-X-Outbound-Node: aer-core-3.cisco.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-From: Alice Ryhl <aliceryhl@google.com>
+> --- a/tools/testing/selftests/proc/proc-empty-vm.c
+> +++ b/tools/testing/selftests/proc/proc-empty-vm.c
 
-Previously, the `ForeignOwnable` trait had a method called `borrow_mut`
-that was intended to provide mutable access to the inner value. However,
-the method accidentally made it possible to change the address of the
-object being modified, which usually isn't what we want. (And when we
-want that, it can be done by calling `from_foreign` and `into_foreign`,
-like how the old `borrow_mut` was implemented.)
+> -#undef _GNU_SOURCE
+> -#define _GNU_SOURCE
 
-In this patch, we introduce an alternate definition of `borrow_mut` that
-solves the previous problem. Conceptually, given a pointer type `P` that
-implements `ForeignOwnable`, the `borrow_mut` method gives you the same
-kind of access as an `&mut P` would, except that it does not let you
-change the pointer `P` itself.
+No! Don't do this. It makes individual test program non-standalone.
 
-This is analogous to how the existing `borrow` method provides the same
-kind of access to the inner value as an `&P`.
+Right now you can copy it to some other machine which triggers test
+fauilure, compile and start debugging instead of remembering which
+stupid compile flags it requires.
 
-Note that for types like `Arc`, having an `&mut Arc<T>` only gives you
-immutable access to the inner `T`. This is because mutable references
-assume exclusive access, but there might be other handles to the same
-reference counted value, so the access isn't exclusive. The `Arc` type
-implements this by making `borrow_mut` return the same type as `borrow`.
-
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20230710074642.683831-1-aliceryhl@google.com
-Signed-off-by: Ariel Miculas <amiculas@cisco.com>
----
- rust/kernel/sync/arc.rs | 25 +++++++----
- rust/kernel/types.rs    | 93 ++++++++++++++++++++++++++++++-----------
- 2 files changed, 86 insertions(+), 32 deletions(-)
-
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index 3673496c2363..9023479281f0 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -356,26 +356,35 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
- 
- impl<T: 'static> ForeignOwnable for Arc<T> {
-     type Borrowed<'a> = ArcBorrow<'a, T>;
-+    // Mutable access to the `Arc` does not give any extra abilities over
-+    // immutable access.
-+    type BorrowedMut<'a> = ArcBorrow<'a, T>;
- 
-     fn into_foreign(self) -> *const core::ffi::c_void {
-         ManuallyDrop::new(self).ptr.as_ptr() as _
-     }
- 
-+    unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
-+        // SAFETY: By the safety requirement of this function, we know that `ptr` came from
-+        // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
-+        // holds a reference count increment that is transferrable to us.
-+        unsafe { Self::from_inner(NonNull::new_unchecked(ptr as _)) }
-+    }
-+
-     unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> ArcBorrow<'a, T> {
-         // SAFETY: By the safety requirement of this function, we know that `ptr` came from
-         // a previous call to `Arc::into_foreign`.
--        let inner = NonNull::new(ptr as *mut ArcInner<T>).unwrap();
-+        let inner = unsafe { NonNull::new_unchecked(ptr as *mut ArcInner<T>) };
- 
--        // SAFETY: The safety requirements of `from_foreign` ensure that the object remains alive
--        // for the lifetime of the returned value.
-+        // SAFETY: The safety requirements ensure that we will not give up our
-+        // foreign-owned refcount while the `ArcBorrow` is still live.
-         unsafe { ArcBorrow::new(inner) }
-     }
- 
--    unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
--        // SAFETY: By the safety requirement of this function, we know that `ptr` came from
--        // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
--        // holds a reference count increment that is transferrable to us.
--        unsafe { Self::from_inner(NonNull::new(ptr as _).unwrap()) }
-+    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> ArcBorrow<'a, T> {
-+        // SAFETY: The safety requirements for `borrow_mut` are a superset of the safety
-+        // requirements for `borrow`.
-+        unsafe { Self::borrow(ptr) }
-     }
- }
- 
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 4d8f02671e0b..17b66d6187ae 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -20,31 +20,25 @@
- /// This trait is meant to be used in cases when Rust objects are stored in C objects and
- /// eventually "freed" back to Rust.
- pub trait ForeignOwnable: Sized {
--    /// Type of values borrowed between calls to [`ForeignOwnable::into_foreign`] and
--    /// [`ForeignOwnable::from_foreign`].
-+    /// Type used to immutably borrow a value that is currently foreign-owned.
-     type Borrowed<'a>;
- 
-+    /// Type used to mutably borrow a value that is currently foreign-owned.
-+    type BorrowedMut<'a>;
-+
-     /// Converts a Rust-owned object to a foreign-owned one.
-     ///
-     /// The foreign representation is a pointer to void.
-     fn into_foreign(self) -> *const core::ffi::c_void;
- 
--    /// Borrows a foreign-owned object.
--    ///
--    /// # Safety
--    ///
--    /// `ptr` must have been returned by a previous call to [`ForeignOwnable::into_foreign`] for
--    /// which a previous matching [`ForeignOwnable::from_foreign`] hasn't been called yet.
--    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> Self::Borrowed<'a>;
--
-     /// Converts a foreign-owned object back to a Rust-owned one.
-     ///
-     /// # Safety
-     ///
--    /// `ptr` must have been returned by a previous call to [`ForeignOwnable::into_foreign`] for
--    /// which a previous matching [`ForeignOwnable::from_foreign`] hasn't been called yet.
--    /// Additionally, all instances (if any) of values returned by [`ForeignOwnable::borrow`] for
--    /// this object must have been dropped.
-+    /// The provided pointer must have been returned by a previous call to [`into_foreign`], and it
-+    /// must not be passed to `from_foreign` more than once.
-+    ///
-+    /// [`into_foreign`]: Self::into_foreign
-     unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self;
- 
-     /// Tries to convert a foreign-owned object back to a Rust-owned one.
-@@ -65,40 +59,91 @@ unsafe fn try_from_foreign(ptr: *const core::ffi::c_void) -> Option<Self> {
-             unsafe { Some(Self::from_foreign(ptr)) }
-         }
-     }
-+
-+    /// Borrows a foreign-owned object immutably.
-+    ///
-+    /// This method provides a way to access a foreign-owned value from Rust immutably. It provides
-+    /// you with exactly the same abilities as an `&Self` when the value is Rust-owned.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The provided pointer must have been returned by a previous call to [`into_foreign`], and if
-+    /// the pointer is ever passed to [`from_foreign`], then that call must happen after the end of
-+    /// the lifetime 'a.
-+    ///
-+    /// [`into_foreign`]: Self::into_foreign
-+    /// [`from_foreign`]: Self::from_foreign
-+    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> Self::Borrowed<'a>;
-+
-+    /// Borrows a foreign-owned object mutably.
-+    ///
-+    /// This method provides a way to access a foreign-owned value from Rust mutably. It provides
-+    /// you with exactly the same abilities as an `&mut Self` when the value is Rust-owned, except
-+    /// that this method does not let you swap the foreign-owned object for another. (That is, it
-+    /// does not let you change the address of the void pointer that the foreign code is storing.)
-+    ///
-+    /// Note that for types like [`Arc`], an `&mut Arc<T>` only gives you immutable access to the
-+    /// inner value, so this method also only provides immutable access in that case.
-+    ///
-+    /// In the case of `Box<T>`, this method gives you the ability to modify the inner `T`, but it
-+    /// does not let you change the box itself. That is, you cannot change which allocation the box
-+    /// points at.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The provided pointer must have been returned by a previous call to [`into_foreign`], and if
-+    /// the pointer is ever passed to [`from_foreign`], then that call must happen after the end of
-+    /// the lifetime 'a.
-+    ///
-+    /// The lifetime 'a must not overlap with the lifetime of any other call to [`borrow`] or
-+    /// `borrow_mut` on the same object.
-+    ///
-+    /// [`into_foreign`]: Self::into_foreign
-+    /// [`from_foreign`]: Self::from_foreign
-+    /// [`borrow`]: Self::borrow
-+    /// [`Arc`]: crate::sync::Arc
-+    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> Self::BorrowedMut<'a>;
- }
- 
- impl<T: 'static> ForeignOwnable for Box<T> {
-     type Borrowed<'a> = &'a T;
-+    type BorrowedMut<'a> = &'a mut T;
- 
-     fn into_foreign(self) -> *const core::ffi::c_void {
-         Box::into_raw(self) as _
-     }
- 
--    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> &'a T {
--        // SAFETY: The safety requirements for this function ensure that the object is still alive,
--        // so it is safe to dereference the raw pointer.
--        // The safety requirements of `from_foreign` also ensure that the object remains alive for
--        // the lifetime of the returned value.
--        unsafe { &*ptr.cast() }
--    }
--
-     unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
-         // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
-         // call to `Self::into_foreign`.
-         unsafe { Box::from_raw(ptr as _) }
-     }
-+
-+    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> &'a T {
-+        // SAFETY: The safety requirements of this method ensure that the object remains alive and
-+        // immutable for the duration of 'a.
-+        unsafe { &*ptr.cast() }
-+    }
-+
-+    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> &'a mut T {
-+        // SAFETY: The safety requirements of this method ensure that the pointer is valid and that
-+        // nothing else will access the value for the duration of 'a.
-+        unsafe { &mut *ptr.cast_mut().cast() }
-+    }
- }
- 
- impl ForeignOwnable for () {
-     type Borrowed<'a> = ();
-+    type BorrowedMut<'a> = ();
- 
-     fn into_foreign(self) -> *const core::ffi::c_void {
-         core::ptr::NonNull::dangling().as_ptr()
-     }
- 
--    unsafe fn borrow<'a>(_: *const core::ffi::c_void) -> Self::Borrowed<'a> {}
--
-     unsafe fn from_foreign(_: *const core::ffi::c_void) -> Self {}
-+
-+    unsafe fn borrow<'a>(_: *const core::ffi::c_void) -> Self::Borrowed<'a> {}
-+    unsafe fn borrow_mut<'a>(_: *const core::ffi::c_void) -> Self::BorrowedMut<'a> {}
- }
- 
- /// Runs a cleanup function/closure when dropped.
--- 
-2.34.1
-
+NAK for /proc, sorry. I'd like to keep #define.
