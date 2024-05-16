@@ -1,65 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6268214388A;
-	Thu, 16 May 2024 10:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF92F143898
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715855078; cv=none; b=jdjB3/qJ3gqmzdu9UWe46CFKapTNJylQ0yt76hKRGMrp2pjVZDAE/UNOtitzHgJ2JXx6HVGu6RyxXtvE46ePsKHxP1RgsbYlV1XG4II5MwfqTP9BdMHRKTEcKhbKomb1sN0TScdFpK13MFG/yNy59l7W2HOiIQnlTk2jXfQIyfA=
+	t=1715855155; cv=none; b=FfCqE6ocz6XcFdFP0znBpXSM8bWM40Eg8ulx1BcI5imdqnIWK5cdavvUmwDup5Zo2BaoIifIfQDigyr2vlYz2RjBJwDai5dKf6IwOR//udPZE4g/qg2dTfK0wCLe37un+RhRPDJ3BKkAOezBnPSGzTQ6cN+vWZuyPatkDdb8G7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715855078; c=relaxed/simple;
-	bh=tbwbFxoda4n29a6HTG7mVjGRU4BB+ruKHjA9NThZsSE=;
+	s=arc-20240116; t=1715855155; c=relaxed/simple;
+	bh=IPtgZuups6F+a4Fqarl6T/Cojz57fikXb4I5WZNsdb4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaDKWbv8+lx87L+BCYhjC3dqj9J+7pOY8rRpJCdUdxEOFc8YPuVIsKq/4oj6m+a3kLgQaY2EMnzMYhLraHRPZO/TLMIIvhlVJCJdTr5RrHTpxujE+fh9lvC16Eb9PNgzy6ORZ/uk+Cz2STToQ/DQ4JeNHH2EOsSS9qjt5TAg7+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNoQCKO4; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNoQCKO4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715855076; x=1747391076;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tbwbFxoda4n29a6HTG7mVjGRU4BB+ruKHjA9NThZsSE=;
-  b=fNoQCKO4S7KE8+CJnN4Orp7L2Zf+kax2inBAFVmiswxNrWwRjo9Qh+uV
-   9O2ab6PHKJC4KJaPM/JuKWFwYRxt9V9dlC5sU7LxsjrPG3BnwmkVafPCG
-   PiNaQvbnTjk/WXuaM5w8FbAIVmaUFFrZTRfx+PO6HPcrOQR4Aa40K9czg
-   GadY66ZLqNsGs98USC8vtiyk6gVBqE4Usrb/DjFmdV1hbgr1FIhHslxYu
-   l7rCPcWC9eiFfEoQ+NlWqPWR7AiGfG/fpX/KjhM5JzpDfMHVG+Npe3uGb
-   4sf7NcC5gTN2fj7WJNB77arlP4agMzKCW7hOaC+oTxSvNuGQCyJIjL8V0
-   A==;
-X-CSE-ConnectionGUID: pIC2bv+XS1i1b55+au/Pow==
-X-CSE-MsgGUID: MCucpIL0Ssm3qXKr18mv4w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12165492"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="12165492"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 03:24:35 -0700
-X-CSE-ConnectionGUID: pn2rNk/IQu6InMufb0x/nQ==
-X-CSE-MsgGUID: cY4qZzFWSTmfooYOvVGIBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="35818983"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 03:24:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s7YHn-000000080Wy-0cni;
-	Thu, 16 May 2024 13:24:31 +0300
-Date: Thu, 16 May 2024 13:24:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Armin Wolf <w_armin@gmx.de>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 0/2] ACPI: EC: Install EC address space handler at the
- namespace root
-Message-ID: <ZkXe3m0DwToiixam@smile.fi.intel.com>
-References: <12437901.O9o76ZdvQC@kreacher>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dY4S/2PZ2o5pze4p73fo9iuKBs0+SlvdjzPFocG5LEk/g9+LMWRWrdmOzNFmbGNdrsuCesqSiWW2y5zIa7T8T+QFVcBmMlRLNPPeaTMFiGhft+R+q5fqKFK6xbx9F/whoYwmGUPIs3DsMHSIQDyx3CoFN6o2uzKVlQjL5Ql6V/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1s7YIz-0003ji-7V; Thu, 16 May 2024 12:25:45 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sha@pengutronix.de>)
+	id 1s7YIx-001h9K-52; Thu, 16 May 2024 12:25:43 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1s7YIx-00Epwj-0D;
+	Thu, 16 May 2024 12:25:43 +0200
+Date: Thu, 16 May 2024 12:25:43 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] mtd: nand: mxc_nand: implement exec_op
+Message-ID: <ZkXfJ6n-06YqOr39@pengutronix.de>
+References: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
+ <20240514-mtd-nand-mxc-nand-exec-op-v3-2-3e6f45fd3d82@pengutronix.de>
+ <20240516103214.57a8ce33@xps-13>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,29 +47,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12437901.O9o76ZdvQC@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240516103214.57a8ce33@xps-13>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2024 at 09:39:15PM +0200, Rafael J. Wysocki wrote:
-> Hi Everyone,
+On Thu, May 16, 2024 at 10:32:14AM +0200, Miquel Raynal wrote:
+> Hi Sascha,
 > 
-> This is an update of
+> > +static const struct nand_op_parser mxcnd_op_parser = NAND_OP_PARSER(
+> > +	NAND_OP_PARSER_PATTERN(mxcnd_do_exec_op,
+> > +			       NAND_OP_PARSER_PAT_CMD_ELEM(false),
+> > +			       NAND_OP_PARSER_PAT_ADDR_ELEM(true, 7),
+> > +			       NAND_OP_PARSER_PAT_CMD_ELEM(true),
+> > +			       NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
+> > +			       NAND_OP_PARSER_PAT_DATA_IN_ELEM(true, MAX_DATA_SIZE)),
 > 
-> https://lore.kernel.org/linux-acpi/5787281.DvuYhMxLoT@kreacher/
-> 
-> which was a follow up for the discussion in:
-> 
-> https://lore.kernel.org/linux-acpi/CAJZ5v0hiXdv08PRcop7oSYqgr_g5rwzRTj7HgdNCCGjXeV44zA@mail.gmail.com/T/#t
-> 
-> Patch [1/2] has been updated to avoid possible issues related to
-> systems with defective platform firmware and patch [2/2] is a resend
-> with a couple of tags added.
+> CMD, ADDR, CMD, DATA is the RNDOUT pattern. So it is now working fine?
 
-FWIW, LGTM (and I followed the discussions around this)
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Yes, RNDOUT is working now.
+
+> Or did you forget to adapt the patterns to your use case?
+
+Although it looks like the patterns from the pl35x-nand-controller.c,
+there is one slight difference. The 'false' in the NAND_OP_PARSER_PAT_CMD_ELEM
+above has the effect that a plain NAND_OP_PARSER_PAT_DATA_IN_ELEM is
+disallowed.
+
+Sascha
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
