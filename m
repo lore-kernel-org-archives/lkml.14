@@ -1,108 +1,154 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D768E145B0B;
-	Thu, 16 May 2024 12:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739F7145FF9;
+	Thu, 16 May 2024 12:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715864167; cv=none; b=NajncSzDUgberqX7Uk1ZPg2uIBje+1oKYOhFYqFP/9MS+x/bPmgZSOHCaSZL3VRAfhAClgapxYUYLhka6de4u5Ywi1aFq28NZFIgGFwzC6lyPprMotzIjXu7sDcZ7KBRVdEZyRXTG00kEfxavhk8pqT7uDYlOmteA1RAk70/o+k=
+	t=1715864214; cv=none; b=Pc+EeNU6FR3HLzCsZcuxD7bdl5l11wSDaQYeJ5WRFzAj0HvuMfkv+kCrzdx4prxDAqD8q8dUPWxOG5FNhFlwdFYdUeEpO9ea3bLQREDMfvin+avKr8iNr3wncvynIagjpv2EzJCizXbbyjn5xnjy5kXtfTKsxrR1DIMKYVtefAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715864167; c=relaxed/simple;
-	bh=kj/YzGnjcUNCYwHQlT5y/Pxy3SVtMbkxcvch1Cof2cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YuQhg05Yi4+eHOYDBGEsn4hGrP8s17ScTr85XY/tjZANl9JQDAnEDQJjiZp1nJBkngOmadInI06HE61Cftcsi7M0aBJtkZYtXmkRJMogURmQMUMotWIpkvZTXNKbA40Qk6MIiwqKEKyGXBrCD/AhM7MJBg8VAY7mLBBTzhKhzx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 09B0E1C0081; Thu, 16 May 2024 14:56:04 +0200 (CEST)
-Date: Thu, 16 May 2024 14:56:03 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	richard.weiyang@gmail.com, masahiroy@kernel.org, ojeda@kernel.org
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/244] 6.1.91-rc3 review
-Message-ID: <ZkYCYxoxqrwlVSI5@duo.ucw.cz>
-References: <20240516091232.619851361@linuxfoundation.org>
+	s=arc-20240116; t=1715864214; c=relaxed/simple;
+	bh=/yLPfI7mbEHwDzLhz+Nf7UUcyTKCIhrbHMaNZgA2hyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TmkIyoaXLABhL7Sl/ulIoF70NlsMAviVqV6pt+SkQJEaaBaArBE1/SWQOjfec/YwtF3+OkIaWxUh/c9Y6DG8+dSB4yWwT7JyV7FH9avJ/16YmYQ/YsC5CerC/G5UyhOWqrhPIvw4/P+eVMfD+INeXFT6OlT8AFCdmzvtTQUhpqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T28cPLYI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T28cPLYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0623DC4AF08;
+	Thu, 16 May 2024 12:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715864214;
+	bh=/yLPfI7mbEHwDzLhz+Nf7UUcyTKCIhrbHMaNZgA2hyc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=T28cPLYI1afhksw1uALFMKWyLsVJ7U7GI/1SAXClzgA8+Rna71l/jFkbIQ9CaC+RB
+	 hyPcKarpM2SfoQJkpJUu9UF6e7TkpJ4CGqnvrXVxzKsEToDOrSfPLTFA3g/imNzavo
+	 VHtBVVJskk8hAIGqilTzeW6oDX8plICo882++2glkeJu78KEJoNKxJ+YIonC6hsB56
+	 Dguz/2JikGMjocC/hF8gR08dCfcEZ3HZLRtoJY31ukMoiyVdNkawDwpqyJU1arKsJH
+	 28atDNvqX3OnXChcCYS3M7l5JYRv2kjxmtAaiJX1RIrmD2pa+u0UyFX8mF6kDBFLTS
+	 +XG18SAM7Mh0g==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c9bcd57524so40432b6e.3;
+        Thu, 16 May 2024 05:56:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUc76wnPi5vbGVgKAKcc1da4Ri7TL3pTGHVnhzlZdE53m1XM0J9q3bEyAcjX36wV7rYAyrT1CI0BpEv/DaL/Y0dtWcQQyIPFbhI5SWljaPyQYFZbvuSAM5gODFEvUy2cwADJAVSg6M=
+X-Gm-Message-State: AOJu0YyeOpJyK//0Rwx95B0faupJFtJDn/sbMSLq9zc/7rhLDWMgdO0o
+	t+oT1QPzYWjlEhNL0TQosQELMrRsSVffS7y6EVA2/dLDQAeqUjZFMRe59gibcRLOqDuX38xuM4Z
+	qkAP2R6JC0DqX1/DJlb78s4Bq04k=
+X-Google-Smtp-Source: AGHT+IFiaoSyd28mKG2dn5+WVYPeWD4D4Jm2o+HpZo1vMtBFQ8BAGcBHHQqm6SlvV5SxjGgnt0I4ZeuhJjzth0Pztpg=
+X-Received: by 2002:a05:6870:5246:b0:23c:350c:f157 with SMTP id
+ 586e51a60fabf-24172fc1a06mr24795650fac.4.1715864213216; Thu, 16 May 2024
+ 05:56:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="87sHDbxo2I/u6+uI"
-Content-Disposition: inline
-In-Reply-To: <20240516091232.619851361@linuxfoundation.org>
-
-
---87sHDbxo2I/u6+uI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <13518388.uLZWGnKmhe@kreacher> <3304112.44csPzL39Z@kreacher>
+ <39e15eef-f7fd-4e16-bc74-7f1c6820fe6a@arm.com> <CAJZ5v0gZJE6jfa8_9LgDdjYotY+crLH1JJXHdAWREPz4SJ305A@mail.gmail.com>
+ <65a94273-7fa5-4352-a24b-a08a1f244f99@linaro.org> <CAJZ5v0g5ejtjYQ9t1O3tW+akmu_pWav9L=-Th5f6LYac7EG3Lw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0g5ejtjYQ9t1O3tW+akmu_pWav9L=-Th5f6LYac7EG3Lw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 16 May 2024 14:56:42 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jUW2ToCS7ZGjPFPnvTKHPLEw+4=FURDoBGzw0R51DgNA@mail.gmail.com>
+Message-ID: <CAJZ5v0jUW2ToCS7ZGjPFPnvTKHPLEw+4=FURDoBGzw0R51DgNA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] thermal: sysfs: Trigger zone temperature updates
+ on sysfs reads
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Thu, May 16, 2024 at 12:02=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
+>
+> Hi Daniel,
+>
+> On Thu, May 16, 2024 at 11:46=E2=80=AFAM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+> >
+> >
+> > Hi Rafael,
+> >
+> > On 16/05/2024 11:04, Rafael J. Wysocki wrote:
+> > > Hi Lukasz,
+> > >
+> > > On Mon, May 13, 2024 at 9:11=E2=80=AFAM Lukasz Luba <lukasz.luba@arm.=
+com> wrote:
+> > >>
+> > >> Hi Rafael,
+> > >>
+> > >> On 5/10/24 15:13, Rafael J. Wysocki wrote:
+> > >>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >>>
+> > >>> Reading the zone temperature via sysfs causes the driver callback t=
+o
+> > >>> be invoked, but it does not cause the thermal zone object to be upd=
+ated.
+> > >>>
+> > >>> This is problematic if the zone temperature read via sysfs differs =
+from
+> > >>> the temperature value stored in the thermal zone object as it may c=
+ause
+> > >>> the kernel and user space to act against each other in some cases.
+> > >>>
+> > >>> For this reason, make temp_show() trigger a zone temperature update=
+ if
+> > >>> the temperature returned by thermal_zone_get_temp() is different fr=
+om
+> > >>> the temperature value stored in the thermal zone object.
+> >
+> >
+> > The hwmon system is doing something similar and I'm not sure we want to
+> > mimic the same behavior.
+> >
+> > Just to summarize:
+> >
+> > 1. There is a polling delay set
+> >
+> > This polling delay gives the sampling rate the thermal zone is
+> > monitored. The temperature is updated at each 'delay' tick
+> >
+> > 2. There is no polling delay set
+> >
+> > The system relies on the interrupts to tell when a temperature reaches =
+a
+> > threshold.
+>
+> So this is a bit of a problem if the interrupts are not coming.
+>
+> At least from the debugfs perspective, there are "mitigation episodes"
+> that last forever if the zone temperature happens to be above a trip
+> at the system resume time, say, and is never updated afterward.
+>
+> > On the other side, if the governor is in-kernel, then we should not rea=
+d
+> > the temperature of the thermal zones because it is the job of the kerne=
+l
+> > to do that.
+> >
+> > Actually we can assume the temperature information exported to the
+> > userspace is a courtesy of the kernel when this one is managing the
+> > thermal zone.
+>
+> It is not the case right now, though, as sysfs temperature reads
+> effectively bypass the whole in-kernel thermal management.
+>
+> > If there is no governor associated to the thermal zone because there is
+> > no cooling device associated to the defined trip points, then we can
+> > assume it is up to the userspace to monitor the thermal zone.
+>
+> Well, in that case trips should not be taken into account, but they are n=
+ow.
 
-> This is the start of the stable review cycle for the 6.1.91 release.
-> There are 244 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Actually, there is always a governor associated with a thermal zone
+AFAICS.  It is set before binding any cooling devices to the thermal
+zone.
 
-> Wei Yang <richard.weiyang@gmail.com>
->     memblock tests: fix undefined reference to `early_pfn_to_nid'
+However, there are thermal zones without any cooling devices bound to
+them and they have the governor set to user_space, so it appears that
+they want to receive trip crossing notifications, but then they don't
+have a way to trigger zone temperature updates which is inconsistent.
 
-We don't have commit 6a9531c3a880 ("memblock: fix crash when reserved
-memory is not added to memory") in 6.1-stable, so we don't need this.
-
-> Wei Yang <richard.weiyang@gmail.com>
->     memblock tests: fix undefined reference to `BIT'
-
-We don't have commit commit 772dd0342727 ("mm: enumerate all gfp
-flags") in 6.1-stable, so we don't need this.
-
-> Wei Yang <richard.weiyang@gmail.com>
->     memblock tests: fix undefined reference to `panic'
-
-We don't have commit commit e96c6b8f212a ("memblock: report failures
-when memblock_can_resize is not set") in 6.1-stable, so we don't need
-this.
-
-> Masahiro Yamada <masahiroy@kernel.org>
->     kbuild: specify output names separately for each emission type from r=
-ustc
-> Masahiro Yamada <masahiroy@kernel.org>
->     kbuild: refactor host*_flags
-
-These are marked as Stable-dep-of: ded103c7eb23 ("kbuild: rust: force
-`alloc` extern to allow "empty" Rust files"), but we don't have
-ded103c7eb23 in 6.1-stable, so we should not need these.
-
-> Miguel Ojeda <ojeda@kernel.org>
->     kbuild: rust: avoid creating temporary files
-
-And since this is just a fix on "kbuild: specify output names", we can
-drop this, too.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---87sHDbxo2I/u6+uI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZkYCYwAKCRAw5/Bqldv6
-8nKKAJ9Kaa9WpGFmUXebdHdPuYwDml6gHgCgppOIs+y322ZNmeQD7bC7YfeRbYw=
-=V3Az
------END PGP SIGNATURE-----
-
---87sHDbxo2I/u6+uI--
+IMO at least for these thermal zones temp_store() should trigger a
+zone temperature update.
