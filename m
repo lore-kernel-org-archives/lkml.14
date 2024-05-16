@@ -1,57 +1,57 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA80157A5B
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 17:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E6415D5C3
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 17:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715881518; cv=none; b=ng35Lpr4pmpA7+zQ09V72N8wGBq6YyDBXxKdLgkDoqSRcqrebWWSaFMpixftDQrb/U/DiHMy4VOb4AJqSCTMtAYIOM1pX9MZL+OubLxMwclhFfNgko/uxoiT0EQitieku0PDxNMPsq2NgpIaHHIxPR7qhu5GCeKWpKlI6fqFk3k=
+	t=1715881519; cv=none; b=Y77/TJLi2+FONQGZVmCShd0Yfv3PJr0W6By1bbZzjfwJRtdouMQyLU7bTKESke4VNiRlFJnj5ixOZXQETNTIguOcbsVBi3pIrK2aE6QRNJfGpfCfnID7wdPtI6ViSwzn4xHpeOzr+LY4NlRdK0k+aOn6qAgv7+/sFofo0zriQJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715881518; c=relaxed/simple;
-	bh=IDW+XAqzMf2JCNQNrwCf4kX29FMhjfrpqeWwIrdLGXw=;
+	s=arc-20240116; t=1715881519; c=relaxed/simple;
+	bh=hGQelBUkaq/JZLSbxTsxKeLUlq22tohYzqKCLBLJTiU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lir6PDukoDbInN99JOSeVs+eFGUMNEfFikFm27VBJswk6mWiGduvWkwbFnvDK+umpzthzgHZi19dVwBtg4TgAZUzVkYWblKzOoMky728SYZQ5ElXpGNu5A2L5MDm1uoqcBvtQ3XGPTHMmYgm3j5VHWpsQa96OnT0X/YofYK3xps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffW58sF5; arc=none smtp.client-ip=209.85.166.47
+	 MIME-Version; b=lvT3mgftc57JQP0fQk2k3yBTcQVGIDmTUviUNn4yNZUcz/BPgMOm6/vfXycikY95F6b05aTwIpNJiird2CV0FbAg3uSgxK1DkdJSF9qj6s+glD54MXXTHl2GeZ7pPXROfFhU01U5jiq5T/Xc2sYdvlTMqBCwgzI0zUgMqYqhX74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSTI7V4D; arc=none smtp.client-ip=209.85.166.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffW58sF5"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7dad81110cfso63558039f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:45:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSTI7V4D"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7e1b4f96994so67090839f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715881515; x=1716486315; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715881517; x=1716486317; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zFPdE+F/gD/56eOR4FxQzgtphE4VEmnkP/G8x8J3yzs=;
-        b=ffW58sF5bH3pR/yElTjFcLkA1Q7GTgBhbZgEjGZywS4+Bb87uExvmyzhiGWn6dg8rm
-         MiMuR8H4nxkiSD/7biMMkelbltPaOwoU2Nj9VtU5LgrHWGCqnk4/N6Xxf/QUNK/E4dIW
-         VaNst4KKUGVKT+KLc9x401rcLgzWo4cOlsBWsbXqs+VFHryPOmbXYLcH3jh+IeJK3t3l
-         ETuQ33c78GWwJ6d3ll1mp3TPbMou9jfO+7NKT3Gnas3Qz++1GcAM62FsDu/PhBpFU3CJ
-         HnOllbA4WbzDDp55tS6YiCWT8rHFC2LFl/I6jykzAT37jTzo+TaD9H7M7MC9OTdV7yko
-         74HA==
+        bh=ukR4HOtDmG+aiLIkXxjNBu5JDcDw31zQRKh9uhizZeM=;
+        b=kSTI7V4DRLIQmmsPw/LcgWQ47FyLVY+4h07wKV6oSS5LEH+TV2jQxk47sgwm7eNOEC
+         JVbTlNT0jyXxXLI519Mg6E6TS1qSfmabmUsVEZHVpkxqxRI+MsDWWDjVbuEQFmRQuvcQ
+         fF6IUVdhwCd+Wdt08cc52Zu883kiQ8YeQyEqO2fBONJBJFI7VqqyGMapWhMU0CX6MR3B
+         tyaeZn6a6s9V4OWLfJ0T6pKuD1B21b3g6R/+Sy7qWfYrtADDOo3J2hmdjFsRFRroe5rE
+         VJpbzEvBUx5HIvNdwlSwYdJWKXpbRR536rKXVu3YFUmGD9jwj75nyGySY5piuCfRCsH2
+         8MBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715881515; x=1716486315;
+        d=1e100.net; s=20230601; t=1715881517; x=1716486317;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zFPdE+F/gD/56eOR4FxQzgtphE4VEmnkP/G8x8J3yzs=;
-        b=ropVBblINczPoS1ZKaEMk+AS+2q+dTML3Y9NGnDz3tgBJELg28LC7SQ8j2mTAvc1jb
-         bLJiuFdAmIr+MYgUZSlgsponFJSJ/cBai1t5hyKps6LwX89wQuUX7/l1lijIlHuTHrgY
-         zuLks1vlhLNvqFsKuUs8FKz/dWWvltDpE6sf1927rsAKZaWxgeR/miGMUg7CeJyxmX+i
-         MMHFO2MHPP7GIOR7Gc9aTwTzAB0T6FJKZfrkc3nS6jvTGOP2pv15DAlFVCKO28vWk//V
-         MPGHVaFKlMVy98eWibExrNV7lGIgBXFGqyeRBjSjg9733QiL5wGxdZoGnSD0AT20asTq
-         8Xgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGDPCr0IJWv8qA4W3s0gSzNqIYZAhDfrAHPrxiglHmRRyByG+47iMBLgRz+Z0jhS3yTdX05wThX10uL5knB1gaAlrIaCXdUQ295Xgn
-X-Gm-Message-State: AOJu0Yyb5uia2LOanBwpbfWaBr4uqZmZGwCnflp93Uzt0KcSuRs0JD0M
-	EAU7sWrUarBfeSpRv5vjm7N6R9Xyh8GZrotALnFG34HXRjV0lArO
-X-Google-Smtp-Source: AGHT+IHhwjPcza3cjyisMDtn6nSQ17rVOTRJT6FgHoSbsSj7BNYjtNHxIZaN5zg722Q4Ov58DRyqwQ==
-X-Received: by 2002:a05:6e02:218a:b0:368:efa4:bdf8 with SMTP id e9e14a558f8ab-36cc14c0c98mr242198095ab.21.1715881515664;
-        Thu, 16 May 2024 10:45:15 -0700 (PDT)
+        bh=ukR4HOtDmG+aiLIkXxjNBu5JDcDw31zQRKh9uhizZeM=;
+        b=oTexwPdo1PVUT9ajhuXvjnOZCCgUvfRqe/woNEMV6KT5ooo3iheGAds0enEs4HOTJ9
+         ECFZ4Ufzcg+kqv3RJLyKRK2s01bW9/hWZuVXCR2IuGjMVzjpVpf34cz82iQuJRo29nzt
+         +hu44fE/+v9n6lRHk40PrXZoc9bJZGljsCKRgvZTK8+8EKILCyYtOE0vwo7g+HCLzP0j
+         XiRl6t34jhtKEsuSr3mlXZ+O3uvH4Ob3maN4amb+dvDk9ika7433wwODLezl2iw1Xxxu
+         DYOk2KwoI+4e8E4uhdVcrWIE02jbRcaMJj3HbcaXmydOmM5/8RqNQYPEa9hfyO51zyHW
+         palA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9PiuKsHI00L2nO2m9d0yyuCyPWUNPsildwOtGW5qs0jhbYjMEk2YktlZ93XZhCzoLzzNS0wCc4VSZqOIP5dJ7RO4YVK0jpRwBI7rF
+X-Gm-Message-State: AOJu0YycCtuOxbG7jhY8GuQUvRoijpYq20khTUpCPXfUWTe273vdbItO
+	RRydfNqZ3XUql6RCHPEdyDsvVBSx8KZ7s+6sHV9XZYs/YLusTt9P
+X-Google-Smtp-Source: AGHT+IF+loahpwgX1qQzZzX7o852RXgHf2TH/P0vy4pdFWNAsBt/Ni5cQCu5Kzr6tBou3N9C6Q+Msw==
+X-Received: by 2002:a05:6602:1311:b0:7e1:896e:5065 with SMTP id ca18e2360f4ac-7e1b520203amr2097824439f.14.1715881517661;
+        Thu, 16 May 2024 10:45:17 -0700 (PDT)
 Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4893715057csm4273595173.80.2024.05.16.10.45.14
+        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4893715057csm4273595173.80.2024.05.16.10.45.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 10:45:15 -0700 (PDT)
+        Thu, 16 May 2024 10:45:17 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: jbaron@akamai.com,
 	gregkh@linuxfoundation.org,
@@ -70,9 +70,9 @@ Cc: ukaszb@chromium.org,
 	yanivt@google.com,
 	bleung@google.com,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v8-RESEND 31/33] drm-drivers: DRM_CLASSMAP_USE in 2nd batch of drivers, helpers
-Date: Thu, 16 May 2024 11:43:55 -0600
-Message-ID: <20240516174357.26755-32-jim.cromie@gmail.com>
+Subject: [PATCH v8-RESEND 33/33] drm-print: workaround compiler meh
+Date: Thu, 16 May 2024 11:43:57 -0600
+Message-ID: <20240516174357.26755-34-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240516174357.26755-1-jim.cromie@gmail.com>
 References: <20240516174357.26755-1-jim.cromie@gmail.com>
@@ -84,142 +84,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a DRM_CLASSMAP_USE declaration to 2nd batch of helpers and *_drv.c
-files.  For drivers, add the decl just above the module's PARAMs,
-since it identifies the "inherited" drm.debug param.
+For some reason I cannot grok, I get an unused variable 'category'
+warning/error, though the usage follows immediately.  This drops the
+local var and directly derefs in the macro-call, which somehow avoids
+the warning.
 
-Note: with CONFIG_DRM_USE_DYNAMIC_DEBUG=y, a module not also declaring
-DRM_CLASSMAP_USE will have its class'd prdbgs stuck in the initial
-(disabled, but for DEBUG) state.
-
-The stuck sites are evident in /proc/dynamic_debug/control as:
-
-   class:_UNKNOWN_ _id:N		# control's last column
-
-rather than a proper "enumeration":
-
-   class:DRM_UT_CORE
-
-TLDR: This set of updates was found by choosing M for all DRM-config
-items I found (not allmodconfig), building & modprobing them, and
-grepping "class unknown," control.  There may yet be others.
-
+commit 9fd6f61a297e ("drm/print: add drm_dbg_printer() for drm device specific printer")
+CC: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 2 ++
- drivers/gpu/drm/gud/gud_drv.c          | 2 ++
- drivers/gpu/drm/mgag200/mgag200_drv.c  | 2 ++
- drivers/gpu/drm/qxl/qxl_drv.c          | 2 ++
- drivers/gpu/drm/radeon/radeon_drv.c    | 2 ++
- drivers/gpu/drm/udl/udl_main.c         | 2 ++
- drivers/gpu/drm/vkms/vkms_drv.c        | 2 ++
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c    | 2 ++
- 8 files changed, 16 insertions(+)
+ drivers/gpu/drm/drm_print.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index e435f986cd13..066d906e3199 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -23,6 +23,8 @@
- #include <drm/drm_prime.h>
- #include <drm/drm_print.h>
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- MODULE_IMPORT_NS(DMA_BUF);
- 
- /**
-diff --git a/drivers/gpu/drm/gud/gud_drv.c b/drivers/gpu/drm/gud/gud_drv.c
-index 9d7bf8ee45f1..5b555045fce4 100644
---- a/drivers/gpu/drm/gud/gud_drv.c
-+++ b/drivers/gpu/drm/gud/gud_drv.c
-@@ -31,6 +31,8 @@
- 
- #include "gud_internal.h"
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- /* Only used internally */
- static const struct drm_format_info gud_drm_format_r1 = {
- 	.format = GUD_DRM_FORMAT_R1,
-diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mgag200/mgag200_drv.c
-index 573dbe256aa8..88c5e24cc894 100644
---- a/drivers/gpu/drm/mgag200/mgag200_drv.c
-+++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
-@@ -25,6 +25,8 @@ static int mgag200_modeset = -1;
- MODULE_PARM_DESC(modeset, "Disable/Enable modesetting");
- module_param_named(modeset, mgag200_modeset, int, 0400);
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- int mgag200_init_pci_options(struct pci_dev *pdev, u32 option, u32 option2)
+diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+index efdf82f8cbbb..c400441cd77e 100644
+--- a/drivers/gpu/drm/drm_print.c
++++ b/drivers/gpu/drm/drm_print.c
+@@ -183,11 +183,10 @@ void __drm_printfn_dbg(struct drm_printer *p, struct va_format *vaf)
  {
- 	struct device *dev = &pdev->dev;
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index beee5563031a..1971bfa8a8a6 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -65,6 +65,8 @@ module_param_named(modeset, qxl_modeset, int, 0400);
- MODULE_PARM_DESC(num_heads, "Number of virtual crtcs to expose (default 4)");
- module_param_named(num_heads, qxl_num_crtc, int, 0400);
+ 	const struct drm_device *drm = p->arg;
+ 	const struct device *dev = drm ? drm->dev : NULL;
+-	enum drm_debug_category category = p->category;
+ 	const char *prefix = p->prefix ?: "";
+ 	const char *prefix_pad = p->prefix ? " " : "";
  
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- static struct drm_driver qxl_driver;
- static struct pci_driver qxl_pci_driver;
+-	if (!__drm_debug_enabled(category))
++	if (!__drm_debug_enabled(p->category))
+ 		return;
  
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 7bf08164140e..d22308328c76 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -247,6 +247,8 @@ int radeon_cik_support = 1;
- MODULE_PARM_DESC(cik_support, "CIK support (1 = enabled (default), 0 = disabled)");
- module_param_named(cik_support, radeon_cik_support, int, 0444);
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- static struct pci_device_id pciidlist[] = {
- 	radeon_PCI_IDS
- };
-diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
-index 3ebe2ce55dfd..ba57c14454e5 100644
---- a/drivers/gpu/drm/udl/udl_main.c
-+++ b/drivers/gpu/drm/udl/udl_main.c
-@@ -19,6 +19,8 @@
- 
- #define NR_USB_REQUEST_CHANNEL 0x12
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- #define MAX_TRANSFER (PAGE_SIZE*16 - BULK_SIZE)
- #define WRITES_IN_FLIGHT (20)
- #define MAX_VENDOR_DESCRIPTOR_SIZE 256
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index dd0af086e7fa..086797c4b82b 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -39,6 +39,8 @@
- 
- static struct vkms_config *default_config;
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- static bool enable_cursor = true;
- module_param_named(enable_cursor, enable_cursor, bool, 0444);
- MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index 58fb40c93100..c159f4d186a3 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -275,6 +275,8 @@ static int vmw_probe(struct pci_dev *, const struct pci_device_id *);
- static int vmwgfx_pm_notifier(struct notifier_block *nb, unsigned long val,
- 			      void *ptr);
- 
-+DRM_CLASSMAP_USE(drm_debug_classes);
-+
- MODULE_PARM_DESC(restrict_iommu, "Try to limit IOMMU usage for TTM pages");
- module_param_named(restrict_iommu, vmw_restrict_iommu, int, 0600);
- MODULE_PARM_DESC(force_coherent, "Force coherent TTM pages");
+ 	/* Note: __builtin_return_address(0) is useless here. */
 -- 
 2.45.0
 
