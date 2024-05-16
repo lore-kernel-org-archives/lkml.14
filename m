@@ -1,125 +1,91 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B1C14D452
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4341E491
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715872621; cv=none; b=nkqMooZPTKR+q2ZqD1qDALstTqi2M14/ZMWTHkBWgIYhT8lG94X9lYjgqk6/Zde/Yz4caPGEbs2+r1MwHTynXdcl4RjZ7wHzl7YCdDBWtWiq7/NWL1WJ/ERi9GAxzR1KKbXyqdFRwibTShS57+oh8mHkwv30mH5eye1+912K11M=
+	t=1715872801; cv=none; b=j/t74u+e1YtkAfxVnqy2KUyGMfExeXH75zy991QzFL6dU+cAEmkv94RkVgTgjdBPKn1BQ/xXXo/wTcoBI9RTO7F6t0/az/yC+El4zCWW6492ongaD/K5rGgCnlalKKzx4yjFeQhCzB7+/9OXK3CRTWv3XiKiUJ5xPSvoG0NqgKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715872621; c=relaxed/simple;
-	bh=ZXs22x8gjkyO5FvWfIYFnYooRXNq/Z5RnIzauYycA2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aHjGvHV4sx/LtuYV066NCaJy+Cxhu5xHxOPjMq+vkbb5ybV5xc4I1MDUvld/u01NMkPhb8oFFWrt38WnGhGXYVx4dbuXsnEVxepf2m1OcxepiBWCZkDF1vYPycjdjSZ1oBMWtFj8608q3PkL9fvNnf0tzD2XtjjKgK5Blszi8gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O9jJV8Y1; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715872801; c=relaxed/simple;
+	bh=g4pCKFHtNv8tWxkrcOunRV36cnVd3ULvVwjtURKk6wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqrJVyg19vT1GjA5xL8ltJFZZ8t1UdHUJr+GwwbfPQnXWByvXPOrRSd1h6LlnJOQxx2kVOEFB9ZOvBAZ0EtzgjBS1H7h/KjCWPhUMM7IAD45yU1MSnFzRdzIKsSCkqmV6wfj3Q9NZdxXn58KA4aKnbcXUuioFkuvAPrgLzL9HeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GU4NPhW0; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O9jJV8Y1"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5750a8737e5so10421a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715872618; x=1716477418; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S4aYJn/xV/PKWXs5PNzajPV5h6iws4xgG9CE/ZAuxU8=;
-        b=O9jJV8Y1NfSroH7pVBI1a0MwoviYauaTDffLSrwHr2ANL2cwvNsI96mZEZwTI9pAds
-         gCiIFDAwYiSSz5n2BPRulynH+x9aB+dmA0l7Aus8N3mCNcaEmDeJ3MGVXzRyWKjnQ1/S
-         j6sbtkwDE0FGG6Gf98vXQpR3lkExREtyhz+oNSEeewpK/vx0tlJqXKjqeKuPXxt/dFPL
-         aA4WFw7MphbIdnuGKeOcPnITQdPmN8ogDcpVB/mtYBU5nnYfi2kMMsduzLGjN4Ab/wJT
-         giZYJCUD2uoyWBYbd6iuSFMFFtn6w5V8tfTh+lV1f8OwmgQ+yie8V19JMnOSuhgCvjy7
-         yMaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715872618; x=1716477418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S4aYJn/xV/PKWXs5PNzajPV5h6iws4xgG9CE/ZAuxU8=;
-        b=kQIEDC+rDuyh0SdVghGPH1bMueOWptmTeO3PQ1D+y+D+9QW7CU/b0fFCLkN/MXDlaH
-         eS1lJoDusxsoyGSY47xkaN/LlGw96CCBnmxLbCI75KeQwzUBMTO/2FvO4kk9V2lXg81G
-         onKB/aal/5CjtqFt7Rb1R/OoRVE3e0QqIelhom+ludd6/6i+PsL5mAheB2S5CfONRTR/
-         0oDUJFMbYW6oCeCyJWnI/l6WnNFaxGAytvo1z2H2jRgdlq1jV296fmADBFV4oK598wFH
-         AseTCg+0X5SFob1O7Og00o2f6CtcbijSJJGWbNAUzRj/MXh20zUtcOPUYrsTfVKVLdU1
-         sd6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHusYEmozEjo9LFuqX7l+UBL3QdIWVk9NvJQl1PUnw+lztpNu0BxYEMrAI5xG/sqUnn1ItesRqpXPdmzTIjkcDHHvUN3jJq7EwbWiW
-X-Gm-Message-State: AOJu0YzLTf1B5abO9nvI0f1BP16rPPEb4hwH1oDh3A6xzxotD8rPL4hM
-	qex+P93pCQaD6LLLleneCxsi5rl6i0iDoAEXoYNOioKaMV72s9CLE+EF8WfNZ54NxnVf58JCxht
-	2jReZrMrbKO2V860w+KLRFBybf0hySF/vGElewj+n6+Btu1WGZw==
-X-Google-Smtp-Source: AGHT+IHMNTC40XpTvgL1XTSP35Cv+n/Rhk6HldIuh2H5A/OEKFOgYm6M15rG805D9tnLx4WQjYkOJaxE+AAac13kuWk=
-X-Received: by 2002:a50:c90b:0:b0:572:a33d:437f with SMTP id
- 4fb4d7f45d1cf-5743a0a4739mr1000638a12.2.1715872617792; Thu, 16 May 2024
- 08:16:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GU4NPhW0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vfRYymjV7A2ksiA1ifbCkQIzMUN+OUNKRWRmXGE/juQ=; b=GU4NPhW0NSrW3wS9kvVVbr9Ov6
+	kVillMd+D/CsiGg8X2K8B71+JW3sGmv6PWZOinBZISE1sr8ZCZQjy2JaBTg8l1H4zgU9I6TYW9PBC
+	4xohhmK5bfCpFeY6HZT/3kNatqA+HMqxNlAHP8jHUWQGIQrdEP6OEl0kyBPzfPKlbg2vFWMwhz92+
+	zYUeEbMa8P+0p7bcKxAUOoPLhRampjlERPb5Z0QwdphJnTz7sE4IOx2sWPJU+lboJWh992au7xL0W
+	HV5eNk0qMnOCJlQledOoGpFiSWpMx10J2UkapoopwLqj7yj3PvEmfM/myZ2rEptV4MR9oSMjbbxEs
+	D2EVAlEA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7ctd-00000005Sgs-473N;
+	Thu, 16 May 2024 15:19:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4367330068B; Thu, 16 May 2024 17:19:53 +0200 (CEST)
+Date: Thu, 16 May 2024 17:19:53 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Yun Levi <ppbuk5246@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	anna-maria@linutronix.de, mingo@kernel.org, tglx@linutronix.de,
+	Markus.Elfring@web.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] time/tick-sched: idle load balancing when nohz_full
+ cpu becomes idle.
+Message-ID: <20240516151953.GM22557@noisy.programming.kicks-ass.net>
+References: <ZkU8lm2tjm_r9FpZ@pavilion.home>
+ <20240516075628.GC22557@noisy.programming.kicks-ass.net>
+ <CAM7-yPRHp3tiZjuBTesdRQoU8WJNg1scon_txS_6R-pZq9MXHw@mail.gmail.com>
+ <20240516084911.GF22557@noisy.programming.kicks-ass.net>
+ <ZkXtHv+fHUD2+lFJ@lothringen>
+ <CAM7-yPTSq0CSmRsTpeXwzhFk77gfwUK_LZKnbgo4NPk5zPCaAg@mail.gmail.com>
+ <20240516140003.GJ22557@noisy.programming.kicks-ass.net>
+ <ZkYW48dTX2FH5NaD@lothringen>
+ <20240516144504.GL22557@noisy.programming.kicks-ass.net>
+ <ZkYgG9KYMpUPeJsM@lothringen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20210416180427.1545645-1-dlatypov@google.com> <b7155efb-e99c-f385-3bf3-3ffcdefd1260@ti.com>
-In-Reply-To: <b7155efb-e99c-f385-3bf3-3ffcdefd1260@ti.com>
-From: Daniel Latypov <dlatypov@google.com>
-Date: Thu, 16 May 2024 08:16:44 -0700
-Message-ID: <CAGS_qxoSgEGThm3RfSc2jXrCUFwSs6HnfNcsg+EMMvWYWRbKWw@mail.gmail.com>
-Subject: Re: [PATCH v6] lib: add basic KUnit test for lib/math
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: andriy.shevchenko@linux.intel.com, brendanhiggins@google.com, 
-	davidgow@google.com, linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org, 
-	Linux Media Mailing List <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkYgG9KYMpUPeJsM@lothringen>
 
-On Thu, May 16, 2024 at 3:19=E2=80=AFAM Devarsh Thakkar <devarsht@ti.com> w=
-rote:
->
-> Hi Daniel, Andy,
->
-> On 16/04/21 23:34, Daniel Latypov wrote:
-> > Add basic test coverage for files that don't require any config options=
-:
-> > * part of math.h (what seem to be the most commonly used macros)
-> > * gcd.c
-> > * lcm.c
-> > * int_sqrt.c
-> > * reciprocal_div.c
-> > (Ignored int_pow.c since it's a simple textbook algorithm.)
-> >
-> > These tests aren't particularly interesting, but they
-> > * provide short and simple examples of parameterized tests
-> > * provide a place to add tests for any new files in this dir
-> > * are written so adding new test cases to cover edge cases should be ea=
-sy
-> >   * looking at code coverage, we hit all the branches in the .c files
-> >
-> > Signed-off-by: Daniel Latypov <dlatypov@google.com>
-> > Reviewed-by: David Gow <davidgow@google.com>
->
-> Just checking if something else was pending on this patch-set for this no=
-t
-> getting merged?
->
-> I needed this patch-set for adding tests for new macros I am adding in ma=
-th.h
-> as suggested in this thread [1], so wanted to pull this in my series and =
-add
-> changes on top of that for new macros.
->
-> Kindly let me know your thoughts on this.
+On Thu, May 16, 2024 at 05:02:51PM +0200, Frederic Weisbecker wrote:
 
-This patch just fell through the cracks for me.
-I had (wrongly) inferred that Andy might have had some lingering
-reservations about this patch (that it was too contrived, might not be
-useful to have tests for stuff like abs(), etc.).
+> > I'm confused, none of that makes sense. If you're part of a
+> > load-balancer, you're part of a load-balancer, no ifs buts or other
+> > nonsense.
+> > 
+> > idle load balancer is no different from regular load balancing.
+> > 
+> > Fundamentally, you can't disable the tick if you're part of a
+> > load-balance group, the load-balancer needs the tick.
+> > 
+> > The only possible way to use nohz_full is to not be part of a
+> > load-balancer, and the only way that is so is by having (lots of) single
+> > CPU partitions.
+> 
+> So you're suggesting that nohz_full should just be part of the whole
+> ilb machinery by default (that is, not fiddle with ilb internals) and
+> then it's up to CPU partitioning (through cpuset or isolcpus) to disable
+> ilb naturally. Right?
 
-Feel free to pull this into your series.
+Yes, but stronger, as long as the CPU is part of a load-balance domain,
+it must not disable the tick while running anything.
 
-Looking over the code itself, I think this still looks valid and
-stylistically correct with regard to KUnit.
-I haven't gone and validated that it still compiles and runs just yet, thou=
-gh.
-But if you do run into any problems, let me know and I can help send
-you a fixed version.
-
-Thanks for picking this up,
-Daniel
+that is, NOHZ_FULL must not become active unless it's running on a
+single CPU partition.
