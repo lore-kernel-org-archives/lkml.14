@@ -1,48 +1,25 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94184143C55
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 10:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDEC0143C4B;
+	Thu, 16 May 2024 10:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715855535; cv=none; b=WZorLCBdrNe0Ga9jXkJt+6Th5/hLG4FWM2HsOGA3QCOfvoE3WiTB1NMcotpU8lhR3aEBY/4bzgyWMSw6+z42/k6tzkYkOkhmx+RuAulcalnOF+3XQvdyu3VxF28xjVGJBmMivuate0CXaHyeA9ouZbJat7lo9uLzrUxsJmvHXkc=
+	t=1715855783; cv=none; b=ANnPXmKMd1kWrAVLa1YidFJX1jtA0SCeqSy6ij12naVcGaksMqzPgvw0o3KUk6LFfrK4pSkxw7USfGycbUv2yLWBJtpaARYyO4AcEuF9M6pfKF0jjmwjs6kDQ2qeBla0HgHpbs/2kccYzbwls1aD41hHk1JTnGTO/U02OC1o6ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715855535; c=relaxed/simple;
-	bh=tL6KAUUBdX+sVXzhCbeVX6rqZ5fXwzcnVA3Sy4BZ7pE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=drv8nnNhp9VambCudLjS5GswNwVjmJxHMh3YdDQOe1YcyRm81FmjvUuuE+cITdgBWar9PD9SoF3x5+qVMjL+/2Zd+pMRpdMUc/c2rUMAjosexeaTD+ep0D8vWl42tcvIfSOS6aILWM3QL6JXrKUWlPPLPMOZoK06RO6x1FmrOUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lOZog/6R; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lOZog/6R"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G9fmVS056166;
-	Thu, 16 May 2024 04:41:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715852508;
-	bh=wYQOXr5Vdn2rus+peaYLnfyMg1IdCq5SCmKMEecT2l4=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=lOZog/6R02eMJWGESciek9BgtgdUOHA/RIeN/A52gS847IG/2nP6fiwFcydkntCMR
-	 DANzLXCNaSl2HJoL/sfcEdyBd8m3PQkaJXGXCDRMI9j01ukLspmLajclg9sj6FFVsZ
-	 tiniWcz/Ta7ZWGZIsriWt8SVa2gJt5fXNbfrr6mk=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G9fmEM117558
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 16 May 2024 04:41:48 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 16
- May 2024 04:41:48 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 16 May 2024 04:41:48 -0500
-Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G9ffH0074525;
-	Thu, 16 May 2024 04:41:41 -0500
-Message-ID: <8bb974f9-90ff-4b61-9623-cf5675f35e78@ti.com>
-Date: Thu, 16 May 2024 15:11:40 +0530
+	s=arc-20240116; t=1715855783; c=relaxed/simple;
+	bh=HDoEm5f5wF8Nd0sGgYrQOCtr9e9W5oFM2Z+H/KVQjf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h1VrI7AAL5Zpw/K7l4NjlDvxGKLs31Uld3VnZh+D2K9YrX1esSvTwrcZ/OqaSFmDg2vXGMeqMh21qqGG88IPKoJqhccWl21x4g4sf3WKiujgeJbDFlzJoNsVTAQd+Q8vRI+rPy3jJdxwmMumluDrLz4HReu/3+EIPsLciG+0ccA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EBA7DA7;
+	Thu, 16 May 2024 03:36:45 -0700 (PDT)
+Received: from [10.91.2.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0A5B3F762;
+	Thu, 16 May 2024 03:36:18 -0700 (PDT)
+Message-ID: <ce6d7e6a-e24a-43b4-a9b8-4e946277c2d8@arm.com>
+Date: Thu, 16 May 2024 12:36:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,78 +27,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] drm/bridge: cdns-dsi: Fix minor bugs
-To: Maxime Ripard <mripard@kernel.org>
-CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Jyri Sarha <jyri.sarha@iki.fi>,
-        Thomas
- Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        DRI Development List
-	<dri-devel@lists.freedesktop.org>,
-        Linux Kernel List
-	<linux-kernel@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Thierry
- Reding <treding@nvidia.com>,
-        Kieran Bingham
-	<kieran.bingham+renesas@ideasonboard.com>,
-        Boris Brezillon
-	<boris.brezillon@bootlin.com>,
-        Nishanth Menon <nm@ti.com>, Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar
-	<u-kumar1@ti.com>,
-        Devarsh Thakkar <devarsht@ti.com>,
-        Jayesh Choudhary
-	<j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
-References: <20240511153051.1355825-1-a-bhatia1@ti.com>
- <20240511153051.1355825-3-a-bhatia1@ti.com>
- <20240516-stereotyped-precise-wapiti-6d0cd3@penduick>
+Subject: Re: [PATCH] MAINTAINERS: perf: arm64: Catch all Arm files and folders
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-perf-users@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240515151221.204163-1-james.clark@arm.com>
+ <e92a8423-9172-4aec-acbf-c9f136e6884f@arm.com>
 Content-Language: en-US
-From: Aradhya Bhatia <a-bhatia1@ti.com>
-In-Reply-To: <20240516-stereotyped-precise-wapiti-6d0cd3@penduick>
-Content-Type: text/plain; charset="UTF-8"
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <e92a8423-9172-4aec-acbf-c9f136e6884f@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 
 
-On 16/05/24 13:41, Maxime Ripard wrote:
-> On Sat, May 11, 2024 at 09:00:46PM +0530, Aradhya Bhatia wrote:
->> Update the Phy initialized state to "not initialized" when the driver
->> (and the hardware by extension) gets suspended. This will allow the Phy
->> to get initialized again after resume.
->>
->> Fix the OF node that gets passed to find the next available bridge in
->> the display pipeline.
->>
->> Fix the order of DSI Link and DSI Phy inits. The link init needs to
->> happen before the Phy is initialized, so the Phy can lock on the
->> incoming PLL reference clock. If this doesn't happen, the Phy cannot
->> lock (until DSI Link is init later on). This causes a warning dump
->> during the kernel boot.
->>
->> Allow the D-Phy config checks to use mode->clock instead of
->> mode->crtc_clock during mode_valid checks, like everywhere else in the
->> driver.
+On 16/05/2024 06:35, Anshuman Khandual wrote:
 > 
-> All these should be in separate patches.
+> 
+> On 5/15/24 20:42, James Clark wrote:
+>> Catch all files and folders with Arm in the name in tools/perf/ up to
+>> two levels deep. There currently no false positives.
+>>
+>> This catches lots of missing items like these and more:
+>>
+>>   * util/arm-spe-decoder/
+>>     (The existing util/arm-spe* entry only matched files not folders)
+>>   * util/perf-regs-arch/perf_regs_arm.c
+>>   * scripts/python/arm-cs-trace-disasm.py
+>>   * tests/shell/test_arm_spe.sh
+> 
+> Agreed.
+> 
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  MAINTAINERS | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index ec0284125e8f..c5d0256d32dd 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -17318,9 +17318,10 @@ R:	Leo Yan <leo.yan@linux.dev>
+>>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>>  S:	Supported
+>>  F:	tools/build/feature/test-libopencsd.c
+>> -F:	tools/perf/arch/arm*/
+>> -F:	tools/perf/pmu-events/arch/arm64/
+>> -F:	tools/perf/util/arm-spe*
+>> +F:	tools/perf/*/*/*arm*
+>> +F:	tools/perf/*/*/*arm*/
+>> +F:	tools/perf/*/*arm*
+>> +F:	tools/perf/*/*arm*/
+>>  F:	tools/perf/util/cs-etm*
+> 
+> Very minor nit, these regular expressions should be arranged as per
+> the increasing directory depth levels, just to make it apparent in
+> terms of which files are being covered here ?
+> 
+> F:	tools/perf/*/*arm*
+> F:	tools/perf/*/*arm*/
+> F:	tools/perf/*/*/*arm*
+> F:	tools/perf/*/*/*arm*/
 > 
 
-Alright! I will split them into different patches in v2.
+Checkpatch has an alphabetical sort which says they have to be the other
+way around, but yes I agree I did write it your way initially.
 
-Regards
-Aradhya
+> But regardless, with or without the above changes
+> 
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+>>  
+>>  PERSONALITY HANDLING
