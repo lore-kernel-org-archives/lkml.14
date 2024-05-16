@@ -1,148 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DE2EBB;
-	Thu, 16 May 2024 01:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE45EBB;
+	Thu, 16 May 2024 01:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715823201; cv=none; b=T+RHPn9M27XXexQYOV4GbwjFOA80Z6Ad3jfabZTtjHT2BIkn2u9Kti++j+l8Z/kDKA0TcKNB+BhzoksqnRqMtNGDJU4m7L6c0cewSHdjOcmWedoJAW9k+QvcKJN6FBSFJZYjwnooF7tQ1MuF7g+2xtmVZbZn+8PtNK8UOiDJNI0=
+	t=1715823362; cv=none; b=M5EnKeXzUO7PklJkaqiK6k/dO63NC/sm2RClg10DrmAjDn/Z/A8uMN2xjP9WhdjJQ/9YTm2LBuWOV/xLdTFWQ81q0u/l4iKdQoRA8VDG1JhOxxymJYFpCeTESU8iw+jP8Erig3Fl50pMxz8an2VbsXZ846dFgDIq2O6wZl4rDnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715823201; c=relaxed/simple;
-	bh=L/MSeE85WwDv+k9wnUzILdJTM7kfnpnvNhjH6yhtOPw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZSGDvD2X0kOHFPGEDJQRkIv8ozDtB7tIa5jFKDhenenOWTQ5JYJP+u3GR9+nP+OvLcTXxltVHY8jjph+OqJOp9+UsyDXxE3q48yMOGV5tig1+gQ6LS1TJTKSCorkPd3ABAUllr8eGzvU7poSTxtibCN09kmWrOeTp03Js0KKNB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LwEaGJP6; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LwEaGJP6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715823200; x=1747359200;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=L/MSeE85WwDv+k9wnUzILdJTM7kfnpnvNhjH6yhtOPw=;
-  b=LwEaGJP60KYbkjK36GlxJyLswavXQtapRPu92PeLejKGcvecuJOmKY2G
-   dCaJwVigubM04DJ1YvX4Qdt8hSc0m8FZlhjwEp+ZgyIOnU3v6j43GrUSy
-   rw/Xsh9s50SzRDTVJwzwu2jS4tH3DbQhP4qAkmVkhJCpYNUSyeCR0uyXY
-   +DGvAlmroobBXbmOPsGlAjiNnl3FDfUebKaYCm3chl7cRd4Tkz1UmfjGl
-   0pMlN6MN6oc3RhNOXSShju8yYNcmenoHK61XRQl0z2kHqChr+A4T4qrQ1
-   RGI14TaU90AhAkMDshujj6Q4LBspCz3uR9+acCLdyV/4PBfqgcBm26gxP
-   w==;
-X-CSE-ConnectionGUID: jz019q2SQsK2VkUMwAJW7w==
-X-CSE-MsgGUID: QCi6LtSgRtu5p1lSByaB7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="15686570"
-X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
-   d="scan'208";a="15686570"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 18:33:19 -0700
-X-CSE-ConnectionGUID: sRUhUOvISA6D5GZbceR8Hw==
-X-CSE-MsgGUID: zYNpDQmeRn+ekVV0I9yNSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,163,1712646000"; 
-   d="scan'208";a="35977510"
-Received: from wentongw-optiplex-8070.sh.intel.com ([10.239.154.12])
-  by orviesa003.jf.intel.com with ESMTP; 15 May 2024 18:33:17 -0700
-From: Wentong Wu <wentong.wu@intel.com>
-To: sakari.ailus@linux.intel.com,
-	tomas.winkler@intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	hao.yao@intel.com,
-	Wentong Wu <wentong.wu@intel.com>,
-	stable@vger.kernel.org,
-	Jason Chen <jason.z.chen@intel.com>
-Subject: [PATCH] mei: vsc: Don't stop/restart mei device during system suspend/resume
-Date: Thu, 16 May 2024 09:54:00 +0800
-Message-Id: <20240516015400.3281634-1-wentong.wu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715823362; c=relaxed/simple;
+	bh=FrGq2YrBThf3E1IoJyu8KCt62cSocVHlIxWXr8AXgIQ=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=l12AR5niuOLxnTjNJW8Z68x44EckCd3IwKfkbL66oLATa60bErmJSYGNU0HDCyXzFIs42e8fUp1/ehyGBzI7SJPWDSJ0QLxS6CdsBP2UBThMGf46uo1/lnZU7rnGOhTQr2jF8F6HDWxsy99b1d2QLTaK/jgQf737jcvSkolxjd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vft2n6XBpz4f3lfZ;
+	Thu, 16 May 2024 09:35:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 1FAC21A0B33;
+	Thu, 16 May 2024 09:35:56 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP2 (Coremail) with SMTP id Syh0CgCnPBD2YkVmYmJfNA--.63684S2;
+	Thu, 16 May 2024 09:35:54 +0800 (CST)
+Subject: Re: [syzbot] [bpf?] KASAN: stack-out-of-bounds Read in hash
+To: syzbot <syzbot+9459b5d7fab774cf182f@syzkaller.appspotmail.com>,
+ bpf@vger.kernel.org
+References: <000000000000485a2d06187fc7a7@google.com>
+Cc: alexei.starovoitov@gmail.com, andrii@kernel.org, ast@kernel.org,
+ daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com,
+ joannekoong@fb.com, john.fastabend@gmail.com, jolsa@kernel.org,
+ kpsingh@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev,
+ netdev@vger.kernel.org, sdf@google.com, song@kernel.org,
+ syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <e8b52077-f0f2-bfa7-a170-09202c86dd24@huaweicloud.com>
+Date: Thu, 16 May 2024 09:35:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <000000000000485a2d06187fc7a7@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:Syh0CgCnPBD2YkVmYmJfNA--.63684S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Jw4Dtr4UKw4UXw45uF18Grg_yoW8JrW7pr
+	WrGrW3KwsYyF1jy3WIgFnrWw1vg395CrW7W34Utry09an7tr1vyws2yFWrWr4UGr1DZF90
+	vrn8Cw1rK348uaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UZ18PUUUUU=
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-The dynamically created mei client device (mei csi) is used as one V4L2
-sub device of the whole video pipeline, and the V4L2 connection graph is
-built by software node. The mei_stop() and mei_restart() will delete the
-old mei csi client device and create a new mei client device, which will
-cause the software node information saved in old mei csi device lost and
-the whole video pipeline will be broken.
 
-Removing mei_stop()/mei_restart() during system suspend/resume can fix
-the issue above and won't impact hardware actual power saving logic.
 
-Fixes: 386a766c4169 ("mei: Add MEI hardware support for IVSC device")
-Cc: stable@vger.kernel.org # for 6.8+
-Reported-by: Hao Yao <hao.yao@intel.com>
-Signed-off-by: Wentong Wu <wentong.wu@intel.com>
-Tested-by: Jason Chen <jason.z.chen@intel.com>
----
- drivers/misc/mei/platform-vsc.c | 39 +++++++++++++--------------------
- 1 file changed, 15 insertions(+), 24 deletions(-)
+On 5/15/2024 11:29 PM, syzbot wrote:
+> syzbot has bisected this issue to:
+>
+> commit 9330986c03006ab1d33d243b7cfe598a7a3c1baa
+> Author: Joanne Koong <joannekoong@fb.com>
+> Date:   Wed Oct 27 23:45:00 2021 +0000
+>
+>     bpf: Add bloom filter map implementation
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1543bd5c980000
+> start commit:   443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+> git tree:       bpf
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=1743bd5c980000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1343bd5c980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9459b5d7fab774cf182f
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13d86795180000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143eff76180000
+>
+> Reported-by: syzbot+9459b5d7fab774cf182f@syzkaller.appspotmail.com
+> Fixes: 9330986c0300 ("bpf: Add bloom filter map implementation")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> .
 
-diff --git a/drivers/misc/mei/platform-vsc.c b/drivers/misc/mei/platform-vsc.c
-index b543e6b9f3cf..1ec65d87488a 100644
---- a/drivers/misc/mei/platform-vsc.c
-+++ b/drivers/misc/mei/platform-vsc.c
-@@ -399,41 +399,32 @@ static void mei_vsc_remove(struct platform_device *pdev)
- 
- static int mei_vsc_suspend(struct device *dev)
- {
--	struct mei_device *mei_dev = dev_get_drvdata(dev);
--	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
-+	struct mei_device *mei_dev;
-+	int ret = 0;
- 
--	mei_stop(mei_dev);
-+	mei_dev = dev_get_drvdata(dev);
-+	if (!mei_dev)
-+		return -ENODEV;
- 
--	mei_disable_interrupts(mei_dev);
-+	mutex_lock(&mei_dev->device_lock);
- 
--	vsc_tp_free_irq(hw->tp);
-+	if (!mei_write_is_idle(mei_dev))
-+		ret = -EAGAIN;
- 
--	return 0;
-+	mutex_unlock(&mei_dev->device_lock);
-+
-+	return ret;
- }
- 
- static int mei_vsc_resume(struct device *dev)
- {
--	struct mei_device *mei_dev = dev_get_drvdata(dev);
--	struct mei_vsc_hw *hw = mei_dev_to_vsc_hw(mei_dev);
--	int ret;
--
--	ret = vsc_tp_request_irq(hw->tp);
--	if (ret)
--		return ret;
--
--	ret = mei_restart(mei_dev);
--	if (ret)
--		goto err_free;
-+	struct mei_device *mei_dev;
- 
--	/* start timer if stopped in suspend */
--	schedule_delayed_work(&mei_dev->timer_work, HZ);
-+	mei_dev = dev_get_drvdata(dev);
-+	if (!mei_dev)
-+		return -ENODEV;
- 
- 	return 0;
--
--err_free:
--	vsc_tp_free_irq(hw->tp);
--
--	return ret;
- }
- 
- static DEFINE_SIMPLE_DEV_PM_OPS(mei_vsc_pm_ops, mei_vsc_suspend, mei_vsc_resume);
--- 
-2.34.1
+#syz fix: bpf: Check bloom filter map value size
 
