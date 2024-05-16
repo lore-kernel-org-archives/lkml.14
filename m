@@ -1,147 +1,139 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2232F4120A;
-	Thu, 16 May 2024 08:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5584EB30;
+	Thu, 16 May 2024 08:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715846437; cv=none; b=kkV9bx82fXTqGymhLjO15eB4eheshaLIzrgXBnUuLSZf1DJauturWZDN625kJ7JuMrLu6hMKxwaTH8b5jfML7FxkKk9UmpcU9cQ7pOHCFcaeF3cP2wxSKSuBOEymLzpOXnLew1rembSBs/G7bTstsH+aifeYV3Tiz9UAr3I+czw=
+	t=1715846585; cv=none; b=upFwa5oqH+7k/bX2erGquoYx3+DWTrjkjJgnsRPVb+n8PtnRD9IKfJiHjbkfJG9lmhBzudiL91QNxNe/E+mCTca3W1O2FpWLMVJIZuBd3go3L0xstHdchNP6Um73MZg6DRGM7QMZWzWtzV5foH9LD6ehh6CF2HsDhwNLB+bd5ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715846437; c=relaxed/simple;
-	bh=ir7OEPsIB4tXdeYYmNY7Cbeyj6ggj2jZXmerEjaLdfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sdbweVHhURrhZcoWqC1oGEuf0WnOb3RuGArqixvr0pMbitOhSui9cBHbUi6DvmtaQvhGhxXYFC7j6YalCjDRoySNlE6D/XnWuNwAWcX/oku+ica9S9FdDjIL/Fxm5JNyt/MmaVmVozbRmTkD7UwURvL6RAZYe/ppmhs569HCtlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=UmMcVkWG; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1715846585; c=relaxed/simple;
+	bh=5HE3VuQjHHXUOEE4YFWAvTD0H1sgsk7BGUNdV6sOGOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=trw+hNLr2FZysSAvHSuT2C8Gm49VniiJ+Ap8K9tYQwRbxYAwKWlu+5S+Q7/WUDHjK7+ahesDWo40rp1ibGwUjSNg/NlUlvzVQFMOu2fDosvE6Y7N+cTgNwifHZWiXimlXXFJgxeTc4V+llbhgIl94k+hjpET1Q+uN0+BGnE1Ngw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+kNbRQn; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="UmMcVkWG"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44G7e2A0009990;
-	Thu, 16 May 2024 10:00:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=Y9trgIEu9RJeCdLikqsHLkO6L244vgMdpxM1Z3pwaD0=; b=Um
-	McVkWGSeyAqG7zib2bWvlJJKU1n11jEEZc09GsrTpzqCiEXZypojsxCIhQ6QGb2R
-	h/85D95WXhwEGLy/EIbDDASXYgx1N9neWTvA7r2fGgB6Ram2rWeAe1YrfAtlcfy8
-	wwfOFzXocBd8Z0W7NA8jrn9cHAO7OhfaY/5ZriS/jmiH4tZRzWVOWpx8QUJfXTLA
-	gyVWgOjZ7tP0MiI8vnu46iBBTPLOM6ywtH7uujQMgnWfhJvJ0hEp9BAmIIaMTAhH
-	X4D+tcpYqpTsMOrhEIuDyLJa5Z5rBuzsiaCGm0RCL9IIf8QtU+FHgHuNpyPuMPQx
-	jH+uBQgahirt8dZKazAQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y4sxv4f6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 May 2024 10:00:03 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3999440044;
-	Thu, 16 May 2024 09:59:58 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39B872122F0;
-	Thu, 16 May 2024 09:58:48 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 16 May
- 2024 09:58:47 +0200
-Message-ID: <5544e11b-25a8-4465-a7cc-f1e9b1d0f0cc@foss.st.com>
-Date: Thu, 16 May 2024 09:58:46 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+kNbRQn"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7fbbb2cf3c1so1196845241.3;
+        Thu, 16 May 2024 01:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715846583; x=1716451383; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fl0nj/kLrslUm9shiSkyG/Y7CY/aAcnLARdZY81Sgbk=;
+        b=j+kNbRQn5iymX73FVekrMtiTXiLFbcKGcrnKuLEbUWYxt1tRfqS1NKJq+MjfUAwGtx
+         PeGzp30ZnvuXy/RMhH3sEw7jP32/V01d4lRvohnGrBJr9ICWBjB3fDiIu0u0XKDZWyei
+         SbTbk2uImlEaAXJ7EkAVKUez74uxRlSDPYb6qeW6p1GrBHIvxutKNRAmCmCRv3T7M7Jl
+         p7fzznEMV05vwMrHcpw/LOYmOjIhJDy8/WFT87bwBd0VaB+6GaMTCTCMmNXTHcpYC3mS
+         rc/i+Jw+LsEDT6rVtqN/UPPdvM0JkGgD5oXVwBhWRtV+HcGljkAGOp4Zp2vRYtLzCH4K
+         fknQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715846583; x=1716451383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fl0nj/kLrslUm9shiSkyG/Y7CY/aAcnLARdZY81Sgbk=;
+        b=SjiIDmS6+bgO86DxaQZwFyfCkgn0d01yGfDaggnH52vaDvbT1Rekh1kbDURBKXl15z
+         ABQwZmSyNtYw6LEnLptDSZo4Bg7n6p0Mh0kDvsXGArXfwTBladUMWwJFKrOpPsFJkAlm
+         7k3l29o5SChPIwhYYH3GzUgxjdxu7rbAN7X1Spu7FJUscs7NvgT5FFYqcWPRkuMyy/wW
+         mIDD4YrneHTcQ+4jj35Gdf4R2UlBWkzRsACkZgHkztS/XnSavOZNmdQAK0tYqWCUmI2c
+         Ve6Ih+4YK659iLUZr3Z9eyFj2mYOJdw6/UMdAtwdrgqQ8Kq9AYshvZKMjiwIenQrEyE3
+         9haw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiFfJO0GraIj8CNK13YAILSomlGzc5WGlJTvZTYz11iDNrLN6TYxxyLC91XmQzF36j0CivSyzXAkXPZOmwLW2cuQWXupOWf1SSk4wziltXc2bwQLM1HkAUaKMeA0mnsxHKDlzFWE6MQdt4VrYd0rdn4U3LQp+BkE80JmbBn9pz0rokNmk=
+X-Gm-Message-State: AOJu0Yy+zndMGE/XzSaYogrd9u2QIYSP4YYhvZJvhlxlf+7PAtHfPwcC
+	7WFMVqZkWhOyM4IX21oBrDZKcNdQoxeJyt+qWDPaO2boA8nYTr02WNoTVaAuPYkI6IQn87hJy0l
+	LXud4hkEPPCjN+C1PbW2WxuujBVk=
+X-Google-Smtp-Source: AGHT+IEGmuIZ94m60TpcHFKQ9zhWmQGKsauGUlJNHGP37sp7Ssf2UU/Ll/3JZVxKgrv+EFCNMM8uiab2zcK65YD2nbo=
+X-Received: by 2002:a05:6122:368d:b0:4df:2ce2:6e4 with SMTP id
+ 71dfb90a1353d-4df882c1c5amr15980200e0c.4.1715846582738; Thu, 16 May 2024
+ 01:03:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/11] ARM: dts: stm32: add ethernet1 and ethernet2 for
- STM32MP135F-DK board
-To: Marek Vasut <marex@denx.de>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard
- Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
- <20240426125707.585269-11-christophe.roullier@foss.st.com>
- <43024130-dcd6-4175-b958-4401edfb5fd8@denx.de>
- <8bf3be27-3222-422d-bfff-ff67271981d8@foss.st.com>
- <9c1d80eb-03e7-4d39-b516-cbcae0d50e4a@denx.de>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <9c1d80eb-03e7-4d39-b516-cbcae0d50e4a@denx.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_03,2024-05-15_01,2023-05-22_02
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 16 May 2024 09:02:35 +0100
+Message-ID: <CA+V-a8vN5YHX3NFJNmqxzQt6HB=xC1Srr12ZvzEWHhKe85YWSg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] Add PFC support for Renesas RZ/V2H(P) SoC
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On Tue, Apr 23, 2024 at 6:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+>
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Hi All,
+>
+> This patch series aims to add PFC (Pin Function Controller) support for
+> Renesas RZ/V2H(P) SoC. The PFC block on RZ/V2H(P) is almost similar to
+> one found on the RZ/G2L family with couple of differences. To able to
+> re-use the use the existing driver for RZ/V2H(P) SoC function pointers
+> are introduced based on the SoC changes.
+>
+>
+> RFC->v2
+> - Fixed review comments pointed by Rob
+> - Incorporated changes suggested by Claudiu
+> - Fixed build error reported for m68K
+> - Dropped IOLH groups as we will be passing register values
+> - Fixed configs for dedicated pins
+> - Added support for slew-rate and bias settings
+> - Added support for OEN
+>
+> RFC: https://patchwork.kernel.org/project/linux-renesas-soc/cover/2024032=
+6222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+>
+> Cheers,
+> Prabhakar
+>
+> Lad Prabhakar (13):
+>   dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Remove the check from the
+>     object
+>   dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
+>   pinctrl: renesas: pinctrl-rzg2l: Allow more bits for pin configuration
+>   pinctrl: renesas: pinctrl-rzg2l: Allow parsing of variable
+>     configuration for all architectures
+>   pinctrl: renesas: pinctrl-rzg2l: Validate power registers for SD and
+>     ETH
+>   pinctrl: renesas: pinctrl-rzg2l: Add function pointers for
+>     locking/unlocking the PFC register
+>   pinctrl: renesas: pinctrl-rzg2l: Add function pointer for writing to
+>     PMC register
+>   pinctrl: renesas: pinctrl-rzg2l: Add function pointers for
+>     reading/writing OEN register
+>   pinctrl: renesas: pinctrl-rzg2l: Add support to configure the
+>     slew-rate
+>   pinctrl: renesas: pinctrl-rzg2l: Add support to set pulling up/down
+>     the pins
+>   pinctrl: renesas: pinctrl-rzg2l: Pass pincontrol device pointer to
+>     pinconf_generic_parse_dt_config()
+>   pinctrl: renesas: pinctrl-rzg2l: Add support for custom parameters
+>   pinctrl: renesas: pinctrl-rzg2l: Add support for RZ/V2H SoC
+>
+Gentle ping.
 
-On 5/16/24 02:23, Marek Vasut wrote:
-> On 5/13/24 6:01 PM, Alexandre TORGUE wrote:
->> Hi Marek
-> 
-> Hi,
-> 
->> On 4/26/24 17:44, Marek Vasut wrote:
->>> On 4/26/24 2:57 PM, Christophe Roullier wrote:
->>>> Add dual Ethernet:
->>>> -Ethernet1: RMII with crystal
->>>> -Ethernet2: RMII without crystal
->>>> PHYs used are SMSC (LAN8742A)
->>>>
->>>> With Ethernet1, we can performed WoL from PHY instead of GMAC point
->>>> of view.
->>>> (in this case IRQ for WoL is managed as wakeup pin and configured
->>>> in OS secure).
->>>
->>> How does the Linux PHY driver process such a PHY IRQ ?
->>>
->>> Or is Linux unaware of the PHY IRQ ? Doesn't that cause issues ?
->>
->> In this case, we want to have an example to wakeup the system from 
->> Standby low power mode (VDDCPU and VDD_CORE off) thanks to a magic 
->> packet detected by the PHY. The PHY then assert his interrupt output 
->> signal.
->> On MP13 DK platform, this PHY signal is connected to a specific GPIO
->> aka "Wakeup pins" (only 6 wakeup pins an MP13). Those specific GPIOs 
->> are handled by the PWR peripheral which is controlled by the secure OS.
-> 
-> What does configure the PHY for this wakeup mode ?
+Cheers,
+Prabhakar
 
-Linux device tree.
-
-> 
->> On WoL packet, the Secure OS catches the PHY interrupt and uses 
->> asynchronous notification mechanism to warn Linux (on our platform we 
->> use a PPI). On Linux side, Optee core driver creates an irq 
->> domain/irqchip triggered on the asynchronous notification. Each device 
->> which use a wakeup pin need then to request an IRQ on this "Optee irq 
->> domain".
->>
->> This OPTEE irq domain will be pushed soon.
-> 
-> I suspect it might make sense to add this WoL part separately from the 
-> actual ethernet DT nodes, so ethernet could land and the WoL 
-> functionality can be added when it is ready ?
-
-If at the end we want to have this Wol from PHY then I agree we need to 
-wait. We could push a WoL from MAC for this node before optee driver 
-patches merge but not sure it makes sens.
-
-Alex
+>  .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  40 +-
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 640 ++++++++++++++++--
+>  2 files changed, 617 insertions(+), 63 deletions(-)
+>
+> --
+> 2.34.1
+>
