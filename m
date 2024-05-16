@@ -1,150 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DE214D452;
-	Thu, 16 May 2024 16:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB57F14D451;
+	Thu, 16 May 2024 16:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715875461; cv=none; b=GG/HM1PgjLpCLBzUPM4gjy8yC/Law/2+pdUOGFeOjx2f5GJaZjfL4IvDtOkyJuQHqzQezVQuhuGPB9RICZP4j5iY+mCrROn4Srvz8dRG+nK8ZRPIKj6L0YFFlv+BgUH+mA2AhsCxWjOwYQMTfwsqoWoakLhyXc4gp0fY16dEhho=
+	t=1715875508; cv=none; b=LKIqBENruUtDYRkI1hdBf/vur84+ZzDIEngHux0pS9aOtXtGILEVfLRK6yonKDL+hPfUsKr6cp/XmW5g+sX7WqpfMeFPqawowEF/tFm+FOcQSqp5r5bCIzEd0jsX7sHP3KpES7nV6mfetm84upWOEq7GT7yaMlpJmROnDlFZ3cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715875461; c=relaxed/simple;
-	bh=w/VCxKOJAzskajQyGDqLy9NBiE2zC4FfWI7LfgmWFfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXcI0iApu/Tq+/OsBBhG9t/x5Xc3c6nbW5J26C+J9ibaexJYKl+Dgfn76OmYXRVNetHjec8zX8b9H9UBjmTx1KlwESJU1KPi7Mmg6+RF8H0cm2Q7TE0QrORW80w+4POmn//AVAl5O9Blu5GT99NXvQ4QjxqvSQU60+Lsa1WVhvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+Hvg3eQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715875508; c=relaxed/simple;
+	bh=dkUWRF5CQj+qay0J1rvifZC7vv/X/i2/qQvVURLE4Zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ko2rO4ikRga426D8moC47pViy6eOIasV05J7HAjk38OCUyoGlo1luvP3dsVCjqhGzeH0lO9MUqIvo+zcHtVaR4nBU0e8TH1T1/toGX03d1Kdm5vxwXbo/mlQSdFI2TDcvWGtNO5n6EwCXHIMNFa0GzBP0U/7+Eb/Ild0ZkoFCAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=CFreOHEb; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+Hvg3eQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF7E3C32786;
-	Thu, 16 May 2024 16:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715875460;
-	bh=w/VCxKOJAzskajQyGDqLy9NBiE2zC4FfWI7LfgmWFfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k+Hvg3eQLJ4lIBsk6+vsvR2fp7IKceiyjLvU8HaXSbVWJ2AAGtSFGQxKUVyW4mYLb
-	 1jhtdzpmD/PK3YwTEIaaP718jLsO4oV9Qz+yWqRsQEaRxJoIctWWYgPMQdkqiqPthy
-	 jR4FYUN8jnkuQAhiBhTNJchXpbFKYakPdP/fy271WL+ve30xsuqS7PWE7zVKaqguUr
-	 y5IUPGGLLX+dd/BVVLn6HuqeAxlqemyf/86swKuesbIQTQoP7AymmoZMCMO/i8nroK
-	 F9xu8rBIVZjyJ3IABAtEvYF6eCPzV3XyasJVbcYVjI/MjSAR2yqV+0nXnQam2KfVSj
-	 mZjzXZ+P2kyzg==
-Date: Thu, 16 May 2024 17:04:16 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Kanak Shilledar <kanakshilledar111@protonmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>, workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] Documentation: process: Revert "Document suitability
- of Proton Mail for kernel development"
-Message-ID: <20240516-tattered-rival-f443328b5971@spud>
-References: <20240516-groin-slingshot-c3c3734d2f10@spud>
- <4oW9pC38sSYZn96BW8abMfVpDDCmG4MDHwwmL73o5bP-WyHAutJ5j2GrSU17MCSWOKufViNl4q2zZUmwmN40evP5OK3QiMnUn2hsgWCYhl4=@protonmail.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="CFreOHEb"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VgFKr0xS2z6Cnk8t;
+	Thu, 16 May 2024 16:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1715875501; x=1718467502; bh=Ho8ISs0QS8pcWo56eqDyveg7
+	mCHU412H1CXWK7Dg6NQ=; b=CFreOHEbNlRZPZRCjRpsQ5wGjtUYNdUlBHUbEbrD
+	NAxRXZV0mLg1hlK0nfNSc7yEpEtiH0SjFWU2O9rc0UuKtbh0vLF7VV+TXkZE6c83
+	frjpuVQ45PTIvKw1YqBKPgBbj8W/kfwapMijNKU1YiXwH0Tx23WrP6xFh1A2sc1C
+	oU9/O5XJNi/xBMMgrhU7yWufX+GXODDjZMqO743REA+Bfy7KDP2UfZlhgDafQDF5
+	wxX2vGNOI8EHSdTnask+kvIAz6g9SXUqAd9XEgXbt5yUMIQA3p0yfeMHV8oMPWOf
+	f0fPOzZiQnRWbbQ1GVFeKde5c5K3CrfKNvB9MXM7eJdy9Q==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id rbHg1KpeB0mj; Thu, 16 May 2024 16:05:01 +0000 (UTC)
+Received: from [10.21.145.186] (unknown [65.132.165.41])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VgFKl3htpz6Cnk8s;
+	Thu, 16 May 2024 16:04:59 +0000 (UTC)
+Message-ID: <1e3308ad-7bf7-4fb4-82fa-a2f63d464ef7@acm.org>
+Date: Thu, 16 May 2024 10:04:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="M4UZhHp/KDapPJjU"
-Content-Disposition: inline
-In-Reply-To: <4oW9pC38sSYZn96BW8abMfVpDDCmG4MDHwwmL73o5bP-WyHAutJ5j2GrSU17MCSWOKufViNl4q2zZUmwmN40evP5OK3QiMnUn2hsgWCYhl4=@protonmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] scsi: ufs: Allow RTT negotiation
+To: Avri Altman <Avri.Altman@wdc.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Bean Huo <beanhuo@micron.com>, Peter Wang <peter.wang@mediatek.com>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240516055124.24490-1-avri.altman@wdc.com>
+ <20240516055124.24490-2-avri.altman@wdc.com>
+ <91e9322b-9304-4cb7-a1be-1f43208800e8@acm.org>
+ <DM6PR04MB6575208AAB1E40C6EE91A815FCED2@DM6PR04MB6575.namprd04.prod.outlook.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <DM6PR04MB6575208AAB1E40C6EE91A815FCED2@DM6PR04MB6575.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 5/16/24 09:21, Avri Altman wrote:
+>> On 5/15/24 23:51, Avri Altman wrote:
+>>>    void ufshcd_fixup_dev_quirks(struct ufs_hba *hba,
+>>>                             const struct ufs_dev_quirk *fixups)
+>>>    {
+>>> @@ -8278,6 +8312,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+>>>        if (hba->ext_iid_sup)
+>>>                ufshcd_ext_iid_probe(hba, desc_buf);
+>>>
+>>> +     ufshcd_rtt_set(hba, desc_buf);
+>>> +
+>>
+>> Why does this call occur in ufs_get_device_desc()? ufshcd_rtt_set() sets
+>> a device parameter. Shouldn't this call be moved one level up into
+>> ufshcd_device_params_init()?
+> Because otherwise bDeviceRTTCap is not available.
+> Please note several device configuration calls in  ufs_get_device_desc - all requires some device descriptor fields.
 
---M4UZhHp/KDapPJjU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please make sure that the functionality of ufs_get_device_desc() and the 
+name of that function remain in sync.
 
-On Thu, May 16, 2024 at 04:00:10PM +0000, Kanak Shilledar wrote:
-> On Thursday, May 16th, 2024 at 9:05 PM, Conor Dooley <conor@kernel.org> w=
-rote:
->=20
-> > From: Conor Dooley conor.dooley@microchip.com
-> >=20
-> >=20
-> > Revert commit 1d2ed9234c85 ("Documentation: process: Document
-> > suitability of Proton Mail for kernel development") as Proton disabled
-> > WKD for kernel.org addresses as a result of some interaction with
-> > Konstantin on social.kernel.org
-> >=20
-> > Signed-off-by: Conor Dooley conor.dooley@microchip.com
-> >=20
-> > ---
-> >=20
-> > I tried to find the stuff on social.korg to provide a link
-> > but could not.
-> >=20
-> > CC: kanakshilledar111@protonmail.com
-> > CC: Konstantin Ryabitsev konstantin@linuxfoundation.org
-> >=20
-> > CC: Mark Brown broonie@kernel.org
-> >=20
-> > CC: Jonathan Corbet corbet@lwn.net
-> >=20
-> > CC: workflows@vger.kernel.org
-> > CC: linux-doc@vger.kernel.org
-> > CC: linux-kernel@vger.kernel.org
-> > ---
-> > Documentation/process/email-clients.rst | 20 --------------------
-> > 1 file changed, 20 deletions(-)
-> >=20
-> > diff --git a/Documentation/process/email-clients.rst b/Documentation/pr=
-ocess/email-clients.rst
-> > index 471e1f93fa09..fc2c46f3f82d 100644
-> > --- a/Documentation/process/email-clients.rst
-> > +++ b/Documentation/process/email-clients.rst
-> > @@ -350,23 +350,3 @@ although tab2space problem can be solved with exte=
-rnal editor.
-> >=20
-> > Another problem is that Gmail will base64-encode any message that has a
-> > non-ASCII character. That includes things like European names.
-> > -
-> > -Proton Mail
-> > -***********
-> > -
-> > -Proton Mail has a "feature" where it looks up keys using Web Key Direc=
-tory
-> > -(WKD) and encrypts mail to any recipients for which it finds a key.
-> > -Kernel.org publishes the WKD for all developers who have kernel.org ac=
-counts.
-> > -As a result, emails sent using Proton Mail to kernel.org addresses wil=
-l be
-> > -encrypted.
-> > -Unfortunately, Proton Mail does not provide a mechanism to disable the
-> > -automatic encryption, viewing it as a privacy feature.
-> > -The automatic encryption feature is also enabled for mail sent via the=
- Proton
-> > -Mail Bridge, so this affects all outgoing messages, including patches =
-sent with
-> > -`git send-email`.
-> > -Encrypted mail adds unnecessary friction, as other developers may not =
-have mail
-> > -clients, or tooling, configured for use with encrypted mail and some m=
-ail
-> > -clients may encrypt responses to encrypted mail for all recipients, in=
-cluding
-> > -the mailing lists.
-> > -Unless a way to disable this "feature" is introduced, Proton Mail is u=
-nsuited
-> > -to kernel development.
->=20
-> Instead of completely removing the Proton Mail section, can we keep the
-> mention about the Proton Mail bridge and the third-party hydroxide
-> (https://github.com/emersion/hydroxide) bridge.
+I think that bDeviceRTTCap is available in ufshcd_device_params_init()
+after ufs_get_device_desc() has returned?
 
-I think that is probably reasonable, but I think writing the replacement
-text is up to someone who actually uses protonmail.
+Thanks,
 
---M4UZhHp/KDapPJjU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkYugAAKCRB4tDGHoIJi
-0omAAQD2PDht18QafEYRX8KcAkFSW+u0xgTPRkv1jW67OHnXUQD/b7l2pDkiHGJO
-H0NRHTXedMoiytMxuVkw1tu7zM96SwE=
-=qAQV
------END PGP SIGNATURE-----
-
---M4UZhHp/KDapPJjU--
+Bart.
