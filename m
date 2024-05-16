@@ -1,118 +1,81 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0FC1553BD;
-	Thu, 16 May 2024 17:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B2014D457
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 17:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715881949; cv=none; b=Akk6CHMPCkmRSVt0TIWSMB4WLNll9t7Ha4jTYvCxWh2blxVgDd0xUG7M6L2VzGo3A7oROxDzODr75GmYCZyrgv9725DwR4xvG48LrQlwTf/5b+RBfU1k9ZRaFu02JS3cgG3aD+xeOHZF4BUeI3z3kZeaANO6caaet295HgmEoh0=
+	t=1715882008; cv=none; b=uD5ihQCcjwMOibIAtOerhBg0wAL+knvaTYJmTd6QupmGyFoyCixzIXma162V+7Tea7OChc36WuacMlXJHhvUD4z3m8FUTYfqU9AWjHU0wgHg3BfzAaXuwvDXu9VErJJTh9v3XNcStGfBJ3Mm2mntD0qKcbF7Pxlh1OTDWL3vSD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715881949; c=relaxed/simple;
-	bh=zOc0bq0Q8lD7wXxEGGsJlN5D1ud+1kdpAHTSlJsG4v8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KuFuou37Q8JqDCFK7apKKlAgRM32tBu0A71y0ThQDF1nJWtfr63E2k8ysiAuFqy2NaBxh5r1VRQVbE8eBmV/S0EmbfY3JbU8NaBoSTs+oJ2E1YuTNHjC6Bg3TT309pH7w60z2bT69qkqaSD3ArOcK6mSmF8wEqhkN4W59yTZCCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ue3VJ34d; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715882008; c=relaxed/simple;
+	bh=PXXsy1vuFtGyoNlHHSR8xTWBE0S55BXma7bKe4Je6ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1UPUbWvezM5uytA66SYGAqybkGM/Dyd0V5RFxS5tma0wBN9y00y874udKIpkKrX1zwbsjcfqE4BEAWlK5Voa0Mw5taqD6u/xN7wOcqKwCGEryFwsLQBsHepvFbv/kIwhZzYElQHBPofElveGg++0bLJ5ADDNkSQyX2aIbvByQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UvSuQdES; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ue3VJ34d"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4521ad6c0so448010b3a.0;
-        Thu, 16 May 2024 10:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715881948; x=1716486748; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gDmhWEiMJ5CnV3oGozg5alnQWKxPvnqmiaAt5RGDDRk=;
-        b=Ue3VJ34dkWiOpQ0VLAW82PPmPtIL29V6O8JIuj4g6LTJHIpQ2ir0EhPJ8LddQ8vswr
-         CWKuQDVsJL00t1PLpwKASyKdDZTDQHcWfMeRtCDWGZ8MHyog7VhMPi/RLJw9F1Yy2SlB
-         LAVDNciL607H4dk/v8nrj7o3pHsQRiV7s2IKKbPMvfdRN+3B6rHHMp7u4aAXQm+j8UqW
-         7yBA2CU8f6fAgZH0t1OFsgoMiuzUKhfmXv7d7P9lgETJariq78BD3TPiYxaw65tNkRfJ
-         ZFiS9uDACrUps1UAyhxkT3WPPnPhr90tVWS/FmSEfiRmVzqwj2WNN9ggSdT4IapWw4GE
-         jsww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715881948; x=1716486748;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gDmhWEiMJ5CnV3oGozg5alnQWKxPvnqmiaAt5RGDDRk=;
-        b=WfJ2/qAj3sL25uZ84jDDhlRQTdCt4ynjiLpdDP7Tf7KUqy58+bpDip31UmqsL/zdKh
-         3KNW+yODWkxoXyoNNh9XH9XaR0PvXBGsV+UctaGz7+JoTF/RsXs5coeFiyD0sw4/4t6P
-         a2PJUVTO/v46IBxEW+uZcPP+X+yHSftGgrz3GESpOYdExofuteus9uazq8jkiJkiyQfk
-         D9q5WdXUbFzZ186WkQhpO3t7bdeTJ14ymdoYKRx0RTsvYgsVjvaEeU6QkpokhQqC6fv/
-         jg7jwgKoHAOozfH+ytdMjUU/R8B0Gd+B/OAt2lM0IpGXR1Zl8nGpKl0ilhMsol6Ypk4q
-         JoKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmelqf6t7NKeBd/qwk2m+j+FjMzlj+Ztj+njQ6CsORQPIjW0O8gFwTwAGL5fMaNNiF7oreNm7Dmo117rdGOH5iruV1w7rgZgamu8RPPD78i99riMXiOvdxXVonPdO+MPwX2WGD6XJOrJE=
-X-Gm-Message-State: AOJu0YxJ+LaaFCqrMRwp77KxDRCOHIHzUO/Nk7NO8/R9OcPqwUqDdRXH
-	ZlcBUH1nIdi4Rd3fGREC2zTfyjKek/pN7L7MCBiuH3MvYC68VAO2+Uh0Up5ZpIs=
-X-Google-Smtp-Source: AGHT+IEqqTKsoVZ8amcaBaR5SBa3obXoMNGF0fq41SqYvXalybmo7t+x8s8FV0XSDLDU1WYqXds51Q==
-X-Received: by 2002:a05:6a00:1ad0:b0:6e6:9f47:c18c with SMTP id d2e1a72fcca58-6f4e03858b3mr23691543b3a.33.1715881947854;
-        Thu, 16 May 2024 10:52:27 -0700 (PDT)
-Received: from paran-QEMU-Virtual-Machine.. ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4f2cdedb7sm9727615b3a.52.2024.05.16.10.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 10:52:27 -0700 (PDT)
-From: yskelg@gmail.com
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Austin Kim <austindh.kim@gmail.com>,
-	shjy180909@gmail.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yunseong Kim <yskelg@gmail.com>
-Subject: [PATCH] line6: add midibuf init failure handling in line6_init_midi()
-Date: Fri, 17 May 2024 02:47:38 +0900
-Message-Id: <20240516174737.415912-1-yskelg@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UvSuQdES"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JZ8dIVPdliawbwUcKrUeitOAz8xKG5PgkXSZmGQa9D4=; b=UvSuQdESm81j8qVqZLrsfFXdHd
+	gRs10BA65Kv8cpXTTmuh9WepRZTt9KxErvu0Jqi5m8suw4U/j8GgY0DIRRqk8+5hlZ352vEG0AVSD
+	G5LEIE0poHMWnIcdczG6gJUV2K3DG0o8kJNQdRefrW+PIHcogEhguQZaMaZXe5hY/jgr/4nLIWPvL
+	Zg/DpFA04icWBk0qt1bS2umQr7HwLIeOx436DhKlpFxQ2D92KlHpfZpq+Q/hOXYaVVbMGmDlMpAiM
+	YoMPNfQ4T2JdfeY/stDro9hPEDSwTckQ3I5nhG3PYIVmgG4K4ZuoAIIQKQPJd+4bMn12stg85TEXk
+	GASg3Mfw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7fIA-0000000C3mA-2EHl;
+	Thu, 16 May 2024 17:53:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EFC3630068B; Thu, 16 May 2024 19:53:21 +0200 (CEST)
+Date: Thu, 16 May 2024 19:53:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Yun Levi <ppbuk5246@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	anna-maria@linutronix.de, mingo@kernel.org, tglx@linutronix.de,
+	Markus.Elfring@web.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] time/tick-sched: idle load balancing when nohz_full
+ cpu becomes idle.
+Message-ID: <20240516175321.GN22557@noisy.programming.kicks-ass.net>
+References: <CAM7-yPRHp3tiZjuBTesdRQoU8WJNg1scon_txS_6R-pZq9MXHw@mail.gmail.com>
+ <20240516084911.GF22557@noisy.programming.kicks-ass.net>
+ <ZkXtHv+fHUD2+lFJ@lothringen>
+ <CAM7-yPTSq0CSmRsTpeXwzhFk77gfwUK_LZKnbgo4NPk5zPCaAg@mail.gmail.com>
+ <20240516140003.GJ22557@noisy.programming.kicks-ass.net>
+ <ZkYW48dTX2FH5NaD@lothringen>
+ <20240516144504.GL22557@noisy.programming.kicks-ass.net>
+ <ZkYgG9KYMpUPeJsM@lothringen>
+ <20240516151953.GM22557@noisy.programming.kicks-ass.net>
+ <ZkYnKAd1Qy+yvjDY@lothringen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkYnKAd1Qy+yvjDY@lothringen>
 
-From: Yunseong Kim <yskelg@gmail.com>
+On Thu, May 16, 2024 at 05:32:56PM +0200, Frederic Weisbecker wrote:
+> On Thu, May 16, 2024 at 05:19:53PM +0200, Peter Zijlstra wrote:
 
-This patch fixes potential memory allocation failures in the
-line6_midibuf_init(). If either midibuf_in, midibuf_out allocation
-line6_midibuf_init call failed, the allocated memory for line6midi
-might have been leaked.
+> > Yes, but stronger, as long as the CPU is part of a load-balance domain,
+> > it must not disable the tick while running anything.
+> > 
+> > that is, NOHZ_FULL must not become active unless it's running on a
+> > single CPU partition.
+> 
+> I like the idea but I'm afraid to introduce regressions while doing so,
+> with people currently using nohz_full without proper partionning...
 
-This patch introduces an error handling label and uses goto to jump there
-in case of allocation failures. A kfree call is added to release any
-partially allocated memory before returning the error code.
+There is no regression, if this is possible today it is utterly broken.
 
-Signed-off-by: Yunseong Kim <yskelg@gmail.com>
----
- sound/usb/line6/midi.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/sound/usb/line6/midi.c b/sound/usb/line6/midi.c
-index 0838632c788e..abcf58f46673 100644
---- a/sound/usb/line6/midi.c
-+++ b/sound/usb/line6/midi.c
-@@ -283,13 +283,18 @@ int line6_init_midi(struct usb_line6 *line6)
- 
- 	err = line6_midibuf_init(&line6midi->midibuf_in, MIDI_BUFFER_SIZE, 0);
- 	if (err < 0)
--		return err;
-+		goto error;
- 
- 	err = line6_midibuf_init(&line6midi->midibuf_out, MIDI_BUFFER_SIZE, 1);
- 	if (err < 0)
--		return err;
-+		goto error;
- 
- 	line6->line6midi = line6midi;
- 	return 0;
-+
-+error:
-+	kfree(line6midi);
-+	return err;
-+
- }
- EXPORT_SYMBOL_GPL(line6_init_midi);
--- 
-2.34.1
-
+This should never have been possible.
