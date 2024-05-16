@@ -1,40 +1,56 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE6714D2AE;
-	Thu, 16 May 2024 16:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE514D702
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 16:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715875522; cv=none; b=ZHW1apnBkyGeHDVkczuiHJJNU0qXsFs4x2qEbEjAU6Jqa+Cu4hTwSA+dk+/pntF4JV2NrIGIcHzWC2G8jkup8vhFG4PvhOFIZtbwg7/llcIg3VvSNxGaZv/tiPIN5ajOduuPCrnSfxzKEvnVMWW1COi++zha5N55vTM67cAhGx0=
+	t=1715875534; cv=none; b=ELyuLXQK4cwjQAc8WvVa/ATVpw3J7vwBdQxhMAyxzJqRE2Q5Yx6SxpL9t6WSn8PGNqMlSr+DFH/QK5t5jrZJ68WoKy7Ot9FWfAliAUFXb1pjmSKVif9Kmx2QD6DAOqDKEPl5nwI/jnLpc0AZbxQpokupXN0pVv6F1Ip0T+ndd4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715875522; c=relaxed/simple;
-	bh=qvVIUgdKJZiGKItHL5ljlIAWYoWtIMbHS5W/uycZGr4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HIN1orynwtrLkeu899H5DSLsrPPMKmYdoF+9Bd00wUHOLHBMhNrvkgwpt28RXqBPWkgA4xMrJbQuG/86Qr6oLuv0OAysvFJGxXYxqPF+kBEXGp6TMYLQ8Fkc7+ZAqspDw71YYtkoWKWvwm2/CBYPVQI6SQ+oLIljsEivCvycx5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tZ/JJNul; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715875534; c=relaxed/simple;
+	bh=GofbfzUoP7F5HvNKVwb5EXDSWgvrLYoGUMZzb2JNBRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aCQ2sdUQym39bKzaxThA/fivX5adRR+P/bwXhi/u0NVPRFqPzErSdQkP6pfKHFcWdddV46Vp8jSsNB+cxyAb6dyH2/piKm7jUTJQdsruHa1RX7anL9GmT4gzah982vDPHw+fDFBdFVDib3nfFBmCErgVR0zpR3Ye1cbpIWg3mf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=BnSxplq3; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tZ/JJNul"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715875514;
-	bh=qvVIUgdKJZiGKItHL5ljlIAWYoWtIMbHS5W/uycZGr4=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=tZ/JJNulmFExB6EaDs5oehCUbnuUs7uJafZxiojOZ8V67nHPCPWPLtP908vSN7JPE
-	 tlGOnk6M5JCaHpOFl687xzLKTwn9HC6Jbl8RypFuZnOT7HxYLUuGaRqDTJjGt/dPO3
-	 5zlqoPC2XW7ZR278q1CnhCzRB3NxM8JyCSEl7IdCfXu8qXE2EjSJDaOAf5azdRjcIq
-	 bzEYIfo4w1StPnosIvhBgkluRsb2vslSiO4hy3mUMIufgP97PRsNJoe8/bBelQIi/L
-	 6LdKtgt2O6lrwS9+G5LKHCRQirULWVmfDF7Q3Y0s7GZ3jq8YHCOgtky7ePx9Z1A5y/
-	 8QvJxZgzBQpVw==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 45F9837821A4;
-	Thu, 16 May 2024 16:05:12 +0000 (UTC)
-Message-ID: <a9d2a04e-7e4f-476a-a006-ec78d56e8ea1@collabora.com>
-Date: Thu, 16 May 2024 10:04:17 -0600
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BnSxplq3"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so53011015ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1715875532; x=1716480332; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z2QkcwU3rJHc7ThbSXbG7yT3nw9OsrjtPifycFEt8iA=;
+        b=BnSxplq3YPhayl03rv60pvO4C6LqP23NAulCAIhua1L8TvTEaY5JUvx9E5a6bzi1Sg
+         ZLssbedEXFuW8K2BeIOz4YzJ90HcuLpv5gKcWF7Ou/i/ll//I239qnJ3F/CekyPiyXwT
+         eQ4uKg0HD/DlCnNWTyOCSdakOLGwYhznKPiDQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715875532; x=1716480332;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=z2QkcwU3rJHc7ThbSXbG7yT3nw9OsrjtPifycFEt8iA=;
+        b=T7+e05hhXZKHRU4PMIAiI0ZQFfeZQRcpmQAiuZ+MgVzBYY3BckZpR+aH47fCeougBO
+         kI8fk2l9BQGVuaghMugvCrzY7hCGVFpyOZmWZsHlqR6J2Y8nfNoM1BUbJjqHGFN9ik4X
+         IUH0msuEEGy3RiDJnS8eVgsv4oQJJjVFvhPykkbYnOh57hVHR4vHVlTHjrV789cU4hik
+         fIGuI/7wWafimknSHfmK3KpAKERsfjIiv6Lbv9ItK2IbwqkBTFrhkRp3EPZPm3IrNcnO
+         Jc6an+O0+LUhOtxXED9k+NPxLhv8phR1LNRs/KY0ld+82AoXlebGza0j/ujIvk+IKlBR
+         hLTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcE5jWXauAVtdEGY3cdEj6xkee6w2UdGRFSusbhSKU8v0gUxK537Hh7ZSB9L5kuralFgry/CCjie7ugWJOjUpVsmP+Qg3flWFmzSyN
+X-Gm-Message-State: AOJu0Yx55q4p8UVuVfhBnGmc4iUg8C58Qprw5leqT+RqdF86VLgvILay
+	6Kzuhu+2le4vke/gReDlSyMeyY62MjKwAUhrNmVEEPaFF3ZIpBOZRq2ITGnGLA==
+X-Google-Smtp-Source: AGHT+IHHLyyRZCYARKaQbF90YlrKOBOCMUkzUDK95khP+op9eejY96K3k/MaCGbYYGOQ2UjkN6rrYQ==
+X-Received: by 2002:a17:902:8646:b0:1e6:68d0:d6c1 with SMTP id d9443c01a7336-1ef43e2682cmr166776285ad.40.1715875531867;
+        Thu, 16 May 2024 09:05:31 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634103f80b7sm13336345a12.66.2024.05.16.09.05.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 May 2024 09:05:29 -0700 (PDT)
+Message-ID: <e2aa0851-02b2-478a-832f-eca77e8fc6fe@broadcom.com>
+Date: Thu, 16 May 2024 09:05:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,54 +58,194 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-sound@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kselftest/alsa: Ensure _GNU_SOURCE is defined
-To: Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Shuah Khan <shuah@kernel.org>,
- Edward Liaw <edliaw@google.com>, John Hubbard <jhubbard@nvidia.com>
-References: <20240516-kselftest-fix-gnu-source-v1-1-e482ca6bfff7@kernel.org>
+Subject: Re: [PATCH net] net: Always descend into dsa/ folder
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: netdev@vger.kernel.org, masahiroy@kernel.org,
+ Stephen Langstaff <stephenlangstaff1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexander Lobakin <alobakin@pm.me>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, open list <linux-kernel@vger.kernel.org>
+References: <20240516033345.1813070-1-florian.fainelli@broadcom.com>
+ <69f12f34-bedb-4d1a-b359-7488530ab4e4@intel.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <69f12f34-bedb-4d1a-b359-7488530ab4e4@intel.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000009602840618946780"
+
+--0000000000009602840618946780
 Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240516-kselftest-fix-gnu-source-v1-1-e482ca6bfff7@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 5/16/24 9:27 AM, Mark Brown wrote:
-> The pcmtest driver tests use the kselftest harness which requires that
-> _GNU_SOURCE is defined but nothing causes it to be defined.  Since the
-> KHDR_INCLUDES Makefile variable has had the required define added let's
-> use that, this should provide some futureproofing.
+On 5/16/24 01:58, Alexander Lobakin wrote:
+> From: Florian Fainelli <florian.fainelli@broadcom.com>
+> Date: Wed, 15 May 2024 20:33:45 -0700
 > 
-> Fixes: daef47b89efd ("selftests: Compile kselftest headers with -D_GNU_SOURCE")
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> Stephen reported that he was unable to get the dsa_loop driver to get
+>> probed, and the reason ended up being because he had CONFIG_FIXED_PHY=y
+>> in his kernel configuration. As Masahiro explained it:
+>>
+>>    "obj-m += dsa/" means everything under dsa/ must be modular.
+>>
+>>    If there is a built-in object under dsa/ with CONFIG_NET_DSA=m,
+>>    you cannot do  "obj-$(CONFIG_NET_DSA) += dsa/".
+>>
+>>    You need to change it back to "obj-y += dsa/".
+>>
+>> This was the case here whereby CONFIG_NET_DSA=m, and so the
+>> obj-$(CONFIG_FIXED_PHY) += dsa_loop_bdinfo.o rule is not executed and
+>> the DSA loop mdio_board info structure is not registered with the
+>> kernel, and eventually the device is simply not found.
+>>
+>> Fixes: 227d72063fcc ("dsa: simplify Kconfig symbols and dependencies")
+>> Reported-by: Stephen Langstaff <stephenlangstaff1@gmail.com>
+>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>> ---
+>>   drivers/net/Makefile | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+>> index 9c053673d6b2..0f6f0f091e0e 100644
+>> --- a/drivers/net/Makefile
+>> +++ b/drivers/net/Makefile
+>> @@ -49,7 +49,7 @@ obj-$(CONFIG_MHI_NET) += mhi_net.o
+>>   obj-$(CONFIG_ARCNET) += arcnet/
+>>   obj-$(CONFIG_CAIF) += caif/
+>>   obj-$(CONFIG_CAN) += can/
+>> -obj-$(CONFIG_NET_DSA) += dsa/
+>> +obj-y += dsa/
+> 
+> obj-$(CONFIG_NET_DSA:m=y) += dsa/
+> 
+> ?
+> 
+> or
+> 
+> ifdef CONFIG_NET_DSA
+> obj-y += dsa/
+> endif
+> 
+> I don't like always adding folders even if nothing will be built there
+> as we then have a lot of folders with just empty built-in.a.
 
-> ---
->  tools/testing/selftests/alsa/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/alsa/Makefile b/tools/testing/selftests/alsa/Makefile
-> index 5af9ba8a4645..c1ce39874e2b 100644
-> --- a/tools/testing/selftests/alsa/Makefile
-> +++ b/tools/testing/selftests/alsa/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  #
->  
-> -CFLAGS += $(shell pkg-config --cflags alsa)
-> +CFLAGS += $(shell pkg-config --cflags alsa) $(KHDR_INCLUDES)
->  LDLIBS += $(shell pkg-config --libs alsa)
->  ifeq ($(LDLIBS),)
->  LDLIBS += -lasound
-> 
-> ---
-> base-commit: 3c999d1ae3c75991902a1a7dad0cb62c2a3008b4
-> change-id: 20240516-kselftest-fix-gnu-source-81ddd00870a8
-> 
-> Best regards,
-
+Sounds good, I prefer the second version which is clearer IMHO, will 
+spin a v2 in the next few hours. Thanks!
 -- 
-BR,
-Muhammad Usama Anjum
+Florian
+
+
+--0000000000009602840618946780
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIETzyXr+iuFVsGhD
+N9C/C9vaCJObra7B546/fwepZz/xMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDUxNjE2MDUzMlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDEnq8yj4D1wuTL2YmnNOV34Ja7pTvm9CNs
+ec8L0Wq8ydzyDN/6TpvYiPLlMHCfx4DOyj6O5Oy/mKG3vZZi+FGu+HSwdCJDfK2W9j7lQf0i1J84
+ubDvBsm3dfhTZwYqcugQVxrUfFognCpln+zZiQYnod7JEPnGPuI/ot4+hheE0f2/My4CBZplTOpd
+efDYBc9MvLcWCZJ8j07SsdA6dk3feI5ozwLPRqZWPB++CnJtaF48U8uPB/XcpTwzC+m0aAoE5An/
+imrAD0x2poTBCyAvfwwW+GgzS+REHtQKja13Cte61Q2/LtdTE/rAn4gvP5lddd4mn5JFjY4BS3vr
+sYcf
+--0000000000009602840618946780--
