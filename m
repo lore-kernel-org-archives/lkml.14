@@ -1,171 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AD98F66
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135541DFD6;
+	Thu, 16 May 2024 15:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874220; cv=none; b=kSd/jykUtzdSNVMfgfIeodsfmysjqukbH7b+vvgcItz58FbvhJBLl41ZSpeX7t+U9b4VcU57zzuT2YpueruqXwQPbxEgw8i88dy8PHluf8yeiCww3d1hbB1224xBx9rPvfxft+0fTrQK9n1LUe4YfKDbuo745T5S7hMw5xJ32Fg=
+	t=1715874387; cv=none; b=WO9QrHYbDqCPTQLWm5dGzbS2T8oRmrmh7SDIPmV8SFBFZXTJzoARFuOGkPBP9eHikTdGyCrDRCTwchpc3t3K+y6fYWWszXeTrgjYXy9ExJ3Q9k3+ddAvTSkfaGeD/P/RBHmJk2qwo5HPI6Z+9B8AXdjbBK5hMSBoUrxYvfjD6oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874220; c=relaxed/simple;
-	bh=IoDvkvHXw1HR8wRbwehqcSi7peKYNyi9CZ1OaH+EN9E=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AT7+jviQqpSd0Ut8Cf1n2q7sjZRMTWI538N6qKrjDHxk5pQqUUzaN1DUSmZqLx5k4DMcbYxz36iNwqHltindz31Ajvxillp0Z7ffNH6q04OHuhQoo3R+8yU43s+DN6v3GuFYBL1zoG7f21C0A1ivr7cQLlEOsmWF9HHHoZWNBYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H1jWd0x/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715874387; c=relaxed/simple;
+	bh=jNeTYgB9JrRx41ZH5bCoz0zP6axFcSR8qxD5/yfBbmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jt+1Gv9gVm9b2xA33qQuftCbbNzhD5znEj1BCzMzcqZRSlD1YTSKLREao0cegzUPO5ARlUQWbBzlB3ddTfhOMqkB3nHCvcsCQ7qcTaWTqCgzb9/fBqFRo8sArlzQqLZqecQQk8yucK1DWFhAyHfAawfkc4FhjzrgmhGmH+tjc38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ic+uftSO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H1jWd0x/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715874218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W+3Q2pNlPjK1FF8Uf4iS6y9B02F58xnA/27DRhKkfIs=;
-	b=H1jWd0x/E7otnS3jZXQGQ3HI5HxPRb40XC4vPB5BaqOURpgIMAnhz2gCbCFLWl+mulxtUC
-	zc3izgdyzSfi+QpNCe1WsR/Z7pkdZ1I7NylIXI7k7/0gOMNxI+B1wHTQdr1qsrEaAX4xrs
-	6q51Whks/JhQ3CYmRXdQLzd680Q4GE0=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-149-BGT-_8W_NO2PuVVVk5HRWA-1; Thu, 16 May 2024 11:43:36 -0400
-X-MC-Unique: BGT-_8W_NO2PuVVVk5HRWA-1
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3c9992bad97so5394326b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:43:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715874216; x=1716479016;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=W+3Q2pNlPjK1FF8Uf4iS6y9B02F58xnA/27DRhKkfIs=;
-        b=fiiwnpmxAOINtvdTSasJSgRMEV9h8XzcOtRObjKHAF1muiVr8TZ0YH8VLpH/z/4/os
-         7Rk0d9nwHGKNV/3f47jbltMA9W0TS2BxtVA/TxfUEhxNiUfMfVpNMw+Sb+wpmx58em8q
-         9a24V6TsJF40NBxQLpFqoOfD4TzUZl4aDB7A4AoJWyL+/UbaQnMn4dQqfTGwfYuE4wRd
-         G60tggFIp/bXyVAfcQXtecSVgpWc1M6V/QDsbsotAaIcgyAWoC696UHcKB4FsMyrPeIv
-         S8egjesLtOHTirclpnXr2tiBdY3C/qBITQTlwcP51Icn1SlLn8T4p490tfHmSVXOZks3
-         J8qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+D2dEUGctRLmXVdUl9U+S3Vzkcra/tM+1f1zCxNBNmHv5B6MnIdwWnQ97zM3Nlx2HzLAMV0DRpqBXSDYIXl/rpjpgMBlK26iLmIg8
-X-Gm-Message-State: AOJu0Yw/eO9RW9mcZ0lHNFPci+Y2fef71LaR0b0mSEe+9ZHhEb+QiWO6
-	v7kXr7/nt2Yyadac+THK52Gb6YOBNeQpxT3YHphfk43dYCFEh4FRf2mlJYwjbN8rTk83ZoVJoPX
-	xzo2RE9aClONg6A6a1pf81S/C51lH1BGce5limv689fZ/LuLMvbQSbjVnkF31aw==
-X-Received: by 2002:a05:6808:148f:b0:3c7:52da:2055 with SMTP id 5614622812f47-3c997035756mr27286627b6e.2.1715874215823;
-        Thu, 16 May 2024 08:43:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHOCCsTNyW+7WaF4mJb+63faC/dTk6Tdyxind5u+rzkVS12U49UBoYVqxzoUBzxfysS0QYUjw==
-X-Received: by 2002:a05:6808:148f:b0:3c7:52da:2055 with SMTP id 5614622812f47-3c997035756mr27286598b6e.2.1715874215414;
-        Thu, 16 May 2024 08:43:35 -0700 (PDT)
-Received: from localhost ([240d:1a:c0d:9f00:a03a:475d:8280:d9b7])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e3c475eb3sm12545921cf.82.2024.05.16.08.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 08:43:35 -0700 (PDT)
-Date: Fri, 17 May 2024 00:43:31 +0900 (JST)
-Message-Id: <20240517.004331.1678192397138539146.syoshida@redhat.com>
-To: ryasuoka@redhat.com
-Cc: horms@kernel.org, krzk@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] nfc: nci: Fix handling of zero-length payload
- packets in nci_rx_work()
-From: Shigeru Yoshida <syoshida@redhat.com>
-In-Reply-To: <ZkXQ5h8fla1KhX6A@zeus>
-References: <20240515151757.457353-1-ryasuoka@redhat.com>
-	<20240516084348.GF179178@kernel.org>
-	<ZkXQ5h8fla1KhX6A@zeus>
-X-Mailer: Mew version 6.9 on Emacs 29.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ic+uftSO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA48FC113CC;
+	Thu, 16 May 2024 15:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715874386;
+	bh=jNeTYgB9JrRx41ZH5bCoz0zP6axFcSR8qxD5/yfBbmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ic+uftSORrrlwHVGGjvLkuoljHBjd4KuI7bteturNO2ObUILYYkiNCae6zyMGVI+U
+	 moSwzr2+1myH76tE91DdtTYXR0t1ee3G4TLc4xhNyDTrZG6mfH7dFT9cDWLDEo5UdZ
+	 rijveDzsieiv56pSmMpGKWLPg/KGtp/P0O78LbeObJhWpYMgM/0Ub8rvl+evA1u/pI
+	 ik5rwLXTXLnYA2/8h9pKsTIpmEUq25GgwZ/q1giaVo2T8c3nkOvTD9CzFfwtdJoHsG
+	 x8tGiMDt2EK3V9m4GDnKayLheqPDmO3eofkQq1iYiW10wmHKyVMUl03J+EanYlkcjB
+	 s3KWcoq/O++BA==
+Date: Thu, 16 May 2024 16:46:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 6.8 000/339] 6.8.10-rc3 review
+Message-ID: <ec7340d6-4bb8-4106-a7dc-2445e230620c@sirena.org.uk>
+References: <20240516121349.430565475@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="an78PT4XpI8Yq0SY"
+Content-Disposition: inline
+In-Reply-To: <20240516121349.430565475@linuxfoundation.org>
+X-Cookie: I'm having a MID-WEEK CRISIS!
 
-Hi Yasuoka-san,
 
-On Thu, 16 May 2024 18:24:54 +0900, Ryosuke Yasuoka wrote:
-> Thank you for your review and comment, Simon.
-> 
-> On Thu, May 16, 2024 at 09:43:48AM +0100, Simon Horman wrote:
->> Hi Yasuoka-san,
->> 
->> On Thu, May 16, 2024 at 12:17:07AM +0900, Ryosuke Yasuoka wrote:
->> > When nci_rx_work() receives a zero-length payload packet, it should
->> > discard the packet without exiting the loop. Instead, it should continue
->> > processing subsequent packets.
->> 
->> nit: I think it would be clearer to say:
->> 
->> ... it should not discard the packet and exit the loop. Instead, ...
-> 
-> Great. I'll update commit msg like this.
-> 
->> > 
->> > Fixes: d24b03535e5e ("nfc: nci: Fix uninit-value in nci_dev_up and nci_ntf_packet")
->> > Closes: https://lore.kernel.org/lkml/20240428134525.GW516117@kernel.org/T/
->> 
->> nit: I'm not sure this Closes link is adding much,
->>      there are more changes coming, right?
-> 
-> No. I just wanna show the URL link as a reference where this bug is
-> found. This URL discuss a little bit different topic as you know.
-> 
-> In the following discussion [1], Jakub pointed out that changing
-> continue statement to break is not related to the patch "Fix
-> uninit-value in nci_rw_work". So I posted this new small patch before
-> posting v5 patch for "Fix: uninit-value in nci_rw_work".
-> 
-> If Closes tag is not appropriate, I can remove this in this v2 patch.
-> What do you think?
+--an78PT4XpI8Yq0SY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think this patch, continuing the loop after freeing skb, came from
-the following discussion:
+On Thu, May 16, 2024 at 02:14:57PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.8.10 release.
+> There are 339 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-https://lore.kernel.org/lkml/Zi-vGH1ROjiv1yJ2@zeus/
+Tested-by: Mark Brown <broonie@kernel.org>
 
-In such a case, you can use Link: tag with the above URL and mention
-it in the change log like "As discussed [1], ...". But this patch
-small and clear, so I think the current change log is enough to convey
-the intent of the changes without external link.
+--an78PT4XpI8Yq0SY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-You may find the following document helpful:
+-----BEGIN PGP SIGNATURE-----
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9#n115
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZGKksACgkQJNaLcl1U
+h9AgZwf+J69pKb1lvGw0Bh9dos4agJzkecCiHvVOjv0Y9iJ0fgVijDOEgidxt0Bf
+KzjIQXyEl5hrSoKLMIzxHZh2jZgdOgZM4qdg/YOMzDq570wh+SGWU6BmLAIWt3pa
+nw3tQYdsBSuOegyL4Ia+BMcJ9lKlfWjpMGSeyBVAWPipUy0K8xVA2m3OPuvDj03S
+qp4HHWxcTSDWn6ebMNkJ9Xlh6jeky47jxf8qcp7qyANc7NOgOpLxw0SMRt5AfLGk
+FtUoAPY3JK2nVT+zLavLIWQHhA2d9Ya5bjIfOfFB/3N+k4I0J3EDzrReDoq3F/hC
+M2FTAk+zuzq3TXHFLVTHOx//QxTrHg==
+=SrXX
+-----END PGP SIGNATURE-----
 
-Thanks,
-Shigeru
-
-> 
-> [1] https://lore.kernel.org/all/20240510190613.72838bf0@kernel.org/
-> 
->> > Reported-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
->> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
->> > ---
->> >  net/nfc/nci/core.c | 3 +--
->> >  1 file changed, 1 insertion(+), 2 deletions(-)
->> > 
->> > diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
->> > index b133dc55304c..f2ae8b0d81b9 100644
->> > --- a/net/nfc/nci/core.c
->> > +++ b/net/nfc/nci/core.c
->> > @@ -1518,8 +1518,7 @@ static void nci_rx_work(struct work_struct *work)
->> >  
->> >  		if (!nci_plen(skb->data)) {
->> >  			kfree_skb(skb);
->> > -			kcov_remote_stop();
->> > -			break;
->> > +			continue;
->> >  		}
->> >  
->> >  		/* Process frame */
->> > -- 
->> > 2.44.0
->> > 
->> > 
->> 
-> 
-> Thank you for your help.
-> Ryosuke
-> 
-> 
-
+--an78PT4XpI8Yq0SY--
