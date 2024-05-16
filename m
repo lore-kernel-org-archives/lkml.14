@@ -1,85 +1,110 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CC0143895
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638EA143895;
+	Thu, 16 May 2024 15:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874492; cv=none; b=ldnK+EbuEwJ4JQdpt7QQWq8RlMf9IWZbzQI0G1Xf36RNLGOsRGM0z99J0wQ11OW/vNInUJj4m4ItbWPD5CWTc6RkznhjfcvATBL2e3yRKM5mF69ksejHYbEqUq3FiszIXM+RGGQFSWR2EOoQ46xMbCWEtWN2o5ohXrw65PG7o2w=
+	t=1715874545; cv=none; b=lPtza/hVdAbN4Luf3PznHM1+fD8BVyRQzI1fIrVOKlw6XgYeg2nfGIUkX6/rfuCv7NSL03l9RIeqs1Uf4mHf6tzFbAbfZum31a55t6FgEztpD3mziHo7n+5T3A+ppu8UUmADmFQblw/zDp0CEiY3KofRy0ChGQo4o9s4r+LS8Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874492; c=relaxed/simple;
-	bh=RZiPgzca9nwRTHTXn6EH2+cSL8F1AcH3O8sQBRT+8O0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GCq6zNzbD7fE9r/eB06oaSgbVQpWFB3x9R2cFTaOzlqwSrhAaopuDN4MzRi+gE++ftxjk2CoCpIymfeJPRPoUxh8tZlwv+tsWlLxJpAy1HZfyStBNF4E+sOWeC4RXhIWr0YzU0AbEURD0sRlXqhJ+8oI0tXFZ6buXCrIqxpTLqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YCZ862VA; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715874545; c=relaxed/simple;
+	bh=TaCKIb+tOlae/OaZnCw4aoUwvzQ2N3Q/DzEajBzwE8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f/tJtppE2Omt6b7cdpAPDWEP6bZSV7PytqyDuXNJn9XObCRAQ8wziQybeSaalh1PjP7xT/X28rsSWJ10G704DDfoupu4V8pzRlFSq3HyPexzN7iYvxus+/jAP1ohUVI9AYRVMEi5MMAkTOmvpLXISA5decbb4dB16/0Sh5byVgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxXZmyhp; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YCZ862VA"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso4180401a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:48:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxXZmyhp"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-572e8028e0cso3693988a12.3;
+        Thu, 16 May 2024 08:49:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715874489; x=1716479289; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BftxJmB2CreY3+o2q0X3TymOit6faQaIr4Dqh2PnWeg=;
-        b=YCZ862VAMeLFnCRZoBg65Mw8ks76lTYZJy+uZwFNJquNeby15EV2i1Q/NA5MiBOeIJ
-         9RmgfdABPjxTNv+dPpcK8pzkxMPEIvO+qkAQMpf2pQxgiYeoNVlpoNmuU75M6Yo2NQoF
-         IcAgrbXgmlw9uk1eexdXgRVZ9UNjrV3nvJ8f8=
+        d=gmail.com; s=20230601; t=1715874543; x=1716479343; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EVGMf75YF+vt1t27uWnw5jAT2X3eMlVNjnjRhN5vWv4=;
+        b=hxXZmyhpV8+/Gy/hU2Rqptf1VE2ZP57apPbg7oTaL/rVPOVZb9dSG0WkdQtzSV/Ucq
+         httY5qTayTKJzzBhTWI+ODq8Cm4PWE+xcXIVMsaQRS+vu94tFGTbZT4CQiyEHrafuErp
+         Ohwe6vAOE7EZllUfC7OgLFMQTwjP1wqvgYqWHNC9o6qkgfb2gALFmYuzl4C5xuMKd+rg
+         ISnjvc+ccz0LiGJaxe+DaGTyegsywOu0kyX16ZXCLKnondrmtRTxhSJmOunTKagz0KXd
+         0xdkTmHw6Dju2jNeV8Pq/9lne9rMKSmCgvn4AEijs0SNmWONVZG6RO6ls4qyybVjE4T9
+         vo1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715874489; x=1716479289;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1715874543; x=1716479343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BftxJmB2CreY3+o2q0X3TymOit6faQaIr4Dqh2PnWeg=;
-        b=wxgO7NKAMjaFHeCk5514JsOIdJBaiyTEqRtj9sheO8+qazDnz0MQ+p2sZUw0Jdo6l1
-         2sSbxy1qHoOD3yMf1enLCO6RKdBKNWpiANdusHMnpAG1zg+VzIr7rlsn4rPi9xcJRXHD
-         XeBsF0SiKVpnjwEboV79E43mBKLAKbvu1GpJC70JARP8d3Pk/X3HUVTAbR0vEbX91MKN
-         hZIBQ4ENr3eToU6Yl5RoKcctNtENty80XgeknkKuA09rmnmpqI0gtO1ccu9anzmenazQ
-         FQ9ExWQykK0qvSJ1xoHwtxgtQ2gDhJbQcRLCpJJhIam5tbs27y/7cmjyEVlIn83Hh5Y2
-         w7Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuB/1ZS3M2ZchPxJw1K1t6vvIVIFO9h+KandUihP5vyHFMCBVGzLcXE1EFqjFHmBPOOytLTWnEWm8FEgUlaxbwz99v8+0EvVuSUnHe
-X-Gm-Message-State: AOJu0Ywa7HnhSHDmkrvOfO/BWZ0PZOdS0BP9EGbPf1CAp8q1DrNEX6nJ
-	jruiFcfv1C5AnQIelah9C8OUK6b979WcB8ptqC7BUcoXCsL/FouCBJeFi62lR2MIGrYbi05luzt
-	XPYssOQ==
-X-Google-Smtp-Source: AGHT+IEFwE/tLTVGPH8J46/eAhHZH+Zpjh52dM/gJG9cXkGD4aWlwpFlQuqMFy9Q0kmE47xVFkSmOA==
-X-Received: by 2002:a17:906:1406:b0:a5a:7a4e:7e80 with SMTP id a640c23a62f3a-a5a7a4e7effmr778909566b.72.1715874488930;
-        Thu, 16 May 2024 08:48:08 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d6bfsm989453566b.31.2024.05.16.08.48.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 May 2024 08:48:08 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a5a2d0d8644so335401666b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:48:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+z9k+wgFRBXMTHo0eRpqBuu06VxubS490bRxZo/xRXZcmHJ0KRNWQrs8G08ChuM7vUMjWMfgyoJxqfKFl4jAFZXbbI6bQA+3ZU1LM
-X-Received: by 2002:a17:906:2708:b0:a5a:84c8:7710 with SMTP id
- a640c23a62f3a-a5a84c8b9eamr575885166b.55.1715874488199; Thu, 16 May 2024
- 08:48:08 -0700 (PDT)
+        bh=EVGMf75YF+vt1t27uWnw5jAT2X3eMlVNjnjRhN5vWv4=;
+        b=NnYgKrMo0EeqkuoWjiuFFZ/4nnOTD0MtQdLI9XYHbkWn84iB73OLO5uaC3dIzIaSHd
+         sVL0ixvIuSvQq/G2L60yOsLKvE6CIpZbuDskx3b6iYjKtZZCQIEAWXFBWozsi9PM1mMi
+         2bGXDu8q817noGg09d6AHbvsxhg11R9/xF4k1vPsZW4TrdPWX29Wge4zBHAG6dtXeDX/
+         ydIhasTHAR1eKKzyKfHOdz1/XZT9WGRe1tglPRjcl1sNmFr5Q78APWM4HeYeJWBjx1sI
+         M12VYTxxerS6fyv4Fi4FSZ9jHJ3bnF6dL8wxhyOdmvdvV+mwfCkpqX6W9CuM2zjA6f3D
+         r+5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXxdPYCJLnHAMTxZ/f1KcsmbsBTabzCvTldB81uOOoh8XiqcNn6jBlxPixdYfL+V9gICguUkj26UygIsALYCZUX0ZBK7/npM8xpkj3NqUET1eOlZUWXi5njJKaEXMj2SP9Tg4ndhhWj/Q==
+X-Gm-Message-State: AOJu0YxrogXouSQKUfdYWek61GsGxCLXMOIyMkkMeB2X28Ug0P+56Lc1
+	M3UYC768A7xzOnr3v/c3oXZHzQoqSf42w5A3Vdpi/fLF7dl3YE9R
+X-Google-Smtp-Source: AGHT+IEOXzHhAeph+JwKQNsAh5vTm8beBoiALShHRSVjBXyTmqnOak4rMy3vcQIPzPH7/wuZU+EBQQ==
+X-Received: by 2002:a50:d5dc:0:b0:56e:60d:9b16 with SMTP id 4fb4d7f45d1cf-5734d5974e6mr12980759a12.6.1715874542455;
+        Thu, 16 May 2024 08:49:02 -0700 (PDT)
+Received: from localhost (host-95-246-50-43.retail.telecomitalia.it. [95.246.50.43])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574bcad0362sm7372766a12.20.2024.05.16.08.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 08:49:02 -0700 (PDT)
+From: Matteo Martelli <matteomartelli3@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Matteo Martelli <matteomartelli3@gmail.com>
+Subject: [PATCH v2 0/2] ASoC: codecs: add support for everest-semi es8311 codec
+Date: Thu, 16 May 2024 17:43:29 +0200
+Message-ID: <20240516154800.125284-1-matteomartelli3@gmail.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1715616501.git.dsterba@suse.com> <CAHk-=wgt362nGfScVOOii8cgKn2LVVHeOvOA7OBwg1OwbuJQcw@mail.gmail.com>
- <32730052-b40e-4262-a1c4-0d45a9b6de53@gmx.com>
-In-Reply-To: <32730052-b40e-4262-a1c4-0d45a9b6de53@gmx.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 16 May 2024 08:47:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjKp4Scs_9zE0a5Bh=tFYuzaaE7q9ZJ8X1n6RsLcZYX6A@mail.gmail.com>
-Message-ID: <CAHk-=wjKp4Scs_9zE0a5Bh=tFYuzaaE7q9ZJ8X1n6RsLcZYX6A@mail.gmail.com>
-Subject: Re: [GIT PULL] Btrfs updates for 6.10
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 16 May 2024 at 02:02, Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
->
-> Considering aarch64 is going more and more common, is the workstation
-> also an aarch64 platform? (the Ampere one?)
+This patch set adds support for the Everest-semi ES8311 codec.
 
-No, this happened on my regular old AMD Threadripper.
+Everest-semi ES8311 codec is a low-power mono audio codec with I2S audio
+interface and I2C control.
 
-                   Linus
+Implemented and tested most of the codec features, with few limitations
+listed in the driver commit message. The test setup was composed of a
+ESP32-LyraT-Mini board, which embeds the codec, connected via I2C and
+I2S to a Raspberry Pi Zero W host board. Some tests were also performed
+on a Pine64 A64 host board (e.g. to test the suspend/resume not
+supported by the rpi). The codec driver was bound with the simple-card
+driver running on kernel v6.9-rc7.
+---
+Changes in v2:
+- dt-bindings: removed wrong es8311 schema file
+- dt-bindings: added es8311 into existing es8316 schema file
+- Link to v1: https://lore.kernel.org/all/20240510131238.1319333-1-matteomartelli3@gmail.com/
+---
+Matteo Martelli (2):
+  ASoC: es8311: dt-bindings: add everest es8311 codec
+  ASoC: codecs: es8311: add everest es8311 codec support
+
+ .../bindings/sound/everest,es8311.yaml        |  52 +
+ sound/soc/codecs/Kconfig                      |   4 +
+ sound/soc/codecs/Makefile                     |   2 +
+ sound/soc/codecs/es8311.c                     | 970 ++++++++++++++++++
+ sound/soc/codecs/es8311.h                     | 162 +++
+ 5 files changed, 1190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/everest,es8311.yaml
+ create mode 100644 sound/soc/codecs/es8311.c
+ create mode 100644 sound/soc/codecs/es8311.h
+---
+base-commit: dccb07f2914cdab2ac3a5b6c98406f765acab803
+-- 
