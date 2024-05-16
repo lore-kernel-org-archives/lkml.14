@@ -1,53 +1,54 @@
-Received: from aer-iport-7.cisco.com (aer-iport-7.cisco.com [173.38.203.69])
+Received: from aer-iport-6.cisco.com (aer-iport-6.cisco.com [173.38.203.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AB615DBCE;
-	Thu, 16 May 2024 19:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.38.203.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484D41586DB;
+	Thu, 16 May 2024 19:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.38.203.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886328; cv=none; b=eoEff+NFukibGKrsVrX82wUYnFFWBn9r5c+fvMY8oAoKchsEV6CJCVtBk0l0ecMKe4QASicWsdzj0vQfM3CTxaETFoCxTxQ5aPkugakxDV4pMV9/aHI7pXhw7M3k7rEEO68hPy83bCvatJhcPQePa2KvXE/Y/nfK7c4nHBpf1k8=
+	t=1715886328; cv=none; b=VpeRX2+8Y68W97H1DJzVB1FgZRForVf3dYAm2Y/l79aGXf03WOWWbQUuWzr2mxIKlqJRzXPUjfVcbiLzA4jtiF85+m71F3zvKTlSAdDKIPR8Eyvys7oBYfIju5QFpxIzzW0Hw6MHhhIArDkRc4XM0SP58Izx1Bbj5FpMtApnp50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715886328; c=relaxed/simple;
-	bh=Dz0gY/c1vUKma34oa1qxnWPM+toKhYV0/teb5v0jICY=;
+	bh=ivMYgIYWIJYUOpRQp9sC48jKIyVBnsdndwyo/5V1fdw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dxcGHbKAUgGWuQQDo58GDsTvysFW4AxIz76ry9m4No0e1sV+GKwS9S71UTXuem5WSrxbo9kFxQZGEpzevhiLGlpnLFeZSmqZjtPyaS+WumgVqhGbXqjTZFGv936NTMZGcRvsOyORq4BYApdHvBJTzOw0DKhYvH1RhByAN7BdpUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=FACq3hiF; arc=none smtp.client-ip=173.38.203.69
+	 MIME-Version; b=ZY0qpLU8OBym6+EbGpX8HxS7uuEuHsWGWCteR4S6Cwx0VS2kosGGUshvfJmpgcwoodcooIHlDy+KkPSCfUDK2es3Lq8oXLdsN+Kaji7qNI2kbc1R1LpPHotJhedXd8GV9Sb9t6QCtODoYcE/j472f6MZfATKLT3RVw767mB7XGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=QeEAS47O; arc=none smtp.client-ip=173.38.203.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="FACq3hiF"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="QeEAS47O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=8763; q=dns/txt; s=iport;
-  t=1715886326; x=1717095926;
+  d=cisco.com; i=@cisco.com; l=10222; q=dns/txt;
+  s=iport; t=1715886326; x=1717095926;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5Zfgw+5jkP6UldlboEjN6TYcmmohaRCDa/+fIuipmTo=;
-  b=FACq3hiFh+OUm1HG/vpRjVqYN7PaYvUYxBJWDvWGASKBUV1tMOPMr5mx
-   bZ0HV0XHjktPMDX4RkgN0VaPeWficEwbdP02HmVXCPbAVZFRBmWVc5Yq2
-   fN6oT1szB1ay7rIPn07irpp0zMid/x9KTRuhUVLjrZUMySTaorgn1VIyi
-   U=;
-X-CSE-ConnectionGUID: ylCF91jLTHmQaXFxkL82OQ==
-X-CSE-MsgGUID: I2kJKejwSomKFhk4qWuDOA==
+  bh=r1r9rd3KeEvtlJHyqBIHLSruG9tMof1Km6W29D4ICag=;
+  b=QeEAS47ObBHz5ssKohIDUcnuIoi36QTrVGYGOTnnlgzy1lCZ1biXDbsB
+   aImmhATQcpLfuo84Ot9yeKSkh057dQg7knAYNCqreT8x/UG9djRCjbHsF
+   QgGCzm4M4J27gDedopZocUFcSBfv3l0gtIQz1Dy310Sjho2SCeMqUnRW+
+   0=;
+X-CSE-ConnectionGUID: RoOBx6bTTeS67jNRJTcCCg==
+X-CSE-MsgGUID: SM4doMEZR8O+f5sjHbTXBQ==
 X-IronPort-AV: E=Sophos;i="6.08,165,1712620800"; 
-   d="scan'208";a="13072182"
-Received: from aer-iport-nat.cisco.com (HELO aer-core-4.cisco.com) ([173.38.203.22])
-  by aer-iport-7.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 19:04:14 +0000
+   d="scan'208";a="10016315"
+Received: from aer-iport-nat.cisco.com (HELO aer-core-3.cisco.com) ([173.38.203.22])
+  by aer-iport-6.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 19:04:23 +0000
 Received: from localhost (ams3-vpn-dhcp4879.cisco.com [10.61.83.14])
 	(authenticated bits=0)
-	by aer-core-4.cisco.com (8.15.2/8.15.2) with ESMTPSA id 44GJ4EuC006367
+	by aer-core-3.cisco.com (8.15.2/8.15.2) with ESMTPSA id 44GJ4Nig017911
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 16 May 2024 19:04:14 GMT
+	Thu, 16 May 2024 19:04:23 GMT
 From: Ariel Miculas <amiculas@cisco.com>
 To: rust-for-linux@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         tycho@tycho.pizza, brauner@kernel.org, viro@zeniv.linux.org.uk,
         ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
-        shallyn@cisco.com, Wedson Almeida Filho <walmeida@microsoft.com>,
-        Daniel Xu <dxu@dxuuu.xyz>, Alice Ryhl <aliceryhl@google.com>,
-        Ariel Miculas <amiculas@cisco.com>
-Subject: [RFC PATCH v3 11/22] rust: file: add bindings for `struct file`
-Date: Thu, 16 May 2024 22:03:34 +0300
-Message-Id: <20240516190345.957477-12-amiculas@cisco.com>
+        shallyn@cisco.com, Alice Ryhl <aliceryhl@google.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Ariel Miculas <amiculas@cisco.com>
+Subject: [RFC PATCH v3 18/22] rust: add improved version of `ForeignOwnable::borrow_mut`
+Date: Thu, 16 May 2024 22:03:41 +0300
+Message-Id: <20240516190345.957477-19-amiculas@cisco.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240516190345.957477-1-amiculas@cisco.com>
 References: <20240516190345.957477-1-amiculas@cisco.com>
@@ -60,269 +61,237 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Authenticated-User: amiculas@cisco.com
 X-Outbound-SMTP-Client: 10.61.83.14, ams3-vpn-dhcp4879.cisco.com
-X-Outbound-Node: aer-core-4.cisco.com
+X-Outbound-Node: aer-core-3.cisco.com
 
-From: Wedson Almeida Filho <walmeida@microsoft.com>
+From: Alice Ryhl <aliceryhl@google.com>
 
-Using these bindings it becomes possible to access files from drivers
-written in Rust. This patch only adds support for accessing the flags,
-and for managing the refcount of the file.
+Previously, the `ForeignOwnable` trait had a method called `borrow_mut`
+that was intended to provide mutable access to the inner value. However,
+the method accidentally made it possible to change the address of the
+object being modified, which usually isn't what we want. (And when we
+want that, it can be done by calling `from_foreign` and `into_foreign`,
+like how the old `borrow_mut` was implemented.)
 
-Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
-Co-Developed-by: Daniel Xu <dxu@dxuuu.xyz>
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-Co-Developed-by: Alice Ryhl <aliceryhl@google.com>
+In this patch, we introduce an alternate definition of `borrow_mut` that
+solves the previous problem. Conceptually, given a pointer type `P` that
+implements `ForeignOwnable`, the `borrow_mut` method gives you the same
+kind of access as an `&mut P` would, except that it does not let you
+change the pointer `P` itself.
+
+This is analogous to how the existing `borrow` method provides the same
+kind of access to the inner value as an `&P`.
+
+Note that for types like `Arc`, having an `&mut Arc<T>` only gives you
+immutable access to the inner `T`. This is because mutable references
+assume exclusive access, but there might be other handles to the same
+reference counted value, so the access isn't exclusive. The `Arc` type
+implements this by making `borrow_mut` return the same type as `borrow`.
+
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-[Adapted for upstream]
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Link: https://lore.kernel.org/r/20230710074642.683831-1-aliceryhl@google.com
 Signed-off-by: Ariel Miculas <amiculas@cisco.com>
 ---
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers.c                  |  16 +++
- rust/kernel/file.rs             | 176 ++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs              |   1 +
- 4 files changed, 194 insertions(+)
- create mode 100644 rust/kernel/file.rs
+ rust/kernel/sync/arc.rs | 25 +++++++----
+ rust/kernel/types.rs    | 93 ++++++++++++++++++++++++++++++-----------
+ 2 files changed, 86 insertions(+), 32 deletions(-)
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 2d87bb9f87c9..0491bb05270c 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -13,6 +13,7 @@
- #include <linux/file.h>
- #include <linux/fs.h>
- #include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/iomap.h>
- #include <linux/jiffies.h>
- #include <linux/mdio.h>
-diff --git a/rust/helpers.c b/rust/helpers.c
-index c26aa07cb20f..90acf9677aa6 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -28,6 +28,7 @@
- #include <linux/err.h>
- #include <linux/errname.h>
- #include <linux/fs.h>
-+#include <linux/fs_parser.h>
- #include <linux/highmem.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
-@@ -353,6 +354,21 @@ void rust_helper_set_delayed_call(struct delayed_call *call,
- }
- EXPORT_SYMBOL_GPL(rust_helper_set_delayed_call);
+diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+index 3673496c2363..9023479281f0 100644
+--- a/rust/kernel/sync/arc.rs
++++ b/rust/kernel/sync/arc.rs
+@@ -356,26 +356,35 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
  
-+struct inode *rust_helper_d_inode(const struct dentry *dentry)
-+{
-+	return d_inode(dentry);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_d_inode);
-+
-+int rust_helper_fs_parse(struct fs_context *fc,
-+		const struct fs_parameter_spec *desc,
-+		struct fs_parameter *param,
-+		struct fs_parse_result *result)
-+{
-+	return fs_parse(fc, desc, param, result);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_fs_parse);
-+
- /*
-  * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
-  * use it in contexts where Rust expects a `usize` like slice (array) indices.
-diff --git a/rust/kernel/file.rs b/rust/kernel/file.rs
-new file mode 100644
-index 000000000000..99657adf2472
---- /dev/null
-+++ b/rust/kernel/file.rs
-@@ -0,0 +1,176 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Files and file descriptors.
-+//!
-+//! C headers: [`include/linux/fs.h`](../../../../include/linux/fs.h) and
-+//! [`include/linux/file.h`](../../../../include/linux/file.h)
-+
-+use crate::{
-+    bindings,
-+    error::{code::*, Error, Result},
-+    types::{ARef, AlwaysRefCounted, Opaque},
-+};
-+use core::ptr;
-+
-+/// Flags associated with a [`File`].
-+pub mod flags {
-+    /// File is opened in append mode.
-+    pub const O_APPEND: u32 = bindings::O_APPEND;
-+
-+    /// Signal-driven I/O is enabled.
-+    pub const O_ASYNC: u32 = bindings::FASYNC;
-+
-+    /// Close-on-exec flag is set.
-+    pub const O_CLOEXEC: u32 = bindings::O_CLOEXEC;
-+
-+    /// File was created if it didn't already exist.
-+    pub const O_CREAT: u32 = bindings::O_CREAT;
-+
-+    /// Direct I/O is enabled for this file.
-+    pub const O_DIRECT: u32 = bindings::O_DIRECT;
-+
-+    /// File must be a directory.
-+    pub const O_DIRECTORY: u32 = bindings::O_DIRECTORY;
-+
-+    /// Like [`O_SYNC`] except metadata is not synced.
-+    pub const O_DSYNC: u32 = bindings::O_DSYNC;
-+
-+    /// Ensure that this file is created with the `open(2)` call.
-+    pub const O_EXCL: u32 = bindings::O_EXCL;
-+
-+    /// Large file size enabled (`off64_t` over `off_t`).
-+    pub const O_LARGEFILE: u32 = bindings::O_LARGEFILE;
-+
-+    /// Do not update the file last access time.
-+    pub const O_NOATIME: u32 = bindings::O_NOATIME;
-+
-+    /// File should not be used as process's controlling terminal.
-+    pub const O_NOCTTY: u32 = bindings::O_NOCTTY;
-+
-+    /// If basename of path is a symbolic link, fail open.
-+    pub const O_NOFOLLOW: u32 = bindings::O_NOFOLLOW;
-+
-+    /// File is using nonblocking I/O.
-+    pub const O_NONBLOCK: u32 = bindings::O_NONBLOCK;
-+
-+    /// Also known as `O_NDELAY`.
-+    ///
-+    /// This is effectively the same flag as [`O_NONBLOCK`] on all architectures
-+    /// except SPARC64.
-+    pub const O_NDELAY: u32 = bindings::O_NDELAY;
-+
-+    /// Used to obtain a path file descriptor.
-+    pub const O_PATH: u32 = bindings::O_PATH;
-+
-+    /// Write operations on this file will flush data and metadata.
-+    pub const O_SYNC: u32 = bindings::O_SYNC;
-+
-+    /// This file is an unnamed temporary regular file.
-+    pub const O_TMPFILE: u32 = bindings::O_TMPFILE;
-+
-+    /// File should be truncated to length 0.
-+    pub const O_TRUNC: u32 = bindings::O_TRUNC;
-+
-+    /// Bitmask for access mode flags.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::file;
-+    /// # fn do_something() {}
-+    /// # let flags = 0;
-+    /// if (flags & file::flags::O_ACCMODE) == file::flags::O_RDONLY {
-+    ///     do_something();
-+    /// }
-+    /// ```
-+    pub const O_ACCMODE: u32 = bindings::O_ACCMODE;
-+
-+    /// File is read only.
-+    pub const O_RDONLY: u32 = bindings::O_RDONLY;
-+
-+    /// File is write only.
-+    pub const O_WRONLY: u32 = bindings::O_WRONLY;
-+
-+    /// File can be both read and written.
-+    pub const O_RDWR: u32 = bindings::O_RDWR;
-+}
-+
-+/// Wraps the kernel's `struct file`.
-+///
-+/// # Invariants
-+///
-+/// Instances of this type are always ref-counted, that is, a call to `get_file` ensures that the
-+/// allocation remains valid at least until the matching call to `fput`.
-+#[repr(transparent)]
-+pub struct File(Opaque<bindings::file>);
-+
-+// SAFETY: By design, the only way to access a `File` is via an immutable reference or an `ARef`.
-+// This means that the only situation in which a `File` can be accessed mutably is when the
-+// refcount drops to zero and the destructor runs. It is safe for that to happen on any thread, so
-+// it is ok for this type to be `Send`.
-+unsafe impl Send for File {}
-+
-+// SAFETY: It's OK to access `File` through shared references from other threads because we're
-+// either accessing properties that don't change or that are properly synchronised by C code.
-+unsafe impl Sync for File {}
-+
-+impl File {
-+    /// Constructs a new `struct file` wrapper from a file descriptor.
-+    ///
-+    /// The file descriptor belongs to the current process.
-+    pub fn from_fd(fd: u32) -> Result<ARef<Self>, BadFdError> {
-+        // SAFETY: FFI call, there are no requirements on `fd`.
-+        let ptr = ptr::NonNull::new(unsafe { bindings::fget(fd) }).ok_or(BadFdError)?;
-+
-+        // SAFETY: `fget` increments the refcount before returning.
-+        Ok(unsafe { ARef::from_raw(ptr.cast()) })
+ impl<T: 'static> ForeignOwnable for Arc<T> {
+     type Borrowed<'a> = ArcBorrow<'a, T>;
++    // Mutable access to the `Arc` does not give any extra abilities over
++    // immutable access.
++    type BorrowedMut<'a> = ArcBorrow<'a, T>;
+ 
+     fn into_foreign(self) -> *const core::ffi::c_void {
+         ManuallyDrop::new(self).ptr.as_ptr() as _
+     }
+ 
++    unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
++        // SAFETY: By the safety requirement of this function, we know that `ptr` came from
++        // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
++        // holds a reference count increment that is transferrable to us.
++        unsafe { Self::from_inner(NonNull::new_unchecked(ptr as _)) }
 +    }
 +
-+    /// Creates a reference to a [`File`] from a valid pointer.
+     unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> ArcBorrow<'a, T> {
+         // SAFETY: By the safety requirement of this function, we know that `ptr` came from
+         // a previous call to `Arc::into_foreign`.
+-        let inner = NonNull::new(ptr as *mut ArcInner<T>).unwrap();
++        let inner = unsafe { NonNull::new_unchecked(ptr as *mut ArcInner<T>) };
+ 
+-        // SAFETY: The safety requirements of `from_foreign` ensure that the object remains alive
+-        // for the lifetime of the returned value.
++        // SAFETY: The safety requirements ensure that we will not give up our
++        // foreign-owned refcount while the `ArcBorrow` is still live.
+         unsafe { ArcBorrow::new(inner) }
+     }
+ 
+-    unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
+-        // SAFETY: By the safety requirement of this function, we know that `ptr` came from
+-        // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
+-        // holds a reference count increment that is transferrable to us.
+-        unsafe { Self::from_inner(NonNull::new(ptr as _).unwrap()) }
++    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> ArcBorrow<'a, T> {
++        // SAFETY: The safety requirements for `borrow_mut` are a superset of the safety
++        // requirements for `borrow`.
++        unsafe { Self::borrow(ptr) }
+     }
+ }
+ 
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 4d8f02671e0b..17b66d6187ae 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -20,31 +20,25 @@
+ /// This trait is meant to be used in cases when Rust objects are stored in C objects and
+ /// eventually "freed" back to Rust.
+ pub trait ForeignOwnable: Sized {
+-    /// Type of values borrowed between calls to [`ForeignOwnable::into_foreign`] and
+-    /// [`ForeignOwnable::from_foreign`].
++    /// Type used to immutably borrow a value that is currently foreign-owned.
+     type Borrowed<'a>;
+ 
++    /// Type used to mutably borrow a value that is currently foreign-owned.
++    type BorrowedMut<'a>;
++
+     /// Converts a Rust-owned object to a foreign-owned one.
+     ///
+     /// The foreign representation is a pointer to void.
+     fn into_foreign(self) -> *const core::ffi::c_void;
+ 
+-    /// Borrows a foreign-owned object.
+-    ///
+-    /// # Safety
+-    ///
+-    /// `ptr` must have been returned by a previous call to [`ForeignOwnable::into_foreign`] for
+-    /// which a previous matching [`ForeignOwnable::from_foreign`] hasn't been called yet.
+-    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> Self::Borrowed<'a>;
+-
+     /// Converts a foreign-owned object back to a Rust-owned one.
+     ///
+     /// # Safety
+     ///
+-    /// `ptr` must have been returned by a previous call to [`ForeignOwnable::into_foreign`] for
+-    /// which a previous matching [`ForeignOwnable::from_foreign`] hasn't been called yet.
+-    /// Additionally, all instances (if any) of values returned by [`ForeignOwnable::borrow`] for
+-    /// this object must have been dropped.
++    /// The provided pointer must have been returned by a previous call to [`into_foreign`], and it
++    /// must not be passed to `from_foreign` more than once.
++    ///
++    /// [`into_foreign`]: Self::into_foreign
+     unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self;
+ 
+     /// Tries to convert a foreign-owned object back to a Rust-owned one.
+@@ -65,40 +59,91 @@ unsafe fn try_from_foreign(ptr: *const core::ffi::c_void) -> Option<Self> {
+             unsafe { Some(Self::from_foreign(ptr)) }
+         }
+     }
++
++    /// Borrows a foreign-owned object immutably.
++    ///
++    /// This method provides a way to access a foreign-owned value from Rust immutably. It provides
++    /// you with exactly the same abilities as an `&Self` when the value is Rust-owned.
 +    ///
 +    /// # Safety
 +    ///
-+    /// The caller must ensure that `ptr` points at a valid file and that its refcount does not
-+    /// reach zero until after the end of the lifetime 'a.
-+    pub unsafe fn from_ptr<'a>(ptr: *const bindings::file) -> &'a File {
-+        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
-+        // `File` type being transparent makes the cast ok.
++    /// The provided pointer must have been returned by a previous call to [`into_foreign`], and if
++    /// the pointer is ever passed to [`from_foreign`], then that call must happen after the end of
++    /// the lifetime 'a.
++    ///
++    /// [`into_foreign`]: Self::into_foreign
++    /// [`from_foreign`]: Self::from_foreign
++    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> Self::Borrowed<'a>;
++
++    /// Borrows a foreign-owned object mutably.
++    ///
++    /// This method provides a way to access a foreign-owned value from Rust mutably. It provides
++    /// you with exactly the same abilities as an `&mut Self` when the value is Rust-owned, except
++    /// that this method does not let you swap the foreign-owned object for another. (That is, it
++    /// does not let you change the address of the void pointer that the foreign code is storing.)
++    ///
++    /// Note that for types like [`Arc`], an `&mut Arc<T>` only gives you immutable access to the
++    /// inner value, so this method also only provides immutable access in that case.
++    ///
++    /// In the case of `Box<T>`, this method gives you the ability to modify the inner `T`, but it
++    /// does not let you change the box itself. That is, you cannot change which allocation the box
++    /// points at.
++    ///
++    /// # Safety
++    ///
++    /// The provided pointer must have been returned by a previous call to [`into_foreign`], and if
++    /// the pointer is ever passed to [`from_foreign`], then that call must happen after the end of
++    /// the lifetime 'a.
++    ///
++    /// The lifetime 'a must not overlap with the lifetime of any other call to [`borrow`] or
++    /// `borrow_mut` on the same object.
++    ///
++    /// [`into_foreign`]: Self::into_foreign
++    /// [`from_foreign`]: Self::from_foreign
++    /// [`borrow`]: Self::borrow
++    /// [`Arc`]: crate::sync::Arc
++    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> Self::BorrowedMut<'a>;
+ }
+ 
+ impl<T: 'static> ForeignOwnable for Box<T> {
+     type Borrowed<'a> = &'a T;
++    type BorrowedMut<'a> = &'a mut T;
+ 
+     fn into_foreign(self) -> *const core::ffi::c_void {
+         Box::into_raw(self) as _
+     }
+ 
+-    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> &'a T {
+-        // SAFETY: The safety requirements for this function ensure that the object is still alive,
+-        // so it is safe to dereference the raw pointer.
+-        // The safety requirements of `from_foreign` also ensure that the object remains alive for
+-        // the lifetime of the returned value.
+-        unsafe { &*ptr.cast() }
+-    }
+-
+     unsafe fn from_foreign(ptr: *const core::ffi::c_void) -> Self {
+         // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
+         // call to `Self::into_foreign`.
+         unsafe { Box::from_raw(ptr as _) }
+     }
++
++    unsafe fn borrow<'a>(ptr: *const core::ffi::c_void) -> &'a T {
++        // SAFETY: The safety requirements of this method ensure that the object remains alive and
++        // immutable for the duration of 'a.
 +        unsafe { &*ptr.cast() }
 +    }
 +
-+    /// Returns the flags associated with the file.
-+    ///
-+    /// The flags are a combination of the constants in [`flags`].
-+    pub fn flags(&self) -> u32 {
-+        // SAFETY: The file is valid because the shared reference guarantees a nonzero refcount.
-+        //
-+        // This uses a volatile read because C code may be modifying this field in parallel using
-+        // non-atomic unsynchronized writes. This corresponds to how the C macro READ_ONCE is
-+        // implemented.
-+        unsafe { core::ptr::addr_of!((*self.0.get()).f_flags).read_volatile() }
++    unsafe fn borrow_mut<'a>(ptr: *const core::ffi::c_void) -> &'a mut T {
++        // SAFETY: The safety requirements of this method ensure that the pointer is valid and that
++        // nothing else will access the value for the duration of 'a.
++        unsafe { &mut *ptr.cast_mut().cast() }
 +    }
-+}
+ }
+ 
+ impl ForeignOwnable for () {
+     type Borrowed<'a> = ();
++    type BorrowedMut<'a> = ();
+ 
+     fn into_foreign(self) -> *const core::ffi::c_void {
+         core::ptr::NonNull::dangling().as_ptr()
+     }
+ 
+-    unsafe fn borrow<'a>(_: *const core::ffi::c_void) -> Self::Borrowed<'a> {}
+-
+     unsafe fn from_foreign(_: *const core::ffi::c_void) -> Self {}
 +
-+// SAFETY: The type invariants guarantee that `File` is always ref-counted.
-+unsafe impl AlwaysRefCounted for File {
-+    fn inc_ref(&self) {
-+        // SAFETY: The existence of a shared reference means that the refcount is nonzero.
-+        unsafe { bindings::get_file(self.0.get()) };
-+    }
-+
-+    unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-+        // SAFETY: The safety requirements guarantee that the refcount is nonzero.
-+        unsafe { bindings::fput(obj.cast().as_ptr()) }
-+    }
-+}
-+
-+/// Represents the EBADF error code.
-+///
-+/// Used for methods that can only fail with EBADF.
-+pub struct BadFdError;
-+
-+impl From<BadFdError> for Error {
-+    fn from(_: BadFdError) -> Error {
-+        EBADF
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 7f0d89b902ce..ea1411a25ee4 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -30,6 +30,7 @@
- pub mod block;
- mod build_assert;
- pub mod error;
-+pub mod file;
- pub mod folio;
- pub mod fs;
- pub mod init;
++    unsafe fn borrow<'a>(_: *const core::ffi::c_void) -> Self::Borrowed<'a> {}
++    unsafe fn borrow_mut<'a>(_: *const core::ffi::c_void) -> Self::BorrowedMut<'a> {}
+ }
+ 
+ /// Runs a cleanup function/closure when dropped.
 -- 
 2.34.1
 
