@@ -1,83 +1,88 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7194140E4D;
-	Thu, 16 May 2024 08:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6888FEAD7
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715848350; cv=none; b=oBevpRI9uOYxO9v+xU82X+kZgDUlUPTbUv34F8yfx1YX+hnd10NxbRY+ClF77TjQ0xShaFj95MjUrz7JsGfoBLscW9HDFVGLmbz8P9SQMBoOGw7LPZl9myXrJ2DNKdbofXSck/NGdVQQC/HRM8S3tzOiGQuvXBprjDEbthTTLY0=
+	t=1715848414; cv=none; b=Rv8FliWbJ4so0ci3Yx8P4qxkwDSR5TeDeXNzC4V2vmZeiiTdhcy/es1TiuJ5fTpHrUo7MBUuaHB6ZXAhUBUJSyFuHfJeJVqRb5unJmwy8F39/HSzPIGQQYYXqb1UkhfKVDOa35fLy3YRdCydsNU/m3PnYBEYK2A2q068Zq5aGiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715848350; c=relaxed/simple;
-	bh=n3wfwXdLhgrZfXaFpbTErMq4VZLJenZ0wJJ6hu+fpmM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KH/i6JBR64xgThZ668h5bKdE0rlOpFk8aOCOa4FQ4ogYlv38lfyCFwkuJ/oZb14+Ft7PbJfXZUBtJ8Bn6K1lZjheq25ldFBc7SfFvEHoDdCOPiwRMsS+F2mxgxHM8muBKRBhH14/bBQsVsd+hGKZzrliltcQFjK4kSIqxXH30E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RNvEgPTB; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715848414; c=relaxed/simple;
+	bh=ODLQOu/zyz06Cszyocvh1VE4KNZojV2wsikA0IFDyTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H4FFwicR8naILVTMsKx1aCyFilvaHoKWULNt37g1M34woKTUI2lVHr89N6AHMDwU4d0a9bBWtDZ0cA8kDil8ADgcPD/5t7QyS9FG1nW9PiE612i7VtRbl7djFsjtNuNmgXJ0y2FMM6We9O0ZOmA3BFVh/80JaQph9bqUbtAwGps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pboRvf7p; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RNvEgPTB"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G8Pni2048592;
-	Thu, 16 May 2024 03:25:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715847949;
-	bh=clZL/8Y8uccnbJaVKNewC7vniy/6nA7aPUL53Va0yB4=;
-	h=From:To:CC:Subject:Date;
-	b=RNvEgPTBrPhcZFllUq05yk/cQwXGO0/fk97hQsSWphVsIvw0E1Kg3vlX03MKuBLEJ
-	 2mYsXIYWzUU9el/Yc77bkTebRDt6nhG5nOtBe0TOjCvDv35KjEJ2TCydRstTv0FNd4
-	 ACv3/IMiMggkgw9kD+KaS7qi7TlNG00/evUVZn6g=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G8PnJr036001
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 16 May 2024 03:25:49 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 16
- May 2024 03:25:48 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 16 May 2024 03:25:48 -0500
-Received: from uda0500640.dal.design.ti.com (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G8PkQt072837;
-	Thu, 16 May 2024 03:25:47 -0500
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-To: <netdev@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <s-vadapalli@ti.com>, <rogerq@kernel.org>, <r-gunasekaran@ti.com>
-Subject: [PATCH] MAINTAINERS: net: Update reviewers for TI's Ethernet drivers
-Date: Thu, 16 May 2024 13:55:45 +0530
-Message-ID: <20240516082545.6412-1-r-gunasekaran@ti.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pboRvf7p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 67DA62000A;
+	Thu, 16 May 2024 08:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715848405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OlCEWWB6cFyweBKAuWpYX1M2Skf3YxIZvcOY5o0N+rQ=;
+	b=pboRvf7pkvdGdjXae92hHGo9tJTRMHWN9xy3c+Cz2JPV4eki+saN8Qs7fe92e4GhLWe7Ml
+	s8DFAd3QtBYQC7V3WKAYSdHABuyXqD68XCtX02GulT0t2g4oIWL2JYbCrH7TjsVKALc9SE
+	Lcdk3eJBSuVSAqFJmM1T+quTxBEJxBE8VfZG0T+gKhIWFbPkSnfwIZJx739gBV48xZd1oe
+	YxrJPOjsgSrjncNRiXYS18WHiZeRCABkqz/Xso74kb3RJnDQg0GBQ1ZFKmHGbdymtksFDN
+	4j5k/15QSBUvOWgKsWN7H9t/cHslvk0WStO4TROagBjHIB/ayPHf+ygcSopprA==
+Date: Thu, 16 May 2024 10:33:21 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] mtd: nand: mxc_nand: support software ECC
+Message-ID: <20240516103321.25b49576@xps-13>
+In-Reply-To: <ZkRyTT7FcDQ-5UeV@pengutronix.de>
+References: <20240514-mtd-nand-mxc-nand-exec-op-v3-0-3e6f45fd3d82@pengutronix.de>
+	<20240514-mtd-nand-mxc-nand-exec-op-v3-3-3e6f45fd3d82@pengutronix.de>
+	<ZkRyTT7FcDQ-5UeV@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Remove myself as reviewer for TI's ethernet drivers
+Hi Sascha,
 
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+> > +	/*
+> > +	 * During a page write the i.MX NAND controller will read 512b from
+> > +	 * main_area0 SRAM, then oob_per_subpage bytes from spare0 SRAM, then
+> > +	 * 512b from main_area1 SRAM and so on until the full page is written.
+> > +	 * For software ECC we want to have a 1:1 mapping between the raw page
+> > +	 * data on the NAND chip and the view of the NAND core. This is
+> > +	 * necessary to make the NAND_CMD_RNDOUT read the data it expects.
+> > +	 * To accomplish this we have to write the data in the order the cont=
+roller
+> > +	 * reads it. This is reversed in copy_page_from_sram() below.
+> > +	 */
+> > +	for (i =3D 0; i < no_subpages; i++) {
+> > +		memcpy16_toio(host->main_area0 + i * 512, buf, 512);
+> > +		buf +=3D 512;
+> > +
+> > +		memcpy16_toio(host->spare0 + i * host->devtype_data->spare_len, buf,
+> > +			      oob_per_subpage);
+> > +		buf +=3D oob_per_subpage;
+> > +	}
+> > +} =20
+>=20
+> I noticed the nandbiterr test won't work with this. It needs the following
+> fixup. The problem is that the core wants to write only user data
+> without OOB, so we have to make sure the remaining SRAM is filled up
+> with 0xff.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 85025e859d57..9698b8b19197 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22463,7 +22463,6 @@ F:	drivers/counter/ti-eqep.c
- 
- TI ETHERNET SWITCH DRIVER (CPSW)
- R:	Siddharth Vadapalli <s-vadapalli@ti.com>
--R:	Ravi Gunasekaran <r-gunasekaran@ti.com>
- R:	Roger Quadros <rogerq@kernel.org>
- L:	linux-omap@vger.kernel.org
- L:	netdev@vger.kernel.org
+Yes. I looked rapidly at the diff, looks ok.
 
-base-commit: dbd9e2e056d8577375ae4b31ada94f8aa3769e8a
--- 
-2.17.1
-
+Thanks,
+Miqu=C3=A8l
