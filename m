@@ -1,238 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB20143862
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E8D145FE0
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715865343; cv=none; b=qmb9lu5SHJHHXUSshbT4H3QC5Y2UJ3Kx6jzxlodZ+6ubmm3JLfghDCmpwo5Gr4TcLftqLZ2ITFBmwsXuzmWHEBFZlieSrM/wgldCeOkSz7H48IoE3P+dlni3FYPZORIDMnhmWkGf+WnHr/3Nae0+ZRk4qejFh7QGBWSPtLPqTuE=
+	t=1715865482; cv=none; b=dERij623yrTPg2p6rYzwLFNh6Y7oawR4xhm/BYCkkCOxnMRnpxFH25kSCzc8UkW2jsgfnPf8kU4RRIgHoV4lGXCBQT/nCHGG0xmtwbmqLgV+C//xc+VDpd2r1Lval2JgTFBs5acYNzfK41q022k0w2pBC6RktPiTYG8niI5pZHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715865343; c=relaxed/simple;
-	bh=K+T7vqOTQzoe7J10uVXZdg4De+l3xm8mWoBd5YROxc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tPt61z99GsMwsmp+3+VQlarM4iWjevP9hj5/YfP+KvPA7E4vyYbbFbmRm+9uBENDmpVZP4h7WsXjvIh7ADngjepg0x5lWlkK0f4E6e+L2A0G7KVzk/89IVGfWIDNsWN8NNxGUV0KRELDk++hxNtK72a5Q7sGoSBsMqRFAszhp0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XBrOEsxy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715865482; c=relaxed/simple;
+	bh=eWIwOv9Zvvo6YEpALZ/ZPdwbeGaIZJVB3BlqIwm1sn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nbWH9wqLKSr7xz4eAcxL4J8WViyj3Tq2Q4uhFGKYyadhk2miCb4hCQ8SjgHN/n9qUSXyZZGu05gsQoDI3Oe/llXecyzkuShvcAlvhCjcoDYggi5SnAm0AvKYu4wVXotfAmeCObZyzWPfB/17VNKZLPYgz6G/gUMdwvNlgN8ljz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2kug9SF1; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBrOEsxy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715865340;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0l6u6hPd0VabUs35cq4b+ucitv/6ESbFrYjDHjfIiEE=;
-	b=XBrOEsxyDLwPit529DjKUfkV91YUdrA5nsBjMJw/jvPLHO5imk/WTDerXT+EC37Wu22k0x
-	aPxSJZsPfahBsPvoZ5BvvVv5+dQW19sp+vlzTYcAkfh3u4Oc1UFzGKMLMnxyiT7vDg2CX5
-	OEEFn5wODttKazYKaX7yWw5+scz2aek=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-138-CF3WLzTKPhWdmmYFN0MxVg-1; Thu, 16 May 2024 09:15:38 -0400
-X-MC-Unique: CF3WLzTKPhWdmmYFN0MxVg-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6a097848a56so74898646d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:15:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2kug9SF1"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6a0b68733f5so53326786d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 06:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715865479; x=1716470279; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K3ryDiibw2FEZDxAgyeJcOHx0hxqbPorlVehc70NqQc=;
+        b=2kug9SF1l0uiFvM1Q4XoD3ppYBRvefSEWzClos+oi+yBwP8A9DLyJSHiyOgxQ7gmWH
+         mpaJdWUhyLtwrllzxU/OCr9X4q2zrx+dJKm1B2OD2fByA5PMLvQvQnlKYCd4vfkMZDOf
+         6/N77N+/lZRWvGPqZdyFBiWIDS0H5/iXcosafMTvPuDv164gjZXbrJwv6zZWhMh6I9Mw
+         ztF5E+amsNkCSIkZxmFOu9RhJwbmqWwZEfDpWiU7oJPqGj6evZgyarjhY45SN3gnlOYZ
+         UCVjFXMlBH4laopFV3cECtg2zOFHfxQHpoWO7cG1KmmrtGM5kX16oVYRZG/RsWhohUoZ
+         Zu3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715865338; x=1716470138;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0l6u6hPd0VabUs35cq4b+ucitv/6ESbFrYjDHjfIiEE=;
-        b=ha6Eu0vSF5BCPjNMGVby+dkvipG3fufNDT4LGUbkHnGdkRJHOfPCgpKCBA/e7fNkJF
-         sjnPtw/1HMXK1ngWF0SwOGGp8rrpuyf2JZZw9jF4KTa/Ja9ZjRBhItu4ImcVfRBUgCw/
-         YoFNr7wI8ZpX33W1QsahZBQnBHCW3TNUN7VIRChr6soH7Pl/FypFQjIAkznZPMuEeuLt
-         j0BvCY/3hhRIX5BimSv99IS89dzYxeXdth2ubJV8cMEFQqCZlX4Y2kIuoEpcykHrDJKm
-         bWefr7NtW4XXrl1Ws0nkDcr5Z7k8jUcm8QF1hjR4GTncIqPEIsCo6MYLZMXIQp2alpep
-         WwrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuytZX6pKpwO1fiWbgxHb92I5F0GvCHsoZrzDv+lmb6XOvoF43Dc5d36AOeBqQSg7XX8GGJUhD5xY9SlX/cRQlUyaTJB0a3xXBSrLf
-X-Gm-Message-State: AOJu0YzY8z9F6sPfFwPF+KqL6bRDbRHdAJhttpiQriS40X9NGan1sLdX
-	EQr4ZJq/H46D6VlLvSjWuMTLB8HRMe5b2dcWPUmsGk+Mi9YwaYGpkYS1qQDJQtm3b56d3RmXGfQ
-	94i/7h5Of+1pbWkPGHRI3EjAsb9MwjWE+1xIEXuQcR/79pbQieOFg1Aes5gnnsg==
-X-Received: by 2002:a05:6214:3d8d:b0:6a0:b9bf:3cb3 with SMTP id 6a1803df08f44-6a1681da9a9mr236654736d6.34.1715865337749;
-        Thu, 16 May 2024 06:15:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5l63B/ThTFOUu+b8+mZcUqIP+JY7JfnEdLxlBSrypwCMC29xnG1Oe9RFOjzz7TJMZvMGXJg==
-X-Received: by 2002:a05:6214:3d8d:b0:6a0:b9bf:3cb3 with SMTP id 6a1803df08f44-6a1681da9a9mr236654376d6.34.1715865337094;
-        Thu, 16 May 2024 06:15:37 -0700 (PDT)
-Received: from x1gen2nano ([2600:1700:1ff0:d0e0::33])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1852fdsm75706596d6.32.2024.05.16.06.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 06:15:36 -0700 (PDT)
-Date: Thu, 16 May 2024 08:15:34 -0500
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@chromium.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/adreno: De-spaghettify the use of memory barriers
-Message-ID: <ae4a77wt3kc73ejshptldqx6ugzrqguyq7etbbu54y4avhbdlt@qyt4r6gma7ev>
-References: <20240508-topic-adreno-v1-1-1babd05c119d@linaro.org>
- <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
+        d=1e100.net; s=20230601; t=1715865479; x=1716470279;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K3ryDiibw2FEZDxAgyeJcOHx0hxqbPorlVehc70NqQc=;
+        b=ny1C6bK1VHzszhRM2qaUFbXDWKIqzJ+wi0O/CBIons0Q+ro5TbH3VjYZeVKfiMkjXF
+         OAdpMBpeb1JreK/RU7UweNoTxArxUetZD50M90rtk+xm7VnTdA0dKleSjBQoaQuqahMe
+         tPNXgNbxQAgJpI5kqnnD0Dz9loVmRYNKVRgghyQC/uNTA2Xu2ujsk+L8vZWyyXZ9Hzru
+         Xc4vdd/a737h1W4Fn679y5MWc02/lWXjQMmYcF+MVGEbivhiabUhux4Zz+fAlnv1Msdq
+         /AtbjqDDJaHMFQYt7jxrmE2KoW/XzVWYECqECgJjbqkgSFRl3C+0wo1NKZWoqOJfCIwV
+         +v3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEp4S+d7Yg4NeHus26dOhAhcbnfAPHiSmbqzQZbKjhM0+c46trqR/Wnss519bsYrj+0Vw8ChcjPkxs7QIBcgmbVso9IAWG6PlE/dnQ
+X-Gm-Message-State: AOJu0YwOomZT225aft/9Kyyxq5rYDYFaKJFHYJ/4O7YtyTwoOvggqFXA
+	Z2fd7SMBUZ5WYQPAo+EIB28JX5RZM8Wgf6NUNN5zHj1tD2q0RaBzu1uLLhczXak=
+X-Google-Smtp-Source: AGHT+IEujLLB/2OVCOaeopynbDG1eVKKcIAgIkn7Cc16JQ9OK5R5FdeAk2/xUtVCzZYR2ptdOJ8EbA==
+X-Received: by 2002:a05:6214:2b96:b0:6a0:984d:7ff7 with SMTP id 6a1803df08f44-6a1681792e4mr226857446d6.4.1715865479521;
+        Thu, 16 May 2024 06:17:59 -0700 (PDT)
+Received: from [192.168.0.2] (host-79-16-6-145.retail.telecomitalia.it. [79.16.6.145])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a35969bcd5sm16517186d6.53.2024.05.16.06.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 May 2024 06:17:58 -0700 (PDT)
+Message-ID: <2943205c-e7dc-4ca1-a174-15df2244c77b@baylibre.com>
+Date: Thu, 16 May 2024 15:17:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] iio: dac: ad3552r: add support for ad3541r and
+ ad3551r
+To: David Lechner <dlechner@baylibre.com>
+Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, nuno.sa@analog.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240510141836.1624009-1-adureghello@baylibre.org>
+ <20240510141836.1624009-2-adureghello@baylibre.org>
+ <CAMknhBFrOdzvo+aEFjMSf_3FGmbhVp42Oymt_DEF2L-CdWiSmQ@mail.gmail.com>
+Content-Language: en-US
+From: Angelo Dureghello <adureghello@baylibre.com>
+In-Reply-To: <CAMknhBFrOdzvo+aEFjMSf_3FGmbhVp42Oymt_DEF2L-CdWiSmQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 15, 2024 at 12:08:49AM GMT, Akhil P Oommen wrote:
-> On Wed, May 08, 2024 at 07:46:31PM +0200, Konrad Dybcio wrote:
-> > Memory barriers help ensure instruction ordering, NOT time and order
-> > of actual write arrival at other observers (e.g. memory-mapped IP).
-> > On architectures employing weak memory ordering, the latter can be a
-> > giant pain point, and it has been as part of this driver.
-> > 
-> > Moreover, the gpu_/gmu_ accessors already use non-relaxed versions of
-> > readl/writel, which include r/w (respectively) barriers.
-> > 
-> > Replace the barriers with a readback that ensures the previous writes
-> > have exited the write buffer (as the CPU must flush the write to the
-> > register it's trying to read back) and subsequently remove the hack
-> > introduced in commit b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt
-> > status in hw_init").
+Hi David,
 
-For what its worth, I've been eyeing (but haven't tested) sending some
-patches to clean up dsi_phy_write_udelay/ndelay(). There's no ordering
-guarantee between a writel() and a delay(), so the expected "write then
-delay" sequence might not be happening.. you need to write, read, delay.
+On 10/05/24 5:42 PM, David Lechner wrote:
+> On Fri, May 10, 2024 at 9:19 AM Angelo Dureghello
+> <adureghello@baylibre.com> wrote:
+>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>
+>> Add support for single-output dac variants.
+>>
+>> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+>> ---
+>>   drivers/iio/dac/ad3552r.c | 39 +++++++++++++++++++++++++++++----------
+>>   1 file changed, 29 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/iio/dac/ad3552r.c b/drivers/iio/dac/ad3552r.c
+>> index a492e8f2fc0f..0dd6f995c3e2 100644
+>> --- a/drivers/iio/dac/ad3552r.c
+>> +++ b/drivers/iio/dac/ad3552r.c
+>> @@ -140,7 +140,9 @@ enum ad3552r_ch_vref_select {
+>>   };
+>>
+>>   enum ad3542r_id {
+>> +       AD3541R_ID = 0x400b,
+>>          AD3542R_ID = 0x4009,
+>> +       AD3551R_ID = 0x400a,
+>>          AD3552R_ID = 0x4008,
+>>   };
+>>
+>> @@ -745,7 +747,8 @@ static void ad3552r_calc_gain_and_offset(struct ad3552r_desc *dac, s32 ch)
+>>          } else {
+>>                  /* Normal range */
+>>                  idx = dac->ch_data[ch].range;
+>> -               if (dac->chip_id == AD3542R_ID) {
+>> +               if (dac->chip_id == AD3541R_ID ||
+>> +                   dac->chip_id == AD3542R_ID) {
+>>                          v_min = ad3542r_ch_ranges[idx][0];
+>>                          v_max = ad3542r_ch_ranges[idx][1];
+>>                  } else {
+>> @@ -780,7 +783,7 @@ static int ad3552r_find_range(u16 id, s32 *vals)
+>>          int i, len;
+>>          const s32 (*ranges)[2];
+>>
+>> -       if (id == AD3542R_ID) {
+>> +       if (id == AD3541R_ID || id == AD3542R_ID) {
+>>                  len = ARRAY_SIZE(ad3542r_ch_ranges);
+>>                  ranges = ad3542r_ch_ranges;
+>>          } else {
+>> @@ -955,9 +958,10 @@ static int ad3552r_configure_device(struct ad3552r_desc *dac)
+>>                          dev_err(dev, "mandatory reg property missing\n");
+>>                          goto put_child;
+>>                  }
+>> -               if (ch >= AD3552R_NUM_CH) {
+>> -                       dev_err(dev, "reg must be less than %d\n",
+>> -                               AD3552R_NUM_CH);
+>> +               if (ch >= AD3552R_NUM_CH ||
+>> +                       (dac->chip_id == AD3541R_ID && ch) ||
+>> +                       (dac->chip_id == AD3551R_ID && ch)) {
+>> +                       dev_err(dev, "channel %d is not supported\n", ch);
+>>                          err = -EINVAL;
+>>                          goto put_child;
+>>                  }
+>> @@ -987,9 +991,10 @@ static int ad3552r_configure_device(struct ad3552r_desc *dac)
+>>                                  goto put_child;
+>>
+>>                          dac->ch_data[ch].range = val;
+>> -               } else if (dac->chip_id == AD3542R_ID) {
+>> +               } else if (dac->chip_id == AD3541R_ID ||
+>> +                          dac->chip_id == AD3542R_ID) {
+>>                          dev_err(dev,
+>> -                               "adi,output-range-microvolt is required for ad3542r\n");
+>> +                               "adi,output-range-microvolt is required for ad354xr\n");
+>>                          err = -EINVAL;
+>>                          goto put_child;
+>>                  } else {
+>> @@ -1088,10 +1093,20 @@ static int ad3552r_probe(struct spi_device *spi)
+>>                  return err;
+>>
+>>          /* Config triggered buffer device */
+>> -       if (dac->chip_id == AD3552R_ID)
+>> -               indio_dev->name = "ad3552r";
+>> -       else
+>> +       switch (dac->chip_id) {
+>> +       case AD3541R_ID:
+>> +               indio_dev->name = "ad3541r";
+>> +               break;
+>> +       case AD3542R_ID:
+>>                  indio_dev->name = "ad3542r";
+>> +               break;
+>> +       case AD3551R_ID:
+>> +               indio_dev->name = "ad3551r";
+>> +               break;
+>> +       case AD3552R_ID:
+>> +               indio_dev->name = "ad3552r";
+>> +               break;
+>> +       }
+>>          indio_dev->dev.parent = &spi->dev;
+>>          indio_dev->info = &ad3552r_iio_info;
+>>          indio_dev->num_channels = dac->num_ch;
+>> @@ -1110,14 +1125,18 @@ static int ad3552r_probe(struct spi_device *spi)
+>>   }
+>>
+>>   static const struct spi_device_id ad3552r_id[] = {
+>> +       { "ad3541r", AD3541R_ID },
+>>          { "ad3542r", AD3542R_ID },
+>> +       { "ad3551r", AD3551R_ID },
+>>          { "ad3552r", AD3552R_ID },
+>>          { }
+>>   };
+>>   MODULE_DEVICE_TABLE(spi, ad3552r_id);
+>>
+>>   static const struct of_device_id ad3552r_of_match[] = {
+>> +       { .compatible = "adi,ad3541r"},
+>>          { .compatible = "adi,ad3542r"},
+>> +       { .compatible = "adi,ad3551r"},
+>>          { .compatible = "adi,ad3552r"},
+>>          { }
+>>   };
+>> --
+>> 2.45.0.rc1
+>>
+>>
+> It looks like it is time for a chip_info struct here instead of the if
+> and switch statements to get chip-specific data. Most other IIO
+> drivers have this already and it is the preferred way to look up this
+> kind of information in the IIO subsystem. I prefer the drivers that
+> don't put all of the info structs in an array (that way the code is
+> less verbose). So I would suggest looking at e.g. adc/aspeed_adc,
+> starting with aspeed_adc_matches, to see what I mean and how to
+> implement it. (So one patch to add the info structs and a second patch
+> to add the single channel chips)
 
-memory-barriers.txt:
-
-	5. A readX() by a CPU thread from the peripheral will complete before
-	   any subsequent delay() loop can begin execution on the same thread.
-	   This ensures that two MMIO register writes by the CPU to a peripheral
-	   will arrive at least 1us apart if the first write is immediately read
-	   back with readX() and udelay(1) is called prior to the second
-	   writeX():
-
-		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
-		readl(DEVICE_REGISTER_0);
-		udelay(1);
-		writel(42, DEVICE_REGISTER_1); // ...at least 1us before this.
-
-> > 
-> > Fixes: b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt status in hw_init")
-> > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c |  5 ++---
-> >  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 14 ++++----------
-> >  2 files changed, 6 insertions(+), 13 deletions(-)
-> 
-> I prefer this version compared to the v2. A helper routine is
-> unnecessary here because:
-> 1. there are very few scenarios where we have to read back the same
-> register.
-> 2. we may accidently readback a write only register.
-> 
-> > 
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > index 0e3dfd4c2bc8..4135a53b55a7 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > @@ -466,9 +466,8 @@ static int a6xx_rpmh_start(struct a6xx_gmu *gmu)
-> >  	int ret;
-> >  	u32 val;
-> >  
-> > -	gmu_write(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, 1 << 1);
-> > -	/* Wait for the register to finish posting */
-> > -	wmb();
-> > +	gmu_write(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, BIT(1));
-> > +	gmu_read(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ);
-> 
-> This is unnecessary because we are polling on a register on the same port below. But I think we
-> can replace "wmb()" above with "mb()" to avoid reordering between read
-> and write IO instructions.
-
-If I understand correctly, you don't need any memory barrier.
-writel()/readl()'s are ordered to the same endpoint. That goes for all
-the reordering/barrier comments mentioned below too.
-
-device-io.rst:
-
-    The read and write functions are defined to be ordered. That is the
-    compiler is not permitted to reorder the I/O sequence. When the ordering
-    can be compiler optimised, you can use __readb() and friends to
-    indicate the relaxed ordering. Use this with care.
-
-memory-barriers.txt:
-
-     (*) readX(), writeX():
-
-	    The readX() and writeX() MMIO accessors take a pointer to the
-	    peripheral being accessed as an __iomem * parameter. For pointers
-	    mapped with the default I/O attributes (e.g. those returned by
-	    ioremap()), the ordering guarantees are as follows:
-
-	    1. All readX() and writeX() accesses to the same peripheral are ordered
-	       with respect to each other. This ensures that MMIO register accesses
-	       by the same CPU thread to a particular device will arrive in program
-	       order.
+Ack, will change in that way.
 
 
-> 
-> >  
-> >  	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_RSCC_CONTROL_ACK, val,
-> >  		val & (1 << 1), 100, 10000);
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > index 973872ad0474..0acbc38b8e70 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > @@ -1713,22 +1713,16 @@ static int hw_init(struct msm_gpu *gpu)
-> >  	}
-> >  
-> >  	/* Clear GBIF halt in case GX domain was not collapsed */
-> > +	gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
-> 
-> We need a full barrier here to avoid reordering. Also, lets add a
-> comment about why we are doing this odd looking sequence.
-> 
-> > +	gpu_read(gpu, REG_A6XX_GBIF_HALT);
-> >  	if (adreno_is_a619_holi(adreno_gpu)) {
-> > -		gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
-> >  		gpu_write(gpu, REG_A6XX_RBBM_GPR0_CNTL, 0);
-> > -		/* Let's make extra sure that the GPU can access the memory.. */
-> > -		mb();
-> 
-> We need a full barrier here.
-> 
-> > +		gpu_read(gpu, REG_A6XX_RBBM_GPR0_CNTL);
-> >  	} else if (a6xx_has_gbif(adreno_gpu)) {
-> > -		gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
-> >  		gpu_write(gpu, REG_A6XX_RBBM_GBIF_HALT, 0);
-> > -		/* Let's make extra sure that the GPU can access the memory.. */
-> > -		mb();
-> 
-> We need a full barrier here.
-> 
-> > +		gpu_read(gpu, REG_A6XX_RBBM_GBIF_HALT);
-> >  	}
-> >  
-> > -	/* Some GPUs are stubborn and take their sweet time to unhalt GBIF! */
-> > -	if (adreno_is_a7xx(adreno_gpu) && a6xx_has_gbif(adreno_gpu))
-> > -		spin_until(!gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK));
-> > -
-> 
-> Why is this removed?
-> 
-> -Akhil
-> 
-> >  	gpu_write(gpu, REG_A6XX_RBBM_SECVID_TSB_CNTL, 0);
-> >  
-> >  	if (adreno_is_a619_holi(adreno_gpu))
-> > 
-> > ---
-> > base-commit: 93a39e4766083050ca0ecd6a3548093a3b9eb60c
-> > change-id: 20240508-topic-adreno-a2d199cd4152
-> > 
-> > Best regards,
-> > -- 
-> > Konrad Dybcio <konrad.dybcio@linaro.org>
-> > 
-> 
+Regards,
+angelo
+
 
