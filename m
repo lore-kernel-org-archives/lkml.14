@@ -1,122 +1,99 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEE0143883;
-	Thu, 16 May 2024 09:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C952576F;
+	Thu, 16 May 2024 09:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715851115; cv=none; b=jIMMpKx8+wd9Iz6+lDFgdO7mSWzzId5rxuHdepfjHo4G7qJnuejG+9W2lhD3woNRer8YRhgoyhkk8C2ZMr+BebhGXyBdYbBfCevs/LA9j99Qg713l6V04GfTZSJTnsH7V+L8LEy1YspQqHp01U2jRAFA9rxHYnHYVRft1h8ExrA=
+	t=1715851262; cv=none; b=baOBZJL5egt+ROAdWJG12YC9V4wPx1rRwkSzswuBuBL8H0RfbVKzUdJoDtC1Xb9JzUs9zoHu0YJhz2Q059W2d/ZZnnbfYdGsbjbnzQ531yiz/ebkbSNVk/m9kRChLbu1J02JTsDEIF5nf9thWFzWNsuCsQMUp+FX7kkzK+SGRAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715851115; c=relaxed/simple;
-	bh=+xmkqYSCYHnosn2TGgTyqw4XPyycmmx3R2w24+K14dk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t+rO3WwJzYmQxbCdb8kw0TMuvXvunHpd2ejAaMCtHdQGl7eiEFJ8osqKs56jYhVVRuSVPrD4BMufLBMCeTJsu5pPx2CRp+axrpZrx+vEdXXLm/Orac2V5ViA0ioMDOqlpAnQ9bR//oCKQ73DIoY+KS3niIKtxKP4u/QoLr+eaHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kkZSSwwt; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715851262; c=relaxed/simple;
+	bh=bIVzihWWVq9niA9Ho7xTtq5LxcYk/bE+AtWltj09Pw4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fIfT3dgtzvrAj3BnQQkazdgOOI0z9+PJy/7xEcpkMkyjOXfyRwl5C7qqE2KYEk073H48IsUymhgjBUANjPBkP1bqJQPByuOb8zgnnKdxJq8+CLsSbX7lZOZO9fXlx0tRjLLHyc1aV/qkht/85C8ZnoNHz0PqaaT1YBd8+b7eEbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=uuSOEL3v; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kkZSSwwt"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G9HtNP127035;
-	Thu, 16 May 2024 04:17:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715851075;
-	bh=KvNnbS9FRbuAHdlS0fq7GDILSQs+EwKSdndASTjueQM=;
-	h=From:To:CC:Subject:Date;
-	b=kkZSSwwtywvvbc689n9Qj+qgt7x/uds36UIbSKK02826imNuELS6FCwrwQUUXymL9
-	 IZsF0OO5j68KQT6TBm6PBqQSZcI3r4+BIN5mzyiH6E1m962z8AwW4lFjfAnmZyJg6M
-	 9S2xRhYUlTR0U/uolyc9p+rbOGtMfedtmmWlPnEw=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G9HtW9009651
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 16 May 2024 04:17:55 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 16
- May 2024 04:17:54 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 16 May 2024 04:17:54 -0500
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G9HsBY030491;
-	Thu, 16 May 2024 04:17:54 -0500
-Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 44G9Hrk3027556;
-	Thu, 16 May 2024 04:17:54 -0500
-From: MD Danish Anwar <danishanwar@ti.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Diogo Ivo
-	<diogo.ivo@siemens.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>, Andrew Lunn
-	<andrew@lunn.ch>,
-        Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller"
-	<davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>, <r-gunasekaran@ti.com>,
-        Roger Quadros <rogerq@kernel.org>,
-        MD Danish Anwar <danishanwar@ti.com>
-Subject: [RFC PATCH net-next 0/2] Add multicast filtering support for ICSSG driver
-Date: Thu, 16 May 2024 14:47:50 +0530
-Message-ID: <20240516091752.2969092-1-danishanwar@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="uuSOEL3v"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1715851252;
+	bh=c6c5jWZX4urHdDWMJYnCIZDawbwhb3BsVFUXThE8GBc=; l=1531;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=uuSOEL3vIVRgTWlWBcD9xyrlZLOHwQd552+Afs3uaOUeTEDCr9jKFqbGpNCWgKX0c
+	 ajl719K3WaKQ4cbDfrDZUDUOnvmQNQ+tBsqYz0alFPNGVMd3K7lEhTrM+iF7Ak2RcL
+	 U8dr0YC3rt4senACmCGY7iSwWsHTNKtf+Jkeh1YGVNPH3JNhOlmVFu67ZCLjkrRocD
+	 n9X4mv1IY0EuZei9mJH8bKhVf6xIFB3vfTHH6QgWKqPavTsyq8HY8tqqb7KmyNm9pG
+	 OWXXkIicX+kJFMA01S09VhRZDuzk6XxiXFgiGaB7XlJvgHEz+P0I5pNEUGle9tnl8k
+	 Lgo5J7to28a1A==
+Received: from 192.168.10.46
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(3213212:0:AUTH_RELAY)
+	(envelope-from <alina_yu@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Thu, 16 May 2024 17:20:39 +0800 (CST)
+Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 16 May
+ 2024 17:20:38 +0800
+Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 16 May 2024 17:20:38 +0800
+From: Alina Yu <alina_yu@richtek.com>
+To: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<alina_yu@richtek.com>, <cy_huang@richtek.com>
+Subject: [PATCH 1/2] regulator: rtq2208: Add fixed LDO VOUT property and check that matches the constraints
+Date: Thu, 16 May 2024 17:20:33 +0800
+Message-ID: <7c28d2e61d2fc13066ba4814d1ecfab8f344aaad.1715846612.git.alina_yu@richtek.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1715846612.git.alina_yu@richtek.com>
+References: <cover.1715846612.git.alina_yu@richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This series add multicast filtering support for ICSSG driver.
+A fixed LDO VOUT property has been added to specify the fixed_uV of the regulator_desc.
+Additionally, a check has been included in this version
+to ensure that the fixed_uV matches the constraints.
 
-The patch 1/2 of the series introduces helper APIs needed to configure
-FDB tables maintained by firmware.
+Signed-off-by: Alina Yu <alina_yu@richtek.com>
+---
+ drivers/regulator/rtq2208-regulator.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Patch 2/2 introduces the support for multicast filtering.
-
-The driver will keep a copy of multicast addresses in emac->mcast_list.
-This list will be kept in sync with the netdev list and to add / del
-multicast address icssg_prueth_mac_add_mcast / icssg_prueth_mac_del_mcast
-APIs will be called.
-
-To add a mac_address for a port, driver need to call icssg_fdb_add_del()
-and pass the mac_address and BIT(port_id) to the API. The ICSSG firmware
-will then configure the rules and allow filtering.
-
-If a mac_address is added to port0 and the same mac_address needs to be
-added for port1, driver needs to pass BIT(port0) | BIT(port1) to the 
-icssg_fdb_add_del() API. If driver just pass BIT(port1) then the entry for
-port0 will be overwritten / lost. This is a design constraint on the
-firmware side.
-
-To overcome this in the driver, to add any mac_address for let's say portX
-driver first checks if the same mac_address is already added for any other
-port. If yes driver calls icssg_fdb_add_del() with BIT(portX) | 
-BIT(other_existing_port). If not, driver calls icssg_fdb_add_del() with 
-BIT(portX).
-
-The same thing is applicable for deleting mac_addresses as well. This
-logic is in icssg_prueth_mac_add_mcast / icssg_prueth_mac_del_mcast APIs.
-
-MD Danish Anwar (2):
-  net: ti: icssg-prueth: Add helper functions to configure FDB
-  net: ti: icssg-prueth: Add multicast filtering support
-
- drivers/net/ethernet/ti/icssg/icssg_config.c | 186 ++++++++++++++++++-
- drivers/net/ethernet/ti/icssg/icssg_config.h |  19 ++
- drivers/net/ethernet/ti/icssg/icssg_prueth.c |  50 ++++-
- drivers/net/ethernet/ti/icssg/icssg_prueth.h |  15 ++
- 4 files changed, 263 insertions(+), 7 deletions(-)
-
-
-base-commit: 654de42f3fc6edc29d743c1dbcd1424f7793f63d
+diff --git a/drivers/regulator/rtq2208-regulator.c b/drivers/regulator/rtq2208-regulator.c
+index 39147d6..c2c1689 100644
+--- a/drivers/regulator/rtq2208-regulator.c
++++ b/drivers/regulator/rtq2208-regulator.c
+@@ -377,6 +377,7 @@ static int rtq2208_of_get_ldo_dvs_ability(struct device *dev)
+ 	struct of_regulator_match *match;
+ 	struct regulator_desc *desc;
+ 	struct regulator_init_data *init_data;
++	u32 fixed_uV;
+ 	int ret, i;
+ 
+ 	if (!dev->of_node)
+@@ -401,9 +402,15 @@ static int rtq2208_of_get_ldo_dvs_ability(struct device *dev)
+ 		if (!init_data || !desc)
+ 			continue;
+ 
+-		if (init_data->constraints.min_uV == init_data->constraints.max_uV) {
++		/* specify working fixed voltage if the propery exists */
++		ret = of_property_read_u32(match->of_node, "richtek,fixed-microvolt", &fixed_uV);
++
++		if (!ret) {
++			if (fixed_uV != init_data->constraints.min_uV ||
++				fixed_uV != init_data->constraints.max_uV)
++				return -EINVAL;
+ 			desc->n_voltages = 1;
+-			desc->fixed_uV = init_data->constraints.min_uV;
++			desc->fixed_uV = fixed_uV;
+ 			desc->ops = &rtq2208_regulator_ldo_fix_ops;
+ 		} else {
+ 			desc->n_voltages = ARRAY_SIZE(rtq2208_ldo_volt_table);
 -- 
-2.34.1
+2.7.4
 
