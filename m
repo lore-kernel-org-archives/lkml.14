@@ -1,100 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F284501A
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA958282EF
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715847103; cv=none; b=kfctKYm8RxFor0xASLG/ouAE1TUgJcod3AHo/+T212Hu2UxdYc2l+SZETRUcN5YMU+QEgTGr+T2sXr+9DknnkNu6f9CL+frNu4HHc38mzmkSpJYUZpUxeOtP5fwQYtusgmpxN+y5LcOGeBRALuZpLnDEyOH8siTiFyATIPG2kjQ=
+	t=1715847242; cv=none; b=kA+7oKapAH866Sd9ky2EbEpEn2qRGP9IvVe7ccpEY/0hW3ryVW10Jm1CoCTEPjXdU+E+M+xhXPyff/vAmQuf5ZKH2JcJc2OgA8W6wVtfgwtdPe5/+ObjZqX1RqSSOwXR44viaijWRq3cqa6Xj2yzNY+ZJvEKbfTD6OxBTnd4Mvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715847103; c=relaxed/simple;
-	bh=SDHydIIcgExVBBEGQEV4opyzcJq5q4MSmcgzjXkbO1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gp2b6xEfoMbjtlNKT0NdCNS0ahxvGnI35Gg9bOdxTtIFLzbt8f/sscIekDouh4S+3G3yxvv0tJDOpVGRglaPKpnAr7xo3U1P0rKx9UFMObU95h+QGPPlN4+eU4JswJpZ4Krptt4OPgnSSRjN4/htWGG0vRQvxw69GT3EHjaZ4v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eC9YOc7p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715847242; c=relaxed/simple;
+	bh=vy3R1czSIAJZEiVCrAT1VQrBFnTqvQtDzBodaJ2eSSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qZQGySovGTxkURK1qzfNj/YR0D1xKeuvCeh79PjFQ3bhZpVl1h9+QRoREErN+TOAop8GxZTqqSBqGT+nK2g9OoG+xO0axPdoWoXl2/csQtdUWPrz557PlMxbcrjs04g3HwLXh2YZ6Rn/F5cQxkWqJbAKcinWEypMTQ0X4R2sn0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UyB1VdKz; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eC9YOc7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B5C1C113CC;
-	Thu, 16 May 2024 08:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715847103;
-	bh=SDHydIIcgExVBBEGQEV4opyzcJq5q4MSmcgzjXkbO1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eC9YOc7pWDAxfIPvy6qHkI5yDPZzkilKJ8iFLiIsMFpGmxtavV4DoI4rrgbvfWwOf
-	 UzHnDPn7xheBOmWtjuti6olVKO2UJICtwiKqS1ML7RSWPNb4GTyLzR+OfyTJwU5qq3
-	 3aQ2Z2c+cC56OM0PaEyXDZcfAClAV60I76ybPtnGzwxXTKhmJXgbnMSTnHNlTKI3Y6
-	 DMCggVedsvUreGsKZwQoDuMz7RFRE27ydn47607BbtUoHGgJtcOU4omAx/XA7R25Iy
-	 xTGhf7OC54ObcQTJCTWsz4/K5ukJ7oTsNnmYh9HZNinjeuEoLvinfeFPQCbFM/xCG8
-	 gbvbiV/pq7BAw==
-Date: Thu, 16 May 2024 10:11:39 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Aradhya Bhatia <a-bhatia1@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Jyri Sarha <jyri.sarha@iki.fi>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, DRI Development List <dri-devel@lists.freedesktop.org>, 
-	Linux Kernel List <linux-kernel@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>, 
-	Thierry Reding <treding@nvidia.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Boris Brezillon <boris.brezillon@bootlin.com>, Nishanth Menon <nm@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>, 
-	Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>, 
-	Jai Luthra <j-luthra@ti.com>
-Subject: Re: [PATCH 2/7] drm/bridge: cdns-dsi: Fix minor bugs
-Message-ID: <20240516-stereotyped-precise-wapiti-6d0cd3@penduick>
-References: <20240511153051.1355825-1-a-bhatia1@ti.com>
- <20240511153051.1355825-3-a-bhatia1@ti.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UyB1VdKz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E7944000E;
+	Thu, 16 May 2024 08:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715847232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b2/hxtco63GpIUnQcjEi0uFkar4EC6MCevZBbmlEDM0=;
+	b=UyB1VdKzA0phoZwd5f/TyztFgpciJgn+VkO5SmFhGe/GlhAAUhhrLF0Dxk++huzIc26wpH
+	FA1XobuAYg4v9grOecv+It4WAvAeOo+E3uluRP5RyiE1tMlT8WoPIQjO1azQfDt2qQI2y1
+	Afjeg2XkSxv9WwRbWB3aGJA4dJI4kdcRM40RMTjXWjm3RV+udFf+fLLtzyT5RSraZc2Y8F
+	+7bL+FYE6HzDkU+RvoTiJ73zIM4//cWhk0cTURMcOV6YS2j5msP4AGMsywOckCY/LRDNM1
+	DbFjOTwHfGJq9wu9ewBqpnc0KezSnkrcC87hVbaOgokllQr/Bn/XqIzrn0xieQ==
+Date: Thu, 16 May 2024 10:13:50 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Richard
+ Weinberger <richard@nod.at>
+Subject: Re: [PATCH] mtd: rawnand: onfi: read parameter pages in one go
+Message-ID: <20240516101350.78e5ee29@xps-13>
+In-Reply-To: <20240514134140.1050141-1-s.hauer@pengutronix.de>
+References: <20240514134140.1050141-1-s.hauer@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="cnswkacfnsz3omkc"
-Content-Disposition: inline
-In-Reply-To: <20240511153051.1355825-3-a-bhatia1@ti.com>
-
-
---cnswkacfnsz3omkc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Sat, May 11, 2024 at 09:00:46PM +0530, Aradhya Bhatia wrote:
-> Update the Phy initialized state to "not initialized" when the driver
-> (and the hardware by extension) gets suspended. This will allow the Phy
-> to get initialized again after resume.
->=20
-> Fix the OF node that gets passed to find the next available bridge in
-> the display pipeline.
->=20
-> Fix the order of DSI Link and DSI Phy inits. The link init needs to
-> happen before the Phy is initialized, so the Phy can lock on the
-> incoming PLL reference clock. If this doesn't happen, the Phy cannot
-> lock (until DSI Link is init later on). This causes a warning dump
-> during the kernel boot.
->=20
-> Allow the D-Phy config checks to use mode->clock instead of
-> mode->crtc_clock during mode_valid checks, like everywhere else in the
-> driver.
+Hi Sascha,
 
-All these should be in separate patches.
+s.hauer@pengutronix.de wrote on Tue, 14 May 2024 15:41:40 +0200:
 
-Maxime
+> nand_read_data_op() is not supported by all NAND controllers.
+> nand_change_read_column_op() is not supported or at least is hard to
+> support by NAND controllers that use a different page layout than
+> expected by the NAND core.
 
---cnswkacfnsz3omkc
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm sorry but RNDOUT is not so hard to support, and I know no NAND
+controller without this feature (I think even the first mxc controller
+supports it?). However, the command does not exist on small page NANDs
+(512 bytes). TBH I have never seen such a device myself, so I wonder
+how spread they still are.
 
------BEGIN PGP SIGNATURE-----
+What may not be supported however are the DATA_IN cycles.
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZkW/uwAKCRAnX84Zoj2+
-dvbiAYCTM8TvoHNwZ6Dm4SMhmLrZgas5Prx9utVjWzNDduffCVKQ1muJvPEoKLqS
-yfhdttQBgJkKcyWiqBjQtycklQDU+f/9fZ9eqO63kMLYM4jz3wRj66wF92677VhA
-nVOw35Wlnw==
-=NUy6
------END PGP SIGNATURE-----
+> Instead of relying on these functions
+> just read the three parameter pages in one go.
 
---cnswkacfnsz3omkc--
+Bitflips in parameter pages are very rare, they are normally quite
+robust. The proposed solution impacts *all* NANDs, because the I/O
+chip speed is at its lowest. There is no reason in most cases to do
+that.
+
+I agree there is a problem with the patch I proposed and we need to
+settle. And we simply cannot make RNDOUT calls randomly here as long as
+we want to support small page NANDs.
+
+I believe we should do something like:
+
+nand_read_param_page_op(0)
+if (corrupted) {
+	if (supported.datain)
+		data_in(); /* this is faster */
+	else	=09
+		nand_read_param_page_op(1)
+}
+
+I'll try to draft something (also applies to the jedec discovery).
+
+Thanks,
+Miqu=C3=A8l
