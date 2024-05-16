@@ -1,147 +1,95 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC7119479;
-	Thu, 16 May 2024 04:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7820FBF3;
+	Thu, 16 May 2024 04:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715834112; cv=none; b=WXgopBPKixhRuexqs5Q2sogTLRWZHaTeTl7R4hx+H3chii0BxfcfZ6d3NsGB+jxNrUVsOfzMrzxZlm0itfuhkc/I3lbnKy9Fq8priQA/0wEm4iWYr7sqqbW8f4dq1bgcgvaGqfHZRlV3p6vkB+FL6kf7Cllkp9pgfgYE0Zw4AvE=
+	t=1715834412; cv=none; b=K5N+vxY83ZhzJj+3JCH7eKNaG7ern7w6z+ekhZyLRdw6eH5OXR7hKq0zcRRbkH+50yhUuRcRzJZd7CemWvRk6o1j9LPxHKcjOuF7bcd7fTSYiu0P4Y6q6tcuA/T48FVseR61hbErZGT5mi2S9aGhqc0PBD++ZjUIo3+TAbVrXi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715834112; c=relaxed/simple;
-	bh=R6g6Kbz23JJuHxxGxKU5UfnHFtwBCQKTbu8wuwF8h5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=R6KXXKu6Yc0PV4bvkC4wOSLzM9nyfaGO7qKyS07Rc8ZAu8Wdwba9y1DpWk0yxbubNbch28ifMp+lEhgR9FqCF28VojFHTSDvIxX8cR4s/Yi1Qq4CcpG7YklZ+PSMmR8k3TrDN8qeaoyjP2eCtejUAJttr9IR+wCGDZeP8+p7TB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uI5t7c1L; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715834412; c=relaxed/simple;
+	bh=L54fO4D0FCChnqQLA0pJ16mx/7DtJOfTrBflRIH5OcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EhRRQjXSFwuTI/T3ItDjD00NK0vvVjxL9cNP/7SR/tczO2KN3BPsyQVm0CISC/hkdeWeAHRWI5MIAt7kCymOgZ1MUaZgeEcw+/4AXk+eZ8k9Eij7n1o51mQ/Myv0qrVY1FHB9UHZJTyrXhPFmk+TqTEj3KttJx8+lLcnWRlFg0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=U7LS7LQI; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uI5t7c1L"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44G4Z5po060121;
-	Wed, 15 May 2024 23:35:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715834105;
-	bh=qhrqxFtYpRU+Vl8uqo5rJIfOPHbM+LsyiYwbd5rWZWk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=uI5t7c1LCpyJVLQe80TqhMKXhpmYZmEXhxdlUsnx6FawlrJIIxl02+UDS77h/BtqK
-	 jTPIX4euwj7vG1WR8xckJRjmlEgpyhr1KgVW+MJ9GwRGaU10B2XSqR1TajnOPIhDaM
-	 JvzcvZgEKfq7cEYk8+hbRv4dxrl9533Ty8gkuRno=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44G4Z5CW019414
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 15 May 2024 23:35:05 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 15
- May 2024 23:35:05 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 15 May 2024 23:35:05 -0500
-Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44G4Z2Mj100716;
-	Wed, 15 May 2024 23:35:02 -0500
-Message-ID: <a5a4db25-01a6-eec0-53fe-166029f71aec@ti.com>
-Date: Thu, 16 May 2024 10:05:01 +0530
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U7LS7LQI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1715834405;
+	bh=KwkWYAxPYWT4jyt7Nt2O/X7NlRLqDeRalY4XQ+cUo50=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=U7LS7LQIAJQ9sJbAsmWLlNoGKR3vuGVLnrBUF0htv/rrWApI2d5bin9OP3X9B9228
+	 TeEGGkoOcM/cYhV+H472ZrYEL94Vzf1vfwP24vb2VVcK5NKeI+G4jup+JQy1JUxJn/
+	 ukV95Eon7vBaQAwkZwsyOSPd9BCqglagvAYwU31aO7ttFxMG3OIRtsLIyP7e6MyjeK
+	 T0h8Iv2P/QCHh0EfRwLQaeMaBVZqkfmJIqVY9ARAVuN+uxbqMde3HCecbiiGJVr35F
+	 cIU4Ep3qVmV+LmkcBxoXfC+jGE0yRzYzNr99Z8+6aJxe0+J+ZlW+1V02luaBGHDe7Y
+	 YHKFTUUsbvUTA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Vfy7S2Pncz4wby;
+	Thu, 16 May 2024 14:40:04 +1000 (AEST)
+Date: Thu, 16 May 2024 14:40:01 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>,
+ Conor Dooley <conor.dooley@microchip.com>, Emil Renner Berthing
+ <emil.renner.berthing@canonical.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+ Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: linux-next: manual merge of the risc-v tree with Linus' tree
+Message-ID: <20240516144001.091ab957@canb.auug.org.au>
+In-Reply-To: <tencent_15C2F112172FA62C64BB318B8F4330461B05@qq.com>
+References: <20240516093641.15695f18@canb.auug.org.au>
+	<tencent_15C2F112172FA62C64BB318B8F4330461B05@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 1/2] usb: cdns3: Add quirk flag to enable suspend
- residency
-Content-Language: en-US
-To: <peter.chen@kernel.org>, <pawell@cadence.com>, <rogerq@kernel.org>
-CC: <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        Ravi Gunasekaran
-	<r-gunasekaran@ti.com>
-References: <20240516042845.31211-1-r-gunasekaran@ti.com>
- <20240516042845.31211-2-r-gunasekaran@ti.com>
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20240516042845.31211-2-r-gunasekaran@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/OrY0=XKI6gro7W/9yHoZroH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/OrY0=XKI6gro7W/9yHoZroH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Yangyu,
 
-On 5/16/24 9:58 AM, Ravi Gunasekaran wrote:
-> From: Roger Quadros <rogerq@kernel.org>
-> 
-> Some platforms (e.g. ti,j721e-usb, ti,am64-usb) require
-> this bit to be set to workaround a lockup issue with PHY
-> short suspend intervals [1]. Add a platform quirk flag
-> to indicate if Suspend Residency should be enabled.
-> 
-> [1] - https://www.ti.com/lit/er/sprz457h/sprz457h.pdf
-> i2409 - USB: USB2 PHY locks up due to short suspend
-> 
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> ---
-> Change log:
-> ----------
-> 
-> Changes since v1:
-> ----------------
-> * Grouped the susp_ctrl register update along with
->   existing CDNS3 snippet as suggested by Peter Chen
-> 
-> v1: https://lore.kernel.org/all/20240514092421.20897-1-r-gunasekaran@ti.com/#t
+On Thu, 16 May 2024 10:17:14 +0800 Yangyu Chen <cyy@cyyself.name> wrote:
+>
+> Oh, No.
+>=20
+> Here should be CONFIG_SOC_CANAAN_K210 not CONFIG_ARCH_CANAAN_K210 .
 
-[...]
+Yeah, sorry about that, I realised after I sent it.  I will add a small
+fix patch to linux-next today and it will be correct tomorrow (if it is
+still needed).
 
-> -	u32 state;
-> +	u32 state, reg;
->  	int ret;
->  
->  	regs = devm_ioremap_resource(cdns->dev, &cdns->otg_res);
-> @@ -433,12 +433,21 @@ int cdns_drd_init(struct cdns *cdns)
->  			cdns->otg_irq_regs = (struct cdns_otg_irq_regs __iomem *)
->  					      &cdns->otg_v1_regs->ien;
->  			writel(1, &cdns->otg_v1_regs->simulate);
-> +
-> +			if (cdns->pdata &&
-> +			    (cdns->pdata->quirks & CDNS3_DRD_SUSPEND_RESIDENCY_ENABLE)) {
-> +				reg = readl(&cdns->otg_v1_regs->susp_ctrl);
-> +				reg |= SUSP_CTRL_SUSPEND_RESIDENCY_ENABLE;
-> +				writel(reg, &cdns->otg_v1_regs->susp_ctrl);
-> +			}
-> +
->  			cdns->version  = CDNS3_CONTROLLER_V1;
->  		} else {
->  			dev_err(cdns->dev, "not supported DID=0x%08x\n", state);
->  			return -EINVAL;
->  		}
->  
-> +
+Just make sure Linus is told the correct thing.
+--=20
+Cheers,
+Stephen Rothwell
 
-Please ignore this patch. I didn't notice this.
-I will send a v3 fixing it.
+--Sig_/OrY0=XKI6gro7W/9yHoZroH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
->  		dev_dbg(cdns->dev, "DRD version v1 (ID: %08x, rev: %08x)\n",
->  			 readl(&cdns->otg_v1_regs->did),
->  			 readl(&cdns->otg_v1_regs->rid));
-> diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
-> index d72370c321d3..1e2aee14d629 100644
-> --- a/drivers/usb/cdns3/drd.h
-> +++ b/drivers/usb/cdns3/drd.h
-> @@ -193,6 +193,9 @@ struct cdns_otg_irq_regs {
->  /* OTGREFCLK - bitmasks */
->  #define OTGREFCLK_STB_CLK_SWITCH_EN	BIT(31)
->  
-> +/* SUPS_CTRL - bitmasks */
-> +#define SUSP_CTRL_SUSPEND_RESIDENCY_ENABLE	BIT(17)
-> +
->  /* OVERRIDE - bitmasks */
->  #define OVERRIDE_IDPULLUP		BIT(0)
->  /* Only for CDNS3_CONTROLLER_V0 version */
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZFjiEACgkQAVBC80lX
+0Gye9Qf9HPluOLJTj3vATBddSi5tC1/fYifvXVs8shGZhxzNHVqz3N57Bz9B46u3
+hN1BOWMC53SYEn4e7DZ/TYspVwur6dJmOZ6139N/t5ElQL7gIKHogC9RiYqdJFcf
+/95J+ulf16OeMbyfXM12ghG14D6g+i7c+NdAsWdn7KGgqfypGxzrX6JT4O8GgVvU
+PoukaXdezmrLMF26N//PMo2YQfduX+NZohjFKkAyz4j49BbndMlT/X5o+BfQ0NH1
+hI6N6ZvXH/o5HHGsQA9vrACwSPQvY4XcnSq4Yo7bqQ5ONHJojifZ0to5INTpYSgn
+FhEmVcqgdIXk/6xhIm8BbnBeoiNLSg==
+=g8f3
+-----END PGP SIGNATURE-----
 
--- 
-Regards,
-Ravi
+--Sig_/OrY0=XKI6gro7W/9yHoZroH--
