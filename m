@@ -1,109 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2696E14658E
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C6B1474C6;
+	Thu, 16 May 2024 13:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715864641; cv=none; b=BOMuRNsbBy6TbeZhoPbuF31klFMuakf5Cob9ymVpGyL+lCqPYjc6CZNWdhFMbJQ0X2/TuSDhve9P8Z45RgYf/w7pu8pwPlMcw/rh7jb6/5AHi4agaLrZswWm9LAem3u6qmgKtD46oW6Zcz/4Qac8W84fL5HZq2Glt0AEHph5pJw=
+	t=1715864680; cv=none; b=psc9HerjxmB+Ulo0JFfOtEYsnIQgZtBhHBOXbVKq1jH1mVukMTzpaykw+D6DroyAXVXUXEYMMLuwE9901x4vh0dxgdTle0CXNnRg2PA2NzcI8crqf/1hwrZYQSC6uh9454q2HcWzAM4/UY9K4Gj7F5R170UhWxivtE55BEvanT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715864641; c=relaxed/simple;
-	bh=WGVi5aGdGAHMERiHO+uuNhv6KeyDPpakxxwg5naMK3I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FlTBeJvKLn+Nwp2pGfES5KePSZEFrpIzUREhATpW1NlG/zjRXiS13oSjITKtGO3N9e1pUINO8nqkj1XpI60Hs88vZMfHfeq3znaxoIXVNU+11URiSPyRpUUKpXYvmlHv3Fiy0E9k4nsjUxIoDkFatgcIhg1YH3A9ZwK5NkX7wOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OD0cqvwS; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715864680; c=relaxed/simple;
+	bh=lANF33hHhvZlC5k66NZieznEujRydEkMTcg2oIOZf+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ULWsLef5egD39ezsKePMUR4til+lFmmMijTEgfe3cd2KSgD/68p792AvMZEa9yNIpFl1/hk4sG+q4QUdf7FRHUHT7eH/HrdoYbpJ8JLon0SzEUI5uRdEcVPx9rtdcmVsXGBUWNEd4rqNCqass5q8FuWwwxh/+PK0hIjPXZH5RA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOcUatqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OD0cqvwS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715864640; x=1747400640;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WGVi5aGdGAHMERiHO+uuNhv6KeyDPpakxxwg5naMK3I=;
-  b=OD0cqvwSmd3nqExP0glxOBjDO+drwZknMFM6r1+1ZvBxdM2CcJF4fnum
-   rDkq2fpv4yYGB9qvMVJ8CWck7O+az43dtPamLrBvViT7zKSzsIgrwOc5z
-   kRSRm+ctmr0v22AK/22foK/nu9V+Q6GYd/8+u/LkjkzT/SKxlxlWMNpKA
-   DHTpGR5ySF06Ctns50mA1TJq5rdNYPNkB0lEe0Y8tT/KfeemGAs+VF4uV
-   NjV47TcnTN0FTjo6W2PJN0+EiAPaZaWsTIGw8YZPB2eC7i1/7/1mHuMsg
-   CcfruLXrFnH/x6kS7PetcrnWMPdtY7XVXZaLWMSULYT/VVeKp9aEH8N+7
-   Q==;
-X-CSE-ConnectionGUID: U3q6PpaiSWOAwMpae/bWoA==
-X-CSE-MsgGUID: sAzC+abyTKa1AbB43+mbkQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="22551061"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="22551061"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 06:03:59 -0700
-X-CSE-ConnectionGUID: /cXk0nLgSPuffZMaA2Cp5w==
-X-CSE-MsgGUID: VZU03uQxQqOyCS3ANyZY9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="31523926"
-Received: from unknown (HELO chenyu-dev.sh.intel.com) ([10.239.62.107])
-  by fmviesa010.fm.intel.com with ESMTP; 16 May 2024 06:03:53 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Prem Nath Dey <prem.nath.dey@intel.com>,
-	Xiaoping Zhou <xiaoping.zhou@intel.com>
-Subject: [PATCH] x86/paravirt: Disable virt spinlock when CONFIG_PARAVIRT_SPINLOCKS disabled
-Date: Thu, 16 May 2024 21:02:44 +0800
-Message-Id: <20240516130244.893573-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOcUatqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD1CC2BD11;
+	Thu, 16 May 2024 13:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715864679;
+	bh=lANF33hHhvZlC5k66NZieznEujRydEkMTcg2oIOZf+0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OOcUatqxoX1Mo/CcGPvfT3OJXCa2Q0HX4obZINi03Qk2mH4IhDoJiqR2g8tNYKOVY
+	 roHwMxJrBJfDzHxwQh++0N5i4M0yNC+ftPOLBCi9GJpdYxiINpufLKQTrONeQOYu+/
+	 btnFmOMT25BdDPUu3s15ZVw7IEsvgQ+RvZ840YzguGlF7TPpXhBqltjpSff8CQArOZ
+	 jVMFoAMzViKf5HQFrE/jQMD0F5/wTsRgXChGEa4zpf4NpbY8KDrSN3LhCgGOmaukCZ
+	 o5gCkyDdTp4dJ60JHbD8ovfstF3d29iwhCSxCoXxBp7nW9KkDH5Uif0LNlI2cbxBuH
+	 CsKDkXblzkkwA==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5b2f4090ac9so40553eaf.2;
+        Thu, 16 May 2024 06:04:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWiLvnBCNC9tnVNGcbCxfkrA3UwXrwUtRXV16efljod9xzkRP8SJ++X6OZj17LbyS2MwAMVk4/6U6iCoNoo9BtFNXqwW/sxRlXo9RuNsZ+NRQ5bVloFIxHJwUD0M3kCY8wsrDWbBUo23VpYq4C9FBdf/rq4RBP/COqzqoMMxHoW7NouW9F+LRlWNol3rcMkcp3zPoWLX7CDtFmnNW/xluNpYg==
+X-Gm-Message-State: AOJu0YwTpYnPh000f9BZaXxtwO25jAD7hTBkwFtoSOGiLgipEaHbK0WO
+	ISU53E+DyPOIAjQVT14mC7nkDRC0quP29yoqH63dU/QEPYQdQ0ytTr5cULDobt1VfwUj9lkioWH
+	/CZV8ivtvF7uQZ85mNIXKncPZ2PM=
+X-Google-Smtp-Source: AGHT+IFemhO95rMoyxfMEhxijBJUiXX4NOCyoajz6xwWsaXxqFUkT8aIVqw1K1TJO13iN9pQ3XfqejYS9nFUxeFLCaw=
+X-Received: by 2002:a05:6870:2153:b0:22e:dfbc:4aae with SMTP id
+ 586e51a60fabf-24172a7e835mr21408284fac.2.1715864678677; Thu, 16 May 2024
+ 06:04:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240516124317.710-1-tzimmermann@suse.de>
+In-Reply-To: <20240516124317.710-1-tzimmermann@suse.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 16 May 2024 15:04:27 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gw620SLfxM66FfVeWMTN=dSZZtpH-=mFT_0HsumT3SsA@mail.gmail.com>
+Message-ID: <CAJZ5v0gw620SLfxM66FfVeWMTN=dSZZtpH-=mFT_0HsumT3SsA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: video: Fix name collision with architecture's video.o
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: rafael@kernel.org, lenb@kernel.org, arnd@arndb.de, 
+	chaitanya.kumar.borah@intel.com, suresh.kumar.kurmi@intel.com, 
+	jani.saarinen@intel.com, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+	linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Performance drop is reported when running encode/decode workload and
-BenchSEE cache sub-workload.
-Bisect points to commit ce0a1b608bfc ("x86/paravirt: Silence unused
-native_pv_lock_init() function warning"). When CONFIG_PARAVIRT_SPINLOCKS
-is disabled the virt_spin_lock_key is set to true on bare-metal.
-The qspinlock degenerates to test-and-set spinlock, which decrease the
-performance on bare-metal.
+CC Hans who has been doing the majority of the ACPI video work.
 
-Fix this by disabling virt_spin_lock_key if CONFIG_PARAVIRT_SPINLOCKS
-is not set, or it is on bare-metal.
+On Thu, May 16, 2024 at 2:43=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse=
+.de> wrote:
+>
+> Commit 2fd001cd3600 ("arch: Rename fbdev header and source files")
+> renames the video source files under arch/ such that they does not
+> refer to fbdev any longer. The new files named video.o conflict with
+> ACPI's video.ko module.
 
-Fixes: ce0a1b608bfc ("x86/paravirt: Silence unused native_pv_lock_init() function warning")
-Suggested-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reported-by: Prem Nath Dey <prem.nath.dey@intel.com>
-Reported-by: Xiaoping Zhou <xiaoping.zhou@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- arch/x86/kernel/paravirt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And surely nobody knew or was unable to check upfront that there was a
+video.ko already in the kernel.
 
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 5358d43886ad..ee51c0949ed8 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -55,7 +55,7 @@ DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
- 
- void __init native_pv_lock_init(void)
- {
--	if (IS_ENABLED(CONFIG_PARAVIRT_SPINLOCKS) &&
-+	if (!IS_ENABLED(CONFIG_PARAVIRT_SPINLOCKS) ||
- 	    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		static_branch_disable(&virt_spin_lock_key);
- }
--- 
-2.25.1
+> Modprobing the ACPI module can then fail with warnings about missing symb=
+ols, as shown below.
+>
+>   (i915_selftest:1107) igt_kmod-WARNING: i915: Unknown symbol acpi_video_=
+unregister (err -2)
+>   (i915_selftest:1107) igt_kmod-WARNING: i915: Unknown symbol acpi_video_=
+register_backlight (err -2)
+>   (i915_selftest:1107) igt_kmod-WARNING: i915: Unknown symbol __acpi_vide=
+o_get_backlight_type (err -2)
+>   (i915_selftest:1107) igt_kmod-WARNING: i915: Unknown symbol acpi_video_=
+register (err -2)
+>
+> Fix this problem by renaming ACPI's video.ko to acpi_video.ko. Also
+> rename a related source file and clean up the Makefile.
 
+If you insist on renaming, rename it to backlight.c (and
+backlight_detect.c for consistency), because that's what it really is
+about.
+
+> Reported-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
+> Closes: https://lore.kernel.org/intel-gfx/9dcac6e9-a3bf-4ace-bbdc-f697f76=
+7f9e0@suse.de/T/#t
+> Tested-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 2fd001cd3600 ("arch: Rename fbdev header and source files")
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-arch@vger.kernel.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> ---
+>  drivers/acpi/Makefile                            | 5 +++--
+>  drivers/acpi/{acpi_video.c =3D> acpi_video_core.c} | 2 +-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>  rename drivers/acpi/{acpi_video.c =3D> acpi_video_core.c} (99%)
+>
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 8cc8c0d9c8732..fc9e11f7afbf7 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -84,7 +84,9 @@ obj-$(CONFIG_ACPI_FAN)                +=3D fan.o
+>  fan-objs                       :=3D fan_core.o
+>  fan-objs                       +=3D fan_attr.o
+>
+> -obj-$(CONFIG_ACPI_VIDEO)       +=3D video.o
+> +obj-$(CONFIG_ACPI_VIDEO)       +=3D acpi_video.o
+> +acpi_video-objs                        +=3D acpi_video_core.o video_dete=
+ct.o
+> +
+>  obj-$(CONFIG_ACPI_TAD)         +=3D acpi_tad.o
+>  obj-$(CONFIG_ACPI_PCI_SLOT)    +=3D pci_slot.o
+>  obj-$(CONFIG_ACPI_PROCESSOR)   +=3D processor.o
+> @@ -124,7 +126,6 @@ obj-$(CONFIG_ACPI_CONFIGFS) +=3D acpi_configfs.o
+>
+>  obj-y                          +=3D pmic/
+>
+> -video-objs                     +=3D acpi_video.o video_detect.o
+>  obj-y                          +=3D dptf/
+>
+>  obj-$(CONFIG_ARM64)            +=3D arm64/
+> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video_core.c
+> similarity index 99%
+> rename from drivers/acpi/acpi_video.c
+> rename to drivers/acpi/acpi_video_core.c
+> index 1fda303882973..32bf81c5773a4 100644
+> --- a/drivers/acpi/acpi_video.c
+> +++ b/drivers/acpi/acpi_video_core.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+> - *  video.c - ACPI Video Driver
+> + *  acpi_video_core.c - ACPI Video Driver
+>   *
+>   *  Copyright (C) 2004 Luming Yu <luming.yu@intel.com>
+>   *  Copyright (C) 2004 Bruno Ducrot <ducrot@poupinou.org>
+> --
+> 2.45.0
+>
+>
