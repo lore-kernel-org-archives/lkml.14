@@ -1,90 +1,78 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC8614D707
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 16:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2ED2421A;
+	Thu, 16 May 2024 16:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715875967; cv=none; b=f3b1MQ39E1n6UjPLw1+yRZ+DwmYgDpz8Obd8XOAMNHGFCMyFAElDfDiKPDB2Aq1OoshIccaAyEEbxDPYC/WEwm4eX8Rays3q2ZCOtNbuhYDf7aQgyE0tYY2EJvoVGhOGwZItDMU+vz7l6j00ntyucgVqfr0966DchpKrvcnvVJ4=
+	t=1715876108; cv=none; b=GLU5r8miuZg8Sq5BqDKevB9pSb0Dt7+hZ1JR1Hq87cIUn40C+XEJEO8y3gX+NX2etf0nImRZrzQZ+Lyx2nJ2lqP4oieNztHw1q0C7f5XH0gBAD+QKEk4geFfexTFpyAkm8nNTMJ2uq/dqfwVUWzEGqmk9Nl3yLg15h28FppsN6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715875967; c=relaxed/simple;
-	bh=EDVDStN9akIll0ya820KZNeIn7ir4olgOtXijBH6aOg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tup+S8XS3O+VVF3QsXv+NoYJZVicyO9js13y3YCTmAhSDe9hF4MecUb4TdUVAZSnU1wLVHzZt1tQ3+LnzbkY7/aB/LSgej0iyXOoHYXIhBc/pSMjPkhIP4nWI6T2iPE/bzIeggp4lh/KA/YQ8llK7jTeXpvrtSdMu9qMVTVegno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQz9+USn; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715876108; c=relaxed/simple;
+	bh=C5txdxBhuj7rW3DWnSbwvCzPzbmF4xQ5STOkAZq83ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=loYiG4FrZCoqwHXh3QMYVATPN7dLxpJ2zsn3SumGLD/jMtRcjrN0CA28pBrGn37AjsgmqOaNQEJIewxGysRkObs/5Cvfrj/pT5NAN+9Wxhudf03XIpy4Ycc86UbUWxE7ihaYSnBuWT4PzjVyUv6TyGGlfQ+M17BNLjOKtqh+Rhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JtYVC8El; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQz9+USn"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-43e1581e81cso31459781cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:12:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715875965; x=1716480765; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EDVDStN9akIll0ya820KZNeIn7ir4olgOtXijBH6aOg=;
-        b=QQz9+USnTDYFWNZgI5ivdSAACTsh/KANVCTKfAUvb8ou3ZMgq8UMHdkKlxvbl1KYCU
-         4VRCY7BfWZST0A0K/DTZkxdekHb7sPlX6gcSTmNIjGkhAyfXvRmL0RfAlLCyCag9ip0Q
-         jR1MEq9v5mQpoFV/cpTkrQNy7nHGuRw4KEFaE8oRZ9eDSfFSf7Y/oaaV8DIzqWpt5oiW
-         LEZXU8nXTd4k/+mPxwqRoRhCmRdgPAX4rWX+CGRRBDP9Ne/07ZPg8r6X3+IrpkrRntML
-         /BR71trOPmQEX1941Ky1+MligW8dMiOoXJxmESoRNJrd7tJzWkkZ5OdKuXD3hq/vO6Oq
-         oPLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715875965; x=1716480765;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EDVDStN9akIll0ya820KZNeIn7ir4olgOtXijBH6aOg=;
-        b=PlVIZfZ9BA4Ve7X6EiAe3llsrZlrTlGPTal0mdxs+qrMJQBSb9w9VvO7hcgdqtoM5n
-         68KukHdCJ/OqX0gVTZp1mK204IBWsSSfZcirv+TMv+Moa7snJmtPMCGkbIjs9QJKcWKW
-         dMG1qtWqpZ2naMVWqHlYcOm/LDfosj3fn0pH2tYLYX/KgPqUjMGkFx2v01PE2eLoFwbn
-         8kxSLk7J3qudDh435y31u69GO6kwHc8oNuGcVjEm9wBtGDt/6ykZ9bSTFQ6BBMv72tlV
-         1Hxadaf/gR9jOp15qs4H472nvyODrgSzh86uzowClFS/cAvzdDotC0cryUuJ7TzU9uev
-         xYbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYNR/4X5Rvo+t2mN6mH/MgQobovckuDUvPnxaPY9+uq32UDr3ZBd+S1T7GEQxqnLs0OPRD8ExjGXwxOa9wj1ECBk7voKer44BfF76C
-X-Gm-Message-State: AOJu0YxSHYCBhwdf2FLj6AkaYkMvI96FJKtD8zeqVlf45ebeblZYDQvA
-	0O6qhks9xfD3JsODhvAd30nJn3ORIUmDrZD51jJytFsMEr91KnATDOXviiDZX0TLDXFp6s+SjEm
-	Wspwm5zuZXV82j08fusz1QSW1Kdk=
-X-Google-Smtp-Source: AGHT+IFaEJ8GHCyu3non5YHI6ttPcdFCQtu47m9l4CWqBdVjbODGX809oQyAj1OqF4j3CWyKqDFe5cMvI7CnUOWr/ZY=
-X-Received: by 2002:ac8:7c45:0:b0:43a:ffa5:3f24 with SMTP id
- d75a77b69052e-43dfdba9604mr246255961cf.58.1715875965116; Thu, 16 May 2024
- 09:12:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JtYVC8El"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF147C113CC;
+	Thu, 16 May 2024 16:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715876108;
+	bh=C5txdxBhuj7rW3DWnSbwvCzPzbmF4xQ5STOkAZq83ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JtYVC8Elpkr080qIIwIffhq7Xabf/QhfcnqUPFWpxscSTASidGwxeAWdxwNUEwpQn
+	 SSPfWjsKCa0RRt1mPnSkMUSd0TyiBWfIA69jJyrMDqeG4ekCfRGRRypHSBeeavbEpF
+	 ds+m50y/663B0JwIW1wujM83A4h6g6sQumIfOYmo=
+Date: Thu, 16 May 2024 18:15:05 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Manthey, Norbert" <nmanthey@amazon.de>
+Cc: "keescook@chromium.org" <keescook@chromium.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Woodhouse, David" <dwmw@amazon.co.uk>,
+	"Stieger, Andreas" <astieger@amazon.de>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	"Hemdan, Hagar Gamal Halim" <hagarhem@amazon.de>
+Subject: Re: Extending Linux' Coverity model and also cover aarch64
+Message-ID: <2024051625-dowry-pacifism-b0b9@gregkh>
+References: <77f6e6fc46232db82a3c63e93877c9534334e407.camel@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240516075628.GC22557@noisy.programming.kicks-ass.net>
- <CAM7-yPRHp3tiZjuBTesdRQoU8WJNg1scon_txS_6R-pZq9MXHw@mail.gmail.com>
- <20240516084911.GF22557@noisy.programming.kicks-ass.net> <ZkXtHv+fHUD2+lFJ@lothringen>
- <CAM7-yPTSq0CSmRsTpeXwzhFk77gfwUK_LZKnbgo4NPk5zPCaAg@mail.gmail.com>
- <20240516140003.GJ22557@noisy.programming.kicks-ass.net> <ZkYW48dTX2FH5NaD@lothringen>
- <20240516144504.GL22557@noisy.programming.kicks-ass.net> <ZkYgG9KYMpUPeJsM@lothringen>
- <20240516151953.GM22557@noisy.programming.kicks-ass.net> <ZkYnKAd1Qy+yvjDY@lothringen>
-In-Reply-To: <ZkYnKAd1Qy+yvjDY@lothringen>
-From: Yun Levi <ppbuk5246@gmail.com>
-Date: Thu, 16 May 2024 17:12:33 +0100
-Message-ID: <CAM7-yPRjjCS7VDz5-X4Z5gBCymoCMxGc+okL7+2WZiHM7D0C_w@mail.gmail.com>
-Subject: Re: [PATCH v4] time/tick-sched: idle load balancing when nohz_full
- cpu becomes idle.
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Vineeth Pillai <vineeth@bitbyteword.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, anna-maria@linutronix.de, mingo@kernel.org, 
-	tglx@linutronix.de, Markus.Elfring@web.de, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77f6e6fc46232db82a3c63e93877c9534334e407.camel@amazon.de>
 
-> > Yes, but stronger, as long as the CPU is part of a load-balance domain,
-> > it must not disable the tick while running anything.
-> >
-> > that is, NOHZ_FULL must not become active unless it's running on a
-> > single CPU partition.
->
-> I like the idea but I'm afraid to introduce regressions while doing so,
-> with people currently using nohz_full without proper partionning...
+On Thu, May 16, 2024 at 03:28:16PM +0000, Manthey, Norbert wrote:
+> Dear Kees, all,
+> 
+> we published an extension for the Coverity model that is used by the
+> CoverityScan setup for the Linux kernel [1]. We have been using this
+> extension to analyze the 6.1 kernel branch, and reported some fixes to
+> the upstream code base that are based on this model [2]. Feel free to
+> merge the pull request, and update the model in the CoverityScan setup.
+> We do not have access to that project to perform these updates
+> ourselves.
+> 
+> To increase the analysis coverage to aarch64, we analyzed a x86 and a
+> aarch64 configuration. The increased coverage is achieved by using re-
+> configuration and cross-compilation during the analysis build. If you
+> are interested in this setup we can share the Dockerfile and script we
+> used for this process.
+> 
+> To prevent regressions in backports to LTS kernels, we wondered whether
+> the community is interested in setting up CoverityScan projects for
+> older kernel releases. Would such an extension be useful to show new
+> defects in addition to the current release testing?
 
-But I wonder when nohz_full cpu enters *idle".
+New defects yes, I would like to know that, as long as they are also
+fixed already in mainline, right?
 
-If the cpuidle governor selects an idle state which wants "stop_tick",
-If nohz_full cpu is still in sched domain, should it disable tick or not?
+Just send us reports of that, no need to get the covertity site involved
+there, I'll be glad to take them.
+
+thanks,
+
+greg k-h
