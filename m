@@ -1,105 +1,173 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130F14206C
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 09:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EC14206C;
+	Thu, 16 May 2024 09:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715852509; cv=none; b=XcToUbTfcRECv2CDOnIk5vSAp2uPbp8wQjbQEupXtTWsaTrv6OR9FLMFfW0N6b0HKfhV+nJAWZMvu5LQTwT11IfN/Z1v01r9CAqeOv7L05fnxG54RJdzALN6JKb4oYPWzp4YlxWQH/8wicTOiLOOZihocSAeabsd4PUZh6B8P10=
+	t=1715852577; cv=none; b=mejk22RRZsmbUjh6yKZlkh8RJRStkQa/lClzpD9EW+9xh1YuMg+3SvvymfSPzuhkc0PBtJJ5aG9L0KMVsmEKCMauTdypt26iBzxiEjFpV2Nx796YTwgvoa3OKxAtduk9KvBXKcqzb2Q99MiVD7uZYhbSLehIDE35wz9NFsd2+Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715852509; c=relaxed/simple;
-	bh=F1O5jiNGFR1SlNv6rgREly1cwT1VCOaVYJdgntR/vbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4xdq3wWaPgvelvBHVOequdhkXGmsW/YufNJ36QpRkN6x+LVR3p7dCbqlVZ6/BCkd4jFND52Q2rogdORd8n6w9QcQqc5SaPx/Y0hSy3ACXR2giTRNSxRtq9HqvT15Re3JTjPZooHbOYQBsP8saIiQja8DiaDvyxQTsWhtguS1qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pF3TRSGx; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1715852577; c=relaxed/simple;
+	bh=H3O243kSJW6K88T+dVi/0NKhZPWFTW+Zoxcp6Ablel0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qyFMyB9r+7x7XY0lZcMxDZpouu81VasiC3+ZI9i8IkCQhUUd+81Cm1a28Tif3+/8T9ONzooe4nLkJ9XSX4OaP7zba88u/c3wdVleuejP8VZXI/DUETTJfpdsa+ev7DrFDFo9QpDvXRC0oflbW8Cj6LsKlEwZi2w9PRL9QQH9mi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gnNhJynD; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pF3TRSGx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=08Rr6n2VlDN7qZVvcsrOzC5KTt4BIlFK/ML4Imtd0gM=; b=pF3TRSGx81dvl5N+YijK7fWZNk
-	gjTe+/wRjN/9/yRTCsxtA+JV7VdiI63YYOIGlQv8uUTnSUogy5Og+c6nEsrN8Cw1RHqltzcp0AgJl
-	8Xm1qIEI0ovdGIBKcKwt2TH5A/Wtpue6mPGjb7HolzYbsF5m2a96Brq8l3z4MldHzAjerFWck8s3T
-	EflMF7lov07KQh10UaZnpDk3XmWFDKleFQotbDiHKHQoSAjMMIx44RRZXuS8tJwVgdV8xzyRpx8w5
-	iS1U6LOLiQFPX9DNjTBAgKVIJihSpvTH/vEj5zxq1bqywjIjlbLNWhlD4EzCpQll/RjZslybCe6/X
-	4NIBygww==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s7XcI-00000005OP2-0EdO;
-	Thu, 16 May 2024 09:41:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A343C30068B; Thu, 16 May 2024 11:41:37 +0200 (CEST)
-Date: Thu, 16 May 2024 11:41:37 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 4/4] perf: Fix event leak upon exec and file release
-Message-ID: <20240516094137.GI22557@noisy.programming.kicks-ass.net>
-References: <20240515144311.16038-1-frederic@kernel.org>
- <20240515144311.16038-5-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gnNhJynD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715852573;
+	bh=H3O243kSJW6K88T+dVi/0NKhZPWFTW+Zoxcp6Ablel0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gnNhJynDO17dcyTxR6IcUdoYBioRyWNo6YNIhTGnexQTXUsYyAh9GShoVghxoArH6
+	 qxyvmblrOC38+tgZ2W1QMK+KtFJ+z5espYG1FUXHJ4GHmSYz8iFWf2rGv5TH6oM/2t
+	 kSTbK/2h6IGMLbuu7Eb2dM1Je+8U6sck88t1mdEOba1Jc056FMXxrg93uCAIscqApD
+	 LPv6a3twrBJWDshPYZrzh9zIx3E/xDZUelDBzwBrl267PPBuvqmYs/a4M3jbeeKWuT
+	 fnL8KRGnEwYgUY+muMuyWySO6+OTxU8xyMQbQ5P0G3zWlHcLAe97uCx9TyWvZmKMuo
+	 FNeNt38DERbjw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0726737821A9;
+	Thu, 16 May 2024 09:42:51 +0000 (UTC)
+Message-ID: <eea541cb-1917-44de-ae40-0824372baab8@collabora.com>
+Date: Thu, 16 May 2024 11:42:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240515144311.16038-5-frederic@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph
+ support for board path
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "wenst@chromium.org" <wenst@chromium.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ =?UTF-8?B?U2hhd24gU3VuZyAo5a6L5a2d6KyZKQ==?= <Shawn.Sung@mediatek.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?= <jitao.shi@mediatek.com>,
+ "daniel@ffwll.ch" <daniel@ffwll.ch>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?WXUtY2hhbmcgTGVlICjmnY7nprnnkosp?= <Yu-chang.Lee@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20240516081104.83458-1-angelogioacchino.delregno@collabora.com>
+ <20240516081104.83458-3-angelogioacchino.delregno@collabora.com>
+ <389716757b2a79f56b3cf4f4127549795c867785.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <389716757b2a79f56b3cf4f4127549795c867785.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 15, 2024 at 04:43:11PM +0200, Frederic Weisbecker wrote:
-> The perf pending task work is never waited upon the matching event
-> release. In the case of a child event, released via free_event()
-> directly, this can potentially result in a leaked event, such as in the
-> following scenario that doesn't even require a weak IRQ work
-> implementation to trigger:
+Il 16/05/24 11:23, CK Hu (胡俊光) ha scritto:
+> Hi, Angelo:
 > 
-> schedule()
->    prepare_task_switch()
-> =======> <NMI>
->       perf_event_overflow()
->          event->pending_sigtrap = ...
->          irq_work_queue(&event->pending_irq)
-> <======= </NMI>
->       perf_event_task_sched_out()
->           event_sched_out()
->               event->pending_sigtrap = 0;
->               atomic_long_inc_not_zero(&event->refcount)
->               task_work_add(&event->pending_task)
->    finish_lock_switch()
-> =======> <IRQ>
->    perf_pending_irq()
->       //do nothing, rely on pending task work
-> <======= </IRQ>
+> On Thu, 2024-05-16 at 10:11 +0200, AngeloGioacchino Del Regno wrote:
+>> Document OF graph on MMSYS/VDOSYS: this supports up to three DDP paths
+>> per HW instance (so potentially up to six displays for multi-vdo SoCs).
+>>
+>> The MMSYS or VDOSYS is always the first component in the DDP pipeline,
+>> so it only supports an output port with multiple endpoints - where each
+>> endpoint defines the starting point for one of the (currently three)
+>> possible hardware paths.
+>>
+>> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../bindings/arm/mediatek/mediatek,mmsys.yaml | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
+>> index b3c6888c1457..0ef67ca4122b 100644
+>> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml
+>> @@ -93,6 +93,34 @@ properties:
+>>     '#reset-cells':
+>>       const: 1
+>>   
+>> +  port:
+>> +    $ref: /schemas/graph.yaml#/properties/port
+>> +    description:
+>> +      Output port node. This port connects the MMSYS/VDOSYS output to
+>> +      the first component of one display pipeline, for example one of
+>> +      the available OVL or RDMA blocks.
+>> +      Some MediaTek SoCs support multiple display outputs per MMSYS.
 > 
-> begin_new_exec()
->    perf_event_exit_task()
->       perf_event_exit_event()
->          // If is child event
->          free_event()
->             WARN(atomic_long_cmpxchg(&event->refcount, 1, 0) != 1)
->             // event is leaked
+> The display pipeline number usually depend on how many display interface. Display interface is in the end of pipeline.
 > 
-> Similar scenarios can also happen with perf_event_remove_on_exec() or
-> simply against concurrent perf_event_release().
-> 
-> Fix this with synchonizing against the possibly remaining pending task
-> work while freeing the event, just like is done with remaining pending
-> IRQ work. This means that the pending task callback neither need nor
-> should hold a reference to the event, preventing it from ever beeing
-> freed.
-> 
-> Fixes: 517e6a301f34 ("perf: Fix perf_pending_task() UaF")
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-Yeah, I suppose this'll do. Thanks!
+I have never stated that the display pipeline number depends on that.
+
+Plus, the display interface is not described in the mmsys binding: this document
+is only saying that mmsys' endpoint is to be connected to a (supported) component
+of your choice. Nothing else.
+
+> In below case, two RDMA is merged into one pipeline and output to one display interface DP_INTF. This is usually ONE display.
+> 
+> RDMA -+
+>        Merge -> ... -> DP_INTF
+> RDMA -+
+> 
+> In below case, one RDMA data output to two display interface DSI and DPI. This is usually TWO display with the same content.
+> 
+>                 +-> DSI
+> RDMA -> ... -> +
+>                 +-> DPI
+> 
+
+The actual content of a display is a software capability - if the hardware supports
+that, and some MediaTek SoCs do, the connection does not happen at the endpoint of
+mmsys, but later.
+
+> So the display pipeline number does not depend on the number of first component. It usually depend on the number of display interface.
+> 
+
+I sure agree with that, but again, I have *never stated* that the display pipeline
+number depends on the number of the first component.
+
+> Regards,
+> CK
+> 
+> 
+>> +    properties:
+>> +      endpoint@0:
+>> +        $ref: /schemas/graph.yaml#/properties/endpoint
+>> +        description: Output to the primary display pipeline
+>> +
+>> +      endpoint@1:
+>> +        $ref: /schemas/graph.yaml#/properties/endpoint
+>> +        description: Output to the secondary display pipeline
+>> +
+>> +      endpoint@2:
+>> +        $ref: /schemas/graph.yaml#/properties/endpoint
+>> +        description: Output to the tertiary display pipeline
+>> +
+>> +    oneOf:
+>> +      - required:
+>> +          - endpoint@0
+>> +      - required:
+>> +          - endpoint@1
+>> +      - required:
+>> +          - endpoint@2
+>> +
+>>   required:
+>>     - compatible
+>>     - reg
+
+
