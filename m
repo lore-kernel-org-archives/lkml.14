@@ -1,126 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357DC63BF
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 16:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1AF4A15;
+	Thu, 16 May 2024 16:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715877231; cv=none; b=mx/mJR+zbe/me66AiSq/rPz2bxAHTqhDuBNBm0Z7SXCfkpsmvGxasCwtWseytUBaEcrI1kkFH0HfBNxOGQ2yb020Sdt1Q8Y8JxCmmAw/eOP2CjN4+HIncQTS8UX85gEC1zvcJhdC7CEFHJ0WCww10DxpSSYLstb6tglb0as8bOw=
+	t=1715877229; cv=none; b=NKt4pRh2kQwa4TIs7UfUL5dtukZxXL9jRQlJvQYXyhScclQ2KqLCCZf6RDATCsYtFd3T3zIbpE/zCU9F6cIFtgCN9pCWzQLZRwfnAjTMaOzbUA+NnzoeHCOacBPEYfXrS9kQGuggvN/Jqpfe89ek31Mc1cnQCnVKzkN/wbQfvzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715877231; c=relaxed/simple;
-	bh=TKa2BFpOcJzNM2WCakr46UXPsFJ6lrdeUWrLHFHLwCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UNDc0cG6uzXZWOE7q8KhjIlqiJ7chexb7Yr2DksaU67QMP8RPTkP+1JqLrs8NbIwcvcwqsRtAeGztLcMQyw6EmYu21Ts8edffUL7MtxbLOxGg2WOBUWg0YT8LvbWZOXyoIqUT4/gvjUAAkS0ix3q9HhWT4ZSyVKgNDGPauc9xqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62186C4AF0C;
-	Thu, 16 May 2024 16:33:50 +0000 (UTC)
-Date: Thu, 16 May 2024 12:33:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Vincent Donnefort <vdonnefort@google.com>, Andrew Morton
- <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Mike
- Rapoport <rppt@kernel.org>
-Subject: [GIT PULL] tracing/ring-buffer: Updates for v6.10
-Message-ID: <20240516123348.1feacd26@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715877229; c=relaxed/simple;
+	bh=jc+p0uqi6u3V3KnhrnLdMf7Zn9A5zPWqZdmw9MFR0Pk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=A3aacuBkb5xf8aq3vol1itzlhen4boskK3z8kzRyWX6YkdEy7+AdFkzRlpYkU85zAfcZDAmE8BzhQCad4pAg60RwORI5kFypLaAsXfPM1jibznR8rdhQuJwhyt3WgGH6FLMOdj7BQSvf63CZqP8MMWcEZwsavvFDQux6hudYQ4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=dM2SFDJz; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="dM2SFDJz"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GDhYe5005402;
+	Thu, 16 May 2024 18:33:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=2pRzvEKsr2u9WywjaryEnBZCx349KN6Wpc4RHZd+rck=; b=dM
+	2SFDJzSYm9AtY55y2HwV2Jyh8tSKydE5jusko5MbfwttReZjEn3YHFd0zMgY6lso
+	aEk774snO5txwIxya4PGQGt+fuci8ATwfzLqhyI/SE0iwLLTI3QEP0x686iIuE0p
+	yls1WTxNB6EaUDH6CvG0Wst0kOvj55xLoR4yZZemdhAXyIPoCS0SCbzP2Sa6NzEO
+	DEQi6AKSAP83EEPGS+sUrFGdfDqdRrfk5JCl/EoXB1PhBEyoHlBjJoYuFSgu+iLN
+	q27l4PC/TM7XcBuykhDDbui/wxORAI6++7wO21esoE1U5MHvwxW3Ezrkq3EXJMHz
+	eJ0ta5KxTtYs+IhVaoDg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y4syme8rc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 May 2024 18:33:11 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E36A340045;
+	Thu, 16 May 2024 18:33:07 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8359226FC6;
+	Thu, 16 May 2024 18:32:17 +0200 (CEST)
+Received: from [10.48.87.205] (10.48.87.205) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 16 May
+ 2024 18:32:17 +0200
+Message-ID: <2e5ad8c3-4889-4062-964b-acf4ec75986c@foss.st.com>
+Date: Thu, 16 May 2024 18:32:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: regulator: st,stm32mp1-pwr-reg: add
+ compatible for STM32MP13
+To: Conor Dooley <conor@kernel.org>, Marek Vasut <marex@denx.de>
+CC: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Pascal
+ Paillet <p.paillet@foss.st.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20240513095605.218042-1-patrick.delaunay@foss.st.com>
+ <20240513115601.v3.1.Ia0a99d90acb512aa020a6e7a8cca8cc1b71f1759@changeid>
+ <615dfdcb-cbda-426f-895e-810f03a8ce60@denx.de>
+ <20240513-stabilize-proofread-81f0f9ee38b9@spud>
+ <d73d4435-75d6-4cea-b38e-07c7ceae3980@foss.st.com>
+ <20240514-entryway-idealize-fcd5ed0e1de7@spud>
+ <0c97408c-422d-46b3-8017-da9ebb0767e1@foss.st.com>
+ <20240515-monsoon-starfish-0dc59707e843@spud>
+ <9de93cbb-5868-473e-8b32-a6b6f50e128e@denx.de>
+ <20240515-edginess-evacuee-356bd6dd1dfa@spud>
+Content-Language: en-US
+From: Patrick DELAUNAY <patrick.delaunay@foss.st.com>
+In-Reply-To: <20240515-edginess-evacuee-356bd6dd1dfa@spud>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
+
+Hi,
+
+On 5/15/24 18:15, Conor Dooley wrote:
+> On Wed, May 15, 2024 at 05:37:49PM +0200, Marek Vasut wrote:
+>> On 5/15/24 5:35 PM, Conor Dooley wrote:
+>>> On Wed, May 15, 2024 at 04:33:22PM +0200, Patrick DELAUNAY wrote:
+>>>> with
+>>>>
+>>>>     compatible:
+>>>>       oneOf:
+>>>>           - items:
+>>>>              - const: st,stm32mp1,pwr-reg
+>>>>           - items:
+>>>>              - const: st,stm32mp13-pwr-reg
+>>>>              - const: st,stm32mp1,pwr-reg
+>>> Other than the extra ,s this looks okay, thanks.
+>> I think the extra ,s are actually correct, those are the ones from the
+>> original compatible which had TWO ,s (it does look a bit unusual).
+> Oh my bad then.
 
 
-Linus,
-
-tracing ring buffer updates for v6.10:
-
-- Add ring_buffer memory mappings
-
-  The tracing ring buffer was created based on being mostly used with the
-  splice system call. It is broken up into page ordered sub-buffers and the
-  reader swaps a new sub-buffer with an existing sub-buffer that's part
-  of the write buffer. It then has total access to the swapped out
-  sub-buffer and can do copyless movements of the memory into other mediums
-  (file system, network, etc).
-
-  The buffer is great for passing around the ring buffer contents in the
-  kernel, but is not so good for when the consumer is the user space task
-  itself.
-
-  A new interface is added that allows user space to memory map the ring
-  buffer. It will get all the write sub-buffers as well as reader sub-buffer
-  (that is not written to). It can send an ioctl to change which sub-buffer
-  is the new reader sub-buffer.
-
-  The ring buffer is read only to user space. It only needs to call the
-  ioctl when it is finished with a sub-buffer and needs a new sub-buffer
-  that the writer will not write over.
-
-  A self test program was also created for testing and can be used as
-  an example for the interface to user space. The libtracefs (external
-  to the kernel) also has code that interacts with this, although it is
-  disabled until the interface is in a official release. It can be enabled
-  by compiling the library with a special flag. This was used for testing
-  applications that perform better with the buffer being mapped.
-
-  Memory mapped buffers have limitations. The main one is that it can not be
-  used with the snapshot logic. If the buffer is mapped, snapshots will be
-  disabled. If any logic is set to trigger snapshots on a buffer, that
-  buffer will not be allowed to be mapped.
-
-- Changes since last pull request:
-    https://lore.kernel.org/all/20240315122934.1d3231ce@gandalf.local.home/
-
-  All the pages of the ring buffer are mapped at the mmap() system call
-  instead of paging them in when they are accessed. The VMA page flags
-  have been updated and the mappings are done via vm_insert_pages().
-  I'd like to thank both Mike Rapoport and  David Hildenbrand for their
-  review of these patches to make sure they are doing things correctly
-  from a memory management point of view.
+Ok, I prepare a V4 with fallback
 
 
-Please pull the latest trace-ringbuffer-v6.10 tree, which can be found at:
+and comma in compatible "st,stm32mp1,pwr-reg" was clearly an error
+
+but it is too late to change it, see [1]
+
+[1] ARM: st: use a correct pwr compatible for stm32mp15
+
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=847733&state=* 
 
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-ringbuffer-v6.10
+regards
 
-Tag SHA1: 61407f35944db217cadb6a520906d52668d6d212
-Head SHA1: b9c6820f029abaabbc37646093866aa730ca0928
+Patrick
 
 
-Steven Rostedt (Google) (2):
-      ring-buffer: Have mmapped ring buffer keep track of missed events
-      ring-buffer: Add cast to unsigned long addr passed to virt_to_page()
-
-Vincent Donnefort (5):
-      ring-buffer: Allocate sub-buffers with __GFP_COMP
-      ring-buffer: Introducing ring-buffer mapping functions
-      tracing: Allow user-space mapping of the ring-buffer
-      Documentation: tracing: Add ring-buffer mapping
-      ring-buffer/selftest: Add ring-buffer mapping test
-
-----
- Documentation/trace/index.rst                  |   1 +
- Documentation/trace/ring-buffer-map.rst        | 106 ++++++
- include/linux/ring_buffer.h                    |   6 +
- include/uapi/linux/trace_mmap.h                |  48 +++
- kernel/trace/ring_buffer.c                     | 471 ++++++++++++++++++++++++-
- kernel/trace/trace.c                           | 104 +++++-
- kernel/trace/trace.h                           |   1 +
- tools/testing/selftests/ring-buffer/.gitignore |   1 +
- tools/testing/selftests/ring-buffer/Makefile   |   8 +
- tools/testing/selftests/ring-buffer/config     |   2 +
- tools/testing/selftests/ring-buffer/map_test.c | 294 +++++++++++++++
- 11 files changed, 1026 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/trace/ring-buffer-map.rst
- create mode 100644 include/uapi/linux/trace_mmap.h
- create mode 100644 tools/testing/selftests/ring-buffer/.gitignore
- create mode 100644 tools/testing/selftests/ring-buffer/Makefile
- create mode 100644 tools/testing/selftests/ring-buffer/config
- create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
----------------------------
