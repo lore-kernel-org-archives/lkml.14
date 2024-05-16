@@ -1,64 +1,64 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D15B14B95D
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 19:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE830156F55
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 19:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715888316; cv=none; b=NyFrCVymuF651NCSHyKrb1pRUZD5Xf1VIveFAa2lf8QiD4nloIGdD99EJQyBhPvm3y8qFSSM2yT3O2rl5Tj7t3ePllX2ISeDqRYbNX2yI3/58dCOHRCyIoBHoj2jbOhNGHVnIdu5QbM9UI8sdCzkUzrmHH3PMlEv1c0XUv8k3HE=
+	t=1715888466; cv=none; b=hmszi4GB5vrbdF5FUkiY/2zhw3NUhpjiYCZcR9tutmnvGP1q3HnMn5i5TMj0U7S3XJ/IxyjfzhE5f0LaWjbrMzgwORzVmwqoHM0GtkPKP5SBiNKhPiRKLiS+o5vQMsjCOQeUW/nudg22WwkU0oRgV+Wk/KL83w+A4BjqCd2+Qyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715888316; c=relaxed/simple;
-	bh=mlnMYRMZywee+bU7X3E/HTKmms1wgK1WMiDq3bygPLc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=TrdbCKUjvi/PYzoxoxKws7pyBouIBsW4G61HcZJjffRF70FOQ0JSIegRzpNZz2n5aP/wJ9OFhXJP4fH2ntkBesTcIY1cVwKyqnMFoTmnSBj/bsFFGwFwQbhbo+DpwLIUDzk0vi7c4wHMhS3MK+kBHrVfoo2G2eMX00ym8WQbr1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BFQIgZIw; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1715888466; c=relaxed/simple;
+	bh=qRGrAjcAOw/BpdIDpIw29VUbCdUpk5nCvIPyhVcCtco=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=m8pWQkI0dnPSb51ThdTLTxNpbwNfxZEE4H7xU81W5aGNPWbbnK9OALn7COO7ck88sr/nXd6RO/yVRtY38ExEeLZ8O0kod9QQvvi7IPCHvL/a2ftM72aItPVat4SjBMp5fxwbJV/X69AnOH9WRM/EcHezJ/waz00AjFWWdLFWZxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sWHzItkG; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BFQIgZIw"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bea0c36bbso167107657b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:38:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sWHzItkG"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6204c4f4240so134014407b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:41:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715888313; x=1716493113; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715888463; x=1716493263; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=GTNya4KcgcK2eGurHUl9hyGe1sf/dMjmphGQ/IQpeU0=;
-        b=BFQIgZIwLjEW71n1n9fcx78hCAtFLlWc2e4G4rD6SICAOrFst9bfAFB0FLmr2O79c5
-         jreVp0gAhYe/9gIkc/TDC5RzbXkGppLGjsIdqG6PPDtg6QcmWA9TK9RlQjJNtYqTQuMf
-         QYSmAIcPKG+CeLKx4Ovk68ea96q04zNzHTKKO4nX3C4fzyAJGrR8ZFq8FlUOguU3JLjS
-         ZCn+4CXaK+GaDN6xq/fxcREM/e8yT+xjn4mGIDLSrXpGZDLU0ANenOLaBCensnW1Q071
-         w2BKC3fZfrGnoDSzZrj0+JWGZdarp40cGqiceJ1ceV1ySCiTxT9wdNd4SrRTBa7Aqgyz
-         RjQw==
+        bh=e1P6Db3qkzX3owazVizLczKyUZgazBAYnFdo7ANHUs0=;
+        b=sWHzItkGsGuUcWNOxHQF3Ctt3honpuyXin7TXnIw6s5PN6d/3ojvgknGkawPtGAWuz
+         Nfy9MQZ+fO5xRSjPAJrK6MjYZDpqOCPQpn1xvm7qHEkv4o7WI6dfXPyxONWZc9358Z5S
+         80XxFwYwtxU9+Td8F7wcyZh+fqL8/iuUO0yUgG/+SNMi6RvaJKy+OE0yfStjZrwNsr+9
+         8Zwbw0Q2thAu5A+tfUyAP832Ww7XGzXaKopSI3WX276AYxVCWC5RmiGrptMImtWYIZbq
+         Sqa7Kr5qQDg0StHwcTIoX61pJQYDqvO9vLyLOr51QKSCAHVMWRmCdeWnaOXnOUFoQhOy
+         hDoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715888313; x=1716493113;
+        d=1e100.net; s=20230601; t=1715888463; x=1716493263;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GTNya4KcgcK2eGurHUl9hyGe1sf/dMjmphGQ/IQpeU0=;
-        b=jUIcwtCUpG++Ix3a6btXs1j3fQd6fB83FBx5wn9/uGnZeao0+vKbyYRP3gcP/+s06z
-         x4XA6iud6HFqDWSCUjP8sGLuT78b2bQaMbdnMVcV0PE4kHsaOcdESkfikc0BC0RSdQ/B
-         3hkyHhbd3phPev1/sP8AwyFom6Rn9fcN4Wx9uLULOv//gi1ujezZsXgUhOxr4gKDzDch
-         n5FTbYB0p41nW32XLf89J2TeJDt0A7zInGLqYRk50Bg0zFtkEWWNA5ASnt6oYiSpXcrV
-         3TDsv6UI99G9Dcp8xbu/skk5rpepkG2flCdExKGfyh2PL1UZlFDehECDKDYBq3y506No
-         gsOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVg+e0cxJS6eODlHvnLPsZ0HESoRbFTPWkd5Hp2WD4kpssRZc2+kQ+7bCoHbdSecPrssYsdrQdlweNXJMHC59iN4jQuRrvqNdGo3tVY
-X-Gm-Message-State: AOJu0YyLR3UhQBUSCvbV0E80f3WDICllzbVKQWD8cGpvYHBBMOhLbLUQ
-	WAjsBVhxbDcg9czN5dQL92fGZatbCxcBwhLpUttAtkoWdlCRR51n6lNmYAm+dLOZaMZg3ty2cqd
-	1kwDPsJIc2Q==
-X-Google-Smtp-Source: AGHT+IGr/aLkFgMRkSjlxVh1xA+fX/na3/5ELahuHu4kuYZN2vLitNc/Cs2NtJ6FKvCmAN8Sir+chzojBjOS2Q==
+        bh=e1P6Db3qkzX3owazVizLczKyUZgazBAYnFdo7ANHUs0=;
+        b=uqtpyT6pwS+jvNrLA6gWBeN/YlmVEaDK3JMM+U4bk4lS4O6IzLqzGe/eBHF9J4Hkn4
+         UAT8ws8LkqoX7x4JkerPR7fODpJLgl03rGTQHE9u5dyGF65DYHs+wVSFFph9VyN2hubP
+         5C7Ze5ZZid84SQ1H59nFhoApXAK4N+fjv5jtBkCrGJqMdViviqsOiiZS3lmPhX9WF6Ra
+         CRRTu6EcvDUAOjtawhcpS3/KkezGUUeTJWLb7UVR1ivnpBu3FMZAIgp/4Lw3jvrBD1E2
+         PKpZD4SKgWp/HJG+saPeRA2jPfZTbDokRUe90cpbT2iXRWIxH6KOyhXjmDUZgb6qD/r7
+         z/fg==
+X-Forwarded-Encrypted: i=1; AJvYcCX227He+ONoIisSGFF1udEzKDPh1q5SfsFIv/dKY2bo8s8eriEW1wOLDgpIjHHkmL1Xnjk6KBsuijYY3nKv1ymWDicKu+tPR4nczZ+8
+X-Gm-Message-State: AOJu0YzKKQBR1zTf701ufjHJt7oKh/HFRE84WccWw6cr6IQsjqOwi5oK
+	wlingnaYVhS0LwOeFwG1dc11YKoGwOP6DunDaY1fo4qfwAIcjMMwu15265MUMwVNMn8FKFC2YAK
+	0ude1lMGI6A==
+X-Google-Smtp-Source: AGHT+IFN8NHYHCx0Mp5JwPViDfrjX4xtgJESmyjLorrTrnPM7FlMf7IPZ+ZzzNyfzySoyjQbNXwc78fPagVkYw==
 X-Received: from beeg.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:11db])
- (user=jackmanb job=sendgmr) by 2002:a05:690c:b96:b0:61b:791a:9850 with SMTP
- id 00721157ae682-622b0168adfmr51024257b3.9.1715888313401; Thu, 16 May 2024
- 12:38:33 -0700 (PDT)
-Date: Thu, 16 May 2024 19:38:30 +0000
+ (user=jackmanb job=sendgmr) by 2002:a05:6902:1142:b0:df1:d00c:130c with SMTP
+ id 3f1490d57ef6-df1d00c1507mr450667276.5.1715888462994; Thu, 16 May 2024
+ 12:41:02 -0700 (PDT)
+Date: Thu, 16 May 2024 19:40:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIALVgRmYC/x2MQQqAIBAAvxJ7TlCxwr4SHUy3WioLrQiiv2edh
+X-B4-Tracking: v=1; b=H4sIAERhRmYC/x2MQQqAIBAAvxJ7TlCxwr4SHUy3WioLrQiiv2edh
  jnM3BAxEEaosxsCnhRp9UlEnoEdjR+QkUsOkkvFC1Gy6fC0M7suG834cTHeRea0VrxSvZUdQoq 3gD1d/7hpn+cFped4W2gAAAA=
 X-Mailer: b4 0.14-dev
-Message-ID: <20240516-kunit-compile-commands-v1-1-05fc32b79312@google.com>
+Message-ID: <20240516-kunit-compile-commands-v1-1-86e61857c820@google.com>
 Subject: [PATCH] kunit: tool: Build compile_commands.json
 From: Brendan Jackman <jackmanb@google.com>
 To: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
@@ -83,8 +83,10 @@ manually keep it up to date.
 
 Unlike the manual approach, having make build the compile_commands.json
 means that it appears in the build output tree instead of at the root of
-the source tree, so you'll need to add --compile-commands-dir= to your
-clangd args for it to be found.
+the source tree, so you'll need to add --compile-commands-dir=.kunit to
+your clangd args for it to be found. This might turn out to be pretty
+annoying, I'm not sure yet. If so maybe we can later add some hackery to
+kunit.py to work around it.
 
 [1] https://clangd.llvm.org/
 [2] https://github.com/FlorentRevest/linux-kernel-vscode
