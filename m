@@ -1,113 +1,144 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60461335B5;
-	Thu, 16 May 2024 12:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730A0145FE7
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 12:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715863694; cv=none; b=Crxnrm/X45q/tKYWwLJe/K8ejO7W3r4WjRtt0ZTYqLooti0w8omTF5qcalnIzvW1qwHBbKsIIFzO3J9o+2GNY81jey5Xdl0vEy3tsY+9JNu4Tdf6jwEPBD/HJ8C7zU9qX3N0QOvuZB/SwnAJevc6QkhggPW0oWdYJDw7KbLxJGw=
+	t=1715863712; cv=none; b=Hn+rO2vWvi57EuvWHcLHJUZfs0gRydvop+79dpr/HvoKmz0YkOCgPWCfdVQA5J75Kql7cTk9JkZa/dskArd0zzWUrMDhvEaMeW8ABasPvpT4z5Qdo4sbo23nv8H49quM4OVQbwqKYRUXxDDYr4QtAyR4VoTmq/1rcTDlZunE0Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715863694; c=relaxed/simple;
-	bh=gKmc573CtTeaZFruajBi8whb3uaaHPFcFemzrj7BzCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dtbsVfchScDfUMjegs5etFCLLrOUAoOutkEaNzqQE9mRzMxcjKOMTDJMXo4Cqo6wWuOUefVC49cAFmTrscppdVoiUsWV5bNzSuKPI3QkF2KieowoC+L1O8BLodhZGTdNdi1OJNWAe0ghIUv/78tWDFQqpteTEUEKgnnwlt2iEsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=OZ6a9/Sh; arc=none smtp.client-ip=117.135.210.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1715863712; c=relaxed/simple;
+	bh=llODjkQVmJ0JRKqb9IK76GX35Rinj4g9QpPEqkPd/NQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NoEFyzT0qw5DCWK8WwmNUh2y9UYHIDZAweckReZ+hsraZ2c+8nPabkLwCjM72JduXRisFypCqedyhxrRl2EBj/21KWaYex9WIVzhocVR5SWoOxUrZKwJeLuI1wT79vrZFLZOo+yzdZRRAlyJmlekD5dxo1yv/QxcSbQIgQFdJU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=OUaZWwnG; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="OZ6a9/Sh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=p5ICnfKj+P66UxcPsMwgRbXDkcNOihM/16tMz/EFdUc=;
-	b=OZ6a9/Sh+KMQq8I6Jn0Ok1zxjwIg2hZIKF821g6G7A1p3E2wtTShxDNb5xr1/1
-	TkOVoEMrG1csRt/95ugwzIlKX9M4RYve4sY2/4tz6YrjARue7GN0o3F7DFjD4Ti+
-	rsGp4gVf40T98458RHO5XTiT9+1G2akFPRs71BHMzQMWI=
-Received: from localhost.localdomain (unknown [116.128.244.171])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wDHD+tp9UVmXt_9Bw--.21873S5;
-	Thu, 16 May 2024 20:01:57 +0800 (CST)
-From: Genjian <zhanggenjian@126.com>
-To: tsbogend@alpha.franken.de,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	ricardo@marliere.net
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Genjian Zhang <zhanggenjian@kylinos.cn>,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH 2/3] MIPS: sgi-ip22: Add prototypes for several functions to header
-Date: Thu, 16 May 2024 19:59:05 +0800
-Message-Id: <20240516115906.1224164-2-zhanggenjian@126.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240516115906.1224164-1-zhanggenjian@126.com>
-References: <20240516115906.1224164-1-zhanggenjian@126.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OUaZWwnG"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6181d032bf9so79383647b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 05:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1715863708; x=1716468508; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A0YMZmj/yuBSBh3+Prm3doCFTI5UB0khyraQ6llJYcQ=;
+        b=OUaZWwnGukTrPBrYgpPgMd1Mow6UWQwtew+9Lw2/5dDHJlcLL9tb0QMmazNf28brgS
+         YcEwna7b+dSvrX4FCaoPzyvRdP6Ow9wEyzh+d/vmvH6HZw4HncO8AKe2hcW9xpTihkxj
+         umR2M6/Tzjtk7/vlz3OhzWmtmP45Exk4ZOB65CQEA326cOq2m/AOkvcZY921ePkLIIYp
+         Y9o9lunFpYX16TPdWSxktA4sbnyuovQGJC0QrD3J0qHGip46+W9ph4x5GTZG20Y9MrM2
+         AUu+pXccdFxqTf+evpQIZ8KUMtSjJAxNBMvUkPq8GwaCwh/j7mMRzkQfBWIjjzqrIZWJ
+         nkLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715863708; x=1716468508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A0YMZmj/yuBSBh3+Prm3doCFTI5UB0khyraQ6llJYcQ=;
+        b=AOgJjJbN0pYgu4JGGX1MVMKUdv4qh5KaxcPEQKBD2KkpHnTexpZXCkUWD64oigvOkw
+         wmo1nguTzgjC6Ry/0v8kcy4lz2HhjYC9yVb1hMKW3sbG/ffbOtu02RICX0XBo0X/vOnF
+         kyeRHP0yyiZD1ykwKl5D/xprUvR7hTQKjwnD34oWQ0lrtlTBju0MT18pCHmTRrN74G/A
+         PxeViO99E+UnA/qsxXxmH8sQQ7HKpf51rJoCEwwiDaypunXejvzwWxV8CYVOI8EqgtpV
+         8RcF6JrLIoi3YhN6QndSiE22djo0BgVNxwyiLTsWn9/+9kiCwQpDh5zNPfFusMsMsbO4
+         +O+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWaFxIx6nXv8G2FUgTmdZ9HYCW6B+VjCSKj/LolElmr51TBNbzJt7iuF0czlAyUzS6eN3whZpp1sv1eEKEwlKSNZmPXaDMAdI1+FaO8
+X-Gm-Message-State: AOJu0YxBGZ2GGef6Ql/3XStCk3wuijDpUcUZwz98BxPvBBZZTRjtqsXA
+	iOb8ml6FVD/JaKT8QWy/alxITTD4DnE/cxJdFVN92C04wWBsmWfKZvxTHL6Zoa0DKe1hVaSixtQ
+	hB1+7emmNKeyqu460XGywSKS0X2e9ciqduVteGA==
+X-Google-Smtp-Source: AGHT+IFmiatJ0VGsQTQP54hpUSwoqwi/xnPZ1Pzr4sv0QEqyqVyV9N5SU92rESBXEGjCyeby+CMydFjJBhLe6iYVziE=
+X-Received: by 2002:a81:c70d:0:b0:61b:1bf5:67a9 with SMTP id
+ 00721157ae682-622affc9c33mr175662497b3.22.1715863708404; Thu, 16 May 2024
+ 05:48:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDHD+tp9UVmXt_9Bw--.21873S5
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF4kXr18Zr4UZF43Cw1Dtrb_yoW8uw4fpF
-	WDA3Z7GrW2grWkXa4rAryUur13Z3Z8C3yFyr4Utr9FqF1xWry5JrnYqr98Xrn8WrWDZ3WF
-	gFyruanrKr4I93DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jr9NsUUUUU=
-X-CM-SenderInfo: x2kd0wxjhqyxldq6ij2wof0z/1tbiHhTgfmV20wENggACsY
+References: <20240503-dev-charlie-support_thead_vector_6_9-v6-0-cb7624e65d82@rivosinc.com>
+ <20240503-dev-charlie-support_thead_vector_6_9-v6-1-cb7624e65d82@rivosinc.com>
+In-Reply-To: <20240503-dev-charlie-support_thead_vector_6_9-v6-1-cb7624e65d82@rivosinc.com>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Thu, 16 May 2024 20:48:17 +0800
+Message-ID: <CABgGipU6rybwUo3ZW_RhH5VgWcFqV0x6RTrKAaMXS6=tfe2t5Q@mail.gmail.com>
+Subject: Re: [PATCH v6 01/17] dt-bindings: riscv: Add xtheadvector ISA
+ extension description
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Palmer Dabbelt <palmer@rivosinc.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Genjian Zhang <zhanggenjian@kylinos.cn>
+On Sat, May 4, 2024 at 3:33=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.co=
+m> wrote:
+>
+> The xtheadvector ISA extension is described on the T-Head extension spec
+> Github page [1] at commit 95358cb2cca9.
+>
+> Link: https://github.com/T-head-Semi/thead-extension-spec/blob/95358cb2cc=
+a9489361c61d335e03d3134b14133f/xtheadvector.adoc [1]
+>
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-This fixes the following build warning:
+Reviewed-by: Andy Chiu <andy.chiu@sifive.com>
 
-arch/mips/sgi-ip22/ip22-time.c:119:18: error: no previous prototype for ‘indy_8254timer_irq’ [-Werror=missing-prototypes]
-arch/mips/sgi-ip22/ip22-berr.c:89:6: error: no previous prototype for ‘ip22_be_interrupt’ [-Werror=missing-prototypes]
-arch/mips/sgi-ip22/ip22-berr.c:113:13: error: no previous prototype for ‘ip22_be_init’ [-Werror=missing-prototypes]
-
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: Genjian Zhang <zhanggenjian@kylinos.cn>
----
- arch/mips/include/asm/sgi/ip22.h | 3 +++
- arch/mips/sgi-ip22/ip22-int.c    | 2 --
- arch/mips/sgi-ip22/ip22-setup.c  | 2 --
- 3 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/arch/mips/include/asm/sgi/ip22.h b/arch/mips/include/asm/sgi/ip22.h
-index 87ec9eaa04e3..57942afb5c86 100644
---- a/arch/mips/include/asm/sgi/ip22.h
-+++ b/arch/mips/include/asm/sgi/ip22.h
-@@ -76,5 +76,8 @@
- 
- extern unsigned short ip22_eeprom_read(unsigned int *ctrl, int reg);
- extern unsigned short ip22_nvram_read(int reg);
-+extern void ip22_be_interrupt(int irq);
-+extern void ip22_be_init(void) __init;
-+extern void indy_8254timer_irq(void);
- 
- #endif
-diff --git a/arch/mips/sgi-ip22/ip22-int.c b/arch/mips/sgi-ip22/ip22-int.c
-index 96798a4ab2de..11f8adc98cb5 100644
---- a/arch/mips/sgi-ip22/ip22-int.c
-+++ b/arch/mips/sgi-ip22/ip22-int.c
-@@ -165,8 +165,6 @@ static void __irq_entry indy_buserror_irq(void)
- #define SGI_INTERRUPTS	SGINT_LOCAL3
- #endif
- 
--extern void indy_8254timer_irq(void);
--
- /*
-  * IRQs on the INDY look basically (barring software IRQs which we don't use
-  * at all) like:
-diff --git a/arch/mips/sgi-ip22/ip22-setup.c b/arch/mips/sgi-ip22/ip22-setup.c
-index b69daa02401b..e06a818fe792 100644
---- a/arch/mips/sgi-ip22/ip22-setup.c
-+++ b/arch/mips/sgi-ip22/ip22-setup.c
-@@ -26,8 +26,6 @@
- #include <asm/sgi/hpc3.h>
- #include <asm/sgi/ip22.h>
- 
--extern void ip22_be_init(void) __init;
--
- void __init plat_mem_setup(void)
- {
- 	char *ctype;
--- 
-2.25.1
-
+> ---
+>  Documentation/devicetree/bindings/riscv/extensions.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
+cumentation/devicetree/bindings/riscv/extensions.yaml
+> index 468c646247aa..99d2a9e8c52d 100644
+> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> @@ -477,6 +477,10 @@ properties:
+>              latency, as ratified in commit 56ed795 ("Update
+>              riscv-crypto-spec-vector.adoc") of riscv-crypto.
+>
+> +        # vendor extensions, each extension sorted alphanumerically unde=
+r the
+> +        # vendor they belong to. Vendors are sorted alphanumerically as =
+well.
+> +
+> +        # Andes
+>          - const: xandespmu
+>            description:
+>              The Andes Technology performance monitor extension for count=
+er overflow
+> @@ -484,5 +488,11 @@ properties:
+>              Registers in the AX45MP datasheet.
+>              https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-=
+5.0.0-Datasheet.pdf
+>
+> +        # T-HEAD
+> +        - const: xtheadvector
+> +          description:
+> +            The T-HEAD specific 0.7.1 vector implementation as written i=
+n
+> +            https://github.com/T-head-Semi/thead-extension-spec/blob/953=
+58cb2cca9489361c61d335e03d3134b14133f/xtheadvector.adoc.
+> +
+>  additionalProperties: true
+>  ...
+>
+> --
+> 2.44.0
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
