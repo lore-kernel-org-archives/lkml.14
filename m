@@ -1,184 +1,102 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60412158D72;
-	Thu, 16 May 2024 19:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41672158D99;
+	Thu, 16 May 2024 19:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715886467; cv=none; b=iyp6aSSdE6tqupwZD7mfE+MSUXMBwkt9DXvPeTID44CqXU6iKFklc+J26d9JuKT0XNgyVWYw+2rvM41qQwRI+KFF03A+vbbBDOrVF4xkPPeQdhDORiJG4DkM4KOn51p7gDEGvhFG+VuM1eyezzzFGembhZzvRRDbjnFEfSJD0ww=
+	t=1715886468; cv=none; b=I6OUnz5XAWaAEBCNonPd1X6SahW5MR9vpaLhwTFuC+iNHTYv083CuwZ2g3BUvjhDdULcgHxMc7nvfDK4YvKXooy9fAXb6UlvmBO9jX1hiP9u4+Yc4l3xr8OfQSEZCBJ/A/NgquzTnaZTNfOgCEAHTmjzLKC8QygmNiHcCmdU23c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715886467; c=relaxed/simple;
-	bh=EmFSx8/Ii7PDX25whTQOapn04D9/HEs4Zzlo9FTr/5A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PnLvNplX5VozThf9gUVsy8UYK4Y8Gogo90Ytg1ExkR2w1k6Bi1ClpkIForkFtb/Rmi7FDlpsTReWrQIMI2P+AKwFA4tVFNWvcryQNjYVqLIlOxqcuV99nCKDTcJGo9snzjUF1/u1pOYYuRfce+HlcvESMELKQQwTcosSLEor6tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+	s=arc-20240116; t=1715886468; c=relaxed/simple;
+	bh=vdVstfTJWRr25JayXKawfEg+DKVNWLVsJwrCAWHBcOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FAc3L1mpoIu8pdOx1Ss2CBG8RFaqUz5XQu6FHrXMqHskWLtflz31Jc2r4bU4hkx+tGV+sVTO94ZqWcx6i5Tt6KD+5N9GiINLbKBcw5rvXsgWLWTp2HxGi7kZJQdYsKyW/yxqnBxgexUcYNrE57h4MVhbLog3wx26iKPboxKcD3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bahG2UVJ; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42016c8daa7so33208275e9.2;
-        Thu, 16 May 2024 12:07:45 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bahG2UVJ"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f44dd41a5cso616940b3a.0;
+        Thu, 16 May 2024 12:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715886465; x=1716491265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vdVstfTJWRr25JayXKawfEg+DKVNWLVsJwrCAWHBcOA=;
+        b=bahG2UVJCKX+3QRk3oG2AYqTxI0QSQ2+XGfGkCUkzc9KxIATJ3iHcv+D1f0Mh/8aAM
+         bkqyavgGVwThMSKTTU4uuOebbuvp32rGIilN1TGan10uEbf3FOATWm1Dpc3vFZXIlLHN
+         utqaaMUnmluVq7puXz9e8cFrAe+UZpEvSUtRcI7ZOue8wIiR9L3E7TlkqJ0g/4p7YmIP
+         +W94DvX1MsImlKwWwNVRMAGJZWw8tYjdyx6lTJHKZjuWmvxYx7RT/YIEocd7YFl+nBPW
+         tT0g9JQbDfcwQBL3B1PBLAeaccBHHWp0zNoC0wQwomZhZl4dhshsJD9uMABim5vhoulg
+         fHTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715886464; x=1716491264;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715886465; x=1716491265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=61LwWLE7vVj50HZOr0xZhY/e3UrTUHc9jD8In45+Uew=;
-        b=SCYCtO24VQHRUl/Z1D2vfoR3Xd+qjz7bCNLlux16gb++RFvygVgpMI/dSHhYRj+FJD
-         dRUAzao1z4cTAtubeZq2GWVjk/gaNenSU5HYu4K1odYoJ+qOHSF1HTT9Ilpyr7NKJUvD
-         R0Nm5VP5IneWoNr9j9J8hJRAm7tV081KPbKPgzek4XOLoIdM8tBGxGfH6uceulyQ214X
-         4KgSVuC405rUXDnt9INU6/1fPKqEH93hRrwloLM4ysOc9oCZ3xcqhlWCriFna7/HSvNy
-         tsY8yATMcVz5U0LV4J7rB91ekb3dmo8WGOW2YqDJ5j3TvPn79jaLZs5yqnXdAoifJ7OY
-         llGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSRlJM1mcBtnR15flDV1dr550aDIXdjJJht8t1jWr4WQydxnPl8ghzLmAJzvhzyF26HFeNXzOmpSF4a6yp7NKVInKIUfOAHsy3Zt3nId9oHPLL88vRBXFNzauxTisZMQ03EsUwFw==
-X-Gm-Message-State: AOJu0YyHryGzBM2baZXx6Bm1PPADyLJlx9pl2pQPM02sZlOTAf12M3zh
-	QaEza/Sxq2bFLWCHxrKGcFnxcQfEr1fAP8Nkrv9SG3pRHEL3MV+d
-X-Google-Smtp-Source: AGHT+IEBxb/kDHNUZLNkFrbcua9vIlbfeC4Qz918TjIq4cHJPBlssgEmoiIGckrGbwvB1Tfo4KE0bg==
-X-Received: by 2002:a05:600c:5487:b0:41b:851a:af43 with SMTP id 5b1f17b1804b1-41feaa38f9dmr133889165e9.11.1715886463488;
-        Thu, 16 May 2024 12:07:43 -0700 (PDT)
-Received: from costa-tp.redhat.com ([2a00:a040:1a3:c059:8b18:f13e:da9b:5a8e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9335sm275834155e9.29.2024.05.16.12.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 12:07:43 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: longman@redhat.com,
-	pauld@redhat.com,
-	juri.lelli@redhat.com,
-	prarit@redhat.com,
-	vschneid@redhat.com,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Yoann Congal <yoann.congal@smile.fr>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: [PATCH v1 1/7] sched/isolation: Add infrastructure to adjust affinity for dynamic CPU isolation
-Date: Thu, 16 May 2024 22:04:31 +0300
-Message-ID: <20240516190437.3545310-2-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240516190437.3545310-1-costa.shul@redhat.com>
-References: <20240516190437.3545310-1-costa.shul@redhat.com>
+        bh=vdVstfTJWRr25JayXKawfEg+DKVNWLVsJwrCAWHBcOA=;
+        b=XusfDbOwq/kFNmasErAVdMxlYVzFuRxZ/8INMPs8i3+xwjqRBbd7pU4CjQcg7AW45I
+         OxdmgZE3I8kaNqARRYaUlWK7vxYKObk1LICPkfjmBU7qY5tfPKllxLqA2arVY0U1Wy1J
+         3J0lJDbjsMKjxR1mZzfXKRsjvcHQaFVMkRpji2k6fMpW8mdHmlcdINsNnfFgvU6usRj1
+         dWqYV0Hm0fj3PWSWUoQncTcwFSzqX5NrlQoagdo+BNwX+QCqj2Q9CIB3kPW5SqB5NPoT
+         x0D23V7oFX4LUDHAgX0iIIhlYAF3ejTAXZbhHjYCCsF7dbblKy8TEgMNiUtGU7rxrltp
+         HP7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVNE8wOpX/qc8ydb/k3w6A0vs5MCmatt9MBXq6WoJQ2hYBoWFZM+Kxv69efkgDmtwdJwIXxkv30JI9zAMlDMR+J6GSRlzihsJzC1Yx71WPaqXFAwJEImMNpHFWk0M/97QRawPFt/BDuiZTT/Vn6+Hl4LzYW79AWaPIG3d9c9QMe8Q==
+X-Gm-Message-State: AOJu0Yyp9P7W+Q1jFvzAtcuci2CC5OMss2zgNbLhO2pzpOaz42VC3hkq
+	wLbRZeyvXqLwfLacIdj/w0QxuGFfvhHUEMncakUWSj4YwZ2EqdrKtbLiCa11cAuVVt4OBIOuFON
+	nM1z3n4IijSpGR1F0QjmxIEf7cTE=
+X-Google-Smtp-Source: AGHT+IGLFT1S7qQvZoURCyPTWP6DLQxIRfqFMLgmLurk+JpY7haynCdqsfwTebdBhjXGd/5cwIz/OyJ0cMQ8OV0KcMA=
+X-Received: by 2002:a05:6a20:9498:b0:1af:c5b9:273b with SMTP id
+ adf61e73a8af0-1afde1d824cmr19019205637.54.1715886465298; Thu, 16 May 2024
+ 12:07:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240515125342.1069999-1-haakon.bugge@oracle.com>
+ <20240515125342.1069999-4-haakon.bugge@oracle.com> <82bf9e5f-b798-4d29-8473-c074a34f15b0@linux.dev>
+ <236B9732-8264-454C-94BF-7C9D491D3A37@oracle.com>
+In-Reply-To: <236B9732-8264-454C-94BF-7C9D491D3A37@oracle.com>
+From: Greg Sword <gregsword0@gmail.com>
+Date: Fri, 17 May 2024 03:07:34 +0800
+Message-ID: <CAEz=Lcvbc3O+PtDSLvGAgd5fmps8j69DDn+Mgm8UWMFMNSd8WA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] RDMA/cma: Brute force GFP_NOIO
+To: Haakon Bugge <haakon.bugge@oracle.com>
+Cc: Zhu Yanjun <zyjzyj2000@gmail.com>, OFED mailing list <linux-rdma@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>, 
+	"rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Allison Henderson <allison.henderson@oracle.com>, 
+	Manjunath Patil <manjunath.b.patil@oracle.com>, Mark Zhang <markzhang@nvidia.com>, 
+	Chuck Lever III <chuck.lever@oracle.com>, Shiraz Saleem <shiraz.saleem@intel.com>, 
+	Yang Li <yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce infrastructure function housekeeping_update() to change
-housekeeping_cpumask during runtime and adjust affinities of depended
-subsystems.
+On Thu, May 16, 2024 at 11:54=E2=80=AFPM Haakon Bugge <haakon.bugge@oracle.=
+com> wrote:
+>
+> Hi Yanjun,
+>
+>
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/maintainer-netdev.rst?h=3Dv6.9#n376
+> >
+> > "
+> > Netdev has a convention for ordering local variables in functions.
+> > Order the variable declaration lines longest to shortest, e.g.::
+>
+> "Infiniband subsystem" !=3D netdev, right?
 
-Affinity adjustments of subsystems follow in subsequent patches.
+All kernel subsystems should follow this rule, including the network
+and rdma subsystems
 
-Parent patch:
-"sched/isolation: Exclude dynamically isolated CPUs from housekeeping masks"
-https://lore.kernel.org/lkml/20240229021414.508972-2-longman@redhat.com/
-
-Test example for cgroup2:
-
-cd /sys/fs/cgroup/
-echo +cpuset > cgroup.subtree_control
-mkdir test
-echo isolated > test/cpuset.cpus.partition
-echo $isolate > test/cpuset.cpus
-
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- kernel/sched/isolation.c | 48 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 43 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 948b9ee0dc2cc..036e48f0e7d1b 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -116,6 +116,39 @@ static void __init housekeeping_setup_type(enum hk_type type,
- 		     housekeeping_staging);
- }
- 
-+/*
-+ * housekeeping_update - change housekeeping.cpumasks[type] and propagate the
-+ * change.
-+ *
-+ * Assuming cpuset_mutex is held in sched_partition_write or
-+ * cpuset_write_resmask.
-+ */
-+static int housekeeping_update(enum hk_type type, cpumask_var_t update)
-+{
-+	struct {
-+		struct cpumask changed;
-+		struct cpumask enable;
-+		struct cpumask disable;
-+	} *masks;
-+
-+	masks = kmalloc(sizeof(*masks), GFP_KERNEL);
-+	if (!masks)
-+		return -ENOMEM;
-+
-+	lockdep_assert_cpus_held();
-+	cpumask_xor(&masks->changed, housekeeping_cpumask(type), update);
-+	cpumask_and(&masks->enable, &masks->changed, update);
-+	cpumask_andnot(&masks->disable, &masks->changed, update);
-+	cpumask_copy(housekeeping.cpumasks[type], update);
-+	housekeeping.flags |= BIT(type);
-+	if (!static_branch_unlikely(&housekeeping_overridden))
-+		static_key_enable_cpuslocked(&housekeeping_overridden.key);
-+
-+	kfree(masks);
-+
-+	return 0;
-+}
-+
- static int __init housekeeping_setup(char *str, unsigned long flags)
- {
- 	cpumask_var_t non_housekeeping_mask, housekeeping_staging;
-@@ -314,9 +347,12 @@ int housekeeping_exlude_isolcpus(const struct cpumask *isolcpus, unsigned long f
- 		/*
- 		 * Reset housekeeping to bootup default
- 		 */
--		for_each_set_bit(type, &housekeeping_boot.flags, HK_TYPE_MAX)
--			cpumask_copy(housekeeping.cpumasks[type],
--				     housekeeping_boot.cpumasks[type]);
-+		for_each_set_bit(type, &housekeeping_boot.flags, HK_TYPE_MAX) {
-+			int err = housekeeping_update(type, housekeeping_boot.cpumasks[type]);
-+
-+			if (err)
-+				return err;
-+		}
- 
- 		WRITE_ONCE(housekeeping.flags, housekeeping_boot.flags);
- 		if (!housekeeping_boot.flags &&
-@@ -344,9 +380,11 @@ int housekeeping_exlude_isolcpus(const struct cpumask *isolcpus, unsigned long f
- 		cpumask_andnot(tmp_mask, src_mask, isolcpus);
- 		if (!cpumask_intersects(tmp_mask, cpu_online_mask))
- 			return -EINVAL;	/* Invalid isolated CPUs */
--		cpumask_copy(housekeeping.cpumasks[type], tmp_mask);
-+		int err = housekeeping_update(type, tmp_mask);
-+
-+		if (err)
-+			return err;
- 	}
--	WRITE_ONCE(housekeeping.flags, housekeeping_boot.flags | flags);
- 	excluded = true;
- 	if (!static_branch_unlikely(&housekeeping_overridden))
- 		static_key_enable_cpuslocked(&housekeeping_overridden.key);
--- 
-2.45.0
-
+>
+>
+> Thxs, H=C3=A5kon
+>
