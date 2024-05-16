@@ -1,90 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D8A6BFBF;
-	Thu, 16 May 2024 08:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912E437142
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715849033; cv=none; b=A0V97csrOAzeGu1ixcOkQ+nOk3+LSUys3PE1zJZK5Y51yKwa+Ok9U7NYLdWzUBkZl3grQvYkM54HZ7AL4X70kzz/GQjQlg8RT+ekTYcm+dnvyQhPrzmyjyPaonzTwh4h8/02VtyPd1yTW2MhMCa5VwekyfWYjDz+nl2Qwgld8hI=
+	t=1715849130; cv=none; b=hzCimQSF1Lgofyt4GkKoOUyNEY+DvmQtTCwR5sSRXLZ6XRTNP+YuhR0kTY94YP5PjOEdmQyveykYcVFezp402q7cJ0nXRrpXYQp6f5jKy5r0FkBRAKOfBSRHc+YBbUXMx0OGAU0GyHztjePcJ0cMDpwr+02E1lQKOdRNRHC1AbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715849033; c=relaxed/simple;
-	bh=7eowNZsP0z/IUYzGQw3TrUkJcTIY48766X+Sspo9t44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DQKwG2r+lUnih4Ljog+smyJP8nyTS4L0nxoEXjU5EGLD2ESRQwsRc7SJX43MIPfX6Pnjsf6hImrS83V58xAMVMOq6uhEUPPG1Ect7Urp4cJcQBXwHohtbxZIjOLfypBgCdG6f5tRu3scaXQITv2fIksFj1+RCpHKzO0WrDlQ5/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkg4pDxZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkg4pDxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B46C1C32781;
-	Thu, 16 May 2024 08:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715849032;
-	bh=7eowNZsP0z/IUYzGQw3TrUkJcTIY48766X+Sspo9t44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pkg4pDxZ1kyNT3gWta5QQ1ZLtC/xQUwyvpn1l27JH2A8G3uR767HFOTFDgDiKwfeV
-	 SaANF+IDO1eZVTDEN3IKoTZVQCT2KLPJvxE7QeF8p8L6h2pQtyEBYe2fDpEfFUL529
-	 iLZHYrSZNKHGR1SZCok/X/4GCOxcsnGD54B66dxe2o0mJkl42PBGERX6sFlDoIQFRN
-	 D5pAVChuwKIIzBd/84TFPrZNFWx8hziSSTv9B27D+UBfo0uptOUyjpu8hLh0FyOEEO
-	 49ocJz7XPoPLlcEYQlAJ3tOBRmhgFItbecA0+jXEVsLX2ch5+RRHhsvZGzBk1pBYxa
-	 Xgb0sguWwoocA==
-Date: Thu, 16 May 2024 09:43:48 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Cc: krzk@kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syoshida@redhat.com
-Subject: Re: [PATCH net] nfc: nci: Fix handling of zero-length payload
- packets in nci_rx_work()
-Message-ID: <20240516084348.GF179178@kernel.org>
-References: <20240515151757.457353-1-ryasuoka@redhat.com>
+	s=arc-20240116; t=1715849130; c=relaxed/simple;
+	bh=7aYx2NAHJSdm6UY/JfxSDGIF/gJzItywug9/e9fWLng=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dz7xbDpU//s7if2M5ZHa72oTGjpbqaQjkQSaz280r2V7u74HG4REVyN9B8eMOcaD5IePz/IUPjghrfuh0omhL55IgrAtyLCe9WLPApMUHN+Y2iOirlNB4ZcCG69qTIsSWvQRDjLuxgwKYBTgU9dUF0DaceebvAW7ZIPbHYhQ5Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Vg3VN5cTSzxNgp;
+	Thu, 16 May 2024 16:41:48 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E42D1800C7;
+	Thu, 16 May 2024 16:45:23 +0800 (CST)
+Received: from [10.173.135.154] (10.173.135.154) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 16 May 2024 16:45:23 +0800
+Subject: Re: [PATCH v2] mm/huge_memory: don't unpoison huge_zero_folio
+To: Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@redhat.com>
+CC: <akpm@linux-foundation.org>, <shy828301@gmail.com>,
+	<nao.horiguchi@gmail.com>, <xuyu@linux.alibaba.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240515023607.870022-1-linmiaohe@huawei.com>
+ <e1c93779-8cde-4986-85d3-2134fb8970b3@redhat.com>
+ <ZkXDS9y_cBSzBzeN@localhost.localdomain>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <fd1b4d3f-be4c-16e2-00d9-8ea6443c68f3@huawei.com>
+Date: Thu, 16 May 2024 16:45:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240515151757.457353-1-ryasuoka@redhat.com>
+In-Reply-To: <ZkXDS9y_cBSzBzeN@localhost.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-Hi Yasuoka-san,
-
-On Thu, May 16, 2024 at 12:17:07AM +0900, Ryosuke Yasuoka wrote:
-> When nci_rx_work() receives a zero-length payload packet, it should
-> discard the packet without exiting the loop. Instead, it should continue
-> processing subsequent packets.
-
-nit: I think it would be clearer to say:
-
-... it should not discard the packet and exit the loop. Instead, ...
-
+On 2024/5/16 16:26, Oscar Salvador wrote:
+> On Wed, May 15, 2024 at 05:55:39PM +0200, David Hildenbrand wrote:
+>>> +	if (is_huge_zero_folio(folio)) {
+>>> +		unpoison_pr_info("Unpoison: huge zero page is not supported %#lx\n",
+>>> +				 pfn, &unpoison_rs);
+>>> +		goto unlock_mutex;
+>>> +	}
+>>> +
 > 
-> Fixes: d24b03535e5e ("nfc: nci: Fix uninit-value in nci_dev_up and nci_ntf_packet")
-> Closes: https://lore.kernel.org/lkml/20240428134525.GW516117@kernel.org/T/
-
-nit: I'm not sure this Closes link is adding much,
-     there are more changes coming, right?
-
-> Reported-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
-> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
-> ---
->  net/nfc/nci/core.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Sorry for spamming your reply David, but for some unknown reason I am not able
+> to find the original patch in my mailbox, in none of the two accountes I am
+> subscribed, so I guess I will have to reply here.
 > 
-> diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-> index b133dc55304c..f2ae8b0d81b9 100644
-> --- a/net/nfc/nci/core.c
-> +++ b/net/nfc/nci/core.c
-> @@ -1518,8 +1518,7 @@ static void nci_rx_work(struct work_struct *work)
+> Just two things
+> 
+> 1) We do not care if someone grabs a refcount for huge_zero_folio,
+>    because since it is not supported anyway the outcome will not change.
+>    Also, AFAIK, there is no chance we can unpoison that folio.
+>    Therefore, I would just lift the check two blocks and place it right after
+>    the hw_memory_failure check.
+> 
+> 2) The whole thing is unsupported, but you will return -EBUSY while you
+>    should be returning -EOPNOTSUPP AFAICS.
+> 
+
+Thanks for your comment. Do you mean something like below?
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 16ada4fb02b7..a9fe9eda593f 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -2546,6 +2546,13 @@ int unpoison_memory(unsigned long pfn)
+                goto unlock_mutex;
+        }
+
++       if (is_huge_zero_folio(folio)) {
++               unpoison_pr_info("Unpoison: huge zero page is not supported %#lx\n",
++                                pfn, &unpoison_rs);
++               ret = -EOPNOTSUPP;
++               goto unlock_mutex;
++       }
++
+        if (!PageHWPoison(p)) {
+                unpoison_pr_info("Unpoison: Page was already unpoisoned %#lx\n",
+                                 pfn, &unpoison_rs);
+
+Thanks.
+.
+
+> with that you can add:
+> 
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> 
 >  
->  		if (!nci_plen(skb->data)) {
->  			kfree_skb(skb);
-> -			kcov_remote_stop();
-> -			break;
-> +			continue;
->  		}
->  
->  		/* Process frame */
-> -- 
-> 2.44.0
 > 
-> 
+
