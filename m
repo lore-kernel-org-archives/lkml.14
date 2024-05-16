@@ -1,114 +1,90 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDA61474BA;
-	Thu, 16 May 2024 13:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739B91465B7
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715864892; cv=none; b=SpNk1poRTXMyiM+CoIGyQfPQ0cy5yP/gp7FPiDISKlQw5CPC20LUfnqmD+2J9R2SDU9C6WEhxq7RxqIWuELLJ8gMyUwEwPBwsTwhfOYU/XUGrgQzbUFQv/robjDBS21uVMMTj053mjvw7DdZRBJ8TPAN285efBrTaDP+Iff/LcE=
+	t=1715864970; cv=none; b=Sq0cgl8dUPkIWs/GpNXNi5tPCpIyuGnxLV+uiR0KOWePqb9fTWVjUuJXWC9xQpQ2XgFB6x3BdLbnXXguKpT2ilJlsFF9Ar/3xgT9dX9iaH3Ah6Qau1SHXKkpivMX9v+BEsz0GzdGI0Jr7hbww8gu60KcRQpVHi6CWcBTOUPxvy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715864892; c=relaxed/simple;
-	bh=LTLX0LeM+qS03ZxB4OHmr2DRJXBFAV5FfJtbLW+rRa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XOiycGDDx2Ys5RVIETP1eRdHRWm0xiLPowNG6TixC5Nuwh5PK0fxEqb7JXm4CHi/X7gCAt7Zqt/6fwCxwDLftyM/Mdx1QiuvubH+yKpd909TBRDqbgrdkAqB8eyToEkoptF9fmuq8Z9V1/cVfP+q4tfkHQLHPgyj9ddOe973CWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a5ce2f0deffso103738366b.3;
-        Thu, 16 May 2024 06:08:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715864889; x=1716469689;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x3xI3WqCXBZnh7JICdirIiSsZ2+IepKR0X49gjIcQu8=;
-        b=U7nrWgiDdqIteNJF7PziMKt3yOPFzeVKebCo7ZsoA2y4ckhwFAd8Y7EI6LJVSmT4It
-         m7UQ/xQeRr/PtwjGszoVhzK0hTvCdGOMbNqtvm5Kgmo0tgGQ8sdHChPcnY531ahwg0Nz
-         wIdOysSOjpl2IBBvwgqyGLGFo+zH0N72cSIoUcmyqMjCobZ0V0fkTnCkULO5b87XF8Hv
-         2iMtk/8sbk6R0l3oG8WQrrukhqo0ZqT8bivQ1QTSp1V/+qmRwVyYS32i1+aFuEB3gfHg
-         dn01sPqviDK1u6H7xvopAm+t2J0C3R7E6PDEyDklVaVnXS629drP2s9ltH2J8n4wjyRu
-         YItQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFxHr9XF2v4O0xVm45MPtLxzcCJXCSozUtmkS35RXfOrb2JXql9EKakHWisXaAE0TTH92Io58TRmaEgn4AIr6q3k9WWuMw557AJCcnuIWR4tdMPQ6hi+krEJ2BK25NbjCuqoqBl7p6f9YCuQVC/Q==
-X-Gm-Message-State: AOJu0YwJcccfutVdYYGkVNIAXygGsqKsBth7idmWxcH/aZ4oJzWpWjrR
-	TS86vt5a+qXvsVkz6s33YuzeLkjfEWDNSqAW+nKi4kZI+1nMxfk6
-X-Google-Smtp-Source: AGHT+IHj6g17NY36UT1C5E1qzE5vQQVCSq6a5qXMzfef9hvyCrnuyZLS/XU8bjsk5rSgGfRB41Azng==
-X-Received: by 2002:a17:906:3d0:b0:a59:bfab:b25a with SMTP id a640c23a62f3a-a5a2d678063mr1306501066b.63.1715864889376;
-        Thu, 16 May 2024 06:08:09 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-000.fbsv.net. [2a03:2880:30ff::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781ce5dsm969498966b.42.2024.05.16.06.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 06:08:08 -0700 (PDT)
-Date: Thu, 16 May 2024 06:08:06 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>, leit@meta.com,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] perf list: Fix the --no-desc option
-Message-ID: <ZkYFNrwGtdi8XHSD@gmail.com>
-References: <20240513212007.62904-1-leitao@debian.org>
- <CAP-5=fXimpTxhC0A+MDs8t9zn=hifHFxLChQm_QzJQtuHbztPg@mail.gmail.com>
+	s=arc-20240116; t=1715864970; c=relaxed/simple;
+	bh=4EsaPXJC+JvHpVJsiCeU8T2WD8dBBn24X0h0DEg9RBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y32HysUHYoVsqSeunVFDP0O7x2MMd6VTefrqbXTfCjZSbsbL/B04Du8G0XMwFQGCBESuMJRgNwXgZVUJBx7PaKNgi+Vqu+AxhU2lhbqyjf+VFnxXRZpMPWVkmPw61basMdZzT+fLdy9Jbl+vXIdJt2bIiGdWlWZUdNSA/DhyiNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EpVoNl/P; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EpVoNl/P"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8F87C1C0006;
+	Thu, 16 May 2024 13:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715864966;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AToU5AIFALBM7r0eZ6ZWKjQjRupuMORQSk8DoQTPoaU=;
+	b=EpVoNl/PLweZX1UQu/60zZH4S/fB+lYjJ3t9ifkXUwYUpiIrqZBpMkkrbw5yuS+/iMppXc
+	qm7cwMM9Auzy+PmwB+8ZDe+XGm5uhxiqkqrMkBUo85g22Q1raZAjcyhDoguIUmZ8DUBRwj
+	ZNI4IR8mdXKl/CWRb3rTk61ds9Rl507aZNOodUHxb0X2B19uCG0y6dtjnkKUueJ/kcDx87
+	GstCyPaBaSkAUl68VHGcU1Qpkw4xZDATaE8aSfpm9cxoORLeNCgYqsu42dkJphZbTlEgNk
+	7dF2ay9C+SeUifLaLoBMj+xvQCabk6BlgZ/XN/6Pfpq2fOdUZopb2c4VLLaunQ==
+Date: Thu, 16 May 2024 15:09:25 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Richard
+ Weinberger <richard@nod.at>
+Subject: Re: [PATCH] mtd: rawnand: onfi: read parameter pages in one go
+Message-ID: <20240516150925.5c65319b@xps-13>
+In-Reply-To: <ZkXylC2xrlqGW_xV@pengutronix.de>
+References: <20240514134140.1050141-1-s.hauer@pengutronix.de>
+	<20240516101350.78e5ee29@xps-13>
+	<20240516115812.02908822@xps-13>
+	<ZkXylC2xrlqGW_xV@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXimpTxhC0A+MDs8t9zn=hifHFxLChQm_QzJQtuHbztPg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, May 13, 2024 at 07:51:12PM -0700, Ian Rogers wrote:
-> On Mon, May 13, 2024 at 2:20 PM Breno Leitao <leitao@debian.org> wrote:
-> >
-> > Currently, the --no-desc option in perf list isn't functioning as
-> > intended.
-> >
-> > This issue arises from the overwriting of struct option->desc with the
-> > opposite value of struct option->long_desc. Consequently, whatever
-> > parse_options() returns at struct option->desc gets overridden later,
-> > rendering the --desc or --no-desc arguments ineffective.
-> >
-> > To resolve this, set ->desc as true by default and allow parse_options()
-> > to adjust it accordingly. This adjustment will fix the --no-desc
-> > option while preserving the functionality of the other parameters.
-> >
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > ---
-> > Changelog:
-> >
-> > v2:
-> >         * Do not print desc if long_desc is being printed, as identified
-> >           by Ian Rogers.
-> > ---
-> >  tools/perf/builtin-list.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> > index e27a1b1288c2..16186acdd301 100644
-> > --- a/tools/perf/builtin-list.c
-> > +++ b/tools/perf/builtin-list.c
-> > @@ -149,7 +149,11 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
-> >         } else
-> >                 fputc('\n', fp);
-> >
-> > -       if (desc && print_state->desc) {
-> > +       if (long_desc && print_state->long_desc) {
-> > +               fprintf(fp, "%*s", 8, "[");
-> > +               wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
-> > +               fprintf(fp, "]\n");
-> > +       } else if (desc && print_state->desc) {
-> 
-> I think we need the same fix also in default_print_metric, on an Intel
-> Tigerlake I see the description repeated like:
+Hi Sascha,
 
-Good point. We also need the same for json_print_event().
+> > > > nand_read_data_op() is not supported by all NAND controllers.
+> > > > nand_change_read_column_op() is not supported or at least is hard to
+> > > > support by NAND controllers that use a different page layout than
+> > > > expected by the NAND core.   =20
+> > >=20
+> > > I'm sorry but RNDOUT is not so hard to support, and I know no NAND
+> > > controller without this feature (I think even the first mxc controller
+> > > supports it?). However, the command does not exist on small page NANDs
+> > > (512 bytes). =20
+> >=20
+> > Nevermind, the ONFI spec (in all versions) states that RNDOUT are
+> > allowed during parameter page reads, regardless of the size of the chip
+> > (at least, that is not mentioned). =20
+>=20
+> I could imagine that there are no ONFI compliant chips with small pages,
+> I don't know how to verify this though.
+>=20
+> Anyway, this was a try to make reading the parameter pages a bit more
+> straight forward. It seems the MXC NAND controller can't support reading
+> three parameter pages in one go either. It works in software ECC mode
+> because I reverse the syndome type layout the controller introduces, but
+> it can't work with hardware ECC.
 
-Thanks for the review.
+Hardware ECC should not be used at this step and should be disabled.
+There should not be any ECC interference.
+
+> So disregard this patch.
+
+I now have a proposal, I'll send a v2 of my previous series.
+
+Thanks,
+Miqu=C3=A8l
