@@ -1,130 +1,183 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D98514B071
-	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 13:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366B5143862;
+	Thu, 16 May 2024 13:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715865517; cv=none; b=m4EH1DUgK+L5cobDd/qXj+1GS8HL5StYQ7HI7j6DAvLlO+J+xOnGFvI4OuDOK+uMqA8tfjz+rCyybDqoPTmh0ONSGOYNWhnqeTUAkZzT9RABRmoUHP2I2uzC9dRdxssdIhzwAwb2euFjRWEcbJoIdx9ITyiF0SQr1WKBs7MNOE0=
+	t=1715865527; cv=none; b=iI0oQT4ucw19HB+h0VETRBAcJt0A48Gsr0HYCfOYdDRz7S94NZoHa4reECKt2zGDAIIBVcZo2z28fY0RyHlGIkUDr+zf1NOYNv4XAO23MjJ5uV8I9Ij+aixK+0pHf+9EOSzBpO0j2vpl8zDPu8YNyoDlDv/KTl2K1uaq1Mnj/sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715865517; c=relaxed/simple;
-	bh=/vrxMtadDQYtqI4w4rk5sueAQ3y7eapu4/8W4sRdUvQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Kv59fEmOvyrYJZ00K45NTe7f6IbmhQvEbTOw6tZskpaxl+P8PrrPJy9xTxIWUrQplWTtWExFfRcqmYIZwz9t+8K2h+3XL1a0HapZFgXiKDc+ybY4qY2o6vLf7AVj+cKsMa0JlgJpXVDdH7ds9xz8XTdVWM4OPn7pnYsK3XAyXu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pNftCPQq; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pNftCPQq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7233E60002;
-	Thu, 16 May 2024 13:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715865514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MrS8b39rxDfx4oFYW2S/d2LnfHxde+rqsW+6XOgTsco=;
-	b=pNftCPQqP1awGmnbstlU4DBekkFnYGGJX4eQo4moAulGT9IEZ3+zKZqfcaQTelHwi0KsMW
-	Kq7HlJ4hOgjgQFC1uETzmgb6oMo6kQZJ4Bupmw8o0KFP9QkRFgLrUJEujd8imEkSTe0YOT
-	HWAJ+ZnEerm3SAeb5vRmCsWuWBZRpgHJvGixgODkOhF3V91VdatIgkod6FbHcPcJ8beQD0
-	R2qkAPNYjXliq8GyfAYZs2zjJbYLgTb/LoWT+95p87pQfuz7P8o/+4qa/5vBDaYhEX7hxt
-	ITOWb+5inqTZs+VaqagW0NakMXANfAGNUjulzug9UaEqVeATcpFrQDMjanPfwg==
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Thu, 16 May 2024 15:18:21 +0200
-Subject: [PATCH 5/5] drm/vkms: Add support for RGB888 formats
+	s=arc-20240116; t=1715865527; c=relaxed/simple;
+	bh=IwDcXBrM7FxrzumjpWEBXxVI/Sjr7Q8mo1aSkT0G6Uk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P7NffrFNLaPphIILmjjOSq/aQpRQoU9svECn/59jNh1csX/RffDwtF1P/+sVR3bM9NaIkAocXZLDBT0ZWw2F/7kG3tB/GTrWO/UUHK1Z+gQIFv2J3njiqgBRf3qVNprM/F4KPo7tb9l+BgWHMaf4r1rBI6wnZhgItvRCe4RPAj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5ce2f0deffso105140366b.3;
+        Thu, 16 May 2024 06:18:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715865523; x=1716470323;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KdGWxoXF3gHnPOdYFh5gyCjeUx8D+oDKEyOSzHQOiAA=;
+        b=HPodG0Dx5rerUOwXaeKOwUywuAVuf5sQnLIOEo1jMZpSgpVoD+xilhx3NQKwsTUYCK
+         kwjgejwxjX8AF2QS9K2h++x1mstGPaQSR3KsHy7kbXOxKtwyfM9AmqT/L/hJPJ/5ux/o
+         5qppnrbnXdUXLNZH6Nf0LrF/C48wIS57f8P3GvXSGav7tbH7H5Y01unZIjtUFqxsPh2+
+         jb5z4Y1mBCN7Vp1WGjJCLi/swemP7JKNitQ/cVm1c7cvyJ84z1gE07Z3ZIALzBh+0ZDZ
+         P6QXy29EgBpZq5Hv2YX7c8Q7PNioMUQd4BDAvWcJADXKjTclSWb+hzvhQKMu4gTS/NNZ
+         MRog==
+X-Forwarded-Encrypted: i=1; AJvYcCVkprhqgFWgktACURSFEFLgEo3y7PP6JbXsJ4kOWzwWQ6qZprW5Zw55+i2aDFKOLBUf61EQQIBQyT6J+ZT/E9HjVRlkWw8kVfSaft4NJ11YW1op2wMzrnJdr+nRwheni2l4aCudVu11mpWsQNk1sQ==
+X-Gm-Message-State: AOJu0Yw1SrZ/0hRRok25b/FXe6q/tSN0pC6VDAC+GvwR9KZ/GqxyGlP6
+	g6YRn2Uf7VK09QsXBWp2/XG3ToAd/4zEs30cCXRSlyTcRPrfcIEa
+X-Google-Smtp-Source: AGHT+IE2d8F0VoqvvpDcSpf30NsfMeCjcYrMF4Tuu+HjVBfDa1U+6aaHYWXjrnML45ynkiykx7Dkrw==
+X-Received: by 2002:a17:906:aa4d:b0:a59:c23d:85d8 with SMTP id a640c23a62f3a-a5a2d6653f4mr1274823266b.51.1715865523323;
+        Thu, 16 May 2024 06:18:43 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-009.fbsv.net. [2a03:2880:30ff:9::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17870sm976435666b.216.2024.05.16.06.18.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 06:18:42 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: irogers@google.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: leit@meta.com,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Subject: [PATCH v3] perf list: Fix the --no-desc option
+Date: Thu, 16 May 2024 06:15:43 -0700
+Message-ID: <20240516131544.2885917-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240516-b4-new-color-formats-v1-5-74cf9fe07317@bootlin.com>
-References: <20240516-b4-new-color-formats-v1-0-74cf9fe07317@bootlin.com>
-In-Reply-To: <20240516-b4-new-color-formats-v1-0-74cf9fe07317@bootlin.com>
-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
- Melissa Wen <melissa.srw@gmail.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net, 
- linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com, 
- miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com, 
- seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com, 
- Louis Chauvet <louis.chauvet@bootlin.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1936;
- i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=/vrxMtadDQYtqI4w4rk5sueAQ3y7eapu4/8W4sRdUvQ=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmRgef1emOyzGd/IpJLMvz4AbwKcC66NGrRXEYu
- fm92wBcRNCJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkYHnwAKCRAgrS7GWxAs
- 4pHgD/9sniUJ7rD+ib4ar88c6BG1CbRJPURj6hQsJe6PoC2U89A8L5a5LP2WvC+nZoVV10o8uIP
- mw9Da72ZgX4lv7TYhypzYTZd0fZ/geoto3+VbH2tumKEqmDqt9NeaTJbalrSp1bKt9F25IbYv2B
- AW6xYtLZXK7b6+QxpgR+/3z1Y575yJZqifkl/aL+tS2s+F5nynMnFT0bwfNySAhKDk27zmJB99v
- 3oYbEww9IgqW8QBnqmJz/cWHcTLidA5mvy9dlZgoD9GelFGlQHFmrFXCGwSIujYUNAzlNvP0sna
- /Z7ZaTUR6El4PwzvYfIKgdnIYKXo7aGg2mU8Jj4Kx+w/4bCbuVZe3k+r8ZuA3yNJu/ZqOkS/2U8
- 7ECns5imI6lLC7b42LJRZqgpC7bULaSsp/uvV8n0czNmst4TySs87wlxUQKnqgaSx+14ntgoRXz
- yliUKFIyRrLnNphIjRT7fBC+0hBWh04nDXY+lFuw41K2C76rOmVqUgdcmrg0H1DK4pQKyruoUoB
- uv4HPcxsQC3jGFDSfFAtYekwXbLcDL+vgYH1XN/WxHITdgl6CT1Tl0vLQdP120Raeqg08x3/lIV
- PpZ59a8AkbBDaaf1oGmkK3FNOxxXXzwRCTC34aR2umd9JppRB+rqAbupsj243TvlEkW7Be6YW6X
- KIPpvsKCQ3pAxsg==
-X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
- fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Add the support for:
-- RGB888
-- BGR888
+Currently, the --no-desc option in perf list isn't functioning as
+intended.
 
-Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+This issue arises from the overwriting of struct option->desc with the
+opposite value of struct option->long_desc. Consequently, whatever
+parse_options() returns at struct option->desc gets overridden later,
+rendering the --desc or --no-desc arguments ineffective.
+
+To resolve this, set ->desc as true by default and allow parse_options()
+to adjust it accordingly. This adjustment will fix the --no-desc
+option while preserving the functionality of the other parameters.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- drivers/gpu/drm/vkms/vkms_formats.c | 7 +++++++
- drivers/gpu/drm/vkms/vkms_plane.c   | 2 ++
- 2 files changed, 9 insertions(+)
+Changelog:
 
-diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index 4d7af36aa28a..6e651f7e6997 100644
---- a/drivers/gpu/drm/vkms/vkms_formats.c
-+++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -472,6 +472,9 @@ READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
- READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
- READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
+v3:
+	* Applied the same logic to default_print_metric() and
+	  json_print_event() functions, as identified by Ian Rogers. 
+v2:
+        * Do not print desc if long_desc is being printed, as identified
+          by Ian Rogers.
+
+---
+ tools/perf/builtin-list.c | 34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
+
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 02bf608d585e..8a0e123587f3 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -149,7 +149,11 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
+ 	} else
+ 		fputc('\n', fp);
  
-+READ_LINE_ARGB8888(RGB888_read_line, px, 255, px[2], px[1], px[0])
-+READ_LINE_ARGB8888(BGR888_read_line, px, 255, px[0], px[1], px[2])
-+
- READ_LINE_16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0]);
- READ_LINE_16161616(ABGR16161616_read_line, px, px[3], px[0], px[1], px[2]);
- READ_LINE_16161616(XRGB16161616_read_line, px, 0xFFFF, px[2], px[1], px[0]);
-@@ -701,6 +704,10 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
- 		return &RGBX8888_read_line;
- 	case DRM_FORMAT_BGRX8888:
- 		return &BGRX8888_read_line;
-+	case DRM_FORMAT_RGB888:
-+		return RGB888_read_line;
-+	case DRM_FORMAT_BGR888:
-+		return BGR888_read_line;
- 	case DRM_FORMAT_ARGB16161616:
- 		return &ARGB16161616_read_line;
- 	case DRM_FORMAT_ABGR16161616:
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index a243a706459f..0fa589abc53a 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -21,6 +21,8 @@ static const u32 vkms_formats[] = {
- 	DRM_FORMAT_XBGR8888,
- 	DRM_FORMAT_RGBX8888,
- 	DRM_FORMAT_BGRX8888,
-+	DRM_FORMAT_RGB888,
-+	DRM_FORMAT_BGR888,
- 	DRM_FORMAT_XRGB16161616,
- 	DRM_FORMAT_XBGR16161616,
- 	DRM_FORMAT_ARGB16161616,
-
+-	if (desc && print_state->desc) {
++	if (long_desc && print_state->long_desc) {
++		fprintf(fp, "%*s", 8, "[");
++		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
++		fprintf(fp, "]\n");
++	} else if (desc && print_state->desc) {
+ 		char *desc_with_unit = NULL;
+ 		int desc_len = -1;
+ 
+@@ -165,12 +169,6 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
+ 		fprintf(fp, "]\n");
+ 		free(desc_with_unit);
+ 	}
+-	long_desc = long_desc ?: desc;
+-	if (long_desc && print_state->long_desc) {
+-		fprintf(fp, "%*s", 8, "[");
+-		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+-		fprintf(fp, "]\n");
+-	}
+ 
+ 	if (print_state->detailed && encoding_desc) {
+ 		fprintf(fp, "%*s", 8, "");
+@@ -243,15 +241,14 @@ static void default_print_metric(void *ps,
+ 	}
+ 	fprintf(fp, "  %s\n", name);
+ 
+-	if (desc && print_state->desc) {
+-		fprintf(fp, "%*s", 8, "[");
+-		wordwrap(fp, desc, 8, pager_get_columns(), 0);
+-		fprintf(fp, "]\n");
+-	}
+ 	if (long_desc && print_state->long_desc) {
+ 		fprintf(fp, "%*s", 8, "[");
+ 		wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+ 		fprintf(fp, "]\n");
++	} else if (desc && print_state->desc) {
++		fprintf(fp, "%*s", 8, "[");
++		wordwrap(fp, desc, 8, pager_get_columns(), 0);
++		fprintf(fp, "]\n");
+ 	}
+ 	if (expr && print_state->detailed) {
+ 		fprintf(fp, "%*s", 8, "[");
+@@ -395,17 +392,16 @@ static void json_print_event(void *ps, const char *pmu_name, const char *topic,
+ 				   deprecated ? "1" : "0");
+ 		need_sep = true;
+ 	}
+-	if (desc) {
+-		fix_escape_fprintf(fp, &buf, "%s\t\"BriefDescription\": \"%S\"",
+-				   need_sep ? ",\n" : "",
+-				   desc);
+-		need_sep = true;
+-	}
+ 	if (long_desc) {
+ 		fix_escape_fprintf(fp, &buf, "%s\t\"PublicDescription\": \"%S\"",
+ 				   need_sep ? ",\n" : "",
+ 				   long_desc);
+ 		need_sep = true;
++	} else if (desc) {
++		fix_escape_fprintf(fp, &buf, "%s\t\"BriefDescription\": \"%S\"",
++				   need_sep ? ",\n" : "",
++				   desc);
++		need_sep = true;
+ 	}
+ 	if (encoding_desc) {
+ 		fix_escape_fprintf(fp, &buf, "%s\t\"Encoding\": \"%S\"",
+@@ -491,6 +487,7 @@ int cmd_list(int argc, const char **argv)
+ 	int i, ret = 0;
+ 	struct print_state default_ps = {
+ 		.fp = stdout,
++		.desc = true,
+ 	};
+ 	struct print_state json_ps = {
+ 		.fp = stdout,
+@@ -563,7 +560,6 @@ int cmd_list(int argc, const char **argv)
+ 		};
+ 		ps = &json_ps;
+ 	} else {
+-		default_ps.desc = !default_ps.long_desc;
+ 		default_ps.last_topic = strdup("");
+ 		assert(default_ps.last_topic);
+ 		default_ps.visited_metrics = strlist__new(NULL, NULL);
 -- 
-2.43.2
+2.43.0
 
