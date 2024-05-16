@@ -1,110 +1,87 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638EA143895;
-	Thu, 16 May 2024 15:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC137143895
+	for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 15:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715874545; cv=none; b=lPtza/hVdAbN4Luf3PznHM1+fD8BVyRQzI1fIrVOKlw6XgYeg2nfGIUkX6/rfuCv7NSL03l9RIeqs1Uf4mHf6tzFbAbfZum31a55t6FgEztpD3mziHo7n+5T3A+ppu8UUmADmFQblw/zDp0CEiY3KofRy0ChGQo4o9s4r+LS8Io=
+	t=1715874557; cv=none; b=c24+R/qivvayQn3bIeyV/0p9dvcOcfMVyE5VdZLCNTZ1YVh5X2Cpj+kPooxJp5cjytsZ2EBHBiGFfvZqbpz5/8G6Rs777mlIYqsZVFbbfHDszpuMP5xkReOJYeQQj5pb2zz9XSezHppJSEB6aL3/BCmOOG2pH2wzSZfCLACgkbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715874545; c=relaxed/simple;
-	bh=TaCKIb+tOlae/OaZnCw4aoUwvzQ2N3Q/DzEajBzwE8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f/tJtppE2Omt6b7cdpAPDWEP6bZSV7PytqyDuXNJn9XObCRAQ8wziQybeSaalh1PjP7xT/X28rsSWJ10G704DDfoupu4V8pzRlFSq3HyPexzN7iYvxus+/jAP1ohUVI9AYRVMEi5MMAkTOmvpLXISA5decbb4dB16/0Sh5byVgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxXZmyhp; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxXZmyhp"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-572e8028e0cso3693988a12.3;
-        Thu, 16 May 2024 08:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715874543; x=1716479343; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVGMf75YF+vt1t27uWnw5jAT2X3eMlVNjnjRhN5vWv4=;
-        b=hxXZmyhpV8+/Gy/hU2Rqptf1VE2ZP57apPbg7oTaL/rVPOVZb9dSG0WkdQtzSV/Ucq
-         httY5qTayTKJzzBhTWI+ODq8Cm4PWE+xcXIVMsaQRS+vu94tFGTbZT4CQiyEHrafuErp
-         Ohwe6vAOE7EZllUfC7OgLFMQTwjP1wqvgYqWHNC9o6qkgfb2gALFmYuzl4C5xuMKd+rg
-         ISnjvc+ccz0LiGJaxe+DaGTyegsywOu0kyX16ZXCLKnondrmtRTxhSJmOunTKagz0KXd
-         0xdkTmHw6Dju2jNeV8Pq/9lne9rMKSmCgvn4AEijs0SNmWONVZG6RO6ls4qyybVjE4T9
-         vo1Q==
+	s=arc-20240116; t=1715874557; c=relaxed/simple;
+	bh=xFcKxnrqOdZ6PUt0MN/5m5P3hjOllGJtNyi6Y3cFKPo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=j1wrrd6W6McM7OQXtWmsf9jTEJb02GrVxJD/WQpPZtejBUKLjN3yZMnKsde3o2NJ5xwnTvQc3lyacoOqPdjDwOKS7rvCtTfj7TkGkQri40T1T9Li8zzKAGbq5kFzeTsFG4ghxMDdF81/6nLeak2yI0h9Lwxy5IDloR/Z6BDiUM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d9fde69c43so869480239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 08:49:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715874543; x=1716479343;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EVGMf75YF+vt1t27uWnw5jAT2X3eMlVNjnjRhN5vWv4=;
-        b=NnYgKrMo0EeqkuoWjiuFFZ/4nnOTD0MtQdLI9XYHbkWn84iB73OLO5uaC3dIzIaSHd
-         sVL0ixvIuSvQq/G2L60yOsLKvE6CIpZbuDskx3b6iYjKtZZCQIEAWXFBWozsi9PM1mMi
-         2bGXDu8q817noGg09d6AHbvsxhg11R9/xF4k1vPsZW4TrdPWX29Wge4zBHAG6dtXeDX/
-         ydIhasTHAR1eKKzyKfHOdz1/XZT9WGRe1tglPRjcl1sNmFr5Q78APWM4HeYeJWBjx1sI
-         M12VYTxxerS6fyv4Fi4FSZ9jHJ3bnF6dL8wxhyOdmvdvV+mwfCkpqX6W9CuM2zjA6f3D
-         r+5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXxdPYCJLnHAMTxZ/f1KcsmbsBTabzCvTldB81uOOoh8XiqcNn6jBlxPixdYfL+V9gICguUkj26UygIsALYCZUX0ZBK7/npM8xpkj3NqUET1eOlZUWXi5njJKaEXMj2SP9Tg4ndhhWj/Q==
-X-Gm-Message-State: AOJu0YxrogXouSQKUfdYWek61GsGxCLXMOIyMkkMeB2X28Ug0P+56Lc1
-	M3UYC768A7xzOnr3v/c3oXZHzQoqSf42w5A3Vdpi/fLF7dl3YE9R
-X-Google-Smtp-Source: AGHT+IEOXzHhAeph+JwKQNsAh5vTm8beBoiALShHRSVjBXyTmqnOak4rMy3vcQIPzPH7/wuZU+EBQQ==
-X-Received: by 2002:a50:d5dc:0:b0:56e:60d:9b16 with SMTP id 4fb4d7f45d1cf-5734d5974e6mr12980759a12.6.1715874542455;
-        Thu, 16 May 2024 08:49:02 -0700 (PDT)
-Received: from localhost (host-95-246-50-43.retail.telecomitalia.it. [95.246.50.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574bcad0362sm7372766a12.20.2024.05.16.08.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 08:49:02 -0700 (PDT)
-From: Matteo Martelli <matteomartelli3@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Matteo Martelli <matteomartelli3@gmail.com>
-Subject: [PATCH v2 0/2] ASoC: codecs: add support for everest-semi es8311 codec
-Date: Thu, 16 May 2024 17:43:29 +0200
-Message-ID: <20240516154800.125284-1-matteomartelli3@gmail.com>
-X-Mailer: git-send-email 2.45.0
+        d=1e100.net; s=20230601; t=1715874555; x=1716479355;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uzybynlll8aTlRUTGkiirdKXhhmo+chE7YKKEdoW2Dg=;
+        b=YrOmzvLu1s8CVthmivt/TIZPdXWLHlevUY4oaLdeBNCjIyqesqahRB6KuJfZ5MvxmM
+         KMUfze4l8EWFSk7todapLvwOCHV/D5s2e8bxupSKxsN8bJ4CI2/eQrx+YOz7a8hKwE6d
+         oYldUFupNEmKRv39AQjXMLVXv+KUg0KINapEpXwLdG/s3p+2+8JFwF4kqEBHb7zo6/or
+         vvQaSytNpcudOAWnrJcH1TF0KmNmC5gQhnLca2aocV662YsM7YjmF6MaYQf9Kgaq8PES
+         vT/4wwSLdw8iCev2P18WRUhCX7b9hKRteFmf3WkmmRu7s9VvZRp+OMrIGrXimkWzt6JZ
+         uFeQ==
+X-Gm-Message-State: AOJu0YzQ5nAAPfSnxdTdJQiGXS96pfyvS41goSJnNl3DbxC8qLS5QYLI
+	3T6WPFMe8Thjj1JNpXE3B+2ZSy07OjKQ86qeV1W7EZFc/k1QffV+tEFRmzS8GAKrR1nITXtouBW
+	yGhMKydpF/aC4OFSXIBx6iTddpRJuOt3nUK4N1VLJ8qUV6vIhGRmO2R8=
+X-Google-Smtp-Source: AGHT+IH99AGHDkez492I2+Ury/bIa6UFSuDDUv7plK5Wuh3kReSs/83KqG4W7DDTh4mlRZrZZq08Dwtu5y89dKLBXLpe62ASJ/GF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:1351:b0:7cc:2522:f5fd with SMTP id
+ ca18e2360f4ac-7e1b51a9835mr117464639f.1.1715874553556; Thu, 16 May 2024
+ 08:49:13 -0700 (PDT)
+Date: Thu, 16 May 2024 08:49:13 -0700
+In-Reply-To: <0000000000007e4a2e0616fdde23@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003e82ae0618942dcd@google.com>
+Subject: Re: [syzbot] Test for 5681e40d297b30f5b513
+From: syzbot <syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This patch set adds support for the Everest-semi ES8311 codec.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-Everest-semi ES8311 codec is a low-power mono audio codec with I2S audio
-interface and I2C control.
+***
 
-Implemented and tested most of the codec features, with few limitations
-listed in the driver commit message. The test setup was composed of a
-ESP32-LyraT-Mini board, which embeds the codec, connected via I2C and
-I2S to a Raspberry Pi Zero W host board. Some tests were also performed
-on a Pine64 A64 host board (e.g. to test the suspend/resume not
-supported by the rpi). The codec driver was bound with the simple-card
-driver running on kernel v6.9-rc7.
----
-Changes in v2:
-- dt-bindings: removed wrong es8311 schema file
-- dt-bindings: added es8311 into existing es8316 schema file
-- Link to v1: https://lore.kernel.org/all/20240510131238.1319333-1-matteomartelli3@gmail.com/
----
-Matteo Martelli (2):
-  ASoC: es8311: dt-bindings: add everest es8311 codec
-  ASoC: codecs: es8311: add everest es8311 codec support
+Subject: Test for 5681e40d297b30f5b513
+Author: syoshida@redhat.com
 
- .../bindings/sound/everest,es8311.yaml        |  52 +
- sound/soc/codecs/Kconfig                      |   4 +
- sound/soc/codecs/Makefile                     |   2 +
- sound/soc/codecs/es8311.c                     | 970 ++++++++++++++++++
- sound/soc/codecs/es8311.h                     | 162 +++
- 5 files changed, 1190 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/everest,es8311.yaml
- create mode 100644 sound/soc/codecs/es8311.c
- create mode 100644 sound/soc/codecs/es8311.h
----
-base-commit: dccb07f2914cdab2ac3a5b6c98406f765acab803
--- 
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 71b1543c83d65af8215d7558d70fc2ecbee77dcf
+
+diff --git a/net/can/j1939/main.c b/net/can/j1939/main.c
+index a6fb89fa6278..7e8a20f2fc42 100644
+--- a/net/can/j1939/main.c
++++ b/net/can/j1939/main.c
+@@ -30,10 +30,6 @@ MODULE_ALIAS("can-proto-" __stringify(CAN_J1939));
+ /* CAN_HDR: #bytes before can_frame data part */
+ #define J1939_CAN_HDR (offsetof(struct can_frame, data))
+ 
+-/* CAN_FTR: #bytes beyond data part */
+-#define J1939_CAN_FTR (sizeof(struct can_frame) - J1939_CAN_HDR - \
+-		 sizeof(((struct can_frame *)0)->data))
+-
+ /* lowest layer */
+ static void j1939_can_recv(struct sk_buff *iskb, void *data)
+ {
+@@ -342,7 +338,7 @@ int j1939_send_one(struct j1939_priv *priv, struct sk_buff *skb)
+ 	memset(cf, 0, J1939_CAN_HDR);
+ 
+ 	/* make it a full can frame again */
+-	skb_put(skb, J1939_CAN_FTR + (8 - dlc));
++	skb_put_zero(skb, 8 - dlc);
+ 
+ 	canid = CAN_EFF_FLAG |
+ 		(skcb->priority << 26) |
+
