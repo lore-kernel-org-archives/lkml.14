@@ -1,73 +1,73 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C229514A4D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC90514A0AE;
 	Thu, 16 May 2024 12:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715862088; cv=none; b=K4P7twYx1NWH2s9vNAYUH4N/ILzRmw+IPAyMUuTqHd+rCJ+1Hh5OtH3XhuiLXxGQP4WK8YTbjUVsg1KTDk0xc6362/ca70nm5fUtVj418UY/+myBBQMEP9bMjk8tREfvyA+dji1mO+ax65xBeLjrMFYAvl+EvkGkPCWJo7ORsYs=
+	t=1715862089; cv=none; b=m4rQi8QUW6loXpOgH53Lb5QpoP0MR3rmK2lvX9C0uJQeEZr/a8MerawgJ/GHjq5QRhTc5W8DtrCQmRXxN+CPL7sfhXQ/nVbvWMx4mFvXsBNSCSQ94VajvtOiQxx5OnQ/P6/VNaJbBUHkfXCdYnNlFRWqvbdGHVSZm2sRpdyAcng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715862088; c=relaxed/simple;
-	bh=/hf734OdcMaFWwiLNNbyneiweb+co3ZZqV4MaSrTQWY=;
+	s=arc-20240116; t=1715862089; c=relaxed/simple;
+	bh=ZdKyu17Ve/jRRUkWXXJ8vUiiLH7UDQcSRq1dYaw96Z4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JOnUK4KmnvoQsve1C6mZqYvHbV0Mf+b/TgbDdKcPwsfo8AM6QN8lQW2JQT2MalaJn5OcF47epo+HLQ8iM6EbDKyTuY+orkSwElGMFV2+tpNJXmN/tKFOhumjCt+qknn1HudEGPvxOko36rdgednvszy1NsxCoBX1Ju/1UHAiiHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=KKJEAYNF; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=m4XzCe6gSN1EQPcXPwHKSdpc8xB3yRKgxfwTYWF4/CjO6hICi1B6bSdAICOY3ioAUNnLcHMYep0iCFkENX0TtfIAKN0Pk+biUYA0TjugC9j1shvPzIMW2+eyrcqf1Bd5rR9/KrOInpBuyWU1K1E1ygLp4u8OOfFZa6WCd4sdoQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=WqNozfdZ; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KKJEAYNF"
-X-UUID: c9d59f52137e11ef8065b7b53f7091ad-20240516
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WqNozfdZ"
+X-UUID: cf38f318137e11efb92737409a0e9459-20240516
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xeweRzJYcKjXRAjEmm1BvsiICj+90Ol864tdWm391kg=;
-	b=KKJEAYNF+jtT5xyY4Px4uJVFP10MV3jHvzVwG8HDlbzFrsGuLbUl2FzwHbgKhjI0yj+Ggn/6YTyLd9cWN5hwlgix2jEN51cpZBUSs8rGqabgGuv/4LR66XVOFcq21WeYGEGNznVMu/56FiVFo6kEZ71vZ48gH+WQ2c4Y6hnLYGo=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=rKXZNO885aRhA7ariCzm4bo04Jh46KH5kL9ABbfNy30=;
+	b=WqNozfdZXeU5AhFJL1TvKBKgJAoh2xrZWF72M3YJNeG7ql0gP/XOxy/ZFPuYCqTzPMgQs5WEIuGnzj0Kqm3ocQlNOcKg4flsyb1j1lPrbq1b0trC4HeAOla2x2XXRuJP89fuYw7WGfg+cAeKWtmgh3kwIfHRkMyVAB1Zr3E852g=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:de78d464-cac6-4d18-8bf9-e1eac9a27e3b,IP:0,U
+X-CID-O-INFO: VERSION:1.1.38,REQID:139686fe-f1a8-42d2-8274-849dcddc61b2,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:82c5f88,CLOUDID:0009f083-4f93-4875-95e7-8c66ea833d57,B
+X-CID-META: VersionHash:82c5f88,CLOUDID:af537087-8d4f-477b-89d2-1e3bdbef96d1,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
 	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c9d59f52137e11ef8065b7b53f7091ad-20240516
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+X-UUID: cf38f318137e11efb92737409a0e9459-20240516
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
 	(envelope-from <yunfei.dong@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 680623611; Thu, 16 May 2024 20:21:14 +0800
+	with ESMTP id 648412703; Thu, 16 May 2024 20:21:23 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 16 May 2024 05:21:13 -0700
+ 15.2.1118.26; Thu, 16 May 2024 20:21:21 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 16 May 2024 20:21:12 +0800
+ 15.2.1118.26 via Frontend Transport; Thu, 16 May 2024 20:21:20 +0800
 From: Yunfei Dong <yunfei.dong@mediatek.com>
 To: Jeffrey Kardatzke <jkardatzke@google.com>,
 	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, Nicolas
- Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
+	<nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, "Nicolas
+ Dufresne" <nicolas.dufresne@collabora.com>, Hans Verkuil
 	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
 	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
 	<benjamin.gaignard@collabora.com>, Sebastian Fricke
-	<sebastian.fricke@collabora.com>, Tomasz Figa <tfiga@chromium.org>, Mauro
- Carvalho Chehab <mchehab@kernel.org>, Marek Szyprowski
+	<sebastian.fricke@collabora.com>, Tomasz Figa <tfiga@chromium.org>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, Marek Szyprowski
 	<m.szyprowski@samsung.com>
-CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>, Hsin-Yi
- Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>, Daniel
- Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei Dong
-	<yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, Brian
- Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
- Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
+CC: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
+	"Hsin-Yi Wang" <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	"Daniel Vetter" <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
+ Dong <yunfei.dong@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+	"Brian Starkey" <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T
+ . J . Mercier" <tjmercier@google.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
 	<christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
 	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v6,04/24] v4l: add documentation for restricted memory flag
-Date: Thu, 16 May 2024 20:20:42 +0800
-Message-ID: <20240516122102.16379-5-yunfei.dong@mediatek.com>
+Subject: [PATCH v6,10/24] media: mediatek: vcodec: send share memory data to optee
+Date: Thu, 16 May 2024 20:20:48 +0800
+Message-ID: <20240516122102.16379-11-yunfei.dong@mediatek.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240516122102.16379-1-yunfei.dong@mediatek.com>
 References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
@@ -79,46 +79,244 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--11.706700-8.000000
+X-TMASE-MatchedRID: WwYPrb4hulWQG6Uyrf0PKFVN8laWo90MTJDl9FKHbrk1LB46LFAAkotf
+	Mtu9FfbrPcGjGTU7TnemGallF1XuaEDn8NFEhJAcFYJUGv4DL3yH7D1bP/FcOhL6MU7t349b3vY
+	rsfFYjWsgY9Nu1Ql6APqPSFsdX1B029aHfVG01jzJ1E39jKDimGaq8BZOZSelzrexXSWzstSgzz
+	s1FNpEXGOFciOhsJ4zgDLqnrRlXrZ8nn9tnqel2MprJP8FBOIair6RaqdDhL4BBfrNQHmUospNP
+	jzqEOnEENpIfgAaa2iepcz+QON4AA==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--11.706700-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: E0BB80BEF6CBA5613FF6C7BB098E6752B42CBE57709F69D101FA53C854F85C602000:8
 X-MTK: N
 
-From: Jeffrey Kardatzke <jkardatzke@google.com>
+Setting msg and vsi information to shared buffer, then call tee invoke
+function to send it to optee-os.
 
-Adds documentation for V4L2_MEMORY_FLAG_RESTRICTED.
-
-Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
 Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 ---
- Documentation/userspace-api/media/v4l/buffer.rst | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../vcodec/decoder/mtk_vcodec_dec_optee.c     | 140 ++++++++++++++++++
+ .../vcodec/decoder/mtk_vcodec_dec_optee.h     |  51 +++++++
+ 2 files changed, 191 insertions(+)
 
-diff --git a/Documentation/userspace-api/media/v4l/buffer.rst b/Documentation/userspace-api/media/v4l/buffer.rst
-index 52bbee81c080..807e43bfed2b 100644
---- a/Documentation/userspace-api/media/v4l/buffer.rst
-+++ b/Documentation/userspace-api/media/v4l/buffer.rst
-@@ -696,7 +696,7 @@ enum v4l2_memory
- 
- .. _memory-flags:
- 
--Memory Consistency Flags
-+Memory Flags
- ------------------------
- 
- .. raw:: latex
-@@ -728,6 +728,14 @@ Memory Consistency Flags
- 	only if the buffer is used for :ref:`memory mapping <mmap>` I/O and the
- 	queue reports the :ref:`V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS
- 	<V4L2-BUF-CAP-SUPPORTS-MMAP-CACHE-HINTS>` capability.
-+    * .. _`V4L2-MEMORY-FLAG-RESTRICTED`:
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
+index 611fb0e56480..f29a8d143fee 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
+@@ -241,3 +241,143 @@ void mtk_vcodec_dec_optee_release(struct mtk_vdec_optee_private *optee_private)
+ 	mutex_unlock(&optee_private->tee_mutex);
+ }
+ EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_release);
 +
-+      - ``V4L2_MEMORY_FLAG_RESTRICTED``
-+      - 0x00000002
-+      - The queued buffers are expected to be in restricted memory. If not, an
-+	error will be returned. This flag can only be used with ``V4L2_MEMORY_DMABUF``.
-+	Typically restricted buffers are allocated using a restricted dma-heap. This flag
-+	can only be specified if the ``V4L2_BUF_CAP_SUPPORTS_RESTRICTED_MEM`` is set.
++static int mtk_vcodec_dec_optee_fill_shm(struct tee_param *command_params,
++					 struct mtk_vdec_optee_shm_memref *shm_memref,
++					 struct mtk_vdec_optee_data_to_shm *data,
++					 int index, struct device *dev)
++{
++	if (!data->msg_buf_size[index] || !data->msg_buf[index]) {
++		pr_err(MTK_DBG_VCODEC_STR "tee invalid buf param: %d.\n", index);
++		return -EINVAL;
++	}
++
++	*command_params = (struct tee_param) {
++		.attr = shm_memref->param_type,
++		.u.memref = {
++			.shm = shm_memref->msg_shm,
++			.size = data->msg_buf_size[index],
++			.shm_offs = 0,
++		},
++	};
++
++	if (!shm_memref->copy_to_ta) {
++		dev_dbg(dev, MTK_DBG_VCODEC_STR "share memref data: 0x%x param_type:%llu.\n",
++			*((unsigned int *)shm_memref->msg_shm_ca_buf), shm_memref->param_type);
++		return 0;
++	}
++
++	memset(shm_memref->msg_shm_ca_buf, 0, shm_memref->msg_shm_size);
++	memcpy(shm_memref->msg_shm_ca_buf, data->msg_buf[index], data->msg_buf_size[index]);
++
++	dev_dbg(dev, MTK_DBG_VCODEC_STR "share memref data => msg id:0x%x 0x%x param_type:%llu.\n",
++		*((unsigned int *)data->msg_buf[index]),
++		*((unsigned int *)shm_memref->msg_shm_ca_buf),
++		shm_memref->param_type);
++
++	return 0;
++}
++
++void mtk_vcodec_dec_optee_set_data(struct mtk_vdec_optee_data_to_shm *data,
++				   void *buf, int buf_size,
++				   enum mtk_vdec_optee_data_index index)
++{
++	data->msg_buf[index] = buf;
++	data->msg_buf_size[index] = buf_size;
++}
++EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_set_data);
++
++int mtk_vcodec_dec_optee_invokd_cmd(struct mtk_vdec_optee_private *optee_private,
++				    enum mtk_vdec_hw_id hw_id,
++				    struct mtk_vdec_optee_data_to_shm *data)
++{
++	struct device *dev = &optee_private->vcodec_dev->plat_dev->dev;
++	struct tee_ioctl_invoke_arg trans_args;
++	struct tee_param command_params[MTK_OPTEE_MAX_TEE_PARAMS];
++	struct mtk_vdec_optee_ca_info *ca_info;
++	struct mtk_vdec_optee_shm_memref *shm_memref;
++	int ret, index;
++
++	if (hw_id == MTK_VDEC_LAT0)
++		ca_info = &optee_private->lat_ca;
++	else
++		ca_info = &optee_private->core_ca;
++
++	memset(&trans_args, 0, sizeof(trans_args));
++	memset(command_params, 0, sizeof(command_params));
++
++	trans_args = (struct tee_ioctl_invoke_arg) {
++		.func = ca_info->vdec_session_func,
++		.session = ca_info->vdec_session_id,
++		.num_params = MTK_OPTEE_MAX_TEE_PARAMS,
++	};
++
++	/* Fill msg command parameters */
++	for (index = 0; index < MTK_OPTEE_MAX_TEE_PARAMS; index++) {
++		shm_memref = &ca_info->shm_memref[index];
++
++		if (shm_memref->param_type == TEE_IOCTL_PARAM_ATTR_TYPE_NONE ||
++		    data->msg_buf_size[index] == 0)
++			continue;
++
++		dev_dbg(dev, MTK_DBG_VCODEC_STR "tee share memory data size: %d -> %d.\n",
++			data->msg_buf_size[index], shm_memref->msg_shm_size);
++
++		if (data->msg_buf_size[index] > shm_memref->msg_shm_size) {
++			dev_err(dev, MTK_DBG_VCODEC_STR "tee buf size big than shm (%d -> %d).\n",
++				data->msg_buf_size[index], shm_memref->msg_shm_size);
++			return -EINVAL;
++		}
++
++		ret = mtk_vcodec_dec_optee_fill_shm(&command_params[index], shm_memref,
++						    data, index, dev);
++		if (ret)
++			return ret;
++	}
++
++	ret = tee_client_invoke_func(optee_private->tee_vdec_ctx, &trans_args, command_params);
++	if (ret < 0 || trans_args.ret != 0) {
++		dev_err(dev, MTK_DBG_VCODEC_STR "tee submit command fail: 0x%x 0x%x.\n",
++			trans_args.ret, ret);
++		return (ret < 0) ? ret : trans_args.ret;
++	}
++
++	/* clear all attrs, set all command param to unused */
++	for (index = 0; index < MTK_OPTEE_MAX_TEE_PARAMS; index++) {
++		data->msg_buf[index] = NULL;
++		data->msg_buf_size[index] = 0;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_invokd_cmd);
++
++void *mtk_vcodec_dec_get_shm_buffer_va(struct mtk_vdec_optee_private *optee_private,
++				       enum mtk_vdec_hw_id hw_id,
++				       enum mtk_vdec_optee_data_index data_index)
++{
++	struct mtk_vdec_optee_ca_info *ca_info;
++
++	if (hw_id == MTK_VDEC_LAT0)
++		ca_info = &optee_private->lat_ca;
++	else
++		ca_info = &optee_private->core_ca;
++
++	return ca_info->shm_memref[data_index].msg_shm_ca_buf;
++}
++EXPORT_SYMBOL_GPL(mtk_vcodec_dec_get_shm_buffer_va);
++
++int mtk_vcodec_dec_get_shm_buffer_size(struct mtk_vdec_optee_private *optee_private,
++				       enum mtk_vdec_hw_id hw_id,
++				       enum mtk_vdec_optee_data_index data_index)
++{
++	struct mtk_vdec_optee_ca_info *ca_info;
++
++	if (hw_id == MTK_VDEC_LAT0)
++		ca_info = &optee_private->lat_ca;
++	else
++		ca_info = &optee_private->core_ca;
++
++	return ca_info->shm_memref[data_index].msg_shm_size;
++}
++EXPORT_SYMBOL_GPL(mtk_vcodec_dec_get_shm_buffer_size);
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
+index 24aa63af9887..c24a567ec877 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
++++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
+@@ -62,6 +62,16 @@ enum mtk_vdec_optee_data_index {
+ 	OPTEE_MAX_INDEX,
+ };
  
- .. raw:: latex
++/**
++ * struct mtk_vdec_optee_data_to_shm - shm data used for TA
++ * @msg_buf:     msg information to TA.
++ * @msg_buf_len: length of msg information.
++ */
++struct mtk_vdec_optee_data_to_shm {
++	void *msg_buf[MTK_OPTEE_MAX_TEE_PARAMS];
++	int msg_buf_size[MTK_OPTEE_MAX_TEE_PARAMS];
++};
++
+ /**
+  * struct mtk_vdec_optee_private - optee private data
+  * @vcodec_dev:     pointer to the mtk_vcodec_dev of the device
+@@ -102,4 +112,45 @@ int mtk_vcodec_dec_optee_private_init(struct mtk_vcodec_dec_dev *vcodec_dev);
+  */
+ void mtk_vcodec_dec_optee_release(struct mtk_vdec_optee_private *optee_private);
  
++/**
++ * mtk_vcodec_dec_optee_set_data - set buffer to share memref.
++ * @vcodec_dev: normal world data used to init optee share memory
++ * @buf: normal world buffer address
++ * @buf_size: buf size
++ * @data_index: indentify each share memory informaiton
++ */
++void mtk_vcodec_dec_optee_set_data(struct mtk_vdec_optee_data_to_shm *data,
++				   void *buf, int buf_size,
++				   enum mtk_vdec_optee_data_index data_index);
++
++/**
++ * mtk_vcodec_dec_optee_invokd_cmd - send share memory data to optee .
++ * @optee_private: optee private context
++ * @hw_id: hardware index
++ * @data: normal world data used to init optee share memory
++ */
++int mtk_vcodec_dec_optee_invokd_cmd(struct mtk_vdec_optee_private *optee_private,
++				    enum mtk_vdec_hw_id hw_id,
++				    struct mtk_vdec_optee_data_to_shm *data);
++
++/**
++ * mtk_vcodec_dec_get_shm_buffer_va - close the communication channels with TA.
++ * @optee_private: optee private context
++ * @hw_id:         hardware index
++ * @@data_index: indentify each share memory informaiton
++ */
++void *mtk_vcodec_dec_get_shm_buffer_va(struct mtk_vdec_optee_private *optee_private,
++				       enum mtk_vdec_hw_id hw_id,
++				       enum mtk_vdec_optee_data_index data_index);
++
++/**
++ * mtk_vcodec_dec_get_shm_buffer_size - close the communication channels with TA.
++ * @optee_private: optee private context
++ * @hw_id:         hardware index
++ * @@data_index: indentify each share memory informaiton
++ */
++int mtk_vcodec_dec_get_shm_buffer_size(struct mtk_vdec_optee_private *optee_private,
++				       enum mtk_vdec_hw_id hw_id,
++				       enum mtk_vdec_optee_data_index data_index);
++
+ #endif /* _MTK_VCODEC_FW_OPTEE_H_ */
 -- 
 2.25.1
 
