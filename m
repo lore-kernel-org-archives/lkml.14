@@ -1,117 +1,112 @@
-Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB871145A0B;
-	Thu, 16 May 2024 11:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.0.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2171459E2;
+	Thu, 16 May 2024 11:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715859113; cv=none; b=o9e7X0oyDvHL+E9Etps9pHC1g4MzNAgy7gF/GWVA+AR5aCt1AdrOE92uoHuMpL085BIrGeTH7iFCKnQ+HSxOarHDcMaEb5N+k0Dzxv2ZzpOT3iAd1MEUXMXgdVBEGeNz2z/X1vItonnzrRIjCqjV73HIMH8XIZ5TMRCPA81ofHU=
+	t=1715859185; cv=none; b=rZtBQObEIrAOav40qN9t4Bkfr82s493RvawncDV1dNc4rWvfCyQPO0dpNT13ipZd7RbHRDbyOeNHy4u3AQN1lJAO50pc+99Z5H98VTNEAj6fkQe3FGaXQNUkk7yBMRgY6BgJwkjy8r5FNOEV9+sYY8h5FTMhfEMGx9M+1qEqmWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715859113; c=relaxed/simple;
-	bh=M+mo9Y0CHfPVQLKoZETkdBfevQ2LMWQyIi/HAshdRT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eMHjfDDarPCkTX9jk+yeXdbA3n+/jIY+SGnngDEYF5kcttHz6zec4Z7G+GqtezWHQD6wsHn8XcPDaGj2VItc1b4xoP3leUycY56KrplGtGzFhyp0aGJGzUJD9bLT8/+Y9v7N26PCrMrrV0lmZkVZ8G/6FHWbQiJf7v8bg0xW+Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=KJHUUIku; arc=none smtp.client-ip=185.250.0.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+	s=arc-20240116; t=1715859185; c=relaxed/simple;
+	bh=vJ1dXf3D1QyoUryoyq2MHmEWi0/eC/n822cq45EZbpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bSSwFru/DTpwcJYMviCSRgWDHD3MTXYncM1QtgWEIxZQhKdlUhJcg94L2uZaGqyne9P3y6Kr0DBnjnwVI36B+UUa+/PgqJfHzJ08icQGs+wx8telgUxHIK9Je5m60ZeJ5nvBkrSxtX1uMvWhCfP0AHSuHXwGEd4F9CVGNBbTgNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=kH78TWg9; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="KJHUUIku"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2AC6D181D4E;
-	Thu, 16 May 2024 14:31:47 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1715859107; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=+UBrzMeNJuIEWIdnDs+QZQBlvEK3sk7AsllHTSelVpQ=;
-	b=KJHUUIkuFggKkNXicjirmIFtaVHZGg5FPC2mBRdnou0pM5QdihSvTlOe8YW0FcZwjVAQPP
-	uv+IsQ+vuUVRY3KiCo6js/RSRadNtAApvmKu0QD5aLQWdYGDZjNs+s3rm+ka5rUbZf0wLU
-	0ZZk+OFqJ7CSlJ53AWX3zoCz+fGfvWfNuuII/8Tx/QZW+Hx/1UWQsQjrFhyWoaQqizBVJp
-	DeYgYrLLh6XG8TGLwNNzMLySYxZA7jb1t5iCdgxgHgRK85Gz+dyMNHEvERNFvOGPQM+uoL
-	kjnLrDkwJj2yXe046L+haIZnwjfHgRR8qm32VCce8f7SKtJXYe97oXDujyf1Ig==
-From: Viacheslav Bocharov <adeep@lexina.in>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: [PATCH v4 4/4] arm64: dts: meson: add dts links to secure-monitor for soc driver in a1, axg, gx, g12
-Date: Thu, 16 May 2024 14:26:51 +0300
-Message-ID: <20240516112849.3803674-8-adeep@lexina.in>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240516112849.3803674-2-adeep@lexina.in>
-References: <20240516112849.3803674-2-adeep@lexina.in>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kH78TWg9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=FtaIYOu5+dNz/ZMQJk5S85cXvl1SZa5DjNYpIAT6Axw=; b=kH78TWg9Y1Ej/jEYMWiGgnfT9u
+	WyeiZ2z2GnV/cDp4x8JK9qV2JTnPaAagZhVm0UuMdRRNWlAIyL8Jr+TH4u+rpxc84MZNaKu0LVBXE
+	s4iHSmQ0L6UwB2YzpmMaHiVqs1RkgEF+gi1V8h4hq74ZaU+NhlkIQjyr8WIUTs0+ug2FdhnpCd0Xo
+	Ft1whsCDOYeIlDnXYUkPTYgFRBydZ/ed4eD/MSDUfKKO0TLkHfUjS6pRpDu6LwgCxZ9iJHj0KerwY
+	0rMIZDkWi8iRwgU+qiHy+aBqEvK8qP90M1835ifzfO0m1RTGoy0nN3djybw+rWr08uheH8NILZ8FQ
+	FEfsz3yg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55876)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1s7ZLp-0004ls-0M;
+	Thu, 16 May 2024 12:32:45 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1s7ZLp-0000Zk-5j; Thu, 16 May 2024 12:32:45 +0100
+Date: Thu, 16 May 2024 12:32:45 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	linux-clk <linux-clk@vger.kernel.org>, lkft-triage@lists.linaro.org,
+	open list <linux-kernel@vger.kernel.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: clkdev: report over-sized strings when creating clkdev entries
+Message-ID: <ZkXu3XNVLhTuRRNt@shell.armlinux.org.uk>
+References: <CA+G9fYuZd_ur56H8fwDSvUywopvn_b7ogprGkjEatQ7EPTLwYQ@mail.gmail.com>
+ <11be44d3-0f32-49c6-b4ae-ba97a9f97763@app.fastmail.com>
+ <820ddc2ec70780ae1ecd3af864dc8bd6.sboyd@kernel.org>
+ <ZkUgqzUn1EmjrPdl@shell.armlinux.org.uk>
+ <CA+G9fYurPNaW=u2E+h+segnXhY3cfWo3BJpfYDJxKRFPY4epsQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYurPNaW=u2E+h+segnXhY3cfWo3BJpfYDJxKRFPY4epsQ@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add links to secure-monitor in soc driver section for A1, AXG, GX, G12
-Amlogic family for use with meson-socinfo-sm driver.
+On Thu, May 16, 2024 at 12:27:20PM +0200, Naresh Kamboju wrote:
+> On Wed, 15 May 2024 at 22:53, Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Tue, May 07, 2024 at 01:26:17PM -0700, Stephen Boyd wrote:
+> > > Quoting Arnd Bergmann (2024-05-07 00:44:15)
+> > > > On Tue, May 7, 2024, at 09:20, Naresh Kamboju wrote:
+> > > > > The WinLink E850-96 board boot failed with Linux next-20240506 but there
+> > > > > is no kernel crash log on the serial [1].
+> > > > >
+> > > > > Anders bisection results pointing to this commit,
+> > > > > # first bad commit:
+> > > > >   [4d11c62ca8d77cb1f79054844b598e0f4e92dabe]
+> > > > >   clkdev: report over-sized strings when creating clkdev entrie
+> > > > >
+> > > > > After reverting the above patch the boot test passed [2].
+> > > > >
+> > > > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > > > >
+> > >
+> > > There are two fixes on the list: [1] and [2]. Perhaps one of those
+> > > resolves this?
+> > >
+> > > [1] https://lore.kernel.org/r/20240507065317.3214186-1-m.szyprowski@samsung.com
+> >
+> > This one has (I think) ended up in the patch system last week, but it's
+> > not clkdev, it's only related. I'm also not Cc'd on its posting, and
+> > it's not posted to any mailing list that I'm a part of. So I've not
+> > been following any discussion on it.
+> >
+> > Digging in to the discussion, I see various attributations, and a final
+> > message reporting an unused variable, and a promise to send v2. So,
+> > I'm guessing that
+> > http://www.home.armlinux.org.uk/developer/patches/viewpatch.php?id=9397/1
+> 
+> I do not have access to this link ^.
 
-Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi         | 1 +
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 1 +
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi         | 1 +
- 4 files changed, 4 insertions(+)
+Sorry, that's my internal link, the external one is:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index c03e207ea6c5..d47f056117fc 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -407,6 +407,7 @@ hwrng: rng@5118 {
- 			sec_AO: ao-secure@5a20 {
- 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
- 				reg = <0x0 0x5a20 0x0 0x140>;
-+				secure-monitor = <&sm>;
- 				amlogic,has-chip-id;
- 			};
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 6d12b760b90f..45791ec6694a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1689,6 +1689,7 @@ mux {
- 			sec_AO: ao-secure@140 {
- 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
- 				reg = <0x0 0x140 0x0 0x140>;
-+				secure-monitor = <&sm>;
- 				amlogic,has-chip-id;
- 			};
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 9d5eab6595d0..a8c1c72543b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -2026,6 +2026,7 @@ cec_AO: cec@100 {
- 			sec_AO: ao-secure@140 {
- 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
- 				reg = <0x0 0x140 0x0 0x140>;
-+				secure-monitor = <&sm>;
- 				amlogic,has-chip-id;
- 			};
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 2673f0dbafe7..656e08b3d872 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -471,6 +471,7 @@ cec_AO: cec@100 {
- 			sec_AO: ao-secure@140 {
- 				compatible = "amlogic,meson-gx-ao-secure", "syscon";
- 				reg = <0x0 0x140 0x0 0x140>;
-+				secure-monitor = <&sm>;
- 				amlogic,has-chip-id;
- 			};
- 
+http://www.armlinux.org.uk/developer/patches/viewpatch.php?id=9397/1
+
 -- 
-2.43.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
