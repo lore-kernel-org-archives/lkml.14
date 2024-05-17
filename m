@@ -1,132 +1,136 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EFA13DDB0;
-	Fri, 17 May 2024 19:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E7713DDB0;
+	Fri, 17 May 2024 19:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715975470; cv=none; b=kNKU4SyNvraNyI9rWAZI3Kx+TDKXdIMHdvbULlX7jCin1oi41bXzLUPijjcCq8ojzgnE9Bxly+4okjkFqfNOvwTrGT9Yb/wdPQT/k4onuJuGc+eUgqchOQQpsoUOQ/An/p1qP7hy31wdu5K6S4AjK2K/WbGmewxqrCQdsylwzOw=
+	t=1715975630; cv=none; b=n59YJpdKu7d0QpimQXVHkKwSEGx+CILxDLDdV0LlBInW+I70HylHfuQk41TshUmltNVmvTyvXy7b8bDZW6ImWLVBH3DVhFSj3swTCAqIzM05llDkQF1N2Q5xpcVOWWpqzi4g0UiplED1Ypxn+wa0S7mkBikdhswlSECqoM81VcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715975470; c=relaxed/simple;
-	bh=rmu3HQK5IMzJ2YBCSpWscJn3wukuD4WnaUXI3S2kyBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XStkM8y0T+31tUbOKNOpar8jbhKrTO5To0ySBdFBus5sth2pc5We/Zpythq+Hx0VoKAvsu81y9LRfaBgX0XXq8mr+NhEnY1iQ7iz20UWkBijQ/qh/ztev9+oSIl+KOtF+fBkRGP1eK0RQJFkyZ1RIff3a3wzNZLMVyGveHoKzi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QSFXmsaV; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715975630; c=relaxed/simple;
+	bh=jyYGQlzaUy8BwNeOWGIhenb9cBWqNz5Bb5cNI/enzAQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PFsDsBeYDm+l6CrXZdMSKJc9xCvdCjZ9zDc2vUviS1XDutiKpJwCtqayCWrb/5yabwM2ilxrdAu41MfQa1rGKtPPW0W5B9M6url3S1ffquhJ+iCE+h2xQjWS+ZfPUxE30gW23JhTus1wdo9fuSF326lGNGTEzvSpALpB0X3tojk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lZlmtNKH; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QSFXmsaV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E8C7BFF803;
-	Fri, 17 May 2024 19:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715975460;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QlP3PK23BxpttVUOU8FsAkJILKdtrU2gUyyrnf+ZS/Y=;
-	b=QSFXmsaVERvB0isdMhxp1MzMnwr57OGNI00otZAQqzk95G1OG2DZXWOPdxN3iFj524NAss
-	PXlV5t5b1+oiUzmJTq+BbMwM3+EsiR+tROgxM/A85pJVIktMj6XBepj31fJYqWcd2fw1fk
-	3T2W9KCMu2URjBIkukDhMOtRrz/LWNCieQpkMlXZ0oTMe2TM7O0sdj/fXSMI7BsAJIC0wc
-	oZE5/se95lpTcSDRUquO51JS4p18WZtgv8+8r60jO44Th8gL275xumbrT1DOz+xuR/4u4Y
-	8+r9w/HXGdBDYX8i9YVRvSNRj+HcAvO23OIxBRg/UFkmLwSxJ+Ef1O/vfn8BnA==
-Date: Fri, 17 May 2024 21:50:55 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Han Xu
- <han.xu@nxp.com>, Vinod Koul <vkoul@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Marek Vasut <marex@denx.de>, linux-mtd@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/5] dt-bindings: mtd: gpmi-nand: Add
- 'fsl,imx8qxp-gpmi-nand' compatible string
-Message-ID: <20240517215055.02622324@xps-13>
-In-Reply-To: <Zkes3n6ZLjIFFQUK@lizhi-Precision-Tower-5810>
-References: <20240517-gpmi_nand-v1-0-73bb8d2cd441@nxp.com>
-	<20240517-gpmi_nand-v1-1-73bb8d2cd441@nxp.com>
-	<20240517203621.72b8b9c7@xps-13>
-	<Zkes3n6ZLjIFFQUK@lizhi-Precision-Tower-5810>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZlmtNKH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715975629; x=1747511629;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jyYGQlzaUy8BwNeOWGIhenb9cBWqNz5Bb5cNI/enzAQ=;
+  b=lZlmtNKHkMN7YT+Kv4LG2P71kOUDICgLtI85Y/erorTJJzHcgrj8Gtx7
+   iyzmGvuIkwP7kqNHvUVMO+CjLMXReQnSfdc32S9yjsdJXBpHikINagEFS
+   RbQzVO5mLwdTAT5bZ6IRxa3sQIocU58DDZwy+pErKidZ3CN/cjhbFD6DD
+   HxM72xZEtUqeCBmBZhu+lsFe5l3XvgEtrmccg1UTxUsyBk4NN3EsYkf9L
+   mtVrjieJ4ZGqu0KcGLtHQ4KinhqnaeVYLR+6O5Xe9uvNAkM3Ck1+FFvFk
+   vG0mMQaPzx7Gb4UrvPWwNKemyv/UzzMYuayWpAvh9DqoNUXW9pE8Y1ec4
+   w==;
+X-CSE-ConnectionGUID: KTC5qtx9SlGdtkTjb6A25w==
+X-CSE-MsgGUID: LRi5uRXuT0+FCjeXuwWWdQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12348646"
+X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
+   d="scan'208";a="12348646"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 12:53:49 -0700
+X-CSE-ConnectionGUID: a2vzALrrSBuLGdm6o6BN0Q==
+X-CSE-MsgGUID: fu+sBTnTR22Wj8TvwYEG/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
+   d="scan'208";a="31915005"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 17 May 2024 12:53:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 1FC47118; Fri, 17 May 2024 22:53:45 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v1 01/10] spi: pxa2xx: Reorganize the SSP type retrieval
+Date: Fri, 17 May 2024 22:47:35 +0300
+Message-ID: <20240517195344.813032-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240517195344.813032-1-andriy.shevchenko@linux.intel.com>
+References: <20240517195344.813032-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Frank,
+The old Intel platforms, such as Intel Braswell, also provide
+the property of SSP type. Reorganize the pxa2xx_spi_init_pdata()
+to take that into account.
 
-Frank.li@nxp.com wrote on Fri, 17 May 2024 15:15:42 -0400:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/spi/spi-pxa2xx.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-> On Fri, May 17, 2024 at 08:36:21PM +0200, Miquel Raynal wrote:
-> > Hi Frank,
-> >=20
-> > Frank.Li@nxp.com wrote on Fri, 17 May 2024 14:09:48 -0400:
-> >  =20
-> > > Add 'fsl,imx8qxp-gpmi-nand' compatible string and clock-names restric=
-tion.
-> > >=20
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/mtd/gpmi-nand.yaml         | 22 ++++++++++++=
-++++++++++
-> > >  1 file changed, 22 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/D=
-ocumentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > > index 021c0da0b072f..f9eb1868ca1f4 100644
-> > > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > > @@ -24,6 +24,7 @@ properties:
-> > >            - fsl,imx6q-gpmi-nand
-> > >            - fsl,imx6sx-gpmi-nand
-> > >            - fsl,imx7d-gpmi-nand
-> > > +          - fsl,imx8qxp-gpmi-nand
-> > >        - items:
-> > >            - enum:
-> > >                - fsl,imx8mm-gpmi-nand
-> > > @@ -151,6 +152,27 @@ allOf:
-> > >              - const: gpmi_io
-> > >              - const: gpmi_bch_apb
-> > > =20
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            enum:
-> > > +              - fsl,imx8qxp-gpmi-nand
-> > > +    then:
-> > > +      properties:
-> > > +        clocks:
-> > > +          items:
-> > > +            - description: SoC gpmi io clock
-> > > +            - description: SoC gpmi apb clock =20
-> >=20
-> > I believe these two clocks are mandatory? =20
->=20
-> minItems default is equal to items numbers, here is 4. So all 4 clock are
-> mandatory.
->=20
-> Anything wrong here?
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index efe76d0c21bb..877fb6d01cd1 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1310,19 +1310,20 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ 	struct pxa2xx_spi_controller *pdata;
+ 	struct device *dev = &pdev->dev;
+ 	struct device *parent = dev->parent;
++	const void *match = device_get_match_data(dev);
+ 	enum pxa_ssp_type type = SSP_UNDEFINED;
+ 	struct ssp_device *ssp = NULL;
+-	const void *match;
+ 	bool is_lpss_priv;
+ 	u32 num_cs = 1;
+ 	int status;
+ 
+-	is_lpss_priv = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpss_priv");
+-
+-	match = device_get_match_data(dev);
+-	if (match)
+-		type = (uintptr_t)match;
+-	else if (is_lpss_priv) {
++	ssp = pxa_ssp_request(pdev->id, pdev->name);
++	if (ssp) {
++		type = ssp->type;
++		pxa_ssp_free(ssp);
++	} else if (match) {
++		type = (enum pxa_ssp_type)(uintptr_t)match;
++	} else {
+ 		u32 value;
+ 
+ 		status = device_property_read_u32(dev, "intel,spi-pxa2xx-type", &value);
+@@ -1330,12 +1331,6 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ 			return ERR_PTR(status);
+ 
+ 		type = (enum pxa_ssp_type)value;
+-	} else {
+-		ssp = pxa_ssp_request(pdev->id, pdev->name);
+-		if (ssp) {
+-			type = ssp->type;
+-			pxa_ssp_free(ssp);
+-		}
+ 	}
+ 
+ 	/* Validate the SSP type correctness */
+@@ -1347,6 +1342,7 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	/* Platforms with iDMA 64-bit */
++	is_lpss_priv = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpss_priv");
+ 	if (is_lpss_priv) {
+ 		pdata->tx_param = parent;
+ 		pdata->rx_param = parent;
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-I'd say that the two "bch" clocks are only used if you decide to
-configure the on-host hardware ECC engine and thus are not needed with
-software corrections, but I'm fine keeping the fourth described in all
-cases if that's simpler.
-
-Also,here the diff just shows that "if we provide a clocks property
-with this compatible, then we need to provide 4 members", I believe the
-"required" property is already filled somewhere with the
-clocks/clock-names properties?
-
-Thanks,
-Miqu=C3=A8l
