@@ -1,198 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EE645007
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EFA13DDB0;
+	Fri, 17 May 2024 19:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715975442; cv=none; b=ekt45jPfJh8wQb6/ErzkWuQYCKi9VpKrNVZHsJD7umBVMBAUhmLFCCmYHOeEnYEljLenaRFXaJwKbCHGLOEFBM9/rnHNcirqvdC8cFyHQCQU+G8x8njxSkfyRyW7xp9zGRx3QboGKQTlct0Ut7MgzdXV9JVHfRq0DxNbMDzPYSc=
+	t=1715975470; cv=none; b=kNKU4SyNvraNyI9rWAZI3Kx+TDKXdIMHdvbULlX7jCin1oi41bXzLUPijjcCq8ojzgnE9Bxly+4okjkFqfNOvwTrGT9Yb/wdPQT/k4onuJuGc+eUgqchOQQpsoUOQ/An/p1qP7hy31wdu5K6S4AjK2K/WbGmewxqrCQdsylwzOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715975442; c=relaxed/simple;
-	bh=XvCCKx8tFEqP1/BD+I3XNnGYNbZ5f6J3SCFAICBZd0w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kNotMG3VL99jlgirGIHQBsAW1mUHk8khvNht1uofiszM1tSEEyd6Brgd1ySl8QtFkUpdtc4M4VBQhi1D9HmDHVrKFmb8ANSpaT3YgQ/i+FF+QHw0LbECjnuvunyRMZDKHnFbDVtQiw5b80oIeGFYjMdZvzdTFTLbTat5uFAxsBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gr9jCqjK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715975470; c=relaxed/simple;
+	bh=rmu3HQK5IMzJ2YBCSpWscJn3wukuD4WnaUXI3S2kyBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XStkM8y0T+31tUbOKNOpar8jbhKrTO5To0ySBdFBus5sth2pc5We/Zpythq+Hx0VoKAvsu81y9LRfaBgX0XXq8mr+NhEnY1iQ7iz20UWkBijQ/qh/ztev9+oSIl+KOtF+fBkRGP1eK0RQJFkyZ1RIff3a3wzNZLMVyGveHoKzi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QSFXmsaV; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gr9jCqjK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715975439;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QSFXmsaV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E8C7BFF803;
+	Fri, 17 May 2024 19:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715975460;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1bxakr/BFBoeB5Z7JNvpJE420hX0IdbRkXcnTw/5V8o=;
-	b=Gr9jCqjKifWM9mMN5HXKXVoXQhvJ144mbxGEjIK2YFLhK9rey1zwcuIbrEb83A8jdsOMhW
-	3FlyYgnigTJtNglHkEKee7LI1UB2XHTAda7516xAw+hF1PB6P/hqhYQKIYi15/xGXI8SI/
-	vuRifMwLFvhatGCUSWzsx2MN2QQZi0U=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-101-y-wtZTZDPSqU9-D7nbH0_A-1; Fri, 17 May 2024 15:50:37 -0400
-X-MC-Unique: y-wtZTZDPSqU9-D7nbH0_A-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-61be452c62bso143785727b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:50:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715975437; x=1716580237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1bxakr/BFBoeB5Z7JNvpJE420hX0IdbRkXcnTw/5V8o=;
-        b=GtD1RDVoaXJHim2AtuGfKZzMm52fnho+cqTo9FseWATxVsKdyWIbOIIJiY+1n4pqqu
-         YrI34n4ZJeaOeOHXaXVw1ah55WdWsG/YMwQMBBGk4OQgx+sp7GAqu7+2OTtQ/BDdzMP+
-         c8l7jyaGSYXMWPU+lxNEO1gAJh3V4yNjhlp8nN1LtPg/DaKzFmPJczyyOFE7iJ5DAYUJ
-         KvjN6ss12hAogOK/TjWNssGc0Ghmuf9eOIHFKzbr64ce1QK0EI0USou4YeRPKMsfXnCo
-         cCfdI2ZDfOZBCT60bb7pHtzC/d3tcVPAXtY3bqgz0+8kopg4/3JjKS7PPxBXtlcW9IFF
-         l1Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgdfOecO8a4ykX7eB+5AOGKZvftsO+mIpo56tvXVSw4MHS2F7MQ/+l9Bc2fEreNC9G39Z5fntW0DO5CUkzRwXeAyYEkNu7+ssg5gZq
-X-Gm-Message-State: AOJu0YxtC9nBv0tPe0VDAI8OCUK0dpkr86mqGd5aVbLAydaKYebHpsZa
-	N90JU9MMvA0VPFxXQOe95uul/Poq8QrAD97CpMVFtUf9omG0BzC8puXsUYA0+D2xWttldXCdQT5
-	n6UlFkwWhsfjgnNJXeEWKGBwyiuhYNWjl5BgDKtpzlEBESkTg0n8VdWmKBpA9fhF/bmNDNcL9et
-	ald8d/WQFWJi9cgre9Nn5SAsbwiFA/dbJOYYNK
-X-Received: by 2002:a05:690c:6401:b0:615:35e1:e512 with SMTP id 00721157ae682-622afdb76b9mr250824487b3.0.1715975437070;
-        Fri, 17 May 2024 12:50:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxZWsOAnMenqeD3LUnJgjbcNzOURcpVyRpjugF02QoP8oAeypq5/rysipjqCLig8Mwkfv+qKUEzIaY6M2epq0=
-X-Received: by 2002:a05:690c:6401:b0:615:35e1:e512 with SMTP id
- 00721157ae682-622afdb76b9mr250824237b3.0.1715975436677; Fri, 17 May 2024
- 12:50:36 -0700 (PDT)
+	bh=QlP3PK23BxpttVUOU8FsAkJILKdtrU2gUyyrnf+ZS/Y=;
+	b=QSFXmsaVERvB0isdMhxp1MzMnwr57OGNI00otZAQqzk95G1OG2DZXWOPdxN3iFj524NAss
+	PXlV5t5b1+oiUzmJTq+BbMwM3+EsiR+tROgxM/A85pJVIktMj6XBepj31fJYqWcd2fw1fk
+	3T2W9KCMu2URjBIkukDhMOtRrz/LWNCieQpkMlXZ0oTMe2TM7O0sdj/fXSMI7BsAJIC0wc
+	oZE5/se95lpTcSDRUquO51JS4p18WZtgv8+8r60jO44Th8gL275xumbrT1DOz+xuR/4u4Y
+	8+r9w/HXGdBDYX8i9YVRvSNRj+HcAvO23OIxBRg/UFkmLwSxJ+Ef1O/vfn8BnA==
+Date: Fri, 17 May 2024 21:50:55 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Han Xu
+ <han.xu@nxp.com>, Vinod Koul <vkoul@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Marek Vasut <marex@denx.de>, linux-mtd@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dmaengine@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] dt-bindings: mtd: gpmi-nand: Add
+ 'fsl,imx8qxp-gpmi-nand' compatible string
+Message-ID: <20240517215055.02622324@xps-13>
+In-Reply-To: <Zkes3n6ZLjIFFQUK@lizhi-Precision-Tower-5810>
+References: <20240517-gpmi_nand-v1-0-73bb8d2cd441@nxp.com>
+	<20240517-gpmi_nand-v1-1-73bb8d2cd441@nxp.com>
+	<20240517203621.72b8b9c7@xps-13>
+	<Zkes3n6ZLjIFFQUK@lizhi-Precision-Tower-5810>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517130118.759301-1-andrey.konovalov@linux.dev>
-In-Reply-To: <20240517130118.759301-1-andrey.konovalov@linux.dev>
-From: Nico Pache <npache@redhat.com>
-Date: Fri, 17 May 2024 13:50:10 -0600
-Message-ID: <CAA1CXcAdG=OFkBzjPqr7M_kC7VZUdj-+vH_2W4UidfbQwfQbeA@mail.gmail.com>
-Subject: Re: [PATCH] kasan, fortify: properly rename memintrinsics
-To: andrey.konovalov@linux.dev
-Cc: Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	Erhard Furtner <erhard_f@mailbox.org>, Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, May 17, 2024 at 7:02=E2=80=AFAM <andrey.konovalov@linux.dev> wrote:
->
-> From: Andrey Konovalov <andreyknvl@gmail.com>
->
-> After commit 69d4c0d32186 ("entry, kasan, x86: Disallow overriding mem*()
-> functions") and the follow-up fixes, with CONFIG_FORTIFY_SOURCE enabled,
-> even though the compiler instruments meminstrinsics by generating calls
-> to __asan/__hwasan_ prefixed functions, FORTIFY_SOURCE still uses
-> uninstrumented memset/memmove/memcpy as the underlying functions.
->
-> As a result, KASAN cannot detect bad accesses in memset/memmove/memcpy.
-> This also makes KASAN tests corrupt kernel memory and cause crashes.
->
-> To fix this, use __asan_/__hwasan_memset/memmove/memcpy as the underlying
-> functions whenever appropriate. Do this only for the instrumented code
-> (as indicated by __SANITIZE_ADDRESS__).
->
-> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-> Reported-by: Nico Pache <npache@redhat.com>
-> Closes: https://lore.kernel.org/all/20240501144156.17e65021@outsider.home=
-/
-> Fixes: 69d4c0d32186 ("entry, kasan, x86: Disallow overriding mem*() funct=
-ions")
-> Fixes: 51287dcb00cc ("kasan: emit different calls for instrumentable memi=
-ntrinsics")
-> Fixes: 36be5cba99f6 ("kasan: treat meminstrinsic as builtins in uninstrum=
-ented files")
-> Signed-off-by: Andrey Konovalov <andreyknvl@gmail.com>
+Hi Frank,
 
-Thank you for fixing this !! The test no longer panics :)
+Frank.li@nxp.com wrote on Fri, 17 May 2024 15:15:42 -0400:
 
-Now that the test progresses I also see rcu_uaf failing.
-    # rcu_uaf: EXPECTATION FAILED at mm/kasan/kasan_test.c:870
-    KASAN failure expected in "call_rcu(&global_rcu_ptr->rcu,
-rcu_uaf_reclaim); rcu_barrier()", but none occurred
-    not ok 31 rcu_uaf
- I can open a new thread for that if you'd like.
+> On Fri, May 17, 2024 at 08:36:21PM +0200, Miquel Raynal wrote:
+> > Hi Frank,
+> >=20
+> > Frank.Li@nxp.com wrote on Fri, 17 May 2024 14:09:48 -0400:
+> >  =20
+> > > Add 'fsl,imx8qxp-gpmi-nand' compatible string and clock-names restric=
+tion.
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/mtd/gpmi-nand.yaml         | 22 ++++++++++++=
+++++++++++
+> > >  1 file changed, 22 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/D=
+ocumentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > > index 021c0da0b072f..f9eb1868ca1f4 100644
+> > > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > > @@ -24,6 +24,7 @@ properties:
+> > >            - fsl,imx6q-gpmi-nand
+> > >            - fsl,imx6sx-gpmi-nand
+> > >            - fsl,imx7d-gpmi-nand
+> > > +          - fsl,imx8qxp-gpmi-nand
+> > >        - items:
+> > >            - enum:
+> > >                - fsl,imx8mm-gpmi-nand
+> > > @@ -151,6 +152,27 @@ allOf:
+> > >              - const: gpmi_io
+> > >              - const: gpmi_bch_apb
+> > > =20
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - fsl,imx8qxp-gpmi-nand
+> > > +    then:
+> > > +      properties:
+> > > +        clocks:
+> > > +          items:
+> > > +            - description: SoC gpmi io clock
+> > > +            - description: SoC gpmi apb clock =20
+> >=20
+> > I believe these two clocks are mandatory? =20
+>=20
+> minItems default is equal to items numbers, here is 4. So all 4 clock are
+> mandatory.
+>=20
+> Anything wrong here?
 
-Tested-by: Nico Pache <npache@redhat.com>
-Acked-by: Nico Pache <npache@redhat.com>
+I'd say that the two "bch" clocks are only used if you decide to
+configure the on-host hardware ECC engine and thus are not needed with
+software corrections, but I'm fine keeping the fourth described in all
+cases if that's simpler.
 
-> ---
->  include/linux/fortify-string.h | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-strin=
-g.h
-> index 85fc0e6f0f7f..bac010cfc42f 100644
-> --- a/include/linux/fortify-string.h
-> +++ b/include/linux/fortify-string.h
-> @@ -75,17 +75,30 @@ void __write_overflow_field(size_t avail, size_t want=
-ed) __compiletime_warning("
->         __ret;                                                  \
->  })
->
-> -#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
-> +#if defined(__SANITIZE_ADDRESS__)
-> +
-> +#if !defined(CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX) && !defined(CONFIG=
-_GENERIC_ENTRY)
-> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) _=
-_RENAME(memset);
-> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_=
-t size) __RENAME(memmove);
-> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t=
- size) __RENAME(memcpy);
-> +#elif defined(CONFIG_KASAN_GENERIC)
-> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) _=
-_RENAME(__asan_memset);
-> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_=
-t size) __RENAME(__asan_memmove);
-> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t=
- size) __RENAME(__asan_memcpy);
-> +#else /* CONFIG_KASAN_SW_TAGS */
-> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) _=
-_RENAME(__hwasan_memset);
-> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_=
-t size) __RENAME(__hwasan_memmove);
-> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t=
- size) __RENAME(__hwasan_memcpy);
-> +#endif
-> +
->  extern void *__underlying_memchr(const void *p, int c, __kernel_size_t s=
-ize) __RENAME(memchr);
->  extern int __underlying_memcmp(const void *p, const void *q, __kernel_si=
-ze_t size) __RENAME(memcmp);
-> -extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t=
- size) __RENAME(memcpy);
-> -extern void *__underlying_memmove(void *p, const void *q, __kernel_size_=
-t size) __RENAME(memmove);
-> -extern void *__underlying_memset(void *p, int c, __kernel_size_t size) _=
-_RENAME(memset);
->  extern char *__underlying_strcat(char *p, const char *q) __RENAME(strcat=
-);
->  extern char *__underlying_strcpy(char *p, const char *q) __RENAME(strcpy=
-);
->  extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strle=
-n);
->  extern char *__underlying_strncat(char *p, const char *q, __kernel_size_=
-t count) __RENAME(strncat);
->  extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_=
-t size) __RENAME(strncpy);
-> +
->  #else
->
->  #if defined(__SANITIZE_MEMORY__)
-> @@ -110,6 +123,7 @@ extern char *__underlying_strncpy(char *p, const char=
- *q, __kernel_size_t size)
->  #define __underlying_strlen    __builtin_strlen
->  #define __underlying_strncat   __builtin_strncat
->  #define __underlying_strncpy   __builtin_strncpy
-> +
->  #endif
->
->  /**
-> --
-> 2.25.1
->
+Also,here the diff just shows that "if we provide a clocks property
+with this compatible, then we need to provide 4 members", I believe the
+"required" property is already filled somewhere with the
+clocks/clock-names properties?
 
+Thanks,
+Miqu=C3=A8l
