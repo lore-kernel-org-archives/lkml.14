@@ -1,87 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25ED52F8C;
-	Fri, 17 May 2024 11:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A7951C59;
+	Fri, 17 May 2024 11:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715947147; cv=none; b=EryS0zx2cx6+SOTzKTYRSTRgIpx+zN/k2CV1LiRPWyPpWctrnZGRwpyEcStptjO2wiIJz7PqvUhPM4Wk6hLSQW7UdxbrLq8FswrQ6OtE+0rrptzFh3+6SNeIo/CIXEJek7exApn0KML2Kf/31mWnn/DjEMekrUQ7+jTDP8Gp3hg=
+	t=1715947149; cv=none; b=SIGPPsx1iE5/j/pgUAPn7u+9BWOR/rsavYwgmsW0x+SSJ1WlDSwFsG8QxlOI/zF64zXDXhhXf3B1YNZXW8ewpAX1aeGcxNwakc+pa8h9V4/mCpwrm7zex6IgnvKJ3aziJ7qzxUksg+bj9EyD9ZcCuNNiLGclNh1C4J7ifXgT5KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715947147; c=relaxed/simple;
-	bh=WTMIO1sZTaI9e4Ow1fRZJ6VLgD3v/PaYq1VPhvKbfH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JI8w6FqEo0I4UxCDw5ZiKRz69VrVu7lLwoxbuFpI55TdyHDc7Et2MFy0DURK8OW00+C2TfJ/jkoYwMV1U3vTmvTJond3KhNhYYoZqtJoZXcu2q9hMTWvNRRTMu6fJOfYVhUEh4jJUfZaLSdALbxBYbfM1jAJyUYvtkDJML8iaCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yQcm0CWq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yQcm0CWq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FB9C2BD10;
-	Fri, 17 May 2024 11:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715947147;
-	bh=WTMIO1sZTaI9e4Ow1fRZJ6VLgD3v/PaYq1VPhvKbfH4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=yQcm0CWqou2H32q2mqnFAfBvjw9aBAfmGehEdQALLO2y44ga7Hr7k8r2IU42i4n5c
-	 Ga6qMK3sAi826Wtomfo0Hbr6YeJXlhoEfBVSdM0j8tSJ6KIZXoityNzCOrI9LkHBBh
-	 b/6sSWbvEiZzKGzrjUBOdRwcjd+HzVPoEbwVwFLU=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	torvalds@linux-foundation.org,
-	stable@vger.kernel.org
-Cc: lwn@lwn.net,
-	jslaby@suse.cz,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.9.1
-Date: Fri, 17 May 2024 13:58:57 +0200
-Message-ID: <2024051758-parchment-unadorned-15ed@gregkh>
-X-Mailer: git-send-email 2.45.1
+	s=arc-20240116; t=1715947149; c=relaxed/simple;
+	bh=fe43fJSj3i9NMSzNqNRStwhPd10HNnKc47sfeXR3k8E=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DpVmuSfsUkMbxrcUT726hiMV7fAkX1cghOjOK+l/0Y7RCSY/eiLWyU8Xcm6XlJht8b58BxqVWZ1DkWFQHgLAo7t3i7e5OKYcf67LivfSE/2uQW9te3CUUuC/iZ+AceflJ6ot1B+xiwkPJk76tT4dt2lj3axEZhiTbb4S9oQgSd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 17 May
+ 2024 13:43:52 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.039; Fri, 17 May 2024 13:43:52 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: Juergen Gross <jgross@suse.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+CC: "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Ernberg
+	<john.ernberg@actia.se>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH] USB: xen-hcd: Traverse host/ when CONFIG_USB_XEN_HCD is
+ selected
+Thread-Topic: [PATCH] USB: xen-hcd: Traverse host/ when CONFIG_USB_XEN_HCD is
+ selected
+Thread-Index: AQHaqE99M70NH7RzN0K31Fykj7Mi3Q==
+Date: Fri, 17 May 2024 11:43:52 +0000
+Message-ID: <20240517114345.1190755-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.45.0
+x-esetresult: clean, is OK
+x-esetid: 37303A29059A2F57607765
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 6.9.1 kernel.
+If no other USB HCDs are selected when compiling a small pure virutal
+machine, the Xen HCD driver cannot be built.
 
-All users of the 6.9 kernel series must upgrade.
+Fix it by traversing down host/ if CONFIG_USB_XEN_HCD is selected.
 
-The updated 6.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.9.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+Fixes: 494ed3997d75 ("usb: Introduce Xen pvUSB frontend (xen hcd)")
+Cc: stable@vger.kernel.org # v5.17+
+Signed-off-by: John Ernberg <john.ernberg@actia.se>
+---
+ drivers/usb/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                         |    2 
- drivers/dma/idxd/cdev.c                          |   77 +++++++++++++++++++++++
- drivers/dma/idxd/idxd.h                          |    3 
- drivers/dma/idxd/init.c                          |    4 +
- drivers/dma/idxd/registers.h                     |    3 
- drivers/dma/idxd/sysfs.c                         |   27 +++++++-
- drivers/net/wireless/mediatek/mt76/mt7915/main.c |    4 +
- drivers/vfio/pci/vfio_pci.c                      |    2 
- include/linux/pci_ids.h                          |    2 
- security/keys/key.c                              |    3 
- 10 files changed, 120 insertions(+), 7 deletions(-)
-
-Arjan van de Ven (2):
-      VFIO: Add the SPR_DSA and SPR_IAX devices to the denylist
-      dmaengine: idxd: add a new security check to deal with a hardware erratum
-
-Ben Greear (1):
-      wifi: mt76: mt7915: add missing chanctx ops
-
-Greg Kroah-Hartman (1):
-      Linux 6.9.1
-
-Nikhil Rao (1):
-      dmaengine: idxd: add a write() method for applications to submit work
-
-Silvio Gissi (1):
-      keys: Fix overwrite of key expiration on instantiation
-
+diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+index 3a9a0dd4be70..949eca0adebe 100644
+--- a/drivers/usb/Makefile
++++ b/drivers/usb/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_USB_R8A66597_HCD)	+=3D host/
+ obj-$(CONFIG_USB_FSL_USB2)	+=3D host/
+ obj-$(CONFIG_USB_FOTG210_HCD)	+=3D host/
+ obj-$(CONFIG_USB_MAX3421_HCD)	+=3D host/
++obj-$(CONFIG_USB_XEN_HCD)	+=3D host/
+=20
+ obj-$(CONFIG_USB_C67X00_HCD)	+=3D c67x00/
+=20
+--=20
+2.45.0
