@@ -1,110 +1,136 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A4E14A8D;
-	Fri, 17 May 2024 06:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE57010A1B
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715929126; cv=none; b=VLqn52wxqx/2rWfxCVjPvSWNA0ws7zGM2WsqVc62CcuYmYZUesucRBMVBVX61IKsLLW/+32ztB2ZVuceL3D8dSUCM8wGm21pwsCt4zniahz+C+ktxmbw8vY5HkCXRUE4gXIR26GChD+wd+b8XZ3qkXJRA+5uoNV87+sLhfIYf6k=
+	t=1715929320; cv=none; b=HOJ58Xgbmm4cN1tD7x0I9St59VjBp8CXKXaCa++2FPc4vMFr4tC82mtDM77KSfOi4oA4gsi6nv+4HoH8b7p9gguDghNf9oQFfuO6a/sRepsK47wpCPYKL0jCuUBvKoTJfQ4D/86WGPiFpxwpT3xs1j/oBy6khuYZbTUcVhuIhf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715929126; c=relaxed/simple;
-	bh=vEIiADZtH0GuW0hNucCCzsAmTERzBSekKmZgJqaVvNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nph3ncLbh8XeRstBi9VATrS+5C6qrz7DDAS/gXA5YvEhxHo55o0w9Q9grVnw1sLFLt+1j09RErRrWIViR6xa67/Vn5OWwSilpSSO/kBaqWLewrePWkLhqstJrdRW46dhlyTomJkYHq2YVGzVY4RmVs6IT5KHio+QB6HXcAvyhWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f8KVFHeN; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f8KVFHeN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5366060016;
-	Fri, 17 May 2024 06:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715929116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8+WtpG+JowVcU8bh3DYjQQ6K0ukhxfEGwefCmJzc8YA=;
-	b=f8KVFHeNh2VvHZZ6hzRy0KYo2z1+B2wGwXn7zUG349l2A4tKLI0ZDhpexlh3IUzFtK/cnH
-	G4vfuEDwNMPNJmSzzVKJTqJkec3UDkhb7Ri4LEuTyTyQUy6andM+Hdr7ASxso739ADCNPf
-	Ko2E4NMePCqgMC1A7+eqx3f8QeIF3NA3fUwPrU+0d2wbbE4Xl5hJJ2PXaQO6+G79OZlB49
-	Vj8Yl1i5JyjqZXeJ6PFT0cGNZNX4RmNQb3gU6C55uHf8H9w8r1JsdI8Hp2gyLKvg/YudPM
-	6YxX7AHARvGW/6A5RRP+N28w/ZyAq10mTdiG1jEHqlveht7usBO2Q8V8FqmNjQ==
-Date: Fri, 17 May 2024 08:58:32 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Yashin <dmt.yashin@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, Jianqun Xu
- <jay.xu@rock-chips.com>, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] pinctrl: rockchip: add rk3308b SoC support
-Message-ID: <20240517085832.365ac878@booty>
-In-Reply-To: <81aa0e4e-a3c7-41d1-8cd2-4d060730b37a@gmail.com>
-References: <20240515121634.23945-1-dmt.yashin@gmail.com>
-	<20240515121634.23945-4-dmt.yashin@gmail.com>
-	<20240515182954.03c4a475@booty>
-	<81aa0e4e-a3c7-41d1-8cd2-4d060730b37a@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715929320; c=relaxed/simple;
+	bh=kAYjYYsJ6/944CRMmlWAvYHZSEQ2PMTd1Ly9WBMLWW8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O+5pugDCRlFcLg4ahLE+cKoV9YCYiIQEc44SPFR649gbOpi7LKQdNNp437ENm3TshEHffEmXi2pnk3Uv10XUhkmjhd6/bbgNhuTpTKDUqi661r1m+lIvQ+epfoS5ePki6stUQt4l2/n6R2GmLm9KXXWXMISx2j3+irS9T5PbYLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB8731424;
+	Fri, 17 May 2024 00:02:20 -0700 (PDT)
+Received: from [10.163.37.42] (unknown [10.163.37.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 833643F7A6;
+	Fri, 17 May 2024 00:01:53 -0700 (PDT)
+Message-ID: <ea14ad49-b094-451a-8e4f-560010868930@arm.com>
+Date: Fri, 17 May 2024 12:32:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/huge_memory: don't unpoison huge_zero_folio
+To: Miaohe Lin <linmiaohe@huawei.com>, akpm@linux-foundation.org
+Cc: shy828301@gmail.com, nao.horiguchi@gmail.com, xuyu@linux.alibaba.com,
+ david@redhat.com, osalvador@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240516122608.22610-1-linmiaohe@huawei.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240516122608.22610-1-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hello Dmitry,
-
-On Thu, 16 May 2024 17:06:46 +0500
-Dmitry Yashin <dmt.yashin@gmail.com> wrote:
-
-> Hi Luca,
+On 5/16/24 17:56, Miaohe Lin wrote:
+> When I did memory failure tests recently, below panic occurs:
 > 
-> On 15.05.24 21:29, Luca Ceresoli wrote:
-> > I'm skeptical about this being bound to a new DT compatible. As far as I
-> > know the RK3308 and RK3308B are mostly equivalent, so it looks as the
-> > pinctrl implementation could be detected at runtime. This would let
-> > products to be built with either chip version and work on any without
-> > any DT change.  
+>  kernel BUG at include/linux/mm.h:1135!
+>  invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+>  CPU: 9 PID: 137 Comm: kswapd1 Not tainted 6.9.0-rc4-00491-gd5ce28f156fe-dirty #14
+>  RIP: 0010:shrink_huge_zero_page_scan+0x168/0x1a0
+>  RSP: 0018:ffff9933c6c57bd0 EFLAGS: 00000246
+>  RAX: 000000000000003e RBX: 0000000000000000 RCX: ffff88f61fc5c9c8
+>  RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff88f61fc5c9c0
+>  RBP: ffffcd7c446b0000 R08: ffffffff9a9405f0 R09: 0000000000005492
+>  R10: 00000000000030ea R11: ffffffff9a9405f0 R12: 0000000000000000
+>  R13: 0000000000000000 R14: 0000000000000000 R15: ffff88e703c4ac00
+>  FS:  0000000000000000(0000) GS:ffff88f61fc40000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 000055f4da6e9878 CR3: 0000000c71048000 CR4: 00000000000006f0
+>  Call Trace:
+>   <TASK>
+>   do_shrink_slab+0x14f/0x6a0
+>   shrink_slab+0xca/0x8c0
+>   shrink_node+0x2d0/0x7d0
+>   balance_pgdat+0x33a/0x720
+>   kswapd+0x1f3/0x410
+>   kthread+0xd5/0x100
+>   ret_from_fork+0x2f/0x50
+>   ret_from_fork_asm+0x1a/0x30
+>   </TASK>
+>  Modules linked in: mce_inject hwpoison_inject
+>  ---[ end trace 0000000000000000 ]---
+>  RIP: 0010:shrink_huge_zero_page_scan+0x168/0x1a0
+>  RSP: 0018:ffff9933c6c57bd0 EFLAGS: 00000246
+>  RAX: 000000000000003e RBX: 0000000000000000 RCX: ffff88f61fc5c9c8
+>  RDX: 0000000000000000 RSI: 0000000000000027 RDI: ffff88f61fc5c9c0
+>  RBP: ffffcd7c446b0000 R08: ffffffff9a9405f0 R09: 0000000000005492
+>  R10: 00000000000030ea R11: ffffffff9a9405f0 R12: 0000000000000000
+>  R13: 0000000000000000 R14: 0000000000000000 R15: ffff88e703c4ac00
+>  FS:  0000000000000000(0000) GS:ffff88f61fc40000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 000055f4da6e9878 CR3: 0000000c71048000 CR4: 00000000000006f0
 > 
+> The root cause is that HWPoison flag will be set for huge_zero_folio
+> without increasing the folio refcnt. But then unpoison_memory() will
+> decrease the folio refcnt unexpectly as it appears like a successfully
+
+Small nit, a typo in here   ^^^^^ s/unexpectly/unexpectedly/.
+
+> hwpoisoned folio leading to VM_BUG_ON_PAGE(page_ref_count(page) == 0)
+> when releasing huge_zero_folio.
 > 
-> Thanks for your feedback.
+> Skip unpoisoning huge_zero_folio in unpoison_memory() to fix this issue.
+> We're not prepared to unpoison huge_zero_folio yet.
 > 
-> Indeed, these SoC's have a lot in common, but as I can see the rk3308b
-> has more blocks, like extra PWM's (rk3308 datasheet 1.5 [0] shows only
-> 1x PWM 4ch, when rk3308b and rk3308b-s have 3x PWM 4ch), 1-wire and
-> CAN controller (mentioned in the TRM, but dropped from rk3308b
-> datasheet for some reason).
+> Fixes: 478d134e9506 ("mm/huge_memory: do not overkill when splitting huge_zero_page")
+
+The target commit looks right.
+
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Yang Shi <shy828301@gmail.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Cc: <stable@vger.kernel.org>
+> ---
+> v3:
+>  Move up is_huge_zero_folio() check and change return value to
+> -EOPNOTSUPP per Oscar.
+>  Collect Reviewed-by and Acked-by tag. Thanks.
+> v2:
+>  Change to simply check for the huge zero page per David. Thanks.
+> ---
+>  mm/memory-failure.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> So, in my view, it really makes sense to add rk3308b.dtsi, where extra
-> PWM's, pinctrl compatible and its pin functions can be moved. And if
-> its not worth it, then I will try to adapt the entire series to runtime
-> config based on cpuid like you suggested.
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 16ada4fb02b7..a9fe9eda593f 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -2546,6 +2546,13 @@ int unpoison_memory(unsigned long pfn)
+>  		goto unlock_mutex;
+>  	}
+>  
+> +	if (is_huge_zero_folio(folio)) {
+> +		unpoison_pr_info("Unpoison: huge zero page is not supported %#lx\n",
+> +				 pfn, &unpoison_rs);
+> +		ret = -EOPNOTSUPP;
+> +		goto unlock_mutex;
+> +	}
+> +
+>  	if (!PageHWPoison(p)) {
+>  		unpoison_pr_info("Unpoison: Page was already unpoisoned %#lx\n",
+>  				 pfn, &unpoison_rs);
 
-Having a rk3308b.dtsi would probably make sense, yes, as there are
-several differences as you described. However for the pinctrl it seems
-probably not necessary.
+This patch applies on latest linux-next but not on latest mainline as
+is_huge_zero_folio() is absent there.
 
-I've seen actual products being manufactured with two different RK3308
-variants in different lots of production, but with the same DT that has
-rockchip,rk3308-pinctrl in it. Those would need a _selective_ DT
-upgrade in order to benefit from your changes.
-
-And even if a product had always used the B variant, it would need DT
-upgrade when upgrading to a kernel with your changes. Otherwise with
-patch 1/3 of this series the pictrl driver would lose many routes after
-upgrading the kernel (but not the DT): can this lead to
-previously-working devices to stop working? I think this is a
-fundamental question to reply.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
