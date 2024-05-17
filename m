@@ -1,116 +1,108 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CB041C68
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71FB41213;
+	Fri, 17 May 2024 12:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715948706; cv=none; b=Du5iZRE6PWCiLXYMnM+JoYwV/yCfVg2a/zjwQYKylyY5PHj8H68QwOvK3vQpd/1G/vQuo+pLzmFudYpqnYiaMJ0v4ZJweGaDsi9mp3193VEhkoy5fVox5409cnZIHefJ8dE4AYZgjfh3ykfqMp+dMZtqFGIE7o3g6qwRS4sRmcc=
+	t=1715948766; cv=none; b=dxYocppJD+fySxn7DUoq6XOsLvbt6rPQYj2+PmBv5T1/IFxlDHQPfSciYsfTmRZj+L+Ihz75gPDE1+3OUz0liDpu5uYjvSR3Al3QexlVKMy7hpntzTEXLXj5cSmftULottBsFwtHQWGfwPAfTkGPi+Qv/dldHTlU4VIwAyXEWUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715948706; c=relaxed/simple;
-	bh=auN0caH7D6wVUHe+HwaFcQrcS3XrqjErEzQRs7BVtbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BPP3+pumlzGRwZiBaankoYgjsKjBiTnPnHNDfwqkPjiBFbU4gia/eKB8wb9D8pk0nowioT2TBUqJhOBkUjeD3vpsPA109jtVmHyb1+1qyynehETztPzHEVZq1v6md5bpAtEepckms3KWpZfikhjp1OcBf6qllz0RWH3IWlFGJyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=XuucxtbC; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1715948766; c=relaxed/simple;
+	bh=Vm4qAjJoPCZ694EsWANLuzZaef/XuiD/Du7DXEqZQ/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UR+JCWRbiWt4oCLg1fZmdudHtZgbSUeynk8HjqNSPJNdjh6csMk//V8853y9RoYSvZKj76jOfiEW74JxFP3jwNn30YVq4HYxnOfNCwrCY9vXiEmJDEOPgRpIahu1ByLO0Q/JJ8sA2+rQ7K6GytDHOBtJdI9Lbo/HXLQUhfoOXQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVbEAI6r; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XuucxtbC"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44HBl9kK019146;
-	Fri, 17 May 2024 06:58:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=n/U1T0up33AqvYftHIrXa/+1I2+X8aJw6y0lb6mwEz8=; b=
-	XuucxtbCbY6q1DpvOo9lNtqkpW3+YL7G+hrwyQd9MkMEFUuNUpTckXchnfou9yzR
-	gGgcr0vaRLnrCmYpyxOr1OtUO5ifTv1DZPU+V1SZGff4FpYcasN1nUtwBjyNuBAi
-	Aa/szo2dCdMbs7QED4GDEUm92uc36YmA273E9ZNO8vd1aSTFW2Hp6bFFrioBDB2W
-	Q0qPf17M7IwMckfmfAbkHPp6o03G88f2xxsplNpz7EtV0hKrtuHo5frdnzKoVkL9
-	d6bb6yQMFGkxnW180M7KYcxEkTVIWd6Mfz03KZFIM6MPv2KDM5Cmlb7V/YWHI9xY
-	TY8BkSt9TxnQErw/qKC5UQ==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3y3qveve4b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 06:58:33 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
- 2024 12:58:30 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Fri, 17 May 2024 12:58:30 +0100
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id CE563820244;
-	Fri, 17 May 2024 11:58:30 +0000 (UTC)
-Message-ID: <ffa73a17-ac32-493f-b0a4-32d3ac4c9027@opensource.cirrus.com>
-Date: Fri, 17 May 2024 12:58:30 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVbEAI6r"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2db17e8767cso7872371fa.3;
+        Fri, 17 May 2024 05:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715948763; x=1716553563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BTfbpSzPiGIEgV303dsq51yFhN3J0xYTsTq4AVxFCHI=;
+        b=WVbEAI6rzrh4ds5H8zgmNvtleB8IBTWMKaj7T/22vdIzcsZbDvx+571ima7G6CNWoH
+         5+fURVkIFEZsky6DHdHioWVUIkPxBIhwPETgbNW93E40Gc7hAl5DxnjXICd2RSz/JM1g
+         MjApSNf1DGtSxRyEN/vuaqcnl1kotw+r8p/dt1R6iOkXVJMmBpMSp67wzymXAJbfm/Fb
+         liTnJ3aRYGDR3psq/HKsKYszpq0lpo/cxrYgGOwOA2ATfxRHILkSKQuCnb+6B/xXCjRR
+         HbGwODrEdholilCY1P2zjf8HPK06DtHyfrHftNpCPO6YH2kXxjCvOpj8DSkxouJTSFNx
+         eEdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715948763; x=1716553563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BTfbpSzPiGIEgV303dsq51yFhN3J0xYTsTq4AVxFCHI=;
+        b=akrg1YUxq5AJfZqVJq8A2HuXyNRwfta+qBzS+uyP+Q1pTkTLlhZsBxHWsJhzF5u+pK
+         Ej8l9TPAqnC3wpe0Ae76ejYokiY+pCebgpPxOe0NMip0k5vVReggjz4uji7ufkDSs+Ky
+         fkYtrwg3BpBZQ10DOuPAhCYXNeJ+WP4bTdaQnh6mtXZgg2XI+FspA11JwXgl7ceIGuqo
+         +HS0V+6OMW7iZFHhXxKh3mhBFMx90bAPMELicISCq2Z4duK4HBI+25p61Tm0BaglBFbE
+         R+ly4j5hXOBNvqZ6edYtdvDzTtOfYkKV0zNn5ZU0uyeIjb2O+WimyR7E4KUUvczc1GOV
+         xnvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeAFqvlpTycmR7UgqJmjkQqq+zIxEDILP4PgnCQRi91/XxzgLf6QYDhJHqJbgk+kMRKTRJz13O4o0ONAV9mnd+P048qZ2NLc4+DHQxVxKsk7WOG73XXFgWrDMhxSbcI95UAmLXO32yzg==
+X-Gm-Message-State: AOJu0YzlSiFVzWxHy4UvLSY31kdMfT0IP0abGB6OXcT0azPIGDOG+C0w
+	fVarSE9FuUIJZbQOTXp6H2zQyF7/vlUIQpWGqs2vUw+ASqhh6UOU
+X-Google-Smtp-Source: AGHT+IESDynaSNz+w7Kg/DLSAjwanT7vil/v6O+GgjNjyOp7XS/RC3dSkeivfIryg2jvuKTuAI0Z9A==
+X-Received: by 2002:a2e:7805:0:b0:2e1:bdfd:ce70 with SMTP id 38308e7fff4ca-2e51fd2dd0amr164028651fa.6.1715948762536;
+        Fri, 17 May 2024 05:26:02 -0700 (PDT)
+Received: from latitude-fedora.letovo.school ([194.247.191.114])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e4d15156d3sm26598971fa.99.2024.05.17.05.26.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 05:26:02 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Alexey Charkov <alchark@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: add rfkill node for M.2 Key E Bluetooth on Rock 5B
+Date: Fri, 17 May 2024 16:25:08 +0400
+Message-ID: <20240517122509.4626-1-alchark@gmail.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/11] regmap: kunit: Run sparse cache tests at non-zero
- register addresses
-To: Guenter Roeck <linux@roeck-us.net>
-CC: <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-References: <20240408144600.230848-1-rf@opensource.cirrus.com>
- <20240408144600.230848-5-rf@opensource.cirrus.com>
- <5c1daddb-d8b3-420a-839f-208e0a6e168b@roeck-us.net>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <5c1daddb-d8b3-420a-839f-208e0a6e168b@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: jQyPbB5cl9eiAX21IbeZVOX5_cO30Wqz
-X-Proofpoint-GUID: jQyPbB5cl9eiAX21IbeZVOX5_cO30Wqz
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 
-On 16/05/2024 20:53, Guenter Roeck wrote:
-> Hi,
-> 
-> On Mon, Apr 08, 2024 at 03:45:53PM +0100, Richard Fitzgerald wrote:
->> Run the cache_drop() and cache_present() tests at blocks of addresses
->> that don't start at zero.
->>
->> This adds a from_reg parameter to struct regmap_test_param. This is
->> used to set the base address of the register defaults created by
->> gen_regmap().
->>
->> Extra entries are added to sparse_cache_types_list[] to test at non-zero
->> from_reg values. The cache_drop() and cache_present() tests are updated
->> to test at the given offset.
->>
->> The aim here is to add test cases to cache_drop() for the bug fixed by
->> commit 00bb549d7d63 ("regmap: maple: Fix cache corruption in
->> regcache_maple_drop()")
->>
->> But the same parameter table is used by the cache_present() test so
->> let's also update that to use from_reg.
->>
->> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> 
-> With this patch in mainline, I get lots of errors such as
-> 
-> [   23.494308] =============================================================================
-> [   23.496391] BUG kmalloc-64 (Tainted: G                 N): kmalloc Redzone overwritten
-> 
+By default the BT WAKE signal inside the M.2 key E connector on Radxa
+Rock 5B is driven low, which results in the Bluetooth function being
+disabled even if the inserted M.2 card supports it. Expose this signal
+as an RFKILL device so that it can be enabled by the userspace.
 
-Just a random thought, I wonder whether in gen_regmap() this:
+Tested with an Intel AX210 card, which connects a Bluetooth device over
+the USB 2.0 bus.
 
-   if (config->num_reg_defaults)
-	config->max_register += (config->num_reg_defaults - 1) *
-				config->reg_stride;
-   else
-	config->max_register += (BLOCK_TEST_SIZE * config->reg_stride);
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-should be:
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+index b70313643af8..27dd95f92f33 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+@@ -65,6 +65,13 @@ rfkill {
+ 		shutdown-gpios = <&gpio4 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
++	rfkill-bt {
++		compatible = "rfkill-gpio";
++		label = "rfkill-m2-bt";
++		radio-type = "bluetooth";
++		shutdown-gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	vcc3v3_pcie2x1l0: vcc3v3-pcie2x1l0-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-- 
+2.45.0
 
-config->max_register += max(config->num_reg_defaults - 1,
-			    BLOCK_TEST_SIZE) * config->reg_stride;
-
-I've only had a quick scan through the code without seeing any other
-obvious problem.
