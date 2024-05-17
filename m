@@ -1,66 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8183A13D8B0
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 16:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE57512F398;
+	Fri, 17 May 2024 16:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715964864; cv=none; b=KrgnyGLTseALgdf4Gj9TZg7XMpSsDXRpgX83q+69b7Kbvsu5MjBkZzIKGCQgF6jNfwVf5D5QvwjNWfR5pmpgqDteIedG8CvkYwt4drNnySnCKr+H43v7KA6xE97CVlMtEHJWzPBt6xS5gcPOqMNwmHu8FFpzb9Eju9RJuUyaoaI=
+	t=1715964957; cv=none; b=tah1HunL1Ywltktf5CLXO52dt1yeOfqRrCviTgAk+2P/2gUb/8FPjSA5qcExFR7Ndnwb2EMGTtynLVvBPPnPIvKYnX/xG5AwtIEqbvpvQgXGFzBO6i1pFbZ4TxTp/Dx/aqHR3fUQZbQVE1cBp/SKFEv85nQqoeBofX2C9ATyfGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715964864; c=relaxed/simple;
-	bh=YoPUOJ5vAGXPmQOgRbq370zFkqkHGyujhuWx2V7WA/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M1pHgWyPMJTtMP0l1dwAQVvOLbhWOLwQiyP14ov7FtciWh50C3X2Uv0PBK39ucho6AagRzF4O+arKpOoXuVF1agu0LCtzkoN5W8i9imO7YbrhGp6PSQ1sTAs5WMKcoqAIp9tu0AT294lr96SRL5GIMKcoWcn/OPD5cfqDkPG+98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XiDOD0pv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715964957; c=relaxed/simple;
+	bh=oS+zk2HYc2BOzJVr2+JxzzDk4PthvgRnZztNAdo8rGM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=qCW3JALVhI3TQUlphSO9UIxADVo3RtikWyFgC4kR4ccRivk3qTqY/iP/wth775xCwGNGA7aFeZhRvqTr9785GYiHhyS7VBqu/9bnIZzXce+XdQuBHUAghnd0k+11+5DEKjue40/YWSFfPmXR3uKvVnHB9GAmHF4dCPCQ8FITmlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rYPq6X2N; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XiDOD0pv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715964862;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GF1WBPKZvZgqchSylvUIsk3qQvjijLvE4tqcy73C8QE=;
-	b=XiDOD0pvTxINF7kEDpN4akaTpKTJk+SjNMgN6adu3W+ZjqjfJiULqvs8pNyIg9MC089BnE
-	V2b6Yn8rXQUE2b9R1mLx9vBcp/tvBdKJeRH+3oY8Wwxe8nw0Mby/zoE0sRnJroDMfR0wRc
-	zrfMBwI/F4uMpCZ8M9am/fmjobvcJaI=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499-yhxqI4f9PxmmquR1LtHWpw-1; Fri, 17 May 2024 12:54:20 -0400
-X-MC-Unique: yhxqI4f9PxmmquR1LtHWpw-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-572a175621bso3355950a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:54:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715964860; x=1716569660;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GF1WBPKZvZgqchSylvUIsk3qQvjijLvE4tqcy73C8QE=;
-        b=DJFneV6rgAAvewVunAdRpoqj1gSpgFPO/lvStepCpKZsOe6RTTT4G5o8EgxRHODsDd
-         mtHKpwOgtPGljFI82jbAhMKq0xDHP1UMoOxU5u0UZUI7kXSdCoc8UG5HmhKUpb6srTeL
-         TRLJMDsV5HX4IOfXF8L4TxSFq+PkoJBmgnnpR2kyJSmVQ4wk4Vlkz/1T0jKY/WxnROxL
-         tBIFuFQwDHs09d9J0nGn91945s2T0/bIxNMUB7II0zt9un9Fu6Dc1ltGb2UDQqnywIOZ
-         JKAIMcOxYS6buvRJwdz4q1IdMGlmVbnGLsVjoiwg9AJxf3Tu+lFdXVa1lyJDv1wzuiXr
-         QtIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUqijcxqMJ+dg07+mgG32WwlrJcNyvkKVs2g/DzM4weKd7KQnkhdRFuY9tGytAehiQG9/aVlqOapsHGvI9mF5udmvMi/saggl7YRoJv
-X-Gm-Message-State: AOJu0YwgIWP2z0TRwVeJAPJLip9H6o+44tvmvk9UMjMIivRV1F6v5KXs
-	51ItjR8R5bID7PlMJbNXBf8lSfV/5DpcYZ6N9k1SL+lwBNgXqIaq/NxaiWbGbpdZ6mf8/XwGcFF
-	kNuvIWMPN+1P4KHm17SpQiPIR279zDu+5MFrw3AHFvbmwIPQtD7DIp9GMI6xlDA==
-X-Received: by 2002:a50:d6d9:0:b0:572:9c4c:2503 with SMTP id 4fb4d7f45d1cf-5734d70378fmr15180739a12.38.1715964859811;
-        Fri, 17 May 2024 09:54:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFU0KHnfopom3+D9iocqjRaYCyCisJHBNEFmDCyMf2L36ipxsnLxIuqinUuhzU12BxKwaZYFA==
-X-Received: by 2002:a50:d6d9:0:b0:572:9c4c:2503 with SMTP id 4fb4d7f45d1cf-5734d70378fmr15180720a12.38.1715964859422;
-        Fri, 17 May 2024 09:54:19 -0700 (PDT)
-Received: from [192.168.10.81] ([151.95.155.52])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5750d24c8c1sm2249663a12.72.2024.05.17.09.54.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 May 2024 09:54:17 -0700 (PDT)
-Message-ID: <58b02adc-7389-4fcd-a443-1856af7886b7@redhat.com>
-Date: Fri, 17 May 2024 18:54:15 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rYPq6X2N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715964921; x=1716569721; i=markus.elfring@web.de;
+	bh=opJ3yzwn4W/yGFt1CijxFGqOb7XueZ6TGIqHxjcuutE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=rYPq6X2Nm3ZNWdgRT56yWY1UNvOnzO/3D0uY+m91uIkGYi2DHkhQUvl8ScoVvN1k
+	 vXX4N21+6TSnxw1Gi1j9mHQZOUj6jQrvHkp119OEhtmN9X+j6VQppa9pKgsBO0O7T
+	 6nx386VFiPY0phbLlCftuhMzxaLaHvOZ8ZDMIkMp402+bVheNAq0an7bSbfDaYSnF
+	 GEgvza4Hvn/DK2OL1wLC746u7Xf+sQ2PreOkmj4/R+05M6DGiPakVE24LUaQhpVsA
+	 UHHodsFafoPoPebIYHCK/+1EMcS+EGj1SCVA4T2ILp90VhOrYSSt3TYorIzRBZlc6
+	 NnBafwdaoS9r0A0M/w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MKdHE-1rrZuH0mpo-00TEYo; Fri, 17
+ May 2024 18:55:21 +0200
+Message-ID: <81a50343-34e3-4a4d-80e9-0c674876cdb8@web.de>
+Date: Fri, 17 May 2024 18:55:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,68 +42,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/20] x86/tdx: Add macros to generate TDVMCALL wrappers
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Sean Christopherson <seanjc@google.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-References: <20240517141938.4177174-1-kirill.shutemov@linux.intel.com>
- <20240517141938.4177174-3-kirill.shutemov@linux.intel.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20240517141938.4177174-3-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>,
+ linux-f2fs-devel@lists.sourceforge.net, kernel-janitors@vger.kernel.org,
+ Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Hao_hao.Wang@unisoc.com,
+ =?UTF-8?B?546L56eRIChLZSBXYW5nKQ==?= <Ke.Wang@unisoc.com>,
+ Zhiguo Niu <niuzhiguo84@gmail.com>
+References: <1715945202-30045-1-git-send-email-zhiguo.niu@unisoc.com>
+Subject: Re: [PATCH] f2fs: fix to check return value of
+ f2fs_allocate_new_section
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <1715945202-30045-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:F5vmjCW5AwisAA6fyRSakYagc++ce9s74l6fZprZXTpp00HIYJ9
+ ZPVZZxE8Ppth6r+STxzWbnVtuy86HwVhP+V9kKlQQz4xmAQM8aQQorcVkxuIh8n/ELIMVlu
+ yyZQDFGQcO/ohrju1o9n4jZSwl1SaYIln0gvIvgkurlqBdH8Bw+YpWMa7y/BwyMBIuuf2gW
+ mO2yhHD+4mL4lyVcU2I3Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/BR6hDIGdNA=;YrAo6ZeUPbgYxIb9yjqSQRcXuE8
+ EdOcrOthGfV2mqTsHCyjDj4RVAsyaAa7hKmV0BaoaScDPXMKjX5NxSPtOpRMqygwltGUBJyB0
+ fNIFBslKb7KJjb6laFkDBWcouWZ5LTV0aC/EfuFYRTekkOsmPHJ9ySrEC8tFrptwrYbfd/6Hk
+ 6uOWHuLck0UMdI6Q6fMEdHjSJXdJEeTnMBp0kYjgKd4nndRel80+DiA3AkF/2Wy780xvItGOU
+ 97RHNmK+ZHAlq28v9ZI9FNsRD9NR2UBPdVQnVnqauB12KUvsGisKYHAjJl4pejTRInUM5PMyM
+ QN5yWZpnb+GyiCRm9hbOv44HaEbFDLXtk64KKPCuoCke9BkpQfmNZTPKeIFsuySomBOqWmOpy
+ QZNcfEUK7mokuxJzJE1EwDH0s/nAKlA8z2k9l9HnRT5h4EwntB7Cs6qQv9y4Lygbu1c7/WjZR
+ Jpms47riUmEiFjRpXsGbL9ZrKWCArHbUWv3nOUGZ3q/sGygojZHWpGquF9zE6iACXf3NvFLbW
+ PmvzoX7d/Q2OHWIBDMALZjL9/5ZPYX++ula/p3oCJCdwW6u4qKaimVFNKd9qS7Lj21oBpg16W
+ 5Wz4AwALbWiXn+isBkwWRhbXqHNJ2PMjEJudZEQc2OYd1cuCFTU8S2T+6YE9icovNBjoldu5Z
+ GGgYmCtVKtZXr5K97TRSlIFb70xc6nUd7KCiPVCQmBwBwkEwig6n5EaswclRtUZyFgwW98Jvc
+ de96CE88C+euWU4i2waTWpd8iwOMPV5aTJkSVGV6AO8gHxHUCpWBL7303BMd/8T/TCVSW2N3I
+ 60KNP29o317ojSYDcQAWRsY+G4Ob+wGZFKytB9VGvvumc=
 
-On 5/17/24 16:19, Kirill A. Shutemov wrote:
-> Introduce a set of macros that allow to generate wrappers for TDVMCALL
-> leafs. The macros uses tdvmcall_trmapoline() and provides SYSV-complaint
-> ABI on top of it.
+=E2=80=A6
+> missed this allocated path, fix it.
 
-Not really SYSV-compliant, more like "The macros use asm() to call 
-tdvmcall_trampoline with its custom parameter passing convention".
+* Will another imperative wording be desirable for an improved change desc=
+ription?
 
-Paolo
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
 
+* How do you think about to append parentheses to the function name
+  in the summary phrase?
+
+
+Regards,
+Markus
