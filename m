@@ -1,114 +1,101 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B543FB2F;
-	Fri, 17 May 2024 11:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75213A28E;
+	Fri, 17 May 2024 11:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715944194; cv=none; b=uHRTiHOD4vJUKnixXJ75pUeKpS3fU2M1XuaoMiSFdCulms1oYAZO2oZuLPre0ctQiG/0AsOvr7YF/4g0nGTEtI0JjKWi4t1kDLsCQJcuHXgZMKbP4QlFubYVd4uVvlhr6FPIVO0Lh+npOM8Y42MKtVo6JTtiFz4C+X/Fx5ibCsc=
+	t=1715944310; cv=none; b=nj+SQP/pyVQMjBfrbMnvhWLtKWPpiGY+yIkiYuyNGS99VTb8CndxSGKoh28coPziNIik2ys2fjpzE316QNvug07AydwWV2zDwlU2J/taJUDs60TowsnUhIsJ+Ll8ZZWNj7XyzWK81ikeuoXRutrXrLbaXp2UNLx6hJZYD0kY6cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715944194; c=relaxed/simple;
-	bh=RQTAK1sZRcW/HEeu/lsrirYTSvY+q0Dip8xhIGw8Z/g=;
+	s=arc-20240116; t=1715944310; c=relaxed/simple;
+	bh=NGy4y9LkeLC6kMLGudcaqdBbS5CppWV4B0ewLsdwhpk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=onADI1uugWOV3loW6yJuCLzM66B48Ezo/BHk+Ue0/U10cixkfBYHLjo/X5knCSpCgsLkSXsaKGcNdNC2wNw7IyAFB3oglrr9cNjlvOw0O3VaSbImlgt491XqbDQgPnuiNKU3SQdggCKLXZpwU+/dgCkwbivkLdwjqEEeTB5gbKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=PXQxEoqz; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MRapSdUeU/yzIfiCQ04kfvhQtvGOOXUtajQ9QkiZDB0q4O9wZKV05d6mebol9KfE4UPWHZouSeRoQpF+b4U5kqPiLarxmAfnThTAduH1C1/GvjkBaaLvotyatYxuFunOJGAI36AadeDGSN4pu75y+b4g2o2VWzOS5AFiC+nwwCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrkcH1zG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="PXQxEoqz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=+tq+++souCpFv9+PH5wxA0rTtq3HB5/z/9XdF0Yji7k=; b=PXQxEoqzA6ESGS5A
-	RR9fwH5MqwROAAdk+Tm5KGQEui49DCReLnueWbvuhiljoFPwoQ9z4t/5qTjkPLCYwmtJDqn+j3Ahl
-	Vg099N255BMVcPYySHq6XdjwT6advwGfUX1s5qZCQDkR9DF39voPmElvrCA2gYRTLMnKTOEJhTaT5
-	G2wr1+xKyYaQpNkYOrldDqeTqIPJBFhCONyAJ/gl++VpXGPXx4fNlvaGPGjoTbrZEN1ojL/AAzdg5
-	HcYxERi2gWxfydoq3LtjAtdgNhVpAFs4SR+OincCvtkAex4NgrxaeFiWuWVo3lNUyJawoXWRs3uwo
-	6nkqTe1siPGDCn9YtA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1s7vT4-001NKG-1q;
-	Fri, 17 May 2024 11:09:42 +0000
-Date: Fri, 17 May 2024 11:09:42 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Frank.li@nxp.com, vkoul@kernel.org, linux-arm-msm@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: qcom: gpi: remove unused struct 'reg_info'
-Message-ID: <Zkc69sMlwawV8Z7l@gallifrey>
-References: <20240516152537.262354-1-linux@treblig.org>
- <39b66355-f67e-49e9-a64b-fdd87340f787@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrkcH1zG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C68C2BD11;
+	Fri, 17 May 2024 11:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715944310;
+	bh=NGy4y9LkeLC6kMLGudcaqdBbS5CppWV4B0ewLsdwhpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HrkcH1zGc5nsdF095rPasSd0smJVrBFPzVO1GfGnDndEAQRzzcEtOccP0Lq+THwc4
+	 pAwXQ3f+M6XWsJrDZNt1FvPIfrTYhdCz2SnBp87g4iKe0IaqCqMHvc/yhtKzdgGaJv
+	 dLAUdfS/gP7P/6XMwMIK5GZ43Hj833J7d0dOXLHcvLJKhNfKwWtUm/RnK70V89+VUu
+	 AKcflMk2YxuK7b1Ya1coPH208ZfKUOWyTC39jgyRK1kZ/ASRPGRlTuL0lnElYvRFcD
+	 VX4z/sJPHRJZ4c5hebs5Lf/i0NjNi4TSVrQuPXXHKTI5HQ+wADouLeFLthJoRCZaFs
+	 N+LYX3g6JdEBg==
+Date: Fri, 17 May 2024 12:11:43 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	shengjiu wang <shengjiu.wang@gmail.com>,
+	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound <linux-sound@vger.kernel.org>,
+	devicetree <devicetree@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	alsa-devel <alsa-devel@alsa-project.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCHv4 9/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
+ for generic codec
+Message-ID: <500db9de-6113-4e73-ba92-6e52ea292b32@sirena.org.uk>
+References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
+ <20240515135411.343333-10-elinor.montmasson@savoirfairelinux.com>
+ <ce9a87c6-4a5c-4f0a-a8df-1fdce8c1f5df@sirena.org.uk>
+ <599489232.349333.1715936741672.JavaMail.zimbra@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u3ZQHG5Itc4786pl"
 Content-Disposition: inline
-In-Reply-To: <39b66355-f67e-49e9-a64b-fdd87340f787@linaro.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 11:05:21 up 8 days, 22:19,  1 user,  load average: 0.00, 0.00, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
-
-* Bryan O'Donoghue (bryan.odonoghue@linaro.org) wrote:
-> On 16/05/2024 17:25, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > Remove unused struct 'reg_info'
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >   drivers/dma/qcom/gpi.c | 6 ------
-> >   1 file changed, 6 deletions(-)
-> > 
-> > diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> > index 1c93864e0e4d..639ab304db9b 100644
-> > --- a/drivers/dma/qcom/gpi.c
-> > +++ b/drivers/dma/qcom/gpi.c
-> > @@ -476,12 +476,6 @@ struct gpi_dev {
-> >   	struct gpii *gpiis;
-> >   };
-> > -struct reg_info {
-> > -	char *name;
-> > -	u32 offset;
-> > -	u32 val;
-> > -};
-> > -
-> >   struct gchan {
-> >   	struct virt_dma_chan vc;
-> >   	u32 chid;
-
-Hi Bryan,
-
-> More detail in the commit log please - is the structure unused ? What is the
-> provenance of it being added and becoming dead code.
-> 
-> More detail required here.
-
-If you look at the V1 I had
-''gpi_desc' seems like it was never used.
-Remove it.'
-
-but Frank suggested copying the subject line; so I'm not sure
-whether you want more or less!
-
-I could change this to:
-
-'gpi_desc' was never used since it's initial
-commit 5d0c3533a19f ("dmaengine: qcom: Add GPI dma driver")
-
-Would you be OK with that?
-
-Dave
+In-Reply-To: <599489232.349333.1715936741672.JavaMail.zimbra@savoirfairelinux.com>
+X-Cookie: Function reject.
 
 
-> 
-> ---
-> bod
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+--u3ZQHG5Itc4786pl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, May 17, 2024 at 05:05:41AM -0400, Elinor Montmasson wrote:
+> From: "Mark Brown" <broonie@kernel.org>
+
+> > This description (and the code) don't feel like they're actually generic
+> > - they're clearly specific to the bidrectional S/PDIF case.  I'd expect
+> > something called -generic to cope with single CODECs as well as double,
+> > and not to have any constraints on what those are.
+
+> I proposed, in an reply of the v3 patch series to Krzysztof Kozlowski,
+> the compatible "fsl,imx-audio-no-codec" instead of "generic".
+> Krzysztof thought it was too generic, but it would convey more clearly
+> that it is for cases without codec driver.
+> Would this other compatible string be more appropriate ?
+
+No.  There is very clearly a CODEC here, it physically exists, we can
+point at it on the board and it has a software representation.  Your
+code is also very specific to the two CODEC case.
+
+--u3ZQHG5Itc4786pl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZHO24ACgkQJNaLcl1U
+h9AA9Af/dEW1/sXD0drucKnj3m5nf/uGf/YhJyyfJ/1JSqxnRA/VSoHYc1D6ZDLc
+CYKJEQc19aWqb2hDm2/NebWPZ2nAgbG64R6Mn+Ue1pJ025SpxFd+SD2G9nzkzh2r
+rhP5qrycZhKjkaMvsYxOQCgUZMDup6yEwckX93anIVYxBuz6o1Vx2H4tJkbXIU74
+Q7wz5GIp6xMQNpX7RoCw/wE7IEe2TOmjGl5bPg9kM+V8uqYq/cZIZOnHMXicXoTa
+jRDfO6DaG6nJ/23U8LJW9Ja6BJ+rHeeBtCDVZvcQUff+s/p7D+LzYeghTFOO1xQW
+kN7EAVsua19NtkhnbL1ZsBqhr6EznA==
+=AwEF
+-----END PGP SIGNATURE-----
+
+--u3ZQHG5Itc4786pl--
