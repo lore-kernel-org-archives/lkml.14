@@ -1,81 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32F46A039;
-	Fri, 17 May 2024 14:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05EB6EB5C
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715957818; cv=none; b=DHvrP93KRSGFcdvFN8e4tMPrmrpPk9jkEbgjsyo8jP5uxGVMO8BaWrHzYhXkIzqz0Od4biGcmxw49u6dz+wkTyHKa0sKnekxY1lmHMtX5QEZou6iKeEy3KfL7VAKMVq5x3Y25HH/NCAiOTZhzcF61ygL7X4pOt6/nbEs43un0mw=
+	t=1715957881; cv=none; b=oU0PXQKHZ8wH8gn+P/wiX7uwPoIr05dITFZ7kPCdtURzTiY9VXRHJgzLzIv+71pzvdOvecxLSqGe7RAIvmtbj09U8Ia1Res82Eyg+zRYivfDjnLYrVhpUWPGp4ZmNaS05eaKXT1qyoB96LeHkYJ6h1aoF7qKcYnrmVUSvrNnKak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715957818; c=relaxed/simple;
-	bh=1Kum9s/qcn+wubjO21I7J9v5LTOxH669/VPueehgn5E=;
+	s=arc-20240116; t=1715957881; c=relaxed/simple;
+	bh=J9El9DMi7Aqogcqwn4M72J4HZnCmiEhSU8KAHVlqz1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pDARlEXLawKm6oyPkGz3vWmPwyiLY5FLtnYHp71gkRjcwla3CMFscrZLaKnaG3bVRrqI0XNMrpyjYQDMvKR0jSqkpJQ9YHLijRQgcHXhfSn/EupWh6gr18v6lxuE3u+Ppimo5EYDW3wRfQu4kwzhrepClqLsGdSE0lgFc2X9sZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/MRmppd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GazEIkQpfG0Xp1UXan1XtG6RA49S9Z6bJUnmLhYG0RtU6i2vSjLnRBUISVUnIAdx2qxVpI8nBkK8KS9OyqpV7wB6fiRKFToU1opsVuYYGvQ1AAxc1l7hvg3Ok1Wx87CUAm8xhVDhaLIrawsLqK1il9zl4j3+JwLOF5VpfMyPstY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=iI1+Agzr; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/MRmppd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9741AC2BD10;
-	Fri, 17 May 2024 14:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715957818;
-	bh=1Kum9s/qcn+wubjO21I7J9v5LTOxH669/VPueehgn5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b/MRmppdsIlCxTXjEi6IdEW4AIyJmyyy+0yOtNUBOKlXVCGR/m4Om2M9BVA/Ue3Qu
-	 HDDf13nPMmN32nR8HB4hxcegaHlV+W8EsIabjByaui5fZ+DEnswRc56Wlt5fNaFvAH
-	 kgTqDtfg9zbMlOWWTLBNqs8KsKSFjyWTLB8FtuCAspKUQfE1NDpyTakgH01RpwsKsj
-	 MExDYPw1bLUqZ8xmuWtECaX7TvJvu6Ln/FcuNRstxe06Ol5ZyxywOovTMlu1MMp6QP
-	 nju1HPtica2R1dfPof3ZY9ZsBUNhST+kygK+GkHD//3FEAYMiSArdPbZvWx2R1Xnka
-	 KxPBCWLPvdutQ==
-Date: Fri, 17 May 2024 07:56:55 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Borislav Petkov <bp@suse.de>, Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: clang: arch/x86/boot/printf.c:257:3: error: unannotated
- fall-through between switch labels [-Werror,-Wimplicit-fallthrough]
-Message-ID: <20240517145655.GA3660288@thelio-3990X>
-References: <CA+G9fYuyPFBVyqqg0RVhaz4c0S+H4TMm1apxgwyTUOkge9NY7A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="iI1+Agzr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=vl1S
+	7NNfcQ1ji6oiWuXr42CZ86hhRSPk2gAQwY+aK9g=; b=iI1+AgzrWh7TGlxnr1LR
+	18S+FljBpQQw+aF3Jw4mPoEz4FkEmIZPCxFt1l5pXLZYhYODMHE8ZNHI0YoZeaC+
+	QfIg8BJR0YoiyFQmCFR1L8pXDuKXv7UeEOY+Gp7GWOZ9VjKSxRFSw1xkVBlER8to
+	PFRI3gw5AToslyyu7UeSGnTykuU7MfbALmY4Sd8VrHLGz2NSBj5xy58bzjPz1H+G
+	xAx7J5T5K9mgYjgA4DI3yj5teqhOzM2V9n+VIa/LT7Y7wUljPrfFcjo1A0bhe1PB
+	SAGJMNaZtmbl4BbHGxOhPQRHBpDENtOWQGoT+MWIj/OCOExEwIQOP6BGw6vVKy9p
+	Kw==
+Received: (qmail 3529926 invoked from network); 17 May 2024 16:57:57 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 May 2024 16:57:57 +0200
+X-UD-Smtp-Session: l3s3148p1@4KG6k6cY0ohehhtP
+Date: Fri, 17 May 2024 16:57:57 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>
+Cc: Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH 00/13] Analog Devices Inc. Automotive Audio Bus (A2B)
+ support
+Message-ID: <ucrnnveh2n3nhonbhvpxy7sl3ffaj3cdcx7pnb2h4dj5cwsznh@gfssqshjortk>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="exc5fy2rgxjrvidu"
+Content-Disposition: inline
+In-Reply-To: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
+
+
+--exc5fy2rgxjrvidu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYuyPFBVyqqg0RVhaz4c0S+H4TMm1apxgwyTUOkge9NY7A@mail.gmail.com>
 
-Hi Naresh,
 
-On Fri, May 17, 2024 at 01:00:25PM +0200, Naresh Kamboju wrote:
-> The following x86 build failed on Linux next-20240517 tag due to following
-> warnings / errors only seen with clang builds.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Build errors:
-> ----
-> arch/x86/boot/printf.c:257:3: error: unannotated fall-through between
-> switch labels [-Werror,-Wimplicit-fallthrough]
->   257 |                 case 'u':
->       |                 ^
-> arch/x86/boot/printf.c:257:3: note: insert 'break;' to avoid fall-through
->   257 |                 case 'u':
->       |                 ^
->       |                 break;
-> 1 error generated.
-> 
-> The suspected patch,
-> x86/boot: Add a fallthrough annotation
+>   On subordinate nodes the I2C interface functions in controller
+>   (master) mode, providing an additional I2C adapter to the host for
+>   each subordinate node connected to the A2B bus.
 
-Thanks for the report, this has been addressed:
+I am not sure I got this right? That would mean for an I2C adapter on a
+subordinate node, that there might be targets connected to only that
+subordinate node? How do its messages go to the host machine? Is I2C
+encapsulated over I2C? I probably missed something.
 
-https://git.kernel.org/tip/82110ae235e0560d1f952f74f9fd991587b0e3a7
 
-Cheers,
-Nathan
+--exc5fy2rgxjrvidu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZHcHUACgkQFA3kzBSg
+KbYkSg//VsE4vNwHgpYpmukjdTai3yWCL7jcPpvdxCdL77d/laRwaHRS/Uda2G2K
+MzkvfPugEynMx6QI1PNbeSu+yDgPQqpvweLp6Ija6u6FQ/gSKEozbM6sHFONJGZS
+9PFwvBgRYqTidARUDPdI2vWaZHtZVQ8ERnnFKu/aQI9JTiHIoKoHrj26yR7XYK+r
+9doFP50GQyUCcEOESZxwfdF/vhECFNnxkaEjoN6XXZlFy3xFZU3CHlk/2dpwb5sE
+IxFFcJ7lPRRCijpM7WGmGcOhHgn0Fq7fZdCdmYIPAq07JVvuAFZlsqm9GMIxYbdH
+CzZ+aOhlTroOitpWT0Dmar/Quci7jtL/DQqN5kL9mCn4ShF7JZT90qkV8kZ/EdmK
+X2o3yQdSXIlDExRMAQYZ/KaNtxOdFpNjFxqzTxG066wiiHQlpEAKG8XVQh7KMNBV
+C+GOBwGcl0aefgLuxgjZcnpnSrBJ+/2d+KnUpIDR2yLcpgTyzM0+jhkoDtujbS/A
+ljHcw4FrHiG3GpnjtX4iXhcippoUXHWK5yAQkLKJbNFvTGf5RCoAp5ZQQLSrLUqR
+SAFWE5rcZfxjOiGeuYwzCvnXk68p3s9wbqwZZoZhweSS7pmPhRiyYWq5sMfNyHSM
+IrXGvesfjslIhXd8otw+ItGouLRoA1s0xBFD35mSeR7zwJKkGLs=
+=HB+b
+-----END PGP SIGNATURE-----
+
+--exc5fy2rgxjrvidu--
