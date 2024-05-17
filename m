@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A7A1A28B;
-	Fri, 17 May 2024 08:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4483328DB7;
+	Fri, 17 May 2024 08:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715933175; cv=none; b=YpBooxSqeLnvvKY8FYJLGkh6869yyxoJcTGhIuKJNZT5TqdNMlaGrOTX5t3LK+IvbLWshniyvXAmmQssAzUYhF97+MMTFP0iQGDlJ5FgBFQxJ6QTdSzdfM+1vfLPlljQzv1yXa0bP5zjewAL6RE+tSVIMVc+HKTJmQ0YcjFZeTY=
+	t=1715933176; cv=none; b=INE3PWSS+hJ2tue/K3RJqZLjBF3rJJ7G6WXJ0XM0A0fVlMoo+QRj0hz/9M/SH8U12mJCxG79lphzqMv1fsaiPCnIUyOa8zfl37Xwry9KGMR+JuXNBOWu1BawC+VDXrwDZNoliAIlbaPrTWn3mX70v3StED6thLMWwFQLWgODDMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715933175; c=relaxed/simple;
-	bh=p+f6z5lEdk2BPt4tpOa9NSusCoLHGwRBqkmLGKbl13c=;
+	s=arc-20240116; t=1715933176; c=relaxed/simple;
+	bh=I7vKyuuBa21buoq2JjLNZ10zt4Ov1stKHuENPHh67ec=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=EIXj2xQ8PjegbxLQHmn/AR/rjmB2toybAJQeolDLq/rCx0YoS3JvPpNOe/frA47jKr+X7pkTk65G6Mauyk46LHtuipqV/5LPIVq1gAfYIy2ky/JI6QSagJcfa11IqyoDuPLZ5Qq5MLxWG4kCwRgArkIrBtA+q+KMeHrGHHZQ82I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nCCJp6z5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BHfrrSZY; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=PgeYPpKQQmKOlipQXZ86LLeSsZU9I49pI14jKeMX9dYChP54YIWrHexTuj7f1rIHNMLmGQSqRIULph3ySgnGTLIS7sXw6pBgmCC8Q9KCW/rU8dIs5lAzG5Ds6vntS28nReb9b8WgOCs40k0tdCVEbGqhbmCZPH71PLTMZjTX65I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZJLyqTjU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Yo1/S+FT; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nCCJp6z5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BHfrrSZY"
-Date: Fri, 17 May 2024 08:06:10 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZJLyqTjU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Yo1/S+FT"
+Date: Fri, 17 May 2024 08:06:11 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1715933171;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yb6qSVvJzENichVEG4o36skuc0PZzlzAYGBpYQFWo7Y=;
-	b=nCCJp6z5Q0+rddQv0Btr4W81oxOH8pV9s8SWystJH4OnhHPoToH5eo0Vu7N72hPvzXU/SL
-	JoqoZGP1BSdxNLzcZ2u0swI6avovItUpRj59ROQb1PZrzWh/A8PisFhC6TQKwL7wYgQBRr
-	9aCXTA/5SJE5ZExiVovXYGh25fQR5EmXdTz130NPkbsPSqho4wHzGB2f6ZL5V48wFpBN2J
-	WCsLohc5mBp25WKZXo7dc1XZAEJaaXk8pZgSY7bt2ZqDrsZ+fDj3YRpypHPTaRBObzgb9K
-	omRQ3Qic2vjTZgoyhhRTbAawoY7aTr3jlQrxn1zo0R5Wbm7DyW3tEaSmTmD2tw==
+	bh=bfjV75NO9SZUF1uggmWNt6tuHqlxRKiRhZjsLp2Oy8c=;
+	b=ZJLyqTjUAOGP+q9C0T355PG4hKWKv+W23F/CDGAvvKUwZCzpcSMOa6Tj4qFtXkAxLXcpe5
+	0fjXYW80YUIKawKIHTWGTbUVyuDvebItIXBQpmyaG3pP/0p2gaRYin1U4MHqNtwbcqt/7A
+	oD2yot78xRQcN6GXTDGreH/GgUGCuAvSlWtp9w1qsizTCJcn6sfdf3LKHGehXufC8XWGlF
+	EKyQUyMxOyqhHd2I1tq4o3LNvc2JZiQsbeZe4o/w9yTdXcZBD5Za6bzI2qRDDouHqoscxE
+	jdgw6/IaRaj2t4+LcKzhk3XJ74WMuXkAoIALXF9QQ8J525+Of/0NfavrwT9xeQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1715933171;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,30 +38,31 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yb6qSVvJzENichVEG4o36skuc0PZzlzAYGBpYQFWo7Y=;
-	b=BHfrrSZYrFTB2YEi04Fg2wopmYcQX3H69H4oWlSVAJboV9gZlVvxYUxBdC1SovsAMcd7hq
-	kDXhSO6KuR6/oKCA==
+	bh=bfjV75NO9SZUF1uggmWNt6tuHqlxRKiRhZjsLp2Oy8c=;
+	b=Yo1/S+FTeIV4A5EpbSXynjpmKMbyN5PGQo/GWwaYKeERVRi2234kxXo+riZ5Aj3YXwRGKZ
+	TdSMqchlCgpUFODA==
 From: "tip-bot2 for Vitalii Bursov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] docs: cgroup-v1: Clarify that domain levels are
- system-specific
+Subject: [tip: sched/urgent] sched/fair: Allow disabling sched_balance_newidle
+ with sched_relax_domain_level
 Cc: Vitalii Bursov <vitaly@bursov.com>, Ingo Molnar <mingo@kernel.org>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Valentin Schneider <vschneid@redhat.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 In-Reply-To:
- <42b177a2e897cdf880caf9c2025f5b609e820334.1714488502.git.vitaly@bursov.com>
+ <bd6de28e80073c79466ec6401cdeae78f0d4423d.1714488502.git.vitaly@bursov.com>
 References:
- <42b177a2e897cdf880caf9c2025f5b609e820334.1714488502.git.vitaly@bursov.com>
+ <bd6de28e80073c79466ec6401cdeae78f0d4423d.1714488502.git.vitaly@bursov.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171593317094.10875.16081049841681398832.tip-bot2@tip-bot2>
+Message-ID: <171593317134.10875.3767772724461271480.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,49 +72,62 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     0f1c74befa656305ecc85c954dc31f84c1cc26e1
-Gitweb:        https://git.kernel.org/tip/0f1c74befa656305ecc85c954dc31f84c1cc26e1
+Commit-ID:     a1fd0b9d751f840df23ef0e75b691fc00cfd4743
+Gitweb:        https://git.kernel.org/tip/a1fd0b9d751f840df23ef0e75b691fc00cfd4743
 Author:        Vitalii Bursov <vitaly@bursov.com>
-AuthorDate:    Tue, 30 Apr 2024 18:05:25 +03:00
+AuthorDate:    Tue, 30 Apr 2024 18:05:23 +03:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 17 May 2024 09:48:25 +02:00
+CommitterDate: Fri, 17 May 2024 09:48:24 +02:00
 
-docs: cgroup-v1: Clarify that domain levels are system-specific
+sched/fair: Allow disabling sched_balance_newidle with sched_relax_domain_level
 
-Add a clarification that domain levels are system-specific
-and where to check for system details.
+Change relax_domain_level checks so that it would be possible
+to include or exclude all domains from newidle balancing.
 
+This matches the behavior described in the documentation:
+
+  -1   no request. use system default or follow request of others.
+   0   no search.
+   1   search siblings (hyperthreads in a core).
+
+"2" enables levels 0 and 1, level_max excludes the last (level_max)
+level, and level_max+1 includes all levels.
+
+Fixes: 1d3504fcf560 ("sched, cpuset: customize sched domains, core")
 Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 Reviewed-by: Valentin Schneider <vschneid@redhat.com>
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lore.kernel.org/r/42b177a2e897cdf880caf9c2025f5b609e820334.1714488502.git.vitaly@bursov.com
+Link: https://lore.kernel.org/r/bd6de28e80073c79466ec6401cdeae78f0d4423d.1714488502.git.vitaly@bursov.com
 ---
- Documentation/admin-guide/cgroup-v1/cpusets.rst | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/cgroup/cpuset.c  | 2 +-
+ kernel/sched/topology.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-index 7d3415e..f401af5 100644
---- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
-+++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-@@ -568,7 +568,7 @@ on the next tick.  For some applications in special situation, waiting
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 4237c87..da24187 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -2948,7 +2948,7 @@ bool current_cpuset_is_being_rebound(void)
+ static int update_relax_domain_level(struct cpuset *cs, s64 val)
+ {
+ #ifdef CONFIG_SMP
+-	if (val < -1 || val >= sched_domain_level_max)
++	if (val < -1 || val > sched_domain_level_max + 1)
+ 		return -EINVAL;
+ #endif
  
- The 'cpuset.sched_relax_domain_level' file allows you to request changing
- this searching range as you like.  This file takes int value which
--indicates size of searching range in levels ideally as follows,
-+indicates size of searching range in levels approximately as follows,
- otherwise initial value -1 that indicates the cpuset has no request.
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 63aecd2..67a777b 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1475,7 +1475,7 @@ static void set_domain_attribute(struct sched_domain *sd,
+ 	} else
+ 		request = attr->relax_domain_level;
  
- ====== ===========================================================
-@@ -581,6 +581,11 @@ otherwise initial value -1 that indicates the cpuset has no request.
-    5   search system wide [on NUMA system]
- ====== ===========================================================
- 
-+Not all levels can be present and values can change depending on the
-+system architecture and kernel configuration. Check
-+/sys/kernel/debug/sched/domains/cpu*/domain*/ for system-specific
-+details.
-+
- The system default is architecture dependent.  The system default
- can be changed using the relax_domain_level= boot parameter.
- 
+-	if (sd->level > request) {
++	if (sd->level >= request) {
+ 		/* Turn off idle balance on this domain: */
+ 		sd->flags &= ~(SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+ 	}
