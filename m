@@ -1,105 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC4D3FBBD
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B7840BFE;
+	Fri, 17 May 2024 12:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715947360; cv=none; b=I8OdOVtjdjowDqv08y3Nje354cf1s5Qm4YUpE7+BvuVGNiyNKGStAfUDBqLAksYHXxHzD3FYajHOoOoMsLJWTFPA6TmcVuembll7utnlVIBV1DAiBbM6XD/8OaJvwrgXVvTRTNEa04JglXqHcp8I56C2pekn5P2xKOp+60enLfw=
+	t=1715947639; cv=none; b=fbk+ocjwOyZYoX2+g/A96L3HZSBh7PEWjqP+JIPDKwaQVbQyOu1ztMMN0rw3kGalyP1nGb9DsWveyP8ROevElVogBtJ4sN2WzgXadSZQ5R6yK42WE0TamicK5adU3983oIemwNg+7+73bLsUZcdKyYJthXHDthRtGV011tdkV7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715947360; c=relaxed/simple;
-	bh=Aj995U25J5UbB1WP0fjOwm2XJjRFPFEAj+XFyuAV13o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D/UZK/EoWVlLVvi6WNex5KogLHJMuSB8V/km81ZM6clfpN5jMsx4CpNjWwm8CHdoeBv06H8MAYMvllAtFVNiXuaDxFNmchkSQIr+l7lmwj7cpIQLs4w0vJHyh2hRjcI+R4aYUE3CdQv0I/vhPaG5Auf6HeArfKO/I++LMVQiqxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glxgZeLp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715947639; c=relaxed/simple;
+	bh=dmMdDLN3YgL1qMEqV22WwccWKGPvTDnUyQtKaq9KA84=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=hBqd8qIV/iznlHZmA/dDHGnXrrhIZsujjpEBp1satUUFbeTrRTVDS9ORwbdTulXIuX/yCucRIBH8L+asCFvuUyzKyGSgH/Dgo87nZgjCTVbKlJ3po5lmxV1a4moBynryN7XfcXE9Tx/U4y8bXPkpAC0jq3YY0+dWNrC77YmALL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=uRBsT+Kn; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glxgZeLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C99A6C32786;
-	Fri, 17 May 2024 12:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715947359;
-	bh=Aj995U25J5UbB1WP0fjOwm2XJjRFPFEAj+XFyuAV13o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=glxgZeLpP1uLmV4GBnYAiTerOc6h4T+R96O1PurnqCi/R8mFeRKSfXTyy57zbZCF9
-	 u62t3dhnkqcVEXQqUZd76ITjG7wlJSWUfrqU8agoKARxrSu1R8w0WgsNwheRRW2gCY
-	 UdTsYEowBotGDj+MwCstPfvBj5+mZaDHmEAtSOnWj4ng5drK5lHCuL+keMB3HcHhud
-	 45ur3p/t+QEG6pxL0CXUTjkjbGD7VZ5B4y2I8d6gJekxUxAN8d9pi7vpViiFH8r89o
-	 R6UU4qt3qoOAnQ4Iv8qeDFy+AtUYb0GVF9GGZppgpo/XdO9A/oZEGD1EacwkG6aq9R
-	 QJHIt9JUoNb3A==
-Date: Fri, 17 May 2024 13:02:34 +0100
-From: Will Deacon <will@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Greg Thelen <gthelen@google.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Tuan Phan <tuanphan@os.amperecomputing.com>
-Subject: Re: [PATCH] perf/arm-dmc620: Fix lockdep assert in ->event_init()
-Message-ID: <20240517120234.GA32598@willie-the-truck>
-References: <20240514180050.182454-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="uRBsT+Kn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1715947634; x=1716552434; i=rwarsow@gmx.de;
+	bh=dmMdDLN3YgL1qMEqV22WwccWKGPvTDnUyQtKaq9KA84=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=uRBsT+KnrKOJInNQPt1GhtEXaecdNjniEjuZR3tahHz4abQ8zSd/Jvo5+4NA61uY
+	 53+lRtNL0dhHOCYTFDXJJSjP5zBopw0BGL37wUe99xT2OsiDhZqkoWPnkcsQGcbqd
+	 0lxCJP4IjvdccvfbqE9DQTZSvLVzIBxSmkPJoQbryeB3GqWCAa5HqXrGFL06ylN1g
+	 NTk6Mlz78eGU7VnVeoAH6VIfuB3jg42kcs7+NZKXmbaYCV2ep6FSMebulVm86i/OP
+	 KQ7xVEJcKABjVU5BQE0D4B5lxhBCQnwLibGH/XnX0lbeyKCpijAXR2WzuEk/Y3scr
+	 HJnHxkbJby5dFbgT8w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.100.20] ([46.142.33.192]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mn2aD-1soBzp1veR-00lEfY; Fri, 17
+ May 2024 14:07:14 +0200
+Message-ID: <2f091444-b48c-4170-90ae-c8449ebf66c4@gmx.de>
+Date: Fri, 17 May 2024 14:07:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514180050.182454-1-namhyung@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.9 0/5] 6.9.1-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:M0+scqx4DmQ6QBqKMm4542s1zUzd0jAHabjxdxqRbkacYXhwxGd
+ NXwu370cS8szVwkzZjkUF1WTM/1B5NjvpxuiFq3jovdH6N/fGUnL8ftsqAz1g/53wYv7lTP
+ 0Kaeic5qFOuLWj7AMJ1otrmJhpfr/RkMEhbMaZKeAKOr9r3knuiqzt0NIVJAQRCheiqvUAC
+ /Zd4gvZP3OPYSZrRsR/fg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:MgLpCTcrkcc=;Qv66Xf4DKyfSCulz+oPVsZxHf4x
+ R00aH6IpPdpmPWD86zEL3EEQckuhXuoeKwjBvkAKYJUje9j+cklUtZz4+L2XyOgi4PYmuU9Dt
+ m5c/AGv0yinW7iUn2P/P6dwPGUeGuzVYu0Yyz4g7DH7tlU0qIpvl5ejYAM3x/NDRn32TT+Kp1
+ CrVtuFUdKbL8BTjf/lGzOfAus1sb1o7v5s1BtMqXtKhTyNTjPsI3+k/+PQLbb0o8sMqsz5rTO
+ k22KWyjXpJh2ABmWcOg8U2n7r7Ui4H9tWfVaqLxooHWWWTSMgKE2JvDopf7iLJcP291lwZM7z
+ InboyNxXA7RrTC43uT6C6d2Wc7WeA/elG22p06aQIse3+jUqwXNoNkFDVvP+lMf2BXlOk93YK
+ rLkF97QImUjkwmRX/POPIz8sjyarzZ6+ZfVkXZvzvsYDl5TK/vN8DBQBnzyzUDrFhWixkwyo8
+ u/MUfUb3fSFzNu9VuMdz54cyzzCaXTj/IFrh/xwKBF7KEeAd6JcObfNwQmdf4PSEonxIKQ1Hf
+ RzqTFmMbS3Igu2cKg/ably84PO+Lju1kgep7p10L6HdnJtkA4PkX2nCAD5D7jAd0tj6/UQkDY
+ QMTGz5HK7QiP6oY3G5/jnsUrSJMgU7iSHBvvKvf5ygqr1coHyBkjoKHKP7dOjBavETOMV5PCp
+ W2PTKsIvACpBLH2OqSWhRMli8N6KMKMghV/2qbdMV+oPsSmHCxVoWJzzOwR+OLXHbGAldfuWO
+ IUZuiDBe5pzkqce0Kp3Oyq0JH6Bt5Im7QUWBh2xsm5d6Yn5g8bQvaXJBPFL3iil2rK72v+eP1
+ rdXypY6RZjRx2rs1tEGEv2OmTx9kGuqA4AcGoi/wb8VuU=
 
-On Tue, May 14, 2024 at 11:00:50AM -0700, Namhyung Kim wrote:
-> for_each_sibling_event() checks leader's ctx but it doesn't have the ctx
-> yet if it's the leader.  Like in perf_event_validate_size(), we should
-> skip checking siblings in that case.
-> 
-> Fixes: f3c0eba287049 ("perf: Add a few assertions")
-> Reported-by: Greg Thelen <gthelen@google.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Tuan Phan <tuanphan@os.amperecomputing.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  drivers/perf/arm_dmc620_pmu.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_dmc620_pmu.c b/drivers/perf/arm_dmc620_pmu.c
-> index 8a81be2dd5ec..88c17c1d6d49 100644
-> --- a/drivers/perf/arm_dmc620_pmu.c
-> +++ b/drivers/perf/arm_dmc620_pmu.c
-> @@ -542,12 +542,16 @@ static int dmc620_pmu_event_init(struct perf_event *event)
->  	if (event->cpu < 0)
->  		return -EINVAL;
->  
-> +	hwc->idx = -1;
-> +
-> +	if (event->group_leader == event)
-> +		return 0;
-> +
->  	/*
->  	 * We can't atomically disable all HW counters so only one event allowed,
->  	 * although software events are acceptable.
->  	 */
-> -	if (event->group_leader != event &&
-> -			!is_software_event(event->group_leader))
-> +	if (!is_software_event(event->group_leader))
->  		return -EINVAL;
->  
->  	for_each_sibling_event(sibling, event->group_leader) {
-> @@ -556,7 +560,6 @@ static int dmc620_pmu_event_init(struct perf_event *event)
->  			return -EINVAL;
->  	}
->  
-> -	hwc->idx = -1;
->  	return 0;
->  }
+Hi Greg
 
-Thanks, I'll pick this up, although Mark reckoned he'd found some other
-issues over at:
+*no* regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-https://lore.kernel.org/r/Zg0l642PgQ7T3a8Z@FVFF77S0Q05N
+Thanks
 
-but didn't elaborate on what exactly he'd found :/
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
-Will
