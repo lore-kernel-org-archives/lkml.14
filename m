@@ -1,98 +1,79 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63112E62C;
-	Fri, 17 May 2024 08:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3838222084;
+	Fri, 17 May 2024 08:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715932861; cv=none; b=rD74SmuDRa7qqfNrs1zwZFoP+BPqyTpmxe4RqE7uy5FUXidopz6djKo2cehGnDjRSiwuewtHYx34feA2Ews3Y4m36ReCgZ/FsTP4OiXT1B+5esQ4TYUK7/W7wqCgesy+GAx+o9dQS7C7T+CzvoZLeHsIXajenwHgrqvG4ipY8+w=
+	t=1715932932; cv=none; b=uvzuYys24FnvxiMRJeCMpydMdz6urBT9aOl+f3RdJ7ZgnMLQjSVUmllFYMka3sodaZdbGq3ILT/BIVN9smQ4PK3KJrr1/WYZYbm3mStGZ0G1huo89mJ8e6y+N14zLNF8fSXKiWaPlQ+dEjzEElXM69IC1vMYNaOQN/g8mj9gj/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715932861; c=relaxed/simple;
-	bh=Vdoo6QU/u39c9Rgl96CtP6qcbMot2KPUxgfcFSgZyBI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tq+pR/kSgE6TkYwJk8tRVjRONhfmRDV3FFipGRSO2zpv0QB9B5pCLqQqhKoS6PBbUJFKLgal34mW0a96HYiaTtZB5rm2rt/G2566/067ZqZW6k2Zm8woutCnEbrEUmKdxdlahdQlNZvdEmtEuhs1jHs8fYFDQeBOit4RqzXVFCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=k3eoWmSs; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1715932932; c=relaxed/simple;
+	bh=LIfxC3togYpPiQ3NtjjAwb/Tptw4luLeCd3cYBag4Pg=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=X2460D0fcbECiY1KTkxVhiFtJAIcmIjyCNfFUOrVsVv/3DT59dExkJGz66+U1X9hQTftl9bK2K1mYgaUDiD1yeTybR7AoiRedglzh2R68akSQ//Up4dybpP/+6EGa0EuCyj6WfRrsfCfo9ZbbvGSKhEi1Bg3Ye4hAYm8K372fmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXcinLi/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k3eoWmSs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1715932859; x=1747468859;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vm22BVZO7WVhxQCWzSyuBh1sHNc/VQxR59e5eUx+xd4=;
-  b=k3eoWmSsD4hZMAzQad/QUuCfeJvJavE2aFhdzP3v/u44N/uhF68VFZ8O
-   3pqmmSqE/IHdWEEwOaplIWNXFtvmEQEmKHRA1RP4MROnsURM7mcpopkrQ
-   3wDMgIQG/kGd6M/XG+YQvFTcp/Gp9o5smWtlA/Gj5v5oLDEtGCzEsBUy4
-   A=;
-X-IronPort-AV: E=Sophos;i="6.08,167,1712620800"; 
-   d="scan'208";a="89887872"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:00:57 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:16909]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.18.108:2525] with esmtp (Farcaster)
- id 8a5c4799-5210-44e6-a13c-cf4505886cc0; Fri, 17 May 2024 08:00:56 +0000 (UTC)
-X-Farcaster-Flow-ID: 8a5c4799-5210-44e6-a13c-cf4505886cc0
-Received: from EX19D002EUC003.ant.amazon.com (10.252.51.218) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 17 May 2024 08:00:56 +0000
-Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
- EX19D002EUC003.ant.amazon.com (10.252.51.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 17 May 2024 08:00:55 +0000
-Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
- (10.253.65.58) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Fri, 17 May 2024 08:00:55
- +0000
-Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
-	id D32C420C24; Fri, 17 May 2024 08:00:54 +0000 (UTC)
-Date: Fri, 17 May 2024 08:00:54 +0000
-From: Hagar Hemdan <hagarhem@amazon.com>
-To: Kent Gibson <warthog618@gmail.com>
-CC: Norbert Manthey <nmanthey@amazon.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <hagarhem@amazon.com>
-Subject: Re: [PATCH] gpio: prevent potential speculation leaks in
- gpio_device_get_desc()
-Message-ID: <20240517080054.GA12268@amazon.com>
-References: <20240514122601.15261-1-hagarhem@amazon.com>
- <20240514124221.GA76024@rigel>
- <20240516125742.GA14240@amazon.com>
- <20240516145540.GA116534@rigel>
- <20240516162239.GA184911@rigel>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXcinLi/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2AEC2BD10;
+	Fri, 17 May 2024 08:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715932931;
+	bh=LIfxC3togYpPiQ3NtjjAwb/Tptw4luLeCd3cYBag4Pg=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=BXcinLi/0Oce3XLR3UFJIvzpohnoGM/S55qXAQ5EuCDwGJw9OZyvZryxXn/K/X1lA
+	 YtgqZOZak6DYmqL4LOI4K0xdKK8mPmZ3GMM67RVLrENmtTsVBKoFSDWVNyUYrP/f7t
+	 QlJg9jQ/ZB5+cubqybmt07OLHQlZ1FYTERD6pZO1qOi2k+6z4r7wtLT1h9riZn/LTS
+	 eMlt9tZxKT7H5MDr4ts2YdPDgbwFV56+jf2WcBT2maPhM8XmgK7Tj1HjVbxi8JJlS+
+	 UoKYSLseqWviUsj1b8yTeA3mCZh/uBUJF9cQ7apNCD88G1EV6RiDeGytQaLXFVoQbj
+	 MA72/0H47VWJw==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240516162239.GA184911@rigel>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 1/6] wifi: wilc1000: set net device registration as
+ last
+ step during interface creation
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240514-mac_addr_at_probe-v2-1-afef09f1cd10@bootlin.com>
+References: <20240514-mac_addr_at_probe-v2-1-afef09f1cd10@bootlin.com>
+To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Cc: Ajay Singh <ajay.kathat@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Heiko Thiery <Heiko.Thiery@kontron.com>,
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171593292799.3274748.9026063903119888618.kvalo@kernel.org>
+Date: Fri, 17 May 2024 08:02:09 +0000 (UTC)
 
-On Fri, May 17, 2024 at 12:22:39AM +0800, Kent Gibson wrote:
-> On Thu, May 16, 2024 at 10:55:40PM +0800, Kent Gibson wrote:
-> > On Thu, May 16, 2024 at 12:57:42PM +0000, Hagar Hemdan wrote:
-> > > On Tue, May 14, 2024 at 08:42:21PM +0800, Kent Gibson wrote:
-> >
-> > Now I need to test your patch to see what it actually does.
-> >
-> 
-> Tested.  Fails.  It does what I thought it would - clamps the offset into
-> bounds BEFORE the call to gpio_device_get_desc().
-> 
-> The appropriate place for this fix is in gpio_device_get_desc(), after
-> the bounds check.
-> 
-> Cheers,
-> Kent.
->
-yes, you are right. The speculation macro should be after the bounds
-check. I missed this property this time.
-I will fix it in v2.
+Alexis Lothoré <alexis.lothore@bootlin.com> wrote:
 
-Thanks,
-Hagar Hemdan
+> net device registration is currently done in wilc_netdev_ifc_init but
+> other initialization operations are still done after this registration.
+> Since net device is assumed to be usable right after registration, it
+> should be the very last step of initialization.
+> 
+> Move netdev registration at the very end of wilc_netdev_ifc_init to let
+> this function completely initialize netdevice before registering it.
+> 
+> Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+
+6 patches applied to wireless-next.git, thanks.
+
+6fe46d5c0a84 wifi: wilc1000: set net device registration as last step during interface creation
+ec99908906e9 wifi: wilc1000: register net device only after bus being fully initialized
+5f1191ed386c wifi: wilc1000: set wilc_set_mac_address parameter as const
+59cf9277c1fe wifi: wilc1000: add function to read mac address from eFuse
+a5d6b1d453a1 wifi: wilc1000: make sdio deinit function really deinit the sdio card
+83d9b54ee5d4 wifi: wilc1000: read MAC address from fuse at probe
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240514-mac_addr_at_probe-v2-1-afef09f1cd10@bootlin.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
