@@ -1,104 +1,131 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBC712F583
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4FC12F591
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715960661; cv=none; b=Ecn7If0WP5pdxYki7DW7w3iSxqFwYFJ3Ydl3YtnTmetK0hFP68O/kJpWYy8Gtl6c45yxDQOsxS5QDYGkhWjy7h48G0YWl2EWwICzBAnf+in/DzinL6RLQa5Ktr0gOf8Dr1NhxGryYcKn9qfyb67n2S9eG/I/Ynl9lOne7dOHDtc=
+	t=1715960790; cv=none; b=Cu+8MRdtJXvkNTWzWpx/G/uakv05ScItN2YSp7O8xNtZo6YW6y4G9+tUGLgcmQys1DUslhjIouKAFuwFLradl7N2pC3jnx7XdfBjj+YlhysOHWzHxtBEYVZMHg7dRSiffy0+qz258gLwYOsa3nRGM7z6QSNOMVwD9Yf+/A9+r0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715960661; c=relaxed/simple;
-	bh=ubyDTwryfQPZLTc+IjrHIJp94tvVFhpq1O41naBbjCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YhzbT0iaiOmlaTpMFVDr1VFtr/zmuFYHxqlAe3AN6MYXqDxSUvssNDpKBPRA8VodWK7B7J2Mtg4rpzDTqA1oon8phNoJFs5Erq9MWXT4r5tYCgjMPWLOWYOVlMKlMb23PiGRO6csVvyanje85YPIup747xWIBN6XLCFLTnVDuMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=qDj/We1H; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1715960790; c=relaxed/simple;
+	bh=L+/cqJrfLgz1kjou+NmF9NFKoLdY5p3cQhtaNnEuh5E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VKKJHv+7fX4O8rGaYzgsFnKP8fGJUd9pUWGkjjVeG66vvzy4lCtwagFloyCdJ6n621q8RMlzh/xo9FBy/ASF4MEJNAahLamSRxoUfMr64LQY7Xxo28mlGA7z6J4c24QLXcfIpHRHyscL2tWv7lnyTwhi/GHKt4MClFwSlTGDbYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2H+UFAH; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="qDj/We1H"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44HBkwC4006101;
-	Fri, 17 May 2024 10:44:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=aI5LaUqJdFSBuuJH0VoyzX6QInTDuqm+xUeSu8umdAk=; b=
-	qDj/We1Hd8fCnVzDrsmlO48hwdf2s9sl9Au5+1n7wqhEtjoSWMx/jRlMaO87FqLH
-	XhzwQlLvEbEgvXlUnRmGypWfEOuz8cJALgf6siqxUJysFMtxCamvPHl7mNfojjJN
-	IkM34EjV+aV20SKVoks4MH9wQyVvwEy26+Czlu9KKUYJTeCqQoBe3Ub7lyHHa724
-	fXR803jk6sLFawtVrnM0cfS9Rgh4vzgCCRd6dWBIVBmSedTY6yq4M+7Iy0sQMfX4
-	RfneY97ZuK6YNUgP4FYhGuGk3TRSlrIfewSfgpZtpsVdLGDCR3PmKFI0CHtFcbpU
-	sX+SIa/PHhJpFe8XbcLQJA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3y253hpjtp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 10:44:05 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
- 2024 16:44:04 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Fri, 17 May 2024 16:44:04 +0100
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id F4016820244;
-	Fri, 17 May 2024 15:44:03 +0000 (UTC)
-Message-ID: <c5f8c1cf-c575-4619-bfca-e89e9c439017@opensource.cirrus.com>
-Date: Fri, 17 May 2024 16:44:03 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2H+UFAH"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ec486198b6so12109295ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:46:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715960788; x=1716565588; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DgpuDYI8j+33tJ7Dk5uqzFwntZEb5ZpRgbewCzVqOoQ=;
+        b=F2H+UFAHtsLTpHJ++449q8j4Zki8P5I6kcDQZzzSGItv4OMoFUYHfeDBFfxuhbLYUU
+         TzK2A5mekil7v+566mPr0PfEJS0nv5DF+ojXiYZxri8HFRH4GRMEG8CwvqkGD71oujz5
+         CgMNtgAvDGbiEdfF8coNPQQ4dEBQVi1Au7RVLJq+SODxw8gnFseP1SgWkuWaSGdsqHJf
+         L+K6KDeL5s/N+3puJSAMe2V0UXIvRQxfWlQyPycF9vuL52J+bil2Mra8mWOb3Z6tY8BA
+         6ibaukpghoW24B7ae083FuJLf7GYtjq/gNS7OSWArD6zinITXAXMQ+hs1jlj0fkU5bxm
+         gsRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715960788; x=1716565588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DgpuDYI8j+33tJ7Dk5uqzFwntZEb5ZpRgbewCzVqOoQ=;
+        b=sSaRA4x48MJtTt+0NcvMsfCPFsqaVfVAnr6Um3lzMY6/sQYWGKSZkUBF0K9UbpqGeJ
+         9TBRExe7NavP4Jq4Ncaw3rkvJYRoK0am1XV50OyYg83G+lj60Y00qyDNGpIjnPWZUMQl
+         tEWF2OlxReHbzAhngjFea9kywOtDndv23PxSCA1v4n8OMQIz2JtRz/4qus10SvWS6otj
+         FrHuOLJQsm+vNgPDvsWWohpdpVUmpxibcy4nuN7tY4bdGC2x/qfyCraSLSmBKu9Ha22U
+         qESBvFZE95eWi4Hr3Xy0s/NmDmdDjz4Lt9iCk6qpdl8oNr5sDvl9brghmtS4bRH6HY5E
+         QSRw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6d/jr08bzygedDQ2VGvG7/jP61daD4oyqzC8T/WffyIUHqd/RnJsng/jeXNPweEfKPSEBAwbTbuLxJVckkmWZruMDbbA5jE1GX/Pw
+X-Gm-Message-State: AOJu0YywO9Qeo1tX5Zj1A+1+7XB4bDRu/JfTSWHm/tE4Jr21Vr35AU77
+	WM3LQn7uyjkwuBOrBYe31vmRzrpr1gBENgu4+VvIslrjf+rbwIp9aGaxom+IeFjDjNaryGXz/mY
+	J7KpodKKbPWQCUHEkhMJxrZIBvTQ=
+X-Google-Smtp-Source: AGHT+IG4waejpOf/qZLwoj5ZE1TOjOYuV5JPU5s1UwIqmRNmcsyC3TIfxfK361yvR3M1Lc0rBKgAs5yjmvxDuRVdaMQ=
+X-Received: by 2002:a17:90b:4f45:b0:2b1:534f:ea09 with SMTP id
+ 98e67ed59e1d1-2b6cc76d27amr21340210a91.23.1715960788222; Fri, 17 May 2024
+ 08:46:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/11] regmap: kunit: Run sparse cache tests at non-zero
- register addresses
-To: Guenter Roeck <linux@roeck-us.net>
-CC: <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-References: <20240408144600.230848-1-rf@opensource.cirrus.com>
- <20240408144600.230848-5-rf@opensource.cirrus.com>
- <5c1daddb-d8b3-420a-839f-208e0a6e168b@roeck-us.net>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <5c1daddb-d8b3-420a-839f-208e0a6e168b@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: fi3BOhpBBGmWom79-ofhUs6ozaq06rTw
-X-Proofpoint-GUID: fi3BOhpBBGmWom79-ofhUs6ozaq06rTw
-X-Proofpoint-Spam-Reason: safe
+References: <20240516115721.1.I8d413e641239c059d018d46cc569048b813a5d9b@changeid>
+ <9dd1cfd1-fe13-4434-a7cc-e14113dcaf53@amd.com>
+In-Reply-To: <9dd1cfd1-fe13-4434-a7cc-e14113dcaf53@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 17 May 2024 11:46:16 -0400
+Message-ID: <CADnq5_NGLrrFmFHFX2bC7naByJGofEiYQyWvRP6CO4BDFo52TQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Remove GC HW IP 9.3.0 from noretry=1
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Tim Van Patten <timvp@chromium.org>, LKML <linux-kernel@vger.kernel.org>, 
+	alexander.deucher@amd.com, prathyushi.nangia@amd.com, 
+	Tim Van Patten <timvp@google.com>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+	Felix Kuehling <Felix.Kuehling@amd.com>, Ikshwaku Chauhan <ikshwaku.chauhan@amd.com>, Le Ma <le.ma@amd.com>, 
+	Lijo Lazar <lijo.lazar@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>, "Shaoyun.liu" <Shaoyun.liu@amd.com>, 
+	Shiwu Zhang <shiwu.zhang@amd.com>, Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/05/2024 20:53, Guenter Roeck wrote:
-> Hi,
-> 
-> On Mon, Apr 08, 2024 at 03:45:53PM +0100, Richard Fitzgerald wrote:
->> Run the cache_drop() and cache_present() tests at blocks of addresses
->> that don't start at zero.
->>
->> This adds a from_reg parameter to struct regmap_test_param. This is
->> used to set the base address of the register defaults created by
->> gen_regmap().
->>
->> Extra entries are added to sparse_cache_types_list[] to test at non-zero
->> from_reg values. The cache_drop() and cache_present() tests are updated
->> to test at the given offset.
->>
->> The aim here is to add test cases to cache_drop() for the bug fixed by
->> commit 00bb549d7d63 ("regmap: maple: Fix cache corruption in
->> regcache_maple_drop()")
->>
->> But the same parameter table is used by the cache_present() test so
->> let's also update that to use from_reg.
->>
->> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> 
-> With this patch in mainline, I get lots of errors such as
-> 
-> [   23.494308] =============================================================================
-> [   23.496391] BUG kmalloc-64 (Tainted: G                 N): kmalloc Redzone overwritten
+On Fri, May 17, 2024 at 2:35=E2=80=AFAM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
 >
+> Am 16.05.24 um 19:57 schrieb Tim Van Patten:
+> > From: Tim Van Patten <timvp@google.com>
+> >
+> > The following commit updated gmc->noretry from 0 to 1 for GC HW IP
+> > 9.3.0:
+> >
+> >      commit 5f3854f1f4e2 ("drm/amdgpu: add more cases to noretry=3D1")
+> >
+> > This causes the device to hang when a page fault occurs, until the
+> > device is rebooted. Instead, revert back to gmc->noretry=3D0 so the dev=
+ice
+> > is still responsive.
+>
+> Wait a second. Why does the device hang on a page fault? That shouldn't
+> happen independent of noretry.
+>
+> So that strongly sounds like this is just hiding a bug elsewhere.
 
-Fix sent:
-https://lore.kernel.org/lkml/20240517144703.1200995-1-rf@opensource.cirrus.com/T/#u
+Fair enough, but this is also the only gfx9 APU which defaults to
+noretry=3D1, all of the rest are dGPUs.  I'd argue it should align with
+the other GFX9 APUs or they should all enable noretry=3D1.
 
+Alex
+
+>
+> Regards,
+> Christian.
+>
+> >
+> > Fixes: 5f3854f1f4e2 ("drm/amdgpu: add more cases to noretry=3D1")
+> > Signed-off-by: Tim Van Patten <timvp@google.com>
+> > ---
+> >
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c | 1 -
+> >   1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c b/drivers/gpu/drm/=
+amd/amdgpu/amdgpu_gmc.c
+> > index be4629cdac049..bff54a20835f1 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
+> > @@ -876,7 +876,6 @@ void amdgpu_gmc_noretry_set(struct amdgpu_device *a=
+dev)
+> >       struct amdgpu_gmc *gmc =3D &adev->gmc;
+> >       uint32_t gc_ver =3D amdgpu_ip_version(adev, GC_HWIP, 0);
+> >       bool noretry_default =3D (gc_ver =3D=3D IP_VERSION(9, 0, 1) ||
+> > -                             gc_ver =3D=3D IP_VERSION(9, 3, 0) ||
+> >                               gc_ver =3D=3D IP_VERSION(9, 4, 0) ||
+> >                               gc_ver =3D=3D IP_VERSION(9, 4, 1) ||
+> >                               gc_ver =3D=3D IP_VERSION(9, 4, 2) ||
+>
