@@ -1,63 +1,30 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBB56A325;
-	Fri, 17 May 2024 15:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CFD1F93E;
+	Fri, 17 May 2024 15:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715958843; cv=none; b=rndg24dPB31N4lAHtKA56uRrw4tiLPNvkVCD/h83ZQ3Q/Bvo2tUtiK7jCjy4MF44jsunfOJ4Maa87l+MiY3eHwcIXR7vTLKnqgkBmBth1K399iKXWLLybtsy6XCyelU+8b9+RirUPmBrvwTn2qKFmkLf9OrM5rqhT15lBupaRXs=
+	t=1715958936; cv=none; b=Z3rEy1bJri2zaQqsMJpU5drb4fJbW1w7DUOVk7dwTDyxC+7EX19bGE7BmLvSX91j3+TrwSsUmmGB2iZL3GNkc2z8LTp56+TQgYUMn2w0sufOfObfgn+Gt9W02WI/JuqeqOPM1CO8XMY6RrAz63ytxKsuHfHvLIqKqT4Ch9wM2E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715958843; c=relaxed/simple;
-	bh=b8BwasW2wpCf4km+OXto+ewclPGsdKNXI2hXEUZMm0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L2h7EiSS6t+ASdLbWt7WhecClg/Uok9Ct6JxISKNhXHkzx52RiKsIy2MwSvYXSuLuDJgsTGTS9FB1sJJWDwx275Pj6Ix4NiaIYsTI28OVYK2+y4gtD/m/qOR4wJs++eOzaSblp+WxQtI8FhpFxPjSztOldY0H06OSf3Qpf6BJzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Rfv23b5/; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Rfv23b5/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 38FFB60002;
-	Fri, 17 May 2024 15:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715958839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b8BwasW2wpCf4km+OXto+ewclPGsdKNXI2hXEUZMm0A=;
-	b=Rfv23b5/HdsOhMcx0s8aGcPQZPDazt8vsyoqc1HVwsEWkgD7QsHCkXUp/hsJolTx32HXDr
-	NSebq+qYhnpRRCOySs6eOlQkM+CrAw2moMP3BBXw/KbQQFRH/PcBvGwNpllONCMXTyPv43
-	/ikugNzujeqdwwfml8K9UIbYhbRw3ebrLd5mhL+LkqSfVUtqxvZ/vdQwfD31cBp/vAxMPd
-	zwd0/2KeqkLvbWWAFIefkrzez32LFsWwNpUABYm3Y92ORlo0lBlS/qYs4uCrjUeAo+J3RE
-	EZENFmsFgrxTmWszoMVPooFz21zlPxz3hXSolzwl04lEuaVY/gMeHu1OyhxmiQ==
-Date: Fri, 17 May 2024 17:13:55 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
- kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Radu Pirea
- <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
- Gospodarek <andy@greyhouse.net>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
- <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
- Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>,
- Willem de Bruijn <willemb@google.com>, Alexandra Winter
- <wintera@linux.ibm.com>
-Subject: Re: [PATCH net-next v12 00/13] net: Make timestamping selectable
-Message-ID: <20240517171355.0a46ad53@kmaincent-XPS-13-7390>
-In-Reply-To: <20240501190925.34c76ada@kernel.org>
-References: <20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com>
-	<20240501190925.34c76ada@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715958936; c=relaxed/simple;
+	bh=tzkeAutgHKDvtezMaRFIFQ1vOKGxq4NGB23kr6qrPCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NI4PbtxFjKBzBBKfazPnlMDCjISSNrRK3l8PhRF0KKoo/FCxjwor8agjswJtkcvS9R3+TI7MGCuu/1GVheHznJMBLIP5EA6K7hOd+SxVldsET6OHJUs4mlGtyEV+OVfKQbFl7pVw5WCVN7mnzpfidRyYm6KNNOXwGGvH6Oq2OwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn; spf=pass smtp.mailfrom=link.tyut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=link.tyut.edu.cn
+Received: from localhost.localdomain (unknown [120.208.127.153])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 2CDA0920119;
+	Fri, 17 May 2024 23:05:50 +0800 (CST)
+From: Hu Haowen <2023002089@link.tyut.edu.cn>
+To: corbet@lwn.net
+Cc: Hu Haowen <2023002089@link.tyut.edu.cn>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs/zh_TW: add translation for glossary
+Date: Fri, 17 May 2024 23:05:28 +0800
+Message-ID: <20240517150529.102958-1-2023002089@link.tyut.edu.cn>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,30 +32,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHx4dVh5LGU0dTxgZQx8ZSVUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpJS1VJS0NVSklMVUpOSFlXWRYaDxIVHRRZQVlPS0hVSk1DTExPVUpLS1VKQktLWQ
+	Y+
+X-HM-Tid: 0a8f8716f93303a1kunm2cda0920119
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MU06Cio4MzMMOTQUMQ46MAoB
+	DxYwCQxVSlVKTEpOQk5DSENDS09PVTMWGhIXVUlLSUhLS0lLQ0I7FxIVEFUPAg4PVR4fDlUYFUVZ
+	V1kSC1lBWUpJS1VJS0NVSklMVUpOSFlXWQgBWUFITUxJNwY+
 
-On Wed, 1 May 2024 19:09:25 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+Add translation for glossary and add it to index according to commit
+cac02cbb91f31e28 ("docs/zh_CN: Add a glossary of Chinese translation
+terms").
 
-> On Tue, 30 Apr 2024 17:49:43 +0200 Kory Maincent wrote:
-> > Up until now, there was no way to let the user select the hardware
-> > PTP provider at which time stamping occurs. The stack assumed that PHY =
-time
-> > stamping is always preferred, but some MAC/PHY combinations were buggy.
-> >=20
-> > This series updates the default MAC/PHY default timestamping and aims to
-> > allow the user to select the desired hwtstamp provider administratively=
-. =20
->=20
-> Looks like there's a linking problem starting with patch 9. On a quick
-> look the functions from a module are now called by build-in code.
+Signed-off-by: Hu Haowen <2023002089@link.tyut.edu.cn>
+---
+ Documentation/translations/zh_TW/glossary.rst | 36 +++++++++++++++++++
+ Documentation/translations/zh_TW/index.rst    |  5 +--
+ 2 files changed, 39 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/translations/zh_TW/glossary.rst
 
-Indeed I have issues in the patch series when building PTP core as module.
-Will fix it. Thanks.
+diff --git a/Documentation/translations/zh_TW/glossary.rst b/Documentation/translations/zh_TW/glossary.rst
+new file mode 100644
+index 000000000000..6ff2a5a460ea
+--- /dev/null
++++ b/Documentation/translations/zh_TW/glossary.rst
+@@ -0,0 +1,36 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++術語表
++======
++
++這不是一個完善的術語表，我們只是將有爭議的和陌生的翻譯詞彙記錄於此，
++它的篇幅應該根據內核文檔翻譯的需求而增加。新詞條最好隨翻譯補丁一起
++提交，且僅在以下情況下收錄新詞條：
++
++        - 在翻譯過程中遇到陌生詞彙，且尚無翻譯先例的；
++        - 在審閱過程中，針對某詞條出現了不同的翻譯意見；
++        - 使用頻率不高的詞條和首字母縮寫類型的詞條；
++        - 已經存在且有歧義的詞條翻譯。
++
++
++* atomic: 原子的，一般指不可中斷的極小的臨界區操作。
++* DVFS: 動態電壓頻率升降。（Dynamic Voltage and Frequency Scaling）
++* EAS: 能耗感知調度。（Energy Aware Scheduling）
++* flush: 刷新，一般指對cache的沖洗操作。
++* fork: 創建, 通常指父進程創建子進程。
++* futex: 快速用戶互斥鎖。（fast user mutex）
++* guest halt polling: 客戶機停機輪詢機制。
++* HugePage: 巨頁。
++* hypervisor: 虛擬機超級管理器。
++* memory barriers: 內存屏障。
++* MIPS: 每秒百萬指令。（Millions of Instructions Per Second）,注意與mips指令集區分開。
++* mutex: 互斥鎖。
++* NUMA: 非統一內存訪問。
++* OpenCAPI: 開放相干加速器處理器接口。（Open Coherent Accelerator Processor Interface）
++* OPP: 操作性能值。
++* overhead: 開銷，一般指需要消耗的計算機資源。
++* PELT: 實體負載跟蹤。（Per-Entity Load Tracking）
++* sched domain: 調度域。
++* semaphores: 信號量。
++* spinlock: 自旋鎖。
++* watermark: 水位，一般指頁表的消耗水平。
+diff --git a/Documentation/translations/zh_TW/index.rst b/Documentation/translations/zh_TW/index.rst
+index 660a74d2023c..95809012a9ef 100644
+--- a/Documentation/translations/zh_TW/index.rst
++++ b/Documentation/translations/zh_TW/index.rst
+@@ -119,9 +119,10 @@ TODOList:
+ 術語表
+ ------
+ 
+-TODOList:
++.. toctree::
++   :maxdepth: 1
+ 
+-* glossary
++   glossary
+ 
+ 
+ 索引和表格
+-- 
+2.45.0
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
