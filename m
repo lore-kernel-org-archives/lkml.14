@@ -1,46 +1,63 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF89B1803A;
-	Fri, 17 May 2024 07:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841D917C69
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715932626; cv=none; b=YAnLmhw3sKbcXA/3llbmp4WkIfa9vu9WMgPhA+LEhgZxkUHlt2telf7+xF0FU1LhOpxNHfFGTl5h64BoOHT5O4q5A5W5VMjNspq96qaCvqebiJjJaPtbmgF291GQuFSgGVAdQqut1XtB3w+DwmMh7iIs3+hnhyN4P93vmC2sZso=
+	t=1715932626; cv=none; b=YerMBtrnovc3QJAdBKza0OQ3v14TeyfHSRKEhw+eKjFVIuRDW5qq6cE3euTf3G+2cMNLm1axEo+fFzo6j+kV6qeLFixIPiVBt01FzguTt80F6aWuMir4vR7CvUxn0EINgAU/RW79mdEy8JD2UjPMVhv8jqHbu3nodV1kDTItznM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715932626; c=relaxed/simple;
-	bh=nRXR2LjG3zEYoBYs/eBWZZzXBm17qacK7QdMd8NBzuk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A5ysY7O/LHR2R+kNC7DC1Y1l2/PQQvk11fYQhGKysR1qVf1B1jQn265ErCcR+vBE0EndmXas2S85zLCI5nCYZMG/drMnyNrt0wMylFpY52Rs2ni1FGlxWxMb0ZVZ0QemYdH26EOz+i9zWyAsxiVrRTok0jQoUGU5aDFPIvVOLZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 44H7uhIE32159345, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 44H7uhIE32159345
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 May 2024 15:56:43 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 17 May 2024 15:56:43 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 17 May
- 2024 15:56:42 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v19 07/13] rtase: Implement a function to receive packets
-Date: Fri, 17 May 2024 15:52:56 +0800
-Message-ID: <20240517075302.7653-8-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240517075302.7653-1-justinlai0215@realtek.com>
-References: <20240517075302.7653-1-justinlai0215@realtek.com>
+	bh=j4mDDIQXQY6Yt0ARbhylixXExzCaLztKBD5Eb//BJs8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KQQSvQNggGl73zbSftTiFPRFlfoWLmj/H6SRHlnrz0/MHfvGG+wY9W5ajivR4WhYTj6P1/0HVo4XDwKzjKl8b0Mv87O2un9uSWRoUVVc7hKaXyuhCqkH9EoqH8nqaEUWNq84hMcAeXljd4SiSVMTBDAFQjApQnBtrec31MeYaoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c87Vm4Sh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c87Vm4Sh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715932623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2+jG2UN45Z0JvX/V83PsUb5yMQORYV9ShWj2nAq73LA=;
+	b=c87Vm4ShnqlOAmVozSkjzhRgafpscyvHrKWYpdrDi9/Ns7lthkxXBTDTNRbsDyc9gprYRi
+	xGpgr1g+ghs8Na+1iy69PGtYd+tgQnQn0c0AWzsA4Xs6WrsIsfazD0hQWdVAGK5WHwmlAN
+	/xh0hD1asc8ixvCUvpj64labohTvUpU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-264-_AF1HgkKO6uhxaIdJBA8cg-1; Fri, 17 May 2024 03:56:59 -0400
+X-MC-Unique: _AF1HgkKO6uhxaIdJBA8cg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19FD6800074;
+	Fri, 17 May 2024 07:56:59 +0000 (UTC)
+Received: from alecto.usersys.redhat.com (unknown [10.43.17.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8184828E2;
+	Fri, 17 May 2024 07:56:57 +0000 (UTC)
+From: Artem Savkov <asavkov@redhat.com>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Artem Savkov <asavkov@redhat.com>
+Subject: [PATCH 1/5] powerpc64/bpf: jit support for 32bit offset jmp instruction
+Date: Fri, 17 May 2024 09:56:46 +0200
+Message-ID: <20240517075650.248801-2-asavkov@redhat.com>
+In-Reply-To: <20240517075650.248801-1-asavkov@redhat.com>
+References: <20240517075650.248801-1-asavkov@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,176 +65,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Implement rx_handler to read the information of the rx descriptor,
-thereby checking the packet accordingly and storing the packet
-in the socket buffer to complete the reception of the packet.
+Add jit support for JMP32_JA instruction. Tested using test_bpf module.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+Signed-off-by: Artem Savkov <asavkov@redhat.com>
 ---
- .../net/ethernet/realtek/rtase/rtase_main.c   | 146 ++++++++++++++++++
- 1 file changed, 146 insertions(+)
+ arch/powerpc/net/bpf_jit_comp64.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index fe9a5bd645e2..266272d8e0ab 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -457,6 +457,152 @@ static void rtase_rx_ring_clear(struct rtase_ring *ring)
- 	}
- }
- 
-+static int rtase_fragmented_frame(u32 status)
-+{
-+	return (status & (RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG)) !=
-+		(RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG);
-+}
-+
-+static void rtase_rx_csum(const struct rtase_private *tp, struct sk_buff *skb,
-+			  const union rtase_rx_desc *desc)
-+{
-+	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
-+
-+	/* rx csum offload */
-+	if (((opts2 & RTASE_RX_V4F) && !(opts2 & RTASE_RX_IPF)) ||
-+	    (opts2 & RTASE_RX_V6F)) {
-+		if (((opts2 & RTASE_RX_TCPT) && !(opts2 & RTASE_RX_TCPF)) ||
-+		    ((opts2 & RTASE_RX_UDPT) && !(opts2 & RTASE_RX_UDPF))) {
-+			skb->ip_summed = CHECKSUM_UNNECESSARY;
-+		} else {
-+			skb->ip_summed = CHECKSUM_NONE;
-+		}
-+	} else {
-+		skb->ip_summed = CHECKSUM_NONE;
-+	}
-+}
-+
-+static void rtase_rx_vlan_skb(union rtase_rx_desc *desc, struct sk_buff *skb)
-+{
-+	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
-+
-+	if (!(opts2 & RTASE_RX_VLAN_TAG))
-+		return;
-+
-+	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q),
-+			       swab16(opts2 & RTASE_VLAN_TAG_MASK));
-+}
-+
-+static void rtase_rx_skb(const struct rtase_ring *ring, struct sk_buff *skb)
-+{
-+	struct rtase_int_vector *ivec = ring->ivec;
-+
-+	napi_gro_receive(&ivec->napi, skb);
-+}
-+
-+static int rx_handler(struct rtase_ring *ring, int budget)
-+{
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	union rtase_rx_desc *desc_base = ring->desc;
-+	u32 pkt_size, cur_rx, delta, entry, status;
-+	struct net_device *dev = tp->dev;
-+	union rtase_rx_desc *desc;
-+	struct sk_buff *skb;
-+	int workdone = 0;
-+
-+	cur_rx = ring->cur_idx;
-+	entry = cur_rx % RTASE_NUM_DESC;
-+	desc = &desc_base[entry];
-+
-+	do {
-+		/* make sure discriptor has been updated */
-+		rmb();
-+		status = le32_to_cpu(desc->desc_status.opts1);
-+
-+		if (status & RTASE_DESC_OWN)
+diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
+index 8afc14a4a1258..3071205782b15 100644
+--- a/arch/powerpc/net/bpf_jit_comp64.c
++++ b/arch/powerpc/net/bpf_jit_comp64.c
+@@ -1053,6 +1053,9 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+ 		case BPF_JMP | BPF_JA:
+ 			PPC_JMP(addrs[i + 1 + off]);
+ 			break;
++		case BPF_JMP32 | BPF_JA:
++			PPC_JMP(addrs[i + 1 + imm]);
 +			break;
-+
-+		if (unlikely(status & RTASE_RX_RES)) {
-+			if (net_ratelimit())
-+				netdev_warn(dev, "Rx ERROR. status = %08x\n",
-+					    status);
-+
-+			dev->stats.rx_errors++;
-+
-+			if (status & (RTASE_RX_RWT | RTASE_RX_RUNT))
-+				dev->stats.rx_length_errors++;
-+
-+			if (status & RTASE_RX_CRC)
-+				dev->stats.rx_crc_errors++;
-+
-+			if (dev->features & NETIF_F_RXALL)
-+				goto process_pkt;
-+
-+			rtase_mark_to_asic(desc, tp->rx_buf_sz);
-+			goto skip_process_pkt;
-+		}
-+
-+process_pkt:
-+		pkt_size = status & RTASE_RX_PKT_SIZE_MASK;
-+		if (likely(!(dev->features & NETIF_F_RXFCS)))
-+			pkt_size -= ETH_FCS_LEN;
-+
-+		/* the driver does not support incoming fragmented
-+		 * frames. they are seen as a symptom of over-mtu
-+		 * sized frames
-+		 */
-+		if (unlikely(rtase_fragmented_frame(status))) {
-+			dev->stats.rx_dropped++;
-+			dev->stats.rx_length_errors++;
-+			rtase_mark_to_asic(desc, tp->rx_buf_sz);
-+			continue;
-+		}
-+
-+		skb = ring->skbuff[entry];
-+		dma_sync_single_for_cpu(&tp->pdev->dev,
-+					ring->mis.data_phy_addr[entry],
-+					tp->rx_buf_sz, DMA_FROM_DEVICE);
-+
-+		ring->skbuff[entry] = NULL;
-+
-+		if (dev->features & NETIF_F_RXCSUM)
-+			rtase_rx_csum(tp, skb, desc);
-+
-+		skb->dev = dev;
-+		skb_put(skb, pkt_size);
-+		skb_mark_for_recycle(skb);
-+		skb->protocol = eth_type_trans(skb, dev);
-+
-+		if (skb->pkt_type == PACKET_MULTICAST)
-+			dev->stats.multicast++;
-+
-+		rtase_rx_vlan_skb(desc, skb);
-+		rtase_rx_skb(ring, skb);
-+
-+		dev_sw_netstats_rx_add(dev, pkt_size);
-+
-+skip_process_pkt:
-+		workdone++;
-+		cur_rx++;
-+		entry = cur_rx % RTASE_NUM_DESC;
-+		desc = ring->desc + sizeof(union rtase_rx_desc) * entry;
-+		prefetch(desc);
-+	} while (workdone != budget);
-+
-+	ring->cur_idx = cur_rx;
-+	delta = rtase_rx_ring_fill(ring, ring->dirty_idx, ring->cur_idx, 1);
-+
-+	if (!delta && workdone)
-+		netdev_info(dev, "no Rx buffer allocated\n");
-+
-+	ring->dirty_idx += delta;
-+
-+	if ((ring->dirty_idx + RTASE_NUM_DESC) == ring->cur_idx)
-+		netdev_emerg(dev, "Rx buffers exhausted\n");
-+
-+	return workdone;
-+}
-+
- static void rtase_rx_desc_init(struct rtase_private *tp, u16 idx)
- {
- 	struct rtase_ring *ring = &tp->rx_ring[idx];
+ 
+ 		case BPF_JMP | BPF_JGT | BPF_K:
+ 		case BPF_JMP | BPF_JGT | BPF_X:
 -- 
-2.34.1
+2.45.0
 
