@@ -1,41 +1,35 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614FA8F55;
-	Fri, 17 May 2024 02:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C340D8F45;
+	Fri, 17 May 2024 03:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715914282; cv=none; b=XZT2FyRtVCNbEF9fBJTOv6hw38LNlg4Mtgfx+i7IDF28F14/jlztmVtiiE6ELdC2buKl7e79uGHT4GMbbc3s9UytcmgVr1BmWKVPKgQ6LjrbnNTC5kdLOG3uraTQeDYMYuUp7iIeQRgGflCuNM6StRW9rTf1gQ+LcG8nE95YhJg=
+	t=1715915429; cv=none; b=Hz09ewUgiwfuL7tlxFQFo1nOwqrWkm4/4bdoU6hF8Z70tfn/O3Qjz3FUe6TTSFuTFDB7ywlr6UH5LNI8oR1y/p9n2gNX1+uylQZHG3M/R+c3DwN5U3XTKwpeE6DwnCZ/rYdfcZuy3Np2wv78oASFD9n7V+DByOvGRsxvWODUl00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715914282; c=relaxed/simple;
-	bh=zzzCp1QUm1wKcYmoJU9X68oy67/XfeJKxY6LghtApFw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JduQVZFBlQogMTBZwfpd9/hNV4v8RvSOYylOw+YkYKtfjSawjYWJsgjlzNrbcrsmR3fKF0uVpey1mmkAggfXLsEib/5eJunZ+2oPJWSV5zSAjX4xC74Be6mOzRNrwb9BKa9g4Cj7TQWmHwI9HsT2OAjopXQ6vVSB+YEN2lr9MKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAC3v5MIxkZmdCJ_Cw--.63667S2;
-	Fri, 17 May 2024 10:50:49 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH net-next v2] net: ethernet: mtk_eth_soc: add missing check for rhashtable_init
-Date: Fri, 17 May 2024 10:39:22 +0800
-Message-Id: <20240517023922.362327-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1715915429; c=relaxed/simple;
+	bh=ewr5LqD6aFBNjgSdsKy+jHQsXVziy9ZAzxRTdgAdHuI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I5OBZCBSTwsiQTEpqu7oBLeV/z7jYk/kqLcNdV0xx9xTOxbp3aWosGRcyIKIfEBOxkGUHx5bPNqjgalUoxxwCtZ1QtaDgV5CEln5cw4gyM3yZDIBtzsrhDCbGJ6kiwg9Yxs6p9P8s1x/qym08YVcYCkUMN55NEtgXPyIGKCT6yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjplShAr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjplShAr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 69B8FC4AF07;
+	Fri, 17 May 2024 03:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715915429;
+	bh=ewr5LqD6aFBNjgSdsKy+jHQsXVziy9ZAzxRTdgAdHuI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XjplShArF2rnbwlAcmCYgpwnFooZFoYCqSus3hGCZDTxetj1qdVHEuf8wyO2YeMwH
+	 c4foFnFpDd49rjAHa1XsZhx0YgBAjXhJ7Qt4SbiRENDP2jAxodfj/RghV/Rvs2fbKK
+	 ZonfRiZg0ggqwa5C1CZWzt7S2UuYjczeDlfbNsTdLuCFhqnNxTRToJR985arGj6oc5
+	 ioORWRwJ6O2l6+tyRFwcMiYBKbqAmMCLdsAdMCH7dWK9y7Ex8fHYk0e+tDNUmm2Q/q
+	 F2tytl+mhrLKNTswwhUbx5RI5JLeoRd+cCUGUbDK8NkCsMTgfvVmkoI0VpdIB/EOtC
+	 Z4b/x+4w5UItQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 546A2C54BDC;
+	Fri, 17 May 2024 03:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,75 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAC3v5MIxkZmdCJ_Cw--.63667S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1rZrWftF4UWw17ArWxXrb_yoW8AFWDpr
-	4Yya47ZF1rJw4UWa1kAa1xZFW5Ga1xK34DGFyfZw1Sv345Ar47JF1Utay5ZrW0yrWDKFsI
-	yr1jv3sxCFZ8Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUq38
-	nUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Subject: Re: [PATCH bpf-next] bpftool: fix make dependencies for vmlinux.h
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171591542934.18753.10218221858654904278.git-patchwork-notify@kernel.org>
+Date: Fri, 17 May 2024 03:10:29 +0000
+References: <20240513112658.43691-1-asavkov@redhat.com>
+In-Reply-To: <20240513112658.43691-1-asavkov@redhat.com>
+To: Artem Savkov <asavkov@redhat.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ bpf@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jstancek@redhat.com
 
-Add check for the return value of rhashtable_init() and return the error
-if it fails in order to catch the error.
+Hello:
 
-Fixes: 33fc42de3327 ("net: ethernet: mtk_eth_soc: support creating mac address based offload entries")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
-Changelog:
+This patch was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-v1 -> v2:
+On Mon, 13 May 2024 13:26:58 +0200 you wrote:
+> With pre-generated vmlinux.h there is no dependency on neither vmlinux
+> nor bootstrap bpftool. Define dependencies separately for both modes.
+> This avoids needless rebuilds in some corner cases.
+> 
+> Suggested-by: Jan Stancek <jstancek@redhat.com>
+> Signed-off-by: Artem Savkov <asavkov@redhat.com>
+> 
+> [...]
 
-1. Rewrite the error handling.
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 +-
- drivers/net/ethernet/mediatek/mtk_ppe.c     | 5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Here is the summary with links:
+  - [bpf-next] bpftool: fix make dependencies for vmlinux.h
+    https://git.kernel.org/bpf/bpf-next/c/83eea61776c9
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index cae46290a7ae..f9b8956a8726 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -4957,7 +4957,7 @@ static int mtk_probe(struct platform_device *pdev)
- 
- 			eth->ppe[i] = mtk_ppe_init(eth, eth->base + ppe_addr, i);
- 
--			if (!eth->ppe[i]) {
-+			if (IS_ERR_OR_NULL(eth->ppe[i])) {
- 				err = -ENOMEM;
- 				goto err_deinit_ppe;
- 			}
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
-index 0acee405a749..4895c6febaf8 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
-@@ -884,12 +884,15 @@ struct mtk_ppe *mtk_ppe_init(struct mtk_eth *eth, void __iomem *base, int index)
- 	struct mtk_ppe *ppe;
- 	u32 foe_flow_size;
- 	void *foe;
-+	int ret;
- 
- 	ppe = devm_kzalloc(dev, sizeof(*ppe), GFP_KERNEL);
- 	if (!ppe)
- 		return NULL;
- 
--	rhashtable_init(&ppe->l2_flows, &mtk_flow_l2_ht_params);
-+	ret = rhashtable_init(&ppe->l2_flows, &mtk_flow_l2_ht_params);
-+	if (ret)
-+		return ERR_PTR(ret);
- 
- 	/* need to allocate a separate device, since it PPE DMA access is
- 	 * not coherent.
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
