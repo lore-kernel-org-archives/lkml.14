@@ -1,86 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7B418651;
-	Fri, 17 May 2024 12:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CB041C68
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715948563; cv=none; b=Hc/fI7w9fXJBxnpStpGCwGIWg9akPpQgvK353TGjGYE7szlatjNrSadQIIg6V2zaY2BHt5Wgch5TSE2Wk5XOltKxmCOxNquQmLNo3DseSt50E9hOFhd2/JhRI12hWnmSs9p+6rmXKZM+NZpOrahFnBvBqg0hJOzUCZnjj6Hxy9w=
+	t=1715948706; cv=none; b=Du5iZRE6PWCiLXYMnM+JoYwV/yCfVg2a/zjwQYKylyY5PHj8H68QwOvK3vQpd/1G/vQuo+pLzmFudYpqnYiaMJ0v4ZJweGaDsi9mp3193VEhkoy5fVox5409cnZIHefJ8dE4AYZgjfh3ykfqMp+dMZtqFGIE7o3g6qwRS4sRmcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715948563; c=relaxed/simple;
-	bh=GStUMf9ZPNcQRDuiycSc19qAYoifeOrKAZJLIJFG/gA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gAwM7ySSljpcV+jVEeoV9ehPazjuzYsE0uh5w7VDkms2NahyC5mcV1C44fIYdd5v9GNpXnVlL+azVrWVsQrc1+mohY1o3+Pi+VVS0c9uY4kscxgJAZeM+oJNCMWvzBuc13rIwkaejsnbdSrJZi6irt/fBtvET/NvcZ3yXVXQQjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mf2L3rRQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715948706; c=relaxed/simple;
+	bh=auN0caH7D6wVUHe+HwaFcQrcS3XrqjErEzQRs7BVtbs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BPP3+pumlzGRwZiBaankoYgjsKjBiTnPnHNDfwqkPjiBFbU4gia/eKB8wb9D8pk0nowioT2TBUqJhOBkUjeD3vpsPA109jtVmHyb1+1qyynehETztPzHEVZq1v6md5bpAtEepckms3KWpZfikhjp1OcBf6qllz0RWH3IWlFGJyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=XuucxtbC; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mf2L3rRQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11977C2BD10;
-	Fri, 17 May 2024 12:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715948563;
-	bh=GStUMf9ZPNcQRDuiycSc19qAYoifeOrKAZJLIJFG/gA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mf2L3rRQ6yt2IjgijzYg/GRRT/rsSy/5szZHWxFVepe5BXuO1PaKXMtlW5yBXffKE
-	 7AjiaCdXCZyTzgTIchIrz7CV9ekS5ai+mvXfwLDGhYEsxgrN2czNRBWaSOxj02MP+7
-	 FJYox7U1AWHfWqSbcsTUahNx+48+ZGcCIN50UQy8EgvBTWbDgM9Yc3LIs9RSorlpb3
-	 /a8GRKN5ZYW0lUwkjjCZFvxl1liR4+1CtRhXyWvV90Xe8kJEJTc2aH/gjEgiDhqaZy
-	 4eS/0uoJWcHm7gOXyCDjYjbbt3nXWpBqXZOQ8IdC133S1AV8icnkVWohbLLGAF132u
-	 vd4XhgrHnH7uQ==
-Date: Fri, 17 May 2024 13:22:38 +0100
-From: Simon Horman <horms@kernel.org>
-To: Hagar Hemdan <hagarhem@amazon.com>
-Cc: Norbert Manthey <nmanthey@amazon.de>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Sabrina Dubroca <sd@queasysnail.net>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: esp: cleanup esp_output_tail_tcp() in case of
- unsupported ESPINTCP
-Message-ID: <20240517122238.GE443576@kernel.org>
-References: <20240516080309.1872-1-hagarhem@amazon.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XuucxtbC"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44HBl9kK019146;
+	Fri, 17 May 2024 06:58:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	PODMain02222019; bh=n/U1T0up33AqvYftHIrXa/+1I2+X8aJw6y0lb6mwEz8=; b=
+	XuucxtbCbY6q1DpvOo9lNtqkpW3+YL7G+hrwyQd9MkMEFUuNUpTckXchnfou9yzR
+	gGgcr0vaRLnrCmYpyxOr1OtUO5ifTv1DZPU+V1SZGff4FpYcasN1nUtwBjyNuBAi
+	Aa/szo2dCdMbs7QED4GDEUm92uc36YmA273E9ZNO8vd1aSTFW2Hp6bFFrioBDB2W
+	Q0qPf17M7IwMckfmfAbkHPp6o03G88f2xxsplNpz7EtV0hKrtuHo5frdnzKoVkL9
+	d6bb6yQMFGkxnW180M7KYcxEkTVIWd6Mfz03KZFIM6MPv2KDM5Cmlb7V/YWHI9xY
+	TY8BkSt9TxnQErw/qKC5UQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3y3qveve4b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 06:58:33 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
+ 2024 12:58:30 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Fri, 17 May 2024 12:58:30 +0100
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id CE563820244;
+	Fri, 17 May 2024 11:58:30 +0000 (UTC)
+Message-ID: <ffa73a17-ac32-493f-b0a4-32d3ac4c9027@opensource.cirrus.com>
+Date: Fri, 17 May 2024 12:58:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516080309.1872-1-hagarhem@amazon.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/11] regmap: kunit: Run sparse cache tests at non-zero
+ register addresses
+To: Guenter Roeck <linux@roeck-us.net>
+CC: <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+References: <20240408144600.230848-1-rf@opensource.cirrus.com>
+ <20240408144600.230848-5-rf@opensource.cirrus.com>
+ <5c1daddb-d8b3-420a-839f-208e0a6e168b@roeck-us.net>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <5c1daddb-d8b3-420a-839f-208e0a6e168b@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: jQyPbB5cl9eiAX21IbeZVOX5_cO30Wqz
+X-Proofpoint-GUID: jQyPbB5cl9eiAX21IbeZVOX5_cO30Wqz
+X-Proofpoint-Spam-Reason: safe
 
-On Thu, May 16, 2024 at 08:03:09AM +0000, Hagar Hemdan wrote:
-> xmit() functions should consume skb or return error codes in error
-> paths.
-> When the configuration "CONFIG_INET_ESPINTCP" is not used, the
-> implementation of the function "esp_output_tail_tcp" violates this rule.
-> The function frees the skb and returns the error code.
-> This change removes the kfree_skb from both functions, for both
-> esp4 and esp6.
+On 16/05/2024 20:53, Guenter Roeck wrote:
+> Hi,
 > 
-> This should not be reachable in the current code, so this change is just
-> a cleanup.
+> On Mon, Apr 08, 2024 at 03:45:53PM +0100, Richard Fitzgerald wrote:
+>> Run the cache_drop() and cache_present() tests at blocks of addresses
+>> that don't start at zero.
+>>
+>> This adds a from_reg parameter to struct regmap_test_param. This is
+>> used to set the base address of the register defaults created by
+>> gen_regmap().
+>>
+>> Extra entries are added to sparse_cache_types_list[] to test at non-zero
+>> from_reg values. The cache_drop() and cache_present() tests are updated
+>> to test at the given offset.
+>>
+>> The aim here is to add test cases to cache_drop() for the bug fixed by
+>> commit 00bb549d7d63 ("regmap: maple: Fix cache corruption in
+>> regcache_maple_drop()")
+>>
+>> But the same parameter table is used by the cache_present() test so
+>> let's also update that to use from_reg.
+>>
+>> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 > 
-> This bug was discovered and resolved using Coverity Static Analysis
-> Security Testing (SAST) by Synopsys, Inc.
+> With this patch in mainline, I get lots of errors such as
 > 
-> Fixes: e27cca96cd68 ("xfrm: add espintcp (RFC 8229)")
-> Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
+> [   23.494308] =============================================================================
+> [   23.496391] BUG kmalloc-64 (Tainted: G                 N): kmalloc Redzone overwritten
+> 
 
-Hi Hagar,
+Just a random thought, I wonder whether in gen_regmap() this:
 
-If esp_output() may be the x->type->output callback called from esp_output()
-then I agree that this seems to be a problem as it looks like a double free
-may occur.
+   if (config->num_reg_defaults)
+	config->max_register += (config->num_reg_defaults - 1) *
+				config->reg_stride;
+   else
+	config->max_register += (BLOCK_TEST_SIZE * config->reg_stride);
 
-However, I believe that your proposed fix introduces will result in skb
-being leaked leak in the case of esp_output_done() calling
-esp_output_tail_tcp(). Perhaps a solution is for esp_output_done()
-to free the skb if esp_output_tail_tcp() fails.
+should be:
 
-I did not analyse other call-chains, but I think such analysis is needed.
+config->max_register += max(config->num_reg_defaults - 1,
+			    BLOCK_TEST_SIZE) * config->reg_stride;
 
-...
+I've only had a quick scan through the code without seeing any other
+obvious problem.
