@@ -1,77 +1,114 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DE23D0A3;
-	Fri, 17 May 2024 11:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6563D0A3;
+	Fri, 17 May 2024 11:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715945071; cv=none; b=qNBNj1+o2V/X/UDkKfG6dBu0YisJsuiKv7OGdM7s23mfP+SEwJUWvvzQ6e5ndxusaJwy4RuxOJZOmmleb0GdiYr38+WiTdxUansNRFbNoSiKzFcbiDjBYsrtX8hTAZsuakTc3fls2Sd9/LGutubgS9OapFramdyBmG//PmSsgt8=
+	t=1715945090; cv=none; b=aHnF199yJN8hwxUX1ZJNY6YXxrKvAkWaYWMFvtaG0tT++9V3DVKCNL/Oob1RNtFT3iMhByTN9A13Os5V8WGd9mbJTzBNrdA6WGWm5SGB5SLuz1Oni14skcJ7J1WQzRNYQQRG15bgNxjTcidqR0wQeqioIehYbwrKIvNNYnySL7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715945071; c=relaxed/simple;
-	bh=/U/WRK8hRfylmU9DyqslMEgp/3MFClzyh1OpQT4xCks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UVcxQoULUbs7nZ2eCiqIUy8wM1AU1f2DB0SRGCj/+Wwl9cEksJPhyNZk9YyZM27m/pG2UsQCtIvYWS6FDktxKJgDkZoUhm/52wOGKlnzuYUTZsh5NQ0tG1R2B+vhJYielEHarQCmUmQHAy2U+2qTIO8qsR1lP/0SkmV9aaj60ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f472d550cbso1104985b3a.1;
-        Fri, 17 May 2024 04:24:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715945069; x=1716549869;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xYuusdJL7E+8RFZR+POmkQq9dUP8qkt55MVFLW6H1bU=;
-        b=pS09+26Xq76TVy7pAuUQCkQPuZ9a16CC4m87kGZyAQsCHi66Becw6tDGcyMEXQmXxR
-         JIJU+WZiHc/4ETIkZF/ddWH/qyz9nBEW6Tre8NJHBNG8cdEVx5qUA+uRXmwg7d59WmR1
-         7lJ1TjDREPEVeGuWRYtKZsb/fB2hxJdIgj6TRySQA/ydbDGaTCqUjU6XA9nwvCsG0wmq
-         0Q7lkzbBqDzuHOqwyOqYZBjW6cG7efai7b8bYdgg9kWSMrx67Qc9ecAUgZ/4newIL7sl
-         c7t31t8PkiwHiQTRYfeaDFz68cQM2RBcb8dwebyyIAVNu+0+vrQpePIyjNMWrtray8p/
-         szKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqE2MMVc/LpE8GzzU1flRSD8JsEX1+fqNS2Mz5seA4vXynZ2hBBCx5uj6f5JgOJCAAjLfCdg15RyXSxOWgFiROgHPpmSgj/IDJy3pvjrdLj+qH1VJNNNffzCKLuvai+O6DDLmvy/kZ
-X-Gm-Message-State: AOJu0YxKtaSbdrGuPymjpsd4HLHDA3dYiqcWKYTHulnYnYniHhuuMa8U
-	4mNAJfeV6Hwy1yNWkpm9QwOcbmAXtz3tvhYV91n5CwAd+iQ8PNMD
-X-Google-Smtp-Source: AGHT+IGyX0R1DkrtBZ/0KeL2ZtPjsZ+lewMwoXHcsdMFhMwYU4ngDrrOKr2M0Ysn6NhiflYUxFNzsg==
-X-Received: by 2002:a05:6a00:21c1:b0:6ea:b818:f499 with SMTP id d2e1a72fcca58-6f4e02d3f9amr29359227b3a.19.1715945069495;
-        Fri, 17 May 2024 04:24:29 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2b72sm14538961b3a.159.2024.05.17.04.24.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 04:24:29 -0700 (PDT)
-Date: Fri, 17 May 2024 20:24:27 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Aleksandr Mishin <amishin@t-argos.ru>
-Cc: Jonathan Chocron <jonnyc@amazon.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3] PCI: dwc: al: Check IORESOURCE_BUS existence during
- PCIe config preparation
-Message-ID: <20240517112427.GV202520@rocinante>
-References: <20240328180126.23574-1-amishin@t-argos.ru>
- <20240503125705.46055-1-amishin@t-argos.ru>
+	s=arc-20240116; t=1715945090; c=relaxed/simple;
+	bh=DoyCXkpOfzLWKgC9ctYH1ac8X2WIkrxKpQLa1A3Sw+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RGedFnnCr7jSLO+SOId/+ao9ofgtcfAcyUnnuwuQTWGhkomdQxhL+YHRnEy0Xn0iQkSZ8zq+fGjfVKm4UFKf5oaUxe/su8d18RvDrAVadwxS50eGufNuvqtpDHy85kiW+w37FL91HujFKYFVIliUIJkXSCAPIvzwAHiHYmLQL/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vgl3p3kPYz4f3jkq;
+	Fri, 17 May 2024 19:24:38 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2280C1A017F;
+	Fri, 17 May 2024 19:24:44 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBFrPkdm3V+kMw--.2732S4;
+	Fri, 17 May 2024 19:24:41 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	chandanbabu@kernel.org,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH v3 0/3] iomap/xfs: fix stale data exposure when truncating realtime inodes
+Date: Fri, 17 May 2024 19:13:52 +0800
+Message-Id: <20240517111355.233085-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503125705.46055-1-amishin@t-argos.ru>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHGBFrPkdm3V+kMw--.2732S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF4fZr4furyktF45Xry7Jrb_yoW8XF45pF
+	Z8Gry5Wr48Gry3ua4fua1qv345J3W0yrWUuFyxtwnxZFy2qryIyr10ga10gayDtrykXr4U
+	Xr15JFZ7Wr1vyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoO
+	J5UUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hello,
+From: Zhang Yi <yi.zhang@huawei.com>
 
-> If IORESOURCE_BUS is not provided in Device Tree it will be fabricated
-> in of_pci_parse_bus_range(). So NULL pointer dereference will not occur.
-> But other drivers do this check. So it can be added for code consistency.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Changes since v2:
+ - Use div_u64_rem() instead of do_div().
 
-Applied to controller/al, thank you!
+Changes since v1:
+ - In iomap_truncate_page() and dax_truncate_page(), for the case of
+   truncate blocksize is not power of 2, use do_dive() to calculate the
+   offset.
 
-[1/1] PCI: dwc: al: Check IORESOURCE_BUS existence during PCIe config preparation
-      https://git.kernel.org/pci/pci/c/d4f21f188682
+This series fix a stale data exposure issue reported by Chandan when
+running fstests generic/561 on xfs with realtime device[1]. The real
+problem is xfs_setattr_size() doesn't zero out enough range when
+truncating a realtime inode, please see the third patch or [1] for
+details.
 
-	Krzysztof
+The first two patches modify iomap_truncate_page() and
+dax_truncate_page() to pass filesystem identified blocksize, and drop
+the assumption of i_blocksize() as Dave suggested. The third patch fix
+the issue by modifying xfs_truncate_page() to pass the correct
+blocksize, and make sure zeroed range have been flushed to disk before
+updating i_size.
+
+[1] https://lore.kernel.org/linux-xfs/87ttj8ircu.fsf@debian-BULLSEYE-live-builder-AMD64/
+
+Thanks,
+Yi.
+
+Zhang Yi (3):
+  iomap: pass blocksize to iomap_truncate_page()
+  fsdax: pass blocksize to dax_truncate_page()
+  xfs: correct the zeroing truncate range
+
+ fs/dax.c               | 13 +++++++++----
+ fs/ext2/inode.c        |  4 ++--
+ fs/iomap/buffered-io.c | 13 +++++++++----
+ fs/xfs/xfs_iomap.c     | 36 ++++++++++++++++++++++++++++++++----
+ fs/xfs/xfs_iops.c      | 10 ----------
+ include/linux/dax.h    |  4 ++--
+ include/linux/iomap.h  |  4 ++--
+ 7 files changed, 56 insertions(+), 28 deletions(-)
+
+-- 
+2.39.2
+
