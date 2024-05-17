@@ -1,150 +1,125 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4AA13DDB5;
-	Fri, 17 May 2024 17:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF11F13DDB8
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 17:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715967466; cv=none; b=qnKftw9zF0cFEAJ5ZTRO44jC1oUeqo+s0DtearWJaQAT6slNiZVN1T1AsOhyPyVSxc+Y+/vjr+YavOf9NWYt/F2Wed5Oe4hoVs59BTOIo+Pj7pDFjWtqdNo+Y7SMg4OwcUbOTan0ftAA6iZ5TB7Wl77bRkGQqV9BIS0eIyxMl2E=
+	t=1715967495; cv=none; b=koTY3KPS+PEh/GSgOWGP5mqktzeVspD3gICGRN++6Wvscp88jGbtfMlyQ1LWTvi1h0sefYhkGCp7+k3meb+3awIIVQT+ft4WFOgvCOM6voCa1OuhoVoTGHCXgv5FNf3qLnMGLco0/y+BYFHcm3zMkY3GHWKQVIIq+ZJP9TQD7+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715967466; c=relaxed/simple;
-	bh=ETgq2IUFXlU+gNPfxlvPx0NXbt5wKYxRCTj/5sRS1Bk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TjtxaId4FQN3EfwRXVKFqoAVUYpsX3b4U6kk7fY+8WnU34vx0uB//8NhxhfA16i5BwbGa3CUAWAwBp5kUKDhveAuWFLwgyvTynTrUvP7zLWAw/V8HbD1yEMAA48VZkr2mT787TiGMPquTEmdTlgYt+v9zw9APaUpqaeeDEXi5nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QXZ9HdJa; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715967495; c=relaxed/simple;
+	bh=BY/hZo13CLwFiuLGXW4iBxh7QnHKbF0uMbcvEEfu4u8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BwEAlB0sVODNl+E0tvawUtL3xIwDgBc8rMJ+5wpYG0twyIt4bACDMo7G5sN2B/n74rGUEWfETPTz8ZyOJYMnUQLUzuFCGU0h1y+bl+q1F5k8NMsc4b9qHFL9aNHoniJg6UepiZ8Oc/8Ft2UsxwzVbYPxUN+4nr3zIakR5RwTHv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t5Up0GXK; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QXZ9HdJa"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44HHbSIw115953;
-	Fri, 17 May 2024 12:37:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715967448;
-	bh=QwzJlg6Go90nYaTZryV4XJOfLUk1jVtqeECp9jUGAUg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=QXZ9HdJaYbSXdbfMwBv31ydeJghwLP96ZKlrRY99Pi16WMAMEQTDaF5F0aEEh7wch
-	 XAkTSuTtZZt7UC3DpbaWKT8g8DfAfDmgPCfz0xzfl83EEh87h1XeB2+7QsYJqOjMk5
-	 sJ9qvusXNQ4JytVr/voLMZh6bOsps2SyPDZnR9Iw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44HHbSC8028873
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 17 May 2024 12:37:28 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 17
- May 2024 12:37:28 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 17 May 2024 12:37:28 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44HHbRRw013542;
-	Fri, 17 May 2024 12:37:27 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <devarsht@ti.com>, <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
-        <andriy.shevchenko@linux.intel.com>, <adobriyan@gmail.com>,
-        <jani.nikula@intel.com>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
-        <daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <andrzej.p@collabora.com>, <nicolas@ndufresne.ca>,
-        <davidgow@google.com>, <dlatypov@google.com>
-Subject: [PATCH v8 08/10] lib: math_kunit: Add tests for new rounding related macros
-Date: Fri, 17 May 2024 23:07:26 +0530
-Message-ID: <20240517173726.803899-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240517171532.748684-1-devarsht@ti.com>
-References: <20240517171532.748684-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t5Up0GXK"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5d8dd488e09so10108988a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 10:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715967493; x=1716572293; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jzuhfQ6w0AXMfOQGLEmaZLyI3U2s6W3AD5J7+WG1xGA=;
+        b=t5Up0GXKE0nkxk5wqIQ7eWRlUoDpJnS7WQsuU8v11c2jqeSwyWw0nwnYn8AtG6Ipo4
+         8EGheSwGmmjQsomo7LptjOv3eMa1qo17l0yQ3+sNlhlAMrJs2JlHGiiFwoysmcBMluhm
+         upCotU8d4vWWOFoTpbff6148Ysx721R8EcTcoNQk960SaIKYrOXhypnChp7yl6+uoawS
+         PlDGV1lXz+JfB4bZAkPwKLXs5QBhCtxncfL7zfWiph9OGI4ieAzHCTnS9L00zSs4xHyD
+         nVIXawrQOxBg8tbbIha4svhF9b7yYCF/Duyk7W1rkbrbghIyXPa9cvsqkhcGFUH2UlTx
+         WRag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715967493; x=1716572293;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jzuhfQ6w0AXMfOQGLEmaZLyI3U2s6W3AD5J7+WG1xGA=;
+        b=laFR5xIsnDV/IeslZJ4qsYer9QeY3os9lgfO26yVAAAy2mKq6CjX883H1KkG6xsHKF
+         z1ST81SLrsr8iSjLl284jpwCuM7OjjOUO3fJy7+eYYmrbFSgEllGQl+w4Sl31bz/FAif
+         mOt0qNjjeLlTgCfFvuQiLnxBUMAsCWZTYiPdO/sEhJUBgjuuiqxbtEuy9XuVS2RFLPzM
+         xyeYugi0DUEIf+cUfIQ8BTthTDEkBchWSMhh0pvqdV1ST0hLeenx48CIYx2kf1fsrk8d
+         yPuyT8X5wkgYfLEutBhAo3ZJ1i7/FR9/wLG8jczrjaDbVIUeDeB4V+Bja4bNa+KoVkTQ
+         +VeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVngVjYLcQNEI6mA49fabuKphCDGKvN9xg7ocpDk2m9xvqAevylv8hSflF38B0dh/OMWnL0mLJdNFcPf55IRxsNff7gf0iY7tNElKTL
+X-Gm-Message-State: AOJu0Yz8Cu5/uBV5YBSlDaLfctPxkhLpmaC8ggk2nGgfM/tXdBqRx28/
+	IpIjJ/yVqJLxMnu6VIHtVlkkTL774S+lIfjFEkX5HIXbWc3PkIsBVKp3AHN5syk61ovrYtNgF/a
+	2jNWiFWRQrh0Z2w==
+X-Google-Smtp-Source: AGHT+IEcSEnhlabGL3MljAexrvTLovRHSHspelEweE+rv/3eEDJNx1P5eiOiDLgxiAyFBGGJIPp91LWn/mkrckE=
+X-Received: from tj-virt.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5683])
+ (user=tjmercier job=sendgmr) by 2002:a17:90b:2341:b0:2b9:df61:c002 with SMTP
+ id 98e67ed59e1d1-2b9df61c049mr21973a91.3.1715967492100; Fri, 17 May 2024
+ 10:38:12 -0700 (PDT)
+Date: Fri, 17 May 2024 17:38:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240517173805.4181349-1-tjmercier@google.com>
+Subject: [PATCH v3 1/2] doc: swiotlb: iommu/dma: Clarify swiotlb=force option
+ applies only to dma-direct
+From: "T.J. Mercier" <tjmercier@google.com>
+To: tjmercier@google.com, Jonathan Corbet <corbet@lwn.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: iommu@lists.linux.dev, isaacmanjarres@google.com, robin.murphy@arm.com, 
+	will@kernel.org, joro@8bytes.org, Petr Tesarik <petr@tesarici.cz>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add tests for round_closest_up/down and roundclosest macros which round
-to nearest multiple of specified argument. These are tested with kunit
-tool as shared here [1].
+IOMMU implementations now sometimes bounce memory through SWIOTLB to
+achieve cacheline alignment [1], or prevent DMA attacks by untrusted
+devices [2]. These uses of SWIOTLB differ conceptually from historical
+use which was a solution to the problem of device addressing
+limitations that prevent DMA to some portion of system memory
+(typically beyond 4 GiB). IOMMUs also solve the problem of device
+addressing limitations and therefore eliminate the need for SWIOTLB for
+that purpose. However as mentioned, IOMMUs can use SWIOTLB for other
+purposes.
 
-[1]: https://gist.github.com/devarsht/3f9042825be3da4e133b8f4eda067876
+The swiotlb=force kernel command line parameter does not impact IOMMU
+related use of SWIOTLB, and that is intentional. IOMMUs cannot be forced
+to use SWIOTLB for all buffers. Update the documentation for the swiotlb
+parameter to clarify that SWIOTLB use can only be forced in scenarios
+where an IOMMU is not involved.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+[1] https://lore.kernel.org/all/20230612153201.554742-16-catalin.marinas@arm.com
+[2] https://lore.kernel.org/all/20190906061452.30791-1-baolu.lu@linux.intel.com/
+Signed-off-by: T.J. Mercier <tjmercier@google.com>
+Reviewed-by: Petr Tesarik <petr@tesarici.cz>
 ---
-V1->V8 (No change, patch introduced in V8)
----
- lib/math/math_kunit.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ Documentation/admin-guide/kernel-parameters.txt | 1 +
+ Documentation/arch/x86/x86_64/boot-options.rst  | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/lib/math/math_kunit.c b/lib/math/math_kunit.c
-index 1b00e4195a1a..1955dcd5655d 100644
---- a/lib/math/math_kunit.c
-+++ b/lib/math/math_kunit.c
-@@ -68,6 +68,26 @@ static void round_down_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, round_down((1 << 30) - 1, 1 << 29), 1 << 29);
- }
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 213d0719e2b7..84c582ac246c 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6486,6 +6486,7 @@
+ 				 to a power of 2.
+ 			force -- force using of bounce buffers even if they
+ 			         wouldn't be automatically used by the kernel
++			         where a hardware IOMMU is not involved
+ 			noforce -- Never use bounce buffers (for debugging)
  
-+static void round_closest_up_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_EQ(test, round_closest_up(17, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_up(15, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_up(14, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_up((1 << 30) - 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_up((1 << 30) + 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_up((1 << 30) - 1, 2), 1 << 30);
-+}
-+
-+static void round_closest_down_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_EQ(test, round_closest_down(17, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_down(15, 4), 16);
-+	KUNIT_EXPECT_EQ(test, round_closest_down(14, 4), 12);
-+	KUNIT_EXPECT_EQ(test, round_closest_down((1 << 30) - 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_down((1 << 30) + 1, 1 << 30), 1 << 30);
-+	KUNIT_EXPECT_EQ(test, round_closest_down((1 << 30) - 1, 2), (1 << 30) - 2);
-+}
-+
- /* These versions can round to numbers that aren't a power of two */
- static void roundup_test(struct kunit *test)
- {
-@@ -93,6 +113,18 @@ static void rounddown_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, rounddown(4, 3), 3);
- }
+ 	switches=	[HW,M68k,EARLY]
+diff --git a/Documentation/arch/x86/x86_64/boot-options.rst b/Documentation/arch/x86/x86_64/boot-options.rst
+index 137432d34109..a37139d1752f 100644
+--- a/Documentation/arch/x86/x86_64/boot-options.rst
++++ b/Documentation/arch/x86/x86_64/boot-options.rst
+@@ -292,6 +292,9 @@ implementation:
+         Prereserve that many 2K slots for the software IO bounce buffering.
+       force
+         Force all IO through the software TLB.
++        Hardware IOMMU implementations can use SWIOTLB bounce buffering in
++        some circumstances, but they cannot be forced to always use them, so
++        this option only has an effect when no hardware IOMMU is involved.
+       noforce
+         Do not initialize the software TLB.
  
-+static void roundclosest_test(struct kunit *test)
-+{
-+	KUNIT_EXPECT_EQ(test, roundclosest(21, 5), 20);
-+	KUNIT_EXPECT_EQ(test, roundclosest(19, 5), 20);
-+	KUNIT_EXPECT_EQ(test, roundclosest(17, 5), 15);
-+	KUNIT_EXPECT_EQ(test, roundclosest((1 << 30), 3), (1 << 30) - 1);
-+	KUNIT_EXPECT_EQ(test, roundclosest((1 << 30) - 1, 1 << 29), 1 << 30);
-+
-+	KUNIT_EXPECT_EQ(test, roundclosest(4, 3), 3);
-+	KUNIT_EXPECT_EQ(test, roundclosest(5, 3), 6);
-+}
-+
- static void div_round_up_test(struct kunit *test)
- {
- 	KUNIT_EXPECT_EQ(test, DIV_ROUND_UP(0, 1), 0);
-@@ -270,8 +302,11 @@ static struct kunit_case math_test_cases[] = {
- 	KUNIT_CASE(int_sqrt_test),
- 	KUNIT_CASE(round_up_test),
- 	KUNIT_CASE(round_down_test),
-+	KUNIT_CASE(round_closest_up_test),
-+	KUNIT_CASE(round_closest_down_test),
- 	KUNIT_CASE(roundup_test),
- 	KUNIT_CASE(rounddown_test),
-+	KUNIT_CASE(roundclosest_test),
- 	KUNIT_CASE(div_round_up_test),
- 	KUNIT_CASE(div_round_closest_test),
- 	KUNIT_CASE_PARAM(gcd_test, gcd_gen_params),
 -- 
-2.39.1
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
