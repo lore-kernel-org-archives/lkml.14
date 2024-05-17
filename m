@@ -1,283 +1,207 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E727652F9A;
-	Fri, 17 May 2024 13:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADF850255;
+	Fri, 17 May 2024 13:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715951716; cv=none; b=Ow5wz3B6DLqq2kky4lEIe7qXpSOS5r67BbSfnZ9dbLwUY92/dqHFos2w4rS1SLBbGPgY7Qih0xiTtDb65Sw8IVq5jLq//xpfhfghsGeCocF3wK4UkhUFM4QJxPSoU9PXcPTeHDGeZL09BKCMbK6rUw4JoD1lPVj0pmGbYh6qWgk=
+	t=1715951778; cv=none; b=Gvp+OplCc9EEKixuf75cK3T7lCLYJIPEJoEs29XbJoIu6rkAmYG9X5p2A6y7e25G9KLXD7ujWN05jfLTlQ6L/G/hSs5NRZRrq5z78nIFAtfnFOT2a4V1getc+ghMH6jPC4RXq6zOeBrq5c5rwbaiJ33c5BGlKiKtgEHNf014x68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715951716; c=relaxed/simple;
-	bh=RsFQ+OoWI70l8JgaWfMkVQEqy2Jyx6j6QbNtAz2F3Og=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vm5NRkUEQkKq/2WKI2td+4O+qivZhghIgCAcoXcK9z6H62AwqOzukuv29R2DPPudn46Fd8BrGBFUFKq1mE8x4Pgiz2OPRyiMNfutHCiolMLPmGb4QlbQFjAQ7YuRHvau5Q9WPrtD9TzkQMCkrOcbqKK6T1Yp4nSXYllOw+lNmrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=JDHKZcgV; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
+	s=arc-20240116; t=1715951778; c=relaxed/simple;
+	bh=oLw1U/bIncficobO2SIQU+Ct9tJgm5fGqsxduffjJ3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oHMGXysjeGq6j4T9sCEGAsK+MLzJf+jAKH1Tzzvn0ze32dZxznNP/M2IrP3HHYTOLw/IW3IANskR6OrUuVpW62k8Ox1GQrwhtms/Vphz6/spShx8bCZ5x09TmYepHATRq2P15PGzYznoJDZO0+PEMsFnSMemvxFlwTOqLEiN+nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z50XfUii; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="JDHKZcgV"
-X-Envelope-To: broonie@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1715951712;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=furiSTSuRDcRd2X5RjG7qZBiz4mVfyegHighaEnbVrw=;
-	b=JDHKZcgVd02Cb1jDAPb5lrgjO495Vpvj9ji4ic/EfRVzYyJQNEjMkzTNbvvHUEtnaliot9
-	26zTd5DMIHj+qdqgSOoLzNOrGrBK99F4imlHxN9jhghXnM3Nf8IPXAk+Biawbp2ltvPraM
-	e/jgiNIMiZp7oDb8hfl24NGNfL2OtOhHVDYENNXgJUIHz9kSHpusr4Thc7Xo6iV9m4Yd4I
-	ijir9dYa/zPXHhAHbEV0iJm/d8Vo2BSww8dNlDV8dZY3PeEzwz2Vs/pzPuVEQPasS2A+QG
-	CUyKyKvkMU0R2HdTOnnRDTO1sn/2WvgYyiL8eKWHCioYt6ytpxak/IwW6JWRYg==
-X-Envelope-To: gregkh@linuxfoundation.org
-X-Envelope-To: rafael@kernel.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: linus.walleij@linaro.org
-X-Envelope-To: brgl@bgdev.pl
-X-Envelope-To: lgirdwood@gmail.com
-X-Envelope-To: perex@perex.cz
-X-Envelope-To: tiwai@suse.com
-X-Envelope-To: mturquette@baylibre.com
-X-Envelope-To: sboyd@kernel.org
-X-Envelope-To: andi.shyti@kernel.org
-X-Envelope-To: saravanak@google.com
-X-Envelope-To: emas@bang-olufsen.dk
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-gpio@vger.kernel.org
-X-Envelope-To: linux-sound@vger.kernel.org
-X-Envelope-To: linux-clk@vger.kernel.org
-X-Envelope-To: linux-i2c@vger.kernel.org
-X-Envelope-To: alsi@bang-olufsen.dk
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Date: Fri, 17 May 2024 15:02:16 +0200
-Subject: [PATCH 09/13] i2c: add AD24xx I2C controller driver
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z50XfUii"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715951776; x=1747487776;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=oLw1U/bIncficobO2SIQU+Ct9tJgm5fGqsxduffjJ3E=;
+  b=Z50XfUii+PU5EAAQfBpMCYhT74qxRHGOLq4OhpdFYqbVw7zgu2fUCDvz
+   faJuX8YHDMEpJ5GH3nosWgTTPkyUn9dgHOAYv8NnNOnAqqe9UOVmf+oza
+   qLbRCQFin4Smfvkcjg6psYTOOP7WGx84WZWHP3hLdNCmaz7+VBGxu/zaX
+   vwGkZoSMgdpXugcTO6tMfzi/04qmig5PwevmXiqkU+zC6Lq3LjXnN1UOF
+   IlGsmU9banVhRjOrJ4OygVXmLutooiQMZ28S95bNP3OcdWf8CveMSF3sl
+   oRnNi06tmPlykjP55wClMa/zSYlVCV05tcmyLUu4R0zKSPq1AHhk2YckC
+   A==;
+X-CSE-ConnectionGUID: NnFLlKM0QCS8m03NtA/O8g==
+X-CSE-MsgGUID: h3sMD/ZlR0Kv614QLk7FhA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11968770"
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="11968770"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 06:16:15 -0700
+X-CSE-ConnectionGUID: THVLFMVEQ++8soNt9bp++Q==
+X-CSE-MsgGUID: qVMG0JPBSfKXyIyzr1ohhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="31803043"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.21])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 06:16:12 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v2] cxl/events: Use a common struct for DRAM and General Media
+ events
+Date: Fri, 17 May 2024 15:16:09 +0200
+Message-ID: <13630976.tdPhlSkOF2@fdefranc-mobl3>
+In-Reply-To: <6646a835ac144_2c26294da@dwillia2-xfh.jf.intel.com.notmuch>
+References:
+ <20240516102116.3512377-1-fabio.m.de.francesco@linux.intel.com>
+ <6646a835ac144_2c26294da@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240517-a2b-v1-9-b8647554c67b@bang-olufsen.dk>
-References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
-In-Reply-To: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
-To: Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
- Saravana Kannan <saravanak@google.com>
-Cc: Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-i2c@vger.kernel.org, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-X-Migadu-Flow: FLOW_OUT
 
-From: Alvin Šipraga <alsi@bang-olufsen.dk>
+On Friday, May 17, 2024 2:43:33=E2=80=AFAM GMT+2 Dan Williams wrote:
+> Fabio M. De Francesco wrote:
+> > cxl_event_common was a poor naming choice and caused confusion with the
+> > existing Common Event Record.
+>=20
+> I would say "unfortunate" rather than "poor".
+>
 
-Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
----
- drivers/a2b/Kconfig             |   1 +
- drivers/clk/Kconfig             |   2 +-
- drivers/i2c/busses/Kconfig      |   7 +++
- drivers/i2c/busses/Makefile     |   1 +
- drivers/i2c/busses/i2c-ad24xx.c | 121 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 131 insertions(+), 1 deletion(-)
+Agreed.
+=20
+> > Use cxl_event_media as a common structure to record information about D=
+RAM
+> > and General Media events because it simplifies handling the two events.
+> >=20
+> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Fixes: 6aec00139d3a ("cxl/core: Add region info to cxl_general_media and
+> > cxl_dram events")
+> What is the fix? There is no user visible behavior changes that results f=
+rom
+> this cleanup, right?
 
-diff --git a/drivers/a2b/Kconfig b/drivers/a2b/Kconfig
-index 08acf5728023..e3c38520a90a 100644
---- a/drivers/a2b/Kconfig
-+++ b/drivers/a2b/Kconfig
-@@ -36,6 +36,7 @@ config A2B_AD24XX_NODE
-        imply GPIO_AD24XX
-        imply SND_SOC_AD24XX
-        imply COMMON_CLK_AD24XX
-+       imply I2C_AD24XX
-        help
-          Say Y here to enable support for AD24xx A2B transceiver nodes. This
-          applies to both main nodes and subordinate nodes. Supported models
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index a3d54b077e68..460762f44434 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -258,7 +258,7 @@ config COMMON_CLK_LAN966X
- 	  within the SoC.
- 
- config COMMON_CLK_AD24XX
--	bool "Clock driver for Analog Devices Inc. AD24xx"
-+	tristate "Clock driver for Analog Devices Inc. AD24xx"
- 	depends on A2B_AD24XX_NODE
- 	help
- 	  This driver supports the clock output functionality of AD24xx series
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index fe6e8a1bb607..d1f303bd7c90 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -1387,6 +1387,13 @@ config I2C_ACORN
- 
- 	  If you don't know, say Y.
- 
-+config I2C_AD24XX
-+	tristate "Analog Devices Inc. AD24xx I2C controller support"
-+	depends on A2B_AD24XX_NODE
-+	help
-+	  Say yes if you want to support the I2C controller function of AD24xx
-+	  A2B transceiver chips.
-+
- config I2C_ELEKTOR
- 	tristate "Elektor ISA card"
- 	depends on ISA && HAS_IOPORT_MAP && BROKEN_ON_SMP
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 3d65934f5eb4..892a32b02267 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -145,6 +145,7 @@ obj-$(CONFIG_I2C_VIPERBOARD)	+= i2c-viperboard.o
- 
- # Other I2C/SMBus bus drivers
- obj-$(CONFIG_I2C_ACORN)		+= i2c-acorn.o
-+obj-$(CONFIG_I2C_AD24XX)	+= i2c-ad24xx.o
- obj-$(CONFIG_I2C_BCM_KONA)	+= i2c-bcm-kona.o
- obj-$(CONFIG_I2C_BRCMSTB)	+= i2c-brcmstb.o
- obj-$(CONFIG_I2C_CROS_EC_TUNNEL)	+= i2c-cros-ec-tunnel.o
-diff --git a/drivers/i2c/busses/i2c-ad24xx.c b/drivers/i2c/busses/i2c-ad24xx.c
-new file mode 100644
-index 000000000000..ad9657df25fb
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-ad24xx.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AD24xx I2C controller (master) driver
-+ *
-+ * Copyright (c) 2023-2024 Alvin Šipraga <alsi@bang-olufsen.dk>
-+ */
-+
-+#include <linux/a2b/a2b.h>
-+#include <linux/a2b/ad24xx.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+
-+struct ad24xx_i2c_adapter {
-+	struct device *dev;
-+	struct a2b_func *func;
-+	struct a2b_node *node;
-+	struct i2c_adapter adap;
-+};
-+
-+static int ad24xx_i2c_adapter_xfer(struct i2c_adapter *adap,
-+				  struct i2c_msg *msgs, int num)
-+{
-+	struct ad24xx_i2c_adapter *ada = i2c_get_adapdata(adap);
-+	struct a2b_node *node = ada->node;
-+
-+	return a2b_node_i2c_xfer(node, msgs, num);
-+}
-+
-+static u32 ad24xx_i2c_adapter_functionality(struct i2c_adapter *adap)
-+{
-+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+}
-+
-+static const struct i2c_adapter_quirks ad24xx_i2c_adapter_quirks = {
-+	.flags = I2C_AQ_COMB | I2C_AQ_COMB_SAME_ADDR,
-+};
-+
-+static const struct i2c_algorithm ad24xx_i2c_adapter_algo = {
-+	.master_xfer = ad24xx_i2c_adapter_xfer,
-+	.functionality = ad24xx_i2c_adapter_functionality,
-+};
-+
-+static int ad24xx_i2c_adapter_probe(struct device *dev)
-+{
-+	struct a2b_func *func = to_a2b_func(dev);
-+	struct device_node *np = dev->of_node;
-+	struct ad24xx_i2c_adapter *ada;
-+	unsigned int val = 0;
-+	u32 bus_speed;
-+	int ret;
-+
-+	ada = devm_kzalloc(dev, sizeof(*ada), GFP_KERNEL);
-+	if (!ada)
-+		return -ENOMEM;
-+
-+	ada->dev = dev;
-+	ada->func = func;
-+	ada->node = func->node;
-+
-+	ada->adap.owner = THIS_MODULE;
-+	ada->adap.algo = &ad24xx_i2c_adapter_algo;
-+	ada->adap.dev.parent = dev;
-+	ada->adap.dev.of_node = dev->of_node;
-+	ada->adap.quirks = &ad24xx_i2c_adapter_quirks;
-+	strscpy(ada->adap.name, dev_name(dev), sizeof(ada->adap.name));
-+	i2c_set_adapdata(&ada->adap, ada);
-+
-+	ret = of_property_read_u32(np, "clock-frequency", &bus_speed);
-+	if (ret)
-+		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
-+
-+	if (bus_speed != I2C_MAX_STANDARD_MODE_FREQ &&
-+	    bus_speed != I2C_MAX_FAST_MODE_FREQ)
-+		return -EINVAL;
-+
-+	val |= FIELD_PREP(A2B_I2CCFG_DATARATE_MASK,
-+			  bus_speed == I2C_MAX_FAST_MODE_FREQ ? 1 : 0);
-+	val |= FIELD_PREP(A2B_I2CCFG_FRAMERATE_MASK,
-+			  func->node->bus->sff == A2B_SFF_44100 ? 1 : 0);
-+
-+	ret = a2b_node_write(func->node, A2B_I2CCFG, val);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_i2c_add_adapter(dev, &ada->adap);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ad24xx_i2c_adapter_of_match_table[] = {
-+	{ .compatible = "adi,ad2401-i2c" },
-+	{ .compatible = "adi,ad2402-i2c" },
-+	{ .compatible = "adi,ad2403-i2c" },
-+	{ .compatible = "adi,ad2410-i2c" },
-+	{ .compatible = "adi,ad2420-i2c" },
-+	{ .compatible = "adi,ad2421-i2c" },
-+	{ .compatible = "adi,ad2422-i2c" },
-+	{ .compatible = "adi,ad2425-i2c" },
-+	{ .compatible = "adi,ad2426-i2c" },
-+	{ .compatible = "adi,ad2427-i2c" },
-+	{ .compatible = "adi,ad2428-i2c" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ad24xx_i2c_adapter_of_match_table);
-+
-+static struct a2b_driver ad24xx_i2c_adapter_driver = {
-+	.driver = {
-+		.name = "ad24xx-i2c-adapter",
-+		.of_match_table = ad24xx_i2c_adapter_of_match_table,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.probe = ad24xx_i2c_adapter_probe,
-+};
-+module_a2b_driver(ad24xx_i2c_adapter_driver);
-+
-+MODULE_AUTHOR("Alvin Šipraga <alsi@bang-olufsen.dk>");
-+MODULE_DESCRIPTION("AD24xx I2C controller driver");
-+MODULE_LICENSE("GPL");
+Right.
+=20
+> > Signed-off-by: Fabio M. De Francesco
+> > <fabio.m.de.francesco@linux.intel.com>
+> > ---
+> >=20
+> > Changes for v2:
+> > 	- Extend the commit message (Alison);
+> > 	- Add a "Fixes" tag (Alison, thanks).
+> > =09
+> >  drivers/cxl/core/mbox.c      |  6 ++--
+> >  drivers/cxl/core/trace.h     |  4 +--
+> >  include/linux/cxl-event.h    | 70 +++++++++++++++---------------------
+> >  tools/testing/cxl/test/mem.c |  4 +--
+> >  4 files changed, 36 insertions(+), 48 deletions(-)
+>=20
+> Oh, nice, net reduction in code I was not expecting.
+>=20
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 2626f3fff201..ad4d7b0f7f4d 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -875,16 +875,16 @@ void cxl_event_trace_record(const struct cxl_memd=
+ev
+> > *cxlmd,>=20
+> >  		guard(rwsem_read)(&cxl_region_rwsem);
+> >  		guard(rwsem_read)(&cxl_dpa_rwsem);
+> >=20
+> > -		dpa =3D le64_to_cpu(evt->common.phys_addr) &=20
+CXL_DPA_MASK;
+> > +		dpa =3D le64_to_cpu(evt->media_common.phys_addr) &=20
+CXL_DPA_MASK;
+>=20
+> I was hoping at the end of this to get rid of the word "common" to avoid =
+any
+> more "common event record confusion".
 
--- 
-2.44.0
+Right, still an unfortunate naming choice.=20
+
+> > [...]
+>=20
+> Oh nice you went for the full 'struct_group_tagged' proposal. However, gi=
+ven
+> that Jonathan is already asking questions about "__packed", lets do the
+> simpler change, something like this, what do you think?=20
+
+I think that these simpler changes are better.=20
+
+> This also preserves
+> type-safety.
+>=20
+> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> index 60b25020281f..f48b59943977 100644
+> --- a/include/linux/cxl-event.h
+> +++ b/include/linux/cxl-event.h
+> @@ -33,14 +33,16 @@ struct cxl_event_generic {
+>   */
+>  #define CXL_EVENT_GEN_MED_COMP_ID_SIZE 0x10
+>  struct cxl_event_gen_media {
+> -       struct cxl_event_record_hdr hdr;
+> -       __le64 phys_addr;
+> -       u8 descriptor;
+> -       u8 type;
+> -       u8 transaction_type;
+> -       u8 validity_flags[2];
+> -       u8 channel;
+> -       u8 rank;
+> +       struct cxl_event_media_hdr {
+> +               struct cxl_event_record_hdr hdr;
+> +               __le64 phys_addr;
+> +               u8 descriptor;
+> +               u8 type;
+> +               u8 transaction_type;
+> +               u8 validity_flags[2];
+> +               u8 channel;
+> +               u8 rank;
+> +       } hdr;
+>         u8 device[3];
+>         u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
+>         u8 reserved[46];
+> @@ -52,14 +54,7 @@ struct cxl_event_gen_media {
+>   */
+>  #define CXL_EVENT_DER_CORRECTION_MASK_SIZE     0x20
+>  struct cxl_event_dram {
+> -       struct cxl_event_record_hdr hdr;
+> -       __le64 phys_addr;
+> -       u8 descriptor;
+> -       u8 type;
+> -       u8 transaction_type;
+> -       u8 validity_flags[2];
+> -       u8 channel;
+> -       u8 rank;
+> +       struct cxl_event_media_hdr hdr;
+>         u8 nibble_mask[3];
+>         u8 bank_group;
+>         u8 bank;
+> @@ -109,7 +104,7 @@ union cxl_event {
+>         struct cxl_event_gen_media gen_media;
+>         struct cxl_event_dram dram;
+>         struct cxl_event_mem_module mem_module;
+> -       struct cxl_event_common common;
+> +       struct cxl_event_media_hdr media_hdr;
+>  } __packed;
+>=20
+>  /*
+
+I'll make v3 according to the suggestion showed above.
+
+Thanks,
+
+=46abio
+
+
 
