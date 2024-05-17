@@ -1,44 +1,38 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1231DFC7
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEDE1A2C2E
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715956841; cv=none; b=QxiDjuR4fe9JFfV6GYsyN2wIUWTxy/swSzcChdb9/uE38BijDH4Lrhu0OOgILthBzS9Y20WCr58AllBznD5Bv2lxpfAQI1NhZqjVoGtZLsK0ZBis+WeatLi6DZ6hiG7BlKyKWCR5eguJnVKT5B/GUNIO+yMJVeuFosUyPOrJGfs=
+	t=1715956862; cv=none; b=ZAVZRFn1764zZxV1vDm8TzIbhbXr6AkTqGYDISMu4itZ+oNPC1fta0ZyG3Dx6uaHfDIjm3s67G/Qy/D3udAjUHD8S2WRbejAAwpY6BUrjKqeZo44oNT2tcck/lhjnxIm7VL0ANR2EaU8ec8a+qtY497D+VazzRkvBw3liKYhVZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715956841; c=relaxed/simple;
-	bh=Xjocpe6o+LPVbYekQlUHM7EpcP5a1fvLjeuj7wvDWAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gzozzbcdZKq/ijzJgSkyGzl267BzAicK0tUO5v4/jJUjMtGK3NkuXZByudn5cbo932PuFdB5S+7jrDw5/ZFq3saafjasu1LNRwP6FsKklA14gTceSqnu4BAcw+FVJfHgOpnmFVT1Lz27tZa3rI8VFo6GdggEE3Qpx0T0E4BU4Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k2S8LvW7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jfrQyv5r; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k2S8LvW7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jfrQyv5r"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715956837;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=8m1vjhmUrX+z6fB8LXwOmch1tlT7U66cdTNDRltqcbU=;
-	b=k2S8LvW7NzCu07k72HJZSDMpyXFt9aws7OUpvdyuQA+udWYPdIP8nd4wnfbTyoJVVdk7ja
-	uzR50rVKpSlYbQRBC60dMdVwICSvO5BQZQJwsJxNyh+E8JcUfpzKFDiY0qypcDH6C+y635
-	y131t21KMtHAN39w3pdlAcjqXa6DjrbelnPMKkp8Z/GAEENT4vTRXTeNugunqGGbLJZwKr
-	QfiwTqm27nqXC8Nc0WKldQl+Pk5XkkKboGXkwzuEYOBSkpyD8NU3o0IgXZvK3+6dKIfPhf
-	ZExrQG6W4+EVoguV0NLL0ZrdsFdZZak/Hr/p/k/HWJ9B/0K9Rx6NKT9KCubeLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715956837;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=8m1vjhmUrX+z6fB8LXwOmch1tlT7U66cdTNDRltqcbU=;
-	b=jfrQyv5rTcaKrgIlsjj0P+1shzep48aWkPmZcUxYnxrJWVGhhHOTLcgwusZ3sK+V9QCAss
-	rY0JxGEJg2EbhqAw==
-To: Carsten Tolkmit <ctolkmit@ennit.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-Subject: x86/topology: Handle bogus ACPI tables correctly
-Date: Fri, 17 May 2024 16:40:36 +0200
-Message-ID: <87le48jycb.ffs@tglx>
+	s=arc-20240116; t=1715956862; c=relaxed/simple;
+	bh=EGn3ljBz6rxQ4NlQ7kY83/2B6Dqy4mSY8TiKcxSKrFI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=htz2oIZVZ6RqasqqZx5fZitLPMnZV1hE4aSR9uMXVMNkV6UgtZqEAqsjxLDUlbcKITMrTQ6c29+TbW3J1j2oeRf4S252m66YG37pT03gg+EYNn81/AJpfD8K/HFoz9Ty+4xwlOdxwKeEAwcz72Rnk+KoKnBvkj5mj9ODYY/QjYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VgqLD2xrZzvYx9;
+	Fri, 17 May 2024 22:37:24 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5372C1800C7;
+	Fri, 17 May 2024 22:40:56 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 17 May
+ 2024 22:40:56 +0800
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <Dave.Martin@arm.com>,
+	<xieyuanbin1@huawei.com>, <xiaojiangfeng@huawei.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<nixiaoming@huawei.com>, <wangbing6@huawei.com>, <douzhaolei@huawei.com>,
+	<liaohua4@huawei.com>, <lijiahuan5@huawei.com>, <wangfangpeng1@huawei.com>
+Subject: [PATCH] arm64: asm-bug: Add .align 2 to the end of __BUG_ENTRY
+Date: Fri, 17 May 2024 22:13:28 +0800
+Message-ID: <1715955208-17109-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,117 +40,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-The ACPI specification clearly states how the processors should be
-enumerated in the MADT:
+I'm using the latest linux kernel mainline code,
+with the default arm64 configuration:
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig,
+and set CONFIG_EXPERT=y, CONFIG_DEBUG_BUGVERBOSE=n,
+CONFIG_PANIC_ON_OOPS=y.
 
- "To ensure that the boot processor is supported post initialization,
-  two guidelines should be followed. The first is that OSPM should
-  initialize processors in the order that they appear in the MADT. The
-  second is that platform firmware should list the boot processor as the
-  first processor entry in the MADT.
-  ...
-  Failure of OSPM implementations and platform firmware to abide by
-  these guidelines can result in both unpredictable and non optimal
-  platform operation."
+Loading the following kernel module will cause kernel panic.
 
-The kernel relies on that ordering to detect the real BSP on crash kernels
-which is important to avoid sending a INIT IPI to it as that would cause a
-full machine reset.
+The call stack is as follows:
 
-On a Dell XPS 16 9640 the BIOS ignores this rule and enumerates the CPUs in
-the wrong order. As a consequence the kernel falsely detects a crash kernel
-and disables the corresponding CPU.
+root@(none):/# /root/insmod hello.ko
+[    6.035003] hello: loading out-of-tree module taints kernel.
+[    6.039129] ------------[ cut here ]------------
+[    6.039287] hello
+[    6.039704] Unexpected kernel BRK exception at EL1
+[    6.040059] Internal error: BRK handler: 00000000f2000800 [#1] PREEMPT SMP
+[    6.040457] Modules linked in: hello(O+)
+[    6.041311] CPU: 0 PID: 50 Comm: insmod Tainted: G           O       6.9.1 #8
+[    6.041755] Hardware name: linux,dummy-virt (DT)
+[    6.042238] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    6.042594] pc : buginit+0x18/0x1000 [hello]
+[    6.043601] lr : buginit+0x18/0x1000 [hello]
+[    6.043852] sp : ffff800080533ae0
+[    6.044121] x29: ffff800080533ae0 x28: 0000000000000000 x27: 0000000000000000
+[    6.044523] x26: ffffaba8c4e70510 x25: ffff800080533c30 x24: ffffaba8c4a28a58
+[    6.044961] x23: 0000000000000000 x22: 0000000000000000 x21: ffff3947c0eab3c0
+[    6.045503] x20: ffffaba8c4e3f000 x19: ffffaba846464000 x18: 0000000000000006
+[    6.046124] x17: 0000000000000000 x16: ffffaba8c2492834 x15: 0720072007200720
+[    6.046387] x14: 0720072007200720 x13: ffffaba8c49b27c8 x12: 0000000000000312
+[    6.046829] x11: 0000000000000106 x10: ffffaba8c4a0a7c8 x9 : ffffaba8c49b27c8
+[    6.047293] x8 : 00000000ffffefff x7 : ffffaba8c4a0a7c8 x6 : 80000000fffff000
+[    6.047739] x5 : 0000000000000107 x4 : 0000000000000000 x3 : 0000000000000000
+[    6.047955] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff3947c0eab3c0
+[    6.048366] Call trace:
+[    6.048653]  buginit+0x18/0x1000 [hello]
+[    6.048922]  do_one_initcall+0x80/0x1c8
+[    6.049333]  do_init_module+0x60/0x218
+[    6.049475]  load_module+0x1ba4/0x1d70
+[    6.049755]  __do_sys_init_module+0x198/0x1d0
+[    6.049959]  __arm64_sys_init_module+0x1c/0x28
+[    6.050160]  invoke_syscall+0x48/0x114
+[    6.050334]  el0_svc_common.constprop.0+0x40/0xe0
+[    6.050468]  do_el0_svc+0x1c/0x28
+[    6.050635]  el0_svc+0x34/0xd8
+[    6.050852]  el0t_64_sync_handler+0x120/0x12c
+[    6.051088]  el0t_64_sync+0x190/0x194
+[    6.051433] Code: d0ffffe0 910003fd 91000000 9400000b (d4210000)
+[    6.052212] ---[ end trace 0000000000000000 ]---
+[    6.052473] Kernel panic - not syncing: BRK handler: Fatal exception
 
-Prevent this by checking the IA32_APICBASE MSR for the BSP bit on the boot
-CPU. If that bit is set, then the MADT based BSP detection can be safely
-ignored. If the kernel detects a mismatch between the BSP bit and the first
-enumerated MADT entry then emit a firmware bug message.
+The kernel module source code is as follows:
+```
 
-This obviously also has to be taken into account when the boot APIC ID and
-the first enumerated APIC ID match. If the boot CPU does not have the BSP
-bit set in the APICBASE MSR then there is no way for the boot CPU to
-determine which of the CPUs is the real BSP. Sending an INIT to the real
-BSP would reset the machine so the only sane way to deal with that is to
-limit the number of CPUs to one and emit a corresponding warning message.
+static int __init buginit(void)
+{
+	WARN(1, "hello\n");
+	return 0;
+}
 
-Fixes: 5c5682b9f87a ("x86/cpu: Detect real BSP on crash kernels")
-Reported-by: Carsten Tolkmit <ctolkmit@ennit.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218837
+static void __exit bugexit(void)
+{
+}
+
+module_init(buginit);
+module_exit(bugexit);
+MODULE_LICENSE("GPL");
+```
+
+When CONFIG_DEBUG_BUGVERBOSE macro is disabled,
+the size of "__bug_table" section in hello.ko
+is only 6 bytes instead of the expected 8 bytes.
+As a result,
+mod->num_bugs = sechdrs[i].sh_size / sizeof(struct bug_entry) = 6 / 8 = 0
+calculated in module_bug_finalize when the kernel loads ko is incorrect.
+
+When running `WARN()`, the following backtrace is triggered:
+
+module_find_bug() at lib/bug.c
+find_bug() at lib/bug.c
+__report_bug() at lib/bug.c
+report_bug() at lib/bug.c
+call_break_hook() at arch/arm64/kernel/debug-monitors.c
+brk_handler() at arch/arm64/kernel/debug-monitors.c
+
+It will return -EFAULT because hello.ko's mod->num_bugs is 0.
+Finally, the kernel OOPS is triggered.
+
+Add .align 2 to the end of __BUG_ENTRY
+to make the object layout generated by the assembly code
+consistent with that of the C struct bug_entry.
+
+Fixes: 9fb7410f955f ("arm64/BUG: Use BRK instruction for generic BUG traps")
+
+Signed-off-by: Yuanbin Xie <xieyuanbin1@huawei.com>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
+ arch/arm64/include/asm/asm-bug.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-This is a slightly different solution than the initial patch I provided in
-the bugzilla. Carsten, can you please test that again?
----
- arch/x86/kernel/cpu/topology.c |   43 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+diff --git a/arch/arm64/include/asm/asm-bug.h b/arch/arm64/include/asm/asm-bug.h
+index c762038..6e73809 100644
+--- a/arch/arm64/include/asm/asm-bug.h
++++ b/arch/arm64/include/asm/asm-bug.h
+@@ -28,6 +28,7 @@
+ 	14470:	.long 14471f - .;			\
+ _BUGVERBOSE_LOCATION(__FILE__, __LINE__)		\
+ 		.short flags; 				\
++		.align 2;				\
+ 		.popsection;				\
+ 	14471:
+ #else
+-- 
+1.8.5.6
 
---- a/arch/x86/kernel/cpu/topology.c
-+++ b/arch/x86/kernel/cpu/topology.c
-@@ -128,6 +128,9 @@ static void topo_set_cpuids(unsigned int
- 
- static __init bool check_for_real_bsp(u32 apic_id)
- {
-+	bool is_bsp = false, has_apic_base = boot_cpu_data.x86 >= 6;
-+	u64 msr;
-+
- 	/*
- 	 * There is no real good way to detect whether this a kdump()
- 	 * kernel, but except on the Voyager SMP monstrosity which is not
-@@ -144,17 +147,51 @@ static __init bool check_for_real_bsp(u3
- 	if (topo_info.real_bsp_apic_id != BAD_APICID)
- 		return false;
- 
-+	/*
-+	 * Check whether the enumeration order is broken by evaluating the
-+	 * BSP bit in the APICBASE MSR. If the CPU does not have the
-+	 * APICBASE MSR then the BSP detection is not possible and the
-+	 * kernel must rely on the firmware enumeration order.
-+	 */
-+	if (has_apic_base) {
-+		rdmsrl(MSR_IA32_APICBASE, msr);
-+		is_bsp = !!(msr & MSR_IA32_APICBASE_BSP);
-+	}
-+
- 	if (apic_id == topo_info.boot_cpu_apic_id) {
--		topo_info.real_bsp_apic_id = apic_id;
--		return false;
-+		if (is_bsp || !has_apic_base) {
-+			topo_info.real_bsp_apic_id = apic_id;
-+			return false;
-+		}
-+		/*
-+		 * If the boot APIC is enumerated first, but the APICBASE
-+		 * MSR does not have the BSP bit set, then there is no way
-+		 * to discover the real BSP here. Assume a crash kernel and
-+		 * limit the number of CPUs to 1 as an INIT to the real BSP
-+		 * would reset the machine.
-+		 */
-+		pr_warn("Enumerated BSP APIC %x is not marked in APICBASE MSR\n", apic_id);
-+		pr_warn("Assuming crash kernel. Limiting to one CPU to prevent machine INIT\n");
-+		set_nr_cpu_ids(1);
-+		goto fwbug;
- 	}
- 
--	pr_warn("Boot CPU APIC ID not the first enumerated APIC ID: %x > %x\n",
-+	pr_warn("Boot CPU APIC ID not the first enumerated APIC ID: %x != %x\n",
- 		topo_info.boot_cpu_apic_id, apic_id);
-+
-+	if (is_bsp && has_apic_base) {
-+		topo_info.real_bsp_apic_id = topo_info.boot_cpu_apic_id;
-+		goto fwbug;
-+	}
-+
- 	pr_warn("Crash kernel detected. Disabling real BSP to prevent machine INIT\n");
- 
- 	topo_info.real_bsp_apic_id = apic_id;
- 	return true;
-+
-+fwbug:
-+	pr_warn(FW_BUG "APIC enumeration order not specification compliant\n");
-+	return false;
- }
- 
- static unsigned int topo_unit_count(u32 lvlid, enum x86_topology_domains at_level,
