@@ -1,196 +1,124 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FD413FD91
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9368E13DDCE
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715973606; cv=none; b=QVcUdS+dZQO41SGV3uYUu8fLJCSd6I8mj82Gh2ZR1GuXyNRBmyWC00ZjB0bewPj+D1lguOZ/TbDqNfdAo35iPoblU5ytMNyCbBZW1wOjTQGidZTnJBHQtICPZh+70cfxRjc9pgw7uB4GuUNh6wFlPJBMmTFiXeUfJtFdAruz7FU=
+	t=1715973766; cv=none; b=fBEf/CEIcADhyR2mm5jxXcgFrNKcJuTxiYgPR4q6SgoBz7gdjahCX8Qox034M9EwsTrSUr72n0Iw1vWrHddxljz3mRm8Xkxw/cxSCYPTI7Lpws4CnrOWoNrGXIjisSlPE0XRajf4SxnL9pC4hyOwMuHStT0M4lPyxbWYigN26gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715973606; c=relaxed/simple;
-	bh=nXgiWCnTh81NG+HIgJTsNmlUbBq2v6oarBwpgv/bUOk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gHPraOl9WLFQluSI6kffIrZAnZ+NdwjjEUm1PTQFSWIFjzjdGXnDng9PQSmcgQlfzHPuZHjaDC0aCCaDfBq/m6K9k+7rX9VBHFx3AuzIT8txYLVCO/3f6Rw4JXMKRB5J6Kfmmy7fjjL2Le+5RfQLt9IaNV+u84sNa73ZL2HZ56M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4Vgx9H3Jflz9st4;
-	Fri, 17 May 2024 21:00:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id h8Eu0JPkjFau; Fri, 17 May 2024 21:00:03 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4Vgx9H2DPjz9st0;
-	Fri, 17 May 2024 21:00:03 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 42E4B8B783;
-	Fri, 17 May 2024 21:00:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id kTwwTQayvkPH; Fri, 17 May 2024 21:00:03 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.121])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id A6FB58B766;
-	Fri, 17 May 2024 21:00:02 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v2 00/20] Reimplement huge pages without hugepd on powerpc (8xx, e500, book3s/64)
-Date: Fri, 17 May 2024 20:59:54 +0200
-Message-ID: <cover.1715971869.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1715973766; c=relaxed/simple;
+	bh=5NZhUebD+jwTapS+lCj4nfvqfbRZkD+FQvIfY19k6Qg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t6M25Dx5uEml5ys98SrGnt26YxD4vTT3qJ281hXU303F/HpJdy9pFFUNUS4nAjtGBta7OhEUp2zm5mA80JVj4ppvlTPKyK0uPahBmkefY1JXVsHlO96HtyS0kT7gyrs+MWRcH8L64p8He/4LR+Ez2mF1dVDPjBKaHVdQza1vwtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YRUk4TGw; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YRUk4TGw"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51fdc9af005so1986981e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715973761; x=1716578561; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sh8TQN24HdRct7EWlhzUHnCJ0TtfqGC3HskYLHQN1S4=;
+        b=YRUk4TGwcKSSBLVBB+ruAF/3rQUD+cWnYMcYnYpF+AjX33UIuJ/9XAvNlQzSTeNMf7
+         966IOE0o8ZQn0Un6DL7j04ueEKxAJ0QJfDatbF4e3jgg5g8/CbY7m0DDoDeHH8ag8WLA
+         NaaknjNR59Umkvt2RSfU2SXgPtzsuEJDUB18I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715973761; x=1716578561;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sh8TQN24HdRct7EWlhzUHnCJ0TtfqGC3HskYLHQN1S4=;
+        b=eC4rrd/KwVw3DIS3WE6W11ExioniN6IcJtt9sj5R7ZEnB0ifKLXON3qE9c2ODBaTDh
+         L3728ZL04/7KKj8r+BBTkSBjBJskPm/tmu+vGPHPI6RkbNVxldShs0V0O39xVXUFMUht
+         /lZ9FRKmfZRrhPlGUL/ueWJpGXejmxMAtljhvO3CzlqipZmG1cXalE7GNFMZT95rAfUt
+         CNrzQTd6d1W+wqyVxNdbyhXmtbVBl5hnKDX24/afc7MClVSCN/7x90ljuCbFWABwFE08
+         DlxEKODZlVBbKlumDcWluHBn1DimcMktDbFERoxNIVYxI+0Q94kac+ic3ys2ugeKNt6L
+         jkMg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/4GBnxxBNWyr4wJD7APE+DFt6iIGM9/hqALTA3VgMiGQCzuEVp8Y3FLa9pDjZrhQ2LCuKNJ4qcITtBGUGPIj8MpK5oiADCaJAmYnN
+X-Gm-Message-State: AOJu0Yzhf+Ezw71fAfw4QcMOywN7VeVZrWEThoVkMAjMRVFkTmXQvlo1
+	AdiKNe8GM2UbFK7+J17krHroxdTug7ny6gvqB542SxPP0a3ILJzqMNSbD3dNaME7n29+nA1YRXP
+	DhCHfKw==
+X-Google-Smtp-Source: AGHT+IGXZBO69btvK7h4gDjvcpznyEBsqVCi1yMC5DaYs24lc11LnF+EgY3y+b81K0Hn8S0u7uRpEw==
+X-Received: by 2002:a05:6512:3e17:b0:51d:605e:f0ce with SMTP id 2adb3069b0e04-52210278698mr26639876e87.50.1715973761327;
+        Fri, 17 May 2024 12:22:41 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d2be2sm3362246e87.254.2024.05.17.12.22.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 May 2024 12:22:40 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51fdc9af005so1986925e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:22:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWxtJykWPXTYCTM5pxxiH4cH7lAe2QbgLHkigAi3G7kvNWdaUXmZF6Oii0hmqWrcpawJ6/WOoSk0dEWmMMYM3eu/rOkk7SIny4l1pH+
+X-Received: by 2002:ac2:4a84:0:b0:51d:9aa7:23e with SMTP id
+ 2adb3069b0e04-52210475801mr17957902e87.65.1715973760408; Fri, 17 May 2024
+ 12:22:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715972395; l=6993; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=nXgiWCnTh81NG+HIgJTsNmlUbBq2v6oarBwpgv/bUOk=; b=JJc9xjsdS8vG4cTo/Ay4rt3hpTzOoF+49PWU37xMh+OtrrREx7xjwaJB5Mb+tWOmexAHZkx0S g8PFoT08NPSBoJdlf5dx+XAf+WUko8IAO1YC5ivO0qgat4VyLrQHX6W
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+References: <CAPM=9tx_KS1qc8E1kUB5PPBvO9EKHNkk7hYWu-WwWJ6os=otJA@mail.gmail.com>
+ <CAHk-=wjdyimk4t2C7xfqLYFX1HUH92yTRTFQXAitJJT+REvF3Q@mail.gmail.com>
+ <CADnq5_NmC9bYkPFUD35gBtxsk_9jYhOTugni-q4WGXggf6=rLA@mail.gmail.com>
+ <6225ecf4-f4ca-4ed7-a316-69c86f4ade7f@amd.com> <CAPM=9tyJCJ+D4h7BZ3dBpm6R33gTfwtigDtmt6g9KX25Jun9Hg@mail.gmail.com>
+In-Reply-To: <CAPM=9tyJCJ+D4h7BZ3dBpm6R33gTfwtigDtmt6g9KX25Jun9Hg@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 17 May 2024 12:22:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whp9ixiDVNvSXRcVWYifXfQaZH9taHxD-i5noppY30e1w@mail.gmail.com>
+Message-ID: <CAHk-=whp9ixiDVNvSXRcVWYifXfQaZH9taHxD-i5noppY30e1w@mail.gmail.com>
+Subject: Re: [git pull] drm urgent for 6.10-rc1
+To: Dave Airlie <airlied@gmail.com>
+Cc: "Paneer Selvam, Arunpravin" <arunpravin.paneerselvam@amd.com>, Alex Deucher <alexdeucher@gmail.com>, 
+	Daniel Vetter <daniel.vetter@ffwll.ch>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-This is the continuation of the RFC v1 series "Reimplement huge pages
-without hugepd on powerpc 8xx". It now get rid of hugepd completely
-after handling also e500 and book3s/64
+On Thu, 16 May 2024 at 18:08, Dave Airlie <airlied@gmail.com> wrote:
+>
+> Linus, do you see it a boot straight away?
 
-Unlike most architectures, powerpc 8xx HW requires a two-level
-pagetable topology for all page sizes. So a leaf PMD-contig approach
-is not feasible as such.
+Ok, back at that computer now, and yes, I see those messages right
+away. In fact, they seem to happen before gnome even starts up, ie I
+see those messages long before the first messages from gnome-session:
 
-Possible sizes are 4k, 16k, 512k and 8M.
+    May 17 12:07:17 tr3970x kernel: WARNING: CPU: 4 PID: 1067 at
+drivers/gpu/drm/drm_buddy.c:198 __force_merge+0x184/0x1b0 [drm_buddy]
+    .. lots and lots and lots of them ..
+    ...
+    May 17 12:07:23 tr3970x systemd-cryptsetup[982]: ...
+    ...
+    May 17 12:07:25 tr3970x systemd[1]: Reached target basic.target
+    ...
+    May 17 12:07:25 tr3970x systemd[1]: Mounted sysroot.mount - /sysroot.
+    ...
+    May 17 12:07:25 tr3970x systemd[1]: Switching root.
+    ...
+    May 17 12:07:36 tr3970x gnome-session[2824]: ..
+    ...
+    May 17 12:07:36 tr3970x gnome-shell[2836]: Obtained a high
+priority EGL context
+    May 17 12:07:36 tr3970x kernel: WARNING: CPU: 31 PID: 2836 at
+drivers/gpu/drm/drm_buddy.c:198 __force_merge+0x184/0x1b0 [drm_buddy]
+    .. lots of warnings resume ...
 
-First level (PGD/PMD) covers 4M per entry. For 8M pages, two PMD entries
-must point to a single entry level-2 page table. Until now that was
-done using hugepd. This series changes it to use standard page tables
-where the entry is replicated 1024 times on each of the two pagetables
-refered by the two associated PMD entries for that 8M page.
+IOW, it happens already during the graphical boot before I have even
+typed in my disk encryption password.
 
-At the moment it has to look into each helper to know if the
-hugepage ptep is a PTE or a PMD in order to know it is a 8M page or
-a lower size. I hope this can me handled by core-mm in the future.
+Then it starts again when gnome starts.
 
-For e500 and book3s/64 there are less constraints because it is not
-tied to the HW assisted tablewalk like on 8xx, so it is easier to use
-leaf PMDs (and PUDs).
+I just checked: I have exactly 8192 warnings from the early boot
+before the first gnome warning. Which sounds like too round a number
+to be an accident.
 
-On e500 the supported page sizes are 4M, 16M, 64M, 256M and 1G. All at
-PMD level on e500/32 and mix of PMD and PUD for e500/64. We encode page
-size with 4 available bits in PTE entries. On e300/32 PGD entries size
-is increases to 64 bits in order to allow leaf-PMD entries because PTE
-are 64 bits on e500.
+I will try the patch Alex pointed at next:
 
-On book3s/64 only the hash-4k mode is concerned. It supports 16M pages
-as cont-PMD and 16G pages as cont-PUD. In other modes (radix-4k, radix-6k
-and hash-64k) the sizes match with PMD and PUD sizes so that's just leaf
-entries.
+    https://patchwork.freedesktop.org/patch/594539/
 
-Christophe Leroy (20):
-  mm: Provide pagesize to pmd_populate()
-  mm: Provide page size to pte_alloc_huge()
-  mm: Provide pmd to pte_leaf_size()
-  mm: Provide mm_struct and address to huge_ptep_get()
-  powerpc/mm: Allow hugepages without hugepd
-  powerpc/8xx: Fix size given to set_huge_pte_at()
-  powerpc/8xx: Rework support for 8M pages using contiguous PTE entries
-  powerpc/8xx: Simplify struct mmu_psize_def
-  powerpc/mm: Remove _PAGE_PSIZE
-  powerpc/mm: Fix __find_linux_pte() on 32 bits with PMD leaf entries
-  powerpc/mm: Complement huge_pte_alloc() for all non HUGEPD setups
-  powerpc/64e: Remove unneeded #ifdef CONFIG_PPC_E500
-  powerpc/64e: Clean up impossible setups
-  powerpc/e500: Remove enc field from struct mmu_psize_def
-  powerpc/85xx: Switch to 64 bits PGD
-  powerpc/e500: Encode hugepage size in PTE bits
-  powerpc/e500: Use contiguous PMD instead of hugepd
-  powerpc/64s: Use contiguous PMD/PUD instead of HUGEPD
-  powerpc/mm: Remove hugepd leftovers
-  mm: Remove CONFIG_ARCH_HAS_HUGEPD
+and see if that fixes it for me.
 
- arch/arm/include/asm/hugetlb-3level.h         |   2 +-
- arch/arm64/include/asm/hugetlb.h              |   2 +-
- arch/arm64/include/asm/pgtable.h              |   2 +-
- arch/arm64/mm/hugetlbpage.c                   |   4 +-
- arch/parisc/mm/hugetlbpage.c                  |   2 +-
- arch/powerpc/Kconfig                          |   1 -
- arch/powerpc/include/asm/book3s/32/pgalloc.h  |   2 -
- arch/powerpc/include/asm/book3s/64/hash-4k.h  |  15 -
- arch/powerpc/include/asm/book3s/64/hash.h     |  38 +-
- arch/powerpc/include/asm/book3s/64/hugetlb.h  |  38 --
- .../include/asm/book3s/64/pgtable-4k.h        |  34 --
- .../include/asm/book3s/64/pgtable-64k.h       |  20 -
- arch/powerpc/include/asm/hugetlb.h            |  26 +-
- .../include/asm/nohash/32/hugetlb-8xx.h       |  58 +--
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h  |   9 +-
- arch/powerpc/include/asm/nohash/32/pgalloc.h  |   2 +
- arch/powerpc/include/asm/nohash/32/pte-40x.h  |   3 -
- arch/powerpc/include/asm/nohash/32/pte-44x.h  |   3 -
- arch/powerpc/include/asm/nohash/32/pte-85xx.h |   3 -
- arch/powerpc/include/asm/nohash/32/pte-8xx.h  |  64 ++-
- .../powerpc/include/asm/nohash/hugetlb-e500.h |  36 +-
- arch/powerpc/include/asm/nohash/mmu-e500.h    |   4 -
- arch/powerpc/include/asm/nohash/pgalloc.h     |   2 -
- arch/powerpc/include/asm/nohash/pgtable.h     |  45 +-
- arch/powerpc/include/asm/nohash/pte-e500.h    |  22 +-
- arch/powerpc/include/asm/page.h               |  32 --
- arch/powerpc/include/asm/pgtable-be-types.h   |  10 -
- arch/powerpc/include/asm/pgtable-types.h      |  13 +-
- arch/powerpc/include/asm/pgtable.h            |   3 +
- arch/powerpc/kernel/head_85xx.S               |  33 +-
- arch/powerpc/kernel/head_8xx.S                |  10 +-
- arch/powerpc/mm/book3s64/hash_utils.c         |  11 +-
- arch/powerpc/mm/book3s64/pgtable.c            |  12 -
- arch/powerpc/mm/hugetlbpage.c                 | 450 ++----------------
- arch/powerpc/mm/init-common.c                 |   8 +-
- arch/powerpc/mm/kasan/8xx.c                   |  15 +-
- arch/powerpc/mm/nohash/8xx.c                  |  46 +-
- arch/powerpc/mm/nohash/book3e_pgtable.c       |   4 +-
- arch/powerpc/mm/nohash/tlb.c                  | 172 ++-----
- arch/powerpc/mm/nohash/tlb_low_64e.S          | 257 ++--------
- arch/powerpc/mm/pgtable.c                     |  94 ++--
- arch/powerpc/mm/pgtable_32.c                  |   2 +-
- arch/riscv/include/asm/hugetlb.h              |   2 +-
- arch/riscv/include/asm/pgtable.h              |   2 +-
- arch/riscv/mm/hugetlbpage.c                   |   4 +-
- arch/s390/include/asm/hugetlb.h               |   2 +-
- arch/s390/mm/hugetlbpage.c                    |   2 +-
- arch/sh/mm/hugetlbpage.c                      |   2 +-
- arch/sparc/include/asm/pgtable_64.h           |   2 +-
- arch/sparc/mm/hugetlbpage.c                   |   4 +-
- fs/hugetlbfs/inode.c                          |   2 +-
- fs/proc/task_mmu.c                            |   8 +-
- fs/userfaultfd.c                              |   2 +-
- include/asm-generic/hugetlb.h                 |   2 +-
- include/linux/hugetlb.h                       |  10 +-
- include/linux/mm.h                            |  12 +-
- include/linux/pgtable.h                       |   2 +-
- include/linux/swapops.h                       |   2 +-
- kernel/events/core.c                          |   2 +-
- mm/Kconfig                                    |  10 -
- mm/damon/vaddr.c                              |   6 +-
- mm/filemap.c                                  |   2 +-
- mm/gup.c                                      | 105 +---
- mm/hmm.c                                      |   2 +-
- mm/hugetlb.c                                  |  46 +-
- mm/internal.h                                 |   2 +-
- mm/memory-failure.c                           |   2 +-
- mm/memory.c                                   |  19 +-
- mm/mempolicy.c                                |   2 +-
- mm/migrate.c                                  |   4 +-
- mm/mincore.c                                  |   2 +-
- mm/pagewalk.c                                 |  57 +--
- mm/pgalloc-track.h                            |   2 +-
- mm/userfaultfd.c                              |   6 +-
- 74 files changed, 494 insertions(+), 1444 deletions(-)
-
--- 
-2.44.0
-
+                 Linus
