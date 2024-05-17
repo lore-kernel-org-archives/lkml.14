@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977E0140E4D;
-	Fri, 17 May 2024 19:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33AE1411E8;
+	Fri, 17 May 2024 19:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715975632; cv=none; b=DwBqx+oAopSyGY2sWA4c0Q5e8lOWfV1n/12LAS4aB78ZuPPphCTNA2oG1RkAuFVByKWXlGs7wuDo0WuoGJ2Jrse0x0pJ8SGyUvt3W3ccM90hvEEKElvIwlkJyfv0CEBBuq8B8HSVn9paShnThHXQlKIH9XUZRMCPmTQ5BSe/N0k=
+	t=1715975633; cv=none; b=kEZ9Zx3XO/ECI6i7hbVeRnK0zHv6k1SpjKTcZNuSEQ6ZF6Q/tQroMm6aBJooUM8FsC8HDtej80jKJ9/mlcGIg60uAtbEvaxuCh4skymFj/h1HD8SUHxDS9TR1VknNj7tFQLbLWnGy1rCOzZJZNTMZWTVAxVyTIlFrnOeOeyVAH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715975632; c=relaxed/simple;
-	bh=0gIMmyJJTI2Ipz0HBjg4zm0dtXuKg8fOksHpUFhIUT8=;
+	s=arc-20240116; t=1715975633; c=relaxed/simple;
+	bh=6yxGDk7ROsAHdlN45SFSGOkUAPyIsLceEo5pzjgzRq0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MwhKLT67LjVeq45/lq0lkZ5hGRTtMwnVvHeS/gjfHh3gCljFrQTiwQ1cE9Xoxbi98edgZ/MWzfwRBtIwIS77s4PDZTpBUZdfFy5CG3lQRhK2Nc6WvaMAoZ3nnmHJ1ucEc0lefnDOI/Sg6YrOIiR2M6faahnG9TKfwitnRKNuyV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DoN+pkcU; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=nUPy2rJZwi0oPitXP+owGFr7Q/HuxPeYN1GJ/6hZavIjequhjQa+FrkEU+L9T+htnELaR45KeRTdxXCv+7KZkX0KSM9LD00Zbw6nW4XqHssRN7MnMHDbWH0U4euF0Wbq8GJGTQ2bk3UNa4Xm27MxxkBGjxL6T+UPIVRyykVYcS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YGJQmR+x; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DoN+pkcU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YGJQmR+x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715975630; x=1747511630;
+  t=1715975632; x=1747511632;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0gIMmyJJTI2Ipz0HBjg4zm0dtXuKg8fOksHpUFhIUT8=;
-  b=DoN+pkcUQWe/a+4QvDupuIQm4702lvGmm7fyytDacl09mV0fr/XFkJJf
-   gATP0iNUm9cAKL8lIquntFpj+5g1xkM2UoQkxoGs0WwPCwIRRFC0IjTM1
-   r8zWYElyIXwhW6ByTbJh9cY4zP7O1ewCuu3SJuJ26NhrJkB1QqkqO4RG6
-   dyiJQzk/4rDzgvGblBhUi91a90p+XRko4itpuR0mEmcXQcVvKJBvuT8zd
-   0czyQoStVmD8TJYOUy14t9yHDS1eNciLa+RyL3X+jqY6vROjd4Ep/7kU6
-   U3kJ3zOfJFgvCRO58xckCsaafsFJb8qsJZ1onUZ5wHJ3aw0W7p/TmemSO
+  bh=6yxGDk7ROsAHdlN45SFSGOkUAPyIsLceEo5pzjgzRq0=;
+  b=YGJQmR+x07kFasJWFsj83RkQwa0qfmIp/WvRlNRzDTXPSkiyqB3h8PE9
+   rlqRlrOyNLAGs5XSCiz3OkLIL/h9KGZZE2BOXHkMGFLMqHCEbsnvgwkaD
+   FLbDpbyrs1cD/YLcNOo+LkQkx2mTnRHxQKXceflmx+Tyl6/Ejwii7Q0uJ
+   8md8vilQBTUhHs2uRfmGsDDlPF4JFBSSFw4938amOO1LueHsX1V0alchK
+   EkCOG1pkatWVMgKBAL2elA47UH7nOuUPJQl/tAGhGdnVk0PUDjDDfBqBL
+   H8XG/qKrhusNkIcVDLbkNxe9tLq4khg3I+T6TzbEXy+sy0olH9IPI+VZE
    g==;
-X-CSE-ConnectionGUID: quSNOe/aQUiq8EiVahdhXQ==
-X-CSE-MsgGUID: VcfRgHXhRlWeMASrXzBLQg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="16004899"
+X-CSE-ConnectionGUID: r4mK80jnSbmMki9XUge75Q==
+X-CSE-MsgGUID: sZURCCQ0S2mkvD96nsrS7g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12348660"
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="16004899"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 12:53:48 -0700
-X-CSE-ConnectionGUID: pbsSzbLrRxSzszoL9NFkNg==
-X-CSE-MsgGUID: zYbAUfGpSa6EtnedYR+6CQ==
+   d="scan'208";a="12348660"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 12:53:51 -0700
+X-CSE-ConnectionGUID: yG+fqxbaS3eJAIHu8L2Vjg==
+X-CSE-MsgGUID: cYaIy8bnRoWTHwLpCa8toQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="36313502"
+   d="scan'208";a="31915014"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 17 May 2024 12:53:46 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 17 May 2024 12:53:49 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3856B44E; Fri, 17 May 2024 22:53:45 +0300 (EEST)
+	id 50F664B1; Fri, 17 May 2024 22:53:45 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Mark Brown <broonie@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -55,9 +55,9 @@ To: Mark Brown <broonie@kernel.org>,
 Cc: Daniel Mack <daniel@zonque.org>,
 	Haojian Zhuang <haojian.zhuang@gmail.com>,
 	Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v1 03/10] spi: pxa2xx: Remove hard coded number of chip select pins
-Date: Fri, 17 May 2024 22:47:37 +0300
-Message-ID: <20240517195344.813032-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 05/10] spi: pxa2xx: Print DMA burst size only when DMA is enabled
+Date: Fri, 17 May 2024 22:47:39 +0300
+Message-ID: <20240517195344.813032-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240517195344.813032-1-andriy.shevchenko@linux.intel.com>
 References: <20240517195344.813032-1-andriy.shevchenko@linux.intel.com>
@@ -69,43 +69,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove hard coded number of chip select pins for Intel Braswell.
-This comes via property.
+Print DMA burst size only when DMA is enabled to avoid making
+a false impression that DMA is enabled when it may be not.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/spi/spi-pxa2xx.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index dee5513936ec..e7087228505e 100644
+index 56ff296925b7..6bbeb1d09ed9 100644
 --- a/drivers/spi/spi-pxa2xx.c
 +++ b/drivers/spi/spi-pxa2xx.c
-@@ -99,7 +99,6 @@ struct lpss_config {
- 	/* Chip select control */
- 	unsigned cs_sel_shift;
- 	unsigned cs_sel_mask;
--	unsigned cs_num;
- 	/* Quirks */
- 	unsigned cs_clk_stays_gated : 1;
- };
-@@ -137,7 +136,6 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 224,
- 		.cs_sel_shift = 2,
- 		.cs_sel_mask = 1 << 2,
--		.cs_num = 2,
- 	},
- 	{	/* LPSS_SPT_SSP */
- 		.offset = 0x200,
-@@ -1574,8 +1572,6 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
- 			tmp &= LPSS_CAPS_CS_EN_MASK;
- 			tmp >>= LPSS_CAPS_CS_EN_SHIFT;
- 			platform_info->num_chipselect = ffz(tmp);
--		} else if (config->cs_num) {
--			platform_info->num_chipselect = config->cs_num;
+@@ -1412,7 +1412,6 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ 		if (IS_ERR(platform_info))
+ 			return dev_err_probe(dev, PTR_ERR(platform_info), "missing platform data\n");
+ 	}
+-	dev_dbg(dev, "DMA burst size set to %u\n", platform_info->dma_burst_size);
+ 
+ 	ssp = pxa_ssp_request(pdev->id, pdev->name);
+ 	if (!ssp)
+@@ -1496,6 +1495,8 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ 			controller->max_dma_len = MAX_DMA_LEN;
+ 			controller->max_transfer_size =
+ 				pxa2xx_spi_max_dma_transfer_size;
++
++			dev_dbg(dev, "DMA burst size set to %u\n", platform_info->dma_burst_size);
  		}
  	}
- 	controller->num_chipselect = platform_info->num_chipselect;
+ 
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
