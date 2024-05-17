@@ -1,145 +1,183 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C383B43ACA;
-	Fri, 17 May 2024 23:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF6921373;
+	Fri, 17 May 2024 23:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715988798; cv=none; b=XzEKZIvIFsh+l8DqJYSYTG4/mKfyg+QOCpiOuDw+n6RUDinWwKRVGa7xq+mvDkW/DbT9cmCwWtqLZjXafmbh0rG7O9Nn7zl0RTLTZLvP99RAOR0mFpM9JjbafPxrPlboPk6dpsnY6l0RnH8pMUrPI5sKcQM7MyE22dUsWnshOqI=
+	t=1715988851; cv=none; b=OPpYhynsDdnee5D36852xGudxEK4vIchUKZImDrFcHR6x4qEwxjshka5MvBbpa5HNdvLFRhfDpvMBbufAkRBPF+YWWnfkn9GS+wsl8Hilb0Wm5zZUS2pKJTt1jQ8XEafWc5nWWePiOmfPmjU5M5ToyLcUgU8sE/VNOtegYXC1eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715988798; c=relaxed/simple;
-	bh=6E7a1R54O4oY/Bv3V3I/b/LpPkVXPb2htFKqeLsOJQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I2ABcNS0gSwfDlcQJPb8uKRkMYe+hZqbpM8L3+uW3bW8FSbsF/jSO8kU+lf1X8nGxpDTme7sbzRWlujCpbMsREtErcT2RVwpj4MIm8Ou+XC1opKB3xzPOdvOg7y366UeYvBUTfOoaAmSghSCRx6yC7DTsqJlmK2BmK9jfjVMas0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tj/nsTyx; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1715988851; c=relaxed/simple;
+	bh=YpWk7gBrTehwAwLinhvvtDdY2x8cHnw1sT27fb5RXXg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EAHpKqXaegq5dRuMOkTCJWZ1v+67d/O3MgZ49viFQUqfXuGgUmOJisVtdoSxjPnfxsk/NR/Bh2j2+js4EyWZxoMH+2radhJlC3AB6WVpLGPiXMtfPY01mYQjdfvTb2tOHyd22X6b4wvbPShj9y3qk8Slr4P4BaGXD7QJjQzfn68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7Hj/VUd; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tj/nsTyx"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-34e0d47bd98so381704f8f.0;
-        Fri, 17 May 2024 16:33:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7Hj/VUd"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1edc696df2bso27807315ad.0;
+        Fri, 17 May 2024 16:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715988795; x=1716593595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qy5GA9CL6efAYNR6rsn4txm+1VlWlDb+jy2cujQvFME=;
-        b=Tj/nsTyxveSoWWPWDLqCKv2+DS2BfXuA2vE4wqi5f8ZS5Bv5MlxV+DMg7Sz5hf6oER
-         BUrr1+pdeAlVzfBE8wEwkJ0qJpEeNr6ITZFseLyvtVDSZ+g2lFaDv9CgLlygiZYwcD0s
-         1lMU9tlILG9ZYIbaslew0trKJBwn9KnU3Ek96Y4tmeXNoOFZJuQdtg3WvI0XPpBruqA6
-         vyraMQTltcRnEpyPD6YmQjoIOpNTvsX6XFXCG8EPsTybo9ovwLlgX0b2h+jIHWz2ozEf
-         2t55rRjJ/Q/QpE3Aaz7cdnPgdEPFhaYPpkhhDo/FFAFJrQiFKkWGeoMvtx4i6h5VIvjm
-         qWGg==
+        d=gmail.com; s=20230601; t=1715988849; x=1716593649; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+/sK2PQiF2i8Hy522ZlTIVQex0uONRXvF9Qxm4LDRbI=;
+        b=l7Hj/VUdhc2n9wKxi00eDHofkafrIzcm0Um+asMSMVDpwftn9V2DwKp0SMxE7ONO+A
+         JLBs/EdmrS58b6h04YZy+t50gkgtS3zlIb8po4cX5Ml+OOPFvCjOqfv5krYtJ8n9325t
+         MlQKK+VSmgnpEp1RiG7ToGJ6DxQLegGTgbb5c2MmgVdUB6lQicJy64d0Uz8CJGcebQ5V
+         agXvJOvQmTnrhwbEFTpQhfoK569/oaeq9cX4zBb5L3V4lv6qoI8SeLecXNjztcXUmCm3
+         Aa5sE6DHTQh6DS+ssflD7+kK3lXGJg9LZw2uM/WhVE9U8VRvjRjUaaW777pLtsZU6G+W
+         g9jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715988795; x=1716593595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qy5GA9CL6efAYNR6rsn4txm+1VlWlDb+jy2cujQvFME=;
-        b=rg7yButq8vrgGRwrF6dJVslORXE0jE3p76RNsE0UI4F/6s+GTLK9910U8FpU781q4K
-         68Atdni+VQfy+3JUI/cAv93SWSq4EZp04t4LaFWWRan06jxdS8i6SE93TaO7t/SCosb+
-         /hS1odgaM0o49duLH9zxKxn6VSxTXSOaWhFjpsrrY6MYeV2l3VxvrH2bQkxnMYxMZM1z
-         s/RCe1m8iQ6BfEEsiEj823Kjgoz0I2XIx3VCj5rzSHRO84Sq3ahNfxY1fyMpF+OFnHv3
-         iz0PQgE3FzBRKwXxCmIJahVgvnGOWXP+RglDLYzUIXR7br22jvoW9bbljdPNCvSpPUwZ
-         xisQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkYutZ//M0P7saTdeepUkjNSyeu02aGiP2/c0Eb/+1f8hhctZId/Z3ci8hu/NHt8GC6y+F539YRaGWY4d1h5naJgSRFj62tDwrFLnL
-X-Gm-Message-State: AOJu0Yw3ER10ySlrIOlq8LHWRStmnE8xI0YZxPwkbbbUJz71Z7sW7d1y
-	IAnAL6oo57SGZjTQ3dcCAYRXO0KsEvAqEvC20hqllcDvPyvMtGxV16pUP1f7i2a4CgveovlXLY1
-	tJGuxAH78cPcjor6MkJpNFp/1R3A=
-X-Google-Smtp-Source: AGHT+IFkvtdpZQ7uzEvzJEF1GhJfoeLNWA35B9P6yCrzkpFHgHgdYb8Apw1NgA9K6XxflUZUV0/k/R3PENWBVmlX+kE=
-X-Received: by 2002:a05:6000:e50:b0:34a:6fac:6dab with SMTP id
- ffacd0b85a97d-354b8dfddc1mr333994f8f.12.1715988794866; Fri, 17 May 2024
- 16:33:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715988849; x=1716593649;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+/sK2PQiF2i8Hy522ZlTIVQex0uONRXvF9Qxm4LDRbI=;
+        b=s1NAr9wQCZ+Jay20e7C59iMn9oR1JlhwELlH3SE6sp05E7/WKvLLbZbT0nI9E/SnLO
+         NWrEoOmaFwa3ZK3wRnxItWSA29nH/BibWN9SMbvq3V4sZgYkI8sY0X9XmXC0jdBTZz6S
+         Ud33s+0CzJ6T9epp+67FTpESPDDEPpOYS4N3ounpqi6AW/0PMk/rPswJ2ucjTcJKTiSr
+         cscta+4AYobaH3u9ZR+XDFjCB75rLk04JeEbvZAn/0h1+yrguHi0xn2OJSSx6EAElDuu
+         zsMLDTVgFLGxzox5JlO0C5/5MpKrHHLUG0dvLZiAP4rweX9P/eyTMVSmPRCpNIu7jIUB
+         +cXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDErRda0PMdSohmsmyqS82uh7TMzz3B/cZimrLleuINPq+IxfssvGOWyk2LH/kp6WQv768TmtF3m9uykxIKyZ18aNesESiR3D8uC4/b8s2B9ANcCnwTgPlQ3zxxgH4BrxDYsx3bacs
+X-Gm-Message-State: AOJu0YweDsCfmNY3hqsL0bKM8q079QIyENQWgsoBjEA6a2r+wEkwp5YU
+	fynZT8eC3mG9EWSjgb0b8G5f3YpaHZKqn15uIrNb/NnbYNkttfnZ
+X-Google-Smtp-Source: AGHT+IHgVJYDbiMVxJeaKDeS8OIiO3+B1aHLYYmBufZSgfi+ak/ZEGCPAK6/89sxXWYxzBEX4hld/w==
+X-Received: by 2002:a17:902:6b82:b0:1e3:dfdc:6972 with SMTP id d9443c01a7336-1ef43d15755mr242284285ad.9.1715988849387;
+        Fri, 17 May 2024 16:34:09 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d166esm161629185ad.36.2024.05.17.16.34.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 May 2024 16:34:08 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <4ea9cc83-c7ca-47b8-8d43-dab16193108f@roeck-us.net>
+Date: Fri, 17 May 2024 16:34:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABWYdi0ymezpYsQsPv7qzpx2fWuTkoD1-wG1eT-9x-TSREFrQg@mail.gmail.com>
-In-Reply-To: <CABWYdi0ymezpYsQsPv7qzpx2fWuTkoD1-wG1eT-9x-TSREFrQg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 17 May 2024 16:33:03 -0700
-Message-ID: <CAADnVQ+YXf=1iO3C7pBvV1vhfWDyko2pJzKDXv7i6fkzsBM0ig@mail.gmail.com>
-Subject: Re: bpftool does not print full names with LLVM 17 and newer
-To: Ivan Babrou <ivan@cloudflare.com>
-Cc: bpf <bpf@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
+ entries
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
+ sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
+ <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
+ <ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 17, 2024 at 2:51=E2=80=AFPM Ivan Babrou <ivan@cloudflare.com> w=
-rote:
+On 5/17/24 15:22, Russell King (Oracle) wrote:
+> On Fri, May 17, 2024 at 03:09:12PM -0700, Guenter Roeck wrote:
+>> Hi,
+>>
+>> On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
+>>> Report an error when an attempt to register a clkdev entry results in a
+>>> truncated string so the problem can be easily spotted.
+>>>
+>>> Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
+>>> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>>
+>> With this patch in the mainline kernel, I get
+>>
+>> 10000000.clock-controller:corepll: device ID is greater than 24
+>> sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for corepll: -12
+>> sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
+>> sifive-clk-prci 10000000.clock-controller: probe with driver sifive-clk-prci failed with error -12
+>> ...
+>> platform 10060000.gpio: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>> platform 10010000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>> platform 10011000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>> platform 10040000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>> platform 10050000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>> platform 10090000.ethernet: deferred probe pending: platform: supplier 10000000.clock-controller not ready
+>>
+>> when trying to boot sifive_u in qemu.
+>>
+>> Apparently, "10000000.clock-controller" is too long. Any suggestion on
+>> how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
+>> for clk_hw_register_clkdev() is not or no longer a good idea.
+>> What else should be used instead ?
+> 
+> It was *never* a good idea. clkdev uses a fixed buffer size of 20
+> characters including the NUL character, and "10000000.clock-controller"
+> would have been silently truncated to "10000000.clock-cont", and thus
+> 
+>                          if (!dev_id || strcmp(p->dev_id, dev_id))
+> 
+> would never have matched.
+> 
+> We need to think about (a) whether your use of clk_hw_register_clkdev()
+> is still appropriate, and (b) whether we need to increase the size of
+> the strings.
 >
-> Hello,
->
-> We recently bumped LLVM used for bpftool compilation from 15 to 18 and
-> our alerting system notified us about some unknown bpf programs. It
-> turns out, the names were truncated to 15 chars, whereas before they
-> were longer.
->
-> After some investigation, I was able to see that the following code:
->
->     diff --git a/src/common.c b/src/common.c
->     index 958e92a..ac38506 100644
->     --- a/src/common.c
->     +++ b/src/common.c
->     @@ -435,7 +435,9 @@ void get_prog_full_name(const struct
-> bpf_prog_info *prog_info, int prog_fd,
->         if (!prog_btf)
->             goto copy_name;
->
->     +    printf("[0] finfo.type_id =3D %x\n", finfo.type_id);
->         func_type =3D btf__type_by_id(prog_btf, finfo.type_id);
->     +    printf("[1] finfo.type_id =3D %x\n", finfo.type_id);
->         if (!func_type || !btf_is_func(func_type))
->             goto copy_name;
->
-> When ran under gdb, shows:
->
->     (gdb) b common.c:439
->     Breakpoint 1 at 0x16859: file common.c, line 439.
->
->     (gdb) r
->     3403: tracing  [0] finfo.type_id =3D 0
->
->     Breakpoint 1, get_prog_full_name (prog_info=3D0x7fffffffe160,
-> prog_fd=3D3, name_buff=3D0x7fffffffe030 "", buff_len=3D128) at common.c:4=
-39
->     439        func_type =3D btf__type_by_id(prog_btf, finfo.type_id);
->     (gdb) print finfo
->     $1 =3D {insn_off =3D 0, type_id =3D 1547}
->
->
-> Notice that finfo.type_id is printed as zero, but in gdb it is in fact 15=
-47.
->
-> Disassembly difference looks like this:
->
->     -    8b 75 cc                 mov    -0x34(%rbp),%esi
->     -    e8 47 8d 02 00           call   3f5b0 <btf__type_by_id>
->     +    31 f6                    xor    %esi,%esi
->     +    e8 a9 8c 02 00           call   3f510 <btf__type_by_id>
->
-> This can be avoided if one removes "const" during finfo initialization:
->
->     const struct bpf_func_info finfo =3D {};
->
-> This seems like a pretty annoying miscompilation, and hopefully
-> there's a way to make clang complain about this loudly, but that's
-> outside of my expertise. There might be other places like this that we
-> just haven't noticed yet.
->
-> I can send a patch to fix this particular issue, but I'm hoping for a
-> more comprehensive approach from people who know better.
 
-Wow. Great catch. Please send a patch to fix bpftool and,
-I agree, llvm should be warning about such footgun,
-but the way ptr_to_u64() is written is probably silencing it.
-We probably should drop 'const' from it:
-static inline __u64 ptr_to_u64(const void *ptr)
+It isn't _my_ use, really. I only run a variety of boot tests with qemu.
+I expect we'll see reports from others trying to boot the mainline kernel
+on real sifive_u hardware or other hardware using the same driver or other
+drivers using dev_name() as dev_id parameter. Coccinelle finds the
+following callers:
 
-and maybe add a flavor of ptr_to_u64 with extra check
-that the arg doesn't have a const modifier.
-__builtin_types_compatible_p(typeof(ptr), void *)
-should do the trick.
+./sound/soc/codecs/rt5682s.c: dev_name() used as dev_id at line 2833
+./drivers/clk/sifive/sifive-prci.c: dev_name() used as dev_id at line 540
+./sound/soc/codecs/tlv320aic32x4-clk.c: dev_name() used as dev_id at line 475
+./drivers/i2c/busses/i2c-bcm2835.c: dev_name() used as dev_id at line 189
+./sound/soc/codecs/rt5682.c: dev_name() used as dev_id at line 2909
+
+Guenter
+
