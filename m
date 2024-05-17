@@ -1,298 +1,1045 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A783517741;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FF61755A;
 	Fri, 17 May 2024 07:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715932456; cv=fail; b=trHjvtmgT8J6hOrF3mldpo/ZtiyhK2/OEu2/u9NPLtNz61fSr8zIynU2Oa1pAiRDuac85qRuWpxLl4bHPqh70Qsx2dpKT8rd+IEKu7nPbM84hyQDkzaWonJbHxr1p7IPEfTiDQCN6LZzllAMNaB38oPcTF9Cvc7v5chhBj6KrPU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715932456; c=relaxed/simple;
-	bh=2xljOK9Kas9is6wqwdFi3s8GLtOMCOASQr5bfc3cBxk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=k5r8E4Sm4NxAYx5YVmECR4F1P4AONnVv+2UiWpgYH5crtaiSZmTSWwnrZHoxBnXiKgvDttI6R9hOEj3n/4vMNCvOoqndQFy0C78Cw+mRFmu9xx6tyxeJR+L23nnYTux2ENKCq0Vczwy8A3q1qoEWM9beEP2h4kNHrtoPLS89+UY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ih1OI9Dz; arc=fail smtp.client-ip=40.107.223.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ih1OI9Dz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n7esaLsgJNLQ8nhLiIvdA1wO87L+dHNBvzP1XPD7zAPewxm5GhFccVaeYsv5CtAlgKdBzsH16teNEK+YODaMLUyeuc8sno6B4vz3Ps7AtJW8UKgGR3T/glzKsZw7MJy64MUdEmPQRfn7ta7JE4usS9Rp1Wh9BU35qQ6Sef/oE7P4SWUQRT12x6onLH+uXpSr4R7+cDzJAQ/05QO519VipV+L/F/LkCM26GqEVHFDHWWyOTVw3ZB313KvrLsHa5XrDe43H6farjCyX/lX6FgOW1C8nWQeunBKXIi0n4qSF/nPByaST3eWqOvirnQF+hu6cXC2+ElPJtaQfpzG0wZIJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TQetnkxy68nJO8JhawkHqVbfce/rn/0woSu/XqdpKW0=;
- b=Q0nshReBMPTXiWjH4uZ7Qfd20Dec3fijkFJh+wsc7qgoXOswgBnIeyL6zm9rQ1L04IjZNROJafHlcGm+pkysdEvWLqH1Ed0a+hk9tt/ySN7DP4cfwDd+iDb5RoKTHHk4LU2SWff0XXPOPpP9ZYXH57TihYY9b3NnerIDYoX3B4l1y4qlsZbNojxOiNBazG3/HqYr79YUWvOG0BZFsSJIHpEqkpC9iUoZqX7yKXkYJz2m13/LWSwkvtFlWRajtfoF/WL2ltdxSp759SeZzKezBoInuwbACHX90QLE4H0AQjsATSXbpYokqXJxa/C3gh4xABLa1pha5RrPQDx2C8pbsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQetnkxy68nJO8JhawkHqVbfce/rn/0woSu/XqdpKW0=;
- b=ih1OI9Dz2ddmKgR0gTBFXsTIpHJNTffGYR4i0ulXxtkj9hP470WFXT41ynDJ1qeT1K/aA837YpoWw6e7pakD87CIMzczw+C3VKq6s4xqdBKwd2CowqWJePF+qq6szwZE2j8ZJxKZXipEN9t8p7xs/JYEd99sASRnvU3o3QbwuMhaVswcqtNtfhVLb+1N8J8v+Rcjkr1/JHSUcx8Xgx5NvGU150eRxmmA5O3AJ7pfjV4jz9GpKlzmBR+V6+qDNhwYLR3rI3ugtxXpR2IRAh8IDfBQ+xXzGthN79nVmyHgM1N0mzgTjAcy3+3ETj3YmRn7+H4nZKrdoVP4sktPftyV9Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by BY5PR12MB4049.namprd12.prod.outlook.com (2603:10b6:a03:201::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.30; Fri, 17 May
- 2024 07:54:11 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::bbac:e733:5c7e:19c6]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::bbac:e733:5c7e:19c6%5]) with mapi id 15.20.7587.028; Fri, 17 May 2024
- 07:54:09 +0000
-Message-ID: <ea0bacc0-2765-4d8f-8b62-0e9c45c560fc@nvidia.com>
-Date: Fri, 17 May 2024 15:53:58 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftest: rtc: Add to check rtc alarm status for alarm
- related test
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: shuah@kernel.org, avagin@google.com, amir73il@gmail.com,
- brauner@kernel.org, mochs@nvidia.com, jszu@nvidia.com,
- linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20240517022847.4094731-1-jjang@nvidia.com>
- <202405170719515a9c6d2f@mail.local>
-Content-Language: en-US
-From: Joseph Jang <jjang@nvidia.com>
-In-Reply-To: <202405170719515a9c6d2f@mail.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR02CA0061.apcprd02.prod.outlook.com
- (2603:1096:4:54::25) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715932457; cv=none; b=tbQLoxdnIa1k/mAIF+/2TywfqrstZ/Q5EzYuf7S9nBkhnR6GMIY26HMWewpm6fmoGz8zp29g935mVIEqlY/sH2Npm4NU1FaG0+O9rIYHIVo7WTS4V79Uam463N477nPlbv6yKmwX/xEGZwZMrXEr1S9qPr3DUfV19UOlVYB8G48=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715932457; c=relaxed/simple;
+	bh=NNMvUdhH+0J3P7CxFcskUfVZCIovjuiMu3PAYey51fw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EX8BsjDOHzAt6O0qPCcmqbXV7k0ElTp7uCfBuKIdobGPbLijicciLc53J/yJ7WnuPc9B6pv7p148nvCUMOZ1fWh12EW1ylSb+PIzv8SNI+byM6nC4KA2eLVwVLGpfiX73JaNM0mnFSOSULTynTo7q1dOTQRLATqeziclg3mCghE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 44H7rdP932158101, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 44H7rdP932158101
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 May 2024 15:53:39 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 17 May 2024 15:53:35 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 17 May
+ 2024 15:53:34 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai
+	<justinlai0215@realtek.com>
+Subject: [PATCH net-next v19 01/13] rtase: Add pci table supported in this module
+Date: Fri, 17 May 2024 15:52:50 +0800
+Message-ID: <20240517075302.7653-2-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240517075302.7653-1-justinlai0215@realtek.com>
+References: <20240517075302.7653-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|BY5PR12MB4049:EE_
-X-MS-Office365-Filtering-Correlation-Id: 006e10e1-c2b0-4eaa-0737-08dc76468896
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N1FlT2JmUEZEWU9PYVpXOU01UU9XcU5zRzhrQlYwOEJqY3djVGpRa1NEWDls?=
- =?utf-8?B?dVV5ZUVTWWtteW9RT1BqS0hRRU9KZ2hFZGNRSjdtU2VUWklIdXFYSjhjSGM3?=
- =?utf-8?B?aVlET3ZXUlBMU2lCZ3ZpUk5LeU5MNmNWUkpsdjVDZW9UVzR5cHVFaWRaN2dH?=
- =?utf-8?B?MnRGb2tNUnNUaHc3RWtadDZsTmxUL2Y1ZFU3L3c2OTEwd0pVUmFDcVYxTW1i?=
- =?utf-8?B?L0hJZlRRSEhvV29jN1VCdVNmdlFSY2JVaGhtOXVJY1ZvWFc4VXdNbG00RktE?=
- =?utf-8?B?ODBCSm40NzNwRzZQaFJKcHhwaE5ROTlFWjFHT2JzUko4VDVMYUllcFF3eFdW?=
- =?utf-8?B?QWhKNDdEdm1hWHljOW9sUjBkNHdmZzdXcHZWWUk0Wm10T09HeEFBUllEbmQw?=
- =?utf-8?B?RHdNTFc5ejlPbzJjOTMyM3BNc09kSHJlQWFIemY1dHdOcFR1SnpHTHk5VGlG?=
- =?utf-8?B?a2NROG85ZCsvYzlHRzdEYWYzeldnMnJ1eEprWWV4dlRDMlpNa0VnWjBPUENn?=
- =?utf-8?B?ekVGM2hxODM3eDUrdGhwbS9IU2RFdXRtZjkvWjhKK3ZTM2RaUmVndEZUZ1ZM?=
- =?utf-8?B?WGx1YUlJakcyeDBHajZTMzZKUUZtN2Ivdi9sc3NNcVRGN29NN2lJMXhYdzZ3?=
- =?utf-8?B?WGYxL1hxQ1hmRmdLY0gwUFRIU09BbC9uRTN5bWxNSkEzSUhpcS9DdjZvSHFh?=
- =?utf-8?B?aW8wUjRIZGhhd3B4bUNVUnpJTi9TaGE1cXdKVHdWTllEQmVqRURsaUNoYVZi?=
- =?utf-8?B?a0lLT01WT2xldDE5cDV0MUFPSmI2SlFYOVhxd3Y4ZHF1SVk2T1g5Nk4rako4?=
- =?utf-8?B?Y011Uk9YLzQycmdybXY1TC9yMThESWlXL01pbVdJeU5tMW5sOUZHMFR3S28z?=
- =?utf-8?B?bUFla3lyZjNxZVZsM1dmbytJUXRRS1hHN3o5OUVxY3RBQldiQVJZRzJicmZy?=
- =?utf-8?B?TDU3RlpsdjZyRFBKQ0dIdnZENG5wb1dyYXlLMk5PeVlTbXQwWU1nRk5BWUhj?=
- =?utf-8?B?UjVHdXhmaExITVV2Z2ovNVBlVTJLY2lQcTdGSGF1eTI0OCtCOElIVFFuZ21K?=
- =?utf-8?B?cGtiWHZkeW03UXlrQmRocEo1YWxQWVlmQjEyODZLc25RdUt3U0JaVEVIM1Zt?=
- =?utf-8?B?N3pHQWVBaytqS29IUWJpNnlEcDFKdUNiUFJWQjNtWWJ3QUo4ekVheFJJblNj?=
- =?utf-8?B?WU85cG1GVXhPMGpmb2tvQlpKVll4dVJUanI3SFo3VTUrZTlXdUMra2VLTHI5?=
- =?utf-8?B?NEk5R3NVKzJPTGpCTXdoVWc2L2dNZ2xmWlh5LytGMzNmT3RxZ0VKdlF2OHQw?=
- =?utf-8?B?VEplTXFNdWdOWVNJTk5HNk05cTJ2Skhpb2pXT3oyNUxiUHVZajloMWtGY0hD?=
- =?utf-8?B?NzBzZ2lReDE3UlhtRWtNNUt4alZqK0JRbjNQWUIxd3pUQUVGeVF3OUgzdUdL?=
- =?utf-8?B?eXdpcXFQRlJPNWIxYVhJY1phaHU0WGNhdGZaWVMxUVhLRnVpc3E3aDNiL2JP?=
- =?utf-8?B?cGFka1JSYmhIajJxRmFuNnZ4NEhyajhoRGpIMXRxY2hpclVtRnZmbVVod2th?=
- =?utf-8?B?UmRENHFydWI3RXp4WWtwdGx6bW5teW5FNFFLYlV6dFAvblZNdXpVUWFZZXlT?=
- =?utf-8?B?YktKZmxQUlQwVzl0eC9hNUJKNktzQVpiMHZTWUFiMm9jNDB2RElKd3JJNWlj?=
- =?utf-8?B?b0RZLzl5K3l5eDdOSkJhZGJ3WTBpUHFESGNIMXlBdlIwczU4dUNWa3lBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TFJhN29PeUQyRUNaMHpMaGkydjkxdjdQa3lDNnkxRWVBdDd6di9NeW5vNUJG?=
- =?utf-8?B?K25URkZNMnR3L2NTVm1wTzh1WXBFNk9mSlVEdURpRWpzaUR4ajQ2VlFERW9G?=
- =?utf-8?B?eWV2NHlnZytPM1NYMGJyR2pJZzVnSTBXV2RKUVoxbk90VTlOK2RqUlBnTytW?=
- =?utf-8?B?RDBRNFdxQVgvVG9WM1dpUmN1bHcxSjdyZEtsUDBWaTBYRDVrakRzRkJOOXc1?=
- =?utf-8?B?V2kxc24rTzluVi9IV0FzSk8xcnlOdEl3MVNyVEZLQlZ1ZjMvcjA1UEtjVmxJ?=
- =?utf-8?B?TzJzT2NjYXFVR2JBMXduVVJRYkJTdUZ4SnNHYm9TK3JuMENITFMrbm9SK0Vw?=
- =?utf-8?B?QUcxbmtPSWt0cllMZFdvTHZIL0xSV2d2bk4rUklCZHozOTVSRWtHUXQ5d3BF?=
- =?utf-8?B?Mk9pSUMwUkZpaWJqdmsyZldiV2dQT3pOSFFKQlJ5em5NS0d6QlUrWnNLQlBB?=
- =?utf-8?B?RGJiRG93aWZCV2owTzQwTkVXRjVKelB3NGZQL2ZIWGRxdk9RSXdRSjlzYjkw?=
- =?utf-8?B?NHVvYi85cUpyd3NHNitkbXdwRnVwbmtENHlSWmRnWk9iVEQraFV3VXE4ZWpi?=
- =?utf-8?B?c0llbHBVaFduRUxEcHJIZ0dWT25oRVhrWjY0R2d3SmpBcmJYNXJxbDBTQWgv?=
- =?utf-8?B?SlNzdnVkQUozNHp3ZVFIck5Ya1lvU0RPTlpGTEM0THZYR1dKUnpXRkx1ZFZE?=
- =?utf-8?B?cndFY0RqWWcweGQ3bnpaZTl4d0I5dmgvVkFMWno5U3JVU2NxSXcxNElJT28y?=
- =?utf-8?B?ZCt3bDJxcTl4VjFxdnFmL0UzeVF0SjA1Y01xVzc5QklSZ2pmeFRnL3MrVHNL?=
- =?utf-8?B?aWY2aDI3N3BLSU5RYXMwS0NPTis3WE03Mk4yK3ZVRG1yNldUREt4bVVTdmx2?=
- =?utf-8?B?YnlwQmE1cFR5OVp6ZjhFYXpaWWduTW4vVS9TRnlaLzAyd3VoZ29wM0JSallQ?=
- =?utf-8?B?YnZUa3lyeXYydXdhZjhiLzZvNkdzYVRXZi9jeGVWSFB6QzBhTGpIMEN4T3Rs?=
- =?utf-8?B?bnpTQko1L0RxZ2dJQXcrMy9LUE1PbG8xTVlEUXZOcGc2NThJeElKNHd2MFox?=
- =?utf-8?B?czZXdzN4ZHY0dWpHekNyNmF3SnBLM0xIdEo4Sm5ScVI3anp5ZFd1Y0NDM2hN?=
- =?utf-8?B?SWJlY1UyT0tIR3FPTXZYaWpaellIRUdOVFRBaEs3ME9VeXVCd29Ec0tYaVhY?=
- =?utf-8?B?TGlRVVF1cVFnMnU5Zk5LeDNLS2hSSDl2SUY3SWpLbXNJY3NCV1RVQ1hXR1JJ?=
- =?utf-8?B?NFdqVDB6bjcweUZGNUc2R3Zjc1g3KzVIc3JYeWtYRFdCS1h4U05TVlhXbFpD?=
- =?utf-8?B?ZzNSYTV3T0xISlY4allrQWlZOTNiN1NneWJmRm9sUGlrU0NzRG82eDVpdit0?=
- =?utf-8?B?aXpYVENUT1ZobjlmYTJ3S0dlbFpuN05tWXo5SmwwZFF2SWthZThuVVkzUVVS?=
- =?utf-8?B?MWxYZXBUS1UrUG1uWFZKZlpVSUd6L0t3aTlrcnJGWU9waitoRjVpbVdvUTBi?=
- =?utf-8?B?akNqS0liL3B6Smo1KzE3dzVWNGdLQ0JVbWdGY1ZBR2M4cVFCVG5jY3liZUVJ?=
- =?utf-8?B?bUp0R2k4KzZMTjJtTHNUYnd5MmtpQUVhaDduaVExb0I2bkFscWJ2YVZOQlJS?=
- =?utf-8?B?NGIxQkJOYnZpNHk3VUlMUVY3WEk3cmNtVFIva1l3NUVvUXhSeU5LMy94enBy?=
- =?utf-8?B?dHNQVDhRNW9aUTZ1RldYc3l1TGs4S05sZll5VmhSSTZpM1EybVJ4bkhvOEhN?=
- =?utf-8?B?OFBSS3hEbGlHM1dnVlhzelBrVnFvUU0rQ3hIandoZzJxdTMvRWl2SlNzenBJ?=
- =?utf-8?B?cHM3d1RZNmJlQkxCN09ubzROOGZZSDdjODNxTktQUzBmYUovL3puRnIwcE1K?=
- =?utf-8?B?bnh3ZUhMdmN1cW51enhDZHlTcEppOVJpMFZHczBjelhYSkZaTHRhMUt6NDFO?=
- =?utf-8?B?SjdCNDNDVFpZdmE4S2dhT1FHdWNqeUJSTkRlc2laQXBzaUs3YmZ1RnowbERU?=
- =?utf-8?B?NGd0azJYLzlaSElVOVdwelVqMmJLMExnRlZyMjVlajBEUGdIYmI4MnNFMEpm?=
- =?utf-8?B?bmNBamIwVzYzVW9Pbnc0ei82elBoV0F4RmhFYVFQMWpGYURNa3AxNjVQQWFs?=
- =?utf-8?Q?n0diI0vNUhwRHvNgojP2hltAe?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 006e10e1-c2b0-4eaa-0737-08dc76468896
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 07:54:09.4783
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w/fgsylteoQ+jUzKMndhqr4GxI3k8jv6IGlysjSKPv1VEPtU5634kQ//m5eBe1vjyprM1ddiHsgvjkaFrOtH0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4049
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
+Add pci table supported in this module, and implement pci_driver function
+to initialize this driver, remove this driver, or shutdown this driver.
 
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ drivers/net/ethernet/realtek/rtase/rtase.h    | 326 +++++++++
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 639 ++++++++++++++++++
+ 2 files changed, 965 insertions(+)
+ create mode 100644 drivers/net/ethernet/realtek/rtase/rtase.h
+ create mode 100644 drivers/net/ethernet/realtek/rtase/rtase_main.c
 
-On 2024/5/17 3:19 PM, Alexandre Belloni wrote:
-> On 16/05/2024 19:28:47-0700, Joseph Jang wrote:
->> In alarm_wkalm_set and alarm_wkalm_set_minute test, they use different
->> ioctl (RTC_ALM_SET/RTC_WKALM_SET) for alarm feature detection. They will
->> skip testing if RTC_ALM_SET/RTC_WKALM_SET ioctl returns an EINVAL error
->> code. This design may miss detecting real problems when the
->> efi.set_wakeup_time() return errors and then RTC_ALM_SET/RTC_WKALM_SET
->> ioctl returns an EINVAL error code with RTC_FEATURE_ALARM enabled.
->>
->> In order to make rtctest more explicit and robust, we propose to use
->> RTC_PARAM_GET ioctl interface to check rtc alarm feature state before
->> running alarm related tests. If the kernel does not support RTC_PARAM_GET
->> ioctl interface, we will fallback to check the presence of "alarm" in
->> /proc/driver/rtc.
->>
->> The rtctest requires the read permission on /dev/rtc0. The rtctest will
->> be skipped if the /dev/rtc0 is not readable.
->>
-> 
-> This change as to be separated. Also, I'm not sure what happened with
-> https://lore.kernel.org/all/20230717175251.54390-1-atulpant.linux@gmail.com/
-> 
-
-I apply above patch and seems like still cannot detect the read
-permission on /dev/rtc0. I guess the 'F_OK' just check the `/dev/rtc0`
-was there.
-
-I share the error logs by following for your reference.
-
-TAP version 13
-1..1
-# timeout set to 210
-# selftests: rtc: rtctest
-# TAP version 13
-# 1..8
-# # Starting 8 tests from 1 test cases.
-# #  RUN           rtc.date_read ...
-# # rtctest.c:53:date_read:Expected -1 (-1) != self->fd (-1)
-# # date_read: Test terminated by assertion
-# #          FAIL  rtc.date_read
-
-Not sure if we could skip the testing by following change ?
-
-FIXTURE_SETUP(rtc) {
-+     if (access(rtc_file, R_OK) != 0)
-+             SKIP(return, "Skipping test since cannot access %s, 
-perhaps miss sudo",
-+                      rtc_file)
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
+new file mode 100644
+index 000000000000..22f895979a7c
+--- /dev/null
++++ b/drivers/net/ethernet/realtek/rtase/rtase.h
+@@ -0,0 +1,326 @@
++/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
++/*
++ *  rtase is the Linux device driver released for Realtek Automotive Switch
++ *  controllers with PCI-Express interface.
++ *
++ *  Copyright(c) 2024 Realtek Semiconductor Corp.
++ */
 +
-       self->fd = open(rtc_file, O_RDONLY);
-}
-
-And I make sure we need root permission to access `/dev/rtc0`.
-
-
-
->> Requires commit 101ca8d05913b ("rtc: efi: Enable SET/GET WAKEUP services
->> as optional")
->>
->> Reviewed-by: Jeremy Szu <jszu@nvidia.com>
->> Reviewed-by: Matthew R. Ochs <mochs@nvidia.com>
->> Signed-off-by: Joseph Jang <jjang@nvidia.com>
->> ---
->>   tools/testing/selftests/rtc/Makefile  |  2 +-
->>   tools/testing/selftests/rtc/rtctest.c | 72 +++++++++++++++++++--------
->>   2 files changed, 53 insertions(+), 21 deletions(-)
->>
->> diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
->> index 55198ecc04db..6e3a98fb24ba 100644
->> --- a/tools/testing/selftests/rtc/Makefile
->> +++ b/tools/testing/selftests/rtc/Makefile
->> @@ -1,5 +1,5 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> -CFLAGS += -O3 -Wl,-no-as-needed -Wall
->> +CFLAGS += -O3 -Wl,-no-as-needed -Wall -I../../../../usr/include/
->>   LDLIBS += -lrt -lpthread -lm
->>   
->>   TEST_GEN_PROGS = rtctest
->> diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
->> index 63ce02d1d5cc..aa47b17fbd1a 100644
->> --- a/tools/testing/selftests/rtc/rtctest.c
->> +++ b/tools/testing/selftests/rtc/rtctest.c
->> @@ -8,6 +8,7 @@
->>   #include <errno.h>
->>   #include <fcntl.h>
->>   #include <linux/rtc.h>
->> +#include <stdbool.h>
->>   #include <stdio.h>
->>   #include <stdlib.h>
->>   #include <sys/ioctl.h>
->> @@ -24,12 +25,17 @@
->>   #define READ_LOOP_SLEEP_MS 11
->>   
->>   static char *rtc_file = "/dev/rtc0";
->> +static char *rtc_procfs = "/proc/driver/rtc";
->>   
->>   FIXTURE(rtc) {
->>   	int fd;
->>   };
->>   
->>   FIXTURE_SETUP(rtc) {
->> +	if (access(rtc_file, R_OK) != 0)
->> +		SKIP(return, "Skipping test since cannot access %s, perhaps miss sudo",
->> +			 rtc_file);
-> 
->> +
->>   	self->fd = open(rtc_file, O_RDONLY);
->>   }
->>   
->> @@ -82,6 +88,36 @@ static void nanosleep_with_retries(long ns)
->>   	}
->>   }
->>   
->> +static bool is_rtc_alarm_supported(int fd)
->> +{
->> +	struct rtc_param param = { 0 };
->> +	int rc;
->> +	char buf[1024] = { 0 };
->> +
->> +	/* Validate kernel reflects unsupported RTC alarm state */
->> +	param.param = RTC_PARAM_FEATURES;
->> +	param.index = 0;
->> +	rc = ioctl(fd, RTC_PARAM_GET, &param);
->> +	if (rc < 0) {
->> +		/* Fallback to read rtc procfs */
->> +		fd = open(rtc_procfs, O_RDONLY);
-> 
-> I think I was clear on the previous thread, no new users of the procfs
-> interface. You can carry this n your own tree but that can't be
-> upstream.
-> 
-
-Okay ~ If we use RTC_PARAM_GET ioctl to detect rtc feature only, not
-sure if that is okay for upstream ?
-
-Thank you,
-Joseph.
++#ifndef _RTASE_H_
++#define _RTASE_H_
++
++#define RTASE_HW_VER_MASK 0x7C800000
++
++#define RTASE_RX_DMA_BURST_256       4
++#define RTASE_TX_DMA_BURST_UNLIMITED 7
++#define RTASE_RX_BUF_SIZE            (PAGE_SIZE - \
++				      SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
++#define RTASE_MAX_JUMBO_SIZE         (RTASE_RX_BUF_SIZE - VLAN_ETH_HLEN - ETH_FCS_LEN)
++
++/* 3 means InterFrameGap = the shortest one */
++#define RTASE_INTERFRAMEGAP 0x03
++
++#define RTASE_REGS_SIZE     256
++#define RTASE_PCI_REGS_SIZE 0x100
++
++#define RTASE_MULTICAST_FILTER_MASK GENMASK(30, 26)
++
++#define RTASE_VLAN_FILTER_ENTRY_NUM 32
++#define RTASE_NUM_TX_QUEUE 8
++#define RTASE_NUM_RX_QUEUE 4
++
++#define RTASE_TXQ_CTRL      1
++#define RTASE_FUNC_TXQ_NUM  1
++#define RTASE_FUNC_RXQ_NUM  1
++#define RTASE_INTERRUPT_NUM 1
++
++#define RTASE_MITI_TIME_COUNT_MASK    GENMASK(3, 0)
++#define RTASE_MITI_TIME_UNIT_MASK     GENMASK(7, 4)
++#define RTASE_MITI_DEFAULT_TIME       128
++#define RTASE_MITI_MAX_TIME           491520
++#define RTASE_MITI_PKT_NUM_COUNT_MASK GENMASK(11, 8)
++#define RTASE_MITI_PKT_NUM_UNIT_MASK  GENMASK(13, 12)
++#define RTASE_MITI_DEFAULT_PKT_NUM    64
++#define RTASE_MITI_MAX_PKT_NUM_IDX    3
++#define RTASE_MITI_MAX_PKT_NUM_UNIT   16
++#define RTASE_MITI_MAX_PKT_NUM        240
++#define RTASE_MITI_COUNT_BIT_NUM      4
++
++#define RTASE_NUM_MSIX 4
++
++#define RTASE_DWORD_MOD 16
++
++/*****************************************************************************/
++enum rtase_registers {
++	RTASE_MAC0   = 0x0000,
++	RTASE_MAC4   = 0x0004,
++	RTASE_MAR0   = 0x0008,
++	RTASE_MAR1   = 0x000C,
++	RTASE_DTCCR0 = 0x0010,
++	RTASE_DTCCR4 = 0x0014,
++#define RTASE_COUNTER_RESET BIT(0)
++#define RTASE_COUNTER_DUMP  BIT(3)
++
++	RTASE_FCR = 0x0018,
++#define RTASE_FCR_RXQ_MASK GENMASK(5, 4)
++
++	RTASE_LBK_CTRL = 0x001A,
++#define RTASE_LBK_ATLD BIT(1)
++#define RTASE_LBK_CLR  BIT(0)
++
++	RTASE_TX_DESC_ADDR0   = 0x0020,
++	RTASE_TX_DESC_ADDR4   = 0x0024,
++	RTASE_TX_DESC_COMMAND = 0x0028,
++#define RTASE_TX_DESC_CMD_CS BIT(15)
++#define RTASE_TX_DESC_CMD_WE BIT(14)
++
++	RTASE_BOOT_CTL  = 0x6004,
++	RTASE_CLKSW_SET = 0x6018,
++
++	RTASE_CHIP_CMD = 0x0037,
++#define RTASE_STOP_REQ      BIT(7)
++#define RTASE_STOP_REQ_DONE BIT(6)
++#define RTASE_RE            BIT(3)
++#define RTASE_TE            BIT(2)
++
++	RTASE_IMR0 = 0x0038,
++	RTASE_ISR0 = 0x003C,
++#define RTASE_TOK7 BIT(30)
++#define RTASE_TOK6 BIT(28)
++#define RTASE_TOK5 BIT(26)
++#define RTASE_TOK4 BIT(24)
++#define RTASE_FOVW BIT(6)
++#define RTASE_RDU  BIT(4)
++#define RTASE_TOK  BIT(2)
++#define RTASE_ROK  BIT(0)
++
++	RTASE_IMR1 = 0x0800,
++	RTASE_ISR1 = 0x0802,
++#define RTASE_Q_TOK BIT(4)
++#define RTASE_Q_RDU BIT(1)
++#define RTASE_Q_ROK BIT(0)
++
++	RTASE_EPHY_ISR = 0x6014,
++	RTASE_EPHY_IMR = 0x6016,
++
++	RTASE_TX_CONFIG_0 = 0x0040,
++#define RTASE_TX_INTER_FRAME_GAP_MASK GENMASK(25, 24)
++	/* DMA burst value (0-7) is shift this many bits */
++#define RTASE_TX_DMA_MASK             GENMASK(10, 8)
++
++	RTASE_RX_CONFIG_0 = 0x0044,
++#define RTASE_RX_SINGLE_FETCH  BIT(14)
++#define RTASE_RX_SINGLE_TAG    BIT(13)
++#define RTASE_RX_MX_DMA_MASK   GENMASK(10, 8)
++#define RTASE_ACPT_FLOW        BIT(7)
++#define RTASE_ACCEPT_ERR       BIT(5)
++#define RTASE_ACCEPT_RUNT      BIT(4)
++#define RTASE_ACCEPT_BROADCAST BIT(3)
++#define RTASE_ACCEPT_MULTICAST BIT(2)
++#define RTASE_ACCEPT_MYPHYS    BIT(1)
++#define RTASE_ACCEPT_ALLPHYS   BIT(0)
++#define RTASE_ACCEPT_MASK      (RTASE_ACPT_FLOW | RTASE_ACCEPT_ERR | \
++				RTASE_ACCEPT_RUNT | RTASE_ACCEPT_BROADCAST | \
++				RTASE_ACCEPT_MULTICAST | RTASE_ACCEPT_MYPHYS | \
++				RTASE_ACCEPT_ALLPHYS)
++
++	RTASE_RX_CONFIG_1 = 0x0046,
++#define RTASE_RX_MAX_FETCH_DESC_MASK GENMASK(15, 11)
++#define RTASE_RX_NEW_DESC_FORMAT_EN  BIT(8)
++#define RTASE_OUTER_VLAN_DETAG_EN    BIT(7)
++#define RTASE_INNER_VLAN_DETAG_EN    BIT(6)
++#define RTASE_PCIE_NEW_FLOW          BIT(2)
++#define RTASE_PCIE_RELOAD_EN         BIT(0)
++
++	RTASE_EEM = 0x0050,
++#define RTASE_EEM_UNLOCK 0xC0
++
++	RTASE_TDFNR  = 0x0057,
++	RTASE_TPPOLL = 0x0090,
++	RTASE_PDR    = 0x00B0,
++	RTASE_FIFOR  = 0x00D3,
++#define RTASE_TX_FIFO_EMPTY BIT(5)
++#define RTASE_RX_FIFO_EMPTY BIT(4)
++
++	RTASE_RMS       = 0x00DA,
++	RTASE_CPLUS_CMD = 0x00E0,
++#define RTASE_FORCE_RXFLOW_EN BIT(11)
++#define RTASE_FORCE_TXFLOW_EN BIT(10)
++#define RTASE_RX_CHKSUM       BIT(5)
++
++	RTASE_Q0_RX_DESC_ADDR0 = 0x00E4,
++	RTASE_Q0_RX_DESC_ADDR4 = 0x00E8,
++	RTASE_Q1_RX_DESC_ADDR0 = 0x4000,
++	RTASE_Q1_RX_DESC_ADDR4 = 0x4004,
++	RTASE_MTPS             = 0x00EC,
++#define RTASE_TAG_NUM_SEL_MASK GENMASK(10, 8)
++
++	RTASE_MISC = 0x00F2,
++#define RTASE_RX_DV_GATE_EN BIT(3)
++
++	RTASE_TFUN_CTRL = 0x0400,
++#define RTASE_TX_NEW_DESC_FORMAT_EN BIT(0)
++
++	RTASE_TX_CONFIG_1 = 0x203E,
++#define RTASE_TC_MODE_MASK GENMASK(11, 10)
++
++	RTASE_TOKSEL      = 0x2046,
++	RTASE_RFIFONFULL  = 0x4406,
++	RTASE_INT_MITI_TX = 0x0A00,
++	RTASE_INT_MITI_RX = 0x0A80,
++
++	RTASE_VLAN_ENTRY_0     = 0xAC80,
++};
++
++enum rtase_desc_status_bit {
++	RTASE_DESC_OWN = BIT(31), /* Descriptor is owned by NIC */
++	RTASE_RING_END = BIT(30), /* End of descriptor ring */
++};
++
++enum rtase_sw_flag_content {
++	RTASE_SWF_MSI_ENABLED  = BIT(1),
++	RTASE_SWF_MSIX_ENABLED = BIT(2),
++};
++
++#define RSVD_MASK 0x3FFFC000
++
++struct rtase_tx_desc {
++	__le32 opts1;
++	__le32 opts2;
++	__le64 addr;
++	__le32 opts3;
++	__le32 reserved1;
++	__le32 reserved2;
++	__le32 reserved3;
++} __packed;
++
++/*------ offset 0 of tx descriptor ------*/
++#define RTASE_TX_FIRST_FRAG BIT(29) /* Tx First segment of a packet */
++#define RTASE_TX_LAST_FRAG  BIT(28) /* Tx Final segment of a packet */
++#define RTASE_GIANT_SEND_V4 BIT(26) /* TCP Giant Send Offload V4 (GSOv4) */
++#define RTASE_GIANT_SEND_V6 BIT(25) /* TCP Giant Send Offload V6 (GSOv6) */
++#define RTASE_TX_VLAN_TAG   BIT(17) /* Add VLAN tag */
++
++/*------ offset 4 of tx descriptor ------*/
++#define RTASE_TX_UDPCS_C BIT(31) /* Calculate UDP/IP checksum */
++#define RTASE_TX_TCPCS_C BIT(30) /* Calculate TCP/IP checksum */
++#define RTASE_TX_IPCS_C  BIT(29) /* Calculate IP checksum */
++#define RTASE_TX_IPV6F_C BIT(28) /* Indicate it is an IPv6 packet */
++
++union rtase_rx_desc {
++	struct {
++		__le64 header_buf_addr;
++		__le32 reserved1;
++		__le32 opts_header_len;
++		__le64 addr;
++		__le32 reserved2;
++		__le32 opts1;
++	} __packed desc_cmd;
++
++	struct {
++		__le32 reserved1;
++		__le32 reserved2;
++		__le32 rss;
++		__le32 opts4;
++		__le32 reserved3;
++		__le32 opts3;
++		__le32 opts2;
++		__le32 opts1;
++	} __packed desc_status;
++} __packed;
++
++/*------ offset 28 of rx descriptor ------*/
++#define RTASE_RX_FIRST_FRAG BIT(25) /* Rx First segment of a packet */
++#define RTASE_RX_LAST_FRAG  BIT(24) /* Rx Final segment of a packet */
++#define RTASE_RX_RES        BIT(20)
++#define RTASE_RX_RUNT       BIT(19)
++#define RTASE_RX_RWT        BIT(18)
++#define RTASE_RX_CRC        BIT(16)
++#define RTASE_RX_V6F        BIT(31)
++#define RTASE_RX_V4F        BIT(30)
++#define RTASE_RX_UDPT       BIT(29)
++#define RTASE_RX_TCPT       BIT(28)
++#define RTASE_RX_IPF        BIT(26) /* IP checksum failed */
++#define RTASE_RX_UDPF       BIT(25) /* UDP/IP checksum failed */
++#define RTASE_RX_TCPF       BIT(24) /* TCP/IP checksum failed */
++#define RTASE_RX_VLAN_TAG   BIT(16) /* VLAN tag available */
++
++#define RTASE_NUM_DESC          1024
++#define RTASE_TX_BUDGET_DEFAULT 256
++#define RTASE_TX_RING_DESC_SIZE (RTASE_NUM_DESC * sizeof(struct rtase_tx_desc))
++#define RTASE_RX_RING_DESC_SIZE (RTASE_NUM_DESC * sizeof(union rtase_rx_desc))
++#define RTASE_TX_STOP_THRS      (MAX_SKB_FRAGS + 1)
++#define RTASE_TX_START_THRS     (2 * RTASE_TX_STOP_THRS)
++#define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
++#define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
++
++#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
++
++struct rtase_int_vector {
++	struct rtase_private *tp;
++	unsigned int irq;
++	char name[RTASE_IVEC_NAME_SIZE];
++	u16 index;
++	u16 imr_addr;
++	u16 isr_addr;
++	u32 imr;
++	struct list_head ring_list;
++	struct napi_struct napi;
++	int (*poll)(struct napi_struct *napi, int budget);
++};
++
++struct rtase_ring {
++	struct rtase_int_vector *ivec;
++	void *desc;
++	dma_addr_t phy_addr;
++	u32 cur_idx;
++	u32 dirty_idx;
++	u16 index;
++
++	struct sk_buff *skbuff[RTASE_NUM_DESC];
++	union {
++		u32 len[RTASE_NUM_DESC];
++		dma_addr_t data_phy_addr[RTASE_NUM_DESC];
++	} mis;
++
++	struct list_head ring_entry;
++	int (*ring_handler)(struct rtase_ring *ring, int budget);
++};
++
++struct rtase_private {
++	void __iomem *mmio_addr;
++	u32 sw_flag;
++
++	struct pci_dev *pdev;
++	struct net_device *dev;
++	u32 rx_buf_sz;
++
++	struct page_pool *page_pool;
++	struct rtase_ring tx_ring[RTASE_NUM_TX_QUEUE];
++	struct rtase_ring rx_ring[RTASE_NUM_RX_QUEUE];
++	struct rtase_counters *tally_vaddr;
++	dma_addr_t tally_paddr;
++
++	u32 vlan_filter_ctrl;
++	u16 vlan_filter_vid[RTASE_VLAN_FILTER_ENTRY_NUM];
++
++	struct msix_entry msix_entry[RTASE_NUM_MSIX];
++	struct rtase_int_vector int_vector[RTASE_NUM_MSIX];
++
++	u16 tx_queue_ctrl;
++	u16 func_tx_queue_num;
++	u16 func_rx_queue_num;
++	u16 int_nums;
++	u16 tx_int_mit;
++	u16 rx_int_mit;
++};
++
++#define RTASE_LSO_64K 64000
++
++#define RTASE_NIC_MAX_PHYS_BUF_COUNT_LSO2 (16 * 4)
++
++#define RTASE_TCPHO_MASK GENMASK(24, 18)
++
++#define RTASE_MSS_MASK GENMASK(28, 18)
++
++#endif /* _RTASE_H_ */
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+new file mode 100644
+index 000000000000..8bb3b96a57aa
+--- /dev/null
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -0,0 +1,639 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/*
++ *  rtase is the Linux device driver released for Realtek Automotive Switch
++ *  controllers with PCI-Express interface.
++ *
++ *  Copyright(c) 2024 Realtek Semiconductor Corp.
++ *
++ *  Below is a simplified block diagram of the chip and its relevant interfaces.
++ *
++ *               *************************
++ *               *                       *
++ *               *  CPU network device   *
++ *               *                       *
++ *               *   +-------------+     *
++ *               *   |  PCIE Host  |     *
++ *               ***********++************
++ *                          ||
++ *                         PCIE
++ *                          ||
++ *      ********************++**********************
++ *      *            | PCIE Endpoint |             *
++ *      *            +---------------+             *
++ *      *                | GMAC |                  *
++ *      *                +--++--+  Realtek         *
++ *      *                   ||     RTL90xx Series  *
++ *      *                   ||                     *
++ *      *     +-------------++----------------+    *
++ *      *     |           | MAC |             |    *
++ *      *     |           +-----+             |    *
++ *      *     |                               |    *
++ *      *     |     Ethernet Switch Core      |    *
++ *      *     |                               |    *
++ *      *     |   +-----+           +-----+   |    *
++ *      *     |   | MAC |...........| MAC |   |    *
++ *      *     +---+-----+-----------+-----+---+    *
++ *      *         | PHY |...........| PHY |        *
++ *      *         +--++-+           +--++-+        *
++ *      *************||****************||***********
++ *
++ *  The block of the Realtek RTL90xx series is our entire chip architecture,
++ *  the GMAC is connected to the switch core, and there is no PHY in between.
++ *  In addition, this driver is mainly used to control GMAC, but does not
++ *  control the switch core, so it is not the same as DSA.
++ */
++
++#include <linux/crc32.h>
++#include <linux/dma-mapping.h>
++#include <linux/etherdevice.h>
++#include <linux/if_vlan.h>
++#include <linux/in.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/ip.h>
++#include <linux/ipv6.h>
++#include <linux/mdio.h>
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <linux/pci.h>
++#include <linux/pm_runtime.h>
++#include <linux/prefetch.h>
++#include <linux/rtnetlink.h>
++#include <linux/tcp.h>
++#include <asm/irq.h>
++#include <net/ip6_checksum.h>
++#include <net/netdev_queues.h>
++#include <net/page_pool/helpers.h>
++#include <net/pkt_cls.h>
++
++#include "rtase.h"
++
++#define RTK_OPTS1_DEBUG_VALUE 0x0BADBEEF
++#define RTK_MAGIC_NUMBER      0x0BADBADBADBADBAD
++
++static const struct pci_device_id rtase_pci_tbl[] = {
++	{PCI_VDEVICE(REALTEK, 0x906A)},
++	{}
++};
++
++MODULE_DEVICE_TABLE(pci, rtase_pci_tbl);
++
++MODULE_AUTHOR("Realtek ARD Software Team");
++MODULE_DESCRIPTION("Network Driver for the PCIe interface of Realtek Automotive Ethernet Switch");
++MODULE_LICENSE("Dual BSD/GPL");
++
++struct rtase_counters {
++	__le64 tx_packets;
++	__le64 rx_packets;
++	__le64 tx_errors;
++	__le32 rx_errors;
++	__le16 rx_missed;
++	__le16 align_errors;
++	__le32 tx_one_collision;
++	__le32 tx_multi_collision;
++	__le64 rx_unicast;
++	__le64 rx_broadcast;
++	__le32 rx_multicast;
++	__le16 tx_aborted;
++	__le16 tx_underun;
++} __packed;
++
++static void rtase_w8(const struct rtase_private *tp, u16 reg, u8 val8)
++{
++	writeb(val8, tp->mmio_addr + reg);
++}
++
++static void rtase_w16(const struct rtase_private *tp, u16 reg, u16 val16)
++{
++	writew(val16, tp->mmio_addr + reg);
++}
++
++static void rtase_w32(const struct rtase_private *tp, u16 reg, u32 val32)
++{
++	writel(val32, tp->mmio_addr + reg);
++}
++
++static u8 rtase_r8(const struct rtase_private *tp, u16 reg)
++{
++	return readb(tp->mmio_addr + reg);
++}
++
++static u16 rtase_r16(const struct rtase_private *tp, u16 reg)
++{
++	return readw(tp->mmio_addr + reg);
++}
++
++static u32 rtase_r32(const struct rtase_private *tp, u16 reg)
++{
++	return readl(tp->mmio_addr + reg);
++}
++
++static void rtase_tally_counter_clear(const struct rtase_private *tp)
++{
++	u32 cmd = lower_32_bits(tp->tally_paddr);
++
++	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(tp->tally_paddr));
++	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
++}
++
++static void rtase_enable_eem_write(const struct rtase_private *tp)
++{
++	u8 val;
++
++	val = rtase_r8(tp, RTASE_EEM);
++	rtase_w8(tp, RTASE_EEM, val | RTASE_EEM_UNLOCK);
++}
++
++static void rtase_disable_eem_write(const struct rtase_private *tp)
++{
++	u8 val;
++
++	val = rtase_r8(tp, RTASE_EEM);
++	rtase_w8(tp, RTASE_EEM, val & ~RTASE_EEM_UNLOCK);
++}
++
++static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
++{
++	u32 rar_low, rar_high;
++
++	rar_low = (u32)addr[0] | ((u32)addr[1] << 8) |
++		  ((u32)addr[2] << 16) | ((u32)addr[3] << 24);
++
++	rar_high = (u32)addr[4] | ((u32)addr[5] << 8);
++
++	rtase_enable_eem_write(tp);
++	rtase_w32(tp, RTASE_MAC0, rar_low);
++	rtase_w32(tp, RTASE_MAC4, rar_high);
++	rtase_disable_eem_write(tp);
++	rtase_w16(tp, RTASE_LBK_CTRL, RTASE_LBK_ATLD | RTASE_LBK_CLR);
++}
++
++static void rtase_get_mac_address(struct net_device *dev)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	u8 mac_addr[ETH_ALEN] __aligned(2) = {};
++	u32 i;
++
++	for (i = 0; i < ETH_ALEN; i++)
++		mac_addr[i] = rtase_r8(tp, RTASE_MAC0 + i);
++
++	if (!is_valid_ether_addr(mac_addr)) {
++		eth_hw_addr_random(dev);
++		netdev_warn(dev, "Random ether addr %pM\n", dev->dev_addr);
++	} else {
++		eth_hw_addr_set(dev, mac_addr);
++		ether_addr_copy(dev->perm_addr, dev->dev_addr);
++	}
++
++	rtase_rar_set(tp, dev->dev_addr);
++}
++
++static void rtase_reset_interrupt(struct pci_dev *pdev,
++				  const struct rtase_private *tp)
++{
++	if (tp->sw_flag & RTASE_SWF_MSIX_ENABLED)
++		pci_disable_msix(pdev);
++	else
++		pci_disable_msi(pdev);
++}
++
++static int rtase_alloc_msix(struct pci_dev *pdev, struct rtase_private *tp)
++{
++	int ret, irq;
++	u16 i;
++
++	memset(tp->msix_entry, 0x0, RTASE_NUM_MSIX *
++	       sizeof(struct msix_entry));
++
++	for (i = 0; i < RTASE_NUM_MSIX; i++)
++		tp->msix_entry[i].entry = i;
++
++	ret = pci_enable_msix_exact(pdev, tp->msix_entry, tp->int_nums);
++
++	if (ret)
++		return ret;
++
++	for (i = 0; i < tp->int_nums; i++) {
++		irq = pci_irq_vector(pdev, i);
++		if (!irq) {
++			pci_disable_msix(pdev);
++			return irq;
++		}
++
++		tp->int_vector[i].irq = irq;
++	}
++
++	return 0;
++}
++
++static int rtase_alloc_interrupt(struct pci_dev *pdev,
++				 struct rtase_private *tp)
++{
++	int ret;
++
++	ret = rtase_alloc_msix(pdev, tp);
++	if (ret) {
++		ret = pci_enable_msi(pdev);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"unable to alloc interrupt.(MSI)\n");
++			return ret;
++		}
++
++		tp->sw_flag |= RTASE_SWF_MSI_ENABLED;
++	} else {
++		tp->sw_flag |= RTASE_SWF_MSIX_ENABLED;
++	}
++
++	return 0;
++}
++
++static void rtase_init_hardware(const struct rtase_private *tp)
++{
++	u16 i;
++
++	for (i = 0; i < RTASE_VLAN_FILTER_ENTRY_NUM; i++)
++		rtase_w32(tp, RTASE_VLAN_ENTRY_0 + i * 4, 0);
++}
++
++static void rtase_init_int_vector(struct rtase_private *tp)
++{
++	u16 i;
++
++	/* interrupt vector 0 */
++	tp->int_vector[0].tp = tp;
++	tp->int_vector[0].index = 0;
++	tp->int_vector[0].imr_addr = RTASE_IMR0;
++	tp->int_vector[0].isr_addr = RTASE_ISR0;
++	tp->int_vector[0].imr = RTASE_ROK | RTASE_RDU | RTASE_TOK |
++				RTASE_TOK4 | RTASE_TOK5 | RTASE_TOK6 |
++				RTASE_TOK7;
++	tp->int_vector[0].poll = rtase_poll;
++
++	memset(tp->int_vector[0].name, 0x0, sizeof(tp->int_vector[0].name));
++	INIT_LIST_HEAD(&tp->int_vector[0].ring_list);
++
++	netif_napi_add(tp->dev, &tp->int_vector[0].napi,
++		       tp->int_vector[0].poll);
++
++	/* interrupt vector 1 ~ 3 */
++	for (i = 1; i < tp->int_nums; i++) {
++		tp->int_vector[i].tp = tp;
++		tp->int_vector[i].index = i;
++		tp->int_vector[i].imr_addr = RTASE_IMR1 + (i - 1) * 4;
++		tp->int_vector[i].isr_addr = RTASE_ISR1 + (i - 1) * 4;
++		tp->int_vector[i].imr = RTASE_Q_ROK | RTASE_Q_RDU |
++					RTASE_Q_TOK;
++		tp->int_vector[i].poll = rtase_poll;
++
++		memset(tp->int_vector[i].name, 0x0,
++		       sizeof(tp->int_vector[0].name));
++		INIT_LIST_HEAD(&tp->int_vector[i].ring_list);
++
++		netif_napi_add(tp->dev, &tp->int_vector[i].napi,
++			       tp->int_vector[i].poll);
++	}
++}
++
++static u16 rtase_calc_time_mitigation(u32 time_us)
++{
++	u8 msb, time_count, time_unit;
++	u16 int_miti;
++
++	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
++
++	msb = fls(time_us);
++	if (msb >= RTASE_MITI_COUNT_BIT_NUM) {
++		time_unit = msb - RTASE_MITI_COUNT_BIT_NUM;
++		time_count = time_us >> (msb - RTASE_MITI_COUNT_BIT_NUM);
++	} else {
++		time_unit = 0;
++		time_count = time_us;
++	}
++
++	int_miti = u16_encode_bits(time_count, RTASE_MITI_TIME_COUNT_MASK) |
++		   u16_encode_bits(time_unit, RTASE_MITI_TIME_UNIT_MASK);
++
++	return int_miti;
++}
++
++static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
++{
++	u8 msb, pkt_num_count, pkt_num_unit;
++	u16 int_miti;
++
++	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
++
++	if (pkt_num > 60) {
++		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
++		pkt_num_count = pkt_num / RTASE_MITI_MAX_PKT_NUM_UNIT;
++	} else {
++		msb = fls(pkt_num);
++		if (msb >= RTASE_MITI_COUNT_BIT_NUM) {
++			pkt_num_unit = msb - RTASE_MITI_COUNT_BIT_NUM;
++			pkt_num_count = pkt_num >> (msb -
++						    RTASE_MITI_COUNT_BIT_NUM);
++		} else {
++			pkt_num_unit = 0;
++			pkt_num_count = pkt_num;
++		}
++	}
++
++	int_miti = u16_encode_bits(pkt_num_count,
++				   RTASE_MITI_PKT_NUM_COUNT_MASK) |
++		   u16_encode_bits(pkt_num_unit,
++				   RTASE_MITI_PKT_NUM_UNIT_MASK);
++
++	return int_miti;
++}
++
++static void rtase_init_software_variable(struct pci_dev *pdev,
++					 struct rtase_private *tp)
++{
++	u16 int_miti;
++
++	tp->tx_queue_ctrl = RTASE_TXQ_CTRL;
++	tp->func_tx_queue_num = RTASE_FUNC_TXQ_NUM;
++	tp->func_rx_queue_num = RTASE_FUNC_RXQ_NUM;
++	tp->int_nums = RTASE_INTERRUPT_NUM;
++
++	int_miti = rtase_calc_time_mitigation(RTASE_MITI_DEFAULT_TIME) |
++		   rtase_calc_packet_num_mitigation(RTASE_MITI_DEFAULT_PKT_NUM);
++	tp->tx_int_mit = int_miti;
++	tp->rx_int_mit = int_miti;
++
++	tp->sw_flag = 0;
++
++	rtase_init_int_vector(tp);
++
++	/* MTU range: 60 - hw-specific max */
++	tp->dev->min_mtu = ETH_ZLEN;
++	tp->dev->max_mtu = RTASE_MAX_JUMBO_SIZE;
++}
++
++static bool rtase_check_mac_version_valid(struct rtase_private *tp)
++{
++	u32 hw_ver = rtase_r32(tp, RTASE_TX_CONFIG_0) & RTASE_HW_VER_MASK;
++	bool known_ver = false;
++
++	switch (hw_ver) {
++	case 0x00800000:
++	case 0x04000000:
++	case 0x04800000:
++		known_ver = true;
++		break;
++	}
++
++	return known_ver;
++}
++
++static int rtase_init_board(struct pci_dev *pdev, struct net_device **dev_out,
++			    void __iomem **ioaddr_out)
++{
++	struct net_device *dev;
++	void __iomem *ioaddr;
++	int ret = -ENOMEM;
++
++	/* dev zeroed in alloc_etherdev */
++	dev = alloc_etherdev_mq(sizeof(struct rtase_private),
++				RTASE_FUNC_TXQ_NUM);
++	if (!dev)
++		goto err_out;
++
++	SET_NETDEV_DEV(dev, &pdev->dev);
++
++	ret = pci_enable_device(pdev);
++	if (ret < 0)
++		goto err_out_free_dev;
++
++	/* make sure PCI base addr 1 is MMIO */
++	if (!(pci_resource_flags(pdev, 2) & IORESOURCE_MEM)) {
++		ret = -ENODEV;
++		goto err_out_disable;
++	}
++
++	/* check for weird/broken PCI region reporting */
++	if (pci_resource_len(pdev, 2) < RTASE_REGS_SIZE) {
++		ret = -ENODEV;
++		goto err_out_disable;
++	}
++
++	ret = pci_request_regions(pdev, KBUILD_MODNAME);
++	if (ret < 0)
++		goto err_out_disable;
++
++	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
++		dev_err(&pdev->dev, "no usable dma addressing method\n");
++		goto err_out_free_res;
++	}
++
++	pci_set_master(pdev);
++
++	/* ioremap MMIO region */
++	ioaddr = ioremap(pci_resource_start(pdev, 2),
++			 pci_resource_len(pdev, 2));
++	if (!ioaddr) {
++		ret = -EIO;
++		goto err_out_free_res;
++	}
++
++	*ioaddr_out = ioaddr;
++	*dev_out = dev;
++
++	return ret;
++
++err_out_free_res:
++	pci_release_regions(pdev);
++
++err_out_disable:
++	pci_disable_device(pdev);
++
++err_out_free_dev:
++	free_netdev(dev);
++
++err_out:
++	*ioaddr_out = NULL;
++	*dev_out = NULL;
++
++	return ret;
++}
++
++static void rtase_release_board(struct pci_dev *pdev, struct net_device *dev,
++				void __iomem *ioaddr)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++
++	rtase_rar_set(tp, tp->dev->perm_addr);
++	iounmap(ioaddr);
++
++	if ((tp->sw_flag & RTASE_SWF_MSIX_ENABLED))
++		pci_disable_msix(pdev);
++	else
++		pci_disable_msi(pdev);
++
++	pci_release_regions(pdev);
++	pci_disable_device(pdev);
++	free_netdev(dev);
++}
++
++static int rtase_init_one(struct pci_dev *pdev,
++			  const struct pci_device_id *ent)
++{
++	struct net_device *dev = NULL;
++	struct rtase_int_vector *ivec;
++	void __iomem *ioaddr = NULL;
++	struct rtase_private *tp;
++	int ret, i;
++
++	if (!pdev->is_physfn && pdev->is_virtfn) {
++		dev_err(&pdev->dev,
++			"This module does not support a virtual function.");
++		return -EINVAL;
++	}
++
++	dev_dbg(&pdev->dev, "Automotive Switch Ethernet driver loaded\n");
++
++	ret = rtase_init_board(pdev, &dev, &ioaddr);
++	if (ret != 0)
++		return ret;
++
++	tp = netdev_priv(dev);
++	tp->mmio_addr = ioaddr;
++	tp->dev = dev;
++	tp->pdev = pdev;
++
++	/* identify chip attached to board */
++	if (!rtase_check_mac_version_valid(tp)) {
++		return dev_err_probe(&pdev->dev, -ENODEV,
++				     "unknown chip version, contact rtase "
++				     "maintainers (see MAINTAINERS file)\n");
++	}
++
++	rtase_init_software_variable(pdev, tp);
++	rtase_init_hardware(tp);
++
++	ret = rtase_alloc_interrupt(pdev, tp);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "unable to alloc MSIX/MSI\n");
++		goto err_out_1;
++	}
++
++	rtase_init_netdev_ops(dev);
++
++	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
++
++	dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_CTAG_RX;
++
++	dev->features |= NETIF_F_IP_CSUM;
++	dev->features |= NETIF_F_HIGHDMA;
++	dev->features |= NETIF_F_RXCSUM | NETIF_F_SG | NETIF_F_TSO;
++	dev->features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
++	dev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
++			   NETIF_F_RXCSUM | NETIF_F_HW_VLAN_CTAG_TX |
++			   NETIF_F_HW_VLAN_CTAG_RX;
++	dev->hw_features |= NETIF_F_RXALL;
++	dev->hw_features |= NETIF_F_RXFCS;
++	dev->hw_features |= NETIF_F_IPV6_CSUM | NETIF_F_TSO6;
++	dev->vlan_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_TSO |
++			     NETIF_F_HIGHDMA;
++	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
++	netif_set_tso_max_size(dev, RTASE_LSO_64K);
++	netif_set_tso_max_segs(dev, RTASE_NIC_MAX_PHYS_BUF_COUNT_LSO2);
++
++	rtase_get_mac_address(dev);
++
++	tp->tally_vaddr = dma_alloc_coherent(&pdev->dev,
++					     sizeof(*tp->tally_vaddr),
++					     &tp->tally_paddr,
++					     GFP_KERNEL);
++	if (!tp->tally_vaddr) {
++		ret = -ENOMEM;
++		goto err_out;
++	}
++
++	rtase_tally_counter_clear(tp);
++
++	pci_set_drvdata(pdev, dev);
++
++	netif_carrier_off(dev);
++
++	ret = register_netdev(dev);
++	if (ret != 0)
++		goto err_out;
++
++	netdev_dbg(dev, "%pM, IRQ %d\n", dev->dev_addr, dev->irq);
++
++	return 0;
++
++err_out:
++	if (tp->tally_vaddr) {
++		dma_free_coherent(&pdev->dev,
++				  sizeof(*tp->tally_vaddr),
++				  tp->tally_vaddr,
++				  tp->tally_paddr);
++
++		tp->tally_vaddr = NULL;
++	}
++
++err_out_1:
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		netif_napi_del(&ivec->napi);
++	}
++
++	rtase_release_board(pdev, dev, ioaddr);
++
++	return ret;
++}
++
++static void rtase_remove_one(struct pci_dev *pdev)
++{
++	struct net_device *dev = pci_get_drvdata(pdev);
++	struct rtase_private *tp = netdev_priv(dev);
++	struct rtase_int_vector *ivec;
++	u32 i;
++
++	unregister_netdev(dev);
++
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		netif_napi_del(&ivec->napi);
++	}
++
++	rtase_reset_interrupt(pdev, tp);
++	if (tp->tally_vaddr) {
++		dma_free_coherent(&pdev->dev,
++				  sizeof(*tp->tally_vaddr),
++				  tp->tally_vaddr,
++				  tp->tally_paddr);
++		tp->tally_vaddr = NULL;
++	}
++
++	rtase_release_board(pdev, dev, tp->mmio_addr);
++	pci_set_drvdata(pdev, NULL);
++}
++
++static void rtase_shutdown(struct pci_dev *pdev)
++{
++	struct net_device *dev = pci_get_drvdata(pdev);
++	const struct rtase_private *tp;
++
++	tp = netdev_priv(dev);
++
++	if (netif_running(dev))
++		rtase_close(dev);
++
++	rtase_reset_interrupt(pdev, tp);
++}
++
++static struct pci_driver rtase_pci_driver = {
++	.name = KBUILD_MODNAME,
++	.id_table = rtase_pci_tbl,
++	.probe = rtase_init_one,
++	.remove = rtase_remove_one,
++	.shutdown = rtase_shutdown,
++};
++
++module_pci_driver(rtase_pci_driver);
+-- 
+2.34.1
 
