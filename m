@@ -1,102 +1,183 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963E367A0D
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633A957887
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715957484; cv=none; b=mpCrbZpHKn08N0FbwhdIRkn58TIFQOpO9H3oPft5/GTjrp+q8el0V51Xg6PLQXFD69GYXbxLtnWkv8+gRlOYHo4g7pvijTMdrYXUq1UkIv/xo55s5vUWYe2I/qcu06OiVZMhLDjdOmPHQRDMsYb4J4A5N4l/uYTYEfW642gB+U0=
+	t=1715957590; cv=none; b=pXE1ITCGZEHNN+jOZTe4mRM+6t+Hon78U5DawI/lNYuPGJ8eSysXBs/hIG4ccvJ8dZSEiEfM1CCKc3DuGVjGQvcoxmYx7sIB8OpgVdxpZaJL5SE2c/9/XFvuMguMHbDGIGU2maCznTtYr0JBXxGSHKNjNh17WI7J9BvNRyh1ueQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715957484; c=relaxed/simple;
-	bh=1aOVgw6hSgat6smy0lHMoNOBWlOufPQjFo20G/kY2sE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQXOaFbyokmg0rH4d2Q6ELJ8eZL9Rv2h5VC2rzNF/5QLRIrhIZUfSNj93oRraP0RiuuX0gZVwm5QthWKHqfcG9UDk8Fx/dOKwtplWyEFXS+3slQt3RIDg7+vvb9J3MF5RtgNs7/4veV1xEf74sazVvSapKZe6pIUN9UtIPcLNJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bRTxpj/I; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1715957590; c=relaxed/simple;
+	bh=hD7Js7fBPmWXFc/aKxb0FtlBOgYC1Bgag5yDVzV8HxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XTtUinOCv5vOpCr9Vallo6agyQB+ztfvoTVAQpRiJTqpTDDDZQdLU04r9K/JScj+DQC4G8ZLEgatikRKTa8Yf3Srn5FZdzCDUSez+hbbJdFgpjq9CZsvhPuwN3Zy+EBe0ziCG1TJec++3Zj1l14cOvNz6fgbYd9kmtwpkMWfhL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yddje5Wk; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bRTxpj/I"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41fd5dc04f0so1618875e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:51:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yddje5Wk"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee0ccf9c2fso117605ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:53:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1715957481; x=1716562281; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u1U5jaDar7OfZ99raGWnoHg7cFZibmJ1aTqNn0ttXSs=;
-        b=bRTxpj/IblmdTrVz9jPdjA02CBwgQhIQGFeNdKndT9KjyNTETRvDogbciVpdjB6tE5
-         cWEsCIfStXkQVEgyo/B7JvHqrOM4QrbsAdqptilRiyTl8cEp0n7hZvbSEHXlNZ58PuHP
-         C6r1y2juBKpD1dVKVu3V31Cy34N+FTTxeBk3SYZNwiEckTFrqBdNks5CE/IAsAUYJXkz
-         aWOCMKCu44htiDocsNttkMi0RDRJnU2n2i40aY0G2WO4g6svcEJ6+KBIgODaO4e7OZYU
-         hDBMGH14pphwJspN6n3JoyRScMIULwLGyGIZincb2QZTX88Ts/ZaHHmzguOjiu7eB8nd
-         /Usw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715957481; x=1716562281;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1715957588; x=1716562388; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u1U5jaDar7OfZ99raGWnoHg7cFZibmJ1aTqNn0ttXSs=;
-        b=AvB16kHX3xm4xAwvQjY9KeBNFHfg/SgkMaAVDN9IHULJT+7CEFuY3eUG8HwhboCOle
-         GdV25Jhbf6m+HvFZlptozh0UX2veNUEgf+5OKdummoVHccQImzqWLqo8KUR2ivHXrE9u
-         17A/zPbGxpSq4Gf95/TPGPEzKnq2zVFLhAsSWAjjJd2r0/IFb8tzKI6rIrg+gLFHobjL
-         6LZWo9EXnMQcz5bmWINmGY8+A7cm9bMPf9emZDYeKgjbyKpFt9THlLoSdrdH2F/tcQ+k
-         mgS0A6rFs37YqW9OLBJ4fTMgdWfmzq+ac0mc09UNQHBiR2QDkwFYTY++OwzK30RhBJSR
-         W/Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1MCjFe+0aHv7f5UCTo0OLwUVOyPIKw/rlOJiHRl8OJ+hVX+Qg9Sm613mgsRmhNE52BzMhmq1gjQqXhhnABkN4ylcAk6xRuIBkdGQY
-X-Gm-Message-State: AOJu0YxCTalU09E/ajE3oFbxmEJSuhtUxOoAF0hHHE9A5xaD1vgmN9Fb
-	1MoHL4DVoUwSC7+yjnHuB6sChM/N/6PCxvw2AQpz5BljwsNBDTQkINULD2+TUsk=
-X-Google-Smtp-Source: AGHT+IGSNgAtmWQfb0w8Kl65ihzrKqCApb6t06Ku0iJmdFWRb730Oyxyj8fQ3oS7uwaOTj9nQj/rrg==
-X-Received: by 2002:a05:600c:19c8:b0:41f:d84b:1ade with SMTP id 5b1f17b1804b1-41feac5560amr234770785e9.27.1715957480894;
-        Fri, 17 May 2024 07:51:20 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4200e518984sm242602035e9.23.2024.05.17.07.51.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 07:51:20 -0700 (PDT)
-Date: Fri, 17 May 2024 16:51:18 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Tony Lindgren <tony@atomide.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hongyu Xie <xiehongyu1@kylinos.cn>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH printk v5 09/30] serial: core: Introduce wrapper to set
- @uart_port->cons
-Message-ID: <Zkdu5v-ifyGNCV_n@pathway.suse.cz>
-References: <20240502213839.376636-1-john.ogness@linutronix.de>
- <20240502213839.376636-10-john.ogness@linutronix.de>
+        bh=J9yEPEdR0yXbjHGQafZygTyo16CLvwcifYer1hkc9ds=;
+        b=yddje5WkABXqisFafWAaJm24PWsTZQo2A1jUk7Hcl1HsybEJ46jUuNzuf/0jS/ZEK5
+         YG6LeYpxHi9Pzo3S/GUv6VX7/zqMpUWTvZ/8SdvYu9JxRuV7A0Wpuqf7Xo6yQ3uFIpWz
+         qtu5IH27kwTx93MBwX4eidGuHDgaFswH28EurB7YHT7gkROJJw3nMa+wi7jM5h/4dlBV
+         jc5JUcqXbVPffSyf88Xg5AEOZJ3TG+s8xpRvKuqSooz0at9IRcd6RbDjp9ctioMAXsv9
+         Lc0SuP1ca3FNq+5DUGJC+PYGC1/oleYxMkabE4T64Bzr0vb0oGTLxI7DSONCfsqwG6mP
+         5E4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715957588; x=1716562388;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J9yEPEdR0yXbjHGQafZygTyo16CLvwcifYer1hkc9ds=;
+        b=Bm8R92p+POW2e0zpqj6kFzO2K3Yw3B++ReBolBqDL58SutM/fmR61TIR792iztxHqn
+         BosN5f4XUzK721SimMILuxFQ6OtNzYiFgzYQ8E+VXXxU72Mwf1+q/72nvuDIV4vcT7qN
+         J5RNNV7SzR02O15GaqRSBV+geuumhrg8MxGx9ah/Vsf0OxSl9Cm2Qz2V54SF3lcxaaDu
+         0hKdDdie+yxRDvYYAfFXL+8M5g8/RFcozazO2BG6nh8OaOeAHY65QaF1jnMT8oTilJ6w
+         EawWn2J/xcEB6x3uunrrskIzcebcgmpo11QjO5ZYf4nwCGYRilqV/vEQ2APQdWJ465VJ
+         xVmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWoPGxiTyWrSVcFao7XhCSR3RmThKGpexbaZIZLyMYh7me1OhIn89E0p2z2Q3bfnKFUzvv/P8mWUEbHyRx7Ys0ZPc12vjNCeemEUvE/
+X-Gm-Message-State: AOJu0YxW/voRhHAcGF61zRanaFd9qyxj5DhRHRs6CjX6psFi00H1zVgU
+	wkSO6VWd3MZyK/+5tlvIMzLs+6VNIxYyHLHdbJ6RsXNylUeq1nLtJoTPUYE/kaQfr5l6IykPZst
+	8AkSRhbY/XTEH7do4M9Uj9LiFHii7bexw30Z8
+X-Google-Smtp-Source: AGHT+IF+/u2t53nDO6K/rA8Xe7gJaCE3VNU49gFdYsvsDWLEBS847TpdyGT3nwc+jPtWDJVK6rNrJ9QPz6Rm8D91qv8=
+X-Received: by 2002:a17:902:eec6:b0:1e9:4b4:907b with SMTP id
+ d9443c01a7336-1f2e04a8fd9mr2374155ad.6.1715957588299; Fri, 17 May 2024
+ 07:53:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502213839.376636-10-john.ogness@linutronix.de>
+References: <20240517141427.1905691-1-leitao@debian.org>
+In-Reply-To: <20240517141427.1905691-1-leitao@debian.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 17 May 2024 07:52:47 -0700
+Message-ID: <CAP-5=fX__BCcvxoykxz1b8LB5tuVzO+JjX8+xpiO4vfcdArUuQ@mail.gmail.com>
+Subject: Re: [PATCH v4] perf list: Fix the --no-desc option
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, leit@meta.com, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 2024-05-02 23:44:18, John Ogness wrote:
-> Introduce uart_port_set_cons() as a wrapper to set @cons of a
-> uart_port. The wrapper sets @cons under the port lock in order
-> to prevent @cons from disappearing while another context is
-> holding the port lock. This is necessary for a follow-up
-> commit relating to the port lock wrappers, which rely on @cons
-> not changing between lock and unlock.
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+On Fri, May 17, 2024 at 7:14=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> Currently, the --no-desc option in perf list isn't functioning as
+> intended.
+>
+> This issue arises from the overwriting of struct option->desc with the
+> opposite value of struct option->long_desc. Consequently, whatever
+> parse_options() returns at struct option->desc gets overridden later,
+> rendering the --desc or --no-desc arguments ineffective.
+>
+> To resolve this, set ->desc as true by default and allow parse_options()
+> to adjust it accordingly. This adjustment will fix the --no-desc
+> option while preserving the functionality of the other parameters.
+>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Best Regards,
-Petr
+Thanks,
+Ian
+
+> ---
+> Changelog:
+>
+> v4:
+>         * Revert the change in json_print_event() from v3.
+> v3:
+>         * Applied the same logic to default_print_metric() and
+>           json_print_event() functions, as identified by Ian Rogers.
+> v2:
+>         * Do not print desc if long_desc is being printed, as identified
+>           by Ian Rogers.
+> ---
+>  tools/perf/builtin-list.c | 23 ++++++++++-------------
+>  1 file changed, 10 insertions(+), 13 deletions(-)
+>
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 02bf608d585e..24a136ea015e 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -149,7 +149,11 @@ static void default_print_event(void *ps, const char=
+ *pmu_name, const char *topi
+>         } else
+>                 fputc('\n', fp);
+>
+> -       if (desc && print_state->desc) {
+> +       if (long_desc && print_state->long_desc) {
+> +               fprintf(fp, "%*s", 8, "[");
+> +               wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+> +               fprintf(fp, "]\n");
+> +       } else if (desc && print_state->desc) {
+>                 char *desc_with_unit =3D NULL;
+>                 int desc_len =3D -1;
+>
+> @@ -165,12 +169,6 @@ static void default_print_event(void *ps, const char=
+ *pmu_name, const char *topi
+>                 fprintf(fp, "]\n");
+>                 free(desc_with_unit);
+>         }
+> -       long_desc =3D long_desc ?: desc;
+> -       if (long_desc && print_state->long_desc) {
+> -               fprintf(fp, "%*s", 8, "[");
+> -               wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+> -               fprintf(fp, "]\n");
+> -       }
+>
+>         if (print_state->detailed && encoding_desc) {
+>                 fprintf(fp, "%*s", 8, "");
+> @@ -243,15 +241,14 @@ static void default_print_metric(void *ps,
+>         }
+>         fprintf(fp, "  %s\n", name);
+>
+> -       if (desc && print_state->desc) {
+> -               fprintf(fp, "%*s", 8, "[");
+> -               wordwrap(fp, desc, 8, pager_get_columns(), 0);
+> -               fprintf(fp, "]\n");
+> -       }
+>         if (long_desc && print_state->long_desc) {
+>                 fprintf(fp, "%*s", 8, "[");
+>                 wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
+>                 fprintf(fp, "]\n");
+> +       } else if (desc && print_state->desc) {
+> +               fprintf(fp, "%*s", 8, "[");
+> +               wordwrap(fp, desc, 8, pager_get_columns(), 0);
+> +               fprintf(fp, "]\n");
+>         }
+>         if (expr && print_state->detailed) {
+>                 fprintf(fp, "%*s", 8, "[");
+> @@ -491,6 +488,7 @@ int cmd_list(int argc, const char **argv)
+>         int i, ret =3D 0;
+>         struct print_state default_ps =3D {
+>                 .fp =3D stdout,
+> +               .desc =3D true,
+>         };
+>         struct print_state json_ps =3D {
+>                 .fp =3D stdout,
+> @@ -563,7 +561,6 @@ int cmd_list(int argc, const char **argv)
+>                 };
+>                 ps =3D &json_ps;
+>         } else {
+> -               default_ps.desc =3D !default_ps.long_desc;
+>                 default_ps.last_topic =3D strdup("");
+>                 assert(default_ps.last_topic);
+>                 default_ps.visited_metrics =3D strlist__new(NULL, NULL);
+> --
+> 2.43.0
+>
