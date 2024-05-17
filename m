@@ -1,61 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5601411C8;
-	Fri, 17 May 2024 19:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80D7321D;
+	Fri, 17 May 2024 19:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715974974; cv=none; b=tJV21R8ltPG21o0BI9oA9cnT2LW2Qu2JmzXt6yYfAnh4+mBiD/Z1n2arWZmMy6VFebNAKVsjlAokGRqXParygC2q07SxgAvPdsOQKPMkZguus6iaMxyI3UEZU4rw7gKDg0a8iWJ7lkE6AW8AI2BoNJuoownjh+UC6zyMTwgk6+w=
+	t=1715975430; cv=none; b=IBwAIO3jtLZYOghfR89g4dNTvUO/6eqYb5sVpmwbfBd7wrH76+4JzAAQ0FMItmHaQxzsjoygxcjw5E51A7/dLFpNdeubegTyPj22lI7lRVlf5mWagvRmvUkZQuc4zJStM1MZq1jWEqX3pFnYkgG9NIRXSZeVhmZMb1UVBM7j5RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715974974; c=relaxed/simple;
-	bh=tth4i9z4tN9bpsaaew9NWOzq4W2ulOpkhRXHXUekINA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iQjGWfiCVyI4eswhncEN28viOvgEQGwrg0cdTIJJJcw0L4nhXGb6dtskgnA9+gIsc/iYRZLSmae3IivWakJXiWhRZ2LDtRHmlezbqBdVsMq2o9PccApKkRV4Fnun8daOz38mTnJYAL+FO29rWDh0REOn8pghHbN3Jsv+hs2R08A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LlsXsMjN; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715975430; c=relaxed/simple;
+	bh=j+QC3kOhZwJKkXX5mPM4HY+DrnVzET6HccRVfuZP43Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jpf9AOgh0wD3jG6kjsMcuLGsJT7eWKOn8m9mTGJalQ/j7jabR1rhObKwzlveg38hWg5h8eA86t512T30eWjiSUXobKRRbFEE34ROAmN2pK9HluFmhHCjAWr394Gk11oAqLfqVYxJVmesaqD4bbkmnD70/Xu+iw6l1wKVifnECzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRWFqIQF; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LlsXsMjN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715974974; x=1747510974;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=tth4i9z4tN9bpsaaew9NWOzq4W2ulOpkhRXHXUekINA=;
-  b=LlsXsMjNymHpaXeIW4e1xUuxKQQo7mGdiTRTxFA10N56n/NH99LrVsNl
-   NA42cf/hO22LrWqApuTEDK2bZEuauioWu8avUO/Xckej4EWCWrhC8NzJ0
-   X+OHtGtuiwcTfkbPwtgUhhgBY2bzHJvYWyAYlG5IlcM3lcLEnSlT8JL5Q
-   fDB58VNjnVn4Y6Zkozcn9yP5Yz0eETgiM+u2/QAVAs9f0TSgZLbJu+6Wc
-   s1Bi7v9MoFeU5kaWwlELFpUd8iTbE0ewKaKRs2JYpLszY0M9cqb2sxJHe
-   38JQuZYAD6iD8AMmwM9h+rs9n8WYM8KGVyQN4Q0bYBcb5CBi7D8cptugL
-   A==;
-X-CSE-ConnectionGUID: v8mnb8CNT1iKQr609v54Kg==
-X-CSE-MsgGUID: O7Jth8EjRc2iEBMIM1tzlg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12284445"
-X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="12284445"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 12:42:50 -0700
-X-CSE-ConnectionGUID: Z6FEC964SjqsKys5UHAxBQ==
-X-CSE-MsgGUID: K0JXPaHlRHiud2vEUOkpuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="31877131"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 17 May 2024 12:42:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 6291E2D2; Fri, 17 May 2024 22:42:47 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] spi: gpio: Use traditional pattern when checking error codes
-Date: Fri, 17 May 2024 22:42:02 +0300
-Message-ID: <20240517194246.747427-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240517194246.747427-1-andriy.shevchenko@linux.intel.com>
-References: <20240517194246.747427-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRWFqIQF"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ecd9a81966so7086895ad.0;
+        Fri, 17 May 2024 12:50:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715975428; x=1716580228; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vGDwCwwhr9iyyZbcO2LNbRmyKSJnbSVS/UCD4IYwGr8=;
+        b=kRWFqIQFG1DuUVCLGEmakJneRpaarX/FdIXoIaeRR7om4a8z46CCe7LAUAPoWBIkKc
+         qVz0sBLC92mEPlUiq/eAy+cSab/HZ3VaVJ5bQUrN5/EqAGGzDFFbpZmJg6MBnH/8Fy3V
+         hM+af8ZQpHiJkn19Ro7Iv9jO7mYF6smEiE1Qi7VopEfUG8JQ3kGkruC91dHoBY6yJ/rV
+         k3GbrpKqXHk28XXceRmhOhC1i3pcIiF68RihqtoqUzz7cMyiyOZeYzJnX0EU6NhuccO0
+         pI9GzzfEY7cuf4acksZ9nhO7NDSkRPpY3kavlGb5d+CnXsarlZKQSUz77rKf9QCPsnzV
+         auDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715975428; x=1716580228;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vGDwCwwhr9iyyZbcO2LNbRmyKSJnbSVS/UCD4IYwGr8=;
+        b=VJlGM1xJk1PA+wUcmIdaKQ6tuUy0GTw3pfWZof20TNllYktDdkriCsvCMM+ydmztMN
+         QhdpuA21e7oBggK/E+97m7zE2EViK+8lgKGVQfa9hcEchcCcbOGdyzvAB8ArFksLr0Ke
+         Wfh8UBylaxk6Ha4hf+XEpbXcnKMm9NCTksLcCrkJboz4ssvRlFzdL1E6vh1NO+UHAE2z
+         JZkHuuo8X0mQith7YG186Z5HtNlA6QCe6rmRKYL56/qZv0cMYd91pmMUvL8UkdIfZTNT
+         VTH7dbiwP4IpvdRzVrj9P2WhVQPUcD17koGcdI7oG7Aqf42T7kLe+9I+kO9sUrBPIold
+         AfDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPqPLjiIHoU2L2psZZ02iW7jBKmqkiOTkme2fkAee8GRkDHBamQWYlcCvYxAx17ajUd3e634uiqH1cctXM55Ss0mgiqtr1kJnXq8sJAYoAkznrFRi/7hPisXz6MzXJgyZN4U7UPmsYG6m7TA==
+X-Gm-Message-State: AOJu0YzJPmyXPC+vhBpO23oj4Jh1dKylQO+opl6qp7aapdXCvTxS+lDh
+	Joj9QLYFW9f/rbBuiZYGQYf+8oAfhi3P0ijGt+HP6baT415vdZCx
+X-Google-Smtp-Source: AGHT+IGED0PKOMspRHBg/lO86eagMfaS1Pal7MYA8gYSpyUm/2pAAGCaWIEFdpCNBk+5VKC7GhGXlA==
+X-Received: by 2002:a17:902:d4ca:b0:1eb:3d68:fc2b with SMTP id d9443c01a7336-1f2ed3f863amr1029215ad.34.1715975427744;
+        Fri, 17 May 2024 12:50:27 -0700 (PDT)
+Received: from localhost ([2a00:79e1:2e00:1301:e1c5:6354:b45d:8ffc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d188dsm160529775ad.2.2024.05.17.12.50.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 12:50:26 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	Rob Clark <robdclark@chromium.org>,
+	Nikita Travkin <nikita@trvn.ru>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Connor Abbott <cwabbott0@gmail.com>,
+	Ruan Jinjie <ruanjinjie@huawei.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm/adreno: Check for zap node availability
+Date: Fri, 17 May 2024 12:50:19 -0700
+Message-ID: <20240517195021.8873-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,49 +80,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of 'if (!ret)' switch to "check for the error first" rule.
+From: Rob Clark <robdclark@chromium.org>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This should allow disabling the zap node via an overlay, for slbounce.
+
+Suggested-by: Nikita Travkin <nikita@trvn.ru>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/spi/spi-gpio.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index abf426711c22..36c587be9e28 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -239,8 +239,8 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
- static int spi_gpio_setup(struct spi_device *spi)
- {
- 	struct gpio_desc	*cs;
--	int			status = 0;
- 	struct spi_gpio		*spi_gpio = spi_to_spi_gpio(spi);
-+	int ret;
- 
- 	/*
- 	 * The CS GPIOs have already been
-@@ -248,15 +248,14 @@ static int spi_gpio_setup(struct spi_device *spi)
- 	 */
- 	if (spi_gpio->cs_gpios) {
- 		cs = spi_gpio->cs_gpios[spi_get_chipselect(spi, 0)];
--		if (!spi->controller_state && cs)
--			status = gpiod_direction_output(cs,
--						  !(spi->mode & SPI_CS_HIGH));
-+		if (!spi->controller_state && cs) {
-+			ret = gpiod_direction_output(cs, !(spi->mode & SPI_CS_HIGH));
-+			if (ret)
-+				return ret;
-+		}
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index d9ea15994ae9..a00241e3373b 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -46,7 +46,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
  	}
  
--	if (!status)
--		status = spi_bitbang_setup(spi);
--
--	return status;
-+	return spi_bitbang_setup(spi);
- }
- 
- static int spi_gpio_set_direction(struct spi_device *spi, bool output)
+ 	np = of_get_child_by_name(dev->of_node, "zap-shader");
+-	if (!np) {
++	if (!np || !of_device_is_available(np)) {
+ 		zap_available = false;
+ 		return -ENODEV;
+ 	}
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.45.1
 
