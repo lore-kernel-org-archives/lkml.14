@@ -1,120 +1,122 @@
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1723665194;
-	Fri, 17 May 2024 14:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A2A612D3
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715957981; cv=none; b=FRUEjW8s85prfks01xROpmRw0aaoG/OLMgWl4vUnLjI8sRrIPhO4YYtev7aP1Mc5K1flBEDg01BAAXROkT6bNBIv+9p4TRCM7qIFvWjphc4c3aZDdi49adIv3Coj+x6dj2k6PG9mjT+G+IZ4C9PESiZBA4GIo1GKVUHjP3F1Bc4=
+	t=1715958024; cv=none; b=Egw0/tTglEB45yYjJHWFozh+sqctGZOZlWcUyDdmayg9TxXNOhqMmWMBkGgwD5pOopfWaHwvBby6p25vmSzNXvJQuL/YxYtqijcPMWuvtXORAh8fgDhW0b+Lh/Lv7EzNPHiJH1kGqILux4EUJEdBU0Dr7GrT2uDx6mhrvkHedas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715957981; c=relaxed/simple;
-	bh=avilw900f6d/x8c9K8ZiuzFANTi4g2LTrG2nEouV5+A=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=AMxUw1V68VZCn8y1DvJP1Q4FhhHkDBsD+jnxQ/GqdmErol+DU1lXqGV5Jxu/iYbpEHre4JfZjN8kwe83qQJahkmnFx1RLjNrPM8uD9S1upzShSZDQOLWxOwMnSpzOw+jE8rPZQj8FcW8LJ+o+BgfycbiH1BKnqV0wMCBW3ou11s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:51178)
-	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1s7yTv-00G0Ui-NK; Fri, 17 May 2024 08:22:47 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:32812 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1s7yTu-00FFhy-O4; Fri, 17 May 2024 08:22:47 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Jonathan Calmels <jcalmels@3xx0.net>
-Cc: brauner@kernel.org,  Luis Chamberlain <mcgrof@kernel.org>,  Kees Cook
- <keescook@chromium.org>,  Joel Granados <j.granados@samsung.com>,  Serge
- Hallyn <serge@hallyn.com>,  Paul Moore <paul@paul-moore.com>,  James
- Morris <jmorris@namei.org>,  David Howells <dhowells@redhat.com>,  Jarkko
- Sakkinen <jarkko@kernel.org>,  containers@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
-  linux-security-module@vger.kernel.org,  keyrings@vger.kernel.org
-References: <20240516092213.6799-1-jcalmels@3xx0.net>
-	<20240516092213.6799-2-jcalmels@3xx0.net>
-	<878r08brmp.fsf@email.froward.int.ebiederm.org>
-	<xv52m5xu5tgwpckkcvyjvefbvockmb7g7fvhlky5yjs2i2jhsp@dcuovgkys4eh>
-Date: Fri, 17 May 2024 09:22:23 -0500
-In-Reply-To: <xv52m5xu5tgwpckkcvyjvefbvockmb7g7fvhlky5yjs2i2jhsp@dcuovgkys4eh>
-	(Jonathan Calmels's message of "Fri, 17 May 2024 04:55:03 -0700")
-Message-ID: <87jzjsa57k.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1715958024; c=relaxed/simple;
+	bh=0Nr8Y4+/ZJBHsC4fobZER1qRfUEhosErOFS9K3ZUB2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h2gCf4Prq1IrMidSlgysIqgKOv7czC7osdpr84OMp0P58rbgWkLG8vdAp5S+CGXEJfuYbTKGqk0i2z5ChaoyCrK6LT0StKPsrtJxx3klZA1Hm3WuHhASQPN4K/yS8MxHAtfyk5npVXVE2nOOA2FBHo30FC1UA4OmtoJAgu8H0y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZSaTH1nF; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZSaTH1nF"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59c448b44aso483118566b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1715958020; x=1716562820; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=90vcdryrilbiLp2GC0B+j36kxSGrzIvMk03oWLCbJRo=;
+        b=ZSaTH1nFQtgMhpDBgCZaTp+lrD2iwRsMFVQ9BWXVQGee9YpO2j3tzVretodIfB6ddk
+         5gq8+/MUtxSTaM1wev0serOA5UxzH6d9MJ0rZVLRkQIX9MV4KtC7GDU56rO8RYtuqbHj
+         FWmqKymDvC+rH7r4jflQKay5yF4dKTqw9BmdNMkY7tTUeBr5kmqwGbbZRsWhgx9TfJAf
+         5N249nf+AMxWArbBnTZLbHILERYPKaWsnifjYxhEFVhlZxgLDJLwndK/ABLQSYvujSGQ
+         0EFRkI7KQAwfKB7bzQi5/m9ojYHEr+sclnlSUAuaAVO9eY+S/XvjTULjQ2ghWt6o9WrD
+         MD7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715958020; x=1716562820;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=90vcdryrilbiLp2GC0B+j36kxSGrzIvMk03oWLCbJRo=;
+        b=lAcrNcrAb/foFdGm1ThAuyV3KQ6K9sdxXCybSUzqqXyMz0CecrvDb+OHN+DDUyOzT7
+         Nlpx5APVbAU/KKxFAD40rXPNzmABmeYBlno8CPdf7Nv9vT0x08ewaGIn3pCV0wOcu1f2
+         VKdYw0DBqHPHo/8sUIX61RCngGZu+JzNDOr+W12Jy7tVXDH56ZAVCG2Al5M3huh7JrjS
+         3hhq8sQvO2kFuSWV0TY7fMX06wZrkVUkvSBdg9Gut8GEnFC1yapameiGQTiFQ0zwvBeW
+         FsUlgxdXCXnUSZ1h6WkUAYip6Kw5MC4iQ+fdVm+q8ozf2EwEDlHr8D7ct/fdoZ3o61xN
+         Nfug==
+X-Forwarded-Encrypted: i=1; AJvYcCUXmXDPuGavoTtfx46wPl8OwXmLCq2Ffa0bKoRO0VnRHCzqvqPBgq/9bDPr09bOgmCkXzosB1jDoFSacSXsn8iaMjP+rPQKSvvsT4zD
+X-Gm-Message-State: AOJu0Yz7WFamUxUNeY0XLWNSyo5RAg7T7Mx5BQytn3xcV3GBHxjgm6aX
+	kAjvoNQqVJL4qYCc7y7ulYwtd91kOE/VvPHgcKkM7Li8BDtNr1e8Zbqoa4RDqrk=
+X-Google-Smtp-Source: AGHT+IFH3sGsvJWbmCtch4QWwjnUqxDk98n6psu+IdrWC/5EPw3YDGX0Tv7xzZxM8iEGEh81fQB4aA==
+X-Received: by 2002:a17:906:3cf1:b0:a5a:8248:253e with SMTP id a640c23a62f3a-a5a82482592mr717938266b.36.1715958020542;
+        Fri, 17 May 2024 08:00:20 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c? (p200300e5873ca5006aafb7a77c29ae5c.dip0.t-ipconnect.de. [2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17894d57sm1131261766b.73.2024.05.17.08.00.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 May 2024 08:00:20 -0700 (PDT)
+Message-ID: <e8b36230-d59f-44f1-ba48-5a0533238d8e@suse.com>
+Date: Fri, 17 May 2024 17:00:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1s7yTu-00FFhy-O4;;;mid=<87jzjsa57k.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX18IkHUj49fRJqM7REx3ND8lhM0yvX7TxF4=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-Level: *
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4999]
-	*  1.5 XMNoVowels Alpha-numberic number with no vowels
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa06 1397; Body=1 Fuz1=1 Fuz2=1]
-X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: *;Jonathan Calmels <jcalmels@3xx0.net>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 365 ms - load_scoreonly_sql: 0.05 (0.0%),
-	signal_user_changed: 11 (3.0%), b_tie_ro: 10 (2.6%), parse: 0.86
-	(0.2%), extract_message_metadata: 19 (5.2%), get_uri_detail_list: 1.95
-	(0.5%), tests_pri_-2000: 15 (4.2%), tests_pri_-1000: 2.9 (0.8%),
-	tests_pri_-950: 1.21 (0.3%), tests_pri_-900: 1.01 (0.3%),
-	tests_pri_-90: 70 (19.1%), check_bayes: 68 (18.6%), b_tokenize: 7
-	(2.0%), b_tok_get_all: 6 (1.7%), b_comp_prob: 2.2 (0.6%),
-	b_tok_touch_all: 49 (13.5%), b_finish: 0.87 (0.2%), tests_pri_0: 231
-	(63.4%), check_dkim_signature: 0.52 (0.1%), check_dkim_adsp: 2.4
-	(0.7%), poll_dns_idle: 0.44 (0.1%), tests_pri_10: 2.1 (0.6%),
-	tests_pri_500: 7 (2.0%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH 1/3] capabilities: user namespace capabilities
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 039/130] KVM: TDX: initialize VM with TDX specific
+ parameters
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+ Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+ Sean Christopherson <seanjc@google.com>, Sagi Shahar <sagis@google.com>,
+ Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, hang.yuan@intel.com,
+ tina.zhang@intel.com, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <5eca97e6a3978cf4dcf1cff21be6ec8b639a66b9.1708933498.git.isaku.yamahata@intel.com>
+ <46mh5hinsv5mup2x7jv4iu2floxmajo2igrxb3haru3cgjukbg@v44nspjozm4h>
+ <de344d2c-6790-49c5-85be-180bc4d92ea4@suse.com>
+ <etso5bvvs2gq3parvzukujgbatwqfb6lhzoxhenrapav6obbgl@o6lowhrcbucp>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <etso5bvvs2gq3parvzukujgbatwqfb6lhzoxhenrapav6obbgl@o6lowhrcbucp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Jonathan Calmels <jcalmels@3xx0.net> writes:
+On 17.05.24 16:53, Kirill A. Shutemov wrote:
+> On Fri, May 17, 2024 at 04:37:16PM +0200, Juergen Gross wrote:
+>> On 17.05.24 16:32, Kirill A. Shutemov wrote:
+>>> On Mon, Feb 26, 2024 at 12:25:41AM -0800, isaku.yamahata@intel.com wrote:
+>>>> @@ -725,6 +967,17 @@ static int __init tdx_module_setup(void)
+>>>>    	tdx_info->nr_tdcs_pages = tdcs_base_size / PAGE_SIZE;
+>>>> +	/*
+>>>> +	 * Make TDH.VP.ENTER preserve RBP so that the stack unwinder
+>>>> +	 * always work around it.  Query the feature.
+>>>> +	 */
+>>>> +	if (!(tdx_info->features0 & MD_FIELD_ID_FEATURES0_NO_RBP_MOD) &&
+>>>> +	    !IS_ENABLED(CONFIG_FRAME_POINTER)) {
+>>>
+>>> I think it supposed to be IS_ENABLED(CONFIG_FRAME_POINTER). "!" shouldn't
+>>> be here.
+>>
+>> No, I don't think so.
+>>
+>> With CONFIG_FRAME_POINTER %rbp is being saved and restored, so there is no
+>> problem in case the seamcall is clobbering it.
+> 
+> Could you check setup_tdparams() in your tree?
+> 
+> Commit
+> 
+> [SEAM-WORKAROUND] KVM: TDX: Don't use NO_RBP_MOD for backward compatibility
+> 
+> in my tree comments out the setting TDX_CONTROL_FLAG_NO_RBP_MOD.
+> 
+> I now remember there was problem in EDK2 using RBP. So the patch is
+> temporary until EDK2 is fixed.
+> 
 
-> On Fri, May 17, 2024 at 06:32:46AM GMT, Eric W. Biederman wrote:
->> 
->> Pointers please?
->> 
->> That sentence sounds about 5 years out of date.
->
-> The link referenced is from last year.
-> Here are some others often cited by distributions:
->
-> https://nvd.nist.gov/vuln/detail/CVE-2022-0185
-> https://nvd.nist.gov/vuln/detail/CVE-2022-1015
-> https://nvd.nist.gov/vuln/detail/CVE-2022-2078
-> https://nvd.nist.gov/vuln/detail/CVE-2022-24122
-> https://nvd.nist.gov/vuln/detail/CVE-2022-25636
->
-> Recent thread discussing this too:
-> https://seclists.org/oss-sec/2024/q2/128
+I have the following line in setup_tdparams() (not commented out):
 
-My apologies perhaps I trimmed too much.
-
-I know that user namespaces enlarge the attack surface.
-How much and how serious could be debated but for unprivileged
-users the attack surface is undoubtedly enlarged.
-
-As I read your introduction you were justifying the introduction
-of a new security mechanism with the observation that distributions
-were carrying distribution specific patches.
-
-To the best of my knowledge distribution specific patches and
-distributions disabling user namespaces have been gone for quite a
-while.  So if that has changed recently I would like to know.
-
-Thank you,
-Eric
+	td_params->exec_controls = TDX_CONTROL_FLAG_NO_RBP_MOD;
 
 
+Juergen
