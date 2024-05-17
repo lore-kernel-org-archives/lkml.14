@@ -1,183 +1,157 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633A957887
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D64461691
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715957590; cv=none; b=pXE1ITCGZEHNN+jOZTe4mRM+6t+Hon78U5DawI/lNYuPGJ8eSysXBs/hIG4ccvJ8dZSEiEfM1CCKc3DuGVjGQvcoxmYx7sIB8OpgVdxpZaJL5SE2c/9/XFvuMguMHbDGIGU2maCznTtYr0JBXxGSHKNjNh17WI7J9BvNRyh1ueQ=
+	t=1715957599; cv=none; b=CHtXklXwDvNS3X9wiw7kMedVyOyTeexaIEQVEZjngI1tfuvoNH0wnaaKtZrokRN/aqps1ZcZaOi7y5Il6xOk8wuoLWjLrG329b5/VHTipdZzZBu9qfSZSYT5rGrSjoWw+Z94f1IOlFA9BsrI0VNP5qeRX7smrXG9GsNTjCnTIL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715957590; c=relaxed/simple;
-	bh=hD7Js7fBPmWXFc/aKxb0FtlBOgYC1Bgag5yDVzV8HxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XTtUinOCv5vOpCr9Vallo6agyQB+ztfvoTVAQpRiJTqpTDDDZQdLU04r9K/JScj+DQC4G8ZLEgatikRKTa8Yf3Srn5FZdzCDUSez+hbbJdFgpjq9CZsvhPuwN3Zy+EBe0ziCG1TJec++3Zj1l14cOvNz6fgbYd9kmtwpkMWfhL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yddje5Wk; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715957599; c=relaxed/simple;
+	bh=11tFZYMuDAVi+4LdOZqevmF5dxJsVBfI1xfm/Sl6E5Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nYGxnE4IQ+uLAw7gmWpF3hLDytVwYeGyTnkVG3wb+Ay/aKLNAaLqzbNk6VZBRQ9eSC7iLRqMT15zjUPQkLK5EMCx9Pf8rlGOfcvZvW2fhbroGXoPvv4WavFh3tXAi8fufyYCaGH2CTSdzjx17i0QsfQAg8XZTb5oX/4JevJDJHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uDRAJlKr; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yddje5Wk"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee0ccf9c2fso117605ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:53:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uDRAJlKr"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4200eae18e0so324465e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715957588; x=1716562388; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J9yEPEdR0yXbjHGQafZygTyo16CLvwcifYer1hkc9ds=;
-        b=yddje5WkABXqisFafWAaJm24PWsTZQo2A1jUk7Hcl1HsybEJ46jUuNzuf/0jS/ZEK5
-         YG6LeYpxHi9Pzo3S/GUv6VX7/zqMpUWTvZ/8SdvYu9JxRuV7A0Wpuqf7Xo6yQ3uFIpWz
-         qtu5IH27kwTx93MBwX4eidGuHDgaFswH28EurB7YHT7gkROJJw3nMa+wi7jM5h/4dlBV
-         jc5JUcqXbVPffSyf88Xg5AEOZJ3TG+s8xpRvKuqSooz0at9IRcd6RbDjp9ctioMAXsv9
-         Lc0SuP1ca3FNq+5DUGJC+PYGC1/oleYxMkabE4T64Bzr0vb0oGTLxI7DSONCfsqwG6mP
-         5E4Q==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715957596; x=1716562396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MBxnVnvMYgrOz5wGG3XSCFV37Hy6vOq+FURf3O2sV60=;
+        b=uDRAJlKr5Mb2MqFY26e+MkN4P2KElvhjOixy3rEUUpYyeTh4FTW+rAD9FSpFIAbehY
+         NMfO0vPKNC7vqimVLaJeLDMebzpokanOF25MSCoisdfqgkZUt6hMKdxiRJwBcgSVDN3P
+         c2JLufSk3SU2w+ibAiJ1x1TJp32z2c/9VKnIr3dQ+06Fj+jTs/hesQ9Q4IAxs0Qfa5BQ
+         H5pfLwh3PO3HHOthGIJimaKCJHEIymsgfvPftfpqfW4OT/lIxRqQIMQIIGiBrIZdhpC+
+         vDjFMk9LYUXxVOtYTCRO2VKUwnCDkOPLdVmDhI1Go6si4MTj4/zC6kAE70MF82irGiVJ
+         7D1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715957588; x=1716562388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J9yEPEdR0yXbjHGQafZygTyo16CLvwcifYer1hkc9ds=;
-        b=Bm8R92p+POW2e0zpqj6kFzO2K3Yw3B++ReBolBqDL58SutM/fmR61TIR792iztxHqn
-         BosN5f4XUzK721SimMILuxFQ6OtNzYiFgzYQ8E+VXXxU72Mwf1+q/72nvuDIV4vcT7qN
-         J5RNNV7SzR02O15GaqRSBV+geuumhrg8MxGx9ah/Vsf0OxSl9Cm2Qz2V54SF3lcxaaDu
-         0hKdDdie+yxRDvYYAfFXL+8M5g8/RFcozazO2BG6nh8OaOeAHY65QaF1jnMT8oTilJ6w
-         EawWn2J/xcEB6x3uunrrskIzcebcgmpo11QjO5ZYf4nwCGYRilqV/vEQ2APQdWJ465VJ
-         xVmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoPGxiTyWrSVcFao7XhCSR3RmThKGpexbaZIZLyMYh7me1OhIn89E0p2z2Q3bfnKFUzvv/P8mWUEbHyRx7Ys0ZPc12vjNCeemEUvE/
-X-Gm-Message-State: AOJu0YxW/voRhHAcGF61zRanaFd9qyxj5DhRHRs6CjX6psFi00H1zVgU
-	wkSO6VWd3MZyK/+5tlvIMzLs+6VNIxYyHLHdbJ6RsXNylUeq1nLtJoTPUYE/kaQfr5l6IykPZst
-	8AkSRhbY/XTEH7do4M9Uj9LiFHii7bexw30Z8
-X-Google-Smtp-Source: AGHT+IF+/u2t53nDO6K/rA8Xe7gJaCE3VNU49gFdYsvsDWLEBS847TpdyGT3nwc+jPtWDJVK6rNrJ9QPz6Rm8D91qv8=
-X-Received: by 2002:a17:902:eec6:b0:1e9:4b4:907b with SMTP id
- d9443c01a7336-1f2e04a8fd9mr2374155ad.6.1715957588299; Fri, 17 May 2024
- 07:53:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715957596; x=1716562396;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MBxnVnvMYgrOz5wGG3XSCFV37Hy6vOq+FURf3O2sV60=;
+        b=LG9qKZEKmeW0P/eNKRldom3ev2jhJM2OO4qfweXWwKwONTfrAqa2/DwlzfilLxoBCU
+         tF6pvVO22rsPhN/UvEyDwK2nKcHPEH9uxd87KpYpiA1NwOczrV6c5wRSPtC0pkem4H7q
+         7LdV5R00q3EYs4LWzyX45ItLUgxZp5pn2UBgtVMA6eAA5JPp5lvggbH68LVBjVMZDmf7
+         t2P5o0Kx4gUQu8jjVbd2wzQ0UNKA98NjnkEeXsuld9uZw0wSRuFBIYcnVi8tGnd/uaXb
+         VxyuRiBSBDr7wZgCVCjV6ENARCyJBDrwd+hXtObtS2Rk+EAOhXRsiPw75wNI1OR8bihe
+         fcLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLBdO90K1bR6WazYErCkQPBhjIyH6tsNmmZ0N5RfqiAqAUPwSK/ZcMTZNtRjJS0NV8A76EO3Z51OLN+vydyoI3OtTnUhBr9HWfs5LD
+X-Gm-Message-State: AOJu0Yw6GrYStvPzBG22QPoAUQR6eTUtzNKhuYiWVXCpsjBt9SlPSs4a
+	0VwFmNatz6X8I44aMlg169M847Ur9QiTaDFvoigxm2IBQWBTnJ8JOggqisRkEI8KNbTbDA+RyWK
+	9Img=
+X-Google-Smtp-Source: AGHT+IElTJZHwS4R62Imc5G809nVY5XtS1QeDbXqWpbZYtlvSrsfuUs8xxpZzJsOl058opK+T4g56g==
+X-Received: by 2002:a05:600c:3b0a:b0:41a:3150:cc83 with SMTP id 5b1f17b1804b1-41feac59d8emr162018155e9.2.1715957595750;
+        Fri, 17 May 2024 07:53:15 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:999:a3a0:46f0:3724:aa77:c1f8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce9431sm301723695e9.28.2024.05.17.07.53.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 07:53:14 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Anup Patel <anup@brainfault.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v5 00/16] Add support for a few Zc* extensions, Zcmop and Zimop
+Date: Fri, 17 May 2024 16:52:40 +0200
+Message-ID: <20240517145302.971019-1-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517141427.1905691-1-leitao@debian.org>
-In-Reply-To: <20240517141427.1905691-1-leitao@debian.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 17 May 2024 07:52:47 -0700
-Message-ID: <CAP-5=fX__BCcvxoykxz1b8LB5tuVzO+JjX8+xpiO4vfcdArUuQ@mail.gmail.com>
-Subject: Re: [PATCH v4] perf list: Fix the --no-desc option
-To: Breno Leitao <leitao@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, leit@meta.com, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 17, 2024 at 7:14=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
-ote:
->
-> Currently, the --no-desc option in perf list isn't functioning as
-> intended.
->
-> This issue arises from the overwriting of struct option->desc with the
-> opposite value of struct option->long_desc. Consequently, whatever
-> parse_options() returns at struct option->desc gets overridden later,
-> rendering the --desc or --no-desc arguments ineffective.
->
-> To resolve this, set ->desc as true by default and allow parse_options()
-> to adjust it accordingly. This adjustment will fix the --no-desc
-> option while preserving the functionality of the other parameters.
->
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Add support for (yet again) more RVA23U64 missing extensions. Add
+support for Zimop, Zcmop, Zca, Zcf, Zcd and Zcb extensions ISA string
+parsing, hwprobe and kvm support. Zce, Zcmt and Zcmp extensions have
+been left out since they target microcontrollers/embedded CPUs and are
+not needed by RVA23U64.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Since Zc* extensions states that C implies Zca, Zcf (if F and RV32), Zcd
+(if D), this series modifies the way ISA string is parsed and now does
+it in two phases. First one parses the string and the second one
+validates it for the final ISA description.
 
-Thanks,
-Ian
+Link: https://lore.kernel.org/linux-riscv/20240404103254.1752834-1-cleger@rivosinc.com/ [1]
+Link: https://lore.kernel.org/all/20240409143839.558784-1-cleger@rivosinc.com/ [2]
 
-> ---
-> Changelog:
->
-> v4:
->         * Revert the change in json_print_event() from v3.
-> v3:
->         * Applied the same logic to default_print_metric() and
->           json_print_event() functions, as identified by Ian Rogers.
-> v2:
->         * Do not print desc if long_desc is being printed, as identified
->           by Ian Rogers.
-> ---
->  tools/perf/builtin-list.c | 23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
->
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index 02bf608d585e..24a136ea015e 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -149,7 +149,11 @@ static void default_print_event(void *ps, const char=
- *pmu_name, const char *topi
->         } else
->                 fputc('\n', fp);
->
-> -       if (desc && print_state->desc) {
-> +       if (long_desc && print_state->long_desc) {
-> +               fprintf(fp, "%*s", 8, "[");
-> +               wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
-> +               fprintf(fp, "]\n");
-> +       } else if (desc && print_state->desc) {
->                 char *desc_with_unit =3D NULL;
->                 int desc_len =3D -1;
->
-> @@ -165,12 +169,6 @@ static void default_print_event(void *ps, const char=
- *pmu_name, const char *topi
->                 fprintf(fp, "]\n");
->                 free(desc_with_unit);
->         }
-> -       long_desc =3D long_desc ?: desc;
-> -       if (long_desc && print_state->long_desc) {
-> -               fprintf(fp, "%*s", 8, "[");
-> -               wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
-> -               fprintf(fp, "]\n");
-> -       }
->
->         if (print_state->detailed && encoding_desc) {
->                 fprintf(fp, "%*s", 8, "");
-> @@ -243,15 +241,14 @@ static void default_print_metric(void *ps,
->         }
->         fprintf(fp, "  %s\n", name);
->
-> -       if (desc && print_state->desc) {
-> -               fprintf(fp, "%*s", 8, "[");
-> -               wordwrap(fp, desc, 8, pager_get_columns(), 0);
-> -               fprintf(fp, "]\n");
-> -       }
->         if (long_desc && print_state->long_desc) {
->                 fprintf(fp, "%*s", 8, "[");
->                 wordwrap(fp, long_desc, 8, pager_get_columns(), 0);
->                 fprintf(fp, "]\n");
-> +       } else if (desc && print_state->desc) {
-> +               fprintf(fp, "%*s", 8, "[");
-> +               wordwrap(fp, desc, 8, pager_get_columns(), 0);
-> +               fprintf(fp, "]\n");
->         }
->         if (expr && print_state->detailed) {
->                 fprintf(fp, "%*s", 8, "[");
-> @@ -491,6 +488,7 @@ int cmd_list(int argc, const char **argv)
->         int i, ret =3D 0;
->         struct print_state default_ps =3D {
->                 .fp =3D stdout,
-> +               .desc =3D true,
->         };
->         struct print_state json_ps =3D {
->                 .fp =3D stdout,
-> @@ -563,7 +561,6 @@ int cmd_list(int argc, const char **argv)
->                 };
->                 ps =3D &json_ps;
->         } else {
-> -               default_ps.desc =3D !default_ps.long_desc;
->                 default_ps.last_topic =3D strdup("");
->                 assert(default_ps.last_topic);
->                 default_ps.visited_metrics =3D strlist__new(NULL, NULL);
-> --
-> 2.43.0
->
+---
+
+v5:
+ - Merged in Zimop to avoid any uneeded series dependencies
+ - Rework dependency resolution loop to loop on source isa first rather
+   than on all extensions.
+ - Disabled extensions in source isa once set in resolved isa
+ - Rename riscv_resolve_isa() parameters
+
+v4:
+ - Modify validate() callbacks to return 0, -EPROBEDEFER or another
+   error.
+ - v3: https://lore.kernel.org/all/20240423124326.2532796-1-cleger@rivosinc.com/
+
+v3:
+ - Fix typo "exists" -> "exist"
+ - Remove C implies Zca, Zcd, Zcf, dt-bindings rules
+ - Rework ISA string resolver to handle dependencies
+ - v2: https://lore.kernel.org/all/20240418124300.1387978-1-cleger@rivosinc.com/
+
+v2:
+ - Add Zc* dependencies validation in dt-bindings
+ - v1: https://lore.kernel.org/lkml/20240410091106.749233-1-cleger@rivosinc.com/
+
+Clément Léger (16):
+  dt-bindings: riscv: add Zimop ISA extension description
+  riscv: add ISA extension parsing for Zimop
+  riscv: hwprobe: export Zimop ISA extension
+  RISC-V: KVM: Allow Zimop extension for Guest/VM
+  KVM: riscv: selftests: Add Zimop extension to get-reg-list test
+  dt-bindings: riscv: add Zca, Zcf, Zcd and Zcb ISA extension
+    description
+  riscv: add ISA extensions validation callback
+  riscv: add ISA parsing for Zca, Zcf, Zcd and Zcb
+  riscv: hwprobe: export Zca, Zcf, Zcd and Zcb ISA extensions
+  RISC-V: KVM: Allow Zca, Zcf, Zcd and Zcb extensions for Guest/VM
+  KVM: riscv: selftests: Add some Zc* extensions to get-reg-list test
+  dt-bindings: riscv: add Zcmop ISA extension description
+  riscv: add ISA extension parsing for Zcmop
+  riscv: hwprobe: export Zcmop ISA extension
+  RISC-V: KVM: Allow Zcmop extension for Guest/VM
+  KVM: riscv: selftests: Add Zcmop extension to get-reg-list test
+
+ Documentation/arch/riscv/hwprobe.rst          |  28 ++
+ .../devicetree/bindings/riscv/extensions.yaml |  95 +++++++
+ arch/riscv/include/asm/cpufeature.h           |  26 +-
+ arch/riscv/include/asm/hwcap.h                |   6 +
+ arch/riscv/include/uapi/asm/hwprobe.h         |   6 +
+ arch/riscv/include/uapi/asm/kvm.h             |   6 +
+ arch/riscv/kernel/cpufeature.c                | 244 ++++++++++++------
+ arch/riscv/kernel/sys_hwprobe.c               |   6 +
+ arch/riscv/kvm/vcpu_onereg.c                  |  12 +
+ .../selftests/kvm/riscv/get-reg-list.c        |  24 ++
+ 10 files changed, 366 insertions(+), 87 deletions(-)
+
+-- 
+2.43.0
+
