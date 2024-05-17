@@ -1,59 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483D06A8DC
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043B869953;
+	Fri, 17 May 2024 15:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715958674; cv=none; b=Phf1Y5dGr/WQfvllL7VUHhNbbLcXqLGMeRZKjsiEGwDhqOv0F4YMKohEX8OnSEIQoSJ9sDuTii4gUwMsosxyNmq/iZcsim/vr42B1qnpTK1MV4sfWLSVYXAFGTkRhxLeSmtNMsnqpHJMBGBFKM6sIGgmX/agMNPHfg9lImMaZX4=
+	t=1715958709; cv=none; b=XSNk4hIeu9Sjh/NpotPyG36Ap4yfNekTpNs6eaSz/ABNhNeenwf9jw/AcHGfLPWeojIJhnGFGgU5TYAES8ANxf4KmHFzU8dczOQLZleF7BMe6Ft6MP8kkHX43y2NFaZUZ5VpeliFx/MlHNsa/k9mPRQUIdF5RsryCQM6qP7N8n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715958674; c=relaxed/simple;
-	bh=AH2OPi34MeT4uPkwc8selbRygzGB0cXzmtw9SFgahv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s23yLXOzmQPJuFAk+9BhekLzyrICBKu7o0z4iNFwjft0q9Om0oFr3Rniq3V9zoO8yCENcSckHicQhiuiHclrKTIJTAf6TjOIwiN0jJp0lNgUt+1Sq7HjsOtE2cWTeYaWBDFDFhycNWRnQheQ0NwxhycpKu7x3UwUi/ReCExz/lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=gddoIic5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715958709; c=relaxed/simple;
+	bh=SjNsK7n6ceh5K81D0gVfZ4gwulogBfesDWHdGQG2EfA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tVXKacz0aOutPZLBnUGQScKKBmHzGLqyIOWG/rjU5un46/U6DFRdEFZ5m5JdSDiQkI/Bz3MFE4ue7198Pc/pzyTdd+B683A7ftaB5KxO+yVnhGoY26vJmB/4O88+ki/u8hXQ6Iq0JJEw1+QF0feLWNXBlGjlZmzI+9bt/tvGt5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tjftkaS/; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="gddoIic5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CDBC2BD10;
-	Fri, 17 May 2024 15:11:13 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="gddoIic5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1715958672;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AH2OPi34MeT4uPkwc8selbRygzGB0cXzmtw9SFgahv8=;
-	b=gddoIic5jN/6RJwW0XR41xgTKZw+8S/IwoSN5n1KTscirSyesMGImY7eDPAJOe9l6Jhfb1
-	EfskXpGzyMBhQZIaVYnJ07b+HkI4ODGCjqH3LZWtVJ2/ZmTOcGZJI3hepZpXfIOzC7lrxm
-	+Q7cUp5JTCb7CX/8KhOcc6GuQ7AEB70=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1ab7018a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Fri, 17 May 2024 15:11:12 +0000 (UTC)
-Date: Fri, 17 May 2024 17:11:10 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] random number generator updates for 6.10-rc1
-Message-ID: <Zkdzjh3XwS17WwiI@zx2c4.com>
-References: <20240517150315.2213425-1-Jason@zx2c4.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tjftkaS/"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44HEHCJi075281;
+	Fri, 17 May 2024 09:17:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715955432;
+	bh=kt66KMrGkxREF7cMwYO1Us9NDDj6Izf4mMkTPSy7wcw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=tjftkaS/AgNKcblNHzk9Ud83ecSNxlz1icFl4nmgOV9hulj7sckvUVgEDtwQ7m972
+	 JRH6U3JslShjbDC/2KFuOcshIWzOb21K04eKwS9DaSzFn9QQYuyQDBUlOdZO3YAibD
+	 h40h6u+hPXTzC0UuTR8nQ9RHS/zd3ieQYcdOKVhw=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44HEHCct117536
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 17 May 2024 09:17:12 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 17
+ May 2024 09:17:12 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 17 May 2024 09:17:12 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44HEH7Sw086208;
+	Fri, 17 May 2024 09:17:07 -0500
+Message-ID: <7439c9e1-59cd-4d37-aab8-bc71b6a98a09@ti.com>
+Date: Fri, 17 May 2024 19:47:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240517150315.2213425-1-Jason@zx2c4.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: net: dp8386x: Add MIT license along with
+ GPL-2.0
+To: Andrew Lunn <andrew@lunn.ch>
+CC: <vigneshr@ti.com>, <nm@ti.com>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Kip Broadhurst <kbroadhurst@ti.com>,
+        <w.egorov@phytec.de>
+References: <20240517104226.3395480-1-u-kumar1@ti.com>
+ <41e30085-937a-410a-ac6a-189307a59319@lunn.ch>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <41e30085-937a-410a-ac6a-189307a59319@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-I forgot to mention, there's a small conflict with the pm tree, which
-you've already pulled, where `.owner = THIS_MODULE` is removed from the
-driver, as part of a tree-wide set of changes. The changes in my tree
-convert the driver to a platform driver, rather than an acpi driver,
-which also doesn't have the `.owner = THIS_MODULE` line, because those
-got converted years ago. So the right conflict resolution is to just
-take my commits and skip 00e8b52bf9. That's the same resolution in -next
-too. It should be trivial enough.
+Thanks Andrew
 
-Jason
+On 5/17/2024 7:26 PM, Andrew Lunn wrote:
+> On Fri, May 17, 2024 at 04:12:26PM +0530, Udit Kumar wrote:
+>> Modify license to include dual licensing as GPL-2.0-only OR MIT
+>> license for TI specific phy header files. This allows for Linux
+>> kernel files to be used in other Operating System ecosystems
+>> such as Zephyr or FreeBSD.
+>>
+>> While at this, update the TI copyright year to sync with current year
+>> to indicate license change.
+>>
+>> Cc: Kip Broadhurst <kbroadhurst@ti.com>
+>> Signed-off-by: Udit Kumar <u-kumar1@ti.com>
+>> ---
+>>   include/dt-bindings/net/ti-dp83867.h | 4 ++--
+>>   include/dt-bindings/net/ti-dp83869.h | 4 ++--
+>>   2 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/dt-bindings/net/ti-dp83867.h b/include/dt-bindings/net/ti-dp83867.h
+>> index 6fc4b445d3a1..2b7bc9c692f2 100644
+>> --- a/include/dt-bindings/net/ti-dp83867.h
+>> +++ b/include/dt-bindings/net/ti-dp83867.h
+>> @@ -1,10 +1,10 @@
+>> -/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
+>>   /*
+>>    * Device Tree constants for the Texas Instruments DP83867 PHY
+>>    *
+>>    * Author: Dan Murphy <dmurphy@ti.com>
+>>    *
+>> - * Copyright:   (C) 2015 Texas Instruments, Inc.
+>> + * Copyright:   (C) 2015-2024 Texas Instruments, Inc.
+>>    */
+> IANAL
+>
+> but about 1/4 of this file was written by Wadim Egorov
+> <w.egorov@phytec.de>. It would be good to Cc: him and make sure he
+> does not object.
+
+Wadim is copied.
+Also will take care of copying in next version if any.
+
+
+> The other file is fine, it was all Dan Murphy's work.
+>
+>       Andrew
