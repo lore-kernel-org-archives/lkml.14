@@ -1,59 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825BF17BD5
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF89B1803A;
+	Fri, 17 May 2024 07:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715932625; cv=none; b=cowbzXurpgS+NL4fbQEBygtMrLRn/t0wyzKeCspoWo6kS3kpPty1b+xA2SxZnrstK9dm+9GGLmyIrRRML90lPvvQ5qohrCSJ4gleuYK1uLVNN7edZZhN75a7F3qC4cK20swSRCnNoHODDjoaHDrev/aA+dAtwenfUslp3xDgruc=
+	t=1715932626; cv=none; b=YAnLmhw3sKbcXA/3llbmp4WkIfa9vu9WMgPhA+LEhgZxkUHlt2telf7+xF0FU1LhOpxNHfFGTl5h64BoOHT5O4q5A5W5VMjNspq96qaCvqebiJjJaPtbmgF291GQuFSgGVAdQqut1XtB3w+DwmMh7iIs3+hnhyN4P93vmC2sZso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715932625; c=relaxed/simple;
-	bh=9avGdIlGtkZAGVzBwd2BMqnvGgEnWpUrqWA8fO7+YJE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LPNmYCW3i3DsCN2DBp9xdbz6B0FAFeywh8Nmf0KI0nWOhbcM1k8sz3yzuHnrV+E+xD3nbQYgms6nNDtKEtFfOPKpkzDdDsD4Eb3FjMNMYOBT2zt+jMgRZgdWCmbo0cvzOtSfgeDPSMuMdatfqQsBlBu4l8spVhIBoLKW+UAPbRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=igIM9lD6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igIM9lD6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715932622;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Z28RdGIa/jW2W1Epz9g0bmIp4vT2NvFeG3FHmL5nW28=;
-	b=igIM9lD6yfiaaXNoXvuHONuD95C7ThxvR0tb6q2UHkwIXocG1Iz3fss2TsJmAGETXI8n/m
-	YSq9toaequSyWzwtelG5OvR/QHDrIOa1xmjbOpTEpAjRfNZ8XwGT+PyDeFmllgO+RurdTO
-	+rFb56fhf4I2OyrVTJXGdhfAJjfLnC0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-58-QBvbkxxENZiprvS6x8DnGQ-1; Fri, 17 May 2024 03:56:57 -0400
-X-MC-Unique: QBvbkxxENZiprvS6x8DnGQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D06F101A525;
-	Fri, 17 May 2024 07:56:57 +0000 (UTC)
-Received: from alecto.usersys.redhat.com (unknown [10.43.17.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 52D6F51BF;
-	Fri, 17 May 2024 07:56:55 +0000 (UTC)
-From: Artem Savkov <asavkov@redhat.com>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Artem Savkov <asavkov@redhat.com>
-Subject: [PATCH 0/5] powerpc64/bpf: jit support for cpuv4 instructions
-Date: Fri, 17 May 2024 09:56:45 +0200
-Message-ID: <20240517075650.248801-1-asavkov@redhat.com>
+	s=arc-20240116; t=1715932626; c=relaxed/simple;
+	bh=nRXR2LjG3zEYoBYs/eBWZZzXBm17qacK7QdMd8NBzuk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A5ysY7O/LHR2R+kNC7DC1Y1l2/PQQvk11fYQhGKysR1qVf1B1jQn265ErCcR+vBE0EndmXas2S85zLCI5nCYZMG/drMnyNrt0wMylFpY52Rs2ni1FGlxWxMb0ZVZ0QemYdH26EOz+i9zWyAsxiVrRTok0jQoUGU5aDFPIvVOLZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 44H7uhIE32159345, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 44H7uhIE32159345
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 May 2024 15:56:43 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 17 May 2024 15:56:43 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 17 May
+ 2024 15:56:42 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai
+	<justinlai0215@realtek.com>
+Subject: [PATCH net-next v19 07/13] rtase: Implement a function to receive packets
+Date: Fri, 17 May 2024 15:52:56 +0800
+Message-ID: <20240517075302.7653-8-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240517075302.7653-1-justinlai0215@realtek.com>
+References: <20240517075302.7653-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,23 +48,176 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Add support for recently added cpuv4 instructions fixing test_bpf module
-failures. This is mostly based on 8ecf3c1dab1c6 (powerpc/bpf/32: Fix
-failing test_bpf tests, 2024-03-05)
+Implement rx_handler to read the information of the rx descriptor,
+thereby checking the packet accordingly and storing the packet
+in the socket buffer to complete the reception of the packet.
 
-Artem Savkov (5):
-  powerpc64/bpf: jit support for 32bit offset jmp instruction
-  powerpc64/bpf: jit support for unconditional byte swap
-  powerpc64/bpf: jit support for sign extended load
-  powerpc64/bpf: jit support for sign extended mov
-  powerpc64/bpf: jit support for signed division and modulo
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 146 ++++++++++++++++++
+ 1 file changed, 146 insertions(+)
 
- arch/powerpc/include/asm/ppc-opcode.h |   2 +
- arch/powerpc/net/bpf_jit_comp64.c     | 118 +++++++++++++++++++-------
- 2 files changed, 90 insertions(+), 30 deletions(-)
-
---
-2.45.0
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index fe9a5bd645e2..266272d8e0ab 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -457,6 +457,152 @@ static void rtase_rx_ring_clear(struct rtase_ring *ring)
+ 	}
+ }
+ 
++static int rtase_fragmented_frame(u32 status)
++{
++	return (status & (RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG)) !=
++		(RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG);
++}
++
++static void rtase_rx_csum(const struct rtase_private *tp, struct sk_buff *skb,
++			  const union rtase_rx_desc *desc)
++{
++	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
++
++	/* rx csum offload */
++	if (((opts2 & RTASE_RX_V4F) && !(opts2 & RTASE_RX_IPF)) ||
++	    (opts2 & RTASE_RX_V6F)) {
++		if (((opts2 & RTASE_RX_TCPT) && !(opts2 & RTASE_RX_TCPF)) ||
++		    ((opts2 & RTASE_RX_UDPT) && !(opts2 & RTASE_RX_UDPF))) {
++			skb->ip_summed = CHECKSUM_UNNECESSARY;
++		} else {
++			skb->ip_summed = CHECKSUM_NONE;
++		}
++	} else {
++		skb->ip_summed = CHECKSUM_NONE;
++	}
++}
++
++static void rtase_rx_vlan_skb(union rtase_rx_desc *desc, struct sk_buff *skb)
++{
++	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
++
++	if (!(opts2 & RTASE_RX_VLAN_TAG))
++		return;
++
++	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q),
++			       swab16(opts2 & RTASE_VLAN_TAG_MASK));
++}
++
++static void rtase_rx_skb(const struct rtase_ring *ring, struct sk_buff *skb)
++{
++	struct rtase_int_vector *ivec = ring->ivec;
++
++	napi_gro_receive(&ivec->napi, skb);
++}
++
++static int rx_handler(struct rtase_ring *ring, int budget)
++{
++	const struct rtase_private *tp = ring->ivec->tp;
++	union rtase_rx_desc *desc_base = ring->desc;
++	u32 pkt_size, cur_rx, delta, entry, status;
++	struct net_device *dev = tp->dev;
++	union rtase_rx_desc *desc;
++	struct sk_buff *skb;
++	int workdone = 0;
++
++	cur_rx = ring->cur_idx;
++	entry = cur_rx % RTASE_NUM_DESC;
++	desc = &desc_base[entry];
++
++	do {
++		/* make sure discriptor has been updated */
++		rmb();
++		status = le32_to_cpu(desc->desc_status.opts1);
++
++		if (status & RTASE_DESC_OWN)
++			break;
++
++		if (unlikely(status & RTASE_RX_RES)) {
++			if (net_ratelimit())
++				netdev_warn(dev, "Rx ERROR. status = %08x\n",
++					    status);
++
++			dev->stats.rx_errors++;
++
++			if (status & (RTASE_RX_RWT | RTASE_RX_RUNT))
++				dev->stats.rx_length_errors++;
++
++			if (status & RTASE_RX_CRC)
++				dev->stats.rx_crc_errors++;
++
++			if (dev->features & NETIF_F_RXALL)
++				goto process_pkt;
++
++			rtase_mark_to_asic(desc, tp->rx_buf_sz);
++			goto skip_process_pkt;
++		}
++
++process_pkt:
++		pkt_size = status & RTASE_RX_PKT_SIZE_MASK;
++		if (likely(!(dev->features & NETIF_F_RXFCS)))
++			pkt_size -= ETH_FCS_LEN;
++
++		/* the driver does not support incoming fragmented
++		 * frames. they are seen as a symptom of over-mtu
++		 * sized frames
++		 */
++		if (unlikely(rtase_fragmented_frame(status))) {
++			dev->stats.rx_dropped++;
++			dev->stats.rx_length_errors++;
++			rtase_mark_to_asic(desc, tp->rx_buf_sz);
++			continue;
++		}
++
++		skb = ring->skbuff[entry];
++		dma_sync_single_for_cpu(&tp->pdev->dev,
++					ring->mis.data_phy_addr[entry],
++					tp->rx_buf_sz, DMA_FROM_DEVICE);
++
++		ring->skbuff[entry] = NULL;
++
++		if (dev->features & NETIF_F_RXCSUM)
++			rtase_rx_csum(tp, skb, desc);
++
++		skb->dev = dev;
++		skb_put(skb, pkt_size);
++		skb_mark_for_recycle(skb);
++		skb->protocol = eth_type_trans(skb, dev);
++
++		if (skb->pkt_type == PACKET_MULTICAST)
++			dev->stats.multicast++;
++
++		rtase_rx_vlan_skb(desc, skb);
++		rtase_rx_skb(ring, skb);
++
++		dev_sw_netstats_rx_add(dev, pkt_size);
++
++skip_process_pkt:
++		workdone++;
++		cur_rx++;
++		entry = cur_rx % RTASE_NUM_DESC;
++		desc = ring->desc + sizeof(union rtase_rx_desc) * entry;
++		prefetch(desc);
++	} while (workdone != budget);
++
++	ring->cur_idx = cur_rx;
++	delta = rtase_rx_ring_fill(ring, ring->dirty_idx, ring->cur_idx, 1);
++
++	if (!delta && workdone)
++		netdev_info(dev, "no Rx buffer allocated\n");
++
++	ring->dirty_idx += delta;
++
++	if ((ring->dirty_idx + RTASE_NUM_DESC) == ring->cur_idx)
++		netdev_emerg(dev, "Rx buffers exhausted\n");
++
++	return workdone;
++}
++
+ static void rtase_rx_desc_init(struct rtase_private *tp, u16 idx)
+ {
+ 	struct rtase_ring *ring = &tp->rx_ring[idx];
+-- 
+2.34.1
 
