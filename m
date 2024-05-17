@@ -1,91 +1,136 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE57512F398;
-	Fri, 17 May 2024 16:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B6712F5A3;
+	Fri, 17 May 2024 16:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715964957; cv=none; b=tah1HunL1Ywltktf5CLXO52dt1yeOfqRrCviTgAk+2P/2gUb/8FPjSA5qcExFR7Ndnwb2EMGTtynLVvBPPnPIvKYnX/xG5AwtIEqbvpvQgXGFzBO6i1pFbZ4TxTp/Dx/aqHR3fUQZbQVE1cBp/SKFEv85nQqoeBofX2C9ATyfGI=
+	t=1715965061; cv=none; b=VmjnQ8718FQOw2nIkkU9QEQe+4Dw2gjdJivmMGORxHB74WszpB8dMxLia/fqlnPLeq3bXDPTaf1vfbo7XhD/9irPb7EKFWXntbaLl9kw1HvyiXsx4tBJt8bV34xAgMhSMHW4Rp34U+baX2rA+hdPJckTU/TlP/xI1TtXQSowjdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715964957; c=relaxed/simple;
-	bh=oS+zk2HYc2BOzJVr2+JxzzDk4PthvgRnZztNAdo8rGM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=qCW3JALVhI3TQUlphSO9UIxADVo3RtikWyFgC4kR4ccRivk3qTqY/iP/wth775xCwGNGA7aFeZhRvqTr9785GYiHhyS7VBqu/9bnIZzXce+XdQuBHUAghnd0k+11+5DEKjue40/YWSFfPmXR3uKvVnHB9GAmHF4dCPCQ8FITmlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rYPq6X2N; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715965061; c=relaxed/simple;
+	bh=G5y7fYlCIS/vQUhWu9GANqMr1dvW8z6d76b7fq7R1Q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=goqXs4yUmYG6/Jynk8GZfa3Zkm9Grr4x3c95kkaQYPqKBkXwpnLXvFMN6FGmgY0sVwTnKS8rkHpTg/un3ymkDrWl9gfRCQYHwYW3qR9fh0xuYj0oikTUZZY+q8ow9MUqvW/c0MArARxiicaYAv9BkIcIhg3coPIn2NZ7q6zgOHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCvO2tws; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rYPq6X2N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715964921; x=1716569721; i=markus.elfring@web.de;
-	bh=opJ3yzwn4W/yGFt1CijxFGqOb7XueZ6TGIqHxjcuutE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=rYPq6X2Nm3ZNWdgRT56yWY1UNvOnzO/3D0uY+m91uIkGYi2DHkhQUvl8ScoVvN1k
-	 vXX4N21+6TSnxw1Gi1j9mHQZOUj6jQrvHkp119OEhtmN9X+j6VQppa9pKgsBO0O7T
-	 6nx386VFiPY0phbLlCftuhMzxaLaHvOZ8ZDMIkMp402+bVheNAq0an7bSbfDaYSnF
-	 GEgvza4Hvn/DK2OL1wLC746u7Xf+sQ2PreOkmj4/R+05M6DGiPakVE24LUaQhpVsA
-	 UHHodsFafoPoPebIYHCK/+1EMcS+EGj1SCVA4T2ILp90VhOrYSSt3TYorIzRBZlc6
-	 NnBafwdaoS9r0A0M/w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MKdHE-1rrZuH0mpo-00TEYo; Fri, 17
- May 2024 18:55:21 +0200
-Message-ID: <81a50343-34e3-4a4d-80e9-0c674876cdb8@web.de>
-Date: Fri, 17 May 2024 18:55:19 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCvO2tws"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-69b24162dd6so5009996d6.2;
+        Fri, 17 May 2024 09:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715965059; x=1716569859; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=siRLjok91NGHey9v30Ita/YRAFgeSTbR5TDyJ6gAeEU=;
+        b=mCvO2twsl5MZFAIcWFPqe9C7TLNgdrQiVY6+PQwOLs8yKc2jJ0keE8POuB2s38mCRl
+         CYhFEOrO/WVDEtEd6sK0wIl2ZH9eVgF0ihJewfWSByobGuJhgBJzKoKk0xBtwLvXK6dH
+         Oqo/hbJ47CpIRD2yXopKVuBRVwH0g89Wg6exgnKwtjkSczGVtJ2WXsIirCXmH5R2hbAz
+         w/pN+KCnlvbdFVDepH0kZzRvya3dv8TcCcDyq0xhTPqIoo2uTs8KPqPDYqYBMKrP3ZFW
+         6eGKexACkAEHAFbFO17af+Ux0lUZx7bf9v/AEWqp8U3XZSdsiNFxoS6t9N+d8uMki/CA
+         BxKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715965059; x=1716569859;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=siRLjok91NGHey9v30Ita/YRAFgeSTbR5TDyJ6gAeEU=;
+        b=YsCN75u3ALwulfOYgWym6jjxZH7IRo75HFIUcZ+CKrTJqs69QvShKfDv8ylswqrtby
+         sk912Vv5VgHqJMpk3RPWrxSzeygfJW52unbtM3z+vzexAaglg2LVBcnnbi5e5v4IZp1A
+         M7/yw3P5pljJ4nKFOqkfFDUf5DdQ4Z+uAzInnAx1xBtTwnci4WiRyq4B8Mps5hV+R7lD
+         eo7J0+QIAwRY7gz8VXsr+IOim5vnk+vl7lEgzAATj70zumQ2fXTTE3kvNi0mFw0++G2Q
+         Mmk+XPf+vc3+avISxCgZOlmG9ZCBDqdZsCXZmyeemuUzAloSEE0Iq9G1tGGZ0Ox3pRvJ
+         kiUg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+VFlz6ZpiWMw++74RaVN09ZfxsPTcmHZ4qmqRPd18xDxOABcLEOVaWxo2bPrNNsYlurNJSPrfjf4nEcebTHqpMxAiNFi9aeA0RvT9
+X-Gm-Message-State: AOJu0YweLZqnq+84Alh2/bL3kfAUZ0y4Out4doe8ZY/EvVw7SEVvSjYN
+	I10FpPb9/jmEBwKPqxpZNcrOr9VJ4cHf9mTFhzxQaHKftEvlrkhuIbwUUlSD
+X-Google-Smtp-Source: AGHT+IF109mu25s47I7e8THQ48j4SsbIhIwhRuyyjhRDH5DT41RX6HzVXp/6L5wbvd6oxFryTX2Jcg==
+X-Received: by 2002:a05:6214:498d:b0:6a0:b3cc:ee0f with SMTP id 6a1803df08f44-6a16820682emr279546906d6.43.1715965059156;
+        Fri, 17 May 2024 09:57:39 -0700 (PDT)
+Received: from [10.7.1.107] (static-74-103-39-5.bltmmd.fios.verizon.net. [74.103.39.5])
+        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6a3e849f8e9sm11703836d6.33.2024.05.17.09.57.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 May 2024 09:57:38 -0700 (PDT)
+Message-ID: <a1cd16d2-1fbc-6543-c17c-a321ac72a2f3@gmail.com>
+Date: Fri, 17 May 2024 12:57:37 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>,
- linux-f2fs-devel@lists.sourceforge.net, kernel-janitors@vger.kernel.org,
- Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hao_hao.Wang@unisoc.com,
- =?UTF-8?B?546L56eRIChLZSBXYW5nKQ==?= <Ke.Wang@unisoc.com>,
- Zhiguo Niu <niuzhiguo84@gmail.com>
-References: <1715945202-30045-1-git-send-email-zhiguo.niu@unisoc.com>
-Subject: Re: [PATCH] f2fs: fix to check return value of
- f2fs_allocate_new_section
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <1715945202-30045-1-git-send-email-zhiguo.niu@unisoc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:F5vmjCW5AwisAA6fyRSakYagc++ce9s74l6fZprZXTpp00HIYJ9
- ZPVZZxE8Ppth6r+STxzWbnVtuy86HwVhP+V9kKlQQz4xmAQM8aQQorcVkxuIh8n/ELIMVlu
- yyZQDFGQcO/ohrju1o9n4jZSwl1SaYIln0gvIvgkurlqBdH8Bw+YpWMa7y/BwyMBIuuf2gW
- mO2yhHD+4mL4lyVcU2I3Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/BR6hDIGdNA=;YrAo6ZeUPbgYxIb9yjqSQRcXuE8
- EdOcrOthGfV2mqTsHCyjDj4RVAsyaAa7hKmV0BaoaScDPXMKjX5NxSPtOpRMqygwltGUBJyB0
- fNIFBslKb7KJjb6laFkDBWcouWZ5LTV0aC/EfuFYRTekkOsmPHJ9ySrEC8tFrptwrYbfd/6Hk
- 6uOWHuLck0UMdI6Q6fMEdHjSJXdJEeTnMBp0kYjgKd4nndRel80+DiA3AkF/2Wy780xvItGOU
- 97RHNmK+ZHAlq28v9ZI9FNsRD9NR2UBPdVQnVnqauB12KUvsGisKYHAjJl4pejTRInUM5PMyM
- QN5yWZpnb+GyiCRm9hbOv44HaEbFDLXtk64KKPCuoCke9BkpQfmNZTPKeIFsuySomBOqWmOpy
- QZNcfEUK7mokuxJzJE1EwDH0s/nAKlA8z2k9l9HnRT5h4EwntB7Cs6qQv9y4Lygbu1c7/WjZR
- Jpms47riUmEiFjRpXsGbL9ZrKWCArHbUWv3nOUGZ3q/sGygojZHWpGquF9zE6iACXf3NvFLbW
- PmvzoX7d/Q2OHWIBDMALZjL9/5ZPYX++ula/p3oCJCdwW6u4qKaimVFNKd9qS7Lj21oBpg16W
- 5Wz4AwALbWiXn+isBkwWRhbXqHNJ2PMjEJudZEQc2OYd1cuCFTU8S2T+6YE9icovNBjoldu5Z
- GGgYmCtVKtZXr5K97TRSlIFb70xc6nUd7KCiPVCQmBwBwkEwig6n5EaswclRtUZyFgwW98Jvc
- de96CE88C+euWU4i2waTWpd8iwOMPV5aTJkSVGV6AO8gHxHUCpWBL7303BMd/8T/TCVSW2N3I
- 60KNP29o317ojSYDcQAWRsY+G4Ob+wGZFKytB9VGvvumc=
-
-=E2=80=A6
-> missed this allocated path, fix it.
-
-* Will another imperative wording be desirable for an improved change desc=
-ription?
-
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
-
-* How do you think about to append parentheses to the function name
-  in the summary phrase?
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH] thermal: adding check if the thermal firmware is running
+Content-Language: en-US
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+ miriam.rachel.korenblit@intel.com, kvalo@kernel.org,
+ rafael.j.wysocki@intel.com, daniel.lezcano@linaro.org,
+ johannes.berg@intel.com, dmantipov@yandex.ru
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240517141655.2797-1-trintaeoitogc@gmail.com>
+From: Jonathan Bither <jonbither@gmail.com>
+In-Reply-To: <20240517141655.2797-1-trintaeoitogc@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Regards,
-Markus
+On 5/17/24 10:16, Guilherme Giacomo Simoes wrote:
+> In the dmesg is showing the message "failed to read out thermal zone"
+> as if the temperature read is failed by don't find the thermal zone.
+>
+> After researching and debugging, I see that this specific error is
+> occurrenced because the thermal try read the temperature when is started,
+> but the firmware is not running yet.
+>
+> For more legibiliti i change the tt.c for return EAGAIN when this was occurrence.
+> After this change, in my computer I compile and install kernel in /boot
+> and in my dmesg the message "failed to read out thermal zone" is not show
+> any more.
+>
+> I would like to thanks for Rafael Wysocki <refael.j.wysocki@intel.com> for
+> your suggestions in mu first patch that results in this another patch.
+> ---
+>   drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 10 ++++++++--
+>   1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> index 8083c4b2ab6b..68ab9966330c 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+> @@ -620,8 +620,14 @@ static int iwl_mvm_tzone_get_temp(struct thermal_zone_device *device,
+>   
+>   	mutex_lock(&mvm->mutex);
+>   
+> -	if (!iwl_mvm_firmware_running(mvm) ||
+> -	    mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
+> +	const int res = iwl_mvm_firmware_running(mvm);
+> +
+> +	if (!res) {
+> +		ret = -EAGAIN;
+> +		goto out;
+> +	}
+> +
+
+You could skip using the res variable and move the mutex lock here and 
+simplify the above a bit. Ex:
+
+         int temp;
+
+-       mutex_lock(&mvm->mutex);
++       if (!iwl_mvm_firmware_running(mvm))
++               return -EAGAIN;
+
+-       if (!iwl_mvm_firmware_running(mvm) ||
+-           mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
++       mutex_lock(&mvm->mutex);
++       if (mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
+                 ret = -ENODATA;
+                 goto out;
+         }
+
+> +	if (mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
+>   		ret = -ENODATA;
+>   		goto out;
+>   	}
