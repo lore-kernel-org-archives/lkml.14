@@ -1,168 +1,155 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E491A17552;
-	Fri, 17 May 2024 07:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384E9171C1
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715930499; cv=none; b=JECgMJMXomj3m9aexBFt5YKUekYSN94Xv4YxNQoSc+NRYQmVr7SrUJQq936k6BeA/9LN+7H41Me0eDpkHwGA8Z4aN8H0GJcAghrGk4bHtIVXDGo93T49vWKkeq/Y5xGUTP+4ABaB2sZSP+NEx2664M+q80lnh2N93wzn9CPK+BU=
+	t=1715930588; cv=none; b=eDk5R7PKQIYaJBY/kTIspgioQ/x6yVvsRD9BGxsknI8u5gkeKgEiViGOizbPZ2babBvTZwylhsNdwgsE3Z1M+12++WXCe6S4sWCXHc2jP8aANzeIwx2VS56XdcGxUKwZvBSvMCFtLkBto97leLLD5ufkbvp3eq5wFKJpyPK5nw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715930499; c=relaxed/simple;
-	bh=fFe9A+03pnKocm377PKFv9FBQBGD+nfpn00TMsnyDR8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WRFMKzO8epS3JSTzntT3ryr9Ck8rLlXGajP7W4CyLKkxzAV0M/gHOZqNEe6fp7S9moCJvTx7V8T1WpC/4GB+7dJiM3Ix4IT1W0sVX3Kx33XJd++2MkJSxh5RenWFt/M3NeAybfMZYEQ1pW+3Fn/jX7FlClfp3SynyLoZWATeUUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ur45jLTc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715930588; c=relaxed/simple;
+	bh=AnWeLBQt5ac+tcuC2FaZYK43qTCgCb5yG5KTMVRwPTU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HGPbI+5GEjSXSEOpaermEJqGvbbrBeJnQLqLJ+Sw2kTprgAOjn+Oft79H/eXT34F8w8kitStXReuToQ6ZvWxbUIwllFAWS0/vgZP5txsuNXWHZqLuoaZQEpbLsiNoSxkuCMMTTaHa7V0UqngyeZFPAGgzB0Z0KEHW3WjCGTPh9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M3BAVl3/; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ur45jLTc"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GKMsIt008130;
-	Fri, 17 May 2024 07:21:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=V13+1xk8KEU7CNK8QkeG0dJeVpQfsz+902pDd7kRldQ=; b=Ur
-	45jLTcA8wi2c98jS/1YCUfhD4N7fuAAyAXzCbJHeQ2aXe0UfSWe7KGX9lea9pC+I
-	6UlrYj8+qtoYfH7IzCYNJ7fJbO4VXAfWvkR1qH+VVs6hBEmTv+auRnmKPcvwlv5p
-	7N7SPU4gjNJ+zB6TAAOciiRy+nZVzQfCPuu5t2o0qorTVqbMBNuJ4aKyD5vYJp5c
-	832HI8pw06oDTvsUbLPGHD0s2uhbLJBhZzwcFoAq402plYGMpj2hMTAQspHXFTpJ
-	wi1Il/xA0iG0MoZa1U2FmLzexIDkKPA4KU7xvpwYUo7PQr/XO03FaAvoi56NO/Ut
-	NHdkF2z9734tSqfJEdrw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y45vbfsts-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 07:21:20 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44H7LIVB018736
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 07:21:18 GMT
-Received: from [10.216.53.65] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
- 2024 00:21:11 -0700
-Message-ID: <1238fa39-f0da-fb4c-0668-caa946505373@quicinc.com>
-Date: Fri, 17 May 2024 12:51:06 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M3BAVl3/"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-572a93890d1so4778904a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 00:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715930585; x=1716535385; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x/XVqZNav4jeDccL5yKKaBFZcarnd4dPclOkrq6OyOY=;
+        b=M3BAVl3/As8CDTbGlpJZrJ3BxEP+Q4d53yCLc/d+0uSTFbVErFjhiBvlkSyBVzQbTw
+         6Dt+U4wCRnfKGBe99HML5qbJJJetREEW6Wz/pdL/k9sQ//RBkhONnfbTllwyk9hvpSVc
+         NIy2fMAXYxR9qvZmy05V34iIq6cEFaGBdXB641BW/vAAS1GqPE2Nm7SGzfYgemLusrUZ
+         pm+9zWs4ALPP51mXrED4TdYCnh91bIQXuUBsqb/+HGLT2pDqTwev+Ic4GL/Q/pr9jkvB
+         0C/t82luF86DCDzki3mMti7k7WXRn5Jd5PWhkPN+imQOV0ot4UZKd0FlFxBIZIsXpcVe
+         dSLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715930585; x=1716535385;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=x/XVqZNav4jeDccL5yKKaBFZcarnd4dPclOkrq6OyOY=;
+        b=rbSrfDQxK9EVFKqkwrqEWJS3muWRpfq1943SkfQUuL/JfKqC2jsXMBzotodMD7nR2k
+         KM5d/Snwf6eviMmAepadZ1fEx4b2yVGO0B6Jh5NTIIr0yi6L6Io/QpiVP72lYZbzKQET
+         feZaIrwkrVSBXi+NIRBBBA35FHHpC3V6G6FpGvHtUqci7gBp2wg4WT6pKk7wUpmrkOQG
+         aCFephK0RWMng1/5pFluWLFZVULq1H8TFl5zgg+8oxJpxdyfkmvCCZ0OdVdrkpwXSewe
+         kbsSOthuLQtJa4dHmTt+0eJ9kMqE+ONbhInhV9CR0siFvXgUzMiaungiJS8J9i34dCMx
+         IxyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVS9aAHDAS+HFor/1vHaHIxTn/mUZPgg6YCBkQuGc6ymJl7lBUdhtYP0FpSZ5R0ofj8+O3nuFPLutsWMECGmXgKgWLWBMTKj2e3DID
+X-Gm-Message-State: AOJu0YwRIw80lXqj39wFD/qKrnvnRCBeWnMqQUnkHQ74rtW+bkUoyY2k
+	VnopGVFoQc/5/liqh+238FZfsY52IQQsa3GuntyZ+2rMuBxouvnBqwEpIr3Yt2o=
+X-Google-Smtp-Source: AGHT+IGevcFSUYvf1bUw8ixrHIf9cut7/bdOTveY3eTYS2It7gi7T93mcyQrJSe5Mtp5z+Tw/6Q5Iw==
+X-Received: by 2002:a17:906:3512:b0:a59:a282:5dbd with SMTP id a640c23a62f3a-a5a2d676474mr2051833166b.66.1715930585310;
+        Fri, 17 May 2024 00:23:05 -0700 (PDT)
+Received: from [10.91.0.73] ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d4b2sm1070364066b.27.2024.05.17.00.23.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 May 2024 00:23:04 -0700 (PDT)
+Message-ID: <244ceca4-0863-436e-bf9e-335ab74d1e67@linaro.org>
+Date: Fri, 17 May 2024 09:23:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 6/7] remoteproc: qcom_q6v5_pas: Add hwspinlock bust on
- stop
-Content-Language: en-US
-To: Chris Lew <quic_clew@quicinc.com>, Bjorn Andersson <andersson@kernel.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon
-	<will@kernel.org>, Waiman Long <longman@redhat.com>,
-        Boqun Feng
-	<boqun.feng@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Richard Maina <quic_rmaina@quicinc.com>
-References: <20240516-hwspinlock-bust-v1-0-47a90a859238@quicinc.com>
- <20240516-hwspinlock-bust-v1-6-47a90a859238@quicinc.com>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20240516-hwspinlock-bust-v1-6-47a90a859238@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Q7iFiLrN1qh9344l0MaOtp_Y2B9i4K0w
-X-Proofpoint-ORIG-GUID: Q7iFiLrN1qh9344l0MaOtp_Y2B9i4K0w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
- adultscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405170056
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v8 0/6] Break out as separate driver and add BOE
+ nv110wum-l60 IVO t109nw41 MIPI-DSI panel
+To: Doug Anderson <dianders@chromium.org>,
+ Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
+ dmitry.baryshkov@linaro.org
+Cc: sam@ravnborg.org, daniel@ffwll.ch, linus.walleij@linaro.org,
+ krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org, conor+dt@kernel.org,
+ airlied@gmail.com, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ xuxinxiong@huaqin.corp-partner.google.com
+References: <20240516072039.1287065-1-yangcong5@huaqin.corp-partner.google.com>
+ <CAD=FV=WNgF7X2=Q-yujVfbTpir3-5nN85Gc+hV+xXY6ZOWSwSA@mail.gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <CAD=FV=WNgF7X2=Q-yujVfbTpir3-5nN85Gc+hV+xXY6ZOWSwSA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 5/17/2024 4:28 AM, Chris Lew wrote:
-> From: Richard Maina <quic_rmaina@quicinc.com>
+On 16/05/2024 15:31, Doug Anderson wrote:
+> Hi,
 > 
-> When remoteproc goes down unexpectedly this results in a state where any
-> acquired hwspinlocks will remain locked possibly resulting in deadlock.
-> In order to ensure all locks are freed we include a call to
-> hwspin_lock_bust() during remoteproc shutdown.
+> On Thu, May 16, 2024 at 12:21 AM Cong Yang
+> <yangcong5@huaqin.corp-partner.google.com> wrote:
+>>
+>> Discussion with Doug and Linus in V1, we need a
+>> separate driver to enable the hx83102 controller.
+>>
+>> So this series this series mainly Break out as separate driver
+>> for Starry-himax83102-j02 panels from boe tv101wum driver.
+>>
+>> Then add BOE nv110wum-l60 and IVO t109nw41 in himax-hx83102 driver.
+>>
+>> Add compatible for BOE nv110wum-l60 and IVO t109nw41
+>> in dt-bindings
+>>
+>> Note:this series depend Dous'series [1]
+>> [1]: https://lore.kernel.org/all/20240501154251.3302887-1-dianders@chromium.org/
+>>
+>> Changes in v8:
+>> - Neil think need sent separately to ARM SoC maintainer with "arm64: defconfig: Enable HIMAX_HX83102 panel patch ", so remove it.
+>> - PATCH 1/6: No change.
+>> - PATCH 2/6: Fix Doug comment "return ret" change to "goto poweroff".
+>> - PATCH 3/6: No change.
+>> - PATCH 4/6: No change.
+>> - PATCH 5/6: No change.
+>> - PATCH 6/6: No change.
+>> - Link to v7:https://lore.kernel.org/all/20240515014643.2715010-1-yangcong5@huaqin.corp-partner.google.com/
 > 
-> For qcom_q6v5_pas remoteprocs, each remoteproc has an assigned id that
-> is used to take the hwspinlock. Remoteproc should use this id to try and
-> bust the lock on remoteproc stop.
+> This all looks good to me now.
 > 
-> This edge case only occurs with q6v5_pas watchdog crashes. The error
-> fatal case has handling to clear the hwspinlock before the error fatal
-> interrupt is triggered.
-> 
-> Signed-off-by: Richard Maina <quic_rmaina@quicinc.com>
-> Signed-off-by: Chris Lew <quic_clew@quicinc.com>
-> ---
->   drivers/remoteproc/qcom_q6v5_pas.c | 28 ++++++++++++++++++++++++++++
->   1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index 54d8005d40a3..57178fcb9aa3 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -10,6 +10,7 @@
->   #include <linux/clk.h>
->   #include <linux/delay.h>
->   #include <linux/firmware.h>
-> +#include <linux/hwspinlock.h>
->   #include <linux/interrupt.h>
->   #include <linux/kernel.h>
->   #include <linux/module.h>
-> @@ -52,6 +53,7 @@ struct adsp_data {
->   	const char *ssr_name;
->   	const char *sysmon_name;
->   	int ssctl_id;
-> +	int hwlock_id;
->   
->   	int region_assign_idx;
->   	int region_assign_count;
-> @@ -84,6 +86,9 @@ struct qcom_adsp {
->   	bool decrypt_shutdown;
->   	const char *info_name;
->   
-> +	struct hwspinlock *hwlock;
-> +	int hwlock_id;
-> +
->   	const struct firmware *firmware;
->   	const struct firmware *dtb_firmware;
->   
-> @@ -399,6 +404,12 @@ static int adsp_stop(struct rproc *rproc)
->   	if (handover)
->   		qcom_pas_handover(&adsp->q6v5);
->   
-> +	if (adsp->hwlock) {
-> +		ret = hwspin_lock_bust(adsp->hwlock, adsp->hwlock_id);
-> +		if (ret)
-> +			dev_info(adsp->dev, "failed to bust hwspinlock\n");
-> +	}
-> +
+> Neil: do you want to apply this series plus Dmitry's [1] atop it, or
+> would you like me to? Dmitry's series has a fix in it but I don't
+> think it's critical enough to warrant the merge conflict that would
+> come with putting it through drm-misc-fixes.
 
-As you said above, you seem to cover only wdog case and fatal cases
-are already handled at remote;
 
-You are clearing here for both ? is this right understanding ?
+Yes, it's not critical enough, I'll apply this one now and switch to Dmitry's one.
 
--Mukesh
+Thanks,
+Neil
+
+> 
+> [1] https://lore.kernel.org/r/20240512-dsi-panels-upd-api-v2-0-e31ca14d102e@linaro.org/
+
