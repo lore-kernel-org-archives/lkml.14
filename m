@@ -1,173 +1,278 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F3479CC
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063BE79EA
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 14:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715957021; cv=none; b=OarohaEV0JX7DW3CEthTllP7QmJZVJNtcXOt1bKIEBXG67DkGHdTNZDUbiglVgKBeFjHYumQyy761pEsmsj9j0+a1d46mZIJQ3nNUa6iyQTW3R0LpoDADj22IIRM96Ytq9lLQRpbgZhumJBaQKVpS+BEQLjcZoTnTZGC2xmMVUY=
+	t=1715957089; cv=none; b=lCjsNSlskEWMHZi/hsk2BdwU77iWokEcm/cf7mLbmuqwKilVbt8HXqBPfJ3H/OjTtvd3DKJ22Pf8RlIEQyDRgwd9EYGAB5moZi256n5I+k45yEgcFY9eXbyBzRmGOmWwiKas8tVI19roRheODQTD+16l3wShR8HHzy3q0Fx37P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715957021; c=relaxed/simple;
-	bh=5RHEgT4TRXWuR2TCtYoK0E9wYhkS7QE0koMrQ034yfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ead96tJmP5L+84Om8rDM/M6Xhfig6MoeoB3WFa81LSYJgqedyASekFj6WJJQ6a1BrOpVmatILnPVPxAG5AmbeW/kVbEmSb5fSI/Ut5dCCZff+noV8QszM3xU3dNxKWZLfw3Agze0R5PknsoqpoTGGeUt4KsLwqdmY7g7Vpa0L9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fy08KIsZ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1715957089; c=relaxed/simple;
+	bh=qXlhpnSQo4Yta6PYLDAuM78FWR18eYetR5pk7ir6sZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F2LdshRRBgQOFma0xOD0sXB4Kvc1aemmPOKGQzeNkGF1MYeqYENA+4X9CeIgT0ZVba9HLBS9xMWtq1GRxncpJOy7xx1I/GgPAM2oEh+DQ3kpjvmNeABfyqSjcYkgNJk/WBxmVAqJiNVRtKGnpkKI/uGtGKsgz/rlv86JQMSFb8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=PpNnz19Y; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=PpNnz19Y; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fy08KIsZ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 56D5E40E0177;
-	Fri, 17 May 2024 14:43:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id mRYkkgVPbLtB; Fri, 17 May 2024 14:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1715957014; bh=nNhARHRzM+VvAMzzt6iIDXpl51Q18SFqa8WDQFl7zJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fy08KIsZosFStvfj1WTdLhGI7NKVAOsUsZVJleADawRD0LG/LghLnENAaELOxarqK
-	 L7kmlcDUAads8HJPvs60uYKYBoRwgNc6OG/sewA+e7lwTqtxr0L/l0m/IzQHzT12vx
-	 ZyGAMSRRCAI2qbOoVSVpxW7IgGkWkolJfpW5REwAqy4lgOA7svdDgov9pBLKKGuAUX
-	 7XYCJQTPTkgrqK5LcPKY21B9h9Z3v6wgICYRvHa3mIXoXkZNt3N6QVP118KTN0gMq5
-	 9Wt7iqdM7YzaHL7wVkiiqU6F1AGf3N3xbK9qO8dGif8RSiiQgoj30ZvpZm9qxn5dlz
-	 EWvVhg58gu3WkZMxpCpW2YSu7BXAuP2Qev00yuCsmlMLQ7szyOAiWzOeONJkQRFFqF
-	 0CQ3aVhdO9ERnLuSMyB/H09CwPOl8eMrJvlFh62EFEy/ytKYQPRiA5CcX1m34xWU0i
-	 u8X6wWCGQ48ff21Fv9ws0kQHPtWVkIorWwHng35o5tAch/mymTCvyPGjf9DyQo88mQ
-	 uS5syOLH3m3aiKgQl6pm60x5WApdInOfqc+akuEURzLaa8tiqz1hjW454z7jRQJLtZ
-	 +ApmScmoOj3yrAxbwidikrjYu63AT1u3i6IH/Le+2ef6qxVUTnL3dUrtnEp0xc/lIA
-	 XXmgPSOy574w7FWZLz4Hhu6g=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="PpNnz19Y";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="PpNnz19Y"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DF2B040E016A;
-	Fri, 17 May 2024 14:43:17 +0000 (UTC)
-Date: Fri, 17 May 2024 16:43:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>,
-	Thomas Renninger <trenn@suse.de>,
-	Greg Kroah-Hartman <gregkh@suse.de>,
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2] x86/cpu: Fix x86_match_cpu() to match just
- X86_VENDOR_INTEL
-Message-ID: <20240517144312.GBZkdtAOuJZCvxhFbJ@fat_crate.local>
-References: <20240516162925.79245-1-tony.luck@intel.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 222E13755F;
+	Fri, 17 May 2024 14:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715957086; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qXlhpnSQo4Yta6PYLDAuM78FWR18eYetR5pk7ir6sZM=;
+	b=PpNnz19Y1KQtWPHfjRi+Jp4e7TibYY86M8vWrpQ8kG2MLDT0DvTj0d5tyP7giTUiN7qn56
+	eCWglPhMs0WPfviov0QcaQ+DffzNlp2aNXwEceeoWyyXvOPLDkPmbP9JUe7aNfGJKg2trr
+	N+1TB/mIBz6VUnZnI1TkGhavVg70xV8=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715957086; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qXlhpnSQo4Yta6PYLDAuM78FWR18eYetR5pk7ir6sZM=;
+	b=PpNnz19Y1KQtWPHfjRi+Jp4e7TibYY86M8vWrpQ8kG2MLDT0DvTj0d5tyP7giTUiN7qn56
+	eCWglPhMs0WPfviov0QcaQ+DffzNlp2aNXwEceeoWyyXvOPLDkPmbP9JUe7aNfGJKg2trr
+	N+1TB/mIBz6VUnZnI1TkGhavVg70xV8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CD47F13942;
+	Fri, 17 May 2024 14:44:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id d1aQMF1tR2YZRQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Fri, 17 May 2024 14:44:45 +0000
+Message-ID: <03d27b6a-be96-44d7-b4ea-aa00ccab4cc5@suse.com>
+Date: Fri, 17 May 2024 16:44:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240516162925.79245-1-tony.luck@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/kvm/tdx: Save %rbp in TDX_MODULE_CALL
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+References: <20240517121450.20420-1-jgross@suse.com>
+ <ohvjbokpaxagc26kxmlrujab7cw3bekgi5ln7dt46cbsaxcqqh@crvqeohfazmf>
+ <f63e1217-3dbe-458d-8c14-7880811d30ba@suse.com>
+ <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
+Content-Language: en-US
+From: Juergen Gross <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------U01Ii1vaf2f58pLpq4QqIpD4"
+X-Spam-Flag: NO
+X-Spam-Score: -5.19
+X-Spam-Level: 
+X-Spamd-Result: default: False [-5.19 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_UNKNOWN(0.10)[application/pgp-keys];
+	XM_UA_NO_VERSION(0.01)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	TO_DN_SOME(0.00)[];
+	HAS_ATTACHMENT(0.00)[]
 
-On Thu, May 16, 2024 at 09:29:25AM -0700, Tony Luck wrote:
-> -#define X86_VENDOR_INTEL	0
->  #define X86_VENDOR_CYRIX	1
->  #define X86_VENDOR_AMD		2
->  #define X86_VENDOR_UMC		3
-> +#define X86_VENDOR_INTEL	4
->  #define X86_VENDOR_CENTAUR	5
->  #define X86_VENDOR_TRANSMETA	7
->  #define X86_VENDOR_NSC		8
-> -- 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------U01Ii1vaf2f58pLpq4QqIpD4
+Content-Type: multipart/mixed; boundary="------------140NpknsPueMmPLVOQnxJSsw";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <03d27b6a-be96-44d7-b4ea-aa00ccab4cc5@suse.com>
+Subject: Re: [PATCH] x86/kvm/tdx: Save %rbp in TDX_MODULE_CALL
+References: <20240517121450.20420-1-jgross@suse.com>
+ <ohvjbokpaxagc26kxmlrujab7cw3bekgi5ln7dt46cbsaxcqqh@crvqeohfazmf>
+ <f63e1217-3dbe-458d-8c14-7880811d30ba@suse.com>
+ <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
+In-Reply-To: <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
 
-From my last review:
+--------------140NpknsPueMmPLVOQnxJSsw
+Content-Type: multipart/mixed; boundary="------------tmx0PgGFHrXp2ws2H0Ct56vf"
 
-> But the Intel vendor has been 0 for what, 30 years?
+--------------tmx0PgGFHrXp2ws2H0Ct56vf
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-> Are you sure no other code in the tree relies on that? Audited?
+T24gMTcuMDUuMjQgMTY6MzksIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gT24gRnJp
+LCBNYXkgMTcsIDIwMjQgYXQgMDQ6MDg6MDNQTSArMDIwMCwgSnVlcmdlbiBHcm9zcyB3cm90
+ZToNCj4+IE9uIDE3LjA1LjI0IDE1OjU1LCBLaXJpbGwgQS4gU2h1dGVtb3Ygd3JvdGU6DQo+
+Pj4gT24gRnJpLCBNYXkgMTcsIDIwMjQgYXQgMDI6MTQ6NTBQTSArMDIwMCwgSnVlcmdlbiBH
+cm9zcyB3cm90ZToNCj4+Pj4gV2hpbGUgdGVzdGluZyBURFggaG9zdCBzdXBwb3J0IHBhdGNo
+ZXMsIGEgY3Jhc2ggb2YgdGhlIGhvc3QgaGFzIGJlZW4NCj4+Pj4gb2JzZXJ2ZWQgYSBmZXcg
+aW5zdHJ1Y3Rpb25zIGFmdGVyIGRvaW5nIGEgc2VhbWNhbGwuIFJlYXNvbiB3YXMgYQ0KPj4+
+PiBjbG9iYmVyZWQgJXJicCAoc2V0IHRvIDApLCB3aGljaCBvY2N1cnJlZCBpbiBzcGl0ZSBv
+ZiB0aGUgVERYIG1vZHVsZQ0KPj4+PiBvZmZlcmluZyB0aGUgZmVhdHVyZSBOT1QgdG8gbW9k
+aWZ5ICVyYnAgYWNyb3NzIFREWCBtb2R1bGUgY2FsbHMuDQo+Pj4+DQo+Pj4+IEluIG9yZGVy
+IG5vdCBoYXZpbmcgdG8gYnVpbGQgdGhlIGhvc3Qga2VybmVsIHdpdGggQ09ORklHX0ZSQU1F
+X1BPSU5URVIsDQo+Pj4+IHNhdmUgJXJicCBhY3Jvc3MgYSBzZWFtY2FsbC90ZGNhbGwuDQo+
+Pj4NCj4+PiBUaGVyZSdzIGEgZmVhdHVyZSBpbiBURFggbW9kdWxlIDEuNSB0aGF0IHByZXZl
+bnRzIFJCUCBtb2RpZmljYXRpb24gYWNyb3NzDQo+Pj4gVERILlZQLkVOVEVSIFNFQU1DQUxM
+LiBTZWUgTk9fUkJQX01PRCBpbiBURFggTW9kdWxlIDEuNSBBQkkgc3BlYy4NCj4+Pg0KPj4+
+IEkgdGhpbmsgaXQgaGFzIHRvIGJlIGVuYWJsZWQgZm9yIGFsbCBURHMgYW5kIFREWCBtb2R1
+bGVzIHRoYXQgZG9uJ3QNCj4+PiBzdXBwb3J0IGl0IG5lZWQgdG8gYmUgcmVqZWN0ZWQuDQo+
+Pj4NCj4+DQo+PiBZZXMsIEkga25vdy4gSSdtIHVzaW5nIHRoZSBwYXRjaCBzZXJpZXM6DQo+
+Pg0KPj4gICAgW1BBVENIIHYxOSAwMDAvMTMwXSBLVk0gVERYIGJhc2ljIGZlYXR1cmUgc3Vw
+cG9ydA0KPj4NCj4+IHdoaWNoIEkgdGhpbmsgZG9lcyBleGFjdGx5IHRoYXQgKHNlZSBzZXR1
+cF90ZHBhcmFtcygpIGFuZCB0ZHhfbW9kdWxlX3NldHVwKCkpLg0KPiANCj4gTG9va3MgbGlr
+ZSB0aGUgY2hlY2sgaXMgYnJva2VuOg0KPiANCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
+YWxsLzQ2bWg1aGluc3Y1bXVwMng3anY0aXUyZmxveG1ham8yaWdyeGIzaGFydTNjZ2p1a2Jn
+QHY0NG5zcGpvem00aC8NCj4gDQo+PiBOZXZlcnRoZWxlc3MgdGhlIGNsb2JiZXJpbmcgaGFw
+cGVuZWQsIGFuZCBzYXZpbmcvcmVzdG9yaW5nICVyYnAgbWFkZSB0aGUNCj4+IGlzc3VlIHRv
+IGdvIGF3YXkuIEkgc3VzcGVjdCB0aGVyZSBpcyBhIHBhdGggbGVmdCBzdGlsbCBjbG9iYmVy
+aW5nICVyYnAuDQo+IA0KPiBXaGF0IGlzIHlvdXIgVERYIG1vZHVsZSB2ZXJzaW9uPyBNeSBn
+dWVzcyBpcyB0aGF0IE5PTV9SQlBfTU9EIGlzIG5vdA0KPiBzdXBwb3J0ZWQgYnkgaXQgYW5k
+IGdpdmVuIHRoYXQgdGhlIGNoZWNrIGlzIGJyb2tlbiBub2JvZHkgZW5mb3JjZXMgaXQuDQoN
+Ckp1c3QgYW5vdGhlciBkYXRhIHBvaW50OiBCZWZvcmUgdXNpbmcgdGhpcyBtYWNoaW5lIEkg
+d2FzIHRlc3Rpbmcgb24NCmFub3RoZXIgb25lIHdpdGggb2xkZXIgZmlybXdhcmUuIFRoYXQg
+b25lIHJlYWxseSBkaWRuJ3Qgc3VwcG9ydCBOT01fUkJQX01PRA0KYW5kIEkgbmVlZGVkIHRv
+IGJ1aWxkIHRoZSBrZXJuZWwgd2l0aCBDT05GSUdfRlJBTUVfUE9JTlRFUiBlbmFibGVkIHRv
+IGdldA0KcGFzdCB0aGUgY2hlY2sgeW91IGFyZSBtZW50aW9uaW5nIGFib3ZlLg0KDQoNCkp1
+ZXJnZW4NCg==
+--------------tmx0PgGFHrXp2ws2H0Ct56vf
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-But nope, apparently that's too much to ask. :-(
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-modinfo ./arch/x86/events/intel/intel-uncore.ko
-filename:       ./arch/x86/events/intel/intel-uncore.ko
-license:        GPL
-srcversion:     ECE38449B18DD83223B93FD
-alias:          cpu:type:x86,ven0000fam0006mod00B6:feature:*
-alias:          cpu:type:x86,ven0000fam0006mod00AF:feature:*
-alias:          cpu:type:x86,ven0000fam0006mod00BE:feature:*
-			     ^^^^^^^^^
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-Would everything still work if it said "ven0004" now?
+--------------tmx0PgGFHrXp2ws2H0Ct56vf--
 
-So tglx and I just did some poking and we think the best solution would
-be to add a __u16 flags field to struct x86_cpu_id right...
+--------------140NpknsPueMmPLVOQnxJSsw--
 
-struct x86_cpu_id {
-        __u16                      vendor;               /*     0     2 */
-        __u16                      family;               /*     2     2 */
-        __u16                      model;                /*     4     2 */
-        __u16                      steppings;            /*     6     2 */
-        __u16                      feature;              /*     8     2 */
+--------------U01Ii1vaf2f58pLpq4QqIpD4
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-        /* XXX 6 bytes hole, try to pack */
+-----BEGIN PGP SIGNATURE-----
 
-<--- HERE
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmZHbV0FAwAAAAAACgkQsN6d1ii/Ey/4
+AAf+K86L3su9bl0FPIwPaISdUAzg17w+gepE5t2UEBNk61m5qRBXn7pmyNjCHjXYn+DMhPdgRULj
+EPif129t7ix1bSC1wfkgF9gmxCi+adVnWc5O/tKHQ/NEKbRM6QBX1iZD4regHDj5rk7jleInN0TI
+YBVfOw53iaWSmjob7P+5afyd2/cHQ414o70z0nfE1WRURKIa66m8429fpq8DWWv/e38BNoJgnIuM
+7e2S4bcLpW33TOTrNdQvACu9cGM6sysMIiSY/lp4zF70q4Gto6Che5V8gNAzdzRdQQqsq0uA+v/r
+Aa2xVAHGykEeyAlTY/kggkXOQmuuuHfwfK1Hyn820g==
+=BV1o
+-----END PGP SIGNATURE-----
 
-        kernel_ulong_t             driver_data;          /*    16     8 */
-
-        /* size: 24, cachelines: 1, members: 6 */
-        /* sum members: 18, holes: 1, sum holes: 6 */
-        /* last cacheline: 24 bytes */
-};
-
-and the 32-bit version has the same hole:
-
-struct x86_cpu_id {
-        __u16                      vendor;               /*     0     2 */
-        __u16                      family;               /*     2     2 */
-        __u16                      model;                /*     4     2 */
-        __u16                      steppings;            /*     6     2 */
-        __u16                      feature;              /*     8     2 */
-
-        /* XXX 2 bytes hole, try to pack */
-
-<--- HERE
-
-        kernel_ulong_t             driver_data;          /*    12     4 */
-
-        /* size: 16, cachelines: 1, members: 6 */
-        /* sum members: 14, holes: 1, sum holes: 2 */
-        /* last cacheline: 16 bytes */
-};
-
-And then do:
-
-struct x86_cpu_id {
-        __u16 vendor;
-        __u16 family;
-        __u16 model;
-        __u16 steppings;
-        __u16 feature;  /* bit index */
-	__u16 flags;
-        kernel_ulong_t driver_data;
-};
-
-#define X86_CPU_ID_FLAG_VENDOR_VALID		BIT(0)
-
-and then have the macros in arch/x86/include/asm/cpu_device_id.h set
-that valid flag and then have x86_match_cpu() check it.
-
-Then you don't risk a userspace breakage and that x86_match_cpu() crap
-thing is fixed.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--------------U01Ii1vaf2f58pLpq4QqIpD4--
