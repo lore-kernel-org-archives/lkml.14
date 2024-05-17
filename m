@@ -1,251 +1,241 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1944883D;
-	Fri, 17 May 2024 14:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715957111; cv=fail; b=BRTzXsJbxmEOoHUFKtlQB6DYDuVMNIgCw7LoO8k6GdwlzDyeXnupdYeTZ9QcCm8xZBDUe++7djjLNtCR8stGPZlTIWOq9e8eiKYhuU5FYcE6mqfZ0nYJtWLB9YCWnGhpOX/ZAFw/iBuqqxUh1y01Z2SHYSqtjVhRVflnsFHvDGk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715957111; c=relaxed/simple;
-	bh=kzwJiukXHcPFI1lXgHQ6+m1bRSNtcPxkonJ+QRUHTpg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CVpS6mZAtwDa62Emzu5uI1rWm54AdeG+xfCAA8GsZB0WY41lZKXWJZtmYhhuXOj6lt8h9PYigBZC8qotFQMoiLDiB07X1kB77Ad4siG8hEdeK1f0kY8vdsOQzjessRuiqLiCTJAX5G8yhkLxcQ+GDGABebY3QbFs5UOEWYAtGaY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cmzCyulC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=TfbJyHYY; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA19379F5;
+	Fri, 17 May 2024 14:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715957179; cv=none; b=IYiX5tm9jYBgn7CqqwLJysrvwojQvhpBZU5Wi7HK0UqzKq9XZNn33E1LhPxg908n0suIlPP5DG8UUg0RUS5itIa6RIEsCH/MbxiNgpuFJZB6ALgHhiTn2F0aq/4+xFVrCiLY9qcp/2WEala9f0ytJFf6DVlcmcQb82FgWOr9yl8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715957179; c=relaxed/simple;
+	bh=dvlyMnDZEzGzhw+M5Rk7VgDP3ma0N8aNDBsghbfPKV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=JBKNBtqeivseq9q0ZTHg1lTOwKGKHjg74OIY02sWceZuZ3KgySrgQmz3QePBiBB4OXFZM25oeBGK5qDMzUWwTDhOa7b0kCwhmJ+SJn6OvuzjV1zkNpEjdykBdQ3lVuwGE9GIP0wLqSv83vxSoB8OqlTszLyPjJEr6Um3hzRUi4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mib+p2X8; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cmzCyulC";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="TfbJyHYY"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44HEeAvh012255;
-	Fri, 17 May 2024 14:45:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=lzu1EaQvyqrHT4wuQnLnexIzKTcSkyfNp5g5aqTujN8=;
- b=cmzCyulC+X6TbKj+Q9oKqbiewfmYRcDj9il9fp+RxVtboRZ6O9Gt8bo40wW239ys09XR
- CAxxX6CQEu+n8tHm3sboBxMVgGewBShkd40zR8Qo2fgRQPcCg48T/fAEnWZXgWJIcxm3
- QTkl0ekiHhf86DMFyqm2kDBs0htqLnHlcbr3J6YJNHeogucm/962xpPWuPMfc/IeA0iU
- +0ld39mJSCIRorSSLubQZ//G+qpMqzQRdDIIfTBRJMnY7WKUoQeTAE24KeyuwYhaLaC5
- Pz8RS9zMc++UWQAtGedb6jpwRL7rAaA6ncz5Q4ZXlL78OeYPgySAYRvo5D+WhYyqeR8U dw== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y3rh7j31a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 May 2024 14:44:59 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44HDD7Xb005786;
-	Fri, 17 May 2024 14:44:59 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y1y4bpekc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 May 2024 14:44:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=APjqyIZWM9TryNpCULyjkcqGyx09fuONM4//I55S2CFgqOR0F4qZnXe9tDngMqXDXCnSjEXp2DQwXOnu9vZe0Pp6d8dIRsCOIY15F9XJVkdBXnqEQjq5wRyZXRrefmuhbeOsBV6Uzml5+Xsvsr+HvmniS3udLCkvumUfwv144y/tfEDP9B/eAANrtmfpmGWzBDmzxLsd/kIYFZ9RGfQ7N/yDQwEoRDr7JgpGBrafmrSbUatK4RsEpYtq+lUoav4yOKRgeztkoLvb+l8jKXEItxlgXzZguU2VuRFlkV8BPjekv4Cuty0vU/1ZZXPPrHR5RNDvfbsBHu2cQw5VOLJEsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lzu1EaQvyqrHT4wuQnLnexIzKTcSkyfNp5g5aqTujN8=;
- b=A3hCmZx0ZeH5d3L/gpJlfPL7tbU0abZijClhrKzT+o3STfc+d0nCptHRG9T1f9wO8LnYMx5SPfAQB4rCdUxIwOpl0HxwBOGzAmSIYmjjlhuwnId8z/ggFCA2ft4gvdoBwLmW96+V01Q/KUsMFKx9Ct1yH6GXTTYoaconEXkLHKCnLzB/AhHgfGKxqkWwHEvgXC7nH/OR3RkX3xPZ/BJG2OWmH/apPcbqvwiJW/1Y2kj307QFI62RwxZF4IqN48wE9POH6lweulI5cAuJe2dRO1egj0DoH8YWAeE0xwYd0qt1OLoF0t+k3SFA/KmRQK3wrQcdMv59pF9NNIJGRw0t/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mib+p2X8"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f082d92864so11204045ad.1;
+        Fri, 17 May 2024 07:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lzu1EaQvyqrHT4wuQnLnexIzKTcSkyfNp5g5aqTujN8=;
- b=TfbJyHYYhDLAQLy9kfj4nf5DBkXv60JFLA8guvHiWcypqequois6jQEyaOhuW1SlrJEDc2y1gVRWi0kxyfs5/p6Lmq1U8/9r8ImbTY+383nWZGLpPMnx3Z0tt2vbTu9UQD4ENR0IlCsInXmXC7Wv0RTjx2oHibBZBr/d8V+YjHk=
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com (2603:10b6:510:1c1::7)
- by MW4PR10MB5749.namprd10.prod.outlook.com (2603:10b6:303:184::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.27; Fri, 17 May
- 2024 14:44:56 +0000
-Received: from PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::309b:26bb:11d5:cc76]) by PH8PR10MB6290.namprd10.prod.outlook.com
- ([fe80::309b:26bb:11d5:cc76%7]) with mapi id 15.20.7587.026; Fri, 17 May 2024
- 14:44:56 +0000
-Message-ID: <09d934d5-b5a3-4a6d-a565-e3f70e7a9d55@oracle.com>
-Date: Fri, 17 May 2024 20:14:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ISST: fix use-after-free in
- tpmi_sst_dev_remove()
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
-        error27@gmail.com
-References: <20240514092656.3462832-1-harshit.m.mogalapalli@oracle.com>
- <48377484a8a9e479b301e9a9772653a3bc6ccf81.camel@linux.intel.com>
- <e2b386431754d70c6772abee099dce4acc1d4023.camel@linux.intel.com>
-Content-Language: en-US
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <e2b386431754d70c6772abee099dce4acc1d4023.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0004.apcprd02.prod.outlook.com
- (2603:1096:4:194::14) To PH8PR10MB6290.namprd10.prod.outlook.com
- (2603:10b6:510:1c1::7)
+        d=gmail.com; s=20230601; t=1715957177; x=1716561977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FBz6A3nac4XOk7LaxYPX60HvEv8JbFpWi2kVXn7/eiI=;
+        b=Mib+p2X8qsZMNzOnchtz8BHSLkpcXDJpgX7CuRcJtBpVb0K731rqsIvOkYxmw2gAuz
+         WY3GzJeE9qzUvXfF61MsBL8/6atXwuLi1R9ynZrCYbbYBPv5/G8FhQ0rn1doBx8RNLKG
+         mt+qaWgxbmZlXh6a7AO3z+a1565RAnuePxhffFDNY+Ks9RGLt5WwnZ6IuJzVtfK7g5jM
+         qcco8DUs3u6MhKBPuXnw1lCatgXZtBrDTQSVDZ22Z4zfXc+Dbwyr6JG19S2eAD6WUNWk
+         +Ph5u/cal9scqmVmOL+doNz8M5hJdHAC0tCzC7goxMPSVVLwbKlhDCrMJMlytDDSEy0A
+         b4ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715957177; x=1716561977;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FBz6A3nac4XOk7LaxYPX60HvEv8JbFpWi2kVXn7/eiI=;
+        b=Y3yfYz2LX4QmpIF6ozP0YTIAeh5lY4/ToQc/2EPvdYuKrPp4AoE0fIFZOUR7TARyzk
+         OPf0pbN5Gyk2ukyKRTJ63y50q7fe7BR+gBK0FJhOKc61iqehVDqLdf0uj0jMW54QIoSV
+         BgJt+1lR/L8STeppUrW2q7lqxLqDA4PKaUOXGjC2U9Y+tUQkpurO1zCVuRWM9ryU+wHs
+         27MKYmrIagYJ98/nxm5KhBJE79XGxClKqEd9dh1hm0/4zI6yuZFSTdh+WByVkx2oPKBQ
+         Aa3pb6L6YqiJ7vexED4OjfNeRVdGl6kjX4V1OP/mlgSKkCSuXpbMebTWTINcQzgGk2l0
+         3twg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYS/ogW42pbnVygQsUThqq2lnuw+WTjlB3jz1gYLV+LPthwlWSuYjly7NFdPJeWLvHGEtCWj5gw/EebMp+8VOwEv4S+FQd1DOPNX4GKd7jTci1hFSVnv7RYb/2EdB2r9zDSg8oUBE3sGA3Z5nPYSc0JEx584t0GNSj
+X-Gm-Message-State: AOJu0YyER1bbRxDzmWm/W8bIVXt1Tgwh3wcio++dNLkdUuePvxIMRJHD
+	zxOM/52FsioZimF5h88EQ4e7GUHiLZuJG2TZ52tcjBEPngY5Cuuv
+X-Google-Smtp-Source: AGHT+IFoDOmAvGHTELPDHGM3rFd4a0Z1ijNML2xr3QJt794ZsCSH7hG9LvUTKQG3epczE85ZgIfo+Q==
+X-Received: by 2002:a17:903:1107:b0:1e2:307f:d283 with SMTP id d9443c01a7336-1ef43c0f5e7mr246214275ad.1.1715957177085;
+        Fri, 17 May 2024 07:46:17 -0700 (PDT)
+Received: from devant.hz.ali.com ([47.89.83.81])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c160a1esm158504985ad.279.2024.05.17.07.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 07:46:16 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+To: stefanha@redhat.com,
+	sgarzare@redhat.com
+Cc: mst@redhat.com,
+	davem@davemloft.net,
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: [RFC PATCH 0/5] vsock/virtio: Add support for multi-devices
+Date: Fri, 17 May 2024 22:46:02 +0800
+Message-Id: <20240517144607.2595798-1-niuxuewei.nxw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR10MB6290:EE_|MW4PR10MB5749:EE_
-X-MS-Office365-Filtering-Correlation-Id: 513f38e7-b95a-4750-fb96-08dc767feb1f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?dDdDVHVqY2FXREtwWEhYWDkrUTdBY2k5Ym1JOUY0bURYL3pWRlJmTC9KVjNk?=
- =?utf-8?B?WEZJeXJnbDc3eHZxcDh5M2JyVmRtZ0JNRUVwOWRvT0QwSXNycE1CU2txQXRn?=
- =?utf-8?B?S1d0TkJlZGIrTDA4bm1UK3IycGRZaHlGZXRtTjlaRVFoUnUrK3YxemdpVVB4?=
- =?utf-8?B?L1VhVmN6MGNwVDQvL2lOVFV6SEp3Rm45VjZoYzNmb3ZTeSt5M1pZUG5ieTJm?=
- =?utf-8?B?WWZEVThCRUZyWXdOOHNNYVJYSlBGTUtPay82U0s5L3lkWXlWY2pUZkQzOEk0?=
- =?utf-8?B?Vmw3NXNTQ2R2ZSt6RXU1NVNDaklRU3BWM0NDN21NV1ZEa2x1UURCNzBuVVB0?=
- =?utf-8?B?NlFXNkFpRzVRMzA0MnRqeWFzdVdCMThVaVNVVytWOGplRnR5a2lyTDl6UXBW?=
- =?utf-8?B?RW5PSXdCVXo5Qk8yeDRacTJNbThzOUFnbzZFSGxHV2hUWHp0Skh2Y0U3L2pD?=
- =?utf-8?B?UmVZcmNkaGtENnB0VmRRK21JSGw2Zm41N2Q4Y2x5S1hzT3dEa0l4STZrMDd2?=
- =?utf-8?B?RTl6b0I0RDRWcVdISk5iYkVOMzZQbGlncjBMZFRwZUQ4eGxjc2s1SVhId3VS?=
- =?utf-8?B?SmNGUnA1cVZHTStHVTMreFA5QmlZTXZ3OSs3Z3hBdUlnSVVhN1hWUDEyNmpV?=
- =?utf-8?B?dVhaN0ZQRVNTaW5yYmNqdDdiWkZ2amZWeDdRRjJlcEJGZ2FqN2hiNmJ6Q0o3?=
- =?utf-8?B?OHZNUXp5OHZUMENQejI4Zm9ReG1hbSt0dlBYUGZxOGZYUzE2ZEgvMEZ4OU51?=
- =?utf-8?B?dGE0WmRWOTZ4SFA4bTI4NkhLbDdjSDQ5aGRRcmsvVWR5ZzAzM2pRelNueU5Z?=
- =?utf-8?B?ZS92ZHFEMkNYM0lGQk4wZ09qR0txU3hvSUNoWGJiV3N4RWhlL2crOVFQeW16?=
- =?utf-8?B?M3FDWUVBSUtudHNOWmFVS2xReVdNdWx0dDdlYUJqOXEyV0haWEF1c1lkaE5I?=
- =?utf-8?B?VGxLdGtNd0licTRCWU8xUDBvdDZYUVluMFBYcWRDUjd5Qk5xaW9FOG0vT2Jo?=
- =?utf-8?B?bzE5MUdSOEEvQlgvSm5BQUJJL0dFZjdZcTFQTnZuY0ZCN3NCVE56UzZFdmwx?=
- =?utf-8?B?a0JLWUFFSHMyeHVwUjR1aHM4Ujh3REtYMmJFS0IzUFlvUVd4Nkp6cFREdzBt?=
- =?utf-8?B?Z09uNlFNZTl1UjdyOXM2UVNuNFI0T2NpRS94QVFReHA3dGw4aTVyNGhQNHNX?=
- =?utf-8?B?RHBYZWxBYmpROWMrclc5eU5BcExYVTdLSW5yWC8yemQ3OHpzL0lEcTF0QnJ6?=
- =?utf-8?B?K016K29JdnFvcUF1MXphVzB1dHFzQjBVQUhoODdvT0dGODRvd2p3MWQwMTBQ?=
- =?utf-8?B?MHQ1YWFnMkdvd1RVeXp2MVBKeDdRTHJWMTk4TktheTN4U202WkhxK0h1aU10?=
- =?utf-8?B?K3ZXRUhpb0M1NlUxUzlJcFVFVWMyRnFCVHI5RXR6OGs0c2pLeTIwRU1yaEJn?=
- =?utf-8?B?VU5QMy9xRUNVRU1aTGhtVVNJdDFKOUY2ZXR0N1hROTBkRS81VHlLYlk5ODVX?=
- =?utf-8?B?R1hhSThHQkFUMnVVaWpxc2V5ZVZLQnBGQUJFM3Q1M3M0RmhSeGVETG9lTWd5?=
- =?utf-8?B?b0ZHT1BxK3NJek1pUzRNeEVCV21qeDFsN3hsWUp3RXkyRFo0MGltRFMxdlFT?=
- =?utf-8?B?eW5xTVNuaHkwdU5PMS9KcS9ldDV4OWVpejk1cE5jaVR3YUNLdWN3RmQ1M0Rl?=
- =?utf-8?B?MWVNNXRlZStkTTVZTmJyUWZSODg1RnhrM3FadHhzYTBndG5mV3A2S2ZRPT0=?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?TnFEeWFGaUJPT2FxRHRrR2JHdzFkbVIzWU1NYmo1YmhFd25ib3JsYjk1QnlF?=
- =?utf-8?B?Z2NtYkMyMVhSNlUwWlpIQXVLRHNLcE5uTFhiQXZmdm5zc3B2UVAyZUllOXUw?=
- =?utf-8?B?YXh3emRYdXNET0hBVWNPZTNlTzduS3NObUFmb3ZhdTVTbXd1WnJxSGphSVpY?=
- =?utf-8?B?ck1ha09BeUYxTGtpQ0FUS2RrQjZHcEVTSG9rYmU0VHhEdDB4bFdQbmhZY0hE?=
- =?utf-8?B?NlkvNWMvUG90WS9ySGd5dHZTQ3RRWlBrMi81aFRkaXpNSlorR1hnSTFXOFR2?=
- =?utf-8?B?WVZGN1R1d0NTd3dqS2Z0SEdVVHNlNEtXbGMvL25BeEFJeVFkZ1JvaWJYZzY0?=
- =?utf-8?B?Rm1ldlpRZ01oRzhUN0JXalBIMUZacUxTc1kzTHJMbXdpSVF3RFhTMWFZbE5F?=
- =?utf-8?B?dS9FT3QxUlhZRGc0eXQxTFI0T0hudW9vSml0cUJ3UFR6bTZ4eStUQUxyT3l5?=
- =?utf-8?B?YzVpLzFkNFVvNGkvSFd3K2p1eXhIVjZQNS95STN2Y2h0NEx3TWtpRlNwTEVR?=
- =?utf-8?B?N3V0NjNvVElDaG5ObHNzTXRtcWM1U1ZEVVZpNnF0YjJnR2pmN0FEQmdwckY4?=
- =?utf-8?B?RStJUjVwajh4RFpEb0NhOWF6b3pQUUFyRHRiMlJDdzlzdUppU0Y0VEdpSWNu?=
- =?utf-8?B?ZDJsL2E0Z1FpZUJOT2NnTTZmTmM2eVpYR280bCtGbGg4aDJTZjJuaDl0ejJD?=
- =?utf-8?B?a05iNTg4U2Z2WUFRYXAyWGYrUnU5eHFZVG4rVVZGdDhtWEZEUkdCZnUzYTRv?=
- =?utf-8?B?NnpGTUhSUTZZREZMV1B3RHQ3TXMzKytHRXBqQjRXWEFPQS9PR0tDaXJZbXRS?=
- =?utf-8?B?ZG5GUWZGVGtSclpZa2VjRFgwWFBxSjJsSjlYekJIc1pwbXpxSnNvcHI0SjF5?=
- =?utf-8?B?OHFERTNtQ20zby9ueUVUQm9nKytoM3puN2JoWUJ0cVpQa2VxczdzYnduUWNw?=
- =?utf-8?B?MlltRUNxbXRsTGU4QVBNdVVsZUFPK0thOFVoNFNoN2N2Tjh1Sm5pTUo3cFZB?=
- =?utf-8?B?cjd3Rkd2cUtiVTFIQXJGOUpzeUdobk5hZHM0cGo1eGkwV3NMbW9uUlMvZnZX?=
- =?utf-8?B?SHY4M3R5R2kwdE5PL3R4MVNxT3FlVGJQNDR4eW52aGRSSVN6WVJ5OGFvZita?=
- =?utf-8?B?bVJHTjJVTTFBRzIzeU5sWGRuNklGNDhhYU5VRTUrNUN2dnhvOGd5UmtNTndE?=
- =?utf-8?B?cEo5QkZ5NXMyTHplT3RKUzBXUWZnaXo4anQ2WXZualVPNkxOY3NkWWY3VWIx?=
- =?utf-8?B?ODhIMDc1VkxUL2MyUmtaMDhUd2VLYjNhNVlXT0N4MDA2VHU4b0s1dXZwL1Qz?=
- =?utf-8?B?MllqY08ybGxjN2NYR1dSRFZKSWZIZ2dXMUR6ekx4S0MraDFyRTVNMHRma1Mv?=
- =?utf-8?B?T2Rkc1AxQ1NEeFBtR21xc2ZjZThtWVhJekltZkhWVFF4VWV1cGhhTU9SRU1L?=
- =?utf-8?B?ejNVZUh4dkNXeWUxY20wa1kzcmtCc2J5TlhrWDk5SXZKSG11QXNETC9OL2cz?=
- =?utf-8?B?T1JBb2doMDNUQVZvTHBVbGt0dFdVZS9HWjZ6b1JnYi92aSt0UnRmVVJDT3h5?=
- =?utf-8?B?ajJXbHJLRklCaUJ1RklsUXpjczFqTTEzeVVKdy9nTkpjN0hsKzVWS1FSY3I4?=
- =?utf-8?B?QTZKcjVBVC91eEpHQldQUUI1TUpqT0VTOU1DdnVod1BFV09MVjhEV1VZbmhy?=
- =?utf-8?B?cHk1Z0kxanVNRzVCUW56SVNvZUZDdlVVdWIxeHcxVzBmb1ErWU9idERRaWgy?=
- =?utf-8?B?a2s0RTJKRWkvOXNnSzFVenFHNEhnVkZFUlhCc1NTajR6aTZFOGRXZUdpWEZo?=
- =?utf-8?B?anV0Q2pRR3VDWGwxbnR0ODhSbVVUTDZVWEp5QmJrNnc1bEI3TlpBRU10MUp1?=
- =?utf-8?B?aytsYURROXVkZEFialFvVkwzK1pWNEVVRHdUblA1OGxrNTlIeVRGNy8yUjNM?=
- =?utf-8?B?ejZoeWFxTkhhRXpOY0N4ZGFlYVRZblNsYUVHQjhRVkhCbUFmNTZRekZkTE0w?=
- =?utf-8?B?V3hZdk9iUDZZSG9QVjcwOTFYYkZpR3YrQzNjcVVXRnRSdkI0NHhkeEloclpa?=
- =?utf-8?B?YmNPTXBlQkltWFBtNkRvZUdpYjNJa2FzNmVaSko3UVFzMUt1cy9zQ2N2YitJ?=
- =?utf-8?B?NFFxbmViZ1l4ZXVOM1ROcUpXaTNpc0hSeHNrbk9CbThXMVU2WEJDbFFEbEdC?=
- =?utf-8?Q?Fjr9MNv3oamDgEwlEntxSdw=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	vHlwasTEXPtHoh72zdnyLevaDPNEjZrx6UbGmUvoU6Mg+W1ll6ypvfpg8St+CvflekEfUvi/EVrMNPoLvprpdUKLUCNEpanL1miK6Fc6vIW76upK3IgS/lW9p7Yj28AoRfXadf2yy9wD797QdM7I0S/bzbMInW7JtWRR7DivDhOidi0aEhjRYoNEtxsyoQklruqm+RKcQCYJbJYeLtQoVuNzTlLcCoMVAknabRLPLoX4Ugn+gDpfZDh1oxtgGGEAd5jDjsI0tBo2asGql8k+kvNlUkleYRtCnto4tpmnvmPCk0in9J/9+XrXC+2wdsuTXQCIBDuP8NJPwOurdPtkz6+NxvfQ+Pytgjgam6+EKa8xTPEolQrvzyqAjFBFSfJgyJBCFwOALkRdaDite4LmUQOFU4Y3GtoQ1lGOqS36Jguz4bsEqfnV6KqondZrlwqWyvuyA8vyDxVK1ruXzAFh45MUQh4MbA4RK8kGo6FOybkC4uoMEsh9OUw45RWrtViX44tqyEV4YYD7k51C8SC58AdhpDm5fe+rNM50pPjQd2d5ugZgxtb9TXYn9FPWIo/Hj7PQ5/He7THv2kJhdSvF1lVXa5rQlWa/ydpceFBZ8ho=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 513f38e7-b95a-4750-fb96-08dc767feb1f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6290.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 14:44:56.0514
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5+roGuAWMzpnR6+6lnossWL02+l67bFZzDdrDaflQmVqJObVz5WhgVVjAsYGjfPDtB2HvxRa2vF7Mu6ZidVhsZgnTs0p/4YR3MDsvRg/NOMnKyDmzCX183PnJAa3J9bV
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5749
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-17_06,2024-05-17_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405170116
-X-Proofpoint-ORIG-GUID: MDuLQW2-q1EkUOvYX2BzOPrDslNPScNb
-X-Proofpoint-GUID: MDuLQW2-q1EkUOvYX2BzOPrDslNPScNb
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 17/05/24 20:03, srinivas pandruvada wrote:
-> On Fri, 2024-05-17 at 07:31 -0700, srinivas pandruvada wrote:
->> On Tue, 2024-05-14 at 02:26 -0700, Harshit Mogalapalli wrote:
->>> In tpmi_sst_dev_remove(), tpmi_sst is dereferenced after being
->>> freed.
->>> Fix this by reordering the kfree() post the dereference.
->>>
->>> Fixes: 9d1d36268f3d ("platform/x86: ISST: Support partitioned
->>> systems")
->>> Signed-off-by: Harshit Mogalapalli
->>> <harshit.m.mogalapalli@oracle.com>
->> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->>
-> I realized the line length is 127 chars in commit description.
-> Please fix that and run checkpatch.pl before posting again.
-> 
+# Motivition
 
-Thanks for the ACK.
+Vsock is a lightweight and widely used data exchange mechanism between host
+and guest. Kata Containers, a secure container runtime, leverages the
+capability to exchange control data between the shim and the kata-agent.
 
-Sorry I usually run checkpatch.pl, but somehow missed noticing the 
-error. Will send it with the commit message fixup.
+The Linux kernel only supports one vsock device for virtio-vsock transport,
+resulting in the following limitations:
 
-Thanks,
-Harshit
-> Thanks,
-> Srinivas
-> 
->>> ---
->>> This is found by smatch and only compile tested.
->>> ---
->>>   drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git
->>> a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
->>> b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
->>> index 7bac7841ff0a..7fa360073f6e 100644
->>> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
->>> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
->>> @@ -1610,8 +1610,8 @@ void tpmi_sst_dev_remove(struct
->>> auxiliary_device *auxdev)
->>>          tpmi_sst->partition_mask_current &= ~BIT(plat_info-
->>>> partition);
->>>          /* Free the package instance when the all partitions are
->>> removed */
->>>          if (!tpmi_sst->partition_mask_current) {
->>> -               kfree(tpmi_sst);
->>>                  isst_common.sst_inst[tpmi_sst->package_id] = NULL;
->>> +               kfree(tpmi_sst);
->>>          }
->>>          mutex_unlock(&isst_tpmi_dev_lock);
->>>   }
->>
-> 
+* Poor performance isolation: All vsock connections share the same
+virtqueue.
+* Cannot enable more than one backend: Virtio-vsock, vhost-vsock, and
+vhost-user-vsock cannot be enabled simultaneously on the transport.
+
+We’d like to transfer networking data, such as TSI (Transparent Socket
+Impersonation), over vsock via the vhost-user protocol to reduce overhead.
+However, by default, the vsock device is occupied by the kata-agent.
+
+# Usages
+
+Principle: **Supporting virtio-vsock multi-devices while also being
+compatible with existing ones.**
+
+## Connection from Guest to Host
+
+There are two valuable questions to take about:
+
+1. How to be compatible with the existing usages?
+2. How do we specify a virtio-vsock device?
+
+### Question 1
+
+Before we delve into question 1, I'd like to provide a piece of pseudocode
+as an example of one of the existing use cases from the guest's
+perspective.
+
+Assuming there is one virtio-vsock device with CID 4. One of existing
+usages to connect to host is shown as following.
+
+```
+fd = socket(AF_VSOCK);
+connect(fd, 2, 1234);
+n = write(fd, buffer);
+```
+
+The result is that a connection is established from the guest (4, ?) to the
+host (2, 1234), where "?" denotes a random port.
+
+In the context of multi-devices, there are more than two devices. If the
+users don’t specify one CID explicitly, the kernel becomes confused about
+which device to use. The new implementation should be compatible with the
+old one.
+
+We expanded the virtio-vsock specification to address this issue. The
+specification now includes a new field called "order".
+
+```
+struct virtio_vsock_config {
+  __le64 guest_cid;
+  __le64 order;
+} _attribute_((packed));
+```
+
+In the phase of virtio-vsock driver probing, the guest kernel reads from
+VMM to get the order of each device. **We stipulate that the device with the
+smallest order is regarded as the default device**(this mechanism functions
+as a 'default gateway' in networking).
+
+Assuming there are three virtio-vsock devices: device1 (CID=3), device2
+(CID=4), and device3 (CID=5). The arrangement of the list is as follows
+from the perspective of the guest kernel:
+
+```
+virtio_vsock_list =
+virtio_vsock { cid: 4, order: 0 } -> virtio_vsock { cid: 3, order: 1 } -> virtio_vsock { cid: 5, order: 10 }
+```
+
+At this time, the guest kernel realizes that the device2 (CID=4) is the
+default device. Execute the same code as before.
+
+```
+fd = socket(AF_VSOCK);
+connect(fd, 2, 1234);
+n = write(fd, buffer);
+```
+
+A connection will be established from the guest (4, ?) to the host (2, 1234).
+
+### Question 2
+
+Now, the user wants to specify a device instead of the default one. An
+explicit binding operation is required to be performed.
+
+Use the device (CID=3), where “-1” represents any port, the kernel will
+search an available port automatically.
+
+```
+fd = socket(AF_VSOCK);
+bind(fd, 3, -1);
+connect(fd, 2, 1234);
+n = write(fd, buffer);
+```
+
+Use the device (CID=4).
+
+```
+fd = socket(AF_VSOCK);
+bind(fd, 4, -1);
+connect(fd, 2, 1234);
+n = write(fd, buffer);
+```
+
+## Connection from Host to Guest
+
+Connection from host to guest is quite similar to the existing usages. The
+device’s CID is specified by the bind operation.
+
+Listen at the device (CID=3)’s port 10000.
+
+```
+fd = socket(AF_VSOCK);
+bind(fd, 3, 10000);
+listen(fd);
+new_fd = accept(fd, &host_cid, &host_port);
+n = write(fd, buffer);
+```
+
+Listen at the device (CID=4)’s port 10000.
+
+```
+fd = socket(AF_VSOCK);
+bind(fd, 4, 10000);
+listen(fd);
+new_fd = accept(fd, &host_cid, &host_port);
+n = write(fd, buffer);
+```
+
+# Use Cases
+
+We've completed a POC with Kata Containers, Ztunnel, which is a
+purpose-built per-node proxy for Istio ambient mesh, and TSI. Please refer
+to the following link for more details.
+
+Link: https://bit.ly/4bdPJbU
+
+Xuewei Niu (5):
+  vsock/virtio: Extend virtio-vsock spec with an "order" field
+  vsock/virtio: Add support for multi-devices
+  vsock/virtio: can_msgzerocopy adapts to multi-devices
+  vsock: seqpacket_allow adapts to multi-devices
+  vsock: Add an ioctl request to get all CIDs
+
+ include/linux/virtio_vsock.h            |   2 +-
+ include/net/af_vsock.h                  |  25 ++-
+ include/uapi/linux/virtio_vsock.h       |   1 +
+ include/uapi/linux/vm_sockets.h         |  14 ++
+ net/vmw_vsock/af_vsock.c                | 116 +++++++++--
+ net/vmw_vsock/virtio_transport.c        | 255 ++++++++++++++++++------
+ net/vmw_vsock/virtio_transport_common.c |  16 +-
+ net/vmw_vsock/vsock_loopback.c          |   4 +-
+ 8 files changed, 352 insertions(+), 81 deletions(-)
+
+-- 
+2.34.1
 
