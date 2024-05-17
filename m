@@ -1,93 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC254DDCD
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 05:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963291095A;
+	Fri, 17 May 2024 05:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715922383; cv=none; b=MeQSncm35F/tBXYQZZZ7BN5bFbj2skyQ3YlybVguniURuFX8UNlqjxwxxUD1IBd6elcl84p50+iedxNbnRy3k/Q0hBmFh+ORKsVALhjrSka573bdnX8Vt9e1fArMLOp6PnFhag9Zk1iEkw1EK82/u7vNR4IhijIIQaat/6942Nk=
+	t=1715922806; cv=none; b=fygVMYL3Z4dsMjRWrLXBs3i/EHABlroiDD/kv+36ZWMl0rty6f6IlGLibhj0b1KZukLvuMtCDBvUUVPT30z1bxfdd64TvCMi8PkE+wSFRQOv1EoVeZJfJ70wFVuqHZDk1yKRIGdg7zpHNzjd/mIaiftro0D0aWKzpF9U63GEFaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715922383; c=relaxed/simple;
-	bh=X65547yC+gjIEWCBBGeUT8y2lrwOCFGBDeGKhjtEZ0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nN3w2YZXOdAVLNFWdW0cwwFWzHtZRxpU9qtV1ZcdtZp8N12E1BK6Ygep6ViRXaJo447k3esHVr5EQk3s5amALizvKixbOto9o1L/5BnF7Up79qIBn3Bb9qZe7WPyHBiSvKBjJcca750TuVzmm8G74cwZzTX8AGJ4jTaHyR6ptTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jFluO/0F; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715922806; c=relaxed/simple;
+	bh=SvfYWL6ebOw6IYoDRZM65JOjv1EFu2rJ4OPCYhGja7I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tSQBxkl5J/cx3P+3XUmDiksObOd4tPIYDXY/WUGqlAtW/DvFJqlYBwLnI9/e8sAKPEvi4MumAn10fod8/6FSVPfNFcd8EHIiP+caCMsH2llB+gUQ1sc570HKtf2c4thq4puVJ15xy3mBZvplr4IlBVtJ86JBwNxyRwEduR1rBMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bi8vbr24; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jFluO/0F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715922381; x=1747458381;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=X65547yC+gjIEWCBBGeUT8y2lrwOCFGBDeGKhjtEZ0I=;
-  b=jFluO/0F7sQ/Q/PHFGmkpTNEwGZ1AozfHI5EbUV9kMlv1XI+cC45OzWC
-   mRBqsoeBJhiZe3hF7tM6StmnK2B903IGnj9Omkro8KPAyT6u0Y2X3FOP6
-   4P2TA1HySlXiVXmjq/8HTVVyMDPGLZ4r9gAngrAJyRlM8PNZf4Ag+dTx1
-   mCWbD2ERisqsIsSFvEzF2sme18jPJL67muvna5mCoyT15ENmgRhlURN3y
-   H/Kno9D/kYi4ZEkY9BiV6pnBAMsSGoYmEOb3Rdmup0rjFNbaKW5n0RPW3
-   goaUQKFivDJ2TDO2WZx+9MJmjDtLRmLHhQrIRRBQaDus4AE7rpy35d01p
-   Q==;
-X-CSE-ConnectionGUID: UXpWMR1XSjmrmmCqkRI1Gg==
-X-CSE-MsgGUID: ZrV4VDjkRUqkwXtWTzaVGQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23217513"
-X-IronPort-AV: E=Sophos;i="6.08,166,1712646000"; 
-   d="scan'208";a="23217513"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 22:06:20 -0700
-X-CSE-ConnectionGUID: ZyiHM67ZSk6bw2XCpyqnhQ==
-X-CSE-MsgGUID: us3R7kliTOaP+RiI+h4+CA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,166,1712646000"; 
-   d="scan'208";a="36575684"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 16 May 2024 22:06:19 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s7pnM-0000Es-04;
-	Fri, 17 May 2024 05:06:16 +0000
-Date: Fri, 17 May 2024 12:56:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Luis Chamberlain <mcgrof@kernel.org>
-Subject: ld.lld: error: vmlinux.a(kernel/kallsyms.o):(function
- kallsyms_lookup_name: .text+0x6e): relocation R_RISCV_PCREL_HI20 out of
- range: -524440 is not in [-524288, 524287]; references
- kallsyms_seqs_of_names
-Message-ID: <202405171222.JQUW7NxR-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bi8vbr24"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so639931a12.3;
+        Thu, 16 May 2024 22:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715922803; x=1716527603; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9QUvOib2SKkuE7gKNCvxK7NtqB45xxaU/y8wZ/za9sw=;
+        b=Bi8vbr24+dOeeUqgZ+oOGUhRtSFxd5xNQpwfSldMXoyjs4HTt7GvPjIcg8ozR65qH3
+         WvvEGgwrB3TLCews2NDWmPF0N9yzQCIKPeKPUAIWdYBhqupbveNUqJxQWB9XivDuoGWP
+         OWf5P4cXPIPTVl04lJ0xdqlAZGb0cEjrgonRIKk1huypBPyO5RICQUUcYHjtI5E5toks
+         Gl6uinPa72lYEg+eAUk/coNiu0aJoP6hAEc97NyFWqkOrrzJ1W5rcwyVwf6ErUFPIGtF
+         g1iYgB271hWCPkavujV92MM1bqlCezGLNlFWgeGI6jVc2FcOLXSdEq0Y07rD/iBvwnjA
+         33Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715922803; x=1716527603;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9QUvOib2SKkuE7gKNCvxK7NtqB45xxaU/y8wZ/za9sw=;
+        b=N4vY7V2jhs8J3XxaxbF7MKWjsppJvzhrsm/4BbZ0ajW7WIMU1zhYgH6T05zYLtNslS
+         qMmDtTDuZi3gJAiI6SfT7WJI0zkPdZVqdM3WZjXtVis6otUpttRpaaVyf/UjzZliiO0v
+         tVbXmTGdYzAcfL2MTlJYVNGQ4x54XHx2UTZwvFHoCtjC5b+l/bBB994SpHzJs+c9AuD/
+         cnaCDQ2OstizM4DxhJ9TR9pE4bpoAOQY3ifYOzRKCiOgWY235ROSWTaqCw5dCVX8RugZ
+         55Ym26IMG+lIxK0EPDbcZlwnzvEV9ctM/p8na0sYhtcHGSofp6Zsw1fwDhJNzw7G2qM8
+         tdqg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8M+vUSBdQGsFkeL6sR1NP8YDgs5F6MCTdu3hEcecTiFMqLak/+WNj+Q2oiC2QBdeH3nHRzmILtoSQDH25XSDXP3hWwfcamdkdJEFFzE+TfU+DdZbOSMMQkctBgFXVeCYVVuvYtlA66k0=
+X-Gm-Message-State: AOJu0YyeRVE7aMBdaQPWNEFAhfQmc/I6HEU0O/2lxBOKkgoWfszRLb8e
+	2/dm3Qe/QmhQsQsja+WExQcezcyamgrv/nJnCdcUXJmltwNuvU5nXOIXlEMx65k=
+X-Google-Smtp-Source: AGHT+IEcXw8WyYpc4pmN3aTkv76doBsVbog/IMtQd1ElGxA+9KBEm3JOLOINKsJzSDY6QqsKbf/xNw==
+X-Received: by 2002:a05:6a21:1693:b0:1af:f64c:b78c with SMTP id adf61e73a8af0-1aff64cba8fmr13880687637.0.1715922803289;
+        Thu, 16 May 2024 22:13:23 -0700 (PDT)
+Received: from xiaxiShen-ThinkPad.dhcp4.washington.edu ([205.175.106.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30b22sm148002705ad.180.2024.05.16.22.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 May 2024 22:13:22 -0700 (PDT)
+From: Xiaxi Shen <shenxiaxi26@gmail.com>
+To: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Cc: shenxiaxi26@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	javier.carrasco.cruz@gmail.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH v4] ASoC: dt-bindings: ak4104: convert to dt schema
+Date: Thu, 16 May 2024 22:13:17 -0700
+Message-Id: <20240517051317.466764-1-shenxiaxi26@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Zhen,
+Convert ak4104 binding to DT schema
 
-FYI, the error/warning still remains.
+Signed-off-by: Xiaxi Shen <shenxiaxi26@gmail.com>
+---
+Changes since v2:
+ - Remove subsystem maintainers
+ - Wrap lines at <80
+ - Use unevaluatedProperties instead
+ - Fix indentations in the example
+ - Move changelog in commit to right section
+---
+ .../devicetree/bindings/sound/ak4104.txt      | 25 ----------
+ .../bindings/sound/asahi-kasei,ak4104.yaml    | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/ak4104.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ea5f6ad9ad9645733b72ab53a98e719b460d36a6
-commit: 60443c88f3a89fd303a9e8c0e84895910675c316 kallsyms: Improve the performance of kallsyms_lookup_name()
-date:   1 year, 6 months ago
-config: riscv-randconfig-r063-20240515 (https://download.01.org/0day-ci/archive/20240517/202405171222.JQUW7NxR-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240517/202405171222.JQUW7NxR-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405171222.JQUW7NxR-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: vmlinux.a(kernel/kallsyms.o):(function kallsyms_lookup_name: .text+0x6e): relocation R_RISCV_PCREL_HI20 out of range: -524440 is not in [-524288, 524287]; references kallsyms_seqs_of_names
-   >>> referenced by kallsyms.c
-   >>> defined in vmlinux.a(kernel/kallsyms.o)
-
+diff --git a/Documentation/devicetree/bindings/sound/ak4104.txt b/Documentation/devicetree/bindings/sound/ak4104.txt
+deleted file mode 100644
+index ae5f7f057dc3..000000000000
+--- a/Documentation/devicetree/bindings/sound/ak4104.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-AK4104 S/PDIF transmitter
+-
+-This device supports SPI mode only.
+-
+-Required properties:
+-
+-  - compatible : "asahi-kasei,ak4104"
+-
+-  - reg : The chip select number on the SPI bus
+-
+-  - vdd-supply : A regulator node, providing 2.7V - 3.6V
+-
+-Optional properties:
+-
+-  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
+-		  deasserted before communication to the device starts.
+-
+-Example:
+-
+-spdif: ak4104@0 {
+-	compatible = "asahi-kasei,ak4104";
+-	reg = <0>;
+-	spi-max-frequency = <5000000>;
+-	vdd-supply = <&vdd_3v3_reg>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
+new file mode 100644
+index 000000000000..86f6061d3c50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/asahi-kasei,ak4104.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/asahi-kasei,ak4104.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AK4104 S/PDIF transmitter
++
++allOf:
++  - $ref: dai-common.yaml#
++
++maintainers:
++  - Daniel Mack <github@zonque.org>
++  - Xiaxi Shen <shenxiaxi26@gmail.com>
++
++properties:
++  compatible:
++    const: asahi-kasei,ak4104
++
++  reg:
++    description: Chip select number on the SPI bus 
++    maxItems: 1
++
++  vdd-supply:
++    description: A regulator node providing between 2.7V and 3.6V.
++
++  reset-gpios:
++    maxItems: 1
++    description: Optional GPIO spec for the reset pin, deasserted 
++                  before communication starts.
++    
++required:
++  - compatible
++  - reg
++  - vdd-supply
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        codec@0 {
++            compatible = "asahi-kasei,ak4104";
++            reg = <0>;
++            vdd-supply = <&vdd_3v3_reg>;
++        };
++    };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
