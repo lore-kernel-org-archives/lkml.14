@@ -1,99 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2045.outbound.protection.outlook.com [40.107.243.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB691DDC9
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715936362; cv=none; b=fd8Xi2gH08MdbzmuptslFJkhsOLIkXQtRfWJjPrNzctsTWZqEWpveVcAqMhnM+dJMTMMNpvN5DUhuTjlavLswW/5vzdnLis7o73HkCyHe+Al2DFdZAQDTg1o328zxKJqJ8VOKJN0GLHhz+RuZHWrZWZ+PiI3VVGTupliWkc+cYU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715936362; c=relaxed/simple;
-	bh=lw2YM73uV4pxb1rCLnOwSpJITikfz/PrwQdE9eVB05s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPJs9jwuj50cQE4Ivbepy1dLQXoL3uG3c35d+erhEpQbqlrgQj+1UGySGRmSV6DxgH0Y1QTc9h+79AoCHLbqGahVu33ZF5RFRDDkMZT7ee2hQF76iBQ3tGzdqSGKEO1ifpuc/r6HJU2syuHTAa02eAKNGyEBknmhlEMLeQO4G3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V85PeP3h; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C94017BBB;
+	Fri, 17 May 2024 09:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715936627; cv=fail; b=netDn0k+OR95sfb5W5b46OJqv4vRxqukm4iMNW3X3NxyaDxNpPCobn4ajzb+URV/C34xjhV9aQYqSD6WrQPlPgOTGmhZVMPZbSipcn5qwIB15HN381yGlA89NxhplfWG0EaS7Z98U0tR1GUsOxZvP+Qt36vHvfxnFwDyx1iB7Vg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715936627; c=relaxed/simple;
+	bh=1OTGnPxQor6Mn308hLBGR/chM8SbYOUWbMYUKkF5G2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o3CckWJQD2/zmUeq6KflMu0TyX9kvFeFAl1y6aFEO9CN+zTbtlS/4kfqkKGOwWH8wWkaFdHIab38U6SJa2J4VYEaXF5J13FK5epjQwxOn7JnFlI0pTlwH6nQg2doCs+CUOPPg6EUzxbM4RiL758woOwbRI3AhILGNwXAvfZ+PAs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pZfhYN0N; arc=fail smtp.client-ip=40.107.243.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V85PeP3h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715936362; x=1747472362;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lw2YM73uV4pxb1rCLnOwSpJITikfz/PrwQdE9eVB05s=;
-  b=V85PeP3h/BPwU78FnPog9ZX5aElrINkAAOv40vm1tspR72m6XLTulqgF
-   L0Z+YLjqFdfbAQZoeugAJnaIvHs/zLABx4cXnQimpZQw7NQmkNI5J29Lc
-   LQvX83D2z4HJLOm9woRpTtdfkhmozFhVoVoQn94VA6FVJkXwRmGD1z85U
-   EQgTLkmYdH2+pO1NWhoLeYbPCJC0fZb0ZvLCnekFEwpnJLInjkb3EnRqG
-   0HT7DmeVnyGljYKH6kQzCKLTWLggv+8OwsFSiXXiJ5op/bv9aVvbo+rXX
-   tEm5Q7GrKyzHp7eI8Sj+XdT5IKHT1b9O20mq45ZEWeHt7XxyOsMiKKlY9
-   Q==;
-X-CSE-ConnectionGUID: rP8HkexwRiuR86KpNron1Q==
-X-CSE-MsgGUID: IYmEhEBJQ8eL9OPV5+IUaA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11972567"
-X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="11972567"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 01:59:21 -0700
-X-CSE-ConnectionGUID: vdRPa5+vQQeEYS7RuqrBGQ==
-X-CSE-MsgGUID: Ur0iTOcVSq2xou8CBAXdbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="31823546"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 17 May 2024 01:59:20 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s7tQq-0000Uq-1Q;
-	Fri, 17 May 2024 08:59:16 +0000
-Date: Fri, 17 May 2024 16:58:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mukesh Ojha <quic_mojha@quicinc.com>, tglx@linutronix.de
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: Re: [PATCH] genirq/chip: Fix the warn for non-SMP system
-Message-ID: <202405171655.T2VuGylp-lkp@intel.com>
-References: <1715887825-1031-1-git-send-email-quic_mojha@quicinc.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pZfhYN0N"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BU09ot20yxLNWUKl+oWpvMZa7L3lV1FEboXUce0dUIzJQRvc7GqrfrQToTfJZGYQMSx39T2ZBUBjaukO/+efzQhTPhDSmx4SrzfH6jyGafmDFughUxlBbz73vxOrSNqqp+TE4ln5mv7X167WscYj3W7ubZeKPdLniG2faeokFxkqAhKsvIJ3DN14fqWBtcfn5KTyy3HnjVoRdVKq53tGIoGhYRT8/YagecrvYkwd5QY+4rDCKlL2Fc//gdDgEkgGfyOEvVyrYfjw9CdyoruTX0XFJQZiVgj1hm529QEZAthWMUsyyj0+SBG9Y2uMTUOwPQpL0MznWXd769a+ZcSrhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NQ1Mn3/ODQ9FcO8OuGtBAnlomTKRbIKQ9AdMVacf8pI=;
+ b=kMNU8kWYdn+0676CsRfsCDPUDnqjEYwv0GmprsmBDAWghOcs1klovswfiYscf1FS3Enfm6cjg+nVTmuJdru7+9tdO2xqYsEej9/1drGskTnmhYYSODcOiamGMWRw8Eb9AmyfEagpHCOeJiZUFXWVtd7XkcUmKChoBFSwwIQGyqc6j4fyNjGAm4a67335nZLvKPJ5QQ9v4uWEmL7njeHHKChxRp6FHWoTYAhuIqo/MY7NdsVbKxBh3irOd0j6ZPEVOei2jLEjmPWudtzZh//I3ciVFDLidFHzJJmq79hQeApSKyU0gyofFxfr8HtplLWDFLJkUi5UebSwOMB6GWEXsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NQ1Mn3/ODQ9FcO8OuGtBAnlomTKRbIKQ9AdMVacf8pI=;
+ b=pZfhYN0NfvKYEYGG9y0EBw5QMQHmYEdqdc6xXAiSFiVV7+oFhgrbjpvaPrJ0lfNOOBBUoDWzAzqpYT0gEpInycSDYYqK5JbuncePdFNmqfztLeSyOWTwFQwEVtrjjzuKfRNwg+mqEMQkYQVc2UV20dar63cRWvx3hVwaaFHoUAQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
+ MW4PR12MB6681.namprd12.prod.outlook.com (2603:10b6:303:1e1::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7587.28; Fri, 17 May 2024 09:03:42 +0000
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7%4]) with mapi id 15.20.7587.028; Fri, 17 May 2024
+ 09:03:40 +0000
+Date: Fri, 17 May 2024 14:33:26 +0530
+From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+To: Perry Yuan <perry.yuan@amd.com>
+Cc: Mario.Limonciello@amd.com, Ray.Huang@amd.com, Borislav.Petkov@amd.com,
+	rafael.j.wysocki@intel.com, Alexander.Deucher@amd.com,
+	Xinmei.Huang@amd.com, Xiaojian.Du@amd.com, Li.Meng@amd.com,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] cpufreq: amd-pstate: remove unused  variable
+ nominal_freq
+Message-ID: <ZkcdXuHjnLzgSCnq@BLR-5CG11610CF.amd.com>
+References: <cover.1715356532.git.perry.yuan@amd.com>
+ <eafcb44942942f2a4489980066712b9e505a76a1.1715356532.git.perry.yuan@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eafcb44942942f2a4489980066712b9e505a76a1.1715356532.git.perry.yuan@amd.com>
+X-ClientProxiedBy: MAXP287CA0020.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::36) To DS7PR12MB8252.namprd12.prod.outlook.com
+ (2603:10b6:8:ee::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1715887825-1031-1-git-send-email-quic_mojha@quicinc.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|MW4PR12MB6681:EE_
+X-MS-Office365-Filtering-Correlation-Id: 558d0b94-81c2-40ac-137e-08dc76503e79
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/FYLxBXqAZv9Qbtj0sHdGLyF53VBG9HwgqY0h2nWhi7ESzjQTAffKawwcSt3?=
+ =?us-ascii?Q?dFc8M9N/JJo4Z1clfT11qqC+lZJWKwaME6hzPYlM9CwS+nHhZZoMaGLjd0Jb?=
+ =?us-ascii?Q?ffbQJDL+4mFbuSsyt4s9dl2OloHbZxd0AaYjR7pWC5n1nLgKzjM/qzzxutqK?=
+ =?us-ascii?Q?CjpKjcoUefC1LcyEMtkM35KVOatu2jbkiZE6Nr5fmuC27Plzk/XlaJ8jjTlt?=
+ =?us-ascii?Q?y1KsCeXe+fsrOfvofPnVYpgVFsUa3jexxi83bJe19TegRVUqKmJuaNvfU2QI?=
+ =?us-ascii?Q?ozvIRUenQCqnExrMnMYxpyzCMfwXlgnT/UjJvPWyCSg9ViDlX6pk/49TX2PN?=
+ =?us-ascii?Q?1uoObBPDN37ZR5YdTMZn1CU1PpZb1UhOiozR7X09aHFrWKHSm1nW7BFF5sQk?=
+ =?us-ascii?Q?gqgXlJHMjm1NSHsj3UgUln8QRu9FbtkYNU4Z6KYJyX3XhAE2GCNZqOrJSrHO?=
+ =?us-ascii?Q?GOHm+RuecFd81CcB2pVOGEwJSaQsauvzOyfPtkCKqZa3ol+yPmFKfNwGUB+x?=
+ =?us-ascii?Q?QfRi4JDF+kUd7WimQE/5nnVEC2vuadRhO2ONerR3+08WOvUm4TFObDQchDSw?=
+ =?us-ascii?Q?pagRn2m6ODVgJzVs3kWnaoqNOSc4MzuI5EsX/gFqRwx9Cs31B0OxXLr2WrsJ?=
+ =?us-ascii?Q?Wngsa9IeOpHC5xCix19vRCaucvFueMKVkgFBIEvMSUw808r+Efkkng/MAnmF?=
+ =?us-ascii?Q?GP7KDOYegwxC8mCfSQgkSWIv0r1vGPDi5iHDlytrh+chPDDR+ccWxFMY5OHu?=
+ =?us-ascii?Q?G55J+prOOqEnxxGCgcZknieCmHGg5E4lIUHCSrGexLRDfDw3R2t31hyigMOg?=
+ =?us-ascii?Q?Zn+Ejcvpx95PXIeAVC6bIq0erPFeYeluhlRZD9Bqkk+LpZWEznR24QM1QskI?=
+ =?us-ascii?Q?SUnGDMemDIB27cPiighs6ESInvD5wVvIduTLc3tMQLg29TC37w+l7a/iPVbG?=
+ =?us-ascii?Q?M6XX3VW5EKUe+XrLvWM76EJPN29OVnX7E6TNQpQkwklcjq98avdriLdetZOV?=
+ =?us-ascii?Q?M0kP3ykw/3EsPMPVt+8DvVUtBNQYr6wRa3v51uo7bNTTetxM941FT/soD/GL?=
+ =?us-ascii?Q?hn4bAeY1Ik8x2YLWv+6L/H/CSe6h/QIn26brHrIhxsGAJLwlVccpgmt2V24H?=
+ =?us-ascii?Q?GWSQcMKEGYmtwgyO/rUIfx3hcvinc+jza0e32ncYQjuEo7mFXoNp/nkNqlb1?=
+ =?us-ascii?Q?UAYFNAyYrm1aLYkgOhjFdYFKw5vN6GFF7gJU1Nzf3l0ew+6pkJmWf43Csp0?=
+ =?us-ascii?Q?=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?9c4SXRMyyTOGXGNV3nkBQEYrg6CBoVZVnwFNisuwAteym9eDo8QMq0y09H/j?=
+ =?us-ascii?Q?SkttP9pc+aDVuJ2iQr3d3gcOwwqARIuBCqyIPhd6jgCELMb9yagXGGZsaP81?=
+ =?us-ascii?Q?4kdK6kfw6FDL1obh29Wyj8oBHGeL6wQgE88DA6wpdbiSF9CXK+fuTheMXtMy?=
+ =?us-ascii?Q?qS4idTMRR1Kk7ReuC9bSztgBwYof2yOq2C135y22YHr2S5QtqRIH2luZ2wel?=
+ =?us-ascii?Q?LKN4zuPJ/DkBQ5HoIOjD0pqbxg+ZgS5pVDqFjloi5FWLrilmJuOX0KOUWCHk?=
+ =?us-ascii?Q?U6fADmTRPV2irPwpahdp+CMj/Afru1HNrfQnTfuDGF//b5N2ZyiuZggGmFBH?=
+ =?us-ascii?Q?xD4vEJuufT1JTW07PP7QmYO5ANa5+cjgyEPccPoEgCswpsoTIxsq/k7n3HfH?=
+ =?us-ascii?Q?0Cxg01RPLbsDpCno/segUWAAma3/cpwORXx91wOx/mzmi0vcEtyZcI5lOpME?=
+ =?us-ascii?Q?/qeZeP0vlyWSKj6AsQcNGsxhdgHqM9tx3AbP4op1RLkySxcRaJeDjO6pCHBB?=
+ =?us-ascii?Q?CAoNd7zf/6EHiKPH/l83XbVozBWAHZ++WlIN5Uw7yjZATeO8cGvmtOrLTMty?=
+ =?us-ascii?Q?xK2c6+Jy5B+C37JyOiMWUQPV3n7rd3JUeGGfjbV1dFQGUyxyYHQjfSvoNwdk?=
+ =?us-ascii?Q?QVLyXxxhHAm6ZmDbrtzmgM5klvWDhs74UaLpzVtz20G/UaKaA2QXfKr/JXyN?=
+ =?us-ascii?Q?lRFzBqV4uXtbwKNruzm6+TRgYvwfIWMSXpl1u6SxzdmtTzIsoqQoGyhf1Xk2?=
+ =?us-ascii?Q?z661PxAnt/yR3QWs80Z4ivvpdidAgJTp/EEBhOIBvhv066T4uSnSV0rbSJYU?=
+ =?us-ascii?Q?vZjjtsoqMasLwC7v7Zs+fy3YBcd18RxLrjnL42j+yEP9SIQDIQtpw9tWIjc8?=
+ =?us-ascii?Q?/uaXzSDFJc/1pkqaqn/lSAXetaETDyxbxcvMmTmV7bQno8lAm01tHtl/PRg8?=
+ =?us-ascii?Q?XzR+nRbFbbjRWJ3EMX9u6K+hg8NCgQg6SvQ0S9U64e6OwOGrSlbAEX7yJzJs?=
+ =?us-ascii?Q?Vkr/artNZoUs3Zb1wwNcg1xOQMevskUoNVejNBbad4hUiHCZhGeaZMgAn4PB?=
+ =?us-ascii?Q?WSWzoy56ShAStXiM3LT+TriuAMbulLeClBqYBxSWSFPmc5VOvcK1LAK+ieUo?=
+ =?us-ascii?Q?8lRLTCMJWfz7lJDPw/rqo8E1RXARBxCbc55cLvjoC90IrvaFpt+GjkuxbyZq?=
+ =?us-ascii?Q?918kOcxvLeQNdi9K7wjp7BM3ocGNgC7Hqrc+Bot4Qi6dJHQk5lQ4F7nxtcAP?=
+ =?us-ascii?Q?3yTG5VXtoK54mK5A3ljwoho0s9Ef9GJZHrAozU3Jafo1KIWx1kPIQFAqnRYT?=
+ =?us-ascii?Q?Lpo3l4hsTxoZhdeMC3YCOSEwHRR2UhbB3cfretzN/PxZX/jX228T/rhACQoO?=
+ =?us-ascii?Q?5L2M+rZkeJJPypSNX3bAt1/KUzdC/ISfn4+Zd8RD/29oR6xVnHdlxiz1eIRd?=
+ =?us-ascii?Q?AXOwZ7KDrcgfSkafnOl77iOZb9CRDrl39XGyYxNqkq4/psFXYD5rIJwJYrdb?=
+ =?us-ascii?Q?e8spdghsHTuLNIkDyXJzAFYedoywzfCwIYJu8BG6+GM27r9LiJvuP6e4XKmG?=
+ =?us-ascii?Q?AAdiLXuJbxG9FssDk3tw2fbA5Enjn5k59TV8bA95?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 558d0b94-81c2-40ac-137e-08dc76503e79
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 09:03:40.0644
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iKV70TgC3tQJykyuwn0KFMkPu3MX2urCBCGaQQCXrbQHr34dCfodrVRpwxyGxVA8gkDLulPJtmieos2HGRy3nA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6681
 
-Hi Mukesh,
+On Mon, May 13, 2024 at 10:07:20AM +0800, Perry Yuan wrote:
+> removed the unused variable `nominal_freq` for build warning.
+> This variable was defined and assigned a value in the previous code,
+> but it was not used in the subsequent code.
+> 
+> Closes: https://lore.kernel.org/oe-kbuild-all/202405080431.BPU6Yg9s-lkp@intel.com/
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 
-[auto build test ERROR on tip/irq/core]
-[also build test ERROR on linus/master v6.9 next-20240517]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-Ojha/genirq-chip-Fix-the-warn-for-non-SMP-system/20240517-033251
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/1715887825-1031-1-git-send-email-quic_mojha%40quicinc.com
-patch subject: [PATCH] genirq/chip: Fix the warn for non-SMP system
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240517/202405171655.T2VuGylp-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240517/202405171655.T2VuGylp-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405171655.T2VuGylp-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   or1k-linux-ld: kernel/irq/chip.o: in function `irq_startup':
->> chip.c:(.text+0x14d8): undefined reference to `irq_do_set_affinity'
->> chip.c:(.text+0x14d8): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `irq_do_set_affinity'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/cpufreq/amd-pstate.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index 614f6fac0764..9ca22e94f3f3 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -912,7 +912,7 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
+>  
+>  static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+>  {
+> -	int min_freq, max_freq, nominal_freq, ret;
+> +	int min_freq, max_freq, ret;
+>  	struct device *dev;
+>  	struct amd_cpudata *cpudata;
+>  
+> @@ -943,7 +943,6 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+>  
+>  	min_freq = READ_ONCE(cpudata->min_freq);
+>  	max_freq = READ_ONCE(cpudata->max_freq);
+> -	nominal_freq = READ_ONCE(cpudata->nominal_freq);
+>  
+>  	policy->cpuinfo.transition_latency = amd_pstate_get_transition_latency(policy->cpu);
+>  	policy->transition_delay_us = amd_pstate_get_transition_delay_us(policy->cpu);
+> @@ -1363,7 +1362,7 @@ static bool amd_pstate_acpi_pm_profile_undefined(void)
+>  
+>  static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>  {
+> -	int min_freq, max_freq, nominal_freq, ret;
+> +	int min_freq, max_freq, ret;
+>  	struct amd_cpudata *cpudata;
+>  	struct device *dev;
+>  	u64 value;
+> @@ -1396,7 +1395,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>  
+>  	min_freq = READ_ONCE(cpudata->min_freq);
+>  	max_freq = READ_ONCE(cpudata->max_freq);
+> -	nominal_freq = READ_ONCE(cpudata->nominal_freq);
+>  
+>  	policy->cpuinfo.min_freq = min_freq;
+>  	policy->cpuinfo.max_freq = max_freq;
+> -- 
+> 2.34.1
+> 
