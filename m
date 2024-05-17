@@ -1,247 +1,112 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from va-2-52.ptr.blmpb.com (va-2-52.ptr.blmpb.com [209.127.231.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543A21CFBC
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BA823754
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715935996; cv=none; b=V3g8ABmFbuICh4vC4mSpns1xtCIdA+U0qXelNseGtHbCae2u3EfoOlfbJxobn/FW2Ff9WwbVItAdnxvxkI+/7NcR00YCd5gh1uOaOV4SWv9HUOeKLfH3QsAKTOnIcClX03goydoKamI3F1kKBFa8pSsfeDiBIhw4luxOsE4Bhco=
+	t=1715936026; cv=none; b=AEOt/OKczeHklNsFNnybQnJ1CEkOzzO2cqnXNXMcoZLc4YeC0j5dzPLbA5G02vGSXF3qbotx3xOabl+cQn2I6FIWIat9RIqkO/zoyiw3xYNASW1QDNjaOB0YYlRAQMQnchs0Ur6emfhaOOyNEImewotuAb39wsRbl3BhQnWC0lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715935996; c=relaxed/simple;
-	bh=XrDZ2khBHaMtsbW3DKfVfsmfyIUUQMmLqt5TAhl53cU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=syadDqplp2AwmaO9TKDzopd5k2XbCPNBNtJa9DeFWc2+B8oUH1dyyVpbPa9lLceKIj//VZIOmMfPL4j2FHfmbsnmyfUK4GV71bcni+cMc3M/EKN8HbPqP/tsrRz+FzHPl00hAND901cos2CMZEJFgPUenFfV4O11F5BI94XwW9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7LI9t4g; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715936026; c=relaxed/simple;
+	bh=z+tJOzT6G7uLGllHiRzwPeRmqIDSWu7BS5oK45nuVCU=;
+	h=Content-Type:Cc:From:Date:To:Message-Id:Subject:Mime-Version; b=Q/p+YVW54yQRs7SHiNrXgf4yN2yklBKhINnRnu7ybQaY8DEErtFhyEODL1CrSxjswPqUtrpaGjNuO+9fhlVnQpidX7L8R9UJom19txyM074+Nbh4KGcG01Jt/R7NZlcBU8OIK5q9bXG/f4Y0uxbpoJHKNWKQUxlQGX2s6pQ9PeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xjmz.com; spf=pass smtp.mailfrom=xjmz.com; dkim=pass (2048-bit key) header.d=xjmz-com.20200927.dkim.feishu.cn header.i=@xjmz-com.20200927.dkim.feishu.cn header.b=nCyoAPeY; arc=none smtp.client-ip=209.127.231.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xjmz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xjmz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7LI9t4g"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e564cad1f6so21393901fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 01:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715935992; x=1716540792; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vUnKK06+m9zxF848R1qs8HU2+D2Pu7/Qze/DSdxTlEg=;
-        b=R7LI9t4gcHIo31g2P85GL/icgnQVVGxrlGuHk+XcILWlmbn6Jx58x9pU8STSYVpbyY
-         neMWZevi/B5XdWxRFz1ByhQumSZ3yGbckXKW9/NNCq+kDF/LyNUw7PlK5hSCvYT6+Qoi
-         UmFkKfYSvCiMxb1fB8PzqD5ohaa5pxmnJcg5sruaryC2QTc3sVIZhWvtvI37VrVSeO6h
-         DxiPSqUHKz0Lw1FqFtRMQ1BIetfjoS6i/wJMG1/MqF/QmO394ugCJ5HeEZTVvU4QtesF
-         ey5c7D7lkh0RlXic+YRknVKxUF4Qj5NOFxk6T5zdp9KuXsUDnic+1BWcHXnQJ63LPcUX
-         9PkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715935992; x=1716540792;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vUnKK06+m9zxF848R1qs8HU2+D2Pu7/Qze/DSdxTlEg=;
-        b=UJNk99kVK9olAgEArY03vjHwr/II9fns+vqiZ0xKZktgonXRDwSYaAbuzomsLx9vYa
-         brGy45XgPsACqCUB9wkD0OoH/SoLZQzeLmQndCXGPobhxAoWVNQ/il05hn4FzindUTx8
-         zqkVahTz4nIp6p4lplVx5td7rByKOS0AV5fTWnr+eCPv/7wmPw78drJOw9GGZLs7ZUZN
-         PrpF3fonK74XGM04lEQp9J0BH2GvYd46TubpKWfE1uZrXgsHI7JNyoJZ7cvoUM3IE7F2
-         gC2/UrIDDd6bGHanE+CQaC43EDRv9eCmPT+0A+uO4FhuqonzJwbAC+Ce+EMuh0g5vr+N
-         sJ5w==
-X-Forwarded-Encrypted: i=1; AJvYcCV4bOXpAvkkP2kIPmLM8rBAGwEON8U2i4ftDmNd6N74r7fuTRmbxPboe8jDkmx7LzU3u9JYP2pTLFyVvbKtXpwkD5dTyv8CkzH0CsGJ
-X-Gm-Message-State: AOJu0YxCPX2nea50jRMQKg6tcZBefEPfsGrvIkFr9NbI8ebBtu4mrvmA
-	vb9GMJ3I2AJlBezB3UmF3HPSxMKOOURwyX16bA3Zm7NCaQ882zP0
-X-Google-Smtp-Source: AGHT+IGUGh68rD9VDYg5VoPspmITc/Dg5WaWIbDgsVs4E0iJoDyb8ifLul6q44yypgR7DR/ARf//Lw==
-X-Received: by 2002:a05:6512:2003:b0:51e:25d2:453f with SMTP id 2adb3069b0e04-5220ff72f1dmr10395650e87.68.1715935992194;
-        Fri, 17 May 2024 01:53:12 -0700 (PDT)
-Received: from localhost.localdomain ([176.59.160.194])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d2c8fsm3209359e87.279.2024.05.17.01.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 01:53:11 -0700 (PDT)
-From: Alex Rusuf <yorha.op@gmail.com>
-To: sj@kernel.org
-Cc: damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	yorha.op@gmail.com
-Subject: Re: [RFC PATCH v1 0/7] DAMON multiple contexts support
-Date: Fri, 17 May 2024 11:51:51 +0300
-Message-ID: <20240517085151.630844-1-yorha.op@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240516221735.82564-1-sj@kernel.org>
-References: <20240516221735.82564-1-sj@kernel.org>
+	dkim=pass (2048-bit key) header.d=xjmz-com.20200927.dkim.feishu.cn header.i=@xjmz-com.20200927.dkim.feishu.cn header.b="nCyoAPeY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=xjmz-com.20200927.dkim.feishu.cn; t=1715936010;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=eNuRp/dEoB8FHHvBWNozzZFQrAyVqRVVHo1Xz6xq4eM=;
+ b=nCyoAPeYbJA25VMER2rXqk9/h/NHm9gULAe8lanOGitYMI4IurCrkkkHIgMA63KnUZaTZ7
+ 5UDovZ032rd1j/nQM3B+jd5rC+f9yDB/InT6akehOY9HLr0fBCkg/R6rr84JScPmNnA6o9
+ lJsE/P3PNFatucvvqH5vGGK2v+lvogKd3nA6iMkYEOuXoVlHed0OrbECLh7kDZcyV/A9P+
+ pKBUB/rupQFTiHq3lT5TojOZeOhHiymM7mhyiqhIDVEJtcNCtLmHiJ0bTd2uixCkOGqUQC
+ sWcGqCqHpWZ59qwRJNj/LY4HojeiVI1mlESSF30arZvv+kcC6/0peYxwceuH6Q==
+Content-Type: text/plain; charset=UTF-8
+Cc: <linux-kernel@vger.kernel.org>
+From: "chenyuwen" <yuwen.chen@xjmz.com>
+Date: Fri, 17 May 2024 16:53:27 +0800
+X-Original-From: chenyuwen <yuwen.chen@xjmz.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+Message-Id: <20240517085327.1188515-1-yuwen.chen@xjmz.com>
+X-Lms-Return-Path: <lba+266471b09+4159d5+vger.kernel.org+yuwen.chen@xjmz.com>
+Subject: null pointer exception at fscrypt_set_bio_crypt_ctx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: git-send-email 2.34.1
+Received: from meizu-Precision-3660.meizu.com ([112.91.84.73]) by smtp.feishu.cn with ESMTPS; Fri, 17 May 2024 16:53:28 +0800
 
-Hi SJ
+Hi jaegeuk & chao:
 
-> Hello Alex,
-> 
-> 
-> Adding high level comments first.  I will try to read each patch and add
-> detailed comments to those as soon as I get some time.
-> 
-> Also, please Cc linux-mm@ for DAMON patches.  I'd also recommend cc-ing
-> linux-kernel@.
+We are facing an issue on 6.1 kernel while using f2fs filesystem at startup=
+.
+The call stack as follows:
 
-Thank you for clarification, I'll add them!
+[   14.904678][ T1116] Unable to handle kernel NULL pointer dereference at =
+virtual address 0000000000000011
+[   14.904986][ T1116]  fscrypt_set_bio_crypt_ctx+0x78/0x1e8
+[   14.904988][ T1116]  f2fs_grab_read_bio+0x78/0x208
+[   14.904990][ T1116]  f2fs_submit_page_read+0x44/0x154
+[   14.904992][ T1116]  f2fs_get_read_data_page+0x288/0x5f4
+[   14.904993][ T1116]  f2fs_get_lock_data_page+0x60/0x190
+[   14.904995][ T1116]  truncate_partial_data_page+0x108/0x4fc
+[   14.904998][ T1116]  f2fs_do_truncate_blocks+0x344/0x5f0
+[   14.904999][ T1116]  f2fs_truncate_blocks+0x6c/0x134
+[   14.905000][ T1116]  f2fs_truncate+0xd8/0x200
+[   14.905002][ T1116]  f2fs_iget+0x20c/0x5ac
+[   14.905004][ T1116]  do_garbage_collect+0x5d0/0xf6c
+[   14.905005][ T1116]  f2fs_gc+0x22c/0x6a4
+[   14.905007][ T1116]  f2fs_disable_checkpoint+0xc8/0x310
+[   14.905009][ T1116]  f2fs_fill_super+0x14bc/0x1764
+[   14.905011][ T1116]  mount_bdev+0x1b4/0x21c
+[   14.905014][ T1116]  f2fs_mount+0x20/0x30
+[   14.905016][ T1116]  legacy_get_tree+0x50/0xbc
+[   14.905018][ T1116]  vfs_get_tree+0x5c/0x1b0
+[   14.905020][ T1116]  do_new_mount+0x298/0x4cc
+[   14.905022][ T1116]  path_mount+0x33c/0x5fc
+[   14.905024][ T1116]  __arm64_sys_mount+0xcc/0x15c
+[   14.905025][ T1116]  invoke_syscall+0x60/0x150
+[   14.905028][ T1116]  el0_svc_common+0xb8/0xf8
+[   14.905029][ T1116]  do_el0_svc+0x28/0xa0
+[   14.905030][ T1116]  el0_svc+0x24/0x84
+[   14.905033][ T1116]  el0t_64_sync_handler+0x88/0xec
 
-> 
-> On Wed, 15 May 2024 18:24:50 +0300 Alex Rusuf <yorha.op@gmail.com> wrote:
-> > Currently kdamond uses only one context per kthread
-> > and most of its time it sleeps, so utilizing several
-> > contexts can scale kdamond and allow it to use
-> > another set of operations.
-> 
-> Thank you for this patchset.  I believe this change is important for DAMON's
-> long term vision.
-> 
-> A quick question for a clarification and proper prioritization, though,
-> since size of this patch series is not very tiny.  Does this patch series
-> is for your real usage?  If so, could you please clarify your usage and how
-> this patch series can help?
+According to ramdump, we found that inode->i_crypt_info is NULL.
+The error occurred in the following function:
 
-No, this is not for some commercial use or so that I could describe. It is
-rather just a RFC, because I'm even not sure how much this can help
-in real use cases.
+bool __fscrypt_inode_uses_inline_crypto(const struct inode *inode)
+{                              =20
+        return inode->i_crypt_info->ci_inlinecrypt;
+}
+EXPORT_SYMBOL_GPL(__fscrypt_inode_uses_inline_crypto);
 
-> 
-> > This patch-set implements support for multiple contexts
-> > per kdamond.
-> > 
-> > In pseudo code previous versions worked like
-> > 
-> > the following:
-> > 	while (!kdamond_should_stop()) {
-> > 	
-> > 		/* prepare accesses for only 1 context */
-> > 		prepare_accesses(damon_context);
-> > 		
-> > 		sleep(sample_interval);
-> > 		
-> > 		/* check accesses for only 1 context */
-> > 		check_accesses(damon_context);
-> > 		
-> > 		...
-> > 	
-> > 	}
-> > 
-> > With this patch kdamond workflow will look
-> > 
-> > like the following:
-> > 	while (!kdamond_shoule_stop()) {
-> > 	
-> > 		/* prepare accesses for all contexts in kdamond */
-> > 		damon_for_each_context(ctx, kdamond)
-> > 		
-> > 			prepare_accesses(ctx);
-> > 		
-> > 		sleep(sample_interval);
-> > 		
-> > 		/* check_accesses for all contexts in kdamond */
-> > 		damon_for_each_context(ctx, kdamond)
-> > 		
-> > 			check_accesses(ctx);
-> > 			
-> > 			...
-> > 	
-> > 	}
-> 
-> The overall idea makes sense to me.
-> 
-> > To try this you can use modified kernel[1] and
-> > damo[2]. I also have written few simple shell scripts[3]
-> > to collect data for damo.
-> > 
-> > 	[1] https://github.com/onlyoneofme/damon-multi-contexts.git
-> > 	[2] https://github.com/onlyoneofme/damo/tree/multi-contexts
-> 
-> Looking forward to the patch for DAMO be submitted, or PR-ed!
-
-Sure, I will submit a PR for DAMO later. I supported only 'record'
-and 'report heats' commands, so others haven't touched, that's
-why I decided to post it there (because it is not ready).
-
-> 
-> > 	[3] https://github.com/onlyoneofme/damon-multi-contexts-tests.git
-> 
-> Do you have a plan to integrate this into DAMON selftests or damon-tests?
-
-Not in the form they are for time being. These are just simple shell scripts
-that set up kdamond to use multiple contexts and these scripts only
-collect information like DAMO (but only as perf.data).
-
-Anyway, I think we can integrate them with damon-tests with some modifications
-to be able to actually _test_ if multiple contexts work.
-
-As for DAMON selftests, I didn't touch them for time being, so they truly
-need to be modified and expanded, but before doing that I would like
-you to look at implementation first, because changes in implementation
-could affect selftests, so once we agree on that I will implement selftests.
-
-Also note, that I didn't integrate changes with debugfs. I remember this is
-deprecated interface, but I'm not sure if compatibility need to be preseved
-with it, so do we need to expand debugfs for this?
-
-> 
-> > Alex Rusuf (7):
-> >   mm/damon/core: kdamond_struct abstraction layer
-> 
-> Let's make the subjects clear what it does.  For example, this patch's
-> subject could be "add kdamonds_struct abstraction layer".  Similar comment
-> for other patches.  Also, I think '_struct' suffix of 'kdamond_struct' is
-> not really needed.  Let's remove it if there is no special reason to add
-> it.
-
-Sure, I'll change that in next version, thanks!
-
-> 
-> >   mm/damon/core: list-based contexts organization
-> 
-> I think this can be squashed into the first patch?  If not, could you please
-> let clarify?
-
-I just tried to separate those patches for them to be as simple as
-possible (actually I failed at that...), but sure, we can squash them.
-
-> 
-> >   mm/damon/lru_sort: kdamond_struct abstraction layer
-> >   mm/damon/reclaim: kdamon_struct abstraction layer
-> 
-> Does these two patches mean lru_sort and reclaim are broken by the first
-> patch? Let's keep everything unbroken in middle of the patchset, to help
-> bisect.
-
-Yes, they're broken by the first patch, I'll squash them, thanks!
-
-> >   mm/damon/core: rename nr_running_ctxs -> nr_running_kdamonds
-> 
-> I think this would also better to be together with the first patch?  I know
-> this does not break something, but makes reading patch bit complex.
-
-No problem, thanks!
-
-> 
-> >   mm/damon/core: multi-context support
-> >   mm/damon/core: multi-context awarness for trace events
-> 
-> I think these two patches should be squashed into one patch.  Otherwise, the
-> trace point is broken in the middle of the patch series, right?
-
-You're right, I'll squash them, thanks!
-
-> 
-> >  include/linux/damon.h        |  48 +++-
-> >  include/trace/events/damon.h |  14 +-
-> >  mm/damon/core.c              | 497 +++++++++++++++++++++--------------
-> >  mm/damon/lru_sort.c          |  31 ++-
-> >  mm/damon/modules-common.c    |  35 ++-
-> >  mm/damon/modules-common.h    |   3 +-
-> >  mm/damon/reclaim.c           |  30 ++-
-> >  mm/damon/sysfs.c             | 306 +++++++++++++--------
-> >  8 files changed, 629 insertions(+), 335 deletions(-)
-> 
-> Thanks,
-> SJ
-
-BR,
-Alex
+The inode->i_crypt_info variable was initialized through the fscryptget_enc=
+ryption_info
+function. Can the f2fs_truncate be called at f2fs_iget when opening file en=
+cryption?
+______________________________________________________________________
+=E6=9C=AC=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E4=BB=85=E4=BE=9B=E9=A2=84=E6=
+=9C=9F=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=EF=BC=8C=E6=9C=AC=E9=82=
+=AE=E4=BB=B6=E5=8F=8A=E9=99=84=E4=BB=B6=E4=B8=AD=E5=8F=AF=E8=83=BD=E5=8C=85=
+=E5=90=AB=E4=BF=9D=E5=AF=86=E5=92=8C=E4=B8=93=E6=9C=89=E4=BF=A1=E6=81=AF=E3=
+=80=82=E7=A6=81=E6=AD=A2=E4=BB=BB=E4=BD=95=E6=9C=AA=E7=BB=8F=E6=8E=88=E6=9D=
+=83=E7=9A=84=E6=9F=A5=E9=98=85=E3=80=81=E4=BD=BF=E7=94=A8=E3=80=81=E6=8A=AB=
+=E9=9C=B2=E6=88=96=E5=88=86=E5=8F=91=E3=80=82=E5=A6=82=E6=9E=9C=E6=82=A8=E4=
+=B8=8D=E6=98=AF=E9=A2=84=E6=9C=9F=E7=9A=84=E6=94=B6=E4=BB=B6=E4=BA=BA=EF=BC=
+=8C=E8=AF=B7=E9=80=9A=E8=BF=87=E5=9B=9E=E5=A4=8D=E7=94=B5=E5=AD=90=E9=82=AE=
+=E4=BB=B6=E4=B8=8E=E5=8F=91=E4=BB=B6=E4=BA=BA=E8=81=94=E7=B3=BB=EF=BC=8C=E5=
+=B9=B6=E9=94=80=E6=AF=81=E5=8E=9F=E5=A7=8B=E9=82=AE=E4=BB=B6=E7=9A=84=E6=89=
+=80=E6=9C=89=E5=89=AF=E6=9C=AC=E3=80=82
+This email is for the intended recipient's use only. This email and its att=
+achments may contain confidential and privileged information. Any unauthori=
+zed review, use, disclosure or distribution is prohibited. If you are not t=
+he intended recipient, please contact the sender by reply email and destroy=
+ all copies of the original message.
