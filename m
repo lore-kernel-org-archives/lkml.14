@@ -1,46 +1,71 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDFD69DF7;
-	Fri, 17 May 2024 12:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DB84F890
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715950270; cv=none; b=BnuxdEfjyvyxlq61iHqv6Yy007p+Uug3uOd7D/2eczhE9ZnotMvG5kZ9+KK03UA/l0SQNqNGeFz68Bdr8PanOIf23ge/KwLbG22wS7oMPAE7+oAYlM85u2V9s+McMupLPUaLSGZjLDGxWK9c/dyp5TC/fvoLjjhCemePBLve9bc=
+	t=1715950307; cv=none; b=LJtU+x/3tgelqj9GYJsS/8bXEKxntQAwvgLp6bFfEuOqgUQsR2YVrCdYL1jFrPzEEQgoeRdgWvugJiKe2HoLgG/8571IPU98uLW0Lp/wYKrO42uhHsOhH6MUzWrLJK6mt7+7w2kfmpIqZTx3j954K8eGnRjmxj33A1+hMcr97Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715950270; c=relaxed/simple;
-	bh=etpSbFq4+uv41wWjX+1YrTAnO2bzwmChpR3xdBbp1z8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lw6nCDGWwo7OwvZtKtMUD2cGR/g3S0jIdKqo/gMWZLHVa6X/lXs4vOjD1fCx/yP81bb8FttdDF/lvaUobY2sJ2jQ0/ZaQOshna4hwYzRw2Hd6wf1KaW7C1GCkjElVx83S4MwE48vuV7gVzWbfIM1IftntyyT7ATr0OPkCCCTOqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VgmzG4Vj8z4f3jdT;
-	Fri, 17 May 2024 20:50:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 5D9CB1A0C07;
-	Fri, 17 May 2024 20:50:59 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBGdUkdmdAmqMw--.14380S14;
-	Fri, 17 May 2024 20:50:59 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ritesh.list@gmail.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v5 10/10] ext4: make ext4_da_map_blocks() buffer_head unaware
-Date: Fri, 17 May 2024 20:40:05 +0800
-Message-Id: <20240517124005.347221-11-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240517124005.347221-1-yi.zhang@huaweicloud.com>
-References: <20240517124005.347221-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1715950307; c=relaxed/simple;
+	bh=Vq4/ozJIACZOKOlrKWjGJ/ITZ67a1Onaw8acoBVl86E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AbdbtKIa2pDXhJv/KMD75DRvwezIqymbKtWMga7HsoLDIrqy1bPBn73+av+Qy76cZEVghsI4hbFB/z4rLZLZxcVoyvbwgmyRfzeGY4tQvtdmSQ1ctQX4FmAmCjofHqdp0taMaFVgG3k3CzMPDanA7rUlXb/SC/0imfNIsrjfbW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iy2Q7w75; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iy2Q7w75"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-572a93890d1so5209436a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 05:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715950303; x=1716555103; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uBDeP9nwT+3vg7rh6Kfq9TwLIodJdwZEaPm8bRsiuNE=;
+        b=Iy2Q7w75h/Zfv9p7KvFkCQVwK/J6wzRch4+kdxQJ1Ht/vZusif1zQ6jBYF2EFbvdGb
+         krpTB0oSkXxDBFvEAwR1FZspXwdoKlBDOcHuFj3OWdmnPS2u/9+pcbwmz+M6TNeHFe+m
+         GAHrlPOyATwOCDJ1Zlt0YJbI1pjizqRxcVXgBd1uUuyU8hxTVchRxV4J1gMKdpXBFhxS
+         BD0gl8MNOema4TwFKZB9UNWBuT+obIxTviPLl/sJDgoh0Nu4QKirjmmSaX4KDwZHP9nm
+         n63lNazZmn9HrHNyL79cfinCYGiZ+ef1+GQwtsei8uZMN1M7I8RfWy+Vv5tx9ZC/BoSR
+         ypYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715950303; x=1716555103;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uBDeP9nwT+3vg7rh6Kfq9TwLIodJdwZEaPm8bRsiuNE=;
+        b=pNUMO8i9wCeTU4LPXGyUWjmXimovATpkWqX6w6Yqh05YZx6lfZ63lR1Q4a4bZ3xwXt
+         l26UFc+SdxsqXHINnv9KRum9/yzKAuA2UWRixb8iaI0PdfYz/bz8lSivUJYWQzrMq5UZ
+         LiU6NS2Qj15iqmYAp0Afv8psHhFVhd84WlRyuXWkh/U8eiZEl0qMiT4BkfPCFaT273bO
+         pSBHv4H2CXNWjZmXUdiDM3Yb78KFevlAYSyd3vr7NTPSw8VmlrVBeW22WMll61hAvk6M
+         cWkegODnQqK7R9q+Y3d8YVjeNnTlhJp28ZZ3QOkcQSkbnTsp0FbtKKNsqnpBUgXsob19
+         4g+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWKB2cIEm2sd58xBLng0AMDNKzK9x+ew03yCwrcXVTNrmBFu4HHfXJs4TtuPywiGglHnU1wU3pbbual5/gNiBPME2DDdC1+3v1mzJS0
+X-Gm-Message-State: AOJu0Yxg4uonlDcRxEl15/Y7+dn4LN/FJp8ODqCQS4ylJZf/o/+pCz1a
+	7ParsH5whEKQHoLNXehFaFN21N6AXYhmMm8w1HYQP1CTCpH3vCcrnp/gB7kHq6o=
+X-Google-Smtp-Source: AGHT+IH2rlo+iZOPkGsHzGODAy1kMGiRTqA99W8UoQQqxB5KaE7eFk+2sx7TdMoVT9m8zu7m5sMMHQ==
+X-Received: by 2002:a50:cd41:0:b0:574:eca8:631c with SMTP id 4fb4d7f45d1cf-574eca865a6mr8447514a12.1.1715950302929;
+        Fri, 17 May 2024 05:51:42 -0700 (PDT)
+Received: from krzk-bin.. ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5735a2490casm10540527a12.32.2024.05.17.05.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 05:51:42 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: soc: bcm: document brcm,bcm2711-avs-monitor
+Date: Fri, 17 May 2024 14:51:38 +0200
+Message-ID: <20240517125138.53441-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,193 +73,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBGdUkdmdAmqMw--.14380S14
-X-Coremail-Antispam: 1UD129KBjvJXoW3WF4kCw4rGr1Utr1kAFW7CFg_yoW7uryrpr
-	Z3AF15Gr15Ww18ua1xtr1UZF1fK3WjyFW7Gr93GryrA34DCrn3tFn8JF1avas8trZ7Wr1r
-	XF4Utry8ua1SkrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUA
-	rcfUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-From: Zhang Yi <yi.zhang@huawei.com>
+Document alreasdy used binding for Syscon / AVS monitor:
+brcm,bcm2711-avs-monitor to fix dt_binding_check and dtbs_check warnings
+like:
 
-After calling the ext4_da_map_blocks(), a delalloc extent state could
-be identified through the EXT4_MAP_DELAYED flag in map. So factor out
-buffer_head related handles in ext4_da_map_blocks(), make this function
-buffer_head unaware and becomes a common helper, and also update the
-stale function commtents, preparing for the iomap da write path in the
-future.
+  brcm,avs-ro-thermal.example.dtb: /example-0/avs-monitor@7d5d2000: failed to match any schema with compatible: ['brcm,bcm2711-avs-monitor', 'syscon', 'simple-mfd']
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- fs/ext4/inode.c | 63 ++++++++++++++++++++++++-------------------------
- 1 file changed, 31 insertions(+), 32 deletions(-)
+ .../soc/bcm/brcm,bcm2711-avs-monitor.yaml     | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 4febee4c833f..2afa3f83ddfb 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1749,36 +1749,32 @@ static int ext4_insert_delayed_blocks(struct inode *inode, ext4_lblk_t lblk,
- }
- 
- /*
-- * This function is grabs code from the very beginning of
-- * ext4_map_blocks, but assumes that the caller is from delayed write
-- * time. This function looks up the requested blocks and sets the
-- * buffer delay bit under the protection of i_data_sem.
-+ * Looks up the requested blocks and sets the delalloc extent map.
-+ * First try to look up for the extent entry that contains the requested
-+ * blocks in the extent status tree without i_data_sem, then try to look
-+ * up for the ondisk extent mapping with i_data_sem in read mode,
-+ * finally hold i_data_sem in write mode, looks up again and add a
-+ * delalloc extent entry if it still couldn't find any extent. Pass out
-+ * the mapped extent through @map and return 0 on success.
-  */
--static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
--			      struct buffer_head *bh)
-+static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map)
- {
- 	struct extent_status es;
- 	int retval;
--	sector_t invalid_block = ~((sector_t) 0xffff);
- #ifdef ES_AGGRESSIVE_TEST
- 	struct ext4_map_blocks orig_map;
- 
- 	memcpy(&orig_map, map, sizeof(*map));
- #endif
- 
--	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
--		invalid_block = ~0;
--
- 	map->m_flags = 0;
- 	ext_debug(inode, "max_blocks %u, logical block %lu\n", map->m_len,
- 		  (unsigned long) map->m_lblk);
- 
- 	/* Lookup extent status tree firstly */
- 	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
--		retval = es.es_len - (map->m_lblk - es.es_lblk);
--		if (retval > map->m_len)
--			retval = map->m_len;
--		map->m_len = retval;
-+		map->m_len = min_t(unsigned int, map->m_len,
-+				   es.es_len - (map->m_lblk - es.es_lblk));
- 
- 		if (ext4_es_is_hole(&es))
- 			goto add_delayed;
-@@ -1788,10 +1784,8 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 		 * Delayed extent could be allocated by fallocate.
- 		 * So we need to check it.
- 		 */
--		if (ext4_es_is_delayed(&es) && !ext4_es_is_unwritten(&es)) {
--			map_bh(bh, inode->i_sb, invalid_block);
--			set_buffer_new(bh);
--			set_buffer_delay(bh);
-+		if (ext4_es_is_delonly(&es)) {
-+			map->m_flags |= EXT4_MAP_DELAYED;
- 			return 0;
- 		}
- 
-@@ -1806,7 +1800,7 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- #ifdef ES_AGGRESSIVE_TEST
- 		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, 0);
- #endif
--		return retval;
-+		return 0;
- 	}
- 
- 	/*
-@@ -1820,7 +1814,7 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 		retval = ext4_map_query_blocks(NULL, inode, map);
- 	up_read(&EXT4_I(inode)->i_data_sem);
- 	if (retval)
--		return retval;
-+		return retval < 0 ? retval : 0;
- 
- add_delayed:
- 	down_write(&EXT4_I(inode)->i_data_sem);
-@@ -1832,10 +1826,8 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 	 * the extent status tree.
- 	 */
- 	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
--		retval = es.es_len - (map->m_lblk - es.es_lblk);
--		if (retval > map->m_len)
--			retval = map->m_len;
--		map->m_len = retval;
-+		map->m_len = min_t(unsigned int, map->m_len,
-+				   es.es_len - (map->m_lblk - es.es_lblk));
- 
- 		if (!ext4_es_is_hole(&es)) {
- 			up_write(&EXT4_I(inode)->i_data_sem);
-@@ -1845,18 +1837,14 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 		retval = ext4_map_query_blocks(NULL, inode, map);
- 		if (retval) {
- 			up_write(&EXT4_I(inode)->i_data_sem);
--			return retval;
-+			return retval < 0 ? retval : 0;
- 		}
- 	}
- 
-+	map->m_flags |= EXT4_MAP_DELAYED;
- 	retval = ext4_insert_delayed_blocks(inode, map->m_lblk, map->m_len);
- 	up_write(&EXT4_I(inode)->i_data_sem);
--	if (retval)
--		return retval;
- 
--	map_bh(bh, inode->i_sb, invalid_block);
--	set_buffer_new(bh);
--	set_buffer_delay(bh);
- 	return retval;
- }
- 
-@@ -1876,11 +1864,15 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
- 			   struct buffer_head *bh, int create)
- {
- 	struct ext4_map_blocks map;
-+	sector_t invalid_block = ~((sector_t) 0xffff);
- 	int ret = 0;
- 
- 	BUG_ON(create == 0);
- 	BUG_ON(bh->b_size != inode->i_sb->s_blocksize);
- 
-+	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
-+		invalid_block = ~0;
+diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml
+new file mode 100644
+index 000000000000..e02d9d7e7d9a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/bcm/brcm,bcm2711-avs-monitor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	map.m_lblk = iblock;
- 	map.m_len = 1;
- 
-@@ -1889,10 +1881,17 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
- 	 * preallocated blocks are unmapped but should treated
- 	 * the same as allocated blocks.
- 	 */
--	ret = ext4_da_map_blocks(inode, &map, bh);
--	if (ret <= 0)
-+	ret = ext4_da_map_blocks(inode, &map);
-+	if (ret < 0)
- 		return ret;
- 
-+	if (map.m_flags & EXT4_MAP_DELAYED) {
-+		map_bh(bh, inode->i_sb, invalid_block);
-+		set_buffer_new(bh);
-+		set_buffer_delay(bh);
-+		return 0;
-+	}
++title: Broadcom AVS Monitor
 +
- 	map_bh(bh, inode->i_sb, map.m_pblk);
- 	ext4_update_bh_state(bh, map.m_flags);
- 
++maintainers:
++  - Stefan Wahren <wahrenst@gmx.net>
++
++properties:
++  compatible:
++    items:
++      - const: brcm,bcm2711-avs-monitor
++      - const: syscon
++      - const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++  thermal:
++    $ref: /schemas/thermal/brcm,avs-ro-thermal.yaml
++    description: Broadcom AVS ring oscillator thermal
++
++required:
++  - compatible
++  - reg
++  - thermal
++
++additionalProperties: false
++
++examples:
++  - |
++    avs-monitor@7d5d2000 {
++        compatible = "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd";
++        reg = <0x7d5d2000 0xf00>;
++
++        thermal: thermal {
++            compatible = "brcm,bcm2711-thermal";
++            #thermal-sensor-cells = <0>;
++        };
++    };
++...
 -- 
-2.39.2
+2.43.0
 
