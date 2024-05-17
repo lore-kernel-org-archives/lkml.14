@@ -1,118 +1,114 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CFD1F93E;
-	Fri, 17 May 2024 15:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA4E1F93E;
+	Fri, 17 May 2024 15:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715958936; cv=none; b=Z3rEy1bJri2zaQqsMJpU5drb4fJbW1w7DUOVk7dwTDyxC+7EX19bGE7BmLvSX91j3+TrwSsUmmGB2iZL3GNkc2z8LTp56+TQgYUMn2w0sufOfObfgn+Gt9W02WI/JuqeqOPM1CO8XMY6RrAz63ytxKsuHfHvLIqKqT4Ch9wM2E4=
+	t=1715958962; cv=none; b=dLTaEkQzIImfvaXAjUURISVbUzvWfLTaNMbGhVc7u3smi9ZNurNcTgVwv/YGKOeh4ru+KcVayLNzaAcK8VLruCpbKI3PZk1LHo9g5LmxvaBl4EAdpsb4AHbLXkn+/MU2ktjijamP6/FwYtuaNqpgUryKJ0vPUU/fRaDX2Au+lnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715958936; c=relaxed/simple;
-	bh=tzkeAutgHKDvtezMaRFIFQ1vOKGxq4NGB23kr6qrPCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NI4PbtxFjKBzBBKfazPnlMDCjISSNrRK3l8PhRF0KKoo/FCxjwor8agjswJtkcvS9R3+TI7MGCuu/1GVheHznJMBLIP5EA6K7hOd+SxVldsET6OHJUs4mlGtyEV+OVfKQbFl7pVw5WCVN7mnzpfidRyYm6KNNOXwGGvH6Oq2OwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn; spf=pass smtp.mailfrom=link.tyut.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=link.tyut.edu.cn
-Received: from localhost.localdomain (unknown [120.208.127.153])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 2CDA0920119;
-	Fri, 17 May 2024 23:05:50 +0800 (CST)
-From: Hu Haowen <2023002089@link.tyut.edu.cn>
-To: corbet@lwn.net
-Cc: Hu Haowen <2023002089@link.tyut.edu.cn>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs/zh_TW: add translation for glossary
-Date: Fri, 17 May 2024 23:05:28 +0800
-Message-ID: <20240517150529.102958-1-2023002089@link.tyut.edu.cn>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715958962; c=relaxed/simple;
+	bh=6SGRzemzE222vlrc/5jANNd2vwMs0qyJ0hvxeF436QA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dWBk58dCBrAOckYUmMlrKZ9C5nTwfDf5sIpQibDZLVu4ghMT2iabG9S5zQE3u1Yu6lOSEz3zsG/4MD6TUgCe6kRG8BNXMD/WVo9v6zYuMFLZDfTpMl8tMDMu16AhzZZ6FjhZGCaA50pzg06rDXoNRsyiSCYycpWh2K8O70IXpzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gx2NzsEH; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gx2NzsEH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715958960; x=1747494960;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=6SGRzemzE222vlrc/5jANNd2vwMs0qyJ0hvxeF436QA=;
+  b=Gx2NzsEHBwqaqqkpa1B63TuzUcem3cJCbWOHPZuq5lRgAkxvwA5pUHy1
+   5eVFIL88CkwlpvqCj9mn4ATu0aE+jIeOwSZ8E42r55KgSf2nGAZop2gaC
+   qzKzZZhag9rQVKgYz++bh0Ea4l8zZn1+ZEGxhzCqlkiFAiuryGHhWMkTl
+   pcNbhOp2jzgK9KUu6TvZ+NOB/+0E3EhQSYj9mKlqe94VuewxXQdiopff9
+   AxV6j+zX9vg9xDUURVdqxJ5G0wB6gBCP8J6JV+p8xEPhfWU1F5rEUn/Xp
+   onUFcdroO1bGSKk2A5Sw07cqgh4O7V0m0GcuXFnr55HPYKkFg5pX3ZoWf
+   g==;
+X-CSE-ConnectionGUID: FQrkQWcVSCmaTr1yWS4YJQ==
+X-CSE-MsgGUID: tfjDikL/Q9WrGHzas6TmGA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="23279378"
+X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
+   d="scan'208";a="23279378"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:15:59 -0700
+X-CSE-ConnectionGUID: Tb8kRrpgRgSE/FtMnbu54w==
+X-CSE-MsgGUID: 1WreihPMQVOPVhn5DjrZag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
+   d="scan'208";a="31743028"
+Received: from velpulaa-mobl3.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.212.227.54])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:15:59 -0700
+Message-ID: <9293c51c7d502843bfff90c5664be00bfe112e8d.camel@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86: ISST: fix use-after-free in
+ tpmi_sst_dev_remove()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, Hans de Goede
+	 <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org, 
+	error27@gmail.com
+Date: Fri, 17 May 2024 08:15:58 -0700
+In-Reply-To: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
+References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHx4dVh5LGU0dTxgZQx8ZSVUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpJS1VJS0NVSklMVUpOSFlXWRYaDxIVHRRZQVlPS0hVSk1DTExPVUpLS1VKQktLWQ
-	Y+
-X-HM-Tid: 0a8f8716f93303a1kunm2cda0920119
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MU06Cio4MzMMOTQUMQ46MAoB
-	DxYwCQxVSlVKTEpOQk5DSENDS09PVTMWGhIXVUlLSUhLS0lLQ0I7FxIVEFUPAg4PVR4fDlUYFUVZ
-	V1kSC1lBWUpJS1VJS0NVSklMVUpOSFlXWQgBWUFITUxJNwY+
 
-Add translation for glossary and add it to index according to commit
-cac02cbb91f31e28 ("docs/zh_CN: Add a glossary of Chinese translation
-terms").
+On Fri, 2024-05-17 at 07:49 -0700, Harshit Mogalapalli wrote:
+> In tpmi_sst_dev_remove(), tpmi_sst is dereferenced after being freed.
+> Fix this by reordering the kfree() post the dereference.
+>=20
+> Fixes: 9d1d36268f3d ("platform/x86: ISST: Support partitioned
+> systems")
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Signed-off-by: Hu Haowen <2023002089@link.tyut.edu.cn>
----
- Documentation/translations/zh_TW/glossary.rst | 36 +++++++++++++++++++
- Documentation/translations/zh_TW/index.rst    |  5 +--
- 2 files changed, 39 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/translations/zh_TW/glossary.rst
-
-diff --git a/Documentation/translations/zh_TW/glossary.rst b/Documentation/translations/zh_TW/glossary.rst
-new file mode 100644
-index 000000000000..6ff2a5a460ea
---- /dev/null
-+++ b/Documentation/translations/zh_TW/glossary.rst
-@@ -0,0 +1,36 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+術語表
-+======
-+
-+這不是一個完善的術語表，我們只是將有爭議的和陌生的翻譯詞彙記錄於此，
-+它的篇幅應該根據內核文檔翻譯的需求而增加。新詞條最好隨翻譯補丁一起
-+提交，且僅在以下情況下收錄新詞條：
-+
-+        - 在翻譯過程中遇到陌生詞彙，且尚無翻譯先例的；
-+        - 在審閱過程中，針對某詞條出現了不同的翻譯意見；
-+        - 使用頻率不高的詞條和首字母縮寫類型的詞條；
-+        - 已經存在且有歧義的詞條翻譯。
-+
-+
-+* atomic: 原子的，一般指不可中斷的極小的臨界區操作。
-+* DVFS: 動態電壓頻率升降。（Dynamic Voltage and Frequency Scaling）
-+* EAS: 能耗感知調度。（Energy Aware Scheduling）
-+* flush: 刷新，一般指對cache的沖洗操作。
-+* fork: 創建, 通常指父進程創建子進程。
-+* futex: 快速用戶互斥鎖。（fast user mutex）
-+* guest halt polling: 客戶機停機輪詢機制。
-+* HugePage: 巨頁。
-+* hypervisor: 虛擬機超級管理器。
-+* memory barriers: 內存屏障。
-+* MIPS: 每秒百萬指令。（Millions of Instructions Per Second）,注意與mips指令集區分開。
-+* mutex: 互斥鎖。
-+* NUMA: 非統一內存訪問。
-+* OpenCAPI: 開放相干加速器處理器接口。（Open Coherent Accelerator Processor Interface）
-+* OPP: 操作性能值。
-+* overhead: 開銷，一般指需要消耗的計算機資源。
-+* PELT: 實體負載跟蹤。（Per-Entity Load Tracking）
-+* sched domain: 調度域。
-+* semaphores: 信號量。
-+* spinlock: 自旋鎖。
-+* watermark: 水位，一般指頁表的消耗水平。
-diff --git a/Documentation/translations/zh_TW/index.rst b/Documentation/translations/zh_TW/index.rst
-index 660a74d2023c..95809012a9ef 100644
---- a/Documentation/translations/zh_TW/index.rst
-+++ b/Documentation/translations/zh_TW/index.rst
-@@ -119,9 +119,10 @@ TODOList:
- 術語表
- ------
- 
--TODOList:
-+.. toctree::
-+   :maxdepth: 1
- 
--* glossary
-+   glossary
- 
- 
- 索引和表格
--- 
-2.45.0
+> ---
+> v1->v2: Add R.B from Hans and fix commit message wrapping to 75
+> chars.
+> This is found by smatch and only compile tested.
+> ---
+> =C2=A0drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git
+> a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index 7bac7841ff0a..7fa360073f6e 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -1610,8 +1610,8 @@ void tpmi_sst_dev_remove(struct
+> auxiliary_device *auxdev)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tpmi_sst->partition_mask_=
+current &=3D ~BIT(plat_info-
+> >partition);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Free the package insta=
+nce when the all partitions are
+> removed */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!tpmi_sst->partition_=
+mask_current) {
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0kfree(tpmi_sst);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0isst_common.sst_inst[tpmi_sst->package_id] =3D NULL=
+;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0kfree(tpmi_sst);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&isst_tpmi_d=
+ev_lock);
+> =C2=A0}
 
