@@ -1,118 +1,98 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7687912F5A3;
-	Fri, 17 May 2024 17:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C112F5A3;
+	Fri, 17 May 2024 17:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966092; cv=none; b=E5CrD5y3Cb6lFR3LLp3cmTkOiFpg44l7YFt/GiJynixGERpM3kKGeiOirTJmxy2sywjJdW6xQiU74cWRXyq4p6/AsJVwYy1oZ/DYQS7Kz5v3UI08PGr0tjQNo6AELXZRyE0WyUtNhO72nii1D0O3cuFKvYq1g4dSH5NmA/k9cBU=
+	t=1715966114; cv=none; b=aGA750FvHdSlEyDjd3uH8C8i1gvrF/ihhJIWF7+2oZbV4nkVRgar9s+l7o5CRFTkq1SoBXd3L20zGNa74C3z4aSIiKXSCxLLRwUjrpB2nqwgMGVTgvEHkuXgUlnYj/y/8R6/ag5GHwMJPmIk6uqVtx5o+HsWBy3+1/ejbHVYiUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966092; c=relaxed/simple;
-	bh=uw9CPXGjU0B7A7pqt8vkqgvzDyz6OO8UztQRenWCnVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JUS6UezdSv2LcoXp20WhjM3XbfeFGswGxkCfI2Kx70RhkDsae6fYlbF6BQnV123jHNmmMWkLPFQDIrC0hxGmoz1ZR8QHbDNjpyEk2jxy/+xJsqkAriId3aTIGxj6wJQrQucrQOL/pqozKw58TK4wpJtIZ8J++aIiKwNfhdB7Ehw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMOW82/b; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715966114; c=relaxed/simple;
+	bh=8niseAwEvm4eufhgATrW3AOhRGKDVc/i+YYWQsWeM7Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rX0FNicvKj/HaOgvbn55cMEfbqtfK/wdz7GtiPd40huNnE2/cIJWcEfOmnkrwjgV/oZiEqnOJHAltlLB/WEjju5ou3DfQ9RRY9kBaP52AVvKWWzP+cwfC5rT3Io4aa0sGWRNCdUHOYzH9P0yBP/cNCn5XYm9ZPmJrUtcd9DcNy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L26Qd1ky; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMOW82/b"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1ed96772f92so15461405ad.0;
-        Fri, 17 May 2024 10:14:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715966091; x=1716570891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X56rUOhK9RH8FnxHSRChz/vg6z6AwcLdxNOEL1Ao9+4=;
-        b=YMOW82/bN76MHkCqK6fgX3H/4vr3VY1iF3zfdFYlaaA8reqLAbZzUWy9oWSl/P6UFZ
-         rKfIiCxURvy2hGkFMQXGG++jUD+zzopn829bu7OnW8iYQ8lQQVfqMylE4vCncNgWwM5T
-         HLuAr0P5umeKnak0K378a1nwoOEPwnOh4Rl6LMA9KJ0kjs+2uo2CKl5e35qzi7H9qpFq
-         5QwxOrieFznVaZXtdTBR6Q7s2a8zeTrQ/lOZ7hTSQewB/WJszTmfxs+W76LDS63Zl1uI
-         OS4ZsDsxc4+yOrRKof/weqnl5Ll8eWwSngAv8mcOmfWSkcumc/vp0YHQuldzLxu4n9B6
-         a69A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715966091; x=1716570891;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X56rUOhK9RH8FnxHSRChz/vg6z6AwcLdxNOEL1Ao9+4=;
-        b=QtA0UIGV2tWXYfBg5feHXlh3RyBLyDcj5dt6WrQ+3tOD5oe4Z6kbtuc49jYQ6Rgy4o
-         jCZKaCxFEIb3Y1WB1rJU7o6yhRQebCyFyaRTXJ1YuBIYubPs9YFFBEdZQU1QDXAhoKiV
-         NutajSj+/G7Wn8o7r1oju6N5ZWfdU50xt4VwEXfaupuXzfGBOD1VuwlT2YDyvAhp26eC
-         66qvwFf3YYt/fiRD0+YPQdPKAMSmGF0HwairGv6ivEdK04monps8PuGTCD+TLlMiDP45
-         LqtTJm97RqpDFW8m6SpNlYBIuaB7Zz4Hpb8W3VrGWuchlzaYWVEPXDqFTIZyI3s5HHjX
-         rLfA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHTsSDgzaOUECUm6qNgRu6qrBJaZMOXTq3dcRGVoM6pNpFmgVvHGeYH2jl1W/ZjZVTQItOOFmEphcqYRulHzQmHTMM9ho007560gmU9kRN5NkcCQRoFuOJ5E16kMGOSaJfAzhUWkB5sCuoCiA=
-X-Gm-Message-State: AOJu0YxoTgqp9RHwyhr3lmIonKE1flPKTUgeRBC24T/3RWcQlQvuXNPH
-	qwuncVyv9nNnKuSZ3L04aB5ZCp7l5HLPqEoJe/DNirPWIsuOlda2
-X-Google-Smtp-Source: AGHT+IGpa2Dr0JDdAiMoTugcbrVLY0mUR0iw+IOqX/boafkVx/d5zR2uQ7+D1n+sqry4E4YaQ6Ztdw==
-X-Received: by 2002:a05:6a21:3115:b0:1b0:1be7:3705 with SMTP id adf61e73a8af0-1b01be7387cmr10024240637.7.1715966090589;
-        Fri, 17 May 2024 10:14:50 -0700 (PDT)
-Received: from localhost.localdomain ([187.120.157.23])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a86a4fsm14988250b3a.63.2024.05.17.10.14.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 10:14:50 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: miriam.rachel.korenblit@intel.com,
-	kvalo@kernel.org,
-	rafael.j.wysocki@intel.com,
-	daniel.lezcano@linaro.org,
-	johannes.berg@intel.com,
-	dmantipov@yandex.ru
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iwlwifi: mvm: adding check if the thermal firmware is running
-Date: Fri, 17 May 2024 14:13:05 -0300
-Message-ID: <20240517171311.3705-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L26Qd1ky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB656C4AF0E;
+	Fri, 17 May 2024 17:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715966113;
+	bh=8niseAwEvm4eufhgATrW3AOhRGKDVc/i+YYWQsWeM7Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L26Qd1kyalzbhAN7I58oIXCoMGliFeN10tRbJywsR7G7832jC/g5AmuXZ3OYaRuav
+	 KNaOX5qBPGdgXrS/dcYCW4tC9ZFk/O4U1MyTnqAHcASLOQ3IsdnWaFLJMzVeSoxnFH
+	 JWTZoUmBiC/OrYwutQ0Qdbsf/qI+hAmoUcAiv7AolTnjhqaoDXLbT0j/c52VLqfXOS
+	 j0bRAd6LC+/NE7+SiINnnT85UxoaPJlx1ssny0OQqZgKzh47ykuVNsyUV0D9EFI3HM
+	 /KUjfoheuJp849m7k8FCDXkgTFDRYNSZifMnH15EtZFtCrrLJrYUxoMMCZM8SmChAJ
+	 Ss6/MOR9E/FSA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-523b017a5c6so3459100e87.1;
+        Fri, 17 May 2024 10:15:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4UBHDUxpkVDomeboGU6nj4NyznefjpK1+cH1Mz6sTXAGQjdMcCWVgwbmkDlB+GozE/z1YhlqDBQyA+0MsqVeRGdNvBBp2sqGcC+rIc5ngXwF0zxJ2DMH6W6ggqwZvnxHiqiJxuPjqW9P63cDyKl9QcVixuNZbpb5UZIkmq1PgRgLD2nnF+QmqLuJlQmw2I6QonNxRprk0jDVbALLb2eKJ1wJn+o/d3x8YUkgVYp3K8RwNSXuP06fiCgiVYxw=
+X-Gm-Message-State: AOJu0Yz9AHyjP/UJiViRFYYCOqLT33Ds/y4gzGd/qq+JMbrhEOhNwWwU
+	GoLCAXdWLc8KRqa+DFXMv1Gus+iH0MaRVNxG6QDT6QQWY5xJsPuMR5QS6LIiAutWG8TF1bJJbGV
+	b0xDzGdBgcckQiMHQXI7svRDd3w==
+X-Google-Smtp-Source: AGHT+IGUUWb0QqBy4GPMsKWcCTpt3kRDK3vukBnYnUPOMugpsBxrcXJSiRK62s1g28Bx/g92dGHcLhVZALfpiK1lJOw=
+X-Received: by 2002:ac2:4643:0:b0:523:ae99:b333 with SMTP id
+ 2adb3069b0e04-523ae99b3c5mr5613808e87.64.1715966112010; Fri, 17 May 2024
+ 10:15:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240514224508.212318-1-romank@linux.microsoft.com> <20240514224508.212318-6-romank@linux.microsoft.com>
+In-Reply-To: <20240514224508.212318-6-romank@linux.microsoft.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 17 May 2024 12:14:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
+Message-ID: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from DeviceTree
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
+	dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
+	hpa@zytor.com, kw@linux.com, kys@microsoft.com, lenb@kernel.org, 
+	lpieralisi@kernel.org, mingo@redhat.com, mhklinux@outlook.com, 
+	rafael@kernel.org, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
+	ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the dmesg is showing the message "failed to read out thermal zone"
-as if the temperature read is failed by don't find the thermal zone.
+On Tue, May 14, 2024 at 5:45=E2=80=AFPM Roman Kisel <romank@linux.microsoft=
+.com> wrote:
+>
+> The vmbus driver uses ACPI for interrupt assignment on
+> arm64 hence it won't function in the VTL mode where only
+> DeviceTree can be used.
+>
+> Update the vmbus driver to discover interrupt configuration
+> via DeviceTree.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index e25223cee3ab..52f01bd1c947 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/syscore_ops.h>
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/pci.h>
+> +#include <linux/of_irq.h>
 
-After researching and debugging, I see that this specific error is
-occurrenced because the thermal try read the temperature when is started,
-but the firmware is not running yet.
+If you are using this header in a driver, you are doing it wrong. We
+have common functions which work on both ACPI or DT, so use them if
+you have a need to support both.
 
-For more legibiliti i change the tt.c for return EAGAIN when this was occurrence.
-After this change, in my computer I compile and install kernel in /boot
-and in my dmesg the message "failed to read out thermal zone" is not show
-any more.
+Though my first question on a binding will be the same as on every
+'hypervisor binding'.  Why can't you make your hypervisor interfaces
+discoverable? It's all s/w, not some h/w device which is fixed.
 
-I would like to thanks for Rafael Wysocki <refael.j.wysocki@intel.com> and
-Kalle Valo <kvalo@kernel.org> for your suggestions in my first patch.
-
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index 8083c4b2ab6b..68ab9966330c 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -620,8 +620,14 @@ static int iwl_mvm_tzone_get_temp(struct thermal_zone_device *device,
- 
- 	mutex_lock(&mvm->mutex);
- 
--	if (!iwl_mvm_firmware_running(mvm) ||
--	    mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
-+	const int res = iwl_mvm_firmware_running(mvm);
-+
-+	if (!res) {
-+		ret = -EAGAIN;
-+		goto out;
-+	}
-+
-+	if (mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
- 		ret = -ENODATA;
- 		goto out;
- 	}
--- 
-2.45.1
-
+Rob
