@@ -1,123 +1,86 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0758755774
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 13:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8E64F887;
+	Fri, 17 May 2024 13:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715951819; cv=none; b=Ux4O9ieg/hLiJcN3kLsqFZrzHiB8ZuRkfDVdV0HwfxBKZtuFpc9IoBV5Mrr9/kLrjT5DCnoDZxCs4T0KPtIX0AosXWZzaQeDO0B6INP1kEisJZSHfhE9FudAoBTskoaiKU8hOZx8Tk/4n0lvovY4OAE4IsfYHW6oejPZzvzQU8Q=
+	t=1715951845; cv=none; b=VmQA7YcPaLzme4kY+/r8hrEcf80JtADgWbttuUpg/A6EA2Zr6Iiy1LZpXcftZEXMsyvDhDheylkLlIVO6NQf01wbiBE+PxnZZGPEy4BPF5O3cmUksqeIFDS6a0zik+0Pqe9onM1Ed0VzMMU8cF9feEPXN/IVj2vIRaGctv59Zak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715951819; c=relaxed/simple;
-	bh=aauTBVOT3XeIZIf4iPBR3drvWHeVdecOUmzx3NQ0Dn8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c/DzxIAs23Nz1QgEjI1MDXyZ7mFyaSRTJh/dSeywQPn8EsaUt6F4ZjvD/qKuBFwdFjlJMi5lSUhBpSmG8mtalMJCPWXeQK9I7gl5115xlbLEbvkXH4WxqYD92C0NbrFCzesJxFDLoSKs0YKSXQagZpmCLaYV+zQ0jvCykhukLYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=Vub0Ksgh; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
+	s=arc-20240116; t=1715951845; c=relaxed/simple;
+	bh=+iDpRvaHBF67JDzZJTV4G+Mp9zFa9uxoX38eD+A5Neg=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=lI8b8zS+iTz/7u5/MQRxmj1h1wY0/m4wnss0fxuJfT1BY5v2bwfW/6Q/VZPYNnaZcfA+DFBborwL4pwJcXVnzlHe7flIE8aEIW5mXcGjuaGVScX/RLwFaDpsbBNVDTR3do8/iBZUyKbWMPJKDckF3upduxUwuaJmPS7pQXVOyko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGeX7leM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="Vub0Ksgh"
-X-Envelope-To: broonie@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1715951816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aoT2lrcR+fSoon+5nFQKLzIon+tYudtRC6WweACFb2U=;
-	b=Vub0Ksghb7U+GY2K5QmoEjBgJQsxJ2FhQH5cHdYuKBbWrLz/NH0WKLvjeeA6k6I0idG3mx
-	JMAKohti18ob3V/hv0HJk5qO28wjy+aPzA37yZBk2MUKhE/K4ByWa4SuO6YN4hfjpydzbT
-	6i1MmJ3ahd99XJM+PH825HpB6VjQNkIYA4GY9hroEAg5nYjJpBMZrwVS7mxD8+SCCdmwUP
-	UwqF0PER8BryHj1iovUY/KrusPIAIT8wKOpKy95vmenGVrhU1JUhQkz3MuZRg6ekcy0duI
-	IRUwGczmtNM5q2z3K+qLV99AT1e4mr3lvbwVdI8pWtDTyFamdiCBlxp2QJaIIA==
-X-Envelope-To: gregkh@linuxfoundation.org
-X-Envelope-To: rafael@kernel.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: linus.walleij@linaro.org
-X-Envelope-To: brgl@bgdev.pl
-X-Envelope-To: lgirdwood@gmail.com
-X-Envelope-To: perex@perex.cz
-X-Envelope-To: tiwai@suse.com
-X-Envelope-To: mturquette@baylibre.com
-X-Envelope-To: sboyd@kernel.org
-X-Envelope-To: andi.shyti@kernel.org
-X-Envelope-To: saravanak@google.com
-X-Envelope-To: emas@bang-olufsen.dk
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-gpio@vger.kernel.org
-X-Envelope-To: linux-sound@vger.kernel.org
-X-Envelope-To: linux-clk@vger.kernel.org
-X-Envelope-To: linux-i2c@vger.kernel.org
-X-Envelope-To: alsi@bang-olufsen.dk
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Date: Fri, 17 May 2024 15:02:20 +0200
-Subject: [PATCH 13/13] MAINTAINERS: add maintainership for A2B drivers
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGeX7leM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACD0C2BD10;
+	Fri, 17 May 2024 13:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715951844;
+	bh=+iDpRvaHBF67JDzZJTV4G+Mp9zFa9uxoX38eD+A5Neg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=TGeX7leMnfPr2iyTGvGBIWvcK5xTUXzvn22fNP6z+Jfci5PGEX6IeREvFFBGkBhaZ
+	 v0Nz4wmvqcxP4lvsORj2PeyQFKJOv8l4AysmdI1UQDZc2W06xp0EcccZDtt1ZrtkQn
+	 34NshspxVzBIG2WomEdCbWitDmbuh2rDU1tAvR2S2ZzF0J2UOvjbn8e6S6yQvS6AXi
+	 rs0DJuzEvD7I6LwgpGFzBxIEn2iC3PXoXtj3xmYR4wnV8epRSUEF7EuVQUNPyh6VHs
+	 oCBb2To3UsWCAoSKgn1tye83nitvUHYUAVyAge1+K44H9g7KYdqMrzZSJSENftK5LE
+	 DSMK7kKwakLug==
+Date: Fri, 17 May 2024 08:17:23 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240517-a2b-v1-13-b8647554c67b@bang-olufsen.dk>
-References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
-In-Reply-To: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
-To: Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
- Saravana Kannan <saravanak@google.com>
-Cc: Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-i2c@vger.kernel.org, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-X-Migadu-Flow: FLOW_OUT
+ Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240516112355.200265-1-alexander.stein@ew.tq-group.com>
+References: <20240516112355.200265-1-alexander.stein@ew.tq-group.com>
+Message-Id: <171595174000.1651057.6767268550343039132.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: add MBa8MP-RAS314 SBC
 
-From: Alvin Šipraga <alsi@bang-olufsen.dk>
 
-Add all relevant A2B driver files to the MAINTAINERS file and mark
-myself as maintainer.
+On Thu, 16 May 2024 13:23:54 +0200, Alexander Stein wrote:
+> MBa8MP-RAS314 is an SBC based on the embedded module TQMa8MPxL.
+> All relevant interfaces integrated in the CPU have been implemented on
+> the MBa8MP-RAS314 for (an) industrial usage. Due to the numerous interfaces
+> and the small size of this SBC the use in different applications
+> is possible without the need of a [special,custom] design.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 90754a451bcf..c2019c78b77c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3501,6 +3501,18 @@ F:	kernel/audit*
- F:	lib/*audit.c
- K:	\baudit_[a-z_0-9]\+\b
- 
-+AUTOMOTIVE AUDIO BUS (A2B) DRIVERS
-+M:	Alvin Šipraga <alsi@bang-olufsen.dk>
-+S:	Supported
-+F:	Documentation/devicetree/bindings/a2b/
-+F:	drivers/a2b/
-+F:	drivers/base/regmap/regmap-a2b.c
-+F:	drivers/clk/clk-ad24xx.c
-+F:	drivers/gpio/gpio-ad24xx.c
-+F:	drivers/i2c/busses/i2c-ad24xx.c
-+F:	include/linux/a2b/
-+F:	sound/soc/codecs/ad24xx-codec.c
-+
- AUXILIARY BUS DRIVER
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- R:	Dave Ertman <david.m.ertman@intel.com>
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
--- 
-2.44.0
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y freescale/imx8mp-tqma8mpql-mba8mp-ras314.dtb' for 20240516112355.200265-1-alexander.stein@ew.tq-group.com:
+
+arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314.dtb: interrupt-controller@32fc2000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
+
+
+
+
 
