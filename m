@@ -1,103 +1,152 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC8D3B78B;
-	Fri, 17 May 2024 11:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34893200DD;
+	Fri, 17 May 2024 11:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715944400; cv=none; b=tWmkY935qzggHdHvzy4WNtDecOIRoLRR+svxHnUO5vcHER7nDuC9W3CXM3U4dPhyDR3yhhuhVzJ4HdznMARIWQCEcD5qY3zVq11klO+3x/Za7/LdArOwgf5nQYTCBywKuWDu7XkG6OOiES7JgeJpVcOQyI3lBQTrMUiJrkaFO60=
+	t=1715944495; cv=none; b=Eboowt7TDe7a9g1bVHZOIzS5b70UVHA3oYNm/AY3I4B2/d4Xm7lj2FPagI5R/b+e75y3w4f9jX/8dEo1Ut+LghuOZHfnZ31sgLr9lY3XVPYaGlhUkHYNNvfzbOp0cabh5K4rN7QCV/gnSeFaeFZIx2wNY0gYmf+FbclIQFKvk6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715944400; c=relaxed/simple;
-	bh=ypJWPAXdkM5itiG5UVH9IVJusTPRaIOKFrtWmyuLtV8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JHyxBJ90yXWvCCNFZZV+3Hid/kY04zM7WC+6jJ/ZB0jTQV6+IMb/lssrslv8GIumD3H1ffsUKTx0pLYHbGkUfmyVeTBHjC6kunLnIUAI6bAw5UX8jepNiIxOrWCH+pinH49sDcKJLfHvodH8AcHUX73nYQ0VtbCrbIjFNwFmjrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jLpuI2+S; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715944495; c=relaxed/simple;
+	bh=zHBiwgBwI9p6Yh7J+Nq4X1m3JqYe0I65Qo5yh4G6VNU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=b1yq4cItO2I0rUj6z36H1FlzuO+LFQAq0oAyKnciFAP6Bs/Jh8a+FLu9kI+XHpRu4hgRRdyHAeBkjbP2zVF5oPYT4N7gscZDYEjMe+VAygXz8xowDG4EX6V1BrUjLc33Ms8PLLooy6rlpwZ53sHDcSYbHeBn82ZceIXvvu72i8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bSUBJh8A; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLpuI2+S"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a5a1054cf61so507059066b.1;
-        Fri, 17 May 2024 04:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715944397; x=1716549197; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F0jVkMtFf3CbTZAlgcnmUWY97LIc8kU/RGoW8WnJqv0=;
-        b=jLpuI2+SNu3lQQfyF82LV7PMcVN05kMdhiGHQqxxVQ8rxrHOzG82jUl3IyFk5HqEfu
-         BdPTL2ujrkoAtaKRwx8IFDeLAlwPMrr+lo1CtWvFxQAn+QUNJnW5u/Nt0Bt9Mkc6eEIg
-         I+Fn9Le8/t9WP358DymASy2SJ9YwgARvEbDo7zFKwHrSPSn7hS1FrWd9UH9YjsUN7fps
-         Xnk9a1YCLX6NiLXS91nNojG9V8veD222osng8o/HHUXX6GIDxrJ4JCubfc4MCdEqsHc0
-         0qevu+lC+6NuyB1jucdQMO1+2to1O5hsLk2PnPvs4UNGy+HTtg19oiEFIx5BuWWc5Ux7
-         SKDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715944397; x=1716549197;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F0jVkMtFf3CbTZAlgcnmUWY97LIc8kU/RGoW8WnJqv0=;
-        b=Wcnr3OPLIRrtJs/6D4MbmxBZ9A0pynb0qQuWr8V3YnNBNBbN8K3NXmoao/9Bwz2t5z
-         OIaOvO5QlWC8Fh/PfaYc6eHZPgq0F4J3UGvWtr95DFfwHnkGJIScJnmfbNbz2jIuDGZO
-         5ZCaNdvuD3V0JzD9XGUPq5KnVr1qRY4HcQWX5Yn40FAceTXGW3pOhNjDqYVG1gW2hn/B
-         8oaTjdR6nRq7TikK6GQupHr8goCS+yyPrbIS0WRRblRhqJ5deElSje//e87QDNGWziWy
-         ijZtgFB8Nb6lyguqd3Q2aEYqzcArvaKIeQbRlyUKabFal5b6A8Pk0mLmQIo8LLW4LMfD
-         6UXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRCDZp34Etk4+LdV1IRRW6vp8hw4EKo4D1Ot1NyX0eg67oZjnEapRQRQ+9+UZnPwV3NDtcBkOe2pJzFOXevxva7fdZk6NpLzxS2R5dfBomavQ21NvicX88NVBIZYds3fGz8YE4vVoMd2AaDZ0cj1Jwfy2RwEEdx663O5PekLatkbWJkA==
-X-Gm-Message-State: AOJu0YzcmqIhfI7NhaYMI7HKbGoSZZQXOFPCD5seLK/WvUMuJU5Z/LUm
-	fh4mASxRoBZXDgi10fFpPzXreAjXbFmSsSgH4tbStBYdpLW2kIWf
-X-Google-Smtp-Source: AGHT+IGIrnMJoafj6+anhAcQkvz0Z2a09SBsigRf595GGX82+EkMCcs70KvD27O3korKTEZjfi+1OQ==
-X-Received: by 2002:a17:906:aec7:b0:a5a:7a4e:7e85 with SMTP id a640c23a62f3a-a5a7a4e7f2fmr1205784866b.24.1715944396821;
-        Fri, 17 May 2024 04:13:16 -0700 (PDT)
-Received: from partp-nb.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01399sm1127891666b.172.2024.05.17.04.13.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 04:13:16 -0700 (PDT)
-From: Parth Pancholi <parth105105@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Parth Pancholi <parth.pancholi@toradex.com>,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bSUBJh8A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715944493; x=1747480493;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zHBiwgBwI9p6Yh7J+Nq4X1m3JqYe0I65Qo5yh4G6VNU=;
+  b=bSUBJh8A4WPqIPsWOG1m7YIpcXF0Fi6G2k1ILUzu5KPcSh6rESiIlruH
+   c4PAwv/JFO2KbAfrh3a9Z8nt30eB4frMQ1F+WLIhHz6Ek4kbOpWEhzrXM
+   p0ykwDCwVfDGtk1T42tK/JnZe/rFIVMLvjGnqCgVfBu9susYVT1WrVB2U
+   599ftL+wLtrdYKAIv5cvnubiqfpI/1QJkdMVgMfkKpli2WrcW3yuipvvo
+   uxTmMLqGpKh+vx8wr/3bjgKGDLlPuJG7/ta+5P+ulNsjNsAV5eAqehd8j
+   UYswU5okIcc02lxnXVB4SnN/mLSwoVGxFhjPndNHKYSJ0NH/g1xVlE1kd
+   A==;
+X-CSE-ConnectionGUID: Gba/Pq+LSTaqFIspPSM7wg==
+X-CSE-MsgGUID: hV2ZOtNkTfqRZc6zPe+vYw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23529049"
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="23529049"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 04:14:52 -0700
+X-CSE-ConnectionGUID: Lvwk0yrGQyOgmsh6VeHWfw==
+X-CSE-MsgGUID: U9fACi/rScGmmmrWSpV6fw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="36276847"
+Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 04:14:52 -0700
+From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
+To: dave.hansen@linux.intel.com,
+	jarkko@kernel.org,
+	kai.huang@intel.com,
+	haitao.huang@linux.intel.com,
+	reinette.chatre@intel.com,
+	linux-sgx@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: usb: gpio-sbu-mux: Add an entry for TMUXHS4212
-Date: Fri, 17 May 2024 13:11:40 +0200
-Message-Id: <20240517111140.859677-1-parth105105@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Cc: mona.vij@intel.com,
+	kailun.qin@intel.com
+Subject: [PATCH v3 0/2] x86/sgx: Fix two data races in EAUG/EREMOVE flows
+Date: Fri, 17 May 2024 04:06:29 -0700
+Message-Id: <20240517110631.3441817-1-dmitrii.kuvaiskii@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
 Content-Transfer-Encoding: 8bit
 
-From: Parth Pancholi <parth.pancholi@toradex.com>
+SGX runtimes such as Gramine may implement EDMM-based lazy allocation of
+enclave pages and may support MADV_DONTNEED semantics [1]. The former
+implies #PF-based page allocation, and the latter implies the usage of
+SGX_IOC_ENCLAVE_REMOVE_PAGES ioctl.
 
-Add a compatible entry for the TI TMUXHS4212 GPIO-based
-bidirectional 2:1 mux/1:2 demux which can be used for
-switching orientation of the SBU lines in USB Type-C
-applications.
+EDMM-based lazy allocation and MADV_DONTNEED semantics provide
+significant performance improvement for some workloads that run on
+Gramine. For example, a Java workload with a 16GB enclave size has
+approx. 57x improvement in total runtime. Thus, we consider it important
+to permit these optimizations in Gramine. However, we observed hangs of
+applications (Node.js, PyTorch, R, iperf, Blender, Nginx) when run on
+Gramine with EDMM, lazy allocation and MADV_DONTNEED features enabled.
 
-TMUXHS4212 datasheet: https://www.ti.com/lit/ds/symlink/tmuxhs4212.pdf
+We wrote a trivial stress test to reproduce the hangs observed in
+real-world applications. The test stresses #PF-based page allocation and
+SGX_IOC_ENCLAVE_REMOVE_PAGES flows in the SGX driver:
 
-Signed-off-by: Parth Pancholi <parth.pancholi@toradex.com>
----
- Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml | 1 +
- 1 file changed, 1 insertion(+)
+/* repeatedly touch different enclave pages at random and mix with
+ * madvise(MADV_DONTNEED) to stress EAUG/EREMOVE flows */
+static void* thread_func(void* arg) {
+    size_t num_pages = 0xA000 / page_size;
+    for (int i = 0; i < 5000; i++) {
+        size_t page = get_random_ulong() % num_pages;
+        char data = READ_ONCE(((char*)arg)[page * page_size]);
 
-diff --git a/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml b/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml
-index 88e1607cf053..48680721abc1 100644
---- a/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml
-+++ b/Documentation/devicetree/bindings/usb/gpio-sbu-mux.yaml
-@@ -22,6 +22,7 @@ properties:
-           - nxp,cbdtu02043
-           - onnn,fsusb43l10x
-           - pericom,pi3usb102
-+          - ti,tmuxhs4212
-       - const: gpio-sbu-mux
- 
-   enable-gpios:
+        page = get_random_ulong() % num_pages;
+        madvise(arg + page * page_size, page_size, MADV_DONTNEED);
+    }
+}
+
+addr = mmap(NULL, 0xA000, PROT_READ | PROT_WRITE, MAP_ANONYMOUS, -1, 0);
+pthread_t threads[16];
+for (int i = 0; i < 16; i++)
+    pthread_create(&threads[i], NULL, thread_func, addr);
+
+This test uncovers two data races in the SGX driver. The remaining
+patches describe and fix these races.
+
+I performed several stress tests to verify that there are no other data
+races (at least with the test program above):
+
+- On Icelake server with 128GB of PRM, without madvise(). This stresses
+  the first data race. A Gramine SGX test suite running in the
+  background for additional stressing. Result: 1,000 runs without hangs
+  (result without the first bug fix: hangs every time).
+- On Icelake server with 128GB of PRM, with madvise(). This stresses the
+  second data race. A Gramine SGX test suite running in the background
+  for additional stressing. Result: 1,000 runs without hangs (result
+  with the first bug fix but without the second bug fix: hangs approx.
+  once in 50 runs).
+- On Icelake server with 4GB of PRM, with madvise(). This additionally
+  stresses the enclave page swapping flows. Two Gramine SGX test suites
+  running in the background for additional stressing of swapping (I
+  observe 100% CPU utilization from ksgxd which confirms that swapping
+  happens). Result: 1,000 runs without hangs.
+
+[1] https://github.com/gramineproject/gramine/pull/1513
+
+v2 -> v3:
+- No changes in code itself
+- Improved commit message of the first patch (text suggested by Dave
+  Hansen); kept the CPU1 vs CPU2 diagram (as all reviewers liked it)
+- No changes in the commit message of the second patch
+
+v1 -> v2:
+- No changes in code itself
+- Expanded cover letter
+- Added CPU1 vs CPU2 race scenarios in commit messages
+
+v1: https://lore.kernel.org/all/20240429104330.3636113-3-dmitrii.kuvaiskii@intel.com/
+v2: https://lore.kernel.org/all/20240515131240.1304824-1-dmitrii.kuvaiskii@intel.com/
+
+Dmitrii Kuvaiskii (2):
+  x86/sgx: Resolve EAUG race where losing thread returns SIGBUS
+  x86/sgx: Resolve EREMOVE page vs EAUG page data race
+
+ arch/x86/kernel/cpu/sgx/encl.c  | 10 +++++++---
+ arch/x86/kernel/cpu/sgx/encl.h  |  3 +++
+ arch/x86/kernel/cpu/sgx/ioctl.c |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
 -- 
 2.34.1
 
