@@ -1,102 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B071FC8;
-	Fri, 17 May 2024 20:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB9C1CAA9;
+	Fri, 17 May 2024 20:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715978184; cv=none; b=Yv+1VMMoi714uEvBOVXNtOPBvMr8PUQAy5GUhZxZ2a0KcyKiS1lpYzhtHuoVFN+9qt+7es6w55a1BJEjYFO7d6SPDVN9aRpYY07rPn4cs0JpeKeR9MQj75PsNyVdxN5XxFyaJxdAKVXpwTU1ZbqNfMI/4yTHJ/jzY2Lr/ZxIDHU=
+	t=1715978310; cv=none; b=otdGbkTy7v7c4PyMbRdftDnBPQP85kyR1cqXpF+XH+VrOf4EUT3PJzViYtVjyqiU2Io5S7YY4ddIH5h72Aju6/GHNfAXPOMGkA57aXi7h5NzLA59l/+KkUbWsmw6L5sfmuf4BWieY2YMeuoZi1qMIkIkWYV+LvuUffs7n82zE98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715978184; c=relaxed/simple;
-	bh=7GCMgjFdqpTN0OvC1V9p7UqDrw/d07Z0ZCZ93oglGmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o7RLrPq98AbQiRzv49Q66Gm/V/ArJjE7FbAZQc6MUXfGwjZ4lhgFPZn4BqXV2/q9AMnx8/epwD9EGN/sOL46a/nK6FC9d0zUXjVMo6x7K+TvefagIKoQAS3WD/lpX+3rgf5d/wqsAT8vAemNEkpAyIUbvbm4MfckgZAkBdeExMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EhmDhd5T; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715978310; c=relaxed/simple;
+	bh=rjXgBf9SXm9iJZB7YQT2V26iQljWZCNDD8RD97X8MY8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=B4xQoQKxxlAMdRpsPoX3G0zKPTb5drlqbsYkhnI93k2Lc8LNdpBbjehkx+Ag0Qou5KWjjxUfPuOIsLdMN6j9F0Bk1RPeABe+exVGFQX2pWKMmhPl0siHULaRdnAM4LHVAQ/dps+j+IL28HDLiESuaAs8zCX6dbx7IQYCfvlWR6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUPJroVQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EhmDhd5T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715978183; x=1747514183;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7GCMgjFdqpTN0OvC1V9p7UqDrw/d07Z0ZCZ93oglGmI=;
-  b=EhmDhd5T1UiAqDOtYm8E+jkae8D8zjEr6bE1fctnlMW/qYdXWlPM0iWR
-   Ghs5OsV5M0i7HlQrFk8D1M/YOBZJuVNwQDxBBr54TgZs5I4aKTwU5p208
-   3kEDk1m3c3syxLixu6++bw4EydbmG1CoAPte0rNM3KbHwW4vkbdvhFlZ7
-   n3mcOZTcFG3wzVxc7gCuv1dJxfBapfG5Dp31Y/wJ3RC87LT91HzjXL4NE
-   tGyvclWlWMonnB00YzeU94yqv1A34tYbJZGwfuLKzQtBcXIs16MZN+3Jf
-   BxAFjTupcQ/upJdJRM9Xs8BsakcHOMjEmxj20qWvMfKukbZH0CGLLM64Z
-   w==;
-X-CSE-ConnectionGUID: yJq/gI+vSZa9dhYiH/mKow==
-X-CSE-MsgGUID: bgH1NEn4RV6t7Joqbr87Pw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="11979049"
-X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="11979049"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 13:36:22 -0700
-X-CSE-ConnectionGUID: RRlG68s1RM66FEo1A8tLfA==
-X-CSE-MsgGUID: HVfsa1nuTXSTgYtWbOTPZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="32465677"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 13:36:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s84JN-00000008caS-0ATr;
-	Fri, 17 May 2024 23:36:17 +0300
-Date: Fri, 17 May 2024 23:36:16 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v1 09/10] spi: pxa2xx: Move platform driver to a separate
- file
-Message-ID: <Zke_wCyt-Dks5314@smile.fi.intel.com>
-References: <20240517195344.813032-1-andriy.shevchenko@linux.intel.com>
- <20240517195344.813032-10-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUPJroVQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A5BE4C2BD10;
+	Fri, 17 May 2024 20:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715978309;
+	bh=rjXgBf9SXm9iJZB7YQT2V26iQljWZCNDD8RD97X8MY8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hUPJroVQ5Kj6AV04VCin3eTymgh6ea1Kz6huBswXme5ZumhjmHKyX7sd5lryRWhCB
+	 N+JEc7kf3j2hjmIvetJclTeq0poiq5hudFQmmqMJft4GgzbjkOHvb97xEdFRZla+g0
+	 fvFRb5fM/sq0tgamwLAz9N40Hi73A8PHH5vkXdZDhTy/lPWT3AkZGCX2BOaK/kLywo
+	 +CIASrfGqdP4qn5O6Mll63dMe3c7zFxxDFslWPRmNdotbSzJVDGGezI8zTytJFNF40
+	 l1vkviSBH2KfP1MzHyCmYFgdq+fCuFDGeGRvGTnrsUSaLIUR79AUIt0BUUi0jcyNk0
+	 qQ1jZmgyDUK+w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 95E00C54BD4;
+	Fri, 17 May 2024 20:38:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517195344.813032-10-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 1/1] net: dsa: microchip: Correct initialization order
+ for KSZ88x3 ports
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171597830961.5541.4864481930303671659.git-patchwork-notify@kernel.org>
+Date: Fri, 17 May 2024 20:38:29 +0000
+References: <20240517050121.2174412-1-o.rempel@pengutronix.de>
+In-Reply-To: <20240517050121.2174412-1-o.rempel@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: davem@davemloft.net, andrew@lunn.ch, edumazet@google.com,
+ f.fainelli@gmail.com, kuba@kernel.org, pabeni@redhat.com, olteanv@gmail.com,
+ woojung.huh@microchip.com, arun.ramadoss@microchip.com, hkelam@marvell.com,
+ kernel@pengutronix.de, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ UNGLinuxDriver@microchip.com, dsahern@kernel.org, horms@kernel.org,
+ willemb@google.com, san@skov.dk
 
-On Fri, May 17, 2024 at 10:47:43PM +0300, Andy Shevchenko wrote:
-> The spi-pxa2xx.c is bloated with a platform driver code while
-> pretending to provide a core functionality. Make it real core
-> library by splitting out the platform driver to a separate file.
+Hello:
 
-...
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> @@ -1597,8 +1485,9 @@ static int pxa2xx_spi_probe(struct device *dev, struct ssp_device *ssp)
+On Fri, 17 May 2024 07:01:21 +0200 you wrote:
+> Adjust the initialization sequence of KSZ88x3 switches to enable
+> 802.1p priority control on Port 2 before configuring Port 1. This
+> change ensures the apptrust functionality on Port 1 operates
+> correctly, as it depends on the priority settings of Port 2. The
+> prior initialization sequence incorrectly configured Port 1 first,
+> which could lead to functional discrepancies.
+> 
+> [...]
 
->  	pxa_ssp_free(ssp);
+Here is the summary with links:
+  - [net,v2,1/1] net: dsa: microchip: Correct initialization order for KSZ88x3 ports
+    https://git.kernel.org/netdev/net/c/f0fa84116434
 
-Looking at this leftover, namely this patch should remove the above line,
-I realised that there is a problem with the original code as well as it may
-drop a reference count in pxa/ssp.c before cleaning up other things which
-might have unexpected behaviour.
-
->  	return status;
->  }
-> +EXPORT_SYMBOL_NS_GPL(pxa2xx_spi_probe, SPI_PXA2xx);
-
-I will rework this one along with providing a fix for the above mentioned
-issue. Meanwhile I will wait for other comments for the rest of the series.
-
+You are awesome, thank you!
 -- 
-With Best Regards,
-Andy Shevchenko
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
