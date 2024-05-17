@@ -1,194 +1,150 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BBE12FB3E
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 17:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B50213E028;
+	Fri, 17 May 2024 17:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715967396; cv=none; b=VoPrCdT86TlxjQpjdFCF21eQlYtSs/54WTwse2VKLXbL+f6RHr7Z+6p4i3Z7PT1dPbzQA5Qnew2Jxj7wwnoLpSr/5iTUETcrQjDdqGmJui6jR9+DB6cq09TkeuTlbB9zAreTs5VV4uaDS8sr/2pQZKxGlXENkMs/Yp64Tq+OlT8=
+	t=1715967401; cv=none; b=VGD+W1XxUso2VlvuOvz4lxOKEOG1+CgMdYH21RRFwrGzncpE6uX2rvfoTeeEHPH29OY+v7d//yMlX7Zpm1LmdWg/0Q0Ow6NTNHQM5w2kDcyPbB/vgn1f05c54oSM9ndNq8DwMOIyRgbeC12qwPOBes4JNFpurb5I1nclEbQAOg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715967396; c=relaxed/simple;
-	bh=XjAWJ2eqX/XHZTMD+zOyCsPctyAoSmWyVzHoUM4DzkM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=BHnXzdlhE/rG4Y0CaDUwrrjtL7XAM9hyBkq1nbA5T/IvxC47OYZb9qYgSFNm2VxpocI0hCQaiF9YYOBOhlTL7mAGLuQo4ypZLK+CuCp32iDTvrVNjFiBD0QYYBrvYl827VvOodTAm+SfHbx7xYeDpWuvUkHv+D3Z8C0EBsfdQwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=AUU1gPvX; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1715967401; c=relaxed/simple;
+	bh=l7K75G8hEZf6Nf3Gd+zb5LouEwarRLauIdJPMoFivlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHDU2a+DAWtPRcmt4C6PNdPbseXKcMelAX2wzvQMYCRqxHPakEdRVvQff3WPguwpodBLpV7fPbdCvZ94NfW0WSvQDuc0Gmbi/M37I2hQcmH6pFp7wlAmn5n+co7hQSDkGkpVMKwa0McBxDQvO/xYNevxFiLG7sf4OWnflrwmeZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=emn3CkST; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AUU1gPvX"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 44HHZXiO2560155
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 17 May 2024 10:35:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 44HHZXiO2560155
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1715967335;
-	bh=3toScG2epOvz4S6GlSaLW07fm+7T68oT6n8TgjNdwTc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=AUU1gPvXKMtDVJygcCQcgezfmNVTmjtzgmb1YoFNkKhpgzpf9HQMjm+bb+PbYPcrv
-	 4tmA2dww/zGyOsGPZP2GsDOitxS3ejFZ0zfa+79ErbIy3eYg8qDz1bAfCJ6nckm6qc
-	 SQ8C1u5Wk4gW2tJJL6Zjd92w7dDO9gm0MuHOai1rKwirG1jCCKywdVdMKvIMugTfW2
-	 aNMqLHmCWWdQBrtl6357Cf6hwaKpMskRsVw0DmQCguSm/quTtnQMyJRGnbYCvfA7G3
-	 ThDGb/GHyK1KE84BRSidn2BFTpzUtJ4dE3SZ2qhSDfOIGvGODyXxUoss2bQabbVjMN
-	 168WjfggeI3/g==
-Date: Fri, 17 May 2024 10:35:29 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Uros Bizjak <ubizjak@gmail.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>,
-        Thomas Renninger <trenn@suse.de>, Greg Kroah-Hartman <gregkh@suse.de>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        patches@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_x86/cpu=3A_Fix_x86=5Fmatch?=
- =?US-ASCII?Q?=5Fcpu=28=29_to_match_just_X86=5FVENDOR=5FINTEL?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240517144312.GBZkdtAOuJZCvxhFbJ@fat_crate.local>
-References: <20240516162925.79245-1-tony.luck@intel.com> <20240517144312.GBZkdtAOuJZCvxhFbJ@fat_crate.local>
-Message-ID: <863D0F06-1217-4C94-B2CA-816FC4ABB103@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emn3CkST"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ee954e0aa6so16680785ad.3;
+        Fri, 17 May 2024 10:36:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715967399; x=1716572199; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rzMfxbAB8QJEcJdIySGROcUOqAKXWq8nqUdcExbi1Zk=;
+        b=emn3CkSTmGwb7Ev6REZ9Z3U3XD4Y+jPjdTTKRrd1xunPWgI+cGM6iP3TELOI5V8ATa
+         VbiGe+xcAirEDS5iorMu2B+VEBPivgYYBJAFyyk/dtcE+BdDAEcBR/OSDeMAia+M02aV
+         JtJr53ZjOlMBaf51DPBBJSXIlVEj8/ta7pTQaBfTGVSwemtnu9tMYnJUuHNl2FkBsWa2
+         RY29x4C0oql3h5xd/BScqyiM9KMAjCxcwhA5cszmGMdkeAyAQyWwOl4SEGtmK+Cfk17e
+         ZUmUwjzXpEuOreMImVvNFBtQTMD0YnZzxGLGWYMvA88gK3n/MpOcCwIl6WzZ4yooz3JS
+         JzXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715967399; x=1716572199;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rzMfxbAB8QJEcJdIySGROcUOqAKXWq8nqUdcExbi1Zk=;
+        b=tRaBInC5CBZVJiTyNhPeAMF0Mv8ZyhDngT/Ke4lsBz6dnWLTVbrxiYmDGKR3474tHa
+         Jw0S2Pd1w9vB5TttyIKUZ3vkElFqN8D82iwb6kL7vCXbWz+ZO+kOgSp2q2lMeYG13wJ3
+         Pd4jLhwNb/5j//D5V0kA6eEHTeRPM+KlHNN2ZXDOKj2sqnyMigDYM3Yyxzog0n99DW50
+         DbdwYUgj+mBGDnl1Wi3MfB/KObA9dlYM5hJ0VYDOGEqfhhsM9xkE6J3r09MMgCufkcSJ
+         MFPDLIL9Qyg8pNl52R6ymP0RQyefKT1UiQ+E7Y0jutAqKo/SZ6YeNcoI1ileC9aAa4W0
+         uyJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeikZ+5A7mGmqeVlRxUOHe3Z4BVx7A6SdRIJ9KlcdOS9QSNvCDsre7aHGEDTt/hTkAM3qO0uM2xeP+jtEHZh5JsSeK9A/+tFrYQA1Gt+sOL3ewNO6LlYK9y7DD7mpAtqpfD7DjXB75ufvKHVU6kM3a/elOuYDfutBUvo4a9bI4BCb2VDcyzEXzDexUc9t0in/T8C2XOhPKn7wWpdtpjhPEZSUvfBbj5JIuV5SOt4ozapoAEBa6p9eoNzUqVSV+FTR0IAeRERSnOL6XqGk495fk7J/QsGArESB7IkyWGLl2UfJVr+STIxS8eHdJJiLcNAzso4UUQBPch6E8dfNENIPvXxQAsave+ZjX9aqXjIT96Hz/aHminfcbngd99gozkR8JcHcG37i5SZidszxbbVcf9ugBd6iBJBSvP3YPM6hIvwhrKlXpceN2VyhqUDGta0Y2tQ8Y92YBThBW9tUwaEcwpwLLtnkcoENUdMSzNo1PisKVaRS0s0oNoAWHaeTm033idWAzW8Z6AMcGqpdUZef30iZpnny7DOCCRdx6bdPIPfc8m8lwMbo6DXkdKIQnaqlplZsK6CLKNgppIYSJ7U793bTJTH44UOdcWLKNUTDeK1XJMU+un4iEAjTM4sbk5xfiplNYftumz3+FD+ZUcLZWXKJBMvMx7eT5NA18jT46CIW4oBwdkZsngjutYGEYxbL/3oE5mRVrHB1dgdQB0YljgIrh2vfVWMnSdGUfmhbsUn3exZybXMRR9PJNk7TMh60ZKjaGM3YyEgvEgQVWpZ4sxK1fHIUzkaJHi56sH9Vb1HRQuX6pNOHreK/nEi3g6aW7gIA7T1ww4N6bLeNtZRSJMBfQ7RJIfpa4nB66EJI9p+xXnabbY1FucmTW2fAhf83tzqzRTLEML3+RBqx6xPn5uR2l/K2m0V/YFHhfHKN5kNYIOcc0Y+KpHUPL2A==
+X-Gm-Message-State: AOJu0YyVJKJDHI54++5KLrCtRmLug9WO1yHYT9xtbae1yHeJBFY7OAOO
+	4meyTffhXTst2nI7rjVckVaPWZ7pOCdtS8zLnwvw9MCn/zh6jfsS
+X-Google-Smtp-Source: AGHT+IHJ9PZtASiLb9HJkYrHy1DRhdQlVEuKbRr0NYIRv4Tx+av91BIA0wx1gBcIQQlm9sd2COIQnQ==
+X-Received: by 2002:a17:90a:9606:b0:2b9:a299:928e with SMTP id 98e67ed59e1d1-2b9a29994c9mr10436893a91.24.1715967398710;
+        Fri, 17 May 2024 10:36:38 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67105666csm15749258a91.8.2024.05.17.10.36.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 10:36:38 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Fri, 17 May 2024 10:36:37 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org, virtualization@lists.linux.dev,
+	linux-rdma@vger.kernel.org, linux-pm@vger.kernel.org,
+	iommu@lists.linux.dev, linux-tegra@vger.kernel.org,
+	netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org, ath12k@lists.infradead.org,
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
+	linux-usb@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+	linux-cifs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-edac@vger.kernel.org, selinux@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-f2fs-devel@lists.sourceforge.net, linux-hwmon@vger.kernel.org,
+	io-uring@vger.kernel.org, linux-sound@vger.kernel.org,
+	bpf@vger.kernel.org, linux-wpan@vger.kernel.org,
+	dev@openvswitch.org, linux-s390@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
+	Julia Lawall <Julia.Lawall@inria.fr>
+Subject: Re: [PATCH] tracing/treewide: Remove second parameter of
+ __assign_str()
+Message-ID: <5080f4c5-e0b3-4c2e-9732-f673d7e6ca66@roeck-us.net>
+References: <20240516133454.681ba6a0@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240516133454.681ba6a0@rorschach.local.home>
 
-On May 17, 2024 7:43:12 AM PDT, Borislav Petkov <bp@alien8=2Ede> wrote:
->On Thu, May 16, 2024 at 09:29:25AM -0700, Tony Luck wrote:
->> -#define X86_VENDOR_INTEL	0
->>  #define X86_VENDOR_CYRIX	1
->>  #define X86_VENDOR_AMD		2
->>  #define X86_VENDOR_UMC		3
->> +#define X86_VENDOR_INTEL	4
->>  #define X86_VENDOR_CENTAUR	5
->>  #define X86_VENDOR_TRANSMETA	7
->>  #define X86_VENDOR_NSC		8
->> --=20
->
->From my last review:
->
->> But the Intel vendor has been 0 for what, 30 years?
->
->> Are you sure no other code in the tree relies on that? Audited?
->
->But nope, apparently that's too much to ask=2E :-(
->
->modinfo =2E/arch/x86/events/intel/intel-uncore=2Eko
->filename:       =2E/arch/x86/events/intel/intel-uncore=2Eko
->license:        GPL
->srcversion:     ECE38449B18DD83223B93FD
->alias:          cpu:type:x86,ven0000fam0006mod00B6:feature:*
->alias:          cpu:type:x86,ven0000fam0006mod00AF:feature:*
->alias:          cpu:type:x86,ven0000fam0006mod00BE:feature:*
->			     ^^^^^^^^^
->
->Would everything still work if it said "ven0004" now?
->
->So tglx and I just did some poking and we think the best solution would
->be to add a __u16 flags field to struct x86_cpu_id right=2E=2E=2E
->
->struct x86_cpu_id {
->        __u16                      vendor;               /*     0     2 *=
-/
->        __u16                      family;               /*     2     2 *=
-/
->        __u16                      model;                /*     4     2 *=
-/
->        __u16                      steppings;            /*     6     2 *=
-/
->        __u16                      feature;              /*     8     2 *=
-/
->
->        /* XXX 6 bytes hole, try to pack */
->
-><--- HERE
->
->        kernel_ulong_t             driver_data;          /*    16     8 *=
-/
->
->        /* size: 24, cachelines: 1, members: 6 */
->        /* sum members: 18, holes: 1, sum holes: 6 */
->        /* last cacheline: 24 bytes */
->};
->
->and the 32-bit version has the same hole:
->
->struct x86_cpu_id {
->        __u16                      vendor;               /*     0     2 *=
-/
->        __u16                      family;               /*     2     2 *=
-/
->        __u16                      model;                /*     4     2 *=
-/
->        __u16                      steppings;            /*     6     2 *=
-/
->        __u16                      feature;              /*     8     2 *=
-/
->
->        /* XXX 2 bytes hole, try to pack */
->
-><--- HERE
->
->        kernel_ulong_t             driver_data;          /*    12     4 *=
-/
->
->        /* size: 16, cachelines: 1, members: 6 */
->        /* sum members: 14, holes: 1, sum holes: 2 */
->        /* last cacheline: 16 bytes */
->};
->
->And then do:
->
->struct x86_cpu_id {
->        __u16 vendor;
->        __u16 family;
->        __u16 model;
->        __u16 steppings;
->        __u16 feature;  /* bit index */
->	__u16 flags;
->        kernel_ulong_t driver_data;
->};
->
->#define X86_CPU_ID_FLAG_VENDOR_VALID		BIT(0)
->
->and then have the macros in arch/x86/include/asm/cpu_device_id=2Eh set
->that valid flag and then have x86_match_cpu() check it=2E
->
->Then you don't risk a userspace breakage and that x86_match_cpu() crap
->thing is fixed=2E
->
->Thx=2E
->
+On Thu, May 16, 2024 at 01:34:54PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> [
+>    This is a treewide change. I will likely re-create this patch again in
+>    the second week of the merge window of v6.10 and submit it then. Hoping
+>    to keep the conflicts that it will cause to a minimum.
+> ]
+> 
+> With the rework of how the __string() handles dynamic strings where it
+> saves off the source string in field in the helper structure[1], the
+> assignment of that value to the trace event field is stored in the helper
+> value and does not need to be passed in again.
+> 
+> This means that with:
+> 
+>   __string(field, mystring)
+> 
+> Which use to be assigned with __assign_str(field, mystring), no longer
+> needs the second parameter and it is unused. With this, __assign_str()
+> will now only get a single parameter.
+> 
+> There's over 700 users of __assign_str() and because coccinelle does not
+> handle the TRACE_EVENT() macro I ended up using the following sed script:
+> 
+>   git grep -l __assign_str | while read a ; do
+>       sed -e 's/\(__assign_str([^,]*[^ ,]\) *,[^;]*/\1)/' $a > /tmp/test-file;
+>       mv /tmp/test-file $a;
+>   done
+> 
+> I then searched for __assign_str() that did not end with ';' as those
+> were multi line assignments that the sed script above would fail to catch.
+> 
 
-I'm confused=2E Why not simply use say -1 for wildcard vendor match, -2 fo=
-r no vendor ID (no CPUID or other known probing mechanism) and -3 for unrec=
-ognized vendor (vendor detectable but not known=2E)
+Building csky:allmodconfig (and others) ... failed
+--------------
+Error log:
+In file included from include/trace/trace_events.h:419,
+                 from include/trace/define_trace.h:102,
+                 from drivers/cxl/core/trace.h:737,
+                 from drivers/cxl/core/trace.c:8:
+drivers/cxl/core/./trace.h:383:1: error: macro "__assign_str" passed 2 arguments, but takes just 1
 
-If we have a match/valid mask, I would suggest that we have *separate* mat=
-ch and valid masks, so that we can explicitly encode the condition of "no v=
-alid vendor", but in the specific case of vendor, there are two conditions =
-(see above=2E)
+This is with the patch applied on top of v6.9-8410-gff2632d7d08e.
+So far that seems to be the only build failure.
+Introduced with commit 6aec00139d3a8 ("cxl/core: Add region info to
+cxl_general_media and cxl_dram events"). Guess we'll see more of those
+towards the end of the commit window.
 
-I *hate* these strings with the passion of a thousand suns: they are a cla=
-ssic case of how just blindly converting binary information to hex adds abs=
-olutely no value, and often makes the result worse than what one started wi=
-th=2E And yes, I complained about that when they first went in as a classic=
- case of exposing what was always simply intended as a kernel internal inte=
-rface to user space=2E
-
-This is particularly pathetic as there already is a canonical string repre=
-sentation of the vendor ID!
-
-Similarly, kernel internal CPUID feature numbers shouldn't be an API, we o=
-nce again have canonical strings for the API level=2E=20
-
-But of course, now the module utilities depend on them, and although they =
-are relatively tightly coupled to the kernel, it still would require a stag=
-ed transition where the legacy strings are included for some time=2E=20
+Guenter
