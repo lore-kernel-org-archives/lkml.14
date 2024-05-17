@@ -1,184 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15893D541;
-	Fri, 17 May 2024 11:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E133D3C068;
+	Fri, 17 May 2024 11:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715946014; cv=none; b=H8dMEFz7wHQZO5ImWBdI1+Wb9SWxHsSJjS95mmdO4i6d0uciPKTqne1kcZswNhMs7L9vWGdqSHjbn4iZtl5oiE9sgtw24LtesFtflDCKT5Dct82OeMknuBSWY8MBcNa8aVBB4qA1JzDNl2qnTqtYH2xzpgxMOFaMvQDT82QQfBY=
+	t=1715946268; cv=none; b=jp/Q+tfWDnPcCm5jeCRDeI6rrv6xs3ZMj9aywKPkFVdJMaGmkjeOqkkdpwBG+1cJ7AQztZM4yR3VstWLK79WmgAmRW6e9KwfFnRwwnbhYz+a0XO2FdS6KSef9mX8slSqhWR7Fp7bXVn8ClXvl7C8LwyFBzUw58zfNKtB5zb6Oh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715946014; c=relaxed/simple;
-	bh=D256TFI+0c0WlOF4Wi9/+Mvuafjti0O9GN9MOXChFTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIIETmOCOhHKy6d0r/DFdUSuGPMH7DfeSzH8DLHknlaXOtSsqqhZ801puFybejS8TE69gxPeOJoh95tROcEZxomZrS1xcqtmmdzfFOUwGa4zoWHR/5LMMDkSSbINwYIOnp3swrn3OaMwmEgz+4rgcxiNM2WoBViwNpKmP9gaXAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7CpS19M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7CpS19M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF65CC2BD10;
-	Fri, 17 May 2024 11:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715946014;
-	bh=D256TFI+0c0WlOF4Wi9/+Mvuafjti0O9GN9MOXChFTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W7CpS19MtjTMMeLh1uaMPRX3B8kkUBgRRIoCCPR/du5PzbO0OQaCLgG04bB0lPNSw
-	 AWkfT4fXaxe4pPObdcjSZjYrghF90t8xpWkzJ47kHUXGh16nOromse0dMLich+hUt8
-	 AaT4ycaZgOgvBzVvqKXf68jf57vxXcbifAc2H84sD5csirZ8yqcY+hv/CfFUcUf+R8
-	 tSQby/+AzdECBBuDSAC3BtMUiJzTxf4yAioyQxTwRPuI9fWgv8vBpUPefwvyJ/i0wG
-	 MJDcP9WHOG4GMgulHGMdLuAQs2wNOHN4vyYD2DzMdLmmCYAWaplHMTFrbyApaetdB5
-	 lGWfXGXRoWs/Q==
-Date: Fri, 17 May 2024 13:40:11 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
-Subject: Re: [PATCH 2/6] rcu: Remove superfluous full memory barrier upon
- first EQS snapshot
-Message-ID: <ZkdCG28qNha2vUSo@localhost.localdomain>
-References: <20240515125332.9306-1-frederic@kernel.org>
- <20240515125332.9306-3-frederic@kernel.org>
- <xhsmhfruhhixv.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <ZkYvemdrEOVFNtVu@lothringen>
- <xhsmha5kphefq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <ZkcHSnvn0TZX6YzV@andrea>
+	s=arc-20240116; t=1715946268; c=relaxed/simple;
+	bh=oe2uN6/FMJd8agEcFyxu+AWXUbAd2SNUJYKEVSDGkuM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UwKwGIKygrZQIhpQ8HlnRE7tO0vpoqouR73RiI5f9VFJ4FV54ITX0Oh08DvBFQy81voumlBLMOT0Eob3RlIQcghK9XNqiEIOsJOR6AEbSjDU5WfiVauqvusDBeQ0nAJ+/6QQ6l1mFHbyp7Ew7vEIHU06fotypkXkmPz5DmO4q0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VglQP6tvSz6K6yd;
+	Fri, 17 May 2024 19:40:45 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B32FF140B54;
+	Fri, 17 May 2024 19:44:20 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 17 May
+ 2024 12:44:19 +0100
+Date: Fri, 17 May 2024 12:44:18 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: Dan Williams <dan.j.williams@intel.com>, Shiju Jose
+	<shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Jean Delvare
+	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov
+	<dmitry.torokhov@gmail.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240517124418.00000b48@Huawei.com>
+In-Reply-To: <20240517121554.000031d4@Huawei.com>
+References: <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
+	<20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local>
+	<20240509101939.0000263a@Huawei.com>
+	<D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
+	<20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
+	<663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
+	<663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
+	<663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
+	<20240517121554.000031d4@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZkcHSnvn0TZX6YzV@andrea>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Le Fri, May 17, 2024 at 09:29:14AM +0200, Andrea Parri a écrit :
-> I know my remark may seem a little biased,  ;-) but the semantics of
-> smp_mb__after_unlock_lock() and smp_mb__after_spinlock() have been
-> somehowr/formally documented in the LKMM.  This means, in particular,
-> that one can write "litmus tests" with the barriers at stake and then
-> "run"/check such tests against the _current model.
+On Fri, 17 May 2024 12:15:54 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+
+> Focusing on just one bit.
 > 
-> For example,  (based on inline comments in include/linux/spinlock.h)
+> > > Now, the question of how many legacy scrub interfaces should be
+> > > considered in this design out of the gate is a worthwhile discussion. I
+> > > am encouraged that this ABI is at least trying to handle more than 1
+> > > backend, which makes me feel better that adding a 3rd and 4th might not
+> > > be prohibitive.    
+> > 
+> > See above.
+> > 
+> > I'm perfectly fine with: "hey, we have a new scrub API interfacing to
+> > RAS scrub capability and it is *the* thing to use and all other hw scrub
+> > functionality should be shoehorned into it.
+> > 
+> > So this thing's design should at least try to anticipate supporting
+> > other scrub hw.
+> > 
+> > Because there's EDAC too. Why isn't this scrub thing part of EDAC? Why
+> > isn't this scrub API part of edac_core? I mean, this is all RAS so why
+> > design a whole new thing when the required glue is already there?
+> > 
+> > We can just as well have a
+> > 
+> > 	/sys/devices/system/edac/scrub/
+> > 
+> > node hierarchy and have everything there.  
+
+Sorry - finger fumble, wasn't meant to send yet :( 
+
 > 
-> $ cat after_spinlock.litmus
-> C after_spinlock
+> A few questions about this. It seems an unusual use of fake devices and a bus
+> so I'm trying to understand how we might do something that looks more standard
+> but perhaps also fit within the existing scheme.  I appreciate this stuff
+> has evolved over a long time, so lots of backwards compatibility concerns.
 > 
-> { }
+> If I follow this right the current situation is:
 > 
-> P0(int *x, spinlock_t *s)
-> {
-> 	spin_lock(s);
-> 	WRITE_ONCE(*x, 1);
-> 	spin_unlock(s);
-> }
+> /sys/devices/system/edac is the 'virtual' device registered on the edac bus.
+
+Actually that's wrong it's not on the edac bus as that is the bus registered
+via subsys_system_register() (which does create a fake device as per the docs
+telling us not to use it any more - fair enough, legacy).
+
+The mc below it is a bare device - I think just to provide a directory?
+The comment on the release function seems to say that. This gives.
+
+/sys/devices/system/edac/mc
+/sys/bus/edac/devices/mc
+
+Under that we have individual mc0/mc1 etc for the instances of that
+accessible via
+/sys/devices/system/edac/mc/mc0
+/sys/bus/edac/device/mc/mc0
+Those are registered a children of mc. I'd have expected them to be
+children of the device that registered them - so for our case, a CXL mc0
+node would be child of the CXL device rather than here but again
+I'm guessing legacy that had to be maintained.
+
+In general this nesting seems unusual, as I'd have expected the
+registration directly on the edac bus with
+/sys/bus/edac/device/mc0
+/sys/bus/edac/device/pci0
+
+Given we are talking about something new, maybe this is an opportunity
+to not perpetuate this?
+
+If we add scrub in here I'd prefer to just use the normal bus registration
+handling rather than creating a nest of additional nodes.  So perhaps we
+could consider
+/sys/bus/edac/device/scrub0 (or whatever name makes sense, as per the
+earlier discussion of cxl_scrub0 or similar).
+Could consider moving the bus location of mc0 etc in future to there with
+symlinks to /sys/bus/edac/device/mc/* for backwards compatibility either
+via setting their parents or more explicit link creation.
+
+These scrub0 would have their dev->parent set to who ever actually registered
+them providing that reference cleanly and letting all the normal device
+model stuff work more simply.
+
+If we did that with the scrub nodes, the only substantial change from
+a separate subsystem as seen in this patch set would be to register
+them on the edac bus rather than a separate class.
+
+As you pointed out, there is a simple scrub interface in the existing
+edac memory controller code. How would you suggest handling that?
+Have them all register an additional device on the bus (as a child
+of the mcX devices) perhaps?  Seems an easy step forwards and should
+be no backwards compatibility concerns.
+
 > 
-> P1(int *x, int *y, spinlock_t *s)
-> {
-> 	int r0;
+> > 
+> > Why does it have to be yet another thing?
+
+It absolutely doesn't as long as we can do it fairly cleanly within
+existing code. I wasn't sure that was possible, but you know edac
+a lot better than me and so I'll defer to you on that!
+
+> > 
+> > And if it needs to be separate, who's going to maintain it?
+
+Several options for that, but fair question - bringing (at least some of)
+the RAS mess together will focus reviewer bandwidth etc better.
+
+> >   
+> > > Which matches what I reacted to on the last posting:
+> > > 
+> > >    "Maybe it is self evident to others, but for me there is little in these
+> > >     changelogs besides 'mechanism exists, enable it'"
+> > > 
+> > > ...and to me that feedback was taken to heart with much improved
+> > > changelogs in this new posting.    
+> > 
+> > Ok.
+> >   
+> > > This init time feature probing discussion feels like it was born from a
+> > > micommunication / misunderstanding.    
+> > 
+> > Yes, it seems so, thanks for clarifying things.
+> > 
+> > I still am unclear on the usecases and how this is supposed to be used
+> > and also, as mentioned above, we have a *lot* of RAS functionality
+> > spread around the kernel. Perhaps we should start unifying it instead of
+> > adding more...
+
+I'm definitely keen on unifying things as I agree, this mixture of different
+RAS functionality is a ever worsening mess.
+
+Jonathan
+
+
+> > 
+> > So the big picture and where we're headed to, needs to be clarified first.
+> > 
+> > Thx.
+> >   
 > 
-> 	spin_lock(s);
-> 	smp_mb__after_spinlock();
-> 	r0 = READ_ONCE(*x);
-> 	WRITE_ONCE(*y, 1);
-> 	spin_unlock(s);
-> }
-> 
-> P2(int *x, int *y)
-> {
-> 	int r1;
-> 	int r2;
-> 
-> 	r1 = READ_ONCE(*y);
-> 	smp_rmb();
-> 	r2 = READ_ONCE(*x);
-> }
-> 
-> exists (1:r0=1 /\ 2:r1=1 /\ 2:r2=0)
-> 
-> $ herd7 -conf linux-kernel.cfg after_spinlock.litmus
-> Test after_spinlock Allowed
-> States 7
-> 1:r0=0; 2:r1=0; 2:r2=0;
-> 1:r0=0; 2:r1=0; 2:r2=1;
-> 1:r0=0; 2:r1=1; 2:r2=0;
-> 1:r0=0; 2:r1=1; 2:r2=1;
-> 1:r0=1; 2:r1=0; 2:r2=0;
-> 1:r0=1; 2:r1=0; 2:r2=1;
-> 1:r0=1; 2:r1=1; 2:r2=1;
-> No
-> Witnesses
-> Positive: 0 Negative: 7
-> Condition exists (1:r0=1 /\ 2:r1=1 /\ 2:r2=0)
-> Observation after_spinlock Never 0 7
-> Time after_spinlock 0.01
-> Hash=b377bde8fe3565fcdd0eb2bdfaf3351e
-> 
-> Notice that, according to the current model at least, the state in
-> the above "exists" clause remains forbidden _after removal of the
-> smp_mb__after_spinlock() barrier.  In this sense, if you want, the
-> inline comment (I contributed to) is misleading/incomplete.  :-/
-
-Z6.0+pooncelock+poonceLock+pombonce.litmus shows an example of
-how full ordering is subtely incomplete without smp_mb__after_spinlock().
-
-But still, smp_mb__after_unlock_lock() is supposed to be weaker than
-smp_mb__after_spinlock() and yet I'm failing to produce a litmus test
-that is successfull with the latter and fails with the former.
-
-For example, and assuming smp_mb__after_unlock_lock() is expected to be
-chained across locking, here is a litmus test inspired by
-Z6.0+pooncelock+poonceLock+pombonce.litmus that never observes the condition
-even though I would expect it should, as opposed to using
-smp_mb__after_spinlock():
-
-C smp_mb__after_unlock_lock
-
-{}
-
-P0(int *w, int *x, spinlock_t *mylock)
-{
-	spin_lock(mylock);
-	WRITE_ONCE(*w, 1);
-	WRITE_ONCE(*x, 1);
-	spin_unlock(mylock);
-}
-
-P1(int *x, int *y, spinlock_t *mylock)
-{
-	int r0;
-
-	spin_lock(mylock);
-	smp_mb__after_unlock_lock();
-	r0 = READ_ONCE(*x);
-	WRITE_ONCE(*y, 1);
-	spin_unlock(mylock);
-}
-
-P2(int *y, int *z, spinlock_t *mylock)
-{
-	int r0;
-
-	spin_lock(mylock);
-	r0 = READ_ONCE(*y);
-	WRITE_ONCE(*z, 1);
-	spin_unlock(mylock);
-}
-
-P3(int *w, int *z)
-{
-	int r1;
-
-	WRITE_ONCE(*z, 2);
-	smp_mb();
-	r1 = READ_ONCE(*w);
-}
-
-exists (1:r0=1 /\ 2:r0=1 /\ z=2 /\ 3:r1=0)
-
 
