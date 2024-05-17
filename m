@@ -1,239 +1,525 @@
-Received: from SG2PR03CU006.outbound.protection.outlook.com (mail-southeastasiaazon11010001.outbound.protection.outlook.com [52.101.133.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D326F801;
-	Fri, 17 May 2024 01:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.133.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715909501; cv=fail; b=PUJCu0Ij6iS/zG3swRgnZUs0m4N3RSrZjR2JSa5Po5BzKAEomNM3fJi4d/S6JRj/0JwPvwYwIALJbxCLARBbLsen/1HeZ9rAYNhdVXqshBHjRQA27DNAGcANcyGjF07Y6jF7TJjCaMJMUOJLK4aDCc4M3gvqv6kqMsfKW7E/4tE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715909501; c=relaxed/simple;
-	bh=Ui1cdJidKqNmbK4IdycvbBmovTyH2Pj7wAK/I+ow+50=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GgRjGCd1ryILCGpsuogpZUhHJDXgS3FeZRvLEhcnhmdTIUOvgPgNYwOof8/xQKYB8aemSEM+BGgY6P2ZkUsgq/ugc7uPWduX/rLiM36MOiMDQTZIQ0RNY71S0gK9MhS80m3lzIaEnA0GlX/V6La1yDVh/wuMPr2k1fMvW0cbzaw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=C6o/YfM9; arc=fail smtp.client-ip=52.101.133.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DA98472;
+	Fri, 17 May 2024 01:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715909517; cv=none; b=pTk06iS6O8BfWLSdmwsUQalKwNjCZ2Y7dORWK5XDX8LgDm+g6mIYmSoEEWSnrwJp4+pvHWxkkrs59hAsb9a5l4DpkxcabuzLXaxO4diWuJP1FPlAWI4oaI2p2nPC60ONm6+WHkTxQ3xf2NcJ1eqnUyRvWVygj9R31p5yArzkkCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715909517; c=relaxed/simple;
+	bh=Nbnr5cLRRRbYIM1S/bNXBWkxT7CZena4u5Il3gfGJG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZRHBVntRyZQQ7dXslFUFuUAFJAraLLSuLCwmB0bD6CLM8RQv8wOT+kIED80ui2ucpu7Z1pxPo4+0VsMm1yaeSDncTiWOsuOiBiGG3RhU3Yl1Ln/L1RsMsO6MOf5RnQxjdN6+28ThCjSfVzqhwffAN0ptICbTZ01fci+iDnKKxHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKM8//+Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="C6o/YfM9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iyj+0/U/ioBrcetEWojRsAnvlk7FqOM6lFy52nMzut6dKRrY/tDF+eiFXij0ezXMzj8hCbvW+vaVi1o4O0Ta9izpkrNLuNxxHq9qHPQScWNsqSAM+5VGHT5CT+V1FIkF5x8man+LoXES1pUyCr116JoH1zR4IZHzr2abpM8gHD8s7K9nZWHIC7OkG4DwMOR3NDrQmf7/PU1c532WmdJ+WJJHizmMdbTmzaA0kRZ4+68UswVUy9HoL6uXUJh2BWJ3yaFdc0+tMuTyrezu6FYX0L8LUIKJBK67RuoQPpiIG6L6XhpNXATejHDlwUPkRCZ72ZRCCwt69997PVPx7TdR7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LrI2jW+ifdAuRb5rTx+K25EalWb8H/o2qA/bZbVye0s=;
- b=MPP22y1xipthtodTQzBnu5aO1idaxa/JLJtrLB4h3X2jRwUs+jgWlbnjQia21V11avm48vb/34Nyl7lX/bg0kR9V8zX8LGMwcibSd8sIaHKiLZQPoDqaTwesyN9L++GX2aRoIhPTZeIaSF7dqN312NiBmAHSi5E+rd8aYK9gadqigsbgXNe3ple78nJMV6e8dO9AKxmZhAAeoFIJb4ehH82Ua7dwCeWxvAbksf8PBtpYjj8l7s6wS3PqbW104qes+YWjkPaeGcES3LCpvhiUas3YC9tu85tFFYFGPhBBEGUESW67MHnpIeRVV2mdNrNeYVCrLUzpEWzPPFFDxDnNaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LrI2jW+ifdAuRb5rTx+K25EalWb8H/o2qA/bZbVye0s=;
- b=C6o/YfM9fvVPEYFnu7gSgiq8xr99UXvJQAYdEc1vKhvOu/p3qhTH8SbzZDi1NuG6RgcNJUULRK2BaxZaBuZ2dipt1Hh3ojhiWoOJZsN7qBvEfrK2b+gQafWuGcBB7jsa9L6vb65dmzarLknPxIyc38Onhvf3YFjc8VJq9lEEJNLvAGDzclBdHpF0dZ1/Vl/cqCClo9ywzs6RVV0I+aLG/wz9ZheSkWS+MCTb/GbXK5edbv9vetGuEKFsNHNHWiwiJCwrfv8zk5tqXTC8U5InO7/kfeD3KjE0VhyXimIY2Yw1CiINxnq0QIS9r3VBY4UJq35N1r+bnYvLkP+ox40xJA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
- by KL1PR06MB6845.apcprd06.prod.outlook.com (2603:1096:820:10d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.30; Fri, 17 May
- 2024 01:31:34 +0000
-Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
- ([fe80::43cb:1332:afef:81e5]) by PSAPR06MB4486.apcprd06.prod.outlook.com
- ([fe80::43cb:1332:afef:81e5%5]) with mapi id 15.20.7587.028; Fri, 17 May 2024
- 01:31:33 +0000
-From: Wu Bo <bo.wu@vivo.com>
-To: bvanassche@acm.org
-Cc: axboe@kernel.dk,
-	bo.wu@vivo.com,
-	dlemoal@kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	wubo.oduw@gmail.com
-Subject: Re: [PATCH stable] block/mq-deadline: fix different priority request on the same zone
-Date: Thu, 16 May 2024 19:44:56 -0600
-Message-Id: <20240517014456.1919588-1-bo.wu@vivo.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <a1c24153-007c-4510-9cb3-bc207e9a75e8@acm.org>
-References: <a1c24153-007c-4510-9cb3-bc207e9a75e8@acm.org>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0046.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::14) To PSAPR06MB4486.apcprd06.prod.outlook.com
- (2603:1096:301:89::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKM8//+Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A157CC113CC;
+	Fri, 17 May 2024 01:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715909516;
+	bh=Nbnr5cLRRRbYIM1S/bNXBWkxT7CZena4u5Il3gfGJG8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TKM8//+ZHn/vBVzCkpnmvZiomgx37iT8rM9cddt2bvaH+2rtqX+R+6i0OrCdfAlLt
+	 ML035Lql1pFknljYbb8OlRY1iYeJd+Xch6eFvlpagWxM9VnOCSO0muX62uYiZ5YLfk
+	 tzdclcIy16g3sp78M3WsjIUtbEVlH+b893IzjFN3sHZZnZeYoywBbsTxUv2kqELDNY
+	 ZMs7CQh0CBAF1O5MBbQH60gsPEFmhIBjAnGROiCa/2v6i2o9W1wBL5NEwKAL56wpPM
+	 4YbCWoUAv1VIV84f7uMLrxsLuqpcYj6DDWolQRNs5KHDlWgrN/MO+Ekjp78oBejDeO
+	 NW4rjdMNmIYqA==
+From: Stephen Boyd <sboyd@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] clk changes for the merge window
+Date: Thu, 16 May 2024 18:31:55 -0700
+Message-ID: <20240517013155.1095253-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|KL1PR06MB6845:EE_
-X-MS-Office365-Filtering-Correlation-Id: 118a9b20-ad21-43f8-b4e9-08dc761115af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|52116005|366007|376005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ASv1C4FYHJ+F+W+Il+nhTEwY2nqMXpnQjIbTIFv0RQNiYt7iaTbUDlexnOWp?=
- =?us-ascii?Q?IA1N9zy6N8HAGrDnSmBREzlVMy9kWn55jMFEA+t0qhBXHksrIVLtJA3lLrDJ?=
- =?us-ascii?Q?Fp36MtxzGhWOibvsj6SID/Ne7YifTsd+Amx4P3gyEnOp+zvwwS2LwrcjAAfB?=
- =?us-ascii?Q?AJ0TJNjVn9ZqEGBUPd/9ooFP5oBDGSYOCp3rwp6HMwXH/ajWRgABdre0x34Y?=
- =?us-ascii?Q?X4IcCCZAokK7K9Ygy+XDdfyGt3eNf0dDbfjDFc/1TEXo5rO2rcLLzihWgv68?=
- =?us-ascii?Q?Ka5GTE0VJFPlpuhgMc6RIdloj+vpYDvnd0eaq/NgF1wQqDtElaY2+zxaUfrh?=
- =?us-ascii?Q?ck8Ge6kNo4IxFkugrrmXmYcS7VstqGqs5MTLSyx0VtDe6HPCP/YrsrVgkAwr?=
- =?us-ascii?Q?XoR8QHK+v5c7zFxisXbp05G6JnQ8hj+BXYOQtvi4VSY5+baNllkWuOml/AOP?=
- =?us-ascii?Q?vMz4G3Mu73EM/4uypx6Kc67/V/vojdTOoL9TXWzKtQvaC0KtYkc7IJfjIgIG?=
- =?us-ascii?Q?kTWFTEqN7eOipNf39UbyJma6zfsUHdlDkN+vavzhFJWNjKfMIrDKb4AXL8bm?=
- =?us-ascii?Q?rx+FU0LAthQELskoNFdCNxERh0aGzeJgBZBx6s37gvkhxXcLoguX3pbuGzx5?=
- =?us-ascii?Q?cRZwK6sF8XgXzwsl4KQORnZ9TxAa1FHXOEPXWrqDWeRDT/2MNwws1Ur/BoNH?=
- =?us-ascii?Q?BX14sm+pmVL6gIcUDhi/fq+MTQdRiQqjw2vMik9vclyKVBCqO7viRCmQGJYM?=
- =?us-ascii?Q?lHV9c82etgi6hA60YXm3CbxI7xNyyuhVzPpjU4fWLQaPSy6xuWXf4MSxyccv?=
- =?us-ascii?Q?Ucp7IryC0cnT64VZyYbmLpSfVeSIGtsKiVISc0wA4UlVe6NPDan8D07flIwq?=
- =?us-ascii?Q?Et+Ov8rZ53NUzXcLktBQJbPBngGSJkW0w3Y3bet5r5zwHQh6GV/iXs0oboWl?=
- =?us-ascii?Q?bFWeHKqz18fGvEzermW6T0RLs4CD9tWILTH8f8SM9yqqjty5YkKU+VNRdziS?=
- =?us-ascii?Q?35l22r7VcrWFO1MRssHAhEoiBPi3YE2c5ODZB6ip1jVYM0XghbK/xZ/p5zkv?=
- =?us-ascii?Q?smjlsBPUYyTFJ3nQ3rsCcqJRoTchq+8tJKzLKTG1U8L20zEdWC849Dlz7pAz?=
- =?us-ascii?Q?806QkpTnLpJMi4mS4E0SR5q78ATpfgYiebU+AKW0vEvBQXyojwnPVTQnTmEY?=
- =?us-ascii?Q?pHoljV7pwDFIYEYNA12tjMIllTwbl0Ax1H4tKofaTAF8tAKLL+j90Jq3w4bZ?=
- =?us-ascii?Q?U/LbcLpXyNbFa+FFytY+/WXf3zhdQG1SthqQuzO2PQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EwEILxXHJonrp0RTJOwkGgzWApvJMyRnWccc5xm6rnwZTDCJG0Z2+HpK29ZR?=
- =?us-ascii?Q?b35HNVwxCViW9BI28+GgPwkCwDa+BkGRraRKjZpc8EzlHHCuqdiwihtU+aY8?=
- =?us-ascii?Q?IpelO8PGNYwIhxXqnGpBCCC6CKmnsWBwJpeVHU7zMeb4RxX675LXxLu159RK?=
- =?us-ascii?Q?5S0+dkLegTnm2gSMREGzm93/TDM7WdLu9gbUW8+r0ISHrdvX5nMYUTIyl9iw?=
- =?us-ascii?Q?HgkokVpnCEQSW9+y1fwXxW5sC6vZpgKg+BL++ffH0WIyCE/lcc+MXACl6hrL?=
- =?us-ascii?Q?1DK+/xMXxgfWH1KiVfV4fdTOVocSF9RSqu6kce8HG7oRKHz0bjURgeXnGtml?=
- =?us-ascii?Q?8QyQy+4zmn62LhaKTtUPoNMIExY9h8r2haBnTbEwRaeXh70hl2Uoj75fHfTb?=
- =?us-ascii?Q?5dw2hGzXl8xAR2gRf4YHi0sxCfotTMiWlfd7AJ8wEc5lgUD/B2zNyOWUEu2F?=
- =?us-ascii?Q?tTqNIfqqNAlz0fY9XdLXbis27E4esBK7oTySRj91LDU/WcpnK9AuqBT7jI4V?=
- =?us-ascii?Q?lNwTwR7C6tOErKivPsz/txLLBM1OnLCHZF0s4X+e7boPm1Jav/wZu+jOeqlO?=
- =?us-ascii?Q?GEHL9s/NOhBRNa2DWv3m2Ry++56TfjZv3vWIGZcwSe9PCQJyjfJnhmwaXzq4?=
- =?us-ascii?Q?NCkHZREk0V2DyGEr4L7uSlYYdAfeplnr2UzdcjjJoqgYPAaeLDW1+60F7vv6?=
- =?us-ascii?Q?f2hlsU6IN5sousK3LtO9Gy6dK/1ojZfpb07luH3N5v78GQR2lxmSVia22Ztp?=
- =?us-ascii?Q?lPlmIuQt53Gxwq2eZIQVfpXdeYQSMmjvSY2DbI5VUSzTqnnm1/JEJqpLDctT?=
- =?us-ascii?Q?cXOTctvOtI0lUaG9KoIU+XyQBgX9TZgnHHZ6MFCtYHvOsQvv22EOxc9Te+k8?=
- =?us-ascii?Q?kb+F4mrSXaJ+kowcgSSwMAdfHDkjquBQ3sxqHNfRKvzQqsgnBrK6cHOyfrvl?=
- =?us-ascii?Q?SQTg+EZ6Zxa+Zq7TUY9pqmDpqMlMMyhhh/NWW7zviX4+OVVNyOcNKX8Htbbs?=
- =?us-ascii?Q?v+nZXvvbmuduAeSukQ4cttCYEADIVO22AZ3dT85AvBHH7RXW/m0JkAQy99pm?=
- =?us-ascii?Q?ERB4e5bTG+tFX60yhmaMmxLqkBX1Gdv9Tu0IJm+EugguUiXPkmU4V61ybO7T?=
- =?us-ascii?Q?FBcoDtiaHwQruZW+Wdpc3ap+0bRokS3AqLP/InsuqMqHc2opNYsDU+Oi2vWB?=
- =?us-ascii?Q?s738FAQahwiAlgXOhwLuCAhb5EQYjEuLLT2JPXdNboOAmjbx1Aat37bBCuei?=
- =?us-ascii?Q?kvg8e8At4+xLTKKLCWyzmAtG8eTZYxRFRufwWicYbSet3a9SSoWTuqqv1G03?=
- =?us-ascii?Q?jiXxFOO7qXuKaJRYCFzrKARs1vvCOCnva8sWBfy4JrHld59GWqCXQRZMM4Au?=
- =?us-ascii?Q?EpxsEeMrOUrFOAI17kJulbNHXgS5m+9YaYRVGtoKy7JeM2hLUWyeGDNLgCGV?=
- =?us-ascii?Q?5rki4ETjP/+o/hyX1xlStko1BN5GauLGa1pG6wFLQ/EI7PCe+4qw+dUDHKsh?=
- =?us-ascii?Q?0f/XLgUvo+fLSUl8o85n+n+Wyz1ytTLDYWjMqBVWNqK+JY8jsM/Og7Dr7Xq3?=
- =?us-ascii?Q?zbQprhU1QHXfhTrTYld6A9YFiBmPDSMbABc8CY99?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 118a9b20-ad21-43f8-b4e9-08dc761115af
-X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 01:31:33.3246
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fSy/eAgYrqGTY2CHidQnA7/s0RRVqoIJItyqMpx+Y3NSbq2yBxKHgYvdimHU0A+xYFXKFZRu0U5LErWz/p5Cmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6845
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 16, 2024 at 07:45:21AM -0600, Bart Van Assche wrote:
-> On 5/16/24 03:28, Wu Bo wrote:
-> > Zoned devices request sequential writing on the same zone. That means
-> > if 2 requests on the saem zone, the lower pos request need to dispatch
-> > to device first.
-> > While different priority has it's own tree & list, request with high
-> > priority will be disptch first.
-> > So if requestA & requestB are on the same zone. RequestA is BE and pos
-> > is X+0. ReqeustB is RT and pos is X+1. RequestB will be disptched before
-> > requestA, which got an ERROR from zoned device.
-> > 
-> > This is found in a practice scenario when using F2FS on zoned device.
-> > And it is very easy to reproduce:
-> > 1. Use fsstress to run 8 test processes
-> > 2. Use ionice to change 4/8 processes to RT priority
-> 
-> Hi Wu,
-> 
-> I agree that there is a problem related to the interaction of I/O
-> priority and zoned storage. A solution with a lower runtime overhead
-> is available here:
-> https://lore.kernel.org/linux-block/20231218211342.2179689-1-bvanassche@acm.org/T/#me97b088c535278fe3d1dc5846b388ed58aa53f46
-Hi Bart,
+The following changes since commit 01aea123b11c7ebbdd64b2df3a4a5a7ad86a460d:
 
-I have tried to set all seq write requests the same priority:
+  dt-bindings: clock: google,gs101-clock: add HSI2 clock management unit (2024-04-29 19:06:57 +0200)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 6a05dd86e8ca..b560846c63cb 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -841,7 +841,10 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx,
-struct request *rq,
-         */
-	         blk_req_zone_write_unlock(rq);
+are available in the Git repository at:
 
-		 -       prio = ioprio_class_to_prio[ioprio_class];
-		 +       if (blk_rq_is_seq_zoned_write(rq))
-		 +               prio = DD_BE_PRIO;
-		 +       else
-		 +               prio = ioprio_class_to_prio[ioprio_class];
-		         per_prio = &dd->per_prio[prio];
-			         if (!rq->elv.priv[0]) {
-				                 per_prio->stats.inserted++;
+  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
 
-I think this is the same effect as the patch you mentioned here. Unfortunatelly,
-this fix causes another issue.
-As all write requests are set to the same priority while read requests still
-have different priotities. This makes f2fs prone to hung when under stress test:
+for you to fetch changes up to 03be434863b9606435be9ef43651d4c0cbbe6788:
 
-[129412.105440][T1100129] vkhungtaskd: INFO: task "f2fs_ckpt-254:5":769 blocked for more than 193 seconds.
-[129412.106629][T1100129] vkhungtaskd:       6.1.25-android14-11-maybe-dirty #1
-[129412.107624][T1100129] vkhungtaskd: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[129412.108873][T1100129] vkhungtaskd: task:f2fs_ckpt-254:5 state:D stack:10496 pid:769   ppid:2      flags:0x00000408
-[129412.110194][T1100129] vkhungtaskd: Call trace:
-[129412.110769][T1100129] vkhungtaskd:  __switch_to+0x174/0x338
-[129412.111566][T1100129] vkhungtaskd:  __schedule+0x604/0x9e4
-[129412.112275][T1100129] vkhungtaskd:  schedule+0x7c/0xe8
-[129412.112938][T1100129] vkhungtaskd:  rwsem_down_write_slowpath+0x4cc/0xf98
-[129412.113813][T1100129] vkhungtaskd:  down_write+0x38/0x40
-[129412.114500][T1100129] vkhungtaskd:  __write_checkpoint_sync+0x8c/0x11c
-[129412.115409][T1100129] vkhungtaskd:  __checkpoint_and_complete_reqs+0x54/0x1dc
-[129412.116323][T1100129] vkhungtaskd:  issue_checkpoint_thread+0x8c/0xec
-[129412.117148][T1100129] vkhungtaskd:  kthread+0x110/0x224
-[129412.117826][T1100129] vkhungtaskd:  ret_from_fork+0x10/0x20
-[129412.484027][T1700129] vkhungtaskd: task:f2fs_gc-254:55  state:D stack:10832 pid:771   ppid:2      flags:0x00000408
-[129412.485337][T1700129] vkhungtaskd: Call trace:
-[129412.485906][T1700129] vkhungtaskd:  __switch_to+0x174/0x338
-[129412.486618][T1700129] vkhungtaskd:  __schedule+0x604/0x9e4
-[129412.487327][T1700129] vkhungtaskd:  schedule+0x7c/0xe8
-[129412.487985][T1700129] vkhungtaskd:  io_schedule+0x38/0xc4
-[129412.488675][T1700129] vkhungtaskd:  folio_wait_bit_common+0x3d8/0x4f8
-[129412.489496][T1700129] vkhungtaskd:  __folio_lock+0x1c/0x2c
-[129412.490196][T1700129] vkhungtaskd:  __folio_lock_io+0x24/0x44
-[129412.490936][T1700129] vkhungtaskd:  __filemap_get_folio+0x190/0x400
-[129412.491736][T1700129] vkhungtaskd:  pagecache_get_page+0x1c/0x5c
-[129412.492501][T1700129] vkhungtaskd:  f2fs_wait_on_block_writeback+0x60/0xf8
-[129412.493376][T1700129] vkhungtaskd:  do_garbage_collect+0x1100/0x223c
-[129412.494185][T1700129] vkhungtaskd:  f2fs_gc+0x284/0x778
-[129412.494858][T1700129] vkhungtaskd:  gc_thread_func+0x304/0x838
-[129412.495603][T1700129] vkhungtaskd:  kthread+0x110/0x224
-[129412.496271][T1700129] vkhungtaskd:  ret_from_fork+0x10/0x20
+  Merge branches 'clk-microchip', 'clk-samsung' and 'clk-qcom' into clk-next (2024-05-16 18:09:14 -0700)
 
-I think because f2fs is a CoW filesystem. Some threads holding lock need much
-reading & writing at the same time. Different reading & writing priority of this
-thread makes this process very long. And other FS operations will be blocked.
+----------------------------------------------------------------
+I'm actually surprised this time. There aren't any new Qualcomm SoC clk
+drivers. And there's zero diff in the core clk framework. Instead we have new
+clk drivers for STM and Sophgo, with Samsung^WGoogle in third for the diffstat
+because they introduced HSI0 and HSI2 clk drivers for Google's GS101 SoC (high
+speed interface things like PCIe, UFS, and MMC). Beyond those big diffs there's
+the usual updates to various clk drivers for incorrect parent descriptions or
+mising MODULE_DEVICE_TABLE()s, etc. Nothing in particular stands out as super
+interesting here.
 
-So I figured this solution to fix this priority issue on zoned device. It sure
-raises the overhead but can do fix it.
+New Drivers:
+ - STM32MP257 SoC clk driver
+ - Airoha EN7581 SoC clk driver
+ - Sophgo CV1800B, CV1812H and SG2000 SoC clk driver
+ - Loongson-2k0500 and Loongson-2k2000 SoC clk driver
+ - Add HSI0 and HSI2 clock controllers for Google GS101
+ - Add i.MX95 BLK CTL clock driver
 
-Thanks,
-Wu Bo
-> 
-> Are you OK with that alternative solution?
-> 
-> Thanks,
-> 
-> Bart.
+Updates:
+ - Allocate clk_ops dynamically for SCMI clk driver
+ - Add support in qcom RCG and RCG2 for multiple configurations for the same frequency
+ - Use above support for IPQ8074 NSS port 5 and 6 clocks to resolve issues
+ - Fix the Qualcomm APSS IPQ5018 PLL to fix boot failures of some boards
+ - Cleanups and fixes for Qualcomm Stromer PLLs
+ - Reduce max CPU frequency on Qualcomm APSS IPQ5018
+ - Fix Kconfig dependencies of Qualcomm SM8650 GPU and SC8280XP camera
+   clk drivers
+ - Make Qualcomm MSM8998 Venus clocks functional
+ - Cleanup downstream remnants related to DisplayPort across Qualcomm
+   SM8450, SM6350, SM8550, and SM8650
+ - Reuse the Huayra APSS register map on Qualcomm MSM8996 CBF PLL
+ - Use a specific Qualcomm QCS404 compatible for the otherwise generic
+   HFPLL
+ - Remove Qualcomm SM8150 CPUSS AHB clk as it is unused
+ - Remove an unused field in the Qualcomm RPM clk driver
+ - Add missing MODULE_DEVICE_TABLE to Qualcomm MSM8917 and MSM8953
+   global clock controller drivers
+ - Allow choice of manual or firmware-driven control over PLLs, needed
+   to fully implement CPU clock controllers on Exynos850
+ - Correct PLL clock IDs on ExynosAutov9
+ - Propagate certain clock rates to allow setting proper SPI clock
+   rates on Google GS101
+ - Mark certain Google GS101 clocks critical
+ - Convert old S3C64xx clock controller bindings to DT schema
+ - Add new PLL rate and missing mux on Rockchip rk3568
+ - Add missing reset line on Rockchip rk3588
+ - Removal of an unused field in struct rockchip_mmc_clock
+ - Amlogic s4/a1: add regmap maximum register for proper debugfs dump
+ - Amlogic s4: add MODULE_DEVICE_TABLE() on pll and periph controllers
+ - Amlogic pll driver: print clock name on lock error to help debug
+ - Amlogic vclk: finish dsi clock path support
+ - Amlogic license: fix occurence "GPL v2" as reported by checkpatch
+ - Add PM runtime support to i.MX8MP Audiomix
+ - Add DT schema for i.MX95 Display Master Block Control
+ - Convert to platform remove callback returning void for i.MX8MP
+   Audiomix
+ - Add SPI (MSIOF) and external interrupt (INTC-EX) clocks on Renesas R-Car V4M
+ - Add interrupt controller (PLIC) clock and reset on Renesas RZ/Five
+ - Prepare power domain support for Renesas RZ/G2L family members, and add
+   actual support on Renesas RZ/G3S SoC
+ - Add thermal, serial (SCIF), and timer (CMT/TMU) clocks on Renesas R-Car V4M
+ - Add additional constraints to Allwinner A64 PLL MIPI clock
+ - Fix autoloading sunxi-ng clocks when build as a module
+
+----------------------------------------------------------------
+Abel Vesa (1):
+      clk: qcom: clk-alpha-pll: Skip reconfiguring the running Lucid Evo
+
+Alexandre Mergnat (1):
+      clk: mediatek: mt8365-mm: fix DPI0 parent
+
+André Draszik (2):
+      clk: samsung: gs101: add support for cmu_hsi0
+      clk: samsung: gs101: mark some apm UASC and XIU clocks critical
+
+Arnd Bergmann (2):
+      clk: ti: dpll: fix incorrect #ifdef checks
+      clk: sophgo: avoid open-coded 64-bit division
+
+Binbin Zhou (6):
+      dt-bindings: clock: Add Loongson-2K expand clock index
+      clk: clk-loongson2: Refactor driver for adding new platforms
+      dt-bindings: clock: loongson2: Add Loongson-2K0500 compatible
+      clk: clk-loongson2: Add Loongson-2K0500 clock support
+      dt-bindings: clock: loongson2: Add Loongson-2K2000 compatible
+      clk: clk-loongson2: Add Loongson-2K2000 clock support
+
+Bjorn Andersson (1):
+      Merge branch '20240315-apss-ipq-pll-ipq5018-hang-v2-1-6fe30ada2009@gmail.com' into clk-for-6.10
+
+Catalin Popescu (1):
+      clk: rs9: fix wrong default value for clock amplitude
+
+Christian Marangi (3):
+      clk: qcom: clk-rcg: introduce support for multiple conf for same freq
+      clk: qcom: clk-rcg2: add support for rcg2 freq multi ops
+      clk: qcom: gcc-ipq8074: rework nss_port5/6 clock to multiple conf
+
+Christophe JAILLET (6):
+      clk: nxp: Remove an unused field in struct lpc18xx_pll
+      clk: highbank: Remove an unused field in struct hb_clk
+      clk: gemini: Remove an unused field in struct clk_gemini_pci
+      clk: qcom: rpm: Remove an unused field in struct rpm_cc
+      clk: renesas: r8a7740: Remove unused div4_clk.flags field
+      clk: rockchip: Remove an unused field in struct rockchip_mmc_clock
+
+Claudiu Beznea (7):
+      dt-bindings: clock: r9a07g043-cpg: Add power domain IDs
+      dt-bindings: clock: r9a07g044-cpg: Add power domain IDs
+      dt-bindings: clock: r9a07g054-cpg: Add power domain IDs
+      dt-bindings: clock: r9a08g045-cpg: Add power domain IDs
+      dt-bindings: clock: renesas,rzg2l-cpg: Update #power-domain-cells = <1> for RZ/G3S
+      clk: renesas: rzg2l: Extend power domain support
+      clk: renesas: r9a08g045: Add support for power domains
+
+Cong Dang (2):
+      clk: renesas: r8a779h0: Add MSIOF clocks
+      clk: renesas: r8a779h0: Add INTC-EX clock
+
+Conor Dooley (2):
+      clock, reset: microchip: move all mpfs reset code to the reset subsystem
+      clk, reset: microchip: mpfs: fix incorrect preprocessor conditions
+
+Cristian Marussi (5):
+      clk: scmi: Allocate CLK operations dynamically
+      clk: scmi: Add support for state control restricted clocks
+      clk: scmi: Add support for rate change restricted clocks
+      clk: scmi: Add support for re-parenting restricted clocks
+      clk: scmi: Add support for get/set duty_cycle operations
+
+David Jander (1):
+      clk: rockchip: rk3568: Add missing USB480M_PHY mux
+
+Dmitry Baryshkov (4):
+      clk: qcom: dispcc-sm8450: fix DisplayPort clocks
+      clk: qcom: dispcc-sm6350: fix DisplayPort clocks
+      clk: qcom: dispcc-sm8550: fix DisplayPort clocks
+      clk: qcom: dispcc-sm8650: fix DisplayPort clocks
+
+Dmitry Rokosov (5):
+      clk: meson: a1: peripherals: determine maximum register in regmap config
+      clk: meson: a1: pll: determine maximum register in regmap config
+      clk: meson: s4: peripherals: determine maximum register in regmap config
+      clk: meson: s4: pll: determine maximum register in regmap config
+      clk: meson: pll: print out pll name when unable to lock it
+
+Fabio Estevam (1):
+      clk: imx: imx8mp: Switch to RUNTIME_PM_OPS()
+
+Frank Oltmanns (2):
+      clk: sunxi-ng: nkm: Support constraints on m/n ratio and parent rate
+      clk: sunxi-ng: a64: Add constraints on PLL-MIPI's n/m ratio and parent rate
+
+Gabor Juhos (11):
+      clk: qcom: clk-alpha-pll: remove invalid Stromer register offset
+      clk: qcom: clk-alpha-pll: reorder Stromer register offsets
+      clk: qcom: clk-alpha-pll: fix kerneldoc of struct clk_alpha_pll
+      clk: qcom: apss-ipq-pll: use stromer ops for IPQ5018 to fix boot failure
+      clk: qcom: apss-ipq-pll: reuse Stromer reg offsets from 'clk_alpha_pll_regs'
+      clk: qcom: apss-ipq-pll: move Huayra register map to 'clk_alpha_pll_regs'
+      clk: qcom: apss-ipq-pll: constify match data structures
+      clk: qcom: apss-ipq-pll: constify clk_init_data structures
+      clk: qcom: clk-cbf-8996: use HUAYRA_APSS register map for cbf_pll
+      clk: qcom: apss-ipq-pll: fix PLL rate for IPQ5018
+      clk: qcom: clk-alpha-pll: fix rate setting for Stromer PLLs
+
+Gabriel Fernandez (4):
+      clk: stm32mp13: use platform device APIs
+      dt-bindings: clocks: stm32mp25: add description of all parents
+      clk: stm32: introduce clocks for STM32MP257 platform
+      dt-bindings: clocks: stm32mp25: add access-controllers description
+
+Geert Uytterhoeven (5):
+      dt-bindings: clock: r9a07g043-cpg: Annotate RZ/G2UL-only core clocks
+      clk: renesas: r8a779h0: Add thermal clock
+      clk: renesas: r8a779h0: Add SCIF clocks
+      clk: renesas: r8a779a0: Fix CANFD parent clock
+      clk: renesas: shmobile: Remove unused CLK_ENABLE_ON_INIT
+
+Heiko Stuebner (1):
+      Merge branch 'v6.10-shared/clkids' into v6.10-clk/next
+
+Inochi Amaoto (5):
+      dt-bindings: clock: sophgo: Add clock controller of SG2000 series SoC
+      clk: sophgo: Add clock support for CV1800 SoC
+      clk: sophgo: Add clock support for CV1810 SoC
+      clk: sophgo: Add clock support for SG2000 SoC
+      clk: sophgo: Make synthesizer struct static
+
+Jaewon Kim (1):
+      clk: samsung: exynosautov9: fix wrong pll clock id value
+
+Krzysztof Kozlowski (6):
+      dt-bindings: clock: samsung,s3c6400-clock: convert to DT Schema
+      clk: qcom: fix module autoloading
+      clk: sunxi-ng: fix module autoloading
+      Merge branch 'for-v6.10/clk-gs101-bindings' into next/clk
+      clk: meson: s4: fix module autoloading
+      clk: samsung: gs101: drop unused HSI2 clock parent data
+
+Lad Prabhakar (1):
+      clk: renesas: r9a07g043: Add clock and reset entry for PLIC
+
+Lorenzo Bianconi (3):
+      dt-bindings: clock: airoha: add EN7581 binding
+      clk: en7523: Add en_clk_soc_data data structure
+      clk: en7523: Add EN7581 support
+
+Luca Weiss (2):
+      dt-bindings: clock: qcom,hfpll: Convert to YAML
+      clk: qcom: hfpll: Add QCS404-specific compatible
+
+Lucas Stach (1):
+      clk: rockchip: rk3568: Add PLL rate for 724 MHz
+
+Marc Gonzalez (1):
+      clk: qcom: mmcc-msm8998: fix venus clock issue
+
+Marek Szyprowski (1):
+      clk: samsung: Don't register clkdev lookup for the fixed rate clocks
+
+Nathan Chancellor (4):
+      clk: bcm: dvp: Assign ->num before accessing ->hws
+      clk: bcm: rpi: Assign ->num before accessing ->hws
+      clk: qcom: Fix SC_CAMCC_8280XP dependencies
+      clk: qcom: Fix SM_GPUCC_8650 dependencies
+
+Neil Armstrong (3):
+      clk: meson: add vclk driver
+      clk: meson: g12a: make VCLK2 and ENCL clock path configurable by CCF
+      clk: meson: fix module license to GPL only
+
+Nícolas F. R. A. Prado (1):
+      clk: mediatek: pllfh: Don't log error for missing fhctl node
+
+Paul Barker (2):
+      clk: renesas: r9a07g043: Mark mod_clks and resets arrays as const
+      clk: renesas: r9a07g044: Mark resets array as const
+
+Peng Fan (4):
+      dt-bindings: clock: add i.MX95 clock header
+      dt-bindings: clock: support i.MX95 BLK CTL module
+      dt-bindings: clock: support i.MX95 Display Master CSR module
+      clk: imx: add i.MX95 BLK CTL clk driver
+
+Peter Griffin (1):
+      clk: samsung: gs101: add support for cmu_hsi2
+
+Rob Herring (Arm) (1):
+      dt-bindings: clock: fixed: Define a preferred node name
+
+Sam Protsenko (2):
+      clk: samsung: Implement manual PLL control for ARM64 SoCs
+      clk: samsung: exynos850: Add CMU_CPUCL0 and CMU_CPUCL1
+
+Sascha Hauer (1):
+      dt-bindings: clock: rockchip: add USB480M_PHY mux
+
+Satya Priya Kakitapalli (1):
+      clk: qcom: gcc-sm8150: De-register gcc_cpuss_ahb_clk_src
+
+Shengjiu Wang (1):
+      clk: imx: imx8mp: Add pm_runtime support for power saving
+
+Shreeya Patel (2):
+      dt-bindings: reset: Define reset id used for HDMI Receiver
+      clk: rockchip: rk3588: Add reset line for HDMI Receiver
+
+Stephen Boyd (12):
+      Merge tag 'renesas-clk-for-v6.10-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into clk-renesas
+      Merge tag 'sunxi-clk-for-6.10-1' of https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux into clk-allwinner
+      Merge tag 'renesas-clk-for-v6.10-tag2' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into clk-renesas
+      Merge tag 'clk-imx-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux into clk-imx
+      Merge tag 'clk-meson-v6.10-1' of https://github.com/BayLibre/clk-meson into clk-amlogic
+      Merge tag 'v6.10-rockchip-clk1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip into clk-rockchip
+      Merge tag 'samsung-clk-6.10-2' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into clk-samsung
+      Merge tag 'qcom-clk-for-6.10' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into clk-qcom
+      Merge branches 'clk-cleanup', 'clk-airoha', 'clk-mediatek', 'clk-sophgo' and 'clk-loongson' into clk-next
+      Merge branches 'clk-stm', 'clk-renesas', 'clk-scmi' and 'clk-allwinner' into clk-next
+      Merge branches 'clk-counted', 'clk-imx', 'clk-amlogic', 'clk-binding' and 'clk-rockchip' into clk-next
+      Merge branches 'clk-microchip', 'clk-samsung' and 'clk-qcom' into clk-next
+
+Thanh Quan (1):
+      clk: renesas: r8a779h0: Add timer clocks
+
+Tudor Ambarus (2):
+      clk: samsung: gs101: propagate PERIC0 USI SPI clock rate
+      clk: samsung: gs101: propagate PERIC1 USI SPI clock rate
+
+Uwe Kleine-König (1):
+      clk: imx: imx8mp: Convert to platform remove callback returning void
+
+ .../bindings/clock/airoha,en7523-scu.yaml          |   31 +-
+ .../devicetree/bindings/clock/fixed-clock.yaml     |    9 +
+ .../bindings/clock/fixed-factor-clock.yaml         |    9 +
+ .../bindings/clock/loongson,ls2k-clk.yaml          |    4 +-
+ .../bindings/clock/nxp,imx95-blk-ctl.yaml          |   56 +
+ .../clock/nxp,imx95-display-master-csr.yaml        |   64 +
+ .../devicetree/bindings/clock/qcom,hfpll.txt       |   63 -
+ .../devicetree/bindings/clock/qcom,hfpll.yaml      |   69 +
+ .../bindings/clock/renesas,rzg2l-cpg.yaml          |   18 +-
+ .../bindings/clock/samsung,s3c6400-clock.yaml      |   57 +
+ .../bindings/clock/samsung,s3c64xx-clock.txt       |   76 -
+ .../bindings/clock/sophgo,cv1800-clk.yaml          |    3 +-
+ .../bindings/clock/st,stm32mp25-rcc.yaml           |  172 +-
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/bcm/clk-bcm2711-dvp.c                  |    3 +-
+ drivers/clk/bcm/clk-raspberrypi.c                  |    2 +-
+ drivers/clk/clk-en7523.c                           |  191 +-
+ drivers/clk/clk-gemini.c                           |    2 -
+ drivers/clk/clk-highbank.c                         |    1 -
+ drivers/clk/clk-loongson2.c                        |  584 +++---
+ drivers/clk/clk-renesas-pcie.c                     |   10 +-
+ drivers/clk/clk-scmi.c                             |  249 ++-
+ drivers/clk/imx/Kconfig                            |    7 +
+ drivers/clk/imx/Makefile                           |    1 +
+ drivers/clk/imx/clk-imx8mp-audiomix.c              |  155 +-
+ drivers/clk/imx/clk-imx95-blk-ctl.c                |  438 +++++
+ drivers/clk/mediatek/clk-mt8365-mm.c               |    2 +-
+ drivers/clk/mediatek/clk-pllfh.c                   |    2 +-
+ drivers/clk/meson/Kconfig                          |    5 +
+ drivers/clk/meson/Makefile                         |    1 +
+ drivers/clk/meson/a1-peripherals.c                 |    1 +
+ drivers/clk/meson/a1-pll.c                         |    1 +
+ drivers/clk/meson/axg-aoclk.c                      |    2 +-
+ drivers/clk/meson/axg-audio.c                      |    2 +-
+ drivers/clk/meson/axg.c                            |    2 +-
+ drivers/clk/meson/clk-cpu-dyndiv.c                 |    2 +-
+ drivers/clk/meson/clk-dualdiv.c                    |    2 +-
+ drivers/clk/meson/clk-mpll.c                       |    2 +-
+ drivers/clk/meson/clk-phase.c                      |    2 +-
+ drivers/clk/meson/clk-pll.c                        |    6 +-
+ drivers/clk/meson/clk-regmap.c                     |    2 +-
+ drivers/clk/meson/g12a-aoclk.c                     |    2 +-
+ drivers/clk/meson/g12a.c                           |   78 +-
+ drivers/clk/meson/gxbb-aoclk.c                     |    2 +-
+ drivers/clk/meson/gxbb.c                           |    2 +-
+ drivers/clk/meson/meson-aoclk.c                    |    2 +-
+ drivers/clk/meson/meson-eeclk.c                    |    2 +-
+ drivers/clk/meson/s4-peripherals.c                 |    2 +
+ drivers/clk/meson/s4-pll.c                         |    2 +
+ drivers/clk/meson/sclk-div.c                       |    2 +-
+ drivers/clk/meson/vclk.c                           |  141 ++
+ drivers/clk/meson/vclk.h                           |   51 +
+ drivers/clk/meson/vid-pll-div.c                    |    2 +-
+ drivers/clk/microchip/clk-mpfs.c                   |   92 +-
+ drivers/clk/nxp/clk-lpc18xx-cgu.c                  |    1 -
+ drivers/clk/qcom/Kconfig                           |    2 +
+ drivers/clk/qcom/apss-ipq-pll.c                    |   79 +-
+ drivers/clk/qcom/clk-alpha-pll.c                   |   24 +-
+ drivers/clk/qcom/clk-alpha-pll.h                   |    5 +-
+ drivers/clk/qcom/clk-cbf-8996.c                    |   13 +-
+ drivers/clk/qcom/clk-rcg.h                         |   24 +-
+ drivers/clk/qcom/clk-rcg2.c                        |  166 ++
+ drivers/clk/qcom/clk-rpm.c                         |    1 -
+ drivers/clk/qcom/common.c                          |   18 +
+ drivers/clk/qcom/common.h                          |    2 +
+ drivers/clk/qcom/dispcc-sm6350.c                   |   11 +-
+ drivers/clk/qcom/dispcc-sm8450.c                   |   20 +-
+ drivers/clk/qcom/dispcc-sm8550.c                   |   20 +-
+ drivers/clk/qcom/dispcc-sm8650.c                   |   20 +-
+ drivers/clk/qcom/gcc-ipq8074.c                     |  120 +-
+ drivers/clk/qcom/gcc-msm8917.c                     |    1 +
+ drivers/clk/qcom/gcc-msm8953.c                     |    1 +
+ drivers/clk/qcom/gcc-sm8150.c                      |   61 -
+ drivers/clk/qcom/hfpll.c                           |    6 +-
+ drivers/clk/qcom/mmcc-msm8998.c                    |    8 +
+ drivers/clk/renesas/clk-r8a73a4.c                  |    2 -
+ drivers/clk/renesas/clk-r8a7740.c                  |   27 +-
+ drivers/clk/renesas/clk-sh73a0.c                   |    2 -
+ drivers/clk/renesas/r8a779a0-cpg-mssr.c            |    2 +-
+ drivers/clk/renesas/r8a779h0-cpg-mssr.c            |   21 +
+ drivers/clk/renesas/r9a07g043-cpg.c                |   13 +-
+ drivers/clk/renesas/r9a07g044-cpg.c                |    2 +-
+ drivers/clk/renesas/r9a08g045-cpg.c                |   41 +
+ drivers/clk/renesas/rzg2l-cpg.c                    |  199 ++-
+ drivers/clk/renesas/rzg2l-cpg.h                    |   67 +
+ drivers/clk/rockchip/clk-mmc-phase.c               |    1 -
+ drivers/clk/rockchip/clk-rk3568.c                  |    5 +
+ drivers/clk/rockchip/rst-rk3588.c                  |    1 +
+ drivers/clk/samsung/clk-exynos-arm64.c             |   56 +-
+ drivers/clk/samsung/clk-exynos850.c                |  440 ++++-
+ drivers/clk/samsung/clk-exynosautov9.c             |    8 +-
+ drivers/clk/samsung/clk-gs101.c                    | 1192 +++++++++++--
+ drivers/clk/samsung/clk.c                          |   11 +-
+ drivers/clk/samsung/clk.h                          |   15 +-
+ drivers/clk/sophgo/Kconfig                         |   11 +
+ drivers/clk/sophgo/Makefile                        |    7 +
+ drivers/clk/sophgo/clk-cv1800.c                    | 1537 ++++++++++++++++
+ drivers/clk/sophgo/clk-cv1800.h                    |  123 ++
+ drivers/clk/sophgo/clk-cv18xx-common.c             |   66 +
+ drivers/clk/sophgo/clk-cv18xx-common.h             |   81 +
+ drivers/clk/sophgo/clk-cv18xx-ip.c                 |  887 +++++++++
+ drivers/clk/sophgo/clk-cv18xx-ip.h                 |  261 +++
+ drivers/clk/sophgo/clk-cv18xx-pll.c                |  419 +++++
+ drivers/clk/sophgo/clk-cv18xx-pll.h                |  118 ++
+ drivers/clk/stm32/Kconfig                          |    7 +
+ drivers/clk/stm32/Makefile                         |    1 +
+ drivers/clk/stm32/clk-stm32-core.c                 |   11 +-
+ drivers/clk/stm32/clk-stm32mp13.c                  |   72 +-
+ drivers/clk/stm32/clk-stm32mp25.c                  | 1875 ++++++++++++++++++++
+ drivers/clk/stm32/reset-stm32.c                    |   59 +-
+ drivers/clk/stm32/reset-stm32.h                    |    7 +
+ drivers/clk/stm32/stm32mp25_rcc.h                  |  712 ++++++++
+ drivers/clk/sunxi-ng/ccu-sun20i-d1-r.c             |    1 +
+ drivers/clk/sunxi-ng/ccu-sun20i-d1.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c           |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100.c             |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c              |   13 +-
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c             |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun50i-h616.c             |    1 +
+ drivers/clk/sunxi-ng/ccu-sun6i-a31.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun6i-rtc.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c              |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r.c                 |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c            |    1 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c           |    1 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c               |    1 +
+ drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c           |    1 +
+ drivers/clk/sunxi-ng/ccu_nkm.c                     |   21 +
+ drivers/clk/sunxi-ng/ccu_nkm.h                     |    2 +
+ drivers/clk/ti/dpll.c                              |   10 +-
+ drivers/reset/reset-mpfs.c                         |   95 +-
+ include/dt-bindings/clock/loongson,ls2k-clk.h      |   54 +-
+ include/dt-bindings/clock/nxp,imx95-clock.h        |   28 +
+ include/dt-bindings/clock/r9a07g043-cpg.h          |   58 +-
+ include/dt-bindings/clock/r9a07g044-cpg.h          |   58 +
+ include/dt-bindings/clock/r9a07g054-cpg.h          |   58 +
+ include/dt-bindings/clock/r9a08g045-cpg.h          |   70 +
+ include/dt-bindings/clock/rk3568-cru.h             |    1 +
+ include/dt-bindings/reset/rockchip,rk3588-cru.h    |    2 +
+ include/dt-bindings/reset/st,stm32mp25-rcc.h       |    2 +-
+ include/soc/microchip/mpfs.h                       |   10 +-
+ 150 files changed, 10956 insertions(+), 1200 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/nxp,imx95-display-master-csr.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c6400-clock.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c64xx-clock.txt
+ create mode 100644 drivers/clk/imx/clk-imx95-blk-ctl.c
+ create mode 100644 drivers/clk/meson/vclk.c
+ create mode 100644 drivers/clk/meson/vclk.h
+ create mode 100644 drivers/clk/sophgo/Kconfig
+ create mode 100644 drivers/clk/sophgo/Makefile
+ create mode 100644 drivers/clk/sophgo/clk-cv1800.c
+ create mode 100644 drivers/clk/sophgo/clk-cv1800.h
+ create mode 100644 drivers/clk/sophgo/clk-cv18xx-common.c
+ create mode 100644 drivers/clk/sophgo/clk-cv18xx-common.h
+ create mode 100644 drivers/clk/sophgo/clk-cv18xx-ip.c
+ create mode 100644 drivers/clk/sophgo/clk-cv18xx-ip.h
+ create mode 100644 drivers/clk/sophgo/clk-cv18xx-pll.c
+ create mode 100644 drivers/clk/sophgo/clk-cv18xx-pll.h
+ create mode 100644 drivers/clk/stm32/clk-stm32mp25.c
+ create mode 100644 drivers/clk/stm32/stm32mp25_rcc.h
+ create mode 100644 include/dt-bindings/clock/nxp,imx95-clock.h
+
+-- 
+https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
+https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
