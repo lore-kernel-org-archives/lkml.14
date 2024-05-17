@@ -1,200 +1,188 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5C9381BB;
-	Fri, 17 May 2024 10:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD55364BE;
+	Fri, 17 May 2024 10:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715942674; cv=none; b=e2orpGJaMAZJRiIYoCraeJDaCPhTuYAeyDfBVUt95uUpSLiIWxkNARt31AjCfvU3srieYGG15iz17sBfcNRdm5MNTUxtA9xovoQkFXUn7z+6rnJu4AUKS39FGNz0anqj/rqE/Y/RoMFLPm4Yx8vEHlfR645HUnwrs6E0GqB/ey8=
+	t=1715942749; cv=none; b=hpgeJR1Vu8/2gXlElHIMxafXpB+xgnYefcm7Ocso8/seUJ5aQ4LBNfjEEy2o+BLlWE1CBlRGYMRz/4veTkiwMBFgAErhXuuj6NTB0zDqZvDmEtBWseTzwL3IUk4ITrjwViBknHcB6dC70/D/YjsChU5RQbdvUv3EMHyGVBG6sog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715942674; c=relaxed/simple;
-	bh=8PDxT62DagqUntKkDWE1G8k9FS6IpbMInZq2Uc32cvk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E3QiN2jAHWIVYBtNYSHcwfSJcicJnArTxtjThKNeg6WErByFb9nWBa/iQj5T/mP2ouvCdNG39U9lqaer37+RR4C6/3v/gEe3rP8xN1hDG0AEMstGqeBJLzFdMbsG1qVazIEDY6RIxUmEAq3F3ZRg5Nd0Q9gVal+Jc/FMKVBQA2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=GFbZ9VaE; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GFbZ9VaE"
-X-UUID: 568b4f00143811ef8065b7b53f7091ad-20240517
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=N8hXx2XzySWtV0EToGINYZKgMgu2HYtNEIyDtX1C/HA=;
-	b=GFbZ9VaEI93cbza84HpGOqKnIDW7mvmILrGpvbeqimMw8N8rA760YCp39Vb/0ZZoW14sbVqsKrACBcJCXCexC1H+vi9uLVZCCdvuaPEXjKd/UreD5RL9iKtuOyawhgED3n+wgOK1HZ+DJhqegeWB++20vOVasb0KTtfBrq0Cqko=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:1ebb9b61-7c33-4004-a634-5d515e36d324,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:82c5f88,CLOUDID:d57ffb83-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 568b4f00143811ef8065b7b53f7091ad-20240517
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 200882049; Fri, 17 May 2024 18:29:27 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 17 May 2024 18:29:26 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 17 May 2024 18:29:26 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v2 1/5] net: phy: mediatek: Re-organize MediaTek ethernet phy drivers
-Date: Fri, 17 May 2024 18:29:04 +0800
-Message-ID: <20240517102908.12079-2-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240517102908.12079-1-SkyLake.Huang@mediatek.com>
-References: <20240517102908.12079-1-SkyLake.Huang@mediatek.com>
+	s=arc-20240116; t=1715942749; c=relaxed/simple;
+	bh=C8v1h21ZRXXxONXZxQQk5g6d1cPj0Ob1g3zhUbkap3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U6GyxtVSAKFDsBsX2gMH0FdC16NuHyMCWiQrVXGh2CvPEu51khX6g7SxG7wIf0ia2I7rf5I01NzkOSVDVkyblwPAHtevrqHtM+UCkOono7I7oaYDFdwIpkYJnLkGBE1Pc+Bakb3g2KvgQ5Cj7VNh5+hD3CyrrQQUS22xHVNnU1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E28001424;
+	Fri, 17 May 2024 03:46:09 -0700 (PDT)
+Received: from [10.91.2.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2BCB3F762;
+	Fri, 17 May 2024 03:45:42 -0700 (PDT)
+Message-ID: <05c0c55c-5758-408b-a0d5-6d535cec3f7b@arm.com>
+Date: Fri, 17 May 2024 12:45:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/17] coresight: Use per-sink trace ID maps for Perf
+ sessions
+To: Mike Leach <mike.leach@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com,
+ scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
+ suzuki.poulose@arm.com,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20240429152207.479221-1-james.clark@arm.com>
+ <CAJ9a7Vi7P3kBG5x_JC6AxDL-AvPc5=48eEC0gH3CHceVtSNmOQ@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAJ9a7Vi7P3kBG5x_JC6AxDL-AvPc5=48eEC0gH3CHceVtSNmOQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "SkyLake.Huang" <skylake.huang@mediatek.com>
 
-Re-organize MediaTek ethernet phy driver files and get ready to integrate
-some common functions and add new 2.5G phy driver.
-mtk-ge.c: MT7530 Gphy on MT7621 & MT7531 Gphy
-mtk-ge-soc.c: Built-in Gphy on MT7981 & Built-in switch Gphy on MT7988
-mtk-2p5ge.c: Planned for built-in 2.5G phy on MT7988
 
-Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
----
- MAINTAINERS                                   |  4 ++--
- drivers/net/phy/Kconfig                       | 17 +-------------
- drivers/net/phy/Makefile                      |  3 +--
- drivers/net/phy/mediatek/Kconfig              | 22 +++++++++++++++++++
- drivers/net/phy/mediatek/Makefile             |  3 +++
- .../mtk-ge-soc.c}                             |  0
- .../phy/{mediatek-ge.c => mediatek/mtk-ge.c}  |  0
- 7 files changed, 29 insertions(+), 20 deletions(-)
- create mode 100644 drivers/net/phy/mediatek/Kconfig
- create mode 100644 drivers/net/phy/mediatek/Makefile
- rename drivers/net/phy/{mediatek-ge-soc.c => mediatek/mtk-ge-soc.c} (100%)
- rename drivers/net/phy/{mediatek-ge.c => mediatek/mtk-ge.c} (100%)
+On 03/05/2024 14:40, Mike Leach wrote:
+> Hi James
+> 
+> On Mon, 29 Apr 2024 at 16:23, James Clark <james.clark@arm.com> wrote:
+>>
+>> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+>> as long as there are fewer than that many ETMs connected to each sink.
+>>
+>> Each sink owns its own trace ID map, and any Perf session connecting to
+>> that sink will allocate from it, even if the sink is currently in use by
+>> other users. This is similar to the existing behavior where the dynamic
+>> trace IDs are constant as long as there is any concurrent Perf session
+>> active. It's not completely optimal because slightly more IDs will be
+>> used than necessary, but the optimal solution involves tracking the PIDs
+>> of each session and allocating ID maps based on the session owner. This
+>> is difficult to do with the combination of per-thread and per-cpu modes
+>> and some scheduling issues. The complexity of this isn't likely to worth
+>> it because even with multiple users they'd just see a difference in the
+>> ordering of ID allocations rather than hitting any limits (unless the
+>> hardware does have too many ETMs connected to one sink).
+>>
+>> Per-thread mode works but only until there are any overlapping IDs, at
+>> which point Perf will error out. Both per-thread mode and sysfs mode are
+>> left to future changes, but both can be added on top of this initial
+>> implementation and only sysfs mode requires further driver changes.
+>>
+>> The HW_ID version field hasn't been bumped in order to not break Perf
+>> which already has an error condition for other values of that field.
+>> Instead a new minor version has been added which signifies that there
+>> are new fields but the old fields are backwards compatible.
+>>
+> 
+> Looking at this overall - would it not be better to introduce the
+> concept of a "sink ID" to allow the detection of multiple sources into
+> the single sink that is now done by emitting multiple AUX_HWID packets
+> with the CPU+ID extra data?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e291445..6deaf94 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13793,8 +13793,8 @@ M:	Qingfang Deng <dqfext@gmail.com>
- M:	SkyLake Huang <SkyLake.Huang@mediatek.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--F:	drivers/net/phy/mediatek-ge-soc.c
--F:	drivers/net/phy/mediatek-ge.c
-+F:	drivers/net/phy/mediatek/mtk-ge-soc.c
-+F:	drivers/net/phy/mediatek/mtk-ge.c
- F:	drivers/phy/mediatek/phy-mtk-xfi-tphy.c
- 
- MEDIATEK I2C CONTROLLER DRIVER
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 1df0595..e0e4b5e 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -251,22 +251,7 @@ config MAXLINEAR_GPHY
- 	  Support for the Maxlinear GPY115, GPY211, GPY212, GPY215,
- 	  GPY241, GPY245 PHYs.
- 
--config MEDIATEK_GE_PHY
--	tristate "MediaTek Gigabit Ethernet PHYs"
--	help
--	  Supports the MediaTek Gigabit Ethernet PHYs.
--
--config MEDIATEK_GE_SOC_PHY
--	tristate "MediaTek SoC Ethernet PHYs"
--	depends on (ARM64 && ARCH_MEDIATEK) || COMPILE_TEST
--	depends on NVMEM_MTK_EFUSE
--	help
--	  Supports MediaTek SoC built-in Gigabit Ethernet PHYs.
--
--	  Include support for built-in Ethernet PHYs which are present in
--	  the MT7981 and MT7988 SoCs. These PHYs need calibration data
--	  present in the SoCs efuse and will dynamically calibrate VCM
--	  (common-mode voltage) during startup.
-+source "drivers/net/phy/mediatek/Kconfig"
- 
- config MICREL_PHY
- 	tristate "Micrel PHYs"
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index 197acfa..de38cbf 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -71,8 +71,7 @@ obj-$(CONFIG_MARVELL_PHY)	+= marvell.o
- obj-$(CONFIG_MARVELL_88Q2XXX_PHY)	+= marvell-88q2xxx.o
- obj-$(CONFIG_MARVELL_88X2222_PHY)	+= marvell-88x2222.o
- obj-$(CONFIG_MAXLINEAR_GPHY)	+= mxl-gpy.o
--obj-$(CONFIG_MEDIATEK_GE_PHY)	+= mediatek-ge.o
--obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mediatek-ge-soc.o
-+obj-y				+= mediatek/
- obj-$(CONFIG_MESON_GXL_PHY)	+= meson-gxl.o
- obj-$(CONFIG_MICREL_KS8995MA)	+= spi_ks8995.o
- obj-$(CONFIG_MICREL_PHY)	+= micrel.o
-diff --git a/drivers/net/phy/mediatek/Kconfig b/drivers/net/phy/mediatek/Kconfig
-new file mode 100644
-index 0000000..2fa3a78
---- /dev/null
-+++ b/drivers/net/phy/mediatek/Kconfig
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config MEDIATEK_GE_PHY
-+	tristate "MediaTek Gigabit Ethernet PHYs"
-+	help
-+	  Supports the MediaTek non-built-in Gigabit Ethernet PHYs.
-+
-+	  Non-built-in Gigabit Ethernet PHYs include mt7530/mt7531.
-+	  You may find mt7530 inside mt7621. This driver shares some
-+	  common operations with MediaTek SoC built-in Gigabit
-+	  Ethernet PHYs.
-+
-+config MEDIATEK_GE_SOC_PHY
-+	bool "MediaTek SoC Ethernet PHYs"
-+	depends on (ARM64 && ARCH_MEDIATEK) || COMPILE_TEST
-+	select NVMEM_MTK_EFUSE
-+	help
-+	  Supports MediaTek SoC built-in Gigabit Ethernet PHYs.
-+
-+	  Include support for built-in Ethernet PHYs which are present in
-+	  the MT7981 and MT7988 SoCs. These PHYs need calibration data
-+	  present in the SoCs efuse and will dynamically calibrate VCM
-+	  (common-mode voltage) during startup.
-diff --git a/drivers/net/phy/mediatek/Makefile b/drivers/net/phy/mediatek/Makefile
-new file mode 100644
-index 0000000..005bde2
---- /dev/null
-+++ b/drivers/net/phy/mediatek/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_MEDIATEK_GE_PHY)		+= mtk-ge.o
-+obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mtk-ge-soc.o
-diff --git a/drivers/net/phy/mediatek-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-similarity index 100%
-rename from drivers/net/phy/mediatek-ge-soc.c
-rename to drivers/net/phy/mediatek/mtk-ge-soc.c
-diff --git a/drivers/net/phy/mediatek-ge.c b/drivers/net/phy/mediatek/mtk-ge.c
-similarity index 100%
-rename from drivers/net/phy/mediatek-ge.c
-rename to drivers/net/phy/mediatek/mtk-ge.c
--- 
-2.18.0
+I think it's worth trying so I'll give it a go and see if it ends up
+being cleaner. One of the reasons for emitting multiple packets was to
+tie events and sinks together that may not have been created when the
+first set of HW_IDs were output. It seems like static sink IDs could
+solve this with less repetition.
 
+> This sink ID could be part of the sink csdev struct - or even the
+> id_map struct - a simple count of sinks as the per sink maps are
+> created would be sufficient. If this sink ID replaced the CPU+ID extra
+
+We could also use the existing sink IDs that are used to select the sink
+on the perf commandline: coresight_get_sink_by_id().
+
+> data in the HWID packets, then each packet could be emitted just once,
+> and perf can then collate based on the sink id.
+> 
+> Moreover, once we are ready to address the per-thread issues - then
+> the overlap would not matter. Generate OpenCSD decode trees per sink
+> ID, add docoders to the tree per Trace ID. Thus if a buffer has data
+> from sink 1 trace id 5, ans sink 2, trace ID 5, then pick the right
+> decoder for the combo.
+
+The issue is more about trace in a single buffer with overlapping IDs.
+Whether we use a sink ID or the CPU+ID mappings, Perf still needs to
+know when to change the tree. In either case we'd have to re-emit the
+mappings to prompt the decoder change.
+
+So yes with either solution there would be multiple decode trees, it's
+just knowing which fragments to send to which tree that's the issue.
+
+> 
+> Finally in systems with ETE+TRBE were there is no use of trace IDs, a
+> sink ID of 0x0 could potentially indicate that 1:1 relationship.
+> 
+
+This is already indicated with the PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW
+flag on the AUX record. But I suppose we could add sink ID 0x0 as well
+for consistency with the new HW_ID packets. For backwards compatibility
+it probably makes sense to continue using the AUX flag in Perf, but I'll
+see how it looks with the sink ID implementation.
+
+James
+
+> Regards
+> 
+> Mike
+> 
+>>
+>> James Clark (17):
+>>   perf cs-etm: Print error for new PERF_RECORD_AUX_OUTPUT_HW_ID versions
+>>   perf auxtrace: Allow number of queues to be specified
+>>   perf: cs-etm: Create decoders after both AUX and HW_ID search passes
+>>   perf: cs-etm: Allocate queues for all CPUs
+>>   perf: cs-etm: Move traceid_list to each queue
+>>   perf: cs-etm: Create decoders based on the trace ID mappings
+>>   perf: cs-etm: Support version 0.1 of HW_ID packets
+>>   coresight: Remove unused stubs
+>>   coresight: Clarify comments around the PID of the sink owner
+>>   coresight: Move struct coresight_trace_id_map to common header
+>>   coresight: Expose map argument in trace ID API
+>>   coresight: Make CPU id map a property of a trace ID map
+>>   coresight: Pass trace ID map into source enable
+>>   coresight: Use per-sink trace ID maps for Perf sessions
+>>   coresight: Remove pending trace ID release mechanism
+>>   coresight: Re-emit trace IDs when the sink changes in per-thread mode
+>>   coresight: Emit HW_IDs for all ETMs that are using the sink
+>>
+>>  drivers/hwtracing/coresight/coresight-core.c  |  10 +
+>>  drivers/hwtracing/coresight/coresight-dummy.c |   3 +-
+>>  .../hwtracing/coresight/coresight-etm-perf.c  |  82 ++-
+>>  .../hwtracing/coresight/coresight-etm-perf.h  |  20 +-
+>>  .../coresight/coresight-etm3x-core.c          |  14 +-
+>>  .../coresight/coresight-etm4x-core.c          |  14 +-
+>>  drivers/hwtracing/coresight/coresight-stm.c   |   3 +-
+>>  drivers/hwtracing/coresight/coresight-sysfs.c |   3 +-
+>>  .../hwtracing/coresight/coresight-tmc-etr.c   |   5 +-
+>>  drivers/hwtracing/coresight/coresight-tmc.h   |   5 +-
+>>  drivers/hwtracing/coresight/coresight-tpdm.c  |   3 +-
+>>  .../hwtracing/coresight/coresight-trace-id.c  | 107 +--
+>>  .../hwtracing/coresight/coresight-trace-id.h  |  57 +-
+>>  include/linux/coresight-pmu.h                 |  17 +-
+>>  include/linux/coresight.h                     |  20 +-
+>>  tools/include/linux/coresight-pmu.h           |  17 +-
+>>  tools/perf/util/auxtrace.c                    |   9 +-
+>>  tools/perf/util/auxtrace.h                    |   1 +
+>>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  28 +-
+>>  tools/perf/util/cs-etm.c                      | 617 ++++++++++++------
+>>  tools/perf/util/cs-etm.h                      |   2 +-
+>>  21 files changed, 633 insertions(+), 404 deletions(-)
+>>
+>> --
+>> 2.34.1
+>>
+> 
+> 
