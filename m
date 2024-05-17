@@ -1,303 +1,195 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC192C68F;
-	Fri, 17 May 2024 09:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAF064A3E;
+	Fri, 17 May 2024 09:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715939922; cv=none; b=dJPQIx5ZOCN3gwcm9JZa2jexv/9HGIv3equzdTNIpxOh4CNXRJiFus6HAW/M5U8dW4VKGXg5g/lDdeALXSC926bBQpl0EBhWtMBl+QEI3yWsQnqiaYr9ASEkr7M5/pCU2iw7QXqWwNoITbREgTtU2qoiDbME4vsvIP0TjKJxTjk=
+	t=1715939981; cv=none; b=ML9ZUewiN0NEEcrxA1P+iBZ4hd+QTnypIhujmB6yES6blCYjBP8dtUIfIB+5cIRuXwRjltlEAUucBTWlyT45/4T2M/vsEOwI2sUrPJS2GaqkrM227d8gHG2YAawcTzDY+zofImBH6xow7tFw6XJxSlb6NlDWTVcoA2L3hC/m+0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715939922; c=relaxed/simple;
-	bh=Ia/dVEWr7HUDim7yKQ618Z6eSusWdkAeUMCVf/PkIBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RKpGrzlIvxs/gXj6zVQdR978ICeU56xf45Wu7ofilNAqlycEb4oxqpnDy/yNZOxUPkmPofwm5vAhgeKdgyJUMf39HdeWREjV6gcYijeL5bkxke9MLjbdOIqXK1zAkdnYyG8QBui7fIPbgG+6O+CWmvbOujqEys7cudGG5C8PhmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VlRnJynH; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1715939981; c=relaxed/simple;
+	bh=dpyBEu8gbIL6XlzIlY5fdmx1tZoQWLnVwLsmf6qiYYA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=bA7op62MM6ljhzX5ZSksAlUF5YcHPzbFHoJ2VJ4klKJzzYMdFkMPaICcughkDsWf90WVw0iB5YTklMZSuLuLgRqUOhdH6jgPLDNbYaSjQ9SxozfDuFN2zR8ysmco947jYblIfJI+D8SGeuwGgSzKOdGUsCXSgJKhmU4JnyxLo6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=XEfgF2K1 reason="signature verification failed"; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VlRnJynH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hxpi/TgnORew9Z/XVkDVjx2QVxlulE667vNxVvqbtUY=; b=VlRnJynHf9XB1WJ2PuU8uoeNgE
-	VdIMolFav8OAqCi1rx/aeYzCQ5aWp6It1sZZRN8BaQATBARFNT0qTDGipMZggVztCksTuSiTW9Xod
-	h7r0+s51aMAtM2HoQ5EfDx9DIBhsjZff/7Hl74WAvcruReu/0HGpQ0EyIWFIUtqjmc/8YNduhWw26
-	sHNIsA7PWEcbQ1+0UPn7DfJPFOOgmTqp9sC6pcY+FAKWFy4P6Ku736gXrhmJgvnCO4gdadR4DXkAP
-	p8KukVuQkhH160MXcGP8GtmlCgLUl3fh2EIxK4ZeO/XCi64BWpa16V2qfytp6hFKbQnHYJHYA9VY2
-	MRLOcXQA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s7uLn-00000005eN4-0oKS;
-	Fri, 17 May 2024 09:58:10 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C30AE3005E3; Fri, 17 May 2024 11:58:06 +0200 (CEST)
-Date: Fri, 17 May 2024 11:58:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
-	torvalds@linux-foundation.org, mingo@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
-	joshdon@google.com, brho@google.com, pjt@google.com,
-	derkling@google.com, haoluo@google.com, dvernet@meta.com,
-	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
-	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
-	andrea.righi@canonical.com, joel@joelfernandes.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
-Message-ID: <20240517095806.GJ30852@noisy.programming.kicks-ass.net>
-References: <20240501151312.635565-1-tj@kernel.org>
- <20240502084800.GY30852@noisy.programming.kicks-ass.net>
- <ZjPnb1vdt80FrksA@slm.duckdns.org>
- <20240503085232.GC30852@noisy.programming.kicks-ass.net>
- <ZjgWzhruwo8euPC0@slm.duckdns.org>
- <20240513080359.GI30852@noisy.programming.kicks-ass.net>
- <20240513142646.4dc5484d@rorschach.local.home>
- <20240514000715.4765jfpwi5ovlizj@airbuntu>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="XEfgF2K1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=ObJzj8BTvZk1VZywMcjbfxOqh0LbeEj7um1CBAweiKE=; b=X
+	EfgF2K1i+wcumRLG/5SVNTZqDy74L9xKzKSHuGwnFjptinwutNKg3+qBU4HT1LNF
+	J5H/5ZuwFwKIF3G95qx2TyN8WzkshpdwFgNANndD28h4yUhv/b86Zg80wgdfzTg1
+	o8A8pnM45lOmjnBb8IVhTJIc2qVcIObrm1jWYBsgOw=
+Received: from slark_xiao$163.com ( [223.104.68.4] ) by
+ ajax-webmail-wmsvr-40-112 (Coremail) ; Fri, 17 May 2024 17:59:03 +0800
+ (CST)
+Date: Fri, 17 May 2024 17:59:03 +0800 (CST)
+From: "Slark Xiao" <slark_xiao@163.com>
+To: "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+Cc: "Manivannan Sadhasivam" <mani@kernel.org>, loic.poulain@linaro.org, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com
+Subject: Re:Re:Re: Re: Re: Re: [PATCH] bus: mhi: host: Add Foxconn SDX72
+ related support
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <20b11ca1.101c.18f8418706b.Coremail.slark_xiao@163.com>
+References: <20240510032657.789629-1-slark_xiao@163.com>
+ <20240514143741.GA2306@thinkpad>
+ <541de8e4.1600.18f79de44f3.Coremail.slark_xiao@163.com>
+ <20240515074119.GA2445@thinkpad>
+ <5eee5967.7bdf.18f7b4567b7.Coremail.slark_xiao@163.com>
+ <20240515115239.GD4488@thinkpad>
+ <58fb648d.ab03.18f7c2f90bd.Coremail.slark_xiao@163.com>
+ <20240516142346.GA6922@thinkpad>
+ <20b11ca1.101c.18f8418706b.Coremail.slark_xiao@163.com>
+X-NTES-SC: AL_Qu2aB/WYtkEv5SmaYOkfm0kaj+c/WMGzu/8m3oFXO51wjDnpxi0GW1lFJV3v0vmdLgGdgR6RVDNy6tVwb7lGU58kTpKLqvJE8EqFhQWYOh2R3A==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514000715.4765jfpwi5ovlizj@airbuntu>
+Message-ID: <6f6143b2.9e05.18f85fda5f9.Coremail.slark_xiao@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:_____wD3n4FnKkdm3VcDAA--.1856W
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiNRbgZGV4Hn6kDwAHs2
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue, May 14, 2024 at 01:07:15AM +0100, Qais Yousef wrote:
-> On 05/13/24 14:26, Steven Rostedt wrote:
-
-> > > That is, from where I am sitting I see $vendor mandate their $enterprise
-> > > product needs their $BPF scheduler. At which point $vendor will have no
-> > > incentive to ever contribute back.
-> > 
-> > Believe me they already have their own scheduler, and because its so
-> > different, it's very hard to contribute back.
-
-'They' are free to have their own scheduler, but since 'nobody' is using
-it and 'they' want to have their product work on RHEL / SLES / etc..
-therefore are bound to respect the common interfaces, no?
-
-> > > So I don't at all mind people playing around with schedulers -- they can
-> > > do so today, there are a ton of out of tree patches to start or learn
-> > > from, or like I said, it really isn't all that hard to just rip out fair
-> > > and write something new.
-> > 
-> > For cloud servers, I bet a lot of schedulers are not public. Although,
-> > my company tries to publish the schedulers they use.
-
-Yeah, it's the TIVO thing. Keeping all that private creates the rebase
-pain. Outside of that there's nothing we can do.
-
-Anyway, instead of doing magic mushroom schedulers, what does the cloud
-crud actually want? I know the KVM people were somewhat looking forward
-to the EEVDF sched_attr::sched_runtime extension because virt likes the
-longer slices. Less preemption more better for them.
-
-In fact, some of the facebook workloads also wanted longer slices (and
-no wakeup preemption).
-
-> > From what I understand (I don't work on production, but Chromebooks), a
-> > lot of changes cannot be contributed back because their updates are far
-> > from what is upstream. Having a plugable scheduler would actually allow
-> > them to contribute *more*.
-
-So can we please start by telling what kind of magic hacks ChromeOS has
-and whatfor?
-
-The term contributing seems to mean different things to us. Building a
-external scheduler isn't contributing, it's fragmenting.
-
-> > > Keeping a rando github repo with BPF schedulers is not contributing.
-> > 
-> > Agreed, and I would guess having them in the Linux kernel tree would be
-> > more beneficial.
-
-Yeah, no. Same thing. It's just a pile of junk until someone puts the
-time in to figure out how to properly integrate it. Very much like Qais
-argues below.
-
-> > > That's just a repo with multiple out of tree schedulers to be ignored.
-> > > Who will put in the effort of upsteaming things if they can hack up a
-> > > BPF and throw it over the wall?
-> > 
-> > If there's a place in the Linux kernel tree, I'm sure there would be
-> > motivation to place it there. Having it in the kernel proper does give
-> > more visibility of code, and therefore enhancements to that code. This
-> > was the same rationale for putting perf into the kernel proper.
-
-These things are very much not the same. A pile of random hacks vs a
-single unified interface to PMUs. They're like the polar opposite of
-one another.
-
-> > > So yeah, I'm very much NOT supportive of this effort. From where I'm
-> > > sitting there is simply not a single benefit. You're not making my life
-> > > better, so why would I care?
-> > > 
-> > > How does this BPF muck translate into better quality patches for me?
-> > 
-> > Here's how we will be using it (we will likely be porting sched_ext to
-> > ChromeOS regardless of its acceptance).
-> > 
-> > Doing testing of scheduler changes in the field is extremely time
-> > consuming and complex. We tested EEVDF vs CFS by backporting EEVDF to
-> > 5.15 (as that is the kernel version we are using on the chromebooks we
-
-/me mumbles something about necro-kernels...
-
-> > were testing on), and then we need to add a user space "switch" to
-> > change the scheduler. Note, this also risks causing a bug in adding
-> > these changes. Then we push the kernel out, and then start our
-> > experiment that enables our feature to a small percentage, and slowly
-> > increases the number of users until we have a enough for a statistical
-> > result.
-> > 
-> > What sched_ext would give us is a easy way to try different scheduling
-> > algorithms and get feedback much quicker. Once we determine a solution
-> > that improves things, we would then spend the time to implement it in
-> > the scheduler, and yes, send it upstream.
-
-This sounds a little backwards... ok, a lot. How do you do actual
-problem analysis in this case? Having random statistics is not really
-useful - beyond determining there might be a problem.
-
-The next step is isolating that problem locally and reproducing it. Then
-analysing *what* the actual problem is and how it happens, and then try
-and think of a solution.
-
-(preferably one that then doesn't break another thing :-)
-
-> > To me, sched_ext should never be the final solution, but it can be
-> > extremely useful in testing various changes quickly in the field. Which
-> > to me would encourage more contributions.
-
-Well, the thing is, the moment sched_ext itself lands upstream, it will
-become the final solution for a fair number of people and leave us, the
-wider Linux scheduler community, up a creek without no paddles on.
-
-There is absolutely no inherent incentive to further contribute. Your
-immediate problem is solved, you get assigned the next problem. That is
-reality.
-
-Worse, they can share the BPF hack and get warm fuzzy feeling of
-'contribution' while in fact it's useless. At best we know 'random hack
-changed something for them'. No problem description, no reproducer, no
-nothing.
-
-Anyway, if you feel you need BPF hackery to do this, by all means, do
-so. But realize that it is a debug tool and in general we don't merge
-debug tools.
-
-Also, I would argue that perhaps a scheduler livepatch would be more
-convenient to actually debug / A-B test things.
-
-> I really don't think the problems we have are because of EEVDF vs CFS vs
-> anything else. Other major OSes have one scheduler, but what they exceed on is
-> providing better QoS interfaces and mechanism to handle specific scenarios that
-> Linux lacks.
-
-Quite possibly. The immediate problem being that adding interfaces is
-terrifying. Linus has a rather strong opinion about breaking stuff, and
-getting this wrong will very quickly result in a paint-into-corner type
-problem.
-
-We can/could add fields to sched_attr under the understanding that
-they're purely optional and try thing, *however* too many such fields
-and we're up a creek again.
-
-> The confusion I see again and again over the years is the fragmentation of
-> Linux eco system and app writers don't know how to do things properly on Linux
-> vs other OSes. Note our CONFIG system is part of this fragmentation.
-> 
-> The addition of more flavours which inevitably will lead to custom QoS specific
-> to that scheduler and libraries built on top of it that require that particular
-> extension available is a recipe for more confusion and fragmentation.
-
-Yes, this!
-
-> I really don't buy the rapid development aspect too. The scheduler was heavily
-> influenced by the early contributors which come from server market that had
-> (few) very specific workloads they needed to optimize for and throughput had
-> a heavier weight vs latency. Fast forward to now, things are different. Even on
-> server market latency/responsiveness has become more important. Power and
-> thermal are important on a larger class of systems now too. I'd dare say even
-> on server market.
-
-Absolutely, AFAIU racks are both power and thermal limited. There are
-some crazy ACPI protocols to manage some of this.
-
-> How do you know when it's okay for an app/task to consume too
-> much power and when it is not? Hint hint, you can't unless someone in userspace
-> tells you.
-
-Yes, cluster/cloud infrastructure needs to manage that. There is nothing
-smart the kernel can do here on its own, except respect the ACPI lunacy
-and hard throttle itself when the panic signal comes.
-
-> Similarly for latency vs throughput. What is the correct way to
-> write an application to provide this info? Then we can ask what is missing in
-> the scheduler to enable this.
-
-Right, so the EEVDF thing is a start here. By providing a per task
-request size, applications can indicate if they want frequent and short
-activations or more infrequent longer activations.
-
-An application can know it's (average) activation time, the kernel has
-no clue when work starts and is completed. Applications can fairly
-trivially measure this using CLOCK_THREAD_CPUTIME_ID reads before and
-after and communicate this (very much like SCHED_DEADLINE).
-
-Anyway, yes, userspace needs to change and provide more information. The
-trick ofcourse is figuring out which bit of information is critical /
-useful etc.
-
-There is a definite limit on the amount of constraints you want to solve
-at runtime.
-
-Everybody going off and hacking their own thing does not help, we need
-collaboration to figure out what it is that is needed.
-
-> Note the original min/wakeup_granularity_ns, latency_ns etc were tuned by
-> default for throughput by the way (server market bias). You can manipulate
-> those and get better latencies.
-
-The immediate problem with those knobs is that they are system wide. But
-yes, everybody was randomly poking them knobs, sometimes in obviously
-insane ways.
-
-> FWIW IMO the biggest issues I see in the scheduler is that its testability and
-> debuggability is hard. I think BPF can be a good fit for that. For the latter
-> I started this project, yet I am still trying to figure out how to add tracer
-> for the difficult paths to help people more easily report when a bad decision
-> has happened to provide more info about the internal state of the scheduler, in
-> hope to accelerate the process of finding solutions. 
-
-So the pitfalls here are that exposing that information for debug
-purposes can/will lead to people consuming this information for
-non-debug purposes and then when we want to change things we're stuck
-because suddenly someone relies something we believed was an
-implementation detail :/
-
-I've been bitten by this before and this is why I'm so very hesitant to
-put tracepoints in the scheduler.
-
-> I think it would be great to have a clear list of the current limitations
-> people see in the scheduler. It could be a failure on my end, but I haven't
-> seen specifics of problems and what was tried and failed to the point it is
-> impossible to move forward. 
-
-Right, list, but also ideally reproducers (yeah, I know, really hard).
-
-The moment we merge sched_ext all motivation to do any of this work goes
-out the window.
-
-> From what I see, I am hitting bugs here and there
-> all the time. But they are hard to debug to truly understand where things went
-> wrong. Like this one for example where PTHREAD_PRIO_PI is a NOP for fair tasks.
-> Many thought using this flag doesn't help (rather than buggy)..
-
-Yay for the terminal backlog :/ I'll try and have a look.
+CkF0IDIwMjQtMDUtMTcgMDk6MDk6MDUsICJTbGFyayBYaWFvIiA8c2xhcmtfeGlhb0AxNjMuY29t
+PiB3cm90ZToKPgo+QXQgMjAyNC0wNS0xNiAyMjoyMzo0NiwgIk1hbml2YW5uYW4gU2FkaGFzaXZh
+bSIgPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPiB3cm90ZToKPj5PbiBXZWQsIE1h
+eSAxNSwgMjAyNCBhdCAwODoxNzoyM1BNICswODAwLCBTbGFyayBYaWFvIHdyb3RlOgo+Pj4gCj4+
+PiAKPj4+IEF0IDIwMjQtMDUtMTUgMTk6NTI6MzksICJNYW5pdmFubmFuIFNhZGhhc2l2YW0iIDxt
+YW5pQGtlcm5lbC5vcmc+IHdyb3RlOgo+Pj4gPk9uIFdlZCwgTWF5IDE1LCAyMDI0IGF0IDA0OjAx
+OjM3UE0gKzA4MDAsIFNsYXJrIFhpYW8gd3JvdGU6Cj4+PiA+PiAKPj4+ID4+IEF0IDIwMjQtMDUt
+MTUgMTU6NDE6MTksICJNYW5pdmFubmFuIFNhZGhhc2l2YW0iIDxtYW5pdmFubmFuLnNhZGhhc2l2
+YW1AbGluYXJvLm9yZz4gd3JvdGU6Cj4+PiA+PiA+KyBRaWFuZwo+Pj4gPj4gPgo+Pj4gPj4gPk9u
+IFdlZCwgTWF5IDE1LCAyMDI0IGF0IDA5OjI5OjIwQU0gKzA4MDAsIFNsYXJrIFhpYW8gd3JvdGU6
+Cj4+PiA+PiA+PiBBdCAyMDI0LTA1LTE0IDIyOjM3OjQxLCAiTWFuaXZhbm5hbiBTYWRoYXNpdmFt
+IiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+IHdyb3RlOgo+Pj4gPj4gPj4gPk9u
+IEZyaSwgTWF5IDEwLCAyMDI0IGF0IDExOjI2OjU3QU0gKzA4MDAsIFNsYXJrIFhpYW8gd3JvdGU6
+Cj4+PiA+PiA+PiA+PiBBbGlnbiB3aXRoIFFjb20gU0RYNzIsIGFkZCByZWFkeSB0aW1lb3V0IGl0
+ZW0gZm9yIEZveGNvbm4gU0RYNzIuCj4+PiA+PiA+PiA+PiBBbmQgYWxzbywgYWRkIGZpcmVob3Nl
+IHN1cHBvcnQgc2luY2UgU0RYNzIuCj4+PiA+PiA+PiA+PiAKPj4+ID4+ID4+ID4+IFNpZ25lZC1v
+ZmYtYnk6IFNsYXJrIFhpYW8gPHNsYXJrX3hpYW9AMTYzLmNvbT4KPj4+ID4+ID4+ID4+IC0tLQo+
+Pj4gPj4gPj4gPj4gIGRyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMgfCAzMSArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysKPj4+ID4+ID4+ID4+ICAxIGZpbGUgY2hhbmdlZCwg
+MzEgaW5zZXJ0aW9ucygrKQo+Pj4gPj4gPj4gPj4gCj4+PiA+PiA+PiA+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMuYyBiL2RyaXZlcnMvYnVzL21oaS9ob3N0
+L3BjaV9nZW5lcmljLmMKPj4+ID4+ID4+ID4+IGluZGV4IDA4ODQ0ZWU3OTY1NC4uMGZkOTRjMTkz
+ZmM2IDEwMDY0NAo+Pj4gPj4gPj4gPj4gLS0tIGEvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dl
+bmVyaWMuYwo+Pj4gPj4gPj4gPj4gKysrIGIvZHJpdmVycy9idXMvbWhpL2hvc3QvcGNpX2dlbmVy
+aWMuYwo+Pj4gPj4gPj4gPj4gQEAgLTM5OSw2ICszOTksOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IG1oaV9jaGFubmVsX2NvbmZpZyBtaGlfZm94Y29ubl9zZHg1NV9jaGFubmVsc1tdID0gewo+Pj4g
+Pj4gPj4gPj4gIAlNSElfQ0hBTk5FTF9DT05GSUdfREwoMTMsICJNQklNIiwgMzIsIDApLAo+Pj4g
+Pj4gPj4gPj4gIAlNSElfQ0hBTk5FTF9DT05GSUdfVUwoMzIsICJEVU4iLCAzMiwgMCksCj4+PiA+
+PiA+PiA+PiAgCU1ISV9DSEFOTkVMX0NPTkZJR19ETCgzMywgIkRVTiIsIDMyLCAwKSwKPj4+ID4+
+ID4+ID4+ICsJTUhJX0NIQU5ORUxfQ09ORklHX1VMX0ZQKDM0LCAiRklSRUhPU0UiLCAzMiwgMCks
+Cj4+PiA+PiA+PiA+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19ETF9GUCgzNSwgIkZJUkVIT1NFIiwg
+MzIsIDApLAo+Pj4gPj4gPj4gPgo+Pj4gPj4gPj4gPlRoaXMgbWVhbnMgU0RYNTUgaXMgYWxzbyBz
+dXBwb3J0aW5nIEZJUkVIT1NFIGNoYW5uZWxzLCB3aGljaCBpcyBub3QgdHJ1ZSBJCj4+PiA+PiA+
+PiA+YmVsaWV2ZS4KPj4+ID4+ID4+IEFjdHVhbGx5LCBJIGp1c3QgdmVyaWZpZWQgaXQgd2l0aCBt
+eSBzZHg1NSBhbmQgdGhlIGFuc3dlciBpcyBZZXMuIFRoZXNlIGNoYW5uZWxzCj4+PiA+PiA+PiBh
+cmUgY29tbW9uIHNldHRpbmdzIGZvciBRY29tIGRldmljZSB3aGljaCBzdXBwb3J0IFBDSWUgbW9k
+ZS4gQlRXLCB0aGUKPj4+ID4+ID4+IGRlZmF1bHQgc2V0dGluZ3Mgb2YgUWNvbSBhbmQgUXVlY3Rl
+bCBzdXBwb3J0IGZpcmVob3NlIGZvciB0aGVpciBzZHg1NSBwcm9kdWN0cy4KPj4+ID4+ID4KPj4+
+ID4+ID5RaWFuZywgY2FuIHlvdSBwbGVhc2UgY29uZmlybSB0aGF0IFNEWDU1IHN1cHBvcnRzIEZJ
+UkVIT1NFIGNoYW5uZWxzPwo+Pj4gPj4gPgo+Pj4gPj4gPj4gPgo+Pj4gPj4gPj4gPj4gIAlNSElf
+Q0hBTk5FTF9DT05GSUdfSFdfVUwoMTAwLCAiSVBfSFcwX01CSU0iLCAxMjgsIDIpLAo+Pj4gPj4g
+Pj4gPj4gIAlNSElfQ0hBTk5FTF9DT05GSUdfSFdfREwoMTAxLCAiSVBfSFcwX01CSU0iLCAxMjgs
+IDMpLAo+Pj4gPj4gPj4gPj4gIH07Cj4+PiA+PiA+PiA+PiBAQCAtNDE5LDYgKzQyMSwxNiBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IG1oaV9jb250cm9sbGVyX2NvbmZpZyBtb2RlbV9mb3hjb25uX3Nk
+eDU1X2NvbmZpZyA9IHsKPj4+ID4+ID4+ID4+ICAJLmV2ZW50X2NmZyA9IG1oaV9mb3hjb25uX3Nk
+eDU1X2V2ZW50cywKPj4+ID4+ID4+ID4+ICB9Owo+Pj4gPj4gPj4gPj4gIAo+Pj4gPj4gPj4gPj4g
+K3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX2NvbnRyb2xsZXJfY29uZmlnIG1vZGVtX2ZveGNvbm5f
+c2R4NzJfY29uZmlnID0gewo+Pj4gPj4gPj4gPj4gKwkubWF4X2NoYW5uZWxzID0gMTI4LAo+Pj4g
+Pj4gPj4gPj4gKwkudGltZW91dF9tcyA9IDIwMDAwLAo+Pj4gPj4gPj4gPj4gKwkucmVhZHlfdGlt
+ZW91dF9tcyA9IDUwMDAwLAo+Pj4gPj4gPj4gPj4gKwkubnVtX2NoYW5uZWxzID0gQVJSQVlfU0la
+RShtaGlfZm94Y29ubl9zZHg1NV9jaGFubmVscyksCj4+PiA+PiA+PiA+PiArCS5jaF9jZmcgPSBt
+aGlfZm94Y29ubl9zZHg1NV9jaGFubmVscywKPj4+ID4+ID4+ID4+ICsJLm51bV9ldmVudHMgPSBB
+UlJBWV9TSVpFKG1oaV9mb3hjb25uX3NkeDU1X2V2ZW50cyksCj4+PiA+PiA+PiA+PiArCS5ldmVu
+dF9jZmcgPSBtaGlfZm94Y29ubl9zZHg1NV9ldmVudHMsCj4+PiA+PiA+PiA+PiArfTsKPj4+ID4+
+ID4+ID4+ICsKPj4+ID4+ID4+ID4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9wY2lfZGV2X2lu
+Zm8gbWhpX2ZveGNvbm5fc2R4MjRfaW5mbyA9IHsKPj4+ID4+ID4+ID4+ICAJLm5hbWUgPSAiZm94
+Y29ubi1zZHgyNCIsCj4+PiA+PiA+PiA+PiAgCS5jb25maWcgPSAmbW9kZW1fZm94Y29ubl9zZHg1
+NV9jb25maWcsCj4+PiA+PiA+PiA+PiBAQCAtNDQ4LDYgKzQ2MCwxNiBAQCBzdGF0aWMgY29uc3Qg
+c3RydWN0IG1oaV9wY2lfZGV2X2luZm8gbWhpX2ZveGNvbm5fc2R4NjVfaW5mbyA9IHsKPj4+ID4+
+ID4+ID4+ICAJLnNpZGViYW5kX3dha2UgPSBmYWxzZSwKPj4+ID4+ID4+ID4+ICB9Owo+Pj4gPj4g
+Pj4gPj4gIAo+Pj4gPj4gPj4gPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX3BjaV9kZXZfaW5m
+byBtaGlfZm94Y29ubl9zZHg3Ml9pbmZvID0gewo+Pj4gPj4gPj4gPj4gKwkubmFtZSA9ICJmb3hj
+b25uLXNkeDcyIiwKPj4+ID4+ID4+ID4+ICsJLmVkbCA9ICJxY29tL3NkeDcybS94Ymxfc19kZXZw
+cmdfbnMubWVsZiIsCj4+PiA+PiA+PiA+Cj4+PiA+PiA+PiA+V2hhdCBpcyAnLm1lbGYnPyBJcyB0
+aGUgZmlybXdhcmUgYXZhaWxhYmxlIHNvbWV3aGVyZT8gRGlkIHlvdSBwbGFuIHRvIHVwc3RyZWFt
+Cj4+PiA+PiA+PiA+aXQgdG8gbGludXgtZmlybXdhcmU/Cj4+PiA+PiA+PiA+Cj4+PiA+PiA+PiBU
+aGlzIGZpbGUgc2ltaWxhciB3aXRoICJlZGwubWJuIi4gSW4gU0RYNzIgcHJvZHVjdCwgdGhlIGRl
+ZmF1bHQgImVkbCIgZmlsZSBuYW1lIGlzCj4+PiA+PiA+PiAieGJsX3NfZGV2cHJnX25zLm1lbGYi
+LiBDdXJyZW50bHkgd2UgZG9uJ3QgcGxhbiB0byB1cHN0cmVhbSBpdCB0byBsaW51eC1maXJtd2Fy
+ZQo+Pj4gPj4gPj4gc2luY2UgMiByZWFzb25zOiAxOiB3ZSBzaGFyZSB0aGUgc2FtZSBmb2xkIG5h
+bWUgc2R4NzJtIHdpdGggcWNvbSBvciBvdGhlciB2ZW5kb3JzCj4+PiA+PiA+PiAyOiB0aGlzIGZp
+bGUgbWF5IGJlIGNoYW5nZWQgc2luY2Ugc2R4NzIgcHJvZHVjdCBzdGlsbCB1bmRlciBkZXZlbG9w
+aW5nIGluIG91ciBzaWRlLiB3ZQo+Pj4gPj4gPj4gbWF5IGNoYW5nZSB0aGUgYmFzZSBsaW5lIGFj
+Y29yZGluZyB0byBRQ09NIHJlbGVhc2UuCj4+PiA+PiA+Cj4+PiA+PiA+VGhlbiBJIHdvdWxkIGFz
+ayB5b3UgdG8gYWRkIHN1cHBvcnQgd2hlbiB5b3UgaGF2ZSBhIHN0YWJsZSBmaXJtd2FyZS4gSSBk
+byBub3QKPj4+ID4+ID53YW50IHRvIGNoYW5nZSB0aGUgZmlybXdhcmUgbmFtZSBhZnRlciBzb21l
+IHRpbWUgYXMgaXQgd2lsbCBjb25mdXNlIHVzZXJzLgo+Pj4gPj4gPgo+Pj4gPj4gPi0gTWFuaQo+
+Pj4gPj4gSWYgYSBzdGFibGUgZmlybXdhcmUgbXVzdCBiZSBwcm92aWRlZCwgSSB0aGluayBJIHNo
+YWxsIGNoYW5nZSB0aGUgZm9sZGVyIG5hbWUgZnJvbSBxY29tIHRvCj4+PiA+PiBmb3gsIGRvIHlv
+dSBhZ3JlZSB0aGlzPwo+Pj4gPgo+Pj4gPkV2ZW4gaW4gdGhhdCBjYXNlLCB3aGVyZSBjYW4gdGhl
+IHVzZXIgZmluZCB0aGUgZmlybXdhcmU/Cj4+PiA+Cj4+PiBJIHRoaW5rIHRoaXMgZWRsIGZpbGUg
+Y291bGQgaGVscCB1c2VyIGxldCBkZXZpY2UgZW50ZXIgaW50byBlZGwgbW9kZSh3d2FuMGZpcmVo
+b3NlMCkuCj4+PiBGb3IgUENJRSBkZXZpY2UsIHRoZXJlIGlzIG5vIG9wZW5zb3VyY2UgdG9vbCB0
+byBzdXBwb3J0IFBDSUUgZWRsIGRvd25sb2FkLiBJZiB1c2VyCj4+PiBjb3VsZCBnZXQgdGhlIHRv
+b2wgdG8gZG8gdGhlIGZpcmVob3NlIGRvd25sb2FkLCBJIHRoaW5rIGl0J3Mgbm90IGhhcmQgdG8g
+Z2V0IGNvbXBsZXRlIGZpcm13YXJlCj4+PiBmcm9tIFBDIHZlbmRvciBvciBzb21ld2hlcmUgZWxz
+ZS4KPj4KPj5JIHdhcyB0b2xkIHRoYXQgUWNvbSB3aWxsIHVwc3RyZWFtIHRoZSBQQ0kgc3VwcG9y
+dCBmb3IgUURMIGluIHRoZSBjb21pbmcgd2Vla3MuCj4+T25jZSB0aGF0IGhhcHBlbnMgKGV2ZW4g
+aWYgYSBQUiksIEknbGwgc2hhcmUgdGhhdCB3aXRoIHlvdS4gUGxlYXNlIHRlc3QgaXQgYW5kCj4+
+bGV0IG1lIGtub3cgaWYgdGhhdCB3b3JrcyBvciBub3QuCj4+Cj5TdXJlLiBCdXQgSSB0aGluayB0
+aGlzIHNoYWxsIG5vdCB0aGUgYmxvY2sgY2F1c2UgZm9yIG1lcmdpbmcgdGhpcyBwYXRjaCwgcmln
+aHQ/Cj5CZWZvcmUgdGhhdCBQUiwgd2UgaGF2ZSB2ZXJpZmllZCB0aGUgZmlyZWhvc2UgZnVuY3Rp
+b24gaW4gb3VyIGxvY2FsIHdpdGggb3VyCj5maXJlaG9zZSB0b29sIHdoaWNoIGlzIG5vdCBvcGVu
+LiAKPj5BbmQgZm9yIGVudGVyaW5nIEVETCBtb2RlLCB3ZSBoYXZlIHJlY2VudGx5IGFkZGVkIHN1
+cHBvcnQgdG8gdHJpZ2dlciBFREwgbW9kZQo+PmZyb20gaG9zdCBbMV0uIENvdWxkIHlvdSBhbHNv
+IHRlc3QgdGhhdD8gWW91IGp1c3QgbmVlZCB0byBhZGQgYGVkbF90cmlnZ2VyID0KPj50cnVlYCB0
+byB0aGUgYG1oaV9wY2lfZGV2X2luZm9gIHN0cnVjdCBvZiBTRFg3MiBhbmQgdHJpZ2dlciBFREwg
+bW9kZSBmcm9tIGhvc3QKPj5ieToKPj4KPj5lY2hvIDEgPiAvc3lzL2J1cy9taGkvZGV2aWNlcy8u
+Li4vdHJpZ2dlcl9lZGwKPj4KPkRvIHlvdSByZW1lbWJlciB0aGF0IEkgdG9sZCB5b3UgSSB3YW50
+IHRvIG1lcmdlIHN1Y2ggZnVuY3Rpb24gZnJvbSBxdWFsY29tbSBkcml2ZXIKPmluIGxhc3QgeWVh
+cj8gSSBtZXJnZSB0aGUgY29tbWl0IGZyb20gUVVEIGRyaXZlciBpbiBteSBsb2NhbC4gQWN0dWFs
+bHkgaXQncyBzYW1lIGFzIHRoZQo+Y29tbWl0IFsxXSwgaXQncyBjYWxsZWQgImZvcmNlX2VkbCIu
+IEFuZCBzdXJlLCB0aGUgcmVzdWx0IGlzIHllcywgaXQgd29ya3Mgd2VsbC4KPgpMYXRlc3QgdGVz
+dCwgaXQgZG9lc24ndCB3b3JrIGluIExpbnV4IFY2Ljkgc2luY2UgdGhlcmUgaXMgYSBwYXRjaCBt
+aXNzaW5nLiBJbiBteSBsb2NhbCBwcmV2aW91cwp0ZXN0LCB0aGVyZSBpcyBubyBtaGlfY250cmwt
+PmVkbF90cmlnZ2VyIGNvbmRpdGlvbiB0byBzZXQgdXAgZGV2X2F0dHJfdHJpZ2dlcl9lZGwuClNl
+ZW1zIHBhdGNoIFsyXSBpcyBtaXNzZWQuCgpbMl0taHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbWhp
+LzE3MTM5Mjg5MTUtMTgyMjktNC1naXQtc2VuZC1lbWFpbC1xdWljX3FpYW55dUBxdWljaW5jLmNv
+bS8KPj4+ID4+IEJUVywgSSBuZWVkIHRvIGNoZWNrIGlmIGl0IHdvcmtzIGFmdGVyIHVwZGF0aW5n
+ICdlZGwgZncnIGZyb20gIHhibF9zX2RldnByZ19ucy5tZWxmIHRvCj4+PiA+PiBlZGwubWJuLiAK
+Pj4+IAo+Pj4gPgo+Pj4gPk9rYXkuIElNTywgd2Ugc2hvdWxkIHVwc3RyZWFtIHRoZSBwcm9kdWN0
+IHN1cHBvcnQgb25seSBhZnRlciBhIHN0YWJsZSBmaXJtd2FyZQo+Pj4gPnJlbGVhc2UgKHdlbGwg
+c3RhYmxlIGluIHRoZSBzZW5zZSBhIHN0YWJsZSBuYW1lIGF0IGxlYXN0KS4KPj4+ID4KPj4+ID4t
+IE1hbmkKPj4+IFRoZSBjaGVjayByZXN1bHQgaXMgd2UgY2FuIHJlbmFtZSBpdCB0byBhbGlnbiB3
+aXRoIHByZXZpb3VzIGZvcm1hdC4gVW50aWwgbm93LCAKPj4+IEkgZGlkbid0IHNlZSBhbnkgbWhp
+IGRldmljZSBoYXMgdXBzdHJlYW0gdGhlaXIgZmlybXdhcmUgdG8gL2xpYi9maXJtd2FyZS9xY29t
+IGZvbGRlci4KPj4KPj5JdCBpcyBub3QgbWFuZGF0b3J5LCBidXQgaXQgaXMgYSBiZXN0IHByYWN0
+aXNlIHRoYXQgSSByZWNlbnRseSBzdGFydGVkIGFza2luZwo+PmZvci4KPj4KPj4+IElmIGl0J3Mg
+YSBtdXN0LCBJIHRoaW5rIHdlIGNhbiB1cHN0cmVhbSB0aGUgZWRsIGZpbGUgbGF0ZXIuICBBbnl3
+YXksIHdlIGhvcGUgd2UgY2FuCj4+PiBtZXJnZSB0aGlzIHNkeDcyIHN1cHBvcnQgaW50byA2LjEw
+IHNpbmNlIGN1c3RvbWVyKERlbGwpIHdvdWxkIHVzZSB0aGlzIGtlcm5lbCBmb3Igb2ZmaWNpYWwK
+Pj4+IHJlbGVhc2UuIEJ1dCBubyB3b3JyeSwgd2UgY2FuIG1ha2Ugc3VyZSB0aGlzIGZpcmVob3Nl
+IGRvd25sb2FkIG1ldGhvZCB3b3JrcyB3ZWxsIGluCj4+PiAgb3VyIGxvY2FsIHNpZGUuCj4+PiBB
+bmQgYWxzbywgcGxlYXNlIGhlbHAgYSByZXZpZXcgYWJvdXQgbXkgcHJldmlvdXMgZW1haWwgYWJv
+dXQgZml4IHNkeDcyIHBpbmcgZmFpbHVyZSBpc3N1ZS4KPj4+IFRoZXJlIGlzIGEgZml4IHNvbHV0
+aW9uIGZyb20gdXMuIAo+Pj4gCj4+Cj4+UWlhbmcgaXMgd29ya2luZyBvbiB0aGF0Lgo+R29vZCB0
+byBoZWFyIHRoYXQuIEJUVywgbWF5IEkga25vdyB0aGUgZmVhdHVyZSBtZXJnZSB3aW5kb3cgaW4g
+VjYuMTA/IEkgZG9uJ3Qgd29ycnkgYWJvdXQKPm1lcmdlIHdpbmRvdyBvZiB0aGUgbmV0d29yayBm
+aXggY29tbWl0LCBzaW5jZSBpdCdzIGEgZml4IHdpdGggaGlnaGVyIHByaW9yaXR5LiBCdXQgSSB3
+YW50IHRvCj5tZXJnZSB0aGUgYmFzaWMgc3VwcG9ydCBvZiBteSBTRFg3MiBiZWZvcmUgbWVyZ2Ug
+d2luZG93IGNsb3NlLiBUaGlzIGlzIGltcG9ydGFudCBmb3IgdXMuCj4KPlRoYW5rcyEKPj4KPj4t
+IE1hbmkKPj4KPj5bMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbWhpLzE3MTM5Mjg5MTUtMTgy
+MjktMS1naXQtc2VuZC1lbWFpbC1xdWljX3FpYW55dUBxdWljaW5jLmNvbS8KPj4KPj4tLSAKPj7g
+rq7grqPgrr/grrXgrqPgr43grqPgrqngr40g4K6a4K6k4K6+4K6a4K6/4K614K6u4K+NCg==
