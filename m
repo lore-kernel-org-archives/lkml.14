@@ -1,34 +1,32 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC9252F9A;
-	Fri, 17 May 2024 12:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8C43D546;
+	Fri, 17 May 2024 12:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715950736; cv=none; b=iaZNSIO5vY23mqQZcyy6orr4o7HnKNrSj5alTLPht85i8zokrzPZ7N6aVkMJLTXUSOBLYaBCs1PiA2pBPHMzPwzD4xBAQ0EDce/OeiFk9v7Pm+jbzmO5BkvsP4OU0vFt2hmqqfO8uf+hYdZTl3n0JBbbtFSIhDrI3QvfR3g6QYY=
+	t=1715950731; cv=none; b=qwDJEcbkXyp9V1HEY7A1kQRRdyxJorhgQhFSEDfpsMSOxUI/kdk2RNS1gSj1gc6gZ2Asly8fPfYIavWE3HViojHPwKYD+/g+Yetzh2VdP9slCvhC6IwLWe1TNlpXWpsAf69mtMt0wrrL8mF+5i55CrVqpin94/jY1Ex6l8EbYcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715950736; c=relaxed/simple;
-	bh=0XOMm+ge0CG1rMR477UJBe3byaxH6SnO+N8jfBfoTS4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TV29b8QM7CB5DqUYNd9QkkJZcdOphMu59ZKJHYbhxZbxu+8x5t+OGnZkbjwXEYQp91DgtkiOwg6mlUBvVvNtkMl7uw27NAmLe/kh1ZnS2FECmo6AFfhAsZTC+XjjLP+fkoA9u2W7gEhcbCNqzkxaGpTqX9fvMJwfW6FLE3cBGsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=t+hKGjVy; arc=none smtp.client-ip=95.215.58.173
+	s=arc-20240116; t=1715950731; c=relaxed/simple;
+	bh=zrk6+cloSLdiIn9uyTXv4YwejY+Ob7e3tkorYnZx4ak=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KtiBi/DXjS/ZLS8E7OpoRkJu7jkyBrwXGcN34Wl9b7ZsZ97/WJCnilGLdZQBHthA107mV6ILStjZNMmwIudHYpPGqMjXXottElkKzfmgmTinSdn4MgoPfHBB3lsLbATlpS3wfF6NIN+gEB8mmThcAAlYfKEQhyKyEZh+LR0mjTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=X/EduMIF; arc=none smtp.client-ip=95.215.58.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="t+hKGjVy"
+	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="X/EduMIF"
 X-Envelope-To: linux-i2c@vger.kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1715950730;
+	t=1715950724;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BKi9dQbr0T+uVxmbTMIarChYf6vJF2b8+XfTd+iLTkI=;
-	b=t+hKGjVy72mnGQfVQXGD2Ss4kQdbuvoKZ3LkaVJJ13ZBKIqKH7WJqRNu6/AhgLJ0aFQcWv
-	/dOzAdAZOO4pstDh3a1PLPzzv+QEOuzuphNU0NalyGPOCSGUov2cD9yny9IFVWsoyBwv0W
-	PIQi2eljSfZqvMIaEDLvb4CTWp/q8dahR8n1s0fjV1G1o3QD62Wdkf3phMsUNOSeONdsWq
-	Px07v9/e5I9TSYJfPRf1yhRPnkfEyJrt01W/iacidEQPvZTAX6Jfao+DKfC3MvV9R/5lao
-	LKVvunhbIn3a2YvQ+JPDl4ed9L/PEsaijBnFaeOtl5j5XhMWR1POGSqkx/2yAQ==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1Ml8qbMHtSEoymkT/K/7bfJSLCHjhajBrHobl8Pf/aQ=;
+	b=X/EduMIFDZseitXtRB+ulnDX9qzY4q7dndnBr5LGTGQy22b9+VMZRQJmQCQDXosoVfeg8S
+	dhIQGkkyKbbEngJSH/UkCYCGPVfhF3ZChX3qth6+itxVtvg2gZADqkMjWgXV6aFTVQiCQj
+	YTpHZ9uGwce3n9wi8GaMzu+6XAkarvxVbixE6jzYExv50xhumZHfpH9bq2IK9pPaAGnYRk
+	CsGAJFreXDHHFHdnaRNY3BMRAThkRc5lhTYthpPaukbHTuj8UX1/4QVB3mwyUayLeFEgvl
+	djXoeBB5CFFAaa6elKExv01CzCTetYTYZ6W0QkrQiUZn+FsT4UVkQw5786zfaQ==
 X-Envelope-To: linux-gpio@vger.kernel.org
 X-Envelope-To: conor+dt@kernel.org
 X-Envelope-To: linus.walleij@linaro.org
@@ -53,8 +51,10 @@ X-Envelope-To: andi.shyti@kernel.org
 X-Envelope-To: brgl@bgdev.pl
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Date: Fri, 17 May 2024 14:58:04 +0200
-Subject: [PATCH 06/13] gpio: add AD24xx GPIO driver
+Subject: [PATCH 00/13] Analog Devices Inc. Automotive Audio Bus (A2B)
+ support
+Date: Fri, 17 May 2024 14:57:58 +0200
+Message-Id: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,9 +63,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
-References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
-In-Reply-To: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
+X-B4-Tracking: v=1; b=H4sIAFZUR2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDI0Mj3USjJN1UU5OkRBOzRMtUA1MloMqCotS0zAqwKdGxtbUAr6uFm1U
+ AAAA=
 To: Mark Brown <broonie@kernel.org>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,372 +84,513 @@ Cc: Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org,
  =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
 X-Migadu-Flow: FLOW_OUT
 
-From: Alvin Šipraga <alsi@bang-olufsen.dk>
+This series adds support for Analog Devices' Automotive Audio Bus (A2B)
+transceivers in the AD242x, AD241x and AD240x series.
 
-This driver adds GPIO function support for AD24xx A2B transceiver chips.
-When a GPIO is requested, the relevant pin is automatically muxed to
-GPIO mode. The device tree property gpio-reserved-ranges can be used to
-protect certain pins which are reserved for other functionality such as
-I2S/TDM data.
+The series is based on today's linux-next.
+
+INTRODUCTION
+============
+
+A2B buses consist of a seires of daisy-chained A2B transceiver ICs known
+as nodes. Every bus consists of a "main" node (attached to the host
+processor via I2C) and, typically, a series of "subordinate" nodes
+connected in a daisy-chained manner via UTP (unshielded twisted pair).
+Digital audio transport is delivered via a standard I2S/TDM interface
+between the host and main node. The UTP links may extend for several
+meters, exposing peripheral function to the host over a distance.
+
+  ┌──────┐ I2C ┌──────┐     ┌──────┐     ┌──────┐         ┌──────┐
+  │      ├─────┤      │ UTP │      │     │      │         │      │
+  │ host │     │ main │XXXXX│ sub1 │XXXXX│ sub2 │XX ... XX│ subN │
+  │      ├─────┤      │     │      │     │      │         │      │
+  └──────┘ TDM └──────┘     └──────┘     └──────┘         └──────┘
+                   \______________________________ ... ______/
+
+                                   A2B bus
+
+All A2B nodes expose a number of peripheral functions, and the A2B
+protocol allows for them to be controlled directly by the host processor
+over I2C:
+
+                  ┌──────────────────────┐
+                  ├─────┐          ┌─────┤
+  <---  ... \/\/\/│ TRX │  AD2428  │ TRX │\/\/\/ ... --->
+            /\/\/\│  A  │          │  B  │/\/\/\
+   towards        ├─────┘          └─────┤        towards last
+   main node      │ ┌──────┐ ┌─────────┐ │        subordinate node
+                  │ │ I2C  │ │ I2S/TDM │ │
+                  │ │      │ │   PDM   │ │
+                  │ └──────┘ └─────────┘ │
+                  │ ┌──────┐ ┌─────────┐ │
+                  │ │ GPIO │ │  CLOCK  │ │
+                  │ └──────┘ └─────────┘ │
+                  └──────────────────────┘
+
+The peripheral functions are as follows:
+
+  I2C interface
+  -------------
+
+  On main nodes the I2C interface must by definition function in
+  target (slave) mode, as it is attached to the host for management.
+  On subordinate nodes the I2C interface functions in controller
+  (master) mode, providing an additional I2C adapter to the host for
+  each subordinate node connected to the A2B bus.
+
+  The control registers of each node, both main and subordinate, can
+  be accessed directly (resp. indirectly) via the I2C interface between
+  the host and main node.
+
+  I2S/TDM and PDM interface
+  -------------------------
+
+  This is the main feature of A2B, whence the name Audio Bus. Each node
+  has two TX and RX pins for I2S function. On the main node the
+  interface functions as a bit- and frame-clock consumer. On the
+  subordinate nodes it functions as a provider. PCM data is transported
+  "upstream" (towards the main node) and "downstream" (towards the last
+  subordinate node) via the A2B protocol in so-called A2B superframes.
+
+  Through control registers of the respective nodes, a user can
+  configure specific TDM slots to be placed into the superframes for
+  transport up or down the A2B bus. Similarly, slots can be pulled from
+  the superframes and retransmitted on a given node's I2S/TDM interface.
+
+  In addition, the pins on a node can be reconfigured to run in PDM mode
+  for applications such as microphone recording. The data is placed into
+  the superframe for forwarding up or down the bus.
+
+  GPIO
+  ----
+
+  Unused pins of a node can be muxed to GPIO mode. The GPIO block
+  supports interrupts as well, so each node connected to the bus can
+  expose a gpiochip/irqchip to the host.
+
+  CLOCK
+  -----
+
+  Certain pins can also be muxed to become clock outputs. The clock
+  outputs divide the internal PLL, which runs at 2048 times the frame
+  sync clock frequency of the main node.
+
+For further details on A2B architecture, check the documentation from
+Analog Devices, which is freely available online; this documentation was
+used to write the driver:
+
+  AD2420(W)/6(W)/7(W)/8(W)/9(W) Automotive Audio Bus A2B Transceiver
+  Technical Reference, Revision 1.1, October 2019, Part Number 82-100138-01
+
+DRIVER DESIGN
+=============
+
+To control these chips, a bus driver core has been added under the
+drivers/a2b/ directory. Drivers for peripheral functionality are instead
+placed in their relevant subsystem directory. What follows is a brief
+description of the design.
+
+The A2B core introduces a bus for two device types, and a class type to
+represent the overall bus:
+
+  * struct bus_type a2b_bus:
+
+    A bus type for A2B buses. There are two device types:
+
+      * struct device_type a2b_node: an A2B node, main or subordinate
+      * struct device_type a2b_func: a peripheral function of a node,
+                                     e.g. gpio or codec
+
+  * struct class a2b_bus_class:
+
+    A class type representing the overall A2B bus instance. There is one
+    device type:
+
+      * struct device_type a2b_bus: an A2B bus instance
+
+Interrupts can be raised by any node and are multiplexed via the IRQ
+line of the main node connected to the host processor. The interrupts
+are then dispatched to the relevant node, or, in the case of GPIO, to
+the a2b_func device representing the irqchip.
+
+At the top level there is the i2c driver, ad24xx-i2c, hereby called an
+A2B interface driver. It sets up the bare necessities required to
+interface with the nodes and to demultiplex interrupts. In principle
+there exist other interfaces for A2B - newer series chips, for example,
+support also SPI, but the hardware is not available for me to test on,
+so this series only implements the I2C interface.
+
+The role of the interface driver is to register a class device of type
+a2b_bus. The interface driver should implement relevant a2b_bus_ops,
+which provide the core with a way to talk to the nodes in an
+interface-agnostic fashion.
+
+When an a2b_bus device is registered, the core will traverse the OF node
+of the top-level i2c node and look for a child node named node@0. This
+node is used to create a new bus device of type a2b_node. It corresponds
+to the main node, and so it is always assumed to be present.
+
+The main node is probed by the node driver, ad24xx-node. This is a
+generic driver and supports both main and subordinate nodes, as
+the setup is very similar.
+
+The A2B core takes a specific interest in the initialization of a2b_node
+devices because it must administer the "discovery" process. Discovery
+can be thought of as enumeration, and involves programming specific
+control registers of the main node and waiting for a specific interrupt
+to determine whether there is another subordinate node attached.
+According to the design of A2B, the discovery process must happen in a
+serial manner, which is to say that it is not possible to discover
+subordinate node N until subordinate node N-1 has been discovered.
+Moreover, the main node must also be set up before any discovery can
+take place.
+
+To address this, the node driver must configure certain a2b_node_ops
+before registering its a2b_node with the core via a2b_register_node().
+Most of the node setup then takes place in the a2b_node_ops::setup()
+function, which is called synchronously by the core. When a node has
+been successfully set up, the core will then attempt (another)
+discovery. This algorithm will proceed until there are no further nodes
+to discover.
+
+When a node is set up by the node driver, it can then optionally add
+peripheral function a2b_func devices. These devices are probed by their
+respective driver, be it for the GPIO subsystem, sound subsystem, etc.
+
+As was alluded to earlier, the driver relies on OF/device tree for the
+hardware description. Here is a simplified example:
+
+  i2c {
+    a2b@68 {                                 interface
+      compatible = "adi,ad2428";
+      reg = <0x68>;
+      #interrupt-cells = <1>;
+      interrupt-controller;
+
+      node@0 {                               # main node
+        compatible = "adi,ad2428-node";
+        reg = <0>
+        interrupts = <0>;
+
+        clock {                              # main node clock
+          compatible = "adi,ad2428-clk";
+          #clock-cells = <1>;
+          clock-output-names = "clkout1", "clkout2";
+        };
+
+        codec {                              # main node audio codec
+          compatible = "adi,ad2428-codec";
+        };
+      };
+
+      node@1 {                               # subordinate node 1
+        compatible = "adi,ad2428-node";
+        reg = <1>;
+        interrupts = <1>;
+
+        gpio {                               # subordinate node 1 GPIO
+          compatible = "adi,ad2428-gpio";
+          #interrupt-cells = <2>;
+          interrupt-controller;
+          #gpio-cells = <2>;
+          gpio-controller;
+        };
+
+        codec {                              # subordinate node 1 audio codec
+          compatible = "adi,ad2428-codec";
+        };
+      };
+
+      node@2 {                               # subordinate node 2 ...
+        compatible = "adi,ad2428-node";
+        reg = <2>;
+        interrupts = <2>;
+
+        codec {                              # subordinate node 2 audio codec
+          compatible = "adi,ad2428-codec";
+        };
+      };
+
+      ... more nodes can follow here
+    };
+  };
+
+It is not a requirement that all described nodes are actually connected
+to the bus.
+
+While the device tree structure is flat, the device topology is nested.
+That means a parent-child device topology as follows:
+
+  1-0068
+   └─ a2b-0
+       └─ a2b-0.0
+           ├─ a2b-0.1
+           │   ├─ a2b-0.2
+           │   │   └─ a2b-0.2-codec
+           │   ├─ a2b-0.1-gpio
+           │   └─ a2b-0.1-codec
+           ├─ a2b-0.0-clk
+           └─ a2b-0.0-codec
+
+Where:
+
+  * 1-0068 is the top-level I2C device
+  * a2b-0 is the a2b_bus class device
+  * a2b-0.0 is the main node a2b_node device
+  * a2b-0.N is the Nth subordinate node a2b_node device
+  * a2b-0.N-codec is the Nth node's audio codec a2b_func device
+  * ditto for a2b-0.N-{clk,gpio} etc.
+
+PATCH ORDER
+===========
+
+The series is split up into per-subsystem pieces to make review easier
+for relevant maintainers.
+
+Broadly speaking the series goes as follows:
+
+  1. Add the driver core
+
+  2. Add device tree bindings for AD24xx chips
+
+  3. Add device drivers for AD24xx chips
+    a) I2C interface driver
+    b) node driver
+    c) per-subsystem functional block drivers
+
+  4. Add an example "custom" A2B node driver for a Bang & Olufsen
+     speaker (Beosound Shape)
+
+  5. Add relevant entries to the MAINTAINERS file
+
+HELP WANTED
+===========
+
+I am aware that the current implementation may not be entirely correct
+from a driver model perspective, and there are also some shortcomings
+which are already evident. Having said that, I am in need of people to
+bounce ideas off, so I figure it is OK to submit the code in its current
+form. Below I want to identify a few issues and get some feedback.
+
+  How will this get merged?
+  -------------------------
+
+  I am a bit clueless as to the review and merge process for a patch
+  series that affects multiple subsystems. If somebody can point me to
+  an explanation (perhaps already stated on the mailing list?), that
+  would be great.
+
+  I made some assumptions on how to structure this series but I am happy
+  to amend if things are not correct.
+
+  fw_devlink=on and device registration during discovery
+  ------------------------------------------------------
+
+  In the current architecture, device_register() is called for each A2B
+  node if and only if the node has been discovered. Since the driver is
+  using OF, this seems to violate some assumptions of fw_devlink. Let me
+  quote a comment from device_links_driver_bound():
+
+  | If a device binds successfully, it's expected to have created all
+  | the device links it needs to or make new device links as it needs
+  | them. So, fw_devlink no longer needs to create device links to any
+  | of the device's suppliers.
+
+  When using the audio-graph-card2 ASoC machine driver, I have
+  experienced fw_devlink=on preventing both the subordinate nodes'
+  codecs and the machine driver from being probed, due to a cyclic
+  dependency. I have been able to work around this by using Saravana's
+  new post-init-providers device tree property, whereby I reference by
+  phandle the corresponding OF graph endpoint of the machine driver in
+  each codec's device tree node. But this seems like a bit of a hack.
+  And I suspect that the logic (and benefits) of fw_devlink=on will be
+  broken in other places by this behaviour as well.
+
+  Looking at other subsystems, I see that i2c will register a device for
+  each child node, and allow the matching driver's probe function to
+  return -ENODEV/-ENXIO if the device doesn't respond. In that case, the
+  devices are still registered but remain unbound.
+
+  A similar strategy could be done for A2B as well I think.
+
+  First it is important to note that discovery must happen sequentially,
+  i.e. node N cannot be discovered until node N-1 has been discovered
+  and its driver bound. This is because node N-1's driver is needed to
+  access some of its registers (to enable B-side transceiver switching,
+  etc.).
+
+  Node discovery could instead be wired into the a2b_bus_probe()
+  function, such that if called for a struct device corresponding to
+  node N, and if nodes 0..N-1 have already been probed, then the code
+  currently in a2b_bus_discovery_work() can be performed to try and
+  discover node N.  If discovered, the a2b_drv->probe() call can then be
+  performed. If not discovered, a2b_bus_probe() can return -ENODEV and
+  we can conclude that the initial discovery algorithm has completed.
+
+  Here I need some help though. As already stated, there is a strict
+  ordering dependency, so I need to ensure that nodes 0..N-1 have
+  actually been probed. If I am already calling device_register() on all
+  nodes with an OF node to begin with, then I need to establish some
+  managed device links to work with this properly. Correct?
+
+  If that works fine, then there is at least one remaining problem.
+  Namely, we at B&O are already using this driver in a product which has
+  an OF description for up to 10 A2B nodes, but where the customer may
+  not necessarily have all nodes connected. This is the Beosound Shape
+  setup described in the last patches of this series. To handle this, I
+  use a modified audio-graph-card2 driver which defers its probe until
+  the A2B bus has finished its discovery. But in the case where some are
+  not connected, I will get -ENODEV. What I want to understand here is,
+  how will fw_devlink respond? To understand, here is a simplified
+  representation of the device tree:
+
+    sound {
+      compatible = "adi,a2b-audio-graph-card2";
+      ...
+
+      ports {
+        port@0 { snd_0_ep: endpoint { remote-endpoint = <&a2b0_codec_ep>; }; };
+        port@1 { snd_1_ep: endpoint { remote-endpoint = <&a2b1_codec_ep>; }; };
+        ...
+        port@10 { snd_10_ep: endpoint { remote-endpoint = <&a2b10_codec_ep>; }; };
+      };
+    };
+
+    a2b@68 {
+      compatible = "adi,ad2428";
+      ...
+
+      node@0 {
+        codec {
+          port { a2b0_codec_ep: endpoint { remote-endpoint = <&snd_0_ep>; }; };
+        };
+      };
+
+      node@1 {
+        codec {
+          port { a2b1_codec_ep: endpoint { remote-endpoint = <&snd_1_ep>; }; };
+        };
+      };
+
+      ...
+
+      node@10 {
+        codec {
+          port { a2b1_codec_ep: endpoint { remote-endpoint = <&snd_10_ep>; }; };
+        };
+      };
+    };
+
+  The question I have is, how can I ensure that the machine driver will
+  probe (sound node) when discovery has completed, even if not all
+  codecs are available because not all A2B nodes are connected?
+
+  I understand this might be pushing the limits of device tree somewhat,
+  but ASoC is quite device tree heavy and I would like to get some
+  advice on what the best way to proceed is. And if going for the
+  proposed amendment above (in the style of i2c, with discovery
+  integrated into a2b_bus_probe()), will post-init-providers still save
+  me in the above situation?
+
+  Perhaps there is a simpler approach here if the assumption I quoted at
+  the top of this section is not so crucial. In that case, maybe the
+  current implementation is OK?
+
+  Device dependencies and discovery
+  ---------------------------------
+
+  Yet another complication that we have recently come upon is what to do
+  when the discovery of a node N requires probing devices which
+  topologically are beneath the I2C controller of node N. Concretely, we
+  have two boards 1 and 2 where the B-side of board 1's A2B node is
+  routed through a mux. The mux is controlled via GPIO, and those GPIOs
+  are exported by an I2C GPIO expander connected to board 1's A2B's I2C
+  controller. Suppose board 1's A2B node is called sub1 and board 2's is
+  called sub2. Then the situation looks like this:
+
+                               X
+               ┌──────┐        X        ┌──────┐
+               │      │     ┌─────┐     │      │
+        ... XXX│ sub1 │XXXXX│ mux │XXXXX│ sub2 │
+               │      │     └──▲──┘     │      │
+               └──────┘        │        └──────┘
+                   │           │
+                   │ I2C       │
+                   │           │
+               ┌──────┐        │
+               │ GPIO │────────┘
+               └──────┘
+
+  The mux itself can be modelled as a simple GPIO mux and hence a
+  platform driver. But in order to discover node sub2, it must get
+  probed and configured appropriately; the default hardware strapping
+  would cause discovery to fail.
+
+  This is not a crucial issue right now and is something we can work
+  around, and I don't think it's necessarily a blocker for getting this
+  series merged upstream. But feedback on how to approach this might
+  inform some useful changes to this series.
+
+  The issue here is that some driver needs to acquire the mux and set
+  it. The discovery process must be delayed as long as this returns
+  -EPROBE_DEFER. Would it be appropriate for the A2B core to acquire
+  this mux based on device tree properties of sub1?
+
+Thank you in advance for all review comments and feedback.
 
 Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
 ---
- drivers/a2b/Kconfig        |   1 +
- drivers/gpio/Kconfig       |   6 +
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-ad24xx.c | 302 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 310 insertions(+)
+Alvin Šipraga (13):
+      a2b: add A2B driver core
+      regmap: add A2B support
+      dt-bindings: a2b: Analog Devices AD24xx devices
+      a2b: add AD24xx I2C interface driver
+      a2b: add AD24xx node driver
+      gpio: add AD24xx GPIO driver
+      ASoC: codecs: add AD24xx codec driver
+      clk: add AD24xx clock driver
+      i2c: add AD24xx I2C controller driver
+      dt-bindings: vendor-prefixes: add Bang & Olufsen a/s
+      dt-bindings: a2b: add compatible string for Beosound Shape node
+      a2b: add Beosound Shape node driver
+      MAINTAINERS: add maintainership for A2B drivers
 
-diff --git a/drivers/a2b/Kconfig b/drivers/a2b/Kconfig
-index 1f6d836463f3..8c894579e2fc 100644
---- a/drivers/a2b/Kconfig
-+++ b/drivers/a2b/Kconfig
-@@ -32,6 +32,7 @@ config A2B_AD24XX_I2C
- config A2B_AD24XX_NODE
-        tristate "Analog Devices Inc. AD24xx node support"
-        select REGMAP_A2B
-+       imply GPIO_AD24XX
-        help
-          Say Y here to enable support for AD24xx A2B transceiver nodes. This
-          applies to both main nodes and subordinate nodes. Supported models
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3dbddec07028..72bd0d88d6b3 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1241,6 +1241,12 @@ config GPIO_ALTERA_A10SR
- 	  includes reads of pushbuttons and DIP switches as well
- 	  as writes to LEDs.
- 
-+config GPIO_AD24XX
-+	tristate "Analog Devies Inc. AD24xx GPIO support"
-+	depends on A2B_AD24XX_NODE
-+	help
-+	  Say Y here to enable GPIO support for AD24xx A2B transceivers.
-+
- config GPIO_ARIZONA
- 	tristate "Wolfson Microelectronics Arizona class devices"
- 	depends on MFD_ARIZONA
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index e2a53013780e..f625bb140143 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)		+= gpio-104-idi-48.o
- obj-$(CONFIG_GPIO_104_IDIO_16)		+= gpio-104-idio-16.o
- obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
- obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
-+obj-$(CONFIG_GPIO_AD24XX)		+= gpio-ad24xx.o
- obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
- obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
- obj-$(CONFIG_GPIO_AGGREGATOR)		+= gpio-aggregator.o
-diff --git a/drivers/gpio/gpio-ad24xx.c b/drivers/gpio/gpio-ad24xx.c
-new file mode 100644
-index 000000000000..097ea9e2d629
---- /dev/null
-+++ b/drivers/gpio/gpio-ad24xx.c
-@@ -0,0 +1,302 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AD24xx GPIO driver
-+ *
-+ * Copyright (c) 2023-2024 Alvin Šipraga <alsi@bang-olufsen.dk>
-+ */
-+
-+#include <linux/a2b/a2b.h>
-+#include <linux/a2b/ad24xx.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/regmap.h>
-+
-+struct ad24xx_gpio {
-+	struct device *dev;
-+	struct a2b_func *func;
-+	struct a2b_node *node;
-+	struct regmap *regmap;
-+	int irqs[AD24XX_MAX_GPIOS];
-+	struct gpio_chip gpio_chip;
-+	struct irq_chip irq_chip;
-+	struct mutex mutex;
-+	unsigned int irq_invert : AD24XX_MAX_GPIOS;
-+	unsigned int irq_enable : AD24XX_MAX_GPIOS;
-+};
-+
-+static int ad24xx_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(adg->regmap, A2B_GPIOOEN, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & BIT(offset))
-+		return 0; /* output */
-+
-+	return 1; /* input */
-+}
-+
-+static int ad24xx_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(adg->regmap, A2B_GPIOIN, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & BIT(offset))
-+		return 1; /* high */
-+
-+	return 0; /* low */
-+}
-+
-+static void ad24xx_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int value)
-+{
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gc);
-+	unsigned int reg = value ? A2B_GPIODATSET : A2B_GPIODATCLR;
-+
-+	regmap_write(adg->regmap, reg, BIT(offset));
-+}
-+
-+static int ad24xx_gpio_set_direction(struct ad24xx_gpio *adg,
-+				     unsigned int offset,
-+				     unsigned int direction)
-+{
-+	unsigned int mask = BIT(offset);
-+	unsigned int ival = direction ? BIT(offset) : 0;
-+	int ret;
-+
-+	ret = regmap_update_bits(adg->regmap, A2B_GPIOIEN, mask, ival);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(adg->regmap, A2B_GPIOOEN, mask, ~ival);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int ad24xx_gpio_direction_input(struct gpio_chip *gc,
-+				       unsigned int offset)
-+{
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gc);
-+
-+	return ad24xx_gpio_set_direction(adg, offset, 1);
-+}
-+
-+static int ad24xx_gpio_direction_output(struct gpio_chip *gc,
-+					unsigned int offset, int value)
-+{
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gc);
-+
-+	/* For atomicity, write the output value before setting the direction */
-+	ad24xx_gpio_set(gc, offset, value);
-+
-+	return ad24xx_gpio_set_direction(adg, offset, 0);
-+}
-+
-+static int ad24xx_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-+					     unsigned int child,
-+					     unsigned int child_type,
-+					     unsigned int *parent,
-+					     unsigned int *parent_type)
-+{
-+	*parent = child;
-+	return 0;
-+}
-+
-+static void ad24xx_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(d);
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gpio_chip);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	adg->irq_enable &= ~BIT(hwirq);
-+	gpiochip_disable_irq(gpio_chip, hwirq);
-+}
-+
-+static void ad24xx_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(d);
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gpio_chip);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	gpiochip_disable_irq(gpio_chip, hwirq);
-+	adg->irq_enable |= BIT(hwirq);
-+}
-+
-+static int ad24xx_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(d);
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gpio_chip);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		adg->irq_invert &= ~BIT(hwirq);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		adg->irq_invert |= BIT(hwirq);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ad24xx_gpio_irq_bus_lock(struct irq_data *d)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(d);
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gpio_chip);
-+
-+	mutex_lock(&adg->mutex);
-+}
-+
-+static void ad24xx_gpio_irq_bus_sync_unlock(struct irq_data *d)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(d);
-+	struct ad24xx_gpio *adg = gpiochip_get_data(gpio_chip);
-+	int ret;
-+
-+	ret = regmap_write(adg->regmap, A2B_PINTINV, adg->irq_invert);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(adg->regmap, A2B_PINTEN, adg->irq_enable);
-+	if (ret)
-+		goto out;
-+
-+out:
-+	mutex_unlock(&adg->mutex);
-+
-+	if (ret)
-+		dev_err(adg->dev,
-+			"failed to update interrupt configuration: %d\n", ret);
-+}
-+
-+static const struct irq_chip ad24xx_gpio_irq_chip = {
-+	.name = "ad24xx-gpio",
-+	.flags = IRQCHIP_IMMUTABLE,
-+	.irq_mask = ad24xx_gpio_irq_mask,
-+	.irq_unmask = ad24xx_gpio_irq_unmask,
-+	.irq_set_type = ad24xx_gpio_irq_set_type,
-+	.irq_bus_lock = ad24xx_gpio_irq_bus_lock,
-+	.irq_bus_sync_unlock = ad24xx_gpio_irq_bus_sync_unlock,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
-+static const struct regmap_config ad24xx_gpio_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int ad24xx_gpio_probe(struct device *dev)
-+{
-+	struct a2b_func *func = to_a2b_func(dev);
-+	struct a2b_node *node = func->node;
-+	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-+	struct gpio_chip *gpio_chip;
-+	struct gpio_irq_chip *irq_chip;
-+	struct irq_domain *parent_domain;
-+	struct ad24xx_gpio *adg;
-+	struct device_node *np;
-+	int ret;
-+
-+	adg = devm_kzalloc(dev, sizeof(*adg), GFP_KERNEL);
-+	if (!adg)
-+		return -ENOMEM;
-+
-+	adg->regmap =
-+		devm_regmap_init_a2b_func(func, &ad24xx_gpio_regmap_config);
-+	if (IS_ERR(adg->regmap))
-+		return PTR_ERR(adg->regmap);
-+
-+	adg->dev = dev;
-+	adg->func = func;
-+	adg->node = node;
-+	mutex_init(&adg->mutex);
-+
-+	np = of_irq_find_parent(dev->of_node);
-+	if (!np)
-+		return -ENOENT;
-+
-+	parent_domain = irq_find_host(np);
-+	of_node_put(np);
-+	if (!parent_domain)
-+		return -ENOENT;
-+
-+	gpio_chip = &adg->gpio_chip;
-+	gpio_chip->label = dev_name(dev);
-+	gpio_chip->parent = dev;
-+	gpio_chip->fwnode = fwnode;
-+	gpio_chip->owner = THIS_MODULE;
-+	gpio_chip->get_direction = ad24xx_gpio_get_direction;
-+	gpio_chip->direction_input = ad24xx_gpio_direction_input;
-+	gpio_chip->direction_output = ad24xx_gpio_direction_output;
-+	gpio_chip->get = ad24xx_gpio_get;
-+	gpio_chip->set = ad24xx_gpio_set;
-+	gpio_chip->base = -1;
-+	gpio_chip->ngpio = node->chip_info->max_gpios;
-+	gpio_chip->can_sleep = true;
-+
-+	irq_chip = &gpio_chip->irq;
-+	gpio_irq_chip_set_chip(irq_chip, &ad24xx_gpio_irq_chip);
-+	irq_chip->fwnode = fwnode;
-+	irq_chip->parent_domain = parent_domain;
-+	irq_chip->child_to_parent_hwirq = ad24xx_gpio_child_to_parent_hwirq;
-+	irq_chip->handler = handle_bad_irq;
-+	irq_chip->default_type = IRQ_TYPE_NONE;
-+
-+	/* Initialize all GPIOs as inputs for high impedance state */
-+	ret = regmap_write(adg->regmap, A2B_GPIOIEN, 0xFF);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_gpiochip_add_data(dev, gpio_chip, adg);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ad24xx_gpio_of_match_table[] = {
-+	{ .compatible = "adi,ad2401-gpio" },
-+	{ .compatible = "adi,ad2402-gpio" },
-+	{ .compatible = "adi,ad2403-gpio" },
-+	{ .compatible = "adi,ad2410-gpio" },
-+	{ .compatible = "adi,ad2420-gpio" },
-+	{ .compatible = "adi,ad2421-gpio" },
-+	{ .compatible = "adi,ad2422-gpio" },
-+	{ .compatible = "adi,ad2425-gpio" },
-+	{ .compatible = "adi,ad2426-gpio" },
-+	{ .compatible = "adi,ad2427-gpio" },
-+	{ .compatible = "adi,ad2428-gpio" },
-+	{ .compatible = "adi,ad2429-gpio" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ad24xx_gpio_of_match_table);
-+
-+static struct a2b_driver ad24xx_gpio_driver = {
-+	.driver = {
-+		.name = "ad24xx-gpio",
-+		.of_match_table = ad24xx_gpio_of_match_table,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.probe = ad24xx_gpio_probe,
-+};
-+module_a2b_driver(ad24xx_gpio_driver);
-+
-+MODULE_AUTHOR("Alvin Šipraga <alsi@bang-olufsen.dk>");
-+MODULE_DESCRIPTION("AD24xx GPIO driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.44.0
+ .../devicetree/bindings/a2b/adi,ad24xx-clk.yaml    |   53 +
+ .../devicetree/bindings/a2b/adi,ad24xx-codec.yaml  |   52 +
+ .../devicetree/bindings/a2b/adi,ad24xx-gpio.yaml   |   76 ++
+ .../devicetree/bindings/a2b/adi,ad24xx-i2c.yaml    |   55 +
+ .../devicetree/bindings/a2b/adi,ad24xx.yaml        |  254 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
+ MAINTAINERS                                        |   12 +
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/a2b/Kconfig                                |   60 +
+ drivers/a2b/Makefile                               |   13 +
+ drivers/a2b/a2b.c                                  | 1252 ++++++++++++++++++++
+ drivers/a2b/ad24xx-i2c.c                           |  532 +++++++++
+ drivers/a2b/ad24xx-node.c                          |  887 ++++++++++++++
+ drivers/a2b/ad24xx-node.h                          |   42 +
+ drivers/a2b/beo-shape-node.c                       |  584 +++++++++
+ drivers/base/regmap/Kconfig                        |    6 +-
+ drivers/base/regmap/Makefile                       |    1 +
+ drivers/base/regmap/regmap-a2b.c                   |   82 ++
+ drivers/clk/Kconfig                                |    7 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-ad24xx.c                           |  341 ++++++
+ drivers/gpio/Kconfig                               |    6 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-ad24xx.c                         |  302 +++++
+ drivers/i2c/busses/Kconfig                         |    7 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-ad24xx.c                    |  121 ++
+ include/linux/a2b/a2b.h                            |  444 +++++++
+ include/linux/a2b/ad24xx.h                         |  892 ++++++++++++++
+ include/linux/regmap.h                             |   38 +
+ sound/soc/codecs/Kconfig                           |    5 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/ad24xx-codec.c                    |  665 +++++++++++
+ 34 files changed, 6798 insertions(+), 1 deletion(-)
+---
+base-commit: c75962170e49f24399141276ae119e6a879f36dc
+change-id: 20231212-a2b-e54ba46a9e05
 
