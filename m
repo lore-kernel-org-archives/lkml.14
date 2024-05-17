@@ -1,68 +1,70 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2101.outbound.protection.partner.outlook.cn [139.219.146.101])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2083.outbound.protection.outlook.com [40.107.92.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2803714A8D;
-	Fri, 17 May 2024 06:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5C014A83
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 06:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.83
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715927613; cv=fail; b=U0xvQTZHrY/IEDBh/Jqv7C+nCc5czC3Xm3baar4gfuuVALf8HdNSXzoGSUGJqZ43frfWQRGnKNgrbmVFDKeLJ0d03a1EU5wr4Z57pDz5YF4BKbDBXqA5OS4jblZc91IG1wJCwaDGPBmxOugg1RtO8uvHqKVpSkW9xu9QHGAQW6E=
+	t=1715927717; cv=fail; b=FxF5aerNIquUJOkNCIjj1DorNP8k5G27vUdpX8wKXBiAjcCa10qNHv9KNVoMJW6taLDKJxGuIwT2aJBKJVmYyXgfeyiLdxwyBEhZG8g2IM5Y+1E+607ZvNSdIWycT07hMwD2hXaPRg2yskOO543pD7RK1bDS/pAfjaynZrDt1OI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715927613; c=relaxed/simple;
-	bh=jZ1ztcx+2/OLIQ/umOI+WGE2LFrwSZY4s6bMGVmqcQI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VxJBN1CEfOJa3vT+/DL5Ri8ZRzwJBibSh7NOhoK/25DBaaJ7wflLOumqSA0BT6EivzTZ+sm70kUd+Ni4XKq8hTiPu1S9Ip76CrWmXjKvAscEZfCUY3/QHzjUp8UdrXKdpof4PDKos2VZftG9/KOJ/hEma8u8pdgJtjoODNmdq10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1715927717; c=relaxed/simple;
+	bh=IqwJvFXnO46u7tkXvX0NJ8zhJ2+cMNt6PYYWO4Oh/Yc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CglDG8a6mjvyLO/TcpFZr7TL+x0n81ql4ScbLnf+HHUMZLurpokusnSEKm/5YT36U7mfhhspp1+79vTmrOEZKfAdJReGu3vTBn97N+lfAhuLorV0Rb6XUJS4CXXh6ycCjOeRq1dRbJv3s76hC4fMlp76ioI1mPceORXXaje00vI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KwL5toIp; arc=fail smtp.client-ip=40.107.92.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KwL5toIp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=obvvncvqV4to1mD9KlDR+Dn2BodOQexcBdBY2G0aIWdGpI7I+I/7nVs7yhueMzFAATonNQkb1gR25U0uFrnd4BR9J29HrrRuw1I9kADz85Qwy1V+upjlSlahHI/iORQe7+dJd2c3MTtb4WnUdNltZ0Tsg3Sf5teCyoGbNbXKE1rC8IoAdwsWQ2UPJg5POxRf325484SO8SSyWhljyKMQ2SCBOe0UZQkV8+cOvKS7iETzh+7+rcar9jmFnweyRs/ipv6xcwHgKZeZgW/40YpjTFWuxHQRxkCgD4bfYuhronNnW1yI8klRhY2LoQ8buPsnFr0ZBZP05wNPgPELyg8MpA==
+ b=NnsTdCdIRLV/YFuc6Gs7YsCoKBEWS8M3j4KiwXYFXmmYNi9UaAod1pXnOi0CflWrIo82vYO6wwFProxiWZ4aDk88fPec10OJpmeYMyyXkz9Dw7bn/ZXlVps4BZQwH16W1Bm6j9Eyy4SaZnLPM0LGWIb085QrLbdQITd4hB2QQduA/h6z8Ms/YIAgJEJjKP3bzVm2wGY4sTPKjMJNTFidqpSRRKNEm26eIJsR2eiR1YBbdAaNxP6vxrH7ozkLJgV5kAU9dPd8q8QI66D4/+fe2WQLhmNM903f32QsuLOAzRz5ynLmdoF4fMXXwnZ/GodpNJCkkwNmvius4pjM+5fa7Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rd6x/VoBMpqInPKkxtbaXfZMRYiwiU5924jOXmOcVaY=;
- b=K/3HzueQpoXqdfT46IIH7fMUSUDO8ASr/fKXp7pnCWdcZMRZofLOhqNTZMoXe0I51QkbvjwN0RtqyLaOTlcocWoooJ1weybgaM0gPVxH+duL/ZMjkqzctv2VBuz+36sc3vBwAXjpbF8u3mxKMdWNLD8uVyM1MDijrUd2emyFIg/y4OmOkrSj+rKNKCF+FwYC3UoU8S2xYrFcv6AGqXJr5t4zS6TkSQBMIoHFCWc8ENI/mMxAllnF/dp2hNipOjjRis/RVmcUimzDUAa3o3ewtKnZtb2JxA1+oOPnnGVQZNRoPji3vSbV6CFme8NAVgvF4r+Q+Tc5gCxPAbUNQlliFg==
+ bh=wqtSXDp0qm38ybix+VyHTAb/GIKWPWONI3BPN+mcyGY=;
+ b=hqGP0BOIEA4v72UC+MrDC/8NSeURsOVR1Ui8pkNsNlSDMWWGNVoQWGLN6DNz9jWTWBi0b1BPxAWm837Y80CoMYVC0DoQCyRJyudBBc/6U++Sp8o7t+Ket6t7y08qrO9I95dEdh+dTisv5Hm4c70mPc6pZsFhRWOyEHTGh9kYIEt1yi/7WNB+1ZEveHk3h2gWe6zVjULa/K2yKmqBi1OlML4TM8JWvkMT1qiCqGRBALRUHSZe2XTUa5OjMGZBzH7KN2j+S6sr8TS1B9iuXgE33czmXTrsPTQ9BwexWrMhTwgRdyMIz+S4D9Fhnpi3bMYP84NDU+32RaZclNnb4FT6sw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wqtSXDp0qm38ybix+VyHTAb/GIKWPWONI3BPN+mcyGY=;
+ b=KwL5toIpK/zYNmRR7HFPk9oLntYVMQMinDlu8+jvsrB1iH2sz6JL6OxZ8l2GtmhXFTGcgPRiQoaD3oOV14OvX0SvPZQY/cjFq1PiUd6Diwu0fSNWiWuLZiwavsHoK4B5ntQfRGCaiIa2yPYjRmjIPLArzLcfJD6ObSpc6O8kOo0=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1164.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:12::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 17 May
- 2024 06:17:21 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::5de:15b9:3114:4f45]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::5de:15b9:3114:4f45%5]) with mapi id 15.20.7472.044; Fri, 17 May 2024
- 06:17:21 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	devicetree@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] dt-bindings: serial: snps-dw-apb-uart: Add one more reset signal for StarFive JH7110 SoC
-Date: Fri, 17 May 2024 14:17:11 +0800
-Message-ID: <20240517061713.95803-2-hal.feng@starfivetech.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240517061713.95803-1-hal.feng@starfivetech.com>
-References: <20240517061713.95803-1-hal.feng@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SH0PR01CA0012.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:5::24) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CH3PR12MB9170.namprd12.prod.outlook.com (2603:10b6:610:199::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Fri, 17 May
+ 2024 06:35:11 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%2]) with mapi id 15.20.7587.025; Fri, 17 May 2024
+ 06:35:10 +0000
+Message-ID: <9dd1cfd1-fe13-4434-a7cc-e14113dcaf53@amd.com>
+Date: Fri, 17 May 2024 08:35:03 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amdgpu: Remove GC HW IP 9.3.0 from noretry=1
+To: Tim Van Patten <timvp@chromium.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: alexander.deucher@amd.com, prathyushi.nangia@amd.com,
+ Tim Van Patten <timvp@google.com>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>, Felix Kuehling <Felix.Kuehling@amd.com>,
+ Ikshwaku Chauhan <ikshwaku.chauhan@amd.com>, Le Ma <le.ma@amd.com>,
+ Lijo Lazar <lijo.lazar@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, "Shaoyun.liu" <Shaoyun.liu@amd.com>,
+ Shiwu Zhang <shiwu.zhang@amd.com>,
+ Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+References: <20240516115721.1.I8d413e641239c059d018d46cc569048b813a5d9b@changeid>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20240516115721.1.I8d413e641239c059d018d46cc569048b813a5d9b@changeid>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0081.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1e::7) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,103 +72,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1164:EE_
-X-MS-Office365-Filtering-Correlation-Id: e1e2fd66-11c2-4aee-7123-08dc76390325
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH3PR12MB9170:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29c17430-480e-46a2-3e2d-08dc763b8039
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
 X-Microsoft-Antispam-Message-Info:
-	QJvU46QM/PrShUnkJaBBmMqYFLzEXPH7GAtfpiJWu7Qt7sAKUflg+0V0fpytrfsbKpgDAIyZl/nfmMdKG7mOQmL0WwFH4EWfV2TTXdyOYO7OLtByZFNQfIbGkgSto6MXt+ihb38amI2gzsWfJWBroKfwgajyJSqM6SDauReivSGtFXVQtcqfG1NKPta9zZa5lDgPghkM7lPwZYqE0OO/1GThJU1SzIzpUf+SWl87pXOOZY1PQOtTio5BZEKa8rV6xKSHR4zesvh75mbxWA47DuGtqPvLXd00EQReOa4gV9qPjnJFELV8wGhRu7pk7bcKctwdezj6CZE09CVBxD9DtstIxqymCgER4Ttb3SUOSpbXJ5aqVnaHHQT8QgR3RRq/savy3p3lVggFFsx5ZB36z4hL5Ii+eHR2gblmTJ1T+GnqEUGpbuu7/s8KEurpssX/m1/EZXNr7DkX8sPjwaiLThungAn06v0mrVqsGLArIjBSAPQIwX2ZKNpRr9ijkhNp2yX7ZGeiQewD9QxBdklf9DzJxH1cS4vXISMpvYKDNPXa/ydg/YV33u5fxR2TbG+oIIVajs4A3i++i3nOFj9Wx6KFp2NVAyfGV6pROmPMTmljwjMZmX4fUPzDqc8IBhDxVsqy6Sxu0vlL3u0d/244Bw==
+	=?utf-8?B?TkVhSi9wRjNndkc2dWgvQXkxVWNub3pFcmpEYVB1elhxZGJlQ1MveEdtSndW?=
+ =?utf-8?B?alJZRk5MZE9WaGFZd05XSG5nRU1zTy9wN1ZNYzFVNWpUTTgrTU40NGpKRUpu?=
+ =?utf-8?B?Q1RtMXJpSGtYb2dxdkQvSFJqMmNtVXFkUnBKRWZIQ3JlclhRaXgrN3h4RlMr?=
+ =?utf-8?B?VXhLVDQ3YXNwV3ZweEo2QnVOT3F4MDMxOEtISGloZy9NaUVtUkp6NmMyMFFE?=
+ =?utf-8?B?MkZhTUFuWVBpLzA2eEZXTjlMK2dML00zalA3YTlKVUVLUmx6VWxGQWp6VUxr?=
+ =?utf-8?B?eCt4Zlc3eC9HVnQzUjFwakNyR3pBZ09yczBYNW9ocnRLdEo1aWdnaG40dzhC?=
+ =?utf-8?B?OWtzQUIvMUU0VGxndGxoWHZvdlFaUGZBMmZ4M05SVUJQaXZVUXQ1TkM0RE9B?=
+ =?utf-8?B?V0NHenJiQkJlWU53cmZuelU2ZzdyVTFyelp5OStoL0ZZR3g4d29rZXRENVF3?=
+ =?utf-8?B?R3c1cXZ3Z3Uvdy83WnhQRzN2NXExaGFoQUFlVHJ6WmNJTG00M0dQaXhDVWdF?=
+ =?utf-8?B?bTNyd0dpS3I3K2tnZDIwMjFWQXFXV3NtK28zSFVsVEt6Q1EvWDRJODNHT3p5?=
+ =?utf-8?B?ZDU3K3pqYVdTeGVmaGZiSTJzdGpRblNiRmViZ3ZsckxqQTdqMGpoNG9uWVE0?=
+ =?utf-8?B?OUF3Rk9qUXlVRjBucU1rUWFUL1NwRnZOMjNTMmZJaWxkbFNsQjdhbVlrcEpM?=
+ =?utf-8?B?eHZDTlVqbFg2Mndzc1NrTzNmL0hTM3Yzdm5OblpRblNYTzNSQTZpSnFPL2JO?=
+ =?utf-8?B?T3Y3YUg5Z29BVU5wbGtISXhGeGhITGE2SmppWXcveVQzM3RXVnJpeXBPT2tN?=
+ =?utf-8?B?aVpaZEJHbzIxVmMvNUdIYk1XSDVmeUk0aWhVcDlmMmhTVUxWZXFsb2pWQWd1?=
+ =?utf-8?B?NFJWU0g3c2dHM0hxcDJ4MmNpZjRuTnZGZ2RibmFCaHVyUFJJLzNEUWdId3Y3?=
+ =?utf-8?B?WSt1ZUxmbEdaSzJrRVdvb3NoQTZTTS9ZQWUveUVTaUtxM0FMRDU0NW4zMUVS?=
+ =?utf-8?B?R01ZSkVjZG9FdjBCZkY2eDM1TzZCRHk2aEdtQ3haQlZURzhoNEQxQUdQamw2?=
+ =?utf-8?B?a0ZDWnQxREFTM1VTWjhrYTVUbUlMQ2JRQlc4WndscCswK3FKTXEzWnpZVVI0?=
+ =?utf-8?B?aXkrYVp0SFA2UDROempIQ0Z0Zm1nb25NVkVSejRJQmJSUHZIaVpFd2pWNjVE?=
+ =?utf-8?B?dHkxMHkrN0Z0bmc3ODJKMm50Tm1haG1jbzdiT29YMFdEVVFJT1BicktNb1hQ?=
+ =?utf-8?B?NkhSdDhzVmRUZE43a0VZRmlQZk1zR2lTR0hVTGNqYytxN3dvOWgvaUR3OVRG?=
+ =?utf-8?B?V1NQVHlXWWlLN0JqMWlpc3FBWlhNYmEvMHBoSGpjTmdJaFlVMHVBVzA5aXk1?=
+ =?utf-8?B?RVlMWHIxMm13a3kzQStIMXU2U3RudmdsY1Q3MG5HSDY2TEFhOGhqT0toNld1?=
+ =?utf-8?B?R0RQVU1hNzhhSEcvcjVYaG5YeXpoc2ZJRXdNTHhzb3RIRXRVZEhXZGlHQTkv?=
+ =?utf-8?B?akNuN3o3WkxHWEVESnEzYlJKVVByNmR0K2xzVER2WUdFcTNwM0VoOEpkemtC?=
+ =?utf-8?B?dlJ2OTlaRnNsV0NVQ0tYQ1pZRkFXRXhKeHNENWptcUZtTzV2VXVLWGJYTG5Q?=
+ =?utf-8?B?eVdtZ0NhUEh4OTN3OG45NlNZamhMSksxQlRKK1A3WWxIMzVqbDBUanpOTE9v?=
+ =?utf-8?B?eDBaYUFIZkNEUUp2KzNCRWlPUE1iTlVwNmx6aUN2YllXZ1A3MExUd0hBPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(41320700004)(52116005)(7416005)(38350700005)(921011);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tu6E3Lrl4DAAEfdGKllE44DlCZr8xCSbc9t+m/vu/x1H41/Wr54rhUBq7wWz?=
- =?us-ascii?Q?aHCfOPskfzg+zydHXzuxzPnoazvhNpCLuQ4llpQqUwX2w0N6IGoCS6feD/Cd?=
- =?us-ascii?Q?xRinKiq6M/xJUPiN5v9V3DkXH1PVBuyqvH4rkMKdtexy9QbWpY54DyYCQFyf?=
- =?us-ascii?Q?ND1IAQsg6EvBZ7NmO398TX81yl0IAijBCGc89P9cHtKJ9k8g5oBeFbQGIMxz?=
- =?us-ascii?Q?DFunYQZl80gS6jJ7D1+CqnmDUPpCJ6PXi+vvmdYqtMYDNly/XK3GTGCqDgpZ?=
- =?us-ascii?Q?huXF41Sk99tdkg/5gCuefNc1Ka05pCz0nIZ2LVfj+1Ej5nkzq0oL+zcRIbQS?=
- =?us-ascii?Q?j0qOuzzlO1zwQwBzFpQBQ6ivcqqSw/GNtImaFatvanzqMkRx481eHstE2LHn?=
- =?us-ascii?Q?zq9+8bW1/pkR/4t91vU6Lv1M8Z5JT5I2mgy9e2oqaQ26FNux3jjLlRHCo8pp?=
- =?us-ascii?Q?sy7Fu2Z7xT0xAOBUPEfkmWnL+tBeXnaiDdEDPfraszV4MKcBUeIsvgTgG7Tl?=
- =?us-ascii?Q?CGtwSvIZAvviZybTIMGU9hNaMgaSAgEUNk4OjnbyQ5whRMcpD8l530Cb7i6d?=
- =?us-ascii?Q?5HrkPiqpVQX93LpI7tXhh6kVv/CEOwALd6J88iy636jACsmk7T8C6BrkvX0c?=
- =?us-ascii?Q?WKsPD/QsRr9l825cH08IkVGpA+axoX7sCB6JkhRvs5zqcSvw9cTZf9J7jpK5?=
- =?us-ascii?Q?ygIgzZKpHDHl6sU7SqLDuY3U3mGCMD+ADkDBkw2DhxmC22gzjE6t4cOWHniQ?=
- =?us-ascii?Q?n7m2FzahNUve3Yeo9UwpSnLIFxGXzi/yLqDMc4EX4/nFW02u7QGq5DXU+q71?=
- =?us-ascii?Q?eS8L947tPUnWYdW+C4b2aAL0f/ce+arwxqaOg5ywyZehiOiwNSjUOUXQpkPK?=
- =?us-ascii?Q?qrSRgK3scQl85npzBI1Mv61vPnO8r1A+yzj2FlvuHAXBY33+EQybaWN1QPfJ?=
- =?us-ascii?Q?7P4lSh2oQBS7zugTX1Yd/MTvomzwpJ3ZEgAHh3XG1MNu07F9Zz+RE78NP4p1?=
- =?us-ascii?Q?on6I/zP29zfsN1A3sRYbpnPV2UoDwRwpl68wBHWDrAIMDWnocqG1HOJKw3WC?=
- =?us-ascii?Q?LkkOnIfe3EFj88hu3gcXeiWHlvGP8V0c/v9RaeOns8c3z9/dyd3isF+cEsTh?=
- =?us-ascii?Q?ITk2iKGNFdJXIxTKXg5opzxWNQ4pTMER/AbF60I7QaWjyL8hy7/UT2eM3fHS?=
- =?us-ascii?Q?35fguPnPUpHdOq5ffwOp5J0ith1p86Me1NOJsVvC2VMCuwTInMMgoHL9KZJO?=
- =?us-ascii?Q?/sDm/SUxx4b7sMHp8/AzLh+ATgb7ubHasEW6rCJNzCf6u5q0mxqH0glabua6?=
- =?us-ascii?Q?A/++Ml9fRyctOn6tGF7Ul5Gyg2uYcM/1TKkVw5qzja4P2qbTz0pJPU1wxvUR?=
- =?us-ascii?Q?O2aflCqAq7jzcFBbzsfbxGBkcd4Vk8CtGrMEJVcXzWDbAgKuNRUs31ivsVYh?=
- =?us-ascii?Q?IrmxDhwjsXK0tycdXrDKbYN0/37anHx/WAEsPZV/Ewv7Wk8vwme5ch/NLlWZ?=
- =?us-ascii?Q?H3DCoIp6sb1R4WGubJQaXUcAQwkgHLmpp2jJJF4/IH9aKr3JDBMUTsoVBI4H?=
- =?us-ascii?Q?hRdVZyXBohZGzzHM4+oXFkSfiBMExp/js2S1S3NM0FIsed0m2rjwdJ6dxEru?=
- =?us-ascii?Q?kg=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1e2fd66-11c2-4aee-7123-08dc76390325
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+	=?utf-8?B?eTIxWXROTzFnbDhFL1VEOXJEUlRWaWp3OEJMNWJReXNZbmlGWC9qcVFIZFpl?=
+ =?utf-8?B?Vmt2aGlkVlNWQzFyTUVCeDRnZFdjS1BpVVg4Zi9mcU5FMGY3dEc4a2tJV3o4?=
+ =?utf-8?B?WGxiYnMwcGVYaWZ1S1ZDOXpPa3RlTm1HZkl6bFlEeTdhM09hbzZtNHh0S1g3?=
+ =?utf-8?B?VVhOY0NvYTRVZWx4ZjhyOTU1aU5YZXRxVk8ybGlIWmVRS2Nlajd2SG40RUM4?=
+ =?utf-8?B?WGkvc093R3RzSHU0ekVhMmhqWEpYZFRhMC8zcjNnZnNyVnZmMmg4Z0YvSUMv?=
+ =?utf-8?B?d2RWVy8xdUJMbEVlYUtnem9CRnV0ZW9VaFJTS053Zy82UmVoODQyRGZ6T2ti?=
+ =?utf-8?B?RnBrY0lCT29JNDVBbW1hWVlHVzg4eE5NbUlXWC80WDdlelNtNkQ2ZEFrZXNS?=
+ =?utf-8?B?NEg1NGZPRVg0NFc2YkQ2bTBsWk8rNUVsOUZSREZIMGc5elFqWmpOV001eUh4?=
+ =?utf-8?B?Qkc0bS9CaytHNjVPVER1eG9QZVNES2tpbk9qcVZXYXVGSW96bXZHRlF6NExM?=
+ =?utf-8?B?N1k0TWhvQ21WU0JIU3FiMFdNcXpDY1kvcGlPZ01kaW1sUGUvdFFIUDlFTWJH?=
+ =?utf-8?B?THkxTCtTcWpycHN5K25vdFduL0NYUWpzMUtlZm15TUJ5K3Y2SGNXUDRxVVd3?=
+ =?utf-8?B?OGdCLzBsaklFVTJFZDh5UkpKM0RmVlNEaTV2S2ljakR5YThkbk5mR2JjUHl3?=
+ =?utf-8?B?anlYRXJTQUVUWDNETi9LYWszVUhQSFJOOGRLKzNJbWRYbS96cldsa1BlZERn?=
+ =?utf-8?B?N2tmMWtjTE9PUkt4aDhrY0ZtQTFTTFVIQ29qUUR3VEZyMVpXbnNuU1pnL1M2?=
+ =?utf-8?B?OUZTRnh3UDltOWg0QTdtR2NXcFZWQ0FUMmdrQ3JCcFp3bXhpZW11SkFITTIr?=
+ =?utf-8?B?a0xzbVZqK3NTVm5mZmVoTWQvZ29iaTlFY0pzcXF0bHhwTVYzd0VzRG1abG1G?=
+ =?utf-8?B?SHBXa0hRQzdGbkp0VW5jcmdMSjRUWXQyTVBLUHZsUGJNQWE5SElvWHRLdFRN?=
+ =?utf-8?B?a0ttWFlsQVo1eTNkbWpPdkV4MXI2bGhMeHR3cjRzb2tyRzN6b2VleDNxa3dS?=
+ =?utf-8?B?RkNMOW1mSWF0U0xQd2hLcFVtc0NCZzNiK0dZVEtaanE5WlVsaGZsVTJLK3Rh?=
+ =?utf-8?B?Y3N6dTgrSFo4bE9Md3dPSWJNUllIYlUwMTRCcXh5dzNzVklRZFZPSlZRMlV5?=
+ =?utf-8?B?OVdlS2ZMWSsvbGlGTC9sdGlyeDZiUUxtR0lXTDV4NHFPK284ZEp2WUZkbDA4?=
+ =?utf-8?B?eWVsSkIxekJNejlXcEduQ1UwdUFpQ0wxdHJSdGRQSFRjQko4TVhKeDZScU1O?=
+ =?utf-8?B?YVlUdlpsbmhzekl1RUdScmRkTmlubGFzcHo5ZWp5SVhENG16SzAza1daQ0FG?=
+ =?utf-8?B?MWJUc1ovZzZ3N2twWE5lQVBJeEVEWHdGU0QxNWpjY2xyZEs4L0xvcXFxdkpq?=
+ =?utf-8?B?SU1zN2xKYTZEbzBYU2RXVk9uRjlJeXZTZVZHV1J4OHRpVndZbFlPM3dLaTkr?=
+ =?utf-8?B?RVl6R05MVUpDWmhWYVdFa3phZUxCWkJoQnk3QWFwRk5hd3BYOEQrNWVoZ3NL?=
+ =?utf-8?B?V3NPTUxGb0w3YnBLM25pTXBCTjV2bVpHTG1UM2Y3di92aWRHaGllcFV1WlVS?=
+ =?utf-8?B?Kzd6cDNYMXB4M2Y0b2RweHhlRllZRzFVanhFdzhUL0d0SC8wZ0paZDllcC9R?=
+ =?utf-8?B?RjdvNVowUnAyOWN6VlpWWStIQ2pLcEdCN1FZdjkyeFJvdzY1bHBJdnZ1NEp6?=
+ =?utf-8?B?Ujc3YVZiSWdQaStNSTJsdENkYUV6SFFJbG4rdTVwM0YwMndmcHljemw5T0sr?=
+ =?utf-8?B?eXdvNy93MDJiaVprbUs0blZmaVNwd3FTdUdrQVFTdXB3YnZaSkdmR0o0dG93?=
+ =?utf-8?B?TXdGWVBUK2ZaczdKZ1RoWmQ4V01GMnloTld5RERBK3paNEcrN1B5YzcrZ0Vx?=
+ =?utf-8?B?NVBrcGR2Rm9zaDJqOVd4M3FHTnIwUHJFTXY4WXRRUlpmR2RFelQ4eEM0dmNN?=
+ =?utf-8?B?RXcxRnBObFlyRXJ3QnNoTTdRQU9wUU5INDVPc3N0V25FQVg2dXFKam5IMFZx?=
+ =?utf-8?B?cDNRbkxWa2VuR0Uyd1luakpkM2wreDVpcHFjbFFiYldUMVJSOVFCYXAvUDBq?=
+ =?utf-8?Q?gosPNbimI6/ZRzQwHfq5e05vV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29c17430-480e-46a2-3e2d-08dc763b8039
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 06:17:21.9056
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 06:35:10.8685
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Hxv6BNre2BjkiX1InU8+0nh1WpKXeU9ZIsAAlEjWeRErPrwx+7IiUEus0kZr7RmuQ45p84saIFBO952vDjtz5W9eL/Q2CIUKGC9CNbe5f2w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1164
+X-MS-Exchange-CrossTenant-UserPrincipalName: HyseEo47LzA/fBzzKU3nsAvPOpIR2aJfijS5hCSauYE1VS0uqAlIes056ilv/0pB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9170
 
-The UART of StarFive JH7110 has two reset signals.
-Both of them are necessary for JH7110 to initialize UART.
+Am 16.05.24 um 19:57 schrieb Tim Van Patten:
+> From: Tim Van Patten <timvp@google.com>
+>
+> The following commit updated gmc->noretry from 0 to 1 for GC HW IP
+> 9.3.0:
+>
+>      commit 5f3854f1f4e2 ("drm/amdgpu: add more cases to noretry=1")
+>
+> This causes the device to hang when a page fault occurs, until the
+> device is rebooted. Instead, revert back to gmc->noretry=0 so the device
+> is still responsive.
 
-Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
----
- .../bindings/serial/snps-dw-apb-uart.yaml          | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Wait a second. Why does the device hang on a page fault? That shouldn't 
+happen independent of noretry.
 
-diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-index 1001d2a6ace8..a6396c5cbfb1 100644
---- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-@@ -13,6 +13,16 @@ allOf:
-   - $ref: serial.yaml#
-   - $ref: rs485.yaml#
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: starfive,jh7110-uart
-+    then:
-+      properties:
-+        resets:
-+          minItems: 2
-+
- properties:
-   compatible:
-     oneOf:
-@@ -48,6 +58,7 @@ properties:
-           - enum:
-               - starfive,jh7100-hsuart
-               - starfive,jh7100-uart
-+              - starfive,jh7110-uart
-           - const: snps,dw-apb-uart
-       - const: snps,dw-apb-uart
- 
-@@ -82,7 +93,8 @@ properties:
-     type: boolean
- 
-   resets:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
- 
-   reg-shift: true
- 
--- 
-2.43.2
+So that strongly sounds like this is just hiding a bug elsewhere.
+
+Regards,
+Christian.
+
+>
+> Fixes: 5f3854f1f4e2 ("drm/amdgpu: add more cases to noretry=1")
+> Signed-off-by: Tim Van Patten <timvp@google.com>
+> ---
+>
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
+> index be4629cdac049..bff54a20835f1 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.c
+> @@ -876,7 +876,6 @@ void amdgpu_gmc_noretry_set(struct amdgpu_device *adev)
+>   	struct amdgpu_gmc *gmc = &adev->gmc;
+>   	uint32_t gc_ver = amdgpu_ip_version(adev, GC_HWIP, 0);
+>   	bool noretry_default = (gc_ver == IP_VERSION(9, 0, 1) ||
+> -				gc_ver == IP_VERSION(9, 3, 0) ||
+>   				gc_ver == IP_VERSION(9, 4, 0) ||
+>   				gc_ver == IP_VERSION(9, 4, 1) ||
+>   				gc_ver == IP_VERSION(9, 4, 2) ||
 
