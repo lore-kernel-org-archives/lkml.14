@@ -1,125 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE77638DD6
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 17:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E437038DD6;
+	Fri, 17 May 2024 17:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966747; cv=none; b=VYWdr6TjlqSB8A0lIFvE/C5sNNsc2yVAQpWf0xto0EfPfyBRZwWeqHM5v+EWED2Pigad+szXNZmlzgg3FfhBBt41OIUBR/aXqHbFDnDaAfjRpUKv3quG/PEmD8XedG5+Hr1oMh4t7QjpdBRdqek1x0CpJOkuus8kw0qg5YspSaM=
+	t=1715966776; cv=none; b=no9d+u5u9aww1YiaBAGEANgAcgppkcLfa5aHC/lvX9u2KPfGckGhOq6NE0IyZODcYhBVpKXYNRHW9YwkQp88QlriGs8lIp+ojUNqnwPpScISxs22pj4YuZt2ETlXuqvJO8zGZiZ4hS+e9Ai02cF8D8S7QyL3sF38j5LEbzPQ0o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966747; c=relaxed/simple;
-	bh=xTrgfjrD4g3Hlii3WVx0sS/D+vbmZjqWJkxgae/P9qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=meb2vAnAuYGb2CnK5cDpL+4psQgTelG2ov0xY9XsPxRe0mYgPA6apdSLJJprThaItp76DRGbBVcYV/dzJePpNcmemsnqTw79aEPSH59Pk6XT8RR0fcit5vdGu5fuY0EnT5jvp6oikHZa1t7uhuDTpyNDZ9/N8kE10EoID1Q47dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24867C2BD10;
-	Fri, 17 May 2024 17:25:44 +0000 (UTC)
-Date: Fri, 17 May 2024 18:25:42 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Yang Shi <yang@os.amperecomputing.com>
-Cc: peterx@redhat.com, will@kernel.org, scott@os.amperecomputing.com,
-	cl@gentwo.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: mm: force write fault for atomic RMW instructions
-Message-ID: <ZkeTFiF_OOy80stO@arm.com>
-References: <20240507223558.3039562-1-yang@os.amperecomputing.com>
- <Zj4O8q9-bliXE435@arm.com>
- <6066e0da-f00a-40fd-a5e2-d4d78786c227@os.amperecomputing.com>
- <ZkM_WXxEQo51mrK5@arm.com>
- <570c686c-6aa1-43f0-ba31-3597a329e037@os.amperecomputing.com>
+	s=arc-20240116; t=1715966776; c=relaxed/simple;
+	bh=0M3HYSdEmubxOzs/jcX7oAnPF/iNS8AiC7WXi8DwIRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fpumou0DLaxTSj3P4FVrLLjt0cWdEwWXW7r16U88q24mt3si3ZvX4IR8g+dirYjYTH0t7pBuhRgMx5Iq8dkjYYnz/BL2hP7qwcNRU6aLylvg0vigkcoe07MXjdkXvZ9xaY/Vz0+Q/ZNKnF+04hb8ZERI0orz41TIPi2SezHz03U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kd0yH2xr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kd0yH2xr"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44H887hm007325;
+	Fri, 17 May 2024 17:25:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=gLVVj3IpTMDOAfQJiNsX9fmZxMsVPG8Kxu10qlV2sjY=; b=Kd
+	0yH2xrdS7mqMMysI3ADZYa8rRXZdNSY5mbAn4DrvuIngbUa9FS/98CqDqHshw8Ee
+	cQzTeilZ7/HuT9O8OlG83JKw6bidRJnWPDwwK2B0y1LJibh8iN9bjMaIrkWlIVsb
+	ACjj1ck65ByXm4pB0zIo7eigOg7UyIY9QqrqfawBSfcb3fU/8oAB7+XZV9EZEc0h
+	GhXFWcHLUtSjLTQo+/xQWAnwif0BRVD675S6TOzqRHvNfRpqd6aepbsiYA1U0wvM
+	KQZIp/OEu4blXaGHGSQFMVy4KRrmUeuTA9z29zHS78XzNKRMj/bmTRRJfzrOFA3I
+	asf3q13i1tG8//uYYKOg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y51tunesg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 17:25:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44HHPvSn025836
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 17:25:57 GMT
+Received: from [10.110.27.85] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
+ 2024 10:25:56 -0700
+Message-ID: <87e2a55c-4b8c-40e0-b371-aaae40e5e876@quicinc.com>
+Date: Fri, 17 May 2024 10:25:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] remoteproc: qcom_q6v5_pas: Add hwspinlock bust on
+ stop
+To: Mukesh Ojha <quic_mojha@quicinc.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Peter
+ Zijlstra" <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon
+	<will@kernel.org>,
+        Waiman Long <longman@redhat.com>, Boqun Feng
+	<boqun.feng@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Richard Maina <quic_rmaina@quicinc.com>
+References: <20240516-hwspinlock-bust-v1-0-47a90a859238@quicinc.com>
+ <20240516-hwspinlock-bust-v1-6-47a90a859238@quicinc.com>
+ <1238fa39-f0da-fb4c-0668-caa946505373@quicinc.com>
+Content-Language: en-US
+From: Chris Lew <quic_clew@quicinc.com>
+In-Reply-To: <1238fa39-f0da-fb4c-0668-caa946505373@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <570c686c-6aa1-43f0-ba31-3597a329e037@os.amperecomputing.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: hUOpJDWfPmO--lYc7lk1l-UrlwupcZOQ
+X-Proofpoint-GUID: hUOpJDWfPmO--lYc7lk1l-UrlwupcZOQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-17_07,2024-05-17_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405170136
 
-On Fri, May 17, 2024 at 09:30:23AM -0700, Yang Shi wrote:
-> On 5/14/24 3:39 AM, Catalin Marinas wrote:
-> > It would be good to understand why openjdk is doing this instead of a
-> > plain write. Is it because it may be racing with some other threads
-> > already using the heap? That would be a valid pattern.
+
+
+On 5/17/2024 12:21 AM, Mukesh Ojha wrote:
 > 
-> Yes, you are right. I think I quoted the JVM justification in earlier email,
-> anyway they said "permit use of memory concurrently with pretouch".
-
-Ah, sorry, I missed that. This seems like a valid reason.
-
-> > A point Will raised was on potential ABI changes introduced by this
-> > patch. The ESR_EL1 reported to user remains the same as per the hardware
-> > spec (read-only), so from a SIGSEGV we may have some slight behaviour
-> > changes:
-> > 
-> > 1. PTE invalid:
-> > 
-> >     a) vma is VM_READ && !VM_WRITE permission - SIGSEGV reported with
-> >        ESR_EL1.WnR == 0 in sigcontext with your patch. Without this
-> >        patch, the PTE is mapped as PTE_RDONLY first and a subsequent
-> >        fault will report SIGSEGV with ESR_EL1.WnR == 1.
 > 
-> I think I can do something like the below conceptually:
+> On 5/17/2024 4:28 AM, Chris Lew wrote:
+>> From: Richard Maina <quic_rmaina@quicinc.com>
+>>
+>> When remoteproc goes down unexpectedly this results in a state where any
+>> acquired hwspinlocks will remain locked possibly resulting in deadlock.
+>> In order to ensure all locks are freed we include a call to
+>> hwspin_lock_bust() during remoteproc shutdown.
+>>
+>> For qcom_q6v5_pas remoteprocs, each remoteproc has an assigned id that
+>> is used to take the hwspinlock. Remoteproc should use this id to try and
+>> bust the lock on remoteproc stop.
+>>
+>> This edge case only occurs with q6v5_pas watchdog crashes. The error
+>> fatal case has handling to clear the hwspinlock before the error fatal
+>> interrupt is triggered.
+>>
+>> Signed-off-by: Richard Maina <quic_rmaina@quicinc.com>
+>> Signed-off-by: Chris Lew <quic_clew@quicinc.com>
+>> ---
+>>   drivers/remoteproc/qcom_q6v5_pas.c | 28 ++++++++++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c 
+>> b/drivers/remoteproc/qcom_q6v5_pas.c
+>> index 54d8005d40a3..57178fcb9aa3 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+>> @@ -10,6 +10,7 @@
+>>   #include <linux/clk.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/firmware.h>
+>> +#include <linux/hwspinlock.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>> @@ -52,6 +53,7 @@ struct adsp_data {
+>>       const char *ssr_name;
+>>       const char *sysmon_name;
+>>       int ssctl_id;
+>> +    int hwlock_id;
+>>       int region_assign_idx;
+>>       int region_assign_count;
+>> @@ -84,6 +86,9 @@ struct qcom_adsp {
+>>       bool decrypt_shutdown;
+>>       const char *info_name;
+>> +    struct hwspinlock *hwlock;
+>> +    int hwlock_id;
+>> +
+>>       const struct firmware *firmware;
+>>       const struct firmware *dtb_firmware;
+>> @@ -399,6 +404,12 @@ static int adsp_stop(struct rproc *rproc)
+>>       if (handover)
+>>           qcom_pas_handover(&adsp->q6v5);
+>> +    if (adsp->hwlock) {
+>> +        ret = hwspin_lock_bust(adsp->hwlock, adsp->hwlock_id);
+>> +        if (ret)
+>> +            dev_info(adsp->dev, "failed to bust hwspinlock\n");
+>> +    }
+>> +
 > 
-> if is_el0_atomic_instr && !is_write_abort
-> ��� force_write = true
+> As you said above, you seem to cover only wdog case and fatal cases
+> are already handled at remote;
 > 
-> if VM_READ && !VM_WRITE && force_write == true
-
-Nit: write implies read, so you only need to check !write.
-
-> ��� vm_flags = VM_READ
-> ��� mm_flags ~= FAULT_FLAG_WRITE
+> You are clearing here for both ? is this right understanding ?
 > 
-> Then we just fallback to read fault. The following write fault will trigger
-> SIGSEGV with consistent ABI.
 
-I think this should work. So instead of reporting the write fault
-directly in case of a read-only vma, we let the core code handle the
-read fault and first and we retry the atomic instruction.
+Yes that is correct. While the firmware is able to handle error fatal 
+cases, I think it is still the responsibility of the remoteproc driver 
+to try and bust the lock on behalf of the rproc in both cases.
 
-> >     b) vma is !VM_READ && !VM_WRITE permission - SIGSEGV reported with
-> >        ESR_EL1.WnR == 0, so no change from current behaviour, unless we
-> >        fix the patch for (1.a) to fake the WnR bit which would change the
-> >        current expectations.
-> > 
-> > 2. PTE valid with PTE_RDONLY - we get a normal writeable fault in
-> >     hardware, no need to fix ESR_EL1 up.
-> > 
-> > The patch would have to address (1) above but faking the ESR_EL1.WnR bit
-> > based on the vma flags looks a bit fragile.
-> 
-> I think we don't need to fake the ESR_EL1.WnR bit with the fallback.
+The bust will only clear the spinlock if it has the token (specific id 
+for that rproc) that is passed into hwspin_lock_bust, so it is safe to 
+attempt this even if the value has been cleared by the rproc in the 
+error fatal case.
 
-I agree, with your approach above we don't need to fake WnR.
-
-> > Similarly, we have userfaultfd that reports the fault to user. I think
-> > in scenario (1) the kernel will report UFFD_PAGEFAULT_FLAG_WRITE with
-> > your patch but no UFFD_PAGEFAULT_FLAG_WP. Without this patch, there are
-> > indeed two faults, with the second having both UFFD_PAGEFAULT_FLAG_WP
-> > and UFFD_PAGEFAULT_FLAG_WRITE set.
-> 
-> I don't quite get what the problem is. IIUC, uffd just needs a signal from
-> kernel to tell this area will be written. It seems not break the semantic.
-> Added Peter Xu in this loop, who is the uffd developer. He may shed some
-> light.
-
-Not really familiar with uffd but just looking at the code, if a handler
-is registered for both MODE_MISSING and MODE_WP, currently the atomic
-instruction signals a user fault without UFFD_PAGEFAULT_FLAG_WRITE (the
-do_anonymous_page() path). If the page is mapped by the uffd handler as
-the zero page, a restart of the instruction would signal
-UFFD_PAGEFAULT_FLAG_WRITE and UFFD_PAGEFAULT_FLAG_WP (the do_wp_page()
-path).
-
-With your patch, we get the equivalent of UFFD_PAGEFAULT_FLAG_WRITE on
-the first attempt, just like having a STR instruction instead of
-separate LDR + STR (as the atomics behave from a fault perspective).
-
-However, I don't think that's a problem, the uffd handler should cope
-with an STR anyway, so it's not some unexpected combination of flags.
-
--- 
-Catalin
+> -Mukesh
