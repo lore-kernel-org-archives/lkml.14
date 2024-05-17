@@ -1,64 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A591A269;
-	Fri, 17 May 2024 08:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863E11B809;
+	Fri, 17 May 2024 08:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715933174; cv=none; b=Ksb37vreEHUefxQ1AIidmQWZenMkcVQufMBVRmLHHaw4FArt/f8KyW9VmuMBsCIClsDysvxEUn0ctY4J0AgGaiQk24K8oOMV66xVzevc2wBEX8/nupwUoAxzH9fCfJ+qYBeCFeCHEZqYdyGFQvH/PWKsoIUWZNJtK3RFQqf32QA=
+	t=1715933174; cv=none; b=kL5U7pBXLqFvTvz7k2SSrCnzgBGSjQ2sGNBvTmxQl6bq33/0aLbhhNHwmLuLuf7YjIZV9L04FnWRCOLyMKP9IgzIPTakFLqN1psyQtg3d1WJnpqAHjLOwZYYTxzk+8w+iw5IyPUxpuZgP8/YlsVL9IRDXWBu6lV72mgW3310sgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715933174; c=relaxed/simple;
-	bh=QMr/SPTgmh1haotnJyA6+vALv91yT0q8VT2NouVZ4dk=;
+	bh=Uo8TMkjO8z0SvFNJAC2gDMe+jJlidtzciWeLP9KZ0V0=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OeaGRR9+jwW2rxxJo3E54fUqCT5T9z3179aa9gjWoKI+WYeXcBF2q5N4wgqu0H66e8BWFx9nUVwkfUPo82N4HSOT8uBXg/3i3lb4KYhe5do3Ct9YXDaZpSf9rOgyPY6euCQGHDIyRCVylrmrVWFgUwKOtA8QXo2Qr8zJpdjDTYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WJamJ9ML; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b0D/g/+c; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=aiX1APxsV1JwoBRw43J47b5JSzJFsKuXWFAVEC//Ee6hLnezc3OwB4tArXv9w/gb1DhssFjdXr8DnCnD9TF9IGGe7xhaXlJFQLUrZeO8Pm+qwoqCkD15jlduiPwV0x/I+KBwihbDRmCaSDWGPCERnYOENn4pVcqjHrdvSCRo3YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p4uZV24Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=10BZvS/g; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WJamJ9ML";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b0D/g/+c"
-Date: Fri, 17 May 2024 08:06:10 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p4uZV24Y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="10BZvS/g"
+Date: Fri, 17 May 2024 08:06:11 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715933170;
+	s=2020; t=1715933171;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RvspPlO30Dpgs5BRdySP249xAR6/Pg+jqZL6QxyeFOU=;
-	b=WJamJ9MLvwL+L3+0hcVWtg/Z32m7m4t5Cgl5XrSPuSumvPPsgENHhLEm2wUSMGOfuT7UPi
-	fJ78LarQpBzb+wmekXTQckwW5q2k4fS60URjSxCxBDur77w5/YMHL/hQKfo8j3g9uC2pNX
-	tz5SFm5xQRFVvlYQxIOK8v+263TmPeyqHAaSjS90wCx2Y1uNkSsd861ZBxGS2Wp/gJdIk5
-	F8VFnLvDRETCM3nVPbqTAxtGJzhF1ICe4KE7jHgJFeC5D81vSoiyf4lUn8xw1dOK6Kj5Za
-	Kjn6JhXvgSieezsrWDsKnNtMWGRy7V7tXhlNGav+Yan+Td2CLIC3Fnod3dHsFQ==
+	bh=DsOCnPWzCftUdW+oxDedyB6AsEoCsWSOjupa4hs7j9o=;
+	b=p4uZV24YzjC3etKFg7D/RGYCl62S3Bhk0UHCsB6v2EGkLxI7RWl6AQQ4KOX9hRjpbsVIzb
+	19ufFjTkX7TkDGDGi/x0/n3HeV2JYjrs0+E8upSjtVqiK8TAgNaHoF5SmsB2lTLFIdDhBE
+	mEGkFRGxiNM7TwAbAzUD8fhB+n5YG7HzYyVDJT5HWyLBX3xA4Z9rrj4it2f5tp9SIgCXSO
+	8bBJbqYsucC2o2fszLozXYvxYwt5OR0wkz1VUHy38mGiJZ9i+Rc7oXN7b6BxY7vQVSS7a5
+	6nrlYXNn4dqlGksKrqAUmrnJzvkDn5Puw/reJ8dia96bq/CVBLYCafNwYwTKMg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715933170;
+	s=2020e; t=1715933171;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RvspPlO30Dpgs5BRdySP249xAR6/Pg+jqZL6QxyeFOU=;
-	b=b0D/g/+c/U0+x91a6/XfL5qOY4EiKzJezVlZgBMJeWhJzprY7n/G2wzsT64ISMkM54Iqe3
-	VZDHedjAXKpN+9Cg==
-From: "tip-bot2 for Dawei Li" <tip-bot2@linutronix.de>
+	bh=DsOCnPWzCftUdW+oxDedyB6AsEoCsWSOjupa4hs7j9o=;
+	b=10BZvS/gxpnSymZ9bU+e1JDrgcgr57JVVqHz4kRfguJCpM/Vx8QyoaMhGUyUjxStpgpeR1
+	F3P98hAfNS3wOtCA==
+From: "tip-bot2 for Vitalii Bursov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: Fix initial util_avg calculation
-Cc: Dawei Li <daweilics@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+Subject: [tip: sched/urgent] sched/debug: Dump domains' level
+Cc: Vitalii Bursov <vitaly@bursov.com>, Ingo Molnar <mingo@kernel.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Vincent Guittot <vincent.guittot@linaro.org>,
- Vishal Chourasia <vishalc@linux.ibm.com>, x86@kernel.org,
+ Valentin Schneider <vschneid@redhat.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240315015916.21545-1-daweilics@gmail.com>
-References: <20240315015916.21545-1-daweilics@gmail.com>
+In-Reply-To:
+ <9489b6475f6dd6fbc67c617752d4216fa094da53.1714488502.git.vitaly@bursov.com>
+References:
+ <9489b6475f6dd6fbc67c617752d4216fa094da53.1714488502.git.vitaly@bursov.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171593317056.10875.16807671929410125258.tip-bot2@tip-bot2>
+Message-ID: <171593317119.10875.3544825660193230541.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,57 +71,46 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     72bffbf57c5247ac6146d1103ef42e9f8d094bc8
-Gitweb:        https://git.kernel.org/tip/72bffbf57c5247ac6146d1103ef42e9f8d094bc8
-Author:        Dawei Li <daweilics@gmail.com>
-AuthorDate:    Thu, 14 Mar 2024 18:59:16 -07:00
+Commit-ID:     287372fa39f579a61e17b000aa74c8418d230528
+Gitweb:        https://git.kernel.org/tip/287372fa39f579a61e17b000aa74c8418d230528
+Author:        Vitalii Bursov <vitaly@bursov.com>
+AuthorDate:    Tue, 30 Apr 2024 18:05:24 +03:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 17 May 2024 09:49:44 +02:00
+CommitterDate: Fri, 17 May 2024 09:48:25 +02:00
 
-sched/fair: Fix initial util_avg calculation
+sched/debug: Dump domains' level
 
-Change se->load.weight to se_weight(se) in the calculation for the
-initial util_avg to avoid unnecessarily inflating the util_avg by 1024
-times.
+Knowing domain's level exactly can be useful when setting
+relax_domain_level or cpuset.sched_relax_domain_level
 
-The reason is that se->load.weight has the unit/scale as the scaled-up
-load, while cfs_rg->avg.load_avg has the unit/scale as the true task
-weight (as mapped directly from the task's nice/priority value). With
-CONFIG_32BIT, the scaled-up load is equal to the true task weight. With
-CONFIG_64BIT, the scaled-up load is 1024 times the true task weight.
-Thus, the current code may inflate the util_avg by 1024 times. The
-follow-up capping will not allow the util_avg value to go wild. But the
-calculation should have the correct logic.
+Usage:
 
-Signed-off-by: Dawei Li <daweilics@gmail.com>
+  cat /debug/sched/domains/cpu0/domain1/level
+
+to dump cpu0 domain1's level.
+
+SDM macro is not used because sd->level is 'int' and
+it would hide the type mismatch between 'int' and 'u32'.
+
+Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Vishal Chourasia <vishalc@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240315015916.21545-1-daweilics@gmail.com
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Link: https://lore.kernel.org/r/9489b6475f6dd6fbc67c617752d4216fa094da53.1714488502.git.vitaly@bursov.com
 ---
- kernel/sched/fair.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/sched/debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 146ecf9..9009787 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1031,7 +1031,8 @@ void init_entity_runnable_average(struct sched_entity *se)
-  * With new tasks being created, their initial util_avgs are extrapolated
-  * based on the cfs_rq's current util_avg:
-  *
-- *   util_avg = cfs_rq->util_avg / (cfs_rq->load_avg + 1) * se.load.weight
-+ *   util_avg = cfs_rq->avg.util_avg / (cfs_rq->avg.load_avg + 1)
-+ *		* se_weight(se)
-  *
-  * However, in many cases, the above util_avg does not give a desired
-  * value. Moreover, the sum of the util_avgs may be divergent, such
-@@ -1078,7 +1079,7 @@ void post_init_entity_util_avg(struct task_struct *p)
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 8d5d98a..c1eb9a1 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -425,6 +425,7 @@ static void register_sd(struct sched_domain *sd, struct dentry *parent)
  
- 	if (cap > 0) {
- 		if (cfs_rq->avg.util_avg != 0) {
--			sa->util_avg  = cfs_rq->avg.util_avg * se->load.weight;
-+			sa->util_avg  = cfs_rq->avg.util_avg * se_weight(se);
- 			sa->util_avg /= (cfs_rq->avg.load_avg + 1);
+ 	debugfs_create_file("flags", 0444, parent, &sd->flags, &sd_flags_fops);
+ 	debugfs_create_file("groups_flags", 0444, parent, &sd->groups->flags, &sd_flags_fops);
++	debugfs_create_u32("level", 0444, parent, (u32 *)&sd->level);
+ }
  
- 			if (sa->util_avg > cap)
+ void update_sched_domain_debugfs(void)
