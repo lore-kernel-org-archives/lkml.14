@@ -1,38 +1,59 @@
-Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B4A1EB5E
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.172.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F8122EE8
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715937645; cv=none; b=h8WP06lLh4c5i8k2Kr3F9PNGwLdFYtWXQTEKZrEJt/yAPfhT0yauaPZMc8MhX0T0ib1DA1rAU8U3d/5IUpJaA24+zSMM5x9Kij4KqgK2PUaBNmtRkqynNjiBlPMom3TsnphCKvymXhdtPQf/Gs4y+hYTUC8C8zoqtJuh5GVSVGo=
+	t=1715937739; cv=none; b=J9m8pEyj5bCihSf5BG+Qs54W24l9JAuJj0F4yjAXbpV8be8SXJSnzuQRT9N03R2bBfQW1uNSuqt2e0+yFR9Wdm/uQa4k7lGaSPTKo5m4X2mCzhNxfuczwplu65ay95x/AKNWRpWTk6QeXcrsiCwXFaVpF6yNPennP5+KA4wvb+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715937645; c=relaxed/simple;
-	bh=zUX5qNIfW548vNLMV3YfOWr2RVuk/rIW/JNspwwgaDA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miOO6hXABB8WYhRafy1Bd4LdUwtvrI09mh9jefGrk0LJ+VbF5nrE1hMopsMyY3CIZSIM3lSBxjeWj+Xfh7W5mdsYjj500/O9/yOJn2BJFlSydDMw0WucBwVSZRvWdySlkHPtC9ZARWB0L5MjUkA1KIS9Rob/SJz3BSdh8zlrZ54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=s8qF9X+x; arc=none smtp.client-ip=95.143.172.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
+	s=arc-20240116; t=1715937739; c=relaxed/simple;
+	bh=tYAI6TOAKRcbV1juyFS7/yUxVV6DkbGrmukK/JfBr+c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b+c9K9BmLD4U63DUV28VMPJ8JGVM4fobGTbcTli2VHvwkG+DurO0eNJVu5i3y3dYWGByAiIyEOkEzGs4o2pOilD46e/iqEfcQ4ubZwoyhAw7iu2VwoxAK78aktv5VV7FGPmfOeJsW9pgi4c3rHwq90zeHC7iBsICZdYBu23D0Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QVV9Vle2; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="s8qF9X+x"
-Received: (qmail 13005 invoked by uid 988); 17 May 2024 09:13:58 -0000
-Authentication-Results: phoenix.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Fri, 17 May 2024 11:13:57 +0200
-From: Illia Ostapyshyn <illia@yshyn.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	Illia Ostapyshyn <illia@yshyn.com>
-Subject: [PATCH] mm/vmscan: Update stale references to shrink_page_list
-Date: Fri, 17 May 2024 11:13:48 +0200
-Message-Id: <20240517091348.1185566-1-illia@yshyn.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QVV9Vle2"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44H9KnI9081866;
+	Fri, 17 May 2024 04:20:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715937650;
+	bh=qiiDi6iBA4vHp7ewYuXe/3jhyEOsgdvn9UBZf5Tf+Nw=;
+	h=From:To:CC:Subject:Date;
+	b=QVV9Vle2k6y0lauTeMd1Tzjy7x3gTq1uF+6qE9zTBH1UM6mUDspuObyEm0QvSVfTc
+	 lQBoBXcvGdTqhsSzW1toI5U9a/+4OAU1BlcG1TJ435LkEXJ7CFzjhv+lDMOM+YBFAG
+	 +CLlwVpzqVhhzeuAt8jL2FD6HPK3raKDoV25IOB4=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44H9KnBe090369
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 17 May 2024 04:20:49 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 17
+ May 2024 04:20:49 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 17 May 2024 04:20:49 -0500
+Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.114])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44H9KhXq036740;
+	Fri, 17 May 2024 04:20:44 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <broonie@kernel.org>
+CC: <andriy.shevchenko@linux.intel.com>, <lgirdwood@gmail.com>,
+        <perex@perex.cz>, <pierre-louis.bossart@linux.intel.com>,
+        <13916275206@139.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <liam.r.girdwood@intel.com>,
+        <bard.liao@intel.com>, <yung-chuan.liao@linux.intel.com>,
+        <kevin-lu@ti.com>, <cameron.berkenpas@gmail.com>, <tiwai@suse.de>,
+        <baojun.xu@ti.com>, <soyer@irl.hu>, <Baojun.Xu@fpt.com>,
+        Shenghao Ding <shenghao-ding@ti.com>
+Subject: [RESEND PATCH v5 1/3] ASoC: tas2781: Fix wrong loading calibrated data sequence
+Date: Fri, 17 May 2024 17:20:36 +0800
+Message-ID: <20240517092039.688-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,114 +61,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: +
-X-Rspamd-Report: MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: 1.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=yshyn.com; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=zUX5qNIfW548vNLMV3YfOWr2RVuk/rIW/JNspwwgaDA=;
-	b=s8qF9X+xASJEWN/cMfdXpv37+eChv24TVme12xnLdvA65YeLPvsTXzosKqg8OeC49J5W76JCJG
-	jXt8b3WBCoWyHOW6ZAXTIEhwcx3HgSKo7GNhhPzlmOFAiMkpfbb/Qr2+tBLxzjpAAPK2KqHIAS3X
-	dun0Pvmwj1DQ5Ikf7ijj4Y6RxzPpcYrN9nNzeGMn0R0Thnq6Z3unRuYKkAK98CKUGmfeVqggYD8j
-	7pWiuwES3hWX1bm0vSyKHopIQGsB0IWLRKFbBd0pEPGW4zAG8AmBYKOyWdHAm1T2zG3TdRB4+fRv
-	qKhYjDH39qcYIOrnRP/Z7LvFijc0MOp8VK/n/Kiw==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Commit 49fd9b6df54e ("mm/vmscan: fix a lot of comments") renamed
-shrink_page_list() to shrink_folio_list().  Fix up the remaining
-references to the old name in comments and documentation.
+Remove declaration of unused API which load calibrated data in wrong
+sequence, changed the copyright year and correct file name in license
+header.
 
-Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
+Fixes: ef3bcde75d06 ("ASoc: tas2781: Add tas2781 driver")
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+
 ---
- Documentation/mm/unevictable-lru.rst | 10 +++++-----
- mm/memory.c                          |  2 +-
- mm/swap_state.c                      |  2 +-
- mm/truncate.c                        |  2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+v5:
+ - correct changelog has no much relationship with the patch
+v4:
+ - Use the the culprit of the bug itself as the fixes tag
+v3:
+ - No changes.
+v2:
+ - In the Subject, fixed --> Fix
+ - Add Fixes tag
+ - Changed the copyright year to 2024 in the related files
+ - In tas2781-dsp.h, __TASDEVICE_DSP_H__ --> __TAS2781_DSP_H__
+v1:
+ - Download calibrated data after loading the new DSP config params
+ - Remove tasdevice_prmg_calibdata_load, because it is unnecessary to load
+   calibrated data after loading DSP program.
+---
+ include/sound/tas2781-dsp.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/mm/unevictable-lru.rst b/Documentation/mm/unevictable-lru.rst
-index b6a07a26b10d..2feb2ed51ae2 100644
---- a/Documentation/mm/unevictable-lru.rst
-+++ b/Documentation/mm/unevictable-lru.rst
-@@ -191,13 +191,13 @@ have become evictable again (via munlock() for example) and have been "rescued"
- from the unevictable list.  However, there may be situations where we decide,
- for the sake of expediency, to leave an unevictable folio on one of the regular
- active/inactive LRU lists for vmscan to deal with.  vmscan checks for such
--folios in all of the shrink_{active|inactive|page}_list() functions and will
-+folios in all of the shrink_{active|inactive|folio}_list() functions and will
- "cull" such folios that it encounters: that is, it diverts those folios to the
- unevictable list for the memory cgroup and node being scanned.
+diff --git a/include/sound/tas2781-dsp.h b/include/sound/tas2781-dsp.h
+index ea9af2726a53..7fba7ea26a4b 100644
+--- a/include/sound/tas2781-dsp.h
++++ b/include/sound/tas2781-dsp.h
+@@ -2,7 +2,7 @@
+ //
+ // ALSA SoC Texas Instruments TAS2781 Audio Smart Amplifier
+ //
+-// Copyright (C) 2022 - 2023 Texas Instruments Incorporated
++// Copyright (C) 2022 - 2024 Texas Instruments Incorporated
+ // https://www.ti.com
+ //
+ // The TAS2781 driver implements a flexible and configurable
+@@ -13,8 +13,8 @@
+ // Author: Kevin Lu <kevin-lu@ti.com>
+ //
  
- There may be situations where a folio is mapped into a VM_LOCKED VMA,
- but the folio does not have the mlocked flag set.  Such folios will make
--it all the way to shrink_active_list() or shrink_page_list() where they
-+it all the way to shrink_active_list() or shrink_folio_list() where they
- will be detected when vmscan walks the reverse map in folio_referenced()
- or try_to_unmap().  The folio is culled to the unevictable list when it
- is released by the shrinker.
-@@ -269,7 +269,7 @@ the LRU.  Such pages can be "noticed" by memory management in several places:
+-#ifndef __TASDEVICE_DSP_H__
+-#define __TASDEVICE_DSP_H__
++#ifndef __TAS2781_DSP_H__
++#define __TAS2781_DSP_H__
  
-  (4) in the fault path and when a VM_LOCKED stack segment is expanded; or
- 
-- (5) as mentioned above, in vmscan:shrink_page_list() when attempting to
-+ (5) as mentioned above, in vmscan:shrink_folio_list() when attempting to
-      reclaim a page in a VM_LOCKED VMA by folio_referenced() or try_to_unmap().
- 
- mlocked pages become unlocked and rescued from the unevictable list when:
-@@ -548,12 +548,12 @@ Some examples of these unevictable pages on the LRU lists are:
-  (3) pages still mapped into VM_LOCKED VMAs, which should be marked mlocked,
-      but events left mlock_count too low, so they were munlocked too early.
- 
--vmscan's shrink_inactive_list() and shrink_page_list() also divert obviously
-+vmscan's shrink_inactive_list() and shrink_folio_list() also divert obviously
- unevictable pages found on the inactive lists to the appropriate memory cgroup
- and node unevictable list.
- 
- rmap's folio_referenced_one(), called via vmscan's shrink_active_list() or
--shrink_page_list(), and rmap's try_to_unmap_one() called via shrink_page_list(),
-+shrink_folio_list(), and rmap's try_to_unmap_one() called via shrink_folio_list(),
- check for (3) pages still mapped into VM_LOCKED VMAs, and call mlock_vma_folio()
- to correct them.  Such pages are culled to the unevictable list when released
- by the shrinker.
-diff --git a/mm/memory.c b/mm/memory.c
-index 0201f50d8307..c58b3d92e6a8 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4511,7 +4511,7 @@ static vm_fault_t __do_fault(struct vm_fault *vmf)
- 	 * lock_page(B)
- 	 *				lock_page(B)
- 	 * pte_alloc_one
--	 *   shrink_page_list
-+	 *   shrink_folio_list
- 	 *     wait_on_page_writeback(A)
- 	 *				SetPageWriteback(B)
- 	 *				unlock_page(B)
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index bfc7e8c58a6d..3d163ec1364a 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -28,7 +28,7 @@
- 
- /*
-  * swapper_space is a fiction, retained to simplify the path through
-- * vmscan's shrink_page_list.
-+ * vmscan's shrink_folio_list.
-  */
- static const struct address_space_operations swap_aops = {
- 	.writepage	= swap_writepage,
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 725b150e47ac..e1c352bb026b 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -554,7 +554,7 @@ EXPORT_SYMBOL(invalidate_mapping_pages);
-  * This is like mapping_evict_folio(), except it ignores the folio's
-  * refcount.  We do this because invalidate_inode_pages2() needs stronger
-  * invalidation guarantees, and cannot afford to leave folios behind because
-- * shrink_page_list() has a temp ref on them, or because they're transiently
-+ * shrink_folio_list() has a temp ref on them, or because they're transiently
-  * sitting in the folio_add_lru() caches.
-  */
- static int invalidate_complete_folio2(struct address_space *mapping,
+ #define MAIN_ALL_DEVICES			0x0d
+ #define MAIN_DEVICE_A				0x01
+@@ -180,7 +180,6 @@ void tasdevice_calbin_remove(void *context);
+ int tasdevice_select_tuningprm_cfg(void *context, int prm,
+ 	int cfg_no, int rca_conf_no);
+ int tasdevice_prmg_load(void *context, int prm_no);
+-int tasdevice_prmg_calibdata_load(void *context, int prm_no);
+ void tasdevice_tuning_switch(void *context, int state);
+ int tas2781_load_calibration(void *context, char *file_name,
+ 	unsigned short i);
 -- 
-2.39.2
+2.34.1
 
