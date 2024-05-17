@@ -1,118 +1,243 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB11817597;
-	Fri, 17 May 2024 07:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EEA17BA7;
+	Fri, 17 May 2024 07:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715931183; cv=none; b=pPmm9ZPRxz85Sm3lBGSmzRZyWTrhBydZ5voXQx40SwX02Wu7s8JzWUIopVlwHjm7diS4hB8QMaFU0OlKDr6+JLUSTfdh9QPC9UL5uBs61i3yJFbUX+UDmKMo2kx4xSytJS4ZaVbikFEMLmQrB5e6ASBBstMhKwoodAqz2qAnL9w=
+	t=1715931476; cv=none; b=sQz/e/Fh8xrTS6MP/TmcYGmfGkgm022Kf4WjvAfGqqYCY6n50fuoIMjyMaDmrqKsvOIXuiO7qJR5UHmmy0l9x/TkYptwcb0FGzGQFwfaweLmzO2khGAk5W8esU7xQtsrsMoyzJNy3XTs/xzr733wNo/NIT1e7PbTx/XLoP5gEEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715931183; c=relaxed/simple;
-	bh=wT0sXS5qVPDTxKJ3z9178RUaDjfMzjcAMh2Rwjp67Y8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nLebwQDz8YEdraKqgIoDK9znQoOeN4SpMhRzKnSy5YD5osVffCuCs1N6Qf1xEk32DNXzK7uFO70YZ9aq0hRtdvCZXZFMgXvBvpmvUDCXJ3q3ZwcUzKv89hgNy0lHkUTwI0baww39ZE1+aYkCn9FjbWXmXDH93lGOyKVmfG7cWKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FmnzMAo+; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1715931476; c=relaxed/simple;
+	bh=8xcNtpQ4LncrDhuJ25hPt9wZoKOTAtIcM5tusY56NBo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p7LQNwk/GNxIXyfv0r5WDI5XCIp1F9CujD76aeQYYi6RXwUEy7BKwSMQntoAiX1Z6BafbhKb+agHpO0hdURbn2ElBidiXhx1E7bifGdL3QV4BBfB3FETt1N4YgrS4Yfecp8qrkUzHBBYLCY6Z9w3gUo35DvCNCaGMjDrMDkIii0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0uNjCjU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FmnzMAo+"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44H79nsp009975;
-	Fri, 17 May 2024 09:32:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=HvU8GeBGqT8dJ0UI3cbIoZdXlAiRynjiAUrWYrcXiCo=; b=Fm
-	nzMAo+sq5wW9Us60uIDdHRpCnDqt/AMwCEk9CD5t6FbyMo+Uid38fgDFdb7ZqSZX
-	bFUQceF3IRwSGworx6yugo0lElGR2Dq8ltHZP1z1vTQmawqBOR7IO6/vNw/38MVn
-	Oe8Afsd2UXny0ZDqKun6M4vI2YAuoWx7Hh7MYnumZ/xZwSeI6JF+lVMkeYJG3qsP
-	90RDHUpoQQH9ybIyoGmfGZI7BWzD6oDTSCFva8nVOD7dWpMBH6P1WrhQnaPD8JWZ
-	Muws3mA0lmmmc3rSt+HSF9ZkX1JWdTBRKuo9oJ/eBiQ5IIsRbLk0jwK+/oyDHKhc
-	9bE5ZnP+USB05o3YQZJg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y4sxv8ttk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 09:32:20 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B919740044;
-	Fri, 17 May 2024 09:32:15 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0AC34211602;
-	Fri, 17 May 2024 09:30:57 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 17 May
- 2024 09:30:56 +0200
-Message-ID: <f94d3cd6-df2a-4c2f-b09f-e424be63ccf7@foss.st.com>
-Date: Fri, 17 May 2024 09:30:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0uNjCjU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5596EC4AF08;
+	Fri, 17 May 2024 07:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715931476;
+	bh=8xcNtpQ4LncrDhuJ25hPt9wZoKOTAtIcM5tusY56NBo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=h0uNjCjUMQZ0IGVvEutrQZXHC8PUdgFQOzZfnfNpqMqz68oqSFKm+tbxK/mpKycnp
+	 2PIN6cQuhJ1a4pkGfOQr+hzy2q60boSlztx2/If64o2f1AJgjvC2IEbtms4/6/P4nY
+	 jVK/k0lkqvLQvpDc6YAfHIvvF5K5gmjneF5Ze65N8Y5XF2OFEVGVgyw+evlPKBgj/c
+	 zSvLPVe+ibiymz7dfxjOulhdEG1Ae9ViqsazJLYrctkWnCKC5Bk8B8fltq+8UWEjzW
+	 hDYhOV+jMWb85P0lujplI/JZpyPQKoGETIQME7mLTy0KnXSCkiArijjK5wv5t79zav
+	 0MiBaPg73FEfg==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-572e48f91e9so4781702a12.0;
+        Fri, 17 May 2024 00:37:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU6CNEbYFfYbq/37FiX0Hn5/4FaOhJHFid/OEtSNfcSCFyMQcHepa4HSac1iBSKeLtjxlvNuuFFwnrm1V8eBDtMQThLD6U7eHwZhFlgu6i13kQNvOhLGfi8ROXfRzA8w6jJzK3+vu0M/Q==
+X-Gm-Message-State: AOJu0Yyq9y+A4g0DG1cZkx3kKO6o9TEr1XIpRlCTq5malfnNpWjqKoUc
+	Uuky4/6X78UjDCF3/acVyQZp13ucbSggXMh+1N0C8X/EYzqx7oWHY0vBQT7ORgg+pAzkIcvk8yf
+	EWM0GGLi02CJ1sbGfyxaRt/Suctw=
+X-Google-Smtp-Source: AGHT+IH5CDy2pFzhrWDy8JnRPH0xH9ZvJn2OFnXyG5cHREPIhLuFsbVMyAcWMPeXmWHTFIbzI/kFufimilUa+7FnJDU=
+X-Received: by 2002:a17:906:a99:b0:a59:aa68:99a0 with SMTP id
+ a640c23a62f3a-a5a2d5819bbmr1385056966b.18.1715931474805; Fri, 17 May 2024
+ 00:37:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/11] ARM: dts: stm32: add ethernet1 and ethernet2 for
- STM32MP135F-DK board
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Marek Vasut <marex@denx.de>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard
- Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
- <20240426125707.585269-11-christophe.roullier@foss.st.com>
- <43024130-dcd6-4175-b958-4401edfb5fd8@denx.de>
- <8bf3be27-3222-422d-bfff-ff67271981d8@foss.st.com>
- <9c1d80eb-03e7-4d39-b516-cbcae0d50e4a@denx.de>
- <5544e11b-25a8-4465-a7cc-f1e9b1d0f0cc@foss.st.com>
- <4b17d7e4-c135-4d91-8565-9a8b2c6341d2@lunn.ch>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <4b17d7e4-c135-4d91-8565-9a8b2c6341d2@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
+References: <20240514073232.3694867-1-chenhuacai@loongson.cn> <b1182755-ec71-2add-ad69-72da85cdbb19@loongson.cn>
+In-Reply-To: <b1182755-ec71-2add-ad69-72da85cdbb19@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 17 May 2024 15:37:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5=jEODTiPK3zE1Rkw=RQEMfebH8j1hsJ7RoXJvjW2OyQ@mail.gmail.com>
+Message-ID: <CAAhV-H5=jEODTiPK3zE1Rkw=RQEMfebH8j1hsJ7RoXJvjW2OyQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add irq_work support via self IPIs
+To: maobibo <maobibo@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 5/16/24 14:22, Andrew Lunn wrote:
->>> I suspect it might make sense to add this WoL part separately from the
->>> actual ethernet DT nodes, so ethernet could land and the WoL
->>> functionality can be added when it is ready ?
->>
->> If at the end we want to have this Wol from PHY then I agree we need to
->> wait. We could push a WoL from MAC for this node before optee driver patches
->> merge but not sure it makes sens.
-> 
-> In general, it is better if the PHY does WoL, since the MAC can then
-> be powered down. MAC WoL should only be used when the PHY does not
-> support the requested WoL configuration, but the MAC can. And
-> sometimes you need to spread it over both the PHY and the MAC.
+On Thu, May 16, 2024 at 8:23=E2=80=AFPM maobibo <maobibo@loongson.cn> wrote=
+:
 >
+>
+>
+> On 2024/5/14 =E4=B8=8B=E5=8D=883:32, Huacai Chen wrote:
+> > Add irq_work support for LoongArch via self IPIs. This make it possible
+> > to run works in hardware interrupt context, which is a prerequisite for
+> > NOHZ_FULL.
+> >
+> > Implement:
+> >   - arch_irq_work_raise()
+> >   - arch_irq_work_has_interrupt()
+> >
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >   arch/loongarch/include/asm/hardirq.h  |  3 ++-
+> >   arch/loongarch/include/asm/irq_work.h | 10 ++++++++++
+> >   arch/loongarch/include/asm/smp.h      |  2 ++
+> >   arch/loongarch/kernel/paravirt.c      |  6 ++++++
+> >   arch/loongarch/kernel/smp.c           | 14 ++++++++++++++
+> >   5 files changed, 34 insertions(+), 1 deletion(-)
+> >   create mode 100644 arch/loongarch/include/asm/irq_work.h
+> >
+> > diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/incl=
+ude/asm/hardirq.h
+> > index d41138abcf26..1d7feb719515 100644
+> > --- a/arch/loongarch/include/asm/hardirq.h
+> > +++ b/arch/loongarch/include/asm/hardirq.h
+> > @@ -12,11 +12,12 @@
+> >   extern void ack_bad_irq(unsigned int irq);
+> >   #define ack_bad_irq ack_bad_irq
+> >
+> > -#define NR_IPI       2
+> > +#define NR_IPI       3
+> >
+> >   enum ipi_msg_type {
+> >       IPI_RESCHEDULE,
+> >       IPI_CALL_FUNCTION,
+> > +     IPI_IRQ_WORK,
+> >   };
+> >
+> >   typedef struct {
+> > diff --git a/arch/loongarch/include/asm/irq_work.h b/arch/loongarch/inc=
+lude/asm/irq_work.h
+> > new file mode 100644
+> > index 000000000000..d63076e9160d
+> > --- /dev/null
+> > +++ b/arch/loongarch/include/asm/irq_work.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_LOONGARCH_IRQ_WORK_H
+> > +#define _ASM_LOONGARCH_IRQ_WORK_H
+> > +
+> > +static inline bool arch_irq_work_has_interrupt(void)
+> > +{
+> > +     return IS_ENABLED(CONFIG_SMP);
+> > +}
+> > +
+> > +#endif /* _ASM_LOONGARCH_IRQ_WORK_H */
+> > diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/=
+asm/smp.h
+> > index 278700cfee88..50db503f44e3 100644
+> > --- a/arch/loongarch/include/asm/smp.h
+> > +++ b/arch/loongarch/include/asm/smp.h
+> > @@ -69,9 +69,11 @@ extern int __cpu_logical_map[NR_CPUS];
+> >   #define ACTION_BOOT_CPU     0
+> >   #define ACTION_RESCHEDULE   1
+> >   #define ACTION_CALL_FUNCTION        2
+> > +#define ACTION_IRQ_WORK              3
+> >   #define SMP_BOOT_CPU                BIT(ACTION_BOOT_CPU)
+> >   #define SMP_RESCHEDULE              BIT(ACTION_RESCHEDULE)
+> >   #define SMP_CALL_FUNCTION   BIT(ACTION_CALL_FUNCTION)
+> > +#define SMP_IRQ_WORK         BIT(ACTION_IRQ_WORK)
+> >
+> >   struct secondary_data {
+> >       unsigned long stack;
+> > diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/p=
+aravirt.c
+> > index 1633ed4f692f..4272d2447445 100644
+> > --- a/arch/loongarch/kernel/paravirt.c
+> > +++ b/arch/loongarch/kernel/paravirt.c
+> > @@ -2,6 +2,7 @@
+> >   #include <linux/export.h>
+> >   #include <linux/types.h>
+> >   #include <linux/interrupt.h>
+> > +#include <linux/irq_work.h>
+> >   #include <linux/jump_label.h>
+> >   #include <linux/kvm_para.h>
+> >   #include <linux/static_call.h>
+> > @@ -97,6 +98,11 @@ static irqreturn_t pv_ipi_interrupt(int irq, void *d=
+ev)
+> >               info->ipi_irqs[IPI_CALL_FUNCTION]++;
+> >       }
+> >
+> > +     if (action & SMP_IRQ_WORK) {
+> > +             irq_work_run();
+> > +             info->ipi_irqs[IPI_IRQ_WORK]++;
+> > +     }
+> > +
+> Would you mind adding common api so that pv ipi handler and hw ipi
+> handler can call it both? The coming avec MSI interrupt driver has the
+> same requirement for ipi.
+We can refactor it after AVEC upstream, if needed.
 
-thanks Andrew. So lets wait the optee driver missing part.
+Huacai
 
-alex
-
-
-> 	Andrew
+>
+> void do_ipi_demux(unsigned int action)
+> {
+>          irq_cpustat_t *info;
+>
+>          info =3D this_cpu_ptr(&irq_stat);
+>          if (action & SMP_RESCHEDULE) {
+>                  scheduler_ipi();
+>                  info->ipi_irqs[IPI_RESCHEDULE]++;
+>          }
+>
+>          if (action & SMP_CALL_FUNCTION) {
+>                  generic_smp_call_function_interrupt();
+>                  info->ipi_irqs[IPI_CALL_FUNCTION]++;
+>          }
+>
+>         if (action & SMP_IRQ_WORK) {
+>                 irq_work_run();
+>                 info->ipi_irqs[IPI_IRQ_WORK]++;
+> }
+>
+> Regards
+> Bibo Mao
+> >       return IRQ_HANDLED;
+> >   }
+> >
+> > diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> > index 0dfe2388ef41..7366de776f6e 100644
+> > --- a/arch/loongarch/kernel/smp.c
+> > +++ b/arch/loongarch/kernel/smp.c
+> > @@ -13,6 +13,7 @@
+> >   #include <linux/cpumask.h>
+> >   #include <linux/init.h>
+> >   #include <linux/interrupt.h>
+> > +#include <linux/irq_work.h>
+> >   #include <linux/profile.h>
+> >   #include <linux/seq_file.h>
+> >   #include <linux/smp.h>
+> > @@ -70,6 +71,7 @@ static DEFINE_PER_CPU(int, cpu_state);
+> >   static const char *ipi_types[NR_IPI] __tracepoint_string =3D {
+> >       [IPI_RESCHEDULE] =3D "Rescheduling interrupts",
+> >       [IPI_CALL_FUNCTION] =3D "Function call interrupts",
+> > +     [IPI_IRQ_WORK] =3D "IRQ work interrupts",
+> >   };
+> >
+> >   void show_ipi_list(struct seq_file *p, int prec)
+> > @@ -217,6 +219,13 @@ void arch_smp_send_reschedule(int cpu)
+> >   }
+> >   EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
+> >
+> > +#ifdef CONFIG_IRQ_WORK
+> > +void arch_irq_work_raise(void)
+> > +{
+> > +     mp_ops.send_ipi_single(smp_processor_id(), ACTION_IRQ_WORK);
+> > +}
+> > +#endif
+> > +
+> >   static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
+> >   {
+> >       unsigned int action;
+> > @@ -234,6 +243,11 @@ static irqreturn_t loongson_ipi_interrupt(int irq,=
+ void *dev)
+> >               per_cpu(irq_stat, cpu).ipi_irqs[IPI_CALL_FUNCTION]++;
+> >       }
+> >
+> > +     if (action & SMP_IRQ_WORK) {
+> > +             irq_work_run();
+> > +             per_cpu(irq_stat, cpu).ipi_irqs[IPI_IRQ_WORK]++;
+> > +     }
+> > +
+> >       return IRQ_HANDLED;
+> >   }
+> >
+> >
+>
+>
