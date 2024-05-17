@@ -1,141 +1,164 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DB84F890
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05E653E0D
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715950307; cv=none; b=LJtU+x/3tgelqj9GYJsS/8bXEKxntQAwvgLp6bFfEuOqgUQsR2YVrCdYL1jFrPzEEQgoeRdgWvugJiKe2HoLgG/8571IPU98uLW0Lp/wYKrO42uhHsOhH6MUzWrLJK6mt7+7w2kfmpIqZTx3j954K8eGnRjmxj33A1+hMcr97Yo=
+	t=1715950510; cv=none; b=ucimYSx833rcfIltJj0WjYFImgjIKfkTf8cgvq9ctqeR+xcv2B7PqsjGDNyD9fUK+AF3e3pzjkcOkMqfrARrSvY8bHUf+BwpgCTpG1KfBp6ahqwsoURuh1VZJ9OmKWkPmoJZpVFxnUWccCrDnjbg5gXqMsQG5GZisJ7uG9VPriA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715950307; c=relaxed/simple;
-	bh=Vq4/ozJIACZOKOlrKWjGJ/ITZ67a1Onaw8acoBVl86E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AbdbtKIa2pDXhJv/KMD75DRvwezIqymbKtWMga7HsoLDIrqy1bPBn73+av+Qy76cZEVghsI4hbFB/z4rLZLZxcVoyvbwgmyRfzeGY4tQvtdmSQ1ctQX4FmAmCjofHqdp0taMaFVgG3k3CzMPDanA7rUlXb/SC/0imfNIsrjfbW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iy2Q7w75; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715950510; c=relaxed/simple;
+	bh=XYXVIrGk8WONF2AJBpCrV0JwFIgC5Y4oslQEkZhhPno=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g8wVBW7TzZ9K5J8S9hXKnQiX21mIknPY7eN0s/UxHuyhs6FGMEVPFY+JsjMQeFY7FLcCWPBsD/l8+jzI24N2tZRVXPE0D8CD/MUgeEQZTw6kKgqjLcNEJFeV/a1pow+fBHytc9aF6sgZk4upqTrns5ekAYtSPc0zciJArf5sWRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=bA+wAUc3; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iy2Q7w75"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-572a93890d1so5209436a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 05:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715950303; x=1716555103; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uBDeP9nwT+3vg7rh6Kfq9TwLIodJdwZEaPm8bRsiuNE=;
-        b=Iy2Q7w75h/Zfv9p7KvFkCQVwK/J6wzRch4+kdxQJ1Ht/vZusif1zQ6jBYF2EFbvdGb
-         krpTB0oSkXxDBFvEAwR1FZspXwdoKlBDOcHuFj3OWdmnPS2u/9+pcbwmz+M6TNeHFe+m
-         GAHrlPOyATwOCDJ1Zlt0YJbI1pjizqRxcVXgBd1uUuyU8hxTVchRxV4J1gMKdpXBFhxS
-         BD0gl8MNOema4TwFKZB9UNWBuT+obIxTviPLl/sJDgoh0Nu4QKirjmmSaX4KDwZHP9nm
-         n63lNazZmn9HrHNyL79cfinCYGiZ+ef1+GQwtsei8uZMN1M7I8RfWy+Vv5tx9ZC/BoSR
-         ypYg==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="bA+wAUc3"
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id A499B41204
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1715950099;
+	bh=zW5wTM7Wxxl+jny7CjNrz3i10lwRcwO9dJoFnZU/wW8=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=bA+wAUc3PPzoStlPejsbvERe1ZgHqEGl3ls8aiBAnMxHPU0U+QoXnl58eWDDCzHly
+	 xS10zCtCQvu4fC81t4Eoo9BznS5DHF0V2NJuWkPC2oD7jLzFms3yKqjwH546PkGGaq
+	 DGJnXBmSW95/XSDbfmwKpd/rH0psmsG1RFH6pMevHGj7CqAo9UHTvmeQ+G1zsGTuZe
+	 P2ZH3Fl3EBeN7d7US5CWFFi3vXuNCO6aR6gzyUIB8TBnuFzSpainEV6R/POK+5Tbzo
+	 cdyuSqSZ90ITJMT+QqjecZ9XQqX5rAVBL0V9Z231QPRwLPMUyc6eqCFY91ogNcwizk
+	 0mTE8bmu0EPjQ==
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-43d1e3e7730so110004191cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 05:48:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715950303; x=1716555103;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uBDeP9nwT+3vg7rh6Kfq9TwLIodJdwZEaPm8bRsiuNE=;
-        b=pNUMO8i9wCeTU4LPXGyUWjmXimovATpkWqX6w6Yqh05YZx6lfZ63lR1Q4a4bZ3xwXt
-         l26UFc+SdxsqXHINnv9KRum9/yzKAuA2UWRixb8iaI0PdfYz/bz8lSivUJYWQzrMq5UZ
-         LiU6NS2Qj15iqmYAp0Afv8psHhFVhd84WlRyuXWkh/U8eiZEl0qMiT4BkfPCFaT273bO
-         pSBHv4H2CXNWjZmXUdiDM3Yb78KFevlAYSyd3vr7NTPSw8VmlrVBeW22WMll61hAvk6M
-         cWkegODnQqK7R9q+Y3d8YVjeNnTlhJp28ZZ3QOkcQSkbnTsp0FbtKKNsqnpBUgXsob19
-         4g+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWKB2cIEm2sd58xBLng0AMDNKzK9x+ew03yCwrcXVTNrmBFu4HHfXJs4TtuPywiGglHnU1wU3pbbual5/gNiBPME2DDdC1+3v1mzJS0
-X-Gm-Message-State: AOJu0Yxg4uonlDcRxEl15/Y7+dn4LN/FJp8ODqCQS4ylJZf/o/+pCz1a
-	7ParsH5whEKQHoLNXehFaFN21N6AXYhmMm8w1HYQP1CTCpH3vCcrnp/gB7kHq6o=
-X-Google-Smtp-Source: AGHT+IH2rlo+iZOPkGsHzGODAy1kMGiRTqA99W8UoQQqxB5KaE7eFk+2sx7TdMoVT9m8zu7m5sMMHQ==
-X-Received: by 2002:a50:cd41:0:b0:574:eca8:631c with SMTP id 4fb4d7f45d1cf-574eca865a6mr8447514a12.1.1715950302929;
-        Fri, 17 May 2024 05:51:42 -0700 (PDT)
-Received: from krzk-bin.. ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5735a2490casm10540527a12.32.2024.05.17.05.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 05:51:42 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: soc: bcm: document brcm,bcm2711-avs-monitor
-Date: Fri, 17 May 2024 14:51:38 +0200
-Message-ID: <20240517125138.53441-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1715950098; x=1716554898;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zW5wTM7Wxxl+jny7CjNrz3i10lwRcwO9dJoFnZU/wW8=;
+        b=MzI0m2wyPZ8bZ2b8hkrWqOsHjPi0jmMH1N5ZaHux09qhf9asI8VRwz0qlR0EVQJrmP
+         +sKIDWIdgWeeR3lAvTDL6R1kpt7Pv/OPeLyFBJZZRXOSp/5EzaYIQN6wg5ZXe/qzZLAK
+         11wLCdH/+UYnEEwRkyjBMLy8ptrrG4zm+ynQxu0FLOCGwjD+TZlt/ijLBs0zRHSn9PLO
+         votD0DZH0MNekmbwtipURejjBLitgOjqTsoG+Dx3OfM7rugd2+WkVgK3fAq8+0cuaPj1
+         MjnWbsNYp2vgleecft7OdLAjsGCnnvMPOieqWvIKUBckwIAA6x7CHTsvRhoeG2934ahT
+         eK4Q==
+X-Gm-Message-State: AOJu0Yx+kaoftCPM40O/WNLOEpWRufaF4P2ucwSe7OMcSwGWHSaZnp1W
+	/jyI8MHrSrJSzjWHj5srjJl+nFQm72BTUzz/TymbsptxUmWkDQjZYRY2ukqOXNuu8Wo6ortnrOW
+	hdGZ6V5h9sLBRFDVVOoYwYf1L9S28AcVXwouTpknsB6EaKrGlNs8yKcPpwc8cZu2HXjabGhcfdb
+	GU227yOqkh8bMRhbTepe9lxvFw/JSiW1KcKqseKqU56+GBm9ysf7v5
+X-Received: by 2002:a05:622a:8b:b0:43a:d430:b678 with SMTP id d75a77b69052e-43dfdb170a3mr219093471cf.32.1715950098388;
+        Fri, 17 May 2024 05:48:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGtRO5hEORW+Wcqb6zHImpmRtuEa+IJ8HEKNoCDnJQ+6k7eHn4EtAEkRMeLCfvr/vbfy2QNeJB++3V1NE8uVYQ=
+X-Received: by 2002:a05:622a:8b:b0:43a:d430:b678 with SMTP id
+ d75a77b69052e-43dfdb170a3mr219093261cf.32.1715950098054; Fri, 17 May 2024
+ 05:48:18 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 17 May 2024 07:48:17 -0500
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240115173657.GA999912-robh@kernel.org>
+References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
+ <20240103132852.298964-2-emil.renner.berthing@canonical.com> <20240115173657.GA999912-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Date: Fri, 17 May 2024 07:48:17 -0500
+Message-ID: <CAJM55Z9xF6_WCcg02xJJfu=UCOj=4m64BXvJTaV4vX09WLhc0w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
+To: Rob Herring <robh@kernel.org>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Drew Fustini <dfustini@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Document alreasdy used binding for Syscon / AVS monitor:
-brcm,bcm2711-avs-monitor to fix dt_binding_check and dtbs_check warnings
-like:
+Rob Herring wrote:
+> On Wed, Jan 03, 2024 at 02:28:38PM +0100, Emil Renner Berthing wrote:
+> > Add bindings for the pin controllers on the T-Head TH1520 RISC-V SoC.
+> >
+> > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> > ---
+> >  .../pinctrl/thead,th1520-pinctrl.yaml         | 372 ++++++++++++++++++
+> >  1 file changed, 372 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..d3ad7a7cfdd1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
+> > @@ -0,0 +1,372 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/thead,th1520-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: T-Head TH1520 SoC pin controller
+> > +
+> > +maintainers:
+> > +  - Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> > +
+> > +description: |
+> > +  Pinmux and pinconf controller in the T-Head TH1520 RISC-V SoC.
+> > +
+> > +  The TH1520 has 3 groups of pads each controlled from different memory ranges.
+> > +  Confusingly the memory ranges are named
+> > +    PADCTRL_AOSYS  -> PAD Group 1
+> > +    PADCTRL1_APSYS -> PAD Group 2
+> > +    PADCTRL0_APSYS -> PAD Group 3
+> > +
+> > +  Each pad can be muxed individually to up to 6 different functions. For most
+> > +  pads only a few of those 6 configurations are valid though, and a few pads in
+> > +  group 1 does not support muxing at all.
+> > +
+> > +  Pinconf is fairly regular except for a few pads in group 1 that either can't
+> > +  be configured or has some special functions. The rest have configurable drive
+> > +  strength, input enable, schmitt trigger, slew rate, pull-up and pull-down in
+> > +  addition to a special strong pull up.
+> > +
+> > +  Certain pads in group 1 can be muxed to AUDIO_PA0 - AUDIO_PA30 functions and
+> > +  are then meant to be used by the audio co-processor. Each such pad can then
+> > +  be further muxed to either audio GPIO or one of 4 functions such as UART, I2C
+> > +  and I2S. If the audio pad is muxed to one of the 4 functions then pinconf is
+> > +  also configured in different registers. All of this is done from a different
+> > +  AUDIO_IOCTRL memory range and is left to the audio co-processor for now.
+>
+> It is still not clear to me if each instance is a different programming
+> model or the same with just different connections. The latter should
+> be the same compatible string. That needs to be answered in *this*
+> patch, not a reply.
 
-  brcm,avs-ro-thermal.example.dtb: /example-0/avs-monitor@7d5d2000: failed to match any schema with compatible: ['brcm,bcm2711-avs-monitor', 'syscon', 'simple-mfd']
+Hi Rob,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../soc/bcm/brcm,bcm2711-avs-monitor.yaml     | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml
+Sorry for the late response. I honestly don't know exactly what you mean by
+differenty programming models and what the difference is, so I'll need a bit of
+help with what you want me to write here.
 
-diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml
-new file mode 100644
-index 000000000000..e02d9d7e7d9a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2711-avs-monitor.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/bcm/brcm,bcm2711-avs-monitor.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom AVS Monitor
-+
-+maintainers:
-+  - Stefan Wahren <wahrenst@gmx.net>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: brcm,bcm2711-avs-monitor
-+      - const: syscon
-+      - const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+  thermal:
-+    $ref: /schemas/thermal/brcm,avs-ro-thermal.yaml
-+    description: Broadcom AVS ring oscillator thermal
-+
-+required:
-+  - compatible
-+  - reg
-+  - thermal
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    avs-monitor@7d5d2000 {
-+        compatible = "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd";
-+        reg = <0x7d5d2000 0xf00>;
-+
-+        thermal: thermal {
-+            compatible = "brcm,bcm2711-thermal";
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
-+...
--- 
-2.43.0
+Any driver for the TH1520 SoC (not just Linux) would need some way to discern
+between the 3 pin controllers so they know how many pins to control and what
+pinmux settings are valid. Basically they'd need the data in the three
+th1520_group{1,2,3}_pins arrays in the driver and a way to know which of them
+to use.
 
+https://lore.kernel.org/linux-riscv/20240103132852.298964-3-emil.renner.berthing@canonical.com/
+
+Another solution would be to just have one compatible value, and then let the
+driver figure out which of the 3 pin controllers it's probing from the base
+physical memory address. That would work fine.
+
+A third solution would be to encode the data in those three arrays into the
+device tree, but I thought we didn't want to encode register information in
+device trees.
+
+/Emil
