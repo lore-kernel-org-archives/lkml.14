@@ -1,149 +1,93 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D0C38DD6;
-	Fri, 17 May 2024 17:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BF313DB9B;
+	Fri, 17 May 2024 17:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966786; cv=none; b=BX/ZrpswPTuE8hQUzn7VFQxRnpqOEb6Au+VRrrjFngUfU7TMNkY+UtXtRAIuUAoJ8Kg0RSgvBmCs4OJ8/iS0IsNaKgwh5fqcJ+0jhyx4pxb1y3V3BXuW9axgK6lWQ0Mdh4qWNYN7yX+M7u7Qt2gJMA1QDcNyUZh2ufiySETZrrU=
+	t=1715966788; cv=none; b=QCDVWAOGYOrGcl+SZ6nb9DO61bVI0fpD9M5PjN0FZzyq4ut5G7qZ5u7SKPE4udVjCqV+h0gDO202fggt2vJulQGanR6DjEvpKocGixZxyJYxiba78RUe6R3v9f0ilkRDzPFePwADRZImiwikgE2b8ctK8llVYH7zEVAiEi8yjYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966786; c=relaxed/simple;
-	bh=072dFkS4d4tbkJvVvRwY+LhA/h9LLDGfty0cX3lcm2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LbYtXcQSS5H+7VN7bNT5hKRdkbI2DYu8WzAEb4cWRTyw/98a5bHrKtpGQgGN8BPajIvF3BdV6116e8Ym9D4v8OipfgfYad5oOq5a3xrs1gUolFLv18UwhW2tXIZIkMrz+fIGrYWUd3C1oj19dtfBBGnS4Ez3aFEvpoJGGCCnKJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZpNA2eJK; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715966788; c=relaxed/simple;
+	bh=L01yknndEnuYphVPNzv32AM8AKWTkpUwEh/WTz0L6Vg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQjAbkGL4PnCf155+PjvlAAembYClG9TDgR3AIWEFANr1iUJK/ixAAAsZGL6+5MEGGZoNpz6TB9lIOZ0CX3UQ/FbCJnxPYr1sVR7IC0vGWSv8NYFZzN3RrMg84adwFNKB/Osv5sH1UmfStTmaBq6MhRvaBLQBJuthHKSkRDRkIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DI2/sOIS; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZpNA2eJK"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5b273b9f1deso276146eaf.3;
-        Fri, 17 May 2024 10:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715966784; x=1716571584; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cZGrmhkZn+JSkvkm9A1cwxxyX0MxkBYI3NcyHvf0LUk=;
-        b=ZpNA2eJKHZSoLaiskIDMfqR/rB57hOzaZXBvfVLDNuq9Ml9Sisq+zo8GGWRGrwbFHh
-         ETBRfxE+gaXqHkkHGt4bIaCfWJJnNPdNK7PECrobLVFH3kkjMmk/yIXZ5G+BwRubgTpO
-         Z9ZZbLLvCk6qAovwncovPgH7734jUjhzpLq3cdXqe8Q00bGG8eiBdMdKWHb2mAUDpt4e
-         Sp0IYmPSn3N0YkudUg1jiNouv931Qgc8uAk4kgyz8woyr9AdH7gFgg8HLuFg88YWCzNL
-         abdMk93WSmMcO0p2L0u0iOAQWjyJcZKE/vhPlSMQvWMr9t9dK7Xl1A5nJtXTjFQphZtY
-         Fwag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715966784; x=1716571584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cZGrmhkZn+JSkvkm9A1cwxxyX0MxkBYI3NcyHvf0LUk=;
-        b=gg5DKu4zG9m84iNMGYfmkC6eNenDcCDFVODPBHi4zJE87j5onnxPsu2Ac5s21ow183
-         +oQ5xVM1NoTqMOyOvw+5NbLB1Q7I83J9x0API8NCsdVMShlMNygtOY5KwgmiFPkFiNzO
-         fG9lUACW1nooa8t49v5Z7tdECrLzzKz/b8q3TtJvQaDrtg/LQ5jeqXnRUUDq7rs5DERP
-         LsgkzX/YuzW6/6Tj7eMTw28i4wOTXuTW/+l4PhPrvgke8pr2bThHih2xK0la3cwWyz6c
-         DDWfURDKJ2g89LlfXVgqYEye842zGTfZ9p5DrobleewjsoG4W5QlU6f+WjGsP6ZJ0GrS
-         IEaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxzy79emLwyi868RteTdLBuIxtYAR5YAuRDu7BseltezPvz0wjAjgM745kJ8Eg+eRgxNQ10OENAcVyarNbHW3h3LS54foBSMalhi1x0/WqJlcZ/tM4s92DwCb8IbwxXtNRp9saoJj138BkQ38=
-X-Gm-Message-State: AOJu0Yz2p4TbsAGM/4p+SnBvD2qMnmEEQ0VlUzClPK/cIetBI/bwKiAo
-	FpLa9J8wfu6FES1HqTzXb6G2qX3O7Wx8QzVw+ey8Z8IDQQ6QIKyfmp6qvquZ6OfRQhwtOaqBWtj
-	NiGY9UjGV5k5wLmh4HQLZv34M5Mv6WGOrihs=
-X-Google-Smtp-Source: AGHT+IGOfKY+UBUaUm6h9GuOYIuW1nWsBC9NcJyqaZgUvLnYOjU5WP4uMThorKRVVc1YDztEugD+hNOi2jnSEFP/40Q=
-X-Received: by 2002:a05:6359:4587:b0:18a:62fd:b874 with SMTP id
- e5c5f4694b2df-193bb63f000mr2904732855d.17.1715966783985; Fri, 17 May 2024
- 10:26:23 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DI2/sOIS"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6FF8840E01E8;
+	Fri, 17 May 2024 17:26:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QUTAxFpwmxTl; Fri, 17 May 2024 17:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1715966780; bh=JxAsV7mx2TJYX+9cLdcRXg8LbfpFXpxmKwDrIX6yx2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DI2/sOISPGLdODF0BiGocWEe/0U2MNVG8oNI+5pw4AX0o3DocNcEi2jD28MsRvtly
+	 LLfpEjN2T0Eh6AZE5KUZfA5/t0wiQ/p0pJXeXz5jCCiJOrwMiqrVpFmDpaFBkPfu8n
+	 zNKfbCYRm3x1HiNnw7Vx0kgVZgqiVLEaY2pipCEj+Dj0th9shVMPJhIFcHEHfDXPEK
+	 WdnGLssQYNWw4prkWdEgsVXM407HYRxxxdQv6oJhFl88uqyfsoPsI6my01zVwmFVGK
+	 i4Vvt2Kje2+NfihI7muhCq3ukKA+l+/JQ2RUU9Db/cH1pXBmcs5H+oltqJn+sEwKMs
+	 Tq4raj3xeDDQ9GGwisXKDd0XLB5yhUa30bxtEqJQYZrw1gylg2T7yziWnfnq/FpSYT
+	 y6DjTjIx//ixAdBFj+JYXBEQe/roXr7LToeSf3DXSZRGtlENmqLFTUfJwP2GobgZDV
+	 MXdaW/MZ5i35OCiKryPq6MvUKyaHeIAlO0wDuRA+bI60UsGRA0gaDmOBT1SJY1kO9T
+	 qoIOmIQnRDPs8BURUKBrkkMFhHVHfnP1eeXiPcyggk00pq42mr31bwex7k9hQa8/a+
+	 ijjVw3w6MRUmSqEiEJosV+NfW1CNX1+SSjm6HK7nEklPBRWX6n+jzYw1hf2aUyGIOt
+	 ggrnG3vW0HjE0rbC/dR/iImg=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DEB4440E0244;
+	Fri, 17 May 2024 17:26:08 +0000 (UTC)
+Date: Fri, 17 May 2024 19:26:03 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+Message-ID: <20240517172603.GEZkeTK246tBvGEtgF@fat_crate.local>
+References: <87o79cjjik.fsf@kernel.org>
+ <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+ <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+ <87h6f4jdrq.fsf@kernel.org>
+ <878r0djxgc.fsf@kernel.org>
+ <874jb0jzx5.fsf@kernel.org>
+ <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+ <87msoofjg1.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517141655.2797-1-trintaeoitogc@gmail.com> <a1cd16d2-1fbc-6543-c17c-a321ac72a2f3@gmail.com>
-In-Reply-To: <a1cd16d2-1fbc-6543-c17c-a321ac72a2f3@gmail.com>
-From: =?UTF-8?Q?Guilherme_Gi=C3=A1como_Sim=C3=B5es?= <trintaeoitogc@gmail.com>
-Date: Fri, 17 May 2024 14:25:48 -0300
-Message-ID: <CAM_Rzfb8f4ki4UB2+9EtnpJL8oMY6x0q=HmDm92mdbhLQafFOQ@mail.gmail.com>
-Subject: Re: [PATCH] thermal: adding check if the thermal firmware is running
-To: Jonathan Bither <jonbither@gmail.com>
-Cc: miriam.rachel.korenblit@intel.com, kvalo@kernel.org, 
-	rafael.j.wysocki@intel.com, daniel.lezcano@linaro.org, 
-	johannes.berg@intel.com, dmantipov@yandex.ru, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87msoofjg1.fsf@kernel.org>
 
-Em sex., 17 de mai. de 2024 =C3=A0s 13:57, Jonathan Bither
-<jonbither@gmail.com> escreveu:
->
->
-> On 5/17/24 10:16, Guilherme Giacomo Simoes wrote:
-> > In the dmesg is showing the message "failed to read out thermal zone"
-> > as if the temperature read is failed by don't find the thermal zone.
-> >
-> > After researching and debugging, I see that this specific error is
-> > occurrenced because the thermal try read the temperature when is starte=
-d,
-> > but the firmware is not running yet.
-> >
-> > For more legibiliti i change the tt.c for return EAGAIN when this was o=
-ccurrence.
-> > After this change, in my computer I compile and install kernel in /boot
-> > and in my dmesg the message "failed to read out thermal zone" is not sh=
-ow
-> > any more.
-> >
-> > I would like to thanks for Rafael Wysocki <refael.j.wysocki@intel.com> =
-for
-> > your suggestions in mu first patch that results in this another patch.
-> > ---
-> >   drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 10 ++++++++--
-> >   1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/=
-wireless/intel/iwlwifi/mvm/tt.c
-> > index 8083c4b2ab6b..68ab9966330c 100644
-> > --- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-> > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-> > @@ -620,8 +620,14 @@ static int iwl_mvm_tzone_get_temp(struct thermal_z=
-one_device *device,
-> >
-> >       mutex_lock(&mvm->mutex);
-> >
-> > -     if (!iwl_mvm_firmware_running(mvm) ||
-> > -         mvm->fwrt.cur_fw_img !=3D IWL_UCODE_REGULAR) {
-> > +     const int res =3D iwl_mvm_firmware_running(mvm);
-> > +
-> > +     if (!res) {
-> > +             ret =3D -EAGAIN;
-> > +             goto out;
-> > +     }
-> > +
->
-> You could skip using the res variable and move the mutex lock here and
-> simplify the above a bit. Ex:
->
->          int temp;
->
-> -       mutex_lock(&mvm->mutex);
-> +       if (!iwl_mvm_firmware_running(mvm))
-> +               return -EAGAIN;
->
-> -       if (!iwl_mvm_firmware_running(mvm) ||
-> -           mvm->fwrt.cur_fw_img !=3D IWL_UCODE_REGULAR) {
-> +       mutex_lock(&mvm->mutex);
-> +       if (mvm->fwrt.cur_fw_img !=3D IWL_UCODE_REGULAR) {
->                  ret =3D -ENODATA;
->                  goto out;
->          }
->
-> > +     if (mvm->fwrt.cur_fw_img !=3D IWL_UCODE_REGULAR) {
-> >               ret =3D -ENODATA;
-> >               goto out;
-> >       }
+On Fri, May 17, 2024 at 08:15:58PM +0300, Kalle Valo wrote:
+> So the weird part is that when the bug happens (ie. suspend stalls) I
+> can access the box normally using ssh and I don't see anything special
+> in dmesg. Below is a full copy of dmesg output after the suspend
+> stalled. Do note that I copied this dmesg before I updated microcode so
+> it will still show the old microcode version.
 
-Hey Jonathan, Thank you for your suggestion.
-I sended a v2 patch of this patch
-https://patchwork.kernel.org/project/linux-wireless/patch/20240517171311.37=
-05-1-trintaeoitogc@gmail.com/
+Does that mean that you'd still see the stall even with the latest
+microcode revision 0xf8?
 
-If you want, you can send this suggestion in this patch v2.
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks.
+https://people.kernel.org/tglx/notes-about-netiquette
