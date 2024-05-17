@@ -1,87 +1,48 @@
-Received: from wflow6-smtp.messagingengine.com (wflow6-smtp.messagingengine.com [64.147.123.141])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB1839FE0;
-	Fri, 17 May 2024 11:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66455BE4A;
+	Fri, 17 May 2024 11:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715945827; cv=none; b=t+vWUCRdghkev4ovXSn/1xnV2Q5UZBRO/VK1/Uy7SahJb7+t8FDu/jQ6ikCbmQ6quHGVzyISu6OqVsAFY2VTFagALK5Ez2Ve2Xl2O5gRk/xV0h8yyrPu1Xno0FP2DmCB6USQUIiMerQ0Czx3myPF3Ziyam9miBqb/CkXpq60Ros=
+	t=1715945863; cv=none; b=kfu/JX5DaTBySR70MjNy5GfJrg3F8cM9e8w+EdLZ/ARHOrkRfhKuvCTWcoK3ad6Qxyinsz1t1GiwKxHmjCnHEtl0IO7yjl+7vRTu8MgBtaXVyLOxM7tRQ6aLiB+VMKmqjlZHwTeG75lqSHsbOeG/WEYj1u4YZ0T8kYuvnKzqyYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715945827; c=relaxed/simple;
-	bh=9iwRhGote2VDlqpW9jTKlkdZQA3B+wPYMKRzpfbwwc4=;
+	s=arc-20240116; t=1715945863; c=relaxed/simple;
+	bh=aqGgQDx8JqQb1TBydwsm0go4suIdDmmkfQxkdVhpHyA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EhlqbkfybwvGlawJDVKcDhgl6rybsr7+Oo+6ykvvWM02/s7UvAdBUkbJAUNe1QGsCKL3TKI6MFz4AUWAzQ32YILq2OwMzLNo2Y9aqtMbmK1ceKdlwtglq+MX1DbwOBcVjlGPo4zKZFjAu70neG2Q405v5oS5UI3iY9OjrkVRVIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=RP7soohG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Yow8Rti0; arc=none smtp.client-ip=64.147.123.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=nvBwth16oBenJgeDdGBKO40pGyvgtPZ+0XGMjSo3rFs57OwQfWhazEcXiyVRnIDoK0mzfkyZl1rHm3p6w7uIrLScEW2MtzWLIrFDHxKjwK/6e0IhG9zN0voCRIdqj8Nyi5PCH0FT+6u01vwNyPoLibS3g7FiaFZgD4+qqyuqz1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Wonq8Dnz; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="RP7soohG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Yow8Rti0"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailflow.west.internal (Postfix) with ESMTP id 2DF562CC0146;
-	Fri, 17 May 2024 07:37:04 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 17 May 2024 07:37:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1715945823; x=1715949423; bh=nI3D7dv9ma
-	mdu0MSJ/mg14u62h/nEOjeznANWab6vVU=; b=RP7soohGfwMt3AO8dys3F2agT+
-	EJoeH1j6f/glE00+8FdBTfi+nIkvSiQsJMzL/hwQkn6uCE7KSJ0MweWaxzFCqNwW
-	fXwyJ79qcIdGeKWlLv4vqx00QPKZhsWdADHQedVow+sRy/e1diFo8xN80ELcvNky
-	qmzZSLWm4YeI0+DjQyq+HmWje9eYdAYqAds1DOZ08EAD5QixDFhhAIgDddApmflC
-	+CYyEy0ds6LRlAFGR1R9lScGMaFlskvtMmkIhvGG0d3NC/UbhvHNUbxvF/qpvm8N
-	j0Hg9ElKIZK+FIDMZNmV9kLkSWFBTp2HeLsHtytIYrZQ631cSuphJnhldEEg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	i76614979.fm3; t=1715945823; x=1715949423; bh=nI3D7dv9mamdu0MSJ/
-	mg14u62h/nEOjeznANWab6vVU=; b=Yow8Rti0jLSufYdeUU+Zt81/T5g8I0tDeQ
-	H2YLccyc78jDer7JXkdBBWemJsc82/oINbcPb+RPjtK1mFaqouIQp3FfmHAHeaz2
-	B64dlAPJKZ0KUNzIq6n++6YqAetFzWU8JrEda4OShudEjGcN9TCJe48+wSOF5c4B
-	JPVzNH9niYpxlYXlfO2rXcOsbSP0LC37UUP6/TBM2DF/myvLFq6FfjHZT4DHW+fs
-	gqgQE1pPvvyfxfRy5pm8ezvWLfph39KPiajmY6RivnFhTygiTdWn96ixaVqlFKOx
-	5mg4G2THALUdw49d167R5iA9jU29zZQStpwCw/4YQaUAsbewWODg==
-X-ME-Sender: <xms:XkFHZjSrjq3gJjFRQ-zy8HR8UI7rwwlFKBM-Ws8oxv3eCQ0b6FQ5gA>
-    <xme:XkFHZky5dUePLN8kWq176cfCL68UTmt5tUnMjKmRlfSil2-frNexvUrqNOYo5qqEM
-    jk5yNAyGlZAQmChRYc>
-X-ME-Received: <xmr:XkFHZo2FCuO7bgyYcWm-UpRb3IsT9F2xl-BKUT-u0EAmCkHmCSNfGq-41Faer11c2_tRZgcN-KQyeVvH_f-6OYU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehfedgleegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtjeenucfhrhhomheplfhonhgr
-    thhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqnecugg
-    ftrfgrthhtvghrnhepjeeigefhffdtledukeekueekffdulefhteejhfelvdeftdelteet
-    gedufeeukedunecuffhomhgrihhnpehprghmpggtrghprdhsohenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjtggrlhhmvghlshesfeiggidt
-    rdhnvght
-X-ME-Proxy: <xmx:XkFHZjD3Vsg4c-nwEQfCfbyUM7a4K81Dw6ZJXL75JWdnBvTOAmEpuQ>
-    <xmx:XkFHZsgjoCt2yTlXrwRaXyskCggR7o9rgcp5ZiyeqPk4Dn70_Eminw>
-    <xmx:XkFHZnqIm2Clp1qofP8p9NvhEdc1uNfSweCQx7l3o7CRSV33mw8yPA>
-    <xmx:XkFHZnhJ7O2DiUDDmbLaP5QR3DGLYGU7rlD8kvvfcLaE5RORjdyl7w>
-    <xmx:X0FHZrRlLRs8g3Q5avKRvrUgDEsPG-rYELie3h_iV6JUXA6uI-noNukQ>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 17 May 2024 07:37:00 -0400 (EDT)
-Date: Fri, 17 May 2024 04:42:02 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Casey Schaufler <casey@schaufler-ca.com>, brauner@kernel.org, 
-	ebiederm@xmission.com, Luis Chamberlain <mcgrof@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Joel Granados <j.granados@samsung.com>, 
-	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, David Howells <dhowells@redhat.com>, containers@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
-Message-ID: <jvy3npdptyro3m2q2junvnokbq2fjlffljxeqitd55ff37cydc@b7mwtquys6im>
-References: <20240516092213.6799-1-jcalmels@3xx0.net>
- <2804dd75-50fd-481c-8867-bc6cea7ab986@schaufler-ca.com>
- <D1BBFWKGIA94.JP53QNURY3J4@kernel.org>
- <D1BBI1LX2FMW.3MTQAHW0MA1IH@kernel.org>
- <D1BC3VWXKTNC.2DB9JIIDOFIOQ@kernel.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Wonq8Dnz"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 59D3CA9A;
+	Fri, 17 May 2024 13:37:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1715945850;
+	bh=aqGgQDx8JqQb1TBydwsm0go4suIdDmmkfQxkdVhpHyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wonq8DnzoMDfcTjkqS2yP1mkP6fuyDEcbEHK+L9rY04eaVqzEDdq/bhE9vMgodzK7
+	 lkd//XLxag3kpJ5kdNmiEbmaOIBHMEOdQt7hNLOxc45EubdhRwZLbax4Q16LCXdyfz
+	 76gMX4dPRGxLGFGMVq6vOCHsSycAEcct6MI0+ywI=
+Date: Fri, 17 May 2024 14:37:30 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: ChiYuan Huang <cy_huang@richtek.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: v4l: async: Fix NULL pointer when v4l2 flash
+ subdev binding
+Message-ID: <20240517113730.GF19755@pendragon.ideasonboard.com>
+References: <e2f9f2b7b7de956d70b8567a2ab285409fff988b.1715136478.git.cy_huang@richtek.com>
+ <ZkXi_U5Js34dUQsA@kekkonen.localdomain>
+ <20240517063150.GA12245@linuxcarl2.richtek.com>
+ <ZkcOoLQQRdRYYacd@kekkonen.localdomain>
+ <20240517111944.GD19755@pendragon.ideasonboard.com>
+ <Zkc_ENTqovMg_WnD@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,51 +51,141 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <D1BC3VWXKTNC.2DB9JIIDOFIOQ@kernel.org>
+In-Reply-To: <Zkc_ENTqovMg_WnD@kekkonen.localdomain>
 
-> > > On Thu May 16, 2024 at 10:07 PM EEST, Casey Schaufler wrote:
-> > > > I suggest that adding a capability set for user namespaces is a bad idea:
-> > > > 	- It is in no way obvious what problem it solves
-> > > > 	- It is not obvious how it solves any problem
-> > > > 	- The capability mechanism has not been popular, and relying on a
-> > > > 	  community (e.g. container developers) to embrace it based on this
-> > > > 	  enhancement is a recipe for failure
-> > > > 	- Capabilities are already more complicated than modern developers
-> > > > 	  want to deal with. Adding another, special purpose set, is going
-> > > > 	  to make them even more difficult to use.
+On Fri, May 17, 2024 at 11:27:12AM +0000, Sakari Ailus wrote:
+> Hi Laurent,
+> 
+> On Fri, May 17, 2024 at 02:19:44PM +0300, Laurent Pinchart wrote:
+> > On Fri, May 17, 2024 at 08:00:32AM +0000, Sakari Ailus wrote:
+> > > Hi Chi Yuan,
+> > > 
+> > > On Fri, May 17, 2024 at 02:31:50PM +0800, ChiYuan Huang wrote:
+> > > > Hi, Sakari:
+> > > > 
+> > > > 	Thanks for your reply.
+> > > > If any misunderstanding, please correct me.
+> > > > 
+> > > > On Thu, May 16, 2024 at 10:42:05AM +0000, Sakari Ailus wrote:
+> > > > > Hi Chi Yuan,
+> > > > > 
+> > > > > On Wed, May 08, 2024 at 10:51:49AM +0800, cy_huang@richtek.com wrote:
+> > > > > > From: ChiYuan Huang <cy_huang@richtek.com>
+> > > > > > 
+> > > > > > In v4l2_async_create_ancillary_links(), if v4l2 async notifier is
+> > > > > > created from v4l2 device, the v4l2 flash subdev async binding will enter
+> > > > > > the logic to create media link. Due to the subdev of notifier is NULL,
+> > > > > > this will cause NULL pointer to access the subdev entity. Therefore, add
+> > > > > > the check to bypass it.
+> > > > > > 
+> > > > > > Fixes: aa4faf6eb271 ("media: v4l2-async: Create links during v4l2_async_match_notify()")
+> > > > > > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> > > > > > ---
+> > > > > > Hi,
+> > > > > > 
+> > > > > >   I'm trying to bind the v4l2 subdev for flashlight testing. It seems
+> > > > > > some logic in v4l2 asynd binding is incorrect.
+> > > > > > 
+> > > > > > From the change, I modified vim2m as the test driver to bind mt6370 flashlight.
+> > > > > > 
+> > > > > > Here's the backtrace log.
+> > > > > > 
+> > > > > >  vim2m soc:vim2m: bound [white:flash-2]
+> > > > > >  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000058
+> > > > > >  ......skipping
+> > > > > >  Call trace:
+> > > > > >   media_create_ancillary_link+0x48/0xd8 [mc]
+> > > > > >   v4l2_async_match_notify+0x17c/0x208 [v4l2_async]
+> > > > > >   v4l2_async_register_subdev+0xb8/0x1d0 [v4l2_async]
+> > > > > 
+> > > > > There's something wrong obviously somewhere but wherea?
+> > > >
+> > > > In vim2m driver, I added v4l2_async_nf_init -> v4l2_async_nf_add_fwnode_remote ->
+> > > > v4l2_async_nf_register.
+> > > > 
+> > > > From the async flow, in notifier complete ops to create v4l-subdevX node for the 
+> > > > specified subdev.
+> > > >
+> > > > > A sub-notifier does have a sub-device after the notifier initialisation.
+> > > > 
+> > > > Why? Are you saying to the notifier can only be used for subdev and subdev binding, 
+> > > > not v4l2 and subdev binding?
+> > > > 
+> > > > But to create v4l-subdevX, the key is only v4l2 device and its needed subdev.
+> > > > 
+> > > > > Maybe the initialisation does not happen in the right order?
+> > > >
+> > > > AFAIK, Async flow can solve the probe order and makes the user no need to care
+> > > > the probe order.
+> > > > 
+> > > > From the stacktrace, I'm pretty sure it's not the probe order issue.
+> > > >
+> > > > > >   __v4l2_flash_init.part.0+0x3b4/0x4b0 [v4l2_flash_led_class]
+> > > > > >   v4l2_flash_init+0x28/0x48 [v4l2_flash_led_class]
+> > > > > >   mt6370_led_probe+0x348/0x690 [leds_mt6370_flash]
+> > > > > > 
+> > > > > > After tracing the code, it will let the subdev labeled as F_LENS or
+> > > > > > F_FLASH function to create media link. To prevent the NULL pointer
+> > > > > > issue, the simplest way is add a check when 'n->sd' is NULL and bypass
+> > > > > > the later media link creataion.
+> > > > > > ---
+> > > > > >  drivers/media/v4l2-core/v4l2-async.c | 3 +++
+> > > > > >  1 file changed, 3 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> > > > > > index 3ec323bd528b..9d3161c51954 100644
+> > > > > > --- a/drivers/media/v4l2-core/v4l2-async.c
+> > > > > > +++ b/drivers/media/v4l2-core/v4l2-async.c
+> > > > > > @@ -324,6 +324,9 @@ static int v4l2_async_create_ancillary_links(struct v4l2_async_notifier *n,
+> > > > > >  	    sd->entity.function != MEDIA_ENT_F_FLASH)
+> > > > > >  		return 0;
+> > > > > >  
+> > > > > > +	if (!n->sd)
+> > > > > > +		return 0;
+> > > > > 
+> > > > > This isn't the right fix: the ancillary link won't be created as a result.
+> > > >
+> > > > Due to the notifier is created by v4l2 device not subdev, this 'n->sd' is NULL.
+> > > > The NULL 'n->sd' will be referenced by the next flow 'media_create_ancillary_link'.
+> > > 
+> > > Ah, right. I took a new look into the code and agree this is a problem.
+> > > This probably hasn't been hit previously as the root notifier driver tends
+> > > not to have any lens or flash devices.
+> > > 
+> > > I'd change the commit message slightly:
+> > > 
+> > > --------8<-------------
+> > > In v4l2_async_create_ancillary_links(), ancillary links are created for
+> > > lens and flash sub-devices. These are sub-device to sub-device links and if
+> > > the async notifier is related to a V4L2 device, the source sub-device of
+> > > the ancillary link is NULL, leading to a NULL pointer dereference. Check
+> > > the notifier's sd field is non-NULL in v4l2_async_create_ancillary_links().
+> > > --------8<-------------
+> > 
+> > What's the use case for including lens or flash devices in the root
+> > notifier ? Shouldn't lens and flash subdevices always be linked to
+> > something ? We should of course not crash, but it seems that simply
+> > ignoring the subdevs and not linking them isn't a great idea either.
+> 
+> Yes, I think triggering this does require a very peculiar setup if not a
+> driver bug. We could also print a warning if this happens.
 
-Sorry if the commit wasn't clear enough. Basically:
+I think a warning would be good.
 
-- Today user namespaces grant full capabilities.
-  This behavior is often abused to attack various kernel subsystems.
-  Only option is to disable them altogether which breaks a lot of
-  userspace stuff.
-  This goes against the least privilege principle.
+> Also using the notifier's sub-device to create ancillary links is somewhat
+> opportunistic. We seem to rely on it currently but it would only seem
+> meaningful for a sensor in practice.
 
-- It adds a new capability set.
-  This set dictates what capabilities are granted in namespaces (instead
-  of always getting full caps).
-  This brings namespaces in line with the rest of the system, user
-  namespaces are no more "special".
-  They now work the same way as say a transition to root does with
-  inheritable caps.
+This should be improved indeed.
 
-- This isn't intended to be used by end users per se (although they could).
-  This would be used at the same places where existing capabalities are
-  used today (e.g. init system, pam, container runtime, browser
-  sandbox), or by system administrators.
+> > > > Or is it caused by the wrong usage? 
+> > > > 
+> > > > > > +
+> > > > > >  	link = media_create_ancillary_link(&n->sd->entity, &sd->entity);
+> > > > > >  
+> > > > > >  #endif
 
-To give you some ideas of things you could do:
+-- 
+Regards,
 
-# E.g. prevent alice from getting CAP_NET_ADMIN in user namespaces under SSH
-echo "auth optional pam_cap.so" >> /etc/pam.d/sshd
-echo "!cap_net_admin alice" >> /etc/security/capability.conf.
-
-# E.g. prevent any Docker container from ever getting CAP_DAC_OVERRIDE
-systemd-run -p CapabilityBoundingSet=~CAP_DAC_OVERRIDE \
-            -p SecureBits=userns-strict-caps \
-            /usr/bin/dockerd
-
-# E.g. kernel could be vulnerable to CAP_SYS_RAWIO exploits
-# Prevent users from ever gaining it
-sysctl -w cap_bound_userns_mask=0x1fffffdffff
+Laurent Pinchart
