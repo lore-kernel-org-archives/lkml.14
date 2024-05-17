@@ -1,128 +1,122 @@
-Received: from flow1-smtp.messagingengine.com (flow1-smtp.messagingengine.com [103.168.172.136])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E49712CD8A;
-	Fri, 17 May 2024 15:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC9D399
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715959939; cv=none; b=EaAq9GZl0XTa60fyIHcCZINBOct9K5ToWs2JkLr/p4cJahldVvtWUZLWDJQA9ss3M8WL2rZ3kmFOAqXmC2Hs7LkhTFBn/GyZhTiZgpRsv6DrXBRz27IqbgMBQtGEkDF3kBjgOVTZP28nFL79vl9oGgwNvuyFgaMd2AG82PbCUv0=
+	t=1715960346; cv=none; b=WNrhxLBcagyvmJ2v/5vCeIB0De7Ocd0E6CsdX+Gyxj/w0wkkzJPfruJFo9ZkcsjQLWC5Ipm+nZknAbLkUIX+dJ3jC4WUKKOicgXjpgYYGZX3pTDqHtEj7kK4dNr7SCCXX8MHE9jNx5X9KPTGimuahxggVFpCmvvtf7+mMnwZx8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715959939; c=relaxed/simple;
-	bh=D+aZeg+2cJFRvQasfMNMmYWH8MS31v4X+wRV4Zfj6AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ayqcw4r9ET+VR8GqSGlYdhjQ9FYvwtIzUHssBAGcTObCNhIT7HB6N6h7YwLCEmSMKhpzWY8SBAtrjW5UdYO1qiD+ILTIFrFjuqxJNziPvuCKQITke1tFmYHZUBwDavpLgYqD5gbJPmSbPsuy+2g85H9bqMK/xB7n/hhmJf0Izq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=KFyjp5QG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dPnNRHpx; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1715960346; c=relaxed/simple;
+	bh=mIWuLHQXFJA3fPsK/2/DpeMWfr4s5/DPccEXuN3UTwk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t4TQpRgc4vvALpMqE7+DS0dTucMMpKgiUC+EQcNlkIophkYGcw19tXLO9Phk44wAe9Ix0yJX4nCu5bqjYZFI1ZJTW8FapEqkeod+sPRtARvb3s3Bq4RROvUolNZBGz3vScguoQx9zOdf66S32U8JefFWD72sHlrcw/tmHzMFQ0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=iulV5qwE; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KFyjp5QG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dPnNRHpx"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 88422200450;
-	Fri, 17 May 2024 11:32:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 17 May 2024 11:32:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1715959936;
-	 x=1715967136; bh=s8Q/l0wRHpTp9lBxT46kDXxjSSe7yKH9ZdbIurG921s=; b=
-	KFyjp5QGLxIPQPo4O+zmoE47Jgqxd4Yz/Ph7adPQ819doQ+vUOamctaLYbQaDSkE
-	STG2S4bzMOEA5CslT/UDD9Y7pKT7GBNySNmiVaWJ+NHcJGY4BLU7p91iAUr6OZIo
-	hYwJG1kNRrWyVv4nGK2DMdEtXjkxj/xCbgIZjWFbvNiaPyvJPmSkucmAwwLci3i5
-	wYPhrb+5fvfBtiikiIR4T2F8/z61p3dXUcWrK4tIJ8/DO+rYS5jS30EF8FtN+Do1
-	eqB3VXCW9KlhlSPy6qv/3ctxn+mUO9W8e4o8IkRyWQP/2VE4YY6sNlsYI0j0pZoy
-	W9A7lKeKTdjUVN5ozuH2iw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715959936; x=
-	1715967136; bh=s8Q/l0wRHpTp9lBxT46kDXxjSSe7yKH9ZdbIurG921s=; b=d
-	PnNRHpxgGOd3y0t1HZgRFwZq0lIa84YUvy7ksSoEKQ6dsraCoxAFp2Ojqdb+pLFP
-	WhNjPExz/Q7yUwZbdDfSvyoncx9yvhy2Wqt/kXDeIiaH+aLkwIh/8cbn9PCr3hNa
-	/lwPttFQO4j1LM6KbomvWoG3QisosZl/i0E5f0Bv0TQ5leEknPqjs/PuQHvP+l9s
-	+nsSrHmxGUVvX/lH7YZ4phwURyx2OK169Y73Z3VLs0ShNEyZz7SWV5XL3kXqMOBV
-	tYtoSs5lG3pPMPutNuBadU7VjC1/W2bVlHqNCs3hhkh7h9tPJS+WWY/2m2Eb0BdJ
-	R+KeeQH8r6lLCZqCD946A==
-X-ME-Sender: <xms:gHhHZi_uoK0ohc3Ob6gTqQ_1YFBMK9BwMXiP7vU3A8F6xXC4Vp6Iew>
-    <xme:gHhHZivAzSBO33oW1odv7C7dFOi_mmb95QGi4mMHbGXQ7ioLokx3_RRAcUtw1Vxhe
-    HXJwpdIqsg2wQ>
-X-ME-Received: <xmr:gHhHZoDMRTtQu9GIwlN8P0cmn1ErQNGXIR45mXKdiZDQPwOMep0gSYBydS8WYBxhcNcB513fL3Qz-Y7QQFyRafHAghAnC3AQCC4Seg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehfedgudegvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepifhr
-    vghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnheple
-    ekheejjeeiheejvdetheejveekudegueeigfefudefgfffhfefteeuieekudefnecuffho
-    mhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:gHhHZqd-Vr2ozLK8ZN89CLKz5_JvooYw2FTifP2xp1PJekIN-Xigpw>
-    <xmx:gHhHZnO71SM8Pki1pXjseWsw1UcmznmbIHbUnd3u9Cfdu1YfaIKasg>
-    <xmx:gHhHZkm-VFHPtBCePeAys828Z6op_Tp3MI5GgDViB_eHzcYML_dTig>
-    <xmx:gHhHZpss9O8sYpESFJo2an3fRrSxZ1DqU5DX7EZLxnrivDafY6QCbQ>
-    <xmx:gHhHZo_D6DA87FMkIMNExhtlzq06u_JdSDIXNrql534y6tV7vURO7teR>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 17 May 2024 11:32:15 -0400 (EDT)
-Date: Fri, 17 May 2024 17:32:12 +0200
-From: Greg KH <greg@kroah.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Vitor Soares <vitor.soares@toradex.com>, linux-can@vger.kernel.org,
-	netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Thomas Kopp <thomas.kopp@microchip.com>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-	Vitor Soares <ivitro@gmail.com>
-Subject: Re: [PATCH v6] can: mcp251xfd: fix infinite loop when xmit fails
-Message-ID: <2024051744-evaluate-dubbed-8433@gregkh>
-References: <20240517134355.770777-1-ivitro@gmail.com>
- <b95de04f-a2f8-4564-b9d4-9c09c47f23c3@web.de>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="iulV5qwE"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44H9IA1X031613;
+	Fri, 17 May 2024 09:47:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=9
+	HFJH8HtJRV3b6jFWJ0QFKdL+PkB882/okW3yMr/QCE=; b=iulV5qwEaGSGYyX3T
+	vFFgD6Jn78m2ithdqKdOMCsG0787dkg5dqJpKWUpmLfOJycOgp8rEz98od2yUJq8
+	wFJcDQX+oMUaIfByG8pZL6fxMHSDuttbCPJ5ZyITNUwEAUUhYQfBIKyirl3WFVxF
+	q4lwTtW62aa6WtL3iedvrVtvXy5O+70KuG6VH8W/eqc4Ni1sBTJMRsX1K9R/AOHl
+	rAGAm7NOn1hSICP5B6h7Jm7F2q04Qev8ogyHi9yFWh7ZOO1tnIGfNcuitRXNM3Cq
+	Ggnwit0ZS+N/QkKfgUBEAW6QCJsQSRBubjD+Kqe+XOvMxND5YVuCuyUqWgywXM5F
+	+n1Hg==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3y253hpgyu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 09:47:19 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
+ 2024 15:47:03 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Fri, 17 May 2024 15:47:03 +0100
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 4EEB7820244;
+	Fri, 17 May 2024 14:47:03 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>
+CC: <linux@roeck-us.net>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH] regmap: kunit: Fix array overflow in stride() test
+Date: Fri, 17 May 2024 15:47:03 +0100
+Message-ID: <20240517144703.1200995-1-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b95de04f-a2f8-4564-b9d4-9c09c47f23c3@web.de>
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 6UvhAdmPS5elTTw3XAj2WCvYz_O6eEm3
+X-Proofpoint-GUID: 6UvhAdmPS5elTTw3XAj2WCvYz_O6eEm3
+X-Proofpoint-Spam-Reason: safe
 
-On Fri, May 17, 2024 at 04:44:18PM +0200, Markus Elfring wrote:
-> …
-> > This patch resolves the issue by starting …
-> 
-> Will further imperative wordings be more desirable for an improved change description?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9#n94
-> 
-> Regards,
-> Markus
-> 
+Force the max_register of the test regmap to be one register longer
+than the number of test registers, to prevent an array overflow in
+the test loop.
 
-Hi,
+The test defines num_reg_defaults = 6. With 6 registers and
+stride == 2 the valid register addresses would be 0, 2, 4, 6, 8, 10.
+However the loop checks attempting to access the odd address, so on
+the final register it accesses address 11, and it writes entry [11]
+of the read/written arrays.
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+Originally this worked because the max_register of the regmap was
+hardcoded to be BLOCK_TEST_SIZE (== 12).
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+commit 710915743d53 ("regmap: kunit: Run sparse cache tests at non-zero
+register addresses")
+introduced the ability to start the test address range from any address,
+which means adjusting the max_register. If max_register was not forced,
+it was calculated either from num_reg_defaults or BLOCK_TEST_SIZE. This
+correctly calculated that with num_reg_defaults == 6 and stride == 2 the
+final valid address is 10. So the read/written arrays are allocated to
+contain entries [0..10]. When stride attempted to access [11] it was
+overflowing the array.
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Fixes: 710915743d53 ("regmap: kunit: Run sparse cache tests at non-zero register addresses")
+---
+ drivers/base/regmap/regmap-kunit.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/base/regmap/regmap-kunit.c b/drivers/base/regmap/regmap-kunit.c
+index 9c5314785fc2..be32cd4e84da 100644
+--- a/drivers/base/regmap/regmap-kunit.c
++++ b/drivers/base/regmap/regmap-kunit.c
+@@ -609,12 +609,19 @@ static void stride(struct kunit *test)
+ 	config.reg_stride = 2;
+ 	config.num_reg_defaults = BLOCK_TEST_SIZE / 2;
+ 
++	/*
++	 * Allow one extra register so that the read/written arrays
++	 * are sized big enough to include an entry for the odd
++	 * address past the final reg_default register.
++	 */
++	config.max_register = BLOCK_TEST_SIZE;
++
+ 	map = gen_regmap(test, &config, &data);
+ 	KUNIT_ASSERT_FALSE(test, IS_ERR(map));
+ 	if (IS_ERR(map))
+ 		return;
+ 
+-	/* Only even registers can be accessed, try both read and write */
++	/* Only even addresses can be accessed, try both read and write */
+ 	for (i = 0; i < BLOCK_TEST_SIZE; i++) {
+ 		data->read[i] = false;
+ 		data->written[i] = false;
+-- 
+2.39.2
 
-greg k-h's patch email bot
