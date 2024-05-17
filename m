@@ -1,76 +1,56 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7912CDDB2;
-	Fri, 17 May 2024 04:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590D01095A
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 05:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715921933; cv=none; b=hpYkULM7zHqDA7gJvn60u0iLmhkEsKyKrPll9XSwedoOshPxQUdYAHY6RYTXbXQDrdwulkgx6pP5tL6AzUJvM71kRZ+8GmRaEwJehH+mm4Mh3v+QCZfvmE0wL7jRTwoUOMu1+sZ5E+MYJETF+6H7rwoPp/HAiq9DAeYUFvQs9+4=
+	t=1715922097; cv=none; b=fM8uq22FRkL+iMDtZT2wXoblhXKwzqNdeDdcO2lM0vgKDNZ316R5gnU5McoshwW7/nUL9lVThDbGnkYHtrDeiRoU1ZKba7XeosuIuVTr5rPo836uuwtjkPo5gY0IS3uSC92MJqDz3v5nWOHczCjkSRsv2nwyK5tBj+TFGKUPmQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715921933; c=relaxed/simple;
-	bh=zD4lWmp3wEmNB1u//FuurUIsViWz6cyW2T5QY6kRnaY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PmVufR549XIJnMQ9U6EBrJZfv9p+PT+qILVONg+zO1b7c4pIxh9ve2IV2UUSWvr7/s1a7oGQVAdtbzC82dMTZb2+OXbrBK0jt0yjTSjXubbS2F7odu2RmzGPxDEO+jVPmsdqUvSjVcVFk3CVtD+3OWEtNPS0v4tTIwuK4mnpCP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIYzXmak; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIYzXmak"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f4178aec15so921816b3a.0;
-        Thu, 16 May 2024 21:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715921932; x=1716526732; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zD4lWmp3wEmNB1u//FuurUIsViWz6cyW2T5QY6kRnaY=;
-        b=bIYzXmak1ZTOeqNggHit5mWiX6p16HIa3P/9/UsfmXSAweVo7bXNWAMk6O09se8ywl
-         aA/jiDZTJHMywUQyJ46mLQCzjf7lm1UK5nPEAIN5iiwAeBF3Y7gQo/L9GgH+MCX6JPHE
-         xymcOzuYkQfECtYsonWzSmB2IjtG/3QFMCSjL806Qw20P71nUXjcQzh2shrUH4XGJ+Qm
-         GzjdUmIyAalBfUp4I2iOOkTLSkw0v1skj0IMQRAvdkl//XGatYQdgozh0VjseByRBvnh
-         djgLS81VRkp8qA+BRB5TJZjU0iujk2pkPrPZviPE3F8YyWsQ+bJNdejbTFknHvaV8dD/
-         k88Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715921932; x=1716526732;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zD4lWmp3wEmNB1u//FuurUIsViWz6cyW2T5QY6kRnaY=;
-        b=c0YM/gtl4gBxRyyf+FD+vqg7eCHLL05bT/A10FusRlHM/238s4WQ3akd0azjhNgvfc
-         i2RrG1f4Zn3/PqhE+ISu6T7BeeDZIkKkR6p39wWzAROmQnU5XbmnxEE7vvYEkJEOUnEO
-         28137lIGWCvK9sPcQOk1P8f2vw+5Mr/TXqxz8ARlRbQvDD2+Z4jybt3FFQtIO0vpM53V
-         Oyx8NfaF90EBoUhgcFdgNOTfA/3c5UtUmpcoHmuXLit6T92W1llHoD5t8KQvTThNYGYU
-         GiSi/TKSCvy9GTzcGSouDDsMGGPZdrg/rA+gG7VuGuDdMs5DIoJ+6FzAHv2AfZHf6Q9k
-         uSeA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0/DLMJovTocWQC1WGJs4wBZU7XeIRLlxOjrWPjn/SZ4z8F4infn8QTT+xfPr/zgE0Q0Z+EtLvdHkV67YbUz5O4XVxKndvtK2vly1TS8ZIOyZ1OKIQq6pLTToBQ87jIzInt6MrXLWh5FOAnOh3Xk64u16p82zo1/LVDeP7DXZ0e1fRxZjT
-X-Gm-Message-State: AOJu0YxqnBZNXnUTNB3a1GFrcBPoBz+0Q9fhc8hYPRTdXDQIqAogI63/
-	fbuPIudQzWN7xW+UTLCEaDJwSZSMrBX1ngqJEPYfJWGZgEy9JFRq
-X-Google-Smtp-Source: AGHT+IGNjAE1LtfsrOxQVZB5wYX0vjh0z7hg7ne2W52SgHNMNs5KV8V7UlyNJC4JaNo9Xt6rJoE0BQ==
-X-Received: by 2002:a05:6a00:3d07:b0:6ea:d740:62a4 with SMTP id d2e1a72fcca58-6f4e03466d2mr24573444b3a.25.1715921931668;
-        Thu, 16 May 2024 21:58:51 -0700 (PDT)
-Received: from xiaxiShen-ThinkPad.dhcp4.washington.edu ([205.175.106.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2977sm13917629b3a.153.2024.05.16.21.58.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 21:58:51 -0700 (PDT)
-From: Xiaxi Shen <shenxiaxi26@gmail.com>
-To: krzk@kernel.org
-Cc: broonie@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	javier.carrasco.cruz@gmail.com,
-	krzk+dt@kernel.org,
-	lgirdwood@gmail.com,
+	s=arc-20240116; t=1715922097; c=relaxed/simple;
+	bh=Q++9aS+kx2YZlIKGrDvxJlGOFReUULix7E6oSVQC3wE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RXzASX+VnMUrR7aXzjZN4mlOYbExIUGrT4F8KCYWnWiSLk24nsmZe2Po570eJBa/9cqmcwlWRVoae2p02f/jixrXSPzCHuDNx7UI03GGDSv1n6m+XQXx+Nmc7k0v4trm9WmhMmWCpCACHm+UizKP7jpHzWPwg83z5IOifg6sFhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s7pif-0001c9-ST; Fri, 17 May 2024 07:01:25 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s7pic-001p0g-BX; Fri, 17 May 2024 07:01:22 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s7pic-0097fT-0u;
+	Fri, 17 May 2024 07:01:22 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Hariprasad Kelam <hkelam@marvell.com>,
+	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	robh@kernel.org,
-	shenxiaxi26@gmail.com,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH v3] ASoC: dt-bindings: ak4104: convert to dt schema
-Date: Thu, 16 May 2024 21:58:50 -0700
-Message-Id: <20240517045850.463906-1-shenxiaxi26@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ee193525-ea10-4006-a86e-977e2f0352ea@kernel.org>
-References: <ee193525-ea10-4006-a86e-977e2f0352ea@kernel.org>
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH net v2 1/1] net: dsa: microchip: Correct initialization order for KSZ88x3 ports
+Date: Fri, 17 May 2024 07:01:21 +0200
+Message-Id: <20240517050121.2174412-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,10 +58,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Adjust the initialization sequence of KSZ88x3 switches to enable
+802.1p priority control on Port 2 before configuring Port 1. This
+change ensures the apptrust functionality on Port 1 operates
+correctly, as it depends on the priority settings of Port 2. The
+prior initialization sequence incorrectly configured Port 1 first,
+which could lead to functional discrepancies.
 
-Thanks for your advices, I am gradually adapting to using b4 as my new tool for submitting patches.
+Fixes: a1ea57710c9d ("net: dsa: microchip: dcb: add special handling for KSZ88X3 family")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Hariprasad Kelam <hkelam@marvell.com>
+---
+ drivers/net/dsa/microchip/ksz_dcb.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Best regards,
-Xiaxi
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
+index a971063275629..086bc9b3cf536 100644
+--- a/drivers/net/dsa/microchip/ksz_dcb.c
++++ b/drivers/net/dsa/microchip/ksz_dcb.c
+@@ -805,5 +805,15 @@ int ksz_dcb_init(struct ksz_device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Enable 802.1p priority control on Port 2 during switch initialization.
++	 * This setup is critical for the apptrust functionality on Port 1, which
++	 * relies on the priority settings of Port 2. Note: Port 1 is naturally
++	 * configured before Port 2, necessitating this configuration order.
++	 */
++	if (ksz_is_ksz88x3(dev))
++		return ksz_prmw8(dev, KSZ_PORT_2, KSZ8_REG_PORT_1_CTRL_0,
++				 KSZ8_PORT_802_1P_ENABLE,
++				 KSZ8_PORT_802_1P_ENABLE);
++
+ 	return 0;
+ }
+-- 
+2.39.2
+
