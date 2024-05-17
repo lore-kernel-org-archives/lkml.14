@@ -1,71 +1,113 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32CC420313;
-	Fri, 17 May 2024 09:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0291F1AAA5;
+	Fri, 17 May 2024 09:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715936634; cv=none; b=qHcfEGeViWocuiNmx+M6J+2lnsuO71u0XhEYS88Or6v3f7AbZAe7FSHODgEFa/vWLQL8ox7pkfu5MLfC1eddjoI+SNys9WjGx36F4XM8rpZL7/RNSMj3hCsvqDcB7eYGyvmSMRNvHN/1F0CtlsKRsHbaeLj7anq/HYTJYytE3q4=
+	t=1715936747; cv=none; b=I5C4OFYxtRjkF8rBb0sSXM9iH1UimlSEXV0c+yuzBApxvB3ng2PC2tl7/b95wh8x24h983keDKW2lolSAsc5ecEUOF6HyyEFgnKcOTVewNht4FyQ1du+uQS13XThgjh8Mtri3i8MnvF32TfUPbGP9Nw/JokcIq76ni42RJssS7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715936634; c=relaxed/simple;
-	bh=lSYn1SIS2fkvLCLFM+efNsgxEGwWxnkze40au5ChSvA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r2DypDNOZq1+IRrbRY32WwTZp0NOfCgq7QJTYy+D7v2jdR9itsI5XafUuB4+nQCa707Cbvo6Vm/QOkGXEnTQB6ja2JkmaC5XJaE3h8FgFqjrKiXqGrt2oy0kO5BRpDLW+C4d1GUamHBl7BpmOgOqrG8KFdYOzSHqv3hv89dLE5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=YnsB0o80; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1715936747; c=relaxed/simple;
+	bh=Cg9MTPT9tWRh/8PAEQ/0bLqgcKcVgIar/eyWrNXcBzY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=pEchBRsDV5kjm1sEYVtRIkgErr1ZNkPQP88S8hnVLaX6oMEyCWYSSqEOJOOsS5z2QJF8kp6oQkjCqxJk7dLuvRNy/k6Vq1C/agrP/6q0vyUgWskdAUdnuY+P/f61ec93EMTa0DHoYvsBIskx2ZOyrOGQlj8qV3j/cGs3/gIplUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=yJbKu2bb; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="YnsB0o80"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1715936630;
-	bh=MwpP6VQrwBifZRjJxzXqLOLi6//U/+JHEGrk8rK8hBE=; l=579;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=YnsB0o80T01qrKKLuYsmTfiUDQlaZwCuHAgWsNnpUaH2eEe+H/j7nKxnu8cvKAreg
-	 /mCFynPeFSxp9DxfnOKGxC62dzwZ6nEjSGiumedVL9Aa0OdJSpoWcPSs4vqNP6Fc+R
-	 1SZZz3vqMD62gYP2npsocIMIc0N3cEqE6rAzf0ZTtqcdYID6lOlUhJljRPxawvFVxM
-	 N0mblc0439Pb/i67vvxHwGUzLeq+LlITdi5OPT22hmaIDB4m4iLZXMlJmdnQm/oqaM
-	 2gRrP1JbTWKmhEOISJXMbCKkNJItVtiy/iOsvE6lJQw660uf+bV7uvDIAPtUkX5XHU
-	 r1DBRSG2aNnAA==
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(3213197:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 17 May 2024 17:03:31 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 17 May
- 2024 17:03:30 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 17 May 2024 17:03:30 +0800
-Date: Fri, 17 May 2024 17:03:30 +0800
-From: ChiYuan Huang <cy_huang@richtek.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: Daniel Scally <djrscally@gmail.com>, Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>, Jean-Michel Hautbois
-	<jeanmichel.hautbois@ideasonboard.com>, <linux-media@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: v4l: async: Fix NULL pointer dereference in
- adding ancillary links
-Message-ID: <20240517090330.GA23279@linuxcarl2.richtek.com>
-References: <57fca5dbcb8e157371deeba019eba430bf7148b2.1715935535.git.cy_huang@richtek.com>
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="yJbKu2bb"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id BE8889C585F;
+	Fri, 17 May 2024 05:05:36 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id OzTJfta_rJ3O; Fri, 17 May 2024 05:05:36 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 157C59C591E;
+	Fri, 17 May 2024 05:05:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 157C59C591E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1715936736; bh=eDu4DXcZYZmRMzTsE23CtiqrrOlfxWxDABDYJj8qWVA=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=yJbKu2bbAaZIR1lR4fB9rs8ae78l/ej/Pp4GgndaChfrPjM47VvPNd7mTV47IFukQ
+	 X//+44ZJ4DRw9DkSHZQf+v4uy4/XKYtuUAaLvLFOebJCl7icu265xkvxy38LLcQmS7
+	 Uyg52oLkXf5YOc/GhiY3eH6K1tqG//Rc45iBqqEkBeuftfDcDzCCis0t5jONcc0Oyu
+	 HuRL8xxkCfNNH2TA3XiBbsjIWxvlyZmJi19c0PW2BlDRhMuiH8f3EfoiH8ednXXhWm
+	 KV3s2SR/VuND91x4ULBGel4DWWFLJ+utgH1gix+qQFlQ/twAETDwd9o1xrq4N0stDE
+	 CWzLmI6/TPfag==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 8CeRVN1p2hdp; Fri, 17 May 2024 05:05:35 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id B02AA9C585F;
+	Fri, 17 May 2024 05:05:35 -0400 (EDT)
+Date: Fri, 17 May 2024 05:05:35 -0400 (EDT)
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	shengjiu wang <shengjiu.wang@gmail.com>, 
+	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
+	Nicolin Chen <nicoleotsuka@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-sound <linux-sound@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	alsa-devel <alsa-devel@alsa-project.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-ID: <822567441.349330.1715936735603.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <ffb3624f-2170-4642-aaa5-fb6736a75d59@sirena.org.uk>
+References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com> <20240515135411.343333-8-elinor.montmasson@savoirfairelinux.com> <ffb3624f-2170-4642-aaa5-fb6736a75d59@sirena.org.uk>
+Subject: Re: [PATCHv4 7/9] ASoC: fsl-asoc-card: add DT clock "cpu_sysclk"
+ with generic codec
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <57fca5dbcb8e157371deeba019eba430bf7148b2.1715935535.git.cy_huang@richtek.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC112 (Linux)/8.8.15_GA_4581)
+Thread-Topic: ASoC: fsl-asoc-card: add DT clock "cpu_sysclk" with generic codec
+Thread-Index: iBqosQBSuRfSSp+1CUZcAzEUlctHMQ==
 
-On Fri, May 17, 2024 at 04:51:29PM +0800, cy_huang@richtek.com wrote:
-> From: ChiYuan Huang <cy_huang@richtek.com>
+From: "Mark Brown" <broonie@kernel.org>
+Sent: Thursday, 16 May, 2024 14:13:19
+> On Wed, May 15, 2024 at 03:54:09PM +0200, Elinor Montmasson wrote:
 > 
-> In v4l2_async_create_ancillary_links(), ancillary links are created for
-> lens and flash sub-devices. These are sub-device to sub-device links and if
-> the async notifier is related to a V4L2 device, the source sub-device of
-> the ancillary link is NULL, leading to a NULL pointer dereference. Check
-> the notifier's sd field is non-NULL in v4l2_async_create_ancillary_links().
+>> Add an optional DT clock "cpu_sysclk" to get the CPU DAI system-clock
+>> frequency when using the generic codec.
+>> It is set for both Tx and Rx.
+>> The way the frequency value is used is up to the CPU DAI driver
+>> implementation.
+> 
+>> +		struct clk *cpu_sysclk = clk_get(&pdev->dev, "cpu_sysclk");
+>> +		if (!IS_ERR(cpu_sysclk)) {
+>> +			priv->cpu_priv.sysclk_freq[TX] = clk_get_rate(cpu_sysclk);
+>> +			priv->cpu_priv.sysclk_freq[RX] = priv->cpu_priv.sysclk_freq[TX];
+>> +			clk_put(cpu_sysclk);
+>> +		}
+> 
+> I don't really understand the goal here - this is just reading whatever
+> frequency happens to be set in the hardware when the driver starts up
+> which if nothing else seems rather fragile?
 
-Not seeing the message 'No send the v2 patch'. Please ignore this one.
+The driver allow to set the sysclk frequency
+of the CPU DAI through `priv->cpu_priv.sysclk_freq` when calling
+`fsl_asoc_card_hw_params()`.
+Currently it is hard-coded per use-case in the driver.
+
+My reasoning was that with a generic codec/compatible, there might
+be use-cases needing to use this parameter, so I exposed it here via DT.
+
+Is it a bad idea to expose this parameter ? This is not a requirement for the
+driver to work, most of the current compatibles do not use this parameter.
+It is currently used only for `fsl,imx-audio-cs42888`.
+In that case I can remove this commit.
+
+Best regards,
+Elinor Montmasson
