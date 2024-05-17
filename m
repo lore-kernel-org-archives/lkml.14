@@ -1,119 +1,169 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp6.goneo.de (smtp6.goneo.de [85.220.129.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063294E1C9
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 12:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F097F9;
+	Fri, 17 May 2024 12:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.220.129.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715949794; cv=none; b=NvWzc9+vNM1e5ztHKm+SmLhe373oCloIobPRXG4efnvhWgsGZxkemvtijRJrU4Fm2nytyLibYbKwq0K9nYapV4T7DEftR20fETihuYLEDRjMCiOCwrXZLQ7ZdS5w8wNp3d2X2PJoEXL8qVZ9uow6r3Ft62EnEODy0wvAzdcQnlk=
+	t=1715949951; cv=none; b=SHYxgl6J/MsoHbJPnBpkay2Il2NycxTChy4mW2rH6o6Cwb1SUS32jv+QmEjPUdMaBVxUjCqL3KhKbeB7PaNtysX71rNoItj/XQ/R4dew93s/JsXF7m1+eUKpVyP2mpc1odjfExZE3ZrwqPgPSSwkPuVVuGJ/PUSuQFFD+i4bbMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715949794; c=relaxed/simple;
-	bh=f/aQOdnb1qPEH9OPOG9Jgx9mTvP5LMcSVmCzIweEKcc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJyGewwixIuTwYaIUvS2orn/WlA4rOIUfcIAQz9KTc8rb28TMjl+KZazgY1TfUAGvS/b/l8H33jFdz43zTleqqMR+2LCh7G5fhJ5EdTYJ0ifTl3YlLhrwWJ+77F9tngl7hcYZP01f1rSEEYKaL1oLI4op7ApkTZ26tWueIYuc6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ferroamp.se; spf=pass smtp.mailfrom=ferroamp.se; dkim=pass (2048-bit key) header.d=ferroamp-se.20230601.gappssmtp.com header.i=@ferroamp-se.20230601.gappssmtp.com header.b=KGHJFSkZ; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ferroamp.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ferroamp.se
+	s=arc-20240116; t=1715949951; c=relaxed/simple;
+	bh=zzowSdOcccsefcTCdPDByVjsT65OHarNBb65thFvtzE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n+xbFlDJR8YYInmMfNtNv96/zpY6fLXj4QkCAbpeXmF9mSl0T/h9TTZwRqKlZhBYeWb1wmg3gKLW2T0MT24u4Y1mSohZ9KnI10CB2qcfGEeYclA5BZIRsXUiicAKJ9XSQ59qaz2pKE2ZgzwMYuEVY2GbTigGFBS7a/gwN0oYFLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=georgemail.de; spf=pass smtp.mailfrom=georgemail.de; dkim=pass (2048-bit key) header.d=georgemail.de header.i=@georgemail.de header.b=hs14MQEv; arc=none smtp.client-ip=85.220.129.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=georgemail.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=georgemail.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ferroamp-se.20230601.gappssmtp.com header.i=@ferroamp-se.20230601.gappssmtp.com header.b="KGHJFSkZ"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f40b5e059so766128e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 05:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ferroamp-se.20230601.gappssmtp.com; s=20230601; t=1715949791; x=1716554591; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p4odqj3f1vqFSZ0CAbdMnpDHtOEgc8xX6bxBAUOmAh0=;
-        b=KGHJFSkZBV53d++jQ1dEqv+eW9/uhHtCxw1KWs4ZM1Fm8BjGMUzIsI4k/kxPTNT8FR
-         2mZbVn1Q9i/Nq9sCc2VWbwQUPvPpgCYFM/16hBdnsGyiQ19KZWW/9BW/t5wGhi9CKnZv
-         qxzBAsCX7dDuEbyOeoEiODn1cLDoXxHozyhm6F9aTWZx539irLHpqD6hltpZ+YHov8Yp
-         2lxSn0GzrynNx70oEALFBX2GL2EAxdDiqxCjlYaHT0323vh3+3nouy+SWLv/LJOO+cx7
-         GNJtupif8fCR7sIqcUErmOo0E9m5eTU0c63rxfJ82Sk+BaNN0fD9tNNR9+f3ufKf5Zxi
-         psZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715949791; x=1716554591;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p4odqj3f1vqFSZ0CAbdMnpDHtOEgc8xX6bxBAUOmAh0=;
-        b=bZlpy0lDubb3dU6GkNPhl9nKFD/L5XI1tRX4oZKgI4wIR7l5NE3lH7N3JrHskB/8kl
-         nC6DlKd5Jvqs8wfuMbcvjg1bIKNLQU42lWCPGbA36GhDU7hUvA24MWPfvekQTWq4Hs0f
-         DAQhmez94beI2Lr/II/gGfccq8xneP9hAXM+7SfEQGQvvlVe2XV+9g7ALoFRQWjxse7T
-         xMkM0modN36pqXKT+hsHvUGYo7qp41TMDgb6v1//9S97oJI2EuM/5kNTaY9O119gRN8d
-         DqySiRzHSIr5utN1Q4/2pJCpx9utdUrpKx180Kx0jkWdymU95U7ZIwqxhT2T1HYBmoCa
-         uVBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVc8BB4xABRstsaqQAQJB7zUvnXAt1fwPzKYtM+76HYruFOz/B1RWr+i4QWLFGVQVyyDS8h9+3vi6jLhuOM0SLnX31XdNTo8dlOLObe
-X-Gm-Message-State: AOJu0Yy+y6d1hBJ/WHT1+D9ZM4uCUncsuow3aWtOXL5NCPJLASqTVde2
-	oFW4LJbJAlhgRVK/YARNWvWbOyDA2xbDZvlG1ssF/JTW4Xox72jFIxyL6aajrnA=
-X-Google-Smtp-Source: AGHT+IHp9p+FH7l3Piksd2SYumeoLKxIBZc1FxIo8Hbs5SbDaClaDIaOn332eu7c17A4SWqlURItxg==
-X-Received: by 2002:a05:6512:124d:b0:51e:f2bb:158a with SMTP id 2adb3069b0e04-5221006cd7cmr15851334e87.64.1715949791256;
-        Fri, 17 May 2024 05:43:11 -0700 (PDT)
-Received: from minibuilder ([185.117.107.42])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f35ba8f1sm3340928e87.85.2024.05.17.05.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 05:43:10 -0700 (PDT)
-Date: Fri, 17 May 2024 14:43:09 +0200
-From: =?iso-8859-1?Q?Ram=F3n?= Nordin Rodriguez <ramon.nordin.rodriguez@ferroamp.se>
-To: Parthiban.Veerasooran@microchip.com
-Cc: andrew@lunn.ch, Pier.Beruto@onsemi.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	horms@kernel.org, saeedm@nvidia.com, anthony.l.nguyen@intel.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	corbet@lwn.net, linux-doc@vger.kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, Horatiu.Vultur@microchip.com,
-	ruanjinjie@huawei.com, Steen.Hegelund@microchip.com,
-	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
-	Thorsten.Kummermehr@microchip.com, Selvamani.Rajagopal@onsemi.com,
-	Nicolas.Ferre@microchip.com, benjamin.bigler@bernformulastudent.ch
-Subject: Re: [PATCH net-next v4 05/12] net: ethernet: oa_tc6: implement error
- interrupts unmasking
-Message-ID: <ZkdQ3eEfvikTavwZ@minibuilder>
-References: <ZjNorUP-sEyMCTG0@builder>
- <ae801fb9-09e0-49a3-a928-8975fe25a893@microchip.com>
- <fd5d0d2a-7562-4fb1-b552-6a11d024da2f@lunn.ch>
- <BY5PR02MB678683EADBC47A29A4F545A59D1C2@BY5PR02MB6786.namprd02.prod.outlook.com>
- <ZkG2Kb_1YsD8T1BF@minibuilder>
- <708d29de-b54a-40a4-8879-67f6e246f851@lunn.ch>
- <ZkIakC6ixYpRMiUV@minibuilder>
- <6e4207cd-2bd5-4f5b-821f-bc87c1296367@microchip.com>
- <ZkUtx1Pj6alRhYd6@minibuilder>
- <e75d1bbe-0902-4ee9-8fe9-e3b7fc9bf3cb@microchip.com>
+	dkim=pass (2048-bit key) header.d=georgemail.de header.i=@georgemail.de header.b="hs14MQEv"
+Received: from hub2.goneo.de (hub2.goneo.de [IPv6:2001:1640:5::8:53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by smtp6.goneo.de (Postfix) with ESMTPS id 90048240DD7;
+	Fri, 17 May 2024 14:39:19 +0200 (CEST)
+Received: from hub2.goneo.de (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by hub2.goneo.de (Postfix) with ESMTPS id B06F1240442;
+	Fri, 17 May 2024 14:39:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=georgemail.de;
+	s=DKIM001; t=1715949557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ETo/7t0jMfRcqI4JYOD11QlXjc/nqxz/zTNoMnf3Kp4=;
+	b=hs14MQEvIiLON4mkZqC0IbPeSwdMp4CJ0XOd3tE1VTfFIN3DZJFwPDD/tSYf0MQSjGHUOP
+	dnqZqP0B/4FQGZ5HtUKAR61cKW3JNiaAkRiWAtwCIbQaf6Vp/obsTcON1Q5/eDMQIhxyxK
+	vCTxO9uuUdgIm4VGvT3PoyJZleCn0UQLnXARrVXI7QlGQNhP0Vh/K+1+ZFvBs3qHF7u3m9
+	pBIbBCLaExSgzzIe4fu0ST4cksyf9sc5m1BhHopbIy6qeFoiTp00buJT379pxAt6elVcXf
+	uVmfTlXDwIafIjc5hhIjciIMGQm2vEv/bYfDl1z1v53/1p0dKUfsYxnzHlYQZQ==
+Received: from couch-potassium.fritz.box (unknown [IPv6:2a02:8071:5250:1240:f4e6:f6d2:6d95:e0c4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hub2.goneo.de (Postfix) with ESMTPSA id 0E74E240300;
+	Fri, 17 May 2024 14:39:17 +0200 (CEST)
+From: "Leon M. Busch-George" <leon@georgemail.de>
+To: linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	devicetree@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH 1/2] net: add option to ignore 'local-mac-address' property
+Date: Fri, 17 May 2024 14:39:07 +0200
+Message-ID: <20240517123909.680686-1-leon@georgemail.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e75d1bbe-0902-4ee9-8fe9-e3b7fc9bf3cb@microchip.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-UID: cd6231
+X-Rspamd-UID: c7a6c2
 
-> Thanks for the consideration. But be informed that the internal PHY 
-> initial settings are updated for the Rev.B1. But the one from the 
-> mainline still supports for Rev.B0. So that microchip_t1s.c to be 
-> updated to support Rev.B1.
+From: "Leon M. Busch-George" <leon@georgemail.eu>
 
-So I figured, thanks for making it clear.
+Here is the definition of a mac that looks like its address would be
+loaded from nvmem:
 
-> 
-> Also I am in talk with our design team that whether the updated initial 
-> settings for B1 are also applicable for B0. If so, then we will have 
-> only one updated initial setting which supports both B0 and B1.
+  mac@0 {
+    compatible = "mediatek,eth-mac";
+    reg = <0>;
+    phy-mode = "2500base-x";
+    phy-handle = <&rtl8221b_phy>;
 
-Sounds ideal if one init procedure can cover both chip revs.
+    nvmem-cell-names = "mac-address";
+    nvmem-cells = <&macaddr_bdinfo_de00 1>; /* this is ignored */
+  };
 
-> 
-> Do you have any plan to update the microchip_t1s.c for Rev.B1 support OR 
-> do you want me to do it? If you want me to do it then I will prepare a 
-> separate patch series for the support?
+Because the boot program inserts a 'local-mac-address', which is preferred
+over other detection methods, the definition using nvmem is ignored.
+By itself, that is only a mild annoyance when dealing with device trees.
+After all, the 'local-mac-address' property exists primarily to pass MAC
+addresses to the kernel.
 
-I'm keen on taking a Rev.B1 chip for a spin, so I'll jump on doing doing
-the init/fixup. I can probably post it to the mailing list during the
-weekend.
-If you're planning on being faster than that I'll wait for your
-submission.
+But it is also possible for this address to be randomly generated (on each
+boot), which turns an annoyance into a hindrance. In such a case, it is no
+longer possible to set the correct address from the device tree. This
+behaviour has been observed on two types of MT7981B devices from different
+vendors (Cudy M3000, Yuncore AX835).
 
-Out of curiosity do you have any insight into if the rev b1 is expected
-to behave differently?
+Restore the ability to set addresses through the device tree by adding an
+option to ignore the 'local-mac-address' property.
 
-R
+Signed-off-by: Leon M. Busch-George <leon@georgemail.eu>
+---
+ net/core/of_net.c  | 18 ++++++++++--------
+ net/ethernet/eth.c | 10 ++++++----
+ 2 files changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/net/core/of_net.c b/net/core/of_net.c
+index 93ea425b9248..4cf4171bc7fe 100644
+--- a/net/core/of_net.c
++++ b/net/core/of_net.c
+@@ -104,11 +104,11 @@ EXPORT_SYMBOL(of_get_mac_address_nvmem);
+  *
+  * Search the device tree for the best MAC address to use.  'mac-address' is
+  * checked first, because that is supposed to contain to "most recent" MAC
+- * address. If that isn't set, then 'local-mac-address' is checked next,
+- * because that is the default address. If that isn't set, then the obsolete
+- * 'address' is checked, just in case we're using an old device tree. If any
+- * of the above isn't set, then try to get MAC address from nvmem cell named
+- * 'mac-address'.
++ * address. If there is no valid 'mac-address' and `ignore-local-mac-address'
++ * isn't set, then 'local-mac-address' is checked next, because that is the
++ * default address. If that isn't set, then the obsolete * 'address' is
++ * checked, just in case we're using an old device tree. If any of the above
++ * isn't set, then try to get MAC address from nvmem cell named 'mac-address'.
+  *
+  * Note that the 'address' property is supposed to contain a virtual address of
+  * the register set, but some DTS files have redefined that property to be the
+@@ -134,9 +134,11 @@ int of_get_mac_address(struct device_node *np, u8 *addr)
+ 	if (!ret)
+ 		return 0;
+ 
+-	ret = of_get_mac_addr(np, "local-mac-address", addr);
+-	if (!ret)
+-		return 0;
++	if (!of_find_property(np, "ignore-local-mac-address", NULL)) {
++		ret = of_get_mac_addr(np, "local-mac-address", addr);
++		if (!ret)
++			return 0;
++	}
+ 
+ 	ret = of_get_mac_addr(np, "address", addr);
+ 	if (!ret)
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index 049c3adeb850..8f4efba90d96 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -582,9 +582,10 @@ static int fwnode_get_mac_addr(struct fwnode_handle *fwnode,
+  *
+  * Search the firmware node for the best MAC address to use.  'mac-address' is
+  * checked first, because that is supposed to contain to "most recent" MAC
+- * address. If that isn't set, then 'local-mac-address' is checked next,
+- * because that is the default address.  If that isn't set, then the obsolete
+- * 'address' is checked, just in case we're using an old device tree.
++ * address. If there is no valid 'mac-address' and `ignore-local-mac-address'
++ * isn't set, then 'local-mac-address' is checked next, because that is the
++ * default address. If that isn't set, then the obsolete 'address' is checked,
++ * just in case we're using an old device tree.
+  *
+  * Note that the 'address' property is supposed to contain a virtual address of
+  * the register set, but some DTS files have redefined that property to be the
+@@ -600,7 +601,8 @@ static int fwnode_get_mac_addr(struct fwnode_handle *fwnode,
+ int fwnode_get_mac_address(struct fwnode_handle *fwnode, char *addr)
+ {
+ 	if (!fwnode_get_mac_addr(fwnode, "mac-address", addr) ||
+-	    !fwnode_get_mac_addr(fwnode, "local-mac-address", addr) ||
++	    (!fwnode_property_present(fwnode, "ignore-local-mac-address") &&
++	      !fwnode_get_mac_addr(fwnode, "local-mac-address", addr)) ||
+ 	    !fwnode_get_mac_addr(fwnode, "address", addr))
+ 		return 0;
+ 
+-- 
+2.44.0
+
