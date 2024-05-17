@@ -1,98 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A81F3D0A3;
-	Fri, 17 May 2024 11:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2489D3BB20;
+	Fri, 17 May 2024 11:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715943971; cv=none; b=MTCQS+1kOEMnderc5h7zKYin6ni5RyOwq8hhd/5+mPUMt3VXG9kiqqfAI4pc8how89mlJze5LNzrQgug+dY4mNw/A8bzLy5j0RkFWXLK6CpShNqyHx25sofHv5jVZopUWImnmZ41lieqnnCVcJdFEkAC0sWF7O7z0kMDVgFEuS8=
+	t=1715944003; cv=none; b=TaKy0S6jQntza95fYCaGHK6RZRxAQYoOS2zfWUc4qDNBb5Rcay/cbTkGRJU5lLNdjd7Mxkoev3uS1nTUCQmizE6DDJbj0dxmpgEVkCgghW0BBESptsFfuDxSf96N/g6PBmxNTR8DVsc/RxfUuhpHTSuC3J/F2yi98OLxDpFLCeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715943971; c=relaxed/simple;
-	bh=cyel7fIdwl4HctMWrrdTp1YOPgFDo9/NgLEnSREBmac=;
+	s=arc-20240116; t=1715944003; c=relaxed/simple;
+	bh=6YKYu+nwgoHIhxuCcyfKEm/0MyLgoLFDAQc26AajwQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzP+DodLerBDnjn2zLuX5bRqlQ2hlFqAgx17PCSxVO2cJFanplnSpEl/NfeYTyYUtHVmh6+mEAvNzQUL9oS13g3H6HPr82o7tBXaLCHyKwPhQdExu01v9wIsWFgKAvs4Ignjfq3zmR9SqVUxTfrYlCELO/eBDywIoy3BKu/e3MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhCtg23U; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhCtg23U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1CBAC2BD10;
-	Fri, 17 May 2024 11:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715943970;
-	bh=cyel7fIdwl4HctMWrrdTp1YOPgFDo9/NgLEnSREBmac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lhCtg23UXxfH8GFvpV0bBhTuuNC/yOVcyf8r+/SBwHRDykFO8ucIH2zOi4Lsfxh4d
-	 jgUm1njcrxzwkFc5ERNxH12t8OuT6FilvS5TVUDj2I26qEA62JOrg9ddHttNLHU92I
-	 WwwqESVPuv7qE7Dt0G1BbgYEuXiM/bp8Kp5wUtlatKoOVFCm7wjeV73X76XhNJgovE
-	 jrSu3So5EIc69ImofyM9j3891OZ3tYqgklB+lrMan8iv6hEsQ/mi44SN+vCPxdjeUx
-	 FK4gKAgevr+QDU7R6Lgh1WAy9nUhkn4UvE+ABj0uOQr0qIz3E3Ic29+uUjVaNb4a7w
-	 1mCgljVttOEiQ==
-Date: Fri, 17 May 2024 12:06:03 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	shengjiu wang <shengjiu.wang@gmail.com>,
-	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound <linux-sound@vger.kernel.org>,
-	devicetree <devicetree@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	alsa-devel <alsa-devel@alsa-project.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCHv4 8/9] ASoC: fsl-asoc-card: add DT property
- "cpu-system-clock-direction-out"
-Message-ID: <aa212906-6579-4884-82b5-6d0eb8b0b7a0@sirena.org.uk>
-References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
- <20240515135411.343333-9-elinor.montmasson@savoirfairelinux.com>
- <20d8eb96-6346-4341-95ee-74729001c01a@sirena.org.uk>
- <1607626951.349332.1715936738428.JavaMail.zimbra@savoirfairelinux.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2V3I376Sf/h9gGx2OJebqpgbrT83nzqpIPVlGIvLpyH1zmQFkivkqCDbLguLqMGiZPGo5aEfER9d9cpNSFFvSpr0Y+EmJ3uRTX9aYylGZOf9rkpJqzG/d34yUCNe1iXq+nOm0abi01hnl7qwqMtDujxAhktf4e0bVkl/iSPG5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ec92e355bfso5152785ad.3;
+        Fri, 17 May 2024 04:06:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715944001; x=1716548801;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p83S38X1HgQAB74fAqntKRjS6xpoQ6Z5CQG1AzBL1YY=;
+        b=i6T93F2DR7pGHiicUazUWdhTLVoCwexdqKHzhGr1PR3+ZOLWrL+loyAVXR3xbmnf5P
+         AyCpF8bJezXhO3tI9f6QWvMGaPUfggrSNLlKabjYEeOY/ZcMPBz9Wjk6CYHu33x49iim
+         RjP2QN3uNckOqkfI9kMrxgmK+uTeMVMMg3PFdwqJ0e3IXItwjIWcrTEJjPau4Tgstsir
+         yYWShxqjmG3+/OAgpqqCzQFWpBTv4jmQNJoal9U1HjGztGzCWaeL4W1ITzsiFif8qK+j
+         IwrvlamI3f8uFa+3qTe1W5aTZgI2nzyMjZ96oUmC3RJ7bHzkuciFCX1jyqAsHdvrAsCm
+         j84g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbNaNRH06MEt0N6J1T6DGtjrOFFyY0mK4nRlQGvpx3I3QVAQiA51b4fWHZsZo4KCQVeY9pr9OJS33JPoiN6O09EuNsAgLsgxzI7G9GEeVr5t3Nl5CdMyRvVpliBZXFFDWoqBN6Cqji
+X-Gm-Message-State: AOJu0Yx/C1KXD9UKFxSXU0K3wHlqNJV3t12DMt7a2prREZV/Opl+2zCt
+	92mk9kpWt9M5vtt3inhBIlXixFLE6wEGYteQMv4ZFFYyY4Dn/9io
+X-Google-Smtp-Source: AGHT+IEszwTbkdrCv4IxKsGy4hC7XFyuCqVlF7lLlDq2IPmKr14GiWBtDXkUNI3atfnXUf/nb6k/Qg==
+X-Received: by 2002:a17:903:2d1:b0:1f2:e14b:3d91 with SMTP id d9443c01a7336-1f2e14b3fc6mr19558985ad.59.1715944001348;
+        Fri, 17 May 2024 04:06:41 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f09363ac7dsm50255295ad.93.2024.05.17.04.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 04:06:40 -0700 (PDT)
+Date: Fri, 17 May 2024 20:06:38 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Niklas Cassel <cassel@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v2 1/2] PCI: endpoint: pci-epf-test: Make use of cached
+ 'epc_features' in pci_epf_test_core_init()
+Message-ID: <20240517110638.GM202520@rocinante>
+References: <20240418-pci-epf-test-fix-v2-0-eacd54831444@linaro.org>
+ <20240418-pci-epf-test-fix-v2-1-eacd54831444@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cuAZOLW+M2wSeAZZ"
-Content-Disposition: inline
-In-Reply-To: <1607626951.349332.1715936738428.JavaMail.zimbra@savoirfairelinux.com>
-X-Cookie: Function reject.
-
-
---cuAZOLW+M2wSeAZZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240418-pci-epf-test-fix-v2-1-eacd54831444@linaro.org>
 
-On Fri, May 17, 2024 at 05:05:38AM -0400, Elinor Montmasson wrote:
+Hello,
 
-> This new compatible is intended to be used when there is no codec
-> device/driver. There is technically no codec device/driver for which
-> the clock input can be set.
+> Instead of getting the epc_features from pci_epc_get_features() API, use
+> the cached pci_epf_test::epc_features value to avoid the NULL check. Since
+> the NULL check is already performed in pci_epf_test_bind(), having one more
+> check in pci_epf_test_core_init() is redundant and it is not possible to
+> hit the NULL pointer dereference.
+> 
+> Also with commit a01e7214bef9 ("PCI: endpoint: Remove "core_init_notifier"
+> flag"), 'epc_features' got dereferenced without the NULL check, leading to
+> the following false positive smatch warning:
+> 
+> drivers/pci/endpoint/functions/pci-epf-test.c:784 pci_epf_test_core_init()
+> error: we previously assumed 'epc_features' could be null (see line 747)
+> 
+> So let's remove the redundant NULL check and also use the epc_features::
+> {msix_capable/msi_capable} flags directly to avoid local variables.
 
-This is obviously not true, there clearly is a driver.
+Applied to endpoint, thank you!
 
-> Is it a bad idea to allow setting the cpu sysclk direction only ?
-> Should the compatible be limited to use-cases where the cpu sysclk
-> direction cannot be set by the machine driver ?
+[01/02] PCI: endpoint: pci-epf-test: Make use of cached 'epc_features' in pci_epf_test_core_init()
+        https://git.kernel.org/pci/pci/c/3acb072c2433
+[02/02] PCI: endpoint: pci-epf-test: Use 'msix_capable' flag directly in pci_epf_test_alloc_space()
+        https://git.kernel.org/pci/pci/c/e79d1b1eb626
 
-When I said "this should use the clock bindings" I meant that we should
-use the clock bindings for configuration here.
-
---cuAZOLW+M2wSeAZZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZHOhoACgkQJNaLcl1U
-h9B5+wf8DiGSZ5ltF8WMKf7h2wg97OfIIvLbAgLOdxagHZRUlW/dW/+Yb3DRoVUx
-bWVR5k6wCU7A6Qwi1k/l7vnJ0gi+7ZqpHvuecyUqUZzymYsReuFY+p73Hm+4vZOq
-hCopfIw0bE96SL2v3NQZKSoIiXX/yKxVU6NboIhgjeZuUWeabzwTkJczdvahes8z
-Wqa5Jfd22U7vq//vQQIViaVycQujM1QOA2vIbGAP0sF2XGNUzo1UmmE5mtbDlbLE
-Cn3ijtOv8bhzkca7J5XKbiWo6JmN/7ormEDq7cpF2fWvfJnxd2L/L8ciKH4ylk8z
-MQjb0jAheAGAERAKoilEwWJkgcCJ/Q==
-=Bx3M
------END PGP SIGNATURE-----
-
---cuAZOLW+M2wSeAZZ--
+	Krzysztof
