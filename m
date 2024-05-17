@@ -1,102 +1,80 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81CB39AEA
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 10:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926DC39AC3;
+	Fri, 17 May 2024 10:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715942534; cv=none; b=tmzF1tFyCiUVRRXE61kTmo67tqguLpYpWnTuV4gP1opcMJqQiqAebysqtSvqHrPN5qtu4LckfPranU43EnBAicg8KjKal3UtSauiN62d7ezdso0atOo3eVqVCTYgXPoWgnYduBKzMOAnlCY/1QXeMb4T9Zxx+yknDmCpGXp/XUk=
+	t=1715942575; cv=none; b=OM00GfZ++rC3xClkC69HQtsXfVHLY45/7vVulAZgVeGhtHRxq14iCzaDLlEq/T5RxW1WbnskdfNFZr8hPFMyiuOngNL3SxZq7NkCdjffFex1CIUy8D8/eDuzDCdcFTQDDWLuaCNPWz8bFJEk3axlmMQdtOBm5/ULFI83VBFMKVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715942534; c=relaxed/simple;
-	bh=Tn3gqGvORrVVvUWeX/AlaSoh4Q4PaVl79FZuGUvXRVM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=XfLexUSh/rQOsCGzq69ur3Y4sd0KgsxUcV+1usBLmJxjoCJH3NAWlQ0aB1ijmL66LPxCAHnvFiwaRCPm75L1hotnGjhBSbKySkrAvqYd10P4WIOucjxMusz1etANSaPgLBaD4yaLaw6FxV92E5m3/yVImHz0QEmgPreiYaiu6rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=W5yVvBpd; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="W5yVvBpd"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-351d3898640so1680756f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 03:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715942531; x=1716547331; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wVVuKeze+/l/m/6SZ6VdHyTwnjR9+FVuJKaedifARXs=;
-        b=W5yVvBpd/7OUn1ILgmrsHHpwBps/y4ZoF5IxCHhI36HCYs2P2DclUN0IibsfDugno4
-         8NP54E0VkzBNNgeDHY/EyAjcAomYn8DcDTtBhKmwE/1a4PNBwQ3Duk07YbDJj5NsON0L
-         xse9GNn5uQkE5F9h+svANAAeRb2ga2MX7UaYGLlbBO3Acr2bYYJ1gqsFcL+0n0NZ2c3l
-         M3idv+hO2FGo9220K2R0q/jJQTF2fPZTu0x52Djtuu7AJwSwcj5YlFRwj5+dPuDcbx9B
-         kE2T0kVv3Qt9HuXc0+ZTS5jMDxqXKxHJEJvQEvcVYO8BKLMdBKXpKyYBRtLVshvA5qxX
-         Vrgw==
+	s=arc-20240116; t=1715942575; c=relaxed/simple;
+	bh=Aemt4kaweQ75xnr3xTspe+ewCkqJCsB/X3CzCx4kKck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hTZSyCQ+PpUOnIs3BUAyzyq+mYTT+AGgXtntZsfhq+/SarijSNkHBrBjUXIqMvMFT1luRnXiWk+H6SF5xoWiMxZ6LDVJ9yq1xVjjTTZ93oJOuxf0ZNrbR5uJiCap4GUpw6/AbeeDJ/5fEt+vboi4aozBWd/xwttmU78FxMNGmgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa20adda1dso789467eaf.1;
+        Fri, 17 May 2024 03:42:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715942531; x=1716547331;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wVVuKeze+/l/m/6SZ6VdHyTwnjR9+FVuJKaedifARXs=;
-        b=Zr1fP6Zj3Sr5x7GhZA3sieiB7BCL4G0xU0Mj9GlD/bK7svey+vRwrfTO0t6fsJuc+W
-         vy55IHHg4lpPQquyKramxf5Se4faBv0YyvtZ7gAone/z/21cJTi55dYTonoMtYaFOFN/
-         Nrbnq6YlqCDxBU/E8LrrjrXKqhY94+/DlFAicfvNLrmbY0DQCEqyZvg2fxym/rB7hCjR
-         LjWCAo71ue6wuGJJYm6Y/ABhx5IudfB4kFptvIjZs7JVgKg2heN1fa2ZDe4O0UIyr49O
-         D0uWvj/wDFc3ZH3FDzb4T0H+urNaBP76ce31WhpRwiWSpFhVXzbojykvBRapGMqbSDqp
-         HsVA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+0OBozgprFszKG0BGN1k6wa3dZkXRmLirGjIIWtLhPIT7HkodAaKp0QItDqxUC9euPCRavBCHNSOpj2g8X9VsMx1YT8B+Mb+nATU0
-X-Gm-Message-State: AOJu0Yy9HwVtXCKYYb8CIomAl68tVNMrbwV6ExGPpud0u0m1JVWzixUI
-	vvrz4/xBg7+4owjyaK3kvl1BS0oUEFwCqz0htmSeh9pFgtLNks9B9LzvoCcEa6A=
-X-Google-Smtp-Source: AGHT+IEjp9qU1QWmuNE004NYUawbuKUIq/KMDMvkPFdBJndlTyNLfoME36VKIbnsStbPx3wk0bzvww==
-X-Received: by 2002:adf:fd0d:0:b0:34c:ab55:bf1 with SMTP id ffacd0b85a97d-3504a62ffb2mr15439295f8f.2.1715942530954;
-        Fri, 17 May 2024 03:42:10 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:aa3:5c01:15a2:d0b5:26bc:4a17])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351b55b4655sm14658221f8f.76.2024.05.17.03.42.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2024 03:42:10 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+        d=1e100.net; s=20230601; t=1715942573; x=1716547373;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K0mDfCC4qqN0aazXdCGoPDOF18pz36dxsqLie4Zoxhs=;
+        b=tv7DFFfvc+9MQKSFWoz+8e+Rxi501KN4k1tHBr6pfFxsACkwwsUdJM7sJCemiiSISM
+         cg6ybMuMutnkdSDtld+dfXjjEpvUa8vn2mqspa4vpwVzqCfbNehnCvE7gosHh1N0UQzo
+         LNQRjSAmpJaSNOZawb5TwWVa7brfulmVeNYCy1t15rus3SScrZy3WvEW+6Owm5rDYL9X
+         UuBGcYQyJnCHrV1kFNN/ekjVJf60iZl4SbbnpFFtqsTmly6cQwV4Sde7qfQ8wRP2O8FR
+         8s9oxaejIkBFsR2Rl4nnnrQ03Sul+Ua7tCrCoIS3l3/N042Ra0DaKy+4Ks19fHef56MX
+         iYIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDqIkk2NO8bK5RwkTZbVr1QkZ6gdYinihf95P/k+01bvzjnBRDHCvu+YOuMHDzKQlqIkqhjyDJXHDjIdUexQMh1AHw52PcXGvdpNlBcLuCaw4bN+p0mBMqWqhplAAoMz64IoevCK4mnAxguGiYwA+yhBGXJ6B3I0RdS1SOUBUpO1w5TQ==
+X-Gm-Message-State: AOJu0YwkgEqtk9vTFwjq3JudWqVQ6h9zbiEAv4nTW8LdL040orpX65vr
+	y2AflLtrjR3263KpocrcVLU+fA10smuwcgkOJ/lL4iAgxDJDogL8
+X-Google-Smtp-Source: AGHT+IEGuM95PCywDHNTrOTy4omJ1d+kOqj5/hZObD0Ewg6JwkTZdpKln98/P1LK93tW0DEzPEdhtA==
+X-Received: by 2002:a05:6358:6f0b:b0:183:7d27:c08d with SMTP id e5c5f4694b2df-193bcff582fmr2235260055d.32.1715942573507;
+        Fri, 17 May 2024 03:42:53 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6584e7897bdsm3292328a12.21.2024.05.17.03.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 03:42:53 -0700 (PDT)
+Date: Fri, 17 May 2024 19:42:51 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	devicetree <devicetree@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>,
+	"Andrew F. Davis" <afd@ti.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Lopes Ivo, Diogo Miguel (T CED IFD-PT)" <diogo.ivo@siemens.com>
+Subject: Re: [PATCH v2] dt-bindings: PCI: ti,am65: Fix remaining binding
+ warnings
+Message-ID: <20240517104251.GK202520@rocinante>
+References: <8032b018-c870-403a-9dd9-63440de1da07@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH v3] net: smc91x: Fix pointer types
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <66AB9A6F-4D24-4033-96B9-E5F2F700029D@toblux.com>
-Date: Fri, 17 May 2024 12:41:59 +0200
-Cc: Arnd Bergmann <arnd@arndb.de>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- glaubitz@physik.fu-berlin.de,
- kuba@kernel.org,
- linux-kernel@vger.kernel.org,
- lkp@intel.com,
- netdev@vger.kernel.org,
- nico@fluxnic.net,
- pabeni@redhat.com
-Content-Transfer-Encoding: 7bit
-Message-Id: <BB22F3F9-BB2E-45B2-A3C3-8A4218B018B2@toblux.com>
-References: <0efd687d-3df5-49dd-b01c-d5bd977ae12e@lunn.ch>
- <20240516223004.350368-2-thorsten.blum@toblux.com>
- <f192113c-9aee-47be-85f6-cd19fcb81a5e@lunn.ch>
- <66AB9A6F-4D24-4033-96B9-E5F2F700029D@toblux.com>
-To: Andrew Lunn <andrew@lunn.ch>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8032b018-c870-403a-9dd9-63440de1da07@siemens.com>
 
-On 17. May 2024, at 01:21, Thorsten Blum <thorsten.blum@toblux.com> wrote:
-> On 17. May 2024, at 00:51, Andrew Lunn <andrew@lunn.ch> wrote:
->> It would also be good if you read:
->> 
->> https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
-> 
-> Will do.
+Hello,
 
-Reading this was helpful and I learned that:
-- net-next is closed during a merge window
-- patches should be prefixed with the tree name
+> This adds the missing num-viewport, phys and phy-name properties to the
+> schema. Based on driver code, num-viewport is required for the root
+> complex, phys are optional. Their number corresponds to the number of
+> lanes. The AM65x supports up to 2 lanes.
 
-I'll submit the patch that cleans up ioaddr from all SMC_* macros when
-net-next is open again.
+Applied to dt-bindings, thank you!
 
-Thanks,
-Thorsten
+[1/1] dt-bindings: PCI: ti,am65: Fix remaining binding warnings
+      https://git.kernel.org/pci/pci/c/64e098b59b8a
+
+	Krzysztof
