@@ -1,330 +1,214 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2045.outbound.protection.outlook.com [40.107.102.45])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011004.outbound.protection.outlook.com [52.101.128.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280234C69;
-	Fri, 17 May 2024 02:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F36944D;
+	Fri, 17 May 2024 02:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.4
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715912952; cv=fail; b=OnFNGjPrI1yX7ylcjQ8DbWQVRWUrCQI6X1lDuOlf595eUWQ+J+EHUYTXzVwwIoXPA89etPjg4YmPfwIJ1Y0LqhV91/v9BIQc132N4knjEAj9fLqiC1MOokPTmpMHE6hRXpF2wE6Qr4PL9ArXSMjk6PtLdkqidfOekddmWoXF65Y=
+	t=1715913358; cv=fail; b=WZieT6sA6X224VYI+sD8/bQdZDE2se9DtFVOSfbMTXFfh7RigSXx7FOOhwCJVsHOaCNdT+mmMEUwfrWZPdgY/Gt5NhMacBMl4Ttjp5NWlg98G8YLLzeicypNMcnf0z0xREkvt5yGKd5hCl0oRW5xf0do7e7NnPppV4ATw67vX8U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715912952; c=relaxed/simple;
-	bh=iVeckCrz9wx4B/iNYMquEQI+UKZo+viljmgf0EIzlns=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h2Z0JN6ux/iqGrpKGIxt/FX7DQrGHwEVRkvfZ8XTTd8xj8SmO8MEqzoRfxfvl3ZnQff14t86fTwZBpxDqG4x8xgB8g/MvKW5DQdSvfAN3pGHjommAJ4nECKXDq+/Fcv2gwIRyE9Yg0sk6MHkkknaMqGa4dIqcgUPdSRCDdOqQZw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tDmk9a2R; arc=fail smtp.client-ip=40.107.102.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1715913358; c=relaxed/simple;
+	bh=y4GMnCajnM5btg92T8F9xc/SzjiejKegSdQWecMNO5c=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MN1BWdasLyttDxOkpDsjUdKwyr4lDBU254jM5kTR67aI+cUANErxuJe/ARFyxHQLoktGgTAJPevgnuggC+T1pvqrKA76ucieqb5nQZiHFILGKMLT1MjxS5LE4C8H+yMBQfgBuQ6ZtVz4BXtdSwKlKy45GPE3Ukr0ln5lY94dMt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=czZADG+m; arc=fail smtp.client-ip=52.101.128.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tDmk9a2R"
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="czZADG+m"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KA925Vr7Ha+R6zP1tHWFmCp526q9TNMeTZuLwB3CNYBhvpZ/UcXIIXGe7TyzMgr/WeOU8FDX5EHN+Axk7OcGeFn0ToK0pDaJBAQ6A2AI88spYPuL+LBTfdXG9Ppb65qhqjEDZ6/kFhrlGNAqF2XV8gBuaNFlyx3MDc2W5aCgCahqSQxJeGMRQVRQeAnjLM+OwQbFpNbLHeMwu973EybU+X0Jg4vjYeZTvaoSm20QsCx9g2LbUZ5rj3jY3j4RRkTZfkWqfrlPpqCDhVsLuKNloeXeG7bOdUn38Cx8pBbhop3NAXWRyUuWDsjm1y3OkhSspZ7cuVqkqmheau59w3M1LQ==
+ b=WYujtTgNRvBRA7CsyIYW8Q4rfT+fCPOV/MJAxPyl2zbniQRmJAFhKBnn5xUnQvN5TYtsPcPIRaX4ojcWH2f6K8TvMERFYUhq1ayU+0iYKyWw9pgwMc768UlktYgdripI2K6zP+b32fcxVFdNuk6VqH83dK4pxJ/Nt7/bDU9k2R6DjZpEHqNQbauHRYD9IazhyrZlFaVmpfqAjLHd9R6QTQvEvitCCbaWHYtJYT9pw3FMpzbZSGWUWwnU5zcxFY+jfwJeArpLqtHiaPUxcvPhoi/iz3+AV32fDd9HfLD5e09/1BH8nDTQuk5cAwWn8V1gf39Gp4l0VPDrFMgB1RX1/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9/FwjHpSnA2BxQLK7KBOKHljoABJta8/kVCJTSfpUW0=;
- b=Nx6z0m61dykjoozEEHG/pqd34gcokyEvR6QBsqR78BT2p1fPGRETWhrnhDH9cpSCu7hlxCkTF57YXPHZlky0IT2A8IpK4UFy0E3NnGOd4SFAzIa9WiaHluXLhuGds2Hz7A3ptMpOWAg1FjVwTuQWmT4OvNOQbUIqAMABtXp0PYTibJ5E8iyT2m+qZYcKFNHEUqfGMllj7/BVLMCAn/oKeatax3/C9kxujg/Gtb7iI3lmXGiQ6WgFc5lM7H/GhwftowddYbSX5DlfWESa1G16/N0CHo5eVtHHA+bPMsK/HG6Gec6gfXf5Fj4THqH0OclF8ztA4E3KPIfpfbCJLYW1XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ bh=y4GMnCajnM5btg92T8F9xc/SzjiejKegSdQWecMNO5c=;
+ b=TM0JMdGnQxcRBX2UgmefTKgple1GINvfZ5w+MMpQ6aaqm8okXAbwWpk1BO3Qfh3z+3cqPokfSZF9joZ1FujA6tZxfAANT6yf8KEUGtfwYbsE63ZIquPtGIpD/CkSqf5LJ9WBOgVntox8wBWWze0LBE5GcgKuMRHJnNDjMdB2Ljv8FDxLGkC0Uh7cnmu1ajtNsvAA3XHXm5FQsSbrT6X+NoL427sslE7aWmJaOkvD2BuY4CdOA4LGFeErsfpOu8TcfpLpm8xvwLV8sn8X3zkKyFZ7MnFu694rusXFQR4yKzDQh8VQl7oD7772P5Dpw2xNdCQ8NCDwzVa1Wc5PfJqiNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wiwynn.com; dmarc=pass action=none header.from=wiwynn.com;
+ dkim=pass header.d=wiwynn.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9/FwjHpSnA2BxQLK7KBOKHljoABJta8/kVCJTSfpUW0=;
- b=tDmk9a2RXq3LbB1ptVujpuKIQGicmcRfcuxvfP96P2c3axb78O/ycit2IkMvgqKrb5/5eNcA5qQ0O0C32aoUQSGgtxquk0bktZyD7Fw7lUSSj+XquX2iUiQIidOFKC0wHlykMGGrNDIbtpXhXth0JnibHe+x77sklvapmhBI4C6wdYgw8h15S71y1KB2BIQ15w6BpfWgofriw6RMpBJ935Srp/QQVet4OyoeFar5+IngK7pJTxV4l2pckvNTjHnk7CAEPL/oEaXmVrqKMplcCXiL5ULfUOpEujHupZbsD/UUAKvbmvxyd5r+NXgv5FwJNzg8tiQ3x5w2MjfQ3VsLSA==
-Received: from MN2PR19CA0054.namprd19.prod.outlook.com (2603:10b6:208:19b::31)
- by IA0PR12MB8349.namprd12.prod.outlook.com (2603:10b6:208:407::17) with
+ bh=y4GMnCajnM5btg92T8F9xc/SzjiejKegSdQWecMNO5c=;
+ b=czZADG+mQYxeEgcR7tmsNtOo6Foo5kvT+oQvMAfOGINbhGst1zv0l/Ekm/NEDA40h9NpIANDKNwUgjqRlVfa4Ol+3gm+VRYdxQXWDEULv389+Xsl/ATqyoSjyQeP9J5W4cKODSbHlnoqeln4d8DTZCq6Gi6qsWvI8KSgK9botxAyCf7lEq1Lmgawqb6yn5ERufeXucDsn7EEeyHL/xDn4YGeLx8AlKYA+sYaNHTkuOnYU53o+irsHeojlmetdyv/brfOfxq8EkSB08xA6GjsNyjSRebt/TAd5KhP/87N6F3lw8GudaMKMTk5/XgQqMiGjmsTxEdZMzOeQpEJB1QoDQ==
+Received: from TYZPR04MB5853.apcprd04.prod.outlook.com (2603:1096:400:1f3::5)
+ by SI2PR04MB6097.apcprd04.prod.outlook.com (2603:1096:4:1f8::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.26; Fri, 17 May
- 2024 02:29:06 +0000
-Received: from BL6PEPF0001AB77.namprd02.prod.outlook.com
- (2603:10b6:208:19b:cafe::bb) by MN2PR19CA0054.outlook.office365.com
- (2603:10b6:208:19b::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28 via Frontend
- Transport; Fri, 17 May 2024 02:29:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BL6PEPF0001AB77.mail.protection.outlook.com (10.167.242.170) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7587.21 via Frontend Transport; Fri, 17 May 2024 02:29:05 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 16 May
- 2024 19:28:50 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 16 May
- 2024 19:28:49 -0700
-Received: from jjang.nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Thu, 16 May
- 2024 19:28:49 -0700
-From: Joseph Jang <jjang@nvidia.com>
-To: <shuah@kernel.org>, <alexandre.belloni@bootlin.com>, <avagin@google.com>,
-	<jjang@nvidia.com>, <amir73il@gmail.com>, <brauner@kernel.org>,
-	<mochs@nvidia.com>, <jszu@nvidia.com>, <linux-kernel@vger.kernel.org>,
-	<linux-rtc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-CC: <linux-tegra@vger.kernel.org>
-Subject: [PATCH] selftest: rtc: Add to check rtc alarm status for alarm related test
-Date: Thu, 16 May 2024 19:28:47 -0700
-Message-ID: <20240517022847.4094731-1-jjang@nvidia.com>
-X-Mailer: git-send-email 2.34.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Fri, 17 May
+ 2024 02:35:52 +0000
+Received: from TYZPR04MB5853.apcprd04.prod.outlook.com
+ ([fe80::9bcd:8112:b072:faca]) by TYZPR04MB5853.apcprd04.prod.outlook.com
+ ([fe80::9bcd:8112:b072:faca%5]) with mapi id 15.20.7587.028; Fri, 17 May 2024
+ 02:35:51 +0000
+From: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Delphine_CC_Chiu/WYHQ/Wiwynn
+	<Delphine_CC_Chiu@wiwynn.com>, "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
+	"joel@jms.id.au" <joel@jms.id.au>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew
+ Jeffery <andrew@codeconstruct.com.au>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1] ARM: dts: aspeed: yosemite4: add I3C config in DTS
+Thread-Topic: [PATCH v1] ARM: dts: aspeed: yosemite4: add I3C config in DTS
+Thread-Index: AQHan6kujHvv2V+fO025/RadaGgcu7GKV3qAgBBuA0A=
+Date: Fri, 17 May 2024 02:35:51 +0000
+Message-ID:
+ <TYZPR04MB58539F598E74106F3C2088E5D6EE2@TYZPR04MB5853.apcprd04.prod.outlook.com>
+References: <20240506113306.1283179-1-Delphine_CC_Chiu@wiwynn.com>
+ <3903300d-9d5b-44b3-95fa-0579e5421071@kernel.org>
+In-Reply-To: <3903300d-9d5b-44b3-95fa-0579e5421071@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wiwynn.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR04MB5853:EE_|SI2PR04MB6097:EE_
+x-ms-office365-filtering-correlation-id: 6c0600c6-ba15-44dc-c85e-08dc761a11c7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|366007|7416005|1800799015|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?bEMrUjRJNFBMMTYrS0lBTitkMS9HWVRPcEVqVzc4c3N3S2NEUWNlMnU2SDdT?=
+ =?utf-8?B?Qjh2ZFY4bU1DL0ZJRG8vYktwdmgrY05nSVVka202ajVhTDE1UTVQS3Bwbytz?=
+ =?utf-8?B?b1dXSEdvWnV5dUNwbldNbTUvdWRLUkdSMTk3YkV1S0NrMW1BdHkrUVNkcXFs?=
+ =?utf-8?B?cjVzS2JhbWFNbVlibDNpVmRORGNNWDlMUXY2Y1IzWElpRmFuT2Q4WVhZUjQv?=
+ =?utf-8?B?cXdSbXFFSTRJalFtQlhYL0o3MTZTOE1ZbU1LYytlRFZzR2tTcWFtYlRDMWox?=
+ =?utf-8?B?cGFIb0F5ZXp4UHhUQTNhcFVITWR6SWpocWoxbkNuc3lSeFJPS3RPUWt5Szlm?=
+ =?utf-8?B?Q1N0bThFM09PcmxNYk85amlVSmRVV3NjM3lLQlZ6Q1h1Rk5lSnhLVTZwM0RL?=
+ =?utf-8?B?ODBjWnRvNENQV1lDbktMbXlPOU9HNHpTSnp4MHlLcFRxVE1BYlVUNGx4bDBq?=
+ =?utf-8?B?SjF0a1BGbm15VzNXU09WTXgyZW0vNllRZWgxdHpTVXErSTRxVEZCOHZOM0Z2?=
+ =?utf-8?B?cGt0ME51TnlhMm9vMWoxcGVQT0N4RDhrQVRDeHZaRVhjQUtpRVFFWlBveTln?=
+ =?utf-8?B?Tm9jZXhNQ2N1cTQxUXROSW53bDBIVDdBTVNydEY2amg1T3A4bTVKb2JnRit5?=
+ =?utf-8?B?WVBMV0FKVTFIRm40Zk05Z2F1ZnlWb2FmV3BSaitLc0FFOXVsYWhhbFYzWVBv?=
+ =?utf-8?B?MmdTRGQzc1k5QzB1aHpvSDJXTEZCcG85M0xsc1ZxZkJ1cUNKeFRONlM5K3pQ?=
+ =?utf-8?B?cFpHcEQwcHdmN2xYWVpsQXRKU1hFSHFTSE9KR2RBbjVPdjVwZm9WdThrYkRY?=
+ =?utf-8?B?SlYzSTMyOTU0YmVsYjFzRm9hWWZPSGxYY2VOamJZUmZHOTlLT1hFRUQ4czRk?=
+ =?utf-8?B?RkxpYlBzSDVRMm91QUZHRUVaWDdrUkxIc09McmkybE96V1pXSkl0SlBwY2N5?=
+ =?utf-8?B?NXFmUHB6RVFQR3QyM05WSVlVMDdDYldlT0dicWZUalltcVZFT3B5K1hFalpL?=
+ =?utf-8?B?dXJ5RWZCY2haY1JRUkhVWnQyYm5NSmgyNjgyY1pJaS9DN1FFUmNvcDBtZ0k2?=
+ =?utf-8?B?bW1RL21nbjBIa3JSZ0haWEJZZ3JESzA1aDBUbUpEZ3FYeTVCNHM5M2JoVmJn?=
+ =?utf-8?B?cmQ5QkI3cXJTdkVZZnhpeGk2VU1MOVE5UmtaSHRGVDBxK1VGSG9lR3hIMENk?=
+ =?utf-8?B?dERuVkw3QlVmVGRqYTRDZDFpU3BkalJFSVNrS3VSaVJsNFkwNS9sZGY4QWs1?=
+ =?utf-8?B?QlZxY3FacWE0ZmszTlMrM3ZRNWl3WGNXa3VCVkxIMHJlR1B5VG5jWDV4cUs1?=
+ =?utf-8?B?U0J4ajRGVTlmbFViZnd4TTNhaHE5cWNwbTUyeWJQRkpPREpCTnJTVysrQW4x?=
+ =?utf-8?B?Q2ZHaGNSdFQ1YURSRXNtWk1PKytZODNtaDhYamdEVmpPNlBDenhOYldNNFZ6?=
+ =?utf-8?B?SlNNZGVSVnB2UnpEU0JEWk9lS29tcjhTMEttd3h4UDlpOURXTHB5M28xR0ow?=
+ =?utf-8?B?Skl4LzZXelZhS2EzeHlnWEE3NFoyejJKZnZuUEdJeTN3OXZBTE5wdmY0VU5s?=
+ =?utf-8?B?TE5RT2tmcUtxbmdNZ1VEQjlBbkN1WUh4RTFEMjNEbkZJODRTQklDREtzbFJ4?=
+ =?utf-8?B?MXg5UFpTTlMzZUZhSkRlWWpLWWIrc3hGSFdvM3JiMWw1b1NLSGk3VmhSanp4?=
+ =?utf-8?B?ZGFIZituYlRldWhPTEpCdWpxZWhXQmFXdkFhaElPWi92czFaMGkzVVpBPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR04MB5853.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?QWR4SWt2Q25SWUU1V0NlWlU1VjB6YkQrUmhTSzVraDJVMU9yZldreE53TURy?=
+ =?utf-8?B?eFJHejAvZU5qNUpkdUMxSHhvZmxXa2JBOTdTTEhwUHN1dmhjVFFYK3JTV0Zy?=
+ =?utf-8?B?TmlXb2lXejdrTGd0emFBcFF4MVBnNm4raWpzUVc2UmRxUVh6LzFDdVpVUmha?=
+ =?utf-8?B?WmJPR1JBV0QyUDRSRzRXbEVydytuTlRmTlZnUnhRLzRlSjhpV0cvQzJCdEdZ?=
+ =?utf-8?B?cnBiWjVIWWhuL0dvb255MUFUR0QwTll1VFM4ci92Ynh6dk9zRXZUWnJBeC9K?=
+ =?utf-8?B?T09RalpPeVJiN0tjMy9wYjMyVFVIbkpGblMyeW5PTDVVYkN0b21odk1yQlRJ?=
+ =?utf-8?B?eWptUGpIZGJxNEJpZEpTV1J3VUhXT01yU016RmtzaEdPYU5lWm5LMjdyZUlz?=
+ =?utf-8?B?TW5RT25FLzlkYW95d2xkVUR0dW5JeDc4NFpLeUZoZjY1TWdEeG5NZk5uNlQ3?=
+ =?utf-8?B?SEVQangrNW0vVnhnNjlWK0pYeXVWMzlJTmVVbTdrQ3pGQmFiSHBPamkyVmgy?=
+ =?utf-8?B?MU1BOXVUUzR2Qk1sSTdJR055VDFDaksrdHVvUjcrRlBoWm9Wd2ZlMDFxTGtz?=
+ =?utf-8?B?QzJTdlBObGZpRnV6ejU3ZHRBQ1VKSytseEhoaWFVTFhHd3F4UXJHRWtEbTMv?=
+ =?utf-8?B?VHE3cmw1UVU2TTk4eTVxSDZocDQ3S1UxM25lWG5DVCt5WUhxSFJhUjRLMDA5?=
+ =?utf-8?B?U0swMXZIYVVGWkVvZEdOc2E1bFJqaGdNYVVQa0RUN2xLTktTUjIxZVdxaDln?=
+ =?utf-8?B?dGg0VS8yYmtwU3ZjMjhmYnBvTVBraXdEQlpwRm1NMGtXOWV1M2RaNHNFMW9Z?=
+ =?utf-8?B?RE1qdnBxT1BIclh4QVpkd2JJaXRPbEV1WjY4ODNqWUw5WDhZMUkrN0t2M2Jm?=
+ =?utf-8?B?Tmo3NFJ0QXpZMHVRS3B1WTFaNzdFdmlIcG5zb2FlYUVlQUEwU1RqUUFLekdB?=
+ =?utf-8?B?NW1QS2tVY2M1OEQ0NFc0VFR5NlVhczlKdHFZcmVxNkJ4Z0tUdGltMWQxalVv?=
+ =?utf-8?B?SnhRNmF2WmgyV3M2bWFqV3o2MVVISTN1N1I3UEo5VzZ2S1BWY2NEVnYyYWRn?=
+ =?utf-8?B?WE11OXNpUDU5ai9DRlNLYXJnUnlRRWJHZzBzZVFGdzkwN2pxc0t6eEFhSmFU?=
+ =?utf-8?B?ZjUxMElRblR1MWpZOXNuSGpKczMxOFR6dmxIU2lUTFhtQjhBUHNZaWFUaHVU?=
+ =?utf-8?B?QnVnTnJBMjA5RW5JK2g5enNaR3orYzByYkJhYU42a2UxVGxOalc5N1hiL3Ft?=
+ =?utf-8?B?L0FiZ2hXOW50QzlmcnhNeG92Q2xHZEQ5TUxlUzB2RWo4VlY5RlFmeUxvYUVK?=
+ =?utf-8?B?empCc1JMMVRjZWQ5TC9pMHZtSC9LL1A4UjBUZG9NNXM2aWd4aHgrVWFzQWZj?=
+ =?utf-8?B?eGVpQ2w1Tjh6VXlETit4VDdWcUt6d3hpd3BNdVRWeG90S25pU2pjdjAwUy9v?=
+ =?utf-8?B?R0p4T2kxV2l0WnpWQXJ6clR4ZWxLV1N3VU5TL1pHWGhNSWZtbUNTbkFOOVdD?=
+ =?utf-8?B?UzZhdkxJWHdjY2xoWDVKaFVVd05XMm8rcWpydGMzVVA2VmE0bnNVQmhwR3Vr?=
+ =?utf-8?B?UjB3cHhOUy9IZE9LU242TFRIV1lxVXk3Ny9KbmFtVGhRTERWNzJoVncyc0Nt?=
+ =?utf-8?B?QnRmKzRxRURQMGJnd0E5NjVBN0h4YzlsdktacVI4WFFXeWd4cHBpeDRCV1Fs?=
+ =?utf-8?B?STBpc0ljYlhJRHY5WVdOTUh0bVdhOGphQ2t3L3ZNTXdWdUVZUG41SjJ6R2V0?=
+ =?utf-8?B?TmFBc2pnZXVhcXF5NlhUV0s3MXpDSU1EVlRVaXhmczltcjhUTC9VR2s5T2J1?=
+ =?utf-8?B?bDkzcllXSFZsUk9zKzBKU2g5UEVoOFZvcnN1S2dBSkdvQlFmQWhJcGNEZjNI?=
+ =?utf-8?B?Z3I1b1RqMk9uS3hLUGx1OXFOendHcmI1WG9vS1BWekIrRVI0ZnBlcC8vK2ts?=
+ =?utf-8?B?TGRPTEhGQURQWEhqbzBiZFBEMGJKZ1NvRDZHb2VXbU5xeW9STnFxZER4dkhP?=
+ =?utf-8?B?OFdaOW9sclF5aXB2WGFkRDM2MXRqeDdyTHg5aHUyYlY1bG4veVVzQnNtTXo1?=
+ =?utf-8?B?V0JnSmtQZE1OM21QWmozdlNQdjFSejNLZTRCbnhjU3R5UmJCanJKSmE5bm9k?=
+ =?utf-8?Q?WZOujSv8R7d8Y7w7rphWm+AVP?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB77:EE_|IA0PR12MB8349:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c48c816-1edb-4fdb-332c-08dc76191fd9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|1800799015|82310400017|36860700004|921011;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7hjjmt90gjULxT+EKyuujiTlh1qDcYvWTixfateAYk+IYrctbXWsn/xXT3hF?=
- =?us-ascii?Q?OBQqh7syEbZogzTAZqb/sGLfHU79egJOUiw4mMY7JucilN+Yf9neewBZlY/K?=
- =?us-ascii?Q?eFxOyruX0ElTqBiD/OP+G85eS+CkgNsuxaXJXXMtvj3uPhjCumdjmw4L6Aii?=
- =?us-ascii?Q?1y7BovAA2FAbhNG6O4vT0o+sB/I1eFsQJmjf70BOo/x4xafbQQmn840TGCYL?=
- =?us-ascii?Q?5BL8wIn1axDNnqemx0PNOUyRZVnKUS4pHKf5sdzUVdGeKgf0HdQWH8eARaYC?=
- =?us-ascii?Q?SDhoGWzkJ8mO8dVoYH//w4RJxp8sGCm8i9Y4oG8qVLITks0xCf/dc7zSMNoC?=
- =?us-ascii?Q?AKqe26pIJzWD2nVrNESVFP4mmCcbcChCv6pOofqNXZANhu3tg4UaSLZhtB9R?=
- =?us-ascii?Q?/0ScrdeX1HAHkXos8cj5OvI3faLklYl9n++LvhLoEWh/wNba4Qcij0nx9pqC?=
- =?us-ascii?Q?AoTaqRNJuVwW2Mz/0Z/g5TO21rpDJx3YZBAmuqRpEBhBQdJrmvDLo2ejq2iU?=
- =?us-ascii?Q?2UfdVLL3KOaKBwIpdjsr7a+b9MulHI5huNof2t58h1909F1Z2O7OkNR/E074?=
- =?us-ascii?Q?gn3hihBEz2SgUg9StuAzczYDLgoZuuU26SKOQjapZo6zVyC3MhoMKV8yL2lZ?=
- =?us-ascii?Q?qNvUlHAY6DZ8bVkfrVkCrI+7LoZyEIn7fDyosJS8dEY/Zzx/L7ZeH4Py2wwG?=
- =?us-ascii?Q?BOoS2kWU0ssHmIkKZWp4ygq+I67UKULPk8uMI4pBxYe3UddW9PgvTTZhrSXC?=
- =?us-ascii?Q?nQilB71CfCOEOv/7d2/ktV7BLu9N+h33WFOep5j2YrvHcnzCLlQpKrENBnsz?=
- =?us-ascii?Q?GZaPaiIPuxizdclhXU361YNFtHMSSXFlgfxV7DkWwm3WGWD2dRfXY17X0uwg?=
- =?us-ascii?Q?my3BecmVau5pdC/L5q6cd7/r2F8uc5FMZVasEGhD74ELr+qe5tj/cPV899RH?=
- =?us-ascii?Q?7omaAryvsulL5IRy8NZwzyU8KDWcV3z8lAYWzp1i21/hGXF0s0blhRaDmKfH?=
- =?us-ascii?Q?KyvF1m4CgQchcpwIR+V+j0LEhckK8Ag/+ko0dkFsJ8CWbHFs4V91zzErBWnD?=
- =?us-ascii?Q?65OwYc+8m7ZqLF+Ycm1ANf61zk+SHmRQPdiGLK5oTFqSDRh0JYUDmNzGFxtW?=
- =?us-ascii?Q?XU1fawAwq5XMHyTLK7lXA+j1csgV9pFxOhVfhT4iGHeYQ0V0TujNp2VsgmBJ?=
- =?us-ascii?Q?LTKvGd0h5gNb5XIY2ySBMBfrU+IeguVX0eMj7LLNAaa/RC+s84HQ+iP7cFzW?=
- =?us-ascii?Q?qkGExH07XrGaVPzRO4q9mlxTXN4tBqs2wVDMZWLgB+UL6LKZo2dDAlnkV8z8?=
- =?us-ascii?Q?y5mIZIP86C4k82RkPe6vG7JLrEkMAT1d3jv3Lbh0oZyJTDM+X6xZiP2MMpFP?=
- =?us-ascii?Q?17PuCtG22TzeAt09o7c8Qj9chnOx?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(1800799015)(82310400017)(36860700004)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 02:29:05.8324
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR04MB5853.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c0600c6-ba15-44dc-c85e-08dc761a11c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2024 02:35:51.9137
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c48c816-1edb-4fdb-332c-08dc76191fd9
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB77.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8349
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8jkVemC9qrE2V9s0OZCDfd2Do1qOJRFlD9fq3PJZAj7+MsTRWoHWvy4g5X1FApwlS4lraPnaZEW0M/tqn8m3KA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR04MB6097
 
-In alarm_wkalm_set and alarm_wkalm_set_minute test, they use different
-ioctl (RTC_ALM_SET/RTC_WKALM_SET) for alarm feature detection. They will
-skip testing if RTC_ALM_SET/RTC_WKALM_SET ioctl returns an EINVAL error
-code. This design may miss detecting real problems when the
-efi.set_wakeup_time() return errors and then RTC_ALM_SET/RTC_WKALM_SET
-ioctl returns an EINVAL error code with RTC_FEATURE_ALARM enabled.
-
-In order to make rtctest more explicit and robust, we propose to use
-RTC_PARAM_GET ioctl interface to check rtc alarm feature state before
-running alarm related tests. If the kernel does not support RTC_PARAM_GET
-ioctl interface, we will fallback to check the presence of "alarm" in
-/proc/driver/rtc.
-
-The rtctest requires the read permission on /dev/rtc0. The rtctest will
-be skipped if the /dev/rtc0 is not readable.
-
-Requires commit 101ca8d05913b ("rtc: efi: Enable SET/GET WAKEUP services
-as optional")
-
-Reviewed-by: Jeremy Szu <jszu@nvidia.com>
-Reviewed-by: Matthew R. Ochs <mochs@nvidia.com>
-Signed-off-by: Joseph Jang <jjang@nvidia.com>
----
- tools/testing/selftests/rtc/Makefile  |  2 +-
- tools/testing/selftests/rtc/rtctest.c | 72 +++++++++++++++++++--------
- 2 files changed, 53 insertions(+), 21 deletions(-)
-
-diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
-index 55198ecc04db..6e3a98fb24ba 100644
---- a/tools/testing/selftests/rtc/Makefile
-+++ b/tools/testing/selftests/rtc/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--CFLAGS += -O3 -Wl,-no-as-needed -Wall
-+CFLAGS += -O3 -Wl,-no-as-needed -Wall -I../../../../usr/include/
- LDLIBS += -lrt -lpthread -lm
- 
- TEST_GEN_PROGS = rtctest
-diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
-index 63ce02d1d5cc..aa47b17fbd1a 100644
---- a/tools/testing/selftests/rtc/rtctest.c
-+++ b/tools/testing/selftests/rtc/rtctest.c
-@@ -8,6 +8,7 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <linux/rtc.h>
-+#include <stdbool.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <sys/ioctl.h>
-@@ -24,12 +25,17 @@
- #define READ_LOOP_SLEEP_MS 11
- 
- static char *rtc_file = "/dev/rtc0";
-+static char *rtc_procfs = "/proc/driver/rtc";
- 
- FIXTURE(rtc) {
- 	int fd;
- };
- 
- FIXTURE_SETUP(rtc) {
-+	if (access(rtc_file, R_OK) != 0)
-+		SKIP(return, "Skipping test since cannot access %s, perhaps miss sudo",
-+			 rtc_file);
-+
- 	self->fd = open(rtc_file, O_RDONLY);
- }
- 
-@@ -82,6 +88,36 @@ static void nanosleep_with_retries(long ns)
- 	}
- }
- 
-+static bool is_rtc_alarm_supported(int fd)
-+{
-+	struct rtc_param param = { 0 };
-+	int rc;
-+	char buf[1024] = { 0 };
-+
-+	/* Validate kernel reflects unsupported RTC alarm state */
-+	param.param = RTC_PARAM_FEATURES;
-+	param.index = 0;
-+	rc = ioctl(fd, RTC_PARAM_GET, &param);
-+	if (rc < 0) {
-+		/* Fallback to read rtc procfs */
-+		fd = open(rtc_procfs, O_RDONLY);
-+		if (fd != -1) {
-+			rc = read(fd, buf, sizeof(buf));
-+			close(fd);
-+
-+			/* Check for the presence of "alarm" in the buf */
-+			if (strstr(buf, "alarm") == NULL)
-+				return false;
-+		} else
-+			return false;
-+	} else {
-+		if ((param.uvalue & _BITUL(RTC_FEATURE_ALARM)) == 0)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
- 	int rc;
- 	long iter_count = 0;
-@@ -202,6 +238,9 @@ TEST_F(rtc, alarm_alm_set) {
- 		SKIP(return, "Skipping test since %s does not exist", rtc_file);
- 	ASSERT_NE(-1, self->fd);
- 
-+	if (!is_rtc_alarm_supported(self->fd))
-+		SKIP(return, "Skipping test since alarms are not supported.");
-+
- 	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
- 	ASSERT_NE(-1, rc);
- 
-@@ -209,11 +248,7 @@ TEST_F(rtc, alarm_alm_set) {
- 	gmtime_r(&secs, (struct tm *)&tm);
- 
- 	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
--	if (rc == -1) {
--		ASSERT_EQ(EINVAL, errno);
--		TH_LOG("skip alarms are not supported.");
--		return;
--	}
-+	ASSERT_NE(-1, rc);
- 
- 	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
- 	ASSERT_NE(-1, rc);
-@@ -260,6 +295,9 @@ TEST_F(rtc, alarm_wkalm_set) {
- 		SKIP(return, "Skipping test since %s does not exist", rtc_file);
- 	ASSERT_NE(-1, self->fd);
- 
-+	if (!is_rtc_alarm_supported(self->fd))
-+		SKIP(return, "Skipping test since alarms are not supported.");
-+
- 	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
- 	ASSERT_NE(-1, rc);
- 
-@@ -269,11 +307,7 @@ TEST_F(rtc, alarm_wkalm_set) {
- 	alarm.enabled = 1;
- 
- 	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
--	if (rc == -1) {
--		ASSERT_EQ(EINVAL, errno);
--		TH_LOG("skip alarms are not supported.");
--		return;
--	}
-+	ASSERT_NE(-1, rc);
- 
- 	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
- 	ASSERT_NE(-1, rc);
-@@ -312,6 +346,9 @@ TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
- 		SKIP(return, "Skipping test since %s does not exist", rtc_file);
- 	ASSERT_NE(-1, self->fd);
- 
-+	if (!is_rtc_alarm_supported(self->fd))
-+		SKIP(return, "Skipping test since alarms are not supported.");
-+
- 	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
- 	ASSERT_NE(-1, rc);
- 
-@@ -319,11 +356,7 @@ TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
- 	gmtime_r(&secs, (struct tm *)&tm);
- 
- 	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
--	if (rc == -1) {
--		ASSERT_EQ(EINVAL, errno);
--		TH_LOG("skip alarms are not supported.");
--		return;
--	}
-+	ASSERT_NE(-1, rc);
- 
- 	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
- 	ASSERT_NE(-1, rc);
-@@ -370,6 +403,9 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
- 		SKIP(return, "Skipping test since %s does not exist", rtc_file);
- 	ASSERT_NE(-1, self->fd);
- 
-+	if (!is_rtc_alarm_supported(self->fd))
-+		SKIP(return, "Skipping test since alarms are not supported.");
-+
- 	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
- 	ASSERT_NE(-1, rc);
- 
-@@ -379,11 +415,7 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
- 	alarm.enabled = 1;
- 
- 	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
--	if (rc == -1) {
--		ASSERT_EQ(EINVAL, errno);
--		TH_LOG("skip alarms are not supported.");
--		return;
--	}
-+	ASSERT_NE(-1, rc);
- 
- 	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
- 	ASSERT_NE(-1, rc);
--- 
-2.34.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
+d3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE1heSA2LCAyMDI0IDExOjM4
+IFBNDQo+IFRvOiBEZWxwaGluZV9DQ19DaGl1L1dZSFEvV2l3eW5uIDxEZWxwaGluZV9DQ19DaGl1
+QHdpd3lubi5jb20+Ow0KPiBwYXRyaWNrQHN0d2N4Lnh5ejsgam9lbEBqbXMuaWQuYXU7IG9wZW5i
+bWNAbGlzdHMub3psYWJzLm9yZzsgUm9iIEhlcnJpbmcNCj4gPHJvYmhAa2VybmVsLm9yZz47IEty
+enlzenRvZiBLb3psb3dza2kgPGtyemsrZHRAa2VybmVsLm9yZz47IENvbm9yIERvb2xleQ0KPiA8
+Y29ub3IrZHRAa2VybmVsLm9yZz47IEFuZHJldyBKZWZmZXJ5IDxhbmRyZXdAY29kZWNvbnN0cnVj
+dC5jb20uYXU+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1hc3BlZWRAbGlzdHMub3psYWJzLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYx
+XSBBUk06IGR0czogYXNwZWVkOiB5b3NlbWl0ZTQ6IGFkZCBJM0MgY29uZmlnIGluIERUUw0KPiAN
+Cj4gICBTZWN1cml0eSBSZW1pbmRlcjogUGxlYXNlIGJlIGF3YXJlIHRoYXQgdGhpcyBlbWFpbCBp
+cyBzZW50IGJ5IGFuIGV4dGVybmFsDQo+IHNlbmRlci4NCj4gDQo+IE9uIDA2LzA1LzIwMjQgMTM6
+MzMsIERlbHBoaW5lIENDIENoaXUgd3JvdGU6DQo+ID4gU2V0IEkzQyBjb25maWcgaW4geW9zZW1p
+dGU0IERUUy4NCj4gPg0KPiA+IFRlc3QgcGxhbjoNCj4gPiBUZXN0ZWQgd2l0aCBhc3BlZWQgSTND
+IHBhdGNoZXMgYW5kIEkzQyBodWIgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRGVs
+cGhpbmUgQ0MgQ2hpdSA8RGVscGhpbmVfQ0NfQ2hpdUB3aXd5bm4uY29tPg0KPiA+IC0tLQ0KPiA+
+ICAuLi4vYXNwZWVkL2FzcGVlZC1ibWMtZmFjZWJvb2steW9zZW1pdGU0LmR0cyAgfCA4Ng0KPiAr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4NiBpbnNlcnRpb25zKCsp
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkL2FzcGVlZC1i
+bWMtZmFjZWJvb2steW9zZW1pdGU0LmR0cw0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC9h
+c3BlZWQtYm1jLWZhY2Vib29rLXlvc2VtaXRlNC5kdHMNCj4gPiBpbmRleCA2NDA3NWNjNDFkOTIu
+LjZhMzBjNDI0ZDc0NSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQv
+YXNwZWVkLWJtYy1mYWNlYm9vay15b3NlbWl0ZTQuZHRzDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvYXNwZWVkL2FzcGVlZC1ibWMtZmFjZWJvb2steW9zZW1pdGU0LmR0cw0KPiA+IEBAIC01
+OTUsNiArNTk1LDkyIEBAIGkyYy1tdXhANzIgew0KPiA+ICAgICAgIH07DQo+ID4gIH07DQo+ID4N
+Cj4gPiArJmkzYzAgew0KPiA+ICsgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiArICAgICBwaW5j
+dHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF9p
+M2MxX2RlZmF1bHQ+Ow0KPiA+ICsgICAgIGkzYy1wcC1zY2wtaGktcGVyaW9kLW5zID0gPDQwPjsN
+Cj4gPiArICAgICBpM2MtcHAtc2NsLWxvLXBlcmlvZC1ucyA9IDw0MD47DQo+ID4gKyAgICAgaTNj
+LW9kLXNjbC1oaS1wZXJpb2QtbnMgPSA8MzgwPjsNCj4gPiArICAgICBpM2Mtb2Qtc2NsLWxvLXBl
+cmlvZC1ucyA9IDw2MjA+Ow0KPiA+ICsgICAgIHNkYS10eC1ob2xkLW5zID0gPDEwPjsNCj4gPiAr
+DQo+ID4gKyAgICAgbWN0cC1jb250cm9sbGVyOw0KPiA+ICsgICAgIGh1YkAweDcwIHsNCj4gDQo+
+IFRoYXQncyBub3QgYSB2YWxpZCB1bml0IGFkZHJlc3MuDQo+IA0KPiANCldpbGwgdXBkYXRlIGlu
+IHRoZSBuZXh0IHBhdGNoLiBUaGFua3MuDQoNCj4gPiArICAgICAgICAgICAgIHJlZyA9IDwweDcw
+IDB4M2MwIDB4MDA3MDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgY3AwLWxkby1lbiA9ICJlbmFi
+bGVkIjsNCj4gPiArICAgICAgICAgICAgIGNwMS1sZG8tZW4gPSAiZW5hYmxlZCI7DQo+ID4gKyAg
+ICAgICAgICAgICBjcDAtbGRvLXZvbHQgPSAiMS4yViI7DQo+ID4gKyAgICAgICAgICAgICBjcDEt
+bGRvLXZvbHQgPSAiMS4yViI7DQo+ID4gKyAgICAgICAgICAgICB0cDAxNDUtbGRvLWVuID0gImVu
+YWJsZWQiOw0KPiA+ICsgICAgICAgICAgICAgdHAyMzY3LWxkby1lbiA9ICJlbmFibGVkIjsNCj4g
+PiArICAgICAgICAgICAgIHRwMDE0NS1sZG8tdm9sdCA9ICIxLjJWIjsNCj4gPiArICAgICAgICAg
+ICAgIHRwMjM2Ny1sZG8tdm9sdCA9ICIxLjJWIjsNCj4gPiArICAgICAgICAgICAgIHRwMDE0NS1w
+dWxsdXAgPSAiMmsiOw0KPiA+ICsgICAgICAgICAgICAgdHAyMzY3LXB1bGx1cCA9ICIyayI7DQo+
+IA0KPiBXaGVyZSBhcmUgYmluZGluZ3MgZm9yIGFsbCB0aGlzPw0KPiANClRoZSBiaW5kaW5ncyBh
+cmUgZnJvbSB0aGUgZm9sbG93aW5nIGJpbmRpbmcgZG9jdW1lbnQuDQpodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtaTNjL3BhdGNoLzIwMjQwMjE3MTMxNDEyLjQxNDU1
+MDYtMS1zdGV2ZW4ubml1LnVqQHJlbmVzYXMuY29tLw0K
