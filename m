@@ -1,66 +1,69 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676D31411CB;
-	Fri, 17 May 2024 23:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CAE142645
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 23:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715989106; cv=none; b=RiGmVjwWCUG/r4nG75AWhlPv00DAIBTdQ5ZsGxzQhkLiTs8L6vuMF0TfhDVN/hG4IFi3tmUPWDSltyNre4sgMivS88Nefmf6JIEdNlbcgrCJBXs4lXvqEM6B6vcaf5DQf6nHdpmymuFSlGZkoFrXjU/wLQZcnsIImg14Gofyd30=
+	t=1715989113; cv=none; b=gU1WeE0T5wLZswPJWtcuWvE8qkiWhboR3QbUJO2k3+fbHr1HmD4gA40HLTtJe/LDcvv7fHZXfTtkA4XDRCtiOamK1IhXyo/pP63mM+N7JX9lDbD8zheiXCkWOOVbHdjaMm0/ds3JJjUtgj81MV1wkzY3a7mT06jFc7Jb1k5Y9YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715989106; c=relaxed/simple;
-	bh=CFyPzwgT2jQhgiA2Zh230O6bxmrqJkm4Z1nabLhVig0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JsQ3lF1rePHP1HYuAIrhUeXOn50YcqopkxB5Qti66rT9muk9XzRCSxX4sK7BlBTNFSMYF7i9oIuIVHSIuBTEiV3qrHniONi0jR8upbdXDCPCA0aytfdAn7lHEePaf5aIRhr9FI0OqSH5fOzaAXs4SKF/iXbgtDERlR/v9z4Lw4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dsv7+3Mm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715989113; c=relaxed/simple;
+	bh=qAGg3p02CzshPTR3Olk+XX9L/LU7qQre5bMGAyQj6y0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ghz0/5O3qoVaf5uame2xVm4jTkjghwWRrtLr9LzdlFNALoZTBB8HNdeM9ivfCK5vEb5QztJlSjerZ0w+s1dNSLbmZ2KU3zmO65zYQbJMszIiyEbO0Gu4BjHmbaa8rOU+PBq458cjnPWiJQ1b8abZHnHn0EI880TUwYM28Xmf9CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IPU/1mAI; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dsv7+3Mm"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44HL1A9k007181;
-	Fri, 17 May 2024 23:38:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=0Ls2CuUKaXalqx1DF7aCUy/WgaExfZwxpPT5v5HwlGo=; b=ds
-	v7+3MmVVv06+JdC1rv4zDcMCkxSjyVe3JBq3aJAxxsMqu+dRAnG3fhtp+XfskvZt
-	sRGtjSs6k254PjyJMhgQb3LtEVNthYwP6txTKok26MnOq0lS5I96qkt6HkMyfKCJ
-	c6Ml4vEH+5GpDeaF2qbn8auZzv98fsDJJH8oBNiwCKHfWjQvvkka+vZXH/GcvQ2d
-	AnXbGLU4rcRhDJ89np9Ha4gIotBieqG3t+zs6Z7ZPb1/0zVlIrPHHtBmiZOaPcQE
-	TNcXxjrFPNOZusaNKzaOUAaNaBFOpq+Lk+stv2PhmVayU1x+lv36rPv6kifG5762
-	1eVySkufJd4pT9nfVlTA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y49ge1a2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 23:38:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44HNcERX025127
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 May 2024 23:38:14 GMT
-Received: from abhinavk-linux1.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 17 May 2024 16:38:13 -0700
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-To: <freedreno@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <seanpaul@chromium.org>,
-        <swboyd@chromium.org>, <dianders@chromium.org>,
-        <quic_jesszhan@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 3/4] drm/msm/iommu: introduce msm_iommu_disp_new() for msm_kms
-Date: Fri, 17 May 2024 16:37:58 -0700
-Message-ID: <20240517233801.4071868-4-quic_abhinavk@quicinc.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240517233801.4071868-1-quic_abhinavk@quicinc.com>
-References: <20240517233801.4071868-1-quic_abhinavk@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPU/1mAI"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51fdc9af005so2233098e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 16:38:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715989110; x=1716593910; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s9H//QTWRYsZ8CFoh3lKgy3kB9SwxktnsEXW1iP/ZhI=;
+        b=IPU/1mAI4WK9Om4gGfiYSGdMfHiL2n+ohl9N61jgZ1XZ5DwovcXtPA2qXrcS04AWGV
+         NrvkJkahJFuxUZ1YpR/iFf1sCRu1OiNFiNH2qC0/9ymoVatOYF2e90AJAMK4zSRzLoQF
+         awmL4yR/ZMCG2nHx+MroaX+bC8JHgTieU/cpIOntFbGPi6zZ4KLvxSy3tjDCWQayFsgh
+         Nx4cJFPVcNf47ywzIaF7Dz1pDl5QkzC0tEqksUH8C+zV6Ik/Y9tSu3B83fDFSODzZwnm
+         a0tlL/p5/0ER3URfJ9CGz+Nqt5UXANt00TIu6+AievU9FqA6CCZJ9AwUgzJoQ3Ynmh78
+         FYfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715989110; x=1716593910;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s9H//QTWRYsZ8CFoh3lKgy3kB9SwxktnsEXW1iP/ZhI=;
+        b=e83T/krBY8mZi0QH7bNocpd4HxzzI5Ovmye8AXoRY3YwTRK1myFOD3bsxLayUNUnHZ
+         NUmUcpZyvGZosXqMNB3wzkkbPJLmQ8aDmmypb2MDXCLQBP/Oxfi3R7j4rSmKKkzXQG9U
+         TBMQsOGiaXSne31HB2j7YRwaoaTg48oXhng5pv0Cy33IvhnptExJA2Y2OxuCMRIx2CKF
+         6X6d+qQEc8RZ7OF99quMaXeV6W8cix5tP6nfUWBRqBogxEocm6CBox7xa9MMA3b/xEUw
+         Ja3sE8n/kEOT2SCg+xtp503NZmZTHcYKPwIb2Kc/adyqK5du7q501+vaT8Uy3Sja1bkK
+         NleA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyejTXUl9X9RfV7r50aRV9iikO/xqL/XsqgOJ+iy0HYvM+XtJPtyxJTAsT+RNHM4s5L75qFpizNw+N36S2gGYrgXMrhkVy6u7p3qAH
+X-Gm-Message-State: AOJu0YyQhqHy0PM/liY9KeqYWjW+yzSLRprDGSJPw6P7RYyFZr5nfZhm
+	eb/SFbEzwbEqR72qkwJ/TQ2JxXUnw6oKBv1A1XpGc+rCilqnFAxfdLpQYA==
+X-Google-Smtp-Source: AGHT+IFaErxkK8QmTqIKSlBWlqDGbStWQOEEvoXxfSx+yl+QzEoB9cgAW3Ayf6V8blHmOHuSQHxOmQ==
+X-Received: by 2002:a05:6512:1308:b0:520:36ea:9375 with SMTP id 2adb3069b0e04-522102783ffmr23154832e87.43.1715989109520;
+        Fri, 17 May 2024 16:38:29 -0700 (PDT)
+Received: from michalis.. ([2a02:85f:fccb:8700:ae86:838e:b741:f781])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17cd0sm1156810566b.214.2024.05.17.16.38.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 16:38:29 -0700 (PDT)
+From: Michail Tatas <michail.tatas@gmail.com>
+To: vaibhav.sr@gmail.com,
+	mgreer@animalcreek.com,
+	johan@kernel.org,
+	elder@kernel.org,
+	gregkh@linuxfoundation.org,
+	outreachy@lists.linux.dev
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Michail Tatas <michail.tatas@gmail.com>
+Subject: [PATCH] staging: greybus: audio_codec.c: Remove redundant parenthesis
+Date: Sat, 18 May 2024 02:38:06 +0300
+Message-ID: <20240517233806.36849-1-michail.tatas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,88 +71,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: r3yRdPu4HSeccNj21lMjnKkLRDZeFVIK
-X-Proofpoint-ORIG-GUID: r3yRdPu4HSeccNj21lMjnKkLRDZeFVIK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-17_11,2024-05-17_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=827
- impostorscore=0 clxscore=1015 priorityscore=1501 phishscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405170184
 
-Introduce a new API msm_iommu_disp_new() for display use-cases.
+Remove unnecessary parenthesis as suggested by the checkpatch.pl
 
-Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Signed-off-by: Michail Tatas <michail.tatas@gmail.com>
 ---
- drivers/gpu/drm/msm/msm_iommu.c | 28 ++++++++++++++++++++++++++++
- drivers/gpu/drm/msm/msm_mmu.h   |  1 +
- 2 files changed, 29 insertions(+)
+ drivers/staging/greybus/audio_codec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index a79cd18bc4c9..3d5c1bb4c013 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -343,6 +343,19 @@ static int msm_gpu_fault_handler(struct iommu_domain *domain, struct device *dev
- 	return 0;
- }
+diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+index 2f05e761fb9a..dfb5322964de 100644
+--- a/drivers/staging/greybus/audio_codec.c
++++ b/drivers/staging/greybus/audio_codec.c
+@@ -305,7 +305,7 @@ int gbaudio_module_update(struct gbaudio_codec_info *codec,
+ 	dev_dbg(module->dev, "%s:Module update %s sequence\n", w->name,
+ 		enable ? "Enable" : "Disable");
  
-+static int msm_disp_fault_handler(struct iommu_domain *domain, struct device *dev,
-+				  unsigned long iova, int flags, void *arg)
-+{
-+	struct msm_iommu *iommu = arg;
-+
-+	if (iommu->base.handler)
-+		return iommu->base.handler(iommu->base.arg, iova, flags, NULL);
-+
-+	pr_warn_ratelimited("*** fault: iova=%16lx, flags=%d\n", iova, flags);
-+
-+	return 0;
-+}
-+
- static void msm_iommu_resume_translation(struct msm_mmu *mmu)
- {
- 	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(mmu->dev);
-@@ -434,6 +447,21 @@ struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
- 	return &iommu->base;
- }
- 
-+struct msm_mmu *msm_iommu_disp_new(struct device *dev, unsigned long quirks)
-+{
-+	struct msm_iommu *iommu;
-+	struct msm_mmu *mmu;
-+
-+	mmu = msm_iommu_new(dev, quirks);
-+	if (IS_ERR_OR_NULL(mmu))
-+		return mmu;
-+
-+	iommu = to_msm_iommu(mmu);
-+	iommu_set_fault_handler(iommu->domain, msm_disp_fault_handler, iommu);
-+
-+	return mmu;
-+}
-+
- struct msm_mmu *msm_iommu_gpu_new(struct device *dev, struct msm_gpu *gpu, unsigned long quirks)
- {
- 	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(dev);
-diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-index 88af4f490881..730458d08d6b 100644
---- a/drivers/gpu/drm/msm/msm_mmu.h
-+++ b/drivers/gpu/drm/msm/msm_mmu.h
-@@ -42,6 +42,7 @@ static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
- 
- struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks);
- struct msm_mmu *msm_iommu_gpu_new(struct device *dev, struct msm_gpu *gpu, unsigned long quirks);
-+struct msm_mmu *msm_iommu_disp_new(struct device *dev, unsigned long quirks);
- 
- static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
- 		int (*handler)(void *arg, unsigned long iova, int flags, void *data))
+-	if ((w->id != snd_soc_dapm_aif_in) && (w->id != snd_soc_dapm_aif_out)) {
++	if (w->id != snd_soc_dapm_aif_in && w->id != snd_soc_dapm_aif_out) {
+ 		dev_dbg(codec->dev, "No action required for %s\n", w->name);
+ 		return 0;
+ 	}
 -- 
-2.44.0
+2.43.0
 
