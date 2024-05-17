@@ -1,139 +1,269 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C21312F5AD;
-	Fri, 17 May 2024 15:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C91412FF7E
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715961467; cv=none; b=sD2TyCaJPQs2/X4Li4PaQiqUGUFywIL+65GtDHmkJAVwvLWxypZl5yovp9WAXWnyRGFC6OxwHFzqMcQOfj7xcQpmG7C+oUFX2fFcu51qdsDbubKhrq3R7MS8wHtmulpCAmih8i4DgsgI5534FocVRP/+26/ll4UqfX8PhLsFgyA=
+	t=1715961486; cv=none; b=ZyNERJ6yHcXv4N6hl9cZcid+zrjozCantCWbnLe+H/W8kQk40GrsWc4E/oT0kNbzDcwkKa7/J0pplkPW3Zj5sqz/Hv27bIsDQ0Gcr5OTbGwk4VcZFYfVC2+68hzySf1Wn5MgL6amNuVkHFqEEIzFYrA4FoyRgBnd/R51L0uf6Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715961467; c=relaxed/simple;
-	bh=C7OBzn5ovR9MRd7VBL4t/mfvst5rJG04ZZ3eFtxBEtE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BkJtgttCi+sB9M1uOnDzgA/Xtc1P3yTjoyh6ku1s0DXTjlfXtSz6QBQFMjbyiZ6Jl4rR38XHSMt0umbIZgWo2cP+jROrnkT/wRKLYVuAxI7VSqxQR/8HBLCV+Tht7Upr3zkQFXbTtfTtcI5MrhWmtCPQV8EWJa6Mii3YBsMBNGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iluTzaVJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715961486; c=relaxed/simple;
+	bh=a2fBzysMpCaW8+tEHMaUIDgwDVM4a5ldLKDCdwVTU0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q99t7y1LQbcVntEoY+5LugCmEPmsIJ4pvexAYB09oIqIP0gyDwL3oCZ9aDzih2uvW+sjAOedn1pZtS43XGELSxlGYBGBfUE9Cy7cGzgVbOsKt+wHH6dc8Waz85sM5kz7WSkw2XVvXkyYsc9LyUvb/3PSU3iwHbxuyLTzXi3j2RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=DxVsAMUg; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=DxVsAMUg; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iluTzaVJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65C3FC32782;
-	Fri, 17 May 2024 15:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715961465;
-	bh=C7OBzn5ovR9MRd7VBL4t/mfvst5rJG04ZZ3eFtxBEtE=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=iluTzaVJnFfbgjU9RbgxZt9r3ezVdeq/JqZJr78PaN7m3fpW2pKb18rqHTLUtzk8U
-	 GsRRJVBZJe0CmzzM/2yNE+jw+lTIfHCIksGpmGbQOvMHrpgyNfdDbybDQhZb2sBdbi
-	 jHZIzTszrIdiLnHcqZ6oiWmvEZd6gJOiNn7pNwZeljcwEdMmZc59vYM2oVDV9HVcJh
-	 EFuJq1DU5IS5hDjnlNvR1YNunXHHtXDdv0Bv83Eo9Q3FaNmldOgrWbHm5xX1dOpNYm
-	 5WgSAs7hi77odDfQa4jwARJMVjoaszPbwdxIxoYnMspRtJl/VNmcof2XvNgj7XT5+N
-	 P+/rm+h/ShCRQ==
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="DxVsAMUg";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="DxVsAMUg"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9CF6A21ACF;
+	Fri, 17 May 2024 15:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715961482; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=a2fBzysMpCaW8+tEHMaUIDgwDVM4a5ldLKDCdwVTU0c=;
+	b=DxVsAMUgy30LmWXFoUkeUTnX1Gf+uvmWfXdo509PdhdE9PP23atSdxgFriG+UVrWJrH/52
+	Lrnnv8AeDOt9tJAdCmg8K5CbPB66kdczO8OlFBaIPSbrtp/bFEAogaD1tLM7yCoELdMYoY
+	zwZiEB9NHBjqClwOR2H9oX01isDmMcA=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715961482; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=a2fBzysMpCaW8+tEHMaUIDgwDVM4a5ldLKDCdwVTU0c=;
+	b=DxVsAMUgy30LmWXFoUkeUTnX1Gf+uvmWfXdo509PdhdE9PP23atSdxgFriG+UVrWJrH/52
+	Lrnnv8AeDOt9tJAdCmg8K5CbPB66kdczO8OlFBaIPSbrtp/bFEAogaD1tLM7yCoELdMYoY
+	zwZiEB9NHBjqClwOR2H9oX01isDmMcA=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 411D613991;
+	Fri, 17 May 2024 15:58:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CAEHDop+R2bgKQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Fri, 17 May 2024 15:58:02 +0000
+Message-ID: <f02d9ebb-a2b3-4cb3-871b-34324d374d01@suse.com>
+Date: Fri, 17 May 2024 17:58:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/kvm/tdx: Save %rbp in TDX_MODULE_CALL
+To: Dave Hansen <dave.hansen@intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+References: <20240517121450.20420-1-jgross@suse.com>
+ <ohvjbokpaxagc26kxmlrujab7cw3bekgi5ln7dt46cbsaxcqqh@crvqeohfazmf>
+ <f63e1217-3dbe-458d-8c14-7880811d30ba@suse.com>
+ <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
+ <03d27b6a-be96-44d7-b4ea-aa00ccab4cc5@suse.com>
+ <fc0e8ab7-86d4-4428-be31-82e1ece6dd21@intel.com>
+ <c0067319-2653-4cbd-8fee-1ccf21b1e646@suse.com>
+ <6df4fb48-9947-46ec-af5a-66fa06d6a83b@intel.com>
+ <86ca805d-7ed7-47dd-8228-5e19fbade53f@suse.com>
+ <f7edef9c-5eb5-4664-a193-3bb063674742@intel.com>
+Content-Language: en-US
+From: Juergen Gross <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <f7edef9c-5eb5-4664-a193-3bb063674742@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------X8DZ3Y7EjPb0AQY02PCi4ZRA"
+X-Spam-Flag: NO
+X-Spam-Score: -6.19
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.19 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-0.988];
+	MIME_UNKNOWN(0.10)[application/pgp-keys];
+	MIME_BASE64_TEXT(0.10)[];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	HAS_ATTACHMENT(0.00)[]
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------X8DZ3Y7EjPb0AQY02PCi4ZRA
+Content-Type: multipart/mixed; boundary="------------3WWlCxOsobQA4Uslmp2R0M46";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Dave Hansen <dave.hansen@intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <f02d9ebb-a2b3-4cb3-871b-34324d374d01@suse.com>
+Subject: Re: [PATCH] x86/kvm/tdx: Save %rbp in TDX_MODULE_CALL
+References: <20240517121450.20420-1-jgross@suse.com>
+ <ohvjbokpaxagc26kxmlrujab7cw3bekgi5ln7dt46cbsaxcqqh@crvqeohfazmf>
+ <f63e1217-3dbe-458d-8c14-7880811d30ba@suse.com>
+ <2a2guben2ysyeb43rzg6zelzpa57o24ufai3mi6ocewwvgu63l@c7dle47q7hzw>
+ <03d27b6a-be96-44d7-b4ea-aa00ccab4cc5@suse.com>
+ <fc0e8ab7-86d4-4428-be31-82e1ece6dd21@intel.com>
+ <c0067319-2653-4cbd-8fee-1ccf21b1e646@suse.com>
+ <6df4fb48-9947-46ec-af5a-66fa06d6a83b@intel.com>
+ <86ca805d-7ed7-47dd-8228-5e19fbade53f@suse.com>
+ <f7edef9c-5eb5-4664-a193-3bb063674742@intel.com>
+In-Reply-To: <f7edef9c-5eb5-4664-a193-3bb063674742@intel.com>
+
+--------------3WWlCxOsobQA4Uslmp2R0M46
+Content-Type: multipart/mixed; boundary="------------j9DN4rZ2rnNijV2gO0KtCBgR"
+
+--------------j9DN4rZ2rnNijV2gO0KtCBgR
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gMTcuMDUuMjQgMTc6NTIsIERhdmUgSGFuc2VuIHdyb3RlOg0KPiBPbiA1LzE3LzI0IDA4
+OjQ4LCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPj4gSXMgdGhlIEJJT1MgdmVyc2lvbiBwcmlu
+dGVkIGF0IGJvb3QgZW5vdWdoIHRvIHNlZSB3aGF0IEkgaGF2ZT8NCj4+DQo+PiBbwqDCoMKg
+IDAuMDAwMDAwXSBETUk6IEludGVsIENvcnBvcmF0aW9uIEQ1MEROUC9ENTBETlAsIEJJT1MN
+Cj4+IFNFNUM3NDExLjg2Qi45NTM1LkQwNC4yMzEyMjcwNTE4IDEyLzI3LzIwMjMNCj4gDQo+
+IEkgaG9uZXN0bHkgZG9uJ3Qga25vdy4NCj4gDQo+IFdoYXQgd2UgYWN0dWFsbHkgbmVlZCBp
+cyB0aGUgVERYIG1vZHVsZSB2ZXJzaW9uLiBJJ20gbm90IHN1cmUgaG93DQo+IHRpZ2h0bHkg
+dGllZCB0aGUgVERYIG1vZHVsZSBpcyB0byB0aGUgQklPUyB2ZXJzaW9uLiBJIHN1c3BlY3Qg
+dGhhdA0KPiB0aGV5J3JlIGFjdHVhbGx5IGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQuDQo+IA0K
+PiBPbmNlIHdlIGhhdmUgdGhlIHNwZWNpZmljIFREWCBtb2R1bGUgdmVyc2lvbiwgd2UgY2Fu
+IGdvIGFzayB0aGUgZm9sa3MNCj4gd2hvIHdyaXRlIGl0IGlmIHRoZXJlIHdlcmUgYW55IFJC
+UCBjbG9iYmVyaW5nIGJ1Z3MuDQo+IA0KDQpPa2F5LCBob3cgdG8gZ2V0IHRoZSBURFggbW9k
+dWxlIHZlcnNpb24/DQoNCg0KSnVlcmdlbg0K
+--------------j9DN4rZ2rnNijV2gO0KtCBgR
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 May 2024 18:57:42 +0300
-Message-Id: <D1C1KL7Q27P9.39BH0Z4EMBBUG@kernel.org>
-Cc: <jgg@ziepe.ca>, <peterhuewe@gmx.de>, <vitor.soares@toradex.com>
-Subject: Re: tpm_tis_spi takes minutes to probe
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Vitor Soares"
- <ivitro@gmail.com>, <linux-integrity@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <bf67346ef623ff3c452c4f968b7d900911e250c3.camel@gmail.com>
- <D1C18M92CMJ1.GNLD51L95OHV@kernel.org>
-In-Reply-To: <D1C18M92CMJ1.GNLD51L95OHV@kernel.org>
 
-On Fri May 17, 2024 at 6:42 PM EEST, Jarkko Sakkinen wrote:
-> On Fri May 17, 2024 at 5:53 PM EEST, Vitor Soares wrote:
-> > Greetings,
-> >
-> > I'm using the tpm_tis_spi.ko module and it is taking several minutes to=
- probe on
-> > kernel:
-> >  - commit ea5f6ad9ad96 ("Merge tag 'platform-drivers-x86-v6.10-1' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x8=
-6")
-> >
-> > root@verdin-imx8mm-07317726:~# time modprobe tpm_tis_spi=20
-> > [   57.534597] SPI driver tpm_tis_spi has no spi_device_id for atmel,at=
-tpm20p
->
-> This was added in 6.9:
->
-> $ git --no-pager log -1 3c45308c44eda
-> commit 3c45308c44eda6cc3343a48341a82b96753c8a13
-> Author: Lukas Wunner <lukas@wunner.de>
-> Date:   Sat Jan 13 18:10:52 2024 +0100
->
->     tpm_tis_spi: Add compatible string atmel,attpm20p
->    =20
->     Commit 4f2a348aa365 ("arm64: dts: imx8mm-venice-gw73xx: add TPM devic=
-e")
->     added a devicetree node for the Trusted Platform Module on certain
->     Gateworks boards.
->    =20
->     The commit only used the generic "tcg,tpm_tis-spi" compatible string,
->     but public documentation shows that the chip is an ATTPM20P from Atme=
-l
->     (nowadays Microchip):
->     https://trac.gateworks.com/wiki/tpm
->    =20
->     Add the chip to the supported compatible strings of the TPM TIS SPI
->     driver.
->    =20
->     For reference, a datasheet is available at:
->     https://ww1.microchip.com/downloads/en/DeviceDoc/ATTPM20P-Trusted-Pla=
-tform-Module-TPM-2.0-SPI-Interface-Summary-Data-Sheet-DS40002082A.pdf
->    =20
->     Signed-off-by: Lukas Wunner <lukas@wunner.de>
->     Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@kernel.org>
->     Cc: Tim Harvey <tharvey@gateworks.com>
->     Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
->
-> linux-tpmdd on =EE=82=A0 tpm2_key=20
-> $ git describe --contains 3c45308c44eda
-> tpmdd-v6.9-rc1~2
->
-> > [   57.560684] tpm_tis_spi spi2.1: 2.0 TPM (device-id 0x3205, rev-id 1)
-> > [   57.584943] tpm tpm0: A TPM error (256) occurred attempting the self=
- test
->
-> Course of event is I think:
->
-> 	rc =3D tpm2_do_selftest(chip);
-> 	if (rc && rc !=3D TPM2_RC_INITIALIZE)
-> 		goto out;
->
-> 	/* 1. TPM_RC_INITIALIZE */
-> 	if (rc =3D=3D TPM2_RC_INITIALIZE) {
-> 		/* 2. Branches here. */
-> 		rc =3D tpm2_startup(chip);
-> 		if (rc)
-> 			goto out;
->
-> 		rc =3D tpm2_do_selftest(chip);
-> 		if (rc)
-> 			goto out;
-> 	}
->
-> 	/* 4. Second self-test successful. */
->
-> It is possible that there is a performance regression given multitude
-> of HMAC changes. It would likely had to be in tpm2_do_selftest(), since
-> it is the most time-consuming function.
->
-> I checked the timeouts etc. but in the first seek did find anything
-> obvious.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Right, the extra time comes from probably null key creation, even though
-tpm2_do_selftest() does not itself invoke tpm2_start_auth_session().
+xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
+oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
+kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
+1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
+BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
+N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
+PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
+FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
+UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
+vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
++6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
+qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
+tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
+Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
+CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
+RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
+8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
+BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
+SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
+7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
+nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
+AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
+Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
+hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
+w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
+VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
+OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
+/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
+c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
+F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
+k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
+wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
+5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
+TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
+N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
+AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
+0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
+Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
+LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
+we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
+v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
+Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
+534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
+b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
+yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
+suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
+jR/i1DG86lem3iBDXzXsZDn8R3/CwO0EGAEIACAWIQSFEmdy6PYElKXQl/ew3p3W
+KL8TLwUCWt3w0AIbAgCBCRCw3p3WKL8TL3YgBBkWCAAdFiEEUy2wekH2OPMeOLge
+gFxhu0/YY74FAlrd8NAACgkQgFxhu0/YY75NiwD/fQf/RXpyv9ZX4n8UJrKDq422
+bcwkujisT6jix2mOOwYBAKiip9+mAD6W5NPXdhk1XraECcIspcf2ff5kCAlG0DIN
+aTUH/RIwNWzXDG58yQoLdD/UPcFgi8GWtNUp0Fhc/GeBxGipXYnvuWxwS+Qs1Qay
+7/Nbal/v4/eZZaWs8wl2VtrHTS96/IF6q2o0qMey0dq2AxnZbQIULiEndgR625EF
+RFg+IbO4ldSkB3trsF2ypYLij4ZObm2casLIP7iB8NKmQ5PndL8Y07TtiQ+Sb/wn
+g4GgV+BJoKdDWLPCAlCMilwbZ88Ijb+HF/aipc9hsqvW/hnXC2GajJSAY3Qs9Mib
+4Hm91jzbAjmp7243pQ4bJMfYHemFFBRaoLC7ayqQjcsttN2ufINlqLFPZPR/i3IX
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-If you don't want that to happen, then you should disable
-CONFIG_TCG_TPM2_HMAC but also bus encrypted sessions to trusted keys
-random number generation and PCR extension.
+--------------j9DN4rZ2rnNijV2gO0KtCBgR--
 
-BR, Jarkko
+--------------3WWlCxOsobQA4Uslmp2R0M46--
+
+--------------X8DZ3Y7EjPb0AQY02PCi4ZRA
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmZHfokFAwAAAAAACgkQsN6d1ii/Ey/I
+SQf/Z9VCuC3BUlwojJNerHepfPWsWUx+m3qeGpqeSZY9qMR3U5zHZgjPC7f67hInCIk8aNkxtFQJ
+GCvnAPeERCFxoChJH5DiRbkH5SM+6c8O7h4Q0U6wc7IxOujB3k1TGcshNBek0yVtI6IwrCO0mArE
+LQQBDFanGg78C3V3M9fGJDhrHfdnehtDzy3ntCLqT7nWLFa6E+TjWDigMfTSmwyVrDVFtDL+t+Kn
+JXq7xFEGpeNDq9J8cM76Mk/KP91qonZbW8IcVPEbmmkX1YOcQoSqG6qg2q0EvKxOJLiHbIGyDG6g
+6DgocpMaydt4XuPoaFw5Dv5TflTpBA2m34zLBDCyoQ==
+=vjLm
+-----END PGP SIGNATURE-----
+
+--------------X8DZ3Y7EjPb0AQY02PCi4ZRA--
