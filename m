@@ -1,84 +1,61 @@
-Received: from wflow4-smtp.messagingengine.com (wflow4-smtp.messagingengine.com [64.147.123.139])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055CA262A8;
-	Fri, 17 May 2024 09:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A072561F;
+	Fri, 17 May 2024 09:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715939764; cv=none; b=rTxgAc2ET1L3LM0pSMDgTKZRjhgiqXUotXgx22qL7Falqdkm0/5RiL8n5eiQ05aiqDfrKyIzNH4lE14M5BO1z2JHVWhH4NlqlCPOGqG91Z93PeikZBUjNn0BVkKZDmgU1gmI/R0JBwt2cWSZ8T3dJomzeD5ZDOsXn0ZWYRtAlUU=
+	t=1715939813; cv=none; b=HUuC9hW6hM80EhKu1QbxZgalt4QSYd0ueyMvDD5GvdeKnEwrjTh2era1I2LTxYIT6FmrK9JM+231n6uLh0vT6WcJVOk/0I8oI1N9Q62OTPcKH7AQ/FrRe4JzPayoM2ZLQjwhAgK4IbQ/6h7+voghHlWs08kaAf5KwZxFSgXWavE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715939764; c=relaxed/simple;
-	bh=KkGcrkmfBCDmC5wsXf5TmL47hbWnMH6ayavHpq65iaM=;
+	s=arc-20240116; t=1715939813; c=relaxed/simple;
+	bh=KUl64RGT5p1k4DfrRgABpkdROBGYZ7VEd5IkWTHMINw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUXoDdhqoJ3NcZNnqWPSGPPo8cfZj80OKv3B+wGSPlbZnJSgLxjZHyLYBO27pXOJhtAx9Yw0OsnupZBeAUtfQQbQjaPzh6QwlMIPpsDavwwpVmjD+1NEgOtjiHaTzysCxnK3kl2EDLw6YnkT8j3ONNFE5JAemcoapIRymk1Cgdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=SFLGcB5W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=J76x28/z; arc=none smtp.client-ip=64.147.123.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=ssA6V2XMrAQ6BH9mIFfPfHIdHMw7U4RZfI6O4t5pOmdP/0r1xdA/duUGs87gWiIEoPXMP/i1V88Vat7JJyqPBQSnGVw0lVfXYBoBGbCxfXYYVYI1vJ+zhor1A8d/yH07TT51AFXB0uq+k8svXN3LmgjBufv0Xq0lqbKYzusWzYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbBbDwom; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="SFLGcB5W";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J76x28/z"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailflow.west.internal (Postfix) with ESMTP id 308202CC0147;
-	Fri, 17 May 2024 05:55:59 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Fri, 17 May 2024 05:56:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1715939759; x=1715943359; bh=rzLpoh5FVD
-	3LOyLFCdIzkEcNceRgesd/v21Z/l7RZ5E=; b=SFLGcB5WertXb1V3m2fi+z4zdU
-	Jp9S90ls3K+H9voIL3aIAJvTxnNjtJnWNCzLTGwdYoRMvNdLQUPAoi53A3ZbmzFN
-	RlE8d1Snpi/dYtx6gH6uWh/wH3uKykEWklZOvuFDMZy9/o1VQ1u/O8XHKYoyzugn
-	PNKksWA0LVq6/Q2MCD7vuymOtGhnnEoIqWWzVGk1sDKavrJIp1v4QAoqpDVmxaMo
-	LSuehCvyvygU0bfbS5KroosGXeBzFTd2dfV2h/w95wS4ghWZ+QT8mX8ekacHbBmG
-	bVlUNhJ5Py3c0QJHeKaGL1DoD2S6Wf1hDEg8jJCPKyAOEf5Zd8lz2BW9eXZQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	i76614979.fm3; t=1715939759; x=1715943359; bh=rzLpoh5FVD3LOyLFCd
-	IzkEcNceRgesd/v21Z/l7RZ5E=; b=J76x28/z38Uyk36WUZXKSl0R9o1g4tW23+
-	JtnPiGE6MbZgwvdz6mfgHIEWv8388bFiJkRd2c16WvW6fEqe8sUpcmbqBODF1uFY
-	eeTIYBjuqbDDoX32oeXKr75JT++SadWSHuS99rk21COe4YdU/lKTw8K+eyDpknRr
-	iz+aN4cHZGX8NvVtu3eVKEn7WNC71wiKzKRdvpr5FmtEtfxmhc94xpcXnmoNOBYF
-	WviHE/W0ubivbnhaj4fgvYQSmuQL1jxMmelMgA3//R6WaDgu41IEGAi5paEhbS2A
-	NGpaB3RPwBHmGBkJaygKFl07N6z9pb/BgAx+9ncpIGegZG+cmBMQ==
-X-ME-Sender: <xms:rilHZj0FM99tlirSD41vgsWEJEEdqQTGO29OwOru8OwDwnqzlZ8aWg>
-    <xme:rilHZiEloOFsYNCyshssEqC-7yh12MJxICZMxyzRlcPiTYlG5zU42E7EH2wqDIN0Y
-    51tssm036N2jKPFSdk>
-X-ME-Received: <xmr:rilHZj7NV8Ly8xSd9EsBVvlug2QPKNmcEcVlkiU83xlv63_xTWVyLIA_iWkhPP-lwQ9ozA6_CiDU6MAV3nNtBBY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehfedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtjeenucfhrhhomheplfhonhgr
-    thhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqnecugg
-    ftrfgrthhtvghrnhepkeekteegfefgvdefgfefffeufeffjedvudeijeehjeehffekjeek
-    leffueelgffgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepjhgtrghlmhgvlhhsseefgiigtddrnhgvth
-X-ME-Proxy: <xmx:rilHZo2D099dIZwbXk55mk2SKAngP2oXBOENCkmjh4DAJPwZ6w9qAw>
-    <xmx:rilHZmF1fx2MHJyoHxM7X06m7qiNCl2lJ54lmveuB-S7nBZFGwm_MQ>
-    <xmx:rilHZp-8DOew53kGbq6lGMvcv9iRDw_tJJ6fxxzywkDXukR7zGxhnw>
-    <xmx:rilHZjm7FAk5hNjKBn5SYAxY8cqgB5IB51w2jF76ZbiZk-WmM0c6kQ>
-    <xmx:rylHZiHgiPuOWpTUiiuyl2BhNMuqGhKfsDpvzi0N3-Wb5eFH1SyQQIzm>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 17 May 2024 05:55:57 -0400 (EDT)
-Date: Fri, 17 May 2024 03:00:58 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Ben Boeckel <me@benboeckel.net>, brauner@kernel.org, 
-	ebiederm@xmission.com, Luis Chamberlain <mcgrof@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Joel Granados <j.granados@samsung.com>, 
-	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, David Howells <dhowells@redhat.com>, containers@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
-Message-ID: <lkgjtvvbhiaern2fkcsholu4yaypsykfdpxim3k3mug2oko5iq@hoyossca24y5>
-References: <20240516092213.6799-1-jcalmels@3xx0.net>
- <ZkYKgNltq2hlBzbx@farprobe>
- <D1B3XN42A6DR.1RSMLZ6R7VRHT@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbBbDwom"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715939812; x=1747475812;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KUl64RGT5p1k4DfrRgABpkdROBGYZ7VEd5IkWTHMINw=;
+  b=nbBbDwomt3PT8FDUdfTH/kNtUQrMw6domVJhkoakKkc00L/SOQYOMRk/
+   WFcOmpvRgP3UjDvWc7rG3akU6tyK6ufawTiWUkOBRKlMQOG+c03YvHZXh
+   V0CeZVoReNg1NFYpYJOb+UL19P19Fe3cKjjMcuwMkDNzpcVuQ+NZ3B+zW
+   IMY5XYbN5kPbAvB8aY7ZR313abaoqk+WgrMcR8Y4NiVVWjjiKyxKAzIJE
+   Xos0LYLBNqIKwo5lJy51GCDmA3j+gqCZJCDM7aO+xTyalOmiWqjyXQ9NK
+   oWYr4zZ+Maln47ZOe1u87HPV8QMOtumo0CjUdDGLZwudPUt+2z9rGHIh+
+   A==;
+X-CSE-ConnectionGUID: EI9PrTJwSHSy09c0zpM2Ew==
+X-CSE-MsgGUID: lvS1hlnYRkmOyOaWeUCd8g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12218195"
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="12218195"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 02:56:51 -0700
+X-CSE-ConnectionGUID: yTxcteB6QFaIFYfsYrnX0Q==
+X-CSE-MsgGUID: PRUoyf06SmaUfh/6w6JRSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="32163178"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 02:56:50 -0700
+Date: Fri, 17 May 2024 02:56:49 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Isaku Yamahata <isaku.yamahata@intel.com>,
+	rick.p.edgecombe@intel.com
+Subject: Re: [PATCH 7/7] KVM: VMX: Introduce test mode related to EPT
+ violation VE
+Message-ID: <20240517095649.GB412700@ls.amr.corp.intel.com>
+References: <20240507154459.3950778-1-pbonzini@redhat.com>
+ <20240507154459.3950778-8-pbonzini@redhat.com>
+ <ZkVHh49Hn8gB3_9o@google.com>
+ <Zka1cub00xu37mHP@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,26 +64,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <D1B3XN42A6DR.1RSMLZ6R7VRHT@kernel.org>
+In-Reply-To: <Zka1cub00xu37mHP@google.com>
 
-On Thu, May 16, 2024 at 04:36:07PM GMT, Jarkko Sakkinen wrote:
-> On Thu May 16, 2024 at 4:30 PM EEST, Ben Boeckel wrote:
-> > I note a lack of any changes to `Documentation/` which seems quite
-> > glaring for something with such a userspace visibility aspect to it.
-> >
-> > --Ben
+On Thu, May 16, 2024 at 06:40:02PM -0700,
+Sean Christopherson <seanjc@google.com> wrote:
+
+> On Wed, May 15, 2024, Sean Christopherson wrote:
+> > On Tue, May 07, 2024, Paolo Bonzini wrote:
+> > > @@ -5200,6 +5215,9 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+> > >  	if (is_invalid_opcode(intr_info))
+> > >  		return handle_ud(vcpu);
+> > >  
+> > > +	if (KVM_BUG_ON(is_ve_fault(intr_info), vcpu->kvm))
+> > > +		return -EIO;
+> > 
+> > I've hit this three times now when running KVM-Unit-Tests (I'm pretty sure it's
+> > the EPT test, unsurprisingly).  And unless I screwed up my testing, I verified it
+> > still fires with Isaku's fix[*], though I'm suddenly having problems repro'ing.
+> > 
+> > I'll update tomorrow as to whether I botched my testing of Isaku's fix, or if
+> > there's another bug lurking.
 > 
-> Yeah, also in cover letter it would be nice to refresh what is
-> a bounding set. I had to xref that (recalled what it is), and
-> then got bored reading the rest :-)
+> *sigh*
+> 
+> AFAICT, I'm hitting a hardware issue.  The #VE occurs when the CPU does an A/D
+> assist on an entry in the L2's PML4 (L2 GPA 0x109fff8).  EPT A/D bits are disabled,
+> and KVM has write-protected the GPA (hooray for shadowing EPT entries).  The CPU
+> tries to write the PML4 entry to do the A/D assist and generates what appears to
+> be a spurious #VE.
+> 
+> Isaku, please forward this to the necessary folks at Intel.  I doubt whatever
+> is broken will block TDX, but it would be nice to get a root cause so we at least
+> know whether or not TDX is a ticking time bomb.
 
-Thanks for reminding me, I actually meant to do it, just forgot.
-Having said that, `Documentation/security/credentials.rst` is not the
-best documention when it comes to capabilities. I will definitely add
-few more lines in there, but it's probably not what you're looking for.
-
-capabilities(7) is where everything is explained, I should have
-mentioned it. I could try to summarize the existing sets, but honestly I
-will probably do a worse job than the man page.
-
-I do plan to update the man page though if it comes to that.
+Sure, let me forward it.
+I tested it lightly myself.  but I couldn't reproduce it.
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
