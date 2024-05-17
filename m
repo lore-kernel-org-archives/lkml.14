@@ -1,131 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE10041C87;
-	Fri, 17 May 2024 12:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4B44C3CD;
+	Fri, 17 May 2024 12:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715949549; cv=none; b=qFRVz9D8mbrehxOTFzQPQlrhUn3e+KdnhIpRjgaC5Do06AlGPdvE94WdgV5P3bDcFDdJIANsKGZwRA+Mk3IG7R6FPiAhfCapsdZKGDT+wfgAwhZnr1vvCIyThHIrZMKqVX6vUResbxRogoDYvs6yH2zL+NF7IyjXOexm5lI99u8=
+	t=1715949785; cv=none; b=o3EKdyCLjEFUxbFo8YvrzO6ClKqxi0zk6rW9Exd++RdzOmao9zQjEL5USCBNfIqZTTFIJPbZRVZj2aWG0Lfm5idMIGtucFyHZe73d8tPgThGiQEBbOd8fzTvOqoFQKGkdrWaje0Y40/9WGqkSnc+wq/5z4V12PM7vw/2jZhwmtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715949549; c=relaxed/simple;
-	bh=BOMB8wdBtR5zMTKdb1X0/tCLTze4IC2lvXPtLc/qX1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LfLDNs7lIeie2GEIXftS6d0EMM/FLdlBV2k4DCpiMI3XL1hVBm0H8ewNEmOh8VzQmKIflHa5bmAS6ESwMPVypRoKdb+3viYB9T2BqMmwHrFz76zIKjV7Ue9jxUgmzB+R0jkc2UROE8gEMqH3iS5hYypIKeO+8wk4OkT+VtoZE1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kHy+44uN; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715949785; c=relaxed/simple;
+	bh=jWKS8SQRbxP0tmQVIN/JQX/lXypAS4uBKg5yMHEVHe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qWCeveopuWHuuSmdl/741PFbcJFAIXQfcf90WzHSLnp3p0DpddgtXiTjv9TgQpw5XJ+pMHrW0GwZ5qKobBXqsm0KhlpapJ0Zw55E6UQ8sZ7+IQmO62dWm3OKxXg/ufWA6N0JAHoHsDvmIvCCJMM9sImPQunB90vsHSWsvWJ0jkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dHrd91Co; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kHy+44uN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715949547; x=1747485547;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BOMB8wdBtR5zMTKdb1X0/tCLTze4IC2lvXPtLc/qX1k=;
-  b=kHy+44uNmaAQiaFKf6Zx9ZxBgt/fESze+va8bryzS3WeefPdzkLZ+s5m
-   GKJeLO/H8llODcfO1wDpiUXp0ty0ICob39fZvyU3ye8cPJZUvjAEKSTZl
-   p++KhnK1+dszv5hKtTRE8JV9BNqIZf+Mi+ZDcvQXyOX41HwqjJpGX0BYo
-   +smY96iFOz/RcRYDNIM+s2Az1PNhRxqb4osFXfBndUmxdOeGbVlAkx8os
-   ztC9AoAKk8MCKvxOIdM7KXsgIecO3WEBoLfdnHeNisdlvp+to3Ilc+XH8
-   T7NQdBXiV5sViSjWtoF7j7ciCmbZXFhtoQsxJsuTGF28CgmK1O0Do4Pvj
-   g==;
-X-CSE-ConnectionGUID: 8ZJscZJ8QHmo42zM2GluTg==
-X-CSE-MsgGUID: zZS8/rE8QNmtAN7cRveROg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12311898"
-X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="12311898"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 05:39:06 -0700
-X-CSE-ConnectionGUID: xSin/eagRWmk4w/QVnTxgw==
-X-CSE-MsgGUID: hAFhE6QaR0y7LOOfqMlQng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
-   d="scan'208";a="62603985"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 17 May 2024 05:39:03 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s7wrU-0000go-0k;
-	Fri, 17 May 2024 12:39:00 +0000
-Date: Fri, 17 May 2024 20:38:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, broonie@kernel.org,
-	andi.shyti@kernel.org, joel@jms.id.au, alistair@popple.id.au,
-	jk@ozlabs.org, andrew@codeconstruct.com.au,
-	linux-aspeed@lists.ozlabs.org, eajames@linux.ibm.com
-Subject: Re: [PATCH v3 37/40] fsi: core: Add different types of CFAM
-Message-ID: <202405172019.j3pOURPP-lkp@intel.com>
-References: <20240516181907.3468796-38-eajames@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dHrd91Co"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2A8D040002;
+	Fri, 17 May 2024 12:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715949775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RmW1cK6oM09eKbpoTnioOWGwx029l+Mpd2nYIacz5po=;
+	b=dHrd91Cogk3W7X4CCdWnm6hSLM4jmHr6O7XOahUGRdzmmrtrwMMAt1x642UVE+ZZc3drF3
+	vsCJnFeOoEvZP7jxuk5nAWcCXONLXVlKeLqElRKQ8DQpmJLaQ99wgPyYDUg8E1rVshoDLK
+	C9WFm9L5X3M08RLgYRHbb5Rl+GlI1JK3bGXegqa/5y+AiuA2PlSdziA26vIjF4QEOX7XhQ
+	4UqEeJ4D2qBng4BE1QnLQ+TMRl5R2x2ulK+KIi1UjV3+VLJYc9pyJdlPYRF35/ABjXdU0+
+	o6JNn07uZTgLx4IOYLbTJy4mliU4HLUfDSA/R+0gpk2sGDVhh6XFwt5uvuC2Kg==
+Date: Fri, 17 May 2024 14:42:54 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Michal Kubecek <mkubecek@suse.cz>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
+ <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Kyle Swenson
+ <kyle.swenson@est.tech>
+Subject: Re: [PATCH ethtool-next 0/2] Add support for Power over Ethernet
+Message-ID: <20240517144254.2aaf949e@kmaincent-XPS-13-7390>
+In-Reply-To: <4asgo5rtu4daknofzmyyk7x47adcyfpdej2pbbv2vdaxnjf6yn@thkh274ismmb>
+References: <20240423-feature_poe-v1-0-9e12136a8674@bootlin.com>
+	<20240517142803.6c28b699@kmaincent-XPS-13-7390>
+	<4asgo5rtu4daknofzmyyk7x47adcyfpdej2pbbv2vdaxnjf6yn@thkh274ismmb>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516181907.3468796-38-eajames@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hi Eddie,
+On Fri, 17 May 2024 14:38:54 +0200
+Michal Kubecek <mkubecek@suse.cz> wrote:
 
-kernel test robot noticed the following build warnings:
+> On Fri, May 17, 2024 at 02:28:03PM +0200, Kory Maincent wrote:
+> > On Tue, 23 Apr 2024 11:05:40 +0200
+> > Kory Maincent <kory.maincent@bootlin.com> wrote:
+> >  =20
+> > > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> > >=20
+> > > Expand the PSE support with Power over Ethernet (clause 33) alongside
+> > > the already existing PoDL support. =20
+> >=20
+> > Hello,
+> >=20
+> > Any news on this patch series?
+> > Would someone have the time to take a look at it? =20
+>=20
+> I should be able to get to it this weekend.
 
-[auto build test WARNING on andi-shyti/i2c/i2c-host]
-[also build test WARNING on robh/for-next broonie-spi/for-next linus/master v6.9 next-20240517]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Ok great, thanks!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Eddie-James/fsi-hub-Set-master-index-to-link-number-plus-one/20240517-023205
-base:   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20240516181907.3468796-38-eajames%40linux.ibm.com
-patch subject: [PATCH v3 37/40] fsi: core: Add different types of CFAM
-config: i386-buildonly-randconfig-002-20240517 (https://download.01.org/0day-ci/archive/20240517/202405172019.j3pOURPP-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240517/202405172019.j3pOURPP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405172019.j3pOURPP-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/fsi/fsi-core.c:1113:27: warning: no previous prototype for function 'fsi_get_cfam_type' [-Wmissing-prototypes]
-    1113 | const struct device_type *fsi_get_cfam_type(u32 id)
-         |                           ^
-   drivers/fsi/fsi-core.c:1113:7: note: declare 'static' if the function is not intended to be used outside of this translation unit
-    1113 | const struct device_type *fsi_get_cfam_type(u32 id)
-         |       ^
-         | static 
-   1 warning generated.
-
-
-vim +/fsi_get_cfam_type +1113 drivers/fsi/fsi-core.c
-
-  1112	
-> 1113	const struct device_type *fsi_get_cfam_type(u32 id)
-  1114	{
-  1115		u32 major = (id & 0xf00) >> 8;
-  1116		u32 minor = (id & 0xf0) >> 4;
-  1117	
-  1118		switch (major) {
-  1119		case 0x9:
-  1120			return &cfam_s_type;
-  1121		case 0xc:
-  1122			if (minor == 0)
-  1123				return &cfam_ody_type;
-  1124			fallthrough;
-  1125		case 0xd:
-  1126		default:
-  1127			return &cfam_type;
-  1128		}
-  1129	}
-  1130	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
