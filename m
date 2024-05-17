@@ -1,235 +1,168 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
+Received: from SLXP216CU001.outbound.protection.outlook.com (mail-koreacentralazon11020002.outbound.protection.outlook.com [52.101.154.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEE92C68F
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715939291; cv=none; b=oEI04R2E8frGYg2g4RsNCpuNQiRTDMur0EGw6ovfdY4Fkk4NYKw6lQl/s1SThqmMK5cEQbEMeKA/NkDHG77H/9D83iqQOCmBlX4v5eT1Re/3+N/HB1o65m71byMugxdiKmOsYfk2ZciOJOEG7rKRlwm9hLeAkSmFwbImcOGvo18=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715939291; c=relaxed/simple;
-	bh=f5hevyF2D2sxM2S0jtF7Z+e6GRtwwKV4JpKADrh1eo0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sQGar7srYfVHbo6ALRaD22e4Fjwk1kOyGVI1jBHapNikQSBMQjGRGmO0P84iDyHaJLeX1EUODRlB/pXGtUMpjPtNgrlfZKV7JK35tIXfqhRSZ11urZ7BwtwCIU8l4/8CyaBSXiSKNzr2kn4Y7LtO7rME7uVk0etavYs8ZvP4ptw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=ByBzeppH reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DFA1EB48;
+	Fri, 17 May 2024 09:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.154.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715939395; cv=fail; b=GRzhE6C/jR2U6Z4VWrxHVXefk9RM1iaEVww45yhfioIkCo30lyD0nD0k313hB2a6zjK2F/iQT/pOmGcFZ3knWoPN4FirPwoB7rglut35roPKQBPOMDgPItqP62VQR/fIu+4w15wQ91SZ2AKGs6SjSu8LENXKSgqjoQRJh+gmjns=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715939395; c=relaxed/simple;
+	bh=8wixs9KktvKVLDwNnu/oWSpJyxfllMrAn8ulQMDCYRg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=u0YJ9csOo9L3qO9zFdnRQyAvIQXGTmBWvafAYs3Qw0V+isPQRuZEu8IcLsJ5d375AMFEi9RFxrHNkP3iB67OsuxCz3VbylvV5IPYUsUCFnCAYjkmzks5AtoA5l++GQK6SLV3NsMFGm3XHStf57HB/xXTBursCcd1PCiWqhDBWgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=pass smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=aJWfcreG; arc=fail smtp.client-ip=52.101.154.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chipsnmedia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="ByBzeppH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SvJuRNCWuYZEZDBBbRcUdX1kPnc4DTTBAf/hI+tHNis=;
-  b=ByBzeppHdnL8oFZ9fDFvq1LIsFVpRkIHbG5gTGAkEa31Z3SbgKdYk5k4
-   6ibDi6oOJOrt2vsKD69kMEBTDQNbAekRckG8JUmReI3rd/jYRgh11B9nV
-   /JkFycLLKwqxaxkhqHJbamX1XMXCi2n2WAti8/shHc4P1e8hjzw7GcWgj
-   yvRG/d/76ZTp3551s0jrbkyd8y1fK8PO+w+hi5xx4i30l+P0c+YKaVjEq
-   8uKsTgj2Sj7AvIcRVbncfgLhVGBuouIryG/Oayv6pWGP4JRckul5ta7+o
-   aJaMSBoA1IKd9XxOo9h+w32DiJCZc0eTqxExh8WPaL3EYN7bDnINJzq6X
-   g==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 17 May 2024 17:48:05 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
-	by mse.ite.com.tw with ESMTP id 44H9m2kw037407;
-	Fri, 17 May 2024 17:48:02 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 17 May 2024 17:48:02 +0800
-From: kuro <kuro.chung@ite.com.tw>
-To: Pin-yen Lin <treapking@chromium.org>,
-        Kenneth Haung
-	<kenneth.hung@ite.com.tw>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil
- Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman
-	<jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        AngeloGioacchino Del
- Regno <angelogioacchino.delregno@collabora.com>,
-        Allen Chen
-	<allen.chen@ite.com.tw>, Hermes Wu <hermes.wu@ite.com.tw>,
-        "open list:DRM
- DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list
-	<linux-kernel@vger.kernel.org>
-CC: Kuro Chung <kuro.chung@ite.com.tw>
-Subject: [PATCH v10] drm/bridge: it6505: fix hibernate to resume no display issue
-Date: Fri, 17 May 2024 17:58:47 +0800
-Message-ID: <20240517095847.1035228-1-kuro.chung@ite.com.tw>
+	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="aJWfcreG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kFNPvpuEaK5zCIO5R9m/8qJrDXt466ybg2yjg4GF6ToZwHdbCtLYPtKZypi7rl3akFBMZCd13MdK+t8xb0ljACF0ADwisuxiYPbq5oPIQ++e71MSVVclDUlZvenwlg/HhWFXIhXQaq80c+ElM2WDprUHkSVmXZM+Xy3SesEM/3UbP3in1eFfVcxUHNoGfaOb2JGSyM7nP2qs1+V9JVxnFjDYul2kCg2jzRENTdlwNwQ5VYnDlCRE3enmJ5s5v2Nvmh6MvX+DLF61tYtv0LLTOUoyUZs2wNlOQIdGIeawMqsqsUTkNK0hxeRwBon7w3MvqDd8g+32iwpTTWIbZDtJrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mT/z9Wm2coDk4CyO+OSPldqlfaO2Mdv/YQQ8LbBLbJ4=;
+ b=HsorrB7WhyCV6T5DEOAWNpLST7J5WqOxXNzLOYTts2TYyPkxsYANSfnkPL8gyRli9dkbwA99iVvTZAbFHWydxJsDkrRTNWyyX8DK7R1dgxrNTCNptFpgm6BfSvmztiH7I8MPxWqkRxROitZDPJcQr4fIsEkpR8NhCxG6t3xiFIcnLvfx7X1o81r4mjpuR3pmQs3Dki3sQSvQZYScbSqezNar41aEhWLWcWWn1Tt1p/mdoxpVzCi97WhzTtzPc7yc2SLcbHzzFXTv+nIoIqoYr6pG+bk4g+wSISO9v5kCoE9728xoRKR+U2kvxihNRuySzU3jAtRGhVbSqtC3uHZdnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
+ header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mT/z9Wm2coDk4CyO+OSPldqlfaO2Mdv/YQQ8LbBLbJ4=;
+ b=aJWfcreGf/JgfzbnisIXHvgsV+56zf36Wwr2iW+GcwP/0ZevGNvx5IVzWiO/yNkpRSBlUJM9naH6QdfhAFIlUi/y2TwQDzn2zred+aLiyu7DrSwBIvNbHimyD3mgElS2NspZrhu4oH34KP6SWd6YzTo9eOR/5AzIAhezz4YEseA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM (2603:1096:101:a::9) by
+ PU4P216MB1999.KORP216.PROD.OUTLOOK.COM (2603:1096:301:12d::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7587.30; Fri, 17 May 2024 09:49:49 +0000
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::8bac:533d:dbe5:ba28]) by SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::8bac:533d:dbe5:ba28%7]) with mapi id 15.20.7587.028; Fri, 17 May 2024
+ 09:49:49 +0000
+From: Nas Chung <nas.chung@chipsnmedia.com>
+To: mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Nas Chung <nas.chung@chipsnmedia.com>
+Subject: [PATCH] media: uapi: v4l: Change V4L2_TYPE_IS_CAPTURE condition
+Date: Fri, 17 May 2024 18:49:40 +0900
+Message-Id: <20240517094940.1169-1-nas.chung@chipsnmedia.com>
 X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SL2P216CA0175.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:1b::6) To SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:a::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP:
-	4868C337A08707CA42C15F05D7F5B7B7632440A583D998B48401C964B311050B2002:8
-X-MAIL:mse.ite.com.tw 44H9m2kw037407
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SL2P216MB1246:EE_|PU4P216MB1999:EE_
+X-MS-Office365-Filtering-Correlation-Id: e84c618b-d87f-494a-fb17-08dc7656b124
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|52116005|376005|366007|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?o4UMcvbJ6ZoQq7fIXvlEkJa3zpWz2H4srUsOhHuRZTXAkGxVCqry8w5z2+1+?=
+ =?us-ascii?Q?0+aZFKTD/tHGYo+c2F9jT5Urffc1FHOsjwoF4bjcKzIfYcI1KRQ6iO47xocV?=
+ =?us-ascii?Q?lVXD//S0UFxvfFJLViWHHYuh4mX+5/cy84t4fxO0ftOk87sios+rUCwExB3W?=
+ =?us-ascii?Q?kB0YrRyMy0vCMreVN9KCkc7L4xVx02T6C1t3Ekk6GMI7He5gMWNZHxFaUbaO?=
+ =?us-ascii?Q?42nqzuq0IKTE7nVHsuJQxOt37cr8ut2/p75BxrCX6qH2RmytgyJZW/5q45zx?=
+ =?us-ascii?Q?FutvblUbYGnpMohNpto7p4GMH70Z8Xse2SGORQaWfwL5uGeOc0bCm3yzmMgN?=
+ =?us-ascii?Q?3bflvXRt0nC7HxTd7SlafzlM4dBoNx9ZGFH4E16eRnLKjl9YCkighzxeYpx0?=
+ =?us-ascii?Q?2v0sq9GtKpfVaSUQQnSJaRZ5d4j5y17nMOiVnm33hD2IEHdM0HLBR4sipy4b?=
+ =?us-ascii?Q?lNsnydo62xzMYF/WznaiuO5C4jvsbHRaNac0pEk1BY3k8bco80mnR3IWul2b?=
+ =?us-ascii?Q?ixHM33QHcPxZNE0NRByxOhwr03ypIZu5c/B9eOeVWM7ceWMQZ+EhZklbuQLf?=
+ =?us-ascii?Q?SqT7m+dyHTk8XGj4JmBuoFOGbHL4ktuoW3/JfF75kWJLDecajHQ1J/F05ivB?=
+ =?us-ascii?Q?bUtC+IstZufaV3VjQog1O3TtuM7cAwHvfUkXhthMNENR9fu2vQ0UGLgqhFM5?=
+ =?us-ascii?Q?oNpLa5kYRkGXq+DT0fAThoKUuCfli33NxTTz7Gqm+F5QMJmEgbaRfkIwQcP3?=
+ =?us-ascii?Q?1fIPkIxbK6hr7QmPfySA/JjhsH2rdfrBj59L11yV0XesWjczv0J1ZDbd2Yjc?=
+ =?us-ascii?Q?JK+xMLOwHuQNcczapmZfZqG1FqyWnQxZOk9vqnOhyljZjkXk4kh2A3CBqAZd?=
+ =?us-ascii?Q?QjYLba3LgrbSxnPGJFmUHU8Vwzek2UjLDOZtdMY5T58uE+6kZbwuRowIKMBk?=
+ =?us-ascii?Q?BEfizyx7sCIlM4mqK0/rcehAyV8pNgixOvl4Tp3dKLBkq8jodmhntS4UGLy0?=
+ =?us-ascii?Q?21bn2VmY03HCnSDqRtGavwFCvLyYLx+NB4Okocja76WcnxLdn4iePWRTQKWG?=
+ =?us-ascii?Q?/xv0HDzG8SbijF2NzgwsLFysWkagkeNgnlQ2WEz3XebSYtDHSHPutteBMbjl?=
+ =?us-ascii?Q?SnUAfBIUfT8QluftmIkxn2On3qNaNyH1yiHrAPGYxKjPRIemyy+kUo40sfT8?=
+ =?us-ascii?Q?sP92azFX80jMMkKd+7JeaUqkLY7sVNnuF5YSmhRHBZmdppZRWFlbH3TDD/Hj?=
+ =?us-ascii?Q?vt/ga90vTgfAjnEHp6QiXxb2BxJZiT2Wtb6ozE4PBHDC1oA64c36Ke0gYDrh?=
+ =?us-ascii?Q?G4A11Vhz6f/2povECMJIa8UaMZqQSnQek5aCxndQnrhUDA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2P216MB1246.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DtFQCw73f1f248XoGquBH9f6huJnvpCcgIn1UquwARt2GB2WuMfmzEa+mXOy?=
+ =?us-ascii?Q?+S9BCqOEwiKqXU7z6Z13dDvgi5Qxl+eBOFUzK4APeVyQah/0RE/DjngRx+jW?=
+ =?us-ascii?Q?0gGbu5PKFs78Fc3vMkMMc/mvepDPPD1LiTY5b/kRsoSR58p05mTurFSFNwFm?=
+ =?us-ascii?Q?IaLMW1kXawsSL/ZF3aajYVOBpvAjrqKYeRUIYpuM2p+L1Y6zA6V+ajjdLWpt?=
+ =?us-ascii?Q?omCcnfUqZW9CxNbW/vJ3qkrey/s2+Gi8bDnJJE5bHvsVCO2+MCgHLs5pDpc8?=
+ =?us-ascii?Q?H+CDhTSHlyp3MOPbOLx4VmFmVfy/tWB/XvmNqOWBWUojtPTm9Djhl1WRVB96?=
+ =?us-ascii?Q?k6mqp2IWANxVpupm955RtkrjW5MU2nRanjDu8QxYMiN0D2DigACZgSB5v8jX?=
+ =?us-ascii?Q?TGe7c8HtauNPDDR17rYZGlApEQifODNvnjG/SZ6rLuOKSWrOZ75g1U9SwGop?=
+ =?us-ascii?Q?qUn9omkrdEpRrPiuYLZO/aQTWtONmVtR0asOh4S7SQWbETTenFCWGVaDVjId?=
+ =?us-ascii?Q?3HQLOqZ/kbgPRyDwT0W7Xk002R0O2dzNxNzdFIrRcD9CtHOu3u8VKq3GkGmH?=
+ =?us-ascii?Q?1/6SogE+9tYCnPDzQgJURW7ARKhGQDF3p6CQHMdpreDVXuv6UFL8sOhSK9YS?=
+ =?us-ascii?Q?98OdfAqkruTdnw4+qDX5o+UHEc7IoGHDIUR9rYUIImad7l2vljGqn68CAjDv?=
+ =?us-ascii?Q?FUTQNBDEaDJWI9lYRZu+ekYiqGuobszGtNe/Iaix+Vqe6C2pfIExI5tEg+z9?=
+ =?us-ascii?Q?KLVk3sH4SlXmRmP915sy2kfZ70d45JW4+msQd/BFtMriP9R8Gk4sD2UnD1O+?=
+ =?us-ascii?Q?pgfFCpGO+geRbuinJnm56UzY4yphaLKf26imyRjrlyN2P0s0KOG0Eks79Oqa?=
+ =?us-ascii?Q?fEJn+JcLT8WCltk+kg2o774LqNKLliRx9gE1++T4hLnSJpKdxWbCgiUcoDJu?=
+ =?us-ascii?Q?qRub8YqvfVzS3AW9pmTfZeuIPA/FCjBthtsXMWiyIqmPFf0saeU6O2rNNj3G?=
+ =?us-ascii?Q?IFWK5ZKXkofUS5T9408GiiO+MjMB0d09z1L+ADFPsMvxqAlMCEFILu+wYnhN?=
+ =?us-ascii?Q?vNFKvfFW3jpmN4BH8F9mS2QYNziHXyZDsQCBqzqzlikL3h1MgV3TdSwv/XJ7?=
+ =?us-ascii?Q?EOmK6iW1qcEqap2AAdv8U72DBQTPEdEa3s0LDazPyBMjPoy1/6DeFecw9f/9?=
+ =?us-ascii?Q?40IIOMz8Q5p2AljBYWx2DncnrLrseGkLhL5geDUi3QQtE+EVSzhaMWOdoO7w?=
+ =?us-ascii?Q?Y7FzQYhV8KUAst9pie+07xQ9levH7sBE1O3SQeemkmebd/9OkIOnI+dCwnk0?=
+ =?us-ascii?Q?PiaBBCRzUOZJq/5hJBT1uMYJTK0fTIym0LJKYWrgJxX2VOF8SEVL5fYpUgjS?=
+ =?us-ascii?Q?xUhtal6bj8ujCI5rVJWfOzopA1c59GvHMssUMku3tW+4qJZdn5pCplDoFOlu?=
+ =?us-ascii?Q?hIsvFclCX5B69htSsC6aCu1DGaIquhL/feDVOdsMYfP+iPnfDg9Nuo1dix6V?=
+ =?us-ascii?Q?4WIw8ldLyQprbdGAgAuj4aHw9uOGrkcFssJ1DQ5nVReGgIDsj48JLbwDUDq4?=
+ =?us-ascii?Q?+cDyRhFhOFy+64jsJFtb5VM9lnqF6f0kbsNuNkhZJ71rGUmegLTEOjU2Zj7o?=
+ =?us-ascii?Q?OQ=3D=3D?=
+X-OriginatorOrg: chipsnmedia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e84c618b-d87f-494a-fb17-08dc7656b124
+X-MS-Exchange-CrossTenant-AuthSource: SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 09:49:49.1778
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z2FKZS46gimDdbElxRQylk9MqOn5BSlnzYT5MmmX0z+pv5KJlL12kOHsWzK4GAISUHHa3dR21vN/V9QMRxeugDhwUfyNsM6oVYSeQ+QXz44=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU4P216MB1999
 
-From: Kuro Chung <kuro.chung@ite.com.tw>
+We expect V4L2_TYPE_IS_CAPTURE() macro allow only CAPTURE type.
+But, Inverting OUTPUT type can allow undefined v4l2_buf_type.
+Check CAPTURE type directly instead of inverting OUTPUT type.
 
-This patch added a FIFO reset bit for input video. When system power resume,
-the TTL input of it6505 may get some noise before video signal stable
-and the hardware function reset is required.
-But the input FIFO reset will also trigger error interrupts of output
-module rising. Thus, it6505 have to wait a period can clear those
-expected error interrupts caused by manual hardware reset in one
-interrupt handler calling to avoid interrupt looping.
-
-Fixes: b5c84a9edcd4 ("drm/bridge: add it6505 driver")
-
+Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
 ---
- drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
+ include/uapi/linux/videodev2.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 469157341f3ab..5703fcf4b7b00 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1307,9 +1307,15 @@ static void it6505_video_reset(struct it6505 *it6505)
- 	it6505_link_reset_step_train(it6505);
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_MUTE);
- 	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00);
--	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, TX_FIFO_RESET);
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
-+
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_FIFO);
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
-+
-+	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+	usleep_range(1000, 2000);
- 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
- }
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index fe6b67e83751..32b10e2b7695 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -171,7 +171,13 @@ enum v4l2_buf_type {
+ 	 || (type) == V4L2_BUF_TYPE_SDR_OUTPUT			\
+ 	 || (type) == V4L2_BUF_TYPE_META_OUTPUT)
  
-@@ -2245,12 +2251,11 @@ static void it6505_link_training_work(struct work_struct *work)
- 	if (ret) {
- 		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
- 		it6505_link_train_ok(it6505);
--		return;
- 	} else {
- 		it6505->auto_train_retry--;
-+		it6505_dump(it6505);
- 	}
+-#define V4L2_TYPE_IS_CAPTURE(type) (!V4L2_TYPE_IS_OUTPUT(type))
++#define V4L2_TYPE_IS_CAPTURE(type)				\
++	((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE			\
++	 || (type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE	\
++	 || (type) == V4L2_BUF_TYPE_VBI_CAPTURE			\
++	 || (type) == V4L2_BUF_TYPE_SLICED_VBI_CAPTURE		\
++	 || (type) == V4L2_BUF_TYPE_SDR_CAPTURE			\
++	 || (type) == V4L2_BUF_TYPE_META_CAPTURE)
  
--	it6505_dump(it6505);
- }
- 
- static void it6505_plugged_status_to_codec(struct it6505 *it6505)
-@@ -2471,31 +2476,53 @@ static void it6505_irq_link_train_fail(struct it6505 *it6505)
- 	schedule_work(&it6505->link_works);
- }
- 
--static void it6505_irq_video_fifo_error(struct it6505 *it6505)
-+static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
- {
--	struct device *dev = it6505->dev;
--
--	DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
-+	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
- }
- 
--static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
-+static void it6505_irq_video_handler(struct it6505 *it6505, const int *int_status)
- {
- 	struct device *dev = it6505->dev;
-+	int reg_0d, reg_int03;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
--}
-+	/*
-+	 * When video SCDT change with video not stable,
-+	 * Or video FIFO error, need video reset
-+	 */
- 
--static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
--{
--	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
-+	if ((!it6505_get_video_status(it6505) &&
-+		(it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))) ||
-+		(it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *) int_status)) ||
-+		(it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *) int_status))) {
-+
-+		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
-+		flush_work(&it6505->link_works);
-+		it6505_stop_hdcp(it6505);
-+		it6505_video_reset(it6505);
-+
-+		usleep_range(10000, 11000);
-+
-+		/*
-+		 * Clear FIFO error IRQ to prevent fifo error -> reset loop
-+		 * HW will trigger SCDT change IRQ again when video stable
-+		 */
-+
-+		reg_int03 = it6505_read(it6505, INT_STATUS_03);
-+		reg_0d = it6505_read(it6505, REG_SYSTEM_STS);
-+
-+		reg_int03 &= (BIT(INT_VID_FIFO_ERROR) | BIT(INT_IO_LATCH_FIFO_OVERFLOW));
-+		it6505_write(it6505, INT_STATUS_03, reg_int03);
-+
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg08 = 0x%02x", reg_int03);
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg0D = 0x%02x", reg_0d);
-+
-+		return;
-+	}
-+
-+
-+	if (it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))
-+		it6505_irq_scdt(it6505);
- }
- 
- static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
-@@ -2508,15 +2535,12 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 	} irq_vec[] = {
- 		{ BIT_INT_HPD, it6505_irq_hpd },
- 		{ BIT_INT_HPD_IRQ, it6505_irq_hpd_irq },
--		{ BIT_INT_SCDT, it6505_irq_scdt },
- 		{ BIT_INT_HDCP_FAIL, it6505_irq_hdcp_fail },
- 		{ BIT_INT_HDCP_DONE, it6505_irq_hdcp_done },
- 		{ BIT_INT_AUX_CMD_FAIL, it6505_irq_aux_cmd_fail },
- 		{ BIT_INT_HDCP_KSV_CHECK, it6505_irq_hdcp_ksv_check },
- 		{ BIT_INT_AUDIO_FIFO_ERROR, it6505_irq_audio_fifo_error },
- 		{ BIT_INT_LINK_TRAIN_FAIL, it6505_irq_link_train_fail },
--		{ BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
--		{ BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_overflow },
- 	};
- 	int int_status[3], i;
- 
-@@ -2546,6 +2570,7 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 			if (it6505_test_bit(irq_vec[i].bit, (unsigned int *)int_status))
- 				irq_vec[i].handler(it6505);
- 		}
-+		it6505_irq_video_handler(it6505, (unsigned int *) int_status);
- 	}
- 
- 	pm_runtime_put_sync(dev);
+ enum v4l2_tuner_type {
+ 	V4L2_TUNER_RADIO	     = 1,
 -- 
 2.25.1
 
