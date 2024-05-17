@@ -1,103 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D54913DDB0
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D06140363;
+	Fri, 17 May 2024 19:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715974971; cv=none; b=KCI98ru/NYMq2C0u3atX4unWmig628QDuvntO8QXgE/kv/Whpq8dofrE4BUnWHNCnPVEohAb/gOK+IWq4JUOv/daUgX5oSpUBueH/2UTu5IBUjQAkPhSlcPRwEB7s/XztfnOSz5YXnXv/I8iBn0MpMSwi9B33BetRbb+0pDgIJo=
+	t=1715974971; cv=none; b=U5JbAu40f8RCcvCDOBqHckA9Rz8Zebs474G1ImLmnOB5YeyvumIVNI38pewbrE5BsodRkbM0XaN4edw0pjPkgz3YQ4Pf0ilM+v4silHzNeaj9kFXYcLy/vzrUkLzpACbEwds7Ov+ynGWmbM7MldFmYH+2aYAQjJ1eIodkZ8Q5x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715974971; c=relaxed/simple;
-	bh=7h9TJkr54xA5UffnPFR88Es1WniKW1IR1TUcTBmd0TM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PGRZLcqPaRFENCOUrUtfMGatCtvqB2F93dYb6gMiMnV2F8TsdGFErN10JTry5N6e6F7UW40sTVOiGrK3Cy9v9XA4PR7ovJQ9xcNod+kD1UllLDdYq72m603mljkmzJ7IfDIQbuKetZ9uJhb2c4G/GkBq8I4acqnNKzObINR4FnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHjssIQl; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=vKKeJE84GjcL1kTEGVbp0Fdmde1mk6S+ku2UwHVtXm0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Qa8m7qLHLmGQEO8MMZ9DGdiWuSmGk5FeVkuseIsnlakAnviWsGuiExJIdrcHB5B7ViXW/huZbD0Tgj+39/xMOBRrLI6BsYYIqR8MfzerkzPRe76JGzzMWdFrmVO9HVXG6mNvrbd3fWO199FNKsV4G3rcGcQCfkOUh3VcWJTsZHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NLhakqJg; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHjssIQl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NLhakqJg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715974969; x=1747510969;
-  h=date:from:to:cc:subject:message-id;
-  bh=7h9TJkr54xA5UffnPFR88Es1WniKW1IR1TUcTBmd0TM=;
-  b=FHjssIQlKTb7j2Uwm09b+cqa1HW8R454cj+nuOem1a7zbNBJmDHyPIbI
-   j09gifN1dm+NuEFEjFTr7HONXIa3u2XxUIBHMwEEhCFXvUHk5aKJXH9UJ
-   5S6Vdam82eJ890qojAf+QY3scr5f5RtObfjZO4zO7HSrXV92j8z7VgJxO
-   Ew60zLA7JG5cxzdxYjNrRHkw7PkjF4/9ia9JEJkS1Tsws+F6kwlGJQ5er
-   HXkXl+dfdqcKPmlHYg6NqPJyWtre1z4M1+VDCd6WHLKoipAfXtWEI3ExE
-   5xEmR3EYfgAd19nehe8Y5zviMKLHGAWuXXVR4v7RO9fNcD+8YLzzGzGej
-   g==;
-X-CSE-ConnectionGUID: zOWeMwuERRKBFLMju6d/LQ==
-X-CSE-MsgGUID: 5ySAbUlbSsCB7Pvk2SSADQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="23577777"
+  t=1715974971; x=1747510971;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vKKeJE84GjcL1kTEGVbp0Fdmde1mk6S+ku2UwHVtXm0=;
+  b=NLhakqJg4fki1yGKXZNUvRvgI7ct2DwWxoGONB0S3nsvC3xLWzDSdzhE
+   fCjyVev5cRmqs4yv/btNNAvlHBW6z9ZG5HRNq1e1oSVOgkG6SJvG9x2/q
+   6iD0U7dgISZnHcvE7yiIYyQFwZDGezxpy0tl3kyq6om3uMhNmN3j3E705
+   gKSHHhFWfXO1Syl1NomcQrXRDQiqlrASWKCI8wsxxe4plhG88gxh6MRRq
+   xd/4C5MRjzrvEwLpe05ETn8/3Bdp6megraPj39agncktbAya5+whLkzCQ
+   hSj390Oz/ATDviHuCuXPqHo9Anc0892/YVuIRKEnVFOcFbAg6aTqJz1Rm
+   A==;
+X-CSE-ConnectionGUID: 708vMxORS8qfTW8wolVX5Q==
+X-CSE-MsgGUID: 4SzJwFrPQrqITeXHZm0NoA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12284438"
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="23577777"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 12:42:48 -0700
-X-CSE-ConnectionGUID: VitgyCCnQ+27BvEXi1yJWQ==
-X-CSE-MsgGUID: /epWT5x1TO6bMkTxq9nf2Q==
+   d="scan'208";a="12284438"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 12:42:50 -0700
+X-CSE-ConnectionGUID: U3HfcRuzRt+XAIE/veAGoA==
+X-CSE-MsgGUID: 2bHMFqiMQc+JlFNJfBKgxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="36629758"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 17 May 2024 12:42:47 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s83TZ-00014k-1h;
-	Fri, 17 May 2024 19:42:45 +0000
-Date: Sat, 18 May 2024 03:42:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 9dba9c67e52dbe0978c0e86c994891eba480adf0
-Message-ID: <202405180324.IrWoHuOv-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="31877128"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 17 May 2024 12:42:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4BA331F1; Fri, 17 May 2024 22:42:47 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] spi: gpio: Convert to be used outside of OF
+Date: Fri, 17 May 2024 22:42:00 +0300
+Message-ID: <20240517194246.747427-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: 9dba9c67e52dbe0978c0e86c994891eba480adf0  x86/alternatives: Use the correct length when optimizing NOPs
+Convert the driver to be used outside of OF and a couple of cleanups.
 
-elapsed time: 728m
+Andy Shevchenko (3):
+  spi: gpio: Make use of device properties
+  spi: gpio: Use traditional pattern when checking error codes
+  spi: gpio: Make num_chipselect 8-bit in the struct
+    spi_gpio_platform_data
 
-configs tested: 26
-configs skipped: 135
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240517   clang
-i386         buildonly-randconfig-002-20240517   clang
-i386         buildonly-randconfig-003-20240517   gcc  
-i386         buildonly-randconfig-004-20240517   clang
-i386         buildonly-randconfig-005-20240517   clang
-i386         buildonly-randconfig-006-20240517   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240517   gcc  
-i386                  randconfig-002-20240517   gcc  
-i386                  randconfig-003-20240517   gcc  
-i386                  randconfig-004-20240517   gcc  
-i386                  randconfig-005-20240517   gcc  
-i386                  randconfig-006-20240517   gcc  
-i386                  randconfig-011-20240517   gcc  
-i386                  randconfig-012-20240517   clang
-i386                  randconfig-013-20240517   gcc  
-i386                  randconfig-014-20240517   gcc  
-i386                  randconfig-015-20240517   clang
-i386                  randconfig-016-20240517   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
+ drivers/spi/spi-gpio.c       | 66 ++++++++++++++----------------------
+ include/linux/spi/spi_gpio.h |  2 +-
+ 2 files changed, 26 insertions(+), 42 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0.rc1.1336.g36b5255a03ac
+
