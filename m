@@ -1,269 +1,166 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491AF16415;
-	Fri, 17 May 2024 07:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7675C171C8;
+	Fri, 17 May 2024 07:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715930402; cv=none; b=HC5oDAKnFtzt8ERdH8lSw3BrWiTFqVNqB/b1zsZBPxhHe4DzIKHtDhERnzvMTYbYThRyZY4ypww29f4aF988nYAXw+j4tnA2DYLsOl4mxLPrmUGjBLE63Wsoco4s3+DWMZvALxCEz8jLpmxH2riz3AUOUfDt1700UshquWTADmA=
+	t=1715930431; cv=none; b=lMT91jZqSO3ciKahVrwSeXTWSSFIrRGmovHSjXK/kxZRyTiSVAFpbnu9wV75bJ7QEjolhgnjz8Rk8wrby1yWtBAh7mZGI90RHkqZmdPKnT5+j69ADMzRBrPaJ6c+VIED/oaoOZi3hiVXGUCQRMFD+n3hiHKfoK194H2DduxKCzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715930402; c=relaxed/simple;
-	bh=BGck91VU9beP2abZzw/rtJxU09+f8W3SkIsxCeaIzKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ex2gnrfPvbHrekEovTpKRUoZ24v7+HZ9xlioaWmZIVI3FAxsgRmHTqxGPpInMPrjqLyr1tQ07o/alwLakgE9OLbX1eOpKVuex06KA+ccAfN4puqQmeEqdMiUYlFf0Ljauo1BmjBC9sygK1G/CxuMp9yMozQIsj1ZHj7LpibAfYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B1E5jVNP; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715930431; c=relaxed/simple;
+	bh=r7NLOcVOLcY+DFIoJzb0OFwv9OcP/ogxNDe9/qB2lVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cyNw6faKRL/wL2j8Q5Elg7qK51ZinFcpac/okIK4LP6mp0MK0rwgWS7WFMqbpARwubgZ6nw+iNlenClBuUlLbDci14F1Qgcx//4syn+IscHbBkgh3HcGhPmx+VQ7a6TFKdmCQHmaA9lVb1KME92IzGrEyIof7hao+Cbms9lWOGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FqQIaaU7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B1E5jVNP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F1411C000C;
-	Fri, 17 May 2024 07:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715930397;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vtNkh6lct/Bn//Hd3X1lliFFmrekYtlN0ngpcECGIUU=;
-	b=B1E5jVNP6+dsEJDwkBKDWpecNxgeRnRXcNfwDW5Q2qETDxSRVCgB82AwM+bpnqb2oXwV+c
-	ocAq5qyOYOggpTa+SY3n35xbcYwndztV8ync4V6t652cnDQXLe1z19pZPK0aI4pS4cep7n
-	dBMXEybf9YMuBPpE/9HQO3pYlmeuo4uOzLODEKbgM37y8ZlQqVDYO0T2zztZ58xGoMM9dd
-	JFbea6F5/xhiJRogH/I31z675gY5qyPuawBF58E5JoWkLI87Ip4IuA6I+48/CnykID7GAG
-	YkTXFmUrIECiNf6dLsKtoGseEsF8Uno7sm4JTofzJUfetBkGqMe9J/N7aWUGFg==
-Date: Fri, 17 May 2024 09:19:51 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Joseph Jang <jjang@nvidia.com>
-Cc: shuah@kernel.org, avagin@google.com, amir73il@gmail.com,
-	brauner@kernel.org, mochs@nvidia.com, jszu@nvidia.com,
-	linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] selftest: rtc: Add to check rtc alarm status for alarm
- related test
-Message-ID: <202405170719515a9c6d2f@mail.local>
-References: <20240517022847.4094731-1-jjang@nvidia.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FqQIaaU7"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44GKMaQW007096;
+	Fri, 17 May 2024 07:20:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=uY1zTHz8LU8EGSAVc2VKG3qcU0iZZ32JvHNT0TH28cA=; b=Fq
+	QIaaU7nFCC+93sdCNvEA+Nujl2gGyfvHHp00O2fAZI/8BJ7M8FfILsxVLw4OBzvK
+	rhZ6cFVMM7ful5O1TdXo4jixidLegTnC+VnZZJpnPPMnR4XKQsqkuQnDb0bhaaQd
+	X55P3+R9oweYP1wRX1asLxbkBk53PCutsVSU5VPzrD0/i3XHKDVkM700SysN7vrh
+	xlQvO6GHzgoj2LwVuT86kDZw5W2matDUODMU2CXO4GOIkxOSYJKLOmdJ6zedvpiC
+	qFjszYAmjzmnFbrpnMpVnoq1TXC8iKptiiuAMnDOY5NGcEyyMwpV5M8p8JgZzOrR
+	+13+5a6YrP4TWO7m71Ng==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47egfmf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 07:20:06 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44H7K489016321
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 May 2024 07:20:04 GMT
+Received: from [10.216.53.65] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 17 May
+ 2024 00:19:56 -0700
+Message-ID: <be23b02d-d2b5-2bec-487b-35caf90f29f7@quicinc.com>
+Date: Fri, 17 May 2024 12:49:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517022847.4094731-1-jjang@nvidia.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 6/7] remoteproc: qcom_q6v5_pas: Add hwspinlock bust on
+ stop
+Content-Language: en-US
+To: Chris Lew <quic_clew@quicinc.com>, Bjorn Andersson <andersson@kernel.org>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon
+	<will@kernel.org>, Waiman Long <longman@redhat.com>,
+        Boqun Feng
+	<boqun.feng@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Richard Maina <quic_rmaina@quicinc.com>
+References: <20240516-hwspinlock-bust-v1-0-47a90a859238@quicinc.com>
+ <20240516-hwspinlock-bust-v1-6-47a90a859238@quicinc.com>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20240516-hwspinlock-bust-v1-6-47a90a859238@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Ji2uEMqRe5cnnI3ZhmT3R5tX19g0KEvH
+X-Proofpoint-ORIG-GUID: Ji2uEMqRe5cnnI3ZhmT3R5tX19g0KEvH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-16_07,2024-05-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 phishscore=0 spamscore=0 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1011 impostorscore=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405170057
 
-On 16/05/2024 19:28:47-0700, Joseph Jang wrote:
-> In alarm_wkalm_set and alarm_wkalm_set_minute test, they use different
-> ioctl (RTC_ALM_SET/RTC_WKALM_SET) for alarm feature detection. They will
-> skip testing if RTC_ALM_SET/RTC_WKALM_SET ioctl returns an EINVAL error
-> code. This design may miss detecting real problems when the
-> efi.set_wakeup_time() return errors and then RTC_ALM_SET/RTC_WKALM_SET
-> ioctl returns an EINVAL error code with RTC_FEATURE_ALARM enabled.
-> 
-> In order to make rtctest more explicit and robust, we propose to use
-> RTC_PARAM_GET ioctl interface to check rtc alarm feature state before
-> running alarm related tests. If the kernel does not support RTC_PARAM_GET
-> ioctl interface, we will fallback to check the presence of "alarm" in
-> /proc/driver/rtc.
-> 
-> The rtctest requires the read permission on /dev/rtc0. The rtctest will
-> be skipped if the /dev/rtc0 is not readable.
-> 
 
-This change as to be separated. Also, I'm not sure what happened with
-https://lore.kernel.org/all/20230717175251.54390-1-atulpant.linux@gmail.com/
 
-> Requires commit 101ca8d05913b ("rtc: efi: Enable SET/GET WAKEUP services
-> as optional")
+On 5/17/2024 4:28 AM, Chris Lew wrote:
+> From: Richard Maina <quic_rmaina@quicinc.com>
 > 
-> Reviewed-by: Jeremy Szu <jszu@nvidia.com>
-> Reviewed-by: Matthew R. Ochs <mochs@nvidia.com>
-> Signed-off-by: Joseph Jang <jjang@nvidia.com>
+> When remoteproc goes down unexpectedly this results in a state where any
+> acquired hwspinlocks will remain locked possibly resulting in deadlock.
+> In order to ensure all locks are freed we include a call to
+> hwspin_lock_bust() during remoteproc shutdown.
+> 
+> For qcom_q6v5_pas remoteprocs, each remoteproc has an assigned id that
+> is used to take the hwspinlock. Remoteproc should use this id to try and
+> bust the lock on remoteproc stop.
+> 
+> This edge case only occurs with q6v5_pas watchdog crashes. The error
+> fatal case has handling to clear the hwspinlock before the error fatal
+> interrupt is triggered.
+> 
+> Signed-off-by: Richard Maina <quic_rmaina@quicinc.com>
+> Signed-off-by: Chris Lew <quic_clew@quicinc.com>
 > ---
->  tools/testing/selftests/rtc/Makefile  |  2 +-
->  tools/testing/selftests/rtc/rtctest.c | 72 +++++++++++++++++++--------
->  2 files changed, 53 insertions(+), 21 deletions(-)
+>   drivers/remoteproc/qcom_q6v5_pas.c | 28 ++++++++++++++++++++++++++++
+>   1 file changed, 28 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
-> index 55198ecc04db..6e3a98fb24ba 100644
-> --- a/tools/testing/selftests/rtc/Makefile
-> +++ b/tools/testing/selftests/rtc/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -CFLAGS += -O3 -Wl,-no-as-needed -Wall
-> +CFLAGS += -O3 -Wl,-no-as-needed -Wall -I../../../../usr/include/
->  LDLIBS += -lrt -lpthread -lm
->  
->  TEST_GEN_PROGS = rtctest
-> diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
-> index 63ce02d1d5cc..aa47b17fbd1a 100644
-> --- a/tools/testing/selftests/rtc/rtctest.c
-> +++ b/tools/testing/selftests/rtc/rtctest.c
-> @@ -8,6 +8,7 @@
->  #include <errno.h>
->  #include <fcntl.h>
->  #include <linux/rtc.h>
-> +#include <stdbool.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <sys/ioctl.h>
-> @@ -24,12 +25,17 @@
->  #define READ_LOOP_SLEEP_MS 11
->  
->  static char *rtc_file = "/dev/rtc0";
-> +static char *rtc_procfs = "/proc/driver/rtc";
->  
->  FIXTURE(rtc) {
->  	int fd;
->  };
->  
->  FIXTURE_SETUP(rtc) {
-> +	if (access(rtc_file, R_OK) != 0)
-> +		SKIP(return, "Skipping test since cannot access %s, perhaps miss sudo",
-> +			 rtc_file);
-
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 54d8005d40a3..57178fcb9aa3 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -10,6 +10,7 @@
+>   #include <linux/clk.h>
+>   #include <linux/delay.h>
+>   #include <linux/firmware.h>
+> +#include <linux/hwspinlock.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+> @@ -52,6 +53,7 @@ struct adsp_data {
+>   	const char *ssr_name;
+>   	const char *sysmon_name;
+>   	int ssctl_id;
+> +	int hwlock_id;
+>   
+>   	int region_assign_idx;
+>   	int region_assign_count;
+> @@ -84,6 +86,9 @@ struct qcom_adsp {
+>   	bool decrypt_shutdown;
+>   	const char *info_name;
+>   
+> +	struct hwspinlock *hwlock;
+> +	int hwlock_id;
 > +
->  	self->fd = open(rtc_file, O_RDONLY);
->  }
->  
-> @@ -82,6 +88,36 @@ static void nanosleep_with_retries(long ns)
->  	}
->  }
->  
-> +static bool is_rtc_alarm_supported(int fd)
-> +{
-> +	struct rtc_param param = { 0 };
-> +	int rc;
-> +	char buf[1024] = { 0 };
-> +
-> +	/* Validate kernel reflects unsupported RTC alarm state */
-> +	param.param = RTC_PARAM_FEATURES;
-> +	param.index = 0;
-> +	rc = ioctl(fd, RTC_PARAM_GET, &param);
-> +	if (rc < 0) {
-> +		/* Fallback to read rtc procfs */
-> +		fd = open(rtc_procfs, O_RDONLY);
-
-I think I was clear on the previous thread, no new users of the procfs
-interface. You can carry this n your own tree but that can't be
-upstream.
-
-> +		if (fd != -1) {
-> +			rc = read(fd, buf, sizeof(buf));
-> +			close(fd);
-> +
-> +			/* Check for the presence of "alarm" in the buf */
-> +			if (strstr(buf, "alarm") == NULL)
-> +				return false;
-> +		} else
-> +			return false;
-> +	} else {
-> +		if ((param.uvalue & _BITUL(RTC_FEATURE_ALARM)) == 0)
-> +			return false;
+>   	const struct firmware *firmware;
+>   	const struct firmware *dtb_firmware;
+>   
+> @@ -399,6 +404,12 @@ static int adsp_stop(struct rproc *rproc)
+>   	if (handover)
+>   		qcom_pas_handover(&adsp->q6v5);
+>   
+> +	if (adsp->hwlock) {
+> +		ret = hwspin_lock_bust(adsp->hwlock, adsp->hwlock_id);
+> +		if (ret)
+> +			dev_info(adsp->dev, "failed to bust hwspinlock\n");
 > +	}
 > +
-> +	return true;
-> +}
-> +
->  TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
->  	int rc;
->  	long iter_count = 0;
-> @@ -202,6 +238,9 @@ TEST_F(rtc, alarm_alm_set) {
->  		SKIP(return, "Skipping test since %s does not exist", rtc_file);
->  	ASSERT_NE(-1, self->fd);
->  
-> +	if (!is_rtc_alarm_supported(self->fd))
-> +		SKIP(return, "Skipping test since alarms are not supported.");
-> +
->  	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
->  	ASSERT_NE(-1, rc);
->  
-> @@ -209,11 +248,7 @@ TEST_F(rtc, alarm_alm_set) {
->  	gmtime_r(&secs, (struct tm *)&tm);
->  
->  	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
-> -	if (rc == -1) {
-> -		ASSERT_EQ(EINVAL, errno);
-> -		TH_LOG("skip alarms are not supported.");
-> -		return;
-> -	}
-> +	ASSERT_NE(-1, rc);
->  
->  	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
->  	ASSERT_NE(-1, rc);
-> @@ -260,6 +295,9 @@ TEST_F(rtc, alarm_wkalm_set) {
->  		SKIP(return, "Skipping test since %s does not exist", rtc_file);
->  	ASSERT_NE(-1, self->fd);
->  
-> +	if (!is_rtc_alarm_supported(self->fd))
-> +		SKIP(return, "Skipping test since alarms are not supported.");
-> +
->  	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
->  	ASSERT_NE(-1, rc);
->  
-> @@ -269,11 +307,7 @@ TEST_F(rtc, alarm_wkalm_set) {
->  	alarm.enabled = 1;
->  
->  	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
-> -	if (rc == -1) {
-> -		ASSERT_EQ(EINVAL, errno);
-> -		TH_LOG("skip alarms are not supported.");
-> -		return;
-> -	}
-> +	ASSERT_NE(-1, rc);
->  
->  	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
->  	ASSERT_NE(-1, rc);
-> @@ -312,6 +346,9 @@ TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
->  		SKIP(return, "Skipping test since %s does not exist", rtc_file);
->  	ASSERT_NE(-1, self->fd);
->  
-> +	if (!is_rtc_alarm_supported(self->fd))
-> +		SKIP(return, "Skipping test since alarms are not supported.");
-> +
->  	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
->  	ASSERT_NE(-1, rc);
->  
-> @@ -319,11 +356,7 @@ TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
->  	gmtime_r(&secs, (struct tm *)&tm);
->  
->  	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
-> -	if (rc == -1) {
-> -		ASSERT_EQ(EINVAL, errno);
-> -		TH_LOG("skip alarms are not supported.");
-> -		return;
-> -	}
-> +	ASSERT_NE(-1, rc);
->  
->  	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
->  	ASSERT_NE(-1, rc);
-> @@ -370,6 +403,9 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
->  		SKIP(return, "Skipping test since %s does not exist", rtc_file);
->  	ASSERT_NE(-1, self->fd);
->  
-> +	if (!is_rtc_alarm_supported(self->fd))
-> +		SKIP(return, "Skipping test since alarms are not supported.");
-> +
->  	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
->  	ASSERT_NE(-1, rc);
->  
-> @@ -379,11 +415,7 @@ TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
->  	alarm.enabled = 1;
->  
->  	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
-> -	if (rc == -1) {
-> -		ASSERT_EQ(EINVAL, errno);
-> -		TH_LOG("skip alarms are not supported.");
-> -		return;
-> -	}
-> +	ASSERT_NE(-1, rc);
->  
->  	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
->  	ASSERT_NE(-1, rc);
-> -- 
-> 2.34.1
-> 
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+What if recovery is disabled, fatal case is clearing the hwspinlock but
+wdog case is not, right ?
+
+-Mukesh
