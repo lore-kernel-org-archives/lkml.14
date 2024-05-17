@@ -1,105 +1,268 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889BC13D8B7;
-	Fri, 17 May 2024 18:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01DF13D8B7
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715972344; cv=none; b=gnTi8Bgk0XbIkhphw7EflmiRgHwBzzbEwABUVQ7RrL++vlTP5FMG7uClkRDF2EbGfxqQpHf1xO92aTzX0YuLIXUWX8bycAiMHnmBGCVxCQhxUWncjbsVU1mO5v33jPhwlPtBJ8VAnlXZGsf/Hsc/0NQNhkB3wil5iYtLeO/Iin0=
+	t=1715972426; cv=none; b=m3ZPevMy2xVwzpQ3frfPlPW753YewiZXgdAI3y/tPT0D58wKyuhumbcU5b8kpPVHGwkqV3t44NUMdsgWjL+OPpBS2+FBJPGgxFZ+VnusB5EI1O+VqP2VFoqgqlyi3332ng4AQeq0TzVC9rZdwRiwbFQItuo80JMb8pJd6hsJKIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715972344; c=relaxed/simple;
-	bh=Yt8hIwKuHi9fG/9C0XoO9CSfPV78OHT2fV6rHiD0uYI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=n+TRPPv2uaZzjwIzfDSb+XhvkmNR0Izje86P+5342srqbd49W3bI2cLG8wfpA3O3O+XaR0KZRltck60Eh7J7ji3wuRb43hkWTFd9Lb2Al4xK621SQAipuiYDXXntke2wsGkK/5ooN8uP/HftFg3IwLL+HwBAM2lcqqmPHR1d+GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Msol5c2e; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Msol5c2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB882C2BD10;
-	Fri, 17 May 2024 18:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715972344;
-	bh=Yt8hIwKuHi9fG/9C0XoO9CSfPV78OHT2fV6rHiD0uYI=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=Msol5c2ebRtlfXBEfaKTuTEYF9et2HbfZPrSs7cuyhrUp6ZdcBfPnH6QTWFWxdBXX
-	 RkRExgHpaW/S+elCa/4Etqz/2axIs9mSFQwNntRuEmLZHOGihOBs+vfriP5pwUs5J+
-	 CsiHQYfUVWeUV3eEuZhCUaTGG0kXzM/Q1hG/IPlO92hXK/N9xKB+q5oLHVW2TlenD7
-	 Fw8BdkRi1XMjdaVaqO007x5upNqb/RtykzuWuje/Fs6kAFcugeHnWL5uY7jJa6K4/1
-	 j1qiC+4UYuGtFKbxo0ItOd6WQS+wnu2JSJeN7hiC9i2h6QWJhqgzuby39NoeHMuNBP
-	 buFIehWpX0Hag==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>,  Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>,  Thomas Gleixner
- <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  x86@kernel.org,  linux-pm@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>
-Subject: Re: [regression] suspend stress test stalls within 30 minutes
-References: <87o79cjjik.fsf@kernel.org>
-	<20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
-	<20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
-	<87h6f4jdrq.fsf@kernel.org> <878r0djxgc.fsf@kernel.org>
-	<874jb0jzx5.fsf@kernel.org>
-	<20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
-	<87msoofjg1.fsf@kernel.org>
-	<35086bb6-ee11-4ac6-b8ba-5fab20065b54@intel.com>
-	<871q60ffnr.fsf@kernel.org>
-	<7813dff5-b140-48c4-bc15-ed25c7a07591@intel.com>
-Date: Fri, 17 May 2024 21:58:59 +0300
-In-Reply-To: <7813dff5-b140-48c4-bc15-ed25c7a07591@intel.com> (Dave Hansen's
-	message of "Fri, 17 May 2024 11:48:44 -0700")
-Message-ID: <87eda0cljg.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1715972426; c=relaxed/simple;
+	bh=QRdZ/0bPeT1pPwG5WSLdvwtqFro0oKtYinwQoUsitzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M1l0EAlsbvUa8ym0DP/AL2l+K/+CXL08B4P7qSpvHMUzedHPCVDoOrPIPD9eX48WSCWHIXdxG4kHcopUvKLp7CwecnliXa1/bOfRxv8ohkygO2PNeWvnCKNdciEjxCtzJmeO6L5v9lIhmiVRvN5N81VbLWuryci21u2GQOCJZDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Vgx9J2NV2z9stW;
+	Fri, 17 May 2024 21:00:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id vUPpztsius7d; Fri, 17 May 2024 21:00:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Vgx9H5wLcz9st0;
+	Fri, 17 May 2024 21:00:03 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C4FF58B783;
+	Fri, 17 May 2024 21:00:03 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id Whiu-wIcSVA7; Fri, 17 May 2024 21:00:03 +0200 (CEST)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.121])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3A1368B775;
+	Fri, 17 May 2024 21:00:03 +0200 (CEST)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [RFC PATCH v2 01/20] mm: Provide pagesize to pmd_populate()
+Date: Fri, 17 May 2024 20:59:55 +0200
+Message-ID: <91159d49bcbee0526ca6235ff7ef1ee7d378d013.1715971869.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1715971869.git.christophe.leroy@csgroup.eu>
+References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715972396; l=7768; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=QRdZ/0bPeT1pPwG5WSLdvwtqFro0oKtYinwQoUsitzg=; b=V+uT7e63aUwkHom1JhxufaACKodi9eHRwkhvAOY4pPe2+bhg0QVn2P/ZJ6/WxVQxS5LOErXv0 HWo2wsZ0Lg0CxOLBcSGrD43ouEQty35JIEIddrDN5L0k7VW4ka/QFJ8
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-Dave Hansen <dave.hansen@intel.com> writes:
+Unlike many architectures, powerpc 8xx hardware tablewalk requires
+a two level process for all page sizes, allthough second level only
+has one entry when pagesize is 8M.
 
-> On 5/17/24 11:37, Kalle Valo wrote:
->> While writing this email I found another way to continue the suspend
->> after a stall: terminate rtcwake with CTRL-C in the ssh session running
->> the for loop. That explains why 'sudo shutdown -h now' makes the suspend
->> go forward, it most likely kills the stalled rtcwake process.
->
-> Could we try and figure out what rtcwake is doing during its stall?  A
-> couple of ideas:
->
-> You could strace it to see if it's hung in the kernel:
->
-> 	strace -o strace.log rtcwake ... <args here>
->
-> You could look at its stack in /proc, like this:
->
-> # cat /proc/`pidof sleep`/stack
-> [<0>] hrtimer_nanosleep+0xb5/0x190
-> [<0>] common_nsleep+0x44/0x50
-> [<0>] __x64_sys_clock_nanosleep+0xcb/0x140
-> [<0>] do_syscall_64+0x65/0x140
-> [<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
->
-> Or you can use sysrq:
->
-> 	echo t > /proc/sysrq-trigger
->
-> to get *all* tasks' stacks dumped out to dmesg.
->
-> I'd probably do all three in that order.
->
-> Getting a function-graph trace of rtcwake during the stall would also be
-> nice, but that's a lot of data so let's try the easier things first.
+To fit with Linux page table topology and without requiring special
+page directory layout like hugepd, the page entry will be replicated
+1024 times in the standard page table. However for large pages it is
+necessary to set bits in the level-1 (PMD) entry. At the time being,
+for 512k pages the flag is kept in the PTE and inserted in the PMD
+entry at TLB miss exception, that is necessary because we can have
+pages of different sizes in a page table. However the 12 PTE bits are
+fully used and there is no room for an additional bit for page size.
 
-I can do all that but most probably not this week. Luckily it's quite
-easy to reproduce the bug, one time I even saw it in the first iteration
-and usually within 15 minutes or so.
+For 8M pages, there will be only one page per PMD entry, it is
+therefore possible to flag the pagesize in the PMD entry, with the
+advantage that the information will already be at the right place for
+the hardware.
 
-And do let me know if there's anything else I should try.
+To do so, add a new helper called pmd_populate_size() which takes the
+page size as an additional argument, and modify __pte_alloc() to also
+take that argument. pte_alloc() is left unmodified in order to
+reduce churn on callers, and a pte_alloc_size() is added for use by
+pte_alloc_huge().
 
+When an architecture doesn't provide pmd_populate_size(),
+pmd_populate() is used as a fallback.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ include/linux/mm.h | 12 +++++++-----
+ mm/filemap.c       |  2 +-
+ mm/internal.h      |  2 +-
+ mm/memory.c        | 19 ++++++++++++-------
+ mm/pgalloc-track.h |  2 +-
+ mm/userfaultfd.c   |  4 ++--
+ 6 files changed, 24 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b6bdaa18b9e9..158cb87bc604 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2803,8 +2803,8 @@ static inline void mm_inc_nr_ptes(struct mm_struct *mm) {}
+ static inline void mm_dec_nr_ptes(struct mm_struct *mm) {}
+ #endif
+ 
+-int __pte_alloc(struct mm_struct *mm, pmd_t *pmd);
+-int __pte_alloc_kernel(pmd_t *pmd);
++int __pte_alloc(struct mm_struct *mm, pmd_t *pmd, unsigned long sz);
++int __pte_alloc_kernel(pmd_t *pmd, unsigned long sz);
+ 
+ #if defined(CONFIG_MMU)
+ 
+@@ -2989,7 +2989,8 @@ pte_t *pte_offset_map_nolock(struct mm_struct *mm, pmd_t *pmd,
+ 	pte_unmap(pte);					\
+ } while (0)
+ 
+-#define pte_alloc(mm, pmd) (unlikely(pmd_none(*(pmd))) && __pte_alloc(mm, pmd))
++#define pte_alloc_size(mm, pmd, sz) (unlikely(pmd_none(*(pmd))) && __pte_alloc(mm, pmd, sz))
++#define pte_alloc(mm, pmd) pte_alloc_size(mm, pmd, PAGE_SIZE)
+ 
+ #define pte_alloc_map(mm, pmd, address)			\
+ 	(pte_alloc(mm, pmd) ? NULL : pte_offset_map(pmd, address))
+@@ -2998,9 +2999,10 @@ pte_t *pte_offset_map_nolock(struct mm_struct *mm, pmd_t *pmd,
+ 	(pte_alloc(mm, pmd) ?			\
+ 		 NULL : pte_offset_map_lock(mm, pmd, address, ptlp))
+ 
+-#define pte_alloc_kernel(pmd, address)			\
+-	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
++#define pte_alloc_kernel_size(pmd, address, sz)			\
++	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd, sz))? \
+ 		NULL: pte_offset_kernel(pmd, address))
++#define pte_alloc_kernel(pmd, address)	pte_alloc_kernel_size(pmd, address, PAGE_SIZE)
+ 
+ #if USE_SPLIT_PMD_PTLOCKS
+ 
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 30de18c4fd28..5a783063d1f6 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -3428,7 +3428,7 @@ static bool filemap_map_pmd(struct vm_fault *vmf, struct folio *folio,
+ 	}
+ 
+ 	if (pmd_none(*vmf->pmd) && vmf->prealloc_pte)
+-		pmd_install(mm, vmf->pmd, &vmf->prealloc_pte);
++		pmd_install(mm, vmf->pmd, &vmf->prealloc_pte, PAGE_SIZE);
+ 
+ 	return false;
+ }
+diff --git a/mm/internal.h b/mm/internal.h
+index 07ad2675a88b..4a01bbf55264 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -206,7 +206,7 @@ void folio_activate(struct folio *folio);
+ void free_pgtables(struct mmu_gather *tlb, struct ma_state *mas,
+ 		   struct vm_area_struct *start_vma, unsigned long floor,
+ 		   unsigned long ceiling, bool mm_wr_locked);
+-void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte);
++void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte, unsigned long sz);
+ 
+ struct zap_details;
+ void unmap_page_range(struct mmu_gather *tlb,
+diff --git a/mm/memory.c b/mm/memory.c
+index d2155ced45f8..2a9eba13a95f 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -409,7 +409,12 @@ void free_pgtables(struct mmu_gather *tlb, struct ma_state *mas,
+ 	} while (vma);
+ }
+ 
+-void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte)
++#ifndef pmd_populate_size
++#define pmd_populate_size(mm, pmdp, pte, sz) pmd_populate(mm, pmdp, pte)
++#define pmd_populate_kernel_size(mm, pmdp, pte, sz) pmd_populate_kernel(mm, pmdp, pte)
++#endif
++
++void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte, unsigned long sz)
+ {
+ 	spinlock_t *ptl = pmd_lock(mm, pmd);
+ 
+@@ -429,25 +434,25 @@ void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte)
+ 		 * smp_rmb() barriers in page table walking code.
+ 		 */
+ 		smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
+-		pmd_populate(mm, pmd, *pte);
++		pmd_populate_size(mm, pmd, *pte, sz);
+ 		*pte = NULL;
+ 	}
+ 	spin_unlock(ptl);
+ }
+ 
+-int __pte_alloc(struct mm_struct *mm, pmd_t *pmd)
++int __pte_alloc(struct mm_struct *mm, pmd_t *pmd, unsigned long sz)
+ {
+ 	pgtable_t new = pte_alloc_one(mm);
+ 	if (!new)
+ 		return -ENOMEM;
+ 
+-	pmd_install(mm, pmd, &new);
++	pmd_install(mm, pmd, &new, sz);
+ 	if (new)
+ 		pte_free(mm, new);
+ 	return 0;
+ }
+ 
+-int __pte_alloc_kernel(pmd_t *pmd)
++int __pte_alloc_kernel(pmd_t *pmd, unsigned long sz)
+ {
+ 	pte_t *new = pte_alloc_one_kernel(&init_mm);
+ 	if (!new)
+@@ -456,7 +461,7 @@ int __pte_alloc_kernel(pmd_t *pmd)
+ 	spin_lock(&init_mm.page_table_lock);
+ 	if (likely(pmd_none(*pmd))) {	/* Has another populated it ? */
+ 		smp_wmb(); /* See comment in pmd_install() */
+-		pmd_populate_kernel(&init_mm, pmd, new);
++		pmd_populate_kernel_size(&init_mm, pmd, new, sz);
+ 		new = NULL;
+ 	}
+ 	spin_unlock(&init_mm.page_table_lock);
+@@ -4740,7 +4745,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+ 		}
+ 
+ 		if (vmf->prealloc_pte)
+-			pmd_install(vma->vm_mm, vmf->pmd, &vmf->prealloc_pte);
++			pmd_install(vma->vm_mm, vmf->pmd, &vmf->prealloc_pte, PAGE_SIZE);
+ 		else if (unlikely(pte_alloc(vma->vm_mm, vmf->pmd)))
+ 			return VM_FAULT_OOM;
+ 	}
+diff --git a/mm/pgalloc-track.h b/mm/pgalloc-track.h
+index e9e879de8649..90e37de7ab77 100644
+--- a/mm/pgalloc-track.h
++++ b/mm/pgalloc-track.h
+@@ -45,7 +45,7 @@ static inline pmd_t *pmd_alloc_track(struct mm_struct *mm, pud_t *pud,
+ 
+ #define pte_alloc_kernel_track(pmd, address, mask)			\
+ 	((unlikely(pmd_none(*(pmd))) &&					\
+-	  (__pte_alloc_kernel(pmd) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
++	  (__pte_alloc_kernel(pmd, PAGE_SIZE) || ({*(mask)|=PGTBL_PMD_MODIFIED;0;})))?\
+ 		NULL: pte_offset_kernel(pmd, address))
+ 
+ #endif /* _LINUX_PGALLOC_TRACK_H */
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 3c3539c573e7..0f129d5c5aa2 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -764,7 +764,7 @@ static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
+ 			break;
+ 		}
+ 		if (unlikely(pmd_none(dst_pmdval)) &&
+-		    unlikely(__pte_alloc(dst_mm, dst_pmd))) {
++		    unlikely(__pte_alloc(dst_mm, dst_pmd, PAGE_SIZE))) {
+ 			err = -ENOMEM;
+ 			break;
+ 		}
+@@ -1687,7 +1687,7 @@ ssize_t move_pages(struct userfaultfd_ctx *ctx, unsigned long dst_start,
+ 					err = -ENOENT;
+ 					break;
+ 				}
+-				if (unlikely(__pte_alloc(mm, src_pmd))) {
++				if (unlikely(__pte_alloc(mm, src_pmd, PAGE_SIZE))) {
+ 					err = -ENOMEM;
+ 					break;
+ 				}
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.44.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
