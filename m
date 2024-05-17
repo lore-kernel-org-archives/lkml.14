@@ -1,169 +1,119 @@
-Received: from flow4-smtp.messagingengine.com (flow4-smtp.messagingengine.com [103.168.172.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAF56A005;
-	Fri, 17 May 2024 19:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477FD6A005;
+	Fri, 17 May 2024 19:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715972817; cv=none; b=apw6ydUW7H+rScpL8+9/y/Gcl99LZ0wFPKxsnhXws7hURA630rv25HLuvXbQU2vdA5vOM5i12j6uEISyNbzfyIHVlKNWZ4dk07/GQxGcMe7a1SQu41w5CP0UlyGIM9HTqBi1TKYvj0xngOcj129zIsWu5NkDzLdTA+KssbwNI6E=
+	t=1715972933; cv=none; b=QQ/i0pRgj0D7kWG+RRZYaomOdeGHizHE9aRCxVXU8jVWBwY0+iiSMfOYF2TaxseAIfbJ6LbOKKBy9ZIZgiNaeU6yhf3xDeaR8ABYlp+SlgYIhWRNEON58eTqxuZ5bzpQ0VbYj1KuCmeaqMCe1YNv0l3lLiKgL3UGb8Sy2M56m3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715972817; c=relaxed/simple;
-	bh=04rcN74LRVOgvg1Pgpl2S95I7nmZQRd+3n8EVCIHMLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WUmc6/KnOxzFw93tdzTYRtvSYqpNZgomR5duxCioZ3vIvmdHsuLyySaVUadyO4vU9V9QgpSG0NrvUnPav6piN7cKwaUrI9KzhLWDhwQLBtzsoJtT+ztrxVYnYP6d5d5v50yM9VvCL8kZfaF5mTk4uhjtTsu1xfXs8S8sjRQ24co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=nk1YlmOw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GuOIWxak; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
+	s=arc-20240116; t=1715972933; c=relaxed/simple;
+	bh=uWb+bOSKwQLJn2Jz1qSkQVUr71jyyOc0xxanYUgAxrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KFJA9BwKNdljJgKRbFqQkPAp8A2gWEN8Ot7/7faFXPxRlrhUfGRd/SzfoOhzqYIdeY+wqpCxZp396KbcZLafpMvuTnWu/PBmwLB9iBA0aoz81IxxDj1SGBbe0+FYJSKQDGg9TWXPV4g38gH8uZDuZc8QBnEE5Ixc6SdJnrbzmTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1SYVzmP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="nk1YlmOw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GuOIWxak"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 406B520011D;
-	Fri, 17 May 2024 15:06:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Fri, 17 May 2024 15:06:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1715972815; x=1715976415; bh=MolZk3aDwQ
-	5AXPmBxbzqYEOhzXdd2allt5iM66ZHWGU=; b=nk1YlmOwRf47RW6Xl0ocg8hbPh
-	vhEG6vO5uradKBG1r0JN72SiAT7soy6dE4iT37d72v42/tyPA/Ju8NEZIeW6vMi2
-	lHNtPudTnfQrDUl1dsqt9+Sw3UeyAPiOMWguSjMv7jcD3UJLuZsGcirL8EOaJxUU
-	lWHTk7rqcxM5rzVMK51IqjOHzWzh6aCw1lWXde2H9ZsAlbwAtzRVOHJRAqn3lgH3
-	DDFXS5Pu8V6lfj1beydisMASxr+JqcmVmRf9H0i0xNdEssVvuCK8JiBW6zE/dROG
-	ZSGlnM4Z0hdc2hw0caXycrppcFYniN44Z20nw3rrhl7rCUr1MHiDgdMySKPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	i76614979.fm3; t=1715972815; x=1715976415; bh=MolZk3aDwQ5AXPmBxb
-	zqYEOhzXdd2allt5iM66ZHWGU=; b=GuOIWxakWky6eQrMiU9frb/EQ+8OXJvLTS
-	jQeeA/nMKbaNfGCRm4Ga0A7jyDdpc3mkXngButmYaeKsELqqNBUZT1KpggexHykl
-	Yxlt/7kLgTBFoRrEq35CmHN7m0XNvcn2j5ADurM66M4ZmJVXZK187q5ZnaeAfA6t
-	z3fNq6hvufYtd3+S41FIRa6hMjn7eEGGWj4qaCZQ74eaK/MKdlB5kxNZLSkt2zqr
-	+NDwBmERl/8PQExnYlDUCFFd+HKmkdif4t5FrmUelZD+02OWC18UTQbK3iiZH+31
-	563Tt7QfsqEImoiAkhKYrRtlH3s2zzJI3pHtlv7tlQe8CM3XddDg==
-X-ME-Sender: <xms:zapHZs3lYqgCs0EsLnDkWXwPs-8TF5Ovcf5Jtl9oUQS5YfAyX-NBoQ>
-    <xme:zapHZnEihHPBIwfTw4V_eI-difhVnimEsF1wygWaTIFxdAcKvTWwOHPijwr9Na4iy
-    gBGsuJytrbUE6ZCk6Q>
-X-ME-Received: <xmr:zapHZk6IwJsdzwfa8H38LsSG5xchGVIVjy_fXAqGiXonmC4AJTLaLuOzzXoMvhymmSA3fZWX_EasQNCWs1y25ts>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehgedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtjeenucfhrhhomheplfhonhgr
-    thhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqnecugg
-    ftrfgrthhtvghrnhepkeekteegfefgvdefgfefffeufeffjedvudeijeehjeehffekjeek
-    leffueelgffgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepjhgtrghlmhgvlhhsseefgiigtddrnhgvth
-X-ME-Proxy: <xmx:zapHZl2JO9xI6FAz3XkByw8qXGqXoU5jkK9sWhzRrlO5DZehXTNWRQ>
-    <xmx:zapHZvHOwsbVuSoQreaaGgRSmXDIIT4TMhHqlc9jFIAiP1d27E23_w>
-    <xmx:zapHZu8-8ev1Z5q5SruSKb4zjQrPU4FKFe4x7DODb-X3qw4P2VEVCQ>
-    <xmx:zapHZkkXNO2jAFjPA4OrQ8YuxJKnBEP3Sztr6gtPlRruh64vvYVmAg>
-    <xmx:z6pHZvHG42Nog5HimWwH-lSGc2XcplGXHnhwSBXRBQtB0QKYfr2Pmgtf>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 17 May 2024 15:06:50 -0400 (EDT)
-Date: Fri, 17 May 2024 12:11:52 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, brauner@kernel.org, 
-	ebiederm@xmission.com, Luis Chamberlain <mcgrof@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Joel Granados <j.granados@samsung.com>, 
-	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, David Howells <dhowells@redhat.com>, containers@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
-Message-ID: <vhpmew3kyay3xq4h3di3euauo43an22josvvz6assex4op3gzw@xeq63mqb2lmh>
-References: <20240516092213.6799-1-jcalmels@3xx0.net>
- <2804dd75-50fd-481c-8867-bc6cea7ab986@schaufler-ca.com>
- <D1BBFWKGIA94.JP53QNURY3J4@kernel.org>
- <D1BBI1LX2FMW.3MTQAHW0MA1IH@kernel.org>
- <D1BC3VWXKTNC.2DB9JIIDOFIOQ@kernel.org>
- <jvy3npdptyro3m2q2junvnokbq2fjlffljxeqitd55ff37cydc@b7mwtquys6im>
- <df3c9e5c-b0e7-4502-8c36-c5cb775152c0@schaufler-ca.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1SYVzmP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B611DC32789;
+	Fri, 17 May 2024 19:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715972932;
+	bh=uWb+bOSKwQLJn2Jz1qSkQVUr71jyyOc0xxanYUgAxrI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B1SYVzmPVa95dii8iiNGtWbLnTRYHsNyGY7TVnPycTDXAk3DJBlQppLj44zNGyc+U
+	 GhhVRlWsBkN8LPYPURcukRIiJAahNyMthuUXayDEb4WqQRzn0M04aWAU5ImLEZuq/K
+	 pwmGci4Y122Pc+Vo2PEp72j/FNFr4gAXtGLRV4n2lDjvTvpejpG1jMmtM2OS5IjlYS
+	 7fT4VlfMOBYtTk4i1UdHsRho9A6uz3Zkz/dDt30lXty9sGoz0Sm4qf5BrNy6Vf+A5u
+	 Y9Q+/QffY2SZ6DizYsyRgYveRTXtsmY0xVTm7gdTXty/Y+fo6NIVRZtWIlAnDSc4Iz
+	 2EKG2LaWZVelg==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5ac4470de3bso67475eaf.0;
+        Fri, 17 May 2024 12:08:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4mENtBuqDt2koXhnTscw/9Ji7dJk3uMGwi5eIRNIQKc4Gq6k41pPiLwfzxQgQ7GkwpNJDBq1iDrFlGn/vCLkRJ+uaht5LkSta9Etpf5BAZn7pedMPM6WIMsbLFfyMqJUX7BSfM20=
+X-Gm-Message-State: AOJu0YxZW6/o71188Y90/ok8IA6W/ltN0AbcGvq0JI6Se/Bn54q/Qvwa
+	6rknc+bwk2JJ0CtGoyTixOwH1TpQOMSOcn+wOsG/U1MA/NKRYH//TeAjZdbf3yupSEUZBArMADy
+	FECabuVYxXLOWRhi+/2i1URpgrp8=
+X-Google-Smtp-Source: AGHT+IG+4u8KxAGrrysp6nvFWeu9dDnGpa/wsXf20CS/0o0U1GC6cHp5W7yqKNQ3oZ2MRrdPXCbVMkds2yJkFSkH1do=
+X-Received: by 2002:a05:6820:1f16:b0:5b2:7d9f:e708 with SMTP id
+ 006d021491bc7-5b28193e476mr24576900eaf.1.1715972931992; Fri, 17 May 2024
+ 12:08:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <df3c9e5c-b0e7-4502-8c36-c5cb775152c0@schaufler-ca.com>
+References: <87o79cjjik.fsf@kernel.org> <20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+ <20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local> <87h6f4jdrq.fsf@kernel.org>
+ <878r0djxgc.fsf@kernel.org> <874jb0jzx5.fsf@kernel.org> <20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+ <87msoofjg1.fsf@kernel.org> <35086bb6-ee11-4ac6-b8ba-5fab20065b54@intel.com>
+ <871q60ffnr.fsf@kernel.org> <7813dff5-b140-48c4-bc15-ed25c7a07591@intel.com> <87eda0cljg.fsf@kernel.org>
+In-Reply-To: <87eda0cljg.fsf@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 17 May 2024 21:08:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hJnXPMq5cjEs=yPrSU1hpJ3H3cMce8fOGQCripYfbeGQ@mail.gmail.com>
+Message-ID: <CAJZ5v0hJnXPMq5cjEs=yPrSU1hpJ3H3cMce8fOGQCripYfbeGQ@mail.gmail.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Jeff Johnson <quic_jjohnson@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 17, 2024 at 10:53:24AM GMT, Casey Schaufler wrote:
-> Of course they do. I have been following the use of capabilities
-> in Linux since before they were implemented. The uptake has been
-> disappointing in all use cases.
+On Fri, May 17, 2024 at 8:59=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wrote=
+:
+>
+> Dave Hansen <dave.hansen@intel.com> writes:
+>
+> > On 5/17/24 11:37, Kalle Valo wrote:
+> >> While writing this email I found another way to continue the suspend
+> >> after a stall: terminate rtcwake with CTRL-C in the ssh session runnin=
+g
+> >> the for loop. That explains why 'sudo shutdown -h now' makes the suspe=
+nd
+> >> go forward, it most likely kills the stalled rtcwake process.
+> >
+> > Could we try and figure out what rtcwake is doing during its stall?  A
+> > couple of ideas:
+> >
+> > You could strace it to see if it's hung in the kernel:
+> >
+> >       strace -o strace.log rtcwake ... <args here>
+> >
+> > You could look at its stack in /proc, like this:
+> >
+> > # cat /proc/`pidof sleep`/stack
+> > [<0>] hrtimer_nanosleep+0xb5/0x190
+> > [<0>] common_nsleep+0x44/0x50
+> > [<0>] __x64_sys_clock_nanosleep+0xcb/0x140
+> > [<0>] do_syscall_64+0x65/0x140
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
+> >
+> > Or you can use sysrq:
+> >
+> >       echo t > /proc/sysrq-trigger
+> >
+> > to get *all* tasks' stacks dumped out to dmesg.
+> >
+> > I'd probably do all three in that order.
+> >
+> > Getting a function-graph trace of rtcwake during the stall would also b=
+e
+> > nice, but that's a lot of data so let's try the easier things first.
+>
+> I can do all that but most probably not this week. Luckily it's quite
+> easy to reproduce the bug, one time I even saw it in the first iteration
+> and usually within 15 minutes or so.
+>
+> And do let me know if there's anything else I should try.
 
-Why "Of course"?
-What if they should not get *all* privileges?
+My somewhat educated guess is that pm_notifier_call_chain_robust()
+blocks for you, so you can add debug printk()s around the call to this
+in suspend_prepare().
 
-> Yes. The problems of a single, all powerful root privilege scheme are
-> well documented.
-
-That's my point, it doesn't have to be this way.
-
-> Hardly.
-
-Maybe I'm missing something, then.
-How do I restrict my users from gaining say CAP_NET_ADMIN in their
-userns today?
-
-> If you're going to run userspace that *requires* privilege, you have
-> to have a way to *allow* privilege. If the userspace insists on a root
-> based privilege model, you're stuck supporting it. Regardless of your
-> principles.
-
-I want *some* privileges, not *all* of them.
-
-> Which is a really, really bad idea. The equation for calculating effective
-> privilege is already more complicated than userspace developers are generally
-> willing to put up with.
-
-This is generally true, but this set is way more straightforward than
-the other sets, it's always:
-
-pU = pP = pE = X
-
-If you look at the patch, there is no transition logic or anything
-complicated, it's just a set of caps behind inherited.
-
-> I would not expect container developers to be eager to learn how to use
-> this facility.
-
-And they probably wouldn't.
-For most use cases it's going to be enforced through system policies
-(init, pam, etc). Other than that, usage won't change, you will run your
-usual `docker run --cap-add ...` to get caps, except now it works in
-userns.
-
-> I'm sorry, but this makes no sense to me whatsoever. You want to introduce
-> a capability set explicitly for namespaces in order to make them less
-> special? Maybe I'm just old and cranky.
-> 
-> >   They now work the same way as say a transition to root does with
-> >   inheritable caps.
-> 
-> That needs some explanation.
-
-From man capabilities(7):
-
-In  order  to  mirror traditional UNIX semantics, the kernel performs
-special treatment of file capabilities when a process with UID 0 (root)
-executes a program [...]
-
-Thus,  when [...] a process whose real and effective UIDs are
-zero execve(2)s a program, the calculation of the process's new
-permitted capabilities simplifies to:
-
-   P'(permitted)   = P(inheritable) | P(bounding)
-
-   P'(effective)   = P'(permitted)
-
-
-So, the same way a root process is bounded by its inheritable set when
-it execs, a "rootless" process is bounded by its userns set when it
-unshares.
+It is also possible that pm_prepare_console() does something weird and
+your description of the problem indicates that it doesn't get to user
+space freezing.
