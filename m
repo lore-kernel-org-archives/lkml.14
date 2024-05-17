@@ -1,152 +1,174 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457D11419AA;
-	Fri, 17 May 2024 21:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12C839FFD;
+	Fri, 17 May 2024 21:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715981881; cv=none; b=rQQxlzVFP9ZL8PMBBCgeCervdEkwt7mp38FZRKOZW5gHChbkpK/WzZYLwWhhRvjJFxGausybQEAInqbHc+6LBQpxz5McnMKWO5IWfhmT/DBCT7U+9UGqJkq0lh4ZVBzsHA3Owkmq9XnlwYjlhjOUWRTPi3JTB+J2teKZjX2VrLY=
+	t=1715981990; cv=none; b=rHrh88Q4EE9V3KRZEaOmj7EV9BtdKoQDdfdFuZ7irzR3ph/RNHuNWYe1lzHxWDeM0qaVLaQ5Np+K72j6bkWJzsnzqMIVe8ruFE9qISD3DVFhgkxWykVbx0dwrXlReG9A2UJa/jPloZKJyO5ePoad4AnKtOUDwnzrDVUpYPLHTdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715981881; c=relaxed/simple;
-	bh=O59K4hbDSsfiQU0mSa0j9lbI6l1M9YPmNCHJAuUsARc=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=IXOaKBCKpx+vuMd+F9Cw6tGll//1OW+GrZJVhaw28BVziC+JqwESaRjTMv/eIFn+CMU6JRmvGRlOfEiJ6sMB1A5GcZT9p6V0mAjpnJiFyozHySX/B+Nql++uSU3Q4ccC/jsVJzNiBGYKQ/AHWGmDgfF2rRAQAIciQbxilW1g0MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pbL1P25V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ljOPtLVG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1715981990; c=relaxed/simple;
+	bh=2SS4RimWdSKvDc8cYyQUQTKo0de1Bc26jlHfZplTVjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BYfSdVx/LjYw6eoxHgx4hBu7GkfhBOHwi5TCOQyw1dW+diEX749xeuOJ1+NzlN3WvpTHZxFjrXz+eDvO1MOHU3tgt/IARFuJQFhyEUP/uEIzKUKb79wMQiBk7t1rw+yaOZ+dctH/M6kXGYgFf3n93j6utxNIF+y/HwtCv9gElec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J5vEFyTp; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pbL1P25V";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ljOPtLVG"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715981878;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DXtrA5LLFohLOjGP/edadyudWrEZRBECLedxJJ0rcYI=;
-	b=pbL1P25VT61HHZRS50rO5Gwpx0znpq5MQBGNgqKMYKYleyJZOtQx/eoVHjlw/zuCRaSnJC
-	ULNr2b2vZQ7C8CJO34JuGGF5mWaWHGTOB2t2RNmso+xBL8Oo4zlEbAlXHkIMwS4hFtwlIz
-	2wdHQ3Wf3U5sCusbJzVXSrZnf+mQuntB6pjpF1nXhmp14eCOWy3OUCsyCOsLF0HUtsTcNI
-	+E11XF1xFIS/0YWOW1JlCrgmm706qH6lj3GAIaEkqqEZhydbpekZh6nnAMxIuWVhc8WcFe
-	dRco29ASa07t9RPrZ//V0G43K+YJ4zFOSZWBUnempkruDisMuCKTTuBP3LHF7w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715981878;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DXtrA5LLFohLOjGP/edadyudWrEZRBECLedxJJ0rcYI=;
-	b=ljOPtLVGpxmk0jU3L4UqfG5IrEz0yayhXyrM3c/ZgIIHuhN+I+V36vHKQAxVndVuIuwDKX
-	O1HriLIZJtakL3Bw==
-To: Costa Shulyupin <costa.shul@redhat.com>, longman@redhat.com,
- pauld@redhat.com, juri.lelli@redhat.com, prarit@redhat.com,
- vschneid@redhat.com, Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, Zefan Li
- <lizefan.x@bytedance.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner
- <hannes@cmpxchg.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Petr
- Mladek <pmladek@suse.com>, Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Yoann Congal <yoann.congal@smile.fr>, "Gustavo A.
- R. Silva" <gustavoars@kernel.org>, Nhat Pham <nphamcs@gmail.com>, Costa
- Shulyupin <costa.shul@redhat.com>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org
-Subject: Re: [PATCH v1 1/7] sched/isolation: Add infrastructure to adjust
- affinity for dynamic CPU isolation
-In-Reply-To: <20240516190437.3545310-2-costa.shul@redhat.com>
-References: <20240516190437.3545310-1-costa.shul@redhat.com>
- <20240516190437.3545310-2-costa.shul@redhat.com>
-Date: Fri, 17 May 2024 23:37:57 +0200
-Message-ID: <877cfsjf0q.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J5vEFyTp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715981987; x=1747517987;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2SS4RimWdSKvDc8cYyQUQTKo0de1Bc26jlHfZplTVjE=;
+  b=J5vEFyTpnVvnOKkJSStUGWO9PBRkSwaPrvmipmVn0vBrOKBGuZV098+k
+   u5ns1CJ+uUeK31K9Wyw+drtCwu+E9aM0xCztDcnllKt820oX2CE+7DnvV
+   5uhD3w7uJ3L4Bfks5xa8TQBI//fbze4E0ZEyxKl8RTg28XhKDaRH5JqKj
+   rklNwTKbNfbnGORcg0DuoB/uOUWWn51m/9qKmq9q2P0ItNQRamigw7x8j
+   Om9T+NkTIRmG1wW/NotRv1YkwX3UhSyoSlEZRatY1DJvOOzFLVwthlVsA
+   yKFlMeQINo/rgX3faEzXEdXPmSe4LdCVYc8ErUYYJSZcxkM7MMf5DctLT
+   g==;
+X-CSE-ConnectionGUID: KlXoS4UxRPm+TIRTqelx9w==
+X-CSE-MsgGUID: AYwRRiQETJ2Br4KIYUvTGw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12356749"
+X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
+   d="scan'208";a="12356749"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 14:39:46 -0700
+X-CSE-ConnectionGUID: gkIVbgFKR4KZwf7oGFI1XQ==
+X-CSE-MsgGUID: zsKfyn7DTkeY+sy0JqMShA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
+   d="scan'208";a="36827114"
+Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 17 May 2024 14:39:41 -0700
+Received: from kbuild by 108735ec233b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s85Fv-00019g-0g;
+	Fri, 17 May 2024 21:37:44 +0000
+Date: Sat, 18 May 2024 05:34:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: ye.xingchen@zte.com.cn, davem@davemloft.net
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	corbet@lwn.net, dsahern@kernel.org, ncardwell@google.com,
+	soheil@google.com, mfreemon@cloudflare.com, lixiaoyan@google.com,
+	david.laight@aculab.com, haiyangz@microsoft.com,
+	ye.xingchen@zte.com.cn, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	xu.xin16@zte.com.cn, zhang.yunkai@zte.com.cn, fan.yu9@zte.com.cn
+Subject: Re: [PATCH net-next] icmp: Add icmp_timestamp_ignore_all to control
+ ICMP_TIMESTAMP
+Message-ID: <202405180545.RQgwvazz-lkp@intel.com>
+References: <20240517172639229ec5bN7VBV7SGEHkSK5K6f@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240517172639229ec5bN7VBV7SGEHkSK5K6f@zte.com.cn>
 
-On Thu, May 16 2024 at 22:04, Costa Shulyupin wrote:
-> Introduce infrastructure function housekeeping_update() to change
-> housekeeping_cpumask during runtime and adjust affinities of depended
-> subsystems.
->
-> Affinity adjustments of subsystems follow in subsequent patches.
->
-> Parent patch:
-> "sched/isolation: Exclude dynamically isolated CPUs from housekeeping masks"
-> https://lore.kernel.org/lkml/20240229021414.508972-2-longman@redhat.com/
->
-> Test example for cgroup2:
->
-> cd /sys/fs/cgroup/
-> echo +cpuset > cgroup.subtree_control
-> mkdir test
-> echo isolated > test/cpuset.cpus.partition
-> echo $isolate > test/cpuset.cpus
+Hi,
 
-This changelog is not telling me anything. Please see
-Documentation/process/ what changelogs should contain.
+kernel test robot noticed the following build warnings:
 
-> +/*
-> + * housekeeping_update - change housekeeping.cpumasks[type] and propagate the
-> + * change.
-> + *
-> + * Assuming cpuset_mutex is held in sched_partition_write or
-> + * cpuset_write_resmask.
+[auto build test WARNING on net-next/main]
 
-Locking cannot be assumed. lockdep_assert_held() is there to document
-and enforce such requirements.
+url:    https://github.com/intel-lab-lkp/linux/commits/ye-xingchen-zte-com-cn/icmp-Add-icmp_timestamp_ignore_all-to-control-ICMP_TIMESTAMP/20240517-172903
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240517172639229ec5bN7VBV7SGEHkSK5K6f%40zte.com.cn
+patch subject: [PATCH net-next] icmp: Add icmp_timestamp_ignore_all to control ICMP_TIMESTAMP
+config: arm-clps711x_defconfig (https://download.01.org/0day-ci/archive/20240518/202405180545.RQgwvazz-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project fa9b1be45088dce1e4b602d451f118128b94237b)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405180545.RQgwvazz-lkp@intel.com/reproduce)
 
-> + */
-> +static int housekeeping_update(enum hk_type type, cpumask_var_t update)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405180545.RQgwvazz-lkp@intel.com/
 
-Please us 'struct cpumask *update' as it makes it clear what this is
-about. cpumask_var_t is a hack to make onstack and embedded cpumask and
-their allocated counterparts possible without #ifdeffery in the code.
+All warnings (new ones prefixed by >>):
 
-But any function which is not related to alloc/free of cpumask_var_t
-should simply use 'struct cpumask *' as argument type.
+   In file included from net/ipv4/icmp.c:69:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:17:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:8:
+   In file included from include/linux/cacheflush.h:5:
+   In file included from arch/arm/include/asm/cacheflush.h:10:
+   In file included from include/linux/mm.h:2210:
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> net/ipv4/icmp.c:1157:16: warning: variable 'net' is uninitialized when used here [-Wuninitialized]
+    1157 |         if (READ_ONCE(net->ipv4.sysctl_icmp_timestamp_ignore_all))
+         |                       ^~~
+   include/asm-generic/rwonce.h:50:14: note: expanded from macro 'READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |                     ^
+   include/asm-generic/rwonce.h:44:72: note: expanded from macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                         ^
+   net/ipv4/icmp.c:1155:17: note: initialize the variable 'net' to silence this warning
+    1155 |         struct net *net;
+         |                        ^
+         |                         = NULL
+   2 warnings generated.
 
-> +	housekeeping.flags |= BIT(type);
 
-The existing code uses WRITE_ONCE() probably for a reason. Why is that
-not longer required here?
+vim +/net +1157 net/ipv4/icmp.c
 
->  static int __init housekeeping_setup(char *str, unsigned long flags)
->  {
->  	cpumask_var_t non_housekeeping_mask, housekeeping_staging;
-> @@ -314,9 +347,12 @@ int housekeeping_exlude_isolcpus(const struct cpumask *isolcpus, unsigned long f
->  		/*
->  		 * Reset housekeeping to bootup default
->  		 */
-> -		for_each_set_bit(type, &housekeeping_boot.flags, HK_TYPE_MAX)
-> -			cpumask_copy(housekeeping.cpumasks[type],
-> -				     housekeeping_boot.cpumasks[type]);
-> +		for_each_set_bit(type, &housekeeping_boot.flags, HK_TYPE_MAX) {
-> +			int err = housekeeping_update(type, housekeeping_boot.cpumasks[type]);
-> +
-> +			if (err)
-> +				return err;
-> +		}
->  
->  		WRITE_ONCE(housekeeping.flags, housekeeping_boot.flags);
->  		if (!housekeeping_boot.flags &&
-> @@ -344,9 +380,11 @@ int housekeeping_exlude_isolcpus(const struct cpumask *isolcpus, unsigned long f
->  		cpumask_andnot(tmp_mask, src_mask, isolcpus);
->  		if (!cpumask_intersects(tmp_mask, cpu_online_mask))
->  			return -EINVAL;	/* Invalid isolated CPUs */
-> -		cpumask_copy(housekeeping.cpumasks[type], tmp_mask);
-> +		int err = housekeeping_update(type, tmp_mask);
-> +
-> +		if (err)
-> +			return err;
+  1144	
+  1145	/*
+  1146	 *	Handle ICMP Timestamp requests.
+  1147	 *	RFC 1122: 3.2.2.8 MAY implement ICMP timestamp requests.
+  1148	 *		  SHOULD be in the kernel for minimum random latency.
+  1149	 *		  MUST be accurate to a few minutes.
+  1150	 *		  MUST be updated at least at 15Hz.
+  1151	 */
+  1152	static enum skb_drop_reason icmp_timestamp(struct sk_buff *skb)
+  1153	{
+  1154		struct icmp_bxm icmp_param;
+  1155		struct net *net;
+  1156	
+> 1157		if (READ_ONCE(net->ipv4.sysctl_icmp_timestamp_ignore_all))
+  1158			return SKB_NOT_DROPPED_YET;
+  1159	
+  1160		/*
+  1161		 *	Too short.
+  1162		 */
+  1163		if (skb->len < 4)
+  1164			goto out_err;
+  1165	
+  1166		/*
+  1167		 *	Fill in the current time as ms since midnight UT:
+  1168		 */
+  1169		icmp_param.data.times[1] = inet_current_timestamp();
+  1170		icmp_param.data.times[2] = icmp_param.data.times[1];
+  1171	
+  1172		BUG_ON(skb_copy_bits(skb, 0, &icmp_param.data.times[0], 4));
+  1173	
+  1174		icmp_param.data.icmph	   = *icmp_hdr(skb);
+  1175		icmp_param.data.icmph.type = ICMP_TIMESTAMPREPLY;
+  1176		icmp_param.data.icmph.code = 0;
+  1177		icmp_param.skb		   = skb;
+  1178		icmp_param.offset	   = 0;
+  1179		icmp_param.data_len	   = 0;
+  1180		icmp_param.head_len	   = sizeof(struct icmphdr) + 12;
+  1181		icmp_reply(&icmp_param, skb);
+  1182		return SKB_NOT_DROPPED_YET;
+  1183	
+  1184	out_err:
+  1185		__ICMP_INC_STATS(dev_net(skb_dst(skb)->dev), ICMP_MIB_INERRORS);
+  1186		return SKB_DROP_REASON_PKT_TOO_SMALL;
+  1187	}
+  1188	
 
-Do we really need two places to define 'int err' or might it be possible
-to have one instance defined at function scope?
-
-Thanks,
-
-        tglx
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
