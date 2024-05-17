@@ -1,66 +1,67 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2080.outbound.protection.outlook.com [40.107.255.80])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88803175BF
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 07:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A783517741;
+	Fri, 17 May 2024 07:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715932139; cv=fail; b=PdBzN7/XNOG3YJC4ItbizfOZKXF+0/we1dlgJg0Y2E7dpPoip73dTJolDiE1q1XSa5IBMD6uT6yMcwu9VQJETbWMttSxE6bFCUQi18BBd8FoSeoHPoekqdU1Nv+XygqfP4LIQIlFbk9ayonOJ1m/Ld+MyMYM7XxV4QmYEXCpcEo=
+	t=1715932456; cv=fail; b=trHjvtmgT8J6hOrF3mldpo/ZtiyhK2/OEu2/u9NPLtNz61fSr8zIynU2Oa1pAiRDuac85qRuWpxLl4bHPqh70Qsx2dpKT8rd+IEKu7nPbM84hyQDkzaWonJbHxr1p7IPEfTiDQCN6LZzllAMNaB38oPcTF9Cvc7v5chhBj6KrPU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715932139; c=relaxed/simple;
-	bh=bwLYGk7p5mxL4A02drJvPEyR367cKRry0+OzF2r7Kpo=;
+	s=arc-20240116; t=1715932456; c=relaxed/simple;
+	bh=2xljOK9Kas9is6wqwdFi3s8GLtOMCOASQr5bfc3cBxk=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Sc1D0KRWyLnq8ZpoX7D24mziecgSDFF7rShvpxyhYRRmgQhb8qRs6HCCsxwMemp2QRjuznI1B1iMzCnP4sb3MncS/wDOFwMXCcVGUSq0t2Ed+UygjrCN2XxXFDDbbn1tz65v+hudEhJW+Bs9D305epjAkiB2sh8e0A3PCscqGZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=DlqZ7Mhd; arc=fail smtp.client-ip=40.107.255.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	 Content-Type:MIME-Version; b=k5r8E4Sm4NxAYx5YVmECR4F1P4AONnVv+2UiWpgYH5crtaiSZmTSWwnrZHoxBnXiKgvDttI6R9hOEj3n/4vMNCvOoqndQFy0C78Cw+mRFmu9xx6tyxeJR+L23nnYTux2ENKCq0Vczwy8A3q1qoEWM9beEP2h4kNHrtoPLS89+UY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ih1OI9Dz; arc=fail smtp.client-ip=40.107.223.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="DlqZ7Mhd"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ih1OI9Dz"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DFLc/5KoeuFxluZMoSveAjOEq5tqGCjNc8p/s+UazBLTG4t5mu2HUuoiYfxhPScuHkU1hZMSzzH+nLKajHkMJWOvrmvGO97p03SCFXRsgEhHNaN4FxVP10GgV5vA2JqyTz0S7gHN63ExNrjcrKD6tqKhPJE5qigh6Ao97I84tUnx90NqMFlLMTI6bYFF2G7cDa+jyYrgpeZ9DXsOs7Y2iDMppVr7OQG/q2afJQCSE+sypp5la5IQDpFrQSVCAYsAioMqrf+RAyPqvDIkdXQX8cmBgCRRiyeaL/8vAGE4/SaV84uuNG8aGnK3BQeYJjo4IZQhThKizZ+rTb+5vLVzpA==
+ b=n7esaLsgJNLQ8nhLiIvdA1wO87L+dHNBvzP1XPD7zAPewxm5GhFccVaeYsv5CtAlgKdBzsH16teNEK+YODaMLUyeuc8sno6B4vz3Ps7AtJW8UKgGR3T/glzKsZw7MJy64MUdEmPQRfn7ta7JE4usS9Rp1Wh9BU35qQ6Sef/oE7P4SWUQRT12x6onLH+uXpSr4R7+cDzJAQ/05QO519VipV+L/F/LkCM26GqEVHFDHWWyOTVw3ZB313KvrLsHa5XrDe43H6farjCyX/lX6FgOW1C8nWQeunBKXIi0n4qSF/nPByaST3eWqOvirnQF+hu6cXC2+ElPJtaQfpzG0wZIJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6WHPDxfQC8Cz0SKLPSS1k0tQuqB2OfZM9qyLrgjZk8k=;
- b=U8OLdQr9ekogJKEDPspT+P4l4TUqsPkr6H0bWv3JsdTVZ7wLN060vPlJi+sldXenJYtYrMIdHSNiBF0uJsKzDRJSsz4MQEMsJop2yvVbjvaXuU3aHQJYvzoJ8WfCJcRGvef3Vcto1U9v+jq4ZXLWOHCfB0sVZoXJgFPB3X2eJE1xmJS36yzxcRgAJPI0E2V68hFGzNWFIcUHUy/gmrhUHgnpMb7ytVwAqApndiO/yVXNed8ke/3cvcg0mc4a7YqNBnrOGMlXZsbHCGsCpLxlInxu6qBCcXzh7lHiipzbX6t1wNY/NDgpDplNOeZwEBPxBvjRMtwdQ7ZQnX086M9YPQ==
+ bh=TQetnkxy68nJO8JhawkHqVbfce/rn/0woSu/XqdpKW0=;
+ b=Q0nshReBMPTXiWjH4uZ7Qfd20Dec3fijkFJh+wsc7qgoXOswgBnIeyL6zm9rQ1L04IjZNROJafHlcGm+pkysdEvWLqH1Ed0a+hk9tt/ySN7DP4cfwDd+iDb5RoKTHHk4LU2SWff0XXPOPpP9ZYXH57TihYY9b3NnerIDYoX3B4l1y4qlsZbNojxOiNBazG3/HqYr79YUWvOG0BZFsSJIHpEqkpC9iUoZqX7yKXkYJz2m13/LWSwkvtFlWRajtfoF/WL2ltdxSp759SeZzKezBoInuwbACHX90QLE4H0AQjsATSXbpYokqXJxa/C3gh4xABLa1pha5RrPQDx2C8pbsQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6WHPDxfQC8Cz0SKLPSS1k0tQuqB2OfZM9qyLrgjZk8k=;
- b=DlqZ7MhdggRhbV8gAoDT8w4CxixCTzJmDnVXoT0XS/KqLV6GGlCtyk+/4kV0rIjubl2GQLjmS+vKHzTSMzmY/claBbMRzhOixQwKvCejejnN/6sdCiJT0VJKzEqDZXvCHzy6b/uU0Di4gMYvtuckv7xEGYdP8++1FJdkQBEGDcquSWNNC+29KZPot/wo1I2IyQhfnS3fX+6Urd50MUkFXH/9NAIK0HTEbK6GeqAKW7Z1KUFuG0teVt2ZUx2z7b2Q4zJ5JdK38JpQz31g4Fg+UQWwlf9AgDbDvnMIfRMUpI5gsiFrwx3qi0k7L9wt6tyGkE9vT/M1bdEW+nKG/t0usg==
+ bh=TQetnkxy68nJO8JhawkHqVbfce/rn/0woSu/XqdpKW0=;
+ b=ih1OI9Dz2ddmKgR0gTBFXsTIpHJNTffGYR4i0ulXxtkj9hP470WFXT41ynDJ1qeT1K/aA837YpoWw6e7pakD87CIMzczw+C3VKq6s4xqdBKwd2CowqWJePF+qq6szwZE2j8ZJxKZXipEN9t8p7xs/JYEd99sASRnvU3o3QbwuMhaVswcqtNtfhVLb+1N8J8v+Rcjkr1/JHSUcx8Xgx5NvGU150eRxmmA5O3AJ7pfjV4jz9GpKlzmBR+V6+qDNhwYLR3rI3ugtxXpR2IRAh8IDfBQ+xXzGthN79nVmyHgM1N0mzgTjAcy3+3ETj3YmRn7+H4nZKrdoVP4sktPftyV9Q==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYSPR06MB6411.apcprd06.prod.outlook.com (2603:1096:400:42a::11)
- by SEYPR06MB5669.apcprd06.prod.outlook.com (2603:1096:101:bf::14) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by BY5PR12MB4049.namprd12.prod.outlook.com (2603:10b6:a03:201::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Fri, 17 May
- 2024 07:48:53 +0000
-Received: from TYSPR06MB6411.apcprd06.prod.outlook.com
- ([fe80::8e76:5af3:e027:ccee]) by TYSPR06MB6411.apcprd06.prod.outlook.com
- ([fe80::8e76:5af3:e027:ccee%3]) with mapi id 15.20.7587.028; Fri, 17 May 2024
- 07:48:53 +0000
-Message-ID: <8f49b95e-88df-48b8-9311-8a15414d8107@vivo.com>
-Date: Fri, 17 May 2024 15:48:49 +0800
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.30; Fri, 17 May
+ 2024 07:54:11 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::bbac:e733:5c7e:19c6]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::bbac:e733:5c7e:19c6%5]) with mapi id 15.20.7587.028; Fri, 17 May 2024
+ 07:54:09 +0000
+Message-ID: <ea0bacc0-2765-4d8f-8b62-0e9c45c560fc@nvidia.com>
+Date: Fri, 17 May 2024 15:53:58 +0800
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] dm: support retrieving struct dm_target from struct
- dm_dev
+Subject: Re: [PATCH] selftest: rtc: Add to check rtc alarm status for alarm
+ related test
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: shuah@kernel.org, avagin@google.com, amir73il@gmail.com,
+ brauner@kernel.org, mochs@nvidia.com, jszu@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20240517022847.4094731-1-jjang@nvidia.com>
+ <202405170719515a9c6d2f@mail.local>
 Content-Language: en-US
-To: Benjamin Marzinski <bmarzins@redhat.com>
-Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240514090445.2847-1-yang.yang@vivo.com>
- <20240514090445.2847-4-yang.yang@vivo.com> <ZkTXzG1yrPmW64Z6@redhat.com>
- <80ddcd90-2e1c-4fbf-a45a-b1b5ff4d60fb@vivo.com> <ZkYmZaGWPtGIwedG@redhat.com>
-From: YangYang <yang.yang@vivo.com>
-In-Reply-To: <ZkYmZaGWPtGIwedG@redhat.com>
+From: Joseph Jang <jjang@nvidia.com>
+In-Reply-To: <202405170719515a9c6d2f@mail.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCP286CA0023.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:263::10) To TYSPR06MB6411.apcprd06.prod.outlook.com
- (2603:1096:400:42a::11)
+X-ClientProxiedBy: SG2PR02CA0061.apcprd02.prod.outlook.com
+ (2603:1096:4:54::25) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,271 +69,230 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYSPR06MB6411:EE_|SEYPR06MB5669:EE_
-X-MS-Office365-Filtering-Correlation-Id: b13edea2-8710-4910-bdb3-08dc7645cc7a
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|BY5PR12MB4049:EE_
+X-MS-Office365-Filtering-Correlation-Id: 006e10e1-c2b0-4eaa-0737-08dc76468896
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U3dnODdjRGo4Z3VsbW9mcWMvTjdMSEg1ZHlRalEyd3pEaTl3UktYR3pDMVEx?=
- =?utf-8?B?ZzRJbm5DSkVsN2FDME8rQWYvdXYzbnl0aDdJWFhacWNNK2xUdThwUTdaWmNE?=
- =?utf-8?B?R1VJWlBseVY5TWFibUdBVkdrbHZGZGNybDRFOW5yZVN6M0pjQlFEWFNZc0k4?=
- =?utf-8?B?SURMN21SdmlJenRsNE5CcGJMKzN1QnFFbGMxZjR0OVZzUkhva0NFMldpUGJT?=
- =?utf-8?B?Z0tlRmRneXo3RFoxbWEzZi9rWnZPMDU2UmZTandWQ01Jd1Z0NENLaEU0dUdx?=
- =?utf-8?B?YVBrUFViZXJ0RlJEQlBkc2V4STYxMHM3cEZUZUxNVTlBZmY2MXdUUGNtbnRV?=
- =?utf-8?B?cU90OGs5Qk9SVCtyZ3F5TVVMdldwcjV6alV5T1FWSFh5NFl6Z0pkUnhHQmNh?=
- =?utf-8?B?WGdVNXkwVWV0RWZkbUJDdXpyTmFOSitLb216SlcyQUFnU05xdzEzTTNHdEh2?=
- =?utf-8?B?M0lqZkFnYythWStTZWpteUcvbDljNkQ3YTlhOWRpcVRrVWlhTFcvZldPTXJX?=
- =?utf-8?B?Tkt3U2RVK1M3NkErSEoyR0RSbnFLYmd4NXN6bE5wVE9XRVBRUCtoVUUxZk5G?=
- =?utf-8?B?dzVBZXA2TWJrb1hVS3djV1JiSjBuRXk0NDh2VEtzWGJIRHd2MnJyQ0I4L3FS?=
- =?utf-8?B?dFg0aGRud0IzL0ZpZWZydW1DSU9OSFpZMUJtNWtLVndBd1JVT2E4MUdQaTVZ?=
- =?utf-8?B?azI3SHN1ZDVqNnRYdEFYaXNmMXFFa0RkUjZRc1hJZ0xiQkErb3RPQjR2elho?=
- =?utf-8?B?TnY5MzFFOTFzTUN0MjV2anR1Uk1maFRJWVliYVI1RHR1Sy9BVFNUVDdidGNt?=
- =?utf-8?B?UEkzUmY1RHRzbnAzem93dWpFaVgwNHdGVVFMNXFBVkJEbGRjR2hmUmd1elVu?=
- =?utf-8?B?Yi8rU1piY3VDZWRkMlRsWnBsRlhYNGh5TjdDTkhLRUhORmlmTzRaZkxXZENC?=
- =?utf-8?B?NGsyTTdJeUFZbkV4UlJxaFgrYm9EOHlkYVZvdm93VWYzeWF4NCtuRHh0dUNE?=
- =?utf-8?B?MWN6Y0I2YlNQTUNJY1BiNFpWL3Y1YjJiME1xS0FCbzd6ZDVWYjBMUGFaT0Ja?=
- =?utf-8?B?TkdRaXlucVkyMWpsa0ZNcnJZc2NxSVpvRFBIZ3lCL3RhZEQwQTJvYVAxNUlX?=
- =?utf-8?B?MUNKMkQyQ04zZW9rc3htUS8xZ1RralRoMjg1MXNUblNJUzExUDVkR1hLTXlZ?=
- =?utf-8?B?QlJUS21GQmE5Qkx5ZnFEVGdMU1lnNUpvWkFJeDd1Nms2a0g3OVlRZ2lNNHRW?=
- =?utf-8?B?bHcraHh3ZUN2V0xEYkFxYTNpUjE0RUFjQ0R4QmFTUWhDdktwTDlTZVY3NEt4?=
- =?utf-8?B?Y01FL211VWZEMzJJT2FoSmdOYkhFelQxdk9YS1JmYjMyZ2lKa3NPRGFJYWl1?=
- =?utf-8?B?ZDNod2dpV2pUL3Z0bTgwRjF6ZjJQQ3k0d1F2ZThZK01SWkVwb08xb0N6OUJE?=
- =?utf-8?B?ekpKdWt3KzlXa3R4WGh2RTFncndIUHBQN2UzN01uMllCRTJPVDkya1lVVFFu?=
- =?utf-8?B?VFR3dmg2QTJ6T2ZLSnV6NUo2VkpvSm12UGJySFEwVnhoU0VMZDJya1NNRkhI?=
- =?utf-8?B?dU1kU3hHR0xxYkwwaHBLNjA2RlVXSGFZY0tPUkFaOHQ3V3V5QVZUdkpFRWwz?=
- =?utf-8?B?YTE1VDl1bXpPVkk2dS80K2pkWkErK2E0UzhnWGFYQ0pGWE51Z01nVHUyZlJF?=
- =?utf-8?B?OXdnK2hRbGZzdnhCeDhEOCtxTmpRVFRKV3lBaFBpN09ZejZYcjFWQVJRPT0=?=
+	=?utf-8?B?N1FlT2JmUEZEWU9PYVpXOU01UU9XcU5zRzhrQlYwOEJqY3djVGpRa1NEWDls?=
+ =?utf-8?B?dVV5ZUVTWWtteW9RT1BqS0hRRU9KZ2hFZGNRSjdtU2VUWklIdXFYSjhjSGM3?=
+ =?utf-8?B?aVlET3ZXUlBMU2lCZ3ZpUk5LeU5MNmNWUkpsdjVDZW9UVzR5cHVFaWRaN2dH?=
+ =?utf-8?B?MnRGb2tNUnNUaHc3RWtadDZsTmxUL2Y1ZFU3L3c2OTEwd0pVUmFDcVYxTW1i?=
+ =?utf-8?B?L0hJZlRRSEhvV29jN1VCdVNmdlFSY2JVaGhtOXVJY1ZvWFc4VXdNbG00RktE?=
+ =?utf-8?B?ODBCSm40NzNwRzZQaFJKcHhwaE5ROTlFWjFHT2JzUko4VDVMYUllcFF3eFdW?=
+ =?utf-8?B?QWhKNDdEdm1hWHljOW9sUjBkNHdmZzdXcHZWWUk0Wm10T09HeEFBUllEbmQw?=
+ =?utf-8?B?RHdNTFc5ejlPbzJjOTMyM3BNc09kSHJlQWFIemY1dHdOcFR1SnpHTHk5VGlG?=
+ =?utf-8?B?a2NROG85ZCsvYzlHRzdEYWYzeldnMnJ1eEprWWV4dlRDMlpNa0VnWjBPUENn?=
+ =?utf-8?B?ekVGM2hxODM3eDUrdGhwbS9IU2RFdXRtZjkvWjhKK3ZTM2RaUmVndEZUZ1ZM?=
+ =?utf-8?B?WGx1YUlJakcyeDBHajZTMzZKUUZtN2Ivdi9sc3NNcVRGN29NN2lJMXhYdzZ3?=
+ =?utf-8?B?WGYxL1hxQ1hmRmdLY0gwUFRIU09BbC9uRTN5bWxNSkEzSUhpcS9DdjZvSHFh?=
+ =?utf-8?B?aW8wUjRIZGhhd3B4bUNVUnpJTi9TaGE1cXdKVHdWTllEQmVqRURsaUNoYVZi?=
+ =?utf-8?B?a0lLT01WT2xldDE5cDV0MUFPSmI2SlFYOVhxd3Y4ZHF1SVk2T1g5Nk4rako4?=
+ =?utf-8?B?Y011Uk9YLzQycmdybXY1TC9yMThESWlXL01pbVdJeU5tMW5sOUZHMFR3S28z?=
+ =?utf-8?B?bUFla3lyZjNxZVZsM1dmbytJUXRRS1hHN3o5OUVxY3RBQldiQVJZRzJicmZy?=
+ =?utf-8?B?TDU3RlpsdjZyRFBKQ0dIdnZENG5wb1dyYXlLMk5PeVlTbXQwWU1nRk5BWUhj?=
+ =?utf-8?B?UjVHdXhmaExITVV2Z2ovNVBlVTJLY2lQcTdGSGF1eTI0OCtCOElIVFFuZ21K?=
+ =?utf-8?B?cGtiWHZkeW03UXlrQmRocEo1YWxQWVlmQjEyODZLc25RdUt3U0JaVEVIM1Zt?=
+ =?utf-8?B?N3pHQWVBaytqS29IUWJpNnlEcDFKdUNiUFJWQjNtWWJ3QUo4ekVheFJJblNj?=
+ =?utf-8?B?WU85cG1GVXhPMGpmb2tvQlpKVll4dVJUanI3SFo3VTUrZTlXdUMra2VLTHI5?=
+ =?utf-8?B?NEk5R3NVKzJPTGpCTXdoVWc2L2dNZ2xmWlh5LytGMzNmT3RxZ0VKdlF2OHQw?=
+ =?utf-8?B?VEplTXFNdWdOWVNJTk5HNk05cTJ2Skhpb2pXT3oyNUxiUHVZajloMWtGY0hD?=
+ =?utf-8?B?NzBzZ2lReDE3UlhtRWtNNUt4alZqK0JRbjNQWUIxd3pUQUVGeVF3OUgzdUdL?=
+ =?utf-8?B?eXdpcXFQRlJPNWIxYVhJY1phaHU0WGNhdGZaWVMxUVhLRnVpc3E3aDNiL2JP?=
+ =?utf-8?B?cGFka1JSYmhIajJxRmFuNnZ4NEhyajhoRGpIMXRxY2hpclVtRnZmbVVod2th?=
+ =?utf-8?B?UmRENHFydWI3RXp4WWtwdGx6bW5teW5FNFFLYlV6dFAvblZNdXpVUWFZZXlT?=
+ =?utf-8?B?YktKZmxQUlQwVzl0eC9hNUJKNktzQVpiMHZTWUFiMm9jNDB2RElKd3JJNWlj?=
+ =?utf-8?B?b0RZLzl5K3l5eDdOSkJhZGJ3WTBpUHFESGNIMXlBdlIwczU4dUNWa3lBPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR06MB6411.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YWVUNEg4SEV2a0s2WmFYSjRwZlhEaCtZczRDOTdjNGVjYllNSFVPOUxMMmdH?=
- =?utf-8?B?RDNCZ1c5bmhMb01lMzFIeVk5ckwxVlhSS2c4cG52QzJHNk5HUmMxY3p2M3Ji?=
- =?utf-8?B?ZW9wTE9oZmNpaCtZdzgzRG53OU9WeDdKVEF2U1prb3phais5cHFzWnliUFA4?=
- =?utf-8?B?c1RDejY2VDVCeDlFcFNaSWYvcGFqQzJad2xVdmpabXBZbkZ0MWpnVWp5RjFj?=
- =?utf-8?B?S1NWT0FJTW45UHRCemZ6dnZRZm9OYUlTTzl0V0JGVkRWNjBNa2hWU3pxMGxO?=
- =?utf-8?B?RnNRb1hHalZXSmVXVWJqRUZSMkhFOGJxdmFLR2IyRHlwcjYwcWJBdjU5QlVJ?=
- =?utf-8?B?Tjlwd3JwdTVCRXBoTjJrRStRbEVRSjkybU4rY1dVOGY1MkJGNmFtOXVGL3ZC?=
- =?utf-8?B?V2taRzZnUWlKd3gvcVRlUHJFdzc5d3Y0Umh3b2JBTjcyQmI5MTVHZm10emE1?=
- =?utf-8?B?MWFJUUxpM3NFdmkvUTU0aUpTdGpGUUhMaXlaUWxTc2lBNGZiaTZDeG5Va3NQ?=
- =?utf-8?B?cjFNWUUwSlRsS1BsQU93Nkljayt2OUVkUE9neWIvME5uRVJaUlhncXdRUU9G?=
- =?utf-8?B?Zit1UDl0Sk9yQ1A2L0VIVXlYTStVTXV2eXluK3hwK2N4ZGw5NjRQK2pwR1BW?=
- =?utf-8?B?bW1VWC93ZXZJY1ZvT3Nqb1FhZUZkcWczV2lKZ1FRYUs4QTBQWlBrdnlGbHdq?=
- =?utf-8?B?RWhKRTR2U002R295UDh3NGo0VkNaRFJHVlNnR3kvSTRuVzhqaEMwSk40WnFR?=
- =?utf-8?B?cGVTK1ZzaG1VYjRtSk10NWVlR2ovbDBjMEJlSmsvVkxGVEx4V3NVbldiM3lG?=
- =?utf-8?B?R00wN1NsWFN4NzBMdi9MYjRBK3Z1eEt1OGdHYzBRWktIL3ltcTNIRTl6aExF?=
- =?utf-8?B?cXdlbWxjQURNTUFYdWVDLzg2TDFUSUFyTzZZdHNHQndsRFRPWkU2bHJ6VExQ?=
- =?utf-8?B?WkNIUG1yU3FtbFhNdnM3SFlqYWxHc2NkT2FkS1d3OVdCN0FBUk5HWmpPVVh3?=
- =?utf-8?B?Um95T28yK04wV0JlSzNiRk5wSXRIb0FmS1RTako0Y2pmaGd1U2V2NFZpWmMx?=
- =?utf-8?B?ZGhLd0RwVFdBVElMNlVkTm44REx4N0xKWDREMkZCR3ZDUnhzdlFZS3dacUZR?=
- =?utf-8?B?THUyc0s4cmNQUERzdlY0eEl1djd0UXpPZjFyNFVTdUFLNzFwN21ISjBRck9S?=
- =?utf-8?B?MDd2UmFqZUdlak03L1hKMmcxZDErczJ0cTN6eWorKzBGVmhjZ1czUEU5S3Jz?=
- =?utf-8?B?RzErYzRxdThOR0JIN0RWaTJRTzB3Z1FHZWFCMU5FQXprS1lyaUloQXJRRWhU?=
- =?utf-8?B?MlVMNGY1c2hXSWRCN0haQ3dHQTI2UnpQd085dG91VWhjU0VtYVlTUDFlZ3JO?=
- =?utf-8?B?VmUzU3ZqZGpkVU04dHp0cllMYnBNRktxYVQyNTc0QnFsUWdXdjQwNU9iZ2gx?=
- =?utf-8?B?ZVNNbDZ2RUtvREdEdjF4Q2krZTZZcmhvdHJGK255LzMxaEtXcklyb3lYczNq?=
- =?utf-8?B?RURyaHJXYk9DQkt4RFhzeEhPeFdmMzgxbWQyekRJUjduSjJKUWxxdHAxVHdt?=
- =?utf-8?B?bnhESUd1ODJtZUk0cGVMZUFXWmJtdjIrcmwycGxaamRPdFJYN3hZb0tVay9o?=
- =?utf-8?B?VmRUOG9XU3BkMTFkblZLOFQrTVQwYW5ST3F5RDM3ZkdrTVh4cEN2ZlF5SENp?=
- =?utf-8?B?OWozeWNiL3RTRFNkbFF4bVNRU2FqZjRtSTNMUlhwajA5Qjhjc1dBU3FtNk14?=
- =?utf-8?B?SjY5RUNFWVZBMnJTYkJoWFJ6amI0NGpNenVOaVREOU5kbmVBLy81dUVsVGNL?=
- =?utf-8?B?MjRRNWtXOVF1YjR6bjQ0eFBMQm84cXZtV3E1SDNRR0pFQUR2eHhRbGt5NnUx?=
- =?utf-8?B?dUVwcUE0VnNqNHRxcVlydmU5Y2VzZW5wOHRJeDNVc3cyQ2NvVm1RTFVnYjdm?=
- =?utf-8?B?aVdLUFptQWJBcW9PeUdwVG9XY3FENFFxZlNVaTZyTkVlQWZGTlFaZ25xc2wv?=
- =?utf-8?B?V0Q3Y2YxNTRMMFdzVUxmN2pvYWRCMjNIcG1nQXAybWx6cDlkSnE3Zm1qYzlx?=
- =?utf-8?B?dHB2ekxGdGU4MFJDZE5MS2VEcE5CNHJCTHZaWnFpeEZIRkRqV2F4M0lsd2tE?=
- =?utf-8?Q?0Y0s8OMVYMnP8+UPQW4A+y8bY?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b13edea2-8710-4910-bdb3-08dc7645cc7a
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR06MB6411.apcprd06.prod.outlook.com
+	=?utf-8?B?TFJhN29PeUQyRUNaMHpMaGkydjkxdjdQa3lDNnkxRWVBdDd6di9NeW5vNUJG?=
+ =?utf-8?B?K25URkZNMnR3L2NTVm1wTzh1WXBFNk9mSlVEdURpRWpzaUR4ajQ2VlFERW9G?=
+ =?utf-8?B?eWV2NHlnZytPM1NYMGJyR2pJZzVnSTBXV2RKUVoxbk90VTlOK2RqUlBnTytW?=
+ =?utf-8?B?RDBRNFdxQVgvVG9WM1dpUmN1bHcxSjdyZEtsUDBWaTBYRDVrakRzRkJOOXc1?=
+ =?utf-8?B?V2kxc24rTzluVi9IV0FzSk8xcnlOdEl3MVNyVEZLQlZ1ZjMvcjA1UEtjVmxJ?=
+ =?utf-8?B?TzJzT2NjYXFVR2JBMXduVVJRYkJTdUZ4SnNHYm9TK3JuMENITFMrbm9SK0Vw?=
+ =?utf-8?B?QUcxbmtPSWt0cllMZFdvTHZIL0xSV2d2bk4rUklCZHozOTVSRWtHUXQ5d3BF?=
+ =?utf-8?B?Mk9pSUMwUkZpaWJqdmsyZldiV2dQT3pOSFFKQlJ5em5NS0d6QlUrWnNLQlBB?=
+ =?utf-8?B?RGJiRG93aWZCV2owTzQwTkVXRjVKelB3NGZQL2ZIWGRxdk9RSXdRSjlzYjkw?=
+ =?utf-8?B?NHVvYi85cUpyd3NHNitkbXdwRnVwbmtENHlSWmRnWk9iVEQraFV3VXE4ZWpi?=
+ =?utf-8?B?c0llbHBVaFduRUxEcHJIZ0dWT25oRVhrWjY0R2d3SmpBcmJYNXJxbDBTQWgv?=
+ =?utf-8?B?SlNzdnVkQUozNHp3ZVFIck5Ya1lvU0RPTlpGTEM0THZYR1dKUnpXRkx1ZFZE?=
+ =?utf-8?B?cndFY0RqWWcweGQ3bnpaZTl4d0I5dmgvVkFMWno5U3JVU2NxSXcxNElJT28y?=
+ =?utf-8?B?ZCt3bDJxcTl4VjFxdnFmL0UzeVF0SjA1Y01xVzc5QklSZ2pmeFRnL3MrVHNL?=
+ =?utf-8?B?aWY2aDI3N3BLSU5RYXMwS0NPTis3WE03Mk4yK3ZVRG1yNldUREt4bVVTdmx2?=
+ =?utf-8?B?YnlwQmE1cFR5OVp6ZjhFYXpaWWduTW4vVS9TRnlaLzAyd3VoZ29wM0JSallQ?=
+ =?utf-8?B?YnZUa3lyeXYydXdhZjhiLzZvNkdzYVRXZi9jeGVWSFB6QzBhTGpIMEN4T3Rs?=
+ =?utf-8?B?bnpTQko1L0RxZ2dJQXcrMy9LUE1PbG8xTVlEUXZOcGc2NThJeElKNHd2MFox?=
+ =?utf-8?B?czZXdzN4ZHY0dWpHekNyNmF3SnBLM0xIdEo4Sm5ScVI3anp5ZFd1Y0NDM2hN?=
+ =?utf-8?B?SWJlY1UyT0tIR3FPTXZYaWpaellIRUdOVFRBaEs3ME9VeXVCd29Ec0tYaVhY?=
+ =?utf-8?B?TGlRVVF1cVFnMnU5Zk5LeDNLS2hSSDl2SUY3SWpLbXNJY3NCV1RVQ1hXR1JJ?=
+ =?utf-8?B?NFdqVDB6bjcweUZGNUc2R3Zjc1g3KzVIc3JYeWtYRFdCS1h4U05TVlhXbFpD?=
+ =?utf-8?B?ZzNSYTV3T0xISlY4allrQWlZOTNiN1NneWJmRm9sUGlrU0NzRG82eDVpdit0?=
+ =?utf-8?B?aXpYVENUT1ZobjlmYTJ3S0dlbFpuN05tWXo5SmwwZFF2SWthZThuVVkzUVVS?=
+ =?utf-8?B?MWxYZXBUS1UrUG1uWFZKZlpVSUd6L0t3aTlrcnJGWU9waitoRjVpbVdvUTBi?=
+ =?utf-8?B?akNqS0liL3B6Smo1KzE3dzVWNGdLQ0JVbWdGY1ZBR2M4cVFCVG5jY3liZUVJ?=
+ =?utf-8?B?bUp0R2k4KzZMTjJtTHNUYnd5MmtpQUVhaDduaVExb0I2bkFscWJ2YVZOQlJS?=
+ =?utf-8?B?NGIxQkJOYnZpNHk3VUlMUVY3WEk3cmNtVFIva1l3NUVvUXhSeU5LMy94enBy?=
+ =?utf-8?B?dHNQVDhRNW9aUTZ1RldYc3l1TGs4S05sZll5VmhSSTZpM1EybVJ4bkhvOEhN?=
+ =?utf-8?B?OFBSS3hEbGlHM1dnVlhzelBrVnFvUU0rQ3hIandoZzJxdTMvRWl2SlNzenBJ?=
+ =?utf-8?B?cHM3d1RZNmJlQkxCN09ubzROOGZZSDdjODNxTktQUzBmYUovL3puRnIwcE1K?=
+ =?utf-8?B?bnh3ZUhMdmN1cW51enhDZHlTcEppOVJpMFZHczBjelhYSkZaTHRhMUt6NDFO?=
+ =?utf-8?B?SjdCNDNDVFpZdmE4S2dhT1FHdWNqeUJSTkRlc2laQXBzaUs3YmZ1RnowbERU?=
+ =?utf-8?B?NGd0azJYLzlaSElVOVdwelVqMmJLMExnRlZyMjVlajBEUGdIYmI4MnNFMEpm?=
+ =?utf-8?B?bmNBamIwVzYzVW9Pbnc0ei82elBoV0F4RmhFYVFQMWpGYURNa3AxNjVQQWFs?=
+ =?utf-8?Q?n0diI0vNUhwRHvNgojP2hltAe?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 006e10e1-c2b0-4eaa-0737-08dc76468896
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 07:48:53.6075
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 07:54:09.4783
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KAYXvvAD4gNncV3SzY23ijtceVMqO18VV3GeLhGAoBjXlW+8jHRRksRz8gkqQY/pJT0jeiiv1ny/hrteuLBJZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5669
+X-MS-Exchange-CrossTenant-UserPrincipalName: w/fgsylteoQ+jUzKMndhqr4GxI3k8jv6IGlysjSKPv1VEPtU5634kQ//m5eBe1vjyprM1ddiHsgvjkaFrOtH0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4049
 
-On 2024/5/16 23:29, Benjamin Marzinski wrote:
-> On Thu, May 16, 2024 at 09:55:53AM +0800, YangYang wrote:
->> On 2024/5/15 23:42, Benjamin Marzinski wrote:
->>> On Tue, May 14, 2024 at 05:04:42PM +0800, Yang Yang wrote:
->>>> Add a list to the struct dm_dev structure to store the associated
->>>> targets, while also allowing differentiation between different target
->>>> types.
->>>
->>> I still think this is more complex than it needs to be. If devices that
->>> support flush_pass_around can guarantee that:
->>>
->>> 1. They will send a flush bio to all of their table devices
->>> 2. They are fine with another target sending the flush bio to their
->>>      table devices
->>>
->>> Then I don't see why we need the table devices to keep track of all the
->>> different target types that are using them. Am I missing something here?
+
+
+On 2024/5/17 3:19 PM, Alexandre Belloni wrote:
+> On 16/05/2024 19:28:47-0700, Joseph Jang wrote:
+>> In alarm_wkalm_set and alarm_wkalm_set_minute test, they use different
+>> ioctl (RTC_ALM_SET/RTC_WKALM_SET) for alarm feature detection. They will
+>> skip testing if RTC_ALM_SET/RTC_WKALM_SET ioctl returns an EINVAL error
+>> code. This design may miss detecting real problems when the
+>> efi.set_wakeup_time() return errors and then RTC_ALM_SET/RTC_WKALM_SET
+>> ioctl returns an EINVAL error code with RTC_FEATURE_ALARM enabled.
 >>
->> I attempted to enhance this solution to support additional target types,
->> such as those with num_flush_bios greater than 1.
+>> In order to make rtctest more explicit and robust, we propose to use
+>> RTC_PARAM_GET ioctl interface to check rtc alarm feature state before
+>> running alarm related tests. If the kernel does not support RTC_PARAM_GET
+>> ioctl interface, we will fallback to check the presence of "alarm" in
+>> /proc/driver/rtc.
+>>
+>> The rtctest requires the read permission on /dev/rtc0. The rtctest will
+>> be skipped if the /dev/rtc0 is not readable.
+>>
 > 
-> I'm still missing why sending a flush to each target type is necessary
-> to handle num_flush_bios > 1. As long as the targets meet the
-> requirements I listed before, AFAICS it should still work with only one
-> of the targets mapped to each device.
+> This change as to be separated. Also, I'm not sure what happened with
+> https://lore.kernel.org/all/20230717175251.54390-1-atulpant.linux@gmail.com/
 > 
-> Say the table devices are sda, sdb, sdc, and sdd.  If you have 4 linear
-> targets, each mapped to a different table device, and one stripe target
-> mapped to all of them.  It doesn't really matter if you don't call
-> __send_empty_flush_bios() for the stripe target, does it? all if its
-> stripe devs will still get flushes. Similarly, it's fine if one of the
-> linear targets doesn't get called (in fact it's fine if all the linear
-> targets don't get called, since the stripe target will send flushes to
-> all the devices). If there were only 3 linear targets, then the stripe
-> target would get linked to a table device, so it would get a flush sent
-> to it. Can you explain a situation where you need the to send a flush to
-> multiple targets per table device for this to work, if you assume the 2
-> guarantees I mentioned above (the target sends flushes to all their
-> devices, and they don't do something special so they need to be the one
-> to send the flushes).
 
-Yes, if the targets meet the requirements you listed previously, there
-is no need to send a flush to each target type.
-I think I may be overthinking this. I tried to handle some targets with
-num_flush_bios > 1 that don't meet the requirements.
+I apply above patch and seems like still cannot detect the read
+permission on /dev/rtc0. I guess the 'F_OK' just check the `/dev/rtc0`
+was there.
 
+I share the error logs by following for your reference.
+
+TAP version 13
+1..1
+# timeout set to 210
+# selftests: rtc: rtctest
+# TAP version 13
+# 1..8
+# # Starting 8 tests from 1 test cases.
+# #  RUN           rtc.date_read ...
+# # rtctest.c:53:date_read:Expected -1 (-1) != self->fd (-1)
+# # date_read: Test terminated by assertion
+# #          FAIL  rtc.date_read
+
+Not sure if we could skip the testing by following change ?
+
+FIXTURE_SETUP(rtc) {
++     if (access(rtc_file, R_OK) != 0)
++             SKIP(return, "Skipping test since cannot access %s, 
+perhaps miss sudo",
++                      rtc_file)
++
+       self->fd = open(rtc_file, O_RDONLY);
+}
+
+And I make sure we need root permission to access `/dev/rtc0`.
+
+
+
+>> Requires commit 101ca8d05913b ("rtc: efi: Enable SET/GET WAKEUP services
+>> as optional")
 >>
->>> If we don't need to worry about sending a flush bio to a target of each
->>> type that is using a table device, then all we need to do is call
->>> __send_empty_flush_bios() for enough targets to cover all the table
->>> devices. This seems a lot easier to track. We just need another flag in
->>> dm_target, something like sends_pass_around_flush.
->>>
->>> When a target calls dm_get_device(), if it adds a new table device to
->>> t->devices, then it's the first target in this table to use that device.
->>> If flush_pass_around is set for this target, then it also sets
->>> sends_pass_around_flush. In __send_empty_flush() if the table has
->>> flush_pass_around set, when you iterate through the devices, you only
->>> call __send_empty_flush_bios() for the ones with sends_pass_around_flush
->>> set.
->>>
->>> Or am I overlooking something?
+>> Reviewed-by: Jeremy Szu <jszu@nvidia.com>
+>> Reviewed-by: Matthew R. Ochs <mochs@nvidia.com>
+>> Signed-off-by: Joseph Jang <jjang@nvidia.com>
+>> ---
+>>   tools/testing/selftests/rtc/Makefile  |  2 +-
+>>   tools/testing/selftests/rtc/rtctest.c | 72 +++++++++++++++++++--------
+>>   2 files changed, 53 insertions(+), 21 deletions(-)
 >>
->> If I understand correctly, you are suggesting to iterate through all the
->> targets, handling those with sends_pass_around_flush set, and skipping
->> those where sends_pass_around_flush is not set. I believe this approach
->> may result in some CPU wastage.
->>
->>    for i in {0..1023}; do
->>      echo $((8000*$i)) 8000 linear /dev/sda2 $((16384*$i))
->>    done | sudo dmsetup create example
->>
->> In this specific scenario, a single iteration of the loop is all that
->> is needed.
+>> diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
+>> index 55198ecc04db..6e3a98fb24ba 100644
+>> --- a/tools/testing/selftests/rtc/Makefile
+>> +++ b/tools/testing/selftests/rtc/Makefile
+>> @@ -1,5 +1,5 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>> -CFLAGS += -O3 -Wl,-no-as-needed -Wall
+>> +CFLAGS += -O3 -Wl,-no-as-needed -Wall -I../../../../usr/include/
+>>   LDLIBS += -lrt -lpthread -lm
+>>   
+>>   TEST_GEN_PROGS = rtctest
+>> diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+>> index 63ce02d1d5cc..aa47b17fbd1a 100644
+>> --- a/tools/testing/selftests/rtc/rtctest.c
+>> +++ b/tools/testing/selftests/rtc/rtctest.c
+>> @@ -8,6 +8,7 @@
+>>   #include <errno.h>
+>>   #include <fcntl.h>
+>>   #include <linux/rtc.h>
+>> +#include <stdbool.h>
+>>   #include <stdio.h>
+>>   #include <stdlib.h>
+>>   #include <sys/ioctl.h>
+>> @@ -24,12 +25,17 @@
+>>   #define READ_LOOP_SLEEP_MS 11
+>>   
+>>   static char *rtc_file = "/dev/rtc0";
+>> +static char *rtc_procfs = "/proc/driver/rtc";
+>>   
+>>   FIXTURE(rtc) {
+>>   	int fd;
+>>   };
+>>   
+>>   FIXTURE_SETUP(rtc) {
+>> +	if (access(rtc_file, R_OK) != 0)
+>> +		SKIP(return, "Skipping test since cannot access %s, perhaps miss sudo",
+>> +			 rtc_file);
 > 
-> It's just one iteration of the loop either way. You either loop through
-> the targets or the devices.  It's true that if you have lots of targets
-> all mapped to the same device, you would waste time looping through all
-> the targets instead of looping through the devices.  But if you only had
-> one striped target mapped to lots of devices, you would waste time
-> looping through all of the devices instead of looping through the
-> targets.
-
-Yes, I get your point. This patchset may make things even worse for
-the striped target.
-I am just curious, in what scenario is the "dm-strip" target mapped to
-a large number of underlying devices from the same block device.
-
-> -Ben
->   
->>>
->>> -Ben
->>>
->>>>
->>>> Signed-off-by: Yang Yang <yang.yang@vivo.com>
->>>> ---
->>>>    drivers/md/dm-table.c         | 36 +++++++++++++++++++++++++++++++++++
->>>>    include/linux/device-mapper.h |  3 +++
->>>>    2 files changed, 39 insertions(+)
->>>>
->>>> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
->>>> index bd68af10afed..f6554590b7af 100644
->>>> --- a/drivers/md/dm-table.c
->>>> +++ b/drivers/md/dm-table.c
->>>> @@ -741,6 +741,8 @@ int dm_table_add_target(struct dm_table *t, const char *type,
->>>>    	if (ti->flush_pass_around == 0)
->>>>    		t->flush_pass_around = 0;
->>>> +	INIT_LIST_HEAD(&ti->list);
->>>> +
->>>>    	return 0;
->>>>     bad:
->>>> @@ -2134,6 +2136,25 @@ void dm_table_postsuspend_targets(struct dm_table *t)
->>>>    	suspend_targets(t, POSTSUSPEND);
->>>>    }
->>>> +static int dm_link_dev_to_target(struct dm_target *ti, struct dm_dev *dev,
->>>> +		sector_t start, sector_t len, void *data)
->>>> +{
->>>> +	struct list_head *targets = &dev->targets;
->>>> +	struct dm_target *pti;
->>>> +
->>>> +	if (!list_empty(targets)) {
->>>> +		list_for_each_entry(pti, targets, list) {
->>>> +			if (pti->type == ti->type)
->>>> +				return 0;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	if (list_empty(&ti->list))
->>>> +		list_add_tail(&ti->list, targets);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>>    int dm_table_resume_targets(struct dm_table *t)
->>>>    {
->>>>    	unsigned int i;
->>>> @@ -2162,6 +2183,21 @@ int dm_table_resume_targets(struct dm_table *t)
->>>>    			ti->type->resume(ti);
->>>>    	}
->>>> +	if (t->flush_pass_around) {
->>>> +		struct list_head *devices = &t->devices;
->>>> +		struct dm_dev_internal *dd;
->>>> +
->>>> +		list_for_each_entry(dd, devices, list)
->>>> +			INIT_LIST_HEAD(&dd->dm_dev->targets);
->>>> +
->>>> +		for (i = 0; i < t->num_targets; i++) {
->>>> +			struct dm_target *ti = dm_table_get_target(t, i);
->>>> +
->>>> +			if (ti->type->iterate_devices)
->>>> +				ti->type->iterate_devices(ti, dm_link_dev_to_target, NULL);
->>>> +		}
->>>> +	}
->>>> +
->>>>    	return 0;
->>>>    }
->>>> diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
->>>> index 0893ff8c01b6..19e03f9b2589 100644
->>>> --- a/include/linux/device-mapper.h
->>>> +++ b/include/linux/device-mapper.h
->>>> @@ -169,6 +169,7 @@ struct dm_dev {
->>>>    	struct dax_device *dax_dev;
->>>>    	blk_mode_t mode;
->>>>    	char name[16];
->>>> +	struct list_head targets;
->>>>    };
->>>>    /*
->>>> @@ -298,6 +299,8 @@ struct dm_target {
->>>>    	struct dm_table *table;
->>>>    	struct target_type *type;
->>>> +	struct list_head list;
->>>> +
->>>>    	/* target limits */
->>>>    	sector_t begin;
->>>>    	sector_t len;
->>>> -- 
->>>> 2.34.1
->>>>
->>>
+>> +
+>>   	self->fd = open(rtc_file, O_RDONLY);
+>>   }
+>>   
+>> @@ -82,6 +88,36 @@ static void nanosleep_with_retries(long ns)
+>>   	}
+>>   }
+>>   
+>> +static bool is_rtc_alarm_supported(int fd)
+>> +{
+>> +	struct rtc_param param = { 0 };
+>> +	int rc;
+>> +	char buf[1024] = { 0 };
+>> +
+>> +	/* Validate kernel reflects unsupported RTC alarm state */
+>> +	param.param = RTC_PARAM_FEATURES;
+>> +	param.index = 0;
+>> +	rc = ioctl(fd, RTC_PARAM_GET, &param);
+>> +	if (rc < 0) {
+>> +		/* Fallback to read rtc procfs */
+>> +		fd = open(rtc_procfs, O_RDONLY);
 > 
+> I think I was clear on the previous thread, no new users of the procfs
+> interface. You can carry this n your own tree but that can't be
+> upstream.
+> 
+
+Okay ~ If we use RTC_PARAM_GET ioctl to detect rtc feature only, not
+sure if that is okay for upstream ?
+
+Thank you,
+Joseph.
 
