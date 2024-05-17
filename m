@@ -1,145 +1,82 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9A712D74D
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6736812DD9F;
+	Fri, 17 May 2024 15:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715959115; cv=none; b=S5wNJdNivr2CUDlOYKYChwcoRtXoRPCq/cLThZmsfKbxu047OsSsvpl6+gGYMsI1LwUnX/z1+wp9z61b9OWzU/l9G5CVxRLxNF2kl2Jk+KEDXDYAEcmnbV7awWGd0B5gsvFGzgexN+bFYS3Ia/nZsBlxTBaVVZ6BriyLfZ7rwgI=
+	t=1715959116; cv=none; b=IiMsWGixv55Y1/yKRyXACI9EmxPNVNmMhT/a6OaTFRK961EmBRHDeGzlHbYHtgjNqgHgfmVb727jYLoiF9Ex+8G1nkEDjaQnzfYVjkNjCskvXBhAhVlZhYeOCIGdvuo1PNUiAsZ48kZeGIX1ZYW4IcVzS2cKPhDAfcK5WJXsI1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715959115; c=relaxed/simple;
-	bh=mpYs6UtAF6g4uCYv3WzchVCd0TLckL19zbzZwRq8vNI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uvJNb6J81ixMrZ/iEZgOtsaWCzdPs5vaPPFoJxMEzTX+rCkJLILDj7K/WjOCOaF37QWi4rc3sNOXUclYHXaBvTwbJ3cD+DmYRD6ZjasdpdIeO0ze91EEV7pmZOLMInFfuQcRJbCOAhzCBgffavrWMCItaFdKrLHktnrIsUdnQLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=KfJGnobH; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1715959116; c=relaxed/simple;
+	bh=UoxzRiDZ+O5N/jgmjQRwGygnUVsa2VMjATeBWNTgTzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKq9lowx+g9uLAA3VLjb/SeNNw5Q01lB6iiDOS3SbZnHhqSlHpGQ9Uc2YW5cFWaGWMvSRjdZGurxJorw91KDnWZePoaR9GE8luCYzHIZch0QjBGqZkvaFwD/lYp4TotRw2iAhosTJOgsszflh9hX2sPiCqwvN/FCO4s5rlDsztg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUp1JG1x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="KfJGnobH"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-36c7b7b995fso4971095ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1715959113; x=1716563913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1m4CFwHLpmZnHQVhxg9Ce7GcAxeNjySCi2dNUZGyOug=;
-        b=KfJGnobHwephIp5j76CaJ6cQEdiFRclnJJFhgSdFrZDnoVbnjVQmTe7GgN4IFd0Vxo
-         lRqMhihiV02kjtcq8ckGlqzQzP/tZb/yWZ8/UUFq7C1DeQ/nEaGpTl4AVGj0adpm6Em5
-         ane58fcXjmjMA2+ZwErmpxVWb4YXra4kX+WsFzouLI7BL+MzTsHIuf41YEbGlHzureB7
-         KAhqJ9EP5bAqa9z2MK0WAmjweThigKfD5Gqw3n/t0lEvKyXOPwGQUboUasRG9oVFzFuG
-         8UL+vnwa08Isf7iVVSSkygwU//mAq8b81pc3dc/c/sr9Jd7pBvC+/53Uz5tN3mmcwk/R
-         wnCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715959113; x=1716563913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1m4CFwHLpmZnHQVhxg9Ce7GcAxeNjySCi2dNUZGyOug=;
-        b=RQaHxBthmgFpyp+BBN9NPX8GhWecMK15jrKM9IO3W9JPjx5uf4YAXh3mw11qZF9Whk
-         mxDtJOlKafxQxtIn0Z6a7jpx/n8snd+2XD6B3TjXoy29g3Ug0fA0RODFuDnkik4N95M0
-         BLqvbdA7jba/YhT6R3Rp2Vr6ZDbccE3bd/tKvKQhMaLfFFe9yU8aWEa8/kq/Lqrxt85q
-         EbRY87y8ObEPF5VLWlPMVEGcwvQ216EOTQ93WQ1szlJOYf7LXjJ/llFPbsljgxYz4lxQ
-         2et3blBy5HZe6a/q6JTcn6oT9nk3FJZMm56I11iPrMJpK13gV5gn1xv83HiwbrxXO57B
-         IxZg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8kz9DRucsc/6Qw4sM4N9viIAquyIMBX7xwTH68HEABwYBk53Rk4BJPGuTss6+JUjm4k5PVHBMrJRiMsU327Oe6e8Ik966nwmigG3+
-X-Gm-Message-State: AOJu0YzRljH7ln3DnqUs5+ZEPGjE8CLpAmVBOhkgcWZCxUQPefb6c8Jr
-	3y/2LUxY+opsbsRXjvxEruiKC9Mitgf5GUn879VUtI5w6G2gPLmUv3B4rDotUryJCu1lpi9qT40
-	456fMi9bsR/LAwhuljpyk71ixm0N4lZbPpCV+2g==
-X-Google-Smtp-Source: AGHT+IGJK8XCJzTVXEsiGdlO5wjVs7wX6BOSuvwLSEKG+jooZHMnH9FoE3Bzx4WPWeKRmsJRiTZQBEo5qN0POnnENhQ=
-X-Received: by 2002:a05:6e02:16cf:b0:36d:b398:aa92 with SMTP id
- e9e14a558f8ab-36db398ac57mr108119485ab.8.1715959113504; Fri, 17 May 2024
- 08:18:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUp1JG1x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3890AC2BD10;
+	Fri, 17 May 2024 15:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715959115;
+	bh=UoxzRiDZ+O5N/jgmjQRwGygnUVsa2VMjATeBWNTgTzk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mUp1JG1xjhlBGV5rWRPDwtlRWArHUCcp6+UL669IQBFyXAohqu2zRvQ7S3yM4pi6O
+	 BXr5RCG18AGMN28M9xDJTgQ+SBrbNUbhEZJXEuZiAK/9H6rPRC4xDLv7OWPpyD0ESC
+	 B9Vq08mIQU/S0YbYmkE+dplgrTD9pt9UaeykKLamyhSrp+RZ/hhEZEYYLYTJ2eSyew
+	 U8wgOq0VEe87HFPDW7m/BJ29Rtd35K5HdNmodHDcDvWLJ/P+51Iw8BrZbsB24UKEUy
+	 EVQCyx/NtHR08QOeeRh8qiGYa2oXNLH0Dt8Q2pVujHYSHr64o3i8dh0IyS1OVUDzPq
+	 clJtycJRMGyHw==
+Date: Fri, 17 May 2024 08:18:33 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, patches@lists.linux.dev,
+	kernel test robot <lkp@intel.com>,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] x86/boot: Address clang -Wimplicit-fallthrough in
+ vsprintf()
+Message-ID: <20240517151833.GB3660288@thelio-3990X>
+References: <20240516-x86-boot-fix-clang-implicit-fallthrough-v1-1-04dc320ca07c@kernel.org>
+ <20240517095110.GAZkcojmJQoY_zU-OT@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517145302.971019-1-cleger@rivosinc.com> <20240517145302.971019-6-cleger@rivosinc.com>
-In-Reply-To: <20240517145302.971019-6-cleger@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 17 May 2024 20:48:21 +0530
-Message-ID: <CAAhSdy0XADKcLS_iFdTzpYDY+KAL2+v91xFcjWUu8LofknQWMA@mail.gmail.com>
-Subject: Re: [PATCH v5 05/16] KVM: riscv: selftests: Add Zimop extension to
- get-reg-list test
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Shuah Khan <shuah@kernel.org>, 
-	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240517095110.GAZkcojmJQoY_zU-OT@fat_crate.local>
 
-On Fri, May 17, 2024 at 8:23=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
-osinc.com> wrote:
->
-> The KVM RISC-V allows Zimop extension for Guest/VM so add this
-> extension to get-reg-list test.
->
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+On Fri, May 17, 2024 at 11:51:10AM +0200, Borislav Petkov wrote:
+> On Thu, May 16, 2024 at 07:03:41AM -0700, Nathan Chancellor wrote:
+> > After enabling -Wimplicit-fallthrough for the x86 boot code, clang
+> > warns:
+> > 
+> >   arch/x86/boot/printf.c:257:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+> >     257 |                 case 'u':
+> >         |                 ^
+> > 
+> > Clang is a little more pedantic than GCC, which does not warn when
+> > falling through to a case that is just break or return.
+> 
+> Is anyone fixing Clang?
+> 
+> :-P
 
-LGTM.
+There was a patch to make Clang match GCC's behavior a few years ago but
+I think Kees made a good argument that GCC's behavior leaves potential
+bugs on the table, so that was not pursued further.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Acked-by: Anup Patel <anup@brainfault.org>
+https://reviews.llvm.org/D91895#2417170
 
-Regards,
-Anup
+It was brought up to GCC as well but they did not want to change their
+behavior:
 
-> ---
->  tools/testing/selftests/kvm/riscv/get-reg-list.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/tes=
-ting/selftests/kvm/riscv/get-reg-list.c
-> index b882b7b9b785..40107bb61975 100644
-> --- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-> +++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-> @@ -67,6 +67,7 @@ bool filter_reg(__u64 reg)
->         case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZIHINTNTL:
->         case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZIHINTPAUSE:
->         case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZIHPM:
-> +       case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZIMOP:
->         case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZKND:
->         case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZKNE:
->         case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV=
-_ISA_EXT_ZKNH:
-> @@ -432,6 +433,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg=
-_off)
->                 KVM_ISA_EXT_ARR(ZIHINTNTL),
->                 KVM_ISA_EXT_ARR(ZIHINTPAUSE),
->                 KVM_ISA_EXT_ARR(ZIHPM),
-> +               KVM_ISA_EXT_ARR(ZIMOP),
->                 KVM_ISA_EXT_ARR(ZKND),
->                 KVM_ISA_EXT_ARR(ZKNE),
->                 KVM_ISA_EXT_ARR(ZKNH),
-> @@ -955,6 +957,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zifencei, ZIFENCEI);
->  KVM_ISA_EXT_SIMPLE_CONFIG(zihintntl, ZIHINTNTL);
->  KVM_ISA_EXT_SIMPLE_CONFIG(zihintpause, ZIHINTPAUSE);
->  KVM_ISA_EXT_SIMPLE_CONFIG(zihpm, ZIHPM);
-> +KVM_ISA_EXT_SIMPLE_CONFIG(zimop, ZIMOP);
->  KVM_ISA_EXT_SIMPLE_CONFIG(zknd, ZKND);
->  KVM_ISA_EXT_SIMPLE_CONFIG(zkne, ZKNE);
->  KVM_ISA_EXT_SIMPLE_CONFIG(zknh, ZKNH);
-> @@ -1010,6 +1013,7 @@ struct vcpu_reg_list *vcpu_configs[] =3D {
->         &config_zihintntl,
->         &config_zihintpause,
->         &config_zihpm,
-> +       &config_zimop,
->         &config_zknd,
->         &config_zkne,
->         &config_zknh,
-> --
-> 2.43.0
->
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91432
+
+Cheers,
+Nathan
