@@ -1,111 +1,118 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2E6158D8E;
-	Fri, 17 May 2024 17:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4280515958E
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 17:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715967672; cv=none; b=mKbKWN0ucHi/AOaLwbikrr/ZkN5vHZBw9fIA/B1xWw8McuBv2YGOY1ktxEyIyz+PHiQY+/CONXaSk8glYXudDBlaTjJbI5TPrSNQkmEdyel2WkLTi3Ejirfou3Br+dj9NAyzG6wP/3qWfniu1ZSEXb3Ky7SPq8tpgtL1LoI5XFY=
+	t=1715967675; cv=none; b=IxmZU0VR+CQ5yzsooc48sXg21LT+CwCi1P/tUzLiF1A7WfTIheE9PcRAZLGTE7Rx1Vv6PUV0Nwc3HA8ioylvXS/69pQBjSeGRtBnAv2Vmn6gf8XfymTVrBMZRdKKbDczTvX705RqNx6gan47bkfVFMibpPgz2NdCYmprDv0fdgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715967672; c=relaxed/simple;
-	bh=XvaXRpk5jVDfaLF6Tcl6t3qPRumZhLNoAB2RuaBv05A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s4fWxxmfLIYnCgXcZ5++HAxJpZl6XjwYN7XN3gljwP0I7zzsFw8i9TFYqHN2q38hQ+CU3sE3Kp5d6pOZC8T6B6Q3s7h4zEqJptllS27OdlWs0w+VN6Me3+RL6xPSm3O7+nVQNh2zvo+PFceIAeg8pHklnrnutqu+54hD1utdogY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wBHbaq7T; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715967675; c=relaxed/simple;
+	bh=DbRs/X4W9CfO4QMBHQGwEV70PLWdGInmhoZ6jcJx+o4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Mq84yja1xQw7RcvSlzmeapLMhwrxogNaesdgCO4D33gKHXCcZEsGKmh9XXx0aLmjED7MCFBOpHPOuoSKgfw8wfLJo/ffnkytguICm9XJQ2SlZdYEVC6lD8Ns2gGLsYt6p4Zar710B/wiXUykUbvDQy3scDsEH6hT0SKlJmM1KdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cneBLwrI; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wBHbaq7T"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44HHetIk116593;
-	Fri, 17 May 2024 12:40:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715967655;
-	bh=Z0Jtv/ACxyCng0G72W+TurXG21YdGWxQxYgqPeRPW3k=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=wBHbaq7T/IS+g9pzSpRs30RDyFKtefn5kA+Uq+ATKfcReki/7cvkxH0fiNs5/VVby
-	 UQYjJ+bPjhHSAAyIqa3TsAyId34uF4XwOsk/EICVTXzIz+d4bvKJtEdqrEkQLwTmtb
-	 O9VCao4US2juAc96sMtZ+/Mxf6/7jpvSKfLdXWP8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44HHetkw031054
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 17 May 2024 12:40:55 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 17
- May 2024 12:40:55 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 17 May 2024 12:40:55 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44HHesjK018723;
-	Fri, 17 May 2024 12:40:55 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <p.zabel@pengutronix.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <akpm@linux-foundation.org>,
-        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
-        <adobriyan@gmail.com>, <jani.nikula@intel.com>
-Subject: [PATCH v8 10/10] gpu: ipu-v3: Use generic macro for rounding closest to specified value
-Date: Fri, 17 May 2024 23:10:54 +0530
-Message-ID: <20240517174054.812332-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240517171532.748684-1-devarsht@ti.com>
-References: <20240517171532.748684-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cneBLwrI"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ef9edf9910so10631894b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 10:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715967673; x=1716572473; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=tJWRXOUZEf0tFhXUEsVYsHdLmAwURDTHhDYt6uCUFks=;
+        b=cneBLwrIX/09t74mq/vj2oGl7EdY6CzBbaoPFAs6EyDOq0tf/X1PUqqUwEEKxr/3o2
+         KGfNb4TO37BhPeXQ+pNImpudUN5fjj7hLYkrt5mnHXk2Z61tZRC9aXmtZ2X2yiq51GFI
+         w5aE9i7IU31qVorTn6XJ7xsrTvsS6FHA6Ayb0oKMsefVWkEmA9dbNfGHr85gy97CsBYF
+         tX35ayncrgUWAxodsLaLDGet3KoidumE1f/t2dlWSJY2EnbCBCNYcK4DTd/zh+vtzF/r
+         uHyMDwTBgO59jL0tXKEtyjCE9XZi/40W+6/G9nyf+0JyHbboqsFEsRkNobKtWgD8TYyO
+         gwdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715967673; x=1716572473;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tJWRXOUZEf0tFhXUEsVYsHdLmAwURDTHhDYt6uCUFks=;
+        b=mZx3pI+RXDkgTMDK1RGTpSXVPmWJsDrkgNcd9ZyiWuoPRRUBud+2QaZzDvKneHMZC4
+         mEnB8An5fw2dCMck1o9uNFuXR2yQUvyF63Jzp4aJMD37KEWBQ7XWf4QeM6OOGJNpS67t
+         W8H+jsK7mr0/9mJOoebwWbp8VKx/ftYZS2jFe4ITd6y764xM9GgdNHqM8SCQehvJoJBb
+         8Ewnk0W5Dd+hd7VsuqcJ+URAGL0zplYvuyAbuT4EtDG+QqVZUQE41/gcRACaLuhmcvD5
+         sPKexKDwj/04woxqmrO/0Hd0QUB52PAB6PWECkS3jmELH4agMpi6c/LvCJvx8XXThKg3
+         VKsw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2GhKT8K7UOSjAEFRlLKm9R6R2Ao9KJElxnQf29JJhcWU37UTC5OeFeL+8upWiBA0SNjME5d+PHkT4MvmiQdgWMtH3sTJ/BAUjvkzs
+X-Gm-Message-State: AOJu0YxH3J6M3xORgjTK1QORa/HFxghOV+Or66VOWbjgfLxZSHOSiosz
+	yVaFuwyJb8Km1CgWRmIB3KbcJ2cfHKcfUDDXukF1hjlGvLxvT2YEnfHw7T16Ohc61pILNiRJ9E3
+	kfg==
+X-Google-Smtp-Source: AGHT+IEoiu5oVtBc2xte06xumcU1fR7G2fGD82bViLeMfqX3DwDl7AOxQ5irBK30N+71sDLyuskNw3VKqWs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:1397:b0:6ea:8a0d:185f with SMTP id
+ d2e1a72fcca58-6f4e02a64c3mr1357360b3a.2.1715967672755; Fri, 17 May 2024
+ 10:41:12 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 17 May 2024 10:39:24 -0700
+In-Reply-To: <20240517173926.965351-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Mime-Version: 1.0
+References: <20240517173926.965351-1-seanjc@google.com>
+X-Mailer: git-send-email 2.45.0.215.g3402c0e53f-goog
+Message-ID: <20240517173926.965351-48-seanjc@google.com>
+Subject: [PATCH v2 47/49] KVM: x86: Drop superfluous host XSAVE check when
+ adjusting guest XSAVES caps
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Hou Wenlong <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
+	Robert Hoo <robert.hoo.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Use generic macro round_closest_up() for rounding closest to specified
-value instead of using local macro round_closest().
+Drop the manual boot_cpu_has() checks on XSAVE when adjusting the guest's
+XSAVES capabilities now that guest cpu_caps incorporates KVM's support.
+The guest's cpu_caps are initialized from kvm_cpu_caps, which are in turn
+initialized from boot_cpu_data, i.e. checking guest_cpu_cap_has() also
+checks host/KVM capabilities (which is the entire point of cpu_caps).
 
-There is no change from functionality point of view as round_closest_up()
-is functionally same as the previously used local macro round_closest().
-
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
-V8: Update commit message
-V1->V7 : (No change, patch introduced in V7)
----
- drivers/gpu/ipu-v3/ipu-image-convert.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/kvm/svm/svm.c | 1 -
+ arch/x86/kvm/vmx/vmx.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 841316582ea9..5192a8b5c02c 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -477,8 +477,6 @@ static int calc_image_resize_coefficients(struct ipu_image_convert_ctx *ctx,
- 	return 0;
- }
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 06770b60c0ba..4aaffbf22531 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4340,7 +4340,6 @@ static void svm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	 * the guest read/write access to the host's XSS.
+ 	 */
+ 	guest_cpu_cap_change(vcpu, X86_FEATURE_XSAVES,
+-			     boot_cpu_has(X86_FEATURE_XSAVE) &&
+ 			     boot_cpu_has(X86_FEATURE_XSAVES) &&
+ 			     guest_cpu_cap_has(vcpu, X86_FEATURE_XSAVE));
  
--#define round_closest(x, y) round_down((x) + (y)/2, (y))
--
- /*
-  * Find the best aligned seam position for the given column / row index.
-  * Rotation and image offsets are out of scope.
-@@ -565,7 +563,7 @@ static void find_best_seam(struct ipu_image_convert_ctx *ctx,
- 		 * The closest input sample position that we could actually
- 		 * start the input tile at, 19.13 fixed point.
- 		 */
--		in_pos_aligned = round_closest(in_pos, 8192U * in_align);
-+		in_pos_aligned = round_closest_up(in_pos, 8192U * in_align);
- 		/* Convert 19.13 fixed point to integer */
- 		in_pos_rounded = in_pos_aligned / 8192U;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 741961a1edcc..6fbdf520c58b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7833,8 +7833,7 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	 * to the guest.  XSAVES depends on CR4.OSXSAVE, and CR4.OSXSAVE can be
+ 	 * set if and only if XSAVE is supported.
+ 	 */
+-	if (!boot_cpu_has(X86_FEATURE_XSAVE) ||
+-	    !guest_cpu_cap_has(vcpu, X86_FEATURE_XSAVE))
++	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_XSAVE))
+ 		guest_cpu_cap_clear(vcpu, X86_FEATURE_XSAVES);
  
+ 	vmx_setup_uret_msrs(vmx);
 -- 
-2.39.1
+2.45.0.215.g3402c0e53f-goog
 
