@@ -1,188 +1,181 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD55364BE;
-	Fri, 17 May 2024 10:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from wflow6-smtp.messagingengine.com (wflow6-smtp.messagingengine.com [64.147.123.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709B13A8EF;
+	Fri, 17 May 2024 10:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715942749; cv=none; b=hpgeJR1Vu8/2gXlElHIMxafXpB+xgnYefcm7Ocso8/seUJ5aQ4LBNfjEEy2o+BLlWE1CBlRGYMRz/4veTkiwMBFgAErhXuuj6NTB0zDqZvDmEtBWseTzwL3IUk4ITrjwViBknHcB6dC70/D/YjsChU5RQbdvUv3EMHyGVBG6sog=
+	t=1715942779; cv=none; b=gkOBvwbbKYOGn7/FQfhVjdabt+wWpH0m0eLw8juXtolqFCi/q5ve3uNtHXxV101SwqQk0HM81o1/5q/rXh1qbX9OydjTMYuTVl85l5xAPDsT/g8gBKtjFA+bQ3/tvYnTE6/OWkB7fxmtNZQqX3omxgS0XDCRHE3iiWdkjCWzaAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715942749; c=relaxed/simple;
-	bh=C8v1h21ZRXXxONXZxQQk5g6d1cPj0Ob1g3zhUbkap3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U6GyxtVSAKFDsBsX2gMH0FdC16NuHyMCWiQrVXGh2CvPEu51khX6g7SxG7wIf0ia2I7rf5I01NzkOSVDVkyblwPAHtevrqHtM+UCkOono7I7oaYDFdwIpkYJnLkGBE1Pc+Bakb3g2KvgQ5Cj7VNh5+hD3CyrrQQUS22xHVNnU1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E28001424;
-	Fri, 17 May 2024 03:46:09 -0700 (PDT)
-Received: from [10.91.2.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2BCB3F762;
-	Fri, 17 May 2024 03:45:42 -0700 (PDT)
-Message-ID: <05c0c55c-5758-408b-a0d5-6d535cec3f7b@arm.com>
-Date: Fri, 17 May 2024 12:45:41 +0200
+	s=arc-20240116; t=1715942779; c=relaxed/simple;
+	bh=Usv8FrNMyMA/e9bwDI/XPptjxA/X7snPzywB+T3VSws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tjYrnYFrP7Wp2Q0E9q6uME1J1iK3o53rhCO+SSWIZLl9Dl3iWS96zepCXyC2MkAjbeFESWKph7bZCnRYmR8i++OerSqi8gC/eZYDXvkbug+vV7ERdNfCXga4RcasKGsjd2QpLSNPNoz1Qei7nfZwFOwMAe4ml+95ocZ7VfscRgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=jzzlTSfl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e8aaZBQa; arc=none smtp.client-ip=64.147.123.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="jzzlTSfl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e8aaZBQa"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailflow.west.internal (Postfix) with ESMTP id 9ACE52CC01B2;
+	Fri, 17 May 2024 06:46:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Fri, 17 May 2024 06:46:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1715942775;
+	 x=1715946375; bh=t6vROMqJIpuDwOB1qQz1P/6tRxrDcWWoZxr9yWTTUM0=; b=
+	jzzlTSfliC7aJdxhlr8U2PaYNhESWNMCT5aBL2w+A90PrnXH2I0i10rsFJx9t9D0
+	sF5ZTql9I06Il8rtHgu8Ffusc+FFdV5x+4ENwWwtNXt12bSZ3b3jLq1LnKeBX2mV
+	iEWZOnubDMdAQYwN9lryqZcXAZ3HriQG8ocqSwKQ1VWp55I38wZ5NkPx3qXaiRgT
+	ayTcwLxYywzfNbDxUPXRWW92h2qvslpTa07Qh6W3sVhqLdGnYHk5DOx2AwLLNlb5
+	YKtMLmyM630PmwNf8N65ZsaLaj8AGZT1I/u0P3Qo+BQ0t6g8IicMGhnQ+/0p7Xgc
+	/ZUcy9H7q89nOke8tingjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=i76614979.fm3; t=
+	1715942775; x=1715946375; bh=t6vROMqJIpuDwOB1qQz1P/6tRxrDcWWoZxr
+	9yWTTUM0=; b=e8aaZBQaXu/jah8iqCXyY6FZKnj7y3GGKyqJrC8oOj6TLG3XOtb
+	gc6GgTHLQQ/iB5x0J3eG3FOKgDybE25yY070f5vJKR2aJkmLJogydrWSz4Y6ETWH
+	QxJ//M6+vNpY5t7WglbgN0SKFMdbSEgpDo0neP28cnQ67RatW1ZiyozQZMV7+GcG
+	N4j6LbPKFXZzXhJjqk2pVnh15Dc9RTdl4N+X7SHrKthGVdRkobDbv/n1w56bA4/o
+	2yMnSdl/C4ymfdQSRESrJLT4BY8mh2NsKc0nnnIszkQhJok5O5MAezxnXV1C5Vnp
+	kSOVMpzffngSmxWweB83DfKbq0rJ95R3xdQ==
+X-ME-Sender: <xms:djVHZsjkhqVsujms6Czt6anR5qrHKswYqBGJ2ls6ufpscgxMpyu9-A>
+    <xme:djVHZlA1UUy7bO9bl-9pp1NV94Ih_BS2SI-SjtOPnB8zbtb0kPZPCzYGpH2LSyt88
+    UWep3qscd9sK2oTjQU>
+X-ME-Received: <xmr:djVHZkHrmfETrJrmj1JbNHYGnhXwvW3kSK1GV5XbyDqyT1q3KtwrVj8Odh2JAwV1Yp6ZM-CXuqJUyLai0lD7ltE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehfedgkeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkefstddttdejnecuhfhrohhmpeflohhn
+    rghthhgrnhcuvegrlhhmvghlshcuoehjtggrlhhmvghlshesfeiggidtrdhnvghtqeenuc
+    ggtffrrghtthgvrhhnpeetgedutdfggeetleefhfeuhedtheduteekieduvdeigeegvdev
+    vddtieekiedvheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjtggrlhhmvghlshesfeiggidtrdhnvght
+X-ME-Proxy: <xmx:djVHZtT8tKpB0YwfwFdvbIMCK_Lx9ylbTqHPhrKsZBaQd0Ycr9p2zA>
+    <xmx:djVHZpzi6XHWQtZ6JLh6O2gg2xySSm9ILCMrLroqynQo6YjSqAwspQ>
+    <xmx:djVHZr5A5FJ6AjCrgofiB93uhjrI8iSL4QyfeCjvOR6rRYAwE4htPg>
+    <xmx:djVHZmzWH0OgtQkzOyD62fqrWWI5Rfd6-jQeOixgJIrCyihu9j20NQ>
+    <xmx:dzVHZphiCg2eM012AMibbr1TZeelQKIqYrExPad6dfKJhQ7fgrR8R7O->
+Feedback-ID: i76614979:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 17 May 2024 06:46:12 -0400 (EDT)
+Date: Fri, 17 May 2024 03:51:14 -0700
+From: Jonathan Calmels <jcalmels@3xx0.net>
+To: John Johansen <john.johansen@canonical.com>
+Cc: brauner@kernel.org, ebiederm@xmission.com, 
+	Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Joel Granados <j.granados@samsung.com>, Serge Hallyn <serge@hallyn.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, containers@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 1/3] capabilities: user namespace capabilities
+Message-ID: <jwuknxmitht42ghsy6nkoegotte5kxi67fh6cbei7o5w3bv5jy@eyphufkqwaap>
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <20240516092213.6799-2-jcalmels@3xx0.net>
+ <641a34bd-e702-4f02-968e-4f71e0957af1@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/17] coresight: Use per-sink trace ID maps for Perf
- sessions
-To: Mike Leach <mike.leach@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com,
- scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
- suzuki.poulose@arm.com,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20240429152207.479221-1-james.clark@arm.com>
- <CAJ9a7Vi7P3kBG5x_JC6AxDL-AvPc5=48eEC0gH3CHceVtSNmOQ@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAJ9a7Vi7P3kBG5x_JC6AxDL-AvPc5=48eEC0gH3CHceVtSNmOQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <641a34bd-e702-4f02-968e-4f71e0957af1@canonical.com>
 
+On Thu, May 16, 2024 at 03:07:28PM GMT, John Johansen wrote:
+> agreed, though it really is application dependent. Some applications handle
+> the denial at userns creation better, than the capability after. Others
+> like anything based on QTWebEngine will crash on denial of userns creation
+> but handle denial of the capability within the userns just fine, and some
+> applications just crash regardless.
 
+Yes this is application specific, but I would argue that the latter is
+much more preferable. For example, having one application crash in a
+container is probably ok, but not being able to start the container in
+the first place is probably not. Similarly, preventing the network
+namespace creation breaks services which rely on systemd’s
+PrivateNetwork, even though they most likely use it to prevent any
+networking from being done.
 
-On 03/05/2024 14:40, Mike Leach wrote:
-> Hi James
+> The userns cred from the LSM hook can be modified, yes it is currently
+> specified as const but is still under construction so it can be safely
+> modified the LSM hook just needs a small update.
 > 
-> On Mon, 29 Apr 2024 at 16:23, James Clark <james.clark@arm.com> wrote:
->>
->> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
->> as long as there are fewer than that many ETMs connected to each sink.
->>
->> Each sink owns its own trace ID map, and any Perf session connecting to
->> that sink will allocate from it, even if the sink is currently in use by
->> other users. This is similar to the existing behavior where the dynamic
->> trace IDs are constant as long as there is any concurrent Perf session
->> active. It's not completely optimal because slightly more IDs will be
->> used than necessary, but the optimal solution involves tracking the PIDs
->> of each session and allocating ID maps based on the session owner. This
->> is difficult to do with the combination of per-thread and per-cpu modes
->> and some scheduling issues. The complexity of this isn't likely to worth
->> it because even with multiple users they'd just see a difference in the
->> ordering of ID allocations rather than hitting any limits (unless the
->> hardware does have too many ETMs connected to one sink).
->>
->> Per-thread mode works but only until there are any overlapping IDs, at
->> which point Perf will error out. Both per-thread mode and sysfs mode are
->> left to future changes, but both can be added on top of this initial
->> implementation and only sysfs mode requires further driver changes.
->>
->> The HW_ID version field hasn't been bumped in order to not break Perf
->> which already has an error condition for other values of that field.
->> Instead a new minor version has been added which signifies that there
->> are new fields but the old fields are backwards compatible.
->>
-> 
-> Looking at this overall - would it not be better to introduce the
-> concept of a "sink ID" to allow the detection of multiple sources into
-> the single sink that is now done by emitting multiple AUX_HWID packets
-> with the CPU+ID extra data?
+> The advantage of doing it under the LSM is an LSM can have a richer policy
+> around what can use them and tracking of what is allowed. That is to say the
+> LSM has the capability of being finer grained than doing it via capabilities.
 
-I think it's worth trying so I'll give it a go and see if it ends up
-being cleaner. One of the reasons for emitting multiple packets was to
-tie events and sinks together that may not have been created when the
-first set of HW_IDs were output. It seems like static sink IDs could
-solve this with less repetition.
+Sure, we could modify the LSM hook to do all sorts of things, but
+leveraging it would be quite cumbersome, will take time to show up in
+userspace, or simply never be adopted.
+We’re already seeing it in Ubuntu which started requiring Apparmor profiles.
 
-> This sink ID could be part of the sink csdev struct - or even the
-> id_map struct - a simple count of sinks as the per sink maps are
-> created would be sufficient. If this sink ID replaced the CPU+ID extra
+This new capability set would be a universal thing that could be
+leveraged today without modification to userspace. Moreover, it’s a
+simple framework that can be extended.
+As you mentioned, LSMs are even finer grained, and that’s the idea,
+those could be used hand in hand eventually. You could envision LSM
+hooks controlling the userns capability set, and thus enforce policies
+on the creation of nested namespaces without limiting the other tasks’
+capabilities.
 
-We could also use the existing sink IDs that are used to select the sink
-on the perf commandline: coresight_get_sink_by_id().
+> I am not opposed to adding another mechanism to control user namespaces,
+> I am just not currently convinced that capabilities are the right
+> mechanism.
 
-> data in the HWID packets, then each packet could be emitted just once,
-> and perf can then collate based on the sink id.
-> 
-> Moreover, once we are ready to address the per-thread issues - then
-> the overlap would not matter. Generate OpenCSD decode trees per sink
-> ID, add docoders to the tree per Trace ID. Thus if a buffer has data
-> from sink 1 trace id 5, ans sink 2, trace ID 5, then pick the right
-> decoder for the combo.
+Well that’s the thing, from past conversations, there is a lot of
+disagreement about restricting namespaces. By restricting the
+capabilities granted by namespaces instead, we’re actually treating the
+root cause of most concerns.
 
-The issue is more about trace in a single buffer with overlapping IDs.
-Whether we use a sink ID or the CPU+ID mappings, Perf still needs to
-know when to change the tree. In either case we'd have to re-emit the
-mappings to prompt the decoder change.
+Today user namespaces are "special" and always grant full caps. Adding a
+new capability set to limit this behavior is logical; same way it's done
+for usual process transitions.
+Essentially this set is to namespaces what the inheritable set is to
+root.
 
-So yes with either solution there would be multiple decode trees, it's
-just knowing which fragments to send to which tree that's the issue.
+> this should be bounded by the creating task's bounding set, other wise
+> the capability model's bounding invariant will be broken, but having the
+> capabilities that the userns want to access in the task's bounding set is
+> a problem for all the unprivileged processes wanting access to user
+> namespaces.
 
-> 
-> Finally in systems with ETE+TRBE were there is no use of trace IDs, a
-> sink ID of 0x0 could potentially indicate that 1:1 relationship.
-> 
+This is possible with the security bit introduced in the second patch.
+The idea of having those separate is that a service which has dropped
+its capabilities can still create a fully privileged user namespace.
+For example, systemd’s machined drops capabilities from its bounding set,
+yet it should be able to create unprivileged containers.
+The invariant is sound because a child userns can never regain what it
+doesn’t have in its bounding set. If it helps you can view the userns
+set as a “namespace bounding set” since it defines the future bounding
+sets of namespaced tasks.
 
-This is already indicated with the PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW
-flag on the AUX record. But I suppose we could add sink ID 0x0 as well
-for consistency with the new HW_ID packets. For backwards compatibility
-it probably makes sense to continue using the AUX flag in Perf, but I'll
-see how it looks with the sink ID implementation.
+> If I am reading this right for unprivileged processes the capabilities in
+> the userns are bounded by the processes permitted set before the userns is
+> created?
 
-James
+Yes, unprivileged processes that want to raise a capability in their
+userns set need it in their permitted set (as well as their bounding
+set). This is similar to inheritable capabilities.
+Recall that processes start with a full set of userns capabilities, so
+if you drop a userns capability (or something else did, e.g.
+init/pam/sysctl/parent) you will never be able to regain it, and
+namespaces you create won't have it included.
+Now, if you’re root (or cap privileged) you can always regain it.
 
-> Regards
-> 
-> Mike
-> 
->>
->> James Clark (17):
->>   perf cs-etm: Print error for new PERF_RECORD_AUX_OUTPUT_HW_ID versions
->>   perf auxtrace: Allow number of queues to be specified
->>   perf: cs-etm: Create decoders after both AUX and HW_ID search passes
->>   perf: cs-etm: Allocate queues for all CPUs
->>   perf: cs-etm: Move traceid_list to each queue
->>   perf: cs-etm: Create decoders based on the trace ID mappings
->>   perf: cs-etm: Support version 0.1 of HW_ID packets
->>   coresight: Remove unused stubs
->>   coresight: Clarify comments around the PID of the sink owner
->>   coresight: Move struct coresight_trace_id_map to common header
->>   coresight: Expose map argument in trace ID API
->>   coresight: Make CPU id map a property of a trace ID map
->>   coresight: Pass trace ID map into source enable
->>   coresight: Use per-sink trace ID maps for Perf sessions
->>   coresight: Remove pending trace ID release mechanism
->>   coresight: Re-emit trace IDs when the sink changes in per-thread mode
->>   coresight: Emit HW_IDs for all ETMs that are using the sink
->>
->>  drivers/hwtracing/coresight/coresight-core.c  |  10 +
->>  drivers/hwtracing/coresight/coresight-dummy.c |   3 +-
->>  .../hwtracing/coresight/coresight-etm-perf.c  |  82 ++-
->>  .../hwtracing/coresight/coresight-etm-perf.h  |  20 +-
->>  .../coresight/coresight-etm3x-core.c          |  14 +-
->>  .../coresight/coresight-etm4x-core.c          |  14 +-
->>  drivers/hwtracing/coresight/coresight-stm.c   |   3 +-
->>  drivers/hwtracing/coresight/coresight-sysfs.c |   3 +-
->>  .../hwtracing/coresight/coresight-tmc-etr.c   |   5 +-
->>  drivers/hwtracing/coresight/coresight-tmc.h   |   5 +-
->>  drivers/hwtracing/coresight/coresight-tpdm.c  |   3 +-
->>  .../hwtracing/coresight/coresight-trace-id.c  | 107 +--
->>  .../hwtracing/coresight/coresight-trace-id.h  |  57 +-
->>  include/linux/coresight-pmu.h                 |  17 +-
->>  include/linux/coresight.h                     |  20 +-
->>  tools/include/linux/coresight-pmu.h           |  17 +-
->>  tools/perf/util/auxtrace.c                    |   9 +-
->>  tools/perf/util/auxtrace.h                    |   1 +
->>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  28 +-
->>  tools/perf/util/cs-etm.c                      | 617 ++++++++++++------
->>  tools/perf/util/cs-etm.h                      |   2 +-
->>  21 files changed, 633 insertions(+), 404 deletions(-)
->>
->> --
->> 2.34.1
->>
-> 
-> 
+> This is only being respected in PR_CTL, the user mode helper is straight
+> setting the caps.
+
+Usermod helper requires CAP_SYS_MODULE and CAP_SETPCAP in the initns so
+the permitted set is irrelevant there. It starts with a full set but from
+there you can only lower caps, so the invariant holds.
