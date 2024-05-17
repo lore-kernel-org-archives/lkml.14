@@ -1,108 +1,143 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F0A1A2C19;
-	Fri, 17 May 2024 18:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E9D433A6;
+	Fri, 17 May 2024 18:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715971019; cv=none; b=sKdjkuKV4Updu0NkmV+ZEk/cMjz+PHHMwjs666qPe4BUwkvQoXIb8k1u6a94Rux5FaNvUn9HIwUon2Y6RdGXgzjqdoYJoxIu2xt+mLgYLAcUCYctEVQ3oc3y8jYgPwrHU/oeSsc2YKVzfnt+z9olghEQ4CHEHzIdGwozhkfWNIc=
+	t=1715971069; cv=none; b=iGaX0C5I/qXzFg6RRuyO7rRm7sJinKAeyOynYKvF58DHzmPE+dJ6hXmkvTMeaOrIFl1/2RlqMNaw+qEKBbyGqRXKg12EfP3dOvdQOaMG2BO1plyl+onAPcChVI9W4Dm+jF5/G9AtWuRp4ShyQxUtNFfsrSf3N4gszIX7q06NUzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715971019; c=relaxed/simple;
-	bh=4PkvaAcvVDH1aF/nkp65UXl1KU5DOp/JS+CYf98ASLQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=HMs0UZr//VlZ2sZxZN2fCjVw9RZ5RsxO6Xk4deM6wbYLBZ4xTli9bg/U4IcCLD03HH/eYhZGzySF9PANE4Ee1qEk2plDUSB18ciOyLPs5ylQIEzOPT7aiDdwGG25pK3Tw2qoNLOXsJ5lBr1t90xHt9NWzktBfVnvfLofHaXjmOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=UBhaBSo6; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715971069; c=relaxed/simple;
+	bh=cDl+GeQ2P3waQU2VJqEU9acfUxXsJOs+MhfK/QhHSyc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=f9xLbj2j81Z6UopdyWEzUKzb/B3MnyIxcgZn0IZoxSfTB6RIW9CTpHMXrb4ZOxQx/vT1G7yj4MuwJp4hEstwO+ZBHy8MfksY1kfYu0JecwpjZHWkHu6B2JMAcWe/H8MD8scLLnM7SGdD4jSXRNWEYaab5t273jbXY5xvyJ0zAzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgBZylgN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="UBhaBSo6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715971014; x=1716575814; i=markus.elfring@web.de;
-	bh=fB7RALjxdRF1G/aDESbEsQC4h5dPoGC+cUZHy0syvLs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=UBhaBSo608yj3CTtHieEr0D2XH77Qz0NO3rHY3B9BxkngkjjIN8pnackHDC2BjGo
-	 /DhLJf4Jfiw03YjkkF4pwUxbZh8YL7rkCSCr/9pHOMS/gkaJ0BPjsz03K/GII6CnM
-	 wEEoZH3mo77GWLbS2x/4r8VOyXWHXT7A5RYzDyD7yA3b2pg0Ck76BpDjQSeS/yQz3
-	 xDDRinhS5FeCqubUDktyvfGLkH2XLEyTQcAB4uJX3jehhV9AV0B6qVtyYaT559Wzq
-	 J4PwSRcsu/hcGuG6+59FC89w/v4q+AiZjKYf6R/ETSfr1OFd0KM89Tsi0P3OmRXUN
-	 RSL0Qv8SdxdPzib9/Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9cLR-1sbNc00Sxx-00wGrB; Fri, 17
- May 2024 20:30:53 +0200
-Message-ID: <94ef2d0b-15d0-4c40-ab52-a5d88a666b3c@web.de>
-Date: Fri, 17 May 2024 20:30:49 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgBZylgN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8DDEC2BD10;
+	Fri, 17 May 2024 18:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715971069;
+	bh=cDl+GeQ2P3waQU2VJqEU9acfUxXsJOs+MhfK/QhHSyc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=OgBZylgN9zqWkDZhPWI5AGWnFINa0FhFeM1ReY7pspp2aFMbHSdYte6a4q0Uty5x7
+	 uZ20F6/dFcD5zgGiknU07ckIywVb82jG0Y4vXFtnq11+JlMYPi3tDue5Alk/9ZTfS4
+	 my2ejW1MdeoxqIVQYMZTfIUCBUqUL0YlVIl6v6RTgDpc5vPjxbojUXk0yUu1kRbhFr
+	 qsYV/Z4iBtcjSpwS1zpjhtBaMOsQZ9zWe00Af1TSvV4slW4ZuwGgI8D9o21PJATFD4
+	 sB/ar8sL/Lp+/kCuMLH/1Wci3pQpyv01CC6ZYknCXCoPhOBT7bxFKtKtdcM/eECxUp
+	 4bZBEtphTVVbA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>,  Pawan Gupta
+ <pawan.kumar.gupta@linux.intel.com>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  x86@kernel.org,  linux-pm@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] suspend stress test stalls within 30 minutes
+References: <87o79cjjik.fsf@kernel.org>
+	<20240511184847.GCZj-9j2sh1Akpt9iS@fat_crate.local>
+	<20240511184945.GDZj-9yaOEWqf1ng8u@fat_crate.local>
+	<87h6f4jdrq.fsf@kernel.org> <878r0djxgc.fsf@kernel.org>
+	<874jb0jzx5.fsf@kernel.org>
+	<20240514160555.GCZkOL41oB3hBt45eO@fat_crate.local>
+	<87msoofjg1.fsf@kernel.org>
+	<35086bb6-ee11-4ac6-b8ba-5fab20065b54@intel.com>
+Date: Fri, 17 May 2024 21:37:44 +0300
+In-Reply-To: <35086bb6-ee11-4ac6-b8ba-5fab20065b54@intel.com> (Dave Hansen's
+	message of "Fri, 17 May 2024 10:22:32 -0700")
+Message-ID: <871q60ffnr.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Kuro Chung <kuro.chung@ite.corp-partner.google.com>,
- dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Allen Chen <allen.chen@ite.com.tw>, Daniel Vetter <daniel@ffwll.ch>,
- David Airlie <airlied@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jonas Karlman <jonas@kwiboo.se>, Kenneth Haung <kenneth.hung@ite.com.tw>,
- Kuro Chung <kuro.chung@ite.com.tw>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Pin-yen Lin <treapking@chromium.org>, Robert Foss <rfoss@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>
-References: <20240517021654.1034218-1-kuro.chung@ite.com.tw>
-Subject: Re: [PATCH v9] drm/bridge: it6505: This patch fixes hibernate to
- resume no display issue
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240517021654.1034218-1-kuro.chung@ite.com.tw>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ocxBC3UDqeM5nCY06kslqg/TVkMQrEhNuG0Dw/kVCwd4cxuSw2Q
- UY3HZYeg4IlBOVMNqRCOIb6/Tj75wO5vXhe+IL9ld1VtsU3G7M0uzhgWkrawRN7mNroeE9w
- XJ9WDv2uYT9Eo3XIxssXaBh89q/0hHQDYbMu8BWLEJJXRtTFJXq9wWtX/koY8zbr59j/DC4
- abhIH/nm+k+2HmFBA/jTg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:o4IVAo/uwds=;mnSJRXK9U0TVbhq8uY4qds84468
- 73aA5R3mQSqaP/LbaXvzB6ckDIb7fFooJF8MAOvJdnQpBtTFgd9uvG47fvqB0haSaHacKrhYV
- 3peY/dB9TqB1ai1JxsYdTpn/cQzhd6yv0XnaQjCOoaFVHqz7IdR6FqlMidrJN17p5XzKJ24Tv
- vlUjKSp0mF54hG+uNziQDZtf4IwF5+redH18RN6YeFziGyEzvD2leU4CgwAbP+KjiihAIBZEB
- il/FYQNrSx4cqHD+YAp7uXznYbvI2ks0S/0pyMKmgUd9fCh6iHb5r24rKXZ3OlMbIbI6hIGBG
- miuVPsHVgCLHGrgUQ41YooKucFpp4JfDwCudBCWToRM0wlMeJb8coWa/v/OfJMUZaHl0Sr0Dq
- 1gq7OZkxRZgjWY/HEIwcyg6ecBBhc3VkzlgaRwbdAXwvObXZLNP6mj8iwkKkrkty6FqmGIS8x
- gMWP6/upxUJarf5FNWdtBfQlbkMS4iv3d7otkdkVkGrIUoyqK6JpUyaeEyKAbL6fdFbOGCa0g
- BVTHTjF8qROAzTmqZs7mqHVJUDzwaLzzu+kd1gJS/qDh6PX5cD60gYF4BiOANFm300xEDRNim
- SssePW/vAB0gJFfTxDDlf7efipUK+nXxL041ZBTTgt9b0tdHFL2S3KkwNicklEbFk28AqpR1w
- ZeIOysJRmWzrLou5F2IaBvWrN00kCpDketEr4pYxQoezHUcFHSmIvjQSHVIQ6AZg+yCW6LFut
- 3PIxUFnqICRUkHQaJCujjpjySnEWqTLX7hRt2+DK2N76wWV26BEQA2JfS83/htFdPXhJF6OTh
- XJClDAodXuY+V4lKy5XT8ax96Xm18S3zM4P4fIGGuQkEw=
+Content-Type: text/plain
 
-Please omit the word combination =E2=80=9CThis patch=E2=80=9D from the sum=
-mary phrase.
+Dave Hansen <dave.hansen@intel.com> writes:
 
+> On 5/17/24 10:15, Kalle Valo wrote:
+>> Borislav Petkov <bp@alien8.de> writes:
+>>> There might be some #GP or so in the logs in case we've managed to f*ck
+>>> up microcode application which emulates that IBRS MSR bit and the
+>>> actual toggling or so when suspending...
+>> So the weird part is that when the bug happens (ie. suspend stalls) I
+>> can access the box normally using ssh and I don't see anything special
+>> in dmesg. Below is a full copy of dmesg output after the suspend
+>> stalled. Do note that I copied this dmesg before I updated microcode so
+>> it will still show the old microcode version.
+>> 
+>> Let me know if you need more info.
+>
+> Kalle, could you remind us what we're seeing here?  Does this show 30
+> working rtcwake tests followed by a failure at "rtcwake test 31" where
+> the system failed to suspend?
 
-=E2=80=A6
-> But the input FIFO reset will also trigger error interrupts of output
-> module rising.Thus, it6505 have to wait a period can clear those
-> expected error interrupts caused by manual hardware reset in one
-> interrupt handler calling to avoid interrupt looping.
+Correct. So basically what I do is that I start the nuc box, ssh into it
+and run:
 
-Please improve this change description another bit.
+sudo su
+for i in {1..400}; do echo "rtcwake test $i" > /dev/kmsg; rtcwake -m mem -s 10; sleep 10; done
 
+Here's the start of first loop:
 
-=E2=80=A6
-> ---
->  drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
-=E2=80=A6
+[   54.945105] rtcwake test 1
+[   55.162603] PM: suspend entry (deep)
+[   55.168875] Filesystems sync: 0.006 seconds
+[   55.182427] Freezing user space processes
+[   55.191498] Freezing user space processes completed (elapsed 0.008 seconds)
+[   55.191711] OOM killer disabled.
+[   55.191805] Freezing remaining freezable tasks
+[   55.193507] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[   55.194056] printk: Suspending console(s) (use no_console_suspend to debug)
+[   55.244962] e1000e: EEE TX LPI TIMER: 00000011
 
-You may present version descriptions behind the marker line.
+Now I leave the box to run it's test. I come back later to see that the
+for loop has stalled and the box is not going into suspend gain. I ssh
+into the machine and see this in dmesg:
 
-Regards,
-Markus
+[  449.061525] rtcwake test 31
+[  449.176854] PM: suspend entry (deep)
+[  449.179072] Filesystems sync: 0.002 seconds
+[  632.961545] loop0: detected capacity change from 0 to 8
+[  637.003835] gpu-manager (6735) used greatest stack depth: 23808 bytes left
+[  738.799026] kworker/dying (87) used greatest stack depth: 23488 bytes left
+[  932.951032] loop0: detected capacity change from 0 to 8
+[ 1232.962610] loop0: detected capacity change from 0 to 8
+
+The system tried go into suspend but after the "Filesystems sync:"
+message nothing happened for 10 minutes. I assume loop0 messages are
+from some Ubuntu daemon, maybe snapd or similar. I have seen them
+always, they are not specific to this issue.
+
+And now comes the really strange part: if I run  'shutdown -h now' the
+suspend continues apparently normally. Afterwards I checked from
+/var/log/kern.log and didn't see any errors:
+
+May 17 13:34:38 nuc2 kernel: [  449.176854] PM: suspend entry (deep)
+May 17 13:34:38 nuc2 kernel: [  449.179072] Filesystems sync: 0.002 seconds
+May 17 13:37:42 nuc2 kernel: [  632.961545] loop0: detected capacity change from 0 to 8
+May 17 13:37:46 nuc2 kernel: [  637.003835] gpu-manager (6735) used greatest stack depth: 23808 bytes left
+May 17 13:39:28 nuc2 kernel: [  738.799026] kworker/dying (87) used greatest stack depth: 23488 bytes left
+May 17 13:42:42 nuc2 kernel: [  932.951032] loop0: detected capacity change from 0 to 8
+May 17 13:47:42 nuc2 kernel: [ 1232.962610] loop0: detected capacity change from 0 to 8
+May 17 13:52:45 nuc2 kernel: [ 1527.307800] Freezing user space processes
+May 17 13:52:45 nuc2 kernel: [ 1527.334585] Freezing user space processes completed (elapsed 0.024 seconds)
+May 17 13:52:45 nuc2 kernel: [ 1527.336094] OOM killer disabled.
+May 17 13:52:45 nuc2 kernel: [ 1527.337562] Freezing remaining freezable tasks
+May 17 13:52:45 nuc2 kernel: [ 1527.340324] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+May 17 13:52:45 nuc2 kernel: [ 1527.342596] printk: Suspending console(s) (use no_console_suspend to debug)
+May 17 13:52:45 nuc2 kernel: [ 1527.380121] e1000e: EEE TX LPI TIMER: 00000011
+May 17 13:52:45 nuc2 kernel: [ 1527.474981] ACPI: EC: interrupt blocked
+May 17 13:52:45 nuc2 kernel: [ 1527.540696] ACPI: PM: Preparing to enter system sleep state S3
+May 17 13:52:45 nuc2 kernel: [ 1527.567302] ACPI: EC: event blocked
+May 17 13:52:45 nuc2 kernel: [ 1527.567307] ACPI: EC: EC stopped
+May 17 13:52:45 nuc2 kernel: [ 1527.567311] ACPI: PM: Saving platform NVS memory
+May 17 13:52:45 nuc2 kernel: [ 1527.567412] Disabling non-boot CPUs ...
+
+While writing this email I found another way to continue the suspend
+after a stall: terminate rtcwake with CTRL-C in the ssh session running
+the for loop. That explains why 'sudo shutdown -h now' makes the suspend
+go forward, it most likely kills the stalled rtcwake process.
