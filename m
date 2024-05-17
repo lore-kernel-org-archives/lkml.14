@@ -1,180 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1661DDDB;
-	Fri, 17 May 2024 09:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B4A1EB5E
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.172.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715937465; cv=none; b=FFNCQ3fUz2FeThHRFhwzvKxYnavoBsUzYW48TiQPq91hsY21stP32EFI1DZ9Bv9z5nP9zoFCkdGbqZfZv0uiegOE/ec5xxO1u9FTQGdw/vcwkZNk10kIkqJR/A+V7Rd9KS6FRSJiSAcpXr5I69/6mO+f1hRAzQ4v4l9Txr6P4iM=
+	t=1715937645; cv=none; b=h8WP06lLh4c5i8k2Kr3F9PNGwLdFYtWXQTEKZrEJt/yAPfhT0yauaPZMc8MhX0T0ib1DA1rAU8U3d/5IUpJaA24+zSMM5x9Kij4KqgK2PUaBNmtRkqynNjiBlPMom3TsnphCKvymXhdtPQf/Gs4y+hYTUC8C8zoqtJuh5GVSVGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715937465; c=relaxed/simple;
-	bh=PH0+m7B2XUeSInY+T38VdjzfDLnpX53dQVeTatGhnRg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o2IXKfr4gmHi6WaXl48UCmIhlVZte6rLjeOoXhVg1eU3VCjeMBaIYRjHRN5J0Wc5guOK/EUG5SD/VRW84REpnscXRpMBwXDA/YIGn31bKZKhOSKWYkkPfr+1LI46p4/l1tGrLnX4gGs8A+FLTMbcs20kCSxcViswzc2yWD+iTLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWVriPPJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715937645; c=relaxed/simple;
+	bh=zUX5qNIfW548vNLMV3YfOWr2RVuk/rIW/JNspwwgaDA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miOO6hXABB8WYhRafy1Bd4LdUwtvrI09mh9jefGrk0LJ+VbF5nrE1hMopsMyY3CIZSIM3lSBxjeWj+Xfh7W5mdsYjj500/O9/yOJn2BJFlSydDMw0WucBwVSZRvWdySlkHPtC9ZARWB0L5MjUkA1KIS9Rob/SJz3BSdh8zlrZ54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=s8qF9X+x; arc=none smtp.client-ip=95.143.172.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWVriPPJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1A6C2BD10;
-	Fri, 17 May 2024 09:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715937465;
-	bh=PH0+m7B2XUeSInY+T38VdjzfDLnpX53dQVeTatGhnRg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aWVriPPJ57nLu5vE4RIQhh8UV+H+XWuOocJwj/lLqfmnuAhMHVuf7jDFyNrRA/SFS
-	 kXm20A9srgZJPNJQ7hfxyawegGrmGHP+GxDOclm0ATHguTlqwEg5e52B+ttEzdKmns
-	 1t8PTDc6zgzDw/lQB+F3CgVdDf0YwnUSNCfEVyfSkQtCY5gU4LhvoijivFL7xYemtP
-	 Gbfh4o9jT+zg8qUCCFLOuU01ZFm4zsZ1lB73rc8ftvZf1HS0oOzZOBR5pkg0h6thmz
-	 1InAjQg4onWLAoKDqKzka+XjwDPLGZn2OoaWsZVstd4P9RY7ypsS4Td4lepmQsfXqF
-	 yTjYFtH2voiGA==
-Message-ID: <d570bf46-f3a3-4a01-b554-1c1c76b55e16@kernel.org>
-Date: Fri, 17 May 2024 11:17:41 +0200
+	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="s8qF9X+x"
+Received: (qmail 13005 invoked by uid 988); 17 May 2024 09:13:58 -0000
+Authentication-Results: phoenix.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Fri, 17 May 2024 11:13:57 +0200
+From: Illia Ostapyshyn <illia@yshyn.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	Illia Ostapyshyn <illia@yshyn.com>
+Subject: [PATCH] mm/vmscan: Update stale references to shrink_page_list
+Date: Fri, 17 May 2024 11:13:48 +0200
+Message-Id: <20240517091348.1185566-1-illia@yshyn.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/9] dt-bindings: fsi: Document the FSI controller
- common properties
-To: Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, robh@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au
-References: <20240514195435.155372-1-eajames@linux.ibm.com>
- <20240514195435.155372-6-eajames@linux.ibm.com>
- <9200e46a-3cb5-4363-a560-ee3d88e05ced@kernel.org>
- <a219f01e-a856-46cb-83c4-4fde99b8addd@linux.ibm.com>
- <eb6e2b5b-f341-404b-9215-6e80f21a6842@kernel.org>
- <80713a00-9574-4ae0-8af7-3fe12affcfc1@linux.ibm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <80713a00-9574-4ae0-8af7-3fe12affcfc1@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: +
+X-Rspamd-Report: MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: 1.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=yshyn.com; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=zUX5qNIfW548vNLMV3YfOWr2RVuk/rIW/JNspwwgaDA=;
+	b=s8qF9X+xASJEWN/cMfdXpv37+eChv24TVme12xnLdvA65YeLPvsTXzosKqg8OeC49J5W76JCJG
+	jXt8b3WBCoWyHOW6ZAXTIEhwcx3HgSKo7GNhhPzlmOFAiMkpfbb/Qr2+tBLxzjpAAPK2KqHIAS3X
+	dun0Pvmwj1DQ5Ikf7ijj4Y6RxzPpcYrN9nNzeGMn0R0Thnq6Z3unRuYKkAK98CKUGmfeVqggYD8j
+	7pWiuwES3hWX1bm0vSyKHopIQGsB0IWLRKFbBd0pEPGW4zAG8AmBYKOyWdHAm1T2zG3TdRB4+fRv
+	qKhYjDH39qcYIOrnRP/Z7LvFijc0MOp8VK/n/Kiw==
 
-On 15/05/2024 17:02, Eddie James wrote:
-> 
-> On 5/15/24 09:35, Krzysztof Kozlowski wrote:
->> On 15/05/2024 16:28, Eddie James wrote:
->>> On 5/15/24 09:18, Krzysztof Kozlowski wrote:
->>>> On 14/05/2024 21:54, Eddie James wrote:
->>>>> Since there are multiple FSI controllers documented, the common
->>>>> properties should be documented separately and then referenced
->>>>> from the specific controller documentation.
->>>>>
->>>>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->>>>> ---
->>>>> Changes since v4:
->>>>>    - Add interrupt controller properties
->>>>>    - Add clock-frequency property to FSI controller and CFAM
->>>>>    - Add detail to chip-id property description
->>>>>
->>>>>    .../bindings/fsi/fsi-controller.yaml          | 66 +++++++++++++++++++
->>>>>    1 file changed, 66 insertions(+)
->>>>>    create mode 100644 Documentation/devicetree/bindings/fsi/fsi-controller.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/fsi/fsi-controller.yaml b/Documentation/devicetree/bindings/fsi/fsi-controller.yaml
->>>>> new file mode 100644
->>>>> index 0000000000000..8620e4da6de77
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/fsi/fsi-controller.yaml
->>>>> @@ -0,0 +1,66 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/fsi/fsi-controller.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: FSI Controller Common Properties
->>>>> +
->>>>> +maintainers:
->>>>> +  - Eddie James <eajames@linux.ibm.com>
->>>>> +
->>>>> +description:
->>>>> +  FSI (FRU (Field Replaceable Unit) Service Interface) is a two wire bus. The
->>>>> +  FSI bus is connected to a CFAM (Common FRU Access Macro) which contains
->>>>> +  various engines such as I2C controllers, SPI controllers, etc.
->>>>> +
->>>>> +properties:
->>>>> +  "#address-cells":
->>>>> +    const: 2
->>>>> +
->>>>> +  "#size-cells":
->>>>> +    const: 0
->>>>> +
->>>>> +  '#interrupt-cells':
->>>>> +    const: 1
->>>>> +
->>>>> +  clock-frequency:
->>>>> +    minimum: 1
->>>>> +    maximum: 200000000
->>>> This is a deprecated property in general. Why did it appear? It does not
->>>> exist in current bindings and nothing in commit msg suggests changes in
->>>> the bindings themselves.
->>>
->>> OK, is there some document that describes what properties are
->>> deprecated? Because it's used all over the place in the bindings. Anyway
->> dtschema: dtschema/schemas/clock/clock.yaml
->>
->> buses anyway should use bus-frequency but it is also legacy one.
->>
->>> I need this property, I can rename it if you like. I can also update the
->> Why do you need it? Why clocks cannot be chosen by drivers and initial
->> state selected by assigned-clock-rates?
-> 
-> 
-> Well, I could use assigned-clock-rates, though it seems like I'd then 
-> have to implement the clock provider framework for both the FSI 
-> controller driver and the CFAM driver, which is a lot of extra work. FSI 
-> controller isn't really a clock provider, it's a bus like i2c (which 
-> uses clock-frequency), so it doesn't quite fit in my opinion...
+Commit 49fd9b6df54e ("mm/vmscan: fix a lot of comments") renamed
+shrink_page_list() to shrink_folio_list().  Fix up the remaining
+references to the old name in comments and documentation.
 
-OK, it's fine in such case.
+Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
+---
+ Documentation/mm/unevictable-lru.rst | 10 +++++-----
+ mm/memory.c                          |  2 +-
+ mm/swap_state.c                      |  2 +-
+ mm/truncate.c                        |  2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/mm/unevictable-lru.rst b/Documentation/mm/unevictable-lru.rst
+index b6a07a26b10d..2feb2ed51ae2 100644
+--- a/Documentation/mm/unevictable-lru.rst
++++ b/Documentation/mm/unevictable-lru.rst
+@@ -191,13 +191,13 @@ have become evictable again (via munlock() for example) and have been "rescued"
+ from the unevictable list.  However, there may be situations where we decide,
+ for the sake of expediency, to leave an unevictable folio on one of the regular
+ active/inactive LRU lists for vmscan to deal with.  vmscan checks for such
+-folios in all of the shrink_{active|inactive|page}_list() functions and will
++folios in all of the shrink_{active|inactive|folio}_list() functions and will
+ "cull" such folios that it encounters: that is, it diverts those folios to the
+ unevictable list for the memory cgroup and node being scanned.
+ 
+ There may be situations where a folio is mapped into a VM_LOCKED VMA,
+ but the folio does not have the mlocked flag set.  Such folios will make
+-it all the way to shrink_active_list() or shrink_page_list() where they
++it all the way to shrink_active_list() or shrink_folio_list() where they
+ will be detected when vmscan walks the reverse map in folio_referenced()
+ or try_to_unmap().  The folio is culled to the unevictable list when it
+ is released by the shrinker.
+@@ -269,7 +269,7 @@ the LRU.  Such pages can be "noticed" by memory management in several places:
+ 
+  (4) in the fault path and when a VM_LOCKED stack segment is expanded; or
+ 
+- (5) as mentioned above, in vmscan:shrink_page_list() when attempting to
++ (5) as mentioned above, in vmscan:shrink_folio_list() when attempting to
+      reclaim a page in a VM_LOCKED VMA by folio_referenced() or try_to_unmap().
+ 
+ mlocked pages become unlocked and rescued from the unevictable list when:
+@@ -548,12 +548,12 @@ Some examples of these unevictable pages on the LRU lists are:
+  (3) pages still mapped into VM_LOCKED VMAs, which should be marked mlocked,
+      but events left mlock_count too low, so they were munlocked too early.
+ 
+-vmscan's shrink_inactive_list() and shrink_page_list() also divert obviously
++vmscan's shrink_inactive_list() and shrink_folio_list() also divert obviously
+ unevictable pages found on the inactive lists to the appropriate memory cgroup
+ and node unevictable list.
+ 
+ rmap's folio_referenced_one(), called via vmscan's shrink_active_list() or
+-shrink_page_list(), and rmap's try_to_unmap_one() called via shrink_page_list(),
++shrink_folio_list(), and rmap's try_to_unmap_one() called via shrink_folio_list(),
+ check for (3) pages still mapped into VM_LOCKED VMAs, and call mlock_vma_folio()
+ to correct them.  Such pages are culled to the unevictable list when released
+ by the shrinker.
+diff --git a/mm/memory.c b/mm/memory.c
+index 0201f50d8307..c58b3d92e6a8 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4511,7 +4511,7 @@ static vm_fault_t __do_fault(struct vm_fault *vmf)
+ 	 * lock_page(B)
+ 	 *				lock_page(B)
+ 	 * pte_alloc_one
+-	 *   shrink_page_list
++	 *   shrink_folio_list
+ 	 *     wait_on_page_writeback(A)
+ 	 *				SetPageWriteback(B)
+ 	 *				unlock_page(B)
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index bfc7e8c58a6d..3d163ec1364a 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -28,7 +28,7 @@
+ 
+ /*
+  * swapper_space is a fiction, retained to simplify the path through
+- * vmscan's shrink_page_list.
++ * vmscan's shrink_folio_list.
+  */
+ static const struct address_space_operations swap_aops = {
+ 	.writepage	= swap_writepage,
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 725b150e47ac..e1c352bb026b 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -554,7 +554,7 @@ EXPORT_SYMBOL(invalidate_mapping_pages);
+  * This is like mapping_evict_folio(), except it ignores the folio's
+  * refcount.  We do this because invalidate_inode_pages2() needs stronger
+  * invalidation guarantees, and cannot afford to leave folios behind because
+- * shrink_page_list() has a temp ref on them, or because they're transiently
++ * shrink_folio_list() has a temp ref on them, or because they're transiently
+  * sitting in the folio_add_lru() caches.
+  */
+ static int invalidate_complete_folio2(struct address_space *mapping,
+-- 
+2.39.2
 
