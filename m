@@ -1,90 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C872BD00;
-	Fri, 17 May 2024 09:32:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C832E40D;
+	Fri, 17 May 2024 09:34:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715938369; cv=none; b=ph+uXAZQ7cbLQE/JPP79gKZv6NQYzXYauEdmO4wnGyEsfEonKjYi6rcE4riTkqexHVp0hdRBOaA/1INpWSJIIErPUovuJA9XnwdzC+oqqqjB2LVvI4Sn2n/t1LTdfTL7IBb6iYMWgX29e45dn59f12Q0M+n9OoztNfjQq7KGPDc=
+	t=1715938446; cv=none; b=tYN99cBesEZ27cDs0XFxVXO65PdPV4UzCo1SbW9G5F6faUsz6UqcUVcO8vOSik3eg9MQBwaVD2rqoMRHOyt4w/NdxPSwb8w00v9hCh46Pjy4aDFzAjS2EErJItvXE1fuVOnf+ZHmtyAiN3mHHZsBtXdSB8WNRSj+eG7SssXutyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715938369; c=relaxed/simple;
-	bh=BIeOajTDnTE0oWk2OSRXZfKHkGcTs4mjiK2NQMCf3VY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=aocVbJiPt8+TFZpToHaOsB/dkh9DPsoOQftrzHcj+KhgxetpbRzVK57ivdPwA37J+EW9n7Q5eRQJZrLoHC8WNFeK4CNPBiM405mNFEVgc/BtcG72aUra1hyNKzQizRT3LnC10EJSexLkzXEX/3MnLVO8PWPyqgg9o72mq+aE6yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1Nv9yrN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1Nv9yrN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0D2C2BD10;
-	Fri, 17 May 2024 09:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715938368;
-	bh=BIeOajTDnTE0oWk2OSRXZfKHkGcTs4mjiK2NQMCf3VY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=S1Nv9yrNxdMNqknT7GMWrpBVRpZ1CpK5jotvkS29S8Khz6S2OpYe85lV5aMywTvKC
-	 BS22zRHAHeRH463OmY/3wWqfNsHb9mEehp9uIx5KXiXApSKZBc5CnbTLeFBJbtD99y
-	 bFwQ3q0AoxGszEKw5iNq/XvWeXztQlXP2zu60MI5lFez9PHKntkhv1BFUj5XNKNGf0
-	 QvedZHd3GcSMfVCQ3vZflychi3F3O47N6RT6qbubI0mUkgZ12aWHnNdPZ0a0lWVIFK
-	 lR1nnTenM+DOyh+sRycfbW+4cD3G/qJNBXU5kWmh9fL5BdgeNhWCB1nZsX5Bhw0b4n
-	 wN/qHNX1/1eRA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Brian Norris <briannorris@chromium.org>,  Rafael Beims
- <rafael.beims@toradex.com>,  linux-wireless@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  tsung-hsien.hsieh@nxp.com,  David Lin
- <yu-hao.lin@nxp.com>,  stable@vger.kernel.org,  Francesco Dolcini
- <francesco.dolcini@toradex.com>
-Subject: Re: [v1] wifi: mwifiex: Fix interface type change
-References: <20240510110458.15475-1-francesco@dolcini.it>
-	<171593306296.3274748.4179889716794962474.kvalo@kernel.org>
-	<20240517081312.GA7974@francesco-nb>
-Date: Fri, 17 May 2024 12:32:44 +0300
-In-Reply-To: <20240517081312.GA7974@francesco-nb> (Francesco Dolcini's message
-	of "Fri, 17 May 2024 10:13:12 +0200")
-Message-ID: <87zfsog4w3.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1715938446; c=relaxed/simple;
+	bh=RJVwbXiVXMNHdFgcxkWovVgZblbHMFIR4uz+RoxIR4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kd7ZvDXuaacgXiAM3TlwkI3DV2t02TtpvrN5uWirU21ln41KOgjLIdxfOswXZYA+SiUoEdjxTNlEwCS2bQ9EqzoKw0QtO0k1wgKD9iXfNIi8f9u3jdH44WTwp30P5xdWa2bzv9z07eUfPsUx3den3szWVdOrw4yJS0mLMgfbZWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2945C32786;
+	Fri, 17 May 2024 09:34:02 +0000 (UTC)
+Date: Fri, 17 May 2024 10:34:00 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v2 10/14] arm64: Force device mappings to be non-secure
+ shared
+Message-ID: <ZkckiCiv1kzM0oCK@arm.com>
+References: <20240412084213.1733764-1-steven.price@arm.com>
+ <20240412084213.1733764-11-steven.price@arm.com>
+ <ZkR535Hmh3WkMYai@arm.com>
+ <4e89f047-ae70-43a8-a459-e375ca05b2c2@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e89f047-ae70-43a8-a459-e375ca05b2c2@arm.com>
 
-Francesco Dolcini <francesco@dolcini.it> writes:
+On Wed, May 15, 2024 at 12:00:49PM +0100, Suzuki K Poulose wrote:
+> On 15/05/2024 10:01, Catalin Marinas wrote:
+> > On Fri, Apr 12, 2024 at 09:42:09AM +0100, Steven Price wrote:
+> > > From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > 
+> > > Device mappings (currently) need to be emulated by the VMM so must be
+> > > mapped shared with the host.
+> > 
+> > You say "currently". What's the plan when the device is not emulated?
+> > How would the guest distinguish what's emulated and what's not to avoid
+> > setting the PROT_NS_SHARED bit?
+> 
+> Arm CCA plans to add support for passing through real devices,
+> which support PCI-TDISP protocol. This would involve the Realm
+> authenticating the device and explicitly requesting "protected"
+> mapping *after* the verification (with the help of RMM).
 
-> On Fri, May 17, 2024 at 08:04:24AM +0000, Kalle Valo wrote:
->
->> Francesco Dolcini <francesco@dolcini.it> wrote:
->> 
->> > From: Rafael Beims <rafael.beims@toradex.com>
->> > 
->> > When changing the interface type we also need to update the bss_num, the
->> > driver private data is searched based on a unique (bss_type, bss_num)
->> > tuple, therefore every time bss_type changes, bss_num must also change.
->> > 
->> > This fixes for example an issue in which, after the mode changed, a
->> > wireless scan on the changed interface would not finish, leading to
->> > repeated -EBUSY messages to userspace when other scan requests were
->> > sent.
->> > 
->> > Fixes: c606008b7062 ("mwifiex: Properly initialize private
->> > structure on interface type changes")
->> > Cc: stable@vger.kernel.org
->> > Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
->> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
->> 
->> BTW I removed the Reviewed-by from the commit message, I don't see the need to
->> have both Reviewed-by and s-o-b.
->
-> Sure, I was in doubt about this, in the end I added it because I have seen
-> this done in other subsystems, e.g. commit 6a4020b4c639 ("drm/bridge:
-> tc358768: fix PLL parameters computation").
+I'd have to do some reading, no clue how this works.
 
-Heh, yeah we all do things a bit differently :) In my view s-o-b implies
-that you have reviewed it as well but clearly not everyone think the
-same. I'm fine either way, this is cosmetics anyway.
+> > > diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> > > index f5376bd567a1..db71c564ec21 100644
+> > > --- a/arch/arm64/include/asm/pgtable.h
+> > > +++ b/arch/arm64/include/asm/pgtable.h
+> > > @@ -598,7 +598,7 @@ static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+> > >   #define pgprot_writecombine(prot) \
+> > >   	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_NORMAL_NC) | PTE_PXN | PTE_UXN)
+> > >   #define pgprot_device(prot) \
+> > > -	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN)
+> > > +	__pgprot_modify(prot, PTE_ATTRINDX_MASK, PTE_ATTRINDX(MT_DEVICE_nGnRE) | PTE_PXN | PTE_UXN | PROT_NS_SHARED)
+> > 
+> > This pgprot_device() is not the only one used to map device resources.
+> > pgprot_writecombine() is another commonly macro. It feels like a hack to
+> > plug one but not the other and without any way for the guest to figure
+> > out what's emulated.
+> 
+> Agree. I have been exploring hooking this into ioremap_prot() where we
+> could apply the attribute accordingly. We will change it in the next
+> version.
+
+pgprot_* at least has the advantage that it covers other places.
+ioremap_prot() would handle the kernel mappings but you have devices
+mapped in user-space via remap_pfn_range() for example. The protection
+bits may come from dma_pgprot() with either write-combine or cacheable
+attributes. One may map device I/O as well (not sure what DPDK does). We
+could restrict those to protected devices but we need to go through the
+use-cases.
+
+All this needs some thinking, especially if at some point we'll have
+protected devices. Just hijacking the low-level pgprot macros doesn't
+feel like a great approach.
+
+> > Can the DT actually place those emulated ranges in the higher IPA space
+> > so that we avoid randomly adding this attribute for devices?
+> 
+> It can, but then we kind of break the "Realm" view of the IPA space. i.e.,
+> right now it only knows about the "lower IPA" half and uses the top bit as a
+> protection attr to access the IPA as shared.
+> 
+> Expanding IPA size view kind of breaks "sharing memory", where, we
+> must "use a different PA" for a page that is now shared.
+
+True, I did not realise that the IPA split is transparent to the host.
+
+An option would be additional DT/ACPI attributes for those devices.
+That's not great either though as we can't handle those attributes in
+the arch code only and probably we don't want to change generic drivers.
+
+Yet another option would be to query the RMM somehow.
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Catalin
