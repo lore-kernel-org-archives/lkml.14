@@ -1,157 +1,139 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E988472;
-	Fri, 17 May 2024 06:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715927534; cv=none; b=BCXxgsquqE0g44NHfOw+MDAPhV27R2R6yx7jmRcmXkVUFMFF1/73i1BGD+2VEvKAOnnT8O7YawGKuBBQMOY17CGXxYhiKHElQu6UZnd5mvu/Je1ltTYiNl9rUrojZ0lPXcHH1GLPboVX3B8M0WiSPGiI/WfvmI3vSFmZGHuUuJg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715927534; c=relaxed/simple;
-	bh=SAb9BPrFdCY6bm78BVJ5rnJLzeV2qvsVCBYu6rx2eq4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmWOC0x+c/ECEfEGKOBUqN/9wvR1hQo72wOupC70bNHiGnaFTNT0bCLoCNc6jKHSeZ72SIrNt0Ajxt+87O3QFCkKO5Angh9bTL3bW+dCq31xAOQO61894wPmO4pLG9xhjbq2+w+O1KYye/s0fOZOn5wXsxaO2Yybju6F6lSyWps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=OcB2CdCM; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="OcB2CdCM"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1715927528;
-	bh=+tnHjAdOwn7MTvQ9Izy5ZraLSNprRXQmhSoT/2DAs2U=; l=3581;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=OcB2CdCM3Q2KLqdKTI/5YvcUYvx+1AmRoZ5uqDDtoYGMDU8KgxcUnO0USl90U22Eh
-	 v/bYFrW9wfaQFMgzOmR7CvgihC2U2s+6e96385J02T9fZCjvegWL3zZiXzR4aW0I9k
-	 wLdQR7apFBu33YENd6r6s2MOJlCwXzk8buPflw0PH7+eWZXiC79LpYGmddAerXDxRE
-	 20mXdZ+yyXbSIbpal4fHv+Ig870lSvzQDQn3umwhjzaU+uNiK1JDmB3zmHcVlTlIme
-	 x5rM6cXdrZLrbnHTu0GWQF5v8fQYpwIg6Mpno2DhCjHjxIcwymoqUtOn29uQF95EOB
-	 8Ab+bj/HG6b+A==
-Received: from 192.168.10.46
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(3213210:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 17 May 2024 14:31:50 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 17 May
- 2024 14:31:50 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 17 May 2024 14:31:50 +0800
-Date: Fri, 17 May 2024 14:31:50 +0800
-From: ChiYuan Huang <cy_huang@richtek.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Daniel Scally
-	<djrscally@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
-	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: v4l: async: Fix NULL pointer when v4l2 flash
- subdev binding
-Message-ID: <20240517063150.GA12245@linuxcarl2.richtek.com>
-References: <e2f9f2b7b7de956d70b8567a2ab285409fff988b.1715136478.git.cy_huang@richtek.com>
- <ZkXi_U5Js34dUQsA@kekkonen.localdomain>
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2101.outbound.protection.partner.outlook.cn [139.219.146.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B134404;
+	Fri, 17 May 2024 06:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715927609; cv=fail; b=gEy/DIlzoAVtj83MuqC8lwQU//wbhvfWkJ7F2cbrTq+AfTfCp1yvqmE5p1rTckqiYegk4hfOJYnGBAP6B1YNXgbLBnZRMum0IJcLDBdDWm+8x3nshBKhBgiY8V5LsPH/HTl3eXQYOIxAEkBaFk2zvAlraP5uOTxseIHIgHx5ews=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715927609; c=relaxed/simple;
+	bh=r2UqC70KrqVWdlWdqPn6KKzkK9izA845qtEZiHrGBQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dMe3WSytWSvhSG0H8O5Jgxx2JpAm+2Ngw/PfAJL9Cg/9bd90/i3QgJA7pvxBQuT4M3iwuWA3jcaOdlb160vOq5SlltBf3PBaM42UlcmiGhA9v42svCLP1NcffgSHL6TFD8Eg5NzG6RcADmSLUSoSBrtyGDkdORqsxXvb1pc+f0k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nCODFjQCIsci/Z4lW129bxNA4JNL2Y8qI/Onr3T3sf6Llhhj+/8RJz+1rQy1EOIiBAnvnbgPeMXY02vAn9915kgw+xhXFdZWRFfVwQxtv9ppMsTUqLf+WrErh65VlNigZYrlKtzgJtsdBXDvGwdQ2BAmLAEyAPVZEjwqQpZPTJQ2Zw7svkc3ZPJKiS7gwK7ACv/9cfm1Afm4DqIiIwvb+7JQnTDwQU2jO5e23p3fBRhoGrTZM9GS1wUyCvrZlv0MQTXLiky1sX9Pr7X794k5rrHJ77SsUGexWwDZpJxE+9mw2s9+ZtOL7yODVPKRK6VyCLQludlSQ+3fWkv6BeMSzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i6Tih7vkpntM2JZIpBPkQty3njo7thVYiUmFvqckrJg=;
+ b=Ko4WgYMRK2hAn/BDOLE0APa3DaXUPTtPZxH+NjNIU46YMT8nieWla4I7WnXMHAp5KT5LhOVDBWwoHhx0I6i6gKcvcph1e+tzWqmDaVHfxfmNUU5BC5aKuMJVA5Kbjus6zhquKHaLjUAvlNWf0gC85FhM1YYKn8zZq7UWXf52AzoWEUMlcaH0UdJAu8WcVLo/fGLkB6NPhBg0WYZozCLe5EZFaPtZ94V5Gu6uEhlF+1Doib3H4fBhsfdwElq0slBQOEU12TQOs+u8GwZkPf62CPJIE3sB+1hjKzuzMvNqa8dWbNUjbLJ09o/KjYfTvzEF8D8O7QEfMQQ3zYSql5mYOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14) by ZQ2PR01MB1164.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:12::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 17 May
+ 2024 06:17:20 +0000
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::5de:15b9:3114:4f45]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::5de:15b9:3114:4f45%5]) with mapi id 15.20.7472.044; Fri, 17 May 2024
+ 06:17:20 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	devicetree@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Add the core reset for UARTs of StarFive JH7110
+Date: Fri, 17 May 2024 14:17:10 +0800
+Message-ID: <20240517061713.95803-1-hal.feng@starfivetech.com>
+X-Mailer: git-send-email 2.43.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SH0PR01CA0012.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:5::24) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZkXi_U5Js34dUQsA@kekkonen.localdomain>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1164:EE_
+X-MS-Office365-Filtering-Correlation-Id: 122dd484-3aa7-4ea1-9d9e-08dc76390266
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	hWfM8a5fXU4LW3XsisYOSgk/3HMoLkZZioTuTxgC1pCrju/bhegNAxbrzJmhmufXrfFgvPmOiKmmsG78nzKFR7RWJQDQ/+M/D99HceIiM8LYaCwZCJozKUASjubMyoy/r/DGwYfhr8/MNat+7JL/Y36gzz3ZCwhJro+1wdlEWRIPA5oblLs1WVa8nOo1gXEKx2U9mZ0VTgZxCPhAeB1kwnXko6swoSnQQ4l+AtKBtXdYqUyvIxQWDWqlOmHh2aPxvX/LlSukEJgbVDl+SLdQSGNI+qoZVH+vaP+s3LpxnjQEMA1IkoWRpsX9bEzexikZjZx71nNzT9jf6sQrY7McjCO8JYDz0JaKclq8Ht6SwuOGrSR8rLwktWSARbjGYg6BxlGV+EHcxG5ZpCh3LTwvTOAovGAF5Mw4YODJ+6dPbTOHKT3Rjbr7w/QgedVKxl/uT+UWnSe/NE5v6cgJUI/5eLxmsybjGKqDV0zHdNrxu1gEI1JPQwPSecZRx5oieElqDOEAn5slqoEAmRYDwbOTlwlIIkS9sFczPtFPMKdH2jcMnt0iIMtmyXpVKKuDmOdic3PEUZ4Z596wBTd8a28yhUDa/2tuOiGTFTX6EV1jAgLSkiYGKG4HuetRu1nxfKYwrJ/LobMLf6X4+INFyU3v8Q==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(41320700004)(52116005)(7416005)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?1iuc1zH1FwWBYrukmDJksmVdpYMt1ZQmHhFYaxzZ5+hMhsnxjothO9cC5vW1?=
+ =?us-ascii?Q?zsXqTtzuO4UIhWPHLpnXADvytb0jenFs4TeCf45bniQA6aFLm0Zz8OtNb0tM?=
+ =?us-ascii?Q?AQf8rwQX+y4BxI5OrGaqKdVU7NWQZz2/uFBehRG8SM1fZxaKR4JPbCDXJKLj?=
+ =?us-ascii?Q?DDSi6zKdj4YdoNDfOIs+eAhn0S7oEqhx1XGBt1osAE0e7dELD+zxpzfCUMtD?=
+ =?us-ascii?Q?gYXNOe+lS4yGu4vl4tFCyY2YdKkymKBxUxU4E4pm8dmLhI7ND9Xka1L20RE3?=
+ =?us-ascii?Q?xGvnhzHjHIV2HXmXBfdZ6l7KHYi+pwX967kMCtY/lrVzB5SoHnTh5HmZyPWA?=
+ =?us-ascii?Q?/9H9bgWA0O/udk4ngASk/Jsap4wPsv2MSdRaWB4yW41ifrkfCaM/PooNxLo8?=
+ =?us-ascii?Q?hP5ylDehlwCENS0pdk2MZ8D3m0N1Gv1UU+DZoA5edxED6KtOrdZ2bCdqTmzJ?=
+ =?us-ascii?Q?T9nbbEb/rbu55v7fchBaWbaWWOo4++Nb3xkLz1hheCvmoa60jPA7rOn7Qd1c?=
+ =?us-ascii?Q?4CymywW0ja7N2fKBHkDPFSZut6I/oics3XKsvWz7+jLMBwp1s6r9beLq70yj?=
+ =?us-ascii?Q?FZyD03Fn55Td+ri6c6JpNJ/O6V9kqYeCRqZgTL9xpETDfgPlcxvasD63wu4P?=
+ =?us-ascii?Q?aExhYb3oyUY8pH9eQH260+K/CDBAe7zXvo6I3becl3/w9wFkW17IvKLwFcr+?=
+ =?us-ascii?Q?UsgonJU00YaaWu71pV1hVfDsCy35R48RorxEmNovJoa8TPAR8/ViXHVNzSt3?=
+ =?us-ascii?Q?Vi7MMoEwnAP6bnvwZJNSxeC5PUaWzuKpFEMKdQyoiUHsC600psJZuJhySDMi?=
+ =?us-ascii?Q?56KGh7//y6WhlrdGTc3hKIDJvQZozpAAoOcK8ueCt2KitjkeXoaq1KyIkc3q?=
+ =?us-ascii?Q?lKxQQYALPvRfHw7tguG3Isw0+U7d6oI/WcdmIQC2YJSrurpFhCuAetDCj7Qo?=
+ =?us-ascii?Q?JOIrLE7p9qe16Ft7Vkx8TiexJ1puJRdpFiJNuIWYPxZ/okWrs58h7IqDwvow?=
+ =?us-ascii?Q?OUPuop7VkEznU+RdTIJmZvZbh+k3iz1XhJi56+LRmTfvUxQA5Yw2MgOU2v8M?=
+ =?us-ascii?Q?iikX3Ezry8wd7MtQx4RhJFErNns88wnERLyeTp90YWLg/VTatzb4MqYn4fFW?=
+ =?us-ascii?Q?wsBKV5Zbc8t+3qKZsQ6C4hOqe/ZmPcLBavcS1M63P+ZD7s/YQq09/PpA9CNj?=
+ =?us-ascii?Q?IMWGrOxxs6ItVyB/giOd5sFFZubB4r3AtGNEPdThPWSi1ouiKIRTguoHD0S5?=
+ =?us-ascii?Q?7XytG1IvJ94dKdIlUoda0kT51GFwGl0GUUEIZA/uN4uZYJhF3vHVb6BSZw+g?=
+ =?us-ascii?Q?tmD+OpbdV3F3M5WQvjEZzD9Cc0SCX1i4JNFkKgjJcdy8Ei+GsHwPJTcYYF2n?=
+ =?us-ascii?Q?Rmb/ylkkzvI3GoWDbNhaPnCiF4AG97MkHfzBLkm4JaI7j1W8ctUOG6JeGqDQ?=
+ =?us-ascii?Q?LV+OC2D7zH0aqjaH4ZWJznXIdqgWbXBD+Plb+4H3s7VR7JZ9bmWOGn5snTcy?=
+ =?us-ascii?Q?NI6UDz8MWQ9U39ORCTQmjAk1R9KUxe61DqTK8VPXf+5M72kQ+ewIlFeBDTy+?=
+ =?us-ascii?Q?7ThFiDgjseCWYPn8/iGMWL4z5yaGw8B1n0xQdYAxRr65KMg3W3R5BjJtIVio?=
+ =?us-ascii?Q?+w=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 122dd484-3aa7-4ea1-9d9e-08dc76390266
+X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 06:17:20.6574
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MR5VcgBhUz+QiaSRKnFCFFhioWZqmIGbASIrx9+CZGQDj9BDAM9sbx9Bc/7h/+diVgXHkRByuvLykmc2NEMsObMtFMQblAfKcynNvZtzYrY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1164
 
-Hi, Sakari:
+The UART of StarFive JH7110 needs two reset signals (apb, core) to
+initialize. This patch series adds the missing core reset.
 
-	Thanks for your reply.
-If any misunderstanding, please correct me.
+Hal Feng (3):
+  dt-bindings: serial: snps-dw-apb-uart: Add one more reset signal for
+    StarFive JH7110 SoC
+  serial: 8250_dw: Use reset array API to get resets
+  riscv: dts: starfive: jh7110: Add the core reset and jh7110 compatible
+    for uarts
 
-On Thu, May 16, 2024 at 10:42:05AM +0000, Sakari Ailus wrote:
-> Hi Chi Yuan,
-> 
-> On Wed, May 08, 2024 at 10:51:49AM +0800, cy_huang@richtek.com wrote:
-> > From: ChiYuan Huang <cy_huang@richtek.com>
-> > 
-> > In v4l2_async_create_ancillary_links(), if v4l2 async notifier is
-> > created from v4l2 device, the v4l2 flash subdev async binding will enter
-> > the logic to create media link. Due to the subdev of notifier is NULL,
-> > this will cause NULL pointer to access the subdev entity. Therefore, add
-> > the check to bypass it.
-> > 
-> > Fixes: aa4faf6eb271 ("media: v4l2-async: Create links during v4l2_async_match_notify()")
-> > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> > ---
-> > Hi,
-> > 
-> >   I'm trying to bind the v4l2 subdev for flashlight testing. It seems
-> > some logic in v4l2 asynd binding is incorrect.
-> > 
-> > From the change, I modified vim2m as the test driver to bind mt6370 flashlight.
-> > 
-> > Here's the backtrace log.
-> > 
-> >  vim2m soc:vim2m: bound [white:flash-2]
-> >  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000058
-> >  ......skipping
-> >  Call trace:
-> >   media_create_ancillary_link+0x48/0xd8 [mc]
-> >   v4l2_async_match_notify+0x17c/0x208 [v4l2_async]
-> >   v4l2_async_register_subdev+0xb8/0x1d0 [v4l2_async]
-> 
-> There's something wrong obviously somewhere but wherea?
-> 
-In vim2m driver, I added v4l2_async_nf_init -> v4l2_async_nf_add_fwnode_remote ->
-v4l2_async_nf_register.
+ .../bindings/serial/snps-dw-apb-uart.yaml     | 14 ++++++++-
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      | 30 +++++++++++--------
+ drivers/tty/serial/8250/8250_dw.c             |  2 +-
+ 3 files changed, 32 insertions(+), 14 deletions(-)
 
-From the async flow, in notifier complete ops to create v4l-subdevX node for the 
-specified subdev.
-> A sub-notifier does have a sub-device after the notifier initialisation.
 
-Why? Are you saying to the notifier can only be used for subdev and subdev binding, 
-not v4l2 and subdev binding?
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+-- 
+2.43.2
 
-But to create v4l-subdevX, the key is only v4l2 device and its needed subdev.
-
-> Maybe the initialisation does not happen in the right order?
-AFAIK, Async flow can solve the probe order and makes the user no need to care
-the probe order.
-
-From the stacktrace, I'm pretty sure it's not the probe order issue.
-> 
-> >   __v4l2_flash_init.part.0+0x3b4/0x4b0 [v4l2_flash_led_class]
-> >   v4l2_flash_init+0x28/0x48 [v4l2_flash_led_class]
-> >   mt6370_led_probe+0x348/0x690 [leds_mt6370_flash]
-> > 
-> > After tracing the code, it will let the subdev labeled as F_LENS or
-> > F_FLASH function to create media link. To prevent the NULL pointer
-> > issue, the simplest way is add a check when 'n->sd' is NULL and bypass
-> > the later media link creataion.
-> > ---
-> >  drivers/media/v4l2-core/v4l2-async.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> > index 3ec323bd528b..9d3161c51954 100644
-> > --- a/drivers/media/v4l2-core/v4l2-async.c
-> > +++ b/drivers/media/v4l2-core/v4l2-async.c
-> > @@ -324,6 +324,9 @@ static int v4l2_async_create_ancillary_links(struct v4l2_async_notifier *n,
-> >  	    sd->entity.function != MEDIA_ENT_F_FLASH)
-> >  		return 0;
-> >  
-> > +	if (!n->sd)
-> > +		return 0;
-> 
-> This isn't the right fix: the ancillary link won't be created as a result.
-> 
-Due to the notifier is created by v4l2 device not subdev, this 'n->sd' is NULL.
-The NULL 'n->sd' will be referenced by the next flow 'media_create_ancillary_link'.
-
-Or is it caused by the wrong usage? 
-
-> > +
-> >  	link = media_create_ancillary_link(&n->sd->entity, &sd->entity);
-> >  
-> >  #endif
-> 
-> -- 
-> Regards,
-> 
-> Sakari Ailus
