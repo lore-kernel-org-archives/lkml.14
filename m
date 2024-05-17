@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7744C2E65B
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FE53A8EF
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 09:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715938292; cv=none; b=Dz3DIfMFXdbI2So9sLc9P6/MJePVQu4TOB2TdT/xVp7LPUdcL/2ZaCEHR8bJt4TvcmbSC4maxdfOlnisOIR5BszNjOjUnQcG9JOqFap+DZrgYF2/D+RiWTQS1AqIL7RnV8cYV+rw9j0Wk/69A1ZhHXHumCnxJgS0/sNCNf3rx3U=
+	t=1715938299; cv=none; b=BFOhxZ2INJ9eM5Zvj/7lvmuZuuCPS3DLSjEyl3HGbinQtteWgZDK+P96gxWpM/iaIMiZU1AfAR7kr2HyLCOIKUXVWOG3w9Jz+N8WEJNrWkd0xpcWQHjTzSdHSeErq7N/HMzW6IrIJUSEmfoAogKa/3WWNfybOFMeVMqoCRHEzRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715938292; c=relaxed/simple;
-	bh=aeDZ5/WJiHjEiF4UH6hboVPOjxNA69bgm3eiTRgYmfw=;
+	s=arc-20240116; t=1715938299; c=relaxed/simple;
+	bh=LdIB77NeyaomUc46ppC8snyiFFs+yu8TNQrT9MsZdX0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OX96kC3uh0/WlPBgpMW0xfZdz/c/Gcng18oKq0gtEnMOxAVXW82fc7VW1la87kiLztgTmu1xc80nC4u6IyI2OGBenxYcIyEVijIi1hnGlOlqiP5Wz4TKX8KoZq+0CpUEDSvPa3eRlH2DONhS59kELko5VIAudgcHHa5BibUSTY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wTHS//Pv; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=HAMqXpRisxtjKE3xnfwgOHJgyhPFwcsb8pJVpoGmolT33a8xzwA2rVsHvMBZf0yY5bUPkf2L/VUePNw0RXY55nVdJqLI7nEJ5LefCkD/YykhIaZYGsimasFnn0pXrE+z6Dr+ZRIOOLr5JhDZ9Pfdsw/XR5Ax5s4cUIDYirZVAqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cB/ka3iD; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTHS//Pv"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de615257412so15657307276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 02:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cB/ka3iD"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-622d157d9fbso98683027b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 02:31:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715938290; x=1716543090; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715938297; x=1716543097; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FoM0hENjKLBpCTA6LD8LoCEIVh28wUrtYe5zjuUaY20=;
-        b=wTHS//Pv9aS0HMrNUFIYFIxCoomkKone3teSU2eV9hyWdrj94qJBB9PDDVHvRAYH6t
-         XBBRV82x8cnApte60YxVTnlhtzCfsZ5DT6qc3r/kQUtF7YSEZvaLKFmlYwvt2UhGX6io
-         /VTHczQSCw2iQTgUCnpW7Ij7IC+pz45XpNG7OvHn8VOD96Te0OL+U+p7tBteeM+CQZKE
-         4pqK/h1Tms++WMg99fN/GMiLGNLLoW9x877V0YVI73wPseKVJw7HGospEbe5AGyaLdE9
-         jb7p/hYGJIHG2pceC4jYP3DwYDRMMrikayR6ucVOAZB0a1zQwwFqbEQgp21OLHXqE4Fw
-         tw1A==
+        bh=tPzgy3HpSmlXL37WBxWgC0/HBG+zHL2ujfWtVnQfaJY=;
+        b=cB/ka3iDGZ1iLT5J3FZd/urRcAXVvc9WBSZ2pfdtOkeJU5blKMdRUa5NjxncgLIKfp
+         IafJcTqYkZQopwNme50PlWYwVuGUA7efq+NsTKQ06Ql3BgaPNs+E2HMvuPM8ymawv236
+         sP8EYF9Lr7ia9KBRzNNnLw9gGDytb1QaitbL4wLPMvTLt2qZvWQXnAcGsPukIR/fkUVE
+         t+E4m+NO9lRybgZMkKvaUsHbWeigkPQRgGKoI6W9HuU7ykmUpGl35qMliIHh9ZI2gQNr
+         r1QGShUyMNmmBMAd7jE4tsWYiQE7NCyzzJWBPVPNMLMtmrOPmXyx8HPHlOPMXmXWgoqb
+         mXig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715938290; x=1716543090;
+        d=1e100.net; s=20230601; t=1715938297; x=1716543097;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FoM0hENjKLBpCTA6LD8LoCEIVh28wUrtYe5zjuUaY20=;
-        b=CpzpBse/SjSnibu1SXh7xi02keuK99/Ze1v0seGRjyDzxCakkXx9B3looFKNTT9BX3
-         Rjk7iftqMFze1WIUVGBMPNaShR5Bmd/nSMa5BqAj94k4VoTDCxUx8P+0URuC2UDHZZIe
-         D6JO9jcp+woKf7jLHPZNpRHD+yDsXYw8qqIgCPjq4982STmrRjXmcjkuiWqcE+6wfE0Z
-         rk2kZjZg9LF42NiUsIX6qN5i+t98+YUDnvdppw2kah1pZw/D7eQEsW6VhGPs2bBYtQkm
-         iG5nzVr0YcL/F+c1cUYyyTs2kt4S1ZpoLNidLUVwI7+cNYKgEjv1UiSvV3lUowl5vT8A
-         oD4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVwYouIVeXgyOILvAPdPaOXACa1NWHykFxT1sijMra41fMWDMF+BsoSltN547MlRWvHJJ8hBJTmSBYADeE1uB4VWbstD1GQl9r9vnHt
-X-Gm-Message-State: AOJu0Ywzb8uLtN1ue3H5WIRCBSGn2Pd3WvIzD2Z0MM34M+uKho0HnAdT
-	kUV3lSlkoK79Get8tX4Mt+UGzQMXyd47BVrRjuhUKTV47JzdeB+Ioum8PNjLAhfQUDOGqKwcKOx
-	aZQU6H0HcoHtveQ==
-X-Google-Smtp-Source: AGHT+IHqZFQYWseUZbrAsp2HKPq882M8bbzO/ZeWgfL3ka1KdvfqLDDlOcmyC8pxOd0YlXBUEA0l6P4hkzYI+KI=
+        bh=tPzgy3HpSmlXL37WBxWgC0/HBG+zHL2ujfWtVnQfaJY=;
+        b=qg+pswCFKSQeCT3vme23lDP4ZCkj4mupNU76Zh8p3LhSgeSeAE5xM5uK54GxpVi3WS
+         Zx0E3rkAk/Nxn2LGQr50YwtO0RjJDxqgTIYxGFtB36JPMFDstL0+0GAOdm7XbQpfY2SP
+         3nXiX4wUmFnKWHoC62NgUwL9ykode8ryCymZGpokHd5PcD/1H4Bl7SdqqV2DxaLD995E
+         ydl/r5zbq3nFbk53kHh0zF9m7HCCiRAxn1a9/z/WExiyYz5P1EZjD+H+6XZkEUmnOelU
+         /27uy0kqEvnrDFKSLKDzSTJWIQRfPGSHboIwQEC3vLBtdLRyDzGUug33axqPBunWfEyE
+         XaLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmckwVd7ONTjXEkd23SmmHwP2iBmqkFFPy1OE3MxIhS+l/bEFt8LoUYY26Ae5CxQi0HIqjUGzJtgKATv5OQvD1K33RSvquWc34VpVC
+X-Gm-Message-State: AOJu0YzEy8LrYMC95qCyYMPPN6jUcZ30CSjGT01dLOowV7oq+/qft/Em
+	ApassPS3vvA/ckcUCajPXZ6ieq4/WzMLmM+UvqsXbN/rI00/CbtWWy95c3hfHCuUAPfGVQn5pDl
+	94hbQAcKe1qKj+w==
+X-Google-Smtp-Source: AGHT+IF40DOuPn7g5Zhk/+NMMJKV5nEt7pY8RzYw1vCxH4uDwznUvDK1G/jYfvrUMpHASYon+pqYRZd6O/Htsog=
 X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a05:6902:120f:b0:dcb:e982:4e40 with SMTP
- id 3f1490d57ef6-dee4f38b7cbmr5719897276.12.1715938290507; Fri, 17 May 2024
- 02:31:30 -0700 (PDT)
-Date: Fri, 17 May 2024 09:30:35 +0000
+ (user=aliceryhl job=sendgmr) by 2002:a05:690c:4508:b0:61b:e1cf:44f1 with SMTP
+ id 00721157ae682-622b0169688mr44445737b3.9.1715938296767; Fri, 17 May 2024
+ 02:31:36 -0700 (PDT)
+Date: Fri, 17 May 2024 09:30:37 +0000
 In-Reply-To: <20240517-alice-file-v6-0-b25bafdc9b97@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,22 +59,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240517-alice-file-v6-0-b25bafdc9b97@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2386; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=aeDZ5/WJiHjEiF4UH6hboVPOjxNA69bgm3eiTRgYmfw=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmRyPlD7Oe7kOoxP0nNZ3unp+A7N+q81ujbarxp
- ByY9LWIQQWJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZkcj5QAKCRAEWL7uWMY5
- RoVpD/9ZGmHXHgnq3gdIVS7E2I7522L3OwFyacELzf4GgQe4FbsWhm2hwa1CCs9GO94YVSqSzzD
- bv4Vk0eWQgQLr4h0oAaVyw8rcj3SwJePix4BpX63h/NFtNAuraN+9eGlpeqMAp5AuFngvODxmVL
- dfLiimUZFfADSAbdm76cegTNXh/UMFt6oAyMo4eEeQlzZu3nN0UFBT7/4mjVbEv75zPUcGtEhb3
- Cv+BZpiM6Hndk/ARU8mqLuS3/Z9imkpCHUGRcPMomKNNmu9lawhjWE/1sEdyRvrhO+r1sVlEhWS
- tCQYqKrwl1J99laLFjWSXbh8IcTMIWHBNW0jCAeRNTcLta3610181saMhwTpEnS2Mzh9FhtWvJ7
- pA/WDvWQgXMRM/ey/5rLOnCb93KR/GP18WH+pITYarWVVpbT9z0fIc+Hes5gP5zU/l97qE1vFbu
- wB7gaBBja7R5xELsYsJJZXR8I8fw9UB3/IpUEsEEYSsCaRy4CmdWMCo5lPw3+d13uHSSzwnwkSI
- m6/2UM3Bk+ejNVi4qoY41mE4OPADCNI/rKIgbAxw/WaNyW/5x0kJ13+YJo3y5fbSU3KIcQuWZkP
- uvr4VQWsTjIM3qMull44hNghLKpkYC7D4WtGUQ9OlVUzeQ6BdnDvhAN120FwdV3B8Yg4r5KQWF2 YGeeTkqAHc3xJ+Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7105; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=lc5ywLvNlny94cApSheat/BbQx7cOU6X8daJ8HVy+3k=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmRyPmg2zMas1P7RUy7B2v/Uq2gYT8ZjdNwz/Rh
+ ZL9HlUX+KWJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZkcj5gAKCRAEWL7uWMY5
+ RkETD/4/hjPwhG4iYZbCt1tNX3bVjZ2/Zrp/2SjqSvPZt75tydua9OYhMXCERbSdmXQLVr2P+u/
+ l0dUry4T208bD/D5K9v/plmzxccQl0V8U/V4/7hyery8JfdHymtT8Us3ejE30OUPgNrlyHU2X8A
+ +sdDTmI9JxkyJRpwIFN6v8njUzlTYw1an1n/ulcyg0Ukvp1jd6pk8i8saPbIbmbmxaGVH/T/wwQ
+ K2LXp+yJRr6RIL9n5R+G5EJGI3IYWlA8gwZF420RIumJPxOov3OF6p83/tnfs3rvSFFTd/6o8D2
+ 8Ruf/S9g/Th/B9AwkjFNGPFQ+CKQ45gD3KIi/8QsGJUjg87eGMnopRAFiyZpOoYopUjhc0WSPL9
+ RlCndHQDn4qg6Sa1+IVOh4ehUEIceiHShHijjUeVxsx932OMJYt0Ybo2WrZExxHnwquSyw8Pri2
+ PEchNAtI6wuRP4A8dsqmn7qt4y8NOI+Q2FyhBQIUEwQceBJzdY0v21Idz/GWakqynAMBRGNBKJ2
+ nY/PT54Uk/DP3eetuGAW+XcxGDdn6atEU7ZanNgscKYsr0z/BOltDdg26Lx2k2FkQkvMIWdJ54b
+ NGswUk7sqjUfB/Y3qAv1SZc3F/QjHC4CQf2rAjdos53P5/h0k72yitYhI7TiFs4Ej0E0cf/Tiz8 7JtRzrCa88xjZOg==
 X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240517-alice-file-v6-2-b25bafdc9b97@google.com>
-Subject: [PATCH v6 2/8] rust: task: add `Task::current_raw`
+Message-ID: <20240517-alice-file-v6-4-b25bafdc9b97@google.com>
+Subject: [PATCH v6 4/8] rust: cred: add Rust abstraction for `struct cred`
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
@@ -89,65 +89,200 @@ Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>,
 	Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, 
 	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Trevor Gross <tmgross@umich.edu>
+	Trevor Gross <tmgross@umich.edu>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 Content-Type: text/plain; charset="utf-8"
 
-Introduces a safe function for getting a raw pointer to the current
-task.
+From: Wedson Almeida Filho <wedsonaf@gmail.com>
 
-When writing bindings that need to access the current task, it is often
-more convenient to call a method that directly returns a raw pointer
-than to use the existing `Task::current` method. However, the only way
-to do that is `bindings::get_current()` which is unsafe since it calls
-into C. By introducing `Task::current_raw()`, it becomes possible to
-obtain a pointer to the current task without using unsafe.
+Add a wrapper around `struct cred` called `Credential`, and provide
+functionality to get the `Credential` associated with a `File`.
 
-Link: https://lore.kernel.org/all/CAH5fLgjT48X-zYtidv31mox3C4_Ogoo_2cBOCmX0Ang3tAgGHA@mail.gmail.com/
+Rust Binder must check the credentials of processes when they attempt to
+perform various operations, and these checks usually take a
+`&Credential` as parameter. The security_binder_set_context_mgr function
+would be one example. This patch is necessary to access these security_*
+methods from Rust.
+
+Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
 Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/task.rs | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ rust/bindings/bindings_helper.h |  1 +
+ rust/helpers.c                  | 13 ++++++++
+ rust/kernel/cred.rs             | 74 +++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/file.rs             | 13 ++++++++
+ rust/kernel/lib.rs              |  1 +
+ 5 files changed, 102 insertions(+)
 
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 278c623de0c6..367b4bbddd9f 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -97,6 +97,15 @@ unsafe impl Sync for Task {}
- type Pid = bindings::pid_t;
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index 541afef7ddc4..94091cb337e9 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -7,6 +7,7 @@
+  */
  
- impl Task {
-+    /// Returns a raw pointer to the current task.
+ #include <kunit/test.h>
++#include <linux/cred.h>
+ #include <linux/errname.h>
+ #include <linux/ethtool.h>
+ #include <linux/file.h>
+diff --git a/rust/helpers.c b/rust/helpers.c
+index 5545a00560d1..56415bce8af0 100644
+--- a/rust/helpers.c
++++ b/rust/helpers.c
+@@ -23,6 +23,7 @@
+ #include <kunit/test-bug.h>
+ #include <linux/bug.h>
+ #include <linux/build_bug.h>
++#include <linux/cred.h>
+ #include <linux/err.h>
+ #include <linux/errname.h>
+ #include <linux/fs.h>
+@@ -164,6 +165,18 @@ struct file *rust_helper_get_file(struct file *f)
+ }
+ EXPORT_SYMBOL_GPL(rust_helper_get_file);
+ 
++const struct cred *rust_helper_get_cred(const struct cred *cred)
++{
++	return get_cred(cred);
++}
++EXPORT_SYMBOL_GPL(rust_helper_get_cred);
++
++void rust_helper_put_cred(const struct cred *cred)
++{
++	put_cred(cred);
++}
++EXPORT_SYMBOL_GPL(rust_helper_put_cred);
++
+ /*
+  * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
+  * use it in contexts where Rust expects a `usize` like slice (array) indices.
+diff --git a/rust/kernel/cred.rs b/rust/kernel/cred.rs
+new file mode 100644
+index 000000000000..360d6fdbe5e7
+--- /dev/null
++++ b/rust/kernel/cred.rs
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Credentials management.
++//!
++//! C header: [`include/linux/cred.h`](srctree/include/linux/cred.h).
++//!
++//! Reference: <https://www.kernel.org/doc/html/latest/security/credentials.html>
++
++use crate::{
++    bindings,
++    types::{AlwaysRefCounted, Opaque},
++};
++
++/// Wraps the kernel's `struct cred`.
++///
++/// Credentials are used for various security checks in the kernel.
++///
++/// Most fields of credentials are immutable. When things have their credentials changed, that
++/// happens by replacing the credential instead of changing an existing credential. See the [kernel
++/// documentation][ref] for more info on this.
++///
++/// # Invariants
++///
++/// Instances of this type are always ref-counted, that is, a call to `get_cred` ensures that the
++/// allocation remains valid at least until the matching call to `put_cred`.
++///
++/// [ref]: https://www.kernel.org/doc/html/latest/security/credentials.html
++#[repr(transparent)]
++pub struct Credential(Opaque<bindings::cred>);
++
++// SAFETY:
++// - `Credential::dec_ref` can be called from any thread.
++// - It is okay to send ownership of `Credential` across thread boundaries.
++unsafe impl Send for Credential {}
++
++// SAFETY: It's OK to access `Credential` through shared references from other threads because
++// we're either accessing properties that don't change or that are properly synchronised by C code.
++unsafe impl Sync for Credential {}
++
++impl Credential {
++    /// Creates a reference to a [`Credential`] from a valid pointer.
 +    ///
-+    /// It is up to the user to use the pointer correctly.
-+    #[inline]
-+    pub fn current_raw() -> *mut bindings::task_struct {
-+        // SAFETY: Getting the current pointer is always safe.
-+        unsafe { bindings::get_current() }
++    /// # Safety
++    ///
++    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
++    /// returned [`Credential`] reference.
++    pub unsafe fn from_ptr<'a>(ptr: *const bindings::cred) -> &'a Credential {
++        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
++        // `Credential` type being transparent makes the cast ok.
++        unsafe { &*ptr.cast() }
 +    }
 +
-     /// Returns a task reference for the currently executing task/thread.
-     ///
-     /// The recommended way to get the current task/thread is to use the
-@@ -119,14 +128,12 @@ fn deref(&self) -> &Self::Target {
-             }
-         }
++    /// Returns the effective UID of the given credential.
++    pub fn euid(&self) -> bindings::kuid_t {
++        // SAFETY: By the type invariant, we know that `self.0` is valid. Furthermore, the `euid`
++        // field of a credential is never changed after initialization, so there is no potential
++        // for data races.
++        unsafe { (*self.0.get()).euid }
++    }
++}
++
++// SAFETY: The type invariants guarantee that `Credential` is always ref-counted.
++unsafe impl AlwaysRefCounted for Credential {
++    fn inc_ref(&self) {
++        // SAFETY: The existence of a shared reference means that the refcount is nonzero.
++        unsafe { bindings::get_cred(self.0.get()) };
++    }
++
++    unsafe fn dec_ref(obj: core::ptr::NonNull<Credential>) {
++        // SAFETY: The safety requirements guarantee that the refcount is nonzero. The cast is okay
++        // because `Credential` has the same representation as `struct cred`.
++        unsafe { bindings::put_cred(obj.cast().as_ptr()) };
++    }
++}
+diff --git a/rust/kernel/file.rs b/rust/kernel/file.rs
+index ad881e67084c..755816eb38ef 100644
+--- a/rust/kernel/file.rs
++++ b/rust/kernel/file.rs
+@@ -7,6 +7,7 @@
  
--        // SAFETY: Just an FFI call with no additional safety requirements.
--        let ptr = unsafe { bindings::get_current() };
--
-+        let current = Task::current_raw();
-         TaskRef {
-             // SAFETY: If the current thread is still running, the current task is valid. Given
-             // that `TaskRef` is not `Send`, we know it cannot be transferred to another thread
-             // (where it could potentially outlive the caller).
--            task: unsafe { &*ptr.cast() },
-+            task: unsafe { &*current.cast() },
-             _not_send: NotThreadSafe,
-         }
+ use crate::{
+     bindings,
++    cred::Credential,
+     error::{code::*, Error, Result},
+     types::{ARef, AlwaysRefCounted, Opaque},
+ };
+@@ -283,6 +284,18 @@ pub fn as_ptr(&self) -> *mut bindings::file {
+         self.inner.get()
      }
+ 
++    /// Returns the credentials of the task that originally opened the file.
++    pub fn cred(&self) -> &Credential {
++        // SAFETY: It's okay to read the `f_cred` field without synchronization because `f_cred` is
++        // never changed after initialization of the file.
++        let ptr = unsafe { (*self.as_ptr()).f_cred };
++
++        // SAFETY: The signature of this function ensures that the caller will only access the
++        // returned credential while the file is still valid, and the C side ensures that the
++        // credential stays valid at least as long as the file.
++        unsafe { Credential::from_ptr(ptr) }
++    }
++
+     /// Returns the flags associated with the file.
+     ///
+     /// The flags are a combination of the constants in [`flags`].
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index c583fd27736d..cc629a74137f 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -28,6 +28,7 @@
+ 
+ pub mod alloc;
+ mod build_assert;
++pub mod cred;
+ pub mod error;
+ pub mod file;
+ pub mod init;
 
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
