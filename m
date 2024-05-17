@@ -1,105 +1,134 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E03848E;
-	Fri, 17 May 2024 15:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491E812D219
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 15:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715959036; cv=none; b=bL+9px7ogT9ad6g6h/73SXqH6KKayQF7+baS3IcNuQslFQ5U8i7MQSnIUFTuV1uytcNIjVlPvQYeBRBsxN9LxW/rcbc+SUy3nrGJZcw5qCmKz1lizsztqiSRjzIJGezNSsrIlFXYZypoHf/0RDVlPkfU7zJVr2gv+xcmbmxVI2o=
+	t=1715959086; cv=none; b=PrshdvSD8GKULVJYPE96CIys1cbuGnFId/BThHV1XJ+ADEHHVe7fIWJxksi8rV3McYMu+yC0bqawoKjS+khOLHjhfLLVnoKJIUag/tea2MFs0AdLaTJP/3tdoD6oFPhi49M1bPYDHZeA8RJNVJ6dMz11tV//V9+aswgOECtGF2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715959036; c=relaxed/simple;
-	bh=XDE1XXacg5P0IujpikfAHU0Y9gPieO3/IVfHjQkcZlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s8moc8xYo1kixVTszHhrQn17PFulRLENQKshKFhsBA2KYcQEx0GPn+n7UgJ9lKkFFwctqQVIKY27iIFpVbEJjxyJFL6V/cWCGD5IQSwZYOf7c+rT//rTgJXyuMmPgOIo8pXl3ibrHeJ4GQTtD1hxvk8VkCN/n7odicpF9D6+Dg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqKk7SPV; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715959086; c=relaxed/simple;
+	bh=VJJtaa3CR6YMvRWAqyg1KE5Ku5S+20oB3+0+lzQy9oI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Icz/xMdQ/Oru4IwbJznV2gyyewKHazrXP7ZsJAGICJDwWH5Z9+0Wad2VHPyIERU9rrOeR60Xqdv2zKu6xl56ItRF2GLZKoKEssPO7ez4CMhz+2SWiIUq/BO61PLoAjI1hs5f6ZwkA+qsjFmRZ4SGXeO1Tinvbe5HdmragHXchgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=GWSAlyKD; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqKk7SPV"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4202c1d19d5so1905475e9.2;
-        Fri, 17 May 2024 08:17:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="GWSAlyKD"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-36c826d6edeso2565075ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 08:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715959033; x=1716563833; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qSlOywFdXmSejH1bm86IT6wJWx8CxpiYUzDNA5leXbQ=;
-        b=cqKk7SPVD/HZwGZOKMvN1eS/EIjM7A/IhvJT2Jsbd/SYQuqD6n2uhIwUXdOKKFxnS6
-         xRIOHLl/U198MJXIMvZtZgumNTAD/qTraeHYmNsGFxHhIsDQ2tvuou3V02LyCtdQaXRq
-         7J8lSraO+CYMvdDrVUMsfuDtF17gdb/Zjudlgn7+qFLtSlwAH2bYmW3pnPrFzAODfA70
-         GotBqJllWWtXajXGeB13Lgp9axLP4EPOotREUdHXUxtkc00f8PQIzSpFvQxlOAYZiMft
-         5IKr4rAaSfkod6YP7702/8k0azy82HIsSBMRqNRzS5RGFj8xZQfbuDy2SQZaFvqtIlgB
-         e2jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715959033; x=1716563833;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1715959084; x=1716563884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qSlOywFdXmSejH1bm86IT6wJWx8CxpiYUzDNA5leXbQ=;
-        b=RDFBjpapK/zV0nFMsSbWJ0XAJqjzFGbdbHmFZ4NzO23LKrIzlntN1md526MSTR80xS
-         x7vWqS/Yi5S1EUVBYUOONuWhBliOKXsJlg97Xp0NHrOSn1GQTENotmsXcdFHSOYpT+On
-         AcWkSn4PiRwuj+btZtMNLPx0mH0pioZFaYJ+IBk2EoEOZ8Ly7fnEmVtTTJ/rNynjdNGn
-         ZZRY6yGPq2UywAs/PATXtOts0dfhnt4PLoM4o7b+HFJZwRKzh9nTmu9910zOW2Vx8zFV
-         C/l5w8qUVec1EAxvmMhBVhWj3ugAhJzBHCpDalvsIbnz/l8cgw7ZuUHFD+7If39pgtm2
-         axtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8YzRGDaPUYLB1uAFJ/jlo6UxB6LMR6UsQljHWBk7jQVoBDJgyWxVMQknuGhxmLDdHz9BQUfyyL0unCtvLi59ce7R6lr+y33RtWX4t
-X-Gm-Message-State: AOJu0Yzlbw5ohYJLaSKGsr2KEi8ydzx5s0cCjd/lwghIQgTTgPHOE+iO
-	E3OkpXc7MWSBWEv6TFlFXgfAysY7KzsvrFlMa14Uo9pL9Ltzw7y4
-X-Google-Smtp-Source: AGHT+IG6feH5w7YXMu/zEGOHkxQGCZya2MNVcnOpPRMS98PzupdrkzDPetdrLk33AKaw7YnycpeUTA==
-X-Received: by 2002:adf:f0cf:0:b0:34d:86ef:eefa with SMTP id ffacd0b85a97d-3504aa66a84mr15858711f8f.65.1715959033241;
-        Fri, 17 May 2024 08:17:13 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad0absm21818639f8f.69.2024.05.17.08.17.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 08:17:12 -0700 (PDT)
-Date: Fri, 17 May 2024 18:17:09 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: netdev@vger.kernel.org, stephenlangstaff1@gmail.com,
-	aleksander.lobakin@intel.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Alexander Lobakin <alobakin@pm.me>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net v2] net: Always descend into dsa/ folder with
- CONFIG_NET_DSA enabled
-Message-ID: <20240517151709.tb65wut2ue76ghqs@skbuf>
-References: <20240516165631.1929731-1-florian.fainelli@broadcom.com>
+        bh=ef3MF8Rs0G3jit24HO3OWy+0DrrgzGDkN37Y+6PEB9I=;
+        b=GWSAlyKDzSG/8Lva7AJJemLNxl1/rCKHYRbWzGVGo9u7VdJpzWumg1j6poS3CiCY+h
+         Q/vYwL571bEeuIVHMbZUi7rZgeanWwpDfcNQqZWTvE8BU9jQA47+CZoZS3a6she498eT
+         mmziej6OAzT0RMLi1XR6sWSe5ECSxo3POPkaFGDb0VkDutbZAxpa98GZ9dfmCG+oyGWA
+         acVgxrrCmxIfOMfBd4ua52CwZ2R/XdZHnv+WOrH1xtKuXIIfUXWdR7Zc7tK13EwuXW28
+         cEX4iyzGoB4JpcpEa2YQ2E1/cW9e/xsWDm0ki1JlmtvkF3n3j5rYpahRiKWC+usOR2HB
+         OXeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715959084; x=1716563884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ef3MF8Rs0G3jit24HO3OWy+0DrrgzGDkN37Y+6PEB9I=;
+        b=Or8zsSfejRgZFGPK4C31GSZ+hXoFGGNR8RqcfLMei2mnYsbXSmtfYJwosJQwMoPsUQ
+         WEyhKKTWzopRtZ4LJpqmPJ++GzKwTymuIuBHugBhcvAX9X+BJjs1t0tL3sdPSU+DCpHk
+         7zzGS4DKbYUdxW24CtV1qMzXAQ+iaQdYPTARvwQzKC49/LXk2l2FQelUySruQFqZgGQz
+         WvUapqAS5nYdxW1x4OJP0tSaG5jBfxljCFcYc34InDijhq4gA3iQEH5uql1nEqNFzlC3
+         y1VvhFEoUtqPdCFt9AVsyieS04oIoofOs4I60srZgYvqQ3GR70q7RZCtgyc+jW9GS+yf
+         sOcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6lBeoL/EeTUxTYEDZTBcbTts1aONhGsXr49XgJtT4Pnv7EJ6tSM6OhCFZp8ERnJvnTk7bIqb/XxatIG2O+ipO7EoWA3ZiK9pXTGS9
+X-Gm-Message-State: AOJu0YxXqi1WrDJsgnKRSRRcUwN0+UB5QD1dC2jendNHa+nqKkW62u3M
+	IAuI0+CxCeeoTV+zHzw4++fng/T0E9oIqtfYHZuzMhuji7lrzcHy1JhD7UyYehDLbW++FU2QT5U
+	tVi1rQxw3J3sWlVAEL2qnUljHNlHZuFmaH14+4g==
+X-Google-Smtp-Source: AGHT+IHuY13zH4hhNjNUU8E5CU5OnLiqg38O1otrjb+/eoZzOjdRjWwMMh69eiDOSrh7CQUbUVho6c8rmZEAihhoEvk=
+X-Received: by 2002:a05:6e02:1886:b0:36a:1725:e123 with SMTP id
+ e9e14a558f8ab-36cc14913bfmr268024205ab.14.1715959084494; Fri, 17 May 2024
+ 08:18:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516165631.1929731-1-florian.fainelli@broadcom.com>
+References: <20240517145302.971019-1-cleger@rivosinc.com> <20240517145302.971019-5-cleger@rivosinc.com>
+In-Reply-To: <20240517145302.971019-5-cleger@rivosinc.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 17 May 2024 20:47:51 +0530
+Message-ID: <CAAhSdy0Ft5KV5ABBPNjxhy71jY0ypF7S6vhrb7gfq892WQkv1w@mail.gmail.com>
+Subject: Re: [PATCH v5 04/16] RISC-V: KVM: Allow Zimop extension for Guest/VM
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Shuah Khan <shuah@kernel.org>, 
+	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 16, 2024 at 09:56:30AM -0700, Florian Fainelli wrote:
-> Stephen reported that he was unable to get the dsa_loop driver to get
-> probed, and the reason ended up being because he had CONFIG_FIXED_PHY=y
-> in his kernel configuration. As Masahiro explained it:
-> 
->   "obj-m += dsa/" means everything under dsa/ must be modular.
-> 
->   If there is a built-in object under dsa/ with CONFIG_NET_DSA=m,
->   you cannot do  "obj-$(CONFIG_NET_DSA) += dsa/".
-> 
->   You need to change it back to "obj-y += dsa/".
-> 
-> This was the case here whereby CONFIG_NET_DSA=m, and so the
-> obj-$(CONFIG_FIXED_PHY) += dsa_loop_bdinfo.o rule is not executed and
-> the DSA loop mdio_board info structure is not registered with the
-> kernel, and eventually the device is simply not found.
-> 
-> To preserve the intention of the original commit of limiting the amount
-> of folder descending, conditionally descend into drivers/net/dsa when
-> CONFIG_NET_DSA is enabled.
-> 
-> Fixes: 227d72063fcc ("dsa: simplify Kconfig symbols and dependencies")
-> Reported-by: Stephen Langstaff <stephenlangstaff1@gmail.com>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+On Fri, May 17, 2024 at 8:23=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
+osinc.com> wrote:
+>
+> Extend the KVM ISA extension ONE_REG interface to allow KVM user space
+> to detect and enable Zimop extension for Guest/VM.
+>
+> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+
+LGTM.
+
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Acked-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
+
 > ---
-
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+>  arch/riscv/include/uapi/asm/kvm.h | 1 +
+>  arch/riscv/kvm/vcpu_onereg.c      | 2 ++
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/=
+asm/kvm.h
+> index b1c503c2959c..35a12aa1953e 100644
+> --- a/arch/riscv/include/uapi/asm/kvm.h
+> +++ b/arch/riscv/include/uapi/asm/kvm.h
+> @@ -167,6 +167,7 @@ enum KVM_RISCV_ISA_EXT_ID {
+>         KVM_RISCV_ISA_EXT_ZFA,
+>         KVM_RISCV_ISA_EXT_ZTSO,
+>         KVM_RISCV_ISA_EXT_ZACAS,
+> +       KVM_RISCV_ISA_EXT_ZIMOP,
+>         KVM_RISCV_ISA_EXT_MAX,
+>  };
+>
+> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
+> index f4a6124d25c9..c6ee763422f2 100644
+> --- a/arch/riscv/kvm/vcpu_onereg.c
+> +++ b/arch/riscv/kvm/vcpu_onereg.c
+> @@ -60,6 +60,7 @@ static const unsigned long kvm_isa_ext_arr[] =3D {
+>         KVM_ISA_EXT_ARR(ZIHINTNTL),
+>         KVM_ISA_EXT_ARR(ZIHINTPAUSE),
+>         KVM_ISA_EXT_ARR(ZIHPM),
+> +       KVM_ISA_EXT_ARR(ZIMOP),
+>         KVM_ISA_EXT_ARR(ZKND),
+>         KVM_ISA_EXT_ARR(ZKNE),
+>         KVM_ISA_EXT_ARR(ZKNH),
+> @@ -137,6 +138,7 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsign=
+ed long ext)
+>         case KVM_RISCV_ISA_EXT_ZIHINTNTL:
+>         case KVM_RISCV_ISA_EXT_ZIHINTPAUSE:
+>         case KVM_RISCV_ISA_EXT_ZIHPM:
+> +       case KVM_RISCV_ISA_EXT_ZIMOP:
+>         case KVM_RISCV_ISA_EXT_ZKND:
+>         case KVM_RISCV_ISA_EXT_ZKNE:
+>         case KVM_RISCV_ISA_EXT_ZKNH:
+> --
+> 2.43.0
+>
