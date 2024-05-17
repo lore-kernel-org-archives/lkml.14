@@ -1,148 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E51D14036E;
-	Fri, 17 May 2024 22:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B74BA29;
+	Fri, 17 May 2024 23:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715986765; cv=none; b=CA/7N1gcCZm8/BUgpvz1K7gk/sz0Ciyrj6bkU9OkYsOvp6xZx7bYsQ0YcNvWE6sYdH9iHR8giQuvx9ufMCXJc3GiRMVKlEpYhCse7wc8SfmS+NcFSRNLiFvHwdn4EsqoxN82cKGU3Q2XpcIySG9o+0xt+3I3FW0IoEHQ7oScCVQ=
+	t=1715987067; cv=none; b=paVxggWPHRNsucJiNW+ffp1whkhlX2Z9FiIRyFE7P+qmzC3Gt+QL6kAyOc3pMFLzhGNqOehT233STHEWxiwJZJnIJyt47Kr1FDRQ26G5H/9taC51renB/QMB1kwf//LZDQLuq1X5DQk9dxQj+YoijYvdtAbjk8RHSE8eCPziGHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715986765; c=relaxed/simple;
-	bh=i/lf2TVxejq4yug3FFuoGpl/sEmPNn8np1eVzk7EMx0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d2XIa5Jl6o6RXbTeAYI7PUBBS4fbQalvr8tro4CPAL7n5J1SQsftvE9s3HUOHGC2TKKVDx6rdGerTj6vOUkV5OKLb8KeOpbOIYHoF4GD+h9KfzGT4Fqao6DdIKCB6a7Mfog7+jZ4tyEcjLgYAeser9zAtwu1G9dIE1e7G9L3sMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VfdxB9f5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715987067; c=relaxed/simple;
+	bh=Jjl+6qHSjrekqgQIZZlevTofzQZYMq1ACQzJopY/mk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLJC9Ws0/HsB2tOb8PFxzkn0KUfLHZ8eTPrfEoJtlZryhvDBIqWDEN0mdr5qGTubGwt2q/EFhWmlBJV9a08QiIGtk2zS7mlJZ74pXTnHOt11MzSj0xatMMrx506vHBJK7Gao4gxYnnZkK0BKnJ3cHCI4ObK7mWtx7teHV/tWlV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=GBxEMGYU; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VfdxB9f5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34440C2BD10;
-	Fri, 17 May 2024 22:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715986764;
-	bh=i/lf2TVxejq4yug3FFuoGpl/sEmPNn8np1eVzk7EMx0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VfdxB9f5UkPBi+DVIpPNNx1wh81JGtsYu2nbc/+ACQtcMligzURaYIG5SvChMswLe
-	 Cf2HHR5Dy4FS/SH+1ft1ngHqNSSsgsQlLr2mTwD0CKuQ04ua+/0bs0qwemDBVceAng
-	 GiWKCUqXL4HG/ojnBJ3y+AU0va9YxScuBtZn/OmjnNphbm9x9dCK8Xc8GhnsdnzqKs
-	 t49qjD71YJMe/17NEuRmVPyYKkKFlCMbCa8eo0xT4qXRnzynXxXJPKo4KfRnVHVg9x
-	 OutgHRJ20LyAbf0Yoj+BQOokoFf9qqGo6CG1SPv0tXZyKtumbqcCe4UI78wPac32ae
-	 o7oGKOjVJmv9g==
-From: SeongJae Park <sj@kernel.org>
-To: Alex Rusuf <yorha.op@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 0/7] DAMON multiple contexts support
-Date: Fri, 17 May 2024 15:59:21 -0700
-Message-Id: <20240517225921.128477-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240517085151.630844-1-yorha.op@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="GBxEMGYU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=WiRSirHLXEeLj+iZNrKZihamTCj24KKNNfaUSFLoN9s=; b=GBxEMGYUUSQv//Wq
+	6AviypKqlUShmUC9Ly9xOu8Eu9FmhGda3Z++ZTSvmLb1VNZ66SsNo8vy0ARJz6kKhzgJwHW5UIEy1
+	R63aPdcdWh1dmR/iDyC2u10NcjWwWIenp1OPV34EgzrCaVZFGISC3zMYpD3Ul2N4GD+QMA28ZUCWE
+	AlyntaLewFVZxMnQdpG8x8iL+wKWd0TuBnERQdMUyyZwOSdF8qU6uou4F9INL93EjpOlZA8y77RfH
+	pmFuWjlC2BFpUzd55xitKQ4Jc+QA68hLl9qWXSBUXDekaBdlmgVHPZSkSd/al0hEj2hsth61+ApGe
+	o1mnRs+gcO13HXMmdw==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1s86cf-001TeT-1h;
+	Fri, 17 May 2024 23:04:21 +0000
+Date: Fri, 17 May 2024 23:04:21 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Frank.li@nxp.com, vkoul@kernel.org, linux-arm-msm@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dmaengine: qcom: gpi: remove unused struct 'reg_info'
+Message-ID: <Zkfidbh3Sqy6BEDh@gallifrey>
+References: <20240516152537.262354-1-linux@treblig.org>
+ <39b66355-f67e-49e9-a64b-fdd87340f787@linaro.org>
+ <Zkc69sMlwawV8Z7l@gallifrey>
+ <Zkc9J4vbQdeCmTpO@gallifrey>
+ <3fe6e86d-5b4d-4b3c-a5d7-59f01dc6b0bc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <3fe6e86d-5b4d-4b3c-a5d7-59f01dc6b0bc@linaro.org>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 23:03:14 up 9 days, 10:17,  1 user,  load average: 0.00, 0.00, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Fri, 17 May 2024 11:51:51 +0300 Alex Rusuf <yorha.op@gmail.com> wrote:
+* Bryan O'Donoghue (bryan.odonoghue@linaro.org) wrote:
+> On 17/05/2024 12:19, Dr. David Alan Gilbert wrote:
+> > > If you look at the V1 I had
+> > > ''gpi_desc' seems like it was never used.
+> > > Remove it.'
+> > > 
+> > > but Frank suggested copying the subject line; so I'm not sure
+> > > whether you want more or less!
+> > > 
+> > > I could change this to:
+> > > 
+> > > 'gpi_desc' was never used since it's initial
+> > > commit 5d0c3533a19f ("dmaengine: qcom: Add GPI dma driver")
+> > Oops, of course I mean 'reg_info' which is what I fixed in v2.
+> > 
+> > > Would you be OK with that?
+> > Dave
+> > 
+> > > Dave
+> 
+> Hi Dave,
+> 
+> I saw your v1 interaction after commenting but, I still think commits that
+> say "this removes a data structure" should elaborate more.
+> 
+> "This structure is no longer used since commit: 12charsubshahere" or "This
+> structure was never used and should be considered dead code"
+> 
+> I generally hope the intention of my commits is clear from the code with the
+> commit log adding whatever context or elaboration on top.
+> 
+> So that's what I'm suggesting here. A bit of commit log sugar on top which
+> elaborates on and justifies the change.
 
-> Hi SJ
-> 
-> > Hello Alex,
-> > 
-> > 
-> > Adding high level comments first.  I will try to read each patch and add
-> > detailed comments to those as soon as I get some time.
-> > 
-> > Also, please Cc linux-mm@ for DAMON patches.  I'd also recommend cc-ing
-> > linux-kernel@.
-> 
-> Thank you for clarification, I'll add them!
-> 
-> > 
-> > On Wed, 15 May 2024 18:24:50 +0300 Alex Rusuf <yorha.op@gmail.com> wrote:
-> > > Currently kdamond uses only one context per kthread
-> > > and most of its time it sleeps, so utilizing several
-> > > contexts can scale kdamond and allow it to use
-> > > another set of operations.
-[...]
-> > > 	[3] https://github.com/onlyoneofme/damon-multi-contexts-tests.git
-> > 
-> > Do you have a plan to integrate this into DAMON selftests or damon-tests?
-> 
-> Not in the form they are for time being. These are just simple shell scripts
-> that set up kdamond to use multiple contexts and these scripts only
-> collect information like DAMO (but only as perf.data).
-> 
-> Anyway, I think we can integrate them with damon-tests with some modifications
-> to be able to actually _test_ if multiple contexts work.
-> 
-> As for DAMON selftests, I didn't touch them for time being, so they truly
-> need to be modified and expanded, but before doing that I would like
-> you to look at implementation first, because changes in implementation
-> could affect selftests, so once we agree on that I will implement selftests.
-> 
-> Also note, that I didn't integrate changes with debugfs. I remember this is
-> deprecated interface, but I'm not sure if compatibility need to be preseved
-> with it, so do we need to expand debugfs for this?
+OK, so how about the version I suggested above:
 
-I think we should keep debugfs work as was.  So I think we should ensure it's
-not broken, but don't need to expand it to support this new feature.
+ 'reg_info' was never used since it's initial
+ commit 5d0c3533a19f ("dmaengine: qcom: Add GPI dma driver")
+ Remove it.
+
+Is that OK with you?
+
+Dave
 
 > 
-> > 
-> > > Alex Rusuf (7):
-> > >   mm/damon/core: kdamond_struct abstraction layer
-> > 
-> > Let's make the subjects clear what it does.  For example, this patch's
-> > subject could be "add kdamonds_struct abstraction layer".  Similar comment
-> > for other patches.  Also, I think '_struct' suffix of 'kdamond_struct' is
-> > not really needed.  Let's remove it if there is no special reason to add
-> > it.
+> ---
+> bod
 > 
-> Sure, I'll change that in next version, thanks!
-> 
-> > 
-> > >   mm/damon/core: list-based contexts organization
-> > 
-> > I think this can be squashed into the first patch?  If not, could you please
-> > let clarify?
-> 
-> I just tried to separate those patches for them to be as simple as
-> possible (actually I failed at that...), but sure, we can squash them.
-> 
-> > 
-> > >   mm/damon/lru_sort: kdamond_struct abstraction layer
-> > >   mm/damon/reclaim: kdamon_struct abstraction layer
-> > 
-> > Does these two patches mean lru_sort and reclaim are broken by the first
-> > patch? Let's keep everything unbroken in middle of the patchset, to help
-> > bisect.
-> 
-> Yes, they're broken by the first patch, I'll squash them, thanks!
-> 
-> > >   mm/damon/core: rename nr_running_ctxs -> nr_running_kdamonds
-> > 
-> > I think this would also better to be together with the first patch?  I know
-> > this does not break something, but makes reading patch bit complex.
-> 
-> No problem, thanks!
-> 
-> > 
-> > >   mm/damon/core: multi-context support
-> > >   mm/damon/core: multi-context awarness for trace events
-> > 
-> > I think these two patches should be squashed into one patch.  Otherwise, the
-> > trace point is broken in the middle of the patch series, right?
-> 
-> You're right, I'll squash them, thanks!
-
-Cool, I'm looking forward to the next version of this great patchset!
-
-
-Thanks,
-SJ
-
-[...]
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
