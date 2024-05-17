@@ -1,91 +1,93 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9A112FB12;
-	Fri, 17 May 2024 15:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB68712F598;
+	Fri, 17 May 2024 15:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715961497; cv=none; b=OkV1BBq+OPNx0SNrD8g+elt7C0skt4ocslgBa+JWL1HkUWqT9OzF9TbHoUoNnAxTpS7knWN8+Ak3+b6Or2cMIyrYKSxlAOCxLuofAzYqFqBpsGKZcXXERfhi1mVYRf5f9DGZ1VrJCqOz8DykfZ7GIZ0FRQ896Zu/Q7S4mAzOMVU=
+	t=1715961513; cv=none; b=Y5h2UcRRmsyR1e4Cd42o4sFxAFETiBCAnQ4lkRNN9Y0Xvj8wk/ItUtOJJIOYS6nOr8w8FiNtMk64Fy/PmXvL1O7hUa9PAVWk6Tukzr2W23p3aoNjOZXbcF2TWHYtnFjJpRBmBz2md2N3b56SBtuoIvhgVuSVBGyA3pV42aGQ2TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715961497; c=relaxed/simple;
-	bh=jPs7IHbfPkYSUHCi80uToaFuP+PivAQ4suilrpSf6d0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lew5scVLwuXsblXIFM+xjT3Z+czN2I+ILoxbgWrypHWv0WXQh9v++AJDal3AqnVN+fvUrEw7Qz0U1WoN/JEIYbR0/IzU7hCooFg28p4MYyUZ3oA0jS9Sc8C7Zd2x43TdgfLPuX8Vl1O7WEDCAtHM9dMDo5E4k4l7bIY2LnS4fyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 17 May
- 2024 18:58:10 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 17 May
- 2024 18:58:10 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
-	<hverkuil-cisco@xs4all.nl>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Luis Chamberlain
-	<mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Patrick Boettcher" <pb@linuxtv.org>, <linux-media@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<syzbot+c88fc0ebe0d5935c70da@syzkaller.appspotmail.com>
-Subject: [PATCH] media: dvb-frontends: dib3000mb: fix uninit-value in dib3000_write_reg
-Date: Fri, 17 May 2024 08:58:00 -0700
-Message-ID: <20240517155800.9881-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1715961513; c=relaxed/simple;
+	bh=UQresL8i5XslVSjYIf1mYzAjCbmYtYZ0tx9VZLeEh+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K839DwWonpPPW6swWNqKk58id3BFz4J6qB2JeYZ+Gs1IVVsnSLqya6nzn0qqr5ufzoBPkwe/tIICwRwJuEgDDmh8sf3oOgWn9d5sLVo8SG6f5TGytje2199yxoyBYzT9r49hI89VSVG4XLHDPnlMhOmfimC1wXdE7G+VVCorVjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nlBpfuOw; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nlBpfuOw"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8A47EE0005;
+	Fri, 17 May 2024 15:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715961509;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zixD6G+Iqmvf/KokPf1pygaOfwIjKh/xrai3jHSQCII=;
+	b=nlBpfuOw6YxQxIdFvJTlW2MtgMlSGIi8OgV8bSmY66lUvcxiiIKrANEPWuRJQ0Hh5iMInd
+	ZzIMzY+CSAK/fsMR2rqwFFMLMSJ4eRrx8CSEIhyYJZ+5bzrP+CCR4c6kTYMj3HWmwABTdq
+	KyYb1m/8uShB4d18Ia1Omfxd72WElT6vg8LPvj6nmJXaE5wZFNpF2YBYh0zjFNzGOpTGx0
+	2kPZ4WK0Zvq0h8VhTlbBLH9sCqiirJdn0GR/wLNaEtqkRw3ZVpDv6fWZB+oOXnI4ct/7kW
+	+uwzrduHV8ULUl2JrxzymwPKFVWwNjqRq5TUUQZLbGd0w6MNFimlm+R6ojKKuw==
+Date: Fri, 17 May 2024 17:58:26 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Richard
+ Cochran <richardcochran@gmail.com>, Radu Pirea
+ <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh <j.vosburgh@gmail.com>, Andy
+ Gospodarek <andy@greyhouse.net>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>, Vladimir
+ Oltean <vladimir.oltean@nxp.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Subject: Re: [PATCH net-next v12 13/13] netlink: specs: tsinfo: Enhance
+ netlink attributes and add a set command
+Message-ID: <20240517175826.690b69e6@kmaincent-XPS-13-7390>
+In-Reply-To: <20240501191407.5661aca0@kernel.org>
+References: <20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com>
+	<20240430-feature_ptp_netnext-v12-13-2c5f24b6a914@bootlin.com>
+	<20240501191407.5661aca0@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Syzbot reports [1] an uninitialized value issue found by KMSAN in
-dib3000_read_reg().
+On Wed, 1 May 2024 19:14:07 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Local u8 rb[2] is used in i2c_transfer() as a read buffer; in case
-that call fails, the buffer may end up with some undefined values.
+> On Tue, 30 Apr 2024 17:49:56 +0200 Kory Maincent wrote:
+> > +      -
+> > +        name: hwtst-provider
+> > +        type: nest
+> > +        nested-attributes: tsinfo-hwtst-provider
+> > +      -
+> > +        name: hwtst-flags
+> > +        type: u32 =20
+>=20
+> C code is unhappy about the naming here vs what the actual C enums
+> are called (make -C tools/net/ynl)
 
-Since no elaborate error handling is expected in dib3000_write_reg(),
-simply zero out rb buffer to mitigate the problem.
+Thanks I didn't know that check.
+It allows me to fix several name issue!
 
-[1] Syzkaller report
-dvb-usb: bulk message failed: -22 (6/0)
-=====================================================
-BUG: KMSAN: uninit-value in dib3000mb_attach+0x2d8/0x3c0 drivers/media/dvb-frontends/dib3000mb.c:758
- dib3000mb_attach+0x2d8/0x3c0 drivers/media/dvb-frontends/dib3000mb.c:758
- dibusb_dib3000mb_frontend_attach+0x155/0x2f0 drivers/media/usb/dvb-usb/dibusb-mb.c:31
- dvb_usb_adapter_frontend_init+0xed/0x9a0 drivers/media/usb/dvb-usb/dvb-usb-dvb.c:290
- dvb_usb_adapter_init drivers/media/usb/dvb-usb/dvb-usb-init.c:90 [inline]
- dvb_usb_init drivers/media/usb/dvb-usb/dvb-usb-init.c:186 [inline]
- dvb_usb_device_init+0x25a8/0x3760 drivers/media/usb/dvb-usb/dvb-usb-init.c:310
- dibusb_probe+0x46/0x250 drivers/media/usb/dvb-usb/dibusb-mb.c:110
-...
-Local variable rb created at:
- dib3000_read_reg+0x86/0x4e0 drivers/media/dvb-frontends/dib3000mb.c:54
- dib3000mb_attach+0x123/0x3c0 drivers/media/dvb-frontends/dib3000mb.c:758
-...
-
-Fixes: 74340b0a8bc6 ("V4L/DVB (4457): Remove dib3000-common-module")
-Reported-by: syzbot+c88fc0ebe0d5935c70da@syzkaller.appspotmail.com
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
----
- drivers/media/dvb-frontends/dib3000mb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/dvb-frontends/dib3000mb.c b/drivers/media/dvb-frontends/dib3000mb.c
-index c598b2a63325..7c452ddd9e40 100644
---- a/drivers/media/dvb-frontends/dib3000mb.c
-+++ b/drivers/media/dvb-frontends/dib3000mb.c
-@@ -51,7 +51,7 @@ MODULE_PARM_DESC(debug, "set debugging level (1=info,2=xfer,4=setfe,8=getfe (|-a
- static int dib3000_read_reg(struct dib3000_state *state, u16 reg)
- {
- 	u8 wb[] = { ((reg >> 8) | 0x80) & 0xff, reg & 0xff };
--	u8 rb[2];
-+	u8 rb[2] = {};
- 	struct i2c_msg msg[] = {
- 		{ .addr = state->config.demod_address, .flags = 0,        .buf = wb, .len = 2 },
- 		{ .addr = state->config.demod_address, .flags = I2C_M_RD, .buf = rb, .len = 2 },
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
