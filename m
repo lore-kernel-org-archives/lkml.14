@@ -1,200 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B5ED524
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 04:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7912CDDB2;
+	Fri, 17 May 2024 04:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715921095; cv=none; b=WX1dZ43xluIJPaQp+MLSnXU9V8EbTRPh0YstSVkmTvbPl/XxLQn5XUQlneHVkxABpte61mvRQRlkmExfsfdr0yxz7GNXOjN8eUTTG3CYAJiwk5wZ3cAjcdj77qaQDmWQ3xjx8+KlKm1GkoluY+RAqnCXdPPY4vRch/WJAm1ua2A=
+	t=1715921933; cv=none; b=hpYkULM7zHqDA7gJvn60u0iLmhkEsKyKrPll9XSwedoOshPxQUdYAHY6RYTXbXQDrdwulkgx6pP5tL6AzUJvM71kRZ+8GmRaEwJehH+mm4Mh3v+QCZfvmE0wL7jRTwoUOMu1+sZ5E+MYJETF+6H7rwoPp/HAiq9DAeYUFvQs9+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715921095; c=relaxed/simple;
-	bh=Hyg1w276bZZtvMX+mZmirznVDfUaMn2+t1CYZpDH00U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rpp+yqCkmkKfur8QVk9WLgE1EDCXjKqVLK0Ka+EZ8u288okSzt96mnsyk7tNjPRDcFS/rtzxx81jO5p4kOL6s572ijOmpeilMQ/4APwH110+CL6ka2qaSt09hMlAaQ2dNERF0P7gKeKa8c0pSYKQVsrZVKRy57Idi1I3n5kHeds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oxo0cHVf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715921933; c=relaxed/simple;
+	bh=zD4lWmp3wEmNB1u//FuurUIsViWz6cyW2T5QY6kRnaY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PmVufR549XIJnMQ9U6EBrJZfv9p+PT+qILVONg+zO1b7c4pIxh9ve2IV2UUSWvr7/s1a7oGQVAdtbzC82dMTZb2+OXbrBK0jt0yjTSjXubbS2F7odu2RmzGPxDEO+jVPmsdqUvSjVcVFk3CVtD+3OWEtNPS0v4tTIwuK4mnpCP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIYzXmak; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oxo0cHVf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715921092;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+Pho0BMrYFF2YDAB5tlU7tWcVNwJsnl8ML6imB+XGp8=;
-	b=Oxo0cHVfA0tfktsn5sSyBk9XTA3w00rgByriVunCpfNPOolv5b4Cs6SS6YPskttwqc9INb
-	8V37nSWAFg8onmzNsAMnnkrOMXRvriM2hAvCxCHUCLjmlODhXU7ztpOGDm6OOHXEbZzzhP
-	13R5xp39BNleN/iMSWDrsP4SBSENSr0=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-391-mOC7WPi4M6yQqlJTuZwYAQ-1; Fri, 17 May 2024 00:44:50 -0400
-X-MC-Unique: mOC7WPi4M6yQqlJTuZwYAQ-1
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e1ac2fbcb7so1035085939f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2024 21:44:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIYzXmak"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f4178aec15so921816b3a.0;
+        Thu, 16 May 2024 21:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715921932; x=1716526732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zD4lWmp3wEmNB1u//FuurUIsViWz6cyW2T5QY6kRnaY=;
+        b=bIYzXmak1ZTOeqNggHit5mWiX6p16HIa3P/9/UsfmXSAweVo7bXNWAMk6O09se8ywl
+         aA/jiDZTJHMywUQyJ46mLQCzjf7lm1UK5nPEAIN5iiwAeBF3Y7gQo/L9GgH+MCX6JPHE
+         xymcOzuYkQfECtYsonWzSmB2IjtG/3QFMCSjL806Qw20P71nUXjcQzh2shrUH4XGJ+Qm
+         GzjdUmIyAalBfUp4I2iOOkTLSkw0v1skj0IMQRAvdkl//XGatYQdgozh0VjseByRBvnh
+         djgLS81VRkp8qA+BRB5TJZjU0iujk2pkPrPZviPE3F8YyWsQ+bJNdejbTFknHvaV8dD/
+         k88Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715921090; x=1716525890;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+Pho0BMrYFF2YDAB5tlU7tWcVNwJsnl8ML6imB+XGp8=;
-        b=e2+yUKT34VtuGO2vBxkLonKJEJ2n135FFNX4vTbegSuwh1+IDPTDTm+W4Fmk40WznF
-         pzYV+CXfOKJe7Ixz6/VJLVrEWpQi2v6j2TZjROILH0kJlqR/ZeJyzLraDXHu2jZT4hpx
-         6yTNAn9cpmv7mcnJfE6ThRyuP8cY6YmkwOQW70AW416j73k6TRMU8kKhDfkBEQCx8/NJ
-         IKfblAjnDilYh5+rTF7O2vwmVaAEQaMJsOJG1AQtqcMKMMUmlc8P4/eUTpLWP+j3IQGi
-         90d/gJHJ0KS8B+NnrkFdn0v1cTLgsuqSteItR9tjjI9bpchTl+ZnpSXBYQMVyJDDjViD
-         oS2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVz2xyxo5tqoQtO+yKmjYK/gnKq4Tqh4pBE0mYg7hEpTV7tjBuaWwcce7b1NPa4xZLKzOezYkMG3hPJiW2uuuoA3qvqhaq4GYgsi/eZ
-X-Gm-Message-State: AOJu0Yx9rjS5SncCnNWKBd4ghy4Ce0qCxwpEFg9qy9goZdA3l3lcieUu
-	bfjtLi3gP2O1x7GG55IKhW/cxMp3aGfJvwY9YGxjilaq9WYUt9+PBO18hTiHvlhB7ieMSonVXpL
-	Mwa2EZhVinY9qvb/onZ/uLxhjb9Hy2NY1Cpkt/7g+pZ6qyhaus+eHR8zueEYnjQ==
-X-Received: by 2002:a5e:c702:0:b0:7de:dbcf:b67f with SMTP id ca18e2360f4ac-7e1b5229628mr2108276439f.21.1715921090072;
-        Thu, 16 May 2024 21:44:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8SJkDmskTL1TlkipsUfaSNL7CgupEzTaNdCDxXRpHof+4T200uekUmWGBuKMc6pRxG0+GtQ==
-X-Received: by 2002:a5e:c702:0:b0:7de:dbcf:b67f with SMTP id ca18e2360f4ac-7e1b5229628mr2108275439f.21.1715921089725;
-        Thu, 16 May 2024 21:44:49 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489375c1a86sm4497757173.105.2024.05.16.21.44.48
+        d=1e100.net; s=20230601; t=1715921932; x=1716526732;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zD4lWmp3wEmNB1u//FuurUIsViWz6cyW2T5QY6kRnaY=;
+        b=c0YM/gtl4gBxRyyf+FD+vqg7eCHLL05bT/A10FusRlHM/238s4WQ3akd0azjhNgvfc
+         i2RrG1f4Zn3/PqhE+ISu6T7BeeDZIkKkR6p39wWzAROmQnU5XbmnxEE7vvYEkJEOUnEO
+         28137lIGWCvK9sPcQOk1P8f2vw+5Mr/TXqxz8ARlRbQvDD2+Z4jybt3FFQtIO0vpM53V
+         Oyx8NfaF90EBoUhgcFdgNOTfA/3c5UtUmpcoHmuXLit6T92W1llHoD5t8KQvTThNYGYU
+         GiSi/TKSCvy9GTzcGSouDDsMGGPZdrg/rA+gG7VuGuDdMs5DIoJ+6FzAHv2AfZHf6Q9k
+         uSeA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0/DLMJovTocWQC1WGJs4wBZU7XeIRLlxOjrWPjn/SZ4z8F4infn8QTT+xfPr/zgE0Q0Z+EtLvdHkV67YbUz5O4XVxKndvtK2vly1TS8ZIOyZ1OKIQq6pLTToBQ87jIzInt6MrXLWh5FOAnOh3Xk64u16p82zo1/LVDeP7DXZ0e1fRxZjT
+X-Gm-Message-State: AOJu0YxqnBZNXnUTNB3a1GFrcBPoBz+0Q9fhc8hYPRTdXDQIqAogI63/
+	fbuPIudQzWN7xW+UTLCEaDJwSZSMrBX1ngqJEPYfJWGZgEy9JFRq
+X-Google-Smtp-Source: AGHT+IGNjAE1LtfsrOxQVZB5wYX0vjh0z7hg7ne2W52SgHNMNs5KV8V7UlyNJC4JaNo9Xt6rJoE0BQ==
+X-Received: by 2002:a05:6a00:3d07:b0:6ea:d740:62a4 with SMTP id d2e1a72fcca58-6f4e03466d2mr24573444b3a.25.1715921931668;
+        Thu, 16 May 2024 21:58:51 -0700 (PDT)
+Received: from xiaxiShen-ThinkPad.dhcp4.washington.edu ([205.175.106.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2977sm13917629b3a.153.2024.05.16.21.58.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 21:44:49 -0700 (PDT)
-Date: Thu, 16 May 2024 22:44:42 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
- <jgg@nvidia.com>, <kevin.tian@intel.com>, <iommu@lists.linux.dev>,
- <pbonzini@redhat.com>, <seanjc@google.com>, <dave.hansen@linux.intel.com>,
- <luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>,
- <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>, <corbet@lwn.net>,
- <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
- <baolu.lu@linux.intel.com>, <yi.l.liu@intel.com>
-Subject: Re: [PATCH 4/5] vfio/type1: Flush CPU caches on DMA pages in
- non-coherent domains
-Message-ID: <20240516224442.56df5c23.alex.williamson@redhat.com>
-In-Reply-To: <ZkbK9CzmcxgqhSuR@yzhao56-desk.sh.intel.com>
-References: <20240507061802.20184-1-yan.y.zhao@intel.com>
-	<20240507062138.20465-1-yan.y.zhao@intel.com>
-	<20240509121049.58238a6f.alex.williamson@redhat.com>
-	<Zj33cUe7HYOIfj5N@yzhao56-desk.sh.intel.com>
-	<20240510105728.76d97bbb.alex.williamson@redhat.com>
-	<ZkG9IEQwi7HG3YBk@yzhao56-desk.sh.intel.com>
-	<20240516145009.3bcd3d0c.alex.williamson@redhat.com>
-	<ZkbK9CzmcxgqhSuR@yzhao56-desk.sh.intel.com>
-Organization: Red Hat
+        Thu, 16 May 2024 21:58:51 -0700 (PDT)
+From: Xiaxi Shen <shenxiaxi26@gmail.com>
+To: krzk@kernel.org
+Cc: broonie@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	javier.carrasco.cruz@gmail.com,
+	krzk+dt@kernel.org,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	robh@kernel.org,
+	shenxiaxi26@gmail.com,
+	skhan@linuxfoundation.org
+Subject: Re: [PATCH v3] ASoC: dt-bindings: ak4104: convert to dt schema
+Date: Thu, 16 May 2024 21:58:50 -0700
+Message-Id: <20240517045850.463906-1-shenxiaxi26@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <ee193525-ea10-4006-a86e-977e2f0352ea@kernel.org>
+References: <ee193525-ea10-4006-a86e-977e2f0352ea@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 17 May 2024 11:11:48 +0800
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+Hi Krzysztof,
 
-> On Thu, May 16, 2024 at 02:50:09PM -0600, Alex Williamson wrote:
-> > On Mon, 13 May 2024 15:11:28 +0800
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Fri, May 10, 2024 at 10:57:28AM -0600, Alex Williamson wrote:  
-> > > > On Fri, 10 May 2024 18:31:13 +0800
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >     
-> > > > > On Thu, May 09, 2024 at 12:10:49PM -0600, Alex Williamson wrote:    
-> > > > > > On Tue,  7 May 2024 14:21:38 +0800
-> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:      
-> ...   
-> > > > > > > @@ -1683,9 +1715,14 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
-> > > > > > >  	for (; n; n = rb_next(n)) {
-> > > > > > >  		struct vfio_dma *dma;
-> > > > > > >  		dma_addr_t iova;
-> > > > > > > +		bool cache_flush_required;
-> > > > > > >  
-> > > > > > >  		dma = rb_entry(n, struct vfio_dma, node);
-> > > > > > >  		iova = dma->iova;
-> > > > > > > +		cache_flush_required = !domain->enforce_cache_coherency &&
-> > > > > > > +				       !dma->cache_flush_required;
-> > > > > > > +		if (cache_flush_required)
-> > > > > > > +			dma->cache_flush_required = true;      
-> > > > > > 
-> > > > > > The variable name here isn't accurate and the logic is confusing.  If
-> > > > > > the domain does not enforce coherency and the mapping is not tagged as
-> > > > > > requiring a cache flush, then we need to mark the mapping as requiring
-> > > > > > a cache flush.  So the variable state is something more akin to
-> > > > > > set_cache_flush_required.  But all we're saving with this is a
-> > > > > > redundant set if the mapping is already tagged as requiring a cache
-> > > > > > flush, so it could really be simplified to:
-> > > > > > 
-> > > > > > 		dma->cache_flush_required = !domain->enforce_cache_coherency;      
-> > > > > Sorry about the confusion.
-> > > > > 
-> > > > > If dma->cache_flush_required is set to true by a domain not enforcing cache
-> > > > > coherency, we hope it will not be reset to false by a later attaching to domain 
-> > > > > enforcing cache coherency due to the lazily flushing design.    
-> > > > 
-> > > > Right, ok, the vfio_dma objects are shared between domains so we never
-> > > > want to set 'dma->cache_flush_required = false' due to the addition of a
-> > > > 'domain->enforce_cache_coherent == true'.  So this could be:
-> > > > 
-> > > > 	if (!dma->cache_flush_required)
-> > > > 		dma->cache_flush_required = !domain->enforce_cache_coherency;    
-> > > 
-> > > Though this code is easier for understanding, it leads to unnecessary setting of
-> > > dma->cache_flush_required to false, given domain->enforce_cache_coherency is
-> > > true at the most time.  
-> > 
-> > I don't really see that as an issue, but the variable name originally
-> > chosen above, cache_flush_required, also doesn't convey that it's only
-> > attempting to set the value if it wasn't previously set and is now
-> > required by a noncoherent domain.  
-> Agreed, the old name is too vague.
-> What about update_to_noncoherent_required?
+Thanks for your advices, I am gradually adapting to using b4 as my new tool for submitting patches.
 
-set_noncoherent?  Thanks,
-
-Alex
-
-> Then in vfio_iommu_replay(), it's like
-> 
-> update_to_noncoherent_required = !domain->enforce_cache_coherency && !dma->is_noncoherent;
-> if (update_to_noncoherent_required)
->          dma->is_noncoherent = true;
-> 
-> ...
-> if (update_to_noncoherent_required)
-> 	arch_flush_cache_phys((phys, size);
-> >   
-> > > > > > It might add more clarity to just name the mapping flag
-> > > > > > dma->mapped_noncoherent.      
-> > > > > 
-> > > > > The dma->cache_flush_required is to mark whether pages in a vfio_dma requires
-> > > > > cache flush in the subsequence mapping into the first non-coherent domain
-> > > > > and page unpinning.    
-> > > > 
-> > > > How do we arrive at a sequence where we have dma->cache_flush_required
-> > > > that isn't the result of being mapped into a domain with
-> > > > !domain->enforce_cache_coherency?    
-> > > Hmm, dma->cache_flush_required IS the result of being mapped into a domain with
-> > > !domain->enforce_cache_coherency.
-> > > My concern only arrives from the actual code sequence, i.e.
-> > > dma->cache_flush_required is set to true before the actual mapping.
-> > > 
-> > > If we rename it to dma->mapped_noncoherent and only set it to true after the
-> > > actual successful mapping, it would lead to more code to handle flushing for the
-> > > unwind case.
-> > > Currently, flush for unwind is handled centrally in vfio_unpin_pages_remote()
-> > > by checking dma->cache_flush_required, which is true even before a full
-> > > successful mapping, so we won't miss flush on any pages that are mapped into a
-> > > non-coherent domain in a short window.  
-> > 
-> > I don't think we need to be so literal that "mapped_noncoherent" can
-> > only be set after the vfio_dma is fully mapped to a noncoherent domain,
-> > but also we can come up with other names for the flag.  Perhaps
-> > "is_noncoherent".  My suggestion was more from the perspective of what
-> > does the flag represent rather than what we intend to do as a result of
-> > the flag being set.  Thanks,   
-> Makes sense!
-> I like the name "is_noncoherent" :)
-> 
-
+Best regards,
+Xiaxi
