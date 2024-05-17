@@ -1,39 +1,39 @@
 Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D7613FD85
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21EA13E059
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 19:00:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715972450; cv=none; b=QO9TZQ3HGLolVveiBkiZs3dlascj2LSEwz1Lx5HewYW7sKwDZNNo3/dTo1uPWGPoadHsfy7SyneDUzL+YdCFAlFwsf8d464JM5ziUw8xcT74Av11sq3hW1Cr+TnqteNRBGsF1ctEOsMtRe73EC1SJBesRXavWaATKaSwW6372os=
+	t=1715972459; cv=none; b=QBNE/MvjMw4GX7kV55fazFTtb3Fo3vkqsn/Gt/AJ3ionqymdDD4xEXFGwvbJZ2xAua2Ih/8Mp3rkVRd9qnWEmoS3FR8o7qVKLMy2Y9xXKb/tXkzznUZ3MTpzrmsYH4za0I7obUFd759hTMpp0IFC04R914gjqE3Q/sHOr7+OMnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715972450; c=relaxed/simple;
-	bh=1GF1AP8tajvOLO+5SI7vVcCcLKzzL1YzSZ6WjpVPsw8=;
+	s=arc-20240116; t=1715972459; c=relaxed/simple;
+	bh=EKXFvixH1QDRMdDwLAcDFjoK2t9maiUDKOftRAhE8M8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Molukrp1XGuvnU1/trxLqBhh11JW3YV0jha9X3D6k/A8jLmcwO261/A5RphesOXk/4olWonjYIzr6E+n1qLe0lbD+vGqQoj+jwyhwl80jRxGIR1y637/1MTNgP0jmZaX/JVzjYZDA00bG0evq16s2SF1CUQCO/EH7MxWzDhzxCg=
+	 MIME-Version; b=m/ZatfASkMAw5/sJpFsieewaJeWoGa2x8r3AbbBgcqpic/8EKCvGNqwzlUwnLR8i85vVVYFHgi9CIizHL03F/gXoO2H5qpM+Sf597lYAHlN/AWZphuumhJeCYV9YUdA/ep80lAcpHEX/BxzSh7wL3WECBZbFvg8SHMAR3TgtAoc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4Vgx9Q3vS0z9t1J;
-	Fri, 17 May 2024 21:00:10 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4Vgx9S1gxkz9t5l;
+	Fri, 17 May 2024 21:00:12 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
 	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id wn4ZCLJ6Jmpw; Fri, 17 May 2024 21:00:10 +0200 (CEST)
+	with ESMTP id 4cIGKIGNK9z9; Fri, 17 May 2024 21:00:12 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4Vgx9L4MS7z9sv8;
-	Fri, 17 May 2024 21:00:06 +0200 (CEST)
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Vgx9M672Bz9syj;
+	Fri, 17 May 2024 21:00:07 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9167C8B775;
-	Fri, 17 May 2024 21:00:06 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CD4458B766;
+	Fri, 17 May 2024 21:00:07 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id GDVjEHegVUU1; Fri, 17 May 2024 21:00:06 +0200 (CEST)
+	with ESMTP id ioM59iiRK_y8; Fri, 17 May 2024 21:00:07 +0200 (CEST)
 Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.232.121])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0D7EC8B766;
-	Fri, 17 May 2024 21:00:06 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 479FE8B783;
+	Fri, 17 May 2024 21:00:07 +0200 (CEST)
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Jason Gunthorpe <jgg@nvidia.com>,
@@ -45,9 +45,9 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v2 06/20] powerpc/8xx: Fix size given to set_huge_pte_at()
-Date: Fri, 17 May 2024 21:00:00 +0200
-Message-ID: <04f4e737608ea0b177b88057db138fbf0d6ab138.1715971869.git.christophe.leroy@csgroup.eu>
+Subject: [RFC PATCH v2 08/20] powerpc/8xx: Simplify struct mmu_psize_def
+Date: Fri, 17 May 2024 21:00:02 +0200
+Message-ID: <ca2d232f07adfd7b3ed56d339a6071155cc9bcb7.1715971869.git.christophe.leroy@csgroup.eu>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1715971869.git.christophe.leroy@csgroup.eu>
 References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
@@ -57,33 +57,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715972396; l=902; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=1GF1AP8tajvOLO+5SI7vVcCcLKzzL1YzSZ6WjpVPsw8=; b=IoskHevYmLAROXWm3Bla0EeNdkO8Ms0H48szoFx+ijylMn/U7znhO/J36x3c1ZmqLZveNFdLf 4Wdtrm4IX4aCKC2WiUHsJ1pg9pKyKmjBwmsEssdpkJRnTzyOgJQlVQS
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715972396; l=1285; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=EKXFvixH1QDRMdDwLAcDFjoK2t9maiUDKOftRAhE8M8=; b=nX2X6vEpdK44UnfhG3HKWABTDQWPK0OwmzarT+5JSy8AVJaSKAikMUF3Rybc/nYF0xa9AiYQb w8VI07De5zHDDN3sYCq674/uu4dnjwSQUFkrAM6P02f/hMw3ZRsgD1m
 X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-set_huge_pte_at() expects the real page size, not the psize which is
-the index of the page definition in table mmu_psize_defs[]
+On 8xx, only the shift field is used in struct mmu_psize_def
 
-Fixes: 935d4f0c6dc8 ("mm: hugetlb: add huge page size param to set_huge_pte_at()")
+Remove other fields and related macros.
+
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/mm/nohash/8xx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 43d4842bb1c7..d93433e26ded 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -94,7 +94,8 @@ static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
- 		return -EINVAL;
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index 141d82e249a8..a756a1e59c54 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -189,19 +189,14 @@ typedef struct {
  
- 	set_huge_pte_at(&init_mm, va, ptep,
--			pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)), psize);
-+			pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)),
-+			1UL << mmu_psize_to_shift(psize));
+ #define PHYS_IMMR_BASE (mfspr(SPRN_IMMR) & 0xfff80000)
  
- 	return 0;
- }
+-/* Page size definitions, common between 32 and 64-bit
++/*
++ * Page size definitions for 8xx
+  *
+  *    shift : is the "PAGE_SHIFT" value for that page size
+- *    penc  : is the pte encoding mask
+  *
+  */
+ struct mmu_psize_def {
+ 	unsigned int	shift;	/* number of bits */
+-	unsigned int	enc;	/* PTE encoding */
+-	unsigned int    ind;    /* Corresponding indirect page size shift */
+-	unsigned int	flags;
+-#define MMU_PAGE_SIZE_DIRECT	0x1	/* Supported as a direct size */
+-#define MMU_PAGE_SIZE_INDIRECT	0x2	/* Supported as an indirect size */
+ };
+ 
+ extern struct mmu_psize_def mmu_psize_defs[MMU_PAGE_COUNT];
 -- 
 2.44.0
 
