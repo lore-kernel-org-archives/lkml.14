@@ -1,32 +1,34 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8C43D546;
-	Fri, 17 May 2024 12:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EE251C59;
+	Fri, 17 May 2024 12:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715950731; cv=none; b=qwDJEcbkXyp9V1HEY7A1kQRRdyxJorhgQhFSEDfpsMSOxUI/kdk2RNS1gSj1gc6gZ2Asly8fPfYIavWE3HViojHPwKYD+/g+Yetzh2VdP9slCvhC6IwLWe1TNlpXWpsAf69mtMt0wrrL8mF+5i55CrVqpin94/jY1Ex6l8EbYcY=
+	t=1715950737; cv=none; b=tE09YU9Lv/yA0bWHOAnsjZgskNzyDGoajsAOBwgtvKX57yB06cy0roknlCyWzh+KrfUFdPglnLDXG1IIjhnNV/ral6T4LSBiKsPgI4DapfYoVPRN/HXE1YOaDeOpnJEHaYSh7Ji6i0e1ErvlPMEck7QBXiSHLiDB0mLBoveWHYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715950731; c=relaxed/simple;
-	bh=zrk6+cloSLdiIn9uyTXv4YwejY+Ob7e3tkorYnZx4ak=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KtiBi/DXjS/ZLS8E7OpoRkJu7jkyBrwXGcN34Wl9b7ZsZ97/WJCnilGLdZQBHthA107mV6ILStjZNMmwIudHYpPGqMjXXottElkKzfmgmTinSdn4MgoPfHBB3lsLbATlpS3wfF6NIN+gEB8mmThcAAlYfKEQhyKyEZh+LR0mjTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=X/EduMIF; arc=none smtp.client-ip=95.215.58.179
+	s=arc-20240116; t=1715950737; c=relaxed/simple;
+	bh=0d39N4GPWNqxF0dFVCzjorEh1XiWOcRr2ujB+nVTEXI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VATcP32w7FzTNr2YeTsKsj5YplbDa+wLZx6o0+LWGUVXFTSMm2gTXQIm01rAC6BaB3fdS6nasQj9DsMlo03QA19x++w0dZ3PAGpDSLAHpGS24UoS7mc+G7+XTtqdIhzy0uq4L+NS1FrV9sFXhwnoMjZTWxbQ7AJF7msHcs4imiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=wa81VU0r; arc=none smtp.client-ip=95.215.58.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="X/EduMIF"
+	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="wa81VU0r"
 X-Envelope-To: linux-i2c@vger.kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1715950724;
+	t=1715950729;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1Ml8qbMHtSEoymkT/K/7bfJSLCHjhajBrHobl8Pf/aQ=;
-	b=X/EduMIFDZseitXtRB+ulnDX9qzY4q7dndnBr5LGTGQy22b9+VMZRQJmQCQDXosoVfeg8S
-	dhIQGkkyKbbEngJSH/UkCYCGPVfhF3ZChX3qth6+itxVtvg2gZADqkMjWgXV6aFTVQiCQj
-	YTpHZ9uGwce3n9wi8GaMzu+6XAkarvxVbixE6jzYExv50xhumZHfpH9bq2IK9pPaAGnYRk
-	CsGAJFreXDHHFHdnaRNY3BMRAThkRc5lhTYthpPaukbHTuj8UX1/4QVB3mwyUayLeFEgvl
-	djXoeBB5CFFAaa6elKExv01CzCTetYTYZ6W0QkrQiUZn+FsT4UVkQw5786zfaQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QZlgR///yHXui6cTc/6KXDaywf/me0E2mv4A04nqOmE=;
+	b=wa81VU0r8x+nrJ00CtQUM/U0gA2ygVrJoSG7OFUWPcDKBmJmDF1WmMXJy8eZ56yxkiQiOr
+	loKwswHpowGRP4aftRo64q2oWmia0Zao/1GYi5T9L07Tru6jMQQsLbJZlshZbO9ZoPj7l/
+	mrIudK5rQ8nWhdwuwz5dmXetu1FK1UQk3dn3FaahlwHXdqMtsoU4Z89rmLtS3XmYFNGzjt
+	14S4u6JB0utb+b+U8S4nUHRKgTFPPUuCxQEV2lsZ7Fxm4QQmtQ0vRlL4vK/0DyEQM+GTdn
+	S9C5/ruov56mZIgKIjrhSbkNZXIFSXt/9SsSAvt0OgyFbKTxhI9mKhAUjzQF/w==
 X-Envelope-To: linux-gpio@vger.kernel.org
 X-Envelope-To: conor+dt@kernel.org
 X-Envelope-To: linus.walleij@linaro.org
@@ -51,10 +53,8 @@ X-Envelope-To: andi.shyti@kernel.org
 X-Envelope-To: brgl@bgdev.pl
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Subject: [PATCH 00/13] Analog Devices Inc. Automotive Audio Bus (A2B)
- support
-Date: Fri, 17 May 2024 14:57:58 +0200
-Message-Id: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
+Date: Fri, 17 May 2024 14:58:03 +0200
+Subject: [PATCH 05/13] a2b: add AD24xx node driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,9 +63,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAFZUR2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2NDI0Mj3USjJN1UU5OkRBOzRMtUA1MloMqCotS0zAqwKdGxtbUAr6uFm1U
- AAAA=
+Message-Id: <20240517-a2b-v1-5-b8647554c67b@bang-olufsen.dk>
+References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
+In-Reply-To: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
 To: Mark Brown <broonie@kernel.org>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,513 +84,1012 @@ Cc: Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org,
  =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
 X-Migadu-Flow: FLOW_OUT
 
-This series adds support for Analog Devices' Automotive Audio Bus (A2B)
-transceivers in the AD242x, AD241x and AD240x series.
-
-The series is based on today's linux-next.
-
-INTRODUCTION
-============
-
-A2B buses consist of a seires of daisy-chained A2B transceiver ICs known
-as nodes. Every bus consists of a "main" node (attached to the host
-processor via I2C) and, typically, a series of "subordinate" nodes
-connected in a daisy-chained manner via UTP (unshielded twisted pair).
-Digital audio transport is delivered via a standard I2S/TDM interface
-between the host and main node. The UTP links may extend for several
-meters, exposing peripheral function to the host over a distance.
-
-  ┌──────┐ I2C ┌──────┐     ┌──────┐     ┌──────┐         ┌──────┐
-  │      ├─────┤      │ UTP │      │     │      │         │      │
-  │ host │     │ main │XXXXX│ sub1 │XXXXX│ sub2 │XX ... XX│ subN │
-  │      ├─────┤      │     │      │     │      │         │      │
-  └──────┘ TDM └──────┘     └──────┘     └──────┘         └──────┘
-                   \______________________________ ... ______/
-
-                                   A2B bus
-
-All A2B nodes expose a number of peripheral functions, and the A2B
-protocol allows for them to be controlled directly by the host processor
-over I2C:
-
-                  ┌──────────────────────┐
-                  ├─────┐          ┌─────┤
-  <---  ... \/\/\/│ TRX │  AD2428  │ TRX │\/\/\/ ... --->
-            /\/\/\│  A  │          │  B  │/\/\/\
-   towards        ├─────┘          └─────┤        towards last
-   main node      │ ┌──────┐ ┌─────────┐ │        subordinate node
-                  │ │ I2C  │ │ I2S/TDM │ │
-                  │ │      │ │   PDM   │ │
-                  │ └──────┘ └─────────┘ │
-                  │ ┌──────┐ ┌─────────┐ │
-                  │ │ GPIO │ │  CLOCK  │ │
-                  │ └──────┘ └─────────┘ │
-                  └──────────────────────┘
-
-The peripheral functions are as follows:
-
-  I2C interface
-  -------------
-
-  On main nodes the I2C interface must by definition function in
-  target (slave) mode, as it is attached to the host for management.
-  On subordinate nodes the I2C interface functions in controller
-  (master) mode, providing an additional I2C adapter to the host for
-  each subordinate node connected to the A2B bus.
-
-  The control registers of each node, both main and subordinate, can
-  be accessed directly (resp. indirectly) via the I2C interface between
-  the host and main node.
-
-  I2S/TDM and PDM interface
-  -------------------------
-
-  This is the main feature of A2B, whence the name Audio Bus. Each node
-  has two TX and RX pins for I2S function. On the main node the
-  interface functions as a bit- and frame-clock consumer. On the
-  subordinate nodes it functions as a provider. PCM data is transported
-  "upstream" (towards the main node) and "downstream" (towards the last
-  subordinate node) via the A2B protocol in so-called A2B superframes.
-
-  Through control registers of the respective nodes, a user can
-  configure specific TDM slots to be placed into the superframes for
-  transport up or down the A2B bus. Similarly, slots can be pulled from
-  the superframes and retransmitted on a given node's I2S/TDM interface.
-
-  In addition, the pins on a node can be reconfigured to run in PDM mode
-  for applications such as microphone recording. The data is placed into
-  the superframe for forwarding up or down the bus.
-
-  GPIO
-  ----
-
-  Unused pins of a node can be muxed to GPIO mode. The GPIO block
-  supports interrupts as well, so each node connected to the bus can
-  expose a gpiochip/irqchip to the host.
-
-  CLOCK
-  -----
-
-  Certain pins can also be muxed to become clock outputs. The clock
-  outputs divide the internal PLL, which runs at 2048 times the frame
-  sync clock frequency of the main node.
-
-For further details on A2B architecture, check the documentation from
-Analog Devices, which is freely available online; this documentation was
-used to write the driver:
-
-  AD2420(W)/6(W)/7(W)/8(W)/9(W) Automotive Audio Bus A2B Transceiver
-  Technical Reference, Revision 1.1, October 2019, Part Number 82-100138-01
-
-DRIVER DESIGN
-=============
-
-To control these chips, a bus driver core has been added under the
-drivers/a2b/ directory. Drivers for peripheral functionality are instead
-placed in their relevant subsystem directory. What follows is a brief
-description of the design.
-
-The A2B core introduces a bus for two device types, and a class type to
-represent the overall bus:
-
-  * struct bus_type a2b_bus:
-
-    A bus type for A2B buses. There are two device types:
-
-      * struct device_type a2b_node: an A2B node, main or subordinate
-      * struct device_type a2b_func: a peripheral function of a node,
-                                     e.g. gpio or codec
-
-  * struct class a2b_bus_class:
-
-    A class type representing the overall A2B bus instance. There is one
-    device type:
-
-      * struct device_type a2b_bus: an A2B bus instance
-
-Interrupts can be raised by any node and are multiplexed via the IRQ
-line of the main node connected to the host processor. The interrupts
-are then dispatched to the relevant node, or, in the case of GPIO, to
-the a2b_func device representing the irqchip.
-
-At the top level there is the i2c driver, ad24xx-i2c, hereby called an
-A2B interface driver. It sets up the bare necessities required to
-interface with the nodes and to demultiplex interrupts. In principle
-there exist other interfaces for A2B - newer series chips, for example,
-support also SPI, but the hardware is not available for me to test on,
-so this series only implements the I2C interface.
-
-The role of the interface driver is to register a class device of type
-a2b_bus. The interface driver should implement relevant a2b_bus_ops,
-which provide the core with a way to talk to the nodes in an
-interface-agnostic fashion.
-
-When an a2b_bus device is registered, the core will traverse the OF node
-of the top-level i2c node and look for a child node named node@0. This
-node is used to create a new bus device of type a2b_node. It corresponds
-to the main node, and so it is always assumed to be present.
-
-The main node is probed by the node driver, ad24xx-node. This is a
-generic driver and supports both main and subordinate nodes, as
-the setup is very similar.
-
-The A2B core takes a specific interest in the initialization of a2b_node
-devices because it must administer the "discovery" process. Discovery
-can be thought of as enumeration, and involves programming specific
-control registers of the main node and waiting for a specific interrupt
-to determine whether there is another subordinate node attached.
-According to the design of A2B, the discovery process must happen in a
-serial manner, which is to say that it is not possible to discover
-subordinate node N until subordinate node N-1 has been discovered.
-Moreover, the main node must also be set up before any discovery can
-take place.
-
-To address this, the node driver must configure certain a2b_node_ops
-before registering its a2b_node with the core via a2b_register_node().
-Most of the node setup then takes place in the a2b_node_ops::setup()
-function, which is called synchronously by the core. When a node has
-been successfully set up, the core will then attempt (another)
-discovery. This algorithm will proceed until there are no further nodes
-to discover.
-
-When a node is set up by the node driver, it can then optionally add
-peripheral function a2b_func devices. These devices are probed by their
-respective driver, be it for the GPIO subsystem, sound subsystem, etc.
-
-As was alluded to earlier, the driver relies on OF/device tree for the
-hardware description. Here is a simplified example:
-
-  i2c {
-    a2b@68 {                                 interface
-      compatible = "adi,ad2428";
-      reg = <0x68>;
-      #interrupt-cells = <1>;
-      interrupt-controller;
-
-      node@0 {                               # main node
-        compatible = "adi,ad2428-node";
-        reg = <0>
-        interrupts = <0>;
-
-        clock {                              # main node clock
-          compatible = "adi,ad2428-clk";
-          #clock-cells = <1>;
-          clock-output-names = "clkout1", "clkout2";
-        };
-
-        codec {                              # main node audio codec
-          compatible = "adi,ad2428-codec";
-        };
-      };
-
-      node@1 {                               # subordinate node 1
-        compatible = "adi,ad2428-node";
-        reg = <1>;
-        interrupts = <1>;
-
-        gpio {                               # subordinate node 1 GPIO
-          compatible = "adi,ad2428-gpio";
-          #interrupt-cells = <2>;
-          interrupt-controller;
-          #gpio-cells = <2>;
-          gpio-controller;
-        };
-
-        codec {                              # subordinate node 1 audio codec
-          compatible = "adi,ad2428-codec";
-        };
-      };
-
-      node@2 {                               # subordinate node 2 ...
-        compatible = "adi,ad2428-node";
-        reg = <2>;
-        interrupts = <2>;
-
-        codec {                              # subordinate node 2 audio codec
-          compatible = "adi,ad2428-codec";
-        };
-      };
-
-      ... more nodes can follow here
-    };
-  };
-
-It is not a requirement that all described nodes are actually connected
-to the bus.
-
-While the device tree structure is flat, the device topology is nested.
-That means a parent-child device topology as follows:
-
-  1-0068
-   └─ a2b-0
-       └─ a2b-0.0
-           ├─ a2b-0.1
-           │   ├─ a2b-0.2
-           │   │   └─ a2b-0.2-codec
-           │   ├─ a2b-0.1-gpio
-           │   └─ a2b-0.1-codec
-           ├─ a2b-0.0-clk
-           └─ a2b-0.0-codec
-
-Where:
-
-  * 1-0068 is the top-level I2C device
-  * a2b-0 is the a2b_bus class device
-  * a2b-0.0 is the main node a2b_node device
-  * a2b-0.N is the Nth subordinate node a2b_node device
-  * a2b-0.N-codec is the Nth node's audio codec a2b_func device
-  * ditto for a2b-0.N-{clk,gpio} etc.
-
-PATCH ORDER
-===========
-
-The series is split up into per-subsystem pieces to make review easier
-for relevant maintainers.
-
-Broadly speaking the series goes as follows:
-
-  1. Add the driver core
-
-  2. Add device tree bindings for AD24xx chips
-
-  3. Add device drivers for AD24xx chips
-    a) I2C interface driver
-    b) node driver
-    c) per-subsystem functional block drivers
-
-  4. Add an example "custom" A2B node driver for a Bang & Olufsen
-     speaker (Beosound Shape)
-
-  5. Add relevant entries to the MAINTAINERS file
-
-HELP WANTED
-===========
-
-I am aware that the current implementation may not be entirely correct
-from a driver model perspective, and there are also some shortcomings
-which are already evident. Having said that, I am in need of people to
-bounce ideas off, so I figure it is OK to submit the code in its current
-form. Below I want to identify a few issues and get some feedback.
-
-  How will this get merged?
-  -------------------------
-
-  I am a bit clueless as to the review and merge process for a patch
-  series that affects multiple subsystems. If somebody can point me to
-  an explanation (perhaps already stated on the mailing list?), that
-  would be great.
-
-  I made some assumptions on how to structure this series but I am happy
-  to amend if things are not correct.
-
-  fw_devlink=on and device registration during discovery
-  ------------------------------------------------------
-
-  In the current architecture, device_register() is called for each A2B
-  node if and only if the node has been discovered. Since the driver is
-  using OF, this seems to violate some assumptions of fw_devlink. Let me
-  quote a comment from device_links_driver_bound():
-
-  | If a device binds successfully, it's expected to have created all
-  | the device links it needs to or make new device links as it needs
-  | them. So, fw_devlink no longer needs to create device links to any
-  | of the device's suppliers.
-
-  When using the audio-graph-card2 ASoC machine driver, I have
-  experienced fw_devlink=on preventing both the subordinate nodes'
-  codecs and the machine driver from being probed, due to a cyclic
-  dependency. I have been able to work around this by using Saravana's
-  new post-init-providers device tree property, whereby I reference by
-  phandle the corresponding OF graph endpoint of the machine driver in
-  each codec's device tree node. But this seems like a bit of a hack.
-  And I suspect that the logic (and benefits) of fw_devlink=on will be
-  broken in other places by this behaviour as well.
-
-  Looking at other subsystems, I see that i2c will register a device for
-  each child node, and allow the matching driver's probe function to
-  return -ENODEV/-ENXIO if the device doesn't respond. In that case, the
-  devices are still registered but remain unbound.
-
-  A similar strategy could be done for A2B as well I think.
-
-  First it is important to note that discovery must happen sequentially,
-  i.e. node N cannot be discovered until node N-1 has been discovered
-  and its driver bound. This is because node N-1's driver is needed to
-  access some of its registers (to enable B-side transceiver switching,
-  etc.).
-
-  Node discovery could instead be wired into the a2b_bus_probe()
-  function, such that if called for a struct device corresponding to
-  node N, and if nodes 0..N-1 have already been probed, then the code
-  currently in a2b_bus_discovery_work() can be performed to try and
-  discover node N.  If discovered, the a2b_drv->probe() call can then be
-  performed. If not discovered, a2b_bus_probe() can return -ENODEV and
-  we can conclude that the initial discovery algorithm has completed.
-
-  Here I need some help though. As already stated, there is a strict
-  ordering dependency, so I need to ensure that nodes 0..N-1 have
-  actually been probed. If I am already calling device_register() on all
-  nodes with an OF node to begin with, then I need to establish some
-  managed device links to work with this properly. Correct?
-
-  If that works fine, then there is at least one remaining problem.
-  Namely, we at B&O are already using this driver in a product which has
-  an OF description for up to 10 A2B nodes, but where the customer may
-  not necessarily have all nodes connected. This is the Beosound Shape
-  setup described in the last patches of this series. To handle this, I
-  use a modified audio-graph-card2 driver which defers its probe until
-  the A2B bus has finished its discovery. But in the case where some are
-  not connected, I will get -ENODEV. What I want to understand here is,
-  how will fw_devlink respond? To understand, here is a simplified
-  representation of the device tree:
-
-    sound {
-      compatible = "adi,a2b-audio-graph-card2";
-      ...
-
-      ports {
-        port@0 { snd_0_ep: endpoint { remote-endpoint = <&a2b0_codec_ep>; }; };
-        port@1 { snd_1_ep: endpoint { remote-endpoint = <&a2b1_codec_ep>; }; };
-        ...
-        port@10 { snd_10_ep: endpoint { remote-endpoint = <&a2b10_codec_ep>; }; };
-      };
-    };
-
-    a2b@68 {
-      compatible = "adi,ad2428";
-      ...
-
-      node@0 {
-        codec {
-          port { a2b0_codec_ep: endpoint { remote-endpoint = <&snd_0_ep>; }; };
-        };
-      };
-
-      node@1 {
-        codec {
-          port { a2b1_codec_ep: endpoint { remote-endpoint = <&snd_1_ep>; }; };
-        };
-      };
-
-      ...
-
-      node@10 {
-        codec {
-          port { a2b1_codec_ep: endpoint { remote-endpoint = <&snd_10_ep>; }; };
-        };
-      };
-    };
-
-  The question I have is, how can I ensure that the machine driver will
-  probe (sound node) when discovery has completed, even if not all
-  codecs are available because not all A2B nodes are connected?
-
-  I understand this might be pushing the limits of device tree somewhat,
-  but ASoC is quite device tree heavy and I would like to get some
-  advice on what the best way to proceed is. And if going for the
-  proposed amendment above (in the style of i2c, with discovery
-  integrated into a2b_bus_probe()), will post-init-providers still save
-  me in the above situation?
-
-  Perhaps there is a simpler approach here if the assumption I quoted at
-  the top of this section is not so crucial. In that case, maybe the
-  current implementation is OK?
-
-  Device dependencies and discovery
-  ---------------------------------
-
-  Yet another complication that we have recently come upon is what to do
-  when the discovery of a node N requires probing devices which
-  topologically are beneath the I2C controller of node N. Concretely, we
-  have two boards 1 and 2 where the B-side of board 1's A2B node is
-  routed through a mux. The mux is controlled via GPIO, and those GPIOs
-  are exported by an I2C GPIO expander connected to board 1's A2B's I2C
-  controller. Suppose board 1's A2B node is called sub1 and board 2's is
-  called sub2. Then the situation looks like this:
-
-                               X
-               ┌──────┐        X        ┌──────┐
-               │      │     ┌─────┐     │      │
-        ... XXX│ sub1 │XXXXX│ mux │XXXXX│ sub2 │
-               │      │     └──▲──┘     │      │
-               └──────┘        │        └──────┘
-                   │           │
-                   │ I2C       │
-                   │           │
-               ┌──────┐        │
-               │ GPIO │────────┘
-               └──────┘
-
-  The mux itself can be modelled as a simple GPIO mux and hence a
-  platform driver. But in order to discover node sub2, it must get
-  probed and configured appropriately; the default hardware strapping
-  would cause discovery to fail.
-
-  This is not a crucial issue right now and is something we can work
-  around, and I don't think it's necessarily a blocker for getting this
-  series merged upstream. But feedback on how to approach this might
-  inform some useful changes to this series.
-
-  The issue here is that some driver needs to acquire the mux and set
-  it. The discovery process must be delayed as long as this returns
-  -EPROBE_DEFER. Would it be appropriate for the A2B core to acquire
-  this mux based on device tree properties of sub1?
-
-Thank you in advance for all review comments and feedback.
+From: Alvin Šipraga <alsi@bang-olufsen.dk>
+
+This A2B node driver supports controlling both main and subordinate
+AD24xx nodes. As well as implementing the required ops for an A2B node
+driver, it also registers peripheral functions available on this series
+of A2B transceivers: GPIO, codec, clock, and I2C controller. The
+implementation of those functions is handled in discrete A2B drivers
+placed in the relevant subsystems.
+
+The core node op symbols are also exported to support the implementation
+of more bespoke node drivers, such as for hardware which requires
+additional hand-holding to properly integrate with the driver model. A
+supporting header file is also added with prototypes for these
+functions.
 
 Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
 ---
-Alvin Šipraga (13):
-      a2b: add A2B driver core
-      regmap: add A2B support
-      dt-bindings: a2b: Analog Devices AD24xx devices
-      a2b: add AD24xx I2C interface driver
-      a2b: add AD24xx node driver
-      gpio: add AD24xx GPIO driver
-      ASoC: codecs: add AD24xx codec driver
-      clk: add AD24xx clock driver
-      i2c: add AD24xx I2C controller driver
-      dt-bindings: vendor-prefixes: add Bang & Olufsen a/s
-      dt-bindings: a2b: add compatible string for Beosound Shape node
-      a2b: add Beosound Shape node driver
-      MAINTAINERS: add maintainership for A2B drivers
+ drivers/a2b/Kconfig       |  14 +
+ drivers/a2b/Makefile      |   3 +
+ drivers/a2b/ad24xx-node.c | 887 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/a2b/ad24xx-node.h |  42 +++
+ 4 files changed, 946 insertions(+)
 
- .../devicetree/bindings/a2b/adi,ad24xx-clk.yaml    |   53 +
- .../devicetree/bindings/a2b/adi,ad24xx-codec.yaml  |   52 +
- .../devicetree/bindings/a2b/adi,ad24xx-gpio.yaml   |   76 ++
- .../devicetree/bindings/a2b/adi,ad24xx-i2c.yaml    |   55 +
- .../devicetree/bindings/a2b/adi,ad24xx.yaml        |  254 ++++
- .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
- MAINTAINERS                                        |   12 +
- drivers/Kconfig                                    |    2 +
- drivers/Makefile                                   |    1 +
- drivers/a2b/Kconfig                                |   60 +
- drivers/a2b/Makefile                               |   13 +
- drivers/a2b/a2b.c                                  | 1252 ++++++++++++++++++++
- drivers/a2b/ad24xx-i2c.c                           |  532 +++++++++
- drivers/a2b/ad24xx-node.c                          |  887 ++++++++++++++
- drivers/a2b/ad24xx-node.h                          |   42 +
- drivers/a2b/beo-shape-node.c                       |  584 +++++++++
- drivers/base/regmap/Kconfig                        |    6 +-
- drivers/base/regmap/Makefile                       |    1 +
- drivers/base/regmap/regmap-a2b.c                   |   82 ++
- drivers/clk/Kconfig                                |    7 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-ad24xx.c                           |  341 ++++++
- drivers/gpio/Kconfig                               |    6 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-ad24xx.c                         |  302 +++++
- drivers/i2c/busses/Kconfig                         |    7 +
- drivers/i2c/busses/Makefile                        |    1 +
- drivers/i2c/busses/i2c-ad24xx.c                    |  121 ++
- include/linux/a2b/a2b.h                            |  444 +++++++
- include/linux/a2b/ad24xx.h                         |  892 ++++++++++++++
- include/linux/regmap.h                             |   38 +
- sound/soc/codecs/Kconfig                           |    5 +
- sound/soc/codecs/Makefile                          |    2 +
- sound/soc/codecs/ad24xx-codec.c                    |  665 +++++++++++
- 34 files changed, 6798 insertions(+), 1 deletion(-)
----
-base-commit: c75962170e49f24399141276ae119e6a879f36dc
-change-id: 20231212-a2b-e54ba46a9e05
+diff --git a/drivers/a2b/Kconfig b/drivers/a2b/Kconfig
+index 120b1d491623..1f6d836463f3 100644
+--- a/drivers/a2b/Kconfig
++++ b/drivers/a2b/Kconfig
+@@ -18,11 +18,25 @@ config A2B_AD24XX_I2C
+        tristate "Analog Devices Inc. AD24xx I2C interface support"
+        depends on I2C
+        select REGMAP_I2C
++       select A2B_AD24XX_NODE
+        help
+          Say Y here to enable I2C interface support for AD24xx A2B transceiver
+          chips from Analog Devices Inc. Supported models include AD240x, AD241x,
+          and AD242x.
+ 
++	 Selecting this option will also force AD24xx node support, which is
++	 required to operate the chip as a main node.
++
++	 If unsure, say N.
++
++config A2B_AD24XX_NODE
++       tristate "Analog Devices Inc. AD24xx node support"
++       select REGMAP_A2B
++       help
++         Say Y here to enable support for AD24xx A2B transceiver nodes. This
++         applies to both main nodes and subordinate nodes. Supported models
++         include AD240x, AD241x, and AD242x.
++
+ 	 If unsure, say N.
+ 
+ endif # A2B
+diff --git a/drivers/a2b/Makefile b/drivers/a2b/Makefile
+index 07241524645c..171ffa237943 100644
+--- a/drivers/a2b/Makefile
++++ b/drivers/a2b/Makefile
+@@ -7,3 +7,6 @@ obj-$(CONFIG_A2B)			+= a2b.o
+ 
+ # Interface drivers
+ obj-$(CONFIG_A2B_AD24XX_I2C)		+= ad24xx-i2c.o
++
++# Node drivers
++obj-$(CONFIG_A2B_AD24XX_NODE)		+= ad24xx-node.o
+diff --git a/drivers/a2b/ad24xx-node.c b/drivers/a2b/ad24xx-node.c
+new file mode 100644
+index 000000000000..c5716391936d
+--- /dev/null
++++ b/drivers/a2b/ad24xx-node.c
+@@ -0,0 +1,887 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AD24xx A2B transceiver node driver
++ *
++ * Copyright (c) 2023-2024 Alvin Šipraga <alsi@bang-olufsen.dk>
++ *
++ * Analog Devices Inc. documentation cited in some of the comments below:
++ *
++ * [1] AD2420(W)/6(W)/7(W)/8(W)/9(W) Automotive Audio Bus A2B Transceiver
++ *     Technical Reference, Revision 1.1, October 2019, Part Number 82-100138-01
++ *
++ * [2] Datasheet for AD2420(W)/AD2426(W)/AD2427(W)/AD2428(W)/AD2429(W) Rev. C,
++ *     July 2021
++ */
++
++#include <linux/a2b/a2b.h>
++#include <linux/a2b/ad24xx.h>
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/regmap.h>
++
++#include "ad24xx-node.h"
++
++struct ad24xx_node {
++	struct device *dev;
++	struct a2b_node *node;
++	struct regmap *regmap;
++	struct irq_domain *irqdomain;
++	int irq;
++	struct completion running_completion;
++	struct completion discovery_completion;
++	struct a2b_func *func_gpio;
++	struct a2b_func *func_codec;
++	struct a2b_func *func_clk;
++	struct a2b_func *func_i2c;
++};
++
++#define A2B_CHIP_CAPS_AD242X                                      \
++	(A2B_CHIP_CAP_REDUCED_RATE | A2B_CHIP_CAP_CLKOUT |        \
++	 A2B_CHIP_CAP_BUS_MONITOR | A2B_CHIP_CAP_SUSTAIN |        \
++	 A2B_CHIP_CAP_DATA_RX_MASK | A2B_CHIP_CAP_GPIO_DISTANCE | \
++	 A2B_CHIP_CAP_MAILBOX)
++
++const struct a2b_chip_info ad24xx_chip_info[] = {
++	[A2B_AD2401] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_PDM,
++		.max_gpios = 7,
++	},
++	[A2B_AD2402] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_PDM,
++		.max_gpios = 7,
++	},
++	[A2B_AD2403] = {
++		.caps = A2B_CHIP_CAP_MAIN |
++			A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_I2S,
++		.max_subs = 8,
++		.max_gpios = 7,
++	},
++	[A2B_AD2410] = {
++		.caps = A2B_CHIP_CAP_MAIN |
++			A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_I2S |
++			A2B_CHIP_CAP_PDM,
++		.max_subs = 8,
++		.max_gpios = 7,
++	},
++	[A2B_AD2420] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_gpios = 8,
++	},
++	[A2B_AD2421] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_gpios = 8,
++	},
++	[A2B_AD2422] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_gpios = 8,
++	},
++	[A2B_AD2425] = {
++		.caps = A2B_CHIP_CAP_MAIN |
++			A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_I2S |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_subs = 10,
++		.max_gpios = 8,
++	},
++	[A2B_AD2426] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_gpios = 8,
++	},
++	[A2B_AD2427] = {
++		.caps = A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_gpios = 8,
++	},
++	[A2B_AD2428] = {
++		.caps = A2B_CHIP_CAP_MAIN |
++			A2B_CHIP_CAP_A_SIDE |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_I2S |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_subs = 10,
++		.max_gpios = 8,
++	},
++	[A2B_AD2429] = {
++		.caps = A2B_CHIP_CAP_MAIN |
++			A2B_CHIP_CAP_B_SIDE |
++			A2B_CHIP_CAP_I2S |
++			A2B_CHIP_CAP_PDM |
++			A2B_CHIP_CAPS_AD242X,
++		.max_subs = 2,
++		.max_gpios = 8,
++	},
++};
++EXPORT_SYMBOL_GPL(ad24xx_chip_info);
++
++static int of_a2b_parse_tdm_slot_size(struct device_node *np,
++				      enum a2b_tdm_slot_size *tdm_slot_size)
++{
++	u32 slot_size;
++	int ret;
++
++	ret = of_property_read_u32(np, "adi,tdm-slot-size", &slot_size);
++	if (ret)
++		return ret;
++
++	if (slot_size == 16)
++		*tdm_slot_size = A2B_TDMSS_16;
++	else if (slot_size == 32)
++		*tdm_slot_size = A2B_TDMSS_32;
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static int of_a2b_parse_tdm_mode(struct device_node *np,
++				 enum a2b_tdm_mode *tdm_mode)
++{
++	u32 mode;
++	int ret;
++
++	ret = of_property_read_u32(np, "adi,tdm-mode", &mode);
++	if (ret)
++		return ret;
++
++	if (mode == 2)
++		*tdm_mode = A2B_TDMMODE_2;
++	else if (mode == 4)
++		*tdm_mode = A2B_TDMMODE_4;
++	else if (mode == 8)
++		*tdm_mode = A2B_TDMMODE_8;
++	else if (mode == 12)
++		*tdm_mode = A2B_TDMMODE_12;
++	else if (mode == 16)
++		*tdm_mode = A2B_TDMMODE_16;
++	else if (mode == 20)
++		*tdm_mode = A2B_TDMMODE_20;
++	else if (mode == 24)
++		*tdm_mode = A2B_TDMMODE_24;
++	else if (mode == 32)
++		*tdm_mode = A2B_TDMMODE_32;
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static const struct irq_chip ad24xx_node_irq_chip = {
++	.name = "ad24xx-node",
++};
++
++static int ad24xx_node_irqdomain_map(struct irq_domain *irqdomain,
++				     unsigned int irq, irq_hw_number_t hwirq)
++{
++	irq_set_chip_data(irq, irqdomain->host_data);
++	irq_set_chip_and_handler(irq, &ad24xx_node_irq_chip, handle_simple_irq);
++	irq_set_nested_thread(irq, 1);
++	irq_set_noprobe(irq);
++
++	return 0;
++}
++
++static void ad24xx_node_irqdomain_unmap(struct irq_domain *irqdomain,
++					unsigned int irq)
++{
++	irq_set_nested_thread(irq, 0);
++	irq_set_chip_and_handler(irq, NULL, NULL);
++	irq_set_chip_data(irq, NULL);
++}
++
++static int ad24xx_node_irqdomain_alloc(struct irq_domain *irqdomain,
++				       unsigned int virq, unsigned int nr_irqs,
++				       void *data)
++{
++	struct ad24xx_node *adn = irqdomain->host_data;
++	struct irq_fwspec *fwspec = data;
++	irq_hw_number_t hwirq = fwspec->param[0];
++
++	if (nr_irqs != 1)
++		return -EINVAL;
++
++	if (hwirq > AD24XX_MAX_GPIOS)
++		return -EINVAL;
++
++	return irq_domain_set_hwirq_and_chip(irqdomain, virq, hwirq,
++					     &ad24xx_node_irq_chip, adn);
++}
++
++static const struct irq_domain_ops ad24xx_node_irqdomain_ops = {
++	.alloc = ad24xx_node_irqdomain_alloc,
++	.free = irq_domain_free_irqs_common,
++	.map = ad24xx_node_irqdomain_map,
++	.unmap = ad24xx_node_irqdomain_unmap,
++	.xlate = irq_domain_xlate_onecell,
++};
++
++static void devm_ad24xx_node_release_irqdomain(void *data)
++{
++	struct irq_domain *irqdomain = data;
++	int virq;
++	int i;
++
++	for (i = 0; i < A2B_MAX_NODES; i++) {
++		virq = irq_find_mapping(irqdomain, i);
++		if (virq)
++			irq_dispose_mapping(virq);
++	}
++
++	irq_domain_remove(irqdomain);
++}
++
++static irqreturn_t ad24xx_node_irq_handler(int irq, void *data)
++{
++	struct ad24xx_node *adn = data;
++	struct a2b_node *node = adn->node;
++	struct device *dev = adn->dev;
++	unsigned int inttype;
++	unsigned int virq;
++	int ret;
++
++	ret = a2b_node_get_inttype(node, &inttype);
++	if (ret) {
++		dev_err_ratelimited(adn->dev,
++				    "failed to get interrupt type: %d\n", ret);
++		return IRQ_NONE;
++	}
++
++	dev_dbg_ratelimited(dev, "received interrupt of type %d\n", inttype);
++
++	switch (inttype) {
++	case A2B_INTTYPE_HDCNTERR:
++	case A2B_INTTYPE_DDERR:
++	case A2B_INTTYPE_CRCERR:
++	case A2B_INTTYPE_DPERR:
++	case A2B_INTTYPE_BECOVF:
++	case A2B_INTTYPE_SRFERR:
++	case A2B_INTTYPE_SRFCRCERR:
++	case A2B_INTTYPE_PWRERR_0:
++	case A2B_INTTYPE_PWRERR_1:
++	case A2B_INTTYPE_PWRERR_2:
++	case A2B_INTTYPE_PWRERR_3:
++	case A2B_INTTYPE_PWRERR_4:
++	case A2B_INTTYPE_PWRERR_5:
++	case A2B_INTTYPE_I2CERR:
++	case A2B_INTTYPE_ICRCERR:
++	case A2B_INTTYPE_PWRERR_6:
++	case A2B_INTTYPE_PWRERR_7:
++	case A2B_INTTYPE_IRQMSGERR:
++	case A2B_INTTYPE_STARTUPERR:
++	case A2B_INTTYPE_SLVINTTYPERR:
++		/* Error IRQ */
++		a2b_node_report_error(node, inttype);
++		return IRQ_HANDLED;
++	case A2B_INTTYPE_IO0PND:
++	case A2B_INTTYPE_IO1PND:
++	case A2B_INTTYPE_IO2PND:
++	case A2B_INTTYPE_IO3PND:
++	case A2B_INTTYPE_IO4PND:
++	case A2B_INTTYPE_IO5PND:
++	case A2B_INTTYPE_IO6PND:
++	case A2B_INTTYPE_IO7PND:
++		/* GPIO IRQ */
++		virq = irq_find_mapping(adn->irqdomain,
++					inttype - A2B_INTTYPE_IO0PND);
++		if (virq)
++			handle_nested_irq(virq);
++		return IRQ_NONE;
++	case A2B_INTTYPE_DSCDONE:
++		/* Discovery done IRQ */
++		complete(&adn->discovery_completion);
++		return IRQ_HANDLED;
++	case A2B_INTTYPE_MBOX0FULL:
++	case A2B_INTTYPE_MBOX0EMPTY:
++	case A2B_INTTYPE_MBOX1FULL:
++	case A2B_INTTYPE_MBOX1EMPTY:
++		/* Mailbox IRQ - unimplemented */
++		dev_info(dev, "unhandled mailbox interrupt %d\n", inttype);
++		return IRQ_NONE;
++	case A2B_INTTYPE_STBYDONE:
++		/* Standby IRQ - unimplemented */
++		dev_info(dev, "unhandled standby interrupt %d\n", inttype);
++		return IRQ_NONE;
++	case A2B_INTTYPE_MSTR_RUNNING:
++		/* Master (main) running IRQ */
++		complete(&adn->running_completion);
++		return IRQ_HANDLED;
++	default:
++		dev_warn(dev, "unhandled unknown interrupt %d\n", inttype);
++		return IRQ_NONE;
++	}
++}
++
++int ad24xx_node_set_respcycs(struct a2b_node *node, unsigned int respcycs)
++{
++	struct ad24xx_node *adn = node->priv;
++	int ret;
++
++	dev_dbg(&node->dev, "set RESPCYCS %d\n", respcycs);
++
++	ret = regmap_write(adn->regmap, A2B_RESPCYCS, respcycs);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_set_respcycs);
++
++int ad24xx_node_set_switching(struct a2b_node *node, bool enable,
++			      enum a2b_swmode mode)
++{
++	struct ad24xx_node *adn = node->priv;
++	unsigned int val;
++	int ret;
++
++	/*
++	 * Use external switch mode 1 instead of 0. This indicates that the
++	 * downstream node is not using A2B bus power and is not properly
++	 * terminating the bias. See [1] section 7-11 "Switch Control Register"
++	 * for more information.
++	 */
++	if (node->swmode_1 && mode == A2B_SWMODE_0)
++		mode = A2B_SWMODE_1;
++
++	dev_dbg(&node->dev, "%s switching, mode %d\n",
++		enable ? "enable" : "disable", mode);
++
++	val = FIELD_PREP(A2B_SWCTL_ENSW_MASK, enable) |
++	      FIELD_PREP(A2B_SWCTL_MODE_MASK, mode);
++
++	ret = regmap_write(adn->regmap, A2B_SWCTL, val);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_set_switching);
++
++int ad24xx_node_discover(struct a2b_node *node, unsigned int respcycs)
++{
++	struct ad24xx_node *adn = node->priv;
++	int ret;
++	long timeout;
++
++	ret = regmap_write(adn->regmap, A2B_DISCVRY, respcycs);
++	if (ret)
++		return ret;
++
++	timeout = wait_for_completion_interruptible_timeout(
++		&adn->discovery_completion, msecs_to_jiffies(350));
++	reinit_completion(&adn->discovery_completion);
++	if (timeout < 0)
++		return timeout;
++	else if (timeout == 0) {
++		/*
++		 * On discovery timeout it is necessary to manually end the
++		 * discovery process by setting the ENDDSC bit. Empirically, the
++		 * following issues were observed when failing to do so:
++		 *
++		 *  - the A2B_DISCSTAT.DSCACT bit will remain indefinitely set;
++		 *  - the main node will fail to report a bus drop error
++		 *    properly; namely, it will signal SRFERRs but only set its
++		 *    LAST bit when switching is disabled;
++		 *  - subsequent attempts to rediscover the first subordinate
++		 *    node will succeed (insofar as a DSCDONE interrupt will
++		 *    arrive), but I2C access to the node's registers over the
++		 *    BUS client will always fail.
++		 */
++		ret = regmap_set_bits(adn->regmap, A2B_CONTROL,
++				      A2B_CONTROL_ENDDSC_MASK);
++		if (ret)
++			return ret;
++
++		return 1;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_discover);
++
++int ad24xx_node_new_structure(struct a2b_node *node,
++			      const struct a2b_slot_config *slot_config,
++			      bool dn_enable, bool up_enable)
++{
++	struct ad24xx_node *adn = node->priv;
++	unsigned int val;
++	int ret;
++
++	/*
++	 * Synchronize A2B slot sizes and formats with all downstream nodes. The
++	 * A2B_SLOTFMT register is main only and with auto-broadcast, meaning
++	 * that the written value is automatically propagated to all downstream
++	 * subordinate nodes.
++	 */
++	val = FIELD_PREP(A2B_SLOTFMT_DNSIZE_MASK,
++			 slot_config->size[A2B_DIR_DOWN]) |
++	      FIELD_PREP(A2B_SLOTFMT_DNFMT_MASK,
++			 slot_config->format[A2B_DIR_DOWN]) |
++	      FIELD_PREP(A2B_SLOTFMT_UPSIZE_MASK,
++			 slot_config->size[A2B_DIR_UP]) |
++	      FIELD_PREP(A2B_SLOTFMT_UPFMT_MASK,
++			 slot_config->format[A2B_DIR_UP]);
++
++	ret = regmap_write(adn->regmap, A2B_SLOTFMT, val);
++	if (ret)
++		return ret;
++
++	val = FIELD_PREP(A2B_DATCTL_DNS_MASK, dn_enable) |
++	      FIELD_PREP(A2B_DATCTL_UPS_MASK, up_enable);
++
++	ret = regmap_write(adn->regmap, A2B_DATCTL, val);
++	if (ret)
++		return ret;
++
++	ret = regmap_set_bits(adn->regmap, A2B_CONTROL,
++			      A2B_CONTROL_NEWSTRCT_MASK);
++	if (ret)
++		return ret;
++
++	/*
++	 * A new structure is applied within 5 superframe cycles unless
++	 * communication errors create delays, cf. [1] section 7-24 "Control
++	 * Register". Nominally this is about 100 us, so add a little extra to
++	 * account for any potential errors.
++	 */
++	usleep_range(200, 400);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_new_structure);
++
++int ad24xx_node_is_last(struct a2b_node *node)
++{
++	struct ad24xx_node *adn = node->priv;
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(adn->regmap, A2B_NODE, &val);
++	if (ret)
++		return ret;
++
++	return val & A2B_NODE_LAST_MASK ? 1 : 0;
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_is_last);
++
++static int ad24xx_node_setup_pincfg(struct ad24xx_node *adn)
++{
++	struct device_node *np = adn->dev->of_node;
++	unsigned int val = 0;
++	unsigned int drvstr = 1; /* Chip default is high drive strength */
++	bool irqinv;
++	bool irqts;
++
++	of_property_read_u32(np, "adi,drive-strength", &drvstr);
++	irqinv = of_property_present(np, "adi,invert-interrupt");
++	irqts = of_property_present(np, "adi,tristate-interrupt");
++
++	val |= FIELD_PREP(A2B_PINCFG_DRVSTR_MASK, drvstr);
++	val |= FIELD_PREP(A2B_PINCFG_IRQINV_MASK, irqinv);
++	val |= FIELD_PREP(A2B_PINCFG_IRQTS_MASK, irqts);
++
++	return regmap_write(adn->regmap, A2B_PINCFG, val);
++}
++
++static int ad24xx_node_setup_i2sgcfg(struct ad24xx_node *adn)
++{
++	struct a2b_node *node = adn->node;
++	unsigned int val = 0;
++
++	val |= FIELD_PREP(A2B_I2SGCFG_TDMMODE_MASK, node->tdm_mode);
++	val |= FIELD_PREP(A2B_I2SGCFG_RXONDTX1_MASK, node->rx_on_dtx1);
++	val |= FIELD_PREP(A2B_I2SGCFG_TDMSS_MASK, node->tdm_slot_size);
++	val |= FIELD_PREP(A2B_I2SGCFG_ALT_MASK, node->alternating_sync);
++	val |= FIELD_PREP(A2B_I2SGCFG_EARLY_MASK, node->early_sync);
++	val |= FIELD_PREP(A2B_I2SGCFG_INV_MASK, node->invert_sync);
++
++	return regmap_write(adn->regmap, A2B_I2SGCFG, val);
++}
++
++static bool ad24xx_node_precious_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case A2B_INTTYPE:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static const struct regmap_config ad24xx_node_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.precious_reg = ad24xx_node_precious_reg,
++	.max_register = A2B_REG_MAX,
++};
++
++int ad24xx_node_setup(struct a2b_node *node)
++{
++	struct device *dev = &node->dev;
++	struct device_node *np = dev->of_node;
++	struct ad24xx_node *adn;
++	long timeout;
++	int ret;
++
++	adn = devm_kzalloc(dev, sizeof(*adn), GFP_KERNEL);
++	if (!adn)
++		return -ENOMEM;
++
++	adn->regmap =
++		devm_regmap_init_a2b_node(node, &ad24xx_node_regmap_config);
++	if (IS_ERR(adn->regmap))
++		return PTR_ERR(adn->regmap);
++
++	ret = of_a2b_parse_tdm_mode(np, &node->tdm_mode);
++	if (ret)
++		return -EINVAL;
++
++	ret = of_a2b_parse_tdm_slot_size(np, &node->tdm_slot_size);
++	if (ret)
++		return -EINVAL;
++
++	if (of_property_present(np, "adi,invert-sync"))
++		node->invert_sync = 1;
++	if (of_property_present(np, "adi,early-sync"))
++		node->early_sync = 1;
++	if (of_property_present(np, "adi,alternating-sync"))
++		node->alternating_sync = 1;
++	if (of_property_present(np, "adi,rx-on-dtx1"))
++		node->rx_on_dtx1 = 1;
++	if (of_property_present(np, "adi,a2b-external-switch-mode-1"))
++		node->swmode_1 = 1;
++
++	node->priv = adn;
++
++	adn->dev = dev;
++	adn->node = node;
++	init_completion(&adn->running_completion);
++	init_completion(&adn->discovery_completion);
++
++	/* Identify */
++	ret = regmap_read(adn->regmap, A2B_VENDOR, &node->vendor);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(adn->regmap, A2B_PRODUCT, &node->product);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(adn->regmap, A2B_VERSION, &node->version);
++	if (ret)
++		return ret;
++
++	/* IRQ domain for GPIOs */
++	adn->irqdomain = irq_domain_add_linear(adn->dev->of_node,
++					       AD24XX_MAX_GPIOS,
++					       &ad24xx_node_irqdomain_ops, adn);
++	if (!adn->irqdomain)
++		return -ENOMEM;
++
++	ret = devm_add_action_or_reset(
++		adn->dev, devm_ad24xx_node_release_irqdomain, adn->irqdomain);
++	if (ret)
++		return ret;
++
++	/* IRQ */
++	adn->irq = of_irq_get(adn->dev->of_node, 0);
++	if (adn->irq <= 0)
++		return -EINVAL;
++
++	ret = devm_request_threaded_irq(adn->dev, adn->irq, NULL,
++					ad24xx_node_irq_handler, IRQF_ONESHOT,
++					"ad24xx-node", adn);
++	if (ret)
++		return ret;
++
++	/*
++	 * Perform a software reset - but only on the main node, as doing this
++	 * on subordinate nodes will require them to be re-discovered.
++	 */
++	if (is_a2b_main(node)) {
++		ret = regmap_set_bits(adn->regmap, A2B_CONTROL,
++				      A2B_CONTROL_SOFTRST_MASK);
++		if (ret)
++			return ret;
++	}
++
++	/* Pin configuration */
++	ret = ad24xx_node_setup_pincfg(adn);
++	if (ret)
++		return ret;
++
++	/* Enable interrupts */
++	ret = regmap_write(adn->regmap, A2B_INTMSK0, 0xFF);
++	if (ret)
++		return ret;
++
++	ret = regmap_write(adn->regmap, A2B_INTMSK1, 0xFF);
++	if (ret)
++		return ret;
++
++	if (is_a2b_main(node)) {
++		/*
++		 * Enable master (main) bit and wait for the transceiver to lock
++		 * its PLL to the received SYNC signal.
++		 */
++		ret = regmap_set_bits(adn->regmap, A2B_CONTROL,
++				      A2B_CONTROL_MSTR_MASK);
++		if (ret)
++			return ret;
++
++		/*
++		 * Per the datasheet [2] Table 3, "Clock and Reset Timing (A2B
++		 * Master)", the typical PLL Lock Time t_PLK is 7.5 ms. Wait 30
++		 * ms to be on the safe side and avoid spurious timeouts.
++		 */
++		timeout = wait_for_completion_interruptible_timeout(
++			&adn->running_completion, msecs_to_jiffies(30));
++		reinit_completion(&adn->running_completion);
++		if (timeout < 0)
++			return timeout;
++		else if (timeout == 0)
++			return -ETIMEDOUT;
++
++		/*
++		 * Enable main-node-only interrupts, ...
++		 *
++		 * but NOT I2C Error interrupts, as we should expect the error
++		 * to be reported via the I2C adapter associated with the BUS
++		 * client of the main node. This prevents many spurious
++		 * interrupts during e.g. i2cdetect -r.
++		 */
++		ret = regmap_write(adn->regmap, A2B_INTMSK2, 0x0D);
++		if (ret)
++			return ret;
++	}
++
++	/*
++	 * Set the global I2S configuration. For main nodes, the Technical
++	 * Reference [1] is clear that this register must be set before
++	 * discovery and must not be modified thereafter. For subordinate nodes
++	 * there is no such restriction.
++	 */
++	ret = ad24xx_node_setup_i2sgcfg(adn);
++	if (ret)
++		return ret;
++
++	/* Register optional transceiver functions with the core */
++	np = of_get_child_by_name(node->dev.of_node, "gpio");
++	if (np)
++		adn->func_gpio = a2b_node_of_add_func(node, np);
++	of_node_put(np);
++	if (IS_ERR(adn->func_gpio))
++		return PTR_ERR(adn->func_gpio);
++
++	np = of_get_child_by_name(node->dev.of_node, "codec");
++	if (np)
++		adn->func_codec = a2b_node_of_add_func(node, np);
++	of_node_put(np);
++	if (IS_ERR(adn->func_codec)) {
++		ret = PTR_ERR(adn->func_codec);
++		goto err_codec;
++	}
++
++	np = of_get_child_by_name(node->dev.of_node, "clock");
++	if (np)
++		adn->func_clk = a2b_node_of_add_func(node, np);
++	of_node_put(np);
++	if (IS_ERR(adn->func_clk)) {
++		ret = PTR_ERR(adn->func_clk);
++		goto err_clk;
++	}
++
++	np = of_get_child_by_name(node->dev.of_node, "i2c");
++	if (np)
++		adn->func_i2c = a2b_node_of_add_func(node, np);
++	of_node_put(np);
++	if (IS_ERR(adn->func_i2c)) {
++		ret = PTR_ERR(adn->func_i2c);
++		goto err_i2c;
++	}
++
++	return 0;
++
++	/* Unregister optional functions on error */
++err_i2c:
++	if (adn->func_clk)
++		device_unregister(&adn->func_clk->dev);
++err_clk:
++	if (adn->func_codec)
++		device_unregister(&adn->func_codec->dev);
++err_codec:
++	if (adn->func_gpio)
++		device_unregister(&adn->func_gpio->dev);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_setup);
++
++void ad24xx_node_teardown(struct a2b_node *node)
++{
++	struct ad24xx_node *adn = node->priv;
++
++	if (adn->func_i2c)
++		device_unregister(&adn->func_i2c->dev);
++	if (adn->func_clk)
++		device_unregister(&adn->func_clk->dev);
++	if (adn->func_codec)
++		device_unregister(&adn->func_codec->dev);
++	if (adn->func_gpio)
++		device_unregister(&adn->func_gpio->dev);
++
++	/*
++	 * Reset the switch control register to disable any switching. This
++	 * might fail - particularly if this node is being torn down as a result
++	 * of a bus drop. But if the driver is just being unbound from the node
++	 * device, switching should be disabled so that on any rebind, the
++	 * discovery process can continue from this node. Otherwise there is a
++	 * possibility that the switching is never toggled off, which is a
++	 * prerequisite for rediscovery.
++	 */
++	regmap_write(adn->regmap, A2B_SWCTL, 0x00);
++
++	/*
++	 * Similarly, in case only an unbind is occurring, mask and clear all
++	 * pending interrupts to prevent spurious interrupts.
++	 */
++	regmap_write(adn->regmap, A2B_INTMSK0, 0x00);
++	regmap_write(adn->regmap, A2B_INTMSK1, 0x00);
++	regmap_write(adn->regmap, A2B_INTPND0, 0xFF);
++	regmap_write(adn->regmap, A2B_INTPND1, 0xFF);
++
++	if (is_a2b_main(node)) {
++		regmap_write(adn->regmap, A2B_INTMSK2, 0x00);
++		regmap_write(adn->regmap, A2B_INTPND2, 0xFF);
++	}
++}
++EXPORT_SYMBOL_GPL(ad24xx_node_teardown);
++
++static struct a2b_node_ops ad24xx_sub_ops = {
++	.set_respcycs = ad24xx_node_set_respcycs,
++	.set_switching = ad24xx_node_set_switching,
++	.is_last = ad24xx_node_is_last,
++	.setup = ad24xx_node_setup,
++	.teardown = ad24xx_node_teardown,
++};
++
++static struct a2b_node_ops ad24xx_main_ops = {
++	.set_respcycs = ad24xx_node_set_respcycs,
++	.set_switching = ad24xx_node_set_switching,
++	.discover = ad24xx_node_discover,
++	.new_structure = ad24xx_node_new_structure,
++	.is_last = ad24xx_node_is_last,
++	.setup = ad24xx_node_setup,
++	.teardown = ad24xx_node_teardown,
++};
++
++static int ad24xx_node_probe(struct device *dev)
++{
++	struct a2b_node *node = to_a2b_node(dev);
++	int ret;
++
++	node->ops = is_a2b_main(node) ? &ad24xx_main_ops : &ad24xx_sub_ops;
++	node->chip_info = of_device_get_match_data(dev);
++
++	ret = a2b_register_node(node);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static void ad24xx_node_remove(struct device *dev)
++{
++	struct a2b_node *node = to_a2b_node(dev);
++
++	a2b_unregister_node(node);
++}
++
++static const struct of_device_id ad24xx_node_of_match_table[] = {
++	{
++		.compatible = "adi,ad2401-node",
++		.data = &ad24xx_chip_info[A2B_AD2401],
++	},
++	{
++		.compatible = "adi,ad2402-node",
++		.data = &ad24xx_chip_info[A2B_AD2402],
++	},
++	{
++		.compatible = "adi,ad2403-node",
++		.data = &ad24xx_chip_info[A2B_AD2403],
++	},
++	{
++		.compatible = "adi,ad2410-node",
++		.data = &ad24xx_chip_info[A2B_AD2410],
++	},
++	{
++		.compatible = "adi,ad2420-node",
++		.data = &ad24xx_chip_info[A2B_AD2420],
++	},
++	{
++		.compatible = "adi,ad2421-node",
++		.data = &ad24xx_chip_info[A2B_AD2421],
++	},
++	{
++		.compatible = "adi,ad2422-node",
++		.data = &ad24xx_chip_info[A2B_AD2422],
++	},
++	{
++		.compatible = "adi,ad2425-node",
++		.data = &ad24xx_chip_info[A2B_AD2425],
++	},
++	{
++		.compatible = "adi,ad2426-node",
++		.data = &ad24xx_chip_info[A2B_AD2426],
++	},
++	{
++		.compatible = "adi,ad2427-node",
++		.data = &ad24xx_chip_info[A2B_AD2427],
++	},
++	{
++		.compatible = "adi,ad2428-node",
++		.data = &ad24xx_chip_info[A2B_AD2428],
++	},
++	{
++		.compatible = "adi,ad2429-node",
++		.data = &ad24xx_chip_info[A2B_AD2429],
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, ad24xx_node_of_match_table);
++
++static struct a2b_driver ad24xx_node_driver = {
++	.driver = {
++		.name = "ad24xx-node",
++		.of_match_table = ad24xx_node_of_match_table,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.probe = ad24xx_node_probe,
++	.remove = ad24xx_node_remove,
++};
++module_a2b_driver(ad24xx_node_driver);
++
++MODULE_AUTHOR("Alvin Šipraga <alsi@bang-olufsen.dk>");
++MODULE_DESCRIPTION("AD24xx A2B transceiver node driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/a2b/ad24xx-node.h b/drivers/a2b/ad24xx-node.h
+new file mode 100644
+index 000000000000..15591f0b1a51
+--- /dev/null
++++ b/drivers/a2b/ad24xx-node.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * AD24xx A2B transceiver node driver extension header
++ *
++ * Copyright (c) 2023-2024 Alvin Šipraga <alsi@bang-olufsen.dk>
++ *
++ * Use this to derive your own custom A2B node driver.
++ */
++#ifndef _AD24XX_NODE_H
++#define _AD24XX_NODE_H
++
++#include <linux/a2b/a2b.h>
++
++enum ad24xx_chips {
++	A2B_AD2401,
++	A2B_AD2402,
++	A2B_AD2403,
++	A2B_AD2410,
++	A2B_AD2420,
++	A2B_AD2421,
++	A2B_AD2422,
++	A2B_AD2425,
++	A2B_AD2426,
++	A2B_AD2427,
++	A2B_AD2428,
++	A2B_AD2429,
++};
++
++extern const struct a2b_chip_info ad24xx_chip_info[];
++
++int ad24xx_node_set_respcycs(struct a2b_node *node, unsigned int respcycs);
++int ad24xx_node_set_switching(struct a2b_node *node, bool enable,
++			      enum a2b_swmode mode);
++int ad24xx_node_discover(struct a2b_node *node, unsigned int respcycs);
++int ad24xx_node_new_structure(struct a2b_node *node,
++			      const struct a2b_slot_config *slot_config,
++			      bool dn_enable, bool up_enable);
++int ad24xx_node_is_last(struct a2b_node *node);
++int ad24xx_node_setup(struct a2b_node *node);
++void ad24xx_node_teardown(struct a2b_node *node);
++
++#endif /* _AD24XX_NODE_H */
+
+-- 
+2.44.0
 
