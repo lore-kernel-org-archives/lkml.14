@@ -1,61 +1,62 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from sonic312-30.consmr.mail.ne1.yahoo.com (sonic312-30.consmr.mail.ne1.yahoo.com [66.163.191.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1121713D88B;
-	Fri, 17 May 2024 18:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2499D13E024
+	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 18:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.191.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715968829; cv=none; b=PKiO8b30p6OKI1lgCG25MzDZk5FWzMcTYuugkgYe04s+sihlm2tdf9MaMWs+mWG+po142+dGrLf5JlsiuHsMOBBfCtQGvPMMVC+fQa8zRVyqtTUiEY6nTQrKb+mYmYpYO3VV4vtyq3OOfEnTZ1XGNAtMXvef5YbBdlrHxeGjU44=
+	t=1715969022; cv=none; b=qpE3Yxc8l+3SRRGlgdsjrXWuB0FdXnRzeSn3Q2ofnQgHCERPRqtwQDibtechGy8ylAw3PJZBl+auUCybNskjzB7c8mXiDj8fDloeEz9dy2g60wG7nzMNyUcJgLSEPVb5LOH1YLI20H69YWVhuRiEYNh6vOM/Uu7AAll0b7JHrs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715968829; c=relaxed/simple;
-	bh=hozAzpQMXObpbdTk7Ibzjpn2uslGrLTRVG5E8LS6QJA=;
+	s=arc-20240116; t=1715969022; c=relaxed/simple;
+	bh=put+y5/J/5Kd8zNeqN0yRq4nqLEYAbVcLkKYZS8ZTpA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HwH/jvTwkNY1CGaK1H3l3hV6WqCOVqPoj8nYiJPtHZe5aaDzOerBiTgmTk3dloDvfABHjpRX7HuvVTNvzSZeMtn4gtbXZNoDwdXwxAX1FlNVr29CrBfUPzGS0L5TBZG6j4tzEhSCap+JskwXLYlifjKZJSK1JgyV3g55UGCrATg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HW4kVh7M; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=Li3OgMADCjqc5OQ46QNwsGFyxGaSyGeNHgR123EC88yl4uyk+alsvsUM4pYfbdSHdJcgNULpmbwVSZfvnv8gBPsJo1EcIfYDzGZNx8dXo/UDlppVqpSvb7hw49ZJYT5JEogSfG38zYfFbFnEWyCj1kq5kx7DwZdYG3ZvQr5nang=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=SLZenIlm; arc=none smtp.client-ip=66.163.191.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HW4kVh7M"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f08442b7bcso17357805ad.1;
-        Fri, 17 May 2024 11:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715968827; x=1716573627; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=w/StxRW/VLxGkt1YAzvKzW9ayexnITae0WPMFzYawxM=;
-        b=HW4kVh7Mf1aqJZXkXUCX5NqzIMDENND+Ktu8JZlXTbcrLARq4Fyzu5hfIgcu9+PuXk
-         CzwAEiFryEdp7zEYZ7/kjY3xgqz0AVfUAviZ3qxix3G/MRZzblh3TcDG/y77K5wI4QjU
-         J/RkIYmye0aYTb0f/nC+C2FYHXxqaWSDoHP2HQWFLdxu4Iy74tgchlE5zb+dctwtERMy
-         LesV3t6oNdCrKBrtbW6UZ+0J1f/SId6G3tadCWC0iQDOih0CvZk0/AkeOVjRcrGIKBMO
-         y4S9xD9CM2BG9wvv+E4ikhz0Tyxnz6mLFUEgEnk50X6OyoUMleopoh90qQA1oNVkpieV
-         X9og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715968827; x=1716573627;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w/StxRW/VLxGkt1YAzvKzW9ayexnITae0WPMFzYawxM=;
-        b=IDJs7MTwPOqL4buqDR7+7ZM98t60Mz+C5/S0KPKrmuSV8fqtqQ4iWoykMMlUQxr/tf
-         KUXQ02RnXauWQ3S4uOgFdNfMF8J5lpgC8gZSGE5t7j5SLBpEo/lelgO56/S/gJ1G/sA7
-         l31h/6zg5PE3UTNozPuNewiDxhiE2MUGpRCOxJtQkPd4beVvhGAeR03/LLv5xXF5NOr/
-         vPNZ1L0VjixrsBuZjPDc8KmBWoQ3aPHKoCSlKCX4htlmDo2VK75VC0t/9KeLJzq3617K
-         V4a7jmRcddD2tzg0c0SzVhkwliqX4MiPI1DVg6+hsc7RNmCwvBAkvRUr91jtk2R8PWFu
-         CnOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUy94UqkqeQllkdcJ0YHsgVItz0lPHKJqBqXnAGtSMnEUhQ8n/D8fnzDg4fQ6rxsh+Cx3vxW/WscXujJ4CKrCN6NK2yKhzuFxT0RZFYX1A6e9KfDcInBfIvO5nDCn3RaTMWuazrCpennqNrm3iGLxxfUGRGrvFRlLAMi5Sk3syVzFg+rffpkFBBMmg3IaflCLpqJRLL5v+BR/WHqseN2JNn5HKo0/B1wmeSmoAkkCkkuSkIJvE0Y4QuXmluo6Pjmlo5TRv5CmjhuJEsSxMVgeTEWmPtUxB/gjbrcm6FWYX04nCZArybyp8hCknYe4+HMehRQfY06ZyFkbE3soa8LNe9NaoJ4YMN74bvHW5FfBzkH9WIk8f1Y6h/R3CZH3ZUq2VWdmPOJj7U+HTVU8cg3vhtmrjxWMV41ez/YApwVMindMJDWtwontSU2MgbDkIKGAspHshumJOeS/eBmzhEW5VwcaxE18c0qY+3ykU9O1nBIG8t8tpm9CD1jNAqSyqjJg2X/wBca4Jhk4sV1biIz4E9QQHjWC2Q8lv33YJYxCxL1q6P4WQL2oFQtwv2R36E0yR3Uvup+zIEy/aTxmm2Vmla34FFEp3qiLppDZ+L0g43G03h+5FT0xhT/S26dAnPbZh9ZgOAUCG5Ltq/Eilawi5t0dnrkHDjTWxt612rwg0fxK79K4V76AAgb+rpvyBfw6Qwr19PJoP/dmcrgqQZS+B5AtK5Kr9MWPVX8csgYh3w+EAMeS85leHvalFLRRfomIC5Jnqp7qoDkc/yP1u5kY6kvBqExnM/t/C87bDv+TKY/DcDZKfdJ6NvOlDcjcxc0wZz4G1ljzQ8sIOdO9RQDCjne2R9mbURnm7zWh5CF/K6f1z+dluq7Mn/kfzTYYcz5fBwAC/Uitkp9Og0Bap/iNfP5yYXn5qzgcRO1h51dODYeRfwzf8ZEdeREMpJ4A==
-X-Gm-Message-State: AOJu0YyRMzm/2Xjrt8z7DljUkzB1tV+7rgEbAl7kKiXNm32QWq1Hj6T5
-	CZaiFp6kBqyRjai0CnM2fhX8k569z67BjPY8VNS1RyKKSQXxs+bW
-X-Google-Smtp-Source: AGHT+IGZDVzcY7OCALKn8Hd9OAI6XcssKSQlDPeH3SNH0EqlCaPwK+7ssdLCEtEMxDGdIwihVzJtAg==
-X-Received: by 2002:a17:903:120e:b0:1e4:6519:816d with SMTP id d9443c01a7336-1ef43f51feamr267718025ad.48.1715968827236;
-        Fri, 17 May 2024 11:00:27 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30bfesm159992895ad.175.2024.05.17.11.00.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 May 2024 11:00:26 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <5cff0ff0-48d1-49f8-84f4-bb33571fdf16@roeck-us.net>
-Date: Fri, 17 May 2024 11:00:22 -0700
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="SLZenIlm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1715969014; bh=tIio+RNaO0tAS6S6sNhPnuxF8pniQ2kOR7PgXrhSanY=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=SLZenIlmVtmyzCw9/jawLtthw1wnJWcaPWr11kfmoO/H/kFqWYWI1CKKHNSWp5TNtbAzAqsiPgzCzbzW4NtXtHpgfghik/gvBOxcrXxtJFNiXfb9xTsyIwakVt5fwLGis0EBC1NDRe1Z1snZ1yQ55F26XjGPdDUFzpBUKtNZexauQ/eOauqUwcXuDYmp0mwq2oBebUXE3cDzOIR2Rdi/mEk6SaSozy0+TmOofizkcGTZTqIPPNyixkw6x4oqUhOD5A0hNwzPPzNHi7udSvw/GBWxhaXWdwuy25eDeqfNUMkW6+Hunf8E1hWNRJUIWQrsH5Q2YIKg0LN4heSdAwo0qw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1715969014; bh=GolWIEwTGLJqvPFPgC2PYtCr1wojqEnMmiIN4mCCkGG=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=RVlNMBRhhp11eo/2PW3Ks+kvLM49A3yBUW4dyjxX99Bd4kNMAH70MwQE0tezo7kp0WPidVdozlnsh9xfdi+3LD208BD8t2B2EToHhAu44TCz934IxWRv7y3vaydCWpuXOY8VrqsxjMH08eTQiRA9iKb53uPcDvyBcz6aFSlA9F0PY19pp00PP+pQVavcxnGHdz0lqVaeBp1xTfev4zosSn2d7pjWO8SbCjuy0NDyICqfd1MqneBaR2Z32IC1BwniNfsIvlKopbdNpbs4z2f4jFmLuHWd40fpm9vBmuCYWvgCY3zYpfI6wuHZI+DRO4frVgkbS32z8JQHAvxleyRX2A==
+X-YMail-OSG: C7dBFvcVM1nvSlNii7HUHZPruZOa8MBqqQnwNdj.jpeoRy.bsooKqqN6CofU7jF
+ AL8YqbhgKh5BrdysJb4mCaBoMtviW_OVszlUtSUG0oKLtiK.exYzsRMm9DYYpvPVRu.nwayzcMxa
+ 84uWJP4uTL_kv9PTKZ1s.a812AFkOYGjvLUU4IhV52xweas1AptPzJ0REbAEP5WgZgUMKEJfSZyK
+ F3TTo3mLHvVjoHsCqlBW4Z6hTP5L8wmhY0OuDSpYmGfdw8GjWoVIhR3sYHs.HHD2f4mvqKT1.6mR
+ 2fB9SoGaYaufCWqr4dk9wsrnZIBjmTxs0oyDazXsymW_8iyw9Oft.qtK_RTgFQvBVdkUi_MnjWJP
+ 8AVC5wdGXnG4kbyZ8_CSAyB6aH6d4QHE80kIjRXxpOZbMW8xHa0cq64Nbr7gGyR9.j4fkVVRLZcs
+ 7Zf1.pQ4p5BEN9uy5YxZlzZb9JA_hYBgdACt0yKhyyu7Z5RfxkLxrz.KNFGuBiyN4mUxAwIDwdP5
+ iAPdb0YIuwXp2yQbeazRld2gbzZotLyq1ICxsQjq3UxkUu0uwILGk7StrenoXALkeuEo0esyt1T8
+ Q8K.JrNmwZTlAE71jNUvd5Y7Cwi6wHG0bQDT5QZz.PeCqeG1aQUpYJnu0t549jFa05e3got8_B_E
+ wtxLYHLutEmGYYXfcCWRopzQgbirFf0XVQ8vh.NiR46Ggo.lq2fviMCrSyxsLj2aNa6XyzEoWaMw
+ HifUO2MOiQDi8pFXDUmN..rfWf9d47G2R50Xzorexpbf8bXy0XY1wB7O8DLprNBARiOKsO6.A5_O
+ YIVzmby4uix8812HeZc.YG9dFXsmq7P7eX33gTpaCwX7OLAqQ8Rlw7xbL8VNspsCOQv2Uk7Gc6p3
+ 12uRD0w5e5EMYiHMES76sGjqnZPkNn_Vc8ndMJYOdzx6aHSaemFtrWe4.nzwWZ9L.dnGDyRbXsZI
+ vZxUVNCOQnF3qAcvVq1.nEL_b6eaW65KATQkW4GQ6t2J4NO7mFixnVRh0w.Fh.8vZiLagUNaJTqz
+ QVARDPvGlekmwCVhHDEkX5ytWFOQiJ6N0ItESgkPylM2h3YrIvlYtV0rlbGGa0S_.oRXMPRS2Rr9
+ Fnsneaar9MxjrrahilxhtAX9nPB0wnvQPiOy__hz8XoX1mZ.8aqHIqplyMzqZPwQEM_zgzp_YamZ
+ YXhZ1WWNFPW.Q_qFhSWTj0AELMIXtopd0gpk_oDz3jCnjpMHYzTVHT_V_dguwuoEswZFTzfMzjcj
+ Fcg_Bn2v34qDNVCbz1I9zo14svkrDxB2DM38jZbFl1AJleAeulpBnFypKlaNR_bRzpEHwz6bwdmq
+ CRvX3kouezgM5_UBFEFCiku8qCIruPUjzlXixde_bZUsS1DygFnc7rl7I2CSXK8.1iD4aYEjtieq
+ WHchfHDOPE4xl1V57emQyQtMifa_zh5YbxPe7CEg9djhT6EKtWN6FnNBhl6KOPpjEy1xLaW5097W
+ wqhBLRA3mQehTBP_N5HZIKCw_MmWChwwGGSAu0x5tUuB1WaNkPBA..gjkb_YsSLdEh66vtIdohJl
+ F88kBpQ_ApaIwcGLs2746VxCHy1PFyqpu4tsZ2kMT4c9zogKaj5yiW5vekRNhSj9HaAQoR23JgEg
+ ertRf13zJsneAph2CkqKEw2n28vhn3hqC_hkpXA5_nsXSIwdaAoykUcgxN.S.Mf0v6.CYQlkq1mh
+ qxvvIk5pRZ2oQW_ppDrbYtk_fxjbdxjc10ZZ8X9Kf9ljq6uLTo8lCS8MVlltVV6dfOq_.mX4Cj9V
+ wKGQtCucyyV6Oo44sD194MDzeot23oJ6aXqjvb9FdouIDF7acea8atdmlua21fPZ3UJ799xwjfvm
+ Drsuukqbvp5Wak0N7epSJK_5fxu1VO38qglUK0LYxmKjDscuJbnYkticBqsDt7Zp6xt53Slewtuh
+ 1Q7uZQYD4qKe5lyFBl40Fi1AtErRwkx.Wt.B8LdcS.y2RJo26gGghATmbSQ5dM6MggFPPHOorRsa
+ ktUTGesdXhUe_i9C6gbe6ykKqMV0nu9yWBgImM7t13zhqGifcmkBFj4MrH8m5MZeouHhJx5qH8aS
+ YJ8Ntzi8MbEYXSEYhmX2dQ_xJxc.naYxUVCQPW4zDKkOD7aKg7.PGM7voSR4k3oQPhHoluFwLXR7
+ 6ZrS50QFr6Y_2ZkxSbfJZ29X8xQUzPEHoX9STDWOLEf_mJOOOVbbKjk2pQAOBUwS0SXcqi6tEuMQ
+ kCwJUstfbt94VqML5Vg.RrNI5rTuk5.3BZsfl2VEEvGxAc_VRJnqeLKOyFERetBj1D54Q2B8yNDg
+ dqoXhAm8elfHwXw--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 85153b7f-4c11-4fca-84a2-cca4d0413b58
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Fri, 17 May 2024 18:03:34 +0000
+Received: by hermes--production-gq1-59c575df44-f4snh (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 8b429e65f2d60a3193676eb029935f6a;
+          Fri, 17 May 2024 17:53:25 +0000 (UTC)
+Message-ID: <df3c9e5c-b0e7-4502-8c36-c5cb775152c0@schaufler-ca.com>
+Date: Fri, 17 May 2024 10:53:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,122 +64,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/treewide: Remove second parameter of
- __assign_str()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-rdma@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev,
- linux-tegra@vger.kernel.org, netdev@vger.kernel.org,
- linux-hyperv@vger.kernel.org, ath10k@lists.infradead.org,
- linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
- ath12k@lists.infradead.org, brcm80211@lists.linux.dev,
- brcm80211-dev-list.pdl@broadcom.com, linux-usb@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-nfs@vger.kernel.org,
- ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-edac@vger.kernel.org,
- selinux@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-hwmon@vger.kernel.org, io-uring@vger.kernel.org,
- linux-sound@vger.kernel.org, bpf@vger.kernel.org,
- linux-wpan@vger.kernel.org, dev@openvswitch.org, linux-s390@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, Julia Lawall <Julia.Lawall@inria.fr>
-References: <20240516133454.681ba6a0@rorschach.local.home>
- <5080f4c5-e0b3-4c2e-9732-f673d7e6ca66@roeck-us.net>
- <20240517134834.43e726dd@gandalf.local.home>
+Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
+To: Jonathan Calmels <jcalmels@3xx0.net>, Jarkko Sakkinen <jarkko@kernel.org>
+Cc: brauner@kernel.org, ebiederm@xmission.com,
+ Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Joel Granados <j.granados@samsung.com>, Serge Hallyn <serge@hallyn.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ David Howells <dhowells@redhat.com>, containers@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <2804dd75-50fd-481c-8867-bc6cea7ab986@schaufler-ca.com>
+ <D1BBFWKGIA94.JP53QNURY3J4@kernel.org>
+ <D1BBI1LX2FMW.3MTQAHW0MA1IH@kernel.org>
+ <D1BC3VWXKTNC.2DB9JIIDOFIOQ@kernel.org>
+ <jvy3npdptyro3m2q2junvnokbq2fjlffljxeqitd55ff37cydc@b7mwtquys6im>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240517134834.43e726dd@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <jvy3npdptyro3m2q2junvnokbq2fjlffljxeqitd55ff37cydc@b7mwtquys6im>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.22356 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On 5/17/24 10:48, Steven Rostedt wrote:
-> On Fri, 17 May 2024 10:36:37 -0700
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
->> Building csky:allmodconfig (and others) ... failed
->> --------------
->> Error log:
->> In file included from include/trace/trace_events.h:419,
->>                   from include/trace/define_trace.h:102,
->>                   from drivers/cxl/core/trace.h:737,
->>                   from drivers/cxl/core/trace.c:8:
->> drivers/cxl/core/./trace.h:383:1: error: macro "__assign_str" passed 2 arguments, but takes just 1
->>
->> This is with the patch applied on top of v6.9-8410-gff2632d7d08e.
->> So far that seems to be the only build failure.
->> Introduced with commit 6aec00139d3a8 ("cxl/core: Add region info to
->> cxl_general_media and cxl_dram events"). Guess we'll see more of those
->> towards the end of the commit window.
-> 
-> Looks like I made this patch just before this commit was pulled into
-> Linus's tree.
-> 
-> Which is why I'll apply and rerun the above again probably on Tuesday of
-> next week against Linus's latest.
-> 
-> This patch made it through both an allyesconfig and an allmodconfig, but on
-> the commit I had applied it to, which was:
-> 
->    1b294a1f3561 ("Merge tag 'net-next-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next")
-> 
-> I'll be compiling those two builds after I update it then.
-> 
+On 5/17/2024 4:42 AM, Jonathan Calmels wrote:
+>>>> On Thu May 16, 2024 at 10:07 PM EEST, Casey Schaufler wrote:
+>>>>> I suggest that adding a capability set for user namespaces is a bad idea:
+>>>>> 	- It is in no way obvious what problem it solves
+>>>>> 	- It is not obvious how it solves any problem
+>>>>> 	- The capability mechanism has not been popular, and relying on a
+>>>>> 	  community (e.g. container developers) to embrace it based on this
+>>>>> 	  enhancement is a recipe for failure
+>>>>> 	- Capabilities are already more complicated than modern developers
+>>>>> 	  want to deal with. Adding another, special purpose set, is going
+>>>>> 	  to make them even more difficult to use.
+> Sorry if the commit wasn't clear enough.
 
-I am currently repeating my test builds with the above errors fixed.
-That should take a couple of hours. I'll let you know how it goes.
+While, as others have pointed out, the commit description left
+much to be desired, that isn't the biggest problem with the change
+you're proposing.
 
-Guenter
+>  Basically:
+>
+> - Today user namespaces grant full capabilities.
 
+Of course they do. I have been following the use of capabilities
+in Linux since before they were implemented. The uptake has been
+disappointing in all use cases.
+
+>   This behavior is often abused to attack various kernel subsystems.
+
+Yes. The problems of a single, all powerful root privilege scheme are
+well documented.
+
+>   Only option
+
+Hardly.
+
+>  is to disable them altogether which breaks a lot of
+>   userspace stuff.
+
+Updating userspace components to behave properly in a capabilities
+environment has never been a popular activity, but is the right way
+to address this issue. And before you start on the "no one can do that,
+it's too hard", I'll point out that multiple UNIX systems supported
+rootless, all capabilities based systems back in the day. 
+
+>   This goes against the least privilege principle.
+
+If you're going to run userspace that *requires* privilege, you have
+to have a way to *allow* privilege. If the userspace insists on a root
+based privilege model, you're stuck supporting it. Regardless of your
+principles.
+
+>
+> - It adds a new capability set.
+
+Which is a really, really bad idea. The equation for calculating effective
+privilege is already more complicated than userspace developers are generally
+willing to put up with.
+
+>   This set dictates what capabilities are granted in namespaces (instead
+>   of always getting full caps).
+
+I would not expect container developers to be eager to learn how to use
+this facility.
+
+>   This brings namespaces in line with the rest of the system, user
+>   namespaces are no more "special".
+
+I'm sorry, but this makes no sense to me whatsoever. You want to introduce
+a capability set explicitly for namespaces in order to make them less
+special? Maybe I'm just old and cranky.
+
+>   They now work the same way as say a transition to root does with
+>   inheritable caps.
+
+That needs some explanation.
+
+>
+> - This isn't intended to be used by end users per se (although they could).
+>   This would be used at the same places where existing capabalities are
+>   used today (e.g. init system, pam, container runtime, browser
+>   sandbox), or by system administrators.
+
+I understand that. It is for containers. Containers are not kernel entities.
+
+>
+> To give you some ideas of things you could do:
+>
+> # E.g. prevent alice from getting CAP_NET_ADMIN in user namespaces under SSH
+> echo "auth optional pam_cap.so" >> /etc/pam.d/sshd
+> echo "!cap_net_admin alice" >> /etc/security/capability.conf.
+>
+> # E.g. prevent any Docker container from ever getting CAP_DAC_OVERRIDE
+> systemd-run -p CapabilityBoundingSet=~CAP_DAC_OVERRIDE \
+>             -p SecureBits=userns-strict-caps \
+>             /usr/bin/dockerd
+>
+> # E.g. kernel could be vulnerable to CAP_SYS_RAWIO exploits
+> # Prevent users from ever gaining it
+> sysctl -w cap_bound_userns_mask=0x1fffffdffff
