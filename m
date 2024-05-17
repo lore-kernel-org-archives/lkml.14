@@ -1,135 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wflow2-smtp.messagingengine.com (wflow2-smtp.messagingengine.com [64.147.123.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB8813FD9A
-	for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 17:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3852B13DDCA;
+	Fri, 17 May 2024 17:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715968458; cv=none; b=JO/Lmwnw67EjFux70p9F+K5Hx5vAVg5QKflXbpXMA5XM+BBrdxNYYb0fN3IIfGVvvciblDfMCHK3G81/1Lut2ENAHz/X0/AYXUdC9QypWwvvPniPA0/U2bhNPqUoQfBUhWTIXoOO7n7OOo6yKoZkACb/PDlkvsWhEiZNbeVYGAs=
+	t=1715968648; cv=none; b=nIrom0Z2xz7JRQxQxCl5TtU2iuO1Edqt/bKFh/QoeQvFMCtIO3qKv9vmxnso8cVJjcGVrhU1m8bIaxyY+fDE85jWnuX1IroS2yZZQbbFGOMZ5sROoMRecAtNBr7lL2Bk26prs7TYD+0bl5O45Iw4FszoWLkWZ1cJ+kpcEnXC5Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715968458; c=relaxed/simple;
-	bh=fIE6oholh89hcyn+Mle9O7jrGtzYqHfvDqdxqhyIcuI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YvxUUIVcgkYC+y0ywlqszgstTiBNgN6c7Ma40q3ptQPOpBE7+ueGhfXYnWQsXh4MNrNffLW8+sFo0LNQW3+vw2rC62aenG6F2Po3GRBp2LMHYjpPKxQMMr8aQVf6BKyGks5DifY1/hBGM5NWcTrQJM8SyTZcQ/TX1PXNcjaiC8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eXH8b6kX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715968648; c=relaxed/simple;
+	bh=I2w45PghcaqjI+y7WfkIeFOVTyWdnhXIf4c8rZ8OaJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnIDRhrQfP7T8N2nKCGyXi5RNUnz8pF8ACH3RTkFbJOnbzG1phL52NNPOnJf+O6B8W0HELQ/VhVgFAoG3Z779J1FvSFStRrul9eepvTX6R5VyC9SHHxFPpECA+wSFgvVDVnYKXAtiV4vib4eGQ6HgICwMZWY8YRFPaHWttBtfu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=uMfGVJkU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TDNEW63p; arc=none smtp.client-ip=64.147.123.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXH8b6kX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715968455;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Me9x3IUsC1z+bCQEZVRKdGqYAG/0M8JKwxm1DyG55YY=;
-	b=eXH8b6kXGHUYlpalRTDr0y9SdiBZhblmeds34a4Zg/WMubJm7XDu/fMZ5aMZHy77lYQPGK
-	jnUqZtQe44zBpvckmXxx8BQni71CucKg70jNz0O2AsJqlnhULX06HYxiHVcnZxkev9vv8P
-	qOg+/X1W9yBpaiXOO4q9Dttc01YEXBI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-295-s610DBGjNHqfu8Z9etiwOQ-1; Fri, 17 May 2024 13:54:14 -0400
-X-MC-Unique: s610DBGjNHqfu8Z9etiwOQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34f1b148725so4310499f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2024 10:54:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715968453; x=1716573253;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Me9x3IUsC1z+bCQEZVRKdGqYAG/0M8JKwxm1DyG55YY=;
-        b=EsUREq6IAP8NWZab5LSLVFyj6D8C5OtQ0EE08+JOlH/UP0d2SnMPzfwvOYtbwABkyC
-         Xgjd2egUKJ8IIv2lTUYXeibb0cZwsXd9GsWw1036X9p5jJfeiOjpnKzHmQH9gultL5yF
-         4XopbQsdBoJEtWqf4MUuJL5BY5LoiMz1zqYHWO2IvH70fmKNtpbz28kv1WXEeFd7C4RZ
-         Uon5ttTlrI4LOq+0CDjvpaf0UKFOwZoug4soGhJkT7tbt/HVu8Y33jxV3UDpcdWXgmkF
-         gEH1iHcWBP742foJiYhnza+J5CLBgs6rIh7gkUfNOI7gCdtc5/FXfWjnokgJJHt8YOYy
-         YaQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXz4zrPQGF/dYRk+x9gNxruAvFXi8ZnYxJAWpASJ1ItKQbBmcRN1M8773tb/HJ46lmwn0VF3AXL/xVlu61b32wT8IguVLr4swGgQKay
-X-Gm-Message-State: AOJu0YxXwjfrTHtW46iTQghm1pj+MiqnHMKAa50y2hYeisSMYh3bl+Jo
-	DxmzFVzxnSURL3mywMTzaHRBnky/z+g5mHZc0MOgw1pQpe1Aj1b7+vRvsS1VbpO7UlzRIofoeiZ
-	sOn6vOYyWOf3RooniVthd588XERqyV0j+cPWuI4ZR5uCQyisan7f+wazvVf94vg4Goa3XawfO+B
-	flEWYzgKZmyOGJS+YXhZE/sVsypy4czNYeryLt
-X-Received: by 2002:adf:f683:0:b0:351:d2e6:9296 with SMTP id ffacd0b85a97d-351d2e69673mr5014787f8f.41.1715968452885;
-        Fri, 17 May 2024 10:54:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElctJ7kRvI21RK2MiLgARCr0ZBPBVbvh3h/+iaUMpetOWOrRkVEQ5gzIhclzKnEFCdM7or0B/27rXrZqW8hcI=
-X-Received: by 2002:adf:f683:0:b0:351:d2e6:9296 with SMTP id
- ffacd0b85a97d-351d2e69673mr5014770f8f.41.1715968452489; Fri, 17 May 2024
- 10:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="uMfGVJkU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TDNEW63p"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailflow.west.internal (Postfix) with ESMTP id 7886D2CC010B;
+	Fri, 17 May 2024 13:57:25 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Fri, 17 May 2024 13:57:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1715968645; x=1715972245; bh=DG6bdjmTz4
+	bBiRVx5vRqnyJGZODkSyHM0WPBKPD11vg=; b=uMfGVJkUQVRfm1T4SuQfg81+Vd
+	5+EwSSzA1veRwFXODlGOsYMfbC5e9PDXupLK9HyaH/xalBd1s2kzVUiWMT2yQzvw
+	hwRQ1fjYhfph5jS6R/35a6KtY34plcZMeR9Ze6xsvaXAZmSVgYgDUo2CD8pKLFPo
+	Xy/T7Yx76YZjEUvdKWTQ/L8b+RH71BSELaxN8E1DA4gdeovy8JQ/GaJdIRS7/+JU
+	nOR9kD+ElEjP9xlmH0WurtQuTo73SZegb2IizZ8K96HXLon2ZWd8yjQxXX9/jyWV
+	LYzWnUzZv2IlDZ6c/LFUuMihTF52VWHKB3S26Kahi3BE/rYv+w/AkiBW4sjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	i76614979.fm3; t=1715968645; x=1715972245; bh=DG6bdjmTz4bBiRVx5v
+	RqnyJGZODkSyHM0WPBKPD11vg=; b=TDNEW63pXqb2VU0CcKW4l1HzhcHIdknUB/
+	pz14lQW13kC6oa25PaUJ3EtzVqxHTnNRnTjcdfH+8czm5HMuaNUoZJNfrrzALEjj
+	BhXP3yluNNAc75YUSlp2g1JKsDbzm4O1ZNjegjBzQEutxAV2qwhBA+PiVAl2qSTD
+	wcvi2l7YIS6ZSe/e860AJvkLBo69+YWUv9s79bv4P/X0XeFjuMU/7FXm6jZHziD5
+	dV8pUspsjHJiSbf/yF1J/558iKeCjLZNiZRLmWuEOFh+rxdDTbikzjB/nf4RuUcS
+	9zUWeQhZVMpSt+DZfp2vzbU8AQQhAgnJoJrumNrLMdK5EsRfgtng==
+X-ME-Sender: <xms:hJpHZgt-DnLYAP4XfCB3f4QDQ4JOhbJ0kjv4C7wIKndVKYrK6cgIIQ>
+    <xme:hJpHZteog5l-85Pkdhrlk26_ZDbUVd1ZBbQGP0nfgODF4pJa5auMVRXbP8aJJU3Up
+    NcIi4mMySIixXSafOo>
+X-ME-Received: <xmr:hJpHZrxlVLZZGOGFQfKZBifYj11s-ibw1SC9sayyin6qUTgQyif-0J2hn7vqmYdM9hEJR-MQ_giyQTDryczmkrI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehgedgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtjeenucfhrhhomheplfhonhgr
+    thhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqnecugg
+    ftrfgrthhtvghrnhepkeekteegfefgvdefgfefffeufeffjedvudeijeehjeehffekjeek
+    leffueelgffgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepjhgtrghlmhgvlhhsseefgiigtddrnhgvth
+X-ME-Proxy: <xmx:hJpHZjOliYt1B30kBgmlLYDz3U_k0ILR04enLwlswHtl81Hc9_tOOw>
+    <xmx:hJpHZg_tTtVt17uZ85S7l8qt2ezP1HcqKp8HG_d_HTVqD7c6KaT-Cg>
+    <xmx:hJpHZrUFUcj0c_VL6ZrIN41Q8tSZ2WWCOA-aRCVfDXmGeifvQPDOGA>
+    <xmx:hJpHZpedGcEgWYQAWwY_aGP7jCPuyq_4VonVfo014ODZjsk29EXztw>
+    <xmx:hZpHZrUx1OlgTMngfhQPqJ-LWsX64N4U3yZMVc9MloMg7FfoIwLl0U3_>
+Feedback-ID: i76614979:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 17 May 2024 13:57:22 -0400 (EDT)
+Date: Fri, 17 May 2024 11:02:23 -0700
+From: Jonathan Calmels <jcalmels@3xx0.net>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: brauner@kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Joel Granados <j.granados@samsung.com>, 
+	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, David Howells <dhowells@redhat.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, containers@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 1/3] capabilities: user namespace capabilities
+Message-ID: <mya7cjq5yzf4xc53un65zia2bwp45mbrt5ys67mgr4azn3phet@o54svegibxze>
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <20240516092213.6799-2-jcalmels@3xx0.net>
+ <878r08brmp.fsf@email.froward.int.ebiederm.org>
+ <xv52m5xu5tgwpckkcvyjvefbvockmb7g7fvhlky5yjs2i2jhsp@dcuovgkys4eh>
+ <87jzjsa57k.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517173926.965351-1-seanjc@google.com>
-In-Reply-To: <20240517173926.965351-1-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 17 May 2024 19:54:00 +0200
-Message-ID: <CABgObfbYL-8KN8naUtm7PcA2z06aqshcSJ_5TyswtiA4hN0yaA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/49] KVM: x86: CPUID overhaul, fixes, and caching
-To: Sean Christopherson <seanjc@google.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Hou Wenlong <houwenlong.hwl@antgroup.com>, Kechen Lu <kechenl@nvidia.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>, Yang Weijiang <weijiang.yang@intel.com>, 
-	Robert Hoo <robert.hoo.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87jzjsa57k.fsf@email.froward.int.ebiederm.org>
 
-On Fri, May 17, 2024 at 7:39=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->  * Disallow KVM_CAP_X86_DISABLE_EXITS after vCPU creation
->  * Reject disabling of MWAIT/HLT interception when not allowed
->  * Advertise TSC_DEADLINE_TIMER in KVM_GET_SUPPORTED_CPUID.
+> > On Fri, May 17, 2024 at 06:32:46AM GMT, Eric W. Biederman wrote:
+> As I read your introduction you were justifying the introduction
+> of a new security mechanism with the observation that distributions
+> were carrying distribution specific patches.
+> 
+> To the best of my knowledge distribution specific patches and
+> distributions disabling user namespaces have been gone for quite a
+> while.  So if that has changed recently I would like to know.
 
-This is technically a breaking change, and it's even documented in
-api.rst under "KVM_GET_SUPPORTED_CPUID issues":
+On the top of my head:
 
----
-CPU[EAX=3D1]:ECX[21] (X2APIC) is reported by
-``KVM_GET_SUPPORTED_CPUID``, but it can only be enabled if
-``KVM_CREATE_IRQCHIP`` or ``KVM_ENABLE_CAP(KVM_CAP_IRQCHIP_SPLIT)``
-are used to enable in-kernel emulation of the local APIC.
+- RHEL based:
+  namespace.unpriv_enable
+  user_namespace.enable
 
-The same is true for the ``KVM_FEATURE_PV_UNHALT`` paravirtualized feature.
+- Arch/Debian based:
+  kernel.unprivileged_userns_clone
 
-CPU[EAX=3D1]:ECX[24] (TSC_DEADLINE) is not reported by
-``KVM_GET_SUPPORTED_CPUID``. It can be enabled if
-``KVM_CAP_TSC_DEADLINE_TIMER`` is present and the kernel has enabled
-in-kernel emulation of the local APIC.
----
+- Ubuntu based:
+  kernel.apparmor_restrict_unprivileged_userns
 
-However I think we can get away with it. QEMU source code on one hand does
+I'm not sure which exact version those apply to, but it's definitely
+still out there.
 
-        /* tsc-deadline flag is not returned by GET_SUPPORTED_CPUID, but it
-         * can be enabled if the kernel has KVM_CAP_TSC_DEADLINE_TIMER,
-         * and the irqchip is in the kernel.
-         */
-        if (kvm_irqchip_in_kernel() &&
-                kvm_check_extension(s, KVM_CAP_TSC_DEADLINE_TIMER)) {
-            ret |=3D CPUID_EXT_TSC_DEADLINE_TIMER;
-        }
+The observation is that while you can disable namespaces today, in
+practice it breaks userspace in various ways. Hence, being able to
+control capabilities is a better way to approach it.
 
-        /* x2apic is reported by GET_SUPPORTED_CPUID, but it can't be enabl=
-ed
-         * without the in-kernel irqchip
-         */
-        if (!kvm_irqchip_in_kernel()) {
-            ret &=3D ~CPUID_EXT_X2APIC;
-        }
+For example, today's big hammer to prevent CAP_NET_ADMIN in userns:
 
-so it has to cope with existing mess but it's not expecting the
-opposite mess (understandable).
+# sysctl -qw user.max_net_namespaces=0
 
-However, in practice userspace APIC has always been utterly broken and
-even deprecated in QEMU, so we might get away with it. I don't see why
-one would use no kernel APIC unless the guest has no APIC whatsoever.
+$ unshare -U -r -n ip tuntap add mode tap tap0 && echo OK
+unshare: unshare failed: No space left on device
 
-And no guest that doesn't find an APIC is going to use the TSC
-deadline timer (sure the MSR is outside x2APIC space but how in the
-world would you configure LVTT), likewise for X2APIC since you need to
-turn it on at 0xFEE0_0000 first.
+With patch, this becomes manageable:
 
-Paolo
-
+# capsh --drop=cap_net_admin --secbits=$((1 << 8)) --user=$USER -- \
+        -c 'unshare -U -r -n ip tuntap add mode tap tap0 && echo OK'
+ioctl(TUNSETIFF): Operation not permitted
