@@ -1,181 +1,121 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail115-24.sinamail.sina.com.cn (mail115-24.sinamail.sina.com.cn [218.30.115.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615781FBA;
-	Sat, 18 May 2024 01:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F0C1FBA
+	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 01:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715995794; cv=none; b=ZKc51b1E/ViYLCUI8Pj6zG7lMZMQf/CgVrdCOwJYJuoPcXWtIMkyxdyXWxj7mtdeMzV3Qmvn1GVAI5EoBH6jhUJJvoOaDQ2zn9nk2kK/LnjDArGIUdHpehJ5u/4OrGyUU3bQ2dU/6JdWSJAKvn7sIhooU0nzrnxZttHjdXrBbsc=
+	t=1715996049; cv=none; b=JRphs2n4AKFP45nbkIE2jU9wKDYL4iI1f8pxr5UGxNOfcX6IzWnmcX6ng96lgBsCC/hJKjXGl+6oK6cPgmNH7uMtqNF9Wh1dcZX4Z0mL5DOvk2v8jmLKRgtrurRqrDQyEMeVjyiyfrNdmX7V/RFNKL2n7bJdwMo/D7P0FXfHmlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715995794; c=relaxed/simple;
-	bh=e/I2R0ex/+zUSG4fYjgegmsp57FKuxraQDKbhee+BMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Irb0thhuBHt3UMjUL093KaRpZtUXf998i1m2xAUBZxbK1EwawcLMCeRdKnPZiFZ51O2lQr8MrULNDQDN3jIZCjumnuc0MrEyxeGIWxlo1v0HQoj+TLV4mAdG9uuzMcWTZNW1AiqI9mbGhTTKlSRAI75dXsI0e26nNtxzrbY3zkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qaxxSgnC; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qaxxSgnC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=NEB3yoSgokyYqC55yoEIejaFuqMNPaLcCTzBCdN9PQQ=; b=qaxxSgnCXlcCLI+/FrV6xJZAxS
-	5mxZyEe5oJ8EM8eoY1tWDcexDNv6Qu46/jcSe+2w2YxvwrFusByPuIKdmOqLVvqOTNXSjoVuOvMGe
-	h0NbUg2pw0OIHfRFJ5nzhiX7PPCUFgJ7R1V+gAOM/tFCNCPJ/EDRCXKW/zTg777ERa2g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s88tC-00FbTm-F0; Sat, 18 May 2024 03:29:34 +0200
-Date: Sat, 18 May 2024 03:29:34 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v2 5/5] net: phy: add driver for built-in 2.5G
- ethernet PHY on MT7988
-Message-ID: <cc0f67de-171e-45e1-90d9-b6b40ec71827@lunn.ch>
-References: <20240517102908.12079-1-SkyLake.Huang@mediatek.com>
- <20240517102908.12079-6-SkyLake.Huang@mediatek.com>
+	s=arc-20240116; t=1715996049; c=relaxed/simple;
+	bh=ifsj8+EQBQy+H/Y8chZd2hRoJRviiAySy67SIqorXqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uqZONVFKVtcUCaQfaVQjIxJEz2RERQaFcyMadLORwzBp7YF4rB0joMyCbVdhyeuS3mmjNCvCUxi0P8v6e6V7+48ByXgipWnmc91knqWVlmFKIyaGrV2MyA4Guk7DlmB4axIJQ8Dm7Kjh6+AgYx6ump3SH1W8RTolhns3trvdQd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.65.249])
+	by sina.com (10.75.12.45) with ESMTP
+	id 6648057E00000BCE; Sat, 18 May 2024 09:33:52 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 85541931457862
+X-SMAIL-UIID: 9697284FBA05422AA631F1BF6CC9C35B-20240518-093352-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+d7c7a495a5e466c031b6@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [v9fs?] KASAN: slab-use-after-free Read in p9_fid_destroy
+Date: Sat, 18 May 2024 09:33:41 +0800
+Message-Id: <20240518013341.1649-1-hdanton@sina.com>
+In-Reply-To: <00000000000049897e0618a4b1ff@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517102908.12079-6-SkyLake.Huang@mediatek.com>
+Content-Transfer-Encoding: 8bit
 
-> +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
-> +{
-> +	struct mtk_i2p5ge_phy_priv *priv = phydev->priv;
-> +	struct device *dev = &phydev->mdio.dev;
-> +	const struct firmware *fw;
-> +	struct pinctrl *pinctrl;
-> +	int ret, i;
-> +	u16 reg;
-> +
-> +	if (!priv->fw_loaded) {
-> +		if (!priv->md32_en_cfg_base || !priv->pmb_addr) {
-> +			dev_err(dev, "MD32_EN_CFG base & PMB addresses aren't valid\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret = request_firmware(&fw, MT7988_2P5GE_PMB, dev);
-> +		if (ret) {
-> +			dev_err(dev, "failed to load firmware: %s, ret: %d\n",
-> +				MT7988_2P5GE_PMB, ret);
-> +			return ret;
-> +		}
-> +
-> +		reg = readw(priv->md32_en_cfg_base);
-> +		if (reg & MD32_EN) {
-> +			phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
-> +			usleep_range(10000, 11000);
-> +		}
-> +		phy_set_bits(phydev, MII_BMCR, BMCR_PDOWN);
-> +
-> +		/* Write magic number to safely stall MCU */
-> +		phy_write_mmd(phydev, MDIO_MMD_VEND1, 0x800e, 0x1100);
-> +		phy_write_mmd(phydev, MDIO_MMD_VEND1, 0x800f, 0x00df);
-> +
-> +		for (i = 0; i < fw->size - 1; i += 4)
-> +			writel(*((uint32_t *)(fw->data + i)), priv->pmb_addr + i);
+On Fri, 17 May 2024 04:31:28 -0700
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    ea5f6ad9ad96 Merge tag 'platform-drivers-x86-v6.10-1' of g..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11df3084980000
 
-You should not trust the firmware. At least do a range check. How big
-is the SRAM the firmware is being written into? If you are given a
-firmware which is 1MB in size, what will happen?
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  ea5f6ad9ad96
 
-> +		release_firmware(fw);
-> +
-> +		writew(reg & ~MD32_EN, priv->md32_en_cfg_base);
-> +		writew(reg | MD32_EN, priv->md32_en_cfg_base);
-> +		phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
-> +		/* We need a delay here to stabilize initialization of MCU */
-> +		usleep_range(7000, 8000);
-> +		dev_info(dev, "Firmware loading/trigger ok.\n");
-
-Is there a version available anywhere for the firmware?
-
-> +static int mt798x_2p5ge_phy_get_features(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +
-> +	ret = genphy_c45_pma_read_abilities(phydev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* We don't support HDX at MAC layer on mt7988.
-
-That is a MAC limitation, so it should be the MAC which disables this,
-not the Phy.
-
-> +	/* FIXME: AN device (MDIO_DEVS_AN)is indeed in this package. However, MDIO_DEVS_AN seems
-> +	 * that it won't be set as we detect phydev->c45_ids.mmds_present. So Autoneg_BIT won't be
-> +	 * set in genphy_c45_pma_read_abilities(), either. Workaround here temporarily.
-> +	 */
-> +	linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, phydev->supported);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mt798x_2p5ge_phy_read_status(struct phy_device *phydev)
-> +{
-> +	u16 bmsr;
-> +	int ret;
-> +
-> +	/* Use this instead of genphy_c45_read_link() because MDIO_DEVS_AN bit isn't set in
-> +	 * phydev->c45_ids.mmds_present.
-
-You have this twice now. Is the hardware broken? If so, maybe change
-phydev->c45_ids.mmds_present in the probe function to set the bit?
-
-> +	 */
-> +	ret = genphy_update_link(phydev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	phydev->speed = SPEED_UNKNOWN;
-> +	phydev->duplex = DUPLEX_UNKNOWN;
-> +	phydev->pause = 0;
-> +	phydev->asym_pause = 0;
-> +
-> +	/* We'll read link speed through vendor specific registers down below. So remove
-> +	 * phy_resolve_aneg_linkmode (AN on) & genphy_c45_read_pma (AN off).
-> +	 */
-> +	if (phydev->autoneg == AUTONEG_ENABLE && phydev->autoneg_complete) {
-> +		ret = genphy_c45_read_lpa(phydev);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* Clause 45 doesn't define 1000BaseT support. Read the link partner's 1G
-> +		 * advertisement via Clause 22
-> +		 */
-> +		ret = phy_read(phydev, MII_STAT1000);
-> +		if (ret < 0)
-> +			return ret;
-> +		mii_stat1000_mod_linkmode_lpa_t(phydev->lp_advertising, ret);
-> +	} else if (phydev->autoneg == AUTONEG_DISABLE) {
-> +		/* Mask link partner's all advertising capabilities when AN is off. In fact,
-> +		 * if we disable antuneg, we can't link up correctly:
-> +		 *   2.5G/1G: Need AN to exchange master/slave information.
-> +		 *   100M: Without AN, link starts at half duplex, which this phy doesn't support.
-> +		 *   10M: Deprecated in this ethernet phy.
-> +		 */
-
-So it sounds like phydev->autoneg == AUTONEG_DISABLE is broken with
-this hardware. So just don't allow it, return -EOPNOTSUPP in config_aneg()
-
-     Andrew
+--- x/include/net/9p/client.h
++++ y/include/net/9p/client.h
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/utsname.h>
+ #include <linux/idr.h>
++#include <linux/mutex.h>
+ #include <linux/tracepoint-defs.h>
+ 
+ /* Number of requests per row */
+@@ -122,6 +123,7 @@ struct p9_client {
+ 
+ 	struct idr fids;
+ 	struct idr reqs;
++	struct mutex destroy_mutex;
+ 
+ 	char name[__NEW_UTS_LEN + 1];
+ };
+--- x/net/9p/client.c
++++ y/net/9p/client.c
+@@ -1041,6 +1041,7 @@ struct p9_client *p9_client_create(const
+ 					   0, 0, P9_HDRSZ + 4,
+ 					   clnt->msize - (P9_HDRSZ + 4),
+ 					   NULL);
++	mutex_init(&clnt->destroy_mutex);
+ 
+ 	return clnt;
+ 
+@@ -1058,6 +1059,7 @@ void p9_client_destroy(struct p9_client
+ {
+ 	struct p9_fid *fid;
+ 	int id;
++	int clean;
+ 
+ 	p9_debug(P9_DEBUG_MUX, "clnt %p\n", clnt);
+ 
+@@ -1066,9 +1068,18 @@ void p9_client_destroy(struct p9_client
+ 
+ 	v9fs_put_trans(clnt->trans_mod);
+ 
++again:
++	clean = 1;
++	mutex_lock(&clnt->destroy_mutex);
+ 	idr_for_each_entry(&clnt->fids, fid, id) {
+ 		pr_info("Found fid %d not clunked\n", fid->fid);
+-		p9_fid_destroy(fid);
++		clean = 0;
++		break;
++	}
++	mutex_unlock(&clnt->destroy_mutex);
++	if (!clean) {
++		schedule_timeout_idle(2);
++		goto again;
+ 	}
+ 
+ 	p9_tag_cleanup(clnt);
+@@ -1454,7 +1465,9 @@ error:
+ 		if (retries++ == 0)
+ 			goto again;
+ 	} else {
++		mutex_lock(&clnt->destroy_mutex);
+ 		p9_fid_destroy(fid);
++		mutex_unlock(&clnt->destroy_mutex);
+ 	}
+ 	return err;
+ }
+--
