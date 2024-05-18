@@ -1,400 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21948376E1;
-	Sat, 18 May 2024 12:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A636F1BC59;
+	Sat, 18 May 2024 12:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716036436; cv=none; b=Kqmh+Xu+3wMsvkEHPYd0WZvkAdoAJqEkhslxukpfhLCQ5ozbxuFRhooMSnyjWNPUR6ARTVhfF2O68tZZarJCE/WTbZXWBnU5mEhvHObnpI+wyMT1LdMdkB+XSAfUDOmbMMYUn/+CjxTve4WZ9etJGtd5yd7iGeheuNzt108t8oQ=
+	t=1716036815; cv=none; b=FOs+HTAj5vfuV07PGc3TV8VdbfzRlVm6LMjUygKyhv4IBHtnXgqpSjxaANjhcpHnMoEVJaRC9WFT5GQ3FH7YHiT19pTGo+eiIZJwnc6wDbI27voac7ynjYKDOCGvcFOgFJLaPxACRw504+p+RkP1c3P5PGcRXR2eDV6ZeCrjpbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716036436; c=relaxed/simple;
-	bh=xuz41WZVIrvTI8jLUziuMNmX+Hum6+huPnqQtG6dkyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bXmVun+cvjD7jIb2zxTgJcS1LbyF1sC8e0HJl85zBxHU5iKYPiS5lgZ1fgtQDpOLfeKGPFaanPNzWu4eMM8uGTGPTBKe/caJcEiWgnMlku0x7PHqEU32GjWzzvi0+ckdgoBjwY0XOgCOPLOve7KVTDFigxbMCnkwS9dpsdcjyGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mNFswWBp; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716036815; c=relaxed/simple;
+	bh=xHr9/P09XCNyXQ2dzA/0yRn8aDeg6Gw0YI+5m8fLZlY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=igjhkpbWrRhR/f9aRfdYguF5U07DizAVcaFt0qr0N0XUwmckir+QFGUD84MQivtzWSrPV/qdCVcseqnDjECN9tGp1YOoLQcvbMhjXXtSNNP1XpYDj8zZIgraBiOrXeSkhmdMIvdXy0W5vqJA9ysN6aO9fQ7fhvkbq4OiOGsyhvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lMIPjfiC; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mNFswWBp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716036435; x=1747572435;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xuz41WZVIrvTI8jLUziuMNmX+Hum6+huPnqQtG6dkyY=;
-  b=mNFswWBp5XEyXEvYe540h80MfMqESEkpZV5RsQId6Icze/krTYQlhtjV
-   mXTint/nUdPiRUxrb9XtDHYQDqK0TQGjSdf/DVja1sp/UZaRtSvMKW53v
-   pDNJjZ2qOlaV5Sl9hGOOoTGL5/2cXJDg1Q0/n14dw0xDJGdqywQtfCheS
-   ope9vOSCTJ9fOeArh7kko3eUnT4qWafR9HpeHMyzsIAUluVjn0VD1q6tH
-   i7WcHfNSSUHSgAYDKxl2y7yZGfIJVMMv5iaLxEGY50HqlYFsWu/lHkupj
-   iRwDjpM0gcng0DR0GANfMWMCsNzTT1j0hbgpZ1aT2EPCzgjNmJjPY2I1n
-   A==;
-X-CSE-ConnectionGUID: JbG4O1RYTcq7biy7VX4Ygg==
-X-CSE-MsgGUID: +MJ9eiMxQsmOk5tGQX7dBw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12327492"
-X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
-   d="scan'208";a="12327492"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2024 05:47:14 -0700
-X-CSE-ConnectionGUID: Ve0APK95TRi/NxP2mzGFxg==
-X-CSE-MsgGUID: UcIFWc++TYWmflmWB2VY3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
-   d="scan'208";a="36978443"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 18 May 2024 05:47:10 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s8JSu-0002CY-0T;
-	Sat, 18 May 2024 12:47:08 +0000
-Date: Sat, 18 May 2024 20:46:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH 3/3] leds: leds-lp5569: Add support for Texas Instruments
- LP5569
-Message-ID: <202405182007.uyC8NXfY-lkp@intel.com>
-References: <20240515143129.31557-3-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMIPjfiC"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6a0ffaa079dso13008526d6.1;
+        Sat, 18 May 2024 05:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716036812; x=1716641612; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nk8j70B2dyx8rUsXGzOgSRjrOsKA9IRanytRvJF+P2M=;
+        b=lMIPjfiCK6QqbP/ps+S529JojFsrZjMKP6MUjZySBwbdZf0A7YtEPQW94852jLqnJc
+         XDA84K9/BthB1nsAnImKUwJa10e6/BGRf4XDlGjVW2CBzGRCkCQx7X0rVo6oNxz5CVvS
+         HzEGewfRdFgyD27ppbBFNfwDwBmQzZrbfmUAmSa874tMlztEX4iX1KOwILbjFf1wpkVH
+         i4GOIJRvp7ew9DQa4iuoDN6jaEpBp/ZyZfq2yhX9EbCT6O2ClpXu71qymgV1n2MIQ0HZ
+         HO/2HxOf0YRw2fZKk/EdGMrRTsFGFI+jzJ40IIZcD7BevQhVXjOsMVEEHfyq3zn5uj4w
+         2Cdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716036812; x=1716641612;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nk8j70B2dyx8rUsXGzOgSRjrOsKA9IRanytRvJF+P2M=;
+        b=bEMHdThYoQwYxPjl4YYWOu9ExNhVk+wKDrGI+i7N79HseS7ov6qioWUdGDx+fn1+1o
+         pmqzOdxNWqqgO2V0n9se4rG7z9Qvfu1riyv/WOcr0h+tKVZXHJfcohZ5Y5Tm5jQswH7e
+         Lw7f3maTX3w9Dxin14aaxO+VXmlTy6dFeUNtK3QYafHtE4fkB3ouynfqEyqpNxUdKTvv
+         q5IoqGhth8NJvwhqbZcTm9nGJVy47Gphj3myN0PyzpV2vIYItZGeac7KtNBvnk5IsjP9
+         Nl8dbThvWFE6CV+rJp7uWGuy6zbKpcp4Q1oqzKKJnsq0P0BHOzciMxyj+nvKFgwq88Ja
+         nllg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5TPnk1yiPTVUL1SmLLB4Pj45PpFfY26inQbOXNZtyNK2d+aGn+WPjhBf1nEErFExMI5sjqJUq6oEYGvCnXisOWspV4Sgu
+X-Gm-Message-State: AOJu0YwioWP1hQAArt123seE3F9UiMlV7gA1kkhku+lLKGX40DD92fyB
+	jfmS5Wa7FpFQX23AMRr9UdubZMfD06RLeyzsHF/lGYOyetM81s7a7Z0HD8d4xkr94FKJkzWxlY4
+	Pyr+DGDWPP02Gc9SAdtxv6GE3mytItyfEuM4=
+X-Google-Smtp-Source: AGHT+IFx6AN9EBW1dNyhXRV9OpYGMlWlZ90LSXEHSLb7Cm8+ts+Bk5AnUR+gVFsRC9zntPdCY0tOL+oVUoHPHpA+ZYk=
+X-Received: by 2002:ad4:4eeb:0:b0:6a0:deb6:7b0f with SMTP id
+ 6a1803df08f44-6a843e6af24mr29148876d6.29.1716036811946; Sat, 18 May 2024
+ 05:53:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240515143129.31557-3-ansuelsmth@gmail.com>
+From: Chris Rankin <rankincj@gmail.com>
+Date: Sat, 18 May 2024 13:53:20 +0100
+Message-ID: <CAK2bqVJoT3yy2m0OmTnqH9EAKkj6O1iTk42EyyMtvvxKh6YDKg@mail.gmail.com>
+Subject: [BUG] Linux 6.8.10 NPE
+To: LKML <linux-kernel@vger.kernel.org>, Linux Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Christian,
+Hi,
 
-kernel test robot noticed the following build errors:
+I am using vanilla Linux 6.8.10, and I've just noticed this BUG in my
+dmesg log. I have no idea what triggered it, and especially since I
+have not even mounted any NFS filesystems?!
 
-[auto build test ERROR on lee-leds/for-leds-next]
-[also build test ERROR on robh/for-next linus/master v6.9 next-20240517]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Cheers,
+Chris
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/dt-bindings-leds-lp55xx-Add-new-ti-lp5569-compatible/20240515-223434
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git for-leds-next
-patch link:    https://lore.kernel.org/r/20240515143129.31557-3-ansuelsmth%40gmail.com
-patch subject: [PATCH 3/3] leds: leds-lp5569: Add support for Texas Instruments LP5569
-config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20240518/202405182007.uyC8NXfY-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d3455f4ddd16811401fa153298fadd2f59f6914e)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405182007.uyC8NXfY-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405182007.uyC8NXfY-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/leds/leds-lp5569.c:15:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/leds/leds-lp5569.c:15:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/leds/leds-lp5569.c:15:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   In file included from drivers/leds/leds-lp5569.c:15:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/leds/leds-lp5569.c:169:9: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     169 |         val |= FIELD_PREP(LP5569_CP_MODE_MASK, chip->pdata->charge_pump_mode);
-         |                ^
->> drivers/leds/leds-lp5569.c:195:8: error: call to undeclared function 'FIELD_PREP_CONST'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     195 |         val = LP5569_MODE_LOAD_ENG << LP5569_MODE_ENGn_SHIFT(idx);
-         |               ^
-   drivers/leds/leds-lp5569.c:41:33: note: expanded from macro 'LP5569_MODE_LOAD_ENG'
-      41 | #define   LP5569_MODE_LOAD_ENG          FIELD_PREP_CONST(LP5569_MODE_ENG_MASK, 0x1)
-         |                                         ^
-   drivers/leds/leds-lp5569.c:262:40: error: call to undeclared function 'FIELD_PREP_CONST'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     262 |                 if (LP5569_MODE_ENGn_GET(i, mode) != LP5569_MODE_LOAD_ENG)
-         |                                                      ^
-   drivers/leds/leds-lp5569.c:41:33: note: expanded from macro 'LP5569_MODE_LOAD_ENG'
-      41 | #define   LP5569_MODE_LOAD_ENG          FIELD_PREP_CONST(LP5569_MODE_ENG_MASK, 0x1)
-         |                                         ^
->> drivers/leds/leds-lp5569.c:321:11: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     321 |         status = FIELD_GET(LP5569_ENG_STATUS_MASK, status);
-         |                  ^
-   drivers/leds/leds-lp5569.c:601:6: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     601 |                                  FIELD_PREP(LP5569_CP_MODE_MASK, LP55XX_CP_BOOST),
-         |                                  ^
-   drivers/leds/leds-lp5569.c:696:6: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     696 |                                  FIELD_PREP(LP5569_CP_MODE_MASK, LP55XX_CP_BYPASS),
-         |                                  ^
-   drivers/leds/leds-lp5569.c:903:9: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     903 |                 val = FIELD_PREP(LP5569_FADER_MAPPING_MASK, val);
-         |                       ^
->> drivers/leds/leds-lp5569.c:904:13: error: call to undeclared function 'FIELD_MAX'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     904 |                 if (val > FIELD_MAX(LP5569_FADER_MAPPING_MASK)) {
-         |                           ^
-   drivers/leds/leds-lp5569.c:932:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     932 |                         val = FIELD_PREP(LP5569_FADER_MAPPING_MASK, buf[i] - '0');
-         |                               ^
-   7 warnings and 9 errors generated.
-
-
-vim +/FIELD_PREP +169 drivers/leds/leds-lp5569.c
-
-   155	
-   156	static int lp5569_post_init_device(struct lp55xx_chip *chip)
-   157	{
-   158		int ret;
-   159		int val;
-   160	
-   161		ret = lp55xx_write(chip, LP5569_REG_ENABLE, LP5569_ENABLE);
-   162		if (ret)
-   163			return ret;
-   164	
-   165		/* Chip startup time is 500 us, 1 - 2 ms gives some margin */
-   166		usleep_range(1000, 2000);
-   167	
-   168		val = LP5569_DEFAULT_CONFIG;
- > 169		val |= FIELD_PREP(LP5569_CP_MODE_MASK, chip->pdata->charge_pump_mode);
-   170	
-   171		if (chip->pdata->clock_mode == LP55XX_CLOCK_INT)
-   172			val |= LP5569_INTERNAL_CLK;
-   173	
-   174		ret = lp55xx_write(chip, LP5569_REG_MISC, val);
-   175		if (ret)
-   176			return ret;
-   177	
-   178		if (chip->pdata->clock_mode == LP55XX_CLOCK_INT) {
-   179			ret = lp55xx_update_bits(chip, LP5569_REG_IO_CONTROL,
-   180						 LP5569_CLK_OUTPUT,
-   181						 LP5569_CLK_OUTPUT);
-   182			if (ret)
-   183				return ret;
-   184		}
-   185	
-   186		return lp5569_init_program_engine(chip);
-   187	}
-   188	
-   189	static void lp5569_load_engine(struct lp55xx_chip *chip)
-   190	{
-   191		enum lp55xx_engine_index idx = chip->engine_idx;
-   192		u8 mask, val;
-   193	
-   194		mask = LP5569_MODE_ENGn_MASK(idx);
- > 195		val = LP5569_MODE_LOAD_ENG << LP5569_MODE_ENGn_SHIFT(idx);
-   196	
-   197		lp55xx_update_bits(chip, LP5569_REG_OP_MODE, mask, val);
-   198	
-   199		lp5569_wait_opmode_done();
-   200	}
-   201	
-   202	static void lp5569_load_engine_and_select_page(struct lp55xx_chip *chip)
-   203	{
-   204		enum lp55xx_engine_index idx = chip->engine_idx;
-   205	
-   206		lp5569_load_engine(chip);
-   207	
-   208		lp55xx_write(chip, LP5569_REG_PROG_PAGE_SEL, LP5569_PAGE_ENG(idx));
-   209	}
-   210	
-   211	static void lp5569_stop_all_engines(struct lp55xx_chip *chip)
-   212	{
-   213		lp55xx_write(chip, LP5569_REG_OP_MODE, 0);
-   214		lp5569_wait_opmode_done();
-   215	}
-   216	
-   217	static void lp5569_stop_engine(struct lp55xx_chip *chip)
-   218	{
-   219		enum lp55xx_engine_index idx = chip->engine_idx;
-   220	
-   221		lp55xx_update_bits(chip, LP5569_REG_OP_MODE, LP5569_MODE_ENGn_MASK(idx), 0);
-   222	
-   223		lp5569_wait_opmode_done();
-   224	}
-   225	
-   226	static void lp5569_turn_off_channels(struct lp55xx_chip *chip)
-   227	{
-   228		int i;
-   229	
-   230		for (i = 0; i < LP5569_MAX_LEDS; i++)
-   231			lp55xx_write(chip, LP5569_REG_LED_PWM_BASE + i, 0);
-   232	}
-   233	
-   234	static void lp5569_run_engine(struct lp55xx_chip *chip, bool start)
-   235	{
-   236		int i, ret;
-   237		u8 mode;
-   238		u8 exec;
-   239	
-   240		/* stop engine */
-   241		if (!start) {
-   242			lp5569_stop_engine(chip);
-   243			lp5569_turn_off_channels(chip);
-   244			return;
-   245		}
-   246	
-   247		/*
-   248		 * To run the engine,
-   249		 * operation mode and enable register should updated at the same time
-   250		 */
-   251	
-   252		ret = lp55xx_read(chip, LP5569_REG_OP_MODE, &mode);
-   253		if (ret)
-   254			return;
-   255	
-   256		ret = lp55xx_read(chip, LP5569_REG_EXEC_CTRL, &exec);
-   257		if (ret)
-   258			return;
-   259	
-   260		/* change operation mode to RUN only when each engine is loading */
-   261		for (i = LP55XX_ENGINE_1; i <= LP55XX_ENGINE_3; i++) {
-   262			if (LP5569_MODE_ENGn_GET(i, mode) != LP5569_MODE_LOAD_ENG)
-   263				continue;
-   264	
-   265			mode &= ~LP5569_MODE_ENGn_MASK(i);
-   266			mode |= LP5569_MODE_RUN_ENG << LP5569_MODE_ENGn_SHIFT(i);
-   267			exec &= ~LP5569_EXEC_ENGn_MASK(i);
-   268			exec |= LP5569_EXEC_RUN_ENG << LP5569_EXEC_ENGn_SHIFT(i);
-   269		}
-   270	
-   271		lp55xx_write(chip, LP5569_REG_OP_MODE, mode);
-   272		lp5569_wait_opmode_done();
-   273	
-   274		lp55xx_write(chip, LP5569_REG_EXEC_CTRL, exec);
-   275	}
-   276	
-   277	static int lp5569_init_program_engine(struct lp55xx_chip *chip)
-   278	{
-   279		int i;
-   280		int j;
-   281		int ret;
-   282		u8 status;
-   283		/* one pattern per engine setting LED MUX start and stop addresses */
-   284		static const u8 pattern[][LP5569_PROGRAM_LENGTH] =  {
-   285			{ 0x9c, LP5569_ENG1_MUX_ADDR, 0x9c, 0xb0, 0x9d, 0x80, 0xd8, 0x00, 0},
-   286			{ 0x9c, LP5569_ENG2_MUX_ADDR, 0x9c, 0xc0, 0x9d, 0x80, 0xd8, 0x00, 0},
-   287			{ 0x9c, LP5569_ENG3_MUX_ADDR, 0x9c, 0xd0, 0x9d, 0x80, 0xd8, 0x00, 0},
-   288		};
-   289	
-   290		/* hardcode 32 bytes of memory for each engine from program memory */
-   291		ret = lp55xx_write(chip, LP5569_REG_CH1_PROG_START, LP5569_ENG1_PROG_ADDR);
-   292		if (ret)
-   293			return ret;
-   294	
-   295		ret = lp55xx_write(chip, LP5569_REG_CH2_PROG_START, LP5569_ENG2_PROG_ADDR);
-   296		if (ret)
-   297			return ret;
-   298	
-   299		ret = lp55xx_write(chip, LP5569_REG_CH3_PROG_START, LP5569_ENG3_PROG_ADDR);
-   300		if (ret)
-   301			return ret;
-   302	
-   303		/* write LED MUX address space for each engine */
-   304		for (i = LP55XX_ENGINE_1; i <= LP55XX_ENGINE_3; i++) {
-   305			chip->engine_idx = i;
-   306			lp5569_load_engine_and_select_page(chip);
-   307	
-   308			for (j = 0; j < LP5569_PROGRAM_LENGTH; j++) {
-   309				ret = lp55xx_write(chip, LP5569_REG_PROG_MEM + j,
-   310						   pattern[i - 1][j]);
-   311				if (ret)
-   312					goto out;
-   313			}
-   314		}
-   315	
-   316		lp5569_run_engine(chip, true);
-   317	
-   318		/* Let the programs run for couple of ms and check the engine status */
-   319		usleep_range(3000, 6000);
-   320		lp55xx_read(chip, LP5569_REG_STATUS, &status);
- > 321		status = FIELD_GET(LP5569_ENG_STATUS_MASK, status);
-   322	
-   323		if (status != LP5569_ENG_STATUS_MASK) {
-   324			dev_err(&chip->cl->dev,
-   325				"could not configure LED engine, status = 0x%.2x\n",
-   326				status);
-   327			ret = -1;
-   328		}
-   329	
-   330	out:
-   331		lp5569_stop_all_engines(chip);
-   332		return ret;
-   333	}
-   334	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[ 9114.607417] BUG: kernel NULL pointer dereference, address: 0000000000000068
+[ 9114.613082] #PF: supervisor read access in kernel mode
+[ 9114.616929] #PF: error_code(0x0000) - not-present page
+[ 9114.620775] PGD 0 P4D 0
+[ 9114.622013] Oops: 0000 [#16] PREEMPT SMP PTI
+[ 9114.624987] CPU: 2 PID: 16501 Comm: sadc Tainted: G      D   I
+  6.8.10 #1
+[ 9114.630993] Hardware name: Gigabyte Technology Co., Ltd.
+EX58-UD3R/EX58-UD3R, BIOS FB  05/04/2009
+[ 9114.638561] RIP: 0010:nfsd_show+0x39/0x18e [nfsd]
+[ 9114.642026] Code: fb 48 83 ec 10 48 8b 47 70 8b 2d 34 9b 03 00 48
+8b 80 b0 00 00 00 4c 8b a0 60 02 00 00 e8 99 84 f2 df 49 8b 84 24 f8
+0b 00 00 <48> 8b 2c e8 e8 6d c0 f2 df 48 8d bd 00 03 00 00 e8 8f ff ff
+ff 48
+[ 9114.659472] RSP: 0018:ffffc9000b1afcf8 EFLAGS: 00010202
+[ 9114.663405] RAX: 0000000000000000 RBX: ffff88810cd5de80 RCX: 0000000000001000
+[ 9114.669239] RDX: ffff88813f45b900 RSI: 0000000000000001 RDI: ffff88810cd5de80
+[ 9114.675069] RBP: 000000000000000d R08: 0000000000400cc0 R09: 00000000ffffffff
+[ 9114.680905] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa11e51e0
+[ 9114.686737] R13: ffffc9000b1afef8 R14: ffff88810cd5de80 R15: ffffffff81a2a520
+[ 9114.692586] FS:  00007f3637e49740(0000) GS:ffff888343c80000(0000)
+knlGS:0000000000000000
+[ 9114.699370] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 9114.703809] CR2: 0000000000000068 CR3: 000000027a18c000 CR4: 00000000000006f0
+[ 9114.709642] Call Trace:
+[ 9114.710798]  <TASK>
+[ 9114.711602]  ? __die_body+0x1a/0x5c
+[ 9114.713802]  ? page_fault_oops+0x321/0x36e
+[ 9114.716636]  ? exc_page_fault+0x105/0x117
+[ 9114.719348]  ? asm_exc_page_fault+0x22/0x30
+[ 9114.722237]  ? nfsd_show+0x39/0x18e [nfsd]
+[ 9114.725103]  ? nfsd_show+0x31/0x18e [nfsd]
+[ 9114.727954]  seq_read_iter+0x171/0x353
+[ 9114.730410]  seq_read+0xe0/0x108
+[ 9114.732350]  ? startup_64+0x1/0x60
+[ 9114.734458]  proc_reg_read+0x8c/0xa7
+[ 9114.736746]  vfs_read+0xa6/0x1bf
+[ 9114.738685]  ? __do_sys_newfstat+0x34/0x5c
+[ 9114.741486]  ksys_read+0x74/0xc0
+[ 9114.743418]  do_syscall_64+0x6c/0xdc
+[ 9114.745695]  entry_SYSCALL_64_after_hwframe+0x60/0x68
+[ 9114.749449] RIP: 0033:0x7f3638039cc1
+[ 9114.751752] Code: 00 48 8b 15 59 81 0d 00 f7 d8 64 89 02 b8 ff ff
+ff ff eb bd e8 b0 aa 01 00 f3 0f 1e fa 80 3d 85 03 0e 00 00 74 13 31
+c0 0f 05 <48> 3d 00 f0 ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48
+83 ec
+[ 9114.769198] RSP: 002b:00007ffec523c288 EFLAGS: 00000246 ORIG_RAX:
+0000000000000000
+[ 9114.775499] RAX: ffffffffffffffda RBX: 000055619e0982e0 RCX: 00007f3638039cc1
+[ 9114.781332] RDX: 0000000000000400 RSI: 000055619e0a3b70 RDI: 0000000000000004
+[ 9114.787166] RBP: 00007ffec523c2c0 R08: 0000000000000001 R09: 0000000000000000
+[ 9114.792997] R10: 0000000000000000 R11: 0000000000000246 R12: 00007f3638111050
+[ 9114.798830] R13: 00007f3638110f00 R14: 0000000000000000 R15: 000055619e0982e0
+[ 9114.804668]  </TASK>
+[ 9114.805559] Modules linked in: udf usb_storage snd_seq_dummy
+rpcrdma rdma_cm iw_cm ib_cm ib_core nf_nat_ftp nf_conntrack_ftp
+cfg80211 af_packet nf_conntrack_netbios_ns nf_conntrack_broadcast
+nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
+nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat
+nf_tables ebtable_nat ebtable_broute ip6table_nat ip6table_mangle
+ip6table_raw ip6table_security iptable_nat nf_nat nf_conntrack
+nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_mangle iptable_raw
+iptable_security ebtable_filter ebtables ip6table_filter ip6_tables
+iptable_filter ip_tables x_tables it87 hwmon_vid bnep binfmt_misc
+snd_hda_codec_realtek snd_hda_codec_generic snd_hda_codec_hdmi
+snd_hda_intel uvcvideo btusb uvc btintel btbcm videobuf2_vmalloc
+snd_intel_dspcfg videobuf2_memops bluetooth videobuf2_v4l2
+snd_hda_codec videodev snd_usb_audio intel_powerclamp coretemp
+snd_virtuoso snd_hda_core kvm_intel snd_oxygen_lib videobuf2_common
+ecdh_generic snd_usbmidi_lib snd_mpu401_uart snd_hwdep mc snd_rawmidi
+[ 9114.805644]  input_leds joydev led_class snd_seq rfkill kvm ecc
+snd_seq_device gpio_ich pktcdvd snd_pcm iTCO_wdt r8169 irqbypass
+i2c_i801 snd_hrtimer realtek snd_timer mdio_devres intel_cstate snd
+libphy acpi_cpufreq i2c_smbus pcspkr intel_uncore psmouse lpc_ich
+i7core_edac mxm_wmi soundcore tiny_power_button button nfsd
+auth_rpcgss nfs_acl lockd grace sunrpc dm_mod loop fuse dax configfs
+nfnetlink zram zsmalloc ext4 crc32c_generic crc16 mbcache jbd2 amdgpu
+video amdxcp i2c_algo_bit mfd_core drm_ttm_helper ttm hid_microsoft
+drm_exec gpu_sched drm_suballoc_helper drm_buddy drm_display_helper
+sr_mod usbhid sd_mod cdrom drm_kms_helper ahci pata_jmicron libahci
+drm uhci_hcd libata ehci_pci ehci_hcd xhci_pci firewire_ohci xhci_hcd
+firewire_core scsi_mod crc32c_intel sha512_ssse3 usbcore
+drm_panel_orientation_quirks sha256_ssse3 cec serio_raw sha1_ssse3
+rc_core crc_itu_t bsg usb_common scsi_common wmi msr [last unloaded:
+sg]
+[ 9114.974386] CR2: 0000000000000068
+[ 9114.976469] ---[ end trace 0000000000000000 ]---
+[ 9114.979859] RIP: 0010:nfsd_show+0x39/0x18e [nfsd]
+[ 9114.983413] Code: fb 48 83 ec 10 48 8b 47 70 8b 2d 34 9b 03 00 48
+8b 80 b0 00 00 00 4c 8b a0 60 02 00 00 e8 99 84 f2 df 49 8b 84 24 f8
+0b 00 00 <48> 8b 2c e8 e8 6d c0 f2 df 48 8d bd 00 03 00 00 e8 8f ff ff
+ff 48
+[ 9115.000909] RSP: 0018:ffffc90002edfcf8 EFLAGS: 00010202
+[ 9115.004850] RAX: 0000000000000000 RBX: ffff88813fee9780 RCX: 0000000000001000
+[ 9115.010725] RDX: ffff88810b474740 RSI: 0000000000000001 RDI: ffff88813fee9780
+[ 9115.016621] RBP: 000000000000000d R08: 0000000000400cc0 R09: 00000000ffffffff
+[ 9115.022507] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa11e51e0
+[ 9115.028414] R13: ffffc90002edfef8 R14: ffff88813fee9780 R15: ffffffff81a2a520
+[ 9115.034338] FS:  00007f3637e49740(0000) GS:ffff888343c00000(0000)
+knlGS:0000000000000000
+[ 9115.041191] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 9115.045739] CR2: 00007f7171a17ef0 CR3: 000000027a18c000 CR4: 00000000000006f0
