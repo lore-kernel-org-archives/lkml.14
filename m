@@ -1,134 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289251BC59;
-	Sat, 18 May 2024 11:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E5C2E3FE;
+	Sat, 18 May 2024 11:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716030063; cv=none; b=BhUcEcOC0U3PqwZpnNOql1k27fpvmqL8kUyAWzgbsPqbp6YTih/o2weg1BxojxHm5cBF4C7GNHDjXYZCQ8gi98uka55UaFY57MSLZAKHKLUUHAKwuskQcntGI9TVlMz0QMO7DnW5h3it2C63Gjyxwt1WlmmHAynfm7bp5m8LSNk=
+	t=1716030496; cv=none; b=SJ3RX0OMFqCMybf4M8fqyf6NhssIjo2cwE82sO9/++jvmh3iWz8VJvVA+uYJQe479jvYrC1KKR/BgZQyQ5uN+f0/7xNwGQC23m1PRSLX0zbjPaCSl2FNG0n8gqC2W/x8Lyr3F8qqj0OTf4+mCZVCrSETZTUXIjQrOxxVIEDfH3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716030063; c=relaxed/simple;
-	bh=IYkSHNbOk5pFgx8fb3hLqTIA1sWMOKEj2tGHHJKWubI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJy2vWKxqoYEyJ4PnRjxhGy9LeFdgBFp5I06927Pp1QFbOa6CF+d+LNVVtdhXZBvjBdU+FtaiHXiNpdCOFa5EHEa60oJUuca3ZYv5YnOJrvkPTmHLKmJPB4o01w7FNm+uF5SRTsZU+FI0Qazue9LQ/CUNr47xs9q95LilKLn/NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=igg2Ld53; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716030496; c=relaxed/simple;
+	bh=HXbBUzug7U+V2vfPNBsz3+xipJXzt7YurgJFoKWIqEY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=pQA6Q9lGwB7HjqXcXm+psMkasU7FLnPqjiW4S3OXY+qO4lxJ7POIpYDflKgQWBdo0VsJ5aKAAkgd5rCxcI0DzECy5e2YuSbkoZCSQ3E4Pv4V2Z8ADthOkmQ69rXT1inde0OYbvy/pd9d/6SRHuJetySs5TdEfKXifg6A8HWhots=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIvX89AP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="igg2Ld53"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716030062; x=1747566062;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IYkSHNbOk5pFgx8fb3hLqTIA1sWMOKEj2tGHHJKWubI=;
-  b=igg2Ld53b+lFvReFbUQwiiDQlu6mG7X/ogX68Ny0a7KoeYGlcnXynzAX
-   /+m813uNyl7+co+Vy4w0MlJL/JQDX8BbM41mohKnvgMgTdVh2IwHp5QW1
-   HvT/ND7PTj5FX5MJtASHIKRpOma2LJoCYg+r1LKLXNhYeppcOYcB1JPZV
-   CDj7d8jCajxssw2vuNS1PkGbVhmRrfBDSdUrnURcdwT0+xcErexA6r2Do
-   +9dFfLYABd0cK6r14quALAh5sepckveYchYlKe3MEKscaxUd4V9vdgEM9
-   7IyFebeDHFJm6dmoGfVYdnpPEK6foY4bo7McCSdNRBkbIan9512W34tAP
-   g==;
-X-CSE-ConnectionGUID: R/lz5lvmQoCklWpWq33tdg==
-X-CSE-MsgGUID: uk/dSYFFRw+eyUJUw3at/g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="34725133"
-X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
-   d="scan'208";a="34725133"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2024 04:01:02 -0700
-X-CSE-ConnectionGUID: +Jm/iyHFS6e00adlVPVeHA==
-X-CSE-MsgGUID: VFtEGmy5TrKGn9EMpzA2WQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
-   d="scan'208";a="32468882"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 18 May 2024 04:00:58 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s8Ho8-00027H-1t;
-	Sat, 18 May 2024 11:00:56 +0000
-Date: Sat, 18 May 2024 19:00:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ramona Gradinariu <ramona.bolboaca13@gmail.com>,
-	linux-kernel@vger.kernel.org, jic23@kernel.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	conor+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	robh@kernel.org, nuno.sa@analog.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Ramona Gradinariu <ramona.bolboaca13@gmail.com>
-Subject: Re: [PATCH v3 9/9] drivers: iio: imu: Add support for adis1657x
- family
-Message-ID: <202405181841.ESCYTmmL-lkp@intel.com>
-References: <20240517074750.87376-10-ramona.bolboaca13@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIvX89AP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A66C113CC;
+	Sat, 18 May 2024 11:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716030495;
+	bh=HXbBUzug7U+V2vfPNBsz3+xipJXzt7YurgJFoKWIqEY=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=MIvX89AP8dU1e/0W56FnUOvYR2BFANvmkcxTg2AB4Wnt120QafMqu6ehIH5wtutsp
+	 dpA4LSS4tO/2rqt2FrV3umvujxDxwyzQsFe3oGQLH83pqZdOXa+MuTrEVZwAU2fbQ9
+	 Ht2e/3ir19vOGbCjsWFfds8D/JYEwJJMiDTXo5Zf2i/gxq56OWSCvkBH0meGFq1f4H
+	 ZS1P4e6txqfRk72du09hjUJPsdfJKvioOypaDP7GFkkmPBVuFosDwDDdIz/j9eOf2V
+	 M5LKNG1L7i0ifUk6/8uilS2EdBe4EOS8Q3lvvIwcmwOdIdtbks9O/XWqRnb+v180pN
+	 aH53POQPngOhQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517074750.87376-10-ramona.bolboaca13@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 18 May 2024 14:08:09 +0300
+Message-Id: <D1CQ1FZ72NIW.2U7ZH0GU6C5W5@kernel.org>
+Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jonathan Calmels" <jcalmels@3xx0.net>, "Casey Schaufler"
+ <casey@schaufler-ca.com>
+Cc: <brauner@kernel.org>, <ebiederm@xmission.com>, "Luis Chamberlain"
+ <mcgrof@kernel.org>, "Kees Cook" <keescook@chromium.org>, "Joel Granados"
+ <j.granados@samsung.com>, "Serge Hallyn" <serge@hallyn.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "David Howells"
+ <dhowells@redhat.com>, <containers@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-security-module@vger.kernel.org>, <keyrings@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <2804dd75-50fd-481c-8867-bc6cea7ab986@schaufler-ca.com>
+ <D1BBFWKGIA94.JP53QNURY3J4@kernel.org>
+ <D1BBI1LX2FMW.3MTQAHW0MA1IH@kernel.org>
+ <D1BC3VWXKTNC.2DB9JIIDOFIOQ@kernel.org>
+ <jvy3npdptyro3m2q2junvnokbq2fjlffljxeqitd55ff37cydc@b7mwtquys6im>
+ <df3c9e5c-b0e7-4502-8c36-c5cb775152c0@schaufler-ca.com>
+ <vhpmew3kyay3xq4h3di3euauo43an22josvvz6assex4op3gzw@xeq63mqb2lmh>
+In-Reply-To: <vhpmew3kyay3xq4h3di3euauo43an22josvvz6assex4op3gzw@xeq63mqb2lmh>
 
-Hi Ramona,
+On Fri May 17, 2024 at 10:11 PM EEST, Jonathan Calmels wrote:
+> On Fri, May 17, 2024 at 10:53:24AM GMT, Casey Schaufler wrote:
+> > Of course they do. I have been following the use of capabilities
+> > in Linux since before they were implemented. The uptake has been
+> > disappointing in all use cases.
+>
+> Why "Of course"?
+> What if they should not get *all* privileges?
 
-kernel test robot noticed the following build errors:
+They do the job given a real-world workload and stress test.
 
-[auto build test ERROR on jic23-iio/togreg]
-[cannot apply to linus/master v6.9 next-20240517]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Here the problem is based on a theory and an experiment.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ramona-Gradinariu/dt-bindings-iio-imu-Add-ADIS16501-compatibles/20240517-155051
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20240517074750.87376-10-ramona.bolboaca13%40gmail.com
-patch subject: [PATCH v3 9/9] drivers: iio: imu: Add support for adis1657x family
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240518/202405181841.ESCYTmmL-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405181841.ESCYTmmL-lkp@intel.com/reproduce)
+Even a formal model does not necessarily map all "unknown unknowns".
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405181841.ESCYTmmL-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/iio/imu/adis16475.c:523:2: error: incompatible pointer types initializing 'const struct iio_dev_attr *' with an expression of type 'struct attribute *' [-Werror,-Wincompatible-pointer-types]
-     523 |         &iio_dev_attr_hwfifo_watermark_min.dev_attr.attr,
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/iio/imu/adis16475.c:524:2: error: incompatible pointer types initializing 'const struct iio_dev_attr *' with an expression of type 'struct attribute *' [-Werror,-Wincompatible-pointer-types]
-     524 |         &iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/iio/imu/adis16475.c:525:2: error: incompatible pointer types initializing 'const struct iio_dev_attr *' with an expression of type 'struct attribute *' [-Werror,-Wincompatible-pointer-types]
-     525 |         &iio_dev_attr_hwfifo_watermark.dev_attr.attr,
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/iio/imu/adis16475.c:526:2: error: incompatible pointer types initializing 'const struct iio_dev_attr *' with an expression of type 'struct attribute *' [-Werror,-Wincompatible-pointer-types]
-     526 |         &iio_dev_attr_hwfifo_enabled.dev_attr.attr,
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   4 errors generated.
-
-
-vim +523 drivers/iio/imu/adis16475.c
-
-   514	
-   515	static IIO_DEVICE_ATTR_RO(hwfifo_watermark_min, 0);
-   516	static IIO_DEVICE_ATTR_RO(hwfifo_watermark_max, 0);
-   517	static IIO_DEVICE_ATTR(hwfifo_watermark, 0444,
-   518			       adis16475_get_fifo_watermark, NULL, 0);
-   519	static IIO_DEVICE_ATTR(hwfifo_enabled, 0444,
-   520			       adis16475_get_fifo_enabled, NULL, 0);
-   521	
-   522	static const struct iio_dev_attr *adis16475_fifo_attributes[] = {
- > 523		&iio_dev_attr_hwfifo_watermark_min.dev_attr.attr,
-   524		&iio_dev_attr_hwfifo_watermark_max.dev_attr.attr,
-   525		&iio_dev_attr_hwfifo_watermark.dev_attr.attr,
-   526		&iio_dev_attr_hwfifo_enabled.dev_attr.attr,
-   527		NULL
-   528	};
-   529	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+BR, Jarkko
