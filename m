@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58ED17582;
-	Sat, 18 May 2024 09:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C423D28373;
+	Sat, 18 May 2024 09:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716025423; cv=none; b=DfxwcOeYeRvBiwC+4To3774LSDKDtqTeqKPAkKOCGMm7FTSqigrUJnB2Cpgf7Bmminnypb40XMKnGLg7kxSRmADFYF0g9Il43c6yt12sgXJn0iURzf7KGZSx71/muZ+ymu8zpc8Y41Vw4B27yDsUch++zYNz7pLtR+1J1HptM/I=
+	t=1716025496; cv=none; b=GgQqua7oU8ZPZvftnyGdPDOjQQkyOCq6lTLDIbViYmxEDTdYxkzkIKb1BCQVvLT30Pr0IPGXz70jXPS0G4te/hysW5X4wzkz4xYWEYKtHW36Sc1bptigXp5DQYSZYM6YNLT/r4R78CSW5FjsyuACuxldG2BnSePF+Twf6+Yr8HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716025423; c=relaxed/simple;
-	bh=cN4taKemZXfix9JfNEyfNhnnzUNu1CKiXassiYzK5/g=;
+	s=arc-20240116; t=1716025496; c=relaxed/simple;
+	bh=ehmUU5DrSg7e7UVvhbwUWBH+UYuQcSC511rfaxLNOpM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=O6ujFG0Fp4ngK07DvkN6hRtfeUSfvdSmtq5ZbmpzHPbbBGWo9wZ8prL4dnGxq9DTGBfdLwmJXH+WGWEHL8KvToanqFtUTAICdhOoq8qfuLpCVsHIuq2CmUl/rNTIKc2o4SfSf9zfVqHGdavAqITRmqAWPUNm6IT1QDBImp5WTfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XJ0kvMs3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=24WdP9po; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=FLJbMQ3Mw9J81cLW13eY91wSFmpHjaZG94Zcg6O8SYCQJbHH9SKseJhwriOCPVEAxyAFTdZg7pjLc9fXJUhyWzygtRnmG7+qapCJ6v9hppYs7/6X6hCfIEfHq7Fb6ZDxcqM6rM1CaLLob1Kc9i/uy/QexerwIggQ25Je5UQB410=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hF3U/sM9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=alx1B85r; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XJ0kvMs3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="24WdP9po"
-Date: Sat, 18 May 2024 09:43:38 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hF3U/sM9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="alx1B85r"
+Date: Sat, 18 May 2024 09:44:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716025419;
+	s=2020; t=1716025493;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A+RQLhf8Q7V1V0kAlxyT1Z11xQC04LkQ5kVZhi2K2ws=;
-	b=XJ0kvMs3PbW1LswSh487Ys18FkGIMEvZKLAYW2NIV9MQXmHYdKDvJdHXHNZHtXVrZFCMbc
-	YbuZS0EEXGb6XsHWkieny5Ih3pWtsRQETTOE+CpawybF0y00UKEf2uHovcWkqCcRtKurl6
-	98qW474JIw0s5lUxwBvOYNLXnLEHPKt0CE0P0A+L3FtmQFgvy9OrZl86EeysEscJXZPXlB
-	dBQMnPkz/qWzwIddYdRdaxPGq8KwqAWkvP+S1KAqMS6DK0/XeXvKBi2I6mHbQI5tHkGNEU
-	2KhzxOnvOOsrhRvF3oHl3FG0I6IpuFqeS0xslY1sR6yHHRGvzPjDejLZ090k3w==
+	bh=CXb2zhViL9/cb+MGhd87dpFhnyoKIP/1oxdzA10sf5A=;
+	b=hF3U/sM9i1IGebuLUgOQufKQ0iew+WjjHxUKdKCe/q6M+oSoz9lQnGQtDom9L8bzQfX6O1
+	AybTgunqXp44LFrSCE1k99bD9KI0F/QtD2ULxxS8tOUmOrMp4CtHOF+3AtvsRwzGADQCIa
+	rBcBrfo6lHlzq5tHR7OYshuJ0AVEiqIeF6ViARwVCKffGFXGej4t2rFantOlPEqU5XiAuS
+	eeJEqWhX27FLR9iDdMspj3LuEjqM1YfUQMp5yEKvuZZUyB/EdFf2nZV/OzLwv1vhE0cyCc
+	p6UcwSVvfMwTDGQnmrO86gq0XMRjcLhDTe+H/muEH0Uk/VHvyDUE9c2J0IqQrw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716025419;
+	s=2020e; t=1716025493;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A+RQLhf8Q7V1V0kAlxyT1Z11xQC04LkQ5kVZhi2K2ws=;
-	b=24WdP9pox0lXY4BP9mRsFw9HopQEoufDrv21zlVCaPhxgLiS34tz4NETEHl02mqnU0BI6Y
-	jM8ay1Qb+/EqPRBw==
+	bh=CXb2zhViL9/cb+MGhd87dpFhnyoKIP/1oxdzA10sf5A=;
+	b=alx1B85r5oQaMe2E5I/IYYKar4fcF0c15E3jAcoDxYw/EHAtiZqXyVkWcF6+nf/B3FOJb0
+	swPARmw5yBmmuMAQ==
 From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/urgent] perf/x86/amd: Use try_cmpxchg() in events/amd/{un,}core.c
+Subject: [tip: x86/percpu] x86/percpu: Fix operand constraint modifier in
+ __raw_cpu_write()
 Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240425101708.5025-1-ubizjak@gmail.com>
-References: <20240425101708.5025-1-ubizjak@gmail.com>
+ Andy Lutomirski <luto@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240430091833.196482-5-ubizjak@gmail.com>
+References: <20240430091833.196482-5-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171602541885.10875.9262354688213911942.tip-bot2@tip-bot2>
+Message-ID: <171602549262.10875.7562387052692287292.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,76 +67,46 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the x86/percpu branch of tip:
 
-Commit-ID:     cd84351c8c1baec86342d784feb884ace007d51c
-Gitweb:        https://git.kernel.org/tip/cd84351c8c1baec86342d784feb884ace007d51c
+Commit-ID:     1fe67aee8ab3fdab4357afc983a9e9ff3892d694
+Gitweb:        https://git.kernel.org/tip/1fe67aee8ab3fdab4357afc983a9e9ff3892d694
 Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Thu, 25 Apr 2024 12:16:14 +02:00
+AuthorDate:    Tue, 30 Apr 2024 11:17:24 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 18 May 2024 11:15:13 +02:00
+CommitterDate: Sat, 18 May 2024 11:18:42 +02:00
 
-perf/x86/amd: Use try_cmpxchg() in events/amd/{un,}core.c
+x86/percpu: Fix operand constraint modifier in __raw_cpu_write()
 
-Replace this pattern in events/amd/{un,}core.c:
+__raw_cpu_write() with !USE_X86_SEG_SUPPORT config uses read/write
+operand constraint modifier "+" for its memory location. This signals
+the compiler that the location is both read and written by the asm.
+This is not true, because MOV insn only writes to the output.
 
-    cmpxchg(*ptr, old, new) == old
-
-... with the simpler and faster:
-
-    try_cmpxchg(*ptr, &old, new)
-
-The x86 CMPXCHG instruction returns success in the ZF flag, so this change
-saves a compare after the CMPXCHG.
-
-No functional change intended.
+Correct the modifier to "=" to inform the compiler that the memory
+location is only written to. This also prevents the compiler from
+value tracking the undefined value from the uninitialized memory.
 
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20240425101708.5025-1-ubizjak@gmail.com
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20240430091833.196482-5-ubizjak@gmail.com
 ---
- arch/x86/events/amd/core.c   | 4 +++-
- arch/x86/events/amd/uncore.c | 8 ++++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/percpu.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 1fc4ce4..18bfe34 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -433,7 +433,9 @@ static void __amd_put_nb_event_constraints(struct cpu_hw_events *cpuc,
- 	 * when we come here
- 	 */
- 	for (i = 0; i < x86_pmu.num_counters; i++) {
--		if (cmpxchg(nb->owners + i, event, NULL) == event)
-+		struct perf_event *tmp = event;
-+
-+		if (try_cmpxchg(nb->owners + i, &tmp, NULL))
- 			break;
- 	}
- }
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 4ccb8fa..0fafe23 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -162,7 +162,9 @@ static int amd_uncore_add(struct perf_event *event, int flags)
- 	/* if not, take the first available counter */
- 	hwc->idx = -1;
- 	for (i = 0; i < pmu->num_counters; i++) {
--		if (cmpxchg(&ctx->events[i], NULL, event) == NULL) {
-+		struct perf_event *tmp = NULL;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
- 			hwc->idx = i;
- 			break;
- 		}
-@@ -196,7 +198,9 @@ static void amd_uncore_del(struct perf_event *event, int flags)
- 	event->pmu->stop(event, PERF_EF_UPDATE);
- 
- 	for (i = 0; i < pmu->num_counters; i++) {
--		if (cmpxchg(&ctx->events[i], event, NULL) == event)
-+		struct perf_event *tmp = event;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, NULL))
- 			break;
- 	}
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index d202551..c77393c 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -178,7 +178,7 @@ do {									\
+ 		(void)pto_tmp__;					\
+ 	}								\
+ 	asm qual(__pcpu_op2_##size("mov", "%[val]", __percpu_arg([var])) \
+-	    : [var] "+m" (__my_cpu_var(_var))				\
++	    : [var] "=m" (__my_cpu_var(_var))				\
+ 	    : [val] __pcpu_reg_imm_##size(pto_val__));			\
+ } while (0)
  
