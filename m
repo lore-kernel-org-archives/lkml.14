@@ -1,63 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D464C3D0
-	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 18:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2228481D3
+	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 18:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716055621; cv=none; b=kX6EJBgLLiK6wUs16SSMfrDL98zREK6dmkyxc5oy8L3uazyVfaM7DU7F4IE91DQJZ80qWIVzSJ+I6y4yHPmygrGJgfETKnrMqoDMgkfF7qp66Po2Fe8ZZ9opXWKji/gcn7hpoGyTRVWU7U+JGdE4zvjL+OAGabOP4P4gFXWuKcQ=
+	t=1716056408; cv=none; b=E18G/UyMLqBIy8nVX3brYZDrNntlLP1KR/TLxNxa4rUAwgJt/rFk/VhJcYl1br47LchLgKXQgVZ+1ef+txeyzlfGM08rcXbPHjUNgWapek+insvqTKG3qEBw1S59TvH/uEqor03/sDoAauX7CNT2RrOFtLPC4JGaEc6ArEznSWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716055621; c=relaxed/simple;
-	bh=Mc9+Oq63ll6NhxvNPkRMg7O5UDgNttsShplBW5RJ0sQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jRG5C+L0/R3YVZClXjBEO8q4Ke9XhiBbtCTf5FW5GaqpKAdDLBD9Pz7+LdkLKi4jOpKGqcx+KDr7KDC2yAkExSzGer9KezpFBboUsMu4XtnQ9vJnWCvtRSqhpiU/fgg8ARhMuBGKjA9mFyrqBVlhEQnlp9ChlBspr8ALo8/ulLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oa/zj6gn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716056408; c=relaxed/simple;
+	bh=A/EoPBeMqtNANCdKY65Ed0ftg91GiZJQ+YgtYe181Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HSkjWf0xN74UWkpv04gVdYXy5ZMwDCqXquPJMNhhRbOO1OINnZLMT5WNVM02cSazjehu1RmPLGdMdE1GCKWoVEegSLwLFbPo2AsW4bPbjqfgZhS93rC7aCkVtyp9dq9QoQ5QfIwosG++D7r4npy7d+mt/H0A8B86QlaxSP7u3X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=lvfpXwX6; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oa/zj6gn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 99AD6C32786;
-	Sat, 18 May 2024 18:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716055621;
-	bh=Mc9+Oq63ll6NhxvNPkRMg7O5UDgNttsShplBW5RJ0sQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=oa/zj6gnWjswUZ41JAs5Bqe8ye2ak4n3Y5CjI8IKuUlNy1j5jmX1mzdg2DlCJ0JwB
-	 yjZESzd7BunHTd2T1SEzvlU7MKAJOs19VIN5J6S7Ew2fL7BVh59Guwy45IdxI3lS59
-	 IL8BqOVppbPQICNRnUdqxDK1tRMw5lcDpgcC5y5vnMnxMKlk26P4uakn/k6XKvbTFD
-	 Q8ZPDhTow8+IdcMl9g+suYIuY0HgxJUcLAqO64/DAExcSyYO+MQhyAnGvZiPlrLDyq
-	 NxPHg9HpJYGNHeChi2u5gLSgxVIyr42v2La4nVUQkAj8sP93cCIkJyu+X+CwezGHON
-	 MhLOQGP+gm6hw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 91B01C43336;
-	Sat, 18 May 2024 18:07:01 +0000 (UTC)
-Subject: Re: [GIT PULL] random number generator updates for 6.10-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240517150315.2213425-1-Jason@zx2c4.com>
-References: <20240517150315.2213425-1-Jason@zx2c4.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240517150315.2213425-1-Jason@zx2c4.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git tags/random-6.10-rc1-for-linus
-X-PR-Tracked-Commit-Id: 7b1bcd6b50a615671d4dcb0ad0378a2660a1a368
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f0cd69b8cca6a5096463644d6dacc9f991bfa521
-Message-Id: <171605562159.7011.14292727494862318524.pr-tracker-bot@kernel.org>
-Date: Sat, 18 May 2024 18:07:01 +0000
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="lvfpXwX6"
+Received: from fedor-21d0 (unknown [5.228.116.47])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 5338F4078517;
+	Sat, 18 May 2024 18:19:53 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5338F4078517
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1716056393;
+	bh=A/EoPBeMqtNANCdKY65Ed0ftg91GiZJQ+YgtYe181Rc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lvfpXwX6nqvtMXO/fxuc8UoVzhOxUZekg/PFrhiut7CwCrRuGUc2lvX/4TOdAmCAa
+	 5LeA/ismKkTT+Jo6uU3zL/b6XWYPnSLxAlOzB8u/ZrQ7+ch4IMg1oQUPwiHxDp5Re2
+	 hjiZ0r0rPCyChPphKjknmWuSMlzVZfdHzYgWZDNI=
+Date: Sat, 18 May 2024 21:19:47 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: syzbot <syzbot+5d4cb6b4409edfd18646@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] KASAN: slab-use-after-free Read in __fput (2)
+Message-ID: <20240518-f07e7cf8430d8fe22f5742ee-pchelkin@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <000000000000898d010616c1fd03@google.com>
 
-The pull request you sent on Fri, 17 May 2024 17:03:15 +0200:
+#syz fix: epoll: be better about file lifetimes
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git tags/random-6.10-rc1-for-linus
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f0cd69b8cca6a5096463644d6dacc9f991bfa521
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Links:
+https://lore.kernel.org/lkml/0000000000002d631f0615918f1e@google.com/
+https://lore.kernel.org/dri-devel/20240423191310.19437-1-dmantipov@yandex.ru/
