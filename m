@@ -1,220 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F868F4A
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 03:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716176000; cv=fail; b=BrFgC1ykhAOP4rvu9aMsI9hV2BJMAPjuLpR6dNhkvxvG4JBurkLk8tnQjYROBqNG4GqRDjwouJ2fEpawNpIIVv7AbGkBV49dMCXKSjNcdS8QYDrn6Ou6fcI+or7IRCFSpDCi/VSDG3Vyup75GdLdDMZRu01A56zhX2/SwT2zLKo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716176000; c=relaxed/simple;
-	bh=DBj+XUlIM1mxNmIDpXBo3RNG6eRRpjBhJZ/7kLFCJ8w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nz4nZPyzsjOl/43Y0zGyhm5OAEn+ExyKezOYUOnF+yg/QUufEjLlJ7J2+GcUo0hLOHcHMT08snlhRZY5jv8lNjwz3RDtlRA6p+3IdPXK6TPNDA9PSEbYRqEYVwxj+LO3BmNL59ryPUwsvrUwIdTn9r0H4uOLQVR4hD0eH1XI7FQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MAl4uH6U; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE67111185;
+	Mon, 20 May 2024 03:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716176004; cv=none; b=fSMnDnC93IC5aA5cFmYiYP60QCHSX/1YoxGun1Pah5b7nmuS3hsgJz8UKa2AJ68DaLSCkn/ORAdvOVI1fRNFyJpj8ksZ9kxnFmb0vuyWVJLgvxCyorwvj/swClZQ0/xcJD2H1kQfPNFuvq/45UrgG3CAsB1t/cBHvS5TZ5v/8bc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716176004; c=relaxed/simple;
+	bh=l6rW66rdQy0BAWRAkvZAhR9FHVUG7xO8ScWz6jA/qVc=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=hSGzB9PnNxk3+NeXdnkK6QGldty28MHktN992NH6TcIjQWlK2/66ABDnF4AIFrOVOYHjVisqYXbhMeniZDxFUuPMtQX4fZBBqHyruln+oIHr7VpEfhSe6F5jpVceRK6ZQFsYVouKB+RJgXg95Tr/WSDqgZy6nWAY4ES+EShYbw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L/MMsAUS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MAl4uH6U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716175999; x=1747711999;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DBj+XUlIM1mxNmIDpXBo3RNG6eRRpjBhJZ/7kLFCJ8w=;
-  b=MAl4uH6U9UW7vvp9Iu3W1ZU/FKWrcvMpvjDeHQJVThURTIZbzAJ+umRK
-   G0NsEMRMVwMAZFeyvWQJkIsG4t/lyi2Xp6yBJDg/tm+PSIrvGKx1iPo72
-   sz2UNtzW37hCFG+ZHjPb6PDZytAAMYezxeGk+7lgNHhCDRlXVDNZ5z9CR
-   6LMNbs9kbe4yaYd5WGlUss/zEqdYkgUOj36zNSpePZl9gEMpQTowggZvR
-   P/lBB7LFP1N7hC22M5WubfNgrQRcHEgmO9vAwp8Krxwj+r+XePd6NK367
-   d/zJM9K6uM8tiYD/nwYeeNSXDJj6SweSXdzN0THv1rKzAjgVDDtVoWQdA
-   g==;
-X-CSE-ConnectionGUID: toes6mMHR2+LtqqzK8JGBQ==
-X-CSE-MsgGUID: 0JJHZf8JRcK7kCg6YipBDA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="16074607"
-X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="16074607"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2024 20:33:19 -0700
-X-CSE-ConnectionGUID: pRspPAiaQ6+o2Edznf6HHA==
-X-CSE-MsgGUID: IGxBxpDxQZKSi8/48PihuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="63621058"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 May 2024 20:33:18 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sun, 19 May 2024 20:33:17 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sun, 19 May 2024 20:33:17 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Sun, 19 May 2024 20:33:17 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L/MMsAUS"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44K1LaCI022405;
+	Mon, 20 May 2024 03:33:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=L6F6DID/35kmP7
+	bLRw8WMPYKrwm+lNrNmRZ/06UH0YY=; b=L/MMsAUSXP/Rr6YjruRoFzKaF2mKuR
+	A6TnLC2K2esTHkDaowzDyE1FU1p0Ta+hGjQun985Gv5BmuqspV0jYOZUequVF9yc
+	2S2rDhv8ieeOAnOfcWyOKZYhYGa8J26ZPl7rit7HJ3fVcqD5k+pBRA4WVorZ2D5F
+	FOVyVEc3rKWHbj3ocag42VsK59oFipxdj09GcmnpxRaCyLj8cvK/valXzwgXi5AT
+	cqRUDZ3HhMCi7mx/AGMYein+TOyD+JDl3kADVmKw9+ptWVvL5pTXdjPtjaviM4Hi
+	OQ5OM45IEul18WdR8I5Xn/Ohw4ykFsqYfcCzXrL3t/VYYAdLilH5CvKQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n3takg3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 03:33:05 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44K3X4CJ016002
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 03:33:04 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 19 May 2024 20:33:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kLHdbX2JDGOu8fgJsk6h6CZkg/+Kxq1H/E3o5qTlSSQNfIs64tbS8V2YhYwRAFwI1D3zij0hggCIBVc+hWVgXGmpgQ++akqQlWVpKMH3ocWXEzM06OTatxDYfS4i46korubDIWhvzXzqnr0juODnKveGrJu9lPtJo0/SOvfSxBu9zx8oVMvNL5ZBxZ6im8dC3BzwjNyHcCh+B+FqmtxFqN33zWzCcG2co+jxX1rCaryZQD08cu/MtMrG1FuNnfkXL1x5QaWprUqmoluelZ7brEeqc484X2M9ecaUOjT9gng96V92eaR2qiPhE47lwnz7eahzNh3bUoDRVXiVU/UZZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DBj+XUlIM1mxNmIDpXBo3RNG6eRRpjBhJZ/7kLFCJ8w=;
- b=AOnOmPsqDzptEnBovy+8iobMVaGjn2/IrOizDB3UVuFoXCgtZFXy6ziXNq2RtmixfinkLJH6O7vuoJfWN0gm3jiTVbeIK/dcIb91TimEPqgcRpx+JQ0NqO3xapA9QH8h5gF/hmE8SmkvONjEcgNjyj6QGKzN6QfiUVaD/+w/OP6cfhfkNcms7cTvfaxIFToKvKbSeMVkbECTy1Oz60E6U/14Sj6qGWUA0WzD2yE7wekO5YWWzvRA4wmr6iHD1EiJvHPH/6aDkFmNPi2ypogR6i+bn8vjX7hvpTYaK6RL8MKx18YGZ4zBUkYpEtKkCAiawYdUp8sm20X0MXvvarWkTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by SJ0PR11MB7703.namprd11.prod.outlook.com (2603:10b6:a03:4e6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Mon, 20 May
- 2024 03:33:15 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.7587.030; Mon, 20 May 2024
- 03:33:14 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	"Joerg Roedel" <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
-	<robin.murphy@arm.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>, "Jacob
- Pan" <jacob.jun.pan@linux.intel.com>, Joel Granados <j.granados@samsung.com>
-CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"virtualization@lists.linux-foundation.org"
-	<virtualization@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5 5/9] iommufd: Add iommufd fault object
-Thread-Topic: [PATCH v5 5/9] iommufd: Add iommufd fault object
-Thread-Index: AQHamw8IPv7IV85GSUGxhOe1hMt7NbGYATUQgAd0KoCAACB/8A==
-Date: Mon, 20 May 2024 03:33:14 +0000
-Message-ID: <BN9PR11MB52765979B524A9362B3D773B8CE92@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240430145710.68112-1-baolu.lu@linux.intel.com>
- <20240430145710.68112-6-baolu.lu@linux.intel.com>
- <BN9PR11MB52769AC595B6BDA8FB4639258CEC2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <e30d919c-2e28-4e01-8317-2a4d82049056@linux.intel.com>
-In-Reply-To: <e30d919c-2e28-4e01-8317-2a4d82049056@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SJ0PR11MB7703:EE_
-x-ms-office365-filtering-correlation-id: 21439ae0-e346-4e03-d07a-08dc787d9533
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|366007|7416005|1800799015|376005|38070700009|921011;
-x-microsoft-antispam-message-info: =?utf-8?B?MEVKbStqMjJXRW56YUJGQTBPZzBvb2xodlVXRUc0OXAxcjNzYmhHS2FYUi9Q?=
- =?utf-8?B?UlU2VlJmSWZKVXpKWHFWOUxOcHZmU0pwT091NzlIWjVxeU9CR1QrcC8ramd2?=
- =?utf-8?B?WVFqeHZFZnBENWR4b1BVYzZ4THpkbWpPRWdjSzhZbWYrcXVQVENTSFhFbkcz?=
- =?utf-8?B?cUs0MGN6WmRzcVhUemVHc0pHUUJNaWtHaFJ4N2pqenJ0ZVBPSUZDbXNTTU5V?=
- =?utf-8?B?aTJXamJvemZ1Y2IxYmt3WVZiQXQzUTVFWmV0L092Y2xFKzJhYStLSFVUWS96?=
- =?utf-8?B?Yk9qQi8xSXBkTnZDNFBHa2I1ejErcjlLWVA2Sm9tSTh5MnUvSFdlZXhzNVVr?=
- =?utf-8?B?ZzZWZHE3N3owdTRvdjR2ZHdhei9IRzVnMEoyMkxxaS9GSEdwUWdWTU5xZlRQ?=
- =?utf-8?B?UHRMbXRHZGJ1YWswZU5VR2t5VUNVQWd1aDBnS3lpYzFOK3ZJeW1YOEs0Z0hM?=
- =?utf-8?B?RWR0OHhFZFBTaTNGSUtjQ0pGZ2IrWFBIWnJzTCtjZnhJTUVLVWdySU50L0R0?=
- =?utf-8?B?WksyL1ZMbXVDZnlDSmVhRnRDSWRPZ3ZrQzcwUGY0c3NwYm5YTGd4NUIrdlRw?=
- =?utf-8?B?WEtGTjBxVnhsMXIydVJySkJ1QVF1dDEybkNmUldPWjdjT2lZcEhRNzRRWUxW?=
- =?utf-8?B?SlhTVXI4ZXZCTDMxNHc5RmlsVitjMzUzelFocTMydzBqbzVlZnJzSkNsbUp0?=
- =?utf-8?B?OG4zRGpHNTdCSEFyQktKVEdpZENQWG1JVjBHbkVsMHRzUllYZStNcWtDSUpp?=
- =?utf-8?B?NExOMWNQNURRakJYZWRYTkdTM1VhV1dOZWU4T2J3dm1nMWM4Q3VPT2dlbVp0?=
- =?utf-8?B?ZXNjbklpNVZ6THltRFZFbGlZRmxGNHZuRVhMMlptY1UrZzNuSkJxcURqcGFv?=
- =?utf-8?B?VVRGTks3cVV1YjdWQkxTa1lteU1lMVFuYUxETXRhODVLZ1ZUUW50NmhKengw?=
- =?utf-8?B?L3R4UGEySGhVZEZXejJyWXBIcjdYVnVJUEk3dHZmZm03NWtQejVMaWYyTzVs?=
- =?utf-8?B?WjF2NEV3a0l6VElGOFBXb2R5djdiV3VNTFZ1djllNTIwNXRmVEgvbUZIZFRa?=
- =?utf-8?B?alVNY1dQc1FTLzRoYXJwVlY0K0tOS01xVHJXWDVwQ0F5aGJ3d3EwUDJMUTE4?=
- =?utf-8?B?Z2VkQm1tb25Fak1SYXFuVFRiUWQwQ0p5THpsT2pyaW9mMEZLVUw3UkUrdlJV?=
- =?utf-8?B?b1dBRVZvc2lDNGtkVEYwQ1VQVXRDSzhpUDcxSkJEeVp3TUEvYXBMaHJBemNB?=
- =?utf-8?B?dUJPYS9iR3lOdi8xSDM3Vlp3TGpwU2p4bEcwM1B2S2c3STBHR0Z6enVITHNq?=
- =?utf-8?B?cHozcDRkOHZhTmlDcXZnTjVpZGs3dDg4Ym4xbk1pL05jMmVqbnQwLzJPNXlY?=
- =?utf-8?B?SXBiVG45UC9OaVFlZXFnU1A4aVRQVWdVWWpkZUw5ZU1iWHM1M0NyQTRiRDJC?=
- =?utf-8?B?aWNCSjNROHJZS0czMGJ3UndCV08xS2V3M3ZtSHJIL2FMdXJLQllOOThvU1Fq?=
- =?utf-8?B?T0JOR0RLZUVpaDhKTXB4OGNXUWhHR1dROGQ1QTFUVUJNRmtzZUZ5dkx2OFdh?=
- =?utf-8?B?blJ6NTg3NXluVEVkcUNQOHlvSWY4NFU3ekRUZWtWaVl5RTdVRW5SSUcxRlNW?=
- =?utf-8?B?NzJqa1Erc1cyWmFrUkVjVVkwL05ZMCtCcWlXS1NzT05iTnkrUmxRcUtwOHlx?=
- =?utf-8?B?SERYeFdmaS9yZXIzUjVuTFN2L1BVdmZiNkwzL0RWQWlURU9JUXpId2ZwWkxR?=
- =?utf-8?B?elUyKzFiNTJiNlQxbGRaYlFjSHErRmtTWEQyL21MNE1IYUtNMWFSYjB0SFVR?=
- =?utf-8?Q?UeRIgUymfUJ/7IZy+mdVvVzY1i3Dk6i7p43tg=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005)(38070700009)(921011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YUZ6a3phVjZqb3BRQTQzMVoyNTBMbzlnZnhIQmtwcUcvNjRLck56SjF1MU9D?=
- =?utf-8?B?K25pSWpMM05VSWROTko3TXJLNGdGbzBEQTQ1N2ZlWmdUcmpiWGFORHlkencr?=
- =?utf-8?B?RlU0SUVEYnZrZXZyNVJoNy9pbUh1S3k5ZmhNRXBFNWtsdTdmQURMSlIxbmZq?=
- =?utf-8?B?cDhDMkdrYlphRHNFaG5QdGZrTG9ET0NqSGlOZkRMR05NeTQ2bmdpYUQ1dUo1?=
- =?utf-8?B?K0Z5RnZzR3UyY05RYko3TzBiM1JWTVNqVmRFVmZCMnoxVkgvZ20wcVgwRVRB?=
- =?utf-8?B?ZVdReW9YWHFTd3JQcXRNUlplZXlxeDU0WXNORmN1R1I4cEJqSTRIRDlUL1Z4?=
- =?utf-8?B?NHB5R20zZWtLNFNhaHljQnI3aktBSWh5enNFU3NncDJka2wwU1k0SmpJTCtx?=
- =?utf-8?B?ZDFRTGFnb0xpdHBXWTRvS001eTJSaHpWeGg2eVY2cG43QTVwSCtKWVlrcEV5?=
- =?utf-8?B?NzA2dUc4eVpOQWdyUkpvN3dLVzhCcWErV2RWNkdZbFBDeDB6ZHFrNEVtc0dx?=
- =?utf-8?B?QkJjcGk1eHk2OCtLekNSUGY4TzU3M2JCdDNTQkJZOUJKYzJ3T2VNRFM5Tzlm?=
- =?utf-8?B?RWM0WFRPcDBMVlNpK3l4cVI0ZlBqT1NrT3ZoWWZ1dkdsV21qbEZlSjRvYmhi?=
- =?utf-8?B?cTNEZ2N4WDFIZ3JzdEJVMnNmM0ZVNmJBOHlyUEhPbWZ6WFEvZ2haM1hJb1ow?=
- =?utf-8?B?Z0kwRzNGM2FldHBvdHFSM1hHMEI2clhVdEdJWk5xMC9IU3VDUDhxZDBIbjlL?=
- =?utf-8?B?ZnNaK1psclNqOE0rSS9JVURrZXVrdXRxcUZrNHYwMlZvbEtPNjNISzlESi85?=
- =?utf-8?B?cFZHMGMyWE9pTXBCc2haNzFIYm14UnZ1SE9CZUF1aW5lc0lUdjhsZ1hqUlJv?=
- =?utf-8?B?SUFIc1pTVTZITXZHS2w2VzlEZkV2V040OVBpRmgyZmhkQ1hrNFFsRnV0WEwv?=
- =?utf-8?B?RGNiY2NCeGxlaEV1OXJIS3lsSjJJTzFYKzErdTh4YTN3WDBnOHVCblZ2VWg3?=
- =?utf-8?B?SWMrTHhSNzkweXZHU1BlemJqMlBweEsxakU5NmJkQ01mdVN1MXZTd3FIY3FE?=
- =?utf-8?B?UURZMnlyZVIvUzdOd1czVzNQUFBKWE1Ib1BSYmZFMFJEd2JvSmY5dU1CYXZt?=
- =?utf-8?B?QldwMTQ4Q3dyZVg5emRSVnBBOTh3UHZSLy8xMERpZUxDZTVFYjF5enlNeXFw?=
- =?utf-8?B?SDR2ZkVjSDl3TU9tSGhmRG9oQlpNdE5RWitlOWtWbEVKbzZsY2xTaVorZm9J?=
- =?utf-8?B?R1pNMW4xSUNIUHhGYmtoM2xXT1haYzQwdy90a2szY0lpeTNaM0NtTlRZN3Z3?=
- =?utf-8?B?eEtIRDM3OE5ISkFQanlMN0k3T2F4aHYzNWhiLzNYT252WnNMbjJuWXpLaHhM?=
- =?utf-8?B?elZ2MnBYL2NpNE82TEpjZXArU045Vk5FODR4RERodXp0eDlrS0pwWmZhNHhv?=
- =?utf-8?B?ekEwZ3B2djJPWURxSGlFb1ZER1pzTFRQUHYwQlg3WDlURVk1cjNrVzdNQm9S?=
- =?utf-8?B?MEROVVhiNXZLVG9nekhRNDQ1aHB3V3VudGtGUnduQlN0RDFmR1pZaHZiaGVw?=
- =?utf-8?B?RHl5dW1FaEhNYU1nc1ZKVVZqdndtdGdqUHdjUnIybWtWbEM5a1dBSEswSDg5?=
- =?utf-8?B?OWwvN0pGVjlGd2tSTEFiQ0Izd2NwYU1LUWJzWW1XSERLSEVhWUJoYkxra2cr?=
- =?utf-8?B?bnNObVNLek0welM1SE9QalRlUE5NSG53eXBQaGJOaEprUkVwVWRIODl1K3Fw?=
- =?utf-8?B?T1JpekZZU2VIWGdrbWRQV2hSanNPQlQ1QkZHSWhoN05xT2NQZ0p2TXJNTWJh?=
- =?utf-8?B?NjZEZEVhRG5oS3FCY1pmenBwaFlEZWk3d2tKeklYdmp1V2RROEdodlIyRmNL?=
- =?utf-8?B?OTJyWEhOTFFsK0FzR2RhZlFMaGdRZHBrMGI1MjJmelpUdVp6Z2k0UUhDM3Bh?=
- =?utf-8?B?eSt1aFdhYkFKK3NXcXlGSVVCb0xmSWRDWG5MVEs5TXY5blN6bnN2N1d3UjJ3?=
- =?utf-8?B?TDNjMXRaQTlzeUlGbjVQKzc5V3V0RXVvaUFITzdNSVR0ZWJ1MVg3a3FjY3lS?=
- =?utf-8?B?eDFGTTBXS0tuMFl0aHhuR3UreW45eWplZld4N0xwR21xV3Y4NGZGZi9XaE85?=
- =?utf-8?Q?t/1GSoKotORCNw/DHcKTnEKvY?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.2.1544.9; Sun, 19 May 2024 20:32:57 -0700
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v13 0/6] PCI: qcom: Add support for OPP
+Date: Sat, 18 May 2024 19:01:41 +0530
+Message-ID: <20240518-opp_support-v13-0-78c73edf50de@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21439ae0-e346-4e03-d07a-08dc787d9533
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2024 03:33:14.9178
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5lBFkPHkUTQp7SpKfaFEgsNyFqhRsLFf8wePUedfEsdPwLWswlR1sE7b8DZYkC76wPme/lo/e+UK2vNpeBAybA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB7703
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL+tSGYC/23OSwrCMBCA4atI1kZm8qjGlfcQkealWdjERIsiv
+ bupILTicga+f+ZFisvBFbJdvEh2fSghdnVAvlwQc267k6PB1gVhwAQIaGhM6VjuKcV8o6YFJZ0
+ GzrQgVaTsfHh8cvtDnc+h3GJ+fuq9GrffznrW6RUFKlSDG2GNkHa9u96DCZ1ZmXghY6lHmHI15
+ wjVo5KNa7Tjgvs/Hiee8R+Po5feWgEavJJ/PJv6n/eRVe/rbQ0teubN3A/D8AbAu3nraQEAAA=
+ =
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
+        <bmasney@redhat.com>, <djakov@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
+        <krzysztof.kozlowski@linaro.org>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716175975; l=6530;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=l6rW66rdQy0BAWRAkvZAhR9FHVUG7xO8ScWz6jA/qVc=;
+ b=Tngm6tR8IGZNmDsGPuJ5IO4JrSVd/rNA0/yF2gQcTEUB2px+Y0EsnbTovj8x7MXjHmQ/xbYE3
+ OP4Gvyv81EoART6is6QC/t31OlOgBXG0V8+FpD+GYBSdlF5ViF1t2Nq
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jm979YXPRY9_8dZPCJyMD57JQin1pBOZ
+X-Proofpoint-ORIG-GUID: jm979YXPRY9_8dZPCJyMD57JQin1pBOZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-20_01,2024-05-17_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405200026
 
-PiBGcm9tOiBCYW9sdSBMdSA8YmFvbHUubHVAbGludXguaW50ZWwuY29tPg0KPiBTZW50OiBNb25k
-YXksIE1heSAyMCwgMjAyNCA5OjM0IEFNDQo+IA0KPiBPbiA1LzE1LzI0IDQ6MzcgUE0sIFRpYW4s
-IEtldmluIHdyb3RlOg0KPiA+PiArDQo+ID4+ICsJCWlvcGZfZ3JvdXBfcmVzcG9uc2UoZ3JvdXAs
-IHJlc3BvbnNlLmNvZGUpOw0KPiA+IFBDSWUgc3BlYyBzdGF0ZXMgdGhhdCBhIHJlc3BvbnNlIGZh
-aWx1cmUgZGlzYWJsZXMgdGhlIFBSSSBpbnRlcmZhY2UuIEZvciBTUi0NCj4gSU9WDQo+ID4gaXQn
-ZCBiZSBkYW5nZXJvdXMgYWxsb3dpbmcgdXNlciB0byB0cmlnZ2VyIHN1Y2ggY29kZSB0byBWRiB0
-byBjbG9zZSB0aGUNCj4gZW50aXJlDQo+ID4gc2hhcmVkIFBSSSBpbnRlcmZhY2UuDQo+ID4NCj4g
-PiBKdXN0IGFub3RoZXIgZXhhbXBsZSBsYWNraW5nIG9mIGNvb3JkaW5hdGlvbiBmb3Igc2hhcmVk
-IGNhcGFiaWxpdGllcw0KPiBiZXR3ZWVuDQo+ID4gUEYvVkYuIEJ1dCBleHBvc2luZyBzdWNoIGdh
-cCB0byB1c2Vyc3BhY2UgbWFrZXMgaXQgd29yc2UuDQo+IA0KPiBZZXMuIFlvdSBhcmUgcmlnaHQu
-DQo+IA0KPiA+DQo+ID4gSSBndWVzcyB3ZSBkb24ndCB3YW50IHRvIG1ha2UgdGhpcyB3b3JrIGRl
-cGVuZGluZyBvbiB0aGF0IGNsZWFudXAuIFRoZQ0KPiA+IG1pbmltYWwgY29ycmVjdCB0aGluZyBp
-cyB0byBkaXNhbGxvdyBhdHRhY2hpbmcgVkYgdG8gYSBmYXVsdC1jYXBhYmxlIGh3cHQNCj4gPiB3
-aXRoIGEgbm90ZSBoZXJlIHRoYXQgb25jZSB3ZSB0dXJuIG9uIHN1cHBvcnQgZm9yIFZGIHRoZSBy
-ZXNwb25zZSBmYWlsdXJlDQo+ID4gY29kZSBzaG91bGQgbm90IGJlIGZvcndhcmRlZCB0byB0aGUg
-aGFyZHdhcmUuIEluc3RlYWQgaXQncyBhbiBpbmRpY2F0aW9uDQo+ID4gdGhhdCB0aGUgdXNlciBj
-YW5ub3Qgc2VydmUgbW9yZSByZXF1ZXN0cyBhbmQgc3VjaCBzaXR1YXRpb24gd2FpdHMgZm9yDQo+
-ID4gYSB2UFJJIHJlc2V0IHRvIHJlY292ZXIuDQo+IA0KPiBJcyBpdCB0aGUgc2FtZSB0aGluZyB0
-byBkaXNhbGxvdyBQUkkgZm9yIFZGIGluIElPTU1VRkQ/DQo+IA0KDQp5ZXMNCg==
+This patch adds support for OPP to vote for the performance state of RPMH
+power domain based upon PCIe speed it got enumerated.
+
+QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+maintains hardware state of a regulator by performing max aggregation of
+the requests made by all of the processors.
+
+PCIe controller can operate on different RPMh performance state of power
+domain based up on the speed of the link. And this performance state varies
+from target to target.
+
+It is manadate to scale the performance state based up on the PCIe speed
+link operates so that SoC can run under optimum power conditions.
+
+Add Operating Performance Points(OPP) support to vote for RPMh state based
+upon GEN speed link is operating.
+
+Before link up PCIe driver will vote for the maximum performance state.
+
+As now we are adding ICC BW vote in OPP, the ICC BW voting depends both
+GEN speed and link width using opp-level to indicate the opp entry table
+will be difficult.
+
+In PCIe certain gen speeds like 2.5GT/s x2 & 5.0 GT/s X1 or 8.0 GT/s x2 &
+16GT/s x1 use same ICC bw if we use freq in the OPP table to represent the
+PCIe speed number of PCIe entries can reduced.
+
+So going back to use freq in the OPP table instead of level.
+
+To access PCIe registers of the host controller and endpoint PCIe
+BAR space, config space the CPU-PCIe ICC (interconnect) path should
+be voted otherwise it may lead to NoC (Network on chip) timeout.
+We are surviving because of other driver voting for this path.
+
+As there is less access on this path compared to PCIe to mem path
+add minimum vote i.e 1KBps bandwidth always which is sufficient enough
+to keep the path active and is recommended by HW team.
+
+In suspend to ram case there can be some DBI access. Except in suspend
+to ram case disable CPU-PCIe ICC path after register space access
+is done.
+
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+Changes from v12:
+	- removed icc bw of the memory path as suggested by mayank
+	- Added check for icc_set_bw in the suspend path as suggested by mani.
+	- Link to v12: https://lore.kernel.org/r/20240427-opp_support-v12-0-f6beb0a1f2fc@quicinc.com
+Changes from v11:
+	- added nicpicks suggested by mani.
+	- Link to v11: https://lore.kernel.org/r/20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com
+Changes from v10:
+	- Updated comments and logs as suggested by mani.
+	- Link to v10: https://lore.kernel.org/r/20240409-opp_support-v10-0-1956e6be343f@quicinc.com
+Changes from v9:
+	- Disable interconnect CPU-PCIe path only system is not suspend to ram case.
+	- If opp find freq fails in the probe fail the probe as suggested by mani.
+	- Modify comments as suggested by mani
+	- Link to v9: https://lore.kernel.org/r/20240407-opp_support-v9-0-496184dc45d7@quicinc.com
+Changes from v8:
+	- Removed the ack-by and reviewed by on dt-bindings as dt-bindings moved to new files.
+	- Removed dt-binding patch for interconnects as it is added in the common file.
+	- Added tags for interconnect as suggested by konrad
+	- Added the comments as suggested by mani
+	- In ICC BW vote for CPU to PCIe path if icc_disable() fails log error and return instead of re-init.
+	- Link to v8: https://lore.kernel.org/linux-arm-msm/20240302-opp_support-v8-0-158285b86b10@quicinc.com/
+Changes from v7:
+	- Fix the compilation issue in patch3
+	- Change the commit text and wrap the comments to 80 columns as suggested by bjorn
+	- remove PCIE_MBS2FREQ macro as this is being used by only qcom drivers.
+	- Link to v7: https://lore.kernel.org/r/20240223-opp_support-v7-0-10b4363d7e71@quicinc.com
+Changes from v6:
+	- change CPU-PCIe bandwidth to 1KBps as suggested by HW team.
+	- Create a new API to get frequency based upon PCIe speed as suggested
+	  by mani.
+	- Updated few commit texts and comments.
+	- Setting opp to NULL in suspend to remove any votes.
+	- Link for v6: https://lore.kernel.org/linux-arm-msm/20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com/
+Changes from v5:
+	- Add ICC BW voting as part of OPP, rebase the latest kernel, and only
+	- either OPP or ICC BW voting will supported we removed the patch to
+	- return error for icc opp update patch.
+	- As we added the icc bw voting in opp table I am not including reviewed
+	- by tags given in previous patch.
+	- Use opp freq to find opp entries as now we need to include pcie link
+	- also in to considerations.
+	- Add CPU-PCIe BW voting which is not present till now.
+	- Drop  PCI: qcom: Return error from 'qcom_pcie_icc_update' as either opp or icc bw
+	- only one executes and there is no need to fail if opp or icc update fails.
+	- Link for v5: https://lore.kernel.org/linux-arm-msm/20231101063323.GH2897@thinkpad/T/
+Changes from v4:
+	- Added a separate patch for returning error from the qcom_pcie_upadate
+	  and moved opp update logic to icc_update and used a bool variable to 
+	  update the opp.
+	- Addressed comments made by pavan.
+changes from v3:
+	- Removing the opp vote on suspend when the link is not up and link is not
+	  up and add debug prints as suggested by pavan.
+	- Added dev_pm_opp_find_level_floor API to find the highest opp to vote.
+changes from v2:
+	- Instead of using the freq based opp search use level based as suggested
+	  by Dmitry Baryshkov.
+Changes from v1:
+        - Addressed comments from Krzysztof Kozlowski.
+        - Added the rpmhpd_opp_xxx phandle as suggested by pavan.
+        - Added dev_pm_opp_set_opp API call which was missed on previous patch.
+---
+
+---
+Krishna chaitanya chundru (6):
+      arm64: dts: qcom: sm8450: Add interconnect path to PCIe node
+      PCI: qcom: Add ICC bandwidth vote for CPU to PCIe path
+      dt-bindings: pci: qcom: Add OPP table
+      arm64: dts: qcom: sm8450: Add OPP table support to PCIe
+      PCI: Bring the PCIe speed to MBps logic to new pcie_link_speed_to_mbps()
+      PCI: qcom: Add OPP support to scale performance
+
+ .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  |   4 +
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               |  89 ++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 134 ++++++++++++++++++---
+ drivers/pci/pci.c                                  |  19 +--
+ drivers/pci/pci.h                                  |  22 ++++
+ 5 files changed, 230 insertions(+), 38 deletions(-)
+---
+base-commit: 6c6e47d69d821047097909288b6d7f1aafb3b9b1
+change-id: 20240406-opp_support-ca095eb032b4
+
+Best regards,
+-- 
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
+
