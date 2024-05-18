@@ -1,93 +1,102 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03848BEA;
-	Sat, 18 May 2024 09:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE55D8BE2;
+	Sat, 18 May 2024 10:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716026386; cv=none; b=CuX8BfqkcbXs8foueNs+j5uZIrfbGk4yqmUPg5zTgCAKcvZ55tXNFo3k+b1W+zGT0/qJT0GxN3Ebn1XOcOio8lDv8CBQfyQGxyGHJwXlxwbhZTKdw9Q+op/gMaJ/u4Tsb+0e2/sf6lM/dfo/uUx19Lx8KsSIHAg113Om9TBjRGc=
+	t=1716026771; cv=none; b=aDlJKikCxBwYcAUs15Qh3ogWhGU0dhMpmt6DTn9Dovpb3rLXbgGFqnRuK3cuZGKVbFdDN8mFaH7ZaFaa94aPYIB5eXJTYsAR3IC6lGCJQnmszgmBGPxC1SQo0VY+mToohv45XR+Alh8XsZ1mwiY0TYcAtfakUHyUV9/lOP+vBWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716026386; c=relaxed/simple;
-	bh=L3kPstBMv6aXX21Sgvx9YjumHQMWLBhZbrinVkSwwA0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Th82wVPlmwFlJarOFa9r3zMoZYhza+UFS5MILtSTCgf/9SmwuP2kA/gwhs4r3J8RbIydy1xn9JPD4Y9K0b+rB8fcuMLP39IEzkh57L+wZxlq4/UAcZWIWWKwNE3NFMH0F3j32RwjDCEHBZs2y6N63bHk/S0S1YzywsbnALtCmHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQboQlec; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716026771; c=relaxed/simple;
+	bh=2KLYzi0Quxs3zJMUGfVzy9lVcJJAzfPspjlA12X1dQg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZuI00ScjrT4zvmiFQffHYRExJ5gNurk4qB8VFJTfP0hsYMmXizehStS59tr8MJOrqByVRl6400V/mJJIxwpsqPAT7+GzJRXWZKRtNDaTT/KyF7UauXbqOR6qI5KjkCIIh+Idb5o4r0QaYvJfQSWttcgPGXmE8bjDDyU82OqBEWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NPGyrMmV; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQboQlec"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51f99f9e0faso3241231e87.2;
-        Sat, 18 May 2024 02:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716026383; x=1716631183; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+H5vJpVIpZOz5Cbd499dwyXdB2lEblIJweWz8Bm/60g=;
-        b=lQboQlecR3Pc2FHn+C6Q2mPf33bnpUJy24k+ToYS3a/SdgGNexu0roV5y+3A5T+2z9
-         RZ2O4YSsgvEPEe/VLdDsa+ZdE25cC+7+WPR8Xj1AC/LHo9keW8KxvBr+NO+HFzt3W9R7
-         MeQz2OtXOJoDnJdtMYz1j17M2Ds0SXyAGUNdznBmnxHISFjgxWTvXxFeS/oNKOlnRzBP
-         o6406CYbpkyYsM3BNe+SreiVcugeIeLmlnoC9GCYncT/E75UrlKfK7xXs+Do51DBEVEN
-         u+PRWycdMQ4qajT6ve8jneYNuHp98HXSB4SqW1gV/CVmsIM46wrZh7SvBVdPX6hYJlyV
-         EMBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716026383; x=1716631183;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+H5vJpVIpZOz5Cbd499dwyXdB2lEblIJweWz8Bm/60g=;
-        b=i5V93VcEIcHQwezhZJF9+WgPJXxVPFi/fykceVPdjLTGdmy20QaSkyHHF7r9uhPpTp
-         h7aI7tQXAiqQjE5T314aD8ilVrAO/o9kN/LGie+j+P/+j4tOxCrqJKgyIY0JSVIYgxQk
-         0dOR5PIodoInaDVBVFKgYGAxuHDIXKW5YmEcA3dXRwtnptw9e3MxHm8NSmDbGPBFaoUr
-         iLvVCVTkF2UaJANrmVQVcoOxmJcvEyGsErOOVjvRImn4eM0k2l6ILy+UJ0pOLNyAF1TI
-         9eAZszDnG0xpOOHwr8fq1/uXGe0zx+FvVVmSQm2C8GdtLctE6iDNHOqqof8/BcjXcyID
-         954Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWGfUq42ERhyuTTnnPk5T4wYWmDmRbsQTaEY8b6MDDjvhJGX0G79euqGzwIdi40k6onFD7zJ+opt/hD+/cGMw7IvbFq2J8PeusVuvfD
-X-Gm-Message-State: AOJu0YyaBcqFojq06EQYCvyGScBNyAg8a61x1WaeP917nEXCSbi3ABv2
-	u1yWzbHTpsqqaV4r0FSliHi5Xypa0ABnuRq13FyQL0j8QDMzSRgm1tp11p3OITiIULyRNWViXyL
-	oQTTeblo6ZSkCJnVUU1Ge+aSUYpw=
-X-Google-Smtp-Source: AGHT+IHzRder/JdbsF4YvrMdFF2L4QMJLhsqGsTOwTU0PZdMHJc/yU7HWTv1mFpKTamXj/z3hRiAHgQeE5LqTTMdrz8=
-X-Received: by 2002:a05:6512:32b5:b0:520:76d0:b054 with SMTP id
- 2adb3069b0e04-522105845ecmr15504233e87.57.1716026382659; Sat, 18 May 2024
- 02:59:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NPGyrMmV"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44IA60pD122481;
+	Sat, 18 May 2024 05:06:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716026760;
+	bh=+s027MF9CiDove3Goyu/bsXNM0Zc7/KqIS+GLcrruic=;
+	h=From:To:CC:Subject:Date;
+	b=NPGyrMmVRTfRneZGxYSUvAwP3q1RkrrCFo4YyhOCKt9S8GK+YXpXP5nmXNKCIv4YP
+	 2RSysowDgaOXtLR3YGLw9dnGtu+kH+272OsWvVbBtSQPEsyZZwwqqQZeUNQOP5cf2m
+	 nLXio2o9VEmzrQ7G/w/3moibFOvF2JOfgcvaeeyY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44IA60FK007642
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 18 May 2024 05:06:00 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 18
+ May 2024 05:05:59 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 18 May 2024 05:05:59 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44IA5vR8100665;
+	Sat, 18 May 2024 05:05:57 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-udma-glue: Fix of_k3_udma_glue_parse_chn_by_id()
+Date: Sat, 18 May 2024 15:35:56 +0530
+Message-ID: <20240518100556.2551788-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 18 May 2024 04:59:30 -0500
-Message-ID: <CAH2r5msmH0Y=iUcu15eX3DiTS=Xdq=v1nqStWR20oVXYhAnFdA@mail.gmail.com>
-Subject: [GIT PULL] smb3 fix
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Please pull the following changes since commit
-1ab1bd2f6a5fd876d1980d6ade74ce5f83807baf:
+The of_k3_udma_glue_parse_chn_by_id() helper function erroneously
+invokes "of_node_put()" on the "udmax_np" device-node passed to it,
+without having incremented its reference at any point. Fix it.
 
-  Merge tag '6.10-rc-smb3-fixes' of
-git://git.samba.org/sfrench/cifs-2.6 (2024-05-15 11:37:15 -0700)
+Fixes: 81a1f90f20af ("dmaengine: ti: k3-udma-glue: Add function to parse channel by ID")
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
 
-are available in the Git repository at:
+Hello,
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/6.10-rc-smb-fix
+This patch is based on commit
+4b377b4868ef kprobe/ftrace: fix build error due to bad function definition
+of Mainline Linux.
 
-for you to fetch changes up to a395726cf823fe8f62f1b8c3829010e5652ce98c:
+Regards,
+Siddharth.
 
-  cifs: fix data corruption in read after invalidate (2024-05-15 17:22:59 -0500)
+ drivers/dma/ti/k3-udma-glue.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-----------------------------------------------------------------
-an important fix to address recent netfs regression (data corruption)
-
-----------------------------------------------------------------
-Steve French (1):
-      cifs: fix data corruption in read after invalidate
-
- fs/smb/client/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-
+diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+index c9b93055dc9d..f0a399cf45b2 100644
+--- a/drivers/dma/ti/k3-udma-glue.c
++++ b/drivers/dma/ti/k3-udma-glue.c
+@@ -200,12 +200,9 @@ of_k3_udma_glue_parse_chn_by_id(struct device_node *udmax_np, struct k3_udma_glu
+ 
+ 	ret = of_k3_udma_glue_parse(udmax_np, common);
+ 	if (ret)
+-		goto out_put_spec;
++		return ret;
+ 
+ 	ret = of_k3_udma_glue_parse_chn_common(common, thread_id, tx_chn);
+-
+-out_put_spec:
+-	of_node_put(udmax_np);
+ 	return ret;
+ }
+ 
 -- 
-Thanks,
+2.40.1
 
-Steve
