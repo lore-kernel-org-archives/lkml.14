@@ -1,244 +1,176 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PAUP264CU001.outbound.protection.outlook.com (mail-francecentralazon11021011.outbound.protection.outlook.com [52.101.167.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B544D1A2C10;
-	Sat, 18 May 2024 06:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716013423; cv=none; b=kP64Cs61blWZ9ZOn51Wu1QKjbsH3NZilLNvARCZosEpDEdkSS1xP7FbpHIQ9SEs1TGn0H3TOiyShuezSRSDa6FjlZQyHJj6npDZgRmdCY6F/p/ZhuFccVglJpvuDo5VmckzTWxJeqhKJlY/bcKxokh8NrEFzHCqzylvou5l8wUE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716013423; c=relaxed/simple;
-	bh=Gs4ZaFZ1pd9n4/qqUHeAwX0aMvkzFoGaz4hwJXK1Huo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kUlSufmesFJd/gSM/cnCyhM2ml4yo2Ng32wXmAUotRc117S01Emx1Ty5TFb0+W3WBisCmLQFu10gE3nLQ38IczfJKutoK1psMj70Q9FoJhZUc57XmB2pAxrFJYsI75fDWojXdbBOiDplx02DkCXbWGJWrTvLsaEL9rRj3vEarjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7riXalN; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3728F44
+	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 06:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.167.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716013741; cv=fail; b=TuFtbz+C1iOE5PSmwQhD+D4qpkepDZyynBGkZ+5CRueywFJnmDbJHyqW6XsEYOtGtCaX79inpYG5cUJBQZKuV1xKgh6JzUF6P5wtRHcZI+Txl6bwvh+iQXDQcmeXsIJcG0FtwoenJDUN0hrP3Q4yC83UioUyhriohhxgFS+pXJ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716013741; c=relaxed/simple;
+	bh=HEtxmTO6Q/CHqCIi3Z5giPLGLHHng/h4m2/pazJNLu0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WHUNR3jhSsjEV0Nb75Yj96p8Sh23JImoA1AFJHszHvSDCaTOmepFTYPj1yIxZhgWm5mAWhecswFPlZoBtDH8+zThsUb8G3yOOhWDSILR5rhtPmy9fpTaslg/Cvne1jE94h4JgCksT5vjXcm24zkB90NfXV3ELowyqkx3icMlF48=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=BwNqRgbU; arc=fail smtp.client-ip=52.101.167.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7riXalN"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2454bad9957so1174149fac.2;
-        Fri, 17 May 2024 23:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716013420; x=1716618220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lChIbpiKLjP/99jCI9/LiFKYC4nQkzM10+P+N1G1jz4=;
-        b=l7riXalNBHyAwp1wJPFTz8CPiDEJeQ4DV0ww0xIbcUX4D1bb0LVLFX91Ua1RwiuU3V
-         p9ytpehBek+EOV6b2lQJexd/b+jAzGby5u1pmnnFqW2Ce6UhByvnZ5Me70BwD2KGyjSI
-         AJe0JjJAQjc1hJW5xgvQv6CT/vRka/YwcR5toy6X9yThBZbXWlH6mXWXLQa3zSXNzF7P
-         7C+raZwSEus5QitRntnLbyBlhGoU0JJQs84SQ05JxGabUZjRllM+4jNexzS3bMaRl5hO
-         tWkWi6eiXugU/z+buI263dSQojZooVL63aqjIZmktlDCHVPRjtukKFzhVx4v8mq9CNmS
-         M/ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716013420; x=1716618220;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lChIbpiKLjP/99jCI9/LiFKYC4nQkzM10+P+N1G1jz4=;
-        b=g2WUXUCytPSQ33i8s4+6xsJPjOwUC5XDssmPducnKroWGeN3kc7OMQG0EEARdpR2Ow
-         Ercufxa58DWEydUdr1P2W5wGEO4DHa59DMG45Jke5JOUTeO1VdcEr+JhImXS2B8hEPqz
-         OC8jbKSq65M3c0Ll1KdHrQx3Qc/qOZaVhTV7CB6QX9wtCun4dvs4b+y/bO9GiV1Fdnnu
-         tD0M742YbdSg5X2Kg2A8s8Ep+0m9bjwi+6Ve4oDObo3U4xK86H7SkWTqLUlPVSG11CzT
-         UZjQDYhw1k5e+U9CXf3lDB9FfcPjlnnzMAz5+f0c1bSxmTZm/dgRcnT+0znOkJKHcXP1
-         wXKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6mFi4/62kqd7xzmcFq3JpSu3F9+GDXDTVZlEPRmVTh/DTwBj7I1gnhtgGsSLY/Uiy8Boihtt7W3aKjWuRsKT8ZRRjXALUWTRs5uN0O79/XAoH9rV88y+AtOvyW43O/HhJaZKFQqn8kg==
-X-Gm-Message-State: AOJu0YyNaIV5ZHaQI3UhoWgYZCIxxPdKEBcjbWpngJQib2dxLuh5CNmp
-	lIBPloUICU0bw8nqVKvrWQfjSr/UT4TgSEVl9ctTIuY0KRkSc2J/
-X-Google-Smtp-Source: AGHT+IHs0B7rpGA8YYCnNcrbM/HW2ScrpVogeU4D5lviCUZIwCnatilzhab0d1p6drNssb7I4s0+gg==
-X-Received: by 2002:a05:6871:8002:b0:245:2ccf:becf with SMTP id 586e51a60fabf-2452ccfc883mr10283944fac.37.1716013419743;
-        Fri, 17 May 2024 23:23:39 -0700 (PDT)
-Received: from localhost.localdomain ([223.178.82.123])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-6f4d2a6669dsm15691233b3a.31.2024.05.17.23.23.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 23:23:39 -0700 (PDT)
-From: Kanak Shilledar <kanakshilledar@gmail.com>
-X-Google-Original-From: Kanak Shilledar <kanakshilledar111@protonmail.com>
-To: 
-Cc: Kanak Shilledar <kanakshilledar111@protonmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: interrupt-controller: riscv,cpu-intc: convert to dtschema
-Date: Sat, 18 May 2024 11:49:21 +0530
-Message-Id: <20240518061925.43549-1-kanakshilledar111@protonmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="BwNqRgbU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hakCEF+RdqbRc1TVjcrWGTwhmF6ZPYmOYQ/Kplx+BmVELzxQsWgkI8EDBfaJ2bHkromLEgMt+lXhoUWoa3ltJwsV/zN8fIEC6aoUXWInKJf2XOajljmdO8iZW/GKUTPNgxnY4laJcgVYce0nGPpNIXubQ2WCiP4Gj5E2IVPXaIhHWiGdo5H9tyd87oksGIP+2yibb2UcBfkuAUx4iQC0yYvOCIRMQ4GW4wNdgPnu1Lp7MpgqLOS2w8tGnAv7/vmbWGBlU5yoEoGKt5PG/ywG8w78vlNZ8jwNitdTb1DnYywiaZwk19PsZTswQxqMlHAjNivkCj3JVBY2Z2fwj5yWVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HEtxmTO6Q/CHqCIi3Z5giPLGLHHng/h4m2/pazJNLu0=;
+ b=VcMTxXml8yrBu5XuhQ0B1DuO78XQysgVTIasBvGvVC/0vdhpyyRBQ2B1vR2iGextA02J7inBTmRhoAAfTl0ZCl01OQL5zvQnXovmEMy63EXpQQEC7Ref+cqDy+ZHFJuXgAg3yRSNThG+fjFa8JrFWZFawIOctV/HK156X6JoD6v5cjUjn6lhFpzaCVHToyQtvzt80w7CiFoMsVqA6XM4z0YiCDdiOC00WjuZsYwkY2J0y+TwtXV6Unhyo2HGZmMLNDMTsvrl8HKyPq1PwUnww28UPjCR13o+jc3R9aUZpuZKHwuxuL/5RvJVTSFnNnW4frPA/+866D8LYJ3mY/id7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HEtxmTO6Q/CHqCIi3Z5giPLGLHHng/h4m2/pazJNLu0=;
+ b=BwNqRgbUx9FrjCNS+Jjv8ZQNMoIYf42SfNtBVnR1iRYL5+FJZd6oOb9P0Yf69U9l40h6WgjO0U0X8uHPeSurUIEmoBTxQrc9u5m9xFc3vmOgtZ+JleVDWVfbEUBiaXgUH7FYGdzMQtZl3NCs+DGX4ayJYKZwP7M1CQatn6pxIvJaxdjfhvu8/OH6YOpqo38uwE3UuWgZkWlT6vxXQoGGpKK6gsHexHk8GRxa6LNOkKvhvRvN+Ii4s0ON73XiAasy8l/DexkTQXCBcDdZUiFcsPv1YQN6cR+Venw9EOogeG+fji9lgYYVhR4TNqFrEPRBfmKKHjCKT6f0gpQTQ+uOgw==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by PR0P264MB2584.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1e3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28; Sat, 18 May
+ 2024 06:28:56 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::e6d7:9670:c147:b801]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::e6d7:9670:c147:b801%3]) with mapi id 15.20.7587.030; Sat, 18 May 2024
+ 06:28:56 +0000
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [RFC PATCH v2 00/20] Reimplement huge pages without hugepd on
+ powerpc (8xx, e500, book3s/64)
+Thread-Topic: [RFC PATCH v2 00/20] Reimplement huge pages without hugepd on
+ powerpc (8xx, e500, book3s/64)
+Thread-Index: AQHaqIxtZis3HNlt1kaC437Gs4/T37GbyXmAgAC+vIA=
+Date: Sat, 18 May 2024 06:28:56 +0000
+Message-ID: <0dcd9649-fd48-495a-9cb3-88f8a4b3abb0@csgroup.eu>
+References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
+ <20240517190613.GC20229@nvidia.com>
+In-Reply-To: <20240517190613.GC20229@nvidia.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PR0P264MB2584:EE_
+x-ms-office365-filtering-correlation-id: b930ef10-3f12-4fb0-1d09-08dc7703cb9d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?MXovYU9aemJLZjRlU3ZmallHUkJ4MmEvdjhjUzNHbWJUMFB5Y1VuQXhtSVJQ?=
+ =?utf-8?B?eTRpSGZkTzI1OXpGREdiUmhhUDJ3YzZ0YjZyMjRKWWNPbWpKNVFuV2lSUjRz?=
+ =?utf-8?B?S2dCNWJNbXh2aUNwbStxU3ZsRUl6eXJsSFBmbC9INkM2bWFBK0ZBMnVIelpG?=
+ =?utf-8?B?UWtXeHpCa0cxQXU0NndEWHF5V0lqYncrUExCMkZrR09xR0RrLzBEMENGQXdB?=
+ =?utf-8?B?OUVvanQxNktPTEE1NkRNczI3L05XVDRYS3JDeWl1LzRlenFuY3BKeUpRZXcx?=
+ =?utf-8?B?a2MyQTk3VVF1NEdLL1BUeDMyakNOVDVqcUd5dGhEWjlaMzNtK3NpT3RoYWFO?=
+ =?utf-8?B?Mmk0SFJTSWxuSGZ2cXIvUERqMUdQUFNkanpDUzM1ZzRaZzlqMlExdzRhTy9C?=
+ =?utf-8?B?WWdJdllYK1lBOExiT0VuOFhhSW1XVHpNSjk1KzFmc0NkYmFRMzBWR0pOVjZE?=
+ =?utf-8?B?QlVmS1FBcTR0cDdEbERpdXQzZXdoempQVmZ2TkU2b0hEVi9RRHRPMjhIR2Mr?=
+ =?utf-8?B?TUdxU0wxSDlFY3E5L3o0WGJMa1JEYUtlR2ZsZU0xU2RkQnpTc3dsdUlmYWlF?=
+ =?utf-8?B?WDR4czhJTU9UenFOdUNJN05SMk5xeTkxWEtLWnVsUDB5bktLZ0RBMFJzL1pL?=
+ =?utf-8?B?OWhwaVo0d3hyL0xZdVByMDd5d2w0bE14MEtWMXhkR3A3U0tnSS9JQVA5UlF0?=
+ =?utf-8?B?WGZNVHRkMUhqdDF2WEpLU3lQdmoxSnhJYXIxSjZNMVduUVRtYVRGa0l5cGVI?=
+ =?utf-8?B?Zk1YWlNJS0NjWUp1Q3pRcVhlS09aMmt2RGwrR1ZKZTJKakc3cTNXalNXOVBP?=
+ =?utf-8?B?T2wwYS9wUDRoYStZWmgybkxVR2lhQ1Z0VStUdVp2NXFpNlZtdStCRmZ1ZUhu?=
+ =?utf-8?B?K3NOU3YwTzErZ2Ezajd1Y2dpVlliNDN6b1lmNXNNMFdpcVMxajNDZVp2UjhR?=
+ =?utf-8?B?S0hCM2lwaTBXdGV6T1dDZTE3cXNLK1pBN2V6SUhOUzlCaXVZZzlWOFBsdnhz?=
+ =?utf-8?B?MHNQTU85TzMzdGFoTEgvZEEwa0d1MnpUa0wvMHU2a3FnZnFVa1pkTWlnMWhI?=
+ =?utf-8?B?b2VzaDJRK0xEbHllZFZkeitaZzg3cWRRU0F5V3UvRFhPY3hIK2VOdHZoSTlH?=
+ =?utf-8?B?cmFnUVhmUXIvTGNNa1RKVkx4aE1tZHMrdCtWRC84eHUvUEkxVkxGTFFUQStR?=
+ =?utf-8?B?TG5xakg5TGVMSitTR2NZekVUQWR0MUhlQXgwOGVNOXR3K250bWJxcFRENVl3?=
+ =?utf-8?B?Yk5XMVdqbnd6RW9vNUhYN2pVa2ZLcVNhZ2QzaGh1aVhxYXFnYVZZd2tVRWpU?=
+ =?utf-8?B?NnZYSE1KcUNpSWthNFB6clQ1VlNYTW1SVW1qUnRqTEdtQUZDbFBrMk51QkI0?=
+ =?utf-8?B?enRqdWo3elJ2MjFuSTZLcHpZMDhUOFZ5SWg1ZG5ON0JWUWhwcm5UOCtnek5Z?=
+ =?utf-8?B?WWluNFI0Y29UQWtBS1V3MFIvRVhTOVNheFZYQTlBNnFFTHRWRkxCMGxOeFNr?=
+ =?utf-8?B?UmxYRHp5WjNiZzFjNTJ5U3d4N3dqbVB3SVVBZEZnaFY5TjVtVkUwbksxQUlL?=
+ =?utf-8?B?ZFBRMjdJcWhDVVVma0Y1TGRCNG5ZNUIzWWppU04wcEFrQ1JQR1NSZ2paUC91?=
+ =?utf-8?B?cGRKMlgwVmJyL1ZOc2ZOTkZFRFB0c3VMK1RIZXpRL0lhZmVqZjlmSTB0Ny90?=
+ =?utf-8?B?d1VDK1UrRThLZyt6Y2tqd2xod2UwRXRNdW4yTXJxcUV3WmcrcEVkbFlLcHhk?=
+ =?utf-8?B?d3p3N0dySmpvbUpML2xLYk1VeldVQTcrZGtoUWk0QXBHWE12R1lBZVZHVklx?=
+ =?utf-8?B?VUIrVHIrWVNwL2QxYTU0dz09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZEx6ZDRNQ2doYnRqM3UwRHVsUU5VUEZ3L3cxSWpsVXdTMWlOeGVtSCtCbWVH?=
+ =?utf-8?B?RFRMSWZKaDZVNW9lMWJKcEhEYmswbGZJTUJTUTUzWHQ1NkJjUlgvTjdjZ0Nh?=
+ =?utf-8?B?SkpWcXBLb01WazZCcTZFTGV6Q1hUOXQzbkMvTDlXeDRnOEsrVmR1TGZlTktI?=
+ =?utf-8?B?ekJkaWRIRlM3THVnRnJmSzFMbGVyZnFUcThHY1FlamVDeklTZ3hhVnhhRUtQ?=
+ =?utf-8?B?dVBTUU8wcFJaZEdmaGVlVEZ2dlJsVjJpRUJMakFONDhnTWtSUG4vTjg4c0lq?=
+ =?utf-8?B?TTU2L3FQenh4WEtMNE9abTVFb09GdEpNWUFRV2hJaTlsWHg3Q2kvQUp0RVRN?=
+ =?utf-8?B?TUtRcW5RbW54M1RGT1ZmWUNneithcS83N1ZVZzEwenZ1RDJpam9NQUZDd1lV?=
+ =?utf-8?B?V3NGdTFqcDdsM3BHTlZKNXZsamNHZ05HS25qRFdYOVR5QU5tTHl0NXdXV3NY?=
+ =?utf-8?B?RXlpM3FiV09jM3Q4cHhxM21weG5weW13VVhndEgzYU5xUDFWOU5LVGRoY3dC?=
+ =?utf-8?B?NWt0cmk5RkdMMnhLeTFHM3dBV09VM2llYTNzUms2bE5Ra2E1SVJ0K2tmTDEw?=
+ =?utf-8?B?MXFwS3o0MUR2Y1RiVHQ2bDVUcTY2YmtwU2tHQ3R6cGhBdWtOcnNTYVBwUFFz?=
+ =?utf-8?B?QzlBQ2xTeVhPNXBrVUtKQmFvUUQzNGdtMmR1eEhjYUVNd3BPV2p6MmFYQmJT?=
+ =?utf-8?B?dzc0cUZHam9sWjFnM1paL0VrbnRTL2x4RnZ5MlREamdvZXNuTW1jdmp4Q1Nn?=
+ =?utf-8?B?K2s0T1p6cUh3WG5pSkZKQ3grWmtiZWxDOG9LT01PejFpYjVYRVF2NlF5ZzdN?=
+ =?utf-8?B?c1VmRXZUUm9ZU0U0N1pyM0w0YXp1MHFoRjdLS2FEamZYZkFabWNiN0tUSTFN?=
+ =?utf-8?B?V0g3RDBwUTA4VVFDVFY2VzhWbU0zRnhUcEJ1K1RGUHJpRE5lZG9DUUptMDR6?=
+ =?utf-8?B?NDBRZzdVZmZQQitXQzd1eHAzOTVDTzRwN2lZc2owVGRWNDJqc21jRWwzVnky?=
+ =?utf-8?B?QnpZWitFOCtPZjJXeVAwdFR1UGZZTkc1a2YzR2VzQW1kVUgzM25scFhSRFJV?=
+ =?utf-8?B?SXpGZER2ZVY4RDFQa0YwM0xIUkdnSzhWSVlPdXJ2QnpHbUJxeEpYVVhDcWhp?=
+ =?utf-8?B?Syt2eHZpNGliN1I2L3FHaUY4Y1ZvRUxhc1lFL0RiUVBoVEFhNVRVRUVLM1FJ?=
+ =?utf-8?B?ZC8ycU9Mb0crWWk0cENWK01LYWFxWXphcG9DVDc4VjVYbEk3Q3VrMXdnME1C?=
+ =?utf-8?B?UFp1Z0dTRmNDcEw2S0R2cHVjMGI3Rjk2K1hwclQ0ZWZwM1ZwVlBCNTdhM0Mx?=
+ =?utf-8?B?YkpRbmJuRTBPclZQTnM1MjJiWWw2NmNWbFFjVTMxdTc0OFhidjRFelpCYXZl?=
+ =?utf-8?B?dWhvd3V6NmtlN05mMEFhaW56OHd0WW1oamM4UncyOEZsbUluSVFhdEk5NmZH?=
+ =?utf-8?B?U2pyc0V3VWhoeE43ck9pRlR0OFVDMGZFK2M3a0Z1QXY3TUdoV1UrMHJDL3ZD?=
+ =?utf-8?B?SWRqNVdXQ015MWhBUFdGUUs2QTArbHAxZmE0ZjMrL1k0VnQ3dFV0WnN4UUNj?=
+ =?utf-8?B?amJZdWdKaTNtZ0prUnNnRHVTdjUvT3l0NFR2cUZHelprMHVLWTBtRGJ0TVlB?=
+ =?utf-8?B?YXZKQ1RidE1iYkN5Vzk4eGRvSlVuU3oxYXlmR0RsSFJHQW8rMitZbjlVOUZB?=
+ =?utf-8?B?a2NXR0FtM1ppbThWSEhobVBERm96Yjk2T1ZzRTJEMEdNclFPYjdVSDIxVGtS?=
+ =?utf-8?B?d3VaNmcrb0xyWFA0eFQ3MTV5K2JHeDRScFkvUmw5M3ZwRDVHYzZGOUdFd25m?=
+ =?utf-8?B?K1d4YVdaZ2toTXVFUFhRYzVpZ09NRDNyMm40dXdYaGtDa1JzblVJMkd1RS8x?=
+ =?utf-8?B?MXNQWVVWOFg5M3ZsZHFwS0RmM25ZSzV6VXlZcGU3V0hpNENHVThTZDdoZi9j?=
+ =?utf-8?B?WFBlUExmQUEra0RVTnV4ajV1ZGhSMDJsUGo0aFJ0UjdZM20vNmtLWDFzcmh1?=
+ =?utf-8?B?NE5kelNjeWcveDZ1TjA3MDMzYUcvSzh5ajkyZ0hMcEdNR0FkZHNvckkyNTBL?=
+ =?utf-8?B?RXVxQUI5WWV6RERaa3RqNGhCL0IxY3grc3FCK082Z1VxSVVNMklQdkUvUjBo?=
+ =?utf-8?B?TGtMbWF1QlRWNEpMV3ZvVFlUbVJDSGdSN0NHTzl5NTlGNDhoSmRtakh2Mktk?=
+ =?utf-8?Q?vijKoT6/jvrWWjRZODgl3NHYrXf2ZFsBvpsdAowcApaC?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FB4B94852FE9B043B3EE6EED606F12AE@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: b930ef10-3f12-4fb0-1d09-08dc7703cb9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2024 06:28:56.4076
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m6m9MCAya48kbJ95fLaPkfeo1U+XwDDpMn7ElPmSGVhpOjKS2YwcPpZWfDtKqhs4U3wZMA40Wn3ItX17aOOBV7xwbPgbRbaVMzxPL2tnqpk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB2584
 
-Convert the RISC-V Hart-Level Interrupt Controller (HLIC) to newer
-DT schema, Created DT schema based on the .txt file which had
-`compatible`, `#interrupt-cells` and `interrupt-controller` as
-required properties.
-Changes made with respect to original file:
-- Changed the example to just use interrupt-controller instead of
-using the whole cpu block
-- Changed the example compatible string.
-
-Signed-off-by: Kanak Shilledar <kanakshilledar111@protonmail.com>
----
-Changes in v2:
-- Update the maintainers list.
-- Add reference to `interrupt-controller` in `riscv/cpus.yaml`.
-- Update compatible property with the reference in `cpus.yaml`.
-- Include description for '#interrupt-cells' property.
-- Change '#interrupt-cells' property to have `const: 1` as per the
-text binding.
-- Fixed the warning thrown by `/renesas/r9a07g043f01-smarc.dtb`.
----
- .../interrupt-controller/riscv,cpu-intc.txt   | 52 --------------
- .../interrupt-controller/riscv,cpu-intc.yaml  | 72 +++++++++++++++++++
- 2 files changed, 72 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-deleted file mode 100644
-index 265b223cd978..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--RISC-V Hart-Level Interrupt Controller (HLIC)
-----------------------------------------------
--
--RISC-V cores include Control Status Registers (CSRs) which are local to each
--CPU core (HART in RISC-V terminology) and can be read or written by software.
--Some of these CSRs are used to control local interrupts connected to the core.
--Every interrupt is ultimately routed through a hart's HLIC before it
--interrupts that hart.
--
--The RISC-V supervisor ISA manual specifies three interrupt sources that are
--attached to every HLIC: software interrupts, the timer interrupt, and external
--interrupts.  Software interrupts are used to send IPIs between cores.  The
--timer interrupt comes from an architecturally mandated real-time timer that is
--controlled via Supervisor Binary Interface (SBI) calls and CSR reads.  External
--interrupts connect all other device interrupts to the HLIC, which are routed
--via the platform-level interrupt controller (PLIC).
--
--All RISC-V systems that conform to the supervisor ISA specification are
--required to have a HLIC with these three interrupt sources present.  Since the
--interrupt map is defined by the ISA it's not listed in the HLIC's device tree
--entry, though external interrupt controllers (like the PLIC, for example) will
--need to define how their interrupts map to the relevant HLICs.  This means
--a PLIC interrupt property will typically list the HLICs for all present HARTs
--in the system.
--
--Required properties:
--- compatible : "riscv,cpu-intc"
--- #interrupt-cells : should be <1>.  The interrupt sources are defined by the
--  RISC-V supervisor ISA manual, with only the following three interrupts being
--  defined for supervisor mode:
--    - Source 1 is the supervisor software interrupt, which can be sent by an SBI
--      call and is reserved for use by software.
--    - Source 5 is the supervisor timer interrupt, which can be configured by
--      SBI calls and implements a one-shot timer.
--    - Source 9 is the supervisor external interrupt, which chains to all other
--      device interrupts.
--- interrupt-controller : Identifies the node as an interrupt controller
--
--Furthermore, this interrupt-controller MUST be embedded inside the cpu
--definition of the hart whose CSRs control these local interrupts.
--
--An example device tree entry for a HLIC is show below.
--
--	cpu1: cpu@1 {
--		compatible = "riscv";
--		...
--		cpu1-intc: interrupt-controller {
--			#interrupt-cells = <1>;
--			compatible = "sifive,fu540-c000-cpu-intc", "riscv,cpu-intc";
--			interrupt-controller;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml
-new file mode 100644
-index 000000000000..e2da595ee389
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/riscv,cpu-intc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RISC-V Hart-Level Interrupt Controller (HLIC)
-+
-+description:
-+  RISC-V cores include Control Status Registers (CSRs) which are local to
-+  each CPU core (HART in RISC-V terminology) and can be read or written by
-+  software. Some of these CSRs are used to control local interrupts connected
-+  to the core. Every interrupt is ultimately routed through a hart's HLIC
-+  before it interrupts that hart.
-+
-+  The RISC-V supervisor ISA manual specifies three interrupt sources that are
-+  attached to every HLIC namely software interrupts, the timer interrupt, and
-+  external interrupts. Software interrupts are used to send IPIs between
-+  cores.  The timer interrupt comes from an architecturally mandated real-
-+  time timer that is controlled via Supervisor Binary Interface (SBI) calls
-+  and CSR reads. External interrupts connect all other device interrupts to
-+  the HLIC, which are routed via the platform-level interrupt controller
-+  (PLIC).
-+
-+  All RISC-V systems that conform to the supervisor ISA specification are
-+  required to have a HLIC with these three interrupt sources present.  Since
-+  the interrupt map is defined by the ISA it's not listed in the HLIC's device
-+  tree entry, though external interrupt controllers (like the PLIC, for
-+  example) will need to define how their interrupts map to the relevant HLICs.
-+  This means a PLIC interrupt property will typically list the HLICs for all
-+  present HARTs in the system.
-+
-+maintainers:
-+  - Palmer Dabbelt <palmer@dabbelt.com>
-+  - Paul Walmsley <paul.walmsley@sifive.com>
-+
-+allOf:
-+  - $ref: /schemas/riscv/cpus.yaml#/properties/interrupt-controller
-+
-+properties:
-+  compatible:
-+    $ref: /schemas/riscv/cpus.yaml#/properties/interrupt-controller/properties/compatible
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+    description: |
-+      The interrupt sources are defined by the RISC-V supervisor ISA manual,
-+      with only the following three interrupts being defined for
-+      supervisor mode:
-+        - Source 1 is the supervisor software interrupt, which can be sent by
-+          an SBI call and is reserved for use by software.
-+        - Source 5 is the supervisor timer interrupt, which can be configured
-+          by SBI calls and implements a one-shot timer.
-+        - Source 9 is the supervisor external interrupt, which chains to all
-+          other device interrupts.
-+
-+required:
-+  - compatible
-+  - '#interrupt-cells'
-+  - interrupt-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller {
-+        #interrupt-cells = <1>;
-+        compatible = "riscv,cpu-intc";
-+        interrupt-controller;
-+    };
--- 
-2.34.1
-
+DQoNCkxlIDE3LzA1LzIwMjQgw6AgMjE6MDYsIEphc29uIEd1bnRob3JwZSBhIMOpY3JpdMKgOg0K
+PiBPbiBGcmksIE1heSAxNywgMjAyNCBhdCAwODo1OTo1NFBNICswMjAwLCBDaHJpc3RvcGhlIExl
+cm95IHdyb3RlOg0KPj4gVGhpcyBpcyB0aGUgY29udGludWF0aW9uIG9mIHRoZSBSRkMgdjEgc2Vy
+aWVzICJSZWltcGxlbWVudCBodWdlIHBhZ2VzDQo+PiB3aXRob3V0IGh1Z2VwZCBvbiBwb3dlcnBj
+IDh4eCIuIEl0IG5vdyBnZXQgcmlkIG9mIGh1Z2VwZCBjb21wbGV0ZWx5DQo+PiBhZnRlciBoYW5k
+bGluZyBhbHNvIGU1MDAgYW5kIGJvb2szcy82NA0KPiANCj4gVGhpcyBpcyByZWFsbHkgYW1hemlu
+ZywgdGhhbmsgeW91IGZvciBkb2luZyBpdCENCj4gDQoNCllvdSBhcmUgd2VsY29tZS4NCg0KSSBo
+YXZlIG5vdCB5ZXQgdGFrZW4gaW50byBhY2NvdW50IHlvdXIgcmV2aWV3IGNvbW1lbnRzIG9uIHYx
+LiBJIGZpcnN0IA0Kd2FudGVkIHRvIGhhdmUgYSBnbG9iYWwgcGljdHVyZS4NCg0KQ2hyaXN0b3Bo
+ZQ0K
