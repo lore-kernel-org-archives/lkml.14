@@ -1,189 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D27E2837A;
-	Sat, 18 May 2024 09:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03848BEA;
+	Sat, 18 May 2024 09:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716025497; cv=none; b=KAMODBMIFQM+SbkLjGc/WE+T7LSsVejNLyUuHpWvx+UA2erssztCXzjCbnlzS+NnjpMOHTyMwak6skSYkwqQRs/eZWP/O7QuLYr1q5b6SOQ1ZcyhBWVrjKb1jp5zN563MnnHhmxrN0m2cUtzMXTk4aSyxhY2F9VkjAS5hM0OP04=
+	t=1716026386; cv=none; b=CuX8BfqkcbXs8foueNs+j5uZIrfbGk4yqmUPg5zTgCAKcvZ55tXNFo3k+b1W+zGT0/qJT0GxN3Ebn1XOcOio8lDv8CBQfyQGxyGHJwXlxwbhZTKdw9Q+op/gMaJ/u4Tsb+0e2/sf6lM/dfo/uUx19Lx8KsSIHAg113Om9TBjRGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716025497; c=relaxed/simple;
-	bh=8z05cY+mbdh4yYltdeYUT+ZofwhgIVGvfP5ZRDafZ70=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hIZKCqTeb5TdvZsnioehB9UdIxJ/OtQ9zd4+m7G1S5BgZyOrAitrzhtPFrk1KjvNJ7lS3kGWuDDUkkpKUMSbO2z+RnoGk4/pImWt34ToiWzdT0MBSoLQnR5Y2MKrTvFXa+q/vwmdthRYImkizsn4mpuGD93hUoI0MQGTLfVwce4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZjeuPRk/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yNSiUhAV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716026386; c=relaxed/simple;
+	bh=L3kPstBMv6aXX21Sgvx9YjumHQMWLBhZbrinVkSwwA0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Th82wVPlmwFlJarOFa9r3zMoZYhza+UFS5MILtSTCgf/9SmwuP2kA/gwhs4r3J8RbIydy1xn9JPD4Y9K0b+rB8fcuMLP39IEzkh57L+wZxlq4/UAcZWIWWKwNE3NFMH0F3j32RwjDCEHBZs2y6N63bHk/S0S1YzywsbnALtCmHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQboQlec; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZjeuPRk/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yNSiUhAV"
-Date: Sat, 18 May 2024 09:44:53 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716025493;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gyVKrmsE63DweEgFk7nEy8vMGDAVV6PsNXGWAj0IS1M=;
-	b=ZjeuPRk/k4IcJr08RIrFkVbNcRIJaujFuJ9Xr1qIOKJ+HSwp4Khr4oocVFffsP6xS59M9B
-	+rwbzYGXU4YGJBHZQmtQuvq52H5BG7nmNn8HG5N+7hpq5ikzq5G2UcVMiAA9cl4NO9m3wk
-	p8yQ0UdYa/KIOAXp/7NivyUhX1SUQsmXF8GGM78ZVsmsTzTpJLOBItqdyWbVJvoOg7RbVn
-	rOHDRJP742Eb5XfEh+hS1oyplIlUd31H5GAvi74iFrZGaA3fkfgZL7bwt4FMC3p1jeTT74
-	SSamZESYjeZBH2qObQpjKr4xtGMoh42fICTO8zFVfTGCCr8WfUsJXd/ZrnjX2Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716025493;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gyVKrmsE63DweEgFk7nEy8vMGDAVV6PsNXGWAj0IS1M=;
-	b=yNSiUhAV1l98JCaLp9YD3waBSaKjfqMEzT6CYGkjvpBv+h/AqLjGmqyDRrFv4+X2Dti8G7
-	I4vie80WKL86F0AQ==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/percpu] x86/percpu: Introduce the pcpu_binary_op() macro
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240430091833.196482-1-ubizjak@gmail.com>
-References: <20240430091833.196482-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQboQlec"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51f99f9e0faso3241231e87.2;
+        Sat, 18 May 2024 02:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716026383; x=1716631183; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+H5vJpVIpZOz5Cbd499dwyXdB2lEblIJweWz8Bm/60g=;
+        b=lQboQlecR3Pc2FHn+C6Q2mPf33bnpUJy24k+ToYS3a/SdgGNexu0roV5y+3A5T+2z9
+         RZ2O4YSsgvEPEe/VLdDsa+ZdE25cC+7+WPR8Xj1AC/LHo9keW8KxvBr+NO+HFzt3W9R7
+         MeQz2OtXOJoDnJdtMYz1j17M2Ds0SXyAGUNdznBmnxHISFjgxWTvXxFeS/oNKOlnRzBP
+         o6406CYbpkyYsM3BNe+SreiVcugeIeLmlnoC9GCYncT/E75UrlKfK7xXs+Do51DBEVEN
+         u+PRWycdMQ4qajT6ve8jneYNuHp98HXSB4SqW1gV/CVmsIM46wrZh7SvBVdPX6hYJlyV
+         EMBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716026383; x=1716631183;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+H5vJpVIpZOz5Cbd499dwyXdB2lEblIJweWz8Bm/60g=;
+        b=i5V93VcEIcHQwezhZJF9+WgPJXxVPFi/fykceVPdjLTGdmy20QaSkyHHF7r9uhPpTp
+         h7aI7tQXAiqQjE5T314aD8ilVrAO/o9kN/LGie+j+P/+j4tOxCrqJKgyIY0JSVIYgxQk
+         0dOR5PIodoInaDVBVFKgYGAxuHDIXKW5YmEcA3dXRwtnptw9e3MxHm8NSmDbGPBFaoUr
+         iLvVCVTkF2UaJANrmVQVcoOxmJcvEyGsErOOVjvRImn4eM0k2l6ILy+UJ0pOLNyAF1TI
+         9eAZszDnG0xpOOHwr8fq1/uXGe0zx+FvVVmSQm2C8GdtLctE6iDNHOqqof8/BcjXcyID
+         954Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWGfUq42ERhyuTTnnPk5T4wYWmDmRbsQTaEY8b6MDDjvhJGX0G79euqGzwIdi40k6onFD7zJ+opt/hD+/cGMw7IvbFq2J8PeusVuvfD
+X-Gm-Message-State: AOJu0YyaBcqFojq06EQYCvyGScBNyAg8a61x1WaeP917nEXCSbi3ABv2
+	u1yWzbHTpsqqaV4r0FSliHi5Xypa0ABnuRq13FyQL0j8QDMzSRgm1tp11p3OITiIULyRNWViXyL
+	oQTTeblo6ZSkCJnVUU1Ge+aSUYpw=
+X-Google-Smtp-Source: AGHT+IHzRder/JdbsF4YvrMdFF2L4QMJLhsqGsTOwTU0PZdMHJc/yU7HWTv1mFpKTamXj/z3hRiAHgQeE5LqTTMdrz8=
+X-Received: by 2002:a05:6512:32b5:b0:520:76d0:b054 with SMTP id
+ 2adb3069b0e04-522105845ecmr15504233e87.57.1716026382659; Sat, 18 May 2024
+ 02:59:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171602549323.10875.9152383980991692175.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Steve French <smfrench@gmail.com>
+Date: Sat, 18 May 2024 04:59:30 -0500
+Message-ID: <CAH2r5msmH0Y=iUcu15eX3DiTS=Xdq=v1nqStWR20oVXYhAnFdA@mail.gmail.com>
+Subject: [GIT PULL] smb3 fix
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	David Howells <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the x86/percpu branch of tip:
+Please pull the following changes since commit
+1ab1bd2f6a5fd876d1980d6ade74ce5f83807baf:
 
-Commit-ID:     455ca134a7b2121dd739d425d3be313fb52f0651
-Gitweb:        https://git.kernel.org/tip/455ca134a7b2121dd739d425d3be313fb52f0651
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Tue, 30 Apr 2024 11:17:20 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 18 May 2024 11:18:40 +02:00
+  Merge tag '6.10-rc-smb3-fixes' of
+git://git.samba.org/sfrench/cifs-2.6 (2024-05-15 11:37:15 -0700)
 
-x86/percpu: Introduce the pcpu_binary_op() macro
+are available in the Git repository at:
 
-Introduce the pcpu_binary_op() macro, a copy of the percpu_to_op() macro.
+  git://git.samba.org/sfrench/cifs-2.6.git tags/6.10-rc-smb-fix
 
-Update percpu binary operators to use the new macro, since
-percpu_to_op() will be re-purposed as a raw percpu write accessor
-in a follow-up patch.
+for you to fetch changes up to a395726cf823fe8f62f1b8c3829010e5652ce98c:
 
-No functional change intended.
+  cifs: fix data corruption in read after invalidate (2024-05-15 17:22:59 -0500)
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20240430091833.196482-1-ubizjak@gmail.com
----
- arch/x86/include/asm/percpu.h | 47 +++++++++++++++++++++-------------
- 1 file changed, 30 insertions(+), 17 deletions(-)
+----------------------------------------------------------------
+an important fix to address recent netfs regression (data corruption)
 
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 3bedee1..cc40d8d 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -163,6 +163,19 @@ do {									\
- 	    : [var] "+m" (__my_cpu_var(_var)));				\
- })
- 
-+#define percpu_binary_op(size, qual, op, _var, _val)			\
-+do {									\
-+	__pcpu_type_##size pto_val__ = __pcpu_cast_##size(_val);	\
-+	if (0) {		                                        \
-+		typeof(_var) pto_tmp__;					\
-+		pto_tmp__ = (_val);					\
-+		(void)pto_tmp__;					\
-+	}								\
-+	asm qual(__pcpu_op2_##size(op, "%[val]", __percpu_arg([var]))	\
-+	    : [var] "+m" (__my_cpu_var(_var))				\
-+	    : [val] __pcpu_reg_imm_##size(pto_val__));			\
-+} while (0)
-+
- /*
-  * Generate a percpu add to memory instruction and optimize code
-  * if one is added or subtracted.
-@@ -182,7 +195,7 @@ do {									\
- 	else if (pao_ID__ == -1)					\
- 		percpu_unary_op(size, qual, "dec", var);		\
- 	else								\
--		percpu_to_op(size, qual, "add", var, val);		\
-+		percpu_binary_op(size, qual, "add", var, val);		\
- } while (0)
- 
- #define percpu_from_op(size, qual, op, _var)				\
-@@ -492,12 +505,12 @@ do {									\
- #define raw_cpu_add_1(pcp, val)		percpu_add_op(1, , (pcp), val)
- #define raw_cpu_add_2(pcp, val)		percpu_add_op(2, , (pcp), val)
- #define raw_cpu_add_4(pcp, val)		percpu_add_op(4, , (pcp), val)
--#define raw_cpu_and_1(pcp, val)		percpu_to_op(1, , "and", (pcp), val)
--#define raw_cpu_and_2(pcp, val)		percpu_to_op(2, , "and", (pcp), val)
--#define raw_cpu_and_4(pcp, val)		percpu_to_op(4, , "and", (pcp), val)
--#define raw_cpu_or_1(pcp, val)		percpu_to_op(1, , "or", (pcp), val)
--#define raw_cpu_or_2(pcp, val)		percpu_to_op(2, , "or", (pcp), val)
--#define raw_cpu_or_4(pcp, val)		percpu_to_op(4, , "or", (pcp), val)
-+#define raw_cpu_and_1(pcp, val)		percpu_binary_op(1, , "and", (pcp), val)
-+#define raw_cpu_and_2(pcp, val)		percpu_binary_op(2, , "and", (pcp), val)
-+#define raw_cpu_and_4(pcp, val)		percpu_binary_op(4, , "and", (pcp), val)
-+#define raw_cpu_or_1(pcp, val)		percpu_binary_op(1, , "or", (pcp), val)
-+#define raw_cpu_or_2(pcp, val)		percpu_binary_op(2, , "or", (pcp), val)
-+#define raw_cpu_or_4(pcp, val)		percpu_binary_op(4, , "or", (pcp), val)
- #define raw_cpu_xchg_1(pcp, val)	raw_percpu_xchg_op(pcp, val)
- #define raw_cpu_xchg_2(pcp, val)	raw_percpu_xchg_op(pcp, val)
- #define raw_cpu_xchg_4(pcp, val)	raw_percpu_xchg_op(pcp, val)
-@@ -505,12 +518,12 @@ do {									\
- #define this_cpu_add_1(pcp, val)	percpu_add_op(1, volatile, (pcp), val)
- #define this_cpu_add_2(pcp, val)	percpu_add_op(2, volatile, (pcp), val)
- #define this_cpu_add_4(pcp, val)	percpu_add_op(4, volatile, (pcp), val)
--#define this_cpu_and_1(pcp, val)	percpu_to_op(1, volatile, "and", (pcp), val)
--#define this_cpu_and_2(pcp, val)	percpu_to_op(2, volatile, "and", (pcp), val)
--#define this_cpu_and_4(pcp, val)	percpu_to_op(4, volatile, "and", (pcp), val)
--#define this_cpu_or_1(pcp, val)		percpu_to_op(1, volatile, "or", (pcp), val)
--#define this_cpu_or_2(pcp, val)		percpu_to_op(2, volatile, "or", (pcp), val)
--#define this_cpu_or_4(pcp, val)		percpu_to_op(4, volatile, "or", (pcp), val)
-+#define this_cpu_and_1(pcp, val)	percpu_binary_op(1, volatile, "and", (pcp), val)
-+#define this_cpu_and_2(pcp, val)	percpu_binary_op(2, volatile, "and", (pcp), val)
-+#define this_cpu_and_4(pcp, val)	percpu_binary_op(4, volatile, "and", (pcp), val)
-+#define this_cpu_or_1(pcp, val)		percpu_binary_op(1, volatile, "or", (pcp), val)
-+#define this_cpu_or_2(pcp, val)		percpu_binary_op(2, volatile, "or", (pcp), val)
-+#define this_cpu_or_4(pcp, val)		percpu_binary_op(4, volatile, "or", (pcp), val)
- #define this_cpu_xchg_1(pcp, nval)	this_percpu_xchg_op(pcp, nval)
- #define this_cpu_xchg_2(pcp, nval)	this_percpu_xchg_op(pcp, nval)
- #define this_cpu_xchg_4(pcp, nval)	this_percpu_xchg_op(pcp, nval)
-@@ -543,16 +556,16 @@ do {									\
- #define this_cpu_read_stable_8(pcp)	percpu_stable_op(8, "mov", pcp)
- 
- #define raw_cpu_add_8(pcp, val)			percpu_add_op(8, , (pcp), val)
--#define raw_cpu_and_8(pcp, val)			percpu_to_op(8, , "and", (pcp), val)
--#define raw_cpu_or_8(pcp, val)			percpu_to_op(8, , "or", (pcp), val)
-+#define raw_cpu_and_8(pcp, val)			percpu_binary_op(8, , "and", (pcp), val)
-+#define raw_cpu_or_8(pcp, val)			percpu_binary_op(8, , "or", (pcp), val)
- #define raw_cpu_add_return_8(pcp, val)		percpu_add_return_op(8, , pcp, val)
- #define raw_cpu_xchg_8(pcp, nval)		raw_percpu_xchg_op(pcp, nval)
- #define raw_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, , pcp, oval, nval)
- #define raw_cpu_try_cmpxchg_8(pcp, ovalp, nval)	percpu_try_cmpxchg_op(8, , pcp, ovalp, nval)
- 
- #define this_cpu_add_8(pcp, val)		percpu_add_op(8, volatile, (pcp), val)
--#define this_cpu_and_8(pcp, val)		percpu_to_op(8, volatile, "and", (pcp), val)
--#define this_cpu_or_8(pcp, val)			percpu_to_op(8, volatile, "or", (pcp), val)
-+#define this_cpu_and_8(pcp, val)		percpu_binary_op(8, volatile, "and", (pcp), val)
-+#define this_cpu_or_8(pcp, val)			percpu_binary_op(8, volatile, "or", (pcp), val)
- #define this_cpu_add_return_8(pcp, val)		percpu_add_return_op(8, volatile, pcp, val)
- #define this_cpu_xchg_8(pcp, nval)		this_percpu_xchg_op(pcp, nval)
- #define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, volatile, pcp, oval, nval)
+----------------------------------------------------------------
+Steve French (1):
+      cifs: fix data corruption in read after invalidate
+
+ fs/smb/client/inode.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+
+-- 
+Thanks,
+
+Steve
