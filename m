@@ -1,141 +1,101 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A452F4A;
-	Sat, 18 May 2024 07:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02AED53B
+	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 07:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716015703; cv=none; b=QKNdrd9yytREM7TELGBF9MGC6QSMQDnuKZv/7jnJY53/yNRUsCUsaqYWiWw9TnbqIfn4pxd7AvmGLjiE2LBxZXes5fWVer1GhWvI4lFcbsuVjM5L7Yq7HLvXRXDOa3mAKVfvFXyvGY4ZGyU0/5iG2W2e3EKNdScfogR5sKdQ1Nc=
+	t=1716017086; cv=none; b=qW+1R7Ro1fl3T4mKmeHYh86F0ofNPNlOJOOud884QjhFq3Sk0S9gJ0B6ZhQ0TU+oMCWAx6GYT3kxZoahApA562XELr9afSnsVbbUz5oM64OmFc1nPn62NkacfOqJAqaGUL4tv4LAWsIT26lZ/x/hc/a6tuemkDmgBjfFvkNtWY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716015703; c=relaxed/simple;
-	bh=7gJcAObcPbQw9XW+LduiP1Y3FVVW2Ym0ZJq4JI+/q94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bmdkMdeFRdldLAQlEzT1MRjcQhQzw3O5o2jCqxSPzICC+Y9W1JFpJqp+t7vZ9WMM9iU4koWks40DVnm0KrgivTJN3Ur33edBJcNcSz/n3Nle4lg+6MunQkAEaTm3H9W7MZhnk/r+G9sbC7SVaM4BnFpmm/eWhQ1xGPoU9PA/2UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=GvwBS/lG; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716017086; c=relaxed/simple;
+	bh=a3XvBXPOApY3RRFgdOHOwQDdLJuSEV/tLdbjK+TjgbE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DbA1cJ6l2xTWl3eYFFbGAOGNrkrnlc2ABLGW5SZsQ6dqFrzbJVqA/l6o3xZhsDLbAxMuwWoZJFRlgZY04ajmPjShoi084Cvjrkqyf7CmHZ0ZyICA5JMA0t4xfIGoOKJvqmo7cOrA9VaoELgSZGQb91ykyyoB+nsW7B40sjRU+VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UKElO2MP; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GvwBS/lG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=r277yi+Nyo+3nifP8z4BGCRO8hmMLsoW+s546ZKtUG0=; b=GvwBS/lGRWXZq4bL7YXwfpOBIR
-	E0RJEWCEOPhfghLmzPhcIItXA8XtN9/0t1NpfWOKBKqp6j/9fgFMlAr0F7yIquJ2pLQhAEAVjIug5
-	wtGsQtV5w6GCrv7tSRha7MnNRFCDXxN+Q2coKSOIrVLEfeU17RPmTiXxOpfqerDdBBtENgw1hCrIi
-	BLwQawXSug27i/O+UwvZ7r82hzcNR8aj1pq91FiYflk2BQxXCVdC5qGOI477KbSmgZYLbSkvAAgLG
-	TZVoEDe4VkaTUwFB/L09s/Mm1LNHMLEHJsoJvtn7/h7Fd0kyh3D7VMJMPIxWRBAomEzoshnDGNDpe
-	zy96AYqw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57026)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s8E4F-0008BX-2v;
-	Sat, 18 May 2024 08:01:21 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s8E4B-0002JK-0a; Sat, 18 May 2024 08:01:15 +0100
-Date: Sat, 18 May 2024 08:01:14 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Duanqiang Wen <duanqiangwen@net-swift.com>, mturquette@baylibre.com,
-	sboyd@kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clkdev: report over-sized strings when creating clkdev
- entries
-Message-ID: <ZkhSOvkaAwsTe7Dm@shell.armlinux.org.uk>
-References: <E1rl62V-004UFh-Te@rmk-PC.armlinux.org.uk>
- <7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net>
- <ZkfYqj+OcAxd9O2t@shell.armlinux.org.uk>
- <4ea9cc83-c7ca-47b8-8d43-dab16193108f@roeck-us.net>
- <ZkfqKMqkUc/Sr7U2@shell.armlinux.org.uk>
- <646bd149-f29a-4c91-ab00-4f6d2fce23fd@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UKElO2MP"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-622ccd54631so123384637b3.0
+        for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 00:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716017084; x=1716621884; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uw4IQYxb+uDF+mWfJsVcG+5UtKWGYyO2JjMy9dD17Z8=;
+        b=UKElO2MPo6JzXv1OmDDLIvJ0CuZv/IF4ov3RTAq6QZwvpVGUTmfz+/Zb43U3i04Y6Z
+         GlPSFdStZut96pfWt255XgvI8IBB+OJQsi2uh2tOLFyjPkmoAFiq8LNaHCra11cgNsMY
+         2cSmKpl/vscbzEXRGT+evaJE9oedtoWh1KAx76Ex6fUnvDEx4dl7i4Mdq/GqzW2yHbC/
+         lilABnmRCZRu/D1MchuQCTJuJED8hKahSlrHu50coOEoQxJ2UR2xDcKoy20sR88SH+Ci
+         E2Lyq8JNL6VqmAvtTmzKB73IkYauEPIkSEMfERF2M9ixUkk+LR/ESJZgF8o9ea9DP4wp
+         kdxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716017084; x=1716621884;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uw4IQYxb+uDF+mWfJsVcG+5UtKWGYyO2JjMy9dD17Z8=;
+        b=iaoNi+lhnI9Hcd+t9dYWqy37E37a938pli5uwPQg79HpPGPst+mjS8b+/kEfvrA+v0
+         4wckFc8R7/zWeCP/25YlqD3JTnAfdSYlFsmp88JR4kuLFs5D42zwG+j8OeHeBxTzwmsR
+         /tYHvBTdWXCq4Kkp5nS0qvAUJsRpN44U3f4Xah6ISNFVPDNoJ/vdjtcY2z292x/1k19x
+         vltcLS0p5l0VW1U0ERXboT/qOM/peUQ7ApK41JagUuFupJL7JNUgfjQz4OwAbt8ZFE56
+         T4CjToTsPEipvfxH5zKp8/3w80cqmbhzimIc8stgmC5ISm3Kvp7LJB/uOj/35fkNfGrw
+         I1NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoQrAjIZnCTMXfOCYkyqlTFRp4W1jm+U8b0KAhkqfHnZGNsb/4KNY7P9Tp0RCmaRjnV9xb0ZuiEuygwGx1Sbq2fsboTjEt+RA1RQog
+X-Gm-Message-State: AOJu0YyJy0bhGRrCAJgBHVXJrnkqpAm3QlRiddMT2zjHupZyb44iWjBK
+	d35i1mlJaNMsX2DbmX3Dq7lcU0TGOjGl9T72u9xrnkFehXEp0naFpjtUeuGmZAAFIHgHOOJZc3/
+	33xRx0g==
+X-Google-Smtp-Source: AGHT+IE94WyeH6RLcAAIOJcTGdhrJI64gxY6uGfhyG5sUnknlOWcMCOVqt5FlhysOWO0+Z0nlFbjELjLHqB7
+X-Received: from yuanchu-desktop.svl.corp.google.com ([2620:15c:2a3:200:97d6:5b37:f65f:971e])
+ (user=yuanchu job=sendgmr) by 2002:a05:6902:1082:b0:de5:a1c9:7a7a with SMTP
+ id 3f1490d57ef6-dee4f1903fdmr1751333276.4.1716017083829; Sat, 18 May 2024
+ 00:24:43 -0700 (PDT)
+Date: Sat, 18 May 2024 00:24:22 -0700
+In-Reply-To: <20240518072422.771698-1-yuanchu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <646bd149-f29a-4c91-ab00-4f6d2fce23fd@roeck-us.net>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0
+References: <20240518072422.771698-1-yuanchu@google.com>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240518072422.771698-2-yuanchu@google.com>
+Subject: [PATCH v1 2/2] virt: pvmemcontrol: add Yuanchu and Pasha as maintainers
+From: Yuanchu Xie <yuanchu@google.com>
+To: Wei Liu <liuwe@microsoft.com>, Rob Bradford <rbradford@rivosinc.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	virtualization@lists.linux.dev, dev@lists.cloudhypervisor.org, 
+	Yuanchu Xie <yuanchu@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 17, 2024 at 08:24:19PM -0700, Guenter Roeck wrote:
-> On 5/17/24 16:37, Russell King (Oracle) wrote:
-> > On Fri, May 17, 2024 at 04:34:06PM -0700, Guenter Roeck wrote:
-> > > On 5/17/24 15:22, Russell King (Oracle) wrote:
-> > > > On Fri, May 17, 2024 at 03:09:12PM -0700, Guenter Roeck wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On Fri, Mar 15, 2024 at 11:47:55AM +0000, Russell King (Oracle) wrote:
-> > > > > > Report an error when an attempt to register a clkdev entry results in a
-> > > > > > truncated string so the problem can be easily spotted.
-> > > > > > 
-> > > > > > Reported by: Duanqiang Wen <duanqiangwen@net-swift.com>
-> > > > > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > > > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > > > > 
-> > > > > With this patch in the mainline kernel, I get
-> > > > > 
-> > > > > 10000000.clock-controller:corepll: device ID is greater than 24
-> > > > > sifive-clk-prci 10000000.clock-controller: Failed to register clkdev for corepll: -12
-> > > > > sifive-clk-prci 10000000.clock-controller: could not register clocks: -12
-> > > > > sifive-clk-prci 10000000.clock-controller: probe with driver sifive-clk-prci failed with error -12
-> > > > > ...
-> > > > > platform 10060000.gpio: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> > > > > platform 10010000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> > > > > platform 10011000.serial: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> > > > > platform 10040000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> > > > > platform 10050000.spi: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> > > > > platform 10090000.ethernet: deferred probe pending: platform: supplier 10000000.clock-controller not ready
-> > > > > 
-> > > > > when trying to boot sifive_u in qemu.
-> > > > > 
-> > > > > Apparently, "10000000.clock-controller" is too long. Any suggestion on
-> > > > > how to solve the problem ? I guess using dev_name(dev) as dev_id parameter
-> > > > > for clk_hw_register_clkdev() is not or no longer a good idea.
-> > > > > What else should be used instead ?
-> > > > 
-> > > > It was *never* a good idea. clkdev uses a fixed buffer size of 20
-> > > > characters including the NUL character, and "10000000.clock-controller"
-> > > > would have been silently truncated to "10000000.clock-cont", and thus
-> > > > 
-> > > >                           if (!dev_id || strcmp(p->dev_id, dev_id))
-> > > > 
-> > > > would never have matched.
-> > > > 
-> > > > We need to think about (a) whether your use of clk_hw_register_clkdev()
-> > > > is still appropriate, and (b) whether we need to increase the size of
-> > > > the strings.
-> > > > 
-> > > 
-> > > It isn't _my_ use, really. I only run a variety of boot tests with qemu.
-> > > I expect we'll see reports from others trying to boot the mainline kernel
-> > > on real sifive_u hardware or other hardware using the same driver or other
-> > > drivers using dev_name() as dev_id parameter. Coccinelle finds the
-> > > following callers:
-> > 
-> > Using dev_name() is not an issue. It's when dev_name() exceeds 19
-> > characters that it becomes an issue (and always has been an issue
-> > due to the truncation.) clk_get(dev, ...) uses dev_name(dev) to match
-> > against its entry in the table.
-> > 
-> > As I say, dev_name() itself is not an issue. The length used for the
-> > name is.
-> > 
-> 
-> Maybe, but the existence of best_dev_name() suggests that this has been seen
-> before and that, as you mentioned, it is not a good idea. Anyway, the patch
-> below fixes the problem for me. I don't know if it is acceptable / correct,
-> so it might serve as guidance for others when fixing the problem for real.
+The pvmemcontrol driver lives under drivers/virt/pvmemcontrol. We
+specify maintainers for the driver.
 
-I get the impression that there's a communication problem here, so I'm
-not going to continue replying. Thanks.
+Signed-off-by: Yuanchu Xie <yuanchu@google.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3fdc3b09c171..fd77ce0c1328 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18048,6 +18048,13 @@ L:	linux-wireless@vger.kernel.org
+ S:	Supported
+ F:	drivers/net/wireless/purelifi/plfxlc/
+ 
++PVMEMCONTROL GUEST DRIVER
++M:	Yuanchu Xie <yuanchu@google.com>
++M:	Pasha Tatashin <pasha.tatashin@soleen.com>
++L:	linux-kernel@vger.kernel.org
++S:	Supported
++F:	drivers/virt/pvmemcontrol/
++
+ PVRUSB2 VIDEO4LINUX DRIVER
+ M:	Mike Isely <isely@pobox.com>
+ L:	pvrusb2@isely.net	(subscribers-only)
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
