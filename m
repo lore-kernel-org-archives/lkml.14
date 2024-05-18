@@ -1,203 +1,179 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB8B7CF16;
-	Sat, 18 May 2024 12:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E558D3AC2B;
+	Sat, 18 May 2024 12:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716036302; cv=none; b=tiWOeikWht4q/gfg7qzx6l/N8F62700a3xMUnu7BcIhFMdbVaKdx18LLbH3LI0vz9CAN8Irf5BLlCZI31GdL7cORYHFtQLVzpTyR5vDniaMGIjKJOHYrikAxsXtliiymC35kYqVCvfJ+2OlvMCvuhpqmkkCNxL0Rf8/wTmTeOCI=
+	t=1716036439; cv=none; b=Bsb3+1nLCIOR8qtI6b8LtNNPR+fxpOSUtdYzO8jH96KFGvM6/5g2WHiYYHMagG1DRqLPaYaY5dglxrMykl+3w3w8CunqS9kXuL0IN2pFhiSic9tw4wKQ3RQtumA/rPa9OWtDmJ64oqNIrj7q0mYJYqs4aFqZ6uak59ZUWuHwuVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716036302; c=relaxed/simple;
-	bh=hynyAfgRm5q+1IANofou/nprgd/BjuI4O4e6YgviSjA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R80z6oHbPI5QcxZIspZG6fL9+o5OwG+W4W6/YVpOdBPCxbM+3pY4KAj7xjALVG0PqeMuJhYJIXv5vxcafv2Xztd52VYSSj3S2tD6/OFY0tvVEaKUYIN3jNefI3MT+wbDT2iAOkP/8j3JLQGCtU0dT8IHX8UKlIgppW8fQHi0PBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dthQdYTY; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716036439; c=relaxed/simple;
+	bh=XX9dAoIEEtVahs7jrjX3M3GFmseeMUdvSbn5U3vwvgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jsrc3b2EVWU2XIoqnkXI34U2pMQ9voHk8DC63u4YKjpL7rLylT20z2FkHEZz8J9t7OCWv7saFA0jfdveGEv5Mdydz4G07eTVn1FuXRbkFykcNi6IPg1HzHOe+4zsFnC4bAK5P+cOVb5xSWXE8ACnWAgpqiLjXzy7BO2QU6rO8iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f892wXxQ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dthQdYTY"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44ICimra055098;
-	Sat, 18 May 2024 07:44:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716036288;
-	bh=VPaREiRTmandW1VVNogQssPNjYrkxOVaQwGJoi1ZkHI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=dthQdYTYKEVD3XytPwLMxYFpI0/p2qDVk/gPrr+k4aUKGMBysbuvG7bki2vAzEaCk
-	 MXkiXxWtBGnbo7EuaO+4xQM9Wd0z1zNnwL7JXxhXPyl2WXU6qXq7R0fOVNyqUCeaJB
-	 URShu77GUbuGADkhaU5/RULKbY7Fv+b3uNpyx3nw=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44ICimT0018265
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 18 May 2024 07:44:48 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 18
- May 2024 07:44:48 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 18 May 2024 07:44:48 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44ICgY9i041511;
-	Sat, 18 May 2024 07:44:44 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <corbet@lwn.net>, <rogerq@kernel.org>,
-        <danishanwar@ti.com>, <vladimir.oltean@nxp.com>
-CC: <netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <vigneshr@ti.com>, <misael.lopez@ti.com>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [RFC PATCH net-next 28/28] net: ethernet: ti: cpsw-proxy-client: enable client driver functionality
-Date: Sat, 18 May 2024 18:12:34 +0530
-Message-ID: <20240518124234.2671651-29-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240518124234.2671651-1-s-vadapalli@ti.com>
-References: <20240518124234.2671651-1-s-vadapalli@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f892wXxQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716036438; x=1747572438;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XX9dAoIEEtVahs7jrjX3M3GFmseeMUdvSbn5U3vwvgk=;
+  b=f892wXxQNae2+OOhYzU7HY/+MvWeaMMTr5xbEFXJxljUHUoAFqhj2/8n
+   5N1hRy7U3tj/OL0fgj6uZxv1hQmdDTl3jBRWUK6zUoPQ+tHW/m8EaUZg9
+   csRVxZl1tlFs7ll/Pfsfw+V+elecE4EOgfNWzFVdmLSmKzsLOzLA3+Tog
+   RMuo8B9IW8kMLTZf87jri2FJm4pBGrBnnSOk6ghGxQCPC3Mnth7iPO9Fg
+   6jw49eTLLzvhvjLoeSzxTfp/7TWXuPJJSgTrndWPTtI48hNfKNr4SeuL1
+   2lvj6g447KyFSCgCha5ejAzhUyuPToyaW2wTOfizQyYlc9BSuB9Tmd0b6
+   Q==;
+X-CSE-ConnectionGUID: mIQQ6loUSvWPQeAlGHqkag==
+X-CSE-MsgGUID: Qmp6sqfTTOOzKd1YEjd2Pw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12327501"
+X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
+   d="scan'208";a="12327501"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2024 05:47:17 -0700
+X-CSE-ConnectionGUID: 6v6MMXvNR/WRLeM4tPVn7g==
+X-CSE-MsgGUID: F9la2JkXQsyzcukD209rTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,170,1712646000"; 
+   d="scan'208";a="36978444"
+Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 18 May 2024 05:47:10 -0700
+Received: from kbuild by 108735ec233b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s8JSu-0002CW-0P;
+	Sat, 18 May 2024 12:47:08 +0000
+Date: Sat, 18 May 2024 20:46:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: oe-kbuild-all@lists.linux.dev, Emil Svendsen <emas@bang-olufsen.dk>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH 01/13] a2b: add A2B driver core
+Message-ID: <202405182008.zWMVYQ6g-lkp@intel.com>
+References: <20240517-a2b-v1-1-b8647554c67b@bang-olufsen.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240517-a2b-v1-1-b8647554c67b@bang-olufsen.dk>
 
-Use the helpers added so far to enable the client driver functionality.
+Hi Alvin,
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
- drivers/net/ethernet/ti/cpsw-proxy-client.c | 82 +++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/net/ethernet/ti/cpsw-proxy-client.c b/drivers/net/ethernet/ti/cpsw-proxy-client.c
-index 90be8bb0e37d..3eccde764c17 100644
---- a/drivers/net/ethernet/ti/cpsw-proxy-client.c
-+++ b/drivers/net/ethernet/ti/cpsw-proxy-client.c
-@@ -12,6 +12,7 @@
- #include <linux/kernel.h>
- #include <linux/kmemleak.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/rpmsg.h>
- #include <linux/dma/k3-udma-glue.h>
- 
-@@ -2227,9 +2228,33 @@ static void register_notifiers(struct cpsw_proxy_priv *proxy_priv)
- 	}
- }
- 
-+static void show_info(struct cpsw_proxy_priv *proxy_priv)
-+{
-+	struct device *dev = proxy_priv->dev;
-+	struct virtual_port *vport;
-+	u32 i;
-+
-+	dev_info(dev, "%u Virtual Switch Port(s), %u Virtual MAC Only Port(s)\n",
-+		 proxy_priv->num_switch_ports, proxy_priv->num_mac_ports);
-+
-+	for (i = 0; i < proxy_priv->num_virt_ports; i++) {
-+		vport = &proxy_priv->virt_ports[i];
-+
-+		if (vport->port_type == VIRT_SWITCH_PORT)
-+			dev_info(dev, "Virt Port: %u, Type: Switch Port, Iface: %s, Num TX: %u, Num RX: %u, Token: %u\n",
-+				 vport->port_id, vport->ndev->name, vport->num_tx_chan,
-+				 vport->num_rx_chan, vport->port_token);
-+		else
-+			dev_info(dev, "Virt Port: %u, Type: MAC Port, Iface: %s, Num TX: %u, Num RX: %u, Token: %u\n",
-+				 vport->port_id, vport->ndev->name, vport->num_tx_chan,
-+				 vport->num_rx_chan, vport->port_token);
-+	}
-+}
-+
- static int cpsw_proxy_client_probe(struct rpmsg_device *rpdev)
- {
- 	struct cpsw_proxy_priv *proxy_priv;
-+	int ret;
- 
- 	proxy_priv = devm_kzalloc(&rpdev->dev, sizeof(struct cpsw_proxy_priv), GFP_KERNEL);
- 	if (!proxy_priv)
-@@ -2237,22 +2262,79 @@ static int cpsw_proxy_client_probe(struct rpmsg_device *rpdev)
- 
- 	proxy_priv->rpdev = rpdev;
- 	proxy_priv->dev = &rpdev->dev;
-+	proxy_priv->dma_node = of_find_compatible_node(NULL, NULL,
-+						       (const char *)rpdev->id.driver_data);
- 	dev_set_drvdata(proxy_priv->dev, proxy_priv);
- 	dev_dbg(proxy_priv->dev, "driver probed\n");
- 
-+	proxy_priv->req_params.token = ETHFW_TOKEN_NONE;
-+	proxy_priv->req_params.client_id = ETHFW_LINUX_CLIENT_TOKEN;
-+	mutex_init(&proxy_priv->req_params_mutex);
-+	init_completion(&proxy_priv->wait_for_response);
-+
-+	ret = get_virtual_port_info(proxy_priv);
-+	if (ret)
-+		return -EIO;
-+
-+	ret = attach_virtual_ports(proxy_priv);
-+	if (ret)
-+		return -EIO;
-+
-+	ret = allocate_port_resources(proxy_priv);
-+	if (ret)
-+		goto err_attach;
-+
-+	ret = dma_coerce_mask_and_coherent(proxy_priv->dev, DMA_BIT_MASK(48));
-+	if (ret) {
-+		dev_err(proxy_priv->dev, "error setting dma mask: %d\n", ret);
-+		goto err_attach;
-+	}
-+
-+	ret = init_tx_chans(proxy_priv);
-+	if (ret)
-+		goto err_attach;
-+
-+	ret = init_rx_chans(proxy_priv);
-+	if (ret)
-+		goto err_attach;
-+
-+	ret = init_netdevs(proxy_priv);
-+	if (ret)
-+		goto err_attach;
-+
-+	ret = register_dma_irq_handlers(proxy_priv);
-+	if (ret)
-+		goto err_netdevs;
-+
-+	register_notifiers(proxy_priv);
-+	show_info(proxy_priv);
-+
- 	return 0;
-+
-+err_netdevs:
-+	unreg_netdevs(proxy_priv);
-+err_attach:
-+	detach_virtual_ports(proxy_priv);
-+	return ret;
- }
- 
- static void cpsw_proxy_client_remove(struct rpmsg_device *rpdev)
- {
-+	struct cpsw_proxy_priv *proxy_priv;
- 	struct device *dev = &rpdev->dev;
- 
- 	dev_dbg(dev, "driver removed\n");
-+	proxy_priv = dev_get_drvdata(&rpdev->dev);
-+	unregister_notifiers(proxy_priv);
-+	unreg_netdevs(proxy_priv);
-+	destroy_vport_wqs(proxy_priv);
-+	detach_virtual_ports(proxy_priv);
- }
- 
- static struct rpmsg_device_id cpsw_proxy_client_id_table[] = {
- 	{
- 		.name = ETHFW_SERVICE_EP_NAME,
-+		.driver_data = (kernel_ulong_t)"ti,j721e-navss-main-udmap",
- 	},
- 	{},
- };
+[auto build test ERROR on c75962170e49f24399141276ae119e6a879f36dc]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Alvin-ipraga/a2b-add-A2B-driver-core/20240517-211849
+base:   c75962170e49f24399141276ae119e6a879f36dc
+patch link:    https://lore.kernel.org/r/20240517-a2b-v1-1-b8647554c67b%40bang-olufsen.dk
+patch subject: [PATCH 01/13] a2b: add A2B driver core
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240518/202405182008.zWMVYQ6g-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405182008.zWMVYQ6g-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405182008.zWMVYQ6g-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/a2b/a2b.c: In function 'a2b_bus_of_add_node':
+>> drivers/a2b/a2b.c:463:16: error: implicit declaration of function 'kzalloc' [-Werror=implicit-function-declaration]
+     463 |         node = kzalloc(sizeof(*node), GFP_KERNEL);
+         |                ^~~~~~~
+>> drivers/a2b/a2b.c:463:14: warning: assignment to 'struct a2b_node *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     463 |         node = kzalloc(sizeof(*node), GFP_KERNEL);
+         |              ^
+   drivers/a2b/a2b.c: In function 'a2b_node_of_add_func':
+>> drivers/a2b/a2b.c:1017:14: warning: assignment to 'struct a2b_func *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+    1017 |         func = kzalloc(sizeof(*func), GFP_KERNEL);
+         |              ^
+   drivers/a2b/a2b.c: In function 'a2b_node_release':
+>> drivers/a2b/a2b.c:1112:9: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
+    1112 |         kfree(node);
+         |         ^~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/kzalloc +463 drivers/a2b/a2b.c
+
+   444	
+   445	static int a2b_bus_of_add_node(struct a2b_bus *bus, struct device_node *np,
+   446				       unsigned int addr)
+   447	{
+   448		struct a2b_node *node;
+   449		int ret = 0;
+   450	
+   451		if (!bus || !np)
+   452			return -EINVAL;
+   453	
+   454		if (addr >= A2B_MAX_NODES)
+   455			return -EINVAL;
+   456	
+   457		if (!of_device_is_available(np))
+   458			return -ENODEV;
+   459	
+   460		if (of_node_test_and_set_flag(np, OF_POPULATED))
+   461			return -EBUSY;
+   462	
+ > 463		node = kzalloc(sizeof(*node), GFP_KERNEL);
+   464		if (IS_ERR(node))
+   465			return -ENOMEM;
+   466	
+   467		node->dev.bus = &a2b_bus;
+   468		node->dev.type = &a2b_node_type;
+   469		node->dev.parent = &bus->dev;
+   470		node->dev.of_node = np;
+   471		node->dev.fwnode = of_fwnode_handle(np);
+   472		dev_set_name(&node->dev, "a2b-%d.%d", bus->id, addr);
+   473	
+   474		node->bus = bus;
+   475		node->addr = addr;
+   476	
+   477		/*
+   478		 * Register the node device. Note that due to asynchronous probing,
+   479		 * there is no guarantee that the node driver's probe function has been
+   480		 * called just yet. The synchronization point is a2b_register_node(),
+   481		 * which should be called unconditionally by node drivers.
+   482		 */
+   483		ret = device_register(&node->dev);
+   484		if (ret)
+   485			goto err_put_device;
+   486	
+   487		return 0;
+   488	
+   489	err_put_device:
+   490		put_device(&node->dev);
+   491	
+   492		return ret;
+   493	}
+   494	
+
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
