@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7142B4778E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FAA47F7F;
 	Sat, 18 May 2024 18:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716055621; cv=none; b=ilBg4upEJBi8bIFUtLGeWMD1TxBPhwaXqEyDYbTm23Ta2NYVG6/ajFoN0IalL1oXIk+4qTJu8Wbr2OTHp9DQr43+xAAFqFJUuMmtZNJNxgkb54R5U3rD0jrt9GMkeHWu2wD4jq8VdTZMDH+WUqLKbIDnFIRvT+Do/mELbnrU6w0=
+	t=1716055621; cv=none; b=t9FROibnTcucVfTjtU5Lpi0pMdk7i33WM3h0n9E12mtE8CRaRUucrzEqcTNTTapdOXTygfMaPSHwHo+0UE4zbR1NS+wPjaSYAC5QX3c1XplHNXpBU4ImdtZWXtEONxPVf+e3RbChImABjWG9RXP1L74N78rPZWjPJHVxM5E4bAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716055621; c=relaxed/simple;
-	bh=pgO2J4u7Y1M2DtNPa0+OyCf+qyXOJ/w2BJb+vok+cro=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MZY4Zrw9oguCyDzDqRPnXIXmU/hRhH05zrY+bGWv6ZMHO/RkjisuvbaAwo/J8mcFFWzZ+5TTVTXQeK3txnKUlfUtJpTy69U4WNlBpStRVPdrTy5ar4tvMFinUlaxOCvZ7txfVhjR+qG31Es4O0DDqLtZkEdyODTWd5VTGwyxoGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a77L//wv; arc=none smtp.client-ip=10.30.226.201
+	bh=+fYWbrwzH7fNf3RB50idGC+p8fSx3vdXVzTXv8qZLBY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=DtFbyiST1DGcNSdJp/E3UkHghI2cV6XT1tXEQlQcH/aZO7/LPvBDF/eYNM+JdyMD8av50/ghGwPmI3IxO2i+FQjJhMK7AwbQaGoLUzKEtHXMiVwhcJ5iO8+RgIRPcXqBCBlQuRxDTV70zKRkkCJrvQV7EivqB4PH7laqfzdCINs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIoyYv3w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a77L//wv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 51CD8C113CC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIoyYv3w"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 727A5C2BD11;
 	Sat, 18 May 2024 18:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716055621;
-	bh=pgO2J4u7Y1M2DtNPa0+OyCf+qyXOJ/w2BJb+vok+cro=;
+	bh=+fYWbrwzH7fNf3RB50idGC+p8fSx3vdXVzTXv8qZLBY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=a77L//wv61ewTWvZ1jBHHREzL9y2KXYCfA3pVFqiu50ftNn095QKfo1TDFURWJDSL
-	 wfMHB/oucTzsSF1YBQyJJu7dFKnJMZD73i9hbZ+ySEeFMQkk2ql5N49VpEhc3YgWn/
-	 xA+ORhxQ9aRiXFfuDrwLpkMtBWaTGSq6LvNm/T7mfju20fDonLOejWCVDM6UCk/CWj
-	 C/LwLLu6Mo+vNHI2ol3DCwHCK/pzsJKge9smrIrnNhdDxTvpwCxZ5Y+bK4ynhaX/j8
-	 FZTFPOtLZ+bYkP+dWzMxSDqkxmOd3Ydqat9Cu1cXQSVlb+z82nxAd6s2O7eYYVyuxC
-	 Ukv0Lr7LKiz2A==
+	b=QIoyYv3wxI98mT/SnpyhikVheI+V+8Akf8JujMYGJknW2XU/11s74tiwTivVBzmoH
+	 IzeHN3iKqtTRofuddI2GB2xuE/BSOesf/mQ39YjZEs2oEnqxLUZ4xPmksaEfXqR9c7
+	 lGmSWWyTqJ2lHXqmimxkWTwmMwUX89fIuIDzfA7mtiR5g1ekK5PSqUGJP4S0hrdiME
+	 CoZK5b+3dJ18b23qvBGm/lvFb3w3oU4C0Vsk1z0G0yFJufaMdHAHao9ARcIIJnrFN8
+	 I7QVbNyXBixZdyPrIJZ7yBLzXmB3DEWFPijlUWEMWovg5huYXCXbvB7qqw04aX8kBs
+	 XehsckiAikrkw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 41CAFC43336;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 65A26C43339;
 	Sat, 18 May 2024 18:07:01 +0000 (UTC)
-Subject: Re: [GIT PULL] Landlock updates for v6.10
+Subject: Re: [git pull] IOMMU Updates for Linux v6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240516132624.1536065-1-mic@digikod.net>
-References: <20240516132624.1536065-1-mic@digikod.net>
+In-Reply-To: <ZkcqDrFmd4ZHv7Qf@8bytes.org>
+References: <ZkcqDrFmd4ZHv7Qf@8bytes.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240516132624.1536065-1-mic@digikod.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-6.10-rc1
-X-PR-Tracked-Commit-Id: 5bf9e57e634bd72a97b4b12c87186fc052a6a116
+X-PR-Tracked-Message-Id: <ZkcqDrFmd4ZHv7Qf@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v6.10
+X-PR-Tracked-Commit-Id: 2bd5059c6cc04b02073d4d9f57137ab74e1d8e7a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2fc0e7892c10734c1b7c613ef04836d57d4676d5
-Message-Id: <171605562124.7011.7388227978468847976.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 0cc6f45cecb46cefe89c17ec816dc8cd58a2229a
+Message-Id: <171605562141.7011.17834859902168748093.pr-tracker-bot@kernel.org>
 Date: Sat, 18 May 2024 18:07:01 +0000
-To: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>, =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>, Ivanov Mikhail <ivanov.mikhail1@huawei-partners.com>, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 16 May 2024 15:26:24 +0200:
+The pull request you sent on Fri, 17 May 2024 11:57:34 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-6.10-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2fc0e7892c10734c1b7c613ef04836d57d4676d5
+https://git.kernel.org/torvalds/c/0cc6f45cecb46cefe89c17ec816dc8cd58a2229a
 
 Thank you!
 
