@@ -1,57 +1,49 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB8C1773A;
-	Sat, 18 May 2024 10:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2707946F
+	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 10:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716027229; cv=none; b=L3l2N8+kEjZossdXAthfgFzNQjErpqFWUW+BzhcVNYMixpGNou5RZ4CItqr6FP+mHW9HzNXyRoWN6p2Qg75bsYwz7/ECs1cvTg04US7cXGwnZVBT4Uu0jSgJgJbWEQraJVesBUv/uDTtzUpnkoogAuaQFqC6bBdbP6JC/wS7tNE=
+	t=1716029067; cv=none; b=YgdvwbXqYHN1CMExEuxTaPVTlnOeHVAbrMEx3b9wATuKqpVZbJNaLpHBERxfOuNTGMNBqu3WFFaIeRxB22ENm7a9N4C7lu3Lc9MKGbLpNHsvDsUemXS1bBVxxTu03umQZnqX50drAGsP31jl04I33dP8FvsVqoIlYM3V+ZHvhoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716027229; c=relaxed/simple;
-	bh=JEEGJe7P7TsOOE2g5iqa8BKS6lSw1rmKWvrEVpgafAk=;
-	h=Date:From:To:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RbkVrUhyvVC3P864oZQVUcJuvbCpMtLqszJpFqL3NqCvu6ziac1fO5xuWVRiYbHXb56oxkxjaiX9U4liawbQgiXsZCWiLghGdBBHYqD1TRoAVPL5ctXubs3fH3isHVtz5T1KMKIQrHufxbOtEwDoCkRM97P2w9CinRxbbn2RZsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=lGxkYnWM; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1716029067; c=relaxed/simple;
+	bh=+g0Djet6VPor+0w2My6R6Rpd8gd93fTaLQzxiswyYc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FGuhWUteIBkmiY1qJNB34bNMxES8z4nF47N0R6dC3lrg0deEoicY9qSPjSpNGT1zIEywoFj6dCaYhoIh06J09hsHV/ivhS5Rl3nyWrysN+342dQGiCQPliKiyM+Oc1PMJ4V30sMQibz5tBTUIOxLS2lnMJCPRf6WK6o0ygL98gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dJ1HM4sV; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="lGxkYnWM"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s8GZ6-006VvV-0f;
-	Sat, 18 May 2024 11:41:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=GZdz7DcQuZNUr0jvTXCmmPFf3gkI4Rtn8V9Cae9sto0=; b=lGxkYnWMYZypqxVrxAGzVjAiff
-	Kjo2o2LPO6tHTj1Oklu3HEz2yTvA23u9m/QBmLKX19/P11xwu4r7KBsnqnHHQprUHybYC0HR0Riwu
-	5vdd5O00bpSO4Vj16/gMC/OG8uu1zgA0sVzzEcd93e+1ZSPi0BkCC1L8Va0hCsZnrSwI7uwgsYmEA
-	/EDOf5MZZFSIP2kUzCvYxWvn7AEn0Z0atDbQVRAznvulNo209aun+PKhbP9d7wEKOnbw7UB0EqpV3
-	W/F2XBoAPR/17liJxkpsDqOwDVp1Pj5/EsSl8Va00Mu0qBXTUXNqRyxlOl4Upqis987gA7gM41iK8
-	O1F0n2+Q==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s8GZ4-001KiF-0X;
-	Sat, 18 May 2024 11:41:19 +0200
-Date: Sat, 18 May 2024 11:41:17 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, marex@denx.de, leoyang.li@nxp.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] ARM: dts: imx: Add Kobo Clara HD rev b
-Message-ID: <20240518114117.54d7aa75@aktux>
-In-Reply-To: <20240504215344.861327-3-andreas@kemnade.info>
-References: <20240504215344.861327-1-andreas@kemnade.info>
-	<20240504215344.861327-3-andreas@kemnade.info>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dJ1HM4sV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0661D40003;
+	Sat, 18 May 2024 10:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716029063;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+g0Djet6VPor+0w2My6R6Rpd8gd93fTaLQzxiswyYc8=;
+	b=dJ1HM4sVgpsZAO+szA2uDJZWhF2Xaigaf8SQ/cwA6DxsJD9fN3RFW2thSnsxioBdD11sGy
+	m6zCzsjLDg1wSAwYoYRgiJlLNL9RdmRqKXLyfg1Xvmo8Z0uJBrf/agKf0X3vrBcBqnPit3
+	mYxHPYcpDMpZIee5Z1IShXvt8EPkNr1q6v6JsmdVRQL2FCkNSuLAJZtvrYeNKB2akQLd6r
+	+quT7wUKLbNb66kNqBsVo4hweJrp+vOtpd2IBzMFfK1sU+0B1NQdhmuc1KJZoB8LePNocv
+	AUZGzIbI2LbNdabEAX3+TlI1kURXa5IfohYgK5b1glIkgNMAgynbvHeCY9fZNg==
+Date: Sat, 18 May 2024 12:44:19 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Val Packett <val@packett.cool>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Heiko Stuebner <heiko@sntech.de>, Stephen Rothwell
+ <sfr@canb.auug.org.au>, linux-mtd@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mtd: rawnand: rockchip: reject NVDDR timings when
+ checked
+Message-ID: <20240518124404.472eb60b@xps-13>
+In-Reply-To: <20240518033923.5577-2-val@packett.cool>
+References: <20240518033923.5577-2-val@packett.cool>
+Organization: Bootlin
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,49 +51,43 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Sat,  4 May 2024 23:53:44 +0200
-Andreas Kemnade <andreas@kemnade.info> wrote:
+Hi Val,
 
-> There is a variation of the Kobo Clara HD containing a PMIC with different
-> default settings for the regulators in the OTP and therefore also
-> regulators wired up in a different way, so add a proper devicetree for it
-> to avoid some magic smoke.
-> 
-[...]
-> +&cpu0 {
-> +	arm-supply = <&dcdc5_reg>;
-> +	soc-supply = <&dcdc2_reg>;
-> +};
-> +
-Vendor devicetree has also this snippet for that revision:
+I might propose a slightly different title which I think better
+describes the situation:
+"mtd: rawnand: rockchip: ensure NVDDR timings are rejected"
 
-       cpus {
-                cpu0: cpu@0 {
-                        operating-points = <    /* Core2_1V3_ARM */
-                                /* kHz    uV */
-                                996000  1062500
-                                792000  1062500
-                                396000  1062500
-                                198000  975000
-                        >;
-                        fsl,soc-operating-points = <    /* Core2_1V3_SOC */
-                                /* ARM kHz      SOC-PU uV */
-                                996000          987500
-                                792000          987500
-                                396000          987500
-                                198000          900000
-                        >;
-                };
+val@packett.cool wrote on Sat, 18 May 2024 00:31:13 -0300:
 
-        };
+> .setup_interface first gets called with a negative "target" value
 
-Apparently we run into https://gitlab.com/postmarketOS/pmaports/-/issues/2811
-but I cannot find any documentation an alternative voltage ranges for that SoC
-(i.MX6SLL). So not all 6SLLs are created equal? At least we do not mix up 1.XV regulators
-with 3.3 regulators now, that is more healthy.
+Just as an FYI, the fact that it is negative is an implementation
+detail, but you mention the #define of the value below, so that's fine.
+=20
+> NAND_DATA_IFACE_CHECK_ONLY, in which case an error is expected
+> if the controller driver does not support the timing mode (NVDDR).
+>=20
 
-Regards,
-Andreas
+Here I would welcome two tags in order to get this backported as early
+as needed in stable kernels:
+
+Cc: stable@vger.kernel.org
+Fixes: a9ecc8c814e9 ("mtd: rawnand: Choose the best timings, NV-DDR include=
+d")
+
+> Signed-off-by: Val Packett <val@packett.cool>
+> ---
+> Hello everyone, first Linux patch from a long time FreeBSD person :)
+>=20
+> This was required to get the NAND controller to attach on the random
+> old RK3066 tablet I'm bringing up mainline on.
+
+Welcome! The fix looks right besides minor nits in the commit log. I'll
+probably take the v2 when it's out after -rc1 has been tagged.
+
+Thanks,
+Miqu=C3=A8l
