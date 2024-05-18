@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A285DF78;
-	Sat, 18 May 2024 21:06:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494496A357;
+	Sat, 18 May 2024 21:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716066361; cv=none; b=lZy8ou4C6LomBz+M1yHJDwzjlYtOJKS9FncBEXpxPrAyk94UIShGbKx2gZ5BudMypQLbVP0bJXpWZg9+k42cH/VWlGQqdbFOioptajXlVB8YJ8/XjwOIExNejUPOZpStdzZOT5Qrhm7tWCn7Cxd0hvNz1BxXG0FIzvF9aeaWWLY=
+	t=1716066367; cv=none; b=T8BGme0uP+rWbMJvbqV0eS/GzBa9glzd4K0BdGckqyed9A7AzVA0OTZhpc09SPg0Tnd1pTl5nUXcl+DjkzOKjFXYsKKd69z2YH1Q4RFOnN1lKPBD3903L5lx1+/esoNxAtJ7UubAa/d/JJUHf+DvDNFnrRvXcUb/OHMmHW0FEv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716066361; c=relaxed/simple;
-	bh=5oJp5eARjxirMLpahlFSgRk4jppjlarQaWWAiqzHi0w=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=CerTxGnVf+Az7fXzOJkVMLYUUZ7C30Bi8W9AlueEP70fpm8OucDcoYKq77p532gZQM3PG7GwZOu8WLHFxPtd4+uJpLaIQ8w4r13uLYUrGITi8bp15d04DI6mzdJmjYJm7IwS/tr34Fx8J8ypvmR4ekiJsiz0JHpB3KqqYGc8FSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxa/ITWC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716066367; c=relaxed/simple;
+	bh=wx8pCTgtDNQR/Nc5SLFJVRegbdhAFnErIl2kEEKaAA0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RlZXG8b8KadyJKvpHevSP3dm1QEo8YVBu6buP4WtjBfDQn6y8vN73Bfb2tkydrN1xbr4T/AJrR6+yDya1rYgxCfU80U/L6q4Yi0GheziD91gkVcU9eu0OVmKE9Jj49x00Gmygb2lRy0fI1R672vvRs/WSTxBI2RAOw//4oDnuNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bq4dj0TW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxa/ITWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2C393C32782;
-	Sat, 18 May 2024 21:06:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bq4dj0TW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BEF4EC113CC;
+	Sat, 18 May 2024 21:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716066361;
-	bh=5oJp5eARjxirMLpahlFSgRk4jppjlarQaWWAiqzHi0w=;
+	s=k20201202; t=1716066366;
+	bh=wx8pCTgtDNQR/Nc5SLFJVRegbdhAFnErIl2kEEKaAA0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=hxa/ITWCwivOPxtikhoG60eT82WX6YoLsrRmuvqvnaawsBI/DFV/GUQgiIIducvyv
-	 D0wi89j7IhJkqPnPgpQ5ffBvOtF0LiiS9M2/iiWVhOyQhgUcdYPKZioj3HpO3N7nd/
-	 M/Az18eBmeVIbVZ/V0To6jH+SoHwr++clg8FPPeOOvR9aTzxpKWvnggBLxguwmVJko
-	 wuq69kcQ+a8l6WQbGhpo4hQvE2CjUuqpUF3P4kwEpBRdhWK0py6HcvfpEdu+zYvcsl
-	 hHmntweZlJgIzDqKi9Shklkg2i8xfF3FloUts48tG5XrvyLy2+Bun+PX6xQo2MraQp
-	 3F5pTABC6utTQ==
+	b=bq4dj0TW5i0PbnFyPS7Oehw5H4dd5oY3u4X1xJlZ8lsim6m52hk4S0k2AOrFQdp/U
+	 O+KcaPBRil31rzepVCA17BsDjPO41c/uzlNGj81SrP6W8SND+shhzJGqHkuboPcrwg
+	 z74Uf9oXIBUJySxdWCm4g2Vai9/wQOApx4GvUwGnpWFYRQPp5XMwBRyD+pFtbKg988
+	 Q5eOU1ow2Iovb9TK9d/tsj8v97uGGUM/XKJ9gWkFi4Cbz7cLAQeo0u9MDXjLU8gqta
+	 YUeFWA51FBQAJNK2RHbPX7+Hkprws53NXHVW+B+PWZPq60Ee2ABjoQCLP+dpBhlFML
+	 vKHfU/sXEtoxA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23F70C43339;
-	Sat, 18 May 2024 21:06:01 +0000 (UTC)
-Subject: Re: [GIT PULL] clk changes for the merge window
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B4373C43336;
+	Sat, 18 May 2024 21:06:06 +0000 (UTC)
+Subject: Re: [GIT PULL] power-supply changes for 6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240517013155.1095253-1-sboyd@kernel.org>
-References: <20240517013155.1095253-1-sboyd@kernel.org>
-X-PR-Tracked-List-Id: <linux-clk.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240517013155.1095253-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
-X-PR-Tracked-Commit-Id: 03be434863b9606435be9ef43651d4c0cbbe6788
+In-Reply-To: <cxfqbs4vvzniebbpvajkymvjfztst75z5di6dvuk3gyvyiodnl@s5phlkjujcon>
+References: <cxfqbs4vvzniebbpvajkymvjfztst75z5di6dvuk3gyvyiodnl@s5phlkjujcon>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cxfqbs4vvzniebbpvajkymvjfztst75z5di6dvuk3gyvyiodnl@s5phlkjujcon>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v6.10
+X-PR-Tracked-Commit-Id: 55f7073f6f59ef2c9e98b70f74118dba62e1aabc
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 619b92b9c8fe5369503ae948ad4e0a9c195c2c4a
-Message-Id: <171606636114.2260.9243449844507321685.pr-tracker-bot@kernel.org>
-Date: Sat, 18 May 2024 21:06:01 +0000
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 85d46148f8a07aa80199e52a2755304a27837caa
+Message-Id: <171606636673.2260.2111975263747141124.pr-tracker-bot@kernel.org>
+Date: Sat, 18 May 2024 21:06:06 +0000
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 16 May 2024 18:31:55 -0700:
+The pull request you sent on Fri, 17 May 2024 18:05:00 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/619b92b9c8fe5369503ae948ad4e0a9c195c2c4a
+https://git.kernel.org/torvalds/c/85d46148f8a07aa80199e52a2755304a27837caa
 
 Thank you!
 
