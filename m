@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BCBFC12
-	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 01:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10A13FFC
+	for <linux-kernel@vger.kernel.org>; Sat, 18 May 2024 01:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715997259; cv=none; b=V3zbl/HRZz6lxuDUoOvVfmxke2XceFtGSqHEEbU2Xd32aCg8BMZcmZqpLJ5DCYO90vVhC2MIJJtxpnHQ5iZYU0xo5c/+E9XevFznU3unPbBL32/O0lg+L0SjdO2osZPmXK9ddMx8IIVuFMBqgXuHlZvVNa+cDqB5/LPaY16l4sM=
+	t=1715997260; cv=none; b=VPejHTHDLuEwNViePFv81lqnXYU86JUXclk1AyM9VahM6UCfPM2XgXLYm8avRQ0ApDauB2Y0jZ+2nExU8ng79G83XbVwdYsdbPfC9/U3TumtpHnASxHLRsTjMPRqxlO1yvy1+sDxljNs9EXmzIvMu654KTMjt4dDGfkCxLeetw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715997259; c=relaxed/simple;
-	bh=Mx6HdHcC6xo7nLkrp62uo0ZFktI/0/gkHJtOspSQ1Ks=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jDFdUxV5Q21/lrMa/o6uMSr6b8wZsmdptZTA5EMKdhy+K42/9D8OoHH/EWzxaItuyQVye6x9+iGYL9ljbffJU0kQsEDfyzj1IC0XFhakAshOjMXrjSBp6YqW5ZNR2f1kFM5xE55s06BxwCt8gVWo0vFhvUByP/1yNJZ2Js+Mj00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMYaMyjE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715997260; c=relaxed/simple;
+	bh=2B+yx0CoABpHTCCoTx8g5BMc9AMcJ7kCLqo9ZvYe/xA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XMojRWJ0uGjp8xDRW/J6XpkpXwFGpSmxxg0lZkrnhUbeZRfFY3ZSlRdE1shYEP83ROucSRKRUohqzWuwtn3ygFG+47JuDCX8eNwORW8Ky5qRIOl89PrPiqROWKFeuhczrTbS3M3MEQJT6WfF1eQjTqYQk0EDDPOdbDbWLstX5Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbkOlYIh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMYaMyjE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8CAF6C4AF0A;
-	Sat, 18 May 2024 01:54:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbkOlYIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E691C2BD10;
+	Sat, 18 May 2024 01:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715997259;
-	bh=Mx6HdHcC6xo7nLkrp62uo0ZFktI/0/gkHJtOspSQ1Ks=;
+	s=k20201202; t=1715997260;
+	bh=2B+yx0CoABpHTCCoTx8g5BMc9AMcJ7kCLqo9ZvYe/xA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=eMYaMyjEcjNz4MzTfaet56CQElq4izAvRdZI85WwOBf0PKe+3aPGgEuWgES3d+Dzz
-	 u+iH0UsslMvMWVFLrspVwW2zV1XrdNnhEsvKlIL6NAFAJ++CvTQpWXVxR97S8OFLAi
-	 bK5zO7x1wQhENgNPN6YQFLORM+4+zpjW1ga+ApzJl3l8KUvHQXdnA33FZk1p+Rg62B
-	 88SR4NkK6nlywsMw4zqoeZlENH4dlJNXfNQ+vGMTPkZwFPsP6Qzo5osicSYH032DSA
-	 1wqnIVMZ5LbEWzDXTtGcR2A1JjKuEym/Zprh+M0XZCEn92wiUodtsmej8i4xbkBTNR
-	 PxX9kfClscLbA==
+	b=CbkOlYIhdosPB2dcasDx8OqYIM7g2xZzJSvVeKCHVouERtdTC3zUD5QD/UcjzjbYe
+	 OIDs1kGfAGoxjwa4zkfWF0m5V/yU6vWG1Y0Se8t2tx9AT/iyUWaewx3bGKwPLb7Iuo
+	 om94dz+VyrygHj7er51fZYqgKNLBFGSI15Tu2EDdLERla8Mu5cdTX7j+7F+uDAhhAr
+	 6+g+4UxP7XWMCAlhZUe1aVj3IXqbKPc056O/ia0DaPxY4oXwWO/oIggP9WhSj0ZKAF
+	 RUWnB+1UP9mFRzjOWa6NLlyiSkplS+gEYJ14q7fuaXfscpt8gkbCLWoSYASjmvpWtd
+	 EpvlUIOzDp7lQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 84D8EC54BB2;
-	Sat, 18 May 2024 01:54:19 +0000 (UTC)
-Subject: Re: [GIT PULL] bootconfig: Updates for v6.10
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 27E94C1614E;
+	Sat, 18 May 2024 01:54:20 +0000 (UTC)
+Subject: Re: [GIT PULL] tracing/tools: RTLA updates for 6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240517091130.61db91a91838b856bb2f8c6e@kernel.org>
-References: <20240517091130.61db91a91838b856bb2f8c6e@kernel.org>
+In-Reply-To: <20240517141247.0ec1242a@gandalf.local.home>
+References: <20240517141247.0ec1242a@gandalf.local.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240517091130.61db91a91838b856bb2f8c6e@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git bootconfig-v6.10
-X-PR-Tracked-Commit-Id: ddd53363f875eb23b6754362ce0a43f2214f0a83
+X-PR-Tracked-Message-Id: <20240517141247.0ec1242a@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-tools-v6.10
+X-PR-Tracked-Commit-Id: 59c22f70b2951d81de410d477ae536ba951b4f37
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e9d682518076b38ae76f9fe45ba4fa9e324274f7
-Message-Id: <171599725954.22868.5429949245001301216.pr-tracker-bot@kernel.org>
-Date: Sat, 18 May 2024 01:54:19 +0000
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Yuntao Wang <ytcoode@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 26aa834ff2eef00a863a64b1a94a5a88a94eb963
+Message-Id: <171599726015.22868.4902334593735869635.pr-tracker-bot@kernel.org>
+Date: Sat, 18 May 2024 01:54:20 +0000
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, John Kacur <jkacur@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 17 May 2024 09:11:30 +0900:
+The pull request you sent on Fri, 17 May 2024 14:12:47 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git bootconfig-v6.10
+> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-tools-v6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e9d682518076b38ae76f9fe45ba4fa9e324274f7
+https://git.kernel.org/torvalds/c/26aa834ff2eef00a863a64b1a94a5a88a94eb963
 
 Thank you!
 
