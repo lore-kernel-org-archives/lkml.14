@@ -1,170 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332DA45026;
-	Sat, 18 May 2024 18:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6F341C86;
+	Sat, 18 May 2024 18:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716056435; cv=none; b=N5ZN5bF9VE0wvlE7etDVMIohTjTOIDDJLeokJCxcf5l8lftSpAQvKhx7pTm4MNn5oVeIjnQh/S9PbVdf9mHJKBljM41sch/p+Jlfvj1tQDb28GkfibOFkHgTiS/1mQi/9he7sR8TrW3ziw2drbrPZBtYkasLnCbLsIEUz59dIiE=
+	t=1716056506; cv=none; b=L7NNwD68ZKRZQp52L9D7STy4FSKKXo8wVTZEFX3TwPlsCctYcON7YV4RJCzO0sWJV2KIg9mExrP9GUHH7wkfYW1jDcOOI1qtc1biu2YLdh8+nWKCKjP/Z9lhbvmayRbhK957FXj7OzMODlHvTS15iQYbEiI9vdTFylsFTvVE0RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716056435; c=relaxed/simple;
-	bh=71RabXOq6vDxowg3qtAHm2HVaMGle+7+ZRIk+BCvGj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDuI6bcJsjZgUB/R38K/AcNo+nLqNmWX9VxIFTa8rPi6wnAmw2vXDBD6VRZhVX/WpQMfZu7TXvYGWMF+jme0sLQ1jYh3v46EXcSq1Zw4WEV8UibDBKbqvf3rF4qqBInC/xihjrmTS7cgOdXFujG6hjo5l8AmIvDFfSGTJK/S6H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DH7KmcMa; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716056506; c=relaxed/simple;
+	bh=p3h5u/IVsvH0vIbr3Xwlv0JzU0DAvSbDNiUA7D2r6pQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d75XzHPWzgydPxql+yGMUVMHbD+9krJ/KnsTcEa16mpmB9gL1xDE5CZYRK4sN7xsOJLQdnLyeKipxfn/w8m6v1/w44h4NIGxfPogrHRashzdAj1EE8lUQqhdJIKzKWZyZHjmssU5Op0U7bl1nyTYQpICgR3E8RCbmavwaYKh6/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iT+5fXQv; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DH7KmcMa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716056433; x=1747592433;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=71RabXOq6vDxowg3qtAHm2HVaMGle+7+ZRIk+BCvGj8=;
-  b=DH7KmcMa3sqo9yWdwbnNtzK46bO02oKoMkqV7NYvqtOR00QabuJug4sd
-   mM4refaTixVj6d9FQkphA10PemARXPxYUcD51VGTbzhTXDGHMIT0VvkXc
-   KDX+ylDVZGcLUr4fuZaL0se9azKEvRDw+FCQk46TiWe+6Ybiwj/hjh1gv
-   dbwaHv/TQbiC7Lw20gOrv/2cMnTlhsRyy2aDnn4rIWzggMpLokj+Rot5c
-   v1qkIlvrxy+WeXYMVYFDG+gn7RixGRXDLPeI5ZU0Le3m7BQKCp1oK0sQ/
-   UPha8l7toviYbu4AqztayTwrhAloF4W/F9fahUTY0Gu4cRF7KNDbJsRF6
-   w==;
-X-CSE-ConnectionGUID: iTjLkUsySkuFZVyQVXT1RQ==
-X-CSE-MsgGUID: oYnyE9srQ4WHH0maJrRo9Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11076"; a="12337510"
-X-IronPort-AV: E=Sophos;i="6.08,171,1712646000"; 
-   d="scan'208";a="12337510"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2024 11:20:32 -0700
-X-CSE-ConnectionGUID: XIbSxsbPQo2VzxIuGvKSig==
-X-CSE-MsgGUID: k4SG/OyfT8WUIPObcss+mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,171,1712646000"; 
-   d="scan'208";a="32687008"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 18 May 2024 11:20:27 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s8OfR-0002UH-1I;
-	Sat, 18 May 2024 18:20:25 +0000
-Date: Sun, 19 May 2024 02:19:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sky Huang <SkyLake.Huang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	Steven Liu <Steven.Liu@mediatek.com>,
-	"SkyLake.Huang" <skylake.huang@mediatek.com>
-Subject: Re: [PATCH net-next v2 1/5] net: phy: mediatek: Re-organize MediaTek
- ethernet phy drivers
-Message-ID: <202405190238.VoQDfwSS-lkp@intel.com>
-References: <20240517102908.12079-2-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iT+5fXQv"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5231efd80f2so3261264e87.2;
+        Sat, 18 May 2024 11:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716056503; x=1716661303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pW9B94zJnRhpVNyWNpsuX/D4931Cs7QCYfW0O+N9uiM=;
+        b=iT+5fXQv0VhgCw4DdoRsmGeS/8AMQfsUa6KZdpWhShe0Gb3X1nyIkypO+omfKb72+9
+         jGp1YxADVVcPh1mGyT0v2w6+1vRYxUIYhnX8dkZsXxBP58TlrnSC2Uq4NN7ZZKidlICu
+         HNBdGyYw7rnl2ftc9tEDOldKfaDdurIYFKATHRl17Mvpx5P6N4UJAlwRLAUYYTUgEBMB
+         FK8bqhMSiEi9WMZbIq2xutYbMplHU/WbznAaRnCW6G7mF4/piJgVZ5gGJVtUDKoMFMAs
+         ljfchcAoibGqYUCJEqE2ahCT04F2mtpqrKTMcsDhehsuWYchYa670Ht28CiPXubRtUqf
+         Fr+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716056503; x=1716661303;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pW9B94zJnRhpVNyWNpsuX/D4931Cs7QCYfW0O+N9uiM=;
+        b=uP+GjEdJfAnTzV7g66l03MAtHHOamJ0zJ2RgX+sLt9+RjKrLizlx/C/7TNvTsyYnnR
+         XdD5usDB+EGFuWs2mwc2aWvRUUwxOCV2jAyvYUhUx8liG3RD+WR8adG8vfcCwhye0tj1
+         u1LztsEo5AgmsAgxFvG0FMGVae/4cy1+ETwG/TRQ1wqj4BFKzpYW2iVq5fYKhmkmxDDp
+         VRpwtTej7fma5r654GXu+cMffyQJBuEwZBjneGXD+O//yx6Jyufj6Jd49MZVEF26JVAL
+         OdLuP6Ppqr4nT7ofaMPiZHbEEArS+KuBVrCcj388oZ+2Zhf3uPRk6FI+3gw2pyAiPpCx
+         lLiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZJGboWl9j5XVYxT6R4O8JqaSSBCTJLTlzpVgdwHe4HY7jPyoW+MBLzS+Qre62RS7k+CsEngubtXnSlfM0F6yi0dg2PFumsjV6kwwNhuoOCb5zk8Detk1Owb4yL8p6ltakc1Ob3Tz684vs8hnV9ZiJkKisQiLmoIOcGqT75+xO5RVyfgM=
+X-Gm-Message-State: AOJu0YyZA32DpczERWZ4ZyLgq48BI4AcWcWUqttOiYTU9GYTBC0E1XUl
+	p5/v8PmuKymjz63X7RwV+f4XjwWA0t5l1SD99LfzdzzK5YRzWGElsYHn9TXI
+X-Google-Smtp-Source: AGHT+IHI5mQSeLUOrN5Uv4YEGmIblQr1Lsj2jigrNR1QVIiH6OqLBKOZKY9Q7HbvOXO6cRn45xUaWQ==
+X-Received: by 2002:a05:6512:3e1e:b0:523:2ed9:edf9 with SMTP id 2adb3069b0e04-5232ed9ef10mr13643052e87.63.1716056502571;
+        Sat, 18 May 2024 11:21:42 -0700 (PDT)
+Received: from pratik-IdeaPad.lan (customer-145-40-29-195.stosn.net. [145.40.29.195])
+        by smtp.googlemail.com with ESMTPSA id 2adb3069b0e04-521f38d86b3sm3730798e87.210.2024.05.18.11.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 May 2024 11:21:42 -0700 (PDT)
+From: Pratik Farkase <pratikfarkase94@gmail.com>
+X-Google-Original-From: Pratik Farkase <pratik.farkase@wsisweden.com>
+To: 
+Cc: Pratik Farkase <pratik.farkase@wsisweden.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Pratik Farkase <pratikfarkase94@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio: gpio-zevio: convert to dtschema
+Date: Sat, 18 May 2024 20:21:37 +0200
+Message-Id: <20240518182139.22623-1-pratik.farkase@wsisweden.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517102908.12079-2-SkyLake.Huang@mediatek.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Sky,
+Convert Zevio GPIO Controller from text to dtschema.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Pratik Farkase <pratik.farkase@wsisweden.com>
+---
+ .../devicetree/bindings/gpio/gpio-zevio.txt   | 16 --------
+ .../devicetree/bindings/gpio/gpio-zevio.yaml  | 41 +++++++++++++++++++
+ 2 files changed, 41 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-zevio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-zevio.yaml
 
-[auto build test ERROR on next-20240517]
-[cannot apply to net-next/main net/main linus/master v6.9 v6.9-rc7 v6.9-rc6 v6.9]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sky-Huang/net-phy-mediatek-Re-organize-MediaTek-ethernet-phy-drivers/20240517-184536
-base:   next-20240517
-patch link:    https://lore.kernel.org/r/20240517102908.12079-2-SkyLake.Huang%40mediatek.com
-patch subject: [PATCH net-next v2 1/5] net: phy: mediatek: Re-organize MediaTek ethernet phy drivers
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240519/202405190238.VoQDfwSS-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240519/202405190238.VoQDfwSS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405190238.VoQDfwSS-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_eee':
->> mtk-ge-soc.c:(.text+0xc5e): undefined reference to `phy_select_page'
->> m68k-linux-ld: mtk-ge-soc.c:(.text+0xe76): undefined reference to `__phy_modify'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_hw_led_on_set':
->> mtk-ge-soc.c:(.text+0xac): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_led_hw_control_set':
->> mtk-ge-soc.c:(.text+0x1d4): undefined reference to `phy_write_mmd'
->> m68k-linux-ld: mtk-ge-soc.c:(.text+0x1fe): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x228): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_hw_led_blink_set':
-   mtk-ge-soc.c:(.text+0x29c): undefined reference to `phy_write_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_led_hw_control_get':
-   mtk-ge-soc.c:(.text+0x3d2): undefined reference to `phy_read_mmd'
->> m68k-linux-ld: mtk-ge-soc.c:(.text+0x4c6): undefined reference to `phy_read_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mtk_socphy_write_page':
-   mtk-ge-soc.c:(.text+0x50e): undefined reference to `__mdiobus_write'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mtk_socphy_read_page':
-   mtk-ge-soc.c:(.text+0x52e): undefined reference to `__mdiobus_read'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt7981_phy_finetune':
-   mtk-ge-soc.c:(.text+0x56a): undefined reference to `phy_write_mmd'
->> m68k-linux-ld: mtk-ge-soc.c:(.text+0x5b6): undefined reference to `phy_select_page'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x5cc): undefined reference to `__mdiobus_write'
->> m68k-linux-ld: mtk-ge-soc.c:(.text+0x6c0): undefined reference to `phy_restore_page'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x6d8): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt7988_phy_finetune':
-   mtk-ge-soc.c:(.text+0x856): undefined reference to `phy_write_mmd'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x88e): undefined reference to `phy_select_page'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x8a4): undefined reference to `__mdiobus_write'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x95e): undefined reference to `phy_restore_page'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x976): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_common_finetune':
-   mtk-ge-soc.c:(.text+0x9b2): undefined reference to `phy_select_page'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x9c8): undefined reference to `__mdiobus_write'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0xb32): undefined reference to `phy_restore_page'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt798x_phy_eee':
-   mtk-ge-soc.c:(.text+0xb68): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0xc78): undefined reference to `__mdiobus_write'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0xe56): undefined reference to `phy_restore_page'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `cal_cycle.constprop.0':
-   mtk-ge-soc.c:(.text+0xeea): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0xf1c): undefined reference to `phy_read_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `tx_vcm_cal_sw':
-   mtk-ge-soc.c:(.text+0x103c): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `tx_amp_fill_result.isra.0':
-   mtk-ge-soc.c:(.text+0x13e2): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `rext_cal_efuse':
-   mtk-ge-soc.c:(.text+0x15ea): undefined reference to `phy_modify_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `cal_efuse':
-   mtk-ge-soc.c:(.text+0x1694): undefined reference to `phy_modify_mmd'
->> m68k-linux-ld: mtk-ge-soc.c:(.text+0x17b0): undefined reference to `phy_write_mmd'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `mt7988_phy_probe':
->> mtk-ge-soc.c:(.text+0x19b8): undefined reference to `devm_phy_package_join'
-   m68k-linux-ld: mtk-ge-soc.c:(.text+0x1a94): undefined reference to `phy_modify_mmd'
->> m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o:(.data+0x7a): undefined reference to `genphy_suspend'
->> m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o:(.data+0x7e): undefined reference to `genphy_resume'
->> m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o:(.data+0x92): undefined reference to `genphy_handle_interrupt_no_ack'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o:(.data+0x18c): undefined reference to `genphy_suspend'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o:(.data+0x190): undefined reference to `genphy_resume'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o:(.data+0x1a4): undefined reference to `genphy_handle_interrupt_no_ack'
-   m68k-linux-ld: drivers/net/phy/mediatek/mtk-ge-soc.o: in function `phy_module_init':
->> mtk-ge-soc.c:(.init.text+0x12): undefined reference to `phy_drivers_register'
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
+deleted file mode 100644
+index a37bd9ae2730..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-Zevio GPIO controller
+-
+-Required properties:
+-- compatible: Should be "lsi,zevio-gpio"
+-- reg: Address and length of the register set for the device
+-- #gpio-cells: Should be two. The first cell is the pin number and the
+-  second cell is used to specify optional parameters (currently unused).
+-- gpio-controller: Marks the device node as a GPIO controller.
+-
+-Example:
+-	gpio: gpio@90000000 {
+-		compatible = "lsi,zevio-gpio";
+-		reg = <0x90000000 0x1000>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-zevio.yaml b/Documentation/devicetree/bindings/gpio/gpio-zevio.yaml
+new file mode 100644
+index 000000000000..3a6e428b7bf1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-zevio.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-zevio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Zevio GPIO controller
++
++maintainers:
++  - Pratik Farkase <pratikfarkase94@gmail.com>
++
++properties:
++  compatible:
++    items:
++      - const: lsi,zevio-gpio
++
++  reg:
++    maxItems: 1
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++required:
++  - compatible
++  - reg
++  - "#gpio-cells"
++  - gpio-controller
++
++additionalProperties: false
++
++examples:
++  - |
++      gpio@90000000 {
++        compatible = "lsi,zevio-gpio";
++        reg = <0x90000000 0x1000>;
++        gpio-controller;
++        #gpio-cells = <2>;
++      };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
