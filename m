@@ -1,70 +1,88 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from smtp.smtpout.orange.fr (smtp-21.smtpout.orange.fr [80.12.242.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFB71799F
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 09:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C19CC125;
+	Sun, 19 May 2024 09:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716109866; cv=none; b=befbHCX6xYphapeI/WK1/l2VeKOcp6grD2uWX8wVz2/lOHJmYsIymburo8kI9vN2yb028hMbODtiq6Okk+CCqP3fycj7GgspvCwHymSIHpjjT6wIQCWZBr9gmAN37UmT6YUv4ILTNc4bbZOdxQx/azw9dxm1deDpqJfvT7rn/u0=
+	t=1716110380; cv=none; b=KxAm2z1uayq2t7cefKCxAQ0b3wZVD0MQvkt8o4SO6p4tGhOXk36DZ+bTdVyUVE+jKDkVGA+TAHMEPjEMCM4zUZXyvB0g8YIOm9y2rs9AnmzpxrQVqwBT0ZTk6S8+f8bHM1YkhlPv56GTG9TCB84/HXrptEYi5hvGQQjFWf8UFcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716109866; c=relaxed/simple;
-	bh=HZofFkKYEc6fyWsMV5cT8IFWrUWtxSlG1TG9c/gl6tg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=LH/tJ66nbVR6aiq/qT1X5ui/B6cz2/KvbnhSO7DGbLodSRNRPWFNiFBrZ3+wewXXtQwkpaebKBcf7KWKzDSFg0r7+bAq57OZUiDs8W/XCAdnkIZ6YcyO3HhHA5wtHj/zV9CBe9zvI+NG/O4IqZbo2CMkv0B+m1GfehyCAgXHZXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7e1c3c98401so714405439f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 02:11:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716109864; x=1716714664;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HmJHcMrpGBkfX2KL7MFrkpNa9ZVJfwG14BAogNSdHT4=;
-        b=fFiY/rH6kAoJw1pH5JaCyx5GVZwACJ4WSTmrOmvtPcNS6If8L3X5pooOeEENSYQsbk
-         FqIpAY26dlNW7OwVqAPIZ+ULftcnk5lJo2MxCRsZy0SZT2b+cWKiIxKEWIwaNFmuqexx
-         pF6N2yQqQdM5lxkiZVH8W12LXlATzuiRVxKzih7e+AVbrFwGNnA4sT8NrTPfOQt3Aotr
-         4hj7i7SiwMMZy1XLB39GDIPRAw4UaarT6ADgWr5/F7AxulZNnTKNqct3+CFdLeJ4bjyM
-         kp7MYqwQVQjD0puj+ZR2qDNymqrSoocn2rdBrMlbKub8kxa2TEAtmuuRfvNSX+QfN48g
-         ptDg==
-X-Gm-Message-State: AOJu0Yz6BRv8LeIgUFa4CmMhZPGwL5NxnfSyXKIwL15AAm8NvQoU4eoS
-	I3uyUA/iu8cIZzAODGBzDHzVIRelyy8qm0ixyj3XPuUf3k1WYejhjYLSR9jR29lFSnfnfjLiCey
-	9p8xlp/7kZE431FI+rtEV9mcpeVbGyznqyZP6GXm9AFQHjTR/Aa4u3f4=
-X-Google-Smtp-Source: AGHT+IHaejbP3gsdD25yZ6Rj3vih4pVLIdpn/xHgVriOHMgFDcJyEHjAt/xM+XoX3mgr8JqgaE51gAtmAS4KKGVimYaCZ6abZhSp
+	s=arc-20240116; t=1716110380; c=relaxed/simple;
+	bh=2Io+Fz92zJ104X+y+nqXRgFvu2MtCDcDNZhKBzNDC5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HlTqm7ne3SVbGwY+Vqhe/YliMdLZGhZ9+EyY4B5BIPSbyqmzc3vAaJz881EI5c0TpKLjicJa/cr5PNIiSPRJ0jTPBsDGjikB3/0pZZhwhYWG5PqEmO1vO/xTlASeHne6LsZeVlL0xJJWRJYuBw5V+KDRjPTjGu/JnH8onV2HqYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Fwg2QKOm; arc=none smtp.client-ip=80.12.242.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Fwg2QKOm"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 8cYSsFC8hNQ4U8cYSspY8i; Sun, 19 May 2024 11:10:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1716109810;
+	bh=ZiwYqa/OT+egvt96+ug0V0xJ+qb/MMnvIJ/vMwb2q84=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Fwg2QKOmzOVxipJAi1QrNN07ZhrxdXAZDJsyPMcP9DtpkEFUPxtXBpRk2xkAqvwkz
+	 rVaYBKpWurpPvr706qcDKnWpCc6dudb6EWXjESZSpzjlUr/uW1/ONwJHb9DhESSTQK
+	 9mkuAvDOhMHVXLZ4JTLwdzUaNc2LaxmSDTv+7jx+ZhI36EJgOkVJq29ig3RP10BDao
+	 LIZ3f1GRX1jfan4mcTyNvRfxWOO7pjr5VY5dXRXXLAou+aJdYnP+f5UsXfnAoOfFjG
+	 G8uhXfYL/Hy7U/KqVMRsK0AeTaqeBwydUR/VkfbagFHmAn+F2nXSvUP+jr5Qf8fU6s
+	 mdzzUL+H1IN9Q==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 19 May 2024 11:10:10 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Ilya Dryomov <idryomov@gmail.com>,
+	Xiubo Li <xiubli@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	ceph-devel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH 1/2 net-next] libceph: Use sruct_size() in ceph_create_snap_context()
+Date: Sun, 19 May 2024 11:09:58 +0200
+Message-ID: <5b7c72bdb52703bbfa5511ed500aed4babde1308.1716109606.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8625:b0:488:7bb2:c9f6 with SMTP id
- 8926c6da1cb9f-48958c02450mr2413163173.3.1716109863866; Sun, 19 May 2024
- 02:11:03 -0700 (PDT)
-Date: Sun, 19 May 2024 02:11:03 -0700
-In-Reply-To: <Zkm6qnUh6Xe2gv6-@zeus>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d4e1ce0618caf6e8@google.com>
-Subject: Re: [syzbot] [net?] [nfc?] KMSAN: uninit-value in nci_rx_work
-From: syzbot <syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, ryasuoka@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Use sruct_size() instead of hand-writing it.
+This makes the code more readable and safer.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only
+---
+ net/ceph/snapshot.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Reported-and-tested-by: syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com
+diff --git a/net/ceph/snapshot.c b/net/ceph/snapshot.c
+index e24315937c45..7363ccebee99 100644
+--- a/net/ceph/snapshot.c
++++ b/net/ceph/snapshot.c
+@@ -28,11 +28,8 @@ struct ceph_snap_context *ceph_create_snap_context(u32 snap_count,
+ 						gfp_t gfp_flags)
+ {
+ 	struct ceph_snap_context *snapc;
+-	size_t size;
+ 
+-	size = sizeof (struct ceph_snap_context);
+-	size += snap_count * sizeof (snapc->snaps[0]);
+-	snapc = kzalloc(size, gfp_flags);
++	snapc = kzalloc(sruct_size(snapc, snaps, snap_count), gfp_flags);
+ 	if (!snapc)
+ 		return NULL;
+ 
+-- 
+2.45.1
 
-Tested on:
-
-commit:         4db783d6 ipv6: prevent NULL dereference in ip6_output()
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=158bb442980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bbf567496022057b
-dashboard link: https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1372beb2980000
-
-Note: testing is done by a robot and is best-effort only.
