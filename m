@@ -1,110 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBD44DA04;
-	Sun, 19 May 2024 14:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880404AEDA;
+	Sun, 19 May 2024 14:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716129477; cv=none; b=unWMQ/n5zDMLm+KUHvmCkpK2+YvRbvF2hWxwm8exVwRwarDKKipuKTIyk14Do8/sLfgJ+ALdHBUjbj+bVVrX625xPF4t+JtzXLdWIMXAHHMOVYM9indcQHI0/Xykal4wxgDzzym4VtSEJEGZddXVBMvLo3ygoVlhQNFmF09DikI=
+	t=1716129501; cv=none; b=VqxZdEAfvb7fFOOmjtvEgQNXQ0On9Rudfx/iyMGbx7PXHvXwn8Yu5grDBNpeYS3xWrhJZ2dtmwifgFibaADjfOrw29XS6tY5DXIr6hj0EpQSaAB2YT7Giavrkn5gpj7ydjIjSeZOOrqSMWQ6aCAblBw32+t1z7Gc7SR2ldDiG1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716129477; c=relaxed/simple;
-	bh=AGcBlp/L0UCiDEm9xU4FkF8tyQP1W/SpJauzpAkP8h0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EKm+gs82nK1/rEM+btusF7JKPlrR9rKr4e1yQ8st/qvif92JXOqFym3YrongC8koCpmj4OXlMH9Vj6Mg39jh/y/Hv0fYafLu7KPrWFZTSKzZ34VNqSmBAECGBkPHnsrVlz4XtTVWlb0VyUcXNhfjeNOKdHY33QZVikvHSyn1LiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EMmbQOEv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716129501; c=relaxed/simple;
+	bh=zuqG7gxGu6jOQkK4xZFwmL6j+4H2TOhQ0a5eY23tRoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=erObffkAHgwlwDY0KLrJTCE0xCMo1Tl442nEgdLjVCN4MJ900dkWp5yqrVWvIjiEaRQTQR7MI2bLAoM/stJ4Y0/qWDQMZf2uwFHErOWg6AM4o/vHZWzcI3urUq2CVFJY9IiX8TsjnuH1CbXC4GpxfsCPQxJ4b6wg+0bRjvTIbnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZjYfE/P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EMmbQOEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC45C32781;
-	Sun, 19 May 2024 14:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716129477;
-	bh=AGcBlp/L0UCiDEm9xU4FkF8tyQP1W/SpJauzpAkP8h0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EMmbQOEvlvD8tg/XNAUE1vqmVbIV9Ny5B5OYx+XdaR5xCATfXTZIkqBZAqdASNYb8
-	 hTxSmORhhPeNQ8i7WAseJZ9KBJujD4lDbFOsV28rkF23navHVpnB5nWivqhTYg7tRg
-	 ez6/mNEVq4d3oAeGZ3THqyF/ZfaxfroSq+ZCL288=
-Date: Sun, 19 May 2024 16:37:54 +0200
-From: gregkh <gregkh@linuxfoundation.org>
-To: "nanfengwq@sina.com" <nanfengwq@sina.com>
-Cc: balbi <balbi@kernel.org>, linux-usb <linux-usb@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: memory leakage in ncm_wrap_ntb() in USB ncm mode with kernel 5.15
-Message-ID: <2024051901-gimmick-cosponsor-f2dd@gregkh>
-References: <2024051922230825069112@sina.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZjYfE/P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF2AC32781;
+	Sun, 19 May 2024 14:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716129501;
+	bh=zuqG7gxGu6jOQkK4xZFwmL6j+4H2TOhQ0a5eY23tRoY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CZjYfE/Pt/eaUxil9rXbB1URr68eY44hOTnQekdIh1K1yLXqlJzTuh+TirmaasBbb
+	 ddn6vOo//cEwC4kzHdHpHK/Vvckle8RnJJ6aGjdMsk00tgJS4P0BkRQC5jsUhGp7UX
+	 Fxwcue8gzDf+cNzK3TRYIaeaj+UukejuHFeFCXk3I/Km/HL4C5F4knMgBcDS9UiuOF
+	 sY2lUWeljiqWGAKpCFY21W9A8G7r6ViOhFA7tyvkj9Ij6AXQ2bYPqp+FMeV/fAJyc0
+	 LfyIj0rIrtRsCpl2UtQ4y6Ld78pOzundYDwN5fcqRxQ35LJNmWHkHqnb3H5mOH8P7u
+	 VxplgKaI8ZeSw==
+Date: Sun, 19 May 2024 15:30:32 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
+ linus.walleij@linaro.org, semen.protsenko@linaro.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/5] iio: pressure: bmp280: Add SCALE, RAW values in
+ channels and refactorize them
+Message-ID: <20240519153032.428aca57@jic23-huawei>
+In-Reply-To: <20240512230524.53990-5-vassilisamir@gmail.com>
+References: <20240512230524.53990-1-vassilisamir@gmail.com>
+	<20240512230524.53990-5-vassilisamir@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024051922230825069112@sina.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 19, 2024 at 10:23:10PM +0800, nanfengwq@sina.com wrote:
-> Hello：
-> I have discovered a risk of memory leakage in ncm_wrap_ntb() under USB ncm mode in kernel 5.15, and I have fixed it. 
-> Please help me review it.
+On Mon, 13 May 2024 01:05:23 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+
+> Add extra IIO_CHAN_INFO_SCALE and IIO_CHAN_INFO_RAW channels in order
+> to be able to calculate the processed value with standard userspace
+> IIO tools. Can be used for triggered buffers as well.
 > 
-> If this modification is effective, it can also be integrated into other kernel versions, such as kernel 4.14, and so on.
+> Even though it is not a good design choice to have SCALE, RAW and
+> PROCESSED together, the PROCESSED channel is kept for ABI compatibility.
 > 
-> The logic of a memory leak is as follows:
+> While at it, separate BMPxxx and BMExxx device channels since BME
+> supports also humidity measurements.
 > 
-> If the return value skb2 of  package_for_tx() is not NULL, and the return value ncm->skb_tx_data of alloc_skb() is NULL, then the code will go to err, where there is no processing of skb2, resulting in a memory leak in skb2.
-> 
-> 
-> Thank you.
-> 
-> 
-> 
-> 
+> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+Applied
 
-
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did not apply to any known trees that Greg is in control
-  of.  Possibly this is because you made it against Linus's tree, not
-  the linux-next tree, which is where all of the development for the
-  next version of the kernel is at.  Please refresh your patch against
-  the linux-next tree, or even better yet, the development tree
-  specified in the MAINTAINERS file for the subsystem you are submitting
-  a patch for, and resend it.
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what is needed in
-  order to properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what a proper
-  Subject: line should look like.
-
-- It looks like you did not use your "real" name for the patch on either
-  the Signed-off-by: line, or the From: line (both of which have to
-  match).  Please read the kernel file,
-  Documentation/process/submitting-patches.rst for how to do this
-  correctly.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Jonathan
