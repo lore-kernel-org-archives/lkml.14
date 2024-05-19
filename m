@@ -1,103 +1,110 @@
-Received: from smtp-out.freemail.hu (fmfe34.freemail.hu [46.107.16.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2E318EB1;
-	Sun, 19 May 2024 21:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFFA18EB1
+	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 21:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716153793; cv=none; b=FE6fT/SB/m02WBL32UaYqd101UE6aaEZDa+ivZzxgMR1wZQxU6O5vxjhJTve9MZk0tTZcvlsyeJj0QlCE12Un9A+a15JuVHEgqTZ2DUqPH04MX2HQ/AAXRsIOrAlg9A7ShQZKbdTQW7wMLM0/6vlKUXw3O6bPKIGTLQaCoD1tDQ=
+	t=1716153966; cv=none; b=a/vXJhnD1hP5LEAoBGvI4mMv56QnQ5twmduyLQsNDIXCUUPHNVBgRwkZgk7L4DWOnQG0dW9E8v2pjcXEOElNpUhoyLACP6dFy+t+D/JTkoLYv4CrxfOZAsYN77lSUqpwBcLlFB6Jre9ZWyLxqpz5pzZDoWs1jrfxpS+nZ8VhoNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716153793; c=relaxed/simple;
-	bh=O1suXOBMrHWELWTrCR01dq1SXrfYu8q3ptBqYca80kw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=a6LYfP/0iN4KXLfXyQjA8aFQtgaKq1mCE6Tlkoq4N8PBeJ728epFMD+6LPyanSz9AqtJ3r0lSxcnY1wpK5dEO+ysL610e1KEkS6lkPdQjfDt2pvfAEEYrrLGg4Ef7+rN42XMBp1JubT/ym6pCVL2LOxCC18/P1srT2SfnCJElLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=LYF8rZbc reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
+	s=arc-20240116; t=1716153966; c=relaxed/simple;
+	bh=xo7z5gBTqh9m8tR1mR90dfldkI721z1Mabjp7Gy3gNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LNRRnRDbsvlY7HVuN0wD6nDo4wcoN97H1TseonwWwz291xtJEfXSS2OiACr1br6ijj57cpyawWUvhYuHOt9wAVCwCI2h5BGyFIdVFa+rkNnlWRhJf4vGApYBrIeHV+dOfmvf+C9cy2u1c6uMGy3tLCfvdmrfuv89dqyer6zdxSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XFF/dnXw; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="LYF8rZbc"
-Received: from fizweb.elte.hu (fizweb.elte.hu [157.181.183.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4VjD2n2fkVz59h;
-	Sun, 19 May 2024 23:13:53 +0200 (CEST)
-From: egyszeregy@freemail.hu
-To: broonie@kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
-Subject: [PATCH v2] spidev: Introduce "linux,spidev-name" property for device tree of spidev.
-Date: Sun, 19 May 2024 23:13:46 +0200
-Message-Id: <20240519211346.30323-1-egyszeregy@freemail.hu>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XFF/dnXw"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e72b8931caso1270551fa.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 14:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716153963; x=1716758763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X6nVMrZE712KEz8bUFbSeox35yQ1x4MWsEF3bYFtA1Y=;
+        b=XFF/dnXw0SewwVpYdQKzaeenUCAeg+raGqTFhqqqZkjm7QYtKlAcFq8qQwkp6JpBIS
+         gzlIq1uhNypfidf1YMrrINSUV377VLTBBCDrevui8TliQIeM1OnTBXPzO4rdoBjWqnaJ
+         +dMcQFaHr27A0TcBRrTzQksxxXzcjp6+K40nsGVe7nDUak3UpKy1nSyw+vTRgGL56hLw
+         3+GSEFICi2foHJSdMOJK4f/PPfOyaMbiv7njG3+k9txv7Nhf23ACsr83FnIg/OlWCTgj
+         TPeJxb7fVBDbNJDZNSwU81BYFhayg9vSwCuqnmGIsKOjXrci7v/RJUwQuQM85aPWIiY6
+         A3HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716153963; x=1716758763;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X6nVMrZE712KEz8bUFbSeox35yQ1x4MWsEF3bYFtA1Y=;
+        b=t0oYjLdXPOvveSXMZaBbgsYnmrnk2FJe+dDgUzX8pJOfL13itdxGlvfiWoKBL5dgZo
+         fYSCgFbeKrRz6ymxZnefMSNg6jzO4r20WH4u9y2sIpNGTs0qAnBGujRdXVkMvelOSx10
+         1NUdn7IwCDbiQCR7wrcxbdRBe/WZhbYkXFKGwOHX3yljc2KuhIHSLUZsOAWSAxlqmk3f
+         3XtBVgnm9C+A+Qt8c6QTWStk46hRtzOE646C6G+IQEMrClCqB3qtx/2GNchyjJveD0ae
+         WEg/01ZtiypGRTC6Mex7ZcT4rLjDXZ22wGQS/HDR8GGvI2sL/7q3xfJDP6nEfQg36L63
+         GrcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVA2y4gdZqeiM3y/1ELROBcVBZP7YxbdLluPSKZ18d/eOS3iiuJZr6FXAcCvK9qYX2wXgnlU2NYTe7F2xakv5KLza3X+LARSEfSI4ZA
+X-Gm-Message-State: AOJu0YwUkExBkD3NK878jnWu2PSoZTo1VCtfRka4G0RzaQP1DmB/BgMX
+	5HdfDuxuRfXXekPCEEyhhwtghqEW5X5zGKUOse/R7GlTMHUL5TuUnC0CBqhV6M0=
+X-Google-Smtp-Source: AGHT+IEDiTly3l/2arj6xKsFbQnwkCXaJx0c6Qc6YWYld3fj0pvH9iSWWsSZ94Z5R5WBsRW4rLHAKQ==
+X-Received: by 2002:a2e:b01a:0:b0:2e6:a0b3:24a3 with SMTP id 38308e7fff4ca-2e6a0b326fdmr141595051fa.4.1716153962611;
+        Sun, 19 May 2024 14:26:02 -0700 (PDT)
+Received: from eriador.lan (dzdbxzyyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::8a5])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e4d1622740sm32064781fa.119.2024.05.19.14.26.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 May 2024 14:26:02 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Liu Ying <victor.liu@nxp.com>
+Cc: andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	biju.das.jz@bp.renesas.com,
+	aford173@gmail.com,
+	bli@bang-olufsen.dk,
+	robh@kernel.org,
+	jani.nikula@intel.com
+Subject: Re: [PATCH] drm/bridge: adv7511: Attach next bridge without creating connector
+Date: Mon, 20 May 2024 00:25:59 +0300
+Message-ID: <171615394192.98831.12547491683028150051.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240513080243.3952292-1-victor.liu@nxp.com>
+References: <20240513080243.3952292-1-victor.liu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1716153233;
-	s=20181004; d=freemail.hu;
-	h=From:To:Cc:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	l=1793; bh=pM8mY8PODejfuv3dytVo9l+AJzQhcJoSsmMu1QYesOY=;
-	b=LYF8rZbcIIHoe4gvJYfvs5Jrsvq+EFtSMO8gvyP3j9v18W6XNFKI9uu1nhJngpEK
-	5vk1x72aqt/4eRmHil/FIO3vZQDjJyYlSEh14BMTkUZ/PAMl0LL8KUaiPHGgAOon11D
-	UNJlTx/gv31XCWODiqJPwuOW4ljbrjmyamB8ILEbmqeZoG+3Xs3BfrTouvrfEl6sSva
-	pkmYJQwMaaPcQ/OBnzZwCG765c9wuJLD28lpO1f7ciGSDymSPnvUNjb8TrOyDzhkysn
-	gZ/tJ0/kGhLAw5Z7/8cF/nIrcFgeN+r7AK9dFtBUw9qyc9A65BKHvzkob5wSakrMLQT
-	U1UiYOb6LQ==
 
-From: Benjamin Szőke <egyszeregy@freemail.hu>
+On Mon, 13 May 2024 16:02:43 +0800, Liu Ying wrote:
+> The connector is created by either this ADV7511 bridge driver or
+> any DRM device driver/previous bridge driver, so this ADV7511
+> bridge driver should not let the next bridge driver create connector.
+> 
+> If the next bridge is a HDMI connector, the next bridge driver
+> would fail to attach bridge from display_connector_attach() without
+> the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag.
+> 
+> [...]
 
-Optionally, spidev may have a "linux,spidev-name" property.
-This is a string which is defining a custom suffix name for spi device in
-/dev/spidev-<name> format. It helps to improve software portability between
-various SoCs and reduce complexities of hardware related codes in SWs.
+Applied to drm-misc-next-fixes, thanks!
 
-Signed-off-by: Benjamin Szőke <egyszeregy@freemail.hu>
----
- drivers/spi/spidev.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+[1/1] drm/bridge: adv7511: Attach next bridge without creating connector
+      commit: 20da948e3a807c67f0efe4f665e64728be370f3d
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 95fb5f1c91c1..389baaf38e99 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -767,6 +767,8 @@ MODULE_DEVICE_TABLE(acpi, spidev_acpi_ids);
- 
- static int spidev_probe(struct spi_device *spi)
- {
-+	int ret;
-+	const char *name;
- 	int (*match)(struct device *dev);
- 	struct spidev_data	*spidev;
- 	int			status;
-@@ -800,9 +802,20 @@ static int spidev_probe(struct spi_device *spi)
- 		struct device *dev;
- 
- 		spidev->devt = MKDEV(SPIDEV_MAJOR, minor);
--		dev = device_create(&spidev_class, &spi->dev, spidev->devt,
--				    spidev, "spidev%d.%d",
--				    spi->controller->bus_num, spi_get_chipselect(spi, 0));
-+
-+		/*
-+		 * If "linux,spidev-name" is specified in device tree, use /dev/spidev-<name>
-+		 * in Linux userspace, otherwise use /dev/spidev<bus_num>.<cs_num>.
-+		 */
-+		ret = device_property_read_string(&spi->dev, "linux,spidev-name", &name);
-+		if (ret < 0)
-+			dev = device_create(&spidev_class, &spi->dev, spidev->devt,
-+					    spidev, "spidev%d.%d",
-+					    spi->controller->bus_num, spi_get_chipselect(spi, 0));
-+		else
-+			dev = device_create(&spidev_class, &spi->dev, spidev->devt,
-+					    spidev, "spidev-%s", name);
-+
- 		status = PTR_ERR_OR_ZERO(dev);
- 	} else {
- 		dev_dbg(&spi->dev, "no minor number available!\n");
+Best regards,
 -- 
-2.39.3
+With best wishes
+Dmitry
 
