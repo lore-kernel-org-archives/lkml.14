@@ -1,193 +1,158 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D384D59E
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 16:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC53B4501B;
+	Sun, 19 May 2024 16:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716137684; cv=none; b=R59XRfsKrLbXQOVxVWj/rxmXLV/ffba4ReNmslTS5TmfAJO9utsGEGxD9XmUBuj7Sf/bG32wlhIkMoBdI2eqdXWMGC+3jiM4cAVcnb3ZaUOrSs4CEvbjlni9gW1cHh8tSsOuuzLZqYu1zgXi6qdkGgp8fKkLpffCNYRbJjghMng=
+	t=1716137691; cv=none; b=GhPCj+STkrY6K81QOcRKO15PkoeV4wDtnr6OudvUCpgQV2VHaCuWa0dhu/Fa/0TY/dwqqV8qC4sAc1/QrruNodICu3oZlipBgJh3YHE8gNA10XAZQczzBEgIegV6TTVq9cMWJrtv7CSZdI37Vqh18gKaTc/ts2QY/Tn40On9dQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716137684; c=relaxed/simple;
-	bh=wR1Emg5c1AEbhI0Kq+IKHKxn5JDqxreiWkqApwdFmSA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CdLlLkGYECi1KWRt64oP8rtGz8FTlbrXolw2eEiB5QzBcGm/HN/kuUegbt3Y43p5lTb5TftHv/U0gGRG9e0Uyh+oxm/AqQlgD54g3NSHkN8EkgJLvCxh7G4LiIuryZO37nHHAlh2xrWg6k8EpX8GNZuDZAS6l0d9wp3J+l1BFdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VbX3EKrj; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716137691; c=relaxed/simple;
+	bh=tR4mc4IZBn+VwLq6uI83LBm5Hav1YvQbFaYXMsVsAn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ck3AXsVioiPqZotO7bgyWRcaB/zb6GBDoXzxAeMc/+gTVrQdbxGSultBpe33LGkigjyPjfsaRxE0p6v2Z9EW+bFoYuM/T8nr1GYtCJbEtYZgxIMHb4ASBFv8vSvkH26U8By0x8ZrKkeiPE0/wGNJP0BZM/JVGrfW2LHq0ok7brA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxXKfFos; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VbX3EKrj"
-X-Envelope-To: l.stach@pengutronix.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716137680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0YtsLv1p6v4P1MxchPcntfjjhkynHWMpb0L7dfEcquM=;
-	b=VbX3EKrjaOG7ZwnS1SiavbEPVj/M3ojTFP9zSfpO1gt39s+/LE9xIJvPB6g7AZEWoQ3xb/
-	Qm4nYdqPISQJe00FXgyOPRHTYacBeU3tMhtdwpnjbUINSzYnfEzdXGUvzxuc854urpRaPZ
-	vJ+rb2k3DRJUnik1wC/2ld4+HZjLFjc=
-X-Envelope-To: linux+etnaviv@armlinux.org.uk
-X-Envelope-To: christian.gmeiner@gmail.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: etnaviv@lists.freedesktop.org
-X-Envelope-To: dri-devel@lists.freedesktop.org
-X-Envelope-To: sui.jingfeng@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Russell King <linux+etnaviv@armlinux.org.uk>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	etnaviv@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [etnaviv-next v14 2/8] drm/etnaviv: Add constructor and destructor for the etnaviv_drm_private structure
-Date: Mon, 20 May 2024 00:53:15 +0800
-Message-Id: <20240519165321.2123356-3-sui.jingfeng@linux.dev>
-In-Reply-To: <20240519165321.2123356-1-sui.jingfeng@linux.dev>
-References: <20240519165321.2123356-1-sui.jingfeng@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxXKfFos"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BFEC4AF07;
+	Sun, 19 May 2024 16:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716137691;
+	bh=tR4mc4IZBn+VwLq6uI83LBm5Hav1YvQbFaYXMsVsAn4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uxXKfFosQgBvoj1mDrpbBmBnJ9EdbIMjKlWw6Q/FwNu5KemtHTyniqVotxguFcSzv
+	 Qel2uVToJ6X/LOvzev76uwqDlHiH3CxGaIZDHJeBWLiHdYu3wDIPSHHNJalY9bGolh
+	 hHP4BSStmnGcN5mTEbgwxjWltRt5+x4gFCV2VB74Xtma9PSI9V14FYldMAg03RYO2H
+	 o5QfB4pMIvNlkwt7Kxz5GcXwr05T3BBUR94zZ/mw/Eahgzt0cyKiDSqJPAaIX+xW9u
+	 yeDDwXh8nRfpp2pHx29ZLN61esD7NFzXnCyvFf5NZoXb7BIgAuRYtMHXsth7NgzPAO
+	 SfDacurBvxi4Q==
+Date: Sun, 19 May 2024 17:54:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>, dumitru.ceclan@analog.com,
+ Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] dt-bindings: adc: ad7173: add support for ad411x
+Message-ID: <20240519175438.5959fab2@jic23-huawei>
+In-Reply-To: <CAMknhBFKM+DC9jNDV+cZ5agwsXJ1iqU9DB3XD-y3sVcRWJOAsQ@mail.gmail.com>
+References: <20240514-ad4111-v2-0-29be6a55efb5@analog.com>
+	<20240514-ad4111-v2-1-29be6a55efb5@analog.com>
+	<CAMknhBGNPvxegL+YbnLGoKjA=P3Vx=x+39aXuMgq+cv2KgdeLw@mail.gmail.com>
+	<151d6893-3e9e-4331-8dde-5293e75f10ef@gmail.com>
+	<CAMknhBFKM+DC9jNDV+cZ5agwsXJ1iqU9DB3XD-y3sVcRWJOAsQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Because there are a lot of data members in the struct etnaviv_drm_private,
-which are intended to be shared by all GPU cores. It can be lengthy and
-daunting on error handling, the 'gem_lock' of struct etnaviv_drm_private
-just be forgeten to destroy on driver leave.
 
-Switch to use the dedicated helpers introduced, etnaviv_bind() and
-etnaviv_unbind() gets simplified. Another potential benefit is that
-we could put the struct drm_device into struct etnaviv_drm_private
-in the future, which made them share the same life time.
+> > =20
+> > >> +
+> > >> +          There are special values that can be selected besides the=
+ voltage
+> > >> +          analog inputs:
+> > >> +            21: REF+
+> > >> +            22: REF=E2=88=92
+> > >> +          Supported only by AD7172-2, AD7172-4, AD7175-2, AD7175-8,=
+ AD7177-2:
+> > >> +            19: ((AVDD1 =E2=88=92 AVSS)/5)+
+> > >> +            20: ((AVDD1 =E2=88=92 AVSS)/5)=E2=88=92
+> > >> +          Supported only by AD4111, AD4112:
+> > >> +            12: IIN3+
+> > >> +            11: IIN3=E2=88=92
+> > >> +            13: IIN2+
+> > >> +            10: IIN2=E2=88=92
+> > >> +            14: IIN1+
+> > >> +             9: IIN1=E2=88=92
+> > >> +            15: IIN0+
+> > >> +             8: IIN0=E2=88=92 =20
+> > >
+> > > I just made a late reply on v1 where Jonathan suggested that the
+> > > current inputs are differential with a similar comment to this:
+> > >
+> > > It doesn't seem to me like current inputs are differential if they are
+> > > only measuring one current. They take 2 pins because you need a way
+> > > for current to come in and go back out, but the datasheet calls them
+> > > single-ended inputs.
+> > > =20
+> > It seemed to me that the conclusion that we arrived to was to expose the
+> > precise pins that are used in the conversion and document the selection.
+> >
+> > Yes, it is a single-ended channel. So revert to the way it was in V1 us=
+ing
+> > single-channel? =20
+>=20
+> I'd like to hear Jonathan's opinion on this one.
 
-Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
----
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 72 +++++++++++++++++----------
- 1 file changed, 46 insertions(+), 26 deletions(-)
+Yes.  I think we rather went off on a false tangent on this.  Any current i=
+nput
+using a shunt is of this form and so far we've treated them as single ended=
+ :(
+e.g. pac1934 does this for it's sense inputs where there is an external
+'sense resitor'.  Similar for the stand alone afe driver for a current sens=
+e shunt
+which is used with a differential voltage input, but presents a single ended
+current measurement.
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 6500f3999c5f..22c78bc944c4 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -41,6 +41,45 @@ static struct device_node *etnaviv_of_first_available_node(void)
- 	return NULL;
- }
- 
-+static struct etnaviv_drm_private *etnaviv_alloc_private(struct device *dev)
-+{
-+	struct etnaviv_drm_private *priv;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return ERR_PTR(-ENOMEM);
-+
-+	xa_init_flags(&priv->active_contexts, XA_FLAGS_ALLOC);
-+
-+	mutex_init(&priv->gem_lock);
-+	INIT_LIST_HEAD(&priv->gem_list);
-+	priv->num_gpus = 0;
-+	priv->shm_gfp_mask = GFP_HIGHUSER | __GFP_RETRY_MAYFAIL | __GFP_NOWARN;
-+
-+	priv->cmdbuf_suballoc = etnaviv_cmdbuf_suballoc_new(dev);
-+	if (IS_ERR(priv->cmdbuf_suballoc)) {
-+		kfree(priv);
-+		dev_err(dev, "Failed to create cmdbuf suballocator\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	return priv;
-+}
-+
-+static void etnaviv_free_private(struct etnaviv_drm_private *priv)
-+{
-+	if (!priv)
-+		return;
-+
-+	mutex_destroy(&priv->gem_lock);
-+
-+	etnaviv_cmdbuf_suballoc_destroy(priv->cmdbuf_suballoc);
-+
-+	xa_destroy(&priv->active_contexts);
-+
-+	kfree(priv);
-+}
-+
- static void load_gpu(struct drm_device *dev)
- {
- 	struct etnaviv_drm_private *priv = dev->dev_private;
-@@ -521,35 +560,21 @@ static int etnaviv_bind(struct device *dev)
- 	if (IS_ERR(drm))
- 		return PTR_ERR(drm);
- 
--	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
--	if (!priv) {
--		dev_err(dev, "failed to allocate private data\n");
--		ret = -ENOMEM;
-+	priv = etnaviv_alloc_private(dev);
-+	if (IS_ERR(priv)) {
-+		ret = PTR_ERR(priv);
- 		goto out_put;
- 	}
-+
- 	drm->dev_private = priv;
- 
- 	dma_set_max_seg_size(dev, SZ_2G);
- 
--	xa_init_flags(&priv->active_contexts, XA_FLAGS_ALLOC);
--
--	mutex_init(&priv->gem_lock);
--	INIT_LIST_HEAD(&priv->gem_list);
--	priv->num_gpus = 0;
--	priv->shm_gfp_mask = GFP_HIGHUSER | __GFP_RETRY_MAYFAIL | __GFP_NOWARN;
--
--	priv->cmdbuf_suballoc = etnaviv_cmdbuf_suballoc_new(drm->dev);
--	if (IS_ERR(priv->cmdbuf_suballoc)) {
--		dev_err(drm->dev, "Failed to create cmdbuf suballocator\n");
--		ret = PTR_ERR(priv->cmdbuf_suballoc);
--		goto out_free_priv;
--	}
--
- 	dev_set_drvdata(dev, drm);
- 
- 	ret = component_bind_all(dev, drm);
- 	if (ret < 0)
--		goto out_destroy_suballoc;
-+		goto out_free_priv;
- 
- 	load_gpu(drm);
- 
-@@ -561,10 +586,8 @@ static int etnaviv_bind(struct device *dev)
- 
- out_unbind:
- 	component_unbind_all(dev, drm);
--out_destroy_suballoc:
--	etnaviv_cmdbuf_suballoc_destroy(priv->cmdbuf_suballoc);
- out_free_priv:
--	kfree(priv);
-+	etnaviv_free_private(priv);
- out_put:
- 	drm_dev_put(drm);
- 
-@@ -580,12 +603,9 @@ static void etnaviv_unbind(struct device *dev)
- 
- 	component_unbind_all(dev, drm);
- 
--	etnaviv_cmdbuf_suballoc_destroy(priv->cmdbuf_suballoc);
--
--	xa_destroy(&priv->active_contexts);
-+	etnaviv_free_private(priv);
- 
- 	drm->dev_private = NULL;
--	kfree(priv);
- 
- 	drm_dev_put(drm);
- }
--- 
-2.34.1
+Sorry for misguiding things :(=20
+
+At the end of this, I don't suppose anyone fancies writing up some notes
+on how to describe different types of channel?
+
+>=20
+> > =20
+> > >> +
+> > >>          items:
+> > >>            minimum: 0
+> > >>            maximum: 31
+> > >> @@ -154,6 +195,23 @@ patternProperties:
+> > >>            - avdd
+> > >>          default: refout-avss
+> > >>
+> > >> +      adi,current-channel:
+> > >> +        description: |
+> > >> +          Signal that the selected inputs are current channels.
+> > >> +          Only available on AD4111 and AD4112.
+> > >> +        type: boolean
+
+I'm lost. Why do we need this one?  Is the channel selection not sufficient
+to tell us this?
+
+> > >> +
+> > >> +      adi,channel-type:
+> > >> +        description:
+> > >> +          Used to differentiate between different channel types as =
+the device
+> > >> +           register configurations are the same for all usage types.
+> > >> +        $ref: /schemas/types.yaml#/definitions/string
+> > >> +        enum:
+> > >> +          - single-ended
+> > >> +          - pseudo-differential
+> > >> +          - differential
+> > >> +        default: differential
+> > >> + =20
+> > >
+> > > As suggested above, we should soon have diff-channels and
+> > > single-channel to differentiate between (fully) differential and
+> > > single-ended. Do we actually need to differentiate between
+> > > single-ended and pseudo-differential though?
+> > > =20
+> > Not really, so just a bool differential flag? (this seems weird as we h=
+ave diff-channels) =20
+>=20
+> Or we need to change the proposed single-channel property to allow two
+> inputs. I guess we'll see what Johnathan has to say.
+
+I think single ended fits better for the current channels with just one
+parameter.
+
+
 
