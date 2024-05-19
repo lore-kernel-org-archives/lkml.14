@@ -1,97 +1,209 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AF22233B;
-	Sun, 19 May 2024 18:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9D2D2FF
+	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 18:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716141941; cv=none; b=Xn3K3talARnpIp0dRrLF/V9NnpoKhCE08Fr3uRIeERO4ttfOeVxGrlJBE+NZ9S/3XEGrLwodOTXsHufwM6bS0fMrwl48OVEP8U73D7yEOxH3XkOs95U/bFUbD5Q4FC95LtbdI2IF7jNe5pPAU2z2b4JQeduCz2yfaizvxAEf0jA=
+	t=1716142644; cv=none; b=AMNGoCAPK2y0TOCwkETa8AqCeWsorFx9TFKEMjRDJL6v0sPmBxZRRkeD0pdV/boQK7bVJJHoVWuxDaYm/grUomuZMGx0D3F+sXkR64EIU2F8tH1GBN0ZPt9A+K227jMvdXp3KxF8kKWQeYkuTa1FTHapOb9LJQA0nLdRiZB7hpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716141941; c=relaxed/simple;
-	bh=27zJDYQNrBc3/Hgn0QfIK4lLVEOUFVMA6YO0B6tgoeM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ugHJvwf0dLbL8ZAaq0/Ykt0mCSSeBp0WxrxCCF8ak8ZqlMoGBZ+BAxHL3qzEDUhLofsbvtZ9+d+1SD1glxDowg+9G+LgFwu7nhcGmOPtVwm7yUN8qVIfUs4kTpvNtRGE4UO0gIU7YtvxKzo+zLJ78jpMlaIZm4F01Yk98DHwptI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=T+ciulGu; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1716142644; c=relaxed/simple;
+	bh=2s5g+zwfMTvziUNuBm+f7vvR7h8jdexplwL+ieGhwOU=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=oytVi1JtpWLeN3jQf7+bvVaCC0FaJ7Clq1ylqQCugeuHEOo4v2e8pVYEH3vjd6nqeHOlcR3nTPHDlZSmu+23rFiX8drscZHgCy76gKyBSsM4aF2MhwjcO8sNYDCc675B2/pO+fsWdYdTfji6j/0ot1MD30RBndM97OQe3qu3AUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mm7zhmJ+; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="T+ciulGu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716141928; x=1716746728; i=markus.elfring@web.de;
-	bh=9pY7nZaq1fyJ1tTGdLEQrtwNkEiGqx7yo3oChVDxHLw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=T+ciulGuxb/TPkzLfXIxCqZ2o0nI6XR16AJkrXKJGT8XYJNCwyo3828sPsxG0ls3
-	 a1/W3Pt7uNMsZ5I/55eumefhoyeIqwsto4CbEA9JBn2bmrxineehLs2rqIeYJBw0q
-	 mjzm6gMS8B2kWqm2DgFIyJgoib0oJZb6dS2sbiieVbhUCRViRBBMfpWHpc4PpxAPG
-	 F2KVCmMZFYirz4nf8I3igUfloRyO/SypSMl3TSo/G3A/datAEhKVOQwX1XKk+45L6
-	 ztGNCQ/WU7Fp1kgbeREI4k4CitwrKeGXnjnWwiAmt1A+L22aenjKDMMtRVJy0icjO
-	 0INfHWHAFShSQbrz7A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N6JxT-1sbm2z2hM9-016izA; Sun, 19
- May 2024 20:05:28 +0200
-Message-ID: <0f78a187-5c64-4d95-a6e8-2b5c42f0c253@web.de>
-Date: Sun, 19 May 2024 20:05:22 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mm7zhmJ+"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dee5f035dd6so16159299276.0
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 11:17:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716142641; x=1716747441; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EF57d/oSo3Tiz1+Ri035kfCFIPne1iVfqsIeBXpa+mA=;
+        b=mm7zhmJ+Dn7S9KUFk/8y22EXpiq3lQgY89mQ3tj51qB42iZ3lA/MD7Vu5rVAzZ0AUQ
+         mujjAhEGTnM3z7aULDG9KNk3sRsHZP73X+Fe8CsUw/P4v6Ntsx82aYRIiKXesl7EEPMp
+         PxTmux3cePpZuiPfOQ1mMSsc+KvSXBvD0UQ1pV9Ou/FwZowOBmmB0+5EDppq4OijGio/
+         DmKl6MoKbVI5E1uWT1uiZiORb/fmnVOHqNaiN1D4gkS0dRxP9GWQuffP8+/bpxSfCU+m
+         2HqO+R43/8eBONn3Ue40HxBwvZ73tDjqzh3eHwo9xCufkK+jIASnxIOfJRAmqOAPdtaJ
+         1SpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716142641; x=1716747441;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EF57d/oSo3Tiz1+Ri035kfCFIPne1iVfqsIeBXpa+mA=;
+        b=VDC8QL2DJf9i1g1D/PdNV4CCmXUeWzOx9UcjFACeU2g5zSnkg90oYIunLYErPNcAGl
+         ad41OgRNOuZGFMjPLvfhMpTEsBOoslICo86L7o83cbkeSEPjfg7Uvop+FNwkh6vrEdkE
+         X2hgapkQ2a77ZkDlxfdTAB1dCnTOWHNs5WJ0hMkUaSp0O/35IfRA9eSRnYEph1LCGz1k
+         emO38kLFIVi6Wr1xFVydcStPNgX1tL7Yukf9tjHdJJXAOc+nWXQv8ddSJouN4H6fCzug
+         K6tel/v0xgYwDgfObTMfSityDHBabFcVIxAz9eSe2l3VX/K2LEewdilpXPlXycsnwA9Q
+         9fPg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0VgrdKfqXB9MT+wQ3PBQZ2kkp0ZIGZNwJlH+/+0CYg0sdADtD0CY6E43z8qyAT5BHiNcG14EZ0WVHxo6j3pkyAHM1n46wCZ28+bom
+X-Gm-Message-State: AOJu0Yw8PKy5O0G90Xm44/dl4Xl8ETUNNEM+EgovYBcK0ESXnogOlnik
+	AAhQY7fNyqH54glqxweQEwvmxbS+4MuUpgvPC68Ewlex+FjcA3bwpx/08sSZWTXQgIo44TKtKLs
+	7TsU2CQ==
+X-Google-Smtp-Source: AGHT+IFX2CyWCwQfx/kdQYayR3AJIKR/mn3cf14Llmu17FFVI55/2e1typh2ueAzDGhVlMaDIzn64DxLf7cw
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4b6d:77c7:e6ad:c2a7])
+ (user=irogers job=sendgmr) by 2002:a05:6902:114d:b0:df4:97ab:3673 with SMTP
+ id 3f1490d57ef6-df497ab39b3mr1174299276.5.1716142641040; Sun, 19 May 2024
+ 11:17:21 -0700 (PDT)
+Date: Sun, 19 May 2024 11:17:16 -0700
+Message-Id: <20240519181716.4088459-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Wardenjohn <zhangwarden@gmail.com>, live-patching@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
- Joe Lawrence <joe.lawrence@redhat.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
- Petr Mladek <pmladek@suse.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240519074343.5833-1-zhangwarden@gmail.com>
-Subject: Re: [PATCH] livepatch: introduce klp_func called interface
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240519074343.5833-1-zhangwarden@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:n1DLcPSd88hho6RTJCi/Ky4agc+v51xTm6fH0J9qsDGvMSA192g
- YH4M6HmPkcexPpMgU8+T3MvYMVK6WK+UGmlyFj5tSgSwgp+uctXpmsGRK9cbqbLm5fZP8t6
- Tc/mTk26VqY3KD7qBF0DiYfIFyZvaRKwL2k9vwOOQbzA24WuDco9C1wEyT9HX0M2hvE5EqQ
- QKxZej+3C7Vglx4kC8L4g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:W9a7sCBMbpc=;fox0FO2AaYDVCTzkA2bWav5YlhG
- d7g8XG0CfKsejGDPLeB8/W7mPbph2E/XDTrW/R09X2X3Oo2AyhZ9fAhlywTgMDZbXs8AaWYDy
- gqdZEImiY9Cz58nipKQJGlfVSdWfRsXfnzo8G+CJd4BtpNtVLPHjm8neiasEF3RxZGvs1K/ae
- frEIfNhPJ2Wf2/KawV/JGg59iDpPldEtXENo2276YF8kRtHfixVl5K3l3AHWdW7fTVtgti7wT
- sHlL7TCNFnoIA7fWmz8xHyrRjKO4PdTx9jJxc49kvfADJLApwQkFIdqIX4ElqmNMq/oM/LmC7
- HKt/DBdU1ghg/5hQR0wviy6CdYoVLNx9PKkN5mPAPHwvZFy2VLSCvROlRu2/90/JhiFybRA1O
- Ap/zu6F/AJltQaj+Jmj5KRf41YdEe5HmFIIgdZ/j3ICzuKA/e1PWbf1xBkbBoodNcfn1543AL
- lmLUIh/zrsz5YZwFlQ1+tdfxVylQMMUfPJcL9YdhdzkSDy8UQ+Sl5srVNuqyeHCBSKnxyLr2p
- yhUjy7qA8frkhflT7uGeUZwHT90XRIP4N5GQauGm75kfdSKOz1PgCNHLWZqB9IllUUz/Rz2OB
- XwJrnfZoIusJK4v/kLQpwVb+Fl8oQaYEwDKXIsDMx9EZQriwynDtH0j7179N1JhwIXdFGR+fM
- T88+3GyGbEUNga1GmHbmHYO1MM1RmadEeJcz0b7zaLNmOKisdwUHNnekkL01hHFAPcxA1jUXV
- IvPNKsjyZaGtwZYMy9m7K6duj9qOFt1TbSRclD2sBPfJkl/tiWptCG23/jTMhMSs4fJzEHoeu
- 0yw2JWUN3pNGSvNHWAXT9Z4QzO2YkTVEycRRupXTmIr8A=
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v1] tools api io: Move filling the io buffer to its own function
+From: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-=E2=80=A6
-> This commit introduce a read only interface of livepatch
+In general a read fills 4kb so filling the buffer is a 1 in 4096
+operation, move it out of the io__get_char function to avoid some
+checking overhead and to better hint the function is good to inline.
 
-Please improve the changelog with an imperative wording.
+For perf's IO intensive internal (non-rigorous) benchmarks there's a
+near 8% improvement to kallsyms-parsing with a default build.
 
+Before:
+```
+$ perf bench internals all
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 146.322 usec (+- 0.305 usec)
+  Average num. events: 61.000 (+- 0.000)
+  Average time per event 2.399 usec
+  Average data synthesis took: 145.056 usec (+- 0.155 usec)
+  Average num. events: 329.000 (+- 0.000)
+  Average time per event 0.441 usec
 
-=E2=80=A6
-> find out which function is successfully called. Any testing process can =
-make sure they
-> have successfully cover all the patched function that changed with the h=
-elp of this interface.
+  Average kallsyms__parse took: 162.313 ms (+- 0.599 ms)
+...
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 53.720 usec (+- 7.823 usec)
+  Average PMU scanning took: 375.145 usec (+- 23.974 usec)
+```
+After:
+```
+$ perf bench internals all
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 127.829 usec (+- 0.079 usec)
+  Average num. events: 61.000 (+- 0.000)
+  Average time per event 2.096 usec
+  Average data synthesis took: 133.652 usec (+- 0.101 usec)
+  Average num. events: 327.000 (+- 0.000)
+  Average time per event 0.409 usec
 
-* I suggest to take preferred line lengths better into account
-  also for such a change description.
+  Average kallsyms__parse took: 150.415 ms (+- 0.313 ms)
+...
+Computing performance of sysfs PMU event scan for 100 times
+  Average core PMU scanning took: 47.790 usec (+- 1.178 usec)
+  Average PMU scanning took: 376.945 usec (+- 23.683 usec)
+```
 
-* Please provide the tag =E2=80=9CSigned-off-by=E2=80=9D.
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/submitting-patches.rst?h=3Dv6.9#n398
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/api/io.h | 69 +++++++++++++++++++++++++---------------------
+ 1 file changed, 38 insertions(+), 31 deletions(-)
 
-Regards,
-Markus
+diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+index 84adf8102018..d3eb04d1bc89 100644
+--- a/tools/lib/api/io.h
++++ b/tools/lib/api/io.h
+@@ -43,48 +43,55 @@ static inline void io__init(struct io *io, int fd,
+ 	io->eof = false;
+ }
+ 
+-/* Reads one character from the "io" file with similar semantics to fgetc. */
+-static inline int io__get_char(struct io *io)
++/* Read from fd filling the buffer. Called when io->data == io->end. */
++static inline int io__fill_buffer(struct io *io)
+ {
+-	char *ptr = io->data;
++	ssize_t n;
+ 
+ 	if (io->eof)
+ 		return -1;
+ 
+-	if (ptr == io->end) {
+-		ssize_t n;
+-
+-		if (io->timeout_ms != 0) {
+-			struct pollfd pfds[] = {
+-				{
+-					.fd = io->fd,
+-					.events = POLLIN,
+-				},
+-			};
+-
+-			n = poll(pfds, 1, io->timeout_ms);
+-			if (n == 0)
+-				errno = ETIMEDOUT;
+-			if (n > 0 && !(pfds[0].revents & POLLIN)) {
+-				errno = EIO;
+-				n = -1;
+-			}
+-			if (n <= 0) {
+-				io->eof = true;
+-				return -1;
+-			}
++	if (io->timeout_ms != 0) {
++		struct pollfd pfds[] = {
++			{
++				.fd = io->fd,
++				.events = POLLIN,
++			},
++		};
++
++		n = poll(pfds, 1, io->timeout_ms);
++		if (n == 0)
++			errno = ETIMEDOUT;
++		if (n > 0 && !(pfds[0].revents & POLLIN)) {
++			errno = EIO;
++			n = -1;
+ 		}
+-		n = read(io->fd, io->buf, io->buf_len);
+-
+ 		if (n <= 0) {
+ 			io->eof = true;
+ 			return -1;
+ 		}
+-		ptr = &io->buf[0];
+-		io->end = &io->buf[n];
+ 	}
+-	io->data = ptr + 1;
+-	return *ptr;
++	n = read(io->fd, io->buf, io->buf_len);
++
++	if (n <= 0) {
++		io->eof = true;
++		return -1;
++	}
++	io->data = &io->buf[0];
++	io->end = &io->buf[n];
++	return 0;
++}
++
++/* Reads one character from the "io" file with similar semantics to fgetc. */
++static inline int io__get_char(struct io *io)
++{
++	if (io->data == io->end) {
++		int ret = io__fill_buffer(io);
++
++		if (ret)
++			return ret;
++	}
++	return *io->data++;
+ }
+ 
+ /* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
