@@ -1,95 +1,142 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F286EB62
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 22:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F7C6BFD4
+	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 22:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716157570; cv=none; b=oqr8Y3OMk630wofqENtKmM5GLNbudc3qudmngtBIKhqGzjf7SvZqaOD+ooiFN4TUv53duLEtp9qnQjq/21I3dXBtK1eMAc47FHjY9IDfv9Kp8H3p3LCaQT/6rhh3Yqevfi1Bhixc5X6uW8QBtMpmXigeNLmjMlzcIrgpDcn7feA=
+	t=1716157572; cv=none; b=MDBWsNQlDLsDasduboV5jjCgx0+oCmVmTZKP1yRnrsNGysODNIssB1OuQeO8qzwB36tzzs7pZKpdIZZAK9vPlu7xpqo0HCKAu36Y0C0bKONOIB0thdEXsA6VhtTyU/bI58eOTtD/gByyp9fJFaM+6T3qfePAzETsLc10OhOmYPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716157570; c=relaxed/simple;
-	bh=9tsQVsXkYAR/JXd8InHKzknLkf0H+ZfY0HgqfGFD+HQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HFuGp1kROoDYdUreIA6ftHnnwMHxJP1xxxnR1Iep9HxcoqS6NccFivb2YsGZ4pXUJc0bRZpRp0jI6YYijkiVN6B9NRD+07J1NBXwjd9t2kvngGG+z/eP4+8xfCoV8GkfWQGn3gLMBBy4yDxfQGYBN9aPuUXpt1+ForBChdN/HFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ryCGgTsu; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716157572; c=relaxed/simple;
+	bh=Szu9njIL0tIEKdHzkoPwCn2+lvTZdhLreYacJvxijn0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=HIfBxX7SXnO/tCFbYnz+PC/bNJWBSh2xIoiTNgPG1izIOlZsNj3Y/taeIATibyuI7tvjaYeBoe+eiu9NSn/Eh+0QQAFcOw8Eu71Pid8aEGb9Km6FibkDeCIo9Bq9UO0l/M4ddNMIIoccdQ2SqlfABfRmZglGrL46IBqMVHiYT7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AvMy9RkQ; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ryCGgTsu"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5210684cee6so2951704e87.0
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 15:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716157567; x=1716762367; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z/u++8bFOJXJXg3s1d2RW1md24+mQv56EN7QzDG+NR8=;
-        b=ryCGgTsuOUTdkBrl9p7C+iqK+AcY3GH2T+wtsmwjxR26BJrjxJlqHXLnksikmb1i8m
-         Ucy3quwRcq0Br+w/+KTCINqki18KnmzJTJzMI0MQQuz1/Nq3GOyKhlBV/xGbZ+ciGFmX
-         klz+4pqr2xxrsWIUTyhOwMeDsOPeV7mt6No4qSWeNgoJtIOyshvqGG3jdTpF1VH306P8
-         o2ThfRSQBD5Y0p6Uq1ROUsF3dWdp5C3cfZtURb4zTOZIDwKGDSRkDGKuUKgdPx6MfsQb
-         w4n0xcEvSCQD7mlBfnUhzioV5tgbIPdHKq8pFm6qbSWLBTFKqcU1plJ0cWkqBXUuzM3E
-         qbZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716157567; x=1716762367;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z/u++8bFOJXJXg3s1d2RW1md24+mQv56EN7QzDG+NR8=;
-        b=vYhk8OTgX00NQNKtGhSKDzMyNnnayxoyPwEd2aXvj6//225tv6g/UlbbA4e9fyAVX8
-         IclRUQgM7SujHr18kWZm5HpQizP8U7uWZ0DaFe4dj1Swe0evlDaOEvMQpgs48ziAzEAz
-         h/1vlre9Vcp0LmkvYJg4mi4VLYVUFL0ZghXmDM2fRA04u2KGpKGLO/5TAZiiOHphJWpM
-         lb8aav6f7sgVbJG/0ltinUQ2o7MAoHtPt1vgOYtKWPbTbDl3bLntDcjyVEkmlOxyB3Km
-         sbuj/dNVVwCNP+3dW0zWreon/M+S2vm0eEPmxEwXWwPivNjKTNs2PEPEq06kyo4Rtr08
-         rEtA==
-X-Forwarded-Encrypted: i=1; AJvYcCUv+iKJbqSsn5cmiioZb1ynuiA/Pu5LyC5PP37KF3TN9XbKZtGTeDxlrcvyv/P5oyVB7xV/ASW/bsmLIksBLQTWgkuDK3Urtl4l5YMd
-X-Gm-Message-State: AOJu0Yxzrs7YfkVkyNXr5gViE+L7DC/VQoDksutKbaapZA874yAoQu+J
-	4wWa1H4qywLG7bSNaj769zrQsEJWXgCUNYIqQKQhiDpnMU0b1h8Zbcqu0zywqik=
-X-Google-Smtp-Source: AGHT+IGQia4SqEUkbwCkX709KmSNyhDWioQI0WkTu6egjizDz5WsQ+KjK82NteBuNryfZ5+wqhg5hA==
-X-Received: by 2002:a19:914e:0:b0:51e:543c:a45d with SMTP id 2adb3069b0e04-5220fb6afd8mr16210701e87.20.1716157566952;
-        Sun, 19 May 2024 15:26:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::8a5])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d3418sm4047465e87.152.2024.05.19.15.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 May 2024 15:26:06 -0700 (PDT)
-Date: Mon, 20 May 2024 01:26:05 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Daniel Vetter <daniel@ffwll.ch>, 
-	David Airlie <airlied@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] drm/panel: boe-tv101wum-nl6: If prepare fails,
- disable GPIO before regulators
-Message-ID: <mge77nka7mh3nslbaoxpecnbmukv2z2rjk4rqpqo4r6nxo2733@nrhdblvxajuk>
-References: <20240517213712.3135166-1-dianders@chromium.org>
- <20240517143643.2.Ieac346cd0f1606948ba39ceea06b55359fe972b6@changeid>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AvMy9RkQ"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240519222605epoutp01480179a5dbb190879d9a47677f558e45~RBDazsHHI1751817518epoutp01C
+	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 22:26:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240519222605epoutp01480179a5dbb190879d9a47677f558e45~RBDazsHHI1751817518epoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716157566;
+	bh=PgDI/bMjdgVCYmG1zHkg2MC/8ynUaS5Yh6Yuf3VKhsM=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=AvMy9RkQXyeTyEVOe1vfCJuna/Si9F8ZhCW11BD0iBjlWA1lW8jewbjALPg3E8CK4
+	 z97VwECt4rtIxtpV6O9hynpeRz+MxbBShnrwODvY+aQFU6MO8gZQ6BeoQMy67CurbM
+	 bW0/mErMvxyoKj4URCUC9FBRgXvF+X6NqZ2Gz3RA=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+	20240519222605epcas2p213aa99fa1635db33711693cff10aba2f~RBDahJany2706827068epcas2p2D;
+	Sun, 19 May 2024 22:26:05 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.101]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VjFf46F3Gz4x9Pt; Sun, 19 May
+	2024 22:26:04 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	47.1D.08666.C7C7A466; Mon, 20 May 2024 07:26:04 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240519222604epcas2p3d427f2f5b3b0156881f6840443210931~RBDZN_waB0281302813epcas2p3O;
+	Sun, 19 May 2024 22:26:04 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240519222604epsmtrp1bf2e98b6bc334be84d9f3dd05f8d88dc~RBDZNUXes2746627466epsmtrp1R;
+	Sun, 19 May 2024 22:26:04 +0000 (GMT)
+X-AuditID: b6c32a43-aa9fa700000021da-a5-664a7c7ce137
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	CA.40.19234.C7C7A466; Mon, 20 May 2024 07:26:04 +0900 (KST)
+Received: from localhost.dsn.sec.samsung.com (unknown [10.229.54.230]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240519222604epsmtip27ac701456c85d36b41aadf47ffb03d2a~RBDY_hv4d0625506255epsmtip23;
+	Sun, 19 May 2024 22:26:04 +0000 (GMT)
+From: Minwoo Im <minwoo.im@samsung.com>
+To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Bart Van
+	Assche  <bvanassche@acm.org>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, Joel Granados
+	<j.granados@samsung.com>, gost.dev@samsung.com, Minwoo Im
+	<minwoo.im@samsung.com>, Asutosh Das <quic_asutoshd@quicinc.com>
+Subject: [PATCH v2 0/2] ufs: mcq: Fix and cleanup unsafe macros
+Date: Mon, 20 May 2024 07:14:55 +0900
+Message-Id: <20240519221457.772346-1-minwoo.im@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240517143643.2.Ieac346cd0f1606948ba39ceea06b55359fe972b6@changeid>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJJsWRmVeSWpSXmKPExsWy7bCmhW5NjVeawa0mI4sH87axWbz8eZXN
+	YtqHn8wWNw/sZLJYuv8ho8XGfg6Ly7vmsFl0X9/BZrH8+D8mi2enDzBbLOyYy+LA7XH5irfH
+	tEmn2Dw+Pr3F4jFxT51H35ZVjB6fN8l5tB/oZgpgj8q2yUhNTEktUkjNS85PycxLt1XyDo53
+	jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAG6UEmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xi
+	q5RakJJTYF6gV5yYW1yal66Xl1piZWhgYGQKVJiQnXH2/Fy2gka2isf7F7I0MN5h6WLk5JAQ
+	MJG40feAvYuRi0NIYAejxIVdM1ggnE+MEova2xjhnNWH1zN3MXKAtbzYrggR38koMX3pYmYI
+	5zejxMmmPewgc9kE1CUapr4C2yEi8IFRYtMbA5AiZoFTjBKf77czgiSEBewlWi59ZAaxWQRU
+	JW5tPM4KYvMKWEt8ufONHeJAeYn9B88yQ8QFJU7OfAI2lBko3rx1NthmCYGf7BLHn56CanCR
+	6LoyE+o7YYlXx7dAxaUkXva3QdnlEj/fTGKEsCskDs66zQbxmr3EtecpICazgKbE+l36EFFl
+	iSO3oLbySXQc/ssOEeaV6GgTgpihLPHx0CFmCFtSYvml12wQtofE3SUTwXYKCcRKLPl/m3kC
+	o/wsJL/MQvLLLIS9CxiZVzGKpRYU56anJhsVGMLjNDk/dxMjOI1qOe9gvDL/n94hRiYOxkOM
+	EhzMSiK8m7Z4pgnxpiRWVqUW5ccXleakFh9iNAWG7kRmKdHkfGAizyuJNzSxNDAxMzM0NzI1
+	MFcS573XOjdFSCA9sSQ1OzW1ILUIpo+Jg1OqgUmg8qf0z6Bp89q6GhV9Z3vfStn/NmfjKZfo
+	lld3lnQcX39Iwf10suisp1saM2b3Mnqsdt6798yTOqcMyy2HnpkmdhXHWhp+ED1rXahwdcZV
+	5v2GS76FazaelAub/68jmPndM8cnM4/OXZ437yx/oKG0sQM393W2nSKftbeLshhdVY9/132D
+	6bAao7cH373LffFXTr7e57ti/uk1N70bs3aY+H1g5WJP7Dl9T97+3rbXn6YlJ1YeKXPwU54s
+	kH453LjIV/NdXprphDnHHC1fzv2wtVZi2T+JtNJQnoMS+xY+EVzKnl5eLa5x86ky/yd2KyN2
+	CeuqtX+kCssMZepi97GatzjIblytouuj5GjSp8RSnJFoqMVcVJwIABqdHScsBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsWy7bCSvG5NjVeawf4PXBYP5m1js3j58yqb
+	xbQPP5ktbh7YyWSxdP9DRouN/RwWl3fNYbPovr6DzWL58X9MFs9OH2C2WNgxl8WB2+PyFW+P
+	aZNOsXl8fHqLxWPinjqPvi2rGD0+b5LzaD/QzRTAHsVlk5Kak1mWWqRvl8CVcfb8XLaCRraK
+	x/sXsjQw3mHpYuTgkBAwkXixXbGLkZNDSGA7o8S8VUkgtoSApMS+0zdZIWxhifstR4BsLqCa
+	n4wS/1avZgRJsAmoSzRMfcUCkhAR+MQosamrA8xhFrjAKDHn0ydmkCphAXuJlksfwWwWAVWJ
+	WxuPg43lFbCW+HLnGzvECnmJ/QfPMkPEBSVOznzCAmIzA8Wbt85mnsDINwtJahaS1AJGplWM
+	oqkFxbnpuckFhnrFibnFpXnpesn5uZsYwUGtFbSDcdn6v3qHGJk4GA8xSnAwK4nwbtrimSbE
+	m5JYWZValB9fVJqTWnyIUZqDRUmcVzmnM0VIID2xJDU7NbUgtQgmy8TBKdXAZOqgnR/3hfvH
+	glu912zyItS6f6/sXLkqQE1r67XSWY8E3lUvidhxIfx4ia/ItOWMWRylzLGWnV/Lj1x5P/+n
+	ZOyjZ7qq7p2Kpx7nPratnrhX8dSvu+GT//9q8WdVO+Z149vz+AbDN1+fd4ttCPPa7xDhI2bL
+	+mPfhy9OHj8/7pAP0d0cdJ/boj3cpn6S7fLTfXK+07NXx6+P9hA9c7ThU4JwocbV7xM2JOfz
+	d/01YDmx+9/zrEv7z+6cMGv3pLuR59/MuJATpmzz/tuGiZ7ei6S2GNzbfklh7nnHe7qRBl46
+	H5Q/rd8c0HR8qwPDdhO2EolJFT1uL/bGq69M/PxZ+f6Dhxd/ri97uKFCemeOe4YSS3FGoqEW
+	c1FxIgB+n14M2QIAAA==
+X-CMS-MailID: 20240519222604epcas2p3d427f2f5b3b0156881f6840443210931
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240519222604epcas2p3d427f2f5b3b0156881f6840443210931
+References: <CGME20240519222604epcas2p3d427f2f5b3b0156881f6840443210931@epcas2p3.samsung.com>
 
-On Fri, May 17, 2024 at 02:36:37PM -0700, Douglas Anderson wrote:
-> The enable GPIO should clearly be set low before turning off
-> regulators. That matches both the inverse order that things were
-> enabled and also the order in unprepare().
-> 
-> Fixes: a869b9db7adf ("drm/panel: support for boe tv101wum-nl6 wuxga dsi video mode panel")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hello,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+This patch set fixes an potential bug for further usages in ufs-mcq.c and
+contains a simple clean-up converting macro to an inline function.
+
+Please review.
+
+Thanks,
+
+v2:
+  - Fix missing argument 'hba' in MCQ_OPR_OFFSET_n by converting it to an
+    inline function (Bart)
+  - Added [2/2] patch to convert the remaining one macro in ufs-mcq.c to an
+    inline function along with the previous patch for the sake of consistency.
+
+Minwoo Im (2):
+  ufs: mcq: Fix missing argument 'hba' in MCQ_OPR_OFFSET_n
+  ufs: mcq: Convert MCQ_CFG_n to a inline function
+
+ drivers/ufs/core/ufs-mcq.c | 35 ++++++++++++++---------------------
+ include/ufs/ufshcd.h       | 13 +++++++++++++
+ 2 files changed, 27 insertions(+), 21 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.34.1
+
