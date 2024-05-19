@@ -1,262 +1,99 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA288481A5;
-	Sun, 19 May 2024 14:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A4B4596E;
+	Sun, 19 May 2024 14:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716128432; cv=none; b=VQ65dG7xQ76H37G5iNUVH2Izfga9iBmgpwiMscdg1fyIdUwqAxpmzCj3jd18TGweuwtmitdGDKlyTP7uuEby3G1EKxPIGWljY7laI4qkRAI6BAg6rK8xcPaMPWldogqsMONO4dHpph3nGmLX+HlO0RROoO28FJlQDBES+JHpEG4=
+	t=1716128570; cv=none; b=G+7A0Uu0VjBeDiyE/re4VSW+y2GygyMJYyPxbK5E8U7nB1t+UY5bui5bkz6x4wF+8D7qU0IWT91xuQMeWEWTW02FvT7Cbh7bTacP/4+5RKUJ5fjE6pvYbjtGBANlJidAuullpDWsCW32izKJwxROAfrwFHrKHo6YLUaLrWoaOv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716128432; c=relaxed/simple;
-	bh=BdRenKhE9AoURtk+e0tvVp4/r07Rd9R5Nz+LPkppaKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N+McSUvgbguu0OuboUELNnwRDrduVBE3zEOxDQgvhpZ22IjRtacT9e0ARC1EVZjxlcie0lDpQJP2VdfBQaJSzJMjk0zIZkTN2A8gQKxMmwKyn7TilLtNpJWcAnp9Kg/U7NDeWKY2+HiOMwe5gBsZm3qe7beIZBWmzoDVTenoul8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holesch.de; spf=pass smtp.mailfrom=holesch.de; dkim=pass (2048-bit key) header.d=holesch.de header.i=simon@holesch.de header.b=Au/xsyQZ; arc=none smtp.client-ip=212.227.126.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holesch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holesch.de
+	s=arc-20240116; t=1716128570; c=relaxed/simple;
+	bh=HdRqtefJzU/1IVN9Z74ykRZLCT25VVz0Y8vi96reINI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AcaZbNxfWWop9lGeifjXsKF4OAN70J9vasb7ZquXqPxO4RdM6Xk/82/C84Ecnn2+EOr0ZJIIdF4tgcr0NTLqP5Oa0If8QA2n1PCBYHscHJTL6pB7ZRLzRw24F6GNaBYL8lmtCLYy61nEsPd6PJYFCznaPBulLieeY5pRhmBkxB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVf7AfrN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=holesch.de header.i=simon@holesch.de header.b="Au/xsyQZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=holesch.de;
-	s=s1-ionos; t=1716128408; x=1716733208; i=simon@holesch.de;
-	bh=V/rkqwTkUlpGLQVnFawbGWTuYkSjydDaVEN2loFqvtA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Au/xsyQZVIGemmbwJH1ewY+ANQ6IalGlU8MCXntwh9DRTAv+9rnP//v39jX2YeWQ
-	 ujVDvjdf8Q9gsLufytpzVbDxQpjWQKEX1Ue77YICakuEl+aZPfHKmgayAi9zs9HJ1
-	 u8srfIlF0By2jxWhaKwu8WulW+U6DnatxW3Ka+qhta4w3WySW/WJOt1L9gqNy9szu
-	 oSZoK9d4jVcJdNL/hQj3p471tnf6NA98fEEBXtTbdnucsez8pP1kIlvO2+At58fs0
-	 uzgMJTY5cXx7FMqh9G6s+29WkjDIks4xN2Ofcc1rL7iq86sYaG/NXLIoPurFr19Wc
-	 K5xny/JfOt1QTl5hIQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([79.254.36.181]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MT9v5-1rycfX0Q8N-00UWbY; Sun, 19 May 2024 16:20:08 +0200
-From: Simon Holesch <simon@holesch.de>
-To: Valentina Manea <valentina.manea.m@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Hongren Zheng <i@zenithal.me>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Simon Holesch <simon@holesch.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5] usbip: Don't submit special requests twice
-Date: Sun, 19 May 2024 16:15:38 +0200
-Message-ID: <20240519141922.171460-1-simon@holesch.de>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVf7AfrN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E748BC32781;
+	Sun, 19 May 2024 14:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716128570;
+	bh=HdRqtefJzU/1IVN9Z74ykRZLCT25VVz0Y8vi96reINI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RVf7AfrN63c+ptmV918ypaSyiyXchSaL6UbnE4k33z8f+Msfpc6r2NYXuJH/et5kE
+	 lnsrI6d27/iYDGqIWUJKDFlWjn5bZ2sLTibUn1MdrEd2bIK5z4w9DS3/2lG2Ae/BFu
+	 E3lWKZVW8ob6mMB2nhqF1P+Hu/coOjPyW4XTk05DHOnibpJB2yWfyyjNKmlFX9DoBq
+	 AGRqDFFtKtGfkMGKgNjHOaoxsskQO5pSPXbPKdWY7g52rQHgyhHN1fx7JyIBx1T4zx
+	 Ge7w/7eK5+kMPfGYSwZA7IZ3yTxkA9uKHqC+CHtj+8E9lXlHwfkoeDHMv0HwXGv4Gg
+	 ciNkSDgbefDPA==
+Date: Sun, 19 May 2024 15:22:35 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
+ linus.walleij@linaro.org, semen.protsenko@linaro.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v7 1/5] iio: pressure: bmp280: Refactorize reading
+ functions
+Message-ID: <20240519152130.32ec84b9@jic23-huawei>
+In-Reply-To: <20240512230524.53990-2-vassilisamir@gmail.com>
+References: <20240512230524.53990-1-vassilisamir@gmail.com>
+	<20240512230524.53990-2-vassilisamir@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KuIM0LrIHXfgd6BCXcWG1d98RfXPzx9wCdF35N5UOl0kx7MBC24
- uOgUmId1n808YPfWBoSTQdfZgbGebE1c5aEmeCIimHZzhji34nTZRmPxn/QM4Eu7cxayo3J
- xEOtamCLHFosglfVcX4jB3cfqdpgTxqBC3g7Y5/XOrwpETtti3+jeD/Nr3iui+A+yVC5LTW
- Cir172NYTJOgjMxWj2uKg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HxSfFBth9NA=;Zbv8j8CJ1WVbFdo8kh1skvECp1z
- gzTM/q79IBFHvLaLCBcgtBYVB80Hv0dkjxsNb9bHi214PUyglOXOO9LskYPwtWDwdX/FSKemc
- D2DurpjUomv0hTkOLY4tZ5aMO0eSOKOysvmdNydpp2KNXpX4fi1dx9Gdg0l8wv3ezuBL310nG
- Yodo0vy7U6m0X8+K1Tazn1nkMMf7pqjyI2t63KaOliPtvByUCG8PVLyVJyllzChaTeZliZWxZ
- 1ezONUZQcdbKPlVds7PeGnw7D9Fe7egyHB9Pj/GxwKPKKkMop3ST5P88JxV50q1AezTGsAqCt
- tX1vMLEXuKjorx6OtgX5ZJFFetKWdufE4GQ1XBc5SArwRurbuNzSQtJDu88YcgkI8A5damcaP
- 0hXd5UzanbPg42Urpp8WXOjfi9Vxvp6/tILIPB9K6PNgjtphidwJId8jxPGuU9IvZj0XVT0FX
- 9j2AQD2LXeXKKKV23mikfXWkppOIa6E8uPqXxE406sgQgjzDPIcNR4H/TQzU7Wct6lmdmnxrA
- sRU/n58SBhlVtqIcHZFnWn54ZgmsO0Zpp4ZKTCiFw/vLzOqNjeoRur0RrKVidTw9dR8Hc8xdZ
- OLFafhsNYzXlGRKS2h9ab1Ds0eg9zEE8wxBPAh4z6XK/auc/qADKamzp1VC69zogPLeLYSXZH
- rNIIhrnhsL7aK0DPVI4ciFOACEVEUZQILkOxd+lNr0OqRL8Q/AG/guMXTsPIipaMDWugRJ+6z
- Bgj99QXWyBdoBV44tYdAAsdWfM7rFwrxGBJTgOb7c+FIf0rBXyGsak=
 
-Skip submitting URBs, when identical requests were already sent in
-tweak_special_requests(). Instead call the completion handler directly
-to return the result of the URB.
+On Mon, 13 May 2024 01:05:20 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-Even though submitting those requests twice should be harmless, there
-are USB devices that react poorly to some duplicated requests.
+> For BMP18x, BMP28x, BME280, BMP38x the reading of the pressure
+> value requires an update of the t_fine variable which happens
+> through reading the temperature value.
+>=20
+> So all the bmpxxx_read_press() functions of the above sensors
+> are internally calling the equivalent bmpxxx_read_temp() function
+> in order to update the t_fine value. By just looking at the code
+> this functionality is a bit hidden and is not easy to understand
+> why those channels are not independent.
+>=20
+> This commit tries to clear these things a bit by splitting the
+> bmpxxx_{read/compensate}_{temp/press/humid}() to the following:
+>=20
+> i. bmpxxx_read_{temp/press/humid}_adc(): read the raw value from
+> the sensor.
+>=20
+> ii. bmpxx_calc_t_fine(): calculate the t_fine variable.
+>=20
+> iii. bmpxxx_get_t_fine(): get the t_fine variable.
+>=20
+> iv. bmpxxx_compensate_{temp/press/humid}(): compensate the adc
+> values and return the calculated value.
+>=20
+> v. bmpxxx_read_{temp/press/humid}(): combine calls of the
+> aforementioned functions to return the requested value.
+>=20
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+Applied with a fix...
+drivers/iio/pressure/bmp280-core.c: In function =E2=80=98bmp180_read_press=
+=E2=80=99:
+drivers/iio/pressure/bmp280-core.c:2091:9: error: =E2=80=98ret=E2=80=99 und=
+eclared (first use in this function); did you mean =E2=80=98net=E2=80=99?
+ 2091 |         ret =3D bmp180_get_t_fine(data, &t_fine);
+      |         ^~~
+      |         net
 
-One example is the ChipIdea controller implementation in U-Boot: The
-second SET_CONFIGURATION request makes U-Boot disable and re-enable all
-endpoints. Re-enabling an endpoint in the ChipIdea controller, however,
-was broken until U-Boot commit b272c8792502 ("usb: ci: Fix gadget
-reinit").
+I guess something got lost in rebasing. Anyhow, fix obvious so not
+problem.
 
-Signed-off-by: Simon Holesch <simon@holesch.de>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Hongren Zheng <i@zenithal.me>
-Tested-by: Hongren Zheng <i@zenithal.me>
-=2D--
+Thanks,
 
-Changes in v5:
-- add comment for global is_tweaked flag
-- fix typo in commit message
-
-Changes in v4:
-- fix compile error
-
-Changes in v3:
-- handle errors in tweak_* routines: send URB if tweaking fails
-
-Changes in v2:
-- explain change in commit message
-
- drivers/usb/usbip/stub_rx.c | 77 ++++++++++++++++++++++++-------------
- 1 file changed, 50 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/usb/usbip/stub_rx.c b/drivers/usb/usbip/stub_rx.c
-index fc01b31bbb87..6338d818bc8b 100644
-=2D-- a/drivers/usb/usbip/stub_rx.c
-+++ b/drivers/usb/usbip/stub_rx.c
-@@ -144,53 +144,62 @@ static int tweak_set_configuration_cmd(struct urb *u=
-rb)
- 	if (err && err !=3D -ENODEV)
- 		dev_err(&sdev->udev->dev, "can't set config #%d, error %d\n",
- 			config, err);
--	return 0;
-+	return err;
- }
-
- static int tweak_reset_device_cmd(struct urb *urb)
- {
- 	struct stub_priv *priv =3D (struct stub_priv *) urb->context;
- 	struct stub_device *sdev =3D priv->sdev;
-+	int err;
-
- 	dev_info(&urb->dev->dev, "usb_queue_reset_device\n");
-
--	if (usb_lock_device_for_reset(sdev->udev, NULL) < 0) {
-+	err =3D usb_lock_device_for_reset(sdev->udev, NULL);
-+	if (err < 0) {
- 		dev_err(&urb->dev->dev, "could not obtain lock to reset device\n");
--		return 0;
-+		return err;
- 	}
--	usb_reset_device(sdev->udev);
-+	err =3D usb_reset_device(sdev->udev);
- 	usb_unlock_device(sdev->udev);
-
--	return 0;
-+	return err;
- }
-
- /*
-  * clear_halt, set_interface, and set_configuration require special trick=
-s.
-+ * Returns 1 if request was tweaked, 0 otherwise.
-  */
--static void tweak_special_requests(struct urb *urb)
-+static int tweak_special_requests(struct urb *urb)
- {
-+	int err;
-+
- 	if (!urb || !urb->setup_packet)
--		return;
-+		return 0;
-
- 	if (usb_pipetype(urb->pipe) !=3D PIPE_CONTROL)
--		return;
-+		return 0;
-
- 	if (is_clear_halt_cmd(urb))
- 		/* tweak clear_halt */
--		 tweak_clear_halt_cmd(urb);
-+		err =3D tweak_clear_halt_cmd(urb);
-
- 	else if (is_set_interface_cmd(urb))
- 		/* tweak set_interface */
--		tweak_set_interface_cmd(urb);
-+		err =3D tweak_set_interface_cmd(urb);
-
- 	else if (is_set_configuration_cmd(urb))
- 		/* tweak set_configuration */
--		tweak_set_configuration_cmd(urb);
-+		err =3D tweak_set_configuration_cmd(urb);
-
- 	else if (is_reset_device_cmd(urb))
--		tweak_reset_device_cmd(urb);
--	else
-+		err =3D tweak_reset_device_cmd(urb);
-+	else {
- 		usbip_dbg_stub_rx("no need to tweak\n");
-+		return 0;
-+	}
-+
-+	return !err;
- }
-
- /*
-@@ -468,6 +477,7 @@ static void stub_recv_cmd_submit(struct stub_device *s=
-dev,
- 	int support_sg =3D 1;
- 	int np =3D 0;
- 	int ret, i;
-+	int is_tweaked;
-
- 	if (pipe =3D=3D -1)
- 		return;
-@@ -580,8 +590,11 @@ static void stub_recv_cmd_submit(struct stub_device *=
-sdev,
- 		priv->urbs[i]->pipe =3D pipe;
- 		priv->urbs[i]->complete =3D stub_complete;
-
--		/* no need to submit an intercepted request, but harmless? */
--		tweak_special_requests(priv->urbs[i]);
-+		/*
-+		 * all URBs belong to a single PDU, so a global is_tweaked flag is
-+		 * enough
-+		 */
-+		is_tweaked =3D tweak_special_requests(priv->urbs[i]);
-
- 		masking_bogus_flags(priv->urbs[i]);
- 	}
-@@ -594,22 +607,32 @@ static void stub_recv_cmd_submit(struct stub_device =
-*sdev,
-
- 	/* urb is now ready to submit */
- 	for (i =3D 0; i < priv->num_urbs; i++) {
--		ret =3D usb_submit_urb(priv->urbs[i], GFP_KERNEL);
-+		if (!is_tweaked) {
-+			ret =3D usb_submit_urb(priv->urbs[i], GFP_KERNEL);
-
--		if (ret =3D=3D 0)
--			usbip_dbg_stub_rx("submit urb ok, seqnum %u\n",
--					pdu->base.seqnum);
--		else {
--			dev_err(&udev->dev, "submit_urb error, %d\n", ret);
--			usbip_dump_header(pdu);
--			usbip_dump_urb(priv->urbs[i]);
-+			if (ret =3D=3D 0)
-+				usbip_dbg_stub_rx("submit urb ok, seqnum %u\n",
-+						pdu->base.seqnum);
-+			else {
-+				dev_err(&udev->dev, "submit_urb error, %d\n", ret);
-+				usbip_dump_header(pdu);
-+				usbip_dump_urb(priv->urbs[i]);
-
-+				/*
-+				 * Pessimistic.
-+				 * This connection will be discarded.
-+				 */
-+				usbip_event_add(ud, SDEV_EVENT_ERROR_SUBMIT);
-+				break;
-+			}
-+		} else {
- 			/*
--			 * Pessimistic.
--			 * This connection will be discarded.
-+			 * An identical URB was already submitted in
-+			 * tweak_special_requests(). Skip submitting this URB to not
-+			 * duplicate the request.
- 			 */
--			usbip_event_add(ud, SDEV_EVENT_ERROR_SUBMIT);
--			break;
-+			priv->urbs[i]->status =3D 0;
-+			stub_complete(priv->urbs[i]);
- 		}
- 	}
-
-=2D-
-2.45.1
-
+Jonathan
