@@ -1,69 +1,68 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1791C18EB1
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 07:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E2517BA2;
+	Sun, 19 May 2024 07:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716104496; cv=none; b=ezWj3pi+sQ053Ff7RBOgC1pp0NL8lqWBwn2oKSY+6YlLqnBO+We24mkoQA8b+BuGEuOLsMTn4ZqH8JBabWZu+UDZ8E6+Qi1IqsKEMRsudCBSym5F9tOPjXVHPAvDvkcc+Pu/A9YTwSUhPr3IfXxBOdHozxRjUJa0nie5nx2YdOA=
+	t=1716104637; cv=none; b=fQKgs5tW8Qz+1OkAusnqGy8U0qPXeifHp3vEMpma7cw9mvHv+9FA6TMQ+2hXLqdWcEaxzSLOUsCToQ+9SuX/DccDbrd0WlipUxAq/PPr9XVZPn1d+jRkGl56fr1NKY6XqAnU4ZtKP9kuik/wauYl9mhb1FpUOuzEj8jfQRMZPbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716104496; c=relaxed/simple;
-	bh=Scg55UA1RklCqNoWsYUK6xDYQtS3H7dxz/frrtpb58o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hpPOi4nm/Kq8f2GAsZ4vFraOOmDYXoNysE/VYAu1PiOswSs6o2Lw0hatpitiK7osaCSOUYNOm7rx4SuxZoIABmZK9Sv/M3bgU8ShQQx34Rn2yCwQ9gx3R6snGPKKKjKxa0vIoojtT2M2q0gNLuga6Ov8yQ5/FCNV8aNQmxVnzPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=vOygvmCD; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1716104637; c=relaxed/simple;
+	bh=BLS/3yqG+x+pmzxow4oCh/ZaClvha66n9SalV6XKyPI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nxgTMr9iF4IRRF+JsHHOHiHGwTCsB+3B8UR9+gVJVcMtZQNc3LughTr2Yxylppr4tfPAZga4z194SsBFx28SMi2Ko+4S8cuyHR/teRt5HoIkWrwyT72JT6it8UZEdpUi6WolC8+HW4rU7PVGzNKAyzY0a+BDZWR+4TAxHu2fdcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hkzgk/z+; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="vOygvmCD"
-X-Envelope-To: val@packett.cool
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1716104492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MnNP0xmGDxanAFfueiOaEkQQkHaHD1N0yNfpZxYHu7g=;
-	b=vOygvmCDYinXST/hlK0BHdTlaBBRBua3v5DJoizXW0DvbnBy+6JMwYe825c+hN/C6EIrAU
-	lkjsD5+VqDB/koqTW6oERNexd+smn06YnvgtrM5wvxYggFd7+xL6Ak0o4sp581Y0A+qLFC
-	YC+cT7kry3X8lXNhqpcJIMQU7TPmmli3kg7+COe9BrF4izNbNK5e3DkMJ4to3GDm9dxAvC
-	MRKyDzxMaLzmIQyQTc/2BrxrlbdFK4mtByEPvUI7aWyl3E+LyJbnjVDHk7nPH9P3UU7mOD
-	0jFX8VnkCjcaBqEns5klYd7p348AoA/D2O6NYnNylrPRyhDUmcnKd0PRjRnpEg==
-X-Envelope-To: stable@vger.kernel.org
-X-Envelope-To: hjc@rock-chips.com
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: andy.yan@rock-chips.com
-X-Envelope-To: maarten.lankhorst@linux.intel.com
-X-Envelope-To: mripard@kernel.org
-X-Envelope-To: tzimmermann@suse.de
-X-Envelope-To: airlied@gmail.com
-X-Envelope-To: daniel@ffwll.ch
-X-Envelope-To: dri-devel@lists.freedesktop.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-To: 
-Cc: Val Packett <val@packett.cool>,
-	stable@vger.kernel.org,
-	Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/rockchip: vop: enable VOP_FEATURE_INTERNAL_RGB on RK3066
-Date: Sun, 19 May 2024 04:31:32 -0300
-Message-ID: <20240519074019.10424-2-val@packett.cool>
-In-Reply-To: <20240519074019.10424-1-val@packett.cool>
-References: <20240519074019.10424-1-val@packett.cool>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hkzgk/z+"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5b27bbcb5f0so867057eaf.3;
+        Sun, 19 May 2024 00:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716104635; x=1716709435; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sxw0ppvwN68aKsYdrg7i/nk/Ahqb/+wiMV6TU4JTkq0=;
+        b=Hkzgk/z+sjGl3uGZ5/cN8u5niBaqdG6cwZ2yYp4ZHzL2Iz5bU/S3D4jgX9Q/gp59x8
+         n8c67saLryXiMGxsxNNZV4DJp2V1ORBgQt/fEoyc+h/oe3IRzXIoqaqvPsE2t7YE8+aj
+         SRA5sMpKnmSyuE1fwILppZ/JKQw4NyLqoc0VuhoZTVjKR64FjMOYDO7DX3RYZY8C++jj
+         KqtdXog21jsNEKQUKXTNWiyH+C7ZGDfBObsC69LzlT4U7cd+4Kw+tAhMBTWbkv2zbwqH
+         2WXy4wOHwOqWyKIVWcrSPEOtNZs8mNvA50vSLIewza6Np0t2fwM6ksdRoSX+GEXqBUa0
+         858Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716104635; x=1716709435;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sxw0ppvwN68aKsYdrg7i/nk/Ahqb/+wiMV6TU4JTkq0=;
+        b=sUIMdY8mTNquYl7xrMsM4s9lnE0exBIDOILxDnBbMvURyBA1VD9jIXMZlDBj/1c80R
+         fPUOp49Aya32bO9rjUKI4F+0sxuvQgdBZctlA58QONY+/pys110JjojBqq15Fjn+yAud
+         mTSIiHMYYQyaJN8HdCncg72/Nuq1I8chIJu+6OSh9DjTenXyAZ6w/WlZor0Yeg92yTH9
+         GNiicDhkE/EjlLdI08AxZuoS17EUs7F7eOuwgJvFQCytw5SFLOyFuGQgrzLqh60Edo75
+         wghJ7Ee+rmzRXykPpNKeivFgVE7eUNDQZMYyrTN9dxhbjaLpoViF9dP9iesJAPBo/CuS
+         lKKA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8wSN8xOmg5zj1sczS80lHr1fLo9YTI7tljKE/NW708BRPtcuMc2rybJoXeza9A3skDtTgvXT6e5XHdpegg/RTmmiA+wKoO9bNVxbP
+X-Gm-Message-State: AOJu0Yw/s+4mNtnbW7Mb733vGXimdfMFXPkAyJAXkIKlyGuscdixafs3
+	nthZqO/qmHOQ2/tvIhD7ph+iTGd4KXiQLNWogTL5/H2gWa+a0csY
+X-Google-Smtp-Source: AGHT+IHNm6SmvyxfGJ2bBkTQkzP7Xrbf6qLP88jCweFCOqqbEpA3/8+5OaaoJ+k0I3HpDOHDqyfI/w==
+X-Received: by 2002:a05:6358:8093:b0:192:5510:e3ee with SMTP id e5c5f4694b2df-193bb623eb1mr3124570055d.13.1716104635013;
+        Sun, 19 May 2024 00:43:55 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.27.58])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67126b666sm19735722a91.34.2024.05.19.00.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 May 2024 00:43:54 -0700 (PDT)
+From: Wardenjohn <zhangwarden@gmail.com>
+To: jpoimboe@kernel.org,
+	mbenes@suse.cz,
+	jikos@kernel.org,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com
+Cc: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wardenjohn <zhangwarden@gmail.com>
+Subject: [PATCH] livepatch: introduce klp_func called interface
+Date: Sun, 19 May 2024 15:43:43 +0800
+Message-Id: <20240519074343.5833-1-zhangwarden@gmail.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,26 +70,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Signed-off-by: Val Packett <val@packett.cool>
-Cc: stable@vger.kernel.org
+Livepatch module usually used to modify kernel functions.
+If the patched function have bug, it may cause serious result
+such as kernel crash.
+
+This commit introduce a read only interface of livepatch
+sysfs interface. If a livepatch function is called, this
+sysfs interface "called" of the patched function will
+set to be 1.
+
+/sys/kernel/livepatch/<patch>/<object>/<function,sympos>/called
+
+This value "called" is quite necessary for kernel stability assurance for livepatching
+module of a running system. Testing process is important before a livepatch module
+apply to a production system. With this interface, testing process can easily
+find out which function is successfully called. Any testing process can make sure they
+have successfully cover all the patched function that changed with the help of this interface.
 ---
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/livepatch.h |  2 ++
+ kernel/livepatch/core.c   | 18 ++++++++++++++++++
+ kernel/livepatch/patch.c  |  2 ++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index 9bcb40a64..e2c6ba26f 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -515,6 +515,7 @@ static const struct vop_data rk3066_vop = {
- 	.output = &rk3066_output,
- 	.win = rk3066_vop_win_data,
- 	.win_size = ARRAY_SIZE(rk3066_vop_win_data),
-+	.feature = VOP_FEATURE_INTERNAL_RGB,
- 	.max_output = { 1920, 1080 },
+diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+index 51a258c24ff5..026431825593 100644
+--- a/include/linux/livepatch.h
++++ b/include/linux/livepatch.h
+@@ -37,6 +37,7 @@
+  * @nop:        temporary patch to use the original code again; dyn. allocated
+  * @patched:	the func has been added to the klp_ops list
+  * @transition:	the func is currently being applied or reverted
++ * @called:		the func is called
+  *
+  * The patched and transition variables define the func's patching state.  When
+  * patching, a func is always in one of the following states:
+@@ -75,6 +76,7 @@ struct klp_func {
+ 	bool nop;
+ 	bool patched;
+ 	bool transition;
++	bool called;
  };
  
+ struct klp_object;
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 52426665eecc..bc055b56dbe5 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -470,6 +470,22 @@ static struct attribute *klp_object_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(klp_object);
+ 
++static ssize_t called_show(struct kobject *kobj,
++				struct kobj_attribute *attr, char *buf)
++{
++	struct klp_func *func;
++	
++	func = container_of(kobj, struct klp_func, kobj);
++	return sysfs_emit(buf, "%d\n", func->called);
++}
++
++static struct kobj_attribute called_kobj_attr = __ATTR_RO(called);
++static struct attribute *klp_func_attrs[] = {
++	&called_kobj_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(klp_func);
++
+ static void klp_free_object_dynamic(struct klp_object *obj)
+ {
+ 	kfree(obj->name);
+@@ -631,6 +647,7 @@ static void klp_kobj_release_func(struct kobject *kobj)
+ static const struct kobj_type klp_ktype_func = {
+ 	.release = klp_kobj_release_func,
+ 	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = klp_func_groups,
+ };
+ 
+ static void __klp_free_funcs(struct klp_object *obj, bool nops_only)
+@@ -903,6 +920,7 @@ static int klp_init_object(struct klp_patch *patch, struct klp_object *obj)
+ static void klp_init_func_early(struct klp_object *obj,
+ 				struct klp_func *func)
+ {
++	func->called = 0;
+ 	kobject_init(&func->kobj, &klp_ktype_func);
+ 	list_add_tail(&func->node, &obj->func_list);
+ }
+diff --git a/kernel/livepatch/patch.c b/kernel/livepatch/patch.c
+index 90408500e5a3..75b9603a183f 100644
+--- a/kernel/livepatch/patch.c
++++ b/kernel/livepatch/patch.c
+@@ -118,6 +118,8 @@ static void notrace klp_ftrace_handler(unsigned long ip,
+ 	if (func->nop)
+ 		goto unlock;
+ 
++	if (!func->called)
++		func->called = true;
+ 	ftrace_regs_set_instruction_pointer(fregs, (unsigned long)func->new_func);
+ 
+ unlock:
 -- 
-2.45.0
+2.37.3
 
