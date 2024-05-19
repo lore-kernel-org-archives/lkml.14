@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742506D1B9
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 19:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968A86E61A;
+	Sun, 19 May 2024 19:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716147417; cv=none; b=Nz7X+UB9yu1yKRFvbsrfwPi5KWRAFxCZHSk0IV3xzh7GWCJUo/hPpIOnhxQ/M98FH7hU0nB42TooU4YfVfa64c7KY5xv6A5Eq9Ai87ahi7kKWEa1cUGFeG2PBYYI5SEFhswAjNSOWcXJh8+Cgp4wclGZfEYpIX5UMbHdPKXLVTc=
+	t=1716147417; cv=none; b=P+W60z/4QjuYafJB4+aKBuNIAMFeF/F0HcDtuYXplWTez1zoheYhwgOg77OH2iuri+6QEFVaLpyGPAGmRNQrKsFICrcgh5Lbl4dpnWyWFjMp8ruoMRKPZ7bp7awxhYecjlZgZQPWa4wT4pc55H/GVvRermPXu+qp+97TgXuM8xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716147417; c=relaxed/simple;
-	bh=yz92c1iXTAyGzBaVB+VHzxZy/8ApJAKOqyom+hXVUfY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VKEWWu9Ftl3SpG/Dd8PosJwz/u4iXT2eBX4kUGym9AUDNoiYqtiwlSc+04FEVyo1Q7JSnLx7kytH5l9SRMhqh9M1RDqzr82ESQVxUfHe3gqn/PUOmA0/Dr/Cz5Yur8F4YoqK5LJpIgHlzIK1XPSaDk1KGE+aN5hU/X6DYEGj5RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKw0bfuB; arc=none smtp.client-ip=10.30.226.201
+	bh=YEgeFgOE7zY5OBbYvBi1KKhLjKSOsdLUG+jQ+L5T8JM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=hENhoSwY4+cQb7jiIZHbWSGEpSIvHbeNabW+VeIlPpoBtpoWdbRqdcpnPfxcsXJVW8yFAUI/UKMs1XhdRHDviwYbGKd8EYXXbYhyCQWT26XiS850z/gMAT9/j9t/YKXDhgZ8j5sf4qJDOeBEpjiFnhpJ4R+Mm5q5mp0i17NYYSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYIH4C9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKw0bfuB"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 535EDC4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYIH4C9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 777F0C4AF0F;
 	Sun, 19 May 2024 19:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716147417;
-	bh=yz92c1iXTAyGzBaVB+VHzxZy/8ApJAKOqyom+hXVUfY=;
+	bh=YEgeFgOE7zY5OBbYvBi1KKhLjKSOsdLUG+jQ+L5T8JM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=sKw0bfuBv00EtgapkrBA59jkeTKGs3LUqLeXdt7sm/5MLaGXABxEHrL3Fbfu6Eg4q
-	 n6l0swz+HGY7PisfwnpfF8QidrLy+zTXHApdkbUb8X/1/4MkyZOV5QMiRpe6NtJTLB
-	 g/j9njvo7gKAid2R6r29H0rq6QCTzT9VFHloF0J5UQoXbd22g77vbgD8ESvyaA2VS+
-	 LLR1f+YZDWGj/t2I46X3FtyoHKbUsywNbCWGw9IVj9No+5kGKJzgQEL+FggN9X7ML5
-	 /tKQiYLowTVQ0jqIsGr5k8vF6/Ox++4l1RWdh6IlAtdJzJChG0bVA2h3klIot0TzEv
-	 3OLnuU46xSv4g==
+	b=JYIH4C9hZXdxv9W554YKPwzDDtspYZb5DG2q651AqgKWXI2pldw24fsSQ2FklY9Iq
+	 9U0WtyGDh7O+P7fjvbGQMBwPuRRQJjynx6xEEds7bIYzJe8Dd/qZiJs5Lm1DIjLEmw
+	 YMnBqdyJ4hsAYgSuUi6lpzN9NzGE7UAuxxGVA6BXidR9EdkHWTJ/0osmNZlUYeMkEV
+	 pAlDGbBCyAAjX460N1R+g0dgeGnRVVf/zOrehvWkVuvdg54hoEPtGeYtBht17vAXkt
+	 NUFv9B87Wz+ZPtyrVUgdHL0QWZAoTNC4Hm7MEWAytbkyzm7QiNO/VEPf5oR2ovREKz
+	 zciAcgi5XJjKw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 498DEC54BB7;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6EEBCC54BB2;
 	Sun, 19 May 2024 19:36:57 +0000 (UTC)
-Subject: Re: [GIT PULL] kgdb changes for v6.10
+Subject: Re: [GIT PULL] Turbostat 2024.05.10 for Linux-6.10-merge
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240518152655.GA5820@aspen.lan>
-References: <20240518152655.GA5820@aspen.lan>
+In-Reply-To: <CAJvTdKmgOCBUX=O4VvuVZfnXVpZcm5vDU6DtAYykuhBH7+-7ow@mail.gmail.com>
+References: <CAJvTdKmgOCBUX=O4VvuVZfnXVpZcm5vDU6DtAYykuhBH7+-7ow@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240518152655.GA5820@aspen.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-6.10-rc1
-X-PR-Tracked-Commit-Id: b2aba15ad6f908d1a620fd97f6af5620c3639742
+X-PR-Tracked-Message-Id: <CAJvTdKmgOCBUX=O4VvuVZfnXVpZcm5vDU6DtAYykuhBH7+-7ow@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git tags/turbostat-for-Linux-6.10-merge-window
+X-PR-Tracked-Commit-Id: 256d218ec6aea99855dc5c54af550fcff96fc732
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a76056285f5d64740b461d70b062225ba80f0ac2
-Message-Id: <171614741729.6582.13612010194829053315.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: a90f1cd105c6c5c246f07ca371d873d35b78c7d9
+Message-Id: <171614741745.6582.271007367077030497.pr-tracker-bot@kernel.org>
 Date: Sun, 19 May 2024 19:36:57 +0000
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jason Wessel <jason.wessel@windriver.com>, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Thorsten Blum <thorsten.blum@toblux.com>, Justin Stitt <justinstitt@google.com>, Liuye <liu.yeC@h3c.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Len Brown <lenb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 18 May 2024 16:26:55 +0100:
+The pull request you sent on Sat, 18 May 2024 11:56:57 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/danielt/linux.git/ tags/kgdb-6.10-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git tags/turbostat-for-Linux-6.10-merge-window
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a76056285f5d64740b461d70b062225ba80f0ac2
+https://git.kernel.org/torvalds/c/a90f1cd105c6c5c246f07ca371d873d35b78c7d9
 
 Thank you!
 
