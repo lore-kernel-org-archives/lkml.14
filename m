@@ -1,74 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850D23D96D;
-	Sun, 19 May 2024 14:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53E5282F0;
+	Sun, 19 May 2024 14:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716128908; cv=none; b=peiBhk/av2a2j4LLP7iMMkdJ9ZZTivDCXJODXpOOwUUpswHCQ9PMSRaqATyxuKnoZ9BUt5OTkGpAUUqmMX128QZU9NltBF1yRaNBQOXy+iiLMDDhWRCiJyEI3tzHQc3uHc8CFFL4t6KIXkoLTeAkwYnWUpTIZjWUocBvFC7XVcs=
+	t=1716129101; cv=none; b=fvOC+G/EBKxhtNhk7jO3QRknlFwhq2e5RX+t4eZadZj/c4UkKBLqlDmNyxAOO4gm+P1EtTdqFjPL8+bCH+CROLqSnd0a4xWsIvZ50LFMNv2TtDFfCeeh47hmpLxyIK7TYFJFbvflAZd3JUxAH1DNTBW4bNWtzGECg6Zr20h92lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716128908; c=relaxed/simple;
-	bh=cBSTNNqNP01K4/ip+KCoAdCRfvtVbABGRgJ90i9SwIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XxvFytA2du0ZtXtkHdR9Ny6DyRQxuxIMRnA1/LKOcTOXiMUpq/QW6Pk7aR8RQUcex59O8FoLKADPsFRtCIWf6gO7EmlMb0gyEIjUGlpHzrqleS7IRiJ+vabDuUS4bSDLkDNNnjFDO0LHrXsBP+stS+fcTSQHHTxlv4hOK07fjpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1z9MtTT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716129101; c=relaxed/simple;
+	bh=Bo0hkkNb6n0GtovvowUCH9XaoMAubly47QTAmugCRVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s621FQX9ZNFVNq98i7jMDtymB+zEiEYnMFK2N7ZK1ZMParFqsBbzhAswyG0V2KmZNAUTpkKNsUHWxYMOmq4OZ3h/zhh7/thMlaOTyJIa/oW64zglqAdYWHqeXIai7hM5PxaUfdZsOP8SfVSNleEbR8NWLEI+kyTBcjGMjf+77aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hsPoZwPb; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1z9MtTT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E387C32781;
-	Sun, 19 May 2024 14:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716128908;
-	bh=cBSTNNqNP01K4/ip+KCoAdCRfvtVbABGRgJ90i9SwIQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U1z9MtTTxGwXZSkTG08z+EbXzQA57bv+iMV7Xshpaq4jQF9UQN955eC1lOQ7OKDMZ
-	 5XIPeneTwlSKehmmXyin9QeJwcbnxYn5C+NfdtSZ6OibVP/34PEbkoduhfEiiGbw1e
-	 oaEpFhk6WxECxaKbNt3fTL5CGiWoO2cFsZ/VKCJb4sKvfBKnkruGWIE3RlEtU1z2Lf
-	 wn9fWYkbhrhJAyWtF+JqCQ8ra/Pi497O9LfDgPwVVWaHp/dc6w+UZ3XmBV2k5eoIw3
-	 AhUKcHXNcw7L8XKFJcbE/rTAAFunopfHdj06AQpwy0fEo0yUrrmol61RJ+95mIxIZi
-	 23jdF4mnzSgsg==
-Date: Sun, 19 May 2024 15:28:13 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
- ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
- petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
- linus.walleij@linaro.org, semen.protsenko@linaro.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/5] iio: pressure: bmp280: Generalize
- read_{temp,press,humid}() functions
-Message-ID: <20240519152813.30605aed@jic23-huawei>
-In-Reply-To: <20240512230524.53990-4-vassilisamir@gmail.com>
-References: <20240512230524.53990-1-vassilisamir@gmail.com>
-	<20240512230524.53990-4-vassilisamir@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hsPoZwPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716129063; x=1716733863; i=markus.elfring@web.de;
+	bh=okgSGZhPXLzsKcF0XXQXyYWpYhHobc+okPiEHtdUg2Q=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=hsPoZwPbyl9kHz9oKkiVu5F5hQDrX/uhpttLkGq4gkskP0mIvN+u6qQazEN6bfC/
+	 w43xpBUftsCLM2XXNgxDG1y9sBiHoGuhSq10V0/KoxjHQuIGWtB+7ilSSykmWL3Jp
+	 8ERJ1VS5bv0Mv7jwXZte9olZWwz3ixQbqL2gLXK+QKuHpoOhzYXfDak0W1ML+DerU
+	 SShKVwM2QtpV/OIefLftCWKA/sI/z3EUROSkm1nVDFvYqmRZ+SmaS7wqbU26EMezB
+	 f6aBh2MXdnjMta+mDlUKkEL9kCxZKwPHxuazKdVB4UGduFzAp8rG7F8XtQxxet4Ea
+	 JywBbyAtGSfdxkUPCw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N3Gga-1sYnFk3to2-00x6CV; Sun, 19
+ May 2024 16:31:03 +0200
+Message-ID: <13c9cf99-48e2-4638-b40e-e5b065421ff3@web.de>
+Date: Sun, 19 May 2024 16:30:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 12/28] net: ethernet: ti: cpsw-proxy-client: add NAPI RX
+ polling function
+To: Matthew Wilcox <willy@infradead.org>, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ MD Danish Anwar <danishanwar@ti.com>, Paolo Abeni <pabeni@redhat.com>,
+ Roger Quadros <rogerq@kernel.org>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, LKML <linux-kernel@vger.kernel.org>,
+ linux-doc@vger.kernel.org, Misael Lopez Cruz <misael.lopez@ti.com>,
+ Sriramakrishnan <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240518124234.2671651-13-s-vadapalli@ti.com>
+ <f9470c3b-5f69-41fa-b0f4-ade18053473a@web.de>
+ <ZkoGCpq1XN4t7wHS@casper.infradead.org>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ZkoGCpq1XN4t7wHS@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZOR+qvZzRR+ttY7PuL03hVIwkfO7x7y7RvXHXJuDeJUFFg/+vou
+ BwVgWAInZI7x7d7oE3Dfl/rE7iP1T/eLVCvjjfayyrwhEuhxhwE39O8tzqt3roh2BpMqkGi
+ aYy3QlFzjJqzlz3/9G7agOFYGgUOyXJrtimGjGkb4vKKCKR7EUy6tmNPRBVAaWj+dpIz6vc
+ aAEpAcp10aXc8VNXn3i0g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:p3njCTGZjQU=;MM/BtbTKdD1/cFkV9hDHqUuaeAA
+ R8CSId/keq81wOpxwHGT/KQ4/EMc9EoKDoFt23MwMKcwbX0IuDzl6HNuffNcsR6AlDHighzfb
+ 2B+cutp2WbiKUvJga7TBKBM4przF3nvvKDYzJmSZlEJ2O24l/wZoSBk+S9KLD3Qhl+JqLp0Em
+ 1D3zuB5amF58IKbdQDVQ7Pxcf+Y1RTTct+Ayv8q7I9D3GoSbkiRw5K97Tv1ryT0qwrlOGgHFS
+ eEy7+ebyN1tir8hvfeVLk1Qys0ls3yvzpSvRFqpEqgdQi44G7Nadm/k0shnia85KtpxgxlKpW
+ DthE0qQZIe3mtkDaXSv/xCmphm94gZ3n4/aqVbarmLo6ou7IW4UAbUhALG1dPG0FZNM4JYjey
+ cg71B7xYHPic7aLYL7fHJZk5VCXGbcTx1aF003t/t/6VSfGZYRTo+dmAiCWl5RozkCrgIbLYZ
+ QkOhjRi1J+a3APsPw0obs+FQOxDy3HXTbW28RPwmLhYvoc/Br1gXrJjcBulS88IqHyWQviK8d
+ U/LeOlPk5asXdhWhlkJH2QpJv1u63peW9/GNboafj2B7flO0toWBxDcrBxrf7tPz8juacvrrW
+ nVfBGcU71xJdyVS3sr9iBIjat028YQsdef86mkhzfZ6mb+YrBftSIpyQrlqzUaz0PxTAYJKtQ
+ ow/iuIjcM6UgdqQPm5kX9tFvzUcPDxqWuzdx8YyHrqIo9gSf/aJuJff9epK0jjydIcxA1vtN5
+ ZMzWwujjFG46gOhAZyhKEVjPxSSlXZHk1yH6F/w9vTrNa4jByh+yImhvHVTPa8bqIeTQjSJKp
+ iviOXkUr8ycRer9OPgCgyULquV7EQb8P5RSH7uOa71E94=
 
-On Mon, 13 May 2024 01:05:22 +0200
-Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+> FYI, Markus can be safely ignored.  His opinions are well-established as
+> being irrelevant.
 
-> Add the coefficients for the IIO standard units and the IIO value
-> inside the chip_info structure.
-> 
-> Move the calculations for the IIO unit compatibility from inside the
-> read_{temp,press,humid}() functions and move them to the general
-> read_raw() function.
-> 
-> In this way, all the data for the calculation of the value are
-> located in the chip_info structure of the respective sensor.
-> 
-> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
-This had the earlier missing
-int ret; in it, so needs some manual tweaking.
+I hope that views can become more constructive somehow.
 
-Applied.
 
-Thanks,
+=E2=80=A6
+>> https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a=
++goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+reso=
+urces
+=E2=80=A6
+>> https://elixir.bootlin.com/linux/v6.9.1/source/include/linux/cleanup.h
 
-Jonathan
+Do linked information sources provide more helpful clarification opportuni=
+ties
+also for undesirable communication difficulties?
+
+Regards,
+Markus
