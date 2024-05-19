@@ -1,191 +1,97 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5FB6EB7E
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 22:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9736971745
+	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 22:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716157573; cv=none; b=RlBuw7H+Cpot+so87MV9wk42wsKS2Lgc0M59OwTcWSs1X7MibnyC3uNWFlll4P+1kwZTRGBq2mWqvYM8M7Gp89EchVoPY/eUt/ayKJgjC5nCKzaWugegcTuP5MG74nDxKTRlfD05rXGSKTbnC17hmPwb9Ix8BZQfRhV3iiuEu+4=
+	t=1716157606; cv=none; b=gxQt0RfMMCc9ZKnR4TM6eGznyOhkQAofAO4Rwk7J2jezs7DkgF/CXDWqt6JC1uQPP3EP3ScuCNLv1b7m6qoFFqzOvqR0qi2EtwU1+dof18G/5lwOJg2p4L84F4c7brgmL2+lIIKwzfgXymSFp/jmnkPpA66lX0pot4rcwEWMyS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716157573; c=relaxed/simple;
-	bh=THb6U/IAXgN0Rni/3oOcLepiryatnwll2o0cHzTm1j0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=I8ZSRDAyEaLecxP6Umca/nUvk+juhaVEE8qGyLhJ8yFV7KlCSdZj3bxZFZndUqHpeiwxDrAtrhBCN0Fs6tp8BCopnym9ruo2BOg6w1YIaeKtkwlMWjzTGBkapbN32akdipUqtZe0/HBStqHUD/HT6qOQIUJ1LuMQjmuhZvQIYcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JZXx5QLb; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1716157606; c=relaxed/simple;
+	bh=bhsmvXZL+pT7EmyzyVZPA1xgTKqR02mDPGlmGXciAs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cj87bHfnAywEsejfqMsAMJDJFYM/tCuGwvMtxCDdGCzs0q8dpQHAT52LtVvbjeQsSabaF0npHrPX/IKiN3AMiYOLiQABNBjuzIac8SSD8uLpsoNxXIiSt05OaZoFge91VstjlYpC2xrBMOgvmT8N5K4ijVDjbHBZn5sMh5gNaeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nZ7OdG47; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JZXx5QLb"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240519222608epoutp01467b2ddfc5e8a97d0f411ba26d958726~RBDdmgCdY1629516295epoutp01g
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 22:26:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240519222608epoutp01467b2ddfc5e8a97d0f411ba26d958726~RBDdmgCdY1629516295epoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716157569;
-	bh=XmhBrod8ZQ9l7o6s6kdW19cgXeZ702NdvMq541eOD4k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JZXx5QLbzBWGYuh9ZYtwZ74XcuIk+EpGSgQ0zJqQrC+fqOiO0DyKtfjcdNvAo8qhb
-	 9XHIh5Oy/fb7XD4kIMqvRNhs1NG0nKA3bqj2rfSMvjq8dIUnSvGiKRZQ//97sUt557
-	 nr/Z7Ho6e6dwr2kVCmkInsUQmQb6FHmxP4c+Rq5k=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20240519222608epcas2p35ce9b746575deda673655539d3d1963c~RBDc8bL_V1101011010epcas2p3i;
-	Sun, 19 May 2024 22:26:08 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.100]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4VjFf73yhDz4x9Pp; Sun, 19 May
-	2024 22:26:07 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	42.40.09673.F7C7A466; Mon, 20 May 2024 07:26:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240519222606epcas2p45c250e92bacb3aa0b00f7430ee69884d~RBDbu5ih12320323203epcas2p4G;
-	Sun, 19 May 2024 22:26:06 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240519222606epsmtrp219946c2a51082b4f384bcfb86b9e0886~RBDbuI1Wb2869528695epsmtrp2D;
-	Sun, 19 May 2024 22:26:06 +0000 (GMT)
-X-AuditID: b6c32a45-a89fa700000025c9-71-664a7c7fc8b3
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C2.87.09238.E7C7A466; Mon, 20 May 2024 07:26:06 +0900 (KST)
-Received: from localhost.dsn.sec.samsung.com (unknown [10.229.54.230]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240519222606epsmtip29dc4334510d7f840828e0f5f939b321c~RBDbfliN40469104691epsmtip2G;
-	Sun, 19 May 2024 22:26:06 +0000 (GMT)
-From: Minwoo Im <minwoo.im@samsung.com>
-To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Bart Van
-	Assche  <bvanassche@acm.org>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, Joel Granados
-	<j.granados@samsung.com>, gost.dev@samsung.com, Minwoo Im
-	<minwoo.im@samsung.com>, Asutosh Das <quic_asutoshd@quicinc.com>
-Subject: [PATCH v2 1/2] ufs: mcq: Fix missing argument 'hba' in
- MCQ_OPR_OFFSET_n
-Date: Mon, 20 May 2024 07:14:56 +0900
-Message-Id: <20240519221457.772346-2-minwoo.im@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240519221457.772346-1-minwoo.im@samsung.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZ7OdG47"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e6f33150bcso37922001fa.2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 15:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716157603; x=1716762403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JObSYzQBPhN8GXmYgBbRvZYZ/SCSfA1Ecyc4ynw/10k=;
+        b=nZ7OdG47AmzNx8CMCzNdKmkW2V44WzcDZJd0p9RdRqOqb3CzhnRRpnplxzMeGtXinx
+         ib+bklGLm0smH/lKd9mW9Q/Z7zNW1bQ3Pvk7U7h8YNCWWgDvFUZZi1agHnzpwCp2zAow
+         KFbxSBwb9Lp4HWvacXT8JTQJOEinGeg4Do03RF4Stkw623t8RbcBDeNBI7orYvc4QF4+
+         Coyh8tYvIjJrXEYgOAKUY3L/HYhmFbVNpQFk/iyh5Z8y87tf40YGNf7TnCKMEqDWw9dG
+         X5EYgRLCleFxy9ZbL2Oht744HEWlQjmdrUoqms6tUIzrQK89NeBz2zZLnS+5ZMiSQflB
+         x5sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716157603; x=1716762403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JObSYzQBPhN8GXmYgBbRvZYZ/SCSfA1Ecyc4ynw/10k=;
+        b=kiCU+PWWi6ejsIxTc5z/bl9yuHdNH1rojpHur5tb6koICBXHAMT2MZAGAX7GNDgAdp
+         fJsrx/3q9Pk+MCtgdxH5ijmXQhTpeffGd+8TwQtUYWy+h1p3RjXTNYehB6N8h4Q7rB72
+         zD10trEcRrvuRewNSbLDCwDHGrrwPbIhpWOLc2i7jU8k2bWD/i3KWvfy+bwqq2EJzuDY
+         fiCa1ODfZqNbhOE+/yfzLHfThVG15nqCnmFWC/3pXRFULwIor2fcW7qP7CcWMbsRbxgk
+         eGKmM5V31FVaJWX5t4bjnrAVhTts4Pw05sbLGSEIppaXnud2OQPGQTdfcGUs8rzUtgrg
+         qL/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXMRYNo2+qVemoy9d0U9Y1b7+yBixpunoW7SoQubliWWp/ZaOm/vk1kgGBX95uz/xJy6Dc4WDE1hAZ6aQOoONGgfx62SOQOoiUy4niv
+X-Gm-Message-State: AOJu0YzNH7lK5i2GUX3odiBp9JCKKOGSTRck/BOrr79KsDxlfj19y6dW
+	U9z2pnLYd8qOlUIHQuvUL3BMnQN+rjd+1FiggC6hD3cftsNMMBC7Tc5pyjvxPiM=
+X-Google-Smtp-Source: AGHT+IFWahWBY2ir7LucN1X/aBwVlMImRfoE+eP/cd4MqvN0pjGjs98YYiaYuQpQSioRNFZxFIQh1A==
+X-Received: by 2002:a05:6512:b88:b0:523:8c7a:5f6 with SMTP id 2adb3069b0e04-5238c7a06e3mr11745122e87.51.1716157602727;
+        Sun, 19 May 2024 15:26:42 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::8a5])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f35ad640sm4025069e87.61.2024.05.19.15.26.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 May 2024 15:26:42 -0700 (PDT)
+Date: Mon, 20 May 2024 01:26:40 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Shuijing Li <shuijing.li@mediatek.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Xinlei Lee <xinlei.lee@mediatek.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] drm/panel: boe-tv101wum-nl6: Check for errors on the
+ NOP in prepare()
+Message-ID: <5n7uz7wacuz7cwlv5drr77l27kq7nsw34horh6o5iecrhs2tws@5gvxuusty4rx>
+References: <20240517213712.3135166-1-dianders@chromium.org>
+ <20240517143643.3.Ibffbaa5b4999ac0e55f43bf353144433b099d727@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOJsWRmVeSWpSXmKPExsWy7bCmhW59jVeawa6D0hYP5m1js3j58yqb
-	xbQPP5ktbh7YyWSxdP9DRouN/RwWl3fNYbPovr6DzWL58X9MFs9OH2C2WNgxl8WB2+PyFW+P
-	aZNOsXl8fHqLxWPinjqPvi2rGD0+b5LzaD/QzRTAHpVtk5GamJJapJCal5yfkpmXbqvkHRzv
-	HG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0oZJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jE
-	Vim1ICWnwLxArzgxt7g0L10vL7XEytDAwMgUqDAhO+PUvlfsBZvEK97fXszSwLhfuIuRk0NC
-	wETi36Hd7F2MXBxCAjsYJW482ckC4XxilJi+aAkzhPONUWLzzddsMC2/vz6CatnLKNF/ZysT
-	hPObUeLygtVgVWwC6hINU1+xgNgiAh8YJTa9MQApYhY4xSjx+X47I0hCWCBI4k7XBFYQm0VA
-	VeJ4wy92EJtXwFri0I4TLBDr5CX2HzzLDGJzCthITLt/nRmiRlDi5MwnYDXMQDXNW2eD3Soh
-	MJFDYvKVQ8wQzS4SL3qaWCFsYYlXx7ewQ9hSEp/f7YX6p1zi55tJjBB2hcTBWbeB4hxAtr3E
-	tecpICazgKbE+l36EFFliSO3oLbySXQc/ssOEeaV6GgTgpihLPHxEMx+SYnll2Dh5iFx4v5f
-	aLj1M0p0/tvGNoFRYRaSZ2YheWYWwuIFjMyrGMVSC4pz01OLjQoM4TGcnJ+7iRGcYrVcdzBO
-	fvtB7xAjEwfjIUYJDmYlEd5NWzzThHhTEiurUovy44tKc1KLDzGaAoN6IrOUaHI+MMnnlcQb
-	mlgamJiZGZobmRqYK4nz3mudmyIkkJ5YkpqdmlqQWgTTx8TBKdXA5KkRMDvS55KjTp33g/Kp
-	35ftaeL6f1M8raSzYv06S/2YozOtoth+ZWXpZh8Tu/G6ZLfDQW2ZrYH2d9hvMOxiWXz1sItq
-	/D/eO5pnPPUYQ5zeaN6qMsjlEunV4mHtVP7HtH1JxZGuhVzrq7bUPl3DEzRvr9qx1oq1AbbO
-	B/OFg9unGmnkVDMfmHZrUezqdW9d14le4m68a/CmY9/W7rn7bR1PnPr/7dUea4lJi5dyNmyO
-	ymvZ1GqreTF4m6xmU+lzjsbjO5kO6/U+uCyz9XCMup8szyL+GzuPr59qsELu+O4b+yd2FnrG
-	LXd7rSidH5y2sP/lnfwpizlqly/Y7ul8IzkvuivZ6MHezXaXnuXIK7EUZyQaajEXFScCAJHd
-	09s6BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSvG5djVeaQdtzY4sH87axWbz8eZXN
-	YtqHn8wWNw/sZLJYuv8ho8XGfg6Ly7vmsFl0X9/BZrH8+D8mi2enDzBbLOyYy+LA7XH5irfH
-	tEmn2Dw+Pr3F4jFxT51H35ZVjB6fN8l5tB/oZgpgj+KySUnNySxLLdK3S+DKOLXvFXvBJvGK
-	97cXszQw7hfuYuTkkBAwkfj99RE7iC0ksJtRYnK3LkRcUmLf6ZusELawxP2WI0A2F1DNT0aJ
-	ibNPsIEk2ATUJRqmvmIBSYgIfGKU2NTVAeYwC1xglJjz6RMzSJWwQIDEq5tPwVawCKhKHG/4
-	BWbzClhLHNpxggVihbzE/oNnweo5BWwkpt2/zgxxkrXEj62XWSDqBSVOznwCZjMD1Tdvnc08
-	gVFgFpLULCSpBYxMqxglUwuKc9Nzkw0LDPNSy/WKE3OLS/PS9ZLzczcxguNBS2MH4735//QO
-	MTJxMB5ilOBgVhLh3bTFM02INyWxsiq1KD++qDQntfgQozQHi5I4r+GM2SlCAumJJanZqakF
-	qUUwWSYOTqkGph2LMpLq7Fc59X9Prn/65PfV3TZmORpC3CbTA9o5l6/cEfKz51vR9yURR3dE
-	FcnsrTirFNOsav5iX8KFl8dUJ8nvUxGtfr/jZuOq9feulOcaVd0QCV17/WVW4+WNJpPU9zrI
-	He4uODpz5fTTq5SXPm+KLNXy2cvaI/42ov281oVb3ec7p2SlKtgkX98iXH3r8hSFQ9+ep3h4
-	fDolwL6DT8lP8s2LeSc/Oy73XhjTtWOL+IJw6UnCvwKPZq4UlZ5kMC/4g2Sqx8eqF2f4c/xX
-	J9+7tOBVg6MtZ8M69XKOWwkvXB8mn36w50HgPImD0qknNFzVWqRURGbsDRZ8fa977TpTn4SD
-	5bxFW89Ihb6cpKHEUpyRaKjFXFScCABRBTbs9gIAAA==
-X-CMS-MailID: 20240519222606epcas2p45c250e92bacb3aa0b00f7430ee69884d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240519222606epcas2p45c250e92bacb3aa0b00f7430ee69884d
-References: <20240519221457.772346-1-minwoo.im@samsung.com>
-	<CGME20240519222606epcas2p45c250e92bacb3aa0b00f7430ee69884d@epcas2p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240517143643.3.Ibffbaa5b4999ac0e55f43bf353144433b099d727@changeid>
 
-The MCQ_OPR_OFFSET_n macro has taken 'hba' on the caller context
-without receiving 'hba' instance as an argument.  To prevent potential
-bugs in future use cases, this patch added an argument 'hba'.
+On Fri, May 17, 2024 at 02:36:38PM -0700, Douglas Anderson wrote:
+> The mipi_dsi_dcs_nop() function returns an error but we weren't
+> checking it in boe_panel_prepare(). Add a check. This is highly
+> unlikely to matter in practice. If the NOP failed then likely later
+> MIPI commands would fail too.
+> 
+> Found by code inspection.
+> 
+> Fixes: 812562b8d881 ("drm/panel: boe-tv101wum-nl6: Fine tune the panel power sequence")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
 
-Fixes: 2468da61ea09 ("scsi: ufs: core: mcq: Configure operation and runtime interface")
-Cc: Asutosh Das <quic_asutoshd@quicinc.com>
-Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
----
- drivers/ufs/core/ufs-mcq.c | 10 ++++------
- include/ufs/ufshcd.h       |  6 ++++++
- 2 files changed, 10 insertions(+), 6 deletions(-)
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index 768bf87cd80d..b93ec147641c 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -231,8 +231,6 @@ int ufshcd_mcq_memory_alloc(struct ufs_hba *hba)
- 
- /* Operation and runtime registers configuration */
- #define MCQ_CFG_n(r, i)	((r) + MCQ_QCFG_SIZE * (i))
--#define MCQ_OPR_OFFSET_n(p, i) \
--	(hba->mcq_opr[(p)].offset + hba->mcq_opr[(p)].stride * (i))
- 
- static void __iomem *mcq_opr_base(struct ufs_hba *hba,
- 					 enum ufshcd_mcq_opr n, int i)
-@@ -343,10 +341,10 @@ void ufshcd_mcq_make_queues_operational(struct ufs_hba *hba)
- 		ufsmcq_writelx(hba, upper_32_bits(hwq->sqe_dma_addr),
- 			      MCQ_CFG_n(REG_SQUBA, i));
- 		/* Submission Queue Doorbell Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_SQD, i),
-+		ufsmcq_writelx(hba, ufshcd_mcq_opr_offset(hba, OPR_SQD, i),
- 			      MCQ_CFG_n(REG_SQDAO, i));
- 		/* Submission Queue Interrupt Status Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_SQIS, i),
-+		ufsmcq_writelx(hba, ufshcd_mcq_opr_offset(hba, OPR_SQIS, i),
- 			      MCQ_CFG_n(REG_SQISAO, i));
- 
- 		/* Completion Queue Lower Base Address */
-@@ -356,10 +354,10 @@ void ufshcd_mcq_make_queues_operational(struct ufs_hba *hba)
- 		ufsmcq_writelx(hba, upper_32_bits(hwq->cqe_dma_addr),
- 			      MCQ_CFG_n(REG_CQUBA, i));
- 		/* Completion Queue Doorbell Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_CQD, i),
-+		ufsmcq_writelx(hba, ufshcd_mcq_opr_offset(hba, OPR_CQD, i),
- 			      MCQ_CFG_n(REG_CQDAO, i));
- 		/* Completion Queue Interrupt Status Address Offset */
--		ufsmcq_writelx(hba, MCQ_OPR_OFFSET_n(OPR_CQIS, i),
-+		ufsmcq_writelx(hba, ufshcd_mcq_opr_offset(hba, OPR_CQIS, i),
- 			      MCQ_CFG_n(REG_CQISAO, i));
- 
- 		/* Save the base addresses for quicker access */
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index a35e12f8e68b..eec7c97e3dbe 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -1132,6 +1132,12 @@ static inline bool is_mcq_enabled(struct ufs_hba *hba)
- 	return hba->mcq_enabled;
- }
- 
-+static inline unsigned int ufshcd_mcq_opr_offset(struct ufs_hba *hba,
-+		enum ufshcd_mcq_opr opr, int idx)
-+{
-+	return hba->mcq_opr[opr].offset + hba->mcq_opr[opr].stride * idx;
-+}
-+
- #ifdef CONFIG_SCSI_UFS_VARIABLE_SG_ENTRY_SIZE
- static inline size_t ufshcd_sg_entry_size(const struct ufs_hba *hba)
- {
 -- 
-2.34.1
-
+With best wishes
+Dmitry
