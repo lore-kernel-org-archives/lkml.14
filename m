@@ -1,53 +1,65 @@
-Received: from msa.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BE115AC4;
-	Sun, 19 May 2024 07:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294061C2E;
+	Sun, 19 May 2024 07:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716104205; cv=none; b=S5n34EAQKauEE+SZzw4Uz8nkvRm+1SZbl3EYD0pJ1EfdpNZHkm++rqht0rehL3U1oSb5wgPqo8iQM4Ftq2lM+4ZdAocqpUT5NsIGr6rixwaQJBCezmDKTIKfaHpwKkL9zN5V204abDBXGwxPIh+Kf0lrFw29q71t+Mdi7EWAxf8=
+	t=1716104489; cv=none; b=jS5vDygh/mLd2FplBIuMGnsaYn4R6YkDsnxpWesULWs82JENGfzmSnF2jngJZmV3xfZcyMQ4O45ePHHHN1H2LaixuGvG308iOuNQ8aZ+bba8+s/kmck9uBXkOk8TmF219px3GOJ+axe6uGgQbleSKlhMuyeH3tX9YelwQZ3lud0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716104205; c=relaxed/simple;
-	bh=EvmQQWNeJGwNqewjsCWVicRfAYaNcgdeLiLjrEetQbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AVMpLh2CoHaHPITJbPvaiPGAXKa+no//qK2VzxnEc6azHCAEKVbjRhA+keS4j5fpg/U5fYjG5bkuRU9lk4pLSRz84uyrM1OlY8Nl6fP5GtPLswXF9uE5aKulaqipPJCqep9/NoyhWkNEuEnh4PpXeYuGtxZ9ArSVCzHLPO8KVS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=laMt+PtV; arc=none smtp.client-ip=80.12.242.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1716104489; c=relaxed/simple;
+	bh=r7qebuKPlwDwTzkVFn4u2wgs6vKh7lR+jcu5oIF9jbA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z0nCN5O5UYfhlf7JkljGSR9JPxeE5o+gDxMmQ3+BwrUvUnn//iUbrYsmqmkQYw+bvmqxCBMCbFX0yKOZgwEi8Ky4oE6jY1UB8kE/lVD2Rh9ExP+hRBOYhVKVYfrb3ERLJCfjrZraUVRzQsqEBzjGRipynLqkOrOgMtVHZtf2NW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=uyHLxjhM; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="laMt+PtV"
-Received: from localhost.localdomain ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id 8aYusLlTw69OH8aYusyjjq; Sun, 19 May 2024 09:02:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1716102150;
-	bh=DpV324OF1N6KWvT4lJQi/tT98cIN5IcDh30eoiZYvd0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=laMt+PtVCBzsbS0whtoPwaW+J+XwtrmW2Nl3RA2gKV94y/I0bEpUVtDm2QEr1x6X4
-	 3bNbLg8hPALHUdhBB+piZyiuMXEGjPbTIaS9/SryDTbieWwtwfwpbDrwvnItMnwwgI
-	 i403EWtgKbooMY70cFtTvgzzYh7GcQmSYX4jBx8KXcZMPMI/432UEj9TMWjKB/l0d0
-	 CHr0DwCpGvIgOiVmWsopRcLDYeKIfVmlbbbiLLW8+xOJvghTLOkn9k3k1z1RuzbRbG
-	 NcCsZO0vZ9MZH21WeAiY3pLlQTWrvoKj//5A2BPfQe7EmLWp+OHEamjbGcsY2/730G
-	 csRzU7MOETESg==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 19 May 2024 09:02:30 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Mustafa Ismail <mustafa.ismail@intel.com>,
-	Shiraz Saleem <shiraz.saleem@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-rdma@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] RDMA/irdma: Annotate  flexible array with __counted_by() in struct irdma_qvlist_info
-Date: Sun, 19 May 2024 09:02:15 +0200
-Message-ID: <2ca8b14adf79c4795d7aa95bbfc79253a6bfed82.1716102112.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="uyHLxjhM"
+X-Envelope-To: val@packett.cool
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
+	s=key1; t=1716104484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iCzZwZj36Iz4vA1dDun7lszpPSZPxwDHKR4L5BLCjIg=;
+	b=uyHLxjhMy3s5Tm8T1twQKRP6W5/3ZNw6oYwG7SQFEmrp6HRLn9yvjp+J4WS2RYr0/Xug/7
+	IeOM96jyjfSeADjc5wXZsFDZ4PzL0NkAM2Hnekudu2iQACIYkoHkFHCOFZQeXs0KQi4HxY
+	Qz7n9kvfBdnt6WINxFLWpbPNiVTQMrghArcTu81SSvTOh6mO29DLWYTeC6gHJwKnNw3QDj
+	l0mR9Pwt6Iq2XP+guouOVkxYjVkvdwEhbxXV8CA2/ZQo//VrO1UA51+Be3fIRslylfuj3b
+	CvzZt6Tv3PIRaXu12T4LcfDUSYbmP79QoZiW1g815fC0gY//CBQtKBSTSGN+YQ==
+X-Envelope-To: stable@vger.kernel.org
+X-Envelope-To: hjc@rock-chips.com
+X-Envelope-To: heiko@sntech.de
+X-Envelope-To: andy.yan@rock-chips.com
+X-Envelope-To: maarten.lankhorst@linux.intel.com
+X-Envelope-To: mripard@kernel.org
+X-Envelope-To: tzimmermann@suse.de
+X-Envelope-To: airlied@gmail.com
+X-Envelope-To: daniel@ffwll.ch
+X-Envelope-To: dri-devel@lists.freedesktop.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Val Packett <val@packett.cool>
+To: 
+Cc: Val Packett <val@packett.cool>,
+	stable@vger.kernel.org,
+	Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drm/rockchip: vop: clear DMA stop bit on flush on RK3066
+Date: Sun, 19 May 2024 04:31:31 -0300
+Message-ID: <20240519074019.10424-1-val@packett.cool>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,33 +67,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-'num_vectors' is used to count the number of elements in the 'qv_info'
-flexible array in "struct irdma_qvlist_info".
+On the RK3066, there is a bit that must be cleared on flush, otherwise
+we do not get display output (at least for RGB).
 
-So annotate it with __counted_by() to make it explicit and enable some
-additional checks.
-
-This allocation is done in irdma_save_msix_info().
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Val Packett <val@packett.cool>
+Cc: stable@vger.kernel.org
 ---
- drivers/infiniband/hw/irdma/main.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi! This was required to get display working on an old RK3066 tablet,
+along with the next tiny patch in the series enabling the RGB output.
 
-diff --git a/drivers/infiniband/hw/irdma/main.h b/drivers/infiniband/hw/irdma/main.h
-index b65bc2ea542f..9f0ed6e84471 100644
---- a/drivers/infiniband/hw/irdma/main.h
-+++ b/drivers/infiniband/hw/irdma/main.h
-@@ -239,7 +239,7 @@ struct irdma_qv_info {
+I have spent quite a lot of time banging my head against the wall debugging
+that display (especially since at the same time a scaler chip is used for
+LVDS encoding), but finally adding debug prints showed that RK3066_SYS_CTRL0
+ended up being reset to all-zero after being written correctly upon init.
+Looking at the register definitions in the vendor driver revealed that the
+reason was pretty self-explanatory: "dma_stop".
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 1 +
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 1 +
+ 3 files changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index a13473b2d..d4daeba74 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -1578,6 +1578,9 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
  
- struct irdma_qvlist_info {
- 	u32 num_vectors;
--	struct irdma_qv_info qv_info[];
-+	struct irdma_qv_info qv_info[] __counted_by(num_vectors);
+ 	spin_lock(&vop->reg_lock);
+ 
++	/* If the chip has a DMA stop bit (RK3066), it must be cleared. */
++	VOP_REG_SET(vop, common, dma_stop, 0);
++
+ 	/* Enable AFBC if there is some AFBC window, disable otherwise. */
+ 	s = to_rockchip_crtc_state(crtc->state);
+ 	VOP_AFBC_SET(vop, enable, s->enable_afbc);
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+index b33e5bdc2..0cf512cc1 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+@@ -122,6 +122,7 @@ struct vop_common {
+ 	struct vop_reg lut_buffer_index;
+ 	struct vop_reg gate_en;
+ 	struct vop_reg mmu_en;
++	struct vop_reg dma_stop;
+ 	struct vop_reg out_mode;
+ 	struct vop_reg standby;
+ };
+diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+index b9ee02061..9bcb40a64 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
++++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+@@ -466,6 +466,7 @@ static const struct vop_output rk3066_output = {
  };
  
- struct irdma_gen_ops {
+ static const struct vop_common rk3066_common = {
++	.dma_stop = VOP_REG(RK3066_SYS_CTRL0, 0x1, 0),
+ 	.standby = VOP_REG(RK3066_SYS_CTRL0, 0x1, 1),
+ 	.out_mode = VOP_REG(RK3066_DSP_CTRL0, 0xf, 0),
+ 	.cfg_done = VOP_REG(RK3066_REG_CFG_DONE, 0x1, 0),
 -- 
-2.45.1
+2.45.0
 
