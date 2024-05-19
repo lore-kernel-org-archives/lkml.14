@@ -1,35 +1,35 @@
 Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A1850241;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE356A33C;
 	Sun, 19 May 2024 20:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716150316; cv=none; b=JarNI089KMf2ry1I37D7neLRF+NguPkxr3X5FI8dOxm3DO2J4qU5Ms6IyYQCfQhN0orb7/WdTNqxr7fxpI2OqRE9zQiN3FFYXmKLyB7zpqNWUCNJnnw6R2GlV9gm/M2jgZ81/Z7aazFCgxEgkurje6ucEUyYdlA7m0Qfhk/esHI=
+	t=1716150316; cv=none; b=WSgwFU41s6MrPMQ7FJhLjYKx2vV9dZ17O5/uypW/a8PMY29l14146d1URYkNZDs2An7WQfHg9ytG+8e/v7k7n4oWQeNaohfPSkStY4Edaez5znPoCHDleYK+FjFaNPV8+m3ZzDX5iIl8njPnuOarFRQ9kA2VpXtAk/hEAsERT0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716150316; c=relaxed/simple;
-	bh=XbjtbEE6y+QkCwnZQcjxEYutHqA57QPfgn6+mSDQKvI=;
+	bh=BZw7zShBTT5PfD4hawcGoNVQjDPKfhLnloDinunlfUc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JHHs9VARRMeEW0FdosXtmXnEOoYbtGRjp6s82AWZ5BhW03t1HSgtV1m7MkZOA0NqZs+1v8Yx+t2ItiLuCENcsnUeSO/KAptGBm+8hPvtQMvqS6ECqW91n29H7xxeJcVxqD9DBz/aqSG5E5rpoFCusOGkwrHpPsgBWbIEx5+7wes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=YSZZSg8Q; arc=none smtp.client-ip=4.36.192.163
+	 MIME-Version; b=h5Hf4pQmwjlyj5ETF4UpsCFjhMdMhn89DniY/lnc9NL5exgwvxvB6izWgL+HAozVri4QvXMtAwQO0ZdApjyhMYe/vGbLLfDeuYqkll38KSqtWLE9zcGMLNx+CJwhSEC4IXxbsjLaMX0SBpDnSBnPNajF75mjrPwxvVT4vGcX0Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=eaoBbPtn; arc=none smtp.client-ip=4.36.192.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="YSZZSg8Q"
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="eaoBbPtn"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=rdMijym+G5sdTUVMU3W8p4D7kqVB/VBKMuu3j157kus=; b=YSZZSg8QPAazFVZ/fqCZhf/zyB
-	iTkKB7v72+I/GfJvYfIXLcjNr4H192NDRr7iQsi+wT6QwcIueun/RRsXdAcuMlpvT0FYTGzpibpN9
-	i+w3UOsYVSWsK/Uzlu44kGXBLyiUFFC4VuqOgDhAUbdvaY3PGOTVVBd0kHAW1cZ5AsMIaGyAGcJJz
-	EMeREFCxFiAonzpZW1WCk82F+/aCi7XOwbj/j84eBxh2Fbozp0mpzdobRP8syk942nia+1fEE8kES
-	aqeWyPNY6PxS6qSGwiQwKQEU9ae+tbp3HdQ/NyvFL5E5cQ1ipT/88Nhi4/z+ThUq4dFT4s6zqxSBK
-	4fDziHCA==;
+	bh=sRVvK3PXYm0eOCy4h040E2JuAl2v9xoXVKyVT6JY+Rw=; b=eaoBbPtn4GhFc3UMuK2hwpo5j2
+	LN/8G80Mcs1OyFrVq98EcrM2aVpb7RdlwrXQiEoLorGIFnK21/Mxonzswxo/N06FoSDQQ17ti5tNn
+	JTgRgdKUMdreM7V4flEmIVmLn//18K89OLRfz7DAmS99ECOZdlJ0i353hO2/ZluDs9C8JqLvUPjKQ
+	drw5QjdXgQ51h00hXYeun+D/qvPx+yGa12W+PZqGPpodAPzXVJgZctTicwAdohJva8F8etW1+1Adr
+	gk0CNEfBOmKhi9fTywrth7npYZNKXMuPcH9SwrcadK92MgYEHMeuYDj9QL4rXAySefDjuGxyzSyjF
+	P0U2EZOg==;
 Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
 	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <zfigura@codeweavers.com>)
-	id 1s8n5d-008wIn-14;
-	Sun, 19 May 2024 15:25:05 -0500
+	id 1s8n5e-008wIn-1k;
+	Sun, 19 May 2024 15:25:06 -0500
 From: Elizabeth Figura <zfigura@codeweavers.com>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,9 +51,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Elizabeth Figura <zfigura@codeweavers.com>
-Subject: [PATCH v5 12/28] ntsync: Introduce NTSYNC_IOC_EVENT_READ.
-Date: Sun, 19 May 2024 15:24:38 -0500
-Message-ID: <20240519202454.1192826-13-zfigura@codeweavers.com>
+Subject: [PATCH v5 19/28] selftests: ntsync: Add some tests for wakeup signaling with WINESYNC_IOC_WAIT_ALL.
+Date: Sun, 19 May 2024 15:24:45 -0500
+Message-ID: <20240519202454.1192826-20-zfigura@codeweavers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240519202454.1192826-1-zfigura@codeweavers.com>
 References: <20240519202454.1192826-1-zfigura@codeweavers.com>
@@ -65,71 +65,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This corresponds to the NT syscall NtQueryEvent().
-
-This returns the signaled state of the event and whether it is manual-reset.
+Test contended "wait-for-all" waits, to make sure that scheduling and wakeup
+logic works correctly, and that the wait only exits once objects are all
+simultaneously signaled.
 
 Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
 ---
- drivers/misc/ntsync.c       | 26 ++++++++++++++++++++++++++
- include/uapi/linux/ntsync.h |  1 +
- 2 files changed, 27 insertions(+)
+ .../testing/selftests/drivers/ntsync/ntsync.c | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
-index 622be0075ba4..a11fe2469841 100644
---- a/drivers/misc/ntsync.c
-+++ b/drivers/misc/ntsync.c
-@@ -633,6 +633,30 @@ static int ntsync_mutex_read(struct ntsync_obj *mutex, void __user *argp)
- 	return ret;
+diff --git a/tools/testing/selftests/drivers/ntsync/ntsync.c b/tools/testing/selftests/drivers/ntsync/ntsync.c
+index 993f5db23768..b77fb0b2c4b1 100644
+--- a/tools/testing/selftests/drivers/ntsync/ntsync.c
++++ b/tools/testing/selftests/drivers/ntsync/ntsync.c
+@@ -706,4 +706,102 @@ TEST(wake_any)
+ 	close(fd);
  }
  
-+static int ntsync_event_read(struct ntsync_obj *event, void __user *argp)
++TEST(wake_all)
 +{
-+	struct ntsync_event_args __user *user_args = argp;
-+	struct ntsync_device *dev = event->dev;
-+	struct ntsync_event_args args;
-+	bool all;
++	struct ntsync_mutex_args mutex_args = {0};
++	struct ntsync_wait_args wait_args = {0};
++	struct ntsync_sem_args sem_args = {0};
++	struct wait_args thread_args;
++	int objs[2], fd, ret;
++	__u32 count, index;
++	pthread_t thread;
 +
-+	if (event->type != NTSYNC_TYPE_EVENT)
-+		return -EINVAL;
++	fd = open("/dev/ntsync", O_CLOEXEC | O_RDONLY);
++	ASSERT_LE(0, fd);
 +
-+	args.event = 0;
++	sem_args.count = 0;
++	sem_args.max = 3;
++	sem_args.sem = 0xdeadbeef;
++	ret = ioctl(fd, NTSYNC_IOC_CREATE_SEM, &sem_args);
++	EXPECT_EQ(0, ret);
++	EXPECT_NE(0xdeadbeef, sem_args.sem);
 +
-+	all = ntsync_lock_obj(dev, event);
++	mutex_args.owner = 123;
++	mutex_args.count = 1;
++	mutex_args.mutex = 0xdeadbeef;
++	ret = ioctl(fd, NTSYNC_IOC_CREATE_MUTEX, &mutex_args);
++	EXPECT_EQ(0, ret);
++	EXPECT_NE(0xdeadbeef, mutex_args.mutex);
 +
-+	args.manual = event->u.event.manual;
-+	args.signaled = event->u.event.signaled;
++	objs[0] = sem_args.sem;
++	objs[1] = mutex_args.mutex;
 +
-+	ntsync_unlock_obj(dev, event, all);
++	wait_args.timeout = get_abs_timeout(1000);
++	wait_args.objs = (uintptr_t)objs;
++	wait_args.count = 2;
++	wait_args.owner = 456;
++	thread_args.fd = fd;
++	thread_args.args = &wait_args;
++	thread_args.request = NTSYNC_IOC_WAIT_ALL;
++	ret = pthread_create(&thread, NULL, wait_thread, &thread_args);
++	EXPECT_EQ(0, ret);
 +
-+	if (copy_to_user(user_args, &args, sizeof(args)))
-+		return -EFAULT;
-+	return 0;
++	ret = wait_for_thread(thread, 100);
++	EXPECT_EQ(ETIMEDOUT, ret);
++
++	count = 1;
++	ret = post_sem(sem_args.sem, &count);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, count);
++
++	ret = pthread_tryjoin_np(thread, NULL);
++	EXPECT_EQ(EBUSY, ret);
++
++	check_sem_state(sem_args.sem, 1, 3);
++
++	ret = wait_any(fd, 1, &sem_args.sem, 123, &index);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, index);
++
++	ret = unlock_mutex(mutex_args.mutex, 123, &count);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(1, count);
++
++	ret = pthread_tryjoin_np(thread, NULL);
++	EXPECT_EQ(EBUSY, ret);
++
++	check_mutex_state(mutex_args.mutex, 0, 0);
++
++	count = 2;
++	ret = post_sem(sem_args.sem, &count);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, count);
++	check_sem_state(sem_args.sem, 1, 3);
++	check_mutex_state(mutex_args.mutex, 1, 456);
++
++	ret = wait_for_thread(thread, 100);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(0, thread_args.ret);
++
++	/* delete an object while it's being waited on */
++
++	wait_args.timeout = get_abs_timeout(200);
++	wait_args.owner = 123;
++	ret = pthread_create(&thread, NULL, wait_thread, &thread_args);
++	EXPECT_EQ(0, ret);
++
++	ret = wait_for_thread(thread, 100);
++	EXPECT_EQ(ETIMEDOUT, ret);
++
++	close(sem_args.sem);
++	close(mutex_args.mutex);
++
++	ret = wait_for_thread(thread, 200);
++	EXPECT_EQ(0, ret);
++	EXPECT_EQ(-1, thread_args.ret);
++	EXPECT_EQ(ETIMEDOUT, thread_args.err);
++
++	close(fd);
 +}
 +
- static int ntsync_obj_release(struct inode *inode, struct file *file)
- {
- 	struct ntsync_obj *obj = file->private_data;
-@@ -666,6 +690,8 @@ static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
- 		return ntsync_event_reset(obj, argp);
- 	case NTSYNC_IOC_EVENT_PULSE:
- 		return ntsync_event_set(obj, argp, true);
-+	case NTSYNC_IOC_EVENT_READ:
-+		return ntsync_event_read(obj, argp);
- 	default:
- 		return -ENOIOCTLCMD;
- 	}
-diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
-index eced73d08783..74abeba832f7 100644
---- a/include/uapi/linux/ntsync.h
-+++ b/include/uapi/linux/ntsync.h
-@@ -56,5 +56,6 @@ struct ntsync_wait_args {
- #define NTSYNC_IOC_EVENT_PULSE		_IOR ('N', 0x8a, __u32)
- #define NTSYNC_IOC_SEM_READ		_IOR ('N', 0x8b, struct ntsync_sem_args)
- #define NTSYNC_IOC_MUTEX_READ		_IOR ('N', 0x8c, struct ntsync_mutex_args)
-+#define NTSYNC_IOC_EVENT_READ		_IOR ('N', 0x8d, struct ntsync_event_args)
- 
- #endif
+ TEST_HARNESS_MAIN
 -- 
 2.43.0
 
