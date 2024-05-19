@@ -1,216 +1,340 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F91A8BEA
-	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 14:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0731481A5;
+	Sun, 19 May 2024 14:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716128027; cv=none; b=lCwIIZt2OzElHOOwYGD54YNEsHmkArYin4PLCOzvuFTu30e6a0kOQk4niHdBG5PPnQip0YdNzONoyF/k8NaO0IzQTMcHgE6B2RJpNbwlRtPlVdaiZlKIlHIg95T1m23I+E2wOW66KkkUlAhPtCU8D4Qt0nC514jASTrEHQbwNo4=
+	t=1716128302; cv=none; b=gt2T8pcF6E1x9UK/q7XvWKIxl3fEhL7ky4BrOqyT1+tCVFu8qtuM6aAukWjfk/cEFgV6LxDl3dbeRmiyWBzd9qrgVs2FCCIN9G5YK88v+77dQGxTJpYvRZXUO47x0ccVIacgtdeLERlWNdWE/MntA5a+58Tzi0I/AKEruaUSrj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716128027; c=relaxed/simple;
-	bh=9t6jwH3FrP0vS5iN/jNE2kGzhEUu2R/PkRBXRDaNa84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=thAS2V2UuMqFb2pnqmCnw3yIsIFgDsMUFLM8VzuHKiJzqaKYg3wVIRR09afXfUY9WD0KhQmq03BkW5wX1XEocUDIVZKis8vLnpiK5+G79W487H/U10GfiTtfWHYW1OIQsPI5cagwjc4PteLTagDFPvq7VSYZVMM96lMMxKqzKYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kdxkVkkA; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716128302; c=relaxed/simple;
+	bh=xjkewc1l0PQ/Sm/ArXEkgi0zRDEeMwDg/sOgETDwA6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FNuJg6qT5Jh+Ks/b/ZEd+YDueRZLLcjzgu0PYfwkNSlnhrCIJUAu3t0cSAvuE1A3T9YBf0nSM4j7rLqLKxlbBSjakn2WWfftIzDTkO/9qOvfBXHAxc4wNuMkS8RAIAfJ2Mc3DFG412HpijK+qbjf0K9u5LWiLNvh/sm/CVllMAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGr7nDlJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdxkVkkA"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5b2baa24c2bso866272eaf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 07:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716128025; x=1716732825; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kHrw/x5NVoGqtuVQNcrErFWhfjb0N0uwlSFD9+cPjas=;
-        b=kdxkVkkAO7l4/FGF6xVfPmCMXXL17pUhHJ8RzmfEwnTRdidaPJ89605aM+Pmjjle+A
-         k1YGPiQ0SFikdtXoZdz2n1pHioqpgnV9bQymUAl56jzTy2WDuC6pbu7XgoTNolcs1zFK
-         80nl02CHcHR1oI3dSIeTVX671HKTEe75+8bNTZiI7EjWXJNTB9+ooW7pohDRUz6xV5pC
-         5N6vioOvS6ySc5SUjmDhFuRegrMSFgNVzPY1ppTggQYh6xrd7Xxpyn8dLUrG93WIHEXO
-         daNCi56JJ7b1CX6AkTdMTtnU7O8L2DlcB4hH00rlW9sSMKJhCwPljx8lrjsqpc+uNE4e
-         2Qmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716128025; x=1716732825;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kHrw/x5NVoGqtuVQNcrErFWhfjb0N0uwlSFD9+cPjas=;
-        b=jSRXfBP/niB6Zl6muI9jyj2sI1SVtdx7qiQwa4/FzqBQCf3c62tW1o162RPa64cYdj
-         twI2PYSZaa/5kZw8f0iFpmzgIXvYptZpJsuzWgHSDS9otAXFASqJUa8qyyKqWpo13kV0
-         B4SWkbKb2uNGKJUMAofDJjiYiENcmJ2/M0pEtkORH6HpDZtdiOHO/oRhAEkdp7N/n9QA
-         FcjSK2n3Amz/C49XPA8OM2Rp9sj6zwltxxvKffhVCcL7iReK1Z4pbzpgGoaBOsnBSWHZ
-         rILRupvb0pOnBzrFO0ih1ydn4xObHNoJt2REvuNOP+AwCCxRyMoiq87nBFvep4eS/cx5
-         eUxg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5uW06W6JjcDxYwhMrAEHzqvwRqqlBd59PUC3N8qcbdg/MeWcprnFH5eeTy4vY0QgyMm8+e+B40LqZs9IN7Wdk2uxVQdQbEUybVPtl
-X-Gm-Message-State: AOJu0YzVUmhrlREP6iq/Fz1ZGdp8nAuJYdTwoT3wr71g61RJQSYIDwx8
-	Jb9IAsVPkdwfFIaYMe6zIJc96/X6JJlqzzryweRfm6sFtrfvN4oPDfT6t8JX
-X-Google-Smtp-Source: AGHT+IFEmSZ/a8PpAbsS7AI+i8TGHMbB4LmiK3qZj++q80foFK5Zl7fz92u6Q03LAk63OkdLP/9agA==
-X-Received: by 2002:a05:6359:4c9f:b0:186:3beb:90e0 with SMTP id e5c5f4694b2df-193bb64d4d4mr2667711355d.18.1716128024862;
-        Sun, 19 May 2024 07:13:44 -0700 (PDT)
-Received: from snowbird ([2600:4041:54fc:a302:414c:9ba6:5d92:63bc])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43df56a57afsm135905681cf.73.2024.05.19.07.13.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 May 2024 07:13:43 -0700 (PDT)
-Date: Sun, 19 May 2024 07:13:40 -0700
-From: Dennis Zhou <dennisszhou@gmail.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Kairui Song <ryncsn@gmail.com>,
-	"zhangpeng (AS)" <zhangpeng362@huawei.com>,
-	Rongwei Wang <rongwei.wrw@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	dennisszhou@gmail.com, shakeelb@google.com, jack@suse.cz,
-	surenb@google.com, kent.overstreet@linux.dev, mhocko@suse.cz,
-	vbabka@suse.cz, yuzhao@google.com, yu.ma@intel.com,
-	wangkefeng.wang@huawei.com, sunnanyong@huawei.com
-Subject: Re: [RFC PATCH v2 2/2] mm: convert mm's rss stats to use atomic mode
-Message-ID: <ZkoJFBfz7P3xuCrx@snowbird>
-References: <20240418142008.2775308-1-zhangpeng362@huawei.com>
- <20240418142008.2775308-3-zhangpeng362@huawei.com>
- <ec2b110b-fb85-4af2-942b-645511a32297@gmail.com>
- <c1c79eb5-4d48-40e5-6f17-f8bc42f2d274@huawei.com>
- <CAMgjq7DHUgyR0vtkYXH4PuzBHUVZ5cyCzi58TfShL57TUSL+Tg@mail.gmail.com>
- <5nv3r7qilsye5jgqcjrrbiry6on7wtjmce6twqbxg6nmvczue3@ikc22ggphg3h>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGr7nDlJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7B3C32781;
+	Sun, 19 May 2024 14:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716128302;
+	bh=xjkewc1l0PQ/Sm/ArXEkgi0zRDEeMwDg/sOgETDwA6M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PGr7nDlJv3LY7yz1v/ZyaLrG+hr4S1KrxeKv6CXNsl07jdO8UplLX2KVwylJZCn4Z
+	 eN6/ZIJGcE9w95fU0DGsixik0wEVgOAIBEptxZWh8RD35qpFldXU2KQpLzR5xnz1FV
+	 wGiiV8vgblUCOSyRAUiSXblJ5VkbWUGSPqBMsMdqyizxQ7BBc5hw+hOJy89//0BGQk
+	 tRtPus0W8bWyCkl/Zz4C6XM1TjNC5AwzRjOR4Jp3qh3W8hiT5BVDdbAs2vwEjXD5cm
+	 cL8PJj3kKAIRlAkaZdtR0Xy2LFeXnafZEHbNd19SQPfQVbNIJv6GmJLwmSjxmmy7b/
+	 y5Vk7XhHVg4jQ==
+Date: Sun, 19 May 2024 15:18:09 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lars@metafoo.de, christophe.jaillet@wanadoo.fr,
+ gerald.loacker@wolfvision.net, devicetree@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] iio: chemical: ens160: add triggered buffer support
+Message-ID: <20240519151809.192448d1@jic23-huawei>
+In-Reply-To: <20240512210444.30824-5-gustavograzs@gmail.com>
+References: <20240512210444.30824-1-gustavograzs@gmail.com>
+	<20240512210444.30824-5-gustavograzs@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5nv3r7qilsye5jgqcjrrbiry6on7wtjmce6twqbxg6nmvczue3@ikc22ggphg3h>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Mateusz and Kairui,
+On Sun, 12 May 2024 18:04:40 -0300
+Gustavo Silva <gustavograzs@gmail.com> wrote:
 
-On Thu, May 16, 2024 at 05:14:06PM +0200, Mateusz Guzik wrote:
-> On Thu, May 16, 2024 at 07:50:52PM +0800, Kairui Song wrote:
-> > > > On 2024/4/18 22:20, Peng Zhang wrote:
-> > > >> From: ZhangPeng <zhangpeng362@huawei.com>
-> > > >>
-> > > >> Since commit f1a7941243c1 ("mm: convert mm's rss stats into
-> > > >> percpu_counter"), the rss_stats have converted into percpu_counter,
-> > > >> which convert the error margin from (nr_threads * 64) to approximately
-> > > >> (nr_cpus ^ 2). However, the new percpu allocation in mm_init() causes a
-> > > >> performance regression on fork/exec/shell. Even after commit
-> > > >> 14ef95be6f55
-> > > >> ("kernel/fork: group allocation/free of per-cpu counters for mm
-> > > >> struct"),
-> > > >> the performance of fork/exec/shell is still poor compared to previous
-> > > >> kernel versions.
-> > > >>
-> > > >> To mitigate performance regression, we delay the allocation of percpu
-> > > >> memory for rss_stats. Therefore, we convert mm's rss stats to use
-> > > >> percpu_counter atomic mode. For single-thread processes, rss_stat is in
-> > > >> atomic mode, which reduces the memory consumption and performance
-> > > >> regression caused by using percpu. For multiple-thread processes,
-> > > >> rss_stat is switched to the percpu mode to reduce the error margin.
-> > > >> We convert rss_stats from atomic mode to percpu mode only when the
-> > > >> second thread is created.
-> > 
-> > I've a patch series that is earlier than commit f1a7941243c1 ("mm:
-> > convert mm's rss stats into
-> > percpu_counter"):
-> > 
-> > https://lwn.net/ml/linux-kernel/20220728204511.56348-1-ryncsn@gmail.com/
-> > 
+> ENS160 supports a data ready interrupt. Use it in combination with
+> triggered buffer for continuous data readings.
+> 
+> Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+Hi Gustavo,
 
-I hadn't seen this series as my inbox filters on percpu, but not
-per-cpu. I can take a closer look this week.
+Various comments inline. Mostly simplifications you can probably make.
 
-> > Instead of a per-mm-per-cpu cache, it used only one global per-cpu
-> > cache, and flush it on schedule. Or, if the arch supports, flush and
-> > fetch it use mm bitmap as an optimization (like tlb shootdown).
-> > 
-> 
-> I just spotted this thread.
-> 
-> I have a rather long rant to write about the entire ordeal, but don't
-> have the time at the moment. I do have time to make some remarks though.
-> 
-> Rolling with a centralized counter and only distributing per-cpu upon
-> creation of a thread is something which was discussed last time and
-> which I was considering doing. Then life got it in the way and in the
-> meantime I managed to conclude it's a questionable idea anyway.
-> 
+Jonathan
 
-To clarify my stance, I'm not against the API of switching a
-percpu_counter to percpu mode. We do it for percpu_refcount. I think the
-implementation here was fragile. Secondly, Kent did implement
-lazy_percpu_counters. We likely should see how that can be leveraged and
-how we can reconcile the 2 APIs.
+> ---
+>  drivers/iio/chemical/ens160.h      |   2 +-
+>  drivers/iio/chemical/ens160_core.c | 155 ++++++++++++++++++++++++++++-
+>  drivers/iio/chemical/ens160_i2c.c  |   2 +-
+>  drivers/iio/chemical/ens160_spi.c  |   2 +-
+>  4 files changed, 156 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/chemical/ens160.h b/drivers/iio/chemical/ens160.h
+> index 3fd079bc4..a8a2f1263 100644
+> --- a/drivers/iio/chemical/ens160.h
+> +++ b/drivers/iio/chemical/ens160.h
+> @@ -2,7 +2,7 @@
+>  #ifndef ENS160_H_
+>  #define ENS160_H_
+>  
+> -int ens160_core_probe(struct device *dev, struct regmap *regmap,
+> +int ens160_core_probe(struct device *dev, struct regmap *regmap, int irq,
+>  		      const char *name);
+>  void ens160_core_remove(struct device *dev);
+>  
+> diff --git a/drivers/iio/chemical/ens160_core.c b/drivers/iio/chemical/ens160_core.c
+> index 25593420d..4b960ef00 100644
+> --- a/drivers/iio/chemical/ens160_core.c
+> +++ b/drivers/iio/chemical/ens160_core.c
+> @@ -11,6 +11,9 @@
+>  
+>  #include <linux/bitfield.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  
+> @@ -24,6 +27,11 @@
+>  
+>  #define ENS160_REG_OPMODE	0x10
+>  
+> +#define ENS160_REG_CONFIG		0x11
+> +#define ENS160_REG_CONFIG_INTEN		BIT(0)
+> +#define ENS160_REG_CONFIG_INTDAT	BIT(1)
+> +#define ENS160_REG_CONFIG_INT_CFG	BIT(5)
+> +
+>  #define ENS160_REG_MODE_DEEP_SLEEP	0x00
+>  #define ENS160_REG_MODE_IDLE		0x01
+>  #define ENS160_REG_MODE_STANDARD	0x02
+> @@ -48,6 +56,12 @@
+>  
+>  struct ens160_data {
+>  	struct regmap *regmap;
+> +	struct mutex mutex;
+> +	struct {
+> +		u16 chans[2];
 
-> The state prior to the counters moving to per-cpu was not that great to
-> begin with, with quite a few serialization points. As far as allocating
-> stuff goes one example is mm_alloc_cid, with the following:
-> 	mm->pcpu_cid = alloc_percpu(struct mm_cid);
-> 
-> Converting the code to avoid per-cpu rss counters in the common case or
-> the above patchset only damage-control the state back to what it was,
-> don't do anything to push things further.
-> 
-> Another note is that unfortunately userspace is increasingly
-> multithreaded for no good reason, see the Rust ecosystem as an example.
-> 
-> All that to say is that the multithreaded case is what has to get
-> faster, as a side effect possibly obsoleting both approaches proposed
-> above. I concede if there is nobody wiling to commit to doing the work
-> in the foreseeable future then indeed a damage-controlling solution
-> should land.
-> 
-> On that note in check_mm there is this loop:
->         for (i = 0; i < NR_MM_COUNTERS; i++) {
->                 long x = percpu_counter_sum(&mm->rss_stat[i]);
-> 
-> This avoidably walks all cpus 4 times with a preemption and lock trip
-> for each round. Instead one can observe all modifications are supposed
-> to have already stopped and that this is allocated in a banch. A
-> routine, say percpu_counter_sum_many_unsafe, could do one iteration
-> without any locks or interrupt play and return an array. This should be
-> markedly faster and I perhaps will hack it up.
+As per the bot reply. This should be __le16.
+> +		s64 timestamp __aligned(8);
+> +	} scan;
 
-I'm a little worried about the correctness in the cpu_hotplug case, idk
-if it's warranted.
+You can do spi read directly into here but if you do
+move it to the end of the structure and align it to IIO_DMA_MINALIGN.
 
-> 
-> A part of The Real Solution(tm) would make counter allocations scale
-> (including mcid, not just rss) or dodge them (while maintaining the
-> per-cpu distribution, see below for one idea), but that boils down to
-> balancing scalability versus total memory usage. It is trivial to just
-> slap together a per-cpu cache of these allocations and have the problem
-> go away for benchmarking purposes, while being probably being too memory
-> hungry for actual usage.
-> 
-> I was pondering an allocator with caches per some number of cores (say 4
-> or 8). Microbenchmarks aside I suspect real workloads would not suffer
-> from contention at this kind of granularity. This would trivially reduce
-> memory usage compared to per-cpu caching. I suspect things like
-> mm_struct, task_struct, task stacks and similar would be fine with it.
-> 
-> Suppose mm_struct is allocated from a more coarse grained allocator than
-> per-cpu. Total number of cached objects would be lower than it is now.
-> That would also mean these allocated but not currently used mms could
-> hold on to other stuff, for example per-cpu rss and mcid counters. Then
-> should someone fork or exit, alloc/free_percpu would be avoided for most
-> cases. This would scale better and be faster single-threaded than the
-> current state.
-> 
-> (believe it or not this is not the actual long rant I have in mind)
-> 
-> I can't commit to work on the Real Solution though.
-> 
-> In the meantime I can submit percpu_counter_sum_many_unsafe as described
-> above if Denis likes the idea.
+> +	int irq;
+As below - not sure there is any advantage in keeping a copy
+of this after probe. I'd just pass it into the functions that need it.
+>  };
 
-To be honest, I'm a little out of my depth here. I haven't spent a lot
-of time in the mm code paths to really know when and how we're
-accounting RSS and other stats. Given that, I think we should align on
-the approach we want to take because in some way it sounds like percpu
-RSS might not be the final evolution here for this and other stats.
+>  
+>  static int ens160_read_raw(struct iio_dev *indio_dev,
+> @@ -79,10 +108,19 @@ static int ens160_read_raw(struct iio_dev *indio_dev,
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
 
-I think lets hold off on percpu_counter_sum_many_unsafe() initially and
-if that's the way we have to go so be it. I'm going to respin a
-cpu_hotplug related series that might change some of the correctness
-here and have that ready for the v6.11 merge window.
+Use iio_device_claim_direct_scoped() and guard() for the mutex
+as will automate the unwinding of the two types of lock and avoid
+you having to do it by hand.
 
-Thanks,
-Dennis
+
+> +		if (ret)
+> +			return ret;
+> +		mutex_lock(&data->mutex);
+>  		ret = regmap_bulk_read(data->regmap, chan->address,
+>  					&buf, sizeof(buf));
+> -		if (ret)
+> +		if (ret) {
+> +			mutex_unlock(&data->mutex);
+> +			iio_device_release_direct_mode(indio_dev);
+>  			return ret;
+> +		}
+> +		mutex_unlock(&data->mutex);
+> +		iio_device_release_direct_mode(indio_dev);
+>  		*val = le16_to_cpu(buf);
+>  		return IIO_VAL_INT;
+>  
+> @@ -182,7 +220,104 @@ static const struct iio_info ens160_info = {
+>  	.read_raw = ens160_read_raw,
+>  };
+>  
+> -int ens160_core_probe(struct device *dev, struct regmap *regmap,
+> +static irqreturn_t ens160_irq_handler(int irq, void *private)
+> +{
+> +	struct iio_dev *indio_dev = private;
+> +
+> +	if (iio_buffer_enabled(indio_dev))
+
+How else did you get here?  Either you should use a threaded interrupt
+to check the status registers on the device, or you should assume
+there is no other way of getting here (and hence no sharing of interrupt
+etc) in which case this check is unnecessary and you can use
+iio_trigger_generic_data_rdy_poll().
+
+
+
+> +		iio_trigger_poll(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t ens160_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct ens160_data *data = iio_priv(indio_dev);
+> +	__le16 val;
+> +	int ret, i, j = 0;
+> +
+> +	mutex_lock(&data->mutex);
+> +
+> +	for_each_set_bit(i, indio_dev->active_scan_mask,
+> +			 indio_dev->masklength) {
+> +		ret = regmap_bulk_read(data->regmap,
+> +				       ENS160_REG_DATA_TVOC + 2 * i, &val, 2U);
+
+sizeof(val) instead of hardcoded 2. Though better still to just bulk
+read the lot ever time and loose this loop in favour of the demux in the IIO
+core handling the rare occasion of people wanting one channel.
+
+> +		if (ret)
+> +			goto err;
+> +
+> +		data->scan.chans[j++] = val;
+
+Read directly into the data->scan.chans[]
+
+Also, I'd assume that 90% of the time, people want all the channels.  A such
+can you just bulk read them all?  Then you can use available_scan_masks
+to let the IIO core handle the 10% of the time when only one channel is requested.
+
+
+> +	}
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
+> +					   pf->timestamp);
+> +err:
+> +	mutex_unlock(&data->mutex);
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ens160_set_trigger_state(struct iio_trigger *trig, bool state)
+> +{
+> +	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+> +	struct ens160_data *data = iio_priv(indio_dev);
+> +	unsigned int int_bits = ENS160_REG_CONFIG_INTEN |
+> +				ENS160_REG_CONFIG_INTDAT |
+> +				ENS160_REG_CONFIG_INT_CFG;
+> +	int ret;
+> +
+> +	if (state)
+> +		ret = regmap_set_bits(data->regmap, ENS160_REG_CONFIG,
+> +				      int_bits);
+		return ...
+> +	else
+> +		ret = regmap_clear_bits(data->regmap, ENS160_REG_CONFIG,
+> +					int_bits);
+		return ...
+
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_trigger_ops ens160_trigger_ops = {
+> +	.set_trigger_state = ens160_set_trigger_state,
+> +	.validate_device = iio_trigger_validate_own_device,
+> +};
+> +
+> +static int ens160_setup_trigger(struct iio_dev *indio_dev)
+> +{
+> +	struct ens160_data *data = iio_priv(indio_dev);
+> +	struct device *dev = indio_dev->dev.parent;
+> +	struct iio_trigger *trig;
+> +	int ret;
+> +
+> +	trig = devm_iio_trigger_alloc(dev, "%s-dev%d", indio_dev->name,
+> +				      iio_device_id(indio_dev));
+> +	if (!trig)
+> +		return dev_err_probe(dev, -ENOMEM,
+> +				     "failed to allocate trigger\n");
+> +
+> +	trig->ops = &ens160_trigger_ops;
+> +	iio_trigger_set_drvdata(trig, indio_dev);
+> +
+> +	ret = devm_iio_trigger_register(dev, trig);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->trig = iio_trigger_get(trig);
+> +
+> +	ret = devm_request_threaded_irq(dev, data->irq,
+> +					ens160_irq_handler,
+> +					NULL,
+> +					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+Generally, for new drivers we leave the direction control up to firmware.
+A nasty, but common trick is to use an inverter to do level conversion.
+That results in the polarity being switched but is not explicitly described
+in the firmware. So we rely in those cases on the firmware settings for
+the interrupt not being modified by the driver.
+
+IRQF_ONESHOT, only here.
+
+> +					indio_dev->name,
+> +					indio_dev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to request irq\n");
+> +
+> +	return 0;
+> +}
+> +
+> +int ens160_core_probe(struct device *dev, struct regmap *regmap, int irq,
+>  		      const char *name)
+>  {
+>  	struct ens160_data *data;
+> @@ -196,6 +331,7 @@ int ens160_core_probe(struct device *dev, struct regmap *regmap,
+>  	data = iio_priv(indio_dev);
+>  	dev_set_drvdata(dev, indio_dev);
+>  	data->regmap = regmap;
+> +	data->irq = irq;
+
+As below. This stashing of a copy of irq is an unnecessary complication.
+
+>  
+>  	indio_dev->name = name;
+>  	indio_dev->info = &ens160_info;
+> @@ -203,12 +339,27 @@ int ens160_core_probe(struct device *dev, struct regmap *regmap,
+>  	indio_dev->channels = ens160_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(ens160_channels);
+>  
+> +	if (data->irq > 0) {
+
+Pass the irq into the setup_trigger call. You don't need it other than for
+registration so no point in keeping it in the data structure.
+
+> +		ret = ens160_setup_trigger(indio_dev);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "failed to setup trigger\n");
+> +	}
+> +
+>  	ret = ens160_chip_init(data);
+>  	if (ret) {
+>  		dev_err_probe(dev, ret, "chip initialization failed\n");
+>  		return ret;
+>  	}
+>  
+> +	mutex_init(&data->mutex);
+> +
+> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+> +					      iio_pollfunc_store_time,
+> +					      ens160_trigger_handler, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  EXPORT_SYMBOL_NS(ens160_core_probe, IIO_ENS160);
