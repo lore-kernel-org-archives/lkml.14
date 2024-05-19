@@ -1,83 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736CA26AEC;
-	Sun, 19 May 2024 21:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EEB15491
+	for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 21:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716153176; cv=none; b=Xj6Y2Znx7Y9QSwp07e36yIr/twIxYOZDMEWGK/wg3+TxKzCslTjdDQ/GmTakl2PDtN27PmR1FqH3dZGQvehW8jUx27/3e5SITI55yEDZurmV3ySKvFrqoNXe26cgcqUN/6F2PF1q5ehKDI48NfYwmGLhckRQ/D8qHWTl2AnDGfI=
+	t=1716153385; cv=none; b=rS90CGC3T522J0r/d6NrT8+hq5fi5lCW78TgDtK0odcjG4jslmI/a/LFvcK9rxEaIFcO9HrnMRdMdRniuiUWCQNI9ZMOkGWyv08H0ZQ4FzqboICm98ULHeVpi7b5JxuzlTGMLlOHpi3Mi/8GjwLYRluMJ+EMGj002wbHxkpatk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716153176; c=relaxed/simple;
-	bh=ycHchcNNkPJYHuh6grxXiGPIJUsXEsvkI6+Ndfvc6L0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UKBW3G7TsT4SawD8CtvbFfBhmajcjfs8Vleg/wggEdYsGE1+p9K0ggPfJNtGagKnb1kPFHC7omP3fqJUdp7YItXLu1i4L+ttu/nLrZTrfcSgUZVDO9LlMYlUDLbKqAVrhyMd6Z0KTrxQVAIcTyGypBEA0ZHTngEpenIcq/PVksQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RB5Hff15; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716153385; c=relaxed/simple;
+	bh=7G5O0pVNX6O64kNvrCRObeZruVYh1lO1jtt6i684H/0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OXNWQ6M7pm5iixORcebf6wkYQhNxvTNMHgBdESy90aNCSc7pwQFbJUtNi6rYDZkDVIO2z/JO50R11SDRP+ocnHYhboyLcR9AQ79h7psVajmeo//l/1pJGOQMncxeFd1NFShvitkTq0uPoj8P2tr0wYUMvmAqd+sSv3LfYTNItss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kg8dRbWs; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RB5Hff15"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC64C32781;
-	Sun, 19 May 2024 21:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716153176;
-	bh=ycHchcNNkPJYHuh6grxXiGPIJUsXEsvkI6+Ndfvc6L0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RB5Hff15TXv+xZ+4FoMJHqq91r+V9dYXpxdjHbBAOPgvPgIlH5dhy5OifIA9U6LQO
-	 uec6kb2dypXp42GiUWluk7mqoo+a+7PSNIFhxzb6tOlxjhSkp4Amcwm0KG7WfFXaJG
-	 DQbuETZs/Qvxxf4KI95TjX5CqMms8aN+RAla9DoH83c8A5HDU3H26qF2eGBCCFmHe1
-	 e6RcXIWt7hZ2099tnpps2TYnbFyXZ9Zk3C1l8x2rkAKQ2XacQO8LiLDDNVQr0+QLJX
-	 w60rOaMK0THM1SvctabMwFtvCV/C9FyQfEApmQewgq0N/w/z+gSv1E0zQYGXjnAlhx
-	 OdTijlbyczy+A==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	linux-kbuild@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH 3/3] kbuild: rust: support `W=e` for Rust
-Date: Sun, 19 May 2024 23:12:35 +0200
-Message-ID: <20240519211235.589325-3-ojeda@kernel.org>
-In-Reply-To: <20240519211235.589325-1-ojeda@kernel.org>
-References: <20240519211235.589325-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kg8dRbWs"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a59c0a6415fso693641066b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 14:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716153382; x=1716758182; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v7DSWcjLrtFO5GaTtTI45y7FSFiCS2MtpG3NKa8KpWg=;
+        b=kg8dRbWsOdgAZ0XLllHRvvq/CP9ZkpqFrhoxily16Ti4Po7UPAAo2FNv0I8Z/y2qRD
+         LsHc9rOXgRIofZozDvvMTAk9ILxzf8cTCH7fXNVcp1ZDlFGBr/0Iy+p5gS9n6mepyoA6
+         lW9vbwjvuk0rjniVnz4Lqfqew7odRkP0l6lzGksrYzCx9+7TeMLo0I02bOrOdU7T2/WQ
+         sRol5jGAaOVBynaD1HP//uS2n15dxbmvh0B4SVSBbXDikpAe5eFekCeksbHCrm70QBI5
+         rNTO/zzSqK3kXVDEYlp7JhNk1kx/p5rYE+AWsYQrDgDo6WvKOjoJn4hvUmAVxxA71x4c
+         xTpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716153382; x=1716758182;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v7DSWcjLrtFO5GaTtTI45y7FSFiCS2MtpG3NKa8KpWg=;
+        b=YEJAPfzDIKfA9rBsMflx13edsmAhzdNNiO+afqHvBNsq0cK45/drjbOxjiIlX81udw
+         ujgPWv+OvAGjcFm72gWJg2xvcla7ZrLTx15WpL3QvP0W6xYVKHmFhaxqcEyLQZCnRHXp
+         JE4M/VDfxRQaUGDz5Zwd1kYZefeRpXwSeHaHD/v+l6CT7OvMMP3HI9Pvy4PQwEi2NuKm
+         V8KzQtBF8meI+nVqtE4spOasXtkBGj4nGL18jdSMw/gho2fYeJTYxMoWvgvQx9yDnFVb
+         QjwlC2XT59a+3zAfLxDYOTNcO3+QoEe1M26sOiZUQaKHh+5XZvH24e3stOTPk08m7kyJ
+         GmiQ==
+X-Gm-Message-State: AOJu0Yza9edM3ZQTnKe/uFrEStg5AraasB5gxUG2VoiE4MgSE7EPDwqu
+	pmqnv19+cQx/o+W3TvHysGeAfAAKrNarN0pPvSqJacJUGkZeGebC8Rscus7mvkTBZEBhd3o/lc7
+	/QlWsBRNMEKUowYS3naXu8/BmFOnkzLTu
+X-Google-Smtp-Source: AGHT+IGuI2HtaaXoYABFhKsKa/QdCI2JIMBqKO9jADIxtOZB0QSLq9dUhtdgXyRuAhHB8YW8btddDi4pgiz/tSgGOQs=
+X-Received: by 2002:a17:907:1b0b:b0:a59:a3ef:21eb with SMTP id
+ a640c23a62f3a-a5a2d675b19mr2315813566b.73.1716153382117; Sun, 19 May 2024
+ 14:16:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Dave Airlie <airlied@gmail.com>
+Date: Mon, 20 May 2024 07:16:10 +1000
+Message-ID: <CAPM=9twvbtHFZ9O_-yXGSgnN5p8e2cHPcr1LzNDc_7w+VEAmAQ@mail.gmail.com>
+Subject: [git pull] drm urgent (part 2) for 6.10-rc1
+To: LKML <linux-kernel@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, 
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, 
+	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-With `W=e`, kernel C targets error out on warnings.
+Hi Linus,
 
-Add support for the same feature for Rust code, but take the opportunity
-to apply it for every Rust target (i.e. not just kernel code), so that
-it behaves like having set `CONFIG_WERROR`.
+Here is Arunpravin's second fix for the buddy allocator warnings you
+have been seeing, hopefully this is the end of that, and thanks for
+your patience.
 
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- scripts/Makefile.extrawarn | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
+Dave.
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 990890821889..214b5edce4f2 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -206,5 +206,6 @@ endif
- ifneq ($(findstring e, $(KBUILD_EXTRA_WARN)),)
- 
- KBUILD_CFLAGS += -Werror
-+rust_common_flags += -Dwarnings
- 
- endif
--- 
-2.45.1
+drm-next-2024-05-20:
+drm urgent (the 2nd) for 6.10-rc1
 
+buddy:
+- fix WARN_ONs during force merge
+The following changes since commit 431c590c3ab0469dfedad3a832fe73556396ee52:
+
+  drm/tests: Add a unit test for range bias allocation (2024-05-16
+12:50:14 +1000)
+
+are available in the Git repository at:
+
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2024-05-20
+
+for you to fetch changes up to 5a5a10d9db77939a22e1d65fc0a4ba6b5d8f4fce:
+
+  drm/buddy: Fix the warn on's during force merge (2024-05-20 06:42:12 +1000)
+
+----------------------------------------------------------------
+drm urgent (the 2nd) for 6.10-rc1
+
+buddy:
+- fix WARN_ONs during force merge
+
+----------------------------------------------------------------
+Arunpravin Paneer Selvam (1):
+      drm/buddy: Fix the warn on's during force merge
+
+ drivers/gpu/drm/drm_buddy.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
