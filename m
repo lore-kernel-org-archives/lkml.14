@@ -1,119 +1,129 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0AB53E02;
-	Sun, 19 May 2024 19:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4046A340;
+	Sun, 19 May 2024 20:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716147484; cv=none; b=SvFmQ/MjXfJ48JTZFuL+rpZZP7nNCQlQtRj4pzokd/WfsZAKQ/4eLJAy0UlbXMIEtN7A2eGfiv9dk+d3BXce8fS+36PEUve1oNV4O6eSpSiOlvIwrS11Hx8dDQ0ebdZNWN5woACam29X+8xvt/ToVhSGrZTq3MnCYx/U511QRHg=
+	t=1716150316; cv=none; b=FuuhptwsBnINErDf5+ljS/9kdq7hcK2kB1YoiPSb+W+7m++EvmAAgD+b+Gm5MZCdg7TD4/sgWosaeafJ1L52rJyFqArCpz1YG/Qzrn8m16Hlrd/v5LtK/sHEtzXsYm1Ambr5QrMB6XFf13djjeM8Gn1H6Qk0TYX88Xdbvmzp4pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716147484; c=relaxed/simple;
-	bh=pnvDrWgelAMwAQrYjlbqhDtT80Gw5tnuHUf3yzZM37Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tibd+Qv116eZKEnblx6vEb7w2RJL057LQTjXMdbchpDl/lu42CDTeVHap7K5+yDn/8BD62/scI39Lghq+Uad7sfmtmthGu3xMoraLThEBeliGmQxbjuQE0soHUcnuCltnaFdCQV8tSFJ5Zt2GjhRm3CqE/AQT5OEOze3oCsrDA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTrTTAXc; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716150316; c=relaxed/simple;
+	bh=1LccXFaAPV45Y0RZiRDtNJd+NSqpCVnceyKAJKST3Tc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K2cuBCcuqpoT15W+5+APBG6cWEcWzWpw4rNSo5vqKpJ1bHykzyb3gHxPbDvKJXlfLjEI6yrUWYx9Y0x9A0KN31qleH7sK0FJ1dQx6oCbXGbxqZ63pKQ3Ox/VQ7rUZ/0NZg9nVOKUPk8kr2bGKKBtvokBxXkux7hs3jxcjrE1FT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=o8wz8xu2; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTrTTAXc"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e576057c56so24249571fa.3;
-        Sun, 19 May 2024 12:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716147481; x=1716752281; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zj4jSaDvedvDrxg8jax5CvqISE9uZYMJo6q0wXM5EZ4=;
-        b=bTrTTAXckdBBFQZQVYadDvSL+aLbRIK9BBhlf1DcZaSlhtNkFSGPpFvt3bX0Nz3GqP
-         duJkLX+04mci2YMyaZnAv4gyD+pkcJJYPtgY2bioIRppERELZiESZEDhvbf6/XkoYsqi
-         1nVrqh9hhdes7jw9gjbB/MUK21d8TwKqBbCXqfuDzESYYk0GDOpZA4R1NF4Ku+JKUQHa
-         3GDI44qfIiCoz4Idhgp8E9Jq4QEnxHRVzEcnqKBHSsfMuvbEkZcZylqVCa8bCxsCwDAP
-         xqP5AHZe9soQbmuPoumrxnQlsdL+/u4/vwJcCpbhLb5/rePOrPBgVpxgeEHDJ4cDASla
-         7ruw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716147481; x=1716752281;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zj4jSaDvedvDrxg8jax5CvqISE9uZYMJo6q0wXM5EZ4=;
-        b=Q9vZXcDYlWWXE98SEmvQHQh+2Xm9CZGsTCSOH8g/Bh+CPCtWuDTC52J5zo2qxGD8sJ
-         /OsBHOUbvehevYXs3GCQb1knSFKLOhEotJz4XP0Fj1RamEld7rLJ+GWfpSiQyJlHoPfH
-         cIq4Wo8PuAWgTmViOH8BkKpCXQ915OBVfd0yGitEpMKKy43f4eENiBMzH3rWBE+rkCUE
-         DHvfBseBg3jm7xezbZnTLBayOYgGegKvlnxo7rL4X6rcqFaT/HP5apZOiou0oKWQqyyH
-         iOc7cZpU75I57ciILimQrF0Fqr/Q6ApfXPjwRj66oPqizATeyI9NiEAwcm9R1BxMSf19
-         UA8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVDmyN/Y4uykC1qpPls+EVBwsh1eaI3R0en+sYDZLfGLB+upOKynAUNWbtGcr5WXWFynr9SaqhJ/RWV6O3L4BuzXheCVB9jG1qJJCh/lD21myniYafUu3OkkNv9BRFLVhq3SEjyaRIim9O70Q8ik2q589CRXTnmiJc9cDDlDXHRinHTuw==
-X-Gm-Message-State: AOJu0YyECy9uNq4jfflpH8W4XTpBm/NqUCAKTofxnK2FfNNI7CDcs22w
-	F/v4mxVTRM1zlbSY+Aj2oJsh7VOHzqFqbgOzbdAgAXPcTyPO1AkfTL/z4tIk
-X-Google-Smtp-Source: AGHT+IGYqjNIm3JqZ0Z2qoxVpyr9PEu8aydkNDANKwFcJL1ZmR4sHMRhw+A7phcVLRKFJGd1Zr7Ddw==
-X-Received: by 2002:a2e:934c:0:b0:2dc:d7e7:d68f with SMTP id 38308e7fff4ca-2e52039e285mr153395541fa.44.1716147480994;
-        Sun, 19 May 2024 12:38:00 -0700 (PDT)
-Received: from [192.168.0.105] (c7.campus.utcluj.ro. [193.226.6.226])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733becfbd3sm14715714a12.44.2024.05.19.12.37.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 May 2024 12:38:00 -0700 (PDT)
-Message-ID: <34c21023-441f-44e4-a427-f3e2bb2f5c15@gmail.com>
-Date: Sun, 19 May 2024 22:37:58 +0300
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="o8wz8xu2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
+	bh=KnWX2k85QT2MAHoz6p77qPHOQoZTmF8C99l666ikqsE=; b=o8wz8xu22a/Hc4uWWk30bBbKff
+	0zJd/5csKULqJw+h5IQB9Bh/uUzqVcv3MAE4HlhNGAiGS9sp2gDHbu7k5WEzPKXvA39o9LNeOpQRq
+	jPIyKib6JIYkCbtsAPurmzkXRBbt/U/g3KvmbxC93uK+k3XTskfS34oURjTZe90fz7O47xxEaB2JS
+	XkoITmimrWC/b9XX5UXO4C3QOWf/4Um+JjmaibWfTTBJvXHLef17qulJVdTZqwtFHyx5AM4+8k19E
+	TWzEa3oFaeR28b9vWtUoK2JKm2Zgbpn7+jAMVDOHuWyRgL+gkdJSOXVtdFKp8QXlxurrwBlvao2WJ
+	ShxsKY/w==;
+Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <zfigura@codeweavers.com>)
+	id 1s8n5c-008wIn-2h;
+	Sun, 19 May 2024 15:25:04 -0500
+From: Elizabeth Figura <zfigura@codeweavers.com>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	wine-devel@winehq.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Arkadiusz Hiler <ahiler@codeweavers.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Elizabeth Figura <zfigura@codeweavers.com>
+Subject: [PATCH v5 09/28] ntsync: Introduce NTSYNC_IOC_EVENT_PULSE.
+Date: Sun, 19 May 2024 15:24:35 -0500
+Message-ID: <20240519202454.1192826-10-zfigura@codeweavers.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240519202454.1192826-1-zfigura@codeweavers.com>
+References: <20240519202454.1192826-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 6/6] iio: adc: ad7192: Add AD7194 support
-To: Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Cc: michael.hennerich@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lars@metafoo.de,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, nuno.sa@analog.com,
- marcelo.schmitt@analog.com, bigunclemax@gmail.com, dlechner@baylibre.com,
- okan.sahin@analog.com, fr0st61te@gmail.com, alisa.roman@analog.com,
- marcus.folkesson@gmail.com, schnelle@linux.ibm.com, liambeguin@gmail.com
-References: <20240514120222.56488-1-alisa.roman@analog.com>
- <20240514120222.56488-7-alisa.roman@analog.com>
- <ZkNijKz0N7PPvmeU@smile.fi.intel.com> <20240519190304.4d93530a@jic23-huawei>
-Content-Language: en-US
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-In-Reply-To: <20240519190304.4d93530a@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 19.05.2024 21:03, Jonathan Cameron wrote:
-> On Tue, 14 May 2024 16:09:32 +0300
-> Andy Shevchenko <andy@kernel.org> wrote:
-> 
->> On Tue, May 14, 2024 at 03:02:22PM +0300, Alisa-Dariana Roman wrote:
->>> Unlike the other AD719Xs, AD7194 has configurable channels. The user can
->>> dynamically configure them in the devicetree.
->>>
->>> Add sigma_delta_info member to chip_info structure. Since AD7194 is the
->>> only chip that has no channel sequencer, num_slots should remain
->>> undefined.
->>>
->>> Also modify config AD7192 description for better scaling.
->>
->> Some non-critical, mostly style related comments below.
->>
-> Tweaked a bit. And applied.  Please check the result in the testing branch
-> of iio.git.
+This corresponds to the NT syscall NtPulseEvent().
 
-Thank you guys for the feedback and for making the adjustments!
+This wakes up any waiters as if the event had been set, but does not set the
+event, instead resetting it if it had been signalled. Thus, for a manual-reset
+event, all waiters are woken, whereas for an auto-reset event, at most one
+waiter is woken.
 
-+/* 10th bit corresponds to CON18(Pseudo) */
-+#define AD7194_CH(p)		(BIT(10) | AD7194_CH_POS(p))
-+
-I noticed this comment got away in the testing branch.
+Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
+---
+ drivers/misc/ntsync.c       | 8 ++++++--
+ include/uapi/linux/ntsync.h | 1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-
-+static bool ad7194_validate_ain_channel(struct device *dev, u32 ain)
-+{
-+	return in_range(ain, AD7194_CH_AIN_START, AD7194_CH_AIN_NR);
-+}
-And the negation got lost here.
-
-With these little changes, tested on board to make sure, running perfectly!
-
-Kind regards,
-Alisa-Dariana Roman.
+diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
+index b070ceccc3af..b0c1d644f0af 100644
+--- a/drivers/misc/ntsync.c
++++ b/drivers/misc/ntsync.c
+@@ -534,7 +534,7 @@ static int ntsync_mutex_kill(struct ntsync_obj *mutex, void __user *argp)
+ 	return ret;
+ }
+ 
+-static int ntsync_event_set(struct ntsync_obj *event, void __user *argp)
++static int ntsync_event_set(struct ntsync_obj *event, void __user *argp, bool pulse)
+ {
+ 	struct ntsync_device *dev = event->dev;
+ 	__u32 prev_state;
+@@ -550,6 +550,8 @@ static int ntsync_event_set(struct ntsync_obj *event, void __user *argp)
+ 	if (all)
+ 		try_wake_all_obj(dev, event);
+ 	try_wake_any_event(event);
++	if (pulse)
++		event->u.event.signaled = false;
+ 
+ 	ntsync_unlock_obj(dev, event, all);
+ 
+@@ -605,9 +607,11 @@ static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
+ 	case NTSYNC_IOC_MUTEX_KILL:
+ 		return ntsync_mutex_kill(obj, argp);
+ 	case NTSYNC_IOC_EVENT_SET:
+-		return ntsync_event_set(obj, argp);
++		return ntsync_event_set(obj, argp, false);
+ 	case NTSYNC_IOC_EVENT_RESET:
+ 		return ntsync_event_reset(obj, argp);
++	case NTSYNC_IOC_EVENT_PULSE:
++		return ntsync_event_set(obj, argp, true);
+ 	default:
+ 		return -ENOIOCTLCMD;
+ 	}
+diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
+index 7fdf79729b20..5586fadd9bdd 100644
+--- a/include/uapi/linux/ntsync.h
++++ b/include/uapi/linux/ntsync.h
+@@ -53,5 +53,6 @@ struct ntsync_wait_args {
+ #define NTSYNC_IOC_MUTEX_KILL		_IOW ('N', 0x86, __u32)
+ #define NTSYNC_IOC_EVENT_SET		_IOR ('N', 0x88, __u32)
+ #define NTSYNC_IOC_EVENT_RESET		_IOR ('N', 0x89, __u32)
++#define NTSYNC_IOC_EVENT_PULSE		_IOR ('N', 0x8a, __u32)
+ 
+ #endif
+-- 
+2.43.0
 
