@@ -1,174 +1,78 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E2517BA2;
-	Sun, 19 May 2024 07:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A6D14006;
+	Sun, 19 May 2024 07:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716104637; cv=none; b=fQKgs5tW8Qz+1OkAusnqGy8U0qPXeifHp3vEMpma7cw9mvHv+9FA6TMQ+2hXLqdWcEaxzSLOUsCToQ+9SuX/DccDbrd0WlipUxAq/PPr9XVZPn1d+jRkGl56fr1NKY6XqAnU4ZtKP9kuik/wauYl9mhb1FpUOuzEj8jfQRMZPbs=
+	t=1716105051; cv=none; b=CXw90NIiw6cApBOpV5y1VIgvvoO5wEIhRMW241axGLeZDl/rScFeMWe/kWInv4aQ+wielmi6dLu6D9IffszRW/afeIgoU7xyloJydm40PKkZq2LLF3TsB/KEokUz7gn5Wq7rxx6GkwR+3ItFtO/rTCuCUky9ipDkXzr56JHEbQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716104637; c=relaxed/simple;
-	bh=BLS/3yqG+x+pmzxow4oCh/ZaClvha66n9SalV6XKyPI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nxgTMr9iF4IRRF+JsHHOHiHGwTCsB+3B8UR9+gVJVcMtZQNc3LughTr2Yxylppr4tfPAZga4z194SsBFx28SMi2Ko+4S8cuyHR/teRt5HoIkWrwyT72JT6it8UZEdpUi6WolC8+HW4rU7PVGzNKAyzY0a+BDZWR+4TAxHu2fdcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hkzgk/z+; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716105051; c=relaxed/simple;
+	bh=jkN9s/UCfqcwcO60sG82AdVMCLkIhP/ZxGRMxoGJvNY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BSSeq+FeEgxpVdzptd3X4zPh+Ff/5gSyaVNHsPI8XgEMchdPKJFa+GTsDdGy3PWY8ThOFdZBfghgTqUMdeDXwBwHhvoC/McRNYlsEeRPuYYAwwvr7KEw2v2nry007W07tF78i5f8BAd+yNE9STE8m8Ar9k5E0Xohc7wBf4LBE34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=N/q3aO5L; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hkzgk/z+"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5b27bbcb5f0so867057eaf.3;
-        Sun, 19 May 2024 00:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716104635; x=1716709435; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sxw0ppvwN68aKsYdrg7i/nk/Ahqb/+wiMV6TU4JTkq0=;
-        b=Hkzgk/z+sjGl3uGZ5/cN8u5niBaqdG6cwZ2yYp4ZHzL2Iz5bU/S3D4jgX9Q/gp59x8
-         n8c67saLryXiMGxsxNNZV4DJp2V1ORBgQt/fEoyc+h/oe3IRzXIoqaqvPsE2t7YE8+aj
-         SRA5sMpKnmSyuE1fwILppZ/JKQw4NyLqoc0VuhoZTVjKR64FjMOYDO7DX3RYZY8C++jj
-         KqtdXog21jsNEKQUKXTNWiyH+C7ZGDfBObsC69LzlT4U7cd+4Kw+tAhMBTWbkv2zbwqH
-         2WXy4wOHwOqWyKIVWcrSPEOtNZs8mNvA50vSLIewza6Np0t2fwM6ksdRoSX+GEXqBUa0
-         858Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716104635; x=1716709435;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sxw0ppvwN68aKsYdrg7i/nk/Ahqb/+wiMV6TU4JTkq0=;
-        b=sUIMdY8mTNquYl7xrMsM4s9lnE0exBIDOILxDnBbMvURyBA1VD9jIXMZlDBj/1c80R
-         fPUOp49Aya32bO9rjUKI4F+0sxuvQgdBZctlA58QONY+/pys110JjojBqq15Fjn+yAud
-         mTSIiHMYYQyaJN8HdCncg72/Nuq1I8chIJu+6OSh9DjTenXyAZ6w/WlZor0Yeg92yTH9
-         GNiicDhkE/EjlLdI08AxZuoS17EUs7F7eOuwgJvFQCytw5SFLOyFuGQgrzLqh60Edo75
-         wghJ7Ee+rmzRXykPpNKeivFgVE7eUNDQZMYyrTN9dxhbjaLpoViF9dP9iesJAPBo/CuS
-         lKKA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8wSN8xOmg5zj1sczS80lHr1fLo9YTI7tljKE/NW708BRPtcuMc2rybJoXeza9A3skDtTgvXT6e5XHdpegg/RTmmiA+wKoO9bNVxbP
-X-Gm-Message-State: AOJu0Yw/s+4mNtnbW7Mb733vGXimdfMFXPkAyJAXkIKlyGuscdixafs3
-	nthZqO/qmHOQ2/tvIhD7ph+iTGd4KXiQLNWogTL5/H2gWa+a0csY
-X-Google-Smtp-Source: AGHT+IHNm6SmvyxfGJ2bBkTQkzP7Xrbf6qLP88jCweFCOqqbEpA3/8+5OaaoJ+k0I3HpDOHDqyfI/w==
-X-Received: by 2002:a05:6358:8093:b0:192:5510:e3ee with SMTP id e5c5f4694b2df-193bb623eb1mr3124570055d.13.1716104635013;
-        Sun, 19 May 2024 00:43:55 -0700 (PDT)
-Received: from localhost.localdomain ([120.229.27.58])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67126b666sm19735722a91.34.2024.05.19.00.43.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 May 2024 00:43:54 -0700 (PDT)
-From: Wardenjohn <zhangwarden@gmail.com>
-To: jpoimboe@kernel.org,
-	mbenes@suse.cz,
-	jikos@kernel.org,
-	pmladek@suse.com,
-	joe.lawrence@redhat.com
-Cc: live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wardenjohn <zhangwarden@gmail.com>
-Subject: [PATCH] livepatch: introduce klp_func called interface
-Date: Sun, 19 May 2024 15:43:43 +0800
-Message-Id: <20240519074343.5833-1-zhangwarden@gmail.com>
-X-Mailer: git-send-email 2.37.3
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="N/q3aO5L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1716105046;
+	bh=jkN9s/UCfqcwcO60sG82AdVMCLkIhP/ZxGRMxoGJvNY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=N/q3aO5L67HYc0Qxj5I/En2FlSEjRWleBkFJgkdEvhG7K8aToJy+IZai/ddJTxGhU
+	 +mlvuaPa9dJxjh7VAqoOohCAlTr8xOoNfhGoKcUfKXzNVSmzYnpRsyIoGvH9chGG2Q
+	 uufYH9vgiLvklNEyO0GqE5Rsz4h4oaO8u4Egrspk=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sun, 19 May 2024 09:50:21 +0200
+Subject: [PATCH 3/3] mfd: cros_ec: Register charge control subdevice
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240519-cros_ec-charge-control-v1-3-baf305dc79b8@weissschuh.net>
+References: <20240519-cros_ec-charge-control-v1-0-baf305dc79b8@weissschuh.net>
+In-Reply-To: <20240519-cros_ec-charge-control-v1-0-baf305dc79b8@weissschuh.net>
+To: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+ Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
+ Dustin Howett <dustin@howett.net>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716105045; l=701;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=jkN9s/UCfqcwcO60sG82AdVMCLkIhP/ZxGRMxoGJvNY=;
+ b=d/Xu0dphsEUz2K3zV15gzzcBWA+HAFvbHnpG9ZKAeDysndbIkVaCkAdx7xSdDSYr9PV2A5L34
+ lBGrnU4Oo1FDRyuleOw+i1p4Ka4EIq1jGRdSPSMiYS5y44Ncdf308KG
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Livepatch module usually used to modify kernel functions.
-If the patched function have bug, it may cause serious result
-such as kernel crash.
+Add ChromeOS EC-based charge control as EC subdevice.
 
-This commit introduce a read only interface of livepatch
-sysfs interface. If a livepatch function is called, this
-sysfs interface "called" of the patched function will
-set to be 1.
-
-/sys/kernel/livepatch/<patch>/<object>/<function,sympos>/called
-
-This value "called" is quite necessary for kernel stability assurance for livepatching
-module of a running system. Testing process is important before a livepatch module
-apply to a production system. With this interface, testing process can easily
-find out which function is successfully called. Any testing process can make sure they
-have successfully cover all the patched function that changed with the help of this interface.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- include/linux/livepatch.h |  2 ++
- kernel/livepatch/core.c   | 18 ++++++++++++++++++
- kernel/livepatch/patch.c  |  2 ++
- 3 files changed, 22 insertions(+)
+ drivers/mfd/cros_ec_dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index 51a258c24ff5..026431825593 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -37,6 +37,7 @@
-  * @nop:        temporary patch to use the original code again; dyn. allocated
-  * @patched:	the func has been added to the klp_ops list
-  * @transition:	the func is currently being applied or reverted
-+ * @called:		the func is called
-  *
-  * The patched and transition variables define the func's patching state.  When
-  * patching, a func is always in one of the following states:
-@@ -75,6 +76,7 @@ struct klp_func {
- 	bool nop;
- 	bool patched;
- 	bool transition;
-+	bool called;
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index a52d59cc2b1e..c571cbc642c7 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -89,6 +89,7 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
+ static const struct mfd_cell cros_usbpd_charger_cells[] = {
+ 	{ .name = "cros-usbpd-charger", },
+ 	{ .name = "cros-usbpd-logger", },
++	{ .name = "cros-charge-control", },
  };
  
- struct klp_object;
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 52426665eecc..bc055b56dbe5 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -470,6 +470,22 @@ static struct attribute *klp_object_attrs[] = {
- };
- ATTRIBUTE_GROUPS(klp_object);
- 
-+static ssize_t called_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	struct klp_func *func;
-+	
-+	func = container_of(kobj, struct klp_func, kobj);
-+	return sysfs_emit(buf, "%d\n", func->called);
-+}
-+
-+static struct kobj_attribute called_kobj_attr = __ATTR_RO(called);
-+static struct attribute *klp_func_attrs[] = {
-+	&called_kobj_attr.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(klp_func);
-+
- static void klp_free_object_dynamic(struct klp_object *obj)
- {
- 	kfree(obj->name);
-@@ -631,6 +647,7 @@ static void klp_kobj_release_func(struct kobject *kobj)
- static const struct kobj_type klp_ktype_func = {
- 	.release = klp_kobj_release_func,
- 	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_groups = klp_func_groups,
- };
- 
- static void __klp_free_funcs(struct klp_object *obj, bool nops_only)
-@@ -903,6 +920,7 @@ static int klp_init_object(struct klp_patch *patch, struct klp_object *obj)
- static void klp_init_func_early(struct klp_object *obj,
- 				struct klp_func *func)
- {
-+	func->called = 0;
- 	kobject_init(&func->kobj, &klp_ktype_func);
- 	list_add_tail(&func->node, &obj->func_list);
- }
-diff --git a/kernel/livepatch/patch.c b/kernel/livepatch/patch.c
-index 90408500e5a3..75b9603a183f 100644
---- a/kernel/livepatch/patch.c
-+++ b/kernel/livepatch/patch.c
-@@ -118,6 +118,8 @@ static void notrace klp_ftrace_handler(unsigned long ip,
- 	if (func->nop)
- 		goto unlock;
- 
-+	if (!func->called)
-+		func->called = true;
- 	ftrace_regs_set_instruction_pointer(fregs, (unsigned long)func->new_func);
- 
- unlock:
+ static const struct mfd_cell cros_usbpd_notify_cells[] = {
+
 -- 
-2.37.3
+2.45.1
 
