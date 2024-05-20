@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925DA367
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 01:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABE979D3
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 01:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716168365; cv=none; b=FgjH5e43d6Ymc2juwRnvsiOgn97k6r1x9OBnW2vm547mw5M82CBeRu8U532wrMDWvuDz9MfOZ/70W2tZ0iMffBuBGPGNV5yyL+OC8+1f+y2VHc+Sj3tp1RuoPqBaibPRpM+jG4i0Dsbdzm2q3cBLsbE16cCKUnvjG1wuaxf6HoI=
+	t=1716168937; cv=none; b=D9rUB+1mDPpvW2FJMeltca1cbl7XqUfaoHJPV52fOUMQ7nkVXPN6pRidbEwAOmvKKcc4+GafGTor3hiPVFAwdTkrr+Ta1b2FccY3Byw2pWuwrNNFLGe7EzYujw5/wkPyJK7qmq0T89V+oNXb2ui4YjMuzZ+5Ajg2fqizduYKDt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716168365; c=relaxed/simple;
-	bh=TtwtjcXrrA11KTveXffexyVsNN0b1pCRGDvph290NUQ=;
+	s=arc-20240116; t=1716168937; c=relaxed/simple;
+	bh=VR6ZYeZcCM4yblOV/1NPtY2M0KZ0UgfEH1ScYqV1UsE=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Tp7XDYyHMVrCvDmrM+ewDlAdIb4w0kn9dKBq/UNP5pbxhi2kk5DgA3ojcuo4t3tRwEP9h7hDQ05ToMR1wMiZYHDdCa7UZXimxR9VQ/kEF8cP+NUcLUJ8H5zdFVyFPT7ObC5yAbERlA0W/iM0+OaQNAKMdtGb51L/MCa4aGDwyNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iKaxybCj; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=exT+q+tXq6FvMNIfmMlW2Pn5RWfbNKH9JMPqnLf5+8YfyuKlC2b6xmZ/3WcMJ49z8i6hIEpIzrWTNE6JaOq3fsX6ec1ri0YxkLHkhZX5aNO9tHo679ylw7k5kOyGYJAUJdYmiMF3T1G9Z6Z/dT2DJMjM2hxGqs0ZNjGKyI5WmDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MX/OBBvx; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iKaxybCj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MX/OBBvx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716168364; x=1747704364;
+  t=1716168936; x=1747704936;
   h=message-id:date:mime-version:cc:subject:to:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=TtwtjcXrrA11KTveXffexyVsNN0b1pCRGDvph290NUQ=;
-  b=iKaxybCj5OqAkxvTzBC7AXSpbhYxkGxiT5dvqURUO3348U9qR/AXeptN
-   K9/Q+BxLb+zBoh5XdscFlbMSaQSiZImeiVpt0e8878EFSr5IuKRImim8w
-   0JfEjT+arQ2VpokWiw1+7zE9aoBZH2Jn/rWzavBz+c1uvxv3DHE8NYgXb
-   Ez1o7WS/WrUDbLkrMZEf4Cu1tXrzmGJs0H86KQPfhR5HHy1epwIoq5rDa
-   LKpeUFG4NtdUnTYTl2K1y4C45fMKu6N0JCzxejW0eo/sh1eScblLAgGYZ
-   86fttRji4l6wn/+mC591j5xucuYLLsxbGMMB5dx0XNdoWw4jSpT8g0I1c
-   Q==;
-X-CSE-ConnectionGUID: GuknArGuStW0lYxIE6r0tA==
-X-CSE-MsgGUID: NOqtds/cSQmQsKjXxG1/gw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="12498183"
+  bh=VR6ZYeZcCM4yblOV/1NPtY2M0KZ0UgfEH1ScYqV1UsE=;
+  b=MX/OBBvxeYuL69ICc1ROdhAuO0s2bHRb7g4H+AMw/m0y1Oz8jeP0Jb+L
+   VqsI9+Esy3/P77q0qaz2E0oO/58fudApG7Gbm1XYGL/15PyYMaJCAKLqA
+   MQnXWDoKhD+ajZoXa27dyJ1Uhq3OSkccDvhXb34jTncKmF5syQlII78mM
+   VrepNEPtadkq9vWOMXBrcMgoVjRyY8lCPbnfnK+n0RURAthXZ7NrlI+pF
+   VkG8kEd1HdYRzdBokKkiGKBQwVehz62/13H+ScMul84fDYltdI3UXlbr3
+   wlYNOa9pY+SqfpjpupeQBrozO8b9SS9NTLJmFJf6yNA+YCmVu8fOq/5eJ
+   w==;
+X-CSE-ConnectionGUID: 6zAVtiJFT6+A5UoZIyEvLg==
+X-CSE-MsgGUID: 8JBHExPPR3y3gzrcPB+4sA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="12399687"
 X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="12498183"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2024 18:26:04 -0700
-X-CSE-ConnectionGUID: SI+sGxD1SaWg/GFY7brOWg==
-X-CSE-MsgGUID: db5ZHzgxSsuIxnX9A7ZDYQ==
+   d="scan'208";a="12399687"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2024 18:35:36 -0700
+X-CSE-ConnectionGUID: QUaP7uYHRRyDzJoDH8+C4A==
+X-CSE-MsgGUID: yZT4bqSOQCGZ3TdBEi/f4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="36786047"
+   d="scan'208";a="69808925"
 Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa005.fm.intel.com with ESMTP; 19 May 2024 18:26:01 -0700
-Message-ID: <79bacf16-dfa6-42c7-b02d-117985e38472@linux.intel.com>
-Date: Mon, 20 May 2024 09:24:09 +0800
+  by orviesa001.jf.intel.com with ESMTP; 19 May 2024 18:35:32 -0700
+Message-ID: <e30d919c-2e28-4e01-8317-2a4d82049056@linux.intel.com>
+Date: Mon, 20 May 2024 09:33:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,45 +75,26 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 5/15/24 4:37 PM, Tian, Kevin wrote:
->> +static ssize_t iommufd_fault_fops_write(struct file *filep, const char __user
->> *buf,
->> +					size_t count, loff_t *ppos)
->> +{
->> +	size_t response_size = sizeof(struct iommu_hwpt_page_response);
->> +	struct iommufd_fault *fault = filep->private_data;
->> +	struct iommu_hwpt_page_response response;
->> +	struct iommufd_device *idev = NULL;
->> +	struct iopf_group *group;
->> +	size_t done = 0;
->> +	int rc;
 >> +
->> +	if (*ppos || count % response_size)
->> +		return -ESPIPE;
->> +
->> +	mutex_lock(&fault->mutex);
->> +	while (count > done) {
->> +		rc = copy_from_user(&response, buf + done, response_size);
->> +		if (rc)
->> +			break;
->> +
->> +		if (!idev || idev->obj.id != response.dev_id)
->> +			idev = container_of(iommufd_get_object(fault->ictx,
->> +							       response.dev_id,
->> +
->> IOMMUFD_OBJ_DEVICE),
->> +					    struct iommufd_device, obj);
->> +		if (IS_ERR(idev))
->> +			break;
->> +
->> +		group = xa_erase(&idev->faults, response.cookie);
->> +		if (!group)
->> +			break;
-> is 'continue' better?
+>> +		iopf_group_response(group, response.code);
+> PCIe spec states that a response failure disables the PRI interface. For SR-IOV
+> it'd be dangerous allowing user to trigger such code to VF to close the entire
+> shared PRI interface.
+> 
+> Just another example lacking of coordination for shared capabilities between
+> PF/VF. But exposing such gap to userspace makes it worse.
 
-If we can't find a matched iopf group here, it means userspace provided
-something wrong. The current logic is that we stop here and tell
-userspace that only part of the faults have been responded to and it
-should retry the remaining responses with the right message.
+Yes. You are right.
+
+> 
+> I guess we don't want to make this work depending on that cleanup. The
+> minimal correct thing is to disallow attaching VF to a fault-capable hwpt
+> with a note here that once we turn on support for VF the response failure
+> code should not be forwarded to the hardware. Instead it's an indication
+> that the user cannot serve more requests and such situation waits for
+> a vPRI reset to recover.
+
+Is it the same thing to disallow PRI for VF in IOMMUFD?
 
 Best regards,
 baolu
