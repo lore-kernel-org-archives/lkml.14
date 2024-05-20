@@ -1,155 +1,107 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFA454FA1
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 13:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C5554FA1
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 13:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716211248; cv=none; b=r4BonLmSObga4P+Ca/LEYDxiPHIkkKrZBrka0Ve0YRQd3vVNe2LHzBqJpiboofw0qTsLeugyh5gMjw8bC0sif4MEIZonFJX/3HIteYWNfJZ64wXx9vDExnts3581FoNxbTEToDL/WPsamkJ6KNIYv3NIdiOhplGM7JpHaGHsFTw=
+	t=1716211315; cv=none; b=CcSqiv7tmbEgLLE/SmCA9uQrUZOgfIi0XdrMzW6gAArlm3vein7NN3RlcLDfZHi55hAeUteqXww8ZY4sazuhwiorlcbW+Y6CY7M216w1d2f7ppJ0TdwygIyWO37/2ssTX41Hiw4315R+d2qslFeL3Pger6bqS6rouiOLETgwKmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716211248; c=relaxed/simple;
-	bh=ZtzndvGkIGuejxzhOSScRg7IFRuZt6nV23246Vkm7LU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=IbRgNAYFQgbiFlZNdZglbsGSm7W6CmUYJVN7BzR9u8XtVyCuuEd9sPxPQO15wdBRDgw5nvd/l+A9uLwUsmJ64fkv5a/zNBcT8/d+F+07GQZOpZRvL+rn3XfpKR0tLWrdAMasmcx0dBadCRDsX35yGKhO6yafiqDJuPpNYdx6e1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=Gi413aOO; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Gi413aOO"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de45dba15feso2438091276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 06:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1716211244; x=1716816044; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hpoD7IfFyo0fRXVXGRhMKLv7hvGmowk4hNOwLuLBHAQ=;
-        b=Gi413aOOHZC8oi/vIxiokZn6wPLk1GwKQisEgY9YXEYwHF4JEYQCv6oxrMMDZH8zxn
-         sZ3pkNx+z3MffKoEv4oZo4Dug06YaSMPc7WuoBu+rDzK7es9E2GGVhNPy+VSvsK6Ipnv
-         Ma7FAcwb7N/rw/jKevDJ6MUwossqrJ+maZyrTSMORnkqarhEv1MCDO4XCyGXGEX/wBIf
-         FX8wY8poBv96TLV8D6Qr8xIRmCGTddAANkVJsZUvonmPWYyk7x74py7qITor9xWLLrq7
-         HEE9Cu6Bf0ohpJy0xNYC9ecUaH4YA/5/L+XwKSkvmZ1kUxnLmEeiWVR6M2/sU6uE4XeI
-         NJWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716211244; x=1716816044;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hpoD7IfFyo0fRXVXGRhMKLv7hvGmowk4hNOwLuLBHAQ=;
-        b=IkqpxXMGwSWBptx10wxalVKzi45Cnhql/djFle6rTDsb2KCTHkcaU0rY2Xgreg3Gpu
-         wX9NyOtDF4K7Z6ZA4UXz+lGtbqYOsAnGPjFGoX/8l1Q7t5hru9r+LmxT19bgEOKgVyu7
-         pJmPFNKtK6/KP/qMqsZ6a9TR9925zDgIbvt/SwwE9zX0R0GPzSm4aIsXnNOyu1mjycM8
-         RFj5WlBlfAUc2ibm2nXXr/bN/rX/uMBzDT9Ydw7LQYR31ZPPWqhk4DPx7KrCHi4hUF93
-         E/KB3FQGPQAjfadVFE17RCYmzffEVCcM7GDL/iQBj6tsnzxCrxHPY0adFRIZGmFfDU0u
-         WPxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZj8pVVr74qMoaaJHORxR11xjI4eZmghoaEo2oebQ65QS042WtxJDpP/WYl9CXnCoV4xad/hukEWIWLXP3j1ayDwYC/oKoo0kl9XOm
-X-Gm-Message-State: AOJu0Ywz58pQFb1e4ECq54ohT91hZ36Om5OC4LF8n3mJAKQO/7KPKJa+
-	nWXHzq4WBg1HsUahzOPk+yhmGHDLoa47VxvaEE5hHDRb02Br9SErXNG0308ZH+U0hnd0Xb8BjH6
-	4iuaQcq9Gcqlk1bkiyyC+Iye4I1RKhPgYvppdgA==
-X-Google-Smtp-Source: AGHT+IGLhrSKkPUoJZ62vutQInuJJOzTJYTiNFbmW3RNzAPYbVG1k0r6chzGp7BB1txzsNkSl4SqFlkWTloKih5W6g8=
-X-Received: by 2002:a5b:3ce:0:b0:de5:51d0:9a8d with SMTP id
- 3f1490d57ef6-dee4f334373mr26443106276.55.1716211243868; Mon, 20 May 2024
- 06:20:43 -0700 (PDT)
+	s=arc-20240116; t=1716211315; c=relaxed/simple;
+	bh=lFhFicoTUR0HTjRnwiKX7Nhd2JVpOUuOPHos2f7lCwo=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lte8wTObOfx23ATsoWPN9x4l9/QYLtMTN9505D1fIr9nxe5XjsHQFpioUAQy5EpouZzkBVk8x+VYZqX+Q4x8EY5sYIYwz6AeS2k8fbMjSUh4VS92pBuiR7lgKKp7K+Wso6aay2kT04VQ8YrOm3LeLAMjfG0a4IJFD+p2CPCH2Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VjdTp3zn5z1HCJF;
+	Mon, 20 May 2024 21:20:14 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8334B180062;
+	Mon, 20 May 2024 21:21:44 +0800 (CST)
+Received: from [10.67.111.82] (10.67.111.82) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 20 May
+ 2024 21:21:44 +0800
+Subject: Re: [PATCH] arm64: asm-bug: Add .align 2 to the end of __BUG_ENTRY
+To: Li Zetao <lizetao1@huawei.com>, Mark Rutland <mark.rutland@arm.com>
+References: <1715955208-17109-1-git-send-email-xiaojiangfeng@huawei.com>
+ <ZksnARrLkKHcX4C_@J2N7QTR9R3>
+ <20d70835-9411-9a08-c567-56d7040e01dd@huawei.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <Dave.Martin@arm.com>,
+	<xieyuanbin1@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <nixiaoming@huawei.com>,
+	<wangbing6@huawei.com>, <douzhaolei@huawei.com>, <liaohua4@huawei.com>,
+	<lijiahuan5@huawei.com>, <wangfangpeng1@huawei.com>, "zhangjianhua (E)"
+	<chris.zjh@huawei.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <876b3571-b7f5-03f1-5da2-07a2ec47ad08@huawei.com>
+Date: Mon, 20 May 2024 21:21:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501152442.1072627-1-git@luigi311.com> <20240501152442.1072627-22-git@luigi311.com>
- <ZkcV5xWZz2jCszxA@kekkonen.localdomain> <q5nbk3qcxsjsqp4mdyx5nlrn4oie6oynunwodm7r2nwtywc2ey@kxsgcatwt5b2>
-In-Reply-To: <q5nbk3qcxsjsqp4mdyx5nlrn4oie6oynunwodm7r2nwtywc2ey@kxsgcatwt5b2>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 20 May 2024 14:20:28 +0100
-Message-ID: <CAPY8ntCfQvp9rCt=fqTFKYEOamLZwKmJDv9agxerQtDvsGKB0g@mail.gmail.com>
-Subject: Re: [PATCH v5 21/25] dt-bindings: media: imx258: Add binding for powerdown-gpio
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, git@luigi311.com, 
-	linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com, 
-	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	pavel@ucw.cz, phone-devel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20d70835-9411-9a08-c567-56d7040e01dd@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-Hi Ond=C5=99ej
 
-On Mon, 20 May 2024 at 13:55, Ond=C5=99ej Jirman <megi@xff.cz> wrote:
->
-> On Fri, May 17, 2024 at 08:31:35AM GMT, Sakari Ailus wrote:
-> > Hi Luis,
-> >
-> > On Wed, May 01, 2024 at 09:24:38AM -0600, git@luigi311.com wrote:
-> > > From: Ondrej Jirman <megi@xff.cz>
-> > >
-> > > Add powerdown-gpio binding as it is required for some boards.
-> >
-> > I thought the conclusion was that this wasn't a property of the sensor?=
- If
-> > it needs to be controlled, then this should take place somewhere else t=
-han
-> > in the sensor driver.
->
-> It's a property of the sensor modules. It's just optional on
-> some, eg. (pin 8):
->
->   https://assets-global.website-files.com/63b65bd4974577341e1fe194/654290=
-d4d0fb173e87f754ed_IMX_258_FF_drawing.png
->
-> Where else should it be so that the module is described properly in the
-> DT and the powerdown signal can be used as part of powerup/down sequence
-> of the sensor?
 
-From v3 [1] Luis reported testing dropping the powerdown-gpio on a PPP
-and it working fine.
+On 2024/5/20 20:05, Li Zetao wrote:
 
-I linked to the IMX258 datasheet in the same thread[2], and that
-datasheet does not include such a signal on the imx258 sensor itself.
 
-If your module has a powerdown gpio, then you'll have to ask the
-module vendor what it is actually connected to. Potentially it relates
-to the VCM driver rather than the sensor.
+>>> diff --git a/arch/arm64/include/asm/asm-bug.h b/arch/arm64/include/asm/asm-bug.h
+>>> index c762038..6e73809 100644
+>>> --- a/arch/arm64/include/asm/asm-bug.h
+>>> +++ b/arch/arm64/include/asm/asm-bug.h
+>>> @@ -28,6 +28,7 @@
+>>>       14470:    .long 14471f - .;            \
+>>>   _BUGVERBOSE_LOCATION(__FILE__, __LINE__)        \
+>>>           .short flags;                 \
+>>> +        .align 2;                \
+> The use of .align 2 here is based on the assumption that struct bug_entry is 4-byte aligned. Currently, there is no problem with this assumption, but for compatibility reasons, refer to the riscv architecture and refactor the implementation of __BUG_FLAGS:
+> 
+> #define __BUG_FLAGS(flags)                    \
+> do {                                \
+>     __asm__ __volatile__ (                    \
+>         "1:\n\t"                    \
+>             "ebreak\n"                \
+>             ".pushsection __bug_table,\"aw\"\n\t"    \
+>         "2:\n\t"                    \
+>             __BUG_ENTRY "\n\t"            \
+>             ".org 2b + %3\n\t"                      \
+>             ".popsection"                \
+>         :                        \
+>         : "i" (__FILE__), "i" (__LINE__),        \
+>           "i" (flags),                    \
+>           "i" (sizeof(struct bug_entry)));              \
+> } while (0)
+> 
+> Align the real size of struct bug_entry through .org. What do you think?
 
-  Dave
+The implementation of risc-v BUG_ENTRY does handle
+the `implicit padding` at the end of the struct correctly,
+however, it does not handle the `implicit padding` in the middle of
+the struct correctly, for example, assume that
+the struct bug_entry changes as follows in the future:
+struct bug_entry {
+	signed int bug_addr_disp; // 4 bytes
+	unsigned short flags; // 2 bytes
+	< implicit padding > // 6 bytes
+	unsigned long long flags2; // 8 bytes
+}
 
-[1] https://www.spinics.net/lists/linux-media/msg252519.html
-[2] https://www.spinics.net/lists/linux-media/msg252496.html
+Even the implementation of risc-v BUG_ENTRY
+can't handle this situation. Referencing risc-v solution
+complicates things, but doesn't completely solve the problem.
 
-> regards,
->         o.
->
-> > >
-> > > Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> > > Signed-off-by: Luis Garcia <git@luigi311.com>
-> > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > > Reviewed-by: Pavel Machek <pavel@ucw.cz>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml | 4 +++=
-+
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.=
-yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> > > index c978abc0cdb3..33338139e6e8 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> > > @@ -36,6 +36,10 @@ properties:
-> > >    reg:
-> > >      maxItems: 1
-> > >
-> > > +  powerdown-gpios:
-> > > +    description:
-> > > +      Reference to the GPIO connected to the PWDN pin, if any.
-> > > +
-> > >    reset-gpios:
-> > >      description: |-
-> > >        Reference to the GPIO connected to the XCLR pin, if any.
-> >
-> > --
-> > Regards,
-> >
-> > Sakari Ailus
+In the current scenario, we know the contents of struct bug_entry
+and generate variables using assembly language.
+I don't think it's necessary to complicate things.
