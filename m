@@ -1,131 +1,238 @@
-Received: from smtp-out.freemail.hu (fmfe14.freemail.hu [46.107.16.207])
+Received: from smtp153-168.sina.com.cn (smtp153-168.sina.com.cn [61.135.153.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0057C535A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6364182DF
 	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.207
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716215578; cv=none; b=EJw0QBTOltx6tc1F6EqKYfyWWE6MpL11i7NmwDSZeX4noysPgIeZRi3q2J+IM6JN+CmOcFyECtx3SELfo6KuNMLwjMXPruxkpEyTxg0Zd6m/KZRsbACEv8jFfZ8h2kAkqAE64qI/yKB3Lq+lBmPwfz0acNHgv7gu77FyRx5BErk=
+	t=1716215581; cv=none; b=fvnzyn9siK0X2CxfR+CeqiO1phCTqedIdUrTQcZB8blV3OcbD5Oh/ZeX36SZHeoqbKukDFYvOdFsW241fOIT0pRBPnw53CHQ6bg5MqE44m7ISJKfZXpeEMbtA7IfR0QZTkGZ7wPzReBmcYfBxne3F30XkkP88OHAskzUYXwJ5jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716215578; c=relaxed/simple;
-	bh=wPkibPmvLKHWRqzFuD+KhOX8e2sjpkOkOk4aotVoSrA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=lyTFX82Cxwntwip8N26PyeaRKkPfph6Twhq2EY25ZSnj/SoNYZGDPC9iVqERZmfNdPCwJUnkxPc4FjY8llF9+5R5C2OUvAmnYkb6RNSSgxd4u9Hx2tyVIEfzu1Ig1c0rHuQbNh3YttbKuz7YHmtumQ+9AYryc6hguR3jaEdy4WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=jywbwGaz reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="jywbwGaz"
-Received: from fizweb.elte.hu (fizweb.elte.hu [157.181.183.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4Vjfyr65TbzgX;
-	Mon, 20 May 2024 16:27:00 +0200 (CEST)
-From: egyszeregy@freemail.hu
-To: vgupta@kernel.org,
-	pasha.tatashin@soleen.com,
-	kent.overstreet@linux.dev,
-	akpm@linux-foundation.org,
-	arnd@arndb.de,
-	linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Benjamin=20Sz=C5=91ke?= <egyszeregy@freemail.hu>
-Subject: [PATCH] arc: rename aux.h to arc_aux.h
-Date: Mon, 20 May 2024 16:26:47 +0200
-Message-Id: <20240520142647.70440-1-egyszeregy@freemail.hu>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1716215581; c=relaxed/simple;
+	bh=RjA9QK1StFOq1s9zLGgz16s6I7u52YYHAsn2RqqMx/s=;
+	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
+	 Content-Type; b=rpf22+RCrEyKqqGgazikl2if9o6huxva38zq/O6c5CniJ8/uL1pLduWVPmX9iBTzkrAmlfpB3sXNa+3o/db87ujRTnUU9JQZUKcDonVVENBCeSmp91qRCZvd2kM0w0Y5YrBfmhJENYfE/y/5XaEFuOY8ivjOd5wwFfE1ACg5r+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: PC-20220305VLFP
+Received: from unknown (HELO PC-20220305VLFP)([112.97.60.228])
+	by sina.com (10.182.253.23) with ESMTP
+	id 664B5F0C00007E12; Mon, 20 May 2024 22:32:46 +0800 (CST)
+X-Sender: nanfengwq@sina.com
+X-Auth-ID: nanfengwq@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=nanfengwq@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=nanfengwq@sina.com
+X-SMAIL-MID: 3256017864831
+X-SMAIL-UIID: F46B7554566F41A4852BB1452072EFE2-20240520-223246-1
+Date: Mon, 20 May 2024 22:32:21 +0800
+From: "nanfengwq@sina.com" <nanfengwq@sina.com>
+To: gregkh <gregkh@linuxfoundation.org>
+Cc: balbi <balbi@kernel.org>, 
+	linux-usb <linux-usb@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: memory leakage in ncm_wrap_ntb() in USB ncm mode with kernel 5.15
+References: <2024051922230825069112@sina.com>, 
+	<2024051901-gimmick-cosponsor-f2dd@gregkh>
+X-Priority: 3
+X-Has-Attach: yes
+X-Mailer: Foxmail 7.2.25.254[cn]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1716215221;
-	s=20181004; d=freemail.hu;
-	h=From:To:Cc:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	l=2297; bh=9zxQy+6Bi08HDP4ghvGzDmmjLAAoSIfkUlTLTmqf+Co=;
-	b=jywbwGazbNSiU9j+vnzoACV6BWbm+X2x9aOKn7BlgwjvH+L8nqey9n4Z3/tawXgn
-	pVEOD68I+yV2XbEsrsf8UuJSUJZrxw0HSmRxuyaVRwSIUiLhj5za7RcfKzk4/zsx03t
-	QZryEzN6imZJHOsuQojp0UvqNQahaHGvqDakQttFB54+5WhXWeokk0QyosZwtQmSOAX
-	wqo/BYhp69Ss9vY/gVgqn9GuxeCKQ7bgNwdMeh/1+HppRwUxcLoFraP7v40G1u91hKJ
-	wTCPP8uYFcm/lI3mNfIwyce8YRshhgol4HIDO3OvLIbLvWNaEFDC4OiHfST2jzjrLRj
-	a9SjFVOMhA==
+Mime-Version: 1.0
+Message-ID: <202405202232198531894@sina.com>
+Content-Type: multipart/mixed;
+	boundary="----=_001_NextPart642033051568_=----"
 
-From: Benjamin Szőke <egyszeregy@freemail.hu>
+This is a multi-part message in MIME format.
 
-The goal is to clean-up Linux repository from AUX file names, because
-the use of such file names is prohibited on other operating systems
-such as Windows, so the Linux repository cannot be cloned and
-edited on them.
+------=_001_NextPart642033051568_=----
+Content-Type: multipart/alternative;
+	boundary="----=_002_NextPart608575887075_=----"
 
-Signed-off-by: Benjamin Szőke <egyszeregy@freemail.hu>
----
- arch/arc/include/asm/arcregs.h       | 2 +-
- arch/arc/include/asm/mmu-arcv2.h     | 2 +-
- include/soc/arc/{aux.h => arc_aux.h} | 0
- include/soc/arc/mcip.h               | 2 +-
- include/soc/arc/timers.h             | 2 +-
- 5 files changed, 4 insertions(+), 4 deletions(-)
- rename include/soc/arc/{aux.h => arc_aux.h} (100%)
 
-diff --git a/arch/arc/include/asm/arcregs.h b/arch/arc/include/asm/arcregs.h
-index 4b13f60fe7ca..005d9e4d187a 100644
---- a/arch/arc/include/asm/arcregs.h
-+++ b/arch/arc/include/asm/arcregs.h
-@@ -146,7 +146,7 @@
- 
- #ifndef __ASSEMBLY__
- 
--#include <soc/arc/aux.h>
-+#include <soc/arc/arc_aux.h>
- 
- /* Helpers */
- #define TO_KB(bytes)		((bytes) >> 10)
-diff --git a/arch/arc/include/asm/mmu-arcv2.h b/arch/arc/include/asm/mmu-arcv2.h
-index d85dc0721907..41412642f279 100644
---- a/arch/arc/include/asm/mmu-arcv2.h
-+++ b/arch/arc/include/asm/mmu-arcv2.h
-@@ -9,7 +9,7 @@
- #ifndef _ASM_ARC_MMU_ARCV2_H
- #define _ASM_ARC_MMU_ARCV2_H
- 
--#include <soc/arc/aux.h>
-+#include <soc/arc/arc_aux.h>
- 
- /*
-  * TLB Management regs
-diff --git a/include/soc/arc/aux.h b/include/soc/arc/arc_aux.h
-similarity index 100%
-rename from include/soc/arc/aux.h
-rename to include/soc/arc/arc_aux.h
-diff --git a/include/soc/arc/mcip.h b/include/soc/arc/mcip.h
-index d1a93c73f006..a78dacd149f1 100644
---- a/include/soc/arc/mcip.h
-+++ b/include/soc/arc/mcip.h
-@@ -8,7 +8,7 @@
- #ifndef __SOC_ARC_MCIP_H
- #define __SOC_ARC_MCIP_H
- 
--#include <soc/arc/aux.h>
-+#include <soc/arc/arc_aux.h>
- 
- #define ARC_REG_MCIP_BCR	0x0d0
- #define ARC_REG_MCIP_IDU_BCR	0x0D5
-diff --git a/include/soc/arc/timers.h b/include/soc/arc/timers.h
-index ae99d3e855f1..51a74166296c 100644
---- a/include/soc/arc/timers.h
-+++ b/include/soc/arc/timers.h
-@@ -6,7 +6,7 @@
- #ifndef __SOC_ARC_TIMERS_H
- #define __SOC_ARC_TIMERS_H
- 
--#include <soc/arc/aux.h>
-+#include <soc/arc/arc_aux.h>
- 
- /* Timer related Aux registers */
- #define ARC_REG_TIMER0_LIMIT	0x23	/* timer 0 limit */
--- 
-2.39.3
+------=_002_NextPart608575887075_=----
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+aGVsbG86DQogICAgICAgSW4gZW1iZWRkZWQgZGV2aWNlcyB3aXRoIHJlbGF0aXZlbHkgc21hbGwg
+bWVtb3J5LCBpZiB0aGUgdHJhbnNmZXIgc3BlZWQgb2YgbmNtIGlzIGZhc3QgYW5kIG90aGVyIHBy
+b2dyYW1zIG9jY3VweSBDUFUgbWVtb3J5LCBpdCBpcyBsaWtlbHkgdGhhdCB0aGUgcmV0dXJuIHZh
+bHVlIG5jbSAtPnNrZF90eF9kYXRhIG9mIGFsbG9jX3NrYigpIGlzIE5VTEwsIGFuZCB0aGUgY29k
+ZSBpcyBsaWtlbHkgdG8gZW50ZXIgZXJyLiBJZiBza2IyIGlzIG5vdCBwcm9jZXNzZWQgaW4gZXJy
+LCBpdCB3aWxsIGNhdXNlIG1lbW9yeSBsZWFrYWdlLg0KDQpUaGFuayB5b3UuDQoNCg0KbmFuZmVu
+Z3dxQHNpbmEuY29tDQogDQpGcm9tOiBncmVna2gNCkRhdGU6IDIwMjQtMDUtMTkgMjI6MzcNClRv
+OiBuYW5mZW5nd3FAc2luYS5jb20NCkNDOiBiYWxiaTsgbGludXgtdXNiOyBsaW51eC1rZXJuZWwN
+ClN1YmplY3Q6IFJlOiBtZW1vcnkgbGVha2FnZSBpbiBuY21fd3JhcF9udGIoKSBpbiBVU0IgbmNt
+IG1vZGUgd2l0aCBrZXJuZWwgNS4xNQ0KT24gU3VuLCBNYXkgMTksIDIwMjQgYXQgMTA6MjM6MTBQ
+TSArMDgwMCwgbmFuZmVuZ3dxQHNpbmEuY29tIHdyb3RlOg0KPiBIZWxsb++8mg0KPiBJIGhhdmUg
+ZGlzY292ZXJlZCBhIHJpc2sgb2YgbWVtb3J5IGxlYWthZ2UgaW4gbmNtX3dyYXBfbnRiKCkgdW5k
+ZXIgVVNCIG5jbSBtb2RlIGluIGtlcm5lbCA1LjE1LCBhbmQgSSBoYXZlIGZpeGVkIGl0LiANCj4g
+UGxlYXNlIGhlbHAgbWUgcmV2aWV3IGl0Lg0KPiANCj4gSWYgdGhpcyBtb2RpZmljYXRpb24gaXMg
+ZWZmZWN0aXZlLCBpdCBjYW4gYWxzbyBiZSBpbnRlZ3JhdGVkIGludG8gb3RoZXIga2VybmVsIHZl
+cnNpb25zLCBzdWNoIGFzIGtlcm5lbCA0LjE0LCBhbmQgc28gb24uDQo+IA0KPiBUaGUgbG9naWMg
+b2YgYSBtZW1vcnkgbGVhayBpcyBhcyBmb2xsb3dzOg0KPiANCj4gSWYgdGhlIHJldHVybiB2YWx1
+ZSBza2IyIG9mICBwYWNrYWdlX2Zvcl90eCgpIGlzIG5vdCBOVUxMLCBhbmQgdGhlIHJldHVybiB2
+YWx1ZSBuY20tPnNrYl90eF9kYXRhIG9mIGFsbG9jX3NrYigpIGlzIE5VTEwsIHRoZW4gdGhlIGNv
+ZGUgd2lsbCBnbyB0byBlcnIsIHdoZXJlIHRoZXJlIGlzIG5vIHByb2Nlc3Npbmcgb2Ygc2tiMiwg
+cmVzdWx0aW5nIGluIGEgbWVtb3J5IGxlYWsgaW4gc2tiMi4NCj4gDQo+IA0KPiBUaGFuayB5b3Uu
+DQo+IA0KPiANCj4gDQo+IA0KIA0KIA0KSGksDQogDQpUaGlzIGlzIHRoZSBmcmllbmRseSBwYXRj
+aC1ib3Qgb2YgR3JlZyBLcm9haC1IYXJ0bWFuLiAgWW91IGhhdmUgc2VudCBoaW0NCmEgcGF0Y2gg
+dGhhdCBoYXMgdHJpZ2dlcmVkIHRoaXMgcmVzcG9uc2UuICBIZSB1c2VkIHRvIG1hbnVhbGx5IHJl
+c3BvbmQNCnRvIHRoZXNlIGNvbW1vbiBwcm9ibGVtcywgYnV0IGluIG9yZGVyIHRvIHNhdmUgaGlz
+IHNhbml0eSAoaGUga2VwdA0Kd3JpdGluZyB0aGUgc2FtZSB0aGluZyBvdmVyIGFuZCBvdmVyLCB5
+ZXQgdG8gZGlmZmVyZW50IHBlb3BsZSksIEkgd2FzDQpjcmVhdGVkLiAgSG9wZWZ1bGx5IHlvdSB3
+aWxsIG5vdCB0YWtlIG9mZmVuY2UgYW5kIHdpbGwgZml4IHRoZSBwcm9ibGVtDQppbiB5b3VyIHBh
+dGNoIGFuZCByZXN1Ym1pdCBpdCBzbyB0aGF0IGl0IGNhbiBiZSBhY2NlcHRlZCBpbnRvIHRoZSBM
+aW51eA0Ka2VybmVsIHRyZWUuDQogDQpZb3UgYXJlIHJlY2VpdmluZyB0aGlzIG1lc3NhZ2UgYmVj
+YXVzZSBvZiB0aGUgZm9sbG93aW5nIGNvbW1vbiBlcnJvcihzKQ0KYXMgaW5kaWNhdGVkIGJlbG93
+Og0KIA0KLSBZb3VyIHBhdGNoIGRpZCBub3QgYXBwbHkgdG8gYW55IGtub3duIHRyZWVzIHRoYXQg
+R3JlZyBpcyBpbiBjb250cm9sDQogIG9mLiAgUG9zc2libHkgdGhpcyBpcyBiZWNhdXNlIHlvdSBt
+YWRlIGl0IGFnYWluc3QgTGludXMncyB0cmVlLCBub3QNCiAgdGhlIGxpbnV4LW5leHQgdHJlZSwg
+d2hpY2ggaXMgd2hlcmUgYWxsIG9mIHRoZSBkZXZlbG9wbWVudCBmb3IgdGhlDQogIG5leHQgdmVy
+c2lvbiBvZiB0aGUga2VybmVsIGlzIGF0LiAgUGxlYXNlIHJlZnJlc2ggeW91ciBwYXRjaCBhZ2Fp
+bnN0DQogIHRoZSBsaW51eC1uZXh0IHRyZWUsIG9yIGV2ZW4gYmV0dGVyIHlldCwgdGhlIGRldmVs
+b3BtZW50IHRyZWUNCiAgc3BlY2lmaWVkIGluIHRoZSBNQUlOVEFJTkVSUyBmaWxlIGZvciB0aGUg
+c3Vic3lzdGVtIHlvdSBhcmUgc3VibWl0dGluZw0KICBhIHBhdGNoIGZvciwgYW5kIHJlc2VuZCBp
+dC4NCiANCi0gWW91IGRpZCBub3Qgc3BlY2lmeSBhIGRlc2NyaXB0aW9uIG9mIHdoeSB0aGUgcGF0
+Y2ggaXMgbmVlZGVkLCBvcg0KICBwb3NzaWJseSwgYW55IGRlc2NyaXB0aW9uIGF0IGFsbCwgaW4g
+dGhlIGVtYWlsIGJvZHkuICBQbGVhc2UgcmVhZCB0aGUNCiAgc2VjdGlvbiBlbnRpdGxlZCAiVGhl
+IGNhbm9uaWNhbCBwYXRjaCBmb3JtYXQiIGluIHRoZSBrZXJuZWwgZmlsZSwNCiAgRG9jdW1lbnRh
+dGlvbi9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5yc3QgZm9yIHdoYXQgaXMgbmVlZGVkIGlu
+DQogIG9yZGVyIHRvIHByb3Blcmx5IGRlc2NyaWJlIHRoZSBjaGFuZ2UuDQogDQotIFlvdSBkaWQg
+bm90IHdyaXRlIGEgZGVzY3JpcHRpdmUgU3ViamVjdDogZm9yIHRoZSBwYXRjaCwgYWxsb3dpbmcg
+R3JlZywNCiAgYW5kIGV2ZXJ5b25lIGVsc2UsIHRvIGtub3cgd2hhdCB0aGlzIHBhdGNoIGlzIGFs
+bCBhYm91dC4gIFBsZWFzZSByZWFkDQogIHRoZSBzZWN0aW9uIGVudGl0bGVkICJUaGUgY2Fub25p
+Y2FsIHBhdGNoIGZvcm1hdCIgaW4gdGhlIGtlcm5lbCBmaWxlLA0KICBEb2N1bWVudGF0aW9uL3By
+b2Nlc3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdCBmb3Igd2hhdCBhIHByb3Blcg0KICBTdWJqZWN0
+OiBsaW5lIHNob3VsZCBsb29rIGxpa2UuDQogDQotIEl0IGxvb2tzIGxpa2UgeW91IGRpZCBub3Qg
+dXNlIHlvdXIgInJlYWwiIG5hbWUgZm9yIHRoZSBwYXRjaCBvbiBlaXRoZXINCiAgdGhlIFNpZ25l
+ZC1vZmYtYnk6IGxpbmUsIG9yIHRoZSBGcm9tOiBsaW5lIChib3RoIG9mIHdoaWNoIGhhdmUgdG8N
+CiAgbWF0Y2gpLiAgUGxlYXNlIHJlYWQgdGhlIGtlcm5lbCBmaWxlLA0KICBEb2N1bWVudGF0aW9u
+L3Byb2Nlc3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdCBmb3IgaG93IHRvIGRvIHRoaXMNCiAgY29y
+cmVjdGx5Lg0KIA0KSWYgeW91IHdpc2ggdG8gZGlzY3VzcyB0aGlzIHByb2JsZW0gZnVydGhlciwg
+b3IgeW91IGhhdmUgcXVlc3Rpb25zIGFib3V0DQpob3cgdG8gcmVzb2x2ZSB0aGlzIGlzc3VlLCBw
+bGVhc2UgZmVlbCBmcmVlIHRvIHJlc3BvbmQgdG8gdGhpcyBlbWFpbCBhbmQNCkdyZWcgd2lsbCBy
+ZXBseSBvbmNlIGhlIGhhcyBkdWcgb3V0IGZyb20gdGhlIHBlbmRpbmcgcGF0Y2hlcyByZWNlaXZl
+ZA0KZnJvbSBvdGhlciBkZXZlbG9wZXJzLg0KIA0KdGhhbmtzLA0KIA0KZ3JlZyBrLWgncyBwYXRj
+aCBlbWFpbCBib3QNCiANCg==
+
+------=_002_NextPart608575887075_=----
+Content-Type: text/html;
+	charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charse=
+t=3DUTF-8"><style>body { line-height: 1.5; }blockquote { margin-top: 0px; =
+margin-bottom: 0px; margin-left: 0.5em; }body { font-size: 14px; font-fami=
+ly: "Microsoft YaHei UI"; color: rgb(0, 0, 0); line-height: 1.5; }</style>=
+</head><body>=0A<div>hello:</div><div><span></span><span style=3D"backgrou=
+nd-color: transparent;">&nbsp; &nbsp;&nbsp;</span><span style=3D"backgroun=
+d-color: transparent;">&nbsp; &nbsp;</span><span style=3D"background-color=
+: transparent;">In embedded devices with relatively small memory, if the t=
+ransfer speed of ncm is fast and other programs occupy CPU memory, it is l=
+ikely that the return value ncm -&gt;skd_tx_data of alloc_skb() is NULL, a=
+nd the code is likely to enter err. If skb2 is not processed in err, it wi=
+ll cause memory leakage.</span></div>=0A<div><br></div><div>Thank you.</di=
+v><hr style=3D"width: 210px; height: 1px;" color=3D"#b5c4df" size=3D"1" al=
+ign=3D"left">=0A<div><span><div style=3D"MARGIN: 10px; FONT-FAMILY: verdan=
+a; FONT-SIZE: 10pt"><div>nanfengwq@sina.com</div></div></span></div>=0A<bl=
+ockquote style=3D"margin-Top: 0px; margin-Bottom: 0px; margin-Left: 0.5em;=
+ margin-Right: inherit"><div>&nbsp;</div><div style=3D"border:none;border-=
+top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0cm"><div style=3D"PADDING-R=
+IGHT: 8px; PADDING-LEFT: 8px; FONT-SIZE: 12px;FONT-FAMILY:tahoma;COLOR:#00=
+0000; BACKGROUND: #efefef; PADDING-BOTTOM: 8px; PADDING-TOP: 8px"><div><b>=
+From:</b>&nbsp;<a href=3D"mailto:gregkh@linuxfoundation.org">gregkh</a></d=
+iv><div><b>Date:</b>&nbsp;2024-05-19&nbsp;22:37</div><div><b>To:</b>&nbsp;=
+<a href=3D"mailto:nanfengwq@sina.com">nanfengwq@sina.com</a></div><div><b>=
+CC:</b>&nbsp;<a href=3D"mailto:balbi@kernel.org">balbi</a>; <a href=3D"mai=
+lto:linux-usb@vger.kernel.org">linux-usb</a>; <a href=3D"mailto:linux-kern=
+el@vger.kernel.org">linux-kernel</a></div><div><b>Subject:</b>&nbsp;Re: me=
+mory leakage in ncm_wrap_ntb() in USB ncm mode with kernel 5.15</div></div=
+></div><div><div>On Sun, May 19, 2024 at 10:23:10PM +0800, nanfengwq@sina.=
+com wrote:</div>=0A<div>&gt; Hello=EF=BC=9A</div>=0A<div>&gt; I have disco=
+vered a risk of memory leakage in ncm_wrap_ntb() under USB ncm mode in ker=
+nel 5.15, and I have fixed it. </div>=0A<div>&gt; Please help me review it=
+.</div>=0A<div>&gt; </div>=0A<div>&gt; If this modification is effective, =
+it can also be integrated into other kernel versions, such as kernel 4.14,=
+ and so on.</div>=0A<div>&gt; </div>=0A<div>&gt; The logic of a memory lea=
+k is as follows:</div>=0A<div>&gt; </div>=0A<div>&gt; If the return value =
+skb2 of&nbsp; package_for_tx() is not NULL, and the return value ncm-&gt;s=
+kb_tx_data of alloc_skb() is NULL, then the code will go to err, where the=
+re is no processing of skb2, resulting in a memory leak in skb2.</div>=0A<=
+div>&gt; </div>=0A<div>&gt; </div>=0A<div>&gt; Thank you.</div>=0A<div>&gt=
+; </div>=0A<div>&gt; </div>=0A<div>&gt; </div>=0A<div>&gt; </div>=0A<div>&=
+nbsp;</div>=0A<div>&nbsp;</div>=0A<div>Hi,</div>=0A<div>&nbsp;</div>=0A<di=
+v>This is the friendly patch-bot of Greg Kroah-Hartman.&nbsp; You have sen=
+t him</div>=0A<div>a patch that has triggered this response.&nbsp; He used=
+ to manually respond</div>=0A<div>to these common problems, but in order t=
+o save his sanity (he kept</div>=0A<div>writing the same thing over and ov=
+er, yet to different people), I was</div>=0A<div>created.&nbsp; Hopefully =
+you will not take offence and will fix the problem</div>=0A<div>in your pa=
+tch and resubmit it so that it can be accepted into the Linux</div>=0A<div=
+>kernel tree.</div>=0A<div>&nbsp;</div>=0A<div>You are receiving this mess=
+age because of the following common error(s)</div>=0A<div>as indicated bel=
+ow:</div>=0A<div>&nbsp;</div>=0A<div>- Your patch did not apply to any kno=
+wn trees that Greg is in control</div>=0A<div>&nbsp; of.&nbsp; Possibly th=
+is is because you made it against Linus's tree, not</div>=0A<div>&nbsp; th=
+e linux-next tree, which is where all of the development for the</div>=0A<=
+div>&nbsp; next version of the kernel is at.&nbsp; Please refresh your pat=
+ch against</div>=0A<div>&nbsp; the linux-next tree, or even better yet, th=
+e development tree</div>=0A<div>&nbsp; specified in the MAINTAINERS file f=
+or the subsystem you are submitting</div>=0A<div>&nbsp; a patch for, and r=
+esend it.</div>=0A<div>&nbsp;</div>=0A<div>- You did not specify a descrip=
+tion of why the patch is needed, or</div>=0A<div>&nbsp; possibly, any desc=
+ription at all, in the email body.&nbsp; Please read the</div>=0A<div>&nbs=
+p; section entitled "The canonical patch format" in the kernel file,</div>=
+=0A<div>&nbsp; Documentation/process/submitting-patches.rst for what is ne=
+eded in</div>=0A<div>&nbsp; order to properly describe the change.</div>=
+=0A<div>&nbsp;</div>=0A<div>- You did not write a descriptive Subject: for=
+ the patch, allowing Greg,</div>=0A<div>&nbsp; and everyone else, to know =
+what this patch is all about.&nbsp; Please read</div>=0A<div>&nbsp; the se=
+ction entitled "The canonical patch format" in the kernel file,</div>=0A<d=
+iv>&nbsp; Documentation/process/submitting-patches.rst for what a proper</=
+div>=0A<div>&nbsp; Subject: line should look like.</div>=0A<div>&nbsp;</di=
+v>=0A<div>- It looks like you did not use your "real" name for the patch o=
+n either</div>=0A<div>&nbsp; the Signed-off-by: line, or the From: line (b=
+oth of which have to</div>=0A<div>&nbsp; match).&nbsp; Please read the ker=
+nel file,</div>=0A<div>&nbsp; Documentation/process/submitting-patches.rst=
+ for how to do this</div>=0A<div>&nbsp; correctly.</div>=0A<div>&nbsp;</di=
+v>=0A<div>If you wish to discuss this problem further, or you have questio=
+ns about</div>=0A<div>how to resolve this issue, please feel free to respo=
+nd to this email and</div>=0A<div>Greg will reply once he has dug out from=
+ the pending patches received</div>=0A<div>from other developers.</div>=0A=
+<div>&nbsp;</div>=0A<div>thanks,</div>=0A<div>&nbsp;</div>=0A<div>greg k-h=
+'s patch email bot</div>=0A<div>&nbsp;</div>=0A</div></blockquote>=0A</bod=
+y></html>
+------=_002_NextPart608575887075_=------
+
+------=_001_NextPart642033051568_=----
+Content-Type: application/octet-stream;
+	name="0001-USB-NCM-mode-There-is-a-memory-leak.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="0001-USB-NCM-mode-There-is-a-memory-leak.patch"
+
+RnJvbSAyOWQ0NTBiMzI3OGQ1MDkwZDhiNjJmNzg0ZTk5M2IwZWIxMWVlYzM0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBuYW5mZW5nd3EgPG5hbmZlbmd3cUBzaW5hLmNvbT4KRGF0ZTog
+U2F0LCAxOCBNYXkgMjAyNCAxNjoxNTo0NSArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIFVTQihOQ00g
+bW9kZSk6VGhlcmUgaXMgYSBtZW1vcnkgbGVhawoKSWYgc2tiMiBpcyBub3QgZXF1YWwgdG8gTlVM
+TCBhbmQgdGhlIHJldHVybiB2YWx1ZSBvZiBhbGxvY3NrYigpIGlzIE5VTEwsaXQgd2lsbCBjYXVz
+ZSBhIG1lbW9yeSBsZWFrCgpTaWduZWQtb2ZmLWJ5OiBuYW5mZW5nd3EgPG5hbmZlbmd3cUBzaW5h
+LmNvbT4KLS0tCiBkcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9uY20uYyB8IDIgKy0KIDEg
+ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX25jbS5jIGIvZHJpdmVycy91c2IvZ2FkZ2V0
+L2Z1bmN0aW9uL2ZfbmNtLmMKaW5kZXggZTBjMTgzMjM0Li5jOWJkZTdhZmQgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX25jbS5jCisrKyBiL2RyaXZlcnMvdXNiL2dh
+ZGdldC9mdW5jdGlvbi9mX25jbS5jCkBAIC0xMTQ0LDcgKzExNDQsNyBAQCBzdGF0aWMgc3RydWN0
+IHNrX2J1ZmYgKm5jbV93cmFwX250YihzdHJ1Y3QgZ2V0aGVyICpwb3J0LAogCWlmIChuY20tPnNr
+Yl90eF9uZHApCiAJCWRldl9rZnJlZV9za2JfYW55KG5jbS0+c2tiX3R4X25kcCk7CiAKLQlyZXR1
+cm4gTlVMTDsKKwlyZXR1cm4gc2tiMjsKIH0KIAogLyoKLS0gCjIuMzIuMC53aW5kb3dzLjEKCg==
+
+------=_001_NextPart642033051568_=------
 
