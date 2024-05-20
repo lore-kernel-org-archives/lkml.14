@@ -1,120 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C268417C67;
-	Mon, 20 May 2024 09:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC13249E8;
+	Mon, 20 May 2024 09:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716197931; cv=none; b=iop5wq8NX4WBcPJQMzCGJvyY3PmsVA/tl6v1cTzOS0jz3Cz6ETa1JSwutiHiKRtEaDRk/AMjOtGR+GRNbtzTSj00UWHOYRmmAdFp9lmRKTODsIIHQZwNsFiJYfqbYyOtnqmmEBm+S2kTs6Pj+63OrCo/EPNtoqODpPrbQbd2M18=
+	t=1716197943; cv=none; b=GMSa5AI6Rb1AgnxPhs1mZ3AgDMuzn4aRO7ZbKuUumiTfaXTyX+tWtFKe4+u/sqzNiRID8iS/WegkztBEzOfecIKqDZhvt/zB7hU58It+2qOov6kufgj0zcPWWi3iDXN/Giq6ai5TcQDhAPbc9s2Oud1+k3hnqSwTA8/w//6InZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716197931; c=relaxed/simple;
-	bh=f2ltlTJfrPXs5K86QOoQ6YuDR8HIGkk3pJMklKg3P6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nZItjFs54f32rjSMRXa/7w/G6CnJzd3QxMuCO+uh1T5NuaML5GshdDF3EfXm4UmwmuFFOGbWHF0gUYRvzjpukoLyxzLWg1XNrx9J8AiA13srHsELExJYcUZt0L2QuUCGul4qRUpHdWBgtiDMqCRqjoKpacYWAhb7JTOVgCWdCIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAGIgH48; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716197943; c=relaxed/simple;
+	bh=HnrE7YR5PqVfQJBFtQC0OlXuY+THNTwRfu9PcjEgXMA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=A0kTBhsbDCe1rfKy40jSS+BQeHqTzDuMty3RtBBs1yclFNELJhy9p6uvaixD/smaWRPSPVi6exDNDOzSTD0AGWAW6u3A1G01qpCxF0r6SuRYV7DdS4JjMhHFSnzTUmZANvzSi55S3OeJSMioYV2E+Sf6kq81WuqBoAshromvlB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2C1HHCx; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAGIgH48"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B15FC4AF08;
-	Mon, 20 May 2024 09:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716197931;
-	bh=f2ltlTJfrPXs5K86QOoQ6YuDR8HIGkk3pJMklKg3P6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LAGIgH48/HWLi4pMVeP+Y54RqB4nRlmrFadY+SSIZN1ms2/Z+Xq9ylVZZ6rabqH2H
-	 b8tqnMQtyZtQ2fh6A9Cpu6nfFBllRAFRUAgyHD1+DG7T3wS7/1/QaWau3k+6SMF1EI
-	 QN1PkIF/jln3DDg0aLxM/hrUAQGF9xIM5HPhX4PA8oC63RMuFWBnkSHxIcZ+VUGCxO
-	 fNdZyVKvb9SenaZSgiPncY6esb6ifpn9m9JoDhirxrJf/ByK8R7grQE/zHis4gAWhP
-	 EqEjr6bR3S4vQAjWLJQ7TX+QMxb0GpeXYtVTqXFgHBUG1SGKXrrUbSObjpC28Kvdvh
-	 QoK9rL9fNOz8A==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51f99f9e0faso4685543e87.2;
-        Mon, 20 May 2024 02:38:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/9vaFE6NOAsa94TAYSgboLg0Tz/XHCdx0IDlBUgyVbHGWGHqvKwz0D/jlvKT1K57UTX0CvVus+IwiKIqke2SnA2zccFEKLFYhzsTOAPW5sTP99HkWJr5G1tcZGppC2xsxb2e1USdMBqjot3gmfBqpEETM0hCnSnNJIqwA9gEvFH7wDebwRIeZSwatnqLZMA==
-X-Gm-Message-State: AOJu0Yx7FjM0Re0Wv3ANXDqSS+2G2BK47bBKh3NDdWPiRtidAV7ZVuv+
-	Gi0hXsCselPuUxBlEg3eck1o/725X6r2pd2Xl1PMlw6gOWB1H+jTb8SwUed9yfmxqLYJy6nd+tH
-	Wfs+4cAAFoiCcW882hMhegAs1VrI=
-X-Google-Smtp-Source: AGHT+IHJ50N0b6yVjcPEnuluIR3E+9C3M5NQS8+OA8xjBOBrvD4f0Q/6GXm3dzXglHKaJPbJ3/n8p7uD8nPWdAXamx8=
-X-Received: by 2002:a05:6512:3448:b0:520:76d0:b054 with SMTP id
- 2adb3069b0e04-524590e5807mr610226e87.57.1716197930086; Mon, 20 May 2024
- 02:38:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2C1HHCx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716197942; x=1747733942;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=HnrE7YR5PqVfQJBFtQC0OlXuY+THNTwRfu9PcjEgXMA=;
+  b=h2C1HHCxaYwGHFrkI1DYGtN9Iu32MLH0qXCbxy5AjFohtWNwA0l+9H0p
+   MygnO0YMapXQ2vKpxTa0LwRoV3KwZp/K2qSrbIdTq08CflurO+ULOLf4m
+   LlM7Iu947xuQHY1qLy4vtmXqmPWLMMh9zNcJhMAOk6dZBu9DD2lgPlbfI
+   vESuHuBE+OFA/Fzqa462bxIefS7u+bzMLO5ZwG74RbRPIEqfPPQApX4/k
+   TCD/1M3iAkTrgtK5EgKZIw3LGIxlc8srGn3juOcZ9anFLAgtMHJATY4gg
+   ST8QjQX+m4cvb4o/a9hvfauwoC7Oad93nx15jMmypxNAh35ZtqmIHtK+E
+   Q==;
+X-CSE-ConnectionGUID: gJ1wBnz8SXerGMRkwEJ3Hw==
+X-CSE-MsgGUID: QYqpxxoERxW8R58FAT61WQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="15260860"
+X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
+   d="scan'208";a="15260860"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 02:39:01 -0700
+X-CSE-ConnectionGUID: FAPKg2nDSMSWRYVi5g54Ww==
+X-CSE-MsgGUID: Kmr3vay3RGyb+8t5T3ojIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
+   d="scan'208";a="33086025"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.113])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 02:38:58 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 20 May 2024 12:38:55 +0300 (EEST)
+To: Markus Elfring <Markus.Elfring@web.de>
+cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
+    platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+    Zhang Rui <rui.zhang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Dan Carpenter <dan.carpenter@linaro.org>, 
+    Dan Carpenter <error27@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: ISST: fix use-after-free in
+ tpmi_sst_dev_remove()
+In-Reply-To: <d5203ff5-8ed4-48ea-8e58-a2e6680b0542@web.de>
+Message-ID: <6d1bf351-77cc-7fe9-2d62-8bd99789e4f1@linux.intel.com>
+References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com> <d5203ff5-8ed4-48ea-8e58-a2e6680b0542@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517042839.544650-1-kris.van.hees@oracle.com> <20240517042839.544650-3-kris.van.hees@oracle.com>
-In-Reply-To: <20240517042839.544650-3-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 20 May 2024 18:38:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAST_SbaN9WQRM_k0xE1MUReJvn9AMSg4A1-9b9xotf67w@mail.gmail.com>
-Message-ID: <CAK7LNAST_SbaN9WQRM_k0xE1MUReJvn9AMSg4A1-9b9xotf67w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] trace: add CONFIG_BUILTIN_MODULE_RANGES option
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; BOUNDARY="8323328-129071608-1716197769=:5522"
+Content-ID: <2d9bfb7c-a268-9795-b90f-6138f88f9a83@linux.intel.com>
 
-On Fri, May 17, 2024 at 1:30=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range dat=
-a
-> is generated for kernel modules that are built into the kernel image.
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
-> Changes since v2:
->  - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
-> ---
->  kernel/trace/Kconfig | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 47345bf1d4a9f..d0c82b4b3a61e 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -188,6 +188,24 @@ menuconfig FTRACE
->
->  if FTRACE
->
-> +config BUILTIN_MODULE_RANGES
-> +       bool "Generate address range information for builtin modules"
-> +       depends on FTRACE
-> +       select VMLINUX_MAP
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-129071608-1716197769=:5522
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <68320c4c-2329-261b-89c9-f624e9d11f16@linux.intel.com>
 
+On Sat, 18 May 2024, Markus Elfring wrote:
 
-I still got this warning.
+> =E2=80=A6
+> > Fix this by reordering the kfree() post the dereference.
+>=20
+> Would a wording approach (like the following) be a bit nicer?
+>=20
+>    Move a kfree() call behind an assignment statement in the affected if =
+branch.
 
-
-WARNING: unmet direct dependencies detected for VMLINUX_MAP
-  Depends on [n]: EXPERT [=3Dn]
-  Selected by [y]:
-  - BUILTIN_MODULE_RANGES [=3Dy] && FTRACE [=3Dy]
-
-
-
-
-
-I recommend changing 'select VMLINUX_MAP'
-to 'depends on VMLINUX_MAP'.
-
-
-
-BTW, do you need to put this inside 'if FTRACE'?
-
-FTRACE is not required to generate the ranges file.
-
-
-
+No, the suggested wording would make it less precise ("post the=20
+dereference" -> "behind an assignment") and also tries to tell pointless=20
+things about the location in the codei that is visible in the patch itself.
 
 --=20
-Best Regards
-Masahiro Yamada
+ i.
+
+> > v1->v2: Add R.B from Hans and fix commit message wrapping to 75 chars.
+> > This is found by smatch and only compile tested.
+>=20
+> * Can it occasionally be nicer to use an enumeration also for
+>   version descriptions?
+>=20
+> * Is it helpful to separate additional comments by blank lines?
+>=20
+>=20
+> > ---
+> >  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
+>=20
+> How do you think about to omit a repeated marker line here?
+>=20
+> Regards,
+> Markus
+>=20
+--8323328-129071608-1716197769=:5522--
