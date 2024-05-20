@@ -1,169 +1,375 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C878C2ED
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 03:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C185107A9;
+	Mon, 20 May 2024 03:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716175829; cv=none; b=Qula1GROgJt53xZJ8rKBKPd9X4wzhXgrR0pz+LIrA8+7aToxb3TZNsBE57dh4q7ciVG/rpE+BT3Qv6+3Ef09fKjAc6mQqE387kqw/2fbhFu1+QMG0+ua/4ELEJNKOgJeZNiPwDdYstyoX37rXEolIU3hcmw+7/WJwhjC+DWXtY4=
+	t=1716175869; cv=none; b=qeJSj7sH+3BkZRwwjSevhvK/+/+b6lm4GZmV16VzvHYWaErd0tJ5fIqU1m0qZVWNpAOZlRvu+AOB0dtgCbsdR1founw69UNtRYALxuWb+K2EPdOV8F1IMIcoi5r3A05HksO3Tx2jLtz8XUUrW+E2njRxILuerETbsITWlAmFy0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716175829; c=relaxed/simple;
-	bh=ikOTYfj5UG4dTpauR7CDHRmki8gXIROQCt77kT2U4jI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E7nE4yKWu2gTj89793M+YQgReJ7ecBQKg1Qojb6a1AgBO/quJW+zIGDUBh2fkIer92ycKY1gyYVbwnuugeiScRM+9u33dtQ3Wb1q0DuIEmUibZXo/5BavlqVml41NV8OCfMV77LBd+eiQban/LdgTpa3ZEac6JXVYVneeT3o2rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UFrZocsn; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UFrZocsn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716175827; x=1747711827;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ikOTYfj5UG4dTpauR7CDHRmki8gXIROQCt77kT2U4jI=;
-  b=UFrZocsn/BVFw/FcEI83In0q2CtplFV9VreutNHpjKH08nVJLxAirw3t
-   MmwV0DfQac2cs0pzmrHsETGdJpcXRE6GmHVb56qdr2kQ5HyYyh1qCwTzk
-   MiOqEmAVyrOUbhQXsT991b843q3ZvCqlyMRdBB4rOoqYLo0k4Je1pEA/e
-   eK7YNOg6dDEWfl5XRdNEN8XMbeyg+muNk+mzyRw7Q33baw6iN+h2C7aPl
-   acsKdxr7rCbSyFpeSrvKXF8a/f48sRvsDHnKICrUNochpWFOadGauN9P+
-   NAaoSsoqk3jIzLjvMsyUApv1rCOAuR3LJ8nMs2Vgqot4RkXnViIHrq/gI
-   A==;
-X-CSE-ConnectionGUID: tfp12MR8TOiiyz+NtPWPzw==
-X-CSE-MsgGUID: xvJ2tzb3TpaEJNU1TH94ng==
-X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="15229124"
-X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="15229124"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2024 20:30:27 -0700
-X-CSE-ConnectionGUID: kpasQPeuTTi6K6G9JAdx7A==
-X-CSE-MsgGUID: w+5CVyV1T867FyHDbsuZiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
-   d="scan'208";a="32297108"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa007.fm.intel.com with ESMTP; 19 May 2024 20:30:21 -0700
-Message-ID: <f88b9fea-3941-49d6-ad54-4be29bc6d034@linux.intel.com>
-Date: Mon, 20 May 2024 11:28:30 +0800
+	s=arc-20240116; t=1716175869; c=relaxed/simple;
+	bh=bWi6GM1ZjfN+LLbqPY6EwmWWTad8t0Sg2YE6Pjjdm7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LXi+paxHgq4evF2VLJcL8Z4XvYFHtPkqSZu4wheWh2gtjYf3OBzZ2ZWo3co3w4px2F6cmES1p86MB2jsVCyjXiMZbT1hKY+SrwIOJfPCs8t7+dlm5/g6BooS68UGxEzsTLuXUkWTmhsygkYsB/7f73oDAqZaGKpOdkUfVTLiHxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 94ABE46C; Sun, 19 May 2024 22:30:58 -0500 (CDT)
+Date: Sun, 19 May 2024 22:30:58 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Jonathan Calmels <jcalmels@3xx0.net>
+Cc: brauner@kernel.org, ebiederm@xmission.com,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, containers@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 1/3] capabilities: user namespace capabilities
+Message-ID: <20240520033058.GA1815759@mail.hallyn.com>
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <20240516092213.6799-2-jcalmels@3xx0.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joel Granados <j.granados@samsung.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 5/9] iommufd: Add iommufd fault object
-To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240430145710.68112-1-baolu.lu@linux.intel.com>
- <20240430145710.68112-6-baolu.lu@linux.intel.com>
- <20240508001121.GN4718@ziepe.ca>
- <a03d3bf6-0610-427c-bf2a-5f6c410e220e@linux.intel.com>
- <BN9PR11MB5276F21755C883FE7EC784228CEC2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <733e3788-d303-4b75-aa97-d97489a7f0bf@linux.intel.com>
- <BN9PR11MB527685B9D96675AA8A3CE78E8CE92@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB527685B9D96675AA8A3CE78E8CE92@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240516092213.6799-2-jcalmels@3xx0.net>
 
-On 5/20/24 11:26 AM, Tian, Kevin wrote:
->> From: Baolu Lu <baolu.lu@linux.intel.com>
->> Sent: Monday, May 20, 2024 8:41 AM
->>
->> On 5/15/24 3:57 PM, Tian, Kevin wrote:
->>>> From: Baolu Lu <baolu.lu@linux.intel.com>
->>>> Sent: Wednesday, May 8, 2024 6:05 PM
->>>>
->>>> On 2024/5/8 8:11, Jason Gunthorpe wrote:
->>>>> On Tue, Apr 30, 2024 at 10:57:06PM +0800, Lu Baolu wrote:
->>>>>> diff --git a/drivers/iommu/iommu-priv.h b/drivers/iommu/iommu-
->> priv.h
->>>>>> index ae65e0b85d69..1a0450a83bd0 100644
->>>>>> --- a/drivers/iommu/iommu-priv.h
->>>>>> +++ b/drivers/iommu/iommu-priv.h
->>>>>> @@ -36,6 +36,10 @@ struct iommu_attach_handle {
->>>>>>     			struct device	*dev;
->>>>>>     			refcount_t	users;
->>>>>>     		};
->>>>>> +		/* attach data for IOMMUFD */
->>>>>> +		struct {
->>>>>> +			void		*idev;
->>>>>> +		};
->>>>> We can use a proper type here, just forward declare it.
->>>>>
->>>>> But this sequence in the other patch:
->>>>>
->>>>> +       ret = iommu_attach_group(hwpt->domain, idev->igroup->group);
->>>>> +       if (ret) {
->>>>> +               iommufd_fault_iopf_disable(idev);
->>>>> +               return ret;
->>>>> +       }
->>>>> +
->>>>> +       handle = iommu_attach_handle_get(idev->igroup->group,
->>>> IOMMU_NO_PASID, 0);
->>>>> +       handle->idev = idev;
->>>>>
->>>>> Is why I was imagining the caller would allocate, because now we have
->>>>> the issue that a fault capable domain was installed into the IOMMU
->>>>> before it's handle could be fully setup, so we have a race where a
->>>>> fault could come in right between those things. Then what happens?
->>>>> I suppose we can retry the fault and by the time it comes back the
->>>>> race should resolve. A bit ugly I suppose.
->>>>
->>>> You are right. It makes more sense if the attached data is allocated and
->>>> managed by the caller. I will go in this direction and update my series.
->>>> I will also consider other review comments you have given in other
->>>> places.
->>>>
->>>
->>> Does this direction imply a new iommu_attach_group_handle() helper
->>> to pass in the caller-allocated handle pointer or exposing a new
->>> iommu_group_set_handle() to set the handle to the group pasid_array
->>> and then having iomm_attach_group() to update the domain info in
->>> the handle?
->>
->> I will add new iommu_attach/replace/detach_group_handle() helpers. Like
->> below:
->>
->> +/**
->> + * iommu_attach_group_handle - Attach an IOMMU domain to an IOMMU
->> group
->> + * @domain: IOMMU domain to attach
->> + * @group: IOMMU group that will be attached
->> + * @handle: attach handle
->> + *
->> + * Returns 0 on success and error code on failure.
->> + *
->> + * This is a variant of iommu_attach_group(). It allows the caller to
->> provide
->> + * an attach handle and use it when the domain is attached. This is
->> currently
->> + * only designed for IOMMUFD to deliver the I/O page faults.
->> + */
->> +int iommu_attach_group_handle(struct iommu_domain *domain,
->> +                             struct iommu_group *group,
->> +                             struct iommu_attach_handle *handle)
->>
+On Thu, May 16, 2024 at 02:22:03AM -0700, Jonathan Calmels wrote:
+> Attackers often rely on user namespaces to get elevated (yet confined)
+> privileges in order to target specific subsystems (e.g. [1]). Distributions
+> have been pretty adamant that they need a way to configure these, most of
+> them carry out-of-tree patches to do so, or plainly refuse to enable them.
+> As a result, there have been multiple efforts over the years to introduce
+> various knobs to control and/or disable user namespaces (e.g. [2][3][4]).
 > 
-> "currently only designed for IOMMUFD" doesn't sound correct.
+> While we acknowledge that there are already ways to control the creation of
+> such namespaces (the most recent being a LSM hook), there are inherent
+> issues with these approaches. Preventing the user namespace creation is not
+> fine-grained enough, and in some cases, incompatible with various userspace
+> expectations (e.g. container runtimes, browser sandboxing, service
+> isolation)
 > 
-> design-wise this can be used by anyone which relies on the handle.
-> There is nothing tied to IOMMUFD.
+> This patch addresses these limitations by introducing an additional
+> capability set used to restrict the permissions granted when creating user
+> namespaces. This way, processes can apply the principle of least privilege
+> by configuring only the capabilities they need for their namespaces.
 > 
-> s/designed for/used by/ is more accurate.
+> For compatibility reasons, processes always start with a full userns
+> capability set.
+> 
+> On namespace creation, the userns capability set (pU) is assigned to the
+> new effective (pE), permitted (pP) and bounding set (X) of the task:
+> 
+>     pU = pE = pP = X
+> 
+> The userns capability set obeys the invariant that no bit can ever be set
+> if it is not already part of the task’s bounding set. This ensures that no
+> namespace can ever gain more privileges than its predecessors.
+> Additionally, if a task is not privileged over CAP_SETPCAP, setting any bit
+> in the userns set requires its corresponding bit to be set in the permitted
+> set. This effectively mimics the inheritable set rules and means that, by
+> default, only root in the initial user namespace can gain userns
+> capabilities:
+> 
+>     p’U = (pE & CAP_SETPCAP) ? X : (X & pP)
+> 
+> Note that since userns capabilities are strictly hierarchical, policies can
+> be enforced at various levels (e.g. init, pam_cap) and inherited by every
+> child namespace.
+> 
+> Here is a sample program that can be used to verify the functionality:
+> 
+> /*
+>  * Test program that drops CAP_SYS_RAWIO from subsequent user namespaces.
+>  *
+>  * ./cap_userns_test unshare -r grep Cap /proc/self/status
+>  * CapInh: 0000000000000000
+>  * CapPrm: 000001fffffdffff
+>  * CapEff: 000001fffffdffff
+>  * CapBnd: 000001fffffdffff
+>  * CapAmb: 0000000000000000
+>  * CapUNs: 000001fffffdffff
+>  */
+> 
+> int main(int argc, char *argv[])
+> {
+>         if (prctl(PR_CAP_USERNS, PR_CAP_USERNS_LOWER, CAP_SYS_RAWIO, 0, 0) < 0)
+>                 err(1, "cannot drop userns cap");
+> 
+>         execvp(argv[1], argv + 1);
+>         err(1, "cannot exec");
+> }
+> 
+> Link: https://security.googleblog.com/2023/06/learnings-from-kctf-vrps-42-linux.html
+> Link: https://lore.kernel.org/lkml/1453502345-30416-1-git-send-email-keescook@chromium.org
+> Link: https://lore.kernel.org/lkml/20220815162028.926858-1-fred@cloudflare.com
+> Link: https://lore.kernel.org/containers/168547265011.24337.4306067683997517082-0@git.sr.ht
+> 
+> Signed-off-by: Jonathan Calmels <jcalmels@3xx0.net>
 
-Done.
+Thanks! Of course we'llnsee how the conversations fall out, but
 
-Best regards,
-baolu
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+
+
+> ---
+>  fs/proc/array.c              |  9 ++++++
+>  include/linux/cred.h         |  3 ++
+>  include/uapi/linux/prctl.h   |  7 +++++
+>  kernel/cred.c                |  3 ++
+>  kernel/umh.c                 | 16 ++++++++++
+>  kernel/user_namespace.c      | 12 +++-----
+>  security/commoncap.c         | 59 ++++++++++++++++++++++++++++++++++++
+>  security/keys/process_keys.c |  3 ++
+>  8 files changed, 105 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/proc/array.c b/fs/proc/array.c
+> index 34a47fb0c57f..364e8bb19f9d 100644
+> --- a/fs/proc/array.c
+> +++ b/fs/proc/array.c
+> @@ -313,6 +313,9 @@ static inline void task_cap(struct seq_file *m, struct task_struct *p)
+>  	const struct cred *cred;
+>  	kernel_cap_t cap_inheritable, cap_permitted, cap_effective,
+>  			cap_bset, cap_ambient;
+> +#ifdef CONFIG_USER_NS
+> +	kernel_cap_t cap_userns;
+> +#endif
+>  
+>  	rcu_read_lock();
+>  	cred = __task_cred(p);
+> @@ -321,6 +324,9 @@ static inline void task_cap(struct seq_file *m, struct task_struct *p)
+>  	cap_effective	= cred->cap_effective;
+>  	cap_bset	= cred->cap_bset;
+>  	cap_ambient	= cred->cap_ambient;
+> +#ifdef CONFIG_USER_NS
+> +	cap_userns	= cred->cap_userns;
+> +#endif
+>  	rcu_read_unlock();
+>  
+>  	render_cap_t(m, "CapInh:\t", &cap_inheritable);
+> @@ -328,6 +334,9 @@ static inline void task_cap(struct seq_file *m, struct task_struct *p)
+>  	render_cap_t(m, "CapEff:\t", &cap_effective);
+>  	render_cap_t(m, "CapBnd:\t", &cap_bset);
+>  	render_cap_t(m, "CapAmb:\t", &cap_ambient);
+> +#ifdef CONFIG_USER_NS
+> +	render_cap_t(m, "CapUNs:\t", &cap_userns);
+> +#endif
+>  }
+>  
+>  static inline void task_seccomp(struct seq_file *m, struct task_struct *p)
+> diff --git a/include/linux/cred.h b/include/linux/cred.h
+> index 2976f534a7a3..adab0031443e 100644
+> --- a/include/linux/cred.h
+> +++ b/include/linux/cred.h
+> @@ -124,6 +124,9 @@ struct cred {
+>  	kernel_cap_t	cap_effective;	/* caps we can actually use */
+>  	kernel_cap_t	cap_bset;	/* capability bounding set */
+>  	kernel_cap_t	cap_ambient;	/* Ambient capability set */
+> +#ifdef CONFIG_USER_NS
+> +	kernel_cap_t	cap_userns;	/* User namespace capability set */
+> +#endif
+>  #ifdef CONFIG_KEYS
+>  	unsigned char	jit_keyring;	/* default keyring to attach requested
+>  					 * keys to */
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 370ed14b1ae0..e09475171f62 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -198,6 +198,13 @@ struct prctl_mm_map {
+>  # define PR_CAP_AMBIENT_LOWER		3
+>  # define PR_CAP_AMBIENT_CLEAR_ALL	4
+>  
+> +/* Control the userns capability set */
+> +#define PR_CAP_USERNS			48
+> +# define PR_CAP_USERNS_IS_SET		1
+> +# define PR_CAP_USERNS_RAISE		2
+> +# define PR_CAP_USERNS_LOWER		3
+> +# define PR_CAP_USERNS_CLEAR_ALL	4
+> +
+>  /* arm64 Scalable Vector Extension controls */
+>  /* Flag values must be kept in sync with ptrace NT_ARM_SVE interface */
+>  #define PR_SVE_SET_VL			50	/* set task vector length */
+> diff --git a/kernel/cred.c b/kernel/cred.c
+> index 075cfa7c896f..9912c6f3bc6b 100644
+> --- a/kernel/cred.c
+> +++ b/kernel/cred.c
+> @@ -56,6 +56,9 @@ struct cred init_cred = {
+>  	.cap_permitted		= CAP_FULL_SET,
+>  	.cap_effective		= CAP_FULL_SET,
+>  	.cap_bset		= CAP_FULL_SET,
+> +#ifdef CONFIG_USER_NS
+> +	.cap_userns		= CAP_FULL_SET,
+> +#endif
+>  	.user			= INIT_USER,
+>  	.user_ns		= &init_user_ns,
+>  	.group_info		= &init_groups,
+> diff --git a/kernel/umh.c b/kernel/umh.c
+> index 1b13c5d34624..51f1e1d25d49 100644
+> --- a/kernel/umh.c
+> +++ b/kernel/umh.c
+> @@ -32,6 +32,9 @@
+>  
+>  #include <trace/events/module.h>
+>  
+> +#ifdef CONFIG_USER_NS
+> +static kernel_cap_t usermodehelper_userns = CAP_FULL_SET;
+> +#endif
+>  static kernel_cap_t usermodehelper_bset = CAP_FULL_SET;
+>  static kernel_cap_t usermodehelper_inheritable = CAP_FULL_SET;
+>  static DEFINE_SPINLOCK(umh_sysctl_lock);
+> @@ -94,6 +97,10 @@ static int call_usermodehelper_exec_async(void *data)
+>  	new->cap_bset = cap_intersect(usermodehelper_bset, new->cap_bset);
+>  	new->cap_inheritable = cap_intersect(usermodehelper_inheritable,
+>  					     new->cap_inheritable);
+> +#ifdef CONFIG_USER_NS
+> +	new->cap_userns = cap_intersect(usermodehelper_userns,
+> +					new->cap_userns);
+> +#endif
+>  	spin_unlock(&umh_sysctl_lock);
+>  
+>  	if (sub_info->init) {
+> @@ -560,6 +567,15 @@ static struct ctl_table usermodehelper_table[] = {
+>  		.mode		= 0600,
+>  		.proc_handler	= proc_cap_handler,
+>  	},
+> +#ifdef CONFIG_USER_NS
+> +	{
+> +		.procname	= "userns",
+> +		.data		= &usermodehelper_userns,
+> +		.maxlen		= 2 * sizeof(unsigned long),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_cap_handler,
+> +	},
+> +#endif
+>  	{ }
+>  };
+>  
+> diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+> index 0b0b95418b16..7e624607330b 100644
+> --- a/kernel/user_namespace.c
+> +++ b/kernel/user_namespace.c
+> @@ -42,15 +42,13 @@ static void dec_user_namespaces(struct ucounts *ucounts)
+>  
+>  static void set_cred_user_ns(struct cred *cred, struct user_namespace *user_ns)
+>  {
+> -	/* Start with the same capabilities as init but useless for doing
+> -	 * anything as the capabilities are bound to the new user namespace.
+> -	 */
+> -	cred->securebits = SECUREBITS_DEFAULT;
+> +	/* Start with the capabilities defined in the userns set. */
+> +	cred->cap_bset = cred->cap_userns;
+> +	cred->cap_permitted = cred->cap_userns;
+> +	cred->cap_effective = cred->cap_userns;
+>  	cred->cap_inheritable = CAP_EMPTY_SET;
+> -	cred->cap_permitted = CAP_FULL_SET;
+> -	cred->cap_effective = CAP_FULL_SET;
+>  	cred->cap_ambient = CAP_EMPTY_SET;
+> -	cred->cap_bset = CAP_FULL_SET;
+> +	cred->securebits = SECUREBITS_DEFAULT;
+>  #ifdef CONFIG_KEYS
+>  	key_put(cred->request_key_auth);
+>  	cred->request_key_auth = NULL;
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index 162d96b3a676..b3d3372bf910 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -228,6 +228,28 @@ static inline int cap_inh_is_capped(void)
+>  	return 1;
+>  }
+>  
+> +/*
+> + * Determine whether a userns capability can be raised.
+> + * Returns 1 if it can, 0 otherwise.
+> + */
+> +#ifdef CONFIG_USER_NS
+> +static inline int cap_uns_is_raiseable(unsigned long cap)
+> +{
+> +	if (!!cap_raised(current_cred()->cap_userns, cap))
+> +		return 1;
+> +	/* a capability cannot be raised unless the current task has it in
+> +	 * its bounding set and, without CAP_SETPCAP, its permitted set.
+> +	 */
+> +	if (!cap_raised(current_cred()->cap_bset, cap))
+> +		return 0;
+> +	if (cap_capable(current_cred(), current_cred()->user_ns,
+> +			CAP_SETPCAP, CAP_OPT_NONE) != 0 &&
+> +	    !cap_raised(current_cred()->cap_permitted, cap))
+> +		return 0;
+> +	return 1;
+> +}
+> +#endif
+> +
+>  /**
+>   * cap_capset - Validate and apply proposed changes to current's capabilities
+>   * @new: The proposed new credentials; alterations should be made here
+> @@ -1382,6 +1404,43 @@ int cap_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+>  			return commit_creds(new);
+>  		}
+>  
+> +#ifdef CONFIG_USER_NS
+> +	case PR_CAP_USERNS:
+> +		if (arg2 == PR_CAP_USERNS_CLEAR_ALL) {
+> +			if (arg3 | arg4 | arg5)
+> +				return -EINVAL;
+> +
+> +			new = prepare_creds();
+> +			if (!new)
+> +				return -ENOMEM;
+> +			cap_clear(new->cap_userns);
+> +			return commit_creds(new);
+> +		}
+> +
+> +		if (((!cap_valid(arg3)) | arg4 | arg5))
+> +			return -EINVAL;
+> +
+> +		if (arg2 == PR_CAP_USERNS_IS_SET) {
+> +			return !!cap_raised(current_cred()->cap_userns, arg3);
+> +		} else if (arg2 != PR_CAP_USERNS_RAISE &&
+> +			   arg2 != PR_CAP_USERNS_LOWER) {
+> +			return -EINVAL;
+> +		} else {
+> +			if (arg2 == PR_CAP_USERNS_RAISE &&
+> +			    !cap_uns_is_raiseable(arg3))
+> +				return -EPERM;
+> +
+> +			new = prepare_creds();
+> +			if (!new)
+> +				return -ENOMEM;
+> +			if (arg2 == PR_CAP_USERNS_RAISE)
+> +				cap_raise(new->cap_userns, arg3);
+> +			else
+> +				cap_lower(new->cap_userns, arg3);
+> +			return commit_creds(new);
+> +		}
+> +#endif
+> +
+>  	default:
+>  		/* No functionality available - continue with default */
+>  		return -ENOSYS;
+> diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
+> index b5d5333ab330..e3670d815435 100644
+> --- a/security/keys/process_keys.c
+> +++ b/security/keys/process_keys.c
+> @@ -944,6 +944,9 @@ void key_change_session_keyring(struct callback_head *twork)
+>  	new->cap_effective	= old->cap_effective;
+>  	new->cap_ambient	= old->cap_ambient;
+>  	new->cap_bset		= old->cap_bset;
+> +#ifdef CONFIG_USER_NS
+> +	new->cap_userns		= old->cap_userns;
+> +#endif
+>  
+>  	new->jit_keyring	= old->jit_keyring;
+>  	new->thread_keyring	= key_get(old->thread_keyring);
+> -- 
+> 2.45.0
+> 
