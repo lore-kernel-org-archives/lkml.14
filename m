@@ -1,108 +1,174 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58D91B7F4;
-	Mon, 20 May 2024 07:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1629D18EA1
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716188965; cv=none; b=gAHc2GFduqaGVWK2+n3uGPsFXHy9xFMJPaRk3zzH3Q4gkLYzC3l7yrsyJaeiiR9QjiwG1p8zE/NTtdhVYLop+ffVHUFZnX6CZzKLJFD3mOf3fyl+LV0EjNHQNdZ66cO1byM2yetj5uFqHCCUArUU5OGy9lWBfH7jh6NIaxom2Yk=
+	t=1716189000; cv=none; b=coQ/PHe3/uVhatEzsZbYIHhBulYQ438+JHudCjetZvgscMWGQzZc+r5Gg/eZ+64nA7X7D7WSkLfHHltT9HNspVX3/YY8SNMmdlE9NKdgL4JfgdEol+VYzrQ34O/b7b6lZHwHLE2xMsvxoDB0hjvv6KSL3bG8TszsRroprYTNte4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716188965; c=relaxed/simple;
-	bh=JmovHuASvA+p1UsintWL61loAHcJzRWLo3Jjwj74OjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mbbRPMo4Fr28c3+KSIqq1TzFm190fDHjJFi6FXmtvh5t8lucn4lCqVlJXzqRJSDyJHYhF1nLWGUK3nIXndMoxdzi0THJuJtto9lnjm3L5JJKhJhLGzEPItQgDrjLzDBdc2LYJ7kZvHRbx7I6CI5xhtGYwZdTY73zIrDY8++9EuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aXET4ZKT; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716189000; c=relaxed/simple;
+	bh=DWl8vgttx0y94Ansyt6GBs5OvLyB7TljJs47io3/TZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rs0WnUdbv41v7GnL1/pqzjW2bDEvYd13cI3Tnnzj/WJQVCd38X3lkdXLKKBNhN/5zOBRwLWo1SviZk0lnYDYt0qPVK8GsMO/fk/e+oK2n9R6DPE2bS4aQYUcMJ9kxK5RE6C+82mGiCHTHLFgyWJ4jqVUrGIvhBJSP9oMr5/5ugo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=PbVD4VkL; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aXET4ZKT"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716188954; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=MDsSId074xo3EY1nI/gNouEZEC8qd9U9t2v9Vm9rIbo=;
-	b=aXET4ZKTNGS4FY28AswQ7chQwxMwaiq285OgWDn7i+iV/yafqAbASX4rmkWBm0Ue11K4zTmDIRgcMaj/yaAtZFZnUp+eHFluI2Bz1446uMcYjtTw4N90uBQ+VC/Aq3/Fj0FCSL6Fv7xGvQh96P1rZof+yjZBquj8WbTgkzdE/P0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W6ny017_1716188952;
-Received: from 30.221.148.185(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W6ny017_1716188952)
-          by smtp.aliyun-inc.com;
-          Mon, 20 May 2024 15:09:13 +0800
-Message-ID: <764c7b94-9ca9-4288-b806-b3e99fbd05c5@linux.alibaba.com>
-Date: Mon, 20 May 2024 15:09:11 +0800
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="PbVD4VkL"
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id EBD003F331
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1716188636;
+	bh=BFUGexLuO075Vn4TwjD0eI7xgrFNdKP3Yd5kw3jHcLA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=PbVD4VkLezrRmzhH/vXZ9Y34yLvssG5dVUXVh1B/CLko7v5c9w/U6mp7hPHGLLSLu
+	 8ZbhPLw+/5soqtKMS6QOyYIScynYv/HBm7CWf8c4Ju/k2Nowz5cRKqjJcQB32rc7ng
+	 6sYc4pP/OIXtraRo6+R4pAffNcHSJilGHRQqmVSh2GzW4K7Rf2FogAjh71Ce5ZqKlJ
+	 SH8ECtYdcktIgBldJ/vGK50sA7WNrYxpv6UN+IH7Irn4F5hgfq5i6dc9okcL9B/Ab+
+	 LNwWSvsvdVZ7CZt+QQZvTwkJn3xJrQsE3GcEzyGfRJNADdnXd1XW0/C6o9pZbNROVH
+	 OL7TgvwuwVfRA==
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6f6985cf246so1209626b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:03:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716188635; x=1716793435;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BFUGexLuO075Vn4TwjD0eI7xgrFNdKP3Yd5kw3jHcLA=;
+        b=Gu+x5FTAIf3DD/JZS/YXixu/3K4zUTnjbTHJ0+avC4355sEmqbEPRdDLNcthFXaBKf
+         6b2CqyLVGEJnPaSrR/BFMMwFWerZ+QtZsUUHZMZS0v1i+3a3O5cPISh/5r5aB/ZiiE2e
+         iU9imWyBX1a/wiuLn4mglINssELWN5wBPsXVTGlPv9LHuQ917D9pgEzcbsqzLfv5+gM+
+         n9JBod10Wd7tYsjo4DD9+4iwjhfN+twksE2/xYNsjoyJexqMEqdLLxqPKRk/IbvTb5mm
+         Uz79MUtldfH4vqXluXZHiMpR5kgpQAgrk56BAczzlNEGS8XrRpekC0uQt0QwM0J17aCd
+         q//A==
+X-Forwarded-Encrypted: i=1; AJvYcCXWKQVL0SjruyT8Ks4C8/53eFx4NCcFM0seGIiqLSDqEpKQ0xnWr3zsUXiGz664kK0SWiZprKUhHpQKkY1mE8+IItyKmm1sIwuM6Kkp
+X-Gm-Message-State: AOJu0YyI1Urh4MoVuIkbeFpiGP+sMJnMkSV8/ruKhy0aH74ekCH1MOO9
+	oiZphXEcAWvl0GyEfOflzUby554bWeSrInp4dpXFaH7NS//OGELFMai00w77cnPzrJcaYbDiDCR
+	mxckPVvGvRIFzh0UzBiFDW0AZBeYctRpvbu5SpZln8un9bQ21lvcL6+U6lRVvpo7pGfY72yi/a7
+	nIxw==
+X-Received: by 2002:a05:6a20:ce43:b0:1af:cc75:3f79 with SMTP id adf61e73a8af0-1afde234e96mr27897872637.55.1716188635459;
+        Mon, 20 May 2024 00:03:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEiuH8ECoxsXXBHCIVNZqb1hJCS/B2V+RQsbdxDB7CMxW1pz6aZLZyopAHes2u0T+Odb+5SXQ==
+X-Received: by 2002:a05:6a20:ce43:b0:1af:cc75:3f79 with SMTP id adf61e73a8af0-1afde234e96mr27897855637.55.1716188635076;
+        Mon, 20 May 2024 00:03:55 -0700 (PDT)
+Received: from chengendu.. (111-248-138-2.dynamic-ip.hinet.net. [111.248.138.2])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-65bc5dd2a84sm6320994a12.85.2024.05.20.00.03.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 00:03:54 -0700 (PDT)
+From: Chengen Du <chengen.du@canonical.com>
+To: willemdebruijn.kernel@gmail.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chengen Du <chengen.du@canonical.com>
+Subject: [PATCH] af_packet: Handle outgoing VLAN packets without hardware offloading
+Date: Mon, 20 May 2024 15:03:48 +0800
+Message-Id: <20240520070348.26725-1-chengen.du@canonical.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/12] cachefiles: remove request from xarry during
- flush requests
-To: libaokun@huaweicloud.com, netfs@lists.linux.dev, dhowells@redhat.com,
- jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com, zhujia.zj@bytedance.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
- yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>
-References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
- <20240515084601.3240503-2-libaokun@huaweicloud.com>
-Content-Language: en-US
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20240515084601.3240503-2-libaokun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+In the outbound packet path, if hardware VLAN offloading is unavailable,
+the VLAN tag is inserted into the payload but then cleared from the
+metadata. Consequently, this could lead to a false negative result when
+checking for the presence of a VLAN tag using skb_vlan_tag_present(),
+causing the packet sniffing outcome to lack VLAN tag information. As a
+result, the packet capturing tool may be unable to parse packets as
+expected.
 
+Signed-off-by: Chengen Du <chengen.du@canonical.com>
+---
+ net/packet/af_packet.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-On 5/15/24 4:45 PM, libaokun@huaweicloud.com wrote:
-> From: Baokun Li <libaokun1@huawei.com>
-> 
-> Even with CACHEFILES_DEAD set, we can still read the requests, so in the
-> following concurrency the request may be used after it has been freed:
-> 
->      mount  |   daemon_thread1    |    daemon_thread2
-> ------------------------------------------------------------
->  cachefiles_ondemand_init_object
->   cachefiles_ondemand_send_req
->    REQ_A = kzalloc(sizeof(*req) + data_len)
->    wait_for_completion(&REQ_A->done)
->             cachefiles_daemon_read
->              cachefiles_ondemand_daemon_read
->                                   // close dev fd
->                                   cachefiles_flush_reqs
->                                    complete(&REQ_A->done)
->    kfree(REQ_A)
->               xa_lock(&cache->reqs);
->               cachefiles_ondemand_select_req
->                 req->msg.opcode != CACHEFILES_OP_READ
->                 // req use-after-free !!!
->               xa_unlock(&cache->reqs);
->                                    xa_destroy(&cache->reqs)
-> 
-> Hence remove requests from cache->reqs when flushing them to avoid
-> accessing freed requests.
-> 
-> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
-
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-
-> ---
->  fs/cachefiles/daemon.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-> index 6465e2574230..ccb7b707ea4b 100644
-> --- a/fs/cachefiles/daemon.c
-> +++ b/fs/cachefiles/daemon.c
-> @@ -159,6 +159,7 @@ static void cachefiles_flush_reqs(struct cachefiles_cache *cache)
->  	xa_for_each(xa, index, req) {
->  		req->error = -EIO;
->  		complete(&req->done);
-> +		__xa_erase(xa, index);
->  	}
->  	xa_unlock(xa);
->  
-
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index ea3ebc160e25..73e9acb1875b 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1010,12 +1010,15 @@ static void prb_fill_vlan_info(struct tpacket_kbdq_core *pkc,
+ 	if (skb_vlan_tag_present(pkc->skb)) {
+ 		ppd->hv1.tp_vlan_tci = skb_vlan_tag_get(pkc->skb);
+ 		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->vlan_proto);
+-		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
++	} else if (eth_type_vlan(pkc->skb->protocol)) {
++		ppd->hv1.tp_vlan_tci = ntohs(vlan_eth_hdr(pkc->skb)->h_vlan_TCI);
++		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->protocol);
+ 	} else {
+ 		ppd->hv1.tp_vlan_tci = 0;
+ 		ppd->hv1.tp_vlan_tpid = 0;
+-		ppd->tp_status = TP_STATUS_AVAILABLE;
+ 	}
++	ppd->tp_status = (ppd->hv1.tp_vlan_tci || ppd->hv1.tp_vlan_tpid) ?
++		TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID : TP_STATUS_AVAILABLE;
+ }
+ 
+ static void prb_run_all_ft_ops(struct tpacket_kbdq_core *pkc,
+@@ -2427,11 +2430,15 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		if (skb_vlan_tag_present(skb)) {
+ 			h.h2->tp_vlan_tci = skb_vlan_tag_get(skb);
+ 			h.h2->tp_vlan_tpid = ntohs(skb->vlan_proto);
+-			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
++		} else if (eth_type_vlan(skb->protocol)) {
++			h.h2->tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
++			h.h2->tp_vlan_tpid = ntohs(skb->protocol);
+ 		} else {
+ 			h.h2->tp_vlan_tci = 0;
+ 			h.h2->tp_vlan_tpid = 0;
+ 		}
++		if (h.h2->tp_vlan_tci || h.h2->tp_vlan_tpid)
++			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
+ 		memset(h.h2->tp_padding, 0, sizeof(h.h2->tp_padding));
+ 		hdrlen = sizeof(*h.h2);
+ 		break;
+@@ -2457,7 +2464,8 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	sll->sll_halen = dev_parse_header(skb, sll->sll_addr);
+ 	sll->sll_family = AF_PACKET;
+ 	sll->sll_hatype = dev->type;
+-	sll->sll_protocol = skb->protocol;
++	sll->sll_protocol = eth_type_vlan(skb->protocol) ?
++		vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
+ 	sll->sll_pkttype = skb->pkt_type;
+ 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
+ 		sll->sll_ifindex = orig_dev->ifindex;
+@@ -3482,7 +3490,8 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 		/* Original length was stored in sockaddr_ll fields */
+ 		origlen = PACKET_SKB_CB(skb)->sa.origlen;
+ 		sll->sll_family = AF_PACKET;
+-		sll->sll_protocol = skb->protocol;
++		sll->sll_protocol = eth_type_vlan(skb->protocol) ?
++			vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
+ 	}
+ 
+ 	sock_recv_cmsgs(msg, sk, skb);
+@@ -3538,11 +3547,15 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 		if (skb_vlan_tag_present(skb)) {
+ 			aux.tp_vlan_tci = skb_vlan_tag_get(skb);
+ 			aux.tp_vlan_tpid = ntohs(skb->vlan_proto);
+-			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
++		} else if (eth_type_vlan(skb->protocol)) {
++			aux.tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
++			aux.tp_vlan_tpid = ntohs(skb->protocol);
+ 		} else {
+ 			aux.tp_vlan_tci = 0;
+ 			aux.tp_vlan_tpid = 0;
+ 		}
++		if (aux.tp_vlan_tci || aux.tp_vlan_tpid)
++			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
+ 		put_cmsg(msg, SOL_PACKET, PACKET_AUXDATA, sizeof(aux), &aux);
+ 	}
+ 
 -- 
-Thanks,
-Jingbo
+2.40.1
+
