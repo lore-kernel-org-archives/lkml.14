@@ -1,107 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAAC13849A
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:35:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF00A2D;
+	Mon, 20 May 2024 17:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226529; cv=none; b=Y2qAxPlFVNSBU0fe2d9dXicws2Xshq+Xq9Bg9XeHTZykAttB8Ik2jFMXv48yzX9WzWP1SbAlfH8HOhGSb9VwA/yvoT8ojoKMTpwV5wVc06s4vG6X/esw0xe9+qqN8T/KxfRC3nehNW9rjmPo1NLhVIJBTjoC8RW+TEhZMES10UI=
+	t=1716226635; cv=none; b=bSf8IoKA3WLpZyBkb7nXc41LCweAOKGDHLJBdmgi7c7B8oobps0AZSGqyx78C/q9cxAgKE+jVCymv05y7KsKwB0gn7cj6ZkvPioZdsHoQMlXlNPNdQNepfTNbm2vx1nW2evxvo/Q+/2c/0WwO7+HYrnUKPr7JmZw0hg2dXV7a1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226529; c=relaxed/simple;
-	bh=O7+CYQOd/w839bO6PiOykmWUcQlJRwbbfX3QEguy//E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=R0oWDG73am9Axqd8eTd7AM/qDX/ZVKx32fWoKk0x89Lay0UkHyWazZN4qFJV+agDSTenVxLApbp6zfLC9eU2QXyRJiD+YUm8qgVecpuSMVw1paXzLm/lof/OWE0RjTLijLTh0H44FQfZgUWly2wqtgq5L/SaStkyIWQnvVtgbj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuDGLLJF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716226635; c=relaxed/simple;
+	bh=+c35VY+nM47X5XU7nqvHCYGuJZVzvWQ2lXzYGoxUU54=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XeWRA8HxYorhoV8gH6pD7ga/xs2deJVdtXeWXiApWdq38L6o5IDuwRtob05ZP2VkVq5/lf4LlIMn17lcVf242xBBPh9ATCikCluA1KhoocKZnw5tJkgXbKcCHnRr8I1rx/V5f+6qR/Y1H74fYvPmzD7I48cAhiR5XiHQE5G4dhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7wFseYL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuDGLLJF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B92C4AF09
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:35:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7wFseYL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E3C8FC2BD10;
+	Mon, 20 May 2024 17:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716226529;
-	bh=O7+CYQOd/w839bO6PiOykmWUcQlJRwbbfX3QEguy//E=;
-	h=From:Date:Subject:To:From;
-	b=nuDGLLJFfcfJSmsa7YGYNP066/Kfl+wR2NaMYNmr0W7QjtqSuDy3DLxsoUJ/lS3GN
-	 eBEb5RZIZIsrQm10nwiRMa/zmaFmOJrcYrb8MWPnipoT9sXm1mPT1BgEYjbGETF4Wl
-	 2dYzeVDJnEBfWM+smXd49DGIL7zoKronxmh6ON8GmCyM+i+giZ/oKfPgQoYztRmTTy
-	 A8wH5dZXqKvnUU6HJMahZ0iCLrfrdxpWqc1zfay1WAFBakyf9PmA2WH8NMe6ZCRZBK
-	 aNx32zJ42cPMilEK/4zY6aEh1NWggvTNFpcC3zyQsNzpRQcDzR5/kYEYDqZgl10ADH
-	 DxNWDh5qDwPIw==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e6f51f9de4so36864871fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:35:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVR8umSPnuF+2Z71pFdL72mNS+CApLBk2y9XFuxWzkzocFCrqciJl1am45dVgSYYsC7inS9kOYrm8yd+ApnhejZ7Z4asT1c+h/ZKnb9
-X-Gm-Message-State: AOJu0YyERkY4C+5LfEOj123X6B3DiJ6998vGa4dMpv1VhgEEpn+6jUOx
-	3unIfHAvEDaEanOBm3v4Czn4+FjlIZNcFcmIezOkkK0lcTb2wuzM1EoX6zaP+2+8441vQfBSzNw
-	/LxYss5R0AldVD863iu9TP5eto9M=
-X-Google-Smtp-Source: AGHT+IEEQtQ+5mZ2a1FVID7q6H6mM0E87SjuizTn64cm/IbslYG5keHfdkxyYT+ArXTNfvOhORojpSU2hhJt5p5FLf8=
-X-Received: by 2002:a2e:9601:0:b0:2e7:1e4a:31e0 with SMTP id
- 38308e7fff4ca-2e71e4a328emr37507561fa.18.1716226528039; Mon, 20 May 2024
- 10:35:28 -0700 (PDT)
+	s=k20201202; t=1716226634;
+	bh=+c35VY+nM47X5XU7nqvHCYGuJZVzvWQ2lXzYGoxUU54=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=h7wFseYLo24P9ZZjRB4bcTxBZ1NhQqs6cvuDtTdfMN3swLH6h5PdnbFHbzDOjGxPe
+	 TKFOZDG82tLaklAPt1ipsftIh/zVsqmEJCsQqU0NHFbIqSNOw4vDc0kKmc8Q7QZKdc
+	 b0JggNKorgM8AEHeacZTmBqrXuCsfE7xlo3Vz4rX45Z9sg/eialupB9bwGbgNrqQeS
+	 JSLtdX+U/RNB9+U3ommInbL+u/gQdRP15wJyB+MWGRfQ3E7BgF4aiDLJEbxVsj0lKU
+	 7QvVDydSsSDq26lA7ZGAAR5Q40uXiAKIR1HSzb8agEulQsSRVDxjELO9XnSrXSwA2H
+	 cCw6m0axLYTsQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DA240C43332;
+	Mon, 20 May 2024 17:37:14 +0000 (UTC)
+Subject: Re: [GIT PULL] dma-mapping updates for Linux 6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZktYriALqC7ZNQpa@infradead.org>
+References: <ZktYriALqC7ZNQpa@infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZktYriALqC7ZNQpa@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.10-2024-05-20
+X-PR-Tracked-Commit-Id: a6016aac5252da9d22a4dc0b98121b0acdf6d2f5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: daa121128a2d2ac6006159e2c47676e4fcd21eab
+Message-Id: <171622663488.4663.13899900592813092105.pr-tracker-bot@kernel.org>
+Date: Mon, 20 May 2024 17:37:14 +0000
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev, netdev@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 21 May 2024 02:34:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARXgaWw3kH9JgrnH4vK6fr8LDkNKf3wq8NhMWJrVwJyVQ@mail.gmail.com>
-Message-ID: <CAK7LNARXgaWw3kH9JgrnH4vK6fr8LDkNKf3wq8NhMWJrVwJyVQ@mail.gmail.com>
-Subject: ftrace/test_ownership kselftest fails in the second run
-To: Steven Rostedt <rostedt@goodmis.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Steven,
+The pull request you sent on Mon, 20 May 2024 07:05:34 -0700:
 
+> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.10-2024-05-20
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/daa121128a2d2ac6006159e2c47676e4fcd21eab
 
-If I execute test.d/00basic/test_ownership.tc in a row,
-it passes in the first run, and fails in the second run.
-
-
-I observe this on the Ubuntu 24.04 (6.8 kernel),
-and also on the latest linux-next (next-20240520).
-
-
-Is this a limitation of the test or a kernel bug?
-
-
-
-vagrant@debian:~/linux/tools/testing/selftests/ftrace$ sudo
-./ftracetest test.d/00basic/test_ownership.tc
-unlink: cannot unlink
-'/home/vagrant/linux/tools/testing/selftests/ftrace/logs/latest': No
-such file or directory
-=== Ftrace unit tests ===
-[1] Test file and directory ownership changes for eventfs [PASS]
-
-
-# of passed:  1
-# of failed:  0
-# of unresolved:  0
-# of untested:  0
-# of unsupported:  0
-# of xfailed:  0
-# of undefined(test bug):  0
-vagrant@debian:~/linux/tools/testing/selftests/ftrace$ sudo
-./ftracetest test.d/00basic/test_ownership.tc
-=== Ftrace unit tests ===
-[1] Test file and directory ownership changes for eventfs [FAIL]
-
-
-# of passed:  0
-# of failed:  1
-# of unresolved:  0
-# of untested:  0
-# of unsupported:  0
-# of xfailed:  0
-# of undefined(test bug):  0
-vagrant@debian:~/linux/tools/testing/selftests/ftrace$ uname -r
-6.9.0-next-20240520
-
-
-
-
+Thank you!
 
 -- 
-Best Regards
-Masahiro Yamada
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
