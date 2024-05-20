@@ -1,152 +1,144 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F267612EB
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB26A8AC;
+	Mon, 20 May 2024 12:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716208275; cv=none; b=O1wbsnOcJNiPVlWWQZXFw7nAzwnDiHrJPo3CgfX1zqXiKwY3oeG8NFwcJ2fS8+uCtLARJODc6Xq+iFyQeS1NpgYDyS3ljoz43+GviHacrbKl9psPGOC2ZI7FbgSjYCXbJQj6jZ9+bCkJL36S2bqSEBHY5Hlg2TwF+NNz5SkEIvk=
+	t=1716208279; cv=none; b=jRPj6YFCUnEjDgD/LWNxz9eaxnhxeuGX6ZNkkMYEEFCgG6XXfSDGKtw0AkB7UhJrjEooasAulf/rLE8xYj0STFJgeoDKI+CZkHoTZJ/Cm1SgJktXrY+9ygsnk+aJiQs+MBrOgzenmghJHpQhOtNLuM35ITJ5NevmdWQgCg2YElk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716208275; c=relaxed/simple;
-	bh=EShonQY2zDsALv6YQhO9ib6qoCyG9n3IUJVvv5yoQjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=a5TYn4xz93h0CrX25xm7V8NVZGDBslU8UxERR8pS7IeSs5SJJ8bt+NoIGb3eBK4pQtDB/gXT/5enpL8I1CFiIOExXp1ZOsXoqleNwa/tbDtRfw+X0HsufRPjwg80i/ifMySgxD1sQ6wmcc7ehgziGS2Jsxqk89NUn6T4kn3OOP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fB+27dHY; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716208279; c=relaxed/simple;
+	bh=OXLRHfwzhWhfF/o+k3sFxvU1ArXQmPhsk8nX+CqNWLg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AHDiPLMcqCgD+W2xnN0DNsFWGUUU7e9ldOU4/ZtNjRlS/LgjPCBOfr9GU1T7OBlLNPh53tgeS1Zik58ocsArWgC8nMFN+O/JgL4hwJTsuHFePoaMS1osJzzEUgz7Mfq5XhtpgnCy2EI9XiLF+4ySSDvC9BfY3XM9yKxn9XmwI94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/q2OSFX; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB+27dHY"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51f174e316eso3198590e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 05:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716208272; x=1716813072; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xTV37OvPNxm097mdCjRk9kivbaQmKYdeu/uwsv44aes=;
-        b=fB+27dHYixS2VsxVZmTA1ck9m/jLuvtQcsbKVX+arbcR9adJApp+7e7pWhTjvi0Y8j
-         WGCcFv/WpugicSlvrhPXj3pmCOnvFXcVXuYh1qme2lilNcCk1jUirARNC5S2fm3gZKya
-         /ACIk9ErlDaZkjicYZine80ot5oYyft/dunoUwhr44OghX+EJvbaTDmTDi26dxd9prQU
-         XBlaoor7COK5d3Ebd3XcI3CAdpQ6ipy6RgA+QsPCuHIuApdDJscE389rAJYz5xOPCfnF
-         OXvbCU0wmdXkNRpVDL4xkoyuPAIs2CAjSmdQqXtW0Pmew9QAPLHERi/sVMDBiocgDC7Y
-         zc+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716208272; x=1716813072;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xTV37OvPNxm097mdCjRk9kivbaQmKYdeu/uwsv44aes=;
-        b=APZmAhHbIDGAmq6tsQEEK/CqtvA7CaRWZv10nMBzckuaGqXYHfeX54df1YyyTGYH1b
-         39OraIDyA0g/PyS3ySLgKPncSrfbmtVSGS+MeQ0T0oGFqQk84MtQ1IhjSl+wT8cGLVRL
-         i15sZNt5yy4u1H9TJo1EAovY+r1LPnTyD3RKxSztib5K3IOOMS83PQhBIdkGz+Yvc4VZ
-         BfYAe14Ksg66SzdcECfsqlDWOudh99snTC6wllj80b8V/BQ9EF8OOJ/yl4eEnZinW1J4
-         Y6aYeRdO53R7EEZC5SdWAXT45LwTHN0ATQX7ysm39NvfnvV80JL2nqtfbXSKVCraIK2P
-         rhFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMLKbDp89M9pD9sbRGfbnNCdWXZJr69lkG78fMPtjYXLWXUi5U+EYiUFUh74tbXO/A82+U0STTy6G1Rpw8Cm4vef50dcFJb4GAMFAQ
-X-Gm-Message-State: AOJu0Yx2ck3wuXaB68mdwM7Ctzfr2IyLtYYe/dDJ1n/1ogyOV1YuoqXd
-	QQn1yP1py3JXqzlbXZ3B5o7Wj0DyF2A8IjlCswKN/6/HCjDOSUs9
-X-Google-Smtp-Source: AGHT+IHNpzsuX0rBjZvmG4Lw90zHePB/y3cd4iL5UI6lZQYVtEZylz8Y+q1a08ijN9zRU4KSKmSsww==
-X-Received: by 2002:a05:6512:3c9f:b0:51d:ab55:f2db with SMTP id 2adb3069b0e04-5220fa717f5mr23174649e87.10.1716208271434;
-        Mon, 20 May 2024 05:31:11 -0700 (PDT)
-Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5238a14d64bsm2074664e87.258.2024.05.20.05.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 05:31:10 -0700 (PDT)
-Date: Mon, 20 May 2024 15:31:02 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?M=E5rten?= Lindahl <marten.lindahl@axis.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] regulator: fix pickable ranges vsel caching
-Message-ID: <ZktChruNV_Jc4j4u@fedora>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/q2OSFX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716208278; x=1747744278;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OXLRHfwzhWhfF/o+k3sFxvU1ArXQmPhsk8nX+CqNWLg=;
+  b=S/q2OSFXstuVD0qwM6X0Bkysj75wxm07HxIz3bywBmHnf2HDI5U5V+h2
+   e6wQWuq5ftSqyJtstq20SxWk4PKJ8XWhUdJGXR/npQU3qmclTz5K9dFZE
+   PbEzS2aeFobr1maJ06Yu+RedKz4GKTbjrpBaeHYlkKUu8e6ppIAPvHglq
+   mTpGpYtae3NH7tSzx7IgeSQ870vtHzveWNIwqWTVrqJT9Wlu2O+e1fHAC
+   ToAGhwUPFLPI+kzT0qxMXbeGfng4yWHK9dwa0DLlQgTBWIclY2ZfP2MlE
+   nOOQLMQ3KoKsEcd79lfHIWcOH8p1Ri86exh1DyIPK3Sr8zc4TTVSJIZpv
+   g==;
+X-CSE-ConnectionGUID: A6hzIa+9Tte4w3SxhMie2w==
+X-CSE-MsgGUID: a5Z7Kz+6QhS7i/YTxAK2+w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12180358"
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="12180358"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:17 -0700
+X-CSE-ConnectionGUID: lIpSSv3RSiihX+465unR8A==
+X-CSE-MsgGUID: SiU3s4YXRKKwcZlDUzJZzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="33091197"
+Received: from unknown (HELO localhost) ([10.245.247.114])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v4 05/16] selftests/resctrl: Use correct type for pids
+Date: Mon, 20 May 2024 15:30:09 +0300
+Message-Id: <20240520123020.18938-6-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
+References: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MQgaS3VPhLaQvzhS"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+A few functions receive PIDs through int arguments. PIDs variables
+should be of type pid_t, not int.
 
---MQgaS3VPhLaQvzhS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Convert pid arguments from int to pid_t.
 
-This series addresses a potential problem where the voltage selector for
-pickable-ranges is used in same fashion as a 'apply-bit'. Eg, when a
-regulator voltage is changed so that also the range changes, the effect
-of the range and voltage selector change is not taken into account until
-the voltage selector is written to hardware. In such case caching the
-voltage-selector value will cause the voltage range change to not change
-the actual output voltage.
-
-Patch 1 addresses this issue by adding a flag to regulator desc to
-advertise this behaviour and by always writing the VSEL register value to
-hardware if range was changed.
-
-Patch 2 sets that flag to Texsas instrument's tps6287x driver because,
-according to the data-sheet, the TI's PMICs VSEL register must be always
-written after the range has been changed. Please note that this has not
-been tested in TI's hardware but the concept is only quickly verified on
-ROHM's BD71851. All testing is appreciated.
-
-Revision history:
-- v2:
-	- Change series name to reflect content that is still not
-	  merged.
-	- Drop already applied patches.
-	- Add patch fixing TI's tps2687x.
-	- Don't bypass cache for pickable-ranges users who don't have.
-	  the 'VSEL as apply' behaviour.
-	- Bypass cache only if range was changed.
-- v1:
-	https://lore.kernel.org/all/cover.1715848512.git.mazziesaccount@gmail.com/
-
-series is base on regulator/for-next
-
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
+ tools/testing/selftests/resctrl/cache.c       | 6 +++---
+ tools/testing/selftests/resctrl/resctrl.h     | 4 ++--
+ tools/testing/selftests/resctrl/resctrl_val.c | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Matti Vaittinen (2):
-  regulator: pickable ranges: don't always cache vsel
-  regulator: tps6287x: Force writing VSEL bit
+diff --git a/tools/testing/selftests/resctrl/cache.c b/tools/testing/selftests/resctrl/cache.c
+index 1b339d6bbff1..9b74fce80037 100644
+--- a/tools/testing/selftests/resctrl/cache.c
++++ b/tools/testing/selftests/resctrl/cache.c
+@@ -101,7 +101,7 @@ static int get_llc_occu_resctrl(unsigned long *llc_occupancy)
+  *
+  * Return:		0 on success, < 0 on error.
+  */
+-static int print_results_cache(const char *filename, int bm_pid, __u64 llc_value)
++static int print_results_cache(const char *filename, pid_t bm_pid, __u64 llc_value)
+ {
+ 	FILE *fp;
+ 
+@@ -133,7 +133,7 @@ static int print_results_cache(const char *filename, int bm_pid, __u64 llc_value
+  * Return: =0 on success. <0 on failure.
+  */
+ int perf_event_measure(int pe_fd, struct perf_event_read *pe_read,
+-		       const char *filename, int bm_pid)
++		       const char *filename, pid_t bm_pid)
+ {
+ 	int ret;
+ 
+@@ -161,7 +161,7 @@ int perf_event_measure(int pe_fd, struct perf_event_read *pe_read,
+  *
+  * Return: =0 on success. <0 on failure.
+  */
+-int measure_llc_resctrl(const char *filename, int bm_pid)
++int measure_llc_resctrl(const char *filename, pid_t bm_pid)
+ {
+ 	unsigned long llc_occu_resc = 0;
+ 	int ret;
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index 00d51fa7531c..e6f221236c79 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -174,8 +174,8 @@ void perf_event_initialize_read_format(struct perf_event_read *pe_read);
+ int perf_open(struct perf_event_attr *pea, pid_t pid, int cpu_no);
+ int perf_event_reset_enable(int pe_fd);
+ int perf_event_measure(int pe_fd, struct perf_event_read *pe_read,
+-		       const char *filename, int bm_pid);
+-int measure_llc_resctrl(const char *filename, int bm_pid);
++		       const char *filename, pid_t bm_pid);
++int measure_llc_resctrl(const char *filename, pid_t bm_pid);
+ void show_cache_info(int no_of_bits, __u64 avg_llc_val, size_t cache_span, bool lines);
+ 
+ /*
+diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
+index 6ea8fd2c65cc..18bfdff78089 100644
+--- a/tools/testing/selftests/resctrl/resctrl_val.c
++++ b/tools/testing/selftests/resctrl/resctrl_val.c
+@@ -572,7 +572,7 @@ void signal_handler_unregister(void)
+  *
+  * Return:		0 on success, < 0 on error.
+  */
+-static int print_results_bw(char *filename,  int bm_pid, float bw_imc,
++static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
+ 			    unsigned long bw_resc)
+ {
+ 	unsigned long diff = fabs(bw_imc - bw_resc);
+-- 
+2.39.2
 
- drivers/regulator/helpers.c            | 43 ++++++++++++++++++--------
- drivers/regulator/tps6287x-regulator.c |  1 +
- include/linux/regulator/driver.h       |  3 ++
- 3 files changed, 34 insertions(+), 13 deletions(-)
-
---=20
-2.45.1
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---MQgaS3VPhLaQvzhS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmZLQn0ACgkQeFA3/03a
-ocVXxAf/eNpKlT3d/ANnNoL1BEmddIi/7e8g3WJrS5H1/1Z5BC+cqZVXPfugKgXy
-YZeJo7Pb8+hBafaQSVsZdzHWBgEu//SGabvPUbfhYP6JzlcX9UNSkrNG/EKYX3CZ
-GGoUnsxwh0n3lGOf6lc5cwk4ZybqwYHji4BBNVmmGmsgzcjVrX58712XbXdVthNy
-w1K9MTJ4elPrgaBrf1cJAbJg+7u7FA9zBxWm8f0SH90Jx65fix63zAvi3chfcqvE
-F6QVAGJ2LDWljB4ggXkHsUgt/c2sV7yh5zFdGKlW+6WJu5UC6rf/kV46wL6ORFuS
-LWbVDp2LlyVEVeBAG6QswHuaTsPxEA==
-=3tAL
------END PGP SIGNATURE-----
-
---MQgaS3VPhLaQvzhS--
