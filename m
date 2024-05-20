@@ -1,116 +1,217 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349DF1BC23
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 08:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81581BC58
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 08:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716193300; cv=none; b=GrpurlJ0ockC7/SZim0t6f08KZiTpfdoRcigJxF8D8IXR9eOWHZDZPUmZcfNUPuCEF4TdCkl7NQX2Qd3kH9bSEJGCEvDt/5IrXOwNhpTGTD9y7hwKEWpFHenyJ/ZhsXHfQkauZBjUlZcdIzG3Iq26kx+flRrkWOb1Xrrry29KsA=
+	t=1716193487; cv=none; b=Ge1gTOWQwXFnQTaz53VEB9I0nvD0Hc0AbeNGdZpX8P3r+4xw11QArJI9hCJzObyewweQ0MUASBIV0m+t5XPcb1iAET7V3YDOEZWbAJBbBwJhe2ygVuTzdw5qtSVQAQiJwkADJ8Ndg1HDS/9IrG2DKI8fxpVP9t7F9jub1+YIFAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716193300; c=relaxed/simple;
-	bh=mfDNx0N0p20uPgD7lLp2G6uKC/nPQ4db0+1RjxMoY0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kt+nyG3w97mijQJ0m7l35Q4zKbdUOnr8YA/HVdudtNc4ZtKv7WMDQ4EqjrGypNFMaKwc6lc+qtStjWgWWClyfnJICk6mcTeIX636BvtEEakAFheLw4mygRWDy0D5K6PHt5V8rztwXXKO2X69YnlDqWkShMQgnQ8lrzxtA3Zr40o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AoyEwHah; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716193487; c=relaxed/simple;
+	bh=eu6ojl58i6PaNBkZTsBa65l6mv2Xh7vqwl4uDCER8f0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZY/3vvbNVedgAK0T1Xbx/ymctphP4811TTNYhImguWo4YJajQmcCldyu2fzsf123GAjqgv/7CeG8nbKquVKzVYNSDGyMKZ7+OuwTKHkOmCZr7NDvB33X5yn8RvFeVva1eIt+zxWvoA3h8OXOs/0g4mBw2YKW2f4suUcuvKfa3AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cdq2P4lV; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoyEwHah"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-34e0d47bd98so1114397f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 01:21:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cdq2P4lV"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de59e612376so16476070276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 01:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716193297; x=1716798097; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RLOkKVCpFX3u54FOqCOA4zzRUntDO6MyxWoG5jTKe2k=;
-        b=AoyEwHahFhrGDEFCjUO1q7Aq+bRnByZqln4iAC8CaeNsK2P2AwN7gMVZ0k+YQwFtsQ
-         p4PMNfCrL5Vy5r/LZg6t4Ykdo+BHncHc77nUuUdmux+Riss/GXNDnQXw0xvsTfiUFppl
-         za2y9u8vlZPyS/jCfQpG6PX0SF9OgFJQVALqXfAiklJperdXqrn+uKRgm1fNI5z7vPEB
-         mF7rjr6gvjTwBqIHcqqSRTPZ4q3XEJ7iBoXkWYQ4ZCl5IR/Ug1JfpiWryrleB/3tWblt
-         4njTayNBsJdiBEvIc9OSZHf430DeX5v9vMwnYyDwEiC7z3ZU+KqyzQiHIc2nBlm6cALW
-         1nNQ==
+        d=google.com; s=20230601; t=1716193484; x=1716798284; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t3v7Wla8eK6FwuQ+NrrrAEqVqGJsnfekL6/dutIVE2c=;
+        b=Cdq2P4lV3wrjZd3pPhnElVcv5/4XxPbk7KV6McaGNpKP+23HPzya24h/Jq4pnmiome
+         pAmnRi+AVC7Bk1qUZo8z46+DwrvU3hR6ZMo20g798K0xRyXap+GAGfduW/ToJ9yKcnY2
+         4dvVJh80YLE9hCZQfIeWhZCspIs24CBwTZc1Jf2nBAItUchDWFwQ/ZGX/8DJt4IC2Mdq
+         XZtoB+VdYW1Bi55BfmE25RG5XWvMqTqsJoXU0NGpX0/UhP8A+MDC79b0pIaatUant1Zk
+         HqEuYewUqCU4BZ07ga1y++ZfOveU5JAbCAu9FxyHqQJBOA0RW6rGTlj+8axnKsAbCX6Z
+         20nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716193297; x=1716798097;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RLOkKVCpFX3u54FOqCOA4zzRUntDO6MyxWoG5jTKe2k=;
-        b=gEr9JEmUvDQEL/QUjfisUJ6vAjz6ng5Tgp0xgx9GyThBTLHwE9l9jUnhW3dvpJup8y
-         trunL7Bz/WO/9BwCcEpjeQ+nGGqdkVdVkEgYb99ZsonF3PfLkakOaf0kNYrwX8qOE20h
-         uc9cXPruUh3VB9NgntZ70BBZfWMhNjxT5Jv4y7mSOd/Wjx9UnwtX5C0dxftJOMUM5W7l
-         XccVedHZwuCLwLz9GFzror5S4+8Llj4J3PDKLDk4Hyl/gn13dgDalgIrusiEykgSYqT+
-         x/aemVDInLbfTHN0fHdrVHq9Mq8dmuHXfB8emJ4vE4qM6stKpkDW9XBgfRlqulpS0+7d
-         Wbmw==
-X-Gm-Message-State: AOJu0YwTYfFfcQE3JVdKKPBcICRKvNiD5z8/8l6iuRlcNFNxwHiCw7MN
-	iiHxhGDil+B6MElduVxXEud9/mxCNZgQemn5B5xXc30YZASLzRwEuZwcpSFgShY=
-X-Google-Smtp-Source: AGHT+IHQSRhAY0ZwPublPM/5ASwi7DkCFsntaBUwKLGNCnAEsFbrfbPRF2T/DGxBAqDMeLaF0Oa5fw==
-X-Received: by 2002:adf:fdd0:0:b0:34d:ac38:7d3f with SMTP id ffacd0b85a97d-354b8e0aa81mr4710989f8f.17.1716193297038;
-        Mon, 20 May 2024 01:21:37 -0700 (PDT)
-Received: from fedora.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbbf9esm28348545f8f.91.2024.05.20.01.21.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 01:21:36 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	Denys Vlasenko <dvlasenk@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] x86/percpu: Enable named address spaces for all capable GCC versions
-Date: Mon, 20 May 2024 10:21:14 +0200
-Message-ID: <20240520082134.121320-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.45.1
+        d=1e100.net; s=20230601; t=1716193484; x=1716798284;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t3v7Wla8eK6FwuQ+NrrrAEqVqGJsnfekL6/dutIVE2c=;
+        b=SGwT1negZI8QkIUHDAnmTuP1tZhY7JrB8X4wx6+Uj1p54mJijBFgZFF2hWRv6TDht9
+         5c+alCUd3CJ541TAwD5GxWrWIACaZMc0bgNoNUT12gFTFmTp1hAvjMK3RXPq8oC7UicT
+         NyFBKQ2qAfzYY8kpupbsukBkohOeHgbST6AbjmuYB1FYIyqzm32060Lf5rEyGOM7vUiL
+         kFvvW6nidJmjH0AIWNm5xk6KBBT21lN58Af5Nh+SEiAwiU8bBu5s4Z+DIVglSpQLDzzy
+         Kf09jJRwcLJPCNS8Bxvt6ECAcVZdSAa6UG27wW7HzvMYagH528gIpyJTilmiRm1HJfWf
+         /1ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVf0GwhF3+GC91i8izwlfWQjdl6cNc4Wgno62kfMUyRl3DaFE6v4OMc7MWP6FquswEzY/F+uLFk5MUWTcXeU9DBz/oFk0Y/rFmvt3A5
+X-Gm-Message-State: AOJu0YzEHhdRG+NHz4rlp8OGBNEVkWHahY04mh2gOTBnF+2x0A63Oqes
+	T7gVJuj0e4GzopjdkvcV2+u0jk/wqkjyLwhirekFHwsNqOpjD0xY3demqQrTOfgkAiNcUSMZKQ=
+	=
+X-Google-Smtp-Source: AGHT+IG8sA3YeAIFxrhEE+nyyOYQWuGUkUZrZ3eRkMpFDbFRqBPU+s9KI5+gvkvtaWsVQO/64uSndvp/Mg==
+X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:d897:cddc:22b9:d054])
+ (user=sesse job=sendgmr) by 2002:a05:6902:1082:b0:df4:a395:4cf2 with SMTP id
+ 3f1490d57ef6-df4a395502fmr297617276.0.1716193484680; Mon, 20 May 2024
+ 01:24:44 -0700 (PDT)
+Date: Mon, 20 May 2024 10:24:28 +0200
+In-Reply-To: <20240520082429.320107-1-sesse@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240520082429.320107-1-sesse@google.com>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240520082429.320107-2-sesse@google.com>
+Subject: [PATCH v3 2/3] perf annotate: split out read_symbol()
+From: "Steinar H. Gunderson" <sesse@google.com>
+To: acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Enable named address spaces also for GCC 6, GCC 7 and GCC 8
-releases. These compilers all produce kernel images that boot
-without problems.
+The Capstone disassembler code has a useful code snippet to read
+the bytes for a given code symbol into memory. Split it out into
+its own function, so that the LLVM disassembler can use it in
+the next patch.
 
-Use compile-time test to detect compiler support for named
-address spaces. The test passes with GCC 6 as the earliest
-compiler version where the support for named address spaces
-was introduced.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Steinar H. Gunderson <sesse@google.com>
 ---
- arch/x86/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/disasm.c | 90 +++++++++++++++++++++++++---------------
+ 1 file changed, 56 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 9d16fee6bdb8..c9e0a54f469e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2430,7 +2430,8 @@ source "kernel/livepatch/Kconfig"
- endmenu
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 72aec8f61b94..c0dbb955e61a 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1396,6 +1396,53 @@ static int find_file_offset(u64 start, u64 len, u64 pgoff, void *arg)
+ 	return 0;
+ }
  
- config CC_HAS_NAMED_AS
--	def_bool CC_IS_GCC && GCC_VERSION >= 90100
-+	def_bool $(success,echo 'int __seg_fs fs; int __seg_gs gs;' | $(CC) -x c - -S -o /dev/null)
-+	depends on CC_IS_GCC
++static u8 *
++read_symbol(const char *filename, struct map *map, struct symbol *sym,
++	    u64 *len, bool *is_64bit)
++{
++	struct dso *dso = map__dso(map);
++	struct nscookie nsc;
++	u64 start = map__rip_2objdump(map, sym->start);
++	u64 end = map__rip_2objdump(map, sym->end);
++	int fd, count;
++	u8 *buf = NULL;
++	struct find_file_offset_data data = {
++		.ip = start,
++	};
++
++	*is_64bit = false;
++
++	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++	fd = open(filename, O_RDONLY);
++	nsinfo__mountns_exit(&nsc);
++	if (fd < 0)
++		return NULL;
++
++	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
++			    is_64bit) == 0)
++		goto err;
++
++	*len = end - start;
++	buf = malloc(*len);
++	if (buf == NULL)
++		goto err;
++
++	count = pread(fd, buf, *len, data.offset);
++	close(fd);
++	fd = -1;
++
++	if ((u64)count != *len)
++		goto err;
++
++	return buf;
++
++err:
++	if (fd >= 0)
++		close(fd);
++	free(buf);
++	return NULL;
++}
++
+ static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
+ 				  struct annotate_args *args, u64 addr)
+ {
+@@ -1458,19 +1505,13 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct map *map = args->ms.map;
+-	struct dso *dso = map__dso(map);
+-	struct nscookie nsc;
+ 	u64 start = map__rip_2objdump(map, sym->start);
+-	u64 end = map__rip_2objdump(map, sym->end);
+-	u64 len = end - start;
++	u64 len;
+ 	u64 offset;
+-	int i, fd, count;
++	int i, count;
+ 	bool is_64bit = false;
+ 	bool needs_cs_close = false;
+ 	u8 *buf = NULL;
+-	struct find_file_offset_data data = {
+-		.ip = start,
+-	};
+ 	csh handle;
+ 	cs_insn *insn;
+ 	char disasm_buf[512];
+@@ -1479,31 +1520,9 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ 	if (args->options->objdump_path)
+ 		return -1;
  
- config CC_HAS_NAMED_AS_FIXED_SANITIZERS
- 	def_bool CC_IS_GCC && GCC_VERSION >= 130300
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+-	fd = open(filename, O_RDONLY);
+-	nsinfo__mountns_exit(&nsc);
+-	if (fd < 0)
+-		return -1;
+-
+-	if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
+-			    &is_64bit) == 0)
+-		goto err;
+-
+-	if (open_capstone_handle(args, is_64bit, &handle) < 0)
+-		goto err;
+-
+-	needs_cs_close = true;
+-
+-	buf = malloc(len);
++	buf = read_symbol(filename, map, sym, &len, &is_64bit);
+ 	if (buf == NULL)
+-		goto err;
+-
+-	count = pread(fd, buf, len, data.offset);
+-	close(fd);
+-	fd = -1;
+-
+-	if ((u64)count != len)
+-		goto err;
++		return -1;
+ 
+ 	/* add the function address and name */
+ 	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+@@ -1521,6 +1540,11 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ 
+ 	annotation_line__add(&dl->al, &notes->src->source);
+ 
++	if (open_capstone_handle(args, is_64bit, &handle) < 0)
++		goto err;
++
++	needs_cs_close = true;
++
+ 	count = cs_disasm(handle, buf, len, start, len, &insn);
+ 	for (i = 0, offset = 0; i < count; i++) {
+ 		int printed;
+@@ -1565,8 +1589,6 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ 	return count < 0 ? count : 0;
+ 
+ err:
+-	if (fd >= 0)
+-		close(fd);
+ 	if (needs_cs_close) {
+ 		struct disasm_line *tmp;
+ 
 -- 
-2.45.1
+2.43.0
 
