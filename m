@@ -1,208 +1,88 @@
-Received: from mail-108-mta245.mxroute.com (mail-108-mta245.mxroute.com [136.175.108.245])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7BA56754
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AC0657A7
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716208711; cv=none; b=R0I4wNraRe0Oy8cBeQmkDLwGNMJVDDEgvLVXS/gBWMVHcgFBmSJEk0lhnEmIT2znCbd7XhzMAk/mGz6E4TeOEKVZoH8I9SqQSaquDv0f9NT2PdspOq+ILeWuDgEW841igLAASy3bQ7ouEhjBuZGyBZAbbheFkGWCKZG4gEKcTfc=
+	t=1716208734; cv=none; b=dbnK7oDQmdsfWfajOxhUm1/dTnZBt9HH6oPLPpg75vtlDj4o4OIJ028UYasLCbalS+je1GCzYKUWUrj53ovAKos4UM2xg8d1KmFvKnOdgV/TqXqy/MTc/Bo3V+qb2DfGeIFtuCzqPCvcJ6KWqd5ndVHBeyEs70hsP2TAR8E/4JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716208711; c=relaxed/simple;
-	bh=vSwLw09oJeePOsbI1H72eswYjkpje5c2G4YPiZSuBj8=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=KM371ucuvheBBUX9Eh+cUuZFAg9fVMs5OLeSHOFz2uxC7VdNNhQah072gNtT/0gbiyl+3naFM6S4sqNuiz70xn3JJXGznkskqM6BIT5lDMflkqKW8KNCiz9qWEb5D7sPoiRgVfTYI/n+agaI8xx3nBoLfEGUfEy+7Dlv2VB2HCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=p8/2w1aH; arc=none smtp.client-ip=136.175.108.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
+	s=arc-20240116; t=1716208734; c=relaxed/simple;
+	bh=NPNIeApQkTP38bbMexQfGxASjgvXMMuexlRTRZEIvXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LgjjkIu80/VkRUWj32kQxaBbNpKTc2vgBhipJpyCBJoH4XfweWJ5hvrSfEDpe+54ai0zLIgQqb0qQ0AGoacHecryLRnR0DyK7QIVYmWfOyLHa7X36fWdThpQYcy8vJxkx7DIqWNmMP3C4k0eHPML2bMT3FlDcOBTQ2Ee90oN0RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Q6vBVsKK; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="p8/2w1aH"
-Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta245.mxroute.com (ZoneMTA) with ESMTPSA id 18f95fdf437000efce.00b
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Mon, 20 May 2024 12:33:19 +0000
-X-Zone-Loop: 43fddec20cacd8692ee656ab6f6f5eb7b1ea636cb875
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
-	; s=x; h=Content-Type:MIME-Version:Message-ID:In-reply-to:Date:Subject:Cc:To:
-	From:References:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=JvDGKlHjtsOoT4fZ/bziidnM87mi6Drl2/H5bm2mPzM=; b=p8/2w1aHCYzDslMAYy93dwz2e6
-	vhlqrwcwxLncKvNFqMHO0DIGCj2FoFfGaMEWE3b4t4Q7nj8MoPpAQR5gJXqIDGKW9SgWSpzUqqXyM
-	aBGjVIdRkgPlHDCBUHijbXEBNemJq3Hw58aNQXcWDFuPZNojxf8yp0LLbmmIXuN1hcsgijmdaKcWx
-	F3KBhhecUmCJibFnY0v0od58b9FdLWxV4MgPJef9Wqle9eiru+7jGkKzhZs1xJBktjiAvjtVGex0q
-	Pib9myuR3eQ2cJd0dw43Rs6XrmL+M08qbepXVG0o286MdarM1LjoI+mFj0BON5kJLQKHjqmocyMth
-	ZH0CT2jw==;
-References: <20240509011900.2694291-1-yukuai1@huaweicloud.com>
- <20240509011900.2694291-4-yukuai1@huaweicloud.com>
-User-agent: mu4e 1.7.5; emacs 28.2
-From: Su Yue <l@damenly.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
- song@kernel.org, xni@redhat.com, dm-devel@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH md-6.10 3/9] md: add new helpers for sync_action
-Date: Mon, 20 May 2024 19:51:25 +0800
-In-reply-to: <20240509011900.2694291-4-yukuai1@huaweicloud.com>
-Message-ID: <v838ekaa.fsf@damenly.org>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Q6vBVsKK"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1ed5cbf7b49so10538025ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 05:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716208731; x=1716813531; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bo/G+8nnOMat7xurVFhAlkVWwon9h/q0L1+qoEc1F20=;
+        b=Q6vBVsKKDWqfJM94tYNvg+LUB+eQbrG/JSgu4AgNFbKBIJ25TZn8Os3o8VWq0sEfHg
+         PeCkg+6o13P1OeTMhfxr6qm3CKkHA7KzXo/8B1UhE1a0Jw4yBBJ8MY0g4n1pdsyegQ0E
+         cnA9mXulE2SJeSGKBR2oLzxySnDZq+L8iPPxNuoFuFjsGZj7W6AkS2Z+ZWv/Cj1/ej8k
+         kWn7ePPcOW4vCMsdTGwwrosEui3GXjxhAKX4WM2lPpbteqKtGf9wGgswwhNhoqBuMjjC
+         OTgz3SEqlHc3YqDH+reywDtI7fFSsKBjw7J/S4UklqRGLm8lPMRTQ4PMnGTsrN/W8dTi
+         //IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716208731; x=1716813531;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bo/G+8nnOMat7xurVFhAlkVWwon9h/q0L1+qoEc1F20=;
+        b=BZhxs9M18p9bWq/OKGsy3dRjeHOnfcWpEKAdsZ4oKbvtxcM3EEZY9KDvkN3sTn8XcC
+         Slg1LLEDJMcMEvkI/XU7MCEsiIccghIyCTMZlLXsmNVg/w21LJcvjrgk7eYY8jEpKOUh
+         62QgmgX6pBL++VLDC7oSV8PS2CJP0em6bhLNviYYVg7m6jTkm7/X303JGdgV3ZMNCoBB
+         ue9oqGYICgjtCzCr44AJsytkLaeytREOUZkAWi971jBL/MtiGfX5p9QrYYp5WZzg2lVD
+         +BOHSvhO9Ln/kIXPGSFha4//io3pR4F+bbuDM2xS6mwB6RqDSJkE8AmM5BPUu+dSM+Do
+         7GUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiBbPqideS+Y2RPOaOn0bEWmwMroNl8z+F0X1K6YfENdGZFk3+PLQ5GJdCq0t7M8xvbJrWWAvVacGqT7qt8nlfPOsWLAOsBirwouB3
+X-Gm-Message-State: AOJu0Yyzkv5aVOvUQBDjuakVqk4kt7dfKsBr0hzhnf+VpUmKGm5Nd/N4
+	pejKx3oSwukqvU7LUf4xS2MSwXKTAJ6cOL/kZ0uEG1Wa77XvTv58dbG0q4dbYKA=
+X-Google-Smtp-Source: AGHT+IEj4WJNROlYb/yO972JMvwOypAjnVuorBG9UAYWGg4hOoOGWTZThXsmI8SyaQBiAm/zlKINYQ==
+X-Received: by 2002:a17:903:11d2:b0:1e5:1138:e299 with SMTP id d9443c01a7336-1ef43d0fb20mr323181575ad.1.1716208731178;
+        Mon, 20 May 2024 05:38:51 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c16093fsm202054565ad.281.2024.05.20.05.38.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 May 2024 05:38:50 -0700 (PDT)
+Message-ID: <5041977d-0d22-4cbb-89c3-b950c7fb1a21@kernel.dk>
+Date: Mon, 20 May 2024 06:38:48 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Authenticated-Id: l@damenly.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] signalfd: fix error return code
+To: Fedor Pchelkin <pchelkin@ispras.ru>,
+ Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alexey Khoroshilov <khoroshilov@ispras.ru>, lvc-project@linuxtesting.org
+References: <20240520090819.76342-1-pchelkin@ispras.ru>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240520090819.76342-1-pchelkin@ispras.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 5/20/24 3:08 AM, Fedor Pchelkin wrote:
+> If anon_inode_getfile() fails, return appropriate error code. This looks
+> like a single typo: the similar code changes in timerfd and userfaultfd
+> are okay.
 
-On Thu 09 May 2024 at 09:18, Yu Kuai <yukuai1@huaweicloud.com> 
-wrote:
+Oops yes, that's my bad.
 
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> The new helpers will get current sync_action of the array, will 
-> be used
-> in later patches to make code cleaner.
->
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md.c | 64 
->  +++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/md/md.h |  3 +++
->  2 files changed, 67 insertions(+)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 00bbafcd27bb..48ec35342d1b 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -69,6 +69,16 @@
->  #include "md-bitmap.h"
->  #include "md-cluster.h"
->
-> +static char *action_name[NR_SYNC_ACTIONS] = {
->
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-Th array will not be modified, so:
+-- 
+Jens Axboe
 
-static const char * const action_names[NR_SYNC_ACTIONS]
-
-> +	[ACTION_RESYNC]		= "resync",
-> +	[ACTION_RECOVER]	= "recover",
-> +	[ACTION_CHECK]		= "check",
-> +	[ACTION_REPAIR]		= "repair",
-> +	[ACTION_RESHAPE]	= "reshape",
-> +	[ACTION_FROZEN]		= "frozen",
-> +	[ACTION_IDLE]		= "idle",
-> +};
-> +
->  /* pers_list is a list of registered personalities protected by 
->  pers_lock. */
->  static LIST_HEAD(pers_list);
->  static DEFINE_SPINLOCK(pers_lock);
-> @@ -4867,6 +4877,60 @@ metadata_store(struct mddev *mddev, const 
-> char *buf, size_t len)
->  static struct md_sysfs_entry md_metadata =
->  __ATTR_PREALLOC(metadata_version, S_IRUGO|S_IWUSR, 
->  metadata_show, metadata_store);
->
-> +enum sync_action md_sync_action(struct mddev *mddev)
-> +{
-> +	unsigned long recovery = mddev->recovery;
-> +
-> +	/*
-> +	 * frozen has the highest priority, means running sync_thread 
-> will be
-> +	 * stopped immediately, and no new sync_thread can start.
-> +	 */
-> +	if (test_bit(MD_RECOVERY_FROZEN, &recovery))
-> +		return ACTION_FROZEN;
-> +
-> +	/*
-> +	 * idle means no sync_thread is running, and no new 
-> sync_thread is
-> +	 * requested.
-> +	 */
-> +	if (!test_bit(MD_RECOVERY_RUNNING, &recovery) &&
-> +	    (!md_is_rdwr(mddev) || !test_bit(MD_RECOVERY_NEEDED, 
-> &recovery)))
-> +		return ACTION_IDLE;
-My brain was lost sometimes looking into nested conditions of md 
-code...
-I agree with Xiao Ni's suggestion that more comments about the 
-array
-state should be added.
-
-> +	if (test_bit(MD_RECOVERY_RESHAPE, &recovery) ||
-> +	    mddev->reshape_position != MaxSector)
-> +		return ACTION_RESHAPE;
-> +
-> +	if (test_bit(MD_RECOVERY_RECOVER, &recovery))
-> +		return ACTION_RECOVER;
-> +
->
-In action_show, MD_RECOVERY_SYNC is tested first then 
-MD_RECOVERY_RECOVER.
-After looking through the logic of MD_RECOVERY_RECOVER 
-clear/set_bit, the
-change is fine to me. However, better to follow old pattern unless 
-there
-have resons.
-
-
-> +	if (test_bit(MD_RECOVERY_SYNC, &recovery)) {
-> +		if (test_bit(MD_RECOVERY_CHECK, &recovery))
-> +			return ACTION_CHECK;
-> +		if (test_bit(MD_RECOVERY_REQUESTED, &recovery))
-> +			return ACTION_REPAIR;
-> +		return ACTION_RESYNC;
-> +	}
-> +
-> +	return ACTION_IDLE;
-> +}
-> +
-> +enum sync_action md_sync_action_by_name(char *page)
-> +{
-> +	enum sync_action action;
-> +
-> +	for (action = 0; action < NR_SYNC_ACTIONS; ++action) {
-> +		if (cmd_match(page, action_name[action]))
-> +			return action;
-> +	}
-> +
-> +	return NR_SYNC_ACTIONS;
-> +}
-> +
-> +char *md_sync_action_name(enum sync_action action)
->
-
-And 'const char *'
-
---
-Su
-
-> +{
-> +	return action_name[action];
-> +}
-> +
->  static ssize_t
->  action_show(struct mddev *mddev, char *page)
->  {
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 2edad966f90a..72ca7a796df5 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -864,6 +864,9 @@ extern void md_unregister_thread(struct 
-> mddev *mddev, struct md_thread __rcu **t
->  extern void md_wakeup_thread(struct md_thread __rcu *thread);
->  extern void md_check_recovery(struct mddev *mddev);
->  extern void md_reap_sync_thread(struct mddev *mddev);
-> +extern enum sync_action md_sync_action(struct mddev *mddev);
-> +extern enum sync_action md_sync_action_by_name(char *page);
-> +extern char *md_sync_action_name(enum sync_action action);
->  extern bool md_write_start(struct mddev *mddev, struct bio 
->  *bi);
->  extern void md_write_inc(struct mddev *mddev, struct bio *bi);
->  extern void md_write_end(struct mddev *mddev);
