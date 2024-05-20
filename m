@@ -1,307 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-out.freemail.hu (fmfe00.freemail.hu [46.107.16.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6877D13A418
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418BD13A417;
+	Mon, 20 May 2024 17:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226051; cv=none; b=kfS+En8/WnH6wj8oKGTNq19lXa8jopNSlHfHokjEdJUC41t18tAzX9AJYXbvQP2QXoFBX+JC+6phjM3mJdAeom8xpylAJr33KGKrgwsaHGzKVqiT1RutLuVcIenTKTSbruZdXInh9KaPM+f399EGZcqFrhpFcbBp1MYorMvKV04=
+	t=1716226052; cv=none; b=MUzV8m/ys4WmMKoKmTrhc4lRiNkE2tdpHLYihDWrsAjzA6lWNs+/Nl6dLKruE2M5joGDD4Tgb6UznRY9FQS9lZu/5KBfVbJ2eUDI7Wd6WpgLEhZIEDENGB8/a9KypNeDQfb5KICllsy8cV1pA2hAeRIO5P5tRzu5zRJAnsua87A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226051; c=relaxed/simple;
-	bh=Pf+OOnuHz5mcZsGqaVhIEIMHurAZcjaBobj/NJHA3CI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MlfV8YKP9TT4wb7nqTJLfgrzw57LTsXxUs73Vw4k03KHqzqjyZHBWrtKEFq862/0IkcnMNRSK9p1xDAH/34tKZSuPxZEGhypruHqpk/P0ii7ZBNVvXb3pavEtqRJo/RqM5avHvY4HSYOAbLlpE8xg3vx11SsJqmGw0JnlvTwqy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SvzrCzGo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716226052; c=relaxed/simple;
+	bh=hZ9BTpanyVdzRqlVTlS9UoiB+8CRYDf1nsuDDju6yYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bjWe3WIT+jwh8GbAI3efVWM7qMPOEBaL6Nc2dvlPC3orxsAv8c7Hj0+tzfE1p2wYsSE3Z0ArRtMIGrOyrnB5S//52fnOc4hDkNqysfudnPS0SaXA+fg/pStQxCngfZUb9Lt27/+TRGYCfMXiB8mdbSpTYaibTcvDKJh2Hg+ka5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=bXIVpLoz reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SvzrCzGo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716226048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1CsnJXGBZcLyYjfrlAMv2FyBTh8bc+Mt3a3EbW5Rnks=;
-	b=SvzrCzGo9wb2DXXlFn5leFcfH0Ok8ax85GHnujv3sSaCXzxc3fWYxmyILkAFDSveCfq+iU
-	A1TwcOIIArL8YwJdMh1bPX9pIykLt/VPoZjbgRY8Vvgjt47mvAtXLQmN050AbjHfibPAsx
-	ZR/IFYijSgZl+lY4rhFyrusppqWZlKs=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-Gp4t6pQcOKab6F_be5iwVg-1; Mon, 20 May 2024 13:27:26 -0400
-X-MC-Unique: Gp4t6pQcOKab6F_be5iwVg-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2e3208c29abso103894141fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:27:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716226045; x=1716830845;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1CsnJXGBZcLyYjfrlAMv2FyBTh8bc+Mt3a3EbW5Rnks=;
-        b=TOImeyVpe0RVKgP6uHsnGm3dFCxtc0EjKq+qjHfkexAgQ40uY2ab/tzg3CMDnsT4lo
-         poHTpx5vWzioAn1/qOS0hc5qEG3L9FGKebkvlNUUsvOmHH+2WZD2vAGw4ui8hEToEjtu
-         rJ3vqCBpoD62G9+sTsUxmKxwR9EXIdEI/A/ZGqvZU/tSKDw8c78FiZ+kbnxBBE3PRiYR
-         l/RVYNhRSOxDOEtCS8l79cioWBJcu45hB5qxhBWWlpSXycLK7X/BQKqC+13/oHjTHeb/
-         WEteUbrKjuuhgL22Bzb9Z3KcK+45NmQAxtlaDjelTd5okTxoUycVj2kvc04dXpjz8Gsy
-         fLYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzQwwt4GWLl6FMn6QMhs/0g527GMYmS30/mB2jSkshruuc3ZIeX4A6l86BiW1CdER9T6+e9D9zClVSu6qxRdKGcZy+dBbzV6w/K9RI
-X-Gm-Message-State: AOJu0YyjYP93EL6J1PHwXhrALob0YepZ8+JAazXqdN+SSEsw/fre15Fi
-	exixOEMHEl4X4tPGPH0Pp5bUP7AUa7BpqTdvPmIr7Ge8PZT0e++fsOMQ6P30rfuG+MuYBFcTjt8
-	fzHh8+QTF9UnyhC/Ta3ZnClechu74eyYMdVHrZCikKP/ujmsXEI++4Wf9IMwbCA==
-X-Received: by 2002:a2e:be9f:0:b0:2e3:ba0e:de12 with SMTP id 38308e7fff4ca-2e51ff5cf48mr319538881fa.22.1716226045291;
-        Mon, 20 May 2024 10:27:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHbLE5+nNhphlxlGh18a3Zy/HbW451IH7B3zyMvPHBImYdCotrNMydqRvyk8NUf6/7klPUZ8Q==
-X-Received: by 2002:a2e:be9f:0:b0:2e3:ba0e:de12 with SMTP id 38308e7fff4ca-2e51ff5cf48mr319538611fa.22.1716226044936;
-        Mon, 20 May 2024 10:27:24 -0700 (PDT)
-Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42009eda143sm363816305e9.14.2024.05.20.10.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 10:27:24 -0700 (PDT)
-From: Danilo Krummrich <dakr@redhat.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	bhelgaas@google.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	wedsonaf@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	airlied@gmail.com,
-	fujita.tomonori@gmail.com,
-	lina@asahilina.net,
-	pstanner@redhat.com,
-	ajanulgu@redhat.com,
-	lyude@redhat.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>
-Subject: [RFC PATCH 08/11] rust: add devres abstraction
-Date: Mon, 20 May 2024 19:25:45 +0200
-Message-ID: <20240520172554.182094-9-dakr@redhat.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240520172554.182094-1-dakr@redhat.com>
-References: <20240520172554.182094-1-dakr@redhat.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="bXIVpLoz"
+Received: from [192.168.0.16] (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.freemail.hu (Postfix) with ESMTPSA id 4Vjkpp6dq1zqc;
+	Mon, 20 May 2024 19:20:18 +0200 (CEST)
+Message-ID: <9ae65e3c-f1fa-4ca9-8d74-12d92c51c5c6@freemail.hu>
+Date: Mon, 20 May 2024 19:20:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] spidev: Introduce "linux,spidev-name" property for
+ device tree of spidev.
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240519211346.30323-1-egyszeregy@freemail.hu>
+ <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
+Content-Language: hu, en-US
+From: =?UTF-8?Q?Sz=C5=91ke_Benjamin?= <egyszeregy@freemail.hu>
+In-Reply-To: <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1716225620;
+	s=20181004; d=freemail.hu;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	l=3028; bh=cvIOdk4xUZa+dLTqg5VA9e7Melwr8hlOaowEyxAGAac=;
+	b=bXIVpLozECHnvAP90I3d0K9994PrGE0swuIbqqeq77SjTOhiokcktCTix+gfkE9e
+	8FehBfGyU+zH7ycndbsuXdwKLx5lmG3U6eTo/poY4Ydb0phNaEQFXaBDuHMMSJxbgzK
+	uBSR+L7zVqdqyGPXz9eb/JpxRfA1nQ6EFYofVn/AA0tj/T6G3mHFkVq/EgPRHU7/dwP
+	y+ZhVCC+zJwTtQDw2Lepwvl3kHllWVf/7GkkHYVa89MSl0WfHyB92+sjhxix9jfzr7X
+	VEiEW1lIG1M4NlPx4NFmQOZoA5AzzYI90PX78nNFfx4c/cDECyJeqa3vQ/7nVmEB5EM
+	JI+vvv0e8g==
 
-Add a Rust abstraction for the kernel's devres (device resource
-management) implementation.
+2024. 05. 20. 15:20 keltezéssel, Mark Brown írta:
+> On Sun, May 19, 2024 at 11:13:46PM +0200, egyszeregy@freemail.hu wrote:
+>> From: Benjamin Szőke <egyszeregy@freemail.hu>
+>>
+>> Optionally, spidev may have a "linux,spidev-name" property.
+>> This is a string which is defining a custom suffix name for spi device in
+>> /dev/spidev-<name> format. It helps to improve software portability between
+>> various SoCs and reduce complexities of hardware related codes in SWs.
+> 
+> This seems like what udev rules are for?
 
-The Devres type acts as a container to manage the lifetime and
-accessibility of device bound resources. Therefore it registers a
-devres callback and revokes access to the resource on invocation.
+Hi,
 
-Users of the Devres abstraction can simply free the corresponding
-resources in their Drop implementation, which is invoked when either the
-Devres instance goes out of scope or the devres callback leads to the
-resource being revoked, which implies a call to drop_in_place().
+Goal of this patch is to introduce this new mode to assign a custom name from 
+lowlevel device tree to a spidev device. As i know udev can do it, but to do it 
+from device tree is the best and easier way for this feature in my opinion.
 
-Co-developed-by: Philipp Stanner <pstanner@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
----
- rust/helpers.c        |   5 ++
- rust/kernel/devres.rs | 151 ++++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs    |   1 +
- 3 files changed, 157 insertions(+)
- create mode 100644 rust/kernel/devres.rs
+It is more maintainable then use udev in userspace for it.
+For example there are three different SoCs: i.MX7, i.MX9, ZynqMP.
 
-diff --git a/rust/helpers.c b/rust/helpers.c
-index 1d3e800140fc..34061eca05a0 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -173,6 +173,11 @@ void rust_helper_rcu_read_unlock(void)
- EXPORT_SYMBOL_GPL(rust_helper_rcu_read_unlock);
- /* end rcu */
- 
-+int rust_helper_devm_add_action(struct device *dev, void (*action)(void *), void *data)
-+{
-+	return devm_add_action(dev, action, data);
-+}
-+
- /*
-  * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
-  * use it in contexts where Rust expects a `usize` like slice (array) indices.
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-new file mode 100644
-index 000000000000..bf7bd304cd9b
---- /dev/null
-+++ b/rust/kernel/devres.rs
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Devres abstraction
-+//!
-+//! [`Devres`] represents an abstraction for the kernel devres (device resource management)
-+//! implementation.
-+
-+use crate::{
-+    alloc::Flags,
-+    bindings,
-+    device::Device,
-+    error::{Error, Result},
-+    prelude::*,
-+    revocable::Revocable,
-+    types::ARef,
-+};
-+
-+use core::ffi::c_void;
-+use core::ops::Deref;
-+
-+#[pin_data]
-+struct DevresInner<T> {
-+    dev: ARef<Device>,
-+    #[pin]
-+    data: Revocable<T>,
-+}
-+
-+/// This abstraction is meant to be used by subsystems to containerize [`Device`] bound resources to
-+/// manage their lifetime.
-+///
-+/// [`Device`] bound resources should be freed when either the resource goes out of scope or the
-+/// [`Device`] is unbound respectively, depending on what happens first.
-+///
-+/// To achieve that [`Devres`] registers a devres callback on creation, which is called once the
-+/// [`Device`] is unbound, revoking access to the encapsulated resource (see also [`Revocable`]).
-+///
-+/// After the [`Devres`] has been unbound it is not possible to access the encapsulated resource
-+/// anymore.
-+///
-+/// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
-+/// [`Drop`] implementation.
-+///
-+/// # Example
-+///
-+/// ```
-+/// use kernel::devres::Devres;
-+///
-+/// // See also [`pci::Bar`] for a real example.
-+/// struct IoRemap(IoMem);
-+///
-+/// impl IoRemap {
-+///     fn new(usize paddr, usize len) -> Result<Self>{
-+///         // assert success
-+///         let addr = unsafe { bindings::ioremap(paddr as _); };
-+///         let iomem = IoMem::new(addr, len)?;
-+///
-+///         Ok(IoRemap(iomem))
-+///     }
-+/// }
-+///
-+/// impl Drop for IoRemap {
-+///     fn drop(&mut self) {
-+///         unsafe { bindings::iounmap(self.0.ioptr as _); };
-+///     }
-+/// }
-+///
-+/// impl Deref for IoRemap {
-+///    type Target = IoMem;
-+///
-+///    fn deref(&self) -> &Self::Target {
-+///        &self.0
-+///    }
-+/// }
-+///
-+/// let devres = Devres::new(dev, IoRemap::new(0xBAAAAAAD, 0x4)?, GFP_KERNEL)?;
-+///
-+/// let res = devres.try_access().ok_or(ENXIO)?;
-+/// res.writel(0xBAD);
-+/// ```
-+///
-+pub struct Devres<T> {
-+    inner: Pin<Box<DevresInner<T>>>,
-+    callback: unsafe extern "C" fn(*mut c_void),
-+}
-+
-+impl<T> DevresInner<T> {
-+    fn as_ptr(&self) -> *const DevresInner<T> {
-+        self as *const DevresInner<T>
-+    }
-+
-+    fn as_cptr(&self) -> *mut c_void {
-+        self.as_ptr() as *mut c_void
-+    }
-+}
-+
-+unsafe extern "C" fn devres_callback<T>(inner: *mut c_void) {
-+    let inner = inner as *const DevresInner<T>;
-+    let inner = unsafe { &*inner };
-+
-+    inner.data.revoke();
-+}
-+
-+impl<T> Devres<T> {
-+    /// Creates a new [`Devres`] instance of the give data.
-+    pub fn new(dev: ARef<Device>, data: T, flags: Flags) -> Result<Self> {
-+        let callback = devres_callback::<T>;
-+
-+        let inner = Box::pin_init(
-+            pin_init!( DevresInner {
-+                dev: dev,
-+                data <- Revocable::new(data),
-+            }),
-+            flags,
-+        )?;
-+
-+        let ret = unsafe {
-+            bindings::devm_add_action(inner.dev.as_raw(), Some(callback), inner.as_cptr())
-+        };
-+
-+        if ret != 0 {
-+            return Err(Error::from_errno(ret));
-+        }
-+
-+        // We have to store the exact callback function pointer used with
-+        // `bindings::devm_add_action` for `bindings::devm_remove_action`. There compiler might put
-+        // multiple definitions of `devres_callback<T>` for the same `T` in both the kernel itself
-+        // and modules. Hence, we might see different pointer values depending on whether we look
-+        // at `devres_callback<T>`'s address from `Devres::new` or `Devres::drop`.
-+        Ok(Devres { inner, callback })
-+    }
-+}
-+
-+impl<T> Deref for Devres<T> {
-+    type Target = Revocable<T>;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.inner.data
-+    }
-+}
-+
-+impl<T> Drop for Devres<T> {
-+    fn drop(&mut self) {
-+        unsafe {
-+            bindings::devm_remove_action(
-+                self.inner.dev.as_raw(),
-+                Some(self.callback),
-+                self.inner.as_cptr(),
-+            )
-+        }
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index d7d415429517..11645060b444 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -30,6 +30,7 @@
- pub mod alloc;
- mod build_assert;
- pub mod device;
-+pub mod devres;
- pub mod driver;
- pub mod error;
- pub mod init;
--- 
-2.45.1
+In Yocto project, the Linux image's SW environment is nicely configurable 
+independently from what is the target MACHNIE. But if i like to deploy a SW 
+which uses peripheries like gpiobanks, i2c-dev, spidev these /dev/... name will 
+be totally different on each SoCs, more over in ZynqMP and any other Adaptive 
+SoC platform, the index number for the spidev, gpiobanks or other can be not 
+deterministic if it probed in run-time. Goal is to easily make a Linux OS image 
+which can support multiple SoCs in SW point of view easily.
+
+So, in Yocto project build system point of view the best, if any Machine 
+specific settings is stored in the device tree files of the target machine in 
+driver levels/config, because it will be deterministic in 100% sure and it will 
+be nicely separated from the SW meta layers which may not contains any machine 
+specific hacking with udev and so on.
+
+So this way to assign a custom name for a spidev from device tree is more 
+efficient and more maintainable in SW developing point of view in embedded Linux 
+and Yocto/buildroot world because i need to just define a name like 
+linux,spidev-name = "sensor"; then use it with a fixed name in my generic SW 
+under /dev/spidev-sensor name. And there are no need to care about what will be 
+the index number of this spidev randomly after boot and how need to make an ugly 
+append layer for udev config and make it for all of machine variants separately.
+
+My opinion udev is ugly to use for it, and no longer beneficial for new Adaptive 
+SoCs where they can be not deterministic what kind of index number they got in 
+driver probing for many gpio, spidev, i2c-dev peripheries (you do not have info 
+about that which need to mapping for what custom name, it can be different in 
+many time based on PL FW). It is much better, safe and easier to assign this 
+custom suffix/name explicitly from device tree, moreover it is a driver related 
+things, i think the best place is in device tree for it not in a sys config file 
+for udev.
+
+DT binding would need to be documented later in a separated patch as a guideline 
+mentioned it in Linux repo.
 
