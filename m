@@ -1,150 +1,120 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91D443AB2;
-	Mon, 20 May 2024 13:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A411E87C;
+	Mon, 20 May 2024 13:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716211779; cv=none; b=Lc369pdizeX0EEMy6G9E8c9w58YM6mzIblpABFNNjX7us9pXw/XvoQ3gCvLNU1PgOi/vlAAHA+azpgsk4WtAgb3S5Xe4wIQvmwG+M2fiVnVyJvxSs4O4DPgu5tHFfWbauO+4RMHybEVfdv03ujw38Ck5ol/q6sLlMOVK8z5vi+I=
+	t=1716211822; cv=none; b=p0MPhX5oNiIQmb1+rjH0R3wHUc1fuOreiL6aWLaM1tHLEwS4HjkEmlxc4fTi2w/HYuN3hYmFi3YJWSdS5kkxIgTdHZtma6kEE2+QxPfikpX/BRyBku6MbFpOOwc9TpRGcmIYm3F7UD84LOgv+SoMHr/g5uMG4391l7LnQ33Se1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716211779; c=relaxed/simple;
-	bh=dfQ2mFPkIfsAxlVTyO4uk0ANvRgUl3qUB4NCcxQVKBM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H9muJ2xhzjNnEWH3ejFLTM/IHJb+KcoCrLvj/QasQuRzyNrzpge9+6OCVAFj/4ESoOucfZhiJsaer0W7SAVqfP9G0MGnULnKtIKzPWZUwXT/AxzFEb/ylVYORA+XDt68Xz1uZGAodII5b9JPvSVc8aDo+6wWt9OJcDY7S0CATK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VjdhM516Tz4f3jMH;
-	Mon, 20 May 2024 21:29:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 8E5871A0BCA;
-	Mon, 20 May 2024 21:29:32 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn+REpUEtmHanDNA--.33390S4;
-	Mon, 20 May 2024 21:29:30 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ritesh.list@gmail.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v2] jbd2: speed up jbd2_transaction_committed()
-Date: Mon, 20 May 2024 21:18:31 +0800
-Message-Id: <20240520131831.2910790-1-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1716211822; c=relaxed/simple;
+	bh=qfvNWKn/CQRVv/+cpmMCpprLiCzOA6G5IF/qyBsiOO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gpk8NCBnmy1GBPYQRAc1znoPkHSW2KmH1tZLOc58kqa2YU6bVP4/2kw7ey2HgFm4DazYPXW1PcfcyA461AoJ0768c2h7fpx+r0/oqYpuwlb+u8RA933G+TcET83gV1rpXB9zzKds6malH8azet8lEpfVzywomU+erHRWimHDrRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=KngA7ggd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jcQS+Dwp; arc=none smtp.client-ip=64.147.123.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="KngA7ggd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jcQS+Dwp"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 1F8EC1800113;
+	Mon, 20 May 2024 09:30:19 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 20 May 2024 09:30:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1716211818; x=1716298218; bh=oa2W4qjwd3
+	7BEc4YnG8uAq9YoHRdThoet19LMJypOJk=; b=KngA7ggdi0drYPof5o7hwmTHRG
+	S1IU/jqt9f39+LLVVayq0jCaruRqJLTNA7Ks8icMsmbv0cfVRKGccFi1pljVa866
+	SYJhvYcWV71/wPhdtsupKguUSphYy8FMJmGL+5CUUFDCMZuKdCPQj2IYpCuetuId
+	Ng4rjvr5M8VMsDg73uJZbUx7uiSmEl3qt2cXtvH0vlyNJsSJNqzIt2nw6mWG3ueS
+	S3bBtq351+HqbQaocyOy1b5Kkgu/XtWYxn0VotlTQg9VSZ25xjNw+EzqymjBmTTS
+	5jPxtYWLB11th1PnC8tJJ65cUBo/TnEkX2taPHdxyflnBj/zCniAj+McRJxA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1716211818; x=1716298218; bh=oa2W4qjwd37BEc4YnG8uAq9YoHRd
+	Thoet19LMJypOJk=; b=jcQS+DwpjR6VeZzuQ0pdwmbkcf2+ELvd20o2DZOzD9JW
+	K1Ouc82eECZh2CUyAZmcpgiJ7Aj+RGF+radye4kAqANBgqeSFC5Kc2RS6r73Qq78
+	wQavmUkdh4ZZyLtkeXSLaEfd/rnlxvhQ4uOL9a+JLfA5zqGV6o/L9jVXO/oK0LQx
+	bcN0cQZ5j0UEtgvbU4c3Qm2USaSBWjT68DDFLctcd6yIURrxVx1cxwHiBjvS0/2V
+	AXPv1wbwPmFkFQ8Xz7F5VxiJnuNqQrcN4kcGxKU6hstqC/KeJC34xetLKaWaTR8n
+	0zOYgO/KgxUDu+2UCJP2h3fO5zWI+MJIk5LWg8D3Qw==
+X-ME-Sender: <xms:aVBLZgSicgZjJPlIVVmqiGzabXmY7U6W-0cf6XlPPGb9FjAoRo3i3Q>
+    <xme:aVBLZtyvBNjibT9OIXMtuxSODDNt60MW4Zx1rQGGupWpM5STLV47xJdGO5ceQHoNp
+    Hn6WzBjyUeeWu9cDQM>
+X-ME-Received: <xmr:aVBLZt3gLg6GCxVnil1t54Zgi9M7nf9iJDLZJfgCKaz2OGOO9cDYTRLuhNRlBinQj-htlu-2o_0zCBcSoxwySoI5og>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeitddggeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihtghh
+    ohcutehnuggvrhhsvghnuceothihtghhohesthihtghhohdrphhiiiiirgeqnecuggftrf
+    grthhtvghrnhepleevudetgefhheekueekhfduffethfehteeftdfhvefgteelvedvudev
+    teeufeehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehthigthhhosehthigthhhordhpihii
+    iigr
+X-ME-Proxy: <xmx:aVBLZkC4m14s5n4tEp3avfH807qvPwncZ2I4Y8fgrQLUIdPf_FIzKA>
+    <xmx:aVBLZpi3GscB2ljoVCtHmBhYuWCIGQjJd8VIwqqSfz5mb8dIqOnIjg>
+    <xmx:aVBLZgpYWVjDC5IVwGQHAI3G5RpzgHOfzQpd-FVNiarwtvRY71MrWQ>
+    <xmx:aVBLZsgJ-Srgc7YF2SLDksEcZPHG5z1ImBm8SgQp1vv6jyTYTnoSJQ>
+    <xmx:alBLZoT0XhJL2dv8tXkxE_p1f3DxUlYY4oWx8zECBUg_U-dVblg9I4z5>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 20 May 2024 09:30:15 -0400 (EDT)
+Date: Mon, 20 May 2024 07:30:14 -0600
+From: Tycho Andersen <tycho@tycho.pizza>
+To: Jonathan Calmels <jcalmels@3xx0.net>
+Cc: brauner@kernel.org, ebiederm@xmission.com,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, containers@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 3/3] capabilities: add cap userns sysctl mask
+Message-ID: <ZktQZi5iCwxcU0qs@tycho.pizza>
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <20240516092213.6799-4-jcalmels@3xx0.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn+REpUEtmHanDNA--.33390S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr4fur4kJry8ZF47Cw47CFg_yoW5ZF4xpr
-	yxCw17trykZ34xurn7Xr4kXFWjvanYya4UXrZF93Z3Za1Utw1xK3y2qryavryqyFs5Ww48
-	XF15ur1DKw1j9a7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
-	UdHUDUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240516092213.6799-4-jcalmels@3xx0.net>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+Hi Jonathan,
 
-jbd2_transaction_committed() is used to check whether a transaction with
-the given tid has already committed, it holds j_state_lock in read mode
-and check the tid of current running transaction and committing
-transaction, but holding the j_state_lock is expensive.
+On Thu, May 16, 2024 at 02:22:05AM -0700, Jonathan Calmels wrote:
+> +int proc_cap_userns_handler(struct ctl_table *table, int write,
+> +			    void *buffer, size_t *lenp, loff_t *ppos)
+> +{
 
-We have already stored the sequence number of the most recently
-committed transaction in journal t->j_commit_sequence, we could do this
-check by comparing it with the given tid instead. If the given tid isn't
-smaller than j_commit_sequence, we can ensure that the given transaction
-has been committed. That way we could drop the expensive lock and
-achieve about 10% ~ 20% performance gains in concurrent DIOs on may
-virtual machine with 100G ramdisk.
+there is an ongoing effort (started at [0]) to constify the first arg
+here, since you're not supposed to write to it. Your usage looks
+correct to me, so I think all it needs is a literal "const" here.
 
-fio -filename=/mnt/foo -direct=1 -iodepth=10 -rw=$rw -ioengine=libaio \
-    -bs=4k -size=10G -numjobs=10 -runtime=60 -overwrite=1 -name=test \
-    -group_reporting
+[0]: https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
 
-Before:
-  overwrite       IOPS=88.2k, BW=344MiB/s
-  read            IOPS=95.7k, BW=374MiB/s
-  rand overwrite  IOPS=98.7k, BW=386MiB/s
-  randread        IOPS=102k, BW=397MiB/s
+> +	struct ctl_table t;
+> +	unsigned long mask_array[2];
+> +	kernel_cap_t new_mask, *mask;
+> +	int err;
+> +
+> +	if (write && (!capable(CAP_SETPCAP) ||
+> +		      !capable(CAP_SYS_ADMIN)))
+> +		return -EPERM;
 
-After:
-  overwrite       IOPS=105k, BW=410MiB/s
-  read            IOPS=112k, BW=436MiB/s
-  rand overwrite  IOPS=104k, BW=404MiB/s
-  randread        IOPS=111k, BW=432MiB/s
+...why CAP_SYS_ADMIN? You mention it in the changelog, but don't
+explain why.
 
-CC: Dave Chinner <david@fromorbit.com>
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Link: https://lore.kernel.org/linux-ext4/ZjILCPNZRHeazSqV@dread.disaster.area/
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
-v1->v2:
- - Add READ_ONCE and WRITE_ONCE to access ->j_commit_sequence
-   concurrently.
- - Keep the jbd2_transaction_committed() helper.
-
- fs/jbd2/commit.c  |  2 +-
- fs/jbd2/journal.c | 12 +-----------
- 2 files changed, 2 insertions(+), 12 deletions(-)
-
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 5e122586e06e..8244cab17688 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -1108,7 +1108,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 
- 	commit_transaction->t_state = T_COMMIT_CALLBACK;
- 	J_ASSERT(commit_transaction == journal->j_committing_transaction);
--	journal->j_commit_sequence = commit_transaction->t_tid;
-+	WRITE_ONCE(journal->j_commit_sequence, commit_transaction->t_tid);
- 	journal->j_committing_transaction = NULL;
- 	commit_time = ktime_to_ns(ktime_sub(ktime_get(), start_time));
- 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index b6c114c11b97..cc586e3c4ee1 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -789,17 +789,7 @@ EXPORT_SYMBOL(jbd2_fc_end_commit_fallback);
- /* Return 1 when transaction with given tid has already committed. */
- int jbd2_transaction_committed(journal_t *journal, tid_t tid)
- {
--	int ret = 1;
--
--	read_lock(&journal->j_state_lock);
--	if (journal->j_running_transaction &&
--	    journal->j_running_transaction->t_tid == tid)
--		ret = 0;
--	if (journal->j_committing_transaction &&
--	    journal->j_committing_transaction->t_tid == tid)
--		ret = 0;
--	read_unlock(&journal->j_state_lock);
--	return ret;
-+	return tid_geq(READ_ONCE(journal->j_commit_sequence), tid);
- }
- EXPORT_SYMBOL(jbd2_transaction_committed);
- 
--- 
-2.39.2
-
+Tycho
