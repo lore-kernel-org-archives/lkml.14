@@ -1,125 +1,126 @@
-Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7119613699A
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B1E13699B;
+	Mon, 20 May 2024 14:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716216897; cv=none; b=BRVfWnZqcUYROGHRdfBsg/1X/49s0IxqlCanvRfCIpYwHnxoCQ3cWYUAaxg6wRDW+TEZZoXlaMniaRNsyL+lGcq8TRjl8a5TpPyCjpqqEg4qAa99kJzIn60CyStOM9+I7rzYs1yI2cYwZL+Fh78FlR8HJbx4+XEE+kWZVx3/PdA=
+	t=1716216982; cv=none; b=PPv52V7lbjxigqhnfNusdJh826I+yUYvHRKPA5Mzju3Q+O+9qpmTtyCeuzoms5miZlDKVTMxSCyNh0M7nU4EtTujlinfAsCBH4F7hnRuCNuv/x3yM1Q1OBGrHarE5KTetKS67r1Dms3QuSqQQg2H7N9xempSIf+MwluO8MZ1Wns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716216897; c=relaxed/simple;
-	bh=clpyNQpvD2QjEkJaOz5hsXiNkIjsCTbRMlRun10p+Hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cDFdoaJY2EUpVxbSJWalzZcvVY+kNKazrtJ8x3YehmyfUBHN6k85Aw/P7K5LbYZA4w8NMhB//tG8Cjfg+mX5M1uaz6e2XNX72vlPVy60pdDYRIRa8hEzWWxa2UaqEaE79ls4rnGwLZRc9BPcjWhQPj8j7mx6PA8ZvJvccO1rTjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=cPklxUCL; arc=none smtp.client-ip=178.154.239.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1716216982; c=relaxed/simple;
+	bh=r016ACG9rLPHqBFAH7IwIq8KsAEq11uLlcFIl+XU3CI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JUxmSDu5GJteUyJiTE5SsCpFrHtEIeZ6OCtguo7tWxzGYTnheJZiIErj8xAtdqIhIEhgqJERrm8RzRJZooTVEFxM+WdubdQJHLhuWO/muZ81Q7Q1GjQOazTXOmmZAQ+WWElKMEb47DlDFp1QzQwxCeASbmW8MeWBgZ3dDvor26M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K0J4/JRK; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="cPklxUCL"
-Received: from mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:c10a:0:640:882f:0])
-	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id 9FD8E60A56;
-	Mon, 20 May 2024 17:51:26 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:8810::1:2c])
-	by mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id uoJQX60IfOs0-Q0v947GF;
-	Mon, 20 May 2024 17:51:25 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1716216685;
-	bh=Ype1Fb5hqSSEjjtIwCnPzpbYPBKN0xi6g1o6op9FVBc=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=cPklxUCLMTmMSZtCeZFXAr0nzBmcB7nUUk7qIlxmXaAIrbSQz8KVLY655LJl0Wudq
-	 QUbhiExTTZblIsAUZO4Qv0IP61IwnwqKfuJ+wc+viK+arJf0Vsmeg5Hk/7xe/I1/TY
-	 6QlOcoUvID/PwEmdLBKJrieOazag8RuurjgANBNQ=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nikolay Kuratov <kniv@yandex-team.ru>
-Subject: [PATCH] x86/numa: Bump NR_NODE_MEMBLKS to MAX_NUMNODES * 4
-Date: Mon, 20 May 2024 17:50:21 +0300
-Message-Id: <20240520145021.1528151-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K0J4/JRK"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44KEhEEL023548;
+	Mon, 20 May 2024 14:56:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=k8LthJaFono5kzefOLh4BpFlOGemu1pGW+k0msP+I4Y=;
+ b=K0J4/JRKbpzYapY0L2S8Q9yiyrgoCqpkVHqfyhmcQKXctmLMR63b1B0F7SkrwRqWlKNo
+ uZ61Wq2UWu5Hq91ibUc6D2rpnoyLyaBSWeCwAW6veNAcdkN2eyqcw4zr+2L4buJz2hzk
+ 5pWLpBNBLLnm/IUdx2iT3reaIz2ZkXIQlH07hDY+D6nPI6464xS08GbOfzgh4hnh7ha6
+ 8Oev4NMJQ9YUMtz3GNyH9jzTv4T/cLKDFpL4zlcSlnRKOY0Ad9IEIG29O6ZMQE8E79qN
+ qvCyoFoJDUopIxTL5WfS/6jc3dGzJMQ1JMdQbI0FPUzQWGRwN3k0g3U7mh1qZjpWmJBO kg== 
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y88h901ey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 14:56:10 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44KCV6vX000878;
+	Mon, 20 May 2024 14:56:10 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y77200fs7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 14:56:10 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44KEu7gw28115624
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 May 2024 14:56:10 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9C28858060;
+	Mon, 20 May 2024 14:56:07 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6DB4E5805C;
+	Mon, 20 May 2024 14:56:07 +0000 (GMT)
+Received: from [9.61.17.2] (unknown [9.61.17.2])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 May 2024 14:56:07 +0000 (GMT)
+Message-ID: <f23e2669-c5b9-4257-ad75-f1431690a544@linux.ibm.com>
+Date: Mon, 20 May 2024 09:56:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] dt-bindings: i2c: i2c-fsi: Convert to json-schema
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
+        andi.shyti@kernel.org
+References: <20240514205454.158157-1-eajames@linux.ibm.com>
+ <79bed5c3-14be-4f15-a2f8-2e2342cb6b57@kernel.org>
+Content-Language: en-US
+From: Eddie James <eajames@linux.ibm.com>
+In-Reply-To: <79bed5c3-14be-4f15-a2f8-2e2342cb6b57@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IBG5_ypo9PzQetmL-qX-ZWH2SCXS76R_
+X-Proofpoint-ORIG-GUID: IBG5_ypo9PzQetmL-qX-ZWH2SCXS76R_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-20_05,2024-05-17_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=816
+ malwarescore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405200120
 
-With modern AMD EPYC platform we're able to spot 3
-memblocks per NUMA, so bump MAX_NUMNODES multiplier
-from 2 to 4. Problem becomes apparent if MAX_NUMNODES
-close enough to real amount of nodes and leaves us with
-`too many memblk ranges` dmesg error.
 
-Bump also maximal count of immovable regions accordingly.
+On 5/19/24 13:03, Krzysztof Kozlowski wrote:
+> On 14/05/2024 22:54, Eddie James wrote:
+>
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ibm,i2c-fsi
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: FSI slave address
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +patternProperties:
+>> +  "^i2c(@.*)?":
+> Either you have or you have not unit addresses. Please fix the pattern.
+> Why is this so flexible? Do you want to deprecate i2c-bus in favor of
+> i2c? If so, then example should use new naming. I am fine with children
+> as i2c-bus, assuming this is allowed by dtschema. Did you actually test it?
 
-Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
----
- If overhead related to doubled arrays is too undesirable
- maybe we should consider config option for this? It appears that
- NR_NODE_MEMBLKS used only on LoongArch and x86 (macro in asm-generic
- is orphane).
 
- arch/x86/boot/compressed/acpi.c | 6 +++---
- arch/x86/boot/compressed/misc.h | 2 +-
- arch/x86/include/asm/numa.h     | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+This is the exact pattern of the i2c-controller schema node name, which 
+I thought would be good. I can make it more specific. But yes I tested 
+it, i2c-bus works fine
 
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index f196b1d1ddf8..74575a900924 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -17,9 +17,9 @@
- 
- /*
-  * Immovable memory regions representation. Max amount of memory regions is
-- * MAX_NUMNODES*2.
-+ * MAX_NUMNODES*4.
-  */
--struct mem_vector immovable_mem[MAX_NUMNODES*2];
-+struct mem_vector immovable_mem[MAX_NUMNODES*4];
- 
- static acpi_physical_address
- __efi_get_rsdp_addr(unsigned long cfg_tbl_pa, unsigned int cfg_tbl_len)
-@@ -305,7 +305,7 @@ int count_immovable_mem_regions(void)
- 				num++;
- 			}
- 
--			if (num >= MAX_NUMNODES*2) {
-+			if (num >= ARRAY_SIZE(immovable_mem)) {
- 				debug_putstr("Too many immovable memory regions, aborting.\n");
- 				return 0;
- 			}
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index b353a7be380c..a756569852e5 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -174,7 +174,7 @@ static inline acpi_physical_address get_rsdp_addr(void) { return 0; }
- #endif
- 
- #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
--extern struct mem_vector immovable_mem[MAX_NUMNODES*2];
-+extern struct mem_vector immovable_mem[MAX_NUMNODES*4];
- int count_immovable_mem_regions(void);
- #else
- static inline int count_immovable_mem_regions(void) { return 0; }
-diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
-index ef2844d69173..057eafe6fed5 100644
---- a/arch/x86/include/asm/numa.h
-+++ b/arch/x86/include/asm/numa.h
-@@ -10,7 +10,7 @@
- 
- #ifdef CONFIG_NUMA
- 
--#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
-+#define NR_NODE_MEMBLKS		(MAX_NUMNODES*4)
- 
- extern int numa_off;
- 
--- 
-2.34.1
 
+Thanks, Eddie
+
+
+>
+> Best regards,
+> Krzysztof
+>
