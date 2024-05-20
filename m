@@ -1,89 +1,135 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B574F12B8B;
-	Mon, 20 May 2024 07:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0170A1B7F7
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716190856; cv=none; b=CYgCSfRiDgxEqgRFix2SXN6/E898ZriHGCE2TKnnWYGSWRx53gCY+6rmudlQjJPIBGhzMiFho7MU0j1dugJfzYMhlnD6QyThAIk+tcSC7UwDMIAbHYB15gETydt5ad1vb8w4Hts+Ef6Hln6gUhX2rdGFRoKbkVwx5dTVy5GTVM4=
+	t=1716190887; cv=none; b=PuARbkQ5tVodXVvi33U+5Z+b2R8LZRVX9crS1JFAo/2WsnN+101DjRDkk+zi1JBGTzTq4YKgyZEj+zrysOkA0zT3k92xQK9PNfnfgXmHSEb11Q5BNE7I/DWPs+JiVboML5nM9F3jJDpEoQXRe9ZKqL3K2aibhQi8C3AjJvS7Yuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716190856; c=relaxed/simple;
-	bh=rEglyoG4FdJOKzE03IYMWtomapTEwx50RRcDUiD5YFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JnlrqRwF8F8q/zBUWesafyMxdSsCt0p2HzbjQMY8XK2Ov3EJIw/33TutYzyQmmhsvumHre+PvdMsaPUoMgx/ao5jIsdilKlZn+JwtW7Tp9mHdi+aVhnGQbJdFIt+ufE9fM3KmicimpdBMNCLLrNR7Z47TtunSm27THlHupQ0DBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mpMWf3CO; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716190887; c=relaxed/simple;
+	bh=plzvp7rNugX3K6ANyXjr92sRX1YWIuJEC3UHm68SOb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VJ4JMhecvpxOiWcAlYc6kZno4TvmDEHYF58UZaCupZ5QDjhVq7VWSeS2Cc0PTpoZGqnogS+QHzAc3dQ8L+KN0RLjPl0HaVArImljbg8r3ILU6PpwmZIDND6GEDzvKZGa3JgnvLWWMZI7XKmthNW+suetROJVBduxqichlgvIvos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PopMMAVy; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mpMWf3CO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716190851; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=crYhzYLF/Z9aGaDX2S1xu5VnG4QQ1Zxh17dm47AJQSo=;
-	b=mpMWf3COln6H5eW4E6+uJXuWFMAHiKJVNqOz4yyUKFmqHKEtp8i6kkscxdZ+nNNl7HffD9vy8dvOAPjGB6HV35fPT1yvk+05O+vzLaPsKPDXR7G0it6koAnQe+a7UW5kYdg+C0Pt6vpWp7WhJ2ehWlANDqgfImKwwgYafHiMKuA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W6nyCdl_1716190849;
-Received: from 30.221.148.185(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W6nyCdl_1716190849)
-          by smtp.aliyun-inc.com;
-          Mon, 20 May 2024 15:40:50 +0800
-Message-ID: <af4b9591-d82e-4da3-b681-eb677369ced3@linux.alibaba.com>
-Date: Mon, 20 May 2024 15:40:47 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PopMMAVy"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59c0a6415fso728134266b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716190883; x=1716795683; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9y2+R5Z+lMlXgJtdu7Zc9o7DnmU5CSj/l6XtGSHRsxY=;
+        b=PopMMAVyZIXgyz5xm/mDb3uJeyXYybjA4txKywJB7MaIZDlwvt7R53tzFR5qZhuvQX
+         NdiJpoD7UM7DFTu3sZNoEd7g3/hJUOoBD/HCx0wHV0T/O0egtl24CAk9byQPvzE+L3+6
+         cxtmsXoBqQDGLveolFYZvOiLDVFCrmD2Ez+QgeqjMIn5KOUEcwXX4oxoU2wj7wdvCOwE
+         03GkKcafd5pk9pfKTXZr01s12MqW7gUzznAlv2M1npuZ4XtDaa0fHpsETS3CNEiDlGtj
+         PZoJFRCbLhPqwV5bxfXULmt7bz9yLs/eiFbxKg6RWn+djnKBSLGfGf80eGBcJ+/p5RLZ
+         nS/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716190883; x=1716795683;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9y2+R5Z+lMlXgJtdu7Zc9o7DnmU5CSj/l6XtGSHRsxY=;
+        b=rSznVw6iayYU5sayYXGfwPBUBmdoQo8/lw2JcIaGxJBXZ3uqiggP0UwDm0iMauRVoE
+         ZCmtDwhVz9AP/GXSZMXKlXxkZWsAyFHiEMFXczwRCj4gkxewBvluMuKLLggxD6O6lTT2
+         RF2k/eZj1qmpPWjG565bSD5RKVJIOQqO8LBZ0+xczYeJOE952Oc31a42hOs3vib9Jyzv
+         /+WRsbuLnhuglWY+nr6cjg7Pm9Itcc8RSq3T27VANU5qMcbelrdOEyHeB7Ixo36pfJfV
+         QvhyY4AU46OYrMPbv6CpEXKjB86vdtJxdKXoowEZK+rDJ4olYH7SowYWRwQ/uFSB9Q2w
+         7yQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEnvSFQ63HrHAQUyL8c5ld4kQGZ/T85YvuVbrOFJbb6c5IJY/ktqYBiV8x64HBUlZqcWAmDT/WDHv3JHnUInrP0hjFv7KkXMAJ5Lej
+X-Gm-Message-State: AOJu0YyqK2uQTAlb+SrsFSfs6wtlIgdOl6RK4BVBwsGD1Bt7ahRmKebo
+	tK08PpPQcE0/HcQE2LsFCOc+04/OBUCu6xDpgtuOWURLp3bFg4FLfecMeWsPyEw=
+X-Google-Smtp-Source: AGHT+IH9haA9iR4YwoKX0PzjzpCIy5yTTINDqwVFObjzHq50kZ9iLXtPJQM9TPGv9QNsFnHhLLi5EQ==
+X-Received: by 2002:a17:906:6a02:b0:a5a:7c7e:a0d3 with SMTP id a640c23a62f3a-a5a7c7ea16fmr1445195766b.44.1716190883404;
+        Mon, 20 May 2024 00:41:23 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a893a91b9sm754853166b.7.2024.05.20.00.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 00:41:22 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Olof Johansson <olof@lixom.net>,
+	arm@kernel.org,
+	soc@kernel.org,
+	Antoine Tenart <atenart@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] =?UTF-8?q?ti:=20omap:=20MAINTAINERS:=20move=20Beno?= =?UTF-8?q?=C3=AEt=20Cousson=20to=20CREDITS?=
+Date: Mon, 20 May 2024 09:40:12 +0200
+Message-ID: <20240520074013.9672-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/12] cachefiles: add output string to
- cachefiles_obj_[get|put]_ondemand_fd
-To: libaokun@huaweicloud.com, netfs@lists.linux.dev, dhowells@redhat.com,
- jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com, zhujia.zj@bytedance.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
- yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>
-References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
- <20240515084601.3240503-6-libaokun@huaweicloud.com>
-Content-Language: en-US
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20240515084601.3240503-6-libaokun@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Last email from Benoît Cousson was in 2014 [1], so remove him from
+maintainers of the TI OMAP platform.  Stale maintainer entries hide
+information whether subsystem needs help, has a bus-factor or is even
+orphaned.
 
+Benoît Cousson, thank you for TI OMAP contributions and maintenance.
 
-On 5/15/24 4:45 PM, libaokun@huaweicloud.com wrote:
-> From: Baokun Li <libaokun1@huawei.com>
-> 
-> This lets us see the correct trace output.
-> 
-> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+[1] https://lore.kernel.org/all/?q=f%3Abcousson%40baylibre.com
 
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ CREDITS     | 5 +++++
+ MAINTAINERS | 2 --
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-Could we move this simple fix to the beginning of the patch set?
-
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-
-
-> ---
->  include/trace/events/cachefiles.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
-> index 119a823fb5a0..bb56e3104b12 100644
-> --- a/include/trace/events/cachefiles.h
-> +++ b/include/trace/events/cachefiles.h
-> @@ -130,6 +130,8 @@ enum cachefiles_error_trace {
->  	EM(cachefiles_obj_see_lookup_failed,	"SEE lookup_failed")	\
->  	EM(cachefiles_obj_see_withdraw_cookie,	"SEE withdraw_cookie")	\
->  	EM(cachefiles_obj_see_withdrawal,	"SEE withdrawal")	\
-> +	EM(cachefiles_obj_get_ondemand_fd,      "GET ondemand_fd")      \
-> +	EM(cachefiles_obj_put_ondemand_fd,      "PUT ondemand_fd")      \
->  	EM(cachefiles_obj_get_read_req,		"GET read_req")		\
->  	E_(cachefiles_obj_put_read_req,		"PUT read_req")
->  
-
+diff --git a/CREDITS b/CREDITS
+index 0107047f807b..ea84fb373310 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -796,6 +796,11 @@ E: luisfcorreia@gmail.com
+ D: Ralink rt2x00 WLAN driver
+ S: Belas, Portugal
+ 
++N: Benoît Cousson
++E: bcousson@baylibre.com
++D: TI OMAP Devicetree platforms
++D: TI OMAP HWMOD boards
++
+ N: Alan Cox
+ W: http://www.linux.org.uk/diary/
+ D: Linux Networking (0.99.10->2.0.29)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a482f2a499e4..8193bd95c84c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16147,7 +16147,6 @@ S:	Maintained
+ F:	arch/arm/*omap*/*clock*
+ 
+ OMAP DEVICE TREE SUPPORT
+-M:	Benoît Cousson <bcousson@baylibre.com>
+ M:	Tony Lindgren <tony@atomide.com>
+ L:	linux-omap@vger.kernel.org
+ L:	devicetree@vger.kernel.org
+@@ -16202,7 +16201,6 @@ S:	Maintained
+ F:	arch/arm/mach-omap2/omap_hwmod*data*
+ 
+ OMAP HWMOD SUPPORT
+-M:	Benoît Cousson <bcousson@baylibre.com>
+ M:	Paul Walmsley <paul@pwsan.com>
+ L:	linux-omap@vger.kernel.org
+ S:	Maintained
 -- 
-Thanks,
-Jingbo
+2.43.0
+
