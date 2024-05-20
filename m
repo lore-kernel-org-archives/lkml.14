@@ -1,94 +1,125 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB9F137C37
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7119613699A
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716216869; cv=none; b=YS8uxxGlw4ERYhPSmUCIvc+TIf/0pgfWmT0Vcci7y4vEuohieYz5HorO5Gxw7FA80zAt/lapagKt3tkm2v8rdwRu9qUALmC3SYXvwOJBbAKrrQ/CzMPPFaO+jCuXGqiCnWzcEcwZjfbOeVC095h6bNRRrSvntc0ZaMoWDQNkzPE=
+	t=1716216897; cv=none; b=BRVfWnZqcUYROGHRdfBsg/1X/49s0IxqlCanvRfCIpYwHnxoCQ3cWYUAaxg6wRDW+TEZZoXlaMniaRNsyL+lGcq8TRjl8a5TpPyCjpqqEg4qAa99kJzIn60CyStOM9+I7rzYs1yI2cYwZL+Fh78FlR8HJbx4+XEE+kWZVx3/PdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716216869; c=relaxed/simple;
-	bh=jvMliZyp5b79r8W0ZhbR9tXovMVqI+2d9dyyz9g1J6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sizu78BtpEva8m+F4A8lCItkniWZfYNI3Zgb11jHf7a22bSq+1EoSyUrcZa6vTSZQAIkMtcc1nLDfYZ5ITw1zTQ8VAAr4brEuKRVWOY9PC5Tgou3ZNKG/nL3A2AIfPpK5+zWldeNZkok5uUAfEeTEcKEaNev+5zBJyjVvErwt1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BkY1enSM; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716216897; c=relaxed/simple;
+	bh=clpyNQpvD2QjEkJaOz5hsXiNkIjsCTbRMlRun10p+Hs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cDFdoaJY2EUpVxbSJWalzZcvVY+kNKazrtJ8x3YehmyfUBHN6k85Aw/P7K5LbYZA4w8NMhB//tG8Cjfg+mX5M1uaz6e2XNX72vlPVy60pdDYRIRa8hEzWWxa2UaqEaE79ls4rnGwLZRc9BPcjWhQPj8j7mx6PA8ZvJvccO1rTjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=cPklxUCL; arc=none smtp.client-ip=178.154.239.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BkY1enSM"
-X-Envelope-To: lpieralisi@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716216866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oBzV40mF6T/nwZNSQ5a6icyFUiLmHUNqTXGAGDGS/rc=;
-	b=BkY1enSMesoupvQV3VJmFH6uOsyEur3jxfmWpBAIXWZOtSAzK12EwcEF/bzn5kCEIzz/9C
-	KU2NPAJQy0Mq98o86gVlUE4VzqNTQZp1AW88LeoOtFntnsVH+EasX6Ni5ck+oPtvpt7jci
-	xBGfLvL3Qf9jTHUJzxY0Mfdqy/fncCk=
-X-Envelope-To: kw@linux.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: linux-pci@vger.kernel.org
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: thippeswamy.havalige@amd.com
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: bhelgaas@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: sean.anderson@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org
-Cc: Michal Simek <michal.simek@amd.com>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v3 7/7] arm64: zynqmp: Add PCIe phys
-Date: Mon, 20 May 2024 10:54:02 -0400
-Message-Id: <20240520145402.2526481-8-sean.anderson@linux.dev>
-In-Reply-To: <20240520145402.2526481-1-sean.anderson@linux.dev>
-References: <20240520145402.2526481-1-sean.anderson@linux.dev>
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="cPklxUCL"
+Received: from mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:c10a:0:640:882f:0])
+	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id 9FD8E60A56;
+	Mon, 20 May 2024 17:51:26 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:8810::1:2c])
+	by mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id uoJQX60IfOs0-Q0v947GF;
+	Mon, 20 May 2024 17:51:25 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1716216685;
+	bh=Ype1Fb5hqSSEjjtIwCnPzpbYPBKN0xi6g1o6op9FVBc=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=cPklxUCLMTmMSZtCeZFXAr0nzBmcB7nUUk7qIlxmXaAIrbSQz8KVLY655LJl0Wudq
+	 QUbhiExTTZblIsAUZO4Qv0IP61IwnwqKfuJ+wc+viK+arJf0Vsmeg5Hk/7xe/I1/TY
+	 6QlOcoUvID/PwEmdLBKJrieOazag8RuurjgANBNQ=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-80.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nikolay Kuratov <kniv@yandex-team.ru>
+Subject: [PATCH] x86/numa: Bump NR_NODE_MEMBLKS to MAX_NUMNODES * 4
+Date: Mon, 20 May 2024 17:50:21 +0300
+Message-Id: <20240520145021.1528151-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Add PCIe phy bindings for the ZCU102.
+With modern AMD EPYC platform we're able to spot 3
+memblocks per NUMA, so bump MAX_NUMNODES multiplier
+from 2 to 4. Problem becomes apparent if MAX_NUMNODES
+close enough to real amount of nodes and leaves us with
+`too many memblk ranges` dmesg error.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Tested-by: thippeswamy.havalige@amd.com
+Bump also maximal count of immovable regions accordingly.
+
+Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
 ---
+ If overhead related to doubled arrays is too undesirable
+ maybe we should consider config option for this? It appears that
+ NR_NODE_MEMBLKS used only on LoongArch and x86 (macro in asm-generic
+ is orphane).
 
-(no changes since v2)
+ arch/x86/boot/compressed/acpi.c | 6 +++---
+ arch/x86/boot/compressed/misc.h | 2 +-
+ arch/x86/include/asm/numa.h     | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-Changes in v2:
-- Remove phy-names
-
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-index ad8f23a0ec67..d2175f3dd099 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-@@ -941,6 +941,7 @@ conf-pull-none {
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index f196b1d1ddf8..74575a900924 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -17,9 +17,9 @@
  
- &pcie {
- 	status = "okay";
-+	phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
- };
+ /*
+  * Immovable memory regions representation. Max amount of memory regions is
+- * MAX_NUMNODES*2.
++ * MAX_NUMNODES*4.
+  */
+-struct mem_vector immovable_mem[MAX_NUMNODES*2];
++struct mem_vector immovable_mem[MAX_NUMNODES*4];
  
- &psgtr {
+ static acpi_physical_address
+ __efi_get_rsdp_addr(unsigned long cfg_tbl_pa, unsigned int cfg_tbl_len)
+@@ -305,7 +305,7 @@ int count_immovable_mem_regions(void)
+ 				num++;
+ 			}
+ 
+-			if (num >= MAX_NUMNODES*2) {
++			if (num >= ARRAY_SIZE(immovable_mem)) {
+ 				debug_putstr("Too many immovable memory regions, aborting.\n");
+ 				return 0;
+ 			}
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index b353a7be380c..a756569852e5 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -174,7 +174,7 @@ static inline acpi_physical_address get_rsdp_addr(void) { return 0; }
+ #endif
+ 
+ #if defined(CONFIG_RANDOMIZE_BASE) && defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
+-extern struct mem_vector immovable_mem[MAX_NUMNODES*2];
++extern struct mem_vector immovable_mem[MAX_NUMNODES*4];
+ int count_immovable_mem_regions(void);
+ #else
+ static inline int count_immovable_mem_regions(void) { return 0; }
+diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+index ef2844d69173..057eafe6fed5 100644
+--- a/arch/x86/include/asm/numa.h
++++ b/arch/x86/include/asm/numa.h
+@@ -10,7 +10,7 @@
+ 
+ #ifdef CONFIG_NUMA
+ 
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
++#define NR_NODE_MEMBLKS		(MAX_NUMNODES*4)
+ 
+ extern int numa_off;
+ 
 -- 
-2.35.1.1320.gc452695387.dirty
+2.34.1
 
