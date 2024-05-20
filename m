@@ -1,153 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C0145BE7;
-	Mon, 20 May 2024 23:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B925E4502D;
+	Mon, 20 May 2024 23:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716247534; cv=none; b=fHKniqUzhLqP0Lh+eXUJfpIy5zVpJTRE5W5C+thk4mODa/gEOFYWvGV35D9MnKSCdNw+IUXTa8hGlxLSkb99t080dwYpNAdtPvmhZdWevY0jOqnQPAKjcIpTnFEbKK7wyS6hvdNwW8dtESz5sWEfaNkThFIfCVBZdAK7XInrMV4=
+	t=1716247658; cv=none; b=Nqz7gqhQkNbCCXI3I/0BhZkyqtuxkrD8JmeKmBfxKC8oMr1GLroB6kkQeG0QXrx80y4Wi52K/ETl1D4Jrdyse7DUKZDafTAcUqVa2rhvkOTNJE8t75ji4WiHLiJCM1V9/e+nARdfwuYSKwt4FBeph/celTodv3xPpS2vMfh8mVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716247534; c=relaxed/simple;
-	bh=hZDKkVV7OaIgYGaTjsW7Rr9VGim/EKkxGLUtLj7dp4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJbPS6yWieDjuR/tTod76YQVOIN+5arEWtlTXXmlZSshYxxYCjEgzc4QDEHD2+gGDr19XNR+cd0fs7SblZ9JuNsd4P1w2lRYzwcrRL4Npbsdhx+TMkRqrDaXl0Cn7w5KgyHGRDK7S9p1mncPhOjb1fyEliZsdR82DnwdEE3cnbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fav/BO76; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716247658; c=relaxed/simple;
+	bh=8QqgZxVf0288aHf9DZD/0Jyi87hO0+ha9iYcdXrU1lI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lf2iufG0H/r5P0i739xmBuyE2viK1lumNP6OC83jJ/q6enE09tHeKkIykXf3L/OxGJu3Y2URXKSjl0+9GJFaSLKKZtDIEL+2pKoDzPBwYaxecfNaccE8zR+n2a+cLflf9Rna4piTi0TCQoVe6OWcTR6DX+7ueNT/LGEDS8PWjd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FpD+Y3cl; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fav/BO76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42EC0C2BD10;
-	Mon, 20 May 2024 23:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716247534;
-	bh=hZDKkVV7OaIgYGaTjsW7Rr9VGim/EKkxGLUtLj7dp4A=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Fav/BO768VQSNjvjT+YMqa22L4y2N1wRkJUL9lkLK81jhWS7tWnV1O5DqniXT5Z8U
-	 xmHvUGmj1LbkxuEPVH/yV7QJMU0k9SQqFR0DZV+wocSHv3T4650VtWDxI6xJ+o+S3R
-	 9ZoI8wJARd3PKefmeVJE2Ajl6YszgpZvLL8XXYw8/glWbMjzStzzGAOiGht0GMsWp0
-	 GR/UsuoqtnfbCu8Zsk9YyDXTSsibfawx11YRATB9Bjpngc2utDRNLtX2WoDnS1sRoi
-	 DiC26A5Om+xvc3xjiDq23iyL4gW2PnebPyo0wmdNIAekNpOrYF2W56s4NEXSfD9kFV
-	 lP813fOU1hqOg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D7FB4CE2AA6; Mon, 20 May 2024 16:25:33 -0700 (PDT)
-Date: Mon, 20 May 2024 16:25:33 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] rcu/tasks: Further comment ordering around current
- task snapshot on TASK-TRACE
-Message-ID: <24467166-5f00-45f2-867f-40b8a836d085@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240517152303.19689-1-frederic@kernel.org>
- <20240517152303.19689-3-frederic@kernel.org>
- <adf836b2-c660-4dc5-82dd-55d18596c803@paulmck-laptop>
- <Zku1kDj_LjK3WxaA@pavilion.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpD+Y3cl"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ee12baa01cso98294615ad.0;
+        Mon, 20 May 2024 16:27:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716247656; x=1716852456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2XXQ+fW79Tox5jnZShvFqsN/aIVjF4mLnyQ2RqxwCuE=;
+        b=FpD+Y3clwm0+wmaQ6zzG1pvW+qC05Uc5e+1aGYr5+wiazeJWTQ2K3T7NER04LrTXpR
+         BxFpMkceuPWF/O1VNUtaAiQQKJedbgq22mnfO7grO4+rqJFy6g5IOMpGknWhl1mQf1KT
+         bqLvQvB4l+tB8p2DufnhcRaUmmm8WKoTj5hjstpWg9YdQaT7shHj7GLUJw9KzXi6BKxP
+         XDqfa8nDme6EPPQo2BwxNYU4eO9BYJeh6ZzhztexJ0dZCwTrCbq2e+t/pjgBuMsML3Ya
+         1jB8Xpd7vXVmd6v5fSdiwE6p+4bUO+wz2cjskm4EsLB0O3Ku/l6fVAR+W2SUFuFlJiWL
+         DtlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716247656; x=1716852456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2XXQ+fW79Tox5jnZShvFqsN/aIVjF4mLnyQ2RqxwCuE=;
+        b=WgzocNp/ol4zGCyckaM2VhFWg/w5e2eo58Ys4vcfzVfKjmRuFGqO/9z5qO0Tp0ruG8
+         +PVUWHTho8vDTF54abdokifm+OAA8O6hu2mPhGk+f7BlUprjNj1j/AtBXbDpeLeAbZQ1
+         UAkfewVgqFjMFK4SdeNX88nhDDoA6k+ebZDAWsSQCVDwnAUWGU75GZP5kcbzER6UkSCX
+         gAZJ8bGP2eOVGSCVREWD8haR0BrYT1PL+dvbiSse74Vvfl59StO6S7TM2xyrFl9SLLw6
+         yj+euvms6kUgV+JctG5cqi9ma4Ax0Nmy+sMrUgr+Dr/ulIVnaRaaL+Ide55tRsfeIoh2
+         r3nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCCEqRpZU8cHxhQEBOZMEtXWSFYhHFAYbKpfVkNmfW5Qf+II+GZrX6kKb8hEO5KNnlLL1/c4xRpm6yjGxn05dKrUMY7e/6j/YdO3M99TV8J3gOA31XdxBTJj6F4IlonSTqVdbYiIlKeDPzpzzPUVaM0oxSsRwcwKYFYr8eHNNQ7lu5jy305NU=
+X-Gm-Message-State: AOJu0YyOsH0kIxEsMwy50MsQGhICVJWQfDXj7athLEztx6wlT1DCxoG9
+	4wNmuXjyfu3QC8+X2Lyfy8s4kAPRM94pSs17LTETrCfZjYEQnuY2oHJMOTEIUNVtnlxzaRaEFIk
+	t5qLNTry4fw09wyIUC4OG0T29FLg=
+X-Google-Smtp-Source: AGHT+IHHIgAAdRine/mHLO7k00sK/oImuclvCKPExA5xMVPtP+YugBCGaRo4B3DZZlCCYxf9oBS8H6lz+9iXaduvCeM=
+X-Received: by 2002:a17:90a:c401:b0:2ac:40c8:1f00 with SMTP id
+ 98e67ed59e1d1-2b6cc566d69mr25208745a91.4.1716247655910; Mon, 20 May 2024
+ 16:27:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zku1kDj_LjK3WxaA@pavilion.home>
+References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-12-dakr@redhat.com>
+In-Reply-To: <20240520172554.182094-12-dakr@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 21 May 2024 01:27:23 +0200
+Message-ID: <CANiq72kObXP7-YtcXnWQXJpEQ=N+RtcSeM6A+scBK00VkFj5JA@mail.gmail.com>
+Subject: Re: [RFC PATCH 11/11] rust: PCI: add BAR request and ioremap
+To: pstanner@redhat.com, Danilo Krummrich <dakr@redhat.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	ajanulgu@redhat.com, lyude@redhat.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 20, 2024 at 10:41:52PM +0200, Frederic Weisbecker wrote:
-> Le Mon, May 20, 2024 at 11:48:54AM -0700, Paul E. McKenney a écrit :
-> > On Fri, May 17, 2024 at 05:23:03PM +0200, Frederic Weisbecker wrote:
-> > > Comment the current understanding of barriers and locking role around
-> > > task snapshot.
-> > > 
-> > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > > ---
-> > >  kernel/rcu/tasks.h | 18 +++++++++++++++---
-> > >  1 file changed, 15 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> > > index 6a9ee35a282e..05413b37dd6e 100644
-> > > --- a/kernel/rcu/tasks.h
-> > > +++ b/kernel/rcu/tasks.h
-> > > @@ -1738,9 +1738,21 @@ static void rcu_tasks_trace_pregp_step(struct list_head *hop)
-> > >  	for_each_online_cpu(cpu) {
-> > >  		rcu_read_lock();
-> > >  		/*
-> > > -		 * RQ must be locked because no ordering exists/can be relied upon
-> > > -		 * between rq->curr write and subsequent read sides. This ensures that
-> > > -		 * further context switching tasks will see update side pre-GP accesses.
-> > > +		 * RQ lock + smp_mb__after_spinlock() before reading rq->curr serve
-> > > +		 * two purposes:
-> > > +		 *
-> > > +		 * 1) Ordering against previous tasks accesses (though already enforced
-> > > +		 *    by upcoming IPIs and post-gp synchronize_rcu()).
-> > > +		 *
-> > > +		 * 2) Make sure not to miss latest context switch, because no ordering
-> > > +		 *    exists/can be relied upon between rq->curr write and subsequent read
-> > > +		 *    sides.
-> > > +		 *
-> > > +		 * 3) Make sure subsequent context switching tasks will see update side
-> > > +		 *    pre-GP accesses.
-> > > +		 *
-> > > +		 * smp_mb() after reading rq->curr doesn't play a significant role and might
-> > > +		 * be considered for removal in the future.
-> > >  		 */
-> > >  		t = cpu_curr_snapshot(cpu);
-> > >  		if (rcu_tasks_trace_pertask_prep(t, true))
-> > 
-> > How about this for that comment?
-> > 
-> > 		// Note that cpu_curr_snapshot() picks up the target
-> > 		// CPU's current task while its runqueue is locked with an
-> > 		// smp_mb__after_spinlock().  This ensures that subsequent
-> > 		// tasks running on that CPU will see the updater's pre-GP
-> > 		// accesses.
-> 
-> Right but to achieve that, the smp_mb() was already enough, courtesy of
-> the official full barrier on schedule that (this one at least) we could rely on:
-> 
-> Updater             Reader
-> ------             -------
-> X = 1              rq->curr = A
->                    // another context switch later
-> smp_mb()           smp_mb__after_spin_lock() // right after rq_lock on __schedule()
-> READ rq->curr      rq->curr = B
->                    READ X
-> 
-> If the updater misses A, B will see the update on X.
-> 
-> So I think we still need to justify the rq locking on the comments.
-> 
-> >                          The trailng smp_mb() in cpu_curr_snapshot()
-> > 		// does not currently play a role other than simplify
-> > 		// that function's ordering semantics.  If these simplified
-> > 		// ordering semantics continue to be redundant, that smp_mb()
-> > 		// might be removed.
-> 
-> That looks good.
-> 
-> > 
-> > I left out the "ordering agains previous tasks accesses" because,
-> > as you say, this ordering is provided elsewhere.
-> 
-> Right!
+Hi Philipp,
 
-Good points!  How about the following?
+A few quick nits I noticed for this one...
 
-		// Note that cpu_curr_snapshot() picks up the target
-		// CPU's current task while its runqueue is locked with
-		// an smp_mb__after_spinlock().  This ensures that either
-		// the grace-period kthread will see that task's read-side
-		// critical section or the task will see the updater's pre-GP
-		// accesses.  The trailng smp_mb() in cpu_curr_snapshot()
-		// does not currently play a role other than simplify
-		// that function's ordering semantics.  If these simplified
-		// ordering semantics continue to be redundant, that smp_mb()
-		// might be removed.
+On Mon, May 20, 2024 at 7:27=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
+wrote:
+>
+> +/// A PCI BAR to perform IO-Operations on.
 
-Keeping in mind that the commit's log fully lays out the troublesome
-scenario.
+Some more documentation, examples, and/or references would be nice.
 
-							Thanx, Paul
+> +pub struct Bar {
+> +    pdev: Device,
+> +    iomem: IoMem,
+> +    num: u8,
+> +}
+> +
+> +impl Bar {
+> +    fn new(pdev: Device, num: u8, name: &CStr) -> Result<Self> {
+> +        let barnr =3D num as i32;
+
+Would it make sense to use newtypes for `num`/`barnr`, perhaps?
+
+> +        let barlen =3D pdev.resource_len(num)?;
+> +        if barlen =3D=3D 0 {
+> +            return Err(ENOMEM);
+> +        }
+> +
+> +        // SAFETY:
+> +        // `pdev` is always valid.
+
+Please explain why it is always valid -- the point of a `SAFETY`
+comment is not to say something is OK, but why it is so.
+
+> +        // `barnr` is checked for validity at the top of the function.
+
+Where was it checked? I may be missing something, but I only see a
+widening cast.
+
+> +        // SAFETY:
+> +        // `pdev` is always valid.
+> +        // `barnr` is checked for validity at the top of the function.
+> +        // `name` is always valid.
+
+Please use the convention we have elsewhere for this kind of lists,
+i.e. use a list with the `-` bullet list marker.
+
+> +        let ioptr: usize =3D unsafe { bindings::pci_iomap(pdev.as_raw(),=
+ barnr, 0) } as usize;
+
+Is the type needed, since there is an explicit cast?
+
+> +        if ioptr =3D=3D 0 {
+> +            // SAFETY:
+> +            // `pdev` is always valid.
+> +            // `barnr` is checked for validity at the top of the functio=
+n.
+> +            unsafe { bindings::pci_release_region(pdev.as_raw(), barnr) =
+};
+> +            return Err(ENOMEM);
+> +        }
+
+Should the region be managed in a RAII type instead?
+
+> +    fn index_is_valid(i: u8) -> bool {
+> +        // A pci_dev on the C side owns an array of resources with at mo=
+st
+> +        // PCI_NUM_RESOURCES entries.
+
+Missing Markdown. There are other instances as well.
+
+> +        if i as i32 >=3D bindings::PCI_NUM_RESOURCES as i32 {
+> +            return false;
+> +        }
+> +
+> +        true
+
+The body of the function could just be `... < ...`, i.e. no `if` needed.
+
+> +    // SAFETY: The caller should ensure that `ioptr` is valid.
+> +    unsafe fn do_release(pdev: &Device, ioptr: usize, num: u8) {
+
+This should not be a comment but documentation, and it should be a `#
+Safety` section, not a `// SAFETY:` comment.
+
+> +    /// Returns the size of the given PCI bar resource.
+> +    pub fn resource_len(&self, bar: u8) -> Result<bindings::resource_siz=
+e_t> {
+
+Sometimes `bindings::` in signatures of public methods may be
+justified -- is it the case here? Or should a newtype or similar be
+provided instead? I only see this function being called inside the
+module, anyway.
+
+> +    /// Mapps an entire PCI-BAR after performing a region-request on it.
+
+Typo.
+
+Cheers,
+Miguel
