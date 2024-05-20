@@ -1,249 +1,215 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2077.outbound.protection.outlook.com [40.107.13.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E23224EF
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 09:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716197082; cv=none; b=EeZ/pmby5puBd/ZzB1h4S4sH5Mrv2SuRjx39trt83timG63Fpcvj1woxQHA8ZnL3Zh3zk+68ut9hr69l5A3NBCg8JxgD+xvtBYxUhayXljFFRMBP5XTrIFlfa7Q2z7JyUQCetTxmDpfQipmNUKjj7pdCj7QX7EtqrSGYeHehnb0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716197082; c=relaxed/simple;
-	bh=Kklz+ktfWuEykTJ9eoIRUAH9YHToANc5MjGu7MgR/Tg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t72KzIkH9214S4AuxLpKlvNbZKxfupbCCW+vUd7P4VC9YnWDP8blkUy7knI5F3Wop3ivGocOKXWUMPoxU7RQZ9yfVr051ErrXAaQhtdSg0OWfx05RbUhlVpDAhkH3fZltFQaHwojuji6uXdmcQ2p3xCoRRpRaWBWNmCuGWqNO9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=QWQvGOym; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8911DFC1D
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 09:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716197153; cv=fail; b=P6I1CoV/ndHwaWPEFVTdTmJJYv/9rRJ0tARqZtUnCf4wowvU8xkTjxgzKK1+TgRGa2AxWIJkFYcIw39rkOdVg2z2TvwpMRDByF0ZM+mnEsI8QOKNRVjVHCTlNiI9QmUODJeldfUwixBrKtTid51d05Po5G+BI/ucp627nZjZB60=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716197153; c=relaxed/simple;
+	bh=rxXIFgLoR6LxVYmkGvrlz+Idhc5ruyhkyTonK/lVBYs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kfdwOEqIb7BQm79yjkfZExc+O580pIPLVyz/F6RKAn5kvvFunMqE0k2Fn1VbPrPH8/0bu/lsqJ3sD8IVp9twY/c8LemXDtVJbREb0ykPCvZiVvBFhNqdcjuSVn2UmjKtdH1q3gXmYr37+mXwjAAWJo7SGoFMt/K78kNjyZQV5Cs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Td1P9Ika; arc=fail smtp.client-ip=40.107.13.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="QWQvGOym"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6203f553e5fso21906527b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 02:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1716197079; x=1716801879; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uTP4n3yhXyuKsvb8V/x0lwx2q2Y2QVn77xnb/moq0rY=;
-        b=QWQvGOymw1sheGJuBHM3OYWQefvLW4graSAUnJi6Ds97fQn0NXAzT5EsxRb+qurOl7
-         iohrMmoROWBDxPsnlKFnCxu7W17bXNuvQfBjaq+7PW25LMvLyDFmdGzL5J5QTAJ7mCYf
-         F4SjjOrHXyYkdK9SppmqCpiKQNFgrDnVvvsRPAkwJ5E6g75s6Dv21ZRnd8L1mufIU0Wm
-         71947uBf7NThiiyUENRWaVJ7AvLqc6ImuI49voqiAVuGhSmg1DTb9KEZvHMPKuiY3cxX
-         7jJrmUG28xhKvNDOxsVczziBhVtkS5DlWtZKf/31JgbWO46SsHT0xK/fnAI73ARqItiR
-         Pg4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716197079; x=1716801879;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uTP4n3yhXyuKsvb8V/x0lwx2q2Y2QVn77xnb/moq0rY=;
-        b=R36IOR4wB/0Kalorb7FFpK9fh+iaw/+peZ7izgK3V8f728s4utP7uZ2FHpp6TkdJM9
-         rmrsIzMxHbDSmBNTUQSmgIm9Mn3midJrS/KQggcsSw95Tj45ommZnvMKFUgLKnlr1Ryv
-         KKkKKMJJ+JMsu1aaSCg6f96yBf7wL1i45KhPobszMnkx97S2f9d6xfL56+wQOlr4pGsP
-         gfqi1GJgms26n9I10qsfURZu+mIjpmjkCz+eNmy2Xd2NEck5hQjlL7Ke/r/c7lMPuY0H
-         fDE1gU2PbujOPlNIynw4bwrRMdfvnGwVKi+Wfzf4ZDxtzUEjYmRIlcNIu2PHrA05uBeG
-         TJfQ==
-X-Gm-Message-State: AOJu0Yy7SJ5jOJL25Qqm6sM9MM1mqQ7dIrQ5Y5IO3QdnEuK9RTfGejHT
-	8JqOQAXY1jAVUuICsQWS0yBLyYB/oBxXpqZcukmZ0zSqQ8+N83rDE+v9mag457sln/Z2AApJA2H
-	yhrg=
-X-Google-Smtp-Source: AGHT+IE3+Bwy1rTW6LZBfxg21C3r33Glem2ZA5GLigMTgswBwDtpNI5ENvAnFkSHCBrmYUtqEjY+bg==
-X-Received: by 2002:a05:690c:6c87:b0:615:9a1:602b with SMTP id 00721157ae682-622b00134e3mr281913707b3.44.1716197078867;
-        Mon, 20 May 2024 02:24:38 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6209e2592c2sm47692367b3.43.2024.05.20.02.24.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 May 2024 02:24:38 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-de604ca3cfcso1990846276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 02:24:37 -0700 (PDT)
-X-Received: by 2002:a25:84c4:0:b0:df3:88ee:799c with SMTP id
- 3f1490d57ef6-df388ee85a4mr13302743276.7.1716197077534; Mon, 20 May 2024
- 02:24:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Td1P9Ika"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IxvwWQqekCEEfa/BJB4F2e+4sVigcUl+5yrk7g5NWuMvobLImYiRM7lZHkg/7z6ZPoTG7+wmYxO2C3yYK18sPmFf58pBNrJhQ55/9vNlKDi43yjKrgJP+kveJr44wiGYaR1dotQ6Mm8a1kFDLf8PdhwxfNj/buxQhQCF53XpobZhvx/iaVhlJb0ZZkp/tmemDGgoZxwd11bnqqyzz7Cg4V+CHYa7WfKYZpyP84ZIcAZ3VG/gDmHvKJ8GQYaeXRyZkk0QU1TRm2ezM3jvc6U0TZfAPNGF+aAvNMYDRcgBGovuunt+WQgckz7I68+3wNRZS+i0wdbDuxR7wJx7vRGwzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jLDYfw8FIOA2IXt8jrgZGy63ET9E3BtraZLh5uP3s54=;
+ b=O8A0J3LPQ8bb9vBQI2ivDhfKFowYRzFNaPrW4O0AlqxOEyje6/teIH+hcFMWzfQFlukBz1MCyxySfpMoEuWtuG7zjExrvv3o5eD60n+Takvyy6RzYumjY3cUo63XR6rufAmW/2FGVpQsbWaFewrrnwno0M/6Fkz7dsyk04BUn//9fvfGHdzK7KKD4Du0XLJ/YLzoNSKtXXD+bAh95P8F3ZLNpCK6+EZN/gEIDPpiX5RGCRDrr/+4tWqblXds6Yk9w5LGTSrzYDop8RBjhQZ9JwIj6RwYr/BkFhTPHXfAGEDm2EWXgPJrplC0gCcQYY6NycmhDp3RCQ7SN3F9auTW2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jLDYfw8FIOA2IXt8jrgZGy63ET9E3BtraZLh5uP3s54=;
+ b=Td1P9IkandXX9VWOIuw11OB86cCHEV/42hCE4qnAXY0E3vgpfTezsErhd2dGMIb+YKv24QNrXqyt8mAu0xo2Rm5cj9dkZ6TswY6a4D03KLbTnZO0HIQDW7VZugzSLdkxHa8WSTuZJZTzo7gvgFT4nM+HrZyPTDiKCsxn/lb+MDQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by DBBPR04MB7691.eurprd04.prod.outlook.com (2603:10a6:10:201::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Mon, 20 May
+ 2024 09:25:47 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.7587.030; Mon, 20 May 2024
+ 09:25:47 +0000
+Message-ID: <2f41a890-915b-4859-8ac9-5436da14fe22@nxp.com>
+Date: Mon, 20 May 2024 17:26:05 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/bridge: adv7511: Exit interrupt handling when
+ necessary
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, aford173@gmail.com
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ biju.das.jz@bp.renesas.com, u.kleine-koenig@pengutronix.de,
+ jani.nikula@intel.com, bli@bang-olufsen.dk, sui.jingfeng@linux.dev
+References: <20240516101006.2388767-1-victor.liu@nxp.com>
+ <evnxopqt5be56vxuxqdj4l3mcd5nrrvucio7jhwgg4emraai3t@gherubdynyip>
+ <5efe29a7-441f-4d70-b17c-5327c0a9f600@nxp.com>
+ <CAA8EJpqZPQUcqm2U+T7AK74qxo9J0kggS4g484OfoNPAEZPNBw@mail.gmail.com>
+Content-Language: en-US
+From: Liu Ying <victor.liu@nxp.com>
+In-Reply-To: <CAA8EJpqZPQUcqm2U+T7AK74qxo9J0kggS4g484OfoNPAEZPNBw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG3P274CA0004.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::16)
+ To AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424063753.3740664-1-tomeu@tomeuvizoso.net> <97eadcba7cabe56f0f4b4d753bd3d53f8540ef4b.camel@pengutronix.de>
-In-Reply-To: <97eadcba7cabe56f0f4b4d753bd3d53f8540ef4b.camel@pengutronix.de>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Mon, 20 May 2024 11:24:26 +0200
-X-Gmail-Original-Message-ID: <CAAObsKDFDNV48XF1DobvVv04Q+DfBY=weBJPKbBewJPbPibRVA@mail.gmail.com>
-Message-ID: <CAAObsKDFDNV48XF1DobvVv04Q+DfBY=weBJPKbBewJPbPibRVA@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: Create an accel device node if compute-only
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>, 
-	Russell King <linux+etnaviv@armlinux.org.uk>, 
-	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DBBPR04MB7691:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6d589888-911b-4276-36ef-08dc78aed49f
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?TUk0Y0Fjei9XYTJUYmJ4Uk5PRWVyWGxxd0tJUEhtSlZwUGRudWhuVGdiU0pz?=
+ =?utf-8?B?am4rcHdIVFJ5WVZoL1M2SnE3eUxRdnJvRmE3b3JvWjAvZVQwVFp5SUgyNllj?=
+ =?utf-8?B?RnBhOXNzMTdBUE1qazdmM2hFaCtKcm5XYjVJVjlDU2poU0JaZjJYZjMwUVMx?=
+ =?utf-8?B?b3BvZUdkT0lDMHRna3EveUQ2eVdYQlgvT0g4TFY4TS9xZndla25XcHQ2Q2Zi?=
+ =?utf-8?B?OE9pbUxjR3dPd3haNmtTSjl4cXlQYkt1THJvNFJtNlZlZXZ5RU5wZkQ2eUlX?=
+ =?utf-8?B?Ny9Qam5jVWd0NUpWaFE5Vnoxd2RLRVJoSlRMNFQ2SUVXT1FndzZrcFllNEJY?=
+ =?utf-8?B?ZERlRGlYVGgwWUNGcDVvSjZWK2wzZ1V0TzVXUzRSRzczRWZzWDY4TXhvZ3NP?=
+ =?utf-8?B?NHZPZCtLL3JJR1R2Wkk0d1hTMTlVclhjQ2I0dGxVZE5pVDJwS2JmZFJSeEx1?=
+ =?utf-8?B?TnN5V2xaNkYxOUxmQWM2Z0VoaWV0S1JacG1XWHk0WU9qY2VhdHdHNzZrbzNz?=
+ =?utf-8?B?TExXVU9lV0REVC9NY0ZyY1NrdGVKblZubEo2d3VzaTNwTzhoWGxhTlhSME5w?=
+ =?utf-8?B?MGVsL2tLWVlnckZTd1p5aGlqanlrdDdVNm9Uc1IwVGNabmZXLzh3cmZqU1V5?=
+ =?utf-8?B?azVNYmhtam1MZFRxb3FVN1lMcGlWbHF0T1UrazBEelRnQUtKSElxT3lUa3Az?=
+ =?utf-8?B?Q1did0dLdzdqVUdOcXpSSVlqZDRJR2tYcDhmYThIays4UEFyNmYzOC9JeHVV?=
+ =?utf-8?B?cFdIZzlOTS84Q1grM2V6Y1YzZUhCb01kSzZlOGs4MEpBU2R5VVZZUldOL0J6?=
+ =?utf-8?B?dmVLNk00QlJlb0FtOTRmajdZSXliY0RIUTF4YndCQmkwY3MwQ2lxSkc4d21J?=
+ =?utf-8?B?ZTF5aytjakU0RUVBM3BuWkQycldNeWRoNWQvNXFRcUhJOEhVOVIvTWk2Mk96?=
+ =?utf-8?B?enhRL1VFcW53RnVVdDdnRnc3NG5jRG11TERzZUFOdUhsbjB6QnB5d2hYT29X?=
+ =?utf-8?B?aVJOWThLSytDN2ExWHEvL2VEVFZjbFhINDVFaGhnQzUvZE8rdGxVYlp6MXp5?=
+ =?utf-8?B?M01wNEM3NUxYUUwxWFkvSHpzUU5DaGU1S0pIdGdJaU4xa2xlUHd0QUhKMlVQ?=
+ =?utf-8?B?NWRLc0tBL1pJLy9vNEhSOW1iSDU2dE1veU1hb3MxVUsvQWxDa0RCa1lrc0dQ?=
+ =?utf-8?B?NWJLOTNmaE1TV3dtU0ZJUnlzcFlzV2FKdGYzaCtIN05mNEttV1Rqd3BiMFZP?=
+ =?utf-8?B?TG8rR2NXa2JPWDdiMGNFOENxbHJOOWptQkg3MEhGTGtjOW56blZTTGY1QXFP?=
+ =?utf-8?B?WkNnVjdGMzQ4ekYxYm1xcFNhL1NNeW1waER6QTA5QzNpMjVHK2drcm92S1do?=
+ =?utf-8?B?eUM2U01wekZwQ2UyMVZmc01NTmJoZTJIbXd0Q2ltQ1RKMEp6eFllTGtMam1C?=
+ =?utf-8?B?b0dxdjJNWDFKTTdpekliQXdJYUdPYXpGcCtvWXJYQnFwNXd4MndmR21nbzBB?=
+ =?utf-8?B?VWhlWDJXSDVEN2tQUjBVMzdZQStyaUZRMXBadDhlanNSSDJ2Szg5bGRqMXJz?=
+ =?utf-8?B?R0E5SWNVNSthQzVsRTFHcjhRR1lpM0ZlUWU3SFA1YzZ4Vm5hRzVPOWErM0ps?=
+ =?utf-8?B?RCt6dVdQSzJZN3RDOUxvUkdSaGJxQnk1dmZkcXh0RVVNc0o0cE9UWXpCNElX?=
+ =?utf-8?B?ZHlMV1VpdGVwZnJ3cEptU2FZelpGc0ZMb1Q3TVpzR3puR2R3S1VtVFl3PT0=?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?V0hzTDM2L1RCRktPZjRjQ1E3aUh4amhwcThzaG5Ba1JVcnB5NkZwM01HWmVy?=
+ =?utf-8?B?UitxWit0UDFLV3d4QzBZRHI0UWEvS1BwaU1FQms4NGhvUVluZGpqOGR6cVZx?=
+ =?utf-8?B?Uko4WjZjanJheWloLytsRFBvVCs5NVhhMzIrdytFNTZJcm1rUDVKT3lKZzdv?=
+ =?utf-8?B?dThpejRNTHNtcEpkN0c5SHQ5bjgwdjVvR3l0RTNyZTZud1AzWWJnV3hUbGll?=
+ =?utf-8?B?a0ZpWkJnZm43K3pxaTh0MDMrY2RPclcrTmwyRlBvT2FGR280TU1KdXhDZTk5?=
+ =?utf-8?B?VkNrNXRHdThmV3d0ZmV3aUNVMXRFd2g3V0Mzcllmam84ZzZab2ZCNlVrbFdo?=
+ =?utf-8?B?YXM3SWd5dUhmcGpaL0xweWV3QkttVmpYY3NRYmtxMDkwNllwUmNHNm1Pa21H?=
+ =?utf-8?B?YTAyYVBicFl6S05oYWRtallkdkNYM3VVV1FNQmdISXZraU04TUpXT0ZWUHd5?=
+ =?utf-8?B?TzZSQTI5SEt4ZXVJU2pMVlRrdmxkUm5oYWxxUC9FTlZkQ1BjRUNGY3dMa3VY?=
+ =?utf-8?B?N081dTNGeElUZGhiZTR5ek9nWXFrdit1c1N1ZkV3VWdLS2ZnY2ZPNlhndXZS?=
+ =?utf-8?B?WHNpRnoyTGRrMXFRUWg4ek84SlhUYXM0TUs3U2g5SFlNSGpYMjloOUhlTzRw?=
+ =?utf-8?B?UHNtN2NnUEtlK3U3U29ZbW9peFBtQmxuOU8vdlZBQkJxMHAwNnBCOVQ3QVgz?=
+ =?utf-8?B?UVFIMWUyaktEZG9haG56WUFWbW1IMXJ0TkdMSHJBL1JqQzdLUzdxL3U5Qlg2?=
+ =?utf-8?B?Vmh3b3FsenRUUVRYWEFsVHNlRGlub0JrbnB5bTg1V2xObDFZUFFEQzZQWTQ3?=
+ =?utf-8?B?ZGt6NEFvQzR1dFBtTmdNbEczNGRZSk1GaWJwQ0VudVp6NHlpSHk3eVFmY3JY?=
+ =?utf-8?B?RTFHWGp2ZklGTVVkOTRmWUdKeTdpS3VSU1dzZHl4cU9lV1gwc0I4STZJVmhB?=
+ =?utf-8?B?UmlaaXlwVVhuQko1bW1JSy9tbFdIdmtUbjJxLzlJaVMzZVV6WTJFSnJYMyty?=
+ =?utf-8?B?T0Z4WHVYdDhHeDhVRzVOSVBaRlpNWVVLMisxMXd3VE9YV3IvdiszRUNtdTF5?=
+ =?utf-8?B?WFJabE9WdXB2a0ovRU5ETlVQeFp3N20yMmFaQ2R0S0IzcnRxL2ZkUStoNVFi?=
+ =?utf-8?B?eDNWOHBMbEtBM2NxRmlEbXZVMUgweW9Bd2l6d05ySXVBbXlMNXMwaVV0d1ZI?=
+ =?utf-8?B?dTNoOVB6ZHZNZnhieGg2eWVmaVdMS2c5K3JycG8vQ3NVY3BlZlQxRERvblU0?=
+ =?utf-8?B?KzJOSVhCd29JUUpLcGVydVV4VWwvamNXY2R0NkpWSlpSanIrY3B4SG1LMDFP?=
+ =?utf-8?B?NThUbm9XVlNuZXZwMmVkbGVONzhzb0NkMjhHcHo3ZjN0alBKTG5vZHZsaURZ?=
+ =?utf-8?B?RnVhUFBlbW5mQ1h1ZlhyNmVNVThyaHVRVjg1K3hxbHA5TUFFOWdNSmR4T2tl?=
+ =?utf-8?B?b2M1VENsbURBSFBGbUwvSDNOdzFpQ1VsVjNhR0VxM3U4MVVHalhTZ3Bxcklk?=
+ =?utf-8?B?SXZNQ1VkYkhSNEFSejR1Z2pmUU5FSDlPVlRYbDFpVDZXWUwvZ2RxenAxWHlM?=
+ =?utf-8?B?MmNyNTRDaFNNQ3BXMmR1TkEybW0zM256K2Z1T3pObEhEaEN1V3dDZWNSd3Bu?=
+ =?utf-8?B?OXJ5U2pjU3B5MC82cjA5MndTUlV3Qm1FeCtXUUtRRW92c0VWdEcwYUI4QW5r?=
+ =?utf-8?B?aG9DM1BJekljMDZHS002dE1uRFVNQXBjRkdqUm1KMjdlY2N5M2h2WHdya0lj?=
+ =?utf-8?B?bFIwSEVUM244eElQU0QyZ2tLVGFwb2NCWE5obENUWkQ2Ry9ERjNKN2RpM0hV?=
+ =?utf-8?B?OFNnazRLRVNxcWE1S1R1a05LMzZZSFg2VnBHWHc4dWd1QnFSZjJFR0c4ZHZW?=
+ =?utf-8?B?aStmQmk4M09FWElZaFc2T1J4N3ZGc3pMS3RSdno5RlVsZFNMdHNxVHlEbEIz?=
+ =?utf-8?B?aEhZdVpuTTMzZGs0aDEwZzNEWWErUi83cDAyclhFa1lHOVhwenNiN0pvOHkz?=
+ =?utf-8?B?dXB5TVFwYUxQMFNOb0ptQzlwYWlwdUVFLzducXdYMW9TOTA3cXUvZktJVmRX?=
+ =?utf-8?B?WmYvcjBNZ2VZK3RYVCtJWE1oSlo4SWkvQ2phMGdad3hJMWRuUFkvSk5tV3JP?=
+ =?utf-8?Q?NjwQhIt1laMvvH0D+e0ULX3Ze?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d589888-911b-4276-36ef-08dc78aed49f
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 09:25:46.9755
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CbkWxNxCd3b+bE1oNa1XoeCMPiIgiV/A6mnaTc/lLif0cRNMxMXbF47SzjMtJkg+AXtiLqMcDr9KJqx+byQ1iA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7691
 
-On Fri, May 10, 2024 at 10:34=E2=80=AFAM Lucas Stach <l.stach@pengutronix.d=
-e> wrote:
->
-> Hi Tomeu,
->
-> Am Mittwoch, dem 24.04.2024 um 08:37 +0200 schrieb Tomeu Vizoso:
-> > If we expose a render node for NPUs without rendering capabilities, the
-> > userspace stack will offer it to compositors and applications for
-> > rendering, which of course won't work.
-> >
-> > Userspace is probably right in not questioning whether a render node
-> > might not be capable of supporting rendering, so change it in the kerne=
-l
-> > instead by exposing a /dev/accel node.
-> >
-> > Before we bring the device up we don't know whether it is capable of
-> > rendering or not (depends on the features of its blocks), so first try
-> > to probe a rendering node, and if we find out that there is no renderin=
-g
-> > hardware, abort and retry with an accel node.
-> >
-> I thought about this for a while. My opinion is that this is the wrong
-> approach. We are adding another path to the kernel driver, potentially
-> complicating the userspace side, as now the NPU backend needs to look
-> for both render and accel nodes.
+On 5/20/24 17:08, Dmitry Baryshkov wrote:
+> On Mon, 20 May 2024 at 06:29, Liu Ying <victor.liu@nxp.com> wrote:
+>>
+>> On 5/20/24 06:11, Dmitry Baryshkov wrote:
+>>> On Thu, May 16, 2024 at 06:10:06PM +0800, Liu Ying wrote:
+>>>> Commit f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
+>>>> fails to consider the case where adv7511->i2c_main->irq is zero, i.e.,
+>>>> no interrupt requested at all.
+>>>>
+>>>> Without interrupt, adv7511_wait_for_edid() could return -EIO sometimes,
+>>>> because it polls adv7511->edid_read flag by calling adv7511_irq_process()
+>>>> a few times, but adv7511_irq_process() happens to refuse to handle
+>>>> interrupt by returning -ENODATA.  Hence, EDID retrieval fails randomly.
+>>>>
+>>>> Fix the issue by checking adv7511->i2c_main->irq before exiting interrupt
+>>>> handling from adv7511_irq_process().
+>>>>
+>>>> Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
+>>>> Signed-off-by: Liu Ying <victor.liu@nxp.com>
+>>>> ---
+>>>>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 3 ++-
+>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+>>>> index 6089b0bb9321..2074fa3c1b7b 100644
+>>>> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+>>>> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+>>>> @@ -479,7 +479,8 @@ static int adv7511_irq_process(struct adv7511 *adv7511, bool process_hpd)
+>>>>              return ret;
+>>>>
+>>>>      /* If there is no IRQ to handle, exit indicating no IRQ data */
+>>>> -    if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+>>>> +    if (adv7511->i2c_main->irq &&
+>>>> +        !(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+>>>>          !(irq1 & ADV7511_INT1_DDC_ERROR))
+>>>>              return -ENODATA;
+>>>
+>>> I think it might be better to handle -ENODATA in adv7511_wait_for_edid()
+>>> instead. WDYT?
+>>
+>> Then, adv7511_cec_irq_process() will have less chance to be called from
+>> adv7511_irq_process() (assuming CONFIG_DRM_I2C_ADV7511_CEC is defined)
+>> if adv7511->i2c_main->irq is zero.
+>>
+>> But, anyway, it seems that commit f3d9683346d6 ("drm/bridge: adv7511:
+>> Allow IRQ to share GPIO pins") is even more broken to handle the CEC case,
+>> as adv7511_cec_adap_enable() may enable some interrupts for CEC.
+>>
+>> This is a bit complicated.  Thoughts?
+> 
+> Send a revert and do it properly?
 
-Forgot to mention in my earlier reply today that with the proposed
-solution no changes are needed in the Gallium drivers, only in the
-pipeloader component in Mesa, and in the Gallium frontends.
-
-But those changes are needed anyway to support the upcoming
-compute-only NPUs, such as Rockchip's.
-
-These are the changes I needed to make to the userspace to go with
-this kernel patch:
-
-https://gitlab.freedesktop.org/tomeu/mesa/-/commit/6b0db4cce406c574d2b77102=
-08df9c8bd1ab6345
-
-Cheers,
-
-Tomeu
-
-> While currently accel and drm are
-> pretty closely related and we can share most of the driver, it might
-> still be a maintenance hassle in the long run.
->
-> On the other hand we already have precedence of compute only DRM
-> devices exposing a render node: there are AMD GPUs that don't expose a
-> graphics queue and are thus not able to actually render graphics. Mesa
-> already handles this in part via the PIPE_CAP_GRAPHICS and I think we
-> should simply extend this to not offer a EGL display on screens without
-> that capability.
->
-> Regards,
-> Lucas
->
-> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> > Cc: Oded Gabbay <ogabbay@kernel.org>
-> > ---
-> >  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 46 ++++++++++++++++++++++-----
-> >  1 file changed, 38 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/et=
-naviv/etnaviv_drv.c
-> > index 6500f3999c5f..8e7dd23115f4 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/uaccess.h>
-> >
-> > +#include <drm/drm_accel.h>
-> >  #include <drm/drm_debugfs.h>
-> >  #include <drm/drm_drv.h>
-> >  #include <drm/drm_file.h>
-> > @@ -488,10 +489,10 @@ static const struct drm_ioctl_desc etnaviv_ioctls=
-[] =3D {
-> >       ETNA_IOCTL(PM_QUERY_SIG, pm_query_sig, DRM_RENDER_ALLOW),
-> >  };
-> >
-> > -DEFINE_DRM_GEM_FOPS(fops);
-> > +DEFINE_DRM_GEM_FOPS(render_fops);
-> > +DEFINE_DRM_ACCEL_FOPS(accel_fops);
-> >
-> > -static const struct drm_driver etnaviv_drm_driver =3D {
-> > -     .driver_features    =3D DRIVER_GEM | DRIVER_RENDER,
-> > +static struct drm_driver etnaviv_drm_driver =3D {
-> >       .open               =3D etnaviv_open,
-> >       .postclose           =3D etnaviv_postclose,
-> >       .gem_prime_import_sg_table =3D etnaviv_gem_prime_import_sg_table,
-> > @@ -500,7 +501,6 @@ static const struct drm_driver etnaviv_drm_driver =
-=3D {
-> >  #endif
-> >       .ioctls             =3D etnaviv_ioctls,
-> >       .num_ioctls         =3D DRM_ETNAVIV_NUM_IOCTLS,
-> > -     .fops               =3D &fops,
-> >       .name               =3D "etnaviv",
-> >       .desc               =3D "etnaviv DRM",
-> >       .date               =3D "20151214",
-> > @@ -508,15 +508,20 @@ static const struct drm_driver etnaviv_drm_driver=
- =3D {
-> >       .minor              =3D 4,
-> >  };
-> >
-> > -/*
-> > - * Platform driver:
-> > - */
-> > -static int etnaviv_bind(struct device *dev)
-> > +static int etnaviv_bind_with_type(struct device *dev, u32 type)
-> >  {
-> >       struct etnaviv_drm_private *priv;
-> >       struct drm_device *drm;
-> > +     bool is_compute_only =3D true;
-> >       int ret;
-> >
-> > +     etnaviv_drm_driver.driver_features =3D DRIVER_GEM | type;
-> > +
-> > +     if (type =3D=3D DRIVER_RENDER)
-> > +             etnaviv_drm_driver.fops =3D &render_fops;
-> > +     else
-> > +             etnaviv_drm_driver.fops =3D &accel_fops;
-> > +
-> >       drm =3D drm_dev_alloc(&etnaviv_drm_driver, dev);
-> >       if (IS_ERR(drm))
-> >               return PTR_ERR(drm);
-> > @@ -553,6 +558,18 @@ static int etnaviv_bind(struct device *dev)
-> >
-> >       load_gpu(drm);
-> >
-> > +     for (unsigned int i =3D 0; i < ETNA_MAX_PIPES; i++) {
-> > +             struct etnaviv_gpu *g =3D priv->gpu[i];
-> > +
-> > +             if (g && (g->identity.minor_features8 & chipMinorFeatures=
-8_COMPUTE_ONLY) =3D=3D 0)
-> > +                     is_compute_only =3D false;
-> > +     }
-> > +
-> > +     if (type =3D=3D DRIVER_RENDER && is_compute_only) {
-> > +             ret =3D -EINVAL;
-> > +             goto out_unbind;
-> > +     }
-> > +
-> >       ret =3D drm_dev_register(drm, 0);
-> >       if (ret)
-> >               goto out_unbind;
-> > @@ -571,6 +588,19 @@ static int etnaviv_bind(struct device *dev)
-> >       return ret;
-> >  }
-> >
-> > +/*
-> > + * Platform driver:
-> > + */
-> > +static int etnaviv_bind(struct device *dev)
-> > +{
-> > +     int ret =3D etnaviv_bind_with_type(dev, DRIVER_RENDER);
-> > +
-> > +     if (ret =3D=3D -EINVAL)
-> > +             return etnaviv_bind_with_type(dev, DRIVER_COMPUTE_ACCEL);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  static void etnaviv_unbind(struct device *dev)
-> >  {
-> >       struct drm_device *drm =3D dev_get_drvdata(dev);
->
+Good idea.  Adam, can you do that?
