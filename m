@@ -1,135 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F70200A0;
-	Mon, 20 May 2024 09:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9D81CA81
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 09:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716197382; cv=none; b=oNwKvLqBavjU96KxldNy3FjpB1ovTrW3RxTfmfq293tp9cwOiKPjQBrDsW1pQctve8Z7G8dPUKPuCDpTxOGCik0jybew0b0tDmps6rdkHfGevMSP7EelEEF94qNktp4SrvViVRYJqq9ZTqDYXivcHdk0a6lJprN0mhTdS1s6JFU=
+	t=1716197389; cv=none; b=uJGoA8jCqNoLp2joa1yi5BJRavvg8vT7LTlz8y61dN6z0OhVCAJ+0EUnY5JTn/YDDNC2Vcugznl9TBsIW2yQeWkbEe66SRe+fcbQ2k4Inenk1Z9AnVltCgi0Uus9Y7Osi7SDKhs947SBh4QhyHMU7c+mxExgMegcUS+4pQNKpdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716197382; c=relaxed/simple;
-	bh=wkIQ0EfC9ZXbexE0omEhycHvMS8UHOTjdewsZ1jd6F0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C3TcnVYnLt2OF76xIoNhuaWXpNj7Bdu0cHD/Z3IeHgPtqnBAeIGU4XkQaz4zFNqWnMFmHui1F9oBnz45cjer9doRtnJnGpcv9/6rgDufy2QriQoMR9o8zHEQvSZ59tnGmykXLJZ+hj1aZrT7Qn2R0FIaV/LAZuNCdF7odAUzIvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqulF4ol; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716197389; c=relaxed/simple;
+	bh=Z6En2rQ56rYKGpCjhvIFLvYQgqhZLyaWZXFlrV2UYzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTGOxwQowd/AzBMY2l5Um6R8x/1Z48w+2jyhCnx4Ok5a2q7nM1q3l3rpFAoo9VJ+6E60G01iWcFHMIrgs+W0a65lhVssJPO6il1VF0sWc/sCyAUwN4Je8re9A0X99EJkGr3O6xnrcN87IlCsR61CVrV/Bgpg7QJNI3bGtQoZRc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JMVxeqLr; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqulF4ol"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D2CC4AF07;
-	Mon, 20 May 2024 09:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716197382;
-	bh=wkIQ0EfC9ZXbexE0omEhycHvMS8UHOTjdewsZ1jd6F0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RqulF4olbfNpIrNEey48enGnwQj2usi66rGuzVHEz/MOxkw4AxlmVsSOJGnd3WwgR
-	 e/CFtA50rbSsEbAIHxKIn8Su9IIoym6FAPESoYyxNwbDQJaSCCWIGNY2adTR1lgdMi
-	 y8BrMSB9CpzQNnrDF/+EC69TZg28xL156UYxOKiAZbFr0YqwPXzZ6WQUOAy/vrnJx/
-	 cXvdePAetd8/PZ8wmBRT/S3PAy+Np5w/hYHZeDku4ZncQsmHfnDCe0Fr6ZEPl2kbdm
-	 TCIo0DNjzLhvB/0tWhv394WzXKMHZO51Hht38tUNkqD5gv6bNQiXdNF0lDJr8W2s8T
-	 8AdDgU+NUC/jA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52327368e59so4560741e87.1;
-        Mon, 20 May 2024 02:29:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXfTW5RFSW3Ye7ozusRSCfd6/oLHwHq3VTAdRUDBVXNVgZ1hrYyQDm4Ge+xDa6kUTmxNUXt2y4+kPDAFvgS2nex3n5ONXl1Y44N5WsNHkLKXMNt9oGJ4w08qbcYRO96OUWhiYi1h/4c5Myfa+VjbtikU5FPuVMcET3xokrfRA0l/Ayz2D5HNBEIrQfbfx8Z0w==
-X-Gm-Message-State: AOJu0Yy2V0ZbE3jqb7uTXR15iOVk73GRrXXwBkkrE/VcyNsGbgYgJEKN
-	OMrRJcUQ9YBg7RIV+J5CT3fdhlWvDBlwdJ6QIc/cRvnARu76skStCBz/p1vaqRpWDOdJBdIfaoY
-	fUZD0jT4J0coshEv0D94aqcg0jQs=
-X-Google-Smtp-Source: AGHT+IG54mJDXF0fFaV3TW54jIR7MyX+7xAvdaOhqvKFhOkcSnI8a2h5otSCeeeNqIiWsDxiscl5AffELnPKBQ8FWAM=
-X-Received: by 2002:a05:6512:290:b0:522:32c0:bb6e with SMTP id
- 2adb3069b0e04-52232c0bbf6mr16059976e87.23.1716197380961; Mon, 20 May 2024
- 02:29:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JMVxeqLr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716197387; x=1747733387;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Z6En2rQ56rYKGpCjhvIFLvYQgqhZLyaWZXFlrV2UYzI=;
+  b=JMVxeqLretVCxeLxGrELzRP0NeV4Jz8jxp6uWH9JM4F4+0HzBXiKbY32
+   cTHcaeuKUp6s3f3GoFdKt7XasRfVzn8qE5Tk3inAfP4VqT16/hdsCjbIA
+   V1DchWxDvLmPADtk7ufK4aBrYwUJdZHGF+1YyBuQqGsnI/VHfuasARF3F
+   CmvTRZAWIadwtG1pSWUJd3ZaEijCihcENhY9hY7g7Eg3O/IcS/Nfq3edE
+   aF9DzTwfX1x0O3hBCXsJlLJ3fBbWMCP8p+mHP1Ljw/ROvn1aOcDAcX9DA
+   J6CPYXzpr4RsonjrcDBLHiCVf2cWG2H6vWdDRHCNh6ljYbgr8p3Zxqoh7
+   Q==;
+X-CSE-ConnectionGUID: SodvZXBNRIqVkznHzQJmSg==
+X-CSE-MsgGUID: GPY1l5/ZQEeqpwkVaOqSvw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="12255558"
+X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
+   d="scan'208";a="12255558"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 02:29:47 -0700
+X-CSE-ConnectionGUID: usaW+o1zQ/muIcggFC+9Yg==
+X-CSE-MsgGUID: lNzpnIzCR2iuKpS7LCl60A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
+   d="scan'208";a="32495689"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 02:29:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s8zKv-00000009GKJ-0Cwl;
+	Mon, 20 May 2024 12:29:41 +0300
+Date: Mon, 20 May 2024 12:29:40 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: broonie@kernel.org, i-salazar@ti.com,
+	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
+	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+	liam.r.girdwood@intel.com, kevin-lu@ti.com, tiwai@suse.de,
+	baojun.xu@ti.com, soyer@irl.hu, Baojun.Xu@fpt.com
+Subject: Re: [PATCH v1] ASoC: tas2552: Add TX path for capturing AUDIO-OUT
+ data
+Message-ID: <ZksYBOk_gHprCd_x@smile.fi.intel.com>
+References: <20240518033515.866-1-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517042839.544650-1-kris.van.hees@oracle.com> <20240517042839.544650-3-kris.van.hees@oracle.com>
-In-Reply-To: <20240517042839.544650-3-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 20 May 2024 18:29:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS6r4RUhm46g2Oop=VFPX08ibtadhiceH32Uo0CU4JL7A@mail.gmail.com>
-Message-ID: <CAK7LNAS6r4RUhm46g2Oop=VFPX08ibtadhiceH32Uo0CU4JL7A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] trace: add CONFIG_BUILTIN_MODULE_RANGES option
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240518033515.866-1-shenghao-ding@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, May 17, 2024 at 1:30=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range dat=
-a
-> is generated for kernel modules that are built into the kernel image.
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
-> Changes since v2:
->  - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
-> ---
->  kernel/trace/Kconfig | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 47345bf1d4a9f..d0c82b4b3a61e 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -188,6 +188,24 @@ menuconfig FTRACE
->
->  if FTRACE
->
-> +config BUILTIN_MODULE_RANGES
-> +       bool "Generate address range information for builtin modules"
-> +       depends on FTRACE
+On Sat, May 18, 2024 at 11:35:15AM +0800, Shenghao Ding wrote:
+> TAS2552 is a Smartamp with I/V sense data, add TX path
+> to support capturing I/V data.
+
+...
+
+>  /*
+>   * tas2552.c - ALSA SoC Texas Instruments TAS2552 Mono Audio Amplifier
+>   *
+> - * Copyright (C) 2014 Texas Instruments Incorporated -  https://www.ti.com
+> + * Copyright (C) 2014 - 2024 Texas Instruments Incorporated -
+> + *	https://www.ti.com
+
+Is it okay to wrap the (c) line? (Just asking.)
+
+>   * Author: Dan Murphy <dmurphy@ti.com>
+>   */
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-This 'depends on' is redundant because this config is
-already located between 'if FTRACE' and 'endif'.
-
-
-
-I believe 2/6 thru 5/6 should be squashed into one commit.
-Adding only the config option does not make much sense.
-
-
-
-
-> +       select VMLINUX_MAP
-> +       help
-> +         When modules are built into the kernel, there will be no module=
- name
-> +         associated with its symbols in /proc/kallsyms.  Tracers may wan=
-t to
-> +         identify symbols by module name and symbol name regardless of w=
-hether
-> +         the module is configured as loadable or not.
-> +
-> +         This option generates modules.builtin.ranges in the build tree =
-with
-> +         offset ranges (per ELF section) for the module(s) they belong t=
-o.
-> +         It also records an anchor symbol to determine the load address =
-of the
-> +         section.
-> +
-> +         It is fully compatible with CONFIG_RANDOMIZE_BASE and similar l=
-ate-
-> +         address-modification options.
-> +
->  config BOOTTIME_TRACING
->         bool "Boot-time Tracing support"
->         depends on TRACING
-> --
-> 2.43.0
->
-
-
---=20
-Best Regards
-Masahiro Yamada
