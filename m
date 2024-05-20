@@ -1,172 +1,103 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3946CA2D;
-	Mon, 20 May 2024 17:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAEFA2D
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226913; cv=none; b=rwXKylQDclLi+5dChvPgjfiiXACJDEHn1Gcbd0c0hFQXRr5kxlhlVTNHywJl2cVZRExJthJjTdCD8iSKImWEtCQSYO4PyPfc3hoZhfI22WmwxJvUEIU9cJCW05imUvegk9so3RIrX+pMjIlhq0y0Udnd9A/5gdedf+FRJKPkItk=
+	t=1716226951; cv=none; b=twcQNwJJiZgRE1ttH3HCnxDke3Ev2liEzsMiq1xFYF271Cf036yaBJA7/+rm6LXD+7kKiA8fy42/QUcuvmG619+dq5bJZ0iDnyJkMKMHKPsI7DTvWHlLG5aZqqDW3xc2ZbnKiPhaxWDUFhNEduPRNzFNjVqpBpGvmlwdmh31ito=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226913; c=relaxed/simple;
-	bh=USAnQFsFIAz4NTK1Wi/gNcItGq8+FboBq9Sm3p6WVJE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fbaiWSWHx0oE5qRHz8T/tK64v1EfhJBktP0q7hd50I2siz5TwB88AJ86gOhracSRepgnQ7KkP527VrV8pbyOFFLlJrtZSk5BGWm22cOcDW+xQ5nGe30tBf+tG8kfoiB+BHc+m3UvalzV8rxIxMq9Rb2Lq4EC5py6YMxOO5djAlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1DAarIjl; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1DAarIjl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716226909;
-	bh=USAnQFsFIAz4NTK1Wi/gNcItGq8+FboBq9Sm3p6WVJE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=1DAarIjlKy2Zl60w7NfmP/MqF+2Vf/lBvTyq/6hDi9OQDKknjDXzFHqpwgOc+lUjA
-	 pphsH/zdCrKHAHbKSZ23D//Eca5Y3tqf5q/o6FJuyEeG5utOgnD/ano+hUgn4j9gBN
-	 985FZoqwm8oJcQR22Ds6awEbQptqdojjls4+AqLvJz4fXuykXdEvusxo2qAUVJ9APi
-	 I5NMO2wdKnu9z4NXjcdMw1JsDF/8pF1qCdzxKcoKubfulihtrzqImF0E3+kTDKIsfC
-	 1cvwoN9Mr2GFIii68eYdsOK+YJWALUX9iBLyUsWizv3g9WVl9KPrb56bji59IhTDA7
-	 HpNToWom1Nqmw==
-Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	s=arc-20240116; t=1716226951; c=relaxed/simple;
+	bh=/mXDHW8VJpO6vlz6465Ksuoe/MWBFR43n1hirMX43fs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zvplo0fo3djQrE1XqGACIdw8sFmpDNe0I9ow/EvZFKwGGx4JNs9OJ0reuSzFtln5HxC9ynjzNRVMhg1gaDN51RUT/jdNPcnWMwb3PMFDAFpfJec0g8iOWiQgZSxKu5dL4MSFXnF1lOa3ZEwrGqL2sdsBKy7YVhkleGljSzp1daU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 09AC0378107D;
-	Mon, 20 May 2024 17:41:47 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: kernel@collabora.com,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: firmware: conform test to TAP
-Date: Mon, 20 May 2024 09:37:57 -0700
-Message-Id: <20240520163759.1427653-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2BE0E33DAC;
+	Mon, 20 May 2024 17:42:28 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A1DC513A6B;
+	Mon, 20 May 2024 17:42:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3RedJIOLS2ZhUwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Mon, 20 May 2024 17:42:27 +0000
+Date: Mon, 20 May 2024 19:42:26 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [RFC PATCH v2 06/20] powerpc/8xx: Fix size given to
+ set_huge_pte_at()
+Message-ID: <ZkuLgtujN1C2cpaH@localhost.localdomain>
+References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
+ <04f4e737608ea0b177b88057db138fbf0d6ab138.1715971869.git.christophe.leroy@csgroup.eu>
+ <ZksUiwNaKx2n1fJO@localhost.localdomain>
+ <f26807dd-bbd2-405d-9a88-c0654c525a5c@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f26807dd-bbd2-405d-9a88-c0654c525a5c@csgroup.eu>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: 2BE0E33DAC
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
 
-Conform the layout, informational and status messages to TAP. No
-functional change is intended other than the layout of output messages.
-Without using TAP messages, the passed/failed/skip test names cannot be
-found. This is a prepartory patch, more patches will be sent to comform
-the test completely.
+On Mon, May 20, 2024 at 04:31:39PM +0000, Christophe Leroy wrote:
+> Hi Oscar, hi Michael,
+> 
+> Le 20/05/2024 à 11:14, Oscar Salvador a écrit :
+> > On Fri, May 17, 2024 at 09:00:00PM +0200, Christophe Leroy wrote:
+> >> set_huge_pte_at() expects the real page size, not the psize which is
+> > 
+> > "expects the size of the huge page" sounds bettter?
+> 
+> Parameter 'pzize' already provides the size of the hugepage, but not in 
+> the way set_huge_pte_at() expects it.
+> 
+> psize has one of the values defined by MMU_PAGE_XXX macros defined in 
+> arch/powerpc/include/asm/mmu.h while set_huge_pte_at() expects the size 
+> as a value.
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- .../selftests/firmware/fw_run_tests.sh        | 63 ++++++++++++-------
- 1 file changed, 40 insertions(+), 23 deletions(-)
+Yes, psize is an index, which is not a size by itself but used to get
+mmu_psize_def.shift to see the actual size, I guess.
+This is why I thought that being explicit about "expects the size of the
+huge page" was better.
 
-diff --git a/tools/testing/selftests/firmware/fw_run_tests.sh b/tools/testing/selftests/firmware/fw_run_tests.sh
-index f6d95a2d51249..5063c75345680 100755
---- a/tools/testing/selftests/firmware/fw_run_tests.sh
-+++ b/tools/testing/selftests/firmware/fw_run_tests.sh
-@@ -6,6 +6,9 @@
- 
- set -e
- 
-+DIR="$(dirname $(readlink -f "$0"))"
-+source "${DIR}"/../kselftest/ktap_helpers.sh
-+
- TEST_DIR=$(dirname $0)
- source $TEST_DIR/fw_lib.sh
- 
-@@ -26,54 +29,68 @@ run_tests()
- 	proc_set_force_sysfs_fallback $1
- 	proc_set_ignore_sysfs_fallback $2
- 	$TEST_DIR/fw_upload.sh
-+
-+	ktap_test_pass "Completed"
- }
- 
- run_test_config_0001()
- {
--	echo "-----------------------------------------------------"
--	echo "Running kernel configuration test 1 -- rare"
--	echo "Emulates:"
--	echo "CONFIG_FW_LOADER=y"
--	echo "CONFIG_FW_LOADER_USER_HELPER=n"
--	echo "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
-+	ktap_print_msg "-----------------------------------------------------"
-+	ktap_print_msg "Running kernel configuration test 1 -- rare"
-+	ktap_print_msg "Emulates:"
-+	ktap_print_msg "CONFIG_FW_LOADER=y"
-+	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER=n"
-+	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
- 	run_tests 0 1
- }
- 
- run_test_config_0002()
- {
--	echo "-----------------------------------------------------"
--	echo "Running kernel configuration test 2 -- distro"
--	echo "Emulates:"
--	echo "CONFIG_FW_LOADER=y"
--	echo "CONFIG_FW_LOADER_USER_HELPER=y"
--	echo "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
-+	ktap_print_msg "-----------------------------------------------------"
-+	ktap_print_msg "Running kernel configuration test 2 -- distro"
-+	ktap_print_msg "Emulates:"
-+	ktap_print_msg "CONFIG_FW_LOADER=y"
-+	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER=y"
-+	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
- 	proc_set_ignore_sysfs_fallback 0
- 	run_tests 0 0
- }
- 
- run_test_config_0003()
- {
--	echo "-----------------------------------------------------"
--	echo "Running kernel configuration test 3 -- android"
--	echo "Emulates:"
--	echo "CONFIG_FW_LOADER=y"
--	echo "CONFIG_FW_LOADER_USER_HELPER=y"
--	echo "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y"
-+	ktap_print_msg "-----------------------------------------------------"
-+	ktap_print_msg "Running kernel configuration test 3 -- android"
-+	ktap_print_msg "Emulates:"
-+	ktap_print_msg "CONFIG_FW_LOADER=y"
-+	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER=y"
-+	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y"
- 	run_tests 1 0
- }
- 
-+ktap_print_header
-+
- check_mods
- check_setup
- 
--echo "Running namespace test: "
--$TEST_DIR/fw_namespace $DIR/trigger_request
--echo "OK"
--
- if [ -f $FW_FORCE_SYSFS_FALLBACK ]; then
-+	ktap_set_plan "4"
-+
- 	run_test_config_0001
- 	run_test_config_0002
- 	run_test_config_0003
- else
--	echo "Running basic kernel configuration, working with your config"
-+	ktap_set_plan "2"
-+
-+	ktap_print_msg "Running basic kernel configuration, working with your config"
- 	run_tests
- fi
-+
-+ktap_print_msg "Running namespace test: "
-+$TEST_DIR/fw_namespace $DIR/trigger_request
-+if [ $? -eq 0 ]; then
-+    ktap_test_pass "fw_namespace completed successfully"
-+else
-+    ktap_test_fail "fw_namespace failed"
-+fi
-+
-+ktap_finished
+But no strong feelings here.
+
+
 -- 
-2.39.2
-
+Oscar Salvador
+SUSE Labs
