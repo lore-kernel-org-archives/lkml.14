@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBDF137C3C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17CD1386D1
 	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 22:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716245201; cv=none; b=BGfQAAS06dLB4FkrEfTwz8tB7/ieGZAf1RLfJmPLlzfpBDW+MEzfybO5vQmvErfnRl0CFL1bN7YfZrmnqE+AhW9Z/kVs4Rehqhizet9/wptAMVswhimMBTa7Y4a2GM40V6w7lAW4DLD+crnsG549B+CK6IYfG7V2xlGx7VZ+Mr0=
+	t=1716245201; cv=none; b=ZCXiz7rx616e4pKIANWBzlTDNrKl7OK8vLcrawaJEn/nPz7wEZL+nvYi60cCKtPi6/Wg59jz7iyHiFmO8guzV0tv0RjDEaV3lc7HipIvgEDtSFaSPQQpPgrZi/4HJ7FhK07B8/ep40xdMelKABL00vjymo8nqlqvYiSDq7/BejI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716245201; c=relaxed/simple;
-	bh=fAvicYEUo7N506OzcEwxkas4C1y1eHYtbiBB7lA+htE=;
+	bh=2WGXBVBs50TNH9MqDPwVlbQd0d4cA9xeNLapku5f+C0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a7ft+AVVzS45+LD5f0y5pcEJDkeENBk5Twxxk3kOEeOEPewdbuyXQZcdTnxapivkjO511ED8dD3H2y4wBX91nA9t5vFWx6EaHD+qKr6SKhGqxMpoYTHhijeoSPIy2Xh9zvRqU62U7LpinlZgIPL0VhPEDOlfaLnUZ8RsWFMAfjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n6YBzOKt; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=bvG4Z4x5tCwzGxeEjtcqFj8o8JjtCUSsV1oZkPxeFOuCZJ/K5X8uPskTtKLYzWTYzX800QlMkvprB7UHxq1x6PKsh88wuD5iD9aB6xOt2YhUaM8NwcmecV+Su5pCbPKhnKE25KtF2brYvvScMIqtGW1o/o6e/fROFjjXscCS9fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OX1BLiem; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n6YBzOKt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OX1BLiem"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716245199; x=1747781199;
+  t=1716245200; x=1747781200;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fAvicYEUo7N506OzcEwxkas4C1y1eHYtbiBB7lA+htE=;
-  b=n6YBzOKtxLScgCwFa++2zN1RekVqtCT1FX+2SfM9yef9a4xeNrKy8MZY
-   6ko6zOGsWD0jVzlek5svosf4OOaHAK1eJFhOz6VzV+2quensDWsCU0FwU
-   UFgVfSRIVmyr3AVI6Eepe1a9SeJLnJ0qnsSEdyg5hBF8j8yeD141A7Y/2
-   yZkWyShDn5XeuIAy+qqD6wbRuWXUob1BWtLDg43cNjjHIWcuqHq6chvRT
-   sO6qoVZq5AfpIXsC+KKsq+SuGjiBxCQL12cGCEndC5aq8uJAWApwoP4Vq
-   oBLkbovwiB65pywVENcRBEWR+bS9SUOWFGZl02G1fDq+z7PGsm/tz8SFC
-   w==;
-X-CSE-ConnectionGUID: r4Xuh2dpQMiHBAVOHvelSg==
-X-CSE-MsgGUID: FhwyzfWgQNupO2JevXvdpQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12199540"
+  bh=2WGXBVBs50TNH9MqDPwVlbQd0d4cA9xeNLapku5f+C0=;
+  b=OX1BLiemrJfQGdde3/y+mdsJ/j8qjfplMV1nM8SjDIhz+tLTx311YJg6
+   RufSTHzCMTQ66wmcWL5mX6XNzaf4G0JhVN4vgbEz1fjkMtIVImBUj0YZn
+   9/yyN+JsGeudarSu+Q3HWMKQaBUR1NvkJfvr9fPzwE7TrIRsX0Teu5Ugz
+   6ze98Cien6W+l0zW9UgE6vK6634sA/hYOvVxwFGXTkNCUXuIN8NXQjXNb
+   RPzNuvEw1q233Y8cRrQXC1zFtd5Qbevy5sOIPz0BL+VQireC+2B7avn/W
+   wi28f3hHnx60+rkoGAT/rnUVgnwpzlfOlV1gT4OUnO0jp5Cl2+d3FENSu
+   g==;
+X-CSE-ConnectionGUID: YRutO+4RTy2859xuV2PEWw==
+X-CSE-MsgGUID: i7778linS/Sr8TSrKzV+Xg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12199563"
 X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="12199540"
+   d="scan'208";a="12199563"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:35 -0700
-X-CSE-ConnectionGUID: BvlCwA5NSc6OcdylUaJZ4Q==
-X-CSE-MsgGUID: MVc/I4PNQpijetxDdSbbUw==
+X-CSE-ConnectionGUID: ABs4mHaJTre9oLsrmJG6mA==
+X-CSE-MsgGUID: NqXET3QaRMmFL6XPYJa7/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="32593392"
+   d="scan'208";a="32593399"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:35 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -60,12 +60,11 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
-	Jithu Joseph <jithu.joseph@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v6 04/49] platform/x86/intel/ifs: Switch to new Intel CPU model defines
-Date: Mon, 20 May 2024 15:45:35 -0700
-Message-ID: <20240520224620.9480-5-tony.luck@intel.com>
+	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH v6 06/49] ASoC: Intel: avs: es8336: Switch to new Intel CPU model defines
+Date: Mon, 20 May 2024 15:45:37 -0700
+Message-ID: <20240520224620.9480-7-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240520224620.9480-1-tony.luck@intel.com>
 References: <20240520224620.9480-1-tony.luck@intel.com>
@@ -75,46 +74,44 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Jithu Joseph <jithu.joseph@intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Acked-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/platform/x86/intel/ifs/core.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ sound/soc/intel/avs/boards/es8336.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-index 7b11198d85a1..33412a584836 100644
---- a/drivers/platform/x86/intel/ifs/core.c
-+++ b/drivers/platform/x86/intel/ifs/core.c
-@@ -11,16 +11,15 @@
+diff --git a/sound/soc/intel/avs/boards/es8336.c b/sound/soc/intel/avs/boards/es8336.c
+index 3bf37a8fd6e6..c8522e2430f8 100644
+--- a/sound/soc/intel/avs/boards/es8336.c
++++ b/sound/soc/intel/avs/boards/es8336.c
+@@ -18,7 +18,7 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/soc-acpi.h>
+-#include <asm/intel-family.h>
++#include <asm/cpu_device_id.h>
+ #include "../utils.h"
  
- #include "ifs.h"
+ #define ES8336_CODEC_DAI	"ES8316 HiFi"
+@@ -153,9 +153,9 @@ static int avs_es8336_hw_params(struct snd_pcm_substream *substream,
+ 	int clk_freq;
+ 	int ret;
  
--#define X86_MATCH(model, array_gen)				\
--	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,	\
--		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, array_gen)
-+#define X86_MATCH(vfm, array_gen)				\
-+	X86_MATCH_VFM_FEATURE(vfm, X86_FEATURE_CORE_CAPABILITIES, array_gen)
- 
- static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
--	X86_MATCH(SAPPHIRERAPIDS_X, ARRAY_GEN0),
--	X86_MATCH(EMERALDRAPIDS_X, ARRAY_GEN0),
--	X86_MATCH(GRANITERAPIDS_X, ARRAY_GEN0),
--	X86_MATCH(GRANITERAPIDS_D, ARRAY_GEN0),
--	X86_MATCH(ATOM_CRESTMONT_X, ARRAY_GEN1),
-+	X86_MATCH(INTEL_SAPPHIRERAPIDS_X, ARRAY_GEN0),
-+	X86_MATCH(INTEL_EMERALDRAPIDS_X, ARRAY_GEN0),
-+	X86_MATCH(INTEL_GRANITERAPIDS_X, ARRAY_GEN0),
-+	X86_MATCH(INTEL_GRANITERAPIDS_D, ARRAY_GEN0),
-+	X86_MATCH(INTEL_ATOM_CRESTMONT_X, ARRAY_GEN1),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+-	switch (boot_cpu_data.x86_model) {
+-	case INTEL_FAM6_KABYLAKE_L:
+-	case INTEL_FAM6_KABYLAKE:
++	switch (boot_cpu_data.x86_vfm) {
++	case INTEL_KABYLAKE_L:
++	case INTEL_KABYLAKE:
+ 		clk_freq = 24000000;
+ 		break;
+ 	default:
 -- 
 2.45.0
 
