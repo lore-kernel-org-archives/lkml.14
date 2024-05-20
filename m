@@ -1,116 +1,97 @@
-Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AFFA18C3B;
-	Mon, 20 May 2024 07:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B3718C3B
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716190461; cv=none; b=jh54qpNhlrq+l0swgglca46bGIM0lstwwuB82ZODrEwXBLW65pcibs9tsjmHJJpQmLORf+stTgLNpbVfIjsdHekntuxnGwNHogHW1tyqrfuA8S9Nj4JVsIj8xTCGAvh96lox/o8nPcR9yq1i1i/dGshYStrnSP89CJBZMGWAjEw=
+	t=1716190526; cv=none; b=icfnUw/XlKzxYpT6QuQK7KVxthFm4y3ep6eDPZHMNETaUVcx7dl/axuQ4cqQK3gzWs6fVZHuMIez1/RQZ6/QE9uTMzchyUoAv9nu9tLqkhOxYUwNSGxAWT1sCRLv64XXYUx6XVXonRm6zqpToaQ+h9ngsciMOUM9SKc2xma4RYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716190461; c=relaxed/simple;
-	bh=w0nWP4OpzxjTteaJdbehBz/NP4ETwZZeVrDtaMvHGWQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ckYno2tRQVEgRmWO/VPa2gfRX83dWQCG2xbdis5S6bEoURjEJ8oZpKiMNslJpfsHxicTRjANvITA2NTQgpq8yUr/YDbvjQJso2l1LoLSqhnlfa/feJXpHAA96VTluQgNBe279kfwUYRpcIkSupW1m8oD3Vnamgtc0y2vXppd1uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=162.243.161.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from gui.. (unknown [115.206.161.197])
-	by mail-app2 (Coremail) with SMTP id by_KCgDHUaC9_EpmpJkFAQ--.208S4;
-	Mon, 20 May 2024 15:33:19 +0800 (CST)
-From: Lin Ma <linma@zju.edu.cn>
-To: johannes@sipsolutions.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1716190526; c=relaxed/simple;
+	bh=CreGSXMBFRDdh+HIhlg2OcR+mWGxYmJCDZEvadFcUiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tH07j8fFEhxW2OaLe6vEf/5Wme2cLVZq2+kbb8tr3kB5E62f4je0OqLbwjXGiw7Tw1+dyVgWmfT1UYjsPBE0IhZ+uoXXHV8kWSx1Ktw7SWdqCI1S3sR6KRX+Jz82Z6B5jeV872TFXSQhoWS/5kRemKuSV8VWNe9UmGsUAc0b01M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GPHSzAEO; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GPHSzAEO"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ec41d82b8bso75573685ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716190525; x=1716795325; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TdeskcQGCOqUgsMYL0wvQIQkx8Opxo9clxqEYF92eYc=;
+        b=GPHSzAEOfrDshMyMDR1sf1Hx1I+UK5XRkpI/RG+LDkJO/JgO9YcUuvUakpaXJI3Qtc
+         V4XPrGCWDT6HHXZTuzAJjJ5ts7GfpHM8wHtnCvhh8NuaQKj1j8zFFB6cu5STuEiGyDOF
+         KGdWa3FOmu0Ggdl5/aRjY79jNGVDnHgIIT8DworrQOYWoFG3tRZ6JHCy9b3B0NBTpksd
+         ln9V4OSmmZzj+6YGQB0YWtiAcSpXw28Y1FtbqVN6DbmMFGDReMbrApjOaX4LZwy0LcDn
+         PiumhBgMJvKtvydlOeAGw4SFUMghvWvtXr8rjTDe6S0V5sNReBLjxBZBtf7how/kAftA
+         CU6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716190525; x=1716795325;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TdeskcQGCOqUgsMYL0wvQIQkx8Opxo9clxqEYF92eYc=;
+        b=CkueOXjSSSakcI4UGApvJNNlltlFZiunqHo5PxD85T4hxeUUSn2AlNECl3EOkpSlgk
+         fDcssS1YgwIh6elbZCp2ZWh2fz78PZNcYkW4DoQUqqZAqdg5KKzixCJRFYjZqZ08ek0Q
+         zuGDdSuG9ueXmyqTxbS4TeK8M1QWGBCzyxq1SqY4mkzVxZES2+G6+BvIuavL16XLUNZ0
+         LSOo7LUjiV60GyViPajWVUnkts47HcuOpYIm/Jx9U9Z+BTyEV3+UDMONF9l8W394esBO
+         ECYf4Pii6cqZoVOpFu9qmN45ZVoZvrdeF5ZZA94xkC0Qdl9Cj+hPAHBNc/gakR7qaCJM
+         sCVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcBS1WMiGqUiNAeD6MOgKf7BuVPOBdiV86U0jV7SbVu6wev/RvhVZOST7yraXhKzsLGVNS5ST8E92G5G7q0pQ1knCb70EEqNMzV5ry
+X-Gm-Message-State: AOJu0YzAgu4D4HJEvImfwDxJMxzRV3IFCJxb0qjFJnhUDN0vYryo5kHp
+	QDzNfnkEESP7JFvNAcJIU84GSYicmkT7lMVCGy2GsK91GZFpPW0dZ3vXcBO16Hw=
+X-Google-Smtp-Source: AGHT+IHPnUMf1hHaC0TYUlsq97fbQdCCRP95VeDkuaFDGW9CA2YAIYyeywDjHu54+bcWgGQVcpgq7w==
+X-Received: by 2002:a05:6a20:c78c:b0:1af:cb89:15d7 with SMTP id adf61e73a8af0-1afde1035a8mr32774233637.27.1716190524677;
+        Mon, 20 May 2024 00:35:24 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bd7f6c90f0sm1214435a91.2.2024.05.20.00.35.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 00:35:24 -0700 (PDT)
+Date: Mon, 20 May 2024 13:05:22 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Vladimir Lypak <vladimir.lypak@gmail.com>,
 	linux-kernel@vger.kernel.org
-Cc: Lin Ma <linma@zju.edu.cn>
-Subject: [PATCH v1 net] cfg80211: pmsr: use correct nla_get_uX functions
-Date: Mon, 20 May 2024 15:33:11 +0800
-Message-Id: <20240520073311.44117-1-linma@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH V2] OPP: Fix required_opp_tables for multiple genpds
+ using same table
+Message-ID: <20240520073522.3nhy4x6fnrqxay6x@vireshk-i7>
+References: <2eb72832e852c80e5c11cd69e7d2f14cefd8b1cb.1712903998.git.viresh.kumar@linaro.org>
+ <e6fc06eb-fe52-4cb3-b412-a602369ee875@leemhuis.info>
+ <CAPDyKFoHoKK-RZsGwnZhbW9_ZRQtL1MFZBuVVLMx-MxL2cQQbw@mail.gmail.com>
+ <7c6df194-fce1-401a-98c5-c903d78627c4@leemhuis.info>
+ <CAPDyKFqKRy6zJdBpK3bNTvkvAjty691-Vi_HV3E5CeqgRAWGmA@mail.gmail.com>
+ <CAKohpomKbhdXRgFxxbg-_hG5EFZT0LrvfQcrwjQPon6AZNbGag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgDHUaC9_EpmpJkFAQ--.208S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxXF13tFW5Cw1Dtry7tFWUArb_yoW5WrW8pF
-	4kta95t3Z8Xw1kZrykCw18WF9FqF17Arn3CFW3uF1fCr4vga45twnrWr4jqa1DA3s5W395
-	tr1vyay8Cw15KFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r1q
-	6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUonmRUUUUU
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKohpomKbhdXRgFxxbg-_hG5EFZT0LrvfQcrwjQPon6AZNbGag@mail.gmail.com>
 
-The commit 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM
-initiator API") defines four attributes, which are
+On 11-05-24, 10:03, Viresh Kumar wrote:
+> On Fri, 10 May 2024 at 16:14, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > I wasn't sure of the level of urgency in this case, as I don't think
+> > we have that many DTSes upstream that could hit this case.
+> >
+> > But nevermind, it should be easy to revert/replace the change when we
+> > have something better to take over. Viresh, feel pick this up - or let
+> > me know if you prefer me to pick it.
+> 
+> Please apply, while I enjoy my holidays :)
 
-- `NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP` with NLA_U8 type
-- `NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD` with NLA_U16 type
-- `NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION` with NLA_U8 type
-- `NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES` with NLA_U8 type
+Merged to Rafael's tree already now.
 
-However, the consumers of these attributes in `pmsr_parse_ftm` blindly
-all use `nla_get_u32`, which is incorrect. Hence, fix these with correct
-`nla_get_u8` and `nla_get_u16`.
-
-Fixes: 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM initiator API")
-Signed-off-by: Lin Ma <linma@zju.edu.cn>
----
- net/wireless/pmsr.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/net/wireless/pmsr.c b/net/wireless/pmsr.c
-index e106dcea3977..c569c37da317 100644
---- a/net/wireless/pmsr.c
-+++ b/net/wireless/pmsr.c
-@@ -56,7 +56,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
- 	out->ftm.burst_period = 0;
- 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD])
- 		out->ftm.burst_period =
--			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD]);
-+			nla_get_u16(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD]);
- 
- 	out->ftm.asap = !!tb[NL80211_PMSR_FTM_REQ_ATTR_ASAP];
- 	if (out->ftm.asap && !capa->ftm.asap) {
-@@ -75,7 +75,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
- 	out->ftm.num_bursts_exp = 0;
- 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP])
- 		out->ftm.num_bursts_exp =
--			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP]);
-+			nla_get_u8(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP]);
- 
- 	if (capa->ftm.max_bursts_exponent >= 0 &&
- 	    out->ftm.num_bursts_exp > capa->ftm.max_bursts_exponent) {
-@@ -88,7 +88,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
- 	out->ftm.burst_duration = 15;
- 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION])
- 		out->ftm.burst_duration =
--			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION]);
-+			nla_get_u8(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION]);
- 
- 	out->ftm.ftms_per_burst = 0;
- 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_FTMS_PER_BURST])
-@@ -107,7 +107,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
- 	out->ftm.ftmr_retries = 3;
- 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES])
- 		out->ftm.ftmr_retries =
--			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES]);
-+			nla_get_u8(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES]);
- 
- 	out->ftm.request_lci = !!tb[NL80211_PMSR_FTM_REQ_ATTR_REQUEST_LCI];
- 	if (out->ftm.request_lci && !capa->ftm.request_lci) {
 -- 
-2.34.1
-
+viresh
