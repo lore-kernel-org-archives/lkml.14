@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6901CD32
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 22:46:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548405026E
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 22:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716245199; cv=none; b=cGMR/srut/87DllwwSs0B+qoUYdBF57CaZuV0I3HhlPMcuSPYtiJZ98kDu0HpIJUZZZNb82pnCMeg6jh4F5+SCKYiuRJ0jHssrQNrwnlw/rIozOEb2oXUr6aG24eWy3Hmn/S22dtSWTET75y2Ng77MTwQBXP+VxWLdSDqVyXZBE=
+	t=1716245200; cv=none; b=iEJcU4HvoH/I/+j0k4FothThbZVCWgJpcX0DKBvi92LVAbHT/4eDNbnaV1qplguv6AbMJGTUGUddHGhDjPA0lpcNFCgwuKtrAA3VNtEQEgzWJY4trr1SMlLQNKsJ5wGc4QGUIxo/tPC3gvmlTRue7Tdtfg75vFMnBaLuzRXMnG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716245199; c=relaxed/simple;
-	bh=v93/ual/g32vB/MEMraEt8b9ts3LdceCjM3EwpB5y20=;
+	s=arc-20240116; t=1716245200; c=relaxed/simple;
+	bh=R7lJm8y1wTPr9sOO4og3VXb29EESiuJx3kDAU5wPuLo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kLP3sHlk1rpb7iD/iDLBzgN0AJzpYC5sHZN3jnpGfMIE0GthE0RIBu+6gqg9lPw16H/NWd+WImdnkPoLBhg9oyZZOabg3fHWJm3PKZrj91VH/z6oPhbZFJ/wi9rN182EssGw7O1Lt3e7C8NAXlgrLeM6+ME3RgJ5yMutnWkwRxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5PLBLSt; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=Yv6zr5klD8s9w5aUhPtPiAZRNzBGwm/3FNzdMu95Zg2M7rNEnZlBv+PYodKnRHyMtya8221rj8QvVOjNKgxv75Ag5iz7zgRRcCYKuLIEuqqA0bQjm2tk03VRSAAdUWgpmJfp0pggLKNwu06jM3CGGfZl/C/AKvbFXNyLoUlunfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=esvVkENu; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5PLBLSt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="esvVkENu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1716245198; x=1747781198;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=v93/ual/g32vB/MEMraEt8b9ts3LdceCjM3EwpB5y20=;
-  b=X5PLBLSt6bj52vVFsHTH6qm5+95UU3cMqa2Imhbg6mdmNUyfEymoJ/mK
-   NyYl0MsqTRsdWbJkae131ySB6Xmua0k/W43uF3J+Ew5mlOw/xDnsCsY0L
-   thWyIwb/zDaRQkfvg9QtudnAv5h2azGmRzz8BDNB1eJwyEbz5TtwFSopo
-   1hQrnWP4ZL3J6b9LUvM1UbiomXPLExtk6lDAXwZeG8yIGd6khpshDCMlY
-   NVyf1iEYwN5cZmAqXMlRTsDoDmUL5aUD+ZX/mlJbZxlq1Y54lWHXzv6bm
-   WRi0MelsqRRHoaXggYzxuAtVFimTRRWBMgdSrc9t1Pe4sU0cmCa8q3/Db
-   A==;
-X-CSE-ConnectionGUID: ejzUp/NKT42jj1ryMCs45Q==
-X-CSE-MsgGUID: U/9F5LWzQGiZQymKEEMeuw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12199529"
+  bh=R7lJm8y1wTPr9sOO4og3VXb29EESiuJx3kDAU5wPuLo=;
+  b=esvVkENuTE25h1bd6mfotyTf34BPPsdEryy214C3S58V+n8SH3qdnq7U
+   kXgtG64jUvg3cAtLwxVY+auw3NyqC93FqSMsdlkxLwfp7iH0b2hv1oVaY
+   4xmVBGl+ELXgyXvNgX/ikJZI4Ij7EGWObGCJxpRQLDGdc0vUTm33Pg14O
+   GmQTxQiNBFfFBBwXMmCPHu0XUkdlTyqywPvQBBPgLY1wvHJC5yoAFgGBb
+   Ck0+XyQfQHhkt4pJGVPM1hGAIhXcH2NMfGoKu6A92UvGyZP3SoFj7miBE
+   lxaG3QL8m+L6c+HgsYV98UbIzajo2eEFGisSFXo4T23BbRAiWhalVxjxG
+   w==;
+X-CSE-ConnectionGUID: w3IDjXf+QQmeHTogPp8/6Q==
+X-CSE-MsgGUID: PBNf28dIRDKP3Yb30IWBTA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12199551"
 X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="12199529"
+   d="scan'208";a="12199551"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:35 -0700
-X-CSE-ConnectionGUID: 8wuCngyrRqutNflgnQSAEA==
-X-CSE-MsgGUID: /viPDrVoQp+zeZMF0zFKDQ==
+X-CSE-ConnectionGUID: m5auZqylSLesyZVyyHIuXg==
+X-CSE-MsgGUID: Q5vCGZJGRheBZu3aCQ6ysQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="32593389"
+   d="scan'208";a="32593396"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:35 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -60,10 +60,11 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
-	Jarkko Sakkinen <jarkko@kernel.org>
-Subject: [PATCH v6 03/49] tpm: Switch to new Intel CPU model defines
-Date: Mon, 20 May 2024 15:45:34 -0700
-Message-ID: <20240520224620.9480-4-tony.luck@intel.com>
+	Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v6 05/49] media: atomisp: Switch to new Intel CPU model defines
+Date: Mon, 20 May 2024 15:45:36 -0700
+Message-ID: <20240520224620.9480-6-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240520224620.9480-1-tony.luck@intel.com>
 References: <20240520224620.9480-1-tony.luck@intel.com>
@@ -78,38 +79,58 @@ Content-Transfer-Encoding: 8bit
 New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/char/tpm/tpm.h          | 2 +-
- drivers/char/tpm/tpm_tis_core.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ .../atomisp/include/linux/atomisp_platform.h  | 27 ++++++++-----------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index 6b8b9956ba69..7bb87fa5f7a1 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -28,7 +28,7 @@
- #include <linux/tpm_eventlog.h>
+diff --git a/drivers/staging/media/atomisp/include/linux/atomisp_platform.h b/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
+index 0e3f6fb78483..fdeb247036b0 100644
+--- a/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
++++ b/drivers/staging/media/atomisp/include/linux/atomisp_platform.h
+@@ -18,7 +18,7 @@
+ #ifndef ATOMISP_PLATFORM_H_
+ #define ATOMISP_PLATFORM_H_
  
- #ifdef CONFIG_X86
 -#include <asm/intel-family.h>
 +#include <asm/cpu_device_id.h>
- #endif
+ #include <asm/processor.h>
  
- #define TPM_MINOR		224	/* officially assigned */
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index 13e99cf65efe..690ad8e9b731 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -210,7 +210,7 @@ static inline int tpm_tis_verify_crc(struct tpm_tis_data *data, size_t len,
- static inline bool is_bsw(void)
- {
- #ifdef CONFIG_X86
--	return ((boot_cpu_data.x86_model == INTEL_FAM6_ATOM_AIRMONT) ? 1 : 0);
-+	return (boot_cpu_data.x86_vfm == INTEL_ATOM_AIRMONT) ? 1 : 0;
- #else
- 	return false;
- #endif
+ #include <linux/i2c.h>
+@@ -178,22 +178,17 @@ void atomisp_unregister_subdev(struct v4l2_subdev *subdev);
+ int v4l2_get_acpi_sensor_info(struct device *dev, char **module_id_str);
+ 
+ /* API from old platform_camera.h, new CPUID implementation */
+-#define __IS_SOC(x) (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && \
+-		     boot_cpu_data.x86 == 6 &&                       \
+-		     boot_cpu_data.x86_model == (x))
+-#define __IS_SOCS(x,y) (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && \
+-		        boot_cpu_data.x86 == 6 &&                       \
+-		        (boot_cpu_data.x86_model == (x) || \
+-		         boot_cpu_data.x86_model == (y)))
+-
+-#define IS_MFLD	__IS_SOC(INTEL_FAM6_ATOM_SALTWELL_MID)
+-#define IS_BYT	__IS_SOC(INTEL_FAM6_ATOM_SILVERMONT)
+-#define IS_CHT	__IS_SOC(INTEL_FAM6_ATOM_AIRMONT)
+-#define IS_MRFD	__IS_SOC(INTEL_FAM6_ATOM_SILVERMONT_MID)
+-#define IS_MOFD	__IS_SOC(INTEL_FAM6_ATOM_AIRMONT_MID)
++#define __IS_SOC(x) (boot_cpu_data.x86_vfm == x)
++#define __IS_SOCS(x, y) (boot_cpu_data.x86_vfm == x || boot_cpu_data.x86_vfm == y)
++
++#define IS_MFLD	__IS_SOC(INTEL_ATOM_SALTWELL_MID)
++#define IS_BYT	__IS_SOC(INTEL_ATOM_SILVERMONT)
++#define IS_CHT	__IS_SOC(INTEL_ATOM_AIRMONT)
++#define IS_MRFD	__IS_SOC(INTEL_ATOM_SILVERMONT_MID)
++#define IS_MOFD	__IS_SOC(INTEL_ATOM_AIRMONT_MID)
+ 
+ /* Both CHT and MOFD come with ISP2401 */
+-#define IS_ISP2401 __IS_SOCS(INTEL_FAM6_ATOM_AIRMONT, \
+-			     INTEL_FAM6_ATOM_AIRMONT_MID)
++#define IS_ISP2401 __IS_SOCS(INTEL_ATOM_AIRMONT, \
++			     INTEL_ATOM_AIRMONT_MID)
+ 
+ #endif /* ATOMISP_PLATFORM_H_ */
 -- 
 2.45.0
 
