@@ -1,296 +1,70 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386528F6F
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 02:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id E1C664C80;
+	Mon, 20 May 2024 02:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716171380; cv=none; b=F+ad1Il4MwbJLZayg4gsor8bz9gZQc6zUv7Yal5T4/U9uUKrSi8YCNd0Q7OrAYbjmFktZM9X7xFrddaF0gE1h87pCUL19V2eegeb95TzXg1DaTrWtCSBK1mI56flz6fbkP5/VoVP53hqig5jDb0m68nUlHrFx0UyQ841Hra7jIw=
+	t=1716171425; cv=none; b=uBsgMOMDuNV6JL7jB0W83u8B/hiOSuhASMHzvDXlyoTG8hr+OduI560JQXLV2ez5J5KizwqUh9HI2G+ysYw/GYILHfIj6LkA+MiuoUYTFnrxub8aiJuH4G9yjmCbebd3FHlXV5RgPMPpMzAs5MmdW6pioLFud2D3tO73XOK+0lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716171380; c=relaxed/simple;
-	bh=emBZah1nJM7hX2hwqXj1bD4HWPpBnlv8ewVWm+AeRdU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dCt1itKAs2HV3DjD5sdM0q/sGAjpoeupk1PdYsM8lvDMQowcxM86ET868J5n9n0jWLf97S+QZWPE+gFuk3vkuAAuhM6W9DgPjmn3Aq91djq9a/48b1Po7Qmco0FpOsTsUnAHr9ySF2RR8Ehg0lqmd8Xiv0sKU1XDyuH3VcY6V3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=noh1Rrwx; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="noh1Rrwx"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ecc23e6c9dso60090025ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 May 2024 19:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716171378; x=1716776178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u7+oCeV5s8SnWCifHQ1nG7jot6TA5mZOIRM4l7lIpDY=;
-        b=noh1RrwxzhxFlv6BvYCB2L9DxeLiHJgoyra2uRscyPuhmXF9vTaTipUn/TSvxDkt/9
-         Xz+J+bWIoXw1kiVng/yk++LKNxE44BWqeAi34n8PsHMTX1Uwf7ryYLYh5VPnV1NFnxrv
-         tu3mz/x+3Y5hk/I3IjLACOXGpyXLWFRzMosfY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716171378; x=1716776178;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u7+oCeV5s8SnWCifHQ1nG7jot6TA5mZOIRM4l7lIpDY=;
-        b=MC4JtnwjUjBOdg9oXpCXuWN2EsZ1do9izaOaoEyP9N4pcK96Co7fSuu2k0S68Fb8Rp
-         qZ5+kaPeLddTB4R6zM20o5bbbBqHqnVl97DQuljVYF8c7ALnyRuKYmoY8hlGkdRiCtSL
-         AzigbS07SKD7jgOmyoy8C+pMTCeZVQBrH5JC1rEz/S2OXhjPtrtchutfgj6rNZy7KwTP
-         KMwvk3+f+wRvGpP1PAqSnsemMEA+u7iyLp1NDLkV4nxCt7fb2a26H8bOS8WrcpdU+aq/
-         w+TNexb8SFrtouGqj6jChaLG/+c1Y9xfZi7F1GJhPX4BCuHU/A285UO/TsUTGU4ItrTv
-         vmSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNVmxSsteVu/dN/Ufls+pbFguk9wk+xmdARoNQPP4SWLXb5gRpKDO0DzCE17OSOWl/HXXh02BBcvaZbVZ8PyRGtgM5PrgXCEpzEu1Z
-X-Gm-Message-State: AOJu0YwmAWo1ErGd2wFe2oDu+ULKnoeawfjcXz2ZjdXf4hjbsn3PCCKU
-	5mCykq1uin2Fn3M89x+LA5obs6bzDpl2IMWcVK2hzKXqP0on2LgTWC4B8CkLAlxI73Um3+zoo/I
-	=
-X-Google-Smtp-Source: AGHT+IHRnGNUav1xrKAItbibrjklhMFmAti4JfbJK6woGd6RFU76uzId3Xy5ieOxiN069HAexO85vQ==
-X-Received: by 2002:a05:6a20:6a04:b0:1af:d40a:7692 with SMTP id adf61e73a8af0-1afde1c4d31mr30237407637.42.1716171378409;
-        Sun, 19 May 2024 19:16:18 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67158c3b4sm19014586a91.45.2024.05.19.19.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 May 2024 19:16:16 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
+	s=arc-20240116; t=1716171425; c=relaxed/simple;
+	bh=XHIQ95g/vueEcW57EIQgD5QSEjqfOnGsPYbNMssLwlQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zrmn2nMx5RngrEIZYVRtDMSJ7Ff7owdPDk9w4SKsKSV5PeQxnyA3SR66PRXE4TOCHSRa7gI7Ns41odQKJDGyI+yx+4AqisYkKi0XxWVye2xzivMZ7LDu5Dd5FIBX6BZM8jvQu6pwI3/ScdhmEJzpWP/2afMPchrujBShdZb29ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [180.167.10.98])
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPSA id DE43D6026E8D1;
+	Mon, 20 May 2024 10:16:49 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com
+Cc: Su Hui <suhui@nfschina.com>,
+	linux-bluetooth@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 1/2] exec: Add KUnit test for bprm_stack_limits()
-Date: Sun, 19 May 2024 19:16:11 -0700
-Message-Id: <20240520021615.741800-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240520021337.work.198-kees@kernel.org>
-References: <20240520021337.work.198-kees@kernel.org>
+	llvm@lists.linux.dev,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH 1/2] Bluetooth: btintel: remove useless code in btintel_set_dsm_reset_method
+Date: Mon, 20 May 2024 10:16:25 +0800
+Message-Id: <20240520021625.110430-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8160; i=keescook@chromium.org;
- h=from:subject; bh=emBZah1nJM7hX2hwqXj1bD4HWPpBnlv8ewVWm+AeRdU=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmSrJr1E0juzDEuXc+NCFvv+X5LxxCes4KOV4R8
- c2T/ikWuoCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZkqyawAKCRCJcvTf3G3A
- JpZMD/90Wembb3QiAeI2/lgYkDLrvjCANGGt0wlkf6F7D0Cv2Xx4H+Yg8dzjNFB2f+Pk5FxgQpa
- JVXfOYEsq2aYbEHjV5oW19f7lxUXC0J9/2c0zIyX+hu10so69Ff5ZlmUoPMl2Awu7oot1pztAmK
- Nnu18J6N40YMPeN6U6N6YGHf2kGySvRAS9prEhT5/DOKec47GQkZrZdl80Br26nga/tRCKReBos
- xbktxpVu0OqDaVgCACoRCMohKw356sYr6C2UOUtKlGuJgRoYZTvgjQLJxkL5NaPg2LOYS5tg7QC
- qk7/H3L7TEn2jpZqmqMiowISQ+POF2Qz0QmMCmJEkSE8GWQlEZ5sQumg5g4cVOUwTlVxsh3+W24
- 0C0/q4OK8h8qG9VRQpfxlL1Lq8EWj1EdfQgB0JkstXdeUto2ikkXtMKAT23ms3Ac8BDbyibe9Qu
- DvIQAFmTZtiXzuO4/chaVOTMnqtarJYvQA1DLNfFQHsLeJYUf5T4cersgMtNhkfLyapJ6WyFC44
- g5HKZbmwjIYV3tEoHnFS87eNmn4Xt1BULsQYihMTtI6CeTOdQljVZEoOOLa2kT1tNwHGVQ1j+j/
- 4wiHrZky3jrRjFfMVJ7HkZ2eEgkteF46GLaEOWytXTdRDeLf5rS/AyrGEcHA1ThJAwdHwaiPnnv K0/rUIpqBm+XkxA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Since bprm_stack_limits() operates with very limited side-effects, add
-it as the first exec.c KUnit test. Add to Kconfig and adjust MAINTAINERS
-file to include it.
+Clang static checker(scan-build) warning:
+drivers/bluetooth/btintel.c:2537:14:
+Value stored to 'handle' during its initialization is never read.
 
-Tested on 64-bit UML:
-$ tools/testing/kunit/kunit.py run exec
+No need to repeatedly assign values to 'handle'. Remove this useless
+code to save some space.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Su Hui <suhui@nfschina.com>
 ---
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- MAINTAINERS       |   2 +
- fs/Kconfig.binfmt |   8 ++++
- fs/exec.c         |  13 ++++++
- fs/exec_test.c    | 113 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 136 insertions(+)
- create mode 100644 fs/exec_test.c
+ drivers/bluetooth/btintel.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7c121493f43d..845165dbb756 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8039,7 +8039,9 @@ S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
- F:	Documentation/userspace-api/ELF.rst
- F:	fs/*binfmt_*.c
-+F:	fs/Kconfig.binfmt
- F:	fs/exec.c
-+F:	fs/exec_test.c
- F:	include/linux/binfmts.h
- F:	include/linux/elf.h
- F:	include/uapi/linux/binfmts.h
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index f5693164ca9a..58657f2d9719 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -176,4 +176,12 @@ config COREDUMP
- 	  certainly want to say Y here. Not necessary on systems that never
- 	  need debugging or only ever run flawless code.
+diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
+index 0c855c3ee1c1..f1c101dc0c28 100644
+--- a/drivers/bluetooth/btintel.c
++++ b/drivers/bluetooth/btintel.c
+@@ -2542,8 +2542,6 @@ static void btintel_set_dsm_reset_method(struct hci_dev *hdev,
+ 		RESET_TYPE_VSEC
+ 	};
  
-+config EXEC_KUNIT_TEST
-+	bool "Build execve tests" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the exec KUnit tests, which tests boundary conditions
-+	  of various aspects of the exec internals.
-+
- endmenu
-diff --git a/fs/exec.c b/fs/exec.c
-index b3c40fbb325f..1d45e1a2d620 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -475,6 +475,15 @@ static int count_strings_kernel(const char *const *argv)
- 	return i;
- }
- 
-+/*
-+ * Calculate bprm->argmin from:
-+ * - _STK_LIM
-+ * - ARG_MAX
-+ * - bprm->rlim_stack.rlim_cur
-+ * - bprm->argc
-+ * - bprm->envc
-+ * - bprm->p
-+ */
- static int bprm_stack_limits(struct linux_binprm *bprm)
- {
- 	unsigned long limit, ptr_size;
-@@ -2200,3 +2209,7 @@ static int __init init_fs_exec_sysctls(void)
- 
- fs_initcall(init_fs_exec_sysctls);
- #endif /* CONFIG_SYSCTL */
-+
-+#ifdef CONFIG_EXEC_KUNIT_TEST
-+#include "exec_test.c"
-+#endif
-diff --git a/fs/exec_test.c b/fs/exec_test.c
-new file mode 100644
-index 000000000000..32a90c6f47e7
---- /dev/null
-+++ b/fs/exec_test.c
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+
-+struct bprm_stack_limits_result {
-+	struct linux_binprm bprm;
-+	int expected_rc;
-+	unsigned long expected_argmin;
-+};
-+
-+static const struct bprm_stack_limits_result bprm_stack_limits_results[] = {
-+	/* Giant values produce -E2BIG */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ULONG_MAX,
-+	    .argc = INT_MAX, .envc = INT_MAX }, .expected_rc = -E2BIG },
-+	/*
-+	 * 0 rlim_stack will get raised to ARG_MAX. With 1 string pointer,
-+	 * we should see p - ARG_MAX + sizeof(void *).
-+	 */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = 1, .envc = 0 }, .expected_argmin = ULONG_MAX - ARG_MAX + sizeof(void *)},
-+	/* Validate that argc is always raised to a minimum of 1. */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = 0, .envc = 0 }, .expected_argmin = ULONG_MAX - ARG_MAX + sizeof(void *)},
-+	/*
-+	 * 0 rlim_stack will get raised to ARG_MAX. With pointers filling ARG_MAX,
-+	 * we should see -E2BIG. (Note argc is always raised to at least 1.)
-+	 */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = ARG_MAX / sizeof(void *), .envc = 0 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = 0, .envc = ARG_MAX / sizeof(void *) - 1 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = ARG_MAX / sizeof(void *) + 1, .envc = 0 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = 0, .envc = ARG_MAX / sizeof(void *) }, .expected_rc = -E2BIG },
-+	/* And with one less, we see space for exactly 1 pointer. */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = (ARG_MAX / sizeof(void *)) - 1, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 0,
-+	    .argc = 0, .envc = (ARG_MAX / sizeof(void *)) - 2, },
-+	  .expected_argmin = ULONG_MAX - sizeof(void *) },
-+	/* If we raise rlim_stack / 4 to exactly ARG_MAX, nothing changes. */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ARG_MAX * 4,
-+	    .argc = ARG_MAX / sizeof(void *), .envc = 0 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ARG_MAX * 4,
-+	    .argc = 0, .envc = ARG_MAX / sizeof(void *) - 1 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ARG_MAX * 4,
-+	    .argc = ARG_MAX / sizeof(void *) + 1, .envc = 0 }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ARG_MAX * 4,
-+	    .argc = 0, .envc = ARG_MAX / sizeof(void *) }, .expected_rc = -E2BIG },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ARG_MAX * 4,
-+	    .argc = (ARG_MAX / sizeof(void *)) - 1, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = ARG_MAX * 4,
-+	    .argc = 0, .envc = (ARG_MAX / sizeof(void *)) - 2, },
-+	  .expected_argmin = ULONG_MAX - sizeof(void *) },
-+	/* But raising it another pointer * 4 will provide space for 1 more pointer. */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = (ARG_MAX + sizeof(void *)) * 4,
-+	    .argc = ARG_MAX / sizeof(void *), .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = (ARG_MAX + sizeof(void *)) * 4,
-+	    .argc = 0, .envc = ARG_MAX / sizeof(void *) - 1 },
-+	  .expected_argmin = ULONG_MAX - sizeof(void *) },
-+	/* Raising rlim_stack / 4 to _STK_LIM / 4 * 3 will see more space. */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 * 3),
-+	    .argc = 0, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 * 3),
-+	    .argc = 0, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-+	/* But raising it any further will see no increase. */
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 * 3 + sizeof(void *)),
-+	    .argc = 0, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * (_STK_LIM / 4 *  + sizeof(void *)),
-+	    .argc = 0, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * _STK_LIM,
-+	    .argc = 0, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-+	{ { .p = ULONG_MAX, .rlim_stack.rlim_cur = 4 * _STK_LIM,
-+	    .argc = 0, .envc = 0 },
-+	  .expected_argmin = ULONG_MAX - (_STK_LIM / 4 * 3) + sizeof(void *) },
-+};
-+
-+static void exec_test_bprm_stack_limits(struct kunit *test)
-+{
-+	/* Double-check the constants. */
-+	KUNIT_EXPECT_EQ(test, _STK_LIM, SZ_8M);
-+	KUNIT_EXPECT_EQ(test, ARG_MAX, 32 * SZ_4K);
-+
-+	for (int i = 0; i < ARRAY_SIZE(bprm_stack_limits_results); i++) {
-+		const struct bprm_stack_limits_result *result = &bprm_stack_limits_results[i];
-+		struct linux_binprm bprm = result->bprm;
-+		int rc;
-+
-+		rc = bprm_stack_limits(&bprm);
-+		KUNIT_EXPECT_EQ_MSG(test, rc, result->expected_rc, "on loop %d", i);
-+		KUNIT_EXPECT_EQ_MSG(test, bprm.argmin, result->expected_argmin, "on loop %d", i);
-+	}
-+}
-+
-+static struct kunit_case exec_test_cases[] = {
-+	KUNIT_CASE(exec_test_bprm_stack_limits),
-+	{},
-+};
-+
-+static struct kunit_suite exec_test_suite = {
-+	.name = "exec",
-+	.test_cases = exec_test_cases,
-+};
-+
-+kunit_test_suite(exec_test_suite);
+-	handle = ACPI_HANDLE(GET_HCIDEV_DEV(hdev));
+-
+ 	if (!handle) {
+ 		bt_dev_dbg(hdev, "No support for bluetooth device in ACPI firmware");
+ 		return;
 -- 
-2.34.1
+2.30.2
 
