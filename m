@@ -1,127 +1,169 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4E41386B5;
-	Mon, 20 May 2024 18:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20B0138496
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 18:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716230597; cv=none; b=YgGEa8v19Ag4XpEqeWcCQVaBHJWFZtVV9JxIrGt3e/c0uicNXrpwO6bmWblfAxv4EPCKiguMPMv2vL8UeyS/6H75Q3Se6svJwN8lVsLyD9LWhpk6O4UR1Sm/EK0+X5DeBDaFNEy245dgJId5fco2+nMsFDh7gpEvAqnGHXOsB6E=
+	t=1716230668; cv=none; b=NfPK/42dAtk8Hl6yRBfBsYOsVM1HW5GX7rK1S4J18OVFeMzeJZttWh6f7u018fppw3kOfi7xhTu9VAPtpmEGFxJYeAWmMV8Daef5pX665bKlASYMZ9sZsODMyqMvU0XeM7Rp9iJVbxLLL/YsbspyT2A5w/Yz1odeqKCJjDCtZSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716230597; c=relaxed/simple;
-	bh=HnSg3+8yvYDWyM1nLfi8rFvp5yUPrPDHA9iB7+b6vZ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YhCC7ceaeaXeorGY0kAn+o9AbXr6nolviQ/MeLxW/r/aJPmYSCIo6vuIPGeAKzxqSAN0qnOE3q2PrbJYDMok1CmiFjcWEGAh27es2nLI0YgV/yRuryeAmEKWVrL6jvEgqu7tZUHwMilgKmZHUKLUJNPotc1xJhpekydrakPiuXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OAHNpXOf; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716230668; c=relaxed/simple;
+	bh=YrF+BGB8KkA20GPMWSqiSRn6DYf3paXMT8yMVBT+jSc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nYvPKld9OtKoEbZD56lX7yGzTsTTs+bw+O3jVOgBC4O9mMzkax2CuKyIbLvAYrQPN+QNnPATAfJaBvbzU4oasptcf5IqzB/KhSa1BRBy0yi6VCESfCgkujF1DzXJw9HwA1sY2jMmRIGannwXZ+yj1bjCYpEBwyU6dLEip/qGusw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=CHmfj0dG; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAHNpXOf"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51ff65b1e14so5236972e87.2;
-        Mon, 20 May 2024 11:43:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="CHmfj0dG"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-61be613d903so30499827b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 11:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716230594; x=1716835394; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=cloudflare.com; s=google09082023; t=1716230666; x=1716835466; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p0OurAq4gNaktjTguChGRH09zP44yFK+BI9ZEKeRFnI=;
-        b=OAHNpXOf2C7pVLjV7VfDXmZjO3H1RNqJs6j53Cd18695AXq0knY8SKK9z7udK7SCFq
-         6PBCgCQ9QECVhTxDKtUHMfvHLrsFOz+xhZM2cLdeQ1Tp8kjvYsEiQup/aaZRN/5hZup0
-         zNcIha06ZYWKGCrIegs/thR/WtlybOubr4/P6Giw8xMfWD0Ph6/wKHkWH07Ymceis8ZT
-         Iyy9khpTuOiJ+YvSviJS0hoXWL8jopv3R1qNQONYfcBGgZQ0VatmkIy70NUfdRoxYS2I
-         vt/yl7hMbnT2Q8jbQjdtf22RNT8XzW8ZyQSbm7OSqQe+hlM4GYk+f0zvUAs1ooifWp79
-         seFQ==
+        bh=KUBLBSrsQ9qU9W/MCb1o7PdEzonP2nGcujZe+jtBzUg=;
+        b=CHmfj0dG/dfHB5J5tRmNRw5zHNb1PTbyhUAqVvw8YouKRqPhXz+rYB5655qI/wMgfC
+         PWmk0Y3NjrJtgpdJ3/mluq2W1lPj9q6Adz3azKRgR1xsqaZLi5yP4BlvrRBw3awXwVkG
+         XgqZTfE9wV91CEPPDPdhjnewVy6c7KvPtcf6jSklNR39A/PNhH4J8Kv1ET29O1sr+2wE
+         x9C2JRxYZIKLOPvPtfOlRIJE8mik6uRI+5RgcAfRjY7lS3wvBTHN8DzvDnFy9R66NAXB
+         6Uwz7nEfvhCT0Xmpm0C9zwcqarBe8Rrguf16uI2tkXaYd8yERIFXv8bwFhK+GGTHc8iB
+         0rLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716230594; x=1716835394;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716230666; x=1716835466;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p0OurAq4gNaktjTguChGRH09zP44yFK+BI9ZEKeRFnI=;
-        b=QP2fEPV60evUpvsCAeCkuUMU1e+8/XgoA/0bsHeZxPWmiO3canps0N5ewAUxgtvasE
-         c2B0yEQF43HiVBmHlhQeEuwLH12/zEuBnrN38ax5l9c1p81t97D3UvjPFu1w4qrbltYN
-         JryEDNwNWYV5IWtNFIpU5P5TyH+R7GNZ3a+Drx7MlYhgc47RbPyHaCOvneCUX1NFxNlP
-         GF65PQyZaSfqrrMynbcoG49/Bkg3WbIudTOoqoNxd4FPM9HLraWvZzDVwWF3f+qgKQla
-         i5vQ5UCeEAK6kAqfZkLUkBAMzdAu85/qbTVO2kbkao/ix14TNcTTx0BFdV5qTslgmdwE
-         /pQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVleUlrxndptw9UV2mcOl9rszNHZjSxCfnrzoImSuSIOV+nazzY8GLB1d9UuOqjg/iPkeBU2MzkW0pjyCknI3T8BNtPuRTo7a9TL7palZiXnn4x9P1uzVt1giwB2WEiNpjwzx9RkA==
-X-Gm-Message-State: AOJu0Yzqlz4F/fSORCAzeFX6swQw2iQ5X5VzcBf/958dSJmJnwl1fIrE
-	BFvB0EuAXlortH5a8SFv/8iX0LDc5RGRrON5mFTrGqlR1GRtqgpQx3gqgXUPh4G0
-X-Google-Smtp-Source: AGHT+IES9MWPihMjZ9PvkU27cNvcpSz1C7H99avkgVPdGIM5+InFmh0mxe8lkpqCAW7BOcWJa45LqQ==
-X-Received: by 2002:a05:6512:3a83:b0:51e:7fa6:d59f with SMTP id 2adb3069b0e04-52210074380mr22923108e87.53.1716230593937;
-        Mon, 20 May 2024 11:43:13 -0700 (PDT)
-Received: from localhost.localdomain ([188.162.49.81])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d335csm4368967e87.125.2024.05.20.11.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 11:43:13 -0700 (PDT)
-From: Aleksandr Shubin <privatesub2@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Aleksandr Shubin <privatesub2@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	John Watts <contact@jookia.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Maksim Kiselev <bigunclemax@gmail.com>,
-	Cheo Fusi <fusibrandon13@gmail.com>,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v9 3/3] riscv: dts: allwinner: d1: Add pwm node
-Date: Mon, 20 May 2024 21:42:21 +0300
-Message-Id: <20240520184227.120956-4-privatesub2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240520184227.120956-1-privatesub2@gmail.com>
-References: <20240520184227.120956-1-privatesub2@gmail.com>
+        bh=KUBLBSrsQ9qU9W/MCb1o7PdEzonP2nGcujZe+jtBzUg=;
+        b=c/uDy95eGSMdlZH/I6J2vR8V57v727oTftpqfijlqBC5sDyaGbWTG3fS8MBAliuNs2
+         4u+m3hE8DDsRTvzn050LBILYEsmznahzcjh07J/Qgu8e+TIOXGGUSFCA+ctZ0DJwwMVz
+         KZVYuZ6je/4kKrLYSjuHYAoaLiyVJmcr4JoFv0QXobPeAqR8GbGZ2P5VQOEbG0jzmbvj
+         eIOXjPsFrah842u1BYa1D1h8yeky8xruUOXiPBahJrJsDlHOwtvL4z1BiQSZwqmzl1ls
+         OS6f8oQiFpzNk+UDahPaC0j7HMS+XtB5wciUHlPcZqnrbiMa4SJn1Txb5H7aZaq/aSf/
+         eI8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXriarT5zzB2ncihvYPMYCtnRHla5bmFdCZPpgfS5UKKHzTQqU5NDz5areqMLxnZSdGybTNd3umB1uS3yopTUBSxPYYjBwIbus+Iwhs
+X-Gm-Message-State: AOJu0YweD0Micz1NCxuXllq/ZlXVrU7vzq4RZWJ4InxIbsezlJpiXAnj
+	NVEN0jxqKQM1Hf8gXdYSfPF5eKNlj3oTIKANrxBK1jopz02CV5c2IXPIcE+QOHaC55FBWx61Kpa
+	tZJlWIiGXnLvDKXdqI4atlsD9I4Q/WlZuUEFbIt4+CDQoH1LBylA=
+X-Google-Smtp-Source: AGHT+IGvyZOpdx1H3JIl7kIfbOIN88Bk9Xcg/DcZmycKNrAoDnBQxHbr227ZGQBGe//YeWl0iY2/9tS2NJGamgHvlxI=
+X-Received: by 2002:a0d:e297:0:b0:627:77fe:d00f with SMTP id
+ 00721157ae682-62777ff81f8mr127465407b3.6.1716230665752; Mon, 20 May 2024
+ 11:44:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CABWYdi0ymezpYsQsPv7qzpx2fWuTkoD1-wG1eT-9x-TSREFrQg@mail.gmail.com>
+ <CAADnVQ+YXf=1iO3C7pBvV1vhfWDyko2pJzKDXv7i6fkzsBM0ig@mail.gmail.com>
+In-Reply-To: <CAADnVQ+YXf=1iO3C7pBvV1vhfWDyko2pJzKDXv7i6fkzsBM0ig@mail.gmail.com>
+From: Ivan Babrou <ivan@cloudflare.com>
+Date: Mon, 20 May 2024 11:44:14 -0700
+Message-ID: <CABWYdi14d61j9=nei6q7YCT8ZLv2DDc1uqmY_f_DimBUAW5MCA@mail.gmail.com>
+Subject: Re: bpftool does not print full names with LLVM 17 and newer
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-D1 and T113s contain a pwm controller with 8 channels.
-This controller is supported by the sun20i-pwm driver.
+On Fri, May 17, 2024 at 4:33=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Fri, May 17, 2024 at 2:51=E2=80=AFPM Ivan Babrou <ivan@cloudflare.com>=
+ wrote:
+> >
+> > Hello,
+> >
+> > We recently bumped LLVM used for bpftool compilation from 15 to 18 and
+> > our alerting system notified us about some unknown bpf programs. It
+> > turns out, the names were truncated to 15 chars, whereas before they
+> > were longer.
+> >
+> > After some investigation, I was able to see that the following code:
+> >
+> >     diff --git a/src/common.c b/src/common.c
+> >     index 958e92a..ac38506 100644
+> >     --- a/src/common.c
+> >     +++ b/src/common.c
+> >     @@ -435,7 +435,9 @@ void get_prog_full_name(const struct
+> > bpf_prog_info *prog_info, int prog_fd,
+> >         if (!prog_btf)
+> >             goto copy_name;
+> >
+> >     +    printf("[0] finfo.type_id =3D %x\n", finfo.type_id);
+> >         func_type =3D btf__type_by_id(prog_btf, finfo.type_id);
+> >     +    printf("[1] finfo.type_id =3D %x\n", finfo.type_id);
+> >         if (!func_type || !btf_is_func(func_type))
+> >             goto copy_name;
+> >
+> > When ran under gdb, shows:
+> >
+> >     (gdb) b common.c:439
+> >     Breakpoint 1 at 0x16859: file common.c, line 439.
+> >
+> >     (gdb) r
+> >     3403: tracing  [0] finfo.type_id =3D 0
+> >
+> >     Breakpoint 1, get_prog_full_name (prog_info=3D0x7fffffffe160,
+> > prog_fd=3D3, name_buff=3D0x7fffffffe030 "", buff_len=3D128) at common.c=
+:439
+> >     439        func_type =3D btf__type_by_id(prog_btf, finfo.type_id);
+> >     (gdb) print finfo
+> >     $1 =3D {insn_off =3D 0, type_id =3D 1547}
+> >
+> >
+> > Notice that finfo.type_id is printed as zero, but in gdb it is in fact =
+1547.
+> >
+> > Disassembly difference looks like this:
+> >
+> >     -    8b 75 cc                 mov    -0x34(%rbp),%esi
+> >     -    e8 47 8d 02 00           call   3f5b0 <btf__type_by_id>
+> >     +    31 f6                    xor    %esi,%esi
+> >     +    e8 a9 8c 02 00           call   3f510 <btf__type_by_id>
+> >
+> > This can be avoided if one removes "const" during finfo initialization:
+> >
+> >     const struct bpf_func_info finfo =3D {};
+> >
+> > This seems like a pretty annoying miscompilation, and hopefully
+> > there's a way to make clang complain about this loudly, but that's
+> > outside of my expertise. There might be other places like this that we
+> > just haven't noticed yet.
+> >
+> > I can send a patch to fix this particular issue, but I'm hoping for a
+> > more comprehensive approach from people who know better.
+>
+> Wow. Great catch. Please send a patch to fix bpftool and,
+> I agree, llvm should be warning about such footgun,
+> but the way ptr_to_u64() is written is probably silencing it.
+> We probably should drop 'const' from it:
+> static inline __u64 ptr_to_u64(const void *ptr)
+>
+> and maybe add a flavor of ptr_to_u64 with extra check
+> that the arg doesn't have a const modifier.
+> __builtin_types_compatible_p(typeof(ptr), void *)
+> should do the trick.
 
-Add a device tree node for it.
+In bpftool there's just two call sites that are unhappy if I remove
+"const" in the arguments:
 
-Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
----
- arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+* this problematic one
+* "GPL" literal passed
 
-diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-index 5a9d7f5a75b4..22821b21b9a2 100644
---- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-@@ -145,6 +145,18 @@ uart3_pb_pins: uart3-pb-pins {
- 			};
- 		};
- 
-+		pwm: pwm@2000c00 {
-+			compatible = "allwinner,sun20i-d1-pwm";
-+			reg = <0x02000c00 0x400>;
-+			clocks = <&ccu CLK_BUS_PWM>,
-+				 <&dcxo>,
-+				 <&ccu CLK_APB0>;
-+			clock-names = "bus", "hosc", "apb";
-+			resets = <&ccu RST_BUS_PWM>;
-+			status = "disabled";
-+			#pwm-cells = <0x3>;
-+		};
-+
- 		ccu: clock-controller@2001000 {
- 			compatible = "allwinner,sun20i-d1-ccu";
- 			reg = <0x2001000 0x1000>;
--- 
-2.25.1
+I'll send the patch to drop "const" from the struct initialization
+today or tomorrow (it works great in our internal build), but I'll
+leave the bigger change to you. There seem to be many places in libbpf
+and I'm far from being a C expert to drive this change.
 
+I managed to bisect clang to find the commit that introduced the change:
+
+* https://github.com/llvm/llvm-project/commit/0b2d5b967d98
+
+I also mentioned the commit author and they have some ideas about
+UBSAN catching this (it doesn't in the current state):
+
+* https://mastodon.ivan.computer/@mastodon/112465898861074834
