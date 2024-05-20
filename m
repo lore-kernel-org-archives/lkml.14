@@ -1,109 +1,113 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3B71BDCD
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9531C698
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716190376; cv=none; b=n5/Y9YlZjB4A0qewFENcrPegdBd+/5dZtCIoTv6qQM+AzOo2RGBVJnlhN4anSbtC09xD55jpbATxGRQb2cN0rs8/Sa7KXzMl1uJ48nHMlGr/d++5QSEAJrZk3BHe1blzRnyEUogcUWxbLE/aE1+VS4G8+g0LF08mVQH0yWcfpKs=
+	t=1716190425; cv=none; b=HlYUwJ/qFAO8U+KEp+R0hNh3m6wBUNKhf4Jo5T44DZ717gOfCmVydPUqV5kaDolhYFZAVIWImCciENZheDsa6qnHuGnik+nFnpaN2yWJ86OZ4hPuJScQL5WZTlfXrWqrtxVkU6g6YbTJ1Lw82cJibZ/POmHBKhiRAfDqQlRTLlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716190376; c=relaxed/simple;
-	bh=FFamMafNUgPmRC2roNs5YTBIj9RyU3l/0sZQ9xCXCLU=;
+	s=arc-20240116; t=1716190425; c=relaxed/simple;
+	bh=WeixK4Kgn0MvKplzBTKjFtE2DZaxPq1ICJ/opiDshY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G0fsanVV69YREHpGODlcy6FVC+1ZKGXsuCbRXO18HoE4HpYHAlohmj+ngiyYcXatV/yCs5D8hAfZmEj87AyJ/VsKc/GKKQkdVUi3+GnxGFu/VTduut5eL1uYj8VS0CeOgVKYd//+L9im4f6TEoBP1bqCQAHBehXpSug2i9L8ac0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=c4J1a2ke; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hj+MUT1XyxOfQ0ubm2QptZDBrtTBUaU1rl6ZWssBVS0pOd2ohTm3P+TTbbgU4Rt3BLD5zgR8TQSi28hBO3BKHFjyXpNLeFcOAJOSjNswXcUUCW8fZFsglEKvSrIqKrAK/4ZSlKudpeugrnJQs9usMlWALkbfUmsw/1KlZiyTD50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tEXDjBz5; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="c4J1a2ke"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id F276814C2DB;
-	Mon, 20 May 2024 09:32:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1716190368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8vbBcX66RghTnkz2dmYVbCbRBKn2ffe8qZ0JA8PcrWg=;
-	b=c4J1a2keNzTDzZHGaRFZjMhWSoqA9vmA+S6H/IEyHyB/aNWouO9ao4pzJ1cfy0VQQqLQUJ
-	1uy+90nuQC5qYy82ZgUdyORwXbc+W5zcHQ79s/zm1fLr6uF6SpKCB6sT1DYeX4tvJw/lGI
-	/d9LnXoHHNyWuWoKmTxKO9WA+ZpvGInL2Li8c7xTLB1gK8WPQL5iVWECLuok8e5A1slGq5
-	nDpdf9sIhgYE3UEKXM9WxfPg15J1yRd13X6vx0qXzC2cfHIf77Ik5VnNYDaHzWynCwwsiy
-	E0NOTKXdRMSrb6HyyuozvKKUlTVpsNplv1gMeVBcWMtdqZVGmUwS2JV78fsY9A==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 88b285a3;
-	Mon, 20 May 2024 07:32:42 +0000 (UTC)
-Date: Mon, 20 May 2024 16:32:27 +0900
-From: asmadeus@codewreck.org
-To: David Howells <dhowells@redhat.com>
-Cc: syzbot <syzbot+df038d463cca332e8414@syzkaller.appspotmail.com>,
-	ericvh@kernel.org, linux-kernel@vger.kernel.org,
-	linux_oss@crudebyte.com, lucho@ionkov.net,
-	syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
-Subject: Re: [syzbot] [v9fs?] KASAN: slab-use-after-free Write in
- v9fs_free_request
-Message-ID: <Zkr8i9XxpkJ9AABZ@codewreck.org>
-References: <0000000000005be0aa061846f8d6@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tEXDjBz5"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c9d0671dfaso1238495b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716190422; x=1716795222; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jTHkzAvMu+l8UyjO4kbcmDDhuFxHapp+W1C8XEMNXN4=;
+        b=tEXDjBz5X6HIDXH/APEZKYUsx9z8++QOoTgXg1mStvoc9Ktlj2ZHefg99GLYWaPiDe
+         sUrOgi/t0cfGfOBQwkS9kfRz8VcEyi5gJj6sWrqQ6W80b/a/LtlrteLrPWHv+4AAOgsk
+         m05rMOipT9nBQIMp+1aPwqS5Ieb2w3qbZAfFiRS/mXaUJYEw7f3Kpq7otnGNao/r+T3v
+         Eq1psNVOp9Flx8MQcBJ03nQkJjS5WcC6dSv1PqI45UGBYosD6vofoUzbnqZe0gOGG6Ls
+         7GwkHGCyNuBK+KyKQqTHZKwNh2hjCqBG9NuB3WfYYfEBCPnPsyA0axjpu7lo4aHPQI1G
+         G+rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716190422; x=1716795222;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jTHkzAvMu+l8UyjO4kbcmDDhuFxHapp+W1C8XEMNXN4=;
+        b=R1ZUpwaKoZrcORd1gFSCtI51wHafrXMSESRmcRSwqC95WcaJX/pxsvjkvK9zjHXvJb
+         a+OMNbYEiO8pPlhMO7DxvyIj0g1c+xsuqfejax+/0BmHp3V6Ozsd/ORgvjrX2gim73vn
+         pv0eNl6ekux1Xe2lJJo3h0oJExeGS2Dzr0w8X+vxrdIEtmVirIKaqkYfRi01VBhJkJHt
+         bzl4L57SqqNW0g9TOd41MbOsOkvUmEYmSJmFFSrA3tJa+Zi/kVYGa8qagCh0YLuo4BqM
+         6IWzspHcMXR7nSLvy5ZaSsDyad9/d//1Iq4+xBAm80tyjZlBBdPb8FN6qfoEmD89G49k
+         xWwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNDp6c9GE9Aic+L927tpGme0nO63cKDLBbii+lh237tPE4xVdJk556vNd+ZYvDLqJYhcVroC4cn3GdhltGoLt9kChF3ZEaYzPFDsBD
+X-Gm-Message-State: AOJu0Yx6p19ikv2hjBGbA+aj1nMMjUDxpNAEMKyyzJwwPb0WAESOXVwp
+	kfOv3ipGwJDdCidq+s2rgA68lKqHC51WetTJGiv+oJXy+mWduvgzvX7rbD7uez4=
+X-Google-Smtp-Source: AGHT+IG7YMk/8WZfU70jkrguYTPefZ2BNfU/qrbtxJO+K7HFLFtKIi73g49AXVItMr7hLaQS5M2OgA==
+X-Received: by 2002:a05:6870:40c8:b0:23d:49b4:6718 with SMTP id 586e51a60fabf-24172bc060emr33527554fac.32.1716190421955;
+        Mon, 20 May 2024 00:33:41 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af52b4sm19106876b3a.174.2024.05.20.00.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 00:33:41 -0700 (PDT)
+Date: Mon, 20 May 2024 13:03:39 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Yangtao Li <tiny.windzz@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cpufreq: sun50i: fix memory leak in
+ dt_has_supported_hw()
+Message-ID: <20240520073339.rf6laivnglmww3bf@vireshk-i7>
+References: <20240503-sun50i-cpufreq-nvmem-cleanup-v1-0-0a2352cac46b@gmail.com>
+ <20240503-sun50i-cpufreq-nvmem-cleanup-v1-1-0a2352cac46b@gmail.com>
+ <20240510174937.0a710104@donnerap.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000005be0aa061846f8d6@google.com>
+In-Reply-To: <20240510174937.0a710104@donnerap.manchester.arm.com>
 
-+To David as I need help with netfs
+On 10-05-24, 17:49, Andre Przywara wrote:
+> On Fri, 03 May 2024 19:52:32 +0200
+> Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+> > diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > index 0b882765cd66..ef83e4bf2639 100644
+> > --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > @@ -131,7 +131,7 @@ static const struct of_device_id cpu_opp_match_list[] = {
+> >  static bool dt_has_supported_hw(void)
+> >  {
+> >  	bool has_opp_supported_hw = false;
+> > -	struct device_node *np, *opp;
+> > +	struct device_node *np;
 
-syzbot wrote on Sun, May 12, 2024 at 12:42:33PM -0700:
-> UAF in
-> Workqueue: events_unbound v9fs_upload_to_server_worker
->  refcount_dec_and_test include/linux/refcount.h:325 [inline]
->  p9_fid_put include/net/9p/client.h:275 [inline]
->  v9fs_free_request+0x5f/0xe0 fs/9p/vfs_addr.c:128
->  netfs_free_request+0x246/0x600 fs/netfs/objects.c:97
->  v9fs_upload_to_server fs/9p/vfs_addr.c:36 [inline]
->  v9fs_upload_to_server_worker+0x200/0x3e0 fs/9p/vfs_addr.c:44
->  process_one_work kernel/workqueue.c:3267 [inline]
+Why is the opp pointer removed ?
 
-> Freed by task 32641:
->  p9_fid_destroy net/9p/client.c:889 [inline]
->  p9_client_destroy+0x1fb/0x660 net/9p/client.c:1070
->  v9fs_session_close+0x51/0x210 fs/9p/v9fs.c:506
->  v9fs_kill_super+0x5c/0x90 fs/9p/vfs_super.c:196
->  deactivate_locked_super+0xc6/0x130 fs/super.c:472
->  cleanup_mnt+0x426/0x4c0 fs/namespace.c:1267
+> >  	struct device *cpu_dev;
+> >  
+> >  	cpu_dev = get_cpu_device(0);
+> > @@ -142,7 +142,7 @@ static bool dt_has_supported_hw(void)
+> >  	if (!np)
+> >  		return false;
+> >  
+> > -	for_each_child_of_node(np, opp) {
+> > +	for_each_child_of_node_scoped(np, opp) {
+> >  		if (of_find_property(opp, "opp-supported-hw", NULL)) {
+> >  			has_opp_supported_hw = true;
+> >  			break;
+> > 
 
-That's a tough one: netfs took a ref in v9fs_init_request (netfs op's
-init_request) and expects to be able to use it until v9fs_free_request
-(net op's free_request()), but the fs was dismounted first and we kill
-the kmem cache at this point so we aggressively drop any dangling ref
-there as there's no way of waiting.
-(this is corroborated by "9pnet: Found fid 1 not clunked" in dmesg in
-the syzcaller logs)
-
-The other two recent kasan errors are similar:
-https://lkml.kernel.org/r/000000000000b86c5e06130da9c6@google.com
-is pretty much the same (it's just that the decrement here hit 0 as
-umount was in the middle of doing it?), and
-https://lkml.kernel.org/r/000000000000041f960618206d7e@google.com
-is yet another step faster (netfs freed the last ref while the cache
-was being emptied and destroyed the fid first; which is possible because
-we're not taking the client lock at this point as we weren't expecting
-any other access after umount)
-
-David, got an idea on how we could wait for these async writebacks?
-
-
-Notes:
- - David removed v9fs_upload_to_server in 2df86547b23d ("netfs: Cut
-over to using new writeback code") (and c245868524cc ("netfs: Remove the
-old writeback code")) in master, but the problem is still present
-conceptually.
- - layering wise, 9p (fs) depends on 9pnet, so 9pnet cannot call into the
-fs code; the wait has to be in v9fs_session_close() before calling
-p9_client_destroy or earlier
-
-
-Thanks,
 -- 
-Dominique Martinet | Asmadeus
+viresh
