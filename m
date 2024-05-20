@@ -1,178 +1,93 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA185337F
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738125337F;
+	Mon, 20 May 2024 12:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716207200; cv=none; b=D8t2m6L2VcL9xo7rEgemMeRSNLUJPKCPgLBsEkDB9MaTVfwQQOEHGzCN6St8p9eyePwlmwYvrLD6+8SRVzHr+qKx8004d2xCd+k/XOix/ACgH9qmhCiQr94g5jzBd7oVg+tCfqGtEoW4080s2+GyxZRcZ+vH3gfO/oXFMbIqaJM=
+	t=1716207282; cv=none; b=JYS06gJzjAmbdYO+NovEmIf3V2CJaIAK7r18/ZHlLf7hEaiZnkuWC6jaSqfNR1UFx4VL0fe7HxMmoB+RWrMjXL4CXSST/m9+l8CuFWZu/H5Amkq6ktEicHaPay4R3D36E0r0UpHGBBbpd0JDsc40CMQrQj7IhZyzQv7wgNgzw14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716207200; c=relaxed/simple;
-	bh=iD22LoyvP1b3Cffzn6b+BCqUp34FfrjwA3/bpSQ6rE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K/ob22JRyk4ZL3ZRDwUTI/IQYRU+d9Q/1CnU0IVJtQsAHrt0rFXiHBpFXM74AhxTGwIP3EuAFVJ2bLZyj5M8Lr0gN66yahec0g3xnaDh8Ek7UnjIWrQS7+udIOjpiKlYmrNA3hH9eJnx4WuQTN+Ql60IwHwcs91kayn8NXR3RPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XFLGoF6/; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XFLGoF6/"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-572e48f91e9so8124035a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 05:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716207197; x=1716811997; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vq2921iavEdoPmEW4aOE6M8eMTh4FTRY+b70NrF3F90=;
-        b=XFLGoF6/eFYgy1egQoeJl9+s3kd9Ri/zb9qYSe6Y3MdiAS6AXngPZmLQzpL3TLOUwk
-         6t9Ea17U1GOttGP2uxGfVFEHAF/pQzPukgWmJM6fwPcJNKpxckkHtjFz0Vs3VxKevLRA
-         sWeDC7u3CZXTC12bP9vy3oavxBj4TEYcm4Ou9dEqv5DSI+CkwFrtAnUHFHwXcUqa6uTy
-         pt7yjgmq3h2laDThJY2Rt8EN4FM9gRx+pUj20QXrKAY5ON/Ow4DApx264lFxuIUFWy1+
-         w4vYi+X5eBJ7K+2w7LwGEDGLX/N7RVcMzKpOp8y0Gx8YswbubyiYpcxmsV3KImaUNd1v
-         AfoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716207197; x=1716811997;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vq2921iavEdoPmEW4aOE6M8eMTh4FTRY+b70NrF3F90=;
-        b=K0GDzpocRBD0NNTs+vNIvljYH7W+N1zQKIB6WaDAXmib3j2RdcEAej9AQcfOhik+2w
-         H7fhStuNAATjf5fBAQyLhe0idoyX0w8i0cWK5EgiUz0njGaq6fOpc5yrlvoTmX70JaBF
-         Uq65vQmt0B1xKRHHaZf0Thz5xzhXatGp6K/DauzrlSLUKL2MxLtC9yLs3xqonPJ+9QzO
-         rIyoZ5LoB8WY/G30hsGbuGAUSMJO9uMQuM1jgQ+RhmdvQQaXM3PXh/zTtNxitmodTcyD
-         wobDOKTRHZJPEledHrcU36qNUR/pNjFEBsh5RZcDg7J40dXJTVkNm8Tlnkgwn3VGfPpf
-         5Eiw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4ShdbLEWMWwVMKXXbH5UoPpzfaAOvOHigV1wk8toBIIKpOA+sz/XAJqn/WTIN605GifWHN1gnDLjH0wvaKpk80B+d5lIV9232bxOc
-X-Gm-Message-State: AOJu0YyPgSXRfHUaTcH9xGyzMzG9yAiB7j6uYGtSHHxGhZCpv4sjCRme
-	b5JLDYfEgnsYfBs9m8HFXO8nMBBaHfQydJR4505MOnAaIgzL43738uedzB30bkWtMAByM3seT0L
-	b
-X-Google-Smtp-Source: AGHT+IHT+4FXFXHpSzVJ2xsAx+yu/dvxZKIC0DzVNL7NS+aUUAOHVjlmEjHt8cyVsO4n6EnN1qMBCQ==
-X-Received: by 2002:a50:bac5:0:b0:56d:ee61:6874 with SMTP id 4fb4d7f45d1cf-5734d5e4089mr19783652a12.20.1716207197067;
-        Mon, 20 May 2024 05:13:17 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c322c85sm14998153a12.84.2024.05.20.05.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 05:13:16 -0700 (PDT)
-Date: Mon, 20 May 2024 14:13:14 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH printk v5 11/30] nbcon: Provide functions for drivers to
- acquire console for non-printing
-Message-ID: <Zks-WkoTmAVFBgoP@pathway.suse.cz>
-References: <20240502213839.376636-1-john.ogness@linutronix.de>
- <20240502213839.376636-12-john.ogness@linutronix.de>
+	s=arc-20240116; t=1716207282; c=relaxed/simple;
+	bh=mvD6sd9vndZ7Sf1mQsWKHKUTPiFurzaR4/bRViw4zaM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L05/KGs2hCckn+tPQe+1ijkD6baJbOiBTZFYGwW9JL4ZLDqht7sl5QhZjAr+WAvubhodC8zZiwPk0GvC/zdGFqFHJWT5nASJsDAiFQBaAgb9tWRe6n0WSWGSle8E0APm/ogbTbxX+raDXM8HvkIG6R9W/PFuoY4Akd5xrJ5SVNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VjbcJ3M3dz2Cj98;
+	Mon, 20 May 2024 19:55:44 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (unknown [7.185.36.236])
+	by mail.maildlp.com (Postfix) with ESMTPS id B43F414037E;
+	Mon, 20 May 2024 19:59:11 +0800 (CST)
+Received: from huawei.com (10.173.134.152) by dggpemm500006.china.huawei.com
+ (7.185.36.236) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 20 May
+ 2024 19:59:11 +0800
+From: <zhoushuling@huawei.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>
+CC: <weiqi4@huawei.com>, <zhoushuling@huawei.com>, <wanpengli@tencent.com>,
+	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] KVM: LAPIC: Fix an inversion error when a negative value assigned to lapic_timer.timer_advance_ns
+Date: Mon, 20 May 2024 19:53:34 +0800
+Message-ID: <20240520115334.852510-1-zhoushuling@huawei.com>
+X-Mailer: git-send-email 2.23.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502213839.376636-12-john.ogness@linutronix.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
 
-On Thu 2024-05-02 23:44:20, John Ogness wrote:
-> Provide functions nbcon_driver_try_acquire() and
-> nbcon_driver_release() to allow drivers to acquire the nbcon
-> console and mark it unsafe for handover/takeover.
+From: Shuling Zhou <zhoushuling@huawei.com>
 
-I would prefer to rename 'driver' to 'device' to keep the existing
-naming scheme in struct console. The API will be used to
-synchronize the 'device' element.
+After 'commit 0e6edceb8f18 ("KVM: LAPIC: Fix lapic_timer_advance_ns
+parameter overflow")',a negative value can be assigned to
+lapic_timer_advance_ns, when it is '-1', the kvm_create_lapic()
+will judge it and turns on adaptive tuning of timer advancement.
+However, when lapic_timer_advance_ns=-2, it will be assigned to
+an uint variable apic->lapic_timer.timer_advance_ns, the
+apic->lapic_timer.timer_advance_ns of each vCPU will become a huge
+value. When a VM is started, the VM is stuck in the
+"
+[    2.669717] ACPI: Core revision 20130517
+[    2.672378] ACPI: All ACPI Tables successfully acquired
+[    2.673309] ftrace: allocating 29651 entries in 116 pages
+[    2.698797] Enabling x2apic
+[    2.699431] Enabled x2apic
+[    2.700160] Switched APIC routing to physical x2apic.
+[    2.701644] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    2.702575] smpboot: CPU0: Intel(R) Xeon(R) Platinum 8378A CPU @ 3.00GHz (fam: 06, model: 6a, stepping: 06)
+..........
+"
 
-> These functions are to be used by nbcon drivers when performing
-> non-printing activities that should be synchronized with their
-> atomic_write() callback.
+'Fixes: 0e6edceb8f18 ("KVM: LAPIC: Fix lapic_timer_advance_ns
+parameter overflow")'
 
-I am still trying to create a mental model around the synchronization
-between the device-specific locks and nbcon context. Also it took
-me some time to realize that just disambling the migration is
-perfectly fine here.
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Shuling Zhou<zhoushuling@huawei.com>
+---
+ arch/x86/kvm/lapic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I propose a bit extended commit message:
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index ebf41023be38..5feeb889ddb6 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2848,7 +2848,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+ 	if (timer_advance_ns == -1) {
+ 		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_NS_INIT;
+ 		lapic_timer_advance_dynamic = true;
+-	} else {
++	} else if (timer_advance_ns >= 0) {
+ 		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ 		lapic_timer_advance_dynamic = false;
+ 	}
+-- 
+2.27.0
 
-<proposal>
-Subject: nbcon: Add API to acquire context for non-printing operations
-
-Provide functions nbcon_device_try_acquire() and
-nbcon_device_release() which will try to acquire the nbcon console
-ownership with NBCON_PRIO_NORMAL and mark it unsafe for handover/takeover.
-
-These functions are to be used together with the device-specific
-locking when performing non-printing activities on the console device.
-They will allow synchronization against atomic_write() callback which
-will be serialized, for higher priority contexts, only by acquiring
-the console context ownership.
-
-Pitfalls:
-
-The API requires to be called in a context with a disabled migration
-because it uses per-CPU variables internally.
-
-The context is set unsafe for a takeover all the time. It guarantees
-full serialization against any atomic_write() caller except for
-the final flush in panic() which might try an unsafe takeover.
-</proposal>
-
-> --- a/include/linux/console.h
-> +++ b/include/linux/console.h
-> @@ -304,6 +304,7 @@ struct nbcon_write_context {
->   *
->   * @nbcon_state:	State for nbcon consoles
->   * @nbcon_seq:		Sequence number of the next record for nbcon to print
-> + * @nbcon_driver_ctxt:	Context available for driver non-printing operations
-
-This provides a context for "@device".
-
-We should call this "@nbcon_device_ctxt" to avoid confusion.
-
-
->   * @pbufs:		Pointer to nbcon private buffer
->   */
->  struct console {
-> @@ -399,6 +400,7 @@ struct console {
->  
->  	atomic_t		__private nbcon_state;
->  	atomic_long_t		__private nbcon_seq;
-> +	struct nbcon_context	__private nbcon_driver_ctxt;
->  	struct printk_buffers	*pbufs;
->  };
->  
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index d8b3f51d9e98..d0a1106388d1 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -9,6 +9,8 @@
->  #include <linux/ratelimit_types.h>
->  #include <linux/once_lite.h>
->  
-> +struct console;
-> +
->  extern const char linux_banner[];
->  extern const char linux_proc_banner[];
->  
-> @@ -193,6 +195,8 @@ void show_regs_print_info(const char *log_lvl);
->  extern asmlinkage void dump_stack_lvl(const char *log_lvl) __cold;
->  extern asmlinkage void dump_stack(void) __cold;
->  void printk_trigger_flush(void);
-> +extern bool nbcon_driver_try_acquire(struct console *con);
-> +extern void nbcon_driver_release(struct console *con);
-
-Similar here:
-
-s/driver/device/
-
->  #else
->  static inline __printf(1, 0)
->  int vprintk(const char *s, va_list args)
-
-
-With all the renames and updated commit message:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
