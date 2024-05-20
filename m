@@ -1,202 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF2F137930;
-	Mon, 20 May 2024 17:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4880F137931
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716224689; cv=none; b=ktoLCP76x32KqEkxqYD5+yBbuTI0Eek5+zwJGAp+9pgp6ky8jt6thZMQzAcxj7eiy74AexU6rKQxzbNc6RzvOTZ1cBniL/lZ/JT4i5KtZcPQcD2wL1UBP9PstKWLgJcO5xrcybZgV00fHngf78v42lJRVg9scQiKu1lz+pCxAno=
+	t=1716224986; cv=none; b=Jb4ENpVAb4NXHf6xfW8pj++txkcI0cTXq0BgB47ZS/h+85Igm43R4ADo1ZVqoflyf4X7Q1tMynwTvd+dXgUsjW3sK65MavkKFKk4+5yg8NrDapJsCBYENBYz856uj4AKuBecv9yKlTDfsuApXLAkoGL5drG1L1lpiOVPXeAFtLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716224689; c=relaxed/simple;
-	bh=lYZdxF7vHXYI37d+JuoV5KIDqrDVCRlsGP24iqU8REU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=InFaVNBYA91E/k8OPwSVvpHmc4EVTPNB3b+qmNiLOyA2ZYHk4Msa/pgy6xhNTFxsOcoh6J71Sml00y/s839BRDBzi5sNAnmwIR+N3JLD8oRwBaYdb1BqJnk1xhLJ9iGEGfmsPqvKPptGAZGVZh99b7KceK+opEa78BxnFi9eUL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BtKSLB/q; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716224986; c=relaxed/simple;
+	bh=iXrU3QtcVFh8Xuzbw7FM7adPMT2MiMJT39cG1TXBTcs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=vAZN6UB2cSWavNlcNasc6GDo2Mf+Dt6r//2bl/OtJuwdsuz7b1Oj3YR17MfuM60CM4qZE7lE0D5Xe1x+HdEZnKPjbuIATk16FYeKok0O1mAgtSvff/KijNmlJdQDQGY0AXN/DaFa6nMSACIYNDdBaq/G61pKcZoq5QEnJHKvLp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BaEgBlWS; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BtKSLB/q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716224688; x=1747760688;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lYZdxF7vHXYI37d+JuoV5KIDqrDVCRlsGP24iqU8REU=;
-  b=BtKSLB/qxFO37djOyTCUr3jZy045DRkahSpRM9OHoWnYgHGBZHpi35By
-   QZhegEQqgadgKIuEkSdAXIsdJpwzUcFTNULZKlr9lBCAED2gGdyucafBV
-   oxbvUDd+fbbkVAg/WDgV7ABR5Kug2s9yilpIUxqFXrLI6ism7sLS47yC5
-   N0l6wICGXRpv3jOuaj8nsTo10hMELHu4EgWm32sDWo9Hqxa6V/OBryuLT
-   NARbj16n29vitqtoKoXW8AbG7jYnZvW5m6tPCFdbnFF6iuTDiBdlGwrCh
-   /6u7D7gnwN8674+bB5tJaoJzNB92BEHceS6efX5yb0ZzyPneiDhFJu76o
-   g==;
-X-CSE-ConnectionGUID: f88ccsDPQ1G/Lf5XBTSgdw==
-X-CSE-MsgGUID: 2CYgAhLjRLKVZ72JvMjazA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="23036919"
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="23036919"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 10:04:47 -0700
-X-CSE-ConnectionGUID: IsGF1I3PSKOfdMC+9IW4ag==
-X-CSE-MsgGUID: i1hjL61qSq+Ho/4jpl1hKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="33170094"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 20 May 2024 10:04:43 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s96RD-0004zo-1n;
-	Mon, 20 May 2024 17:04:39 +0000
-Date: Tue, 21 May 2024 01:04:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org,
-	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, marex@denx.de, linux-clk@vger.kernel.org,
-	imx@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de, shengjiu.wang@gmail.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v4 2/5] clk: imx: clk-audiomix: Add reset controller
-Message-ID: <202405210036.hMLQ7OGl-lkp@intel.com>
-References: <1716188963-16175-3-git-send-email-shengjiu.wang@nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BaEgBlWS"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de59e612376so17176955276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716224984; x=1716829784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j30OoqLnuK99UHrofDf6Sz2fV/csd7+KiSSj9cTAu00=;
+        b=BaEgBlWSRwgw6nwCIo8bR34imtDGs0CIbhsSpYOKyLXO82HVRxAlV8WUJaXBWzhInF
+         dErbXUxhZno4liyZx2RhxfZjXYKIBuNrpVKxvkskHcfIukbZqx/r3PZAQD3CGWaznFti
+         /jHV0wEuXbFRcxaa0WTBega2JJuZg6m9lIsXbVYDlbu/ICpy5JDXed1CAYe+hPG/2jiQ
+         WDI1rnhGsiSCZ/7+hq1Xc5eHhfs5+R+gOFFCMAJkeZ21nTO+mKoAnyhhsdvth+lhkglY
+         Cr5w/oT7Fts9pR3cN1AJBa8fcOF6oMDsRzaOlw+vT8MSEmJ3FF+LvKZeY9Fw9/fpGTzt
+         XLiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716224984; x=1716829784;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=j30OoqLnuK99UHrofDf6Sz2fV/csd7+KiSSj9cTAu00=;
+        b=LnNLkgupYAVPJ25EGKpXhh7XhLYEZwTnpb/M+v7T2BUoNtBeCPlz9aE+b6+DjxUpI6
+         PJZewF1YyHnlVF/O1zgYOkIeVQss7GRwUaR8CQyWsPjStPvQ4Zu7vtvSxDGzkuBer+BJ
+         G/IHYCH2nlZxM9lVULhIP2jg74tJTrYp9A7qUopNu1FjnQo/4eDmzuc0CNRLXuNYPM1v
+         jnigmIR+sk5HO/umNQ9ANnea/aj32vU0CCj3hq7shZ4q1kedrW5aqnpcidgV0nlL1Ys4
+         oHPHjYV8OUgq/iKHyGaZMa0UQVg8Bwbl18ASwO43K28q/48Nz2O/qoBws5iOg8Ff7do1
+         wGOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQyJL9B2T0k5ooCa7gIX/EOens2phDc6NlVsBroYmqnVGUL+VMI4koGYRkM8EnwmsQPrQuyl1+Oj+kFa7ESh+OWQz4f94TvRyKTTwg
+X-Gm-Message-State: AOJu0YykA8jrzkhdPE5v/zD4PYj+vKAveaswUFncoDnFqA01v+1i4GQt
+	MnaYX8h18FV+fJe8KD2Sjo4clmYX0nepdoWRElPvlBBklndxUzM5ugltbQ2jOwOshUrDk1DmBcf
+	/ww==
+X-Google-Smtp-Source: AGHT+IG81IiVTqSztoF8HyU0QWrzXwFvH5pJ0aEkZ4gO5+oNq81s7//SP/vyposoedqfpisyCD+zc3L4EoA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1206:b0:df4:9688:b28 with SMTP id
+ 3f1490d57ef6-df496880e86mr615823276.3.1716224984265; Mon, 20 May 2024
+ 10:09:44 -0700 (PDT)
+Date: Mon, 20 May 2024 10:09:42 -0700
+In-Reply-To: <a170e420-efc3-47f9-b825-43229c999c0d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1716188963-16175-3-git-send-email-shengjiu.wang@nxp.com>
+Mime-Version: 1.0
+References: <20240219074733.122080-1-weijiang.yang@intel.com>
+ <20240219074733.122080-25-weijiang.yang@intel.com> <ZjLNEPwXwPFJ5HJ3@google.com>
+ <39b95ac6-f163-4461-93f3-eaa653ab1355@intel.com> <ZkYauRJBhaw9P1A_@google.com>
+ <87r0e0ke8w.ffs@tglx> <ZkdpKiSyOwB3NwRD@google.com> <a170e420-efc3-47f9-b825-43229c999c0d@intel.com>
+Message-ID: <ZkuD1uglu5WFSoxR@google.com>
+Subject: Re: [PATCH v10 24/27] KVM: x86: Enable CET virtualization for VMX and
+ advertise to userspace
+From: Sean Christopherson <seanjc@google.com>
+To: Weijiang Yang <weijiang.yang@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, rick.p.edgecombe@intel.com, pbonzini@redhat.com, 
+	dave.hansen@intel.com, x86@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, peterz@infradead.org, chao.gao@intel.com, 
+	mlevitsk@redhat.com, john.allen@amd.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Shengjiu,
+On Mon, May 20, 2024, Weijiang Yang wrote:
+> On 5/17/2024 10:26 PM, Sean Christopherson wrote:
+> > On Fri, May 17, 2024, Thomas Gleixner wrote:
+> > > On Thu, May 16 2024 at 07:39, Sean Christopherson wrote:
+> > > > On Thu, May 16, 2024, Weijiang Yang wrote:
+> > > > > We synced the issue internally, and got conclusion that KVM shoul=
+d honor host
+> > > > > IBT config.  In this case IBT bit in boot_cpu_data should be hono=
+red.=C2=A0 With
+> > > > > this policy, it can avoid CPUID confusion to guest side due to ho=
+st ibt=3Doff
+> > > > > config.
+> > > > What was the reasoning?  CPUID confusion is a weak justification, e=
+.g. it's not
+> > > > like the guest has visibility into the host kernel, and raw CPUID w=
+ill still show
+> > > > IBT support in the host.
+> > > >=20
+> > > > On the other hand, I can definitely see folks wanting to expose IBT=
+ to guests
+> > > > when running non-complaint host kernels, especially when live migra=
+tion is in
+> > > > play, i.e. when hiding IBT from the guest will actively cause probl=
+ems.
+> > > I have to disagree here violently.
+> > >=20
+> > > If the exposure of a CPUID bit to a guest requires host side support,
+> > > e.g. in xstate handling, then exposing it to a guest is simply not
+> > > possible.
+> > Ya, I don't disagree, I just didn't realize that CET_USER would be clea=
+red in the
+> > supported xfeatures mask.
+>=20
+> For host side support, fortunately,=C2=A0 this patch already has some che=
+cks for
+> that. But for userspace CPUID config, it allows IBT to be exposed alone.
+>=20
+> IIUC, this series tries to tie IBT to SHSTK feature, i.e., IBT cannot be
+> exposed as an independent feature to guest without exposing SHSTK at the =
+same
+> time. If it is, then below patch is not needed anymore:
+> https://lore.kernel.org/all/20240219074733.122080-3-weijiang.yang@intel.c=
+om/
 
-kernel test robot noticed the following build errors:
+That's a question for the x86 maintainers.  Specifically, do they want to a=
+llow
+enabling XFEATURE_CET_USER even if userspace shadow stack support is disabl=
+ed.
 
-[auto build test ERROR on abelvesa/clk/imx]
-[also build test ERROR on linus/master next-20240520]
-[cannot apply to pza/reset/next shawnguo/for-next robh/for-next pza/imx-drm/next v6.9]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I don't think it impacts KVM, at least not directly.  Regardless of what de=
+cision
+the kernel makes, KVM needs to disable IBT and SHSTK if CET_USER _or_ CET_K=
+ERNEL
+is missing, which KVM already does via:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shengjiu-Wang/dt-bindings-clock-imx8mp-Add-reset-cells-property/20240520-153230
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git clk/imx
-patch link:    https://lore.kernel.org/r/1716188963-16175-3-git-send-email-shengjiu.wang%40nxp.com
-patch subject: [PATCH v4 2/5] clk: imx: clk-audiomix: Add reset controller
-config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20240521/202405210036.hMLQ7OGl-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project fa9b1be45088dce1e4b602d451f118128b94237b)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240521/202405210036.hMLQ7OGl-lkp@intel.com/reproduce)
+	if ((kvm_caps.supported_xss & (XFEATURE_MASK_CET_USER |
+	     XFEATURE_MASK_CET_KERNEL)) !=3D
+	    (XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL)) {
+		kvm_cpu_cap_clear(X86_FEATURE_SHSTK);
+		kvm_cpu_cap_clear(X86_FEATURE_IBT);
+		kvm_caps.supported_xss &=3D ~(XFEATURE_MASK_CET_USER |
+					    XFEATURE_MASK_CET_KERNEL);
+	}
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405210036.hMLQ7OGl-lkp@intel.com/
+> I'd check and clear IBT bit from CPUID when userspace enables only IBT vi=
+a
+> KVM_SET_CPUID2.
 
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/clk/imx/clk-imx8mp-audiomix.c:11:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/clk/imx/clk-imx8mp-audiomix.c:11:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/clk/imx/clk-imx8mp-audiomix.c:11:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> drivers/clk/imx/clk-imx8mp-audiomix.c:235:2: error: call to undeclared function 'kfree'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     235 |         kfree(adev);
-         |         ^
-   drivers/clk/imx/clk-imx8mp-audiomix.c:235:2: note: did you mean 'vfree'?
-   include/linux/vmalloc.h:162:13: note: 'vfree' declared here
-     162 | extern void vfree(const void *addr);
-         |             ^
->> drivers/clk/imx/clk-imx8mp-audiomix.c:244:9: error: call to undeclared function 'kzalloc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     244 |         adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-         |                ^
-   drivers/clk/imx/clk-imx8mp-audiomix.c:244:9: note: did you mean 'vzalloc'?
-   include/linux/vmalloc.h:142:14: note: 'vzalloc' declared here
-     142 | extern void *vzalloc(unsigned long size) __alloc_size(1);
-         |              ^
->> drivers/clk/imx/clk-imx8mp-audiomix.c:244:7: error: incompatible integer to pointer conversion assigning to 'struct auxiliary_device *' from 'int' [-Wint-conversion]
-     244 |         adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-         |              ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/clk/imx/clk-imx8mp-audiomix.c:254:3: error: call to undeclared function 'kfree'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     254 |                 kfree(adev);
-         |                 ^
-   drivers/clk/imx/clk-imx8mp-audiomix.c:261:3: error: call to undeclared function 'kfree'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     261 |                 kfree(adev);
-         |                 ^
-   6 warnings and 5 errors generated.
-
-
-vim +/kfree +235 drivers/clk/imx/clk-imx8mp-audiomix.c
-
-   230	
-   231	static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
-   232	{
-   233		struct auxiliary_device *adev = to_auxiliary_dev(dev);
-   234	
- > 235		kfree(adev);
-   236	}
-   237	
-   238	static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
-   239								 struct clk_imx8mp_audiomix_priv *priv)
-   240	{
-   241		struct auxiliary_device *adev;
-   242		int ret;
-   243	
- > 244		adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-   245		if (!adev)
-   246			return -ENOMEM;
-   247	
-   248		adev->name = "reset";
-   249		adev->dev.parent = dev;
-   250		adev->dev.release = clk_imx8mp_audiomix_reset_adev_release;
-   251	
-   252		ret = auxiliary_device_init(adev);
-   253		if (ret) {
-   254			kfree(adev);
-   255			return ret;
-   256		}
-   257	
-   258		ret = auxiliary_device_add(adev);
-   259		if (ret) {
-   260			auxiliary_device_uninit(adev);
-   261			kfree(adev);
-   262			return ret;
-   263		}
-   264	
-   265		return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_unregister_adev, adev);
-   266	}
-   267	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+No.  It is userspace's responsibility to provide a sane CPUID model for the=
+ guest.
+KVM needs to ensure that *KVM* doesn't treat IBT as supported if the kernel=
+ doesn't
+allow XFEATURE_CET_USER, but userspace can advertise whatever it wants to t=
+he guest
+(and gets to keep the pieces if it does something funky).
