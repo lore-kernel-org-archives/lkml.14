@@ -1,81 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD646133425;
-	Mon, 20 May 2024 13:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50860135A46
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 13:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716211208; cv=none; b=KQDIxbLPut1Y+/rpBneuNIkH5PYSGNZEQV0PfmbSZdKXGHuSUa1aBvyAMP18V/NrAMcpGhexm9rBaJkqDoMaK9PlQv/bFMV4jBECD7zGp+CA5xXfwf5gh5ZV1w0pAKSD6kN32n1Pp8BbORzXfMOpF/gAJx0npESw3XzrxuuoIyY=
+	t=1716211249; cv=none; b=HxJ71i4xCbfuxbOOOf/E/zG4d/Mpt3epXkzUKPQDtfrNiYJxYxTn+vuriSlZrRbMCa07e58vxrRaqTUtxAbwrNgDYTx1T3J1GJ5ft/sIXJnL6yAy9bp3R8q/eqMohAg9RF+X22IAlCcXRgJ1msQ0LW4ils7LNiC1FpAyEq319Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716211208; c=relaxed/simple;
-	bh=+UeaMW3/A1z0Fn3F6ZcWZjIC6nbjZWIHxmEB7YaIsAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V04emHtuK3Y3rXAQ+Ta8F4lWEcrE8uPfp/+QpQ8gSbXsSrtOJn1TqO/vFmDNnBXWVF8m6erduD58pqGUVko6+Pjg0WoZnw4Q66ibUXs2MNvGf45NoPan2uIvF0LrBSWS6cur48ofWhNzqihyew6MPWSGfrgu/NpIDrCgyt2NgPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QULXfonQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QULXfonQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D7CC2BD10;
-	Mon, 20 May 2024 13:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716211208;
-	bh=+UeaMW3/A1z0Fn3F6ZcWZjIC6nbjZWIHxmEB7YaIsAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QULXfonQPmw3cDXkbQK77O2AkUSg09xxKw8UUDqJ0ojMvtstDt1HvyM/1cnSaL4Db
-	 1LoEvrGZ+U3q6pL8FZkbZNThxVK5legI3Ybez3hGyk6k9o9hlcUTW4nW5cxD7M9199
-	 alJKR5Q+PBkg2HpDFP/afpwf5o2xTbrqw1RAky9Mt4sU4mVjAa16fWBBj3Mfk2g3s2
-	 iIxDZtL/YrHqyQSvGJQZ3MheLkSVEb4lWOwIVQiEn9gtQN20ypjw44/aKrzw15YdKz
-	 zFBv4MOfgYr6hCmr1OjpdLt1o1RSxqwh7iJO/RtJfjDELs69rS7tmQCL7onL14ryOe
-	 R8m/WCtQm1a1g==
-Date: Mon, 20 May 2024 14:20:04 +0100
-From: Mark Brown <broonie@kernel.org>
-To: egyszeregy@freemail.hu
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] spidev: Introduce "linux,spidev-name" property for
- device tree of spidev.
-Message-ID: <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
-References: <20240519211346.30323-1-egyszeregy@freemail.hu>
+	s=arc-20240116; t=1716211249; c=relaxed/simple;
+	bh=Ohi1BUI+oUAqw309tNWF/kYN5L+Pt9fSMgIrzJRyzNU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eev3d6/5qFXkQqtU87Y1OWiDCDJZqzezaGFrf1UTPay90rKS9zgm/9nOXGotZsPy0qMPh3EPuywEJclvb57Gw/ucNuR0nloFHgn5mamuz9nS6tKHMrIyjB1QfuSlgC060mjvHRf72iXkRJ8DpYiDshrBpFFRJspBdd8/65MZbyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VjdPX234CzXgSg;
+	Mon, 20 May 2024 21:16:32 +0800 (CST)
+Received: from kwepemm600014.china.huawei.com (unknown [7.193.23.54])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5AEE9140159;
+	Mon, 20 May 2024 21:20:41 +0800 (CST)
+Received: from Linux-SUSE12SP5.huawei.com (10.67.136.233) by
+ kwepemm600014.china.huawei.com (7.193.23.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 20 May 2024 21:20:40 +0800
+From: <zhuqiuer1@huawei.com>
+To: <anna-maria@linutronix.de>, <frederic@kernel.org>, <tglx@linutronix.de>,
+	<linux-kernel@vger.kernel.org>
+CC: <zhuqiuer1@huawei.com>
+Subject: Question: One-jiffy latency from the checking in run_local_timers()
+Date: Mon, 20 May 2024 21:20:40 +0800
+Message-ID: <20240520132040.259477-1-zhuqiuer1@huawei.com>
+X-Mailer: git-send-email 2.12.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s+JyqRfoTwUi6FDd"
-Content-Disposition: inline
-In-Reply-To: <20240519211346.30323-1-egyszeregy@freemail.hu>
-X-Cookie: We are what we are.
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600014.china.huawei.com (7.193.23.54)
 
+Hi there, the function "kernel/time/timer.c:run_local_timers" avoids raising a softirq when there are no timers set to expire at the current time.
+It achieves this by comparing the current "jiffies" with "base->next_expiry". 
+However, when working with SMP, it is possible that a few CPUs are reading the jiffies while it is being incremented.
+These CPUs may read the old-jiffies value in "run_local_timers" and fail to invoke expired timers at this jiffy.
+This results in a one-jiffy latency for the timers. Can we simply add 1 to the "jiffies" value when we compare it with next_expiry?
+This may result in an unnecessary softirq being raised if a timer expires in the next jiffy, but can remove the one-jiffy latency. 
+Not sure if this is a positive trade-off.
 
---s+JyqRfoTwUi6FDd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Below is the example that we found to
+have a few cpus reading the old-jiffies value while cpu-0 is updating the jiffies:
 
-On Sun, May 19, 2024 at 11:13:46PM +0200, egyszeregy@freemail.hu wrote:
-> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
->=20
-> Optionally, spidev may have a "linux,spidev-name" property.
-> This is a string which is defining a custom suffix name for spi device in
-> /dev/spidev-<name> format. It helps to improve software portability betwe=
-en
-> various SoCs and reduce complexities of hardware related codes in SWs.
+<idle>-0       [000] d.h.   133.492480: do_timer: updated_jiffies: 4294950645
+<idle>-0       [010] d.h.   133.492480: run_local_timers: base->next_expiry: 5368691712, jiffies: 4294950644
+<idle>-0       [001] d.h.   133.492480: run_local_timers: base->next_expiry: 4294950645, jiffies: 4294950644
+....
+<idle>-0       [006] d.h.   133.492481: run_local_timers: base->next_expiry: 4294967808, jiffies: 4294950645
+....
 
-This seems like what udev rules are for?
-
---s+JyqRfoTwUi6FDd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZLTgMACgkQJNaLcl1U
-h9CTPQf/WCjngVabwHijSli/3fOm/oBG0ACmD1HiQNhWggtDXSd7m4XraU+1datt
-042b7g6rUyQHF7joD2BO7OxXKLhzRIQpDxZkZQCJfcub399mJ5O64/ujvp8vpTXb
-uBc+HbzQ6DGUoLvFtbF7fV6BTybVW5zU+NGcYPAByRuwOoFTVoRCVVHekcOXpcAe
-cBHqq58rDxC4PZOyxwb8SZXih59MBRum7TLAdsagaC+T9ULbVesMrHzYFya9vywd
-j+4RC1IjgDlKVHsCwWoL00Y+nKG7fTK8FfswoQBRysDSU93DtwOmwwYOEjLPaaDN
-/km94tV190L68rfHtwRei1PHwVDaHQ==
-=0POV
------END PGP SIGNATURE-----
-
---s+JyqRfoTwUi6FDd--
+We found that in this case the timer on cpu-1 was invoked in next jiffy but not the one it is expected to.
