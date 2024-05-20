@@ -1,32 +1,32 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55050136E26
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7696A136E04
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716216861; cv=none; b=W/FRQNZnw3eYwzstBBuaGS7MPgR/rdz10X6RY+5oRnqE1B12OccRA9SsdJEol1I+1tzXEo1D3/SrGcaq/IqfR+XlnuYhxD5G58UtxnqHDrBWO5sR+bPCQ2n4SZVf63y7oZ4/vjJzDSjL+hE9G8PpjQfBmg9dA4QK6m0k6yYO0AY=
+	t=1716216861; cv=none; b=mr+Vurg817DHg2+BIJTBtSfc5LNX2BMm3djagTLo6+Rdi5YG/G4nADia4Tbsn+1X6V3y/tGKkr4KT4Qyc2bsHF+LMd+021BZyKwi9mfUD1RBF1VNPZaqbAy9MG1tjuZcMj6HKPKT1LcNuryFcmhxBOkuPPEvCzMWYcLv+oq4bbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716216861; c=relaxed/simple;
-	bh=R6C/JcAy4XUIj+2mid0YFJ1dW39G3VQ8kRlz1b3tSQ8=;
+	bh=sHuVMqOOOz9XO4IshcQZEwhXzzhogGCT5T+bmtChve0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bfFOBH9EWgZPVPhcgFTwar5sk75WgRDTTuCVCX3WnbQrRCW+FUFJImC/2oKV2RgbUnJ8LdOidOn2kBz9WRmdi/CY7nFaDdT8pOEexk4f5J1fbdcvnjdDbv1WL2y2VzwNhMHCxay6/2ZFE7t/unuQxh1MAUwdO7L5rKoXimatsXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pGI8Zd6V; arc=none smtp.client-ip=91.218.175.177
+	 MIME-Version; b=XCo2oNLyoQ5Ck58bL2Ez03a4lLDOz3AYa12gavWVdscSmYOKCGHCf9gCqk1AigSjFAU74b1lEXt8vLzGX16XwDF58d0TQ3kYveanlqy1rdw3EqhexaTP0MaCYXxb+Wwnffko8kcAOIzJLYRT5+5FVHdE6YvVNAPcU/GZvvUUhy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d09pMeOY; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pGI8Zd6V"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d09pMeOY"
 X-Envelope-To: lpieralisi@kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716216858;
+	t=1716216854;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=h+uuIXz4xj0FsFVOIz/Umf+nSIXJTEGtc5WA6Ask/xo=;
-	b=pGI8Zd6VEt20VL6kw+23rXruM9Wjb9BVRm9ETW6EKayZz35VT6Rw0QRsuSSU+n9YOtmvBV
-	GE2Pi1WTXnmd3YUCTOPLaSj1XY4402y/gaa6oNHo6w6X1Nkay57l0j0GmDDy+i2BriaCnW
-	txIAT1AJC/a/sCQ8nmAqRLOrg4sl1mI=
+	bh=0TZ3BGmEu8mVwpdyswgFBs/ct4xyk7TF2NGi7rztXsU=;
+	b=d09pMeOYiWVnrY3txO33VLyO8lPiZDqCbW6nnx1MgKYzNfA7HqMxY6eRxGmcAVt+xvUuLr
+	HJaMZwbY43vTCCVFZNqFMo0SGjrWVZyBsNQKtRnylcNqWD/4VhGRLaMgLvshkFuswYgckK
+	JKBUlXWHl5h6LN9mcvgc7bixP3ltZMI=
 X-Envelope-To: kw@linux.com
 X-Envelope-To: robh@kernel.org
 X-Envelope-To: linux-pci@vger.kernel.org
@@ -36,6 +36,9 @@ X-Envelope-To: linux-arm-kernel@lists.infradead.org
 X-Envelope-To: bhelgaas@google.com
 X-Envelope-To: linux-kernel@vger.kernel.org
 X-Envelope-To: sean.anderson@linux.dev
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: krzysztof.kozlowski+dt@linaro.org
+X-Envelope-To: devicetree@vger.kernel.org
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -47,10 +50,13 @@ Cc: Michal Simek <michal.simek@amd.com>,
 	linux-arm-kernel@lists.infradead.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	linux-kernel@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v3 3/7] PCI: xilinx-nwl: Fix register misspelling
-Date: Mon, 20 May 2024 10:53:58 -0400
-Message-Id: <20240520145402.2526481-4-sean.anderson@linux.dev>
+	Sean Anderson <sean.anderson@linux.dev>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 1/7] dt-bindings: pci: xilinx-nwl: Add phys
+Date: Mon, 20 May 2024 10:53:56 -0400
+Message-Id: <20240520145402.2526481-2-sean.anderson@linux.dev>
 In-Reply-To: <20240520145402.2526481-1-sean.anderson@linux.dev>
 References: <20240520145402.2526481-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -62,56 +68,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-MSIC -> MISC
+Add phys properties so Linux can power-on/configure the GTR
+transcievers.
 
-Fixes: c2a7ff18edcd ("PCI: xilinx-nwl: Expand error logging")
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
-(no changes since v1)
+Changes in v3:
+- Document phys property
 
- drivers/pci/controller/pcie-xilinx-nwl.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Changes in v2:
+- Remove phy-names
+- Add an example
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 437927e3bcca..ce881baac6d8 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -80,8 +80,8 @@
- #define MSGF_MISC_SR_NON_FATAL_DEV	BIT(22)
- #define MSGF_MISC_SR_FATAL_DEV		BIT(23)
- #define MSGF_MISC_SR_LINK_DOWN		BIT(24)
--#define MSGF_MSIC_SR_LINK_AUTO_BWIDTH	BIT(25)
--#define MSGF_MSIC_SR_LINK_BWIDTH	BIT(26)
-+#define MSGF_MISC_SR_LINK_AUTO_BWIDTH	BIT(25)
-+#define MSGF_MISC_SR_LINK_BWIDTH	BIT(26)
+ Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
+index 426f90a47f35..cc50795d170b 100644
+--- a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
+@@ -61,6 +61,11 @@ properties:
+   interrupt-map:
+     maxItems: 4
  
- #define MSGF_MISC_SR_MASKALL		(MSGF_MISC_SR_RXMSG_AVAIL | \
- 					MSGF_MISC_SR_RXMSG_OVER | \
-@@ -96,8 +96,8 @@
- 					MSGF_MISC_SR_NON_FATAL_DEV | \
- 					MSGF_MISC_SR_FATAL_DEV | \
- 					MSGF_MISC_SR_LINK_DOWN | \
--					MSGF_MSIC_SR_LINK_AUTO_BWIDTH | \
--					MSGF_MSIC_SR_LINK_BWIDTH)
-+					MSGF_MISC_SR_LINK_AUTO_BWIDTH | \
-+					MSGF_MISC_SR_LINK_BWIDTH)
++  phys:
++    minItems: 1
++    maxItems: 4
++    description: One phy per logical lane, in order
++
+   power-domains:
+     maxItems: 1
  
- /* Legacy interrupt status mask bits */
- #define MSGF_LEG_SR_INTA		BIT(0)
-@@ -299,10 +299,10 @@ static irqreturn_t nwl_pcie_misc_handler(int irq, void *data)
- 	if (misc_stat & MSGF_MISC_SR_FATAL_DEV)
- 		dev_err(dev, "Fatal Error Detected\n");
- 
--	if (misc_stat & MSGF_MSIC_SR_LINK_AUTO_BWIDTH)
-+	if (misc_stat & MSGF_MISC_SR_LINK_AUTO_BWIDTH)
- 		dev_info(dev, "Link Autonomous Bandwidth Management Status bit set\n");
- 
--	if (misc_stat & MSGF_MSIC_SR_LINK_BWIDTH)
-+	if (misc_stat & MSGF_MISC_SR_LINK_BWIDTH)
- 		dev_info(dev, "Link Bandwidth Management Status bit set\n");
- 
- 	/* Clear misc interrupt status */
+@@ -110,6 +115,7 @@ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/phy/phy.h>
+     #include <dt-bindings/power/xlnx-zynqmp-power.h>
+     soc {
+         #address-cells = <2>;
+@@ -138,6 +144,7 @@ examples:
+                             <0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
+                             <0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
+             msi-parent = <&nwl_pcie>;
++            phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
+             power-domains = <&zynqmp_firmware PD_PCIE>;
+             iommus = <&smmu 0x4d0>;
+             pcie_intc: legacy-interrupt-controller {
 -- 
 2.35.1.1320.gc452695387.dirty
 
