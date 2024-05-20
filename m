@@ -1,103 +1,219 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015D2137C38
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06A41386DA
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226026; cv=none; b=uCMviV9mXKrnYtC2aF6jgeQxynCUDLx+RtnBL0atfm8sNU/z1Zj6AvwQ6sE/5X6+ZPSg0KpGry7Mx/PdVfFaRjAw0++2yfCT8YKRiuc+2OvX21x3KS+NSvZLmMABxjpEckkTkjRhZluYDT5RJjVabBBUSdfEJmkxo+zlHbGnbjA=
+	t=1716226030; cv=none; b=nyDQ2svgwhOMBZIYjpxKlzW9ack7cet96FzFdTMJ0nQHgCjxH1vWj53fM+GKjv1FVo8cMt9wc00knQGHONjw0Pm1UMkpyToWP0xP2tpuvQ3OoXeTmgWeW9MZnlnSU/idq6WyWZoDO4NVsqXC15tvLosm2A/RYCBDFORZkWrx6lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226026; c=relaxed/simple;
-	bh=gJionPJ472/yk8wS2uPDB77ENhe05RuHWRUzcheWWUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a1pDEJdgJjNAN9ul1R1+dUKNFdlZOjvaSlCGUcse4JlFLh347+nmpFQnFSdu3xLxs0g0FdRfgJl91WEpEtzFedfdb+Vque1gmKD4Po9cdEJse+tiD7FvP3GzOXZoteiIs7cjEWvfSPHE4aDuLtz1+VKUgOlM2oUtQy1grHBBVwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=3Wgca8wm; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1716226030; c=relaxed/simple;
+	bh=wZpumSaAgofzk39YfBsp32v4+ebHuETq3cEP9jzCvOU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vic02Adg4ONVV4yWdt3I2UUrTdn6PgrajCrxGn7miFnjFYaEs8wOF8Kqwo/KMYAQTfo9WdbQnWwyZ557KxO5PUZ+BUphAFnZvX/IZQJGBBfz22Z3KZCn+9C8Y/mdo8yOBfUBcwsyrey7ndyU046zW+a2ZXcaRqNe02tExIHiVEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M8kUejGT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="3Wgca8wm"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1eca195a7c8so80566075ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1716226024; x=1716830824; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R3s300s+eRItiZsWIWpZ9cPe8WeTqKCXRM5Vucr8exE=;
-        b=3Wgca8wmk7SQVUh3q2iSaWaZ3fJbBdIsmx2ipKQQvC4d+8UxB1ncvz3/gvSdopZkYR
-         4tDqVvGTqyxykdIftC+HeKL6692CnzRm4OoIPcFJaIois6EAYLq4MGljueuqhH2MBvTm
-         O2a1pzDfhxEjPB0loKCdXFArw9EOzrQZ+39gS/7DAj9ikmWYiOFispjO4I6xaP4LvxzA
-         zL9RywQ3RQGmbRIacwtF2m3qyz+SZ9WRBoQUUxJMF0ttGDoRhxv+kd2TRLgzQ1FUP2jw
-         RpTc0V551pi9B2gkwE4IflIdpTuSGMw0MEZjvxoJBixepEdY1QYvMbRl8StekN3eV4iY
-         FZ/g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8kUejGT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716226027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5CImq0b4mEhq1pg3qJ1z+g35+FLQKy2u4BGJkZOUedY=;
+	b=M8kUejGT966ZQvgKzLtiyjigQvuoaYOysHWIe7ZurdnJEX9cVpvPrjmyzMfqCxMmQAbXvk
+	cTsVFlvq5AJHzjI00g1mvJbRA7X/fAWhsn6t6VVzE3chqgXKKOGceXCbpM/wRgYN3S2SEF
+	kMXb/kPu4CqyPjSMGDvOZFQQPkt8T4s=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-446-vxCQewDYPjSiEheEoxU0qg-1; Mon, 20 May 2024 13:27:06 -0400
+X-MC-Unique: vxCQewDYPjSiEheEoxU0qg-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42015260835so39352435e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:27:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716226024; x=1716830824;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3s300s+eRItiZsWIWpZ9cPe8WeTqKCXRM5Vucr8exE=;
-        b=po80toTx1zXLcff+N0iamJMENcuQPfxXXrMkVFtm6GxCbAt7OYa5gw9sHM0Is5pWXh
-         PWjCzsL2nXPyDLfUpj9Lbkd99ONqN9AXvScupk+hqPTf62f2QxxRyM6FIgk95Mnt9RSj
-         r6y6OCII0qib3xLjFaId9QY+0MqrlpynKLa2YxFq9E4wDPjq/9u8TBDmfo8ts4PUYZBP
-         J+ih2RfiCoR5fbrmD5cuBTtMx/6DMt9Beb4d86VGNqzyPKOTMH/dTc8/UFs4xCtnVP0e
-         4Ttt3ypkp1QZzZDPOQr1hB78ydHlH8ofyvBNWznNYiGrCGqPeagCTv0cWyIHaAxFisQS
-         0/tA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9/NsKTrUzHQNyajlupL27JM4mCZYpGX6Rhofei2k52FfYC7h4BZeXJD4t2eAAapq0t5qXFlPnXxfwtN6BJjcWR3cel6Qa5wbGQIjV
-X-Gm-Message-State: AOJu0YzODrU665hh4/MVfTRLfPeArO3hX9Irf8vA4jP6HVUo0of9Kb1k
-	mNR2OQY0nlTkG3d9YB+AdXKg98osIaAV6YOtKrsVAg8C8dEwRDYMveYKdTMLSxc=
-X-Google-Smtp-Source: AGHT+IFfScuKSWYT7LnaHkWdBwB74S/62Fylm0oGC7fkF0kh9NLQCJkPdFeDyIIgL69BZNLWfTwZow==
-X-Received: by 2002:a17:902:8f94:b0:1e3:c610:597d with SMTP id d9443c01a7336-1ef44057ca0mr260527645ad.60.1716226024087;
+        d=1e100.net; s=20230601; t=1716226025; x=1716830825;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5CImq0b4mEhq1pg3qJ1z+g35+FLQKy2u4BGJkZOUedY=;
+        b=Yu7FXvtuFOzaGU6zZAvVv6qY0RxMB3ijXrtw4cKVRABG2WwIxKcar+tBc6cXkOXI2E
+         r6P49iSnC0572/A5hFZveYejr4kYVTiAY+muTQBq+f/jI5FUIwAe2S9LuhZwvLnRxlr5
+         /aSW2PfI+sJeIfKQSkY4ENB/5wJaUugNWAI9aucFGgySFZM3VWzoHP+trDrXXGDtQrZ+
+         hg5PIm1RO9rGZABrErtydMXoTMJkvL3AsLQjTHcCBNgWBbVxqWYdkg2RXMtperAJGVFG
+         KgWgt7dx34nVqk2G44+oP6xmMa7ak9ktXVg+pAIibwMp1zV/1up4YjHIonAjkMlvdLJ2
+         zw0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVJDXyzkTq6weNBo/FFzXtUhMVBintvklAK1scrjmAk5PhXU46UBU5YrBgNa9XMDuGoBQ4XXsy0Ot/dTEfVhQeOpdJCVw3qfgIvt5bM
+X-Gm-Message-State: AOJu0YzoW6EiyNBpctB/2XrMCg/HOP5mXh0GLv63+eXhJMULcqPy0Lbi
+	FOtFEKIV7iPkmlH7vWViHWzCKa7xBSTfsSJdLtRdrKqA4bQXSIeFvFASXN1Lu/aZjHdzBfpPFaH
+	6TReprGqBX1OyxTpjoeFUoe8csK7aVcx2Zx8QuWbkeL0xXnEqePWJ3v30J6Xj6w==
+X-Received: by 2002:a05:600c:4f93:b0:41b:e416:43d3 with SMTP id 5b1f17b1804b1-41fead6a51dmr216213275e9.35.1716226025185;
+        Mon, 20 May 2024 10:27:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF/bF4bRoSUln2A7cqDJukXexNcMjambbxJHYjat/XzwST1JPeAlpPwPz2OHv0SZFXR65NeCA==
+X-Received: by 2002:a05:600c:4f93:b0:41b:e416:43d3 with SMTP id 5b1f17b1804b1-41fead6a51dmr216212835e9.35.1716226024359;
         Mon, 20 May 2024 10:27:04 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1151:15:40a:5eb5:8916:33a4? ([2620:10d:c090:500::4:d4e8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f2f46c28desm37860325ad.221.2024.05.20.10.27.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42028c7730dsm189604005e9.25.2024.05.20.10.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 20 May 2024 10:27:03 -0700 (PDT)
-Message-ID: <713182b5-5fda-48a7-8947-8dc3d10c42b1@davidwei.uk>
-Date: Mon, 20 May 2024 10:27:01 -0700
+From: Danilo Krummrich <dakr@redhat.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	bhelgaas@google.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	airlied@gmail.com,
+	fujita.tomonori@gmail.com,
+	lina@asahilina.net,
+	pstanner@redhat.com,
+	ajanulgu@redhat.com,
+	lyude@redhat.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Subject: [RFC PATCH 03/11] rust: add rcu abstraction
+Date: Mon, 20 May 2024 19:25:40 +0200
+Message-ID: <20240520172554.182094-4-dakr@redhat.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240520172554.182094-1-dakr@redhat.com>
+References: <20240520172554.182094-1-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 4/5] gve: Add flow steering adminq commands
-Content-Language: en-GB
-To: Ziwei Xiao <ziweixiao@google.com>
-Cc: netdev@vger.kernel.org, jeroendb@google.com, pkaligineedi@google.com,
- shailend@google.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, willemb@google.com,
- hramamurthy@google.com, rushilg@google.com, jfraker@google.com,
- linux-kernel@vger.kernel.org
-References: <20240507225945.1408516-1-ziweixiao@google.com>
- <20240507225945.1408516-5-ziweixiao@google.com>
- <a75ca51c-89b1-4f90-be52-e5fb71ca519a@davidwei.uk>
- <CAG-FcCPnrN8Wodn0+UYPJ4XpvDpVyhCzvGPx2CnDit8adwKYSg@mail.gmail.com>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <CAG-FcCPnrN8Wodn0+UYPJ4XpvDpVyhCzvGPx2CnDit8adwKYSg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 2024-05-09 17:18, Ziwei Xiao wrote:
-> On Tue, May 7, 2024 at 11:24 PM David Wei <dw@davidwei.uk> wrote:
->>
->> On 2024-05-07 15:59, Ziwei Xiao wrote:
+From: Wedson Almeida Filho <wedsonaf@gmail.com>
 
-[...]
+Add a simple abstraction to guard critical code sections with an rcu
+read lock.
 
->>> +/* Flow-steering related definitions */
->>> +enum gve_adminq_flow_rule_cfg_opcode {
->>> +     GVE_RULE_ADD    = 0,
->>> +     GVE_RULE_DEL    = 1,
->>> +     GVE_RULE_RESET  = 2,
->>> +};
->>
->> Could these be more descriptive?
->>
-> Could you be more specific on which needs to be improved? Is the enum
-> name or the field name?
+Co-developed-by: Andreas Hindborg <a.hindborg@samsung.com>
+Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+---
+ rust/helpers.c          | 15 ++++++++++++
+ rust/kernel/sync.rs     |  1 +
+ rust/kernel/sync/rcu.rs | 52 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 68 insertions(+)
+ create mode 100644 rust/kernel/sync/rcu.rs
 
-Sorry for the late response.
+diff --git a/rust/helpers.c b/rust/helpers.c
+index f9d2db1d1f33..1d3e800140fc 100644
+--- a/rust/helpers.c
++++ b/rust/helpers.c
+@@ -27,6 +27,7 @@
+ #include <linux/err.h>
+ #include <linux/errname.h>
+ #include <linux/mutex.h>
++#include <linux/rcupdate.h>
+ #include <linux/refcount.h>
+ #include <linux/sched/signal.h>
+ #include <linux/spinlock.h>
+@@ -158,6 +159,20 @@ void rust_helper_init_work_with_key(struct work_struct *work, work_func_t func,
+ }
+ EXPORT_SYMBOL_GPL(rust_helper_init_work_with_key);
+ 
++/* rcu */
++void rust_helper_rcu_read_lock(void)
++{
++	rcu_read_lock();
++}
++EXPORT_SYMBOL_GPL(rust_helper_rcu_read_lock);
++
++void rust_helper_rcu_read_unlock(void)
++{
++	rcu_read_unlock();
++}
++EXPORT_SYMBOL_GPL(rust_helper_rcu_read_unlock);
++/* end rcu */
++
+ /*
+  * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
+  * use it in contexts where Rust expects a `usize` like slice (array) indices.
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 0ab20975a3b5..1806767359fe 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -11,6 +11,7 @@
+ mod condvar;
+ pub mod lock;
+ mod locked_by;
++pub mod rcu;
+ 
+ pub use arc::{Arc, ArcBorrow, UniqueArc};
+ pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
+diff --git a/rust/kernel/sync/rcu.rs b/rust/kernel/sync/rcu.rs
+new file mode 100644
+index 000000000000..1a1c8ea49359
+--- /dev/null
++++ b/rust/kernel/sync/rcu.rs
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! RCU support.
++//!
++//! C header: [`include/linux/rcupdate.h`](../../../../include/linux/rcupdate.h)
++
++use crate::bindings;
++use core::marker::PhantomData;
++
++/// Evidence that the RCU read side lock is held on the current thread/CPU.
++///
++/// The type is explicitly not `Send` because this property is per-thread/CPU.
++///
++/// # Invariants
++///
++/// The RCU read side lock is actually held while instances of this guard exist.
++pub struct Guard {
++    _not_send: PhantomData<*mut ()>,
++}
++
++impl Guard {
++    /// Acquires the RCU read side lock and returns a guard.
++    pub fn new() -> Self {
++        // SAFETY: An FFI call with no additional requirements.
++        unsafe { bindings::rcu_read_lock() };
++        // INVARIANT: The RCU read side lock was just acquired above.
++        Self {
++            _not_send: PhantomData,
++        }
++    }
++
++    /// Explicitly releases the RCU read side lock.
++    pub fn unlock(self) {}
++}
++
++impl Default for Guard {
++    fn default() -> Self {
++        Self::new()
++    }
++}
++
++impl Drop for Guard {
++    fn drop(&mut self) {
++        // SAFETY: By the type invariants, the rcu read side is locked, so it is ok to unlock it.
++        unsafe { bindings::rcu_read_unlock() };
++    }
++}
++
++/// Acquires the RCU read side lock.
++pub fn read_lock() -> Guard {
++    Guard::new()
++}
+-- 
+2.45.1
 
-The enum field names. GVE_RULE_x is too sparse for me; what rule? To
-match the rest of the file maybe something like GVE_FLOW_RULE_CFG_x.
