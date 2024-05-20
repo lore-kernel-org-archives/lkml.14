@@ -1,165 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB541F945;
-	Mon, 20 May 2024 19:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2931AAC4;
+	Mon, 20 May 2024 19:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716234138; cv=none; b=XyuiDWo72O56PszwmPuFqSDLZodYjkwxNzSnGDrZRhGNnc/naRLAiCHYzGtQabnbGx+/GoBDgDzCFZpC4V5Mxrji4oqTyYobYh6XkTWerhcPE2tfIMN42aLN7de4M5fncCuv42jrARpXwNTrItiP1mCeS/F+vZcNpvf5BAdflLE=
+	t=1716234288; cv=none; b=qh5fIyzZUeHQCzNV4snCl/yeCmdfdqsxpi++8SReVBiz9ETOe4SFNlGLGnK6y+SMKxFdhZBBwARq2O6saPRmaYDxx5KyNxE1RvA8IBDEQp012KwbHGTCOA6oOFeyfNrVnCRdJ+hKgx3QWjYP+NP6EyaPwSSCpNEFlACA56ZFl+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716234138; c=relaxed/simple;
-	bh=TC5YGn3w3/yr6FzaVfTxCUg2L4p7HcRQyWWJNr6TxLw=;
+	s=arc-20240116; t=1716234288; c=relaxed/simple;
+	bh=10RuVPJyv0cb0NDS7drH+ekYsGtckzk+dNuzrvyX0L4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EQaPqLibCX/SZku58ej44/9bu2a/dF3BxolSzfLgsIJzoVDU25ZFqJce7aByu/cO8HouxPxRWr8mYJd2ADVn2jnJxwBNOloNLiUqEHrFHRYr1f49uUu/1nFAqLvzXYe5nIpQgoX5QEBo6wdiPQ/WsmVdClc5265vxmXE+cDWLGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HRWA5uQO; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBqq1wZyQZ6VzR1VS+EKMgHxG+xINSXjr1m1V/QIMrq5M3sF8NoMdrrpN4Nu4/SoKny9PNBfqlBeJKmn2jpqZYrjVF5AqWHrnkO7HziUZaSiwseU9vI7OVc7s3h/L6MW7OqgjCp+/039axn7OneBcJqbWVodxRDzD/JiHeIK38A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0MZ8AYf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HRWA5uQO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716234136; x=1747770136;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=TC5YGn3w3/yr6FzaVfTxCUg2L4p7HcRQyWWJNr6TxLw=;
-  b=HRWA5uQOtwYXdC7crIJ9L9MZZoojy+BtPeUHNhPqbTxtPv9OFKKnj23U
-   TS/NtZ3jSLW5MKlT8FgFyK67LJ56KBZfR9HkZTKHdRI+k1fi4vdw40+8h
-   qbYtzF7Oal8FR598up4prYq11f4dt7iTl7p3KVMbkW6fv6FupDnE46SdY
-   4qpDxUUpkh2CgbDl54wygitu78zr5qnB8bb9mVAvMKIR4sTXVZ38g5nex
-   IeCHAPRzV6WP8e1KsX5qoYl9zRNJ3QbY6kp9RIQnumbBj8YLGlisMBkn/
-   MQYp8ReGck2dhV8BqXP0QgxjaF4jhtH888XlPRZkXCnVUlrK78iDCFrmS
-   g==;
-X-CSE-ConnectionGUID: eRQVHExySMqckBT1aK++iQ==
-X-CSE-MsgGUID: +/XrUf5MRi2MPBICT6csiw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="34904044"
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="34904044"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 12:42:15 -0700
-X-CSE-ConnectionGUID: VJN3Ja6FS4CQZEk6Pkjwyw==
-X-CSE-MsgGUID: 3bmG9zIhQo+9cSrOrLUu5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="37598254"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.51.95])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 12:42:15 -0700
-Date: Mon, 20 May 2024 12:42:13 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cxl/events: Use a common struct for DRAM and General
- Media events
-Message-ID: <Zkunlbv2qIOaLaq3@aschofie-mobl2>
-References: <20240518113317.3683718-1-fabio.m.de.francesco@linux.intel.com>
- <4446774.UPlyArG6xL@fdefranc-mobl3>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0MZ8AYf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A28C2BD10;
+	Mon, 20 May 2024 19:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716234288;
+	bh=10RuVPJyv0cb0NDS7drH+ekYsGtckzk+dNuzrvyX0L4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H0MZ8AYfLzpSg33qbrY/GlyIG7TurBlDzvbW4IM97qpgkf2laz8xA37tYK5x9I7/F
+	 Fb63qN2NBIaLGXlyEAAjtRRtn3zDT1DBUUY3S50NdbEXmtWHKw13QML7rTjyzAfVWK
+	 N4sSl5dfqO/xO4Ln0xZZglAyYbVxRaDTxCTfYkv/4ntiAJspw/E2IsAfvtghiKGfbV
+	 8hoM2kLaBTA9imNTw9ufAODojkpgsbbeTuE3cSPcsM02ftgk3V9LhzFM6hiEIsvaHx
+	 dXRvOmkHy/vf1NQ4agWEWHmfiPd0KaM0lGyoGFoFFW6sf4JV8qTKC/uskgsn74yo81
+	 axIBT7WkDWwRA==
+Date: Mon, 20 May 2024 14:44:46 -0500
+From: Rob Herring <robh@kernel.org>
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+	Melody Olvera <quic_molvera@quicinc.com>,
+	Shivendra Pratap <quic_spratap@quicinc.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] dt-bindings: arm: Document reboot mode magic
+Message-ID: <20240520194446.GA1368012-robh@kernel.org>
+References: <20240515-arm-psci-system_reset2-vendor-reboots-v3-0-16dd4f9c0ab4@quicinc.com>
+ <20240515-arm-psci-system_reset2-vendor-reboots-v3-2-16dd4f9c0ab4@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4446774.UPlyArG6xL@fdefranc-mobl3>
+In-Reply-To: <20240515-arm-psci-system_reset2-vendor-reboots-v3-2-16dd4f9c0ab4@quicinc.com>
 
-On Mon, May 20, 2024 at 07:55:17PM +0200, Fabio M. De Francesco wrote:
-> On Saturday, May 18, 2024 1:26:21 PM GMT+2 Fabio M. De Francesco wrote:
-> > cxl_event_common was an unfortunate naming choice and caused confusion with
-> > the existing Common Event Record. Furthermore, its fields didn't map all
-> > the common information between DRAM and General Media Events.
-> > 
-> > Remove cxl_event_common and introduce cxl_event_media_hdr to record common
-> > information between DRAM and General Media events.
-> > 
-> > cxl_event_media_hdr, which is embedded in both cxl_event_gen_media and
-> > cxl_event_dram, leverages the commonalities between the two events to
-> > simplify their respective handling.
-> > 
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> > ---
-> > 
-> > [...]
-> > -
-> >  union cxl_event {
-> >  	struct cxl_event_generic generic;
-> >  	struct cxl_event_gen_media gen_media;
-> >  	struct cxl_event_dram dram;
-> >  	struct cxl_event_mem_module mem_module;
-> > -	struct cxl_event_common common;
-> > +	struct cxl_event_media_hdr media_hdr;
-> >  } __packed;
+On Wed, May 15, 2024 at 04:09:45PM -0700, Elliot Berman wrote:
+> Add bindings to describe vendor-specific reboot modes. Values here
+> correspond to valid parameters to vendor-specific reset types in PSCI
+> SYSTEM_RESET2 call.
 > 
-> Today I was thinking about a comment from Ira. He didn't like the addition of 
-> an event that is not in the specs.[0] (Notice that the other issues have been 
-> already addressed). 
+> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/arm/psci.yaml | 43 +++++++++++++++++++++++--
+>  1 file changed, 41 insertions(+), 2 deletions(-)
 > 
-> I dislike the addition of an artificial event for the very same reasons Ira 
-> expressed.
+> diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
+> index cbb012e217ab..47b5bbe540ce 100644
+> --- a/Documentation/devicetree/bindings/arm/psci.yaml
+> +++ b/Documentation/devicetree/bindings/arm/psci.yaml
+> @@ -137,8 +137,34 @@ allOf:
+>        required:
+>          - cpu_off
+>          - cpu_on
+> -
+> -additionalProperties: false
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: arm,psci-1.0
+> +    then:
+> +      properties:
+> +        reset-types:
 
-Agree it should not appear like an artifical event. It should appear
-as a special member of the union. A union's purpose is to allow access
-like this. Perhaps it's a naming thing.
+The normal structure is declare all properties and nodes at the top 
+level (outside of if/then schemas) and then add restrictions with 
+if/then schemas. 
 
-How about s/cxl_event_media_hdr/cxl_media_hdr and add a comment:
+> +          type: object
+> +          $ref: /schemas/power/reset/reboot-mode.yaml#
 
--	struct cxl_event_common common;
-+	struct cxl_media_hdr media_hdr; /* dram & gen_media event header */
+             additionalProperties: false
 
-> 
-> This additional event could be easily removed by something simple like the 
-> following diff.
+and a blank line
 
-Some typos below and also you'll need to look at the larger chunk of
-code and reconsider the if/else flow. Perhaps revert to an earlier
-version of the event patchset.
-
--- Alison
-
-> 
-> Fabio
-> 
-> [0] https://lore.kernel.org/linux-cxl/66467b8b47170_8c79294b3@iweiny-mobl.notmuch/
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index a08f050cc1ca..05de8836adea 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -875,7 +875,13 @@ void cxl_event_trace_record(const struct cxl_memdev 
-> *cxlmd,
->                 guard(rwsem_read)(&cxl_region_rwsem);
->                 guard(rwsem_read)(&cxl_dpa_rwsem);
->  
-> -               dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
-> +               if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> +                       dpa = le64_to_cpu(evt->gen_media.media_hdr.phys_addr)
-> +                             & CXL_DPA_MASK;
-> +               else if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-> +                       dpa = le64_to_cpu(evt->dram.media_hdr.phys_addr)
-> +                             & CXL_DPA_MASK;
+> +          properties:
+> +            # "mode-normal" is just SYSTEM_RESET
+> +            mode-normal: false
+> +          patternProperties:
+> +            "^mode-.*$":
+> +              items:
+> +                maxItems: 2
+> +              description: |
+> +                Describes a vendor-specific reset type. The string after "mode-"
+> +                maps a reboot mode to the parameters in the PSCI SYSTEM_RESET2 call.
 > +
->                 cxlr = cxl_dpa_to_region(cxlmd, dpa);
->                 if (cxlr)
->                         hpa = cxl_trace_hpa(cxlr, cxlmd, dpa);
-> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-> index 6562663a036d..f0a5be131e6a 100644
-> --- a/include/linux/cxl-event.h
-> +++ b/include/linux/cxl-event.h
-> @@ -97,7 +97,6 @@ union cxl_event {
->         struct cxl_event_gen_media gen_media;
->         struct cxl_event_dram dram;
->         struct cxl_event_mem_module mem_module;
-> -       struct cxl_event_media_hdr media_hdr;
->  } __packed;
+> +                Parameters are named mode-xxx = <type[, cookie]>, where xxx
+> +                is the name of the magic reboot mode, type is the lower 31 bits
+> +                of the reset_type, and, optionally, the cookie value. If the cookie
+> +                is not provided, it is defaulted to zero.
+> +                The 31st bit (vendor-resets) will be implicitly set by the driver.
+> +
+> +unevaluatedProperties: false
 >  
->  /*
+>  examples:
+>    - |+
+> @@ -261,4 +287,17 @@ examples:
+>          domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWRDN>;
+>        };
+>      };
+> +
+> +  - |+
+> +
+> +    // Case 5: SYSTEM_RESET2 vendor resets
+> +    psci {
+> +      compatible = "arm,psci-1.0";
+> +      method = "smc";
+> +
+> +      reset-types {
+> +        mode-edl = <0>;
+> +        mode-bootloader = <1 2>;
+> +      };
+> +    };
+>  ...
 > 
-> 
+> -- 
+> 2.34.1
 > 
