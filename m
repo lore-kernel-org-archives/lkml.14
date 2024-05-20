@@ -1,267 +1,129 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FDE139D01
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 21:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75A0134DE
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 21:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716239809; cv=none; b=J9bKmNnj3NVRk4hg4rR8k/DfzWhEtu52Mr8ywU56m6Nmnom75UzUMlz47ZNqb7C2m0L5xR0XrEc6ASICXGn1mLxJ/hrkuqGQg5tC9uzcOXAB4UNq3FrPJddDpDJatp1UPMBCFbwNyk6Z3xPqNfd9KDWoZ5cqYkzA+DQ8MWXcb2g=
+	t=1716239899; cv=none; b=EKH3kW0XTRXJIvvxL0yclgdI5SyR6acChklW5oFY8iEC3c2PaxTrrwD6aDRJJ2Yg0o2Z2bgZ+6DE/5H6wAPOR/G6vM+t1mCUjUgtKNxJNpqMsQsmOaT+v1nuYhpG/GrZktcYnMdjD9dN7gFhfcpVLDmrErfZP8UHKOdnEpv1krs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716239809; c=relaxed/simple;
-	bh=Q69knQy5aWtyMV52TDeQIu0cu45JjhpKnFX3Ul/xAnc=;
+	s=arc-20240116; t=1716239899; c=relaxed/simple;
+	bh=cXSYJ6Uq/Nt1467RetY5cc0avV5e/FrYKk+EzIhsnug=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pr2y1M+zGtCH6zS4/NXFBkb5H40iwpoiU6VtDkjioVAm2LxqNl93dgjqXuOsmGc2oPcYeAloTxkbdAAJh0U28F9yDJ7uEqSYg9BFNgMIvVHvQf8fUB/DWjYyEw/wVkxND4WDr2XxeCLfbvWxJygyKqjn+TVai/FpM/OHefMQ+rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oU5NziKq; arc=none smtp.client-ip=209.85.208.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=hgswxAcKby9ByMQtS6A9TO7ENBJdww2dWioOIzZvw962sAQIL5bhCn+hSTr+I7oEADOyMhksA/v1zE+42zq+eg04gPFRMH8aC1ldetyLF4gxMXSMIbADdQLR6w4nt10CsYjxqAFIkBe6ZXpRPuuti1lvEQTbiWfrh6MQai29XG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TxDfy+Fi; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oU5NziKq"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e538a264e0so60821591fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:16:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TxDfy+Fi"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e27277d2c1so60509561fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716239806; x=1716844606; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VG+wyOOGGLfw+B2ijipUditBjceEdzKS6/pyMdE87yA=;
-        b=oU5NziKq394lPsS2aP1UcgR/CS2KhCHt4fB73JwhRiLIO/V5UwZpncEX97Wx+gEGXW
-         6xc6PpDGg68WKfwdF9X/QPfI0cPV15k0Ft4/TrQOIES6ggbYhMgQxPviJQGfYcUgwLpq
-         t+JVcaIL/Tkg1fAX8QyrjPOHSkXNSbo/7vym1iOIf7mO/2mmB/JdXOYJPbNMSDLVqbVl
-         RZUbUwkdFQhXANZqzfN/UiudCiDZ18hhVzFdupt3WR+m1CZIPrfT8QfpoJdcE3QTfS5F
-         V7ADDAeGsS6Gw3FEmCK22KLAydohaQe/0/7SOoTn76biwW86nTDOxWDV2MIEYBYUjx7b
-         dXkw==
+        d=linaro.org; s=google; t=1716239896; x=1716844696; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HW+WHMVY50002e9IRpssfBbRimW3FKru0iLADUV6i64=;
+        b=TxDfy+Fiw0Cz4cVFTNnE4KQTiU0YUknEySgIum3PBx8SjWnAE+mawUjgkkfZDOLOTd
+         HYPxlmqul8sIH6Q6irLFsAxYV0a49rjjI6Vn865cYdD5T4gIlBYdzu8zfTV+PGZN+YDx
+         dwfQlnjE1ON54o9DUMP73ahQNlhjpWqy6A/9OJ9iSA5+tTqsWVmlGcn8zAbOhiwsKI4Q
+         m1fcMh6KUSbdaQi9V/0GiPoGAnyTX7A3y2FLNTxWPf1+zZP4C+R/Go9DwSGv3TEkAcYG
+         A4r9qSx2cowd1tdTkyw4yPFkGb9XlNEeXCEOEI6rqdhaPbNacRKVntJzeTQ+Q43ZksE4
+         wRxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716239806; x=1716844606;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VG+wyOOGGLfw+B2ijipUditBjceEdzKS6/pyMdE87yA=;
-        b=NB6MZD+eyjCOzW0Ual4OEYI+QOXXvNkujjHbpE6YZ60i2dhIpY2qTyrjXbMnBKXT2/
-         Txiq3fQUQec3XmTcBUCbQJzSxzWHyKFz0cFHgLNdDEqmO52Fnr1Tgf+bHakWVSW8Xe8l
-         msVvf9GokhDfZaFD5vxx2YMisEdIsfxDYtTb+PiO84NDbacFOYn2cjIRLbZTJLWJ1IRt
-         e8qxHB0V6eMRrprfRFy5xf+iQjfVMlD6glyUxL0QJH14W6pV1hp3FSraRcE909WJktxC
-         Itd2eSOgLX6ZKneJLk8U3RU0hD39DDimRQnRJvvvGS5qV/c0qD3jikjHJChxe9WoV3Bv
-         hl/g==
-X-Forwarded-Encrypted: i=1; AJvYcCW9LKydEKtGzcV3R41Ryjlj9HmzgQSwQopCITAvdlkfn/wXnhm2a9i9uReKwRu9a8xiSCDdylxy6T0vk8TgdbCRKoesUYFe97RXNtyx
-X-Gm-Message-State: AOJu0YwxuBrX/SB6bKo7RfLALdSj3cwgqat+J7EOzmwSbbgdTmtfRWOd
-	7gqh7+JEv1MTu6v+HnzAkIlMEpqbEWMAwBvenFi1InduVvoibDQgp6F33GCFGJw=
-X-Google-Smtp-Source: AGHT+IEp/sEhG115TKoHU/cBHnUXls0SY/sGKzpT+eTYnWDyBk/vRVw2jF5iCZxcKZkZcJlt8gQnsQ==
-X-Received: by 2002:a2e:a40f:0:b0:2e4:a21a:bf7d with SMTP id 38308e7fff4ca-2e51ff5234cmr312792631fa.21.1716239805722;
-        Mon, 20 May 2024 14:16:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716239896; x=1716844696;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HW+WHMVY50002e9IRpssfBbRimW3FKru0iLADUV6i64=;
+        b=a8LtYXn3TglWWxYOQolM3NP/RcgMQQ1k9lAoEslpij8vQSxXELwSSpwO2Ibhi/5ETD
+         tOFpWNUsG6SfU7Et/h7PMTzdKo84ktD0WpDO8ZtQQUcudHSdbUsYJQsik3J5pn1rLWY7
+         KC21ukazYZtkrYncmyM3HyE4F4ryx4NeaS8HDZ8OILqd3DaUtZ+0T3NgjIpKmVYYiDcU
+         9TIkO/jEkBgewEiUWwnUFHLV6UEVjHGClH7AoA4GSB9sH9gV+YvaXYafbKp2AlXbEQkj
+         M41k2FWrFYGPHM1uHfU/SU0zdsUN265FjjJZFyGrhrHkEBGQf7ZhDhVEKeq7kFWaU5j5
+         jRAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEkxIo3XcsStAzlFw+nEc6CMyzsITzB83xzhgZU6YHCMhN0X2Ot9XOs0LCSXoLLpt4dwZ3Pww5nipgNP5UIXfdcZH0qNGfDcWGy8t9
+X-Gm-Message-State: AOJu0YwHd/BDBj9C+8ItFleNUf/i+DfOqmUxb1taY+83v2d7Bh9o9i96
+	9oGWwkEBrQYCxqsgi8fzCgno16qUECH4gWoEStWVez9VmvYAihNCkkAUgPyBSAo=
+X-Google-Smtp-Source: AGHT+IHjDaHWa60F+jHY9vRPyuZpYDge9YtHlyBxPbhzbM3teDE9hhUOJNQM1jd2KggUv9gaasw50Q==
+X-Received: by 2002:a2e:a7d5:0:b0:2e1:5684:8fa3 with SMTP id 38308e7fff4ca-2e51ff5ce98mr229404741fa.22.1716239895787;
+        Mon, 20 May 2024 14:18:15 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e4d0ce2733sm34965821fa.31.2024.05.20.14.16.45
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e76070598dsm639771fa.35.2024.05.20.14.18.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 14:16:45 -0700 (PDT)
-Date: Tue, 21 May 2024 00:16:43 +0300
+        Mon, 20 May 2024 14:18:15 -0700 (PDT)
+Date: Tue, 21 May 2024 00:18:13 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Adam Ford <aford173@gmail.com>
-Cc: Sui Jingfeng <sui.jingfeng@linux.dev>, Liu Ying <victor.liu@nxp.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, andrzej.hajda@intel.com, 
-	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
-	biju.das.jz@bp.renesas.com, u.kleine-koenig@pengutronix.de, jani.nikula@intel.com, 
-	bli@bang-olufsen.dk
-Subject: Re: [PATCH] drm/bridge: adv7511: Exit interrupt handling when
- necessary
-Message-ID: <lpgtwv74vlazlzpurey3qdhs6qygauw2xr3g4gcfp6kvbio4zj@2puyycoaqqay>
-References: <20240516101006.2388767-1-victor.liu@nxp.com>
- <evnxopqt5be56vxuxqdj4l3mcd5nrrvucio7jhwgg4emraai3t@gherubdynyip>
- <e2d4e8b4-bab4-448f-8b67-21f2902fdcd2@linux.dev>
- <CAA8EJppH1rYQ5pzkGP+V-=cOPBYMWm=ZK2Ei1ttjOiN6GRDP+w@mail.gmail.com>
- <acc508e2-b067-47ef-b3e2-fcac51403fe0@linux.dev>
- <CAA8EJpowLnrnV8ezXYj=oWBFFTa6LqkPFFHc9F49un6AYgZvzw@mail.gmail.com>
- <CAHCN7x+5L+fjkDgR_mJ2BQ1M52oBZyU0nUca1Uvhyh1pFSJChw@mail.gmail.com>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, 
+	maarten.lankhorst@linux.intel.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] drm/bridge: analogix: remove unused struct
+ 'bridge_init'
+Message-ID: <tmlrvvop6lhmppwxp5pfumq4vr24rq4byiljsqn5rt72sokslz@bfqeqmfdlqdl>
+References: <20240517232427.230709-1-linux@treblig.org>
+ <6tfxkc3foarpfuo6viwmsm4e2ujxjmhpqsku37d4ov6ppufpjr@byrbjs7srqri>
+ <ZkqAoG9ZGg0_dC-9@gallifrey>
+ <la43b5ra7aziiv7dwt4o5zha3px7jarfmk45dwsf24qn6pgcre@pcmcsicjdrus>
+ <ZktIwMWtQXuxCgRN@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHCN7x+5L+fjkDgR_mJ2BQ1M52oBZyU0nUca1Uvhyh1pFSJChw@mail.gmail.com>
+In-Reply-To: <ZktIwMWtQXuxCgRN@gallifrey>
 
-On Mon, May 20, 2024 at 07:46:05AM -0500, Adam Ford wrote:
-> On Mon, May 20, 2024 at 7:00 AM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Mon, 20 May 2024 at 14:48, Sui Jingfeng <sui.jingfeng@linux.dev> wrote:
-> > >
-> > > Hi,
-> > >
-> > >
-> > > On 5/20/24 19:13, Dmitry Baryshkov wrote:
-> > > > On Mon, 20 May 2024 at 14:11, Sui Jingfeng <sui.jingfeng@linux.dev> wrote:
-> > > >>
-> > > >> Hi,
-> > > >>
-> > > >> On 5/20/24 06:11, Dmitry Baryshkov wrote:
-> > > >>> On Thu, May 16, 2024 at 06:10:06PM +0800, Liu Ying wrote:
-> > > >>>> Commit f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
-> > > >>>> fails to consider the case where adv7511->i2c_main->irq is zero, i.e.,
-> > > >>>> no interrupt requested at all.
-> > > >>>>
-> > > >>>> Without interrupt, adv7511_wait_for_edid() could return -EIO sometimes,
-> > > >>>> because it polls adv7511->edid_read flag by calling adv7511_irq_process()
-> > > >>>> a few times, but adv7511_irq_process() happens to refuse to handle
-> > > >>>> interrupt by returning -ENODATA.  Hence, EDID retrieval fails randomly.
+On Mon, May 20, 2024 at 12:57:36PM +0000, Dr. David Alan Gilbert wrote:
+> * Dmitry Baryshkov (dmitry.baryshkov@linaro.org) wrote:
+> > On Sun, May 19, 2024 at 10:43:44PM +0000, Dr. David Alan Gilbert wrote:
+> > > * Dmitry Baryshkov (dmitry.baryshkov@linaro.org) wrote:
+> > > > On Sat, May 18, 2024 at 12:24:27AM +0100, linux@treblig.org wrote:
+> > > > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > > > > 
+> > > > > 'bridge_init' is unused, I think following:
+> > > > > commit 6a1688ae8794 ("drm/bridge: ptn3460: Convert to I2C driver model")
+> > > > > (which is where a git --follow finds it)
+> > > > > Remove it.
+> > > > 
+> > > > Please rephrase the commit message following guidelines in
+> > > > Documentation/process. Use Fixes tags if suitable.
+> > > 
+> > > I specifically don't want to use Fixes in these set because
+> > > there's no need for someone to backport this to older
+> > > kernels that use the original, and many backporters
+> > > use 'Fixes' as an automated means to find stuff they should
+> > > backport.
+> > > 
+> > > Other than that, is there something specific you think I've
+> > > missed?
+> > 
+> > It's not about missing things. It's about a way it is written.
+> > Consider something like:
+> > 
+> > The commit aaaaaaa ("drm/bridge: foo bar") has dropped all the users of
+> > the struct bridge_init from the exynos_dp_core, while retainng unused
+> > structure definition. Later on the driver was reworked and the
+> > definition migrated to the analogix_dp driver. Remove unused struct
+> > bridge_init definition.
 > 
-> Sorry about that.  I did some testing and didn't see any regressions,
-> but if it was random, it's likely I just was lucky to not see it.
+> OK, v2 sent with text close to that.
 > 
-> > > >>>>
-> > > >>>> Fix the issue by checking adv7511->i2c_main->irq before exiting interrupt
-> > > >>>> handling from adv7511_irq_process().
-> > > >>>>
-> > > >>>> Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
-> > > >>>> Signed-off-by: Liu Ying <victor.liu@nxp.com>
-> > > >>>> ---
-> > > >>>>    drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 3 ++-
-> > > >>>>    1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >>>>
-> > > >>>> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > > >>>> index 6089b0bb9321..2074fa3c1b7b 100644
-> > > >>>> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > > >>>> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > > >>>> @@ -479,7 +479,8 @@ static int adv7511_irq_process(struct adv7511 *adv7511, bool process_hpd)
-> > > >>>>               return ret;
-> > > >>>>
-> > > >>>>       /* If there is no IRQ to handle, exit indicating no IRQ data */
-> > > >>>> -    if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
-> > > >>>> +    if (adv7511->i2c_main->irq &&
-> > > >>>> +        !(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
-> > > >>>>           !(irq1 & ADV7511_INT1_DDC_ERROR))
-> > > >>>>               return -ENODATA;
-> > > >>>
-> > > >>> I think it might be better to handle -ENODATA in adv7511_wait_for_edid()
-> > > >>> instead. WDYT?
-> > > >>>
-> > > >>
-> > > >> I think this is may deserve another patch.
-> > > >
-> > > > My point is that the IRQ handler is fine to remove -ENODATA here,
-> > >
-> > > [...]
-> > >
-> > > > there is no pending IRQ that can be handled.
-> > >
-> > > But there may has other things need to do in the adv7511_irq_process()
-> > > function.
-> >
-> > But the function returns anyway. So, we know that the condition is broken.
+> > 
+> > > 
+> > > (I'm also purposely being less certain here, because --follow
+> > > is showing it in a ptn3460 and I don't quite follow
+> > > why that changes it here).
+> > 
+> > The mentioned commit is a correct one. Historically exynos_dp_core had
+> > been creating the ptn3460 bridge manually. Later on this was fixed in
+> > the ptn3640 driver and the code was dropped from exynos_dp_core.
 > 
-> When I originally submitted the patch, I only added the shared IRQ
-> flag without any IRQ condition checks, IRQ because I didn't want to
-> break anything. The feedback I got was to check to see if the IRQ was
-> intended by the device.  My focus was the adv7511_drv.c file because
-> that appears to be what the registered IRQ hander was, but after
-> looking through adv7511_cec, I see that adv7511_cec_irq_process checks
-> adv_cec_tx_raw_status and returns if there is nothing to do.
-> 
-> Would it make sense to move the if statement  did the following things:
-> 
-> -  Make adv7511_cec_irq_process return an int and modify it to return
-> 0 in normal operation or return -ENODATA where there is nothing to do.
-> It already has the checks in place to determine if there is work to
-> do, so the impact here should be minimal.
-> 
-> - Move the check I added on whether or not there is an interrupt  to
-> the very end of adv7511_irq_process just before the return 0.
-> 
-> - Instead of blindly returning 0, modify the if statement to read the
-> state of the return code of adv7511_cec_irq_process and the IRQ flags
-> it already checks.  If ADV7511_INT0_HPD, ADV7511_INT0_EDID_READY and
-> ADV7511_INT1_DDC_ERROR are all not true and adv7511_cec_irq_process
-> returned early, return ENODATA, but if any of the interrupts was
-> present and adv7511_cec_irq_process did work, it would return 0.
-> 
-> I think that would cover the situation where adv7511_cec_irq_process
-> would get called, and also prevent a false return of the IRQ being
-> handled when this part didn't handle anything.
-> 
-> It would look something like:
-> 
-> cec_irq = adv7511_cec_irq_process(adv7511, irq1);
-> 
-> /* If there is no IRQ to handle, exit indicating no IRQ data */)
-> if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
->    !(irq1 & ADV7511_INT1_DDC_ERROR) &&
->   cec_irq ==  -ENODATA)
->         return -ENODATA;
-> else
->         return 0
-> 
-> 
-> OR...
-> 
-> 
-> Another alternative to all this is to modify the check that I added to
-> verify all the following flags which are currently checked in
-> adv7511_cec_irq_process :
-> 
-> ADV7511_INT1_CEC_TX_READY
-> ADV7511_INT1_CEC_TX_ARBIT_LOST
-> ADV7511_INT1_CEC_TX_RETRY_TIMEOUT
-> ADV7511_INT1_CEC_RX_READY1
-> ADV7511_INT1_CEC_RX_READY2
-> ADV7511_INT1_CEC_RX_READY3
-> 
-> It would look something like:
-> 
-> /* If there is no IRQ to handle, exit indicating no IRQ data */
-> if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
->    !(irq1 & ADV7511_INT1_DDC_ERROR) &&
->    !(irq1 & ADV7511_INT1_CEC_TX_READY) &&
->   !(irq1 & ADV7511_INT1_CEC_TX_ARBIT_LOST) &&
->   !(irq1 & ADV7511_INT1_CEC_TX_RETRY_TIMEOUT) &&
->   !(irq1 & ADV7511_INT1_CEC_RX_READY1) &&
->   !(irq1 & ADV7511_INT1_CEC_RX_READY2) &&
->   !(irq1 & ADV7511_INT1_CEC_RX_READY3))
-> return -ENODATA;
+> Ah OK; remember I don't know the actual structure of these devices
+> or the history.
 
-This definitely looks ugly. At least it should be a mask.
-
-I have a slightly different solution:
-
-Make adv7511_irq_process return <0 for error, IRQ_NONE or IRQ_HANDLED.
-This would also require tracking whether HPD, EDID or CEC processing
-actually took place (add temp var for the current 'handled' status, make
-adv7511_cec_irq_process() return IRQ_HANDLED too).
-
-> 
-> 
-> Please let me know what is preferred or if there is a third possible solution.
-> 
-> I can write up a patch with a fixes tag later today when I get back to
-> my build machine.
-> 
-> adam
-> >
-> > >
-> > > > So instead of continuing
-> > > > the execution when we know that IRQ bits are not set,
-> > >
-> > > Even when IRQ bits are not set, it just means that there is no HPD
-> > > and no EDID ready-to-read signal. HDMI CEC interrupts still need
-> > > to process.
-> >
-> > Yes. Let's get the CEC fixed. Then maybe we won't need this commit at all.
-> >
-> > >
-> > >
-> > > > it's better to
-> > > > ignore -ENODATA in the calling code and go on with msleep().
-> > > >
-> > >
-> > > So, It's confusing to ignore the -ENODATA here.
-> >
-> > [BTW: you had quotation levels wrong in two places, I've fixed them]
-> >
-> > --
-> > With best wishes
-> > Dmitry
+It's all a part of the git history. I've just read it aloud for you.
 
 -- 
 With best wishes
