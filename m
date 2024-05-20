@@ -1,100 +1,112 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wflow5-smtp.messagingengine.com (wflow5-smtp.messagingengine.com [64.147.123.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F6D134CC
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 19:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60911137935;
+	Mon, 20 May 2024 19:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716232802; cv=none; b=oTHPLuJVJgMrYA2VCjPgXE2JzSuO9RADDcR9rZX+yYsw4dUWP/gX5DMISAUd5dH9i672acyqWYKyfMWjeBLF/5nZIM97sQrD+dbKyGgX2uzyQhyXJe3t2CB6TD2QSDrewHhyEHnyguHdB5NNMs/DYvbQuI/YM6JpRmRhp8/QDWw=
+	t=1716232831; cv=none; b=fh2cOb0V47mT9I3m3QeKQPzcIHNkVD5nYeEMkendmCbQqwI+0EduAOLPyEOCEpKZSexFszt7KYfR5N6d/bSuk3+3YCviFFJC/6iz6fMqnasgUk2hNCNOssmuvyXcJKseK6AnGvmO0VUiUYHk2fQ3+uAAQLNGk/SJsbNFHwQEKng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716232802; c=relaxed/simple;
-	bh=xY1qK0Yx5cJZ0/DOHZqEwDlK7UkPPBcazYLb2quM418=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zhrv+S0iKcQkI7ROy26zw1LkAX5hvkg0dhvRZHATElmz33xWJjhGZukRwDxz6Le/1jtH1Ean2bYcmH4BETJdTyv6jj7SyA7dhsWNwnE3woeT3/e59+SInNdJQol4cbehf8EWUAT6f3Pvdg1XpQ86nK6c4zrlP9W/ZAPSBhww870=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hQvWwXGL; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1716232831; c=relaxed/simple;
+	bh=oBHEUgxuOy3Gb3SSjzvFEwOATEjDLoQFe4gPk/cU3Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sSmAmvDdteswSKSOZw5qrdGPXYv+u8lj6SEaimd2PUUR+e8/vq09dOjE4awjaypL3fnn0WbkpJh0qAkB/HQVd8gugkTj00GrdFUAEQ5JchS6xhv27pzAKsVqhOMx2Qa/6WV/H7Pajm+GbSNNEFJ7smPFs7a8aE8pHH9GIMv5czw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=PcnX9rzu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RLa1niyU; arc=none smtp.client-ip=64.147.123.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hQvWwXGL"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e538a264e0so59428671fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1716232799; x=1716837599; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xY1qK0Yx5cJZ0/DOHZqEwDlK7UkPPBcazYLb2quM418=;
-        b=hQvWwXGLkdi1sgHhvrfZuqEz7gzenGgRdXqswpU66frg92RS4Hs2h4rNdjQULSF4eO
-         D2y5AcFznv+xQ0j5f40uccd38dyMh+kLxyhw1My2lwRskDJWWO1V1VOrSzbhCd647K0x
-         sqNQ6Wz0Ej8aMpkhH+f0Hgx7TPA9YqFdJecqg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716232799; x=1716837599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xY1qK0Yx5cJZ0/DOHZqEwDlK7UkPPBcazYLb2quM418=;
-        b=bAvsfxm0KgglHH/5oGzXCIz31HY1MQS/xa50o4YQOJkkrzUHgU19F7H1tbpbmu0loS
-         kupYepHCMCqtu2DXDfqUpyoxsFcFHgVG4KuxjKEG50S79jmB+hibeqW5SQ+9q/Y1ZYYj
-         l64xeusPB7FwT1vSrQyS/9MNzjju04SjR9VobU9WoCfdQ0yUEalUuiXXAmKuPV+Iy7pH
-         pTA4CrZ1G5IclWmJ39bMkd/dW2eUWqe9O3GZWbLQZbmluSZo6u/uMTZDG2oAZ8btRUzW
-         A80erch1AcBdOcGIZVZHfKb/01jFAjiMFdOgwOXrW2tUf5RJ9U9hdZjFDA/WxDpat8JW
-         pYNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSEsacjRc5fIBpwIa9orOFdsyBJeADfYHBWap1y6WXPKyZyo3yJUdKperPyH9SIK5rDM62uWsWbCvP80Hhi+5EYuwF+kVw9uHMQdjM
-X-Gm-Message-State: AOJu0YzPN38uS1qXXKOU991imk4PAnZdoX8RvtkCUuKS6xQ1NN68708u
-	hW9lbgOkBD6sWeli1rEi5m8CZrdBi1OZPQZBArkcKQAPABspMBFqVNjvlClZU59Aqtqlx2zHLPf
-	oaX7XZCjpyVKg29jjdxidn4517YrGvAp012WXO9jzJCe0ZNP00wFlbQcCxAFpuy9RYnsavgj2+k
-	SgFkYAQbZsnq4RG9/WaaZlY9hMzA==
-X-Google-Smtp-Source: AGHT+IEJBva2Jcefe2Yh+TeHrjvit6WQ7OPmQcczNguOh+mzYdQEwNpQNHy3Ih4usmFhTJBLVYujsIWi1lV8Lrjhv2U=
-X-Received: by 2002:a2e:9f4f:0:b0:2e6:f51e:ec1b with SMTP id
- 38308e7fff4ca-2e6f51eedd3mr154968421fa.3.1716232799230; Mon, 20 May 2024
- 12:19:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="PcnX9rzu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RLa1niyU"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailflow.west.internal (Postfix) with ESMTP id 959502CC023E;
+	Mon, 20 May 2024 15:20:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 20 May 2024 15:20:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1716232828; x=1716236428; bh=mO0EedKpcd
+	HIsso5KUGd6iDgcS2AGEPXGB8hV4/SyCk=; b=PcnX9rzubBrca97DZrsVgCICWa
+	JuiSf1k6djT2sFikn6eAuRpbOZU5lv5Bj1KvcUQAFi1pKJ706kRS0yGwhnGaglUp
+	Q5Gw9xY5u6i3SgySAUVERfFcr7KQzVCCo3GhWOhYJAF8EFACZssHggqNs6MXa75H
+	jG8ybiPYenaaz/geBonOqtTnd3jpjaIn0DVcaX6hspR6jyHYNGzRop+7cJhJAKCF
+	a/vnSlOb8M+GNxyhXHt7PqgSfRkwYay4QFdDh4YlRrxN8m4UGYHCTSBDH2BEw3Wz
+	q9mhqOUE98+dEnicxF/AXmtYshKzNmHJ0c0YAF3A5gW2kjlTWEMG8shAepQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1716232828; x=1716236428; bh=mO0EedKpcdHIsso5KUGd6iDgcS2A
+	GEPXGB8hV4/SyCk=; b=RLa1niyUuqomipMH6wH8n5ZPTPzAUDg26M3+U8ZJ3gKk
+	frG9wr7yyFYQhg92xcqHHOy2kb7yqd4GqpWgl2dxppyYmws07gtgS8aVCNNduP/4
+	G6ep8zG3tGKUxab1vECr7uefbgvO1uX5Az/YEj+ocAXD7m0Dc4wcAs20tpuu6X/A
+	eCGB401w53Y4ui+5MM5ciJLIKNmIeuT8pIGpnIgtiGkOMjlGWD/iDI5JKgmA9lF0
+	yOKhDRxQYMBRl6QknG8izF2gsIwsiJpw0ehYT6ZdxPh2RubGF+ijT0MVSNAG8Nc4
+	Wl0S9T9Y/XQ2iQobpRojjP5FRcV2DcMxUjGlZjpBHA==
+X-ME-Sender: <xms:e6JLZqL3F3B2aRCJ4w1S9WRH9slbVS04Anuc3Mq4dVF0uFsSre9bwA>
+    <xme:e6JLZiIY_k-ZDk7QL_-QBKTGCi4lkqtA31fORwgqNxil4r9Jp9Y3zvFfgVuzNJX-A
+    3-wDoQWoF_ozipb2vQ>
+X-ME-Received: <xmr:e6JLZqsqlwtMoI0P81WwiLaEuT2yOboTSj1LwLg-zsZgJgbT0qxMktr2CeY8-tPlWjQ3GnGl1Vy6_ap5KNOU8ss>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeitddgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddttdejnecuhfhrohhmpeflohhn
+    rghthhgrnhcuvegrlhhmvghlshcuoehjtggrlhhmvghlshesfeiggidtrdhnvghtqeenuc
+    ggtffrrghtthgvrhhnpeekkeetgeefgfdvfefgfeffueefffejvdduieejheejheffkeej
+    keelffeulefggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjtggrlhhmvghlshesfeiggidtrdhnvght
+X-ME-Proxy: <xmx:e6JLZvY4OqRPmhLDbSoNBf9SaSnyJhxd3ipvV7YA-JVJX_8F5wtRbQ>
+    <xmx:e6JLZhYJA0-Y4UiDfcKcdBM3JdCdCTyL5lAtnDmC8vj7X55i9IPQ4g>
+    <xmx:e6JLZrA-o1NbLbBFxj_rl6jjY8fNsBfo-ozmgIL2il_amxjjZDfpUw>
+    <xmx:e6JLZnZisSO1vb5NFiGJfxQHXjZLXuo3uRGN8amQ8DjLajlWAl-eKQ>
+    <xmx:fKJLZlqTk4UcPirAK9O5Z2cBz4ms-BwgWtuD-EK2p5_O71z9bjoeav0X>
+Feedback-ID: i76614979:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 20 May 2024 15:20:25 -0400 (EDT)
+Date: Mon, 20 May 2024 12:25:27 -0700
+From: Jonathan Calmels <jcalmels@3xx0.net>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: brauner@kernel.org, ebiederm@xmission.com, 
+	Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Joel Granados <j.granados@samsung.com>, Serge Hallyn <serge@hallyn.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, containers@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 3/3] capabilities: add cap userns sysctl mask
+Message-ID: <ptixqmplbovxmqy3obybwphsie2xaybfj46xyafdnol7bme4z4@4kwdljmrkdpn>
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <20240516092213.6799-4-jcalmels@3xx0.net>
+ <ZktQZi5iCwxcU0qs@tycho.pizza>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514182050.20931-1-ronak.doshi@broadcom.com>
- <20240514182050.20931-3-ronak.doshi@broadcom.com> <20240515104626.GE154012@kernel.org>
- <CAP1Q3XRYGySJQaWe8dvasUGmpZGcYy_g_Xgft2u=hg9R_eqEsQ@mail.gmail.com>
-In-Reply-To: <CAP1Q3XRYGySJQaWe8dvasUGmpZGcYy_g_Xgft2u=hg9R_eqEsQ@mail.gmail.com>
-From: Ronak Doshi <ronak.doshi@broadcom.com>
-Date: Mon, 20 May 2024 12:19:43 -0700
-Message-ID: <CAP1Q3XQKStM5Tn9HZjTdgki4_7RiF8EOf0ksZE9gzZYHNkAFbQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/4] vmxnet3: add latency measurement support in vmxnet3
-To: Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZktQZi5iCwxcU0qs@tycho.pizza>
 
-> On Wed, May 15, 2024 at 3:46=E2=80=AFAM Simon Horman <horms@kernel.org> w=
-rote:
-> If not, I would suggest making this feature optional and only compiled
-> for x86. That might mean factoring it out into a different file. I'm
-> unsure.
-I can move the rdpmc code under #if defined(__i386__) ||
-defined(__x86_64__) so that it will be no-op for other architectures.
-Will that be fine?
+On Mon, May 20, 2024 at 07:30:14AM GMT, Tycho Andersen wrote:
+> there is an ongoing effort (started at [0]) to constify the first arg
+> here, since you're not supposed to write to it. Your usage looks
+> correct to me, so I think all it needs is a literal "const" here.
 
---=20
-This electronic communication and the information and any files transmitted=
-=20
-with it, or attached to it, are confidential and are intended solely for=20
-the use of the individual or entity to whom it is addressed and may contain=
-=20
-information that is confidential, legally privileged, protected by privacy=
-=20
-laws, or otherwise restricted from disclosure to anyone else. If you are=20
-not the intended recipient or the person responsible for delivering the=20
-e-mail to the intended recipient, you are hereby notified that any use,=20
-copying, distributing, dissemination, forwarding, printing, or copying of=
-=20
-this e-mail is strictly prohibited. If you received this e-mail in error,=
-=20
-please return the e-mail to the sender, delete it from your computer, and=
-=20
-destroy any printed copy of it.
+Will do, along with the suggestions from Jarkko
+
+> > +	struct ctl_table t;
+> > +	unsigned long mask_array[2];
+> > +	kernel_cap_t new_mask, *mask;
+> > +	int err;
+> > +
+> > +	if (write && (!capable(CAP_SETPCAP) ||
+> > +		      !capable(CAP_SYS_ADMIN)))
+> > +		return -EPERM;
+> 
+> ...why CAP_SYS_ADMIN? You mention it in the changelog, but don't
+> explain why.
+
+No reason really, I was hoping we could decide what we want here.
+UMH uses CAP_SYS_MODULE, Serge mentioned adding a new cap maybe.
