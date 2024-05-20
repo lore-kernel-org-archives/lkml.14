@@ -1,131 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4AB18EB1;
-	Mon, 20 May 2024 20:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9349718EB1
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716235399; cv=none; b=jQgKM1DDSRr6PrcxRVagsdm8U9+GOYW2V1RN0hILTSPPV4rDY0DI+3DcEPUNmE4+4xIU7OdZQNEXZyP62HfLbPuSUqoGsdjtAdxRwx19l1u8VIPmv4WqmHmm4qb+qMoagMdAGtsaOtHwWUX4gwNM6bvvZVy1sT+9qkpa46V8+U4=
+	t=1716235467; cv=none; b=tTmDcydsnsd9kNYLuC3v0LNBDQfPl+ZYZx/zxoiv8AtlxHJNqvSXkiaf37v2xT593iiixFy4TMiCjpm6xh+S2Vk17AYa1WwRpkLnV6MR84nW+qyKOJPTqjliP7F5pWLjLh/EqhJIavOfjz/S+57sgDljEHYuYKZ+EkuqDWpSksQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716235399; c=relaxed/simple;
-	bh=nRm4lwVO4aNIYcE4K0ymDegIzaRnOX6D1ml7Ph6469o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWTnHwenfQUIHuJHxTvyiWUJTheJ2TmInY6AjKfsuwutCGEOx38cWTjv88l9T/m5gQQJNrxDvbS+tfDRx9juCrSYP0SglEZ/2unaDzs28ERUoWtsCfeYNPCif8QmjONCJr15OHXD5h3eIHsA0J6veJuMEVxY62evhZ82/oZpfIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlmTdfiC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716235467; c=relaxed/simple;
+	bh=gE0jJbfeL8Rptb3Y0r70A2PZVj+MXTnaFUlk5wpYuN0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=k3qfyKHj5Y1inQJxGf2amHYRrSK/6s3KqShHCulvmgAMfC6LBmm9k7iySj46CAYuBqAIixavhQsOUbU/KJHU9a/d31BjvzLxOXzPLUPmOoHVA9EEtJ+RjzGmT1+Kmmh8qSBq1/KDs4Y7Iig9O+F/ilD/oNiCEKOEQCpl2K+cG1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mlx5pXAp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlmTdfiC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53614C2BD10;
-	Mon, 20 May 2024 20:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716235399;
-	bh=nRm4lwVO4aNIYcE4K0ymDegIzaRnOX6D1ml7Ph6469o=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=JlmTdfiCWp8Et2sZhPHBGjb9Y/kMB5PgEKC5uchelF1dVlgghjYxeCarZIIjALRYO
-	 kO2p4fd7Z+eG3W5IgHQd4u94JRvRej1m8SiEuQ6t9kiO3Qdn8W8//xBQFCtVs9GrEI
-	 hCOGp7bu28AlIz9bSpikR7OZ7vuXs8qx1h4NKTHbeFrnOXjNQ69uQPTlBXIVn5HwwH
-	 KlfPbVhiVgOH19n/rpdx6+fwaW+ckKqUsx1IqrnNDtA9WSuoS9C8InaZ0usVlXpXAt
-	 OPukHng/rg0asusQZ1rwenU3a4qhb7Tvey8DHQQzZy9dqHP7Bii97o/JS+nIrQC1Hp
-	 RmxnQ4DPo9WpQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id DF4A5CE0C3C; Mon, 20 May 2024 13:03:18 -0700 (PDT)
-Date: Mon, 20 May 2024 13:03:18 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, x86@kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH V2 00/11] rcu/x86: Use per-cpu rcu preempt count
-Message-ID: <363efc75-7ebf-408d-be2d-e6c579674f44@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240407090558.3395-1-jiangshanlai@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mlx5pXAp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716235465; x=1747771465;
+  h=date:from:to:cc:subject:message-id;
+  bh=gE0jJbfeL8Rptb3Y0r70A2PZVj+MXTnaFUlk5wpYuN0=;
+  b=Mlx5pXApflFt0o9O+x7zpvW0uinV51HTs/mGe0LqfK6C8k215poAA01C
+   kOzNHn4Q8HmqnjWakHMcHyEre3J2R9TIqVUUyihKkwmuEF31o25ABJ+vk
+   DgTo5bBuz9zgMC2Lk5r23XpJRU3nkJcMArmxeYHVGoMhQVcY61I4S3+Rn
+   J6RkMtBWok5c2GWi3jopCQsHx9a1DV+k9VwkXuorOYVsmfgTZoSCm7rxq
+   KhGzV2Szwqr4no9HHAjVljf1c3suupBQFz2lEyWIG9/IRA/qv20MgwCye
+   U7khL9DrYJIIW7gjF381RC6DL8PwuMNTg0cKjp85rS8L58lfWiAqUnFfa
+   g==;
+X-CSE-ConnectionGUID: uZxkWJw2SCm8DTeckHHH/Q==
+X-CSE-MsgGUID: 95HuAkwwSDWobMmLJCql0w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12612334"
+X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
+   d="scan'208";a="12612334"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 13:04:24 -0700
+X-CSE-ConnectionGUID: uOE7AkDQSXu70/y8Erw9OQ==
+X-CSE-MsgGUID: lrHVJQnKQpe+7rCn1X4hcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
+   d="scan'208";a="32561814"
+Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 20 May 2024 13:04:23 -0700
+Received: from kbuild by 108735ec233b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s99ES-00057A-3A;
+	Mon, 20 May 2024 20:04:08 +0000
+Date: Tue, 21 May 2024 04:02:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 73e1bdc9383b59de5d9770f11aef67e7ef9105c4
+Message-ID: <202405210432.54QIWejb-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240407090558.3395-1-jiangshanlai@gmail.com>
 
-On Sun, Apr 07, 2024 at 05:05:47PM +0800, Lai Jiangshan wrote:
-> From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-> 
-> 
-> Changed from v1:
-> 	Merge thunk_64.S and thunk_32.S into thunk.S
-> 	Add missing #ifdef in arch/x86/kernel/cpu/common.c
-> 
-> X86 can access percpu data in a single instruction.
-> 
-> Use per-cpu rcu preempt count and make it able to be inlined.
-> 
-> patch 1-8: prepare
-> patch 9-11: implement PCPU_RCU_PREEMPT_COUNT
-> 
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: 73e1bdc9383b59de5d9770f11aef67e7ef9105c4  Merge branch into tip/master: 'x86/percpu'
 
-Hello, Lai!
+elapsed time: 728m
 
-This is really cool stuff, thank you!!!
+configs tested: 50
+configs skipped: 149
 
-Two big questions remain: (1) What system-level net performance benefit
-is there, taking the increased context-switch overhead into account and
-(2) Are the scheduler maintainers on board with these changes?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-On #1, I do well recall your ca. 2019 points about the improved code
-generated, but I have seen cases where improved code actually ran
-more slowly.  My guess is that you have the best chance of seeing
-system-level benefits on low-end x86 platforms, perhaps the old Atom
-or Celeron systems.  The rcuref module provides a good way of doing
-microbenchmarks, which would be a good start.  Other metrics that
-might help include overall kernel code size.
+tested configs:
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240520   clang
+i386         buildonly-randconfig-002-20240520   clang
+i386         buildonly-randconfig-003-20240520   clang
+i386         buildonly-randconfig-004-20240520   clang
+i386         buildonly-randconfig-005-20240520   clang
+i386         buildonly-randconfig-006-20240520   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240520   clang
+i386                  randconfig-002-20240520   clang
+i386                  randconfig-003-20240520   gcc  
+i386                  randconfig-004-20240520   gcc  
+i386                  randconfig-005-20240520   clang
+i386                  randconfig-006-20240520   gcc  
+i386                  randconfig-011-20240520   gcc  
+i386                  randconfig-012-20240520   gcc  
+i386                  randconfig-013-20240520   clang
+i386                  randconfig-014-20240520   gcc  
+i386                  randconfig-015-20240520   clang
+i386                  randconfig-016-20240520   gcc  
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240520   clang
+x86_64       buildonly-randconfig-002-20240520   gcc  
+x86_64       buildonly-randconfig-003-20240520   gcc  
+x86_64       buildonly-randconfig-004-20240520   gcc  
+x86_64       buildonly-randconfig-005-20240520   gcc  
+x86_64       buildonly-randconfig-006-20240520   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240520   clang
+x86_64                randconfig-002-20240520   gcc  
+x86_64                randconfig-003-20240520   gcc  
+x86_64                randconfig-004-20240520   gcc  
+x86_64                randconfig-005-20240520   gcc  
+x86_64                randconfig-006-20240520   clang
+x86_64                randconfig-011-20240520   clang
+x86_64                randconfig-012-20240520   gcc  
+x86_64                randconfig-013-20240520   clang
+x86_64                randconfig-014-20240520   clang
+x86_64                randconfig-015-20240520   gcc  
+x86_64                randconfig-016-20240520   gcc  
+x86_64                randconfig-071-20240520   clang
+x86_64                randconfig-072-20240520   gcc  
+x86_64                randconfig-073-20240520   clang
+x86_64                randconfig-074-20240520   gcc  
+x86_64                randconfig-075-20240520   clang
+x86_64                randconfig-076-20240520   gcc  
+x86_64                          rhel-8.3-rust   clang
 
-On #2, good data for #1 would help greatly.
-
-Thoughts?
-
-							Thanx, Paul
-
-> Lai Jiangshan (11):
->   lib: Use rcu_preempt_depth() to replace current->rcu_read_lock_nesting
->   rcu: Move rcu_preempt_depth_set() to rcupdate.h
->   rcu: Reorder tree_exp.h after tree_plugin.h
->   rcu: Add macros set_rcu_preempt_special() and
->     clear_rcu_preempt_special()
->   rcu: Make rcu_read_unlock_special() global
->   rcu: Rename marco __LINUX_RCU_H to __KERNEL_RCU_H
->   sched/core: Add rcu_preempt_switch()
->   x86/entry: Merge thunk_64.S and thunk_32.S into thunk.S
->   rcu: Implement PCPU_RCU_PREEMPT_COUNT framework
->   x86/rcu: Add rcu_preempt_count
->   x86/rcu: Add THUNK rcu_read_unlock_special_thunk
-> 
->  arch/x86/Kconfig                       |   1 +
->  arch/x86/entry/Makefile                |   2 +-
->  arch/x86/entry/{thunk_64.S => thunk.S} |   5 ++
->  arch/x86/entry/thunk_32.S              |  18 ----
->  arch/x86/include/asm/current.h         |   3 +
->  arch/x86/include/asm/rcu_preempt.h     | 109 +++++++++++++++++++++++++
->  arch/x86/kernel/cpu/common.c           |   4 +
->  include/linux/rcupdate.h               |  36 ++++++++
->  kernel/rcu/Kconfig                     |   8 ++
->  kernel/rcu/rcu.h                       |  15 +++-
->  kernel/rcu/tree.c                      |   2 +-
->  kernel/rcu/tree_exp.h                  |   2 +-
->  kernel/rcu/tree_plugin.h               |  41 ++++++----
->  kernel/sched/core.c                    |   2 +
->  lib/locking-selftest.c                 |   6 +-
->  15 files changed, 212 insertions(+), 42 deletions(-)
->  rename arch/x86/entry/{thunk_64.S => thunk.S} (72%)
->  delete mode 100644 arch/x86/entry/thunk_32.S
->  create mode 100644 arch/x86/include/asm/rcu_preempt.h
-> 
-> 
-> base-commit: f2f80ac809875855ac843f9e5e7480604b5cbff5
-> -- 
-> 2.19.1.6.gb485710b
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
