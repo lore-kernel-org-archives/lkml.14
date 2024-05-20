@@ -1,66 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5425137C27;
-	Mon, 20 May 2024 19:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716231902; cv=none; b=ZPEI1iWM1irGD+GXU7/yTnlLPbIH29QgZLjmGYEojLoyu+0HVN1RGmncZYCdmfLfeMlJu5Gul3Bzd6IrbxTmi+YhGRTAAjGG6Oxn01aOKwBROdJoDlZFDq8YV2drqUOr2AWPXCCpu+EqbqZuiKQ/E3+ufVfva222Q++O0YokQnU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716231902; c=relaxed/simple;
-	bh=2bofe4srdc7g/v+TH2JcderECmQbSv5VsRs5x7ADRJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdbH8xDm7MO55HWIHpo6WwD3ZrFy8X0GSFZqdp9fOLQvdEyH4QrkofOjsFNpuB0D9R8cPSTjivsX3tyz+7+BUxeJ+oh3Fy3xAjp2p8tdnAx/tIuuUHqjJuvHt1HmNhFYYhCeEUGAxUWfwH5Af3tWl8am//mZsC5r005Wrg0QKQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBRHySU/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBRHySU/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5326C2BD10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0F4137934;
 	Mon, 20 May 2024 19:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716231901;
-	bh=2bofe4srdc7g/v+TH2JcderECmQbSv5VsRs5x7ADRJY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eBRHySU/NF3dXIsJ5EBOukjYPr/RPuVxg/3/HuwfeMSIn4iLreyuNiX4hD8+deLjV
-	 lcachPR3ep9RiXIe7I7HZTkp61cDseYPikysNl6Yn6onWgN3eYFLSmdKNV8FeqP9Be
-	 3NA4bgEKOzK0Qv68R6JzE1J0E4FSiqRWRacH9yjLIdPw02QvI9c0wFkuN9c/QdvhQp
-	 npG0LZ8KIM6srIkOb4CH4KA7Xw65xbSRsIF/T36gJ6e8+z2n/Ni9x+cShrCnjIERqt
-	 jFXyU40I3eGbTsvgTvfFyMguW5nJcYguPa/Pfv85i7Af11MLj+6KRxgJkavJ9BM2aB
-	 EpARyH3xvLYYQ==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: keyrings@vger.kernel.org,
-	James.Bottomley@HansenPartnership.com,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2]  KEYS: trusted: bug fixes for v6.10-rc2
-Date: Mon, 20 May 2024 22:04:51 +0300
-Message-ID: <20240520190454.28745-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.45.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716231904; cv=none; b=ALrLs41ra5FTESHzWIEnOipbIJ1tqbFctTiaksmMisrxFj06PNeCq8+HZJYCTh10F88Oj7JDVWYyDY5CYWby009VlAPfT+1DIeOmgVwN1dAugI8+yDRMx4Gf+QuAszRogDU1SmB0y2Gy+GdorZgh7oID8q87VWLr/svRSKM1goE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716231904; c=relaxed/simple;
+	bh=Whkq+hKM/qmDNnBMj3dbzvPDG5j50Xp2GcuxKj7WaHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hUZ+0yHUhkPA7BzqTVtJ8ioLK6Z0qcBsu4wcoO9oRFbDRNhC+75M8bw/i6cAZ45mdX3UgBYwC5H2tH7zTbmm+hnG/VJ5fEW5RIaQVrKcQz/NqWTtceVxdBP/6uDUyKaj1iQjcLA1JIKu+wIYyLU3vJAt7fm8AsG+tuOQQg1XkRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=pVacRy8l; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="pVacRy8l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1716231898; bh=Whkq+hKM/qmDNnBMj3dbzvPDG5j50Xp2GcuxKj7WaHI=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=pVacRy8loO5jQ12YSQrnC47BXn66ePeAvKoHrFsTNZbUZuDE9I/8bc/37EdRZIQWN
+	 YJSS60cvLymNAglX+885beRZOfcbFcd8IxTR0nbDIJBtt2kVkGu2XfCUnR8pgUXis6
+	 ouo8co6qtt2wJAvS0kjSU1RuzrFrBuSb+cJmZbIE=
+Date: Mon, 20 May 2024 21:04:58 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, git@luigi311.com, 
+	linux-media@vger.kernel.org, jacopo.mondi@ideasonboard.com, mchehab@kernel.org, 
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, 
+	phone-devel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 21/25] dt-bindings: media: imx258: Add binding for
+ powerdown-gpio
+Message-ID: <6egxnvqjz4z57bwd7jeubikfiew2myjo74hw3x6dimcdm6nuq3@qnk2tliwfxps>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, git@luigi311.com, 
+	linux-media@vger.kernel.org, jacopo.mondi@ideasonboard.com, mchehab@kernel.org, 
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, 
+	phone-devel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240501152442.1072627-1-git@luigi311.com>
+ <20240501152442.1072627-22-git@luigi311.com>
+ <ZkcV5xWZz2jCszxA@kekkonen.localdomain>
+ <q5nbk3qcxsjsqp4mdyx5nlrn4oie6oynunwodm7r2nwtywc2ey@kxsgcatwt5b2>
+ <CAPY8ntCfQvp9rCt=fqTFKYEOamLZwKmJDv9agxerQtDvsGKB0g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPY8ntCfQvp9rCt=fqTFKYEOamLZwKmJDv9agxerQtDvsGKB0g@mail.gmail.com>
 
-Accumulated bug fixes for trusted keys.
+Hi Dave,
 
-v2: 
-Dropped a patch disabling hmac by default for now.
+On Mon, May 20, 2024 at 02:20:28PM GMT, Dave Stevenson wrote:
+> Hi Ondřej
+>
+> [...]
+> 
+> From v3 [1] Luis reported testing dropping the powerdown-gpio on a PPP
+> and it working fine.
+> 
+> I linked to the IMX258 datasheet in the same thread[2], and that
+> datasheet does not include such a signal on the imx258 sensor itself.
+> 
+> If your module has a powerdown gpio, then you'll have to ask the
+> module vendor what it is actually connected to. Potentially it relates
+> to the VCM driver rather than the sensor.
 
-Jarkko Sakkinen (2):
-  KEYS: trusted: Fix memory leak in tpm2_key_encode()
-  KEYS: trusted: Do not use WARN when encode fails
+I've tested it in various ways (inverting the signal, etc.) and it doesn't
+seem to do anything. So these patches related to powerdown-gpio can
+be dropped.
 
- security/keys/trusted-keys/trusted_tpm2.c | 25 +++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+Kind regards,
+	o.
 
--- 
-2.45.1
-
+>   Dave
+> 
+> [1] https://www.spinics.net/lists/linux-media/msg252519.html
+> [2] https://www.spinics.net/lists/linux-media/msg252496.html
