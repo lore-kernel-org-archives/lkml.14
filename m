@@ -1,130 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F022A225A2;
-	Mon, 20 May 2024 09:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1E51C6A3
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 09:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716196253; cv=none; b=oIgk2VQkm82xL/7+EnJwHw3akjm5L6GVPEDx56QV7R/SFbxFzLMKLH2i20LFHxWPcLAWBjAJBMVoK2+d/jkTjlJ1GrFd5sl4yQp79h9qQTn/ttlDvBHJvCzeCER27Sq8fLneqeqZOBqJa/lVSkGGRefhklZ+T2E80oDGc4v+1qk=
+	t=1716196496; cv=none; b=jtGyt7SPRw2PEDHg7w1vhtX/bMVRoFPwu2ugpynYFi5+MWBANBwl429UVdgjipj7FErk2EFFa5kq//RVmSPBFYtJFQ18emer6oQLzECTjwnmNTBrIkAAPu72FTgRzGxZcgOWwOjWsLdXtvB13yugINxqhLNXFTj31TmWD4uf9Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716196253; c=relaxed/simple;
-	bh=Q6sy/yqBnxAOXD0xKfmyxs8rg9J9ax7DDH/hoUyv8dE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TuYZm5cecs9rhmJqYvIQaqNwEaJpiTe9XsZ0t7Glh+cMO1AU3Cb0IjoxL49JGjI1VJ91+2xq8zrUyXmCW+g3mrHpbG+wUo2i1Lrae5F5PM24y1tpHju7IAy0st9wmbMkvh/cOJb8LLG/czJd3JsU+2SXDk8JImhQjyQbao9TH24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jxya2naQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716196496; c=relaxed/simple;
+	bh=LVBctxLzOPar47r1X+xyUCWooEprhK/vcDKfEVAVmcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=StIXEALlUg6A2oatGLF9CVYO/OkyLL0FOwFAts7oAqwPS4X2HJWjBWgjloSUZHYEuRPLtAiQzJbVLx4J+usdoAjzbUo1i/gYyq5QNv1aR3Col3Y8XIYZWsXGWDOf8ZcJ38sM9nvuW4h7gr9qsvbgomEP+n+zq0K+M7YOSjZnYCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SQ/+LTtN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QC8SRNpp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SQ/+LTtN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QC8SRNpp; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jxya2naQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1B5C2BD11;
-	Mon, 20 May 2024 09:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716196252;
-	bh=Q6sy/yqBnxAOXD0xKfmyxs8rg9J9ax7DDH/hoUyv8dE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Jxya2naQ4Xwkob+emV7Cr87GqmvNOzNljndPvUvyYazmmjsbdZFraHzpp9BTBULST
-	 zHJfrWf+QMuA9Au83I4g3WZ08z09yMEo/rIujDs/5qdMDuGymr/iWOQphOytFkl4i2
-	 v6LP8Noyttmal7gDKJWkNywY8MJX2jk1wYoq1zqxsdZnK+fo1xv/P+bJy7sUtoAXvy
-	 EiZNxx4edm55w5xfVPh0XMdVbnOFxnh7yI+Lx1t44N9B5mVUEkRUQRC/E7SDssp/YV
-	 7daXNwJs2aWfijHMAHGFTXUBPSwHJ8eEG2QQQsWsr2vDow2D65qczQysrskQz3NNS1
-	 WI54i+SOHBOag==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f0b6b682fso4352316e87.1;
-        Mon, 20 May 2024 02:10:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVw2PVJFPrL/umE2XUbPL/zN+1l3Q/XP7JF+qUr9thJGt6qRtcDZy1RS3GYoEMsSffZkptgG0o9jd58Jem8OFXMhrsjuZQCsSkAkGvCo8s93uVGteG6LgmqW9xF0OF8vvkJWRXyzuVbw6LA5sdGTlXFM6gGBe5Nm96v52HYp6EJFpEiQHW6BG/w9JSXBGicdw==
-X-Gm-Message-State: AOJu0Yzx4r26wUfoKAu2ohx2qgbtBUaMx1xtg6gNKmGRLNm0SAwV6tn6
-	pthG3a9ujA4PSCMjgdpn9Le2MG3pTbeUqE1cKpxOZrU/JWz/sR5+j94R1tt6rRzc0y8zEw+yD1V
-	v8V6k8k8RcBdO3WuG54fDaUQ9kNk=
-X-Google-Smtp-Source: AGHT+IEKE4eyaPfrutTX+d/MXvf7QvyTt/qFeBHwJCBN7jwuSH6tb83TRukvAJxG5rCDz3nkfHwne6d8il/jkzqejrA=
-X-Received: by 2002:a05:6512:10cb:b0:521:b333:743d with SMTP id
- 2adb3069b0e04-52331e202b9mr25479235e87.14.1716196251138; Mon, 20 May 2024
- 02:10:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SQ/+LTtN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QC8SRNpp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SQ/+LTtN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QC8SRNpp"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D19C2230F;
+	Mon, 20 May 2024 09:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716196493; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DQpaWqEk14kmnZcRhdQPeYIN4UAv14SG3VVppGhfDQw=;
+	b=SQ/+LTtNmqQ5lsOk1oA9qLfIIOqAFGFL5m4YmwHs8Is7y9FKQNJjmip74l+Uwc9gzozVUg
+	hzCz6cM5ClUd/phVVLgFDDCk/Kfg96Hc+VF/LRatpnCuQSvX6wyl1yY3fIim5HyPYfktSg
+	ZV1ZlLdrh0DVbh9jVSxoeUKLRsrsQso=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716196493;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DQpaWqEk14kmnZcRhdQPeYIN4UAv14SG3VVppGhfDQw=;
+	b=QC8SRNppEITCa/rAX9pRgj9rB/ERaebOnt5nW39BmxGgevybxtNyCzt9dMQXYCSQARYQkq
+	nU2/g80JI8Uw2LBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716196493; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DQpaWqEk14kmnZcRhdQPeYIN4UAv14SG3VVppGhfDQw=;
+	b=SQ/+LTtNmqQ5lsOk1oA9qLfIIOqAFGFL5m4YmwHs8Is7y9FKQNJjmip74l+Uwc9gzozVUg
+	hzCz6cM5ClUd/phVVLgFDDCk/Kfg96Hc+VF/LRatpnCuQSvX6wyl1yY3fIim5HyPYfktSg
+	ZV1ZlLdrh0DVbh9jVSxoeUKLRsrsQso=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716196493;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DQpaWqEk14kmnZcRhdQPeYIN4UAv14SG3VVppGhfDQw=;
+	b=QC8SRNppEITCa/rAX9pRgj9rB/ERaebOnt5nW39BmxGgevybxtNyCzt9dMQXYCSQARYQkq
+	nU2/g80JI8Uw2LBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8475713A6B;
+	Mon, 20 May 2024 09:14:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id C18sHYwUS2ZSYQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Mon, 20 May 2024 09:14:52 +0000
+Date: Mon, 20 May 2024 11:14:51 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 06/20] powerpc/8xx: Fix size given to
+ set_huge_pte_at()
+Message-ID: <ZksUiwNaKx2n1fJO@localhost.localdomain>
+References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
+ <04f4e737608ea0b177b88057db138fbf0d6ab138.1715971869.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517042839.544650-1-kris.van.hees@oracle.com> <20240517042839.544650-7-kris.van.hees@oracle.com>
-In-Reply-To: <20240517042839.544650-7-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 20 May 2024 18:10:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQPN34CK0co+nX83e84fcK_JrSyEJAdwEJZ5uVBvTKUyg@mail.gmail.com>
-Message-ID: <CAK7LNAQPN34CK0co+nX83e84fcK_JrSyEJAdwEJZ5uVBvTKUyg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] module: add install target for modules.builtin.ranges
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04f4e737608ea0b177b88057db138fbf0d6ab138.1715971869.git.christophe.leroy@csgroup.eu>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,nvidia.com,redhat.com,ellerman.id.au,gmail.com,vger.kernel.org,kvack.org,lists.ozlabs.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,csgroup.eu:email]
 
-On Fri, May 17, 2024 at 1:32=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> When CONFIG_BUILTIN_MODULE_RANGES is enabled, the modules.builtin.ranges
-> file should be installed in the module install location.
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+On Fri, May 17, 2024 at 09:00:00PM +0200, Christophe Leroy wrote:
+> set_huge_pte_at() expects the real page size, not the psize which is
+
+"expects the size of the huge page" sounds bettter? 
+
+> the index of the page definition in table mmu_psize_defs[]
+> 
+> Fixes: 935d4f0c6dc8 ("mm: hugetlb: add huge page size param to set_huge_pte_at()")
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+AFAICS, this fixup is not related to the series, right? (yes, you will
+the parameter later)
+I would have it at the very beginning of the series.
+
+
 > ---
-> Changes since v2:
->  - Include modules.builtin.ranges in modules install target
-> ---
->  scripts/Makefile.modinst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-> index 0afd75472679f..f5160ddd74239 100644
-> --- a/scripts/Makefile.modinst
-> +++ b/scripts/Makefile.modinst
-> @@ -30,10 +30,10 @@ $(MODLIB)/modules.order: modules.order FORCE
->  quiet_cmd_install_modorder =3D INSTALL $@
->        cmd_install_modorder =3D sed 's:^\(.*\)\.o$$:kernel/\1.ko:' $< > $=
-@
->
-> -# Install modules.builtin(.modinfo) even when CONFIG_MODULES is disabled=
-.
-> -install-y +=3D $(addprefix $(MODLIB)/, modules.builtin modules.builtin.m=
-odinfo)
-> +# Install modules.builtin(.modinfo,.ranges) even when CONFIG_MODULES is =
-disabled.
-> +install-y +=3D $(addprefix $(MODLIB)/, modules.builtin modules.builtin.m=
-odinfo modules.builtin.ranges)
+>  arch/powerpc/mm/nohash/8xx.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+> index 43d4842bb1c7..d93433e26ded 100644
+> --- a/arch/powerpc/mm/nohash/8xx.c
+> +++ b/arch/powerpc/mm/nohash/8xx.c
+> @@ -94,7 +94,8 @@ static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
+>  		return -EINVAL;
+>  
+>  	set_huge_pte_at(&init_mm, va, ptep,
+> -			pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)), psize);
+> +			pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)),
+> +			1UL << mmu_psize_to_shift(psize));
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.44.0
+> 
 
-
-This will break modules_install when CONFIG_BUILTIN_MODULE_RANGES
-is disabled.
-
-modules.builtin.ranges should be added to install-y conditionally,
-like this:
-
-
-
-
-# Install modules.builtin(.modinfo) even when CONFIG_MODULES is disabled.
-install-y +=3D $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modi=
-nfo)
-
-install-$(CONFIG_BUILTIN_MODULE_RANGES) +=3D $(MODLIB)/modules.builtin.rang=
-es
-
-
-
-
-
-> -$(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo): $(MODL=
-IB)/%: % FORCE
-> +$(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo modules.=
-builtin.ranges): $(MODLIB)/%: % FORCE
->         $(call cmd,install)
->
->  endif
-> --
-> 2.43.0
->
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Oscar Salvador
+SUSE Labs
