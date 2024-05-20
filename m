@@ -1,166 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4FE56766;
-	Mon, 20 May 2024 12:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F267612EB
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716208270; cv=none; b=udovgncUl5Jxj3J6OIBla0Iqinz+RQTv//Ocfv9ED6IlKpoNtDKH3dX9f6j/kE2xQ3TX6HDKH4OcpYuq37oP83BQgp3Grkc4luQVK9leYR3o1ahU6CmtPPErSoMKAgtkIJcC3HkKdx23dySXcPkMvGT+QPWxhre8NKRpms4N+gc=
+	t=1716208275; cv=none; b=O1wbsnOcJNiPVlWWQZXFw7nAzwnDiHrJPo3CgfX1zqXiKwY3oeG8NFwcJ2fS8+uCtLARJODc6Xq+iFyQeS1NpgYDyS3ljoz43+GviHacrbKl9psPGOC2ZI7FbgSjYCXbJQj6jZ9+bCkJL36S2bqSEBHY5Hlg2TwF+NNz5SkEIvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716208270; c=relaxed/simple;
-	bh=IK/hJK9+J08W1MsxIwwJRZTw4zqFwkiytsnG2YPMKBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NPT6zOec4Pn9Wj5/9DG5qx/nW26IPM2qedeADUpc28moWRLcezNUy6eDLclknYZDXd42U4pmBXjmrByN8rQtJHR7/Dv5DASWASsgr9kv/wb/TT29aEhOhxFN1Fl98afF+UcfgQIyanEepx2TH2tzb/iSAkTK+xM0OpdKg9abT/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XmlMpimr; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716208275; c=relaxed/simple;
+	bh=EShonQY2zDsALv6YQhO9ib6qoCyG9n3IUJVvv5yoQjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=a5TYn4xz93h0CrX25xm7V8NVZGDBslU8UxERR8pS7IeSs5SJJ8bt+NoIGb3eBK4pQtDB/gXT/5enpL8I1CFiIOExXp1ZOsXoqleNwa/tbDtRfw+X0HsufRPjwg80i/ifMySgxD1sQ6wmcc7ehgziGS2Jsxqk89NUn6T4kn3OOP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fB+27dHY; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XmlMpimr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716208269; x=1747744269;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IK/hJK9+J08W1MsxIwwJRZTw4zqFwkiytsnG2YPMKBw=;
-  b=XmlMpimrY32/0Q10z2G+E+7XkEjDLchqO2y6zzxKVWptQS+6UQVBYhZl
-   WrZI+a7bF3GzeNYXWPZCUqzNjx4apqMIJ0jLozhR24d54jxAlybHsE5Wm
-   Qe7qVjmSUISC+M8m6T0w1wQ2c0snU7VOjm5ues2fEKCkgFDHFs6NNlq6w
-   8Kig39kZrUV7r2+8CpdLqv/3/lj2QugaJLNXk08EtPtibern0dfL0H+yc
-   irtgx4KL9xKYEZ/lnCTLiZhI8XqO2jknSqFLnv6nV9lsVHIB9dkm6yOYv
-   ABShegtbNCBTaa8Zi8c5bb6OXd0+k01zpNHHH1P5Li6r37bLkxq8mul+2
-   Q==;
-X-CSE-ConnectionGUID: i7ddnMAvRpaHT6Y3jt88yA==
-X-CSE-MsgGUID: ApsuPWIRRuGarYQlwFtjxg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12180336"
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="12180336"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:08 -0700
-X-CSE-ConnectionGUID: 33vUk75zRgSv9Xb8f1AUfg==
-X-CSE-MsgGUID: sTw8PonUQTOlY/r9VbJLMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="33091115"
-Received: from unknown (HELO localhost) ([10.245.247.114])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v4 04/16] selftests/resctrl: Consolidate get_domain_id() into resctrl_val()
-Date: Mon, 20 May 2024 15:30:08 +0300
-Message-Id: <20240520123020.18938-5-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
-References: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB+27dHY"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51f174e316eso3198590e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 05:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716208272; x=1716813072; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xTV37OvPNxm097mdCjRk9kivbaQmKYdeu/uwsv44aes=;
+        b=fB+27dHYixS2VsxVZmTA1ck9m/jLuvtQcsbKVX+arbcR9adJApp+7e7pWhTjvi0Y8j
+         WGCcFv/WpugicSlvrhPXj3pmCOnvFXcVXuYh1qme2lilNcCk1jUirARNC5S2fm3gZKya
+         /ACIk9ErlDaZkjicYZine80ot5oYyft/dunoUwhr44OghX+EJvbaTDmTDi26dxd9prQU
+         XBlaoor7COK5d3Ebd3XcI3CAdpQ6ipy6RgA+QsPCuHIuApdDJscE389rAJYz5xOPCfnF
+         OXvbCU0wmdXkNRpVDL4xkoyuPAIs2CAjSmdQqXtW0Pmew9QAPLHERi/sVMDBiocgDC7Y
+         zc+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716208272; x=1716813072;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xTV37OvPNxm097mdCjRk9kivbaQmKYdeu/uwsv44aes=;
+        b=APZmAhHbIDGAmq6tsQEEK/CqtvA7CaRWZv10nMBzckuaGqXYHfeX54df1YyyTGYH1b
+         39OraIDyA0g/PyS3ySLgKPncSrfbmtVSGS+MeQ0T0oGFqQk84MtQ1IhjSl+wT8cGLVRL
+         i15sZNt5yy4u1H9TJo1EAovY+r1LPnTyD3RKxSztib5K3IOOMS83PQhBIdkGz+Yvc4VZ
+         BfYAe14Ksg66SzdcECfsqlDWOudh99snTC6wllj80b8V/BQ9EF8OOJ/yl4eEnZinW1J4
+         Y6aYeRdO53R7EEZC5SdWAXT45LwTHN0ATQX7ysm39NvfnvV80JL2nqtfbXSKVCraIK2P
+         rhFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMLKbDp89M9pD9sbRGfbnNCdWXZJr69lkG78fMPtjYXLWXUi5U+EYiUFUh74tbXO/A82+U0STTy6G1Rpw8Cm4vef50dcFJb4GAMFAQ
+X-Gm-Message-State: AOJu0Yx2ck3wuXaB68mdwM7Ctzfr2IyLtYYe/dDJ1n/1ogyOV1YuoqXd
+	QQn1yP1py3JXqzlbXZ3B5o7Wj0DyF2A8IjlCswKN/6/HCjDOSUs9
+X-Google-Smtp-Source: AGHT+IHNpzsuX0rBjZvmG4Lw90zHePB/y3cd4iL5UI6lZQYVtEZylz8Y+q1a08ijN9zRU4KSKmSsww==
+X-Received: by 2002:a05:6512:3c9f:b0:51d:ab55:f2db with SMTP id 2adb3069b0e04-5220fa717f5mr23174649e87.10.1716208271434;
+        Mon, 20 May 2024 05:31:11 -0700 (PDT)
+Received: from fedora ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5238a14d64bsm2074664e87.258.2024.05.20.05.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 05:31:10 -0700 (PDT)
+Date: Mon, 20 May 2024 15:31:02 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?M=E5rten?= Lindahl <marten.lindahl@axis.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] regulator: fix pickable ranges vsel caching
+Message-ID: <ZktChruNV_Jc4j4u@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MQgaS3VPhLaQvzhS"
+Content-Disposition: inline
 
-Both initialize_mem_bw_resctrl() and initialize_llc_occu_resctrl() that
-are called from resctrl_val() need to determine domain ID to construct
-resctrl fs related paths. Both functions do it by taking CPU ID which
-neither needs for any other purpose than determining the domain ID.
 
-Consolidate determining the domain ID into resctrl_val() and pass the
-domain ID instead of CPU ID to initialize_mem_bw_resctrl() and
-initialize_llc_occu_resctrl().
+--MQgaS3VPhLaQvzhS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+This series addresses a potential problem where the voltage selector for
+pickable-ranges is used in same fashion as a 'apply-bit'. Eg, when a
+regulator voltage is changed so that also the range changes, the effect
+of the range and voltage selector change is not taken into account until
+the voltage selector is written to hardware. In such case caching the
+voltage-selector value will cause the voltage range change to not change
+the actual output voltage.
+
+Patch 1 addresses this issue by adding a flag to regulator desc to
+advertise this behaviour and by always writing the VSEL register value to
+hardware if range was changed.
+
+Patch 2 sets that flag to Texsas instrument's tps6287x driver because,
+according to the data-sheet, the TI's PMICs VSEL register must be always
+written after the range has been changed. Please note that this has not
+been tested in TI's hardware but the concept is only quickly verified on
+ROHM's BD71851. All testing is appreciated.
+
+Revision history:
+- v2:
+	- Change series name to reflect content that is still not
+	  merged.
+	- Drop already applied patches.
+	- Add patch fixing TI's tps2687x.
+	- Don't bypass cache for pickable-ranges users who don't have.
+	  the 'VSEL as apply' behaviour.
+	- Bypass cache only if range was changed.
+- v1:
+	https://lore.kernel.org/all/cover.1715848512.git.mazziesaccount@gmail.com/
+
+series is base on regulator/for-next
+
 ---
- tools/testing/selftests/resctrl/resctrl_val.c | 33 ++++++++-----------
- 1 file changed, 13 insertions(+), 20 deletions(-)
 
-diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-index 126a9cad588b..6ea8fd2c65cc 100644
---- a/tools/testing/selftests/resctrl/resctrl_val.c
-+++ b/tools/testing/selftests/resctrl/resctrl_val.c
-@@ -456,19 +456,12 @@ void set_mbm_path(const char *ctrlgrp, const char *mongrp, int domain_id)
-  * initialize_mem_bw_resctrl:	Appropriately populate "mbm_total_path"
-  * @ctrlgrp:			Name of the control monitor group (con_mon grp)
-  * @mongrp:			Name of the monitor group (mon grp)
-- * @cpu_no:			CPU number that the benchmark PID is binded to
-+ * @domain_id:			Domain ID (cache ID; for MB, L3 cache ID)
-  * @resctrl_val:		Resctrl feature (Eg: mbm, mba.. etc)
-  */
- static void initialize_mem_bw_resctrl(const char *ctrlgrp, const char *mongrp,
--				      int cpu_no, char *resctrl_val)
-+				      int domain_id, char *resctrl_val)
- {
--	int domain_id;
--
--	if (get_domain_id("MB", cpu_no, &domain_id) < 0) {
--		ksft_print_msg("Could not get domain ID\n");
--		return;
--	}
--
- 	if (!strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR)))
- 		set_mbm_path(ctrlgrp, mongrp, domain_id);
- 
-@@ -627,19 +620,12 @@ static void set_cmt_path(const char *ctrlgrp, const char *mongrp, char sock_num)
-  * initialize_llc_occu_resctrl:	Appropriately populate "llc_occup_path"
-  * @ctrlgrp:			Name of the control monitor group (con_mon grp)
-  * @mongrp:			Name of the monitor group (mon grp)
-- * @cpu_no:			CPU number that the benchmark PID is binded to
-+ * @domain_id:			Domain ID (cache ID; for MB, L3 cache ID)
-  * @resctrl_val:		Resctrl feature (Eg: cat, cmt.. etc)
-  */
- static void initialize_llc_occu_resctrl(const char *ctrlgrp, const char *mongrp,
--					int cpu_no, char *resctrl_val)
-+					int domain_id, char *resctrl_val)
- {
--	int domain_id;
--
--	if (get_domain_id("L3", cpu_no, &domain_id) < 0) {
--		ksft_print_msg("Could not get domain ID\n");
--		return;
--	}
--
- 	if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR)))
- 		set_cmt_path(ctrlgrp, mongrp, domain_id);
- }
-@@ -775,10 +761,17 @@ int resctrl_val(const struct resctrl_test *test,
- 	int ret = 0, pipefd[2];
- 	char pipe_message = 0;
- 	union sigval value;
-+	int domain_id;
- 
- 	if (strcmp(param->filename, "") == 0)
- 		sprintf(param->filename, "stdio");
- 
-+	ret = get_domain_id(test->resource, uparams->cpu, &domain_id);
-+	if (ret < 0) {
-+		ksft_print_msg("Could not get domain ID\n");
-+		return ret;
-+	}
-+
- 	if (!strncmp(resctrl_val, MBA_STR, sizeof(MBA_STR)) ||
- 	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
- 		ret = validate_bw_report_request(param->bw_report);
-@@ -873,10 +866,10 @@ int resctrl_val(const struct resctrl_test *test,
- 			goto out;
- 
- 		initialize_mem_bw_resctrl(param->ctrlgrp, param->mongrp,
--					  uparams->cpu, resctrl_val);
-+					  domain_id, resctrl_val);
- 	} else if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR)))
- 		initialize_llc_occu_resctrl(param->ctrlgrp, param->mongrp,
--					    uparams->cpu, resctrl_val);
-+					    domain_id, resctrl_val);
- 
- 	/* Parent waits for child to be ready. */
- 	close(pipefd[1]);
--- 
-2.39.2
+Matti Vaittinen (2):
+  regulator: pickable ranges: don't always cache vsel
+  regulator: tps6287x: Force writing VSEL bit
 
+ drivers/regulator/helpers.c            | 43 ++++++++++++++++++--------
+ drivers/regulator/tps6287x-regulator.c |  1 +
+ include/linux/regulator/driver.h       |  3 ++
+ 3 files changed, 34 insertions(+), 13 deletions(-)
+
+--=20
+2.45.1
+
+
+--=20
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =3D]=20
+
+--MQgaS3VPhLaQvzhS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmZLQn0ACgkQeFA3/03a
+ocVXxAf/eNpKlT3d/ANnNoL1BEmddIi/7e8g3WJrS5H1/1Z5BC+cqZVXPfugKgXy
+YZeJo7Pb8+hBafaQSVsZdzHWBgEu//SGabvPUbfhYP6JzlcX9UNSkrNG/EKYX3CZ
+GGoUnsxwh0n3lGOf6lc5cwk4ZybqwYHji4BBNVmmGmsgzcjVrX58712XbXdVthNy
+w1K9MTJ4elPrgaBrf1cJAbJg+7u7FA9zBxWm8f0SH90Jx65fix63zAvi3chfcqvE
+F6QVAGJ2LDWljB4ggXkHsUgt/c2sV7yh5zFdGKlW+6WJu5UC6rf/kV46wL6ORFuS
+LWbVDp2LlyVEVeBAG6QswHuaTsPxEA==
+=3tAL
+-----END PGP SIGNATURE-----
+
+--MQgaS3VPhLaQvzhS--
