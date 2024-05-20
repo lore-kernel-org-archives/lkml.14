@@ -1,76 +1,122 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CDD137C42
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 19:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A44137C41;
+	Mon, 20 May 2024 19:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716233058; cv=none; b=u8HSp1+bJAxBpK/yV7kGtOIKwH3X4G7FHw09Ib9mlsHHj+poImnItBjRLL16r/qA0t77z83fejqjga8xlICEkqBasVd7bw7TULQvodUAP/V47bjP+I80nkNGB+jxdsTa8QJasXaA7w95ti1ASFFLOn2tWi9TzL2+M1hWt1GfvhY=
+	t=1716233139; cv=none; b=A7HarkYwzujTRUhLYFhsBragZujmKrAk6USA6pL4O95xcdJTXjkq11H/9fIt/LT8LU085Lgg2GHRII8/0Ok3Hz2Ag67YIAI776CdCgpdeJL/kjOmfUsuf8YcVR8gtdUvnetiswh4GrZXfzvDD4usO8JawQip2TEPTeYlyav9urw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716233058; c=relaxed/simple;
-	bh=G36Cx8GySjdHNtcYSHoIRZuKeuqegAU39EJK3W+NhBc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=cku+1PxR3EbKLtpRRoDzUwc3eHcloKNtU9DDyjuaHsczS3EAQqSf3FCttMQbkTLgBX/E3mbADC6Co+M0jvsdJiMCOkvMbA57+vOT0SMobzWiGThoT/yyswqEcmQhQqN6QUQe9S+Cir4CiyfRO7S7fZtpmZ9l2yEeZHM37ZXyRU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 1B8E96195FC2;
-	Mon, 20 May 2024 21:24:07 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 6z9Gs4OLXYbU; Mon, 20 May 2024 21:24:06 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 678D96195FD7;
-	Mon, 20 May 2024 21:24:06 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id cPpfmcUIF8d4; Mon, 20 May 2024 21:24:06 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 09C736195FC2;
-	Mon, 20 May 2024 21:24:05 +0200 (CEST)
-Date: Mon, 20 May 2024 21:24:05 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: hch <hch@lst.de>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	linux-um <linux-um@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1300720405.125947.1716233045712.JavaMail.zimbra@nod.at>
-In-Reply-To: <20240520152049.GB398@lst.de>
-References: <20240505001508.255096-1-linux@treblig.org> <20240506070648.GA6506@lst.de> <ZktoVIG500he350_@gallifrey> <20240520152049.GB398@lst.de>
-Subject: Re: [PATCH] ubd: Remove unused mutex 'ubd_mutex'
+	s=arc-20240116; t=1716233139; c=relaxed/simple;
+	bh=5LBXzjzDAPTZBUaBcHE7waTQatRc3TVSXvGyu/MVk7A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tbJenvo1Zs01+zFb/rrMI5f5vvETSkH7nPGmwngr19Iu1kZt7+Md9NHBhvcO0BhAVWFAW/AJHrOpQAJbdW1dxxmlmYwV8cB3vs5qKh38WR8HPpY+A9P3TtI1zLVIcnhLvla9jv2vLlMH/XMx4G1L6ewKKpA4xCTF87ci9blhvAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WQl4upsy; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WQl4upsy"
+Received: from [10.137.186.190] (unknown [131.107.159.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 86661205421D;
+	Mon, 20 May 2024 12:25:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86661205421D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1716233136;
+	bh=MBxWBiadl4sTqBaO3ScFCEQXblE9CV7k2QIVsB3rijA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WQl4upsytkSNzZMYUQzV1c6k/uK8n/Tv1YX48+vP5jmz2O1aGpKlw9raxHIiMiZ5P
+	 B+wcmw0OFEA5NIqDtjca44j/FSezEkjxTUQXuuyOj2+auBaDgpuqexIy8PMHYe2WgC
+	 1SS0WAGK5pORppu92rp4lKsTZ8uMRlKBEdno0aPU=
+Message-ID: <ec8c1b9e-6ada-49c1-a3e3-47452208d26c@linux.microsoft.com>
+Date: Mon, 20 May 2024 12:25:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Remove unused mutex 'ubd_mutex'
-Thread-Index: sUO+fPwo/Hce3VfngHxEy05naTFOLg==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from
+ DeviceTree
+To: Rob Herring <robh@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, dave.hansen@linux.intel.com, decui@microsoft.com,
+ haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, mingo@redhat.com,
+ mhklinux@outlook.com, rafael@kernel.org, tglx@linutronix.de,
+ wei.liu@kernel.org, will@kernel.org, linux-acpi@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, x86@kernel.org, ssengar@microsoft.com,
+ sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20240514224508.212318-1-romank@linux.microsoft.com>
+ <20240514224508.212318-6-romank@linux.microsoft.com>
+ <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "hch" <hch@lst.de>
-> An: "Dr. David Alan Gilbert" <linux@treblig.org>
-> CC: "hch" <hch@lst.de>, "richard" <richard@nod.at>, "linux-um" <linux-um@=
-lists.infradead.org>, "linux-kernel"
-> <linux-kernel@vger.kernel.org>
-> Gesendet: Montag, 20. Mai 2024 17:20:49
-> Betreff: Re: [PATCH] ubd: Remove unused mutex 'ubd_mutex'
 
-> On Mon, May 20, 2024 at 03:12:20PM +0000, Dr. David Alan Gilbert wrote:
->> * Christoph Hellwig (hch@lst.de) wrote:
->> > Looks good:
->> >=20
->> > Reviewed-by: Christoph Hellwig <hch@lst.de>
->>=20
->> Thanks Christoph; any ideas who might take this?
->=20
-> Probably Richard who is alredy on Cc.
 
-Yes, after the merge window.
+On 5/17/2024 10:14 AM, Rob Herring wrote:
+> On Tue, May 14, 2024 at 5:45 PM Roman Kisel <romank@linux.microsoft.com> wrote:
+>>
+>> The vmbus driver uses ACPI for interrupt assignment on
+>> arm64 hence it won't function in the VTL mode where only
+>> DeviceTree can be used.
+>>
+>> Update the vmbus driver to discover interrupt configuration
+>> via DeviceTree.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c | 37 +++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index e25223cee3ab..52f01bd1c947 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -36,6 +36,7 @@
+>>   #include <linux/syscore_ops.h>
+>>   #include <linux/dma-map-ops.h>
+>>   #include <linux/pci.h>
+>> +#include <linux/of_irq.h>
+> 
+> If you are using this header in a driver, you are doing it wrong. We
+> have common functions which work on both ACPI or DT, so use them if
+> you have a need to support both.
+> 
+Understood, thank you! I'll look more for the examples. If you happen to 
+have in mind the place where the idiomatic/more preferred approach is 
+used, please let me know, would owe you a great debt of gratitude.
 
-Thanks,
-//richard
+
+> Though my first question on a binding will be the same as on every
+> 'hypervisor binding'.  Why can't you make your hypervisor interfaces
+> discoverable? It's all s/w, not some h/w device which is fixed.
+> 
+I've taken a look at the related art. AWS's Firecracker, Intel's Cloud 
+Hypervisor, Google's CrosVM, QEmu allow the guest use the 
+well-established battle-tested generic approaches (ACPI, 
+DeviceTree/OpenFirmware) of describing the virtual hardware and its 
+resources rather than making the guest use their own specific 
+interfaces. That holds true for the s/w devices like 
+"vcpu-stall-detector" and VirtIO that do not have counterparts built as 
+hardware, too.
+
+Here, the guest needs to set up VMBus (the intra-partition communication 
+transport) to be able to talk to the host partition. Receiving a message 
+needs an interrupt service routine attached to the interrupt injected 
+into the guest virtual processor, and DeviceTree lets provide the 
+interrupt number. If a custom interface were used here, it'd look less 
+expected due to others relying on ACPI and DT for configuring virtual 
+devices and busses. A specialized interface would add more code (new 
+code) instead of relying on the approach that is widely used.
+
+
+> Rob
+
+-- 
+Thank you,
+Roman
