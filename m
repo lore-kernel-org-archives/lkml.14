@@ -1,80 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B2D4C624;
-	Mon, 20 May 2024 10:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15061224D7;
+	Mon, 20 May 2024 10:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716199829; cv=none; b=au48su5c+vLF6neFqVMxgKRi3KVHtGYhadhbaWyYrLPC7rk7hc+uWIoLnssgji6PfleTXWWUgZAqslneiZAqhsUpytr/6C1lKr/5Cgeilhp13EK5rTCtSgZM3jUyhYp99kaeMFtMvP6bFAvbXCmBbbu4BdyC3aiT4nUsWkajGkU=
+	t=1716199932; cv=none; b=ifmvggwdRpFfW8TSi3I0UezfU20DuwpQ7KrwuvprVt1A1q6HZd05SPfFR46V44Ri8LxOG5y6TlBFcwRiAL0wi/ntTnx19XHW/szl48GixoRBxxd1zGsfJ/yyJkcyn/xuBvB2ZpwvKaWNXHJ7jekfC7nArURrQCT0p6q1lsThICY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716199829; c=relaxed/simple;
-	bh=TNK9Jar8YJmnNeoHJ9Ha26Z++4zG5iduTJAAtSVf+IM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=RJXGoj1xMKCR8z+ozKWpmVDR8eTT2EdertxJN2xgFAWcXdThIIhW9hVOxDn0MNEzvE7++45ft+X/tkImbrZF+wmRSRxRZkkFGSX0eNaObVWJILEEK51Rh9tjIk8KcSOjkPZe8QchnHY6299YrjB2e0ttBbhSH5sheKV/9Vz5oG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/Zy/CPt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716199932; c=relaxed/simple;
+	bh=6NDH0z522me5vrgmflzfx3WQmnMcDdrAZ53MUWxQv/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=g19ZYwiAKNwQcocUsUqqusmbvvBGGUZMTlPxQ9lP6OUvvusEP0h/168aKMhcvpSyuCi+LNIOIU2HMeNAF4n9SZKKVodMipBQBf4bAOT5UbZwhqag0xMZs7Kg+NYDXfw8akkmy+bbs8htezLh2ysWVBecdJayuGqoNV6vAsu/0U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3RKlVEnw; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/Zy/CPt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6916CC32786;
-	Mon, 20 May 2024 10:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716199828;
-	bh=TNK9Jar8YJmnNeoHJ9Ha26Z++4zG5iduTJAAtSVf+IM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=e/Zy/CPtqaqE2CvEKLArDsFHeqGbt6RDBhgQKr7MGY0XDmMxNKzdhSL9jiFvBW++h
-	 M6Jnko0fA06Kn/k47Ce5VSXOX1bQxQANwRXvKYk7bUm9lz63Iu6UZ5sah6pWXHuTS8
-	 m27CiHRS9BJBfbrMbgAAcnZu9z8qwh78SSDsNuGbzRvvlcBWnkWCgkJuspRmN14H6w
-	 /1jo3V5cblLk1fucf6YvDCr3kz5+D4Os+8KfyHQxQ/IFlsc7Nv8UGpum8Oo6md9rCw
-	 Xec/N+9O8giYux0ajVlQJbY5K1yO8N2+ItkPqYmzbH5nYs0cW9aPr/sPJH7P3wm4Pd
-	 G2E39XaoI+w4g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5007CC54BD4;
-	Mon, 20 May 2024 10:10:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3RKlVEnw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716199929;
+	bh=6NDH0z522me5vrgmflzfx3WQmnMcDdrAZ53MUWxQv/4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=3RKlVEnwwt+L5N6iv4pr5sMiBA1t3K7kWgvqTEz2d1rPQs0u9QxBIfxWjsU5Ch537
+	 MwoEupaZcfEH4C6n5h8R0IDoqxWmROmYlaHoRlRJ7wjPrBZ/Q2kUZEOg5xMLmKHsni
+	 LVSNEE08mvwsn0Jen6ElZtG6U57kCmUC11S4ghbAqW0cEyQAuYpJesHhj8ADRfXdR4
+	 5qHAg0a9Wh0ytta1OEjeFBngPVBUthhT1DGluv2H5NzRfI/2ci45MZdCBWuUId4/nQ
+	 TlCXVJzXpd2Jo6UUexOJwg2S72A7G0xA08/Z8OG9HNea6u1utU6oHEu+C8h44MZUUM
+	 Ah+2Y+6LS3jtA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9B0B037809D1;
+	Mon, 20 May 2024 10:12:08 +0000 (UTC)
+Message-ID: <cf8c87fe-7a4f-423f-9c97-3759eeee4894@collabora.com>
+Date: Mon, 20 May 2024 12:12:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: Always descend into dsa/ folder with
- CONFIG_NET_DSA enabled
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171619982832.25234.9983760519411876794.git-patchwork-notify@kernel.org>
-Date: Mon, 20 May 2024 10:10:28 +0000
-References: <20240516165631.1929731-1-florian.fainelli@broadcom.com>
-In-Reply-To: <20240516165631.1929731-1-florian.fainelli@broadcom.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: netdev@vger.kernel.org, stephenlangstaff1@gmail.com,
- aleksander.lobakin@intel.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, olteanv@gmail.com, f.fainelli@gmail.com,
- alobakin@pm.me, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] arm64: dts: mediatek: mt8365: use a specific SCPSYS
+ compatible
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ MandyJH Liu <mandyjh.liu@mediatek.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Alexandre Mergnat <amergnat@baylibre.com>
+References: <20240518211159.142920-1-krzysztof.kozlowski@linaro.org>
+ <20240518211159.142920-2-krzysztof.kozlowski@linaro.org>
+ <f42ef151-6eee-418f-91e1-5ac08d161119@collabora.com>
+ <2cc638ca-0add-4c8c-b844-606e22dbd253@linaro.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <2cc638ca-0add-4c8c-b844-606e22dbd253@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Thu, 16 May 2024 09:56:30 -0700 you wrote:
-> Stephen reported that he was unable to get the dsa_loop driver to get
-> probed, and the reason ended up being because he had CONFIG_FIXED_PHY=y
-> in his kernel configuration. As Masahiro explained it:
+Il 20/05/24 12:03, Krzysztof Kozlowski ha scritto:
+> On 20/05/2024 11:55, AngeloGioacchino Del Regno wrote:
+>> Il 18/05/24 23:11, Krzysztof Kozlowski ha scritto:
+>>> SoCs should use dedicated compatibles for each of their syscon nodes to
+>>> precisely describe the block.  Using an incorrect compatible does not
+>>> allow to properly match/validate children of the syscon device.  Replace
+>>> SYSCFG compatible, which does not have children, with a new dedicated
+>>> one for SCPSYS block.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> Technically, that's not a SCPSYS block, but called SYSCFG in MT8365, but the
+>> meaning and the functioning is the same, so it's fine for me.
 > 
->   "obj-m += dsa/" means everything under dsa/ must be modular.
+> So there are two syscfg blocks? With exactly the same set of registers
+> or different?
 > 
->   If there is a built-in object under dsa/ with CONFIG_NET_DSA=m,
->   you cannot do  "obj-$(CONFIG_NET_DSA) += dsa/".
-> 
-> [...]
 
-Here is the summary with links:
-  - [net,v2] net: Always descend into dsa/ folder with CONFIG_NET_DSA enabled
-    https://git.kernel.org/netdev/net/c/b1fa60ec252f
+I'm not sure about that, I don't have the MT8365 datasheet...
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Adding Alexandre to the loop - I think he can clarify as he should have the
+required documentation.
 
-
+Cheers
