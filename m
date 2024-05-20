@@ -1,113 +1,95 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E879CE576
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3E41862F
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716189648; cv=none; b=TpyHB0NtizFcj8dpqKMyGDJHrXEDIFth3nuQXaXRRUzuW3HyvVX9lbtW+LI1j4EJPHh9y/lzTn6lEGst0NACVLq6342Qiwz/2jyY/OAZh+mbHyJE8B0nVYHVl5Xg2/Dg5TuE1ewgjat9RTJYESu7fl4Pk3WEnhMPXO2cTKNVq34=
+	t=1716189918; cv=none; b=NQWh0b9kWIqneS6mj9/grg9GSBNmwwMjsviHl5MIfG++rzHRN8tImhQLU6mooRlT9AaJIY2TPc1tmfNYqNZDLnwXOsUiH9GXIECXMaYjCYe7czRTXv4YtJRq9XBiO2gFRj8e7kbiZjMjvXVaYOv9YqEkqW+AtfJ+KBQsfoTUG2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716189648; c=relaxed/simple;
-	bh=gqIAUbUBH0zrLm1kxTzRh/nI+40++QuEy6cZC2eVlCs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oV4n3+RVfHBNKjez3NqeoXaMlOgsxD070sRcIdlU8KmQvKbpmcSqBvT0w1jv3yQhj4qBJ0Ps2HgzUQj6l1ARM9bR/aHqFM0ozBYnDlTHnXYB3Q21MiOflAtZFIdvNx6fbLn0lZDhifxP6npVgScKhwRUWjPeabFKpNni2hDAB0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VWy2YJrD; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1716189918; c=relaxed/simple;
+	bh=+fObv7pYjpDl9fdzZP147nI7QMSBzyYiYdYAVlbJC1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQDchYvRBl6htyKk6X31/atEqo+TN82heNGcyLSkms+UVCSIqzkQsjvYFkMsr60dkgFdI/UVglgkwUNbzz6Qf7baZ/8gPAXEBDzw6PX/oBejVHx53eh4omITLeEh4XnNTrfkH+1+b0j6kDcSbCjuFFgznKUN7SWK10CGJAa5UnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r/ihDRJb; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VWy2YJrD"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5210684cee6so3306930e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:20:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r/ihDRJb"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ed0abbf706so62998835ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1716189644; x=1716794444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NZBUhRNFLDmCI2ChcjlpR99DNWg+Cc8ceERhi6tF0ro=;
-        b=VWy2YJrDkuo5GTVgOdg3Di5KaEVvjlYbz2ISbYzR7L1lfW5h/AHaNR9xwse942g3t2
-         JRDGY8pHIeC+pOkmqHyJKsP1LlsDJacUrZzENQ/hIVQp19xFYZYnelUWkfRPefrG077k
-         FU0uc0LwopogE9cT1f2MgXqG3vGqiVjJrwR9ZHQVbMTxPSsuqCy8/FgF3TvqkkioeVMm
-         H31gFXNPKPL72foU0fP1OTDvlx1aCoUzUXgwwC5jjajdCVBs7x7Di4st0o2kFUHClGWR
-         +tiITXY1fyOXz3PgjJf9XuH6U4Ra1KuOzbuY7/QmVHgXVcjt+1RqwrnmcEKSHlo1j9Lm
-         yqLQ==
+        d=linaro.org; s=google; t=1716189916; x=1716794716; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SFdmcNpzRo2oo+yppr3+cUzOw6aLmc7VZ0+XNX0Zb1s=;
+        b=r/ihDRJb0Z/gUar1t1tPHTiw949RFqYvJzblzQYOmyylS8U7OEAqeE30oIX7Ndg5oa
+         ONWauew3GMAoeHKak8/xOvzaFRhjOD/MgGd/4RZT/X/JKKOuqhkX10Wzb1dBovFYDyMZ
+         JRNt2PSpI3smbheIKWqCg6PIHEbMtM2t+HBPE2NyOp88JW6h552pMBawdggbo2U88Dv7
+         8nx+iEbAUyNHpX5VJ7b1NKqcyl5uwupsidBJhSUeTO5KO4G0/fvTXsNN3mXJ9ogyGzLQ
+         q1JzNTHDrhsV1w5vanWh2MMlNQoxVe2TRWu+FXcfUIgVdfH8Cp9MdMfYCMBhNWv5+hKb
+         27PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716189644; x=1716794444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NZBUhRNFLDmCI2ChcjlpR99DNWg+Cc8ceERhi6tF0ro=;
-        b=uB51IOVXZbIqMfpQcy7869uCgbdfBEzJjNxcOlfmqjlEJfJZth28o53sLC9FzVE18c
-         iLA24OUSUOc5zPjOL7pFLctjkPlFDLJmmhqNZWONxLh0H0HkyfRoKiRqkU+W4PT50eB/
-         x9g5LKq+kYyXFEyHYJElT8iDUEheW8iAc4n5H880E01KAJ3QNtcavIG+FCRS8RZXAQqb
-         pWM50ToUR4Yvfi7i7PJuJfM05a/WcONHmWPt6kfkWRRc2PXpU3IK7cHnXV8hl8QBiSkv
-         fkmjg1YipidDATirmrMOphHbKkxzMHRqEojcJgJQXx3T3y3QHn9qF4Rn346X/aWrj/BP
-         bvdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJZOodsopj8oa8LBB3hvWgtDKWd2LgPkwZZZb3Zqavo7yO8wTstP/vP1UynJDODDfq1V+XWDsZZ3pYyz3/SjuauaiciWOGPMeCTxAI
-X-Gm-Message-State: AOJu0YymI216psARoqMW35ZUu7ynU8kVwkLVsXoR7XARUHRWw6HKfpxt
-	25iO+sj6TmGizT7coMy6hAlOSTVWX97tqVJgBnc9r8wjCiBe6VHn2yyeD8skGgyKde5i5fNI7kq
-	dBHo=
-X-Google-Smtp-Source: AGHT+IGTMldOTJK/Mk84R/2R/3qaWKsKo9JQiM+f1Bi56FP9zReRBJfFHH+CDVcKkrFNNmSxx9oDag==
-X-Received: by 2002:a05:6512:3091:b0:51e:f1a6:ac39 with SMTP id 2adb3069b0e04-5220fa71b46mr23227383e87.12.1716189643948;
-        Mon, 20 May 2024 00:20:43 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccfe1277sm398943205e9.42.2024.05.20.00.20.42
+        d=1e100.net; s=20230601; t=1716189916; x=1716794716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SFdmcNpzRo2oo+yppr3+cUzOw6aLmc7VZ0+XNX0Zb1s=;
+        b=MiB+tCrsxGS7CD5uo1reNhEYkqxfetNXiJ9IPARJDwr7CnI+PI9w7b78qV7CUozW+r
+         fs9+lBmUjImjJkubVXSve7L3MTrpWXdfQ7V5SMgNOzTPowDdECgmQCpfDYRlgZblqV9g
+         S2kyN8xg4unrY67pIvcnHCvuYkB+0Qu8HzWVCJz6kLoFN29TvhcgLYCL5ZOGKxS869GV
+         rK1yKfcv7tVbcQt5tGBP1BAsYNEWOiGMEDo4DtLILGnm6gELpyso5xnCABtYZPqC8VuF
+         GcDjqRisgvBL4luOyIdB/XdzcStMDa9eKUcicK1sThMMz+hFvmvHNdzx13JMW8Cxe9DQ
+         iR/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWN7X4P19ZL8UHrN9F3I8LTHydsysoPZ98h+0qC3HYzIQKLqvpfXdvLcj+kDsuJyy8qvdXRw5SnV8pz/RH25YekhmbGYiTo4tJ4Ppkx
+X-Gm-Message-State: AOJu0YzrPYrr2L17jzJUIa+tLpqLjeaXbgnVFYJJfao17fjJSWSS7jmN
+	GX5HOizmJ98IYdjG+atgBtVaFX/90thFO4o72s74+tR4A9JGHPqnr/OB42ozjLQ=
+X-Google-Smtp-Source: AGHT+IErwJLJcVq4YYoQHsxB+z/x6ysdEbBT7kYPibdEh7GbAAShwTr+CfGDco3v8nOOB3tK/ekTFA==
+X-Received: by 2002:a17:902:c942:b0:1f2:f3dc:43ee with SMTP id d9443c01a7336-1f2f3dc4ddbmr56186065ad.3.1716189916472;
+        Mon, 20 May 2024 00:25:16 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d385esm201022905ad.38.2024.05.20.00.25.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 00:20:43 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	didi.debian@cknow.org,
-	efault@gmx.de
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	linux-rt-users@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: rzg2l: use spin_{lock,unlock}_irq{save,restore}
-Date: Mon, 20 May 2024 10:20:33 +0300
-Message-Id: <20240520072033.228049-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
+        Mon, 20 May 2024 00:25:15 -0700 (PDT)
+Date: Mon, 20 May 2024 12:55:13 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: liwei <liwei728@huawei.com>
+Cc: rafael@kernel.org, lenb@kernel.org, Pierre.Gondois@arm.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liwei391@huawei.com
+Subject: Re: [PATCH v2] cpufreq/cppc: fix perf_to_khz/khz_to_perf conversion
+ exception
+Message-ID: <20240520072513.vtlqwjbmxugvuppj@vireshk-i7>
+References: <20240506075816.1325303-1-liwei728@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506075816.1325303-1-liwei728@huawei.com>
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 06-05-24, 15:58, liwei wrote:
+> When the nominal_freq recorded by the kernel is equal to the lowest_freq,
+> and the frequency adjustment operation is triggered externally, there is
+> a logic error in cppc_perf_to_khz()/cppc_khz_to_perf(), resulting in perf
+> and khz conversion errors.
+> 
+> Fix this by adding the branch processing logic when nominal_freq is equal
+> to lowest_freq.
+> 
+> Fixes: ec1c7ad47664 ("cpufreq: CPPC: Fix performance/frequency conversion")
+> Signed-off-by: liwei <liwei728@huawei.com>
+> ---
+> v2:
+>     - Fix similar issue in cppc_khz_to_perf()
+> 
+>  drivers/acpi/cppc_acpi.c | 22 +++++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
 
-On PREEMPT_RT kernels the spinlock_t maps to an rtmutex. Using
-raw_spin_lock_irqsave()/raw_spin_unlock_irqrestore() on
-&pctrl->lock.rlock breaks the PREEMPT_RT builds. To fix this use
-spin_lock_irqsave()/spin_unlock_irqrestore() on &pctrl->lock.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Fixes: e1fd1f9f457b ("pinctrl: renesas: rzg2l: Configure the interrupt type on resume")
-Reported-by: Diederik de Haas <didi.debian@cknow.org>
-Closes: https://lore.kernel.org/all/131999629.KQPSlr0Zke@bagend
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 20425afc6b33..78f947a8e26e 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -2069,11 +2069,11 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_pinctrl *pctrl)
- 		 * This has to be atomically executed to protect against a concurrent
- 		 * interrupt.
- 		 */
--		raw_spin_lock_irqsave(&pctrl->lock.rlock, flags);
-+		spin_lock_irqsave(&pctrl->lock, flags);
- 		ret = rzg2l_gpio_irq_set_type(data, irqd_get_trigger_type(data));
- 		if (!ret && !irqd_irq_disabled(data))
- 			rzg2l_gpio_irq_enable(data);
--		raw_spin_unlock_irqrestore(&pctrl->lock.rlock, flags);
-+		spin_unlock_irqrestore(&pctrl->lock, flags);
- 
- 		if (ret)
- 			dev_crit(pctrl->dev, "Failed to set IRQ type for virq=%u\n", virq);
 -- 
-2.39.2
-
+viresh
