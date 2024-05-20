@@ -1,92 +1,216 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F89B53815;
-	Mon, 20 May 2024 13:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A2053815
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 13:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716213032; cv=none; b=cJJyGUtlp/UWwdNdvZnkqXo3zpfYpmVXmL02MEjEt30u6Quq0w1fpBch647DZM2Rw2Jyisrtdtmruohvvw0ncxhwB+Opv2HTLZ03Yws72Sgc5+kZq1vHX5m+ojEaIsCPLaU81D1HBRkNopp5iPaR2Q2OW4UDHjmJZbV3akS/PgU=
+	t=1716213119; cv=none; b=s+tRAlqOcDhtrXL2aO0CW2vl9KsqdAQDOcO/TLFeA7imZf5PHyVpVZ+z7eVCR8NtvQ4QkSKMxOO5RAnukuVwWPB+wcb/beEdtPqq0KS9x0u7O0cS5sEjpyB/m/GsSp1V6Mh5fZJwnZwyjO3usCsaLonOzm/m7FKiTK6+P2r68CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716213032; c=relaxed/simple;
-	bh=Lx0tA9PUl4u6rsl64pdQUuI6eKpXJDiV5Zbxo3wsfbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fKw2rrFBpaqE5YeaBy6zJbjQuYR1JwhC1MNlgzbIothxTCxqIoA195vPHRgm2c8yGGMKwLt1PO/URyFp7SPqcylBBo0a3lLqJ2CA+wJJc85rlaHwno7kKhjHT3jerWyloZ6WJdm22h7HThZaL2J0HkqQj0rEtPiUdlXGg57dScs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=GnN9zUkx; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1716213119; c=relaxed/simple;
+	bh=NTsRMbb5iWNBU8od9S2Jd/KrHPBQGWlCUbGymF1Fw3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bC3hqjMdvGru3mlIicQyorfxK9g/VzRtWgyuYMPiyIdJAlIWYZbU8uxVxEs96cyqAKpo4QcpQoP/HFlXQogiiAaIz0ufLbCYX7tGs5vdLhsPCupSiCiPrPYY3l1y0BXMFjpQJ0QhERz2uu/0M8uxsYYNEP3yj/ceruKkX0QdFeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KPmvrE07; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="GnN9zUkx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=C+780rlDaKNA/H8vHY/36D+6Z05m+PymlHPYx7PH0iw=; b=GnN9zUkxwPFpBVPs
-	6dZgf3nZdak+FspBPIv1ffgPd8Y7OFaS+TRTvA90+n9Xt3CndHWOmd7+hlEa5Gw/O/6IZ81KN58uf
-	JMvtMD7xRS1W8fQjnqH9M8KzBeCpEYNwjCHnHL+BQr9kHfPnYw3P7RWWU2JJSCfIfT3NcGRY20hEU
-	Xp5fTVTVboXIX9qOVIv4X8q8AN4DzeyOC2ZWoNNHSYQaQVdQfVEyjTmlgYZ3kySNBP+/pvnZw9jlu
-	V+dtVc9SPPgi5iVzDq+vNIyzryhUCnoiwkLLyY+uAslEjwTDcWWaRlVTQAZCnIoS+Ui3dSYIXY03c
-	okr4MoBImIKALYSnIw==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1s93P6-001gmf-1X;
-	Mon, 20 May 2024 13:50:16 +0000
-Date: Mon, 20 May 2024 13:50:16 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	irogers@google.com, adrian.hunter@intel.com
-Cc: linux-perf-users@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/cstate: Remove unused struct 'perf_cstate_msr'
-Message-ID: <ZktVGHl5PVd2hAqF@gallifrey>
-References: <20240506004009.770451-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KPmvrE07"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c9cc681ee0so1301908b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 06:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716213115; x=1716817915; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Rt+swezO2XoZgidBhPae8eGHxrp7XZ2iue6hZ5iS2g8=;
+        b=KPmvrE07fAv9Z9TcPuCIR1KewqCG73z8bimdlgXDrFxlDVFUUVm8o40gAGwaaIUw+f
+         kCojKzvf9VEFcpKoXdwfe564jP6SsMXBGinWC/lTC+qkJgCBvKAs/I2bIu5cY28KRD70
+         xQorhuNzMAK1KYf3wQDh1s0XirkGyk6izW9C3PlIvCpCI7GozFmu+IOwPjYoW7SeoXsA
+         +eOcChZRgSRghVDDuXZjjPO0cBFk/rozicr5cMEFUXKdaT0euy4xxR7c0UwCuYTlWw/F
+         +0KNULX8YDtw9tVNU78nlcj0mrfsopkiWw9MHUtpHK1k1JeeR9P0LoKiTc/XwXU/aT/y
+         sxeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716213115; x=1716817915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rt+swezO2XoZgidBhPae8eGHxrp7XZ2iue6hZ5iS2g8=;
+        b=ZvbhNe0N4fjOKZI7ZbK0GUmjIVGWOvf4lNZfmIpHWPM6KxCzJPYk0erWXYWTqOQUQM
+         i2XmqUly4g6HbrZy2yngB2TaEV5HrjFXC38lO5oe3rmE54fVRYy5h5lhecqU5NbvKo9x
+         /QzesdWPgqEmphKcI0biBOtRq6DXb7Fy+fA/V7GqWakUSVd0CMY+5bOXsO58rt5DNVFy
+         sYOfinckl86l9LEoHInLKKiZkPf7Y1mmwpFOmVBOp+zoD9VpXEsU/J4z+Hf5QtPqA+B7
+         E5dQJ4d2t5eKq+/TNON8laKrhSSDdYWlfwtk0Xx+P3VJMvgDoE+Q0fGgsf+EsSk+XM1k
+         PLiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWok4635fSfe5W8DnSzfAvlNurSc3ixakJPGZYAEo3uuFp/7B0Qwh44pfaOiQZT2FRBRA0RLwgGDYnZAxSTd38JGx0aXe/vLR6pFFCY
+X-Gm-Message-State: AOJu0Yy4uG90S/terSAlIqIjJUo5hZ2AM93GtrJN/K5JZippnpBjZ3AF
+	xB3ROHtn6k/WRJcNvV9lBBEvfhR/jB7+134nbxH1gc2Isq36t3+c9EJ+21dn1oY=
+X-Google-Smtp-Source: AGHT+IFU10m32Gb2xWok1B4/mtfFUidep2XTvahd+Xb9OopS6qpAPhoM94gSqMsEhEtiYhFACB28PA==
+X-Received: by 2002:a05:6808:150c:b0:3c9:d118:4b4b with SMTP id 5614622812f47-3c9d1184ecbmr9504987b6e.15.1716213114222;
+        Mon, 20 May 2024 06:51:54 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3c9c8260c0esm1349499b6e.58.2024.05.20.06.51.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 May 2024 06:51:53 -0700 (PDT)
+Message-ID: <ebf18ed1-a82f-4c0a-9a63-2c428b5aee40@baylibre.com>
+Date: Mon, 20 May 2024 08:51:52 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20240506004009.770451-1-linux@treblig.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 13:49:15 up 12 days,  1:03,  1 user,  load average: 0.04, 0.01, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 3/4] iio: add support for multiple scan types per
+ channel
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Julien Stephan <jstephan@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
+ <20240507-iio-add-support-for-multiple-scan-types-v1-3-95ac33ee51e9@baylibre.com>
+ <20240519201241.7c60abac@jic23-huawei>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20240519201241.7c60abac@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-* linux@treblig.org (linux@treblig.org) wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 5/19/24 2:12 PM, Jonathan Cameron wrote:
+> On Tue,  7 May 2024 14:02:07 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 > 
-> This looks like it's unused since
-> Commit 8f2a28c5859b ("perf/x86/cstate: Use new probe function")
+>> This adds new fields to the iio_channel structure to support multiple
+>> scan types per channel. This is useful for devices that support multiple
+>> resolution modes or other modes that require different data formats of
+>> the raw data.
+>>
+>> To make use of this, drivers can still use the old scan_type field for
+>> the "default" scan type and use the new scan_type_ext field for any
+>> additional scan types.
 > 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> Comment inline says that you should commit scan_type if scan_type_ext
+> is provided.  That makes sense to me rather that a default no one reads.
+> 
+> The example that follows in patch 4 uses both the scan_type and
+> the scan_type_ext which is even more confusing.
+> 
+>> And they must implement the new callback
+>> get_current_scan_type() to return the current scan type based on the
+>> current state of the device.
+>>
+>> The buffer code is the only code in the IIO core code that is using the
+>> scan_type field. This patch updates the buffer code to use the new
+>> iio_channel_validate_scan_type() function to ensure it is returning the
+>> correct scan type for the current state of the device when reading the
+>> sysfs attributes. The buffer validation code is also update to validate
+>> any additional scan types that are set in the scan_type_ext field. Part
+>> of that code is refactored to a new function to avoid duplication.
+>>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+> 
+>> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+>> index 19de573a944a..66f0b4c68f53 100644
+>> --- a/include/linux/iio/iio.h
+>> +++ b/include/linux/iio/iio.h
+>> @@ -205,6 +205,9 @@ struct iio_scan_type {
+>>   * @scan_index:		Monotonic index to give ordering in scans when read
+>>   *			from a buffer.
+>>   * @scan_type:		struct describing the scan type
+>> + * @ext_scan_type:	Used in rare cases where there is more than one scan
+>> + *			format for a channel. When this is used, omit scan_type.
+> 
+> Here is the disagreement with the patch description.
+> 
+>> + * @num_ext_scan_type:	Number of elements in ext_scan_type.
+>>   * @info_mask_separate: What information is to be exported that is specific to
+>>   *			this channel.
+>>   * @info_mask_separate_available: What availability information is to be
+>> @@ -256,6 +259,8 @@ struct iio_chan_spec {
+>>  	unsigned long		address;
+>>  	int			scan_index;
+>>  	struct iio_scan_type scan_type;
+>> +	const struct iio_scan_type *ext_scan_type;
+>> +	unsigned int		num_ext_scan_type;
+> 
+> Let's make it explicit that you can't do both.
+> 
+> 	union {
+> 		struct iio_scan_type scan_type;
+> 		struct {
+> 			const struct iio_scan_type *ext_scan_type;
+> 			unsigned int num_ext_scan_type;
+> 		};
+> 	};
+> should work for that I think.
+> 
+> However this is I think only used for validation. If that's the case
+> do we care about values not in use?  Can we move the validation to
+> be runtime if the get_current_scan_type() callback is used.
 
-Ping
+I like the suggestion of the union to use one or the other. But I'm not
+sure I understand the comments about validation.
 
-> ---
->  arch/x86/events/intel/cstate.c | 6 ------
->  1 file changed, 6 deletions(-)
+If you are referring to iio_channel_validate_scan_type(), it only checks
+for programmer error of realbits > storagebits, so it seems better to
+keep it where it is to fail as early as possible.
+
 > 
-> diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-> index 326c8cd5aa2d2..dcf3f152a2a64 100644
-> --- a/arch/x86/events/intel/cstate.c
-> +++ b/arch/x86/events/intel/cstate.c
-> @@ -143,12 +143,6 @@ struct cstate_model {
->  #define SLM_PKG_C6_USE_C7_MSR	(1UL << 0)
->  #define KNL_CORE_C6_MSR		(1UL << 1)
->  
-> -struct perf_cstate_msr {
-> -	u64	msr;
-> -	struct	perf_pmu_events_attr *attr;
-> -};
-> -
-> -
->  /* cstate_core PMU */
->  static struct pmu cstate_core_pmu;
->  static bool has_cstate_core;
-> -- 
-> 2.45.0
 > 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+>>  	long			info_mask_separate;
+>>  	long			info_mask_separate_available;
+>>  	long			info_mask_shared_by_type;
+>> @@ -435,6 +440,9 @@ struct iio_trigger; /* forward declaration */
+>>   *			for better event identification.
+>>   * @validate_trigger:	function to validate the trigger when the
+>>   *			current trigger gets changed.
+>> + * @get_current_scan_type: must be implemented by drivers that use ext_scan_type
+>> + *			in the channel spec to return the currently active scan
+>> + *			type based on the current state of the device.
+>>   * @update_scan_mode:	function to configure device and scan buffer when
+>>   *			channels have changed
+>>   * @debugfs_reg_access:	function to read or write register value of device
+>> @@ -519,6 +527,9 @@ struct iio_info {
+>>  
+>>  	int (*validate_trigger)(struct iio_dev *indio_dev,
+>>  				struct iio_trigger *trig);
+>> +	const struct iio_scan_type *(*get_current_scan_type)(
+>> +					const struct iio_dev *indio_dev,
+>> +					const struct iio_chan_spec *chan);
+>>  	int (*update_scan_mode)(struct iio_dev *indio_dev,
+>>  				const unsigned long *scan_mask);
+>>  	int (*debugfs_reg_access)(struct iio_dev *indio_dev,
+>> @@ -804,6 +815,28 @@ static inline bool iio_read_acpi_mount_matrix(struct device *dev,
+>>  }
+>>  #endif
+>>  
+>> +/**
+>> + * iio_get_current_scan_type - Get the current scan type for a channel
+>> + * @indio_dev:	the IIO device to get the scan type for
+>> + * @chan:	the channel to get the scan type for
+>> + *
+>> + * Most devices only have one scan type per channel and can just access it
+>> + * directly without calling this function. Core IIO code and drivers that
+>> + * implement ext_scan_type in the channel spec should use this function to
+>> + * get the current scan type for a channel.
+>> + *
+>> + * Returns: the current scan type for the channel
+>> + */
+>> +static inline const struct iio_scan_type *iio_get_current_scan_type(
+>> +					const struct iio_dev *indio_dev,
+>> +					const struct iio_chan_spec *chan)
+>> +{
+>> +	if (indio_dev->info->get_current_scan_type)
+>> +		return indio_dev->info->get_current_scan_type(indio_dev, chan);
+>> +
+>> +	return &chan->scan_type;
+>> +}
+>> +
+>>  ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals);
+>>  
+>>  int iio_str_to_fixpoint(const char *str, int fract_mult, int *integer,
+>>
+> 
+
