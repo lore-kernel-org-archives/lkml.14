@@ -1,145 +1,113 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F0C1CD18;
-	Mon, 20 May 2024 13:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2EC1CD18;
+	Mon, 20 May 2024 13:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716211069; cv=none; b=Gs2eb9IKv416fCFugFRfJwFCcFWU9NQWCAefeD9m/8bjngTRvUHgJjK2V3AGyLfuBdGgglwZspBdtgoMd+lNXCIW3OPhk+a2X7pr3RB1vEC4eH2fUxcFbmOv5yGMuMXM3h9iMekTryQynJMl9wMRgk1eVEhoa7by2X8C65h5Buk=
+	t=1716211189; cv=none; b=QuPbXys9GI0GJWJ+NmQVl0P4h0PI6H8wvi6bdmBOG6H+o9O3p/pGz2+vE5bYCDzsyxOdD29HmqNi02UAvpKSQJNTOxtd6XgeAwknI60C8WYQLBJkGyKqzzEJdS0UQJzv13KaUfvXTlxGczX8ZJymmIMu/XYkgj4a7WO0N9UnZl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716211069; c=relaxed/simple;
-	bh=2pc9eb/n0fggHWJGm7ZPYFjRKT4X2r90jaagBTnGttA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HOaZa0VM5lbF6miFKV0ZfVT9wiCZXfnXHnqb+nBe8O36PRh3iyudSBWv/M/OzWSMH2/Nw/3CnTfJQ1AHODkMMrx2Ztpx+ttDpejdOXi3skcv4h/LUHs9ii9lUZ2Eiu33T2vIh/HdSZsNsQEkha6YL2AbaLyzbornD0Os3HwJ1EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XrQkqERh; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1716211189; c=relaxed/simple;
+	bh=NuEonSsy9BHcGw03XtsY8/+H2cm/AtrmCekQjk+olEY=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNKU34ZUy1BVnwW3TnzMyA4p8qz5AKiYgllUXW4hKCChgXvCcQWbYWvuCBEU/Gvne7/7WatL5A85icjqljNPBVvg1mrXmwl/S/icCYKTAepvLKwgX16PlG1CjC6f7/+sHZoyHqiPs42NkXgrkLIA81mzmn1nJ68Fgzad73iZvqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D5DwRzne; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XrQkqERh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kBepfuRSnR60+uXpcB5dLLA7csPWcskh8ZUNfZDMcXI=; b=XrQkqERh5PY8JuDZ54IBjmYc/S
-	OzyanipZZToOSnM3CT9RqesnTEe7B0Jyqt1grcLwm8aDN+oJtl4WJbPB7bnKL9VS+SMFDkY+Vxnfv
-	RKQ9FZI+7i1LHL6p064EIw20vAMW/04AgUsPWZkkHiEeFhbvQgVk3eiKbJNRgeqBxWok=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s92tR-00FhLz-AJ; Mon, 20 May 2024 15:17:33 +0200
-Date: Mon, 20 May 2024 15:17:33 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v3 4/5] net: phy: mediatek: Extend 1G TX/RX link
- pulse time
-Message-ID: <5389c04a-40ff-44a1-9592-05c6dc1a9636@lunn.ch>
-References: <20240520113456.21675-1-SkyLake.Huang@mediatek.com>
- <20240520113456.21675-5-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D5DwRzne"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716211188; x=1747747188;
+  h=date:from:to:subject:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to;
+  bh=NuEonSsy9BHcGw03XtsY8/+H2cm/AtrmCekQjk+olEY=;
+  b=D5DwRzne7fetmP2UI6rmdbUsG+9+K1jB5fmJz9DcWqT/lP8biKzVN/QN
+   p8SfYO79z4NcIDK+17eKNmvHJGbt5MuhxbajRMCLUvjBtJgtSL1vAxUyO
+   545dlcZnRVC/EA/NX7+Lf3lU9Q/eLCl/FsdLNPPi8pJgkwPd/9zB06m+Q
+   aPBQGHoBsE58/DhKRBtwII0/h3uYD0XoyziKMR8Zfd184Gn2YVNRSNNAX
+   rLpOLwo6udwhDNgiqdR2cAGVfTRXxRehPXhRK0M2/p1lmK/D4Y0ihTebT
+   sTRuFSXBQ1iwjLDaaJFQir9upTSTpfzAf+bfBqxK2UTh8F5ahEg72VWZo
+   Q==;
+X-CSE-ConnectionGUID: KJtdniVvTfONm0krfltTZA==
+X-CSE-MsgGUID: kJiaBLkhTuGIdhy/OwDfGQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="15285546"
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="15285546"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 06:19:47 -0700
+X-CSE-ConnectionGUID: 6tFvXyVtRRKL8lxX7jfCRQ==
+X-CSE-MsgGUID: H2tDu6cjS8i01DNr1Lex/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="32519214"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 06:19:42 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id B6A0811F855;
+	Mon, 20 May 2024 16:19:40 +0300 (EEST)
+Date: Mon, 20 May 2024 13:19:40 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, git@luigi311.com,
+	linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	pavel@ucw.cz, phone-devel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 21/25] dt-bindings: media: imx258: Add binding for
+ powerdown-gpio
+Message-ID: <ZktN7EcXiqupI9Qd@kekkonen.localdomain>
+References: <20240501152442.1072627-1-git@luigi311.com>
+ <20240501152442.1072627-22-git@luigi311.com>
+ <ZkcV5xWZz2jCszxA@kekkonen.localdomain>
+ <q5nbk3qcxsjsqp4mdyx5nlrn4oie6oynunwodm7r2nwtywc2ey@kxsgcatwt5b2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240520113456.21675-5-SkyLake.Huang@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <q5nbk3qcxsjsqp4mdyx5nlrn4oie6oynunwodm7r2nwtywc2ey@kxsgcatwt5b2>
 
-> +static void extend_an_new_lp_cnt_limit(struct phy_device *phydev)
-> +{
-> +	int mmd_read_ret;
-> +	int ret;
-> +	u32 reg_val;
-> +
-> +	ret = read_poll_timeout(mmd_read_ret = phy_read_mmd, reg_val,
-> +				(mmd_read_ret < 0) || reg_val & MTK_PHY_FINAL_SPEED_1000,
-> +				10000, 1000000, false, phydev,
-> +				MDIO_MMD_VEND1, MTK_PHY_LINK_STATUS_MISC);
-> +	if (mmd_read_ret < 0)
-> +		ret = mmd_read_ret;
-> +	/* If final_speed_1000 is raised, try to extend timeout period
-> +	 * of auto downshift.
-> +	 */
-> + if (!ret) {
+Hi Ondřej,
 
-If you look at other Linux code, the general pattern is to look if a
-function returned an error. If it does, either return immediately, or
-jump to the end of the function where the cleanup is.
+On Mon, May 20, 2024 at 02:55:26PM +0200, Ondřej Jirman wrote:
+> On Fri, May 17, 2024 at 08:31:35AM GMT, Sakari Ailus wrote:
+> > Hi Luis,
+> > 
+> > On Wed, May 01, 2024 at 09:24:38AM -0600, git@luigi311.com wrote:
+> > > From: Ondrej Jirman <megi@xff.cz>
+> > > 
+> > > Add powerdown-gpio binding as it is required for some boards.
+> > 
+> > I thought the conclusion was that this wasn't a property of the sensor? If
+> > it needs to be controlled, then this should take place somewhere else than
+> > in the sensor driver.
+> 
+> It's a property of the sensor modules. It's just optional on
+> some, eg. (pin 8):
+> 
+>   https://assets-global.website-files.com/63b65bd4974577341e1fe194/654290d4d0fb173e87f754ed_IMX_258_FF_drawing.png
+> 
+> Where else should it be so that the module is described properly in the 
+> DT and the powerdown signal can be used as part of powerup/down sequence
+> of the sensor?
 
-Since this is a void function:
+That's an interesting case. The document does suggest the PWDN pin isn't
+connected though.
 
-> +	if (mmd_read_ret < 0)
-> +		return;
+Is this pin used for something? If so, what is it? The sensor doesn't have
+it and generally the module in this respect just contains wiring.
 
-And then you don't need the
+Someone earlier suggested this could have been related to the VCM.
 
-> + if (!ret) {
+-- 
+Regards,
 
-
-> +		tr_modify(phydev, 0x0, 0xf, 0x3c, AN_NEW_LP_CNT_LIMIT_MASK,
-> +			  FIELD_PREP(AN_NEW_LP_CNT_LIMIT_MASK, 0xf));
-> +		mdelay(1500);
-> +
-> +		ret = read_poll_timeout(mmd_read_ret = tr_read, reg_val,
-> +					(mmd_read_ret < 0) ||
-> +					(reg_val & AN_STATE_MASK) !=
-> +					(AN_STATE_TX_DISABLE << AN_STATE_SHIFT),
-> +					10000, 1000000, false, phydev,
-> +					0x0, 0xf, 0x2);
-> +
-> +		if (mmd_read_ret < 0)
-> +			ret = mmd_read_ret;
-> +
-> +		if (!ret) {
-
-This if can also be removed.
-
-> +			mdelay(625);
-> +			tr_modify(phydev, 0x0, 0xf, 0x3c, AN_NEW_LP_CNT_LIMIT_MASK,
-> +				  FIELD_PREP(AN_NEW_LP_CNT_LIMIT_MASK, 0x8));
-> +			mdelay(500);
-> +			tr_modify(phydev, 0x0, 0xf, 0x3c, AN_NEW_LP_CNT_LIMIT_MASK,
-> +				  FIELD_PREP(AN_NEW_LP_CNT_LIMIT_MASK, 0xf));
-> +		}
-> +	}
-
-One question i have is, should this really be a void function? What
-does it mean if read_poll_timeout() returns an error? Why is it safe
-to ignore it? Why not return the error?
-
-> +}
-> +
-> +int mtk_gphy_cl22_read_status(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +
-> +	ret = genphy_read_status(phydev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete) {
-> +		ret = phy_read(phydev, MII_CTRL1000);
-> +		if ((ret & ADVERTISE_1000FULL) || (ret & ADVERTISE_1000HALF))
-> +			extend_an_new_lp_cnt_limit(phydev);
-> +	}
-> +
-> +	return 0;
-
-If extend_an_new_lp_cnt_limit() fails, what does it mean? Do we
-actually want mtk_gphy_cl22_read_status() to indicate something has
-gone wrong? Or does extend_an_new_lp_cnt_limit() failing not matter?
-
-	Andrew
+Sakari Ailus
