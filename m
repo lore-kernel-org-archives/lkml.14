@@ -1,229 +1,194 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD715676F;
-	Mon, 20 May 2024 11:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716206235; cv=fail; b=XIWF7nzvWcguNfmgg0uYxcVJxhK1hhglOcnkU4lYqmPM2JUah68EcE/u0CuJaBVz5ZRVaL+zz033DoVAvvhDqKH8f5syVdt97u20+ZJd8v0sMgNLgvTnAOhq+ZLA/Gv43UN6nTWUiZCLo0pVRlWLdBKexhDOYvWT3IzcE/MWsuc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716206235; c=relaxed/simple;
-	bh=tu+l9oOPO1ViZIzn530t9nkb4u6RJMZaMufBUT+0eg0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pZmPcWqjuyrpncfTK+YO6dEBWJlckDhqX9EpiP3D52OclwnF2NY4emarSmdKUHF3fMpkcvxSscaEn8qsNa77rdu0wZIJS3Xq5uBDS9VVJXCGBWNVxN8JYVU28J2hVffLpDJz6L1QFOqz1pvbg/f+kk/OGaki8xkfotiMWJ3JicQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dKhb6Yji; arc=fail smtp.client-ip=40.107.94.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6A71B960;
+	Mon, 20 May 2024 11:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716206335; cv=none; b=FSmjl9oyaUMdsvKP65KVkzbUY91ykhVGW+qwPgpwJYkaK5TbwCHRXMjQcveJAGwCSzJHkJHHz0uGX+7vAy3+tC8lsBRY2McUHeCTq6ABH/q6X+jAHscion41oac9J1w4L9jQpTzAoGzLAW2FbFlIgnoqSdfeAWTEa6wiiIWXVCA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716206335; c=relaxed/simple;
+	bh=bHNHl9JcLOSKGTPq7jvpEWQfUxyRDiDCngPc1F2Y4h8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K/ImfIGUNGzeLZYPnAfBR+ylt6yKfuruZlOEyDId+omTY+WPA97aIuWcHwRQ7lY/AFFRufVEm/OfB2V2TzgK8tGGgVo79Uv0fwiC9IbC0J0a/R3wcTCLVt/GLEaQYCKCJFm5UemohG7pAV9bAfD7rNzpdp5C8iHWlvmbDXxs0oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=fsUmlYuo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6EKitTSP; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KZ5b86gE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3XhpOVOA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dKhb6Yji"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZyZvJQY67yYmcmw9K8CsCsg/6gsFFIdj+mZcgV/yDHwlUaWnxw7Ft6kv/neDR6wowltrR+FOBeah7as6GJMgtiSI2ko7kSJViQhVBwS7THrjM7IDtOXBdSMJ0smIaSH302FPzRSneFBTCNMh36XEcqyN3s61hettYrMJhxRUXOSa/epmfSvZuhQ2+wEm3NHr6A67+CJCaLZWJD4th2SUBjBGMVgbQ2qu3zA1rp2vpg89c+dOeOtYHhSIMckJzPH0+wl6rcfGn5tQYFYbRA4n8Nyjlw43uqNef+7AujCSsmsf7SK6Ty1JMI/2rvgLrlnlGxCT4F+hb6AcGD9ndLMoNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k3G9hGj4HQSEaeMOnQ/xjz2Mzid1MG0kFCIbFwKAaOo=;
- b=MwuHqHZWF+osd9anX9/02rndKYksSe5OLceTs/OYrvWSaXo2dVpdBQb0kpJr7a/TJ3haVAKHJwy7c6FCdWoP+TFPskg4Ibk4eXAOFT/pDIEL1ydAtI+ba4mZeDbw5gmiOxQHysTKr/nIuwcIkUsOlvANow3Qo4TBQX4+vnQfTWl+zC0tlQ+vtZ+YCAyIkaKNfSqeQd7HEqgZ9o6L7lx+jrAw3rk2ye3nNiYrQrw9BWexJRnlC32Wjg6VjLP3GtHkZLdp3ql8k6tgrTAr7YtDuG5sI3/cEzyUN6lkjCljWUTgrqS5uxzy2MKdkq5qnk4aWCPUBAYq0rrTkA98WX3O6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k3G9hGj4HQSEaeMOnQ/xjz2Mzid1MG0kFCIbFwKAaOo=;
- b=dKhb6Yji5O/LhZsHaWRbGlSBXsVzamKP0iYe3xFJJNw5nMcnbFGNKAcHqK9dp40g9Ph3HeevOeBbHvR4Qep2KFp80uz056eLu02LcDeLgpMl0o4aNGK54zMLQeZ7RuHrPU1zEy1ElLeN5atthI0VD994qtOtmmRwteJRfWyNA0W/F9BPB/M00RUm3cseujAzDAVUUIqTqsJic0S3YyXdriP7a6UjAwnocUbpF0QMAt1T1+zCU8aATGgeLxarZUJ8E12F+c3/U0TL9qWnkPyU9vhbgWFGowTTovo56rYdSGgvS9GFfpWzeLnUSDlnggrOtwzUxxYNNsG+Azvjyo3lsA==
-Received: from BN9PR03CA0145.namprd03.prod.outlook.com (2603:10b6:408:fe::30)
- by PH7PR12MB7379.namprd12.prod.outlook.com (2603:10b6:510:20e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.30; Mon, 20 May
- 2024 11:57:04 +0000
-Received: from BN1PEPF00004682.namprd03.prod.outlook.com
- (2603:10b6:408:fe:cafe::f0) by BN9PR03CA0145.outlook.office365.com
- (2603:10b6:408:fe::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35 via Frontend
- Transport; Mon, 20 May 2024 11:57:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00004682.mail.protection.outlook.com (10.167.243.88) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7611.14 via Frontend Transport; Mon, 20 May 2024 11:57:03 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 20 May
- 2024 04:56:50 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 20 May
- 2024 04:56:49 -0700
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.10)
- with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Mon, 20 May
- 2024 04:56:48 -0700
-From: Shravan Kumar Ramani <shravankr@nvidia.com>
-To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
-	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
- Thompson" <davthompson@nvidia.com>
-CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/4] platform/mellanox: mlxbf-pmc: Add support for clock_measure performance block
-Date: Mon, 20 May 2024 07:56:35 -0400
-Message-ID: <9a2c59a17314d1449a43d13ac0cf51b807de09c8.1716205838.git.shravankr@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <cover.1716205838.git.shravankr@nvidia.com>
-References: <cover.1716205838.git.shravankr@nvidia.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fsUmlYuo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6EKitTSP";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KZ5b86gE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3XhpOVOA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E847E20CBB;
+	Mon, 20 May 2024 11:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716206332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
+	b=fsUmlYuoYYddvJ7cs0YoGabDIp5ofkSffhBkM/sYifMORlwhS2rMb24AuMZSx81AAiYG1c
+	b2ZqyHRBDNBKBrkFr08SfYHMpqRC5VgYBIyqjQKWVfvrjAgj7uHTfjk9NmmNWbXSs2EGKd
+	exU9ARjDeCA63yXc3X5OwDZk+LfPG0I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716206332;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
+	b=6EKitTSPmN7XLWrVvRRWnBAo6dHpgTGe7Bj1R1Z8VainveiJBvxV/BWjGX8BFHecApfzeF
+	lgE1+l78EUQzIVCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=KZ5b86gE;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=3XhpOVOA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716206331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
+	b=KZ5b86gEJ4Ml/imRWLmSSHHasp1i7AXhSLcXjO5y/Y18zv6ZGmPcoX0pZpiKBq/lx7xuXo
+	tXsG2IDB3QanEKNwrVG2QJ7xQj7n25DDRGQ85tR0LshrO7IZfbKZllw9SNmEiPnhGcg6xc
+	p7qFzY+vNm32pV/P0iJGcWjS/sQSrEU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716206331;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UQ0h6zaNbKQHduY01o7fAQC33d55GnLQirB81SYs06U=;
+	b=3XhpOVOAADnPbdL/pAVyLGDYnXa6G6dD60Zjq5x8BRZQgxyjn+cEJU1M+Oc82dKbSjZMfa
+	UIoAgRchQEQeVHBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4AD313A6B;
+	Mon, 20 May 2024 11:58:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mvPaM/s6S2ZaWgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 20 May 2024 11:58:51 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 5A29CA08D8; Mon, 20 May 2024 13:58:51 +0200 (CEST)
+Date: Mon, 20 May 2024 13:58:51 +0200
+From: Jan Kara <jack@suse.cz>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] fs: fix unintentional arithmetic wraparound in offset
+ calculation
+Message-ID: <20240520115851.gcwj3nwicvr2c4j3@quack3>
+References: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004682:EE_|PH7PR12MB7379:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86e314e5-703a-430c-186f-08dc78c3f742
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|36860700004|376005|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CDDw9pvEMT4R4ZLynfQJWaXwzqPrbEZr217ypM3XszWWyY1ACF0Z/b9kw7/9?=
- =?us-ascii?Q?Qxhsq/BrW3vWd8IkkML/GhZi958J1uLiS1x8twX8CVbfuOZWGzwP/ops7b1j?=
- =?us-ascii?Q?nB+tHiNVoZ9aZbv06xTQsAy6Ay21+yZy2FFQt7oZC31cFnzpsVMADk9Lq+t0?=
- =?us-ascii?Q?syk5UwUtRWfjoyAeqO28MycIRCcjGkcWu3Rmee9VLNIWelDOTNr6NgcJJiqK?=
- =?us-ascii?Q?mFE/hdFx+kJDKaC/0VsYvxCaZsuw07FNHw+Ox5wGVv5zFSVawlFWscEFn6oD?=
- =?us-ascii?Q?hLvAgE1mET5ATZgnFifwiIISJ7iHWZ/QsphCFef4yyRCL1cNMqSCWPSE0YVP?=
- =?us-ascii?Q?HZT+BrSNwppu6xetg2nfz18As5serz/frZBd0/VSniGu2g2NDo6gMsJHLyi3?=
- =?us-ascii?Q?8k6IzuAaJOrSIl/w61laM3gVKmsL3685T3+BVgBkmrFVZUkprZaLXiTN7YnO?=
- =?us-ascii?Q?nnhdqOvNbjFyi9g29EeWPDtEryywyVVZ23AADDq56jxcrOCZWsrlItmuk34Q?=
- =?us-ascii?Q?qmiqYwiduYvNHNZ+N9NoRphD03JurreY8w6yokK4KB6od2C/nX/LuHY16FgB?=
- =?us-ascii?Q?e23ocNec/36JeTJwkFQ3GQUPRr9Ck9+2sWXh3VrwS+RlIk41+vIaLk3V0JVw?=
- =?us-ascii?Q?wshC3ssLWwVszRl0Ii5pS8UCZnmpVLcusSzMXyrkdmfDvArrA7lanURwIaav?=
- =?us-ascii?Q?7n5p5Iy5JZlU/bKVcHhwU2O6X3nciAnT9yGp5S2UNhGu+DfNRuJFiuXDU9n0?=
- =?us-ascii?Q?ElU05LCC3hJrrDq88g5PwcnCMqcICxSstq9yaA4Q+WqCO+ZKnvHCsUhwgyhu?=
- =?us-ascii?Q?oTt1bspK/1Jf7ovJq2TzquC/pFDngKXSkpOuFBec/Qz7j+smVQeSC08fjbZy?=
- =?us-ascii?Q?rkmW0aOaQEeJs21T4w9q1z8t7atkoJ83LYyeCXkRPVUDbWo/tni5DITt1XDH?=
- =?us-ascii?Q?LGoKE0e8uX/RsLv45Zqb0VWKNlGQJB8+ILrFK401LH6VxrF6MSwQFuG1CNO+?=
- =?us-ascii?Q?HePGRsRHNMHyyofT5wX1m0fSZD+0w60TjEHeci6iX7UnpERARwSZhtIloyxs?=
- =?us-ascii?Q?RSZY8Ivf+YCyEdBR0RYO37TpmxSQEX54UO+P+0e5P80GXRaBKZ2ZptOCu2pC?=
- =?us-ascii?Q?+rUTv1jSqoS+sO7dEyQUrhBEpNugnmX7xNBJjMgJEkskXLMs9XeNnoByDkq2?=
- =?us-ascii?Q?bfkfzKM7X9u0FF8oLkCwOHqyUxJZcmpahbbEKK9DiigRIIS/KpJtrfD0LF7e?=
- =?us-ascii?Q?GtS2587wuBT4R2SfKHEC0vzui+arMUrHaXqUYjl7gxBuuImgk1DqUcpwbGvb?=
- =?us-ascii?Q?7XHDNrIy1mBtgl55TRmve2Rf3pr/peEsYJDnMTLr/8rXAZx8pJ/+8x31BWqp?=
- =?us-ascii?Q?NLFFCK48X2jR0RUcgr9lygZgfm6J?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 11:57:03.9996
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86e314e5-703a-430c-186f-08dc78c3f742
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004682.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7379
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240517-b4-sio-read_write-v3-1-f180df0a19e6@google.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: E847E20CBB
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
 
-The HW clock_measure counter info is passed to the driver from ACPI.
-Create a new sub-directory for clock_measure events and provide
-read access to the user. Writes are blocked since the fields are RO.
+On Fri 17-05-24 00:29:06, Justin Stitt wrote:
+> When running syzkaller with the newly reintroduced signed integer
+> overflow sanitizer we encounter this report:
+> 
+> UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
+> 9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x93/0xd0
+>  handle_overflow+0x171/0x1b0
+>  generic_file_llseek_size+0x35b/0x380
+> 
+> ... amongst others:
+> UBSAN: signed-integer-overflow in ../fs/read_write.c:1657:12
+> 142606336 - -9223372036854775807 cannot be represented in type 'loff_t' (aka 'long long')
+> ...
+> UBSAN: signed-integer-overflow in ../fs/read_write.c:1666:11
+> 9223372036854775807 - -9223231299366420479 cannot be represented in type 'loff_t' (aka 'long long')
+> 
+> Fix the accidental overflow in these position and offset calculations
+> by checking for negative position values, using check_add_overflow()
+> helpers and clamping values to expected ranges.
+> 
+> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+> Closes: https://github.com/KSPP/linux/issues/358
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-Reviewed-by: David Thompson <davthompson@nvidia.com>
-Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-pmc.c | 46 ++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 4 deletions(-)
+Except for the unfortunate wording in the changelog, the code actually
+looks easier to grasp to me and if it helps the compiler as well, I'm in
+favor of this change (but I definitely don't want to overrule Al if he
+hates it ;)).
 
-diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-index 635ecc3b3845..1212a96fb3eb 100644
---- a/drivers/platform/mellanox/mlxbf-pmc.c
-+++ b/drivers/platform/mellanox/mlxbf-pmc.c
-@@ -865,6 +865,37 @@ static const struct mlxbf_pmc_events mlxbf_pmc_llt_miss_events[] = {
- 	{75, "HISTOGRAM_HISTOGRAM_BIN9"},
- };
- 
-+static const struct mlxbf_pmc_events mlxbf_pmc_clock_events[] = {
-+	{ 0x0, "FMON_CLK_LAST_COUNT_PLL_D1_INST0" },
-+	{ 0x4, "REFERENCE_WINDOW_WIDTH_PLL_D1_INST0" },
-+	{ 0x8, "FMON_CLK_LAST_COUNT_PLL_D1_INST1" },
-+	{ 0xc, "REFERENCE_WINDOW_WIDTH_PLL_D1_INST1" },
-+	{ 0x10, "FMON_CLK_LAST_COUNT_PLL_G1" },
-+	{ 0x14, "REFERENCE_WINDOW_WIDTH_PLL_G1" },
-+	{ 0x18, "FMON_CLK_LAST_COUNT_PLL_W1" },
-+	{ 0x1c, "REFERENCE_WINDOW_WIDTH_PLL_W1" },
-+	{ 0x20, "FMON_CLK_LAST_COUNT_PLL_T1" },
-+	{ 0x24, "REFERENCE_WINDOW_WIDTH_PLL_T1" },
-+	{ 0x28, "FMON_CLK_LAST_COUNT_PLL_A0" },
-+	{ 0x2c, "REFERENCE_WINDOW_WIDTH_PLL_A0" },
-+	{ 0x30, "FMON_CLK_LAST_COUNT_PLL_C0" },
-+	{ 0x34, "REFERENCE_WINDOW_WIDTH_PLL_C0" },
-+	{ 0x38, "FMON_CLK_LAST_COUNT_PLL_N1" },
-+	{ 0x3c, "REFERENCE_WINDOW_WIDTH_PLL_N1" },
-+	{ 0x40, "FMON_CLK_LAST_COUNT_PLL_I1" },
-+	{ 0x44, "REFERENCE_WINDOW_WIDTH_PLL_I1" },
-+	{ 0x48, "FMON_CLK_LAST_COUNT_PLL_R1" },
-+	{ 0x4c, "REFERENCE_WINDOW_WIDTH_PLL_R1" },
-+	{ 0x50, "FMON_CLK_LAST_COUNT_PLL_P1" },
-+	{ 0x54, "REFERENCE_WINDOW_WIDTH_PLL_P1" },
-+	{ 0x58, "FMON_CLK_LAST_COUNT_REF_100_INST0" },
-+	{ 0x5c, "REFERENCE_WINDOW_WIDTH_REF_100_INST0" },
-+	{ 0x60, "FMON_CLK_LAST_COUNT_REF_100_INST1" },
-+	{ 0x64, "REFERENCE_WINDOW_WIDTH_REF_100_INST1" },
-+	{ 0x68, "FMON_CLK_LAST_COUNT_REF_156" },
-+	{ 0x6c, "REFERENCE_WINDOW_WIDTH_REF_156" },
-+};
-+
- static struct mlxbf_pmc_context *pmc;
- 
- /* UUID used to probe ATF service. */
-@@ -1038,6 +1069,9 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size
- 	} else if (strstr(blk, "llt")) {
- 		events = mlxbf_pmc_llt_events;
- 		size = ARRAY_SIZE(mlxbf_pmc_llt_events);
-+	} else if (strstr(blk, "clock_measure")) {
-+		events = mlxbf_pmc_clock_events;
-+		size = ARRAY_SIZE(mlxbf_pmc_clock_events);
- 	} else {
- 		events = NULL;
- 		size = 0;
-@@ -1472,14 +1506,15 @@ static int mlxbf_pmc_read_event(unsigned int blk_num, u32 cnt_num, bool is_l3, u
- /* Method to read a register */
- static int mlxbf_pmc_read_reg(unsigned int blk_num, u32 offset, u64 *result)
- {
--	u32 ecc_out;
-+	u32 reg;
- 
--	if (strstr(pmc->block_name[blk_num], "ecc")) {
-+	if ((strstr(pmc->block_name[blk_num], "ecc")) ||
-+	    (strstr(pmc->block_name[blk_num], "clock_measure"))) {
- 		if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base + offset,
--				    &ecc_out))
-+				    &reg))
- 			return -EFAULT;
- 
--		*result = ecc_out;
-+		*result = reg;
- 		return 0;
- 	}
- 
-@@ -1493,6 +1528,9 @@ static int mlxbf_pmc_read_reg(unsigned int blk_num, u32 offset, u64 *result)
- /* Method to write to a register */
- static int mlxbf_pmc_write_reg(unsigned int blk_num, u32 offset, u64 data)
- {
-+	if (strstr(pmc->block_name[blk_num], "clock_measure"))
-+		return -EINVAL;
-+
- 	if (strstr(pmc->block_name[blk_num], "ecc")) {
- 		return mlxbf_pmc_write(pmc->block[blk_num].mmio_base + offset,
- 				       MLXBF_PMC_WRITE_REG_32, data);
+Regarding the code:
+
+> @@ -1467,8 +1470,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
+>  
+>  	/* Don't allow overlapped copying within the same file. */
+>  	if (inode_in == inode_out &&
+> -	    pos_out + count > pos_in &&
+> -	    pos_out < pos_in + count)
+> +	    out_sum > pos_in &&
+> +	    pos_out < in_sum)
+>  		return -EINVAL;
+
+This is actually subtly wrong becaue 'count' could have been updated
+(shrinked) between the check_add_overflow() and this place. So please keep
+the old checks here.
+
+> @@ -1649,6 +1652,9 @@ int generic_write_check_limits(struct file *file, loff_t pos, loff_t *count)
+>  	loff_t max_size = inode->i_sb->s_maxbytes;
+>  	loff_t limit = rlimit(RLIMIT_FSIZE);
+>  
+> +	if (pos < 0)
+> +		return -EINVAL;
+> +
+>  	if (limit != RLIM_INFINITY) {
+>  		if (pos >= limit) {
+>  			send_sig(SIGXFSZ, current, 0);
+
+Here I'm a bit confused. How is this related to the signed overflow
+handling?
+
+								Honza
 -- 
-2.30.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
