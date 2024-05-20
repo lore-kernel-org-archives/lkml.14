@@ -1,128 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B871A2D;
-	Mon, 20 May 2024 09:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D453F210E7;
+	Mon, 20 May 2024 10:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716199196; cv=none; b=nHUb4QUXLx+ajrJaf/02vaXvBfBe2yxJ5komNvhm6cKilMBiu99514b0Q6gGZCiBxtYX2ul4DEe9okdHqrSYyQXoCJMab7YcqHqZXguoi3GLi/TYSmFvx+8ksHPRnyaPk03MPUBNneeA9RlDyrRrErAlhM5MH8biiteM/okqX+E=
+	t=1716199276; cv=none; b=iIAJhyReL4G8LOdkYg04uD/4v8pSZvg4ejMKY+fLTeu31MMYj9onPqrHffX2v95IpPbzGAtWr4sNB2JdNlCI2W2jEO+tYyLmaLzCzpFXm87Nki13vs4Nk5GyECxy34nc89tdOdSWqActUZJO1or55fdNSZjouVFEzntmPzDgmwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716199196; c=relaxed/simple;
-	bh=jLOdgazjiiTdRmUD81SHTdZCwonsG+vVDmIptdjPZOg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VRJC8EaklG1DOf1F6bbLXKC9eaR7vnowmY1yQ5414fUHQn5WKM9M8W46DMFyCc5UrtPrzDvSSWUA500EQfhXR5nm0CgN+bjXVgoa8axHO01CyHh4+tCVGRVIJm8+LAeWwpUXUrdU0z9HwAki7VUiMN6HUlKonh7wj9FPmXvC+vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UoJDF7bD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wol5Ib6P; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1716199276; c=relaxed/simple;
+	bh=DNxb9Q+EgsM24VqcBmbvjT6zK7dkJ6oWXCSwdBa6psc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IIl5arceG9zie27rC0Rx0IoSPhMxJZxEXMcGXyFHPThSZsSY3+CMSHQzdOowVCq+jHr/9hEl6WuCwyalbLWbffOm+YEcFbH4h5XozcrRlbXqfzNe/JL3UhHh+RB52rLKIJM4pQ2qbzARYpEbLQhvECdGjkBmuD9+sdse970pQ8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NxI8gI70; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UoJDF7bD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wol5Ib6P"
-Date: Mon, 20 May 2024 09:52:08 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716198729;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C1N9+Qdwz8AdQfydLx/OfIe37pEhj7V/SohKPZyrId8=;
-	b=UoJDF7bDv5/FtV5JlQlh2f2ch/gDlxHR79KZ1DQcEtZkN+iKc1srq2bwkOy7c3ZO8XSY6N
-	a/k2O3na02tzoZ0rMYS7sOfuhFY7aijYDdcFXwd9ZPTYgsGVOaCk8mTZ3yagFmpVskO/bz
-	54olCcpu18lcg1SYDZhBjC6r2ykbiFGfmFCxD5Pr1wBm1ILogKfeZ70+/Q1mQbNCAbN7C8
-	sXTXowMdFASzhy3JReLrNS00EEqrfpPaYe0lEL6TLL78uS1L/5KfHserAgxADCdocJ3gyt
-	1jVY6/AAk0Xi0gFpyBEPTVYoKKQbH0Nd3UZZXY8wG/vSlTcNMUtKtVUFSqCU4Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716198729;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C1N9+Qdwz8AdQfydLx/OfIe37pEhj7V/SohKPZyrId8=;
-	b=Wol5Ib6PpYTls7ZdFlo24QEkkqqjcUAaUe7Ua4Jw4WxC1wIXIpiUiNvNCFXrER7FRM/A+8
-	Tu5hsrI3OhkPbVDA==
-From: "tip-bot2 for Masahiro Yamada" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/kconfig: Select ARCH_WANT_FRAME_POINTERS again
- when UNWINDER_FRAME_POINTER=y
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Josh Poimboeuf <jpoimboe@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240204122003.53795-1-masahiroy@kernel.org>
-References: <20240204122003.53795-1-masahiroy@kernel.org>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NxI8gI70"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1716199266;
+	bh=DNxb9Q+EgsM24VqcBmbvjT6zK7dkJ6oWXCSwdBa6psc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=NxI8gI70wT5rB+FkirUCuDK/7TNkudQyluMoi6EII72BnVPs9lBaIDSq3JxwmQYCc
+	 cke9sO4A87eYmMhyfcgPnDjVRLzLcL1PkiatGs00ZUcfQeCRYiddhRMv8hSsutfRhM
+	 qP7jVh6o2g5ydHSGiiqZjj3vUeYJIVuH7LcPcNiA=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Subject: [PATCH 0/5] ChromeOS Embedded Controller LED driver
+Date: Mon, 20 May 2024 12:00:28 +0200
+Message-Id: <20240520-cros_ec-led-v1-0-4068fc5c051a@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171619872839.10875.9967455502104186005.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADwfS2YC/x3MQQqAIBRF0a3IHyek1sC2EhGir/oQGgoRhHtPG
+ p7BvS8VZEahSbyUcXPhFBtUJ8gfLu6QHJpJ93roR2Wlz6ms8PJEkAab0wOMtQrUiitj4+e/zUu
+ tH1U/JexdAAAA
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ chrome-platform@lists.linux.dev, Dustin Howett <dustin@howett.net>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716199265; l=1387;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=DNxb9Q+EgsM24VqcBmbvjT6zK7dkJ6oWXCSwdBa6psc=;
+ b=J0Us/FA3Xq6fffueC/im/YnLftY6uXVXMSfvKnGOl9iiBZNcpWqN4SyC6E1g0nPlzFUAL19nn
+ 09oTf2LcWugDniJFmuUaEBTWBgB9PxW5fDmp/aZ3x/7RL9eE8oYB3/X
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The following commit has been merged into the x86/urgent branch of tip:
+Add a LED driver that supports the LED devices exposed by the
+ChromeOS Embedded Controller.
 
-Commit-ID:     66ee3636eddcc82ab82b539d08b85fb5ac1dff9b
-Gitweb:        https://git.kernel.org/tip/66ee3636eddcc82ab82b539d08b85fb5ac1dff9b
-Author:        Masahiro Yamada <masahiroy@kernel.org>
-AuthorDate:    Sun, 04 Feb 2024 21:20:03 +09:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 20 May 2024 11:37:23 +02:00
+Patch 1-3 add a utility function to the led subsystem.
+Patch 4 introduces the actual driver.
+Patch 5 registers the driver through the cros_ec mfd devices.
 
-x86/kconfig: Select ARCH_WANT_FRAME_POINTERS again when UNWINDER_FRAME_POINTER=y
+Currently the driver introduces some non-standard LED functions.
+(See "cros_ec_led_functions")
 
-It took me some time to understand the purpose of the tricky code at
-the end of arch/x86/Kconfig.debug.
+Tested on a Framework 13 AMD, Firmware 3.05.
 
-Without it, the following would be shown:
-
-  WARNING: unmet direct dependencies detected for FRAME_POINTER
-
-because
-
-  81d387190039 ("x86/kconfig: Consolidate unwinders into multiple choice selection")
-
-removed 'select ARCH_WANT_FRAME_POINTERS'.
-
-The correct and more straightforward approach should have been to move
-it where 'select FRAME_POINTER' is located.
-
-Several architectures properly handle the conditional selection of
-ARCH_WANT_FRAME_POINTERS. For example, 'config UNWINDER_FRAME_POINTER'
-in arch/arm/Kconfig.debug.
-
-Fixes: 81d387190039 ("x86/kconfig: Consolidate unwinders into multiple choice selection")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/r/20240204122003.53795-1-masahiroy@kernel.org
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- arch/x86/Kconfig.debug | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Thomas Weißschuh (5):
+      leds: introduce led_color_name function
+      leds: multicolor: use led_color_name function
+      leds: unexport led_colors array
+      leds: add ChromeOS EC driver
+      mfd: cros_ec: Register LED subdevice
 
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index c5d614d..74777a9 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -248,6 +248,7 @@ config UNWINDER_ORC
- 
- config UNWINDER_FRAME_POINTER
- 	bool "Frame pointer unwinder"
-+	select ARCH_WANT_FRAME_POINTERS
- 	select FRAME_POINTER
- 	help
- 	  This option enables the frame pointer unwinder for unwinding kernel
-@@ -271,7 +272,3 @@ config UNWINDER_GUESS
- 	  overhead.
- 
- endchoice
--
--config FRAME_POINTER
--	depends on !UNWINDER_ORC && !UNWINDER_GUESS
--	bool
+ MAINTAINERS                         |   5 +
+ drivers/leds/Kconfig                |  15 ++
+ drivers/leds/Makefile               |   1 +
+ drivers/leds/led-class-multicolor.c |   2 +-
+ drivers/leds/led-core.c             |  12 +-
+ drivers/leds/leds-cros_ec.c         | 299 ++++++++++++++++++++++++++++++++++++
+ drivers/leds/leds.h                 |   1 -
+ drivers/mfd/cros_ec_dev.c           |   9 ++
+ include/linux/leds.h                |  10 ++
+ 9 files changed, 350 insertions(+), 4 deletions(-)
+---
+base-commit: eb6a9339efeb6f3d2b5c86fdf2382cdc293eca2c
+change-id: 20240519-cros_ec-led-3efa24e3991e
+
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
+
