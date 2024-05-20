@@ -1,38 +1,46 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C07A2D;
-	Mon, 20 May 2024 17:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3946CA2D;
+	Mon, 20 May 2024 17:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226651; cv=none; b=poeB9tytCLRAKRoP8PMnb4L2qRRITVGCINOb992O87db2tW/QWyc8vtFC9l9xpdhrbPl2f0shg7uLMl5BsyytS1wW74/WxVYGZ38PQtSEz9jykC3dL1+12BvW2oS4ifpVqfqDjFpZUwf8WW+gN/+NASWm8iFdNJf477vgOa0JzA=
+	t=1716226913; cv=none; b=rwXKylQDclLi+5dChvPgjfiiXACJDEHn1Gcbd0c0hFQXRr5kxlhlVTNHywJl2cVZRExJthJjTdCD8iSKImWEtCQSYO4PyPfc3hoZhfI22WmwxJvUEIU9cJCW05imUvegk9so3RIrX+pMjIlhq0y0Udnd9A/5gdedf+FRJKPkItk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226651; c=relaxed/simple;
-	bh=3pJWOpeUaIw55Dq1/uPdfsrzR6sFZhwannbYrrdZqUk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P0tGO8hqjvPlPaN1Fgu6VogU+2AMjBxkVV3tZT+Ih7oXHRYOR9neKEAZIWR3chlLNIpXtNROtzojuJYFbm5gqJpKL+Pjb3lgWOe6hsn0fb0YYN4wKjQQT7EoCMClWkE6tgreBQh2JOOcq+XLNG7qWcK84iyJRDmg/cNK8fyhKuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from dslb-084-059-234-031.084.059.pools.vodafone-ip.de ([84.59.234.31] helo=martin-debian-3.kaiser.cx)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1s96wY-000hxD-2p;
-	Mon, 20 May 2024 19:37:02 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Anna Schumaker <Anna.Schumaker@Netapp.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	David Howells <dhowells@redhat.com>
-Cc: NeilBrown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v4] nfs: keep server info for remounts
-Date: Mon, 20 May 2024 19:36:39 +0200
-Message-Id: <20240520173639.174439-1-martin@kaiser.cx>
+	s=arc-20240116; t=1716226913; c=relaxed/simple;
+	bh=USAnQFsFIAz4NTK1Wi/gNcItGq8+FboBq9Sm3p6WVJE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fbaiWSWHx0oE5qRHz8T/tK64v1EfhJBktP0q7hd50I2siz5TwB88AJ86gOhracSRepgnQ7KkP527VrV8pbyOFFLlJrtZSk5BGWm22cOcDW+xQ5nGe30tBf+tG8kfoiB+BHc+m3UvalzV8rxIxMq9Rb2Lq4EC5py6YMxOO5djAlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1DAarIjl; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1DAarIjl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716226909;
+	bh=USAnQFsFIAz4NTK1Wi/gNcItGq8+FboBq9Sm3p6WVJE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=1DAarIjlKy2Zl60w7NfmP/MqF+2Vf/lBvTyq/6hDi9OQDKknjDXzFHqpwgOc+lUjA
+	 pphsH/zdCrKHAHbKSZ23D//Eca5Y3tqf5q/o6FJuyEeG5utOgnD/ano+hUgn4j9gBN
+	 985FZoqwm8oJcQR22Ds6awEbQptqdojjls4+AqLvJz4fXuykXdEvusxo2qAUVJ9APi
+	 I5NMO2wdKnu9z4NXjcdMw1JsDF/8pF1qCdzxKcoKubfulihtrzqImF0E3+kTDKIsfC
+	 1cvwoN9Mr2GFIii68eYdsOK+YJWALUX9iBLyUsWizv3g9WVl9KPrb56bji59IhTDA7
+	 HpNToWom1Nqmw==
+Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 09AC0378107D;
+	Mon, 20 May 2024 17:41:47 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Shuah Khan <shuah@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: kernel@collabora.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: firmware: conform test to TAP
+Date: Mon, 20 May 2024 09:37:57 -0700
+Message-Id: <20240520163759.1427653-1-usama.anjum@collabora.com>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,83 +50,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With newer kernels that use fs_context for nfs mounts, remounts fail with
--EINVAL.
+Conform the layout, informational and status messages to TAP. No
+functional change is intended other than the layout of output messages.
+Without using TAP messages, the passed/failed/skip test names cannot be
+found. This is a prepartory patch, more patches will be sent to comform
+the test completely.
 
-$ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
-$ mount -t nfs -o remount /mnt/test/
-mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
-
-For remounts, the nfs server address and port are populated by
-nfs_init_fs_context and later overwritten with 0x00 bytes by
-nfs23_parse_monolithic. The remount then fails as the server address is
-invalid.
-
-Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
-we're doing a remount.
-
-Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- v4:
- - rebased against linux-next from 20th May 2024
+ .../selftests/firmware/fw_run_tests.sh        | 63 ++++++++++++-------
+ 1 file changed, 40 insertions(+), 23 deletions(-)
 
- v3:
- - rebased against linux-next from 12th April 2024
-
- v2:
- - rebased against linux-next from 26th February 2024
-
-Dear all,
-
-I'm resending this patch again.
-
-The problem that I'm trying to fix is still present in today's linux-next.
-It affects (amongst others) systems where the rootfs is mounted via nfs2/3.
-If the rootfs is mounted read-only first and remounted read-write later, the
-remount will fail and the system won't boot.
-
-Thanks in advance for any reviews and comments.
-
-I guess that we're taking this path for remounts
-
-do_remount
-    fs_context_for_reconfigure
-        alloc_fs_context
-            init_fs_context == nfs_init_fs_context
-               fc->root is set for remounts
-               ctx->nfs_server is populated
-    parse_monolithic_mount_data
-        nfs_fs_context_parse_monolithic
-            nfs23_parse_monolithic
-               ctx->nfs_server is overwritten with data from mount request
-
-An alternative to checking for !is_remount_fc(fc) would be to check
-if (ctx->nfs_server.addrlen == 0)
-
- fs/nfs/fs_context.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index d0a0956f8a13..cac1157be2c2 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1112,9 +1112,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
- 		ctx->acdirmax	= data->acdirmax;
- 		ctx->need_mount	= false;
+diff --git a/tools/testing/selftests/firmware/fw_run_tests.sh b/tools/testing/selftests/firmware/fw_run_tests.sh
+index f6d95a2d51249..5063c75345680 100755
+--- a/tools/testing/selftests/firmware/fw_run_tests.sh
++++ b/tools/testing/selftests/firmware/fw_run_tests.sh
+@@ -6,6 +6,9 @@
  
--		memcpy(sap, &data->addr, sizeof(data->addr));
--		ctx->nfs_server.addrlen = sizeof(data->addr);
--		ctx->nfs_server.port = ntohs(data->addr.sin_port);
-+		if (!is_remount_fc(fc)) {
-+			memcpy(sap, &data->addr, sizeof(data->addr));
-+			ctx->nfs_server.addrlen = sizeof(data->addr);
-+			ctx->nfs_server.port = ntohs(data->addr.sin_port);
-+		}
+ set -e
+ 
++DIR="$(dirname $(readlink -f "$0"))"
++source "${DIR}"/../kselftest/ktap_helpers.sh
 +
- 		if (sap->ss_family != AF_INET ||
- 		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
+ TEST_DIR=$(dirname $0)
+ source $TEST_DIR/fw_lib.sh
+ 
+@@ -26,54 +29,68 @@ run_tests()
+ 	proc_set_force_sysfs_fallback $1
+ 	proc_set_ignore_sysfs_fallback $2
+ 	$TEST_DIR/fw_upload.sh
++
++	ktap_test_pass "Completed"
+ }
+ 
+ run_test_config_0001()
+ {
+-	echo "-----------------------------------------------------"
+-	echo "Running kernel configuration test 1 -- rare"
+-	echo "Emulates:"
+-	echo "CONFIG_FW_LOADER=y"
+-	echo "CONFIG_FW_LOADER_USER_HELPER=n"
+-	echo "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
++	ktap_print_msg "-----------------------------------------------------"
++	ktap_print_msg "Running kernel configuration test 1 -- rare"
++	ktap_print_msg "Emulates:"
++	ktap_print_msg "CONFIG_FW_LOADER=y"
++	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER=n"
++	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
+ 	run_tests 0 1
+ }
+ 
+ run_test_config_0002()
+ {
+-	echo "-----------------------------------------------------"
+-	echo "Running kernel configuration test 2 -- distro"
+-	echo "Emulates:"
+-	echo "CONFIG_FW_LOADER=y"
+-	echo "CONFIG_FW_LOADER_USER_HELPER=y"
+-	echo "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
++	ktap_print_msg "-----------------------------------------------------"
++	ktap_print_msg "Running kernel configuration test 2 -- distro"
++	ktap_print_msg "Emulates:"
++	ktap_print_msg "CONFIG_FW_LOADER=y"
++	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER=y"
++	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n"
+ 	proc_set_ignore_sysfs_fallback 0
+ 	run_tests 0 0
+ }
+ 
+ run_test_config_0003()
+ {
+-	echo "-----------------------------------------------------"
+-	echo "Running kernel configuration test 3 -- android"
+-	echo "Emulates:"
+-	echo "CONFIG_FW_LOADER=y"
+-	echo "CONFIG_FW_LOADER_USER_HELPER=y"
+-	echo "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y"
++	ktap_print_msg "-----------------------------------------------------"
++	ktap_print_msg "Running kernel configuration test 3 -- android"
++	ktap_print_msg "Emulates:"
++	ktap_print_msg "CONFIG_FW_LOADER=y"
++	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER=y"
++	ktap_print_msg "CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y"
+ 	run_tests 1 0
+ }
+ 
++ktap_print_header
++
+ check_mods
+ check_setup
+ 
+-echo "Running namespace test: "
+-$TEST_DIR/fw_namespace $DIR/trigger_request
+-echo "OK"
+-
+ if [ -f $FW_FORCE_SYSFS_FALLBACK ]; then
++	ktap_set_plan "4"
++
+ 	run_test_config_0001
+ 	run_test_config_0002
+ 	run_test_config_0003
+ else
+-	echo "Running basic kernel configuration, working with your config"
++	ktap_set_plan "2"
++
++	ktap_print_msg "Running basic kernel configuration, working with your config"
+ 	run_tests
+ fi
++
++ktap_print_msg "Running namespace test: "
++$TEST_DIR/fw_namespace $DIR/trigger_request
++if [ $? -eq 0 ]; then
++    ktap_test_pass "fw_namespace completed successfully"
++else
++    ktap_test_fail "fw_namespace failed"
++fi
++
++ktap_finished
 -- 
 2.39.2
 
