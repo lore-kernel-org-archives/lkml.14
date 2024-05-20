@@ -1,98 +1,109 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E13C28E7;
-	Mon, 20 May 2024 15:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5864F28E7
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 15:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716217580; cv=none; b=X4aMM85K3AQ8A5Y8sruYF5zXZN8p15eeAjlUp3w44eWc9Bktht/t1V83sKHJdMScoon5QoZYNvB/Ii2UJbc6zNJrLsSvFwgjSUob3WKTf63r+2vOa3kMhOQ9OMTP56Cg4B/ecjm7H53oUu7Ah9EBVNdfW4t2HKRyN0vcmz5efQY=
+	t=1716217671; cv=none; b=Odq6FlTkWfsE7Upxt3o1FMselno8+Wb9igTSivcIwU6UY1rsIQFm+Nzp9TvELMbi1KeOODebb+DuDSea2XpMazohfcQzCIh3OfeqnJKsAmjmxmSySBZ8Rv+THAQjwHUlASSD2FSLS4Qgj53ZwgYKsZp/yUHjy45WJ5YbS34b6IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716217580; c=relaxed/simple;
-	bh=cq2AutFBNcE4IKUuF38V75vCKDlyHWW3DIw4p+lv/Tg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DReMpYsRiANEGWUpQ+U7oqED4BBH1GbztoEJmARD+xYEF7EjuY4Sh1Rpm7MaHym43JFwF918JC0XImS5iEz8ZPaAn/I/cxxvh2lp6z4T5hJgyBzzmqOj+TNl+IQmnOneF6MK+gALWFrvrCs1E6iVE86soePW3qsztnEvyQ7y7P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iLwK1OFU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716217671; c=relaxed/simple;
+	bh=DY0GU6upOgiDDmylYzIWrHNWZ+2ZmWy8gOFdxID9q6Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E9eKqukOxtPOO5HyCxieRzVVurcqUSBC18K+3vfXzPY4XA1vnGzbV+JjaCHe+MaFuyasKKGdW//nYuTcF3MoYevQT3MiApszfMTBwksrZf63MxmbWb/Z/Y8iS7s4+2/NTYR08czxwfoal8ctks08crpEbc9GXk6Ojg44mUkh1Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P1lTF429; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iLwK1OFU"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KC1fAq030201;
-	Mon, 20 May 2024 15:05:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=cRUbjug0mchDdOc/J9+wic0AfN/3tGGWfkEN3WY8+1A=; b=iL
-	wK1OFUAifEAfVKxl0guSZayGvMo03m9qfZR+hZEYXccgrg+1o1Ko1rhal54mnI1t
-	trB7SQg7NsZEKjOq/srZPuEw7hwsZW0nECMGRjK5JctdyqthVq+XVboleg2Xhssf
-	Mlb0XhfscyC2G1utCfXxJ+zHoMUjpwyUFO/X8qUNF+72uMlz3CbHtg2mukAb3cU2
-	i9ZxC+2lZQ6P/dYjaZFoVKgPLXD+IYsL2uDrxcenslkaEFIPzaoDhCVEdoQPhjkA
-	W+AIiaQris3Sv24PSqJd3M9vlZWyoT8d4q7uZ4jvDEVcp5GBpJq1QGdLbFLLD7tD
-	xlXrbGGCq4HHdGxhzgpA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pqc3fup-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 15:05:57 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44KF5ubq000394
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 15:05:56 GMT
-Received: from [10.216.60.210] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 20 May
- 2024 08:05:53 -0700
-Message-ID: <f2b7c45f-d5d4-8a47-26c4-71f139b69971@quicinc.com>
-Date: Mon, 20 May 2024 20:35:49 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1lTF429"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ec41d82b8bso87779505ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 08:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716217669; x=1716822469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IhwVQj77q9WsVa/PNIbqf67vLZaFOrT0DXfZ5Ha2VXE=;
+        b=P1lTF429HedmKVy7wr1i/Ud2V3cZC9fl3aD+T4TbwMxwERbOqjT4DtWJJJM+ZL1fCW
+         i7eXceTRYCzDf1bwP9/oG3Krs89ZsFDOQYueFY/+BVQP7VZ10+hcfSTRkNpeLxrBjH4N
+         H3TwWnnS50hunnpEYgCV7uANDLdXnomJTU68DiNZQ79QO2787SiurNLmYrKxgh9HoDzx
+         wN6096r/pYEn9sTv6dyShnUY6jxum/yahIAdHVCBDEYdAoOMwZvhSmaUA5JM6jqhej8R
+         3n+x1G6bwXqGd8uXmZ6hHAh+TNlCCM9slh5EAzcpcfFOhZvfxG6DaDWwCQc7mKRNPETU
+         g3Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716217669; x=1716822469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IhwVQj77q9WsVa/PNIbqf67vLZaFOrT0DXfZ5Ha2VXE=;
+        b=uZJk0FXFhgc8Sg47GgV1Bqvt0yZzcNV93CksnIE42AT9eJgpWtOTt4LfJ8IARZZKX/
+         UtNiaj0EREihaHe+pnC+K+oC3EJwQiWYoeqDeRJxhb8M8DWtG6ADIrp6n4ilEeAMRXHi
+         CEfcFVDiM7K8SMCjP5LrTwPCn4q/9n2DC499lRCGLVVy9BtHcTA8Vvr8EbKE2k1upbN6
+         LN/pLeFP/HXkddQ7IvJJ/MCOl/8N/Y6ZNzzRibWsdOVxvbsyYi6JQ5PuWlz2ULtujogp
+         7PQdfvNwnjag9hoPAGYN/ONnsB2iSW+yd+eIc8C/oe5o9LtJlftUugJhaRBIYB1tfCII
+         A3MA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Bd9+szmgadKp5iwXAwvKl3gCzyACGT3SfhHgSqNUijmIqoCkSwjnZ2UwaKhkj2XQ2eXLfpvQ7A3qaYXbPXEx2P5AhA80h5FT9EC6
+X-Gm-Message-State: AOJu0YzZZlwzSU9KcGIBB5NXrUYlB7H4Auw+HIuzwXW0r4zyJpZtwck2
+	88Jjaypw1+rFFtv1aKfmd1NU9+WV65UQ4G1NLW6kqgGvLiX+aKWWInNeyXeDo2fYS8Nu0oR+oox
+	b8PwUnw7Wa+9YZDRps509hBQn3YU=
+X-Google-Smtp-Source: AGHT+IFPFW/F5D24m94Tz0YHdPMZG54zKWfl02ijEGW9135nYPbQuliZTHA0+CJ4LJGqGqLCQ22PggF4KPszeIb267g=
+X-Received: by 2002:a17:90a:e389:b0:2af:2be3:89c5 with SMTP id
+ 98e67ed59e1d1-2b6cc76d2bamr26474648a91.29.1716217669551; Mon, 20 May 2024
+ 08:07:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] rpmsg: char: fix rpmsg_eptdev structure documentation
-Content-Language: en-US
-To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20240517165654.427746-1-arnaud.pouliquen@foss.st.com>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20240517165654.427746-1-arnaud.pouliquen@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -9YZW9fVy6pa1O6N5mdAL-6MV9-yZGA5
-X-Proofpoint-GUID: -9YZW9fVy6pa1O6N5mdAL-6MV9-yZGA5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-20_05,2024-05-17_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxlogscore=803 impostorscore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 spamscore=0 suspectscore=0 mlxscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405200120
+References: <20240517082637.69928-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20240517082637.69928-1-yang.lee@linux.alibaba.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 20 May 2024 11:07:37 -0400
+Message-ID: <CADnq5_MTOUOdesLtSY_8X5kHVmGvXxSCY3Lh54RwGutysj=p1g@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amd/display: Update optc35_set_odm_combine doc
+ to match kernel-doc spec
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: alexander.deucher@amd.com, airlied@gmail.com, daniel@ffwll.ch, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 17, 2024 at 4:42=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.com=
+> wrote:
+>
+> This patch updates the function documentation comment for
+> optc35_set_odm_combine to conform to the kernel-doc specification.
+>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
+Thanks for the patch.  Srini already fixed this last week.
 
-On 5/17/2024 10:26 PM, Arnaud Pouliquen wrote:
-> Add missing @ tags for some rpmsg_eptdev structure parameters.
-> 
-> This fixes warning messages on build:
-> drivers/rpmsg/rpmsg_char.c:75: warning: Function parameter or struct member 'remote_flow_restricted' not described in 'rpmsg_eptdev'
-> drivers/rpmsg/rpmsg_char.c:75: warning: Function parameter or struct member 'remote_flow_updated' not described in 'rpmsg_eptdev'
-> 
-> Fixes: 5550201c0fe2 ("rpmsg: char: Add RPMSG GET/SET FLOWCONTROL IOCTL support")
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Alex
 
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-
--Mukesh
-
+> ---
+>  drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c b/dri=
+vers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
+> index 7c9faa507ec2..1f8516e5ce68 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
+> @@ -50,7 +50,9 @@
+>   * @optc: Output Pipe Timing Combine instance reference.
+>   * @opp_id: Output Plane Processor instance ID.
+>   * @opp_cnt: Output Plane Processor count.
+> - * @timing: Timing parameters used to configure DCN blocks.
+> + * @segment_width: Width in pixels of each segment in a horizontal direc=
+tion.
+> + * @last_segment_width: Width in pixels of the last segment if it differ=
+s from
+> + *                     other segments.
+>   *
+>   * Return: void.
+>   */
+> --
+> 2.20.1.7.g153144c
+>
