@@ -1,139 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAF56BFB5
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086A06CDC5;
+	Mon, 20 May 2024 12:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716208284; cv=none; b=BbLLetlHOR5riqJjZ2b2OKCq1go0xNHmGc4iZC5x76bQBh6BGneDcPIgEL4z9z3zSOAjAXOpxTHluI0KdJD6sQhqd78WfXTYCC5mqZaS0Rlqa7s07XcQgKG47DQ0FWqiwJi4Bir1Yji4cvageXZf6LebbYKj5siflJwXi/dMkeE=
+	t=1716208288; cv=none; b=GDsJOzReDlLdWz+tnCKCk8iwmsZdvAaCXRYuSb8Y2iuM/aRYs2Ap5oEuP//Q7ElPwfqtsrRbXxJljv+/hD0sb2qcT9+emC28mP3g+w9/d/QXqGZJkX2kO+608YW+B1pjijLZMZ8Oco+O9fCsqJy1TaJrXOIBJ9Yfvogb9wiBSYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716208284; c=relaxed/simple;
-	bh=ce6oru7LPD9lbhzZfnzBKS2IPT8JY+sTsV2gMVxtYCk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XGbwYWti34lRGg1rdcMZFtuUlMNwZHZ82mEB9dUNf41MpEnC7hBubJ6WXRhf3keT8lpznLAekHlIvPLMwA3l0OvRVI0DefP0LqH9R3/bwGPJZX3NWCjEHjGkdipu4rucEjeaQpIKeSCig0w2Q4l6AIk+TB3+yANEAGSWcDtLcgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HFP1hM52; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716208288; c=relaxed/simple;
+	bh=K+i/q8levs1aLzjEe7nsPGEh1RHzB4gA9b8PvFdYk0s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SBDHul17Ao9NYC0p/3l5rK+Fy1hwMfhpFO3amuPD0i/a0NwWUUnMt04Rs1sa/ZPjE4E1a+FjiWXS5zomz24nr8ZxPOLk999B2ImNY0H0OMakXf9IlIR+1IZv462vg0AlVsqkP//gJOgZuA7cye4fgXrg8vFHhxTVB5CqDR7OzUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OiIMo3j4; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFP1hM52"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716208281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9xxq06coPp2aoGXiJwR3/gZ9zYxOiYsiplvRA2+0uqY=;
-	b=HFP1hM526Bj4ww30PVw945Te/GG7f4bYD0Ec3xBImzXXA7BDRFQSZbHCAxgFhgbGGbQ9Ze
-	KqYspKEfjm1mdJI4Cou3r59EwNXUYDUyHSmVEBhtT5fd7YL+A5UtHQ5BY9UMVfGBT3txIR
-	yl1gBiAr9FpM6htqR2y6jEHJaZ1W5FU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-604-6Z3kB0usO7OYs13PWUSzNQ-1; Mon,
- 20 May 2024 08:31:18 -0400
-X-MC-Unique: 6Z3kB0usO7OYs13PWUSzNQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 848A73C0C2C4;
-	Mon, 20 May 2024 12:31:17 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BA0B40C6EB7;
-	Mon, 20 May 2024 12:31:17 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id E330530C1C33; Mon, 20 May 2024 12:31:16 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id E05EF3FB52;
-	Mon, 20 May 2024 14:31:16 +0200 (CEST)
-Date: Mon, 20 May 2024 14:31:16 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Fan Wu <wufan@linux.microsoft.com>
-cc: Mike Snitzer <snitzer@kernel.org>, corbet@lwn.net, zohar@linux.ibm.com, 
-    jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org, 
-    axboe@kernel.dk, agk@redhat.com, eparis@redhat.com, paul@paul-moore.com, 
-    linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org, 
-    linux-security-module@vger.kernel.org, fsverity@lists.linux.dev, 
-    linux-block@vger.kernel.org, dm-devel@lists.linux.dev, 
-    audit@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v18 12/21] dm: add finalize hook to target_type
-In-Reply-To: <234910c1-40c3-4489-94ab-6e9a5f00d93e@linux.microsoft.com>
-Message-ID: <889a7880-8336-a44a-bea4-a4c81c5e5cce@redhat.com>
-References: <1714775551-22384-1-git-send-email-wufan@linux.microsoft.com> <1714775551-22384-13-git-send-email-wufan@linux.microsoft.com> <aa767961-5e3-2ceb-1a1e-ff66a8eed649@redhat.com> <212b02a8-f5f0-4433-a726-1639dda61790@linux.microsoft.com>
- <bc9aa053-20a6-eaa-cbe4-344f340242b@redhat.com> <234910c1-40c3-4489-94ab-6e9a5f00d93e@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OiIMo3j4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716208287; x=1747744287;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=K+i/q8levs1aLzjEe7nsPGEh1RHzB4gA9b8PvFdYk0s=;
+  b=OiIMo3j4k28xsswzqjT44M9Tc04IP+1+q4CiN1UyGceqE7+vuU4OwlYC
+   5QFp3apU9r4L+dtQwL4eQ5qpR4VTTRNLMNKD+2vLc2P6dUQ0A2LlZvntT
+   o2cvjvG+hEcppfxCMaHjvpbMnCNo3HBdTCTvFMyxz71GZvm2DX8fGWfrV
+   gx7xrm6VeL/xrhmUieHZ/I7AykGpcRXAS3yAvpfuRg4YDhmgV6UHra+GE
+   GcDXTn4Eb/31zsk/q9FUNl+wRa/VjXo0NvbBNZCNNp8ecC7HOni4KF4qU
+   GYB0wzRUD4TERL9yNE+MSQq/kmef2lEE3hOBeL2WlQ7aOFNPxj0v5GapI
+   A==;
+X-CSE-ConnectionGUID: wSRoIUXuTbW/UhhnmXP1HA==
+X-CSE-MsgGUID: fVWtIUjTRxGiVrlUUj/BZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12180387"
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="12180387"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:26 -0700
+X-CSE-ConnectionGUID: ZD2gpGpaSPexQkA8/jRn3w==
+X-CSE-MsgGUID: ei8Lnr3dRXaMhEhAsya2vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="37474354"
+Received: from unknown (HELO localhost) ([10.245.247.114])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v4 06/16] selftests/resctrl: Cleanup bm_pid and ppid usage & limit scope
+Date: Mon, 20 May 2024 15:30:10 +0300
+Message-Id: <20240520123020.18938-7-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
+References: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+'bm_pid' and 'ppid' are global variables. As they are used by different
+processes and in signal handler, they cannot be entirely converted into
+local variables.
 
+The scope of those variables can still be reduced into resctrl_val.c
+only. As PARENT_EXIT() macro is using 'ppid', make it a function in
+resctrl_val.c and pass ppid to it as an argument because it is easier
+to understand than using the global variable directly.
 
-On Fri, 17 May 2024, Fan Wu wrote:
+Pass 'bm_pid' into measure_val() instead of relying on the global
+variable which helps to make the call signatures of measure_val() and
+measure_llc_resctrl() more similar to each other.
 
-> > So, it seems that the preresume callback provides the guarantee that you
-> > looking for.
-> > 
-> >> -Fan
-> > 
-> > Mikulas
-> 
-> Thanks for the info. I have tested and verified that the preresume() hook can
-> also work for our case.
-> 
-> From the source code
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-ioctl.c#n1149,
-> the whole resume process appears to be:
-> 
-> 1. Check if there is a new map for the device. If so, attempt to activate the
-> new map using dm_swap_table() (where the finalize() callback occurs).
-> 
-> 2. Check if the device is suspended. If so, use dm_resume() (where the
-> preresume() callback occurs) to resume the device.
-> 
-> 3. If a new map is activated, use dm_table_destroy() to destroy the old map.
-> 
-> For our case:
-> 
-> - Using the finalize() callback, the metadata of the dm-verity target inside
-> the table is attached to the mapped device every time a new table is
-> activated.
-> - Using the preresume() callback, the same metadata is attached every time the
-> device resumes from suspension.
-> 
-> If I understand the code correctly, resuming from suspension is a necessary
-> step for loading a new mapping table. Thus, the preresume() callback covers
-> all conditions where the finalize() callback would be triggered.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ tools/testing/selftests/resctrl/resctrl.h     |  9 --------
+ tools/testing/selftests/resctrl/resctrl_val.c | 23 ++++++++++++-------
+ 2 files changed, 15 insertions(+), 17 deletions(-)
 
-Yes.
-
-> However, the preresume() callback can also be triggered when the device 
-> resumes from suspension without loading a new table, in which case there 
-> is no new metadata in the table to attach to the mapped device.
-
-Yes.
-
-> In the scenario where the finalize() callback succeeds but the preresume()
-> callback fails, it seems the device will remain in a suspended state, the
-> newly activated table will be kept, and the old table will be destroyed, so it
-> seems there is no inconsistency using finalize() even preresume() potentially
-> fails.
-
-What does your security module do when the verification of the dm-verity 
-hash fails? Does it halt the whole system? Does it destroy just the 
-failing dm device? Or does it attempt to recover somehow from this 
-situation?
-
-> I believe both the finalize() callback proposed by Mike and the preresume()
-> callback suggested by Mikulas can work for our case. I am fine with either
-> approach, but I would like to know which one is preferred by the maintainers
-> and would appreciate an ACK for the chosen approach.
-> 
-> -Fan
-
-I would prefer preresume - we shouldn't add new callbacks unless it's 
-necessary.
-
-Mikulas
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index e6f221236c79..e4b6dc672ecc 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -43,13 +43,6 @@
+ 
+ #define DEFAULT_SPAN		(250 * MB)
+ 
+-#define PARENT_EXIT()				\
+-	do {					\
+-		kill(ppid, SIGKILL);		\
+-		umount_resctrlfs();		\
+-		exit(EXIT_FAILURE);		\
+-	} while (0)
+-
+ /*
+  * user_params:		User supplied parameters
+  * @cpu:		CPU number to which the benchmark will be bound to
+@@ -127,8 +120,6 @@ struct perf_event_read {
+  */
+ extern volatile int *value_sink;
+ 
+-extern pid_t bm_pid, ppid;
+-
+ extern char llc_occup_path[1024];
+ 
+ int get_vendor(void);
+diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
+index 18bfdff78089..198b5133432a 100644
+--- a/tools/testing/selftests/resctrl/resctrl_val.c
++++ b/tools/testing/selftests/resctrl/resctrl_val.c
+@@ -505,7 +505,7 @@ static int get_mem_bw_resctrl(FILE *fp, unsigned long *mbm_total)
+ 	return 0;
+ }
+ 
+-pid_t bm_pid, ppid;
++static pid_t bm_pid, ppid;
+ 
+ void ctrlc_handler(int signum, siginfo_t *info, void *ptr)
+ {
+@@ -563,6 +563,13 @@ void signal_handler_unregister(void)
+ 	}
+ }
+ 
++static void parent_exit(pid_t ppid)
++{
++	kill(ppid, SIGKILL);
++	umount_resctrlfs();
++	exit(EXIT_FAILURE);
++}
++
+ /*
+  * print_results_bw:	the memory bandwidth results are stored in a file
+  * @filename:		file that stores the results
+@@ -631,7 +638,7 @@ static void initialize_llc_occu_resctrl(const char *ctrlgrp, const char *mongrp,
+ }
+ 
+ static int measure_vals(const struct user_params *uparams,
+-			struct resctrl_val_param *param)
++			struct resctrl_val_param *param, pid_t bm_pid)
+ {
+ 	unsigned long bw_resc, bw_resc_start, bw_resc_end;
+ 	FILE *mem_bw_fp, *mem_bw_fp2;
+@@ -710,7 +717,7 @@ static void run_benchmark(int signum, siginfo_t *info, void *ucontext)
+ 	fp = freopen("/dev/null", "w", stdout);
+ 	if (!fp) {
+ 		ksft_perror("Unable to direct benchmark status to /dev/null");
+-		PARENT_EXIT();
++		parent_exit(ppid);
+ 	}
+ 
+ 	if (strcmp(benchmark_cmd[0], "fill_buf") == 0) {
+@@ -724,7 +731,7 @@ static void run_benchmark(int signum, siginfo_t *info, void *ucontext)
+ 			once = false;
+ 		} else {
+ 			ksft_print_msg("Invalid once parameter\n");
+-			PARENT_EXIT();
++			parent_exit(ppid);
+ 		}
+ 
+ 		if (run_fill_buf(span, memflush, operation, once))
+@@ -738,7 +745,7 @@ static void run_benchmark(int signum, siginfo_t *info, void *ucontext)
+ 
+ 	fclose(stdout);
+ 	ksft_print_msg("Unable to run specified benchmark\n");
+-	PARENT_EXIT();
++	parent_exit(ppid);
+ }
+ 
+ /*
+@@ -817,7 +824,7 @@ int resctrl_val(const struct resctrl_test *test,
+ 		/* Register for "SIGUSR1" signal from parent */
+ 		if (sigaction(SIGUSR1, &sigact, NULL)) {
+ 			ksft_perror("Can't register child for signal");
+-			PARENT_EXIT();
++			parent_exit(ppid);
+ 		}
+ 
+ 		/* Tell parent that child is ready */
+@@ -835,7 +842,7 @@ int resctrl_val(const struct resctrl_test *test,
+ 		sigsuspend(&sigact.sa_mask);
+ 
+ 		ksft_perror("Child is done");
+-		PARENT_EXIT();
++		parent_exit(ppid);
+ 	}
+ 
+ 	ksft_print_msg("Benchmark PID: %d\n", bm_pid);
+@@ -905,7 +912,7 @@ int resctrl_val(const struct resctrl_test *test,
+ 
+ 		if (!strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR)) ||
+ 		    !strncmp(resctrl_val, MBA_STR, sizeof(MBA_STR))) {
+-			ret = measure_vals(uparams, param);
++			ret = measure_vals(uparams, param, bm_pid);
+ 			if (ret)
+ 				break;
+ 		} else if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR))) {
+-- 
+2.39.2
 
