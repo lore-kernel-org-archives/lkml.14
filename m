@@ -1,232 +1,413 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5352137F;
-	Mon, 20 May 2024 09:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ACEFC1D;
+	Mon, 20 May 2024 09:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716196798; cv=none; b=SMSggfRLh6OHHQZlYB8rm3HAzZJZNdoLlWNwkOBpSH25XE5lc7INVQXSFN0O2USFTEWus+sszrnW4RfdckKtvyqm8eMgqdAn14GvfAc14gRv59DRThfIEQTz7YbmZHSfkDpx40cM5q2g5K/Gel23NiuM9PA3etUj8QPL9hKem1g=
+	t=1716196977; cv=none; b=e671IJ5FFVfkDGvG51xyC++XqYKWforwuc120ixnC+kNw7NP3eEwCTWpbK5ADUjPCAREDPl0guUtnLVx6VGqLwNuuAapE0tarbwuQWdyL3RXWrTl6kx7WqdtQJgx+qMiji5mg4Wha0qdiKgJL9eDcgruwU3tgVl7q2mFpNAuG8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716196798; c=relaxed/simple;
-	bh=v1mCRc4Cyw1bo9jvOSa3ltHdkaf7YQ1Ul8qqdJDs2Vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mCvZQzNolDG9NxpcTk0eLML4rQNhr4j9uGSZNWjqzL9hEn2s5igV0jMuFd0pIRBvXK1abZCouPCa7Y7Yl/nBsgz+DUlCeIAUeRhIZoFJbXh8HutxE6mfMxTw1B/a/3IvTIKTKUHLEr/DS7B2OemaFUWpN7fVCTAeMEVZc4T0Fk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VjX8L0FhNz4f3jqB;
-	Mon, 20 May 2024 17:19:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B927D1A0A82;
-	Mon, 20 May 2024 17:19:51 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g6zFUtmP6KzNA--.3807S3;
-	Mon, 20 May 2024 17:19:51 +0800 (CST)
-Message-ID: <5e3716d1-379a-a052-2ecf-8df497efafef@huaweicloud.com>
-Date: Mon, 20 May 2024 17:19:47 +0800
+	s=arc-20240116; t=1716196977; c=relaxed/simple;
+	bh=3pMKgd4LmFd4C4gJjWdjXdVrkXrPsHj6cGmB/FY1nl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AEtD5IUt9jvQwgR8EMFaRZrxVNeVjqJtz3gEr258Kxu9DMlvbLr1vxKer0IorDPFywdGuHOeJPmnQ8U9GVJ5PdlN0txhwUcwur+/FUuXEQ8zMzIvzZkXmuw6w6AWmGae7xu8tqkSAjctkzzZ1v42ijBhxn4mrfGZgtsnWNSJDMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJONfR+W; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJONfR+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F08C2BD10;
+	Mon, 20 May 2024 09:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716196977;
+	bh=3pMKgd4LmFd4C4gJjWdjXdVrkXrPsHj6cGmB/FY1nl4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=MJONfR+WtLjhJO70UsIZWSeTbhKyMnQTb8HwATGqEJdrEW2NRwlL84vUl4pTb3PjW
+	 QANfnibBlnfqu4TxcwrPHdLGhr9Sn4Qult5J5zfvEzbXtwJqxbcl2gCC6MjZfdNIJS
+	 2WuCIpnqG7oGP8sCDiPW57Grg392rG0gzZWCrR3Eu/0VxqhHWHa7Isj7VyNqyhYztu
+	 E1P/s+eUTd1LpcgXmUTC6hYhUTAcnAw9VjAzkf0nFR4+zyPnImxOZNz5EsxLBRvblx
+	 54T3YKlHowgB/UUXYbjGYXlLwN4P8tBK+P+oxYAaH2eU3M7hb/bmsobGcChTSDcpLp
+	 aVfPiHYv1YYnw==
+Date: Mon, 20 May 2024 11:22:53 +0200
+From: Wolfram Sang <wsa@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: [PULL REQUEST] i2c-for-6.10-rc1
+Message-ID: <ZksWbctxiJmcNmg9@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v2 03/12] cachefiles: fix slab-use-after-free in
- cachefiles_ondemand_get_fd()
-Content-Language: en-US
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev,
- dhowells@redhat.com, jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com, zhujia.zj@bytedance.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
- yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
- libaokun@huaweicloud.com
-References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
- <20240515084601.3240503-4-libaokun@huaweicloud.com>
- <35561c99-c978-4cf6-82e9-d1308c82a7ff@linux.alibaba.com>
- <d8154eed-98d0-9cb7-4a2c-6b68ed75b7a2@huaweicloud.com>
- <d0e6d1f6-002f-4255-a481-6bd17f3da7fc@linux.alibaba.com>
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <d0e6d1f6-002f-4255-a481-6bd17f3da7fc@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g6zFUtmP6KzNA--.3807S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxtF4rXrW5Kw48KF4kKw4fAFb_yoW3Ar43pF
-	Z3tFyxtry5GrykJr1Utr1UJryUtr1UJ3WDXr18JF18Ar4DAr1Yqr1UXr1qgryUGr48Ar4U
-	Jr1UJry7Zr1UJr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9I14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
-	Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJb
-	IYCTnIWIevJa73UjIFyTuYvjfUouWlDUUUU
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Ci9aXpwAIRAxNlWI"
+Content-Disposition: inline
 
-On 2024/5/20 17:10, Jingbo Xu wrote:
->
-> On 5/20/24 4:38 PM, Baokun Li wrote:
->> Hi Jingbo,
->>
->> Thanks for your review!
->>
->> On 2024/5/20 15:24, Jingbo Xu wrote:
->>> On 5/15/24 4:45 PM, libaokun@huaweicloud.com wrote:
->>>> From: Baokun Li <libaokun1@huawei.com>
->>>>
->>>> We got the following issue in a fuzz test of randomly issuing the
->>>> restore
->>>> command:
->>>>
->>>> ==================================================================
->>>> BUG: KASAN: slab-use-after-free in
->>>> cachefiles_ondemand_daemon_read+0x609/0xab0
->>>> Write of size 4 at addr ffff888109164a80 by task ondemand-04-dae/4962
->>>>
->>>> CPU: 11 PID: 4962 Comm: ondemand-04-dae Not tainted 6.8.0-rc7-dirty #542
->>>> Call Trace:
->>>>    kasan_report+0x94/0xc0
->>>>    cachefiles_ondemand_daemon_read+0x609/0xab0
->>>>    vfs_read+0x169/0xb50
->>>>    ksys_read+0xf5/0x1e0
->>>>
->>>> Allocated by task 626:
->>>>    __kmalloc+0x1df/0x4b0
->>>>    cachefiles_ondemand_send_req+0x24d/0x690
->>>>    cachefiles_create_tmpfile+0x249/0xb30
->>>>    cachefiles_create_file+0x6f/0x140
->>>>    cachefiles_look_up_object+0x29c/0xa60
->>>>    cachefiles_lookup_cookie+0x37d/0xca0
->>>>    fscache_cookie_state_machine+0x43c/0x1230
->>>>    [...]
->>>>
->>>> Freed by task 626:
->>>>    kfree+0xf1/0x2c0
->>>>    cachefiles_ondemand_send_req+0x568/0x690
->>>>    cachefiles_create_tmpfile+0x249/0xb30
->>>>    cachefiles_create_file+0x6f/0x140
->>>>    cachefiles_look_up_object+0x29c/0xa60
->>>>    cachefiles_lookup_cookie+0x37d/0xca0
->>>>    fscache_cookie_state_machine+0x43c/0x1230
->>>>    [...]
->>>> ==================================================================
->>>>
->>>> Following is the process that triggers the issue:
->>>>
->>>>        mount  |   daemon_thread1    |    daemon_thread2
->>>> ------------------------------------------------------------
->>>>    cachefiles_ondemand_init_object
->>>>     cachefiles_ondemand_send_req
->>>>      REQ_A = kzalloc(sizeof(*req) + data_len)
->>>>      wait_for_completion(&REQ_A->done)
->>>>
->>>>               cachefiles_daemon_read
->>>>                cachefiles_ondemand_daemon_read
->>>>                 REQ_A = cachefiles_ondemand_select_req
->>>>                 cachefiles_ondemand_get_fd
->>>>                 copy_to_user(_buffer, msg, n)
->>>>               process_open_req(REQ_A)
->>>>                                     ------ restore ------
->>>>                                     cachefiles_ondemand_restore
->>>>                                     xas_for_each(&xas, req, ULONG_MAX)
->>>>                                      xas_set_mark(&xas,
->>>> CACHEFILES_REQ_NEW);
->>>>
->>>>                                     cachefiles_daemon_read
->>>>                                      cachefiles_ondemand_daemon_read
->>>>                                       REQ_A =
->>>> cachefiles_ondemand_select_req
->>>>
->>>>                write(devfd, ("copen %u,%llu", msg->msg_id, size));
->>>>                cachefiles_ondemand_copen
->>>>                 xa_erase(&cache->reqs, id)
->>>>                 complete(&REQ_A->done)
->>>>      kfree(REQ_A)
->>>>                                       cachefiles_ondemand_get_fd(REQ_A)
->>>>                                        fd = get_unused_fd_flags
->>>>                                        file = anon_inode_getfile
->>>>                                        fd_install(fd, file)
->>>>                                        load = (void *)REQ_A->msg.data;
->>>>                                        load->fd = fd;
->>>>                                        // load UAF !!!
->>>>
->>>> This issue is caused by issuing a restore command when the daemon is
->>>> still
->>>> alive, which results in a request being processed multiple times thus
->>>> triggering a UAF. So to avoid this problem, add an additional reference
->>>> count to cachefiles_req, which is held while waiting and reading, and
->>>> then
->>>> released when the waiting and reading is over.
->>>>
->>>>
->>>> Note that since there is only one reference count for waiting, we
->>>> need to
->>>> avoid the same request being completed multiple times, so we can only
->>>> complete the request if it is successfully removed from the xarray.
->>> Sorry the above description makes me confused.  As the same request may
->>> be got by different daemon threads multiple times, the introduced
->>> refcount mechanism can't protect it from being completed multiple times
->>> (which is expected).  The refcount only protects it from being freed
->>> multiple times.
->> The idea here is that because the wait only holds one reference count,
->> complete(&req->done) can only be called when the req has been
->> successfully removed from the xarry, otherwise the following UAF may
->> occur:
->
-> "complete(&req->done) can only be called when the req has been
-> successfully removed from the xarry ..."
->
-> How this is done? since the following xarray_erase() following the first
-> xarray_erase() will fail as the xarray slot referred by the same id has
-> already been erased?
->
->
->>>> @@ -455,7 +459,7 @@ static int cachefiles_ondemand_send_req(struct
->>>> cachefiles_object *object,
->>>>        wake_up_all(&cache->daemon_pollwq);
->>>>        wait_for_completion(&req->done);
->>>>        ret = req->error;
->>>> -    kfree(req);
->>>> +    cachefiles_req_put(req);
->>>>        return ret;
->>>>    out:
->>>>        /* Reset the object to close state in error handling path.
->>> Don't we need to also convert "kfree(req)" to cachefiles_req_put(req)
->>> for the error path of cachefiles_ondemand_send_req()?
->>>
->>> ```
->>> out:
->>>      /* Reset the object to close state in error handling path.
->>>       * If error occurs after creating the anonymous fd,
->>>       * cachefiles_ondemand_fd_release() will set object to close.
->>>       */
->>>      if (opcode == CACHEFILES_OP_OPEN)
->>>          cachefiles_ondemand_set_object_close(object);
->>>      kfree(req);
->>>      return ret;
->>> ```
->> When "goto out;" is called in cachefiles_ondemand_send_req(),
->> it means that the req is unallocated/failed to be allocated/failed to
->> be inserted into the xarry, and therefore the req can only be accessed
->> by the current function, so there is no need to consider concurrency
->> and reference counting.
-> Okay I understand. But this is indeed quite confusing. I see no cost of
-> also converting to cachefiles_req_put(req).
->
->
-Yes, kfree(req) converts to cachefiles_req_put(req) at no cost,
-but may trigger a NULL pointer dereference in cachefiles_req_put(req)
-if the req has not been initialised.
 
--- 
-With Best Regards,
-Baokun Li
+--Ci9aXpwAIRAxNlWI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+The following changes since commit dd5a440a31fae6e459c0d6271dddd62825505361:
+
+  Linux 6.9-rc7 (2024-05-05 14:06:01 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-=
+6.10-rc1
+
+for you to fetch changes up to 068a95ef3945033b5355e50fecea18737680d43d:
+
+  power: supply: sbs-manager: Remove class argument from i2c_mux_add_adapte=
+r() (2024-05-14 09:21:43 +0200)
+
+----------------------------------------------------------------
+I2C core removes an argument from the i2c_mux_add_adapter() call to
+further deprecate class based I2C device instantiation. All users are
+converted, too. Other that that, Andi collected a number if I2C host
+driver patches. Those merges have their own description.
+
+----------------------------------------------------------------
+Abhinav Jain (1):
+      i2c: mpc: Removal of of_node_put with __free for auto cleanup
+
+Alexander Stein (1):
+      i2c: lpi2c: Avoid calling clk_get_rate during transfer
+
+Andy Shevchenko (1):
+      i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TABLE()
+
+Animesh Agarwal (1):
+      dt-bindings: i2c: nxp,pnx-i2c: Convert to dtschema
+
+Arnd Bergmann (1):
+      i2c: ocores: convert to ioport_map() for IORESOURCE_IO
+
+Bryan O'Donoghue (1):
+      dt-bindings: i2c: qcom-cci: Document sc8280xp compatible
+
+Christophe JAILLET (1):
+      i2c: synquacer: Fix an error handling path in synquacer_i2c_probe()
+
+Hamish Martin (1):
+      i2c: acpi: Unbind mux adapters before delete
+
+Hans Hu (6):
+      i2c: wmt: create wmt_i2c_init for general init
+      i2c: wmt: split out common files
+      i2c: wmt: rename something
+      i2c: wmt: fix a bug when thread blocked
+      i2c: wmt: add platform type VIAI2C_PLAT_WMT
+      i2c: add zhaoxin i2c controller driver
+
+Heiner Kallweit (6):
+      i2c: i801: Call i2c_register_spd for muxed child segments
+      i2c: i801: Fix missing Kconfig dependency
+      i2c: i801: Remove usage of I2C_CLASS_SPD
+      i2c: mux: gpio: remove support for class-based device instantiation
+      i2c: i801: Annotate apanel_addr as __ro_after_init
+      i2c: mux: Remove class argument from i2c_mux_add_adapter()
+
+Ji Sheng Teoh (1):
+      i2c: cadence: Add RISCV architecture support
+
+Krzysztof Kozlowski (1):
+      i2c: viperboard: drop driver owner assignment
+
+Lad Prabhakar (4):
+      dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+      i2c: riic: Introduce helper functions for I2C read/write operations
+      i2c: riic: Pass register offsets and chip details as OF data
+      i2c: riic: Add support for R9A09G057 SoC
+
+Lukas Bulwahn (1):
+      MAINTAINERS: adjust file entry in ARM/LPC32XX SOC SUPPORT
+
+Niklas Schnelle (1):
+      i2c: add HAS_IOPORT dependencies
+
+Piyush Malgujar (2):
+      i2c: octeon: Add platform prefix to macros
+      i2c: thunderx: Adding ioclk support
+
+Sai Pavan Boddu (1):
+      i2c: cadence: Avoid fifo clear after start
+
+Shanth Murthy (1):
+      i2c: designware: Add ACPI ID for Granite Rapids-D I2C controller
+
+Suneel Garapati (3):
+      i2c: thunderx: Clock divisor logic changes
+      i2c: thunderx: Support for High speed mode
+      i2c: octeon: Handle watchdog timeout
+
+Wolfram Sang (40):
+      i2c: at91-master: remove printout on handled timeouts
+      i2c: bcm-iproc: remove printout on handled timeouts
+      i2c: bcm2835: remove printout on handled timeouts
+      i2c: cadence: remove printout on handled timeouts
+      i2c: davinci: remove printout on handled timeouts
+      i2c: img-scb: remove printout on handled timeouts
+      i2c: ismt: remove printout on handled timeouts
+      i2c: nomadik: remove printout on handled timeouts
+      i2c: omap: remove printout on handled timeouts
+      i2c: qcom-geni: remove printout on handled timeouts
+      i2c: qup: remove printout on handled timeouts
+      i2c: rk3x: remove printout on handled timeouts
+      i2c: sh_mobile: remove printout on handled timeouts
+      i2c: st: remove printout on handled timeouts
+      i2c: tegra: remove printout on handled timeouts
+      i2c: uniphier-f: remove printout on handled timeouts
+      i2c: uniphier: remove printout on handled timeouts
+      i2c: i801: remove printout on handled timeouts
+      i2c: ali1535: remove printout on handled timeouts
+      i2c: ali1563: remove printout on handled timeouts
+      i2c: ali15x3: remove printout on handled timeouts
+      i2c: amd-mp2-plat: use 'time_left' variable with wait_for_completion_=
+timeout()
+      i2c: digicolor: use 'time_left' variable with wait_for_completion_tim=
+eout()
+      i2c: exynos5: use 'time_left' variable with wait_for_completion_timeo=
+ut()
+      i2c: hix5hd2: use 'time_left' variable with wait_for_completion_timeo=
+ut()
+      i2c: imx-lpi2c: use 'time_left' variable with wait_for_completion_tim=
+eout()
+      i2c: omap: use 'time_left' variable with wait_for_completion_timeout()
+      i2c: st: use 'time_left' variable with wait_for_completion_timeout()
+      i2c: stm32f4: use 'time_left' variable with wait_for_completion_timeo=
+ut()
+      i2c: stm32f7: use 'time_left' variable with wait_for_completion_timeo=
+ut()
+      i2c: synquacer: use 'time_left' variable with wait_for_completion_tim=
+eout()
+      i2c: jz4780: use 'time_left' variable with wait_for_completion_timeou=
+t()
+      i2c: qcom-geni: use 'time_left' variable with wait_for_completion_tim=
+eout()
+      i2c: rk3x: use 'time_left' variable with wait_event_timeout()
+      i2c: s3c2410: use 'time_left' variable with wait_event_timeout()
+      i2c: pxa: use 'time_left' variable with wait_event_timeout()
+      Merge tag 'i2c-host-fixes-6.8-rc8' of git://git.kernel.org/pub/scm/li=
+nux/kernel/git/andi.shyti/linux into i2c/for-mergewindow
+      Merge tag 'i2c-host-6.10' of git://git.kernel.org/pub/scm/linux/kerne=
+l/git/andi.shyti/linux into i2c/for-mergewindow
+      Merge branch 'i2c/for-current' into i2c/for-mergewindow
+      power: supply: sbs-manager: Remove class argument from i2c_mux_add_ad=
+apter()
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andi Shyti (5):
+      (Rev.) i2c: acpi: Unbind mux adapters before delete
+      (Rev.) i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TAB=
+LE()
+      (Rev.) i2c: wmt: create wmt_i2c_init for general init
+      (Rev.) i2c: lpi2c: Avoid calling clk_get_rate during transfer
+      (Rev.) MAINTAINERS: adjust file entry in ARM/LPC32XX SOC SUPPORT
+
+Bjorn Andersson (3):
+      (Rev.) i2c: qcom-geni: use 'time_left' variable with wait_for_complet=
+ion_timeout()
+      (Rev.) i2c: qup: remove printout on handled timeouts
+      (Rev.) i2c: qcom-geni: remove printout on handled timeouts
+
+Bryan O'Donoghue (1):
+      (Rev.) i2c: qcom-geni: use 'time_left' variable with wait_for_complet=
+ion_timeout()
+
+Chris Packham (1):
+      (Rev.) i2c: mpc: Removal of of_node_put with __free for auto cleanup
+
+Conor Dooley (1):
+      (Rev.) dt-bindings: i2c: nxp,pnx-i2c: Convert to dtschema
+
+Geert Uytterhoeven (4):
+      (Rev.) i2c: riic: Add support for R9A09G057 SoC
+      (Rev.) i2c: riic: Pass register offsets and chip details as OF data
+      (Rev.) i2c: riic: Introduce helper functions for I2C read/write opera=
+tions
+      (Rev.) dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+
+Jarkko Nikula (1):
+      (Test) i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TAB=
+LE()
+
+Jean Delvare (4):
+      (Rev.) i2c: ali15x3: remove printout on handled timeouts
+      (Rev.) i2c: ali1563: remove printout on handled timeouts
+      (Rev.) i2c: ali1535: remove printout on handled timeouts
+      (Rev.) i2c: i801: remove printout on handled timeouts
+
+Krzysztof Kozlowski (1):
+      (Rev.) dt-bindings: i2c: qcom-cci: Document sc8280xp compatible
+
+Laurent Pinchart (1):
+      (Rev.) i2c: mux: Remove class argument from i2c_mux_add_adapter()
+
+Linus Walleij (1):
+      (Rev.) i2c: nomadik: remove printout on handled timeouts
+
+Mario Limonciello (1):
+      (Rev.) i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TAB=
+LE()
+
+Mika Westerberg (1):
+      (Rev.) i2c: acpi: Unbind mux adapters before delete
+
+Peng Fan (1):
+      (Rev.) i2c: imx-lpi2c: use 'time_left' variable with wait_for_complet=
+ion_timeout()
+
+Philippe Mathieu-Daud=C3=A9 (1):
+      (Rev.) i2c: jz4780: use 'time_left' variable with wait_for_completion=
+_timeout()
+
+Serge Semin (1):
+      (Test) i2c: designware: Replace MODULE_ALIAS() with MODULE_DEVICE_TAB=
+LE()
+
+Thomas Zimmermann (1):
+      (Rev.) i2c: mux: Remove class argument from i2c_mux_add_adapter()
+
+Uwe Kleine-K=C3=B6nig (2):
+      (Rev.) i2c: st: use 'time_left' variable with wait_for_completion_tim=
+eout()
+      (Rev.) i2c: lpi2c: Avoid calling clk_get_rate during transfer
+
+Vladimir Zapolskiy (1):
+      (Rev.) dt-bindings: i2c: qcom-cci: Document sc8280xp compatible
+
+Wolfram Sang (11):
+      (Rev.) i2c: wmt: fix a bug when thread blocked
+      (Rev.) i2c: wmt: rename something
+      (Rev.) i2c: wmt: split out common files
+      (Rev.) i2c: wmt: create wmt_i2c_init for general init
+      (Rev.) i2c: i801: Fix missing Kconfig dependency
+      (Rev.) i2c: add HAS_IOPORT dependencies
+      (Rev.) i2c: i801: Call i2c_register_spd for muxed child segments
+      (Rev.) i2c: riic: Add support for R9A09G057 SoC
+      (Rev.) i2c: riic: Pass register offsets and chip details as OF data
+      (Rev.) i2c: riic: Introduce helper functions for I2C read/write opera=
+tions
+      (Rev.) dt-bindings: i2c: renesas,riic: Document R9A09G057 support
+
+ Documentation/devicetree/bindings/i2c/i2c-pnx.txt  |  34 --
+ .../devicetree/bindings/i2c/nxp,pnx-i2c.yaml       |  46 +++
+ .../devicetree/bindings/i2c/qcom,i2c-cci.yaml      |  19 +
+ .../devicetree/bindings/i2c/renesas,riic.yaml      |  19 +-
+ MAINTAINERS                                        |  12 +-
+ drivers/gpu/drm/bridge/sii902x.c                   |   2 +-
+ drivers/i2c/busses/Kconfig                         |  49 ++-
+ drivers/i2c/busses/Makefile                        |   3 +
+ drivers/i2c/busses/i2c-ali1535.c                   |   8 +-
+ drivers/i2c/busses/i2c-ali1563.c                   |   1 -
+ drivers/i2c/busses/i2c-ali15x3.c                   |   4 +-
+ drivers/i2c/busses/i2c-amd-mp2-plat.c              |   8 +-
+ drivers/i2c/busses/i2c-at91-master.c               |   1 -
+ drivers/i2c/busses/i2c-bcm-iproc.c                 |   2 -
+ drivers/i2c/busses/i2c-bcm2835.c                   |   1 -
+ drivers/i2c/busses/i2c-cadence.c                   |   3 +-
+ drivers/i2c/busses/i2c-davinci.c                   |   1 -
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   2 -
+ drivers/i2c/busses/i2c-designware-platdrv.c        |   9 +-
+ drivers/i2c/busses/i2c-digicolor.c                 |   6 +-
+ drivers/i2c/busses/i2c-exynos5.c                   |  12 +-
+ drivers/i2c/busses/i2c-hix5hd2.c                   |   8 +-
+ drivers/i2c/busses/i2c-i801.c                      |  41 +-
+ drivers/i2c/busses/i2c-img-scb.c                   |   5 +-
+ drivers/i2c/busses/i2c-imx-lpi2c.c                 |  25 +-
+ drivers/i2c/busses/i2c-ismt.c                      |   1 -
+ drivers/i2c/busses/i2c-jz4780.c                    |  22 +-
+ drivers/i2c/busses/i2c-mpc.c                       |  11 +-
+ drivers/i2c/busses/i2c-nomadik.c                   |   7 +-
+ drivers/i2c/busses/i2c-ocores.c                    |  21 +-
+ drivers/i2c/busses/i2c-octeon-core.c               | 141 +++++--
+ drivers/i2c/busses/i2c-octeon-core.h               |  53 ++-
+ drivers/i2c/busses/i2c-omap.c                      |  11 +-
+ drivers/i2c/busses/i2c-pxa.c                       |  14 +-
+ drivers/i2c/busses/i2c-qcom-geni.c                 |  10 +-
+ drivers/i2c/busses/i2c-qup.c                       |   4 +-
+ drivers/i2c/busses/i2c-riic.c                      | 125 ++++--
+ drivers/i2c/busses/i2c-rk3x.c                      |  14 +-
+ drivers/i2c/busses/i2c-s3c2410.c                   |   6 +-
+ drivers/i2c/busses/i2c-sh_mobile.c                 |   1 -
+ drivers/i2c/busses/i2c-st.c                        |  11 +-
+ drivers/i2c/busses/i2c-stm32f4.c                   |   8 +-
+ drivers/i2c/busses/i2c-stm32f7.c                   |   8 +-
+ drivers/i2c/busses/i2c-synquacer.c                 |  26 +-
+ drivers/i2c/busses/i2c-tegra.c                     |   2 -
+ drivers/i2c/busses/i2c-thunderx-pcidrv.c           |  13 +-
+ drivers/i2c/busses/i2c-uniphier-f.c                |   1 -
+ drivers/i2c/busses/i2c-uniphier.c                  |   4 +-
+ drivers/i2c/busses/i2c-viai2c-common.c             | 256 +++++++++++++
+ drivers/i2c/busses/i2c-viai2c-common.h             |  85 +++++
+ drivers/i2c/busses/i2c-viai2c-wmt.c                | 148 ++++++++
+ drivers/i2c/busses/i2c-viai2c-zhaoxin.c            | 298 +++++++++++++++
+ drivers/i2c/busses/i2c-viperboard.c                |   1 -
+ drivers/i2c/busses/i2c-wmt.c                       | 421 -----------------=
+----
+ drivers/i2c/i2c-core-acpi.c                        |  19 +-
+ drivers/i2c/i2c-mux.c                              |  24 +-
+ drivers/i2c/muxes/i2c-arb-gpio-challenge.c         |   2 +-
+ drivers/i2c/muxes/i2c-mux-gpio.c                   |   3 +-
+ drivers/i2c/muxes/i2c-mux-gpmux.c                  |   2 +-
+ drivers/i2c/muxes/i2c-mux-ltc4306.c                |   2 +-
+ drivers/i2c/muxes/i2c-mux-mlxcpld.c                |   2 +-
+ drivers/i2c/muxes/i2c-mux-pca9541.c                |   2 +-
+ drivers/i2c/muxes/i2c-mux-pca954x.c                |   2 +-
+ drivers/i2c/muxes/i2c-mux-pinctrl.c                |   2 +-
+ drivers/i2c/muxes/i2c-mux-reg.c                    |   2 +-
+ drivers/iio/gyro/mpu3050-i2c.c                     |   2 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c          |   2 +-
+ drivers/media/dvb-frontends/af9013.c               |   2 +-
+ drivers/media/dvb-frontends/lgdt3306a.c            |   2 +-
+ drivers/media/dvb-frontends/m88ds3103.c            |   2 +-
+ drivers/media/dvb-frontends/rtl2830.c              |   2 +-
+ drivers/media/dvb-frontends/rtl2832.c              |   2 +-
+ drivers/media/dvb-frontends/si2168.c               |   2 +-
+ drivers/media/i2c/max9286.c                        |   2 +-
+ drivers/media/usb/cx231xx/cx231xx-i2c.c            |   5 +-
+ drivers/of/unittest.c                              |   2 +-
+ drivers/power/supply/sbs-manager.c                 |   2 +-
+ include/linux/i2c-mux.h                            |   3 +-
+ include/linux/platform_data/i2c-mux-gpio.h         |   2 -
+ 79 files changed, 1340 insertions(+), 798 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-viai2c-common.c
+ create mode 100644 drivers/i2c/busses/i2c-viai2c-common.h
+ create mode 100644 drivers/i2c/busses/i2c-viai2c-wmt.c
+ create mode 100644 drivers/i2c/busses/i2c-viai2c-zhaoxin.c
+ delete mode 100644 drivers/i2c/busses/i2c-wmt.c
+
+--Ci9aXpwAIRAxNlWI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZLFm0ACgkQFA3kzBSg
+KbZJLQ/9EY9Twfk+W2ji0OvXD08U47jMNj2ldxT7Ced23L+TJF02QiG7+ckImGOf
+712dYCeA0QgUZCAkGAcpyQhOlXLUlKjKSHAdJydUgNM9ySaJsvBnWVggJAd3u2aR
+C+AEaagkesk+EQAhFJXwCDEjsf0EQC6lcyKxJ1tMHgj2bpa9oKdswKwduH2SYEt9
+hw9oJcJfT72rnhqYIxT6lbtCGK4yQNd4ot3vdbQ2nwmY48VVfqdGEXVMGB2l6qVl
+dIISSAU5VXI2IfMjfcr4cfGlY+ZSVrIgR09AzkKSq59KZJDYQUNyRoQKO5ZRGEHs
+uSNAwXj5EMGXQBt6Rv+lheuURay9muw1QMuxKWes+IA4MS0w/C59kmKq+bcnovBJ
++i8KV0Da+sOIpPOFambph47JsT0pxqiFpUfrkp7X7VUXPFC/gGyQz3AkM9D5SrRp
+JMu88WzAGo1NKWF7Yu8k6R8/NgRsGExSUGXuHWJ7JU9SfUOLo62JG7JacENeJfnS
+zKIFaEqrt6WFmrjZag8k8jLeLILjyA4ldkb34QUhpRY/82V/OfcELGdfIrHaU3aS
+400dv3IXRRm6SBDhrvi1/+jCJZbQYM7Ktcsnlu3H/aMfoeznsrqEWzo10nPfu6su
+hrTLd+49e8MvpMxALMK900fzYfaR8rBVo6vUiB/BiQjxBeukOd8=
+=r4Iy
+-----END PGP SIGNATURE-----
+
+--Ci9aXpwAIRAxNlWI--
