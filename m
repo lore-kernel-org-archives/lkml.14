@@ -1,235 +1,138 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172D03FBB2;
-	Mon, 20 May 2024 09:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E022117582
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 09:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716196054; cv=none; b=iG9nT/7cOJhN8HeVmZXUXpe7oA/yvaGBRpntyFVQumxqCnoRB8K82QxiNpmQMh4PWdYao/tDQg1Zp17VvNfZSaGGoIi68mtEeKZ7d8Tl1j8UM6UJiagCCpUf8LBZ6ukRUTGpfvMWe2RZcW0SljfY9LYkxum91RVvVKpjwIjXyM0=
+	t=1716196128; cv=none; b=VUdgI0e6HtL2sn0Gz0blBFTfXpb2Ivg5+RTMqeuWDDaK40ediozZrN5cJHgM9BrGyqdi2NUxhfJOh58HImyEgStnsPX84BN60a+tZIwYz6dut/TLtUPpw7oHGQ35AoUiZdmPcFLW3VAO56e2nZPpaTPdHC3HwXr4EOyYMCQjN0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716196054; c=relaxed/simple;
-	bh=ib5CLMDc2aaE4jFTePgzuTCNvu8mWqSWyEWzHG2rmYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V4ClhHGeQzzSsIUTYZZ5IOx5wJmWHJ5Ervz8SBVqjaZRBG8KVcyEX3V0vxkxh4IvkX4FxakG5DCgE60B96pIVaiRPMsJ0y0gmjxh4PfmjdTQfDg0Oo/vgRPSmTTi89EnGT98PojFA0nN06lo9THSeNAZXPRghqa5Seibo58icEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VjWsz6Tkqz4f3jct;
-	Mon, 20 May 2024 17:07:19 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BF4D71A017F;
-	Mon, 20 May 2024 17:07:28 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ7MEktmDtmyNA--.20085S3;
-	Mon, 20 May 2024 17:07:28 +0800 (CST)
-Message-ID: <d62b162d-acb3-2fa7-085e-79da3278091a@huaweicloud.com>
-Date: Mon, 20 May 2024 17:07:24 +0800
+	s=arc-20240116; t=1716196128; c=relaxed/simple;
+	bh=rCsD98lOj+gPz0pt3osk3WseVqXh3KbKOiVTjSqIW2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J2gtTeqSytTSQfs4H1kAp+37qQbi8nv4VLeDw0xVZOG9C8wVwOi/tp7Lpj3FDe8xTCfTYlIeQdSGpB92ijl0AyqKxI8vSPDM7N2rHIxrrN8qZFCvBOZsTgSqOkDHEjmm290DqTx3H8O/fNGMWoXX+hYEyCAf9/4HGP/Ct6DNBSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YGzLuJOW; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YGzLuJOW"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-deb654482bcso2282242276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 02:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716196126; x=1716800926; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rsXIdnEGMK6jEQXuJEcWV+3QDrgp423KVVA+wYoTsTk=;
+        b=YGzLuJOW+arCWwh9PXPKY6tFpZ/4uwrSVkkJxR8p2GCyqteSXbOfWKSpHYV9SQJ7vs
+         UgcDK6CHc47xAT/w3XacbTzsxDNaPKWuzU9pHadF+99u1PQbdQxDeeVN/riXVnV/ptXd
+         B/QPquY63wq/3Pf5booKUR+op3uMR21cxmQBFNKvqHaWCK1FV/MsAPN9q5asAqgOfB47
+         I+Ji+MLuz2AMPEwot0oieHI5I6+Lveumn9SbndOTr3VSwYUuZZXgxgBA5zyH6aTk/LA1
+         933uLCj2z5JndY7C2zJ/Q+hi9HZUR8lsWGJjYC/5VXwp3mtnxTGg4bnNbiEcFlDksg5g
+         ydhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716196126; x=1716800926;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rsXIdnEGMK6jEQXuJEcWV+3QDrgp423KVVA+wYoTsTk=;
+        b=RoQAy3DJRj2a3S+mfnpTjMM0JMhQOoFPoGfDp2t56sjevYtZiTaSZiv+6hdbxKdEWx
+         tcLLKoM6aA8G2OXfhSKQX5G6CXby3pov2fju8VuhYKpmuhXw6Vacd6u3mLPZdW5ktRjw
+         ROjuzxL0SM4JQROUQKz39VsPqPq4Ln292itBwQpf7Utb7+yaFViyoFr/s8RLDhArEDLE
+         y5IEiyf6qzq8x0aVotXbRtcVkYfOgYa/TmtfkWN6eayYYW9LhfH2pKpf03IhSKrQINWq
+         AUU+vVrBvkBGJ9rpR827jlx6KNG6guhWoRnZvsLLneM2lYssoK0mVnymid3qm6uggAQi
+         RKbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSUuvOoEdFPMXJmBrZfLJt/HCpyj7bsby1ifbqfolkMo6rYHYFFFh6wUZQbRKmlfN1v3iHfS0dduuIYHDwRVFh86hb1wHEPR0w/KNE
+X-Gm-Message-State: AOJu0Yz6qpKt483gX1ju+KXszM8K/YA/DwPzc0SCEBstkCbMJH4ibc21
+	DzpoXN+MCA6nEaHC6WR8M8r2bvG5Lz80jypwg+jPCfFPHXuf/Or+nstoh+r4hHHFyxGmOQ5QBeO
+	ZZh74plrPo3y2LoFMU1kjGlF0k0kWWl8y4f/mJQ==
+X-Google-Smtp-Source: AGHT+IHNVEhnihEzvQfFRep3JcNSMShmxc2WAoOrCzTZfseWMCDTcy0PJ24ZzIcLimohwaU6t1G4RC2Jwd5WaS/Am1A=
+X-Received: by 2002:a25:f403:0:b0:de5:4b1f:7e00 with SMTP id
+ 3f1490d57ef6-dee4f2ce7bcmr24641867276.15.1716196125854; Mon, 20 May 2024
+ 02:08:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v2 08/12] cachefiles: never get a new anonymous fd if
- ondemand_id is valid
-Content-Language: en-US
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev,
- dhowells@redhat.com, jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com, zhujia.zj@bytedance.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com,
- yukuai3@huawei.com, wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
- libaokun@huaweicloud.com
-References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
- <20240515084601.3240503-9-libaokun@huaweicloud.com>
- <f4d24738-76a2-4998-9a28-493599cd7eae@linux.alibaba.com>
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <f4d24738-76a2-4998-9a28-493599cd7eae@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgBHZQ7MEktmDtmyNA--.20085S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxKw18JFyUZFykZw4kAryxXwb_yoW7Kr47pF
-	Waya43KFyxWF1xGrZ7ZFs8XryFy3y8ZFnrWw1aga48Arn8ur1rur17tr1SvF98Ar9agrs7
-	ta1UuF9xK34qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWU
-	JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbE_M3UUUUU==
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+References: <20240516101006.2388767-1-victor.liu@nxp.com> <evnxopqt5be56vxuxqdj4l3mcd5nrrvucio7jhwgg4emraai3t@gherubdynyip>
+ <5efe29a7-441f-4d70-b17c-5327c0a9f600@nxp.com>
+In-Reply-To: <5efe29a7-441f-4d70-b17c-5327c0a9f600@nxp.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 20 May 2024 12:08:34 +0300
+Message-ID: <CAA8EJpqZPQUcqm2U+T7AK74qxo9J0kggS4g484OfoNPAEZPNBw@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: adv7511: Exit interrupt handling when necessary
+To: Liu Ying <victor.liu@nxp.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, daniel@ffwll.ch, biju.das.jz@bp.renesas.com, 
+	u.kleine-koenig@pengutronix.de, aford173@gmail.com, jani.nikula@intel.com, 
+	bli@bang-olufsen.dk, sui.jingfeng@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/5/20 16:43, Jingbo Xu wrote:
+On Mon, 20 May 2024 at 06:29, Liu Ying <victor.liu@nxp.com> wrote:
 >
-> On 5/15/24 4:45 PM, libaokun@huaweicloud.com wrote:
->> From: Baokun Li <libaokun1@huawei.com>
->>
->> Now every time the daemon reads an open request, it gets a new anonymous fd
->> and ondemand_id. With the introduction of "restore", it is possible to read
->> the same open request more than once, and therefore an object can have more
->> than one anonymous fd.
->>
->> If the anonymous fd is not unique, the following concurrencies will result
->> in an fd leak:
->>
->>       t1     |         t2         |          t3
->> ------------------------------------------------------------
->>   cachefiles_ondemand_init_object
->>    cachefiles_ondemand_send_req
->>     REQ_A = kzalloc(sizeof(*req) + data_len)
->>     wait_for_completion(&REQ_A->done)
->>              cachefiles_daemon_read
->>               cachefiles_ondemand_daemon_read
->>                REQ_A = cachefiles_ondemand_select_req
->>                cachefiles_ondemand_get_fd
->>                  load->fd = fd0
->>                  ondemand_id = object_id0
->>                                    ------ restore ------
->>                                    cachefiles_ondemand_restore
->>                                     // restore REQ_A
->>                                    cachefiles_daemon_read
->>                                     cachefiles_ondemand_daemon_read
->>                                      REQ_A = cachefiles_ondemand_select_req
->>                                        cachefiles_ondemand_get_fd
->>                                          load->fd = fd1
->>                                          ondemand_id = object_id1
->>               process_open_req(REQ_A)
->>               write(devfd, ("copen %u,%llu", msg->msg_id, size))
->>               cachefiles_ondemand_copen
->>                xa_erase(&cache->reqs, id)
->>                complete(&REQ_A->done)
->>     kfree(REQ_A)
->>                                    process_open_req(REQ_A)
->>                                    // copen fails due to no req
->>                                    // daemon close(fd1)
->>                                    cachefiles_ondemand_fd_release
->>                                     // set object closed
->>   -- umount --
->>   cachefiles_withdraw_cookie
->>    cachefiles_ondemand_clean_object
->>     cachefiles_ondemand_init_close_req
->>      if (!cachefiles_ondemand_object_is_open(object))
->>        return -ENOENT;
->>      // The fd0 is not closed until the daemon exits.
->>
->> However, the anonymous fd holds the reference count of the object and the
->> object holds the reference count of the cookie. So even though the cookie
->> has been relinquished, it will not be unhashed and freed until the daemon
->> exits.
->>
->> In fscache_hash_cookie(), when the same cookie is found in the hash list,
->> if the cookie is set with the FSCACHE_COOKIE_RELINQUISHED bit, then the new
->> cookie waits for the old cookie to be unhashed, while the old cookie is
->> waiting for the leaked fd to be closed, if the daemon does not exit in time
->> it will trigger a hung task.
->>
->> To avoid this, allocate a new anonymous fd only if no anonymous fd has
->> been allocated (ondemand_id == 0) or if the previously allocated anonymous
->> fd has been closed (ondemand_id == -1). Moreover, returns an error if
->> ondemand_id is valid, letting the daemon know that the current userland
->> restore logic is abnormal and needs to be checked.
->>
->> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
->> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> The LOCs of this fix is quite under control.  But still it seems that
-> the worst consequence is that the (potential) malicious daemon gets
-> hung.  No more effect to the system or other processes.  Or does a
-> non-malicious daemon have any chance having the same issue?
-If we enable hung_task_panic, it may cause panic to crash the server.
->> ---
->>   fs/cachefiles/ondemand.c | 34 ++++++++++++++++++++++++++++------
->>   1 file changed, 28 insertions(+), 6 deletions(-)
->>
->> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
->> index d04ddc6576e3..d2d4e27fca6f 100644
->> --- a/fs/cachefiles/ondemand.c
->> +++ b/fs/cachefiles/ondemand.c
->> @@ -14,11 +14,18 @@ static int cachefiles_ondemand_fd_release(struct inode *inode,
->>   					  struct file *file)
->>   {
->>   	struct cachefiles_object *object = file->private_data;
->> -	struct cachefiles_cache *cache = object->volume->cache;
->> -	struct cachefiles_ondemand_info *info = object->ondemand;
->> +	struct cachefiles_cache *cache;
->> +	struct cachefiles_ondemand_info *info;
->>   	int object_id;
->>   	struct cachefiles_req *req;
->> -	XA_STATE(xas, &cache->reqs, 0);
->> +	XA_STATE(xas, NULL, 0);
->> +
->> +	if (!object)
->> +		return 0;
->> +
->> +	info = object->ondemand;
->> +	cache = object->volume->cache;
->> +	xas.xa = &cache->reqs;
->>   
->>   	xa_lock(&cache->reqs);
->>   	spin_lock(&info->lock);
->> @@ -288,22 +295,39 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
->>   		goto err_put_fd;
->>   	}
->>   
->> +	spin_lock(&object->ondemand->lock);
->> +	if (object->ondemand->ondemand_id > 0) {
->> +		spin_unlock(&object->ondemand->lock);
->> +		/* Pair with check in cachefiles_ondemand_fd_release(). */
->> +		file->private_data = NULL;
->> +		ret = -EEXIST;
->> +		goto err_put_file;
->> +	}
->> +
->>   	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
->>   	fd_install(fd, file);
->>   
->>   	load = (void *)req->msg.data;
->>   	load->fd = fd;
->>   	object->ondemand->ondemand_id = object_id;
->> +	spin_unlock(&object->ondemand->lock);
->>   
->>   	cachefiles_get_unbind_pincount(cache);
->>   	trace_cachefiles_ondemand_open(object, &req->msg, load);
->>   	return 0;
->>   
->> +err_put_file:
->> +	fput(file);
->>   err_put_fd:
->>   	put_unused_fd(fd);
->>   err_free_id:
->>   	xa_erase(&cache->ondemand_ids, object_id);
->>   err:
->> +	spin_lock(&object->ondemand->lock);
->> +	/* Avoid marking an opened object as closed. */
->> +	if (object->ondemand->ondemand_id <= 0)
->> +		cachefiles_ondemand_set_object_close(object);
->> +	spin_unlock(&object->ondemand->lock);
->>   	cachefiles_put_object(object, cachefiles_obj_put_ondemand_fd);
->>   	return ret;
->>   }
->> @@ -386,10 +410,8 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
->>   
->>   	if (msg->opcode == CACHEFILES_OP_OPEN) {
->>   		ret = cachefiles_ondemand_get_fd(req);
->> -		if (ret) {
->> -			cachefiles_ondemand_set_object_close(req->object);
->> +		if (ret)
->>   			goto out;
->> -		}
->>   	}
->>   
->>   	msg->msg_id = xas.xa_index;
+> On 5/20/24 06:11, Dmitry Baryshkov wrote:
+> > On Thu, May 16, 2024 at 06:10:06PM +0800, Liu Ying wrote:
+> >> Commit f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
+> >> fails to consider the case where adv7511->i2c_main->irq is zero, i.e.,
+> >> no interrupt requested at all.
+> >>
+> >> Without interrupt, adv7511_wait_for_edid() could return -EIO sometimes,
+> >> because it polls adv7511->edid_read flag by calling adv7511_irq_process()
+> >> a few times, but adv7511_irq_process() happens to refuse to handle
+> >> interrupt by returning -ENODATA.  Hence, EDID retrieval fails randomly.
+> >>
+> >> Fix the issue by checking adv7511->i2c_main->irq before exiting interrupt
+> >> handling from adv7511_irq_process().
+> >>
+> >> Fixes: f3d9683346d6 ("drm/bridge: adv7511: Allow IRQ to share GPIO pins")
+> >> Signed-off-by: Liu Ying <victor.liu@nxp.com>
+> >> ---
+> >>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> >> index 6089b0bb9321..2074fa3c1b7b 100644
+> >> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> >> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> >> @@ -479,7 +479,8 @@ static int adv7511_irq_process(struct adv7511 *adv7511, bool process_hpd)
+> >>              return ret;
+> >>
+> >>      /* If there is no IRQ to handle, exit indicating no IRQ data */
+> >> -    if (!(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+> >> +    if (adv7511->i2c_main->irq &&
+> >> +        !(irq0 & (ADV7511_INT0_HPD | ADV7511_INT0_EDID_READY)) &&
+> >>          !(irq1 & ADV7511_INT1_DDC_ERROR))
+> >>              return -ENODATA;
+> >
+> > I think it might be better to handle -ENODATA in adv7511_wait_for_edid()
+> > instead. WDYT?
+>
+> Then, adv7511_cec_irq_process() will have less chance to be called from
+> adv7511_irq_process() (assuming CONFIG_DRM_I2C_ADV7511_CEC is defined)
+> if adv7511->i2c_main->irq is zero.
+>
+> But, anyway, it seems that commit f3d9683346d6 ("drm/bridge: adv7511:
+> Allow IRQ to share GPIO pins") is even more broken to handle the CEC case,
+> as adv7511_cec_adap_enable() may enable some interrupts for CEC.
+>
+> This is a bit complicated.  Thoughts?
+
+Send a revert and do it properly?
+
+>
+> Regards,
+> Liu Ying
+>
+>
+>
+>
+>
+
 
 -- 
-With Best Regards,
-Baokun Li
-
+With best wishes
+Dmitry
