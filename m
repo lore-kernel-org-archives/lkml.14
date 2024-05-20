@@ -1,119 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE31854FBD;
-	Mon, 20 May 2024 12:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716207779; cv=none; b=X9Y14OizVFmar32k6gnggXPsvMmbyaXBAXwUavQX5rMHaKwX9o9G53pxj+dikTj0EVRrWWdoAcGufPGqpW2VR1ton7r6LkZKzOccH6eSdfAHV9iRY6YXdL/V7DOTqBLk4VjiCMfUoG9YJCWYdR6j1Zr02tN843IQNm6xx4bmekQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716207779; c=relaxed/simple;
-	bh=FIHPzrYBeBwApuNIfaSlsYWDNvGy7ZbVQrqLmZ/82pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UZUmCOZDX0akzJJxSkbRLu3nsMtiNSe0hRssVbDA8CAZFIcTvykauRXcc6TvWZa927/WWkgSwvDD8fuo0BaOn8d4g/gG53jv3T7amcyM6HUBP1aqalEDSmpY2v5GFZPg2ghHF4jK/ufQ+FLGpqx13JIfQy0teTfvTS7vqOMWt2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TD0D+cAJ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7FF52F74;
+	Mon, 20 May 2024 12:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716207859; cv=fail; b=nQb9MT7zPhNcHzvmJLQZuLgEw28d4QzW6p/RAlJ9nGI9GiiB/X3hqNXc1DR6MFOr1l2KU2bVhJeCxKgfX7qJWSBoeHQUod7BlPOjT33rT+70hRHDg5JpySadcUh6Obed3/+z5DzyP/AUlJr8NTFgKKANo6xWbFJFSvzfZFyUPqc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716207859; c=relaxed/simple;
+	bh=Gx6/pGkmDXD3pFjBoH4/UsVR/YEDMm6Aad7W8Q81/gc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZwAwK7smh4SWQEm3VbjtuwDNI89FkE+ncV9zdsL9RDAvQYOmhmplcTLMU3Mk15TggF17MOP7Qe6kLf8oF3kx03Ns3Va2Jg05x3rDgG38+SGBI+BejxIBhQLHnDa/QZhWXKZivxDggCjBSf8IvFwjyn68vui4SDNNlChnt30dfj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mt1wUqTC; arc=fail smtp.client-ip=40.107.220.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TD0D+cAJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716207778; x=1747743778;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FIHPzrYBeBwApuNIfaSlsYWDNvGy7ZbVQrqLmZ/82pg=;
-  b=TD0D+cAJWpOXVMlr+M5ngqJJ0fG7hhmTwx3/W8ZDCstnvMts0NRJbHPA
-   ph3uDzAf+uvSxkpkMk/zCyMeFA6pkI7newEIUqf+sbF6am1lppnpj7pdv
-   3nT6ZM8GebZu1A9GiRMWn7V+S+9m6dRB9NUDyCOsGuUwc+5xy8AyZGNDv
-   hTg8qcsLioeVAnLEehmQRUnizJeL6a2mUPvq0BEJEZ23wyrw30aWX/aDC
-   NcCwKOXIrD2XKwVLvzmwcBR1UtN6xZBgpcHVvq7FE0PPg0HFOyZHrSBTU
-   Ln8dC/Euwx4wJXnmjxgZCGKQGR8+RhMW6g8lv+ohixwUAAnvokCZHkeZH
-   g==;
-X-CSE-ConnectionGUID: 0yxWYYs5SnizDKg1khRQug==
-X-CSE-MsgGUID: e8DYWLavRO6LcT/Kb8xahQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="16121090"
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="16121090"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:22:57 -0700
-X-CSE-ConnectionGUID: BwU7Y7GMQkeBw3e/17TV/w==
-X-CSE-MsgGUID: BjQEzPg3QwSQCXAimCM+iQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="32652526"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:22:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s922R-00000009J9i-2ohd;
-	Mon, 20 May 2024 15:22:47 +0300
-Date: Mon, 20 May 2024 15:22:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: Daniel Latypov <dlatypov@google.com>, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.gaignard@collabora.com,
-	sebastian.fricke@collabora.com, akpm@linux-foundation.org,
-	gregkh@linuxfoundation.org, adobriyan@gmail.com,
-	jani.nikula@intel.com, p.zabel@pengutronix.de, airlied@gmail.com,
-	daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-	laurent.pinchart@ideasonboard.com, praneeth@ti.com, nm@ti.com,
-	vigneshr@ti.com, a-bhatia1@ti.com, j-luthra@ti.com, b-brnich@ti.com,
-	detheridge@ti.com, p-mantena@ti.com, vijayp@ti.com,
-	andrzej.p@collabora.com, nicolas@ndufresne.ca, davidgow@google.com
-Subject: Re: [PATCH v8 07/10] lib: add basic KUnit test for lib/math
-Message-ID: <ZktAlza1zEke1eCx@smile.fi.intel.com>
-References: <20240517171532.748684-1-devarsht@ti.com>
- <20240517173607.800549-1-devarsht@ti.com>
- <Zke6o3HYnUrgtD0K@smile.fi.intel.com>
- <7b8cd37b-5b16-2d99-ab62-5d6876e6571c@ti.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mt1wUqTC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=knwDw8qk11LDKVXC6kTwoz2H7/LOEidG/L184E/4jQ01tCQXMeTyBFm8JfAyoBxpR3bh0LCrO87E1c1sNJGKvnurTZcqnB3tjYrTBT1zMsDXFKQ6dai3QCh1QUlUeCxMm73GMJ3CyR8GbqdcThPNrDZfK0N7Q16TV2UGe/qpJ72aMIjxXRebHEZQPfcXORjHmQXu8v7QzKFOdUtO/ZfvgRpDGAPZjzl3FT+N9ukXMnV9fBvTzBtSjm5M1TUIX1vQuOrIIeq5j7kengtFw9oT+33GGwg2HK2y6pP6t3q13QnN548IR5WLRchIGE16p2ijFgNHFE+bNtgpE+9odqxxOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QPIjvUUYWgaMwZcyb3axc6WJo2LY5gxYGHSH8RI+jkQ=;
+ b=XdFjH8/5HhXwat0YClNY1C3rFajvPTy44iubgGur0iR6LGpDpXkLdFmOn5Ak5eTguYs/aTz7bDBdRqt/iMQRD/crLRFvbqIfe/npeligp/D11FmykK4YeofFQ0cgZyqLj3i07HIyBoJwoBkkr8930I7WZMIM39SyEDfAFVyrvPIPNlu6p4/7lj1Z+zM5Z6Enww+qwG27fy3+aWp/67VLX/qeMaBJpq7lJgmH5AbJ0/PbfZmyVkX2fY4ySTRJVkeZjKsaTOu/QTK2veFZhMVp6zDdN7mDFgQdVGy6E4ewltSEk/m1JnCQfmHVTGCAGcldkhU/OalvcTbwNea/W1sTZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QPIjvUUYWgaMwZcyb3axc6WJo2LY5gxYGHSH8RI+jkQ=;
+ b=mt1wUqTCha4RPTvJk0gDOijFmUzFg+GGoF1fgmjB0Dk31U5o3qWUWzF7RAscZgKmyIrtnJ/8K2VWLYyAY7331ra9C2uoCXuQIdC4PdpAu6ELztn4ZpJTI4TsVnlNkFYOkuUCUr9HmOFKUKADtmWbEUb6YuPSm1XvI8GMDFdS8ADxCYOVpN+AzpKuVUfd1a5CZAmIBhLPi3miKI1MOmvUdFGnpH4Z4F1rRSHkunVQC1ZmoI/dnfw9dW5SlxPiLce/a6puT//xJqlUfZfkowXLUJpoL3R74IbRw6cybR2wWkzpAzDTcO/FIwj5W7R0RYjzvrYPPb6MsQhFJUiPBGB58g==
+Received: from MW4PR03CA0144.namprd03.prod.outlook.com (2603:10b6:303:8c::29)
+ by DS0PR12MB8564.namprd12.prod.outlook.com (2603:10b6:8:167::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Mon, 20 May
+ 2024 12:24:15 +0000
+Received: from CO1PEPF000044FA.namprd21.prod.outlook.com
+ (2603:10b6:303:8c:cafe::dc) by MW4PR03CA0144.outlook.office365.com
+ (2603:10b6:303:8c::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.34 via Frontend
+ Transport; Mon, 20 May 2024 12:24:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CO1PEPF000044FA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7633.0 via Frontend Transport; Mon, 20 May 2024 12:24:14 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 20 May
+ 2024 05:24:01 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 20 May
+ 2024 05:24:01 -0700
+Received: from build-spujar-20240506T080629452.internal (10.127.8.9) by
+ mail.nvidia.com (10.129.68.9) with Microsoft SMTP Server id 15.2.1544.4 via
+ Frontend Transport; Mon, 20 May 2024 05:24:01 -0700
+From: Sameer Pujar <spujar@nvidia.com>
+To: <vkoul@kernel.org>, <thierry.reding@gmail.com>,
+	<dmaengine@vger.kernel.org>
+CC: <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <mkumard@nvidia.com>, <spujar@nvidia.com>,
+	<ldewangan@nvidia.com>
+Subject: [PATCH 1/2] dt-bindings: dma: Add reg-names to nvidia,tegra210-adma
+Date: Mon, 20 May 2024 12:23:50 +0000
+Message-ID: <20240520122351.1691058-2-spujar@nvidia.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240520122351.1691058-1-spujar@nvidia.com>
+References: <20240520122351.1691058-1-spujar@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b8cd37b-5b16-2d99-ab62-5d6876e6571c@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FA:EE_|DS0PR12MB8564:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62ce93a7-91b7-4546-6092-08dc78c7c33d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|82310400017|36860700004|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HpGCMZzLzQ7xfY7O7QLps/loH9YKFOo7L3+WiBwrc6VEDX2cdv5ud0khOo3e?=
+ =?us-ascii?Q?jqoO+Y2duRH8lAwsUOK12w1CtZKfiW3MImgiHU0IHTmCFk4cWqU7JP8eRrAu?=
+ =?us-ascii?Q?dQ+B7h5BgGeWLBrARofEVM/6Rb+D4ksING/bbPKe/8rvPGKXqG+HbmfVaWl3?=
+ =?us-ascii?Q?WlyJMETZI/kGmD1Ln5zTdSi6OXxSOgJjpNTpjchwiW1mJ8rFPXZVH/V3vaLu?=
+ =?us-ascii?Q?hDU8SFuFB5gzcKG3fZEXu81W9GAEL1lJAd3SKbrFXHYbNmUpYx9nvOnfEkKB?=
+ =?us-ascii?Q?R/oLNp/l40MgNyFwKQU0hYk+bnPRb3kedOyNYi3jRAQqpejL4VdAFYaOh52V?=
+ =?us-ascii?Q?pzU6E+fSAiyY4O7sh/f4XxbOmOCXMWEOEl2l3YNITCBCbvHqibDo3w9+8AML?=
+ =?us-ascii?Q?MHca5pkZ46AkgDfTpLqpfLRfBxQ0gEljgAB74yuTU5n36Sb8sEaFw3l2jaUY?=
+ =?us-ascii?Q?KbBOdWFKHiHFYlrMC9j4co2vPbL3IEjywpquUqpyqgD1m0iKO2LzlSDxX5t/?=
+ =?us-ascii?Q?rJqod//yrg/AfONFbZvQs09qEkmed3jdufewq8Sa5CR+I0YgImSI0t2SGN5k?=
+ =?us-ascii?Q?jwrE2AbLeq8+9/akXdzTzFi9fl4cY0cN68OkCFlgSu20yKCKaqc+35PVBSRi?=
+ =?us-ascii?Q?/AOjeMp88m2AcQ3T41vkMiOsh3J+KrEIjyg9llH9ErolCJaFnjgalSljeVlK?=
+ =?us-ascii?Q?UgJ6hd67+NepX1y41x7kMg2I6ABxawCzDdXcoTePgXdfuHB9hzMhlcQhHCFK?=
+ =?us-ascii?Q?pXk4uLKq7k18+1n/VLZ6+o0CAlG6cQgaDLHwLTUcpQyFePcyOI+StX0nu3iR?=
+ =?us-ascii?Q?GEOITt1s9ro62fPZdFE4qylOGPl5WX7ahwrp9iVyFPGph5YlyY2xwGV9GAvL?=
+ =?us-ascii?Q?xfQ3tnVgTBWAgxSwm7b95mS3udIAxjWdGh8ajhDqfslOmmq+OUTa8Sjg3rlI?=
+ =?us-ascii?Q?RKyHx1z0UsNGErOSiKwK+tI5EuWOfxii3YP7VCa7FsFhYdmwPCx0aBSo++CO?=
+ =?us-ascii?Q?SQ76kqz8ocJutJ0v1YVRtECBeGqUBGjmFwxtW6Pl1galfn+sCR/Od2hhgX7r?=
+ =?us-ascii?Q?cYC/F5vbHpTGFg3yUwCYvZLUKN4o6Gb0SLIIL/ujD4+S8WSZguNmWsITcr6Y?=
+ =?us-ascii?Q?0sjCZA6m/ZvZf1YWJxp+F1nF0VqDSyF5axFyutG01Sgl/CpyPQ0tueNXoeiv?=
+ =?us-ascii?Q?WfUDoVi2bmDS5+kp/8EVThvxhUgVfvPJwJfaBs6n6+4CKuqLzRuPF+/wjx8M?=
+ =?us-ascii?Q?KcEToaqLHKcnyuVjQBGfSrkrLAm2hyQbcgUc0NMxnL0W692ybZTRcLB54fka?=
+ =?us-ascii?Q?vGDQwU9hnMzuBmyJxg8uMOXVt8P6EnzReyOM0G8g9o+R+UyIZpTQKzEZn1aX?=
+ =?us-ascii?Q?DFG5H00iak4p0tUzyFQWH27A9/us?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(82310400017)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 12:24:14.7609
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62ce93a7-91b7-4546-6092-08dc78c7c33d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FA.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8564
 
-On Mon, May 20, 2024 at 05:11:18PM +0530, Devarsh Thakkar wrote:
-> On 18/05/24 01:44, Andy Shevchenko wrote:
-> > On Fri, May 17, 2024 at 11:06:07PM +0530, Devarsh Thakkar wrote:
+From: Mohan Kumar <mkumard@nvidia.com>
 
-[..]
+For Non-Hypervisor mode, Tegra ADMA driver requires the register
+resource range to include both global and channel page in the reg
+entry. For Hypervisor more, Tegra ADMA driver requires only the
+channel page and global page range is not allowed for access.
 
-> >> +#include <kunit/test.h>
-> >> +#include <linux/gcd.h>
-> > 
-> >> +#include <linux/kernel.h>
-> > 
-> > Do you know why this header is included?
-> 
-> It includes all the other required headers (including those you mentioned
-> below), and header list is probably copied from other files in same directory.
-> But it does suffice the requirements as I have verified the compilation.
+Add reg-names DT binding for Hypervisor mode to help driver to
+differentiate the config between Hypervisor and Non-Hypervisor
+mode of execution.
 
-Yes, and one should follow IWYU principle and not cargo cult or whatever
-arbitrary lists.
+Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ .../devicetree/bindings/dma/nvidia,tegra210-adma.yaml  | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> >> +#include <linux/lcm.h>
-> > 
-> > + math.h // obviously
-> > + module.h
-> > 
-> >> +#include <linux/reciprocal_div.h>
-> > 
-> > + types.h
-> 
-> All the above headers are already included as part of kernel.h
-
-Yes, that's why you should not use "proxy" headers.
-Have you read the top comment in the kernel.h?
-
+diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
+index 877147e95ecc..ede47f4a3eec 100644
+--- a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
++++ b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
+@@ -29,8 +29,18 @@ properties:
+           - const: nvidia,tegra186-adma
+ 
+   reg:
++    description: |
++      For hypervisor mode, the address range should include a
++      ADMA channel page address range, for non-hypervisor mode
++      it starts with ADMA base address covering Global and Channel
++      page address range.
+     maxItems: 1
+ 
++  reg-names:
++    description: only required for Hypervisor mode.
++    items:
++      - const: vm
++
+   interrupts:
+     description: |
+       Should contain all of the per-channel DMA interrupts in
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.45.1
 
