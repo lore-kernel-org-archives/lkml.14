@@ -1,564 +1,169 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B683228E7
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 15:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A306F136E26;
+	Mon, 20 May 2024 15:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716218091; cv=none; b=e8Jx462QaUrtDpKASkZPHYlMB1hKKrA1Mp2TBWr4VLzQJ877r5fs3EfnTwealgMBRMUOwUbZImHlX5byKyga1prAH6jbmn6MvVV4bXqrEDwY2OucwlYuWiqJDjOboCWTWRizWbXUqLvRtIQTBOP/EnadL/G9dOZdKIc5+p+611s=
+	t=1716218103; cv=none; b=fJr0RryyMEZQN8OdpwPxUZv9Bl4fZp8Wh8UJnZGa+6Z/vw9Y+rWj3zNujlq0Ogf9aQIsxxI+tzGfoYE/RwOxvsqe0qCWdtgBvdpIew3DayoJwSgpaxrTOoCCXnAKuY5ESPWjHgD0hsRZYQSNf9VHpt53Rvk9W9M/lhm4wQDm6+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716218091; c=relaxed/simple;
-	bh=PUW3TOHcAkFSV/D/DhOgpcKzZp2FOVn21j5/i1sJ6VA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TPaZlQtmYH8sBcj1ocFd3LpGPKdfjiN3CD1H8ZQ2sJTkgtGCEClKGr2rkQyF16mo1L0gTp7p/YUumZB+VIKb4yYY/jSo+lQxyGp9Rcd2MoZRjeBzCGbO0osKI59AuFJH1zkYxeNAZzmF4JN0XO+41Ud/+CodCFbrhzChFOEUA8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Fp6xlEft; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716218103; c=relaxed/simple;
+	bh=BSQq3nH6BbvG3GwwX7KXj9SSGpe+oFenzMH/FHArVAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ULSn3828PVOyGietuhCl0T6/r67/rvNyGxxps7qc9XhHEyFSXpfFFXKACrA/oj8RRgunlj5sWbbu6n6/UM/fBJnbUC7Tm2wkBx9LLRem9PYKSRJm687JzCX3UU1oVlFTxccjpmt4MSMY4D+Nte5lyjNmx7SEb4mRRw7KmuNRwZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=VLevcejG; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=VLevcejG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Fp6xlEft"
-X-Envelope-To: brauner@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716218086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zU11edajvRqOFAuhaHHlL63+RzpHnSNiI79n6UUOUwE=;
-	b=Fp6xlEftiJ8jC3n4hDEwGUVURMvYAkZYZoGPtqJn4WC4ftcjQWprjX3R/D/J+mKfv5Fya4
-	vvnDqJrNUTfc9PAIRk2QSNgmk5lFRmnI5LeHBMWq7hmwC1YNMANw/ESr7NoMT+gzwTNDxc
-	ZssylZ8yCsjOmxqwTRWIYTmxsb2Wemg=
-X-Envelope-To: jack@suse.cz
-X-Envelope-To: viro@zeniv.linux.org.uk
-X-Envelope-To: wen.yang@linux.dev
-X-Envelope-To: axboe@kernel.dk
-X-Envelope-To: hch@lst.de
-X-Envelope-To: dylany@fb.com
-X-Envelope-To: dwmw@amazon.co.uk
-X-Envelope-To: pbonzini@redhat.com
-X-Envelope-To: dyoung@redhat.com
-X-Envelope-To: lkp@intel.com
-X-Envelope-To: linux-fsdevel@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wen Yang <wen.yang@linux.dev>
-To: Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Wen Yang <wen.yang@linux.dev>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Dylan Yudaken <dylany@fb.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	kernel test robot <lkp@intel.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] eventfd: introduce ratelimited wakeup for non-semaphore eventfd
-Date: Mon, 20 May 2024 23:13:54 +0800
-Message-Id: <20240520151354.4903-1-wen.yang@linux.dev>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="VLevcejG";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="VLevcejG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 96A1B20E0B;
+	Mon, 20 May 2024 15:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1716218099; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=txH8gRBcmiZ+FPDAMq+kB7RXfbCSffpiS23t4sam29M=;
+	b=VLevcejGINAYhrq4LcJ2vAGg8pRqCHvTRldomG8OwDpFInxqFfL3EYvwryIgX2JmepIfO4
+	Zt1IHePJE+Eav9WY/OzvFEr8qyDurbrgaCcXkKOFAHocomCCy4zFiB6QGBBNB0U6WKlYlv
+	Rej9p3mFPN0LBXLYTMPCP1zm1MahUcA=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1716218099; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=txH8gRBcmiZ+FPDAMq+kB7RXfbCSffpiS23t4sam29M=;
+	b=VLevcejGINAYhrq4LcJ2vAGg8pRqCHvTRldomG8OwDpFInxqFfL3EYvwryIgX2JmepIfO4
+	Zt1IHePJE+Eav9WY/OzvFEr8qyDurbrgaCcXkKOFAHocomCCy4zFiB6QGBBNB0U6WKlYlv
+	Rej9p3mFPN0LBXLYTMPCP1zm1MahUcA=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7849113A6B;
+	Mon, 20 May 2024 15:14:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jmNjGvNoS2ZaJwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 20 May 2024 15:14:59 +0000
+Date: Mon, 20 May 2024 17:14:58 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: cve@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Xu <peterx@redhat.com>
+Cc: linux-cve-announce@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: CVE-2024-36000: mm/hugetlb: fix missing hugetlb_lock for resv
+ uncharge
+Message-ID: <Zkto8rbtAUBql-78@tiehlicka>
+References: <2024052023-CVE-2024-36000-cfc4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024052023-CVE-2024-36000-cfc4@gregkh>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-For the NON-SEMAPHORE eventfd, a write (2) call adds the 8-byte integer
-value provided in its buffer to the counter, while a read (2) returns the
-8-byte value containing the value and resetting the counter value to 0.
-Therefore, the accumulated value of multiple writes can be retrieved by a
-single read.
+Peter,
+does b76b46902c2d ("mm/hugetlb: fix missing hugetlb_lock for resv
+uncharge") really have any security implications? I fail to see any but
+UFFD is not really my area so I might be missing something very easily.
 
-However, the current situation is to immediately wake up the read thread
-after writing the NON-SEMAPHORE eventfd, which increases unnecessary CPU
-overhead. By introducing a configurable rate limiting mechanism in
-eventfd_write, these unnecessary wake-up operations are reduced.
+On Mon 20-05-24 11:48:36, Greg KH wrote:
+> Description
+> ===========
+> 
+> In the Linux kernel, the following vulnerability has been resolved:
+> 
+> mm/hugetlb: fix missing hugetlb_lock for resv uncharge
+> 
+> There is a recent report on UFFDIO_COPY over hugetlb:
+> 
+> https://lore.kernel.org/all/000000000000ee06de0616177560@google.com/
+> 
+> 350:	lockdep_assert_held(&hugetlb_lock);
+> 
+> Should be an issue in hugetlb but triggered in an userfault context, where
+> it goes into the unlikely path where two threads modifying the resv map
+> together.  Mike has a fix in that path for resv uncharge but it looks like
+> the locking criteria was overlooked: hugetlb_cgroup_uncharge_folio_rsvd()
+> will update the cgroup pointer, so it requires to be called with the lock
+> held.
+> 
+> The Linux kernel CVE team has assigned CVE-2024-36000 to this issue.
+> 
+> 
+> Affected and fixed versions
+> ===========================
+> 
+> 	Issue introduced in 5.10 with commit 79aa925bf239 and fixed in 6.1.91 with commit 4c806333efea
+> 	Issue introduced in 5.10 with commit 79aa925bf239 and fixed in 6.6.30 with commit f6c5d21db16a
+> 	Issue introduced in 5.10 with commit 79aa925bf239 and fixed in 6.8.9 with commit 538faabf31e9
+> 	Issue introduced in 5.10 with commit 79aa925bf239 and fixed in 6.9 with commit b76b46902c2d
+> 	Issue introduced in 5.9.7 with commit f87004c0b2bd
+> 
+> Please see https://www.kernel.org for a full list of currently supported
+> kernel versions by the kernel community.
+> 
+> Unaffected versions might change over time as fixes are backported to
+> older supported kernel versions.  The official CVE entry at
+> 	https://cve.org/CVERecord/?id=CVE-2024-36000
+> will be updated if fixes are backported, please check that for the most
+> up to date information about this issue.
+> 
+> 
+> Affected files
+> ==============
+> 
+> The file(s) affected by this issue are:
+> 	mm/hugetlb.c
+> 
+> 
+> Mitigation
+> ==========
+> 
+> The Linux kernel CVE team recommends that you update to the latest
+> stable kernel version for this, and many other bugfixes.  Individual
+> changes are never tested alone, but rather are part of a larger kernel
+> release.  Cherry-picking individual commits is not recommended or
+> supported by the Linux kernel community at all.  If however, updating to
+> the latest release is impossible, the individual changes to resolve this
+> issue can be found at these commits:
+> 	https://git.kernel.org/stable/c/4c806333efea1000a2a9620926f560ad2e1ca7cc
+> 	https://git.kernel.org/stable/c/f6c5d21db16a0910152ec8aa9d5a7aed72694505
+> 	https://git.kernel.org/stable/c/538faabf31e9c53d8c870d114846fda958a0de10
+> 	https://git.kernel.org/stable/c/b76b46902c2d0395488c8412e1116c2486cdfcb2
 
-We may use the following test code:
-	#define _GNU_SOURCE
-	#include <assert.h>
-	#include <err.h>
-	#include <errno.h>
-	#include <getopt.h>
-	#include <pthread.h>
-	#include <poll.h>
-	#include <stdlib.h>
-	#include <stdio.h>
-	#include <unistd.h>
-	#include <string.h>
-	#include <sys/eventfd.h>
-	#include <sys/prctl.h>
-	#include <sys/ioctl.h>
-
-	struct eventfd_qos {
-		__u32 token_capacity;
-		__u32 token_rate;
-	};
-
-	#define EFD_IOC_SET_QOS        _IOW('E', 0, struct eventfd_qos)
-	#define EFD_IOC_GET_QOS        _IOR('E', 0, struct eventfd_qos)
-
-	struct pub_param {
-		int fd;
-		int cpu;
-		struct eventfd_qos *qos;
-	};
-
-	struct sub_param {
-		int fd;
-		int cpu;
-	};
-
-	static void publish(void *data)
-	{
-		struct pub_param * param = (struct pub_param *)data;
-		unsigned long long value = 1;
-		cpu_set_t cpuset;
-		int ret;
-
-		prctl(PR_SET_NAME,"publish");
-
-		CPU_ZERO(&cpuset);
-		CPU_SET(param->cpu, &cpuset);
-		sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-		if (param->qos) {
-			ret = ioctl(param->fd, EFD_IOC_SET_QOS, param->qos);
-			if (ret == -1) {
-				printf("ioctl failed, error=%s\n",
-					strerror(errno));
-				return;
-			}
-		}
-
-		while (1) {
-			ret = eventfd_write(param->fd, value);
-			if (ret < 0)
-				printf("XXX: write failed, %s\n",
-				       	strerror(errno));
-		}
-	}
-
-	static void subscribe(void *data)
-	{
-		struct sub_param *param = (struct sub_param *)data;
-		unsigned long long value = 0;
-		struct pollfd pfds[1];
-		cpu_set_t cpuset;
-
-		prctl(PR_SET_NAME,"subscribe");
-		CPU_ZERO(&cpuset);
-		CPU_SET(param->cpu, &cpuset);
-		sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-		pfds[0].fd = param->fd;
-		pfds[0].events = POLLIN;
-
-		while(1) {
-			poll(pfds, 1, -1);
-			if(pfds[0].revents & POLLIN) {
-				read(param->fd, &value, sizeof(value));
-			}
-		}
-	}
-
-	static void usage(void)
-	{
-		printf("Usage: \n");
-		printf("\t");
-		printf("<-p cpuid> <-s cpuid > [ -r rate ] [ -c capacity ] \n");
-	}
-
-	int main(int argc, char *argv[])
-	{
-		char *optstr = "p:s:r::c::";
-		struct sub_param sub_param = {0};
-		struct pub_param pub_param = {0};
-		struct eventfd_qos qos = {0};
-		pid_t pid;
-		int fd;
-		int opt;
-
-		if (argc < 3) {
-			usage();
-			return 1;
-		}
-
-		while((opt = getopt(argc, argv, optstr)) != -1){
-			switch(opt) {
-				case 'p':
-					pub_param.cpu = atoi(optarg);
-					break;
-				case 's':
-					sub_param.cpu = atoi(optarg);
-					break;
-				case 'r':
-					qos.token_rate = atoi(optarg);
-					break;
-				case 'c':
-					qos.token_capacity = atoi(optarg);
-					break;
-				case '?':
-					usage();
-					return 1;
-			}
-		}
-
-		fd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK | EFD_NONBLOCK);
-		assert(fd);
-
-		sub_param.fd = fd;
-		pub_param.fd = fd;
-		pub_param.qos = (qos.token_capacity && qos.token_rate) ? &qos : NULL;
-
-		pid = fork();
-		if (pid == 0)
-			subscribe(&sub_param);
-		else if (pid > 0)
-			publish(&pub_param);
-		else {
-			printf("XXX: fork error!\n");
-			return -1;
-		}
-
-		return 0;
-	}
-
-	# ./a.out  -p 2 -s 3
-	The original cpu usage is as follows:
-09:53:38 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-09:53:40 PM    2   47.26    0.00   52.74    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-09:53:40 PM    3   44.72    0.00   55.28    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-
-09:53:40 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-09:53:42 PM    2   45.73    0.00   54.27    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-09:53:42 PM    3   46.00    0.00   54.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-
-09:53:42 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-09:53:44 PM    2   48.00    0.00   52.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-09:53:44 PM    3   45.50    0.00   54.50    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-
-Then enable the ratelimited wakeup, eg:
-	# ./a.out  -p 2 -s 3  -r1000 -c2
-
-Observing a decrease of over 20% in CPU utilization (CPU # 3, 54% ->30%), as shown below:
-10:02:32 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-10:02:34 PM    2   53.00    0.00   47.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-10:02:34 PM    3   30.81    0.00   30.81    0.00    0.00    0.00    0.00    0.00    0.00   38.38
-
-10:02:34 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-10:02:36 PM    2   48.50    0.00   51.50    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-10:02:36 PM    3   30.20    0.00   30.69    0.00    0.00    0.00    0.00    0.00    0.00   39.11
-
-10:02:36 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-10:02:38 PM    2   45.00    0.00   55.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-10:02:38 PM    3   27.08    0.00   30.21    0.00    0.00    0.00    0.00    0.00    0.00   42.71
-
-Signed-off-by: Wen Yang <wen.yang@linux.dev>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dylan Yudaken <dylany@fb.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: kernel test robot <lkp@intel.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-v2: fix the build errors reported by kernel test robot
-
- fs/eventfd.c                 | 188 ++++++++++++++++++++++++++++++++++-
- include/uapi/linux/eventfd.h |   8 ++
- init/Kconfig                 |  18 ++++
- 3 files changed, 213 insertions(+), 1 deletion(-)
-
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 9afdb722fa92..a6161ba73f94 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -27,6 +27,15 @@
- 
- static DEFINE_IDA(eventfd_ida);
- 
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+struct eventfd_bucket {
-+	struct eventfd_qos qos;
-+	struct hrtimer timer;
-+	u64 timestamp;
-+	u64 tokens;
-+};
-+#endif
-+
- struct eventfd_ctx {
- 	struct kref kref;
- 	wait_queue_head_t wqh;
-@@ -41,8 +50,97 @@ struct eventfd_ctx {
- 	__u64 count;
- 	unsigned int flags;
- 	int id;
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+	struct eventfd_bucket bucket;
-+#endif
- };
- 
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+
-+static void eventfd_refill_tokens(struct eventfd_bucket *bucket)
-+{
-+	unsigned int rate = bucket->qos.token_rate;
-+	u64 now = ktime_get_ns();
-+	u64 tokens;
-+
-+	tokens = ktime_sub(now, bucket->timestamp) * rate;
-+	do_div(tokens, NSEC_PER_SEC);
-+	if (tokens > 0) {
-+		tokens += bucket->tokens;
-+		bucket->tokens = (tokens > bucket->qos.token_capacity) ?
-+				 tokens : bucket->qos.token_capacity;
-+	}
-+	bucket->timestamp = now;
-+}
-+
-+static int eventfd_consume_tokens(struct eventfd_bucket *bucket)
-+{
-+	if (bucket->tokens > 0) {
-+		bucket->tokens--;
-+		return 1;
-+	} else
-+		return 0;
-+}
-+
-+static bool eventfd_detect_storm(struct eventfd_ctx *ctx)
-+{
-+	u32 rate = ctx->bucket.qos.token_rate;
-+
-+	if (rate == 0)
-+		return false;
-+
-+	eventfd_refill_tokens(&ctx->bucket);
-+	return !eventfd_consume_tokens(&ctx->bucket);
-+}
-+
-+static enum hrtimer_restart eventfd_timer_handler(struct hrtimer *timer)
-+{
-+	struct eventfd_ctx *ctx;
-+	unsigned long flags;
-+
-+	ctx = container_of(timer, struct eventfd_ctx, bucket.timer);
-+	spin_lock_irqsave(&ctx->wqh.lock, flags);
-+
-+	/*
-+	 * Checking for locked entry and wake_up_locked_poll() happens
-+	 * under the ctx->wqh.lock lock spinlock
-+	 */
-+	if (waitqueue_active(&ctx->wqh))
-+		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-+
-+	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
-+	eventfd_ctx_put(ctx);
-+
-+	return HRTIMER_NORESTART;
-+}
-+
-+static void eventfd_ratelimited_wake_up(struct eventfd_ctx *ctx)
-+{
-+	u32 rate = ctx->bucket.qos.token_rate;
-+	u64 now = ktime_get_ns();
-+	u64 slack_ns;
-+	u64 expires;
-+
-+	if (likely(rate)) {
-+		slack_ns = NSEC_PER_SEC/rate;
-+	} else {
-+		WARN_ON_ONCE("fallback to the default NSEC_PER_SEC.");
-+		slack_ns = NSEC_PER_MSEC;
-+	}
-+
-+	/* if already queued, don't bother */
-+	if (hrtimer_is_queued(&ctx->bucket.timer))
-+		return;
-+
-+	/* determine next wakeup, add a timer margin */
-+	expires = now + slack_ns;
-+
-+	kref_get(&ctx->kref);
-+	hrtimer_start(&ctx->bucket.timer, expires, HRTIMER_MODE_ABS);
-+}
-+
-+#endif
-+
- /**
-  * eventfd_signal_mask - Increment the event counter
-  * @ctx: [in] Pointer to the eventfd context.
-@@ -270,8 +368,23 @@ static ssize_t eventfd_write(struct file *file, const char __user *buf, size_t c
- 	if (likely(res > 0)) {
- 		ctx->count += ucnt;
- 		current->in_eventfd = 1;
--		if (waitqueue_active(&ctx->wqh))
-+
-+		/*
-+		 * Checking for locked entry and wake_up_locked_poll() happens
-+		 * under the ctx->wqh.lock spinlock
-+		 */
-+		if (waitqueue_active(&ctx->wqh)) {
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+			if ((ctx->flags & EFD_SEMAPHORE) || !eventfd_detect_storm(ctx))
-+				wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-+			else
-+				eventfd_ratelimited_wake_up(ctx);
-+
-+#else
- 			wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-+#endif
-+		}
-+
- 		current->in_eventfd = 0;
- 	}
- 	spin_unlock_irq(&ctx->wqh.lock);
-@@ -299,6 +412,66 @@ static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
- }
- #endif
- 
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+static long eventfd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	struct eventfd_ctx *ctx = file->private_data;
-+	void __user *uaddr = (void __user *)arg;
-+	struct eventfd_qos qos;
-+
-+	if (ctx->flags & EFD_SEMAPHORE)
-+		return -EINVAL;
-+	if (!uaddr)
-+		return -EINVAL;
-+
-+	switch (cmd) {
-+	case EFD_IOC_SET_QOS:
-+		if (copy_from_user(&qos, uaddr, sizeof(qos)))
-+			return -EFAULT;
-+		if (qos.token_rate > NSEC_PER_SEC)
-+			return -EINVAL;
-+
-+		for (;;) {
-+			spin_lock_irq(&ctx->wqh.lock);
-+			if (hrtimer_try_to_cancel(&ctx->bucket.timer) >= 0) {
-+				spin_unlock_irq(&ctx->wqh.lock);
-+				break;
-+			}
-+			spin_unlock_irq(&ctx->wqh.lock);
-+			hrtimer_cancel_wait_running(&ctx->bucket.timer);
-+		}
-+
-+		spin_lock_irq(&ctx->wqh.lock);
-+		ctx->bucket.timestamp = ktime_get_ns();
-+		ctx->bucket.qos = qos;
-+		ctx->bucket.tokens = qos.token_capacity;
-+
-+		current->in_eventfd = 1;
-+		/*
-+		 * Checking for locked entry and wake_up_locked_poll() happens
-+		 * under the ctx->wqh.lock lock spinlock
-+		 */
-+		if ((!ctx->count) && (waitqueue_active(&ctx->wqh)))
-+			wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-+		current->in_eventfd = 0;
-+
-+		spin_unlock_irq(&ctx->wqh.lock);
-+		return 0;
-+
-+	case EFD_IOC_GET_QOS:
-+		qos = READ_ONCE(ctx->bucket.qos);
-+		if (copy_to_user(uaddr, &qos, sizeof(qos)))
-+			return -EFAULT;
-+		return 0;
-+
-+	default:
-+		return -ENOENT;
-+	}
-+
-+	return -EINVAL;
-+}
-+#endif
-+
- static const struct file_operations eventfd_fops = {
- #ifdef CONFIG_PROC_FS
- 	.show_fdinfo	= eventfd_show_fdinfo,
-@@ -308,6 +481,10 @@ static const struct file_operations eventfd_fops = {
- 	.read_iter	= eventfd_read,
- 	.write		= eventfd_write,
- 	.llseek		= noop_llseek,
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+	.unlocked_ioctl	= eventfd_ioctl,
-+	.compat_ioctl	= eventfd_ioctl,
-+#endif
- };
- 
- /**
-@@ -403,6 +580,15 @@ static int do_eventfd(unsigned int count, int flags)
- 	ctx->flags = flags;
- 	ctx->id = ida_alloc(&eventfd_ida, GFP_KERNEL);
- 
-+#ifdef CONFIG_EVENTFD_RATELIMITED_WAKEUP
-+	ctx->bucket.qos.token_rate = 0;
-+	ctx->bucket.qos.token_capacity = 0;
-+	ctx->bucket.tokens = 0;
-+	ctx->bucket.timestamp = ktime_get_ns();
-+	hrtimer_init(&ctx->bucket.timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	ctx->bucket.timer.function = eventfd_timer_handler;
-+#endif
-+
- 	flags &= EFD_SHARED_FCNTL_FLAGS;
- 	flags |= O_RDWR;
- 	fd = get_unused_fd_flags(flags);
-diff --git a/include/uapi/linux/eventfd.h b/include/uapi/linux/eventfd.h
-index 2eb9ab6c32f3..8e9d5361ec6a 100644
---- a/include/uapi/linux/eventfd.h
-+++ b/include/uapi/linux/eventfd.h
-@@ -8,4 +8,12 @@
- #define EFD_CLOEXEC O_CLOEXEC
- #define EFD_NONBLOCK O_NONBLOCK
- 
-+struct eventfd_qos {
-+	__u32 token_capacity;
-+	__u32 token_rate;
-+};
-+
-+#define EFD_IOC_SET_QOS	_IOW('E', 0, struct eventfd_qos)
-+#define EFD_IOC_GET_QOS	_IOR('E', 0, struct eventfd_qos)
-+
- #endif /* _UAPI_LINUX_EVENTFD_H */
-diff --git a/init/Kconfig b/init/Kconfig
-index 0a021d6b4939..ebfc79ff34ca 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1646,6 +1646,24 @@ config EVENTFD
- 
- 	  If unsure, say Y.
- 
-+config EVENTFD_RATELIMITED_WAKEUP
-+	bool "support ratelimited wakeups for the NON-SEMAPHORE eventfd" if EXPERT
-+	default n
-+	depends on EVENTFD
-+	help
-+	  This option enables the ratelimited wakeups for the non-semaphore
-+	  eventfd. Frequent writing to an eventfd can lead to frequent wakeup
-+	  of processes waiting for reading on this eventfd, resulting in
-+	  significant overhead. However, for the NON-SEMAPHORE eventfd, if its
-+	  counter has a non-zero value, read (2) returns 8 bytes containing
-+	  that value, and the counter value is reset to zero. This means that
-+	  a read operation can retrieve the accumulated value caused by
-+	  multiple write operations.
-+	  By introducing the ratelimited wakeups for the NON-SEMAPHORE eventfd,
-+	  these CPU overhead can be reduced.
-+
-+	  If unsure, say N.
-+
- config SHMEM
- 	bool "Use full shmem filesystem" if EXPERT
- 	default y
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
