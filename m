@@ -1,174 +1,130 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1629D18EA1
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2289817991;
+	Mon, 20 May 2024 07:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716189000; cv=none; b=coQ/PHe3/uVhatEzsZbYIHhBulYQ438+JHudCjetZvgscMWGQzZc+r5Gg/eZ+64nA7X7D7WSkLfHHltT9HNspVX3/YY8SNMmdlE9NKdgL4JfgdEol+VYzrQ34O/b7b6lZHwHLE2xMsvxoDB0hjvv6KSL3bG8TszsRroprYTNte4=
+	t=1716189062; cv=none; b=lcZCJbOh8yliDkxjGFtfmz1aJDWugiwcZv+lDZmvPelX9GB80d1L3lBWqfBkYNCtG2nDSd0sqESgaLEIh9bJzY3YpoKkktAsTgJzU4G1f70EnDe9s2oUXZE9INKsNjl96eQOBeR/3CucVMfJnwe5K8RvsGni4PbMCcNSZhDsUsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716189000; c=relaxed/simple;
-	bh=DWl8vgttx0y94Ansyt6GBs5OvLyB7TljJs47io3/TZ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rs0WnUdbv41v7GnL1/pqzjW2bDEvYd13cI3Tnnzj/WJQVCd38X3lkdXLKKBNhN/5zOBRwLWo1SviZk0lnYDYt0qPVK8GsMO/fk/e+oK2n9R6DPE2bS4aQYUcMJ9kxK5RE6C+82mGiCHTHLFgyWJ4jqVUrGIvhBJSP9oMr5/5ugo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=PbVD4VkL; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1716189062; c=relaxed/simple;
+	bh=Xqp4WFSK/O1dCF/AoIOI2mi1EC2aT+nNHiw50mWgMi4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ilHNZUGJa8m93vAfJhyI/F5grSe9r4eE1sU+2KC7mpcmVURpAaRkgNJQ2PIl8KR/Y/pDGMUkq+zmS3tTxmzLgtJl4Ik7agPQ8FdtONySxF3jsx36JJx5CVdcncsYkj1PUsD8+O9+pptTBdvo0WH+kuHKPm1LTuUkT9pYcgKxUX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=REMDBuTV; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="PbVD4VkL"
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id EBD003F331
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1716188636;
-	bh=BFUGexLuO075Vn4TwjD0eI7xgrFNdKP3Yd5kw3jHcLA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=PbVD4VkLezrRmzhH/vXZ9Y34yLvssG5dVUXVh1B/CLko7v5c9w/U6mp7hPHGLLSLu
-	 8ZbhPLw+/5soqtKMS6QOyYIScynYv/HBm7CWf8c4Ju/k2Nowz5cRKqjJcQB32rc7ng
-	 6sYc4pP/OIXtraRo6+R4pAffNcHSJilGHRQqmVSh2GzW4K7Rf2FogAjh71Ce5ZqKlJ
-	 SH8ECtYdcktIgBldJ/vGK50sA7WNrYxpv6UN+IH7Irn4F5hgfq5i6dc9okcL9B/Ab+
-	 LNwWSvsvdVZ7CZt+QQZvTwkJn3xJrQsE3GcEzyGfRJNADdnXd1XW0/C6o9pZbNROVH
-	 OL7TgvwuwVfRA==
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6f6985cf246so1209626b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:03:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REMDBuTV"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ed835f3c3cso73065525ad.3;
+        Mon, 20 May 2024 00:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716189060; x=1716793860; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GzRkDGtz7I3+/0/aWq4lp22/QhQlM4vFfLswyFGXHd8=;
+        b=REMDBuTVsPIBIi5CsX10qqlieCvm06TFXkegLE6pNJcxVNgi+pw7UFV63HoavvFwOd
+         8dLb0zKWuPdlIudbjLmk+2M/vufkH0Evw4Y9IV4+kWNeEK8xkaAfFCLhZoXnt3RHIaK0
+         vOpTWOzE6xzdhxS3GoS71eCmuXG1/24776DGXcNZdFIsehAv6RWFPFzbjwrFsA4b6P6k
+         yIwyK99mjfYOB7ja0K3+XaZ9wUOtEOr+KGbtOGF1PDmkOqPiHvTZjcpafzKFmemEYj2n
+         upyU2OFVCx8DD2KriFLmGj3NNZ1opnUSwuzuAHj6yK07vxMjmBWzzWxnxSKQEhgSYPTC
+         Pocw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716188635; x=1716793435;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BFUGexLuO075Vn4TwjD0eI7xgrFNdKP3Yd5kw3jHcLA=;
-        b=Gu+x5FTAIf3DD/JZS/YXixu/3K4zUTnjbTHJ0+avC4355sEmqbEPRdDLNcthFXaBKf
-         6b2CqyLVGEJnPaSrR/BFMMwFWerZ+QtZsUUHZMZS0v1i+3a3O5cPISh/5r5aB/ZiiE2e
-         iU9imWyBX1a/wiuLn4mglINssELWN5wBPsXVTGlPv9LHuQ917D9pgEzcbsqzLfv5+gM+
-         n9JBod10Wd7tYsjo4DD9+4iwjhfN+twksE2/xYNsjoyJexqMEqdLLxqPKRk/IbvTb5mm
-         Uz79MUtldfH4vqXluXZHiMpR5kgpQAgrk56BAczzlNEGS8XrRpekC0uQt0QwM0J17aCd
-         q//A==
-X-Forwarded-Encrypted: i=1; AJvYcCXWKQVL0SjruyT8Ks4C8/53eFx4NCcFM0seGIiqLSDqEpKQ0xnWr3zsUXiGz664kK0SWiZprKUhHpQKkY1mE8+IItyKmm1sIwuM6Kkp
-X-Gm-Message-State: AOJu0YyI1Urh4MoVuIkbeFpiGP+sMJnMkSV8/ruKhy0aH74ekCH1MOO9
-	oiZphXEcAWvl0GyEfOflzUby554bWeSrInp4dpXFaH7NS//OGELFMai00w77cnPzrJcaYbDiDCR
-	mxckPVvGvRIFzh0UzBiFDW0AZBeYctRpvbu5SpZln8un9bQ21lvcL6+U6lRVvpo7pGfY72yi/a7
-	nIxw==
-X-Received: by 2002:a05:6a20:ce43:b0:1af:cc75:3f79 with SMTP id adf61e73a8af0-1afde234e96mr27897872637.55.1716188635459;
-        Mon, 20 May 2024 00:03:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEiuH8ECoxsXXBHCIVNZqb1hJCS/B2V+RQsbdxDB7CMxW1pz6aZLZyopAHes2u0T+Odb+5SXQ==
-X-Received: by 2002:a05:6a20:ce43:b0:1af:cc75:3f79 with SMTP id adf61e73a8af0-1afde234e96mr27897855637.55.1716188635076;
-        Mon, 20 May 2024 00:03:55 -0700 (PDT)
-Received: from chengendu.. (111-248-138-2.dynamic-ip.hinet.net. [111.248.138.2])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-65bc5dd2a84sm6320994a12.85.2024.05.20.00.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 00:03:54 -0700 (PDT)
-From: Chengen Du <chengen.du@canonical.com>
-To: willemdebruijn.kernel@gmail.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chengen Du <chengen.du@canonical.com>
-Subject: [PATCH] af_packet: Handle outgoing VLAN packets without hardware offloading
-Date: Mon, 20 May 2024 15:03:48 +0800
-Message-Id: <20240520070348.26725-1-chengen.du@canonical.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1716189060; x=1716793860;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GzRkDGtz7I3+/0/aWq4lp22/QhQlM4vFfLswyFGXHd8=;
+        b=hT13hU9vXZRXVm6ZtgWy+lk8Co2MAZlL7bJEzr+0sERuY4hAvolR9z6NRTk893tvYx
+         TtoHQ8zu3pUQjltYYUfcFW35d7p8QXlHYvYHHxBChUpSUMbxCPR/f8EZa5CYBQdtLcjn
+         ewQAJDOxz5SJHSP/mx80PtOX2VfOIQohlZsq4IB11H3NzMcv9Nmv3trJ6akn5nysugYA
+         X1rVgt5dgON+YyrYHwMdZPzejgiK+ARNkpKPf7onpK0qMGYNFbV91OnYxB92WjOtXMt6
+         YAVCJOoSXsyliMM9PA08cts+q56xa+HZfLVqZnpCPLTnG877u7GZbpA297xOmPEdVnTD
+         szog==
+X-Forwarded-Encrypted: i=1; AJvYcCUa5kgqA9W+xRUn6S3Y5qH0n8YmhZwNqxXHcDij7mnAVTkJ9zh9QvUoLqLHHJf9astOToszcXn0ZDQ/TAyNvqNAHizPPCN3kVaIvJsZTmFxG13dCVIpmOvC0cRSRrNXoIQNXXC593mrWs+Amg==
+X-Gm-Message-State: AOJu0Yx1zyGX2MI6HeBbPXI+VKqbXMR5cBsoTlh7gxOiUV7pxYY9Ss11
+	i4w1eOOCs3ad9OzkPUn2yzNKPk8VeqJAP6i99cmyLVPKc21NR5vY17eviU+G5qk=
+X-Google-Smtp-Source: AGHT+IG4Ymvi2o+m4Cd7KR59fK5NFZa5IP8shdlOvXufN+TZu1xsj/UlyyJohS1f26TB2LTxebTbZw==
+X-Received: by 2002:a17:902:eb86:b0:1eb:4a40:c486 with SMTP id d9443c01a7336-1ef43d17f42mr374476445ad.14.1716189060280;
+        Mon, 20 May 2024 00:11:00 -0700 (PDT)
+Received: from smtpclient.apple ([47.246.179.0])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c03874csm195601135ad.206.2024.05.20.00.10.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2024 00:10:59 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] livepatch: introduce klp_func called interface
+From: zhang warden <zhangwarden@gmail.com>
+In-Reply-To: <alpine.LSU.2.21.2405200845130.11413@pobox.suse.cz>
+Date: Mon, 20 May 2024 15:10:40 +0800
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>,
+ Petr Mladek <pmladek@suse.com>,
+ Joe Lawrence <joe.lawrence@redhat.com>,
+ live-patching@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BBD2A553-6D44-4CD5-94DD-D8B2D5536F94@gmail.com>
+References: <20240520005826.17281-1-zhangwarden@gmail.com>
+ <alpine.LSU.2.21.2405200845130.11413@pobox.suse.cz>
+To: Miroslav Benes <mbenes@suse.cz>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-In the outbound packet path, if hardware VLAN offloading is unavailable,
-the VLAN tag is inserted into the payload but then cleared from the
-metadata. Consequently, this could lead to a false negative result when
-checking for the presence of a VLAN tag using skb_vlan_tag_present(),
-causing the packet sniffing outcome to lack VLAN tag information. As a
-result, the packet capturing tool may be unable to parse packets as
-expected.
 
-Signed-off-by: Chengen Du <chengen.du@canonical.com>
----
- net/packet/af_packet.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index ea3ebc160e25..73e9acb1875b 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1010,12 +1010,15 @@ static void prb_fill_vlan_info(struct tpacket_kbdq_core *pkc,
- 	if (skb_vlan_tag_present(pkc->skb)) {
- 		ppd->hv1.tp_vlan_tci = skb_vlan_tag_get(pkc->skb);
- 		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->vlan_proto);
--		ppd->tp_status = TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-+	} else if (eth_type_vlan(pkc->skb->protocol)) {
-+		ppd->hv1.tp_vlan_tci = ntohs(vlan_eth_hdr(pkc->skb)->h_vlan_TCI);
-+		ppd->hv1.tp_vlan_tpid = ntohs(pkc->skb->protocol);
- 	} else {
- 		ppd->hv1.tp_vlan_tci = 0;
- 		ppd->hv1.tp_vlan_tpid = 0;
--		ppd->tp_status = TP_STATUS_AVAILABLE;
- 	}
-+	ppd->tp_status = (ppd->hv1.tp_vlan_tci || ppd->hv1.tp_vlan_tpid) ?
-+		TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID : TP_STATUS_AVAILABLE;
- }
- 
- static void prb_run_all_ft_ops(struct tpacket_kbdq_core *pkc,
-@@ -2427,11 +2430,15 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 		if (skb_vlan_tag_present(skb)) {
- 			h.h2->tp_vlan_tci = skb_vlan_tag_get(skb);
- 			h.h2->tp_vlan_tpid = ntohs(skb->vlan_proto);
--			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-+		} else if (eth_type_vlan(skb->protocol)) {
-+			h.h2->tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
-+			h.h2->tp_vlan_tpid = ntohs(skb->protocol);
- 		} else {
- 			h.h2->tp_vlan_tci = 0;
- 			h.h2->tp_vlan_tpid = 0;
- 		}
-+		if (h.h2->tp_vlan_tci || h.h2->tp_vlan_tpid)
-+			status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
- 		memset(h.h2->tp_padding, 0, sizeof(h.h2->tp_padding));
- 		hdrlen = sizeof(*h.h2);
- 		break;
-@@ -2457,7 +2464,8 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 	sll->sll_halen = dev_parse_header(skb, sll->sll_addr);
- 	sll->sll_family = AF_PACKET;
- 	sll->sll_hatype = dev->type;
--	sll->sll_protocol = skb->protocol;
-+	sll->sll_protocol = eth_type_vlan(skb->protocol) ?
-+		vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
- 	sll->sll_pkttype = skb->pkt_type;
- 	if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
- 		sll->sll_ifindex = orig_dev->ifindex;
-@@ -3482,7 +3490,8 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 		/* Original length was stored in sockaddr_ll fields */
- 		origlen = PACKET_SKB_CB(skb)->sa.origlen;
- 		sll->sll_family = AF_PACKET;
--		sll->sll_protocol = skb->protocol;
-+		sll->sll_protocol = eth_type_vlan(skb->protocol) ?
-+			vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->protocol;
- 	}
- 
- 	sock_recv_cmsgs(msg, sk, skb);
-@@ -3538,11 +3547,15 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 		if (skb_vlan_tag_present(skb)) {
- 			aux.tp_vlan_tci = skb_vlan_tag_get(skb);
- 			aux.tp_vlan_tpid = ntohs(skb->vlan_proto);
--			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
-+		} else if (eth_type_vlan(skb->protocol)) {
-+			aux.tp_vlan_tci = ntohs(vlan_eth_hdr(skb)->h_vlan_TCI);
-+			aux.tp_vlan_tpid = ntohs(skb->protocol);
- 		} else {
- 			aux.tp_vlan_tci = 0;
- 			aux.tp_vlan_tpid = 0;
- 		}
-+		if (aux.tp_vlan_tci || aux.tp_vlan_tpid)
-+			aux.tp_status |= TP_STATUS_VLAN_VALID | TP_STATUS_VLAN_TPID_VALID;
- 		put_cmsg(msg, SOL_PACKET, PACKET_AUXDATA, sizeof(aux), &aux);
- 	}
- 
--- 
-2.40.1
+> On May 20, 2024, at 14:46, Miroslav Benes <mbenes@suse.cz> wrote:
+>=20
+> Hi,
+>=20
+> On Mon, 20 May 2024, Wardenjohn wrote:
+>=20
+>> Livepatch module usually used to modify kernel functions.
+>> If the patched function have bug, it may cause serious result
+>> such as kernel crash.
+>>=20
+>> This is a kobject attribute of klp_func. Sysfs interface named
+>> "called" is introduced to livepatch which will be set as true
+>> if the patched function is called.
+>>=20
+>> /sys/kernel/livepatch/<patch>/<object>/<function,sympos>/called
+>>=20
+>> This value "called" is quite necessary for kernel stability
+>> assurance for livepatching module of a running system.
+>> Testing process is important before a livepatch module apply to
+>> a production system. With this interface, testing process can
+>> easily find out which function is successfully called.
+>> Any testing process can make sure they have successfully cover
+>> all the patched function that changed with the help of this =
+interface.
+>=20
+> Even easier is to use the existing tracing infrastructure in the =
+kernel=20
+> (ftrace for example) to track the new function. You can obtain much =
+more=20
+> information with that than the new attribute provides.
+>=20
+> Regards,
+> Miroslav
+Hi Miroslav
+
+First, in most cases, testing process is should be automated, which make =
+using existing tracing infrastructure inconvenient. Second, livepatch is =
+already use ftrace for functional replacement, I don=E2=80=99t think it =
+is a good choice of using kernel tracing tool to trace a patched =
+function.
+
+At last, this attribute can be thought of as a state of a livepatch =
+function. It is a state, like the "patched" "transition" state of a =
+klp_patch.  Adding this state will not break the state consistency of =
+livepatch.
+
+Regards,
+Wardenjohn
 
