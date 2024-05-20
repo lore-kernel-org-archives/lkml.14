@@ -1,191 +1,103 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F26137C48
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 18:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2864F137935;
+	Mon, 20 May 2024 18:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716229501; cv=none; b=GgEOMCOOJl4J9ipY2ZUc9A8pSiM4D+QKF251vvCqno7MOvXpMpVLSPiB8hzQTQTtBd0AQcbGU0/m5zqB2LumFK8qDzamBPvtLX5mDAQLHBq3D1YTZkevQjd3RPGVfO5QzPAhGT5IigvjbysLw3iFjQYcIzvJinxHZ856QCyxzVQ=
+	t=1716229511; cv=none; b=Xs9l8D79nirkOGhBOyf4jhoRAnSKSoKhIlKWSofQJ+kC6t2JND9dhfBjchWzcz/OSfFo+77ls+74LZf4+F6ZaYzMDYEmtJJLq5GuAei34GBRYK4Evv7VppJNo6hlZMF0EnnFrVwlttigDKnCtHk5JxKJmaaEZlLMmUzBSLWpwrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716229501; c=relaxed/simple;
-	bh=dDm79kFjTMDwIZyPH0s80xpUacie3sx5J6V+kXbGlEA=;
+	s=arc-20240116; t=1716229511; c=relaxed/simple;
+	bh=p1xprU4vOea7uqODiskzLhgw/kUfj5m0dleX5y0RR/Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NmEuPBxrL+wG5Ez2nB5mhnTWc9H3L9RHXO36Uv80f5zZqyXsUJMiBmDPAXpqeavwqW5yQ+OdgtKPWQqOYiDEePbwEaQXYX5BQQHkkp8RKFKHzwj9kQf4VLBP0mZULor3gowSWEE0RXhK2TaEK6xON/mbTT5Fx7PNQYrIrLEPJV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O1P5SsLy; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=OUh6uxqV6usAEHI+b6nc2Jh0nB9t853B6pISc9yrSVmQs2fU2RKbRiSWdsRRTVw4NVxNotIFFNRbIXg+wuOFFll4APsBe56Bds0H0ZF8mx9Ke8erilLyuXtV24AlXWjdk4UccufUwAXAZgcytfeiwYo5I3JgvM+ox2rzA/p9aME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UtBfyvIG; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O1P5SsLy"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-351da5838fcso2696655f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 11:24:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtBfyvIG"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f2ecea41deso76436725ad.1;
+        Mon, 20 May 2024 11:25:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716229498; x=1716834298; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716229509; x=1716834309; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZdzEvfu1PEpJBwHmOIv154V3jtL1pSQeI6RYwYyKYZk=;
-        b=O1P5SsLymRYGLPFOcjsjAoXv1AyUYOanpGavuKQdgbB5XRlKjs2LOhw6sOBKDNUpRb
-         QMObBMZUpOq6QV5adlV3ByK4g6y5bPzMW5Wp6KgOhgGy3vb/z21CjjCq7H2Na3FrpN6c
-         06FLyVsMGjzMchlnY/wa/vfsMyqs9USGCJtyo7ygYImJenbLFDsdYDc11PoGAvErFIxy
-         mF4MxRas+83zfZt3uJ1SDgq8GfTYVw5y6RqFzoTfrTAGSUaq5Cw49PHhFXycICb5xuqg
-         VM46Xa5cagy6ZYrJlOGvL/9KpcQn3QxzuYsfngiXn2Cb+8VpGR5F0imwFXVaMUWSjxoi
-         gGew==
+        bh=aCzsMXCJzJib1Vj/052OC8Unse2419z65QvsV8mXP9k=;
+        b=UtBfyvIGNkbMGJgFZDWHS7kOxfVXqfk0U3AYzudbmebCCfbKOjVGV7+RC74bZdm8lg
+         VaMNMcPBOPa8nzgAA4Y+bBEInmJpysHo3LoT0W3Tmzy8Y/75V5mVn3KM/mL0NIPJBfn0
+         TVOrW57kz+XMIHlMO6MYr1Yp7xzq5HyfjNsx1olHdyKe9KDNkW0jUkcF+WdPTETa11mI
+         KWnLC0lwPiIY7NZ/pnO8xmApg2q2dlAVhLOWqk2wsWuRiQQ2Jx7WzssUdVoi85N9mq86
+         J9H05pSJvbIYwxSc73n+lH/1KyVG/wuIfaSPLpMD7VTBOiSOQnGC6h99vRxqoNmMTaVW
+         UR/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716229498; x=1716834298;
+        d=1e100.net; s=20230601; t=1716229509; x=1716834309;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZdzEvfu1PEpJBwHmOIv154V3jtL1pSQeI6RYwYyKYZk=;
-        b=i++tcxeOzpJzrKOud7tprDa7IB8sxjuMrOpdSK+xrhc0v/CP0PWZr8iO9fT2mgGhmT
-         UyI5dRhj4Qpu3nZ+C9Wy0WrKsM+ZehX+P22RJgYkcoNcBwBUH43oNLCEyjRUN4L1uJOG
-         c68x6u76ccrFaquba3RaCUCqOvAsk/E0SjmeJ53JzDErOQBoUweuPn9krcPxLXqKQyZJ
-         qJRetIZ9EY84c95GuUQd7XryAYQ3twHbwe7KabA0L1Qj5BPcxCu0s/0V0+xEBMxGXwjk
-         rpsZn/kbKqRR8w5NODphglODHoV10RIdH+aJS/O7bGYHW8cidnpg0uxaKrsXo1DL+teE
-         wVhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUf+BB4/5FyThLJpeJOODaPtEfkGPwbJIolEGz7ktO1fb7Ec3M5tWH8XL2CvQ4Rvy9R7Qjo/z+XMavEQ3wxXHCag9XmhFH5jg96aS3
-X-Gm-Message-State: AOJu0Yx/OW1U+psuj4OeOcIfAoxFmcpVQVzuflgX6+loE5DKO9DbM+F4
-	UpFKRyIU1l8GC3ZRtGHfRthuEbqleRZ21ZVkW+Sz0S7UrjSzQ2fK//VPojRFdJyyiG2TtpiBTBN
-	7wt5J9plNM+XSnjuxunquoq9IvQna/+oU+kRqWPkY6jZ0ijbia1Cs
-X-Google-Smtp-Source: AGHT+IHip0D1CwulZkUqzgTRHd4h9KDYjqLHoifTqfHumIM8JPr9kA/cIoKnvUx1OIyjr1GSqMOBTklaXEOXcjT5FEw=
-X-Received: by 2002:a05:6000:1a8d:b0:351:b882:4e2b with SMTP id
- ffacd0b85a97d-351b8824ef3mr21104096f8f.63.1716229497450; Mon, 20 May 2024
- 11:24:57 -0700 (PDT)
+        bh=aCzsMXCJzJib1Vj/052OC8Unse2419z65QvsV8mXP9k=;
+        b=Ovy4NAqgi5ozyBrT+6v8ZKJg6KEe0SonNhQuTsEEy0VY2LtPS6G+vT4n1hyQa3VX77
+         jBZDMHObBXu7Njla6WXHCShd8jAhvjZWz417I+r5mou7LZLRKv2LwV5Ig1lOw4bPGTYg
+         gQTBpvOo5rEVNu7LoQBBW8AOZJWnzv8WuCZVlaaKPqUSyRokYj4y7FOrTgYgMooABnNl
+         1vHMQmsY0OGY0t79rAIZGopEri2o6j0cjqdgO29OEgpRQYdx6YivNozvU+s0+CUuuHEu
+         IrnyX274prwGBJnmtmvkgeaq6Fw6VIxxvcyxFIvcU1jTh45wlWoFHqUo+Gh3d67pi7Pq
+         Sr1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWg2epGNq9yAwrIXPvEaJCyv0oLekWE7Qxwe/4MJAR5guH0CGbkXg9oZg8udKg7Bmpqa4plwHM/auudDiK+FjNjI82JDoJGqaS6pmbWARUq5c7x5YNTG4HDYLn01XlPAUeXMWiqILZXqE0kdAiglguVBY64OswUyG7+nBItx3hhwgF4iHoCfuI=
+X-Gm-Message-State: AOJu0Yw2b2VLkav8pbbTfdK7BLmRqwREbbEFDrzGB6O+aJsDhpyL1QjV
+	uv1/4jSfPjGh/a3CRazEEA05/8rC4Hsfyxb8bWhDi1/LAqtf2XVkMnsyHFVsrxlguRaWLWHyD4h
+	QMjVpxnLboLhCRg3pYoxsSTEXomqLoiIG
+X-Google-Smtp-Source: AGHT+IEo5H6eSId3eMYUGGmgFGcoQeNlGjDqS05obW5JIaQ7xwgIbgIbOQXUmPJK+Mk8Q73L4WM10QgiqrVY9P+5AOk=
+X-Received: by 2002:a17:90b:d0b:b0:2a2:c16:d673 with SMTP id
+ 98e67ed59e1d1-2b6ccc73005mr27772865a91.36.1716229509274; Mon, 20 May 2024
+ 11:25:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520090106.2898681-1-hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240520090106.2898681-1-hsiangkao@linux.alibaba.com>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Mon, 20 May 2024 11:24:44 -0700
-Message-ID: <CAB=BE-Qr5mukXPPqqduH2Rr3cBrkP_WUiJ1udhtfmmrHFmObcQ@mail.gmail.com>
-Subject: Re: [PATCH] erofs: avoid allocating DEFLATE streams before mounting
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, 
-	stable@vger.kernel.org
+References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-2-dakr@redhat.com>
+ <2024052038-deviancy-criteria-e4fe@gregkh>
+In-Reply-To: <2024052038-deviancy-criteria-e4fe@gregkh>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 20 May 2024 20:24:56 +0200
+Message-ID: <CANiq72n5Cb9dyzRozt9_SWknm9JOuZrY0jo7sLrC9AGkdKR9Qw@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/11] rust: add abstraction for struct device
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@redhat.com>, rafael@kernel.org, bhelgaas@google.com, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 20, 2024 at 2:06=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba.=
-com> wrote:
+On Mon, May 20, 2024 at 8:00=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
 >
-> Currently, each DEFLATE stream takes one 32 KiB permanent internal
-> window buffer even if there is no running instance which uses DEFLATE
-> algorithm.
->
-> It's unexpected and wasteful on embedded devices with limited resources
-> and servers with hundreds of CPU cores if DEFLATE is enabled but unused.
->
-> Fixes: ffa09b3bd024 ("erofs: DEFLATE compression support")
-> Cc: <stable@vger.kernel.org> # 6.6+
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> What's the status of moving .rs files next to their respective .c files
+> in the build system?  Keeping them separate like this just isn't going
+> to work, sorry.
 
-LGTM.
+In progress.
 
-Reviewed-by: Sandeep Dhavale <dhavale@google.com>
+> > +//! Generic devices that are part of the kernel's driver model.
+> > +//!
+> > +//! C header: [`include/linux/device.h`](../../../../include/linux/dev=
+ice.h)
+>
+> relative paths for a common "include <linux/device.h" type of thing?
+> Rust can't handle include paths from directories?
 
-Thanks,
-Sandeep.
+We have the custom `srctree/` notation for that (which the patch should use=
+).
 
-> ---
->  fs/erofs/decompressor_deflate.c | 55 +++++++++++++++++----------------
->  1 file changed, 29 insertions(+), 26 deletions(-)
->
-> diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_defl=
-ate.c
-> index 81e65c453ef0..3a3461561a3c 100644
-> --- a/fs/erofs/decompressor_deflate.c
-> +++ b/fs/erofs/decompressor_deflate.c
-> @@ -46,39 +46,15 @@ int __init z_erofs_deflate_init(void)
->         /* by default, use # of possible CPUs instead */
->         if (!z_erofs_deflate_nstrms)
->                 z_erofs_deflate_nstrms =3D num_possible_cpus();
-> -
-> -       for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstrms;
-> -            ++z_erofs_deflate_avail_strms) {
-> -               struct z_erofs_deflate *strm;
-> -
-> -               strm =3D kzalloc(sizeof(*strm), GFP_KERNEL);
-> -               if (!strm)
-> -                       goto out_failed;
-> -
-> -               /* XXX: in-kernel zlib cannot shrink windowbits currently=
- */
-> -               strm->z.workspace =3D vmalloc(zlib_inflate_workspacesize(=
-));
-> -               if (!strm->z.workspace) {
-> -                       kfree(strm);
-> -                       goto out_failed;
-> -               }
-> -
-> -               spin_lock(&z_erofs_deflate_lock);
-> -               strm->next =3D z_erofs_deflate_head;
-> -               z_erofs_deflate_head =3D strm;
-> -               spin_unlock(&z_erofs_deflate_lock);
-> -       }
->         return 0;
-> -
-> -out_failed:
-> -       erofs_err(NULL, "failed to allocate zlib workspace");
-> -       z_erofs_deflate_exit();
-> -       return -ENOMEM;
->  }
->
->  int z_erofs_load_deflate_config(struct super_block *sb,
->                         struct erofs_super_block *dsb, void *data, int si=
-ze)
->  {
->         struct z_erofs_deflate_cfgs *dfl =3D data;
-> +       static DEFINE_MUTEX(deflate_resize_mutex);
-> +       static bool inited;
->
->         if (!dfl || size < sizeof(struct z_erofs_deflate_cfgs)) {
->                 erofs_err(sb, "invalid deflate cfgs, size=3D%u", size);
-> @@ -89,9 +65,36 @@ int z_erofs_load_deflate_config(struct super_block *sb=
-,
->                 erofs_err(sb, "unsupported windowbits %u", dfl->windowbit=
-s);
->                 return -EOPNOTSUPP;
->         }
-> +       mutex_lock(&deflate_resize_mutex);
-> +       if (!inited) {
-> +               for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstr=
-ms;
-> +                    ++z_erofs_deflate_avail_strms) {
-> +                       struct z_erofs_deflate *strm;
-> +
-> +                       strm =3D kzalloc(sizeof(*strm), GFP_KERNEL);
-> +                       if (!strm)
-> +                               goto failed;
-> +                       /* XXX: in-kernel zlib cannot customize windowbit=
-s */
-> +                       strm->z.workspace =3D vmalloc(zlib_inflate_worksp=
-acesize());
-> +                       if (!strm->z.workspace) {
-> +                               kfree(strm);
-> +                               goto failed;
-> +                       }
->
-> +                       spin_lock(&z_erofs_deflate_lock);
-> +                       strm->next =3D z_erofs_deflate_head;
-> +                       z_erofs_deflate_head =3D strm;
-> +                       spin_unlock(&z_erofs_deflate_lock);
-> +               }
-> +               inited =3D true;
-> +       }
-> +       mutex_unlock(&deflate_resize_mutex);
->         erofs_info(sb, "EXPERIMENTAL DEFLATE feature in use. Use at your =
-own risk!");
->         return 0;
-> +failed:
-> +       mutex_unlock(&deflate_resize_mutex);
-> +       z_erofs_deflate_exit();
-> +       return -ENOMEM;
->  }
->
->  int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-> --
-> 2.39.3
->
+And eventually we should have support for easy-to-use links to C
+structs and so on (i.e. to the C docs) -- today I happened to be
+talking to the `rustdoc` maintainers about this old idea of ours.
+
+Cheers,
+Miguel
