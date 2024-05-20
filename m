@@ -1,80 +1,139 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DAC51C28;
-	Mon, 20 May 2024 11:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980B054BE8;
+	Mon, 20 May 2024 11:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716205278; cv=none; b=HG79fCSj4tbqKXHbEiwvBFNozQKoziidzpiIZlYrr6pLJz3w4BDHMWU3zw2rA6a7ETZF0Jg9X/Kx7frea+9uIR+qzvTW6Kytx6y3ZrIgzFXqF+nJluvQfSirGG5vZqYBufG5NtKmqog2BbBEGKGrmmEp/AY3FtUTv2Kfgo+5rKg=
+	t=1716205303; cv=none; b=UR+79MXWP9vxUMxSpZCiYooQsIJ5Q/rZegxuoc3k/JkA9jAz4LZ+Ap7TlXxshwYraYl/6lehNR9k9cmBkTd8P9e2yxxUuQ6oOCPsNvqkBbiWOsG2X9i3tM5h9/5Zsn+Jy9Z9MvWwLITTfRBu0qQlsNpo/ET7RbOrWIXFxnONrgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716205278; c=relaxed/simple;
-	bh=WwTSMnw7dKO/AgFPsWwYsEsVevXMKMS79IXwmEUQ7zI=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gexYpG4i8AIYgHmEW2gJEnAXhcfgTtI57PAMjKSkqC3HDO8SSbGigzWGjvhBLqevl+LK1jEBn9qE4nENyQmcBeW51+uUHKUU2aB9vBjrlhGopiTWeTz/1U3DHPQ5HPy2BViCvFCN4OlnfNrUwpQkfvGW5oJ5iUG2K6mrA2BYGdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=K28xO3jp; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1716205303; c=relaxed/simple;
+	bh=u130tbWpT6LvE50q6tsnZs3h7loPdMb44w2PkpTnAbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iQW6Em04gepbJYmmkLRmU6JsJSjPyO294Pb2JFad5OUtL2Fk+iNSfxQ2fHJ/b2HtWrOkRXtmoCgWkx/voIOVw4qF2fOuSfPd9kJDCFAYFCsyDyUEQ12CIDKq5LeaPIAyIeUeju8Uooyx8+AM91yIpcMZzZ4fvHSPRiazGUtlbWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EiP1nCzH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="K28xO3jp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=WwTSMnw7dKO/AgFPsWwYsEsVevXMKMS79IXwmEUQ7zI=;
-	t=1716205276; x=1717414876; b=K28xO3jpLUTFZu/gkC6rtHlD/W1/8WrAhsnqfDQY5hYEPOI
-	2eDhxsxBeq7uppt5WmOAd/O0WSOhJK5vE8xDUlW5ERGBXfdFyN8MEtzllprDaOf6WdYET4EY4fC52
-	1U6nl8Ny2mmmDoz1STgiiVEw66M1BTN1oi7M3sXbNOr646I7Ue/edoeZBwairX3iSn8JhVll1rmSC
-	lGSjSewFpLgYDqQWKk93m7WzOiVNAGt5I2KMuUS1pEhFaywv7vEHqCypUzR4wiKBT4x0a2jtT2EKx
-	6TADHdF78O0upbIfmH23jXiJ0AODt+UEewcZ5fmWdtz8uCWipcZ5jmBWTdL7A6kA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1s91Nx-00000000BbZ-18IN;
-	Mon, 20 May 2024 13:40:57 +0200
-Message-ID: <b7583de35462b06bbfbeb39bf2435bcb5f04be06.camel@sipsolutions.net>
-Subject: Re: [PATCH v1 net] cfg80211: pmsr: use correct nla_get_uX functions
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Lin Ma <linma@zju.edu.cn>, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 20 May 2024 13:40:56 +0200
-In-Reply-To: <20240520073311.44117-1-linma@zju.edu.cn>
-References: <20240520073311.44117-1-linma@zju.edu.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EiP1nCzH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3016AC2BD10;
+	Mon, 20 May 2024 11:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716205303;
+	bh=u130tbWpT6LvE50q6tsnZs3h7loPdMb44w2PkpTnAbc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EiP1nCzHxOEa+BR7Kpdt3rojQ2goPIuUi6CR+1vWHvRUjXLnPYaw6gBMEjffQLnbz
+	 +/CFIgAxdyc7dbPVPNpj2EsuQJEwlY75/Hw+i2f0aoida5RtbXnnOYcHntdzi/AeJq
+	 7OmzLIRjjxYW/MhMyv+NRbQ9Dj91lttRf8tNy++iUVluN+BC5Omqckl7dxWtjLLfo8
+	 JKD6UeguXk62LjHE+TtjJPIlNgOD/iZt75WkjbbFvPUYhimLhVu8gkCXgGDcmX0Q76
+	 8ln0fn+EsWqm7r3OKtiR/x6fRdIhUn5+y45OO1ZEUJ+TVSLhlRYDCMED1u/qHchR2c
+	 60A7bnWsGH9Ow==
+Message-ID: <6f9f87d3-9570-4eb0-a3d0-f087308d9815@kernel.org>
+Date: Mon, 20 May 2024 14:41:37 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: soc: ti: am645-system-controller: add
+ AM654 syscon
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240518-dt-bindings-ti-soc-mfd-v1-0-b3952f104c9a@linaro.org>
+ <20240518-dt-bindings-ti-soc-mfd-v1-2-b3952f104c9a@linaro.org>
+Content-Language: en-US
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20240518-dt-bindings-ti-soc-mfd-v1-2-b3952f104c9a@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Couple of minor comments:
 
-The subject is missing wifi: prefix.
 
-On Mon, 2024-05-20 at 15:33 +0800, Lin Ma wrote:
-> The commit 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM
-> initiator API") defines four attributes, which are
->=20
-> - `NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP` with NLA_U8 type
-> - `NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD` with NLA_U16 type
-> - `NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION` with NLA_U8 type
-> - `NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES` with NLA_U8 type
->=20
-> However, the consumers of these attributes in `pmsr_parse_ftm` blindly
-> all use `nla_get_u32`, which is incorrect. Hence, fix these with correct
-> `nla_get_u8` and `nla_get_u16`.
+On 18/05/2024 23:07, Krzysztof Kozlowski wrote:
+> Add dedicated binding for the AM654 MCU SCM system controller registers,
+> already used in the DTS to properly describe its children.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../soc/ti/ti,am654-system-controller.yaml         | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+> new file mode 100644
+> index 000000000000..e79803e586ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/ti/ti,am654-system-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI AM654 System Controller Registers R/W
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
 
-Maybe mention a bit more clearly that the _policy_ actually defines them
-with those types, so the users are incorrect, vs. a possible scenario
-where the kernel's documentation is just incorrect and we have to keep
-the code as-is for userspace to continue to function.
+Please update the email address to Kishon Vijay Abraham I <kishon@kernel.org>
 
-I believe the changes are correct since the policy wants the right types
-and then on little-endian platforms it'll all work ...
+> +  - Roger Quadros <rogerq@kernel.org>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - ti,am654-system-controller
+> +      - const: syscon
+> +      - const: simple-mfd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  ranges: true
+> +
+> +patternProperties:
+> +  "^phy@[0-9a-f]+$":
+> +    type: object
+> +    $ref: /schemas/phy/ti,phy-gmii-sel.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    syscon@40f00000 {
+> +        compatible = "ti,am654-system-controller", "syscon", "simple-mfd";
+> +        reg = <0x40f00000 0x20000>;
+> +        ranges = <0x0 0x40f00000 0x20000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        phy@4040 {
+> +            compatible = "ti,am654-phy-gmii-sel";
+> +            reg = <0x4040 0x4>;
+> +            #phy-cells = <1>;
+> +        };
+> +    };
+> 
 
-johannes
-
+-- 
+cheers,
+-roger
