@@ -1,51 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DEE1D531;
-	Mon, 20 May 2024 21:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C13A1D531;
+	Mon, 20 May 2024 21:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716239181; cv=none; b=D+15wpNDC9voJK5j62VaYcPIiPB0hdne0AOU9DZcVxUtXBwT4JU4bBOAMyUmh+OCS/hzz7rmtlVBHAeNypLmOhKvJTppPgZnNWyhK13I+xyVmgEodNQ8lOHg5ydxJ4TttbXKL3f/0tGWdLo2Py1M0D2ug30ZRyxsjabrUnn50pk=
+	t=1716239251; cv=none; b=i2xPx0l1WmEaJ8P0oMpinlPdx6RMSbFZ3cTmUJUB7a5ajG4bDBaYJxasXuIV5Xz3cnOXnMVVAkE5gApVX5DhoYZ0T17l6sbmlSkxGU9CPzBbcUfhLrrywKsXNzkMJ7j15dRhZJPkslx0J7cZx5UELGAduRYxseh3bbIOHxjgMKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716239181; c=relaxed/simple;
-	bh=X6Yvl2HDN1mwWgAijkjfXODat3krxuLgb+ypTVFjGv4=;
+	s=arc-20240116; t=1716239251; c=relaxed/simple;
+	bh=X/NsTjluZhFUIdDleKVBp6yB9DdSZqAO99eq3Zz04l8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SDTnMvEQ9msGphF+wczSUKPuAu7KIhr4zOSziXqvcLZx8JPWwxZHJS/wTlzbkYv8Na+pcC5BXzI7IgXE2i5F55AaNbClgRoeicpjQe2Mtt+O+W2bIPv3Hz1JfwBNK4hIsZPj+rv2i8yEbw3PHogLCJQmdAF1eqlNJlfk8hHRR9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY+wyvYK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gb6VCo0Uj48cz/fTkxVkLhhKua2EHZ6WtiRU0j+JQC6lJZwkOmaPBZAFeUiIteL48KcNYJDA73ecbJLfxFijDoqAT5dMVvWTKe8+zLy38QN9pwmD5ypq9jcrXjeWaUOa+yk8L5QA/rDe36RbhyEG7QDVE5InXcsseCzrFIqGTA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COcLBCX1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY+wyvYK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E099C2BD10;
-	Mon, 20 May 2024 21:06:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COcLBCX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44D8C2BD10;
+	Mon, 20 May 2024 21:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716239181;
-	bh=X6Yvl2HDN1mwWgAijkjfXODat3krxuLgb+ypTVFjGv4=;
+	s=k20201202; t=1716239251;
+	bh=X/NsTjluZhFUIdDleKVBp6yB9DdSZqAO99eq3Zz04l8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EY+wyvYKPs8iGaPysYr7Et988UMSXiwI419njQKsmPThaJp3i+bwsK0gM1n3tBUkB
-	 osmpByAYYVNe54/ioOCak1Lp7AvjpuVoNYhNZcFYn+SMDJQI1oKJkEnUsexNdOJQwc
-	 qZ3AblTs96k6TCOErZT9GOfAU54MpoJcrdK18Wv9WaCz/cAjEKlvsn6mrL43d5NE09
-	 PmiP5kyGdcupvO58nw69rxigTy/H6mQOesNK6zfogwSbcOxjN8X7q9dA5VabLSq/b7
-	 fDIjfZIFnMwdFg8wMX2IVbuyIvkGnLgKqYEMr5vQuuKhuBDF28ZVWve74ryr1bvmNo
-	 znWOeHo8UqtlA==
-Date: Mon, 20 May 2024 16:06:20 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
+	b=COcLBCX11lfP8lavHY9s/toyqvSg0NurL5PdVAePq5mib/NEy463Muej/HOax+eLx
+	 y8tUmti4dWfu3xUUT+aiN0V10wxnYLZfqx9/Kzft/yecuvlfWMcGGJS7dDETp4Nnj8
+	 oVse2C/FFlqR3oqzMmYrRH5KxPD0iQV2czPJvL620Ch4JyYAVSibMURUAhvbSqboem
+	 Ci/mnOigC+B/TR0Xqkvbdt19uMeQ6aXidSreVnfpI5Mh6mgKokpZxSIwcqp9pzYgBH
+	 cl3QgPwYIGSdITwSDB8ClhtRg2cjspJ3W6Rfg7htOz20Qct3H+qHF4S504N971qnHD
+	 yhFPwYQzEcTGw==
+Date: Mon, 20 May 2024 16:07:29 -0500
+From: Rob Herring <robh@kernel.org>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	linux-kernel@vger.kernel.org,
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Lars Povlsen <lars.povlsen@microchip.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	UNGLinuxDriver@microchip.com, linux-mediatek@lists.infradead.org,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
 	Daniel Machon <daniel.machon@microchip.com>,
-	Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: soc: sprd: sc9863a-glbregs: Document
- SC9863A syscon
-Message-ID: <171623917700.1507883.13414727469852068344.robh@kernel.org>
+	UNGLinuxDriver@microchip.com, Nishanth Menon <nm@ti.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 3/8] dt-bindings: soc: intel: lgm-syscon: Move to
+ dedicated schema
+Message-ID: <20240520210729.GA1509114-robh@kernel.org>
 References: <20240519-dt-bindings-mfd-syscon-split-v1-0-aaf996e2313a@linaro.org>
- <20240519-dt-bindings-mfd-syscon-split-v1-2-aaf996e2313a@linaro.org>
+ <20240519-dt-bindings-mfd-syscon-split-v1-3-aaf996e2313a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,18 +53,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240519-dt-bindings-mfd-syscon-split-v1-2-aaf996e2313a@linaro.org>
+In-Reply-To: <20240519-dt-bindings-mfd-syscon-split-v1-3-aaf996e2313a@linaro.org>
 
-
-On Sun, 19 May 2024 20:42:17 +0200, Krzysztof Kozlowski wrote:
-> Document sprd,sc9863a-glbregs compatible already used in DTS and other
-> bindings example.
+On Sun, May 19, 2024 at 08:42:18PM +0200, Krzysztof Kozlowski wrote:
+> intel,lgm-syscon is not a simple syscon device - it has children - thus
+> it should be fully documented in its own binding.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/soc/sprd/sprd,sc9863a-glbregs.yaml    | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
 > 
+> ---
+> 
+> Context might depend on
+> https://lore.kernel.org/r/20240510123018.3902184-1-robh@kernel.org
+> and also further patches here depend on this one.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.yaml  |  1 -
+>  .../bindings/soc/intel/intel,lgm-syscon.yaml       | 53 ++++++++++++++++++++++
+>  2 files changed, 53 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> index 622ea0f1b08e..5a0aeae24a50 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> @@ -77,7 +77,6 @@ properties:
+>                - hisilicon,pcie-sas-subctrl
+>                - hisilicon,peri-subctrl
+>                - hpe,gxp-sysreg
+> -              - intel,lgm-syscon
+>                - loongson,ls1b-syscon
+>                - loongson,ls1c-syscon
+>                - lsi,axxia-syscon
+> diff --git a/Documentation/devicetree/bindings/soc/intel/intel,lgm-syscon.yaml b/Documentation/devicetree/bindings/soc/intel/intel,lgm-syscon.yaml
+> new file mode 100644
+> index 000000000000..aa8d24074fd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/intel/intel,lgm-syscon.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/intel/intel,lgm-syscon.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Lightning Mountain(LGM) Syscon
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: intel,lgm-syscon
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Should have ranges.
 
+> +
+> +patternProperties:
+> +  "^emmc-phy@[0-9a-f]+$":
+> +    $ref: /schemas/phy/intel,lgm-emmc-phy.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    chiptop@e0200000 {
+> +        compatible = "intel,lgm-syscon", "syscon";
+> +        reg = <0xe0200000 0x100>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        emmc-phy@a8 {
+> +            compatible = "intel,lgm-emmc-phy";
+> +            reg = <0x00a8 0x10>;
+> +            clocks = <&emmc>;
+> +            #phy-cells = <0>;
+> +        };
+> +    };
+> 
+> -- 
+> 2.43.0
+> 
