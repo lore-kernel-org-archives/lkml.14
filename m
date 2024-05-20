@@ -1,140 +1,102 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18164E1CB;
-	Mon, 20 May 2024 10:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B655A14285;
+	Mon, 20 May 2024 10:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716199945; cv=none; b=OJuHdm7XKvVirpVhQ1HShrcFVMpaPPluowLBE/4UPbff3qU7aj/gKMkhHGZA2areX3QvWbPXilpwt2TfliDNovdNszEghzEBX8XD+jZj+bS0XWKSkSqhkUQFMh8M3yhrF8yXOMmLTSxY0t4pDocJ2dNGfA5+5euFn6/zARm0eis=
+	t=1716200134; cv=none; b=CYVYUTrY7egnUnW9A580PaMMxqNMLaVHi4VZ3laACWTb1sxVs0Ko0knpWvGgivHxAZV9qJkmmge5wpxrSHJ1ETYoTVoxK8qSMcUhTADzAZshI4JiHvb+uBewfFflrks0HZ825Ut7Nb6zCKjLQhPMtuUiZaMlCMAClMj3fjrHGkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716199945; c=relaxed/simple;
-	bh=B7UGf62VIlfbsuG41GpXoPMlwig2i+WLhtcuxN9rsUs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kE96nyx6rHRb/+0wPCnqZfzDYk7IMfL2/J4/MsRLJQkqc5C9TLG4MycgYe3s6/v/YBbG3IQtb6+6hFYwfxcS4zH8Gla2ot0/C6iwGcpt3zZoQ1JJjuXyjVs9TXImqt1SE3mPcCCZtq8nS1/GEp4xcAtOppr8M14Sp6H21JZ6EvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kknTgXkC; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1716200134; c=relaxed/simple;
+	bh=quscQVhGYECqWdN6pmPjH9Lcvjms9S+zA4L3I3EqjiQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=igUzGU/oyBUOXmJQgLdBNI2Tn/nPZwHELZhFVx126d2yl6SAXEnSrI1eQBBSqWQgL1C7BgqTJzuGb4IgLDXcWYmGxPCiHWTZYV3d3DkvvVf7J6dgzRsqzlUO4IXrkqosYI9azUxI9iZnL5CF+skxjbgv3qIh2WNiusawwyVgZ9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T12CGJkF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kknTgXkC"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44KAC16i078594;
-	Mon, 20 May 2024 05:12:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716199921;
-	bh=0adn+D3xwf79tqNaR78Q3qvk0G7vP3pbuZLrIFjpqLg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=kknTgXkC83j92N/IpQQ2PlEndOBP73V8bP5RbiQRK6AfF5yMUdKuNe7lUUAMa7xMA
-	 8s//1OYnY+/ssKde9SF+pZRaLyqZ06a5pIL/VPeLYlpMhcwcG67EtloCtNKxKGb0fo
-	 XWhWAWEfwaHcyT+mQKWfzRPOO8L0bmDRaUva7aVk=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44KAC1hV067710
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 20 May 2024 05:12:01 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 20
- May 2024 05:12:00 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 20 May 2024 05:12:00 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44KABnjU060604;
-	Mon, 20 May 2024 05:11:57 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <danishanwar@ti.com>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2 2/3] arm64: dts: ti: k3-j784s4-evm: Enable PCIe0 and PCIe1 in RC Mode
-Date: Mon, 20 May 2024 15:41:48 +0530
-Message-ID: <20240520101149.3243151-3-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240520101149.3243151-1-s-vadapalli@ti.com>
-References: <20240520101149.3243151-1-s-vadapalli@ti.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T12CGJkF"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44JNwfm3030497;
+	Mon, 20 May 2024 10:15:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=hKiodN63Z0RVsc8gXW3IiXso5pHhoSGv7lkZ5eTB99E=; b=T1
+	2CGJkFyF80nsOUBOS4vzcG24n2OQWSDySie8JV1bRvWy/hiAmEkXG3dddzYq/7o+
+	bKl2tAY5oeLoBlwDnFqqMBnLr9gkLvO/mGxrO09qt2cRB4juMSOT+I9hbYfTww0t
+	LyDNxArrhjEg4DGMoh/Km7cWI9iGAUYEjY6JmzQeiRbRxJ4Ksk6rgdUp7IjWnuvH
+	SyZrr+y1ZY7uHXmpg0ggxMhnZLnzLWejav5QQUwpmnY4NPBaKk29ChxnZmUagVg/
+	HiTqbHBGQO2v0wNjly5ee1yzY+RjVGNTbFNbltDEEzum2kKnrzAS7fsUi6AzCzkN
+	DaElI0tuw8WXK2cLlLog==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pq5avt3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 10:15:20 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44KAFJwU014001
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 May 2024 10:15:19 GMT
+Received: from [10.216.4.5] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 20 May
+ 2024 03:15:13 -0700
+Message-ID: <bdfd0704-ac8f-45c2-e292-a5bc416e6610@quicinc.com>
+Date: Mon, 20 May 2024 15:45:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v5 7/7] arm64: dts: qcom: ipq9574: Disable eMMC node
+Content-Language: en-US
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+CC: <broonie@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <richard@nod.at>, <vigneshr@ti.com>,
+        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>
+References: <20240508083637.3744003-1-quic_mdalam@quicinc.com>
+ <20240508083637.3744003-8-quic_mdalam@quicinc.com>
+ <20240516145915.10adca29@xps-13>
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <20240516145915.10adca29@xps-13>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: GIfhyrBYp1lFuQVrWvmXxsU1Z8Tk9sjo
+X-Proofpoint-ORIG-GUID: GIfhyrBYp1lFuQVrWvmXxsU1Z8Tk9sjo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-20_05,2024-05-17_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 clxscore=1015 mlxlogscore=528 mlxscore=0
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405200085
 
-Enable PCIe0 and PCIe1 instances of PCIe in Root Complex mode of
-operation on J784S4 EVM. The lanes of PCIe0 are connected to Serdes1
-instance of Serdes while the lanes of PCIe1 are connected to Serdes0
-instance of Serdes in J784S4 SoC. Despite both PCIe instances supporting
-up to 4 Lanes, since the physical connections to the PCIe connector
-corresponding to the PCIe1 instance of PCIe are limited to 2 Lanes on
-the J784S4 EVM, update the "num-lanes" property of PCIe1 accordingly.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
-v1:
-https://lore.kernel.org/r/20240129114749.1197579-3-s-vadapalli@ti.com/
-Changes since v1:
-- NA
 
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 46 ++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-index d511b25d62e3..31e88a6445f4 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -1105,3 +1105,49 @@ dp0_out: endpoint {
- 		};
- 	};
- };
-+
-+&serdes0 {
-+	status = "okay";
-+	serdes0_pcie1_link: phy@0 {
-+		reg = <0>;
-+		cdns,num-lanes = <4>;
-+		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_PCIE>;
-+		resets = <&serdes_wiz0 1>, <&serdes_wiz0 2>,
-+			 <&serdes_wiz0 3>, <&serdes_wiz0 4>;
-+	};
-+};
-+
-+&serdes_wiz0 {
-+	status = "okay";
-+};
-+
-+&pcie1_rc {
-+	status = "okay";
-+	num-lanes = <2>;
-+	reset-gpios = <&exp1 2 GPIO_ACTIVE_HIGH>;
-+	phys = <&serdes0_pcie1_link>;
-+	phy-names = "pcie-phy";
-+};
-+
-+&serdes1 {
-+	status = "okay";
-+	serdes1_pcie0_link: phy@0 {
-+		reg = <0>;
-+		cdns,num-lanes = <2>;
-+		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_PCIE>;
-+		resets = <&serdes_wiz1 1>, <&serdes_wiz1 2>;
-+	};
-+};
-+
-+&serdes_wiz1 {
-+	status = "okay";
-+};
-+
-+&pcie0_rc {
-+	status = "okay";
-+	reset-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
-+	phys = <&serdes1_pcie0_link>;
-+	phy-names = "pcie-phy";
-+};
--- 
-2.40.1
-
+On 5/16/2024 6:29 PM, Miquel Raynal wrote:
+> Hi,
+> 
+> quic_mdalam@quicinc.com wrote on Wed,  8 May 2024 14:06:37 +0530:
+> 
+>> Disable eMMC node
+> 
+> Please explain why or remove this patch from this series, because at a
+> first glance there is no reason to link this patch with the others.
+  rdp433 default boot mode is norplusnand and GPIOs are shared b/w eMMC
+  and NAND so we can't keep both.So we are disabling the eMMC for rdp433.
+> 
+> Thanks,
+> Miquèl
