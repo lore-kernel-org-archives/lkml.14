@@ -1,168 +1,166 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDB711184
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FCDDDDA;
+	Mon, 20 May 2024 17:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716224519; cv=none; b=VsK3gQrMWu30tkz24xJlUgg38XThUnd66XxxdcYlFvEwR7WyJ2EnfBPteY5sHW1xzr+Z8fotjPfIvLctr4zGyv1n9BkDMNwJsF/eYPwiFg3DC7Pxv2AYgyQwQRXv4N2viP3cidz/rQjTB74tNUrhsIS4Bq/hEGuByhp0vUWWEko=
+	t=1716224648; cv=none; b=IoLU4AhIp1LtpfsxBFZougM6nnotfnPcx4QcYW0hY97DcmBhwnpepKdMU2eByCCGQzoOZFbrB9P5XqF1OvGezaT9srVM1iBcS63tyeYtEhFJd/A7dkV8Zm42CloeRFwvvMYpER14jP7qPBfU3jf9OIicE+h1u26bRFRJsZmin+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716224519; c=relaxed/simple;
-	bh=+61SlSFs+bK47d9CKe64gm4Q05wLUYPddacTpbPUX94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MwSIDx5oDViAkWzDUozIcgWqOPfx92FDoH0pztKeTFduBnZB0tN+vWNEzD6hHZKncOA/suR1UnlR8CMbQEqBC/zHF8Xc4phbO1iwAitR4pJ+2eTDnt3jOmhgBSm1aXrExbA3LM0JgJjUaiVWiMSaRj1iOJDbdWaj1F5h2Bjwj7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m6vHjLOA; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716224648; c=relaxed/simple;
+	bh=ZFXgfExUtf/f5Ry4XgdFT2EMynkxeS6qR3EITMrGELE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AziwQj1NG2gNCY7UjJuSOVsEEm2DfMscnN1Gir2/Ha6y4H2V5UDruVthi8nXW4AGseeP2LvT7tGmxUFfVkPx2ufZW6efLbhbFslkfpPwX+6OwF+/QbhIsVr1O7ZcbdTcvUroXfZm/H7V91uR74iwTz0QvVVwTK4b/HQHFNzhKfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEIvrcx2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m6vHjLOA"
-X-Envelope-To: alexei.starovoitov@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716224514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EAgmPQxenfiA/ZhiTeo4I/5YK5kI+JEH9mMpDcYcRdg=;
-	b=m6vHjLOAF12YD8MlEZSeLfBS0wuKogqiwdOsKP3RkFH7frV7s3Tszz5kY4HxxFD3aQ6rTX
-	Vk/JwnCmzc0JCWOeVV5rTOqfKO+gzf2Srx4MlI3KM8+HeStcHVNjaFjbUJkSkHpmo2xvm7
-	HplM9mUUtzRO/Ou8kJfeehPXeb8dzU4=
-X-Envelope-To: ivan@cloudflare.com
-X-Envelope-To: bpf@vger.kernel.org
-X-Envelope-To: kernel-team@cloudflare.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: llvm@lists.linux.dev
-Message-ID: <5cb46d34-f4a3-49c7-8dd6-df6bc87b4f25@linux.dev>
-Date: Mon, 20 May 2024 10:01:47 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEIvrcx2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1AB3C2BD10;
+	Mon, 20 May 2024 17:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716224647;
+	bh=ZFXgfExUtf/f5Ry4XgdFT2EMynkxeS6qR3EITMrGELE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pEIvrcx207xgxV2y1hG3ztZuvZjDqsZTx5ifIItvSP8mUYjICLLrqDrCBB45xh8JU
+	 auUK3vZQ3EFXsQaTvmfrViL4T8T/x074JVuQ5DWLSZ9hy+pcGX5SDUTMfhnX0pg9KJ
+	 uKR3X0RVIGhicPAcPn//OK4oWLAYrX5UPOIMkfd+B2RajpXFi8aoV3GGOi0Uvnqr55
+	 zwjxDcv/RAxyNvnh6z6Ckrf+7lv5vW8DuACEyg68fYCeH/9Ij4FFP//YJ6s50Kb8m0
+	 RL+eML/005Dzz83+6ubr55fEzLWc+PWY79DzfK/crRv/z9P0bB7wZE0iyFCYzSa2Xk
+	 sUmhovd1H7ueQ==
+Date: Mon, 20 May 2024 18:04:02 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kanak Shilledar <kanakshilledar@gmail.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, linux-riscv@lists.infradead.org,
+	Kanak Shilledar <kanakshilledar111@protonmail.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH 2/2] dt-bindings: riscv: cpus: add ref to
+ interrupt-controller
+Message-ID: <20240520-verbally-vibes-47604636b8db@spud>
+References: <20240519175906.138410-1-kanakshilledar111@protonmail.com>
+ <20240519175906.138410-3-kanakshilledar111@protonmail.com>
+ <171614715439.2941344.11264816105918092609.robh@kernel.org>
+ <CAGLn_=tLdJU1F-i9YV5aCZQbS0L7y7Wu+_k6Dn=6HwH5JmZoMQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: bpftool does not print full names with LLVM 17 and newer
-Content-Language: en-GB
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Ivan Babrou <ivan@cloudflare.com>
-Cc: bpf <bpf@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>
-References: <CABWYdi0ymezpYsQsPv7qzpx2fWuTkoD1-wG1eT-9x-TSREFrQg@mail.gmail.com>
- <CAADnVQ+YXf=1iO3C7pBvV1vhfWDyko2pJzKDXv7i6fkzsBM0ig@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <CAADnVQ+YXf=1iO3C7pBvV1vhfWDyko2pJzKDXv7i6fkzsBM0ig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n8jWxXrQpCGvcZN3"
+Content-Disposition: inline
+In-Reply-To: <CAGLn_=tLdJU1F-i9YV5aCZQbS0L7y7Wu+_k6Dn=6HwH5JmZoMQ@mail.gmail.com>
 
 
-On 5/17/24 5:33 PM, Alexei Starovoitov wrote:
-> On Fri, May 17, 2024 at 2:51 PM Ivan Babrou <ivan@cloudflare.com> wrote:
->> Hello,
->>
->> We recently bumped LLVM used for bpftool compilation from 15 to 18 and
->> our alerting system notified us about some unknown bpf programs. It
->> turns out, the names were truncated to 15 chars, whereas before they
->> were longer.
->>
->> After some investigation, I was able to see that the following code:
->>
->>      diff --git a/src/common.c b/src/common.c
->>      index 958e92a..ac38506 100644
->>      --- a/src/common.c
->>      +++ b/src/common.c
->>      @@ -435,7 +435,9 @@ void get_prog_full_name(const struct
->> bpf_prog_info *prog_info, int prog_fd,
->>          if (!prog_btf)
->>              goto copy_name;
->>
->>      +    printf("[0] finfo.type_id = %x\n", finfo.type_id);
->>          func_type = btf__type_by_id(prog_btf, finfo.type_id);
->>      +    printf("[1] finfo.type_id = %x\n", finfo.type_id);
->>          if (!func_type || !btf_is_func(func_type))
->>              goto copy_name;
->>
->> When ran under gdb, shows:
->>
->>      (gdb) b common.c:439
->>      Breakpoint 1 at 0x16859: file common.c, line 439.
->>
->>      (gdb) r
->>      3403: tracing  [0] finfo.type_id = 0
->>
->>      Breakpoint 1, get_prog_full_name (prog_info=0x7fffffffe160,
->> prog_fd=3, name_buff=0x7fffffffe030 "", buff_len=128) at common.c:439
->>      439        func_type = btf__type_by_id(prog_btf, finfo.type_id);
->>      (gdb) print finfo
->>      $1 = {insn_off = 0, type_id = 1547}
->>
->>
->> Notice that finfo.type_id is printed as zero, but in gdb it is in fact 1547.
->>
->> Disassembly difference looks like this:
->>
->>      -    8b 75 cc                 mov    -0x34(%rbp),%esi
->>      -    e8 47 8d 02 00           call   3f5b0 <btf__type_by_id>
->>      +    31 f6                    xor    %esi,%esi
->>      +    e8 a9 8c 02 00           call   3f510 <btf__type_by_id>
->>
->> This can be avoided if one removes "const" during finfo initialization:
->>
->>      const struct bpf_func_info finfo = {};
->>
->> This seems like a pretty annoying miscompilation, and hopefully
->> there's a way to make clang complain about this loudly, but that's
->> outside of my expertise. There might be other places like this that we
->> just haven't noticed yet.
->>
->> I can send a patch to fix this particular issue, but I'm hoping for a
->> more comprehensive approach from people who know better.
-> Wow. Great catch. Please send a patch to fix bpftool and,
+--n8jWxXrQpCGvcZN3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Indeed, removing 'const' modifier should allow correct code
-generation.
+On Mon, May 20, 2024 at 03:09:44PM +0530, Kanak Shilledar wrote:
+> On Mon, May 20, 2024 at 1:02=E2=80=AFAM Rob Herring (Arm) <robh@kernel.or=
+g> wrote:
+> >
+> >
+> > On Sun, 19 May 2024 23:29:06 +0530, Kanak Shilledar wrote:
+> > > removed the redundant properties for interrupt-controller
+> > > and provide reference to the riscv,cpu-intc.yaml which defines
+> > > the interrupt-controller. making the properties for riscv
+> > > interrupt-controller at a central place.
+> > >
+> > > Signed-off-by: Kanak Shilledar <kanakshilledar111@protonmail.com>
+> > > ---
+> > >  .../devicetree/bindings/riscv/cpus.yaml       | 22 +----------------=
+--
+> > >  1 file changed, 1 insertion(+), 21 deletions(-)
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/riscv/cpus.yaml: properties:interrupt-controller: 'oneOf' conditional fail=
+ed, one must be fixed:
+> >         Additional properties are not allowed ('$ref' was unexpected)
+> >         'type' is a required property
+> >                 hint: DT nodes ("object" type in schemas) can only use =
+a subset of json-schema keywords
+> >         from schema $id: http://devicetree.org/meta-schemas/interrupts.=
+yaml#
+> >
+> > doc reference errors (make refcheckdocs):
+> >
+> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2024=
+0519175906.138410-3-kanakshilledar111@protonmail.com
+>=20
+> I have fixed the above warning.
+>=20
+> > The base for the series is generally the latest rc1. A different depend=
+ency
+> > should be noted in *this* patch.
+>=20
+> Can you please clarify this part? Is my base commit ID incorrect?
 
-> I agree, llvm should be warning about such footgun,
-> but the way ptr_to_u64() is written is probably silencing it.
+The bot says this in case the error is caused by it having applied
+patches on top of 6.9-rc1, but in this case I doubt there's any impact.
+By "this patch" it means that having the information in the cover
+doesn't help, but info about missing deps should go under the --- line
+etc.
 
-Yes, ptr_to_u64() cast a 'ptr to const value' to a __u64
-which later could be used as 'ptr to value' where the 'value'
-could be changed.
+| base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+| prerequisite-patch-id: 158157d32a32e765834a0cb4fc6335f9009d9962
+| prerequisite-patch-id: 4007c7386e66f93b67a2631dddca08cadcee708b
 
-> We probably should drop 'const' from it:
-> static inline __u64 ptr_to_u64(const void *ptr)
->
-> and maybe add a flavor of ptr_to_u64 with extra check
-> that the arg doesn't have a const modifier.
-> __builtin_types_compatible_p(typeof(ptr), void *)
-> should do the trick.
+That said, why do you have two prerequisite patches? This applies on top
+of 6.9-rc3 without any issues (other than trailing whitespace warnings).
 
-I guess we could introduce ptr_non_const_to_u64() like
+Also, you forgot the v3 tag on this patchset, which confuses tooling:
+	shazam https://lore.kernel.org/linux-riscv/20240519175906.138410-1-kanaksh=
+illedar111@protonmail.com/T/#t
+	Grabbing thread from lore.kernel.org/all/20240519175906.138410-1-kanakshil=
+ledar111@protonmail.com/t.mbox.gz
+	Checking for newer revisions
+	Grabbing search results from lore.kernel.org
+--->	  Added from v2: 1 patches
+	Analyzing 10 messages in the thread
+--->	Will use the latest revision: v2
+	You can pick other revisions using the -vN flag
+	Checking attestation on all messages, may take a moment...
+	Retrieving CI status, may take a moment...
+	Some CI checks failed, see patchwork for more info:
+	  https://patchwork.kernel.org/project/linux-riscv/list/?series=3D854147
+	---
+	  =E2=9C=93 [=E2=97=8F PATCH v2] dt-bindings: interrupt-controller: riscv,=
+cpu-intc: convert to dtschema
+	    + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+	  ---
+	  =E2=9C=93 Signed: DKIM/gmail.com
+	---
+	Total patches: 1
+	---
+	Applying: dt-bindings: interrupt-controller: riscv,cpu-intc: convert to dt=
+schema
 
-static inline __u64 ptr_non_const_to_u64(void *ptr)
-{
-         static_assert(__builtin_types_compatible_p(typeof(ptr), void *), "expect type void *");
-         return (__u64)(unsigned long)ptr;
-}
+Thanks,
+Conor.
 
-and add additional check in ptr_to_u64() like
+--n8jWxXrQpCGvcZN3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-static inline __u64 ptr_to_u64(const void *ptr)
-{
-        static_assert(__builtin_types_compatible_p(typeof(ptr), const void *), "expect type const void *");
-        return (__u64)(unsigned long)ptr;
-}
+-----BEGIN PGP SIGNATURE-----
 
-But I am not sure how useful they are. If users declare the variable as 'const'
-and use ptr_to_u64(), compilation will succeed but the result could be wrong.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkuCggAKCRB4tDGHoIJi
+0i0rAP9iTXoJLL92685zxN6JyS52MGmR2C23GQGodmPrRrAhaAD/c77LyzMo1OfW
+9umhDvm7Q/Bk5V6Iu23CQkfBsSRZHAM=
+=pXxW
+-----END PGP SIGNATURE-----
 
-Compiler could do the following analysis:
-   (1) ptr_to_u64() argument is a constant and the result is __u64 (let us say u64_val = ptr_to_u64(...)).
-   (2) u64_val has address taken and its content may be modified in the current function or
-       through the function call. If this is true, compiler might warn. This will require some
-       analysis and the warning may not be always true (esp. it requires inter-procedural analysis and
-       in this case, bpf_prog_get_info_by_fd() eventually goes into the library/kernel so compiler has no
-       way to know whether the value could change).
-So I guess it will be very hard for compiler to warn for this particular case.
-
+--n8jWxXrQpCGvcZN3--
