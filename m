@@ -1,62 +1,48 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9674F28E7;
-	Mon, 20 May 2024 15:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADAA1369AF;
+	Mon, 20 May 2024 15:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716217789; cv=none; b=CfszjD/bn76U3tEEEOiB3OH+DYzhYJ78EIrx5jgUCvR2oJlOH1nyCSDrzqW2NZfGJuFLaam5r1prK+9AyhkyF5Z70oyvDDXYyQUuDeROYMn5K6rZ90ZG+tKI4cMmN8D3kUqHx3osa3ICH+skdhxf3G1kDhgcrIwqJ8w5W2kC378=
+	t=1716217929; cv=none; b=ZHrzV4dxY8TCVNMoPX1+9vcqQSFYktbtyT0NA6z6zhbT0S6LW2FCRHotFx03JyYAQfVlRpfc85TWSLiJpqMy8eRw3OCha/EGmdobkYhXRc+caUnf/N+gg0nBgvDJh8OtYnMHyBFbgJ1wKyBkcD629p27roDzOZ6iLQBYUT2fYBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716217789; c=relaxed/simple;
-	bh=3ZPzTccGxeYiZ3UCRWcRKYqjZ6SNEtUDp0r4ooVJnSg=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZsVZc2ZpJaFhP4PacuARu9hcRRxLanUvGRljdFdrzdmxS9ADpIDZFotdB0scT/d+TA+3r/WFTPbcWHPnQca3m77M2DLtOEjsa8SzW2iND9eDtHQeXqdoo4vYRdcdYO6+MFomQKDQeJBlIYQPBmMswI3763ge7+skP6ywyI8sTe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BF/4T0Rx; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716217929; c=relaxed/simple;
+	bh=CqITRP3HvOUhv+CLwPKkqznN2CVoZFJoOynUjb76pHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H0LqAli+ObfTFkqvkw7P7FycZyY1rFNzCE1Hg6k/Yw30ekCzjThpgvc8/EZuPnOrLt7OGHyFecuGJiobwlbTfy6mAP5BTJnNUNBrW5x6xM2FDjdjYmNKdTyoSV2WjZmdvzM0TeIqddAAGR9tLmFisxSo79AXrt102UwRNXnC+uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltclPiRv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BF/4T0Rx"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-23d1c4c14ceso1440709fac.0;
-        Mon, 20 May 2024 08:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716217788; x=1716822588; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3ZPzTccGxeYiZ3UCRWcRKYqjZ6SNEtUDp0r4ooVJnSg=;
-        b=BF/4T0Rxls8Bhm4YqXf6pHPnHuaLO3lm2MWs/ZDcelKiAy7gRpA324g8DU4sGfGQqy
-         nwPTcNIPfSn80Op0vCPXywUF4PeJjPx4muTfMQ7AHmHLYuBB3A6pMG+xS+k0nla5oqSk
-         nj8gkSWCHudBPPus5Mr7RWNRPktzIqUHZHZCVoTb2t9QVczU0+eE4xAw59Gh9/9X/UHS
-         OWxa90j6dE2L71iJ6il8Q6vGIdNYTgTCwLMM2KGo05IuV5sheW6QEEzSTikrp2IbKjc/
-         TEuQgi5Y1f37NQLKKzQidHmCy6yqT+niBUb/zxD8ZDieZGsP1K/QCOB34eeFQC4i6SK/
-         OLuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716217788; x=1716822588;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ZPzTccGxeYiZ3UCRWcRKYqjZ6SNEtUDp0r4ooVJnSg=;
-        b=nRh4M+Rvab291VayoHkIO5ACZtzYMCpT6nemD+xzBVF/Z0DK0HaxoxZJqoglGGijF+
-         JeAQmDLHeWC8y5UoWOaKzq8VlJ9ZFkZxBchr2UrAnnFSR40wypjE3J70LNeq+RgSvzaf
-         9sjEVJGHHxCzC1XmWqCpZiYTHjYv2sYSvC+oe+MH/ZeDe4HldcNJWHE13cCcAcUuQ2xK
-         0DlZzA6wGCkJAzex+xdKmDSWyN3fac9pheHpgZFXZNCQYnOXHsRMZZ/RJOYLdwlgd1DC
-         VGy7ATdTP/nB6E72PGrl48OS8FrOdcnXbGewBuGNJwFKOf3M33n65AIS0NdWjV7FOT5I
-         Zffw==
-X-Forwarded-Encrypted: i=1; AJvYcCVB8GCUDSaplHHU0dcDzHvduewx7ORZkgyTgvUlpvd570lV7cZ7RbE4cafj/M/tX7gFoQXdI+UFegf7qWVSyd6hTOlo8Z1avhIqDf3Yd+6MYQKKsYc8cCNC+ONNhZ2cp1aoMumwl5hLH5++BwL/IFQMucBsXg+KbKNR+R+BhUSMhcqpUiP7tINgp5AdaQ==
-X-Gm-Message-State: AOJu0YxO9fU0XqXdgc0gD5hRi8f3/S2re3DeXzke7oOmuE5q9ja3f3d3
-	GPZ7q7iSmoMBTxH8RyFokWaLDGtlFsOlXSrAPa1JqyjvS4yJKlXD
-X-Google-Smtp-Source: AGHT+IEEwTNwDG/5OWJKkrOQ+QtpD76b+5Ie4/DQJOETwsN4jDmj2Z5/18baOTuuE1EhEH6prG8TgQ==
-X-Received: by 2002:a05:6870:5246:b0:23b:b0fd:47f4 with SMTP id 586e51a60fabf-24172a8b902mr33765767fac.18.1716217787405;
-        Mon, 20 May 2024 08:09:47 -0700 (PDT)
-Received: from arch (recod-gw.ic.unicamp.br. [143.106.7.151])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-4df85902f10sm2923274e0c.54.2024.05.20.08.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 08:09:46 -0700 (PDT)
-Date: Mon, 20 May 2024 12:09:43 -0300
-From: Artur A C de Barros <arturacb@gmail.com>
-To: willy@infradead.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: First Contributions for KUnit
-Message-ID: <Zktnt7rjKryTh9-N@arch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltclPiRv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31117C2BD10;
+	Mon, 20 May 2024 15:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716217928;
+	bh=CqITRP3HvOUhv+CLwPKkqznN2CVoZFJoOynUjb76pHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ltclPiRv0EHCt0sEpJJLkNKcb0Y1LQb30bqAXOTMUhxgVlFClbHgN8yE6D5epWZ6M
+	 mjqTuUfmAK4tYtDW0pCvgtN7P+42kH/P59Kl2cr3l8N/D+UJSd7TQ9hvsUjMXm+hGk
+	 mB4aHvGZ5ZwpeOCwW0JrB2w/Nm28B6Nt/sIjmDuUIcpGvcgRf6gqb7DfIR70f7UQPE
+	 ULPeI8JZ8Ggl3u9FEJbnCtQmmTbupBP1pov8wp8KRzWRkd2XOV0/BBueQLwJzRzw/k
+	 jpysawP7sE5pjCgeTqEm96CzFoezfFiX9M7VRyi982cUDMVx7v8ydxriE20FZEVM5z
+	 gE1GN4vy0eoFg==
+Date: Mon, 20 May 2024 10:12:07 -0500
+From: Rob Herring <robh@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, Helge Deller <deller@gmx.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Baoquan He <bhe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	David Bauer <mail@david-bauer.net>, Liviu Dudau <liviu@dudau.co.uk>,
+	Serge Semin <fancer.lancer@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 0/4] of: bootargs handling improvement
+Message-ID: <20240520151207.GA541701-robh@kernel.org>
+References: <20240512132513.2831-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,21 +51,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240512132513.2831-1-ansuelsmth@gmail.com>
 
-Hi all,
+On Sun, May 12, 2024 at 03:25:07PM +0200, Christian Marangi wrote:
+> This is a very simple series that try to solve a very simple problem.
+> 
+> Many emebedded devices have very hacked (by OEMS) bootloader that do all
+> kind of modification and makes the kernel unbootable with the very first
+> small modification. And also many times these broken bootloader have
+> hardcoded values that can't be modified and would require risky
+> procedure that can brick the device.
+> 
+> One of the common modification done is hardcoding bootargs in the
+> appended kernel DT trashing the bootargs set in the /chosen.
+> 
+> The main usage of this is to have dynamic stuff to support dual
+> partition scheme and make the kernel load a dedicated rootfs. But the
+> other usage of this is to effectively lockup the device and cause kernel
+> panic on modification like using squashfs instead of legacy jffs2.
+> 
+> The simple solution to this is to let the bootloader override the
+> bootargs in /chosen and make the kernel parse a different property.
 
-We are students from the State University of Campinas with an interest in contributing to the kernel. We are part of LKCAMP, a student group that focuses on researching and contributing to open source software. Our group has organized kernel hackathons in the past [1] that resulted in sucessful contributions, and we would like to continue the effort this year.
+What happens when bootloaders start using these new "standard" bootarg 
+properties and you need to override them? Perhaps name it something the 
+OEM wouldn't use (maybe): 
+"use-this-bootargs-instead-for-the-broken-bootloader"
 
-This time, we were thinking about writing KUnit tests for data structures in `lib/` (or converting existing lib test code), similarly to our previous hackathon. We are currently considering a few candidates:
+> >From long time on OpenWRT we use bootargs-override as the alternative
+> property for this task fixing the problem of overridden bootargs.
+> 
+> The second feature is bootargs-append. This is self-explanatory,
+> sometimes bootargs from bootloader might be good but lack of some
+> crucial things that needs to be appended, like rootfstype or rootfs
+> path.
 
-- lib/kfifo.c
-- lib/llist.c
-- tools/testing/scatterlist
-- tools/testing/radix-tree
+It is unfortunate that the kernel's handling of appending or prepending 
+to bootargs is ambiguous. And MIPS is a further mess with handling 
+cmdline from multiple sources.
 
-We would like to know if these are good candidates, and also ask for suggestions of other code that could benefit from having KUnit tests.
+I'm not really interested in adding any more complexity to the cmdline 
+handling until it is made common. There's been at least 2 approaches to 
+doing that.
 
-Thanks!
-Artur Alves
-
-[1] https://lore.kernel.org/dri-devel/20211011152333.gm5jkaog6b6nbv5w@notapiano/
+Rob
