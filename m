@@ -1,117 +1,275 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC753224D7;
-	Mon, 20 May 2024 09:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2362224D7;
+	Mon, 20 May 2024 09:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716197348; cv=none; b=YSDeTvfeUeq/Pd5kqa3KduwDpIjFIesqeEbHrQH8Q4DeKDRKXye1TVETTPpmyjkbZA3nUseJwaMPbVLz1OxsFu2WIMXOvTCwD1hIIyZ3Bn/DKb9v9jn3cnkIRZipvBCemM3vbSMs+4uOuBfTIbgBg96cnqmXQbToPlmTKgVFxHw=
+	t=1716197357; cv=none; b=i7ycxY1kYn4bpn/I3gJ6GzugLBMaa78v7Yet+7aTB71rtMSNbZ6CRMRO0wal+Dz4j9YFPtgxPNRIIfKELpVlYXiSJbNOfjJq32F7IiT3fHHJCN7qSZ8qvQ0qg+g9g84QceaFgrSK9v8o5XYJVnwKm7/rMzJnjJk0uzJ1Eo+85gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716197348; c=relaxed/simple;
-	bh=o2Ta2tVgYz8zBplQ5g6ryctD/giXzE2qXg58AjWjmPI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MC4FLh9mL8CWod3mp0bZNCtgjW0Zbl5foyy11w+FnDpR367lTceuLzYiw4NIWiv2oZO9QywRpoLNL5IC8MDPYlCcGKpMjBA33A7fJODCR/H5HQbGaiGG7rZAQRMsqoJ6MeAQXuLaLrVDqbzVgu3H5KXSc77b2C5itxpNWNs4zvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QctnMMGS; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QctnMMGS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716197295; x=1716802095; i=markus.elfring@web.de;
-	bh=u6nHGvcBqMTPqIN2MtW+oE9OO6oEG3uVuQ2+HbH7zik=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QctnMMGShrq3jzUdzH42CozIpIvdz3PVcHZG2w7BJjcZ/8gJeqWmVRlatVhzTeNo
-	 NPDXUbQMi6Rj6Ri1Dt8z5WpEmJy92LlOGpmbeg8zPWHJd0IC6sjXkIAkivly+Dwq7
-	 fA+Wn+Yt4ifQh6Dnc9jXoa7ATOT50BEKb5SLhN+6SIATQEaj8CYl1X///jEN46Flk
-	 n3RKchsO/HS9Udcdvj/2QSZqnFnEw8+n20J68muI1rS+6eAGCPq1x5imZoEkRoTiP
-	 NF9zFr5WcIlOg9g+WZSAxyzeky3R+hpoFnYEoqwwbIwRXG2FADFOtj//uRrRLjxPE
-	 8rP83LZrZMcRm/v/mA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MiMAE-1snFU10Bh0-00mXlY; Mon, 20
- May 2024 11:28:15 +0200
-Message-ID: <fb6ee370-54d7-4eff-8a44-ee7cf2d13e61@web.de>
-Date: Mon, 20 May 2024 11:28:09 +0200
+	s=arc-20240116; t=1716197357; c=relaxed/simple;
+	bh=YYusQLSqoWPggr6hER2c0buyo+1+WOiwP2OT7HerXYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sj83L7CPr9Bgpo2nGd6LEiBlLewupmmkEkoyc4szW30fyhRunRfo0UntBEnECjEFOlfWeRvL+V2rkVYXhzMXKx5kkB8s8iDeScl7ycVUmj/UGS2W40Aa6p+dEuiNPoBJTIInOio806SHY4w3W3oIkcqEInIz2T6kQd4u6iGoQUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D3271063;
+	Mon, 20 May 2024 02:29:38 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7189E3F766;
+	Mon, 20 May 2024 02:29:12 -0700 (PDT)
+Date: Mon, 20 May 2024 10:29:06 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Vitor Massaru Iha <vitor@massaru.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] kunit: test: Add vm_mmap() allocation resource
+ manager
+Message-ID: <ZksX4r0a1EGE_VPl@J2N7QTR9R3>
+References: <20240519190422.work.715-kees@kernel.org>
+ <20240519191254.651865-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-pm@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andre Przywara <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Samuel Holland <samuel@sholland.org>,
- Yangtao Li <tiny.windzz@gmail.com>
-References: <20240520083522.vvga3aqjg4w3adkj@vireshk-i7>
-Subject: Re: [PATCH 2/2] cpufreq: sun50i: replace of_node_put() with automatic
- cleanup handler
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240520083522.vvga3aqjg4w3adkj@vireshk-i7>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HXcd/g6a7OP7gzDepmaooJv4Okhf0ew3NClde231I+VAKbgUuUQ
- JBKPP52Ckkjb/6eHI2X/we+fKADuX3zCpDcEp3Hk0hYeyD+9R2YoH7H2V4L83HPktsFdupf
- DQt8z/9xr2wFzt6JdZEaeIX8XbtVrYeyOab3UegVdwLJF6s2s7f9hvaU2XD6P7iZknTmL7L
- VD4hqRfiaFvFL59HuY6xA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QBI3m0Ncq0k=;c3cL6gMCHAggpVYtmQaIPDAmjqU
- 7/YAfq7dareu5KT74iLb6rfqNfT6Mmh+8HRex9EkUFLjXkl0tTM811TYZ9WSkLRCii3kPi3/X
- 5jDVp5EaDEij5R8iB6g84/Lqkk16yasgKeuuuk3EnWYCR4FCbqWxvXHWryeIIsL1oFdMUCjfC
- t3uGwR/uzrp4qr1s+wj64EAvaoRABsw+k5XB28bbd3c/5vXMjXWFZU2V3+/IrBgOvh+mZ6Avi
- UpmxzjtPcFP9w30CPXhVK38EL2PoAWUDsGMndFCUc4/Ig+emvYLWDKi2XadVcf1knnlvr4AzY
- IGgY+eYCboDteS6AZzHSzkMXERru82JtjaIL3dv+pol6YzHKJN4xoSRbckERtRKbXzOZJv1mw
- Kl77HmCC0pbL3TGD/HXrHT8JzL6QzvUNbmIezJlzxZcxGqUb7GFG5nzHmbtHmJaMDRI/LYZDn
- /Evzkb2gHuHCNB+6YwqPpkQgRyztc/u+sm77mur2FQvy9RAjC7xc8DFJVx5+h4PjUJ/lnQ52q
- GdlfzoNkk0NF4SizfPWb5jCYg/sVEd6EuR6vWCXZsTsSkz90doCR3L9s8lj8rQNX+5WCfKRNM
- DoNl7SG2LhranQYdqYeWT/qtmXBRaWX7jEAiRT6c/4Ur3Wf/F6N/31KOuI27UEQRmuhTNypzS
- LQEh3s/livmf7VnAiEnzLHUFOcQAdgyAULqe79VXG7eo8otr/K8EbCwnSs3h2KGGQTj+4Q2PM
- 9Nxg9YVhkpWEmB6JVYac2amaIrw8NrZx2c57m6grarJdxAp8tGZej768wLcXAOgntuogsYFWa
- u28cNRuVWTy5LsdyGfXS1216jtauRgwdnhcM3zMRhELvk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240519191254.651865-1-keescook@chromium.org>
 
-=E2=80=A6
-> > > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > > @@ -131,14 +131,14 @@ static const struct of_device_id cpu_opp_match=
-_list[] =3D {
-> > >  static bool dt_has_supported_hw(void)
-> > >  {
-> > >  	bool has_opp_supported_hw =3D false;
-> > > -	struct device_node *np;
-> > >  	struct device *cpu_dev;
-> > >
-> > >  	cpu_dev =3D get_cpu_device(0);
-> > >  	if (!cpu_dev)
-> > >  		return false;
-> > >
-> > > -	np =3D dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> > > +	struct device_node *np __free(device_node) =3D
-> > > +		dev_pm_opp_of_get_opp_desc_node(cpu_dev);
->
-> Won't that result in build warning, mixed code and definitions now ?
+On Sun, May 19, 2024 at 12:12:52PM -0700, Kees Cook wrote:
+> For tests that need to allocate using vm_mmap() (e.g. usercopy and
+> execve), provide the interface to have the allocation tracked by KUnit
+> itself. This requires bringing up a placeholder userspace mm.
+> 
+> This combines my earlier attempt at this with Mark Rutland's version[1].
+> 
+> Link: https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/ [1]
+> Co-developed-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/kunit/test.h |  17 ++++++
+>  lib/kunit/test.c     | 139 ++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 155 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 61637ef32302..8c3835a6f282 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -478,6 +478,23 @@ static inline void *kunit_kcalloc(struct kunit *test, size_t n, size_t size, gfp
+>  	return kunit_kmalloc_array(test, n, size, gfp | __GFP_ZERO);
+>  }
+>  
+> +/**
+> + * kunit_vm_mmap() - Allocate KUnit-tracked vm_mmap() area
+> + * @test: The test context object.
+> + * @file: struct file pointer to map from, if any
+> + * @addr: desired address, if any
+> + * @len: how many bytes to allocate
+> + * @prot: mmap PROT_* bits
+> + * @flag: mmap flags
+> + * @offset: offset into @file to start mapping from.
+> + *
+> + * See vm_mmap() for more information.
+> + */
+> +unsigned long kunit_vm_mmap(struct kunit *test, struct file *file,
+> +			    unsigned long addr, unsigned long len,
+> +			    unsigned long prot, unsigned long flag,
+> +			    unsigned long offset);
+> +
+>  void kunit_cleanup(struct kunit *test);
+>  
+>  void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt, ...);
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 1d1475578515..09194dbffb63 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -11,13 +11,14 @@
+>  #include <kunit/test-bug.h>
+>  #include <kunit/attributes.h>
+>  #include <linux/kernel.h>
+> +#include <linux/kthread.h>
+> +#include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/mutex.h>
+>  #include <linux/panic.h>
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched.h>
+> -#include <linux/mm.h>
+>  
+>  #include "debugfs.h"
+>  #include "device-impl.h"
+> @@ -871,6 +872,142 @@ void kunit_kfree(struct kunit *test, const void *ptr)
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_kfree);
+>  
+> +struct kunit_vm_mmap_resource {
+> +	unsigned long addr;
+> +	size_t size;
+> +};
+> +
+> +/* vm_mmap() arguments */
+> +struct kunit_vm_mmap_params {
+> +	struct file *file;
+> +	unsigned long addr;
+> +	unsigned long len;
+> +	unsigned long prot;
+> +	unsigned long flag;
+> +	unsigned long offset;
+> +};
+> +
+> +/*
+> + * Arbitrarily chosen user address for the base allocation.
+> + */
+> +#define UBUF_ADDR_BASE	SZ_2M
+> +
+> +/* Create and attach a new mm if it doesn't already exist. */
+> +static int kunit_attach_mm(void)
+> +{
+> +	struct vm_area_struct *vma;
+> +	struct mm_struct *mm;
+> +
+> +	if (current->mm)
+> +		return 0;
 
-I suggest to take another look at a corresponding information source.
+My tests deliberately created/destroyed the mm for each test; surely we
+don't want to inherit an MM in some arbitrary state? ... or is this just
+so the mm can be allocated lazily upon the first mmap() within a test?
 
-[PATCH v3 04/57] kbuild: Drop -Wdeclaration-after-statement
-https://lore.kernel.org/all/20230612093537.693926033@infradead.org/
+> +
+> +	mm = mm_alloc();
+> +	if (!mm)
+> +		return -ENOMEM;
+> +
+> +	if (mmap_write_lock_killable(mm))
+> +		goto out_free;
+> +
+> +	/* Define the task size. */
+> +	mm->task_size = TASK_SIZE;
+> +
+> +	/* Prepare the base VMA. */
+> +	vma = vm_area_alloc(mm);
+> +	if (!vma)
+> +		goto out_unlock;
+> +
+> +	vma_set_anonymous(vma);
+> +	vma->vm_start = UBUF_ADDR_BASE;
+> +	vma->vm_end = UBUF_ADDR_BASE + PAGE_SIZE;
+> +	vm_flags_init(vma, VM_READ | VM_MAYREAD | VM_WRITE | VM_MAYWRITE);
+> +	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+> +
+> +	if (insert_vm_struct(mm, vma))
+> +		goto out_free_vma;
+> +
+> +	mmap_write_unlock(mm);
 
-See also:
-https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Warning-Options.html#index-W=
-declaration-after-statement
+Why do we need this VMA given you have kunit_vm_mmap()?
 
+This existed in my uaccess tests because I didn't use vm_mmap(), and I
+wanted complete control over the addresses used.
 
-Would you like to stress a scope reduction for the affected local variable
-by adding any curly brackets?
+Given you add kunit_vm_mmap(), I don't think we want this VMA -- it
+doesn't serve any real purpose to tests, and accesses can erroneously
+hit it, which is problematic.
 
-Regards,
-Markus
+UBUF_ADDR_BASE shouldn't be necessary either with kunit_vm_mmap(),
+unless you want to use fixed addresses. That was just arbitrarily chosen
+to be above NULL and the usual minimum mmap limit.
+
+Mark.
+
+> +
+> +	/* Make sure we can allocate new VMAs. */
+> +	arch_pick_mmap_layout(mm, &current->signal->rlim[RLIMIT_STACK]);
+> +
+> +	/* Attach the mm. It will be cleaned up when the process dies. */
+> +	kthread_use_mm(mm);
+> +
+> +	return 0;
+> +
+> +out_free_vma:
+> +	vm_area_free(vma);
+> +out_unlock:
+> +	mmap_write_unlock(mm);
+> +out_free:
+> +	mmput(mm);
+> +	return -ENOMEM;
+> +}
+> +
+> +static int kunit_vm_mmap_init(struct kunit_resource *res, void *context)
+> +{
+> +	struct kunit_vm_mmap_params *p = context;
+> +	struct kunit_vm_mmap_resource vres;
+> +	int ret;
+> +
+> +	ret = kunit_attach_mm();
+> +	if (ret)
+> +		return ret;
+> +
+> +	vres.size = p->len;
+> +	vres.addr = vm_mmap(p->file, p->addr, p->len, p->prot, p->flag, p->offset);
+> +	if (!vres.addr)
+> +		return -ENOMEM;
+> +	res->data = kmemdup(&vres, sizeof(vres), GFP_KERNEL);
+> +	if (!res->data) {
+> +		vm_munmap(vres.addr, vres.size);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void kunit_vm_mmap_free(struct kunit_resource *res)
+> +{
+> +	struct kunit_vm_mmap_resource *vres = res->data;
+> +
+> +	/*
+> +	 * Since this is executed from the test monitoring process,
+> +	 * the test's mm has already been torn down. We don't need
+> +	 * to run vm_munmap(vres->addr, vres->size), only clean up
+> +	 * the vres.
+> +	 */
+> +
+> +	kfree(vres);
+> +	res->data = NULL;
+> +}
+> +
+> +unsigned long kunit_vm_mmap(struct kunit *test, struct file *file,
+> +			    unsigned long addr, unsigned long len,
+> +			    unsigned long prot, unsigned long flag,
+> +			    unsigned long offset)
+> +{
+> +	struct kunit_vm_mmap_params params = {
+> +		.file = file,
+> +		.addr = addr,
+> +		.len = len,
+> +		.prot = prot,
+> +		.flag = flag,
+> +		.offset = offset,
+> +	};
+> +	struct kunit_vm_mmap_resource *vres;
+> +
+> +	vres = kunit_alloc_resource(test,
+> +				    kunit_vm_mmap_init,
+> +				    kunit_vm_mmap_free,
+> +				    GFP_KERNEL,
+> +				    &params);
+> +	if (vres)
+> +		return vres->addr;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(kunit_vm_mmap);
+> +
+>  void kunit_cleanup(struct kunit *test)
+>  {
+>  	struct kunit_resource *res;
+> -- 
+> 2.34.1
+> 
