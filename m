@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E734213956C
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 22:46:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BFB13A250
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 22:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716245201; cv=none; b=idhATGpG9fJTrBdp/w4RuUFblyxHOc5fQyVTL5IIO1zFaZkVkIpjxOHNN2vGpbqQ+Ue+4DN0/DnbwAavuqg3Dl+rmNbTNvznpPvFfbYO54gEsrBOZoViwoGMJvTjr4wAJ/MygFKyWn7X0iVjT+MnHTS7qsLZ0HSfKtvkHasgM1s=
+	t=1716245202; cv=none; b=kxwsoUPzWu9zUf+LaiwHrKxe7fq8GHjArtQr56iT8BMfoyRMgqIs838XW6sATQuznUeotHQBr08WR9+lMoVMrF8aAofvytZtFLacXoJu3/ygCF14hvyJvsl69Q3DtIiAdrDEwWNG36EPvUDKBVf1jtCY34X8iLfl9fRaqZe6Cqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716245201; c=relaxed/simple;
-	bh=uwrfu/RQXE+CPGny/VIfWFI+r++v83onQnRT6WNFLOM=;
+	s=arc-20240116; t=1716245202; c=relaxed/simple;
+	bh=SrCUXI/oM/RyfJid2zkIs4n9nvj5uW7YKEMoo1adejA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Op7dnNSmfHN/jFyNsJbtc44cyZfHyYvJfKVHiliJPEEPo6q3vkvb+h6Oj8HHywyeQZO/5vzfXUF+k/EsyfxrH8IgEbtG69nzCJN6g6cy8qt9d8e9N+fQoPehDlbquArx0DT41iNUb0DCFN49KUMaWmCeyViRn5di74XwjDBT80E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CuHlyso7; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=KNH7iD0MXJOLHMBVKKiaefSUyiOwkgSCfPMbmllTVaKXnebf4TznwvlAM4Xj/kLniZmJYRQ6LZ5fNuVJZDNkEawjapzRtpInc8yububfbRNRi8FSAg7IGNRwtM9jUfsI1+HPJG9Qvqurw003leK0dnhIIlfwdNmUuvvqtsguCXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B5qjDzrA; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CuHlyso7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B5qjDzrA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716245200; x=1747781200;
+  t=1716245201; x=1747781201;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uwrfu/RQXE+CPGny/VIfWFI+r++v83onQnRT6WNFLOM=;
-  b=CuHlyso7t6bOM2ppRr9iWiuNZD695ScQ++i5O+dO18IaM94ygoFKLNs1
-   X1wBB2jKqllzCWUn4TLaaDKmbI+K22RWFjSYVAqOjj/ASAB8IRuBACvun
-   Dj0ZRcenPkyH1rqKKDo7jdf7RjEow0EAOmbQLHASbHtq14AP0zL3goiRd
-   WFjR8G3m8jFCg9dghm7TMX7I/eRPplowvxlBbtC+jA7cxK2auByDaqeE+
-   l/yXcAFXAWS7FP7/smBRpMIzRxo57pCTZAl/WGdKSWDoLIIoQXIGHtn55
-   1j7DVxGjDB0k8Dy/eU9CYJzqmcgCFkrw1XGgb9jCsVbBoiOxQGUw7EMii
+  bh=SrCUXI/oM/RyfJid2zkIs4n9nvj5uW7YKEMoo1adejA=;
+  b=B5qjDzrAHfcgnWGUKHf3mFXs82WZ8/U3NhADcmEmWx46FBdncdvzmt2o
+   y0KRknvMjNbYNlxCHLsCRbzBd1twLnJF7K/ISAIb5tjJ6RRX7OaPdp/mM
+   UWjL5QQoQUo9JRxQ2KvFXrAzP3b8f1eRokJtJNNLTwqQGPcLL9ncpAJRr
+   irpzil3d+uaCVm1Il3C3U9tuEjDklIBWdoAANytmhFnyEFOH6VUJrKVa3
+   0XCYs1cebFAgyyE/4SVTjvMb1MJ6o+YB76Ld5e/XlKwjeu5NU0Hyfqx8z
+   xA4Go46oqV5A0eLLIrw91dVIf3YzrCgLiFk07v6nPgJh9S95nM63W4uCG
    w==;
-X-CSE-ConnectionGUID: J2CvRVReQNG4LWnle8zqdQ==
-X-CSE-MsgGUID: 9RRd2de5RjmPCqlLppV9og==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12199575"
+X-CSE-ConnectionGUID: v/OiVYVGTMWiUuP8J+F8EQ==
+X-CSE-MsgGUID: QfxRmTJAQkSnniAdy8DKdA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12199599"
 X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="12199575"
+   d="scan'208";a="12199599"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:36 -0700
-X-CSE-ConnectionGUID: ONS95sjIQoW2yWT/aoDaVQ==
-X-CSE-MsgGUID: EIlSKc9cRMeYwJ3xQJKG7w==
+X-CSE-ConnectionGUID: hUI/PFvgSy+kdlt5jv+Wtw==
+X-CSE-MsgGUID: rEtX2mjpRy677qKZA6Yolg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="32593403"
+   d="scan'208";a="32593409"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:35 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 15:46:36 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,11 +60,10 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v6 07/49] platform/x86: intel_scu_wdt: Switch to new Intel CPU model defines
-Date: Mon, 20 May 2024 15:45:38 -0700
-Message-ID: <20240520224620.9480-8-tony.luck@intel.com>
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH v6 09/49] KVM: VMX: Switch to new Intel CPU model defines
+Date: Mon, 20 May 2024 15:45:40 -0700
+Message-ID: <20240520224620.9480-10-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240520224620.9480-1-tony.luck@intel.com>
 References: <20240520224620.9480-1-tony.luck@intel.com>
@@ -79,25 +78,42 @@ Content-Transfer-Encoding: 8bit
 New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Sean Christopherson <seanjc@google.com>
 ---
- drivers/platform/x86/intel_scu_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel_scu_wdt.c
-index a5031a25632e..d0b6637861d3 100644
---- a/drivers/platform/x86/intel_scu_wdt.c
-+++ b/drivers/platform/x86/intel_scu_wdt.c
-@@ -50,7 +50,7 @@ static struct intel_mid_wdt_pdata tangier_pdata = {
- };
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 6051fad5945f..ceb0c1e6275a 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2525,17 +2525,15 @@ static bool cpu_has_sgx(void)
+  */
+ static bool cpu_has_perf_global_ctrl_bug(void)
+ {
+-	if (boot_cpu_data.x86 == 0x6) {
+-		switch (boot_cpu_data.x86_model) {
+-		case INTEL_FAM6_NEHALEM_EP:	/* AAK155 */
+-		case INTEL_FAM6_NEHALEM:	/* AAP115 */
+-		case INTEL_FAM6_WESTMERE:	/* AAT100 */
+-		case INTEL_FAM6_WESTMERE_EP:	/* BC86,AAY89,BD102 */
+-		case INTEL_FAM6_NEHALEM_EX:	/* BA97 */
+-			return true;
+-		default:
+-			break;
+-		}
++	switch (boot_cpu_data.x86_vfm) {
++	case INTEL_NEHALEM_EP:	/* AAK155 */
++	case INTEL_NEHALEM:	/* AAP115 */
++	case INTEL_WESTMERE:	/* AAT100 */
++	case INTEL_WESTMERE_EP:	/* BC86,AAY89,BD102 */
++	case INTEL_NEHALEM_EX:	/* BA97 */
++		return true;
++	default:
++		break;
+ 	}
  
- static const struct x86_cpu_id intel_mid_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, &tangier_pdata),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, &tangier_pdata),
- 	{}
- };
- 
+ 	return false;
 -- 
 2.45.0
 
