@@ -1,110 +1,114 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCE45579A;
-	Mon, 20 May 2024 15:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC23524D4
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 15:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716220106; cv=none; b=evn1HarwSEnCwpn4fV0F7EhU8xN05QI9SPw4XR2WKYq9bT2AvVcKjII37TBKPtgOeluEDOsEIOpo6Ze7j4sz6X9jyqx2GrLjHWbinDDtuqMHRFmLADO+FtzTbXTQ7YARv7ISsz0Nz2hkweEQJAU2NQfy2YlnRIdTS0u1EZ34Kk4=
+	t=1716220162; cv=none; b=STaXxX78wzzTy2r1nqPoSm0cAvh8qVLULE7OUh1JHDjhtLjNNFI3XPWALDzJ8uEtEmmrvDYzJZU7ZqswCnrIJ0XONceDsiGiaLIYwx1JRPyz4iiH8fNXxxsfbXTph8OrcZMpt8GHgPVQNtjbv+xiF8F652uvV0CwpfEkXkwM/gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716220106; c=relaxed/simple;
-	bh=8sPgUO6A6S54NHecpLAH9MdSYbkpfIj4fhZVkGGxefs=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=b8xz1l+Vj9JZ19NyFaOb90dM6kFLzIocN3UEhEuuhI88NstcxX/73TgpZdd3zgvjaFceon3hmIjytpLDzdZnmOs87lChb0OUCGaAb9LUXPdbOM90Wxjf79oICnGnq9N46MvOhQh9EnfdqLs2R5OIlNgjKTokrkP7gpOd06HJ9hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from localhost.localdomain (unknown [82.64.135.138])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id B36492003AE;
-	Mon, 20 May 2024 17:48:11 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-	id 7035340039; Mon, 20 May 2024 17:47:03 +0200 (CEST)
-Date: Mon, 20 May 2024 17:47:03 +0200
-From: Etienne Buira <etienne.buira@free.fr>
-To: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
-Subject: [PATCH] gpio-syscon: do not report bogus error
-Message-ID: <Zktwd4Y8zu6XSGaE@Z926fQmE5jqhFMgp6>
-Mail-Followup-To: linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	etienne.buira@free.fr
+	s=arc-20240116; t=1716220162; c=relaxed/simple;
+	bh=4iB0UniyvGsVchRqtMoChe7NlqVHuiQOzngJRi+uD6o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=T4MShR7V+nJkC+4ztrfQWaKtvI6Qy7onvidboVIbq8NPqk+6f8oKeIv4/z1ALDD8OWJvw74W3Mm8HuAC1G++0AnjXWDOD2CFi3kVrrcDYr7Oxyx2g2f/KyLKY+dYC7qGReXnMMOLYVeZmgieF+qB2BWoHR3yvoilnCenytQQIRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kyletso.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WCRdbWwb; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kyletso.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCRdbWwb"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso16370737276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 08:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716220159; x=1716824959; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3Hta5Q6/b2rPRyvZAPSqwK1sqIL5wofS3TUQ5XOr7Cs=;
+        b=WCRdbWwb3h9YKpUTyyIeIrWAoBbRg2SyEDVvAuyxVVXVp2XBwg9gKfsScI2HW5ilQ+
+         ndT2MxOmv8IEgZwMplkk+y+0XWODXFBnxU8OZpZ/5a+Cg1Nwzm6Cn5jz00Xq569SLAHa
+         SWtHngG05WDcp2zNDGQRyQ1Nqxupp8Oi6bpODCjOMcKZJ+Buht1wqIsVSU8SHCJtFoHv
+         F3nedsdHviLjbBkJsnigBUUrvc+4c/Ptk8PicatkscFJdaYKivS98nsHRMCJJAooMiOG
+         Zrii/j48u7thpxZFCPBim07mes5tWv8lZc5MWo9DC604+6eNRFhwaYfH75033ZoxqPbc
+         BxHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716220159; x=1716824959;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3Hta5Q6/b2rPRyvZAPSqwK1sqIL5wofS3TUQ5XOr7Cs=;
+        b=hdJzYedazoBJxPLNcseROGRoYGpc+HAnO1F0PX9wXsw5tQGEWwEO93v0gunea72zA/
+         Xs+u3J0qatMDKsxyCTp5JxuX6Xu3iUTUmdRJDchSJ9gEioJ2NdRGQvw7GcrbAS5qSvc9
+         9CUWivMSXReijxoPQ73PLOwSrrlDSXdtBn1IgK4P9G6ZEy3bj1lDIhAx0k1Vw2Slhk0l
+         8eVXR/f0Z6yRVClS5HbHAJ2pNQTWmGrYZkw7+kxkva567+UjahwAQoKbyPGYc2bv+/KH
+         rlKff4ifLyjEn2b3lujrQt3jBlwJXG8ooFX+XgMhE2GZAb6S3xylowb/X0e2BoKgl2kA
+         quKg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8z8AaI4AKiaSchcYXmOY2wzH6hi7ks++l7KQhgsb2JjeqavF63EiQs9IvR4OgtOGMVxQOrSu7cmawwcnBHKb893Gb4qB2stijPDLw
+X-Gm-Message-State: AOJu0YzUZKvLI5LWGkpaJT5KfuRJawd/u4CdnAMI9BDjwQYgM+YPZcJH
+	1GkCOY/px8X0REPdO6EzXKWhUNEwS+utLGePPnAvEg1W0wg8UfbtRcPPX3dEyDjGXyVg1Md3WET
+	k0Nw3kw==
+X-Google-Smtp-Source: AGHT+IFiZXUt8sxoCkvWR9ksdbwYOAWH9aUG7crxl4brbEO5+hvznY+zLbTMl/qWVD2B4Kq7QWK0AT+WRJAL
+X-Received: from kyletso-p620lin01.ntc.corp.google.com ([2401:fa00:a7:c:e7e6:5547:2aba:8696])
+ (user=kyletso job=sendgmr) by 2002:a05:6902:1241:b0:df4:9b3d:66a6 with SMTP
+ id 3f1490d57ef6-df49b3d9b3emr1603204276.10.1716220159335; Mon, 20 May 2024
+ 08:49:19 -0700 (PDT)
+Date: Mon, 20 May 2024 23:48:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240520154858.1072347-1-kyletso@google.com>
+Subject: [PATCH] usb: typec: tcpm: Ignore received Hard Reset in TOGGLING state
+From: Kyle Tso <kyletso@google.com>
+To: linux@roeck-us.net, heikki.krogerus@linux.intel.com, 
+	gregkh@linuxfoundation.org
+Cc: badhri@google.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Kyle Tso <kyletso@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Do not issue "can't read the data register offset!" when gpio,syscon-dev
-is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
-this iomem region is documented in
-Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-does not require gpio,syscon-dev setting.
+Similar to what fixed in Commit a6fe37f428c1 ("usb: typec: tcpm: Skip
+hard reset when in error recovery"), the handling of the received Hard
+Reset has to be skipped during TOGGLING state.
 
-v3:
-  - moved from flag to parent regmap detection
+[ 4086.021288] VBUS off
+[ 4086.021295] pending state change SNK_READY -> SNK_UNATTACHED @ 650 ms [rev2 NONE_AMS]
+[ 4086.022113] VBUS VSAFE0V
+[ 4086.022117] state change SNK_READY -> SNK_UNATTACHED [rev2 NONE_AMS]
+[ 4086.022447] VBUS off
+[ 4086.022450] state change SNK_UNATTACHED -> SNK_UNATTACHED [rev2 NONE_AMS]
+[ 4086.023060] VBUS VSAFE0V
+[ 4086.023064] state change SNK_UNATTACHED -> SNK_UNATTACHED [rev2 NONE_AMS]
+[ 4086.023070] disable BIST MODE TESTDATA
+[ 4086.023766] disable vbus discharge ret:0
+[ 4086.023911] Setting usb_comm capable false
+[ 4086.028874] Setting voltage/current limit 0 mV 0 mA
+[ 4086.028888] polarity 0
+[ 4086.030305] Requesting mux state 0, usb-role 0, orientation 0
+[ 4086.033539] Start toggling
+[ 4086.038496] state change SNK_UNATTACHED -> TOGGLING [rev2 NONE_AMS]
 
-Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+// This Hard Reset is unexpected
+[ 4086.038499] Received hard reset
+[ 4086.038501] state change TOGGLING -> HARD_RESET_START [rev2 HARD_RESET]
+
+Fixes: f0690a25a140 ("staging: typec: USB Type-C Port Manager (tcpm)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kyle Tso <kyletso@google.com>
 ---
- drivers/gpio/gpio-syscon.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ drivers/usb/typec/tcpm/tcpm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 6e1a2581e6ae..3a90a3a1caea 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -208,6 +208,7 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	struct syscon_gpio_priv *priv;
- 	struct device_node *np = dev->of_node;
- 	int ret;
-+	bool use_parent_regmap = false;
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 8a1af08f71b6..9c1cb8c11bd6 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -6172,6 +6172,7 @@ static void _tcpm_pd_hard_reset(struct tcpm_port *port)
+ 		port->tcpc->set_bist_data(port->tcpc, false);
  
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -216,24 +217,28 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	priv->data = of_device_get_match_data(dev);
- 
- 	priv->syscon = syscon_regmap_lookup_by_phandle(np, "gpio,syscon-dev");
--	if (IS_ERR(priv->syscon) && np->parent)
-+	if (IS_ERR(priv->syscon) && np->parent) {
- 		priv->syscon = syscon_node_to_regmap(np->parent);
-+		use_parent_regmap = true;
-+	}
- 	if (IS_ERR(priv->syscon))
- 		return PTR_ERR(priv->syscon);
- 
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
--					 &priv->dreg_offset);
--	if (ret)
--		dev_err(dev, "can't read the data register offset!\n");
-+	if (!use_parent_regmap) {
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
-+						 &priv->dreg_offset);
-+		if (ret)
-+			dev_err(dev, "can't read the data register offset!\n");
- 
--	priv->dreg_offset <<= 3;
-+		priv->dreg_offset <<= 3;
- 
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
--					 &priv->dir_reg_offset);
--	if (ret)
--		dev_dbg(dev, "can't read the dir register offset!\n");
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
-+						 &priv->dir_reg_offset);
-+		if (ret)
-+			dev_dbg(dev, "can't read the dir register offset!\n");
- 
--	priv->dir_reg_offset <<= 3;
-+		priv->dir_reg_offset <<= 3;
-+	}
- 
- 	priv->chip.parent = dev;
- 	priv->chip.owner = THIS_MODULE;
-
-base-commit: 4cece764965020c22cff7665b18a012006359095
+ 	switch (port->state) {
++	case TOGGLING:
+ 	case ERROR_RECOVERY:
+ 	case PORT_RESET:
+ 	case PORT_RESET_WAIT_OFF:
 -- 
-2.43.0
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
