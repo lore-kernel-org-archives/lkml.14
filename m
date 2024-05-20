@@ -1,48 +1,47 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6D645026;
-	Mon, 20 May 2024 14:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC83A53E20;
+	Mon, 20 May 2024 14:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716213698; cv=none; b=tmModCGTHTsWqSTG5Kktcl0EqAN9eNggAbPuuLparQDZndUE95aBUMy13BZRJUu2om+TsvjqcQrZHqT+3Vg9ThlyIQ/sQgf+jrAhPvCOZEeSgJwTkhinoV1XMQP+HS4ePcu4FP650xYGhrK57R3fjN9vI4W6+MU9wrAjMGsEmjc=
+	t=1716213717; cv=none; b=FKomVTsunBzXw1tvSLe63woDzFP3BblkUGylHZBJKBAbFZch88pPAwYJvOvIygS5krEumkye/Se9pqApMqUcRYQYQXIp+mloKP1gvnKGNhL+Dc96jBSdQkBoP88UW7YGRj9QPpEpHe+dCsAMe1p9zuk8C4aWafWHoagFQOHKM48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716213698; c=relaxed/simple;
-	bh=In9zIq8IukzKSjyjDxEXgTEBcFek8fe0l1bt3l/HRAk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e2QC63oqMItIiJj4dBDAeOUVPgqWFfToG/fdvKpm7yY6LJE9H7KyM8jS61SgeaTUMEwdvM80oZaXX9HatdBaqZe1KIuSa6iMU0XD++vqwNt5yf4GkD4c/OjrPG+6178NysSFCrm6+gilSyuZleh6/5hFpBaCjm9oR4aIeeEBAYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1oE7Otpp; arc=none smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1716213717; c=relaxed/simple;
+	bh=nqUvc6sU6vpcddIpClyKh9qpVYre+r9fzZH4SsuS2ag=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MN31n20bn9PXzmKQbCPbfIe9Q5Sew6+8zwPqWUrYqYgAJR3qBXpX7zCM7K+c+SOfjK1DU1YUqVzNXvqkaoueWuStGaU/suSG3U/60Gdfk28x/QuMZPwBIkqfsYSuyjZG3cfDBZ8srvreYTHrgeFLKgxKLbStQSPvO72powWJoz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=xNqjhzzM; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1oE7Otpp"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KBMT05021385;
-	Mon, 20 May 2024 16:01:11 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="xNqjhzzM"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44KDtKnN018364;
+	Mon, 20 May 2024 16:01:28 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=ZgsE3xWv3XDME8Xvz+S9s6R3DQC6mEdB9EsMvdI4S4s=; b=1o
-	E7Otpp6d79XNB/2IazpsVg28JQpX5aqqehm+H8sgpMP7kUUaTFxouySUstnwqm3k
-	8KJiTjNyplYl4Xd/9d6vP57EOTkdiM3MKqPwMt5VttB4GjVOpNKJCatplLqRnBBT
-	bhJVNgz6IZ3s0hLIEtBTKm34ttR0aKUBG+ZGD4jnZRVj4BZcX+OXKRChUbZMNNjT
-	Qr6FHqMWQp0p354LtkuSyrnbtouTbtg9QhyFwT+T6kV2FOsm36wb0J4SROiYUu0e
-	pwbJGMYMW2eXpEYPOErlCcMNPqUfox+yWMOQJ9xkxNLtjAjOwHoo8/OMUesXzNlx
-	0+7zC7Q1IlOhKrqwvUtA==
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=/eWZVhr
+	f80If0Zu1V4FcVn5XIUfeeeYvTullFqKWqvU=; b=xNqjhzzMZ0EpV3j+0L2WojM
+	vfYR+H6ZE3j8r0HKFHK1FlGd8CHsdqS8epSHMIeq5ZOlbQJmJBo0b03hmFVsfm1S
+	HyId82NCOKuudcy7bH5x9gP7CYmpzSkmEpssEkraWxRXo8A53JnfdkyTgPmxJjHW
+	6vmdqz8tukQwNVpLlF27xDuAlAXdXAjWpLoubULMldK+wdcVM9gD8wJCmsTKObm7
+	QICSkm+yUzNd7wuZBv208r8AFgcc8d9Ms2hMh9jOS5GBJ4ttL/MpDrBHp7TIfJWP
+	D77eAg7C7QuVZnVsIamf4jZ9CMbmrXg9gtSfLWPf4QeX5j7uwe7NkdZ59HRpWUA=
+	=
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y75w05m43-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n337bnf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 16:01:11 +0200 (MEST)
+	Mon, 20 May 2024 16:01:28 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2AF044004F;
-	Mon, 20 May 2024 16:01:07 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9D9CC4004A;
+	Mon, 20 May 2024 16:01:06 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 578D4222C89;
-	Mon, 20 May 2024 16:00:38 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F02D8222C81;
+	Mon, 20 May 2024 16:00:35 +0200 (CEST)
 Received: from localhost (10.48.86.111) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 20 May
- 2024 16:00:38 +0200
+ 2024 16:00:35 +0200
 From: Valentin Caron <valentin.caron@foss.st.com>
 To: Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski
@@ -52,12 +51,10 @@ To: Rob Herring <robh@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         Valentin Caron <valentin.caron@foss.st.com>
-Subject: [PATCH 3/3] arm64: dts: st: add usart6 on stm32mp257f-ev1 board
-Date: Mon, 20 May 2024 16:00:24 +0200
-Message-ID: <20240520140024.3711080-4-valentin.caron@foss.st.com>
+Subject: [PATCH 0/3] arm64: dts: st: add usart nodes for stm32mp25
+Date: Mon, 20 May 2024 16:00:21 +0200
+Message-ID: <20240520140024.3711080-1-valentin.caron@foss.st.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240520140024.3711080-1-valentin.caron@foss.st.com>
-References: <20240520140024.3711080-1-valentin.caron@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,38 +69,22 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-20_05,2024-05-17_03,2024-05-17_01
 
-Add node for USART6 on stm32mp257f-ev1 board.
-
-Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 27b7360e5dbaf..18c6266532b29 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -18,6 +18,7 @@ / {
+STM32MP25 got the same serial hardware block as STM32MP1x but with two improvements:
+ - TX and RX FIFO have been extended to 64 bytes.
+ - one instance more than in STM32MP1x series (4x usart and 5x uart).
  
- 	aliases {
- 		serial0 = &usart2;
-+		serial1 = &usart6;
- 	};
- 
- 	chosen {
-@@ -109,3 +110,12 @@ &usart2 {
- 	pinctrl-2 = <&usart2_sleep_pins_a>;
- 	status = "okay";
- };
-+
-+&usart6 {
-+	pinctrl-names = "default", "idle", "sleep";
-+	pinctrl-0 = <&usart6_pins_a>;
-+	pinctrl-1 = <&usart6_idle_pins_a>;
-+	pinctrl-2 = <&usart6_sleep_pins_a>;
-+	uart-has-rtscts;
-+	status = "disabled";
-+};
+STM32MP257F-EV1 board has one usart used by console and one usart on IO port.
+
+Valentin Caron (3):
+  arm64: dts: st: add usart nodes on stm32mp25
+  arm64: dts: st: add usart6 pinctrl used on stm32mp257f-ev1 board
+  arm64: dts: st: add usart6 on stm32mp257f-ev1 board
+
+ arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 41 +++++++++++
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        | 72 +++++++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 10 +++
+ 3 files changed, 123 insertions(+)
+
 -- 
 2.25.1
 
