@@ -1,97 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADAA1369AF;
-	Mon, 20 May 2024 15:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C255A136E21;
+	Mon, 20 May 2024 15:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716217929; cv=none; b=ZHrzV4dxY8TCVNMoPX1+9vcqQSFYktbtyT0NA6z6zhbT0S6LW2FCRHotFx03JyYAQfVlRpfc85TWSLiJpqMy8eRw3OCha/EGmdobkYhXRc+caUnf/N+gg0nBgvDJh8OtYnMHyBFbgJ1wKyBkcD629p27roDzOZ6iLQBYUT2fYBk=
+	t=1716217931; cv=none; b=j6TjjyBeSyK9nW0uo3+aTbfWfaLNyuL46Ac3dizsPX3c8/6WG4MJEreyECh3rWtBcYHPtarjCgweTevHHOgglJWDPYEH4T5+3tmE+gs9pR/EfoqzCtJzU6BKWhCZV9uaqrUBmkhxcptoCJGz1FSzXorkqEWlAwfRnGOLrByDxUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716217929; c=relaxed/simple;
-	bh=CqITRP3HvOUhv+CLwPKkqznN2CVoZFJoOynUjb76pHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0LqAli+ObfTFkqvkw7P7FycZyY1rFNzCE1Hg6k/Yw30ekCzjThpgvc8/EZuPnOrLt7OGHyFecuGJiobwlbTfy6mAP5BTJnNUNBrW5x6xM2FDjdjYmNKdTyoSV2WjZmdvzM0TeIqddAAGR9tLmFisxSo79AXrt102UwRNXnC+uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltclPiRv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716217931; c=relaxed/simple;
+	bh=l4YKr8q4hSlSYnlmC8is7kKyo1psXqGg1nzwO8qkXlE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gAgz7XRGza/827sOaMKyoSsE4vSJ8P2j0LPET9S7SufeD9TNlu1U5Q/yJ5PDMJZsdPM+ozq+jcp48W9dNZ+QNxoSYvruHVadx6O2sxIepTP05HG0BMUXNVddc8hHTglSH3j5tnE0YZfaX9LiHDqd+wf3t/ocnoGq1bWNIJZl0zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=iG0uswZ8; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltclPiRv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31117C2BD10;
-	Mon, 20 May 2024 15:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716217928;
-	bh=CqITRP3HvOUhv+CLwPKkqznN2CVoZFJoOynUjb76pHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ltclPiRv0EHCt0sEpJJLkNKcb0Y1LQb30bqAXOTMUhxgVlFClbHgN8yE6D5epWZ6M
-	 mjqTuUfmAK4tYtDW0pCvgtN7P+42kH/P59Kl2cr3l8N/D+UJSd7TQ9hvsUjMXm+hGk
-	 mB4aHvGZ5ZwpeOCwW0JrB2w/Nm28B6Nt/sIjmDuUIcpGvcgRf6gqb7DfIR70f7UQPE
-	 ULPeI8JZ8Ggl3u9FEJbnCtQmmTbupBP1pov8wp8KRzWRkd2XOV0/BBueQLwJzRzw/k
-	 jpysawP7sE5pjCgeTqEm96CzFoezfFiX9M7VRyi982cUDMVx7v8ydxriE20FZEVM5z
-	 gE1GN4vy0eoFg==
-Date: Mon, 20 May 2024 10:12:07 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, Helge Deller <deller@gmx.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Baoquan He <bhe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	David Bauer <mail@david-bauer.net>, Liviu Dudau <liviu@dudau.co.uk>,
-	Serge Semin <fancer.lancer@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 0/4] of: bootargs handling improvement
-Message-ID: <20240520151207.GA541701-robh@kernel.org>
-References: <20240512132513.2831-1-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="iG0uswZ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1716217922; bh=l4YKr8q4hSlSYnlmC8is7kKyo1psXqGg1nzwO8qkXlE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=iG0uswZ88y5tt8RR8Ak5aackUNDyrnZ25F5WfiBekmPKoJem+rMN4eLLQfnwcRz15
+	 DZDAKMBRaYH08cm32uki5G5LIx2r2UNnI7utFn9a9zKML5Hp2DqVRRnZG+cMWs/WE1
+	 aKV0IBzQ8gTcR2Y6rhwj2nQXmsL0lFC3+EC34kH4=
+From: Luca Weiss <luca@z3ntu.xyz>
+To: Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH RFC 1/2] dt-bindings: soc: qcom,smsm: Allow specifying mboxes
+ instead of qcom,ipc
+Date: Mon, 20 May 2024 17:11:59 +0200
+Message-ID: <12437992.O9o76ZdvQC@g550jk>
+In-Reply-To: <1ab150cd-68f0-4153-8d4e-5bd30bb01dfe@linaro.org>
+References:
+ <20240424-smsm-mbox-v1-0-555f3f442841@z3ntu.xyz> <2729475.mvXUDI8C0e@g550jk>
+ <1ab150cd-68f0-4153-8d4e-5bd30bb01dfe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240512132513.2831-1-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Sun, May 12, 2024 at 03:25:07PM +0200, Christian Marangi wrote:
-> This is a very simple series that try to solve a very simple problem.
+On Montag, 20. Mai 2024 08:46:39 MESZ Krzysztof Kozlowski wrote:
+> On 15/05/2024 17:06, Luca Weiss wrote:
+> > Hi Rob,
+> > 
+> > Any feedback on the below topic?
 > 
-> Many emebedded devices have very hacked (by OEMS) bootloader that do all
-> kind of modification and makes the kernel unbootable with the very first
-> small modification. And also many times these broken bootloader have
-> hardcoded values that can't be modified and would require risky
-> procedure that can brick the device.
+> Can be explained in description, like
+> mboxes:
+>   description: Each entry corresponds to one remote processor
+>   maxItems: 5
+
+Hi Krzysztof
+
+Ack, sounds good.
+
+Maybe also from you, any opinion between these two binding styles?
+
+So first using index of mboxes for the numbering, where for the known
+usages the first element (and sometimes the 3rd - ipc-2) are empty <>.
+
+The second variant is using mbox-names to get the correct channel-mbox
+mapping.
+
+-               qcom,ipc-1 = <&apcs 8 13>;
+-               qcom,ipc-2 = <&apcs 8 9>;
+-               qcom,ipc-3 = <&apcs 8 19>;
++               mboxes = <0>, <&apcs 13>, <&apcs 9>, <&apcs 19>;
+
+vs.
+
+-               qcom,ipc-1 = <&apcs 8 13>;
+-               qcom,ipc-2 = <&apcs 8 9>;
+-               qcom,ipc-3 = <&apcs 8 19>;
++               mboxes = <&apcs 13>, <&apcs 9>, <&apcs 19>;
++               mbox-names = "ipc-1", "ipc-2", "ipc-3";
+
+Regards
+Luca
+
 > 
-> One of the common modification done is hardcoding bootargs in the
-> appended kernel DT trashing the bootargs set in the /chosen.
+> Best regards,
+> Krzysztof
 > 
-> The main usage of this is to have dynamic stuff to support dual
-> partition scheme and make the kernel load a dedicated rootfs. But the
-> other usage of this is to effectively lockup the device and cause kernel
-> panic on modification like using squashfs instead of legacy jffs2.
 > 
-> The simple solution to this is to let the bootloader override the
-> bootargs in /chosen and make the kernel parse a different property.
 
-What happens when bootloaders start using these new "standard" bootarg 
-properties and you need to override them? Perhaps name it something the 
-OEM wouldn't use (maybe): 
-"use-this-bootargs-instead-for-the-broken-bootloader"
 
-> >From long time on OpenWRT we use bootargs-override as the alternative
-> property for this task fixing the problem of overridden bootargs.
-> 
-> The second feature is bootargs-append. This is self-explanatory,
-> sometimes bootargs from bootloader might be good but lack of some
-> crucial things that needs to be appended, like rootfstype or rootfs
-> path.
 
-It is unfortunate that the kernel's handling of appending or prepending 
-to bootargs is ambiguous. And MIPS is a further mess with handling 
-cmdline from multiple sources.
 
-I'm not really interested in adding any more complexity to the cmdline 
-handling until it is made common. There's been at least 2 approaches to 
-doing that.
-
-Rob
