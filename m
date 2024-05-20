@@ -1,144 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB26A8AC;
-	Mon, 20 May 2024 12:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAF56BFB5
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716208279; cv=none; b=jRPj6YFCUnEjDgD/LWNxz9eaxnhxeuGX6ZNkkMYEEFCgG6XXfSDGKtw0AkB7UhJrjEooasAulf/rLE8xYj0STFJgeoDKI+CZkHoTZJ/Cm1SgJktXrY+9ygsnk+aJiQs+MBrOgzenmghJHpQhOtNLuM35ITJ5NevmdWQgCg2YElk=
+	t=1716208284; cv=none; b=BbLLetlHOR5riqJjZ2b2OKCq1go0xNHmGc4iZC5x76bQBh6BGneDcPIgEL4z9z3zSOAjAXOpxTHluI0KdJD6sQhqd78WfXTYCC5mqZaS0Rlqa7s07XcQgKG47DQ0FWqiwJi4Bir1Yji4cvageXZf6LebbYKj5siflJwXi/dMkeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716208279; c=relaxed/simple;
-	bh=OXLRHfwzhWhfF/o+k3sFxvU1ArXQmPhsk8nX+CqNWLg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AHDiPLMcqCgD+W2xnN0DNsFWGUUU7e9ldOU4/ZtNjRlS/LgjPCBOfr9GU1T7OBlLNPh53tgeS1Zik58ocsArWgC8nMFN+O/JgL4hwJTsuHFePoaMS1osJzzEUgz7Mfq5XhtpgnCy2EI9XiLF+4ySSDvC9BfY3XM9yKxn9XmwI94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/q2OSFX; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716208284; c=relaxed/simple;
+	bh=ce6oru7LPD9lbhzZfnzBKS2IPT8JY+sTsV2gMVxtYCk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XGbwYWti34lRGg1rdcMZFtuUlMNwZHZ82mEB9dUNf41MpEnC7hBubJ6WXRhf3keT8lpznLAekHlIvPLMwA3l0OvRVI0DefP0LqH9R3/bwGPJZX3NWCjEHjGkdipu4rucEjeaQpIKeSCig0w2Q4l6AIk+TB3+yANEAGSWcDtLcgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HFP1hM52; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/q2OSFX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716208278; x=1747744278;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OXLRHfwzhWhfF/o+k3sFxvU1ArXQmPhsk8nX+CqNWLg=;
-  b=S/q2OSFXstuVD0qwM6X0Bkysj75wxm07HxIz3bywBmHnf2HDI5U5V+h2
-   e6wQWuq5ftSqyJtstq20SxWk4PKJ8XWhUdJGXR/npQU3qmclTz5K9dFZE
-   PbEzS2aeFobr1maJ06Yu+RedKz4GKTbjrpBaeHYlkKUu8e6ppIAPvHglq
-   mTpGpYtae3NH7tSzx7IgeSQ870vtHzveWNIwqWTVrqJT9Wlu2O+e1fHAC
-   ToAGhwUPFLPI+kzT0qxMXbeGfng4yWHK9dwa0DLlQgTBWIclY2ZfP2MlE
-   nOOQLMQ3KoKsEcd79lfHIWcOH8p1Ri86exh1DyIPK3Sr8zc4TTVSJIZpv
-   g==;
-X-CSE-ConnectionGUID: A6hzIa+9Tte4w3SxhMie2w==
-X-CSE-MsgGUID: a5Z7Kz+6QhS7i/YTxAK2+w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12180358"
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="12180358"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:17 -0700
-X-CSE-ConnectionGUID: lIpSSv3RSiihX+465unR8A==
-X-CSE-MsgGUID: SiU3s4YXRKKwcZlDUzJZzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
-   d="scan'208";a="33091197"
-Received: from unknown (HELO localhost) ([10.245.247.114])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 05:31:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v4 05/16] selftests/resctrl: Use correct type for pids
-Date: Mon, 20 May 2024 15:30:09 +0300
-Message-Id: <20240520123020.18938-6-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
-References: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFP1hM52"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716208281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9xxq06coPp2aoGXiJwR3/gZ9zYxOiYsiplvRA2+0uqY=;
+	b=HFP1hM526Bj4ww30PVw945Te/GG7f4bYD0Ec3xBImzXXA7BDRFQSZbHCAxgFhgbGGbQ9Ze
+	KqYspKEfjm1mdJI4Cou3r59EwNXUYDUyHSmVEBhtT5fd7YL+A5UtHQ5BY9UMVfGBT3txIR
+	yl1gBiAr9FpM6htqR2y6jEHJaZ1W5FU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-604-6Z3kB0usO7OYs13PWUSzNQ-1; Mon,
+ 20 May 2024 08:31:18 -0400
+X-MC-Unique: 6Z3kB0usO7OYs13PWUSzNQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 848A73C0C2C4;
+	Mon, 20 May 2024 12:31:17 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BA0B40C6EB7;
+	Mon, 20 May 2024 12:31:17 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id E330530C1C33; Mon, 20 May 2024 12:31:16 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id E05EF3FB52;
+	Mon, 20 May 2024 14:31:16 +0200 (CEST)
+Date: Mon, 20 May 2024 14:31:16 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Fan Wu <wufan@linux.microsoft.com>
+cc: Mike Snitzer <snitzer@kernel.org>, corbet@lwn.net, zohar@linux.ibm.com, 
+    jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org, 
+    axboe@kernel.dk, agk@redhat.com, eparis@redhat.com, paul@paul-moore.com, 
+    linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org, 
+    linux-security-module@vger.kernel.org, fsverity@lists.linux.dev, 
+    linux-block@vger.kernel.org, dm-devel@lists.linux.dev, 
+    audit@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v18 12/21] dm: add finalize hook to target_type
+In-Reply-To: <234910c1-40c3-4489-94ab-6e9a5f00d93e@linux.microsoft.com>
+Message-ID: <889a7880-8336-a44a-bea4-a4c81c5e5cce@redhat.com>
+References: <1714775551-22384-1-git-send-email-wufan@linux.microsoft.com> <1714775551-22384-13-git-send-email-wufan@linux.microsoft.com> <aa767961-5e3-2ceb-1a1e-ff66a8eed649@redhat.com> <212b02a8-f5f0-4433-a726-1639dda61790@linux.microsoft.com>
+ <bc9aa053-20a6-eaa-cbe4-344f340242b@redhat.com> <234910c1-40c3-4489-94ab-6e9a5f00d93e@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-A few functions receive PIDs through int arguments. PIDs variables
-should be of type pid_t, not int.
 
-Convert pid arguments from int to pid_t.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- tools/testing/selftests/resctrl/cache.c       | 6 +++---
- tools/testing/selftests/resctrl/resctrl.h     | 4 ++--
- tools/testing/selftests/resctrl/resctrl_val.c | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+On Fri, 17 May 2024, Fan Wu wrote:
 
-diff --git a/tools/testing/selftests/resctrl/cache.c b/tools/testing/selftests/resctrl/cache.c
-index 1b339d6bbff1..9b74fce80037 100644
---- a/tools/testing/selftests/resctrl/cache.c
-+++ b/tools/testing/selftests/resctrl/cache.c
-@@ -101,7 +101,7 @@ static int get_llc_occu_resctrl(unsigned long *llc_occupancy)
-  *
-  * Return:		0 on success, < 0 on error.
-  */
--static int print_results_cache(const char *filename, int bm_pid, __u64 llc_value)
-+static int print_results_cache(const char *filename, pid_t bm_pid, __u64 llc_value)
- {
- 	FILE *fp;
- 
-@@ -133,7 +133,7 @@ static int print_results_cache(const char *filename, int bm_pid, __u64 llc_value
-  * Return: =0 on success. <0 on failure.
-  */
- int perf_event_measure(int pe_fd, struct perf_event_read *pe_read,
--		       const char *filename, int bm_pid)
-+		       const char *filename, pid_t bm_pid)
- {
- 	int ret;
- 
-@@ -161,7 +161,7 @@ int perf_event_measure(int pe_fd, struct perf_event_read *pe_read,
-  *
-  * Return: =0 on success. <0 on failure.
-  */
--int measure_llc_resctrl(const char *filename, int bm_pid)
-+int measure_llc_resctrl(const char *filename, pid_t bm_pid)
- {
- 	unsigned long llc_occu_resc = 0;
- 	int ret;
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 00d51fa7531c..e6f221236c79 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -174,8 +174,8 @@ void perf_event_initialize_read_format(struct perf_event_read *pe_read);
- int perf_open(struct perf_event_attr *pea, pid_t pid, int cpu_no);
- int perf_event_reset_enable(int pe_fd);
- int perf_event_measure(int pe_fd, struct perf_event_read *pe_read,
--		       const char *filename, int bm_pid);
--int measure_llc_resctrl(const char *filename, int bm_pid);
-+		       const char *filename, pid_t bm_pid);
-+int measure_llc_resctrl(const char *filename, pid_t bm_pid);
- void show_cache_info(int no_of_bits, __u64 avg_llc_val, size_t cache_span, bool lines);
- 
- /*
-diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-index 6ea8fd2c65cc..18bfdff78089 100644
---- a/tools/testing/selftests/resctrl/resctrl_val.c
-+++ b/tools/testing/selftests/resctrl/resctrl_val.c
-@@ -572,7 +572,7 @@ void signal_handler_unregister(void)
-  *
-  * Return:		0 on success, < 0 on error.
-  */
--static int print_results_bw(char *filename,  int bm_pid, float bw_imc,
-+static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
- 			    unsigned long bw_resc)
- {
- 	unsigned long diff = fabs(bw_imc - bw_resc);
--- 
-2.39.2
+> > So, it seems that the preresume callback provides the guarantee that you
+> > looking for.
+> > 
+> >> -Fan
+> > 
+> > Mikulas
+> 
+> Thanks for the info. I have tested and verified that the preresume() hook can
+> also work for our case.
+> 
+> From the source code
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-ioctl.c#n1149,
+> the whole resume process appears to be:
+> 
+> 1. Check if there is a new map for the device. If so, attempt to activate the
+> new map using dm_swap_table() (where the finalize() callback occurs).
+> 
+> 2. Check if the device is suspended. If so, use dm_resume() (where the
+> preresume() callback occurs) to resume the device.
+> 
+> 3. If a new map is activated, use dm_table_destroy() to destroy the old map.
+> 
+> For our case:
+> 
+> - Using the finalize() callback, the metadata of the dm-verity target inside
+> the table is attached to the mapped device every time a new table is
+> activated.
+> - Using the preresume() callback, the same metadata is attached every time the
+> device resumes from suspension.
+> 
+> If I understand the code correctly, resuming from suspension is a necessary
+> step for loading a new mapping table. Thus, the preresume() callback covers
+> all conditions where the finalize() callback would be triggered.
+
+Yes.
+
+> However, the preresume() callback can also be triggered when the device 
+> resumes from suspension without loading a new table, in which case there 
+> is no new metadata in the table to attach to the mapped device.
+
+Yes.
+
+> In the scenario where the finalize() callback succeeds but the preresume()
+> callback fails, it seems the device will remain in a suspended state, the
+> newly activated table will be kept, and the old table will be destroyed, so it
+> seems there is no inconsistency using finalize() even preresume() potentially
+> fails.
+
+What does your security module do when the verification of the dm-verity 
+hash fails? Does it halt the whole system? Does it destroy just the 
+failing dm device? Or does it attempt to recover somehow from this 
+situation?
+
+> I believe both the finalize() callback proposed by Mike and the preresume()
+> callback suggested by Mikulas can work for our case. I am fine with either
+> approach, but I would like to know which one is preferred by the maintainers
+> and would appreciate an ACK for the chosen approach.
+> 
+> -Fan
+
+I would prefer preresume - we shouldn't add new callbacks unless it's 
+necessary.
+
+Mikulas
 
