@@ -1,262 +1,129 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2074.outbound.protection.outlook.com [40.107.7.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F291139CFA;
-	Mon, 20 May 2024 20:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716237716; cv=fail; b=Jbt5sKMXHsX9iv+zTb7D1JxfgI+wry+VAyS7SPh2h8/5Gav7trVPpS4T6WsK3KqSP1T0RIn7lLFKcWI6KsEygzl4d8P9S6RBoZEEDfbpqSMLOrm0taEX6zFfI6JCRYyzrgx2FwzSPBTkzlWeN18eONejXqT0b6GKKJJUHDYM7bY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716237716; c=relaxed/simple;
-	bh=oWaM/CQyojbHgWGiSFA4WtRWbVzpTxVKkfl8L2eWRyM=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=awjeTd+EGZo7i8RDa+IOkW7q3F4/jISMxLnKZN6ke/h2LKW4xu6HXH811Z3nao9yL0qGIjFvsi1YF10a9t03wnQ7iddxKkwZq1jE8M3g+LMESlXxDkmcC9jk2+xB0ss320E/1K6O7feiIL+rtZQrwqZSXCTjzlR/rvpG6ZlPP/Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ebqTPVEJ; arc=fail smtp.client-ip=40.107.7.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AFC13A3EF
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716237719; cv=none; b=A/XIw+nqTEOmdTeB+jgveuEy9g/VhKxp1JvDs8TWZE6+faZETtvehcZbjSI0AiCPB8Al7Gc5LC8HxDdYEY5sRFW66GSkP6+qSazfZHZdaeXa17s8bHgcjO0Rl3dw3I5ZO5Y48GvAonJIRDlvuOWdPCusK/Jm578YgxR98EXhsuU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716237719; c=relaxed/simple;
+	bh=KLAoNg3lNimMGEM1iK1E2E71QyftAe7H7PKPd5zQpd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZhhsOogI3eYFHd8TYFWWuykm/HSEbpJfKNL10RqS41IOR6Vx9kqX/0dju4BPpCm+TWaubR72k/zgJeGd8GHPoe3Fsa+3z9UWzhXGn26kdOGejvsIdx7COBOR83b08uPS4SUAm+ZzgtgDQFu5mL8EdpV+UjvhYj+YMqCfmoskPIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c5qDFkTd; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ebqTPVEJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dht8J4dtAEql0+ThqVdiEpLBsYMvxMbMxIlDUvmqoS082apX9AhcDFNhCT2nINgcznO/yBHdOazRitaY2f3PV4Q9mBM8T25GJaIYpACaGFEeVp6TixHSqqdGzRVs1hNm0nEZn3PdPVubPA/6E2oERYcXD2T04npE4FzQ5RX/BCPS87c6TzdYKHsdH9CVvnxwIL17RoujCs+h8KczjLYJPw2KmH9DyGHIE5Y3lf/cT+4iAE4XD7xzC2Tzrht97A+0Y18P6jJs/yBUqooIoJgY8LIg3cO2nBLYVmf4WImMpqGnWpeMKzNLsutUfZgcUQb4daMIGIqPyZYXcYYQr1gHcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=STLaoB1KKhGKq3jjdzpSjfywUac8hgqZ5hBTD7tKRSQ=;
- b=Aq4FbTwFAKhRgKCHSzHgMscJBQUN4EdaPf6RcTeLoPEYQereFjw53z5y3czqDebnJ4Wv9euz/6lSGfAevbjzZ0dsq85yQyfAJOAwmEUQwpcCXfbK0LEAcJhJjUrXC/OJiFz+tnxbH5Gt0wxro/tSevo23KJ0iJG0wjUzG5htluSdCIvC9zJLjwBzjZv8kjMgIfwZ27yKo7NPYaDU/cVsuwfrDGzXbrvlpVvUAXl0ZuJVz0e1Zw6++f4MQAE0bUv3WptVnFoaiaP4sjJ2GKFa0R61KDP23G7j7SD4RKZTNriGYKmqqf+2p73b1YyhMMI5xg7qnmEvEVyK871pQTQ8Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=STLaoB1KKhGKq3jjdzpSjfywUac8hgqZ5hBTD7tKRSQ=;
- b=ebqTPVEJeW8sK5zv01vI6F8Yttk+8TxFDbrkG7DEPkY74nY2e+JBGalSiQ6V+B6fYdXy8/gigeQ3MkI5e2TiaxlrLZMXelOgtx3Gz7LjOa8LUD6NDGdvLeVaEe37wAaCXBP9lY2+yCR3boyYyoKZeOe/Terqj/iqY+AGRSg2aI8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PR3PR04MB7385.eurprd04.prod.outlook.com (2603:10a6:102:89::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Mon, 20 May
- 2024 20:41:52 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7587.035; Mon, 20 May 2024
- 20:41:52 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 20 May 2024 16:41:32 -0400
-Subject: [PATCH 2/2] arm64: dts: freescale: ls1028a: Reorder sai dma-names
- to fix warning
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240520-ls_warning-v1-2-6851155356c6@nxp.com>
-References: <20240520-ls_warning-v1-0-6851155356c6@nxp.com>
-In-Reply-To: <20240520-ls_warning-v1-0-6851155356c6@nxp.com>
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716237705; l=3223;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=oWaM/CQyojbHgWGiSFA4WtRWbVzpTxVKkfl8L2eWRyM=;
- b=sujunTehnApY95qzIyoFEqTFhQDRiLW+qUpZKwfYwFDsc0DS/Ue4OGmOGz0/zCuLMyipZz5hL
- nBrjLPpzR6zClLMg8pjc93dQwMoc8XrJqZiMDzxPe01OEDC7cL1L6i7
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR03CA0162.namprd03.prod.outlook.com
- (2603:10b6:a03:338::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c5qDFkTd"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ed0abbf706so19641885ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 13:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716237717; x=1716842517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P7tYjQOKUhhyypRv+20xcgSB/ZPEIGDyWUW6MmS8mUM=;
+        b=c5qDFkTdGW/PkzxKKeC19A10gpemAfXqRD6QFIiBGcrWjQH1Yk+DMgRZ3sUkWVjUvl
+         uLnSjKX+gueJ2JS0QjrZNiYu46IoGMT9W2buQcHovUkMTpVVJET65QI083rLJGQheHly
+         WwaDX5m+tO054qE1Ukf/NgHLlcam90K0hLJGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716237717; x=1716842517;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P7tYjQOKUhhyypRv+20xcgSB/ZPEIGDyWUW6MmS8mUM=;
+        b=iuX9lkItSHErOroFeAo5JWLvfbmrqYNc8jyXlJUqCD/dEnYfPj5WgppiOV2xo2LW1r
+         R+85Afd1bByLDaTIcvqncBrp4dlte3/StUv37ZYNu0v9Z8eQjq75eNRepbqByIPACL5D
+         nAK1kbY7QvG4jqLop5egJDMmm2oOUH9z2WI3oBjt0pgRqv7iIV47w40VqT52l0CGkRWj
+         zaT37rvynZ4Mx6TE0UhUXCGjS3PhjWjc7UPC8V6F0tpw87BuloiYpVU1Hzjo9zXibs67
+         htOXAInlAtXp9R5qZrHK9774SS+vWuU47uK9CR4jPfzItUeaOpMb67OfyY/faNJuCPeI
+         hKEA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ywVmhBEbjhRWbMR4Hs5nW4o8H9S5V46Oo3e6nUvk5PvF4wjftQgA/43+C4JH2jcUCKrbzNCApeamvuLxL3PHx1PczwI3sDcIJKCx
+X-Gm-Message-State: AOJu0Yxarx96tLcS0b5MevTk2Q6Km5wFxyuCYNc3d5sUyFtrNquxpsXQ
+	9mnx8cBEwJp1EyTP233V5lAoBXBT+hsLxX2zxkv6KZoBVLPMjibqBLfTzZZymw==
+X-Google-Smtp-Source: AGHT+IGUEKmCgcmIHfXp6npZuZGjuJx5A/FAe7BpLxOGHhZPiMoBvbnihDQpbFMwZRHpWh2syWfS+Q==
+X-Received: by 2002:a17:902:e54d:b0:1f3:590:71d9 with SMTP id d9443c01a7336-1f3059073f7mr34219075ad.2.1716237717581;
+        Mon, 20 May 2024 13:41:57 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:cd20:112a:72ca:4425])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bbde9d7sm213068255ad.106.2024.05.20.13.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 13:41:57 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Hayes Wang <hayeswang@realtek.com>
+Cc: danielgeorgem@google.com,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Grant Grundler <grundler@chromium.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next 1/2] r8152: If inaccessible at resume time, issue a reset
+Date: Mon, 20 May 2024 13:41:11 -0700
+Message-ID: <20240520134108.net-next.1.Ibeda5c0772812ce18953150da5a0888d2d875150@changeid>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PR3PR04MB7385:EE_
-X-MS-Office365-Filtering-Correlation-Id: b51fbd97-a16c-4f30-c6ec-08dc790d47d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|52116005|376005|366007|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aVJad0NxUGRNVG1pZUF0RTI3NldnZFZEMkE1azRHMEMrUEk4bGNwSVF4NXVV?=
- =?utf-8?B?S09WcGhrOEkvUHdpVzRqU3p2Y3BtL21JTGR1MG9yWEV2NTBOQkMvVURsQlBN?=
- =?utf-8?B?WjliSTEwVlUvdHI1UGlFQ25HeFZreXBvczVoZUQ3Z29EdlZKcVMxV3o3TDg5?=
- =?utf-8?B?U1Bha00xV2dEekw4MU5FSlRWc0tKakl3ZlQvTmhCVEl4TlZkck1rajFZQi80?=
- =?utf-8?B?VE9EalFnc05DN3h4TGplemNFOTh0Yml3bWtMRGY5bGEzQXlsekc5R1M4K2cv?=
- =?utf-8?B?c2RpZ0xXTW0vbXBnNStOWUtWM0hmMlFjTTNhcmU3dnhJNFIzV0VCUlFLc2Yz?=
- =?utf-8?B?Y0xvVm5ldmpVOTBXblNUeVNORFdFQ2lqckEwekYvOE81Tk8vaWJpUnZzVmlG?=
- =?utf-8?B?V09ma2hJQTMybyszNXdJaVJsRWx1alZHYXlqVzZkWjNMeEEzR2dBdVhzS0VU?=
- =?utf-8?B?TEFLSndNTmM5OWU1cGZFekw1UnpYWmF6OFhIYWNlMzRyRUpKNlUxM3c5OUdI?=
- =?utf-8?B?Wk5zMHEzbVJUdjNOUTY2b01qTEl1eHdwUDdqYmE3cGl1Z0NKK2RHYzBrQnVH?=
- =?utf-8?B?dVhGWExvc3Mvc0pyMmlsdGxKdXlRL0xSZTBkd1hXUlRuUzhna2JkbGkxVSsw?=
- =?utf-8?B?UktyS2pmZWdWL0g2MXRoU0krSThSL1hMTStoaUVUV1BKVys0enVRckVxRC9P?=
- =?utf-8?B?KzNKYlBqOVVoV3d5bmtWbGNLMTgwZkFEdW96V2t5dmdxSXdGOW1KMTE1V2ha?=
- =?utf-8?B?ZUVkNUJoc0VGN2RVQXdRbHB0MGVjalRYNlliaTZ5d1JDTGp0VVdwdmV1MUFI?=
- =?utf-8?B?Mmw2UjRoU0IraHpDUzhHb1V6a0l2dUdpVUwzaTRubFJpNzMybGU5UVZaN1c4?=
- =?utf-8?B?K1JPSG9TdVdZUHB3MGg0dXF3MkRvZmJXVTc0TzlyOEN6VkRPam5hQkpWUEht?=
- =?utf-8?B?ZkFJVUgwQU1hUTROblVvdmYxRTlWUFBQVFBUVURJb0FKSWlXbytaTk1kdFJB?=
- =?utf-8?B?L1BQTFNpZGZwUk1DNmZRUmFZVGNKcnNpV2lqVGRhYmVjUEFMU3BZbTVJTHFB?=
- =?utf-8?B?czRYNk8vR0drQ1F0TGxkSzRjWkJkcG1venFiMmo0aEFFL2pSK1hvbUw3Tmdj?=
- =?utf-8?B?WHV6aG5MUHdmYWswTFJHemdTZVFKRjJCaHVRRkVML29XTWFlYUt4ekt5N3dT?=
- =?utf-8?B?WVlvSUl3cmk4bzZWQ3djK3A3elZuSlhLQ0N6UGQ5bm9oQnhmSU1LWnNIVUZu?=
- =?utf-8?B?RGlWRTVCaDhPMFJKOW9QK0hTYldlSG16YUZacjdtTmpoaldEcnAvaVIxaDlX?=
- =?utf-8?B?UU1sR2JUd01uT1ExWUpqazhLNFkzK2c4TkhhdDlhNFlFalIyQVZFTE9UWEVi?=
- =?utf-8?B?dGwzSVY1cDRUOW1DUEFNOFBKYk9hL1QySFdvdEM0aVh5c1k5bUZTSThtb1VB?=
- =?utf-8?B?MTVQakFqU3lmNFdqbG8xMlZzY3ptRXN5NHBFRTcwUFZHenNBQ1lLcXNjclBK?=
- =?utf-8?B?eFRvMXhsdFhTYnYxRkZrRUhNMEZkblJKZEdsMm53ZXhsNkJYN3h1ZWo2V1l3?=
- =?utf-8?B?aVp0eklIcElZVk5hVmw1QnBBTnVIaEpQU3cxZU8zdUw4MFZLaitLZUlIRlZi?=
- =?utf-8?B?OFhDMWkvSVRMSnpoNmx0RlQxZFcyM3NSWnVuZFBlZVUrRXJwSEpDbTV6YjZO?=
- =?utf-8?B?L0hVaTRpSHVOOWZheEIxYWkxNTJWbW04ZXVudVNuR1hRUGg2RjEya1h3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U1lvSk9hMXAwN2tKZFdmRlNpVmh0MmZNN1dUUnZ1Wm5WZVRMb3IvK0RmUWF2?=
- =?utf-8?B?UjdreGx4SGZJNWt3ZlI2aHVEU2c0Q3FXRnJHeWFKOWduTEFhNWc1SndtTVBU?=
- =?utf-8?B?WERaSUdUOXRBa25aQVduL0hLU3VPVTlNVjNBMWM0VVNNczlqSDZjVzBJNGFR?=
- =?utf-8?B?RWs2WkljSWMzQ1RQY3pGR0UrSWx1MmN5S0tsb0lPZkJHWWY3MUdjRFFRVjcz?=
- =?utf-8?B?UVRvejZkWmgreXJWZjdsTkt2OVVBWUxVVUx3VDVEa3hIVzVaeHcwczFiVmpS?=
- =?utf-8?B?Y1cwTzdjOTJ6YlEvazBwcU41WDFxUnN3YzRQZi9FVnpsSlU1WS9lbUp2U2tQ?=
- =?utf-8?B?U2puR0tXaFNPVzNjN1ZPTnRMY2xqR0NLbG5QYURsK21YUnRTSnByN210MnZh?=
- =?utf-8?B?SCtuNjFsKzUvcUxJaVdnTDh1eU4yQXhyb0dyN0lMTTJOS1VmZkQ4bk90d2FQ?=
- =?utf-8?B?TnB1Q3oxS280UjJ4MEU3RFZsalpFZFRuWE9KbFJHeTh6Z3hkeXVTTkN6SWRY?=
- =?utf-8?B?aHZSbWNiS1hzQjdHZUdUNVdmLzdsNERibFA0Q2JGRlFMUUd3TlhLVVBwUWFH?=
- =?utf-8?B?MlZWTk5nUmx0bWFYR0IxbzhjbUtFL0xwQS9nYXp6NmcrZTdRcWE2SW1NSmpv?=
- =?utf-8?B?NHpSeHVVam1yc0pBOUl0WnoxaXpaRE4wUUxGQkZ2NWxxSUp6ZTVvRzQvc2pH?=
- =?utf-8?B?NTlpaTNMSjNhZmZZQysrUnFYYTVGTnJoZGNZUWlUNTUwRFRtRWFZS0R4SUc3?=
- =?utf-8?B?NEdremxQSVJXTnZUVnFwMEI4aVk3bG11WkxTbjZzUEYydEJab1NSWGxhL3FK?=
- =?utf-8?B?Y1pQeDhMUFNISkNqUWhyZXozcFc1c0g1QkVmazg4TGp1T1ZmSmlDNWRsU21U?=
- =?utf-8?B?UjZrQ0d5VEdHUVVwOW9nbXo1RXhjQ21ucDhzLzhlMlNXWUFvRVc4aCtQZm9z?=
- =?utf-8?B?cDNKMGFoVllqbU1iRCsrVDhjZGNleC84cHlRMUxzL3RKa2crTFRsYlVoZ1M3?=
- =?utf-8?B?K1Q4SEg2U2ZpNjBXc2ZISk93V1BSWGVRZFBRYk1rNXNwOUd0Z1hRa3UyY3hF?=
- =?utf-8?B?ekR5Ym4yWndGeGpTS2hKU0s0UXUydWg4QVN2YUZzT296WktNeDhVeXpoME5F?=
- =?utf-8?B?ekNMNHRJS1FDMVB0YTJNamRkSUltd2ZlUE91dDZyZDF0ZzN4Wnl0aXlmalh6?=
- =?utf-8?B?cUovQ3dTMGUzN0tQRzhwTkxZa01INkVRT3F4ZWNjMkVZYW15dkpCdVFZc1lH?=
- =?utf-8?B?Z3FFU0pmbVp2NFRrZ0kyODNyYXVYK2NQdEpOTWlXR0xoR0JsdkFSNnpuTC9z?=
- =?utf-8?B?MVhhY3hOVHlKRVVYelNtZDllTGplMzVNaFNjSTZiY3llbWdoQ1l2M0ZQc3N5?=
- =?utf-8?B?cnBYci9Bak1CeE4wTzY5K0REZDkxTjNOL0NqeFpnc1Z1UmVUbzY4ekdja2x2?=
- =?utf-8?B?aGxLdHJ4aUV4NjJDYmlmMFU3TGdRSEtNc216dU4yelJKajRKZzA2UndmS0RO?=
- =?utf-8?B?NUZHN1FOblpqckx2RTJuUHpPK3ZsYVkxQUJSS1IxSzFabjZKbkdwSENZRlFS?=
- =?utf-8?B?S1huaVhtSFAwcVZ5ZzZJTWhGVGl0OFF2TmUxdnVaVDQvbjN5NmNmRUFmRnA1?=
- =?utf-8?B?V2J4V0NWVUhGaUtCbVg0VHZhN00xTUxPZXRNb3ZjaHZ5QjN2WFEwaEV4RDk4?=
- =?utf-8?B?N0hGQXFZaHpLVURxeXBNMWZnQ01yZGJHaUNqNEptSHliK0U5bElWS1pBV3I0?=
- =?utf-8?B?ME1xL21vQ2RiVStSMTZiM2hDckhlaDZhdG45RFJYU3g0M3k0L2d3RU0rU1p5?=
- =?utf-8?B?WElPOENyK2JtS1IvM3JIdCtpUk8vM3Z2UWlmN3lzbEVCNG4rdWxZWUFtMVIr?=
- =?utf-8?B?MGd1SEg4MVRvaEFwbnBxQ1pLUTkrT2FXcGhoTVlva3I2dFE5d3J4RHpNK2Ns?=
- =?utf-8?B?NkRzUGJYVWw4bW1wTEJFc2U4WkxJZ3BoMDlSTWcwZjdSbk52T2JEWXgxWnBY?=
- =?utf-8?B?Y3Q1ZE0rbzdGVFR5VUJ5VGpLbURTMjNYeHNZVUlpSXhlNmIrTElhUmJHN21s?=
- =?utf-8?B?UW1XSTM5bHNNZGIwSFZRTHlvUENjS0p4TGExTENzWG53NE1xaFNrL0N0TXlE?=
- =?utf-8?Q?sxh4XhZFqYlm7CAWCwpyqjnok?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b51fbd97-a16c-4f30-c6ec-08dc790d47d6
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 20:41:52.7457
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m95kr00zuAVB1S8GeBPhbZsqtmwngSAAykMaXdHkeryD7AMoBuU71Zil7q/0U6um+bD2/7nEh4hPWeKs/9EPIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7385
+Content-Transfer-Encoding: 8bit
 
-Reorder the SAI dma-names to ensure "rx" precedes "tx" as required to fixes
-the DTB_CHECK warning.
+If we happened to get a USB transfer error during the transition to
+suspend then the usb_queue_reset_device() that r8152_control_msg()
+calls will get dropped on the floor. This is because
+usb_lock_device_for_reset() (which usb_queue_reset_device() uses)
+silently fails if it's called when a device is suspended or if too
+much time passes.
 
-arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dtb: audio-controller@f100000: dma-names:1: 'tx' was expected
-	from schema $id: http://devicetree.org/schemas/sound/fsl,sai.yaml#
-arm64/boot/dts/freescale/fsl-ls1028a-rdb.dtb: audio-controller@f110000: dma-names:1: 'tx' was expected
+Let's resolve this by resetting the device ourselves in r8152's
+resume() function.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+NOTE: due to timing, it's _possible_ that we could end up with two USB
+resets: the one queued previously and the one called from the resume()
+patch. This didn't happen in test cases I ran, though it's conceivably
+possible. We can't easily know if this happened since
+usb_queue_reset_device() can just silently drop the reset request. In
+any case, it's not expected that this is a problem since the two
+resets can't run at the same time (because of the device lock) and it
+should be OK to reset the device twice. If somehow the double-reset
+causes problems we could prevent resets from being queued up while
+suspend is running.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 36 +++++++++++++-------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index f8b19b54e2afa..6552d404d1310 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -903,9 +903,9 @@ QORIQ_CLK_PLL_DIV(2)>,
- 				 <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(2)>;
- 			clock-names = "bus", "mclk1", "mclk2", "mclk3";
--			dma-names = "tx", "rx";
--			dmas = <&edma0 1 4>,
--			       <&edma0 1 3>;
-+			dma-names = "rx", "tx";
-+			dmas = <&edma0 1 3>,
-+			       <&edma0 1 4>;
- 			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
-@@ -924,9 +924,9 @@ QORIQ_CLK_PLL_DIV(2)>,
- 				 <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(2)>;
- 			clock-names = "bus", "mclk1", "mclk2", "mclk3";
--			dma-names = "tx", "rx";
--			dmas = <&edma0 1 6>,
--			       <&edma0 1 5>;
-+			dma-names = "rx", "tx";
-+			dmas = <&edma0 1 5>,
-+			       <&edma0 1 6>;
- 			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
-@@ -945,9 +945,9 @@ QORIQ_CLK_PLL_DIV(2)>,
- 				 <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(2)>;
- 			clock-names = "bus", "mclk1", "mclk2", "mclk3";
--			dma-names = "tx", "rx";
--			dmas = <&edma0 1 8>,
--			       <&edma0 1 7>;
-+			dma-names = "rx", "tx";
-+			dmas = <&edma0 1 7>,
-+			       <&edma0 1 8>;
- 			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
-@@ -966,9 +966,9 @@ QORIQ_CLK_PLL_DIV(2)>,
- 				 <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(2)>;
- 			clock-names = "bus", "mclk1", "mclk2", "mclk3";
--			dma-names = "tx", "rx";
--			dmas = <&edma0 1 10>,
--			       <&edma0 1 9>;
-+			dma-names = "rx", "tx";
-+			dmas = <&edma0 1 9>,
-+			       <&edma0 1 10>;
- 			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
-@@ -987,9 +987,9 @@ QORIQ_CLK_PLL_DIV(2)>,
- 				 <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(2)>;
- 			clock-names = "bus", "mclk1", "mclk2", "mclk3";
--			dma-names = "tx", "rx";
--			dmas = <&edma0 1 12>,
--			       <&edma0 1 11>;
-+			dma-names = "rx", "tx";
-+			dmas = <&edma0 1 11>,
-+			       <&edma0 1 12>;
- 			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
-@@ -1008,9 +1008,9 @@ QORIQ_CLK_PLL_DIV(2)>,
- 				 <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(2)>;
- 			clock-names = "bus", "mclk1", "mclk2", "mclk3";
--			dma-names = "tx", "rx";
--			dmas = <&edma0 1 14>,
--			       <&edma0 1 13>;
-+			dma-names = "rx", "tx";
-+			dmas = <&edma0 1 13>,
-+			       <&edma0 1 14>;
- 			fsl,sai-asynchronous;
- 			status = "disabled";
- 		};
+ drivers/net/usb/r8152.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 19df1cd9f072..6a3f4b2114ee 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -8554,6 +8554,19 @@ static int rtl8152_system_resume(struct r8152 *tp)
+ 		usb_submit_urb(tp->intr_urb, GFP_NOIO);
+ 	}
+ 
++	/* If the device is RTL8152_INACCESSIBLE here then we should do a
++	 * reset. This is important because the usb_lock_device_for_reset()
++	 * that happens as a result of usb_queue_reset_device() will silently
++	 * fail if the device was suspended or if too much time passed.
++	 *
++	 * NOTE: The device is locked here so we can directly do the reset.
++	 * We don't need usb_lock_device_for_reset() because that's just a
++	 * wrapper over device_lock() and device_resume() (which calls us)
++	 * does that for us.
++	 */
++	if (test_bit(RTL8152_INACCESSIBLE, &tp->flags))
++		usb_reset_device(tp->udev);
++
+ 	return 0;
+ }
+ 
 -- 
-2.34.1
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
