@@ -1,100 +1,107 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18934C66
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 15:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259354C66;
+	Mon, 20 May 2024 15:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716220612; cv=none; b=ToJVdne1bxrF7NvohoLUhPrPmxCNfjxIPAmKzwqq7UaYMpOdR9kUXVlxDGeTy5OPI6x2CFTAxuz09eDGFrayjlUS/7TwMJUfP6Hjls/JPMOX1r7IS4iV4HvG+2EXclbPm+ZFisAHWTxN295AGjs2Lr/1ooE9/hRhYFhRzYSfUYw=
+	t=1716220667; cv=none; b=PbWVvz9uErzBryvIE2FsaRKmoO2fU+px0sKF1NBOPmMY43Ut5PRQasReMEHX7gh1MXdn2SLjR7AjO6UzIOqecwPw+nJRpmHSndg42ZGVuw518gQ0Zs2IxPyQgjQQ1VLkPTMjPPuEz6sT/cx7OV98ZZO7HNRHWktCEicUHGFROEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716220612; c=relaxed/simple;
-	bh=CP0ZA9PYcEs6x4vau0aHq+RdPXaf/fqBDeOsmXzNn2I=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dHg2sL8F1HaqYaq3Jl/Y12KOvnUOA1tX8apWyIibQQs5eDMiCxPHJenoc7j6emXAEdn28nwTpJBTB8NFvQFkxXmsQGzOYxHUGy7kMAFPqHThmoUjczJP+D1072SCh5OzlAFKkpr/TlVgdYWlTfzCKv5Q7quLtKuTKptXzAG9VJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jwylder.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P6Fq21zJ; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jwylder.bounces.google.com
+	s=arc-20240116; t=1716220667; c=relaxed/simple;
+	bh=dgi6/+GHc+2bDbv40ImoR2hfMHO0yKR3AM+UeaGAIVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hgmwks3/NEGn+Yps019Pko270fHtXXea7Hsy3UJ3F6czgA7U5GTYOe7Or6LW8/P1FrDBrgAGLFDFLGlY86fgQgjEZ2jj4egNS8Rh+g7n2jAC/+WFb5CS+6x5Pw71CRwe2Dy9SQpNoeX4ItYf67NqtYjMwV34ts/b/bi4zYL9Y0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSCuewc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P6Fq21zJ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be5d44307so192790417b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 08:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716220609; x=1716825409; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=k71/7VL0ZvFVNLFyJr0mQ6OVb2SIlkc1E/+KvwagaLU=;
-        b=P6Fq21zJqJ8fWqk3eDZVpr+c48/U6NZqUoYj0HCB92N6WjIqjvUGP2PKRiSD2EUlPr
-         XjJmq5aYR12/yyyQH6miDron6XocxYZV7eYV+Zpjbpsw+VoHDY27Ax55WQjNzhJRWDEZ
-         uJFM0wrU8LMUbDMyuaWDmOW66TGAlfw2lFg7SNRZ7DazEr0efw/l99uRC9BcEYWQD798
-         J4MYGnpb7Cf2XkK7jhR+Ipc2Gyw0L+JB0N0hBE5GSkiCQqGCjb27hD7WsrH4gXM/mEBp
-         XLj8Em4OBs6s8nBiYh2tUwkB/eKs9LOk+4G5hKoV/kf4gUWlBBKF+V5k80erXInRGL5C
-         pOCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716220609; x=1716825409;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k71/7VL0ZvFVNLFyJr0mQ6OVb2SIlkc1E/+KvwagaLU=;
-        b=CCVt7+/F2KYhjRQwBbYHM4zrat2K7aH6eqTOgN4FpO5IDik84mR9TfIjz6sqiIovYt
-         yJp3BQfD67Yqzuaa1gJxE7SNq5+PZJQOpe6W29W2e92KuoLFvpc32KYRdQdWQ9AZ1FUk
-         bsuleN7MMjtmlmBHJ1lRR6eCwK2sruABCDiub7MMbgZ71yUw1MgIM8Ds/YZba3hWKIXg
-         MzBubkQr0nzV0Jzk0fW7dqZIGZWJTSJfJsoI6MLdFfbOLNK5bjKoptfaoHQ+55j1wROu
-         hBoYfp9/OAbik/gDEEnM/XoD6CosO7xq/TtnyM8x/IZIuUT0MHtUmuuenyRQN/909cOe
-         e+FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8ybRlq/RLfdH2MnZo7Z4ZbexbE5JJR5/52ez72J/1zmSTECgtI4cqSl3JRl0vZhRqZpEZuihQoTXAvkA4xlQGn37DFgrzJ04QVT3r
-X-Gm-Message-State: AOJu0YwkBCYqIjz2Mus+eyw/rRDlpW7JUByDLgHURriVjE2yknZr0kbI
-	1nIJVTpaIHgH286AZTRHo7d02EnKONL9AYUkXEoYGkdYflUTALMbfB3nWeEG0Dd7Uesx0XU5Fue
-	1Wkk8bQ==
-X-Google-Smtp-Source: AGHT+IHBcgiST2Lj6n7laJSmi1YlvlcyBqSxSJbFcjZ8I5/Oae28wZWTgUNkY7seRE60ykCGbpmKWj2y0U3N
-X-Received: from tetrad.chi.corp.google.com ([2620:15c:2:a:3ad4:9b42:3a8e:37e3])
- (user=jwylder job=sendgmr) by 2002:a05:6902:1026:b0:dee:6147:7e26 with SMTP
- id 3f1490d57ef6-dee6bf164abmr2514888276.11.1716220609702; Mon, 20 May 2024
- 08:56:49 -0700 (PDT)
-Date: Mon, 20 May 2024 10:56:37 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSCuewc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B15EC2BD10;
+	Mon, 20 May 2024 15:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716220666;
+	bh=dgi6/+GHc+2bDbv40ImoR2hfMHO0yKR3AM+UeaGAIVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NSCuewc6ybxi/KY4sHRJnx4zOXUWf8WNft00cf6zgJ8RdUqhMXalqvGVcMySGWzG5
+	 zlavp9or63s5Ub98qY4S/Xs/JvBVeVYaApH+4ju5y9xKNP6XtcE6fe4BzEpOvgA9tV
+	 ITKAzV02QjLJir2h6IYB2fbFcRCDLMQ/GpF2j4rZRz4Ej/WOfMYEd63LfQl9fujdbm
+	 x+C55OMbar6VkCb/zdwLj/rHiKOtXsOsTrqzCwMPbYMNwHybtwWV1gzGmLwuMH+8j/
+	 tyUBfxFwOcNvki0mM/yyXDpI58iQWhUv0mU7wS7IkCcRw8jPmgF5GgSqoSQjuG0Wke
+	 Aj9k1t5nelv+w==
+Date: Mon, 20 May 2024 10:57:45 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	Tommaso Merciai <tommaso.merciai@amarulasolutions.com>,
+	Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: panel: mipi-dbi-spi: Add a
+ pixel format property
+Message-ID: <171622065959.617153.198991768265226176.robh@kernel.org>
+References: <20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org>
+ <20240512-panel-mipi-dbi-rgb666-v2-1-49dd266328a0@tronnes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240520155638.994719-1-jwylder@google.com>
-Subject: [PATCH] RESEND: regmap-i2c: Subtract reg size from max_write
-From: Jim Wylder <jwylder@google.com>
-To: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jim Wylder <jwylder@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240512-panel-mipi-dbi-rgb666-v2-1-49dd266328a0@tronnes.org>
 
-Currently, when an adapter defines a max_write_len quirk,
-the data will be chunked into data sizes equal to the
-max_write_len quirk value.  But the payload will be increased by
-the size of the register address before transmission.  The
-resulting value always ends up larger than the limit set
-by the quirk.
 
-Avoid this error by setting regmap's max_write to the quirk's
-max_write_len minus the number of bytes for the register.  This
-allows the chunking to work correctly for this limited case
-without impacting other use-cases.
+On Sun, 12 May 2024 17:25:38 +0200, Noralf Trønnes wrote:
+> The MIPI DBI 2.0 specification (2005) lists only two pixel formats for
+> the Type C Interface (SPI) and that is 3-bits/pixel RGB111 with
+> 2 options for bit layout.
+> 
+> For Type A and B (parallel) the following formats are listed: RGB332,
+> RGB444, RGB565, RGB666 and RGB888 (some have 2 options for the bit layout).
+> 
+> Many MIPI DBI compatible controllers support all interface types on the
+> same chip and often the manufacturers have chosen to provide support for
+> the Type A/B interface pixel formats also on the Type C interface.
+> 
+> Some chips provide many pixel formats with optional bit layouts over SPI,
+> but the most common by far are RGB565 and RGB666. So even if the
+> specification doesn't list these formats for the Type C interface, the
+> industry has chosen to include them.
+> 
+> The MIPI DCS specification lists the standard commands that can be sent
+> over the MIPI DBI interface. The set_address_mode (36h) command has one
+> bit in the parameter that controls RGB/BGR order:
+>     This bit controls the RGB data latching order transferred from the
+>     peripheral’s frame memory to the display device.
+> This means that each supported RGB format also has a BGR variant.
+> 
+> Based on this rationale document the following pixel formats describing
+> the bit layout going over the wire:
+> - RGB111 (option 1): x2r1g1b1r1g1b1 (2 pixels per byte)
+> - BGR111 (option 1): x2b1g1r1b1g1r1 (2 pixels per byte)
+> - RGB111 (option 2): x1r1g1b1x1r1g1b1 (2 pixels per byte)
+> - BGR111 (option 2): x1b1g1r1x1b1g1r1 (2 pixels per byte)
+> - RGB565: r5g6b5 (2 bytes)
+> - BGR565: b5g6r5 (2 bytes)
+> - RGB666: r6x2g6x2b6x2 (3 bytes)
+> - BGR666: b6x2g6x2r6x2 (3 bytes)
+> (x: don't care)
+> 
+> v2:
+> - Use 'default: r5g6b5' (Rob)
+> 
+> Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+> ---
+>  .../bindings/display/panel/panel-mipi-dbi-spi.yaml | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
 
-Signed-off-by: Jim Wylder <jwylder@google.com>
----
- drivers/base/regmap/regmap-i2c.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/base/regmap/regmap-i2c.c b/drivers/base/regmap/regmap-i2c.c
-index 3ec611dc0c09..3b1e78e845bf 100644
---- a/drivers/base/regmap/regmap-i2c.c
-+++ b/drivers/base/regmap/regmap-i2c.c
-@@ -350,7 +350,7 @@ static const struct regmap_bus *regmap_get_i2c_bus(struct i2c_client *i2c,
- 
- 		if (quirks->max_write_len &&
- 		    (bus->max_raw_write == 0 || bus->max_raw_write > quirks->max_write_len))
--			max_write = quirks->max_write_len;
-+			max_write = quirks->max_write_len - config->reg_bits / BITS_PER_BYTE;
- 
- 		if (max_read || max_write) {
- 			ret_bus = kmemdup(bus, sizeof(*bus), GFP_KERNEL);
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
