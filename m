@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CED137939
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 16:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E77137C4B;
+	Mon, 20 May 2024 16:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716222840; cv=none; b=l6hbFW2fJ8qBvYLJRufcnBVN6U7veHoRdRe32WwyuzL8pdY7cAHwOvLw9XDRRlmhlxiVpFGsGEWZx8UNcZaPFiYfmmikopXFtXE2yjz1h6Iz5iNDapvnEmDeJjwerQBAkX+YO5dCXfEwyS5g5+nSCm6fW+yB2ClhbAD5lHFvYKE=
+	t=1716222841; cv=none; b=hGbKWsbQdkHCvjDVOzTit3N2FT7L+5de1QdG1Nda0zm0xS42LqkIpIcvB6nBz66ExMdRKowwjOBMpmdMs+EMoReyAhRHsabBbf5HRmi9TdexjZ0nMj+GTIqLvLi6RAqrJx8k/jjud4Fx+/Wjl3qtf/X8MsGsqZkFzLbZCMeR35w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716222840; c=relaxed/simple;
-	bh=3+7dgtdbRKeFV9q5f4JxqU1pRV4ObMy5JibBlPNIc1E=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Z/QvSvAX6Oq0CVMui0Ct/Wx5EWb1O8ezL+H7K9tX2rRSVIxbr0HYexsUitAQPDWTjqLRak9cYN9eGputras5MYvC8qLCn3vDvqIBywXivP36Di+4UvTtcXOqe4ItLG0RiB6cW137INXDzNH8Jn8FCW/zMUuy6CDN/QwYI2sHabg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j44plxLI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716222841; c=relaxed/simple;
+	bh=dhjXSwNavR9cyMzfQa7qIcQZ8225y2dbFBT8fnMXtxg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jqE89p5fz8eeU+cIbmSsWmnPVNcBDp9QKOUpS2YN1IinFfOaizj/RYYHN1ieTOmbii1FqLfPUYytaKQbKR9Mw72pvDreVxF0SzFU2WyRpzDyhclz/3k+LYENaaWXdSsirUIFkuTNQzpeNF1Vq+u/JaJRs4TDgvP0dHMVmK1QirM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7xoE0eb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j44plxLI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 994C4C32789;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7xoE0eb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDD0AC4AF08;
 	Mon, 20 May 2024 16:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716222840;
-	bh=3+7dgtdbRKeFV9q5f4JxqU1pRV4ObMy5JibBlPNIc1E=;
+	bh=dhjXSwNavR9cyMzfQa7qIcQZ8225y2dbFBT8fnMXtxg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=j44plxLIQrZ4k2sOHEHKYSIfA3cbh4AouV/NiyRCQzBJjgy3yc1QWFUK2m3NTG5ky
-	 o6Wypub+Pedv66S7Ho62Wqz1cNbKSjRp3nAZHArrtdMDMygQDZwi8o2kSLg1EMR5My
-	 My3rnOizVWIT5Ys+Rt5252whAjEGlXROJhbxI3T2RP87KGxkKDGG+x5DO3VM32U88P
-	 lEvUMfH4irr92kJlznoqwnco5LzNLxTzqOgTQSk9QKIfq2AGz18g8Fhv8U04OFBBLs
-	 xq990pggJ9DJDL3hdoeL/NYbd2ndf9p0SMfzYCvgUEieNX7lHgBaAuaDnK5BNFoPnf
-	 05uHcpQfqLkiA==
+	b=k7xoE0ebQm6KlKtRhm+/MtWngf461zBwRdUPNDAGm2ooeotk1jFsrhaFhYVL1vxBd
+	 dgWD0SZQ5BDAzi6bSsigX7BHNsKT5LGInFYm//7qdw2ECoupNleOUr2ixgPyw3rqQW
+	 oLfxGb8PjYCwcfv8Vnybf8C2DlTv3ot+ho1jo07aBte8lRY5mo8kAKr/hOgHYwohA1
+	 HmlIPPg1LGruFKVWKSiSHTiKbExFc/LHsyLMaxks33Mt+GEyzMAHl3GXJM0L/mKEhR
+	 9/cBAYukPpGBxizQIcOrNYSUrpWi2QV3fc5cbWFM6sJkhOJU0NUYelYoIyNrCzfVwA
+	 m0iWxy0qGiQmQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8FDB4C43332;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B31F2C54BB1;
 	Mon, 20 May 2024 16:34:00 +0000 (UTC)
-Subject: Re: [GIT PULL] dmi update for v6.10
+Subject: Re: [PULL REQUEST] i2c-for-6.10-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240520101221.463a1ec8@endymion.delvare>
-References: <20240520101221.463a1ec8@endymion.delvare>
+In-Reply-To: <ZksWbctxiJmcNmg9@shikoro>
+References: <ZksWbctxiJmcNmg9@shikoro>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240520101221.463a1ec8@endymion.delvare>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git dmi-for-v6.10
-X-PR-Tracked-Commit-Id: 4d1b28a8119c615f1e932520f9ee1f80bdda5204
+X-PR-Tracked-Message-Id: <ZksWbctxiJmcNmg9@shikoro>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.10-rc1
+X-PR-Tracked-Commit-Id: 068a95ef3945033b5355e50fecea18737680d43d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 80f9d9023058e156eb09226ac339f56a8411bc8a
-Message-Id: <171622284057.31783.1824216704697127937.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 0a07e09085e5cff1c8415ebd2ce9b087cf3acc73
+Message-Id: <171622284072.31783.16840894349939315410.pr-tracker-bot@kernel.org>
 Date: Mon, 20 May 2024 16:34:00 +0000
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+To: Wolfram Sang <wsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 20 May 2024 10:12:21 +0200:
+The pull request you sent on Mon, 20 May 2024 11:22:53 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git dmi-for-v6.10
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.10-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/80f9d9023058e156eb09226ac339f56a8411bc8a
+https://git.kernel.org/torvalds/c/0a07e09085e5cff1c8415ebd2ce9b087cf3acc73
 
 Thank you!
 
