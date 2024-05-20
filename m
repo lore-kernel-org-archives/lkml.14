@@ -1,180 +1,334 @@
-Received: from DEU01-FR2-obe.outbound.protection.outlook.com (mail-fr2deu01on2102.outbound.protection.outlook.com [40.107.135.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F071136E26;
-	Mon, 20 May 2024 14:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.135.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716215590; cv=fail; b=R9fJzjJ2kenLpnrSdglqJ/46F84/j8v65E5+27JLPU8rViUjOrFNS8zFHKKGNwen4FBQrEGG1WEjLDvi86PBqB5iqW6zJLJZI6TbNTjtfAtyQhyQ4070zVfqUh0AfUhLbsTxS6X9iC4Lx+PBL9KpxxNoS9ZsCeuTcXt8wlMyUbs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716215590; c=relaxed/simple;
-	bh=w0jDKZdkhk8OSLlVYpRtwsv7AEf9NIM3S92uHOkJTWE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oij7Vf8neO44bT5+wq7vVKV9tdoEm6chPklcoo6l2VDD/kmtogsTF3zMeok7LkHuPAjPSLDJBEuwHH2sfk/GQ7u7IEn5f7FCWZd9f4RG0mCs7NtOH8JGuauhpfMVsqlqSC6LLbwB/zveLZBbDJavJ2ehAwYyZeG4yL/5pf+K6Hs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cyberus-technology.de; spf=pass smtp.mailfrom=cyberus-technology.de; dkim=pass (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b=WB29042Q; arc=fail smtp.client-ip=40.107.135.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cyberus-technology.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyberus-technology.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9622E7C0B2;
+	Mon, 20 May 2024 14:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716215604; cv=none; b=ZehN82VuTMLd0hMvUz7U2bvMLBcCHTkkVCe0mw0ULMXKYZKqKtw+DVYIFAsIC7yCA96Byaxdqdva+BeQwGGuqEaP6G5HsrRFFfCl6Fm1PkueKJxAOaW1bwqFrne2HDdvVk3JCI9mCqIaQfh7AXmTZtkla6TL49cDJM5wGc7ChOI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716215604; c=relaxed/simple;
+	bh=xciCHReFFZlVddQDu0g7FFTsuuoF7H/QKFVGKEg8Gc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZEqlV5guO/Ct8vqbCOTk5eiTvEjLIiJPon8L5Gty0iWGAivT9MuvzSn9oKK53gtc7vKbxMzBljdZcAkwY7t5ZZovx1WKUTz6GJrNElDJXrIvn6FCLdWhBZnReaKob+33gi/mJpSLEp8TNsQIt1T6J7AYKW/jDUFl9SpdlIyXnEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggletEnJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="WB29042Q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ibmx80cwq0oK9lZ0ghbDK3kZobhmJSIvWtkbjtdVibtFFeu/1XN+L3RjMKCtizQUba4DEMs8LTAse8Qlkp9mWf99wdeI8iTqKnG+NbHn/rFlUiPfvXlDnqq5y6g/SPFJ5+wETaKwojGA9YcgnjgOooBLXkg17Ok8zvz4qxwVGfVoOnSui3vUl4C/pQOo0TYAmlLMx8vJ2TbJIeMSOP+1JDtg/zysk8FVj+YmPGIqNAybGev07XXsEoGIUdkl5lYbbnDp9N7h87zB2LePuuTe9IAt2ihpbboeDaDJpFi+9fgyJ/L/pqXEMyGY7MzLhJpnCpwzoT6AWhfrzasP3u0R1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wZUA/SeEfUnO/dn+cPWISTnH1aU5MZMu0bbtj8icaBQ=;
- b=b+VvHknkHpsOsxLyEs6XsCKe7Rz+UOAzuZHd54OegV1Lv63irKk8WOnOnT5Y4NCMmwyMDIhyc16+pC/pMpJ7jqOEj9QRf6jmjORsKCoTPJBzR0jCp2To7dkXmTx01lp36r8sXB2xNbKu9lCPAh4KEp4AwqC+TQiNxKOvwHmCf7MZAqFNJXLFwZoJaW9ifg4RPXlVeQ7ZSeniORWVYwKWFH6VVsO5fkbPOGYON1R//BxAsTClvEOUTtvRjsyDRcSMkTvz5XFzoeiU98IpkXhRV/x5GhGypuT3KfxZ39SxyjcsZWDjF64+PFer+o6reGt3qOpYsKuGCWpeZrFiq5TPhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cyberus-technology.de; dmarc=pass action=none
- header.from=cyberus-technology.de; dkim=pass header.d=cyberus-technology.de;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyberus-technology.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wZUA/SeEfUnO/dn+cPWISTnH1aU5MZMu0bbtj8icaBQ=;
- b=WB29042QzBr88/u2BILT0A/ffsyJAgNfvJgsV7K7QoOtQ+KNTDJJeuNXRXWxRAkS7SvLeD/tKgDKCgDYYeTBMWqEAM08V9ki5hxQSQo06fZ6zEX9bjM2Vox20kUAWaSjzBTu8qea6b4UuWhQ2JDGLCrbk/FwVwrG6q4Ry/UneQhab9pEXkv4kObnkEjrVJ4CBx5AArLxofnFXLuN9upGc6phzjaxkj+0JfiyOVPYpQuiff1/JqjK5Pp2O1omz3p6v/SU+V0yGbdo9AGjF91Z40JrYbDKD/HlDZI+GBZMjiHg+SQ/fsC4SHra/xwdRi0Q04m4lpz7fKoV/xJEK2TYeA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cyberus-technology.de;
-Received: from FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:38::7) by
- FR6P281MB3534.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:bd::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7611.16; Mon, 20 May 2024 14:33:06 +0000
-Received: from FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
- ([fe80::bf0d:16fc:a18c:c423]) by FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
- ([fe80::bf0d:16fc:a18c:c423%5]) with mapi id 15.20.7611.013; Mon, 20 May 2024
- 14:33:06 +0000
-From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Julian Stecklina <julian.stecklina@cyberus-technology.de>,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] KVM: fix spelling of KVM_RUN_X86_BUS_LOCK in docs
-Date: Mon, 20 May 2024 16:32:19 +0200
-Message-ID: <20240520143220.340737-2-julian.stecklina@cyberus-technology.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240520143220.340737-1-julian.stecklina@cyberus-technology.de>
-References: <20240520143220.340737-1-julian.stecklina@cyberus-technology.de>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA3P292CA0009.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2c::10) To FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:38::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggletEnJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D3EC2BD10;
+	Mon, 20 May 2024 14:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716215604;
+	bh=xciCHReFFZlVddQDu0g7FFTsuuoF7H/QKFVGKEg8Gc4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ggletEnJVNvT+XMfBN6K1gVjC0KEbb4ExeLzLf0vbaRRHkZ7IEvEOZKQ/PDc2oi8E
+	 pXage4QdiC0oUqSrpJiUeB0dKqWhB9I2hK5C8yyHuxu3ceh9gv3Z3LhdYf2h19+aDY
+	 oFvXuSOCMpaBZfU2sTrfs2yKp2E1sJ2bpIDWvK9q4yAf2KdBD459pZm2g4WzKYdPaZ
+	 9LKPkZgdyYVLe5mOYkhyVJZG4nDEp5EiHkvCVT78MBz3DJ+jvCWsC1a70wZeVO+0qJ
+	 P7lIZ7Cvagfs8b82Dg3wnyXYXdq61GunvMX/02kzLwD+9UncB7By2qWgOYlHFsdMqd
+	 ZZ624nKVYYE4w==
+Message-ID: <c31f663f-36c0-4db2-8bf6-8e3c699073ca@kernel.org>
+Date: Mon, 20 May 2024 16:33:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: FR2P281MB2329:EE_|FR6P281MB3534:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73641797-fb73-4451-59dc-08dc78d9c39e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|1800799015|52116005|376005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tSuAIZMF3CDbRrtKU0xUKHeAzpusDrOm+wrHfummsUHC41j0De5nNpsV2+Be?=
- =?us-ascii?Q?1CNw6gwEh14JzzE/Sbs2nNSddbvW4/Vj2EW8Cgey69baSgihqtMzNw5e+an9?=
- =?us-ascii?Q?ukSQgr0tMx0ivx9utnu2KGew2883DsRTD7HzE+ekQVY4xsI+PeJIP+P1xj3P?=
- =?us-ascii?Q?AoykeKzrg59p4MNBN2Sw/KNd/ysaNMskvP1P9B6VXVeApUbXdU3OjHRW/Pbp?=
- =?us-ascii?Q?WKUV6RHNuuAXG6KUhY3PeNhPLoqvhmkQ2CnAbdzethKeSzJgGCEHGptT1fi2?=
- =?us-ascii?Q?iWJ1EJp5gR24mmHdt0r6Q/9ErxOKuxnb9/JrcZ0uzXYdJ7zDdtC+BbtS081i?=
- =?us-ascii?Q?4hN9dg+65MnEVailytQefswSKW7u7jMapSSlJm78FH2AMPwhsp+/eO8byGNT?=
- =?us-ascii?Q?XDiDJ672xDPzQPZuFYQHxsqJa30fzgfIO+d2lU8YDuQQP5DZTHGS/BkqJs1l?=
- =?us-ascii?Q?wLmXciAvtx8LCHiZ9qftthS2BJAFCX1wmIWNyKohjwUlZ09l1JOoROkhXbkJ?=
- =?us-ascii?Q?93ExSnyAk9tVkYXZ/xKUM0K7NT0SQrfak+JTXHhxtpE0OT0ZBO168hhLh34M?=
- =?us-ascii?Q?j+fEXa6VxFV1D/UGediNvrT6ioTmXcpkhts0EDq613rdV88ucb1ZxCrItqrM?=
- =?us-ascii?Q?SI+pom9io29NyXLgleQssG+qkuvRcGzas5/EM/jWth57fOXYBadV8M9t9erw?=
- =?us-ascii?Q?WEHAnvIBAV+pv6LnFNfFkweAY5fpJUkVMrTY4KC4BLSSRjdeCGpYerD4fx0a?=
- =?us-ascii?Q?M+bvq6evIQm4F6R1h7N96AIkTaPTFs6T7KQIjl7jUkbeaES3F+FgCf81zNPH?=
- =?us-ascii?Q?RBXXhEtVNXlWxNbkiSvH45dYE0wjwzbWIk5487LIekZqGdbktBL+n/adH9mc?=
- =?us-ascii?Q?ZVyG8mlYcZkAP7VqooYto4j7NYBx9lglqoMD1t9TD/fVadT6WkCQuvllygWk?=
- =?us-ascii?Q?6mfZWC4m8TG1isBTeZsDsfqeXNSAp4eWciKhoB/2q+Vs/ZAGZuhg9gCt1pVF?=
- =?us-ascii?Q?RtiXO3dopzsV9twC9Fq46ruvccf1j+a3apxawoa+FYmkUv+azkGUtvu3qn7L?=
- =?us-ascii?Q?ayJ0p7PMEmMrt1sCUDgoBCK0nJrHRuKYf0jo7Da2X/5cItcq3MIebH/NakbW?=
- =?us-ascii?Q?S+OazpXkp52qjNWMUozrFY3N/Xt4o3othH65dESURH5Sz31W7mBKg8pOOOEg?=
- =?us-ascii?Q?yN8h7eGkPt3Xkq+z+5V650MDRJ08mWY0IHUTIm7q3qpuojbxYFlNPgDUeg4d?=
- =?us-ascii?Q?J7xXPyvxOtHGjGqo1XfbvEOmBPkl6o4YJ04fgT3eresuvs82l34pznH7qRvY?=
- =?us-ascii?Q?/WTAhS+A0WIaHSGzA1LrJcsc5NwurmW87GN53OTq3a/24w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(52116005)(376005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BIV6/CKh4m8w0FkjgdvAmpGjS+ee78xA8NnjJKLXADQXVY06GpSHJzntrsyn?=
- =?us-ascii?Q?nMVF7ZCmN0Q6oNFfTTXBjXcEj3h4ScmYZFD9fbFkZr7xOAS3SE67tvAyBZS3?=
- =?us-ascii?Q?bUbo9UuFmBzYqk0HGp3PsT9PKBb2eeYjqEliXCNGYNsqyZw6O9fuJPFK/8yy?=
- =?us-ascii?Q?VtOZhdaV3OFERfJHvZXwkBzVDGhXi54ar8qsAHZhs1zS9V5G0WljGLRz/nEI?=
- =?us-ascii?Q?rZnHbJTo8yKVyQIl2xAcYMWXs5C4GIySGGy4WeSJA6aJRmfmPoOJQ7aPSzBR?=
- =?us-ascii?Q?ZvG844zWdtEUSqaPxpFFOwh3O0Sw8+CythZEvE/4Rz83ZO2mowL/sf6twEdG?=
- =?us-ascii?Q?6Z1xLV8PDdkZvb7P+AUWI2Cyl6APnisJjsNoJ7T5clKWgpA0Unsm8sdXLtLE?=
- =?us-ascii?Q?OSG4qbcHiv2i1+C26eCiff+L3sKN9iq54OB0R839wqC2Ie+o/pnw6/jXMfjp?=
- =?us-ascii?Q?yXnHKX8tRV4SEeSLyZV0I5fXvwDYso/42/va+UFJDmH30eFUOyyIvH2ol2vl?=
- =?us-ascii?Q?jLyZG1cD/LylJCj/+h8UloIma6nA06PUpUUzwNAtJVy1uCWYMkiPubRdBRuO?=
- =?us-ascii?Q?65VF3sHv77J7PnxBzhRCdOfmZ80RhzoriSLsMdnC7MEgnPZIVyLRHP7+T3vR?=
- =?us-ascii?Q?fdR2JbO2sH2193UWQkBZh0M5FWeWEIuzjKjW/IKsMTmaL8PEojYbOyFBkbRZ?=
- =?us-ascii?Q?9O+czaAISyCKyS2DvU6Cf13mRhzztNGPB8KTE6tvYwNo6oZM2minsTALYhPj?=
- =?us-ascii?Q?FQh1G5xQpQAGe9h5iuoJihax90l9YB5bxoHww/oy/QMqpX5uMx4NloQWFjHP?=
- =?us-ascii?Q?eN4KVllho3bnOJ6GBl7E79mC97+MreE2MXvq1dY5G+iCxE9EANJl9aUSpBM+?=
- =?us-ascii?Q?nvdaXfvYiGgSl398BlPUBPWCMMb3PslAV0+8g2d+I+kD4M19GtumtFulkweJ?=
- =?us-ascii?Q?IeAnCGJRCqswuFZXUSCT1K8pJP11PKoEL3reK+63XpRVyMLd8y8pJHoZ0VWA?=
- =?us-ascii?Q?eSz1xf8VLFzifC8KzulAq6g24S41kIlAnsliBq2bqgR2noCNy+dNmqJDAE12?=
- =?us-ascii?Q?spqJvRgs8VyXGHbiNUpoyDOKLcdNtnnTUWLHqV0it21GK1MGyD2zP5UmSIDF?=
- =?us-ascii?Q?/JZ4TBvxjeZiRlfiAkKP+cVQ2jCdEIKJILloMjNTA4DQGH7AwcmKLtXaBl9r?=
- =?us-ascii?Q?+uprOxUSSRPmoKUWoTlohBwCLNc7D4tB8Bb8nepIZG0f7uJD8US/8DVQ8I7e?=
- =?us-ascii?Q?rGlYyGUHAyYU1J3k6F0BRfFtqj97jAJ3z9ZLnlFNeRLweAfQh6qCOyFcJEAd?=
- =?us-ascii?Q?bku6Y3cFPhMtSshUa3SWlzXdNwAdfvE7a6h9zsO7z/o8KI3BGVc63hRWgig+?=
- =?us-ascii?Q?sDbKRRyR9MKxO4WjjUC4XFv+W9aDceQYsrDG1YBJ+Knvh0ZmzvR9TnUo3nY+?=
- =?us-ascii?Q?1Op88gF9ceQURViYwmz3t28VFWDfbljOsm7UqsMtfIDfNytBD7l+dQPLFyVU?=
- =?us-ascii?Q?J8QqpmKJaiAPNaQgiPdrrUFKwwezDxtxuco4x6L4SOaLIOOb5dJoa/Y+IqLo?=
- =?us-ascii?Q?fsiv1/XI6ufLiFnSH1OVicle2BFG2BLFzjJaMvqXkMXxcQ3QUY+ZebDlBgqk?=
- =?us-ascii?Q?6cwXEAqaMmdaJpO8gT2+Ujc=3D?=
-X-OriginatorOrg: cyberus-technology.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73641797-fb73-4451-59dc-08dc78d9c39e
-X-MS-Exchange-CrossTenant-AuthSource: FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 14:33:06.5824
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f4e0f4e0-9d68-4bd6-a95b-0cba36dbac2e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TwTkD50zDl4q8UIN/2WNCHnnuyrVeMWwC7D3FcIaQFm72UMyXak+szpYLWNJFEXCN7sQO7Fz7kkFcCi3hj3Hev6G/oHe9GZsWdVZMFwHRw2p38nyQ2VFkzC3+AZDkm4k
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR6P281MB3534
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v20 01/12] block: Introduce queue limits and sysfs for
+ copy-offload support
+To: Nitesh Shetty <nj.shetty@samsung.com>, Jens Axboe <axboe@kernel.dk>,
+ Jonathan Corbet <corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>,
+ Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: martin.petersen@oracle.com, bvanassche@acm.org, david@fromorbit.com,
+ hare@suse.de, damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
+ joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+ <CGME20240520102830epcas5p27274901f3d0c2738c515709890b1dec4@epcas5p2.samsung.com>
+ <20240520102033.9361-2-nj.shetty@samsung.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240520102033.9361-2-nj.shetty@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The documentation refers to KVM_RUN_BUS_LOCK, but the constant is
-actually called KVM_RUN_X86_BUS_LOCK.
+On 2024/05/20 12:20, Nitesh Shetty wrote:
+> Add device limits as sysfs entries,
+> 	- copy_max_bytes (RW)
+> 	- copy_max_hw_bytes (RO)
+> 
+> Above limits help to split the copy payload in block layer.
+> copy_max_bytes: maximum total length of copy in single payload.
+> copy_max_hw_bytes: Reflects the device supported maximum limit.
+> 
+> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+> ---
+>  Documentation/ABI/stable/sysfs-block | 23 +++++++++++++++
+>  block/blk-settings.c                 | 34 ++++++++++++++++++++--
+>  block/blk-sysfs.c                    | 43 ++++++++++++++++++++++++++++
+>  include/linux/blkdev.h               | 14 +++++++++
+>  4 files changed, 112 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/stable/sysfs-block
+> index 831f19a32e08..52d8a253bf8e 100644
+> --- a/Documentation/ABI/stable/sysfs-block
+> +++ b/Documentation/ABI/stable/sysfs-block
+> @@ -165,6 +165,29 @@ Description:
+>  		last zone of the device which may be smaller.
+>  
+>  
+> +What:		/sys/block/<disk>/queue/copy_max_bytes
+> +Date:		May 2024
+> +Contact:	linux-block@vger.kernel.org
+> +Description:
+> +		[RW] This is the maximum number of bytes that the block layer
+> +		will allow for a copy request. This is always smaller or
+> +		equal to the maximum size allowed by the hardware, indicated by
+> +		'copy_max_hw_bytes'. An attempt to set a value higher than
+> +		'copy_max_hw_bytes' will truncate this to 'copy_max_hw_bytes'.
+> +		Writing '0' to this file will disable offloading copies for this
+> +		device, instead copy is done via emulation.
+> +
+> +
+> +What:		/sys/block/<disk>/queue/copy_max_hw_bytes
+> +Date:		May 2024
+> +Contact:	linux-block@vger.kernel.org
+> +Description:
+> +		[RO] This is the maximum number of bytes that the hardware
+> +		will allow for single data copy request.
+> +		A value of 0 means that the device does not support
+> +		copy offload.
+> +
+> +
+>  What:		/sys/block/<disk>/queue/crypto/
+>  Date:		February 2022
+>  Contact:	linux-block@vger.kernel.org
+> diff --git a/block/blk-settings.c b/block/blk-settings.c
+> index a7fe8e90240a..67010ed82422 100644
+> --- a/block/blk-settings.c
+> +++ b/block/blk-settings.c
+> @@ -52,6 +52,9 @@ void blk_set_stacking_limits(struct queue_limits *lim)
+>  	lim->max_write_zeroes_sectors = UINT_MAX;
+>  	lim->max_zone_append_sectors = UINT_MAX;
+>  	lim->max_user_discard_sectors = UINT_MAX;
+> +	lim->max_copy_hw_sectors = UINT_MAX;
+> +	lim->max_copy_sectors = UINT_MAX;
+> +	lim->max_user_copy_sectors = UINT_MAX;
+>  }
+>  EXPORT_SYMBOL(blk_set_stacking_limits);
+>  
+> @@ -219,6 +222,9 @@ static int blk_validate_limits(struct queue_limits *lim)
+>  		lim->misaligned = 0;
+>  	}
+>  
+> +	lim->max_copy_sectors =
+> +		min(lim->max_copy_hw_sectors, lim->max_user_copy_sectors);
+> +
+>  	return blk_validate_zoned_limits(lim);
+>  }
+>  
+> @@ -231,10 +237,11 @@ int blk_set_default_limits(struct queue_limits *lim)
+>  {
+>  	/*
+>  	 * Most defaults are set by capping the bounds in blk_validate_limits,
+> -	 * but max_user_discard_sectors is special and needs an explicit
+> -	 * initialization to the max value here.
+> +	 * but max_user_discard_sectors and max_user_copy_sectors are special
+> +	 * and needs an explicit initialization to the max value here.
 
-Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
----
- Documentation/virt/kvm/api.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+s/needs/need
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 2d45b21b0288..5050535140ab 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6418,7 +6418,7 @@ affect the device's behavior. Current defined flags::
-   /* x86, set if the VCPU is in system management mode */
-   #define KVM_RUN_X86_SMM     (1 << 0)
-   /* x86, set if bus lock detected in VM */
--  #define KVM_RUN_BUS_LOCK    (1 << 1)
-+  #define KVM_RUN_X86_BUS_LOCK    (1 << 1)
-   /* arm64, set for KVM_EXIT_DEBUG */
-   #define KVM_DEBUG_ARCH_HSR_HIGH_VALID  (1 << 0)
- 
-@@ -7776,10 +7776,10 @@ its own throttling or other policy based mitigations.
- This capability is aimed to address the thread that VM can exploit bus locks to
- degree the performance of the whole system. Once the userspace enable this
- capability and select the KVM_BUS_LOCK_DETECTION_EXIT mode, KVM will set the
--KVM_RUN_BUS_LOCK flag in vcpu-run->flags field and exit to userspace. Concerning
-+KVM_RUN_X86_BUS_LOCK flag in vcpu-run->flags field and exit to userspace. Concerning
- the bus lock vm exit can be preempted by a higher priority VM exit, the exit
- notifications to userspace can be KVM_EXIT_BUS_LOCK or other reasons.
--KVM_RUN_BUS_LOCK flag is used to distinguish between them.
-+KVM_RUN_X86_BUS_LOCK flag is used to distinguish between them.
- 
- 7.23 KVM_CAP_PPC_DAWR1
- ----------------------
+>  	 */
+>  	lim->max_user_discard_sectors = UINT_MAX;
+> +	lim->max_user_copy_sectors = UINT_MAX;
+>  	return blk_validate_limits(lim);
+>  }
+>  
+> @@ -316,6 +323,25 @@ void blk_queue_max_discard_sectors(struct request_queue *q,
+>  }
+>  EXPORT_SYMBOL(blk_queue_max_discard_sectors);
+>  
+> +/*
+> + * blk_queue_max_copy_hw_sectors - set max sectors for a single copy payload
+> + * @q:	the request queue for the device
+> + * @max_copy_sectors: maximum number of sectors to copy
+> + */
+> +void blk_queue_max_copy_hw_sectors(struct request_queue *q,
+> +				   unsigned int max_copy_sectors)
+> +{
+> +	struct queue_limits *lim = &q->limits;
+> +
+> +	if (max_copy_sectors > (BLK_COPY_MAX_BYTES >> SECTOR_SHIFT))
+> +		max_copy_sectors = BLK_COPY_MAX_BYTES >> SECTOR_SHIFT;
+> +
+> +	lim->max_copy_hw_sectors = max_copy_sectors;
+> +	lim->max_copy_sectors =
+> +		min(max_copy_sectors, lim->max_user_copy_sectors);
+> +}
+> +EXPORT_SYMBOL_GPL(blk_queue_max_copy_hw_sectors);
+
+Hmm... Such helper seems to not fit with Christoph's changes of the limits
+initialization as that is not necessarily done using &q->limits but depending on
+the driver, a different limit structure. So shouldn't this function be passed a
+queue_limits struct pointer instead of the request queue pointer ?
+
+> +
+>  /**
+>   * blk_queue_max_secure_erase_sectors - set max sectors for a secure erase
+>   * @q:  the request queue for the device
+> @@ -633,6 +659,10 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+>  	t->max_segment_size = min_not_zero(t->max_segment_size,
+>  					   b->max_segment_size);
+>  
+> +	t->max_copy_sectors = min(t->max_copy_sectors, b->max_copy_sectors);
+> +	t->max_copy_hw_sectors = min(t->max_copy_hw_sectors,
+> +				     b->max_copy_hw_sectors);
+> +
+>  	t->misaligned |= b->misaligned;
+>  
+>  	alignment = queue_limit_alignment_offset(b, start);
+> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> index f0f9314ab65c..805c2b6b0393 100644
+> --- a/block/blk-sysfs.c
+> +++ b/block/blk-sysfs.c
+> @@ -205,6 +205,44 @@ static ssize_t queue_discard_zeroes_data_show(struct request_queue *q, char *pag
+>  	return queue_var_show(0, page);
+>  }
+>  
+> +static ssize_t queue_copy_hw_max_show(struct request_queue *q, char *page)
+> +{
+> +	return sprintf(page, "%llu\n", (unsigned long long)
+> +		       q->limits.max_copy_hw_sectors << SECTOR_SHIFT);
+> +}
+> +
+> +static ssize_t queue_copy_max_show(struct request_queue *q, char *page)
+> +{
+> +	return sprintf(page, "%llu\n", (unsigned long long)
+> +		       q->limits.max_copy_sectors << SECTOR_SHIFT);
+> +}
+
+Given that you repeat the same pattern twice, may be add a queue_var64_show()
+helper ? (naming can be changed).
+
+> +
+> +static ssize_t queue_copy_max_store(struct request_queue *q, const char *page,
+> +				    size_t count)
+> +{
+> +	unsigned long max_copy_bytes;
+> +	struct queue_limits lim;
+> +	ssize_t ret;
+> +	int err;
+> +
+> +	ret = queue_var_store(&max_copy_bytes, page, count);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (max_copy_bytes & (queue_logical_block_size(q) - 1))
+> +		return -EINVAL;
+> +
+> +	blk_mq_freeze_queue(q);
+> +	lim = queue_limits_start_update(q);
+> +	lim.max_user_copy_sectors = max_copy_bytes >> SECTOR_SHIFT;
+
+max_copy_bytes is an unsigned long, so 64 bits on 64-bit arch and
+max_user_copy_sectors is an unsigned int, so 32-bits. There are thus no
+guarantees that this will not overflow. A check is needed.
+
+> +	err = queue_limits_commit_update(q, &lim);
+> +	blk_mq_unfreeze_queue(q);
+> +
+> +	if (err)
+
+You can reuse ret here. No need for adding the err variable.
+
+> +		return err;
+> +	return count;
+> +}
+> +
+>  static ssize_t queue_write_same_max_show(struct request_queue *q, char *page)
+>  {
+>  	return queue_var_show(0, page);
+> @@ -505,6 +543,9 @@ QUEUE_RO_ENTRY(queue_nr_zones, "nr_zones");
+>  QUEUE_RO_ENTRY(queue_max_open_zones, "max_open_zones");
+>  QUEUE_RO_ENTRY(queue_max_active_zones, "max_active_zones");
+>  
+> +QUEUE_RO_ENTRY(queue_copy_hw_max, "copy_max_hw_bytes");
+> +QUEUE_RW_ENTRY(queue_copy_max, "copy_max_bytes");
+> +
+>  QUEUE_RW_ENTRY(queue_nomerges, "nomerges");
+>  QUEUE_RW_ENTRY(queue_rq_affinity, "rq_affinity");
+>  QUEUE_RW_ENTRY(queue_poll, "io_poll");
+> @@ -618,6 +659,8 @@ static struct attribute *queue_attrs[] = {
+>  	&queue_discard_max_entry.attr,
+>  	&queue_discard_max_hw_entry.attr,
+>  	&queue_discard_zeroes_data_entry.attr,
+> +	&queue_copy_hw_max_entry.attr,
+> +	&queue_copy_max_entry.attr,
+>  	&queue_write_same_max_entry.attr,
+>  	&queue_write_zeroes_max_entry.attr,
+>  	&queue_zone_append_max_entry.attr,
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index aefdda9f4ec7..109d9f905c3c 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -309,6 +309,10 @@ struct queue_limits {
+>  	unsigned int		discard_alignment;
+>  	unsigned int		zone_write_granularity;
+>  
+> +	unsigned int		max_copy_hw_sectors;
+> +	unsigned int		max_copy_sectors;
+> +	unsigned int		max_user_copy_sectors;
+> +
+>  	unsigned short		max_segments;
+>  	unsigned short		max_integrity_segments;
+>  	unsigned short		max_discard_segments;
+> @@ -933,6 +937,8 @@ void blk_queue_max_secure_erase_sectors(struct request_queue *q,
+>  		unsigned int max_sectors);
+>  extern void blk_queue_max_discard_sectors(struct request_queue *q,
+>  		unsigned int max_discard_sectors);
+> +extern void blk_queue_max_copy_hw_sectors(struct request_queue *q,
+> +					  unsigned int max_copy_sectors);
+>  extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
+>  		unsigned int max_write_same_sectors);
+>  extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
+> @@ -1271,6 +1277,14 @@ static inline unsigned int bdev_discard_granularity(struct block_device *bdev)
+>  	return bdev_get_queue(bdev)->limits.discard_granularity;
+>  }
+>  
+> +/* maximum copy offload length, this is set to 128MB based on current testing */
+
+Current testing will not be current in a while... So may be simply say
+"arbitrary" or something. Also please capitalize the first letter of the
+comment. So something like:
+
+/* Arbitrary absolute limit of 128 MB for copy offload. */
+
+> +#define BLK_COPY_MAX_BYTES		(1 << 27)
+
+Also, it is not clear from the name if this is a soft limit or a cap on the
+hardware limit... So at least please adjust the comment to say which one it is.
+
+> +
+> +static inline unsigned int bdev_max_copy_sectors(struct block_device *bdev)
+> +{
+> +	return bdev_get_queue(bdev)->limits.max_copy_sectors;
+> +}
+> +
+>  static inline unsigned int
+>  bdev_max_secure_erase_sectors(struct block_device *bdev)
+>  {
+
 -- 
-2.44.0
+Damien Le Moal
+Western Digital Research
 
