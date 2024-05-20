@@ -1,187 +1,194 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0946AE552
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 19:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC3CE552;
+	Mon, 20 May 2024 19:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716232417; cv=none; b=UHos+OdNDoAVJlHh/Gfolk1t0TaioB0na1SajxQiThcMlUnnWbJ4oJp1TsSsAO3SlWhxJ0Z1hVZ3eOHzzTGJ7J3cPxDxhauvTYxA39TTTs7DhEQKTHephVaarZnSlZBKdiTa2VZnLZ1+LHOrsgEB9uIYgpGhleiIIgDo/TqS1/Y=
+	t=1716232491; cv=none; b=WmjM4k0iItKIqeNFGQP7G6LIzOjReR9DFfMxX1voOR+bxWPe6Mpy6Hv2uSVkaDHkcZlN6pQXN1QKyZ4F6c8krift2RleE+LIqli+ieS89a2vvjsoqgC9Jma4ITvDVMbbgK75PnWV+n7vSlsXbBbNYiRoEc1DMa71TqBL7LsaHkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716232417; c=relaxed/simple;
-	bh=BAeLUJ3nqsO8dJX0BxxVNPUiiLjJK0aAAQw4lrODvI8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DOPnraIGRRR00sQ0mk9LWUSNrvwQzBROPt9BeHlUbauvAQFGhkW0E8ZbGnsQxbxbi4/uhP3ZusG5r0KG/UwJGu7Iza2cdqUBEa29sgQDP7XESx5TMBAtu+h/lZpKEwaJWYEvbKacVZac4cp9ps2W23vsU6QId47mvIZYjTaY3NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=NB2nmjEI; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1716232491; c=relaxed/simple;
+	bh=JMmxMc4KxFDgWYo64T8S+XbqNNYGK47LMWQHk3hYL4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pt5B1bzTzMD/COuFpexsjkwlucG1ephOREpypwSPBR38aNhRGwF51e467bN18YS9yjIB60sG1BDOEGVYtNlGogJa+zJE0upYTojVdq8yA6HVWcood41DsNlIvl6yKeZe2HdegPAwcQbw3U+Y/SekWTpVMQ0gssPIpr+nCGQnlZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lz++x3Gq; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="NB2nmjEI"
-Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44KISQSj009531;
-	Mon, 20 May 2024 18:36:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=gAeKZTtAY9OBlRuNw6pwsX4ALpDGRNYLZRYeGk5XNeI=;
- b=NB2nmjEIeK2oi4Me2MgeATfD3JcZ5YEE4vZIQyN1PUYr4I/aQ150iu3X6FMWuyBN1inr
- DW9SgIOG5YDL7pvFtbRkzwXpuRj8UV/0+68XjhsQESjcssTlPxE7nvDBv4wpCvnYamvW
- 3e+saFHWKZzQ5o1IZstwBqHi/mymac2wZZo83mz+j1NjBM209MJJjfw6Do2qZhHrpEpZ
- /QK2uPr0w1EoYq0xo9sTOYJiko0o9xv8iNvN+53aZ9Mytc016gv0Qlvv2Vxd9EQ52bRK
- hI1BxxC97OrsRDZsBVE/QqjfP4SA0ZXEBqafAJy1KDlvwd+04ZDg/czhi8miuLFC4BIh rg== 
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3y8btrg23c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 18:36:41 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 7B5A08005D2;
-	Mon, 20 May 2024 18:36:39 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 6AFAC80502B;
-	Mon, 20 May 2024 18:36:37 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id AE9F130000BA2; Mon, 20 May 2024 13:36:33 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Pavin Joseph <me@pavinjoseph.com>, Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>, Michael Roth <michael.roth@amd.com>
-Subject: [PATCH 2/3] x86/kexec: Add EFI Confidential Computing blob to kexec identity mapping.
-Date: Mon, 20 May 2024 13:36:32 -0500
-Message-Id: <20240520183633.1457687-3-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20240520183633.1457687-1-steve.wahl@hpe.com>
-References: <20240520183633.1457687-1-steve.wahl@hpe.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lz++x3Gq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716232489; x=1747768489;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JMmxMc4KxFDgWYo64T8S+XbqNNYGK47LMWQHk3hYL4g=;
+  b=Lz++x3Gqebd7BRbH7USCZOiuaLscP+s17VYWiGr0ZABagpIPK9GOhHWV
+   yBwel/EXPBkQQwWKz7DLC9KU0JqZpyGO8ST0UUy1pyleO9HzSqVg1jh5C
+   QJyvVcEiSkk5UXP0VainPi53omG0pYTSGVby9jD+pKse2LTQZrnkpKPmR
+   NNBrN8GFqk06+vqpSeOHnJN3eD1SjGvPu1IyIe1aiYvmZt1Oc1GgNdSqO
+   KTyRhKMZ5Kot8lxCgGaFwdUc4bS4HETaV+VuGAQMGcFcoC3dqzvjURDqA
+   cJOZ+uD1VFZ+8BdzPjRkpTlmzuASdSJP+hWBGhPQXQdv+lfTAkRl0Skp+
+   Q==;
+X-CSE-ConnectionGUID: OCMtqep3Ss2ZlBBBPLAfCQ==
+X-CSE-MsgGUID: mhWXYgOoQFWx/VUUBb5Hhg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12178323"
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="12178323"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 12:14:48 -0700
+X-CSE-ConnectionGUID: hcN/iEklQZy2RiPWZ3fsxw==
+X-CSE-MsgGUID: UFs0ZNCiQ8OklrWpLsAV+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,175,1712646000"; 
+   d="scan'208";a="63470070"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.54])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 12:14:47 -0700
+Date: Mon, 20 May 2024 12:14:47 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"michael.roth@amd.com" <michael.roth@amd.com>,
+	"pankaj.gupta@amd.com" <pankaj.gupta@amd.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"tobin@ibm.com" <tobin@ibm.com>,
+	"liam.merwick@oracle.com" <liam.merwick@oracle.com>,
+	"alpergun@google.com" <alpergun@google.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	"jmattson@google.com" <jmattson@google.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"ak@linux.intel.com" <ak@linux.intel.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+	"slp@redhat.com" <slp@redhat.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"dovmurik@linux.ibm.com" <dovmurik@linux.ibm.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"vkuznets@redhat.com" <vkuznets@redhat.com>,
+	"vbabka@suse.cz" <vbabka@suse.cz>,
+	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"nikunj.dadhania@amd.com" <nikunj.dadhania@amd.com>,
+	"Rodel, Jorg" <jroedel@suse.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	"kirill@shutemov.name" <kirill@shutemov.name>,
+	"jarkko@kernel.org" <jarkko@kernel.org>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	isaku.yamahata@intel.com, isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v15 13/20] KVM: SEV: Implement gmem hook for initializing
+ private pages
+Message-ID: <20240520191447.GB22775@ls.amr.corp.intel.com>
+References: <20240501085210.2213060-1-michael.roth@amd.com>
+ <20240501085210.2213060-14-michael.roth@amd.com>
+ <41d8ba3a48d33de82baa67ef5ee88e5f8995aea8.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: aO2MSBNr8QnlwANVQUbhEPErA966XHQ9
-X-Proofpoint-GUID: aO2MSBNr8QnlwANVQUbhEPErA966XHQ9
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-20_09,2024-05-17_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405200149
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <41d8ba3a48d33de82baa67ef5ee88e5f8995aea8.camel@intel.com>
 
-Like the EFI config table itself, the Confidential Computing blob entry
-in that table, if it exists, is referenced by the kexec kernel before
-it establishes its own identity map.
+On Mon, May 20, 2024 at 10:16:54AM +0000,
+"Huang, Kai" <kai.huang@intel.com> wrote:
 
-This could potentially cause a kexec failure if the CC blob is not
-located close to other identity map areas.  Such a failure is more
-likely with the nogbpages command line option.
+> On Wed, 2024-05-01 at 03:52 -0500, Michael Roth wrote:
+> > This will handle the RMP table updates needed to put a page into a
+> > private state before mapping it into an SEV-SNP guest.
+> > 
+> > 
+> 
+> [...]
+> 
+> > +int sev_gmem_prepare(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order)
+> > +{
+> > +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > +	kvm_pfn_t pfn_aligned;
+> > +	gfn_t gfn_aligned;
+> > +	int level, rc;
+> > +	bool assigned;
+> > +
+> > +	if (!sev_snp_guest(kvm))
+> > +		return 0;
+> > +
+> > +	rc = snp_lookup_rmpentry(pfn, &assigned, &level);
+> > +	if (rc) {
+> > +		pr_err_ratelimited("SEV: Failed to look up RMP entry: GFN %llx PFN %llx error %d\n",
+> > +				   gfn, pfn, rc);
+> > +		return -ENOENT;
+> > +	}
+> > +
+> > +	if (assigned) {
+> > +		pr_debug("%s: already assigned: gfn %llx pfn %llx max_order %d level %d\n",
+> > +			 __func__, gfn, pfn, max_order, level);
+> > +		return 0;
+> > +	}
+> > +
+> > +	if (is_large_rmp_possible(kvm, pfn, max_order)) {
+> > +		level = PG_LEVEL_2M;
+> > +		pfn_aligned = ALIGN_DOWN(pfn, PTRS_PER_PMD);
+> > +		gfn_aligned = ALIGN_DOWN(gfn, PTRS_PER_PMD);
+> > +	} else {
+> > +		level = PG_LEVEL_4K;
+> > +		pfn_aligned = pfn;
+> > +		gfn_aligned = gfn;
+> > +	}
+> > +
+> > +	rc = rmp_make_private(pfn_aligned, gfn_to_gpa(gfn_aligned), level, sev->asid, false);
+> > +	if (rc) {
+> > +		pr_err_ratelimited("SEV: Failed to update RMP entry: GFN %llx PFN %llx level %d error %d\n",
+> > +				   gfn, pfn, level, rc);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	pr_debug("%s: updated: gfn %llx pfn %llx pfn_aligned %llx max_order %d level %d\n",
+> > +		 __func__, gfn, pfn, pfn_aligned, max_order, level);
+> > +
+> > +	return 0;
+> > +}
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index b70556608e8d..60783e9f2ae8 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -5085,6 +5085,8 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+> >  	.vcpu_deliver_sipi_vector = svm_vcpu_deliver_sipi_vector,
+> >  	.vcpu_get_apicv_inhibit_reasons = avic_vcpu_get_apicv_inhibit_reasons,
+> >  	.alloc_apic_backing_page = svm_alloc_apic_backing_page,
+> > +
+> > +	.gmem_prepare = sev_gmem_prepare,
+> >  };
+> >  
+> > 
+> 
+> +Rick, Isaku,
+> 
+> I am wondering whether this can be done in the KVM page fault handler?
+> 
+> The reason that I am asking is KVM will introduce several new
+> kvm_x86_ops::xx_private_spte() ops for TDX to handle setting up the
+> private mapping, and I am wondering whether SNP can just reuse some of
+> them so we can avoid having this .gmem_prepare():
 
-So, explicitly add the CC blob to the kexec identity map.
+Although I can't speak for SNP folks, I guess those hooks doesn't make sense for
+them.  I guess they want to stay away from directly modifying the TDP MMU to add
+hooks to the TDP MMU.  Instead, They intentionally chose to add hooks to
+guest_memfd.  Maybe it's possible for SNP to use those hooks, what's the benefit
+for SNP?
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Tested-by: Pavin Joseph <me@pavinjoseph.com>
-Tested-by: Sarah Brofeldt <srhb@dbc.dk>
-Tested-by: Eric Hagberg <ehagberg@gmail.com>
----
- arch/x86/kernel/machine_kexec_64.c | 47 +++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index d89942307659..bb68d86ecafe 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -29,6 +29,7 @@
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
- #include <asm/efi.h>
-+#include <asm/sev.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -90,6 +91,7 @@ map_efi_tables(struct x86_mapping_info *info, pgd_t *level4p)
- 	unsigned long mstart, mend;
- 	void *kaddr;
- 	int ret;
-+	unsigned int cfg_tbl_len;
- 
- 	if (!efi_enabled(EFI_BOOT))
- 		return 0;
-@@ -120,16 +122,59 @@ map_efi_tables(struct x86_mapping_info *info, pgd_t *level4p)
- 	if (efi_enabled(EFI_64BIT)) {
- 		efi_system_table_64_t *stbl = (efi_system_table_64_t *)kaddr;
- 
-+		cfg_tbl_len = stbl->nr_tables;
- 		mend = mstart + sizeof(efi_config_table_64_t) * stbl->nr_tables;
- 	} else {
- 		efi_system_table_32_t *stbl = (efi_system_table_32_t *)kaddr;
- 
-+		cfg_tbl_len = stbl->nr_tables;
- 		mend = mstart + sizeof(efi_config_table_32_t) * stbl->nr_tables;
- 	}
- 
- 	memunmap(kaddr);
- 
--	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-+	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * CC blob is referenced in kernel startup before the new
-+	 * kernel creates it's own identity map, so make sure it's
-+	 * included in the kexec identity map.
-+	 */
-+	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
-+	if (!kaddr) {
-+		pr_err("Could not map UEFI config table\n");
-+		return -ENOMEM;
-+	}
-+
-+	mstart = 0;
-+	if (efi_enabled(EFI_64BIT)) {
-+		efi_config_table_64_t *ctbl = (void *) kaddr;
-+		int i;
-+
-+		for (i = 0; i < cfg_tbl_len; i++) {
-+			if (!efi_guidcmp(EFI_CC_BLOB_GUID, ctbl[i].guid)) {
-+				mstart = ctbl[i].table;
-+				mend = mstart + sizeof(struct cc_blob_sev_info);
-+				break;
-+			}
-+		}
-+	} else {
-+		efi_config_table_32_t *ctbl = (void *) kaddr;
-+		int i;
-+
-+		for (i = 0; i < cfg_tbl_len; i++) {
-+			if (!efi_guidcmp(EFI_CC_BLOB_GUID, ctbl[i].guid)) {
-+				mstart = ctbl[i].table;
-+				mend = mstart + sizeof(struct cc_blob_sev_info);
-+				break;
-+			}
-+		}
-+	}
-+	memunmap(kaddr);
-+	if (mstart)
-+		return kernel_ident_mapping_init(info, level4p, mstart, mend);
- #endif
- 	return 0;
- }
+If you're looking for the benefit to allow the hooks of the TDP MMU for shared
+page table, what about other vm type? SW_PROTECTED or future one?
 -- 
-2.26.2
-
+Isaku Yamahata <isaku.yamahata@intel.com>
