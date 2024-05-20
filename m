@@ -1,109 +1,538 @@
-Received: from smtp-out.freemail.hu (fmfe00.freemail.hu [46.107.16.193])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418BD13A417;
-	Mon, 20 May 2024 17:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BE813A894
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226052; cv=none; b=MUzV8m/ys4WmMKoKmTrhc4lRiNkE2tdpHLYihDWrsAjzA6lWNs+/Nl6dLKruE2M5joGDD4Tgb6UznRY9FQS9lZu/5KBfVbJ2eUDI7Wd6WpgLEhZIEDENGB8/a9KypNeDQfb5KICllsy8cV1pA2hAeRIO5P5tRzu5zRJAnsua87A=
+	t=1716226054; cv=none; b=qjyhQjokMtYzI5u9gru/ONCWCIL3guRQaDWydxTb3YxycysvJaoqeq9/rHBcArQWFE9EiNWUUkm7iP4eFQfQmvLoOCZ348ogf3ckHwaiLbXYvY+rqZJsEqe3yGnbpEHA7q5XPtSb8AttzoMbD+YAqpiOUS2RetcD/ZRXhqmm3Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226052; c=relaxed/simple;
-	bh=hZ9BTpanyVdzRqlVTlS9UoiB+8CRYDf1nsuDDju6yYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjWe3WIT+jwh8GbAI3efVWM7qMPOEBaL6Nc2dvlPC3orxsAv8c7Hj0+tzfE1p2wYsSE3Z0ArRtMIGrOyrnB5S//52fnOc4hDkNqysfudnPS0SaXA+fg/pStQxCngfZUb9Lt27/+TRGYCfMXiB8mdbSpTYaibTcvDKJh2Hg+ka5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=bXIVpLoz reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
+	s=arc-20240116; t=1716226054; c=relaxed/simple;
+	bh=5ysJ7veRsD9TP3SKhDxVg22CoKwjiIVIqxUU9mdur14=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gnOYe3CA1+kOLcHk97uRUmbIZ+lxUSjiL6wFQX23Yx3Qjcl8MnBqJicdQ8d2KMFzF/OGFpllCwaLG0uZsOTj44Op+ru5Hn2aHqhG+igpcs92o+UIMDM9JGEqXnhU5XnpkiNQrPJPFbvM1pSdicuI5zoBHr/NEhag8wJ9mWq1LtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eEexPLJW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="bXIVpLoz"
-Received: from [192.168.0.16] (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4Vjkpp6dq1zqc;
-	Mon, 20 May 2024 19:20:18 +0200 (CEST)
-Message-ID: <9ae65e3c-f1fa-4ca9-8d74-12d92c51c5c6@freemail.hu>
-Date: Mon, 20 May 2024 19:20:12 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eEexPLJW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716226052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6S1JMvs3wWwoYY5yLjwWSAqPBxm7FbzVGctvxFDmowc=;
+	b=eEexPLJWNNzKfZkiLJ3SALMCPI9Gg4TZamzSfFBSYsuK4bP6qeGGSFS0yKy/roiEvIfX1C
+	GwVcnMa8UDZUm6QRShpLgVTCLJaNXMmrp2Na/PpQgzaTMP4a9DpQ9ChG1oDkGfbDA7eZ4H
+	Hmqeu8ud3P/w4fmzG7vtCKHWbzOmUCA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-613-MPpKqFhrMpaM3Wu3awzEhg-1; Mon, 20 May 2024 13:27:30 -0400
+X-MC-Unique: MPpKqFhrMpaM3Wu3awzEhg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42015260835so39354525e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:27:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716226049; x=1716830849;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6S1JMvs3wWwoYY5yLjwWSAqPBxm7FbzVGctvxFDmowc=;
+        b=UFskFUHNKo6hFpNVbQdmAD78ZZmruAlzgv7w8CMk42qnFz/3BRTQX1FfxEcY+ucYwM
+         Fp8OdpTlmx5BWjXEcftH/3y4dvxBeLqrBWXRaUb9lOG4GxveNkW+eYUuSFdqO/jiVoZ1
+         nAyxKGOisvI8aD8g7Q5ypN1JjOCV/yibEq3Y8sowv56anqrJWMSWhXZ32/CqpMQGkjZi
+         j0Hj9kCjv9c7nTGAMIETl25zkPBgshkqsxM+xuF5D0QUQlDeEQvuaGqZOJWsXhVdwztj
+         NQE+ThNpw0NEpj4ztD3r9M+SRPyFA1YzipKObKmnw2mWvIIBajG5yG0gZqsTCFQN/Dp5
+         e1og==
+X-Forwarded-Encrypted: i=1; AJvYcCXW7V2GveM0ISRLYcGjFXP/2G0S1Nr3zsSN3fNkyWA5m20EpJPGZybz4me1W3NwVnPWIHAdKBSy2ADwL4YnfFtiNMeoKqIO3Srn71ZD
+X-Gm-Message-State: AOJu0Yzy9JdPhTYiEc0rYZGc34SKnnqlnyVOQm2Re/q9cEEXkUuMplz9
+	hofBmakQU5qsLP6VN4ruKpDwS1bAp+jKjdqHQYUNAF2Z0kSvxF80osTw0KL0nEEbHDTnCK6ozry
+	RrbtW5LyBxnaVkNcNbrNNzfZvyCD5PGEXrEZacSjdpSenuFgbzEqvEjSzFe6IpA==
+X-Received: by 2002:a05:600c:1547:b0:420:1078:a74c with SMTP id 5b1f17b1804b1-4201078a89cmr192092525e9.20.1716226049337;
+        Mon, 20 May 2024 10:27:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEowXlkhLoQlD536HTIQse+gl+PqtvMMQTha8X+ha5edJrAVhb5zSf/srjBFRZN7CNK5aE/Hg==
+X-Received: by 2002:a05:600c:1547:b0:420:1078:a74c with SMTP id 5b1f17b1804b1-4201078a89cmr192092225e9.20.1716226048892;
+        Mon, 20 May 2024 10:27:28 -0700 (PDT)
+Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce24c0sm430961865e9.17.2024.05.20.10.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 10:27:28 -0700 (PDT)
+From: Danilo Krummrich <dakr@redhat.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	bhelgaas@google.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	airlied@gmail.com,
+	fujita.tomonori@gmail.com,
+	lina@asahilina.net,
+	pstanner@redhat.com,
+	ajanulgu@redhat.com,
+	lyude@redhat.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Subject: [RFC PATCH 09/11] rust: add basic PCI driver abstractions
+Date: Mon, 20 May 2024 19:25:46 +0200
+Message-ID: <20240520172554.182094-10-dakr@redhat.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240520172554.182094-1-dakr@redhat.com>
+References: <20240520172554.182094-1-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] spidev: Introduce "linux,spidev-name" property for
- device tree of spidev.
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240519211346.30323-1-egyszeregy@freemail.hu>
- <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
-Content-Language: hu, en-US
-From: =?UTF-8?Q?Sz=C5=91ke_Benjamin?= <egyszeregy@freemail.hu>
-In-Reply-To: <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1716225620;
-	s=20181004; d=freemail.hu;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	l=3028; bh=cvIOdk4xUZa+dLTqg5VA9e7Melwr8hlOaowEyxAGAac=;
-	b=bXIVpLozECHnvAP90I3d0K9994PrGE0swuIbqqeq77SjTOhiokcktCTix+gfkE9e
-	8FehBfGyU+zH7ycndbsuXdwKLx5lmG3U6eTo/poY4Ydb0phNaEQFXaBDuHMMSJxbgzK
-	uBSR+L7zVqdqyGPXz9eb/JpxRfA1nQ6EFYofVn/AA0tj/T6G3mHFkVq/EgPRHU7/dwP
-	y+ZhVCC+zJwTtQDw2Lepwvl3kHllWVf/7GkkHYVa89MSl0WfHyB92+sjhxix9jfzr7X
-	VEiEW1lIG1M4NlPx4NFmQOZoA5AzzYI90PX78nNFfx4c/cDECyJeqa3vQ/7nVmEB5EM
-	JI+vvv0e8g==
 
-2024. 05. 20. 15:20 keltezéssel, Mark Brown írta:
-> On Sun, May 19, 2024 at 11:13:46PM +0200, egyszeregy@freemail.hu wrote:
->> From: Benjamin Szőke <egyszeregy@freemail.hu>
->>
->> Optionally, spidev may have a "linux,spidev-name" property.
->> This is a string which is defining a custom suffix name for spi device in
->> /dev/spidev-<name> format. It helps to improve software portability between
->> various SoCs and reduce complexities of hardware related codes in SWs.
-> 
-> This seems like what udev rules are for?
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-Hi,
+This commit implements the abstractions necessary to bind a most basic
+PCI driver to a PCI device. It also serves as a ground layer for further
+PCI functionality.
 
-Goal of this patch is to introduce this new mode to assign a custom name from 
-lowlevel device tree to a spidev device. As i know udev can do it, but to do it 
-from device tree is the best and easier way for this feature in my opinion.
+Specifically, a basic PCI driver has to provide register() and
+unregister() methods, a PCI device structure for Rust, and probe() and
+remove() callbacks for the C side.
 
-It is more maintainable then use udev in userspace for it.
-For example there are three different SoCs: i.MX7, i.MX9, ZynqMP.
+A PCI driver shall be able to register itself for the desired devices,
+recognized by their device ID. Another basic necessity is the ability to
+store driver data, i.e., through pci_set_drvdata().
 
-In Yocto project, the Linux image's SW environment is nicely configurable 
-independently from what is the target MACHNIE. But if i like to deploy a SW 
-which uses peripheries like gpiobanks, i2c-dev, spidev these /dev/... name will 
-be totally different on each SoCs, more over in ZynqMP and any other Adaptive 
-SoC platform, the index number for the spidev, gpiobanks or other can be not 
-deterministic if it probed in run-time. Goal is to easily make a Linux OS image 
-which can support multiple SoCs in SW point of view easily.
+In congruency with the C implementation of pci_dev, a Rust PCI device
+holds a basic device (device::Device) which is always reference counted
+to ensure it cannot disappear as long as there are still users.
 
-So, in Yocto project build system point of view the best, if any Machine 
-specific settings is stored in the device tree files of the target machine in 
-driver levels/config, because it will be deterministic in 100% sure and it will 
-be nicely separated from the SW meta layers which may not contains any machine 
-specific hacking with udev and so on.
+Holding a basic device allows for both using interfaces that require a
+device, as well as such that demand a pci_dev, which can be obtained
+through as_raw(), using the established container_of() macro.
 
-So this way to assign a custom name for a spidev from device tree is more 
-efficient and more maintainable in SW developing point of view in embedded Linux 
-and Yocto/buildroot world because i need to just define a name like 
-linux,spidev-name = "sensor"; then use it with a fixed name in my generic SW 
-under /dev/spidev-sensor name. And there are no need to care about what will be 
-the index number of this spidev randomly after boot and how need to make an ugly 
-append layer for udev config and make it for all of machine variants separately.
+Implement a basic driver model with probe() and remove() callbacks,
+implementing the corresponding traits from the 'driver' crate.
 
-My opinion udev is ugly to use for it, and no longer beneficial for new Adaptive 
-SoCs where they can be not deterministic what kind of index number they got in 
-driver probing for many gpio, spidev, i2c-dev peripheries (you do not have info 
-about that which need to mapping for what custom name, it can be different in 
-many time based on PL FW). It is much better, safe and easier to assign this 
-custom suffix/name explicitly from device tree, moreover it is a driver related 
-things, i think the best place is in device tree for it not in a sys config file 
-for udev.
+Implement PCI device IDs.
 
-DT binding would need to be documented later in a separated patch as a guideline 
-mentioned it in Linux repo.
+Implement pci::Device with basic methods, holding an always reference
+counted device::Device.
+
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Co-developed-by: Philipp Stanner <pstanner@redhat.com>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Co-developed-by: Danilo Krummrich <dakr@redhat.com>
+Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+---
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers.c                  |  18 ++
+ rust/kernel/lib.rs              |   2 +
+ rust/kernel/pci.rs              | 328 ++++++++++++++++++++++++++++++++
+ 4 files changed, 349 insertions(+)
+ create mode 100644 rust/kernel/pci.rs
+
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index ddb5644d4fd9..32221de16e57 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -11,6 +11,7 @@
+ #include <linux/ethtool.h>
+ #include <linux/jiffies.h>
+ #include <linux/mdio.h>
++#include <linux/pci.h>
+ #include <linux/phy.h>
+ #include <linux/refcount.h>
+ #include <linux/sched.h>
+diff --git a/rust/helpers.c b/rust/helpers.c
+index 34061eca05a0..c3d80301185c 100644
+--- a/rust/helpers.c
++++ b/rust/helpers.c
+@@ -33,6 +33,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
++#include <linux/pci.h>
+ 
+ __noreturn void rust_helper_BUG(void)
+ {
+@@ -178,6 +179,23 @@ int rust_helper_devm_add_action(struct device *dev, void (*action)(void *), void
+ 	return devm_add_action(dev, action, data);
+ }
+ 
++void rust_helper_pci_set_drvdata(struct pci_dev *pdev, void *data)
++{
++	pci_set_drvdata(pdev, data);
++}
++EXPORT_SYMBOL_GPL(rust_helper_pci_set_drvdata);
++
++void *rust_helper_pci_get_drvdata(struct pci_dev *pdev)
++{
++	return pci_get_drvdata(pdev);
++}
++EXPORT_SYMBOL_GPL(rust_helper_pci_get_drvdata);
++
++u64 rust_helper_pci_resource_len(struct pci_dev *pdev, int barnr)
++{
++	return pci_resource_len(pdev, barnr);
++}
++
+ /*
+  * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
+  * use it in contexts where Rust expects a `usize` like slice (array) indices.
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 11645060b444..606391cbff83 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -55,6 +55,8 @@
+ #[doc(hidden)]
+ pub use bindings;
+ pub use macros;
++#[cfg(all(CONFIG_PCI, CONFIG_PCI_MSI))]
++pub mod pci;
+ pub use uapi;
+ 
+ #[doc(hidden)]
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+new file mode 100644
+index 000000000000..323aea565d84
+--- /dev/null
++++ b/rust/kernel/pci.rs
+@@ -0,0 +1,328 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Wrappers for the PCI subsystem
++//!
++//! C header: [`include/linux/pci.h`](../../../../include/linux/pci.h)
++
++use crate::{
++    bindings, container_of, device, driver,
++    error::{to_result, Result},
++    str::CStr,
++    types::{ARef, ForeignOwnable},
++    ThisModule,
++};
++use kernel::prelude::*; // for pinned_drop
++
++/// An adapter for the registration of PCI drivers.
++///
++/// # Example
++///
++///```
++/// use kernel::pci;
++///
++/// impl pci::Driver for MyDriver {
++///     type Data = Arc<MyDeviceData>;
++///
++///     define_pci_id_table! {
++///         (),
++///         [ (pci::DeviceId::new(bindings::PCI_VENDOR_ID_MY_VENDOR,
++///                               bindings::PCI_ANY_ID as u32),
++///            None)
++///         ]
++///     }
++///
++///     fn probe(
++///         pdev: &mut pci::Device,
++///         id_info: Option<&Self::IdInfo>
++///     ) -> Result<Arc<Self::Data>> {
++///         ...
++///     }
++///
++///     fn remove(data: &Self::Data) {
++///         ...
++///     }
++/// }
++///
++/// struct MyModule {
++///     _registration: Pin<Box<driver::Registration<pci::Adapter<MyDriver>>>>,
++/// }
++///
++/// impl kernel::Module for MyModule {
++///     fn init(_name: &'static CStr, module: &'static ThisModule) -> Result<Self> {
++///         let registration = driver::Registration::new_pinned(c_str!("MyDriver"), module)?;
++///
++///         Ok(Self {
++///             _registration: registration,
++///         })
++///     }
++/// }
++///```
++pub struct Adapter<T: Driver>(T);
++
++impl<T: Driver> driver::DriverOps for Adapter<T> {
++    type RegType = bindings::pci_driver;
++
++    // SAFETY: The caller must ensure that `reg` is valid and unequal NULL.
++    unsafe fn register(
++        reg: *mut bindings::pci_driver,
++        name: &'static CStr,
++        module: &'static ThisModule,
++    ) -> Result {
++        // SAFETY: Guaranteed by the safety requirements of this function.
++        let pdrv: &mut bindings::pci_driver = unsafe { &mut *reg };
++
++        pdrv.name = name.as_char_ptr();
++        pdrv.probe = Some(Self::probe_callback);
++        pdrv.remove = Some(Self::remove_callback);
++        pdrv.id_table = T::ID_TABLE.as_ref();
++        // SAFETY: Guaranteed by the safety requirements of this function.
++        to_result(unsafe { bindings::__pci_register_driver(reg, module.0, name.as_char_ptr()) })
++    }
++
++    // SAFETY: The caller must ensure that `reg` is valid and unequal NULL.
++    unsafe fn unregister(reg: *mut bindings::pci_driver) {
++        // SAFETY: Guaranteed by the safety requirements of this function.
++        unsafe { bindings::pci_unregister_driver(reg) }
++    }
++}
++
++impl<T: Driver> Adapter<T> {
++    extern "C" fn probe_callback(
++        pdev: *mut bindings::pci_dev,
++        id: *const bindings::pci_device_id,
++    ) -> core::ffi::c_int {
++        // SAFETY: Safe because the core kernel only ever calls the probe callback with a valid
++        // `pdev`.
++        let dev = unsafe { device::Device::from_raw(&mut (*pdev).dev) };
++        // SAFETY: Guaranteed by the rules described above.
++        let mut pdev = unsafe { Device::from_dev(dev) };
++
++        // SAFETY: `id` is a pointer within the static table, so it's always valid.
++        let offset = unsafe { (*id).driver_data };
++        let info = {
++            // SAFETY: The offset comes from a previous call to `offset_from` in `IdArray::new`,
++            // which guarantees that the resulting pointer is within the table.
++            let ptr = unsafe {
++                id.cast::<u8>()
++                    .offset(offset as _)
++                    .cast::<Option<T::IdInfo>>()
++            };
++            // SAFETY: Guaranteed by the preceding safety requirement.
++            unsafe { (*ptr).as_ref() }
++        };
++        match T::probe(&mut pdev, info) {
++            Ok(data) => {
++                // SAFETY:
++                // A valid `pdev` is always passed to this function. `data` is always valid since
++                // it's created in Rust.
++                unsafe { bindings::pci_set_drvdata(pdev.as_raw(), data.into_foreign() as _) };
++            }
++            Err(err) => return Error::to_errno(err),
++        }
++
++        0
++    }
++
++    extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
++        // SAFETY: This function is called by the C side and always with a valid `pdev`.
++        let ptr = unsafe { bindings::pci_get_drvdata(pdev) };
++        // SAFETY: Guaranteed by the preceding safety requirement.
++        let data = unsafe { T::Data::from_foreign(ptr) };
++        T::remove(&data);
++        <T::Data as driver::DeviceRemoval>::device_remove(&data);
++    }
++}
++
++/// Abstraction for bindings::pci_device_id.
++#[derive(Clone, Copy)]
++pub struct DeviceId {
++    /// Vendor ID
++    pub vendor: u32,
++    /// Device ID
++    pub device: u32,
++    /// Subsystem vendor ID
++    pub subvendor: u32,
++    /// Subsystem device ID
++    pub subdevice: u32,
++    /// Device class and subclass
++    pub class: u32,
++    /// Limit which sub-fields of the class
++    pub class_mask: u32,
++}
++
++impl DeviceId {
++    const PCI_ANY_ID: u32 = !0;
++
++    /// PCI_DEVICE macro.
++    pub const fn new(vendor: u32, device: u32) -> Self {
++        Self {
++            vendor,
++            device,
++            subvendor: DeviceId::PCI_ANY_ID,
++            subdevice: DeviceId::PCI_ANY_ID,
++            class: 0,
++            class_mask: 0,
++        }
++    }
++
++    /// PCI_DEVICE_CLASS macro.
++    pub const fn with_class(class: u32, class_mask: u32) -> Self {
++        Self {
++            vendor: DeviceId::PCI_ANY_ID,
++            device: DeviceId::PCI_ANY_ID,
++            subvendor: DeviceId::PCI_ANY_ID,
++            subdevice: DeviceId::PCI_ANY_ID,
++            class,
++            class_mask,
++        }
++    }
++
++    /// PCI_DEVICE_ID macro.
++    pub const fn to_rawid(&self, offset: isize) -> bindings::pci_device_id {
++        bindings::pci_device_id {
++            vendor: self.vendor,
++            device: self.device,
++            subvendor: self.subvendor,
++            subdevice: self.subdevice,
++            class: self.class,
++            class_mask: self.class_mask,
++            driver_data: offset as _,
++            override_only: 0,
++        }
++    }
++}
++
++// SAFETY: `ZERO` is all zeroed-out and `to_rawid` stores `offset` in `pci_device_id::driver_data`.
++unsafe impl driver::RawDeviceId for DeviceId {
++    type RawType = bindings::pci_device_id;
++
++    const ZERO: Self::RawType = bindings::pci_device_id {
++        vendor: 0,
++        device: 0,
++        subvendor: 0,
++        subdevice: 0,
++        class: 0,
++        class_mask: 0,
++        driver_data: 0,
++        override_only: 0,
++    };
++}
++
++/// Define a const pci device id table
++///
++/// # Examples
++///
++/// ```ignore
++/// # use kernel::{pci, define_pci_id_table};
++/// #
++/// struct MyDriver;
++/// impl pci::Driver for MyDriver {
++///     // [...]
++/// #   fn probe(_dev: &mut pci::Device, _id_info: Option<&Self::IdInfo>) -> Result {
++/// #       Ok(())
++/// #   }
++/// #   define_pci_id_table! {u32, [
++/// #       (pci::DeviceId::new(0x010800, 0xffffff), None),
++/// #       (pci::DeviceId::with_class(0x010802, 0xfffff), Some(0x10)),
++/// #   ]}
++/// }
++/// ```
++#[macro_export]
++macro_rules! define_pci_id_table {
++    ($data_type:ty, $($t:tt)*) => {
++        type IdInfo = $data_type;
++        const ID_TABLE: $crate::driver::IdTable<'static, $crate::pci::DeviceId, $data_type> = {
++            $crate::define_id_array!(ARRAY, $crate::pci::DeviceId, $data_type, $($t)* );
++            ARRAY.as_table()
++        };
++    };
++}
++pub use define_pci_id_table;
++
++/// The PCI driver trait.
++///
++/// Drivers must implement this trait in order to get a PCI driver registered. Please refer to the
++/// `Adapter` documentation for an example.
++pub trait Driver {
++    /// Data stored on device by driver.
++    ///
++    /// Corresponds to the data set or retrieved via the kernel's
++    /// `pci_{set,get}_drvdata()` functions.
++    ///
++    /// Require that `Data` implements `ForeignOwnable`. We guarantee to
++    /// never move the underlying wrapped data structure.
++    ///
++    /// TODO: Use associated_type_defaults once stabilized:
++    ///
++    /// `type Data: ForeignOwnable + driver::DeviceRemoval = ();`
++    type Data: ForeignOwnable + driver::DeviceRemoval;
++
++    /// The type holding information about each device id supported by the driver.
++    ///
++    /// TODO: Use associated_type_defaults once stabilized:
++    ///
++    /// type IdInfo: 'static = ();
++    type IdInfo: 'static;
++
++    /// The table of device ids supported by the driver.
++    const ID_TABLE: driver::IdTable<'static, DeviceId, Self::IdInfo>;
++
++    /// PCI driver probe.
++    ///
++    /// Called when a new platform device is added or discovered.
++    /// Implementers should attempt to initialize the device here.
++    fn probe(dev: &mut Device, id: Option<&Self::IdInfo>) -> Result<Self::Data>;
++
++    /// PCI driver remove.
++    ///
++    /// Called when a platform device is removed.
++    /// Implementers should prepare the device for complete removal here.
++    fn remove(_data: &Self::Data);
++}
++
++/// The PCI device representation.
++///
++/// A PCI device is based on an always reference counted `device:Device` instance. Cloning a PCI
++/// device, hence, also increments the base device' reference count.
++#[derive(Clone)]
++pub struct Device(ARef<device::Device>);
++
++impl Device {
++    /// Create a PCI Device instance from an existing `device::Device`.
++    ///
++    /// # Safety
++    ///
++    /// `dev` must be an `ARef<device::Device>` whose underlying `bindings::device` is a member of
++    /// a `bindings::pci_dev`.
++    pub unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
++        Self(dev)
++    }
++
++    fn as_raw(&self) -> *mut bindings::pci_dev {
++        // SAFETY: Guaranteed by the requirements described in pci::Device::new().
++        unsafe { container_of!(self.0.as_raw(), bindings::pci_dev, dev) as _ }
++    }
++
++    /// Enable the Device's memory.
++    pub fn enable_device_mem(&self) -> Result {
++        // SAFETY: By the type invariants, we know that `self.ptr` is non-null and valid.
++        let ret = unsafe { bindings::pci_enable_device_mem(self.as_raw()) };
++        if ret != 0 {
++            Err(Error::from_errno(ret))
++        } else {
++            Ok(())
++        }
++    }
++
++    /// Set the Device's master.
++    pub fn set_master(&self) {
++        // SAFETY: By the type invariants, we know that `self.ptr` is non-null and valid.
++        unsafe { bindings::pci_set_master(self.as_raw()) };
++    }
++}
++
++impl AsRef<device::Device> for Device {
++    fn as_ref(&self) -> &device::Device {
++        &self.0
++    }
++}
+-- 
+2.45.1
 
