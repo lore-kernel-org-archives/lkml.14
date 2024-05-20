@@ -1,32 +1,32 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7696A136E04
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1005D137744
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 14:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716216861; cv=none; b=mr+Vurg817DHg2+BIJTBtSfc5LNX2BMm3djagTLo6+Rdi5YG/G4nADia4Tbsn+1X6V3y/tGKkr4KT4Qyc2bsHF+LMd+021BZyKwi9mfUD1RBF1VNPZaqbAy9MG1tjuZcMj6HKPKT1LcNuryFcmhxBOkuPPEvCzMWYcLv+oq4bbs=
+	t=1716216863; cv=none; b=KctW50M3qio6xR2cBRQqStA1Bt2kxL/gcxXwIjKRZ3pZy/LpNuz3ybsy6vwzAQm2a5nVrnKA5axK5HF8B44gu8N7CWuN9bi/6CaRNIu+WR17FQdHAULRjyRC1uYAQ2dWPjUSycTthyImzmn5jU9zkOEFdMs87NeN1g+h2rZPEyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716216861; c=relaxed/simple;
-	bh=sHuVMqOOOz9XO4IshcQZEwhXzzhogGCT5T+bmtChve0=;
+	s=arc-20240116; t=1716216863; c=relaxed/simple;
+	bh=Z1/InqPro1U0+pj2thLeLheiLnUhwHnjffb+hYMRUik=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XCo2oNLyoQ5Ck58bL2Ez03a4lLDOz3AYa12gavWVdscSmYOKCGHCf9gCqk1AigSjFAU74b1lEXt8vLzGX16XwDF58d0TQ3kYveanlqy1rdw3EqhexaTP0MaCYXxb+Wwnffko8kcAOIzJLYRT5+5FVHdE6YvVNAPcU/GZvvUUhy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d09pMeOY; arc=none smtp.client-ip=91.218.175.174
+	 MIME-Version; b=h0nsbH/ceSQ2A06yRTP0DZMA7hn4LcGvwQ+Y1Kl/rGBwWdB0au+HP7akU0Lw0r9UETKQHxFgVHhCnEzIaw+vTy+n8xDPIFIffgLmyPuFMHfyd7z+oB8fYdVB0/6GqE+6A9YwDRorTGIyafwEYcBI0OLYbs75MHvD+blu7hEPc1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pBvoH/8e; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d09pMeOY"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pBvoH/8e"
 X-Envelope-To: lpieralisi@kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716216854;
+	t=1716216860;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0TZ3BGmEu8mVwpdyswgFBs/ct4xyk7TF2NGi7rztXsU=;
-	b=d09pMeOYiWVnrY3txO33VLyO8lPiZDqCbW6nnx1MgKYzNfA7HqMxY6eRxGmcAVt+xvUuLr
-	HJaMZwbY43vTCCVFZNqFMo0SGjrWVZyBsNQKtRnylcNqWD/4VhGRLaMgLvshkFuswYgckK
-	JKBUlXWHl5h6LN9mcvgc7bixP3ltZMI=
+	bh=aQwH77/vqcL6nAroUqOCPsVDtJd7S7+cLJcYruhNakw=;
+	b=pBvoH/8efJEugUE9jNRbNpcO7Ugvrf9vZkfx0TBnxwyqrjgD15xaD1qrOPoURAeXuuCwC+
+	9BmLFlJl3xeq2Le1KR/sxxnOIZ4nJh6F3v/b/OwL1tj+07PNhV4GxktJZxtA+LsUrOQlid
+	xl1NFvbvhGruDAT+u1+58x0jT4r2UAE=
 X-Envelope-To: kw@linux.com
 X-Envelope-To: robh@kernel.org
 X-Envelope-To: linux-pci@vger.kernel.org
@@ -36,9 +36,6 @@ X-Envelope-To: linux-arm-kernel@lists.infradead.org
 X-Envelope-To: bhelgaas@google.com
 X-Envelope-To: linux-kernel@vger.kernel.org
 X-Envelope-To: sean.anderson@linux.dev
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: krzysztof.kozlowski+dt@linaro.org
-X-Envelope-To: devicetree@vger.kernel.org
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -50,13 +47,10 @@ Cc: Michal Simek <michal.simek@amd.com>,
 	linux-arm-kernel@lists.infradead.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	linux-kernel@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org
-Subject: [PATCH v3 1/7] dt-bindings: pci: xilinx-nwl: Add phys
-Date: Mon, 20 May 2024 10:53:56 -0400
-Message-Id: <20240520145402.2526481-2-sean.anderson@linux.dev>
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH v3 4/7] PCI: xilinx-nwl: Rate-limit misc interrupt messages
+Date: Mon, 20 May 2024 10:53:59 -0400
+Message-Id: <20240520145402.2526481-5-sean.anderson@linux.dev>
 In-Reply-To: <20240520145402.2526481-1-sean.anderson@linux.dev>
 References: <20240520145402.2526481-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -68,54 +62,71 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Add phys properties so Linux can power-on/configure the GTR
-transcievers.
+The conditions logged by the misc interrupt can occur repeatedly and
+continuously. Avoid rendering the console unusable by rate-limiting
+these messages.
 
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
-Changes in v3:
-- Document phys property
+(no changes since v1)
 
-Changes in v2:
-- Remove phy-names
-- Add an example
+ drivers/pci/controller/pcie-xilinx-nwl.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
- Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-index 426f90a47f35..cc50795d170b 100644
---- a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-@@ -61,6 +61,11 @@ properties:
-   interrupt-map:
-     maxItems: 4
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+index ce881baac6d8..c0a60cebdb2e 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -267,37 +267,37 @@ static irqreturn_t nwl_pcie_misc_handler(int irq, void *data)
+ 		return IRQ_NONE;
  
-+  phys:
-+    minItems: 1
-+    maxItems: 4
-+    description: One phy per logical lane, in order
-+
-   power-domains:
-     maxItems: 1
+ 	if (misc_stat & MSGF_MISC_SR_RXMSG_OVER)
+-		dev_err(dev, "Received Message FIFO Overflow\n");
++		dev_err_ratelimited(dev, "Received Message FIFO Overflow\n");
  
-@@ -110,6 +115,7 @@ examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/phy/phy.h>
-     #include <dt-bindings/power/xlnx-zynqmp-power.h>
-     soc {
-         #address-cells = <2>;
-@@ -138,6 +144,7 @@ examples:
-                             <0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
-                             <0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
-             msi-parent = <&nwl_pcie>;
-+            phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
-             power-domains = <&zynqmp_firmware PD_PCIE>;
-             iommus = <&smmu 0x4d0>;
-             pcie_intc: legacy-interrupt-controller {
+ 	if (misc_stat & MSGF_MISC_SR_SLAVE_ERR)
+-		dev_err(dev, "Slave error\n");
++		dev_err_ratelimited(dev, "Slave error\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_MASTER_ERR)
+-		dev_err(dev, "Master error\n");
++		dev_err_ratelimited(dev, "Master error\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_I_ADDR_ERR)
+-		dev_err(dev, "In Misc Ingress address translation error\n");
++		dev_err_ratelimited(dev, "In Misc Ingress address translation error\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_E_ADDR_ERR)
+-		dev_err(dev, "In Misc Egress address translation error\n");
++		dev_err_ratelimited(dev, "In Misc Egress address translation error\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_FATAL_AER)
+-		dev_err(dev, "Fatal Error in AER Capability\n");
++		dev_err_ratelimited(dev, "Fatal Error in AER Capability\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_NON_FATAL_AER)
+-		dev_err(dev, "Non-Fatal Error in AER Capability\n");
++		dev_err_ratelimited(dev, "Non-Fatal Error in AER Capability\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_CORR_AER)
+-		dev_err(dev, "Correctable Error in AER Capability\n");
++		dev_err_ratelimited(dev, "Correctable Error in AER Capability\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_UR_DETECT)
+-		dev_err(dev, "Unsupported request Detected\n");
++		dev_err_ratelimited(dev, "Unsupported request Detected\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_NON_FATAL_DEV)
+-		dev_err(dev, "Non-Fatal Error Detected\n");
++		dev_err_ratelimited(dev, "Non-Fatal Error Detected\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_FATAL_DEV)
+-		dev_err(dev, "Fatal Error Detected\n");
++		dev_err_ratelimited(dev, "Fatal Error Detected\n");
+ 
+ 	if (misc_stat & MSGF_MISC_SR_LINK_AUTO_BWIDTH)
+ 		dev_info(dev, "Link Autonomous Bandwidth Management Status bit set\n");
 -- 
 2.35.1.1320.gc452695387.dirty
 
