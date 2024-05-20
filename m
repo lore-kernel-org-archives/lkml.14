@@ -1,114 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from web-out.onbox.hu (fmfe37.freemail.hu [46.107.16.242])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC14E552;
-	Mon, 20 May 2024 16:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB1879EF;
+	Mon, 20 May 2024 16:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716223784; cv=none; b=UroIKQyfViMpT/2yluVSxtYxW0RGhc4RFuN9Eau6m2PjGfvt7c705xFBJV7lImx+xRk89RW4iTPJKgyTldSrZuY+cfYaE5O7PCw/ABkbbJZJwpCZnDyr/0T3lwcwkxt05MPY32pLKhYRZ3s2cHIaDwW4RclCvpZahQRJfNKXje4=
+	t=1716223839; cv=none; b=rp4b5631qk8Iual39D4LBvsRgQ67e6rC9IMTjo76vZgZiBZVboXgRRWo+1eYM9CSb2GCR75kkxPCbJfyZ2agJUaO+OL11fXMqEc9zGjTktoensMLGIBFoexjxfFBB1BnAjfJu9DKM6xoUaGcWsR4hh7Ja6dBO3pg9S9S9mYIG4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716223784; c=relaxed/simple;
-	bh=7lK2EaXV5Z2wVlx+P0QHezS3v+W1rlKWdQ50owAmfzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyDjLLDPQVXmjJlqnpLGQ3ykQUmmlhmvEd+MWr2lqqJxrvE3/Y/qy440SiXzUpaRTQeT9k2Jxy5mevGmASF2J0TDdx2MA+LvrrvFzs7bkZAjYXzKwwd1c6qEGaUKVfi+Muo60khV7tMgNaCyfJqrTJ7LS4gs7jgIeHV8WBU3ZZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIWN85ZY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716223839; c=relaxed/simple;
+	bh=cG0hlyXh6vcW3V/UPL40CkMLlVDApVwQqePJso+0IcM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MbedGWs5YK16lTeCuHK4E7DU16uWzoFjrKf6idM8RJBSM+PCeWhM7BErdswyOjIzaQ0NgKdHCIEeuBoWizSyY45wnE11a1hSleZXRI8ZEYGqu9mvy9QFUxdc1+OyvMkIB097iEH0hYj5h8nP1kB/0/GhaSOf8N7yhx1E5dN7hSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=DnjPf2pL reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIWN85ZY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E16C2C2BD10;
-	Mon, 20 May 2024 16:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716223784;
-	bh=7lK2EaXV5Z2wVlx+P0QHezS3v+W1rlKWdQ50owAmfzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dIWN85ZYJBApTFKC24qc0/xj4LqoSoDqHlEmH5dJV5XMR31IE6caPYKGbUlK3MTnZ
-	 hM/d2FPtwGk+52vmTUq1rO0PBzB9fIt4uJtipi6SctsUldq0++WlZMXtmpJCcRhCuJ
-	 8PIhy3FMp1gphcDy9WrDKDrTK6R/CRUG9XmwuFtrR/VEUA+/akzpqV0DgUQRFcZp0O
-	 Ax+3H2qtu3kA5bNbdPZ7Xz1NjHsn8f0utn8h+D6XvjOdthMyB6kgr734KFeQ50MLc4
-	 iyVom14jUEHu16DC7l3M/n1Znli2o96gWYJfBNZ1TowBtvZjZY+vQsdQC1NcpDpSWj
-	 BpAqzkB9nXyhA==
-Date: Mon, 20 May 2024 17:49:39 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jdelvare@suse.com, linux@roeck-us.net, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, ukleinek@kernel.org,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <20240520-pendant-charity-a66a8d738690@spud>
-References: <20240520030321.3756604-1-chris.packham@alliedtelesis.co.nz>
- <20240520030321.3756604-2-chris.packham@alliedtelesis.co.nz>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="DnjPf2pL"
+X-fm-smtp-source: yes
+Received: from localhost (localhost [80.98.74.198])
+	by web-out.onbox.hu (Postfix) with SMTP id 4VjjxT1y1kz1Rqc;
+	Mon, 20 May 2024 18:41:01 +0200 (CEST)
+Message-ID: <3c0f28a0-9d07-4e15-ad8e-ad22f25ff979@freemail.hu>
+Date: Mon, 20 May 2024 16:41:00 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FcZ+YKiVPcvShcYO"
-Content-Disposition: inline
-In-Reply-To: <20240520030321.3756604-2-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpiolib: Introduce "linux,gpiochip-name" property for
+ device tree of GPIO controller.
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240519144920.14804-1-egyszeregy@freemail.hu>
+ <CAMRc=MctEsMiRgaV5UTiaxjoFDa2izX9wnLAU07=G8gBEcSKoQ@mail.gmail.com>
+Content-Language: hu, en-US
+From: =?UTF-8?Q?Sz=C5=91ke_Benjamin?= <egyszeregy@freemail.hu>
+X-Mozilla-Draft-Info: internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0;
+ attachmentreminder=0; deliveryformat=1
+X-Identity-Key: id1
+Fcc: imap://egyszeregy%40freemail.hu@imap.freemail.hu/Sent
+In-Reply-To: <CAMRc=MctEsMiRgaV5UTiaxjoFDa2izX9wnLAU07=G8gBEcSKoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-fm-smtp-source: true
+X-AccountId: 2510275
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1716223262;
+	s=20181004; d=freemail.hu;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	l=4071; bh=3BI+CILpAaJTRMcPmqa6NHbUdlNW9qh59WpRidgQl1g=;
+	b=DnjPf2pLTD8FhNAqA0P8I66s+8zs8qhhfbOGdFHjhrYNF5WsWKB4qEcMgqpkzgN5
+	hgDx6GwKlCtDeDsvYzh7RfuEu3M0HzsVc52JhrjQacz9hu6TanR9NMy29tJTudnj1fl
+	sFwHE1P0aK3Clrl9HEqv9mKQ4o9TJF6u6QPXAoUdhZjT4a6ngj0Xv6+eIVXsvCDAjOF
+	BJuq5nTfvAwOsC0t0S2VMWpAqhkMd/ukQjkyEHnLA9Mc1vpy9Wy+4usj2wBYjxYmR8g
+	cAisSQHz9iZugp3yj59PLJfmn/2Fh+2RORNunVf1SF1uPIwY2mDCfheuhsTj7nQhvaO
+	5BDZqvBGHQ==
 
+2024. 05. 19. 19:27 keltezéssel, Bartosz Golaszewski írta:
+> On Sun, May 19, 2024 at 4:49 PM <egyszeregy@freemail.hu> wrote:
+>>
+>> From: Benjamin Szőke <egyszeregy@freemail.hu>
+>>
+>> Optionally, a GPIO controller may have a "linux,gpiochip-name" property.
+> 
+> Oh, may it really?
+> 
+> $ git grep "linux,gpiochip-name" Documentation/devicetree/bindings/
+> $
+> 
+> Doesn't look like it.
+> 
+>> This is a string which is defining a custom suffix name for gpiochip in
+>> /dev/gpiochip-<name> format. It helps to improve software portability
+>> between various SoCs and reduce complexities of hardware related codes
+>> in SWs.
+>>
+>> Signed-off-by: Benjamin Szőke <egyszeregy@freemail.hu>
+>> ---
+>>   drivers/gpio/gpiolib.c | 12 +++++++++++-
+>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index ce94e37bcbee..e24d8db1d054 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -860,6 +860,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>>                                 struct lock_class_key *lock_key,
+>>                                 struct lock_class_key *request_key)
+>>   {
+>> +       const char *name;
+>>          struct gpio_device *gdev;
+>>          unsigned int desc_index;
+>>          int base = 0;
+>> @@ -896,7 +897,16 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>>                  goto err_free_gdev;
+>>          }
+>>
+>> -       ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+>> +       /*
+>> +        * If "linux,gpiochip-name" is specified in device tree, use /dev/gpiochip-<name>
+>> +        * in Linux userspace, otherwise use /dev/gpiochip<id>.
+>> +        */
+>> +       ret = device_property_read_string(gc->parent, "linux,gpiochip-name", &name);
+>> +       if (ret < 0)
+>> +               ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+>> +       else
+>> +               ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "-%s", name);
+>> +
+>>          if (ret)
+>>                  goto err_free_ida;
+>>
+>> --
+>> 2.39.3
+>>
+> 
+> NAK, this is udev's task in user-space if you need this.
+> 
+> Bart
 
---FcZ+YKiVPcvShcYO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Mon, May 20, 2024 at 03:03:19PM +1200, Chris Packham wrote:
-> Add fan child nodes that allow describing the connections for the
-> ADT7475 to the fans it controls. This also allows setting some
-> initial values for the pwm duty cycle and frequency.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->=20
-> Notes:
->     Changes in v3:
->     - Use the pwm provider/consumer bindings
->     Changes in v2:
->     - Document 0 as a valid value (leaves hardware as-is)
->=20
->  .../devicetree/bindings/hwmon/adt7475.yaml    | 25 ++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-> index 051c976ab711..99bd689ae0cd 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -51,6 +51,15 @@ properties:
->        enum: [0, 1]
->        default: 1
-> =20
-> +  "#pwm-cells":
-> +    const: 4
-> +    description: |
-> +      Number of cells in a PWM specifier.
-> +      - 0: The pwm channel
-> +      - 1: The pwm frequency in hertz - 0, 11, 14, 22, 29, 35, 44, 58, 8=
-8, 22500
+Goal of this patch is to introduce this new mode to assign a custom name from 
+lowlevel device tree to a gpio bank.
 
-The standard binding is period in nanoseconds, not frequency in Hz.
-What's gained from deviating from that?
+It is more maintainable then use udev in userspace for it.
+For example there are three different SoCs: i.MX7, i.MX9, ZynqMP.
 
-> +      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
-> +      - 3: The default pwm duty cycle - 0-255
+In Yocto project, the Linux image's SW environment is nicely configurable 
+independently from what is the target MACHNIE. But if i like to deploy a SW 
+which uses peripheries like gpiobanks, i2c-dev, spidev these /dev/... name will 
+be totally different on each SoCs, more over in ZynqMP and any other Adaptive 
+SoC platform, the index number for the gpiobanks or other can be not 
+deterministic if it probed in run-time. Goal is to easily make a Linux OS image 
+which can support multiple SoCs and in SW point of view it is flexible.
 
-Same here I guess, why not match the units used for the period for the
-duty cycle?
+So, in Yocto project point of view the best, if any Machine specific settings is 
+stored in the device tree files of the target MACHNIEs in driver levels/config, 
+because it will be deterministic in 100% sure and it will be nicely separated 
+from the SW meta layers which may not contains any machine specific hacking with 
+udev and so on for building image.
 
-Cheers,
-Conor.
+So this way to assign a custom name for a gpiobanks from device tree is more 
+efficient and more maintainable in SW developing point of view in 
+Yocto/buildroot world because i need to just define a name like 
+linux,gpiochip-name = "expander"; then use it with a fixed name in my generic SW 
+under /dev/gpiochip-expander name. And there are no need to care about what will 
+be the index number of this banks randomly after boot and how need to make an 
+ugly append layer for udev and make it for all of machine variants which are the 
+target to use with the same SW.
 
---FcZ+YKiVPcvShcYO
-Content-Type: application/pgp-signature; name="signature.asc"
+My opinion udev is ugly to use for it and more complicated, and no longer 
+beneficial for new Adaptive SoCs where they can be not deterministic what kind 
+of index number they got in driver probing (you will not know what index need to 
+mapping for what custom name). It is much better to assign this suffix/name 
+explicitly from device tree.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkt/IwAKCRB4tDGHoIJi
-0mfnAP9s9FF6jnmkLsPw4HMFWexogPLNAzkTcCtHtu3/XsAZmgEA6sGT8IN0+hkD
-+T0zrkoU4WrbZN3jfYN5xXzTqQpeWwY=
-=o2BQ
------END PGP SIGNATURE-----
-
---FcZ+YKiVPcvShcYO--
