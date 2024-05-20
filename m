@@ -1,107 +1,108 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23011136648
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 13:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BCD53E07;
+	Mon, 20 May 2024 13:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716212108; cv=none; b=hL7Sfk7KLQXuGgTYAoy+bihDryAtOH2iE9qbwn82d6FSRYEYoP3MZlTsp0Met5sWNb2sTZGA23zv5TsFCtfU+IBbjbhPP1Oz2b5dnevNb03+qf8LHf48dUygtLI0GPTq8Ym1zHlxYpNBAmhOo6end0vdCkLBt1asYfIklVKL5NA=
+	t=1716212143; cv=none; b=Qr50qylBMQvoVqKPeMIX/Psy+j5tu8/WuedcYQfysci+wsgd5bcfZUgJocfdLjDSyy7E0YULc0fdGQnggPQDjJCYw4dSfqeH/pibmrNFM0RJYhq2dg9ejQCy4KUayPcBXGK/GrsPpn2GuaXSy5VSr3IG8jbi+EfHxN1zxLcdHek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716212108; c=relaxed/simple;
-	bh=R/0zG6yLUYRJaCSaEdvkdqZcg4FkuA6onh3IU8OmRfU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pIv2hjIqTLl3Wfi2uVfRrnnxGSh3vkogS5YQFscTcBL7NkX0VWAPDv4j3+EnB2p1gh4DXRItNGrJYgeV/z7v1WBjuB48A6g6z5nIQjafZbO+2wbKbZDaiAu6udHoTTgkYIeauUbPjdv79qv2/Eg3BPWI4R8yWG7DP69fgVdWEqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QVpUy6j/; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1716212143; c=relaxed/simple;
+	bh=eKlD1ITrUAqbOoU46mxHGdH230qRNZ71RdpMuz1QTt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JANN4CS080eNDW8Osi8UpJKqQiqg1qohXb0VjN+vUwsLA/0yrHqR4SmyfhCMNVQsrav7M6m4ka8Vugej7owKDq1eNCxhXhDgLANUmVb81+qHZlE1unPUwJN+ZQUuPZ6ohhFxtqImrMIu+N5cdtGN+CdPVLbONTCTeBXH7PmJL4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0Fn4CyZ6; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QVpUy6j/"
-X-Envelope-To: lkp@intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716212103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gyw5WnWHpJz6E3Mc68G1X1pQFAugA2g3tSqbvj80T9o=;
-	b=QVpUy6j/slpeF+8hheYUC0ArIclrwUJUOcg0BMYheBc3WY9jbEzvl8u3m4pJk/cVpU3t0Z
-	u3v8gM+fsA8apsOwRvDm0Gz6yNeY4WnNfPQRjo79/+0fs9mbm8be4lf1ywSU7VlAFCWziE
-	/VUBDF3ygfeGR5X9TuyANXi8Q6BKEmU=
-X-Envelope-To: brauner@kernel.org
-X-Envelope-To: jack@suse.cz
-X-Envelope-To: viro@zeniv.linux.org.uk
-X-Envelope-To: oe-kbuild-all@lists.linux.dev
-X-Envelope-To: axboe@kernel.dk
-X-Envelope-To: hch@lst.de
-X-Envelope-To: dylany@fb.com
-X-Envelope-To: dwmw@amazon.co.uk
-X-Envelope-To: pbonzini@redhat.com
-X-Envelope-To: dyoung@redhat.com
-X-Envelope-To: linux-fsdevel@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Message-ID: <18ef03df-8313-432f-bf24-aa685d099f3e@linux.dev>
-Date: Mon, 20 May 2024 21:34:26 +0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0Fn4CyZ6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=KvdEIYYYkIBNIphyeovfwOBCnQAQsyfyDCazfo+ptac=; b=0Fn4CyZ6sIsex8ug8E1lVRfHYM
+	YkjjrNDxDIKdB/4AtWOLmYn6AnYCNtklor1/x1VLM6sxaJhP1EZTdAqOlbAEeVtl34e4HAaLh0cMY
+	wLzTG2KfwRUcL5He7OG3DbvllFMTk+6EdFh1KOKztgR+VVLJu2ksMJPYYVIXUO1MvRI4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s93Ao-00FhQJ-Ld; Mon, 20 May 2024 15:35:30 +0200
+Date: Mon, 20 May 2024 15:35:30 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v3 5/5] net: phy: add driver for built-in 2.5G
+ ethernet PHY on MT7988
+Message-ID: <1158a657-1b95-4d7f-9371-41eec5388441@lunn.ch>
+References: <20240520113456.21675-1-SkyLake.Huang@mediatek.com>
+ <20240520113456.21675-6-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] eventfd: introduce ratelimited wakeup for non-semaphore
- eventfd
-To: kernel test robot <lkp@intel.com>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: oe-kbuild-all@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Dylan Yudaken <dylany@fb.com>,
- David Woodhouse <dwmw@amazon.co.uk>, Paolo Bonzini <pbonzini@redhat.com>,
- Dave Young <dyoung@redhat.com>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240519144124.4429-1-wen.yang@linux.dev>
- <202405200456.29VvtOKg-lkp@intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wen Yang <wen.yang@linux.dev>
-In-Reply-To: <202405200456.29VvtOKg-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240520113456.21675-6-SkyLake.Huang@mediatek.com>
 
+> +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
+> +{
+> +	struct mtk_i2p5ge_phy_priv *priv = phydev->priv;
+> +	struct device *dev = &phydev->mdio.dev;
+> +	const struct firmware *fw;
+> +	struct pinctrl *pinctrl;
+> +	int ret, i;
+> +	u16 reg;
+> +
+> +	if (!priv->fw_loaded) {
+> +		if (!priv->md32_en_cfg_base || !priv->pmb_addr) {
+> +			dev_err(dev, "MD32_EN_CFG base & PMB addresses aren't valid\n");
+> +			return -EINVAL;
+> +		}
 
+...
 
-On 2024/5/20 05:18, kernel test robot wrote:
-> Hi Wen,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on brauner-vfs/vfs.all]
-> [also build test ERROR on linus/master v6.9 next-20240517]
-> [cannot apply to vfs-idmapping/for-next hch-configfs/for-next]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Wen-Yang/eventfd-introduce-ratelimited-wakeup-for-non-semaphore-eventfd/20240519-224440
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-> patch link:    https://lore.kernel.org/r/20240519144124.4429-1-wen.yang%40linux.dev
-> patch subject: [PATCH] eventfd: introduce ratelimited wakeup for non-semaphore eventfd
-> config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20240520/202405200456.29VvtOKg-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240520/202405200456.29VvtOKg-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202405200456.29VvtOKg-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->     arm-linux-gnueabi-ld: fs/eventfd.o: in function `eventfd_write':
->>> eventfd.c:(.text+0x1740): undefined reference to `__aeabi_uldivmod'
-> 
+> +static int mt798x_2p5ge_phy_probe(struct phy_device *phydev)
+> +{
+> +	struct mtk_i2p5ge_phy_priv *priv;
+> +
+> +	priv = devm_kzalloc(&phydev->mdio.dev,
+> +			    sizeof(struct mtk_i2p5ge_phy_priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	switch (phydev->drv->phy_id) {
+> +	case MTK_2P5GPHY_ID_MT7988:
+> +		priv->pmb_addr = ioremap(MT7988_2P5GE_PMB_BASE, MT7988_2P5GE_PMB_LEN);
+> +		if (!priv->pmb_addr)
+> +			return -ENOMEM;
+> +		priv->md32_en_cfg_base = ioremap(MT7988_2P5GE_MD32_EN_CFG_BASE,
+> +						 MT7988_2P5GE_MD32_EN_CFG_LEN);
+> +		if (!priv->md32_en_cfg_base)
+> +			return -ENOMEM;
+> +
+> +		/* The original hardware only sets MDIO_DEVS_PMAPMD */
+> +		phydev->c45_ids.mmds_present |= (MDIO_DEVS_PCS | MDIO_DEVS_AN |
+> +						 MDIO_DEVS_VEND1 | MDIO_DEVS_VEND2);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
 
-Thanks, we will fix it soon and then send v2.
+How can priv->md32_en_cfg_base or priv->pmb_addr not be set in
+mt798x_2p5ge_phy_config_init()
 
---
-Best wishes,
-Wen
+	Andrew
