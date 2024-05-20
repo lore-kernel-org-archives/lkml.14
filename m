@@ -1,309 +1,284 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C850713A894
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E90A2D
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 17:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226063; cv=none; b=ZxKMUzp8HQtp8gILpiwiiB9pOeErXEsOoZqOIP0t/xGQ01kE9Eg7WFF/8SPU5/gl0khZY05EmXg2TCZqoiS4IY1on4vqguVd1/0lJjfnrHiNHdcwOrpLBeMNObcpKmYRrv8zcLnoO+tt7xbi2n8k35oZu7RTl1wBFrf5JsKregw=
+	t=1716226213; cv=none; b=JE6zpMAwjNyfjQ51bdl7T7fgEPQ8foMjheG2lYYbaBjMYzJ4toab/+zGGX6PsKBpJbWCXWX58jjRowNxZNX9nH1B7V/LGzhHjOCaUUD+N37CmsW4xJ25PUTEsn9LWinxLdkGXqaNK7XHSQlrLHbrGJm+lrBO5Dqql4GJ2FWpvRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226063; c=relaxed/simple;
-	bh=YZfg+yFUJvGKf66LKiZJyB7z2AoSnnfdsff2xWWMZwY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FJZzZ1dqMYG5f7FC9PgmxiWq3iD4Ml6BNT0RlVBeUAoCWWqDnpnbNP27FonV+KMQrZiUnOsYDn6QRQLPwkkKzSrgcol+NMRA7c5LbSPNSjkv9Ob00WUkcqovFVswgdL/Z3MvMUyi3Y+AEJt1uvqaA1dFcjxeUsS86v3YM1iLgW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KLzz7ZDg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716226213; c=relaxed/simple;
+	bh=cBsM2N1jHlOPN0IreD5rHEkojD3zYmil1uPSW0Oyi6M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uvfsSfHYXskNro8H8oa9rViOE/Kou7gDuFj9x+pe3JvF5c9cN+ZZ4f59p/HNPIBz4VtvMIEukHa3f1Pl1YRzFDOXz+iiw6AYlpqEOsY4E6PF+Cb7afExxjrM8Y78oEiJQ+aUPdMXcygWUap1INDLTrm1pTxRSDUiBXGjHcMPstw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MQWERGqP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KniWNG/8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MQWERGqP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KniWNG/8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLzz7ZDg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716226061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MQWERGqP";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KniWNG/8";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MQWERGqP";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KniWNG/8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5F363228C0;
+	Mon, 20 May 2024 17:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716226209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3g+oeQpArsYWOlDSausMXlW95ZfMKvIKOo6W5/n3oc=;
-	b=KLzz7ZDgqn0J7XZX960fRcn+mXV9zLG4zdJGhf5MEn+4LEKYRSu0FQD9RZrFxcEpvkzflJ
-	46Dk/YIw753rJgefscAOqBR5NIZ1FBtzSbQ5OdojiYinFrMmR5dxPugs4ZWnl9W4wMyFWj
-	EXsaCddAwh0qSdj49RJJxDH+/BqDfTE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-398-RV6_kUaoMv26Y79GDCCgDg-1; Mon, 20 May 2024 13:27:38 -0400
-X-MC-Unique: RV6_kUaoMv26Y79GDCCgDg-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34da03e19beso7946800f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 10:27:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716226057; x=1716830857;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V3g+oeQpArsYWOlDSausMXlW95ZfMKvIKOo6W5/n3oc=;
-        b=fTvSXWyzgSyhnXEHm7Gy4nkwkoJI6hlX258J6FqT+ZkgsSOHCind52nUcmczi6ECmQ
-         8rinD9iF3IkEZQ+YYt8HejJZ4oONHFgaHmiNtOPoDQdtN1aBSUpYAWCSQpsx21/kAZEk
-         zypsnsSWAcc8ZiLSoTt6iH2zV8vSoiT20x+rPWpGYvl9TyD8c2gL5oRLjB404dBA/WM3
-         2wL4WNkHPQJyHHKVWR54/tVZX3Ev0Q0cIMS53YVLcbFXaeDvmie7+yB4S67enWNp3TZZ
-         DH9yFNwYRVC4tx0ljpnMsRhTfy69sYLrl7AMB4yMo1x8feGaHG348rXi2XQku7GMQPCL
-         2RwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVextjsu1Wfgq8T+0Y5jDELlMjOOjHWpgyDFFrVoeuveCDPzjHog/SqFVn1k8WeLccuiqu+tp5B1t2AAMfFTkSVYHWkal+I/nhEew+m
-X-Gm-Message-State: AOJu0Yy9brLcf6JPJG0k4pVseauXrR+anGwGhC2myKRxNkhbpCDCn8n6
-	tYali46fZB6tFD6/qn3aE7YcKxX8yHP9PkzYM4Cm7LWdUIJwGkARBTsBA3e3MvH9sJVmW+HNRwf
-	ZF2QrQa+cuLTcqbHMWSfs8UBSS6leyMMcqqF2nZeDT4kiYdabDvwFeufxnvmn8A==
-X-Received: by 2002:adf:ab1a:0:b0:351:4e42:c5f0 with SMTP id ffacd0b85a97d-3514e42c73emr20272321f8f.52.1716226057072;
-        Mon, 20 May 2024 10:27:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGu7wi4ZLZ2yvRdkdYrPpzRkpeebcFzF47KqCnjyY1JeHk/jzOQJr9+KzuhFk2uiAX8OmXa2g==
-X-Received: by 2002:adf:ab1a:0:b0:351:4e42:c5f0 with SMTP id ffacd0b85a97d-3514e42c73emr20272302f8f.52.1716226056700;
-        Mon, 20 May 2024 10:27:36 -0700 (PDT)
-Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-352f264c7f1sm9827066f8f.42.2024.05.20.10.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 10:27:36 -0700 (PDT)
-From: Danilo Krummrich <dakr@redhat.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	bhelgaas@google.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	wedsonaf@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	airlied@gmail.com,
-	fujita.tomonori@gmail.com,
-	lina@asahilina.net,
-	pstanner@redhat.com,
-	ajanulgu@redhat.com,
-	lyude@redhat.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>
-Subject: [RFC PATCH 11/11] rust: PCI: add BAR request and ioremap
-Date: Mon, 20 May 2024 19:25:48 +0200
-Message-ID: <20240520172554.182094-12-dakr@redhat.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240520172554.182094-1-dakr@redhat.com>
-References: <20240520172554.182094-1-dakr@redhat.com>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MbT9vfV4fhIRSbiw0ZC6R173lRwaCUu2Hmcj1y018H8=;
+	b=MQWERGqPK5msWZ+oGvqKi7Y0ImpsrNk+fbWyRF7r265R5BSNwlTWIB9ypDAUu+IWFo7NQe
+	8FyW+gWJC9iNBAxldDk9UVOmgp27E5dNYEke+/eskd7XI+Gy1TwVdtdKgRSVSA0J30A49o
+	V76XSKKXUsZsUxMio2cS8tWGVZs3BNE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716226209;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MbT9vfV4fhIRSbiw0ZC6R173lRwaCUu2Hmcj1y018H8=;
+	b=KniWNG/8jmqGj4Bb0B3h2Zw9b36h7Cxqp0WiyblPYFR7LaLhpYvbdrZeXnoHWVkExM7K+i
+	z2qn/R2Q4CESHpCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=MQWERGqP;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="KniWNG/8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1716226209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MbT9vfV4fhIRSbiw0ZC6R173lRwaCUu2Hmcj1y018H8=;
+	b=MQWERGqPK5msWZ+oGvqKi7Y0ImpsrNk+fbWyRF7r265R5BSNwlTWIB9ypDAUu+IWFo7NQe
+	8FyW+gWJC9iNBAxldDk9UVOmgp27E5dNYEke+/eskd7XI+Gy1TwVdtdKgRSVSA0J30A49o
+	V76XSKKXUsZsUxMio2cS8tWGVZs3BNE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1716226209;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MbT9vfV4fhIRSbiw0ZC6R173lRwaCUu2Hmcj1y018H8=;
+	b=KniWNG/8jmqGj4Bb0B3h2Zw9b36h7Cxqp0WiyblPYFR7LaLhpYvbdrZeXnoHWVkExM7K+i
+	z2qn/R2Q4CESHpCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 47CCB13A6B;
+	Mon, 20 May 2024 17:30:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id J+vsEKGIS2a/bQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 20 May 2024 17:30:09 +0000
+Message-ID: <ca41164e-b895-4a89-bd4e-4786bf25cf8e@suse.cz>
+Date: Mon, 20 May 2024 19:30:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] percpu_counter: add a cmpxchg-based _add_batch variant
+Content-Language: en-US
+To: Mateusz Guzik <mjguzik@gmail.com>, dennis@kernel.org
+Cc: tj@kernel.org, hughd@google.com, akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240520071407.201618-1-mjguzik@gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20240520071407.201618-1-mjguzik@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:email];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 5F363228C0
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
 
-From: Philipp Stanner <pstanner@redhat.com>
+On 5/20/24 9:14 AM, Mateusz Guzik wrote:
+> This was "percpu_counter: reimplement _add_batch with __this_cpu_cmpxchg".
+> 
+> I chatted with vbabka a little bit and he pointed me at mod_zone_state,
+> which does the same thing I needed except dodges preemption -- turns out
+> cmpxchg with a gs-prefixed argument is safe here.
+> 
+> ================ cut here ================
+> 
+> Interrupt disable/enable trips are quite expensive on x86-64 compared to
+> a mere cmpxchg (note: no lock prefix!) and percpu counters are used
+> quite often.
+> 
+> With this change I get a bump of 1% ops/s for negative path lookups,
+> plugged into will-it-scale:
+> 
+> void testcase(unsigned long long *iterations, unsigned long nr)
+> {
+>         while (1) {
+>                 int fd = open("/tmp/nonexistent", O_RDONLY);
+>                 assert(fd == -1);
+> 
+>                 (*iterations)++;
+>         }
+> }
+> 
+> The win would be higher if it was not for other slowdowns, but one has
+> to start somewhere.
+> 
+> v2:
+> - dodge preemption
+> - use this_cpu_try_cmpxchg
+> - keep the old variant depending on CONFIG_HAVE_CMPXCHG_LOCAL
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-This commit implements a basic mechanism for requesting and IO-mapping
-PCI BARs.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-To perform IO on PCI devices it is necessary to have memory mapped PCI
-BARs. Before mapping those, a region request should be performed so that
-collisions with other drivers can be avoided.
+I tried a stupid microbenchmark just doing percpu_counter_inc() in a loop
+and this cut the time by almost 50%.
 
-Since all the logic necessary to obtain the aforementioned resources are
-already implemented in C, Rust abstractions should use these interfaces.
-Hereby, the Rust implementation has to ensure that all resources are
-released again latest when the driver's remove() callback gets invoked,
-or earlier if the driver drop()s the PCI resource.
+As we discussed, should be also possible to make the fastpath inlined as the
+next step, to avoid the function calls that are stupid expensive with cpu
+mitigations.
 
-This can be achieved through the Devres container, which uses devres
-callbacks combined with Revocable to block access to the resource - in
-this case, the PCI BAR and its IoMem.
-
-A pci::Bar's Drop() trait shall deregister the memory region request and
-iounmap() the mapping. In case remove() is invoked before such a Bar is
-drop()ed, the Devres container shall ensure that access to the Bar is
-revoke()d (through Revocable) so that no UAFs can occur.
-
-Implement 'Bar', a container for requested and ioremapped PCI BARs.
-
-Implement the Drop() trait such that the memory request and IO-mapping
-get freed if Bar goes out of scope.
-
-Implement Deref() so that the container is transparent.
-
-Implement iomap_region() to create a Bar and have the result returned
-through a Devres container, ensuring that the resources are latest freed
-in the driver's remove() callback and access to the Bar is revoke()d for
-outstanding users.
-
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Co-developed-by: Danilo Krummrich <dakr@redhat.com>
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
----
- rust/kernel/lib.rs |   1 +
- rust/kernel/pci.rs | 123 ++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 123 insertions(+), 1 deletion(-)
-
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 606391cbff83..15730deca822 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -54,6 +54,7 @@
- 
- #[doc(hidden)]
- pub use bindings;
-+mod iomem;
- pub use macros;
- #[cfg(all(CONFIG_PCI, CONFIG_PCI_MSI))]
- pub mod pci;
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 323aea565d84..403a1f53eb25 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -5,12 +5,17 @@
- //! C header: [`include/linux/pci.h`](../../../../include/linux/pci.h)
- 
- use crate::{
--    bindings, container_of, device, driver,
-+    alloc::flags::*,
-+    bindings, container_of, device,
-+    devres::Devres,
-+    driver,
-     error::{to_result, Result},
-+    iomem::IoMem,
-     str::CStr,
-     types::{ARef, ForeignOwnable},
-     ThisModule,
- };
-+use core::ops::Deref;
- use kernel::prelude::*; // for pinned_drop
- 
- /// An adapter for the registration of PCI drivers.
-@@ -287,6 +292,104 @@ pub trait Driver {
- #[derive(Clone)]
- pub struct Device(ARef<device::Device>);
- 
-+/// A PCI BAR to perform IO-Operations on.
-+pub struct Bar {
-+    pdev: Device,
-+    iomem: IoMem,
-+    num: u8,
-+}
-+
-+impl Bar {
-+    fn new(pdev: Device, num: u8, name: &CStr) -> Result<Self> {
-+        let barnr = num as i32;
-+
-+        let barlen = pdev.resource_len(num)?;
-+        if barlen == 0 {
-+            return Err(ENOMEM);
-+        }
-+
-+        // SAFETY:
-+        // `pdev` is always valid.
-+        // `barnr` is checked for validity at the top of the function.
-+        // `name` is always valid.
-+        let ret = unsafe { bindings::pci_request_region(pdev.as_raw(), barnr, name.as_char_ptr()) };
-+        if ret != 0 {
-+            return Err(EBUSY);
-+        }
-+
-+        // SAFETY:
-+        // `pdev` is always valid.
-+        // `barnr` is checked for validity at the top of the function.
-+        // `name` is always valid.
-+        let ioptr: usize = unsafe { bindings::pci_iomap(pdev.as_raw(), barnr, 0) } as usize;
-+        if ioptr == 0 {
-+            // SAFETY:
-+            // `pdev` is always valid.
-+            // `barnr` is checked for validity at the top of the function.
-+            unsafe { bindings::pci_release_region(pdev.as_raw(), barnr) };
-+            return Err(ENOMEM);
-+        }
-+
-+        let iomem = match IoMem::new(ioptr, barlen as usize) {
-+            Ok(iomem) => iomem,
-+            Err(err) => {
-+                // SAFETY:
-+                // `pdev` is always valid.
-+                // `ioptr` was created above, and `num` was checked at the top of the function.
-+                unsafe { Self::do_release(&pdev, ioptr, num) };
-+                return Err(err);
-+            }
-+        };
-+
-+        Ok(Bar { pdev, iomem, num })
-+    }
-+
-+    fn index_is_valid(i: u8) -> bool {
-+        // A pci_dev on the C side owns an array of resources with at most
-+        // PCI_NUM_RESOURCES entries.
-+        if i as i32 >= bindings::PCI_NUM_RESOURCES as i32 {
-+            return false;
-+        }
-+
-+        true
-+    }
-+
-+    // SAFETY: The caller should ensure that `ioptr` is valid.
-+    unsafe fn do_release(pdev: &Device, ioptr: usize, num: u8) {
-+        // SAFETY:
-+        // `pdev` is Rust data and guaranteed to be valid.
-+        // A valid `ioptr` should be provided by the caller, but an invalid one
-+        // does not cause faults on the C side.
-+        // `num` is checked for validity above.
-+        unsafe {
-+            bindings::pci_iounmap(pdev.as_raw(), ioptr as _);
-+            bindings::pci_release_region(pdev.as_raw(), num as i32);
-+        }
-+    }
-+
-+    fn release(&self) {
-+        // SAFETY:
-+        // Safe because `self` always contains a refcounted device that belongs
-+        // to a pci::Device.
-+        // `ioptr` and `num` are always valid because the Bar was created successfully.
-+        unsafe { Self::do_release(&self.pdev, self.iomem.ioptr, self.num) };
-+    }
-+}
-+
-+impl Drop for Bar {
-+    fn drop(&mut self) {
-+        self.release();
-+    }
-+}
-+
-+impl Deref for Bar {
-+    type Target = IoMem;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.iomem
-+    }
-+}
-+
- impl Device {
-     /// Create a PCI Device instance from an existing `device::Device`.
-     ///
-@@ -319,6 +422,24 @@ pub fn set_master(&self) {
-         // SAFETY: By the type invariants, we know that `self.ptr` is non-null and valid.
-         unsafe { bindings::pci_set_master(self.as_raw()) };
-     }
-+
-+    /// Returns the size of the given PCI bar resource.
-+    pub fn resource_len(&self, bar: u8) -> Result<bindings::resource_size_t> {
-+        if !Bar::index_is_valid(bar) {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY: Safe as by the type invariant.
-+        Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.into()) })
-+    }
-+
-+    /// Mapps an entire PCI-BAR after performing a region-request on it.
-+    pub fn iomap_region(&mut self, barnr: u8, name: &CStr) -> Result<Devres<Bar>> {
-+        let bar = Bar::new(self.clone(), barnr, name)?;
-+        let devres = Devres::new(self.0.clone(), bar, GFP_KERNEL)?;
-+
-+        Ok(devres)
-+    }
- }
- 
- impl AsRef<device::Device> for Device {
--- 
-2.45.1
+> ---
+>  lib/percpu_counter.c | 44 +++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 39 insertions(+), 5 deletions(-)
+> 
+> diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+> index 44dd133594d4..80ec2ffc981a 100644
+> --- a/lib/percpu_counter.c
+> +++ b/lib/percpu_counter.c
+> @@ -73,17 +73,50 @@ void percpu_counter_set(struct percpu_counter *fbc, s64 amount)
+>  EXPORT_SYMBOL(percpu_counter_set);
+>  
+>  /*
+> - * local_irq_save() is needed to make the function irq safe:
+> - * - The slow path would be ok as protected by an irq-safe spinlock.
+> - * - this_cpu_add would be ok as it is irq-safe by definition.
+> - * But:
+> - * The decision slow path/fast path and the actual update must be atomic, too.
+> + * Add to a counter while respecting batch size.
+> + *
+> + * There are 2 implementations, both dealing with the following problem:
+> + *
+> + * The decision slow path/fast path and the actual update must be atomic.
+>   * Otherwise a call in process context could check the current values and
+>   * decide that the fast path can be used. If now an interrupt occurs before
+>   * the this_cpu_add(), and the interrupt updates this_cpu(*fbc->counters),
+>   * then the this_cpu_add() that is executed after the interrupt has completed
+>   * can produce values larger than "batch" or even overflows.
+>   */
+> +#ifdef CONFIG_HAVE_CMPXCHG_LOCAL
+> +/*
+> + * Safety against interrupts is achieved in 2 ways:
+> + * 1. the fast path uses local cmpxchg (note: no lock prefix)
+> + * 2. the slow path operates with interrupts disabled
+> + */
+> +void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
+> +{
+> +	s64 count;
+> +	unsigned long flags;
+> +
+> +	count = this_cpu_read(*fbc->counters);
+> +	do {
+> +		if (unlikely(abs(count + amount)) >= batch) {
+> +			raw_spin_lock_irqsave(&fbc->lock, flags);
+> +			/*
+> +			 * Note: by now might have migrated to another CPU or
+> +			 * the value might have changed.
+> +			 */
+> +			count = __this_cpu_read(*fbc->counters);
+> +			fbc->count += count + amount;
+> +			__this_cpu_sub(*fbc->counters, count);
+> +			raw_spin_unlock_irqrestore(&fbc->lock, flags);
+> +			return;
+> +		}
+> +	} while (!this_cpu_try_cmpxchg(*fbc->counters, &count, count + amount));
+> +}
+> +#else
+> +/*
+> + * local_irq_save() is used to make the function irq safe:
+> + * - The slow path would be ok as protected by an irq-safe spinlock.
+> + * - this_cpu_add would be ok as it is irq-safe by definition.
+> + */
+>  void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
+>  {
+>  	s64 count;
+> @@ -101,6 +134,7 @@ void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, s32 batch)
+>  	}
+>  	local_irq_restore(flags);
+>  }
+> +#endif
+>  EXPORT_SYMBOL(percpu_counter_add_batch);
+>  
+>  /*
 
