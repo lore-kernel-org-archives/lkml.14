@@ -1,79 +1,51 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from msa.smtpout.orange.fr (smtp-83.smtpout.orange.fr [80.12.242.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EB318C3B
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 07:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC6812B8B;
+	Mon, 20 May 2024 07:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716190888; cv=none; b=ZDYomcbh1fqw8w9Ia05yu+QkAwfPxJRt1eHkPtrOouBCWjNBUIVHYxW4lInQ3wWjBx1FfYIsgeXu+gASZHZnUr/kHvKJYzM6zjgErehGd/1kFMlB0Cm9pxb8TiQJaHhH2k5zmRre801DWQxKsemznrVeukoUmxNfk2iMtUSIfR4=
+	t=1716190940; cv=none; b=IrME58nnxlOKMfJ+qE3Q9qjBkj3sSz0+SZviaoXiq+iy17gn2DmVlQSnigcicT7pZI76QXQTbqhXuyTI4CcDji4gBui5aFEZnNW+qOwF11IJ+ElbUNc2hEVxcPxBM4+rmDkPxEZe2SOdskLlOJ5FfxiySknF5kQdBTkpx5slFIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716190888; c=relaxed/simple;
-	bh=G5RDRHDp8bHkhePtdbNcRht+dyNZhXMGcqFPvB99Cuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cWh2h25v+WbdNyGoPGM0GYjl52uR8/+ZzJ6VpO3NKNMU90A3NEPocyG1Xm7s2GIHi6kLFoBEbkt20rRhvsMb5LRfJ3IMfjlkfzulvs4nD84VjYd9W/cfUSGxJKi+/Q7vT/QkBqUbGETGD95Pe4M4rkZhas1Sbl1gXl1H7I6TuCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SIVHYJeh; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716190940; c=relaxed/simple;
+	bh=k4k9NEelRcoi98SI9g7103KMZ9H3Z/pFf+PgoWGfjy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HZscgJqH5i4WVKZFKzdtwfoMARRvkW/54r3Fozqle8EsssbqWA2bl4mbLjgL8BD33GaDE45Plx4wnHU8joE+fLvtRxTWgqt9VPTWxGbIAGW5uJ7hm5A8NEd/cY3MW2enk2yi5NzmFZpe1rcPZHRdgFJevQacmLO3chInj2uV3fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=t+8vRIjd; arc=none smtp.client-ip=80.12.242.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SIVHYJeh"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-572a93890d1so7692986a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 00:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716190885; x=1716795685; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6A/avYP5YPpm971N8IK0uubu89NMozFIaDiylX6PsHQ=;
-        b=SIVHYJehigN7Z+uGkDHc1JXmT3UA1QwdO0L4SKt5cjkYYu08ajuJUYcbokh6wQymlf
-         tPn/YOSql7kMgbv9Zkn7+vXUGGGPOzgEuNZjI6j/j7Xl3F+VChveElSxgTUxnzMZKMy/
-         qyMvMB5Jsw8xYWgnRzMl4et+c44SCilHajNjEPTtRxm1RjzRDkTyHv3cZel+7WsRxslU
-         rFkcnpgrSN329zStFn9cK6YN+dUTB/aa/zC3p0Q1ethr6BW4KS5H6eYaXMFRs3KXOwjN
-         76kAJGLny2od8PsfeV6Gdzq6dcdFRNUj1s9tC2iAmzLwyr82qu07fXYHhHJSBYnLbVG7
-         wJPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716190885; x=1716795685;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6A/avYP5YPpm971N8IK0uubu89NMozFIaDiylX6PsHQ=;
-        b=SAdZtRDYry4wXAQQvvsAJoi2alWk7g4gDGYxS+I6yjihIsdTHO+w7EBftbeA83nmvZ
-         uurRTa6CJ9vXj5uSGCB2UJLXi3/iSc1Q3ku9pzOH9eLDvCS7AFtp1zmqBjGEAG+4i7wk
-         5TGaoTzGKhon/FPvxTLtrW9x2R7zHNXvwQ1vP/+rhhPowngBUssou3By3I0GjwhdCWxH
-         Q1gXLvVX4Fq0MSdC5MuWKUP1UVcfa1bt2MH/Ky75q1rKeJfZEcqP32qgbsUyPjWTR3N+
-         ETZ5bkc1QbABkbksp8j2xUAb4IYWFeHIUNcPy5cumc5v2LlpYEWa7LpAIbwdlkCuN3cy
-         fJ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuvNJFFpq4VQdVNtBh66EETxb2YLzWDJ3MkO/00TiBPc0yWVJNOTujyD0yYJxhjb3J8kqawbPXPgjcp4l9mVlXJ93srYU2eM5+MYDp
-X-Gm-Message-State: AOJu0YxpzWmUZcMaaV8bfBcgrvNwx5+dMhtjYNcniIgg3cv3IdO6UCvG
-	VKrFFMa0uLVi8XGFCcR6od9tTzzyQpottHLjVba2QPYOiJE8uQn5WAS+RmNwVak=
-X-Google-Smtp-Source: AGHT+IGaGv6w5Ejo+3PCQdIkO7sIlmQZTkHvXrWEWEQy4bzPDzHGkbybTDIi2J4UNNkyIEUhf7BVeg==
-X-Received: by 2002:a17:906:4f83:b0:a59:ea34:fe0d with SMTP id a640c23a62f3a-a5a2d65ed4bmr2937020466b.47.1716190884722;
-        Mon, 20 May 2024 00:41:24 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a893a91b9sm754853166b.7.2024.05.20.00.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 00:41:24 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Olof Johansson <olof@lixom.net>,
-	arm@kernel.org,
-	soc@kernel.org,
-	Antoine Tenart <atenart@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] amazon: MAINTAINERS: change to odd fixes and Tsahee Zidenberg to CREDITS
-Date: Mon, 20 May 2024 09:40:13 +0200
-Message-ID: <20240520074013.9672-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240520074013.9672-1-krzysztof.kozlowski@linaro.org>
-References: <20240520074013.9672-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="t+8vRIjd"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 8xeqsglyjml3s8xersCxfy; Mon, 20 May 2024 09:42:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1716190930;
+	bh=bdxbRY6DhIfGliSzM5MbeLiBdRI38zgyGW9MM+5fHeE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=t+8vRIjdGyNISv2Dq+QABq/jhNPkpgpmtCbCrZAauIfXEEJEm4/kSoSCe2uw1oE9H
+	 k3jvy8TEzmnOPH2k5pjGrM89Pv3MKBvuG2rOC84uZ2NAdsMRR5iMI80IommRPUFKdT
+	 vs8xkqHkDt+1H7wfBfFej7bXLLGEYVu2CuLVmdf7wQlHMwd8L7VK5yTYB/gsbbVyXU
+	 whAvKBMETZ7KKN7ftm6kOqBjwohTVXGGvLcFhay5ypfK9OL1CRPJKQcWSR9/z+/Hp/
+	 FmEPifZ8kgskWWoj6sQP0Vz2HY/1t08Qq1JTvG7hDluDPgw93lVKDxHq6v26KtdeRb
+	 oO6h4KFyha2ew==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 20 May 2024 09:42:10 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Tedd Ho-Jeong An <tedd.an@intel.com>,
+	Kiran K <kiran.k@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	linux-bluetooth@vger.kernel.org
+Subject: [PATCH] Bluetooth: btintel_pcie: Fix the error handling path of btintel_pcie_probe()
+Date: Mon, 20 May 2024 09:41:57 +0200
+Message-ID: <692b4749f4267436363a5a8840140da8cd8858a1.1716190895.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,56 +54,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Last email from Tsahee Zidenberg was in 2016 [1], so move Tsahee from
-Amazon platform maintainers to credits (thank you for your contributions
-and maintenance!).  Stale maintainer entries hide information whether
-subsystem needs help, has a bus-factor or is even orphaned.
+Some resources freed in the remove function are not handled by the error
+handling path of the probe.
 
-The Amazon platform still has active maintainer - Antoine Tenart -
-however there was no maintenance activities coming from Antoine.  All
-my patches from last 4 years related to Amazon remained unanswered - no
-acks, no picks - so document the actual not active status of the
-platform by changing it to Odd Fixes.
+Add the needed function calls.
 
-[1] https://lore.kernel.org/all/?q=f%3Atsahee%40annapurnalabs.com
-
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Fixes: c2b636b3f788 ("Bluetooth: btintel_pcie: Add support for PCIe transport")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- CREDITS     | 4 ++++
- MAINTAINERS | 3 +--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Compile tested only.
+Maybe incomplete.
+---
+ drivers/bluetooth/btintel_pcie.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/CREDITS b/CREDITS
-index ea84fb373310..bdf592e0bd25 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -4367,6 +4367,10 @@ N: Haojian Zhuang
- E: haojian.zhuang@gmail.com
- D: MMP support
+diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
+index 5b6805d87fcf..d572576d0dbc 100644
+--- a/drivers/bluetooth/btintel_pcie.c
++++ b/drivers/bluetooth/btintel_pcie.c
+@@ -1280,17 +1280,17 @@ static int btintel_pcie_probe(struct pci_dev *pdev,
  
-+N: Tsahee Zidenberg
-+E: tsahee@annapurnalabs.com
-+D: Annapurna Labs Alpine Architecture
+ 	err = btintel_pcie_config_pcie(pdev, data);
+ 	if (err)
+-		goto exit_error;
++		goto exit_destroy_worqueue;
+ 
+ 	pci_set_drvdata(pdev, data);
+ 
+ 	err = btintel_pcie_alloc(data);
+ 	if (err)
+-		goto exit_error;
++		goto exit_free_irq_vectors;
+ 
+ 	err = btintel_pcie_enable_bt(data);
+ 	if (err)
+-		goto exit_error;
++		goto exit_free_pcie;
+ 
+ 	/* CNV information (CNVi and CNVr) is in CSR */
+ 	data->cnvi = btintel_pcie_rd_reg32(data, BTINTEL_PCIE_CSR_HW_REV_REG);
+@@ -1299,17 +1299,25 @@ static int btintel_pcie_probe(struct pci_dev *pdev,
+ 
+ 	err = btintel_pcie_start_rx(data);
+ 	if (err)
+-		goto exit_error;
++		goto exit_free_pcie;
+ 
+ 	err = btintel_pcie_setup_hdev(data);
+ 	if (err)
+-		goto exit_error;
++		goto exit_free_pcie;
+ 
+ 	bt_dev_dbg(data->hdev, "cnvi: 0x%8.8x cnvr: 0x%8.8x", data->cnvi,
+ 		   data->cnvr);
+ 	return 0;
+ 
+-exit_error:
++exit_free_pcie:
++	btintel_pcie_free(data);
 +
- N: Richard Zidlicky
- E: rz@linux-m68k.org, rdzidlic@geocities.com
- W: http://www.geocities.com/rdzidlic
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8193bd95c84c..3e1ce64801ef 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1958,10 +1958,9 @@ F:	drivers/soc/amlogic/
- N:	meson
++exit_free_irq_vectors:
++	pci_free_irq_vectors(pdev);
++
++exit_destroy_worqueue:
++	destroy_workqueue(data->workqueue);
++
+ 	/* reset device before exit */
+ 	btintel_pcie_reset_bt(data);
  
- ARM/Annapurna Labs ALPINE ARCHITECTURE
--M:	Tsahee Zidenberg <tsahee@annapurnalabs.com>
- M:	Antoine Tenart <atenart@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--S:	Maintained
-+S:	Odd Fixes
- F:	arch/arm/boot/dts/amazon/
- F:	arch/arm/mach-alpine/
- F:	arch/arm64/boot/dts/amazon/
 -- 
-2.43.0
+2.45.1
 
