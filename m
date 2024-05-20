@@ -1,87 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6011386C0
-	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 18:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEDB11184
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 18:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716231505; cv=none; b=TDDo994CRfXEk9uf5dprw9h+2T7LVJVM/GKrShkDapvbNrjJQnmYMf6tJIlm3/djr9Ev43YZ53L1VHuph6p6HaXtbqjQxQ5qzbO5MbBsdXtS89IRblvPpE850Wkeaes1yi9WKkvcgQAiNHct8F/uaVYSO8UUfSra93jz49ys9v8=
+	t=1716231534; cv=none; b=sWlUJ7c96ms1EYbnfTiHcYImGPQSjzPshlgjsf6HhK/xcUhCsxhBt1T2rzcrYPMIMzk3cxHxRiM8zqrxE7jIWLg81jA1OQRxyESWjk0VJGj96si4sngqCd1c/MxA/E2n2fR+NCvXaGA3Qt7V1LD/kyb1wpaODK2dwEAy/zbV6Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716231505; c=relaxed/simple;
-	bh=a+eA01vjVkP3G5nFgnuhnP1gKtaM1FSkoDTcoDq1BTs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XRaX34S3/EfcQbnsEu8C/I3Fm05Egn8M/qGQMbYLjLJngQ0VCpPCFoLwPmwOTZfUTLIHfz+P9T6qWKkFusQpl5pfNGDyLThwzSaZXezDm4MJ36BSGdRgwRSV/3LtPmYMUt5RASgf8P8LoCbSEpgkK05osGDvFUfgQPH6nmwJhq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RwwEU0bS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716231534; c=relaxed/simple;
+	bh=fBnCjpKJ7CF65HGWNGXJZSrAbDCCX00X0RQT571Lttc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gws6h/9KYOWh+S28/7Si6JgOurc8G3iLeKQdeYPd7H93OxNIZgGVjqDFcwlWKUO+7II0PhQYQNi9hvPPf9danYTmUr0jfHw3WKNR8vy1SKOcFhZj7RFRyP3gC9I0WIqtSssTmBJlbwMtPIZZ2AYSZLxrxCkX06+mLlnsrFQIQ1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bAPnp4Sp; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RwwEU0bS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716231502;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dl4+SLBeFPnriuBwYnryUMkurFVrv5hxlqLG9E31XsI=;
-	b=RwwEU0bSJXYp1EC+3hHFi7mgUhXR6wrvbRADnZyvXv6jzmagPROI+2dSbqIPY+RtOJaahz
-	FWeh0KRNZV/VComDi23cFoJPw8EErJnGLsvtl3Sq/OqbWHydWO4DGkdIRFOspg3nVRVfTr
-	3UuRInXhsifx84lkcEZqAAROOro7KZE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-641-tnOtF_v7M-ide5nKun1KlQ-1; Mon, 20 May 2024 14:58:19 -0400
-X-MC-Unique: tnOtF_v7M-ide5nKun1KlQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51AFA101A525;
-	Mon, 20 May 2024 18:58:18 +0000 (UTC)
-Received: from dba-icx.bos.redhat.com (prarit2023-dbaguest.khw.eng.bos2.dc.redhat.com [10.26.1.94])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2BDBA200A78F;
-	Mon, 20 May 2024 18:58:18 +0000 (UTC)
-From: David Arcari <darcari@redhat.com>
-To: linux-pm@vger.kernel.org
-Cc: David Arcari <darcari@redhat.com>,
-	Len Brown <lenb@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/power turbostat: make the '-n' command line argument work in all cases
-Date: Mon, 20 May 2024 14:57:49 -0400
-Message-ID: <20240520185749.1404283-1-darcari@redhat.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bAPnp4Sp"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-43e0a5e3c08so20529201cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 11:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716231531; x=1716836331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=df0l1z5z3FCtw3Ch204FxFA5rR9YqNy64rwyV2fw88o=;
+        b=bAPnp4SptxmoFbRkuGl/PzzDsgHaUGsjy39ofUdnmmyevTSzfewDziz6/Of40xjtzg
+         l35Dfp1U9E8PyIfqd2SkXywtz6vesOwcDLdGFmRNBawkiqpzo+7cDVsWeCvKAfoZqH43
+         BbIm6em4fSGrDT4pEy3jOT22IXwqXiod+TU1I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716231531; x=1716836331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=df0l1z5z3FCtw3Ch204FxFA5rR9YqNy64rwyV2fw88o=;
+        b=xUWSt1TSqIKAMR8cF0YjNtZcEGQZQeWcI2zGEdO5T/AJbfeYwq0OBa3raKGo8mCsE1
+         d3SNOdeQQCDjkDFeC6cl3IiMn9q5/Vc7jmPkQU8S59vcJn9SvT+Bfzi1Q770Wmmw//QJ
+         6X4jttdhj7qeiIxjvhkPKzCaCtgv9NTFkDvURYgBOrjfCYYLxgQWAMMGiQqhkHexOuay
+         w7CV4yqMQulSBKCrup0xrL9zGt+SiNHwHrNpJO7T8wkYeuWr9nQ6XmwPT0TsbTAdTH8J
+         tGiqWNzSfFXaG2gioScNPSwDJpHChwDne60q/cxhd843slCZlW+q5Z35OGBYkZflwe6T
+         sInA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj7qFL4ZhOobaZiqepI+iOETsJ3Z2JvuQ1ouOdg8r1RylXQvc24Yvk3zkOyLKw9xg7kaknsPxTOvJhv22n3xKSJQ3iyAkcoC3S003k
+X-Gm-Message-State: AOJu0YzavS8w4f2i4eBxjnXWiWmP3NZy4BKbCGJZXpYarmtH4e+WajvQ
+	DBIunE9YRc2L9TfQytyM6Ix0XGgUF2zTxOC+w9Q5jxCl99wfbFsHdVk1BMtJ4049eGYaoSO9xpM
+	=
+X-Google-Smtp-Source: AGHT+IHfKwfNpdR4WsLAPFOHhpvYawTecsP76HEnxHAia+Dz0c18WUMloAFv0aUVYAd3LFsz4VnYIA==
+X-Received: by 2002:a05:6214:4598:b0:6aa:cd1d:1fcc with SMTP id 6a1803df08f44-6aacd1d24a1mr37224936d6.56.1716231531170;
+        Mon, 20 May 2024 11:58:51 -0700 (PDT)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a35c7e4cbbsm52502536d6.128.2024.05.20.11.58.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 May 2024 11:58:50 -0700 (PDT)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-43e14f0bd75so489041cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 11:58:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWKFgMb4Yacl+to9jc+cgT/PlEPtw+XMnOe/fSHrd/HRJzi/bs9raQDAUBynQrefM+xnqdLvPYHs/BXTr8grMZtsfme12Sk/HFdNGre
+X-Received: by 2002:a05:622a:1918:b0:43d:a002:b with SMTP id
+ d75a77b69052e-43f7a91b195mr5561141cf.9.1716231529626; Mon, 20 May 2024
+ 11:58:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+References: <20240507230440.3384949-1-quic_abhinavk@quicinc.com>
+In-Reply-To: <20240507230440.3384949-1-quic_abhinavk@quicinc.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 20 May 2024 11:58:33 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Us-459kG-h1xT2+ffuSGuTLJ-UrJBD-5seRh4jAeHxmQ@mail.gmail.com>
+Message-ID: <CAD=FV=Us-459kG-h1xT2+ffuSGuTLJ-UrJBD-5seRh4jAeHxmQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: remove python 3.9 dependency for compiling msm
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, seanpaul@chromium.org, 
+	swboyd@chromium.org, quic_jesszhan@quicinc.com, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In some cases specifying the '-n' command line argument will cause
-turbostat to fail.  For instance 'turbostat -n 1' works fine; however,
-'turbostat -n 1 -d' will fail.  This is the result of the first call
-to getopt_long_only() where "MP" is specified as the optstring.  This can
-be easily fixed by changing the optstring from "MP" to "MPn:" to remove
-ambiguity between the arguments.
+Hi,
 
-Signed-off-by: David Arcari <darcari@redhat.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- tools/power/x86/turbostat/turbostat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, May 7, 2024 at 4:05=E2=80=AFPM Abhinav Kumar <quic_abhinavk@quicinc=
+.com> wrote:
+>
+> Since commit 5acf49119630 ("drm/msm: import gen_header.py script from Mes=
+a"),
+> compilation is broken on machines having python versions older than 3.9
+> due to dependency on argparse.BooleanOptionalAction.
+>
+> Switch to use simple bool for the validate flag to remove the dependency.
+>
+> Fixes: 5acf49119630 ("drm/msm: import gen_header.py script from Mesa")
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> ---
+>  drivers/gpu/drm/msm/registers/gen_header.py | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 98256468e248..8071a3ef2a2e 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -7851,7 +7851,7 @@ void cmdline(int argc, char **argv)
- 	 * Parse some options early, because they may make other options invalid,
- 	 * like adding the MSR counter with --add and at the same time using --no-msr.
- 	 */
--	while ((opt = getopt_long_only(argc, argv, "MP", long_options, &option_index)) != -1) {
-+	while ((opt = getopt_long_only(argc, argv, "MPn:", long_options, &option_index)) != -1) {
- 		switch (opt) {
- 		case 'M':
- 			no_msr = 1;
--- 
-2.44.0
+FWIW, it looks like the commit this is fixing is now present in
+Linus's tree. Is there any plan to land this fix? It would be nifty if
+it could somehow make it in time for -rc1 so I don't need to track
+down this patch every time I need to build a subsystem tree for the
+next several weeks...
 
+-Doug
