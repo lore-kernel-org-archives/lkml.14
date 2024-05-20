@@ -1,87 +1,114 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15061224D7;
-	Mon, 20 May 2024 10:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0714D59E;
+	Mon, 20 May 2024 10:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716199932; cv=none; b=ifmvggwdRpFfW8TSi3I0UezfU20DuwpQ7KrwuvprVt1A1q6HZd05SPfFR46V44Ri8LxOG5y6TlBFcwRiAL0wi/ntTnx19XHW/szl48GixoRBxxd1zGsfJ/yyJkcyn/xuBvB2ZpwvKaWNXHJ7jekfC7nArURrQCT0p6q1lsThICY=
+	t=1716199939; cv=none; b=UGpP1wDfaH1wYezH9fpZnDbnZOU2q/TLTPexmhZXC77PgV0YuYrph3Y/vdcKxBPM/h0O4xwX/hRkTwN2z1N43JB4tpxDPZXnN4awZ0EFAjsCTeRZ3xRFSXxE8ju5J6HmPF3GqGdu7dk9Hvz71OJt9RnPsDNBDgL/1evz3eioCAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716199932; c=relaxed/simple;
-	bh=6NDH0z522me5vrgmflzfx3WQmnMcDdrAZ53MUWxQv/4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=g19ZYwiAKNwQcocUsUqqusmbvvBGGUZMTlPxQ9lP6OUvvusEP0h/168aKMhcvpSyuCi+LNIOIU2HMeNAF4n9SZKKVodMipBQBf4bAOT5UbZwhqag0xMZs7Kg+NYDXfw8akkmy+bbs8htezLh2ysWVBecdJayuGqoNV6vAsu/0U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3RKlVEnw; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716199939; c=relaxed/simple;
+	bh=t8JHFIczAcdCAF9OJRqKZg4eqdcnQTsX+a1jEg1CWjs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V0bvvkD2MlmAQ+So/0/OMWM4VUzMVr0+kJkhCxazUVBcaJk8Ts1pPjR1/UUy2f+8ocrfo4BleyQr43DRoIiR5XG+dvpR+3dqkFexZStm1y5poekb36Rpc4HdXNHXwyBKrEVMGlX6B+o7JHAyZKQ2LyLHUmQ/aXUvMrS077oQdn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BRKsI0cZ; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3RKlVEnw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716199929;
-	bh=6NDH0z522me5vrgmflzfx3WQmnMcDdrAZ53MUWxQv/4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=3RKlVEnwwt+L5N6iv4pr5sMiBA1t3K7kWgvqTEz2d1rPQs0u9QxBIfxWjsU5Ch537
-	 MwoEupaZcfEH4C6n5h8R0IDoqxWmROmYlaHoRlRJ7wjPrBZ/Q2kUZEOg5xMLmKHsni
-	 LVSNEE08mvwsn0Jen6ElZtG6U57kCmUC11S4ghbAqW0cEyQAuYpJesHhj8ADRfXdR4
-	 5qHAg0a9Wh0ytta1OEjeFBngPVBUthhT1DGluv2H5NzRfI/2ci45MZdCBWuUId4/nQ
-	 TlCXVJzXpd2Jo6UUexOJwg2S72A7G0xA08/Z8OG9HNea6u1utU6oHEu+C8h44MZUUM
-	 Ah+2Y+6LS3jtA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9B0B037809D1;
-	Mon, 20 May 2024 10:12:08 +0000 (UTC)
-Message-ID: <cf8c87fe-7a4f-423f-9c97-3759eeee4894@collabora.com>
-Date: Mon, 20 May 2024 12:12:08 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BRKsI0cZ"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44KABrbs112056;
+	Mon, 20 May 2024 05:11:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716199913;
+	bh=l9dQQBkoaq18ik/IFSgRjGWwiw8uydoqC4ckZ4WqZ90=;
+	h=From:To:CC:Subject:Date;
+	b=BRKsI0cZq6HCnyscELq36UuCvjbSVyTFhfsbXze2JJOOMDwsMnwzHzishae6f6Gvv
+	 O/NsXbH0Jd9ZVRCwV9HANhmb9gQdioX8vBbQRwpnNMQha/5Zn9LPW3qMB4ajhQsCFn
+	 mpyB6ZlfwERhWFx+h/aBs2fBBqZLhXBD3Wj9NRR8=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44KABroq025278
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 20 May 2024 05:11:53 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 20
+ May 2024 05:11:53 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 20 May 2024 05:11:53 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44KABnjS060604;
+	Mon, 20 May 2024 05:11:50 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <danishanwar@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v2 0/3] Add PCIe DT support for TI's J784S4 SoC
+Date: Mon, 20 May 2024 15:41:46 +0530
+Message-ID: <20240520101149.3243151-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] arm64: dts: mediatek: mt8365: use a specific SCPSYS
- compatible
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- MandyJH Liu <mandyjh.liu@mediatek.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Alexandre Mergnat <amergnat@baylibre.com>
-References: <20240518211159.142920-1-krzysztof.kozlowski@linaro.org>
- <20240518211159.142920-2-krzysztof.kozlowski@linaro.org>
- <f42ef151-6eee-418f-91e1-5ac08d161119@collabora.com>
- <2cc638ca-0add-4c8c-b844-606e22dbd253@linaro.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <2cc638ca-0add-4c8c-b844-606e22dbd253@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Il 20/05/24 12:03, Krzysztof Kozlowski ha scritto:
-> On 20/05/2024 11:55, AngeloGioacchino Del Regno wrote:
->> Il 18/05/24 23:11, Krzysztof Kozlowski ha scritto:
->>> SoCs should use dedicated compatibles for each of their syscon nodes to
->>> precisely describe the block.  Using an incorrect compatible does not
->>> allow to properly match/validate children of the syscon device.  Replace
->>> SYSCFG compatible, which does not have children, with a new dedicated
->>> one for SCPSYS block.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> Technically, that's not a SCPSYS block, but called SYSCFG in MT8365, but the
->> meaning and the functioning is the same, so it's fine for me.
-> 
-> So there are two syscfg blocks? With exactly the same set of registers
-> or different?
-> 
+Hello,
 
-I'm not sure about that, I don't have the MT8365 datasheet...
+TI's J784S4 SoC has two Gen3 x4 Lane PCIe Controllers. This series adds
+the necessary device-tree support to enable both PCIe instances in Root
+Complex mode of operation by default. The device-tree overlay to enable
+both instances in Endpoint mode of operation is also present in this
+series.
 
-Adding Alexandre to the loop - I think he can clarify as he should have the
-required documentation.
+v1:
+https://lore.kernel.org/r/20240129114749.1197579-1-s-vadapalli@ti.com
+Changes since v1:
+- Rebased series on linux-next tagged next-2024020.
+- All dependencies mentioned in v1 series have been met. This series has
+  no further dependencies for functionality.
+- Added "pcie0_ctrl" and "pcie1_ctrl" nodes within the System Controller
+  node (scm_conf). This enables reusing the existing
+  "ti,syscon-pcie-ctrl" property without having to map the entire System
+  Controller region for configuring the PCIe specific registers within
+  "scm_conf". This change is also done in the "overlay" file in patch
+  3/3 w.r.t. providing the phandle to the pcie0_ctrl and pcie1_ctrl
+  nodes to the "ti,syscon-pcie-ctrl" property in the overlay.
 
-Cheers
+Test Logs:
+1. PCIe0 and PCIe1 in Root Complex Modes of operation with an NVMe SSD
+connected to the PCIe0 instance and the Read Performance measured with
+hdparm command:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/96c4ca37dd855120516ccdc298548dc6
+2. PCIe0 Endpoint Mode functionality verified with the overlay. Logs of
+the RC enumerating PCIe0 as an Endpoint:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/01b6fb0c9494ab76607b574a728b84da
+3. PCIe1 Endpoint Mode functionality verified with the overlay. Logs of
+the RC enumerating PCIe1 as an Endpoint:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/e844ac92d56131cbb2c134fab621b1e6
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (3):
+  arm64: dts: ti: k3-j784s4-main: Add PCIe nodes
+  arm64: dts: ti: k3-j784s4-evm: Enable PCIe0 and PCIe1 in RC Mode
+  arm64: dts: ti: k3-j784s4-evm: Add overlay for PCIe0 and PCIe1 EP Mode
+
+ arch/arm64/boot/dts/ti/Makefile               |  7 +-
+ .../dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso  | 79 ++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      | 46 +++++++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 94 +++++++++++++++++++
+ 4 files changed, 225 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-pcie0-pcie1-ep.dtso
+
+-- 
+2.40.1
+
