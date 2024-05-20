@@ -1,98 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2BF1369BA;
-	Mon, 20 May 2024 21:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876581847
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 21:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716241139; cv=none; b=YfLcLKu6pVlvYHmqVNl/1q31IF1T29iKzYklvmKzmpOTT8d9eDGsFJ1gBEtgtIsPs80SJJGzNGiI5HPD/02sEfXitZm9kKQD/Woe2zi8kjHMvY5J2ZoJKf4Nn245TdDv7X5NM/KDDML1Ln6UT2neXhAMk4NrlSXltZqNPfcnXsk=
+	t=1716241585; cv=none; b=qblIjevqen4BT1hTb5fFK3f8CGA6N2lzPSgdYfGnBGwrNJzVis5V77z71xVbYL0vJvvrOrhIQWJxlSblVuI72CwvU3oVRqmQ8ezoYHASVmT3yAGC4MkCWOKbFFxS2WfDz+SitBSXBGDvcl2b8hR/Hhs6Fz01sT/ir4P1kDYUnNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716241139; c=relaxed/simple;
-	bh=yw2rCIrCQibFXCP4yX81inyprqmfwEEpDAwGlUMhIJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ci+av9u+G1frLXKJ5qVnCZn2WZa6z26euidktkhQGA9DGla6n1vlspwOCRI/cDPKWku6sxjc/ATuW+QXcQ/tyhvam7frLQ7cMHHSoHJikdAbnvi1tKAsaJzx81dS7R6IcYLFTLdb03Q1EZ7oSbKjIM/86MGz4K9AGBDKESbyTlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZUHisKTI; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716241585; c=relaxed/simple;
+	bh=KQDTWd1zWt7BnRrAMEwqQyxOs0X2hSXknq8dCRM1SEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BpZ3YoZUvCSAAm4c9HatazPXplDC+lXqesEfr1dypRKbzJijtE49ID/xLPe9i0gF/UPn5beTNgXgo/vo3OVt126znXMd190svFDWUOsW1SPqjkF/az2JnFR2IUQqC0YCF/B0U+v7MSi/1VoyaJa+09r3sJ1pXqPLSv155y0HVoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A1JjLReq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZUHisKTI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716241138; x=1747777138;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yw2rCIrCQibFXCP4yX81inyprqmfwEEpDAwGlUMhIJY=;
-  b=ZUHisKTIz38vSvQ1ClUt9pFSyv5xd4wDlQ1p9p9CV86gh/zCyt4SAEJV
-   WG6FL85exbt8/erL7IslWt/w5wE54dsemDwLgb6CLbU0wq8mtKGYLL5wC
-   WPVDRvjfv+76uiZY/o5caImCuhpXqDR7Nw6ACsrj2DLF7DxStCf0DX7dC
-   Oc2jMYDb6NO73vuHNmW+qZVTX4ibbB+NT2Ytu/6bYxMBmZV31TouvEw8i
-   1FsRokfPh66har7CmuSjCC7BBeyL3CDNOPFq8lb6LvPOJPOrBCeZd4RKM
-   k4xtn58cNmtSk4Kes+JKvQPuu1tlXbEphkTjSvOiE28k/VhQVHHxdhe+d
-   g==;
-X-CSE-ConnectionGUID: hn5TJ6scSuSC/ZAqkwPcrA==
-X-CSE-MsgGUID: GZFCZkNVSd6yIsOQFEwy/A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12585216"
-X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="12585216"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 14:38:56 -0700
-X-CSE-ConnectionGUID: DGQ7yuvzRpeP50GVaMCv6w==
-X-CSE-MsgGUID: 0MqdF6MhR2ehoTcJGZj5ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,176,1712646000"; 
-   d="scan'208";a="70084551"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.125.109.51]) ([10.125.109.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2024 14:38:55 -0700
-Message-ID: <c683b42c-f75c-427e-b6b0-66babce9b55e@linux.intel.com>
-Date: Mon, 20 May 2024 16:31:31 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A1JjLReq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9eZPpYZJ8iy/NNjYCCupfftHLCCO8p5oJKHb/HLE+Lg=; b=A1JjLReqArNhLPm0IIoqbg9xfF
+	AAobZTEtxfDYYQiD2EQ3E8+dbyajyX1LHfqBclnDgPJ5Ev9fv9I2QFGk6c/vjb4as08937mjvgbcQ
+	9SmFqFA9k50XRg+mId9dCmHRGStY4WTiWfiMNME1E5QMMXoANXUzdCKjFs68ssglKRnYjmyJNrpSc
+	TQMQbTY6wdj7JPGDfnlj/JbbZUMIx0RW9sd0GgYPUvuwuNcdYJGRB+jZgMq9niLtSu6Jyw8GBRPqt
+	r2HmQWuHeWgbZzn281FWOIM2S5AC1+2/lxxqsRoDYKQPm6VReigPeMZvaemAf7vdeGvV0OYehp/S0
+	JaLGg3mA==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s9Apo-0000000GPNJ-40T3;
+	Mon, 20 May 2024 21:46:20 +0000
+Date: Mon, 20 May 2024 22:46:20 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, muchun.song@linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Convert __unmap_hugepage_range() to folios
+Message-ID: <ZkvErLsj8Ngj4qM3@casper.infradead.org>
+References: <20240520194749.334896-1-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] ASoC: topology: Constify an argument of
- snd_soc_tplg_component_load()
-To: Mark Brown <broonie@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: lgirdwood@gmail.com, tiwai@suse.com, cezary.rojewski@intel.com,
- peter.ujfalusi@linux.intel.com, yung-chuan.liao@linux.intel.com,
- ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
- srinivas.kandagatla@linaro.org, bgoswami@quicinc.com, daniel.baluta@nxp.com,
- linux-sound@vger.kernel.org, alsa-devel@alsa-project.org,
- sound-open-firmware@alsa-project.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <f2f983e791d7f941a95556bb147f426a345d84d4.1715526069.git.christophe.jaillet@wanadoo.fr>
- <1fb69d24-03af-4742-9f44-5a93704f5cfb@sirena.org.uk>
- <b736e11e-430a-462b-898a-d5e1dcf7f74a@wanadoo.fr>
- <baf1789a-a573-470f-b816-ca9bb0d7f299@sirena.org.uk>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <baf1789a-a573-470f-b816-ca9bb0d7f299@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240520194749.334896-1-vishal.moola@gmail.com>
 
+On Mon, May 20, 2024 at 12:47:49PM -0700, Vishal Moola (Oracle) wrote:
+> Replaces 4 calls to compound_head() with one. Also converts
+> unmap_hugepage_range() and unmap_ref_private() to take in folios.
 
+This is great!
 
-On 5/20/24 08:24, Mark Brown wrote:
-> On Sat, May 18, 2024 at 10:34:33AM +0200, Christophe JAILLET wrote:
->> Le 14/05/2024 à 12:21, Mark Brown a écrit :
-> 
->>> As mentioned in submitting-patches.rst when submitting a patch series
->>> you should supply a cover letter for that patch series which describes
->>> the overall content of the series.  This helps people understand what
->>> they are looking at and how things fit together.
-> 
->> Ok.
->> I usually do, but I thought that the subjects were self-explanatory enough
->> in this case.
-> 
->> Do you want me to resend?
-> 
-> It's fine this time.
+>  void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>  			    unsigned long start, unsigned long end,
+> -			    struct page *ref_page, zap_flags_t zap_flags)
+> +			    struct folio *ref_folio, zap_flags_t zap_flags)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	unsigned long address;
+>  	pte_t *ptep;
+>  	pte_t pte;
+>  	spinlock_t *ptl;
+> -	struct page *page;
+> +	struct folio *folio;
+>  	struct hstate *h = hstate_vma(vma);
+>  	unsigned long sz = huge_page_size(h);
 
-no issues with
-https://github.com/thesofproject/linux/pull/4993, so
+I would appreciate some further cleanup ...
 
-Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+	size_t sz = folio_size(folio);
+
+I think there are further cleanups along those lines, eg
+pages_per_huge_page(), hugetlb_mask_last_page(), huge_page_mask().
+
