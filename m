@@ -1,49 +1,65 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDC912E6A;
-	Mon, 20 May 2024 19:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BF154735
+	for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 19:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716234837; cv=none; b=kK0/RM7J8BuFrnRtKzqOK8Exa1+XdkyI5Tjw+nWA6HAcmYpzSlIQQ9JkHJ7/meF9sCz0MMQU6Wz7vdOPQSu5XESgOlMQN4JsqYVuHKnmXnb7bS9mqWDVnW/JosIkFb3EnuN9j58DUMvnWzYMn0t6ZQX7MMtzPpOf97ncNCYK974=
+	t=1716235043; cv=none; b=RI5yiWsGeZ4LAwK79BQ24YIwZ9WvHmv6i6FCx6VuJcXbxU3JuSLLJ1nwLFSiHMgcStdiK4Od4Nly3+gsephb0qxtvDfGwV2yqMvNsyQg/8IL+3ESf7lA5XCQM8dmCq6QNo6y+4m7U+PHyXRwA2KnJq3DGWlcPypop2uB1x6Idlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716234837; c=relaxed/simple;
-	bh=QxwadSFkxmRXFr0xxxHIn2pF5xPts2dxqh+DBylu7mQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rbHgP0hKbo1XOQCIrVUoYgKEq02bUpwsaD5aSi4EPVUiTsu9pm+MJ2xDcui8eTyjJIRewOE2hhs6l6bracFgzs9NaexTUP6Wd3rTrhZwkdkW7Rmcxumd23NHMSXpCpvpH56nTc/WS9+ZFepZ1pnQyPBVDGGDRUhVX7ZtF3sZwsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VhUZLS06; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716235043; c=relaxed/simple;
+	bh=KbdZiWU/yJLATN8W3LnKGoV4prfPNDWGjBK11wMs1JQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=duMZaYYBmmiGn4yuRMLwSD0PZGDVMoMSx2b5itEuCHifGKxN1J7vCE9hLaAY3JLKpwZ4Y9T2kWdatds6ytY/IZahBc5pjjP34hxAsLHk+L5CUJ+yQa8w+vuLn0YmwCCa1RiKlGldkTtWQFJrbCY9zMYRSWlkYRPC42luxovRn24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DIyl5bCw; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VhUZLS06"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716234833;
-	bh=QxwadSFkxmRXFr0xxxHIn2pF5xPts2dxqh+DBylu7mQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VhUZLS06j1YdBnQbzv56wlvUR5HQvP/1AvkKKjbuDbLyWBUR182YzrNpA53jj0242
-	 /XfRVzmz2NPwJEqJ4wd3q1geEWlr3zMB3hKvXqSCwwLwldwYxWeCJt72l0fQ3kneEc
-	 vlqrJdesHy/9tfTO5izTPOAmQKFQymdSt2ocrpWD2o1Al0Tds8TQgKcOziaLorI9au
-	 CZ5KW2RBAZAHfCsmQjPa2KhipqUUce1J40a4H6aU1WN+tiM6K7JL5qB7Ly8DW+u324
-	 disEcT1fkvvegQKdSYQvjt9vIAhmHagZsTdVqE5TtD8nBypirSCIvwOI1ug//FF0tI
-	 aZUYxFQM7Ln4Q==
-Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 317083780BFE;
-	Mon, 20 May 2024 19:53:52 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: kernel@collabora.com,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DIyl5bCw"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ed0abbf706so18495405ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 12:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716235041; x=1716839841; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fnF+Mknkz+zd02jEEOQ0KqrK7Y/NJrOjG6yc2dtSwvk=;
+        b=DIyl5bCwFY4xYezb6VcO7A41HhBIIAScDKa+Ji8udTTheqpG61hp2bRW9zrMqWkXCh
+         fZkKRG0pIYTwNxgXDOYKBA1YuR9Gq4b5coxSbQiyWvE/19Q6yaQZbkgHAiFOL8HVHxDZ
+         jhbnqToHFKJ2PMLH21pY2o9DAUkToLUQsSB7A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716235041; x=1716839841;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fnF+Mknkz+zd02jEEOQ0KqrK7Y/NJrOjG6yc2dtSwvk=;
+        b=kMx0MhgLG77B7YAg6TX4RPVY55BlfN82yDNhB53gWkw2k9PYRdy4FlG47A4Q3tIZzq
+         c6W1EMwYOr3LGZbfgVBtI5o6Avsrf/s4c8xl03Ha1ghfnp17zhx8SNZvm+9mkDiPZQd6
+         O5Wm/oBwEBezWLIe2Del6ruVYRJqMKhEjexnTkBQK3FCeoDeCxDI+NZGe+Oelx9llngV
+         xn8c/2HjaQrOhxNBgV+sNanKR66l3LUNZqFJSpdTVrQMdk9oH12Ar1uvkf7mfX1j3CeU
+         Ag8IlbrOi7HaVM0viPdZuIlie9dgzTIufiUOdlp8bwMLunfKDkK/MWz8y5TbBWUHJ5k0
+         QQCw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6ugl9zWoHRNRD/YIVzZkmmAtybp9yJ1Ggnw2faxtEbfCah/qiAkYKToIPNIIM29AudMJurqB6WTXxwTy8YJuxszVWcteC1jD0tECi
+X-Gm-Message-State: AOJu0YzAYV2wFXE5UP0Vnxy1Dv5qfIuKrekwxrb4Oe1RMFQbTgFTTg5t
+	D+nHSCgaYhhSVBtOVnHl/kNWz45i71Mpu7XNRIHqbmMeAflNJNMllvuPSBfK4WP+C3JB+xlUkEI
+	=
+X-Google-Smtp-Source: AGHT+IFLOJWoQjDyhCGKYBlSnHVGpAwxx4U7rvTLHLxQ1kl65e9qSyMQupncqTXqrJ2K/OEY04WwLw==
+X-Received: by 2002:a17:903:2350:b0:1f2:f854:f54 with SMTP id d9443c01a7336-1f2f8541142mr66290255ad.62.1716235041064;
+        Mon, 20 May 2024 12:57:21 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:cd20:112a:72ca:4425])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c136d13sm207501405ad.242.2024.05.20.12.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 12:57:20 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Stephen Boyd <swboyd@chromium.org>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: mm: check return values
-Date: Mon, 20 May 2024 11:52:48 -0700
-Message-Id: <20240520185248.1801945-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
+Subject: [PATCH] kbuild: scripts/gdb: Replace missed $(srctree)/$(src) w/ $(src)
+Date: Mon, 20 May 2024 12:56:52 -0700
+Message-ID: <20240520125648.1.If6cc3e73812d5f66aee58d335bfc9439c0ad9285@changeid>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,30 +68,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Check return value and return error/skip the tests.
+Recently we went through the source tree and replaced
+$(srctree)/$(src) w/ $(src). However, the gdb scripts Makefile had a
+hidden $(srctree)/$(src) that looked like this:
 
-Fixes: 46fd75d4a3c9 ("selftests: mm: add pagemap ioctl tests")
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+  $(abspath $(srctree))/$(src)
+
+Because we missed that then my installed kernel had symlinks that
+looked like this:
+
+  __init__.py ->
+    ${INSTALL_DIR}/$(INSTALL_DIR}/scripts/gdb/linux/__init__.py
+
+Let's also replace the midden $(abspath $(srctree))/$(src) with
+$(src). Now:
+
+  __init__.py ->
+    $(INSTALL_DIR}/scripts/gdb/linux/__init__.py
+
+Fixes: b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src) for source directory")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- tools/testing/selftests/mm/pagemap_ioctl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
-index 2d785aca72a5c..bcc73b4e805c6 100644
---- a/tools/testing/selftests/mm/pagemap_ioctl.c
-+++ b/tools/testing/selftests/mm/pagemap_ioctl.c
-@@ -1567,8 +1567,10 @@ int main(int argc, char *argv[])
- 	/* 7. File Hugetlb testing */
- 	mem_size = 2*1024*1024;
- 	fd = memfd_create("uffd-test", MFD_HUGETLB | MFD_NOEXEC_SEAL);
-+	if (fd < 0)
-+		ksft_exit_fail_msg("uffd-test creation failed %d %s\n", errno, strerror(errno));
- 	mem = mmap(NULL, mem_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
--	if (mem) {
-+	if (mem != MAP_FAILED) {
- 		wp_init(mem, mem_size);
- 		wp_addr_range(mem, mem_size);
+ scripts/gdb/linux/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/gdb/linux/Makefile b/scripts/gdb/linux/Makefile
+index d77ad9079d0f..fd1402c0a1a1 100644
+--- a/scripts/gdb/linux/Makefile
++++ b/scripts/gdb/linux/Makefile
+@@ -5,7 +5,7 @@ ifdef building_out_of_srctree
+ symlinks := $(patsubst $(src)/%,%,$(wildcard $(src)/*.py))
  
+ quiet_cmd_symlink = SYMLINK $@
+-      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(abspath $(srctree))/$(src)/%,$@) $@
++      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(src)/%,$@) $@
+ 
+ always-y += $(symlinks)
+ $(addprefix $(obj)/, $(symlinks)): FORCE
 -- 
-2.39.2
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
