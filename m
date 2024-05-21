@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE45B20B3E;
-	Tue, 21 May 2024 08:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74D054762;
+	Tue, 21 May 2024 08:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716278454; cv=none; b=lkfeDOmG0t/VvmF/2IBqGva3Mrea5+itYBb2ZnNDO4oblwBvIel2sVk1KREFfPRY7r+L5PTPFnGnydVa2nDD6bCKWf5d+NDShY6Df+PYnSIGXXrX5dFI+S2YhF8zKMN6t4QdH34Rdzd+jl6Q0djGZPyPCqtKI239lUgZcp0cw2w=
+	t=1716278540; cv=none; b=eI9Ki5BONgxTB79JOwBpvtghxAoS/ybGnB+DIzrnrXIMXBQltXnu3lqOxckDrqgCYVCyVntFQ3QTzYfmlIXJhGnSVFSwLrpwwowEC+GHD1tOz2pQu5VSKPzmClQ6IPtEJitILqfixstOqlb8IFY4sJ7iQ80rgiRlEnUsPLHhwGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716278454; c=relaxed/simple;
-	bh=UMpk2XmZFk9Hk1ptfnrlb3PT18Y5P5/o13Gl8p/rTa8=;
+	s=arc-20240116; t=1716278540; c=relaxed/simple;
+	bh=KSahs3ldXZzAAoo4YJC7zEMWf0t3JgGj4P52e6oIDEk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V9JaJ3OrSe0L54DDNnLYn1BzP+euSXThgruC9vR6f6tgZQk3lUUCeYGBtFIuWG2mL8xcEeezeWzhXFGiCYXQe+3FosZeuk2HBDyvlDM3eKbPX5jWWNOKhSqlcK8GRlt+jtChUplOpv7CbuntVQRuCZiqPXaBg+Pueob7arqwlMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEG1oVRD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JwoiTSp/2zIYJfMUo1T596iHkc9BrQuZ4vDg/wAaS4ZT83RsG1NOBMy29glorE5IfeSqzRlvEPQFhSC5+ptWi5Yd4mvHZprTGLTdFD40Tr6Dy47osJzYIeiBde+lAE0F2d1RPDhLSSLrokAgheIxVx2iABz+plt+EtJ9HyX8zRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NBd534qG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEG1oVRD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB7BC2BD11;
-	Tue, 21 May 2024 08:00:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NBd534qG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74339C4AF07;
+	Tue, 21 May 2024 08:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716278453;
-	bh=UMpk2XmZFk9Hk1ptfnrlb3PT18Y5P5/o13Gl8p/rTa8=;
+	s=k20201202; t=1716278540;
+	bh=KSahs3ldXZzAAoo4YJC7zEMWf0t3JgGj4P52e6oIDEk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GEG1oVRDFQZ3M8NXYgC62/zcQW/TtmqELe4qJdxz6mUqysgfKAgxQY69Y6m1vqaqd
-	 cTyKSO3eXTTNUJvm+U6h3BEC+aQreWmR848UD37c33veGWJKnPeCTgnJYCeIBdLbVm
-	 miabfZE5RdCJWafgZkKm2DFSlcDqn5feIJ6fDcJq27FaGi/OlvsTqGCgJAtWBymkY6
-	 MDDX4Ydjtya156CW1WiBPh2oXLmypoTZ+u6LE7Li4sjt/Ca7nmhcYOkra6AbZHbvFk
-	 FD0kE3YdPMW5hxy2i5RRSGyS1AiNbov/DUpEQriACHVyt1p6mEiJ8xawxfyXVxJz66
-	 /og1CepEkGusA==
-Message-ID: <fe8af4fb-0cf6-4eb8-9500-dbe42b3a6a4b@kernel.org>
-Date: Tue, 21 May 2024 10:00:46 +0200
+	b=NBd534qGql8kDsW+LAoUj/V4vtcYdQ8tRwXftoOb+LKJEt0bS/FnpITbWETFFeGm9
+	 LsQQFm8jzTyTrs9RoiHFASxhIf9hbD7l1oJUvi4DW56ZjtDEQzF2gVeKuLe7Olc60v
+	 9n/efYPhhw3pLi5UqKZGUCdl1Cw5759w5snO171KVJ/zvFqSQGfZkExH8IL/Yfyp8d
+	 zkczv/I3x99efihSJkM+Ddffy0Eo9m1MkuMSwr6S98LTUHxJdfKh4dpW58Kost1trk
+	 s+1BZ/KI3QO8CjkCpqxDrXEA5nCrQfYIA8zQRy/m+iOFKVVXHy9NPFkn9cBrsHJRvN
+	 G5uJ4kqrQq4IA==
+Message-ID: <20ab0093-5ae1-461b-962d-ada2e6ba52b9@kernel.org>
+Date: Tue, 21 May 2024 10:02:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] dt-bindings: soc: intel: lgm-syscon: Move to
- dedicated schema
+Subject: Re: [PATCH 6/8] dt-bindings: mfd: syscon: Split and enforce
+ documenting MFD children
 To: Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -49,8 +49,8 @@ Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-mediatek@lists.infradead.org
 References: <20240519-dt-bindings-mfd-syscon-split-v1-0-aaf996e2313a@linaro.org>
- <20240519-dt-bindings-mfd-syscon-split-v1-3-aaf996e2313a@linaro.org>
- <20240520210729.GA1509114-robh@kernel.org>
+ <20240519-dt-bindings-mfd-syscon-split-v1-6-aaf996e2313a@linaro.org>
+ <20240520212025.GA1531862-robh@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,41 +96,58 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240520210729.GA1509114-robh@kernel.org>
+In-Reply-To: <20240520212025.GA1531862-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/05/2024 23:07, Rob Herring wrote:
-> On Sun, May 19, 2024 at 08:42:18PM +0200, Krzysztof Kozlowski wrote:
->> intel,lgm-syscon is not a simple syscon device - it has children - thus
->> it should be fully documented in its own binding.
+On 20/05/2024 23:20, Rob Herring wrote:
+> On Sun, May 19, 2024 at 08:42:21PM +0200, Krzysztof Kozlowski wrote:
+>> Simple syscon nodes can be documented in common syscon.yaml, however
+>> devices with simple-mfd compatible, thus with some children, should have
+>> their own schema listing these children.  Such listing makes the binding
+>> specific, allows better validation (so the incorrect child would not
+>> appear in the simple-mfd node) and actually enforces repeated rule for
+>> simple-mfd devices:
+>>
+>>   "simple-mfd" is only for simple devices, where the children do not
+>>   depend on the parent.
+>>
+>> Currently the syscon+simple-mfd binding is quite broad and allows
+>> any child or property, thus above rule cannot be enforced.
+>>
+>> Split the syscon.yaml binding into:
+>> 1. Common syscon properties, used potentially by many bindings.
+>> 2. Simple syscon devices (NO simple-mfd!).
 >>
 >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 ...
 
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: intel,lgm-syscon
->> +      - const: syscon
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 1
-> 
-> Should have ranges.
 
-ack
+>>  
+>>  description: |
+>>    System controller node represents a register region containing a set
+>> @@ -19,122 +19,99 @@ description: |
+>>  maintainers:
+>>    - Lee Jones <lee@kernel.org>
+>>  
+>> -select:
+>> -  properties:
+>> -    compatible:
+>> -      contains:
+>> -        enum:
+>> -          - syscon
+>> -
+>> -  required:
+>> -    - compatible
+>> -
+> 
+> Removing this is only going to work with v2024.04. The only way it 
+> works for older versions is listing all the compatibles here. That's a 
+> bit new for us to require it.
+
+I'll keep it, in such case. Anyway its removal is not really related to
+main concept of this patch.
 
 Best regards,
 Krzysztof
