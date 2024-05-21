@@ -1,173 +1,220 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA297210FB
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408F817C6D
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716262318; cv=none; b=SvxL4qYpFoxo2wEfrqTkIsJAaFIOldhluSw/a1pqxRuQAfo5EBHSdArf8e3doNef98EjdGAa56hzIR51WWB9i8jTyDRZ/oCB0m5LEtjXuFGj8vffSd0mg0r7vbfmj9u/dCLrKhBYyYS/DQOOWTrBRgLCL8UbgpzuNTIE+uyFVi4=
+	t=1716262355; cv=none; b=gi51y3C4yrpD25TR60Bw1scIrJH/+kdvtxIcDRMyCrQ8GLriCC51ixJ60FwMDW+Eh8Xw7++ks748wKbYre4zBe3oN7L2m5efJ0jTCRGl9NzS7cHOGqaA6GT3KRfl5zv6QPDbUNZ8aek3Anpq07xgyBD9R3/RKX4ayxQWTDXiX8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716262318; c=relaxed/simple;
-	bh=MFCU+pjB3KCKhjmKoPu7wpzHpc58NnIFXFSypYZ2ds4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nFiKkwRDarmAPxCxPCY8g1f9e655IqKI4xS0fFslsPLoTXoNg4r/IhkUYLVtF9eYCuDqp8+10UXrE8OktGLPhSKyi/t/6Iz/bCKJOwBscx26IafLpC6BMQY476jv8QrhrjJ0ah3svmkJDLkVc/FFUQTVF1ytzeI60DaQlm7qGK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=dVZY/b1w; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="dVZY/b1w"
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A20763F331
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1716262313;
-	bh=oRT4EC1vFVwwe/RwAMWjDpt+UAEk61rLUizH+FeKckE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=dVZY/b1wgbSp1oD1d6pAxFCX6N/oFTO9SFqa74hRmKu0YIaPS/0DgHKQ83RDXpCnn
-	 LxlmB00qb7Qzmr1nvPoaMCgKUPNLHP9zYV8dhWHgTISsH2bXkWJmlP2jryKldkJF+k
-	 Wppy1wf2c4TpUBpCi3tlwftGzosyplpaJTGMHCbxoRpKVAo6h/+Hv0t63/F0Y+JsT6
-	 G9XnhFMc5xU+Rve7C525juoO56tDZ95TvgUk6Fjlz0lvpPyKgpfb/nAZo0pdcurEWX
-	 cmwcK9UKcfUPpdjrNyecsWZr/IRd3222VtesOVtfPWsGx3PTsyQVkyQ5glvqJCXVEE
-	 PFHo8l0ExVAAQ==
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a59a63a1f78so707596766b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:31:53 -0700 (PDT)
+	s=arc-20240116; t=1716262355; c=relaxed/simple;
+	bh=bPnVvZw/n8Jy59WyHjpYngGUKtsEOFpba/PrN2EhEoA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iKV6vZSw9hYjGRH/1tOjHlDkJRyA4MnUwe+2brO8GrDxrIficHnqRaSstjYoJJ+LsN7LIyTwpaf0JISQXi52MWuVBKpXezyny/2j0KS2jSOSd7BjROT4M3GQ4fvL0jiOxEAkaHu/GSdOtfSlVi2/fbUUUt1zXmxU0ZAU0w86UdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7e255f62e6cso33718039f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:32:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716262313; x=1716867113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oRT4EC1vFVwwe/RwAMWjDpt+UAEk61rLUizH+FeKckE=;
-        b=a3LnLFd2pUtlkSpv1jWTxzgymn1X/BIO0smsQiwfo8FZHBgRgb4cydzWxREu50/t3x
-         dGN/yDjjJDiCZ0Ex2ZiEFiy1v7C1TQLX+YKqL/rMn+go3Lw1pi4Sb9WHjaCYOfAD8ivb
-         LkKUPAFZO49iTiBUiLNOaykJP+3A7OmOME+TWfWAy1tY7nU22jtD2uIthSV4QKda+kA0
-         WE0hcKs/+HhI+RtzXOck0RKJK4z1rzBI4EKTo8qmogrwIXi8zBrAM2JYy7gX2HFks2Mw
-         Gidw7hWb5ylG9JitGab7cxkbmxqijGQoQvjBjqypmmftFblxmYNjdr2DkAiwGf9ioDrM
-         q3NA==
-X-Forwarded-Encrypted: i=1; AJvYcCUv/4HMrf939qsopeEC74kbMPO8BKIu0hzLrewMnKhKPKvrS83tnzMhHDy8obH29QHUakzm/KqcylirqPcT2e5xZkFpmVkxR4Dx8e5y
-X-Gm-Message-State: AOJu0YyfXjCt6tUsQHg87tqpj2hltRKRlUsOkxOJbz8L5ERiqDUS0GGH
-	hNs1gtsw/SUPc1OQTrtk1BVCszH+hwx/MCgD4AQzG+3ERHFz2buIcha42bTASyFt3P7jzwYAavM
-	WhKYSoBogd2iHQbWzpSKDYudcMpJvGQc1+lorurVuYDMxF1SuDkvOC85IOIYZNcej4PiPrEPGFv
-	mvfB+cxjp3oitwFV9kDwMzcm+3ycyDyCGQvW97iXhoO0dYWlIQ/BVL
-X-Received: by 2002:a17:906:c452:b0:a59:ee81:fd68 with SMTP id a640c23a62f3a-a5a2d68089bmr1950750366b.71.1716262313284;
-        Mon, 20 May 2024 20:31:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOJPK5+qn5c923mZ3slXAnGra7/NlJptA4G/g7FgwPIMj5jx6DIRqcDO0o17J+ODRWW86LPcncRhI9GyxkwF0=
-X-Received: by 2002:a17:906:c452:b0:a59:ee81:fd68 with SMTP id
- a640c23a62f3a-a5a2d68089bmr1950749466b.71.1716262312944; Mon, 20 May 2024
- 20:31:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716262353; x=1716867153;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e/vinNNp8jUbubjtFGLvk7MGWde7WYxEn7T8IibDPPU=;
+        b=r9uqhjgqSF41dXSQdaTxYRdVaxDG9s5AEaeETuyTzcw33Jcow7nUNFYXyhkDjan7Lk
+         ACe/6gGOk3wxoezrwRAWhnWas9MWye+iQ0zohSVyPnPwWDhIlaWld+3mYF4b+tnWOfXB
+         dfMpU1MzH7okO1EGkf2tZFtoPCsytwRlH/PGDc3bMHEvTX1TK6t71QMHSCmbbef6lLCR
+         IvrL6lb+P8CeCWDW0OHfbgKH/QNqT5iRDEr5PiKSRQxtr/SBZpidCMR1D281H6fHV0ux
+         6jPVzPHyowyokXxYagYRTccSd+0Ok7ydmzfUP2Dv7P/7N+LpkgGoQafIZGC9o3XmAhdF
+         6vDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM+p0wMMAI81HB2rYZpRPH9Y/7b9pmwKOrm1oWJ4TJrOJo1EzdXh8DYj1LdaZ7tH+Z658023bhL8iiIf73dA4suppXeySGkmEETBw7
+X-Gm-Message-State: AOJu0YyP+DHmQEHGZMUNx4PGDD1onjDprT6wVLbT+KTN1gkOZaiMKUEk
+	b5Hn6AH4C2WdnYQb1WEB77SHfDO33HNHeoLHO8oF4zWDo6C9xtpTKT8dO+zbcCfTJUCYcUBjB3+
+	R59bFqJz8FJtd1K9GyK1Nb5EaxRUZe1Vvygdszi9qSvtnBUAP0Ae6G1E=
+X-Google-Smtp-Source: AGHT+IFGQ8jmJXCFtxOCP2ibgVU85X4VsfAr7UD7Lo0/Ki0fHx0PGatnReeblaRzn0qP/71Cjj0nCGivNvm8WSUYchGzADkOLpJb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520070348.26725-1-chengen.du@canonical.com> <664b97e8abe7a_12b4762946f@willemb.c.googlers.com.notmuch>
-In-Reply-To: <664b97e8abe7a_12b4762946f@willemb.c.googlers.com.notmuch>
-From: Chengen Du <chengen.du@canonical.com>
-Date: Tue, 21 May 2024 11:31:42 +0800
-Message-ID: <CAPza5qcGyfcUYOoznci4e=1eaScVTgkzAhXfKSG3bTzC=aOwew@mail.gmail.com>
-Subject: Re: [PATCH] af_packet: Handle outgoing VLAN packets without hardware offloading
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6638:8305:b0:488:75e3:f3c1 with SMTP id
+ 8926c6da1cb9f-489589d7ba6mr2230243173.0.1716262353453; Mon, 20 May 2024
+ 20:32:33 -0700 (PDT)
+Date: Mon, 20 May 2024 20:32:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000eb54450618ee7792@google.com>
+Subject: [syzbot] [ntfs3?] WARNING: held lock freed in alloc_super
+From: syzbot <syzbot+6b2e22a2beb29d5b5a50@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Willem,
+Hello,
 
-Thank you for your response.
+syzbot found the following issue on:
 
-I would appreciate any suggestions you could offer, as I am not as
-familiar with this area as you are.
+HEAD commit:    6e51b4b5bbc0 Merge tag 'mips_6.10' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15848f0a980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4381d48cde9bcb26
+dashboard link: https://syzkaller.appspot.com/bug?extid=6b2e22a2beb29d5b5a50
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-I encountered an issue while capturing packets using tcpdump, which
-leverages the libpcap library for sniffing functionalities.
-Specifically, when I use "tcpdump -i any" to capture packets and
-hardware VLAN offloading is unavailable, some bogus packets appear.
-In this scenario, Linux uses cooked-mode capture (SLL) for the "any"
-device, reading from a PF_PACKET/SOCK_DGRAM socket instead of the
-usual PF_PACKET/SOCK_RAW socket.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Using SOCK_DGRAM instead of SOCK_RAW means that the Linux socket code
-does not supply the packet's link-layer header.
-Based on the code in af_packet.c, SOCK_DGRAM strips L2 headers from
-the original packets and provides SLL for some L2 information.
-From the receiver's perspective, the VLAN information can only be
-parsed from SLL, which causes issues if the kernel stores VLAN
-information in the payload.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-6e51b4b5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2ded6f5d7f90/vmlinux-6e51b4b5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1e9274bab03b/bzImage-6e51b4b5.xz
 
-As you mentioned, this modification affects existing PF_PACKET receivers.
-For example, libpcap needs to change how it parses VLAN packets with
-the PF_PACKET/SOCK_RAW socket.
-The lack of VLAN information in SLL may prevent the receiver from
-properly decoding the L3 frame in cooked mode.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6b2e22a2beb29d5b5a50@syzkaller.appspotmail.com
 
-I am new to this area and would appreciate it if you could kindly
-correct any misunderstandings I might have about the mechanism.
-I would also be grateful for any insights you could share on this issue.
-Additionally, I am passionate about contributing to resolving this
-issue and am willing to work on patches based on your suggestions.
+loop3: detected capacity change from 0 to 4096
+ntfs3: loop3: Different NTFS sector size (1024) and media sector size (512).
+=========================
+WARNING: held lock freed!
+6.9.0-syzkaller-09868-g6e51b4b5bbc0 #0 Not tainted
+-------------------------
+syz-executor.3/16347 is freeing memory ffff88802a8a4098-ffff88802a8a4127, with a lock still held there!
+ffff88802a8a40e0 (&type->s_umount_key#74/1){+.+.}-{3:3}, at: alloc_super+0x23d/0xbd0 fs/super.c:343
+1 lock held by syz-executor.3/16347:
+ #0: ffff88802a8a40e0 (&type->s_umount_key#74/1){+.+.}-{3:3}, at: alloc_super+0x23d/0xbd0 fs/super.c:343
 
-Thank you for your time and assistance.
+stack backtrace:
+CPU: 2 PID: 16347 Comm: syz-executor.3 Not tainted 6.9.0-syzkaller-09868-g6e51b4b5bbc0 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ print_freed_lock_bug kernel/locking/lockdep.c:6538 [inline]
+ debug_check_no_locks_freed+0x203/0x2a0 kernel/locking/lockdep.c:6571
+ debug_mutex_init+0x1b/0x70 kernel/locking/mutex-debug.c:86
+ ntfs_alloc_inode+0x5b/0x70 fs/ntfs3/super.c:569
+ alloc_inode+0x5d/0x230 fs/inode.c:261
+ iget5_locked fs/inode.c:1235 [inline]
+ iget5_locked+0x1c9/0x2c0 fs/inode.c:1228
+ ntfs_iget5+0xd1/0x3950 fs/ntfs3/inode.c:531
+ ntfs_fill_super+0x3738/0x4490 fs/ntfs3/super.c:1485
+ get_tree_bdev+0x36f/0x610 fs/super.c:1614
+ vfs_get_tree+0x8f/0x380 fs/super.c:1779
+ do_new_mount fs/namespace.c:3352 [inline]
+ path_mount+0x14e6/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount fs/namespace.c:3875 [inline]
+ __x64_sys_mount+0x297/0x320 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1a8e07e5ea
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1a8edf2ef8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f1a8edf2f80 RCX: 00007f1a8e07e5ea
+RDX: 0000000020000040 RSI: 000000002001f840 RDI: 00007f1a8edf2f40
+RBP: 0000000020000040 R08: 00007f1a8edf2f80 R09: 0000000000800000
+R10: 0000000000800000 R11: 0000000000000202 R12: 000000002001f840
+R13: 00007f1a8edf2f40 R14: 000000000001f81b R15: 00000000200003c0
+ </TASK>
+ntfs3: loop3: try to read out of volume at offset 0x22800
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000005: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
+CPU: 2 PID: 16347 Comm: syz-executor.3 Not tainted 6.9.0-syzkaller-09868-g6e51b4b5bbc0 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+RIP: 0010:iput_final fs/inode.c:1710 [inline]
+RIP: 0010:iput.part.0+0x38c/0x7f0 fs/inode.c:1767
+Code: 8c ff 48 8b 44 24 10 48 85 c0 0f 85 f5 02 00 00 e8 99 4f 8c ff 49 8d 7e 28 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d4 03 00 00 49 8b 46 28 48 85 c0 48 89 44 24 10
+RSP: 0000:ffffc9000382f8b8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffff88802a8a4250 RCX: ffffc90005a91000
+RDX: 0000000000000005 RSI: ffffffff820198e7 RDI: 0000000000000028
+RBP: ffff88802a8a4458 R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 6c203a337366746e R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff88802a8a4328
+FS:  00007f1a8edf36c0(0000) GS:ffff88806b200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6a99d14440 CR3: 000000005af5a000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ iput+0x5c/0x80 fs/inode.c:1757
+ ntfs_read_mft fs/ntfs3/inode.c:502 [inline]
+ ntfs_iget5+0x6b9/0x3950 fs/ntfs3/inode.c:538
+ ntfs_fill_super+0x3738/0x4490 fs/ntfs3/super.c:1485
+ get_tree_bdev+0x36f/0x610 fs/super.c:1614
+ vfs_get_tree+0x8f/0x380 fs/super.c:1779
+ do_new_mount fs/namespace.c:3352 [inline]
+ path_mount+0x14e6/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount fs/namespace.c:3875 [inline]
+ __x64_sys_mount+0x297/0x320 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1a8e07e5ea
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1a8edf2ef8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f1a8edf2f80 RCX: 00007f1a8e07e5ea
+RDX: 0000000020000040 RSI: 000000002001f840 RDI: 00007f1a8edf2f40
+RBP: 0000000020000040 R08: 00007f1a8edf2f80 R09: 0000000000800000
+R10: 0000000000800000 R11: 0000000000000202 R12: 000000002001f840
+R13: 00007f1a8edf2f40 R14: 000000000001f81b R15: 00000000200003c0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:iput_final fs/inode.c:1710 [inline]
+RIP: 0010:iput.part.0+0x38c/0x7f0 fs/inode.c:1767
+Code: 8c ff 48 8b 44 24 10 48 85 c0 0f 85 f5 02 00 00 e8 99 4f 8c ff 49 8d 7e 28 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d4 03 00 00 49 8b 46 28 48 85 c0 48 89 44 24 10
+RSP: 0000:ffffc9000382f8b8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffff88802a8a4250 RCX: ffffc90005a91000
+RDX: 0000000000000005 RSI: ffffffff820198e7 RDI: 0000000000000028
+RBP: ffff88802a8a4458 R08: 0000000000000007 R09: 0000000000000000
+R10: 0000000000000000 R11: 6c203a337366746e R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000000 R15: ffff88802a8a4328
+FS:  00007f1a8edf36c0(0000) GS:ffff88806b200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6a99d14440 CR3: 000000005af5a000 CR4: 0000000000350ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	8c ff                	mov    %?,%edi
+   2:	48 8b 44 24 10       	mov    0x10(%rsp),%rax
+   7:	48 85 c0             	test   %rax,%rax
+   a:	0f 85 f5 02 00 00    	jne    0x305
+  10:	e8 99 4f 8c ff       	call   0xff8c4fae
+  15:	49 8d 7e 28          	lea    0x28(%r14),%rdi
+  19:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  20:	fc ff df
+  23:	48 89 fa             	mov    %rdi,%rdx
+  26:	48 c1 ea 03          	shr    $0x3,%rdx
+* 2a:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
+  2e:	0f 85 d4 03 00 00    	jne    0x408
+  34:	49 8b 46 28          	mov    0x28(%r14),%rax
+  38:	48 85 c0             	test   %rax,%rax
+  3b:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
 
-Best regards,
-Chengen Du
 
-On Tue, May 21, 2024 at 2:35=E2=80=AFAM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> Chengen Du wrote:
-> > In the outbound packet path, if hardware VLAN offloading is unavailable=
-,
-> > the VLAN tag is inserted into the payload but then cleared from the
-> > metadata. Consequently, this could lead to a false negative result when
-> > checking for the presence of a VLAN tag using skb_vlan_tag_present(),
-> > causing the packet sniffing outcome to lack VLAN tag information. As a
-> > result, the packet capturing tool may be unable to parse packets as
-> > expected.
-> >
-> > Signed-off-by: Chengen Du <chengen.du@canonical.com>
->
-> This is changing established behavior, which itself may confuse
-> existing PF_PACKET receivers.
->
-> The contract is that the VLAN tag can be observed in the payload or
-> as tp_vlan_* fields if it is offloaded.
->
-> > @@ -2457,7 +2464,8 @@ static int tpacket_rcv(struct sk_buff *skb, struc=
-t net_device *dev,
-> >       sll->sll_halen =3D dev_parse_header(skb, sll->sll_addr);
-> >       sll->sll_family =3D AF_PACKET;
-> >       sll->sll_hatype =3D dev->type;
-> > -     sll->sll_protocol =3D skb->protocol;
-> > +     sll->sll_protocol =3D eth_type_vlan(skb->protocol) ?
-> > +             vlan_eth_hdr(skb)->h_vlan_encapsulated_proto : skb->proto=
-col;
->
-> This is a particularly subtle change of behavior.
->
-> >               if (skb_vlan_tag_present(skb)) {
-> >                       aux.tp_vlan_tci =3D skb_vlan_tag_get(skb);
-> >                       aux.tp_vlan_tpid =3D ntohs(skb->vlan_proto);
-> > -                     aux.tp_status |=3D TP_STATUS_VLAN_VALID | TP_STAT=
-US_VLAN_TPID_VALID;
-> > +             } else if (eth_type_vlan(skb->protocol)) {
-> > +                     aux.tp_vlan_tci =3D ntohs(vlan_eth_hdr(skb)->h_vl=
-an_TCI);
-> > +                     aux.tp_vlan_tpid =3D ntohs(skb->protocol);
-> >               } else {
-> >                       aux.tp_vlan_tci =3D 0;
-> >                       aux.tp_vlan_tpid =3D 0;
-> >               }
-> > +             if (aux.tp_vlan_tci || aux.tp_vlan_tpid)
-> > +                     aux.tp_status |=3D TP_STATUS_VLAN_VALID | TP_STAT=
-US_VLAN_TPID_VALID;
-> >               put_cmsg(msg, SOL_PACKET, PACKET_AUXDATA, sizeof(aux), &a=
-ux);
->
-> vlan_tci 0 is valid identifier. That's the reason explicit field
-> TP_STATUS_VLAN_VALID was added.
->
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
