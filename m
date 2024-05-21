@@ -1,55 +1,57 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A711442F4
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 15:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC061448DA
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 15:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716305202; cv=none; b=MkDOznrjW+j2gS6vfQcBMD/QqCUHCJcCYvYoY5v40o1bCpMZkrxWBDSAi4uomhIjtFd2KN1uv/hxgY7XmvT4mwh4/1dcDLvEqI/GDdgzgCRDwN/WuKj7oJyNhb3dAOxfa/6ENWXP5uACMZIMvil73rUwQVniRWRFJ9lfT45EGU8=
+	t=1716305205; cv=none; b=JcM5jPcUF6IyTTatq4s1jOGLsflnRdgnGHHpO9N0JR0mlu9Te/cEOvh39aGbKqxSDNQ42+72gZI+xdHLphnszYvvOJ6XCus2wmZC2KZkK3nf+4IJyQcChuYjQUuwCLmc2ra5BvQCoYcgPsmGhwqRUP3hgPvFtjEhMl0HuFpMeQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716305202; c=relaxed/simple;
-	bh=YbcpAnvKee2GOMccnSTVfLdSPbQ/cZoM9orq9m3+dek=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uDpYbXOIU0ILZYUAWqpwkuHjSZeeiGvmqU2iFB+nceKkPbKyBFBLFGlOnllyCAmC2q8MsX183D+yVOpAYWeIfIVZMQFYCIKTz/4agE7B33sxFA5teMDE3lI06JieYEDf/dRbg0+5woLc256E84ptxKgcai+pwVDIc4+vJeiSwOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=BS/EnN8P; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1716305205; c=relaxed/simple;
+	bh=aiHtBVIcUBQAnB5Q2EBmNg8ODIWt4KSjAsZp4MaE7bc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RIRCs3uia/gaRyWWwJ5zqPmJ0MvJNf3eJWKJJAe0oZq/eHgIzWbf1Zs9BeOGg3/Ow1puX0675W8bfts2XyEgn+9kcsJ1CL/fPKFAPOjFBMg8gjAmEU5xIN3TW14rjcZFMzGLedM6nvVOAAjUXOypTO/qSuVjxV7z2joSnT7sIjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=Zdbx9h1Y; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="BS/EnN8P"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a5a5c930cf6so882608266b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 08:26:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Zdbx9h1Y"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a5ce2f0deffso553855566b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 08:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1716305199; x=1716909999; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SP7h2B6yJgGk4TH9IEQ7JI0U019rt16DjXGMkeKeb4=;
-        b=BS/EnN8PmaRk1Jmat2BP1RZDEfPL7COEnqjTFsqKlLlt4brTZk8qLSb8L/AJOyr2en
-         D5zuaIOZ8XiRsLtXzvyZRG0bxeaVbSa3pkywN91poW9SnbyEB1jfWY3Mdzfp5OUzIhNO
-         VTkfAaY7P7IgvxhVLaOF2m0zHtvMPImKEXsBs1Ia+ScdvwZcFMLzyui7aYzLH8CoMbUP
-         qxGWcK8IK5Y9GakY+U61BpLAXbHvL3nmsSv0LN7Hxc342JWP8/KCCw7uXLkFZKsuSXDe
-         TF+Znt7g+fkyFnY9aSOIHNfpfeEVnS6uGL+lE6bHhueFQtdV6AXrB2snwKxK0pvFtVp9
-         FTwA==
+        d=9elements.com; s=google; t=1716305202; x=1716910002; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qjFz7A85flN3TvntQYJ6kQFqr3/C0cpeamTEx2vLXLU=;
+        b=Zdbx9h1Y1VzFBHgpKkn0VUrx0LM9HC/BZnvkVkosPwf07A70+JXWaV9PtzKWGXvBb/
+         wCUsmOg0bvA9G6ia8l3I3I++UI+TYEK99UVEBAnCD7K012yPC91Ji7FHjXNNaf7Ro4FU
+         At/c2fEf6EEGrrbD6pquSn8OUSSEG2pSGUtXaw6Sefa2AnhyY9u2tL6/tPweLuE7zGML
+         iptl+wIW3HB4pVXb/6vSEPrnc96l7eK2isZHDodpUw+gKdvcDpLqnoxXeY/997x7IxWD
+         8zorYdOsSDrE1UqX6W0yXpu4Dqz4iM1ixpEYFNsNbY823BcMJ2V4Sycsgjf5qBm6hDa8
+         JKTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716305199; x=1716909999;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0SP7h2B6yJgGk4TH9IEQ7JI0U019rt16DjXGMkeKeb4=;
-        b=jrplGL3P5vCaaLhzwdUctbKbrF+w+hkmN+pAnFSS6YgR2quAggYpBISdBDR0a50CXx
-         Zs2DYVIAVsZW6RtNhlD4cG/sExaILI7ww8hnS7tK7NrTd7gFvzCY032MhXGQNcfmSYXZ
-         yp7wUTPbKWiUmeGHcQbKTo07ypjYqfmCC8hNOvIbrMacS/twsrDkCpMUy5N/sIlf7g05
-         KZW6eyJVcF2LMeyfE0BrIs2yVVhypPrZ5emNp0/hazSpjjRhA3UYT/AF2opX0pzfBLQ2
-         SkNZmdzv4G4wotTYMmfXUjOjTJ9RF2SD2W+JQOm+4J/JVfKElZxZEBbFDEuJtMfxJasB
-         B8JA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfpzt3vy9I6Psq1ViL+4hK+k3zVJrtpLJpJw4EtckDJw6IDMTRiI9R73C3zZWf+mujM04fsc0IFGPLCz9uRLe8pgNff8pcK/oT/8Te
-X-Gm-Message-State: AOJu0YwFkl4/4/9TrWTVuNFbXAe+HOeHQsFPlBvwmKSfsh7ue4wk2Xcj
-	e+327f3757mfoolK52kizGAtuhGs4P1H4l5v+ZkJRhJJ2z5opxgpVoNShG/+hgo=
-X-Google-Smtp-Source: AGHT+IHNXBESWf3UtYt88Rul5ND3zDlu4ztC4pHIbV9GB5hTd3riRS/EOXQgXNRtiuUfWmdtSDvAWg==
-X-Received: by 2002:a17:906:6882:b0:a5a:76e2:c2a8 with SMTP id a640c23a62f3a-a5a76e2c306mr1547537466b.23.1716305199086;
-        Tue, 21 May 2024 08:26:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716305202; x=1716910002;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qjFz7A85flN3TvntQYJ6kQFqr3/C0cpeamTEx2vLXLU=;
+        b=sxFq3RKdvnQ2/wK9sj/eXYW6A5aTE9VNADFnX9QAZO4EfXSwAtREluTLrHNobxnxHV
+         xhVykVvEE11A0qLOwsG3vYlOlpnzp2Lqp35RsGuG+z2qJ348ju5CSr8EbD6WABQsFlWw
+         iQ8So3jARM/oFjmACyJ238GOj7+ymdYyD0JzyO4TdbO0Eq/8piBTvkVaVh4aE0MrtO1C
+         ww5KmD6K4IKttJl2nsXVzVvvlurJ169/YQCmm20VB8or4m6YTMvmhdF1CXVOhxkGaIo8
+         cLemEuhor+sJLhSJNwBYFbkKLI7AcwY9fzmwJM0gRiwucziMhqdT5SAL8jzz4G8CUJ6F
+         EnoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGAHuj4rLitSsVRogHlZQGg46P93Zqg3PEcC2G/7w3NIi32PNd1B2IEhTcLkSq2dTiZp6dzH+qQ1Ctbslz9qcSflzTy+Np6+bcDbay
+X-Gm-Message-State: AOJu0YyLqkXx1sCOos5lyJVESC8HL04W0/zqnu1rB/6+zmTIgHXxkBTr
+	3jPm/HZ1PqN9jU9bheBi8HZBeJ/gjQ3wmVwBQbv4Dsu/wFHhVEI5/xGvI4YcbWo=
+X-Google-Smtp-Source: AGHT+IH9GEyPJ76wtwNB4/jHWZs7niX/sYQbANa7CsmlIy9vKqofJGQiIZsdI4gRpsE8eF4yskDYXw==
+X-Received: by 2002:a17:907:845:b0:a59:b376:87b3 with SMTP id a640c23a62f3a-a5a2d6657e1mr2483206366b.62.1716305202032;
+        Tue, 21 May 2024 08:26:42 -0700 (PDT)
 Received: from fedora.sec.9e.network (ip-037-049-067-221.um09.pools.vodafone-ip.de. [37.49.67.221])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b180c7sm1638327666b.221.2024.05.21.08.26.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b180c7sm1638327666b.221.2024.05.21.08.26.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 08:26:38 -0700 (PDT)
+        Tue, 21 May 2024 08:26:41 -0700 (PDT)
 From: Patrick Rudolph <patrick.rudolph@9elements.com>
 To: Patrick Rudolph <patrick.rudolph@9elements.com>,
 	Linus Walleij <linus.walleij@linaro.org>
@@ -58,10 +60,12 @@ Cc: naresh.solanki@9elements.com,
 	broonie@kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] pinctrl: cy8c95x0: Use single I2C lock
-Date: Tue, 21 May 2024 17:25:57 +0200
-Message-ID: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
+Subject: [PATCH 3/3] pinctrl: cy8c95x0: Use REGCACHE_MAPLE
+Date: Tue, 21 May 2024 17:25:59 +0200
+Message-ID: <20240521152602.1097764-3-patrick.rudolph@9elements.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
+References: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,128 +74,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently there are 3 locks being used when accessing the chip, one
-in the driver and one in each regmap. Reduce that to one driver only
-lock that protects all regmap and regcache accesses.
+Use REGCACHE_MAPLE instead of REGCACHE_FLAT.
 
 Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
 ---
- drivers/pinctrl/pinctrl-cy8c95x0.c | 32 ++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 981c569bd671..ca54d91fdc77 100644
+index 9570de598193..4efb8b5cc2d3 100644
 --- a/drivers/pinctrl/pinctrl-cy8c95x0.c
 +++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -453,7 +453,6 @@ cy8c95x0_mux_reg_read(void *context, unsigned int off, unsigned int *val)
- 	u8 port = CY8C95X0_MUX_REGMAP_TO_PORT(off);
- 	int ret, reg = CY8C95X0_MUX_REGMAP_TO_REG(off);
+@@ -457,7 +457,7 @@ static const struct regmap_config cy8c9520_i2c_regmap = {
+ 	.volatile_reg = cy8c95x0_volatile_register,
+ 	.precious_reg = cy8c95x0_precious_register,
  
--	mutex_lock(&chip->i2c_lock);
- 	/* Select the correct bank */
- 	ret = regmap_write(chip->regmap, CY8C95X0_PORTSEL, port);
- 	if (ret < 0)
-@@ -463,11 +462,7 @@ cy8c95x0_mux_reg_read(void *context, unsigned int off, unsigned int *val)
- 	 * Read the register through direct access regmap. The target range
- 	 * is marked volatile.
- 	 */
--	ret = regmap_read(chip->regmap, reg, val);
--out:
--	mutex_unlock(&chip->i2c_lock);
--
--	return ret;
-+	return regmap_read(chip->regmap, reg, val);
- }
- 
- static int
-@@ -477,7 +472,6 @@ cy8c95x0_mux_reg_write(void *context, unsigned int off, unsigned int val)
- 	u8 port = CY8C95X0_MUX_REGMAP_TO_PORT(off);
- 	int ret, reg = CY8C95X0_MUX_REGMAP_TO_REG(off);
- 
--	mutex_lock(&chip->i2c_lock);
- 	/* Select the correct bank */
- 	ret = regmap_write(chip->regmap, CY8C95X0_PORTSEL, port);
- 	if (ret < 0)
-@@ -487,11 +481,7 @@ cy8c95x0_mux_reg_write(void *context, unsigned int off, unsigned int val)
- 	 * Write the register through direct access regmap. The target range
- 	 * is marked volatile.
- 	 */
--	ret = regmap_write(chip->regmap, reg, val);
--out:
--	mutex_unlock(&chip->i2c_lock);
--
--	return ret;
-+	return regmap_write(chip->regmap, reg, val);
- }
- 
- static bool cy8c95x0_mux_accessible_register(struct device *dev, unsigned int off)
-@@ -524,6 +514,7 @@ static const struct regmap_config cy8c95x0_muxed_regmap = {
- 	.num_reg_defaults_raw = MUXED_STRIDE * BANK_SZ,
- 	.readable_reg = cy8c95x0_mux_accessible_register,
- 	.writeable_reg = cy8c95x0_mux_accessible_register,
-+	.disable_locking = true,
- };
- 
- /* Direct access regmap */
-@@ -542,6 +533,7 @@ static const struct regmap_config cy8c95x0_i2c_regmap = {
- 
- 	.cache_type = REGCACHE_FLAT,
- 	.max_register = CY8C95X0_COMMAND,
-+	.disable_locking = true,
- };
- 
- static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
-@@ -559,6 +551,8 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
- 	if (reg == CY8C95X0_PORTSEL)
- 		return -EINVAL;
- 
-+	mutex_lock(&chip->i2c_lock);
-+
- 	/* Registers behind the PORTSEL mux have their own regmap */
- 	if (cy8c95x0_muxed_register(reg)) {
- 		regmap = chip->muxed_regmap;
-@@ -574,7 +568,7 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
- 
- 	ret = regmap_update_bits_base(regmap, off, mask, val, change, async, force);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	/* Update the cache when a WC bit is written */
- 	if (cy8c95x0_wc_register(reg) && (mask & val)) {
-@@ -595,6 +589,8 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
- 			regcache_cache_only(regmap, false);
- 		}
- 	}
-+out:
-+	mutex_unlock(&chip->i2c_lock);
- 
- 	return ret;
- }
-@@ -667,7 +663,9 @@ static int cy8c95x0_regmap_read(struct cy8c95x0_pinctrl *chip, unsigned int reg,
- 				unsigned int port, unsigned int *read_val)
- {
- 	struct regmap *regmap;
--	int off;
-+	int off, ret;
-+
-+	mutex_lock(&chip->i2c_lock);
- 
- 	/* Registers behind the PORTSEL mux have their own regmap */
- 	if (cy8c95x0_muxed_register(reg)) {
-@@ -682,7 +680,11 @@ static int cy8c95x0_regmap_read(struct cy8c95x0_pinctrl *chip, unsigned int reg,
- 			off = reg;
- 	}
- 
--	return regmap_read(regmap, off, read_val);
-+	ret = regmap_read(regmap, off, read_val);
-+
-+	mutex_unlock(&chip->i2c_lock);
-+
-+	return ret;
- }
- 
- static int cy8c95x0_write_regs_mask(struct cy8c95x0_pinctrl *chip, int reg,
+-	.cache_type = REGCACHE_FLAT,
++	.cache_type = REGCACHE_MAPLE,
+ 	.ranges	= NULL,			/* Updated at runtime */
+ 	.num_ranges = 1,
+ 	.max_register = 0,		/* Updated at runtime */
 -- 
 2.44.0
 
