@@ -1,629 +1,133 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544161494C2;
-	Tue, 21 May 2024 18:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A1514B945;
+	Tue, 21 May 2024 18:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716316850; cv=none; b=X/i20HHZmxRswgQsMCeXtGlf7qIi7+AFLwFv/ZQxgHge/tVvb08CeXS4XsB4754D+VBUnyzjOp8G/WzGgyP3acFHaHBmaN7CUXq2v4oYyHocoOtJc4AOd0RdkrvV/FV/vtkuyEH5gOf0OAIYuALpoDkd5iCU8ihKjwV5B3QMOxA=
+	t=1716316870; cv=none; b=jOc6RClly3CnoLn7HS5ohxDe7QcGv+0t5q2ac6Ei33wl1pNOkUIPyQevD1hMyNjYeMo2JS6Y8+rDsqKDWLfmfyR6PwBePQSYYNcsL5W8SvUMO8pvhdaXvfrBGLbHMLMvBnAX38rzY9FccqxaSBKQ6Rqo4zQf7CnWLosByuJKKRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716316850; c=relaxed/simple;
-	bh=wOqQqKuDwpeZmXB6W8DCd1Alkczjf/k3SmlTLa2BxsQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=g3XDoXDkEiZPjpBg099FCFOrIRBDhdOyDF1i/U/DwmhPD2M9fV6PmGoUvmG/Unqa83WCLSQxXiNTmBDSR1ZE8NR9NUAJWisTPqWr7R4rRhnRf9gyzj/R1lL3qMMXrz/cjCmIzC64ukwPMlcbtx7ldTBo88XMG27mS5u3OrpUSsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l2A3MT++; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1716316870; c=relaxed/simple;
+	bh=6XpijqtccTHGXA+AoieILf4pViR2pTCtkLRfit3mgFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IhDuhWecnOZVtpD+cdK5hmUkzgtmV/r19pIu0SqzQ5PQxFEUE5wsnXzWs87/JSZpYIvNLJohrcWl6pempzyp6D580kERXE4J5nI/RDgCsz0ty7eZ74b0pNoiXA9j5Z0mL7GdbWgO9LmhC/5RKHSKWzx1j6V++5UKIc8p5LdBSjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hiqxO9EB; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l2A3MT++"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44LEwuoJ020201;
-	Tue, 21 May 2024 18:38:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=QwY0YQr84zBHrkcdkKsTRVkrZiZJkP64GeSk1KtlB8w
-	=; b=l2A3MT++e/5WyLDXOWF8BagMKmPI4Zuv6DXIRaW8dr2sPefaM2E8sR81zkp
-	v+r0IRB4ONgWrA1ftyO+2dEnW8yCRShpGDK46RqMxsDNt+b73LTgPvf9ofRtdbsE
-	gRNNAbUoWFU2txpwgyRJ53BSKYXvaFnbAhGXtvUnfSL2B2nL2KJsXcNXDn+VPoTN
-	xzzXupdmhcpMrla/l4dmsKvc0vKh4eu6huPhvKjpBZckoax2crsxUvAdYesnj0Pt
-	yNa4VFULQsqBSsILKkYMCxJlTFRZAwu1kEbLFvAdgziAka/29TYLlx67SHa7K9I/
-	K7omTIqm+b5Kqe2IzDVVbQH6KJw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pqapmmk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 18:38:29 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44LIcT7A016664
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 18:38:29 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 21 May 2024 11:38:28 -0700
-From: Elliot Berman <quic_eberman@quicinc.com>
-Date: Tue, 21 May 2024 11:38:04 -0700
-Subject: [PATCH RFC v3 7/9] arm64: boot: dts: qcom: Use phandles for
- thermal_zones
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hiqxO9EB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=s0vsdZ7jPEzrw+PhFnU9mrUZ+GaBCox5t4ZNvaUAMzQ=;
+	t=1716316868; x=1716748868; b=hiqxO9EBHgPHF86mKMWpl8g5AYL39tV1kK+YjnfqmddZQj3
+	o8OSLRgj+MS9x2OqvcApOtVqAtCOx1zgCEo4rn9ekcAFYFv7lRL4UinmGU1ZEAxj+dLc/+iggUG16
+	7ucYdPX5eox+lrj1ZkvDXIeFMayUJvG/X74E3IcSFOY08TPQzyDXl/4uA3B0JeaRZtX6tOvTiOjNK
+	qsvWZp0VnGQCvfqk2Sej/a4o8wW4L+BqV8r45qVduq4Z/tzMaXULEc8gS8eowjhz5Ww4zSVY02yiB
+	mmkBHlOLEJlZs0NlX8BRuhCPBPreBq+05FthCgNS11ZnK2ZKWlwoGMwfNnCbx6Rg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9UQ3-0000WH-Df; Tue, 21 May 2024 20:41:03 +0200
+Message-ID: <5252311c-1b40-48ac-96f6-0fd94a095dc2@leemhuis.info>
+Date: Tue, 21 May 2024 20:41:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Laura Nao <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-acpi@vger.kernel.org,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "kernelci.org bot" <bot@kernelci.org>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+ <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+ <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+ <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+ <c10a77b6-e7b1-43c0-af38-79092eeb34f1@leemhuis.info>
+ <Zky1UgJSf_ybRMOI@smile.fi.intel.com>
+ <4f1bcc8b-1795-4e3c-90a6-742cd8443396@leemhuis.info>
+ <Zky9bovo_99LwDfY@smile.fi.intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <Zky9bovo_99LwDfY@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240521-board-ids-v3-7-e6c71d05f4d2@quicinc.com>
-References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
-In-Reply-To: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>
-CC: Amrit Anand <quic_amrianan@quicinc.com>,
-        Peter Griffin
-	<peter.griffin@linaro.org>,
-        Caleb Connolly <caleb.connolly@linaro.org>,
-        "Andy
- Gross" <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Doug
- Anderson" <dianders@chromium.org>,
-        Simon Glass <sjg@chromium.org>, "Chen-Yu
- Tsai" <wenst@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "Humphreys,
- Jonathan" <j-humphreys@ti.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        "Jon
- Hunter" <jonathanh@nvidia.org>,
-        Michal Simek <michal.simek@amd.com>,
-        <boot-architecture@lists.linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Elliot Berman <quic_eberman@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: O8l3yje1EKD7HghNyRUlYyv4bHgIydEY
-X-Proofpoint-ORIG-GUID: O8l3yje1EKD7HghNyRUlYyv4bHgIydEY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_11,2024-05-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=820 clxscore=1015
- priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405010000 definitions=main-2405210140
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716316868;77975787;
+X-HE-SMSGID: 1s9UQ3-0000WH-Df
 
-In preparation for converting sm8550 to use devicetree overlays, use
-phandles for thermal_zones.
+On 21.05.24 17:27, Andy Shevchenko wrote:
+> On Tue, May 21, 2024 at 05:14:07PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 21.05.24 16:53, Andy Shevchenko wrote:
+>>> On Tue, May 21, 2024 at 04:26:32PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 21.05.24 16:00, Andy Shevchenko wrote:
+>>>>> On Tue, May 21, 2024 at 12:01:17PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>>> On 13.05.24 12:02, Andy Shevchenko wrote:
+>>>>>>> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
+> [...]
+>>> The other thing, that we have 3 regressions
+>>> now for very this code. And some of them are still under discussions.
+>>>
+>>> Wouldn't be better to gather all fixes and send a bunch via proper process
+>>> after rc1? 
+>>
+>> Depends on the situation. As a general approach I'd say no, but there
+>> definitely can be situations where that is wise.
+>>
+>>> This will ensure that everything we know about is covered properly
+>>> and processed accordingly,
+>>>
+>>> In broader way, the process should be amended if you want a fast track for
+>>> the patches like this. I'm on the second level here, Bart is the maintainer
+>>> who sends PRs directly to Linus. Do we have anything like this?
+>>
+>> Pretty sure Linus wants maintains to just fast-track things when needed
+>> by sending an additional PR; he multiple times said that this is not a
+>> problem.
+>>
+>> But there is a way to fast track things: just ask Linus to pull a patch
+>> from the list (e.g. in a reply to the patch while CCIng tim). He
+>> multiple times said this is no problem for him, unless it becomes the
+>> norm. This is documented in
+>> Documentation/process/handling-regressions.rst /
+>> https://docs.kernel.org/process/handling-regressions.html
+> 
+> "For urgent regressions, consider asking Linus to pick up the fix straight from
+> the mailing list: he is totally fine with that for uncontroversial fixes.
+> Ideally though such requests should happen in accordance with the subsystem
+> maintainers or come directly from them."
+> 
+> The first thing I'm not so comfortable with is that Bart as a subsystem
+> maintainer will be by-passed.
 
-Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
----
- arch/arm64/boot/dts/qcom/pm8010.dtsi    |  62 ++++++++--------
- arch/arm64/boot/dts/qcom/pm8550.dtsi    |  32 ++++----
- arch/arm64/boot/dts/qcom/pm8550b.dtsi   |  36 +++++----
- arch/arm64/boot/dts/qcom/pm8550ve.dtsi  |  38 +++++-----
- arch/arm64/boot/dts/qcom/pm8550vs.dtsi  | 128 ++++++++++++++++----------------
- arch/arm64/boot/dts/qcom/pmr735d_a.dtsi |  38 +++++-----
- arch/arm64/boot/dts/qcom/pmr735d_b.dtsi |  38 +++++-----
- arch/arm64/boot/dts/qcom/sm8550.dtsi    |   2 +-
- arch/arm64/boot/dts/qcom/sm8650.dtsi    |   2 +-
- 9 files changed, 181 insertions(+), 195 deletions(-)
+Well, that's why the last sentence you quoted is there; but yeah, the
+"sub-subsystem" case it only kinda indirectly covered there. I can add
+something about it if people feel that this is needed. But in the end
+I'd say in this case Bart should be involved or the one that feeds this
+to Linus. We'll see soon how both react to your PR. Thx for that BTW!
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8010.dtsi b/arch/arm64/boot/dts/qcom/pm8010.dtsi
-index 0ea641e12209..a889df2f2f25 100644
---- a/arch/arm64/boot/dts/qcom/pm8010.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8010.dtsi
-@@ -6,47 +6,45 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pm8010-m-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
-+&thermal_zones {
-+	pm8010-m-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
- 
--			thermal-sensors = <&pm8010_m_temp_alarm>;
-+		thermal-sensors = <&pm8010_m_temp_alarm>;
- 
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
-+	};
- 
--		pm8010-n-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
-+	pm8010-n-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
- 
--			thermal-sensors = <&pm8010_n_temp_alarm>;
-+		thermal-sensors = <&pm8010_n_temp_alarm>;
- 
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/pm8550.dtsi b/arch/arm64/boot/dts/qcom/pm8550.dtsi
-index 797a18c249a4..cb5e70b28445 100644
---- a/arch/arm64/boot/dts/qcom/pm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550.dtsi
-@@ -6,26 +6,24 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pm8550-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
-+&thermal_zones {
-+	pm8550-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
- 
--			thermal-sensors = <&pm8550_temp_alarm>;
-+		thermal-sensors = <&pm8550_temp_alarm>;
- 
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/pm8550b.dtsi b/arch/arm64/boot/dts/qcom/pm8550b.dtsi
-index 72609f31c890..b3cfa030679a 100644
---- a/arch/arm64/boot/dts/qcom/pm8550b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550b.dtsi
-@@ -6,26 +6,24 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pm8550b-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
--			thermal-sensors = <&pm8550b_temp_alarm>;
--
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+&thermal_zones {
-+	pm8550b-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
-+
-+		thermal-sensors = <&pm8550b_temp_alarm>;
-+
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/pm8550ve.dtsi b/arch/arm64/boot/dts/qcom/pm8550ve.dtsi
-index 4dc1f03ab2c7..8ef57a51b5cd 100644
---- a/arch/arm64/boot/dts/qcom/pm8550ve.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550ve.dtsi
-@@ -6,26 +6,24 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pm8550ve-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
--			thermal-sensors = <&pm8550ve_temp_alarm>;
--
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
--
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+&thermal_zones {
-+	pm8550ve-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
-+
-+		thermal-sensors = <&pm8550ve_temp_alarm>;
-+
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
-+
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/pm8550vs.dtsi b/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
-index 97b1c18aa7d8..258526abcc21 100644
---- a/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8550vs.dtsi
-@@ -6,89 +6,87 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pm8550vs-c-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
--			thermal-sensors = <&pm8550vs_c_temp_alarm>;
--
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
--
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+&thermal_zones {
-+	pm8550vs-c-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
-+
-+		thermal-sensors = <&pm8550vs_c_temp_alarm>;
-+
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
-+
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
-+	};
- 
--		pm8550vs-d-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
-+	pm8550vs-d-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
- 
--			thermal-sensors = <&pm8550vs_d_temp_alarm>;
-+		thermal-sensors = <&pm8550vs_d_temp_alarm>;
- 
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
-+	};
- 
--		pm8550vs-e-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
-+	pm8550vs-e-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
- 
--			thermal-sensors = <&pm8550vs_e_temp_alarm>;
-+		thermal-sensors = <&pm8550vs_e_temp_alarm>;
- 
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
-+	};
- 
--		pm8550vs-g-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
-+	pm8550vs-g-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
- 
--			thermal-sensors = <&pm8550vs_g_temp_alarm>;
-+		thermal-sensors = <&pm8550vs_g_temp_alarm>;
- 
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
- 
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi b/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi
-index 37daaefe3431..251a16424d84 100644
---- a/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pmr735d_a.dtsi
-@@ -6,26 +6,24 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pmr735d-k-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
--			thermal-sensors = <&pmr735d_k_temp_alarm>;
--
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
--
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+&thermal_zones {
-+	pmr735d-k-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
-+
-+		thermal-sensors = <&pmr735d_k_temp_alarm>;
-+
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
-+
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi b/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi
-index 3b470f6ac46f..dbcfeb53d8ec 100644
---- a/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pmr735d_b.dtsi
-@@ -6,26 +6,24 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
--/ {
--	thermal-zones {
--		pmr735d-l-thermal {
--			polling-delay-passive = <100>;
--			polling-delay = <0>;
--
--			thermal-sensors = <&pmr735d_l_temp_alarm>;
--
--			trips {
--				trip0 {
--					temperature = <95000>;
--					hysteresis = <0>;
--					type = "passive";
--				};
--
--				trip1 {
--					temperature = <115000>;
--					hysteresis = <0>;
--					type = "hot";
--				};
-+&thermal_zones {
-+	pmr735d-l-thermal {
-+		polling-delay-passive = <100>;
-+		polling-delay = <0>;
-+
-+		thermal-sensors = <&pmr735d_l_temp_alarm>;
-+
-+		trips {
-+			trip0 {
-+				temperature = <95000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
-+
-+			trip1 {
-+				temperature = <115000>;
-+				hysteresis = <0>;
-+				type = "hot";
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index ee1ba5a8c8fc..c68e08747b6f 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -4452,7 +4452,7 @@ compute-cb@8 {
- 		};
- 	};
- 
--	thermal-zones {
-+	thermal_zones: thermal-zones {
- 		aoss0-thermal {
- 			polling-delay-passive = <0>;
- 			polling-delay = <0>;
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index 2df77123a8c7..32198bf3cf7c 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -5030,7 +5030,7 @@ compute-cb@8 {
- 		};
- 	};
- 
--	thermal-zones {
-+	thermal_zones: thermal-zones {
- 		aoss0-thermal {
- 			polling-delay-passive = <0>;
- 			polling-delay = <0>;
+> The second one, is the metrics of urgency.
+> I can assume that something from a TIP tree is really urgent and they
+> even have established fast track for ages. But why do you think this fix
+> is of the same level of urgency? 
 
--- 
-2.34.1
+We get into "best to ask Linus directly" territory here. I suspect
+things for him boil down to "a fix is a fix; if it was reviewed and
+ideally in next for ~2 days, let's just merge it to get rid of the
+regression, unless there are strong reasons to wait a bit more (for
+example if the fix is dangerous and better should be in -next somewhat
+longer)".
 
+Ciao, Thorsten
