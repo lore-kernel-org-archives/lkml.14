@@ -1,121 +1,288 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4682471B3D;
-	Tue, 21 May 2024 10:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536FF6F086;
+	Tue, 21 May 2024 10:49:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716288570; cv=none; b=na+uFEtBXvCGz3qLzHQFwkAdXLG2/i7Lrus5DITJQ2vCtKuxMYsfCz1V6hQSbgsxR1JWVw/nqI2RN1B+mTWQfrgP+Q5y8jXv7OVW91ndsx+Tk7CDzAOpm4D+QQG6nKoefWofRLvCGGzyH49Rn2v6NYPe3nTzPsUjSYPFSF9YcQU=
+	t=1716288575; cv=none; b=byUjrFjwXFIcy9zFHCfw1b41i0r4pJKj7QphtE3YfbrsHXO7FPR0SqAIOlSDqkBB2kEUrc7PzyQxfHDta2qBoZk0pmyUWxQqwFkfF3ioI3fRCuR0+seDREDJL4QtrAjslHm361ojNPm4IL9/c+a0Lo0vqUXmWXtg81SJJ0FHjj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716288570; c=relaxed/simple;
-	bh=6KPrfDvxePiYqQ+U86QGOtRIQhJqkZNmdPViVsnR34A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+qe6KnFRARArbjdPJq6cwsPu4NKgl3CAjQWdcMIFU9CGY+8XHaqZNO8pgt/gXlkYq15nQeZhwpCe/TSsA8GurPiUHaNTpUI9y6sxvgnTjj6ku3g5QW6l+I0yHS6qBjeYoJf3HPXRT1cOOS4NkPiZaG7UBt06s6JdqiUOhI4J8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkCGxQgO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716288575; c=relaxed/simple;
+	bh=lW/3gzi9X62qpxx+XfjSgU8B5H9BM2eiM14Ks29Hm10=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CbdTmaxIU4INWE8yOGJoTLyScYJwAe9Az4anLmZ9plUZxAU+ClvscVfcwTACmE0yWWphYXw1rwfbf5sT1QZ5p2Lo457sO4Oojaf4h/9Kj3x2YIhjvyVCDZyK0sEUK/LL7xQzG8ZJQzpapg3UetgdLzgf5diIensCIncAbaFnwvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVc8/R1L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkCGxQgO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9034EC32789;
-	Tue, 21 May 2024 10:49:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVc8/R1L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D0BC4AF0E;
+	Tue, 21 May 2024 10:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716288570;
-	bh=6KPrfDvxePiYqQ+U86QGOtRIQhJqkZNmdPViVsnR34A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QkCGxQgOHgBFCqFIlV4VgKAH9/B6+1F+Do1GmLFKqPl1Igib7uV61Ae3Xkqy7JuLn
-	 3cbFhuqfwf58ScdoX0J9/J8vTCOeD5Kip4AIehMr9L2lnevQxOZmoxk2fSjrTxU0Sa
-	 tZI+VSdqYEFh9l2Sj7pD5AjLcDfoMHzG+2qKUMaW/PT39BqCr39gGKwjCcqVt49d8n
-	 SC/7q0VHuRPRf3/c19Sbj1hHOrIZcEscJEN5EHv30PXm/YrePix9wM+ykthsAxBJcx
-	 RF/IsckJu+5LM+j2eELP6rptO7nE223xSnwXI0IxvSPS7oVyMucBQHmH7pks1gSWcC
-	 tCtE0o/rXxVtA==
-Date: Tue, 21 May 2024 11:49:21 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Alvin =?utf-8?Q?=C5=A0ipraga?= <ALSI@bang-olufsen.dk>
-Cc: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Emil Abildgaard Svendsen <EMAS@bang-olufsen.dk>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH 07/13] ASoC: codecs: add AD24xx codec driver
-Message-ID: <e2ab39b8-55a3-4afe-9832-b1a780b93831@sirena.org.uk>
-References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
- <20240517-a2b-v1-7-b8647554c67b@bang-olufsen.dk>
- <e5782aef-d64d-46f3-ab5c-dc01285e08c2@sirena.org.uk>
- <edv5aqfnb5gdxfmrh5nywnzg3tzfdq27kfvpkhg2t2q2jwf7ej@vjqgiw3ssv3b>
+	s=k20201202; t=1716288575;
+	bh=lW/3gzi9X62qpxx+XfjSgU8B5H9BM2eiM14Ks29Hm10=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FVc8/R1L53KFJ48iZ2iLycmDxu2dE/vQ1Rvh3NzcIN7CKenZYw1e3JV0c/1YeyywX
+	 leHFIQl+Fx6M2GM7FPiI7eH3cW9fvW4ihrWK4WoyAYr+Ser7ZcEO3a8oMoM/O3jFqu
+	 UD3i4ITyufjg80zLH0O9CJ/Zvrcw1BftjhfPIxcjnWHkl9sgrb56pjSFaGO9u8GsK6
+	 WiW8K4bAKNPjLJa9Jpjarv6b7TUVYLmpkbi+ru6uRs7zhgMtHiXrYTZA1QFdCimkdR
+	 qRPfB1SAbBWNc1IoiXpDL7jOByIKNPFk5aAhACPmrpKEIaTUCdLBDhOopclEyxcboV
+	 qWfDbKlVWzF8Q==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: [PATCHv6 bpf-next 5/9] selftests/bpf: Add uretprobe syscall test for regs integrity
+Date: Tue, 21 May 2024 12:48:21 +0200
+Message-ID: <20240521104825.1060966-6-jolsa@kernel.org>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240521104825.1060966-1-jolsa@kernel.org>
+References: <20240521104825.1060966-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IfNqVr8A6eo57Tqb"
-Content-Disposition: inline
-In-Reply-To: <edv5aqfnb5gdxfmrh5nywnzg3tzfdq27kfvpkhg2t2q2jwf7ej@vjqgiw3ssv3b>
-X-Cookie: Eloquence is logic on fire.
+Content-Transfer-Encoding: 8bit
 
+Add uretprobe syscall test that compares register values before
+and after the uretprobe is hit. It also compares the register
+values seen from attached bpf program.
 
---IfNqVr8A6eo57Tqb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/include/linux/compiler.h                |   4 +
+ .../selftests/bpf/prog_tests/uprobe_syscall.c | 163 ++++++++++++++++++
+ .../selftests/bpf/progs/uprobe_syscall.c      |  15 ++
+ 3 files changed, 182 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
 
-On Tue, May 21, 2024 at 06:46:21AM +0000, Alvin =C5=A0ipraga wrote:
-> On Fri, May 17, 2024 at 04:03:50PM GMT, Mark Brown wrote:
-> > On Fri, May 17, 2024 at 02:58:05PM +0200, Alvin =C5=A0ipraga wrote:
+diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
+index 8a63a9913495..6f7f22ac9da5 100644
+--- a/tools/include/linux/compiler.h
++++ b/tools/include/linux/compiler.h
+@@ -62,6 +62,10 @@
+ #define __nocf_check __attribute__((nocf_check))
+ #endif
+ 
++#ifndef __naked
++#define __naked __attribute__((__naked__))
++#endif
++
+ /* Are two types/vars the same type (ignoring qualifiers)? */
+ #ifndef __same_type
+ # define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+new file mode 100644
+index 000000000000..311ac19d8992
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <test_progs.h>
++
++#ifdef __x86_64__
++
++#include <unistd.h>
++#include <asm/ptrace.h>
++#include <linux/compiler.h>
++#include "uprobe_syscall.skel.h"
++
++__naked unsigned long uretprobe_regs_trigger(void)
++{
++	asm volatile (
++		"movq $0xdeadbeef, %rax\n"
++		"ret\n"
++	);
++}
++
++__naked void uretprobe_regs(struct pt_regs *before, struct pt_regs *after)
++{
++	asm volatile (
++		"movq %r15,   0(%rdi)\n"
++		"movq %r14,   8(%rdi)\n"
++		"movq %r13,  16(%rdi)\n"
++		"movq %r12,  24(%rdi)\n"
++		"movq %rbp,  32(%rdi)\n"
++		"movq %rbx,  40(%rdi)\n"
++		"movq %r11,  48(%rdi)\n"
++		"movq %r10,  56(%rdi)\n"
++		"movq  %r9,  64(%rdi)\n"
++		"movq  %r8,  72(%rdi)\n"
++		"movq %rax,  80(%rdi)\n"
++		"movq %rcx,  88(%rdi)\n"
++		"movq %rdx,  96(%rdi)\n"
++		"movq %rsi, 104(%rdi)\n"
++		"movq %rdi, 112(%rdi)\n"
++		"movq   $0, 120(%rdi)\n" /* orig_rax */
++		"movq   $0, 128(%rdi)\n" /* rip      */
++		"movq   $0, 136(%rdi)\n" /* cs       */
++		"pushf\n"
++		"pop %rax\n"
++		"movq %rax, 144(%rdi)\n" /* eflags   */
++		"movq %rsp, 152(%rdi)\n" /* rsp      */
++		"movq   $0, 160(%rdi)\n" /* ss       */
++
++		/* save 2nd argument */
++		"pushq %rsi\n"
++		"call uretprobe_regs_trigger\n"
++
++		/* save  return value and load 2nd argument pointer to rax */
++		"pushq %rax\n"
++		"movq 8(%rsp), %rax\n"
++
++		"movq %r15,   0(%rax)\n"
++		"movq %r14,   8(%rax)\n"
++		"movq %r13,  16(%rax)\n"
++		"movq %r12,  24(%rax)\n"
++		"movq %rbp,  32(%rax)\n"
++		"movq %rbx,  40(%rax)\n"
++		"movq %r11,  48(%rax)\n"
++		"movq %r10,  56(%rax)\n"
++		"movq  %r9,  64(%rax)\n"
++		"movq  %r8,  72(%rax)\n"
++		"movq %rcx,  88(%rax)\n"
++		"movq %rdx,  96(%rax)\n"
++		"movq %rsi, 104(%rax)\n"
++		"movq %rdi, 112(%rax)\n"
++		"movq   $0, 120(%rax)\n" /* orig_rax */
++		"movq   $0, 128(%rax)\n" /* rip      */
++		"movq   $0, 136(%rax)\n" /* cs       */
++
++		/* restore return value and 2nd argument */
++		"pop %rax\n"
++		"pop %rsi\n"
++
++		"movq %rax,  80(%rsi)\n"
++
++		"pushf\n"
++		"pop %rax\n"
++
++		"movq %rax, 144(%rsi)\n" /* eflags   */
++		"movq %rsp, 152(%rsi)\n" /* rsp      */
++		"movq   $0, 160(%rsi)\n" /* ss       */
++		"ret\n"
++);
++}
++
++static void test_uretprobe_regs_equal(void)
++{
++	struct uprobe_syscall *skel = NULL;
++	struct pt_regs before = {}, after = {};
++	unsigned long *pb = (unsigned long *) &before;
++	unsigned long *pa = (unsigned long *) &after;
++	unsigned long *pp;
++	unsigned int i, cnt;
++	int err;
++
++	skel = uprobe_syscall__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "uprobe_syscall__open_and_load"))
++		goto cleanup;
++
++	err = uprobe_syscall__attach(skel);
++	if (!ASSERT_OK(err, "uprobe_syscall__attach"))
++		goto cleanup;
++
++	uretprobe_regs(&before, &after);
++
++	pp = (unsigned long *) &skel->bss->regs;
++	cnt = sizeof(before)/sizeof(*pb);
++
++	for (i = 0; i < cnt; i++) {
++		unsigned int offset = i * sizeof(unsigned long);
++
++		/*
++		 * Check register before and after uretprobe_regs_trigger call
++		 * that triggers the uretprobe.
++		 */
++		switch (offset) {
++		case offsetof(struct pt_regs, rax):
++			ASSERT_EQ(pa[i], 0xdeadbeef, "return value");
++			break;
++		default:
++			if (!ASSERT_EQ(pb[i], pa[i], "register before-after value check"))
++				fprintf(stdout, "failed register offset %u\n", offset);
++		}
++
++		/*
++		 * Check register seen from bpf program and register after
++		 * uretprobe_regs_trigger call
++		 */
++		switch (offset) {
++		/*
++		 * These values will be different (not set in uretprobe_regs),
++		 * we don't care.
++		 */
++		case offsetof(struct pt_regs, orig_rax):
++		case offsetof(struct pt_regs, rip):
++		case offsetof(struct pt_regs, cs):
++		case offsetof(struct pt_regs, rsp):
++		case offsetof(struct pt_regs, ss):
++			break;
++		default:
++			if (!ASSERT_EQ(pp[i], pa[i], "register prog-after value check"))
++				fprintf(stdout, "failed register offset %u\n", offset);
++		}
++	}
++
++cleanup:
++	uprobe_syscall__destroy(skel);
++}
++#else
++static void test_uretprobe_regs_equal(void)
++{
++	test__skip();
++}
++#endif
++
++void test_uprobe_syscall(void)
++{
++	if (test__start_subtest("uretprobe_regs_equal"))
++		test_uretprobe_regs_equal();
++}
+diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall.c b/tools/testing/selftests/bpf/progs/uprobe_syscall.c
+new file mode 100644
+index 000000000000..8a4fa6c7ef59
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/uprobe_syscall.c
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <string.h>
++
++struct pt_regs regs;
++
++char _license[] SEC("license") = "GPL";
++
++SEC("uretprobe//proc/self/exe:uretprobe_regs_trigger")
++int uretprobe(struct pt_regs *ctx)
++{
++	__builtin_memcpy(&regs, ctx, sizeof(regs));
++	return 0;
++}
+-- 
+2.45.0
 
-> > > +static const char *const ad24xx_codec_slot_size_text[] =3D {
-> > > +	"8 bits",  "12 bits", "16 bits", "20 bits",
-> > > +	"24 bits", "28 bits", "32 bits",
-> > > +};
-> >=20
-> > Why is this configured by the user rather than via set_tdm_slot(), and
-> > how would one usefully use this at runtime?
->=20
-> This configures the slot size of A2B data slots, not the slot size on
-> the TDM interface. Typically one would expect it to be the same, so your
-> question is valid. But it is not a strict requirement as far as the A2B
-> bus and hardware is concerned.
->=20
-> To give a concrete example, the TDM interface might run with a TDM slot
-> size of 32 bits, but the PCM data is in reality 24 bits padded to 32
-> bits. In this case, A2B bus bandwidth can be saved by configuring the
-> "{Up,Down}stream Slot Size" kcontrol to "24 bits".
->=20
-> More detailed information can be found in the manual in [1] section 3-22
-> "I2S/TDM Port Programming Concepts", where an analogous example is
-> given.
-
-That still doesn't sound like something that should be configured
-dynamically by the user.  Based on that description it sounds like it's
-just the sample size so should cope from hw_params.
-
---IfNqVr8A6eo57Tqb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZMfDAACgkQJNaLcl1U
-h9ACLgf9F/4Hlcaz6ms2pQ1jUz65htj1EgnNuZtgs/G5QOQR/dSlJToXp1Fsk0+B
-LX+uL2Bi+Va82Rv/PoN/GXymodv97hPrbFvwmyNHUaDncUXdlZSBVzo0h/3uk9Hf
-P2yvFxZLGkFVMrCxAaA+/C75nwRoftdmd/DbxGCtmcfy9VCO95LVf9jP6pHmAWk6
-JGJ+VUBmwqZZ3NDyFqRvujjpE1uFgWrvgracm1PAujirj0hcYbhXwVpOTxh8HWBL
-1WhXTof/JrHLwVWAWFEE2nuh2ZziHMiq1sWYA6tCxhdtQZSc4z2EJnI+qXJfrd2b
-ZHe0aWB3mYxQ+jN2cq3QGaG2KR7PUA==
-=Woy1
------END PGP SIGNATURE-----
-
---IfNqVr8A6eo57Tqb--
