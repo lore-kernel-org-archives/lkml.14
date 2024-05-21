@@ -1,54 +1,56 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C11250A63
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 19:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03238149015
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 19:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716320963; cv=none; b=b0YDbKXQ3NznSvKTx956n5aGMN5hBJ4wRxVMtgVjSZu51V+uygzkia1GwEgAXzR3mmrXz7Bf97y4IcAk02c0KFW/Xrr7XOI9GWt5dLNf2ymzQp+eTlnZInjkD4epqXXgnCi/mmiOwz03WfwWmK8VTLDYjemHtzh+abPidTfKNcg=
+	t=1716320964; cv=none; b=Ux30amFz0oNCvRDIrYTw7bxYC2XPqlbWN/QcbQpcleHlsO0YDVDl5ST3FpFxTgZiC1zQNiY53vnUi6vL8XBo+KmJ76G5nJXb8fO6s+s42rYeaTd3x4M8Z5d/g21VRhAHuQUHimSCnMgosPNDHowHUYfES1WZDW/XoaD+CkknS+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716320963; c=relaxed/simple;
-	bh=/k9i+bfVHQ5K3f/3wFoNG5mKxEPQIrinng8NftWO7uc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ACmvA4U8ltKk8xHtNWxEB04nFqT1g7L7iONmyYeXTksxD/P79mjKNU0xC6WBvPjOM4q0lvzwDfnn00KffGZbtPsWgLOhLL0vV7e9kmIrXuWeQmxFwpr20Ftk6DIiG4WiOerqgZXHzmviEA8GT++IO6P/Q03J219KLO2pEzZ7cSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NGK0mFdV; arc=none smtp.client-ip=209.85.222.174
+	s=arc-20240116; t=1716320964; c=relaxed/simple;
+	bh=Tooj6Y95pxQ5NpSlmeomxmuNcm9R63NtHWlrO8VM0ZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tFlY3xwQXSD+zxSSh12AIjH7aF1/XDuG23rAghqF1j9iFQDrzMdOZ+LFwQfPlUr23YyMk+1Pg4l4pYe/ocsIcIHq/MQStyxaNT8642DJBLSaAXQZ8l9by0svDjHa5o8yYBUND72/VlDCxk3Dap413AcGKqSLkUPs2NLTA5OXOEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sBmPlD3F; arc=none smtp.client-ip=209.85.160.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NGK0mFdV"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7930504b2e2so31323985a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 12:49:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sBmPlD3F"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-23f0d7d2ce6so3031342fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 12:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716320958; x=1716925758; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Omfjln/bi5kI4Iv+VFCzVDHJ4DQuTKFJqorBA/dp30=;
-        b=NGK0mFdVmX7ocouW8/mnvxK23K1NNx26fmGEj5RNcMDJtmfZa2GD7tTHlbyLDlmSNv
-         bTM3zcqcYiFnFSo0MmgcWqOhgFSQXfXSRMWeAaskcruSAL0wuew37EVpBQbOF8Exvj1m
-         FUjRaDW6ob/imo8efxV0AIqqriNYlQsOqZVAgObfK47ivh+IpKLP+3BkF5zvZQurzSr4
-         sgIDif5mXWgN1FVpw513qw5FkcCRN5FW7716s/jxSxTt/L3XtdC51Tq4TfOTnm6f1xYk
-         yeVyjxjG3+igwdIxRF8RTvPUMG4FZnQmHYc7iogRQpMsvZGldya9ToP58KWF5eSqjE0G
-         YcsA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716320961; x=1716925761; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZqjqst6IA8s4Y0Tix3Y2ed1HRW8o5RgtxqsUgjpfM8=;
+        b=sBmPlD3FiShGzMSRE1qIn4c9t6NoypMiypCaiqR/LsouXj3cQjHZINdoIk5XI5nX5C
+         q4m51xRNFallri6Rpq5lTREUd7gdYfB9IsW+f+sF/puAI7AYWsePCnaog9akR5VIBcfi
+         E0lHo0iCHjR8x210+ZmNs4MFAi5lAubWHFPfBqeLGwCqpZNmvWmCkK3J/WeEg3CIxVGk
+         pBBn41wXJOsdFipOpLwAofMJzl3EQ2hyYYUFAgbTEABBKqo/JopyDB55/W1kvFJma4if
+         yTL4iBz9+Lf449qBxvG9V2EmVkNgF8Li0b+d97cVsVnoOZ7B0lqv+bXQyWabEmBtejzY
+         5I3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716320958; x=1716925758;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2Omfjln/bi5kI4Iv+VFCzVDHJ4DQuTKFJqorBA/dp30=;
-        b=X7F6phAmgf4JOib3hgkc9/AQr9yNO+G13278J/swZEzJ2Q9o0udJCZbKunqg+sGG0L
-         LuDXsrczLmvnq8QKuZIq44f4I5LMIpwDNh562xIu2C12Lg7c2woWHKqGpCH2R0Kvdo1S
-         P8sFg4XYgzJrSGDe1ZIIi/ejyaarcbXhekIDzl2y7ID7oKk0p3nvAdjR2F6vM8fnMqmv
-         BvfNBwYkZOV2gwLovc4r79K2JUGo3xrSeabnMG9NbhDGdKHg5gvnheAXP/41zLr+OlSg
-         sPtlSTs8eBlmqnaBDjahe37MyzYmQHwzUceRwP2p/cw4F9ZXbmCvDXN/ATfcSltgomwc
-         uq8g==
-X-Gm-Message-State: AOJu0YyVIEBJOyKSVHO9sa0/PLx5ucjZAs8o2tXB4xqZgTi8YdDfU4kX
-	W38mDe32R1Sk1BM/wXB47+CWdWuB7AS/mPDgNHPhsVgJIbZdCGqH97q9hCFDScY=
-X-Google-Smtp-Source: AGHT+IHc4cDmfckFWlq+FyC07M3DyfM4aXioOiHBE6E7Qe1Oh791SLEDE6cXopgwbpDJ02CqXuS3lQ==
-X-Received: by 2002:a05:620a:4610:b0:793:343:6dba with SMTP id af79cd13be357-79303437183mr2084584485a.2.1716320958445;
-        Tue, 21 May 2024 12:49:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716320961; x=1716925761;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nZqjqst6IA8s4Y0Tix3Y2ed1HRW8o5RgtxqsUgjpfM8=;
+        b=kdPERgFdwFktQJqGsNShulmJnmjTapmOLJ16DPZbqKuyJrO9i2YSdCGuKLHPe+VXr4
+         RSg8w/XSdkOmVqPRZ40jsFimOKBq4e8bjJRcN5MCEFsPOrFsiEvAz5RVgmJkE/lUA9B0
+         aN45xRSCXqjPXB8mjIV3c1Op1SUC5QES8zwdgB7voFfehZaXD3PMZKqIKF0IdupsGvHG
+         RC+WMCOplD+84SEP5ufW5r+GWlFUjAGiDSbiOHA9PpHcyB4gbMY01tK9dZm1vOGZyw/y
+         Lo/SBXJLNICTtlNN8rfssh1M7D1G2WbotqOnKeen7qQ76029ntIEHGVmtnJ4L5Q5PlYR
+         A4ZQ==
+X-Gm-Message-State: AOJu0YwBfhNlTxZgVi8/Iw6pkYRje2xeFmmfwcSTO+Ab0dKdgcauhFbb
+	Zypfx7VnMNgxqzy0x7CiFcUkloFPFK5ZUJkiJaxPj7EK2eWUJ+hksF0VIldqsvo=
+X-Google-Smtp-Source: AGHT+IEXbAcssGSEqg2FFDiVusT4NNfPEryqOcuyeXi3Pw+DSNm9s1FRNgKW5xThmneBDiVA2Juu/A==
+X-Received: by 2002:a05:6871:712:b0:23d:c09b:e5eb with SMTP id 586e51a60fabf-24c68ddeb4emr106959fac.36.1716320960765;
+        Tue, 21 May 2024 12:49:20 -0700 (PDT)
 Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43df54d85a0sm161723611cf.23.2024.05.21.12.49.17
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43df54d85a0sm161723611cf.23.2024.05.21.12.49.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 12:49:18 -0700 (PDT)
+        Tue, 21 May 2024 12:49:20 -0700 (PDT)
 From: Trevor Gamblin <tgamblin@baylibre.com>
 To: linux-pwm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -57,10 +59,12 @@ Cc: linux-kernel@vger.kernel.org,
 	nuno.sa@analog.com,
 	tgamblin@baylibre.com,
 	dlechner@baylibre.com
-Subject: [PATCH 0/2 v3] pwm: add support for duty_offset
-Date: Tue, 21 May 2024 15:49:14 -0400
-Message-ID: <20240521194916.1897909-1-tgamblin@baylibre.com>
+Subject: [PATCH 2/2 v3] pwm: axi-pwmgen: add duty offset support
+Date: Tue, 21 May 2024 15:49:16 -0400
+Message-ID: <20240521194916.1897909-3-tgamblin@baylibre.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240521194916.1897909-1-tgamblin@baylibre.com>
+References: <20240521194916.1897909-1-tgamblin@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,52 +73,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series extends the PWM subsystem to support the duty_offset feature
-found on some PWM devices. It includes a patch to enable this feature
-for the axi-pwmgen driver, which can also serve as an example of how to
-implement it for other devices.
+Enable duty_offset feature now that it is supported in the pwm
+subsystem. Related macros and struct fields related to duty_offset are
+renamed to be consistent.
 
-The series was tested on actual hardware using a Zedboard. An
-oscilloscope was used to validate that the generated PWM signals matched
-the requested ones. 
-
-Note that in addition to the other patches in this series, the changes
-to the axi-pwmgen driver rely on [1], which hasn't been picked up yet.
-
-[1] https://lore.kernel.org/linux-pwm/20240424125850.4189116-1-tgamblin@baylibre.com/
-
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 ---
 v3 changes:
 * rebased on top of latest pwm/for-next
-* removed changes related to cdev to match current pwm tree
-* fixed minor whitespace issue caught by checkpatch
-
-Link to v2: https://lore.kernel.org/linux-pwm/20240409174126.1296318-1-tgamblin@baylibre.com/
 
 v2 changes:
 * Address feedback for driver in v1:
-  * Remove supports_offset flag in pwm_chip struct, and references to it
-    in the axi-pwmgen driver patch
-  * Drop pwm_config_full patch entirely
-  * Don't return EINVAL when state->duty_offset + state->duty_cycle >
-    state->period in __pwm_apply(), since this is valid as long as
-    neither is greater than state->period on its own
-  * Add a check to disallow setting the PWM signal as inverse and a
-    nonzero duty_offset at the same time in __pwm_apply(), with a
-    comment explaining why
+  * Remove line setting supports_offset flag in pwm_chip, since that has
+    been removed from the struct in core.c.
+---
+ drivers/pwm/pwm-axi-pwmgen.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-Link to v1 (RFC): https://lore.kernel.org/linux-pwm/20240405003025.739603-1-tgamblin@baylibre.com/
-
-Trevor Gamblin (2):
-  pwm: add duty offset support
-  pwm: axi-pwmgen: add duty offset support
-
- drivers/pwm/core.c           | 79 +++++++++++++++++++++++++++++++++---
- drivers/pwm/pwm-axi-pwmgen.c | 20 ++++++++-
- include/linux/pwm.h          | 15 +++++++
- include/trace/events/pwm.h   |  6 ++-
- 4 files changed, 112 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+index e0bf90cc2ba3..9ae06b105d07 100644
+--- a/drivers/pwm/pwm-axi-pwmgen.c
++++ b/drivers/pwm/pwm-axi-pwmgen.c
+@@ -56,7 +56,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
+ 	unsigned int ch = pwm->hwpwm;
+ 	struct regmap *regmap = ddata->regmap;
+-	u64 period_cnt, duty_cnt;
++	u64 period_cnt, duty_cnt, duty_offset_cnt;
+ 	int ret;
+ 
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+@@ -81,6 +81,14 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
+ 		if (ret)
+ 			return ret;
++
++		duty_offset_cnt = mul_u64_u64_div_u64(state->duty_offset, ddata->clk_rate_hz, NSEC_PER_SEC);
++		if (duty_offset_cnt > UINT_MAX)
++			duty_offset_cnt = UINT_MAX;
++
++		ret = regmap_write(regmap, AXI_PWMGEN_CHX_OFFSET(ch), duty_offset_cnt);
++		if (ret)
++			return ret;
+ 	} else {
+ 		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
+ 		if (ret)
+@@ -89,6 +97,10 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
+ 		if (ret)
+ 			return ret;
++
++		ret = regmap_write(regmap, AXI_PWMGEN_CHX_OFFSET(ch), 0);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return regmap_write(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_LOAD_CONFIG);
+@@ -117,6 +129,12 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	state->duty_cycle = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
+ 
++	ret = regmap_read(regmap, AXI_PWMGEN_CHX_OFFSET(ch), &cnt);
++	if (ret)
++		return ret;
++
++	state->duty_offset = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
++
+ 	state->polarity = PWM_POLARITY_NORMAL;
+ 
+ 	return 0;
 -- 
 2.45.1
 
