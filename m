@@ -1,151 +1,160 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F737F48E;
-	Tue, 21 May 2024 13:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB17A7CF39;
+	Tue, 21 May 2024 13:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716299831; cv=none; b=X0eN7Mw4T1RMYdJFFWi0UU6P7JrJeRh/4lWLfWzNPqw3r6vLC6ycqllpnAA8/vwlVAzneVwQNsBM+xN8cX6QLfkOKWyWb/Y1rSiKYRhOSDh/9m3FDUqQixuEZnzH/SMfc5Z46kbQ/n9sLGKiwB4esNJt5bF5/mrlFECe6zSB850=
+	t=1716299892; cv=none; b=IxR1oegC5w4zrguOia1siAUkx+3jAM2OqyNBPKkRFF9Nsb7CtkTYn12sLlf6hv1H0JetXjZMt5easqykG8SkgAcGnOwmFpSwnuJUZC1uOtV1tfciWPWtk2bJlfzyoWwZaR0bigLJQcl2cU9WamthUQAfjNTi+P9t4gkHOdV4j/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716299831; c=relaxed/simple;
-	bh=nh700QlV7zHPucf/ZaUoc9P1Sc5stx0DZKKVJkF+Dbs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AKRozAy4Y6Fw049sbmALQt+4OrdQ4IZhazCNufUClgYn6Em+XRMBGwi/gqEp6jOolVfFEMYYSSuRt4bZhEoHAaRmIxMRINK6H3H4nsABjhxlPczn7NBJd02XqVtFbn3UiAVnaU4yAINVePM29zqBel+rbxjabDRKycmTzuxDRM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XUjDVmgU; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716299892; c=relaxed/simple;
+	bh=IFxykgL4i+7OkE2HCCYJkBDbEnmNeEOyhztywlck38E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q5FEMY1XuqCG2uGit1xOfwqAecxs2IDow3GPqes7YQKQE7ESvHUZPxmhmKTAzVG1iCdrOrKxbJahCy2C4Ttyt+gsMh5B3Xy13ZW7P03deDF8484jt6OOb2IFwZA0W7t+nQVHKlyvut52j8YQ9U4LmFgVva5bED0uT8gqvq6yITE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=m7zO3Zsr; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUjDVmgU"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e47843cc7so8014560a12.0;
-        Tue, 21 May 2024 06:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716299828; x=1716904628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=emM0buPGHM3Qea7pkdrtiXLfG88POGw+bVMSHXBBdtA=;
-        b=XUjDVmgUrfDFQOKgHBQigzza6EEIrakKYefuB5ED4nQAwt/R0eye7jtRTMNZj+rtSc
-         catydGzX0bnGODmm+K3KKr7dImI/sbnFcG2tFnlLkIicBdvtWG8VOizRkKNcG/MfTxw7
-         OasuMIWf6EsEZ9S9iT51XJRPb/TTXANdhQrfMW6dDGVezj9ZW4iqmK/ebxMTbSH+xWCB
-         m69J4+LuInob3WVfYloq4cvHWgefWwhJ8xvXdixMh6R7Iy1DxLikimdh5iEMu/X2Lpkj
-         /wHs8kypVDQp/rpmw7l8XzyJZL7umJhMOpNZUViTyQke/d0gNIoFVrJv7eyUAElFafiq
-         9P5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716299828; x=1716904628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=emM0buPGHM3Qea7pkdrtiXLfG88POGw+bVMSHXBBdtA=;
-        b=YlhNirSe5gdA61MriPtvdQ2hV8xzJU9jncOTqjkl/Sv3cuZAJsPDYx0DwvnEYKF1Dt
-         JIU5iTLg+IAWUCvqet8l07HvV5XgPmeBK8tp95NBiZVGnLVEd3RGNeCas6MDsJKzyKlM
-         UK8+8ytSBeBJ75eLwRwfudGLNSD0NvXas4ZQ6Xql3I+MYbXDo9S5EgrF73aLfvU6E4nn
-         ThwHXjJZWJfFEHXEl6w1tlvobjjVpTmYdHV7/wlEptQZ6GmxJ6Ybc9grl4w80IgPkBY8
-         tRKWNTUYYwmI8pzuL1OQUOdFWe/4B3uLKJOiLewpxJX+fzeDk72w6SOwCSvctkDi4aOf
-         lJiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2694Wa3ExwViSGq/ImuSfPGz8D9mfl6FjvHLuH5OZ2X+QoPPeRXmVynDU1yzkSrWDsgzIQ0kEbYN2F6YygpC6ktbbvsGI9CsbM7jiD6L03Id5yUcEHxmLmCVqzeG4HjTLdsMvQg1tAQ==
-X-Gm-Message-State: AOJu0YzAnKoM1t+qWBaYO8oOvhYMSKwspMv5WktIpHVAwnav21f4akIe
-	u2WNQrAXpFl09w/xibFWiBohUar8WQzRBrjC6FuEbOy5rtY7267eiaTc8yzrZzCjViEenQcAuJZ
-	xDkvB8lyb7Cpv8Lrk9EhwFch5f/U=
-X-Google-Smtp-Source: AGHT+IGlrIEhEpyh0449PtWaBUIUUbn6UYoi23li4foh2VI15hVY+W7ucOK0F7C/5WROZbwXGti7tIAwaK42FPEibYA=
-X-Received: by 2002:a50:d7c2:0:b0:572:7bda:1709 with SMTP id
- 4fb4d7f45d1cf-5734d5904b4mr22542040a12.9.1716299827717; Tue, 21 May 2024
- 06:57:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="m7zO3Zsr"
+Received: from [192.168.192.85] (unknown [50.39.103.33])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 677D23F1DF;
+	Tue, 21 May 2024 13:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1716299882;
+	bh=dD3lJ5LEcnY8Jlr8OtzBKvvhqYyRgZu66FmZbZHw2Sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=m7zO3Zsr6BufaPwLWS9yLnKNmn5u6LmiqqdPWxTiz8285beFyKlH8o7VIx1MQ/1MI
+	 kHcHpD//wtQjlmT3KlFT5Q8G9ewyyXXFBNeHfdzJS26unw3zuRH3uaVKvHR0qf15z0
+	 ztQAMtWvK4m2/7Gon5BWZ0fP+KnlRJFGsyqpsxsWXE/pxBC6Cpp8/DZMb2k0a02qtG
+	 goypLplT0oGH58xYx8DoQC9XCON8unIWyk5k+VkwjLp3r5Clvp5GVGIvYTfCmX1U3w
+	 KZu31IDlAwYI/iMZ0v7jaZ0MKsF8FfeyDgCAHOQDE+qekRXtjZfW55K3m02OL3R6pY
+	 h/b3Pw9CdU2sw==
+Message-ID: <1b0d222a-b556-48b0-913f-cdd5c30f8d27@canonical.com>
+Date: Tue, 21 May 2024 06:57:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240519175906.138410-1-kanakshilledar111@protonmail.com>
- <20240519175906.138410-3-kanakshilledar111@protonmail.com>
- <171614715439.2941344.11264816105918092609.robh@kernel.org>
- <CAGLn_=tLdJU1F-i9YV5aCZQbS0L7y7Wu+_k6Dn=6HwH5JmZoMQ@mail.gmail.com> <20240520-verbally-vibes-47604636b8db@spud>
-In-Reply-To: <20240520-verbally-vibes-47604636b8db@spud>
-From: Kanak Shilledar <kanakshilledar@gmail.com>
-Date: Tue, 21 May 2024 19:26:54 +0530
-Message-ID: <CAGLn_=vsFSrEi9uaZosZ6hOK5WKyOhBWvhWmz1GXz8vp9M9M9w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: riscv: cpus: add ref to interrupt-controller
-To: Conor Dooley <conor@kernel.org>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>, linux-riscv@lists.infradead.org, 
-	Kanak Shilledar <kanakshilledar111@protonmail.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Samuel Holland <samuel.holland@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Introduce user namespace capabilities
+To: Jarkko Sakkinen <jarkko@kernel.org>, Jonathan Calmels
+ <jcalmels@3xx0.net>, Casey Schaufler <casey@schaufler-ca.com>
+Cc: brauner@kernel.org, ebiederm@xmission.com,
+ Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Joel Granados <j.granados@samsung.com>, Serge Hallyn <serge@hallyn.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ David Howells <dhowells@redhat.com>, containers@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+References: <20240516092213.6799-1-jcalmels@3xx0.net>
+ <2804dd75-50fd-481c-8867-bc6cea7ab986@schaufler-ca.com>
+ <D1BBFWKGIA94.JP53QNURY3J4@kernel.org>
+ <D1BBI1LX2FMW.3MTQAHW0MA1IH@kernel.org>
+ <D1BC3VWXKTNC.2DB9JIIDOFIOQ@kernel.org>
+ <jvy3npdptyro3m2q2junvnokbq2fjlffljxeqitd55ff37cydc@b7mwtquys6im>
+ <df3c9e5c-b0e7-4502-8c36-c5cb775152c0@schaufler-ca.com>
+ <vhpmew3kyay3xq4h3di3euauo43an22josvvz6assex4op3gzw@xeq63mqb2lmh>
+ <D1CQ1FZ72NIW.2U7ZH0GU6C5W5@kernel.org>
+ <D1CQ8J60S7L4.1OVRIWBERNM5Y@kernel.org>
+ <D1CQC0PTK1G0.124QCO3S041Q@kernel.org>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <D1CQC0PTK1G0.124QCO3S041Q@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Conor,
+On 5/18/24 04:21, Jarkko Sakkinen wrote:
+> On Sat May 18, 2024 at 2:17 PM EEST, Jarkko Sakkinen wrote:
+>> On Sat May 18, 2024 at 2:08 PM EEST, Jarkko Sakkinen wrote:
+>>> On Fri May 17, 2024 at 10:11 PM EEST, Jonathan Calmels wrote:
+>>>> On Fri, May 17, 2024 at 10:53:24AM GMT, Casey Schaufler wrote:
+>>>>> Of course they do. I have been following the use of capabilities
+>>>>> in Linux since before they were implemented. The uptake has been
+>>>>> disappointing in all use cases.
+>>>>
+>>>> Why "Of course"?
+>>>> What if they should not get *all* privileges?
+>>>
+>>> They do the job given a real-world workload and stress test.
+>>>
+>>> Here the problem is based on a theory and an experiment.
+>>>
+>>> Even a formal model does not necessarily map all "unknown unknowns".
+>>
+>> So this was like the worst "sales pitch" ever:
+>>
+>> 1. The cover letter starts with the idea of having to argue about name
+>> spaces, and have fun while doing that ;-) We all have our own ways to
+>> entertain ourselves but "name space duels" are not my thing. Why not
+>> just start with why we all want this instead? Maybe we don't want it
+>> then. Maybe this is just useless spam given the angle presented?
+>> 2. There's shitloads of computer science and set theory but nothing
+>> that would make common sense. You need to build more understandable
+>> model. There's zero "gist" in this work.
+>>
+>> Maybe this does make sense but the story around it sucks so far.
+> 
+> One tip: I think this is wrong forum to present namespace ideas in the
+> first place. It would be probably better to talk about this with e.g.
+> systemd or podman developers, and similar groups. There's zero evidence
+> of the usefulness. Then when you go that route and come back with actual
+> users, things click much more easily. Now this is all in the void.
+> 
+> BR, Jarkko
 
-Thanks for the clarification.
-On Mon, May 20, 2024 at 10:34=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
-ote:
->
-> On Mon, May 20, 2024 at 03:09:44PM +0530, Kanak Shilledar wrote:
-> > On Mon, May 20, 2024 at 1:02=E2=80=AFAM Rob Herring (Arm) <robh@kernel.=
-org> wrote:
-> > >
+Jarkko,
+
+this is very much the right forum. User namespaces exist today. This
+is a discussion around trying to reduce the exposed kernel surface
+that is being used to attack the kernel.
 
 
-
-> By "this patch" it means that having the information in the cover
-> doesn't help, but info about missing deps should go under the --- line
-> etc.
-
-I am still unable to get this part. I don't see there is any dependency
-other than the two patches dependent on each other. In my cover letter
-I have mentioned that the two patches are dependent on each other.
-
-> | base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
-> | prerequisite-patch-id: 158157d32a32e765834a0cb4fc6335f9009d9962
-> | prerequisite-patch-id: 4007c7386e66f93b67a2631dddca08cadcee708b
->
-> That said, why do you have two prerequisite patches? This applies on top
-> of 6.9-rc3 without any issues (other than trailing whitespace warnings).
-
-For generation the patches I am using the command:
-`git format-patch -2 -o outgoing/ --cover-letter --base=3Dauto`
-It is automatically adding those two preqrequisite-patch-ids
-automatically along with the base-commit id.
-Is it due to the fact that I am having 2 older patches which I have
-rolled out already? Shall I remove those
-prerequisite patch id from the coverletter to solve this issue?
-
-> Also, you forgot the v3 tag on this patchset, which confuses tooling:
-
-I will fix it in my next version. I haven't changed anything in the
-patch so I will add the v3 tag and send it.
-
->         shazam https://lore.kernel.org/linux-riscv/20240519175906.138410-=
-1-kanakshilledar111@protonmail.com/T/#t
->         Grabbing thread from lore.kernel.org/all/20240519175906.138410-1-=
-kanakshilledar111@protonmail.com/t.mbox.gz
->         Checking for newer revisions
->         Grabbing search results from lore.kernel.org
-> --->      Added from v2: 1 patches
->         Analyzing 10 messages in the thread
-> --->    Will use the latest revision: v2
->         You can pick other revisions using the -vN flag
->         Checking attestation on all messages, may take a moment...
->         Retrieving CI status, may take a moment...
->         Some CI checks failed, see patchwork for more info:
->           https://patchwork.kernel.org/project/linux-riscv/list/?series=
-=3D854147
->         ---
->           =E2=9C=93 [=E2=97=8F PATCH v2] dt-bindings: interrupt-controlle=
-r: riscv,cpu-intc: convert to dtschema
->             + Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->           ---
->           =E2=9C=93 Signed: DKIM/gmail.com
->         ---
->         Total patches: 1
->         ---
->         Applying: dt-bindings: interrupt-controller: riscv,cpu-intc: conv=
-ert to dtschema
->
-> Thanks,
-> Conor.
-
-Thanks and Regards,
-Kanak Shilledar
