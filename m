@@ -1,319 +1,299 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FF974C09
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483DC57CB2
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716291905; cv=none; b=Yzod111cRP+JP9scH0/H50FhEutb+OSSipUaneIGYIxmQs3VFpW//mPQnK0fBDxFukxXK2bXu758wE1vKyl0b0RvAGLdDJFAyW+jwlhvAc8S9CcyCbbp7ZR54YiX03t2bXfMKzyO7IGLk5EQUh3TVqxVZ+HMhafUYDYEvuM6rcw=
+	t=1716291936; cv=none; b=gHhlhhmEdnsZaO6+f4nqg+OLsHXCevBex+ftgkhiiLJutlIyyYMF0nnX0dtSygDoms6g0nTkCf/nz1fwayTJK+uoN9gw0xdtuf4Eg7/xUzhCYAZ1kWpsr8HwqXgAKm0UctQD2wGg4jIdy+cfzk8It/hM+nSYmVHh5+kLu9d4m34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716291905; c=relaxed/simple;
-	bh=2Gy3xvFckSkNvjNEWhGj/kHspLan6ykQQUl7cs/HI5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qmO9hexidKXkKTzm1fkMbpiikdhu4raFFu7+qY/w9RRNa+iiTCzogt6RhoRha4hkrG4nnc5EH8I0bKQ8OOwitAgV4SBZbrWmlHC47j8jDTzbYE2YaSv6qdR3V4RZeXwYsBcX/jdwWsm4ZPj7auV8UyGZ2V6P0L5bJlg1WHqmUDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=BfZ23q3n; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1716291936; c=relaxed/simple;
+	bh=WI+W2XMBjZIyfWvlk7MSYFGVtNnqzAUQKLonrzifA5A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nq1e4uLuuZE+5yDdxWp6n6X399L/hgpqOenMFuF8KHEXGNqUR3jQAt2btUG7dTsKZThkRb7e8ZDfDRuo37XsukrQKwOX3NlkJRMd41sYw3rkY/Y7N6jjxSLzHpX1OR2fZCpc7aJBQRmwHDQxU5w6oDpi4AgPtZAnIJhZYn/emNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mpjwAs0c; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BfZ23q3n"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-574d96f71efso1615969a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 04:45:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mpjwAs0c"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51fcb7dc722so4809937e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 04:45:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1716291902; x=1716896702; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IOG87kRKqhGoWjQDtxhtb40Vr6tjKxEiEr57hLDOyAs=;
-        b=BfZ23q3nMD1kkd6L5j55kbUxd9Wg3VONWI+oBQgfIzIAIXeyk3kt5+nyXf9Rr1ZQmj
-         zNEJALztllfTNxoJD4IdOl9BXQW9UZtW8YK2+C6OVVfw905Fsc/aU0HIhn9TDKYR3I7g
-         jSOCiXE1uRUGlhqjmNrgq7hQMTNFHO0M95cuM=
+        d=chromium.org; s=google; t=1716291932; x=1716896732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f8Qd+SRRVTsjkfzy+IjSnlZiFTGS0/2MNpa9Ko1nWh0=;
+        b=mpjwAs0cZoWdkPExouzD2090ENGfKDvteewRLj0vQbmHqtE++cxQzWhA6KyRRx+JXs
+         usMbU+zgCnnFKO5+YP/nOiizc3DzN5huOIzXWE7GAexVk1zfe1JYYyFerWUXeC/5ATbI
+         KTztMtlyAXPg3lZuxOHMNT0nqTxC2l3r97ffI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716291902; x=1716896702;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IOG87kRKqhGoWjQDtxhtb40Vr6tjKxEiEr57hLDOyAs=;
-        b=imSZdI/+CqnVIHax5Abg5+kJUVKIotuYyVubyIeHiZ/Ygb0FznFR2PDeTQvZX17t4F
-         +lXHEHinSGf7DThzFFi4tsZIKKEieQD4Gj3hrgn7XIuxLvZqyJYYuzUkKQOB0Hw3lC7a
-         SYqqjpXUh62LbbuLBMF4WYurSHK62LluYFoJZzjxZWeyq86PvKke0IaPyLryKcivCZuG
-         A3N+7xyvYukWf17T73y6J+wE5MD2mHqVSopeC3lIsqFZAVxyiVnxd++02yiFl/FCgXW2
-         iUpc+IXF3OFwggZFMJ62rHvwVgT+JqdNW7wNBk9nklr7vTJmAz1RtFE7FPeE/HXgCqlA
-         ds4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXCKGjc0t1ihlQR9Zo4I37igynPZXkHIeFI3Et/A3yAgkjYqPm7TiUctUw7jd3Zv9yrOeneNX9XccP8kJ56kf2yBgFzEeezL/rURFt1
-X-Gm-Message-State: AOJu0YxzoOn6ZI1NNnraJ/Ew2KooKtiX3RS4HoReE0TyUl9mCv7q6tAv
-	fxg7XusQmgvVn39yskmdTYyxj1PuJpQKGU8szxP3vwiXDxg+fcJwRyGJ/d1ad2M=
-X-Google-Smtp-Source: AGHT+IHpqPsQEMClqFfPwE8hlGKP0FeodEfBdWinlRo0GJs8wdzebX+3CZQPu/6okkJEhteu1rblhw==
-X-Received: by 2002:a05:6402:8d0:b0:572:5c95:50fe with SMTP id 4fb4d7f45d1cf-5734d444320mr21767661a12.0.1716291901588;
-        Tue, 21 May 2024 04:45:01 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574bcad0362sm13110306a12.20.2024.05.21.04.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 04:45:01 -0700 (PDT)
-Date: Tue, 21 May 2024 13:44:59 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: =?iso-8859-1?Q?Adri=E1n?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, kernel@collabora.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Rob Clark <robdclark@gmail.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>
-Subject: Re: [PATCH v2 1/1] drm: Add ioctl for querying a DRM device's list
- of open client PIDs
-Message-ID: <ZkyJO01lvuVhFlMG@phenom.ffwll.local>
-Mail-Followup-To: =?iso-8859-1?Q?Adri=E1n?= Larumbe <adrian.larumbe@collabora.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, kernel@collabora.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Rob Clark <robdclark@gmail.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>
-References: <20240501185047.3126832-1-adrian.larumbe@collabora.com>
- <20240501185047.3126832-2-adrian.larumbe@collabora.com>
- <ZjNKLVZgekRqw5AL@phenom.ffwll.local>
- <a3hakatontuh535xkvwz3txbaocjx44ajkarmiigt3prekqysc@hp2zayht4hbh>
+        d=1e100.net; s=20230601; t=1716291932; x=1716896732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f8Qd+SRRVTsjkfzy+IjSnlZiFTGS0/2MNpa9Ko1nWh0=;
+        b=RamVpzSOmrBGhnNGSvSRpwm2E7GcuxJxGOed68u74nIp9bGzHrHASGeG15xtulPLcs
+         +q5K2NC3+6ZbxHfT6NULeeLr+K7wPwPALolLn7WPmJ09lKLpe0OscP2InVcvRLnemV6l
+         yS2OJ6/50dMBXVOY7iMS/adOuHUDbrJGxEbO0EN/oU3r57yPbXyaUCTYVx2PeIuWbyYz
+         p6+1aFFiNjtDX24HhRYv/DvRAIQCKAdl11dibEX3ctWFwMPSG9rKgp4orr1bGtdsYPNI
+         IgHmORovLOECLMafDYTCZf8DMK743AQGPeWLYNfUULND+Zg0yfJA1RlEcq5/IAhmNuhs
+         f8yA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0JA+a0CZ1+cC2EG3OihDqh7FFt+FUeIZkU13Px/YREOq5mp1S0Fc+I/loKD71HqiwljlyafOWnEuNeQDgDIlVW9mnfm+vzx98BaRz
+X-Gm-Message-State: AOJu0YzymefTivrpsKbWO3Af8LaT8SMqX8plmRNQ9B4XrDJz7OquzmXl
+	t1Ca4LdrL2JhxrOf16rdlPlZaw+3OHrl+KtbuPvgD+dhgNs88RhVp0iTYvYKeFJC0fVs91l0pSW
+	PIKr+MyM7O1yTV+j7lpEcNf4Qk0723P5dQWY=
+X-Google-Smtp-Source: AGHT+IH3rKqy1XmZb5uBs/FFnL2Rny/bG0aGjPCEM48ItqeHRqIiuaFB6NqaDBz5DvvJi70o5T0c6/G8VykaKG9GU8A=
+X-Received: by 2002:a19:2d4e:0:b0:51f:9a88:be2a with SMTP id
+ 2adb3069b0e04-52407cde448mr2310900e87.23.1716291932397; Tue, 21 May 2024
+ 04:45:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a3hakatontuh535xkvwz3txbaocjx44ajkarmiigt3prekqysc@hp2zayht4hbh>
-X-Operating-System: Linux phenom 6.8.9-amd64 
+References: <20240516174357.26755-1-jim.cromie@gmail.com> <20240516174357.26755-6-jim.cromie@gmail.com>
+In-Reply-To: <20240516174357.26755-6-jim.cromie@gmail.com>
+From: =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>
+Date: Tue, 21 May 2024 13:45:21 +0200
+Message-ID: <CALwA+NahLwNXapUogMGvBX1LavVKMoipLwN7v1DdjtJzayEkNQ@mail.gmail.com>
+Subject: Re: [PATCH v8-RESEND 05/33] dyndbg: replace classmap list with a vector
+To: Jim Cromie <jim.cromie@gmail.com>
+Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk, joe@perches.com, 
+	mcgrof@kernel.org, daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, 
+	jani.nikula@intel.com, ville.syrjala@linux.intel.com, seanpaul@chromium.org, 
+	robdclark@gmail.com, groeck@google.com, yanivt@google.com, bleung@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 16, 2024 at 11:12:19PM +0100, Adrián Larumbe wrote:
-> Hi Daniel,
-> 
-> On 02.05.2024 10:09, Daniel Vetter wrote:
-> > On Wed, May 01, 2024 at 07:50:43PM +0100, Adrián Larumbe wrote:
-> > > Up to this day, all fdinfo-based GPU profilers must traverse the entire
-> > > /proc directory structure to find open DRM clients with fdinfo file
-> > > descriptors. This is inefficient and time-consuming.
-> > > 
-> > > This patch adds a new DRM ioctl that allows users to obtain a list of PIDs
-> > > for clients who have opened the DRM device. Output from the ioctl isn't
-> > > human-readable, and it's meant to be retrieved only by GPU profilers like
-> > > gputop and nvtop.
-> > > 
-> > > Cc: Rob Clark <robdclark@gmail.com>
-> > > Cc: Tvrtko Ursulin <tursulin@ursulin.net>
-> > > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_internal.h |  1 +
-> > >  drivers/gpu/drm/drm_ioctl.c    | 89 ++++++++++++++++++++++++++++++++++
-> > >  include/uapi/drm/drm.h         |  7 +++
-> > >  3 files changed, 97 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
-> > > index 690505a1f7a5..6f78954cae16 100644
-> > > --- a/drivers/gpu/drm/drm_internal.h
-> > > +++ b/drivers/gpu/drm/drm_internal.h
-> > > @@ -243,6 +243,7 @@ static inline void drm_debugfs_encoder_remove(struct drm_encoder *encoder)
-> > >  drm_ioctl_t drm_version;
-> > >  drm_ioctl_t drm_getunique;
-> > >  drm_ioctl_t drm_getclient;
-> > > +drm_ioctl_t drm_getclients;
-> > >  
-> > >  /* drm_syncobj.c */
-> > >  void drm_syncobj_open(struct drm_file *file_private);
-> > > diff --git a/drivers/gpu/drm/drm_ioctl.c b/drivers/gpu/drm/drm_ioctl.c
-> > > index e368fc084c77..da7057376581 100644
-> > > --- a/drivers/gpu/drm/drm_ioctl.c
-> > > +++ b/drivers/gpu/drm/drm_ioctl.c
-> > > @@ -207,6 +207,93 @@ int drm_getclient(struct drm_device *dev, void *data,
-> > >  	}
-> > >  }
-> > >  
-> > > +/*
-> > > + * Get list of client PIDs who have opened a DRM file
-> > > + *
-> > > + * \param dev DRM device we are querying
-> > > + * \param data IOCTL command input.
-> > > + * \param file_priv DRM file private.
-> > > + *
-> > > + * \return zero on success or a negative number on failure.
-> > > + *
-> > > + * Traverses list of open clients for the given DRM device, and
-> > > + * copies them into userpace as an array of PIDs
-> > > + */
-> > > +int drm_getclients(struct drm_device *dev, void *data,
-> > > +		   struct drm_file *file_priv)
-> > > +
-> > > +{
-> > > +	struct drm_get_clients *get_clients = data;
-> > > +	ssize_t size = get_clients->len;
-> > > +	char __user *pid_buf;
-> > > +	ssize_t offset = 0;
-> > > +	int ret = 0;
-> > > +
-> > > +	/*
-> > > +	 * We do not want to show clients of display only devices so
-> > > +	 * as to avoid confusing UM GPU profilers
-> > > +	 */
-> > > +	if (!dev->render) {
-> > > +		get_clients->len = 0;
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * An input size of zero means UM wants to know the size of the PID buffer
-> > > +	 * We round it up to the nearest multiple of the page size so that we can have
-> > > +	 * some spare headroom in case more clients came in between successive calls
-> > > +	 * of this ioctl, and also to simplify parsing of the PIDs buffer, because
-> > > +	 * sizeof(pid_t) will hopefully always divide PAGE_SIZE
-> > > +	 */
-> > > +	if (size == 0) {
-> > > +		get_clients->len =
-> > > +			roundup(atomic_read(&dev->open_count) * sizeof(pid_t), PAGE_SIZE);
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	pid_buf = (char *)(void *)get_clients->user_data;
-> > > +
-> > > +	if (!pid_buf)
-> > > +		return -EINVAL;
-> > > +
-> > > +	mutex_lock(&dev->filelist_mutex);
-> > > +	list_for_each_entry_reverse(file_priv, &dev->filelist, lhead) {
-> > > +		pid_t pid_num;
-> > > +
-> > > +		if ((size - offset) < sizeof(pid_t))
-> > > +			break;
-> > > +
-> > > +		rcu_read_lock();
-> > > +		pid_num = pid_vnr(rcu_dereference(file_priv->pid));
-> > > +		rcu_read_unlock();
-> > > +
-> > > +		/* We do not want to return the profiler's PID */
-> > > +		if (pid_vnr(task_tgid(current)) == pid_num)
-> > > +			continue;
-> > > +
-> > > +		ret = copy_to_user(pid_buf + offset, &pid_num, sizeof(pid_t));
-> > > +		if (ret)
-> > > +			break;
-> > > +
-> > > +		offset += sizeof(pid_t);
-> > > +	}
-> > > +	mutex_unlock(&dev->filelist_mutex);
-> > > +
-> > > +	if (ret)
-> > > +		return -EFAULT;
-> > > +
-> > > +	if ((size - offset) >= sizeof(pid_t)) {
-> > > +		pid_t pid_zero = 0;
-> > > +
-> > > +		ret = copy_to_user(pid_buf + offset,
-> > > +				   &pid_zero, sizeof(pid_t));
-> > > +		if (ret)
-> > > +			return -EFAULT;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  /*
-> > >   * Get statistics information.
-> > >   *
-> > > @@ -672,6 +759,8 @@ static const struct drm_ioctl_desc drm_ioctls[] = {
-> > >  	DRM_IOCTL_DEF(DRM_IOCTL_MODE_LIST_LESSEES, drm_mode_list_lessees_ioctl, DRM_MASTER),
-> > >  	DRM_IOCTL_DEF(DRM_IOCTL_MODE_GET_LEASE, drm_mode_get_lease_ioctl, DRM_MASTER),
-> > >  	DRM_IOCTL_DEF(DRM_IOCTL_MODE_REVOKE_LEASE, drm_mode_revoke_lease_ioctl, DRM_MASTER),
-> > > +
-> > > +	DRM_IOCTL_DEF(DRM_IOCTL_GET_CLIENTS, drm_getclients, DRM_RENDER_ALLOW),
-> > 
-> > Uh RENDER_ALLOW sounds like a very bad idea for this, flat out leaks
-> > information that really paranoid people don't want to have leaked.
-> 
-> I'm curious, how is this ioctl leakier than, let's say, any of the driver
-> getparam ioctls, like Panfrost's panfrost_ioctl_get_param() ?
-> 
-> I'm asking this because I checked the way access to a drm file is being handled
-> in drm_ioctl_permit(), and it seems in the case of a render node (which are the
-> kind we're most interested in retrieving the list of client PIDs for),
-> DRM_RENDER_ALLOW access is mandatory.
+On Thu, May 16, 2024 at 7:44=E2=80=AFPM Jim Cromie <jim.cromie@gmail.com> w=
+rote:
+>
+> Classmaps are stored in an elf section/array, but are individually
+> list-linked onto dyndbg's per-module ddebug_table for operation.
+>
+> This is unnecessary; even when ddebug_attach_classmap() is handling
+> the builtin section (with classmaps for multiple builtin modules), its
+> contents are ordered, so a module's possibly multiple classmaps will
+> be consecutive in the section, and could be treated as a vector/block,
+> since both start-addy and subrange length are in the ddebug_info arg.
 
-All the resources are attached to a file, and that's fundamentally what
-the ioctls we have operate on. Or invariant stuff from the driver/hw, like
-the get_param ioctl you mention.
+Should it be start-addr instead of start-addy ?
 
-What your ioctl does is give us information about _other_ files opened of
-the same underlying render node, which is entirely new and does break the
-full isolation between different open render node files we've hade thus
-far.
+>
+> IOW, this treats classmaps similarly to _ddebugs, which are already
+> kept as vector-refs (address+len).
+>
+> So this changes:
+>
+> struct ddebug_class_map drops list-head link.
+>
+> struct ddebug_table drops the list-head maps, and gets: classes &
+> num_classes for the start-addy and num_classes, placed to improve
 
-> > Natural would be to limit to ptrace ability, but ptrace is for processes
-> > and fd aren't tied to that. So I'm not sure ...
-> > 
-> > I think a separate file (whether in procfs or a special chardev) where you
-> > can set access rights that suit feels a lot better for this. Plus putting
-> > it into procfs would also give the natural property that you can only read
-> > it if you have access to procfs anyway, so imo that feels like the best
-> > place for this ...
-> > 
-> > And yes that means some lkml bikeshedding with procfs folks, but I do
-> > think that's good here since we're likely not the only ones who need a bit
-> > faster procfs trawling for some special use-cases. So consistency across
-> > subsystems would be nice to at least try to aim for.
-> > -Sima
-> 
-> I think using procfs would make sense if we were displaying process-specific
-> information, and such is the case of fdinfo directories therein, but this ioctl
-> (and the device sysfs knob that it replaces from a previous patch series) is
-> meant to yield all the device's client PIDs. To me that doesn't sound like
-> something that is tied to a single render client, but to the device as a whole.
+The same here. Should it be start-addr instead of start-addy ?
 
-procfs because it's an algorithmic improvement for an interface that _is_
-in procfs. If you don't have access to procfs and it's fdinfo files, then
-this "give me the list of all open files" is no use. Also with pid name
-spaces we need to make sure that the list we hand out matches the relevant
-pid name space, if it's global that's a bug. So it's also relevant to the
-specific procfs instance a process has.
+> struct packing.
+>
+> The loading: in ddebug_attach_module_classes(), replace the
+> for-the-modname list-add loop, with a forloop that finds the module's
 
-So from a security pov, that's where it belongs.
--Sima
+Please add space forloop -> for loop
 
-> 
-> > >  };
-> > >  
-> > >  #define DRM_CORE_IOCTL_COUNT	ARRAY_SIZE(drm_ioctls)
-> > > diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
-> > > index 16122819edfe..c47aa9de51ab 100644
-> > > --- a/include/uapi/drm/drm.h
-> > > +++ b/include/uapi/drm/drm.h
-> > > @@ -1024,6 +1024,11 @@ struct drm_crtc_queue_sequence {
-> > >  	__u64 user_data;	/* user data passed to event */
-> > >  };
-> > >  
-> > > +struct drm_get_clients {
-> > > +	__u64 user_data;
-> > > +	__kernel_size_t len;
-> > > +};
-> > > +
-> > >  #if defined(__cplusplus)
-> > >  }
-> > >  #endif
-> > > @@ -1236,6 +1241,8 @@ extern "C" {
-> > >  #define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
-> > >  #define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
-> > >  
-> > > +#define DRM_IOCTL_GET_CLIENTS		DRM_IOWR(0xD1, struct drm_get_clients)
-> > > +
-> > >  /**
-> > >   * DRM_IOCTL_MODE_GETFB2 - Get framebuffer metadata.
-> > >   *
-> > > -- 
-> > > 2.44.0
-> > > 
-> 
-> Adrian Larumbe
+> subrange (start,length) of matching classmaps within the possibly
+> builtin classmaps vector, and saves those to the ddebug_table.
+>
+> The reading/using: change list-foreach loops in ddebug_class_name() &
+> ddebug_find_valid_class() to walk the array from start to length.
+>
+> Also:
+> Move #define __outvar up, above an added use in a fn-prototype.
+> Simplify ddebug_attach_module_classes args, ref has both addy,len.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+addy,len -> addr,len ?
+
+
+>
+> no functional changes
+>
+> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+> ---
+>  include/linux/dynamic_debug.h |  1 -
+>  lib/dynamic_debug.c           | 61 ++++++++++++++++++-----------------
+>  2 files changed, 32 insertions(+), 30 deletions(-)
+>
+> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.=
+h
+> index 5231aaf361c4..b53217e4b711 100644
+> --- a/include/linux/dynamic_debug.h
+> +++ b/include/linux/dynamic_debug.h
+> @@ -83,7 +83,6 @@ enum class_map_type {
+>  };
+>
+>  struct ddebug_class_map {
+> -       struct list_head link;
+>         struct module *mod;
+>         const char *mod_name;   /* needed for builtins */
+>         const char **class_names;
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index 152b04c05981..46e4cdd8e6be 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -45,10 +45,11 @@ extern struct ddebug_class_map __start___dyndbg_class=
+es[];
+>  extern struct ddebug_class_map __stop___dyndbg_classes[];
+>
+>  struct ddebug_table {
+> -       struct list_head link, maps;
+> +       struct list_head link;
+>         const char *mod_name;
+> -       unsigned int num_ddebugs;
+>         struct _ddebug *ddebugs;
+> +       struct ddebug_class_map *classes;
+> +       unsigned int num_ddebugs, num_classes;
+>  };
+>
+>  struct ddebug_query {
+> @@ -147,13 +148,15 @@ static void vpr_info_dq(const struct ddebug_query *=
+query, const char *msg)
+>                   query->first_lineno, query->last_lineno, query->class_s=
+tring);
+>  }
+>
+> +#define __outvar /* filled by callee */
+>  static struct ddebug_class_map *ddebug_find_valid_class(struct ddebug_ta=
+ble const *dt,
+> -                                                         const char *cla=
+ss_string, int *class_id)
+> +                                                       const char *class=
+_string,
+> +                                                       __outvar int *cla=
+ss_id)
+>  {
+>         struct ddebug_class_map *map;
+> -       int idx;
+> +       int i, idx;
+>
+> -       list_for_each_entry(map, &dt->maps, link) {
+> +       for (map =3D dt->classes, i =3D 0; i < dt->num_classes; i++, map+=
++) {
+>                 idx =3D match_string(map->class_names, map->length, class=
+_string);
+>                 if (idx >=3D 0) {
+>                         *class_id =3D idx + map->base;
+> @@ -164,7 +167,6 @@ static struct ddebug_class_map *ddebug_find_valid_cla=
+ss(struct ddebug_table cons
+>         return NULL;
+>  }
+>
+> -#define __outvar /* filled by callee */
+>  /*
+>   * Search the tables for _ddebug's which match the given `query' and
+>   * apply the `flags' and `mask' to them.  Returns number of matching
+> @@ -1114,9 +1116,10 @@ static void *ddebug_proc_next(struct seq_file *m, =
+void *p, loff_t *pos)
+>
+>  static const char *ddebug_class_name(struct ddebug_iter *iter, struct _d=
+debug *dp)
+>  {
+> -       struct ddebug_class_map *map;
+> +       struct ddebug_class_map *map =3D iter->table->classes;
+> +       int i, nc =3D iter->table->num_classes;
+>
+> -       list_for_each_entry(map, &iter->table->maps, link)
+> +       for (i =3D 0; i < nc; i++, map++)
+>                 if (class_in_range(dp->class_id, map))
+>                         return map->class_names[dp->class_id - map->base]=
+;
+>
+> @@ -1200,30 +1203,31 @@ static const struct proc_ops proc_fops =3D {
+>         .proc_write =3D ddebug_proc_write
+>  };
+>
+> -static void ddebug_attach_module_classes(struct ddebug_table *dt,
+> -                                        struct ddebug_class_map *classes=
+,
+> -                                        int num_classes)
+> +static void ddebug_attach_module_classes(struct ddebug_table *dt, struct=
+ _ddebug_info *di)
+>  {
+>         struct ddebug_class_map *cm;
+> -       int i, j, ct =3D 0;
+> +       int i, nc =3D 0;
+>
+> -       for (cm =3D classes, i =3D 0; i < num_classes; i++, cm++) {
+> +       /*
+> +        * Find this module's classmaps in a subrange/wholerange of
+> +        * the builtin/modular classmap vector/section.  Save the start
+> +        * and length of the subrange at its edges.
+> +        */
+> +       for (cm =3D di->classes, i =3D 0; i < di->num_classes; i++, cm++)=
+ {
+>
+>                 if (!strcmp(cm->mod_name, dt->mod_name)) {
+> -
+> -                       v2pr_info("class[%d]: module:%s base:%d len:%d ty=
+:%d\n", i,
+> -                                 cm->mod_name, cm->base, cm->length, cm-=
+>map_type);
+> -
+> -                       for (j =3D 0; j < cm->length; j++)
+> -                               v3pr_info(" %d: %d %s\n", j + cm->base, j=
+,
+> -                                         cm->class_names[j]);
+> -
+> -                       list_add(&cm->link, &dt->maps);
+> -                       ct++;
+> +                       if (!nc) {
+> +                               v2pr_info("start subrange, class[%d]: mod=
+ule:%s base:%d len:%d ty:%d\n",
+> +                                         i, cm->mod_name, cm->base, cm->=
+length, cm->map_type);
+> +                               dt->classes =3D cm;
+> +                       }
+> +                       nc++;
+>                 }
+>         }
+> -       if (ct)
+> -               vpr_info("module:%s attached %d classes\n", dt->mod_name,=
+ ct);
+> +       if (nc) {
+> +               dt->num_classes =3D nc;
+> +               vpr_info("module:%s attached %d classes\n", dt->mod_name,=
+ nc);
+> +       }
+>  }
+>
+>  /*
+> @@ -1256,10 +1260,9 @@ static int ddebug_add_module(struct _ddebug_info *=
+di, const char *modname)
+>         dt->num_ddebugs =3D di->num_descs;
+>
+>         INIT_LIST_HEAD(&dt->link);
+> -       INIT_LIST_HEAD(&dt->maps);
+>
+>         if (di->classes && di->num_classes)
+> -               ddebug_attach_module_classes(dt, di->classes, di->num_cla=
+sses);
+> +               ddebug_attach_module_classes(dt, di);
+>
+>         mutex_lock(&ddebug_lock);
+>         list_add_tail(&dt->link, &ddebug_tables);
+> @@ -1372,8 +1375,8 @@ static void ddebug_remove_all_tables(void)
+>         mutex_lock(&ddebug_lock);
+>         while (!list_empty(&ddebug_tables)) {
+>                 struct ddebug_table *dt =3D list_entry(ddebug_tables.next=
+,
+> -                                                     struct ddebug_table=
+,
+> -                                                     link);
+> +                                                    struct ddebug_table,
+> +                                                    link);
+>                 ddebug_table_free(dt);
+>         }
+>         mutex_unlock(&ddebug_lock);
+> --
+> 2.45.0
+>
