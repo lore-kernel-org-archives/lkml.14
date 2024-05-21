@@ -1,46 +1,46 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CE71494C3;
-	Tue, 21 May 2024 17:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA5B148844;
+	Tue, 21 May 2024 17:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716311973; cv=none; b=QIwzeaza5nYt0ZGPKMS70niULcWECISrkWgLD9OWrT//oQD5oWxUjxp9tOg0zXSTwRphw/2F8u2jk64Po5js1bZ3zF7H8lycPQDN7yec2zHVoF/NGgpSpm/cGKWVvumvxIbYRmVWfD8WNxjZJ/DsWyWM/3Z+W5U2mabDpXHyhIg=
+	t=1716311970; cv=none; b=MrvtM2rUhl6EHZG623XvZBbPe0IFlbbXOQuOkhAEU/wAdEQJ64oPlFvxTXWn+sFJ2b7jAomMpYTUvWsLBVuB1mvAW0fYh/B/EhFWhD1CSoVgOwzpDtmb6fVrTNftVRpknuL+Pr3f1XIeU8d7gjRIeBgGTuJag/ryjhtPIYC6Ouk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716311973; c=relaxed/simple;
-	bh=XXc4ZVHQ3468HjMOkaUtp+1/c9gRX3ItG55fZxqHGSU=;
+	s=arc-20240116; t=1716311970; c=relaxed/simple;
+	bh=pn/N/tomZkfJ80o3AS9b1GWzDZb9YsSYE8dK5Lfymr0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rWsFQF0v9RNrQ0vWkLnq2chekAA40eLkYbVJnZq6d/D9b0LztKPdkujFA0L0/y/mERI6lN/66Z5TAso8XEoK/VpuUJfVesm7aD1dGyLu3ydnw+FqEZdmmfeBLtwvxNoXWBLqRpZcg6zzJ8VwKsdqoJ11sqGymWD/0Lb7dU1yfGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jDPZjgI4; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=RLfcZpsc5rBfRMCZRJDng7wbfKV3YTtxpAauOYciIyUSRR2oaZkIgNMxMkhaVpKy6pBhynsfZCP1p9BQdaqu/1u2ep53XdbT4A4xerMzWXMtri5ZekNas60aAocg22aE4a9VLnS57MQnCveclH/I2QqXHrg40DfYGTUAmWEmusM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ig7tNvkb; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jDPZjgI4"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJCT6090430;
-	Tue, 21 May 2024 12:19:12 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ig7tNvkb"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJ6WB096852;
+	Tue, 21 May 2024 12:19:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716311952;
-	bh=tfgFIKVbwd3mJpFFiifa6H/UE8QctylrB+jQUaYNqs0=;
+	s=ti-com-17Q1; t=1716311946;
+	bh=UKsjJNqkj5eMePohYAF+jp0Hdx2XZ2RBA8z0JuV7els=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=jDPZjgI4+rnCCZkebI3C1upbIIPOW8coWvS7113T28twTw/OWeVYsStaZU+fh8vwG
-	 9Uof4wtydN/sUjE7J4snjVFFzXiouGSVeRAZAgKW44ncQZDzzx8bKOg959yr/+IsVN
-	 IhIvXLtlpqqrNd+G1kxQnWsko4vwECVxzwdw9wxM=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44LHJCED015148
+	b=ig7tNvkbOCNaQm6I3/le8hr0YNhqq06SuAuLSxS4W8dDbja9vlm5GmJdtR3yqyaYx
+	 Bw2BphgNiFokgM1U0hN2fiCvAZ47V0zWNQ2pQ9cTPR84b+N6Em5kWOTT6bPxcmHYm3
+	 t33upFfshjphDAxQW/G8m0wjJkgdZ37ZmB5aQxoU=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44LHJ6nt076458
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 21 May 2024 12:19:12 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 21 May 2024 12:19:06 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 21
- May 2024 12:19:12 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 12:19:06 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 21 May 2024 12:19:12 -0500
+ Frontend Transport; Tue, 21 May 2024 12:19:06 -0500
 Received: from localhost (uda0389739.dhcp.ti.com [137.167.1.114])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJBKB023437;
-	Tue, 21 May 2024 12:19:11 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJ5v7023307;
+	Tue, 21 May 2024 12:19:05 -0500
 From: <michael.nemanov@ti.com>
 To: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>,
         Breno Leitao <leitao@debian.org>,
@@ -52,9 +52,9 @@ CC: Sabeeh Khan <sabeeh-khan@ti.com>,
         Michael Nemanov
 	<Michael.Nemanov@ti.com>,
         Michael Nemanov <michael.nemanov@ti.com>
-Subject: [PATCH 11/17] Add init.c, init.h
-Date: Tue, 21 May 2024 20:18:35 +0300
-Message-ID: <20240521171841.884576-12-michael.nemanov@ti.com>
+Subject: [PATCH 07/17] Add boot.c, boot.h
+Date: Tue, 21 May 2024 20:18:31 +0300
+Message-ID: <20240521171841.884576-8-michael.nemanov@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240521171841.884576-1-michael.nemanov@ti.com>
 References: <20240521171841.884576-1-michael.nemanov@ti.com>
@@ -70,279 +70,420 @@ X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 From: Michael Nemanov <Michael.Nemanov@ti.com>
 
-High-level init code for new vifs
+Implements FW download for CC33xx. The FW comes in 2 parts - a 2nd stage
+bootloader (cc33xx_2nd_loader.bin) and the actual FW (cc33xx_fw.bin).
+Each file is requested from user space, and transferred to device
+chunk by chunk. A dedicated IRQ is excepted after each stage
+(Device power-on -> 2nd stage loader -> FW). This logic is implemnted in
+cc33xx_init_fw.
 
 Signed-off-by: Michael Nemanov <michael.nemanov@ti.com>
 ---
- drivers/net/wireless/ti/cc33xx/init.c | 236 ++++++++++++++++++++++++++
- drivers/net/wireless/ti/cc33xx/init.h |  15 ++
- 2 files changed, 251 insertions(+)
- create mode 100644 drivers/net/wireless/ti/cc33xx/init.c
- create mode 100644 drivers/net/wireless/ti/cc33xx/init.h
+ drivers/net/wireless/ti/cc33xx/boot.c | 363 ++++++++++++++++++++++++++
+ drivers/net/wireless/ti/cc33xx/boot.h |  24 ++
+ 2 files changed, 387 insertions(+)
+ create mode 100644 drivers/net/wireless/ti/cc33xx/boot.c
+ create mode 100644 drivers/net/wireless/ti/cc33xx/boot.h
 
-diff --git a/drivers/net/wireless/ti/cc33xx/init.c b/drivers/net/wireless/ti/cc33xx/init.c
+diff --git a/drivers/net/wireless/ti/cc33xx/boot.c b/drivers/net/wireless/ti/cc33xx/boot.c
 new file mode 100644
-index 000000000000..f338901ea96d
+index 000000000000..a0be54c7fbb7
 --- /dev/null
-+++ b/drivers/net/wireless/ti/cc33xx/init.c
-@@ -0,0 +1,236 @@
++++ b/drivers/net/wireless/ti/cc33xx/boot.c
+@@ -0,0 +1,363 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
 + */
 +
 +#include <linux/firmware.h>
-+#include "acx.h"
++
++#include "boot.h"
 +#include "cmd.h"
-+#include "conf.h"
-+#include "event.h"
-+#include "tx.h"
++#include "debug.h"
 +#include "init.h"
++#include "io.h"
 +
-+static int cc33xx_init_phy_vif_config(struct cc33xx *cc,
-+				      struct cc33xx_vif *wlvif)
++#define CC33XX_BOOT_TIMEOUT 2000
++
++struct hwinfo_bitmap {
++	u32 disable_5g			: 1u;
++	u32 disable_6g			: 1u;
++	u32 disable_ble			: 1u;
++	u32 disable_ble_m0plus		: 1u;
++	u32 disable_m33			: 1u;
++	u64 udi				: 64u;
++	u32 pg_version			: 4u;
++	u32 metal_version		: 4u;
++	u32 boot_rom_version		: 4u;
++	u32 m3_rom_version		: 4u;
++	u32 fuse_rom_structure_version	: 4u;
++	u64 mac_address			: 48u;
++	u32 device_part_number		: 6u;
++	u32 package_type		: 4u;
++	u32 fw_rollback_protection_1	: 32u;
++	u32 fw_rollback_protection_2	: 32u;
++	u32 fw_rollback_protection_3	: 32u;
++	u32 reserved			: 13u;
++} /* Aligned with boot code, must not be __packed */;
++
++union hw_info {
++	struct hwinfo_bitmap	bitmap;
++	u8			bytes[sizeof(struct hwinfo_bitmap)];
++};
++
++/* Called from threaded irq context */
++void cc33xx_handle_boot_irqs(struct cc33xx *cc, u32 pending_interrupts)
 +{
++	if (WARN_ON(!cc->fw_download))
++		return;
++
++	cc33xx_debug(DEBUG_BOOT, "BOOT IRQs: 0x%x", pending_interrupts);
++
++	atomic_or(pending_interrupts, &cc->fw_download->pending_irqs);
++	complete(&cc->fw_download->wait_on_irq);
++}
++
++static u8 *fetch_container(struct cc33xx *cc, const char *container_name,
++			   size_t *container_len)
++{
++	u8 *container_data = NULL;
++	const struct firmware *container;
 +	int ret;
 +
-+	ret = cc33xx_acx_slot(cc, wlvif, DEFAULT_SLOT_TIME);
-+	if (ret < 0)
-+		return ret;
++	ret = request_firmware(&container, container_name, cc->dev);
 +
-+	return 0;
-+}
-+
-+static int cc33xx_init_sta_beacon_filter(struct cc33xx *cc,
-+					 struct cc33xx_vif *wlvif)
-+{
-+	int ret;
-+
-+	ret = cc33xx_acx_beacon_filter_table(cc, wlvif);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* disable beacon filtering until we get the first beacon */
-+	ret = cc33xx_acx_beacon_filter_opt(cc, wlvif, false);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int cc33xx_ap_init_templates(struct cc33xx *cc,
-+				    struct ieee80211_vif *vif)
-+{
-+	struct cc33xx_vif *wlvif = cc33xx_vif_to_data(vif);
-+	int ret;
-+
-+	/* when operating as AP we want to receive external beacons for
-+	 * configuring ERP protection.
-+	 */
-+	ret = cc33xx_acx_beacon_filter_opt(cc, wlvif, false);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void cc33xx_set_ba_policies(struct cc33xx *cc, struct cc33xx_vif *wlvif)
-+{
-+	/* Reset the BA RX indicators */
-+	wlvif->ba_allowed = true;
-+	cc->ba_rx_session_count = 0;
-+
-+	/* BA is supported in STA/AP modes */
-+	wlvif->ba_support = (wlvif->bss_type != BSS_TYPE_AP_BSS &&
-+				wlvif->bss_type != BSS_TYPE_STA_BSS);
-+}
-+
-+/* vif-specifc initialization */
-+static int cc33xx_init_sta_role(struct cc33xx *cc, struct cc33xx_vif *wlvif)
-+{
-+	int ret = cc33xx_acx_group_address_tbl(cc, true, NULL, 0);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Beacon filtering */
-+	ret = cc33xx_init_sta_beacon_filter(cc, wlvif);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/* vif-specific initialization */
-+static int cc33xx_init_ap_role(struct cc33xx *cc, struct cc33xx_vif *wlvif)
-+{
-+	int ret;
-+
-+	/* initialize Tx power */
-+	ret = cc33xx_acx_tx_power(cc, wlvif, wlvif->power_level);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (cc->radar_debug_mode)
-+		cc33xx_cmd_generic_cfg(cc, wlvif,
-+				       CC33XX_CFG_FEATURE_RADAR_DEBUG,
-+				       cc->radar_debug_mode, 0);
-+
-+	return 0;
-+}
-+
-+int cc33xx_init_vif_specific(struct cc33xx *cc, struct ieee80211_vif *vif)
-+{
-+	struct cc33xx_vif *wlvif = cc33xx_vif_to_data(vif);
-+	struct conf_tx_ac_category *conf_ac;
-+	struct conf_tx_ac_category ac_conf[4];
-+	struct conf_tx_tid tid_conf[8];
-+	struct conf_tx_settings *tx_settings = &cc->conf.host_conf.tx;
-+	struct conf_tx_ac_category *p_wl_host_ac_conf = &tx_settings->ac_conf0;
-+	struct conf_tx_tid *p_wl_host_tid_conf = &tx_settings->tid_conf0;
-+	bool is_ap = (wlvif->bss_type == BSS_TYPE_AP_BSS);
-+	u8 ps_scheme = cc->conf.mac.ps_scheme;
-+	int ret, i;
-+
-+	/* consider all existing roles before configuring psm. */
-+
-+	if (cc->ap_count == 0 && is_ap) { /* first AP */
-+		ret = cc33xx_acx_sleep_auth(cc, CC33XX_PSM_ELP);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* unmask ap events */
-+		cc->event_mask |= cc->ap_event_mask;
-+
-+	/* first STA, no APs */
-+	} else if (cc->sta_count == 0 && cc->ap_count == 0 && !is_ap) {
-+		u8 sta_auth = cc->conf.host_conf.conn.sta_sleep_auth;
-+		/* Configure for power according to debugfs */
-+		if (sta_auth != CC33XX_PSM_ILLEGAL)
-+			ret = cc33xx_acx_sleep_auth(cc, sta_auth);
-+		/* Configure for ELP power saving */
-+		else
-+			ret = cc33xx_acx_sleep_auth(cc, CC33XX_PSM_ELP);
-+
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Mode specific init */
-+	if (is_ap) {
-+		ret = cc33xx_init_ap_role(cc, wlvif);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		ret = cc33xx_init_sta_role(cc, wlvif);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	cc33xx_init_phy_vif_config(cc, wlvif);
-+
-+	/* Default TID/AC configuration */
-+	WARN_ON(tx_settings->tid_conf_count != tx_settings->ac_conf_count);
-+	memcpy(ac_conf, p_wl_host_ac_conf, 4 * sizeof(struct conf_tx_ac_category));
-+	memcpy(tid_conf, p_wl_host_tid_conf, 8 * sizeof(struct conf_tx_tid));
-+
-+	for (i = 0; i < tx_settings->tid_conf_count; i++) {
-+		conf_ac =  &ac_conf[i];
-+
-+		/* If no ps poll is used, send legacy ps scheme in cmd */
-+		if (ps_scheme == PS_SCHEME_NOPSPOLL)
-+			ps_scheme = PS_SCHEME_LEGACY;
-+
-+		ret = cc33xx_tx_param_cfg(cc, wlvif, conf_ac->ac,
-+					  conf_ac->cw_min, conf_ac->cw_max,
-+					  conf_ac->aifsn, conf_ac->tx_op_limit,
-+					  false, ps_scheme, conf_ac->is_mu_edca,
-+					  conf_ac->mu_edca_aifs,
-+					  conf_ac->mu_edca_ecw_min_max,
-+					  conf_ac->mu_edca_timer);
-+
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Mode specific init - post mem init */
-+	if (is_ap)
-+		ret = cc33xx_ap_init_templates(cc, vif);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Configure initiator BA sessions policies */
-+	cc33xx_set_ba_policies(cc, wlvif);
-+
-+	return 0;
-+}
-+
-+int cc33xx_hw_init(struct cc33xx *cc)
-+{
-+	cc33xx_acx_init_mem_config(cc);
-+
-+	cc33xx_debug(DEBUG_TX, "available tx blocks: %d", 16);
-+	cc->last_fw_rls_idx = 0;
-+	cc->partial_rx.status = CURR_RX_START;
-+	return 0;
-+}
-+
-+int cc33xx_download_ini_params_and_wait(struct cc33xx *cc)
-+{
-+	struct cc33xx_cmd_ini_params_download *cmd;
-+	size_t command_size = ALIGN((sizeof(*cmd) + sizeof(cc->conf)), 4);
-+	int ret;
-+
-+	cc33xx_set_max_buffer_size(cc, INI_MAX_BUFFER_SIZE);
-+
-+	cc33xx_debug(DEBUG_ACX,
-+		     "Downloading INI configurations to FW, payload Length: %zu",
-+		     sizeof(cc->conf));
-+
-+	cmd = kzalloc(command_size, GFP_KERNEL);
-+	if (!cmd) {
-+		cc33xx_set_max_buffer_size(cc, CMD_MAX_BUFFER_SIZE);
-+		return -ENOMEM;
-+	}
-+
-+	cmd->length = cpu_to_le32(sizeof(cc->conf));
-+
-+	/* copy INI file params payload */
-+	memcpy((cmd->payload), &cc->conf, sizeof(cc->conf));
-+
-+	ret = cc33xx_cmd_send(cc, CMD_DOWNLOAD_INI_PARAMS,
-+			      cmd, command_size, 0);
 +	if (ret < 0) {
-+		cc33xx_warning("download INI params to FW command sending failed: %d",
-+			       ret);
-+	} else {
-+		cc33xx_debug(DEBUG_BOOT, "INI Params downloaded successfully");
++		cc33xx_error("could not get container %s: (%d)",
++			     container_name, ret);
++		return NULL;
 +	}
 +
-+	cc33xx_set_max_buffer_size(cc, CMD_MAX_BUFFER_SIZE);
-+	kfree(cmd);
++	if (container->size % 4) {
++		cc33xx_error("container size is not word-aligned: %zu",
++			     container->size);
++		goto out;
++	}
++
++	*container_len = container->size;
++	container_data = vmalloc(container->size);
++
++	if (!container_data) {
++		cc33xx_error("could not allocate memory for the container");
++		goto out;
++	}
++
++	memcpy(container_data, container->data, container->size);
++
++out:
++	release_firmware(container);
++	return container_data;
++}
++
++static int cc33xx_set_power_on(struct cc33xx *cc)
++{
++	int ret;
++
++	msleep(CC33XX_PRE_POWER_ON_SLEEP);
++	ret = cc33xx_power_on(cc);
++	if (ret < 0)
++		goto out;
++	msleep(CC33XX_POWER_ON_SLEEP);
++	cc33xx_io_reset(cc);
++	cc33xx_io_init(cc);
++
++out:
 +	return ret;
 +}
-diff --git a/drivers/net/wireless/ti/cc33xx/init.h b/drivers/net/wireless/ti/cc33xx/init.h
++
++static int cc33xx_chip_wakeup(struct cc33xx *cc)
++{
++	int ret = 0;
++
++	cc33xx_debug(DEBUG_BOOT, "Chip wakeup");
++
++	ret = cc33xx_set_power_on(cc);
++	if (ret < 0)
++		goto out;
++
++	if (!cc33xx_set_block_size(cc))
++		cc->quirks &= ~CC33XX_QUIRK_TX_BLOCKSIZE_ALIGN;
++
++out:
++	return ret;
++}
++
++static int wait_for_boot_irq(struct cc33xx *cc, u32 boot_irq_mask,
++			     unsigned long timeout)
++{
++	int ret;
++	u32 pending_irqs;
++	struct cc33xx_fw_download *fw_download;
++
++	fw_download = cc->fw_download;
++
++	ret = wait_for_completion_interruptible_timeout(&fw_download->wait_on_irq,
++							msecs_to_jiffies(timeout));
++
++	/* Fetch pending IRQs while clearing them in fw_download */
++	pending_irqs = atomic_fetch_and(0, &fw_download->pending_irqs);
++	pending_irqs &= ~HINT_COMMAND_COMPLETE;
++
++	reinit_completion(&fw_download->wait_on_irq);
++
++	if (ret == 0) {
++		cc33xx_error("boot IRQ timeout");
++		return -1;
++	} else if (ret < 0) {
++		cc33xx_error("boot IRQ completion error %d", ret);
++		return -2;
++	}
++
++	if (boot_irq_mask != pending_irqs) {
++		cc33xx_error("Unexpected IRQ received @ boot: 0x%x",
++			     pending_irqs);
++		return -3;
++	}
++
++	return 0;
++}
++
++static int download_container(struct cc33xx *cc, u8 *container, size_t len)
++{
++	int ret = 0;
++	u8 *current_transfer;
++	size_t current_transfer_size;
++	u8 *const container_end = container + len;
++	size_t max_transfer_size = cc->fw_download->max_transfer_size;
++	bool is_last_transfer;
++
++	current_transfer = container;
++
++	while (current_transfer < container_end) {
++		current_transfer_size = container_end - current_transfer;
++		current_transfer_size =
++			min(current_transfer_size, max_transfer_size);
++
++		is_last_transfer = (current_transfer + current_transfer_size >= container_end);
++
++		ret = cmd_download_container_chunk(cc,
++						   current_transfer,
++						   current_transfer_size,
++						   is_last_transfer);
++
++		current_transfer += current_transfer_size;
++
++		if (ret < 0) {
++			cc33xx_error("Chunk transfer failed");
++			goto out;
++		}
++	}
++
++out:
++	return ret;
++}
++
++static int container_download_and_wait(struct cc33xx *cc,
++				       const char *container_name,
++				       const u32 irq_wait_mask)
++{
++	int ret =  -1;
++	u8 *container_data;
++	size_t container_len;
++
++	cc33xx_debug(DEBUG_BOOT,
++		     "Downloading %s to device", container_name);
++
++	container_data = fetch_container(cc, container_name, &container_len);
++	if (!container_data)
++		return ret;
++
++	ret = download_container(cc, container_data, container_len);
++	if (ret < 0) {
++		cc33xx_error("Transfer error while downloading %s",
++			     container_name);
++		goto out;
++	}
++
++	ret = wait_for_boot_irq(cc, irq_wait_mask, CC33XX_BOOT_TIMEOUT);
++
++	if (ret < 0) {
++		cc33xx_error("%s boot signal timeout", container_name);
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_BOOT, "%s loaded successfully", container_name);
++	ret = 0;
++
++out:
++	vfree(container_data);
++	return ret;
++}
++
++static int fw_download_alloc(struct cc33xx *cc)
++{
++	if (WARN_ON(cc->fw_download))
++		return -EFAULT;
++
++	cc->fw_download = kzalloc(sizeof(*cc->fw_download), GFP_KERNEL);
++	if (!cc->fw_download)
++		return -ENOMEM;
++
++	init_completion(&cc->fw_download->wait_on_irq);
++
++	return 0;
++}
++
++static void fw_download_free(struct cc33xx *cc)
++{
++	if (WARN_ON(!cc->fw_download))
++		return;
++
++	kfree(cc->fw_download);
++	cc->fw_download = NULL;
++}
++
++static int get_device_info(struct cc33xx *cc)
++{
++	int ret;
++	union hw_info hw_info;
++	u64 mac_address;
++
++	ret = cmd_get_device_info(cc, hw_info.bytes, sizeof(hw_info.bytes));
++	if (ret < 0)
++		return ret;
++
++	cc33xx_debug(DEBUG_BOOT,
++		     "CC33XX device info: PG version: %d, Metal version: %d, Boot ROM version: %d, M3 ROM version: %d, MAC address: 0x%llx, Device part number: %d",
++		     hw_info.bitmap.pg_version, hw_info.bitmap.metal_version,
++		     hw_info.bitmap.boot_rom_version,
++		     hw_info.bitmap.m3_rom_version,
++		     (u64)hw_info.bitmap.mac_address,
++		     hw_info.bitmap.device_part_number);
++
++	cc->fw_download->max_transfer_size = 640;
++
++	mac_address = hw_info.bitmap.mac_address;
++
++	cc->fuse_rom_structure_version = hw_info.bitmap.fuse_rom_structure_version;
++	cc->pg_version = hw_info.bitmap.pg_version;
++	cc->device_part_number = hw_info.bitmap.device_part_number;
++	cc->disable_5g = hw_info.bitmap.disable_5g;
++	cc->disable_6g = hw_info.bitmap.disable_6g;
++
++	cc->efuse_mac_address[5] = (u8)(mac_address);
++	cc->efuse_mac_address[4] = (u8)(mac_address >> 8);
++	cc->efuse_mac_address[3] = (u8)(mac_address >> 16);
++	cc->efuse_mac_address[2] = (u8)(mac_address >> 24);
++	cc->efuse_mac_address[1] = (u8)(mac_address >> 32);
++	cc->efuse_mac_address[0] = (u8)(mac_address >> 40);
++
++	return 0;
++}
++
++int cc33xx_init_fw(struct cc33xx *cc)
++{
++	int ret;
++
++	cc->max_cmd_size = CC33XX_CMD_MAX_SIZE;
++
++	ret = fw_download_alloc(cc);
++	if (ret < 0)
++		return ret;
++
++	reinit_completion(&cc->fw_download->wait_on_irq);
++
++	ret = cc33xx_chip_wakeup(cc);
++	if (ret < 0)
++		goto power_off;
++
++	cc33xx_enable_interrupts(cc);
++
++	ret = wait_for_boot_irq(cc, HINT_ROM_LOADER_INIT_COMPLETE,
++				CC33XX_BOOT_TIMEOUT);
++	if (ret < 0)
++		goto disable_irq;
++
++	ret = get_device_info(cc);
++	if (ret < 0)
++		goto disable_irq;
++
++	ret = container_download_and_wait(cc, SECOND_LOADER_NAME,
++					  HINT_SECOND_LOADER_INIT_COMPLETE);
++	if (ret < 0)
++		goto disable_irq;
++
++	ret = container_download_and_wait(cc,  FW_NAME,
++					  HINT_FW_WAKEUP_COMPLETE);
++	if (ret < 0)
++		goto disable_irq;
++
++	ret = cc33xx_download_ini_params_and_wait(cc);
++
++	if (ret < 0)
++		goto disable_irq;
++
++	ret = wait_for_boot_irq(cc, HINT_FW_INIT_COMPLETE, CC33XX_BOOT_TIMEOUT);
++
++	if (ret < 0)
++		goto disable_irq;
++
++	ret = cc33xx_hw_init(cc);
++	if (ret < 0)
++		goto disable_irq;
++
++	/* Now we know if 11a is supported (info from the INI File), so disable
++	 * 11a channels if not supported
++	 */
++	cc->enable_11a = cc->conf.core.enable_5ghz;
++
++	cc33xx_debug(DEBUG_MAC80211, "11a is %ssupported",
++		     cc->enable_11a ? "" : "not ");
++
++	cc->state = CC33XX_STATE_ON;
++	ret = 0;
++	goto out;
++
++disable_irq:
++	cc33xx_disable_interrupts_nosync(cc);
++
++power_off:
++	cc33xx_power_off(cc);
++
++out:
++	fw_download_free(cc);
++	return ret;
++}
+diff --git a/drivers/net/wireless/ti/cc33xx/boot.h b/drivers/net/wireless/ti/cc33xx/boot.h
 new file mode 100644
-index 000000000000..b0bc6a548611
+index 000000000000..d5b7763dcd0f
 --- /dev/null
-+++ b/drivers/net/wireless/ti/cc33xx/init.h
-@@ -0,0 +1,15 @@
++++ b/drivers/net/wireless/ti/cc33xx/boot.h
+@@ -0,0 +1,24 @@
 +/* SPDX-License-Identifier: GPL-2.0-only
 + *
 + * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
 + */
 +
-+#ifndef __INIT_H__
-+#define __INIT_H__
++#ifndef __BOOT_H__
++#define __BOOT_H__
 +
 +#include "cc33xx.h"
 +
-+int cc33xx_hw_init(struct cc33xx *cc);
-+int cc33xx_download_ini_params_and_wait(struct cc33xx *cc);
-+int cc33xx_init_vif_specific(struct cc33xx *cc, struct ieee80211_vif *vif);
++int cc33xx_init_fw(struct cc33xx *cc);
 +
-+#endif /* __INIT_H__ */
++void cc33xx_handle_boot_irqs(struct cc33xx *cc, u32 pending_interrupts);
++
++#define SECOND_LOADER_NAME "ti-connectivity/cc33xx_2nd_loader.bin"
++#define FW_NAME "ti-connectivity/cc33xx_fw.bin"
++
++struct cc33xx_fw_download {
++	atomic_t pending_irqs;
++	struct completion wait_on_irq;
++	size_t max_transfer_size;
++};
++
++#endif /* __BOOT_H__ */
 -- 
 2.25.1
 
