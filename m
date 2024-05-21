@@ -1,235 +1,499 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA5E6CDC0;
-	Tue, 21 May 2024 12:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2955D524C9;
+	Tue, 21 May 2024 12:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716294392; cv=none; b=udrK7wlecU2KUGlyHUEbCF3jfE9Tc3sVsqfzPNRXWmESSr/aage/7P1WqWBpHN17wFbAWGklS4MrgceldtRbQkVWX6JL3kgnz9k1m8lktLVZd5EKXP0dB+a3bpM97lTFO9PKpvUhPWO3wTVFYNQ9UFBGGStz1umbC5J/jAaDscY=
+	t=1716294461; cv=none; b=mXX4l5B1tkeB+FvNT5BP1U3D0+OV492lOfhF04HWsP45qJt11DMsSzpkLMVRzRsTFrq+fUAEWeVWrVQ80lcWY4f42usfSYQDuz8wIVkmS5W8zJ8pBK/LkAqxJseb9nb3dQycJAWPrUjwam+qUlfRTUAxptSjIOdtBxi3XTYeLYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716294392; c=relaxed/simple;
-	bh=nubv3Ssyz42cMLMtiiGjL2NthUA/jwxK15fytFgof9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TMds3KUWUUFauRdZYAFUthjHCDE0QcSwJK4OnRXhrUCywhfTOdsgHyWoTRx56yxeap2A3kCOXBJ/k2tj70LSmNAJdNAY2Ankdej2XKolyshIHzi0UpGUOb6oJ1dYR7esncjpuGQGjTaHeVXc60/7WimUws2OEr8PNpFVORH43ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=BCQTuMzs; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1716294461; c=relaxed/simple;
+	bh=5DKr0URRu3WXGP+64uYearjadYJhWwEWBAiX/LGf+1k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U/qQ6sAiIOk01kDROD0xClQn7P0iTEHZQ1Qm5od6EKKui1qoJOuHtK5kF65hN9bsEyK5qj7df4oEukkb1cWzCVJ6fwdOrXHiittUPpsOw2VKo+fXZ23LgYk/oX8xd5FWQuAQ/7oqwAgL1WUAxhR2WzmYgzyU9mLiAlArW6XCs6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxT3tGBq; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="BCQTuMzs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1716294373; x=1716899173; i=wahrenst@gmx.net;
-	bh=Ik/83sXmHwQbQMcvXH6krjU366NMUVdg+a6AS/Ux1h8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BCQTuMzsrkI7oT5ZA79xX/UCMnWI027/ijWHJjr1BS9//ZpkVfcHnHpN6Sc/QQ9f
-	 q/rbTXdTCNbxZLEZyy0x8zFeV6eDXjxfWBbVWE20ON/LxcPwJTJ2AMHneoiYA3j4y
-	 2lz+i3VMgb5fhxucSU3tI/6qD7jEXKKtV0B3qv1ldEwytoQTaFkrRrsL9wmWA3S5X
-	 LGX2LeTO2aAzKuV7Zi40olCFnvaa7WrIyYtmGf/JeqA4ktn9DwdkHk8McmGS5qKfx
-	 OH3w8lsNZfB/6olfJZtqHqPdcSPRHvSC4OkQ9WmcYv7zNNF6UNZiElf7d59TIvWUj
-	 FDmwCffO4V3w5fsl7A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.126] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MvbG2-1sQNQA3fXy-00sglH; Tue, 21
- May 2024 14:26:12 +0200
-Message-ID: <f27aaf92-8109-4cad-94ba-6f72cd9bdabf@gmx.net>
-Date: Tue, 21 May 2024 14:26:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxT3tGBq"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51fdc9af005so7392021e87.3;
+        Tue, 21 May 2024 05:27:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716294457; x=1716899257; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aYGHL1LDa2Mvx1QpEmaJ5OoxLbKyEIFkerAv7AIWdjQ=;
+        b=JxT3tGBqpTxMsMRjim1Fvkv8bmdPg6VXNLfuLzakQyVYeppQvEhTu36zbFozFw29KU
+         SQ7jia58pYNtBvrTCgopV6iQcGwo5wwLIOchPrG2IHPCsa5YiXgI/LKz7kJER0OAcxU9
+         Yl2LnwCLPl9MQqxilFaG1E+SyGfmymMkfjB1zKa0H/SPrzGs4FS5liB1OM0qNQeGuHD9
+         pPPAsH7BPpoDED+6EDa24Iyg+FU9PVjKGRonVmksTB5188qUit3Gt1kG28T3vMgmH573
+         seO9PZGgDdd7JxZXz5/ndkkiOn5sYJeJvyGBH2gOFFwEdZzCLuxlEQK8vtWnmuUiVPxv
+         vglA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716294457; x=1716899257;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aYGHL1LDa2Mvx1QpEmaJ5OoxLbKyEIFkerAv7AIWdjQ=;
+        b=QSMNYszL78KzdFrQlAuJKnen9C0YAYcJbjjnCghemcKO1Xbhvm9uO6E036ulswOEjK
+         MwI4UYzl6wWlzuHStZXGwP0/OK4EcXGLv4RVOXd9pkwR8NjWSds1VfQ4Tz/VnEJQ+Xe6
+         T4ensirWbhVMxDbYmT0FU8iDscaTwKZgcJa/iajL27wlcpfW4zbXUNviYNeP5Z+1xGHL
+         s/1YiikA2dPtdL3M/pEfKoSDMRoNA3r0/ndnPIgriEf+Su0/plmuWuzrhl3tKnfR8s7s
+         NdJNdmbi3txiUqEP2udyRoLHEeqWSwrUsghQrjHGFhmiFiBIgLKtPizdELIGk7XnCfs0
+         B0GA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcwMrWhQk+tZCRkK7jbpday+vdhnI3h4rnQurX0zzQbNGAjGf9zvPpgTOJYOpJ3bEYRsQ06p1vxiQoaKk07yYSeiJ4FXxBapiipmRCk6HMpY+fLYrhpyF0RravEO2YaqDllr4zHZfAJdRh39AE8Dgl2AX1UcWRiuJl28mHOrTmZm9OjZ3LHMnM2UOhbeoWUpDX2JJjMi+N8fvjPKZe7A==
+X-Gm-Message-State: AOJu0Yyhx03FGw9zeHYdeulY9r97GRgSfhTkjNQXYUwah4O2VO9+kJNd
+	AEbEbb/URX9+hYDf07F02ShZod4XvRJpWlEF9TDFEmWgsIzaILoh
+X-Google-Smtp-Source: AGHT+IHTwAqo4+asNVNDWNtzu542SRBSkgGqfE2wKBmmx2JxS/Zeim+49muD7slkuirIjUXH4t338A==
+X-Received: by 2002:ac2:521a:0:b0:51a:c3b8:b9cf with SMTP id 2adb3069b0e04-5221047590amr22069610e87.69.1716294456869;
+        Tue, 21 May 2024 05:27:36 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5d10b3ef82sm536264266b.158.2024.05.21.05.27.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 05:27:36 -0700 (PDT)
+Message-ID: <6c5fd2cef9a6412e63f2534243eda37c321ffcd2.camel@gmail.com>
+Subject: Re: [PATCH RFC v2 6/8] spi: axi-spi-engine: add offload support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
+ Jonathan Cameron
+	 <jic23@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Lars-Peter Clausen
+	 <lars@metafoo.de>, David Jander <david@protonic.nl>, Martin Sperl
+	 <kernel@martin.sperl.org>, linux-spi@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org
+Date: Tue, 21 May 2024 14:31:19 +0200
+In-Reply-To: <20240510-dlech-mainline-spi-engine-offload-2-v2-6-8707a870c435@baylibre.com>
+References: 
+	<20240510-dlech-mainline-spi-engine-offload-2-v2-0-8707a870c435@baylibre.com>
+	 <20240510-dlech-mainline-spi-engine-offload-2-v2-6-8707a870c435@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] mmc: sdhci-brcmstb: Add BCM2712 support
-To: Andrea della Porta <andrea.porta@suse.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Marc Zyngier <maz@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kamal Dasu <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org
-References: <cover.1716277695.git.andrea.porta@suse.com>
- <c413737f538d9bd403c30104a83a7fbb1ea7461d.1716277695.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <c413737f538d9bd403c30104a83a7fbb1ea7461d.1716277695.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iQHoBjHwHK9vT/wN4cVqFD2QZSORuPKXX0FuHBqu25pr76llXa2
- O8GOEnO5F0MH53MC080AU0MtN3A1h71ZIdAuShRnPN66c+tH1TraE1Hs2sn+mUSV904vOhS
- syfUdSHNofm6S94aBYlBAkZ06mbdvr0OoVNj+cTityV/NES2QLuHMmGzR+QwkYE/EpjtXdl
- Td+WA+CHWHFoemtm/RYcg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BZeqmSh2A/o=;W3zIYW4pDntFO7HErWtXhF1nrvS
- 4bv94zh6mzR6kOCKPmkzi9izaDlx8hu10JbrihVS/n/WEgOyx0R/7qVE5K5n1gyz7Sti5kv4u
- y5KlfxXbS5tcYqV+jcpcipfzM8xJN5LevHvLncJRIO+OgDR71AxPI8PxWN8s0QBlBLTJ5mvd7
- 16O/Boh4bo64r3SenodBInuSbLCeyvljmAsPah7Zxr1vlL2kjzXHl+iwBewaNbEZZlQ0xZdWy
- TxOlVTcI/g6P4MZzZWmhPxbn6SxNLlx8X9JgeHKPbprAo8yEZ1GgfWHsVgrWx2AEAHY/kaPdZ
- qKgrokbwzGhRe76kEp4n3O4qR3NRKSwyktbFb90B0fqCfb3Vt1BiBhwhuo3by3heVH9uUkbm3
- aSmDTWX6i1E4yCoecWF5YjtyuOk2dzOB8aJ4EZeeJd6Zc18aNJXXXL6OzTY+YJtWbErHfMQts
- zLAWDkIN9Iaor91aH+0a80kg+2IMMaN/nplv/0t29aiETrQbqOp+7KbAX4XxODyNGeln9n+sD
- LLfHSTW7zFar72tid8czoPD2WYChUp4RG3QG70VZq8SpWA5+Cq4KURWZQ/KwsZqW94OcYtWmQ
- A80qKr1uQ8wzbws0/Z/dZAYt4DKYuwOEWJn1J5y4GcttHHJIIut6smvuY1zvidyz3YDb/nCeU
- 3k1/5yu/KaDEg4f3j1aLf4YFAM3TD6q78uvI5/IAnoFkr91UE6s77ssdAeIxfJY9Q7mFAERJ/
- Hw5v2JxHnfa+88TKWmiWRZP14Z3pBKPa++LL7qHBMaqjGHy8t3dGsHq6Vxl0P+2y5p1QvOxqZ
- 0RG5PhAzYu6HjDLSKUykDT0MwA92VqxcP7bc2FrDzYnyY=
 
-Hi Andrea,
-
-Am 21.05.24 um 10:35 schrieb Andrea della Porta:
-> Broadcom BCM2712 SoC has an SDHCI card controller using the SDIO CFG
-> register block present on other STB chips. Add support for BCM2712
-> SD capabilities of this chipset.
-> The silicon is SD Express capable but this driver port does not currentl=
-y
-> include that feature yet.
-> Based on downstream driver by raspberry foundation maintained kernel.
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+On Fri, 2024-05-10 at 19:44 -0500, David Lechner wrote:
+> This implements SPI offload support for the AXI SPI Engine. Currently,
+> the hardware only supports triggering offload transfers with a hardware
+> trigger so attempting to use an offload message in the regular SPI
+> message queue will fail. Also, only allows streaming rx data to an
+> external sink, so attempts to use a rx_buf in the offload message will
+> fail.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
->   drivers/mmc/host/sdhci-brcmstb.c | 65 ++++++++++++++++++++++++++++++++
->   1 file changed, 65 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-b=
-rcmstb.c
-> index 9053526fa212..b349262da36e 100644
-> --- a/drivers/mmc/host/sdhci-brcmstb.c
-> +++ b/drivers/mmc/host/sdhci-brcmstb.c
-> @@ -30,6 +30,21 @@
->
->   #define SDHCI_ARASAN_CQE_BASE_ADDR		0x200
->
-> +#define SDIO_CFG_CQ_CAPABILITY			0x4c
-> +#define SDIO_CFG_CQ_CAPABILITY_FMUL		GENMASK(13, 12)
+>=20
+> v2 changes:
+>=20
+> This patch has been reworked to accommodate the changes described in all
+> of the other patches.
+> ---
+> =C2=A0drivers/spi/spi-axi-spi-engine.c | 267
+> ++++++++++++++++++++++++++++++++++++++-
+> =C2=A01 file changed, 264 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-
+> engine.c
+> index e358ac5b4509..95327df572a0 100644
+> --- a/drivers/spi/spi-axi-spi-engine.c
+> +++ b/drivers/spi/spi-axi-spi-engine.c
+> @@ -2,6 +2,7 @@
+> =C2=A0/*
+> =C2=A0 * SPI-Engine SPI controller driver
+> =C2=A0 * Copyright 2015 Analog Devices Inc.
+> + * Copyright 2024 BayLibre, SAS
+> =C2=A0 *=C2=A0 Author: Lars-Peter Clausen <lars@metafoo.de>
+> =C2=A0 */
+> =C2=A0
+> @@ -16,6 +17,7 @@
+> =C2=A0#include <linux/platform_device.h>
+> =C2=A0#include <linux/spi/spi.h>
+> =C2=A0
+> +#define SPI_ENGINE_REG_OFFLOAD_MEM_ADDR_WIDTH	0x10
+> =C2=A0#define SPI_ENGINE_REG_RESET			0x40
+> =C2=A0
+> =C2=A0#define SPI_ENGINE_REG_INT_ENABLE		0x80
+> @@ -23,6 +25,7 @@
+> =C2=A0#define SPI_ENGINE_REG_INT_SOURCE		0x88
+> =C2=A0
+> =C2=A0#define SPI_ENGINE_REG_SYNC_ID			0xc0
+> +#define SPI_ENGINE_REG_OFFLOAD_SYNC_ID		0xc4
+> =C2=A0
+> =C2=A0#define SPI_ENGINE_REG_CMD_FIFO_ROOM		0xd0
+> =C2=A0#define SPI_ENGINE_REG_SDO_FIFO_ROOM		0xd4
+> @@ -33,10 +36,24 @@
+> =C2=A0#define SPI_ENGINE_REG_SDI_DATA_FIFO		0xe8
+> =C2=A0#define SPI_ENGINE_REG_SDI_DATA_FIFO_PEEK	0xec
+> =C2=A0
+> +#define SPI_ENGINE_MAX_NUM_OFFLOADS		32
 > +
-> +#define SDIO_CFG_CTRL				0x0
-> +#define SDIO_CFG_CTRL_SDCD_N_TEST_EN		BIT(31)
-> +#define SDIO_CFG_CTRL_SDCD_N_TEST_LEV		BIT(30)
+> +#define SPI_ENGINE_REG_OFFLOAD_CTRL(x)		(0x100 +
+> SPI_ENGINE_MAX_NUM_OFFLOADS * (x))
+> +#define SPI_ENGINE_REG_OFFLOAD_STATUS(x)	(0x104 +
+> SPI_ENGINE_MAX_NUM_OFFLOADS * (x))
+> +#define SPI_ENGINE_REG_OFFLOAD_RESET(x)		(0x108 +
+> SPI_ENGINE_MAX_NUM_OFFLOADS * (x))
+> +#define SPI_ENGINE_REG_OFFLOAD_CMD_FIFO(x)	(0x110 +
+> SPI_ENGINE_MAX_NUM_OFFLOADS * (x))
+> +#define SPI_ENGINE_REG_OFFLOAD_SDO_FIFO(x)	(0x114 +
+> SPI_ENGINE_MAX_NUM_OFFLOADS * (x))
 > +
-> +#define SDIO_CFG_MAX_50MHZ_MODE			0x1ac
-> +#define SDIO_CFG_MAX_50MHZ_MODE_STRAP_OVERRIDE	BIT(31)
-> +#define SDIO_CFG_MAX_50MHZ_MODE_ENABLE		BIT(0)
+> +#define SPI_ENGINE_SPI_OFFLOAD_MEM_WIDTH_SDO	GENMASK(15, 8)
+> +#define SPI_ENGINE_SPI_OFFLOAD_MEM_WIDTH_CMD	GENMASK(7, 0)
 > +
-> +#define MMC_CAP_HSE_MASK	(MMC_CAP2_HSX00_1_2V | MMC_CAP2_HSX00_1_8V)
-> +/* Select all SD UHS type I SDR speed above 50MB/s */
-> +#define MMC_CAP_UHS_I_SDR_MASK	(MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104)
+> =C2=A0#define SPI_ENGINE_INT_CMD_ALMOST_EMPTY		BIT(0)
+> =C2=A0#define SPI_ENGINE_INT_SDO_ALMOST_EMPTY		BIT(1)
+> =C2=A0#define SPI_ENGINE_INT_SDI_ALMOST_FULL		BIT(2)
+> =C2=A0#define SPI_ENGINE_INT_SYNC			BIT(3)
+> +#define SPI_ENGINE_INT_OFFLOAD_SYNC		BIT(4)
 > +
->   struct sdhci_brcmstb_priv {
->   	void __iomem *cfg_regs;
->   	unsigned int flags;
-> @@ -38,6 +53,7 @@ struct sdhci_brcmstb_priv {
->   };
->
->   struct brcmstb_match_priv {
-> +	void (*cfginit)(struct sdhci_host *host);
->   	void (*hs400es)(struct mmc_host *mmc, struct mmc_ios *ios);
->   	struct sdhci_ops *ops;
->   	const unsigned int flags;
-> @@ -168,6 +184,38 @@ static void sdhci_brcmstb_set_uhs_signaling(struct =
-sdhci_host *host,
->   	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
->   }
->
-> +static void sdhci_brcmstb_cfginit_2712(struct sdhci_host *host)
+> +#define SPI_ENGINE_OFFLOAD_CTRL_ENABLE		BIT(0)
+> =C2=A0
+> =C2=A0#define SPI_ENGINE_CONFIG_CPHA			BIT(0)
+> =C2=A0#define SPI_ENGINE_CONFIG_CPOL			BIT(1)
+> @@ -74,6 +91,10 @@
+> =C2=A0#define SPI_ENGINE_CMD_SYNC(id) \
+> =C2=A0	SPI_ENGINE_CMD(SPI_ENGINE_INST_MISC, SPI_ENGINE_MISC_SYNC, (id))
+> =C2=A0
+> +/* default sizes - can be changed when SPI Engine firmware is compiled *=
+/
+> +#define SPI_ENGINE_OFFLOAD_CMD_FIFO_SIZE	16
+> +#define SPI_ENGINE_OFFLOAD_SDO_FIFO_SIZE	16
+> +
+> =C2=A0struct spi_engine_program {
+> =C2=A0	unsigned int length;
+> =C2=A0	uint16_t instructions[] __counted_by(length);
+> @@ -101,6 +122,12 @@ struct spi_engine_message_state {
+> =C2=A0	uint8_t *rx_buf;
+> =C2=A0};
+> =C2=A0
+> +struct spi_engine_offload {
+> +	struct spi_device *spi;
+> +	unsigned int id;
+> +	bool prepared;
+> +};
+> +
+> =C2=A0struct spi_engine {
+> =C2=A0	struct clk *clk;
+> =C2=A0	struct clk *ref_clk;
+> @@ -111,6 +138,10 @@ struct spi_engine {
+> =C2=A0	struct spi_engine_message_state msg_state;
+> =C2=A0	struct completion msg_complete;
+> =C2=A0	unsigned int int_enable;
+> +
+> +	unsigned int offload_ctrl_mem_size;
+> +	unsigned int offload_sdo_mem_size;
+> +	struct spi_engine_offload offload_priv[SPI_ENGINE_MAX_NUM_OFFLOADS];
+> =C2=A0};
+> =C2=A0
+> =C2=A0static void spi_engine_program_add_cmd(struct spi_engine_program *p=
+,
+> @@ -154,7 +185,7 @@ static void spi_engine_gen_xfer(struct spi_engine_pro=
+gram
+> *p, bool dry,
+> =C2=A0
+> =C2=A0		if (xfer->tx_buf)
+> =C2=A0			flags |=3D SPI_ENGINE_TRANSFER_WRITE;
+> -		if (xfer->rx_buf)
+> +		if (xfer->rx_buf || (xfer->offload_flags &
+> SPI_OFFLOAD_XFER_RX_STREAM))
+> =C2=A0			flags |=3D SPI_ENGINE_TRANSFER_READ;
+> =C2=A0
+> =C2=A0		spi_engine_program_add_cmd(p, dry,
+> @@ -202,16 +233,24 @@ static void spi_engine_gen_cs(struct spi_engine_pro=
+gram
+> *p, bool dry,
+> =C2=A0 *
+> =C2=A0 * NB: This is separate from spi_engine_compile_message() because t=
+he latter
+> =C2=A0 * is called twice and would otherwise result in double-evaluation.
+> + *
+> + * Returns 0 on success, -EINVAL on failure.
+> =C2=A0 */
+> -static void spi_engine_precompile_message(struct spi_message *msg)
+> +static int spi_engine_precompile_message(struct spi_message *msg)
+> =C2=A0{
+> =C2=A0	unsigned int clk_div, max_hz =3D msg->spi->controller->max_speed_h=
+z;
+> =C2=A0	struct spi_transfer *xfer;
+> =C2=A0
+> =C2=A0	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+> +		/* If we have an offload transfer, we can't rx to buffer */
+> +		if (msg->offload && xfer->rx_buf)
+> +			return -EINVAL;
+> +
+> =C2=A0		clk_div =3D DIV_ROUND_UP(max_hz, xfer->speed_hz);
+> =C2=A0		xfer->effective_speed_hz =3D max_hz / min(clk_div, 256U);
+> =C2=A0	}
+> +
+> +	return 0;
+> =C2=A0}
+> =C2=A0
+> =C2=A0static void spi_engine_compile_message(struct spi_message *msg, boo=
+l dry,
+> @@ -503,8 +542,11 @@ static irqreturn_t spi_engine_irq(int irq, void *dev=
+id)
+> =C2=A0static int spi_engine_optimize_message(struct spi_message *msg)
+> =C2=A0{
+> =C2=A0	struct spi_engine_program p_dry, *p;
+> +	int ret;
+> =C2=A0
+> -	spi_engine_precompile_message(msg);
+> +	ret =3D spi_engine_precompile_message(msg);
+> +	if (ret)
+> +		return ret;
+> =C2=A0
+> =C2=A0	p_dry.length =3D 0;
+> =C2=A0	spi_engine_compile_message(msg, true, &p_dry);
+> @@ -539,6 +581,11 @@ static int spi_engine_transfer_one_message(struct
+> spi_controller *host,
+> =C2=A0	unsigned int int_enable =3D 0;
+> =C2=A0	unsigned long flags;
+> =C2=A0
+> +	if (msg->offload) {
+> +		dev_err(&host->dev, "Single transfer offload not
+> supported\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> =C2=A0	/* reinitialize message state for this transfer */
+> =C2=A0	memset(st, 0, sizeof(*st));
+> =C2=A0	st->cmd_buf =3D p->instructions;
+> @@ -579,6 +626,204 @@ static int spi_engine_transfer_one_message(struct
+> spi_controller *host,
+> =C2=A0	return msg->status;
+> =C2=A0}
+> =C2=A0
+> +static struct spi_engine_offload *spi_engine_get_offload(struct spi_devi=
+ce
+> *spi,
+> +							 unsigned int id,
+> +							 unsigned int
+> *offload_num)
 > +{
-> +	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +	struct sdhci_brcmstb_priv *brcmstb_priv =3D sdhci_pltfm_priv(pltfm_hos=
-t);
-> +	u32 reg, base_clk_mhz;
+> +	struct spi_controller *host =3D spi->controller;
+> +	struct spi_engine *spi_engine =3D spi_controller_get_devdata(host);
+> +	struct spi_engine_offload *priv;
+> +	int i;
 > +
-> +	/*
-> +	 * If we support a speed that requires tuning,
-> +	 * then select the delay line PHY as the clock source.
-> +	 */
-> +	if ((host->mmc->caps & MMC_CAP_UHS_I_SDR_MASK) || (host->mmc->caps2 & =
-MMC_CAP_HSE_MASK)) {
-> +		reg =3D readl(brcmstb_priv->cfg_regs + SDIO_CFG_MAX_50MHZ_MODE);
-> +		reg &=3D ~SDIO_CFG_MAX_50MHZ_MODE_ENABLE;
-> +		reg |=3D SDIO_CFG_MAX_50MHZ_MODE_STRAP_OVERRIDE;
-> +		writel(reg, brcmstb_priv->cfg_regs + SDIO_CFG_MAX_50MHZ_MODE);
+> +	for (i =3D 0; i < SPI_ENGINE_MAX_NUM_OFFLOADS; i++) {
+> +		priv =3D &spi_engine->offload_priv[i];
+> +
+> +		if (priv->spi =3D=3D spi && priv->id =3D=3D id) {
+> +			*offload_num =3D i;
+> +			return priv;
+> +		}
 > +	}
 > +
-> +	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE) ||
-> +	    (host->mmc->caps & MMC_CAP_NEEDS_POLL)) {
-> +		/* Force presence */
-> +		reg =3D readl(brcmstb_priv->cfg_regs + SDIO_CFG_CTRL);
-> +		reg &=3D ~SDIO_CFG_CTRL_SDCD_N_TEST_LEV;
-> +		reg |=3D SDIO_CFG_CTRL_SDCD_N_TEST_EN;
-> +		writel(reg, brcmstb_priv->cfg_regs + SDIO_CFG_CTRL);
-> +	}
-> +
-> +	/* Guesstimate the timer frequency (controller base clock) */
-> +	base_clk_mhz =3D max_t(u32, clk_get_rate(pltfm_host->clk) / (1000 * 10=
-00), 1);
-> +	reg =3D SDIO_CFG_CQ_CAPABILITY_FMUL | base_clk_mhz;
-> +	writel(reg, brcmstb_priv->cfg_regs + SDIO_CFG_CQ_CAPABILITY);
-This part assumes the clock isn't changed afterwards, see below ...
+> +	return ERR_PTR(-ENODEV);
 > +}
 > +
->   static void sdhci_brcmstb_dumpregs(struct mmc_host *mmc)
->   {
->   	sdhci_dumpregs(mmc_priv(mmc));
-> @@ -200,6 +248,14 @@ static struct sdhci_ops sdhci_brcmstb_ops =3D {
->   	.set_uhs_signaling =3D sdhci_set_uhs_signaling,
->   };
->
-> +static struct sdhci_ops sdhci_brcmstb_ops_2712 =3D {
-> +	.set_clock =3D sdhci_set_clock,
-> +	.set_power =3D sdhci_set_power_and_bus_voltage,
-> +	.set_bus_width =3D sdhci_set_bus_width,
-> +	.reset =3D sdhci_reset,
-> +	.set_uhs_signaling =3D sdhci_set_uhs_signaling,
-> +};
+> +static int spi_engine_offload_map_channel(struct spi_device *spi,
+> +					=C2=A0 unsigned int id,
+> +					=C2=A0 unsigned int channel)
+> +{
+> +	struct spi_controller *host =3D spi->controller;
+> +	struct spi_engine *spi_engine =3D spi_controller_get_devdata(host);
+> +	struct spi_engine_offload *priv;
 > +
->   static struct sdhci_ops sdhci_brcmstb_ops_7216 =3D {
->   	.set_clock =3D sdhci_brcmstb_set_clock,
->   	.set_bus_width =3D sdhci_set_bus_width,
-> @@ -214,6 +270,11 @@ static struct sdhci_ops sdhci_brcmstb_ops_74165b0 =
-=3D {
->   	.set_uhs_signaling =3D sdhci_brcmstb_set_uhs_signaling,
->   };
->
-> +static const struct brcmstb_match_priv match_priv_2712 =3D {
-> +	.cfginit =3D sdhci_brcmstb_cfginit_2712,
-> +	.ops =3D &sdhci_brcmstb_ops_2712,
-> +};
+> +	if (channel >=3D SPI_ENGINE_MAX_NUM_OFFLOADS)
+> +		return -EINVAL;
 > +
->   static struct brcmstb_match_priv match_priv_7425 =3D {
->   	.flags =3D BRCMSTB_MATCH_FLAGS_NO_64BIT |
->   	BRCMSTB_MATCH_FLAGS_BROKEN_TIMEOUT,
-> @@ -238,6 +299,7 @@ static struct brcmstb_match_priv match_priv_74165b0 =
-=3D {
->   };
->
->   static const struct of_device_id __maybe_unused sdhci_brcm_of_match[] =
-=3D {
-> +	{ .compatible =3D "brcm,bcm2712-sdhci", .data =3D &match_priv_2712 },
->   	{ .compatible =3D "brcm,bcm7425-sdhci", .data =3D &match_priv_7425 },
->   	{ .compatible =3D "brcm,bcm7445-sdhci", .data =3D &match_priv_7445 },
->   	{ .compatible =3D "brcm,bcm7216-sdhci", .data =3D &match_priv_7216 },
-> @@ -370,6 +432,9 @@ static int sdhci_brcmstb_probe(struct platform_devic=
-e *pdev)
->   	    (host->mmc->caps2 & MMC_CAP2_HS400_ES))
->   		host->mmc_host_ops.hs400_enhanced_strobe =3D match_priv->hs400es;
->
-> +	if (match_priv->cfginit)
-> +		match_priv->cfginit(host);
+> +	priv =3D &spi_engine->offload_priv[channel];
 > +
-I'm not sure this is the right place to call cfginit.
-sdhci_brcmstb_cfginit_2712 retrives the current controller base clock,
-but at the end of=C2=A0 sdhci_brcmstb_probe this clock frequency could be
-adjusted by the device property "clock-frequency". So i'm not sure this
-is intended.
->   	/*
->   	 * Supply the existing CAPS, but clear the UHS modes. This
->   	 * will allow these modes to be specified by device tree
+> +	if (priv->spi)
+> +		return -EBUSY;
+
+I wonder if we need to be this strict? Is there any problem by having two
+devices requesting the same offload engine? I would expect that having mult=
+iple
+peripherals trying to actually use it at the same time (with the prepare()
+callback) to be problematic but if they play along it could actually work,
+right? In reality that may never be a realistic usecase so this is likely f=
+ine.
+
+> +
+> +	priv->spi =3D spi;
+> +	priv->id =3D id;
+> +
+> +	return 0;
+> +}
+> +
+> +static int spi_engine_offload_prepare(struct spi_device *spi, unsigned i=
+nt
+> id,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct spi_message *msg)
+> +{
+> +	struct spi_controller *host =3D spi->controller;
+> +	struct spi_engine *spi_engine =3D spi_controller_get_devdata(host);
+> +	struct spi_engine_program *p =3D msg->opt_state;
+> +	struct spi_engine_offload *priv;
+> +	struct spi_transfer *xfer;
+> +	void __iomem *cmd_addr;
+> +	void __iomem *sdo_addr;
+> +	size_t tx_word_count =3D 0;
+> +	unsigned int offload_num, i;
+> +
+> +	priv =3D spi_engine_get_offload(spi, id, &offload_num);
+> +	if (IS_ERR(priv))
+> +		return PTR_ERR(priv);
+> +
+> +	if (priv->prepared)
+> +		return -EBUSY;
+> +
+> +	if (p->length > spi_engine->offload_ctrl_mem_size)
+> +		return -EINVAL;
+> +
+> +	/* count total number of tx words in message */
+> +	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+> +		if (!xfer->tx_buf)
+> +			continue;
+> +
+> +		if (xfer->bits_per_word <=3D 8)
+> +			tx_word_count +=3D xfer->len;
+> +		else if (xfer->bits_per_word <=3D 16)
+> +			tx_word_count +=3D xfer->len / 2;
+> +		else
+> +			tx_word_count +=3D xfer->len / 4;
+> +	}
+> +
+> +	if (tx_word_count > spi_engine->offload_sdo_mem_size)
+> +		return -EINVAL;
+> +
+> +	cmd_addr =3D spi_engine->base + SPI_ENGINE_REG_OFFLOAD_CMD_FIFO(priv-
+> >id);
+> +	sdo_addr =3D spi_engine->base +
+> SPI_ENGINE_REG_OFFLOAD_SDO_FIFO(offload_num);
+> +
+> +	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+> +		if (!xfer->tx_buf)
+> +			continue;
+> +
+> +		if (xfer->bits_per_word <=3D 8) {
+> +			const u8 *buf =3D xfer->tx_buf;
+> +
+> +			for (i =3D 0; i < xfer->len; i++)
+> +				writel_relaxed(buf[i], sdo_addr);
+> +		} else if (xfer->bits_per_word <=3D 16) {
+> +			const u16 *buf =3D xfer->tx_buf;
+> +
+> +			for (i =3D 0; i < xfer->len / 2; i++)
+> +				writel_relaxed(buf[i], sdo_addr);
+> +		} else {
+> +			const u32 *buf =3D xfer->tx_buf;
+> +
+> +			for (i =3D 0; i < xfer->len / 4; i++)
+> +				writel_relaxed(buf[i], sdo_addr);
+> +		}
+> +	}
+> +
+> +	for (i =3D 0; i < p->length; i++)
+> +		writel_relaxed(p->instructions[i], cmd_addr);
+> +
+> +	msg->offload_state =3D (void *)(intptr_t)offload_num;
+> +	priv->prepared =3D true;
+> +
+> +	return 0;
+> +}
+> +
+> +static void spi_engine_offload_unprepare(struct spi_device *spi, unsigne=
+d int
+> id)
+> +{
+> +	struct spi_controller *host =3D spi->controller;
+> +	struct spi_engine *spi_engine =3D spi_controller_get_devdata(host);
+> +	struct spi_engine_offload *priv;
+> +	unsigned int offload_num;
+> +
+> +	priv =3D spi_engine_get_offload(spi, id, &offload_num);
+> +	if (IS_ERR(priv)) {
+> +		dev_warn(&spi->dev, "failed match offload in unprepare\n");
+> +		return;
+> +	}
+> +
+> +	writel_relaxed(1, spi_engine->base +
+> SPI_ENGINE_REG_OFFLOAD_RESET(offload_num));
+> +	writel_relaxed(0, spi_engine->base +
+> SPI_ENGINE_REG_OFFLOAD_RESET(offload_num));
+> +
+> +	priv->prepared =3D false;
+> +}
+> +
+> +static int spi_engine_offload_enable(struct spi_device *spi, unsigned in=
+t id)
+> +{
+> +	struct spi_controller *host =3D spi->controller;
+> +	struct spi_engine *spi_engine =3D spi_controller_get_devdata(host);
+> +	struct spi_engine_offload *priv;
+> +	unsigned int offload_num, reg;
+> +
+> +	priv =3D spi_engine_get_offload(spi, id, &offload_num);
+> +	if (IS_ERR(priv))
+> +		return PTR_ERR(priv);
+> +
+> +	reg =3D readl_relaxed(spi_engine->base +
+> +			=C2=A0=C2=A0=C2=A0 SPI_ENGINE_REG_OFFLOAD_CTRL(offload_num));
+> +	reg |=3D SPI_ENGINE_OFFLOAD_CTRL_ENABLE;
+> +	writel_relaxed(reg, spi_engine->base +
+> +			=C2=A0=C2=A0=C2=A0 SPI_ENGINE_REG_OFFLOAD_CTRL(offload_num));
+> +
+> +	return 0;
+> +}
+> +
+> +static void spi_engine_offload_disable(struct spi_device *spi, unsigned =
+int
+> id)
+> +{
+> +	struct spi_controller *host =3D spi->controller;
+> +	struct spi_engine *spi_engine =3D spi_controller_get_devdata(host);
+> +	struct spi_engine_offload *priv;
+> +	unsigned int offload_num, reg;
+> +
+> +	priv =3D spi_engine_get_offload(spi, id, &offload_num);
+> +	if (IS_ERR(priv)) {
+> +		dev_warn(&spi->dev, "failed match offload in disable\n");
+> +		return;
+> +	}
+> +
+> +	reg =3D readl_relaxed(spi_engine->base +
+> +			=C2=A0=C2=A0=C2=A0 SPI_ENGINE_REG_OFFLOAD_CTRL(offload_num));
+> +	reg &=3D ~SPI_ENGINE_OFFLOAD_CTRL_ENABLE;
+> +	writel_relaxed(reg, spi_engine->base +
+> +			=C2=A0=C2=A0=C2=A0 SPI_ENGINE_REG_OFFLOAD_CTRL(offload_num));
+> +}
+> +
+> +static const struct spi_controller_offload_ops spi_engine_offload_ops =
+=3D {
+> +	.map_channel =3D spi_engine_offload_map_channel,
+> +	.prepare =3D spi_engine_offload_prepare,
+> +	.unprepare =3D spi_engine_offload_unprepare,
+> +	.hw_trigger_enable =3D spi_engine_offload_enable,
+> +	.hw_trigger_disable =3D spi_engine_offload_disable,
+
+I guess this is what you and Conor are already somehow discussing but I wou=
+ld
+expect this to be the actual offload trigger to play a spi transfer. As it
+stands, it looks weird (or confusing) to have the enable/disable of the eng=
+ine
+to act as a trigger... Maybe these callbacks could be used to enable/disabl=
+e the
+actual trigger of the offload engine (in our current cases, the PWM)? So th=
+is
+would make it easy to move the trigger DT property where it belongs. The DM=
+A one
+(given it's tight relation with IIO DMA buffers) is another (way more diffi=
+cult)
+story I think.
+
+- Nuno S=C3=A1
+
 
