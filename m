@@ -1,96 +1,142 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C95B770E3
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B221914290C
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716302206; cv=none; b=H6pT6Bj2xuoZBu3fo9vFOvXICIZ4DSPNXw5ju6Ivofgix8VUbyRbqi+xFtjVpKd+2v3DRdqVgbiAdp9fnQpO7ZMCaHk5YTTz7Efl0fZyIciVToJ+59MqroPMtbHaj8+S1rPSrJaDEVAcsuw1itOF7YP6GIo6wwYAlHwlegELYjI=
+	t=1716302486; cv=none; b=VoERJXEJeFtspe5Bj7d1quFEB5zfw/cXoCdayaXRyu/JBvddp8pQAYN6nGjZr1xLzTA7qXiU5uu9TNuk9RsM01TqdFLeixC4385ZO2C5ZEOno8+YGi1qxbsrM7ojv/ZBRXBTG7mgAtV8IsjfALI1l0DIEljdoKIVi4lSHcUMu8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716302206; c=relaxed/simple;
-	bh=RkxcTAGiypwdS8ks2MdXm+0G5zezjLyPmKlm8b5l57o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oEkpYbSWAyktK6ILm4ExXceZNqmqhHCJZxaA1MkbShODj1SLViy8IpYAD1DVOe/ps1L2rmBcrzYW3qeWtn9ug3NfACrwiPxgkFBeYBcQ42von53RGDRlTOkkDl+T9jlxQBpgfQUOLF8cVTl2dfQYb3NBGCb0M5l/ZJWO8gfKPVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HuyT3iLG; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716302486; c=relaxed/simple;
+	bh=SB1OqSLlnsVqan3jm+OCZqKbhfuxNUZmUtXn7elwayA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Z+7zD1Su/ei9KMUfiu+smg5jUhPak3J22ocDvsOExd0+OJyRb2ypA535Qb2taxWFhT5yl0ZnufIRd+3Q3pBhgixLUz32vMmZRpU8od5sEeJSUWOx0T3kfOnfkK5YDFKNIiNGXrPcMFG4HAGu24XqO5TBK24oEQ3jLvDIcOS5xqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=lzN6s/ez; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuyT3iLG"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6f693fb0ad4so741700b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:36:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="lzN6s/ez"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-620390308e5so36924217b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:41:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716302204; x=1716907004; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BynBJz4xedvnT0nDFPYWUwNi7+Io9mNGTAt+X4QFG34=;
-        b=HuyT3iLGA1fFIcgo6JFrEFL1HmypfSXTVnMeB22hA8CUCGO6gsGFJ9CSlPuFSLLs/7
-         fG+MeEfVXujyX1cdDbJklkJ0H+wU5v+A8jJI2h1KdYvL8NEz1Tn/G3pShg5+UthpDNse
-         HO5v27m0MlhIhpOAgv08+xy+hw7ECuCEP15yHIfbp8WXz+UGuj42mLPqaHHgUS8i5cDS
-         8N+AfM5Un1YG7cZ27Ns1AU7LjFTvHVQnF1ESvoWMsIM4Mg49FrQLSMD0gJdAetNUdISg
-         QZHZnIeqeUprXJcY3KQEzLTpXje3APAAskSWF8kfXRtsihw5TDKa35kdUghfB2rEfgXX
-         tsnA==
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1716302478; x=1716907278; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SB1OqSLlnsVqan3jm+OCZqKbhfuxNUZmUtXn7elwayA=;
+        b=lzN6s/ezF5BSxwJN6HwHkzw6Jt4/keHdsf8ESiicHvKipBsTOQDaaFkzL4mTWPaEio
+         Q+k06vNqUomc3/OpFSDRvo/mwejZonNksOgO05HI8/slG7na/x18Fx7heCsrNdDhLmqA
+         17xQjebci6nqE1xjHln0ZA1xJ2RexI0hHBXNSxwKqQErfvIEDGF+UA3r3Sor/ApuEGtS
+         k1ngV2vUoUs1KIU5A8mc3pDI9IH8YU65NGcSAhTdnwhRICnRr73WjS+lzoyyb41vBNve
+         RvII3pFATMkV+JMmk/egutBj4i0AQ0cmlvb7yHYdkBaqVUNO9s/nDRwsifDSxbG9XfA8
+         CZpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716302204; x=1716907004;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BynBJz4xedvnT0nDFPYWUwNi7+Io9mNGTAt+X4QFG34=;
-        b=b7zrjOVsIUqZ8M4x4ZHJs61QKIuobocSq5KAGo8tIyxcaas7n6irjigonSfnROsNmY
-         8axhihoJqL53vUo59s6C2rQ3C6J9Y3UnKQW0S3Z37BKkZnId4dLYrqyXKWoSXRB7OT63
-         qW9nH1Pnna87W+uIKIDd7HNledXJAf3ssFrH9/4zxiv1T1LnNYg0+qCu4UiIxnGQiTCt
-         iG8J8LlNkxnCaDhNS+78KSXyPhYZPlVU3WiZJk+3GCVXhTeZxWIyGn+yhLULyIKjreNc
-         DfW7AYQPM9xbdYxj4Ao8mT/bd3DCS4b7ZJXiZY7cfs0muJo2QXWMDM/r8n6sT+rkfi92
-         1U5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVFvVJ/F8ClfVeLp3gWmINRridEEL+Vet1B46A/EYkGpLn13hHTesxSaIV07GoQ7lmcH4K+KbfPUcdH8HXRZni/UDGBiEPmVMB1Nmvb
-X-Gm-Message-State: AOJu0Yzs7plJww2vQfzWJtAen/uFIQAzoEjbdgXMRhqvGDVnElqEMYjI
-	NhxPkkgqnFuglv/13VlrfiqqKI9Iuj2DBHl4bBuYuCvjkE7Ls469
-X-Google-Smtp-Source: AGHT+IEhHkXc3gEQ/59qxMkeqDVXPHb5xH5G9ULXkpNkxZMVvu+VESyyg5CeRR2jEObc9IE9uXY2jA==
-X-Received: by 2002:a05:6a21:2782:b0:1af:b80e:5406 with SMTP id adf61e73a8af0-1afde0d4d1amr27260112637.21.1716302203457;
-        Tue, 21 May 2024 07:36:43 -0700 (PDT)
-Received: from ubuntukernelserver.. ([110.44.116.44])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6340a632823sm20886815a12.19.2024.05.21.07.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 07:36:42 -0700 (PDT)
-From: Roshan Khatri <topofeverest8848@gmail.com>
-To: Larry.Finger@lwfinger.net,
-	florian.c.schilhabel@googlemail.com,
-	gregkh@linuxfoundation.org,
-	rcengland@gmail.com
-Cc: Roshan Khatri <topofeverest8848@gmail.com>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8712: Fix spelling mistake in rtl8712_xmit.c
-Date: Tue, 21 May 2024 20:21:17 +0545
-Message-Id: <20240521143617.53139-1-topofeverest8848@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1716302478; x=1716907278;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SB1OqSLlnsVqan3jm+OCZqKbhfuxNUZmUtXn7elwayA=;
+        b=Ae+qeGVDAKwCpaqQPPfqHPuCMO8TP7VQG3ERR2Bv0bXIJH3eXfSpkO1ftyu30/yZcP
+         KkIygLCDnuSMBKDPn/9H+49BUtGe6qC/an7hgfLct6no2YmMlUdHX9OkKgZfwWOEajTY
+         QQO/v4JA3iaLXLcStxMCfwLUyqJd6h4QZov+++UqMBSKHH5qODGRFDM5v2OSOn12K50R
+         o02PIoats52opXML07/BeC70cTMLxegyUealsSdXgUjnRR8IwscvOn9IS7NOZ3t6C6lt
+         ceoTfHGV+1Njs1t+kgm3tTl5cjVi7dmCwLOI87PYTH9rmwqH0U9moyMzAXSiXlgVSDrf
+         dJKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFhAWxLU7vX+usKK1mw0iaibVf5TFvzy+bgloKhWXRn5qBhZN44QtuWmJ0xoRnk4XBQskCtQcEHECw7zLFFB/omPRxmLIHF5hI8EyD
+X-Gm-Message-State: AOJu0Yx6oO1IgpHc9NjZgt/YtgO5Il8wM4/AYBNtXGrQ3P2okkwSx4R0
+	CA0sEaU4ZjpT07jgo5U64oyMDG8FqD2Qm8UDs2KeOB+8BXZM6axhEG2+7NADi5fcTgHABDHrGPh
+	EnKbv0w==
+X-Google-Smtp-Source: AGHT+IH41UBvd/p2EZxgg6neo+B0A15GYVfMjxx9fHEfN4KhcnjkGVtU7OQ56gVJi+XgjVVdrkIQTQ==
+X-Received: by 2002:a81:4e06:0:b0:61a:b7c8:ea05 with SMTP id 00721157ae682-622b001ec63mr331264077b3.35.1716302477515;
+        Tue, 21 May 2024 07:41:17 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-627bc199c3bsm5614827b3.136.2024.05.21.07.41.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 07:41:17 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-de60380c04aso3906137276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:41:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV1rZuOxno1h8TPHuPOQwYJdXpa7pslbD39kq9Xqx7ZXagIwBGZYEJ5XfbPBwHmMBsZ3OWIbUGEBC0jeKvcagDH/BenoDELUFbGSjJf
+X-Received: by 2002:a25:ae45:0:b0:de6:1057:c85f with SMTP id
+ 3f1490d57ef6-dee4f2cf86emr30830551276.22.1716302476510; Tue, 21 May 2024
+ 07:41:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAAObsKAw174AhGaA13Hyw0ANW=TxJHpK10+OwQGNMVca85Urdg@mail.gmail.com>
+ <ZkyPoIXBeBUqFJ48@phenom.ffwll.local>
+In-Reply-To: <ZkyPoIXBeBUqFJ48@phenom.ffwll.local>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Tue, 21 May 2024 16:41:05 +0200
+X-Gmail-Original-Message-ID: <CAAObsKAJvgg54zBEP-e3PKPLVeX+akZFJudjutjzVVZOJa-41g@mail.gmail.com>
+Message-ID: <CAAObsKAJvgg54zBEP-e3PKPLVeX+akZFJudjutjzVVZOJa-41g@mail.gmail.com>
+Subject: Re: DRM Accel BoF at Linux Plumbers
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, open list <linux-kernel@vger.kernel.org>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@gmail.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, 
+	Oded Gabbay <ogabbay@kernel.org>, Olof Johansson <olof@lixom.net>, 
+	Lucas Stach <l.stach@pengutronix.de>, Jeffrey Hugo <quic_jhugo@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-codespell reported misspelled aggregation in rtl8712_xmit.c. This patch
-corrects the spelling to increase code readability and searching.
+On Tue, May 21, 2024 at 2:12=E2=80=AFPM Daniel Vetter <daniel@ffwll.ch> wro=
+te:
+>
+> On Sat, May 18, 2024 at 10:46:01AM +0200, Tomeu Vizoso wrote:
+> > Hi,
+> >
+> > I would like to use the chance at the next Plumbers to discuss the
+> > present challenges related to ML accelerators in mainline.
+> >
+> > I'm myself more oriented towards edge-oriented deployments, and don't
+> > know enough about how these accelerators are being used in the cloud
+> > (and maybe desktop?) to tell if there is enough overlap to warrant a
+> > common BoF.
+> >
+> > In any case, these are the topics I would like to discuss, some
+> > probably more relevant to the edge than to the cloud or desktop:
+> >
+> > * What is stopping vendors from mainlining their drivers?
+> >
+> > * How could we make it easier for them?
+> >
+> > * Userspace API: how close are we from a common API that we can ask
+> > userspace drivers to implement? What can be done to further this goal?
+> >
+> > * Automated testing: DRM CI can be used, but would be good to have a
+> > common test suite to run there. This is probably dependent on a common
+> > userspace API.
+> >
+> > * Other shared userspace infrastructure (compiler, execution,
+> > synchronization, virtualization, ...)
+> >
+> > * Firmware-mediated IP: what should we do about it, if anything?
+> >
+> > * Any standing issues in DRM infra (GEM, gpu scheduler, DMABuf, etc)
+> > that are hurting accel drivers?
+> >
+> > What do people think, should we have a drivers/accel-wide BoF at
+> > Plumbers? If so, what other topics should we have in the agenda?
+>
+> Yeah sounds good, and I'll try to at least attend lpc this year since it'=
+s
+> rather close ... Might be good to explicitly ping teams of merged and
+> in-flight drivers we have in accel already.
 
-Signed-off-by: Roshan Khatri <topofeverest8848@gmail.com>
----
- drivers/staging/rtl8712/rtl8712_xmit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sounds like a good idea to me. Will check if the people that sent the
+previous aborted attempts are still interested in this.
 
-diff --git a/drivers/staging/rtl8712/rtl8712_xmit.c b/drivers/staging/rtl8712/rtl8712_xmit.c
-index d7d678b04ca8..12f2fdb1b3cb 100644
---- a/drivers/staging/rtl8712/rtl8712_xmit.c
-+++ b/drivers/staging/rtl8712/rtl8712_xmit.c
-@@ -247,7 +247,7 @@ void r8712_construct_txaggr_cmd_desc(struct xmit_buf *pxmitbuf)
- {
- 	struct tx_desc *ptx_desc = (struct tx_desc *)pxmitbuf->pbuf;
- 
--	/* Fill up TxCmd Descriptor according as USB FW Tx Aaggregation info.*/
-+	/* Fill up TxCmd Descriptor according as USB FW Tx Aggregation info.*/
- 	/* dw0 */
- 	ptx_desc->txdw0 = cpu_to_le32(CMD_HDR_SZ & 0xffff);
- 	ptx_desc->txdw0 |=
--- 
-2.34.1
+Cheers,
 
+Tomeu
+
+> I think the topic list is at least a good starting point.
+>
+> Cheers, Sima
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
