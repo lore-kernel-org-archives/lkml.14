@@ -1,406 +1,245 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC6C56770
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 08:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716281325; cv=none; b=qcM9ZSxwjQiSkfzhaIokUcKkou3DDEGkBEAWDsWPg7ZacFGpfc7+ylArN0I2IvpY/NQ32QLAC8NHeuK0IojgkkBQveOQUBoZShSmYYY6OVTdEHPvkDCizFNtnaNmNzD1gYj0GCTx4KJncFCrgktBiprBBYitvh/eQxSIStPmeds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716281325; c=relaxed/simple;
-	bh=dmI2lHHhY4cCTr7RsSI0QCMlvhgTmbDVRSf49Jcbg+E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qretgi0nAsjpwpoEicoBbpOI2nbTUbOQImVvHqlWuFWAojyRWSzJ30rWnuAyi0+URNCiePtL2I8DDfEM75STethXsvvfIm3gr9c+DXj9/WHu1DiJA4lt4DUXbkMbDLcVBGhUy9BI2q5KbwNsEQ10F2CuZP696arsklHk6jPR5bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mQko6Eg2; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEA94CDE0;
+	Tue, 21 May 2024 08:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716281419; cv=fail; b=JjXV/funLewSiG3xRoAdr0clMQFhhr54M/NAHyXUBOk7sDFWEDHhFIf36XkmkLN9mRvglcjiaQnP31V2+KU2raaQQ2HhLKO7PkXxh0YuQlM8JOFgdNkl3bxoXB2jS37Px1+ffmJBHzS4UXETAhLI3+a7S4IdsDEH6lIm9OLktEs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716281419; c=relaxed/simple;
+	bh=/H4nF+ohEKCpXhLiayO3OrtEVH44yo/m1T7+v+sBJ60=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=iMkBaIy0QQi2IPL8bXGqE7scrMSC4meBQrJW2jLTJ3mDUtQJeaN9gy7x84EXxgosAkrpC7qy+lGiQgDK0EhHA9TnqkpBJkGefecnh5XKyHOnQ7zbSXly3v65AbIuxrGqcw131erjs2yJrSHnP1v9H0ovQhBI8KQD/KcXEXvR7Ys=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBMwhBWK; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mQko6Eg2"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44L7ImNt004222;
-	Tue, 21 May 2024 08:48:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=xm3u46wSczENEA6bjd0Y/HTqxRm5xkp6vlY3MezCIds=;
- b=mQko6Eg2jLPH4YBprjZMfrpA/hKnxgcakb4MeOmf0znlB6/APQRLIl/QIpj9suwsXw8m
- +4lrPULaAn8uQKmRiSICJC70KlmLKIu7fGrR/wafMLe09OrB5Ep8eNje0jwK9k3sKHXs
- P2/ZgA9j9hfBG1GFq51rR/vdFd+t/2PTGHeUN0chaRwNF5xdX6rO29vmO7pPuxLeQPWs
- Oz2g91476q7yOriHdmJEm+7Sc/KDLhKXIiC4YN3Y9qwmO6A6KIPBO9mlYfcRuAYQBpCo
- A9Atit0TIPn65UrbboTcfvnVNH5mHnfiDxQxmEkpSYLZ2gp3k+PYd/kp3NPTkCk/PdoB YQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y8q3a0736-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 08:48:19 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44L8mICi024317;
-	Tue, 21 May 2024 08:48:18 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y8q3a0733-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 08:48:18 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44L64wpR022087;
-	Tue, 21 May 2024 08:48:17 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y76ntmxvv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 08:48:17 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44L8mF6C3473960
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 May 2024 08:48:17 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0CB4B5805D;
-	Tue, 21 May 2024 08:48:15 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41D0158053;
-	Tue, 21 May 2024 08:48:11 +0000 (GMT)
-Received: from [9.171.37.250] (unknown [9.171.37.250])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 May 2024 08:48:10 +0000 (GMT)
-Message-ID: <945416af-3f8b-40b5-9681-49973beb2cb2@linux.ibm.com>
-Date: Tue, 21 May 2024 14:18:09 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] nvme: multipath: Implemented new iopolicy
- "queue-depth"
-To: John Meneghini <jmeneghi@redhat.com>, kbusch@kernel.org, hch@lst.de,
-        sagi@grimberg.me, emilne@redhat.com
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jrani@purestorage.com, randyj@purestorage.com, hare@kernel.org
-References: <20240520202045.427110-1-jmeneghi@redhat.com>
- <20240520202045.427110-2-jmeneghi@redhat.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <20240520202045.427110-2-jmeneghi@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3l9zGOflHi9wVURUG_KoanMRZ1AsS-er
-X-Proofpoint-GUID: W_P4WROK6Mh8DK3lR-bMsNmLCgglWOf2
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBMwhBWK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716281417; x=1747817417;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=/H4nF+ohEKCpXhLiayO3OrtEVH44yo/m1T7+v+sBJ60=;
+  b=nBMwhBWKMPZ8TfRR9m3ppuLvCYmWqArM9ndXYl6qGu5lDVaRCmG2FVZE
+   2KVDc3Bxki3FCN/JsPKtRa6OJsMFGzz47f6nl1noEfu7SmNIPhfRc4D9L
+   xIfCezdi1lzqQLUdM5ynUAcXNHM5Ub3CCDVDGQCyV2oOgQrfFZfz4bWWf
+   2pnBBDw0Uv6X8U3kwuoAX/RJaJ8JOF3aYUlAJ6Q5wGDEnkzsXGXNMXP1e
+   YRBfPXGxARzrmkXYlQLLYuffv3xwR8NvNKlyxoD7XfvC1dUI9OYcOcefV
+   0+DRcXlKlusRuwEjT0EL12ETXwKc2YUuKmLpuPRJViw6YCVYafv8zVS4J
+   g==;
+X-CSE-ConnectionGUID: 7SnSZ6OdSBmKrF2jEd5rMg==
+X-CSE-MsgGUID: aKTJ+b+CTMq1WnDrTu3sjA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="23861219"
+X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
+   d="scan'208";a="23861219"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 01:50:17 -0700
+X-CSE-ConnectionGUID: A8UAQ+I9RxaTGF9VhvxCsQ==
+X-CSE-MsgGUID: nAOXLrMzRpuTaf6ppSMtzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
+   d="scan'208";a="32966365"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 May 2024 01:50:17 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 21 May 2024 01:50:16 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 21 May 2024 01:50:16 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 21 May 2024 01:50:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dMVpaCafJsBQ3wWDJbssqVU/jcUH4YpOij909s+DUaP2UP3hhwIdgyz8DaS4gFMItFZOh22BtSDELpO+S+/Z4IMcYBurMhr3XBRuuLtrTk7W9238anlmG50vm4s8Rnb6Hq9VsBj6Uin5kdXrJYtusL7aD4ZRv/SNiipRmGMFDkbci1UeDV1x+jIlGDBx0ZRkIdHh//kuxrowO9qwap5y8fjUeAC5+rq7T1mMHoGCpV6OI0MRD+uw/WVA+Cvza04JQBZjYcWiEaXHe8F/fUEwUN88N9uk/bCgXAd7++Ex94UGsaAzvJa85SogJ+nAblTydqxWMIZVI47FAeW4wQoD8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lkkTuLYvjQcAkE8mxgP/rv3Agj+/Rtc9jYrLK+3jlig=;
+ b=BOojMnk0y/hBXicoiqaa/RlNHOiID5M81JbwquXnP1tJWnJzDe2num+Fx+u5rNT67sLwuQWOc0UuHwSqOap7KqMA42AYOwAXPgkJ3nZkDAAfOXIX3W3aRbXHka0RAm0p9FjEoXHDAV0kwT7q4gpHmoWF81ebBZkmWvtfqk7X9AnH9MmTLKoEMjVY8sbPs8PbEmnvfYOwuCAR64TwZA/O7IM6KNWU7M4k4GeBpefwB8sHaLXEpFHqaFdhdYk9Z0H88uQkmvq8Ni0rEob26Q5inDEdo5wph44vpPB+Xl2XNoGN/n7LKCrOCPZy/u5+V3O7Sj4Adn9c/rvfNRuAjeDAVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by BL1PR11MB5224.namprd11.prod.outlook.com (2603:10b6:208:30a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Tue, 21 May
+ 2024 08:50:14 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%2]) with mapi id 15.20.7587.030; Tue, 21 May 2024
+ 08:50:13 +0000
+Date: Tue, 21 May 2024 16:50:03 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Roman Gushchin <roman.gushchin@linux.dev>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Shakeel Butt
+	<shakeel.butt@linux.dev>, Yosry Ahmed <yosryahmed@google.com>, "T.J. Mercier"
+	<tjmercier@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko
+	<mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	<cgroups@vger.kernel.org>, <linux-mm@kvack.org>, <oliver.sang@intel.com>
+Subject: [linus:master] [mm]  aab6103b97:
+ kernel-selftests.cgroup.test_kmem.test_percpu_basic.fail
+Message-ID: <202405211653.efc447b0-oliver.sang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096::24) To
+ LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_05,2024-05-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 phishscore=0 mlxscore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 suspectscore=0 clxscore=1011
- spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2405010000 definitions=main-2405210065
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|BL1PR11MB5224:EE_
+X-MS-Office365-Filtering-Correlation-Id: aae8b710-af7f-4812-ec2e-08dc79730772
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?DF4N0YLdtdi3gw8H+fp5I8iUsGI6Vmw1Wwb/t/Cei1ZCHCZLRYwc604GwPkp?=
+ =?us-ascii?Q?GUc4AYPiuzQJFtQyc+tPlbSdYyikVnDYAcvS7D1psbAGQTtkPjpB0kgIgBPS?=
+ =?us-ascii?Q?P4uGTH10QJt0X8Px19NY/auI119m1T6OqlHvRdafx8OxZ9JyyhxX0XGRlIl8?=
+ =?us-ascii?Q?Bs0UZrjCRwBMNz1giiypb5w9NAt8Za6p+ntdH7NjW85ipk2tGcWNUfJrGRav?=
+ =?us-ascii?Q?pGMl9k/6MZXhQXIctWZmqTvS4wEKQOqPQdJooDc7mOSARKrZ9siwthcSY0F2?=
+ =?us-ascii?Q?Jo1IDEWoiolE8nzrqYADRp1SZM9IcPSGPTMeT31cz2z6L47GrqWW+lsdN+cB?=
+ =?us-ascii?Q?bWoRjTYTG96FrjETE1eluVWJqCjynXQ77AUDwd4yhKXDy+UOmuJO/gCzGBWd?=
+ =?us-ascii?Q?Ql9KJYASl+KS5Z0BcIoANwRnlbd5f3o2SCP5JP5smoUPW3157Oeml4evtnFm?=
+ =?us-ascii?Q?L0fiEZLJzyxng3joStl3TVKlqTET0Bp9Y4UDCRmJiaY6Z5RVOGe968KbKMjE?=
+ =?us-ascii?Q?tZt+lONbJKMxbqfHChCccir/4hIEQFYTeqNLvPWX82qzGeFVUzm8LWmPQEy8?=
+ =?us-ascii?Q?lEbj+EByL8WGelHdsJ92T5WoZ6Pdugs4RzdHVRBuv9+pDcLRGGzMjYL3t5Jr?=
+ =?us-ascii?Q?zk0zWd14LQzAn5zWVQPiIMWRKQZqr6vzx9lwYY5iuuJGUeZKFh0HdhbkzfIz?=
+ =?us-ascii?Q?rHe/iAN/XkgWoq4w7GUk+m+ENbJwbRhjylr2Vq1lziNC5ENzlcy4Qjh0Pwcs?=
+ =?us-ascii?Q?0vxRIAr1Ta6r1zvHphisK8UM4+9R4kIeyqUmc4yMTQP/0TwzdPYy+DGqFlHp?=
+ =?us-ascii?Q?88tvICfu7ZcvLCALESmhVfb3Vk3H8l4Ma2GrUx5iJd2XvcS8uhUm5PxwsKhb?=
+ =?us-ascii?Q?tCtBtcSN89hZqmR94sPnLgtsWQN/BS3JQ/kojWiyXUqkKLROY+iLq4fJqZW5?=
+ =?us-ascii?Q?THFnXyNmb9jSmc/6HHwvH484IibVlPpNGdhK6LDUrZ1z4u2Uy/H/PpEspRAz?=
+ =?us-ascii?Q?R8Kzr6WljX5jS4u5sEovsQa0bNN4qhOnt6KEWOvQGnarkCDau6Jfl3kkyvVm?=
+ =?us-ascii?Q?txfQynTQ5DLsiUbXYeFxdRxQIACzVExsx+0ZqAtyEz5eFTvlhWpxP9yWtMZu?=
+ =?us-ascii?Q?d0HPTqtHjrrdWGSwCR/3Ec1etFwzfaBQyw4hPmSYHINF5zZP4tn11L3oiSmT?=
+ =?us-ascii?Q?Gd5KUduIAnz2gascqU8YRIkoJ5ELlwanFE2XE0ioLJ3Bq/JnXzq8yLUvvAc?=
+ =?us-ascii?Q?=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KQxIImQv6CLXMLtvZlrPsoE3rj47jxA0vGepG2XsZTN00tQv/ib7bQKJmcq+?=
+ =?us-ascii?Q?2sQYnrMamVY7nezq9z45jLA5MgBin1zfr4Ut83Mp4wjH10Ybg6scPrKzqeCr?=
+ =?us-ascii?Q?2p4VOZzTrYXKUCmKK37asDCznPvKb1rCyeEJ+to95YFTLIUEGw6h2AxsMk8O?=
+ =?us-ascii?Q?yV/hAYZMZx/h3n+vsRBmeADovBjOxfgKzB1mOMU4PxnCV+fdUnrXF2X5RJTr?=
+ =?us-ascii?Q?zuPrz13SL4ZF9+AeQLShb3pVtTp2O1+glyAx51D6LyFBC5R0v3sDktzFYYO2?=
+ =?us-ascii?Q?Jv66oMZuJa1pmUTnFkBtQexpfIZ28losTctwryYnSaFS/VDRMebm9ON9iKyl?=
+ =?us-ascii?Q?S/gK9cyOhnV2srYfs2bfVj1vDT0VOXwEQ737HaRv29zkOnREzpOmFc2twxDN?=
+ =?us-ascii?Q?sKYB0jctkVxuLWy9w0T/IBeBoRbGJQ3djijf7JtJUcob74gsvEQCQPo5utCK?=
+ =?us-ascii?Q?clkXspB+LaxV+pPQzocXoFsILJT5R83NJ2511I2bas/9ydnexPj/4/bgezui?=
+ =?us-ascii?Q?aBmvIUrp/12ZhR6YkNpimMeeAbmXtItmJ9336JfNKjFqoFKN7AjRpMHXC5Ah?=
+ =?us-ascii?Q?ijV2qEMgApbQOK1m8UYGe9ESxAPkUFJhyD6D496NTNibGb66s9QmVqIYgjhj?=
+ =?us-ascii?Q?B6G38O1memH6QMGRC2BKLYnWnbe1sdirTieqwUfd9PQIARNCSN5ZUSxevcpZ?=
+ =?us-ascii?Q?vsLox3URJCfFphV1zmstyUpRDaFB9Gi0znCs0GYtOGG4VrTgY9cL7GIG9BRY?=
+ =?us-ascii?Q?N2nKOFdMnCtYlN+tX+sWkv5YRushFNiTL29p1H5LaHhijwD/6Ml9Ultx6ih7?=
+ =?us-ascii?Q?gsQuu1lxzPc2BOv7J2ZLXGA+qLApWwbtnrtYX5ihkHJTVng6R2N9R3JPg9my?=
+ =?us-ascii?Q?bzrREV/Fi92Act0q1flEABXd1Qs/lc0vyA/kvlE0hFmzb3n+vPq4le1j6cZe?=
+ =?us-ascii?Q?EvF4fStaJ+JloZoOUcAeMRYRMmtWZ3gGqhoaxyr+RCNk1JH6sDUwBZy5WpAN?=
+ =?us-ascii?Q?7BpfCH18AH5ZAE+pqhmkrsFDDrXwgKQto8UKoTSjgC9Ztks0uYAD8ALlWAUW?=
+ =?us-ascii?Q?Ew258H9UfBL7UTufSEAueZxuS4a2QXJteLwiMGmL4dJhDqDMq3wWMbEhjjP3?=
+ =?us-ascii?Q?I8IWYaa1s1KonVodN29u6Yi5KZNfQQlDCRGVdVQz4Lq3pGSwEmQCV2DXpmze?=
+ =?us-ascii?Q?gaHPp483Cxg7xxoQ1Bq6kGaArNmXfwLuAQ7+HBmRNfHP0t385AlQrFytHCkn?=
+ =?us-ascii?Q?QL8/ZQplILVv2xMx1SfDn4DUhGevAO8++8HzmA1eJyfEUl1e4llL2i04zVq2?=
+ =?us-ascii?Q?b3t8CHQixGQxTQFYCgg4Yohozof3dslbyqEvVciFfFBH2Yc5GiocT7CDDiqD?=
+ =?us-ascii?Q?cFlWeKsUgC+wJ+lrK4LMC4KrUT/SZWaj209so8VeJhjluc3iEVDXiCnr0umS?=
+ =?us-ascii?Q?OJP2rqOEPcsTLevBDffTxgyTE3OU+II2fYbQgDEojkh9XscKnefo/WiAF7te?=
+ =?us-ascii?Q?Tyftlejl6hug/pOuvyVt3Wc/Lv/+mlU4fDD56VNL3DOv3128yhtM9KnztxiD?=
+ =?us-ascii?Q?og4LYgvz3H36QJ48PCCrAvpWRlpriJ+DDN17mXZQCFrfoX7yX1PN8f3i+mPL?=
+ =?us-ascii?Q?bA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aae8b710-af7f-4812-ec2e-08dc79730772
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 08:50:13.3707
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vLo/88JiHeyVsppKHGoz7YT79umBnxLv/HrTCxpCc+Wzdasd7quCaA0j30TXra0BRTMYZpiFOe5B3rH4FmzVYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5224
+X-OriginatorOrg: intel.com
 
 
 
-On 5/21/24 01:50, John Meneghini wrote:
-> From: "Ewan D. Milne" <emilne@redhat.com>
-> 
-> The round-robin path selector is inefficient in cases where there is a
-> difference in latency between multiple active optimized paths.  In the
-> presence of one or more high latency paths the round-robin selector
-> continues to the high latency path equally. This results in a bias
-> towards the highest latency path and can cause is significant decrease
-> in overall performance as IOs pile on the lowest latency path. This
-> problem is particularly accute with NVMe-oF controllers.
-> 
-> The queue-depth policy instead sends I/O requests down the path with the
-> least amount of requests in its request queue. Paths with lower latency
-> will clear requests more quickly and have less requests in their queues
-> compared to higher latency paths. The goal of this path selector is to
-> make more use of lower latency paths, which will bring down overall IO
-> latency.
-> 
-> Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-> [tsong: patch developed by Thomas Song @ Pure Storage, fixed whitespace
->       and compilation warnings, updated MODULE_PARM description, and
->       fixed potential issue with ->current_path[] being used]
-> Signed-off-by: Thomas Song <tsong@purestorage.com>
-> [jmeneghi: vairious changes and improvements, addressed review comments]
-> Signed-off-by: John Meneghini <jmeneghi@redhat.com>
-> Link: https://lore.kernel.org/linux-nvme/20240509202929.831680-1-jmeneghi@redhat.com/
-> Tested-by: Marco Patalano <mpatalan@redhat.com>
-> Reviewed-by: Randy Jennings <randyj@redhat.com>
-> Tested-by: Jyoti Rani <jani@purestorage.com>
-> ---
->  drivers/nvme/host/core.c      |  2 +-
->  drivers/nvme/host/multipath.c | 86 +++++++++++++++++++++++++++++++++--
->  drivers/nvme/host/nvme.h      |  9 ++++
->  3 files changed, 92 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index a066429b790d..1dd7c52293ff 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -110,7 +110,7 @@ struct workqueue_struct *nvme_delete_wq;
->  EXPORT_SYMBOL_GPL(nvme_delete_wq);
->  
->  static LIST_HEAD(nvme_subsystems);
-> -static DEFINE_MUTEX(nvme_subsystems_lock);
-> +DEFINE_MUTEX(nvme_subsystems_lock);
->  
->  static DEFINE_IDA(nvme_instance_ida);
->  static dev_t nvme_ctrl_base_chr_devt;
-> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-> index 5397fb428b24..0e2b6e720e95 100644
-> --- a/drivers/nvme/host/multipath.c
-> +++ b/drivers/nvme/host/multipath.c
-> @@ -17,6 +17,7 @@ MODULE_PARM_DESC(multipath,
->  static const char *nvme_iopolicy_names[] = {
->  	[NVME_IOPOLICY_NUMA]	= "numa",
->  	[NVME_IOPOLICY_RR]	= "round-robin",
-> +	[NVME_IOPOLICY_QD]      = "queue-depth",
->  };
->  
->  static int iopolicy = NVME_IOPOLICY_NUMA;
-> @@ -29,6 +30,8 @@ static int nvme_set_iopolicy(const char *val, const struct kernel_param *kp)
->  		iopolicy = NVME_IOPOLICY_NUMA;
->  	else if (!strncmp(val, "round-robin", 11))
->  		iopolicy = NVME_IOPOLICY_RR;
-> +	else if (!strncmp(val, "queue-depth", 11))
-> +		iopolicy = NVME_IOPOLICY_QD;
->  	else
->  		return -EINVAL;
->  
-> @@ -43,7 +46,7 @@ static int nvme_get_iopolicy(char *buf, const struct kernel_param *kp)
->  module_param_call(iopolicy, nvme_set_iopolicy, nvme_get_iopolicy,
->  	&iopolicy, 0644);
->  MODULE_PARM_DESC(iopolicy,
-> -	"Default multipath I/O policy; 'numa' (default) or 'round-robin'");
-> +	"Default multipath I/O policy; 'numa' (default) , 'round-robin' or 'queue-depth'");
->  
->  void nvme_mpath_default_iopolicy(struct nvme_subsystem *subsys)
->  {
-> @@ -127,6 +130,11 @@ void nvme_mpath_start_request(struct request *rq)
->  	struct nvme_ns *ns = rq->q->queuedata;
->  	struct gendisk *disk = ns->head->disk;
->  
-> +	if (READ_ONCE(ns->head->subsys->iopolicy) == NVME_IOPOLICY_QD) {
-> +		atomic_inc(&ns->ctrl->nr_active);
-> +		nvme_req(rq)->flags |= NVME_MPATH_CNT_ACTIVE;
-> +	}
-> +
->  	if (!blk_queue_io_stat(disk->queue) || blk_rq_is_passthrough(rq))
->  		return;
->  
-> @@ -140,8 +148,12 @@ void nvme_mpath_end_request(struct request *rq)
->  {
->  	struct nvme_ns *ns = rq->q->queuedata;
->  
-> +	if ((nvme_req(rq)->flags & NVME_MPATH_CNT_ACTIVE))
-> +		atomic_dec_if_positive(&ns->ctrl->nr_active);
-> +
->  	if (!(nvme_req(rq)->flags & NVME_MPATH_IO_STATS))
->  		return;
-> +
->  	bdev_end_io_acct(ns->head->disk->part0, req_op(rq),
->  			 blk_rq_bytes(rq) >> SECTOR_SHIFT,
->  			 nvme_req(rq)->start_time);
-> @@ -330,6 +342,40 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
->  	return found;
->  }
->  
-I think you may also want to reset nr_active counter if in case, in-flight nvme request 
-is cancelled. If the request is cancelled then nvme_mpath_end_request() wouldn't be invoked.
-So you may want to reset nr_active counter from nvme_cancel_request() as below:
+Hello,
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index bf7615cb36ee..4fea7883ce8e 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -497,8 +497,9 @@ EXPORT_SYMBOL_GPL(nvme_host_path_error);
- 
- bool nvme_cancel_request(struct request *req, void *data)
- {
--       dev_dbg_ratelimited(((struct nvme_ctrl *) data)->device,
--                               "Cancelling I/O %d", req->tag);
-+       struct nvme_ctrl *ctrl = (struct nvme_ctrl *)data;
-+
-+       dev_dbg_ratelimited(ctrl->device, "Cancelling I/O %d", req->tag);
- 
-        /* don't abort one completed or idle request */
-        if (blk_mq_rq_state(req) != MQ_RQ_IN_FLIGHT)
-@@ -506,6 +507,8 @@ bool nvme_cancel_request(struct request *req, void *data)
- 
-        nvme_req(req)->status = NVME_SC_HOST_ABORTED_CMD;
-        nvme_req(req)->flags |= NVME_REQ_CANCELLED;
-+       if ((nvme_req(rq)->flags & NVME_MPATH_CNT_ACTIVE))
-+               atomic_dec(&ctrl->nr_active);
-        blk_mq_complete_request(req);
-        return true;
- }
+kernel test robot noticed "kernel-selftests.cgroup.test_kmem.test_percpu_basic.fail" on:
 
-Please note that I am using atomic_dec() instead of atomic_dec_if_positive()
-above for the same reason as Keith mentioned in his earlier mail.
+commit: aab6103b97f1c7ca6cf33e78d5e6916e53fc265c ("mm: memcg: account memory used for memcg vmstats and lruvec stats")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
-> +static struct nvme_ns *nvme_queue_depth_path(struct nvme_ns_head *head)
-> +{
-> +	struct nvme_ns *best_opt = NULL, *best_nonopt = NULL, *ns;
-> +	unsigned int min_depth_opt = UINT_MAX, min_depth_nonopt = UINT_MAX;
-> +	unsigned int depth;
-> +
-> +	list_for_each_entry_rcu(ns, &head->list, siblings) {
-> +		if (nvme_path_is_disabled(ns))
-> +			continue;
-> +
-> +		depth = atomic_read(&ns->ctrl->nr_active);
-> +
-> +		switch (ns->ana_state) {
-> +		case NVME_ANA_OPTIMIZED:
-> +			if (depth < min_depth_opt) {
-> +				min_depth_opt = depth;
-> +				best_opt = ns;
-> +			}
-> +			break;
-> +
-> +		case NVME_ANA_NONOPTIMIZED:
-> +			if (depth < min_depth_nonopt) {
-> +				min_depth_nonopt = depth;
-> +				best_nonopt = ns;
-> +			}
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	return best_opt ? best_opt : best_nonopt;
-> +}
-> +
->  static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
->  {
->  	return nvme_ctrl_state(ns->ctrl) == NVME_CTRL_LIVE &&
-> @@ -338,15 +384,27 @@ static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
->  
->  inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
->  {
-> -	int node = numa_node_id();
-> +	int iopolicy = READ_ONCE(head->subsys->iopolicy);
-> +	int node;
->  	struct nvme_ns *ns;
->  
-> +	/*
-> +	 * queue-depth iopolicy does not need to reference ->current_path
-> +	 * but round-robin needs the last path used to advance to the
-> +	 * next one, and numa will continue to use the last path unless
-> +	 * it is or has become not optimized
-> +	 */
-> +	if (iopolicy == NVME_IOPOLICY_QD)
-> +		return nvme_queue_depth_path(head);
-> +
-> +	node = numa_node_id();
->  	ns = srcu_dereference(head->current_path[node], &head->srcu);
->  	if (unlikely(!ns))
->  		return __nvme_find_path(head, node);
->  
-> -	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
-> +	if (iopolicy == NVME_IOPOLICY_RR)
->  		return nvme_round_robin_path(head, node, ns);
-> +
->  	if (unlikely(!nvme_path_is_optimized(ns)))
->  		return __nvme_find_path(head, node);
->  	return ns;
-> @@ -798,6 +856,25 @@ static ssize_t nvme_subsys_iopolicy_show(struct device *dev,
->  			  nvme_iopolicy_names[READ_ONCE(subsys->iopolicy)]);
->  }
->  
-> +void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
-> +{
-> +	struct nvme_ctrl *ctrl;
-> +	int old_iopolicy = READ_ONCE(subsys->iopolicy);
-> +
-> +	WRITE_ONCE(subsys->iopolicy, iopolicy);
-> +
-> +	mutex_lock(&nvme_subsystems_lock);
-> +	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry) {
-> +		atomic_set(&ctrl->nr_active, 0);
-> +		nvme_mpath_clear_ctrl_paths(ctrl);
-> +	}
-> +	mutex_unlock(&nvme_subsystems_lock);
-> +
-> +	pr_notice("%s: changed from %s to %s for subsysnqn %s\n", __func__,
-> +			nvme_iopolicy_names[old_iopolicy], nvme_iopolicy_names[iopolicy],
-> +			subsys->subnqn);
-> +}
-> +
->  static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
->  		struct device_attribute *attr, const char *buf, size_t count)
->  {
-> @@ -807,7 +884,7 @@ static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
->  
->  	for (i = 0; i < ARRAY_SIZE(nvme_iopolicy_names); i++) {
->  		if (sysfs_streq(buf, nvme_iopolicy_names[i])) {
-> -			WRITE_ONCE(subsys->iopolicy, i);
-> +			nvme_subsys_iopolicy_update(subsys, i);
->  			return count;
->  		}
->  	}
-> @@ -905,6 +982,7 @@ void nvme_mpath_init_ctrl(struct nvme_ctrl *ctrl)
->  	mutex_init(&ctrl->ana_lock);
->  	timer_setup(&ctrl->anatt_timer, nvme_anatt_timeout, 0);
->  	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
-> +	atomic_set(&ctrl->nr_active, 0);
->  }
->  
->  int nvme_mpath_init_identify(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
-> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-> index f243a5822c2b..f5557889b244 100644
-> --- a/drivers/nvme/host/nvme.h
-> +++ b/drivers/nvme/host/nvme.h
-> @@ -50,6 +50,8 @@ extern struct workqueue_struct *nvme_wq;
->  extern struct workqueue_struct *nvme_reset_wq;
->  extern struct workqueue_struct *nvme_delete_wq;
->  
-> +extern struct mutex nvme_subsystems_lock;
-> +
->  /*
->   * List of workarounds for devices that required behavior not specified in
->   * the standard.
-> @@ -190,6 +192,7 @@ enum {
->  	NVME_REQ_CANCELLED		= (1 << 0),
->  	NVME_REQ_USERCMD		= (1 << 1),
->  	NVME_MPATH_IO_STATS		= (1 << 2),
-> +	NVME_MPATH_CNT_ACTIVE	= (1 << 3),
->  };
->  
->  static inline struct nvme_request *nvme_req(struct request *req)
-> @@ -354,6 +357,7 @@ struct nvme_ctrl {
->  	size_t ana_log_size;
->  	struct timer_list anatt_timer;
->  	struct work_struct ana_work;
-> +	atomic_t nr_active;
->  #endif
->  
->  #ifdef CONFIG_NVME_HOST_AUTH
-> @@ -402,6 +406,7 @@ static inline enum nvme_ctrl_state nvme_ctrl_state(struct nvme_ctrl *ctrl)
->  enum nvme_iopolicy {
->  	NVME_IOPOLICY_NUMA,
->  	NVME_IOPOLICY_RR,
-> +	NVME_IOPOLICY_QD,
->  };
->  
->  struct nvme_subsystem {
-> @@ -935,6 +940,7 @@ void nvme_mpath_clear_ctrl_paths(struct nvme_ctrl *ctrl);
->  void nvme_mpath_shutdown_disk(struct nvme_ns_head *head);
->  void nvme_mpath_start_request(struct request *rq);
->  void nvme_mpath_end_request(struct request *rq);
-> +void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy);
->  
->  static inline void nvme_trace_bio_complete(struct request *req)
->  {
-> @@ -1034,6 +1040,9 @@ static inline bool nvme_disk_is_ns_head(struct gendisk *disk)
->  {
->  	return false;
->  }
-> +static inline void nvme_subsys_iopolicy_update(struct nvme_subsystem *subsys, int iopolicy)
-> +{
-> +}
->  #endif /* CONFIG_NVME_MULTIPATH */
->  
->  int nvme_ns_report_zones(struct nvme_ns *ns, sector_t sector,
+in testcase: kernel-selftests
+version: kernel-selftests-x86_64-977d51cf-1_20240508
+with following parameters:
 
-Thanks,
---Nilay
+	group: cgroup
+
+
+
+compiler: gcc-13
+test machine: 4 threads 1 sockets Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz (Ivy Bridge) with 8G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202405211653.efc447b0-oliver.sang@intel.com
+
+
+
+# timeout set to 300
+# selftests: cgroup: test_kmem
+# not ok 1 test_kmem_basic
+# ok 2 test_kmem_memcg_deletion
+# ok 3 test_kmem_proc_kpagecgroup
+# ok 4 test_kmem_kernel_stacks
+# ok 5 test_kmem_dead_cgroups
+# memory.current 20549632
+# percpu 12096000
+# not ok 6 test_percpu_basic     <------
+not ok 2 selftests: cgroup: test_kmem # exit=1
+
+
+the case always pass on parent
+
+70a64b7919cbd6c1 aab6103b97f1c7ca6cf33e78d5e
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :6          100%           6:6     kernel-selftests.cgroup.test_kmem.test_percpu_basic.fail
+
+
+below is the log from one parent run:
+
+# timeout set to 300
+# selftests: cgroup: test_kmem
+# not ok 1 test_kmem_basic
+# ok 2 test_kmem_memcg_deletion
+# ok 3 test_kmem_proc_kpagecgroup
+# ok 4 test_kmem_kernel_stacks
+# ok 5 test_kmem_dead_cgroups
+# ok 6 test_percpu_basic     <-------
+not ok 2 selftests: cgroup: test_kmem # exit=1
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240521/202405211653.efc447b0-oliver.sang@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
