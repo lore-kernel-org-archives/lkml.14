@@ -1,60 +1,60 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7256971B4B
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F671770E9
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716284734; cv=none; b=blO9Yh27bo8VsYThZZrgQ6CId+CJB0yblYOGFuXU28u6LxcA21wrcraanqWbPPxnm0UymWIVCssqG+gA/rJ1NqqNfBfXQO0k0q3MrbdPvsF4G5ZnzBeLAUJXec64vlgOTXO49bSMjPUb9Hta+9WMfV9r8xLUhhLxjKV4YLJFiWk=
+	t=1716284738; cv=none; b=pbDAV/9UKi8ucXotWi1Sf7w87ppcArvnO+qtWjk/gJIeCAKnWLKM54dRFLHTfJ25sIEoRrQFtdgJsYR/gjVDuX7SJ9mYiaKD5zVECNRToz0WF8gH0GJMAQdXUdoQi8+AHZIlKXLFkaMgfabO/VYJeMG4YCC1Y8aKpqjL96QWXhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716284734; c=relaxed/simple;
-	bh=3GMSFXyN5ilu4SqpHge+aFL3zkwzk7yL0BcyJB6jSAk=;
+	s=arc-20240116; t=1716284738; c=relaxed/simple;
+	bh=hNIcpe1sOvV0/2oq2E+Wm6ZeAwz5DUtQCi+I+XlGNEg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JMtmaZJ14c+jtfjvo3CBdpKpTygdVuY4oZBZGF0nXd62J6QIC4bwTEFos2rCKAH5E1jXuN2BYZdhWVXeu7dSutWVMJtV9zR+aQPMdq459Ir5WfqSxqNJdt7h4OtjYFXIaK/ErNj01ClKvgWKAKVxXG4Yw3wNebDm4DEVnYwQqA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S+EHt4L3; arc=none smtp.client-ip=209.85.208.171
+	 In-Reply-To:To:Cc; b=pX/C7xrNx3oUMUzRxFbDqaJQTjIz/dyrqQe+9Db5dO4OOqgbx4WiFM8+G52Cq0221+9seR8PNV+JbpbnCk6d18nICB9kSmTPUzcyYTGjIk1WotA66+Cmgn0b9aLVuZx6bVF+KrxX66cBgO0azx4/DFq6K0b8De4vNb3mdzupa1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vedFmH6u; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S+EHt4L3"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e538a264e0so67506181fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vedFmH6u"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e538a264e0so67507021fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716284729; x=1716889529; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716284734; x=1716889534; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cIq/k/IeC60qZbvt7sKK/1GOc3t+5RIB9rwIXTiRrZ8=;
-        b=S+EHt4L34umNNqJHGRPfejgWBFW6X733iAtImHkC+W82Zhev78I7Ha1LJ8QTjh83l+
-         5uCvb2RbHbTuMd40P/72RlqgzO55nwnE4auxW2c7K/9vlmbkBK/b5h0otEOcCMQil1QC
-         haTU8mmxlQOYMYTduv1hzyHSigucoXdC+gs9duKyeLnk3CVpOcei5v9IF5FLeL8yU2LX
-         taMcHFUFi1AXdfre5ujEKg1ZayPWyuQ8L9qgdNcdOuEeTY8u7Hp0sbl9DiVdlKLJRfgr
-         dlUPfpRM1dhsI0NczwRRaD0BlPX+J+/vdMURcjDiO6/JAGHXUG9hx52Xu+RwzwNNFg7z
-         FzTg==
+        bh=76RXMDJdIf87Lj/v6tqI1Ofql4asvJ4Gr33M+iMz2pU=;
+        b=vedFmH6uMnaY+QyRY8kx0Vo9hwWJdGbzVK4qhTHM9qRMGF2cuZFGYXdd4P21TUhQeB
+         9WuPOjhZ5lHNk/TzXG6JDVd0F6NbevPJ+TcdFxH7yoOs0byedvPaZuC8D5eaUSPIlWdq
+         Ton8I38Llz3dn90vZcIKUdj0GYu4zPwTfaNYS4CJgjVlR1b/QmVzg94ssdCTJFh/udNW
+         RfHpfLvCqtJTifmWicsQAk6SwCCrTNAmEIvTxhxkEbELiTEQZn9IcacKd/UdZucaBX+V
+         LA78k51Rzr/vDNK9nKm/taAYokPXKJ9QkgXttDsuLZvaVab8mhgpcP2V/5Y2jmM36ihm
+         uHPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716284729; x=1716889529;
+        d=1e100.net; s=20230601; t=1716284734; x=1716889534;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cIq/k/IeC60qZbvt7sKK/1GOc3t+5RIB9rwIXTiRrZ8=;
-        b=NqF0nDlPYtKK5DdwIWSVS01s4z2MfsXFx+yNuJP0kIz1QI+G7Mace562xILQdCQ44p
-         0Y9jvC4wpHlvhdRUn6Uja3e535Vt4c50e9pex/1WqXVFXlHDpjFcSPn0lA2hvVz4vCYN
-         yv+JT0LqOxlQGjhHyV06t4CdtTYTmx3U6jTlkZ8GBYeguTEeaFkVryGOeoxopIiEpC2H
-         WSaJkInbwXv8ggk6s0BwUlCBTlOUiRDfRZPSfX6thgUgIAROpemPTIi6Awz6bv3BwNt4
-         VbSCcbA1afzpE7WFVu/kJxxbxNYUj1/Naxr0BKJfSAaf3YWYeXlvvgoE1Caz4SPT1Qg2
-         2XAg==
-X-Gm-Message-State: AOJu0Yw00nJY7VP4fOwHuUveMr8MavQgSLzX+qTaDIyvqA3rkvTeI6Ks
-	5IgCKAahQQ+hmz/cbjnxRjZGM6Vu5/H3YtHDkQLnjo/mfVgLY+3ZkdcmijwNmrI=
-X-Google-Smtp-Source: AGHT+IEKa17r23iQKv2XCAX0BvXMw/CFrDizcCAluTCl+f1X45ThXZiwZbDwMMNPQaw/SpE9aBJK5A==
-X-Received: by 2002:a2e:a98d:0:b0:2dd:cb34:ddbc with SMTP id 38308e7fff4ca-2e5205c8fc4mr346995051fa.48.1716284729715;
-        Tue, 21 May 2024 02:45:29 -0700 (PDT)
+        bh=76RXMDJdIf87Lj/v6tqI1Ofql4asvJ4Gr33M+iMz2pU=;
+        b=PG2nXca7ri/ZDRH5WWmMc/82t8bHioIR+A+YvdBZoRvDTTCKcuibGDy3HAhyJQ5gWf
+         rjAEucKZeMmIahuQ+2oGUIgsk/5hbaLInif8SdgCHXyxnPD1HkfuoJZDIQhVTy/box1X
+         FsHBqpOFSU5P9X4h36InXdxYCyQgKn4UgSgHGPigha980aaZ9HWxBEpcfGyuTdR7zM5Y
+         LIpTlNp0X3dRfftlz4mdABkbdFabp2UXB1Q0va5CzlHV2Q/2UDrxKSjNB/3JdOru3dtK
+         D7Ww49za8S2qyGAvHKNzQiGdTOLswv0yW/tswU+MuI8NatZJRDsEcgJ3Sa2ImCssB0U5
+         Rm9g==
+X-Gm-Message-State: AOJu0YzWyp2SuIbdnlLJKA4qQs14Zu0L+8NV2fojsZmzHPNW3r6V3vVl
+	tbOfr0XsyZvHJ0W65rF1xeDq/xdJ4+I09+jso2qkzOepjvMtzm6hZmuBb6QDLcs=
+X-Google-Smtp-Source: AGHT+IEqAy4DTdCoeAv2Vdxu6aMYdVExJ0VTzJA4oaoyPSmsMWau+PJh35LHB+sTJu87BfIxRz3YVQ==
+X-Received: by 2002:a2e:98cf:0:b0:2dc:e3da:8025 with SMTP id 38308e7fff4ca-2e5203b41dfmr336605301fa.36.1716284733986;
+        Tue, 21 May 2024 02:45:33 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.29
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:45:29 -0700 (PDT)
+        Tue, 21 May 2024 02:45:33 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 21 May 2024 12:45:26 +0300
-Subject: [PATCH 06/12] remoteproc: qcom_q6v5_pas: switch to mbn files by
- default
+Date: Tue, 21 May 2024 12:45:32 +0300
+Subject: [PATCH 12/12] arm64: dts: qcom: apq8096-db820c: drop firmware-name
+ properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-qcom-firmware-name-v1-6-99a6d32b1e5e@linaro.org>
+Message-Id: <20240521-qcom-firmware-name-v1-12-99a6d32b1e5e@linaro.org>
 References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
 In-Reply-To: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -78,325 +78,47 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Arnd Bergmann <arnd@arndb.de>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10421;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=867;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=3GMSFXyN5ilu4SqpHge+aFL3zkwzk7yL0BcyJB6jSAk=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0zpMk5r9LDAbiXaAl3+dyLkGHHAYS+fYqa4
- 8Y/ZWNFgpGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMwAKCRCLPIo+Aiko
- 1crYCACvwdcoc2mokea78aIQPXX1+SXGckOyXSENXcp1uX+WshgqbPy5srU10vhEu2s3Sc2E81T
- j+3C5Bib57Z1xdUNrEumkpy9BpTieY4WaECHo7fF5R3eF96TuaahK7VQM8gEWaFh5RFdiQeO4w9
- gV6ZpGSfdzW5Acs+oJGmPBCgb7vu/GltAV/bVo84tl+bP9ZwIj+D8f7Ts1p21Vwsx+v9EIRzSJM
- w2Q38ct0DR2QpCRD+z0j1Pebx6lnPFwrsMDhT+BKLaxoWFJ92/TxgFq6RrbEp6ajqIExf0loCzI
- v7fqVN2B+G3ijH4tC2DrDNfXm3OkEGgOtmH13dlNKw479pFw
+ bh=hNIcpe1sOvV0/2oq2E+Wm6ZeAwz5DUtQCi+I+XlGNEg=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG00XZHHmjrQ3qkPBy9bf5pX47eUXttvZKwjl
+ K3ZuOLJ9+uJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtNAAKCRCLPIo+Aiko
+ 1SULCACrryMAqbZ1Va3cYrmE/JyS2h5P2T1NgaXOI8XFucKAREQa56inkv1aVjV+lM4Q/los5rx
+ Hse4D3WZur17W5buWRif/FSoXkFlBFHq11Bum/3KV8490wuSElXP6Z+w0LfGe+920BdLspNtHzb
+ nD1kWhyBQI0WRxmgp252Fxj4/bkX5UhX7R1cXsSA/r9pViUggXL5LhL2XUwfvqxG9ZGj0kggVUF
+ O4qhJCSZIfLe8VNu9T4ZxR3YBBBP252aQidYgJ72qXoFsM8ccXKuodksJHJaVh+P6B/TcyO7l6R
+ efJMaqM8Cg/9a3N0h1leWK3V/ArWR5g2a/tzOhxLJQ5i3WaB
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-We have been pushing userspace to use mbn files by default for ages.
-As a preparation for making the firmware-name optional, make the driver
-use .mbn instead of .mdt files by default.
+As the drivers default to loading the firmware from the board-specific
+location, drop the firmware-name properties.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/remoteproc/qcom_q6v5_pas.c | 76 +++++++++++++++++++-------------------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 54d8005d40a3..4694ec4f038d 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -812,7 +812,7 @@ static void adsp_remove(struct platform_device *pdev)
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
+index e8148b3d6c50..2c8a77401aa3 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
+@@ -161,7 +161,6 @@ bluetooth {
  
- static const struct adsp_data adsp_resource_init = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.ssr_name = "lpass",
-@@ -822,7 +822,7 @@ static const struct adsp_data adsp_resource_init = {
+ &adsp_pil {
+ 	status = "okay";
+-	firmware-name = "qcom/apq8096/adsp.mbn";
+ };
  
- static const struct adsp_data sdm845_adsp_resource_init = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.load_state = "adsp",
-@@ -833,7 +833,7 @@ static const struct adsp_data sdm845_adsp_resource_init = {
+ &blsp2_i2c1 {
+@@ -253,7 +252,6 @@ &mmcc {
+ &mss_pil {
+ 	status = "okay";
+ 	pll-supply = <&vreg_l12a_1p8>;
+-	firmware-name = "qcom/apq8096/mba.mbn", "qcom/apq8096/modem.mbn";
+ };
  
- static const struct adsp_data sm6350_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -849,7 +849,7 @@ static const struct adsp_data sm6350_adsp_resource = {
- 
- static const struct adsp_data sm6375_mpss_resource = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
-+	.firmware_name = "modem.mbn",
- 	.pas_id = 4,
- 	.minidump_id = 3,
- 	.auto_boot = false,
-@@ -864,7 +864,7 @@ static const struct adsp_data sm6375_mpss_resource = {
- 
- static const struct adsp_data sm8150_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -879,7 +879,7 @@ static const struct adsp_data sm8150_adsp_resource = {
- 
- static const struct adsp_data sm8250_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -895,7 +895,7 @@ static const struct adsp_data sm8250_adsp_resource = {
- 
- static const struct adsp_data sm8350_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -911,7 +911,7 @@ static const struct adsp_data sm8350_adsp_resource = {
- 
- static const struct adsp_data msm8996_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
-+	.firmware_name = "adsp.mbn",
- 	.pas_id = 1,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -925,7 +925,7 @@ static const struct adsp_data msm8996_adsp_resource = {
- 
- static const struct adsp_data cdsp_resource_init = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.ssr_name = "cdsp",
-@@ -935,7 +935,7 @@ static const struct adsp_data cdsp_resource_init = {
- 
- static const struct adsp_data sdm845_cdsp_resource_init = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.load_state = "cdsp",
-@@ -946,7 +946,7 @@ static const struct adsp_data sdm845_cdsp_resource_init = {
- 
- static const struct adsp_data sm6350_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -962,7 +962,7 @@ static const struct adsp_data sm6350_cdsp_resource = {
- 
- static const struct adsp_data sm8150_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -977,7 +977,7 @@ static const struct adsp_data sm8150_cdsp_resource = {
- 
- static const struct adsp_data sm8250_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -992,7 +992,7 @@ static const struct adsp_data sm8250_cdsp_resource = {
- 
- static const struct adsp_data sc8280xp_nsp0_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1006,7 +1006,7 @@ static const struct adsp_data sc8280xp_nsp0_resource = {
- 
- static const struct adsp_data sc8280xp_nsp1_resource = {
- 	.crash_reason_smem = 633,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 30,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1020,8 +1020,8 @@ static const struct adsp_data sc8280xp_nsp1_resource = {
- 
- static const struct adsp_data x1e80100_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
--	.dtb_firmware_name = "adsp_dtb.mdt",
-+	.firmware_name = "adsp.mbn",
-+	.dtb_firmware_name = "adsp_dtb.mbn",
- 	.pas_id = 1,
- 	.dtb_pas_id = 0x24,
- 	.lite_pas_id = 0x1f,
-@@ -1040,8 +1040,8 @@ static const struct adsp_data x1e80100_adsp_resource = {
- 
- static const struct adsp_data x1e80100_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
--	.dtb_firmware_name = "cdsp_dtb.mdt",
-+	.firmware_name = "cdsp.mbn",
-+	.dtb_firmware_name = "cdsp_dtb.mbn",
- 	.pas_id = 18,
- 	.dtb_pas_id = 0x25,
- 	.minidump_id = 7,
-@@ -1060,7 +1060,7 @@ static const struct adsp_data x1e80100_cdsp_resource = {
- 
- static const struct adsp_data sm8350_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
-+	.firmware_name = "cdsp.mbn",
- 	.pas_id = 18,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1076,7 +1076,7 @@ static const struct adsp_data sm8350_cdsp_resource = {
- 
- static const struct adsp_data mpss_resource_init = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
-+	.firmware_name = "modem.mbn",
- 	.pas_id = 4,
- 	.minidump_id = 3,
- 	.auto_boot = false,
-@@ -1093,7 +1093,7 @@ static const struct adsp_data mpss_resource_init = {
- 
- static const struct adsp_data sc8180x_mpss_resource = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
-+	.firmware_name = "modem.mbn",
- 	.pas_id = 4,
- 	.auto_boot = false,
- 	.proxy_pd_names = (char*[]){
-@@ -1108,7 +1108,7 @@ static const struct adsp_data sc8180x_mpss_resource = {
- 
- static const struct adsp_data msm8996_slpi_resource_init = {
- 	.crash_reason_smem = 424,
--	.firmware_name = "slpi.mdt",
-+	.firmware_name = "slpi.mbn",
- 	.pas_id = 12,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1122,7 +1122,7 @@ static const struct adsp_data msm8996_slpi_resource_init = {
- 
- static const struct adsp_data sdm845_slpi_resource_init = {
- 	.crash_reason_smem = 424,
--	.firmware_name = "slpi.mdt",
-+	.firmware_name = "slpi.mbn",
- 	.pas_id = 12,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1138,7 +1138,7 @@ static const struct adsp_data sdm845_slpi_resource_init = {
- 
- static const struct adsp_data wcss_resource_init = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "wcnss.mdt",
-+	.firmware_name = "wcnss.mbn",
- 	.pas_id = 6,
- 	.auto_boot = true,
- 	.ssr_name = "mpss",
-@@ -1148,7 +1148,7 @@ static const struct adsp_data wcss_resource_init = {
- 
- static const struct adsp_data sdx55_mpss_resource = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
-+	.firmware_name = "modem.mbn",
- 	.pas_id = 4,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1163,7 +1163,7 @@ static const struct adsp_data sdx55_mpss_resource = {
- 
- static const struct adsp_data sm8450_mpss_resource = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
-+	.firmware_name = "modem.mbn",
- 	.pas_id = 4,
- 	.minidump_id = 3,
- 	.auto_boot = false,
-@@ -1181,8 +1181,8 @@ static const struct adsp_data sm8450_mpss_resource = {
- 
- static const struct adsp_data sm8550_adsp_resource = {
- 	.crash_reason_smem = 423,
--	.firmware_name = "adsp.mdt",
--	.dtb_firmware_name = "adsp_dtb.mdt",
-+	.firmware_name = "adsp.mbn",
-+	.dtb_firmware_name = "adsp_dtb.mbn",
- 	.pas_id = 1,
- 	.dtb_pas_id = 0x24,
- 	.minidump_id = 5,
-@@ -1200,8 +1200,8 @@ static const struct adsp_data sm8550_adsp_resource = {
- 
- static const struct adsp_data sm8550_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
--	.dtb_firmware_name = "cdsp_dtb.mdt",
-+	.firmware_name = "cdsp.mbn",
-+	.dtb_firmware_name = "cdsp_dtb.mbn",
- 	.pas_id = 18,
- 	.dtb_pas_id = 0x25,
- 	.minidump_id = 7,
-@@ -1220,8 +1220,8 @@ static const struct adsp_data sm8550_cdsp_resource = {
- 
- static const struct adsp_data sm8550_mpss_resource = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
--	.dtb_firmware_name = "modem_dtb.mdt",
-+	.firmware_name = "modem.mbn",
-+	.dtb_firmware_name = "modem_dtb.mbn",
- 	.pas_id = 4,
- 	.dtb_pas_id = 0x26,
- 	.minidump_id = 3,
-@@ -1243,7 +1243,7 @@ static const struct adsp_data sm8550_mpss_resource = {
- 
- static const struct adsp_data sc7280_wpss_resource = {
- 	.crash_reason_smem = 626,
--	.firmware_name = "wpss.mdt",
-+	.firmware_name = "wpss.mbn",
- 	.pas_id = 6,
- 	.auto_boot = true,
- 	.proxy_pd_names = (char*[]){
-@@ -1259,8 +1259,8 @@ static const struct adsp_data sc7280_wpss_resource = {
- 
- static const struct adsp_data sm8650_cdsp_resource = {
- 	.crash_reason_smem = 601,
--	.firmware_name = "cdsp.mdt",
--	.dtb_firmware_name = "cdsp_dtb.mdt",
-+	.firmware_name = "cdsp.mbn",
-+	.dtb_firmware_name = "cdsp_dtb.mbn",
- 	.pas_id = 18,
- 	.dtb_pas_id = 0x25,
- 	.minidump_id = 7,
-@@ -1283,8 +1283,8 @@ static const struct adsp_data sm8650_cdsp_resource = {
- 
- static const struct adsp_data sm8650_mpss_resource = {
- 	.crash_reason_smem = 421,
--	.firmware_name = "modem.mdt",
--	.dtb_firmware_name = "modem_dtb.mdt",
-+	.firmware_name = "modem.mbn",
-+	.dtb_firmware_name = "modem_dtb.mbn",
- 	.pas_id = 4,
- 	.dtb_pas_id = 0x26,
- 	.minidump_id = 3,
+ &pm8994_resin {
 
 -- 
 2.39.2
