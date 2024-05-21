@@ -1,63 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB33314884C;
-	Tue, 21 May 2024 18:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEF1219ED
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716317582; cv=none; b=n0e7ceSBcVLDscEZR75HgPqvW6Ga/+2K6fnRBw9o1lsF9dytH7qXpmJJN7iBT1FZYFBkMl05j/GampbGG43sclZifncP1dKRzZ1K+wgbJEl55qky1bn3oLVSQo1YQTqsdfGKbxMFfyNvA9hTtY4qKjl1mh/23EVnp9SUHSpZ+WQ=
+	t=1716317821; cv=none; b=uB2kIuG97H//8Zaz5Gxzzkq492wc0/Duv1VPRVoh1KJSYvBG76maLo1Z5/3di/Zoe4zFNLGJYMbofogqxAGAUdoTvc7JPozdzBjtpVwspyN/bV7m9VJamJWJjcjkGdrLJzsO9IZbOh9GSP+QMB+Gx7ZTv4ewb7WPk6NBrQoZLeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716317582; c=relaxed/simple;
-	bh=sTB3PlkRtS3vhBocKg9q5/+8qGpg1XiW1+Y2R0WYWx4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UbPPqGyM5zJMH+2PYKCWajuzYw+eA7qBO8p0r43t1SGT1onmow6rOA+jrUzWW6NIgRFyIIMOWxx5aZNu5FS9QsOy5E0U2BMVytbBp2JrnGRRlvHFUVUF+XP3cdVAgcIYUXF51PprFNDnA2MIkYYjDixcbQYvwGUI0OVtiNCcF2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=saRXX5uF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716317821; c=relaxed/simple;
+	bh=uT+ls486dG8nHmi/MyCGG3XvVfsPdmT4J2Rnn+NHSdE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=e/Wbx08RLY0CQaoRVL1F/b7Mjzxghw/pRGU8P1A8mejPUq1f8pXNIAMo3SY+JzltdV6TX1cRoyXw7njVQ9g6kvyXlmBCQx4Gd4tjAaAqkoV27Jmg+XCDpK8jNidbWcieMAJKsD5zx/RSNFqhNXlp0hIXP6XIQ2JalB//sYIg/NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=MYS8fL3w; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="saRXX5uF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7A01C4AF0A;
-	Tue, 21 May 2024 18:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716317581;
-	bh=sTB3PlkRtS3vhBocKg9q5/+8qGpg1XiW1+Y2R0WYWx4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=saRXX5uF/bn0gpJ4sVciBmOZBwDStdT4SCGbppNkIIAEei+QvkGU1ff0XSKtdJ/vy
-	 FtfRoDVG98vuvMsWS40dl4IoZjq2MrUjR1BJ6nJrm0x18noiKp5twWwi0lxmW+q6Wk
-	 ho8IDqOf/eG3ZUVXqNwRS7Tx8N1KDGqGxileJxVxjrMHlvE5/CTXNEbtSA+MSK72E0
-	 DIGITGUmUw1+rsCTBb0ehNmSsWG6+RGRTasPyE36LQcKiGBamIOOq8tdfjg3Un26ff
-	 YB6gRgE7LYqoQiS9NRD4DmM80XWtGceHw+dIzVF1DpT5kiWJBTp8Ac6dpFJcc0REBg
-	 Rk+yeebMkAI3g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BEE86C4936D;
-	Tue, 21 May 2024 18:53:01 +0000 (UTC)
-Subject: Re: [GIT PULL] Power management fixes for v6.10-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0irEVCJcq=x6FXEpRh_KW2NwFD6At=2KU-Jc-Qs_se5jw@mail.gmail.com>
-References: <CAJZ5v0irEVCJcq=x6FXEpRh_KW2NwFD6At=2KU-Jc-Qs_se5jw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0irEVCJcq=x6FXEpRh_KW2NwFD6At=2KU-Jc-Qs_se5jw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.10-rc1-2
-X-PR-Tracked-Commit-Id: dee8f20e61aea655a43b74e5b65bcc6fbc69df7b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 98f312bc58156a5922b5a496119e3a42b0ad439a
-Message-Id: <171631758176.16717.5909166935011429175.pr-tracker-bot@kernel.org>
-Date: Tue, 21 May 2024 18:53:01 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="MYS8fL3w"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e564cad1f6so82976181fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=libre.computer; s=google; t=1716317816; x=1716922616; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wK5e67Jdl5vfjzEOu3Eo6/JgeP8I4p2OioGReqzd8h8=;
+        b=MYS8fL3wPzIJIPY41/mzt1cBgKJp0tSU7hDVp+u3Rva+IadjYFBeNQnVBc7ywkbHRz
+         zWAikAMUJSB0xaWxHd+wvf2WDxKWizgBCCzJ/8M299ZekO0lG55Mf8NMI2lep/I4Xh+f
+         0Azn578DgfvXtKippuirqphAY/2SQoVgRLao8PaXRAhiwVc+Z7MOrVGl0cGgsAeRH1ih
+         IzBMPegnpgpf466ZE7sl5mYWJivlIkWm1rRvKNDDbSqMLuEmyDObGfTlPlyQxunMlqcC
+         oFOiJ5wBSbLfNYx9Jfda7YX6JMh/KoasB/YJ+wVjX9NDWK/zjcoNhDEmJyGDhCsvRDmh
+         uq0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716317816; x=1716922616;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wK5e67Jdl5vfjzEOu3Eo6/JgeP8I4p2OioGReqzd8h8=;
+        b=RSN59M/5YGtlvIenVVbBvJ67NBmBjwuDVEJzq/XMEQLlF50ThaYuvOQUNxhh2NGG1Z
+         5VxugvngROMRiwdPp/g96kTRDmFLVcT2HyWkvOJe/68Oi2ELT4lqDFb0EkpB0J2RxKmZ
+         G9+Y6BUcaURnDoUnF3mNtHwzIoPOCQwwsVo3avmky2TXjXwbywt3IwRclv9I3klJCN3z
+         EQguth4obzQbXkXktOxTI0FKcZZDmGDYpw4epppECMcExHurRXRJtnkpxxjj6W2S2mwx
+         952Ga62XT0o8qe2gMJl3lkXh/yxbuTfqk0MedBfs3nm+KsjMGTmXIv44LqUftEzgGB4M
+         sQlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkVwA66SyvxAMSCBXBs75YGy0frFjsA4dqUXARjgbqbglxCtHYi6T87bANss5DjAf0XP2PizkR4WtYnuGpperAUAdC7xsHkFoTgF0C
+X-Gm-Message-State: AOJu0YwTjpuGb5/XC7ro0yeVSPxTKSIh1uQYNeF9pDXilOrnGF+B8NFk
+	52QyM/lD53Row2qjqDgiW2JUWSSlZBCkFnT/R9pYdTfAzHt93T/GjEFQykGDhrFHugIi5fFAABB
+	Y/D/d15VWTLu61XRUEtWucv5Lf+s3OEMD2jQt
+X-Google-Smtp-Source: AGHT+IEqPa+du8fjYKGXkpILJkupqk3Qb0cGifkvSVqA1SHvtN7Dt3pRQ9a8SeREQmZzpASy17m8MSkPD92GjkUvBm8=
+X-Received: by 2002:a2e:a58b:0:b0:2e2:891d:5f62 with SMTP id
+ 38308e7fff4ca-2e51ff6692amr237140221fa.29.1716317816220; Tue, 21 May 2024
+ 11:56:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Da Xue <da@libre.computer>
+Date: Tue, 21 May 2024 14:56:45 -0400
+Message-ID: <CACqvRUbx-KsrMwCHYQS6eGXBohynD8Q1CQx=8=9VhqZi13BCQQ@mail.gmail.com>
+Subject: [PATCH] net: mdio: meson-gxl set 28th bit in eth_reg2
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Cc: linux-stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Tue, 21 May 2024 11:36:54 +0200:
+This bit is necessary to enable packets on the interface. Without this
+bit set, ethernet behaves as if it is working but no activity occurs.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.10-rc1-2
+The vendor SDK sets this bit along with the PHY_ID bits. u-boot will set
+this bit as well but if u-boot is not compiled with networking, the
+interface will not work.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/98f312bc58156a5922b5a496119e3a42b0ad439a
+Fixes: 9a24e1ff4326 ("net: mdio: add amlogic gxl mdio mux support");
 
-Thank you!
+Signed-off-by: Da Xue <da@libre.computer>
+---
+ drivers/net/mdio/mdio-mux-meson-gxl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/mdio/mdio-mux-meson-gxl.c
+b/drivers/net/mdio/mdio-mux-meson-gxl.c
+index 89554021b5cc..b2bd57f54034 100644
+--- a/drivers/net/mdio/mdio-mux-meson-gxl.c
++++ b/drivers/net/mdio/mdio-mux-meson-gxl.c
+@@ -17,6 +17,7 @@
+ #define  REG2_LEDACT GENMASK(23, 22)
+ #define  REG2_LEDLINK GENMASK(25, 24)
+ #define  REG2_DIV4SEL BIT(27)
++#define  REG2_RESERVED_28 BIT(28)
+ #define  REG2_ADCBYPASS BIT(30)
+ #define  REG2_CLKINSEL BIT(31)
+ #define ETH_REG3 0x4
+@@ -65,7 +66,7 @@ static void gxl_enable_internal_mdio(struct
+gxl_mdio_mux *priv)
+  * The only constraint is that it must match the one in
+  * drivers/net/phy/meson-gxl.c to properly match the PHY.
+  */
+- writel(FIELD_PREP(REG2_PHYID, EPHY_GXL_ID),
++ writel(REG2_RESERVED_28 | FIELD_PREP(REG2_PHYID, EPHY_GXL_ID),
+         priv->regs + ETH_REG2);
+
+  /* Enable the internal phy */
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.2
