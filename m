@@ -1,194 +1,193 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FECC6CDA6
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7D414290
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716287386; cv=none; b=k75BbvW8U9FqpIb4jOebckIMBkm17uiIchyq4HHJ3DofpFTbjpiWPgiM1snOC4hP/u2WMbp18rlqxYLC/HQ2RZ3bfFO+q+Q5w7CLxJgDVXsOKyVIPBWfRTtTw0Ky6/szV0pwhb8LMKFuU90kW9+mi1x50LpOpRqoTKPxkRudGjk=
+	t=1716287537; cv=none; b=ctmniR7eDMmOHqsX8ZeaTA6djRE77z8TkQwpUwgjHwoQ5d4mbPmUJIHB6ifDVDnk6vcVXfzDbP6wnZMaCK1dy0PGIFjJODqOHXKD9g2lyKwsJvXHE0P8AxmLgmnulaimIGLHWHnYJlDGcNPnzUHX9yM6UliyXntlBZQZb2qpwBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716287386; c=relaxed/simple;
-	bh=hhxSfEN3YZHsURt9abVwnipYtfjc7URPzVX6S12WmaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fefqiwiZkiVdnB5D7//2axsZutvrYJLOeHvABCXXV4MP+T6PMiR1Fb0C+qsKGSnZfIdIf6/KAAfByLj4gPfO7/rUoNLkVjiid+drBcv0TFMAsdt+ocqFO1SqBLW8kQGeMKRd0jKG88sv54326oGDtKkHRFaDYjHHDz7Q8P3id6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oHVqd2cD; arc=none smtp.client-ip=209.85.219.170
+	s=arc-20240116; t=1716287537; c=relaxed/simple;
+	bh=HrkSTRpwzQrx25GBOwV9JMfsH7ZTLE5VmrQtBoPjVpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oktWCrv3rBIOUILqgtVl34B+pF7gKk9WD1fTB6W4BHBsOIAA2cfgpr/lLKKoz+j/e/xFUzBA/O6UgzDaqOvjm/NF786iF+6uq3pScdoP5Vif72djKFRaUHliAVeOyIcOs+uyWusxcHHcyG+h27fT40Vt/nY+F28Ah+iPj99cGaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bxfk22n+; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oHVqd2cD"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-de6074a464aso3277379276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:29:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bxfk22n+"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e716e3030aso31874291fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716287383; x=1716892183; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hhxSfEN3YZHsURt9abVwnipYtfjc7URPzVX6S12WmaU=;
-        b=oHVqd2cDJwclSmbMZTfGyhouMD1SOYRV2gGP9p5kGs4rrImma+UFt1IbFx9oEiNsLj
-         CrhMj/1lC2t/McLja0lAop/KL8QgTtPhSu082FT9e7C5Q3pRzlag7qaJug0tWEEzUrOp
-         nMiEIgC9seNopTp0Cu4ciPc1KSBJU/tM7KzPpVBw2Gyt2BD9MiBtoi60eD7mdjevIRDg
-         DpSNsH5KZh17oXNfMH0QY3gQs5fgHpm8MESG4+f7hTSyg59oGoCiM2eCgraYNleRdSr7
-         MVOnVZnwl1FSOqFlftQBYQbUDYtxc1iuSQUofuHpCGbGma6enUdlYWtBQ+dTPM3JI9bS
-         Kmiw==
+        d=linaro.org; s=google; t=1716287533; x=1716892333; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=u8lwFU9i0vjaUsXdcqI1/oUBUKt6N0tUiifOIzySzKM=;
+        b=Bxfk22n+glHBHK1L7AE48NDSuaNLDn/z8eVd0AuYeqOCEPzmlNTS/bvc83QHaw229d
+         pcE8qCNpRoAP7WKToggGjmC+txda8DZvsHrO7UpwyFfNdfI6/JrQXx60KBal6SVHb8q3
+         Bkb/jBQ+wq6u6BMv9Trdhy94rXU+Dmsz3gpzz3rJuvwliYaW6zt2zIyHXottJDxk72Qb
+         fczw+ya1jD0wRDXUEptkUwZlSkclHRLYOBLjiB1K4E+n+foXrPTp16Miun0tXtGmSI6D
+         hDT56iw4En3v8+j14opMfDFXmcdHQwvLRiKF1FqGoZ4Xo37rAHkDTm5Gq712aPqV5LUh
+         hUQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716287383; x=1716892183;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1716287533; x=1716892333;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hhxSfEN3YZHsURt9abVwnipYtfjc7URPzVX6S12WmaU=;
-        b=TEIdaG5AfgUudBf0oAarWakE8T1R7+XH2eG2b2J1T3u7oSeIe31SyOqD2I80KBbWAz
-         yHNp6ximXYLsp2Tan4DTDZyjAzqamql8F1RrZK9vMiLA9MQoI5N+ATd/pj2TBuRYQZ3h
-         LXcuME2C0AHpldJJ2xtb4w6PHfc6Q6bAzNGAB6F22xtTj2gu6pHovlM3TzFABQwcFbPu
-         7Mw41x35dMPaWYuh25ZVnDTN4w8TxNVVDNHI+6PlvhdPh60NKkvhlcDkAl/+J0YMgcep
-         dBAcBRXT0hp0D2oNFj1kybaGPvdeLB67YgX2pGl0DocxYqkajaPKpZSVPm8X6D7mk/+J
-         M3mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Iehe+4ntuV7Eebl/rJ7mCXa09uu5H4gKdCk+4q6FWNgwThvaFjlucdcVc1cfFgFhFpd4ZuYqxUZkbz60a4Ew4dLihXAQtRh+61Rr
-X-Gm-Message-State: AOJu0YzdeRmJSZs5wUQ8NH0f7wo7+V0dFwidq8ofFd7JuGHi8mb4QODl
-	KXxEFu1oukMioP+96ars/byTaoegnK+vsXVYcgG2w0faAYCrlDoCnXTdKyYeCFHBuBoPckAjbpc
-	kTgL/kO6plSl1kKC94mxlu37Qdribg+hwyMWKGA1nL+G0agiG
-X-Google-Smtp-Source: AGHT+IHEkPcbU/mY9ABnsDa2hRbs7hlpxgMWmqACXFmTwhxL+abQNPRnrk+hHryTOxcjSofFyV3Lr3Hzwi2viXteRkA=
-X-Received: by 2002:a05:6902:4:b0:de5:705d:9373 with SMTP id
- 3f1490d57ef6-dee4f1b7848mr26999598276.12.1716287383352; Tue, 21 May 2024
- 03:29:43 -0700 (PDT)
+        bh=u8lwFU9i0vjaUsXdcqI1/oUBUKt6N0tUiifOIzySzKM=;
+        b=SG3z5PlTcT0heQeNgFvuZsr8WfeHTBjx0tRrcv/snjwIRYgc3cVCNyBFzwPdGmKodc
+         bfanz9Z96we6ek2AmFx5GfrPT37LKFh+2apA/p8WV5hMTC7wElr1XP14Op9ffbdsNeub
+         kJNZ+d7WAcJRISrayHgkdymxM+d029uQAcGAj6KWy0cqnqxd5b7hFIjEsGcDshzBuV4i
+         IdFF7Vbntw5sq7q3wWdkbdmCL+Cl6t5UohHuIlpr1V7N4YZdj/z65acT1+Fitr7jSCcq
+         JV/dar4x1X47XQJP5j1ek47ijRakzRh5oKnZqwHR+nuo8CUkplpdhpjNZOhRm29ZF3n4
+         j4xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVo70n+QqJIhWkU/k6rlYNd/PwDcq1cPiFoc8sdSxEwziCAdVxM9/KC0BBdzScmW9/SrfjL4QrgcR+ZRfy2b4XLg7Ry84QzjATTaagw
+X-Gm-Message-State: AOJu0YxhnRqYulGO1jGGRTdF3iKAfjUA6VviW1TjjV+yZZYlJszjeVJ3
+	Cgxy8eYYUyxJPGd+HZa2/ps7tM3tAT+0GzVdGqqt15FdNuJiD+g+pkgZvHY5F6D94QKvgTnQw+9
+	W
+X-Google-Smtp-Source: AGHT+IE7rppITVfppMDERrnSg8fsdvBMSBAoSLOuZhaaxwoZ4C42vyQHDlcVAq2aaaWFiYwqNTVisQ==
+X-Received: by 2002:a2e:8794:0:b0:2d8:34ec:54e6 with SMTP id 38308e7fff4ca-2e5204ccd8fmr185946341fa.33.1716287532892;
+        Tue, 21 May 2024 03:32:12 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42013bf1a5dsm356277615e9.30.2024.05.21.03.32.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 03:32:12 -0700 (PDT)
+Message-ID: <a41c9684-6562-45bb-b009-1fe7b265f60e@linaro.org>
+Date: Tue, 21 May 2024 12:32:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415-ti-sci-pd-v1-0-a0e56b8ad897@ideasonboard.com>
- <20240415-ti-sci-pd-v1-2-a0e56b8ad897@ideasonboard.com> <d4cd0323-4792-49b0-a4e2-0bc92068e7f0@ideasonboard.com>
- <CAPDyKFqShuq98qV5nSPzSqwLLUZ7LxLvp1eihGRBkU4qUKdWwQ@mail.gmail.com> <d7bf10d1-9294-44b0-b9f4-193d1a4f26a0@ideasonboard.com>
-In-Reply-To: <d7bf10d1-9294-44b0-b9f4-193d1a4f26a0@ideasonboard.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 21 May 2024 12:29:07 +0200
-Message-ID: <CAPDyKFppS1CFZ7iDATfvT1=C+oqOR6sOGoV5Fc2PgXTn4NkUOQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/2] pmdomain: ti-sci: Support retaining PD boot time state
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Abel Vesa <abel.vesa@linaro.org>, Saravana Kannan <saravanak@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, 
-	Santosh Shilimkar <ssantosh@kernel.org>, Dave Gerlach <d-gerlach@ti.com>, J Keerthy <j-keerthy@ti.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Santosh Shilimkar <santosh.shilimkar@oracle.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Devarsh Thakkar <devarsht@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] spi: cadence: Add Marvell xSPI IP overlay changes
+To: Witold Sadowski <wsadowski@marvell.com>, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, pthombar@cadence.com
+References: <20240509010523.3152264-1-wsadowski@marvell.com>
+ <20240509010523.3152264-4-wsadowski@marvell.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240509010523.3152264-4-wsadowski@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 10 May 2024 at 12:19, Tomi Valkeinen
-<tomi.valkeinen@ideasonboard.com> wrote:
->
-> Hi,
->
-> On 03/05/2024 16:45, Ulf Hansson wrote:
-> > + Abel, Saravanna, Stephen
-> >
-> > On Mon, 15 Apr 2024 at 19:17, Tomi Valkeinen
-> > <tomi.valkeinen@ideasonboard.com> wrote:
-> >>
-> >> On 15/04/2024 19:00, Tomi Valkeinen wrote:
-> >>> Add a new flag, TI_SCI_PD_KEEP_BOOT_STATE, which can be set in the dts
-> >>> when referring to power domains. When this flag is set, the ti-sci
-> >>> driver will check if the PD is currently enabled in the HW, and if so,
-> >>> set the GENPD_FLAG_ALWAYS_ON flag so that the PD will stay enabled.
-> >>>
-> >>> The main issue I'm trying to solve here is this:
-> >>>
-> >>> If the Display Subsystem (DSS) has been enabled by the bootloader, the
-> >>> related PD has also been enabled in the HW. When the tidss driver
-> >>> probes, the driver framework will automatically enable the PD. While
-> >>> executing the probe function it is very common for the probe to return
-> >>> EPROBE_DEFER, and, in rarer cases, an actual error. When this happens
-> >>> (probe() returns an error), the driver framework will automatically
-> >>> disable the related PD.
-> >>>
-> >>> Powering off the PD while the DSS is enabled and displaying a picture
-> >>> will cause the DSS HW to enter a bad state, from which (afaik) it can't
-> >>> be woken up except with full power-cycle. Trying to access the DSS in
-> >>> this state (e.g. when retrying the probe) will usually cause the board
-> >>> to hang sooner or later.
-> >>>
-> >>> Even if we wouldn't have this board-hangs issue, it's nice to be able to
-> >>> keep the DSS PD enabled: we want to keep the DSS enabled when the
-> >>> bootloader has enabled the screen. If, instead, we disable the PD at the
-> >>> first EPROBE_DEFER, the screen will (probably) go black.
-> >>
-> >> A few things occurred to me. The driver is supposed to clear the
-> >> GENPD_FLAG_ALWAYS_ON when the driver has probed successfully. There are
-> >> two possible issues with that:
-> >>
-> >> - Afaics, there's no API to do that, and currently I just clear the bit
-> >> in genpd->flags. There's a clear race there, so some locking would be
-> >> required.
-> >>
-> >> - This uses the GENPD_FLAG_ALWAYS_ON flag to say "PD is always on, until
-> >> the driver has started". If the PD would have GENPD_FLAG_ALWAYS_ON set
-> >> for other reasons, the driver would still go and clear the flag, which
-> >> might break things.
-> >>
-> >> Also, unrelated to the above and not a problem in practice at the very
-> >> moment, but I think clocks should also be dealt with somehow. Something,
-> >> at early-ish boot stage, should mark the relevant clocks as in use, so
-> >> that there's no chance they would be turned off when the main kernel has
-> >> started (the main display driver is often a module).
-> >>
-> >> It would be nice to deal with all the above in a single place. I wonder
-> >> if the tidss driver itself could somehow be split into two parts, an
-> >> early part that would probe with minimal dependencies, mainly to reserve
-> >> the core resources without doing any kind of DRM init. And a main part
-> >> which would (somehow) finish the initialization at a later point, when
-> >> we have the filesystem (for firmware) and the other bridge/panel drivers
-> >> have probed.
-> >>
-> >> That can be somewhat achieved with simplefb or simpledrm, though, but we
-> >> can't do any TI DSS specific things there, and it also creates a
-> >> requirement to have either of those drivers built-in, and the related DT
-> >> nodes to be added.
-> >
-> > Without going into too much detail, this and similar problems have
-> > been discussed in the past. With the fw_devlink and the ->sync_state()
-> > callback we are getting closer to a solution, but for genpd a solution
-> > is still pending.
-> >
-> > If you want to read up on earlier discussions and join us moving
-> > forward, that would be great. The last attempt for genpd to move this
-> > forward was posted by Abel Vesa:
-> > https://lore.kernel.org/linux-pm/20230621144019.3219858-1-abel.vesa@linaro.org/
-> >
-> > Beyond that, we have also discussed various solutions at the last LPC
-> > in Richmond. I think the consensus at that point was that Saravana
-> > targeted to post something for clocks - and when that was done, we
-> > should do the similar thing for genpd. Anyway, I have looped them into
-> > this thread, so they can share any updates on their side of the
-> > matter.
->
-> If I understand the series correctly, it has an issue at least for this
-> case/platform.
->
-> The devlinks are between the consumer devices and the PD provider
-> device. TI SCI PD provider has quite a lot of PDs, and all the consumers
-> would have to be probed before any of the PDs could be disabled. So, to
-> get the display PD disabled, I would have to load, e.g., the GPU driver
-> (which I don't even have).
->
-> I believe this is the case for the clocks also.
->
-> Perhaps that can be considered a feature, but I fear that in practice it
-> would mean that most of the time for most users all the boot-time
-> enabled powerdomains would be always on.
->
-> Nevertheless, I believe the series would fix the issue mentioned in this
-> patch, so I'll see if I can get the series working on the TI platform to
-> get a bit more experience on this whole issue.
+On 09/05/2024 03:05, Witold Sadowski wrote:
+> Add support for basic v2 Marvell overlay block. Support for basic
+> operation is added here: clock configuration, PHY configuration,
+> interrupt configuration(enabling)
+> Clock divider block is build on top of Cadence xSPI IP, and divides
+> external 800MHz clock. It allows only for a few different clock speeds
+> starting from 6.25MHz up to 200MHz.
+> PHY configuration can be read from device-tree, if parameter is not
+> present - safe defaults will be used..
+> In addition to handle interrupt propoerly driver must clear MSI-X
+> interrupt bit, in addition to clearing xSPI interrupt bit. Interrupt
+> masking must be disabled.
 
-[...]
+Please use full sentences, properly wrapped, continued, readable. There
+are typos above, double full-stops and it looks like one sentence per
+paragraph... or some sort of list.
 
-Just to share a brief update on this matter. I have had an offlist
-chat with Saravana and some Qcom guys about this topic. In particular
-we looked closer at some implementation details.
+> 
+> Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
+> ---
 
-Allow me a few weeks, then I will post a series for genpd to implement
-the above. I will keep you posted and would appreciate reviews and
-tests, of course.
 
-Kind regards
-Uffe
+...
+
+>  
+>  	cdns_xspi = spi_controller_get_devdata(host);
+> @@ -565,23 +809,27 @@ static int cdns_xspi_probe(struct platform_device *pdev)
+>  	init_completion(&cdns_xspi->auto_cmd_complete);
+>  	init_completion(&cdns_xspi->sdma_complete);
+>  
+> +	cdns_xspi->mrvl_hw_overlay = drv_data->mrvl_hw_overlay;
+> +
+>  	ret = cdns_xspi_of_get_plat_data(pdev);
+>  	if (ret)
+>  		return -ENODEV;
+>  
+> -	cdns_xspi->iobase = devm_platform_ioremap_resource_byname(pdev, "io");
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	cdns_xspi->iobase = devm_ioremap_resource(dev, res);
+
+Why are you changing this to two calls? The wrapper is there on purpose.
+
+Anyway, does not look related to this patch.
+
+
+>  	if (IS_ERR(cdns_xspi->iobase)) {
+>  		dev_err(dev, "Failed to remap controller base address\n");
+>  		return PTR_ERR(cdns_xspi->iobase);
+>  	}
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sdma");
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  	cdns_xspi->sdmabase = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(cdns_xspi->sdmabase))
+>  		return PTR_ERR(cdns_xspi->sdmabase);
+>  	cdns_xspi->sdmasize = resource_size(res);
+>  
+> -	cdns_xspi->auxbase = devm_platform_ioremap_resource_byname(pdev, "aux");
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> +	cdns_xspi->auxbase = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(cdns_xspi->auxbase)) {
+>  		dev_err(dev, "Failed to remap AUX address\n");
+>  		return PTR_ERR(cdns_xspi->auxbase);
+> @@ -598,8 +846,12 @@ static int cdns_xspi_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+
+
+Best regards,
+Krzysztof
+
