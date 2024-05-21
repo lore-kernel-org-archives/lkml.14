@@ -1,245 +1,128 @@
-Received: from unicorn.mansr.com (unicorn.mansr.com [81.2.72.234])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490677F46B;
-	Tue, 21 May 2024 13:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.2.72.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6B971B48;
+	Tue, 21 May 2024 13:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716298988; cv=none; b=tVMXjhKjIzIzarKsRVNaIW4luU/qaEKOaGgEuRSbVMg5t20akBTvibiMrmLIGg/FTV74WmjHap99eyvoZAdslP3D1FoPZpbmzWu/SwGc/jHkYxA8eNBfgK94qlxLqfPqtUOSYQ98S7JYJ8MeNbRxDFW9XFzgATFty3XQmzjLaks=
+	t=1716299074; cv=none; b=HR83lD+8u/UFF4CxEtV5oXwmbHFJni/Cmbg2EPNhZKa30mLVSYtt49P1HG8oZIMjKYQaT93a1sFbjPboe+ZNB994WqqY/W54XHepWwMjLckJ170wjFYqXGnWs9fCtx1Qe7Q5FtNW4q6GU5qPFxZn2nzxmhZ0aLP1Ir4XBHOuYpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716298988; c=relaxed/simple;
-	bh=zjB8v+NoVOfwtkTTGvRVzO2+JLMrRbv6D0wkhQKyrv0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TR2wMQ+K8g/IQNOkiSYHHM4Kb2qIOhWAXVi4eBowQVgsBTzHF4sjUUhGb0fMeV6fknrwmxVOzILQb3KoZ62svVFjWTPuF1PFHkYvIRvsk9EWXemaTgTFALAvyfosDgDTvPEsfCXNavTrZUIJDAm1JQOK06OWWWI/9YrbIhTgAYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com; spf=pass smtp.mailfrom=mansr.com; arc=none smtp.client-ip=81.2.72.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mansr.com
-Received: from raven.mansr.com (raven.mansr.com [IPv6:2001:8b0:ca0d:1::3])
-	by unicorn.mansr.com (Postfix) with ESMTPS id 5E1C915362;
-	Tue, 21 May 2024 14:35:47 +0100 (BST)
-Received: by raven.mansr.com (Postfix, from userid 51770)
-	id 4E7CB219E4D; Tue, 21 May 2024 14:35:47 +0100 (BST)
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To: Frank Oltmanns <frank@oltmanns.dev>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Guido
- =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Purism Kernel Team
- <kernel@puri.sm>, Ondrej
- Jirman <megi@xff.cz>, Neil Armstrong <neil.armstrong@linaro.org>, Jessica
- Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] clk: sunxi-ng: common: Support minimum and
- maximum rate
-In-Reply-To: <20240310-pinephone-pll-fixes-v4-1-46fc80c83637@oltmanns.dev>
-	(Frank Oltmanns's message of "Sun, 10 Mar 2024 14:21:11 +0100")
-References: <20240310-pinephone-pll-fixes-v4-0-46fc80c83637@oltmanns.dev>
-	<20240310-pinephone-pll-fixes-v4-1-46fc80c83637@oltmanns.dev>
-Date: Tue, 21 May 2024 14:35:47 +0100
-Message-ID: <yw1xo78z8ez0.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/29.3 (gnu/linux)
+	s=arc-20240116; t=1716299074; c=relaxed/simple;
+	bh=avfaquBLiabJK+NWspAcIo7IYcWZcY1k597OcwfKryE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qclc9ojmDyiUtajb5kR4F50ksHCIdFF242NtKL7g6OWeK0MK2Va/XwVtxRGe3SoZX6RGnPQr1lgrwGzaafACEhLnovxiH83j2ZsK7MPjR6Mto3jNUR6zt3fJpFtm8M3DSP6sHSGOdqeXXiqNJmoeZG2yyYnqFPVK+LFWXclGPw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zIkjlHMh; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zIkjlHMh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=GgRuBOpasoNF/joUeeZUqQr+iEJyi6OYHgdAIIl1wqU=;
+	t=1716299072; x=1716731072; b=zIkjlHMhM15RFb+9GHqQaC9aZzLdbBqHyUT+oP2MMMXQLAM
+	FK061lij+lz9t/b8nmoerD4JYCYKLEU07ysZTY9Tc52m4W6n5BN6lFet2gvODF0nBHs+shCZyeOPQ
+	xdVG3aPbIRGW/Z+/KGLxxQ6mtLDn7IdtEIOgS4QFZykNQTFSW/427PM95rHl54kELLBsVbZ2gyN3E
+	ALVjyw2vi45VNYS77rk30MQXNJctCbrPMN8715zEb2/ui78JNK5tPvQSdlVuESC69b3y1hGZ2dG7G
+	cIdJVswphX/Rj1g7lSQW7XIvP/xaDmdC8gVEIxKdgp8aN8nyvUjO2/rPdiNfHDzA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9Pn3-0005Nd-IX; Tue, 21 May 2024 15:44:29 +0200
+Message-ID: <75053193-92db-40ad-9658-3cdeb0f553be@leemhuis.info>
+Date: Tue, 21 May 2024 15:44:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: BUG: Framework Laptop 16 i2c-hid Based Touchpad Sometimes Fails
+ To Initialize Properly On Early Boot
+To: Arazil Songweaver <arazil@arazil.net>
+Cc: linux-input@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Benjamin Tissoires <bentiss@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <0111018f7508efb1-1206661a-d4b5-4bd1-b54f-ccb8504b8b4a-000000@us-west-1.amazonses.com>
+ <f0dd90aa-78b0-4253-96b0-3241e8b2a11b@leemhuis.info>
+ <0111018f9b597531-d4643a7e-c27a-46f9-9e25-90530d648d65-000000@us-west-1.amazonses.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <0111018f9b597531-d4643a7e-c27a-46f9-9e25-90530d648d65-000000@us-west-1.amazonses.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716299072;0ac60004;
+X-HE-SMSGID: 1s9Pn3-0005Nd-IX
 
-Frank Oltmanns <frank@oltmanns.dev> writes:
+On 21.05.24 15:31, Arazil Songweaver wrote:
+> I was able to reproduce bug again with: Linux version
+> 6.9.0-1-git-10323-g8f6a15f095a6 (linux-git@archlinux) (gcc (GCC) 14.1.1
+> 20240507, GNU ld (GNU Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Tue, 21
+> May 2024 11:58:24 +0000 (not an official Arch Linux package)
+> 
+> The relevant I2C_HID module needs to be built in to the kernel for the
+> bug to trigger on a consistent basis. Arch Linux and mkinitcpio is
+> currently getting around this issue by building I2C_HID as a module and
+> delaying the load of that module until the part when autoprobe starts
+> loading relevant kernel modules. The bug became (more) visible on Arch
+> Linux after an update to mkinitcpio moved the I2C_HID module up to the
+> beginning of the boot process.
+> 
+> This is not a recent regression. In my testing, I was able to reproduce
+> this issue as far back as version 6.8. I did not test 6.7 or earlier
+> revisions yet.
 
-> The Allwinner SoC's typically have an upper and lower limit for their
-> clocks' rates. Up until now, support for that has been implemented
-> separately for each clock type.
->
-> Implement that functionality in the sunxi-ng's common part making use of
-> the CCF rate liming capabilities, so that it is available for all clock
-> types.
->
-> Suggested-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/clk/sunxi-ng/ccu_common.c | 19 +++++++++++++++++++
->  drivers/clk/sunxi-ng/ccu_common.h |  3 +++
->  2 files changed, 22 insertions(+)
+Okay, then I won't track this as a regression; might still be worth
+trying a few older kernels in a spare minute to see if it was introduced
+in the last 12 or 18 months and can be bisected.
 
-This just landed in 6.6 stable, and it broke HDMI output on an A20 based
-device, the clocks ending up all wrong as seen in this diff of
-/sys/kernel/debug/clk/clk_summary:
+CCed Jiri and Benjamin nevertheless in case they missed this report on
+the lists.
 
-@@ -70,16 +71,14 @@
-           apb1-i2c0                  0       0        0        24000000   =
- 0=20=20=20
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
-        pll-gpu                       0       0        0        1200000000 =
- 0=20=20=20
--       pll-video1                    3       3        1        159000000  =
- 0=20=20=20
-+       pll-video1                    2       2        1        159000000  =
- 0=20=20=20
-           hdmi                       1       1        0        39750000   =
- 0=20=20=20
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
-           tcon0-ch1-sclk2            1       1        1        39750000   =
- 0=20=20=20
-              tcon0-ch1-sclk1         1       1        1        39750000   =
- 0=20=20=20
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
--          pll-video1-2x              1       1        0        318000000  =
- 0=20=20=20
-+          pll-video1-2x              0       0        0        318000000  =
- 0=20=20=20
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
--             hdmi-tmds               2       2        0        39750000   =
- 0=20=20=20
--                hdmi-ddc             1       1        0        1987500    =
- 0=20=20=20
-        pll-periph-base               2       2        0        1200000000 =
- 0=20=20=20
-           mbus                       1       1        0        300000000  =
- 0=20=20=20
-           pll-periph-sata            0       0        0        100000000  =
- 0=20=20=20
-@@ -199,7 +198,7 @@
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
-           ace                        0       0        0        384000000  =
- 0=20=20=20
-           ve                         0       0        0        384000000  =
- 0=20=20=20
--       pll-video0                    4       4        2        297000000  =
- 0=20=20=20
-+       pll-video0                    5       5        2        297000000  =
- 0=20=20=20
-           hdmi1                      0       0        0        297000000  =
- 0=20=20=20
-           tcon1-ch1-sclk2            0       0        0        297000000  =
- 0=20=20=20
-              tcon1-ch1-sclk1         0       0        0        297000000  =
- 0=20=20=20
-@@ -222,8 +221,10 @@
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
-           de-be0                     1       1        1        297000000  =
- 0=20=20=20
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
--          pll-video0-2x              0       0        0        594000000  =
- 0=20=20=20
-+          pll-video0-2x              1       1        0        594000000  =
- 0=20=20=20
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20
-+             hdmi-tmds               2       2        0        594000000  =
- 0=20=20=20
-+                hdmi-ddc             1       1        0        29700000   =
- 0=20=20=20
-        pll-audio-base                0       0        0        1500000    =
- 0=20=20=20
-           pll-audio-8x               0       0        0        3000000    =
- 0=20=20=20
-              i2s2                    0       0        0        3000000    =
- 0=20=20=20
+Ciao, Thorsten
 
-Reverting this commit makes it work again.
-
-> diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu=
-_common.c
-> index 8babce55302f..ac0091b4ce24 100644
-> --- a/drivers/clk/sunxi-ng/ccu_common.c
-> +++ b/drivers/clk/sunxi-ng/ccu_common.c
-> @@ -44,6 +44,16 @@ bool ccu_is_better_rate(struct ccu_common *common,
->  			unsigned long current_rate,
->  			unsigned long best_rate)
->  {
-> +	unsigned long min_rate, max_rate;
-> +
-> +	clk_hw_get_rate_range(&common->hw, &min_rate, &max_rate);
-> +
-> +	if (current_rate > max_rate)
-> +		return false;
-> +
-> +	if (current_rate < min_rate)
-> +		return false;
-> +
->  	if (common->features & CCU_FEATURE_CLOSEST_RATE)
->  		return abs(current_rate - target_rate) < abs(best_rate - target_rate);
->
-> @@ -122,6 +132,7 @@ static int sunxi_ccu_probe(struct sunxi_ccu *ccu, str=
-uct device *dev,
->
->  	for (i =3D 0; i < desc->hw_clks->num ; i++) {
->  		struct clk_hw *hw =3D desc->hw_clks->hws[i];
-> +		struct ccu_common *common =3D hw_to_ccu_common(hw);
->  		const char *name;
->
->  		if (!hw)
-> @@ -136,6 +147,14 @@ static int sunxi_ccu_probe(struct sunxi_ccu *ccu, st=
-ruct device *dev,
->  			pr_err("Couldn't register clock %d - %s\n", i, name);
->  			goto err_clk_unreg;
->  		}
-> +
-> +		if (common->max_rate)
-> +			clk_hw_set_rate_range(hw, common->min_rate,
-> +					      common->max_rate);
-> +		else
-> +			WARN(common->min_rate,
-> +			     "No max_rate, ignoring min_rate of clock %d - %s\n",
-> +			     i, name);
->  	}
->
->  	ret =3D of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
-> diff --git a/drivers/clk/sunxi-ng/ccu_common.h b/drivers/clk/sunxi-ng/ccu=
-_common.h
-> index 942a72c09437..329734f8cf42 100644
-> --- a/drivers/clk/sunxi-ng/ccu_common.h
-> +++ b/drivers/clk/sunxi-ng/ccu_common.h
-> @@ -31,6 +31,9 @@ struct ccu_common {
->  	u16		lock_reg;
->  	u32		prediv;
->
-> +	unsigned long	min_rate;
-> +	unsigned long	max_rate;
-> +
->  	unsigned long	features;
->  	spinlock_t	*lock;
->  	struct clk_hw	hw;
->
-> --=20
->
-> 2.44.0
->
-
---=20
-M=E5ns Rullg=E5rd
+> On 5/21/24 5:57 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 14.05.24 04:57, Arazil Songweaver wrote:
+>>> We are experiencing an issue where the touch pad on the Framework Laptop
+>>> 16 fails to initialize properly when the "i2c-hid" is loaded early in
+>>> the boot process. This issue is especially prominent when "i2c-hid" is
+>>> built directly into the kernel. When the "i2c-hid" module is built in,
+>>> the issue occurs roughly 50% of the time.
+>>> (https://community.frame.work/t/touchpad-not-working-since-update-archlinux/50304) Moving the module load to later in the boot process appears to resolve this issue by making initialization more likely to succeed. (https://gitlab.archlinux.org/archlinux/mkinitcpio/mkinitcpio/-/releases/v39.1)
+>>>
+>>> Kernel version: Linux artemis 6.9.0-1-git-01560-ga7c840ba5fa7 #1 SMP
+>>> PREEMPT_DYNAMIC Tue, 14 May 2024 01:49:25 +0000 x86_64 GNU/Linux
+>>>
+>>> I'm using the standard Arch Linux AUR "linux-git" package with the
+>>> following kernel configuration changes:
+>>>
+>>> CONFIG_I2C_DEBUG_CORE=y
+>>> CONFIG_I2C_DEBUG_ALGO=y
+>>> CONFIG_I2C_DEBUG_BUS=y
+>>> CONFIG_I2C_HID=y
+>>> CONFIG_I2C_HID_ACPI=y
+>>> CONFIG_I2C_HID_OF=y
+>>> CONFIG_I2C_HID_CORE=y
+>>>
+>>> We tried reverting the following patches without any behavior impact
+>>> (good or bad):
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.8.y&id=fb49deec375aa5beca4a5d71d7a74ec951872f28
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.8.y&id=418c5575d56410c6e186ab727bf32ae32447d497
+>>>
+>>> Impacted devices seem to include: "PIXA3854:00" and "i2c_designware
+>>> AMDI0010:03"
+>> Any news on this? If this is still unresolved I'll bring this to the
+>> attention of the right developer, if this is a recent regressions (it
+>> sounds like it, but it's not exactly clear; and from the first link
+>> above it sounds like it's partly due to a change in arch's approach to
+>> the initramfs).
+>>
+>> Ciao, Thorsten
+> 
+> 
