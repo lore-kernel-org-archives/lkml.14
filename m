@@ -1,83 +1,105 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A40E256A
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 01:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132907F
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 01:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716253357; cv=none; b=lMyfqvpsS/RiISBePJ2982l/oJK42MVStX21uXYNDzLCZhpoh+amWsiOTUFczmHP1TbEN7rya4k9PVh80+tNsWmxXLru2shDmz8SJcwhYUOv45zor5GfvqMeJhXdBVPrS7XdMqLbTcoOMTjSeAptU0A5FYjc0lWQidV7a8ne52Y=
+	t=1716253493; cv=none; b=V0zsbOtErTeMEYUbCCCE8Imj8trqxXOqS/ygq21fsyY7qFeloMmQ0ko7Soh9buk5G2UJpuLBR6rxCJxZ6zS1s1xTd7ToUsRqGQnWe8Y/iIOx3NBuuM9STIcXSXMhDx3FS5J6d6C/5inewuCxsBou/CIA/fh3Wm0VvAC86gT1/RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716253357; c=relaxed/simple;
-	bh=62s9ZBQLECjqwaw8IyELeu4N6Gxe1GRRUiarSV+DbTA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VHdnqNmQMh58gUAaxOS4qpB4Zdfjwey4OOLOSWIrDp1avFhzBtQOckghgptEZA/LXuDZdq87qemWGRe5DK3X6rHrRIXnu2MR+TLtUZnZEERI5MmR0juTVJWmv2b0N7+miE6djo9Wzp9fpUrRs2sVvJCYOi2o8wsJyUkTv9GB3MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ngnLFSgM; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1716253493; c=relaxed/simple;
+	bh=HnZOyTLA1z7HGjFiTaimfVCHoyCYiv6gxIK1l/WLd9c=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=bh/CUognetbl1yIF/N2PDqBxGIHj3IgQ37Ts+3VT0FC5yTUyidXphO+Qsh1l2ANwDdfLhMvooHUJ/6vWZLgk5COK0Y1BNaUlcZTQUMwvOwUYqs/kvDfH3fnWmzx68Jm3hWyVIinRXZGmKmTQaS+r7nCFOl/FZNPEJmPC5qW3bGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=clp322AP; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngnLFSgM"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f49fc7b5e6so13183265b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 18:02:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="clp322AP"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6202fd268c1so220343337b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 18:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716253356; x=1716858156; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kj18FI+spxVo0wYyt5GLsAf9LnUaY68HrretgdhL1+Q=;
-        b=ngnLFSgMBYAqDnM+eXECVqCMKjSpijc4jSlWkGw5T2ec4kJG64E+oRuDhS5t1B6MkL
-         gDVNSvnk/OZqO3lw5Bknh66lBq23xfVujP6gY8JQ0LTOrK04gDP7QSfdE3YDCLaE/0f8
-         0uO+/nvEfhV6n7Lv3hDDcaITVTe/dOpZGdQX52tfJ8jDwpkAz0VBjPf5Vytu9+67Osjf
-         /GYqtinm8/UpkPqQFIuvegYwBU7PKbiWUOhv6lQvzJQ0guUjikqgfZbOnhhtcLouNAm1
-         fWA8Rjr7NjV0TUfJLCDGAB3TvouPDYRKBLSanh/U6E5UjsCAr7NEbDVhw7g5HiogOg/H
-         w4mw==
+        d=google.com; s=20230601; t=1716253491; x=1716858291; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qpOLP0XnzrTQf20d05HSRvs4OM1Ncix8hyKknNTHteQ=;
+        b=clp322APGH01SehhXEomMqOXDsUBlV6LzkR909b/LG8TnlVmQEEo0d/q4XoQV/UcRd
+         NI6q9shi93Gg4LvAfTMCTlGnZjdej2Y3WUbP6vEbJ0Twq7mnkfJs0c2MdMWqBiqwTMy0
+         YibS5OYcVH7V9qvruf7e5BmdjqNfTuytX9mDhfTNOo03vyiVcKDA6/ggKpJxzwAHpJhT
+         9J2ItzI2Om2OR+/NFgsuFoBWxeAvvOEKJcylOYBatDtFBWOZeXtAHKRBn8CzBbVVVu37
+         za0huhStK95cGnKTpVW5nYYK75uNLGswQOLfg0BjGDCoDE3tbwkhbZKcdBAamaxqLdiM
+         y29g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716253356; x=1716858156;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kj18FI+spxVo0wYyt5GLsAf9LnUaY68HrretgdhL1+Q=;
-        b=UXP4UMCQI5G9mGJh693JrekALZsP9lzuEVjXj+hZP4KIxZadziusL3QXAPbNCC7YKf
-         Qn822rafS2pOifjObhj3bWlDZ2p4XF9vSiRP8MFjX2kbBzpTIqViS8nNMChp8VxqJSJT
-         yhkyVnMBwZL1PJFMKZhsqqBjMfHuyVdrHKthDIJmQOb358L28uqzB1d3sSOy5B4Mn8d7
-         dQ1TMiX/HpgU9EAg7u2cwOcxhNRoRXvkBtooG9Kfjp8JEwYDqGHYrju9fYWLBqBlIYab
-         bHDBd+zTde5RQger3q7bC4lxbWtF5OwDDTuEUyTUqX2Mn/OZHdDUHzD6aNAdF3JMOXbH
-         cuMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDSSCdy9cA4/cI1nhWWtkDW0zxvePPvgU/jbB0n0mMxIO2yIiqbwqqgqoXWrmdtgx6n/QscOANhf1sx7m9iXyW7xyWFX2R79mZUzuM
-X-Gm-Message-State: AOJu0Yzwzag9UVfI2K5pUuozd2kwGDOhq5XtPoDGWwbM/mVKrkzaxU93
-	YJyl+ImXMKFvip5LSD8iV/ogLcVPmW9KViCLODqDczqN1ZQJIJLhun/B6m0MOL0zVr7AOYlcxFj
-	GFw==
-X-Google-Smtp-Source: AGHT+IG2yAJanvKyU97focG/MqnEJX7x8reSfJL3QGZKYOWsxkzVO6QuYNNBaybkLhpdSDhQ/N8gw84H7eA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:a91:b0:6f4:d079:bb24 with SMTP id
- d2e1a72fcca58-6f4e0296acamr1399421b3a.1.1716253355725; Mon, 20 May 2024
- 18:02:35 -0700 (PDT)
-Date: Mon, 20 May 2024 18:02:34 -0700
-In-Reply-To: <3e7413b5-482a-4243-be6c-21a0ee232cc4@intel.com>
+        d=1e100.net; s=20230601; t=1716253491; x=1716858291;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qpOLP0XnzrTQf20d05HSRvs4OM1Ncix8hyKknNTHteQ=;
+        b=c+czjIxb9ZyiJIYIbmccweUtlzEE7aunGzjLazX4vkO5oAm8XWAAxssGpQJQtv3yhh
+         0DPjw/H7awwc1Y9FeCszURBVJiljnoRQk+EGI6vFWaL+Pcwc520cin3S9+vf226xY1js
+         Q6arrb/cpON9z5SPSf3BNOMIvO7b6cyqwaR8HszsgNIOj8kC16wwJ9X1BTl+rvgURa2v
+         prlpd1wn5HsdhaW4+e//WVruGbmpq7Kk9fOxTGepBjmklxG6/pE4RebuykYiky1dV9f6
+         1k37t+5Smq2aTtBhboRlcJHS3qsw2hlCNpg7+SH5bsMeG19/qqbhJ0Gb9/fFwdiGZiXZ
+         Bo0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWqrx5r28OKyvMzr/V72wimqozhZwlDit/0D2cQBevZP+ELI4jBpSo68cBirzY8zw1MIwPVeER7vmBZGMphSVw4IeTLETwkIV9YgxQN
+X-Gm-Message-State: AOJu0YwSlupmUeWMW65l4WXzi9uysognxrDImAKHgFL0d32e3mKd97Q8
+	MLw0a6wM+nUmm2vuzV7N0nsNEeUXf8/NG3h/dHOf3hSBsykZVwhZrvrJ9Bq01OmcJMfao9ZQAYt
+	lwrC4XQ==
+X-Google-Smtp-Source: AGHT+IH3laioA2ReSfTb001L3Np4E6P0YRTj77ACLXkl114QIRHb+vY7xJeursyPnrL6W1q5Bah5nKB5u06g
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:8533:b29a:936d:651a])
+ (user=irogers job=sendgmr) by 2002:a05:6902:a8b:b0:dc7:7ce9:fb4d with SMTP id
+ 3f1490d57ef6-dee4f322140mr7251230276.12.1716253491136; Mon, 20 May 2024
+ 18:04:51 -0700 (PDT)
+Date: Mon, 20 May 2024 18:04:36 -0700
+Message-Id: <20240521010439.321264-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240518000430.1118488-1-seanjc@google.com> <20240518000430.1118488-3-seanjc@google.com>
- <78b3a0ef-54dc-4f49-863e-fe8288a980a7@intel.com> <ZkvbUNGEZwUHgHV9@google.com>
- <b1def408-f6e8-4ab5-ac7a-52f11f490337@intel.com> <ZkvpDkOTW8SwrO5g@google.com>
- <3e7413b5-482a-4243-be6c-21a0ee232cc4@intel.com>
-Message-ID: <ZkvyqjLoGxuf-AdC@google.com>
-Subject: Re: [PATCH 2/9] KVM: nVMX: Initialize #VE info page for vmcs02 when
- proving #VE support
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v2 0/3] Use BPF filters for a "perf top -u" workaround
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Changbin Du <changbin.du@huawei.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 21, 2024, Kai Huang wrote:
-> But now L0 always handles #VE exits from L2, and AFAICT L0 will just kill
-> the L1, until the patch:
-> 
-> 	KVM: VMX: Don't kill the VM on an unexpected #VE
-> 
-> lands.
-> 
-> So looks that patch at least should be done first.  Otherwise it doesn't
-> make a lot sense to kill L1 for #VE exits from L2.
+Allow uid and gid to be terms in BPF filters by first breaking the
+connection between filter terms and PERF_SAMPLE_xx values. Calculate
+the uid and gid using the bpf_get_current_uid_gid helper, rather than
+from a value in the sample. Allow filters to be passed to perf top, this allows:
 
-I have no objection to changing the order.
+$ perf top -e cycles:P --filter "uid == $(id -u)"
+
+to work as a "perf top -u" workaround, as "perf top -u" usually fails
+due to processes/threads terminating between the /proc scan and the
+perf_event_open.
+
+v2. Allow PERF_SAMPLE_xx to be computed from the PBF_TERM_xx value
+    using a shift as requested by Namhyung.
+
+Ian Rogers (3):
+  perf bpf filter: Give terms their own enum
+  perf bpf filter: Add uid and gid terms
+  perf top: Allow filters on events
+
+ tools/perf/Documentation/perf-record.txt     |  2 +-
+ tools/perf/Documentation/perf-top.txt        |  4 ++
+ tools/perf/builtin-top.c                     |  9 +++
+ tools/perf/util/bpf-filter.c                 | 33 ++++++----
+ tools/perf/util/bpf-filter.h                 |  5 +-
+ tools/perf/util/bpf-filter.l                 | 66 ++++++++++----------
+ tools/perf/util/bpf-filter.y                 |  7 ++-
+ tools/perf/util/bpf_skel/sample-filter.h     | 61 +++++++++++++++++-
+ tools/perf/util/bpf_skel/sample_filter.bpf.c | 54 +++++++++++-----
+ 9 files changed, 171 insertions(+), 70 deletions(-)
+
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
