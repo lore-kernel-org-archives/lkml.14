@@ -1,157 +1,423 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA19858AD0
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 07:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A798E7C081
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 07:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716363973; cv=none; b=CX3JCNWeoiVmMAtK95lzUrXXTm7b1bMlew/CJHxe5QqA7DQ0Jwq7gpLmjYJXtHaNxq1gry/y1GdpB7z2XUGaodsbz6zP1n7BtrujiAy5tjYH0EOp1EXQ6KaEoK/aaXRNUzGmsVhBQt0cQQpHiLoZkHYUa1OMyW5V8y/0EtEy/Tw=
+	t=1716364092; cv=none; b=uPTDFu0tJF6aEEdozcrftfPQi4/rdhQ0WRXcEb+itKneCSHjp4A24mFWc4gF4ZgpRyZTi0ted1e/rQNcPhyw1A/PeB2IfSIiLub5hGs9enbC59i4l24wgX/vRW0ky/NOTvmMslBUl/f8NNSqx6bldIYoiBSWN4Rpk165qGu3N8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716363973; c=relaxed/simple;
-	bh=tLI1/TLS9lgL0S+7Aa/oJePgPCAr9RaWzgqRi5Nu1w0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BaAL75yeXDSsdGEB1J8KwiJCm049N/jqSWpfCKQOiJPLIN2M7KLVBfRsGgt/UrMUME6I18KBYXC2KoDC5aG/Im9cG0zC3QuzYR8OSMxpvmmJ2rELT3OhaZ+yhX9pE6bKcuLQ03ZdKTX6OnzkEqN1qeHrjtuLsxaeyxYrKpDLU7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qI2eEKlg; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qI2eEKlg"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-572669fd9f9so9829012a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 00:46:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716363967; x=1716968767; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gBM+jZUTYiUUTV5gkY6H6ON+yEQkLd9WRxTkpxE1iOk=;
-        b=qI2eEKlgLOir2CtqKVILaIuM3bvkYcAT0IWtXUVOcix3V5MyGzpDFmNFfrrzdQDCjH
-         RffvQbTr3nycZJS1snfg4lBHgLJGZLBfbD6BFZ7OL2UfSWN4LlnmpNc6NVAYRfzR7vtP
-         AbiRzd5DDT4oBa5h4K1YimB3IrYIWt4Rf5Q3IrZvYCNSZbxEVjuRcPWEdeXKN+62qQND
-         xzcn1QIfQtWpkIp4Or2rnXKThbCTmAKfI2x41oBFYjXsCtOOSzQR782vLnNSo9J/0tIf
-         umNpRB0lt5hJ9QkyMFDR1UrWaD0QCRSr0euP5DB3JzwCCjt3eUPlerngmMuAVCqSOh6S
-         cngw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716363967; x=1716968767;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gBM+jZUTYiUUTV5gkY6H6ON+yEQkLd9WRxTkpxE1iOk=;
-        b=nqePy4Y+sRw16uQeUuLWBUFCifm8RbVHLGJKXTyCR/8awMVGtStH/cEIJfoAEg8PPV
-         FZM8W1ymFFM/ljiRY/KBLYog8WWHdKR+p24jEgJ9vuTbW1p7Vwp3ocWwcS6uTMCYXsL1
-         w6chRxo4glTgg/zp6hfowIXdBU/u3cjy8HLKRDhA8SvtMwwA1uxAAsJww9QHogooLk5l
-         faMMq8XT3GyFQ42806n8/3JXZnyxDZP55Wlxqb7DVZTBwcArFRd7gTCHO13mNcOamuN8
-         Wn6wiYyyY0hBVsi5ncnMkmruKvfC6r44qIT3L7qXEC2RCR1R917iap59k9N912JfY0No
-         SPcw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/S0pSddfATGgn9pJG2/mZxLAwOa6ihcidDpjalhs0HVV5qVGqHidBMiKTtLox1+jy6vptClhcsODOdDw+HfYjQtTOPRYOG6irtCRj
-X-Gm-Message-State: AOJu0YxycV0jrWCeRXcuX1pYm/IZI1cKhRzaZsSO7ZDtRwrFitSC/ryx
-	TNYeH+y1J0Z3H/lOXQQWoLDosD0rJ7SMN0IB+bsttVCPTSBcQVFNl5VgDZ/ENqg=
-X-Google-Smtp-Source: AGHT+IGZLSApaCXvQGxW0dsVfPo3k1iNOpL3wwK5gco9RO/JQwo8qJZoMUt8UyhYHnBdO5wDLTd9WQ==
-X-Received: by 2002:a50:c355:0:b0:56c:5a12:ac53 with SMTP id 4fb4d7f45d1cf-57832bc92b0mr655224a12.24.1716363966909;
-        Wed, 22 May 2024 00:46:06 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:8b9d:52bd:4757:6b10? ([2a01:e0a:982:cbb0:8b9d:52bd:4757:6b10])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5751ada828esm6950621a12.62.2024.05.22.00.46.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 00:46:06 -0700 (PDT)
-Message-ID: <0f784354-c5ca-4436-b5fd-b1744414bc3d@linaro.org>
-Date: Wed, 22 May 2024 09:46:03 +0200
+	s=arc-20240116; t=1716364092; c=relaxed/simple;
+	bh=UFileiIY+FcdENlfmaHs7dMmW4+IrMZlQd00Hn5+Gt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sd5QQbS7l7BnD8mm+HdJa1kUXBAeNigwW67yVvIYkAGPLbtzxeLzaxxQ6FVHErUptZDZCKFOY5dlpvCfIs3an8OZgjB5yn/+1WF1Hj1H7Qwwdbdn2maMidXnPefXibwlGb+AArtJ6mHmCuxkZK2W7itT3nO+evgOqhFtVTAsMjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1s9ghS-00081G-2A; Wed, 22 May 2024 09:47:50 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1s9ghP-002Uky-JB; Wed, 22 May 2024 09:47:47 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 50A9C2D520D;
+	Tue, 21 May 2024 12:27:11 +0000 (UTC)
+Date: Tue, 21 May 2024 14:27:10 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Pankaj Gupta <pankaj.gupta@nxp.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: RE: RE: [EXT] Re: [PATCH 4/4] firmware: imx: add driver for NXP
+ EdgeLock Enclave
+Message-ID: <20240521-handsome-hairy-bullfrog-d2faba-mkl@pengutronix.de>
+References: <20240510-imx-se-if-v1-0-27c5a674916d@nxp.com>
+ <20240510-imx-se-if-v1-4-27c5a674916d@nxp.com>
+ <20240513-pretty-quartz-lemming-14d9ea-mkl@pengutronix.de>
+ <AM9PR04MB86044FBF697375EB2C8D285B95EE2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+ <20240520-accurate-intrepid-kestrel-8eb361-mkl@pengutronix.de>
+ <AM9PR04MB86045BD682A0362A7D463C5A95EA2@AM9PR04MB8604.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 1/2] phy: qcom: qmp-pcie: restore compatibility with
- existing DTs
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- devicetree@vger.kernel.org
-References: <20240521-fix-pcie-phy-compat-v1-0-8aa415b92308@linaro.org>
- <20240521-fix-pcie-phy-compat-v1-1-8aa415b92308@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240521-fix-pcie-phy-compat-v1-1-8aa415b92308@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7yk6pkmeqxyudczq"
+Content-Disposition: inline
+In-Reply-To: <AM9PR04MB86045BD682A0362A7D463C5A95EA2@AM9PR04MB8604.eurprd04.prod.outlook.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 21/05/2024 22:30, Dmitry Baryshkov wrote:
-> Existing device trees specify only a single clock-output-name for the
-> PCIe PHYs. The function phy_aux_clk_register() expects a second entry in
-> that property. When it doesn't find it, it returns an error, thus
-> failing the probe of the PHY and thus breaking support for the
-> corresponding PCIe host.
-> 
-> Follow the approach of the combo USB+DT PHY and generate the name for
-> the AUX clocks instead of requiring it in DT.
-> 
-> Fixes: 583ca9ccfa80 ("phy: qcom: qmp-pcie: register second optional PHY AUX clock")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> index 6c796723c8f5..b4767b8cc014 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> @@ -3730,14 +3730,11 @@ static int phy_aux_clk_register(struct qmp_pcie *qmp, struct device_node *np)
->   {
->   	struct clk_fixed_rate *fixed = &qmp->aux_clk_fixed;
->   	struct clk_init_data init = { };
-> -	int ret;
-> +	char name[64];
->   
-> -	ret = of_property_read_string_index(np, "clock-output-names", 1, &init.name);
-> -	if (ret) {
-> -		dev_err(qmp->dev, "%pOFn: No clock-output-names index 1\n", np);
-> -		return ret;
-> -	}
-> +	snprintf(name, sizeof(name), "%s::pipe_aux_clk", dev_name(qmp->dev));
 
-Should be "::phy_aux_clk"
+--7yk6pkmeqxyudczq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->   
-> +	init.name = name;
->   	init.ops = &clk_fixed_rate_ops;
->   
->   	fixed->fixed_rate = qmp->cfg->aux_clock_rate;
-> 
+On 21.05.2024 11:57:04, Pankaj Gupta wrote:
+> > > > > +
+> > > > > +	memset(s_info, 0x0, sizeof(*s_info));
+> > > > > +
+> > > > > +	if (priv->mem_pool_name)
+> > > > > +		get_info_data =3D get_phy_buf_mem_pool(dev,
+> > > > > +						     priv->mem_pool_name,
+> > > > > +						     &get_info_addr,
+> > > > > +						     ELE_GET_INFO_BUFF_SZ);
+> > > > > +	else
+> > > > > +		get_info_data =3D dmam_alloc_coherent(dev,
+> > > > > +						    ELE_GET_INFO_BUFF_SZ,
+> > > > > +						    &get_info_addr,
+> > > > > +						    GFP_KERNEL);
+> > > >
+> > > > It's better style to move the init of the dma memory into the probe
+> > > > function.
+> > >
+> > > It is not DMA init. It is DMA allocation.
+> >=20
+> > It's better style to move the allocation of the dma memory into the pro=
+be
+> > function.
+> >=20
+> The buffer 'get_info_data', is allocated and freed within this function.
+> This API is called multiple times:
+> - as part of probe.
+> - as part of suspend/resume.
+>=20
+> Why to keep the memory retained?
 
-With that:
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+I see. Then why do you allocate with dmam_alloc_coherent()?
 
-Thanks,
-Neil
+[...]
+
+> > > > > +int imx_ele_msg_send(struct se_if_priv *priv, void *mssg) {
+> > > > > +	bool is_cmd_lock_tobe_taken =3D false;
+> > > > > +	int err;
+> > > > > +
+> > > > > +	if (!priv->waiting_rsp_dev || priv->no_dev_ctx_used) {
+> > > > > +		is_cmd_lock_tobe_taken =3D true;
+> > > > > +		mutex_lock(&priv->se_if_cmd_lock);
+> > > > > +	}
+> > > > > +	scoped_guard(mutex, &priv->se_if_lock);
+> > > > > +
+> > > > > +	err =3D mbox_send_message(priv->tx_chan, mssg);
+> > > > > +	if (err < 0) {
+> > > > > +		dev_err(priv->dev, "Error: mbox_send_message failure.\n");
+> > > > > +		if (is_cmd_lock_tobe_taken)
+> > > > > +			mutex_unlock(&priv->se_if_cmd_lock);
+> > > >
+> > > > Only dropping the lock in case of failure doesn't look right to me.
+> > >
+> > > The callers of this function, takes the execution flow to aborting the
+> > > operation on getting return code < 0. No next action is expected under
+> > > this aborted operation. Unlocking the lock here is not an issue
+> > >
+> > > > It seems you should better move the lock to the callers of this fun=
+ction.
+> > >
+> > > Accepted, and moved to the caller of the function for:
+> > >    - locking
+> > >    - unlocking in case of error.
+> > >
+> > > Unlocking in the read API, once response is successfully received and
+> > > read.
+> >=20
+> > A better design would be: imx_ele_msg_rcv() imx_ele_msg_send() are
+> > expected to be called locked. Add lockdep_assert_held() to these functi=
+on to
+> > document/check this.
+> >=20
+> > The callers of imx_ele_msg_rcv() and imx_ele_msg_send() have to take ca=
+re
+> > of the locking.
+> >=20
+> > [...]
+> >=20
+> The locking/unlocking of se_if_cmd_lock, is taken care by the callers onl=
+y:
+> - imx_ele_msg_send_rcv calls both the functions:
+>   --imx_ele_msg_send.
+>   --imx_ele_msg_rcv.
+>=20
+> But the lockdep_assert_held, cannot be added to imx_ele_msg_send, as
+> its another caller function imx_ele_miscdev_msg_send calls if for
+> sending:
+>  --- command (here command lock is taken).
+>  --- response to a command (here command lock is not taken).
+
+miscdev is another patch.
+
+But why can't you use the same lock in imx_ele_miscdev_msg_send()?
+
+
+> > > > > +static const struct imx_se_node_info_list imx93_info =3D {
+> > > > > +	.num_mu =3D 1,
+> > > > > +	.soc_id =3D SOC_ID_OF_IMX93,
+> > > > > +	.info =3D {
+> > > > > +			{
+> > > > > +				.se_if_id =3D 2,
+> > > > > +				.se_if_did =3D 3,
+> > > > > +				.max_dev_ctx =3D 4,
+> > > > > +				.cmd_tag =3D 0x17,
+> > > > > +				.rsp_tag =3D 0xe1,
+> > > > > +				.success_tag =3D 0xd6,
+> > > > > +				.base_api_ver =3D MESSAGING_VERSION_6,
+> > > > > +				.fw_api_ver =3D MESSAGING_VERSION_7,
+> > > > > +				.se_name =3D "hsm1",
+> > > > > +				.mbox_tx_name =3D "tx",
+> > > > > +				.mbox_rx_name =3D "rx",
+> > > > > +				.reserved_dma_ranges =3D true,
+> > > > > +				.imem_mgmt =3D true,
+> > > > > +				.soc_register =3D true,
+> > > > > +			},
+> > > > > +	},
+> > > >
+> > > >
+> > > > Some (most?) members of these structs are the same. Why do you have
+> > > > this abstraction if it's not needed right now?
+> > >
+> > > It is needed as the values is different for different NXP SoC
+> > > compatible. It will be needed for NXP i.MX95 platform, whose code will
+> > > be next in pipeline.
+> >=20
+> > How does the imx95 .info look like?
+> >=20
+> Copied from the internal repo.
+> static const struct imx_info_list imx95_info =3D {
+>         .num_mu =3D 4,
+>         .soc_id =3D SOC_ID_OF_IMX95,
+>         .info =3D {
+>                         {
+>                                 .socdev =3D false,
+>                                 .mu_id =3D 2,
+>                                 .mu_did =3D 3,
+>                                 .max_dev_ctx =3D 4,
+>                                 .cmd_tag =3D 0x17,
+>                                 .rsp_tag =3D 0xe1,
+>                                 .success_tag =3D 0xd6,
+>                                 .base_api_ver =3D MESSAGING_VERSION_6,
+>                                 .fw_api_ver =3D MESSAGING_VERSION_7,
+>                                 .se_name =3D "hsm1",
+>                                 .mbox_tx_name =3D "tx",
+>                                 .mbox_rx_name =3D "rx",
+>                                 .pool_name =3D NULL,
+>                                 .reserved_dma_ranges =3D false,
+>                                 .init_fw =3D true,
+>                                 .v2x_state_check =3D true,
+>                                 .start_rng =3D ele_start_rng,
+>                                 .enable_ele_trng =3D true,
+>                                 .imem_mgmt =3D false,
+>                                 .mu_buff_size =3D 0,
+>                                 .fw_name_in_rfs =3D NULL,
+>                         },
+>                         {
+>                                 .socdev =3D false,
+>                                 .mu_id =3D 0,
+>                                 .mu_did =3D 0,
+>                                 .max_dev_ctx =3D 0,
+>                                 .cmd_tag =3D 0x17,
+>                                 .rsp_tag =3D 0xe1,
+>                                 .success_tag =3D 0xd6,
+>                                 .base_api_ver =3D 0x2,
+>                                 .fw_api_ver =3D 0x2,
+>                                 .se_name =3D "v2x_dbg",
+>                                 .pool_name =3D NULL,
+>                                 .mbox_tx_name =3D "tx",
+>                                 .mbox_rx_name =3D "rx",
+>                                 .reserved_dma_ranges =3D false,
+>                                 .init_fw =3D false,
+>                                 .v2x_state_check =3D true,
+>                                 .start_rng =3D v2x_start_rng,
+>                                 .enable_ele_trng =3D false,
+>                                 .imem_mgmt =3D false,
+>                                 .mu_buff_size =3D 0,
+>                                 .fw_name_in_rfs =3D NULL,
+>                         },
+>                         {
+>                                 .socdev =3D false,
+>                                 .mu_id =3D 4,
+>                                 .mu_did =3D 0,
+>                                 .max_dev_ctx =3D 4,
+>                                 .cmd_tag =3D 0x18,
+>                                 .rsp_tag =3D 0xe2,
+>                                 .success_tag =3D 0xd6,
+>                                 .base_api_ver =3D 0x2,
+>                                 .fw_api_ver =3D 0x2,
+>                                 .se_name =3D "v2x_sv0",
+>                                 .pool_name =3D NULL,
+>                                 .mbox_tx_name =3D "tx",
+>                                 .mbox_rx_name =3D "rx",
+>                                 .reserved_dma_ranges =3D false,
+>                                 .init_fw =3D false,
+>                                 .v2x_state_check =3D true,
+>                                 .start_rng =3D NULL,
+>                                 .enable_ele_trng =3D false,
+>                                 .imem_mgmt =3D false,
+>                                 .mu_buff_size =3D 16,
+>                                 .fw_name_in_rfs =3D NULL,
+>                         },
+>                         {
+>                                 .socdev =3D false,
+>                                 .mu_id =3D 6,
+>                                 .mu_did =3D 0,
+>                                 .max_dev_ctx =3D 4,
+>                                 .cmd_tag =3D 0x1a,
+>                                 .rsp_tag =3D 0xe4,
+>                                 .success_tag =3D 0xd6,
+>                                 .base_api_ver =3D 0x2,
+>                                 .fw_api_ver =3D 0x2,
+>                                 .se_name =3D "v2x_she",
+>                                 .pool_name =3D NULL,
+>                                 .mbox_tx_name =3D "tx",
+> 		   .mbox_rx_name =3D "rx",
+>                                 .reserved_dma_ranges =3D false,
+>                                 .init_fw =3D false,
+>                                 .v2x_state_check =3D true,
+>                                 .start_rng =3D NULL,
+>                                 .enable_ele_trng =3D false,
+>                                 .imem_mgmt =3D false,
+>                                 .mu_buff_size =3D 16,
+>                                 .fw_name_in_rfs =3D NULL,
+>                         },
+>                         {
+>                                 .socdev =3D false,
+>                                 .mu_id =3D 6,
+>                                 .mu_did =3D 0,
+>                                 .max_dev_ctx =3D 4,
+>                                 .cmd_tag =3D 0x1a,
+>                                 .rsp_tag =3D 0xe4,
+>                                 .success_tag =3D 0xd6,
+>                                 .base_api_ver =3D 0x2,
+>                                 .fw_api_ver =3D 0x2,
+>                                 .se_name =3D "v2x_she",
+>                                 .pool_name =3D NULL,
+>                                 .mbox_tx_name =3D "tx",
+>                                 .mbox_rx_name =3D "rx",
+>                                 .reserved_dma_ranges =3D false,
+>                                 .init_fw =3D false,
+>                                 .v2x_state_check =3D true,
+>                                 .start_rng =3D NULL,
+>                                 .enable_ele_trng =3D false,
+>                                 .imem_mgmt =3D false,
+>                                 .mu_buff_size =3D 256,
+>                                 .fw_name_in_rfs =3D NULL,
+>                         },
+>         }
+> };
+
+Just looking at _some_, the .cmd_tag, .rsp_tag and .success_tag look the
+same for all SoCs.
+
+[...]
+
+> Created a static variable g_soc_rev in the se_ctrl.c.
+> Accepted and will correct it in v2.
+>=20
+> >=20
+> > > > > +	if (info_list->soc_rev)
+> > > > > +		return err;
+> > > >
+> Will change the above condition to g_soc_rev.
+
+"g_" as is global? Don't do that. Use your priv!
+
+[...]
+
+> > > > > +
+> > > > > +	info_list->soc_rev =3D s_info.soc_rev;
+> > > > > +
+> > > > > +	if (!info->soc_register)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	attr =3D devm_kzalloc(dev, sizeof(*attr), GFP_KERNEL);
+> > > > > +	if (!attr)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	if (s_info.minor_ver)
+> > > > > +		attr->revision =3D devm_kasprintf(dev, GFP_KERNEL, "%x.%x",
+> > > > > +					   s_info.major_ver,
+> > > > > +					   s_info.minor_ver);
+> > > > > +	else
+> > > > > +		attr->revision =3D devm_kasprintf(dev, GFP_KERNEL, "%x",
+> > > > > +					   s_info.major_ver);
+> > > > > +
+> > > > > +	switch (s_info.soc_id) {
+> > > > > +	case SOC_ID_OF_IMX8ULP:
+> > > > > +		attr->soc_id =3D devm_kasprintf(dev, GFP_KERNEL,
+> > > > > +					      "i.MX8ULP");
+> > > > > +		break;
+> > > > > +	case SOC_ID_OF_IMX93:
+> > > > > +		attr->soc_id =3D devm_kasprintf(dev, GFP_KERNEL,
+> > > > > +					      "i.MX93");
+> > > > > +		break;
+> > > > > +	}
+> > > > > +
+> > > > > +	err =3D of_property_read_string(of_root, "model",
+> > > > > +				      &attr->machine);
+> > > > > +	if (err) {
+> > > > > +		devm_kfree(dev, attr);
+> > > >
+> > > > Why do you do a manual cleanup of devm managed resources? Same
+> > > > applies to the other devm managed resources, too.
+> > > >
+> > > Used devm managed memory, as this function is called as part probe.
+> > > Post device registration, this devm managed memory is un-necessarily
+> > > blocked. It is better to release it as part of clean-up, under this
+> > > function only.
+> >=20
+> > Why do you allocate the memory with devm in the first place, if it's not
+> > needed after probe?
+>=20
+> Sorry to confuse you. Actually the devm_memory will be needed for the cas=
+e of soc_registration.
+> Meaning, memory with devm, will be needed post probing as well.
+>=20
+> If this function fails, the probing will fail too. It will be auto cleane=
+d.
+>=20
+> Accepted, will remove the devm_free in v2.
+
+If you don't need the memory past probe() allocate with kzalloc() and
+use kfree(). Only used managed resources for lifetimes beyond the probe
+function.
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--7yk6pkmeqxyudczq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmZMkxsACgkQKDiiPnot
+vG+Z/Af/WMnqhWM48LnZtU6kUIbY7cRacggeGQv2jj71QpNxkSQ62f9qkFrUh3rS
+Zmnt+uZAOghpnCADbwdGszNnOMR8saS83xmewg528L/7StvqR2/2N92ZGAfVC7Q1
+BEn0/fwyAGSWnvNLgmeSGi0gDd+LxVQVfrkhqxSPSYvLCcZMJh0Q0VBiHlv2ikqt
+Sf8hGPnZ5cyeNWzHucZ0luAWy2ilrU2fA9VUiuhrczVRJL4Rb6Tudswv7Dmb2DX2
+jHSD3/RViGgDHR4xUVQnV2BW43sS220cKg8xQ5xeHgtOlxo/PvVfMPbCyrpZZJ11
+Weuh3GM0jY/KBh4rxcm2VBE8FJOfgw==
+=R/M7
+-----END PGP SIGNATURE-----
+
+--7yk6pkmeqxyudczq--
