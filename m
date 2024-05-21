@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64C0535AF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ED55676F;
 	Tue, 21 May 2024 08:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716281186; cv=none; b=GTki7wN32NEfpzg1UcNaLo6GrChsz+yOEl7xxfm5GkUS3UwyGXgdhb+87IAcI9h/NuIZln+9DhwYb7o92yYmjrrCwa1sxbB3KxJ4d3FKAPCN6gHh/ONuOIswu6yKcr6VVrIbZIwiAtrZTFAmQ6fsc3SChGZt9gyrPVUsQYqHV3w=
+	t=1716281187; cv=none; b=JvpnCT0CcjcRIf5OSCh1xLtHBGeJrnzHKP5ssLPjJaEv95HzZ0Sl/TocZjsFqXxmaHXrjodkZ7+JfvC6DWl3JXyfVZcqSlEHktlkMsyfcTiAHF2woe/8XkFOK4IyXBTk4kI/Dr1io4rmcgcg0cj0UVfoNePdIidiwQURMQYYfQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716281186; c=relaxed/simple;
-	bh=SiXMPzFyIkTEwRXRmeckMbEvLhH98lpRv9fx8PUHfMk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vw25HAqQH9sul6D9j0usamP2wpQgeTbkFCmzBZCIT2aw4bIHWWGuHZkKN6CHjwQe+FvblX51tMyd1OSIpBUx/sz2pgvbBwrLcOim8vbP7I4v2qae7ZlVJvAiGmhFprQgxb4i4wU0OgNnYTndG+X6XfOrFAHy2x5yGvZJ+dxDH1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPKtPo+N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716281187; c=relaxed/simple;
+	bh=C5v4/fLzS6Bdo8dJf1AM1vOKlChKS52Cq8X9QRh1u/I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qZWMzEdgMaBdpY9nJJXmevqZfDIK2PRG3KdWXqEjegysMdnTuIf+WE2rhFYWh3k+C6cNIrmuPy0+59z6bTJZhSXLzbjxiv8nPXtr1ksRrJy/slVH2Eo0CEARJ1bT0m3lrswrDkvFUrOiEHOIFJ2E5Dt8hHS9ArU2DDB3DDlvbro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKMEV1re; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPKtPo+N"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A3D1C4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKMEV1re"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F905C4AF09;
 	Tue, 21 May 2024 08:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716281186;
-	bh=SiXMPzFyIkTEwRXRmeckMbEvLhH98lpRv9fx8PUHfMk=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=DPKtPo+NQ6EiaAXn9qi3VobMhUCqq8vCW0ww6cQnhlpWrrcihfml3sBBJbe1YCZ/k
-	 4spOMmeclpCAmyT2Wo20pOiZtu/PgUy35zJCHxPdDWYhe0CkU0qfI1wDPTUFiwl+we
-	 ELNJf/vNLGc0LEMD+CEES6ddZg3S1LjqjLVyaui3HO51BgeTW+5QfkRjt+kGlO4meN
-	 T15ZW6QLsFTU1XXHyP1tNIwmuoatbvf7yuXCT+wfO1o4ZhPmBodfEMGwDaaTV31y+U
-	 BEqPFmd+c7sxCOgUtEmFI4Mef2qWd0Ckb01eW2df/012yUZA7KNh0RnAQXh57jSjOi
-	 k6doOlg4+9ddw==
+	bh=C5v4/fLzS6Bdo8dJf1AM1vOKlChKS52Cq8X9QRh1u/I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=hKMEV1reeeKSM6fSCtgDFn23jtW7WBSlf6PVbq3Y7+B/epl0vHGglZwr5ngzy/i7h
+	 GDEBXbsFqeVH3QiSvdMw+Ol4BAa0+Y/XRzUXt+Z5s2WlxRku93o7ESz2EclevsTPcx
+	 oAPCsSrrmhTD3q8uFucqUpWt6gLULkSJEyjlzz28wt4wpLPPvfuSCg39gFz2XB//QU
+	 OyAP7Xxw5p1teU4zshXOFbjhzLsWr1DsVh4CSpon9Htg0RX7r4aShJ3I7OtMzUjkKi
+	 ZkGKgYQc3X7Z8oF6ficEet92QCxijVXYfrxD02OQPZGTLMc0N5ciVHL0IGCQMEYnuV
+	 s7uqP+m6n8unQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D6EC25B78;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9276EC25B7D;
 	Tue, 21 May 2024 08:46:26 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Subject: [PATCH 0/3] AD7173 fixes
-Date: Tue, 21 May 2024 11:45:38 +0300
-Message-Id: <20240521-ad7173-fixes-v1-0-8161cc7f3ad1@analog.com>
+Date: Tue, 21 May 2024 11:45:41 +0300
+Subject: [PATCH 3/3] iio: adc: ad7173: Remove index from temp channel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,20 +40,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADJfTGYC/x3LQQqAIBBG4avErBN00oSuEi0kf2s2FgoRRHdPW
- n483kMVRVBp6h4quKTKkRtM39G6h7xBSWwm1my1Y6NC9MYPKsmNqiwYLujRIDG15Sz4Qzvm5X0
- /Vkpz3V4AAAA=
+Message-Id: <20240521-ad7173-fixes-v1-3-8161cc7f3ad1@analog.com>
+References: <20240521-ad7173-fixes-v1-0-8161cc7f3ad1@analog.com>
+In-Reply-To: <20240521-ad7173-fixes-v1-0-8161cc7f3ad1@analog.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, 
  Jonathan Cameron <jic23@kernel.org>
 Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dumitru Ceclan <dumitru.ceclan@analog.com>, 
- David Lechner <dlechner@baylibre.com>
+ Dumitru Ceclan <dumitru.ceclan@analog.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716281184; l=743;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716281184; l=851;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=SiXMPzFyIkTEwRXRmeckMbEvLhH98lpRv9fx8PUHfMk=;
- b=mbQ9Sc9j2q9NvpEcKkqyc2ZV88kcFbtvJ4v0Mzpc8nUEUSH8X9JiETPM2gregjT5H5N0Okut7
- ernOZyzGcYOBfoCpUAQEcIxKX+Xyi081We6W7WiBJEWO+tkb/uRldut
+ bh=qHzAb3Lr8QOhPoRlBg0Itkn9NRPMWDsCz2unbRqp8RE=;
+ b=zxXiZsq7aw1ZMWgq02220Luc3U7UtU/mZVkZapTEiP+gmlZk+oA/AvL2vULuakdmQeil2AEGB
+ glgGrhonwrwAKUgtuRVvx0+bB1OgM1EzTT3cTkGAKHvLv37iFmmxK6H
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -61,25 +60,32 @@ X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
 X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 Reply-To: dumitru.ceclan@analog.com
 
-This patch series adds fixes for ad7173 driver that were originally
-sent along AD411x series. To ensure that they are included in this
-current rc cycle they are sent in a separate series with the Fixes tag.
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
+Temperature channel is unique per device, index is not needed.
+This is breaking userspace: Include fixes tag to be released within the
+same rc cycle.
+
+Fixes: 8eb903272f75 ("iio: adc: ad7173: add AD7173 driver")
 Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
-Dumitru Ceclan (3):
-      iio: adc: ad7173: fix buffers enablement for ad7176-2
-      iio: adc: ad7173: Add ad7173_device_info names
-      iio: adc: ad7173: Remove index from temp channel
+ drivers/iio/adc/ad7173.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- drivers/iio/adc/ad7173.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
----
-base-commit: 5ab61121a34759eb2418977f0b3589b7edc57776
-change-id: 20240521-ad7173-fixes-4e2e5a061ef2
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 58620be41ef5..eb512878c30e 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -815,7 +815,6 @@ static const struct iio_chan_spec ad7173_channel_template = {
+ 
+ static const struct iio_chan_spec ad7173_temp_iio_channel_template = {
+ 	.type = IIO_TEMP,
+-	.indexed = 1,
+ 	.channel = AD7173_AIN_TEMP_POS,
+ 	.channel2 = AD7173_AIN_TEMP_NEG,
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
 
-Best regards,
 -- 
-Dumitru Ceclan <dumitru.ceclan@analog.com>
+2.43.0
 
 
