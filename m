@@ -1,520 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8083A148FFA;
-	Tue, 21 May 2024 18:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8216321105
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716315536; cv=none; b=VWyZcUBd41q/B2Nn0QnfTmr6NFk0Rb6SlGyHM2Tbpvi0dP8tmRmo5vwrPDPr2yWlnObLeOy6yz3MGpmFgZAlFO7jAYFc3tgRb+PuTMuqnmLPm3rQ2TjLQbWTDKaYOAf4QwdiGLxXrbYnG80oNqxkm9RkjhKuxYx76vZCQE0FuRg=
+	t=1716315598; cv=none; b=uHMxSw9KyNoo8ti57dgDK8sv+vjf7GmdPVKgXMKmIvrxOy6FMjjFENLz6Xj9DElj+DPkpAsIwADbPCLteQQi+hFr+CnMpQynVhEKStCJszDInFyPl7KZsRS20qZKf3VfBwaSwxZCgDf5QGc409fZgs5Ce+xTVt6UuM5WU3jKALo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716315536; c=relaxed/simple;
-	bh=2Kn/zQ8UGCer1u8bszUqcshJKZWfJxL62JLkYYC55KI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mJ+zseokCu3qCeDdooJ+iiUuSqnzKwezx35a5U/T5EF7KjKv2lEQ5n5DtltT4WcLcFZcIBFpkGtj8Mv/3gOb049KSvDPD8wg6CcytVyq+Mysi7YeDdLU8uoVPb16z3Sz60g2OGeNd70Yz09iVR2W7nFCpDwiZhPzpTurv2od6yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGLqrTqQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716315598; c=relaxed/simple;
+	bh=0dqwcK/XPOcEv1mTsxYC7i1Y/75vW0HO1WRQSYOUEbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e3KZ2RCQYQA47Y/cHQoM1rsF9QwmmMucHRUJlCG2rD92HMne6bYy1jyDqUfBo6k1q1SpyB4bwrsFxVkm5QePuTUPoDPZqN3yNh1tp7N6VWTUHk6Rn+yuo6uEu4iEa56v2nLgcYOv88FKUishd6hHseEM/6B9V3ZogUNpwCbUTjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GFlassp/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGLqrTqQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE6AAC4AF0C;
-	Tue, 21 May 2024 18:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716315536;
-	bh=2Kn/zQ8UGCer1u8bszUqcshJKZWfJxL62JLkYYC55KI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=nGLqrTqQGiJlWGIEdqFds/XpgK52gVSm24J3tTId+9kbF2GT64uwDQSfaOTvaQNZc
-	 4flltIfTKQ1AI+N/kd1rUrWPVvllNlhlOXeTpsFd3/+axrw6DsSErWAi0FmnkML4HB
-	 4ctYcykKZrmoIQm5AuPCbUGjcWHmbYG5ZPEs4bIZvDDlJJQkqA0emFTvWB4LbkP3E/
-	 Nb1lXEC3dH0wh4+B5erTv6EWaBM9FsHDO1LOdGeQtt9s9zbc7oQVvH5fbPl2AYxMia
-	 4ldE2Et+8Ull09q6K5KQGTPcrRmLhI7HzoXGCtmuwbQJia0E6MAkTv5o8gIuGxAxQi
-	 uF1wv5PCXqL+w==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 21 May 2024 19:18:26 +0100
-Subject: [PATCH] kselftest/arm64: Include kernel mode NEON in fp-stress
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GFlassp/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716315594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Isde2dh7/647rfx8u6foFeQh7vHwio2r62p6n+pus0=;
+	b=GFlassp/6UCRwOXSNDQ3oCV6r6V3UQ/A1XCXDjVMCvjMGOv7PYlqCh7tioHhTmreoo98pf
+	Tg1o7GwuJeQN/3TbcfWFFkgHq0XWcFc7fa4vJugAvC6wRBQNhYB8LtH2HT3EpGpM97q6gI
+	L5afy5B9dSiCpvD+xtEy0VNlB7g5jwQ=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-98-MtO88H13POyAmI-gUFNAvg-1; Tue, 21 May 2024 14:19:51 -0400
+X-MC-Unique: MtO88H13POyAmI-gUFNAvg-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7da42114485so1527168039f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:19:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716315590; x=1716920390;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1Isde2dh7/647rfx8u6foFeQh7vHwio2r62p6n+pus0=;
+        b=Ot9h7zmThAcpqYvdOzb6jWYWGyXA1w7TvKKbv29FzL5GhrpTr1HgrjQMdG1gUdWRXD
+         XtBqhoad7mOm+jXbu9+lUVxTA7Xb/vvkoqHiHNSqSVs+Rr6JnOX3EqYinpwn5U6nJhWW
+         lemjRKK1xfveXm0hTtHeRxxRgVlQRJOOAferMYZxAWXI3NgONg/jTgsI1rI+URSC7gs6
+         kawOLeBZtsD9qF4CikV9+h5jcEu5BIDdtD0A9IVGWlBUN/Slt141QB6ruKsBFuU2clKi
+         AOO/Xzb8HqrBeS3zpZwV0+JnlnARDoIEUlTdbLHYoeHJTf1kytWP7Z5IUQJ3+uhYi6DW
+         QjEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJRLxTsZ23ZUwMpGQ7c7XJ7d+eF+pCJuUyS05kZArefTuaSWdz6pA42RW/SAqTsnahtzaYFUk1x7zfvzEJ9AWrP6OI8T4kPmbfFPTX
+X-Gm-Message-State: AOJu0YyU/fFFhGq5AhuHKZ8vbHTCp1eH49eNqkjoC1WRfounIsfRMjoz
+	rZ/I2EExF9GIar1JRDA8lC1nar2GeSGx7BgpzRhlF3/chUYoPhxXoeBpu0B3rBr7KWV5e+gnG77
+	cDO221BbWPe0wyxHbJB40IJX0dTEf1RRqbe7vCEhxxnWcF+k2d4zQ/qXSaNyaYA==
+X-Received: by 2002:a5d:9553:0:b0:7e1:973b:fbfc with SMTP id ca18e2360f4ac-7e1b520c7b7mr3444746039f.15.1716315589610;
+        Tue, 21 May 2024 11:19:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF4dEPJMmyq53uNgsrumO7N0Qr7jKz/Z8GDsO+x2zbKwDnCjIJWu7WA5azwt4gAJaAXiGpCZA==
+X-Received: by 2002:a5d:9553:0:b0:7e1:973b:fbfc with SMTP id ca18e2360f4ac-7e1b520c7b7mr3444744239f.15.1716315589310;
+        Tue, 21 May 2024 11:19:49 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489376de0e3sm7019591173.146.2024.05.21.11.19.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 11:19:48 -0700 (PDT)
+Date: Tue, 21 May 2024 12:19:45 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>, "Vetter, Daniel"
+ <daniel.vetter@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "pbonzini@redhat.com"
+ <pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "luto@kernel.org" <luto@kernel.org>, "peterz@infradead.org"
+ <peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "hpa@zytor.com" <hpa@zytor.com>, "corbet@lwn.net" <corbet@lwn.net>,
+ "joro@8bytes.org" <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "baolu.lu@linux.intel.com"
+ <baolu.lu@linux.intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>
+Subject: Re: [PATCH 4/5] vfio/type1: Flush CPU caches on DMA pages in
+ non-coherent domains
+Message-ID: <20240521121945.7f144230.alex.williamson@redhat.com>
+In-Reply-To: <20240521163400.GK20229@nvidia.com>
+References: <20240509121049.58238a6f.alex.williamson@redhat.com>
+	<Zj33cUe7HYOIfj5N@yzhao56-desk.sh.intel.com>
+	<20240510105728.76d97bbb.alex.williamson@redhat.com>
+	<ZkG9IEQwi7HG3YBk@yzhao56-desk.sh.intel.com>
+	<BN9PR11MB52766D78684F6206121590B98CED2@BN9PR11MB5276.namprd11.prod.outlook.com>
+	<20240516143159.0416d6c7.alex.williamson@redhat.com>
+	<20240517171117.GB20229@nvidia.com>
+	<BN9PR11MB5276250B2CF376D15D16FF928CE92@BN9PR11MB5276.namprd11.prod.outlook.com>
+	<20240521160714.GJ20229@nvidia.com>
+	<20240521102123.7baaf85a.alex.williamson@redhat.com>
+	<20240521163400.GK20229@nvidia.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-arm64-fp-stress-kernel-v1-1-e38f107baad4@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAHHlTGYC/x3MQQrDIBBA0auEWXdAxRjSq5QuTDo2Q1IrMyUUx
- LtXunyL/ysoCZPCdaggdLLyO3fYywDrFvOTkB/d4IzzZrQTRnkFj6mgfoRUcSfJdGA0s7F2mUP
- yDnpchBJ//+PbvbUfhnSExGgAAAA=
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: Johannes Nixdorf <mixi@shadowice.org>, Ard Biesheuvel <ardb@kernel.org>, 
- Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-621fa
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12532; i=broonie@kernel.org;
- h=from:subject:message-id; bh=2Kn/zQ8UGCer1u8bszUqcshJKZWfJxL62JLkYYC55KI=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmTOWMrKrZl1Xm1Eud4fivcWJpaLOJATDE50YxuAEZ
- mghYQh+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZkzljAAKCRAk1otyXVSH0L93B/
- 0dOIJMXV2grCUQ8Ap+B1gBJ3Ig3hBLk8R26OVIMV8RsKMPNSokFSr9qZ7FhEMwlVKMKFWEtTb20Q1g
- zsUCqSKE619aypdfVHNR93hOHyZ0RpEC7uz6xv+xoF+b0F1DQQu58rKi7HjZ7hvg8uIjMcV0uzQCpl
- ZoekAAPecc0LZnF2iH7ynVBz+ARlZRKL+CAXO5mYdQ9vtkXdyhwgUKSKU6P3namC6QrCUEJBm38Ijo
- UQpg4OsydNKUZ4GPzcSwHJVs42s2AuoD+6tjR2u6T72vsheke89OLQfJUqigniMQZswxABg3nxgw29
- n1Pzf/9DgcEJ7QW/iZaFAL9rqHeAoz
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Currently fp-stress only covers userspace use of floating point, it does
-not cover any kernel mode uses.  Since currently kernel mode floating
-point usage can't be preempted and there are explicit preemption points in
-the existing implementations this isn't so important for fp-stress but
-when we readd preemption it will be good to try to exercise it.
+On Tue, 21 May 2024 13:34:00 -0300
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-When the arm64 accelerated crypto operations are implemented we can
-relatively straightforwardly trigger kernel mode floating point usage by
-using the crypto userspace API to hash data, using the splice() support
-in an effort to minimise copying.  We use /proc/crypto to check which
-accelerated implementations are available, picking the first symmetric
-hash we find.  We run the kernel mode test unconditionally, replacing the
-second copy of the FPSIMD testcase for systems with FPSIMD only. If we
-don't think there are any suitable kernel mode implementations we fall back
-to running another copy of fpsimd-stress.
+> On Tue, May 21, 2024 at 10:21:23AM -0600, Alex Williamson wrote:
+> 
+> > > Intel GPU weirdness should not leak into making other devices
+> > > insecure/slow. If necessary Intel GPU only should get some variant
+> > > override to keep no snoop working.
+> > > 
+> > > It would make alot of good sense if VFIO made the default to disable
+> > > no-snoop via the config space.  
+> > 
+> > We can certainly virtualize the config space no-snoop enable bit, but
+> > I'm not sure what it actually accomplishes.  We'd then be relying on
+> > the device to honor the bit and not have any backdoors to twiddle the
+> > bit otherwise (where we know that GPUs often have multiple paths to get
+> > to config space).  
+> 
+> I'm OK with this. If devices are insecure then they need quirks in
+> vfio to disclose their problems, we shouldn't punish everyone who
+> followed the spec because of some bad actors.
+> 
+> But more broadly in a security engineered environment we can trust the
+> no-snoop bit to work properly.
 
-There are a number issues with this approach, we don't actually verify
-that we are using an accelerated (or even CPU) implementation of the
-algorithm being tested and even with attempting to use splice() to
-minimise copying there are sizing limits on how much data gets spliced
-at once.
+ The spec has an interesting requirement on devices sending no-snoop
+ transactions anyway (regarding PCI_EXP_DEVCTL_NOSNOOP_EN):
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
-This is mainly focused on trying to reproduce the issues reported by
-Asahi users with preemptable kernel mode floating point - as noted in
-the commit log it needs reenablement of preemptable floating point and
-removal of the preemption points in the current algorithm
-implementations to really have anything to exercise directly.  There
-also seem to be race conditions when AF_ALG is built as a module,
-attempting to bind triggers module load but does not block.
----
- tools/testing/selftests/arm64/fp/.gitignore    |   1 +
- tools/testing/selftests/arm64/fp/Makefile      |   1 +
- tools/testing/selftests/arm64/fp/fp-stress.c   |  26 +-
- tools/testing/selftests/arm64/fp/kernel-test.c | 324 +++++++++++++++++++++++++
- 4 files changed, 343 insertions(+), 9 deletions(-)
+ "Even when this bit is Set, a Function is only permitted to Set the No
+  Snoop attribute on a transaction when it can guarantee that the
+  address of the transaction is not stored in any cache in the system."
 
-diff --git a/tools/testing/selftests/arm64/fp/.gitignore b/tools/testing/selftests/arm64/fp/.gitignore
-index 00e52c966281..8362e7ec35ad 100644
---- a/tools/testing/selftests/arm64/fp/.gitignore
-+++ b/tools/testing/selftests/arm64/fp/.gitignore
-@@ -2,6 +2,7 @@ fp-pidbench
- fp-ptrace
- fp-stress
- fpsimd-test
-+kernel-test
- rdvl-sme
- rdvl-sve
- sve-probe-vls
-diff --git a/tools/testing/selftests/arm64/fp/Makefile b/tools/testing/selftests/arm64/fp/Makefile
-index 55d4f00d9e8e..d171021e4cdd 100644
---- a/tools/testing/selftests/arm64/fp/Makefile
-+++ b/tools/testing/selftests/arm64/fp/Makefile
-@@ -12,6 +12,7 @@ TEST_GEN_PROGS := \
- 	vec-syscfg \
- 	za-fork za-ptrace
- TEST_GEN_PROGS_EXTENDED := fp-pidbench fpsimd-test \
-+	kernel-test \
- 	rdvl-sme rdvl-sve \
- 	sve-test \
- 	ssve-test \
-diff --git a/tools/testing/selftests/arm64/fp/fp-stress.c b/tools/testing/selftests/arm64/fp/fp-stress.c
-index dd31647b00a2..faac24bdefeb 100644
---- a/tools/testing/selftests/arm64/fp/fp-stress.c
-+++ b/tools/testing/selftests/arm64/fp/fp-stress.c
-@@ -319,6 +319,19 @@ static void start_fpsimd(struct child_data *child, int cpu, int copy)
- 	ksft_print_msg("Started %s\n", child->name);
- }
- 
-+static void start_kernel(struct child_data *child, int cpu, int copy)
-+{
-+	int ret;
-+
-+	ret = asprintf(&child->name, "KERNEL-%d-%d", cpu, copy);
-+	if (ret == -1)
-+		ksft_exit_fail_msg("asprintf() failed\n");
-+
-+	child_start(child, "./kernel-test");
-+
-+	ksft_print_msg("Started %s\n", child->name);
-+}
-+
- static void start_sve(struct child_data *child, int vl, int cpu)
- {
- 	int ret;
-@@ -438,7 +451,7 @@ int main(int argc, char **argv)
- 	int ret;
- 	int timeout = 10;
- 	int cpus, i, j, c;
--	int sve_vl_count, sme_vl_count, fpsimd_per_cpu;
-+	int sve_vl_count, sme_vl_count;
- 	bool all_children_started = false;
- 	int seen_children;
- 	int sve_vls[MAX_VLS], sme_vls[MAX_VLS];
-@@ -482,12 +495,7 @@ int main(int argc, char **argv)
- 		have_sme2 = false;
- 	}
- 
--	/* Force context switching if we only have FPSIMD */
--	if (!sve_vl_count && !sme_vl_count)
--		fpsimd_per_cpu = 2;
--	else
--		fpsimd_per_cpu = 1;
--	tests += cpus * fpsimd_per_cpu;
-+	tests += cpus * 2;
- 
- 	ksft_print_header();
- 	ksft_set_plan(tests);
-@@ -542,8 +550,8 @@ int main(int argc, char **argv)
- 				   tests);
- 
- 	for (i = 0; i < cpus; i++) {
--		for (j = 0; j < fpsimd_per_cpu; j++)
--			start_fpsimd(&children[num_children++], i, j);
-+		start_fpsimd(&children[num_children++], i, 0);
-+		start_kernel(&children[num_children++], i, 0);
- 
- 		for (j = 0; j < sve_vl_count; j++)
- 			start_sve(&children[num_children++], sve_vls[j], i);
-diff --git a/tools/testing/selftests/arm64/fp/kernel-test.c b/tools/testing/selftests/arm64/fp/kernel-test.c
-new file mode 100644
-index 000000000000..50db26a3ed79
---- /dev/null
-+++ b/tools/testing/selftests/arm64/fp/kernel-test.c
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 ARM Limited.
-+ */
-+
-+#define _GNU_SOURCE
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include <sys/socket.h>
-+
-+#include <linux/kernel.h>
-+#include <linux/if_alg.h>
-+
-+#define DATA_SIZE (16 * 4096)
-+
-+static int base, sock;
-+
-+static int digest_len;
-+static char *ref;
-+static char *digest;
-+static char *alg_name;
-+
-+static struct iovec data_iov;
-+static int zerocopy[2];
-+static int sigs;
-+static int iter;
-+
-+static void handle_exit_signal(int sig, siginfo_t *info, void *context)
-+{
-+	printf("Terminated by signal %d, iterations=%d, signals=%d\n",
-+	       sig, iter, sigs);
-+	exit(0);
-+}
-+
-+static void handle_kick_signal(int sig, siginfo_t *info, void *context)
-+{
-+	sigs++;
-+}
-+
-+static char *drivers[] = {
-+	"crct10dif-arm64-ce",
-+	/* "crct10dif-arm64-neon", - Same priority as generic */
-+	"sha1-ce",
-+	"sha224-arm64",
-+	"sha224-arm64-neon",
-+	"sha224-ce",
-+	"sha256-arm64",
-+	"sha256-arm64-neon",
-+	"sha256-ce",
-+	"sha384-ce",
-+	"sha512-ce",
-+	"sha3-224-ce",
-+	"sha3-256-ce",
-+	"sha3-384-ce",
-+	"sha3-512-ce",
-+	"sm3-ce",
-+	"sm3-neon",
-+};
-+
-+static bool create_socket(void)
-+{
-+	FILE *proc;
-+	struct sockaddr_alg addr;
-+	char buf[1024];
-+	char *c, *driver_name;
-+	bool is_shash, match;
-+	int ret, i;
-+
-+	ret = socket(AF_ALG, SOCK_SEQPACKET, 0);
-+	if (ret < 0) {
-+		if (errno == EAFNOSUPPORT) {
-+			printf("AF_ALG not supported\n");
-+			return false;
-+		}
-+
-+		printf("Failed to create AF_ALG socket: %s (%d)\n",
-+		       strerror(errno), errno);
-+		return false;
-+	}
-+	base = ret;
-+
-+	memset(&addr, 0, sizeof(addr));
-+	addr.salg_family = AF_ALG;
-+	strncpy((char *)addr.salg_type, "hash", sizeof(addr.salg_type));
-+
-+	proc = fopen("/proc/crypto", "r");
-+	if (!proc) {
-+		printf("Unable to open /proc/crypto\n");
-+		return false;
-+	}
-+
-+	driver_name = NULL;
-+	is_shash = false;
-+	match = false;
-+
-+	/* Look through /proc/crypto for a driver with kernel mode FP usage */
-+	while (!match) {
-+		c = fgets(buf, sizeof(buf), proc);
-+		if (!c) {
-+			if (feof(proc)) {
-+				printf("Nothing found in /proc/crypto\n");
-+				return false;
-+			}
-+			continue;
-+		}
-+
-+		/* Algorithm descriptions are separated by a blank line */
-+		if (*c == '\n') {
-+			if (is_shash && driver_name) {
-+				for (i = 0; i < ARRAY_SIZE(drivers); i++) {
-+					if (strcmp(drivers[i],
-+						   driver_name) == 0) {
-+						match = true;
-+					}
-+				}
-+			}
-+
-+			if (!match) {
-+				digest_len = 0;
-+
-+				free(driver_name);
-+				driver_name = NULL;
-+
-+				free(alg_name);
-+				alg_name = NULL;
-+
-+				is_shash = false;
-+			}
-+			continue;
-+		}
-+
-+		/* Remove trailing newline */
-+		c = strchr(buf, '\n');
-+		if (c)
-+			*c = '\0';
-+
-+		/* Find the field/value separator and start of the value */
-+		c = strchr(buf, ':');
-+		if (!c)
-+			continue;
-+		c += 2;
-+
-+		if (strncmp(buf, "digestsize", strlen("digestsize")) == 0)
-+			sscanf(c, "%d", &digest_len);
-+
-+		if (strncmp(buf, "name", strlen("name")) == 0)
-+			alg_name = strdup(c);
-+
-+		if (strncmp(buf, "driver", strlen("driver")) == 0)
-+			driver_name = strdup(c);
-+
-+		if (strncmp(buf, "type", strlen("type")) == 0)
-+			if (strncmp(c, "shash", strlen("shash")) == 0)
-+				is_shash = true;
-+	}
-+
-+	strncpy((char *)addr.salg_name, alg_name,
-+		sizeof(addr.salg_name) - 1);
-+
-+	ret = bind(base, (struct sockaddr *)&addr, sizeof(addr));
-+	if (ret < 0) {
-+		printf("Failed to bind %s: %s (%d)\n",
-+		       addr.salg_name, strerror(errno), errno);
-+		return false;
-+	}
-+
-+	ret = accept(base, NULL, 0);
-+	if (ret < 0) {
-+		printf("Failed to accept %s: %s (%d)\n",
-+		       addr.salg_name, strerror(errno), errno);
-+		return false;
-+	}
-+
-+	sock = ret;
-+
-+	ret = pipe(zerocopy);
-+	if (ret != 0) {
-+		printf("Failed to create zerocopy pipe: %s (%d)\n",
-+		       strerror(errno), errno);
-+		return false;
-+	}
-+
-+	ref = malloc(digest_len);
-+	if (!ref) {
-+		printf("Failed to allocated %d byte reference\n", digest_len);
-+		return false;
-+	}
-+
-+	digest = malloc(digest_len);
-+	if (!digest) {
-+		printf("Failed to allocated %d byte digest\n", digest_len);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool compute_digest(void *buf)
-+{
-+	struct iovec iov;
-+	int ret, wrote;
-+
-+	iov = data_iov;
-+	while (iov.iov_len) {
-+		ret = vmsplice(zerocopy[1], &iov, 1, SPLICE_F_GIFT);
-+		if (ret < 0) {
-+			printf("Failed to send buffer: %s (%d)\n",
-+			       strerror(errno), errno);
-+			return false;
-+		}
-+
-+		wrote = ret;
-+		ret = splice(zerocopy[0], NULL, sock, NULL, wrote, 0);
-+		if (ret < 0) {
-+			printf("Failed to splice buffer: %s (%d)\n",
-+			       strerror(errno), errno);
-+		} else if (ret != wrote) {
-+			printf("Short splice: %d < %d\n", ret, wrote);
-+		}
-+
-+		iov.iov_len -= wrote;
-+		iov.iov_base += wrote;
-+	}
-+
-+reread:
-+	ret = recv(sock, buf, digest_len, 0);
-+	if (ret == 0) {
-+		printf("No disgest returned\n");
-+		return false;
-+	}
-+	if (ret != digest_len) {
-+		if (errno == -EAGAIN)
-+			goto reread;
-+		printf("Failed to get digest: %s (%d)\n",
-+		       strerror(errno), errno);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+int main(void)
-+{
-+	char *data;
-+	struct sigaction sa;
-+	int ret;
-+
-+	/* Ensure we have unbuffered output */
-+	setvbuf(stdout, NULL, _IOLBF, 0);
-+
-+	/* The parent will communicate with us via signals */
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_sigaction = handle_exit_signal;
-+	sa.sa_flags = SA_RESTART | SA_SIGINFO;
-+	sigemptyset(&sa.sa_mask);
-+	ret = sigaction(SIGTERM, &sa, NULL);
-+	if (ret < 0)
-+		printf("Failed to install SIGTERM handler: %s (%d)\n",
-+		       strerror(errno), errno);
-+
-+	sa.sa_sigaction = handle_kick_signal;
-+	ret = sigaction(SIGUSR2, &sa, NULL);
-+	if (ret < 0)
-+		printf("Failed to install SIGUSR2 handler: %s (%d)\n",
-+		       strerror(errno), errno);
-+
-+	data = malloc(DATA_SIZE);
-+	if (!data) {
-+		printf("Failed to allocate data buffer\n");
-+		return EXIT_FAILURE;
-+	}
-+	memset(data, 0, DATA_SIZE);
-+
-+	data_iov.iov_base = data;
-+	data_iov.iov_len = DATA_SIZE;
-+
-+	/*
-+	 * If we can't create a socket assume it's a lack of system
-+	 * support and fall back to a basic FPSIMD test for the
-+	 * benefit of fp-stress.
-+	 */
-+	if (!create_socket()) {
-+		execl("./fpsimd-test", "./fpsimd-test", NULL);
-+		printf("Failed to fall back to fspimd-test: %d (%s)\n",
-+			errno, strerror(errno));
-+		return EXIT_FAILURE;
-+	}
-+
-+	/*
-+	 * Compute a reference digest we hope is repeatable, we do
-+	 * this at runtime partly to make it easier to play with
-+	 * parameters.
-+	 */
-+	if (!compute_digest(ref)) {
-+		printf("Failed to compute reference digest\n");
-+		return EXIT_FAILURE;
-+	}
-+
-+	printf("AF_ALG using %s\n", alg_name);
-+
-+	while (true) {
-+		if (!compute_digest(digest)) {
-+			printf("Failed to coempute digest, iter=%d\n", iter);
-+			return EXIT_FAILURE;
-+		}
-+
-+		if (memcmp(ref, digest, digest_len) != 0) {
-+			printf("Digest mismatch, iter=%d\n", iter);
-+			return EXIT_FAILURE;
-+		}
-+
-+		iter++;
-+	}
-+
-+	return EXIT_FAILURE;
-+}
+I wouldn't think the function itself has such visibility and it would
+leave the problem of reestablishing coherency to the driver, but am I
+overlooking something that implicitly makes this safe?  ie. if the
+function isn't permitted to perform no-snoop to an address stored in
+cache, there's nothing we need to do here.
 
----
-base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-change-id: 20240517-arm64-fp-stress-kernel-a09011b96f42
+> > We also then have the question of does the device function
+> > correctly if we disable no-snoop.  
+> 
+> Other than the GPU BW issue the no-snoop is not a functional behavior.
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+As with some other config space bits though, I think we're kind of
+hoping for sloppy driver behavior to virtualize this.  The spec does
+allow the bit to be hardwired to zero:
+
+ "This bit is permitted to be hardwired to 0b if a Function would never
+  Set the No Snoop attribute in transactions it initiates."
+
+But there's no capability bit that allows us to report whether the
+device supports no-snoop, we're just hoping that a driver writing to
+the bit doesn't generate a fault if the bit doesn't stick.  For example
+the no-snoop bit in the TLP itself may only be a bandwidth issue, but
+if the driver thinks no-snoop support is enabled it may request the
+device use the attribute for a specific transaction and the device
+could fault if it cannot comply.
+
+> > The more secure approach might be that we need to do these cache
+> > flushes for any IOMMU that doesn't maintain coherency, even for
+> > no-snoop transactions.  Thanks,  
+> 
+> Did you mean 'even for snoop transactions'?
+
+I was referring to IOMMUs that maintain coherency regardless of
+no-snoop transactions, ie domain->enforce_cache_coherency (ex. snoop
+control/SNP on Intel), so I meant as typed, the IOMMU maintaining
+coherency even for no-snoop transactions.
+
+That's essentially the case we expect and we don't need to virtualize
+no-snoop enable on the device.
+
+> That is where this series is, it assumes a no-snoop transaction took
+> place even if that is impossible, because of config space, and then
+> does pessimistic flushes.
+
+So are you proposing that we can trust devices to honor the
+PCI_EXP_DEVCTL_NOSNOOP_EN bit and virtualize it to be hardwired to zero
+on IOMMUs that do not enforce coherency as the entire solution?
+
+Or maybe we trap on setting the bit to make the flushing less
+pessimistic?
+
+Intel folks might be able to comment on the performance hit relative to
+iGPU assignment of denying the device the ability to use no-snoop
+transactions (assuming the device control bit is actually honored).
+The latency of flushing caches on touching no-snoop enable might be
+prohibitive in the latter case.  Thanks,
+
+Alex
 
