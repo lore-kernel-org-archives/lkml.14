@@ -1,134 +1,181 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C087F;
-	Tue, 21 May 2024 07:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE8D1E876;
+	Tue, 21 May 2024 07:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716274873; cv=none; b=plSiT53Ly4fNZECSMVfzceRvmbr6Y9ewVXpjZOJCIt7XSQxlyhOAW1qneA+gEr1OD6utyZ99UO+19LJpHxxvMH3GXOCsJ8yh2F0c5jsocN48/bTzXj/4VKr2NoJDtuBVNst8xWsn2J0HrddG6BhQAGGYjZgSH1kkWJn/EOzocuo=
+	t=1716274921; cv=none; b=Cfn/SeNyqwWmpxAQ1ChqxqSPzv/sWA2KW+1v/NKYkI7SVGQkFgxX3KpUfVmtA+geqzSUBHUQI+DLLVXOHBw+5xkMXLwS71lpbbVuloo+kFnKvL8lxaAXNagBCpHP9siEBYSKgy7ymJ3Z233XALWx75GO3oPRPE+oG5jL2W//0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716274873; c=relaxed/simple;
-	bh=HkA7G+WZziI0+WY66bqy3c/uUl0leQntthhE7ntsiok=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=qwmTxdWGXDSK/nY4uu1zjJwMHoDEDCGdvWErzUlVLINEAxCFxYLeZ3R3Yts5oUgYzWGXhjOg+NUHe/542tjOiixUY6pmKZQPCUbsJrcplX1GcjpCpEZaI1MbS4K1wZK6jOQsV4CQ0Tkbe0Adt4vWknltJhGbpycesoSstR44vgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLrxZN6W; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716274921; c=relaxed/simple;
+	bh=aGacCwVy1sJgCqHv8jgzaxIHXbfrWkMkcqTwY7lep7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LR/H6RN+AGsI6jEkjKzlJmrTgoHle+Ouh+5hixa5ide0RzV73y9iW7YLQAmdiOY/35JMr5egM21Dk+OKiWbku8ZDUbMJ1BS+Ure59A/QKFnJtaHHXjUrTm+zEh63RBBZOwslzCHgei5jacpAdsbewUKIJiDJkgzG+MS+Kk9fSXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yH2f3qVG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D+CrOKUZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yH2f3qVG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D+CrOKUZ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLrxZN6W"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e271acb015so64928481fa.1;
-        Tue, 21 May 2024 00:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716274870; x=1716879670; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UkWR+t4coTvUfqKps9eZBaaz7b4Ay7sWZdC6HnQxB+Y=;
-        b=XLrxZN6WHCjRXtbKf6ynCl5u5U0kGOwmPWG7zrO8Z7rkGdGkurKHBVBt0MmIU4Ekxu
-         kW1MQyZupWyIDHVEvSxoWtZkWDFtxFP8q6okW7ruhv6Ie7eWAn1bACtNRgZQWIJybH8+
-         zQSAfPvaQMnUfKko3slutqgEUrufJWt7k2VJVIr51pjYAtiyEkgfcA8Kdfc0w3VP67v9
-         /SzDI1oDEUfYXn1aGBkj6tGaiA17zRMgKI4W0cD5N7WOlQtERLtRfVX2sZ7wuNI43VSt
-         xmL0JkDpwoF/d+sxDVGaUvbNWfm6xd5hb+71KRRKxEDZ8A3ki2cyEeapmaGw7vpsM4Ku
-         upZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716274870; x=1716879670;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UkWR+t4coTvUfqKps9eZBaaz7b4Ay7sWZdC6HnQxB+Y=;
-        b=CT5T1PGZWnqT04T+6v/LKl8SR188AtT0i3ZdxyvGPopd7iQrwpJEzTzP3xngmrVEt4
-         KVqzXCIlFkzLoZxYbv9P6dfB6XVBkQ9Sdq6YtfAhcefAXIZihnXB0DOirKBkghbqT/ia
-         hR5RrzWJPlL6389M0vlSb9TBT1p6agHeYGn0yqkPVpf6ys7Q/Q11BUkfyHiUFeX0WrzW
-         jaJER31Rmo0dcLWPpKZJ4vqtRh0eifYyjDhtu3nDbYuan/9nWuw+NDi6CSTypEBErTM2
-         KNv9yHIFEyVDcRsFZNKMTu+muFWKZZnyJrnlLd2jukwEHij5ouyHYKWPBA2gTEza7QVX
-         QMNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnSBN6rdabwvQW43eMXefNpbaiC3hknYc6c81QGAtnlb56A/5TrL0KmiiOluyDdy+mS6XPc8J/kFwUpo8g0OjvGGbAloXbu+mdQwY+UQCymxwFWuJvQSCw27HNGt/gzEZTLoDEu8suh4ls3D4=
-X-Gm-Message-State: AOJu0YzRdDdijShNIYrSMOwAutluwu0w8/yeYgjxrxqbhHqITpNE7FTt
-	mQYBGBLBCAmNeORARx4kVNnZelnW+/b7/jg9r4kYtW9WoiCdinG50uhqWg==
-X-Google-Smtp-Source: AGHT+IGMUIWoeq0jhoFs/GRtfBhQ/rk6jS/l8R79/kT9O7NdrOKMHEpwVp27euETugMllwP1USmcSA==
-X-Received: by 2002:a2e:730b:0:b0:2dd:409:3b25 with SMTP id 38308e7fff4ca-2e51fd42038mr215262941fa.4.1716274869853;
-        Tue, 21 May 2024 00:01:09 -0700 (PDT)
-Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42012a025dbsm351827435e9.23.2024.05.21.00.01.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 00:01:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yH2f3qVG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D+CrOKUZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yH2f3qVG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D+CrOKUZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8B1125BF17;
+	Tue, 21 May 2024 07:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716274918; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vfwNeirqJErZbK+9uvkbq+97VsJL1e7zcTxFG4saEj8=;
+	b=yH2f3qVG8nLYLNx9u1imARwL2LjRJgomwkLYfnsdOHlpEXEs/696DEqd3LInz7RSo+0eCD
+	AardD1TtJhL4QUHHO1ezR+wlyijMZxCEGdypAn8SdZIEap3+zUFAen4Obcx8T5H2oRpOQk
+	lv08KVa2SZtnHXM9P70JtfXlXcQnyOk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716274918;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vfwNeirqJErZbK+9uvkbq+97VsJL1e7zcTxFG4saEj8=;
+	b=D+CrOKUZlwWuQXrpqq6BtzpeILUBNp1rJiHYF7CBffkiQ+0tM5lTzezG/onZQ0PL5lKUSw
+	GED5gg6bobS18ZAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yH2f3qVG;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=D+CrOKUZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716274918; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vfwNeirqJErZbK+9uvkbq+97VsJL1e7zcTxFG4saEj8=;
+	b=yH2f3qVG8nLYLNx9u1imARwL2LjRJgomwkLYfnsdOHlpEXEs/696DEqd3LInz7RSo+0eCD
+	AardD1TtJhL4QUHHO1ezR+wlyijMZxCEGdypAn8SdZIEap3+zUFAen4Obcx8T5H2oRpOQk
+	lv08KVa2SZtnHXM9P70JtfXlXcQnyOk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716274918;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vfwNeirqJErZbK+9uvkbq+97VsJL1e7zcTxFG4saEj8=;
+	b=D+CrOKUZlwWuQXrpqq6BtzpeILUBNp1rJiHYF7CBffkiQ+0tM5lTzezG/onZQ0PL5lKUSw
+	GED5gg6bobS18ZAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6B8F213A1E;
+	Tue, 21 May 2024 07:01:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fka0F+VGTGZjDQAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 21 May 2024 07:01:57 +0000
+Message-ID: <f54c770c-9a14-44d3-9949-37c4a08777e7@suse.de>
+Date: Tue, 21 May 2024 09:01:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 21 May 2024 09:01:08 +0200
-Message-Id: <D1F4NY5F73YD.1T55A9QAAA1N@gmail.com>
-Subject: Re: [PATCH] wifi: cfg80211: Lock wiphy in cfg80211_get_station
-From: "Nicolas Escande" <nico.escande@gmail.com>
-To: "Remi Pommarel" <repk@triplefau.lt>, "Johannes Berg"
- <johannes@sipsolutions.net>
-Cc: "Antonio Quartulli" <antonio@open-mesh.com>,
- <linux-wireless@vger.kernel.org>, <b.a.t.m.a.n@lists.open-mesh.org>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <983b24a6a176e0800c01aedcd74480d9b551cb13.1716046653.git.repk@triplefau.lt>
-In-Reply-To: <983b24a6a176e0800c01aedcd74480d9b551cb13.1716046653.git.repk@triplefau.lt>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
+ and request layer.
+Content-Language: en-US
+To: Nitesh Shetty <nj.shetty@samsung.com>, Jens Axboe <axboe@kernel.dk>,
+ Jonathan Corbet <corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>,
+ Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: martin.petersen@oracle.com, bvanassche@acm.org, david@fromorbit.com,
+ damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
+ nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+ <CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
+ <20240520102033.9361-3-nj.shetty@samsung.com>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240520102033.9361-3-nj.shetty@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,acm.org,fromorbit.com,opensource.wdc.com,samsung.com,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 8B1125BF17
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
 
-On Sat May 18, 2024 at 5:50 PM CEST, Remi Pommarel wrote:
-> Wiphy should be locked before calling rdev_get_station() (see lockdep
-> assert in ieee80211_get_station()).
->
-> This fixes the following kernel NULL dereference:
->
->  Unable to handle kernel NULL pointer dereference at virtual address 0000=
-000000000050
->  Mem abort info:
->    ESR =3D 0x0000000096000006
->    EC =3D 0x25: DABT (current EL), IL =3D 32 bits
->    SET =3D 0, FnV =3D 0
->    EA =3D 0, S1PTW =3D 0
->    FSC =3D 0x06: level 2 translation fault
->  Data abort info:
->    ISV =3D 0, ISS =3D 0x00000006
->    CM =3D 0, WnR =3D 0
->  user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000003001000
->  [0000000000000050] pgd=3D0800000002dca003, p4d=3D0800000002dca003, pud=
-=3D08000000028e9003, pmd=3D0000000000000000
->  Internal error: Oops: 0000000096000006 [#1] SMP
->  Modules linked in: netconsole dwc3_meson_g12a dwc3_of_simple dwc3 ip_gre=
- gre ath10k_pci ath10k_core ath9k ath9k_common ath9k_hw ath
->  CPU: 0 PID: 1091 Comm: kworker/u8:0 Not tainted 6.4.0-02144-g565f9a3a791=
-1-dirty #705
->  Hardware name: RPT (r1) (DT)
->  Workqueue: bat_events batadv_v_elp_throughput_metric_update
->  pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
->  pc : ath10k_sta_statistics+0x10/0x2dc [ath10k_core]
->  lr : sta_set_sinfo+0xcc/0xbd4
->  sp : ffff000007b43ad0
->  x29: ffff000007b43ad0 x28: ffff0000071fa900 x27: ffff00000294ca98
->  x26: ffff000006830880 x25: ffff000006830880 x24: ffff00000294c000
->  x23: 0000000000000001 x22: ffff000007b43c90 x21: ffff800008898acc
->  x20: ffff00000294c6e8 x19: ffff000007b43c90 x18: 0000000000000000
->  x17: 445946354d552d78 x16: 62661f7200000000 x15: 57464f445946354d
->  x14: 0000000000000000 x13: 00000000000000e3 x12: d5f0acbcebea978e
->  x11: 00000000000000e3 x10: 000000010048fe41 x9 : 0000000000000000
->  x8 : ffff000007b43d90 x7 : 000000007a1e2125 x6 : 0000000000000000
->  x5 : ffff0000024e0900 x4 : ffff800000a0250c x3 : ffff000007b43c90
->  x2 : ffff00000294ca98 x1 : ffff000006831920 x0 : 0000000000000000
->  Call trace:
->   ath10k_sta_statistics+0x10/0x2dc [ath10k_core]
->   sta_set_sinfo+0xcc/0xbd4
->   ieee80211_get_station+0x2c/0x44
->   cfg80211_get_station+0x80/0x154
->   batadv_v_elp_get_throughput+0x138/0x1fc
->   batadv_v_elp_throughput_metric_update+0x1c/0xa4
->   process_one_work+0x1ec/0x414
->   worker_thread+0x70/0x46c
->   kthread+0xdc/0xe0
->   ret_from_fork+0x10/0x20
->  Code: a9bb7bfd 910003fd a90153f3 f9411c40 (f9402814)
->
-> Fixes: 7406353d43c8 ("cfg80211: implement cfg80211_get_station cfg80211 A=
-PI")
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+On 5/20/24 12:20, Nitesh Shetty wrote:
+> We add two new opcode REQ_OP_COPY_DST, REQ_OP_COPY_SRC.
+> Since copy is a composite operation involving src and dst sectors/lba,
+> each needs to be represented by a separate bio to make it compatible
+> with device mapper.
+> We expect caller to take a plug and send bio with destination information,
+> followed by bio with source information.
+> Once the dst bio arrives we form a request and wait for source
+> bio. Upon arrival of source bio we merge these two bio's and send
+> corresponding request down to device driver.
+> Merging non copy offload bio is avoided by checking for copy specific
+> opcodes in merge function.
+> 
+> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
+> ---
+>   block/blk-core.c          |  7 +++++++
+>   block/blk-merge.c         | 41 +++++++++++++++++++++++++++++++++++++++
+>   block/blk.h               | 16 +++++++++++++++
+>   block/elevator.h          |  1 +
+>   include/linux/bio.h       |  6 +-----
+>   include/linux/blk_types.h | 10 ++++++++++
+>   6 files changed, 76 insertions(+), 5 deletions(-)
+> 
+I am a bit unsure about leveraging 'merge' here. As Bart pointed out, 
+this is arguably as mis-use of the 'merge' functionality as we don't
+actually merge bios, but rather use the information from these bios to
+form the actual request.
+Wouldn't it be better to use bio_chain here, and send out the eventual
+request from the end_io function of the bio chain?
 
-Reviewed-by: Nicolas Escande <nico.escande@gmail.com>
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+
