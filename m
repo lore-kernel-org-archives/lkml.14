@@ -1,91 +1,105 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261227F48D
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 17:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35FC7F48D;
+	Tue, 21 May 2024 17:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716312986; cv=none; b=s8Yhiy7pF1w68wqLvyk9iC4zG8A1ZvcpaPRF+gGoHH9mL1zy6Bqr8IuN8x8rZer0GhuUsjFJQg7w6P6lAyajwR64wSlRsPVYoAONbSV0DeCEFEoJ20PGXZZUZl8SThC/xo7Lt4zAkHIY+63322u3blxnrAyKpF0VtaEU/1qZ5fI=
+	t=1716312990; cv=none; b=ttkvjaMdwtR3iqZy8SCD1ND49CgOT4++r3PgJJI1I9hSfPOHmMf+pvaSpNAPuq+iFvbuVJsd7LDrPq22p6W1rle1OxMlru2L8Bww0n3jEAGDmjfXoaFpQpST016jvpbZ0RjtFDAKzJ7wbe2UDdYT/g7qXRxzz704YrmXAX4pxWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716312986; c=relaxed/simple;
-	bh=8Gli0BGCzmpOJS0PeIquJpQ2yCEw7IsocVvUgPq5HIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=celW5rqRSUEK2xCEbKZRwTH8vm1T9eI45B+NSleIt/sTbi5PXnRnJlRjECJDlmpOizNYoUoD8wVKSL4y9NxeSF08PaqboxdXPUmVBqQ5yywuayYy2Q3WUKenrt6uNqIxdHAytEdr7Vb+lgPS+ibqVR8MGybWvYFL546VlGJd7OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xiRjkSxx; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1716312990; c=relaxed/simple;
+	bh=UUgYo1pJjsln1cMSgisDH1/jsYW8CqI5x6WXoM4b6NE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pvuohXim8vj1nyKe2hruwtcpj5NBKbnN3F0RUFHEMzqPq5a6TULyguDfTNcQNB4zB4PRpHhLGkmhs/RSrsgHwzbX2+2fBLfo8gV2CfdbLmmTVQ9yqzPvk3jqKHaFzCne/HiJBberjKVCdf4GX2iWe8mSLgpyTQkamHQ1bW56qqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRiFGX5Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xiRjkSxx"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e576057c56so46993511fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716312981; x=1716917781; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aPgEx3GtMaUfzrhotDmNS7q39kZcogdON2mF0DZp2xw=;
-        b=xiRjkSxx73C3hOiRXqZTf4L5j7/0PR8qOcyv0OTaAG/1XUEh/hyRWCCqJEbeq1ZJMC
-         W1zAN/YGlsmIzzL8Xd9kXJqN1o4RF6QaVgBUbxrGhanw5akAmHigab7seIp7W1p/Qw1e
-         1jr/txsjUEX2qo3PfPjPupXxDmSbdFbpAFgrav5vwbAdQINonmhtSCZyrYYlM04v7Hkh
-         683yliHiaOxRA6FgIjf/nObTo4YFGf+F8jqHKcCFNVug3K4XBFkmiHyCqBQLW645FcjP
-         tbl5pG4rij1VwHDatzdmZNpKG+VhBKx56MTr2SgP4O9CCPiPQagCBWWsgGlQM4PZrjjM
-         iXgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716312981; x=1716917781;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aPgEx3GtMaUfzrhotDmNS7q39kZcogdON2mF0DZp2xw=;
-        b=pEC6a5zfD3fmkVspEdAmAoZLoI6IM3RKL8/yfo5TeNcKBp3OiE5GlWGtiTfcFH1CBj
-         UYlk1IDUNG8xHKRH+f7J8yeUEGj6xqiqcLDLGqyEUTQV+XeowC++IlyHfXifhjTuLi0C
-         uluxhxB4PU6Kws5NSXbVXulCkzcxu/xlmpe5KsXohaiLnHCt5KgawjF1USJJpZeNqSvP
-         4711+AIGf0KRd61M2t+25TgaB3V/PmV/Gb0reUgKrajb7r/lpbtfO2AJqXBBUp1Y0H4m
-         oIUbLGF4kKbAI3QciPSG+2rz/GGacJb627vJPFx9dKNW0SEWxc+JfdMjuXicfIPOBv0j
-         jbQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrfVcBN02Rau4BYhq7SsKzbGTJs8soa/hmnc1DqJhb/txFv/uIBSXZpJUXt0aWxXa/5W80oRIpp0h4W7reuc+1bc1+3IJL9FXKyqe2
-X-Gm-Message-State: AOJu0Yww1dhwJ66uNyBAfYEE0VipZS1jMZAoOtpEO/N+y5qiHTtCxe95
-	Za808t05IBETiPecSn8pyCDSKqT4VBzm0Gp95VgIIBW1jmuJ+nijHF47r7c0nuI=
-X-Google-Smtp-Source: AGHT+IFjJk9ErXRZ9mgIVn9Q70lSKsJgFXX9/mhVTn1VEkxcNEDE0qL/KX6kDba10kEFw4rs+oNWEg==
-X-Received: by 2002:a2e:9b19:0:b0:2e8:60e2:3c8d with SMTP id 38308e7fff4ca-2e860e242f2mr6435921fa.12.1716312981380;
-        Tue, 21 May 2024 10:36:21 -0700 (PDT)
-Received: from [192.168.1.172] ([93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baacfc6sm32606201f8f.72.2024.05.21.10.36.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 10:36:21 -0700 (PDT)
-Message-ID: <a2ef92ad-7704-49d2-9cb7-783047e5676d@baylibre.com>
-Date: Tue, 21 May 2024 19:36:20 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRiFGX5Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36CCC4AF0A;
+	Tue, 21 May 2024 17:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716312989;
+	bh=UUgYo1pJjsln1cMSgisDH1/jsYW8CqI5x6WXoM4b6NE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FRiFGX5Y+SAZYXmQNh1/2GZKEhPgQwEK78NgJS1H2n/EqyuF9+aA0v2OMp7eYVYBe
+	 qhFyV37j1zZE0XMIZZoRrfvHw3WaMHPBuER8PUpDmXEQBNt8+HGDWeTzgqfXRKrF4A
+	 tTu3xYnBEd7PFj2LmrwrXSx8KKlaDclDK3lRMjnf+OvJ/Fma+15J6b51g/arzFWbTD
+	 Qj+WmtWlJdmu7A0t1EvQEODSAIlxm/GjssM3WduZeeIm7dIvPoxzwQr3BWNvrkvryl
+	 wvlIceP3l25SaY0ipwEMhM3AzsePJPDLR+Skcz7zsw4UBMjVQkjHPSgeKFI71DOI61
+	 NHZ2wTBc+TeWQ==
+Date: Tue, 21 May 2024 10:36:27 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>,
+	Thomas Renninger <trenn@suse.de>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v6 01/49] crypto: x86/aes-xts - Switch to new Intel CPU
+ model defines
+Message-ID: <20240521173627.GA50837@sol.localdomain>
+References: <20240520224620.9480-1-tony.luck@intel.com>
+ <20240520224620.9480-2-tony.luck@intel.com>
+ <20240521172202.GFZkzYOh0pET7B1SFW@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: mfd: mediatek,mt8195-scpsys: add
- mediatek,mt8365-scpsys
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- MandyJH Liu <mandyjh.liu@mediatek.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240518211159.142920-1-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <20240518211159.142920-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240521172202.GFZkzYOh0pET7B1SFW@fat_crate.local>
 
-Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+On Tue, May 21, 2024 at 07:22:02PM +0200, Borislav Petkov wrote:
+> + Herbert as an FYI that I'll pick up this one and the next for 6.10 as
+> it is a fix for a regression that got discovered.
+> 
+> Thx.
+> 
+> On Mon, May 20, 2024 at 03:45:32PM -0700, Tony Luck wrote:
+> > New CPU #defines encode vendor and family as well as model.
+> > 
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >  arch/x86/crypto/aesni-intel_glue.c | 16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/arch/x86/crypto/aesni-intel_glue.c b/arch/x86/crypto/aesni-intel_glue.c
+> > index 5b25d2a58aeb..ef031655b2d3 100644
+> > --- a/arch/x86/crypto/aesni-intel_glue.c
+> > +++ b/arch/x86/crypto/aesni-intel_glue.c
+> > @@ -1223,14 +1223,14 @@ DEFINE_XTS_ALG(vaes_avx10_512, "xts-aes-vaes-avx10_512", 800);
+> >   * implementation with ymm registers (256-bit vectors) will be used instead.
+> >   */
+> >  static const struct x86_cpu_id zmm_exclusion_list[] = {
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_SKYLAKE_X },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_ICELAKE_X },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_ICELAKE_D },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_ICELAKE },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_ICELAKE_L },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_ICELAKE_NNPI },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_TIGERLAKE_L },
+> > -	{ .vendor = X86_VENDOR_INTEL, .family = 6, .model = INTEL_FAM6_TIGERLAKE },
+> > +	X86_MATCH_VFM(INTEL_SKYLAKE_X,		0),
+> > +	X86_MATCH_VFM(INTEL_ICELAKE_X,		0),
+> > +	X86_MATCH_VFM(INTEL_ICELAKE_D,		0),
+> > +	X86_MATCH_VFM(INTEL_ICELAKE,		0),
+> > +	X86_MATCH_VFM(INTEL_ICELAKE_L,		0),
+> > +	X86_MATCH_VFM(INTEL_ICELAKE_NNPI,	0),
+> > +	X86_MATCH_VFM(INTEL_TIGERLAKE_L,	0),
+> > +	X86_MATCH_VFM(INTEL_TIGERLAKE,		0),
+> >  	/* Allow Rocket Lake and later, and Sapphire Rapids and later. */
+> >  	/* Also allow AMD CPUs (starting with Zen 4, the first with AVX-512). */
+> >  	{},
+> > -- 
 
-On 18/05/2024 23:11, Krzysztof Kozlowski wrote:
-> Add a new mediatek,mt8365-scpsys compatible, for the SCPSYS syscon block
-> having power controller.  Previously the DTS was re-using SYSCFG
-> compatible, but that does not seem right, because SYSCFG does not have
-> children.
+Reviewed-by: Eric Biggers <ebiggers@google.com>
 
--- 
-Regards,
-Alexandre
+- Eric
