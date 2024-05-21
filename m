@@ -1,147 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFD553E0A
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C5D4F88A;
+	Tue, 21 May 2024 07:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716276797; cv=none; b=hKMlx0FTGQLoqIWWDHwAKZ4X/yjdl377gdbsoRWgMPJcXqXQm+SD2BMliQLv1UjSz6ULSQuzDl2wu6P+cz2OswcujaDd6rrii6VQqESW0ek14f0Zgvsf5BuOQr2LAO81kRQgiA4zYaPJ8l0ZsslY51C/IAx0FHkmOqqHd99hYIA=
+	t=1716276856; cv=none; b=PR5XKMYh+smNqUTJIuZ4N4F7kv4NqWUuQ09n3VeoZIfB0jKEAbg9FAKHcECDnbAtCUBbHz6GuqEiM0QCr/aiXTyi5MnpGGlSIvWwXc79TkNUg8mpGY1to/jOP2kmaiJmKApT/qOql/XtuUcaMD4hbsO64oqzM3Xw4h8tEqusgJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716276797; c=relaxed/simple;
-	bh=DvwhrxxsccQSrw9QTfMS9cC8aa8Ng49TDT7sFzlr740=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+SgCjDUzo40xwyRQJPgfC6l/0ehA7nj4A77JS5Yu/g1iIgODWdJj/WXjS9lYOgB2QyL0JaFaBg95Fr0CjFbM3UUD0keIYDf9uejfV+BtgqUyqDuIlkGciU7fPOjvEqCmq2XwD6vkOnEk5h10rmV+81HmPd2aXZ6f/XRcmIrnLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Degd8G0m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716276856; c=relaxed/simple;
+	bh=cCUHYwHUUcU73ns+lR3zvunoCAM8T5MxFs0Kcv5o/qU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uXAi15IwpRR0lfIyrbPnUfjug9+PTy90LxYKWKMhhr9FEEc1YfKs4Fe/6gOKJLHjQVv6XiACQD4iLbuVzKM30IJQ1e1uPwU1T5T9izmRmUO+cHXys3ob9EMMVm+CkniDnd/ii3RGE/gah1pZFbPUu3lLvGTuh2O6Ekuo4PZWtOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=GaPj7+s4; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Degd8G0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996B0C4AF07;
-	Tue, 21 May 2024 07:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716276797;
-	bh=DvwhrxxsccQSrw9QTfMS9cC8aa8Ng49TDT7sFzlr740=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Degd8G0mcC24obZPCioMA8GZLLkhmrbvq97vKhDminCEXOieMRtSfj16TjW1afYlu
-	 JeTfVFrYSgrfjhFw220IL/rvqfUbvGQts5I0aO6/hFOJ+vNhKT4aR4t9e6SvweYZms
-	 oZFmWsxKcB0LWLo2Zs9SdI1fAsBf6gAzSfE4hr2mDhNJVzHbzs1EL1p5oicA1hdfGg
-	 BCLD+XzW7sUumjHEQ6STLt4n7XXY6mChMkapkkGETW40yvV9WEUj8+z9cvHCYSrXSz
-	 iLRvo/R3UleCpZ14PLwqlumuhWfKzqpebWuQGZO+IIy+9rvbSRS+8Yvy4LDdp8LF1I
-	 1lyDUZaXn42iw==
-Date: Tue, 21 May 2024 10:31:31 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jaewon Kim <jaewon31.kim@samsung.com>
-Cc: "vbabka@suse.cz" <vbabka@suse.cz>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>,
-	"tkjos@google.com" <tkjos@google.com>
-Subject: Re: [RESEND PATCH 00/10] memblock: introduce memsize showing
- reserved memory
-Message-ID: <ZkxN0yQ7Fb0X26hT@kernel.org>
-References: <20240521023957.2587005-1-jaewon31.kim@samsung.com>
- <CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p6>
- <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GaPj7+s4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716276833; x=1716881633; i=markus.elfring@web.de;
+	bh=zn+hY6AnEP5z1c/lSffS9Qqf6QfYpj29UvfNSHzxSTE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=GaPj7+s4Y4soiqVjtQ9sI9CnLMelXN9004f6A3AlWtjQSY3WXWjtX705DUkEwhiT
+	 YkGP42UWqPrBuIXZQ8agTJyuzct0dGcK23qsDfFxYadonVcHfqgCNHKpYXRmmgj7r
+	 Z4/wiTG60IqfGfkgaDLhu1W3HXXokF7RcgIVIlK9bcZWc2ajhcZ//e+5N/9aTH40E
+	 SxO1X6pOKzt+YbbtOb9nguNcWOgGrCrrekM21TLELzO2jMbDNwOviithS7fshy/VQ
+	 Boa7J8zI2XZXfpww2iYlTFJuQM00n43P6PzUOmlIZ+nDKdQ1jAWb7t/sYpa6/17N5
+	 UDih9Fl8blmRVeuI+Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2BMA-1sX3gU3Zxm-013Zxh; Tue, 21
+ May 2024 09:33:52 +0200
+Message-ID: <7ffeb91e-97b7-4f60-851e-120062b63c17@web.de>
+Date: Tue, 21 May 2024 09:33:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/13] a2b: add A2B driver core
+To: =?UTF-8?Q?Alvin_=C5=A0ipraga?= <ALSI@bang-olufsen.dk>,
+ devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-clk@vger.kernel.org, kernel-janitors@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Alvin_=C5=A0ipraga?=
+ <alvin@pqrs.dk>, Emil Abildgaard Svendsen <EMAS@bang-olufsen.dk>,
+ Andi Shyti <andi.shyti@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jaroslav Kysela <perex@perex.cz>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Takashi Iwai <tiwai@suse.com>
+References: <20240517-a2b-v1-1-b8647554c67b@bang-olufsen.dk>
+ <feb239b1-7a14-479a-87f2-dcbf9966bffd@web.de>
+ <alv4rqrrnjqw3fb5vsw5r4f6lv7ymvuatcqovt7ddxi5ich5on@aan7wybzrzru>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <alv4rqrrnjqw3fb5vsw5r4f6lv7ymvuatcqovt7ddxi5ich5on@aan7wybzrzru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:e69jBfqsU7V39J0EAOpZ3TXV931/rCtohLs+eKf1KNp+TNPo7nQ
+ GJHnumpYuZbexnCSr5vp0W59q25zc2+d/sOVIopBIR0W6Q+B8qJo7CmtIpggJLkEkqoUZuQ
+ aBfBvv2vFZkZzSMQDpskzUiKAs+lEiSx3ScFjRTxjWfH6UmADO/T3plH57Tt9yduDMEuNYL
+ tVgMMQiuusWrDzxYSxzTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:T4sx1G3BKec=;uaEzddfo7N87U07ND12zqMDiS0H
+ SslBAkamtrtzREOt5rDtiUA+8m+GwUYvQJ1Lpe09X0gslOjpIFS3zI5u5+x994mMA2MO1t36O
+ xHjUsLL+vIyH+YuOXISvhWmHdxW+A5GZV7JhqnZNSMYjIu4PSmn5OU+yNXC6OrYRPaBkcEWKp
+ 5XOPYZujcZchs5DVvkO8ce/V7/ogeQ6Na+hnN2V8ArbcY8M1GRxC2SdrvwWa+YRY2uQ+nfUDK
+ Yk7Qep4d5kLRY0LJD75Ssh43aP3tFvvKcgwxqsm3KSLja0L2isHcNVjFEf3iwb7Eq4E6QnXUo
+ 2dEN4XfVtDpH8gtohQh2xqRVyrdq+TXwoHw0vGZOBKRJgBmFPbpaOticmuyW1qLl1Z96ymp07
+ xNxRLqGU1ka32jDWYNlUXpbQVq52dtNAgZLS3hzOXLU9UFVjRcgBfzEoke7ui1k0FVFomINJI
+ LJOHeQgxCCSlGyVc1oCkenQZx/6EUFZsP0lHAdPerpPxvhloFviSsub1j7lKZburzyKVgZ8ly
+ 9TzFPQ6ueOwX7gU0Bh73XrfFfwMUN3LTfqNcKfuj1mqe+RB+eFEddAUaRnOBjDBbWD5qnhyea
+ T/fjDuEO49tfpTmsEfgOnN13e5cOgR3FNkZ/4Ows0M6PmroK+K0aVw2O6QLg0rc3jM+kz1Cxa
+ Fqs4BE4v2ZxUhgPZzemd1gzclXKcdmT+LgkL6d5v1PnaR7nmIj7u7dFc7qy1209S2V439e7TZ
+ BQRrTQLQDeEEtK/jjXyiWwbDI41vrgk3dU0MHh0NUR2XCsx46jck7P1VSuokOXVEt2W+aK/cu
+ bk1tv4m1DDfrKxGCy5ANcgTKpdMRD/NltPoLsFujTV0A4=
 
-On Tue, May 21, 2024 at 11:53:29AM +0900, Jaewon Kim wrote:
-> >--------- Original Message ---------
-> >Sender : 김재원 <jaewon31.kim@samsung.com>System Performance Lab.(MX)/삼성전자
-> >Date   : 2024-05-21 11:40 (GMT+9)
-> >Title  : [RESEND PATCH 00/10] memblock: introduce memsize showing reserved memory
-> >?
-> >Some of memory regions can be reserved for a specific purpose. They are
-> >usually defined through reserved-memory in device tree. If only size
-> >without address is specified in device tree, the address of the region
-> >will be determined at boot time.
-> >
-> >We may find the address of the memory regions through booting log, but
-> >it does not show all. And it could be hard to catch the very beginning
-> >log. The memblock_dump_all shows all memblock status but it does not
-> >show region name and its information is difficult to summarize.
-> >
-> >This patch introduce a debugfs node, memblock/memsize, to see reserved
-> >memory easily.
-> >
-> >Here's an example
-> >
-> >$ cat debugfs/memblock/memsize
-> >
-> >0x0000000000000000-0x0000000000000000 0x02000000 (?  32768 KB )?  map reusable linux,cma
-> >0x0000000000000000-0x0000000000000000 0x01000000 (?  16384 KB )?  map reusable vxxxxx
-> >...
-> >0x0000000000000000-0x0000000000000000 0x004e0000 (? ? 4992 KB ) nomap unusable unknown
-> >0x0000000000000000-0x0000000000000000 0x00400000 (? ? 4096 KB ) nomap unusable cxxxxx
-> >0x0000000000000000-0x0000000000000000 0x00e00000 (?  14336 KB ) nomap unusable gxxxxx
-> >
-> >Reserved? ? : 1223856 KB
-> > .kernel? ? :? 275208 KB
-> >? .text? ?  :?  16576 KB
-> >? .rwdata?  :? ? 1963 KB
-> >? .rodata?  :?  11920 KB
-> >? .bss? ? ? :? ? 2450 KB
-> >? .memmap?  :? 186368 KB
-> >? .etc? ? ? :?  55933 KB
-> > .unusable? :? 948648 KB
-> >System? ? ? : 11359056 KB
-> > .common? ? : 10306384 KB
-> > .reusable? : 1052672 KB
-> >Total? ? ?  : 12582912 KB ( 12288.00 MB )
-> >
-> >Jaewon Kim (10):
-> >? memblock: introduce memsize showing reserved memory
-> >? memblock: detect hidden memory hole size
-> >? memblock: handle overlapped reserved memory region
-> >? memblock: take a region intersecting an unknown region
-> >? memblock: track memblock changed at early param
-> >? memblock: recognize late freed size by checking PageReserved
-> >? memblock: track kernel size on memsize
-> >? memblock: print memsize summary information
-> >? memblock: print kernel internal size
-> >? memblock: support memsize reusable to consider as reusable
-> >
-> > drivers/of/fdt.c? ? ? ? ? ?  |? 11 +
-> > drivers/of/of_reserved_mem.c |? 12 +-
-> > include/linux/memblock.h? ?  |? 29 ++
-> > init/main.c? ? ? ? ? ? ? ? ? |? 13 +-
-> > kernel/dma/contiguous.c? ? ? |?  9 +-
-> > mm/Kconfig? ? ? ? ? ? ? ? ?  |? 16 ++
-> > mm/memblock.c? ? ? ? ? ? ? ? | 502 ++++++++++++++++++++++++++++++++++-
-> > mm/mm_init.c? ? ? ? ? ? ? ?  |?  6 +-
-> > mm/page_alloc.c? ? ? ? ? ? ? |? 10 +-
-> > 9 files changed, 597 insertions(+), 11 deletions(-)
-> >
-> >-- 
-> >2.25.1
-> 
-> Hello Mike 
-> 
-> This is actually RESEND as it was introduced 2 years ago.
-> Please refer to https://lore.kernel.org/linux-mm/YkQB6Ah603yPR3qf@kernel.org/#t
-> 
-> > But you never provided details about *why* you want this information exposed.
-> 
-> For your question, I'd like to say ;
-> We can see the same format and exact information between different version of kernel status.
-> 
-> 1) Internally we can check if the reserved memory changes.
-> 2) Externally we can communicate between chipset vendors and OEM, with a same format.
+>> =E2=80=A6
+>>> +++ b/drivers/a2b/a2b.c
+>>> @@ -0,0 +1,1252 @@
+>> =E2=80=A6
+>>> +static int a2b_bus_of_add_node(struct a2b_bus *bus, struct device_nod=
+e *np,
+>>> +                            unsigned int addr)
+>>> +{
+>> =E2=80=A6
+>>> +     node =3D kzalloc(sizeof(*node), GFP_KERNEL);
+>>> +     if (IS_ERR(node))
+>>> +             return -ENOMEM;
+>>
+>> Please improve the distinction for checks according to the handling of =
+error/null pointers.
+>
+> Right, I think it returns NULL on error.
 
-Why the existing debugfs interface is not sufficient?
- 
-> This helps us to communitcate well, to easily detect changes or just to see differences.
-> 
-> Jaewon Kim
-> 
+Do you see possibilities to reduce =E2=80=9Cconfusion=E2=80=9D about the p=
+roperties of such a programming interface
+any further?
+https://elixir.bootlin.com/linux/v6.9.1/A/ident/kzalloc
 
--- 
-Sincerely yours,
-Mike.
+Regards,
+Markus
