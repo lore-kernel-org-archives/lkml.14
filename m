@@ -1,128 +1,108 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B0F6FDC
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 04:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EB43D556
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 04:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716264158; cv=none; b=BCQcRNOUulnyfJDAubi10Ch5gro32lX6KaNL6tx3BiZq8h4rCOsNDU3qDIyC4JUSoPNsHcOa6t07IJmpMJ8tJkoV6DUtNvdtPgyPkjjLN5cg5y2C0H/tYTgj24hwQ6Mym2FuhvQlKJ/xeZvyT2Xp+oQs4oCew1yIy2X4jYbznnI=
+	t=1716264178; cv=none; b=l7my8olzSLwGPdhbQ8a5B+YWNh1gRlnxP8Zl5SwwXxtBQicMxirrFUYCe2RJIMxdZSuUartsGO8X6l4VNmyad8ek3+BVqhIFxX+o0Dp+nqGPEzW381ILogujKmdK/DnOjWPua1YEFLMUTr8JbPKAQgT2G5DyCKbqSgSGbdrvPbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716264158; c=relaxed/simple;
-	bh=jJbxgLd+YWO2Lg+/N7DnuDy51HfRFPtkPt4nTh+4MBA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QOJYXPOVuAALyUwqD4O8FtOllmJQCyQUncQEgdLu4SDd5dbQ7/GZz21P+jLC6lad7+BFsnVhTRGiHtlSSH4+/2wsb5FjOIU4KAzb+adHPhvJzx204K6N2fXwVd+LFmzO25jy2auXKSF4h87OwJX8mK6fS1RuBU5nPTzRD0CloSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7da52a99cbdso1380424939f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 21:02:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716264156; x=1716868956;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0yfAWJ5qhF41x1rSSrkKGC+wMZlFsEqb4/oAdzKKOC8=;
-        b=qB8p056NdrOlwStQMrEqjT3qY4OMhR52j4tkn3YsCerqwV0gumVL+eHwtDHwO0SEx+
-         tn04mq9O+HtTfXeEon6S/9FCyikKPfzQr8dt8+yBdJVd3kQO/xUKhbF6pNkYzPjXzKsY
-         v8l0uUZBfe5HCL8DRAWW7+ikQ3jlca8cAgz1k6kiEn/8sNJxYymDrYB5B1OxK7XBzp81
-         30qW8MA1m8t56gySZ4G9Z2Y/uhStyH4cG+Eves6bRXt97cxT9bp8rtP1qzKqSKVJSRGM
-         DZE6EwvaZA36ByMKdrXGamwBQBTubSdJyZqVnbO3V1U2XhhipiOPshbKelXGUqUA6YFm
-         MUxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdMS9i4dREThQh+H+081yzraE4TLoGFxa65FGIu4Vh5YtUqAZ1xsrsNkZh1r48gjlZu4qN6bieFLY+bRsuIDZpxjZrJ5rXA8GLGWOd
-X-Gm-Message-State: AOJu0YzZDKmSre823h3FbhJWc2KgXwkv5XTjZ46OoC9VzJKASqVHrGw5
-	KbgrB0xBvAv934zzrE+K64ao5kVyrQVW6mkWE8/Skz8ERVNKOBTrLqPe/fLakYLCmsA3o38eNN1
-	ZzTjoZBkEIKMvMpsVMKjp6AkhnBPmmAt2/tcB31Hwc9TTzoqf8cL9KXE=
-X-Google-Smtp-Source: AGHT+IEFT/zTHh4X7a2pzSbS/LiikWABh60nqRg30Ez6PJMC0zjbh413k4+WFmwKVpXjOgRUcJEJhKKnczaMTR2/evEVH85mX4Wm
+	s=arc-20240116; t=1716264178; c=relaxed/simple;
+	bh=CWj/6bR4BbPGl9J0wGJExs/1VriTTxHSODfpnk/QI6U=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=iazox/CH2CqW9omBdQ0nA1C9O+EVGWzXAc8NRgL55dGC0rUyIL1z+2pxSKmZ8iYfEt5mkWv2qVETNyv2LHpzOJSsm2ou0RtNOX0mdR7pk3hOcqDRxQBjANDqXJXq7PBwwzBzxCJXgTYixz45annL+aG/EiLydLbmLx3zZ/s/6bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tJx6ToEV; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tJx6ToEV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1716264165; bh=2ZvdINK6wvHC0lJ0GdyeahipLn/enAa0n7oiObPGLFo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=tJx6ToEViqNVOV4cliPihXGLpGUnqBr5DSOJSltRnOE6fvz3t0s9veZg/7p6nhtu+
+	 A4VZ2VHz90F+CZe1RZhZlQLRS4tW4wcDDpz1zUH9SoqA7a/ALXSA1XmHYsGa7DJzXT
+	 lzpn1MeuNiVtn/ynnUvFKl+5qNZYJsh22xqwdD50=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id B582643F; Tue, 21 May 2024 11:45:24 +0800
+X-QQ-mid: xmsmtpt1716263124tdzm6zjxp
+Message-ID: <tencent_FFE5365E9608362A4B7474FF76E567C03C09@qq.com>
+X-QQ-XMAILINFO: MQspGcEBiT+RrGdw47aRNAbM3eFZnTpwqqLHvwcTgCpr6Lqu5VVixyWa9MaRii
+	 +iqOMyb0qfaL4Smaj3FZ0cU0icvwEVvmEDWQ98s6R1VYEe0QLxPOwCQvsg3EHY6NYcQv1YPlGMTV
+	 RcmjUnrbRCCpaIT/6Gv6Yo2F6ZHMvcX257y6qzP0ioLpMWz4X5XSNyxMkU0C00FUjuRwt63kwV4s
+	 CCSPLHPNKa7e8kGBtyqnPxOmd7+ly0oN6ft1NFCaMFiPZuLSZhR+6Jr7aeDYxEpFSz/GQMiuJlvN
+	 ut937rxnz+OquIVBAAf1gy1Fy+OdQqm+F0PgFeSH3K7wv1/VNYV2sMIuljErEL3ftwN/gW2IQcXq
+	 jqAfzQ5ASqSVgUAjWbj/mTAJefd6pndqVvzVjdCxFcc+O529YCSFk+Mtaly7IX8FhPzYS7nMgBtI
+	 wxrirGe97DruIaILHGny3BuDJqOc5eAEnqJkoX1qtkuDB2j5k8mp8Z1zlQdHt07+P8nm96xRDb4U
+	 hLuDmZVZbNJHo7tVystM3jxYDsW1vas6DOJRMk+a95t/kKgYvoW99SibUZTK7MX5CvfWW3L5HIca
+	 VtXCVQx2rYDJyYLNL/hh/UHOJUDoGg22sRMMnX29He4STkCDJ1wNg4yGWCjT3eb+5rzL97tk+LB/
+	 TQ/047dmrIr5oBqAtuw6Jjy1cUpX/YqjhhnNjV+AhXWb/eP2yZse7R4DZUONlgpSDb+4gycmdxBb
+	 FIyCvlvmSc6q0oqrfvZ/5rlWoUVUf2ATVlFYYjX1Y4lXG3WkvLqe1ZXW9s0IueglVjihkhzTe4SS
+	 5L8B9nBxHOIp7MjDNdLU2j12yEsLAetcYf949DyMzr9AFfhdsKnt7CmqvMUgJAl20uanacYfxeso
+	 QpSIlBmXE5QgWfOfiqTdo/Og/tKr1uHMKM2dAwQR2oQ+ygsKrMouUwS060iIEc9ovByLp1mqoHZR
+	 DU6D2tZTo=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+efde959319469ff8d4d7@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hfs?] KMSAN: uninit-value in copy_name
+Date: Tue, 21 May 2024 11:45:24 +0800
+X-OQ-MSGID: <20240521034524.416086-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000037162f0618b6fefb@google.com>
+References: <00000000000037162f0618b6fefb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:7101:b0:488:77ea:f194 with SMTP id
- 8926c6da1cb9f-4895903263emr2233675173.5.1716264156339; Mon, 20 May 2024
- 21:02:36 -0700 (PDT)
-Date: Mon, 20 May 2024 21:02:36 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000612f290618eee3e5@google.com>
-Subject: [syzbot] [wireless?] WARNING in cfg80211_bss_color_notify
-From: syzbot <syzbot+d073f255508305ccb3fd@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, johannes@sipsolutions.net, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+please test uiv in copy_name
 
-syzbot found the following issue on:
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git a5131c3fdf26
 
-HEAD commit:    f6f25eebe05f Merge branch 'wangxun-fixes'
-git tree:       net
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=11696b5c980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bddb81daac38d475
-dashboard link: https://syzkaller.appspot.com/bug?extid=d073f255508305ccb3fd
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f9ec92980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1595fa84980000
+diff --git a/fs/hfsplus/unicode.c b/fs/hfsplus/unicode.c
+index 73342c925a4b..8e97df12375d 100644
+--- a/fs/hfsplus/unicode.c
++++ b/fs/hfsplus/unicode.c
+@@ -234,6 +234,7 @@ int hfsplus_uni2asc(struct super_block *sb,
+ 		}
+ done:
+ 		res = nls->uni2char(cc, op, len);
++		printk("res: %d, cc: %d, op:%p, len: %d, ustrlen: %d, %s\n", res, cc, op, len, ustrlen, __func__);
+ 		if (res < 0) {
+ 			if (res == -ENAMETOOLONG)
+ 				goto out;
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 9c9ff6b8c6f7..cac1cca468d8 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -698,7 +698,7 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
+ 		return err;
+ 	}
+ 
+-	strbuf = kmalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
++	strbuf = kzalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
+ 			XATTR_MAC_OSX_PREFIX_LEN + 1, GFP_KERNEL);
+ 	if (!strbuf) {
+ 		res = -ENOMEM;
+@@ -733,6 +733,7 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
+ 			goto end_listxattr;
+ 
+ 		xattr_name_len = NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN;
++		printk("sb: %p, xnl: %d, %s\n", strbuf, xattr_name_len, __func__);
+ 		if (hfsplus_uni2asc(inode->i_sb,
+ 			(const struct hfsplus_unistr *)&fd.key->attr.key_name,
+ 					strbuf, &xattr_name_len)) {
+@@ -741,6 +742,7 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
+ 			goto end_listxattr;
+ 		}
+ 
++		printk("s:%d, buf:%p, res:%d, sb: %s, xnl: %d, %s\n", size, buffer, res, strbuf, xattr_name_len, __func__);
+ 		if (!buffer || !size) {
+ 			if (can_list(strbuf))
+ 				res += name_len(strbuf, xattr_name_len);
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/10564bcf8b3a/disk-f6f25eeb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6ac9b53e5395/vmlinux-f6f25eeb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/be417a358cca/bzImage-f6f25eeb.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d073f255508305ccb3fd@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 2855 at net/wireless/nl80211.c:19469 cfg80211_bss_color_notify+0x5f6/0x8b0 net/wireless/nl80211.c:19469
-Modules linked in:
-CPU: 0 PID: 2855 Comm: kworker/u8:9 Not tainted 6.9.0-syzkaller-05179-gf6f25eebe05f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-Workqueue: phy3 ieee80211_color_collision_detection_work
-RIP: 0010:cfg80211_bss_color_notify+0x5f6/0x8b0 net/wireless/nl80211.c:19469
-Code: 00 e8 ee b8 b7 fe 48 83 c4 08 89 c1 c1 f8 1f 21 c8 e9 08 fd ff ff e8 09 96 ba f6 90 0f 0b 90 e9 71 fb ff ff e8 fb 95 ba f6 90 <0f> 0b 90 e9 38 fb ff ff e8 ed 95 ba f6 c6 05 46 6f bb 04 01 90 48
-RSP: 0018:ffffc9000ac37aa0 EFLAGS: 00010293
-RAX: ffffffff8adbc735 RBX: 0000000000000000 RCX: ffff88802b693c00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc9000ac37bb0 R08: ffffffff8adbc262 R09: 1ffffffff1f593bd
-R10: dffffc0000000000 R11: ffffffff8af73d80 R12: 1ffff92001586f5c
-R13: ffff888022f48000 R14: ffff888022f48cb0 R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020001700 CR3: 0000000022822000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- process_one_work kernel/workqueue.c:3267 [inline]
- process_scheduled_works+0xa10/0x17c0 kernel/workqueue.c:3348
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3429
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
