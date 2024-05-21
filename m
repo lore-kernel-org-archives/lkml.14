@@ -1,58 +1,58 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2146D1B0
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6AF73539
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716261458; cv=none; b=S8SBRPIxRiB887cse14gQRK3OXTzHOn7TyM28MVwlsOtFC2p1cF7ATeCF1TnTImP8/AXLDoWf04j56U3NmnRxr54mhg9nsGOmWqXWUDX4zjiQ8RAhdBrXf7hXqHCJvwKLmbYUpODcjqj9A3LSAB1uVnBrHWn65Hl72jDLzE9/zw=
+	t=1716261459; cv=none; b=KGE4pLcqWZ00LmTjsSaEmhVENOHssAr6nx8TNWGjzg5VAKdJq55hXDOawCYuQ6ejDKBw0pUjvtHWBrKwU5+w5LX+r1tA1/Ngh87B8QP7n4KzlMM9wWNuHV/jxRVZZ0i8vuyu6x2XckTUCv0BDUaUIqAQenilG+sO7eVxbjWsHWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716261458; c=relaxed/simple;
-	bh=vOlhyRJiwMlcqMkjgh8ZqeWXUxY6D61pDutdGqwl5CY=;
+	s=arc-20240116; t=1716261459; c=relaxed/simple;
+	bh=O1x9lXALRfV3PEXYjxpd9ysMagtz9IVgfLsMeVEQ/yI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t6wo2FzmGAexU3ITN9h1vzomREA5Ofjcx2iH/c97AIBwD/p74ZF3lbwlMuyrLnP8QN5CjhpMAgGk4FHo61VO7ej7lcztOVojgSEX4MKYR+r0Sk0q9l+hJ7P5cCM9/0YuqoDwshjERZaM/6tE6Wy4lh1K84LsJkBcoZs25e8rMz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=JM+FM1Hu; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=Jrg11zzeHpJYIw98wHJBcJbaBAdM1RHuFYPfs2+0Ck3uB0rNlWFRM9IFJzpGfwNC01UltGdxqMVRi2qE+FB8b3ArP9WLaTQIgj3kbc3cZwUCg8/a93rN92w03hYshdlInV//fLZejryh2sJA6EBClFaMbEXvPakW0A956wRU9xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=GlPa6h0m; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="JM+FM1Hu"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1edc696df2bso30589315ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:17:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="GlPa6h0m"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee38966529so24149375ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:17:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1716261456; x=1716866256; darn=vger.kernel.org;
+        d=darkphysics.net; s=google; t=1716261458; x=1716866258; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vIGSQ3C/BdvZT98agea7mQnapaDbDhw1o6G8ocniTTE=;
-        b=JM+FM1HukvOhiVVfpaBzpqrpMhTCy2bh0Monq8xoWuWFx4DKq63gr9YXu3yGvYvMLU
-         3T228LHr/qwuHJdfYP3LPd9RpUyaht/PPXDwDRKPoXKE1gE8q/Fh5SWkGXqan7gf352F
-         KSdYIINB5MAqiotW1VDrmmyGyNYZ568/NsnNF8ubFV1SAW72fkBWvtJowp3XQ7Iq6hYL
-         dEasRh2wl+SPNc/mkYnmJdn8b5EaDFu5sUu7vZaq7fP9cSpRbiOJAh/LwPHTHfXF9uAE
-         Ym321F2b0mmNVlhfUbwZlEyjDhqpuAskfxUqpZrKp2Gs34n5WpkMXi+4yltMR9YpxV1O
-         aWFQ==
+        bh=4fdeEpEPtpWbE5Mh9fqJmFvRworqsEQTxGybJaCMPRk=;
+        b=GlPa6h0mP+AW3aywezI+gwc4M4G/gp1RRjYk6gHzreyZjY4QB8yw66QQV4Bjm9y6dQ
+         So2OJ+nPOZD4F/1J3sDddLO+orVA50cWoXz9t1L2Ivh+MNbTaFSzoMs+sQiR1JB///E4
+         yXR0oai9NM+mtlmOQ+Qz1B0nHsCXG03srXhok7jV6N0+6OncRG+GKj79A5xpJiN7ofhd
+         EuzLr85y6dbcP+QqZYRTx8e+Ozhlck8gXkc7zBBZaNGbD8NRf6hKO6AmRYHgFob7V7ZF
+         WC0BqyfWqTrjBDUVL+7Y8WVJB5Dlr3dw1DFXvgRYCLb1odQPX+wPRr7VNfOD845LxIr1
+         LgdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716261456; x=1716866256;
+        d=1e100.net; s=20230601; t=1716261458; x=1716866258;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vIGSQ3C/BdvZT98agea7mQnapaDbDhw1o6G8ocniTTE=;
-        b=Xj072Ch0W3+sEdG2J+lu0f/nUdl3Xwp9fn7YzRFU10ykOsy5y+9BoMq183YnbgRL4b
-         ZnnJRbNsFcDCUOuYGN2AjP4M8YeXTJdEMToRcKotoYKom5sqVNzXkAGmCiaK+uNtWpx0
-         VECDg9ehA0lOy3EoN4vHzIdrt6MleayOtg/vuBklXLo9UM/MXjulmqjjlU9xqkTFkCcE
-         CfuqKacX3iTAXBO1yWe1AtzXQWuxmMiYjyh7JWkBljYBam24d1qaeeWM1x0EzBlqs/SC
-         cShs5BdmBX/n5sht/3tsxh6kfkFJyBfBmNP0nsLONB3roCAQDIHoDI9KqdAfmVTU0u+c
-         nCAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVw1Jc3TufMdI6LdI6He8KJoRKy/7+uVyBLxMfuwpGVibIEDQGekpJN2IjmLbQhpJBQJUdgaJV6VK/odTEI6z84tse20oxHENJu7XHa
-X-Gm-Message-State: AOJu0YyJ5AQT6g68dVB1Axvqveh8HliCOJY8/zja5OA7xTEENQScXF7A
-	t9HIqIXGRIV5vn0bjuIRu3zMzodgwoVoMlHLBbHHdfv24vagr4bCfOwc+BtqBfletoCPZq4yPOb
-	5
-X-Google-Smtp-Source: AGHT+IHCEk90C+Vq4CiPohjEvBRo0vWIF3yzHeFHSZPkzH/iMjxz0YZfmHGO49DF9SNeggUgvFn79A==
-X-Received: by 2002:a17:902:6b82:b0:1e3:dfdc:6972 with SMTP id d9443c01a7336-1ef43d15755mr316580525ad.9.1716261456179;
-        Mon, 20 May 2024 20:17:36 -0700 (PDT)
+        bh=4fdeEpEPtpWbE5Mh9fqJmFvRworqsEQTxGybJaCMPRk=;
+        b=MlqvWRHDJnvwp/anliYX290RM4VSPPjeBjCq6QjQGbOxFF94oRvLW17bnUDHWeXp9w
+         2Iopj5zf6ZXnmMf5G+v4kUwguK2qA7q/vT4j4h69h4/diDZ0nJ6rA1GxFO08wTpUaqmj
+         u0c0z2g0oVyD3iuskPP9dCw3qDkan3hjgUpAcwM/YP+3kMKB3eowxWRiHXzU9MhwjjpV
+         gRNQXw1UHSFHr6VCXofw1uAb007ekW2TCsuUmYvEwmbydaPZGxhI9a3g8w3xsP2Ei9G2
+         yGJuvfUpZVHYpAB7WxfFK5VSCDXCR1n39IB6zOvQslSyNFJX6KkACaHlazzA1RFwcI10
+         +tbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWlbwup1I7bq1NwSLPjltk7JCfx3IweaUak1LVZi7Kn/z38cFonTRuBVRP7caJ7QqyKHPl4Stw8+GYAbofhEGYoUahxM1xwE0Z227OZ
+X-Gm-Message-State: AOJu0Ywr3o1ws6kUrSwZgaHo1zi+0vAGvVNeiUCeZVOvwT9X9uFVL6W2
+	ghzfZwUh6IRmfXc++R+Ivi4Bb5vj7G7xcClzAH1OpgmgJEzCFEmU5Df2jbF5PNTeUhHR2GpeU0Z
+	T
+X-Google-Smtp-Source: AGHT+IHLUgFiZc3Qe3eYozL7kHO2osGBiNgXlRXygRH9TaPBs9Sb/E5DEHR2GAEbHm1R06IhTO9DZA==
+X-Received: by 2002:a17:903:2448:b0:1f2:feb4:84f3 with SMTP id d9443c01a7336-1f2feb48734mr60320535ad.1.1716261457837;
+        Mon, 20 May 2024 20:17:37 -0700 (PDT)
 Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31a93sm214885415ad.134.2024.05.20.20.17.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31a93sm214885415ad.134.2024.05.20.20.17.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 20:17:35 -0700 (PDT)
+        Mon, 20 May 2024 20:17:37 -0700 (PDT)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com
@@ -60,9 +60,9 @@ Cc: dan.carpenter@linaro.org,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH v2 19/31] Staging: rtl8192e: Remove variable ChkLength
-Date: Mon, 20 May 2024 20:17:06 -0700
-Message-Id: <20240521031718.17852-20-tdavies@darkphysics.net>
+Subject: [PATCH v2 21/31] Staging: rtl8192e: Rename variable WinSize
+Date: Mon, 20 May 2024 20:17:08 -0700
+Message-Id: <20240521031718.17852-22-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240521031718.17852-1-tdavies@darkphysics.net>
 References: <20240521031718.17852-1-tdavies@darkphysics.net>
@@ -74,38 +74,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove variable ChkLength which fixes warning Avoid CamelCase,
-and use llc_offset in its place.
+Rename variable WinSize to win_size
+to fix checkpatch warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
-v2: Delete ChkLength, and use llc_offset instead.
- drivers/staging/rtl8192e/rtllib_rx.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+v2: No change.
+ drivers/staging/rtl8192e/rtllib_rx.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/rtl8192e/rtllib_rx.c b/drivers/staging/rtl8192e/rtllib_rx.c
-index 52fbbbaf30b0..3a637731506c 100644
+index ab2aa1a86c51..50687f3dce47 100644
 --- a/drivers/staging/rtl8192e/rtllib_rx.c
 +++ b/drivers/staging/rtl8192e/rtllib_rx.c
-@@ -729,7 +729,6 @@ static u8 parse_subframe(struct rtllib_device *ieee, struct sk_buff *skb,
- 	u16		fc = le16_to_cpu(hdr->frame_control);
+@@ -526,19 +526,19 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
+ {
+ 	struct rt_hi_throughput *ht_info = ieee->ht_info;
+ 	struct rx_reorder_entry *pReorderEntry = NULL;
+-	u8 WinSize = ht_info->rx_reorder_win_size;
++	u8 win_size = ht_info->rx_reorder_win_size;
+ 	u16 win_end = 0;
+ 	u8 index = 0;
+ 	bool bMatchWinStart = false, bPktInBuf = false;
+ 	unsigned long flags;
  
- 	u16		llc_offset = sizeof(struct ieee80211_hdr_3addr);
--	u16		ChkLength;
- 	bool		is_aggregate_frame = false;
- 	u16		nSubframe_Length;
- 	u8		pad_len = 0;
-@@ -746,9 +745,7 @@ static u8 parse_subframe(struct rtllib_device *ieee, struct sk_buff *skb,
- 	if (rx_stats->contain_htc)
- 		llc_offset += sHTCLng;
+ 	netdev_dbg(ieee->dev,
+-		   "%s(): Seq is %d, ts->rx_indicate_seq is %d, WinSize is %d\n",
+-		   __func__, SeqNum, ts->rx_indicate_seq, WinSize);
++		   "%s(): Seq is %d, ts->rx_indicate_seq is %d, win_size is %d\n",
++		   __func__, SeqNum, ts->rx_indicate_seq, win_size);
  
--	ChkLength = llc_offset;
--
--	if (skb->len <= ChkLength)
-+	if (skb->len <= llc_offset)
- 		return 0;
+ 	spin_lock_irqsave(&(ieee->reorder_spinlock), flags);
  
- 	skb_pull(skb, llc_offset);
+-	win_end = (ts->rx_indicate_seq + WinSize - 1) % 4096;
++	win_end = (ts->rx_indicate_seq + win_size - 1) % 4096;
+ 	/* Rx Reorder initialize condition.*/
+ 	if (ts->rx_indicate_seq == 0xffff)
+ 		ts->rx_indicate_seq = SeqNum;
+@@ -569,11 +569,11 @@ static void rx_reorder_indicate_packet(struct rtllib_device *ieee,
+ 		ts->rx_indicate_seq = (ts->rx_indicate_seq + 1) % 4096;
+ 		bMatchWinStart = true;
+ 	} else if (SN_LESS(win_end, SeqNum)) {
+-		if (SeqNum >= (WinSize - 1))
+-			ts->rx_indicate_seq = SeqNum + 1 - WinSize;
++		if (SeqNum >= (win_size - 1))
++			ts->rx_indicate_seq = SeqNum + 1 - win_size;
+ 		else
+ 			ts->rx_indicate_seq = 4095 -
+-					     (WinSize - (SeqNum + 1)) + 1;
++					     (win_size - (SeqNum + 1)) + 1;
+ 		netdev_dbg(ieee->dev,
+ 			   "Window Shift! IndicateSeq: %d, NewSeq: %d\n",
+ 			   ts->rx_indicate_seq, SeqNum);
 -- 
 2.30.2
 
