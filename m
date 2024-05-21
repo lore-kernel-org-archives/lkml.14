@@ -1,117 +1,105 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 495967641B;
-	Tue, 21 May 2024 12:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945A428E7;
+	Tue, 21 May 2024 12:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716294646; cv=none; b=r1Ru564hf1Wqme6mLMbrnRXAs+oli6Wbn1keUDFmgTr8S1IJ1JwrhWJA1JXXT8DopOiYIbqlM48lNkCxiv24njs/CDQ7rId19l1HWYpCIgpWP/bDBmdj5c0XyUqT4RrPVh1hxBVCdYHVVOFCrOYO6sJ0k+w9H42lTV6u1FYnwjo=
+	t=1716294716; cv=none; b=FCwFPyvXd9LBcPzWs3KDrr86ryUxOq96mGBY6SR1wmVauPrlv4+BYXJzsNjprxgV1NSGuGGlhymHHjGuYamtIiewdOmgy3O5Goqki1iJWI2i1sB/KtZa4bKu/JuKi0H1kcs95d9cIcdRs7NH0GAHai/54A3/W8YztwHlZxCSsMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716294646; c=relaxed/simple;
-	bh=Li4W/+yXNqvCUJAgYsUZZdfWI0AWWai5MEvNGUE7iS8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bKldejCtP0T7aK/AvGt3dF55LD2RM6XyH/Z8mxkxARYgCXYsz4ikV7wAmKp0ni8sFKRsklqx6VZo39RaRcaVvgiCyict3iOG5Ce4AUYB5AqszRAFWTh4jHIGIg5hQsccNdOBebaPWkz53xKv1xmoPQ2DDop7MRaWK8N6iysC/58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=R+pT4Fys; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1716294716; c=relaxed/simple;
+	bh=2VUP4B/6QYT/IYsnqmX+BdABbHu7lo+RmKillgVoklM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CJ9PTo3Pq1OKouz2N/AMZaBazA8qAkvRwL7okC2S/5BiqvYSL2SxkU5SxQTQc1xVsmRSTOw2Zb1i3ttHwvrpyYC5Oyd53kkMItfilCHI+TA0MWmrqP7tJe7ESR0i6vSnt26cKuYgpflAGZ7dtrkj8UNShIhPFgUiMO6N4gmn0fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OKnzGjWb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="R+pT4Fys"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id B758C14C2DB;
-	Tue, 21 May 2024 14:30:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1716294635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DVp6YCfajHs+yNWdfKMUPIPzz9c0Xk93q1PicjfZ4vY=;
-	b=R+pT4FysZdDlHaYGG7L5deFEpB/UlAFZCZeqyRZyQvei+WEf8azLbh6hgfkKUkvfrhIHCh
-	Kjt0MJiV2OsO+glAXRuT7dtk/C5TsVVPZXsruYwpu94CZTDOM1OCfnhW9QlHCBzI7l4fMk
-	ngnklRnV6phwGh9is3T9T8/wFmjYm+rg+dbk4zEHNRxF6KuqNP9gzrQ9ivHrUOtY+Ck4QU
-	swtgkh6y7Q4o49ZnuVtVQ1+nsWefkIdVMoqV5EG+I2iQXny2NtGfcxhg+T4Gzz0x/BRzZU
-	814E+mjFJI8epx1o+R9jeTzrFEImBBxCQKAA2Mi7ipeuFURY9I92SntV0gyllw==
-Received: from gaia.codewreck.org (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 9ee2cc6c;
-	Tue, 21 May 2024 12:30:28 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Greg Kurz <groug@kaod.org>,
-	Jianyong Wu <jianyong.wu@arm.com>
-Cc: stable@vger.kernel.org,
-	Eric Van Hensbergen <ericvh@gmail.com>,
-	v9fs@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] 9p: add missing locking around taking dentry fid list
-Date: Tue, 21 May 2024 21:29:46 +0900
-Message-ID: <20240521122947.1080227-1-asmadeus@codewreck.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OKnzGjWb"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44L3aVf6030616;
+	Tue, 21 May 2024 12:31:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=IlNoFCAo5nlH1H6C7luAGx5l0cpdPI2BaL3sVZ5ChUQ=; b=OK
+	nzGjWb/xQ3SL22yP1AOVCAM5+gVyAZHPnyFuj1TYnDxBCWe9hxm887WNawshFbrb
+	14Cs9hjVRCPM1sqYfqvsCuqM8lsc1bcgwxyUb617i5zi0WfqTsDCartXQgriQ/la
+	fM/t3979B0oaUnOcqjha2f3/TSlAUzAZomXqe8JoRMSsx/O3Cbby/Dz0xDCwkI8N
+	cY4aB1zAEIujCe9PvtSCrwV05APVYRDc5wWOwURfeCaoXufo892lAELuU4iNDaSF
+	wuyz5yt2cmcWNyrERzFHhakhzX78lQDoNVsRrTWnjPrQA9NvCoC3U//DS9YdZRH7
+	Fk6YfjoSTnGl99RYbIsA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pr2nqmd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 May 2024 12:31:38 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44LCVbnB004681
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 May 2024 12:31:37 GMT
+Received: from [10.216.52.184] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 21 May
+ 2024 05:31:30 -0700
+Message-ID: <abead689-de3f-eed1-fcd8-6347a2518ce6@quicinc.com>
+Date: Tue, 21 May 2024 18:01:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v6 4/8] drivers: mtd: nand: Add qpic_common API file
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, <broonie@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
+References: <20240521105532.1537845-1-quic_mdalam@quicinc.com>
+ <20240521105532.1537845-5-quic_mdalam@quicinc.com>
+ <38517491-678e-4aba-ad5a-f7cb7519ef1c@kernel.org>
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <38517491-678e-4aba-ad5a-f7cb7519ef1c@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: L6mg3MFywzwiotuHjWfx-Ee_7MeP3vZ4
+X-Proofpoint-GUID: L6mg3MFywzwiotuHjWfx-Ee_7MeP3vZ4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-21_08,2024-05-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=802 bulkscore=0
+ malwarescore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1011 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405210094
 
-Fix a use-after-free on dentry's d_fsdata fid list when a thread
-lookups a fid through dentry while another thread unlinks it:
 
-UAF thread:
-refcount_t: addition on 0; use-after-free.
- p9_fid_get linux/./include/net/9p/client.h:262
- v9fs_fid_find+0x236/0x280 linux/fs/9p/fid.c:129
- v9fs_fid_lookup_with_uid linux/fs/9p/fid.c:181
- v9fs_fid_lookup+0xbf/0xc20 linux/fs/9p/fid.c:314
- v9fs_vfs_getattr_dotl+0xf9/0x360 linux/fs/9p/vfs_inode_dotl.c:400
- vfs_statx+0xdd/0x4d0 linux/fs/stat.c:248
 
-Freed by:
- p9_client_clunk+0xb0/0xe0 linux/net/9p/client.c:1456
- p9_fid_put linux/./include/net/9p/client.h:278
- v9fs_dentry_release+0xb5/0x140 linux/fs/9p/vfs_dentry.c:55
- v9fs_remove+0x38f/0x620 linux/fs/9p/vfs_inode.c:518
- vfs_unlink+0x29a/0x810 linux/fs/namei.c:4335
-
-The problem is that d_fsdata was not accessed under d_lock, because
-d_release() normally is only called once the dentry is otherwise no
-longer accessible but since we also call it explicitly in v9fs_remove
-that lock is required:
-move the hlist out of the dentry under lock then unref its fids once
-they are no longer accessible.
-
-Fixes: 154372e67d40 ("fs/9p: fix create-unlink-getattr idiom")
-Cc: stable@vger.kernel.org
-Reported-by: Meysam Firouzi
-Reported-by: Amirmohammad Eftekhar
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
- fs/9p/vfs_dentry.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/fs/9p/vfs_dentry.c b/fs/9p/vfs_dentry.c
-index f16f73581634..01338d4c2d9e 100644
---- a/fs/9p/vfs_dentry.c
-+++ b/fs/9p/vfs_dentry.c
-@@ -48,12 +48,17 @@ static int v9fs_cached_dentry_delete(const struct dentry *dentry)
- static void v9fs_dentry_release(struct dentry *dentry)
- {
- 	struct hlist_node *p, *n;
-+	struct hlist_head head;
- 
- 	p9_debug(P9_DEBUG_VFS, " dentry: %pd (%p)\n",
- 		 dentry, dentry);
--	hlist_for_each_safe(p, n, (struct hlist_head *)&dentry->d_fsdata)
-+
-+	spin_lock(&dentry->d_lock);
-+	hlist_move_list((struct hlist_head *)&dentry->d_fsdata, &head);
-+	spin_unlock(&dentry->d_lock);
-+
-+	hlist_for_each_safe(p, n, &head)
- 		p9_fid_put(hlist_entry(p, struct p9_fid, dlist));
--	dentry->d_fsdata = NULL;
- }
- 
- static int v9fs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
--- 
-2.44.0
-
+On 5/21/2024 5:24 PM, Krzysztof Kozlowski wrote:
+> On 21/05/2024 12:55, Md Sadre Alam wrote:
+>> Add qpic_common.c file which hold all the common
+>> qpic APIs which will be used by both qpic raw nand
+>> driver and qpic spi nand driver.
+>>
+>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+>> ---
+>> Change in [v6]
+>>
+> 
+> This is v6, but you still keep prefixing in the subject as "drivers".
+> Drop it finally from all your patches.
+  Sorry, Will correct in next patch.
+> 
+> Best regards,
+> Krzysztof
+> 
