@@ -1,97 +1,150 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC8A2AE6C;
-	Tue, 21 May 2024 22:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537EF2AE6C
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 22:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716330881; cv=none; b=WilR6Yvq4UgyOWWcapWRL/9b5bt9kEXXb9t6dZCgTUL1QNCBtISSMGGXwMLWODWno+xIzKFJKkPgXmFKgeaVM/UkaWtKKx175Nw/Tqks/1cFiNcupWpnpzxvGWzVxKNfyZWy3/RJM4yH6pDg8iRPr/lRakC3yYBm2p1VJKgXvtc=
+	t=1716330970; cv=none; b=KbEpllJ6/9aTe9Gn2NVYmJrguPPHO6+WZPeDHHwSwkk7HUvMY7RYn1CJDh5QRrFdw4i/3K6raW50DXVwGAscDiWkz0Vm6lgTVkC8N80mgaizXtsMK2BFqbLKhv1bcQUaN/eECPsAb5ohhGY3BdGOxoY8vd128+kP+rZg+EmOlRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716330881; c=relaxed/simple;
-	bh=OBM7O2kKtLY/1QgubILBB/QK9LUevsJ1RA9MVdlyKRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S5jMR6NT6GxWfuP/dMNPnOwobv58JvISDVzpKg0QRgE72DY2qoygVgjTN9mHjXxoVKZEG26weC4T1u4G90N1+VugVc+5oX3K8/SQcGpgn+JFtei9McgpBuc1b8wHKYwkPNuqIGUclg+10jVRxt5AEJKBic5iSCxwBJpQd+egYGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IZ6opajI; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1716330970; c=relaxed/simple;
+	bh=ayDPkBz4fuCHUkYAJZRynPr42K5/21e3I+ovedbiq9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oJxP+hKq5e501lmMK0BnEk+PMoC7B2IXzLVJAUiIvmC/HSiAIQzGshsJCp7Rix/JaaHMGUE2gsWEPrUFGBuF3FvBYfK/UODygv9XbuNFoDIaCGCzcbvxO8u1xQqnvEkTj9u+xDWCy4mgQ6/tnxzH2+W3ebcrHlybmpW0kmbQqfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wu69B4iV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IZ6opajI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1716330875;
-	bh=uoPzlo97cnnqqclusONENycg8BoqMoybdfTYv6wPJS0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IZ6opajIcsSzSB9DWKyVtb6qU9kOiixWFQRAv2a6e+lug5SwFxWtah9AZXEwNjkV5
-	 U9AWiSk+DHujalOPC9R+3b07z94qGOcQtsZU9GG2petRpAXR7qKd/VSXOauqleu4hm
-	 UMOZTbPbIJPiQzfqKAmJEzMrU3yg/SFs8T2qY9XsOQcbYMljFrV0uQjEZG6yjdYhHy
-	 wZ3JCVPyPEP7cYtK4hTAgSbhUJUYZB1wJyj2aaD5F1aQKBk8vCNmqocEETOaV7SisE
-	 uzfE/WvCcSeLrdUkMFiSegoAZw9pjANyjboh+FhLN1p9ji8EI/PxdN3b5tb4cL117m
-	 qKCSoy1HAE7mA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VkTkz5WPCz4wcg;
-	Wed, 22 May 2024 08:34:35 +1000 (AEST)
-Date: Wed, 22 May 2024 08:34:32 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
- <namhyung@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patch in the perf tree
-Message-ID: <20240522083432.49da1e35@canb.auug.org.au>
-In-Reply-To: <20240520073426.7d8bd11e@canb.auug.org.au>
-References: <20240520073426.7d8bd11e@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wu69B4iV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716330967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/pVKJNSWNWZ1vgxIz4pu8U802ZIUK1JxE+9Cwhknulk=;
+	b=Wu69B4iVGuFgBvmath5tj8Qbtdea5dBh72acgrToRwNgtpf1/rubogrRmxSe28cge9OsBD
+	bSiwzMFzKKg2RMXluuByb8mxxl+3L7weFjbACuJcI6DZZoTiayyEOKT0HnwVKtwFQvDdCA
+	dXPZqHa6wWOco1S3MEP0lEs5seqjlZM=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-JmqQ1io6MUqM0rDLTezm8A-1; Tue, 21 May 2024 18:36:05 -0400
+X-MC-Unique: JmqQ1io6MUqM0rDLTezm8A-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-792c8f9c4f5so276612285a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 15:36:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716330965; x=1716935765;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/pVKJNSWNWZ1vgxIz4pu8U802ZIUK1JxE+9Cwhknulk=;
+        b=PCaO4TZ1nfZLlOS7g77k/7MZC1MFfUSJZQhTCP+f2UzZ/VjzU2PG+DFD60BtooMUPJ
+         loIbX+z5lCxnrfiWDxPEqQflVfaI7j7XA0LwMaa/m+du34UtayNg+Z80HnkJTQroUFEy
+         h9j4BhKUzM33hlks0SDgFIFTCgYnHUmSCC+rZgKOqHjN0plE9COr1Gcq1kysx5O5ycBv
+         Sn3m0k2ZI7ZpRFUF0GY6PouAq2Cmo3zvfU+MvHOjCwTlku/Q9yjMtmPde2LDd17nFhDR
+         72RZMZgSQqtKlDgUdTT66WPabg5s0UWQJEGBPfw9J377H3+GGw1RuQfnc5g4aXaIxERq
+         u9DA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGYuoaPVWz2MJ4rDR44mvRWm+SCBbHeaO4kXosivw6kECgbZBnsEnZM0h4OjdT6qZQYNHUvdyKbEuxxGKsyGTZcyYb+5mOEUB6Glui
+X-Gm-Message-State: AOJu0YxiRNuzLIE1zbSEIvE1dYKavwlSLIuu0rqtrWIpc1BmdD+DIOkr
+	3mofLL0O91jsmGx0KPE9TUKjeGJf+1i1DBd4mlQHUcUab/MO0bZNuReGTKwt1Qx63jMmWRwVOsT
+	OTfQ20LLkDmwGRmcs6rw5lFBYl6aN05Xt0Q9bcecdWHHGCVd+aoVOVhBjnXHlPQ==
+X-Received: by 2002:a05:622a:1912:b0:439:9b56:42fb with SMTP id d75a77b69052e-43f9e1f1d05mr3634831cf.5.1716330964624;
+        Tue, 21 May 2024 15:36:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH5et9vU8jTmYA9yIWZrymeYSOINju+fcIISS4mqA2uxUbMcRGnMNAk5cJzm9+gKx/Xn06Qng==
+X-Received: by 2002:a05:622a:1912:b0:439:9b56:42fb with SMTP id d75a77b69052e-43f9e1f1d05mr3634611cf.5.1716330963970;
+        Tue, 21 May 2024 15:36:03 -0700 (PDT)
+Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e144a98a2sm125879561cf.16.2024.05.21.15.36.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 15:36:03 -0700 (PDT)
+Date: Tue, 21 May 2024 18:36:01 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>, axelrasmussen@google.com,
+	David Hildenbrand <david@redhat.com>, nadav.amit@gmail.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: 6.10/bisected/regression - commit 8430557fc584 cause warning at
+ mm/page_table_check.c:198 __page_table_check_ptes_set+0x306
+Message-ID: <Zk0h0V8kvZRKu6F4@x1n>
+References: <CABXGCsMB9A8-X+Np_Q+fWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com>
+ <Zk0HxVODITGKqYCw@x1n>
+ <CABXGCsNbcMn0Z0RudFrBW78rZPE+cDY+f9r+yKf_AZwJZUOrQg@mail.gmail.com>
+ <Zk0UA6wABOB9X_Dx@x1n>
+ <CABXGCsOZnxrSHd0y6QrFhzAiY-uTJiRSmo__C_P8Y2qjFV6bRA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MBL3ub9FZe8jQFgxPxkZ_sX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABXGCsOZnxrSHd0y6QrFhzAiY-uTJiRSmo__C_P8Y2qjFV6bRA@mail.gmail.com>
 
---Sig_/MBL3ub9FZe8jQFgxPxkZ_sX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 22, 2024 at 03:21:04AM +0500, Mikhail Gavrilov wrote:
+> On Wed, May 22, 2024 at 2:37 AM Peter Xu <peterx@redhat.com> wrote:
+> > Hmm I still cannot reproduce.  Weird.
+> >
+> > Would it be possible for you to identify which line in debug_vm_pgtable.c
+> > triggered that issue?
+> >
+> > I think it should be some set_pte_at() but I'm not sure, as there aren't a
+> > lot and all of them look benign so far.  It could be that I missed
+> > something important.
+> 
+> I hope it's helps:
 
-Hi all,
+Thanks for offering this, it's just that it doesn't look coherent with what
+was reported for some reason.
 
-On Mon, 20 May 2024 07:34:26 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> The following commits are also in Linus Torvalds' tree as different
-> commits (but the same patch):
->=20
->   cd88c11c6d89 ("tools lib rbtree: Pick some improvements from the kernel=
- rbtree code")
->=20
-> This is commit
->=20
->   bbed8b9ffed1 ("tools lib rbtree: pick some improvements from the kernel=
- rbtree code")
->=20
-> in Linus' tree.
+> 
+> > sh /usr/src/kernels/(uname -r)/scripts/faddr2line /lib/debug/lib/modules/(uname -r)/vmlinux debug_vm_pgtable+0x1c04
+> debug_vm_pgtable+0x1c04/0x3360:
+> native_ptep_get_and_clear at arch/x86/include/asm/pgtable_64.h:94
+> (inlined by) ptep_get_and_clear at arch/x86/include/asm/pgtable.h:1262
+> (inlined by) ptep_clear at include/linux/pgtable.h:509
 
-This duplicate is now in the perf-current tree.
---=20
-Cheers,
-Stephen Rothwell
+This is a pte_clear(), and pte_clear() shouldn't even do the set() checks,
+and shouldn't stumble over what I added.
 
---Sig_/MBL3ub9FZe8jQFgxPxkZ_sX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+IOW, it doesn't match with the real stack dump previously:
 
------BEGIN PGP SIGNATURE-----
+[    5.581003]  ? __page_table_check_ptes_set+0x306/0x3c0
+[    5.581274]  ? __pfx___page_table_check_ptes_set+0x10/0x10
+[    5.581544]  ? __pfx_check_pgprot+0x10/0x10
+[    5.581806]  set_ptes.constprop.0+0x66/0xd0
+[    5.582072]  ? __pfx_set_ptes.constprop.0+0x10/0x10
+[    5.582333]  ? __pfx_pte_val+0x10/0x10
+[    5.582595]  debug_vm_pgtable+0x1c04/0x3360
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZNIXgACgkQAVBC80lX
-0GwtLQf8DQTqG6/gGWx6tR/nRlCAiWP4vYrFAjdrbR0fMY1agrdYnVvOW+U1/x54
-9Q16Vbgl5vfvlv7eMV7l7u7sMXoq7n44j3s/VU7ihX4QwqNmy2aMJnSsDHL4reKZ
-2EdLTKkoxoZbeAyDwp8+BVlSMZOIGhjVRur/fxszX4pF10kMUYDM1uY4FWJFfzcz
-lmL42ktfeALjPP+9BRlk8MCotxd0V4lP4mbvTX8dHeSXvRH7mfJ3uJ37zwnWWJqM
-TnK9rXE4XuY3fCVSNu1Lk022Y1uD4BaYOKOZbszMWFU7KVqvgsYHG7SFWoh8CdjP
-eTyCojalFyl9MCzdY9G6sGv5vKuTrQ==
-=Ixr1
------END PGP SIGNATURE-----
+Would it be possible that e.g. you recompiled the kernel so the vmlinux
+didn't match?
 
---Sig_/MBL3ub9FZe8jQFgxPxkZ_sX--
+> (inlined by) pte_clear_tests at mm/debug_vm_pgtable.c:643
+> (inlined by) debug_vm_pgtable at mm/debug_vm_pgtable.c:1392
+> 
+> > cat -n /usr/src/debug/kernel-6.9-10323-g8f6a15f095a6/linux-6.10.0-0.rc0.20240521git8f6a15f095a6.10.fc41.x86_64/mm/debug_vm_pgtable.c | sed -n '1387,1397 p'
+>   1387 * Page table modifying tests. They need to hold
+>   1388 * proper page table lock.
+>   1389 */
+>   1390
+>   1391 args.ptep = pte_offset_map_lock(args.mm, args.pmdp, args.vaddr, &ptl);
+>   1392 pte_clear_tests(&args);
+>   1393 pte_advanced_tests(&args);
+>   1394 if (args.ptep)
+>   1395 pte_unmap_unlock(args.ptep, ptl);
+>   1396
+>   1397 ptl = pmd_lock(args.mm, args.pmdp);
+> 
+> -- 
+> Best Regards,
+> Mike Gavrilov.
+> 
+
+-- 
+Peter Xu
+
