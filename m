@@ -1,122 +1,195 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6B06BB54
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172E056763
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716285352; cv=none; b=h1ImdSR72uqEqhNMoOMmqzfEypQQYIY9mcHgGlDMMdYNgqMrGteXTtWefCpaFjty8lXx65fay6XWa5hdxo1mcVByLH6SwNOtqkHedcglMv1ZcbFkAZU3a97oRQYPpcw/MSdJJ4YZa9YBDYPz+7b54zhUXxBrZDY5Qh3ETD8D3hw=
+	t=1716285423; cv=none; b=WgM5gS8nXh+tjFnlv198mdYV4B/YUpm47eWLFfMNQIGvVeCPkdnf04YnwovmQNjjdmFUozx/BDB+Hi+F6aPmSVYgYOmM87WoL3zOvsBly8WG+Vgwrhp+Ac5y5AZmwWFYFF2VWUnvjaSKzUCYBzMKBtWYDNoF11CDTBj13ph+xP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716285352; c=relaxed/simple;
-	bh=qMTfM2RqcLcFcnpmgsM4+ekw46TcyOHKMEZUctQ7tns=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LhXuOKTPJj/5RN/b4bUyAVpG6RQcu4hFI9S0GY/DD0O+qANLanS6K3W3tRpNrI07SiLQEy2pCCfDSEN2Vh2ZEBjGMxN7d706IkMf+fEWqgBT5zDGsN1/0wxfrntE1OoeVyrLvXP4wdmh9Pt2uDdERFaFvYWQgEEyrrt1okS49rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hzoa8u/P; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716285423; c=relaxed/simple;
+	bh=JKPlMAB3CGLTGnfn/LIYfXmddkB77QG77ZBKJkFQ+Lo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lOYI/xSRDodfIG2Dl4APRPexAPDJJG7jJ+vZnP6cjeYPxRELywdGdo5tGpw0F7ZKTRnKaGlHq/prjZKgBFtWypcIfv8gGczbDnvtQ2/L8dcyP+IrPKmh1ciCluI5CN3qN1hsmhq3NMsDmF+yBTcHLrp3i9VeivGziLB2XvUw78Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICTv7+bH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hzoa8u/P"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6f0ecec6411so2674513a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716285349; x=1716890149; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QIL8bJvqQtt10T5yeC3JXxYF7RA/JJU1vyZUZM4XpQE=;
-        b=hzoa8u/P0M2zf2nPp2UUHs+5wCwCHYSNz7tFQN7N00aelg3onWOiAGArUGn5iXUcCD
-         +OlDGmjAFf6u9KrxnrurSgfcdR0hJ8U4HcHuIEZ7FRF8rulDFvJ+uJxP8U2Lofh9DEnV
-         U1YSvoOsIvQlSHfFeY96fE8Qy4J5s9YGFVn1I=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICTv7+bH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716285421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wd9inBZlBGfzSq9NxBy6Ikm8gocZxSrZzTYPRX0fGwk=;
+	b=ICTv7+bH0x8DBySJj8qKbprvN1pbwvZLEm5n+DPZzqMpazHnDytkvOAntlueOz7bWYhEQW
+	cG4zuZOigoxW88jhg4n2R1+pr2tAhgwTg/230o8b2GL2R2jfg9bzwnCe44VhUpRj2nm3GQ
+	NWT1ketDVXRDs5p+IPXVNldEd7X5Y54=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-611-VGvs2EZvOpm_7yvmNzsHAQ-1; Tue, 21 May 2024 05:56:58 -0400
+X-MC-Unique: VGvs2EZvOpm_7yvmNzsHAQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-523936877a3so5984090e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:56:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716285349; x=1716890149;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QIL8bJvqQtt10T5yeC3JXxYF7RA/JJU1vyZUZM4XpQE=;
-        b=jYcYDGbyoNAHCPzla9Z+5AciJEYJSSxuDcO4U2ZYwf5C+8u3iaisqOvK2N/UFfyb8W
-         b2UrRHikfBYoemE1q5gvvkUQFQ7ZuYxM8miukhqSuheWoAJJ2oIGTnREwzwH2l6MLEgG
-         XELy6JSRzj8FenpIMY6i9S7yynxtvA6QadvpeNotjZeFKdB+B+Tm6Ruf8PIS+dkn2M0C
-         2Car2BjeCBNdSJ3RmQbCwtt90WrhFA6SwsogYUzsdWAXzI1pC1neYsfLvXpuHHsuQKCM
-         aL7IoM1XeEbLEVoFaPomHXC3wUB11wS1vF10Q91p/T8G1vwDDdSTr+Dp7fxe6jC1HBEz
-         7Nwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXClOU+EyB5r2TY+zPuYr9W5IzSpqHvXBBpiBs0h1CvqyJBaZxQDA5QQTuAlaoSDcIRM3mzgQ9jIPmd8Sr/A/D7kK1IQtxVjBbre8Y/
-X-Gm-Message-State: AOJu0Yyf10KAdaiLMqRVpuDd6OYgH6g2q5Xef4TtVmLeEqR/AXY7oi6K
-	B8K3eOyge4zFtngrBLlI9pxN/eRPj9DVY8CMzo9ApO7TBjSjhg6BdoeGdSxY2A==
-X-Google-Smtp-Source: AGHT+IFKIYFqTMarrGIwJW/xjD4E5TP4smgp1LW/1jUBwGpm9C4Gsb/IKEVVDk5X70ezxhmNydvPxw==
-X-Received: by 2002:a05:6830:3299:b0:6f2:5b44:593c with SMTP id 46e09a7af769-6f25b445a16mr6106649a34.35.1716285349487;
-        Tue, 21 May 2024 02:55:49 -0700 (PDT)
-Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:7412:b980:a8eb:dfa3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f679902e57sm10016198b3a.110.2024.05.21.02.55.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:55:49 -0700 (PDT)
-From: Fei Shao <fshao@chromium.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Fei Shao <fshao@chromium.org>,
-	Yunfei Dong <yunfei.dong@mediatek.com>,
-	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Tiffany Lin <tiffany.lin@mediatek.com>,
-	Xiaoyong Lu <xiaoyong.lu@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] media: mediatek: vcodec: Reduce msg queue trans buffer size
-Date: Tue, 21 May 2024 17:54:56 +0800
-Message-ID: <20240521095536.3869399-1-fshao@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+        d=1e100.net; s=20230601; t=1716285417; x=1716890217;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wd9inBZlBGfzSq9NxBy6Ikm8gocZxSrZzTYPRX0fGwk=;
+        b=t8dvn8ulvB2IJeWk2vvU7yLRrxxBxZq59ROi/dudcTVi2nH/Raid1Iren4iObhJSUx
+         9s8keLGKamjVE7h+6+WGkD991UG3oFFWrCtgLnpT38YBWTOf4gOdBHgz7mR3TrPgPGDl
+         9VEOs83wCi+wwpDRgtrMgfKJrTIJIVffcBfZTKQMrtrm0dl//sORxPu8OgZV5SPQZKC1
+         RY1d6XEVQs6z/qmrdj/eTmRyqciNvRRgBzjWu+Xo1na4EOcmekwR5vKkPJSS+UxOa7Hd
+         KDITnb7JitJ/LDt/ZQycRIbnosGMSq82ljGxAAZVmHOQcBz34pvaknyh6rsIHhJzVnnH
+         Msag==
+X-Gm-Message-State: AOJu0Yw4X6F29d4zMGTxfM7d0qgergTZP6zsssTYP914c+raBoHotgBS
+	YYDR5GDHm6X2s5h1u0G9/8YsE+yAGz987WjHDfxG8FB5sljm9CZ4TGYBY3g23ZodOSlmyDmmHvd
+	ZRT9h9QvgTZM+jOxGSWjlkvCHqS8F70A/BurzhMI96WFDaT0ybaBJe2a8XKkrwQ==
+X-Received: by 2002:a05:6512:3e1e:b0:523:2ed9:edf9 with SMTP id 2adb3069b0e04-5232ed9ef10mr18293682e87.63.1716285416886;
+        Tue, 21 May 2024 02:56:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0Sg4El9iGO0U7Fxi/Q3arD6oI4iwFMyrSYUV6cFdEDesXTLG6Kw66eWdy2pSCcuhq5EJ+7g==
+X-Received: by 2002:a05:6512:3e1e:b0:523:2ed9:edf9 with SMTP id 2adb3069b0e04-5232ed9ef10mr18293666e87.63.1716285416436;
+        Tue, 21 May 2024 02:56:56 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5236d2e9ad9sm2710005e87.178.2024.05.21.02.56.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 02:56:55 -0700 (PDT)
+Message-ID: <338b4d56-7e5a-4d8f-8908-610f2c59e29e@redhat.com>
+Date: Tue, 21 May 2024 11:56:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: Move vmf_anon_prepare upfront in hugetlb_wp
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Muchun Song <muchun.song@linux.dev>, Vishal Moola <vishal.moola@gmail.com>
+References: <20240521073446.23185-1-osalvador@suse.de>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240521073446.23185-1-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In the MediaTek HW vcodec pipeline, the `trans` buffer is used to
-transfer the data decoded by the lat decoder to the core decoder.
+On 21.05.24 09:34, Oscar Salvador wrote:
+> hugetlb_wp calls vmf_anon_prepare() after having allocated a page, which
+> means that we might need to call restore_reserve_on_error() upon error.
+> vmf_anon_prepare() releases the vma lock before returning, but
+> restore_reserve_on_error() expects the vma lock to be held by the caller.
+> 
+> Fix it by calling vmf_anon_prepare() before allocating the page.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> Fixes: 9acad7ba3e25 ("hugetlb: use vmf_anon_prepare() instead of anon_vma_prepare()")
+> ---
+> I did not hit this bug, I just spotted this because I was looking at hugetlb_wp
+> for some other reason. And I did not want to get creative to see if I could
+> trigger this so I could get a backtrace.
+> My assumption is that we could trigger this if 1) this was a shared mapping,
+> so no anon_vma and 2) we call in GUP code with FOLL_WRITE, which would cause
+> the FLAG_UNSHARE to be passed, so we will end up in hugetlb_wp().
 
-In the beginning, 6MB and 30MB were allocated for the trans buffer to
-handle FHD and higher-resolution contents respectively, but it turns out
-that's more than enough in practice and there's room for improvement.
+FOLL_WRITE should never result in FLAG_UNSHARE.
 
-The buffer sizes were reduced to 5MB / 8MB respectively and the decoders
-have been validated to work normally on the MediaTek Android products.
-It's time to adopt that change in the upstream MediaTek vcodec driver.
+> 
+>   mm/hugetlb.c | 17 +++++++++--------
+>   1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 6be78e7d4f6e..eb0d8a45505e 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -6005,6 +6005,15 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+>   	 * be acquired again before returning to the caller, as expected.
+>   	 */
+>   	spin_unlock(vmf->ptl);
+> +
+> +	/*
+> +	 * When the original hugepage is shared one, it does not have
+> +	 * anon_vma prepared.
+> +	 */
+> +	ret = vmf_anon_prepare(vmf);
+> +	if (unlikely(ret))
+> +		goto out_release_old;
+> +
+>   	new_folio = alloc_hugetlb_folio(vma, vmf->address, outside_reserve);
+>   
+>   	if (IS_ERR(new_folio)) {
+> @@ -6058,14 +6067,6 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+>   		goto out_release_old;
+>   	}
+>   
+> -	/*
+> -	 * When the original hugepage is shared one, it does not have
+> -	 * anon_vma prepared.
+> -	 */
+> -	ret = vmf_anon_prepare(vmf);
+> -	if (unlikely(ret))
+> -		goto out_release_all;
+> -
+>   	if (copy_user_large_folio(new_folio, old_folio, vmf->real_address, vma)) {
+>   		ret = VM_FAULT_HWPOISON_LARGE | VM_FAULT_SET_HINDEX(hstate_index(h));
+>   		goto out_release_all;
 
-Reduce the msg queue trans buffer size to 5MB / 8MB respectively to
-optimize the memory usage per decoder instance and improve the overall
-system performance.
+The joy of hugetlb reservation code.
 
-Signed-off-by: Fei Shao <fshao@chromium.org>
+LGTM
 
-CC: Yunfei Dong <yunfei.dong@mediatek.com>
-
----
-I consulted Yunfei and he confirmed that these are the sizes they are
-using today.
-
- .../media/platform/mediatek/vcodec/decoder/vdec_msg_queue.c   | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec_msg_queue.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec_msg_queue.c
-index f283c4703dc6..e36741179a97 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec_msg_queue.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec_msg_queue.c
-@@ -29,9 +29,9 @@
- static int vde_msg_queue_get_trans_size(int width, int height)
- {
- 	if (width > 1920 || height > 1088)
--		return 30 * SZ_1M;
-+		return 8 * SZ_1M;
- 	else
--		return 6 * SZ_1M;
-+		return 5 * SZ_1M;
- }
- 
- void vdec_msg_queue_init_ctx(struct vdec_msg_queue_ctx *ctx, int hardware_index)
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+Cheers,
+
+David / dhildenb
 
