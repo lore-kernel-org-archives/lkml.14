@@ -1,131 +1,197 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D542EB1D;
-	Tue, 21 May 2024 09:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673872EB1D
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716283099; cv=none; b=PZSKkf5WH/FnEamiU7oIR3IU9/xYo3FBOfwxWpH2BSh+R7PGNnyFw3z85HkpztU6m4bosZUbbPt/ay138L8wzABHJpVG9Yn1bSE5EY95IL/FuWEyNuZVFma5mROu42qPn62zPmQ2Zpmv29gVnqjRlId8cEyMWM7WCl+J5RcLMtw=
+	t=1716283128; cv=none; b=AgH5ixhWlBaUPocGD5zhAKmRW7iFoReR64mxzeeWldq7/xQyttPgPYs80NU4RVneRm8tErnCuM9NVtxnRAhIE5CiIeXh97nMz7cSeK/W3YfMZhfkdrJ/cubeEO5074s6JJqcrqCpnod1T0ho6+mYBr4JmXVKZ8CjaTi2C7Mvja8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716283099; c=relaxed/simple;
-	bh=evIKBeDjrjIyrHQrE6yLoAQSN9K9vIdfXRpSaiKjBgE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lo24sDu/byA9YSvJsJwpM4vrhZCg64aaL9I8NFchZkQkCq99crRJjFtJLYCXNwJPSSUx3PM9M36/ScwfbJXT9yyN/ieVtmXpXZtjECnkSo8phj7i8Zl6BEdWbkAws9tcinlOdsRlI4SL5CFr01KAwPtzV7AyXpdxc2Mtt23qm8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FsFmmGOE; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716283128; c=relaxed/simple;
+	bh=0X9YsczLkwuQQ1uVOKhEJVPPv/H07Bx6pD3Fm3d0QGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L40g5DD57uZbscAg3677FZjOU56oXwT7k7gvmkJE2Cbiy3u3u2QWCYkjQ28l3oLVXqmotJ+bZ9svrJeDKpH60TS3VVtmvsje4QTY+Ozm2S4Z2C+Fj40EOdRaexkkOY+l7puvY/iw0uYd8K/TuOnRIyVzxseareKeQIPFXM3X/Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hlV36nte; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FsFmmGOE"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so106299215ad.1;
-        Tue, 21 May 2024 02:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716283097; x=1716887897; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=evIKBeDjrjIyrHQrE6yLoAQSN9K9vIdfXRpSaiKjBgE=;
-        b=FsFmmGOEC/VhY0UUXUWBNpzNjtvFmEfMl3npl973KK7v+92QY7xSWH8phaAOQeZd1r
-         1o4m/wncg2yy6V1dBctSYohnyOBOMZGcoFIn3HmbfuZCz0UWQfrKaO1GtYBwtspe0ws7
-         Q/aEPMM20YB58OffunAPcoVJjRnxIc2H5E9k4k8UND8dURoD0+4FcDBWB0nmA1DE9ZXS
-         uzNfssLVprmuxh2tElgkRbYr/RrEZaDM63ArcEYsMT/tAMb0djl1EnlKXbh2Bprsnac4
-         bEucmxJS9bR09XK0yfjEOcdOHVQxJ7fFTJhpK0wG8IBQvuVoSbKn1eQYk6aRlLuVYKz3
-         sF/Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hlV36nte"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716283126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=dnj58lhRSj3HFW+3WnRIrRV99SqSMaIOOL0f1Q9rFks=;
+	b=hlV36nteK5h/vsQxHWjGyYZdfRhe5Quu9jhbkCEZvFnpfHl/uD0KcUTR0CXP4YE8qFB3eY
+	3gW1f17qguRwNXkR0aWYNdHf4YgPYIXgnETT1YoHyt7DjY57KRiiknZbgktttn5B5rk3kI
+	1WMGgS/QScxiCGa5TcbKGKjYOd47toI=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-wPz5GIhnNKmSCA8hootIYQ-1; Tue, 21 May 2024 05:18:44 -0400
+X-MC-Unique: wPz5GIhnNKmSCA8hootIYQ-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2e1f38cb631so112309631fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:18:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716283097; x=1716887897;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=evIKBeDjrjIyrHQrE6yLoAQSN9K9vIdfXRpSaiKjBgE=;
-        b=AosQKbJ4XKolCiyW9z3X5/aulE+WV6E/4DOUHhtWgve0jsKdx/G+W7YfglRmqtmtSj
-         ojrjq+ROZnyy2xiZQF+aiIYgRsId2lbrVZzFPciW8QBYMyi2cyscDMwTmEGhkndPeL4R
-         HxknI6dBEvWDjSvib8wzmEmbu41oe0HNj/UKsnD6/f7sC5nS5SXm837Hz6zEAOGDxVj9
-         7ijh+lUM9OoCZCTfFS5APAaHe7+o9ZEpSOqxDGXX3FMUUfduCNfFi4trRJ+l/cn6sF70
-         sY2dHB8/OJdOack7YqXp9Uz3qFqrP6OnsT6kQKh59T9VjCpNWFqLcmJKbV7895xEGb2C
-         4UAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUV5aVN8sUq6a/QOmkHHgPU+xNUZh2Yj9oPvdNY3bBj/hye+tDjZZgvl78fkoteMo3splLuB/mAlE+Maxj9ZFW+Qs/gF3Gx3AekBn5m08eqireICG/aeYjkNCve4MBePZgaB+krDbtTSBxA56c/cL17lPXVYbkwStDtsFjv8o2exRYSu61FgRk=
-X-Gm-Message-State: AOJu0YxRdCn7E16TDRNIG1zem0kobVUI+Cogv+RDdq1G8oCAuNMurVgu
-	jEKviECqyYFdZEW3uvWUT1E6CjgUEJUDuaChdf9M9Wm968397MbtMs1XcrxxJd5chUW9aXvQdIj
-	YzamfY2vvnUYtY6haCyN2yoFSOis=
-X-Google-Smtp-Source: AGHT+IFieXXoG+hRo4v8ZQFVy0FPx0LzOZqLI2NQxeJ8z3p0jf0pXavFZ5ZiMD9/R71xHVho3OeDGCXPVB6CXwJTom4=
-X-Received: by 2002:a17:90b:100d:b0:2b6:2ef4:e2aa with SMTP id
- 98e67ed59e1d1-2b6cc780466mr24891904a91.25.1716283097622; Tue, 21 May 2024
- 02:18:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716283123; x=1716887923;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dnj58lhRSj3HFW+3WnRIrRV99SqSMaIOOL0f1Q9rFks=;
+        b=HJZ9Rh8WDR/PFCh8Eu7j+97jDhJU92pOtK5bYBmmMEPK2wTYNwVZlmJMipZmJPGHjB
+         wEvSbv3ATPET/9beT6XNhJErQkfdddQpCMbjO5GQSxXdgZ/AILiJCak2jHLm1ZZtKrDK
+         BcLskFluD1ZL1bGtweZ0CfEfiOcx/9J+LxmD+zQH3UTKHN46Nrc9Y4cquWEiN14Uo3tV
+         DU1g3S6hY0aQne9vrx39Iurnm4C/Pw4xV1B5gGsxLIkKEuC7kowQLoxzXHhN+0dsOwWC
+         LzxuBv6Vq9rf7/ZUuW2TDyxtCXFagtsMQhygCXTIq3iUB0wn0Si8Y9q9RD8rKyMNqoIj
+         5JCw==
+X-Gm-Message-State: AOJu0Yz0SQOC4V4nAOmEFshOVIsEwfINsfSxCsV3dH4CSaEXAvQDcwI2
+	UaKiTFDQMPhBp+hcYasYpKtJrOj1uPNK3xxAOjd9tq5AsNqpglTK2Dr+KgZi1rvusqO0+k9q0L1
+	26YAUixnpCg/YQtOI8rt9vI+IiHqvBgVVLQ6bikYUe0lH4+lBGz9GIO/E+z4lnw==
+X-Received: by 2002:a2e:9ac2:0:b0:2e0:298d:65ec with SMTP id 38308e7fff4ca-2e51fd45214mr271433801fa.17.1716283123243;
+        Tue, 21 May 2024 02:18:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHtI3Nqf10gi5+vvA+q89PR5+fFmUED7YWM/0b2KlxJbM+vtt+wifUlgzEsUFkC/F+dL/OK4A==
+X-Received: by 2002:a2e:9ac2:0:b0:2e0:298d:65ec with SMTP id 38308e7fff4ca-2e51fd45214mr271433571fa.17.1716283122764;
+        Tue, 21 May 2024 02:18:42 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8fa6sm457113275e9.2.2024.05.21.02.18.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 02:18:42 -0700 (PDT)
+Message-ID: <dde2f22d-c57f-44ac-9f2c-4a1790de084b@redhat.com>
+Date: Tue, 21 May 2024 11:18:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-11-dakr@redhat.com>
- <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com> <cf89c02d45545b67272aba933fbc8a8a0df83358.camel@redhat.com>
-In-Reply-To: <cf89c02d45545b67272aba933fbc8a8a0df83358.camel@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 21 May 2024 11:18:04 +0200
-Message-ID: <CANiq72k7H3Y0ksdquVsrAbRtj_5CqMCYfo79UrhSVcK5VwfG5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem operations
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Danilo Krummrich <dakr@redhat.com>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com, 
-	lina@asahilina.net, ajanulgu@redhat.com, lyude@redhat.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] mm/memory: cleanly support zeropage in
+ vm_insert_page*(), vm_map_pages*() and vmf_insert_mixed()
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Dan Williams <dan.j.williams@intel.com>, rostedt@goodmis.org
+References: <20240430204044.52755-1-david@redhat.com>
+ <20240430204044.52755-2-david@redhat.com> <Zkdys7YKC5pe1vAu@google.com>
+ <3decc6c8-9035-44d6-89c6-8d42a5e0bc40@redhat.com>
+ <ZkxkDPnPiQzPEm-0@google.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZkxkDPnPiQzPEm-0@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 21, 2024 at 9:36=E2=80=AFAM Philipp Stanner <pstanner@redhat.co=
-m> wrote:
->
-> Justified questions =E2=80=93 it is public because the Drop implementatio=
-n for
-> pci::Bar requires the ioptr to pass it to pci_iounmap().
->
-> The alternative would be to give pci::Bar a copy of ioptr (it's just an
-> integer after all), but that would also not be exactly beautiful.
+On 21.05.24 11:06, Vincent Donnefort wrote:
+> On Tue, May 21, 2024 at 10:25:43AM +0200, David Hildenbrand wrote:
+>> On 17.05.24 17:07, Vincent Donnefort wrote:
+>>> Hi David,
+>>>
+>>> [...]
+>>>
+>>>> -static int validate_page_before_insert(struct page *page)
+>>>> +static bool vm_mixed_zeropage_allowed(struct vm_area_struct *vma)
+>>>> +{
+>>>> +	VM_WARN_ON_ONCE(vma->vm_flags & VM_PFNMAP);
+>>>> +	/*
+>>>> +	 * Whoever wants to forbid the zeropage after some zeropages
+>>>> +	 * might already have been mapped has to scan the page tables and
+>>>> +	 * bail out on any zeropages. Zeropages in COW mappings can
+>>>> +	 * be unshared using FAULT_FLAG_UNSHARE faults.
+>>>> +	 */
+>>>> +	if (mm_forbids_zeropage(vma->vm_mm))
+>>>> +		return false;
+>>>> +	/* zeropages in COW mappings are common and unproblematic. */
+>>>> +	if (is_cow_mapping(vma->vm_flags))
+>>>> +		return true;
+>>>> +	/* Mappings that do not allow for writable PTEs are unproblematic. */
+>>>> +	if (!(vma->vm_flags & (VM_WRITE | VM_MAYWRITE)))
+>>>> +		return false;
+>>>
+>>> Shouldn't we return true here?
+>>
+>> Indeed, thanks! I wish we would have user in the tree already that could
+>> exercise that code path.
+> 
+> I have a patch ready to use this path from the memory map tracing! I can either
+> send it once this one is picked-up or you can add it to your series?
 
-If by copy you mean keeping an actual copy elsewhere, then you could
-provide an access method instead.
+Whatever works for you! To debug, it would be good if you could send me 
+the patch and simple instructions on how to test it (do we have a 
+selftest as well?).
 
-If you meant the access method, it may not be "beautiful" (Why? What
-do you mean?), but it is way more important to be sound.
+> 
+>>
+>> [...]
+>>
+>>>> @@ -2043,7 +2085,7 @@ static int insert_page_in_batch_locked(struct vm_area_struct *vma, pte_t *pte,
+>>>>    	if (!page_count(page))
+>>>>    		return -EINVAL;
+>>>
+>>> This test here prevents inserting the zero-page.
+>>
+>> You mean the existing page_count() check? or the (wrong) vma->vm_flags check
+>> in vm_mixed_zeropage_allowed() ?
+> 
+> I meant this page_count() here. As a quick test, I removed that check (also fixed
+> the vm_flags above) and the zero-page was properly mapped!
 
-> The commit message states (btw this file would get more extensive
-> comments soonish) that with this design its the subsystem that is
-> responsible for creating IoMem validly, because the subsystem is the
-> one who knows about the memory regions and lengths and stuff.
->
-> The driver should only ever take an IoMem through a subsystem, so that
-> would be safe.
+That's weird and might indicate another issue.
 
-The Rust safety boundary is normally the module -- you want that
-subsystems cannot make mistakes either when using the `iomem` module,
-not just drivers when using the subsystem APIs.
+The refcount of the shared zeropage should be initialized to 1, just 
+like for any other reserved pages 
+(mm/mm_init.c:__init_single_page()->init_page_count())
 
-So you can't rely on a user, even if it is a subsystem, to "validly
-create" objects and also hope that they do not modify the fields later
-etc. If you need to ask subsystems for that, then you need to require
-`unsafe` somewhere, e.g. the constructor (and make the field private,
-and add an invariant to the type, and add `INVARIANT:` comments).
+Hm ...
 
-Think about it this way: if we were to write all the code like that
-(e.g. with all structs using public fields), then essentially we would
-be back at C, since we would be trusting everybody not to touch what
-they shouldn't, and not to put values that could later lead something
-else into UB, and we would not even have the documentation/invariants
-to verify those either, etc.
-
-> Yes, if the addition violates the capacity of a usize. But that would
-> then be a bug we really want to notice, wouldn't we?
-
-Definitely, but what I wanted is that you consider whether it is
-reasonable to have the panic possibility there, since it depends on a
-value that others control. For instance, would it make sense to make
-it a fallible operation instead? Should the panic be documented
-otherwise? Could it be prevented somehow? etc.
-
-Please check Wedson's `io_mem` in the old `rust` branch for some ideas too.
-
+-- 
 Cheers,
-Miguel
+
+David / dhildenb
+
