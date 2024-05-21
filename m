@@ -1,109 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29BF6EB5D
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D557351A
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716284734; cv=none; b=a8brYq2C2X5WIsWu1Fvh8N+0mZ4xgGy1NP//b64Qa1ydLNtp/HkNoPf57hVY/F/tfGgd8v4GqCoOBlg5tPTtKMMgZX/c/siwzUKbGGFrsMPsVd2OyehnAzf1AtmStG5LPO1OWNieZd8dP9MdPaUsrqO59Esz1Gr9ihlSrZRM/Fw=
+	t=1716284734; cv=none; b=eouiNjgDAUzr9zYosySU/kpfCPoL0/agZET/j8Im76Agwc14kSkxOXdmygiU2X44Im3TxleaytuLPUt/gcAamP7dzJgiH5w/kx//ICX0PWmBZ1N1wlBhsiUXNuVjTW2QAJO+8zf5B7kqw3auMvS6+Zk0KJJT2ojhFB6UuZKaYsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716284734; c=relaxed/simple;
-	bh=auUr06gKMtQJmw70SqyuisbzOZRSZGi7CZ50SSxwtvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I/jTjSJRaW+HDQGD3GMwykQI33ibd7cwwQ9LR6yVm2wbj9l3jdhr6b79zvhxFynX36wFQlblMVbkFSU+NUJq8nyyALDmzxQ+4Ea6cNBceHEqA+CRAQaZrYc1JVuJ+Ll5mY05t5kAsOqpNK3BXUmyk7JKcNqN3lptnhVem8xEtzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KD2YMljs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=LXkde7roNdCA5RiqXlZv5DapdIAdFkD6mr6zmTWtmTw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ccxVH0ThmV5B767ZLrL+8/zmjdUI1naUXdz3H8DpsKrptNl2fpIQh1VvqYUsaCqRd9QTaKdB03mdC5GVgq3hv6clo6Co3WT8ZS6Xm9NOvyAhlg6Q9YGStH1vNiJMWx2c7VK63jeGvh9k2QirN4SEOV+G0/nIynp12CU5i20vCPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yndy3JFS; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KD2YMljs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716284729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Uutlqnz7GlxG5MMRoikdk+qop535bU307tyY8QMm6Qo=;
-	b=KD2YMljshv0/l6JMZ6BeRMFFWl74aYJ0/ky8YcJl4L8BvpOuipEyTPBP95ZP0k1bbFIUaA
-	lIXqm90q7zZLW2v8Y6ODfDQcMGGqugoBNCgR0V8lgAverv61EdmFpLl0hXlO3jN/AIISGw
-	ONos+vFSBVjtjkwpQxMEtCOjGcWuRCk=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-355-8IfNmCADMASWbLMj9EvEug-1; Tue, 21 May 2024 05:45:28 -0400
-X-MC-Unique: 8IfNmCADMASWbLMj9EvEug-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a59eea00cafso828193266b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yndy3JFS"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e724bc466fso25600041fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716284730; x=1716889530; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h832anITW8A4X0+wlt4pMVjTXDOHgXNK3h0zens11dU=;
+        b=Yndy3JFSQOK8ny5Pjqj5nRkt2vny6dpLUXXXajJmx8M7GHuFDBkLbbJk7le/dF23ZN
+         8rEAEV5I6S12E7DYa370A5wOK7NgqkwSq5Q6FLg64J5cu3HcCNy5CtsT9KHl7YPwe4SR
+         XlW2nidcTnpmvBu5glUx+l0Ul5V3QXPZre0iSHFW6yDy7l0suy3B1Xf5uOR/C688KgaZ
+         1Puguzb4C/gI/nfoW488rytuMAr/su9BSgU2wsN0Gd2XW5MeiqXGgoT/l3UC6mbGY09f
+         mw/JUg4bdl3QxSpgakGE1MpyNXnAMCz0Q55/yU/pirrzynkJMzJyk4u4L9BaWl93G0eS
+         ja6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716284727; x=1716889527;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uutlqnz7GlxG5MMRoikdk+qop535bU307tyY8QMm6Qo=;
-        b=c/x594X3+dP2hdQR6yOFtfEsPtaQMQfCilIz5wWU/mRYTaLjbax4YWrVm89WAJfudB
-         ivVBJZIdMWVASteo4hqs3JQf1kfh1fuyINdXhHsf0uonHROChNsjQapVl0K/pf+5QJRI
-         WO7oPJF1kfIXkfj49ZedYaVzs4WOBR3zO3EKwvG2Rq1X8BT+G/Xr2QVsPNn0/rFq6Dl+
-         ldpi5gdQlhdt9KUfzbEYBeo/d6cNQNVBQhIqmj6Epk5lmoFk4OTY8axaMsXVAy8EMK1r
-         cfIR02YwmdNwQj5HgFnpC8XRi+WAIIQYWKp659m+RDg50HhPNiqKhAe9BD3jks5sLUac
-         qAzA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3R4WyRFhOKkTsYlQhV4/GtaE7qg28Yytn/FjWvXKpNN6/6WyOt8zM1yGEwXLK/Fi6AKrP7qbCg3gsvdpAsqW2FA9zpK2UahTvw0rx
-X-Gm-Message-State: AOJu0Ywy4aVC5budv7dWN4BgkMmJu5g/ZHCjSqGPq3kZz7HLyqcCgNHr
-	RyFR04dgOdgOwEJVzD+6/y+qBKO194/daB2/o3XXHvrTCI7ifmg7Xv4sx/MWOhp7qTUF8oGHh6D
-	J5M4JZ3+GbbwhDOVCc1Zfhw4CqUrr950mLTuQMr5XzVp00kSd5uInSTXFeMA4wQ==
-X-Received: by 2002:a17:906:b7d4:b0:a5a:1bd8:b7d9 with SMTP id a640c23a62f3a-a5a2d5ccac2mr2984489366b.46.1716284727352;
-        Tue, 21 May 2024 02:45:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE15shLrDIA1bwGzpuKkQi1N9ZuJhZCcByks9Q2SL2bAm9EWYksBkA2ylT1GE1900zyIyzMcg==
-X-Received: by 2002:a17:906:b7d4:b0:a5a:1bd8:b7d9 with SMTP id a640c23a62f3a-a5a2d5ccac2mr2984487466b.46.1716284726874;
-        Tue, 21 May 2024 02:45:26 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01631sm1589870066b.153.2024.05.21.02.45.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 02:45:26 -0700 (PDT)
-Message-ID: <e55a1a36-8ed6-490e-b720-a25a0ad57afc@redhat.com>
-Date: Tue, 21 May 2024 11:45:25 +0200
+        d=1e100.net; s=20230601; t=1716284730; x=1716889530;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h832anITW8A4X0+wlt4pMVjTXDOHgXNK3h0zens11dU=;
+        b=WoK2+QZPqoOZ16vZxKaMcGQ1dcWqXp643YeORN0f6+Wq+7k6J1GfSXqQf7jEmhw3fE
+         Sfv/Oq1fsseR6NQO9KQswWC+E3n3N23M50A8ckr5Zvk0zEsfSQhsvQj9dipUXuDHB8R7
+         ZQEtEOuxV5eSRvwQiq4rappYyKA2POHfzW2X5qpi77mEfi3TT7rhwD0VVIG8zDMXqz+4
+         tKyyOhbhpoIo55tS7/EghKE0Pz9KLUXtVGc4UMqNt/5Ukmuu+aQ5m6uhopS0WqZ2RHvv
+         sdMDVbA8EUO9iRCrODtnVAwCOUE+YlyzDPv4GcZ98xftg0Nsp9xgpjFtguz/cxVKAhrp
+         U5rw==
+X-Gm-Message-State: AOJu0Yz9J72IQAcwIGvKVv5e3WX6xblLDCQclv4o5hnEQ70xcymKLi/f
+	zVDLvsRv/ykpJeE/jZbe4NiUUrhDMI9uCfW55OQu5fEnVeP7GcGDFzvYsmv9XCo=
+X-Google-Smtp-Source: AGHT+IEcIY8h4MViTxQwWwqeUoj25uDkIjguJWgmCmNuJWowFj8tcwGKQRvY8Y2jNkYsGpgXWPLuiQ==
+X-Received: by 2002:a2e:9f4f:0:b0:2e6:f51e:ec1b with SMTP id 38308e7fff4ca-2e6f51eedd3mr168497591fa.3.1716284730390;
+        Tue, 21 May 2024 02:45:30 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 02:45:30 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 21 May 2024 12:45:27 +0300
+Subject: [PATCH 07/12] remoteproc: qcom_q6v5_pas: make use of
+ QCOM_FW_HELPER
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: other.c:undefined reference to `devm_led_classdev_register_ext'
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <202405182256.FsKBjIzG-lkp@intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <202405182256.FsKBjIzG-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240521-qcom-firmware-name-v1-7-99a6d32b1e5e@linaro.org>
+References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
+In-Reply-To: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Loic Poulain <loic.poulain@linaro.org>, Kalle Valo <kvalo@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, 
+ linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1771;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=LXkde7roNdCA5RiqXlZv5DapdIAdFkD6mr6zmTWtmTw=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0ztEDbiBUwdFTHantDBNI67jC6CkE6jTStI
+ DUBBlDj+sKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMwAKCRCLPIo+Aiko
+ 1ateCACA8fdJTGUFyqavoy+BefLiojGkW0ckGZOdHnmEcupX4OyFqKuRYWb7RFv2x1GQO/175W9
+ /j+8Q82CAXNCl5roYzW2GnFjcWa5NnHHjk97bGbJcVvgAvLfUNSbT6yCC8gfIgj3LMdrSk5Tsdq
+ PnFP4zQ0ugU2Et2RUt6lwTkZRPRUevmxbwH4t+qYJgxebP/+Upic1FWXBJpuyWuEmJxgaQYb/e2
+ nH7vXuWfB7jwmOkCCk3zP+bdH99GLKAq02xWCp+f53Jvlck2j+V5ssX2BfWQX3v+i/E40qfgLgB
+ XCJQt8z1tUODh2nOnLoqSa/KLd1yQ3pwCZQMmVw7vK/qGVzw
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Hi,
+Make the driver use qcom_fw_helper to autodetect the path to the
+calibration data file.
 
-On 5/18/24 4:09 PM, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   4b377b4868ef17b040065bd468668c707d2477a5
-> commit: 9426adb0326a87ed2fa9d010c4c18189047e0c11 platform/x86: x86-android-tablets: Create LED device for Xiaomi Pad 2 bottom bezel touch buttons
-> date:   4 days ago
-> config: i386-buildonly-randconfig-004-20240118 (https://download.01.org/0day-ci/archive/20240518/202405182256.FsKBjIzG-lkp@intel.com/config)
-> compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405182256.FsKBjIzG-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202405182256.FsKBjIzG-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    ld: drivers/platform/x86/x86-android-tablets/other.o: in function `xiaomi_mipad2_init':
->>> other.c:(.init.text+0x97): undefined reference to `devm_led_classdev_register_ext'
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/remoteproc/Kconfig         | 1 +
+ drivers/remoteproc/qcom_q6v5_pas.c | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-My bad config X86_ANDROID_TABLETS now needs a "select NEW_LEDS" + "select LEDS_CLASS"
-I'll submit a patch fixing this and include it in the first pdx86 fixes pull-request for 6.10.
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 884e1e69bbb6..7bb22fdb64e4 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -223,6 +223,7 @@ config QCOM_Q6V5_PAS
+ 	depends on RPMSG_QCOM_GLINK || RPMSG_QCOM_GLINK=n
+ 	depends on QCOM_AOSS_QMP || QCOM_AOSS_QMP=n
+ 	select MFD_SYSCON
++	select QCOM_FW_HELPER
+ 	select QCOM_PIL_INFO
+ 	select QCOM_MDT_LOADER
+ 	select QCOM_Q6V5_COMMON
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index 4694ec4f038d..893fda54b598 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -22,6 +22,7 @@
+ #include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/remoteproc.h>
++#include <linux/soc/qcom/fw_helper.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+ #include <linux/soc/qcom/smem.h>
+ #include <linux/soc/qcom/smem_state.h>
+@@ -705,11 +706,19 @@ static int adsp_probe(struct platform_device *pdev)
+ 						    &dtb_fw_name);
+ 		if (ret < 0 && ret != -EINVAL)
+ 			return ret;
++
++		dtb_fw_name = devm_qcom_get_board_fw(&pdev->dev, dtb_fw_name);
++		if (!dtb_fw_name)
++			return -ENOMEM;
+ 	}
+ 
+ 	if (desc->minidump_id)
+ 		ops = &adsp_minidump_ops;
+ 
++	fw_name = qcom_get_board_fw(fw_name);
++	if (!fw_name)
++		return -ENOMEM;
++
+ 	rproc = devm_rproc_alloc(&pdev->dev, pdev->name, ops, fw_name, sizeof(*adsp));
+ 
+ 	if (!rproc) {
 
-Regards,
-
-Hans
-
+-- 
+2.39.2
 
