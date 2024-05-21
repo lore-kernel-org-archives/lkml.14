@@ -1,123 +1,96 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D737760BBE
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA764776A;
+	Tue, 21 May 2024 09:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716282844; cv=none; b=atDzWKqgvNPZnqWRQt346jW6hEcdtV74dBBpkpegNfp4DXQGbW1nC5bCLxUzyJSnKaYZ6ZBKU49I0DplNKbkP3Ob2QgymDTfNe6UQQym8zd3wtWlkumK5e8S0UX9eRuL+Y7A3kGHu+oy7xY3C7HVBOe5+Ir3MJcDK7T+SBxbzbA=
+	t=1716282884; cv=none; b=GSGBBwyaXPcrwr+7BCqaYVwpqS/zdaSvbOwFDU1Q2f3gPvE9jG9VzxIMSaHimIFrjVOWQm35aeCe0eqhUzuDaIHRNMLDHhX9M4GFQ8Dy8p1sfmNiBhgdwZefJkjtvlmNGE/8IDZ2/8k6DdiyC6ggEacFUEIHS8EFDbYy+LEeGHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716282844; c=relaxed/simple;
-	bh=gsQ/9v+Ww0+k8PG9ZOe0TIJm5Lf0GndH5Ni1tTfFNms=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DVS3qUUtCGloOR2OHESs9ldD7+XmTvy7ciC4qId3+PcVcae6FiyXKBx5+QJJoP9k/VfmBV/rgLgqkvsJM8Y5hP2rxsIQebP7BbskPU9hB+neQRE9jxgDepIn/vyfKET8T5UHtKRohSUtBJ2GVN59dYJAM6ykJQa8gaHat/mIbhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7B4LBMY; arc=none smtp.client-ip=209.85.208.171
+	s=arc-20240116; t=1716282884; c=relaxed/simple;
+	bh=KFQK1c4PQyE7m3PzOehKHpBHvcc8reWa8UWw8E/vUj4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Qz634UyzOZ3zvQWvjhozGmI1OQ0+1PR/kzA1cMzCtngY/OBcirWDDwjWhKrSIiQzPkif43ctWup9wZty4l+axtZzIcBIU6kEq0deewsAH/d1eJZip/QWzx/zYHC/1eoeJf1GFcpYwMN1r0n4anCKYT4Ttah1xRSa7qwxSVST8Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKf0BoTu; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7B4LBMY"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e6f33150bcso53017111fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:14:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKf0BoTu"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a599c55055dso795095966b.0;
+        Tue, 21 May 2024 02:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716282841; x=1716887641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BkEcZV9otfNet+oPSyzKllj/HRtvnW65yYTPY3r8R7c=;
-        b=c7B4LBMYYgVk3uhHMYUD1zwF2CM9zPTPOQLdWSeVDfx2kYAMc88rSzETfH6oZI4NoW
-         WxO2mvxcAw7i9hhzdGG50M6QTAKCNpg3gn/mIkL41VAS10SQPbGcCvLCvZSMXr0+vnIc
-         bXzlvIWmBErZH/1IPWu+NtRBmzrVXRo2RkjVd9d0XBkz1llwzQIat/7rgehponbCTade
-         egYkkPqFGHgN77WtY6b8ZtWirnJsz8tmV7OdNcBcBcAqdR/U4mJ+wXSTblSZBdLOb6vR
-         tsDK3S//9WoTjB8yKOHLdADBwGyaDMf6f+phzD+4skt6+dnMtvBzuMKcZpJOC0a9ZaLi
-         wy5w==
+        d=gmail.com; s=20230601; t=1716282881; x=1716887681; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KFQK1c4PQyE7m3PzOehKHpBHvcc8reWa8UWw8E/vUj4=;
+        b=WKf0BoTuzHHlEtiB53BsfRqn4jEP0yEFSXBP7fOWvT5QWuC9RMQpIO10rkJ+Ft8+wZ
+         m7dv86j4LVOpU07HHbwdwRzeeqNcIuNgvYj2O6Ua5XnoMbUOmDcXdYvdk4HuqErdVWEO
+         PxivgHo5ePliVXKaaYUuQiDvZEInY9tePwGAJIhtR/Dayc0cFgbu9+4+B9KGkM3gsJdf
+         rPo4fVqamhlhlY0wbClUhiaIWRJdFxnEg78qLi+6eLa/fb1LMlHoAsKsOPTDKfAo0h+S
+         lbcK4S0vezdYGmUu6HPGvTY7+at//D/kJQ6TyAlnEQCW1fgP7Owl75AIhsAoYaxDh2tB
+         kCwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716282841; x=1716887641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BkEcZV9otfNet+oPSyzKllj/HRtvnW65yYTPY3r8R7c=;
-        b=SLLcqjCih+XNNeh3/8BeonIsddaH4FyOBzc2aBwXbuQv2iM/vBuNJ1LwIcLCU84vwi
-         skgojGd0OtFp+H3Bf0u471n2ZulEKOvuhU2VJz5/Cr8dG0ukfSTUY84K8Vb6UyrJrkNy
-         fDQczCYXAV6kOOUo8LbZxqyCl+SHV6qEFdGBFMIyDOhp9+VRysZLqrkmJmWD+EchYKTp
-         TIyND11Xin5rd1UbloNXHIdMAAXX2RB21oi2996A5XwsPkn0e7xXrtPP94N3UTDG1mzl
-         ZSkaMmd15Q8GI6igvf0OfiVLLTOrEFDZNhoxmutmQHagM8NS6jzvm8+JeVSyIZpJftaN
-         X4AA==
-X-Gm-Message-State: AOJu0YzDD8s5WKq351viOIQOuXBDgscgnElqqDx2V/HQw6rrddLRy1nv
-	YfPOk/FaMffQPSy4uAHBAVM3Wwvb3t0cT9E2rVdsgyBjwmQG3CdYrkA2kNnNnm4jb6esajNd9Rf
-	R7NimB0uQWHRIAdK5sFZ2AuFq6TU=
-X-Google-Smtp-Source: AGHT+IHTgsMsQu9irQccR5FbYjGLrxW5NkW0sX0QWPOsy2HY0W/KV12K90sxh9WZS1q9R2HYKev6vkz2cXRjJQV5Fww=
-X-Received: by 2002:a2e:7e05:0:b0:2dc:bf5c:9648 with SMTP id
- 38308e7fff4ca-2e51fd4b1f2mr226672731fa.19.1716282840655; Tue, 21 May 2024
- 02:14:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716282881; x=1716887681;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KFQK1c4PQyE7m3PzOehKHpBHvcc8reWa8UWw8E/vUj4=;
+        b=XqDgMbh0xAurifUrqraS1DiiJxS91XtQSXZ5/zU2iQ7BZf0dNO5b7qunDn2dDPh/Hy
+         hlZbmBz9s6u4VJs8+kkhytGp5CclSo5JMtZ2H1S6MRFSIQ5NSEUq35OKncEskBZGS4uX
+         kVcD99JhiWD8PgYwLnaJLjvvpBxr92b8pajPVo12X3HdKM0gWNCrZBT4cJiS2yOEUJP0
+         VFiYN8xGwqT6uZAbawmSKTCihTowglfQbd3bdRebUzCD7tEtnT7NCfreRRoLMBr1kJUh
+         B/FxtTLacmIVruL/ViKkJ514FJvocU8WUETSHyYl8iiaMLQNzdqkN80jxgSgDKlLu49e
+         pGrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvdYxZ3Gek0fT/gVewyFLs/gcNYAyYH2qnNk0/GVyhaLzWL8T2xiblgRt0MtVe+Kklxdw12x+T61BBjPKGmnhepXjU2Xg9mtCd0LSJkx0g1wLDbpgNI1h1fXcQ5Ly/UkWtJ0uzKb31
+X-Gm-Message-State: AOJu0Yz+v25TrqmvENHWlXYLv1YTIiGXf7cySmAZJccqrVGmNzR+Sf00
+	QKMos1sklCqaJOCApF5kHEl7Cd84wCbWC0Yz9okvHHY0GNLcP3va
+X-Google-Smtp-Source: AGHT+IE/7gJpJG9wiUiEYW3ilUdR4829vb87RX4BE7XTz5YsALoI/o56dKfV0CPJZj/Y/y8iIT2EKQ==
+X-Received: by 2002:a17:906:f6ca:b0:a59:a0ec:e02d with SMTP id a640c23a62f3a-a5a2d53b08emr1739780166b.8.1716282881293;
+        Tue, 21 May 2024 02:14:41 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5ceb46c33fsm668469666b.142.2024.05.21.02.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 02:14:41 -0700 (PDT)
+Message-ID: <e1277a004b5aef8e6b407089ac1e3df6ff6fee50.camel@gmail.com>
+Subject: Re: [PATCH RFC 0/4] iio: add support for multiple scan types
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Julien Stephan
+ <jstephan@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 21 May 2024 11:18:24 +0200
+In-Reply-To: <20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
+References: 
+	<20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520082134.121320-1-ubizjak@gmail.com> <ZkxY04qY7spBvlYb@gmail.com>
-In-Reply-To: <ZkxY04qY7spBvlYb@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Tue, 21 May 2024 11:13:49 +0200
-Message-ID: <CAFULd4YPBSdfyUYr8D6_wDbRZSnXrT-4OcgNUNoYpAqefrnA+w@mail.gmail.com>
-Subject: Re: [PATCH] x86/percpu: Enable named address spaces for all capable
- GCC versions
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>, 
-	Denys Vlasenko <dvlasenk@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 10:18=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
-te:
->
->
-> * Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> > Enable named address spaces also for GCC 6, GCC 7 and GCC 8
-> > releases. These compilers all produce kernel images that boot
-> > without problems.
-> >
-> > Use compile-time test to detect compiler support for named
-> > address spaces. The test passes with GCC 6 as the earliest
-> > compiler version where the support for named address spaces
-> > was introduced.
-> >
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Andy Lutomirski <luto@kernel.org>
-> > Cc: Brian Gerst <brgerst@gmail.com>
-> > Cc: Denys Vlasenko <dvlasenk@redhat.com>
-> > Cc: H. Peter Anvin <hpa@zytor.com>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > ---
-> >  arch/x86/Kconfig | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 9d16fee6bdb8..c9e0a54f469e 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -2430,7 +2430,8 @@ source "kernel/livepatch/Kconfig"
-> >  endmenu
-> >
-> >  config CC_HAS_NAMED_AS
-> > -     def_bool CC_IS_GCC && GCC_VERSION >=3D 90100
-> > +     def_bool $(success,echo 'int __seg_fs fs; int __seg_gs gs;' | $(C=
-C) -x c - -S -o /dev/null)
-> > +     depends on CC_IS_GCC
->
-> So ... will this test also trigger on Clang, which might have a
-> __seg_fs/__seg_gs work-alike definition?
+On Tue, 2024-05-07 at 14:02 -0500, David Lechner wrote:
+> Following up from this thread [1]...
+>=20
+> Unless I've overlooked something important, I think adding support for
+> multiple scan types per channels should be rather trivial, at least in
+> the kernel. Userspace tools will need to learn to re-read buffer _type
+> attributes though. For example, it looks like libiio caches these values.
+> I had to restart iiod to get a proper capture with the iio-oscilloscope
+> after changing the scan type at runtime.
 
-Yes, but please note the dependence on CC_IS_GCC. This dependence can
-be removed once CLANG is tested to create correct code for named AS.
+No for now but to add more future fun, we may consider in having something
+similar as hwmon [1]. Hence, userspace could do things like poll(2) on the
+specific file rather than having to read it over and over...
 
-Thanks,
-Uros.
+[1]: https://elixir.bootlin.com/linux/latest/source/drivers/hwmon/hwmon.c#L=
+649
+- Nuno S=C3=A1
+
+
