@@ -1,59 +1,60 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBB160EC4
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECAC6CDA5
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716284729; cv=none; b=oShsf19xT0ejiGh9EBX5gV1YLBI3z+BUKkKyTs2xWtZPXRxhWj/h2Iu/tx6lfWge3OAN6mg/OJHon8s9FKN0GRcMIzwgDDnh8O+nNTjAWHPX+DG7oZwVfAaaij1sQwp2r84+36sBfp9UD9V2JZmzD5uh36A3liZ0w80KrGV9Y7I=
+	t=1716284732; cv=none; b=CECILiJzlagMUWC2ZVYxKdaQeIuEmN/kLEWxtQB1slnFF8oPAYNGbNELLPNu6Iqi0sScCvCjJarN5EaDqY1vLpsAplzvaJMCGuA4KGLWv41MhCbnhzJCjvqtMZzuMaWxfSwZIa4Y0gzQJtGjEGzfvyiOf5+oY/RD0e5wRguTM+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716284729; c=relaxed/simple;
-	bh=8bSYJFZxOttwC6WGzJnbnsvxZHPinVGAHkl3/krhwFU=;
+	s=arc-20240116; t=1716284732; c=relaxed/simple;
+	bh=cXnQhU7DTsaHUnDJalMnIg7XjAg9iNbwZVjIZgmeSpk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Eq7lY263sDDnf6fnybCyZ8J247pcyorP28jeGlsnCLXKfiR/P7z99+pLmMPIoDF6LVnpVGaxJ5Ci311QYxPuOQaJE4kGXui11AeP416+NOVP/pXeVkfC/Z8pJD9IcgXFJ5Xx9PpQAV/cUz41W2KKLCsYt03oPbmAR0O69MSePjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m5xFXcKb; arc=none smtp.client-ip=209.85.208.175
+	 In-Reply-To:To:Cc; b=e2h6ls+T4uw+KlJn+BoWaZMjP+rRzEW5MDQWvoI9tCwY9nDD/xULw2YpPypZCCwfrql2HBrT/0SzZ/bAOWOJN6O+LCxheTk5VU489tZO+0J3l1zEU++Gqrgkd7PSw4GBHXyY35C9w8eWOGdS6wbT4JaMAdtz7QtUDYzYi9Yhnqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c6L9dSyJ; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5xFXcKb"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e6f33150bcso53296881fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c6L9dSyJ"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e576057c06so43958341fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716284726; x=1716889526; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716284728; x=1716889528; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=s+iPb833VFVcxccVnaoN5omlaE6HTbUUtzkP4wXORTQ=;
-        b=m5xFXcKbP3jJPDk8reuRHY+7n77jSX2QAZndqoPqK0TZjSOIA7QvcRwwZ3IveIEia1
-         CVdAOf6Hm3L1wNoW+gbkswW/3qeNeYcNTUpoucE3JMRplzmaMdHWYe5st14AZEUHnVc4
-         CsRIL5YnX+28fcZFkwH+YDAlM4cukzwXEAypWiezGTL+CT4eHHFzKQkLgsHLkGjhMqMo
-         L5P9RWNKVMdXQAL71sExaDFK3cdtStiEpqF5hvfaENbrzHSnEDgA2/SJkHGOqgBpwFzS
-         jQZg6oGFZPYQ+RwHp9mtQh7Ccuz5r7Npg1uBXZ1qiteTlbGZywL2SSLTYMH0hgLKoZ/n
-         Amsw==
+        bh=sgcASYNTvkFLrMGDS2Eu8AcYhISRnJlaNxwD2bJ6AP0=;
+        b=c6L9dSyJ0UDxhzPY2s7LGjyxjVKc6BcWwK6HFJjAcN1G5cKYLLPjdDFjqYUOWPO1T0
+         aXyTYCCSGy1YQw/PSsBtir8M/sPenBPFD/bAGPZJDxLgWHvsf837Bqi3RKDVDmMBflTz
+         f1mPgAi5c1jwoibA/oKPeThGvtXc4lWVR5VpFb0UMXir9EyteAelKsNYvFVxT7H3QWmY
+         oD8gEHqpAlRxpDlxfYdW15cDaHmws6V1lFrlY2iyH6TLPse/AwBx2ekW8aut7nIWYYib
+         ic4LH+VRzf6YZtH143hmUzPcYWDb6005vQN8ibnN/PoG0g+JarV9B7vFBOfc3qV5CON+
+         a5+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716284726; x=1716889526;
+        d=1e100.net; s=20230601; t=1716284728; x=1716889528;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s+iPb833VFVcxccVnaoN5omlaE6HTbUUtzkP4wXORTQ=;
-        b=UFTBkvxBtEsQQIn9QoN92GSUslzhr1u7qXsy7KSA9QZxR1FXq+Bm0PMJviJexCO6Y9
-         jfssNeyLSNcBOfSXXcJm9TOoTkgZGqJvkgwx1y00mMB7RDCCJ2vaKQbdN2ln7VpqB/sI
-         YbWYtHHpcDhtQ1MSicFYVJQTrf649dWlesYQYFk7a125R1DKacM5kf1d0MfRHwuzucsR
-         ffYbdnjTrdD/5we4KNf+YZukXO3TSpNjfdrNZmuPkJTWjUbET/z1xXfRcx9K9RWyTh/k
-         SgQ8lKhO44YLGyuLHDT70O3w4r+MBMCKoCXxLZcbIhDvKNSmLLIIohr9zTEY+H/SwB2O
-         yJSQ==
-X-Gm-Message-State: AOJu0YyF+gWyPqR9u1/Vh1XEFXlYgM9opoXk7mfb1lRFqXne/0BlApIj
-	XDYH5QQKLuTYwXUylXhgzPSBnnFdfjxNgOg6dIbAEv0kC2Y6Z2ur1Kn/nyceouQ=
-X-Google-Smtp-Source: AGHT+IGK2Mm/vNlP83fxNawhKETP5S72Iv/Fv7BCr1CruU63ZvCJ9JIg8mo2tnDHyPHB1+g5HBRVvQ==
-X-Received: by 2002:a2e:74f:0:b0:2e6:bc64:dd50 with SMTP id 38308e7fff4ca-2e6bc64de97mr164048351fa.39.1716284726075;
-        Tue, 21 May 2024 02:45:26 -0700 (PDT)
+        bh=sgcASYNTvkFLrMGDS2Eu8AcYhISRnJlaNxwD2bJ6AP0=;
+        b=Cf7lXd8F9cFdPf8CRURTLY3AFURpuhZK37In5zzVj6LYqDMVlYLZ/3pyZPp4CrD0lD
+         QwF3C4tC24BcDhRlN0/aW4zHTN0xhcHyT1VhIJvYl6X/7IVaGzU1enzrkLljTJno+Nr1
+         AGXuUeOqPTRNCOIAdy5Y0wPLJNlnVdAvF6+1D6TFEO+Kdiv17R7Re2dbzY1ljdoJeQ0H
+         6VaASM7FyIq/4k0lWH8KR04PJVJqNbCPcOx6vDq/Nqeu0+luewX7AOxq9aats6UJfHIG
+         C+pMqNXRr99Wi9sYJPpnpd+vAnrpFCWojbybpjwA+6fvVVun99YQR6s6FvprLNqmtpKn
+         AUCw==
+X-Gm-Message-State: AOJu0YybBeLndpPDaKVJ2rTOUtIg5IH51oTwKJKG5wvhjjeyqaVIlz8u
+	Zjp0WG7D/G3m2vv5Mom+tuDqEjH1WckEoRub/luePJIMCQTzCWs32FfjRaI+66g=
+X-Google-Smtp-Source: AGHT+IH+yWZDlb8bLS8nPxgS1saOotk0gFOAEFagqvE8965Yk3oeS5tWeCYbJp5/QyV9ROS9rcHYXg==
+X-Received: by 2002:a2e:7a19:0:b0:2e7:2a95:a735 with SMTP id 38308e7fff4ca-2e72a95b39emr30334991fa.0.1716284728093;
+        Tue, 21 May 2024 02:45:28 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.25
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:45:25 -0700 (PDT)
+        Tue, 21 May 2024 02:45:27 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 21 May 2024 12:45:21 +0300
-Subject: [PATCH 01/12] soc: qcom: add firmware name helper
+Date: Tue, 21 May 2024 12:45:24 +0300
+Subject: [PATCH 04/12] remoteproc: qcom_q6v5_mss: switch to mbn files by
+ default
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-qcom-firmware-name-v1-1-99a6d32b1e5e@linaro.org>
+Message-Id: <20240521-qcom-firmware-name-v1-4-99a6d32b1e5e@linaro.org>
 References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
 In-Reply-To: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -77,170 +78,41 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Arnd Bergmann <arnd@arndb.de>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4930;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=968;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=8bSYJFZxOttwC6WGzJnbnsvxZHPinVGAHkl3/krhwFU=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0y1XUQH+EkXc9kNuEjWYoYT5cJRxUMUftgv
- dfOM+jgTIKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMgAKCRCLPIo+Aiko
- 1YlIB/9nvjT0T/s9Ip16YLNw25bZIyKJO+WvibNJUKE13nQDVALipPKFR8jyH1tkeaAqeI8rg21
- qoAK5hzh0LytrRgX8iRNtEpm7liRiM/Oxn8APVe+PPOjzAKo84EqvW67uCJHBQV5VaFR6CrCtb7
- EIe46Mjt/ZRc4FUlmGf9of6WIwut+LJf+KzqgSb7/X+hQCatGhtpxcLH8hhqcYQMViUTjqyMxj8
- xuL3FFPKz0K0VPUUI6DRbUeFg7z1uY1HeeVqOlRomg1q/HAHGMQ/ewg+bpMT/y/HoP047eCXXV9
- jrkGfY3YItyS3bp25iqY/JUUI6gf0vzQYiT+NEkuseYQsV+m
+ bh=cXnQhU7DTsaHUnDJalMnIg7XjAg9iNbwZVjIZgmeSpk=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0z325iTl+oMn1NQPrPRQ4Q6ZS6i5lCSsDT8
+ POtLZsdzk6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMwAKCRCLPIo+Aiko
+ 1Qx4B/9aFjIwgs7dL0sZ1cXYFdsxgqusHx8lV3ee+k6wrcZ50Tk67GjspFGGFf+/SurH08Rlaor
+ P1exT5p9sVRAW5FCra4CzBSV/8p4CoSitkEeo4b7DxhOWrXhN73ATE0JLeoqzTwvlsrIORsRyS5
+ msC4jvfGmotWUr0mO/PbNY/cd4liaPOroxtECb2WF2eD7Dl91sYIonLL5f+I0NPJ0HL1/VXrShX
+ cVLekJ/MtRuH8QjUxdC11CEpTNb8CWasj9+ltZbCjrNuQ5GOB3igW0r+MScMpyoIJQ8jNi+3onS
+ DzH9oZmFQ4Fmx1ogoh9B0Ix2gxcm642ftyqgoPEQoOwegcvo
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Qualcomm platforms have different sets of the firmware files, which
-differ from platform to platform (and from board to board, due to the
-embedded signatures). Rather than listing all the firmware files,
-including full paths, in the DT, provide a way to determine firmware
-path based on the root DT node compatible.
+We have been pushing userspace to use mbn files by default for ages.
+As a preparation for making the firmware-name optional, make the driver
+use .mbn instead of .mdt files by default.
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/soc/qcom/Kconfig           |  5 +++
- drivers/soc/qcom/Makefile          |  1 +
- drivers/soc/qcom/qcom_fw_helper.c  | 86 ++++++++++++++++++++++++++++++++++++++
- include/linux/soc/qcom/fw_helper.h | 10 +++++
- 4 files changed, 102 insertions(+)
+ drivers/remoteproc/qcom_q6v5_mss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 5af33b0e3470..b663774d65f8 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -62,6 +62,11 @@ config QCOM_MDT_LOADER
- 	tristate
- 	select QCOM_SCM
- 
-+config QCOM_FW_HELPER
-+	tristate "NONE FW HELPER"
-+	help
-+	  Helpers to return platform-specific location for the firmware files.
-+
- config QCOM_OCMEM
- 	tristate "Qualcomm On Chip Memory (OCMEM) driver"
- 	depends on ARCH_QCOM
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index ca0bece0dfff..e612bee5b955 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
- obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
- obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
- obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
-+obj-$(CONFIG_QCOM_FW_HELPER)	+= qcom_fw_helper.o
- obj-$(CONFIG_QCOM_OCMEM)	+= ocmem.o
- obj-$(CONFIG_QCOM_PDR_HELPERS)	+= pdr_interface.o
- obj-$(CONFIG_QCOM_PMIC_GLINK)	+= pmic_glink.o
-diff --git a/drivers/soc/qcom/qcom_fw_helper.c b/drivers/soc/qcom/qcom_fw_helper.c
-new file mode 100644
-index 000000000000..13123c2514b8
---- /dev/null
-+++ b/drivers/soc/qcom/qcom_fw_helper.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Qualcomm Firmware loading data
-+ *
-+ * Copyright (C) 2024 Linaro Ltd
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/device.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/soc/qcom/fw_helper.h>
-+
-+static DEFINE_MUTEX(qcom_fw_mutex);
-+static const char *fw_path;
-+
-+static const struct of_device_id qcom_fw_paths[] = {
-+	/* device-specific entries */
-+	{ .compatible = "thundercomm,db845c", .data = "qcom/sdm845/Thundercomm/db845c", },
-+	{ .compatible = "qcom,qrb5165-rb5", .data = "qcom/sm8250/Thundercomm/RB5", },
-+	/* SoC default entries */
-+	{ .compatible = "qcom,apq8016", .data = "qcom/apq8016", },
-+	{ .compatible = "qcom,apq8096", .data = "qcom/apq8096", },
-+	{ .compatible = "qcom,sdm845", .data = "qcom/sdm845", },
-+	{ .compatible = "qcom,sm8250", .data = "qcom/sm8250", },
-+	{ .compatible = "qcom,sm8350", .data = "qcom/sm8350", },
-+	{ .compatible = "qcom,sm8450", .data = "qcom/sm8450", },
-+	{ .compatible = "qcom,sm8550", .data = "qcom/sm8550", },
-+	{ .compatible = "qcom,sm8650", .data = "qcom/sm8650", },
-+	{},
-+};
-+
-+static int qcom_fw_ensure_init(void)
-+{
-+	const struct of_device_id *match;
-+	struct device_node *root;
-+
-+	if (fw_path)
-+		return 0;
-+
-+	root = of_find_node_by_path("/");
-+	if (!root)
-+		return -ENODEV;
-+
-+	match = of_match_node(qcom_fw_paths, root);
-+	of_node_put(root);
-+	if (!match || !match->data) {
-+		pr_notice("Platform not supported by qcom_fw_helper\n");
-+		return -ENODEV;
-+	}
-+
-+	fw_path = match->data;
-+
-+	return 0;
-+}
-+
-+const char *qcom_get_board_fw(const char *firmware)
-+{
-+	if (strchr(firmware, '/'))
-+		return kstrdup(firmware, GFP_KERNEL);
-+
-+	scoped_guard(mutex, &qcom_fw_mutex) {
-+		if (!qcom_fw_ensure_init())
-+			return kasprintf(GFP_KERNEL, "%s/%s", fw_path, firmware);
-+	}
-+
-+	return kstrdup(firmware, GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(qcom_get_board_fw);
-+
-+const char *devm_qcom_get_board_fw(struct device *dev, const char *firmware)
-+{
-+	if (strchr(firmware, '/'))
-+		return devm_kstrdup(dev, firmware, GFP_KERNEL);
-+
-+	scoped_guard(mutex, &qcom_fw_mutex) {
-+		if (!qcom_fw_ensure_init())
-+			return devm_kasprintf(dev, GFP_KERNEL, "%s/%s", fw_path, firmware);
-+	}
-+
-+	return devm_kstrdup(dev, firmware, GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(devm_qcom_get_board_fw);
-+
-+MODULE_DESCRIPTION("Firmware helpers for Qualcomm devices");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/soc/qcom/fw_helper.h b/include/linux/soc/qcom/fw_helper.h
-new file mode 100644
-index 000000000000..755645386bba
---- /dev/null
-+++ b/include/linux/soc/qcom/fw_helper.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __QCOM_FW_HELPER_H__
-+#define __QCOM_FW_HELPER_H__
-+
-+struct device;
-+
-+const char *qcom_get_board_fw(const char *firmware);
-+const char *devm_qcom_get_board_fw(struct device *dev, const char *firmware);
-+
-+#endif
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 1779fc890e10..eeaae2505352 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -2003,7 +2003,7 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	qproc = rproc->priv;
+ 	qproc->dev = &pdev->dev;
+ 	qproc->rproc = rproc;
+-	qproc->hexagon_mdt_image = "modem.mdt";
++	qproc->hexagon_mdt_image = "modem.mbn";
+ 	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
+ 					    1, &qproc->hexagon_mdt_image);
+ 	if (ret < 0 && ret != -EINVAL) {
 
 -- 
 2.39.2
