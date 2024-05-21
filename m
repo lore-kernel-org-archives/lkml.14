@@ -1,125 +1,186 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092445674A
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716288698; cv=none; b=KqaTP9/5TQ0LkHmDyBiOnNTQBi8VMK4qiYbydDD7R+jYW/PkwqVNXXBw6R3xGcotCpbuoH8Dh7LMIJ5rU53v51NNnIv8XK8lur79t3PZyCnCfOJPSuN72hCHJhFxquQ9+SSrtBn7iMC+rhkN5MuzHAMsDrPHtrXSNlRDLWsfZTs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716288698; c=relaxed/simple;
-	bh=4Kx7WXARIW9MSU6q7eJuCa5sRur+0LgvIET+O3hB6nw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WzBUNjKyqLE1Fv3U/9ghNQPR/Vqw7ZApYMfQguNyBwfW9wTkhPSPnzJ2hmPtWOBVTbmIJ2QL8SstQOreXHW4E3HYIKJ8OgC1wWD/9D8hC0pqfheGaucGADmuoraTvkUuOLPejXZ8XiCWDxngvOiKT97gijommXynCekklWJVVt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z+lHHegZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Bon4G70g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z+lHHegZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Bon4G70g; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EA171B3D;
+	Tue, 21 May 2024 10:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716288782; cv=fail; b=Zg0KDpz77UtzWZc3UZHOyuuYlhG7xQVEA9aVb5pCZiARJvj2iMY3dAqTOFi/kYW/3EKx/k1PXx2+Gxu1EaEIWNlMxL0DTm64gMFef3BFPEP02Aye7ZdG32Qb8xe1K45NOlCUNGWadq8E8NkbN/D04Auh58K3ffT5tqchHzncgV4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716288782; c=relaxed/simple;
+	bh=UzTqVBYVp3MOPIUVQ1vG7ev8W1GEm0G/BgkUl0SjafI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NfjyBcNW9usVejfOGRe1OhmsP1SVrPu9/KTGhZJQDKwDwM44iyp7oBG4fyRnYM91t2rMkYU69d58WNcO2RzASzBhA/qsiQgNnmE2cq+E4pdv+81Fe/UAXW13uvb7ymCRzxynOiMjSU9N5/qhlXLznyNrZMZ986xsbE2oRWdJbTo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JbUPiJE4; arc=fail smtp.client-ip=40.107.223.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z+lHHegZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Bon4G70g";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z+lHHegZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Bon4G70g"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 88D2E3402E;
-	Tue, 21 May 2024 10:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716288691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z3Td21Nb/lca1rU44g3R9277/UsQFL4lej+k+yXEDEk=;
-	b=Z+lHHegZSQ4W23K+LKRA3yg9ZAiT/NjuRK59CeguCXFWStXaUI/WM2mGXIMIKDCo9oH/w0
-	OpijWjAxpFgiVEZcf8SbF60C8XOFBzdAimww3+Ar3fnPZDDIgkk576shbMugQ7kMryNkKq
-	Dl4MIIVqqW545/qID36jmCQiQEHmYTg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716288691;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z3Td21Nb/lca1rU44g3R9277/UsQFL4lej+k+yXEDEk=;
-	b=Bon4G70gnMgLKIEJyZMk0mT4znXDbzETwGZ/MxttgI+7z8/RAQ4joaCE2R15Mp7QoHxuGK
-	wrrMYMvGapEPXgAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716288691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z3Td21Nb/lca1rU44g3R9277/UsQFL4lej+k+yXEDEk=;
-	b=Z+lHHegZSQ4W23K+LKRA3yg9ZAiT/NjuRK59CeguCXFWStXaUI/WM2mGXIMIKDCo9oH/w0
-	OpijWjAxpFgiVEZcf8SbF60C8XOFBzdAimww3+Ar3fnPZDDIgkk576shbMugQ7kMryNkKq
-	Dl4MIIVqqW545/qID36jmCQiQEHmYTg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716288691;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z3Td21Nb/lca1rU44g3R9277/UsQFL4lej+k+yXEDEk=;
-	b=Bon4G70gnMgLKIEJyZMk0mT4znXDbzETwGZ/MxttgI+7z8/RAQ4joaCE2R15Mp7QoHxuGK
-	wrrMYMvGapEPXgAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 20B7F13A1E;
-	Tue, 21 May 2024 10:51:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id riBOBbN8TGaNEwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 21 May 2024 10:51:31 +0000
-Date: Tue, 21 May 2024 12:51:25 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, vishal.moola@oracle.com,
-	muchun.song@linux.dev, peterx@redhat.com
-Subject: Re: [PATCH] mm/hugetlb: remove {Set,Clear}Hpage macros
-Message-ID: <Zkx8rW-HvlzCND04@localhost.localdomain>
-References: <20240520224407.110062-1-sidhartha.kumar@oracle.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JbUPiJE4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AeQ+tBcd/tAKefreGbWvpC+g0wYIQazD9O51k/PpT52JXcDqhomJxuXXqUfhhA1qZ4QZiurpJJDaJTCDCL5yCSg1lt27pew/DKdAzvICyFLo3rfqR2RBRHEOJzjKZ+DNnM+TwISJbgR2JEIzveZZFSVptudjKutyS8Bfv6KZNgYcFohwEhE2RuXN8Va2OGIh/mTCXK4k/zgCu31dFcHh8/Yc3hWHK6Mq+OfshFrP7//n332zOOV1Cu8l81YkmfEBocuHCP/R0k4Oq8zNbc3FMbpvDcNSWX+arsM4EAwYigORGI7skR6MAmHheIUGFmdeGrT+3it3hOjko7Bs5R5ucA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uFEaX1++H7A8n07KEGq7VOJSpbf9+5fc77/Cl8xXUvY=;
+ b=WvOnoE+1VI5wH9xrQ8rDtJ2DCnCePXTqiL000r2Vk5NpHMwnvd59SSkXdlwZWYGssQwpogM1Z8aVwtdn+rUr+Mle2MC07vLpg22vA9+V9sUT6lEc6arFYa5zl+hWlM/3TKT6j8UQWtVif+EUz5GNkdWgWoayHP6ZZ/hnTGHuxDiYnwP2WosGch3S2kBfS43hoA7D7GfF9Fmo14o4VDRarnMpBAc/mB8P0jji+Gg/GNbY48rYJrK7nbs+M8mvk04y0Uc5zLQnmR63yeTrxO/9lBNbDyZkiNhFSIjAUUSaMUJzPfzvM0v4wbw1C4Rs02jIGqilt/VoJiOn06FdKauhyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uFEaX1++H7A8n07KEGq7VOJSpbf9+5fc77/Cl8xXUvY=;
+ b=JbUPiJE46dqDKvZLJ+lIayuRgYKEfqaMnrlKtLjEtyDISQ4ucAQPJPmRMAOqcMOFwO1idm+/3o8x+j8jIvGSYeQC3JT/9TnEZrMLc8Fv6oFb/IFRu7mwNKWRFSe7CWWexf/SSQTPS2JZO6ebJyyseoUjq0sJt4w3x+wOYF8uTnI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MN0PR12MB6056.namprd12.prod.outlook.com (2603:10b6:208:3cc::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Tue, 21 May
+ 2024 10:52:57 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7587.035; Tue, 21 May 2024
+ 10:52:57 +0000
+Message-ID: <e7227b7c-d544-42a2-8396-a7d104b54e31@amd.com>
+Date: Tue, 21 May 2024 05:52:52 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
+ assume dead" on stable kernel > 6.8.7
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ =?UTF-8?Q?Benjamin_B=C3=B6hmke?= <benjamin@boehmke.net>
+Cc: Christian Heusel <christian@heusel.eu>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Gia <giacomo.gio@gmail.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "kernel@micha.zone" <kernel@micha.zone>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ "S, Sanath" <Sanath.S@amd.com>
+References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
+ <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
+ <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
+ <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
+ <61-664b6880-3-6826fc80@79948770>
+ <20240520162100.GI1421138@black.fi.intel.com>
+ <5d-664b8000-d-70f82e80@161590144>
+ <20240521045940.GJ1421138@black.fi.intel.com>
+Content-Language: en-US
+From: "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <20240521045940.GJ1421138@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0157.namprd04.prod.outlook.com
+ (2603:10b6:303:85::12) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240520224407.110062-1-sidhartha.kumar@oracle.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,oracle.com:email,suse.de:email]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN0PR12MB6056:EE_
+X-MS-Office365-Filtering-Correlation-Id: ddcd3ea4-62ed-4925-7cbc-08dc79842cd4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cUJxQzVEYjRnVzQxeVBiN0h4SnlXNHlPekdsT2Zza3ZlM3lJZ091K0pTQ2Z5?=
+ =?utf-8?B?NVdxc05ScENIQ0Z5MC9FbkZadUJYdjhtb3hNcXhMcThQT3NKd05OZGpMNDVQ?=
+ =?utf-8?B?elRxeHA3YVdTazlXM2o5STk0MElOZmROdE1xQUdFZGlldXNyZ0xmNDdkNkk2?=
+ =?utf-8?B?OXU1MFdGY2JINkpLSlFEUnErdStESGQrSjVZZll5aFMxNUdKcnhOQ2RRa2Zh?=
+ =?utf-8?B?R2R1dWRsVENaLzJ2Q1IwdzBwZWJ0K3FPUnlOZU1yUktvUGZOb0xVenpMaXZz?=
+ =?utf-8?B?clk3RDlLOGl1Tm40dDlnUldzRmdXckpHdHpjY0dldXcvcXRLQks0bHZ6TEty?=
+ =?utf-8?B?bS95SWFjdFg4c1JaQXQwNUVOL1ZRVlFVTnhIck1RK3JrRi9GejZacGt4eXQ1?=
+ =?utf-8?B?S2IwcFhJUE9OSktjbmdIRFBwbGY2UmRabXJDK0hYSkpGZHpmZ2MvWHhzL090?=
+ =?utf-8?B?NTZtZVQ3VExPdWlFRTJZaUdaVmdKTHBoeERnWEVhbGsxK3JQV0JxeC82cHgy?=
+ =?utf-8?B?bEpERXJZUXhHMXl2ZjFIRWxWQ1lGdWtld3dMV3BTd296eUpzTEZLVGZodkxx?=
+ =?utf-8?B?Q01CeHZpWWZzYUx3bEFKQUNHeldzTWZxKy9sdnIwTkpXYml5N3pNNHVQYURs?=
+ =?utf-8?B?V1dsdWtyUXptTHg5NHlSTWo5V3NXek5aU1BIWmVXcVdSc0xsdUppRkNodFRE?=
+ =?utf-8?B?QzJWRlJDVWlSSDhwUTVqVEpKUDFSdkVWRWJETndnUmdrOU42NkhCNHNwQ3Ji?=
+ =?utf-8?B?aFVZbnljVzZlamdFSnFXOVFkd3VJM2ZNM3YxajduWS9ycXgwRDk1UkpxQmdQ?=
+ =?utf-8?B?SkhSVHMyL2lrUXRaZFpCZE9TcmhvbnhUbGhDSnlmMW00bEMxK1dDY3ovQkhy?=
+ =?utf-8?B?aSt0WklPOUVRRFNTK1BBb2hYb3FXWnFWRGpRdXJ4YXltd3B3R1VFUjdVVmRV?=
+ =?utf-8?B?R1N0K0lmQU1qTW9LWlNSSFg0OTArVjlxT0kwWHdoTUM5TEo4c3d6dWRFZFZx?=
+ =?utf-8?B?Y0Jna1VMMWhnVHlHSGozK1NJM2Z6ZHpHdWZuaHMvaE00enNpRVVzMXBXcUJQ?=
+ =?utf-8?B?cWZxQ1h4Q1pDL0t1ditKWGlzWm1iYmZQaUFWTTg3L1dNdk5zNi9iY0kyaDVt?=
+ =?utf-8?B?Z0kwcnUzZVB0ejdDMEpPTCs3d0FyR0RpaHNnd1M3clQxT0NSd3VvWXN0SnZq?=
+ =?utf-8?B?bldkc1NvYm1VZVhHZExwN2lpOEVTd1IxbkJUbVc3QjhrSU1XYnluMFRGK1pT?=
+ =?utf-8?B?eW5OVjRBNHoyYWdJUEVaNVJlbVplN1p2UUVKRkQ2Mm1ZL1UwVk56WW1aYTJE?=
+ =?utf-8?B?OW9BVDB3K3p4NXBmalJ6VnV6eUtpaTJiVmpVVWpoZS9ESkFiUkFSSGoySy8v?=
+ =?utf-8?B?UVc2THVyNDVQMVpHYmxsMXp1aytvemNuZDVPTFVucDlWUDRNUHRRL2NhRU1E?=
+ =?utf-8?B?RXJ3eVNpQXNKc0FINzFDdXplT1dScjFTcEtkMkZIbDZFZTNRa3JIcGRRNjNX?=
+ =?utf-8?B?TW5IZ1JXVnBhNXE5SEkvT3UwT2FocklENkNWeWxCZ3J5U2tlcERzNFZmK2VI?=
+ =?utf-8?B?OGJxRHpsSUhjeThPWnduUXhtbkFwZnd3VFI0WGJXOCtjdkZNRlJ0WE1LZEw4?=
+ =?utf-8?B?clZCU0N3cE9TWi9zOGtSV2l4cXVxM3RVcEE4RXByV202SDJHMmVJNzUzdUJw?=
+ =?utf-8?B?cyt0anpJb2d3aTIvVWhGZ2RsLzc3cmdhT09TZWluL0tOTTBEU3l4bEtRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Mnpnai8zUzFQeERka0UzODFQMzAvdU9UREJQUGhoYzk4Q3BVS3kxcElObzV6?=
+ =?utf-8?B?WHA5WlpHZE1WK0tpa1J5eXBleVl0VVIxdEtyUDNLRWVqb0FScjdWaWVja0h3?=
+ =?utf-8?B?VjlLcVBVL01KRjhjanlhT2E3YVM3Qjc5YUdaTHROWVA0MXRXeG9rNnFNL3E1?=
+ =?utf-8?B?aW5ya3JKQkpHRGRlL2JtajhNYXNLMEFhbWNaaGRaendSTDhFU3dpaGM4MTRJ?=
+ =?utf-8?B?OE9vZ1k0TmlIVUdsQ0RjWnhDMzFneThKYTRubUhhVnNBNlRndkdoUWxJNnk2?=
+ =?utf-8?B?Um5lUjh4NUh2OHFXREFFa05YNThCTDdJcVFna242SE1jWlRWUVVya291RXBW?=
+ =?utf-8?B?MHFKZXlDMkI2eUVWd2VKeVBVcjgwbzkwdm55WUQ4VzgvMS9NNTlFT28wVURh?=
+ =?utf-8?B?THhCYWYrdFMwQm1KUGFJbys3S0hZU3ovU0VaNkZicFZKM1ovOUlqai9RbFNk?=
+ =?utf-8?B?bnlWa1N3eDA4QzM5cFRMTTRFYTB0Q0tnYVZCeHhoTVlQcUszQmdIVC9QRjY4?=
+ =?utf-8?B?ZDZKS0hqdUxLK0lodkwrclZRS0t2OXJnNEtXMWlnV2J5bzNBNVlBNy9FNlhW?=
+ =?utf-8?B?S1VVditiSkpmWkZ6UHJKSkFKQlVOZ2VGL0pNNUhQZzNnQmFhejNZME9Ybktn?=
+ =?utf-8?B?U0wvZ08xV2dMV2Zkb1ZjVnNqMU9vclU5TlhzK3dCaEtvaVdLajZ5SGg5ZW43?=
+ =?utf-8?B?b2lBeG9hYjh1cUFSRzFGUG9hYkRvY2oxWHlpdmd0dGVmUnZvZnRRREgyN1Z1?=
+ =?utf-8?B?cUNWM2p6SDVYemo0Vmd2Z2NoVUN4MWd1bjlMa2ZpZzRGRDByQkJDcHVRMTBx?=
+ =?utf-8?B?V1lHeEhpRzN5N3crdC93WkhrdWYxelg2YWFCU3JycTMwb2dNc2FZd0pDcXNk?=
+ =?utf-8?B?NWNxckgyTW8vclBwdXkrN09IclY4SXczU2MyWnhBQ0grdm5oQjF1eldjSzIx?=
+ =?utf-8?B?aWxkNHZBemZ4NXdjSTc2cTBnaTZXRnY3Y3FGQncwWG9JU2I2MnFXRnAyTEp5?=
+ =?utf-8?B?aFpGUkF0YnRwWFB0VG9VUGg3UXp1TlVYVm5KNCsvRjhHTEhXdHlaNUtFY0Ft?=
+ =?utf-8?B?QjV0MmxWZ3VidnBqUXRvdDd5YmR0cmhpVDJaWm5BbG1kbHp0VmVudHNWUXVK?=
+ =?utf-8?B?WE5XNFBIaGVBWnZQZlcwbGt2V1RXUjl2dkNyL3pHSUNVcUpyMDk0NUhiYXlV?=
+ =?utf-8?B?YkhaenM3YzdSUnExSXBBRWs4eWVpT1ZwdWF6NWlOcEFzZ0dsWURDWHBKUTVl?=
+ =?utf-8?B?VGtrRGJQNFlacTBjZUszdUpxR2krak56aFlTWkJVZ250bTYwZ2tGa0Z5a2du?=
+ =?utf-8?B?ZExoYndHQ2VGUENWalFtRGNjTWZSa1dhc1hCZXQvWmRiLzRwcFdQdU5NclB3?=
+ =?utf-8?B?OFJIcVFLVHpFY08rbllwNHRka0VyM2pSVGJCS2d1TEpFUWhROXAySThCVFRj?=
+ =?utf-8?B?YnU0QmFidkJ1QmhiQnZOQzNzdkFXbXNzL2NnaGlxdTdndUZOZ0MycXB4eE1Q?=
+ =?utf-8?B?YVAvbVE1Q216WDU1RlVSM3drclBiYzVlbXFqRjUrc0lCZWVnOFhOR245VUZ2?=
+ =?utf-8?B?aFgyTVZHWDJnQUpUaFJSWnQ0THlKbWcxc1htZHRTNTA0R21KaUFKZUNLQ1d3?=
+ =?utf-8?B?OUoyK2pkeXlsMUFTaWZZTEh2VnVyYWNxSDZ6NHAyUFVleGVuazVYZzZ5VkJW?=
+ =?utf-8?B?Zm43UW5yaERIUGpzZzJYbDBDeUJlYndZTnBuUFpidzhCTk5ZK040R2RhSU9S?=
+ =?utf-8?B?Z3RobG4xWURPK0ZnbW0xaUZHQnVEOHVwUXVhOUY3SmJxS2g2cmI3TWhpQXRR?=
+ =?utf-8?B?eEYyWXljZlJmRk5sNU9sYW5iYVNaL0VBYVVMK0Q0VFlzRXVUdHIyT3dPcXIy?=
+ =?utf-8?B?YmVIZkxVU0lLa2FXYU5mbGxMREVaUFU1czNzZmJ5elg3dXM3NlRsaGJlS2p6?=
+ =?utf-8?B?dE16V0NKNGM2ek9wM2wyRnNUYTFjZkc5R2NZS21lWDBEeFExL3NudTV0NG9Q?=
+ =?utf-8?B?MEtIalBlNG1ZWWtJekxBVmhXK1ppYStGR0UxOEkveW96eUx3VEtUOVlUWHRV?=
+ =?utf-8?B?QVgvVkphYit4MUdRcTRTOSsrUWNoYklPanFkMFgycEtOL0RtK0Q4cnoycC83?=
+ =?utf-8?Q?hsQxgpq64KwNNz9NBc0bkrcSh?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddcd3ea4-62ed-4925-7cbc-08dc79842cd4
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 10:52:57.6217
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r+yjZ7EQLHnvUUq7dgfxw4KGxUji0o/xLOgf+2+vC1jAmnswsHTfh/rHN2BMiT0a1F1yH4J5RNXWh4Ce0MP79Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6056
 
-On Mon, May 20, 2024 at 03:44:07PM -0700, Sidhartha Kumar wrote:
-> All users have been converted to use the folio version of these macros,
-> we can safely remove the page based interface.
+
+>> I still don't understand why this happened as it was working great for
+>> years and is still working with kernels 6.8.7 or older. But
+>> nevertheless sorry if I wasted time of anyone because of broken
+>> hardware.
 > 
-> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+> I think the BIOS CM creates the "first" tunnel using reduced
+> capabilities already so this makes the "second" tunnel fit there in the
+> 18G link. Now that we do the reset the "first" tunnel is re-created with
+> max capabilities and that makes the "second" not to fit there anymore.
+> 
+> But now you get the full 40G link :)
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
- 
-
--- 
-Oscar Salvador
-SUSE Labs
+Well that's awesome!  That confirms there were other issues besides the 
+one Sanath found that get fixed by not reusing BIOS tunnels.
