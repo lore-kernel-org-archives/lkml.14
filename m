@@ -1,26 +1,26 @@
 Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2093.outbound.protection.partner.outlook.cn [139.219.17.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC25CA40;
-	Tue, 21 May 2024 02:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F53117BA4;
+	Tue, 21 May 2024 02:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.93
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716260325; cv=fail; b=fO/Xd3uUJN3P4jF6m+XXvQS12Exew170D3Qbg33vFMxrnZDaQLfnCxx7VVbicbPtErvNMjDfuTIOtOuPGNUXo4TA5KnGw5+W6DpO93NtiSHtidQRC5Z3IfnsnLrQu97VNlI13xaaKwyVJzk5HSRyJGBqZ4rG6Bw60aOfB7LZEio=
+	t=1716260329; cv=fail; b=MyTmEi/G2bUkAC+PwgeaYN5jHe/HeMfDy+v0CBRnw3GAh0DZb26fnWPpmavwiksaLKtyEBcW7rMMsi83SVg3r5NTGh60x1ZJ5Ub2WMr8yqyAMpqIf3cq0c4AQVv7oRcbsIRc99zpxbyOuW4Td7oZQKmMLfRRU5jpBpBhNZ03mr4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716260325; c=relaxed/simple;
-	bh=YrlT3dBlJ75b/2P5mkuh2Fj7poXxdM6hs6FTHeIfBY4=;
+	s=arc-20240116; t=1716260329; c=relaxed/simple;
+	bh=/mFMN8JVAs5Q+nrOZN56PZ5uprHYWeVRec/E9ahmt90=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rwHBsOzgFNK+G5tvOQ+aI+J0hdyYCr62Q6PJUQXGGmMuSel2ldWhWfkhgFEFrZomF6t7jtlNbi/7hSIo0xtGiCfV0WlXUs9iR4BDPSGFL+oEYT4gqOe+aGTjmjdZkfNiD/D4mnI76G2HIogGlm601+xDBfpiMgfguY6SuFLG1K4=
+	 Content-Type:MIME-Version; b=iCxw0sd+20/BjJJNQ1TWPLJDZ09PeCAm3jKDGIfBkcfTHfaYHxaBXrhxUSfpNaVrASKzMpRGa871GaqoKi5Xby4hd8+/yWisIf9WxgxNBW3DAE31xQ2ttx0UtzjABYpvVd8zZioy1SljvvMcjDj6HndWSoBvWSpSJAgMQbZUY/Q=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i4k37yqLATooloVufU9q1vQdK/5p06x6JQggI7qoEYdhHFpE+MooIr8IyaWaBaSe/PmwXzkW3IM1yY05QgQRuZbbNb5QXpUuOciDoeQmiRe+hrTBd4qA0nNNbkpS+fHAQ3aHNH6Ot70lCFPedPL6jJQw08pJGNBbneKC1s/AzJUg5CAzQdR9KMfociS8/kUx+gjHlbJEP4GJqqeB02W6AgqfPZxBni3oF5ezrH1Zw/B54QUggvixrhs7QFcO02UktdaSvOzTZghSet5W5XWBlkFsqO8r7Os77qQ/R7k4I9rLhW9bkcpeY/PAgSrhZ2VQG9C1J48zb2YroDe1ERkr5g==
+ b=fdklX/9wIhq8thQvTsZpCEUGRrWZdQL5nNKAwcO6RsSAQGE5BuO34wcYmmSwC6i7HfIHKpAoHsGFO4pO/EaoyaDO8egz5o6aBS0QiN4a7TWe4MM9FSAch7RWoaG3gu5mubnlCmJaTYEw9w9K9IWjLdRvjvsN7uzg/zuFKqKNcSwhcLJXyFqjEaW1n51irCPxYw0W1Mb6fKkBQcsmly8KHBBOwKN8gepS1XoN3lHFCI7ZmVIGjrHxFtXalXrxqX/OgHp4/5od8Hu/3dJjOx5V8QssgnSLh7vmxlFYVach2tmtb1aMKCVyZLoBQuRTV0qMV7B/uRmEs1NV7Fmmz5ieZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JkFPBug7fAvc3Hc9QKfOTgfWdoMaeaBBl7zHyK5APLc=;
- b=JnvjWNaawuUrynWaDUzemP/N+3maA3cqI6DrxMCBx/p39NiEgN17IGIdIHvgC8u5tJf5hdUBFp0JFzf7tOu4EsMbrkzoGRIhpOMwi2zzoYsmbzlcU0BDeklN3UIZHjy4cag1Arh7lNZmNytI8JFLPeOlI0ILkWC9xcyLdUjqoemW/DJV0kqww8J9pjbZmZ80dBy8fOsHBQesylsYsR4vmHM7HE1p6ljCdNUpGynR10h5lgwUVR3051p73Rep6al5/WsXpQPHTQ61IsSxKPx8LlwHhvOO2tShzPr6PecEq65BZsFyR1L3vXTMbngZe2L8i5zmC/J4KVFBbtmc1fPpnA==
+ bh=WtKFCKRO5L1v4IcU4Rq0x1MMrsUrK41w+oVQOWZBCYI=;
+ b=I05sfMRETfvd7irj1DI2ZpXCiL+D+buMB0x8uikdB1sTF0vcng+lS6ISVT7Ofe7S8/meMzxoBPqoCMJikJPBgaufPCVUDhDCLQ2DjZqyfQA8hf402a8kRDyf6hDW93Z4N7SU7SxmzOZhiNwPusLQPKwlL0x9JRJ0XtYQAy8WP3yw/KZATjWWMlo41ByqEH+Ng2uZ52XkXPSrIWpCGgy/T++kngCSpR0VrLBcPNsJxgQ7Lc3tvvwfl/nLqpKzvQOofHgtbtespGBuUy1lrsrhcji+23ZA76dg12QiHB8ZNvmik47wkUHaLl03S4rEc0pXBrJUU12S8E2/ULTgU8pVfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -30,11 +30,11 @@ Received: from ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c550:c::7) by ZQ0PR01MB1128.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c550:c::6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 21 May
- 2024 02:58:32 +0000
+ 2024 02:58:34 +0000
 Received: from ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
  ([fe80::39be:8ed9:67b7:adc6]) by
  ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn ([fe80::39be:8ed9:67b7:adc6%6])
- with mapi id 15.20.7472.044; Tue, 21 May 2024 02:58:32 +0000
+ with mapi id 15.20.7472.044; Tue, 21 May 2024 02:58:34 +0000
 From: keith <keith.zhao@starfivetech.com>
 To: andrzej.hajda@intel.com,
 	neil.armstrong@linaro.org,
@@ -62,9 +62,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	keith.zhao@starfivetech.com
-Subject: [PATCH v4 06/10] drm/vs: add vs plane api
-Date: Tue, 21 May 2024 18:58:13 +0800
-Message-Id: <20240521105817.3301-7-keith.zhao@starfivetech.com>
+Subject: [PATCH v4 08/10] drm/vs: add vs drm master driver
+Date: Tue, 21 May 2024 18:58:15 +0800
+Message-Id: <20240521105817.3301-9-keith.zhao@starfivetech.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240521105817.3301-1-keith.zhao@starfivetech.com>
 References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
@@ -81,706 +81,802 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1047:EE_|ZQ0PR01MB1128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4aca330b-e8c7-4baa-8519-08dc7941e629
+X-MS-Office365-Filtering-Correlation-Id: fd5de063-1dd6-4507-84e6-08dc7941e784
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	RbBW4JOV0jDrrEqtZaHmNAB+e8CJmD1bwJl/lkI9W0g4a4150689rR9LkwKatrbZ7519OZIMw+SHdZzJ5n+8Bz24o/hyGCbDxNxDpmq6bisqjrkwOJF7KS9b6HFPKkJunqD4eJRU9wNZ3sqC1lVPixscEq862iCZlWvjEIG1Tc9jmcUfckRn5CpSAKq0C6QAJTcPLF3UOb3sw8Fh7oxkLVoKENxde7UaPiTmFyR3xVrnyM9lUiubkdIsgg2tcZlH/MHboxp3SLI0onDq8sovILtoh0zJ8+MmXnRbnm4WouUlyt10SpVr+zXRPLqn+6tv39LLx9JGS1LYXfyMKeu4aHxDvLWEnTD0r4w1hSQJJ4js1cGZ5hD43JTu16NIaG/46AMFyvRq+zQHklUuok/ALAA6nFixdybfuVlrLiUO16zGadkfhv5f+kgTWiV2OL5udK7PmJHBbobrXDhMbEToU/4dWwjIiM9SlIF+gO5ZzdcMh5mqqHitBc2KkLCe2EGw7j49wrTvARFDejZpVIOn2UbIcrRVJiqLGP+XJaIjrg3z6DDvqejWYOBrI7CZBIsmzF6sj97zS6c2FjCrDoLL0Jb70gfwK9XGQncOGIFEy2sK1/5Aj0/S1strvn346HFc2izLnOztBJGtwGJkV5s7ZA==
+	p6HOkAaU80PZzU2zIenjNFBYe+GVh6t8c+Wa7QUZCguVmGtaBp/5a3W32Aa9ZM1Wr3x2G2QwavHEOVqjDVKicFlTHf7fogKDXalkYF8d2S2qN8GtNSkSx87ZPg3xvscNswPbCm9DvxZrTh3W2f+hnTFksinDCLJqpFQJ3EctiZwaobJkv9xQOw8nBTEL9LR2OPl9YRLmwo8f+EUD+IOVdfIwITsJhlN1zafzj0Js+tLMI56X7j56U4LUsAXgXk2+VLwjmshVWmRtStWxklp3ouCckAPiPvhi0WlzLUMXtDiMV8Wi5SRa5LObOUQrEjJykBHyY3/UKytvHE2RULKNUPsNPjPeFU2dMVv5uoUH0/XpZFhKe3T4ao2LMfkF9UyCajmwjcok8pyCLIHF9agZmZfZ4rCLniyNzmEpZ1RXXxE+EBgIsU583M0VySZeqaJksKjlwdASuM1sbNHJ+LKRh0p5XCTHldWItFeawcFuftIDsWvsFSPlORZAYK/pgzmrI4//VGJYg2igWQrdXcKtvUKntX451EtSI0QcvZ+DTpUX3yTOUSTCqvIN9PXJpu5XL7g2VjLgQoRGfMH9b8Y5BPlftihzkvzLV1rwFnHN6Ub2e7oQ/AfIoAye+fgzbIGJ6UKViwNdUcEehJI3FT9z+A==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(52116005)(7416005)(1800799015)(366007)(38350700005)(921011);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ntqESfK8k82UsGJbZMJdNvs+7DR8OBt771VVlOdaoq8qoRazrhnDD3BkmTW2?=
- =?us-ascii?Q?zghNMspWdVNNdEEeoCKx5uxWE6w6UgUD25RfXokBmDCwNbKFqMHCFItfO3yA?=
- =?us-ascii?Q?VbhGqYcpE6vkU2GorFzt1/AWrGHm4PRtQB349/+zdbqjHNXut2PngsTLAdLf?=
- =?us-ascii?Q?jcCex/T5q5wI2o/6RjG9SBpfB4ly3Z0uPq8VaAnW1LrykiEw8cDxyMRitVRp?=
- =?us-ascii?Q?Wh+rXruYK2kdp35ja+LghEZAicuKjkni2518xSAiXvq7MhmIRIZ+WK1DRBbk?=
- =?us-ascii?Q?mACzd1mzNqJRxxT8YHf6/Xs6Ok+z2j5M/UB8x/e9w0M/wixCOXh1IkD5m8PU?=
- =?us-ascii?Q?kClreJuNdd8C6+V6XbEljWG5zdrhuE4BhZBxC/rjNMXW1AMML1xRLuk1dGb3?=
- =?us-ascii?Q?Kiq8vxCQftZlOnY8Z9IpynheGh21OUe9Rme7AQS4Iozw7jVow/M3rY7uFCeR?=
- =?us-ascii?Q?/hqatPle8t8UnhCxx4G08J9ZrtS2q3yFMuQHsZ5YVTvNl/gEKduJhjaQ3Z+A?=
- =?us-ascii?Q?KeX7fJPYAfFHeObHv7Au9BUE6aHdVxIofVcce330BOfISWDjoe2UCOTrIsEJ?=
- =?us-ascii?Q?CAMm+nKHLEWCmM9wkgjBlaKCGVDvynQzMO0C/zCVBZwu1OxdWZqsvjnWQIYU?=
- =?us-ascii?Q?mVMDxUZy5LfLEFiPjtF0xMJsBylZ1rPibBE6cjCBSYcMrjipHE2AteS+WtIL?=
- =?us-ascii?Q?TPQsdiQXGpY7Op5iFEGHEvvDUqIQuvtccOLT4E5I6U5JM3IXgsjEEGqysRz0?=
- =?us-ascii?Q?9zASlVXTGIOoDbVGu12YphsIRptqN6mMgENM8qVuMCtA1GR6KsLWvvV7qkKc?=
- =?us-ascii?Q?Faqwoi3M8NSF6FP6Hturt13BiVG4X5SnYGCor2De6L8Kdc1EloZW3TY8bIBu?=
- =?us-ascii?Q?NEz0ie7C3Q5GX4I8UOVZoDWXcPLrMPF3YW1P+IntQbs6bO1p4TyD9g/r2A1+?=
- =?us-ascii?Q?ZJYeUf0mw7zlLjf7GxPw3svdzOu1R1LDPADBsxcuyPPN/efipjW74btbTZIx?=
- =?us-ascii?Q?RuaenFOagYAcpQYD6+QFe5Me7HepW/11GPBl8C2VJQx5GL6w1oqdgXrFLo4A?=
- =?us-ascii?Q?eEmPqIE6cym4MaegIPpVK772FzT5C0htrqEt2Jox96a4bYOKqRFFbNXQt4nV?=
- =?us-ascii?Q?K984iQ6+Jf0J4Y+TjkHJeb9/2WnhU0wQ9pvvkmuaNrxO6f+Ed1zarLSKOn1X?=
- =?us-ascii?Q?yuCWS63k/5h+AKOF8sb1OJ6+NRwIUT97r5mX34aIiqA6A2AcNYIfod3oi/QJ?=
- =?us-ascii?Q?E3WDAzMO10ULvrj52Zo82ph+CLuyJmirx+fuxLyHUnE+76CYKuTX6ruY7W0Z?=
- =?us-ascii?Q?7Pd202aUpnWf90Z3jEVR/YZhPTQZiTBGoj/sKk6o7d697irFWITKW+vL6Pd8?=
- =?us-ascii?Q?yNM9C5G1fN8pfixIx9No+g2QuDsUavGg3QUZ8c/Q1Z8L1RJz9widP++6iVN8?=
- =?us-ascii?Q?krjLda2Fb3QktSPPrWdgjqNHRAUHyL3ZXHwnWdK/V1mOwCZx7e1urmcE0em5?=
- =?us-ascii?Q?3xaWrrtJXnYsYqbIoKVrpS9sPYNlIsI4GfTFwkcG/t9gXg3FNd9xfu0mZROz?=
- =?us-ascii?Q?duwYApzKIAshTGGK8vJPsbqzJcz4z5Sry6RBUVQkg90Z/UnBtCzw4/1PavEJ?=
- =?us-ascii?Q?fA=3D=3D?=
+	=?us-ascii?Q?BSRIFqIUGGCbJ6wv5N8Rgflys62TyF23aLhHl8A0Rv0r000Erbnv67GoPM/9?=
+ =?us-ascii?Q?gFREeWl7ABm4bxp56CaKjbA/9JgyDk+9jVnqY+C8Dvfm96yc0eK8UUydJy0O?=
+ =?us-ascii?Q?5ic5znYT+6HBrN/Pm8lqBaCwOe8bxF9cpLUAz1T/3nW/nPR1elZlqytyLVja?=
+ =?us-ascii?Q?qSbxEY7efld763NGXzw+u7dODmW+ndOq7HAISNh40Q+cHPtUUExbNwUu3A3Z?=
+ =?us-ascii?Q?wDPRN1x7+BbXt1ws9KswVrGsBlTnN+z9Bq9LOHM0jvkBXq/6hgvn4iTmAUX0?=
+ =?us-ascii?Q?9PS5Hu7jU2UES+EJ0AcFOHKCknAfKpNFojMNfM92KCe67X1VIqwY3GicmsEX?=
+ =?us-ascii?Q?B4RC/7OAbAFNMXk+W+25u1Pp4APp6tDnIIqVAgPc6mJanVnDjG+BkB1b6elR?=
+ =?us-ascii?Q?oPWEno30ijxMsfedBrVRRQsSUsur83Ga13aADRW5XNBoKv9LfWkEWrLfcliq?=
+ =?us-ascii?Q?g/z10vvAPwVtrEbPDivuRDQoU4sNt3DjOk/Xjs4GMSDrMhnSt/FhVLk0VCc0?=
+ =?us-ascii?Q?lf8/ecDAtjjET5yaYTljZWdJ5l2WDtkiOMdHQDdSyR7Ht6BRScUwyY2xAtB3?=
+ =?us-ascii?Q?WuUVeCMrif8KGlPuoM6A/aoYWLZawAn07zzZYhfXXr4onkzFK0tk752bNkU9?=
+ =?us-ascii?Q?C2QUblgvmap2r9Sv31oyuKqdY46zuebLpTRlOuF0Ka/yb5xbWJmFqZTxfevg?=
+ =?us-ascii?Q?w/e3g8+eYFjbMSBdG55k9/KPp97D4f680suaw/mJChSWnIHA1bnF/JeyctL7?=
+ =?us-ascii?Q?SuOIOX52k60ez45LRsVvgqAAUjss+kVj+I9dmGdbdOTqQMN8ALGWCQCvLq7W?=
+ =?us-ascii?Q?cNSY6QOR9YuxXxgoQHc7AGfpi2eURGtLV+jfqasySw7jipLSL2ovgYz8AygF?=
+ =?us-ascii?Q?uVinDdt71SRXwiStPUGlxLlyXIFN1xfPMHBNrgx7/tymRajd0qIoMsrgn0eq?=
+ =?us-ascii?Q?uQYPfNMrVjdcTsHUPE45QdDQTo0T89pE5MqR8NS4wWBUtoFPP0taWJHNc1h6?=
+ =?us-ascii?Q?JJ2FuWh4A2q9wafbHOpKSsXq+4ZRJHp4KIPV7wCz38U3smzvrtzl/9O0oXa5?=
+ =?us-ascii?Q?+98fPSBzUvoNNqtBZfxNfggdLzGa4R6U6e1X6yY8nZABGjQnIQ5hYK8sxi1i?=
+ =?us-ascii?Q?mLMrx2HyaqIdh+J9d0ZaZIdxZ6hjIUYYFhdREGnmJO6MFcbZkwDFsFVd1WMX?=
+ =?us-ascii?Q?mjOGG8pwtSmipdK5rANbdElWTayaN+r/gcTfyIhe2njylI2ZgckLsEqHTNrR?=
+ =?us-ascii?Q?QiMYRlKwAzKI4Bk6GHeYhLkrzRVH3pYHWMz17298oag9olkDu9dxJP3DKNVI?=
+ =?us-ascii?Q?u3Vk9WsCjrb+oa7NILiQcadiACl3Kvc+/DUSGXns7p2hGYsCxTP6RDB10AHR?=
+ =?us-ascii?Q?nf6pXSVh2Tax7+zYZEnfPQuB8VqQwIpUlmdMLQghTCuJ0j5GXdP0QI3H9ppd?=
+ =?us-ascii?Q?wh/wLLc3QwRP4rAhbOvjwiJn9MjIPwBP3q1XGg92Ycyf7FCrGbwUUKtdm/36?=
+ =?us-ascii?Q?eqAl1rewSPaKgqV0F8jxRMjtTVu3hOD/Mm1wls+wl3z1+ybLG+qTknFfOCPt?=
+ =?us-ascii?Q?jewsEe4rMiTYb+NrtHygZUvi9qdoVejkYh+R6gqUffK32jpZXvOLlqTDIiL9?=
+ =?us-ascii?Q?RQ=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4aca330b-e8c7-4baa-8519-08dc7941e629
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd5de063-1dd6-4507-84e6-08dc7941e784
 X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 02:58:32.2439
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 02:58:34.5329
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SRCA/kseaVHpeCRkixBBNO74yRxIRWw/LZfFLrj2kXJbopAXpYkWluw6jCM+Y3X2g9LnZzUC9mPCUWRb6oGgr7mmcXeVVzHUAlpEMiMeE6I=
+X-MS-Exchange-CrossTenant-UserPrincipalName: TGJ4ojovCHPyfK4H2bBLym7wHjErTk2FmR4bFJGkyissZf70DUt2VqunkMy9N+W0UdhGpjDrLpXXc4eKu+fUueWJgfMI56XmojmqvOexRzk=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1128
 
-add plane funs and helper funs
-add vs drm common struct and funs
+Add vs DRM master driver for JH7110 SoC
+ADD DMA GEM driver
 
 Signed-off-by: keith <keith.zhao@starfivetech.com>
 ---
- drivers/gpu/drm/verisilicon/Makefile   |   3 +-
- drivers/gpu/drm/verisilicon/vs_drv.h   |  93 +++++
- drivers/gpu/drm/verisilicon/vs_plane.c | 487 +++++++++++++++++++++++++
- drivers/gpu/drm/verisilicon/vs_plane.h |  26 ++
- 4 files changed, 608 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/verisilicon/vs_drv.h
- create mode 100644 drivers/gpu/drm/verisilicon/vs_plane.c
- create mode 100644 drivers/gpu/drm/verisilicon/vs_plane.h
+ drivers/gpu/drm/verisilicon/Makefile |   3 +-
+ drivers/gpu/drm/verisilicon/vs_drv.c | 718 +++++++++++++++++++++++++++
+ 2 files changed, 720 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/verisilicon/vs_drv.c
 
 diff --git a/drivers/gpu/drm/verisilicon/Makefile b/drivers/gpu/drm/verisilicon/Makefile
-index 536091f37378..1c593b943261 100644
+index 26a43ca0fd36..88a07a308e31 100644
 --- a/drivers/gpu/drm/verisilicon/Makefile
 +++ b/drivers/gpu/drm/verisilicon/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
+@@ -3,6 +3,7 @@
  vs_drm-objs := vs_dc_hw.o \
--		vs_modeset.o
-+		vs_modeset.o \
-+		vs_plane.o
+ 		vs_modeset.o \
+ 		vs_plane.o \
+-		vs_crtc.o
++		vs_crtc.o \
++		vs_drv.o
  
  obj-$(CONFIG_DRM_VERISILICON_DC8200) += vs_drm.o
-diff --git a/drivers/gpu/drm/verisilicon/vs_drv.h b/drivers/gpu/drm/verisilicon/vs_drv.h
+diff --git a/drivers/gpu/drm/verisilicon/vs_drv.c b/drivers/gpu/drm/verisilicon/vs_drv.c
 new file mode 100644
-index 000000000000..d9f6efa7c8f9
+index 000000000000..c22fd2199fe2
 --- /dev/null
-+++ b/drivers/gpu/drm/verisilicon/vs_drv.h
-@@ -0,0 +1,93 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/drivers/gpu/drm/verisilicon/vs_drv.c
+@@ -0,0 +1,718 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2023 VeriSilicon Holdings Co., Ltd.
 + */
-+
-+#ifndef __VS_DRV_H__
-+#define __VS_DRV_H__
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
 +#include <linux/clk.h>
-+#include <linux/reset.h>
++#include <linux/component.h>
++#include <linux/of_clk.h>
++#include <linux/pm_runtime.h>
++#include <linux/of_device.h>
 +
-+#include <drm/drm_drv.h>
-+#include <drm/drm_fourcc.h>
-+#include <drm/drm_gem.h>
-+#include <drm/drm_managed.h>
++#include <drm/drm_aperture.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_fb_helper.h>
++#include <drm/drm_fbdev_generic.h>
++#include <drm/drm_file.h>
++#include <drm/drm_gem_dma_helper.h>
++#include <drm/drm_module.h>
++#include <drm/drm_of.h>
++#include <drm/drm_probe_helper.h>
++#include <drm/drm_vblank.h>
++#include <drm/drm_blend.h>
 +
-+#include "vs_dc_hw.h"
++#include "vs_drv.h"
++#include "vs_crtc.h"
++#include "vs_plane.h"
++#include "vs_modeset.h"
 +
-+/*@pitch_alignment: buffer pitch alignment required by sub-devices.*/
-+struct vs_drm_device {
-+	struct drm_device base;
-+	unsigned int pitch_alignment;
-+	/* clocks */
-+	unsigned int clk_count;
-+	struct clk_bulk_data	*clks;
-+	struct reset_control	*rsts;
-+	struct vs_dc dc;
-+	int irq;
++#define DRV_NAME	"verisilicon"
++#define DRV_DESC	"Verisilicon DRM driver"
++#define DRV_DATE	"20230516"
++#define DRV_MAJOR	1
++#define DRV_MINOR	0
++
++#define FRAC_16_16(mult, div)	 (((mult) << 16) / (div))
++
++static const u32 primary_overlay_format[] = {
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_BGR565,
++	DRM_FORMAT_XRGB8888,
++	DRM_FORMAT_XBGR8888,
++	DRM_FORMAT_RGBX8888,
++	DRM_FORMAT_BGRX8888,
++	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_ABGR8888,
++	DRM_FORMAT_RGBA8888,
++	DRM_FORMAT_BGRA8888,
++	DRM_FORMAT_XRGB4444,
++	DRM_FORMAT_XBGR4444,
++	DRM_FORMAT_RGBX4444,
++	DRM_FORMAT_BGRX4444,
++	DRM_FORMAT_ARGB4444,
++	DRM_FORMAT_ABGR4444,
++	DRM_FORMAT_RGBA4444,
++	DRM_FORMAT_BGRA4444,
++	DRM_FORMAT_XRGB1555,
++	DRM_FORMAT_XBGR1555,
++	DRM_FORMAT_RGBX5551,
++	DRM_FORMAT_BGRX5551,
++	DRM_FORMAT_ARGB1555,
++	DRM_FORMAT_ABGR1555,
++	DRM_FORMAT_RGBA5551,
++	DRM_FORMAT_BGRA5551,
++	DRM_FORMAT_ARGB2101010,
++	DRM_FORMAT_ABGR2101010,
++	DRM_FORMAT_RGBA1010102,
++	DRM_FORMAT_BGRA1010102,
++	DRM_FORMAT_YUYV,
++	DRM_FORMAT_YVYU,
++	DRM_FORMAT_UYVY,
++	DRM_FORMAT_VYUY,
++	DRM_FORMAT_YVU420,
++	DRM_FORMAT_YUV420,
++	DRM_FORMAT_NV12,
++	DRM_FORMAT_NV21,
++	DRM_FORMAT_NV16,
++	DRM_FORMAT_NV61,
++	DRM_FORMAT_P010,
 +};
 +
-+static inline struct vs_drm_device *
-+to_vs_drm_private(const struct drm_device *dev)
++static const u32 cursor_formats[] = {
++	DRM_FORMAT_ARGB8888
++};
++
++static const u64 format_modifier[] = {
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID
++};
++
++static const u64 secondary_format_modifiers[] = {
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID
++};
++
++static const struct vs_plane_primary_info dc_hw_planes_primary[2] = {
++	{
++		.id			= PRIMARY_PLANE_0,
++		.num_formats		= ARRAY_SIZE(primary_overlay_format),
++		.formats		= primary_overlay_format,
++		.num_modifiers		= ARRAY_SIZE(format_modifier),
++		.modifiers		= format_modifier,
++		.min_width		= 0,
++		.min_height		= 0,
++		.max_width		= 4096,
++		.max_height		= 4096,
++		.min_scale		= FRAC_16_16(1, 3),
++		.max_scale		= FRAC_16_16(10, 1),
++		.rotation		= DRM_MODE_ROTATE_0 |
++					  DRM_MODE_ROTATE_90 |
++					  DRM_MODE_ROTATE_180 |
++					  DRM_MODE_ROTATE_270 |
++					  DRM_MODE_REFLECT_X |
++					  DRM_MODE_REFLECT_Y,
++		.color_encoding		= BIT(DRM_COLOR_YCBCR_BT709) | BIT(DRM_COLOR_YCBCR_BT2020),
++		.zpos			= 0,
++	},
++	{
++		.id			= PRIMARY_PLANE_1,
++		.num_formats		= ARRAY_SIZE(primary_overlay_format),
++		.formats		= primary_overlay_format,
++		.num_modifiers		= ARRAY_SIZE(format_modifier),
++		.modifiers		= format_modifier,
++		.min_width		= 0,
++		.min_height		= 0,
++		.max_width		= 4096,
++		.max_height		= 4096,
++		.min_scale		= FRAC_16_16(1, 3),
++		.max_scale		= FRAC_16_16(10, 1),
++		.rotation		= DRM_MODE_ROTATE_0 |
++					  DRM_MODE_ROTATE_90 |
++					  DRM_MODE_ROTATE_180 |
++					  DRM_MODE_ROTATE_270 |
++					  DRM_MODE_REFLECT_X |
++					  DRM_MODE_REFLECT_Y,
++		.color_encoding		= BIT(DRM_COLOR_YCBCR_BT709) | BIT(DRM_COLOR_YCBCR_BT2020),
++		.zpos			= 3,
++	},
++};
++
++static const struct vs_plane_overlay_info dc_hw_planes_overlay[4] = {
++	{
++		.id			= OVERLAY_PLANE_0,
++		.num_formats		= ARRAY_SIZE(primary_overlay_format),
++		.formats		= primary_overlay_format,
++		.num_modifiers		= ARRAY_SIZE(format_modifier),
++		.modifiers		= format_modifier,
++		.min_width		= 0,
++		.min_height		= 0,
++		.max_width		= 4096,
++		.max_height		= 4096,
++		.min_scale		= FRAC_16_16(1, 3),
++		.max_scale		= FRAC_16_16(10, 1),
++		.rotation		= DRM_MODE_ROTATE_0 |
++					  DRM_MODE_ROTATE_90 |
++					  DRM_MODE_ROTATE_180 |
++					  DRM_MODE_ROTATE_270 |
++					  DRM_MODE_REFLECT_X |
++					  DRM_MODE_REFLECT_Y,
++		.color_encoding		= BIT(DRM_COLOR_YCBCR_BT709) | BIT(DRM_COLOR_YCBCR_BT2020),
++		.zpos			= 1,
++	},
++	{
++		.id			= OVERLAY_PLANE_1,
++		.num_formats		= ARRAY_SIZE(primary_overlay_format),
++		.formats		= primary_overlay_format,
++		.num_modifiers		= ARRAY_SIZE(secondary_format_modifiers),
++		.modifiers		= secondary_format_modifiers,
++		.min_width		= 0,
++		.min_height		= 0,
++		.max_width		= 4096,
++		.max_height		= 4096,
++		.min_scale		= DRM_PLANE_NO_SCALING,
++		.max_scale		= DRM_PLANE_NO_SCALING,
++		.rotation		= 0,
++		.color_encoding		= BIT(DRM_COLOR_YCBCR_BT709) | BIT(DRM_COLOR_YCBCR_BT2020),
++		.zpos			= 2,
++	},
++	{
++		.id			= OVERLAY_PLANE_2,
++		.num_formats		= ARRAY_SIZE(primary_overlay_format),
++		.formats		= primary_overlay_format,
++		.num_modifiers		= ARRAY_SIZE(format_modifier),
++		.modifiers		= format_modifier,
++		.min_width		= 0,
++		.min_height		= 0,
++		.max_width		= 4096,
++		.max_height		= 4096,
++		.min_scale		= FRAC_16_16(1, 3),
++		.max_scale		= FRAC_16_16(10, 1),
++		.rotation		= DRM_MODE_ROTATE_0 |
++					  DRM_MODE_ROTATE_90 |
++					  DRM_MODE_ROTATE_180 |
++					  DRM_MODE_ROTATE_270 |
++					  DRM_MODE_REFLECT_X |
++					  DRM_MODE_REFLECT_Y,
++		.color_encoding		= BIT(DRM_COLOR_YCBCR_BT709) | BIT(DRM_COLOR_YCBCR_BT2020),
++		.zpos			= 4,
++	},
++	{
++		.id			= OVERLAY_PLANE_3,
++		.num_formats		= ARRAY_SIZE(primary_overlay_format),
++		.formats		= primary_overlay_format,
++		.num_modifiers		= ARRAY_SIZE(secondary_format_modifiers),
++		.modifiers		= secondary_format_modifiers,
++		.min_width		= 0,
++		.min_height		= 0,
++		.max_width		= 4096,
++		.max_height		= 4096,
++		.min_scale		= DRM_PLANE_NO_SCALING,
++		.max_scale		= DRM_PLANE_NO_SCALING,
++		.rotation		= 0,
++		.color_encoding		= BIT(DRM_COLOR_YCBCR_BT709) | BIT(DRM_COLOR_YCBCR_BT2020),
++		.zpos			= 5,
++	},
++};
++
++static const struct vs_plane_cursor_info dc_hw_planes_cursor[2] = {
++	{
++		.id			= CURSOR_PLANE_0,
++		.num_formats		= ARRAY_SIZE(cursor_formats),
++		.formats		= cursor_formats,
++		.min_width		= 32,
++		.min_height		= 32,
++		.max_width		= 64,
++		.max_height		= 64,
++		.zpos			= 255,
++	},
++	{
++		.id			= CURSOR_PLANE_1,
++		.num_formats		= ARRAY_SIZE(cursor_formats),
++		.formats		= cursor_formats,
++		.min_width		= 32,
++		.min_height		= 32,
++		.max_width		= 64,
++		.max_height		= 64,
++		.zpos			= 255,
++	},
++};
++
++static const struct vs_dc_info dc8200_info = {
++	.name			= "DC8200",
++	.panel_num		= 2,
++	.primary_num		= 2,
++	.overlay_num		= 4,
++	.cursor_num		= 2,
++	.primary		= dc_hw_planes_primary,
++	.overlay		= dc_hw_planes_overlay,
++	.cursor			= dc_hw_planes_cursor,
++	.layer_num		= 6,
++	.gamma_size		= GAMMA_EX_SIZE,
++	.gamma_bits		= 12,
++	.pitch_alignment	= 128,
++};
++
++static int vs_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
++			      struct drm_mode_create_dumb *args)
 +{
-+	return container_of(dev, struct vs_drm_device, base);
++	struct vs_drm_device *priv = to_vs_drm_private(dev);
++	unsigned int pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
++
++	args->pitch = ALIGN(pitch, priv->pitch_alignment);
++	return drm_gem_dma_dumb_create_internal(file, dev, args);
 +}
 +
-+struct vs_crtc_state {
-+	struct drm_crtc_state base;
++DEFINE_DRM_GEM_FOPS(vs_drm_fops);
 +
-+	u32 output_fmt;
-+	u8 encoder_type;
-+	u8 bpp;
++static struct drm_driver vs_drm_driver = {
++	.driver_features	= DRIVER_MODESET | DRIVER_ATOMIC | DRIVER_GEM,
++
++	DRM_GEM_DMA_DRIVER_OPS_WITH_DUMB_CREATE(vs_gem_dumb_create),
++
++	.fops			= &vs_drm_fops,
++	.name			= DRV_NAME,
++	.desc			= DRV_DESC,
++	.date			= DRV_DATE,
++	.major			= DRV_MAJOR,
++	.minor			= DRV_MINOR,
 +};
 +
-+struct vs_crtc {
-+	struct drm_crtc base;
-+	struct device *dev;
-+};
-+
-+static inline u8 to_vs_display_id(struct vs_dc *dc, struct drm_crtc *crtc)
++static irqreturn_t vs_dc_isr(int irq, void *data)
 +{
-+	u8 panel_num = dc->hw.info->panel_num;
-+	u32 index = drm_crtc_index(crtc);
-+	int i;
++	struct vs_drm_device *priv = data;
++	struct vs_dc *dc = &priv->dc;
++	struct vs_dc_info *dc_info = dc->hw.info;
++	u32 i;
 +
-+	for (i = 0; i < panel_num; i++) {
-+		if (index == dc->crtc[i]->base.index)
-+			return i;
++	dc_hw_get_interrupt(&dc->hw);
++
++	for (i = 0; i < dc_info->panel_num; i++)
++		drm_crtc_handle_vblank(&dc->crtc[i]->base);
++
++	return IRQ_HANDLED;
++}
++
++static int vs_drm_device_init_res(struct vs_drm_device *priv)
++{
++	struct device *dev = priv->base.dev;
++	struct platform_device *pdev = to_platform_device(dev);
++	int ret;
++	struct vs_dc *dc;
++
++	dc = &priv->dc;
++	dc->hw.hi_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(dc->hw.hi_base))
++		return PTR_ERR(dc->hw.hi_base);
++
++	dc->hw.reg_base = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(dc->hw.reg_base))
++		return PTR_ERR(dc->hw.reg_base);
++
++	dc->hw.info = (struct vs_dc_info *)of_device_get_match_data(dev);
++
++	ret = devm_clk_bulk_get_all(dev, &priv->clks);
++	if (ret < 0) {
++		dev_err(dev, "can't get vout clock, ret=%d\n", ret);
++		return ret;
++	}
++	priv->clk_count = ret;
++
++	priv->rsts = devm_reset_control_array_get_shared(dev);
++	if (IS_ERR(priv->rsts))
++		return PTR_ERR(priv->rsts);
++
++	priv->irq = platform_get_irq(pdev, 0);
++
++	/* do not autoenable, will be enabled later */
++	ret = devm_request_irq(dev, priv->irq, vs_dc_isr, IRQF_NO_AUTOEN, dev_name(dev), priv);
++	if (ret < 0) {
++		dev_err(dev, "Failed to install irq:%u.\n", priv->irq);
++		return ret;
++	}
++
++	return ret;
++}
++
++static u32 get_addr_offset(u32 id)
++{
++	u32 offset = 0;
++
++	switch (id) {
++	case PRIMARY_PLANE_1:
++	case OVERLAY_PLANE_1:
++		offset = 0x04;
++		break;
++	case OVERLAY_PLANE_2:
++		offset = 0x08;
++		break;
++	case OVERLAY_PLANE_3:
++		offset = 0x0C;
++		break;
++	default:
++		break;
++	}
++
++	return offset;
++}
++
++static int vs_drm_device_crtc_plane_create(struct vs_drm_device *priv)
++{
++	struct vs_dc *dc;
++	struct drm_device *drm_dev;
++	int i, ret;
++	struct device_node *port;
++	struct vs_crtc *crtc;
++	struct vs_dc_info *dc_info;
++	struct vs_plane *plane;
++	struct vs_plane_primary_info *primary_info;
++	struct vs_plane_overlay_info *overlay_info;
++	struct vs_plane_cursor_info *cursor_info;
++
++	struct device *dev = priv->base.dev;
++	u32 max_width = 0, max_height = 0;
++	u32 min_width = 0xffff, min_heigth = 0xffff;
++	u32 possible_crtc = 0;
++
++	dc = &priv->dc;
++	dc_info = dc->hw.info;
++	drm_dev = &priv->base;
++
++	for (i = 0; i < dc_info->panel_num; i++) {
++		crtc = vs_crtc_create(drm_dev, dc_info);
++		if (!crtc) {
++			drm_err(drm_dev, "Failed to create CRTC.\n");
++			ret = -ENOMEM;
++			return ret;
++		}
++		crtc->dev = drm_dev->dev;
++
++		port = of_graph_get_port_by_id(crtc->dev->of_node, i);
++		if (!port) {
++			drm_err(drm_dev, "no port node found for crtc_port%d\n", i);
++			return -ENOENT;
++		}
++
++		crtc->base.port = port;
++		dc->crtc[i] = crtc;
++
++		of_node_put(port);
++	}
++
++	if (!dc->crtc[0]->base.port || !dc->crtc[1]->base.port) {
++		drm_err(drm_dev, "no port no crtc mask, fail to create plane\n");
++		return -ENOENT;
++	}
++
++	for (i = 0; i < dc_info->primary_num; i++) {
++		primary_info = (struct vs_plane_primary_info *)&dc_info->primary[i];
++
++		if (primary_info->id == PRIMARY_PLANE_0)
++			possible_crtc = drm_crtc_mask(&dc->crtc[0]->base);
++		else
++			possible_crtc = drm_crtc_mask(&dc->crtc[1]->base);
++
++		plane = vs_plane_primary_create(drm_dev, primary_info,
++						dc_info->layer_num, possible_crtc);
++		if (IS_ERR(plane)) {
++			dev_err(dev, "failed to construct plane\n");
++			return PTR_ERR(plane);
++		}
++
++		plane->id = primary_info->id;
++		dc->planes[plane->id].id = primary_info->id;
++		dc->planes[plane->id].offset = get_addr_offset(primary_info->id);
++
++		if (primary_info->id == PRIMARY_PLANE_0)
++			dc->crtc[0]->base.primary = &plane->base;
++		else
++			dc->crtc[1]->base.primary = &plane->base;
++
++		min_width = min_t(u32, min_width, primary_info->min_width);
++		min_heigth = min_t(u32, min_heigth, primary_info->min_height);
++		/*
++		 * Note: these values are used for multiple independent things:
++		 * hw display mode filtering, plane buffer sizes ...
++		 * Use the combined maximum values here to cover all use cases,
++		 * and do more specific checking in the respective code paths.
++		 */
++		max_width = max_t(u32, max_width, primary_info->max_width);
++		max_height = max_t(u32, max_height, primary_info->max_height);
++	}
++
++	for (i = 0; i < dc_info->overlay_num; i++) {
++		overlay_info = (struct vs_plane_overlay_info *)&dc_info->overlay[i];
++
++		possible_crtc = drm_crtc_mask(&dc->crtc[0]->base) |
++				drm_crtc_mask(&dc->crtc[1]->base);
++
++		plane = vs_plane_overlay_create(drm_dev, overlay_info,
++						dc_info->layer_num, possible_crtc);
++		if (IS_ERR(plane)) {
++			dev_err(dev, "failed to construct plane\n");
++			return PTR_ERR(plane);
++		}
++
++		plane->id = overlay_info->id;
++		dc->planes[plane->id].id = overlay_info->id;
++		dc->planes[plane->id].offset = get_addr_offset(overlay_info->id);
++	}
++
++	for (i = 0; i < dc_info->cursor_num; i++) {
++		cursor_info = (struct vs_plane_cursor_info *)&dc_info->cursor[i];
++
++		if (cursor_info->id == CURSOR_PLANE_0)
++			possible_crtc = drm_crtc_mask(&dc->crtc[0]->base);
++		else
++			possible_crtc = drm_crtc_mask(&dc->crtc[1]->base);
++
++		plane = vs_plane_cursor_create(drm_dev, cursor_info, possible_crtc);
++		if (IS_ERR(plane)) {
++			dev_err(dev, "failed to construct plane\n");
++			return PTR_ERR(plane);
++		}
++
++		plane->id = cursor_info->id;
++		dc->planes[plane->id].id = cursor_info->id;
++		dc->planes[plane->id].offset = get_addr_offset(cursor_info->id);
++
++		if (cursor_info->id == CURSOR_PLANE_0)
++			dc->crtc[0]->base.cursor = &plane->base;
++		else
++			dc->crtc[1]->base.cursor = &plane->base;
++		drm_dev->mode_config.cursor_width =
++			max_t(u32, drm_dev->mode_config.cursor_width,
++			      cursor_info->max_width);
++		drm_dev->mode_config.cursor_height =
++			max_t(u32, drm_dev->mode_config.cursor_height,
++			      cursor_info->max_height);
++		}
++
++	drm_dev->mode_config.min_width = min_width;
++	drm_dev->mode_config.min_height = min_heigth;
++	drm_dev->mode_config.max_width = max_width;
++	drm_dev->mode_config.max_height = max_height;
++
++	if (dc_info->pitch_alignment > priv->pitch_alignment)
++		priv->pitch_alignment = dc_info->pitch_alignment;
++
++	return 0;
++}
++
++static int vs_load(struct vs_drm_device *priv)
++{
++	int ret;
++
++	ret = clk_bulk_prepare_enable(priv->clk_count, priv->clks);
++	if (ret)
++		return ret;
++
++	reset_control_deassert(priv->rsts);
++
++	ret = dc_hw_init(&priv->dc);
++	if (ret) {
++		DRM_ERROR("failed to init DC HW\n");
++		return ret;
 +	}
 +
 +	return 0;
 +}
 +
-+static inline struct vs_crtc_state *
-+to_vs_crtc_state(struct drm_crtc_state *state)
++static int vs_drm_bind(struct device *dev)
 +{
-+	return container_of(state, struct vs_crtc_state, base);
++	struct vs_drm_device *priv;
++	int ret;
++	struct drm_device *drm_dev;
++
++	priv = devm_drm_dev_alloc(dev, &vs_drm_driver, struct vs_drm_device, base);
++	if (IS_ERR(priv))
++		return PTR_ERR(priv);
++
++	priv->pitch_alignment = 64;
++	drm_dev = &priv->base;
++	dev_set_drvdata(dev, drm_dev);
++
++	ret = dma_set_coherent_mask(drm_dev->dev, DMA_BIT_MASK(40));
++	if (ret)
++		return ret;
++
++	ret = vs_drm_device_init_res(priv);
++	if (ret)
++		return ret;
++
++	vs_mode_config_init(drm_dev);
++
++	/* Remove existing drivers that may own the framebuffer memory. */
++	ret = drm_aperture_remove_framebuffers(&vs_drm_driver);
++	if (ret)
++		return ret;
++
++	ret = vs_drm_device_crtc_plane_create(priv);
++	if (ret) {
++		DRM_ERROR("Failed to create ctrc and plane\n");
++		return ret;
++	}
++
++	ret = vs_load(priv);
++	if (ret)
++		return ret;
++
++	/* Now try and bind all our sub-components */
++	ret = component_bind_all(dev, drm_dev);
++	if (ret) {
++		ret = -EPROBE_DEFER;
++		goto unload;
++	}
++	ret = drm_vblank_init(drm_dev, drm_dev->mode_config.num_crtc);
++	if (ret)
++		goto err_unbind_all;
++
++	drm_mode_config_reset(drm_dev);
++
++	ret = drmm_kms_helper_poll_init(drm_dev);
++	if (ret)
++		goto err_unbind_all;
++
++	ret = drm_dev_register(drm_dev, 0);
++	if (ret)
++		goto err_unbind_all;
++
++	drm_fbdev_generic_setup(drm_dev, 32);
++
++	return 0;
++
++err_unbind_all:
++	component_unbind_all(drm_dev->dev, drm_dev);
++unload:
++	reset_control_assert(priv->rsts);
++	clk_bulk_disable_unprepare(priv->clk_count, priv->clks);
++	return ret;
++
 +}
 +
-+struct vs_plane_state {
-+	struct drm_plane_state base;
-+	dma_addr_t dma_addr[DRM_FORMAT_MAX_PLANES];
++static void vs_drm_unbind(struct device *dev)
++{
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
++	struct vs_drm_device *priv = to_vs_drm_private(drm_dev);
++
++	reset_control_assert(priv->rsts);
++	clk_bulk_disable_unprepare(priv->clk_count, priv->clks);
++
++	drm_dev_unregister(drm_dev);
++	drm_atomic_helper_shutdown(drm_dev);
++	component_unbind_all(drm_dev->dev, drm_dev);
++}
++
++static const struct component_master_ops vs_drm_ops = {
++	.bind = vs_drm_bind,
++	.unbind = vs_drm_unbind,
 +};
 +
-+struct vs_plane {
-+	struct drm_plane base;
-+	u8 id;
++static struct platform_driver *drm_sub_drivers[] = {
++
 +};
 +
-+static inline struct vs_plane *to_vs_plane(struct drm_plane *plane)
++static struct component_match *vs_add_external_components(struct device *dev)
 +{
-+	return container_of(plane, struct vs_plane, base);
-+}
-+
-+static inline struct vs_plane_state *
-+to_vs_plane_state(struct drm_plane_state *state)
-+{
-+	return container_of(state, struct vs_plane_state, base);
-+}
-+
-+#endif /* __VS_DRV_H__ */
-diff --git a/drivers/gpu/drm/verisilicon/vs_plane.c b/drivers/gpu/drm/verisilicon/vs_plane.c
-new file mode 100644
-index 000000000000..653f0ce72ed6
---- /dev/null
-+++ b/drivers/gpu/drm/verisilicon/vs_plane.c
-@@ -0,0 +1,487 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2023 VeriSilicon Holdings Co., Ltd.
-+ */
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_blend.h>
-+#include <drm/drm_gem_dma_helper.h>
-+#include <drm/drm_fb_dma_helper.h>
-+#include <drm/drm_framebuffer.h>
-+#include <drm/drm_plane.h>
-+#include <drm/drm_plane_helper.h>
-+
-+#include "vs_plane.h"
-+
-+static void vs_plane_atomic_destroy_state(struct drm_plane *plane,
-+					  struct drm_plane_state *state)
-+{
-+	struct vs_plane_state *vs_plane_state = to_vs_plane_state(state);
-+
-+	__drm_atomic_helper_plane_destroy_state(state);
-+	kfree(vs_plane_state);
-+}
-+
-+static void vs_plane_reset(struct drm_plane *plane)
-+{
-+	struct vs_plane_state *state;
-+	struct vs_plane *vs_plane = to_vs_plane(plane);
-+
-+	if (plane->state)
-+		vs_plane_atomic_destroy_state(plane, plane->state);
-+
-+	state = kzalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return;
-+
-+	state->base.zpos = vs_plane->id;
-+	__drm_atomic_helper_plane_reset(plane, &state->base);
-+}
-+
-+static struct drm_plane_state *
-+vs_plane_atomic_duplicate_state(struct drm_plane *plane)
-+{
-+	struct vs_plane_state *state;
-+
-+	if (WARN_ON(!plane->state))
-+		return NULL;
-+
-+	state = kzalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return NULL;
-+
-+	__drm_atomic_helper_plane_duplicate_state(plane, &state->base);
-+
-+	return &state->base;
-+}
-+
-+static bool vs_format_mod_supported(struct drm_plane *plane,
-+				    u32 format,
-+				    u64 modifier)
-+{
++	struct component_match *match = NULL;
 +	int i;
 +
-+	/* We always have to allow these modifiers:
-+	 * 1. Core DRM checks for LINEAR support if userspace does not provide modifiers.
-+	 * 2. Not passing any modifiers is the same as explicitly passing INVALID.
++	for (i = 0; i < ARRAY_SIZE(drm_sub_drivers); ++i) {
++		struct platform_driver *drv = drm_sub_drivers[i];
++		struct device *p = NULL, *d;
++
++		while ((d = platform_find_device_by_driver(p, &drv->driver))) {
++			put_device(p);
++
++			drm_of_component_match_add(dev, &match, component_compare_of,
++						   d->of_node);
++			p = d;
++		}
++		put_device(p);
++	}
++
++	return match ? match : ERR_PTR(-ENODEV);
++}
++
++static int vs_drm_platform_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct component_match *match;
++
++	/* all the planes and CRTC would be created in this platform device
++	 * , so external components are encoder + connector or self-defined
++	 * encoder.
 +	 */
-+	if (modifier == DRM_FORMAT_MOD_LINEAR)
-+		return true;
++	match = vs_add_external_components(dev);
++	if (IS_ERR(match))
++		return PTR_ERR(match);
 +
-+	/* Check that the modifier is on the list of the plane's supported modifiers. */
-+	for (i = 0; i < plane->modifier_count; i++) {
-+		if (modifier == plane->modifiers[i])
-+			break;
-+	}
-+
-+	if (i == plane->modifier_count)
-+		return false;
-+
-+	return true;
++	return component_master_add_with_match(dev, &vs_drm_ops, match);
 +}
 +
-+const struct drm_plane_funcs vs_plane_funcs = {
-+	.update_plane		= drm_atomic_helper_update_plane,
-+	.disable_plane		= drm_atomic_helper_disable_plane,
-+	.reset			= vs_plane_reset,
-+	.atomic_duplicate_state = vs_plane_atomic_duplicate_state,
-+	.atomic_destroy_state	= vs_plane_atomic_destroy_state,
-+	.format_mod_supported	= vs_format_mod_supported,
++static int vs_drm_platform_remove(struct platform_device *pdev)
++{
++	component_master_del(&pdev->dev, &vs_drm_ops);
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int vs_drm_suspend(struct device *dev)
++{
++	return drm_mode_config_helper_suspend(dev_get_drvdata(dev));
++}
++
++static int vs_drm_resume(struct device *dev)
++{
++	drm_mode_config_helper_resume(dev_get_drvdata(dev));
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(vs_drm_pm_ops, vs_drm_suspend, vs_drm_resume);
++
++static const struct of_device_id vs_drm_dt_ids[] = {
++	{ .compatible = "starfive,jh7110-dc8200", .data = &dc8200_info,},
++	{ },
 +};
 +
-+static unsigned char vs_get_plane_number(struct drm_framebuffer *fb)
-+{
-+	const struct drm_format_info *info;
++MODULE_DEVICE_TABLE(of, vs_drm_dt_ids);
 +
-+	if (!fb)
-+		return 0;
++static struct platform_driver vs_drm_platform_driver = {
++	.probe = vs_drm_platform_probe,
++	.remove = vs_drm_platform_remove,
 +
-+	info = drm_format_info(fb->format->format);
-+	if (!info || info->num_planes > DRM_FORMAT_MAX_PLANES)
-+		return 0;
-+
-+	return info->num_planes;
-+}
-+
-+static bool vs_dc_mod_supported(const u64 *info_modifiers, u64 modifier)
-+{
-+	const u64 *mods;
-+
-+	if (!info_modifiers)
-+		return false;
-+
-+	for (mods = info_modifiers; *mods != DRM_FORMAT_MOD_INVALID; mods++) {
-+		if (*mods == modifier)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int vs_primary_plane_atomic_check(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+	struct drm_framebuffer *fb = new_state->fb;
-+	const struct vs_plane_primary_info *primary_info;
-+	struct drm_crtc_state *crtc_state;
-+	int i;
-+
-+	if (!new_state->crtc || !new_state->fb)
-+		return 0;
-+	for (i = 0; i < dc->hw.info->primary_num; i++) {
-+		primary_info = (struct vs_plane_primary_info *)&dc->hw.info->primary[i];
-+		if (primary_info->id == to_vs_plane(plane)->id)
-+			break;
-+	}
-+
-+	primary_info = &dc->hw.info->primary[i];
-+
-+	if (fb->width < primary_info->min_width ||
-+	    fb->width > primary_info->max_width ||
-+	    fb->height < primary_info->min_height ||
-+	    fb->height > primary_info->max_height)
-+		drm_err_once(plane->dev, "buffer size may not support on plane%d.\n",
-+			     to_vs_plane(plane)->id);
-+
-+	if (!vs_dc_mod_supported(primary_info->modifiers, fb->modifier)) {
-+		drm_err(plane->dev, "unsupported modifier on plane%d.\n", to_vs_plane(plane)->id);
-+		return -EINVAL;
-+	}
-+
-+	crtc_state = drm_atomic_get_existing_crtc_state(new_state->state, new_state->crtc);
-+	return drm_atomic_helper_check_plane_state(new_state, crtc_state,
-+						   primary_info->min_scale,
-+						   primary_info->max_scale,
-+						   true, true);
-+}
-+
-+static int vs_overlay_plane_atomic_check(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+	struct drm_framebuffer *fb = new_state->fb;
-+	const struct vs_plane_overlay_info *overlay_info;
-+	struct drm_crtc_state *crtc_state;
-+	int i;
-+
-+	if (!new_state->crtc || !new_state->fb)
-+		return 0;
-+
-+	for (i = 0; i < dc->hw.info->overlay_num; i++) {
-+		overlay_info = (struct vs_plane_overlay_info *)&dc->hw.info->overlay[i];
-+		if (overlay_info->id == to_vs_plane(plane)->id)
-+			break;
-+	}
-+
-+	overlay_info = &dc->hw.info->overlay[i];
-+
-+	if (fb->width < overlay_info->min_width ||
-+	    fb->width > overlay_info->max_width ||
-+	    fb->height < overlay_info->min_height ||
-+	    fb->height > overlay_info->max_height)
-+		drm_err_once(plane->dev, "buffer size may not support on plane%d.\n",
-+			     to_vs_plane(plane)->id);
-+
-+	if (!vs_dc_mod_supported(overlay_info->modifiers, fb->modifier)) {
-+		drm_err(plane->dev, "unsupported modifier on plane%d.\n", to_vs_plane(plane)->id);
-+		return -EINVAL;
-+}
-+
-+	crtc_state = drm_atomic_get_existing_crtc_state(new_state->state, new_state->crtc);
-+	return drm_atomic_helper_check_plane_state(new_state, crtc_state,
-+						   overlay_info->min_scale,
-+						   overlay_info->max_scale,
-+						   true, true);
-+}
-+
-+static int vs_cursor_plane_atomic_check(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+	struct drm_framebuffer *fb = new_state->fb;
-+	const struct vs_plane_cursor_info *cursor_info;
-+	struct drm_crtc_state *crtc_state;
-+	int i;
-+
-+	if (!new_state->crtc || !new_state->fb)
-+		return 0;
-+
-+	for (i = 0; i < dc->hw.info->cursor_num; i++) {
-+		cursor_info = (struct vs_plane_cursor_info *)&dc->hw.info->cursor[i];
-+		if (cursor_info->id == to_vs_plane(plane)->id)
-+			break;
-+	}
-+
-+	cursor_info = &dc->hw.info->cursor[i];
-+
-+	if (fb->width < cursor_info->min_width ||
-+	    fb->width > cursor_info->max_width ||
-+	    fb->height < cursor_info->min_height ||
-+	    fb->height > cursor_info->max_height)
-+		drm_err_once(plane->dev, "buffer size may not support on plane%d.\n",
-+			     to_vs_plane(plane)->id);
-+
-+	crtc_state = drm_atomic_get_existing_crtc_state(new_state->state, new_state->crtc);
-+	return drm_atomic_helper_check_plane_state(new_state, crtc_state,
-+						   DRM_PLANE_NO_SCALING,
-+						   DRM_PLANE_NO_SCALING,
-+						   true, true);
-+}
-+
-+static void vs_plane_atomic_update(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state, plane);
-+
-+	unsigned char i, num_planes, display_id, id;
-+	u32 format;
-+	bool is_yuv;
-+	struct vs_plane *vs_plane = to_vs_plane(plane);
-+	struct vs_plane_state *plane_state = to_vs_plane_state(new_state);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+
-+	if (!new_state->fb || !new_state->crtc)
-+		return;
-+
-+	drm_fb_dma_sync_non_coherent(plane->dev, old_state, new_state);
-+
-+	num_planes = vs_get_plane_number(new_state->fb);
-+
-+	for (i = 0; i < num_planes; i++) {
-+		dma_addr_t dma_addr;
-+
-+		dma_addr = drm_fb_dma_get_gem_addr(new_state->fb, new_state, i);
-+		plane_state->dma_addr[i] = dma_addr;
-+	}
-+
-+	display_id = to_vs_display_id(dc, new_state->crtc);
-+	format = new_state->fb->format->format;
-+	is_yuv = new_state->fb->format->is_yuv;
-+	id = vs_plane->id;
-+
-+	plane_hw_update_format_colorspace(dc, format, new_state->color_encoding, id, is_yuv);
-+	if (new_state->visible)
-+		plane_hw_update_address(dc, id, format, plane_state->dma_addr,
-+					new_state->fb, &new_state->src);
-+	plane_hw_update_format(dc, format, new_state->color_encoding, new_state->rotation,
-+			       new_state->visible, new_state->zpos, id, display_id);
-+	plane_hw_update_scale(dc, &new_state->src, &new_state->dst, id,
-+			      display_id, new_state->rotation);
-+	plane_hw_update_blend(dc, new_state->alpha, new_state->pixel_blend_mode,
-+			      id, display_id);
-+}
-+
-+static void vs_cursor_plane_atomic_update(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *new_state = drm_atomic_get_new_plane_state(state,
-+									   plane);
-+	struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state,
-+									   plane);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+	unsigned char display_id;
-+	u32 crtc_w, crtc_x, crtc_y;
-+	s32 hotspot_x, hotspot_y;
-+	dma_addr_t dma_addr;
-+
-+	display_id = to_vs_display_id(dc, new_state->crtc);
-+
-+	if (!new_state->fb || !new_state->crtc)
-+		return;
-+
-+	drm_fb_dma_sync_non_coherent(new_state->fb->dev, old_state, new_state);
-+	dma_addr = drm_fb_dma_get_gem_addr(new_state->fb, new_state, 0);
-+	crtc_w = new_state->crtc_w;
-+
-+	if (new_state->crtc_x > 0) {
-+		crtc_x = new_state->crtc_x;
-+		hotspot_x = 0;
-+	} else {
-+		hotspot_x = -new_state->crtc_x;
-+		crtc_x = 0;
-+	}
-+	if (new_state->crtc_y > 0) {
-+		crtc_y = new_state->crtc_y;
-+		hotspot_y = 0;
-+	} else {
-+		hotspot_y = -new_state->crtc_y;
-+		crtc_y = 0;
-+	}
-+	dc_hw_update_cursor(&dc->hw, display_id, dma_addr, crtc_w, crtc_x,
-+			    crtc_y, hotspot_x, hotspot_y);
-+}
-+
-+static void vs_plane_atomic_disable(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct vs_plane *vs_plane = to_vs_plane(plane);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+
-+	dc_hw_disable_plane(dc, vs_plane->id);
-+}
-+
-+static void vs_cursor_plane_atomic_disable(struct drm_plane *plane, struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state, plane);
-+	struct vs_drm_device *priv = to_vs_drm_private(plane->dev);
-+	struct vs_dc *dc = &priv->dc;
-+	unsigned char display_id;
-+
-+	display_id = to_vs_display_id(dc, old_state->crtc);
-+	dc_hw_disable_cursor(&dc->hw, display_id);
-+}
-+
-+const struct drm_plane_helper_funcs primary_plane_helpers = {
-+	.atomic_check	= vs_primary_plane_atomic_check,
-+	.atomic_update	= vs_plane_atomic_update,
-+	.atomic_disable = vs_plane_atomic_disable,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = vs_drm_dt_ids,
++		.pm = &vs_drm_pm_ops,
++	},
 +};
 +
-+const struct drm_plane_helper_funcs overlay_plane_helpers = {
-+	.atomic_check	= vs_overlay_plane_atomic_check,
-+	.atomic_update	= vs_plane_atomic_update,
-+	.atomic_disable = vs_plane_atomic_disable,
-+};
-+
-+const struct drm_plane_helper_funcs cursor_plane_helpers = {
-+	.atomic_check	= vs_cursor_plane_atomic_check,
-+	.atomic_update	= vs_cursor_plane_atomic_update,
-+	.atomic_disable = vs_cursor_plane_atomic_disable,
-+};
-+
-+struct vs_plane *vs_plane_primary_create(struct drm_device *drm_dev,
-+					 struct vs_plane_primary_info *info,
-+					 unsigned int layer_num,
-+					 unsigned int possible_crtcs)
++static int __init vs_drm_init(void)
 +{
-+	struct vs_plane *plane;
 +	int ret;
 +
-+	if (!info)
-+		return NULL;
-+
-+	plane = drmm_universal_plane_alloc(drm_dev, struct vs_plane, base,
-+					   possible_crtcs,
-+					   &vs_plane_funcs,
-+					   info->formats, info->num_formats,
-+					   info->modifiers, DRM_PLANE_TYPE_PRIMARY,
-+					   NULL);
-+	if (IS_ERR(plane))
-+		return ERR_CAST(plane);
-+
-+	drm_plane_helper_add(&plane->base, &primary_plane_helpers);
-+
-+	drm_plane_create_alpha_property(&plane->base);
-+	drm_plane_create_blend_mode_property(&plane->base,
-+					     BIT(DRM_MODE_BLEND_PIXEL_NONE) |
-+					     BIT(DRM_MODE_BLEND_PREMULTI) |
-+					     BIT(DRM_MODE_BLEND_COVERAGE));
-+
-+	if (info->color_encoding) {
-+		ret = drm_plane_create_color_properties(&plane->base, info->color_encoding,
-+							BIT(DRM_COLOR_YCBCR_LIMITED_RANGE),
-+							DRM_COLOR_YCBCR_BT709,
-+							DRM_COLOR_YCBCR_LIMITED_RANGE);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	if (info->rotation) {
-+		ret = drm_plane_create_rotation_property(&plane->base,
-+							 DRM_MODE_ROTATE_0,
-+							 info->rotation);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	ret = drm_plane_create_zpos_property(&plane->base, info->zpos, 0, layer_num - 1);
++	ret = platform_register_drivers(drm_sub_drivers, ARRAY_SIZE(drm_sub_drivers));
 +	if (ret)
-+		return NULL;
++		return ret;
 +
-+	return plane;
++	ret = drm_platform_driver_register(&vs_drm_platform_driver);
++	if (ret)
++		platform_unregister_drivers(drm_sub_drivers, ARRAY_SIZE(drm_sub_drivers));
++
++	return ret;
 +}
 +
-+struct vs_plane *vs_plane_overlay_create(struct drm_device *drm_dev,
-+					 struct vs_plane_overlay_info *info,
-+					 unsigned int layer_num,
-+					 unsigned int possible_crtcs)
++static void __exit vs_drm_fini(void)
 +{
-+	struct vs_plane *plane;
-+	int ret;
-+
-+	if (!info)
-+		return NULL;
-+
-+	plane = drmm_universal_plane_alloc(drm_dev, struct vs_plane, base,
-+					   possible_crtcs,
-+					   &vs_plane_funcs,
-+					   info->formats, info->num_formats,
-+					   info->modifiers, DRM_PLANE_TYPE_OVERLAY,
-+					   NULL);
-+	if (IS_ERR(plane))
-+		return ERR_CAST(plane);
-+
-+	drm_plane_helper_add(&plane->base, &overlay_plane_helpers);
-+
-+	drm_plane_create_alpha_property(&plane->base);
-+	drm_plane_create_blend_mode_property(&plane->base,
-+					     BIT(DRM_MODE_BLEND_PIXEL_NONE) |
-+					     BIT(DRM_MODE_BLEND_PREMULTI) |
-+					     BIT(DRM_MODE_BLEND_COVERAGE));
-+
-+	if (info->color_encoding) {
-+		ret = drm_plane_create_color_properties(&plane->base, info->color_encoding,
-+							BIT(DRM_COLOR_YCBCR_LIMITED_RANGE),
-+							DRM_COLOR_YCBCR_BT709,
-+							DRM_COLOR_YCBCR_LIMITED_RANGE);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	if (info->rotation) {
-+		ret = drm_plane_create_rotation_property(&plane->base,
-+							 DRM_MODE_ROTATE_0,
-+							 info->rotation);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	ret = drm_plane_create_zpos_property(&plane->base, info->zpos, 0, layer_num - 1);
-+	if (ret)
-+		return NULL;
-+
-+	return plane;
++	platform_driver_unregister(&vs_drm_platform_driver);
++	platform_unregister_drivers(drm_sub_drivers, ARRAY_SIZE(drm_sub_drivers));
 +}
 +
-+struct vs_plane *vs_plane_cursor_create(struct drm_device *drm_dev,
-+					struct vs_plane_cursor_info *info,
-+					unsigned int possible_crtcs)
-+{
-+	struct vs_plane *plane;
-+	int ret;
++late_initcall_sync(vs_drm_init);
++module_exit(vs_drm_fini);
 +
-+	if (!info)
-+		return NULL;
-+
-+	plane = drmm_universal_plane_alloc(drm_dev, struct vs_plane, base,
-+					   possible_crtcs,
-+					   &vs_plane_funcs,
-+					   info->formats, info->num_formats,
-+					   NULL, DRM_PLANE_TYPE_CURSOR,
-+					   NULL);
-+	if (IS_ERR(plane))
-+		return ERR_CAST(plane);
-+
-+	drm_plane_helper_add(&plane->base, &cursor_plane_helpers);
-+
-+	ret = drm_plane_create_zpos_immutable_property(&plane->base, info->zpos);
-+	if (ret)
-+		return NULL;
-+
-+	return plane;
-+}
-diff --git a/drivers/gpu/drm/verisilicon/vs_plane.h b/drivers/gpu/drm/verisilicon/vs_plane.h
-new file mode 100644
-index 000000000000..0416146226a8
---- /dev/null
-+++ b/drivers/gpu/drm/verisilicon/vs_plane.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2023 VeriSilicon Holdings Co., Ltd.
-+ */
-+
-+#ifndef __VS_PLANE_H__
-+#define __VS_PLANE_H__
-+
-+#include <drm/drm_plane_helper.h>
-+
-+#include "vs_drv.h"
-+
-+struct vs_plane *vs_plane_primary_create(struct drm_device *drm_dev,
-+					 struct vs_plane_primary_info *info,
-+					 unsigned int layer_num,
-+					 unsigned int possible_crtcs);
-+
-+struct vs_plane *vs_plane_overlay_create(struct drm_device *drm_dev,
-+					 struct vs_plane_overlay_info *info,
-+					 unsigned int layer_num,
-+					 unsigned int possible_crtcs);
-+
-+struct vs_plane *vs_plane_cursor_create(struct drm_device *drm_dev,
-+					struct vs_plane_cursor_info *info,
-+					unsigned int possible_crtcs);
-+#endif /* __VS_PLANE_H__ */
++MODULE_DESCRIPTION("VeriSilicon DRM Driver");
++MODULE_LICENSE("GPL");
 -- 
 2.27.0
 
