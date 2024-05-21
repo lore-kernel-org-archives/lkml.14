@@ -1,41 +1,40 @@
 Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C529B1514C5
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 21:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FC4149DF1
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 21:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716325882; cv=none; b=UrWMWXZPnTnG97dXiI2R9uu8yXPuuLG8Fn360NwVOLt3mq8XYxYUQ/8pp7zwexpTaSygPB8ifPLUr1qmlAzRzu0F2/b1WwFOthkTKBKAf3R7oqzjnJtep+s/+o5f5M6j0Uf0dJJQFhzlIE34UIPA3all8bwBv/usfOPrkae7x0A=
+	t=1716325893; cv=none; b=IAScbvO0zBmUblXJ+kglgTyZO8ObgnqGpP5FT4rIRHG/jVoqqUaQi2DmK0n+2pfHhvdpBiYDEcUP+fgo7Vcyelcs/VLe/gpWZPrTMR7ZV8ycNVSA8Cjlb3B89iLDOKKDJoyU/vIj2gmJ9zzxiZcHu2qYdpkeHwK3dajpkGV2QXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716325882; c=relaxed/simple;
-	bh=780LjI9zHykK8F9yF1AvzIEg7laoNZ1MFbBqgi3DkCg=;
+	s=arc-20240116; t=1716325893; c=relaxed/simple;
+	bh=Y30ceGqckoTbulkjj+006ptRCarsoInM1Ia0qkC6q8Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aP2i2zM3WttiHRkBz9jmwv47REpiGe0ybMALTk8JGupmoT2Lk/Q6mB36FdF21VaiyY5pC7Zk3ttnmbZhsV1+9S0BssTVc9Ctm0VqyWkDVe3HQ60xSA4RCwnslRqcULo7q7xF4CEEeOP6S/qrRpSmSfr//VWi8bF96E1uhVjk+Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=XT9srpWB; arc=none smtp.client-ip=167.172.40.54
+	 MIME-Version; b=Vvf4LLrL1PUMDog67VtqZeOnhQTbHhfZIVRLfrBx0ClItGMgkUORGO4lpkahD8+DMPNxtUpiyBsP9zqGfJsbWb4DC9j4YaxJdcvJku/9omMFgPTGr0ZctHPgknA181ytbLurBcHtIKvnZlEttDNLBiQ1Q1Ut5rwZUu8GpsywvC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=rNL+pzDm; arc=none smtp.client-ip=167.172.40.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="XT9srpWB"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="rNL+pzDm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
  h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
  Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1716325865; bh=Q+KNqYGJ2pU6mX/5douK68ZydcHesKtGsJ1fQQSMki8=;
- b=XT9srpWBp9X8lt5U3jtP9AQkwIYe8Iaj9DHwrpekvNs3mlkU5JUaIieBBx9sVxSydr+LXaoz2
- YKK+N+TSnvZCIHPk/ugUmi7/90CFsF1cq+h+K8BloUPl2WaTkFFz5mBuKI/eqW1a0BWkm1lbNlD
- W1sdPxVZZKuEKg/4NKuLrUaUo+yKMitmw8K/hFCMWxWqgN3bq0f5KOIYWE5lQN2mXxmSP5Qcw2M
- a9zfXKcd4HA/Pthf5NDp47Aw0tMjUEjNGSV3Gyn2jAZqok8s2CBt3GrVi5a3XVvU0ml3VctiCBu
- F9DQuRZ11JE88gVxoLfepARwzeQ8az4k4ekvq6KPu9uQ==
+ t=1716325876; bh=K5yAjzEaLtFOa4kSsCuv53z0xE/nN5Eju4FGamxvgXQ=;
+ b=rNL+pzDmC8uQ6XOIaFwDkSd/t0qyPl4sfX5cGEQ+fTvQdfaEXpxqOaytKGoouQDEUUoP/YY9d
+ PkfVLAbKvaTRSQZobSd27BRlP7Fq/pybnTEl70pw4x0nUavL67KeHXoRk5RZU4qp8SL/XoE6pvF
+ oRZiTaYhNBiwLrcPM/0fsQO9AX3iO6FUY6JyDKeFGiR5xisWpRHCtdqIYmLT1Z+vuBByT+7QKtM
+ 4GapiCfXprcNLM4ozimh6AQUlM9+y5FAY2uqNXsp1F7fPWite/9jgIC+lcP68FVOOSsCcDsaSxp
+ 4vlR4/2azrcgfP+RGJtrBIlIlg0kJItJMVa6+7ZiV0Fg==
 From: Jonas Karlman <jonas@kwiboo.se>
 To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sjoerd Simons <sjoerd@collabora.com>, Akash Gajjar
- <akash@openedev.com>
+ <conor+dt@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas
  Karlman <jonas@kwiboo.se>
-Subject: [PATCH 06/13] arm64: dts: rockchip: rk3308-rock-pi-s: Rename LED related pinctrl nodes
-Date: Tue, 21 May 2024 21:10:09 +0000
-Message-ID: <20240521211029.1236094-7-jonas@kwiboo.se>
+Subject: [PATCH 09/13] dt-bindings: power: rockchip: Document RK3308 IO voltage domains
+Date: Tue, 21 May 2024 21:10:12 +0000
+Message-ID: <20240521211029.1236094-10-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240521211029.1236094-1-jonas@kwiboo.se>
 References: <20240521211029.1236094-1-jonas@kwiboo.se>
@@ -52,75 +51,64 @@ X-Complaints-To: abuse@forwardemail.net
 X-ForwardEmail-Version: 0.4.40
 X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
  167.172.40.54
-X-ForwardEmail-ID: 664d0de48b6b0c828344af00
+X-ForwardEmail-ID: 664d0df08b6b0c828344af3d
 
-The nodename, <name>-gpio, of referenced pinctrl nodes for the two LEDs
-on the ROCK Pi S cause DT schema validation error:
+Document dt-bindings for RK3308 IO voltage domains.
 
-  leds: green-led-gpio: {'rockchip,pins': [[0, 6, 0, 90]], 'phandle': [[98]]} is not of type 'array'
-        from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
-  leds: heartbeat-led-gpio: {'rockchip,pins': [[0, 5, 0, 90]], 'phandle': [[99]]} is not of type 'array'
-        from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
-
-Rename the pinctrl nodes and symbols to pass DT schema validation, also
-extend LED nodes with information about color and function.
-
-Fixes: 2e04c25b1320 ("arm64: dts: rockchip: add ROCK Pi S DTS support")
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- arch/arm64/boot/dts/rockchip/rk3308-rock-pi-s.dts | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ .../bindings/power/rockchip-io-domain.yaml    | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-s.dts b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-s.dts
-index 08d1be3a5de7..d4cf6026241c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-s.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-s.dts
-@@ -5,6 +5,8 @@
-  */
+diff --git a/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml b/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
+index d71fc72d4464..c434277218ea 100644
+--- a/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
++++ b/Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
+@@ -50,6 +50,7 @@ properties:
+       - rockchip,rk3188-io-voltage-domain
+       - rockchip,rk3228-io-voltage-domain
+       - rockchip,rk3288-io-voltage-domain
++      - rockchip,rk3308-io-voltage-domain
+       - rockchip,rk3328-io-voltage-domain
+       - rockchip,rk3368-io-voltage-domain
+       - rockchip,rk3368-pmu-io-voltage-domain
+@@ -71,6 +72,7 @@ allOf:
+   - $ref: "#/$defs/rk3188"
+   - $ref: "#/$defs/rk3228"
+   - $ref: "#/$defs/rk3288"
++  - $ref: "#/$defs/rk3308"
+   - $ref: "#/$defs/rk3328"
+   - $ref: "#/$defs/rk3368"
+   - $ref: "#/$defs/rk3368-pmu"
+@@ -194,6 +196,28 @@ $defs:
+         wifi-supply:
+           description: The supply connected to APIO3_VDD. Also known as SDIO0.
  
- /dts-v1/;
++  rk3308:
++    if:
++      properties:
++        compatible:
++          contains:
++            const: rockchip,rk3308-io-voltage-domain
 +
-+#include <dt-bindings/leds/common.h>
- #include "rk3308.dtsi"
- 
- / {
-@@ -24,17 +26,21 @@ chosen {
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&green_led_gio>, <&heartbeat_led_gpio>;
-+		pinctrl-0 = <&green_led>, <&heartbeat_led>;
- 
- 		green-led {
-+			color = <LED_COLOR_ID_GREEN>;
- 			default-state = "on";
-+			function = LED_FUNCTION_POWER;
- 			gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
- 			label = "rockpis:green:power";
- 			linux,default-trigger = "default-on";
- 		};
- 
- 		blue-led {
-+			color = <LED_COLOR_ID_BLUE>;
- 			default-state = "on";
-+			function = LED_FUNCTION_HEARTBEAT;
- 			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
- 			label = "rockpis:blue:user";
- 			linux,default-trigger = "heartbeat";
-@@ -216,11 +222,11 @@ &pinctrl {
- 	pinctrl-0 = <&rtc_32k>;
- 
- 	leds {
--		green_led_gio: green-led-gpio {
-+		green_led: green-led {
- 			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 
--		heartbeat_led_gpio: heartbeat-led-gpio {
-+		heartbeat_led: heartbeat-led {
- 			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
++    then:
++      properties:
++        vccio0-supply:
++          description: The supply connected to VCCIO0.
++        vccio1-supply:
++          description: The supply connected to VCCIO1.
++        vccio2-supply:
++          description: The supply connected to VCCIO2.
++        vccio3-supply:
++          description: The supply connected to VCCIO3.
++        vccio4-supply:
++          description: The supply connected to VCCIO4.
++        vccio5-supply:
++          description: The supply connected to VCCIO5.
++
+   rk3328:
+     if:
+       properties:
 -- 
 2.43.2
 
