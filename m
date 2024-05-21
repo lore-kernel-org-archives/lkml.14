@@ -1,179 +1,252 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2C76CDD8
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816F37CF34;
+	Tue, 21 May 2024 10:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716286682; cv=none; b=Dt6Lm/MA11JC8mObbhGvVZmnBaEBWXTIcPMcvzlALRf9KqCYEMzjuKYZ030Ac02Iu83J/n8jWkGXOkFR71ACCDRqUgs/kedWJlcoRWgfVEp5uZS6JFoAM+Uj+ZzQY4c1GYNMG277ZuTrjW+Rwz3BDfBYwL3abahX1hPJgnhnE4U=
+	t=1716286696; cv=none; b=tq3etrYyS3+KE3WL7dHofy6u/gtZbDgN/2iCirgBu28Jb3rs7uNjVu5MhGho/NKxtw92WnonmV9dy0vT0qfmQMcUAXxGoNbxSJEsTzVnlr2X1o+lQJARndz9L/mEJ19CO6Y/F/MC3Nce2Uq07Tq3dt1ekRk4dqw95ZNy8w+zKw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716286682; c=relaxed/simple;
-	bh=xNtfwsLj+AXhnT99jVhXBY0LB5g4T+lW3lcoU9wKeIQ=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=fERx/XpbIboLGUENWRhVXON66v/LNSDeC4wUX6QNUdbqyEtZna/+e029xuq3IKT4bxEqQWRoyLZzWF8ERMlfQ6lWxWKi+ziMKY/ziMOcuSXePO8QHaF/H8o0jc85LbrlJvbGGVuuYvlPVaY8ZhU7/2k320rUQ7SRTPqsXpB1T2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gJP93wTF; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1716286696; c=relaxed/simple;
+	bh=dyn0wnOs5ah6OzX/Bmsg49n3vC+8iuKjjPFZXueJA6I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J1xkSIs8pEjzcHBYWW0mfF8hbRnv4m6XW8duY5SE63Xy529JbWyjF60BCO9GmbJaIt0STkj1Hiy4rSwPhQFc4QgCzVkQUT5jcYFmdmKUQoR0nf9SaOXcuczbSZqKu7iDONtLo+EfbLwwusu5ZleqpYSctX8QGw/rQc8oyIuidQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ij3MtVTp; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gJP93wTF"
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240521101755epoutp01fdad356112021897e4afbad2580adb46~ReaNZxu680206902069epoutp01T
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:17:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240521101755epoutp01fdad356112021897e4afbad2580adb46~ReaNZxu680206902069epoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1716286675;
-	bh=xNtfwsLj+AXhnT99jVhXBY0LB5g4T+lW3lcoU9wKeIQ=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=gJP93wTFQKdJyt38z2Vk87Yi3LnQrQcgoWMnByvx/qrgY8o61OaH7dThz7D7rPV89
-	 XKsL5+hNFYPeS5REZxA1C1ZcqCZrUiMTZSX/jUH+VoG5YIejwsZuB3J/EOdtzz/Rmo
-	 L14D+0wL9A+n9hDqrQA1/Wdn98yH9tXhZIYRVa1I=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-	20240521101754epcas1p4faba0848f97da16868486c58b9039450~ReaMVjLtI0862408624epcas1p4q;
-	Tue, 21 May 2024 10:17:54 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.36.223]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Vk9Ny04Pzz4x9Py; Tue, 21 May
-	2024 10:17:54 +0000 (GMT)
-X-AuditID: b6c32a35-053ff700000025be-ab-664c74d14045
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FA.1F.09662.1D47C466; Tue, 21 May 2024 19:17:53 +0900 (KST)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ij3MtVTp"
+X-UUID: 6c1af96c175b11efb92737409a0e9459-20240521
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=n6049CLmOykfsLJuEGhnBsULqwRkvRXGeSxXNY14rlc=;
+	b=ij3MtVTpRkAWxtuEpUaMqnVSkjlsgOigQdgMa8Idp3lptAH43WfUOfKfGP045tqnCW38J/2UpIsMwH5+dj7OMr+G6stwn0+oK8jkGl/KRdDIgFBkHVNVzradAvOESayfLB86UvZirLEuj5ResC+zeDcJwj0uWt51kxTpLbPNTRQ=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:ce18e183-02bf-44ba-961a-e6ad899c057a,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:82c5f88,CLOUDID:c2d65cfc-ed05-4274-9204-014369d201e8,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 6c1af96c175b11efb92737409a0e9459-20240521
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
+	(envelope-from <skylake.huang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 573676641; Tue, 21 May 2024 18:18:09 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 21 May 2024 18:18:08 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 21 May 2024 18:18:08 +0800
+From: Sky Huang <SkyLake.Huang@mediatek.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
+	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
+	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
+	<skylake.huang@mediatek.com>
+Subject: [PATCH net-next v4 4/5] net: phy: mediatek: Extend 1G TX/RX link pulse time
+Date: Tue, 21 May 2024 18:15:47 +0800
+Message-ID: <20240521101548.9286-5-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240521101548.9286-1-SkyLake.Huang@mediatek.com>
+References: <20240521101548.9286-1-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE:(2) [RESEND PATCH 00/10] memblock: introduce memsize showing
- reserved memory
-Reply-To: jaewon31.kim@samsung.com
-Sender: Jaewon Kim <jaewon31.kim@samsung.com>
-From: Jaewon Kim <jaewon31.kim@samsung.com>
-To: Mike Rapoport <rppt@kernel.org>, Jaewon Kim <jaewon31.kim@samsung.com>
-CC: "vbabka@suse.cz" <vbabka@suse.cz>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>, "tkjos@google.com"
-	<tkjos@google.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <ZkxN0yQ7Fb0X26hT@kernel.org>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1@epcms1p5>
-Date: Tue, 21 May 2024 19:17:53 +0900
-X-CMS-MailID: 20240521101753epcms1p50443f6b88adea211dd9bbb417dd57cb1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmnu7FEp80g5u9xhZz1q9hs3h5SNOi
-	e/NMRove96+YLC7vmsNmcW/Nf1aLI+u3M1m8n1xsMbuxj9GB02PnrLvsHgs2lXpsWtXJ5rHp
-	0yR2jxMzfrN49G1ZxehxZsERdo/Pm+QCOKKybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwM
-	dQ0tLcyVFPISc1NtlVx8AnTdMnOAjlNSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTk
-	FJgV6BUn5haX5qXr5aWWWBkaGBiZAhUmZGdsPbWYvWCNQcX5GTtZGxh/6nUxcnJICJhIrGzu
-	Y+1i5OIQEtjBKHH530a2LkYODl4BQYm/O4RBaoQFoiQuzD7FBmILCShJnP1xhR0irivR1L2a
-	BcRmE9CWeL9gEitIq4iAl8Sdtx4gI5kFVjFJ9Ld3M0Ls4pWY0f6UBcKWlti+fCtYnFNAS+Lk
-	3VZmiLioxM3Vb9lh7PfH5kP1iki03jsLVSMo8eDnbkaYOX+OP2eDsIsllnU+YIKwayRWnFsF
-	FTeXaHi7EszmFfCVmPLwOtgcFgFViZZjZ6HqXSR+nd8FtpcZ6JdlC18zg/zCLKApsX6XPkSY
-	T+Ld1x5WmFcaNv5mx8beMe8J1Eg1iZZnX6HqZST+/nsGZXtI3L22m2UCo+IsREDPQrJ4FsLi
-	BYzMqxjFUguKc9NTiw0LDOFxm5yfu4kRnEy1THcwTnz7Qe8QIxMH4yFGCQ5mJRHeTVs804R4
-	UxIrq1KL8uOLSnNSiw8xmgK9PJFZSjQ5H5jO80riDU0sDUzMjEwsjC2NzZTEec9cKUsVEkhP
-	LEnNTk0tSC2C6WPi4JRqYLJdqVp/zKN2c7LKv6abt2/LqjtlHLObMOFLY4CKCbeee63cyisL
-	p31bmrQm8K2X9751csHBu+b6nrkRe1Jj7fxg89j23V/mRWtIBdyd8Gu78uNZgmwrzq0ujtq9
-	9LOkws+A39t6Mn9e3OeTV8NWXexwIlBzqfWNjJBF/GpZxgdZenUOLjgtObHkwvngNbOlTzeu
-	/vpC/2PZ/p4weR/D05M3/jWTPPlMW+a90t03ndsnKx/WDBA7skTHwCtkuWV4g7XcJV+nCfed
-	p1/fZ3ng8sKjWjviWd1kvm+7399spXq5v/bQ2+qlpy4qxTDorlCe+mmx2pz8dK96ZWcG/x19
-	pm3fbq206dyWmSfxz3nmsQtKLMUZiYZazEXFiQCB18uOLwQAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76
-References: <ZkxN0yQ7Fb0X26hT@kernel.org>
-	<20240521023957.2587005-1-jaewon31.kim@samsung.com>
-	<20240521025329epcms1p6ce11064c0f0608a0156d82fda7ef285c@epcms1p6>
-	<CGME20240521024009epcas1p10ed9f9b929203183a29f79508e79bb76@epcms1p5>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK: N
 
->On Tue, May 21, 2024 at 11:53:29AM +0900, Jaewon Kim wrote:
->> >--------- Original Message ---------
->> >Sender : =EA=B9=80=EC=9E=AC=EC=9B=90=20<jaewon31.kim=40samsung.com>Syst=
-em=20Performance=20Lab.(MX)/=EC=82=BC=EC=84=B1=EC=A0=84=EC=9E=90=0D=0A>>=20=
->Date=20=20=20:=202024-05-21=2011:40=20(GMT+9)=0D=0A>>=20>Title=20=20:=20=
-=5BRESEND=20PATCH=2000/10=5D=20memblock:=20introduce=20memsize=20showing=20=
-reserved=20memory=0D=0A>>=20>?=0D=0A>>=20>Some=20of=20memory=20regions=20ca=
-n=20be=20reserved=20for=20a=20specific=20purpose.=20They=20are=0D=0A>>=20>u=
-sually=20defined=20through=20reserved-memory=20in=20device=20tree.=20If=20o=
-nly=20size=0D=0A>>=20>without=20address=20is=20specified=20in=20device=20tr=
-ee,=20the=20address=20of=20the=20region=0D=0A>>=20>will=20be=20determined=
-=20at=20boot=20time.=0D=0A>>=20>=0D=0A>>=20>We=20may=20find=20the=20address=
-=20of=20the=20memory=20regions=20through=20booting=20log,=20but=0D=0A>>=20>=
-it=20does=20not=20show=20all.=20And=20it=20could=20be=20hard=20to=20catch=
-=20the=20very=20beginning=0D=0A>>=20>log.=20The=20memblock_dump_all=20shows=
-=20all=20memblock=20status=20but=20it=20does=20not=0D=0A>>=20>show=20region=
-=20name=20and=20its=20information=20is=20difficult=20to=20summarize.=0D=0A>=
->=20>=0D=0A>>=20>This=20patch=20introduce=20a=20debugfs=20node,=20memblock/=
-memsize,=20to=20see=20reserved=0D=0A>>=20>memory=20easily.=0D=0A>>=20>=0D=
-=0A>>=20>Here's=20an=20example=0D=0A>>=20>=0D=0A>>=20>=24=20cat=20debugfs/m=
-emblock/memsize=0D=0A>>=20>=0D=0A>>=20>0x0000000000000000-0x000000000000000=
-0=200x02000000=20(?=20=2032768=20KB=20)?=20=20map=20reusable=20linux,cma=0D=
-=0A>>=20>0x0000000000000000-0x0000000000000000=200x01000000=20(?=20=2016384=
-=20KB=20)?=20=20map=20reusable=20vxxxxx=0D=0A>>=20>...=0D=0A>>=20>0x0000000=
-000000000-0x0000000000000000=200x004e0000=20(?=20?=204992=20KB=20)=20nomap=
-=20unusable=20unknown=0D=0A>>=20>0x0000000000000000-0x0000000000000000=200x=
-00400000=20(?=20?=204096=20KB=20)=20nomap=20unusable=20cxxxxx=0D=0A>>=20>0x=
-0000000000000000-0x0000000000000000=200x00e00000=20(?=20=2014336=20KB=20)=
-=20nomap=20unusable=20gxxxxx=0D=0A>>=20>=0D=0A>>=20>Reserved?=20?=20:=20122=
-3856=20KB=0D=0A>>=20>=20.kernel?=20?=20:?=20275208=20KB=0D=0A>>=20>?=20.tex=
-t?=20?=20=20:?=20=2016576=20KB=0D=0A>>=20>?=20.rwdata?=20=20:?=20?=201963=
-=20KB=0D=0A>>=20>?=20.rodata?=20=20:?=20=2011920=20KB=0D=0A>>=20>?=20.bss?=
-=20?=20?=20:?=20?=202450=20KB=0D=0A>>=20>?=20.memmap?=20=20:?=20186368=20KB=
-=0D=0A>>=20>?=20.etc?=20?=20?=20:?=20=2055933=20KB=0D=0A>>=20>=20.unusable?=
-=20:?=20948648=20KB=0D=0A>>=20>System?=20?=20?=20:=2011359056=20KB=0D=0A>>=
-=20>=20.common?=20?=20:=2010306384=20KB=0D=0A>>=20>=20.reusable?=20:=201052=
-672=20KB=0D=0A>>=20>Total?=20?=20?=20=20:=2012582912=20KB=20(=2012288.00=20=
-MB=20)=0D=0A>>=20>=0D=0A>>=20>Jaewon=20Kim=20(10):=0D=0A>>=20>?=20memblock:=
-=20introduce=20memsize=20showing=20reserved=20memory=0D=0A>>=20>?=20membloc=
-k:=20detect=20hidden=20memory=20hole=20size=0D=0A>>=20>?=20memblock:=20hand=
-le=20overlapped=20reserved=20memory=20region=0D=0A>>=20>?=20memblock:=20tak=
-e=20a=20region=20intersecting=20an=20unknown=20region=0D=0A>>=20>?=20memblo=
-ck:=20track=20memblock=20changed=20at=20early=20param=0D=0A>>=20>?=20memblo=
-ck:=20recognize=20late=20freed=20size=20by=20checking=20PageReserved=0D=0A>=
->=20>?=20memblock:=20track=20kernel=20size=20on=20memsize=0D=0A>>=20>?=20me=
-mblock:=20print=20memsize=20summary=20information=0D=0A>>=20>?=20memblock:=
-=20print=20kernel=20internal=20size=0D=0A>>=20>?=20memblock:=20support=20me=
-msize=20reusable=20to=20consider=20as=20reusable=0D=0A>>=20>=0D=0A>>=20>=20=
-drivers/of/fdt.c?=20?=20?=20?=20?=20?=20=20=7C?=2011=20+=0D=0A>>=20>=20driv=
-ers/of/of_reserved_mem.c=20=7C?=2012=20+-=0D=0A>>=20>=20include/linux/membl=
-ock.h?=20?=20=20=7C?=2029=20++=0D=0A>>=20>=20init/main.c?=20?=20?=20?=20?=
-=20?=20?=20?=20?=20=7C?=2013=20+-=0D=0A>>=20>=20kernel/dma/contiguous.c?=20=
-?=20?=20=7C?=20=209=20+-=0D=0A>>=20>=20mm/Kconfig?=20?=20?=20?=20?=20?=20?=
-=20?=20?=20=20=7C?=2016=20++=0D=0A>>=20>=20mm/memblock.c?=20?=20?=20?=20?=
-=20?=20?=20?=20=7C=20502=20++++++++++++++++++++++++++++++++++-=0D=0A>>=20>=
-=20mm/mm_init.c?=20?=20?=20?=20?=20?=20?=20?=20=20=7C?=20=206=20+-=0D=0A>>=
-=20>=20mm/page_alloc.c?=20?=20?=20?=20?=20?=20?=20=7C?=2010=20+-=0D=0A>>=20=
->=209=20files=20changed,=20597=20insertions(+),=2011=20deletions(-)=0D=0A>>=
-=20>=0D=0A>>=20>--=20=0D=0A>>=20>2.25.1=0D=0A>>=20=0D=0A>>=20Hello=20Mike=
-=20=0D=0A>>=20=0D=0A>>=20This=20is=20actually=20RESEND=20as=20it=20was=20in=
-troduced=202=20years=20ago.=0D=0A>>=20Please=20refer=20to=20https://lore.ke=
-rnel.org/linux-mm/YkQB6Ah603yPR3qf=40kernel.org/=23t=0D=0A>>=20=0D=0A>>=20>=
-=20But=20you=20never=20provided=20details=20about=20*why*=20you=20want=20th=
-is=20information=20exposed.=0D=0A>>=20=0D=0A>>=20For=20your=20question,=20I=
-'d=20like=20to=20say=20;=0D=0A>>=20We=20can=20see=20the=20same=20format=20a=
-nd=20exact=20information=20between=20different=20version=20of=20kernel=20st=
-atus.=0D=0A>>=20=0D=0A>>=201)=20Internally=20we=20can=20check=20if=20the=20=
-reserved=20memory=20changes.=0D=0A>>=202)=20Externally=20we=20can=20communi=
-cate=20between=20chipset=20vendors=20and=20OEM,=20with=20a=20same=20format.=
-=0D=0A>=0D=0A>Why=20the=20existing=20debugfs=20interface=20is=20not=20suffi=
-cient?=0D=0A=0D=0Adebugfs/memblock/memory=20&=20debugfs/memblock/reserved=
-=20have=20changed=20its=20format=20but=20still=20does=20not=20show=20name,=
-=20reusable,=20kernel=20size.=0D=0AIf=20memory=20is=20reserved=20from=20mem=
-block,=20and=20did=20not=20freed=20back=20to=20memblock.=20Memblock=20does=
-=20not=20know=20even=20after=20the=20memory=20is=20freed=20to=20system.=0D=
-=0AI=20think=20a=20simple=20debug=20interface=20is=20needed=20to=20easily=
-=20communicate=20with=20others=20or=20compare=20different=20SW=20releases.=
-=0D=0A=0D=0A>=20=0D=0A>>=20This=20helps=20us=20to=20communitcate=20well,=20=
-to=20easily=20detect=20changes=20or=20just=20to=20see=20differences.=0D=0A>=
->=20=0D=0A>>=20Jaewon=20Kim=0D=0A>>=20=0D=0A>=0D=0A>--=20=0D=0A>Sincerely=
-=20yours,=0D=0A>Mike.=0D=0A=0D=0A
+From: "SkyLake.Huang" <skylake.huang@mediatek.com>
+
+We observe that some 10G devices' (mostly Marvell's chips inside) 1G
+training time violates specification, which may last 2230ms and affect
+later TX/RX link pulse time. This will invalidate MediaTek series
+gigabit Ethernet PHYs' hardware auto downshift mechanism.
+
+Without this patch, if someone is trying to use "4-wire" cable to
+connect above devices, MediaTek' gigabit Ethernet PHYs may fail
+to downshift to 100Mbps. (If partner 10G devices' downshift mechanism
+stops at 1G)
+
+This patch extends our 1G TX/RX link pulse time so that we can still
+link up with those 10G devices.
+
+Tested device:
+- Netgear GS110EMX's 10G port (Marvell 88X3340P)
+- QNAP QSW-M408-4C
+
+v3:
+Refactor mtk_gphy_cl22_read_status() with genphy_read_status().
+
+v4:
+1. Change extend_an_new_lp_cnt_limit()'s return type and all return values
+2. Refactor comments in extend_an_new_lp_cnt_limit()
+
+Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+---
+ drivers/net/phy/mediatek/mtk-ge-soc.c  |  2 +
+ drivers/net/phy/mediatek/mtk-ge.c      |  1 +
+ drivers/net/phy/mediatek/mtk-phy-lib.c | 66 ++++++++++++++++++++++++++
+ drivers/net/phy/mediatek/mtk.h         | 16 +++++++
+ 4 files changed, 85 insertions(+)
+
+diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
+index 8f23137..62424d4 100644
+--- a/drivers/net/phy/mediatek/mtk-ge-soc.c
++++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
+@@ -1339,6 +1339,7 @@ static struct phy_driver mtk_socphy_driver[] = {
+ 		PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7981),
+ 		.name		= "MediaTek MT7981 PHY",
+ 		.config_init	= mt798x_phy_config_init,
++		.read_status	= mtk_gphy_cl22_read_status,
+ 		.config_intr	= genphy_no_config_intr,
+ 		.handle_interrupt = genphy_handle_interrupt_no_ack,
+ 		.probe		= mt7981_phy_probe,
+@@ -1356,6 +1357,7 @@ static struct phy_driver mtk_socphy_driver[] = {
+ 		PHY_ID_MATCH_EXACT(MTK_GPHY_ID_MT7988),
+ 		.name		= "MediaTek MT7988 PHY",
+ 		.config_init	= mt798x_phy_config_init,
++		.read_status	= mtk_gphy_cl22_read_status,
+ 		.config_intr	= genphy_no_config_intr,
+ 		.handle_interrupt = genphy_handle_interrupt_no_ack,
+ 		.probe		= mt7988_phy_probe,
+diff --git a/drivers/net/phy/mediatek/mtk-ge.c b/drivers/net/phy/mediatek/mtk-ge.c
+index 5c0226d..c832c90 100644
+--- a/drivers/net/phy/mediatek/mtk-ge.c
++++ b/drivers/net/phy/mediatek/mtk-ge.c
+@@ -211,6 +211,7 @@ static struct phy_driver mtk_gephy_driver[] = {
+ 		.name		= "MediaTek MT7531 PHY",
+ 		.probe		= mt7531_phy_probe,
+ 		.config_init	= mt7531_phy_config_init,
++		.read_status	= mtk_gphy_cl22_read_status,
+ 		/* Interrupts are handled by the switch, not the PHY
+ 		 * itself.
+ 		 */
+diff --git a/drivers/net/phy/mediatek/mtk-phy-lib.c b/drivers/net/phy/mediatek/mtk-phy-lib.c
+index 43547f4..8ec1699 100644
+--- a/drivers/net/phy/mediatek/mtk-phy-lib.c
++++ b/drivers/net/phy/mediatek/mtk-phy-lib.c
+@@ -106,6 +106,72 @@ int mtk_phy_write_page(struct phy_device *phydev, int page)
+ }
+ EXPORT_SYMBOL_GPL(mtk_phy_write_page);
+ 
++static int extend_an_new_lp_cnt_limit(struct phy_device *phydev)
++{
++	int mmd_read_ret;
++	u32 reg_val;
++	int timeout;
++
++	timeout = read_poll_timeout(mmd_read_ret = phy_read_mmd, reg_val,
++			  (mmd_read_ret < 0) || reg_val & MTK_PHY_FINAL_SPEED_1000,
++			  10000, 1000000, false, phydev,
++			  MDIO_MMD_VEND1, MTK_PHY_LINK_STATUS_MISC);
++	if (mmd_read_ret < 0)
++		return mmd_read_ret;
++
++	/* [When cable is plugged in]
++	 * We expect final_speed_1000 will be set, which means this phy starts 1G link-up
++	 * training. In this case, try to extend timeout period of auto downshift.
++	 * [When cable is unplugged]
++	 * We expect that reading MTK_PHY_FINAL_SPEED_1000 will time out. Do nothing but
++	 * return.
++	 */
++	if (!timeout) {
++		tr_modify(phydev, 0x0, 0xf, 0x3c, AN_NEW_LP_CNT_LIMIT_MASK,
++			  FIELD_PREP(AN_NEW_LP_CNT_LIMIT_MASK, 0xf));
++		mdelay(1500);
++
++		timeout = read_poll_timeout(tr_read, reg_val,
++					    (reg_val & AN_STATE_MASK) !=
++					    (AN_STATE_TX_DISABLE << AN_STATE_SHIFT),
++					    10000, 1000000, false, phydev,
++					    0x0, 0xf, 0x2);
++		if (!timeout) {
++			mdelay(625);
++			tr_modify(phydev, 0x0, 0xf, 0x3c, AN_NEW_LP_CNT_LIMIT_MASK,
++				  FIELD_PREP(AN_NEW_LP_CNT_LIMIT_MASK, 0x8));
++			mdelay(500);
++			tr_modify(phydev, 0x0, 0xf, 0x3c, AN_NEW_LP_CNT_LIMIT_MASK,
++				  FIELD_PREP(AN_NEW_LP_CNT_LIMIT_MASK, 0xf));
++		} else {
++			return -ETIMEDOUT;
++		}
++	}
++
++	return 0;
++}
++
++int mtk_gphy_cl22_read_status(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = genphy_read_status(phydev);
++	if (ret)
++		return ret;
++
++	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete) {
++		ret = phy_read(phydev, MII_CTRL1000);
++		if ((ret & ADVERTISE_1000FULL) || (ret & ADVERTISE_1000HALF)) {
++			ret = extend_an_new_lp_cnt_limit(phydev);
++			if (ret < 0)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mtk_gphy_cl22_read_status);
++
+ int mtk_phy_led_hw_is_supported(struct phy_device *phydev, u8 index, unsigned long rules,
+ 				unsigned long supported_triggers)
+ {
+diff --git a/drivers/net/phy/mediatek/mtk.h b/drivers/net/phy/mediatek/mtk.h
+index 10ee9be..32fa3f1 100644
+--- a/drivers/net/phy/mediatek/mtk.h
++++ b/drivers/net/phy/mediatek/mtk.h
+@@ -12,6 +12,20 @@
+ #define MTK_PHY_PAGE_STANDARD			0x0000
+ #define MTK_PHY_PAGE_EXTENDED_52B5		0x52b5
+ 
++/* Registers on Token Ring debug nodes */
++/* ch_addr = 0x0, node_addr = 0xf, data_addr = 0x2 */
++#define   AN_STATE_MASK			GENMASK(22, 19)
++#define   AN_STATE_SHIFT		19
++#define   AN_STATE_TX_DISABLE		1
++
++/* ch_addr = 0x0, node_addr = 0xf, data_addr = 0x3c */
++#define AN_NEW_LP_CNT_LIMIT_MASK		GENMASK(23, 20)
++#define AUTO_NP_10XEN				BIT(6)
++
++/* Registers on MDIO_MMD_VEND1 */
++#define MTK_PHY_LINK_STATUS_MISC	(0xa2)
++#define   MTK_PHY_FINAL_SPEED_1000	BIT(3)
++
+ /* Registers on MDIO_MMD_VEND2 */
+ #define MTK_PHY_LED0_ON_CTRL			0x24
+ #define MTK_PHY_LED1_ON_CTRL			0x26
+@@ -75,6 +89,8 @@ void __tr_clr_bits(struct phy_device *phydev, u8 ch_addr, u8 node_addr, u8 data_
+ int mtk_phy_read_page(struct phy_device *phydev);
+ int mtk_phy_write_page(struct phy_device *phydev, int page);
+ 
++int mtk_gphy_cl22_read_status(struct phy_device *phydev);
++
+ int mtk_phy_led_hw_is_supported(struct phy_device *phydev, u8 index, unsigned long rules,
+ 				unsigned long supported_triggers);
+ int mtk_phy_led_hw_ctrl_set(struct phy_device *phydev, u8 index, unsigned long rules,
+-- 
+2.18.0
+
