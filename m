@@ -1,180 +1,158 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A518524B4
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 12:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2099C524B4
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 12:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292985; cv=none; b=KfayTXJxhZVVnSpAAkxw1x0NLWw8pDRjHFXeVI4n3P2RHzk0HezxdAovVsQcOUBoYJ+srAQbAiliIKEGNkpShZTYG+yEJdn8AsYZZalqLetdD/FNlNDR2WT8UMyAKYRxjhGucVfYQ6cvf14mmlpMQyspW/xVdw2AcuVAllsB7VQ=
+	t=1716293187; cv=none; b=rOddkMWVgAWIiWZCNDTSyzi+A5fQg/Nq/0YqJR3NvBbSSvzvct8Gv2Ct/zN2wwAcmLo/BvPgeXlvb2hFhVSzjl+HmTEbOcnFPJSBWh6cg/LZYv9gD/zuRbjYw79kUU1tyTkAdUYhPz4At4nA0SVz6d7tNYTKeaVJz/Bxyyu+TDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292985; c=relaxed/simple;
-	bh=u3iIttHg9NASbB6DzCxhtGEaurumyZBrd5vYTbWrC9U=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PkY6C4WMU40a6DKlUbBgm+Nyhgbj2xI3L5TmnNEJ3+jn9DpllQct6XpD1Wa0Fdo96F2yRUUjE+lNYd6Zxo8NhigYiRN6bLA2RC6o0ZLaw/4DuqGRqsBJAulF9afJXv7qAmc9lEuqM9JU06osffws1bW3F+JSm31Mdb26KdW7gQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-7e1be009e6eso1298938539f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 05:03:03 -0700 (PDT)
+	s=arc-20240116; t=1716293187; c=relaxed/simple;
+	bh=y6uf/C+i1B/yZlW5DIn/xIOBl/tE1YV+evnBt2Jjmkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=feC7vqVUTcChSt11zRzn/ODbdoLKeh/C9+F4yIr3NkbK6LNTybsq6Wh/Gu79GytTi6RbTcSIN4f+Qq77eitTex4e0WshFZ8Ew+lniIp56LYCxNKZinXqVfh/buYyV7ajRzWsXrcVksOSPKxF6UrmOtPHrkSq2fpHG7au+uQXPDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=jbrtEksX; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jbrtEksX"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59d5b112ecso12885466b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 05:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1716293184; x=1716897984; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJYdzH0pAsynv7wKO0qk2byjZJ72J8K30m6YCIFuLT4=;
+        b=jbrtEksX6Do3jWz9S8J7A2RiC3sJeIZUNewnDgHUsOqvPhzUKVaq8AceCPeNuUQJ/X
+         qaXHkIHF+TzKlSFThuYA7ZYi6F+DKhMIAigp49QE7J+eAd6j1hicu6UZoWc1bOM6cXkT
+         MKMkon/MdFVWaCbzK44Q7fqx+DczFafCf466s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716292983; x=1716897783;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EuW1xXVlFP0pYy5SWrOSCxRjFQR2tPJVuYwPOncInug=;
-        b=KDEbc6OZI4qBpbEmXBNmWqWq6f0nxohApUeInyVu8+PDHMcoC4ZnHbK1MS5cq9klmb
-         Vrt7ACbWa6XeG/Pfb2O9orDCaPbN0RRf/0jICidjsjJJbtPf6gcHKD8UWFCt58PHygA4
-         JkHa+nQjEpkmuGy+LBqdevUR2tqAc7mDFMmI/h+FqME4vQlL2rKV1NIyZG8wS+SD3KWo
-         J83zECgi3aae9Qb2wex9Po0BWwKD8sczjTbmihdl9GDIyzSmL4+u1uuZplLhcU23HFQB
-         jVnas2WMiD0HimyflIz2nmYYdO9qlhWML3HQnPlB3T0Nt0d+kVIZeSEFVlY7MDMZrMbk
-         8UXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFahl6r2t0mcSbGv3B0ynPLZc9RaIzQNseXp2sZBZgBhsUDZ3HJB1WPC6LLQp3YXq2NZDtNwdXGSjTxdIVrndsKq2ucSATcQIR8sMr
-X-Gm-Message-State: AOJu0YwMP709iRDgaP5rtWJdcPHqNQu2migo75EnxreJXRNd3xoeo9eu
-	TAdqROeSIsvVdzMisffeU6CABY9A2ZatWTCzzn2/Sf0pNMlDpt9LFqcoeTLR6hps2TsWjw2F0pJ
-	G/lWE2v1OuGVAlWcnplABn/d6co635rgmPcJbjgumViuoQqE+GqrQOkQ=
-X-Google-Smtp-Source: AGHT+IFpQf/UUnB15kOQUyjZIBSC8oBVwHr2UqFbSdipg+k+Bml8AV7Cd4EpT2T+3Nr0XtQyNl0BZuHP2KTTkST4Vw8eOLq+NOlY
+        d=1e100.net; s=20230601; t=1716293184; x=1716897984;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mJYdzH0pAsynv7wKO0qk2byjZJ72J8K30m6YCIFuLT4=;
+        b=RgWGvZR+FmV6Qd7wWEPOtYhIh7NaSY2ucZLFB+Npuv85YNUNTKHCTyqWDjMMVGFvzh
+         t6PJ5obB8aUF9tC1Zik6Z9lmohadPXWhHr1KaKanMT0vhzI14t3hLWDHC246b905QwzQ
+         afvjo80OdLt4yrOYPC2/n+vuYPHyyurxKcAYX/OdD4C7Hu7obf+QIyA6gMNkhA9Arvl+
+         4/0PkRSMD4dJyyj+u77wNwT/ywJDJpPFu3wjAAVaV7LKH8Bg9TjSyYu1XFgXatHcDt3e
+         tQtnRoSsh2EqME9kv010uKv09dwzqiCz3/pukMRteh8FX18wTFuWUgCM+ZWuvWj/QgpR
+         ahQg==
+X-Forwarded-Encrypted: i=1; AJvYcCW40cb9DES0jqtdQnzXXR9Xeo1yUYCQjfwmz8CijnATW0VkHRN0D2A6lc1EOE4m91uxtmNKIlNBi9iI/9Aqf7hUuJim8jqH55N/tfvT
+X-Gm-Message-State: AOJu0Ywvg+im3EMIYbYIdnEnJK+dHncmaOFcQgXS8rQxFx1vEtM7fpfK
+	mt/rhfkZiWcPaqkXvvu7IRC6BPXVRTNN9iyoD/Bm7X7iUDe5ZE8v3dOA5fDMNOY=
+X-Google-Smtp-Source: AGHT+IGfWNF191WRUe0dOT+wxuFScDgLI5Opi7mIPWI0KL0XH3aj2MmoNzb6yDiPo3DHO/ZyoC6pQg==
+X-Received: by 2002:a17:906:3553:b0:a5a:893a:ad3d with SMTP id a640c23a62f3a-a5a893aae74mr1306089766b.7.1716293184252;
+        Tue, 21 May 2024 05:06:24 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7d14sm1605454566b.130.2024.05.21.05.06.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 05:06:21 -0700 (PDT)
+Date: Tue, 21 May 2024 14:06:19 +0200
+From: Daniel Vetter <daniel@ffwll.ch>
+To: John Stultz <jstultz@google.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH 0/8] dma-buf: heaps: Support carved-out heaps and ECC
+ related-flags
+Message-ID: <ZkyOOwpM57HIiO3v@phenom.ffwll.local>
+Mail-Followup-To: John Stultz <jstultz@google.com>,
+	Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org
+References: <20240515-dma-buf-ecc-heap-v1-0-54cbbd049511@kernel.org>
+ <CANDhNCoOKwtpstFE2VDcUvzdXUWkZ-Zx+fz6xrdPWTyciVXMXQ@mail.gmail.com>
+ <ZkXmWwmdPsqAo7VU@phenom.ffwll.local>
+ <CANDhNCo5hSC-sLwdkBi3e-Ja-MzdqcGGbn-4G3XNYwCzZUwscw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3f85:b0:7da:9d28:6578 with SMTP id
- ca18e2360f4ac-7e1b521c6famr117103939f.3.1716292983335; Tue, 21 May 2024
- 05:03:03 -0700 (PDT)
-Date: Tue, 21 May 2024 05:03:03 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009a4d470618f599f2@google.com>
-Subject: [syzbot] [btrfs?] general protection fault in put_pwq_unlocked
-From: syzbot <syzbot+bce6ef1d850c98d6d157@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCo5hSC-sLwdkBi3e-Ja-MzdqcGGbn-4G3XNYwCzZUwscw@mail.gmail.com>
+X-Operating-System: Linux phenom 6.8.9-amd64 
 
-Hello,
+On Thu, May 16, 2024 at 09:51:35AM -0700, John Stultz wrote:
+> On Thu, May 16, 2024 at 3:56 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > On Wed, May 15, 2024 at 11:42:58AM -0700, John Stultz wrote:
+> > > But it makes me a little nervous to add a new generic allocation flag
+> > > for a feature most hardware doesn't support (yet, at least). So it's
+> > > hard to weigh how common the actual usage will be across all the
+> > > heaps.
+> > >
+> > > I apologize as my worry is mostly born out of seeing vendors really
+> > > push opaque feature flags in their old ion heaps, so in providing a
+> > > flags argument, it was mostly intended as an escape hatch for
+> > > obviously common attributes. So having the first be something that
+> > > seems reasonable, but isn't actually that common makes me fret some.
+> > >
+> > > So again, not an objection, just something for folks to stew on to
+> > > make sure this is really the right approach.
+> >
+> > Another good reason to go with full heap names instead of opaque flags on
+> > existing heaps is that with the former we can use symlinks in sysfs to
+> > specify heaps, with the latter we need a new idea. We haven't yet gotten
+> > around to implement this anywhere, but it's been in the dma-buf/heap todo
+> > since forever, and I like it as a design approach. So would be a good idea
+> > to not toss it. With that display would have symlinks to cma-ecc and cma,
+> > and rendering maybe cma-ecc, shmem, cma heaps (in priority order) for a
+> > SoC where the display needs contig memory for scanout.
+> 
+> So indeed that is a good point to keep in mind, but I also think it
+> might re-inforce the choice of having ECC as a flag here.
+> 
+> Since my understanding of the sysfs symlinks to heaps idea is about
+> being able to figure out a common heap from a collection of devices,
+> it's really about the ability for the driver to access the type of
+> memory. If ECC is just an attribute of the type of memory (as in this
+> patch series), it being on or off won't necessarily affect
+> compatibility of the buffer with the device.  Similarly "uncached"
+> seems more of an attribute of memory type and not a type itself.
+> Hardware that can access non-contiguous "system" buffers can access
+> uncached system buffers.
 
-syzbot found the following issue on:
+Yeah, but in graphics there's a wide band where "shit performance" is
+defacto "not useable (as intended at least)".
 
-HEAD commit:    8f6a15f095a6 Merge tag 'cocci-for-6.10' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1736b784980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6be91306a8917025
-dashboard link: https://syzkaller.appspot.com/bug?extid=bce6ef1d850c98d6d157
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+So if we limit the symlink idea to just making sure zero-copy access is
+possible, then we might not actually solve the real world problem we need
+to solve. And so the symlinks become somewhat useless, and we need to
+somewhere encode which flags you need to use with each symlink.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+But I also see the argument that there's a bit a combinatorial explosion
+possible. So I guess the question is where we want to handle it ...
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f30c87f89d17/disk-8f6a15f0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3d73f0e35e13/vmlinux-8f6a15f0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3d524f6fb25b/bzImage-8f6a15f0.xz
+Also wondering whether we should get the symlink/allocator idea off the
+ground first, but given that that hasn't moved in a decade it might be too
+much. But then the question is, what userspace are we going to use for all
+these new heaps (or heaps with new flags)?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bce6ef1d850c98d6d157@syzkaller.appspotmail.com
+Cheers, Sima
 
-BTRFS info (device loop3): last unmount of filesystem c9fe44da-de57-406a-8241-57ec7d4412cf
-Oops: general protection fault, probably for non-canonical address 0xe01ffbf11002a143: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: maybe wild-memory-access in range [0x00ffff8880150a18-0x00ffff8880150a1f]
-CPU: 0 PID: 8186 Comm: syz-executor.3 Not tainted 6.9.0-syzkaller-10323-g8f6a15f095a6 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-RIP: 0010:__lock_acquire+0x6a/0x1fd0 kernel/locking/lockdep.c:5005
-Code: df 0f b6 04 30 84 c0 0f 85 4b 16 00 00 83 3d 28 c3 39 0e 00 0f 84 1c 11 00 00 83 3d 5f 8b ad 0c 00 74 2c 4c 89 e0 48 c1 e8 03 <80> 3c 30 00 74 12 4c 89 e7 e8 c8 42 86 00 48 be 00 00 00 00 00 fc
-RSP: 0000:ffffc900041bf790 EFLAGS: 00010002
-RAX: 001ffff11002a143 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 00ffff8880150a18
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-R10: dffffc0000000000 R11: fffffbfff1f5818e R12: 00ffff8880150a18
-R13: 0000000000000001 R14: ffff88802658da00 R15: 0000000000000000
-FS:  00005555668d4480(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6558b0b000 CR3: 0000000067b3c000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- __raw_spin_lock_irq include/linux/spinlock_api_smp.h:119 [inline]
- _raw_spin_lock_irq+0xd3/0x120 kernel/locking/spinlock.c:170
- put_pwq_unlocked+0x42/0x190 kernel/workqueue.c:1662
- destroy_workqueue+0x9a4/0xc40 kernel/workqueue.c:5851
- btrfs_destroy_workqueue+0x45/0x260 fs/btrfs/async-thread.c:360
- btrfs_stop_all_workers+0x15a/0x2a0 fs/btrfs/disk-io.c:1797
- close_ctree+0x67d/0xd20 fs/btrfs/disk-io.c:4365
- generic_shutdown_super+0x136/0x2d0 fs/super.c:642
- kill_anon_super+0x3b/0x70 fs/super.c:1226
- btrfs_kill_super+0x41/0x50 fs/btrfs/super.c:2088
- deactivate_locked_super+0xc4/0x130 fs/super.c:473
- cleanup_mnt+0x426/0x4c0 fs/namespace.c:1267
- task_work_run+0x24f/0x310 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
- do_syscall_64+0x102/0x240 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff305e7e217
-Code: b0 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 b0 ff ff ff f7 d8 64 89 02 b8
-RSP: 002b:00007fff1d9a1428 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007ff305e7e217
-RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007fff1d9a14e0
-RBP: 00007fff1d9a14e0 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007fff1d9a25a0
-R13: 00007ff305ec8336 R14: 00000000000507f7 R15: 0000000000000006
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__lock_acquire+0x6a/0x1fd0 kernel/locking/lockdep.c:5005
-Code: df 0f b6 04 30 84 c0 0f 85 4b 16 00 00 83 3d 28 c3 39 0e 00 0f 84 1c 11 00 00 83 3d 5f 8b ad 0c 00 74 2c 4c 89 e0 48 c1 e8 03 <80> 3c 30 00 74 12 4c 89 e7 e8 c8 42 86 00 48 be 00 00 00 00 00 fc
-RSP: 0000:ffffc900041bf790 EFLAGS: 00010002
-RAX: 001ffff11002a143 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 00ffff8880150a18
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-R10: dffffc0000000000 R11: fffffbfff1f5818e R12: 00ffff8880150a18
-R13: 0000000000000001 R14: ffff88802658da00 R15: 0000000000000000
-FS:  00005555668d4480(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6558b0b000 CR3: 0000000067b3c000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	df 0f                	fisttps (%rdi)
-   2:	b6 04                	mov    $0x4,%dh
-   4:	30 84 c0 0f 85 4b 16 	xor    %al,0x164b850f(%rax,%rax,8)
-   b:	00 00                	add    %al,(%rax)
-   d:	83 3d 28 c3 39 0e 00 	cmpl   $0x0,0xe39c328(%rip)        # 0xe39c33c
-  14:	0f 84 1c 11 00 00    	je     0x1136
-  1a:	83 3d 5f 8b ad 0c 00 	cmpl   $0x0,0xcad8b5f(%rip)        # 0xcad8b80
-  21:	74 2c                	je     0x4f
-  23:	4c 89 e0             	mov    %r12,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	80 3c 30 00          	cmpb   $0x0,(%rax,%rsi,1) <-- trapping instruction
-  2e:	74 12                	je     0x42
-  30:	4c 89 e7             	mov    %r12,%rdi
-  33:	e8 c8 42 86 00       	call   0x864300
-  38:	48                   	rex.W
-  39:	be 00 00 00 00       	mov    $0x0,%esi
-  3e:	00 fc                	add    %bh,%ah
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
