@@ -1,46 +1,46 @@
 Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF46149011;
-	Tue, 21 May 2024 17:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA411494B3;
+	Tue, 21 May 2024 17:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716311974; cv=none; b=Y30bvCao7jBPe8zhccV4flfj9DZnAJSkol30zlsVT6SP4re+BfCOP8ILFQMOjaAZ6oz2X4otCoZjUgHf2otXd9Fau9lrrm7+wNo6XT/VnhPbXQxP6jauIiPGHqEtcEGF99FfKLPvvl03m3oMo6xVqCqmwKFrV2ck1NOVVN0hFTg=
+	t=1716311976; cv=none; b=LXMd3s5x+hMNBLgbc9V1ROdwC50E6RFPS4F+3B+pPOCljvuCkKUVoICzN8efqM54og10efX/1luEZL/8nuSh8imiUAv96mfB0xq1zA7p70KrzzrC+olcbTD7Zv+dpnR07eR6/Nywt5M9coKhMfAZy39J5gh7yxnYKTUj4JeeKk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716311974; c=relaxed/simple;
-	bh=j520wFBub/9IESEiEHXBkNXtlWCXw3GvG1d3KkGlUhw=;
+	s=arc-20240116; t=1716311976; c=relaxed/simple;
+	bh=quSfXp+m3suRpndtoIwqvSspOcntD+r0ARDGB31BVEI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vy65yQgNQF/ujdU6/uufzZ05O5e1xQw3WtoQ1N64nnAowFDaxDcicG74KrIUG+5Zg+cagjg+NJebhGltcDU98r2gkdZPa781wVqgnSbE8KbtIg53hX6C8I9XuIxpxkTqaLYMzkppWUL+BDJTgkV/lgDXpwWLUXhqYkKGD2EFfCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jhL9lIeO; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=BRJ5QmrDuQjp/xs3LFocAH/j2MEM7xONhg63c/OxZSi4+wDLa2j601GaxxWkKRLlNM2cBMz4pjwP9+nfUcKspDXJ8UpzxRk6nenSERfsWnQPshO/IzB8YcsQTlZ5k5DfoPuktCqUvkEwrJzMCuKZBTNnTMBDn9OELzxCSHiWqxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ul0eJn3f; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jhL9lIeO"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJBcb071218;
-	Tue, 21 May 2024 12:19:11 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ul0eJn3f"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJ2SE071199;
+	Tue, 21 May 2024 12:19:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716311951;
-	bh=Eg30Zfn2e65VuLdk8T/G1BMtcDVJyyqE0kgQ8pY6yLI=;
+	s=ti-com-17Q1; t=1716311942;
+	bh=ani1l8HYyqFIYKft9vGISkouo9rC3TjNClLZWy+MkW8=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=jhL9lIeOmz8jhfF8mnwsIyUAVN6/qAiYdc/2ZGFLZHtC+Z5rL28HwpRw57gpvIY93
-	 Zk2AoL78z0b+U4xzzj8DISSKfeWbmg3kRKQTjRa08F7Fz2/ck0yTVnf/WShgWBPErX
-	 iF8YzzdWK53vw7G15cCaTKP6hDSNtnfjMFu4BB18=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44LHJBLV032654
+	b=ul0eJn3fwllRJ+EED9eckgjny5fmfLvuuDWFODpcLMmj32yOTt9cmMi+IecKFOVzR
+	 Zs+Z9og0wONj1KfcNqNIqwAR0xwNEsy0hd5e4ndBwW9noEdyR3aFVr80n7/sCoimpT
+	 /8iSiDyVuAT1xOgYh4MaEijR/YMDefV4Bo+D5QAw=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44LHJ1AM015013
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 21 May 2024 12:19:11 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 21 May 2024 12:19:02 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 21
- May 2024 12:19:10 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 12:19:01 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 21 May 2024 12:19:10 -0500
+ Frontend Transport; Tue, 21 May 2024 12:19:01 -0500
 Received: from localhost (uda0389739.dhcp.ti.com [137.167.1.114])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJ9jM023411;
-	Tue, 21 May 2024 12:19:10 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44LHJ0OS013994;
+	Tue, 21 May 2024 12:19:01 -0500
 From: <michael.nemanov@ti.com>
 To: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>,
         Breno Leitao <leitao@debian.org>,
@@ -52,9 +52,9 @@ CC: Sabeeh Khan <sabeeh-khan@ti.com>,
         Michael Nemanov
 	<Michael.Nemanov@ti.com>,
         Michael Nemanov <michael.nemanov@ti.com>
-Subject: [PATCH 10/17] Add tx.c, tx.h
-Date: Tue, 21 May 2024 20:18:34 +0300
-Message-ID: <20240521171841.884576-11-michael.nemanov@ti.com>
+Subject: [PATCH 04/17] Add cmd.c, cmd.h
+Date: Tue, 21 May 2024 20:18:28 +0300
+Message-ID: <20240521171841.884576-5-michael.nemanov@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240521171841.884576-1-michael.nemanov@ti.com>
 References: <20240521171841.884576-1-michael.nemanov@ti.com>
@@ -70,1610 +70,2767 @@ X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 From: Michael Nemanov <Michael.Nemanov@ti.com>
 
-Tx of data frames starts either with MAC80211 tx op (cc33xx_op_tx)
-or from the deferred IRQ context (irq_deferred_work). Both trigger
-cc->tx_work (cc33xx_tx_work @ tx.c) which will call
-cc33xx_tx_work_locked where data from MAC80211 SKBs will be packed
-and transferred to HW. An interrupt will then be received from HW
-indicating that a given frame was transmitted or expired so that its
-SKB can be freed (cc33xx_tx_immediate_complete).
+This is the command infrastructure for the CC33xx.
+Similar to wlcore, all commands eventually reach
+__cc33xx_cmd_send which fills a generic command
+header and send the buffer via the IO abstraction layer.
+Unlike wlcore, there is no polling for command completion
+which is received via an interrupt which signals
+cc->command_complete.
 
 Signed-off-by: Michael Nemanov <michael.nemanov@ti.com>
 ---
- drivers/net/wireless/ti/cc33xx/tx.c | 1416 +++++++++++++++++++++++++++
- drivers/net/wireless/ti/cc33xx/tx.h |  160 +++
- 2 files changed, 1576 insertions(+)
- create mode 100644 drivers/net/wireless/ti/cc33xx/tx.c
- create mode 100644 drivers/net/wireless/ti/cc33xx/tx.h
+ drivers/net/wireless/ti/cc33xx/cmd.c | 2033 ++++++++++++++++++++++++++
+ drivers/net/wireless/ti/cc33xx/cmd.h |  700 +++++++++
+ 2 files changed, 2733 insertions(+)
+ create mode 100644 drivers/net/wireless/ti/cc33xx/cmd.c
+ create mode 100644 drivers/net/wireless/ti/cc33xx/cmd.h
 
-diff --git a/drivers/net/wireless/ti/cc33xx/tx.c b/drivers/net/wireless/ti/cc33xx/tx.c
+diff --git a/drivers/net/wireless/ti/cc33xx/cmd.c b/drivers/net/wireless/ti/cc33xx/cmd.c
 new file mode 100644
-index 000000000000..3a9bbd888164
+index 000000000000..481745e79044
 --- /dev/null
-+++ b/drivers/net/wireless/ti/cc33xx/tx.c
-@@ -0,0 +1,1416 @@
++++ b/drivers/net/wireless/ti/cc33xx/cmd.c
+@@ -0,0 +1,2033 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
 + */
 +
 +#include "acx.h"
-+#include "debug.h"
++#include "event.h"
 +#include "io.h"
-+#include "ps.h"
 +#include "tx.h"
-+#include "cc33xx.h"
 +
-+static int cc33xx_set_default_wep_key(struct cc33xx *cc,
-+				      struct cc33xx_vif *wlvif, u8 id)
++#define CC33XX_REBOOT_TIMEOUT_MSEC		100
++
++static void init_cmd_header(struct cc33xx_cmd_header *header,
++			    size_t cmd_len, u16 id)
 +{
-+	int ret;
-+	bool is_ap = (wlvif->bss_type == BSS_TYPE_AP_BSS);
++	header->NAB_header.len = cpu_to_le16(cmd_len);
++	WARN_ON(le16_to_cpu(header->NAB_header.len) != cmd_len);
 +
-+	if (is_ap)
-+		ret = cc33xx_cmd_set_default_wep_key(cc, id,
-+						     wlvif->ap.bcast_hlid);
-+	else
-+		ret = cc33xx_cmd_set_default_wep_key(cc, id, wlvif->sta.hlid);
++	header->NAB_header.sync_pattern = cpu_to_le32(HOST_SYNC_PATTERN);
++	header->NAB_header.opcode = cpu_to_le16(id);
++}
++
++int cc33xx_set_max_buffer_size(struct cc33xx *cc, enum buffer_size max_buffer_size)
++{
++	switch (max_buffer_size) {
++	case INI_MAX_BUFFER_SIZE:
++		/* INI FILE PAYLOAD SIZE + INI CMD PARAM + INT */
++		cc->max_cmd_size = CC33XX_INI_CMD_MAX_SIZE;
++		cc->max_cmd_size += sizeof(struct cc33xx_cmd_ini_params_download);
++		cc->max_cmd_size += sizeof(u32);
++		break;
++
++	case CMD_MAX_BUFFER_SIZE:
++		cc->max_cmd_size = CC33XX_CMD_MAX_SIZE;
++		break;
++
++	default:
++		cc33xx_warning("max_buffer_size invalid, not changing buffer size");
++		break;
++	}
++
++	return 0;
++}
++
++static int send_buffer(struct cc33xx *cc, int cmd_box_addr,
++		       void *buf, size_t len)
++{
++	size_t max_cmd_size_align;
++
++	memcpy(cc->cmd_buf, buf, len);
++
++	memset(cc->cmd_buf + len, 0, (CC33XX_CMD_BUFFER_SIZE) - len);
++
++	max_cmd_size_align = __ALIGN_MASK(cc->max_cmd_size,
++					  CC33XX_BUS_BLOCK_SIZE * 2 - 1);
++
++	return cc33xx_write(cc, cmd_box_addr, cc->cmd_buf,
++			    max_cmd_size_align, true);
++}
++
++/* send command to firmware
++ *
++ * @cc: cc struct
++ * @id: command id
++ * @buf: buffer containing the command, must work with dma
++ * @len: length of the buffer
++ * return the cmd status code on success.
++ */
++static int __cc33xx_cmd_send(struct cc33xx *cc, u16 id, void *buf,
++			     size_t len, size_t res_len, bool sync)
++{
++	struct cc33xx_cmd_header *cmd;
++	unsigned long timeout;
++	int ret;
++
++	if (id >= CMD_LAST_SUPPORTED_COMMAND) {
++		cc33xx_debug(DEBUG_CMD, "command ID: %d, blocked", id);
++		return CMD_STATUS_SUCCESS;
++	}
++
++	if (WARN_ON(len < sizeof(*cmd))		||
++	    WARN_ON(len > cc->max_cmd_size)	||
++	    WARN_ON(len % 4 != 0))
++		return -EIO;
++
++	cmd = buf;
++	cmd->id = cpu_to_le16(id);
++	cmd->status = 0;
++
++	init_cmd_header(cmd, len, id);
++	init_completion(&cc->command_complete);
++	ret = send_buffer(cc, NAB_DATA_ADDR, buf, len);
 +
 +	if (ret < 0)
 +		return ret;
 +
-+	cc33xx_debug(DEBUG_CRYPT, "default wep key idx: %d", (int)id);
++	if (unlikely(!sync))
++		return CMD_STATUS_SUCCESS;
++
++	timeout = msecs_to_jiffies(CC33XX_COMMAND_TIMEOUT);
++	ret = wait_for_completion_timeout(&cc->command_complete, timeout);
++
++	if (ret < 1) {
++		cc33xx_debug(DEBUG_CMD, "Command T.O");
++		return -EIO;
++	}
++
++	switch (id) {
++	case CMD_INTERROGATE:
++	case CMD_DEBUG_READ:
++	case CMD_TEST_MODE:
++	case CMD_BM_READ_DEVICE_INFO:
++		cc33xx_debug(DEBUG_CMD,
++			     "Response len %d, allocated buffer len %zu",
++			     cc->result_length, res_len);
++
++		if (!res_len)
++			break; /* Response should be discarded */
++
++		if (WARN_ON(cc->result_length > res_len)) {
++			cc33xx_error("Error, insufficient response buffer");
++			break;
++		}
++
++		memcpy(buf + sizeof(struct NAB_header),
++		       cc->command_result,
++			cc->result_length);
++
++		break;
++
++	default:
++		break;
++	}
++
++	return CMD_STATUS_SUCCESS;
++}
++
++/* send command to fw and return cmd status on success
++ * valid_rets contains a bitmap of allowed error codes
++ */
++static int cc33xx_cmd_send_failsafe(struct cc33xx *cc, u16 id, void *buf,
++				    size_t len, size_t res_len,
++				    unsigned long valid_rets)
++{
++	int ret = __cc33xx_cmd_send(cc, id, buf, len, res_len, true);
++
++	cc33xx_debug(DEBUG_TESTMODE, "CMD# %d, len=%zu", id, len);
++
++	if (ret < 0)
++		goto fail;
++
++	/* success is always a valid status */
++	valid_rets |= BIT(CMD_STATUS_SUCCESS);
++
++	if (ret >= MAX_COMMAND_STATUS || !test_bit(ret, &valid_rets)) {
++		cc33xx_error("command execute failure %d", ret);
++		ret = -EIO;
++	}
++
++	return ret;
++fail:
++	cc33xx_queue_recovery_work(cc);
++	return ret;
++}
++
++/* wrapper for cc33xx_cmd_send that accept only CMD_STATUS_SUCCESS
++ * return 0 on success.
++ */
++int cc33xx_cmd_send(struct cc33xx *cc, u16 id, void *buf,
++		    size_t len, size_t res_len)
++{
++	int ret;
++	/* Support id */
++	switch ((enum cc33xx_cmd)id) {
++	case CMD_EMPTY:
++	case CMD_START_DHCP_MGMT_SEQ:
++	case CMD_STOP_DHCP_MGMT_SEQ:
++	case CMD_START_SECURITY_MGMT_SEQ:
++	case CMD_STOP_SECURITY_MGMT_SEQ:
++	case CMD_START_ARP_MGMT_SEQ:
++	case CMD_STOP_ARP_MGMT_SEQ:
++	case CMD_START_DNS_MGMT_SEQ:
++	case CMD_STOP_DNS_MGMT_SEQ:
++	case CMD_SEND_DEAUTH_DISASSOC:
++	case CMD_SCHED_STATE_EVENT:
++	{
++		return 0;
++	} break;
++	default:
++	{
++		if ((enum cc33xx_cmd)id >= CMD_LAST_SUPPORTED_COMMAND)
++			return 0;
++		goto send;
++	}
++	}
++send:
++	ret = cc33xx_cmd_send_failsafe(cc, id, buf, len, res_len, 0);
++	if (ret < 0)
++		return ret;
 +	return 0;
 +}
 +
-+static int cc33xx_alloc_tx_id(struct cc33xx *cc, struct sk_buff *skb)
++static int cc33xx_count_role_set_bits(unsigned long role_map)
 +{
-+	int id;
++	int count = 0;
++	/* if device bit is set ( BIT_2 = ROLE_DEVICE)
++	 * since role device is not counted
++	 * remove it from map
++	 */
++	role_map &= ~BIT(2);
 +
-+	id = find_first_zero_bit(cc->tx_frames_map, CC33XX_NUM_TX_DESCRIPTORS);
-+	if (id >= CC33XX_NUM_TX_DESCRIPTORS)
++	while (role_map != 0) {
++		count += role_map & 1;
++		role_map >>= 1;
++	}
++
++	return count;
++}
++
++int cc33xx_cmd_role_enable(struct cc33xx *cc, u8 *addr,
++			   u8 role_type, u8 *role_id)
++{
++	struct cc33xx_cmd_role_enable *cmd;
++
++	int ret;
++	unsigned long role_count;
++
++	struct cc33xx_cmd_complete_role_enable *command_complete =
++		  (struct cc33xx_cmd_complete_role_enable *)&cc->command_result;
++
++	role_count = *cc->roles_map;
++	ret = cc33xx_count_role_set_bits(role_count);
++	cc33xx_debug(DEBUG_CMD, "cmd roles enabled: bitmap before: %ld, ret=%d",
++		     role_count, ret);
++
++	/* do not enable more than 2 roles at once, exception is device role */
++	if (ret >= 2 && role_type != CC33XX_ROLE_DEVICE) {
++		cc33xx_debug(DEBUG_CMD,
++			     "cmd role enable: 2 roles already have beed allocated");
++		cc33xx_error("failed to initiate cmd role enable");
++		ret = -EBUSY;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role enable, role type %d, addr = %pM",
++		     role_type, addr);
++
++	if (WARN_ON(*role_id != CC33XX_INVALID_ROLE_ID))
 +		return -EBUSY;
 +
-+	__set_bit(id, cc->tx_frames_map);
-+	cc->tx_frames[id] = skb;
-+	cc->tx_frames_cnt++;
-+	cc33xx_debug(DEBUG_TX, "alloc desc ID. id - %d, frames count %d",
-+		     id, cc->tx_frames_cnt);
-+	return id;
-+}
-+
-+void cc33xx_free_tx_id(struct cc33xx *cc, int id)
-+{
-+	if (__test_and_clear_bit(id, cc->tx_frames_map)) {
-+		if (unlikely(cc->tx_frames_cnt == CC33XX_NUM_TX_DESCRIPTORS))
-+			clear_bit(CC33XX_FLAG_FW_TX_BUSY, &cc->flags);
-+
-+		cc->tx_frames[id] = NULL;
-+		cc->tx_frames_cnt--;
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
 +	}
-+	cc33xx_debug(DEBUG_TX, "free desc ID. id - %d, frames count %d",
-+		     id, cc->tx_frames_cnt);
++
++	memcpy(cmd->mac_address, addr, ETH_ALEN);
++	cmd->role_type = role_type;
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_ENABLE, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role enable");
++		goto out_free;
++	}
++	cc33xx_debug(DEBUG_CMD, "complete role_id = %d",
++		     command_complete->role_id);
++	__set_bit(command_complete->role_id, cc->roles_map);
++	*role_id = command_complete->role_id;
++
++out_free:
++	kfree(cmd);
++out:
++	return ret;
 +}
-+EXPORT_SYMBOL(cc33xx_free_tx_id);
 +
-+static void cc33xx_tx_ap_update_inconnection_sta(struct cc33xx *cc,
-+						 struct cc33xx_vif *wlvif,
-+						 struct sk_buff *skb)
++int cc33xx_cmd_role_disable(struct cc33xx *cc, u8 *role_id)
 +{
-+	struct ieee80211_hdr *hdr;
++	struct cc33xx_cmd_role_disable *cmd;
++	int ret;
 +
-+	hdr = (struct ieee80211_hdr *)(skb->data +
-+				       sizeof(struct cc33xx_tx_hw_descr));
-+	if (!ieee80211_is_auth(hdr->frame_control))
++	cc33xx_debug(DEBUG_CMD, "cmd role disable");
++
++	if (WARN_ON(*role_id == CC33XX_INVALID_ROLE_ID))
++		return -ENOENT;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++	cmd->role_id = *role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_DISABLE, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role disable");
++		goto out_free;
++	}
++
++	__clear_bit(*role_id, cc->roles_map);
++	*role_id = CC33XX_INVALID_ROLE_ID;
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_set_link(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 link)
++{
++	unsigned long flags;
++
++	/* these bits are used by op_tx */
++	spin_lock_irqsave(&cc->cc_lock, flags);
++	__set_bit(link, cc->links_map);
++	__set_bit(link, wlvif->links_map);
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++	cc->links[link].wlvif = wlvif;
++
++	/* Take saved value for total freed packets from wlvif, in case this is
++	 * recovery/resume
++	 */
++	if (wlvif->bss_type != BSS_TYPE_AP_BSS)
++		cc->links[link].total_freed_pkts = wlvif->total_freed_pkts;
++
++	cc->active_link_count++;
++	return 0;
++}
++
++void cc33xx_clear_link(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 *hlid)
++{
++	unsigned long flags;
++
++	if (*hlid == CC33XX_INVALID_LINK_ID)
 +		return;
 +
-+	/* ROC for 1 second on the AP channel for completing the connection.
-+	 * Note the ROC will be continued by the update_sta_state callbacks
-+	 * once the station reaches the associated state.
++	/* these bits are used by op_tx */
++	spin_lock_irqsave(&cc->cc_lock, flags);
++	__clear_bit(*hlid, cc->links_map);
++	__clear_bit(*hlid, wlvif->links_map);
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++
++	cc->links[*hlid].prev_freed_pkts = 0;
++	cc->links[*hlid].ba_bitmap = 0;
++	eth_zero_addr(cc->links[*hlid].addr);
++
++	/* At this point op_tx() will not add more packets to the queues. We
++	 * can purge them.
 +	 */
-+	cc33xx_update_inconn_sta(cc, wlvif, NULL, true);
-+	wlvif->pending_auth_reply_time = jiffies;
-+	cancel_delayed_work(&wlvif->pending_auth_complete_work);
-+	ieee80211_queue_delayed_work(cc->hw,
-+				     &wlvif->pending_auth_complete_work,
-+				msecs_to_jiffies(CC33XX_PEND_AUTH_ROC_TIMEOUT));
-+}
++	cc33xx_tx_reset_link_queues(cc, *hlid);
++	cc->links[*hlid].wlvif = NULL;
 +
-+static void cc33xx_tx_regulate_link(struct cc33xx *cc,
-+				    struct cc33xx_vif *wlvif,
-+				    u8 hlid)
-+{
-+	bool fw_ps;
-+	u8 tx_pkts;
++	if (wlvif->bss_type == BSS_TYPE_AP_BSS &&
++	    *hlid == wlvif->ap.bcast_hlid) {
++		u32 sqn_padding = CC33XX_TX_SQN_POST_RECOVERY_PADDING;
++		/* save the total freed packets in the wlvif, in case this is
++		 * recovery or suspend
++		 */
++		wlvif->total_freed_pkts = cc->links[*hlid].total_freed_pkts;
 +
-+	if (WARN_ON(!test_bit(hlid, wlvif->links_map)))
-+		return;
++		/* increment the initial seq number on recovery to account for
++		 * transmitted packets that we haven't yet got in the FW status
++		 */
++		if (wlvif->encryption_type == KEY_GEM)
++			sqn_padding = CC33XX_TX_SQN_POST_RECOVERY_PADDING_GEM;
 +
-+	fw_ps = test_bit(hlid, &cc->ap_fw_ps_map);
-+	tx_pkts = cc->links[hlid].allocated_pkts;
-+
-+	/* if in FW PS and there is enough data in FW we can put the link
-+	 * into high-level PS and clean out its TX queues.
-+	 * Make an exception if this is the only connected link. In this
-+	 * case FW-memory congestion is less of a problem.
-+	 * Note that a single connected STA means 2*ap_count + 1 active links,
-+	 * since we must account for the global and broadcast AP links
-+	 * for each AP. The "fw_ps" check assures us the other link is a STA
-+	 * connected to the AP. Otherwise the FW would not set the PSM bit.
-+	 */
-+	if (cc->active_link_count > (cc->ap_count * 2 + 1) && fw_ps &&
-+	    tx_pkts >= CC33XX_PS_STA_MAX_PACKETS)
-+		cc33xx_ps_link_start(cc, wlvif, hlid, true);
-+}
-+
-+inline bool cc33xx_is_dummy_packet(struct cc33xx *cc, struct sk_buff *skb)
-+{
-+	return cc->dummy_packet == skb;
-+}
-+EXPORT_SYMBOL(cc33xx_is_dummy_packet);
-+
-+static u8 cc33xx_tx_get_hlid_ap(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+				struct sk_buff *skb, struct ieee80211_sta *sta)
-+{
-+	struct ieee80211_hdr *hdr;
-+
-+	if (sta) {
-+		struct cc33xx_station *wl_sta;
-+
-+		wl_sta = (struct cc33xx_station *)sta->drv_priv;
-+		return wl_sta->hlid;
++		if (test_bit(CC33XX_FLAG_RECOVERY_IN_PROGRESS, &cc->flags))
++			wlvif->total_freed_pkts += sqn_padding;
 +	}
 +
-+	if (!test_bit(WLVIF_FLAG_AP_STARTED, &wlvif->flags))
-+		return CC33XX_SYSTEM_HLID;
++	cc->links[*hlid].total_freed_pkts = 0;
 +
-+	hdr = (struct ieee80211_hdr *)skb->data;
-+	if (is_multicast_ether_addr(ieee80211_get_DA(hdr)))
-+		return wlvif->ap.bcast_hlid;
-+	else
-+		return wlvif->ap.global_hlid;
++	*hlid = CC33XX_INVALID_LINK_ID;
++	cc->active_link_count--;
++	WARN_ON_ONCE(cc->active_link_count < 0);
 +}
 +
-+u8 cc33xx_tx_get_hlid(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+		      struct sk_buff *skb, struct ieee80211_sta *sta)
++static u8 cc33xx_get_native_channel_type(u8 nl_channel_type)
 +{
-+	struct ieee80211_tx_info *control;
-+
-+	if (wlvif->bss_type == BSS_TYPE_AP_BSS)
-+		return cc33xx_tx_get_hlid_ap(cc, wlvif, skb, sta);
-+
-+	control = IEEE80211_SKB_CB(skb);
-+	if (control->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
-+		cc33xx_debug(DEBUG_TX, "tx offchannel");
-+		return wlvif->dev_hlid;
-+	}
-+
-+	return wlvif->sta.hlid;
-+}
-+
-+unsigned int cc33xx_calc_packet_alignment(struct cc33xx *cc,
-+					  unsigned int packet_length)
-+{
-+	if ((cc->quirks & CC33XX_QUIRK_TX_PAD_LAST_FRAME) ||
-+	    !(cc->quirks & CC33XX_QUIRK_TX_BLOCKSIZE_ALIGN))
-+		return ALIGN(packet_length, CC33XX_TX_ALIGN_TO);
-+	else
-+		return ALIGN(packet_length, CC33XX_BUS_BLOCK_SIZE);
-+}
-+EXPORT_SYMBOL(cc33xx_calc_packet_alignment);
-+
-+static u32 cc33xx_calc_tx_blocks(struct cc33xx *cc, u32 len, u32 spare_blks)
-+{
-+	u32 blk_size = CC33XX_TX_HW_BLOCK_SIZE;
-+	/* In CC33xx the packet will be stored along with its internal descriptor.
-+	 * the descriptor is not part of the host transaction, but should be
-+	 * considered as part of the allocate memory blocks in the device
-+	 */
-+	len = len + CC33xx_INTERNAL_DESC_SIZE;
-+	return (len + blk_size - 1) / blk_size + spare_blks;
-+}
-+
-+static inline void cc33xx_set_tx_desc_blocks(struct cc33xx *cc,
-+					     struct cc33xx_tx_hw_descr *desc,
-+					     u32 blks, u32 spare_blks)
-+{
-+	desc->cc33xx_mem.total_mem_blocks = blks;
-+}
-+
-+static void cc33xx_set_tx_desc_data_len(struct cc33xx *cc,
-+					struct cc33xx_tx_hw_descr *desc,
-+					struct sk_buff *skb)
-+{
-+	desc->length = cpu_to_le16(skb->len);
-+
-+	/* if only the last frame is to be padded, we unset this bit on Tx */
-+	if (cc->quirks & CC33XX_QUIRK_TX_PAD_LAST_FRAME)
-+		desc->cc33xx_mem.ctrl = CC33XX_TX_CTRL_NOT_PADDED;
-+	else
-+		desc->cc33xx_mem.ctrl = 0;
-+
-+	cc33xx_debug(DEBUG_TX, "tx_fill_hdr: hlid: %d  len: %d life: %d mem: %d",
-+		     desc->hlid, le16_to_cpu(desc->length),
-+		     le16_to_cpu(desc->life_time),
-+		     desc->cc33xx_mem.total_mem_blocks);
-+}
-+
-+static int cc33xx_get_spare_blocks(struct cc33xx *cc, bool is_gem)
-+{
-+	/* If we have keys requiring extra spare, indulge them */
-+	if (cc->extra_spare_key_count)
-+		return CC33XX_TX_HW_EXTRA_BLOCK_SPARE;
-+
-+	return CC33XX_TX_HW_BLOCK_SPARE;
-+}
-+
-+int cc33xx_tx_get_queue(int queue)
-+{
-+	switch (queue) {
-+	case 0:
-+		return CONF_TX_AC_VO;
-+	case 1:
-+		return CONF_TX_AC_VI;
-+	case 2:
-+		return CONF_TX_AC_BE;
-+	case 3:
-+		return CONF_TX_AC_BK;
++	switch (nl_channel_type) {
++	case NL80211_CHAN_NO_HT:
++		return CC33XX_CHAN_NO_HT;
++	case NL80211_CHAN_HT20:
++		return CC33XX_CHAN_HT20;
++	case NL80211_CHAN_HT40MINUS:
++		return CC33XX_CHAN_HT40MINUS;
++	case NL80211_CHAN_HT40PLUS:
++		return CC33XX_CHAN_HT40PLUS;
 +	default:
-+		return CONF_TX_AC_BE;
++		WARN_ON(1);
++		return CC33XX_CHAN_NO_HT;
 +	}
 +}
 +
-+static int cc33xx_tx_allocate(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+			      struct sk_buff *skb, u32 extra, u32 buf_offset,
-+			      u8 hlid, bool is_gem,
-+			      struct NAB_tx_header *nab_cmd)
++static int cc33xx_cmd_role_start_dev(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++				     enum nl80211_band band, int channel)
 +{
-+	struct cc33xx_tx_hw_descr *desc;
-+	u32 total_blocks;
-+	int id, ret = -EBUSY, ac;
-+	u32 spare_blocks;
-+	u32 total_skb_len = skb->len + extra;
-+	/* Add NAB command required for CC33xx architecture */
-+	u32 total_len = sizeof(struct NAB_tx_header);
++	struct cc33xx_cmd_role_start *cmd;
++	int ret;
 +
-+	total_skb_len += sizeof(struct cc33xx_tx_hw_descr);
-+	total_len += total_skb_len;
++	struct cc33xx_cmd_complete_role_start *command_complete =
++		(struct cc33xx_cmd_complete_role_start *)&cc->command_result;
 +
-+	cc33xx_debug(DEBUG_TX, "cc->tx_blocks_available %d",
-+		     cc->tx_blocks_available);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
 +
-+	if (buf_offset + total_len > cc->aggr_buf_size)
-+		return -EAGAIN;
++	cc33xx_debug(DEBUG_CMD, "cmd role start dev %d", wlvif->dev_role_id);
 +
-+	spare_blocks = cc33xx_get_spare_blocks(cc, is_gem);
++	cmd->role_id = wlvif->dev_role_id;
++	cmd->role_type = CC33XX_ROLE_DEVICE;
++	if (band == NL80211_BAND_5GHZ)
++		cmd->band = CC33XX_BAND_5GHZ;
++	cmd->channel = channel;
++	cmd->channel_type = cc33xx_get_native_channel_type(wlvif->channel_type);
 +
-+	/* allocate free identifier for the packet */
-+	id = cc33xx_alloc_tx_id(cc, skb);
-+	if (id < 0)
-+		return id;
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_START, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role device start");
++		goto err_hlid;
++	}
 +
-+	/* memblocks should not include nab descriptor */
-+	total_blocks = cc33xx_calc_tx_blocks(cc, total_skb_len, spare_blocks);
-+	cc33xx_debug(DEBUG_TX, "total blocks %d", total_blocks);
++	wlvif->dev_hlid = command_complete->sta.hlid;
++	cc->links[wlvif->dev_hlid].allocated_pkts = 0;
++	cc->session_ids[wlvif->dev_hlid] = command_complete->sta.session;
++	cc33xx_debug(DEBUG_CMD, "role start: roleid=%d, hlid=%d, session=%d ",
++		     wlvif->dev_role_id, command_complete->sta.hlid,
++		     command_complete->sta.session);
++	ret = cc33xx_set_link(cc, wlvif, wlvif->dev_hlid);
++	goto out_free;
 +
-+	if (total_blocks <= cc->tx_blocks_available) {
-+		/**
-+		 * In CC33XX the packet starts with NAB command,
-+		 * only then the descriptor.
-+		 */
-+		nab_cmd->sync = cpu_to_le32(HOST_SYNC_PATTERN);
-+		nab_cmd->opcode = cpu_to_le16(NAB_SEND_CMD);
++err_hlid:
++	/* clear links on error */
++	cc33xx_clear_link(cc, wlvif, &wlvif->dev_hlid);
 +
-+		/**
-+		 * length should include the following 4 bytes
-+		 * of the NAB command.
-+		 */
-+		nab_cmd->len = cpu_to_le16(total_len -
-+						sizeof(struct NAB_header));
-+		nab_cmd->desc_length = cpu_to_le16(total_len -
-+						sizeof(struct NAB_tx_header));
-+		nab_cmd->sd = 0;
-+		nab_cmd->flags = NAB_SEND_FLAGS;
++out_free:
++	kfree(cmd);
 +
-+		desc = skb_push(skb, total_skb_len - skb->len);
++out:
++	return ret;
++}
 +
-+		cc33xx_set_tx_desc_blocks(cc, desc, total_blocks, spare_blocks);
++int cc33xx_cmd_role_stop_transceiver(struct cc33xx *cc)
++{
++	struct cc33xx_cmd_role_stop *cmd;
++	int ret;
 +
-+		desc->id = id;
++	if (unlikely(cc->state != CC33XX_STATE_ON || !cc->plt)) {
++		ret = -EINVAL;
++		goto out;
++	}
 +
-+		cc33xx_debug(DEBUG_TX,
-+			     "tx allocate id %u skb 0x%p tx_memblocks %d",
-+			     id, skb, desc->cc33xx_mem.total_mem_blocks);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++	cc33xx_debug(DEBUG_CMD, "cmd role stop transceiver");
 +
-+		cc->tx_blocks_available -= total_blocks;
-+		cc->tx_allocated_blocks += total_blocks;
++	cmd->role_id = cc->plt_role_id;
 +
-+		/* If the FW was empty before, arm the Tx watchdog. Also do
-+		 * this on the first Tx after resume, as we always cancel the
-+		 * watchdog on suspend.
-+		 */
-+		if (cc->tx_allocated_blocks == total_blocks ||
-+		    test_and_clear_bit(CC33XX_FLAG_REINIT_TX_WDOG, &cc->flags))
-+			cc33xx_rearm_tx_watchdog_locked(cc);
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_STOP, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("transceiver - failed to initiate cmd role stop");
++		goto out_free;
++	}
 +
-+		ac = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
-+		desc->ac = ac;
-+		cc->tx_allocated_pkts[ac]++;
++out_free:
++	kfree(cmd);
 +
-+		if (test_bit(hlid, cc->links_map))
-+			cc->links[hlid].allocated_pkts++;
++out:
++	return ret;
++}
 +
-+		ret = 0;
++int cc33xx_cmd_plt_disable(struct cc33xx *cc)
++{
++	struct cc33xx_cmd_PLT_disable *cmd;
++	int ret;
 +
-+		cc33xx_debug(DEBUG_TX,
-+			     "tx_allocate: size: %d, blocks: %d, id: %d",
-+			     total_len, total_blocks, id);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = cc33xx_cmd_send(cc, CMD_PLT_DISABLE, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("transceiver: failed to disable Transceiver mode");
++		goto out_free;
 +	} else {
-+		cc33xx_free_tx_id(cc, id);
++		cc33xx_debug(DEBUG_CMD, "Succeed to disable Transceiver mode");
++	}
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++static int cc333xx_cmd_role_stop_dev(struct cc33xx *cc,
++				     struct cc33xx_vif *wlvif)
++{
++	struct cc33xx_cmd_role_stop *cmd;
++	int ret;
++
++	if (WARN_ON(wlvif->dev_hlid == CC33XX_INVALID_LINK_ID))
++		return -EINVAL;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role stop dev");
++
++	cmd->role_id = wlvif->dev_role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_STOP, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role stop");
++		goto out_free;
++	}
++
++	cc33xx_clear_link(cc, wlvif, &wlvif->dev_hlid);
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_cmd_plt_enable(struct cc33xx *cc, u8 role_id)
++{
++	struct cc33xx_cmd_PLT_enable *cmd;
++	s32 ret;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = cc33xx_cmd_send(cc, CMD_PLT_ENABLE, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("Failed to send CMD_PLT_ENABLE");
++		goto out_free;
++	}
++	cc33xx_debug(DEBUG_CMD, "Success to send CMD_PLT_ENABLE");
++
++out_free:
++	kfree(cmd);
++out:
++	return ret;
++}
++
++int cc33xx_cmd_role_start_transceiver(struct cc33xx *cc, u8 role_id)
++{
++	struct cc33xx_cmd_role_start *cmd;
++	s32 ret;
++	u8 role_type = ROLE_TRANSCEIVER;
++
++	/* Default values */
++	u8 band = NL80211_BAND_2GHZ;
++	u8 channel = 6;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->role_type = role_type;
++	cmd->role_id = role_id;
++	cmd->channel = channel;
++	cmd->band = band;
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_START, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role start PLT");
++		goto out_free;
++	}
++
++	cc33xx_debug(DEBUG_CMD,
++		     "cmd role start PLT. Role ID number: %u", role_id);
++
++out_free:
++	kfree(cmd);
++out:
++	return ret;
++}
++
++int cc33xx_cmd_role_start_sta(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	struct ieee80211_vif *vif = cc33xx_wlvif_to_vif(wlvif);
++	struct cc33xx_cmd_role_start *cmd;
++
++	u32 supported_rates;
++	int ret;
++
++	struct cc33xx_cmd_complete_role_start *command_complete =
++		(struct cc33xx_cmd_complete_role_start *)&cc->command_result;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role start sta %d", wlvif->role_id);
++
++	cmd->role_id = wlvif->role_id;
++	cmd->role_type = CC33XX_ROLE_STA;
++	cmd->channel = wlvif->channel;
++	if (wlvif->band == NL80211_BAND_5GHZ) {
++		cmd->band = CC33XX_BAND_5GHZ;
++		cmd->sta.basic_rate_set = cpu_to_le32(wlvif->basic_rate_set
++							& ~CONF_TX_CCK_RATES);
++	} else {
++		cmd->sta.basic_rate_set = cpu_to_le32(wlvif->basic_rate_set);
++	}
++	cmd->sta.beacon_interval = cpu_to_le16(wlvif->beacon_int);
++	cmd->sta.ssid_type = CC33XX_SSID_TYPE_ANY;
++	cmd->sta.ssid_len = wlvif->ssid_len;
++	memcpy(cmd->sta.ssid, wlvif->ssid, wlvif->ssid_len);
++	memcpy(cmd->sta.bssid, vif->bss_conf.bssid, ETH_ALEN);
++
++	supported_rates = CONF_TX_ENABLED_RATES | CONF_TX_MCS_RATES | wlvif->rate_set;
++	if (wlvif->band == NL80211_BAND_5GHZ)
++		supported_rates &= ~CONF_TX_CCK_RATES;
++
++	if (wlvif->p2p)
++		supported_rates &= ~CONF_TX_CCK_RATES;
++
++	cmd->sta.local_rates = cpu_to_le32(supported_rates);
++
++	cmd->channel_type = cc33xx_get_native_channel_type(wlvif->channel_type);
++
++	/* We don't have the correct remote rates in this stage.  The
++	 * rates will be reconfigured later, after association, if the
++	 * firmware supports ACX_PEER_CAP.  Otherwise, there's nothing
++	 * we can do, so use all supported_rates here.
++	 */
++	cmd->sta.remote_rates = cpu_to_le32(supported_rates);
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_START, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role start sta");
++		goto err_hlid;
++	}
++
++	wlvif->sta.role_chan_type = wlvif->channel_type;
++
++	wlvif->sta.hlid = command_complete->sta.hlid;
++	cc->links[wlvif->sta.hlid].allocated_pkts = 0;
++	cc->session_ids[wlvif->sta.hlid] = command_complete->sta.session;
++	cc33xx_debug(DEBUG_CMD, "role start: roleid=%d, hlid=%d, session=%d basic_rate_set: 0x%x, remote_rates: 0x%x",
++		     wlvif->role_id,
++		     command_complete->sta.hlid, command_complete->sta.session,
++		     wlvif->basic_rate_set, wlvif->rate_set);
++	ret = cc33xx_set_link(cc, wlvif, wlvif->sta.hlid);
++
++	goto out_free;
++
++err_hlid:
++	cc33xx_clear_link(cc, wlvif, &wlvif->sta.hlid);
++
++out_free:
++	kfree(cmd);
++out:
++	return ret;
++}
++
++/* use this function to stop ibss as well */
++int cc33xx_cmd_role_stop_sta(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	struct cc33xx_cmd_role_stop *cmd;
++	int ret;
++
++	if (WARN_ON(wlvif->sta.hlid == CC33XX_INVALID_LINK_ID))
++		return -EINVAL;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role stop sta %d", wlvif->role_id);
++
++	cmd->role_id = wlvif->role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_STOP, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role stop sta");
++		goto out_free;
++	}
++
++	cc33xx_clear_link(cc, wlvif, &wlvif->sta.hlid);
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_cmd_role_start_ap(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	struct cc33xx_cmd_role_start *cmd;
++	struct ieee80211_vif *vif = cc33xx_wlvif_to_vif(wlvif);
++	struct ieee80211_bss_conf *bss_conf = &vif->bss_conf;
++	u32 supported_rates;
++	int ret;
++
++	struct cc33xx_cmd_complete_role_start *command_complete =
++		(struct cc33xx_cmd_complete_role_start *)&cc->command_result;
++
++	cc33xx_debug(DEBUG_CMD, "cmd role start ap %d", wlvif->role_id);
++	cc33xx_debug(DEBUG_CMD, "cmd role start ap basic rateset: 0x%x",
++		     wlvif->basic_rate_set);
++
++	/* If MESH --> ssid_len is always 0 */
++	if (!ieee80211_vif_is_mesh(vif)) {
++		/* trying to use hidden SSID with an old hostapd version */
++		if (wlvif->ssid_len == 0 && !bss_conf->hidden_ssid) {
++			cc33xx_error("got a null SSID from beacon/bss");
++			ret = -EINVAL;
++			goto out;
++		}
++	}
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->role_id = wlvif->role_id;
++	cmd->role_type = CC33XX_ROLE_AP;
++	cmd->ap.basic_rate_set = cpu_to_le32(wlvif->basic_rate_set);
++	cmd->ap.beacon_interval = cpu_to_le16(wlvif->beacon_int);
++	cmd->ap.dtim_interval = bss_conf->dtim_period;
++	cmd->ap.wmm = wlvif->wmm_enabled;
++	cmd->channel = wlvif->channel;
++	cmd->channel_type = cc33xx_get_native_channel_type(wlvif->channel_type);
++
++	supported_rates = CONF_TX_ENABLED_RATES | CONF_TX_MCS_RATES;
++	if (wlvif->p2p)
++		supported_rates &= ~CONF_TX_CCK_RATES;
++
++	cc33xx_debug(DEBUG_CMD, "cmd role start ap with supported_rates 0x%08x",
++		     supported_rates);
++
++	cmd->ap.local_rates = cpu_to_le32(supported_rates);
++
++	switch (wlvif->band) {
++	case NL80211_BAND_2GHZ:
++		cmd->band = CC33XX_BAND_2_4GHZ;
++		break;
++	case NL80211_BAND_5GHZ:
++		cmd->band = CC33XX_BAND_5GHZ;
++		break;
++	default:
++		cc33xx_warning("ap start - unknown band: %d", (int)wlvif->band);
++		cmd->band = CC33XX_BAND_2_4GHZ;
++		break;
++	}
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_START, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role start ap");
++		goto out_free_bcast;
++	}
++
++	wlvif->ap.global_hlid = command_complete->ap.global_hlid;
++	wlvif->ap.bcast_hlid  = command_complete->ap.broadcast_hlid;
++	cc->session_ids[wlvif->ap.global_hlid] = command_complete->ap.global_session_id;
++	cc->session_ids[wlvif->ap.bcast_hlid] = command_complete->ap.bcast_session_id;
++
++	cc33xx_debug(DEBUG_CMD, "role start: roleid=%d, global_hlid=%d, broadcast_hlid=%d, global_session_id=%d, bcast_session_id=%d, basic_rate_set: 0x%x, remote_rates: 0x%x",
++		     wlvif->role_id,
++		     command_complete->ap.global_hlid,
++		     command_complete->ap.broadcast_hlid,
++		     command_complete->ap.global_session_id,
++		     command_complete->ap.bcast_session_id,
++		     wlvif->basic_rate_set, wlvif->rate_set);
++
++	ret = cc33xx_set_link(cc, wlvif, wlvif->ap.global_hlid);
++	ret = cc33xx_set_link(cc, wlvif, wlvif->ap.bcast_hlid);
++
++	goto out_free;
++
++out_free_bcast:
++	cc33xx_clear_link(cc, wlvif, &wlvif->ap.bcast_hlid);
++	cc33xx_clear_link(cc, wlvif, &wlvif->ap.global_hlid);
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_cmd_role_stop_ap(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	struct cc33xx_cmd_role_stop *cmd;
++	int ret;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role stop ap %d", wlvif->role_id);
++
++	cmd->role_id = wlvif->role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_STOP, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role stop ap");
++		goto out_free;
++	}
++
++	cc33xx_clear_link(cc, wlvif, &wlvif->ap.bcast_hlid);
++	cc33xx_clear_link(cc, wlvif, &wlvif->ap.global_hlid);
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_cmd_role_start_ibss(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	struct ieee80211_vif *vif = cc33xx_wlvif_to_vif(wlvif);
++	struct cc33xx_cmd_role_start *cmd;
++	struct ieee80211_bss_conf *bss_conf = &vif->bss_conf;
++	int ret;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role start ibss %d", wlvif->role_id);
++
++	cmd->role_id = wlvif->role_id;
++	cmd->role_type = CC33XX_ROLE_IBSS;
++	if (wlvif->band == NL80211_BAND_5GHZ)
++		cmd->band = CC33XX_BAND_5GHZ;
++	cmd->channel = wlvif->channel;
++	cmd->ibss.basic_rate_set = cpu_to_le32(wlvif->basic_rate_set);
++	cmd->ibss.beacon_interval = cpu_to_le16(wlvif->beacon_int);
++	cmd->ibss.dtim_interval = bss_conf->dtim_period;
++	cmd->ibss.ssid_type = CC33XX_SSID_TYPE_ANY;
++	cmd->ibss.ssid_len = wlvif->ssid_len;
++	memcpy(cmd->ibss.ssid, wlvif->ssid, wlvif->ssid_len);
++	memcpy(cmd->ibss.bssid, vif->bss_conf.bssid, ETH_ALEN);
++	cmd->sta.local_rates = cpu_to_le32(wlvif->rate_set);
++
++	if (wlvif->sta.hlid == CC33XX_INVALID_LINK_ID) {
++		ret = cc33xx_set_link(cc, wlvif, wlvif->sta.hlid);
++		if (ret)
++			goto out_free;
++	}
++	cmd->ibss.hlid = wlvif->sta.hlid;
++	cmd->ibss.remote_rates = cpu_to_le32(wlvif->rate_set);
++
++	ret = cc33xx_cmd_send(cc, CMD_ROLE_START, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd role enable");
++		goto err_hlid;
++	}
++
++	goto out_free;
++
++err_hlid:
++	/* clear links on error. */
++	cc33xx_clear_link(cc, wlvif, &wlvif->sta.hlid);
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++/* send test command to firmware
++ *
++ * @cc: cc struct
++ * @buf: buffer containing the command, with all headers, must work with dma
++ * @len: length of the buffer
++ * @answer: is answer needed
++ */
++int cc33xx_cmd_test(struct cc33xx *cc, void *buf, size_t buf_len, u8 answer)
++{
++	int ret;
++	size_t res_len = 0;
++
++	cc33xx_debug(DEBUG_CMD, "cmd test");
++
++	if (answer)
++		res_len = buf_len;
++
++	ret = cc33xx_cmd_send(cc, CMD_TEST_MODE, buf, buf_len, res_len);
++
++	if (ret < 0) {
++		cc33xx_warning("TEST command failed");
++		return ret;
 +	}
 +
 +	return ret;
 +}
 +
-+static void cc33xx_tx_fill_hdr(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+			       struct sk_buff *skb, u32 extra,
-+			       struct ieee80211_tx_info *control, u8 hlid)
++/* read acx from firmware
++ *
++ * @cc: cc struct
++ * @id: acx id
++ * @buf: buffer for the response, including all headers, must work with dma
++ * @len: length of buf
++ */
++int cc33xx_cmd_interrogate(struct cc33xx *cc, u16 id, void *buf,
++			   size_t cmd_len, size_t res_len)
 +{
-+	struct cc33xx_tx_hw_descr *desc;
-+	int ac, rate_idx;
-+	u16 tx_attr = 0;
-+	__le16 frame_control;
-+	struct ieee80211_hdr *hdr;
-+	u8 *frame_start;
-+	bool is_dummy;
++	struct acx_header *acx = buf;
++	int ret;
 +
-+	desc = (struct cc33xx_tx_hw_descr *)skb->data;
++	cc33xx_debug(DEBUG_CMD, "cmd interrogate");
 +
-+	frame_start = (u8 *)(desc + 1);
-+	hdr = (struct ieee80211_hdr *)(frame_start + extra);
-+	frame_control = hdr->frame_control;
++	acx->id = cpu_to_le16(id);
 +
-+	/* relocate space for security header */
-+	if (extra) {
-+		int hdrlen = ieee80211_hdrlen(frame_control);
++	/* response payload length, does not include any headers */
++	acx->len = cpu_to_le16(res_len - sizeof(*acx));
 +
-+		memmove(frame_start, hdr, hdrlen);
-+		skb_set_network_header(skb, skb_network_offset(skb) + extra);
-+	}
++	ret = cc33xx_cmd_send(cc, CMD_INTERROGATE, acx, cmd_len, res_len);
++	if (ret < 0)
++		cc33xx_error("INTERROGATE command failed");
 +
-+	is_dummy = cc33xx_is_dummy_packet(cc, skb);
-+	if (is_dummy || !wlvif || wlvif->bss_type != BSS_TYPE_AP_BSS)
-+		desc->life_time = cpu_to_le16(TX_HW_MGMT_PKT_LIFETIME_TU);
-+	else
-+		desc->life_time = cpu_to_le16(TX_HW_AP_MODE_PKT_LIFETIME_TU);
-+
-+	/* queue */
-+	ac = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
-+	desc->tid = skb->priority;
-+
-+	if (is_dummy) {
-+		/* FW expects the dummy packet to have an invalid session id -
-+		 * any session id that is different than the one set in the join
-+		 */
-+		tx_attr = (SESSION_COUNTER_INVALID <<
-+			   TX_HW_ATTR_OFST_SESSION_COUNTER) &
-+			   TX_HW_ATTR_SESSION_COUNTER;
-+
-+		tx_attr |= TX_HW_ATTR_TX_DUMMY_REQ;
-+	} else if (wlvif) {
-+		u8 session_id = cc->session_ids[hlid];
-+
-+		if (cc->quirks & CC33XX_QUIRK_AP_ZERO_SESSION_ID &&
-+		    wlvif->bss_type == BSS_TYPE_AP_BSS)
-+			session_id = 0;
-+
-+		/* configure the tx attributes */
-+		tx_attr = session_id << TX_HW_ATTR_OFST_SESSION_COUNTER;
-+	}
-+
-+	desc->hlid = hlid;
-+	if (is_dummy || !wlvif) {
-+		rate_idx = 0;
-+	} else if (wlvif->bss_type != BSS_TYPE_AP_BSS) {
-+		/* if the packets are data packets
-+		 * send them with AP rate policies (EAPOLs are an exception),
-+		 * otherwise use default basic rates
-+		 */
-+		if (skb->protocol == cpu_to_be16(ETH_P_PAE))
-+			rate_idx = wlvif->sta.basic_rate_idx;
-+		else if (control->flags & IEEE80211_TX_CTL_NO_CCK_RATE)
-+			rate_idx = wlvif->sta.p2p_rate_idx;
-+		else if (ieee80211_is_data(frame_control))
-+			rate_idx = wlvif->sta.ap_rate_idx;
-+		else
-+			rate_idx = wlvif->sta.basic_rate_idx;
-+	} else {
-+		if (hlid == wlvif->ap.global_hlid)
-+			rate_idx = wlvif->ap.mgmt_rate_idx;
-+		else if (hlid == wlvif->ap.bcast_hlid ||
-+			 skb->protocol == cpu_to_be16(ETH_P_PAE) ||
-+			 !ieee80211_is_data(frame_control))
-+			/* send non-data, bcast and EAPOLs using the
-+			 * min basic rate
-+			 */
-+			rate_idx = wlvif->ap.bcast_rate_idx;
-+		else
-+			rate_idx = wlvif->ap.ucast_rate_idx[ac];
-+	}
-+
-+	tx_attr |= rate_idx << TX_HW_ATTR_OFST_RATE_POLICY;
-+
-+	/* for WEP shared auth - no fw encryption is needed */
-+	if (ieee80211_is_auth(frame_control) &&
-+	    ieee80211_has_protected(frame_control))
-+		tx_attr |= TX_HW_ATTR_HOST_ENCRYPT;
-+
-+	/* send EAPOL frames as voice */
-+	if (control->control.flags & IEEE80211_TX_CTRL_PORT_CTRL_PROTO)
-+		tx_attr |= TX_HW_ATTR_EAPOL_FRAME;
-+
-+	desc->tx_attr = cpu_to_le16(tx_attr);
-+
-+	cc33xx_set_tx_desc_data_len(cc, desc, skb);
++	return ret;
 +}
 +
-+/* caller must hold cc->mutex */
-+static int cc33xx_prepare_tx_frame(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+				   struct sk_buff *skb, u32 buf_offset, u8 hlid)
++/* read debug acx from firmware
++ *
++ * @cc: cc struct
++ * @id: acx id
++ * @buf: buffer for the response, including all headers, must work with dma
++ * @len: length of buf
++ */
++int cc33xx_cmd_debug_inter(struct cc33xx *cc, u16 id, void *buf,
++			   size_t cmd_len, size_t res_len)
 +{
-+	struct ieee80211_tx_info *info;
-+	u32 extra = 0;
-+	int ret = 0;
-+	u32 total_len;
-+	bool is_dummy;
-+	bool is_gem = false;
-+	struct NAB_tx_header nab_cmd;
++	struct acx_header *acx = buf;
++	int ret;
 +
-+	if (!skb) {
-+		cc33xx_error("discarding null skb");
-+		return -EINVAL;
++	cc33xx_debug(DEBUG_CMD, "cmd debug interrogate");
++
++	acx->id = cpu_to_le16(id);
++
++	/* response payload length, does not include any headers */
++	acx->len = cpu_to_le16(res_len - sizeof(*acx));
++
++	ret = cc33xx_cmd_send(cc, CMD_DEBUG_READ, acx, cmd_len, res_len);
++	if (ret < 0)
++		cc33xx_error("CMD_DEBUG_READ command failed");
++
++	return ret;
++}
++
++/* write acx value to firmware
++ *
++ * @cc: cc struct
++ * @id: acx id
++ * @buf: buffer containing acx, including all headers, must work with dma
++ * @len: length of buf
++ * @valid_rets: bitmap of valid cmd status codes (i.e. return values).
++ * return the cmd status on success.
++ */
++int cc33xx_cmd_configure_failsafe(struct cc33xx *cc, u16 id, void *buf,
++				  size_t len, unsigned long valid_rets)
++{
++	struct acx_header *acx = buf;
++	int ret;
++
++	cc33xx_debug(DEBUG_CMD, "cmd configure (%d), TSFL %x",
++		     id, cc->core_status->tsf);
++
++	if (WARN_ON_ONCE(len < sizeof(*acx)))
++		return -EIO;
++
++	acx->id = cpu_to_le16(id);
++
++	/* payload length, does not include any headers */
++	acx->len = cpu_to_le16(len - sizeof(*acx));
++
++	ret = cc33xx_cmd_send_failsafe(cc, CMD_CONFIGURE, acx, len, 0,
++				       valid_rets);
++	if (ret < 0) {
++		cc33xx_warning("CONFIGURE command NOK");
++		return ret;
 +	}
 +
-+	if (hlid == CC33XX_INVALID_LINK_ID) {
-+		cc33xx_error("invalid hlid. dropping skb 0x%p", skb);
-+		return -EINVAL;
-+	}
++	return ret;
++}
 +
-+	info = IEEE80211_SKB_CB(skb);
-+
-+	is_dummy = cc33xx_is_dummy_packet(cc, skb);
-+
-+	if ((cc->quirks & CC33XX_QUIRK_TKIP_HEADER_SPACE) &&
-+	    info->control.hw_key &&
-+	    info->control.hw_key->cipher == WLAN_CIPHER_SUITE_TKIP)
-+		extra = CC33XX_EXTRA_SPACE_TKIP;
-+
-+	if (info->control.hw_key) {
-+		bool is_wep;
-+		u8 idx = info->control.hw_key->hw_key_idx;
-+		u32 cipher = info->control.hw_key->cipher;
-+
-+		is_wep = (cipher == WLAN_CIPHER_SUITE_WEP40) ||
-+			 (cipher == WLAN_CIPHER_SUITE_WEP104);
-+
-+		if (WARN_ON(is_wep && wlvif && wlvif->default_key != idx)) {
-+			ret = cc33xx_set_default_wep_key(cc, wlvif, idx);
-+			if (ret < 0)
-+				return ret;
-+			wlvif->default_key = idx;
-+		}
-+
-+		is_gem = (cipher == CC33XX_CIPHER_SUITE_GEM);
-+	}
-+
-+	/* Add 4 bytes gap, may be filled later on by the PMAC. */
-+	extra += IEEE80211_HT_CTL_LEN;
-+	ret = cc33xx_tx_allocate(cc, wlvif, skb, extra, buf_offset, hlid,
-+				 is_gem, &nab_cmd);
-+	cc33xx_debug(DEBUG_TX, "cc33xx_tx_allocate %d", ret);
++/* wrapper for cc33xx_cmd_configure that accepts only success status.
++ * return 0 on success
++ */
++int cc33xx_cmd_configure(struct cc33xx *cc, u16 id, void *buf, size_t len)
++{
++	int ret = cc33xx_cmd_configure_failsafe(cc, id, buf, len, 0);
 +
 +	if (ret < 0)
 +		return ret;
-+
-+	cc33xx_tx_fill_hdr(cc, wlvif, skb, extra, info, hlid);
-+
-+	cc33xx_debug(DEBUG_TX, "cc33xx_tx_fill_hdr ");
-+
-+	if (!is_dummy && wlvif && wlvif->bss_type == BSS_TYPE_AP_BSS) {
-+		cc33xx_tx_ap_update_inconnection_sta(cc, wlvif, skb);
-+		cc33xx_tx_regulate_link(cc, wlvif, hlid);
-+	}
-+
-+	/* The length of each packet is stored in terms of
-+	 * words. Thus, we must pad the skb data to make sure its
-+	 * length is aligned.  The number of padding bytes is computed
-+	 * and set in cc33xx_tx_fill_hdr.
-+	 * In special cases, we want to align to a specific block size
-+	 * (eg. for wl128x with SDIO we align to 256).
-+	 */
-+	total_len = cc33xx_calc_packet_alignment(cc, skb->len);
-+	cc33xx_debug(DEBUG_TX, "cc33xx_calc_packet_alignment ");
-+
-+	memcpy(cc->aggr_buf + buf_offset,
-+	       &nab_cmd, sizeof(struct NAB_tx_header));
-+	memcpy(cc->aggr_buf + buf_offset + sizeof(struct NAB_tx_header),
-+	       skb->data, skb->len);
-+	memset(cc->aggr_buf + buf_offset + sizeof(struct NAB_tx_header)
-+		+ skb->len, 0, total_len - skb->len);
-+
-+	/* Revert side effects in the dummy packet skb, so it can be reused */
-+	if (is_dummy)
-+		skb_pull(skb, sizeof(struct cc33xx_tx_hw_descr));
-+
-+	return (total_len + sizeof(struct NAB_tx_header));
++	return 0;
 +}
 +
-+u32 cc33xx_tx_enabled_rates_get(struct cc33xx *cc, u32 rate_set,
-+				enum nl80211_band rate_band)
++/* write acx value to firmware
++ *
++ * @cc: cc struct
++ * @id: acx id
++ * @buf: buffer containing debug, including all headers, must work with dma
++ * @len: length of buf
++ * @valid_rets: bitmap of valid cmd status codes (i.e. return values).
++ * return the cmd status on success.
++ */
++static int cc33xx_cmd_debug_failsafe(struct cc33xx *cc, u16 id, void *buf,
++				     size_t len, unsigned long valid_rets)
 +{
-+	struct ieee80211_supported_band *band;
-+	u32 enabled_rates = 0;
-+	int bit;
++	struct debug_header *acx = buf;
++	int ret;
 +
-+	band = cc->hw->wiphy->bands[rate_band];
-+	for (bit = 0; bit < band->n_bitrates; bit++) {
-+		if (rate_set & 0x1)
-+			enabled_rates |= band->bitrates[bit].hw_value;
-+		rate_set >>= 1;
++	cc33xx_debug(DEBUG_CMD, "cmd debug (%d)", id);
++
++	if (WARN_ON_ONCE(len < sizeof(*acx)))
++		return -EIO;
++
++	acx->id = cpu_to_le16(id);
++
++	/* payload length, does not include any headers */
++	acx->len = cpu_to_le16(len - sizeof(*acx));
++
++	ret = cc33xx_cmd_send_failsafe(cc, CMD_DEBUG, acx, len, 0,
++				       valid_rets);
++	if (ret < 0) {
++		cc33xx_warning("CONFIGURE command NOK");
++		return ret;
 +	}
 +
-+	/* MCS rates indication are on bits 16 - 31 */
-+	rate_set >>= HW_HT_RATES_OFFSET - band->n_bitrates;
-+
-+	for (bit = 0; bit < 16; bit++) {
-+		if (rate_set & 0x1)
-+			enabled_rates |= (CONF_HW_BIT_RATE_MCS_0 << bit);
-+		rate_set >>= 1;
-+	}
-+
-+	return enabled_rates;
++	return ret;
 +}
 +
-+static inline int cc33xx_tx_get_mac80211_queue(struct cc33xx_vif *wlvif,
-+					       int queue)
++/* wrapper for cc33xx_cmd_debug that accepts only success status.
++ * return 0 on success
++ */
++int cc33xx_cmd_debug(struct cc33xx *cc, u16 id, void *buf, size_t len)
 +{
-+	int mac_queue = wlvif->hw_queue_base;
++	int ret = cc33xx_cmd_debug_failsafe(cc, id, buf, len, 0);
 +
-+	switch (queue) {
-+	case CONF_TX_AC_VO:
-+		return mac_queue + 0;
-+	case CONF_TX_AC_VI:
-+		return mac_queue + 1;
-+	case CONF_TX_AC_BE:
-+		return mac_queue + 2;
-+	case CONF_TX_AC_BK:
-+		return mac_queue + 3;
-+	default:
-+		return mac_queue + 2;
-+	}
++	if (ret < 0)
++		return ret;
++	return 0;
 +}
 +
-+static void cc33xx_wake_queue(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+			      u8 queue, enum cc33xx_queue_stop_reason reason)
++int cc33xx_cmd_ps_mode(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		       u8 ps_mode, u16 auto_ps_timeout)
 +{
-+	unsigned long flags;
-+	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
++	struct cc33xx_cmd_ps_params *ps_params = NULL;
++	int ret = 0;
 +
-+	spin_lock_irqsave(&cc->cc_lock, flags);
++	cc33xx_debug(DEBUG_CMD, "cmd set ps mode");
 +
-+	/* queue should not be clear for this reason */
-+	WARN_ON_ONCE(!test_and_clear_bit(reason, &cc->queue_stop_reasons[hwq]));
-+
-+	if (cc->queue_stop_reasons[hwq])
++	ps_params = kzalloc(sizeof(*ps_params), GFP_KERNEL);
++	if (!ps_params) {
++		ret = -ENOMEM;
 +		goto out;
++	}
 +
-+	ieee80211_wake_queue(cc->hw, hwq);
++	ps_params->role_id = wlvif->role_id;
++	ps_params->ps_mode = ps_mode;
++	ps_params->auto_ps_timeout = cpu_to_le16(auto_ps_timeout);
++
++	ret = cc33xx_cmd_send(cc, CMD_SET_PS_MODE, ps_params,
++			      sizeof(*ps_params), 0);
++	if (ret < 0) {
++		cc33xx_error("cmd set_ps_mode failed");
++		goto out;
++	}
 +
 +out:
-+	spin_unlock_irqrestore(&cc->cc_lock, flags);
++	kfree(ps_params);
++	return ret;
 +}
 +
-+void cc33xx_handle_tx_low_watermark(struct cc33xx *cc)
++int cc33xx_cmd_set_default_wep_key(struct cc33xx *cc, u8 id, u8 hlid)
 +{
-+	int i;
-+	struct cc33xx_vif *wlvif;
++	struct cc33xx_cmd_set_keys *cmd;
++	int ret = 0;
 +
-+	cc33xx_for_each_wlvif(cc, wlvif) {
-+		for (i = 0; i < NUM_TX_QUEUES; i++) {
-+			if (cc33xx_is_queue_stopped_by_reason(cc, wlvif, i,
-+							      CC33XX_QUEUE_STOP_REASON_WATERMARK) &&
-+			    wlvif->tx_queue_count[i] <=
-+					CC33XX_TX_QUEUE_LOW_WATERMARK)
-+				/* firmware buffer has space, restart queues */
-+				cc33xx_wake_queue(cc, wlvif, i,
-+						  CC33XX_QUEUE_STOP_REASON_WATERMARK);
++	cc33xx_debug(DEBUG_CMD, "cmd set_default_wep_key %d", id);
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->hlid = hlid;
++	cmd->key_id = id;
++	cmd->lid_key_type = WEP_DEFAULT_LID_TYPE;
++	cmd->key_action = cpu_to_le16(KEY_SET_ID);
++	cmd->key_type = KEY_WEP;
++
++	ret = cc33xx_cmd_send(cc, CMD_SET_KEYS, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_warning("cmd set_default_wep_key failed: %d", ret);
++		goto out;
++	}
++
++out:
++	kfree(cmd);
++
++	return ret;
++}
++
++int cc33xx_cmd_set_sta_key(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			   u16 action, u8 id, u8 key_type, u8 key_size,
++			   const u8 *key, const u8 *addr, u32 tx_seq_32,
++			   u16 tx_seq_16)
++{
++	struct cc33xx_cmd_set_keys *cmd;
++	int ret = 0;
++
++	/* hlid might have already been deleted */
++	if (wlvif->sta.hlid == CC33XX_INVALID_LINK_ID)
++		return 0;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->hlid = wlvif->sta.hlid;
++
++	if (key_type == KEY_WEP)
++		cmd->lid_key_type = WEP_DEFAULT_LID_TYPE;
++	else if (is_broadcast_ether_addr(addr))
++		cmd->lid_key_type = BROADCAST_LID_TYPE;
++	else
++		cmd->lid_key_type = UNICAST_LID_TYPE;
++
++	cmd->key_action = cpu_to_le16(action);
++	cmd->key_size = key_size;
++	cmd->key_type = key_type;
++
++	cmd->ac_seq_num16[0] = cpu_to_le16(tx_seq_16);
++	cmd->ac_seq_num32[0] = cpu_to_le32(tx_seq_32);
++
++	cmd->key_id = id;
++
++	if (key_type == KEY_TKIP) {
++		/* We get the key in the following form:
++		 * TKIP (16 bytes) - TX MIC (8 bytes) - RX MIC (8 bytes)
++		 * but the target is expecting:
++		 * TKIP - RX MIC - TX MIC
++		 */
++		memcpy(cmd->key, key, 16);
++		memcpy(cmd->key + 16, key + 24, 8);
++		memcpy(cmd->key + 24, key + 16, 8);
++
++	} else {
++		memcpy(cmd->key, key, key_size);
++	}
++
++	cc33xx_dump(DEBUG_CRYPT, "TARGET KEY: ", cmd, sizeof(*cmd));
++
++	ret = cc33xx_cmd_send(cc, CMD_SET_KEYS, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_warning("could not set keys");
++		goto out;
++	}
++
++out:
++	kfree(cmd);
++
++	return ret;
++}
++
++int cc33xx_cmd_set_ap_key(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			  u16 action, u8 id, u8 key_type, u8 key_size,
++			  const u8 *key, u8 hlid, u32 tx_seq_32, u16 tx_seq_16)
++{
++	struct cc33xx_cmd_set_keys *cmd;
++	int ret = 0;
++	u8 lid_type;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
++
++	if (hlid == wlvif->ap.bcast_hlid) {
++		if (key_type == KEY_WEP)
++			lid_type = WEP_DEFAULT_LID_TYPE;
++		else
++			lid_type = BROADCAST_LID_TYPE;
++	} else {
++		lid_type = UNICAST_LID_TYPE;
++	}
++
++	cc33xx_debug(DEBUG_CRYPT, "ap key action: %d id: %d lid: %d type: %d hlid: %d",
++		     (int)action, (int)id, (int)lid_type,
++		     (int)key_type, (int)hlid);
++
++	cmd->lid_key_type = lid_type;
++	cmd->hlid = hlid;
++	cmd->key_action = cpu_to_le16(action);
++	cmd->key_size = key_size;
++	cmd->key_type = key_type;
++	cmd->key_id = id;
++	cmd->ac_seq_num16[0] = cpu_to_le16(tx_seq_16);
++	cmd->ac_seq_num32[0] = cpu_to_le32(tx_seq_32);
++
++	if (key_type == KEY_TKIP) {
++		/* We get the key in the following form:
++		 * TKIP (16 bytes) - TX MIC (8 bytes) - RX MIC (8 bytes)
++		 * but the target is expecting:
++		 * TKIP - RX MIC - TX MIC
++		 */
++		memcpy(cmd->key, key, 16);
++		memcpy(cmd->key + 16, key + 24, 8);
++		memcpy(cmd->key + 24, key + 16, 8);
++	} else {
++		memcpy(cmd->key, key, key_size);
++	}
++
++	cc33xx_dump(DEBUG_CRYPT, "TARGET AP KEY: ", cmd, sizeof(*cmd));
++
++	ret = cc33xx_cmd_send(cc, CMD_SET_KEYS, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_warning("could not set ap keys");
++		goto out;
++	}
++
++out:
++	kfree(cmd);
++	return ret;
++}
++
++int cc33xx_cmd_set_peer_state(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			      u8 hlid)
++{
++	struct cc33xx_cmd_set_peer_state *cmd;
++	int ret = 0;
++
++	cc33xx_debug(DEBUG_CMD, "cmd set peer state (hlid=%d)", hlid);
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->hlid = hlid;
++	cmd->state = CC33XX_CMD_STA_STATE_CONNECTED;
++
++	ret = cc33xx_cmd_send(cc, CMD_SET_LINK_CONNECTION_STATE,
++			      cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send set peer state command");
++		goto out_free;
++	}
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_cmd_add_peer(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			struct ieee80211_sta *sta, u8 *hlid, u8 is_connected)
++{
++	struct cc33xx_cmd_add_peer *cmd;
++
++	struct cc33xx_cmd_complete_add_peer *command_complete =
++		(struct cc33xx_cmd_complete_add_peer *)&cc->command_result;
++
++	int i, ret;
++	u32 sta_rates;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd add peer is ap %d", is_connected);
++	cmd->is_connected = is_connected;
++	cmd->role_id = wlvif->role_id;
++	cmd->role_type = CC33XX_ROLE_AP;
++	cmd->link_type = 1;
++
++	memcpy(cmd->addr, sta->addr, ETH_ALEN);
++	cmd->bss_index = CC33XX_AP_BSS_INDEX;
++	cmd->aid = cpu_to_le16(sta->aid);
++	cmd->sp_len = sta->max_sp;
++	cmd->wmm = sta->wme ? 1 : 0;
++
++	for (i = 0; i < NUM_ACCESS_CATEGORIES_COPY; i++) {
++		if (sta->wme && (sta->uapsd_queues & BIT(i))) {
++			cmd->psd_type[NUM_ACCESS_CATEGORIES_COPY - 1 - i] =
++					CC33XX_PSD_UPSD_TRIGGER;
++		} else {
++			cmd->psd_type[NUM_ACCESS_CATEGORIES_COPY - 1 - i] =
++					CC33XX_PSD_LEGACY;
 +		}
 +	}
++
++	sta_rates = sta->deflink.supp_rates[wlvif->band];
++	if (sta->deflink.ht_cap.ht_supported) {
++		sta_rates |=
++			(sta->deflink.ht_cap.mcs.rx_mask[0] << HW_HT_RATES_OFFSET) |
++			(sta->deflink.ht_cap.mcs.rx_mask[1] << HW_MIMO_RATES_OFFSET);
++	}
++
++	cmd->supported_rates =
++		cpu_to_le32(cc33xx_tx_enabled_rates_get(cc, sta_rates,
++							wlvif->band));
++
++	if (!cmd->supported_rates) {
++		cc33xx_debug(DEBUG_CMD,
++			     "peer has no supported rates yet, configuring basic rates: 0x%x",
++			     wlvif->basic_rate_set);
++		cmd->supported_rates = cpu_to_le32(wlvif->basic_rate_set);
++	}
++
++	cc33xx_debug(DEBUG_CMD, "new peer rates=0x%x queues=0x%x",
++		     cmd->supported_rates, sta->uapsd_queues);
++
++	if (sta->deflink.ht_cap.ht_supported) {
++		cmd->ht_capabilities = cpu_to_le32(sta->deflink.ht_cap.cap);
++		cmd->ht_capabilities |= cpu_to_le32(CC33XX_HT_CAP_HT_OPERATION);
++		cmd->ampdu_params = sta->deflink.ht_cap.ampdu_factor |
++				    sta->deflink.ht_cap.ampdu_density;
++	}
++
++	cmd->has_he = sta->deflink.he_cap.has_he;
++	cmd->mfp = sta->mfp;
++	ret = cc33xx_cmd_send(cc, CMD_ADD_PEER, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd add peer");
++		goto out_free;
++	}
++
++	if (hlid) {
++		if (le16_to_cpu(command_complete->header.status) == CMD_STATUS_SUCCESS) {
++			*hlid = command_complete->hlid;
++			cc->links[*hlid].allocated_pkts = 0;
++			cc->session_ids[*hlid] = command_complete->session_id;
++			cc33xx_debug(DEBUG_CMD, "new peer hlid=%d session_ids=%d",
++				     command_complete->hlid, command_complete->session_id);
++		} else {
++			ret = -EMLINK;
++		}
++	} else {
++		cc33xx_debug(DEBUG_CMD, "update peer done !");
++	}
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
 +}
 +
-+static int cc33xx_select_ac(struct cc33xx *cc)
++int cc33xx_cmd_remove_peer(struct cc33xx *cc,
++			   struct cc33xx_vif *wlvif, u8 hlid)
 +{
-+	int i, q = -1, ac;
-+	u32 min_pkts = 0xffffffff;
++	struct cc33xx_cmd_remove_peer *cmd;
++	int ret;
++	bool timeout = false;
 +
-+	/* Find a non-empty ac where:
-+	 * 1. There are packets to transmit
-+	 * 2. The FW has the least allocated blocks
-+	 *
-+	 * We prioritize the ACs according to VO>VI>BE>BK
++	cc33xx_debug(DEBUG_CMD, "cmd remove peer %d", (int)hlid);
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->hlid = hlid;
++
++	cmd->role_id = wlvif->role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_REMOVE_PEER, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to initiate cmd remove peer");
++		goto out_free;
++	}
++
++	ret = cc33xx_wait_for_event(cc, CC33XX_EVENT_PEER_REMOVE_COMPLETE,
++				    &timeout);
++
++	/* We are ok with a timeout here. The event is sometimes not sent
++	 * due to a firmware bug. In case of another error (like SDIO timeout)
++	 * queue a recovery.
 +	 */
-+	for (i = 0; i < NUM_TX_QUEUES; i++) {
-+		ac = cc33xx_tx_get_queue(i);
-+		if (cc->tx_queue_count[ac] &&
-+		    cc->tx_allocated_pkts[ac] < min_pkts) {
-+			q = ac;
-+			min_pkts = cc->tx_allocated_pkts[q];
++	if (ret < 0)
++		cc33xx_queue_recovery_work(cc);
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++static int cc33xx_get_reg_conf_ch_idx(enum nl80211_band band, u16 ch)
++{
++	/* map the given band/channel to the respective predefined
++	 * bit expected by the fw
++	 */
++	switch (band) {
++	case NL80211_BAND_2GHZ:
++		/* channels 1..14 are mapped to 0..13 */
++		if (ch >= 1 && ch <= 14)
++			return ch - 1;
++		break;
++	case NL80211_BAND_5GHZ:
++		switch (ch) {
++		case 8 ... 16:
++			/* channels 8,12,16 are mapped to 18,19,20 */
++			return 18 + (ch - 8) / 4;
++		case 34 ... 48:
++			/* channels 34,36..48 are mapped to 21..28 */
++			return 21 + (ch - 34) / 2;
++		case 52 ... 64:
++			/* channels 52,56..64 are mapped to 29..32 */
++			return 29 + (ch - 52) / 4;
++		case 100 ... 140:
++			/* channels 100,104..140 are mapped to 33..43 */
++			return 33 + (ch - 100) / 4;
++		case 149 ... 165:
++			/* channels 149,153..165 are mapped to 44..48 */
++			return 44 + (ch - 149) / 4;
++		default:
++			break;
 +		}
-+	}
-+
-+	return q;
-+}
-+
-+static struct sk_buff *cc33xx_lnk_dequeue(struct cc33xx *cc,
-+					  struct cc33xx_link *lnk, u8 q)
-+{
-+	struct sk_buff *skb;
-+	unsigned long flags;
-+
-+	skb = skb_dequeue(&lnk->tx_queue[q]);
-+	if (skb) {
-+		spin_lock_irqsave(&cc->cc_lock, flags);
-+		WARN_ON_ONCE(cc->tx_queue_count[q] <= 0);
-+		cc->tx_queue_count[q]--;
-+		if (lnk->wlvif) {
-+			WARN_ON_ONCE(lnk->wlvif->tx_queue_count[q] <= 0);
-+			lnk->wlvif->tx_queue_count[q]--;
-+		}
-+		spin_unlock_irqrestore(&cc->cc_lock, flags);
-+	}
-+
-+	return skb;
-+}
-+
-+static bool cc33xx_lnk_high_prio(struct cc33xx *cc, u8 hlid,
-+				 struct cc33xx_link *lnk)
-+{
-+	u8 thold;
-+	struct core_fw_status *core_fw_status = &cc->core_status->fw_info;
-+	unsigned long suspend_bitmap, fast_bitmap, ps_bitmap;
-+
-+	suspend_bitmap = le32_to_cpu(core_fw_status->link_suspend_bitmap);
-+	fast_bitmap = le32_to_cpu(core_fw_status->link_fast_bitmap);
-+	ps_bitmap = le32_to_cpu(core_fw_status->link_ps_bitmap);
-+
-+	/* suspended links are never high priority */
-+	if (test_bit(hlid, &suspend_bitmap))
-+		return false;
-+
-+	/* the priority thresholds are taken from FW */
-+	if (test_bit(hlid, &fast_bitmap) && !test_bit(hlid, &ps_bitmap))
-+		thold = core_fw_status->tx_fast_link_prio_threshold;
-+	else
-+		thold = core_fw_status->tx_slow_link_prio_threshold;
-+
-+	return lnk->allocated_pkts < thold;
-+}
-+
-+static bool cc33xx_lnk_low_prio(struct cc33xx *cc, u8 hlid,
-+				struct cc33xx_link *lnk)
-+{
-+	u8 thold;
-+	struct core_fw_status *core_fw_status = &cc->core_status->fw_info;
-+	unsigned long suspend_bitmap, fast_bitmap, ps_bitmap;
-+
-+	suspend_bitmap = le32_to_cpu(core_fw_status->link_suspend_bitmap);
-+	fast_bitmap = le32_to_cpu(core_fw_status->link_fast_bitmap);
-+	ps_bitmap = le32_to_cpu(core_fw_status->link_ps_bitmap);
-+
-+	if (test_bit(hlid, &suspend_bitmap))
-+		thold = core_fw_status->tx_suspend_threshold;
-+	else if (test_bit(hlid, &fast_bitmap) && !test_bit(hlid, &ps_bitmap))
-+		thold = core_fw_status->tx_fast_stop_threshold;
-+	else
-+		thold = core_fw_status->tx_slow_stop_threshold;
-+
-+	return lnk->allocated_pkts < thold;
-+}
-+
-+static struct sk_buff *cc33xx_lnk_dequeue_high_prio(struct cc33xx *cc,
-+						    u8 hlid, u8 ac,
-+						    u8 *low_prio_hlid)
-+{
-+	struct cc33xx_link *lnk = &cc->links[hlid];
-+
-+	if (!cc33xx_lnk_high_prio(cc, hlid, lnk)) {
-+		if (*low_prio_hlid == CC33XX_INVALID_LINK_ID &&
-+		    !skb_queue_empty(&lnk->tx_queue[ac]) &&
-+		    cc33xx_lnk_low_prio(cc, hlid, lnk))
-+			/* we found the first non-empty low priority queue */
-+			*low_prio_hlid = hlid;
-+
-+		return NULL;
-+	}
-+
-+	return cc33xx_lnk_dequeue(cc, lnk, ac);
-+}
-+
-+static struct sk_buff *cc33xx_vif_dequeue_high_prio(struct cc33xx *cc,
-+						    struct cc33xx_vif *wlvif,
-+						    u8 ac, u8 *hlid,
-+						    u8 *low_prio_hlid)
-+{
-+	struct sk_buff *skb = NULL;
-+	int i, h, start_hlid;
-+
-+	/* start from the link after the last one */
-+	start_hlid = (wlvif->last_tx_hlid + 1) % CC33XX_MAX_LINKS;
-+
-+	/* dequeue according to AC, round robin on each link */
-+	for (i = 0; i < CC33XX_MAX_LINKS; i++) {
-+		h = (start_hlid + i) % CC33XX_MAX_LINKS;
-+
-+		/* only consider connected stations */
-+		if (!test_bit(h, wlvif->links_map))
-+			continue;
-+
-+		skb = cc33xx_lnk_dequeue_high_prio(cc, h, ac, low_prio_hlid);
-+		if (!skb)
-+			continue;
-+
-+		wlvif->last_tx_hlid = h;
++		break;
++	default:
 +		break;
 +	}
 +
-+	if (!skb)
-+		wlvif->last_tx_hlid = 0;
-+
-+	*hlid = wlvif->last_tx_hlid;
-+	return skb;
++	cc33xx_error("%s: unknown band/channel: %d/%d", __func__, band, ch);
++	return -1;
 +}
 +
-+static struct sk_buff *cc33xx_skb_dequeue(struct cc33xx *cc, u8 *hlid)
++void cc33xx_set_pending_regdomain_ch(struct cc33xx *cc, u16 channel,
++				     enum nl80211_band band)
 +{
-+	unsigned long flags;
-+	struct cc33xx_vif *wlvif = cc->last_wlvif;
-+	struct sk_buff *skb = NULL;
-+	int ac;
-+	u8 low_prio_hlid = CC33XX_INVALID_LINK_ID;
++	int ch_bit_idx = 0;
 +
-+	ac = cc33xx_select_ac(cc);
-+	if (ac < 0)
-+		goto out;
++	if (!(cc->quirks & CC33XX_QUIRK_REGDOMAIN_CONF))
++		return;
 +
-+	/* continue from last wlvif (round robin) */
-+	if (wlvif) {
-+		cc33xx_for_each_wlvif_continue(cc, wlvif) {
-+			if (!wlvif->tx_queue_count[ac])
-+				continue;
++	ch_bit_idx = cc33xx_get_reg_conf_ch_idx(band, channel);
 +
-+			skb = cc33xx_vif_dequeue_high_prio(cc, wlvif, ac, hlid,
-+							   &low_prio_hlid);
-+			if (!skb)
-+				continue;
-+
-+			cc->last_wlvif = wlvif;
-+			break;
-+		}
-+	}
-+
-+	/* dequeue from the system HLID before the restarting wlvif list */
-+	if (!skb) {
-+		skb = cc33xx_lnk_dequeue_high_prio(cc, CC33XX_SYSTEM_HLID,
-+						   ac, &low_prio_hlid);
-+		if (skb) {
-+			*hlid = CC33XX_SYSTEM_HLID;
-+			cc->last_wlvif = NULL;
-+		}
-+	}
-+
-+	/* Do a new pass over the wlvif list. But no need to continue
-+	 * after last_wlvif. The previous pass should have found it.
-+	 */
-+	if (!skb) {
-+		cc33xx_for_each_wlvif(cc, wlvif) {
-+			if (!wlvif->tx_queue_count[ac])
-+				goto next;
-+
-+			skb = cc33xx_vif_dequeue_high_prio(cc, wlvif, ac, hlid,
-+							   &low_prio_hlid);
-+			if (skb) {
-+				cc->last_wlvif = wlvif;
-+				break;
-+			}
-+
-+next:
-+			if (wlvif == cc->last_wlvif)
-+				break;
-+		}
-+	}
-+
-+	/* no high priority skbs found - but maybe a low priority one? */
-+	if (!skb && low_prio_hlid != CC33XX_INVALID_LINK_ID) {
-+		struct cc33xx_link *lnk = &cc->links[low_prio_hlid];
-+
-+		skb = cc33xx_lnk_dequeue(cc, lnk, ac);
-+
-+		WARN_ON(!skb); /* we checked this before */
-+		*hlid = low_prio_hlid;
-+
-+		/* ensure proper round robin in the vif/link levels */
-+		cc->last_wlvif = lnk->wlvif;
-+		if (lnk->wlvif)
-+			lnk->wlvif->last_tx_hlid = low_prio_hlid;
-+	}
-+
-+out:
-+	if (!skb &&
-+	    test_and_clear_bit(CC33XX_FLAG_DUMMY_PACKET_PENDING, &cc->flags)) {
-+		int q;
-+
-+		skb = cc->dummy_packet;
-+		*hlid = CC33XX_SYSTEM_HLID;
-+		q = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
-+		spin_lock_irqsave(&cc->cc_lock, flags);
-+		WARN_ON_ONCE(cc->tx_queue_count[q] <= 0);
-+		cc->tx_queue_count[q]--;
-+		spin_unlock_irqrestore(&cc->cc_lock, flags);
-+	}
-+
-+	return skb;
++	if (ch_bit_idx >= 0 && ch_bit_idx <= CC33XX_MAX_CHANNELS)
++		__set_bit_le(ch_bit_idx, (long *)cc->reg_ch_conf_pending);
 +}
 +
-+static void cc33xx_skb_queue_head(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+				  struct sk_buff *skb, u8 hlid)
++int cc33xx_cmd_regdomain_config_locked(struct cc33xx *cc)
 +{
-+	unsigned long flags;
-+	int q = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
++	struct cc33xx_cmd_regdomain_dfs_config *cmd = NULL;
++	int ret = 0, i, b, ch_bit_idx;
++	__le32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
++	struct wiphy *wiphy = cc->hw->wiphy;
++	struct ieee80211_supported_band *band;
++	bool timeout = false;
 +
-+	if (cc33xx_is_dummy_packet(cc, skb)) {
-+		set_bit(CC33XX_FLAG_DUMMY_PACKET_PENDING, &cc->flags);
-+	} else {
-+		skb_queue_head(&cc->links[hlid].tx_queue[q], skb);
++	return 0;
 +
-+		/* make sure we dequeue the same packet next time */
-+		wlvif->last_tx_hlid = (hlid + CC33XX_MAX_LINKS - 1) %
-+				      CC33XX_MAX_LINKS;
-+	}
-+
-+	spin_lock_irqsave(&cc->cc_lock, flags);
-+	cc->tx_queue_count[q]++;
-+	if (wlvif)
-+		wlvif->tx_queue_count[q]++;
-+	spin_unlock_irqrestore(&cc->cc_lock, flags);
-+}
-+
-+static inline bool cc33xx_tx_is_data_present(struct sk_buff *skb)
-+{
-+	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)(skb->data);
-+
-+	return ieee80211_is_data_present(hdr->frame_control);
-+}
-+
-+/* Returns failure values only in case of failed bus ops within this function.
-+ * cc33xx_prepare_tx_frame retvals won't be returned in order to avoid
-+ * triggering recovery by higher layers when not necessary.
-+ * In case a FW command fails within cc33xx_prepare_tx_frame fails a recovery
-+ * will be queued in cc33xx_cmd_send. -EAGAIN/-EBUSY from prepare_tx_frame
-+ * can occur and are legitimate so don't propagate. -EINVAL will emit a WARNING
-+ * within prepare_tx_frame code but there's nothing we should do about those
-+ * as well.
-+ */
-+int cc33xx_tx_work_locked(struct cc33xx *cc)
-+{
-+	struct cc33xx_vif *wlvif;
-+	struct sk_buff *skb;
-+	struct cc33xx_tx_hw_descr *desc;
-+	u32 buf_offset = 0, last_len = 0;
-+	u32 transfer_len = 0;
-+	u32 padding_size = 0;
-+	bool sent_packets = false;
-+	unsigned long active_hlids[BITS_TO_LONGS(CC33XX_MAX_LINKS)] = {0};
-+	int ret = 0;
-+	int bus_ret = 0;
-+	u8 hlid;
-+
-+	cc33xx_debug(DEBUG_TX, " Tx work locked");
-+
-+	memset(cc->aggr_buf, 0, 0x300);
-+	if (unlikely(cc->state != CC33XX_STATE_ON))
++	if (!(cc->quirks & CC33XX_QUIRK_REGDOMAIN_CONF))
 +		return 0;
 +
-+	while ((skb = cc33xx_skb_dequeue(cc, &hlid))) {
-+		struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-+		bool has_data = false;
++	cc33xx_debug(DEBUG_CMD, "cmd reg domain config");
 +
-+		cc33xx_debug(DEBUG_TX, "skb dequeue skb: 0x%p data %#lx head %#lx tail %#lx end %#lx",
-+			     skb,
-+			     (unsigned long)skb->data, (unsigned long)skb->head,
-+			     (unsigned long)skb->tail, (unsigned long)skb->end);
-+		wlvif = NULL;
-+		if (!cc33xx_is_dummy_packet(cc, skb))
-+			wlvif = cc33xx_vif_to_data(info->control.vif);
-+		else
-+			hlid = CC33XX_SYSTEM_HLID;
++	memcpy(tmp_ch_bitmap, cc->reg_ch_conf_pending, sizeof(tmp_ch_bitmap));
 +
-+		has_data = wlvif && cc33xx_tx_is_data_present(skb);
-+		ret = cc33xx_prepare_tx_frame(cc, wlvif, skb, buf_offset,
-+					      hlid);
++	for (b = NL80211_BAND_2GHZ; b <= NL80211_BAND_5GHZ; b++) {
++		band = wiphy->bands[b];
++		for (i = 0; i < band->n_channels; i++) {
++			struct ieee80211_channel *channel = &band->channels[i];
++			u16 ch = channel->hw_value;
++			u32 flags = channel->flags;
 +
-+		if (ret == -EAGAIN) {
-+			/* Aggregation buffer is full.
-+			 * Flush buffer and try again.
-+			 */
-+			cc33xx_skb_queue_head(cc, wlvif, skb, hlid);
++			if (flags & (IEEE80211_CHAN_DISABLED |
++				     IEEE80211_CHAN_NO_IR))
++				continue;
 +
-+			transfer_len = __ALIGN_MASK(buf_offset,
-+						    CC33XX_BUS_BLOCK_SIZE * 2 - 1);
++			if ((flags & IEEE80211_CHAN_RADAR) &&
++			    channel->dfs_state != NL80211_DFS_AVAILABLE)
++				continue;
 +
-+			padding_size = transfer_len - buf_offset;
-+			memset(cc->aggr_buf + buf_offset, 0x33, padding_size);
++			ch_bit_idx = cc33xx_get_reg_conf_ch_idx(b, ch);
++			if (ch_bit_idx < 0)
++				continue;
 +
-+			cc33xx_debug(DEBUG_TX, "sdio transaction length: %d ",
-+				     transfer_len);
-+
-+			bus_ret = cc33xx_write(cc, NAB_DATA_ADDR, cc->aggr_buf,
-+					       transfer_len, true);
-+			if (bus_ret < 0)
-+				goto out;
-+
-+			sent_packets = true;
-+			buf_offset = 0;
-+			continue;
-+		} else if (ret == -EBUSY) {
-+			/* Firmware buffer is full.
-+			 * Queue back last skb, and stop aggregating.
-+			 */
-+			cc33xx_skb_queue_head(cc, wlvif, skb, hlid);
-+			/* No work left, avoid scheduling redundant tx work */
-+			set_bit(CC33XX_FLAG_FW_TX_BUSY, &cc->flags);
-+			goto out_ack;
-+		} else if (ret < 0) {
-+			if (cc33xx_is_dummy_packet(cc, skb))
-+				/* fw still expects dummy packet,
-+				 * so re-enqueue it
-+				 */
-+				cc33xx_skb_queue_head(cc, wlvif, skb, hlid);
-+			else
-+				ieee80211_free_txskb(cc->hw, skb);
-+			goto out_ack;
-+		}
-+
-+		last_len = ret;
-+		buf_offset += last_len;
-+
-+		if (has_data) {
-+			desc = (struct cc33xx_tx_hw_descr *)skb->data;
-+			__set_bit(desc->hlid, active_hlids);
++			__set_bit_le(ch_bit_idx, (long *)tmp_ch_bitmap);
 +		}
 +	}
 +
-+out_ack:
-+	if (buf_offset) {
-+		transfer_len = __ALIGN_MASK(buf_offset,
-+					    CC33XX_BUS_BLOCK_SIZE * 2 - 1);
++	if (!memcmp(tmp_ch_bitmap, cc->reg_ch_conf_last, sizeof(tmp_ch_bitmap)))
++		goto out;
 +
-+		padding_size = transfer_len - buf_offset;
-+		memset(cc->aggr_buf + buf_offset, 0x33, padding_size);
-+
-+		cc33xx_debug(DEBUG_TX, "sdio transaction (926) length: %d ",
-+			     transfer_len);
-+
-+		bus_ret = cc33xx_write(cc, NAB_DATA_ADDR, cc->aggr_buf,
-+				       transfer_len, true);
-+		if (bus_ret < 0)
-+			goto out;
-+
-+		sent_packets = true;
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
 +	}
 +
-+	if (sent_packets)
-+		cc33xx_handle_tx_low_watermark(cc);
++	cmd->ch_bit_map1 = tmp_ch_bitmap[0];
++	cmd->ch_bit_map2 = tmp_ch_bitmap[1];
++	cmd->dfs_region = cc->dfs_region;
++
++	cc33xx_debug(DEBUG_CMD,
++		     "cmd reg domain bitmap1: 0x%08x, bitmap2: 0x%08x",
++		     cmd->ch_bit_map1, cmd->ch_bit_map2);
++
++	ret = cc33xx_cmd_send(cc, CMD_DFS_CHANNEL_CONFIG, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send reg domain dfs config");
++		goto out;
++	}
++
++	ret = cc33xx_wait_for_event(cc, CC33XX_EVENT_DFS_CONFIG_COMPLETE,
++				    &timeout);
++
++	if (ret < 0 || timeout) {
++		cc33xx_error("reg domain conf %serror",
++			     timeout ? "completion " : "");
++		ret = timeout ? -ETIMEDOUT : ret;
++		goto out;
++	}
++
++	memcpy(cc->reg_ch_conf_last, tmp_ch_bitmap, sizeof(tmp_ch_bitmap));
++	memset(cc->reg_ch_conf_pending, 0, sizeof(cc->reg_ch_conf_pending));
 +
 +out:
-+	return bus_ret;
++	kfree(cmd);
++	return ret;
 +}
 +
-+void cc33xx_tx_work(struct work_struct *work)
++int cc33xx_cmd_config_fwlog(struct cc33xx *cc)
 +{
-+	struct cc33xx *cc = container_of(work, struct cc33xx, tx_work);
++	struct cc33xx_cmd_config_fwlog *cmd;
++	int ret = 0;
++
++	cc33xx_debug(DEBUG_CMD, "cmd config firmware logger");
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->logger_mode = cc->conf.host_conf.fwlog.mode;
++	cmd->log_severity = cc->conf.host_conf.fwlog.severity;
++	cmd->timestamp = cc->conf.host_conf.fwlog.timestamp;
++	cmd->output = cc->conf.host_conf.fwlog.output;
++	cmd->threshold = cc->conf.host_conf.fwlog.threshold;
++
++	ret = cc33xx_cmd_send(cc, CMD_CONFIG_FWLOGGER, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send config firmware logger command");
++		goto out_free;
++	}
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++static int cc33xx_cmd_roc(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			  u8 role_id, enum nl80211_band band, u8 channel)
++{
++	struct cc33xx_cmd_roc *cmd;
++	int ret = 0;
++
++	cc33xx_debug(DEBUG_CMD, "cmd roc %d (%d)", channel, role_id);
++
++	if (WARN_ON(role_id == CC33XX_INVALID_ROLE_ID))
++		return -EINVAL;
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->role_id = role_id;
++	cmd->channel = channel;
++	switch (band) {
++	case NL80211_BAND_2GHZ:
++		cmd->band = CC33XX_BAND_2_4GHZ;
++		break;
++	case NL80211_BAND_5GHZ:
++		cmd->band = CC33XX_BAND_5GHZ;
++		break;
++	default:
++		cc33xx_error("roc - unknown band: %d", (int)wlvif->band);
++		ret = -EINVAL;
++		goto out_free;
++	}
++
++	ret = cc33xx_cmd_send(cc, CMD_REMAIN_ON_CHANNEL, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send ROC command");
++		goto out_free;
++	}
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++static int cc33xx_cmd_croc(struct cc33xx *cc, u8 role_id)
++{
++	struct cc33xx_cmd_croc *cmd;
++	int ret = 0;
++
++	cc33xx_debug(DEBUG_CMD, "cmd croc (%d)", role_id);
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++	cmd->role_id = role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_CANCEL_REMAIN_ON_CHANNEL, cmd,
++			      sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send ROC command");
++		goto out_free;
++	}
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++int cc33xx_roc(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 role_id,
++	       enum nl80211_band band, u8 channel)
++{
++	int ret = 0;
++
++	if (WARN_ON(test_bit(role_id, cc->roc_map)))
++		return 0;
++
++	ret = cc33xx_cmd_roc(cc, wlvif, role_id, band, channel);
++	if (ret < 0)
++		goto out;
++
++	__set_bit(role_id, cc->roc_map);
++out:
++	return ret;
++}
++
++int cc33xx_croc(struct cc33xx *cc, u8 role_id)
++{
++	int ret = 0;
++
++	if (WARN_ON(!test_bit(role_id, cc->roc_map)))
++		return 0;
++
++	ret = cc33xx_cmd_croc(cc, role_id);
++	if (ret < 0)
++		goto out;
++
++	__clear_bit(role_id, cc->roc_map);
++
++	/* Rearm the tx watchdog when removing the last ROC. This prevents
++	 * recoveries due to just finished ROCs - when Tx hasn't yet had
++	 * a chance to get out.
++	 */
++	if (find_first_bit(cc->roc_map, CC33XX_MAX_ROLES) >= CC33XX_MAX_ROLES)
++		cc33xx_rearm_tx_watchdog_locked(cc);
++out:
++	return ret;
++}
++
++int cc33xx_cmd_stop_channel_switch(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	struct cc33xx_cmd_stop_channel_switch *cmd;
 +	int ret;
 +
-+	mutex_lock(&cc->mutex);
++	cc33xx_debug(DEBUG_ACX, "cmd stop channel switch");
 +
-+	ret = cc33xx_tx_work_locked(cc);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	cmd->role_id = wlvif->role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_STOP_CHANNEL_SWITCH,
++			      cmd, sizeof(*cmd), 0);
 +	if (ret < 0) {
-+		cc33xx_queue_recovery_work(cc);
++		cc33xx_error("failed to stop channel switch command");
++		goto out_free;
++	}
++
++out_free:
++	kfree(cmd);
++
++out:
++	return ret;
++}
++
++/* start dev role and roc on its channel */
++int cc33xx_start_dev(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		     enum nl80211_band band, int channel)
++{
++	int ret;
++
++	if (WARN_ON(!(wlvif->bss_type == BSS_TYPE_STA_BSS ||
++		      wlvif->bss_type == BSS_TYPE_IBSS)))
++		return -EINVAL;
++
++	/* the dev role is already started for p2p mgmt interfaces */
++
++	if (!cc33xx_is_p2p_mgmt(wlvif)) {
++		ret = cc33xx_cmd_role_enable(cc,
++					     cc33xx_wlvif_to_vif(wlvif)->addr,
++					     CC33XX_ROLE_DEVICE,
++					     &wlvif->dev_role_id);
++		if (ret < 0)
++			goto out;
++	}
++
++	cc33xx_debug(DEBUG_CMD, "cmd role start dev");
++	ret = cc33xx_cmd_role_start_dev(cc, wlvif, band, channel);
++	if (ret < 0)
++		goto out_disable;
++
++	cc33xx_debug(DEBUG_CMD, "cmd roc");
++	ret = cc33xx_roc(cc, wlvif, wlvif->dev_role_id, band, channel);
++	if (ret < 0)
++		goto out_stop;
++
++	return 0;
++
++out_stop:
++	cc333xx_cmd_role_stop_dev(cc, wlvif);
++out_disable:
++	if (!cc33xx_is_p2p_mgmt(wlvif))
++		cc33xx_cmd_role_disable(cc, &wlvif->dev_role_id);
++out:
++	return ret;
++}
++
++/* croc dev hlid, and stop the role */
++int cc33xx_stop_dev(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	int ret;
++
++	if (WARN_ON(!(wlvif->bss_type == BSS_TYPE_STA_BSS ||
++		      wlvif->bss_type == BSS_TYPE_IBSS)))
++		return -EINVAL;
++
++	/* flush all pending packets */
++	ret = cc33xx_tx_work_locked(cc);
++	if (ret < 0)
 +		goto out;
++
++	if (test_bit(wlvif->dev_role_id, cc->roc_map)) {
++		ret = cc33xx_croc(cc, wlvif->dev_role_id);
++		if (ret < 0)
++			goto out;
++	}
++
++	ret = cc333xx_cmd_role_stop_dev(cc, wlvif);
++	if (ret < 0)
++		goto out;
++
++	if (!cc33xx_is_p2p_mgmt(wlvif)) {
++		ret = cc33xx_cmd_role_disable(cc, &wlvif->dev_role_id);
++		if (ret < 0)
++			goto out;
 +	}
 +
 +out:
-+	mutex_unlock(&cc->mutex);
++	return ret;
 +}
 +
-+void cc33xx_tx_reset_link_queues(struct cc33xx *cc, u8 hlid)
++int cc33xx_cmd_generic_cfg(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			   u8 feature, u8 enable, u8 value)
 +{
-+	struct sk_buff *skb;
-+	int i;
-+	unsigned long flags;
-+	struct ieee80211_tx_info *info;
-+	int total[NUM_TX_QUEUES];
-+	struct cc33xx_link *lnk = &cc->links[hlid];
++	struct cc33xx_cmd_generic_cfg *cmd;
++	int ret;
 +
-+	for (i = 0; i < NUM_TX_QUEUES; i++) {
-+		total[i] = 0;
-+		while ((skb = skb_dequeue(&lnk->tx_queue[i]))) {
-+			cc33xx_debug(DEBUG_TX, "link freeing skb 0x%p", skb);
++	cc33xx_debug(DEBUG_CMD,
++		     "cmd generic cfg (role %d feature %d enable %d value %d)",
++		     wlvif->role_id, feature, enable, value);
 +
-+			if (!cc33xx_is_dummy_packet(cc, skb)) {
-+				info = IEEE80211_SKB_CB(skb);
-+				info->status.rates[0].idx = -1;
-+				info->status.rates[0].count = 0;
-+				ieee80211_tx_status_ni(cc->hw, skb);
-+			}
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
 +
-+			total[i]++;
-+		}
++	cmd->role_id = wlvif->role_id;
++	cmd->feature = feature;
++	cmd->enable = enable;
++	cmd->value = value;
++
++	ret = cc33xx_cmd_send(cc, CMD_GENERIC_CFG, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send generic cfg command");
++		goto out_free;
 +	}
-+
-+	spin_lock_irqsave(&cc->cc_lock, flags);
-+	for (i = 0; i < NUM_TX_QUEUES; i++) {
-+		cc->tx_queue_count[i] -= total[i];
-+		if (lnk->wlvif)
-+			lnk->wlvif->tx_queue_count[i] -= total[i];
-+	}
-+	spin_unlock_irqrestore(&cc->cc_lock, flags);
-+
-+	cc33xx_handle_tx_low_watermark(cc);
++out_free:
++	kfree(cmd);
++	return ret;
 +}
 +
-+/* caller must hold cc->mutex and TX must be stopped */
-+void cc33xx_tx_reset_wlvif(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++int cmd_channel_switch(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		       struct ieee80211_channel_switch *ch_switch)
 +{
-+	int i;
++	struct cmd_channel_switch *cmd;
++	u32 supported_rates;
++	int ret;
 +
-+	/* TX failure */
-+	for_each_set_bit(i, wlvif->links_map, CC33XX_MAX_LINKS) {
-+		if (wlvif->bss_type == BSS_TYPE_AP_BSS &&
-+		    i != wlvif->ap.bcast_hlid &&
-+		    i != wlvif->ap.global_hlid) {
-+			/* this calls cc33xx_clear_link */
-+			cc33xx_free_sta(cc, wlvif, i);
-+		} else {
-+			u8 hlid = i;
++	cc33xx_debug(DEBUG_ACX, "cmd channel switch (role_id=%d, new channel=%d, count=%d, block tx=%d",
++		     wlvif->role_id, ch_switch->chandef.chan->hw_value,
++		     ch_switch->count, ch_switch->block_tx);
 +
-+			cc33xx_clear_link(cc, wlvif, &hlid);
-+		}
-+	}
-+
-+	wlvif->last_tx_hlid = 0;
-+
-+	for (i = 0; i < NUM_TX_QUEUES; i++)
-+		wlvif->tx_queue_count[i] = 0;
-+}
-+
-+int cc33xx_tx_total_queue_count(struct cc33xx *cc)
-+{
-+	int i, count = 0;
-+
-+	for (i = 0; i < NUM_TX_QUEUES; i++)
-+		count += cc->tx_queue_count[i];
-+
-+	return count;
-+}
-+
-+/* caller must hold cc->mutex and TX must be stopped */
-+void cc33xx_tx_reset(struct cc33xx *cc)
-+{
-+	int i;
-+	struct sk_buff *skb;
-+	struct ieee80211_tx_info *info;
-+
-+	/* only reset the queues if something bad happened */
-+	if (cc33xx_tx_total_queue_count(cc) != 0) {
-+		for (i = 0; i < CC33XX_MAX_LINKS; i++)
-+			cc33xx_tx_reset_link_queues(cc, i);
-+
-+		for (i = 0; i < NUM_TX_QUEUES; i++)
-+			cc->tx_queue_count[i] = 0;
-+	}
-+
-+	/* Make sure the driver is at a consistent state, in case this
-+	 * function is called from a context other than interface removal.
-+	 * This call will always wake the TX queues.
-+	 */
-+	cc33xx_handle_tx_low_watermark(cc);
-+
-+	for (i = 0; i < CC33XX_NUM_TX_DESCRIPTORS; i++) {
-+		if (!cc->tx_frames[i])
-+			continue;
-+
-+		skb = cc->tx_frames[i];
-+		cc33xx_free_tx_id(cc, i);
-+		cc33xx_debug(DEBUG_TX, "freeing skb 0x%p", skb);
-+
-+		if (!cc33xx_is_dummy_packet(cc, skb)) {
-+			/* Remove private headers before passing the skb to
-+			 * mac80211
-+			 */
-+			info = IEEE80211_SKB_CB(skb);
-+			skb_pull(skb, sizeof(struct cc33xx_tx_hw_descr));
-+			if ((cc->quirks & CC33XX_QUIRK_TKIP_HEADER_SPACE) &&
-+			    info->control.hw_key &&
-+			    info->control.hw_key->cipher ==
-+			    WLAN_CIPHER_SUITE_TKIP) {
-+				int hdrlen = ieee80211_get_hdrlen_from_skb(skb);
-+
-+				memmove(skb->data + CC33XX_EXTRA_SPACE_TKIP,
-+					skb->data, hdrlen);
-+				skb_pull(skb, CC33XX_EXTRA_SPACE_TKIP);
-+			}
-+
-+			info->status.rates[0].idx = -1;
-+			info->status.rates[0].count = 0;
-+
-+			ieee80211_tx_status_ni(cc->hw, skb);
-+		}
-+	}
-+}
-+
-+#define CC33XX_TX_FLUSH_TIMEOUT 500000
-+
-+/* caller must *NOT* hold cc->mutex */
-+void cc33xx_tx_flush(struct cc33xx *cc)
-+{
-+	unsigned long timeout, start_time;
-+	int i;
-+
-+	start_time = jiffies;
-+	timeout = start_time + usecs_to_jiffies(CC33XX_TX_FLUSH_TIMEOUT);
-+
-+	/* only one flush should be in progress, for consistent queue state */
-+	mutex_lock(&cc->flush_mutex);
-+
-+	mutex_lock(&cc->mutex);
-+	if (cc->tx_frames_cnt == 0 && cc33xx_tx_total_queue_count(cc) == 0) {
-+		mutex_unlock(&cc->mutex);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
 +		goto out;
 +	}
 +
-+	cc33xx_stop_queues(cc, CC33XX_QUEUE_STOP_REASON_FLUSH);
++	cmd->role_id = wlvif->role_id;
++	cmd->channel = ch_switch->chandef.chan->hw_value;
++	cmd->switch_time = ch_switch->count;
++	cmd->stop_tx = ch_switch->block_tx;
 +
-+	while (!time_after(jiffies, timeout)) {
-+		cc33xx_debug(DEBUG_MAC80211, "flushing tx buffer: %d %d",
-+			     cc->tx_frames_cnt,
-+			     cc33xx_tx_total_queue_count(cc));
-+
-+		/* force Tx and give the driver some time to flush data */
-+		mutex_unlock(&cc->mutex);
-+		if (cc33xx_tx_total_queue_count(cc))
-+			cc33xx_tx_work(&cc->tx_work);
-+		msleep(20);
-+		mutex_lock(&cc->mutex);
-+
-+		if (cc->tx_frames_cnt == 0 && cc33xx_tx_total_queue_count(cc) == 0) {
-+			cc33xx_debug(DEBUG_MAC80211, "tx flush took %d ms",
-+				     jiffies_to_msecs(jiffies - start_time));
-+			goto out_wake;
-+		}
++	switch (ch_switch->chandef.chan->band) {
++	case NL80211_BAND_2GHZ:
++		cmd->band = CC33XX_BAND_2_4GHZ;
++		break;
++	case NL80211_BAND_5GHZ:
++		cmd->band = CC33XX_BAND_5GHZ;
++		break;
++	default:
++		cc33xx_error("invalid channel switch band: %d",
++			     ch_switch->chandef.chan->band);
++		ret = -EINVAL;
++		goto out_free;
 +	}
 +
-+	cc33xx_warning("Unable to flush all TX buffers, timed out (timeout %d ms",
-+		       CC33XX_TX_FLUSH_TIMEOUT / 1000);
++	supported_rates = CONF_TX_ENABLED_RATES | CONF_TX_MCS_RATES;
++	supported_rates |= wlvif->rate_set;
++	if (wlvif->p2p)
++		supported_rates &= ~CONF_TX_CCK_RATES;
++	cmd->local_supported_rates = cpu_to_le32(supported_rates);
++	cmd->channel_type = wlvif->channel_type;
 +
-+	/* forcibly flush all Tx buffers on our queues */
-+	for (i = 0; i < CC33XX_MAX_LINKS; i++)
-+		cc33xx_tx_reset_link_queues(cc, i);
++	ret = cc33xx_cmd_send(cc, CMD_CHANNEL_SWITCH, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send channel switch command");
++		goto out_free;
++	}
 +
-+out_wake:
-+	cc33xx_wake_queues(cc, CC33XX_QUEUE_STOP_REASON_FLUSH);
-+	mutex_unlock(&cc->mutex);
++out_free:
++	kfree(cmd);
 +out:
-+	mutex_unlock(&cc->flush_mutex);
++	return ret;
 +}
 +
-+u32 cc33xx_tx_min_rate_get(struct cc33xx *cc, u32 rate_set)
++int cmd_dfs_master_restart(struct cc33xx *cc, struct cc33xx_vif *wlvif)
 +{
-+	if (WARN_ON(!rate_set))
-+		return 0;
++	struct cmd_dfs_master_restart *cmd;
++	int ret = 0;
 +
-+	return BIT(__ffs(rate_set));
++	cc33xx_debug(DEBUG_CMD, "cmd dfs master restart (role %d)",
++		     wlvif->role_id);
++
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
++
++	cmd->role_id = wlvif->role_id;
++
++	ret = cc33xx_cmd_send(cc, CMD_DFS_MASTER_RESTART,
++			      cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send dfs master restart command");
++		goto out_free;
++	}
++out_free:
++	kfree(cmd);
++	return ret;
 +}
 +
-+void cc33xx_stop_queue_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+			      u8 queue, enum cc33xx_queue_stop_reason reason)
++int cmd_set_cac(struct cc33xx *cc, struct cc33xx_vif *wlvif, bool start)
 +{
-+	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
-+	bool stopped = !!cc->queue_stop_reasons[hwq];
++	struct cmd_cac_start *cmd;
++	int ret = 0;
 +
-+	/* queue should not be stopped for this reason */
-+	WARN_ON_ONCE(test_and_set_bit(reason, &cc->queue_stop_reasons[hwq]));
++	cc33xx_debug(DEBUG_CMD, "cmd cac (channel %d) %s",
++		     wlvif->channel, start ? "start" : "stop");
 +
-+	if (stopped)
-+		return;
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
 +
-+	ieee80211_stop_queue(cc->hw, hwq);
-+}
++	cmd->role_id = wlvif->role_id;
++	cmd->channel = wlvif->channel;
++	if (wlvif->band == NL80211_BAND_5GHZ)
++		cmd->band = CC33XX_BAND_5GHZ;
++	cmd->bandwidth = cc33xx_get_native_channel_type(wlvif->channel_type);
 +
-+void cc33xx_stop_queues(struct cc33xx *cc,
-+			enum cc33xx_queue_stop_reason reason)
-+{
-+	int i;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&cc->cc_lock, flags);
-+
-+	/* mark all possible queues as stopped */
-+	for (i = 0; i < CC33XX_NUM_MAC_ADDRESSES * NUM_TX_QUEUES; i++) {
-+		WARN_ON_ONCE(test_and_set_bit(reason,
-+					      &cc->queue_stop_reasons[i]));
++	ret = cc33xx_cmd_send(cc, start ? CMD_CAC_START : CMD_CAC_STOP,
++			      cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to send cac command");
++		goto out_free;
 +	}
 +
-+	/* use the global version to make sure all vifs in mac80211 we don't
-+	 * know are stopped.
-+	 */
-+	ieee80211_stop_queues(cc->hw);
-+
-+	spin_unlock_irqrestore(&cc->cc_lock, flags);
++out_free:
++	kfree(cmd);
++	return ret;
 +}
 +
-+void cc33xx_wake_queues(struct cc33xx *cc,
-+			enum cc33xx_queue_stop_reason reason)
++int cmd_set_bd_addr(struct cc33xx *cc, u8 *bd_addr)
 +{
-+	int i;
-+	unsigned long flags;
++	struct cmd_set_bd_addr *cmd;
++	int ret = 0;
 +
-+	spin_lock_irqsave(&cc->cc_lock, flags);
-+
-+	/* mark all possible queues as awake */
-+	for (i = 0; i < CC33XX_NUM_MAC_ADDRESSES * NUM_TX_QUEUES; i++) {
-+		WARN_ON_ONCE(!test_and_clear_bit(reason,
-+						 &cc->queue_stop_reasons[i]));
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd) {
++		ret = -ENOMEM;
++		goto out;
 +	}
 +
-+	/* use the global version to make sure all vifs in mac80211 we don't
-+	 * know are woken up.
-+	 */
-+	ieee80211_wake_queues(cc->hw);
++	memcpy(cmd->bd_addr, bd_addr, sizeof(cmd->bd_addr));
 +
-+	spin_unlock_irqrestore(&cc->cc_lock, flags);
-+}
-+
-+bool cc33xx_is_queue_stopped_by_reason(struct cc33xx *cc,
-+				       struct cc33xx_vif *wlvif, u8 queue,
-+				       enum cc33xx_queue_stop_reason reason)
-+{
-+	unsigned long flags;
-+	bool stopped;
-+
-+	spin_lock_irqsave(&cc->cc_lock, flags);
-+	stopped = cc33xx_is_queue_stopped_by_reason_locked(cc, wlvif, queue,
-+							   reason);
-+	spin_unlock_irqrestore(&cc->cc_lock, flags);
-+
-+	return stopped;
-+}
-+
-+bool cc33xx_is_queue_stopped_by_reason_locked(struct cc33xx *cc,
-+					      struct cc33xx_vif *wlvif, u8 queue,
-+				       enum cc33xx_queue_stop_reason reason)
-+{
-+	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
-+
-+	assert_spin_locked(&cc->cc_lock);
-+	return test_bit(reason, &cc->queue_stop_reasons[hwq]);
-+}
-+
-+bool cc33xx_is_queue_stopped_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+				    u8 queue)
-+{
-+	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
-+
-+	assert_spin_locked(&cc->cc_lock);
-+	return !!cc->queue_stop_reasons[hwq];
-+}
-+
-+static void cc33xx_tx_complete_packet(struct cc33xx *cc, u8 tx_stat_byte,
-+				      struct core_fw_status *core_fw_status)
-+{
-+	struct ieee80211_tx_info *info;
-+	struct sk_buff *skb;
-+	int id = tx_stat_byte & CC33XX_TX_STATUS_DESC_ID_MASK;
-+	bool tx_success;
-+	struct cc33xx_tx_hw_descr *tx_desc;
-+	u16 desc_session_idx;
-+
-+	/* check for id legality */
-+	if (unlikely(id >= CC33XX_NUM_TX_DESCRIPTORS ||
-+		     !cc->tx_frames[id])) {
-+		cc33xx_warning("illegal id in tx completion: %d", id);
-+
-+		print_hex_dump(KERN_DEBUG, "fw_info local:",
-+			       DUMP_PREFIX_OFFSET, 16, 4, (u8 *)(core_fw_status),
-+			       sizeof(struct core_fw_status), false);
-+
-+		cc33xx_queue_recovery_work(cc);
-+		return;
++	ret = cc33xx_cmd_send(cc, CMD_SET_BD_ADDR, cmd, sizeof(*cmd), 0);
++	if (ret < 0) {
++		cc33xx_error("failed to set BD address");
++		goto out_free;
 +	}
 +
-+	/* a zero bit indicates Tx success */
-+	tx_success = !(tx_stat_byte & BIT(CC33XX_TX_STATUS_STAT_BIT_IDX));
-+
-+	skb = cc->tx_frames[id];
-+	info = IEEE80211_SKB_CB(skb);
-+	tx_desc = (struct cc33xx_tx_hw_descr *)skb->data;
-+
-+	if (cc33xx_is_dummy_packet(cc, skb)) {
-+		cc33xx_free_tx_id(cc, id);
-+		return;
-+	}
-+
-+	/* update the TX status info */
-+	if (tx_success && !(info->flags & IEEE80211_TX_CTL_NO_ACK))
-+		info->flags |= IEEE80211_TX_STAT_ACK;
-+
-+	info->status.rates[0].count = 1; /* no data about retries */
-+	info->status.ack_signal = -1;
-+
-+	if (!tx_success)
-+		cc->stats.retry_count++;
-+
-+	/* remove private header from packet */
-+	skb_pull(skb, sizeof(struct cc33xx_tx_hw_descr));
-+
-+	/* remove TKIP header space if present */
-+	if ((cc->quirks & CC33XX_QUIRK_TKIP_HEADER_SPACE) &&
-+	    info->control.hw_key &&
-+	    info->control.hw_key->cipher == WLAN_CIPHER_SUITE_TKIP) {
-+		int hdrlen = ieee80211_get_hdrlen_from_skb(skb);
-+
-+		memmove(skb->data + CC33XX_EXTRA_SPACE_TKIP, skb->data, hdrlen);
-+		skb_pull(skb, CC33XX_EXTRA_SPACE_TKIP);
-+	}
-+
-+	cc33xx_debug(DEBUG_TX,
-+		     "tx status id %u skb 0x%p success %d, tx_memblocks %d",
-+		     id, skb, tx_success, tx_desc->cc33xx_mem.total_mem_blocks);
-+
-+	/**
-+	 * in order to update the memory management
-+	 * we should have total_blocks, ac, and hlid
-+	 */
-+	cc->tx_blocks_available += tx_desc->cc33xx_mem.total_mem_blocks;
-+	cc->tx_allocated_blocks -= tx_desc->cc33xx_mem.total_mem_blocks;
-+	/* per queue */
-+
-+	/* prevent wrap-around in freed-packets counter */
-+	cc->tx_allocated_pkts[tx_desc->ac]--;
-+
-+	/* per link */
-+	desc_session_idx = (le16_to_cpu(tx_desc->tx_attr) & TX_HW_ATTR_SESSION_COUNTER) >>
-+					TX_HW_ATTR_OFST_SESSION_COUNTER;
-+
-+	if (cc->session_ids[tx_desc->hlid] == desc_session_idx)
-+		cc->links[tx_desc->hlid].allocated_pkts--;
-+
-+	cc33xx_free_tx_id(cc, id);
-+
-+	/* new mem blocks are available now */
-+	clear_bit(CC33XX_FLAG_FW_TX_BUSY, &cc->flags);
-+
-+	/* return the packet to the stack */
-+	skb_queue_tail(&cc->deferred_tx_queue, skb);
-+	queue_work(cc->freezable_wq, &cc->netstack_work);
++out_free:
++	kfree(cmd);
++out:
++	return ret;
 +}
 +
-+void cc33xx_tx_immediate_complete(struct cc33xx *cc)
++int cmd_get_device_info(struct cc33xx *cc, u8 *info_buffer, size_t buffer_len)
 +{
-+	u8 tx_result_queue_index;
-+	struct core_fw_status core_fw_status;
-+	u8 i;
++	struct cc33xx_cmd_get_device_info *cmd;
++	int ret = 0;
 +
-+	claim_core_status_lock(cc);
-+	memcpy(&core_fw_status, &cc->core_status->fw_info,
-+	       sizeof(struct core_fw_status));
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
 +
-+	tx_result_queue_index = cc->core_status->fw_info.tx_result_queue_index;
-+	/* Lock guarantees we shadow tx_result_queue_index NOT during
-+	 * an active transaction. Subsequent references to fw_info can be done
-+	 * without locking as long we do not pass this index.
-+	 */
-+	release_core_status_lock(cc);
-+
-+	cc33xx_debug(DEBUG_TX, "last released desc = %d, current idx = %d",
-+		     cc->last_fw_rls_idx, tx_result_queue_index);
-+
-+	/* nothing to do here */
-+	if (cc->last_fw_rls_idx == tx_result_queue_index)
-+		return;
-+
-+	/* freed Tx descriptors */
-+
-+	if (tx_result_queue_index >= TX_RESULT_QUEUE_SIZE) {
-+		cc33xx_error("invalid desc release index %d",
-+			     tx_result_queue_index);
-+		WARN_ON(1);
-+		return;
++	ret = cc33xx_cmd_send(cc, CMD_BM_READ_DEVICE_INFO, cmd,
++			      sizeof(*cmd), sizeof(*cmd));
++	if (ret < 0) {
++		cc33xx_error("Device info command failure ");
++	} else {
++		WARN_ON(buffer_len > sizeof(cmd->device_info));
++		memcpy(info_buffer, cmd->device_info, buffer_len);
 +	}
 +
-+	cc33xx_debug(DEBUG_TX, "TX result queue! priv last fw idx %d, current resut index %d ",
-+		     cc->last_fw_rls_idx, tx_result_queue_index);
++	kfree(cmd);
 +
-+	for (i = cc->last_fw_rls_idx; i != tx_result_queue_index;
-+	     i = (i + 1) % TX_RESULT_QUEUE_SIZE) {
-+		cc33xx_tx_complete_packet(cc, core_fw_status.tx_result_queue[i],
-+					  &core_fw_status);
-+	}
-+
-+	cc->last_fw_rls_idx = tx_result_queue_index;
++	return ret;
 +}
-diff --git a/drivers/net/wireless/ti/cc33xx/tx.h b/drivers/net/wireless/ti/cc33xx/tx.h
++
++int cmd_download_container_chunk(struct cc33xx *cc, u8 *chunk,
++				 size_t chunk_len, bool is_last_chunk)
++{
++	struct cc33xx_cmd_container_download *cmd;
++	const size_t command_size = sizeof(*cmd) + chunk_len;
++	int ret;
++	bool  is_sync_transfer = !is_last_chunk;
++
++	cmd = kzalloc(command_size, GFP_KERNEL);
++
++	if (!cmd) {
++		cc33xx_error("Chunk buffer allocation failure");
++		return -ENOMEM;
++	}
++
++	memcpy(cmd->payload, chunk, chunk_len);
++	cmd->length = cpu_to_le32(chunk_len);
++
++	if (is_last_chunk) {
++		cc33xx_debug(DEBUG_BOOT, "Suspending IRQ while device reboots");
++		cc33xx_disable_interrupts_nosync(cc);
++	}
++
++	ret = __cc33xx_cmd_send(cc, CMD_CONTAINER_DOWNLOAD, cmd,
++				command_size, sizeof(u32), is_sync_transfer);
++
++	kfree(cmd);
++
++	if (is_last_chunk) {
++		msleep(CC33XX_REBOOT_TIMEOUT_MSEC);
++		cc33xx_debug(DEBUG_BOOT, "Resuming IRQ");
++		cc33xx_enable_interrupts(cc);
++	}
++
++	return ret;
++}
+diff --git a/drivers/net/wireless/ti/cc33xx/cmd.h b/drivers/net/wireless/ti/cc33xx/cmd.h
 new file mode 100644
-index 000000000000..9062d50c7c8e
+index 000000000000..f6e4877cf7b4
 --- /dev/null
-+++ b/drivers/net/wireless/ti/cc33xx/tx.h
-@@ -0,0 +1,160 @@
++++ b/drivers/net/wireless/ti/cc33xx/cmd.h
+@@ -0,0 +1,700 @@
 +/* SPDX-License-Identifier: GPL-2.0-only
 + *
 + * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
 + */
 +
-+#ifndef __TX_H__
-+#define __TX_H__
++#ifndef __CMD_H__
++#define __CMD_H__
 +
-+#define CC33XX_TX_HW_BLOCK_SPARE        1
-+/* for special cases - namely, TKIP and GEM */
-+#define CC33XX_TX_HW_EXTRA_BLOCK_SPARE  2
-+#define CC33XX_TX_HW_BLOCK_SIZE         256
++#include "cc33xx.h"
 +
-+#define CC33XX_TX_STATUS_DESC_ID_MASK    0x7F
-+#define CC33XX_TX_STATUS_STAT_BIT_IDX    7
++struct acx_header;
 +
-+/* Indicates this TX HW frame is not padded to SDIO block size */
-+#define CC33XX_TX_CTRL_NOT_PADDED	BIT(7)
-+
-+#define TX_HW_MGMT_PKT_LIFETIME_TU       2000
-+#define TX_HW_AP_MODE_PKT_LIFETIME_TU    8000
-+
-+#define TX_HW_ATTR_SESSION_COUNTER       (BIT(2) | BIT(3) | BIT(4))
-+#define TX_HW_ATTR_TX_DUMMY_REQ          BIT(13)
-+#define TX_HW_ATTR_HOST_ENCRYPT          BIT(14)
-+#define TX_HW_ATTR_EAPOL_FRAME           BIT(15)
-+
-+#define TX_HW_ATTR_OFST_SESSION_COUNTER  2
-+#define TX_HW_ATTR_OFST_RATE_POLICY      5
-+
-+#define CC33XX_TX_ALIGN_TO 4
-+#define CC33XX_EXTRA_SPACE_TKIP 4
-+#define CC33XX_EXTRA_SPACE_AES  8
-+#define CC33XX_EXTRA_SPACE_MAX  8
-+
-+#define CC33XX_TX_EXTRA_HEADROOM	\
-+		(sizeof(struct cc33xx_tx_hw_descr) + IEEE80211_HT_CTL_LEN)
-+
-+/* Used for management frames and dummy packets */
-+#define CC33XX_TID_MGMT 7
-+
-+/* stop a ROC for pending authentication reply after this time (ms) */
-+#define CC33XX_PEND_AUTH_ROC_TIMEOUT     1000
-+#define CC33xx_PEND_ROC_COMPLETE_TIMEOUT 2000
-+
-+struct cc33xx_tx_mem {
-+	/* Total number of memory blocks allocated by the host for
-+	 * this packet.
-+	 */
-+	u8 total_mem_blocks;
-+
-+	/* control bits
-+	 */
-+	u8 ctrl;
-+} __packed;
-+
-+/* On cc33xx based devices, when TX packets are aggregated, each packet
-+ * size must be aligned to the SDIO block size. The maximum block size
-+ * is bounded by the type of the padded bytes field that is sent to the
-+ * FW. The HW maximum block size is 256 bytes. We use 128 to utilize the
-+ * SDIO built-in busy signal when the FIFO is full.
-+ */
-+#define CC33XX_BUS_BLOCK_SIZE 128
-+
-+struct cc33xx_tx_hw_descr {
-+	/* Length of packet in words, including descriptor+header+data */
-+	__le16 length;
-+
-+	struct cc33xx_tx_mem cc33xx_mem;
-+
-+	/* Packet identifier used also in the Tx-Result. */
-+	u8 id;
-+	/* The packet TID value (as User-Priority) */
-+	u8 tid;
-+	/* host link ID (HLID) */
-+	u8 hlid;
-+	u8 ac;
-+	/* Max delay in TUs until transmission. The last device time the
-+	 * packet can be transmitted is: start_time + (1024 * life_time)
-+	 */
-+	__le16 life_time;
-+	/* Bitwise fields - see TX_ATTR... definitions above. */
-+	__le16 tx_attr;
-+} __packed;
-+
-+struct cc33xx_tx_hw_res_descr {
-+	/* Packet Identifier - same value used in the Tx descriptor.*/
-+	u8 id;
-+	/* The status of the transmission, indicating success or one of
-+	 * several possible reasons for failure.
-+	 */
-+	u8 status;
-+	/* Total air access duration including all retrys and overheads.*/
-+	__le16 medium_usage;
-+	/* The time passed from host xfer to Tx-complete.*/
-+	__le32 fw_handling_time;
-+	/* Total media delay
-+	 * (from 1st EDCA AIFS counter until TX Complete).
-+	 */
-+	__le32 medium_delay;
-+	/* LS-byte of last TKIP seq-num (saved per AC for recovery). */
-+	u8 tx_security_sequence_number_lsb;
-+	/* Retry count - number of transmissions without successful ACK.*/
-+	u8 ack_failures;
-+	/* The rate that succeeded getting ACK
-+	 * (Valid only if status=SUCCESS).
-+	 */
-+	u8 rate_class_index;
-+	/* for 4-byte alignment. */
-+	u8 spare;
-+} __packed;
-+
-+enum cc33xx_queue_stop_reason {
-+	CC33XX_QUEUE_STOP_REASON_WATERMARK,
-+	CC33XX_QUEUE_STOP_REASON_FW_RESTART,
-+	CC33XX_QUEUE_STOP_REASON_FLUSH,
-+	CC33XX_QUEUE_STOP_REASON_SPARE_BLK, /* 18xx specific */
++enum buffer_size {
++	INI_MAX_BUFFER_SIZE,
++	CMD_MAX_BUFFER_SIZE
 +};
 +
-+int cc33xx_tx_get_queue(int queue);
-+int cc33xx_tx_total_queue_count(struct cc33xx *cc);
-+void cc33xx_tx_immediate_complete(struct cc33xx *cc);
-+void cc33xx_tx_work(struct work_struct *work);
-+int cc33xx_tx_work_locked(struct cc33xx *cc);
-+void cc33xx_tx_reset_wlvif(struct cc33xx *cc, struct cc33xx_vif *wlvif);
-+void cc33xx_tx_reset(struct cc33xx *cc);
-+void cc33xx_tx_flush(struct cc33xx *cc);
-+u8 cc33xx_rate_to_idx(struct cc33xx *cc, u8 rate, enum nl80211_band band);
-+u32 cc33xx_tx_enabled_rates_get(struct cc33xx *cc, u32 rate_set,
-+				enum nl80211_band rate_band);
-+u32 cc33xx_tx_min_rate_get(struct cc33xx *cc, u32 rate_set);
-+u8 cc33xx_tx_get_hlid(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+		      struct sk_buff *skb, struct ieee80211_sta *sta);
-+void cc33xx_tx_reset_link_queues(struct cc33xx *cc, u8 hlid);
-+void cc33xx_handle_tx_low_watermark(struct cc33xx *cc);
-+bool cc33xx_is_dummy_packet(struct cc33xx *cc, struct sk_buff *skb);
-+unsigned int cc33xx_calc_packet_alignment(struct cc33xx *cc,
-+					  unsigned int packet_length);
-+void cc33xx_free_tx_id(struct cc33xx *cc, int id);
-+void cc33xx_stop_queue_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+			      u8 queue, enum cc33xx_queue_stop_reason reason);
-+void cc33xx_stop_queues(struct cc33xx *cc,
-+			enum cc33xx_queue_stop_reason reason);
-+void cc33xx_wake_queues(struct cc33xx *cc,
-+			enum cc33xx_queue_stop_reason reason);
-+bool cc33xx_is_queue_stopped_by_reason(struct cc33xx *cc,
-+				       struct cc33xx_vif *wlvif, u8 queue,
-+				       enum cc33xx_queue_stop_reason reason);
-+bool cc33xx_is_queue_stopped_by_reason_locked(struct cc33xx *cc,
-+					      struct cc33xx_vif *wlvif,
-+					      u8 queue,
-+					 enum cc33xx_queue_stop_reason reason);
-+bool cc33xx_is_queue_stopped_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
-+				    u8 queue);
++int cc33xx_set_max_buffer_size(struct cc33xx *cc, enum buffer_size max_buffer_size);
++int cc33xx_cmd_send(struct cc33xx *cc, u16 id, void *buf,
++		    size_t len, size_t res_len);
++int cc33xx_cmd_role_enable(struct cc33xx *cc, u8 *addr,
++			   u8 role_type, u8 *role_id);
++int cc33xx_cmd_role_disable(struct cc33xx *cc, u8 *role_id);
++int cc33xx_cmd_role_start_sta(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_cmd_role_stop_sta(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_cmd_role_start_ap(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_cmd_role_stop_ap(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_cmd_role_start_ibss(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_start_dev(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		     enum nl80211_band band, int channel);
++int cc33xx_stop_dev(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_cmd_test(struct cc33xx *cc, void *buf, size_t buf_len, u8 answer);
++int cc33xx_cmd_interrogate(struct cc33xx *cc, u16 id, void *buf,
++			   size_t cmd_len, size_t res_len);
++int cc33xx_cmd_debug_inter(struct cc33xx *cc, u16 id, void *buf,
++			   size_t cmd_len, size_t res_len);
++int cc33xx_cmd_configure(struct cc33xx *cc, u16 id, void *buf, size_t len);
++int cc33xx_cmd_debug(struct cc33xx *cc, u16 id, void *buf, size_t len);
++int cc33xx_cmd_configure_failsafe(struct cc33xx *cc, u16 id, void *buf,
++				  size_t len, unsigned long valid_rets);
++int cc33xx_cmd_ps_mode(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		       u8 ps_mode, u16 auto_ps_timeout);
++int cc33xx_cmd_set_default_wep_key(struct cc33xx *cc, u8 id, u8 hlid);
++int cc33xx_cmd_set_sta_key(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			   u16 action, u8 id, u8 key_type,
++			   u8 key_size, const u8 *key, const u8 *addr,
++			   u32 tx_seq_32, u16 tx_seq_16);
++int cc33xx_cmd_set_ap_key(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			  u16 action, u8 id, u8 key_type, u8 key_size,
++			  const u8 *key, u8 hlid, u32 tx_seq_32, u16 tx_seq_16);
++int cc33xx_cmd_set_peer_state(struct cc33xx *cc,
++			      struct cc33xx_vif *wlvif, u8 hlid);
++int cc33xx_roc(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 role_id,
++	       enum nl80211_band band, u8 channel);
++int cc33xx_croc(struct cc33xx *cc, u8 role_id);
++int cc33xx_cmd_add_peer(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			struct ieee80211_sta *sta, u8 *hlid, u8 is_connected);
++int cc33xx_cmd_remove_peer(struct cc33xx *cc,
++			   struct cc33xx_vif *wlvif, u8 hlid);
++void cc33xx_set_pending_regdomain_ch(struct cc33xx *cc, u16 channel,
++				     enum nl80211_band band);
++int cc33xx_cmd_regdomain_config_locked(struct cc33xx *cc);
++int cc33xx_cmd_generic_cfg(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			   u8 feature, u8 enable, u8 value);
++int cc33xx_cmd_config_fwlog(struct cc33xx *cc);
++int cc33xx_cmd_stop_channel_switch(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cc33xx_set_link(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 link);
++void cc33xx_clear_link(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 *hlid);
++int cc33xx_cmd_role_start_transceiver(struct cc33xx *cc, u8 role_id);
++int cc33xx_cmd_role_stop_transceiver(struct cc33xx *cc);
++int cc33xx_cmd_plt_enable(struct cc33xx *cc, u8 role_id);
++int cc33xx_cmd_plt_disable(struct cc33xx *cc);
++int cmd_channel_switch(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		       struct ieee80211_channel_switch *ch_switch);
++int cmd_dfs_master_restart(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++int cmd_set_cac(struct cc33xx *cc, struct cc33xx_vif *wlvif, bool start);
++int cmd_set_bd_addr(struct cc33xx *cc, u8 *bd_addr);
++int cmd_get_device_info(struct cc33xx *cc, u8 *info_buffer, size_t buffer_len);
++int cmd_download_container_chunk(struct cc33xx *cc, u8 *chunk,
++				 size_t chunk_len, bool is_last_chunk);
 +
-+/* from main.c */
-+void cc33xx_free_sta(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 hlid);
-+void cc33xx_rearm_tx_watchdog_locked(struct cc33xx *cc);
++enum cc33xx_cmd {
++	CMD_EMPTY,
++	CMD_SET_KEYS = 1,
++	CMD_SET_LINK_CONNECTION_STATE = 2,
 +
-+#endif /* __TX_H__ */
++	CMD_CHANNEL_SWITCH = 3,
++	CMD_STOP_CHANNEL_SWITCH = 4,
++
++	CMD_REMAIN_ON_CHANNEL = 5,
++	CMD_CANCEL_REMAIN_ON_CHANNEL = 6,
++
++	CMD_START_DHCP_MGMT_SEQ = 7,
++	CMD_STOP_DHCP_MGMT_SEQ = 8,
++
++	CMD_START_SECURITY_MGMT_SEQ = 9,
++	CMD_STOP_SECURITY_MGMT_SEQ = 10,
++
++	CMD_START_ARP_MGMT_SEQ = 11,
++	CMD_STOP_ARP_MGMT_SEQ = 12,
++
++	CMD_START_DNS_MGMT_SEQ = 13,
++	CMD_STOP_DNS_MGMT_SEQ = 14,
++
++	/* Access point commands */
++	CMD_ADD_PEER = 15,
++	CMD_REMOVE_PEER = 16,
++
++	/* Role API */
++	CMD_ROLE_ENABLE = 17,
++	CMD_ROLE_DISABLE = 18,
++	CMD_ROLE_START = 19,
++	CMD_ROLE_STOP = 20,
++
++	CMD_AP_SET_BEACON_INFO = 21, /* Set AP beacon template */
++
++	/* Managed sequence of sending deauth / disassoc frame */
++	CMD_SEND_DEAUTH_DISASSOC = 22,
++
++	CMD_SCHED_STATE_EVENT = 23,
++	CMD_SCAN = 24,
++	CMD_STOP_SCAN = 25,
++	CMD_SET_PROBE_IE = 26,
++
++	CMD_CONFIGURE = 27,
++	CMD_INTERROGATE = 28,
++
++	CMD_DEBUG = 29,
++	CMD_DEBUG_READ = 30,
++
++	CMD_TEST_MODE = 31,
++	CMD_PLT_ENABLE = 32,
++	CMD_PLT_DISABLE = 33,
++	CMD_CONNECTION_SCAN_SSID_CFG = 34,
++	CMD_BM_READ_DEVICE_INFO = 35,
++	CMD_CONTAINER_DOWNLOAD = 36,
++	CMD_DOWNLOAD_INI_PARAMS = 37,
++	CMD_SET_BD_ADDR = 38,
++	CMD_BLE_COMMANDS = 39,
++
++	CMD_LAST_SUPPORTED_COMMAND,
++
++	/* The following commands are legacy and are not yet supported */
++
++	CMD_SET_PS_MODE,
++	CMD_DFS_CHANNEL_CONFIG,
++	CMD_CONFIG_FWLOGGER,
++	CMD_START_FWLOGGER,
++	CMD_STOP_FWLOGGER,
++	CMD_GENERIC_CFG,
++	CMD_DFS_MASTER_RESTART,
++	CMD_CAC_START,
++	CMD_CAC_STOP,
++	CMD_DFS_RADAR_DETECTION_DEBUG,
++
++	MAX_COMMAND_ID_CC33xx = 0x7FFF,
++};
++
++#define MAX_CMD_PARAMS 572
++
++/* unit ms */
++#define CC33XX_COMMAND_TIMEOUT     2000
++#define CC33XX_CMD_TEMPL_MAX_SIZE  512
++#define CC33XX_EVENT_TIMEOUT       5000
++
++struct cc33xx_cmd_header {
++	struct NAB_header NAB_header;
++	__le16 id;
++	__le16 status;
++
++	/* payload */
++	u8 data[];
++} __packed;
++
++#define CC33XX_CMD_MAX_PARAMS 572
++
++struct cc33xx_command {
++	struct cc33xx_cmd_header header;
++	u8  parameters[CC33XX_CMD_MAX_PARAMS];
++} __packed;
++
++enum {
++	CMD_MAILBOX_IDLE		=  0,
++	CMD_STATUS_SUCCESS		=  1,
++	CMD_STATUS_UNKNOWN_CMD		=  2,
++	CMD_STATUS_UNKNOWN_IE		=  3,
++	CMD_STATUS_REJECT_MEAS_SG_ACTIVE	= 11,
++	CMD_STATUS_RX_BUSY		= 13,
++	CMD_STATUS_INVALID_PARAM		= 14,
++	CMD_STATUS_TEMPLATE_TOO_LARGE		= 15,
++	CMD_STATUS_OUT_OF_MEMORY		= 16,
++	CMD_STATUS_STA_TABLE_FULL		= 17,
++	CMD_STATUS_RADIO_ERROR		= 18,
++	CMD_STATUS_WRONG_NESTING		= 19,
++	CMD_STATUS_TIMEOUT		= 21, /* Driver internal use.*/
++	CMD_STATUS_FW_RESET		= 22, /* Driver internal use.*/
++	CMD_STATUS_TEMPLATE_OOM		= 23,
++	CMD_STATUS_NO_RX_BA_SESSION	= 24,
++
++	MAX_COMMAND_STATUS
++};
++
++enum {
++	BSS_TYPE_IBSS = 0,
++	BSS_TYPE_STA_BSS = 2,
++	BSS_TYPE_AP_BSS = 3,
++	MAX_BSS_TYPE = 0xFF
++};
++
++struct cc33xx_cmd_role_enable {
++	struct cc33xx_cmd_header header;
++
++	u8 role_type;
++	u8 mac_address[ETH_ALEN];
++	u8 padding;
++} __packed;
++
++struct command_complete_header {
++	__le16 id;
++	__le16 status;
++
++	/* payload */
++	u8 data[];
++} __packed;
++
++struct cc33xx_cmd_complete_role_enable {
++	struct command_complete_header header;
++	u8 role_id;
++	u8 padding[3];
++} __packed;
++
++struct cc33xx_cmd_role_disable {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 padding[3];
++} __packed;
++
++enum cc33xx_band {
++	CC33XX_BAND_2_4GHZ		= 0,
++	CC33XX_BAND_5GHZ		= 1,
++	CC33XX_BAND_JAPAN_4_9_GHZ	= 2,
++	CC33XX_BAND_DEFAULT		= CC33XX_BAND_2_4GHZ,
++	CC33XX_BAND_INVALID		= 0x7E,
++	CC33XX_BAND_MAX_RADIO		= 0x7F,
++};
++
++enum cc33xx_channel_type {
++	CC33XX_CHAN_NO_HT,
++	CC33XX_CHAN_HT20,
++	CC33XX_CHAN_HT40MINUS,
++	CC33XX_CHAN_HT40PLUS
++};
++
++struct cc33xx_cmd_role_start {
++	struct cc33xx_cmd_header header;
++	u8 role_id;
++	u8 role_type;
++	u8 band;
++	u8 channel;
++
++	u8 channel_type;
++
++	union {
++		struct {
++			u8 padding_1[54];
++		} __packed device;
++		/* sta & p2p_cli use the same struct */
++		struct {
++			u8 bssid[ETH_ALEN];
++
++			__le32 remote_rates; /* remote supported rates */
++
++			/* The target uses this field to determine the rate at
++			 * which to transmit control frame responses (such as
++			 * ACK or CTS frames).
++			 */
++			__le32 basic_rate_set;
++			__le32 local_rates; /* local supported rates */
++
++			u8 ssid_type;
++			u8 ssid_len;
++			u8 ssid[IEEE80211_MAX_SSID_LEN];
++
++			__le16 beacon_interval; /* in TBTTs */
++		} __packed sta;
++		struct {
++			u8 bssid[ETH_ALEN];
++			u8 hlid; /* data hlid */
++			u8 dtim_interval;
++			__le32 remote_rates; /* remote supported rates */
++
++			__le32 basic_rate_set;
++			__le32 local_rates; /* local supported rates */
++
++			u8 ssid_type;
++			u8 ssid_len;
++			u8 ssid[IEEE80211_MAX_SSID_LEN];
++
++			__le16 beacon_interval; /* in TBTTs */
++
++			u8 padding_1[2];
++		} __packed ibss;
++		/* ap & p2p_go use the same struct */
++		struct {
++			__le16 beacon_interval; /* in TBTTs */
++
++			__le32 basic_rate_set;
++			__le32 local_rates; /* local supported rates */
++
++			u8 dtim_interval;
++			/* ap supports wmm (note that there is additional
++			 * per-sta wmm configuration)
++			 */
++			u8 wmm;
++			u8 padding_1[42];
++		} __packed ap;
++	};
++	u8 padding;
++} __packed;
++
++struct cc33xx_cmd_complete_role_start {
++	struct command_complete_header header;
++	union {
++		struct {
++			u8 hlid;
++			u8 session;
++			u8 padding[2];
++		} __packed sta;
++		struct {
++			/* The host link id for the AP's global queue */
++			u8 global_hlid;
++			/* The host link id for the AP's broadcast queue */
++			u8 broadcast_hlid;
++			u8 bcast_session_id;
++			u8 global_session_id;
++		} __packed ap;
++	};
++} __packed;
++
++struct cc33xx_cmd_role_stop {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 padding[3];
++} __packed;
++
++struct cmd_enabledisable_path {
++	struct cc33xx_cmd_header header;
++
++	u8 channel;
++	u8 padding[3];
++} __packed;
++
++enum cc33xx_cmd_ps_mode_e {
++	STATION_AUTO_PS_MODE,   /* Dynamic Power Save */
++	STATION_ACTIVE_MODE,
++	STATION_POWER_SAVE_MODE
++};
++
++struct cc33xx_cmd_ps_params {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 ps_mode; /* STATION_* */
++	__le16 auto_ps_timeout;
++} __packed;
++
++/* HW encryption keys */
++#define NUM_ACCESS_CATEGORIES_COPY 4
++
++enum cc33xx_cmd_key_action {
++	KEY_ADD_OR_REPLACE = 1,
++	KEY_REMOVE         = 2,
++	KEY_SET_ID         = 3,
++	MAX_KEY_ACTION     = 0xffff,
++};
++
++enum cc33xx_cmd_lid_key_type {
++	UNICAST_LID_TYPE     = 0,
++	BROADCAST_LID_TYPE   = 1,
++	WEP_DEFAULT_LID_TYPE = 2
++};
++
++enum cc33xx_cmd_key_type {
++	KEY_NONE = 0,
++	KEY_WEP  = 1,
++	KEY_TKIP = 2,
++	KEY_AES  = 3, /* aes_ccmp_128 */
++	KEY_GEM  = 4,
++	KEY_IGTK = 5, /* bip_cmac_128 */
++	KEY_CMAC_256 = 6,
++	KEY_GMAC_128 = 7,
++	KEY_GMAC_256 = 8,
++	KEY_GCMP_256 = 9,
++	KEY_CCMP256 = 10,
++	KEY_GCMP128 = 11,
++};
++
++struct cc33xx_cmd_set_keys {
++	struct cc33xx_cmd_header header;
++
++	/* Indicates whether the HLID is a unicast key set
++	 * or broadcast key set. A special value 0xFF is
++	 * used to indicate that the HLID is on WEP-default
++	 * (multi-hlids). of type cc33xx_cmd_lid_key_type.
++	 */
++	u8 hlid;
++
++	/* In WEP-default network (hlid == 0xFF) used to
++	 * indicate which network STA/IBSS/AP role should be
++	 * changed
++	 */
++	u8 lid_key_type;
++
++	/* Key ID - For TKIP and AES key types, this field
++	 * indicates the value that should be inserted into
++	 * the KeyID field of frames transmitted using this
++	 * key entry. For broadcast keys the index use as a
++	 * marker for TX/RX key.
++	 * For WEP default network (HLID=0xFF), this field
++	 * indicates the ID of the key to add or remove.
++	 */
++	u8 key_id;
++	u8 reserved_1;
++
++	/* key_action_e */
++	__le16 key_action;
++
++	/* key size in bytes */
++	u8 key_size;
++
++	/* key_type_e */
++	u8 key_type;
++
++	/* This field holds the security key data to add to the STA table */
++	u8 key[MAX_KEY_SIZE];
++	__le16 ac_seq_num16[NUM_ACCESS_CATEGORIES_COPY];
++	__le32 ac_seq_num32[NUM_ACCESS_CATEGORIES_COPY];
++} __packed;
++
++struct cc33xx_cmd_test_header {
++	u8 id;
++	u8 padding[3];
++} __packed;
++
++#define CC33XX_CMD_STA_STATE_CONNECTED  1
++
++struct cc33xx_cmd_set_peer_state {
++	struct cc33xx_cmd_header header;
++
++	u8 hlid;
++	u8 state;
++	u8 padding[2];
++} __packed;
++
++struct cc33xx_cmd_roc {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 channel;
++	u8 band;
++	u8 padding;
++};
++
++struct cc33xx_cmd_croc {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 padding[3];
++};
++
++enum cc33xx_ssid_type {
++	CC33XX_SSID_TYPE_PUBLIC = 0,
++	CC33XX_SSID_TYPE_HIDDEN = 1,
++	CC33XX_SSID_TYPE_ANY = 2,
++};
++
++enum CC33XX_psd_type {
++	CC33XX_PSD_LEGACY = 0,
++	CC33XX_PSD_UPSD_TRIGGER = 1,
++	CC33XX_PSD_LEGACY_PSPOLL = 2,
++	CC33XX_PSD_SAPSD = 3
++};
++
++#define MAX_SIZE_BEACON_TEMP    (450)
++struct cc33xx_cmd_set_beacon_info {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	__le16 beacon_len;
++	u8 beacon[MAX_SIZE_BEACON_TEMP];
++	u8 padding[3];
++} __packed;
++
++struct cc33xx_cmd_add_peer {
++	struct cc33xx_cmd_header header;
++
++	u8 is_connected;
++	u8 role_id;
++	u8 role_type;
++	u8 link_type;
++	u8 addr[ETH_ALEN];
++	__le16 aid;
++	u8 psd_type[NUM_ACCESS_CATEGORIES_COPY];
++	__le32 supported_rates;
++	u8 bss_index;
++	u8 sp_len;
++	u8 wmm;
++	__le32 ht_capabilities;
++	u8  ampdu_params;
++
++	/* HE peer support */
++	bool has_he;
++	bool mfp;
++	u8 padding[2];
++} __packed;
++
++struct cc33xx_cmd_complete_add_peer {
++	struct command_complete_header header;
++	u8 hlid;
++	u8 session_id;
++} __packed;
++
++struct cc33xx_cmd_remove_peer {
++	struct cc33xx_cmd_header header;
++	u8 hlid;
++	u8 role_id;
++	u8 padding[2];
++} __packed;
++
++/* Continuous mode - packets are transferred to the host periodically
++ * via the data path.
++ * On demand - Log messages are stored in a cyclic buffer in the
++ * firmware, and only transferred to the host when explicitly requested
++ */
++enum cc33xx_fwlogger_log_mode {
++	CC33XX_FWLOG_CONTINUOUS,
++};
++
++/* Include/exclude timestamps from the log messages */
++enum cc33xx_fwlogger_timestamp {
++	CC33XX_FWLOG_TIMESTAMP_DISABLED,
++	CC33XX_FWLOG_TIMESTAMP_ENABLED
++};
++
++/* Logs can be routed to the debug pinouts (where available), to the host bus
++ * (SDIO/SPI), or dropped
++ */
++enum cc33xx_fwlogger_output {
++	CC33XX_FWLOG_OUTPUT_NONE,
++	CC33XX_FWLOG_OUTPUT_DBG_PINS,
++	CC33XX_FWLOG_OUTPUT_HOST,
++};
++
++struct cc33xx_cmd_regdomain_dfs_config {
++	struct cc33xx_cmd_header header;
++
++	__le32 ch_bit_map1;
++	__le32 ch_bit_map2;
++	u8 dfs_region;
++	u8 padding[3];
++} __packed;
++
++enum cc33xx_generic_cfg_feature {
++	CC33XX_CFG_FEATURE_RADAR_DEBUG = 2,
++};
++
++struct cc33xx_cmd_generic_cfg {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 feature;
++	u8 enable;
++	u8 value;
++} __packed;
++
++struct cc33xx_cmd_config_fwlog {
++	struct cc33xx_cmd_header header;
++
++	/* See enum cc33xx_fwlogger_log_mode */
++	u8 logger_mode;
++
++	/* Minimum log level threshold */
++	u8 log_severity;
++
++	/* Include/exclude timestamps from the log messages */
++	u8 timestamp;
++
++	/* See enum cc33xx_fwlogger_output */
++	u8 output;
++
++	/* Regulates the frequency of log messages */
++	u8 threshold;
++
++	u8 padding[3];
++} __packed;
++
++struct cc33xx_cmd_stop_channel_switch {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 padding[3];
++} __packed;
++
++/* Used to check radio status after calibration */
++#define MAX_TLV_LENGTH		500
++#define TEST_CMD_P2G_CAL	2	/* TX BiP */
++
++struct cc33xx_cmd_cal_p2g {
++	struct cc33xx_cmd_header header;
++
++	struct cc33xx_cmd_test_header test;
++
++	__le32 ver;
++	__le16 len;
++	u8 buf[MAX_TLV_LENGTH];
++	u8 type;
++	u8 padding;
++
++	__le16 radio_status;
++
++	u8 sub_band_mask;
++	u8 padding2;
++} __packed;
++
++struct cmd_channel_switch {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++
++	/* The new serving channel */
++	u8 channel;
++	/* Relative time of the serving channel switch in TBTT units */
++	u8 switch_time;
++	/* Stop the role TX, should expect it after radar detection */
++	u8 stop_tx;
++
++	__le32 local_supported_rates;
++
++	u8 channel_type;
++	u8 band;
++
++	u8 padding[2];
++} __packed;
++
++struct cmd_set_bd_addr {
++	struct cc33xx_cmd_header header;
++
++	u8 bd_addr[ETH_ALEN];
++	u8 padding[2];
++} __packed;
++
++struct cmd_dfs_master_restart {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 padding[3];
++} __packed;
++
++/* cac_start and cac_stop share the same params */
++struct cmd_cac_start {
++	struct cc33xx_cmd_header header;
++
++	u8 role_id;
++	u8 channel;
++	u8 band;
++	u8 bandwidth;
++} __packed;
++
++/* PLT structs */
++
++struct cc33xx_cmd_PLT_enable {
++	struct cc33xx_cmd_header header;
++	__le32 dummy;
++};
++
++struct cc33xx_cmd_PLT_disable {
++	struct cc33xx_cmd_header header;
++	__le32 dummy;
++};
++
++struct cc33xx_cmd_ini_params_download {
++	struct cc33xx_cmd_header header;
++	__le32 length;
++	u8 payload[];
++} __packed;
++
++struct cc33xx_cmd_container_download {
++	struct cc33xx_cmd_header header;
++	__le32 length;
++	u8 payload[];
++} __packed;
++
++struct cc33xx_cmd_get_device_info {
++	struct cc33xx_cmd_header header;
++	u8 device_info[700];
++} __packed;
++
++#endif /* __CC33XX_CMD_H__ */
 -- 
 2.25.1
 
