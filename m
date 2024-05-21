@@ -1,69 +1,70 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA685482D0
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 17:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0F11482FD;
+	Tue, 21 May 2024 17:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716313150; cv=none; b=UyZCYygdc8SLUad0T3BBfRcbfyrACHBkrNJk8DhBNgIBbec3ldWrGndLcgJocvimyfIfrGAO9UIP66/zqOkCqlI+NjaNLIlHbDdxCYQ5NvM+tpf6QMCGaKBaJ+MCQ+6VH2mMXIyim1B/FmSbo7T+P/k24foIbyWts0GODHvh4rw=
+	t=1716313200; cv=none; b=OX3i1jkVgnZ8YPxP2qIWy5BUDp5kbMyod8mN03GUDG/du1NXjShRPTqq/98n5XSf6qPAkAi7ki1DjbSYupNSCdPRua2j0wspVhhP1e0WG+EZvjOG0N6P1jhzYsGja10RtzB9QqjNZuIzqm6HIJOYbh6iAlex72PjUUihhwcYD/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716313150; c=relaxed/simple;
-	bh=/XhjSFuvkXzuGm8TOE4bt1Gx2/2a15udsyjEKI16Wmo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N0flYzTQmOE9isRA5YKsbJCoSU918YkNHLLiBPp2BGrBVGxtLL+SoYc54CMRk+qXq+jyTF7+JBmZI9xjqh0OhKasELDpsOaZJ40VznyJ0AfTM+Dxq0lowjXi/HcrNstYQBEG/D2ZhqsDTH8kWyRCNuSF5W0tk2OdOrdxYaDIEi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hj3LQXko; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716313200; c=relaxed/simple;
+	bh=7qISfX8pQXnp5VsCsVfGRRlPI2rRCjiR3HDByhARypk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jFwmJRtlE6fzw6wn9yaxu76hU2Qn3nmlSuW6ndyWrCCMrvZyjC2XXcTFqkc8bKix/iHX0DbrsTlFfWO5nAANSUFj9vtJkbA1gvSiKQa05hoXwljrc6jl+i7jJkHmYgnbjAEdgry0EMbhK7XKl5s0Jh+UNV/CS9MgZJnKrKokLhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBIN5fdu; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj3LQXko"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so110657165ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716313148; x=1716917948; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uV3GrqVP0qYMNyLcMp5DeTAEtIzneWxCv77ALTeKoVk=;
-        b=hj3LQXkoNDCJqWFu9Qo0sLpcvoiC6yw/Oq/XkxIRrqmUs3769ADEGt/bFjUg9MAa7A
-         0pRsY/38p2TkTwXAgpI/kK0d/gIZr8GiD7H2jvi+Fr1sGkMENH5nIF7WC3WeqbEg54Kq
-         r0HtCZWrcltwkB/yJmLjpmaz1fvKXEQM3dJYBVx3JYm0VMaGV5DgErCbIZ9doSNOSW/B
-         567EqmZbeLtvNXkxLBtbO7dAEnW2gNhD8YWAPhAwCD0uFhYiTzl2Qp7Rx+eTdx1lJn1x
-         g/CfbAtyucE6vRb+Z+bYR+KDBCZzS1Y9IuQUO1qLr8YxKokUkdML9hbrBb+FvKjwrbOy
-         9NyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716313148; x=1716917948;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uV3GrqVP0qYMNyLcMp5DeTAEtIzneWxCv77ALTeKoVk=;
-        b=dwwiwSZlOnspFgIuccvIRhUu2HnHKIMkl55adI77YrhzDSsg5PFyZCXpoYv4nC7HBg
-         u3LpSXhOJ/nYe4oX2fZ2ey76aZeVo6iCfvrKauQdZhCFkgl6yiMAoBIbMBb5woq3BJ4s
-         xN1u5ezbiLjQz9uNykru9sUeLOdfffK55S9nAa1/UO3vi3pEkJ53Y+rzRg4eMMN23aD5
-         b2vl7/AxZ5+KfBGuVAynYfYBYoroTVJxXWOvfkWuFy8XyzFw7zGqA26LNCtSsAgUSeNZ
-         kYWYte0Ju6zqBNp86oW5d4Ic95qDFRk0pNaQwlMseyfNq9nqfp+YPA4TVTc59xMZ/y/r
-         YO4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVqVrfnf3u0icUdIj9ZlfDPFPZqZCzHWiAZQI6yX42DBB+DZC9leh1Ots9fdArbRauw/X6U2+x3ojNzXj6kjJpI1Pn8UgbpA21HTiZQ
-X-Gm-Message-State: AOJu0YyM3qTzpf8BVF5uIR5MB6zLkcM3FumYxfXXkG7pKP1zo70su1jY
-	MpmicXsqWDt6bWDYR/85JqhxEdbctoCbHmIUvHjIJ7+Mtw/BwnNb
-X-Google-Smtp-Source: AGHT+IGjD6OYIpckFwaXQYt3LAcRXmZvaDuzHbk7bgUa8MB4MekY1TOiVYfkBkDV1dIBIo7GwHFClg==
-X-Received: by 2002:a17:902:c402:b0:1ee:1fcf:e19a with SMTP id d9443c01a7336-1ef4404adbcmr379970535ad.59.1716313147899;
-        Tue, 21 May 2024 10:39:07 -0700 (PDT)
-Received: from localhost.localdomain ([27.7.152.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f0958d1e3csm112759285ad.191.2024.05.21.10.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 10:39:06 -0700 (PDT)
-From: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
-To: nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev
-Cc: linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBIN5fdu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716313199; x=1747849199;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7qISfX8pQXnp5VsCsVfGRRlPI2rRCjiR3HDByhARypk=;
+  b=XBIN5fdu2obJ0CcMru1NdpEypALFDXqaiVDxQYMibl3GXtv2vwGD5+pD
+   w+HQ3/kbg0YlQ8IIIejdZmUT816oecbaeC5YZnwdf29gPUK8Ay+3Skuhh
+   aawJbcKOyMhMiAuGFC2weMkR2og+spkVFsB3I6WaHbr06aNRntNQk0i51
+   MCHSIcW9ME3BP6TF/96FUOfMwX/QcrgXk1UX/O0YNnxr8c8b+BuNHTCGD
+   0d/MuefrrXuOSM2niUnrrdXehNQoWTiEphHjy87YSnjl2CR9SvUiK6HWN
+   btavXXswT/u5Q90Vz2/PUjIuOMVz8MCS4F84Spzl52ZXLqQCEizkG6Eab
+   w==;
+X-CSE-ConnectionGUID: FtyMIl8GTyiz9cP2dXWDjw==
+X-CSE-MsgGUID: mhcpHtjiQ0e8FLtW5GGXwg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12317651"
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="12317651"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 10:39:57 -0700
+X-CSE-ConnectionGUID: /8yrsMx0QWK5yArBIM8nDw==
+X-CSE-MsgGUID: teC3IRU4RwemBZuybC0lMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="32924951"
+Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
+  by fmviesa007.fm.intel.com with ESMTP; 21 May 2024 10:39:57 -0700
+From: weilin.wang@intel.com
+To: weilin.wang@intel.com,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	julia.lawall@inria.fr,
-	javier.carrasco@wolfvision.net,
-	skhan@linuxfoundation.org,
-	Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
-Subject: [PATCH] drivers: soc: atmel: Automated Cleanup using __free()
-Date: Tue, 21 May 2024 23:08:57 +0530
-Message-Id: <20240521173857.1080030-1-pvkumar5749404@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: [RFC PATCH v9 2/7] perf data: Allow to use given fd in data->file.fd
+Date: Tue, 21 May 2024 13:39:30 -0400
+Message-ID: <20240521173952.3397644-3-weilin.wang@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240521173952.3397644-1-weilin.wang@intel.com>
+References: <20240521173952.3397644-1-weilin.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,35 +73,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Using automated cleanup to replace of_node_put() handling
-allows for a simplified flow to enable direct returns on errors.
+From: Weilin Wang <weilin.wang@intel.com>
 
-Signed-off-by: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
+When in PIPE mode, allow to use fd dynamically opened and asigned to
+data->file.fd instead of STDIN_FILENO or STDOUT_FILENO.
+
+Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- drivers/soc/atmel/soc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/util/data.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/atmel/soc.c b/drivers/soc/atmel/soc.c
-index cc9a3e107479..8c7fe37b4f21 100644
---- a/drivers/soc/atmel/soc.c
-+++ b/drivers/soc/atmel/soc.c
-@@ -250,7 +250,7 @@ static const struct at91_soc socs[] __initconst = {
- 
- static int __init at91_get_cidr_exid_from_dbgu(u32 *cidr, u32 *exid)
- {
--	struct device_node *np;
-+	struct device_node *np __free(device_node);
- 	void __iomem *regs;
- 
- 	np = of_find_compatible_node(NULL, NULL, "atmel,at91rm9200-dbgu");
-@@ -261,7 +261,6 @@ static int __init at91_get_cidr_exid_from_dbgu(u32 *cidr, u32 *exid)
- 		return -ENODEV;
- 
- 	regs = of_iomap(np, 0);
--	of_node_put(np);
- 
- 	if (!regs) {
- 		pr_warn("Could not map DBGU iomem range");
--- 
-2.34.1
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 08c4bfbd817f..98661ede2a73 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -204,7 +204,12 @@ static bool check_pipe(struct perf_data *data)
+ 				data->file.fd = fd;
+ 				data->use_stdio = false;
+ 			}
+-		} else {
++
++		/*
++		 * When is_pipe and data->file.fd is given, use given fd
++		 * instead of STDIN_FILENO or STDOUT_FILENO
++		 */
++		} else if (data->file.fd <= 0) {
+ 			data->file.fd = fd;
+ 		}
+ 	}
+--
+2.43.0
 
