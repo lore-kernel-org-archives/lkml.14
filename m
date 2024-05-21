@@ -1,174 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C02E76045
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8C66EB6E;
+	Tue, 21 May 2024 11:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292165; cv=none; b=dkS7wBpl/vvB5l4gjYx48zbU9PAkguRYwYLMwucnhjsFkhQF3VP2/VSg5Npmy/7M3d8iH/AeiSm27Yi02blDMPsk1fQXkRM1OLIqco0sF8pkzDPUm6RjHDgVBYZb8LiJVklYti5bNY/JSSI8zrZSQffGFS7m4hKH726tKApIkM0=
+	t=1716292264; cv=none; b=A/oQl/sqHv4JkZ3NQHANjJ3VLDeHucUAHJoL784hI40v7Xy/2VTFFe418wIqQTuAuDM2lk3PB9zaQdut/gxxB5DK83tF7Ft/egEpIZ2BdwpY+pw5qv7vdEdcGnXd0bDraM228dZ9nqoER+fwEAd/jJsQAi+5EE6zyzVuASgscnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292165; c=relaxed/simple;
-	bh=UfTTCJAd6gAR/W/+kWuHX2+0dwTK25Vi11SpkX7YGOg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LpCPrrD9Mg7l5FjKa1yruJQPuHRmMtubSkXjjm5Unw6KlIIxueQ6FzUDleLcoQUFbbz2J5Osg+4eaStSodYUGBvOzk0JRxfzI/WC/4V0hBxOZcu6WYbU9fBC+GFdBW29k3RtIb01lyvdW9FOW2KcSkNKEkEc2lhn0kYOlZeSUcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rESFWlwt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716292264; c=relaxed/simple;
+	bh=LW2SW54CS7kiFzJ+0X6xF+D2LW3LQDKnImBKOygd46E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZviy8LzWUYjUvKNWEnjy0uUHZh2cHMnoalO/RyiGMkIt0CAf7LZB45z5/2+JYlV5bQ16XGCBBMITf4fhOM0r0MnGaEf1sVE7X9g9GsZ+hzrHRQ7htKAHuW8ZTBlaeH5sAbvUZwCePJAdfK3O8PngHG//RfbF0UXv4cFUlH0vo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DViXGBwT; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rESFWlwt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F4EC2BD11;
-	Tue, 21 May 2024 11:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716292164;
-	bh=UfTTCJAd6gAR/W/+kWuHX2+0dwTK25Vi11SpkX7YGOg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rESFWlwtcK7rvFv8Um9btQJZUwRB2RdO8MjvUB2BICQEPh/EbugiTsxumyL5292hX
-	 SaghKnmizBA/pp7A+Dtlq+qwqNSRixbwdlsADGbs6CIn15dyBN0k28FwBbMS8aiTPI
-	 Kp1INLM1FgGFhmvmSsgoX0Ju3Cx9yzirSxLHZ/7IJ7s8WGmxnG22tVNZm7926LBz6M
-	 m49b2985aSBi87GawTioSdpHQvEIGdWaOc7nHUaGWvtz6CXRNKEfKQBtE6tGfFo5qO
-	 sEpBR+MlOfCff/Ge6iR1CKDRfbGBh0FxjrF7lgu/xXIUY28Ntlxfpz6GDjZg2lyHDr
-	 N+eN0jCwq4bcw==
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	David Hildenbrand <david@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-riscv@lists.infradead.org,
-	Oscar Salvador <osalvador@suse.de>
-Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Andrew Bresticker <abrestic@rivosinc.com>,
-	Chethan Seshadri <Chethan.Seshadri@catalinasystems.io>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Santosh Mamila <santosh.mamila@catalinasystems.io>,
-	Sivakumar Munnangi <siva.munnangi@catalinasystems.io>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 9/9] riscv: mm: Add support for ZONE_DEVICE
-Date: Tue, 21 May 2024 13:48:30 +0200
-Message-Id: <20240521114830.841660-10-bjorn@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240521114830.841660-1-bjorn@kernel.org>
-References: <20240521114830.841660-1-bjorn@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DViXGBwT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716292262; x=1747828262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LW2SW54CS7kiFzJ+0X6xF+D2LW3LQDKnImBKOygd46E=;
+  b=DViXGBwT9bwQ00LBzcz/lG23a7ILjpce/CGFqppRJ1GL/Jqz1oZlaoO7
+   PyQTyTQEnUKVh/mBsBAi+O29qLbaE9QowiZQCqAYaREdLmj9000vH/nzv
+   nSkQ5J1b40HVQZiOezut6wdvB166EX6ImymPpgpwzyBCKM19uA72egQMn
+   X8+pbGuKis1hd5DKZvw7pbA9RzlSbp20+N1D24n5OJSz6Atqq9DG+1kio
+   hI8//q/OpzcfYU+7fTJuCrwQhSqoXSUzRVAtxqck/PjIIfG8xGjAlY+ML
+   r5v7DH/qvjRo9ljXE4wT9WtDJ1OzGhJrqZ7QL/VFDYUM4/pmg+xxFBCXy
+   w==;
+X-CSE-ConnectionGUID: wxDvXtzhTNCV6eeQlSQyiA==
+X-CSE-MsgGUID: dIceliU+TJe66YidjMH20w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="15425136"
+X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
+   d="scan'208";a="15425136"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 04:51:01 -0700
+X-CSE-ConnectionGUID: wiMzQji1Rc+4RukGpTyyzA==
+X-CSE-MsgGUID: aJzOEdKUQN2RouCil4rAwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
+   d="scan'208";a="33489098"
+Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 21 May 2024 04:50:59 -0700
+Received: from kbuild by 108735ec233b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s9O1A-0006K0-0X;
+	Tue, 21 May 2024 11:50:56 +0000
+Date: Tue, 21 May 2024 19:50:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yasin Lee <yasin.lee.x@outlook.com>, jic23@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, lars@metafoo.de, swboyd@chromium.org,
+	nuno.a@analog.com, andy.shevchenko@gmail.com,
+	u.kleine-koenig@pengutronix.de, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yasin.lee.x@gmail.com,
+	yasin.lee.x@outlook.com
+Subject: Re: [PATCH] iio:proximity:hx9031as: Add TYHX HX9031AS/HX9023S sensor
+ driver
+Message-ID: <202405211949.0oxrugaN-lkp@intel.com>
+References: <SN7PR12MB8101EDFA7F91A59761095A28A4E72@SN7PR12MB8101.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN7PR12MB8101EDFA7F91A59761095A28A4E72@SN7PR12MB8101.namprd12.prod.outlook.com>
 
-From: Björn Töpel <bjorn@rivosinc.com>
+Hi Yasin,
 
-ZONE_DEVICE pages need DEVMAP PTEs support to function
-(ARCH_HAS_PTE_DEVMAP). Claim another RSW (reserved for software) bit
-in the PTE for DEVMAP mark, add the corresponding helpers, and enable
-ARCH_HAS_PTE_DEVMAP for riscv64.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/Kconfig                    |  1 +
- arch/riscv/include/asm/pgtable-64.h   | 20 ++++++++++++++++++++
- arch/riscv/include/asm/pgtable-bits.h |  1 +
- arch/riscv/include/asm/pgtable.h      | 17 +++++++++++++++++
- 4 files changed, 39 insertions(+)
+[auto build test ERROR on jic23-iio/togreg]
+[also build test ERROR on linus/master v6.9 next-20240521]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 2724dc2af29f..0b74698c63c7 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -36,6 +36,7 @@ config RISCV
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PMEM_API
- 	select ARCH_HAS_PREPARE_SYNC_CORE_CMD
-+	select ARCH_HAS_PTE_DEVMAP if 64BIT && MMU
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_SET_DIRECT_MAP if MMU
- 	select ARCH_HAS_SET_MEMORY if MMU
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index 221a5c1ee287..c67a9bbfd010 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -400,4 +400,24 @@ static inline struct page *pgd_page(pgd_t pgd)
- #define p4d_offset p4d_offset
- p4d_t *p4d_offset(pgd_t *pgd, unsigned long address);
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+static inline int pte_devmap(pte_t pte);
-+static inline pte_t pmd_pte(pmd_t pmd);
-+
-+static inline int pmd_devmap(pmd_t pmd)
-+{
-+	return pte_devmap(pmd_pte(pmd));
-+}
-+
-+static inline int pud_devmap(pud_t pud)
-+{
-+	return 0;
-+}
-+
-+static inline int pgd_devmap(pgd_t pgd)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* _ASM_RISCV_PGTABLE_64_H */
-diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-index 179bd4afece4..a8f5205cea54 100644
---- a/arch/riscv/include/asm/pgtable-bits.h
-+++ b/arch/riscv/include/asm/pgtable-bits.h
-@@ -19,6 +19,7 @@
- #define _PAGE_SOFT      (3 << 8)    /* Reserved for software */
- 
- #define _PAGE_SPECIAL   (1 << 8)    /* RSW: 0x1 */
-+#define _PAGE_DEVMAP    (1 << 9)    /* RSW, devmap */
- #define _PAGE_TABLE     _PAGE_PRESENT
- 
- /*
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 7933f493db71..02fadc276064 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -387,6 +387,13 @@ static inline int pte_special(pte_t pte)
- 	return pte_val(pte) & _PAGE_SPECIAL;
- }
- 
-+#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
-+static inline int pte_devmap(pte_t pte)
-+{
-+	return pte_val(pte) & _PAGE_DEVMAP;
-+}
-+#endif
-+
- /* static inline pte_t pte_rdprotect(pte_t pte) */
- 
- static inline pte_t pte_wrprotect(pte_t pte)
-@@ -428,6 +435,11 @@ static inline pte_t pte_mkspecial(pte_t pte)
- 	return __pte(pte_val(pte) | _PAGE_SPECIAL);
- }
- 
-+static inline pte_t pte_mkdevmap(pte_t pte)
-+{
-+	return __pte(pte_val(pte) | _PAGE_DEVMAP);
-+}
-+
- static inline pte_t pte_mkhuge(pte_t pte)
- {
- 	return pte;
-@@ -711,6 +723,11 @@ static inline pmd_t pmd_mkdirty(pmd_t pmd)
- 	return pte_pmd(pte_mkdirty(pmd_pte(pmd)));
- }
- 
-+static inline pmd_t pmd_mkdevmap(pmd_t pmd)
-+{
-+	return pte_pmd(pte_mkdevmap(pmd_pte(pmd)));
-+}
-+
- static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 				pmd_t *pmdp, pmd_t pmd)
- {
+url:    https://github.com/intel-lab-lkp/linux/commits/Yasin-Lee/iio-proximity-hx9031as-Add-TYHX-HX9031AS-HX9023S-sensor-driver/20240515-083021
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/SN7PR12MB8101EDFA7F91A59761095A28A4E72%40SN7PR12MB8101.namprd12.prod.outlook.com
+patch subject: [PATCH] iio:proximity:hx9031as: Add TYHX HX9031AS/HX9023S sensor driver
+config: xtensa-randconfig-001-20240521 (https://download.01.org/0day-ci/archive/20240521/202405211949.0oxrugaN-lkp@intel.com/config)
+compiler: xtensa-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240521/202405211949.0oxrugaN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405211949.0oxrugaN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   `.exit.text' referenced in section `__jump_table' of fs/fuse/inode.o: defined in discarded section `.exit.text' of fs/fuse/inode.o
+   `.exit.text' referenced in section `__jump_table' of fs/fuse/inode.o: defined in discarded section `.exit.text' of fs/fuse/inode.o
+   xtensa-linux-ld: drivers/base/regmap/regmap-spi.o: in function `__regmap_init_spi':
+   regmap-spi.c:(.text+0x17c): undefined reference to `spi_write_then_read'
+   xtensa-linux-ld: regmap-spi.c:(.text+0x1a2): undefined reference to `spi_write_then_read'
+   xtensa-linux-ld: drivers/base/regmap/regmap-spi.o: in function `__devm_regmap_init_spi':
+   regmap-spi.c:(.text+0x2a0): undefined reference to `spi_sync'
+   xtensa-linux-ld: drivers/base/regmap/regmap-spi.o: in function `regmap_spi_async_alloc':
+   regmap-spi.c:(.text+0x372): undefined reference to `spi_sync'
+   xtensa-linux-ld: drivers/base/regmap/regmap-spi.o: in function `spi_sync_transfer.constprop.0':
+   regmap-spi.c:(.text+0x3f4): undefined reference to `spi_async'
+   xtensa-linux-ld: drivers/base/regmap/regmap-spi.o: in function `regmap_spi_write':
+   regmap-spi.c:(.text+0x53e): undefined reference to `spi_async'
+   xtensa-linux-ld: drivers/base/regmap/regmap-spi.o: in function `regmap_spi_async_write':
+   regmap-spi.c:(.text+0x6eb): undefined reference to `spi_sync'
+   xtensa-linux-ld: drivers/iio/dac/ad9739a.o:(.init.literal+0x8): undefined reference to `__spi_register_driver'
+   xtensa-linux-ld: drivers/iio/dac/ad9739a.o: in function `ad9739a_driver_init':
+   ad9739a.c:(.init.text+0x1e): undefined reference to `__spi_register_driver'
+   xtensa-linux-ld: drivers/iio/proximity/hx9031as.o: in function `hx9031as_manual_offset_calibration_store':
+   hx9031as.c:(.text.unlikely+0x15e8): undefined reference to `__udivdi3'
+>> xtensa-linux-ld: hx9031as.c:(.text.unlikely+0x167f): undefined reference to `__udivdi3'
+   xtensa-linux-ld: drivers/iio/proximity/hx9031as.o: in function `schedule_delayed_work.constprop.0.isra.0':
+   hx9031as.c:(.text.unlikely+0x18ca): undefined reference to `__udivdi3'
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for REGMAP_SPI
+   Depends on [n]: SPI [=n]
+   Selected by [y]:
+   - AD9739A [=y] && IIO [=y] && (SPI [=n] || COMPILE_TEST [=y])
+
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
