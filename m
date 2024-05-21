@@ -1,119 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8A681E
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716256852; cv=none; b=IIVm/dBt+ZFOVN7VOfiHzc5bvD6XSfPNd7dEcSk6NmP+xCS0nv5o76oxv6zKeadrzrAHKyZ8p29a+/ur/0N7XDwQm33ZMvwgN1RiIZT8O7zu8Me9ySQs6L3t1fnhK2ytSKP0Ba/DHIoDfIqke40IPa6wZ3Gz6GfZmvvHE5ri8jg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716256852; c=relaxed/simple;
-	bh=LEe8CaSmZOU+/uH6TFaHHAqDZVuU4bc8AcBiyab2VOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n/TljI7H9wZvhlOq/LwRSCBsYsg/0xV+n5KivtY7xv2w271AvPzjJdWUCQxImsjp17XoOGZSnfJjishWAO2AwxtRikCM06aZmgGA9MvL+SROuBVEWU/fd7sR5f1rwm1Oz971c+wAneFDmhq3v1ShoX5ZMJn1pvZVaHQTeWdBsP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GTswUnPi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C9033C5;
+	Tue, 21 May 2024 02:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716256868; cv=fail; b=ctfQQvOZjwOur41+8qOZ+x26SbDiXeMQ6WkLb7B62i4aB2fidVdLSkLJGYHvaCzGN54aYaqYoz/C07wqVxN8iH2jBVptU62QBziCBFEBlaPiPy+UI1XCq3E1MqBL8A5pOF8Hx7s4xTZXIqfOiftYcz742KAFLTUPgpoLsBdCP9Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716256868; c=relaxed/simple;
+	bh=kpnDp7uQbNMdy9eEZk6g64GL+l+Rs/xnT5wkBjgRfNw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=eGo1iw6QwFQll4Z4OLOPJ9VFdaT6tCPrKzCBMAKjxPw5gKixRW1NYXRGyt5mlFPycUlD2TyhncpswHzGN32ZORjJGMu0h0G/tSS+R17g047hOoaBP78vVQXPh4RB6fw6zRO85fP70UKVr0BpPfIuyv8Lb3WKidQ1qQ44r7KQGMw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RW5xxWIh; arc=fail smtp.client-ip=40.107.220.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTswUnPi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716256849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5UjzgLZqQ1A3A/STroNQKIAanlssx47OVX19tlPyfkk=;
-	b=GTswUnPiD0BvMqWkDscfajb6KPX+6OmmwRRvd7MRs5z3We7lP/MouP1Id49tOdMcgHVhR6
-	kqA4x2VpuIifeGqobPYNH+p0jL1uEzMirL07gsfxBbTFxAKOvTCSHgRS5/DeBYgl4c3fci
-	EftXDp8VQhr/bLiFyrDae2SNEqNt7Tg=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-0Vr78hk1Ml23CrnB0BzL6Q-1; Mon, 20 May 2024 22:00:48 -0400
-X-MC-Unique: 0Vr78hk1Ml23CrnB0BzL6Q-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6f446a1ec59so11027934b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 19:00:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716256847; x=1716861647;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5UjzgLZqQ1A3A/STroNQKIAanlssx47OVX19tlPyfkk=;
-        b=XhjTXpMnVkt5SXeOk63cynA4Mv/2JuwfW+bjWyByB47mON+0rBcuaXZuzLQtH+PXPi
-         WzbQLwtTCDaoijKtHxxh83D5oLA9R6QbknOH0WIy59t+P65I6ARYtfQT8RBjIhDcHrrx
-         Nl3zKk5Dia/RtAi9YYSs+aQW7vzGLv2aKTegQnNAEbqw8vlrg92X4UAUzntlKejPC6jU
-         P1Krb2Q5B4VyWbh7XBGmXSW3Dz+dXvllY34rl0Pa1HjC+B+H/M5/M3jsvRjOoGBgHaL8
-         darvUOFjQedJDSN907wwiGljDeVBwtk4bZ2cRm8/RQvqJzVfircGK46s/8+8SFuHGK5b
-         PD+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUDsWjDrG5S/EsNWborODqD+QDvg5ZihaT0QAHNHCmInXW3hZPJyq6jFvcVSGlWFl3+xriB+uW5mG0lIKRmKvOW9l2JIy3+j6EESZif
-X-Gm-Message-State: AOJu0Yw9n+L0Yy1UgecX3DWJ+seqw3G2gFFGvDpBicA0fx6eNO1B65qG
-	RDGBKsxEn0v8ZVjvzBggN5+58CJupQX+jYKSdgVVmyNkrNHQ42MSuhuWBRjFNp3EzE243sdUPmT
-	GtftBNl4QMV5/beduCG6EGfU9QiYADxLAB/vc0dRbJAGQe0ZmfKRFpiYWkuYLgA==
-X-Received: by 2002:a05:6a00:c93:b0:6f3:ea4b:d235 with SMTP id d2e1a72fcca58-6f4e01b91eamr37168624b3a.0.1716256846918;
-        Mon, 20 May 2024 19:00:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGh7HhBHnJNneyIw7ihYF0Kt+meuvDu1Ef/rXN+B35MEGXdllcXI7mvKKuXqDyPl0gxaXLFSQ==
-X-Received: by 2002:a05:6a00:c93:b0:6f3:ea4b:d235 with SMTP id d2e1a72fcca58-6f4e01b91eamr37168566b3a.0.1716256846045;
-        Mon, 20 May 2024 19:00:46 -0700 (PDT)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634103f67f3sm19982062a12.62.2024.05.20.19.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 19:00:45 -0700 (PDT)
-Date: Tue, 21 May 2024 09:58:36 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 1/7] kexec_file: allow to place kexec_buf randomly
-Message-ID: <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
-References: <20240425100434.198925-1-coxu@redhat.com>
- <20240425100434.198925-2-coxu@redhat.com>
- <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RW5xxWIh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H8v0JSNFyppNXO2PR3nvs3z2MRyW4wIUNcf5DrmeHFXGmNY9/JMPeVmaPA18Kf0bIfdIpuHQR1F6VBb5kZ3jUxcqw3VlC4PeAUsaEgAiywjD49utPqUfeZRnMzVdv2piG8hL4+SfIhOo7hlwHhGzEMeV7KN/Pv98+5B9bX1yGN20CLQcgjN71IKHjB4WGE5is/D3IEDa07E1Bz2t26aWIA2Swwe7CFXS1sJmKzN1R1K1r3Yg+BMqhDdBdaZk6/UYNl8I3mtvSxjHhFTIuO9m5sr/KPTbm65ylLuig/7xs2f1qa93y8ONiN/vMhhvQsS6N1MVzrGQPxTXzgppTybLJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sXxF3GvbqYOeEVx2lzK4yLyhFu0Ult1+/w3jTxE0BBI=;
+ b=Zrhul7gZQbhmcz4da3AM8VFfl9DgPt5qXVjRFXHaG6yt8ZE6YPqeGojr03RjNtHeHP7Io0qBvuhOcLiVuqu689Cerwq84FN5PddI4Z+qBBB5jCoVKK8oWoYRwyrTi1iZG4RspoghXQfzjkYVkzBVJcOqsGLpVcz61FF+/zZLht7OVoN2bEamsRvfap3TFQDcG08ECnTxpxDXSeSY+3jrE8CZKKePB8/KSH3BmNQtZst0a9DTpbH8vzea4G4gC11EGpmjHlH1ok76RKvGFQz6WL47xdHsNxNjDu5EToWF0xfdN6z39Dx22Lwa1MXC7guw0QUvkU0VkTzXYl2wspGdgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sXxF3GvbqYOeEVx2lzK4yLyhFu0Ult1+/w3jTxE0BBI=;
+ b=RW5xxWIhwOGG+5lBeilciQxh1fjHwYa+/QTjGtTsdeSmwa+FgOMX10JqQuRchfRx9SJN1FBpLEAaTrrSLF83qFI0pNnAL7IiG2Pb9IPEbEMNoejmTMoDajVpRimWsBGKxQauhK5QuPifa+wJLMtKW3Rti9SXScGWo8UgpcgmWDY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by IA0PR12MB7697.namprd12.prod.outlook.com (2603:10b6:208:433::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Tue, 21 May
+ 2024 02:01:04 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7587.035; Tue, 21 May 2024
+ 02:01:04 +0000
+Message-ID: <4ee142f5-7e21-4fdb-aadb-7328407e7c42@amd.com>
+Date: Mon, 20 May 2024 21:01:01 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: amd: Set up affinity for GPIO lines when
+ enabling interrupt
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Shyam-sundar.S-k@amd.com, linus.walleij@linaro.org,
+ Basavaraj.Natikar@amd.com, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ Kieran Levin <ktl@frame.work>
+References: <20240519124109.1523-1-mario.limonciello@amd.com>
+ <ZksaCG3Q5qHthNcN@smile.fi.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <ZksaCG3Q5qHthNcN@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7PR18CA0027.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA0PR12MB7697:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71107c5f-5c76-4803-1ee4-08dc7939df02
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U1lBSUlCb2NYSHRtZEU5RGVLNmVsamVkaHE4clhFOGJ5WkwxN1JKK0Z4bkpj?=
+ =?utf-8?B?cUkzbHdYQ2hrNUdBS0lwSnBmNHpVMm4vR1RCQktaMDRpQThSamlEYVh0Wmhj?=
+ =?utf-8?B?TFhPSjREU0lJQ2NHTWN2Vm1UZCtCamx3SkF0K1dPMCtnV1dCampyTmgrTHV5?=
+ =?utf-8?B?YUZLT0prOHQwM0JzUldzcVNXSlVUaUQwU3JGRW1ucll0U0NqaTQ1dnhyc0lZ?=
+ =?utf-8?B?VHUxSit6SUVWRnJzU25VK0RxMTFNN1dObmF0VU45ZE9zU3ZLWW9uVzFmY2FP?=
+ =?utf-8?B?VGVaMEtiTHhxRFpjdEJONlFYNFZRQi9XYnFwZXhIY3dZVzMrMTk4aStpanVJ?=
+ =?utf-8?B?TGNUaGRERmppMTFvQk9PM005VHYwa25HK0lxcXNqT1pGZitjcm5wYm1UaWli?=
+ =?utf-8?B?UVY4SzdKMTA3YnBIbHBaOXI5SGlaWU1udlFLbm5lcklJRnAzUWV0Y0VrVmty?=
+ =?utf-8?B?YllOZVlyUURSOUFXQ3BURFNiSjRFVHFLT2xtekEwV1lTOWJ3NWQ3NjlzeVA1?=
+ =?utf-8?B?dzFVaG1xMk14Wk5ROXg3dW1XNmNlTmRjeXNCTitFOFFyZ0pTSDFJZUQxWUo5?=
+ =?utf-8?B?NFVyRWQrOHI0djFuU1JGYlpQMXlNQzUvNm1SSVVualBEYzVLMG0xMFFMVzdS?=
+ =?utf-8?B?VWxzZ3FwYzFrSVUvV2VnQzZCb2hmZUJsODRJWlVqcFEzMmwyUjRMQytTdUlm?=
+ =?utf-8?B?dytzcWxOLy9yQ2FEWFRqYXhyeG82MHVyU3hsNUE2bUtvSjFrOGN0bUVRRGRG?=
+ =?utf-8?B?Z0VBRjFUZkltUksvVTU0VGxsVHBGeWI5WFhGdmtLQmhZdDhKbnZzbVA1Zmg1?=
+ =?utf-8?B?NnVVLzFmZ3dxcWZOclppTE1ZdU91M2JKclhaWFFOa2JtMll2K1U4VG1YTWVR?=
+ =?utf-8?B?TDlmU09zeS9acllXbTd0R3VWSXl5dFZKbVAwZXNQY3o1Uy8xVHRoWVh3bTVn?=
+ =?utf-8?B?cXRQZEs1WkhvRG9iMXVMN1dIa3ErMHNVdHJJWHE0TjVkMmhwR3JoVVlrQWpy?=
+ =?utf-8?B?Qi9WaklGLy9xOExNRWplRjk5Zi9VVjQ0dUliK0FsUXRpVmRrVDNPUHBITTAw?=
+ =?utf-8?B?ZW1KZjZqTjdBUW1nVmtvQ1p1N20ySmRMSVFZWHFCenBSSCthUGpQTDZrNVY1?=
+ =?utf-8?B?UVB4U25DNURRY1F3cWJuSWQ0UFpxeDN1U0NXUXhEZWZwWVRuRVBpL0hlT0Q5?=
+ =?utf-8?B?NHRVU24vNGRkcWVLV0x0bTdIN2k4cnJzMHZvU2MrR3dzbkRhUXBMRzhxUEh6?=
+ =?utf-8?B?N3U4ZElKSTBiK3E1cmU0WWtRZzhCUjlGc2NSRG42c1NtNlUrM2U3akFhSE5u?=
+ =?utf-8?B?NnhBSVNZYXZMK3IxR3hzMEtqVVBIM0ZJNE8vc3h5T2MrbkdlWitRVnJnR1Bs?=
+ =?utf-8?B?NWNXdFc5SXFXYzFsNjhNSGNMMCtLYlptQU9qTGhQclpHZXdZUTF5a1FjQ0lU?=
+ =?utf-8?B?SG1TcXdic0wvSVZlMUFqaUs0M1pVcVg3bnBUZWZ4dXIrSmQvM254WVY1bkFY?=
+ =?utf-8?B?Z29MYmc3M2wwQ2loejRZR3hvQktMVWU1cmUxd3lqUFoxTTdnY1NpU0lWaGFQ?=
+ =?utf-8?B?bW1PMGRpV1Q0d0E2TVFLSE10RzZCaWJsWGo3QlAzME1lUkJUc1ovR2kxNDJS?=
+ =?utf-8?B?WU1nSjRld013c1FFcExPdlU1eWUwOEx6cU0vQkZMRG5RcTVDUG5YZWdTYTJP?=
+ =?utf-8?B?WHZQY3M2OE43cVVCSFVUV2V3NkEvMHd4dzRkZWtLQ0xtUjErRGNOSTJRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UFJIV1VjWnBPL0lReWJ4Z2VhRWRGWmhuZWxOT3JBdjY2dkh6cHFHdXpSazcv?=
+ =?utf-8?B?dU1VNDRwaXI3NUNVZXNTbkU0NnAyb1p1cmVZZncvRFpEYWVIRVFXWTllMS9K?=
+ =?utf-8?B?OXdmUzlsdXY5VXNYbW5ucnNPeHZ1QnMxOUNCNDZlVCtmRHczZVk0WjRZYU80?=
+ =?utf-8?B?NHkyUjRXVTJDVTJlY2QwVXhwYnIvNFB0UWZLcjJRV3QvbjFYNWhad1RHd1Vm?=
+ =?utf-8?B?S3hta3ZsSmY1Q0ZrUVZ6WXlvRGRTL0pVM0FaVG9pZkw5TjlQNC9KTE1BWkZU?=
+ =?utf-8?B?dGcxSXFBU0xNZWVSSkhDbGhuMTM2V0luZ0RudGlvRlh6OENNb08wYnQ5N0lo?=
+ =?utf-8?B?QnNSZEVldHhwaVhqVVBUN1A2dTVDRlBnYTdYTnpBUTQ1RU8xelRpSldUdVJv?=
+ =?utf-8?B?K1g4TFE3M3lwRUJ2MHBwYlRzSEMzYnF2TWxMdSttMjhwR2xBbnVqWW1FK1hK?=
+ =?utf-8?B?MFJzWkpyV1Ayem4zbktkVk5BeVZ6Tnk2cVJNdGVYODJmcUMwWWFma001Snk5?=
+ =?utf-8?B?R3RUVTZWTWdWcmNTTmpJYmxLaVVGeE01RUs5cTlOajdHSis0aVZqVkVsTFIw?=
+ =?utf-8?B?eTVTRmIyemNtQjJFUnBPZnIvR2dReXdaUTNzTElHeURjcmgwOW9PNHNMK09V?=
+ =?utf-8?B?M3piem9wU1JYU3pUZzNxeG85YnZzaGRlZHJVM20reG0vRUt6b2lpcjJwZkdY?=
+ =?utf-8?B?NGw3U2ZDZ21tUkJxSjhvZXFCWm9RaElPRWpmc3kyb05acXdydXl4UmgrUC9x?=
+ =?utf-8?B?b0IzNkR4NHNDNWd2K1ZERUZPYWFqMjZTSFRUOGxibjMrRythM0krZDNuQ0tU?=
+ =?utf-8?B?NmR2SlV1dkhSZjJmSHFaNis1NXNxSnZVbi9vTHQxQnNKOFF5ZWI3R015SWE1?=
+ =?utf-8?B?bjJnMGQ1c1RuN3RrK2pVYkdCam1zbWRGcTA0aXh0MEYwZmhGTW95ekRHY0hy?=
+ =?utf-8?B?VmRGcnBJSnpoV3RhdlFmRWJZdGo0WVgyeGYvREprNEkxeW12UjNNOG1RUUNX?=
+ =?utf-8?B?blFiZllKSDBzNDc3Tk9QUCs2QUNpMWNmK1hlbjJPanpORXkvZC9LVDh4bGRq?=
+ =?utf-8?B?ZVJzdEh3TEdBL3MySzhwRkVjTFBsQ29FaDltd0IyaFM4d3BNTWNockhWRlpC?=
+ =?utf-8?B?d0FXQjNBVFFaZTZXT2kwbkJGU0VjemNhTDhybHVYMHpwMTh5WnlmVk5lZ3JR?=
+ =?utf-8?B?SUNubTVDRDE3R1pUQ0NLV1Fmc2IzMmtEbzduZWdQalpiaVFQTEdpMDFpTXlh?=
+ =?utf-8?B?OU5KWFcwTXJTSXhLL2pyaHNOV0ZlaDh1ZWxJbHFpQUhudXBaL2tZdmwzVEpl?=
+ =?utf-8?B?TGN2YnNkK2FYYjlzZDN0Yk1ENDJTdStrejM0NG5abEZpRWhBVzdNUU1HMkNx?=
+ =?utf-8?B?YzI3dGFzczhCZzF4SkQrS3QxbmxibElWQTE2M2lwUzc1L3RPQllPdEM0WmM0?=
+ =?utf-8?B?ejQ2RGtRMitqbm1tZkYrMTBwcXg3THJaSXMrMzVGWnhqbWNNOGZBUmNiS1Ex?=
+ =?utf-8?B?NXpiTGhpWis5b1dJbk9mczBGaE83UjVEd0FEemttOFlUMXZlWU02c04yZzZl?=
+ =?utf-8?B?blhkTW9qcTR2cDFZeXlhRVRxTHczenBKekRFZmVGQjdPVkRtYTAzak1yZnIz?=
+ =?utf-8?B?T3ZrcGNjUnU2ZzdpenNxOUliSlJ3OGFjV3hIbXZsZjVONitBL3hnNU81UFJH?=
+ =?utf-8?B?THZuVWFkV0FTaWlZQmtvZXNQbWFKOHBRRVRjRWdSWkwwUGcxUnBPbnBBeGRT?=
+ =?utf-8?B?Tk5oWGZwTEV4MWVHVDNLbVpPTlp4ZUI0STVWVmNIWmFuQ0sxeHVuVmhEa29r?=
+ =?utf-8?B?cnQ1V2F6WkFEZitVTTBseG1DSXJNM3FoVi90Z25uMkFrbFA1ZEFhcG8xaldw?=
+ =?utf-8?B?cjA5V2NQVVVjNmRzK0oxOTk5RVRHK1JRN2d5b0VINWZEVVZGZWlnYTk1VE5w?=
+ =?utf-8?B?a2JvMUNWQkFmb2F6ZnFMOTNhaytwVlkzNU5pNUJ1ZmcyVFQzT2IxZXU3ZWZi?=
+ =?utf-8?B?OTBDNmFMWHRYcm9tTTZZV29YUVhtb3U5S1IyTlVEVml3OVJwMEFRMkIwZi8r?=
+ =?utf-8?B?RG42UGcrOWRaK0xKbGRESW5Ra3dvMnlEdWY1enE2bmFMRFRNcHlJMkRVUVdu?=
+ =?utf-8?Q?tq56QH1gvkObL/Vj4cL/DBgZF?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71107c5f-5c76-4803-1ee4-08dc7939df02
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 02:01:04.2825
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FbKEXSXnRsGGuXoDMRQM/n9MQRWiSncF4XH8mCl9Ew0r/x+SrQh+FtHYD+VKsp6+sVjhMG8GiTZ2AlPgvWHAKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7697
 
-On Mon, May 20, 2024 at 02:16:43PM +0800, Baoquan He wrote:
->On 04/25/24 at 06:04pm, Coiby Xu wrote:
->> Currently, kexec_buf is placed in order which means for the same
->> machine, the info in the kexec_buf is always located at the same
->> position each time the machine is booted. This may cause a risk for
->> sensitive information like LUKS volume key. Now struct kexec_buf has a
->> new field random which indicates it's supposed to be placed in a random
->> position.
->
->Do you want to randomize the key's position for both kdump and kexec
->rebooting? Assume you only want to do that for kdump. If so, we may need
->to make that more specific in code.
+On 5/20/2024 04:38, Andy Shevchenko wrote:
+> On Sun, May 19, 2024 at 07:41:09AM -0500, Mario Limonciello wrote:
+>> When a touchpad's attention interrupt is triggered on a different
+>> CPU than the GPIO controller interrupt multiple CPUs wake up the system
+>> and can cause higher power consumption than necessary for operating
+>> the touchpad.
+>>
+>> Waking up the additional CPUs is especially unnecessary as the
+>> irq_ack() callback for pinctrl-amd doesn't do anything.
+>>
+>> To solve this save the affinity of the GPIO controller interrupt when
+>> it's set up and assign that affinity to the GPIO line IRQ.
+> 
+> I do not much care about AMD :-) case but I think this is quite a big hammer
+> with possible undesired effects. It will basically put _all_ GPIO IRQs on
+> the same CPU which may slow down other peripherals, like UART, with potential
+> of buffer overrun (on the high speed modes).
+> 
 
-Thanks for the suggestion! Currently, no one has requested this feature
-for kexec reboot so yes, I only have kdump in mind. But kdump depends
-on kexec thus I'm not sure how we can make it kdump specfic. Do you have
-a further suggestion?
+Yeah I see your point.
 
+> Ideally it should be done in a way that exact consumer may ask for this from
+> its driver. Yet, I have no idea how to achieve this, but it would be really
+> nice to have something in I²C HID to
+> 
+> 	set_the_same_affinity_as_parent/GPIO_irq()
+> 
 
->diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->index 060835bb82d5..fc1e20d565d5 100644
->--- a/include/linux/kexec.h
->+++ b/include/linux/kexec.h
->@@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
->  * @buf_min:	The buffer can't be placed below this address.
->  * @buf_max:	The buffer can't be placed above this address.
->  * @top_down:	Allocate from top of memory.
->+ * @random:	Place the buffer at a random position.
+You know I think this is only half of the problem.  The interrupts need 
+to be aligned but so does the I2C traffic.  This was something else that 
+Hans mentioned in the linked thread.  It's a lot more complex to sync 
+everything up.
 
-How about a comment here saying this is currently only used by kdump.
+I'm tempted to have a helper that i2c-hid uses after everything is setup 
+to go and align the affinities rather than at probe.
 
--- 
-Best regards,
-Coiby
-
+> ...
+> 
+>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+> 
+> You can move these (Cc lines) to be after ---, that they won't pollute
+> the commit message with the same effect made on email, i.e. Cc'ing to
+> the listed people.
+> 
+Right; thanks.
