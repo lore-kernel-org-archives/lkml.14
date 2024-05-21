@@ -1,244 +1,128 @@
-Received: from mail-108-mta55.mxroute.com (mail-108-mta55.mxroute.com [136.175.108.55])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C042E17722
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B0F6FDC
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 04:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716263989; cv=none; b=r4TBIBl23dO1g/brW4KndyhiCXIvLGJwq0gVc6t1rCnOZUD1egoVNI6I1bd7o2j1pxDu8Ls+CT4LIiW1+R57XNfEW0wNbQZTP46SrfhUlOyqfPoOvSd2tZd4qSCCGpGTr7e8XUmGQtlfASEphzGK9Yp2iIsc1P2dCwyGWLwfI84=
+	t=1716264158; cv=none; b=BCQcRNOUulnyfJDAubi10Ch5gro32lX6KaNL6tx3BiZq8h4rCOsNDU3qDIyC4JUSoPNsHcOa6t07IJmpMJ8tJkoV6DUtNvdtPgyPkjjLN5cg5y2C0H/tYTgj24hwQ6Mym2FuhvQlKJ/xeZvyT2Xp+oQs4oCew1yIy2X4jYbznnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716263989; c=relaxed/simple;
-	bh=kYIKHYmpfxlDrhJ93GDwspPDhBxwB6XwqWN/aBb/pHg=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=Iil3GB9tFTRoDRLhNv8+cp3ZqPaoUQv3dDWekLyeab1Uqb/FMTkCs7DnZqSZayoyd//LwPgnOS0r5bfHJgVCeOWqI5OQhH6jCTT7MzoiH6mgbPELSR7wHFsqeU/hRRWF3INwcvk3XpCFN02vCbDfFLLI6wVuf9U9RSNWF6vA5DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org; spf=pass smtp.mailfrom=damenly.org; dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b=wbV+ZaZB; arc=none smtp.client-ip=136.175.108.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damenly.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damenly.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=damenly.org header.i=@damenly.org header.b="wbV+ZaZB"
-Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta55.mxroute.com (ZoneMTA) with ESMTPSA id 18f99496bb9000efce.00b
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Tue, 21 May 2024 03:54:36 +0000
-X-Zone-Loop: 642db6ad4060857bc08602831e1531a33dc75b61c152
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=damenly.org
-	; s=x; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	In-reply-to:Date:Subject:Cc:To:From:References:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=DPtLHpKIAy/sjrt9Mpwp5EnxqKTtyHFZBeLVILI3AVc=; b=wbV+ZaZB6yxToKDmVhy5+7W38E
-	Ppd+wkmExCJpOCDd31JxfDvq8IiLoLoXiEpn14JCfSmg8akvKXMtd1tn8sEGFQBlmOoqYjzxFRhrN
-	1amjV4tK4u+ZOAkbuFZFhoKjksU9vSzAleg4aNAfRmCwmvD6XxsFK3arqj+OmqRuprzCbGPpxocWP
-	efoNcVSGt9NjcWepT2KrDOZ0iIQOQQ12OEmNgESfWzCBszhDK1FFImJ9MVvVh5kaNWS/LTQDgjAxU
-	XgEQ8XpT8jTIZE03WAMdy6GWU17k3qfIWTx6GwMjWwKUKqxwD7LD34goMR6eWXPTb+pJWjHKdUDsb
-	4/QrCszA==;
-References: <20240509011900.2694291-1-yukuai1@huaweicloud.com>
- <20240509011900.2694291-4-yukuai1@huaweicloud.com>
- <v838ekaa.fsf@damenly.org>
- <CALTww28PVgS3D+9JsNv4PvDLAi=hOyT14QMkk5245_a8JXvgNQ@mail.gmail.com>
-User-agent: mu4e 1.7.5; emacs 28.2
-From: Su Yue <l@damenly.org>
-To: Xiao Ni <xni@redhat.com>
-Cc: Su Yue <l@damenly.org>, Yu Kuai <yukuai1@huaweicloud.com>,
- agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com,
- yangerkun@huawei.com
-Subject: Re: [PATCH md-6.10 3/9] md: add new helpers for sync_action
-Date: Tue, 21 May 2024 11:50:53 +0800
-In-reply-to: <CALTww28PVgS3D+9JsNv4PvDLAi=hOyT14QMkk5245_a8JXvgNQ@mail.gmail.com>
-Message-ID: <r0dves7n.fsf@damenly.org>
+	s=arc-20240116; t=1716264158; c=relaxed/simple;
+	bh=jJbxgLd+YWO2Lg+/N7DnuDy51HfRFPtkPt4nTh+4MBA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QOJYXPOVuAALyUwqD4O8FtOllmJQCyQUncQEgdLu4SDd5dbQ7/GZz21P+jLC6lad7+BFsnVhTRGiHtlSSH4+/2wsb5FjOIU4KAzb+adHPhvJzx204K6N2fXwVd+LFmzO25jy2auXKSF4h87OwJX8mK6fS1RuBU5nPTzRD0CloSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7da52a99cbdso1380424939f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 21:02:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716264156; x=1716868956;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0yfAWJ5qhF41x1rSSrkKGC+wMZlFsEqb4/oAdzKKOC8=;
+        b=qB8p056NdrOlwStQMrEqjT3qY4OMhR52j4tkn3YsCerqwV0gumVL+eHwtDHwO0SEx+
+         tn04mq9O+HtTfXeEon6S/9FCyikKPfzQr8dt8+yBdJVd3kQO/xUKhbF6pNkYzPjXzKsY
+         v8l0uUZBfe5HCL8DRAWW7+ikQ3jlca8cAgz1k6kiEn/8sNJxYymDrYB5B1OxK7XBzp81
+         30qW8MA1m8t56gySZ4G9Z2Y/uhStyH4cG+Eves6bRXt97cxT9bp8rtP1qzKqSKVJSRGM
+         DZE6EwvaZA36ByMKdrXGamwBQBTubSdJyZqVnbO3V1U2XhhipiOPshbKelXGUqUA6YFm
+         MUxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdMS9i4dREThQh+H+081yzraE4TLoGFxa65FGIu4Vh5YtUqAZ1xsrsNkZh1r48gjlZu4qN6bieFLY+bRsuIDZpxjZrJ5rXA8GLGWOd
+X-Gm-Message-State: AOJu0YzZDKmSre823h3FbhJWc2KgXwkv5XTjZ46OoC9VzJKASqVHrGw5
+	KbgrB0xBvAv934zzrE+K64ao5kVyrQVW6mkWE8/Skz8ERVNKOBTrLqPe/fLakYLCmsA3o38eNN1
+	ZzTjoZBkEIKMvMpsVMKjp6AkhnBPmmAt2/tcB31Hwc9TTzoqf8cL9KXE=
+X-Google-Smtp-Source: AGHT+IEFT/zTHh4X7a2pzSbS/LiikWABh60nqRg30Ez6PJMC0zjbh413k4+WFmwKVpXjOgRUcJEJhKKnczaMTR2/evEVH85mX4Wm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Authenticated-Id: l@damenly.org
+X-Received: by 2002:a05:6638:7101:b0:488:77ea:f194 with SMTP id
+ 8926c6da1cb9f-4895903263emr2233675173.5.1716264156339; Mon, 20 May 2024
+ 21:02:36 -0700 (PDT)
+Date: Mon, 20 May 2024 21:02:36 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000612f290618eee3e5@google.com>
+Subject: [syzbot] [wireless?] WARNING in cfg80211_bss_color_notify
+From: syzbot <syzbot+d073f255508305ccb3fd@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, johannes@sipsolutions.net, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    f6f25eebe05f Merge branch 'wangxun-fixes'
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11696b5c980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bddb81daac38d475
+dashboard link: https://syzkaller.appspot.com/bug?extid=d073f255508305ccb3fd
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f9ec92980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1595fa84980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/10564bcf8b3a/disk-f6f25eeb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6ac9b53e5395/vmlinux-f6f25eeb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/be417a358cca/bzImage-f6f25eeb.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d073f255508305ccb3fd@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 2855 at net/wireless/nl80211.c:19469 cfg80211_bss_color_notify+0x5f6/0x8b0 net/wireless/nl80211.c:19469
+Modules linked in:
+CPU: 0 PID: 2855 Comm: kworker/u8:9 Not tainted 6.9.0-syzkaller-05179-gf6f25eebe05f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Workqueue: phy3 ieee80211_color_collision_detection_work
+RIP: 0010:cfg80211_bss_color_notify+0x5f6/0x8b0 net/wireless/nl80211.c:19469
+Code: 00 e8 ee b8 b7 fe 48 83 c4 08 89 c1 c1 f8 1f 21 c8 e9 08 fd ff ff e8 09 96 ba f6 90 0f 0b 90 e9 71 fb ff ff e8 fb 95 ba f6 90 <0f> 0b 90 e9 38 fb ff ff e8 ed 95 ba f6 c6 05 46 6f bb 04 01 90 48
+RSP: 0018:ffffc9000ac37aa0 EFLAGS: 00010293
+RAX: ffffffff8adbc735 RBX: 0000000000000000 RCX: ffff88802b693c00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc9000ac37bb0 R08: ffffffff8adbc262 R09: 1ffffffff1f593bd
+R10: dffffc0000000000 R11: ffffffff8af73d80 R12: 1ffff92001586f5c
+R13: ffff888022f48000 R14: ffff888022f48cb0 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020001700 CR3: 0000000022822000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ process_one_work kernel/workqueue.c:3267 [inline]
+ process_scheduled_works+0xa10/0x17c0 kernel/workqueue.c:3348
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3429
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
 
-On Tue 21 May 2024 at 11:25, Xiao Ni <xni@redhat.com> wrote:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> On Mon, May 20, 2024 at 8:38=E2=80=AFPM Su Yue <l@damenly.org> wrote:
->>
->>
->> On Thu 09 May 2024 at 09:18, Yu Kuai <yukuai1@huaweicloud.com>
->> wrote:
->>
->> > From: Yu Kuai <yukuai3@huawei.com>
->> >
->> > The new helpers will get current sync_action of the array,=20
->> > will
->> > be used
->> > in later patches to make code cleaner.
->> >
->> > Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> > ---
->> >  drivers/md/md.c | 64
->> >  +++++++++++++++++++++++++++++++++++++++++++++++++
->> >  drivers/md/md.h |  3 +++
->> >  2 files changed, 67 insertions(+)
->> >
->> > diff --git a/drivers/md/md.c b/drivers/md/md.c
->> > index 00bbafcd27bb..48ec35342d1b 100644
->> > --- a/drivers/md/md.c
->> > +++ b/drivers/md/md.c
->> > @@ -69,6 +69,16 @@
->> >  #include "md-bitmap.h"
->> >  #include "md-cluster.h"
->> >
->> > +static char *action_name[NR_SYNC_ACTIONS] =3D {
->> >
->>
->> Th array will not be modified, so:
->>
->> static const char * const action_names[NR_SYNC_ACTIONS]
->>
->> > +     [ACTION_RESYNC]         =3D "resync",
->> > +     [ACTION_RECOVER]        =3D "recover",
->> > +     [ACTION_CHECK]          =3D "check",
->> > +     [ACTION_REPAIR]         =3D "repair",
->> > +     [ACTION_RESHAPE]        =3D "reshape",
->> > +     [ACTION_FROZEN]         =3D "frozen",
->> > +     [ACTION_IDLE]           =3D "idle",
->> > +};
->> > +
->> >  /* pers_list is a list of registered personalities protected=20
->> >  by
->> >  pers_lock. */
->> >  static LIST_HEAD(pers_list);
->> >  static DEFINE_SPINLOCK(pers_lock);
->> > @@ -4867,6 +4877,60 @@ metadata_store(struct mddev *mddev,=20
->> > const
->> > char *buf, size_t len)
->> >  static struct md_sysfs_entry md_metadata =3D
->> >  __ATTR_PREALLOC(metadata_version, S_IRUGO|S_IWUSR,
->> >  metadata_show, metadata_store);
->> >
->> > +enum sync_action md_sync_action(struct mddev *mddev)
->> > +{
->> > +     unsigned long recovery =3D mddev->recovery;
->> > +
->> > +     /*
->> > +      * frozen has the highest priority, means running=20
->> > sync_thread
->> > will be
->> > +      * stopped immediately, and no new sync_thread can=20
->> > start.
->> > +      */
->> > +     if (test_bit(MD_RECOVERY_FROZEN, &recovery))
->> > +             return ACTION_FROZEN;
->> > +
->> > +     /*
->> > +      * idle means no sync_thread is running, and no new
->> > sync_thread is
->> > +      * requested.
->> > +      */
->> > +     if (!test_bit(MD_RECOVERY_RUNNING, &recovery) &&
->> > +         (!md_is_rdwr(mddev) ||=20
->> > !test_bit(MD_RECOVERY_NEEDED,
->> > &recovery)))
->> > +             return ACTION_IDLE;
->> My brain was lost sometimes looking into nested conditions of=20
->> md
->> code...
->
-> agree+
->
->> I agree with Xiao Ni's suggestion that more comments about the
->> array
->> state should be added.
->
-> In fact, I suggest to keep the logic which is in action_show=20
-> now. The
-> logic in action_show is easier to understand for me.
->
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-I'm in the middle, either of new/old logic looks good to me ;)
-Thanks for clarifying.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
---
-Su
-> Best Regards
-> Xiao
->>
->> > +     if (test_bit(MD_RECOVERY_RESHAPE, &recovery) ||
->> > +         mddev->reshape_position !=3D MaxSector)
->> > +             return ACTION_RESHAPE;
->> > +
->> > +     if (test_bit(MD_RECOVERY_RECOVER, &recovery))
->> > +             return ACTION_RECOVER;
->> > +
->> >
->> In action_show, MD_RECOVERY_SYNC is tested first then
->> MD_RECOVERY_RECOVER.
->> After looking through the logic of MD_RECOVERY_RECOVER
->> clear/set_bit, the
->> change is fine to me. However, better to follow old pattern=20
->> unless
->> there
->> have resons.
->>
->>
->> > +     if (test_bit(MD_RECOVERY_SYNC, &recovery)) {
->> > +             if (test_bit(MD_RECOVERY_CHECK, &recovery))
->> > +                     return ACTION_CHECK;
->> > +             if (test_bit(MD_RECOVERY_REQUESTED, &recovery))
->> > +                     return ACTION_REPAIR;
->> > +             return ACTION_RESYNC;
->> > +     }
->> > +
->> > +     return ACTION_IDLE;
->> > +}
->> > +
->> > +enum sync_action md_sync_action_by_name(char *page)
->> > +{
->> > +     enum sync_action action;
->> > +
->> > +     for (action =3D 0; action < NR_SYNC_ACTIONS; ++action) {
->> > +             if (cmd_match(page, action_name[action]))
->> > +                     return action;
->> > +     }
->> > +
->> > +     return NR_SYNC_ACTIONS;
->> > +}
->> > +
->> > +char *md_sync_action_name(enum sync_action action)
->> >
->>
->> And 'const char *'
->>
->> --
->> Su
->>
->> > +{
->> > +     return action_name[action];
->> > +}
->> > +
->> >  static ssize_t
->> >  action_show(struct mddev *mddev, char *page)
->> >  {
->> > diff --git a/drivers/md/md.h b/drivers/md/md.h
->> > index 2edad966f90a..72ca7a796df5 100644
->> > --- a/drivers/md/md.h
->> > +++ b/drivers/md/md.h
->> > @@ -864,6 +864,9 @@ extern void md_unregister_thread(struct
->> > mddev *mddev, struct md_thread __rcu **t
->> >  extern void md_wakeup_thread(struct md_thread __rcu=20
->> >  *thread);
->> >  extern void md_check_recovery(struct mddev *mddev);
->> >  extern void md_reap_sync_thread(struct mddev *mddev);
->> > +extern enum sync_action md_sync_action(struct mddev *mddev);
->> > +extern enum sync_action md_sync_action_by_name(char *page);
->> > +extern char *md_sync_action_name(enum sync_action action);
->> >  extern bool md_write_start(struct mddev *mddev, struct bio
->> >  *bi);
->> >  extern void md_write_inc(struct mddev *mddev, struct bio=20
->> >  *bi);
->> >  extern void md_write_end(struct mddev *mddev);
->>
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
