@@ -1,44 +1,43 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2CB149E05;
-	Tue, 21 May 2024 22:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B05B149DE5;
+	Tue, 21 May 2024 22:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716330188; cv=none; b=akB/qj+5DpeJvDzhzS4Fotc99iYUS+VbvugYnxHTIPXOoEdnG+VBDiDe8DpZp7UbBaKmjX/ABhwLHFDJMI4IvRwi+xPLPMJ2audoZDTQV09fS/a5NYHpG+cDXX/8vFY2X2P/eSEzAe8HDSSOSvpnXJCaskv+KBMspoMQ9+pnP2k=
+	t=1716330189; cv=none; b=pnoYdc2uuyhCfRkaISTgOJjztSUwW3YBMj3OVpzcJhe7f+axg6kj9bXEusfIGsTERdt5Bn5JQQTwU+LSXyAAj6Tpk7357TikIIZ2aHPL8IixSkAj4PJ+TdXCbQlBk03Eqc3pDt+Ftk1kgQ/OCb+69clhpy62FbY2btbUa0c3X8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716330188; c=relaxed/simple;
-	bh=KRA0hzdbcQleJG9h2ccYEgi+Z4Omnx++qe9VSxqm0Jc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MMagiMzrDJOJczx8WVdwIKzPWZjDofCblJZ6U8U+drDs0DSAbZ/m8Zitm18+B1m310RTqGmgd8n1vBtr4uR9H/86C1R/WSIO35mcTb35tdcvKeyJ3l4tKlY5iRz4jLK0rw8CCyGj99BSjdta9r0BvptaaPFDYMTiXeuGSqYdtq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=jMz2d8Cb; arc=none smtp.client-ip=45.89.224.132
+	s=arc-20240116; t=1716330189; c=relaxed/simple;
+	bh=lT0go+khrIBtFYj4jcepsMnSbYwOAjo0s7O87/hfYSE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GBwyx45sOQjK/TmqgqDcM+zrEjgDLtMWz6/G3jNUYchBACKBodyRZ11LJ5SQxrH3FVeFx4AQhmalKHT2hSmcC97B5op5YbFERbDcYI2Hc2MygXfiS2AwRfoEh32NbW8l9zTkg8osAKU+3SV5neMbescXQqOnX1oLyQA1EtrRLxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=azYnNpfp; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="jMz2d8Cb"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A01EC120013;
-	Wed, 22 May 2024 01:23:04 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A01EC120013
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="azYnNpfp"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id B98B1100013;
+	Wed, 22 May 2024 01:23:03 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B98B1100013
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1716330184;
-	bh=Y5KLTru70ihF59JB6SdRG0BlaBrGNjPfEalirF6qzHI=;
+	s=mail; t=1716330183;
+	bh=CZg76scw7v97dA0RfUhhSpMZL+RjQmhtnVdo0IGU76s=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=jMz2d8CbRa4ExoilijE8iYZK44sfA7CHUu6dGsHZKIY1Pt7nYA3ICinNLPtxh2tzl
-	 3rJTL/js632kKou6QQJnUXryCTCoxKJiWzCanIpI6KlwaWt9FMLCKzEAPu0s2K8mlo
-	 qYUukLxlXKh+5vyfX31+XpcDEzDold0AQCUR/SekeOu247Em+YaNhY3bfMJtd8d+uA
-	 vfgbH+pm5MmmGN8wjxFZjjSBNWMuPbj6PLt34ewHYEKQ7UgLa42vogXGrVxfghXhmF
-	 CJaDtg/yRqaeAJX87nRq+beiUfXoxvqiMhaVLYzMpfVbO9y3dd7sswojkQ8YKp1uyC
-	 oXijpUrF0X9ZA==
+	b=azYnNpfppiSYmIT828TB71EKKKOpRNG//yHacsHcbgs4+t4RXrVevSBAPpzyYPOC0
+	 HcQArDScq+RvxC+Tr/db5qO56fQSilYqkT9s7n6Gp1Zt1ZundkxvFHsR5qcsNLPlIl
+	 7ENARXbh6mlDzEJaIsPP6rO60LNgsrvwfnx2qzSMHdqJnHxEKd/Fi5ZqwDm5upqFuM
+	 M+7QVo+dNIHPiC5YTE4u6YO5R/V3+oYNphQCo7c8AKWIoG2FkPn7JBbSuQKRYlfzxw
+	 yltDNktVf81Gdtuf65FnkryDPsuA2qN4P2C6RaUIQXgnzqkKCQ/egH0YUx5VC/w9Un
+	 fuyxWrY4HSHvg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 22 May 2024 01:23:04 +0300 (MSK)
+	Wed, 22 May 2024 01:23:03 +0300 (MSK)
 Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 22 May 2024 01:23:04 +0300
+ 15.2.1118.40; Wed, 22 May 2024 01:23:03 +0300
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
 	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Dmitry Rokosov
@@ -49,12 +48,10 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
  Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong
 	<neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, Xianwei Zhao
 	<xianwei.zhao@amlogic.com>
-Subject: [PATCH 3/3] arch/arm64: dts: ac200: introduce initial support of the board
-Date: Wed, 22 May 2024 01:21:55 +0300
-Message-ID: <20240521222155.28094-4-jan.dakinevich@salutedevices.com>
+Subject: [PATCH 0/3] Introduce initial support of Amlogic AC200 board
+Date: Wed, 22 May 2024 01:21:52 +0300
+Message-ID: <20240521222155.28094-1-jan.dakinevich@salutedevices.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240521222155.28094-1-jan.dakinevich@salutedevices.com>
-References: <20240521222155.28094-1-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,7 +71,7 @@ X-KSMG-AntiSpam-Rate: 0
 X-KSMG-AntiSpam-Status: not_detected
 X-KSMG-AntiSpam-Method: none
 X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_smtp_not_equal_from}, 100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;sberdevices.ru:5.0.1,7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_smtp_not_equal_from}, sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
 X-MS-Exchange-Organization-SCL: -1
 X-KSMG-AntiSpam-Interceptor-Info: scan successful
 X-KSMG-AntiPhishing: Clean
@@ -82,44 +79,26 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/21 08:41:00 #25230763
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-AC200 is Amlogic's reference board based on S905D3 SoC. The board has
-support for USB, Ethernet, HDMI, WiFi, eMMC, micro SD, AV output, analog
-audio.
+ - Make some cosmetics in existing device tree files;
 
-Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
----
- .../boot/dts/amlogic/meson-sm1-ac200.dts      | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ - Add the board.
+
+Jan Dakinevich (3):
+  arch/arm64: dts: ac2xx: make common the sound card
+  dt-bindings: arm: amlogic: document AC200 support
+  arch/arm64: dts: ac200: introduce initial support of the board
+
+ .../devicetree/bindings/arm/amlogic.yaml      |  1 +
+ .../dts/amlogic/meson-sm1-a95xf3-air-gbit.dts | 87 -------------------
+ .../boot/dts/amlogic/meson-sm1-a95xf3-air.dts | 87 -------------------
+ .../boot/dts/amlogic/meson-sm1-ac200.dts      | 22 +++++
+ .../boot/dts/amlogic/meson-sm1-ac2xx.dtsi     | 87 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-sm1-h96-max.dts    | 87 -------------------
+ .../dts/amlogic/meson-sm1-x96-air-gbit.dts    | 87 -------------------
+ .../boot/dts/amlogic/meson-sm1-x96-air.dts    | 87 -------------------
+ 8 files changed, 110 insertions(+), 435 deletions(-)
  create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dts
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dts
-new file mode 100644
-index 000000000000..68209a790460
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-ac200.dts
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-sm1-ac2xx.dtsi"
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/gpio/meson-g12a-gpio.h>
-+
-+/ {
-+	compatible = "amlogic,ac200", "amlogic,sm1";
-+	model = "Amlogic AC200";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>; /* 2GB */
-+	};
-+};
 -- 
 2.34.1
 
