@@ -1,110 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0D515EA2
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 21:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AF81494D6
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 21:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716327435; cv=none; b=oHa81XMoe94FtchBMKBHZzb3kVCT/80IxtKoo/M3Fq6czRn2RRdgAyMtupr3jdaJTqAsqo0r842UbBq2e/o419G5QWo9KxekZZxfDhhpZr2SKJdIPCHbL0EtAIyt+aYInJGd4XIEVJIzpPLXlFymX+qduh+8s+/dYzGb2b0FXwQ=
+	t=1716327505; cv=none; b=iMZq27DO0J4lzx+oxmwRjVK9h0w5gK401FI+c35Cqbg83wgVSmMUbfvlxK0cLZ8EbIxXuGWgXKd1T8JXmFgmthvlAgLaYFbxUzqWajjG9OabHc64T1CEOekMbgYEgSKD+1Kz2CI7n0Vt/z3UWstPiEGZ0N2+dPJU1BZ/hxq/gmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716327435; c=relaxed/simple;
-	bh=fI6cEyNp0OvlkejRT4oAUfcpRMswuK3u3jTLq3XEYHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZADdZQHrGyGYEtmUjoT3rbP9zPHzUgmL0HfpzFR53aP99JCHsNk+abULEfnTY2Q6kmJS2rJUM2AMmrbVEYLMN+ntpMY3EuwxNJahepY2xTJZMJUKimbkt9y9CNs3u7kfNjxki4QuAIFjYa2XDUAsyNoaKnLqRnd5LSw6jVJjLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CoksG6Zi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716327505; c=relaxed/simple;
+	bh=oR5loQ/i/Rsx1Ierj/b9bxTyVCpBalS4Ej8gyPm7Brc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jli7Vn1nC+xTnHEKJ7YJMuY61gMp81NR4xwcFzrC9373S+Tnsq9PMNIc2L4DJggqdnh1YLY04MAzUyz4ZWXjpDGAa7iO3qovE3l7HIGj6O0aJ6MQnAlEDR5ajTwti8EFxSHvotF726XUs3QursPfBnyzR1voQcp9tNPaeQMeSvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRRWV2mz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CoksG6Zi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716327433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wOOUcDoB7zn51oiG2G/m9VVZoM1IpKgtfwDaxbFOJc8=;
-	b=CoksG6ZiUtPLET4+kSBakc1lXAqVBnRa0hYuR/nM0Zc7LvUr2sD+h8xX+qZrR0HPMMxbq0
-	SDD2D95h39aF7EL5PHI7hRBcKzhOv6FN8/OYprb+Ldf0QfmWRNqRp/eZhln65+TwskeOHA
-	pyKX75mmZ3pkRj6fyp5cVDtgS8WGo8E=
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com
- [209.85.222.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-31-0r1xThRRP3uVf-VOZumlTg-1; Tue, 21 May 2024 17:37:11 -0400
-X-MC-Unique: 0r1xThRRP3uVf-VOZumlTg-1
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-802c720980dso135444241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:37:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716327431; x=1716932231;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wOOUcDoB7zn51oiG2G/m9VVZoM1IpKgtfwDaxbFOJc8=;
-        b=gYY9LRCAYIb9zFqBqUXdS2sibmr8XGoVPLZw5lx6hvD1GVe0fB/wltRtbwMy7Vewv0
-         zugwGO3SRFsLACpfRa9wVlUlpzpm7z+Ae2fg7JlN2iR3kYLeD9ygWu7K1vItBawzFmqp
-         MzhxoViSSITwhTDOHE7Huakf3Tt8NzJaLgP88oIGXIm7r8cHvqljKAVayW4H5p427nFL
-         PKJy/5NfFWTXzwyNm0B662ma5Rc6IAnqguJbzC7gIimuSCtxpgsF2wiaqxG2b7xU0CpU
-         nzNR59geOMP1oPCzAHOeRAUR8snPCvoy0kfVQeopPdeOhM5i8/ApiP8wa+B47tWa7syM
-         xCPw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0SeDUI7iOjIVlVJ3q3gJZV3HLFoiFVxessMR04U0DaxKPkSqY4ke0aKr/GDVVgJWgsW5uzIV8Wb4r8AQ/ptAoGFwJPWD8YAcUt751
-X-Gm-Message-State: AOJu0YxX+hkas8dDNHPE8keYpElH7/PirZ+cEMjhzzZJxOTIgl97zmk/
-	1fLbB+kiQvT1vmci0MSlasgN44rOxNO2TMPk8fHkoH7PP4IVfqnBKO8MHtSZRF14FP1rJSBLQN7
-	aQ2VnTGAcXqwFGJuF6tA5FgFbLzQFVoxhP2YiGb+GWfIyBSDH+U2K1hU/I705wA==
-X-Received: by 2002:a67:e8cd:0:b0:47f:1bc9:37b7 with SMTP id ada2fe7eead31-4890a12b43cmr156654137.2.1716327431055;
-        Tue, 21 May 2024 14:37:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6Q5QA6BnBX8hYhsWYnFSu3O2ruJ4scyYeUsKVcJaDjIaZrrUh3Xl33J0obqDC+cyD4ztjig==
-X-Received: by 2002:a67:e8cd:0:b0:47f:1bc9:37b7 with SMTP id ada2fe7eead31-4890a12b43cmr156624137.2.1716327430375;
-        Tue, 21 May 2024 14:37:10 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e40f144d0sm70996451cf.96.2024.05.21.14.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 14:37:10 -0700 (PDT)
-Date: Tue, 21 May 2024 17:37:07 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>, axelrasmussen@google.com,
-	David Hildenbrand <david@redhat.com>, nadav.amit@gmail.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: 6.10/bisected/regression - commit 8430557fc584 cause warning at
- mm/page_table_check.c:198 __page_table_check_ptes_set+0x306
-Message-ID: <Zk0UA6wABOB9X_Dx@x1n>
-References: <CABXGCsMB9A8-X+Np_Q+fWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com>
- <Zk0HxVODITGKqYCw@x1n>
- <CABXGCsNbcMn0Z0RudFrBW78rZPE+cDY+f9r+yKf_AZwJZUOrQg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRRWV2mz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2885C2BD11;
+	Tue, 21 May 2024 21:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716327504;
+	bh=oR5loQ/i/Rsx1Ierj/b9bxTyVCpBalS4Ej8gyPm7Brc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aRRWV2mzamYq+493uTYGefAmM60IvfIRY1mQoBMKUKToegUyImYWhjdjer739pp6V
+	 rnLAeZBEOgI5p2RLFhbROQW0e5xW/WU5AaADkrJrktemwNy1Gd42o38uGS7RNGotFk
+	 9LojW1/7Wm12ZCDj3gcxlh2CtkxtA8D3RDiG85ZKh5qI9GKvnIOh+vRTlygAg9AaAQ
+	 sFJMKb+79MAZIrCjgplDdCda8GA7IwNPi0177W8UabsDqgB5++qC2ME5GlmlKZBWCt
+	 4ZmPJFej36azxQctCBZuHO3OGBxdTKnJehAx7dBwX3Wu+wFoLvVm56zmrtXIe7iObm
+	 88JpRliRgktbg==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Klara Modin <klarasmodin@gmail.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: patching: fix handling of execmem addresses
+Date: Wed, 22 May 2024 00:38:13 +0300
+Message-ID: <20240521213813.703309-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABXGCsNbcMn0Z0RudFrBW78rZPE+cDY+f9r+yKf_AZwJZUOrQg@mail.gmail.com>
 
-On Wed, May 22, 2024 at 01:48:36AM +0500, Mikhail Gavrilov wrote:
-> On Wed, May 22, 2024 at 1:45 AM Peter Xu <peterx@redhat.com> wrote:
-> >
-> >
-> > Did you forget to attach the kernel config?  If so, please attach it, I'll
-> > try that, as my local config won't reproduce with CONFIG_DEBUG_VM_PGTABLE=y.
-> >
-> 
-> Oh, sorry.
-> Now I've definitely attached it.
+From: Will Deacon <will@kernel.org>
 
-Hmm I still cannot reproduce.  Weird.
+Klara Modin reported warnings for a kernel configured with BPF_JIT but
+without MODULES:
 
-Would it be possible for you to identify which line in debug_vm_pgtable.c
-triggered that issue?
+[   44.131296] Trying to vfree() bad address (000000004a17c299)
+[   44.138024] WARNING: CPU: 1 PID: 193 at mm/vmalloc.c:3189 remove_vm_area (mm/vmalloc.c:3189 (discriminator 1))
+[   44.146675] CPU: 1 PID: 193 Comm: kworker/1:2 Tainted: G      D W          6.9.0-01786-g2c9e5d4a0082 #25
+[   44.158229] Hardware name: Raspberry Pi 3 Model B (DT)
+[   44.164433] Workqueue: events bpf_prog_free_deferred
+[   44.170492] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   44.178601] pc : remove_vm_area (mm/vmalloc.c:3189 (discriminator 1))
+[   44.183705] lr : remove_vm_area (mm/vmalloc.c:3189 (discriminator 1))
+[   44.188772] sp : ffff800082a13c70
+[   44.193112] x29: ffff800082a13c70 x28: 0000000000000000 x27: 0000000000000000
+[   44.201384] x26: 0000000000000000 x25: ffff00003a44efa0 x24: 00000000d4202000
+[   44.209658] x23: ffff800081223dd0 x22: ffff00003a198a40 x21: ffff8000814dd880
+[   44.217924] x20: 00000000d4202000 x19: ffff8000814dd880 x18: 0000000000000006
+[   44.226206] x17: 0000000000000000 x16: 0000000000000020 x15: 0000000000000002
+[   44.234460] x14: ffff8000811a6370 x13: 0000000020000000 x12: 0000000000000000
+[   44.242710] x11: ffff8000811a6370 x10: 0000000000000144 x9 : ffff8000811fe370
+[   44.250959] x8 : 0000000000017fe8 x7 : 00000000fffff000 x6 : ffff8000811fe370
+[   44.259206] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
+[   44.267457] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000002203240
+[   44.275703] Call trace:
+[   44.279158] remove_vm_area (mm/vmalloc.c:3189 (discriminator 1))
+[   44.283858] vfree (mm/vmalloc.c:3322)
+[   44.287835] execmem_free (mm/execmem.c:70)
+[   44.292347] bpf_jit_free_exec+0x10/0x1c
+[   44.297283] bpf_prog_pack_free (kernel/bpf/core.c:1006)
+[   44.302457] bpf_jit_binary_pack_free (kernel/bpf/core.c:1195)
+[   44.307951] bpf_jit_free (include/linux/filter.h:1083 arch/arm64/net/bpf_jit_comp.c:2474)
+[   44.312342] bpf_prog_free_deferred (kernel/bpf/core.c:2785)
+[   44.317785] process_one_work (kernel/workqueue.c:3273)
+[   44.322684] worker_thread (kernel/workqueue.c:3342 (discriminator 2) kernel/workqueue.c:3429 (discriminator 2))
+[   44.327292] kthread (kernel/kthread.c:388)
+[   44.331342] ret_from_fork (arch/arm64/kernel/entry.S:861)
 
-I think it should be some set_pte_at() but I'm not sure, as there aren't a
-lot and all of them look benign so far.  It could be that I missed
-something important.
+The problem is because bpf_arch_text_copy() silently fails
+to write to the read-only area as a result of patch_map() faulting and
+the resulting -EFAULT being chucked away.
 
-Thanks,
+Update patch_map() to use CONFIG_EXECMEM instead of
+CONFIG_STRICT_MODULE_RWX to check for vmalloc addresses.
 
+Fixes: 2c9e5d4a0082 ("bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of")
+Reported-by: Klara Modin <klarasmodin@gmail.com>
+Closes: https://lore.kernel.org/all/7983fbbf-0127-457c-9394-8d6e4299c685@gmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
+Tested-by: Klara Modin <klarasmodin@gmail.com>
+Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+---
+
+Andrew, if you can pick this up before -rc1 it won't need to wait for
+arm64 tree rebase
+
+ arch/arm64/kernel/patching.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kernel/patching.c b/arch/arm64/kernel/patching.c
+index 255534930368..945df74005c7 100644
+--- a/arch/arm64/kernel/patching.c
++++ b/arch/arm64/kernel/patching.c
+@@ -36,7 +36,7 @@ static void __kprobes *patch_map(void *addr, int fixmap)
+ 
+ 	if (image)
+ 		page = phys_to_page(__pa_symbol(addr));
+-	else if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
++	else if (IS_ENABLED(CONFIG_EXECMEM))
+ 		page = vmalloc_to_page(addr);
+ 	else
+ 		return addr;
+
+base-commit: 8f6a15f095a63a83b096d9b29aaff4f0fbe6f6e6
 -- 
-Peter Xu
+2.43.0
 
