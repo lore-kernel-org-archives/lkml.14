@@ -1,113 +1,213 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23576CDA9;
-	Tue, 21 May 2024 13:11:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027641E4AD
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 13:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716297070; cv=none; b=EFS0AJ8BkgeMWrC/vADVfO2urBH6IVfMt3au/SfLm3TPmMBuJo7PhhGDTZi7fDnb/jXZF+WR00BR6RZsjFMkGwL8qk5E0VuWQNeMq9NUijTbZK84vs0+iOK8XUGkl38/7+8YtkOhjjdjFis3Ex3T0TVivYg+h5//grALMb77Zxw=
+	t=1716297309; cv=none; b=QgPqWivWuuo/uGBpZQ6iNtz8TJXaOWLiJVVRleo+Ihrtumosfm0WzA2bDH6uB7qkIZdkSPg/7cjUwJ1ZHbyoKwX0vlO/W0iayPLvI1MxdPbjnCi2s09Bhv3g6msODdvh93/C/7ZNgskNTJx/AQMmLn6KPULjY6uMbSq88Kmy1Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716297070; c=relaxed/simple;
-	bh=WnkxiH7GGIBgXGDmzcBsifOH2rh1iziAD4cjZZHAwg4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=qLmQwDIslv1pPkAY7FSD8wTyui6+mmCgheyI/wNTNNCZY5AHR0CREqjMleXqTSfpB1xaCVj4ef9tR4YPoefXa0eoJ0b7ZM0lAZE5ptasQFeQdGm2Fi1c+CyMDgfCicZ7MjGfv5eCb8UG4MHCeqGQwNC4dQ1qqI1ytBTtA5s0OKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4J1UUeU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716297309; c=relaxed/simple;
+	bh=QI3B4EYlEbIIwWwbPtpuremAcvQV29WJXPwBTfgIJY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b7MidII9X6y1CRCm+cke5YCRRtOxPEUItUAPxcKtwythO9Fww5x8mW8Ivs1m4OPQ+tAVCERsSnYcUWvK5kCT2mXMVdI60GI8ZkY2R02B3JX9VI5JsbtXoo7G/i2zfWf8t/mCmOGcPL0Sbaka/ygk4ZJmt0OtOX7C54e1Adtnd+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCM+jVT2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4J1UUeU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E6AC2BD11;
-	Tue, 21 May 2024 13:11:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCM+jVT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02C68C2BD11;
+	Tue, 21 May 2024 13:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716297070;
-	bh=WnkxiH7GGIBgXGDmzcBsifOH2rh1iziAD4cjZZHAwg4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=F4J1UUeU7dtRbETFzbYRF7dlisqyjxYZZiuD2vObvWg3mAXgb4xa8JTMJXQ/cfzsZ
-	 4bhcz9tPF9pT8RRd8GRfZduHKhJJ9+5/lc/E0txB5XFxFvYLM/m4+tKj4bfUe9/DOV
-	 Y9YGnSQ5syPqcNlU/GIvZgA/KjJ08R8ByLCr8D4rQAdn/aVkzQ0ca+RQunoG+YDMxk
-	 /cBa62bkwYS1M3vNSPeYdi5+wCKI7A1nTB3lfAhkcqoNWw6UWzup+C59zcgfIkEOau
-	 FYPWLzrxfw2BsrVZacpFB7P5Oqyh1mTj6DNLih+N2c+FnPRYL8HSsKzGv8ca09pTz1
-	 x6EODLXI036JA==
+	s=k20201202; t=1716297308;
+	bh=QI3B4EYlEbIIwWwbPtpuremAcvQV29WJXPwBTfgIJY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hCM+jVT2fpS7ic5sXNUfre7XEVcgQcrmap8MIT2/lRVyOnGU078F/ftIGV1QFbL43
+	 9kIgrxp1E3W++Y+GHNPRyOpzT1H+L86nvwUnsfYEMJjNM85PXTr1hgOnqcKEs6+fL7
+	 whmVmSja6dv/Pk9tr0H/gVg8/CJpH3hAWRKghRCXRiGv8WiKChGdURIkmqB83Y+JAb
+	 WTiDBNTrMDgvP9rvfiKL030y968lamnQ73C5Ke81jQUZNf14Ncfd7LO1iCTHBwGewZ
+	 dftY6a7MTyEAjLiz4vjsPpLtGhOR0Lpg3TOfFpikHs0uMwUjldaiRzoEBDu2J0Ravx
+	 a5mbxG3Cp7Q/Q==
+Date: Tue, 21 May 2024 15:15:06 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Aradhya Bhatia <a-bhatia1@ti.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Jyri Sarha <jyri.sarha@iki.fi>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, DRI Development List <dri-devel@lists.freedesktop.org>, 
+	Linux Kernel List <linux-kernel@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>, 
+	Thierry Reding <treding@nvidia.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Boris Brezillon <boris.brezillon@bootlin.com>, Nishanth Menon <nm@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>, 
+	Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>, 
+	Jai Luthra <j-luthra@ti.com>
+Subject: Re: [PATCH 6/7] drm/bridge: Introduce early_enable and late disable
+Message-ID: <20240521-realistic-imposing-lemur-aac3ad@houat>
+References: <20240511153051.1355825-1-a-bhatia1@ti.com>
+ <20240511153051.1355825-7-a-bhatia1@ti.com>
+ <20240516-bipedal-keen-taipan-eedbe7@penduick>
+ <ba8d0b98-67d2-41e2-b568-a40543a9b0fa@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="yt2j545gywcn32mt"
+Content-Disposition: inline
+In-Reply-To: <ba8d0b98-67d2-41e2-b568-a40543a9b0fa@ti.com>
+
+
+--yt2j545gywcn32mt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 21 May 2024 16:11:05 +0300
-Message-Id: <D1FCJ71B0HAO.2CD8A7N7DR5DP@kernel.org>
-Cc: <keyrings@vger.kernel.org>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, "Mimi Zohar" <zohar@linux.ibm.com>, "David
- Howells" <dhowells@redhat.com>, "Paul Moore" <paul@paul-moore.com>, "James
- Morris" <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- <linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tpm: Disable TCG_TPM2_HMAC by default
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Vitor Soares" <ivitro@gmail.com>,
- <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240519235122.3380-1-jarkko@kernel.org>
- <20240519235122.3380-2-jarkko@kernel.org>
- <850862655008f84ef0b6ecd99750e8dc395304d1.camel@gmail.com>
- <D1F4V8NMSUNZ.2VCTEKHZZ0LB@kernel.org>
- <17dc838120b56ce342c34611596c7b46dcd9ab5a.camel@HansenPartnership.com>
- <D1FCAPJSYLTS.R9VC1CXDCIHH@kernel.org>
-In-Reply-To: <D1FCAPJSYLTS.R9VC1CXDCIHH@kernel.org>
 
-On Tue May 21, 2024 at 4:00 PM EEST, Jarkko Sakkinen wrote:
-> On Tue May 21, 2024 at 3:33 PM EEST, James Bottomley wrote:
-> > On Tue, 2024-05-21 at 10:10 +0300, Jarkko Sakkinen wrote:
-> > > This benchmark could be done in user space using /dev/tpm0.
-> >
-> > Let's actually try that.  If you have the ibmtss installed, the command
-> > to time primary key generation from userspace on your tpm is
-> >
-> > time tsscreateprimary -hi n -ecc nistp256
-> >
-> >
-> > And just for chuckles and grins, try it in the owner hierarchy as well
-> > (sometimes slow TPMs cache this)
-> >
-> > time tsscreateprimary -hi o -ecc nistp256
-> >
-> > And if you have tpm2 tools, the above commands should be:
-> >
-> > time tpm2_createprimary -C n -G ecc256
-> > time tpm2_createprimary -C o -G ecc256
->
-> Thanks, I definitely want to try these in my NUC7. I can try both
-> stacks and it is pretty good test machine because it is old'ish
-> and slow ;-)
->
-> I'm also thinking differently than when I put out this pull request.
-> I honestly think that it must be weird use case to use TPM with
-> a machine that dies with a HMAC pipe. It makes no sense to me and
-> I think we should focus on common sense here.
->
-> I could imagine one use case: pre-production hardware that is not
-> yet in ASIC. But in that case you would probably build your kernel
-> picking exactly the right options. I mean it is only a default
-> after all.
->
-> I think we could add this:
->
-> 	default X86 || ARM64
->
-> This pretty covers the spectrum where HMAC does make sense by
-> default. We can always relax it but this does not really take
-> away the legit user base from the feature.
->
-> It would be a huge bottleneck to make HMAC also opt-in because
-> the stuff it adds makes a lot of sense when build on top. E.g.
-> the asymmetric key patch set that I sent within early week was
-> made possible by all this great work that you've done.
->
-> So yeah, I'd like to send the above Kconfig changes, but that
-> is all I want to do this at this point.
+Hi,
 
-Patch is out (lore link was not yet available):
+On Thu, May 16, 2024 at 03:10:15PM GMT, Aradhya Bhatia wrote:
+> >>  	/**
+> >>  	 * @pre_enable:
+> >>  	 *
+> >> @@ -285,6 +319,26 @@ struct drm_bridge_funcs {
+> >>  	 */
+> >>  	void (*enable)(struct drm_bridge *bridge);
+> >> =20
+> >> +	/**
+> >> +	 * @atomic_early_enable:
+> >> +	 *
+> >> +	 * This callback should enable the bridge. It is called right before
+> >> +	 * the preceding element in the display pipe is enabled. If the
+> >> +	 * preceding element is a bridge this means it's called before that
+> >> +	 * bridge's @atomic_early_enable. If the preceding element is a
+> >> +	 * &drm_crtc it's called right before the crtc's
+> >> +	 * &drm_crtc_helper_funcs.atomic_enable hook.
+> >> +	 *
+> >> +	 * The display pipe (i.e. clocks and timing signals) feeding this br=
+idge
+> >> +	 * will not yet be running when this callback is called. The bridge =
+can
+> >> +	 * enable the display link feeding the next bridge in the chain (if
+> >> +	 * there is one) when this callback is called.
+> >> +	 *
+> >> +	 * The @early_enable callback is optional.
+> >> +	 */
+> >> +	void (*atomic_early_enable)(struct drm_bridge *bridge,
+> >> +				    struct drm_bridge_state *old_bridge_state);
+> >> +
+> >>  	/**
+> >>  	 * @atomic_pre_enable:
+> >>  	 *
+> >> @@ -361,6 +415,21 @@ struct drm_bridge_funcs {
+> >>  	void (*atomic_post_disable)(struct drm_bridge *bridge,
+> >>  				    struct drm_bridge_state *old_bridge_state);
+> >> =20
+> >> +	/**
+> >> +	 * @atomic_late_disable:
+> >> +	 *
+> >> +	 * This callback should disable the bridge. It is called right after=
+ the
+> >> +	 * preceding element in the display pipe is disabled. If the precedi=
+ng
+> >> +	 * element is a bridge this means it's called after that bridge's
+> >> +	 * @atomic_late_disable. If the preceding element is a &drm_crtc it's
+> >> +	 * called right after the crtc's &drm_crtc_helper_funcs.atomic_disab=
+le
+> >> +	 * hook.
+> >> +	 *
+> >> +	 * The @atomic_late_disable callback is optional.
+> >> +	 */
+> >> +	void (*atomic_late_disable)(struct drm_bridge *bridge,
+> >> +				    struct drm_bridge_state *old_bridge_state);
+> >> +
+> >=20
+> > But more importantly, I don't quite get the use case you're trying to
+> > solve here.
+> >=20
+> > If I got the rest of your series, the Cadence DSI bridge needs to be
+> > powered up before its source is started. You can't use atomic_enable or
+> > atomic_pre_enable because it would start the source before the DSI
+> > bridge. Is that correct?
+> >=20
+>=20
+> That's right. I cannot use bridge_atomic_pre_enable /
+> bridge_atomic_enable here. But that's because my source is CRTC, which
+> gets enabled via crtc_atomic_enable.
+>=20
+>=20
+> > If it is, then how is it different from what
+> > drm_atomic_bridge_chain_pre_enable is doing? The assumption there is
+> > that it starts enabling bridges last to first, to it should be enabled
+> > before anything starts.
+> >=20
+> > The whole bridge enabling order code starts to be a bit of a mess, so it
+> > would be great if you could list all the order variations we have
+> > currently, and why none work for cdns-dsi.
+> >=20
+>=20
+> Of course! I can elaborate on the order.
+>=20
+> Without my patches (and given there isn't any bridge setting the
+> "pre_enable_prev_first" flag) the order of enable for any single display
+> chain, looks like this -
+>=20
+> 	crtc_enable
+> =09
+> 	bridge[n]_pre_enable
+> 	---
+> 	bridge[1]_pre_enable
+>=20
+> 	encoder_enable
+>=20
+> 	bridge[1]_enable
+> 	---
+> 	bridge[n]_enable
+>=20
+> The tidss enables at the crtc_enable level, and hence is the first
+> entity with stream on. cdns-dsi doesn't stand a chance with
+> bridge_atmoic_pre_enable / bridge_atmoic_enable hooks. And there is no
+> bridge call happening before crtc currently.
 
-https://lkml.org/lkml/2024/5/21/583
+Thanks for filling the blanks :)
 
-BR, Jarkko
+I assume that since cdns-dsi is a bridge, and it only has a simple
+encoder implementation, for it to receive some video signal we need to
+enable the CRTC before the bridge.
+
+If so, I think that's the original intent between the bridge pre_enable.
+The original documentation had:
+
+  pre_enable: this contains things needed to be done for the bridge
+  before this contains things needed to be done for the bridge before
+  this contains things needed to be done for the bridge before.
+
+and the current one has:
+
+  The display pipe (i.e. clocks and timing signals) feeding this bridge
+  will not yet be running when this callback is called. The bridge must
+  not enable the display link feeding the next bridge in the chain (if
+  there is one) when this callback is called.
+
+I would say the CRTC is such a source, even more so now that the encoder
+is usually transparent, so I think we should instead move the crtc
+enable call after the bridge pre_enable.
+
+Would that work?
+
+Maxime
+
+--yt2j545gywcn32mt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZkyeVQAKCRAnX84Zoj2+
+dmQTAYD+Ne1ZkY/AFqrz3EHZtn3MxFe0zkhuFwWhGF1cMmY6F1H9YKDjPnYMvc+/
+KbA4a1sBfAiT5CVtjjb6RpsGYpaD8isYCkSaUl45XE9kVfLH8NxSyBtvVkQ9gRVl
+SaJgX5LLXg==
+=jlQ6
+-----END PGP SIGNATURE-----
+
+--yt2j545gywcn32mt--
