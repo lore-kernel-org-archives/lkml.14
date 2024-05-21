@@ -1,89 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABA212FF91;
-	Tue, 21 May 2024 14:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7DD12FF91
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716301667; cv=none; b=tJcy3d86sF876lf6t3YVPvCr7dzQ13UtNv2p6zplbgiGK8dl9n60dPZEMt3+sGRu1/zcbkcrs2/UWXkSwJSeiXtdosmV5tSktAlZnTRThGL4VMZYFVk1YbOIYnA9Q7kgFj1nKx/E5ghWomaC5zaD+/57yr7v4JsDc1ABvzi0BzU=
+	t=1716301691; cv=none; b=tZKIq6/zYEbLfmjA+Dip0oJqE6mhnYUO8gGOQtKO3pTUnXfbxKyTFdV6RYvLYa0y6t7GXdBXj4kiBMypZwxnrrD96acQWmktZM1TARyYjCNV3ch1DtYkhxZzD3GHXhxDE/Ews77RbR6feKoZ17VQoUdK1RBT47rqvoDGqnyGd+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716301667; c=relaxed/simple;
-	bh=N0cM3yxnHhctCSdjxbIjzQRvpL3SVaCTMfYfSYckKMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nOX0V3PuTMHSf9vL2WFdNdNXho1eHN7KJZp3fIUeF1k0srtU2o8faNuqeTtyQWIXGOqe0O86wWaE2WF6IkHVkCEmtvp4IFh2hywf191G2joV78dsUwpj6foJvicogEyfakY1gdyOCF372NaI/uBGvN4RI4VcNFuKl9h/KzMHjcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y90ecRCg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716301691; c=relaxed/simple;
+	bh=EdNZ4h2iIcnlVFQVn+LHBQcKm+5zQwjrV9IduBirb9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ql/7cZwPnKNA82RksdIs829uv39zeiH37Q+tvf647y9MDX8odmj9ieBhs33eDxnoc+3Z6qYqzQ0ZvhEUo6hAm5nx7guLVn9TOKgCWjldm4SCDAi156HC1ngxwjSItYLDpvBgyfhQp0T1ChxpojZ+OuUcFMEsnOlkdA3+FokopFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=en44kIKN; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y90ecRCg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9287CC2BD11;
-	Tue, 21 May 2024 14:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716301667;
-	bh=N0cM3yxnHhctCSdjxbIjzQRvpL3SVaCTMfYfSYckKMA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y90ecRCg3gZjCzCB3pUZ/OESTWKCiQ2XZ2dZ5hC7U+Z6nyhFbCg7qStWUjaC5HH/4
-	 EOytmejLfW1WpSGaV74JHScIuN2h9Mi5dCBa+1pFssdOGZJjwPN8nOKH9iwPavOULs
-	 EQ06xY10pvhxDAsCkaBoJvjFYNKoQ2A9OyahmTxspSm4pzjTb5MZHyTwinrW3Za3ui
-	 pZ2C9Eha9+eX4hbkaFYgGGLERnzgAxosmKEuSP2ZSjaDJi/Bh2kch2g3XibU9xWkr2
-	 rvGKZvpDFfHAEz5+YnJ7RTFDQjjU8a6WG3z3ERjJwuGWSVLIGaqphGMalG/uZBJvFc
-	 /FQUmp1ZmT35w==
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
-	Amir Goldstein <amir73il@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] fs: switch timespec64 fields in inode to discrete integers
-Date: Tue, 21 May 2024 16:27:10 +0200
-Message-ID: <20240521-unwiederholbar-stelzen-84e3769c4349@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240517-amtime-v1-1-7b804ca4be8f@kernel.org>
-References: <20240517-amtime-v1-1-7b804ca4be8f@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="en44kIKN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716301689; x=1747837689;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EdNZ4h2iIcnlVFQVn+LHBQcKm+5zQwjrV9IduBirb9w=;
+  b=en44kIKN4t3DP7luVmWhtCO/eH8N8XHCEbzWXoGrxuNpg2R0xq9D1hlk
+   POoEZWp6s1GFtUz7iHJjiH1FkdckHo4Sm6hur/nwuMGDKxjPbHNcUEO0b
+   BYDKHFUWVOEDX1eVEJ+uZO3DsoWMKo0Bq1fCacfxaBiYWMSCQSGSyW2h+
+   Fi5/hY1Zq0ZOLnqM5PM48X+KZqHmveA5g+VRyQrBo8oTwAqNljldAMN+V
+   CRgjQvImLiMwG+Kef7EqDEcFbxNu1zgl2XfzfHYNEEXsV8ondy02JHsHJ
+   Bxd/J4xBylndAd4wSkqSVleKcijELJjncwce30/w16TIKlroeDSJw0dOG
+   g==;
+X-CSE-ConnectionGUID: 7rEhHns/TziM6Qs8vmXSYA==
+X-CSE-MsgGUID: 0VV7GZmCReaxXq7pTTaxrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12612712"
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="12612712"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 07:28:08 -0700
+X-CSE-ConnectionGUID: DtrbXJVnTuWf04rbl2oPkA==
+X-CSE-MsgGUID: dRuFqotDT+qYZ9Q27l6qvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="63774457"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 21 May 2024 07:28:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E9D2317F; Tue, 21 May 2024 17:28:02 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Tony Luck <tony.luck@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] MAINTAINERS: Add Intel MID section
+Date: Tue, 21 May 2024 17:27:58 +0300
+Message-ID: <20240521142758.2298717-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1458; i=brauner@kernel.org; h=from:subject:message-id; bh=N0cM3yxnHhctCSdjxbIjzQRvpL3SVaCTMfYfSYckKMA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT5rI/e/OZx3abalri8R2mNOyrnL9csmDb7VHXY9Yl2f zTee1Zv7yhlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIxtuMDJ0+VsZnFyc7csvZ 3xHni/Zp/5BzL/mgrm55rKBDcFbcZYb/mee1BUK2G/bZyv6MUbJv3/H1x4TlD7b1lZ376/jzm4A KPwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Fri, 17 May 2024 20:08:40 -0400, Jeff Layton wrote:
-> Adjacent struct timespec64's pack poorly. Switch them to discrete
-> integer fields for the seconds and nanoseconds. This shaves 8 bytes off
-> struct inode with a garden-variety Fedora Kconfig on x86_64, but that
-> also moves the i_lock into the previous cacheline, away from the fields
-> it protects.
-> 
-> To remedy that, move i_generation above the i_lock, which moves the new
-> 4-byte hole to just after the i_fsnotify_mask in my setup. Amir has
-> plans to use that to expand the i_fsnotify_mask, so add a comment to
-> that effect as well.
-> 
-> [...]
+The different drivers are spread over the kernel. I would like
+to be informed about the changes in them, which are done not by
+me.
 
-Let's see what the performance bot thing has to say...
-
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ MAINTAINERS | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 29f43c8bfc16..3e80895074a5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11082,6 +11082,21 @@ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-driver-intel-m10-bmc-sec-update
+ F:	drivers/fpga/intel-m10-bmc-sec-update.c
+ 
++INTEL MID (Mobile Internet Device) PLATFORM
++M:	Andy Shevchenko <andy@kernel.org>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	arch/x86/include/asm/intel-mid.h
++F:	arch/x86/pci/intel_mid_pci.c
++F:	arch/x86/platform/intel-mid/
++F:	drivers/extcon/extcon-intel-mrfld.c
++F:	drivers/iio/adc/intel_mrfld_adc.c
++F:	drivers/mfd/intel_soc_pmic_mrfld.c
++F:	drivers/platform/x86/intel/mrfld_pwrbtn.c
++F:	drivers/watchdog/intel-mid_wdt.c
++F:	include/linux/mfd/intel_soc_pmic_mrfld.h
++F:	include/linux/platform_data/intel-mid_wdt.h
++
+ INTEL P-Unit IPC DRIVER
+ M:	Zha Qipeng <qipeng.zha@intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] fs: switch timespec64 fields in inode to discrete integers
-      https://git.kernel.org/vfs/vfs/c/ad401d976810
