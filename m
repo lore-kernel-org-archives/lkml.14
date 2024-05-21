@@ -1,101 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02CF7EEFD;
-	Tue, 21 May 2024 15:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64D2143C6F;
+	Tue, 21 May 2024 15:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716305079; cv=none; b=SXz3RSwgaA3DoyiKeGESMwrgfL72VCoRTcIshlDilILeJs+cnmizxSEDmFbMokJP2jPW/muoEMfzRc1Go4IJgh0YxLrPTHaok2dAMr2dhA+yjseEcUp33sTk7RMVC1mnnSG5VoszXV6U35cuchbQAGzyfHtd73HZiyfq8JPhoI0=
+	t=1716305106; cv=none; b=kx3d5NdQr9/KGMrz59xoXNj6Nhas0BwEu1/QndgqSl4NgGdCu1SQjexrl/JjRvTgr2AH3512yjU9iW3M/h5MnnmhjuF+ORxLCRQ9D2ifz5N48qMDaYNpNKR3ImaY8NHZB9tgdx2KMBF5AraYxiKZrXL+OQujb8u28tyqwH2GGQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716305079; c=relaxed/simple;
-	bh=LT2IUGSarwkRVytFH/RJkbdqTKdlRHx7kjBBbCwkZOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPXyNZtz8hGJgUbP+YsFDE99mWoFIt3WQRFcrTwKVBR7NXdjyGgYTZ/dhAhpY8bx8fYHxgnf/VJaCWkO05fldg9W/Z9JxkTnb95TzZEcZ1g8Z/rrEGb9W/HNI9Tz3EC/1G3wudO9zTo6TwRadJ+37QW3vxIEK8xNeb/QLEy1vls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=w1lSHUlE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716305106; c=relaxed/simple;
+	bh=A3J309TsoqdkIrXDSI0knLWc6p6vrTEOmqxSntKFqCs=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=I0lHwVJLXGpZT33rvdYVYKtxQp+17rh1tua4vZkucPn7d7b18d2Gs8ocGjniCKA+7z0w2WmLkLd/jfh1cYbh0tvQ+EXON6CPMAtIC/N03GT9wSUJAL1JAaCMV7GDudFf8i+Ju3TZ+1V7Y54/kvHhU4gvM5NdAxl5gOy6u1RqsaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dM8QQmw0; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="w1lSHUlE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08FF1C2BD11;
-	Tue, 21 May 2024 15:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716305079;
-	bh=LT2IUGSarwkRVytFH/RJkbdqTKdlRHx7kjBBbCwkZOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=w1lSHUlEHNdUOwtpggmkodjLPq5e6XoEd/jeTIGLtlAfkWhwgojNAbWSwSm2MoGXx
-	 BPRZblVE/xwREaXWcgKfJrruhZZE1XuVVN57yD/06Hwa70krn0wGvgrH9DjmwaWiwq
-	 U8MFpltI8aA428Idvt85wdfvGhnWEZdckYdrcX+k=
-Date: Tue, 21 May 2024 17:21:26 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] usb: ucsi: stm32: fix command completion handling
-Message-ID: <2024052113-vanilla-expectant-5684@gregkh>
-References: <20240521151109.3078775-1-fabrice.gasnier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dM8QQmw0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DAC5F1BF204;
+	Tue, 21 May 2024 15:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1716305096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElkBmCZAiz2r8dVRfGBgfJobIEqZm/ZvOK4Iwl3Tq2w=;
+	b=dM8QQmw0qDIYIjfpu9qQke7m2RDR5886taHKqC9o0InqTDE9M8rTppd82I1AAqPx/0JLdM
+	fzYKE6f4xyWsRkhHToCijAZ9E8cIfXojSYJd5azQ53VkZ5h1f4A8H6FacfmyaRfF9IFwgb
+	H7CXsJ2BCGmbz0KUOh2smiFLpkKQa/HHzMdNL/HahzbxE8bvE51p3YyjVQDNMGQAoGP+vH
+	/3jXzwq+EWvg3ssvibNF6caZeK3HLU7C9bKNrI1pAD9U6RmvKAUmQjzQoFZtUs0AJZ6Pff
+	44yqJef2NOM5jWmyDcmcCgpd8AmxzO67NrWhCW4jEKkR3GOvKOlfB9+3c9fAyw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521151109.3078775-1-fabrice.gasnier@foss.st.com>
+Date: Tue, 21 May 2024 17:24:55 +0200
+From: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marco Felsch
+ <m.felsch@pengutronix.de>, Jeff LaBundy <jeff@labundy.com>
+Cc: catalin.popescu@leica-geosystems.com, mark.satterthwaite@touchnetix.com,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement
+ <gregory.clement@bootlin.com>, bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH v11 0/3] Input: Add TouchNetix axiom touchscreen driver
+In-Reply-To: <20240419123829.120396-1-kamel.bouhara@bootlin.com>
+References: <20240419123829.120396-1-kamel.bouhara@bootlin.com>
+Message-ID: <b418074df10f52d64f53ea13bb17977f@bootlin.com>
+X-Sender: kamel.bouhara@bootlin.com
+Organization: Bootlin
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: kamel.bouhara@bootlin.com
 
-On Tue, May 21, 2024 at 05:11:09PM +0200, Fabrice Gasnier wrote:
-> Sometimes errors are seen, when doing DR swap, like:
-> [   24.672481] ucsi-stm32g0-i2c 0-0035: UCSI_GET_PDOS failed (-5)
-> [   24.720188] ucsi-stm32g0-i2c 0-0035: ucsi_handle_connector_change:
->  GET_CONNECTOR_STATUS failed (-5)
+Le 2024-04-19 14:38, Kamel Bouhara a écrit :
+> Add a new driver for the TouchNetix's axiom family of touchscreen
+> controller. This driver only support i2c and can be later adapted for
+> SPI and USB support.
 > 
-> There may be some race, which lead to read CCI, before the command complete
-> flag is set, hence returning -EIO. Similar fix has been done also in
-> ucsi_acpi [1].
+
+Hello Dmitry,
+
+I just saw you are still applying patch and I wanted to know if this 
+series could be merged as well ?
+
+Kamel
+
+> --
+> Changes in v11:
+>  - Fix regulators name to match dt-binding
+>  - Enable regulators before reset is asserted
 > 
-> In case of a spurious or otherwise delayed notification it is
-> possible that CCI still reports the previous completion. The
-> UCSI spec is aware of this and provides two completion bits in
-> CCI, one for normal commands and one for acks. As acks and commands
-> alternate the notification handler can determine if the completion
-> bit is from the current command.
+> Changes in v10:
+>  - Set regulators as required
+>  - Enable power supply before reset
+>  - Fix ref count due to regulator requested twice
+>  - Rebase on v6.9-rc4
 > 
-> To fix this add the ACK_PENDING bit for ucsi_stm32g0 and only complete
-> commands if the completion bit matches.
+> Changes in v9:
+>  - Fix issue reported in 
+> https://lore.kernel.org/oe-kbuild-all/202402201157.BKo97uWl-lkp@intel.com/
+>  - Rebase on v6.8-rc2
 > 
-> [1] https://lore.kernel.org/lkml/20240121204123.275441-3-lk@c--e.de/
+> Changes in v8:
+>  - Fix missing call to input_report_slot_state()
+>  - Fix issue reported in 
+> https://lore.kernel.org/oe-kbuild-all/202402020623.8T1Ah513-lkp@intel.com/
 > 
-> Fixes: 72849d4fcee7 ("usb: typec: ucsi: stm32g0: add support for stm32g0 controller")
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-> ---
->  drivers/usb/typec/ucsi/ucsi_stm32g0.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
+> Changes in v7:
+>  - Remove startup time from dt-binding
+>  - Fix usage table not correctly populated
+> 
+> Changes in v6:
+>  - Fix missing unevaluatedProperties.in dt-binding
+>  - Use __le16 to correctly deal with device endianness
+>  - Use standart kernel types s/char/u8/
+>  - Use regmap api as driver might support spi later
+>  - Use get_unaligned_le16() for the sake of clarity
+>  - Use devm_regulator_enable_optional()
+> 
+> Changes in v5:
+>  - Fix wrong message constructed in axiom_i2c_read
+>  - Delay required between i2c reads is >= 250us
+>  - Do not split report reading in two phases as we'll
+>    have to wait 500us
+>  - Use lower-case in properties names
+>  - Make regulators properties are required in dt-binding
+>  - Fix bug report: 
+> https://lore.kernel.org/lkml/202312051457.y3N1q3sZ-lkp@intel.com/
+>  - Fix bug report: 
+> https://lore.kernel.org/lkml/6f8e3b64-5b21-4a50-8680-063ef7a93bdb@suswa.mountain/
+> 
+> Changes in v4:
+>  - Cleanup unused headers and macros
+>  - Use standard kernel type
+>  - Namespace structures and functions
+>  - Use packed struct when possible to avoid bitfield operators
+>  - Fix missing break when address is found in 
+> axiom_populate_target_address()
+>  - Split reads in two steps for the reports, first length then report
+>    itself so we only read required bytes
+>  - Get poll-interval from devicetree
+>  - Add VDDI/VDDA regulators
+>  - Add a startup delay of 110 ms required after VDDA/VDDI is applied
+>  - Remove axiom_i2c_write() as it is no more used
+> 
+> Changes in v3:
+>  - Remove irq-gpios property in dt-binding
+>  - Use a generic node name
+>  - Fix issues reported in 
+> https://lore.kernel.org/oe-kbuild-all/202310100300.oAC2M62R-lkp@intel.com/
+> 
+> Changes in v2:
+>  - Add device tree binding documentation
+>  - Move core functions in axiom_i2c as we only care about i2c support 
+> now
+>  - Use static function when required
+>  - Use syntax dev_err_probe()
+>  - Add an hardware based reset
+> 
+> 
+> Kamel Bouhara (3):
+>   dt-bindings: vendor-prefixes: Add TouchNetix AS
+>   dt-bindings: input: Add TouchNetix axiom touchscreen
+>   Input: Add TouchNetix axiom i2c touchscreen driver
+> 
+>  .../input/touchscreen/touchnetix,ax54a.yaml   |  62 ++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  MAINTAINERS                                   |   8 +
+>  drivers/input/touchscreen/Kconfig             |  12 +
+>  drivers/input/touchscreen/Makefile            |   1 +
+>  drivers/input/touchscreen/touchnetix_axiom.c  | 657 ++++++++++++++++++
+>  6 files changed, 742 insertions(+)
+>  create mode 100644 
+> Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
+>  create mode 100644 drivers/input/touchscreen/touchnetix_axiom.c
+> 
+> --
+> 2.25.1
 
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+-- 
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
