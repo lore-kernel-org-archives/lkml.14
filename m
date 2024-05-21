@@ -1,99 +1,165 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7585E22C;
-	Tue, 21 May 2024 09:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA32F3B1A1;
+	Tue, 21 May 2024 09:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716283754; cv=none; b=f7OrPfgEApq0BbTzPdgYP4Ktf8l3dyDEdRNP1NyXmXsy5MzGXRKIuuTIzk/uMmSH3zUBARgmwc3ha9OfrmqYCTQ7mM++KCk5m0zVk2OijTzMRjLkZpZS2CP6Gm2hXT7WWK5hs75r2Gzb9K3dAX+8iLsXODlp3Qt1wwAxVbSzEdY=
+	t=1716283830; cv=none; b=uwEEbk105RYXahZoAwn0KmzAq3Tmk7DfDXlhg7e2/nHbh5aPY+nenN8IzURGkfUkB5X0buDeexGOFTxvw+la96fH5/J6S+Es/a6PPlo+OBVW/SuA0FjDLMlZ/k4aYmg0NLQK4oDvUNdAC6Odnntu0eL+hCHjDKLeTFlLtmq2kzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716283754; c=relaxed/simple;
-	bh=9YxAc6ONjbFHEyGLzLUnZ+Cukg7tPjLFv7nBPqy1sDo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ox2KpT7KiVjeGyMg6lQm7tFEoXl2PSmEqwWHIzcOw2fANP/NvTEziehjBgUiZfZQZmFkxtCkmi44Y09vqZQtpuo8dAtuXZ5AIfXw0hr72oEY4EZcgkbKRSV1lYe1YzNgrZX6dzSdxmLOKsFXKB/T10r8asZAYv83eBpuHczzAjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowABnbQFZaUxmKAaIDA--.16476S2;
-	Tue, 21 May 2024 17:28:58 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: tvboxspy@gmail.com,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] media: lmedm04: Handle errors for lme2510_int_read
-Date: Tue, 21 May 2024 17:10:42 +0800
-Message-Id: <20240521091042.1769684-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1716283830; c=relaxed/simple;
+	bh=dK7zzThPWoX0Tl/h413qAPmj7A3KkKjcLZB+0ecLH1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LuwiJp9XAwpdU01w84OrbZ/s7H2WOSbX4P5UAHf3rFOt3pBE/Co0S4OwE9/HO2n87fBVkfCcnJsptnv4qNcKufW2aeEjh0mOSjLDSW/JgQg4isgWRop3AS44klK9Pz2YAhy/kfl2b8c+kNT86QP5hD+N6MWn0Ll94oMeKpNA1d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOV95p0M; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOV95p0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E071C2BD11;
+	Tue, 21 May 2024 09:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716283829;
+	bh=dK7zzThPWoX0Tl/h413qAPmj7A3KkKjcLZB+0ecLH1o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QOV95p0MwWmW0FKD2XbVKxIjoQAppi/NX9+/wU29NCp/RXB29DzQPbF10NVE5vLUJ
+	 lqtBOvgI01OiyXmRKf6IszObIIItcD/drHBtiwjragDmbnDN1JEZfZ+fLNGsUN+iG2
+	 ay6kDfdUO3nxEPuBwnuCHEmzgsAGT2NnEsYCERLSzYyK7r4TTnewguQg0HyxFpVTYa
+	 yfgfULe9H8Gn6bAb5CO7zebi2njO8/b38rjxjZM0l4vLY132LBdDnri/Boxar+JmLx
+	 6qHqFql9LJ/fMzI3aw+x75d8bVNkyIkl2uoMzd2+xOIySGKWSKsxbDs9a2olMB5K9N
+	 7zr2eJ+njU8oQ==
+Message-ID: <f09e599b-15df-4a15-ada0-09278ab4991e@kernel.org>
+Date: Tue, 21 May 2024 11:30:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABnbQFZaUxmKAaIDA--.16476S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw45tFyfGF4fCr1xtr45Awb_yoW8Wr4Upa
-	y5GFWjkFWUJrZrursrJrs8Ar4fuw4rCay3KFWa9a4fXF1fJw1DAa4FkF15tr4rCr95Ja42
-	qa90qay3Kr15CFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkS14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFWl
-	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0VyxDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/10] drm/bridge: add common api for inno hdmi
+To: keith <keith.zhao@starfivetech.com>, andrzej.hajda@intel.com,
+ neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
+ xingyu.wu@starfivetech.com, p.zabel@pengutronix.de,
+ jack.zhu@starfivetech.com, shengyang.chen@starfivetech.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
+ <20240521105817.3301-3-keith.zhao@starfivetech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240521105817.3301-3-keith.zhao@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add check for the return value of usb_pipe_endpoint() and
-usb_submit_urb() in order to catch the errors.
+On 21/05/2024 12:58, keith wrote:
+> Add INNO common api so that it can be used by vendor
+> drivers which implement vendor specific extensions to Innosilicon HDMI.
+> 
+> Signed-off-by: keith <keith.zhao@starfivetech.com>
+> ---
+>  MAINTAINERS                                   |   2 +
 
-Fixes: 15e1ce33182d ("[media] lmedm04: Fix usb_submit_urb BOGUS urb xfer, pipe 1 != type 3 in interrupt urb")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/media/usb/dvb-usb-v2/lmedm04.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+> +}
+> +
+> +static u32 inno_hdmi_i2c_func(struct i2c_adapter *adapter)
+> +{
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +}
+> +
+> +static const struct i2c_algorithm inno_hdmi_algorithm = {
+> +	.master_xfer	= inno_hdmi_i2c_xfer,
+> +	.functionality	= inno_hdmi_i2c_func,
+> +};
+> +
+> +static struct i2c_adapter *inno_hdmi_i2c_adapter(struct inno_hdmi *hdmi)
+> +{
+> +	struct i2c_adapter *adap;
+> +	struct inno_hdmi_i2c *i2c;
+> +	int ret;
+> +
+> +	i2c = devm_kzalloc(hdmi->dev, sizeof(*i2c), GFP_KERNEL);
+> +	if (!i2c)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mutex_init(&i2c->lock);
+> +	init_completion(&i2c->cmp);
+> +
+> +	adap = &i2c->adap;
+> +	adap->owner = THIS_MODULE;
+> +	adap->dev.parent = hdmi->dev;
+> +	adap->dev.of_node = hdmi->dev->of_node;
+> +	adap->algo = &inno_hdmi_algorithm;
+> +	strscpy(adap->name, "Inno HDMI", sizeof(adap->name));
+> +	i2c_set_adapdata(adap, hdmi);
+> +
+> +	ret = i2c_add_adapter(adap);
+> +	if (ret) {
+> +		dev_warn(hdmi->dev, "cannot add %s I2C adapter\n", adap->name);
+> +		devm_kfree(hdmi->dev, i2c);
 
-diff --git a/drivers/media/usb/dvb-usb-v2/lmedm04.c b/drivers/media/usb/dvb-usb-v2/lmedm04.c
-index 8a34e6c0d6a6..f0537b741d13 100644
---- a/drivers/media/usb/dvb-usb-v2/lmedm04.c
-+++ b/drivers/media/usb/dvb-usb-v2/lmedm04.c
-@@ -373,6 +373,7 @@ static int lme2510_int_read(struct dvb_usb_adapter *adap)
- 	struct dvb_usb_device *d = adap_to_d(adap);
- 	struct lme2510_state *lme_int = adap_to_priv(adap);
- 	struct usb_host_endpoint *ep;
-+	int ret;
- 
- 	lme_int->lme_urb = usb_alloc_urb(0, GFP_KERNEL);
- 
-@@ -390,11 +391,20 @@ static int lme2510_int_read(struct dvb_usb_adapter *adap)
- 
- 	/* Quirk of pipe reporting PIPE_BULK but behaves as interrupt */
- 	ep = usb_pipe_endpoint(d->udev, lme_int->lme_urb->pipe);
-+	if (!ep) {
-+		usb_free_urb(lme_int->lme_urb);
-+		return -ENODEV;
-+	}
- 
- 	if (usb_endpoint_type(&ep->desc) == USB_ENDPOINT_XFER_BULK)
- 		lme_int->lme_urb->pipe = usb_rcvbulkpipe(d->udev, 0xa);
- 
--	usb_submit_urb(lme_int->lme_urb, GFP_KERNEL);
-+	ret = usb_submit_urb(lme_int->lme_urb, GFP_KERNEL);
-+	if (ret) {
-+		usb_free_urb(lme_int->lme_urb);
-+		return ret;
-+	}
-+
- 	info("INT Interrupt Service Started");
- 
- 	return 0;
--- 
-2.25.1
+Hm, why freeing? That's a devm. You don't free other pieces in bind paths...
+
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	hdmi->i2c = i2c;
+> +
+> +	DRM_DEV_INFO(hdmi->dev, "registered %s I2C bus driver\n", adap->name);
+
+Please do not print simple success messages. Tracing tells you this and
+driver should be quiet in typical cases.
+
+You have also some weird tabs instead of spaces here and there... like
+before 'encoder' arguments. This is needs some basic style check.
+
+
+Best regards,
+Krzysztof
 
