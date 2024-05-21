@@ -1,186 +1,191 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EA171B3D;
-	Tue, 21 May 2024 10:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716288782; cv=fail; b=Zg0KDpz77UtzWZc3UZHOyuuYlhG7xQVEA9aVb5pCZiARJvj2iMY3dAqTOFi/kYW/3EKx/k1PXx2+Gxu1EaEIWNlMxL0DTm64gMFef3BFPEP02Aye7ZdG32Qb8xe1K45NOlCUNGWadq8E8NkbN/D04Auh58K3ffT5tqchHzncgV4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716288782; c=relaxed/simple;
-	bh=UzTqVBYVp3MOPIUVQ1vG7ev8W1GEm0G/BgkUl0SjafI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NfjyBcNW9usVejfOGRe1OhmsP1SVrPu9/KTGhZJQDKwDwM44iyp7oBG4fyRnYM91t2rMkYU69d58WNcO2RzASzBhA/qsiQgNnmE2cq+E4pdv+81Fe/UAXW13uvb7ymCRzxynOiMjSU9N5/qhlXLznyNrZMZ986xsbE2oRWdJbTo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JbUPiJE4; arc=fail smtp.client-ip=40.107.223.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A30B745ED;
+	Tue, 21 May 2024 10:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716288784; cv=none; b=Tzl3pzVg1Dkx3l6NYA+rpOJEzEmfkw0ucVMuWx2FNKBZQyjY5tStbCCTWm7V3dlxhNYPuIYfGkr+Qpxok6T07YCDrMAV4bPfRvUU4ggBmN4oROmNcU2tBWhDo72ogRbgiV7SONNa1y4X5I/CQYgvehomkSmsCjnQ0fgWD5PceW4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716288784; c=relaxed/simple;
+	bh=tC+V9Y70X/Xnv05SewXsKRHGbavT2qz+t6q9U43RK5M=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bujyO28y3Y3EZs7Z5St+mg4Gzv1Zr5RN0Zb8yN21ZkKpmkzzoj6zWc+YCQROYl+/KTSnZjKww21E2Z3qFqrOyuA3BFysvPAeX5+sIPV9bB5BT8b30VfEGhlD1JSg4i+MQVJCQ8cg7C+eNlu4S+u/MMOGLpNEhEy51b0jvPPpq3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aPatt4kt; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JbUPiJE4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AeQ+tBcd/tAKefreGbWvpC+g0wYIQazD9O51k/PpT52JXcDqhomJxuXXqUfhhA1qZ4QZiurpJJDaJTCDCL5yCSg1lt27pew/DKdAzvICyFLo3rfqR2RBRHEOJzjKZ+DNnM+TwISJbgR2JEIzveZZFSVptudjKutyS8Bfv6KZNgYcFohwEhE2RuXN8Va2OGIh/mTCXK4k/zgCu31dFcHh8/Yc3hWHK6Mq+OfshFrP7//n332zOOV1Cu8l81YkmfEBocuHCP/R0k4Oq8zNbc3FMbpvDcNSWX+arsM4EAwYigORGI7skR6MAmHheIUGFmdeGrT+3it3hOjko7Bs5R5ucA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uFEaX1++H7A8n07KEGq7VOJSpbf9+5fc77/Cl8xXUvY=;
- b=WvOnoE+1VI5wH9xrQ8rDtJ2DCnCePXTqiL000r2Vk5NpHMwnvd59SSkXdlwZWYGssQwpogM1Z8aVwtdn+rUr+Mle2MC07vLpg22vA9+V9sUT6lEc6arFYa5zl+hWlM/3TKT6j8UQWtVif+EUz5GNkdWgWoayHP6ZZ/hnTGHuxDiYnwP2WosGch3S2kBfS43hoA7D7GfF9Fmo14o4VDRarnMpBAc/mB8P0jji+Gg/GNbY48rYJrK7nbs+M8mvk04y0Uc5zLQnmR63yeTrxO/9lBNbDyZkiNhFSIjAUUSaMUJzPfzvM0v4wbw1C4Rs02jIGqilt/VoJiOn06FdKauhyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uFEaX1++H7A8n07KEGq7VOJSpbf9+5fc77/Cl8xXUvY=;
- b=JbUPiJE46dqDKvZLJ+lIayuRgYKEfqaMnrlKtLjEtyDISQ4ucAQPJPmRMAOqcMOFwO1idm+/3o8x+j8jIvGSYeQC3JT/9TnEZrMLc8Fv6oFb/IFRu7mwNKWRFSe7CWWexf/SSQTPS2JZO6ebJyyseoUjq0sJt4w3x+wOYF8uTnI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MN0PR12MB6056.namprd12.prod.outlook.com (2603:10b6:208:3cc::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Tue, 21 May
- 2024 10:52:57 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7587.035; Tue, 21 May 2024
- 10:52:57 +0000
-Message-ID: <e7227b7c-d544-42a2-8396-a7d104b54e31@amd.com>
-Date: Tue, 21 May 2024 05:52:52 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] "xHCI host controller not responding,
- assume dead" on stable kernel > 6.8.7
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- =?UTF-8?Q?Benjamin_B=C3=B6hmke?= <benjamin@boehmke.net>
-Cc: Christian Heusel <christian@heusel.eu>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Gia <giacomo.gio@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "kernel@micha.zone" <kernel@micha.zone>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>,
- Yehezkel Bernat <YehezkelShB@gmail.com>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- "S, Sanath" <Sanath.S@amd.com>
-References: <CAHe5sWavQcUTg2zTYaryRsMywSBgBgETG=R1jRexg4qDqwCfdw@mail.gmail.com>
- <38de0776-3adf-4223-b8e0-cedb5a5ebf4d@leemhuis.info>
- <lqdpk7lopqq4jn22mycxgg6ps4yfs7hcca33tqb2oy6jxc2y7p@rhjjbzs6wigu>
- <611f8200-8e0e-40e4-aff4-cc2c55dc6354@amd.com>
- <61-664b6880-3-6826fc80@79948770>
- <20240520162100.GI1421138@black.fi.intel.com>
- <5d-664b8000-d-70f82e80@161590144>
- <20240521045940.GJ1421138@black.fi.intel.com>
-Content-Language: en-US
-From: "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20240521045940.GJ1421138@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0157.namprd04.prod.outlook.com
- (2603:10b6:303:85::12) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPatt4kt"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-572baf393ddso11822464a12.1;
+        Tue, 21 May 2024 03:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716288780; x=1716893580; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vwKhGwCuZU7pPcy50QvgvS6xSY301hGuD+YpB8vSPTs=;
+        b=aPatt4kt7WlrUaKU9FbnuqZvXUOPCp+WMyX23eRN2lbccYjyz245/PK97GLkHVGif6
+         0SFQ7LbqG6eB+L3Cahli3x/+kJQi0/qME9rXxC4wHNA/Yniz5qM4rWXxZXObUuyF91yL
+         b9kMdyciJ30fa/FGY5esBMABEZBgjNbMRVT9uKsqVHmCk/8vpEnFtB9gNNqcSoYbN7wQ
+         RuIPMVp43yloWr9Jt/oSf2oOKNwHfFjvLNT8KbUfPaTUmTYSMoR5UzC1l7Ci/L/i6HU7
+         B5szHlFdOtW4rpIN4B2+qm4KhmwY8y5GzMu0+Zvniz69el191UzQL+Ukry2J/Orrc+ZV
+         90ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716288780; x=1716893580;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vwKhGwCuZU7pPcy50QvgvS6xSY301hGuD+YpB8vSPTs=;
+        b=sbRB5jVworfHBDhnoDtY874wGKINLRwjsQgjMq+3+R7Kx0Jeul9RTiShD7oNuTVi8t
+         u9C3VmsJTLuEJQZU4e3S4IQEyf5FYapJ1Ths5N3Wz2zUuYxfza+alLRVy6KqhNZ80QHH
+         m/Bsn1P24+AKgGSqOarBd8rzfJbffnaAsd7FAdYGhGC8QGknsUqT97SxsVLGI/J39rDT
+         4dTsM+AuTEbyTPAbbvgNgoCbhukFKNpZKlUPYCWeLepHgNpVkdLYZYluYzc4OOC65fgz
+         iOASvhwtWOMpr0690vmGL7fOywrw9XQG/pVNILkDwJUZ7//7BXO0+8W6UQda0UAqDkLJ
+         QCSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlxuG2Cr/430BPEyMYORJQrm3ARz+f13CEud9yVDDs+erhJ6z65OaQ1w60p/pBJrSOQGpftBuKXPZkgNK2UyJV/KxvH6YMF4O+TFkUqtNFDW3IW9hGqp7mES8YtZM8Hj7hftIR6FV26uiRbBkYKh/UHwKbdF8aI4vFey0/aW8khFB3EA==
+X-Gm-Message-State: AOJu0YxSoTeQeNOwL7HFnAO7JhjbB0A79qbX4VWKfaUqyDsF7Q3wV7TF
+	w+Ce37K3idVTc7Dkb4GB6LC5ZRdzpY/LDTiExRbQIEEdHLgujWkK
+X-Google-Smtp-Source: AGHT+IFXKW6WGKcUPz8FMtXQiXjIMyo4n6v5VoDQgWnYwcqGq3eB+PXBwd5+S/yU+NN4hq4P17B1Vg==
+X-Received: by 2002:a17:906:79ca:b0:a5a:5bc8:9fcf with SMTP id a640c23a62f3a-a5d5d98cec1mr749951466b.36.1716288780350;
+        Tue, 21 May 2024 03:53:00 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01932sm1586399666b.168.2024.05.21.03.52.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 03:53:00 -0700 (PDT)
+Message-ID: <cc53c6c282c070894d8c65fd78f47616d36ec75f.camel@gmail.com>
+Subject: Re: [PATCH v3 7/9] iio: imu: adis_trigger: Allow level interrupts
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Ramona Gradinariu <ramona.bolboaca13@gmail.com>, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, conor+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, robh@kernel.org, nuno.sa@analog.com
+Date: Tue, 21 May 2024 12:56:43 +0200
+In-Reply-To: <20240517074750.87376-8-ramona.bolboaca13@gmail.com>
+References: <20240517074750.87376-1-ramona.bolboaca13@gmail.com>
+	 <20240517074750.87376-8-ramona.bolboaca13@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN0PR12MB6056:EE_
-X-MS-Office365-Filtering-Correlation-Id: ddcd3ea4-62ed-4925-7cbc-08dc79842cd4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cUJxQzVEYjRnVzQxeVBiN0h4SnlXNHlPekdsT2Zza3ZlM3lJZ091K0pTQ2Z5?=
- =?utf-8?B?NVdxc05ScENIQ0Z5MC9FbkZadUJYdjhtb3hNcXhMcThQT3NKd05OZGpMNDVQ?=
- =?utf-8?B?elRxeHA3YVdTazlXM2o5STk0MElOZmROdE1xQUdFZGlldXNyZ0xmNDdkNkk2?=
- =?utf-8?B?OXU1MFdGY2JINkpLSlFEUnErdStESGQrSjVZZll5aFMxNUdKcnhOQ2RRa2Zh?=
- =?utf-8?B?R2R1dWRsVENaLzJ2Q1IwdzBwZWJ0K3FPUnlOZU1yUktvUGZOb0xVenpMaXZz?=
- =?utf-8?B?clk3RDlLOGl1Tm40dDlnUldzRmdXckpHdHpjY0dldXcvcXRLQks0bHZ6TEty?=
- =?utf-8?B?bS95SWFjdFg4c1JaQXQwNUVOL1ZRVlFVTnhIck1RK3JrRi9GejZacGt4eXQ1?=
- =?utf-8?B?S2IwcFhJUE9OSktjbmdIRFBwbGY2UmRabXJDK0hYSkpGZHpmZ2MvWHhzL090?=
- =?utf-8?B?NTZtZVQ3VExPdWlFRTJZaUdaVmdKTHBoeERnWEVhbGsxK3JQV0JxeC82cHgy?=
- =?utf-8?B?bEpERXJZUXhHMXl2ZjFIRWxWQ1lGdWtld3dMV3BTd296eUpzTEZLVGZodkxx?=
- =?utf-8?B?Q01CeHZpWWZzYUx3bEFKQUNHeldzTWZxKy9sdnIwTkpXYml5N3pNNHVQYURs?=
- =?utf-8?B?V1dsdWtyUXptTHg5NHlSTWo5V3NXek5aU1BIWmVXcVdSc0xsdUppRkNodFRE?=
- =?utf-8?B?QzJWRlJDVWlSSDhwUTVqVEpKUDFSdkVWRWJETndnUmdrOU42NkhCNHNwQ3Ji?=
- =?utf-8?B?aFVZbnljVzZlamdFSnFXOVFkd3VJM2ZNM3YxajduWS9ycXgwRDk1UkpxQmdQ?=
- =?utf-8?B?SkhSVHMyL2lrUXRaZFpCZE9TcmhvbnhUbGhDSnlmMW00bEMxK1dDY3ovQkhy?=
- =?utf-8?B?aSt0WklPOUVRRFNTK1BBb2hYb3FXWnFWRGpRdXJ4YXltd3B3R1VFUjdVVmRV?=
- =?utf-8?B?R1N0K0lmQU1qTW9LWlNSSFg0OTArVjlxT0kwWHdoTUM5TEo4c3d6dWRFZFZx?=
- =?utf-8?B?Y0Jna1VMMWhnVHlHSGozK1NJM2Z6ZHpHdWZuaHMvaE00enNpRVVzMXBXcUJQ?=
- =?utf-8?B?cWZxQ1h4Q1pDL0t1ditKWGlzWm1iYmZQaUFWTTg3L1dNdk5zNi9iY0kyaDVt?=
- =?utf-8?B?Z0kwcnUzZVB0ejdDMEpPTCs3d0FyR0RpaHNnd1M3clQxT0NSd3VvWXN0SnZq?=
- =?utf-8?B?bldkc1NvYm1VZVhHZExwN2lpOEVTd1IxbkJUbVc3QjhrSU1XYnluMFRGK1pT?=
- =?utf-8?B?eW5OVjRBNHoyYWdJUEVaNVJlbVplN1p2UUVKRkQ2Mm1ZL1UwVk56WW1aYTJE?=
- =?utf-8?B?OW9BVDB3K3p4NXBmalJ6VnV6eUtpaTJiVmpVVWpoZS9ESkFiUkFSSGoySy8v?=
- =?utf-8?B?UVc2THVyNDVQMVpHYmxsMXp1aytvemNuZDVPTFVucDlWUDRNUHRRL2NhRU1E?=
- =?utf-8?B?RXJ3eVNpQXNKc0FINzFDdXplT1dScjFTcEtkMkZIbDZFZTNRa3JIcGRRNjNX?=
- =?utf-8?B?TW5IZ1JXVnBhNXE5SEkvT3UwT2FocklENkNWeWxCZ3J5U2tlcERzNFZmK2VI?=
- =?utf-8?B?OGJxRHpsSUhjeThPWnduUXhtbkFwZnd3VFI0WGJXOCtjdkZNRlJ0WE1LZEw4?=
- =?utf-8?B?clZCU0N3cE9TWi9zOGtSV2l4cXVxM3RVcEE4RXByV202SDJHMmVJNzUzdUJw?=
- =?utf-8?B?cyt0anpJb2d3aTIvVWhGZ2RsLzc3cmdhT09TZWluL0tOTTBEU3l4bEtRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Mnpnai8zUzFQeERka0UzODFQMzAvdU9UREJQUGhoYzk4Q3BVS3kxcElObzV6?=
- =?utf-8?B?WHA5WlpHZE1WK0tpa1J5eXBleVl0VVIxdEtyUDNLRWVqb0FScjdWaWVja0h3?=
- =?utf-8?B?VjlLcVBVL01KRjhjanlhT2E3YVM3Qjc5YUdaTHROWVA0MXRXeG9rNnFNL3E1?=
- =?utf-8?B?aW5ya3JKQkpHRGRlL2JtajhNYXNLMEFhbWNaaGRaendSTDhFU3dpaGM4MTRJ?=
- =?utf-8?B?OE9vZ1k0TmlIVUdsQ0RjWnhDMzFneThKYTRubUhhVnNBNlRndkdoUWxJNnk2?=
- =?utf-8?B?Um5lUjh4NUh2OHFXREFFa05YNThCTDdJcVFna242SE1jWlRWUVVya291RXBW?=
- =?utf-8?B?MHFKZXlDMkI2eUVWd2VKeVBVcjgwbzkwdm55WUQ4VzgvMS9NNTlFT28wVURh?=
- =?utf-8?B?THhCYWYrdFMwQm1KUGFJbys3S0hZU3ovU0VaNkZicFZKM1ovOUlqai9RbFNk?=
- =?utf-8?B?bnlWa1N3eDA4QzM5cFRMTTRFYTB0Q0tnYVZCeHhoTVlQcUszQmdIVC9QRjY4?=
- =?utf-8?B?ZDZKS0hqdUxLK0lodkwrclZRS0t2OXJnNEtXMWlnV2J5bzNBNVlBNy9FNlhW?=
- =?utf-8?B?S1VVditiSkpmWkZ6UHJKSkFKQlVOZ2VGL0pNNUhQZzNnQmFhejNZME9Ybktn?=
- =?utf-8?B?U0wvZ08xV2dMV2Zkb1ZjVnNqMU9vclU5TlhzK3dCaEtvaVdLajZ5SGg5ZW43?=
- =?utf-8?B?b2lBeG9hYjh1cUFSRzFGUG9hYkRvY2oxWHlpdmd0dGVmUnZvZnRRREgyN1Z1?=
- =?utf-8?B?cUNWM2p6SDVYemo0Vmd2Z2NoVUN4MWd1bjlMa2ZpZzRGRDByQkJDcHVRMTBx?=
- =?utf-8?B?V1lHeEhpRzN5N3crdC93WkhrdWYxelg2YWFCU3JycTMwb2dNc2FZd0pDcXNk?=
- =?utf-8?B?NWNxckgyTW8vclBwdXkrN09IclY4SXczU2MyWnhBQ0grdm5oQjF1eldjSzIx?=
- =?utf-8?B?aWxkNHZBemZ4NXdjSTc2cTBnaTZXRnY3Y3FGQncwWG9JU2I2MnFXRnAyTEp5?=
- =?utf-8?B?aFpGUkF0YnRwWFB0VG9VUGg3UXp1TlVYVm5KNCsvRjhHTEhXdHlaNUtFY0Ft?=
- =?utf-8?B?QjV0MmxWZ3VidnBqUXRvdDd5YmR0cmhpVDJaWm5BbG1kbHp0VmVudHNWUXVK?=
- =?utf-8?B?WE5XNFBIaGVBWnZQZlcwbGt2V1RXUjl2dkNyL3pHSUNVcUpyMDk0NUhiYXlV?=
- =?utf-8?B?YkhaenM3YzdSUnExSXBBRWs4eWVpT1ZwdWF6NWlOcEFzZ0dsWURDWHBKUTVl?=
- =?utf-8?B?VGtrRGJQNFlacTBjZUszdUpxR2krak56aFlTWkJVZ250bTYwZ2tGa0Z5a2du?=
- =?utf-8?B?ZExoYndHQ2VGUENWalFtRGNjTWZSa1dhc1hCZXQvWmRiLzRwcFdQdU5NclB3?=
- =?utf-8?B?OFJIcVFLVHpFY08rbllwNHRka0VyM2pSVGJCS2d1TEpFUWhROXAySThCVFRj?=
- =?utf-8?B?YnU0QmFidkJ1QmhiQnZOQzNzdkFXbXNzL2NnaGlxdTdndUZOZ0MycXB4eE1Q?=
- =?utf-8?B?YVAvbVE1Q216WDU1RlVSM3drclBiYzVlbXFqRjUrc0lCZWVnOFhOR245VUZ2?=
- =?utf-8?B?aFgyTVZHWDJnQUpUaFJSWnQ0THlKbWcxc1htZHRTNTA0R21KaUFKZUNLQ1d3?=
- =?utf-8?B?OUoyK2pkeXlsMUFTaWZZTEh2VnVyYWNxSDZ6NHAyUFVleGVuazVYZzZ5VkJW?=
- =?utf-8?B?Zm43UW5yaERIUGpzZzJYbDBDeUJlYndZTnBuUFpidzhCTk5ZK040R2RhSU9S?=
- =?utf-8?B?Z3RobG4xWURPK0ZnbW0xaUZHQnVEOHVwUXVhOUY3SmJxS2g2cmI3TWhpQXRR?=
- =?utf-8?B?eEYyWXljZlJmRk5sNU9sYW5iYVNaL0VBYVVMK0Q0VFlzRXVUdHIyT3dPcXIy?=
- =?utf-8?B?YmVIZkxVU0lLa2FXYU5mbGxMREVaUFU1czNzZmJ5elg3dXM3NlRsaGJlS2p6?=
- =?utf-8?B?dE16V0NKNGM2ek9wM2wyRnNUYTFjZkc5R2NZS21lWDBEeFExL3NudTV0NG9Q?=
- =?utf-8?B?MEtIalBlNG1ZWWtJekxBVmhXK1ppYStGR0UxOEkveW96eUx3VEtUOVlUWHRV?=
- =?utf-8?B?QVgvVkphYit4MUdRcTRTOSsrUWNoYklPanFkMFgycEtOL0RtK0Q4cnoycC83?=
- =?utf-8?Q?hsQxgpq64KwNNz9NBc0bkrcSh?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddcd3ea4-62ed-4925-7cbc-08dc79842cd4
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 10:52:57.6217
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r+yjZ7EQLHnvUUq7dgfxw4KGxUji0o/xLOgf+2+vC1jAmnswsHTfh/rHN2BMiT0a1F1yH4J5RNXWh4Ce0MP79Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6056
+
+On Fri, 2024-05-17 at 10:47 +0300, Ramona Gradinariu wrote:
+> Currently, adis library allows configuration only for edge interrupts,
+> needed for data ready sampling.
+> This patch removes the restriction for level interrupts, which are
+> needed to handle FIFO watermark interrupts.
+> Furthermore, in case of level interrupts, devm_request_threaded_irq is
+> used for interrupt allocation, to avoid blocking the processor while
+> retrieving the FIFO samples.
+
+Technically this not totally accurate (though ends up being true) as we do =
+read
+the FIFO samples in a thread already. The part that runs on the top halve s=
+hould
+be:
+
+iio_trigger_generic_data_rdy_poll() ->=C2=A0iio_trigger_poll() -> iio_pollf=
+unc_store_time()
+
+and given the FIFO nature (as the interrupt keeps firing until FIFO_CNT dro=
+ps
+below the watermark), it seems this is enough for you to see some freezes.
+
+Anyhow, I'd say the commit message should be a bit refactored. This also le=
+ads to
+another minor detail/question (see below)
+
+>=20
+> Signed-off-by: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+> ---
+> changes in v3:
+> =C2=A0- new patch
+> =C2=A0drivers/iio/imu/adis_trigger.c | 39 ++++++++++++++++++-------------=
+---
+> =C2=A01 file changed, 21 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/adis_trigger.c b/drivers/iio/imu/adis_trigge=
+r.c
+> index f890bf842db8..becf1f558b4e 100644
+> --- a/drivers/iio/imu/adis_trigger.c
+> +++ b/drivers/iio/imu/adis_trigger.c
+> @@ -34,21 +34,16 @@ static int adis_validate_irq_flag(struct adis *adis)
+> =C2=A0	if (adis->data->unmasked_drdy)
+> =C2=A0		adis->irq_flag |=3D IRQF_NO_AUTOEN;
+> =C2=A0	/*
+> -	 * Typically this devices have data ready either on the rising edge
+> or
+> -	 * on the falling edge of the data ready pin. This checks enforces
+> that
+> -	 * one of those is set in the drivers... It defaults to
+> -	 * IRQF_TRIGGER_RISING for backward compatibility with devices that
+> -	 * don't support changing the pin polarity.
+> +	 * Typically adis devices without fifo have data ready either on the
+> +	 * rising edge or on the falling edge of the data ready pin.
+> +	 * IMU devices with fifo support have the watermark pin level driven
+> +	 * either high or low when the fifo is filled with the desired number
+> +	 * of samples.
+> +	 * It defaults to IRQF_TRIGGER_RISING for backward compatibility with
+> +	 * devices that don't support changing the pin polarity.
+> =C2=A0	 */
+> -	if (direction =3D=3D IRQF_TRIGGER_NONE) {
+> +	if (direction =3D=3D IRQF_TRIGGER_NONE)
+> =C2=A0		adis->irq_flag |=3D IRQF_TRIGGER_RISING;
+> -		return 0;
+> -	} else if (direction !=3D IRQF_TRIGGER_RISING &&
+> -		=C2=A0=C2=A0 direction !=3D IRQF_TRIGGER_FALLING) {
+> -		dev_err(&adis->spi->dev, "Invalid IRQ mask: %08lx\n",
+> -			adis->irq_flag);
+> -		return -EINVAL;
+> -	}
+
+I guess then we should rename the function as no actual validation is being
+done, right?
+
+>=20
+> =C2=A0	return 0;
+> =C2=A0}
+> @@ -77,11 +72,19 @@ int devm_adis_probe_trigger(struct adis *adis, struct
+> iio_dev *indio_dev)
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+>=20
+> -	ret =3D devm_request_irq(&adis->spi->dev, adis->spi->irq,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &iio_trigger_generic_data_rdy_po=
+ll,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 adis->irq_flag,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 indio_dev->name,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 adis->trig);
+> +	if (adis->irq_flag & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW))
+> +		ret =3D devm_request_threaded_irq(&adis->spi->dev, adis->spi-
+> >irq,
+> +						NULL,
+> +						&iio_trigger_generic_data_rdy
+> _poll,
+> +						adis->irq_flag |
+> IRQF_ONESHOT,
+> +						indio_dev->name,
+> +						adis->trig);
+
+So, this is not really a big deal for me but I wonder if we should actually=
+ tie
+this change to the device having FIFO support (so a boolean in the adis_dat=
+a
+struct)? It seems to me that's the real reason for the split... With the
+boolean, we could also constrain the IRQ level support for devices supporti=
+ng
+FIFOs. Anyhow, since this is the first supported device with a FIFO having =
+the
+boolean (while it makes sense to me) may add more overhead than needed to t=
+he
+series so I'm fine with this as-is.
+
+- Nuno S=C3=A1
+>=20
 
 
->> I still don't understand why this happened as it was working great for
->> years and is still working with kernels 6.8.7 or older. But
->> nevertheless sorry if I wasted time of anyone because of broken
->> hardware.
-> 
-> I think the BIOS CM creates the "first" tunnel using reduced
-> capabilities already so this makes the "second" tunnel fit there in the
-> 18G link. Now that we do the reset the "first" tunnel is re-created with
-> max capabilities and that makes the "second" not to fit there anymore.
-> 
-> But now you get the full 40G link :)
 
-Well that's awesome!  That confirms there were other issues besides the 
-one Sanath found that get fixed by not reusing BIOS tunnels.
