@@ -1,149 +1,109 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3171B6BB5D
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29BF6EB5D
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716284733; cv=none; b=W/shXFPm2PS/CLwn9qtByMwsK392Bl+HepPbBQfeXtqnFwOqjB4zUd8fulqhJ4K3t40MqI32v/ySfGmHz7IQCPEDbpJRH0d2Dwsrv4SZNy2bT7iyuLkh9BCBg42ispCxZajE4m3OpG2wt2zFoqcYTRzedwCDfpvMuiBw4FGvYkE=
+	t=1716284734; cv=none; b=a8brYq2C2X5WIsWu1Fvh8N+0mZ4xgGy1NP//b64Qa1ydLNtp/HkNoPf57hVY/F/tfGgd8v4GqCoOBlg5tPTtKMMgZX/c/siwzUKbGGFrsMPsVd2OyehnAzf1AtmStG5LPO1OWNieZd8dP9MdPaUsrqO59Esz1Gr9ihlSrZRM/Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716284733; c=relaxed/simple;
-	bh=mNFfoGKwazQZaJjxyTEqcayzLDaum8DceVCVSofmCS0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qhd58ZvZsxVwOtLM85RV+ObOEYsyWpF2tcbyRFWKypxM+ytrerx0KqV24d2IBG9NyfFcKhYtfr6hunp+NMUVjhZyas7/E2QcuXAfnADYo6pHsW6859DqqxP+5/A6cs6HNLinnZNgaIhG4ZBHKSzV2M5qpeAhaTS/aEE6X1DbOuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P6KVckUl; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716284734; c=relaxed/simple;
+	bh=auUr06gKMtQJmw70SqyuisbzOZRSZGi7CZ50SSxwtvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I/jTjSJRaW+HDQGD3GMwykQI33ibd7cwwQ9LR6yVm2wbj9l3jdhr6b79zvhxFynX36wFQlblMVbkFSU+NUJq8nyyALDmzxQ+4Ea6cNBceHEqA+CRAQaZrYc1JVuJ+Ll5mY05t5kAsOqpNK3BXUmyk7JKcNqN3lptnhVem8xEtzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KD2YMljs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P6KVckUl"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e271acb015so66756611fa.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KD2YMljs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716284729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uutlqnz7GlxG5MMRoikdk+qop535bU307tyY8QMm6Qo=;
+	b=KD2YMljshv0/l6JMZ6BeRMFFWl74aYJ0/ky8YcJl4L8BvpOuipEyTPBP95ZP0k1bbFIUaA
+	lIXqm90q7zZLW2v8Y6ODfDQcMGGqugoBNCgR0V8lgAverv61EdmFpLl0hXlO3jN/AIISGw
+	ONos+vFSBVjtjkwpQxMEtCOjGcWuRCk=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-355-8IfNmCADMASWbLMj9EvEug-1; Tue, 21 May 2024 05:45:28 -0400
+X-MC-Unique: 8IfNmCADMASWbLMj9EvEug-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a59eea00cafso828193266b.1
         for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716284727; x=1716889527; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jecFdq9XX1dTw2yUnC7PhQdscC925IcSiTTnqz+9Dko=;
-        b=P6KVckUlQH26Z3m/xAvLTPVDJTWPfSQvu86u+pCTvjZ9mtqK2rfk5OinwouDpSSg1L
-         4vS1M2aPpDeFCf+Zb2Q+bLGtKJiOGaWuicXN4HQ+06tmFGI+geRdosiqx15WbsuHrzAW
-         BYEY3G/IUUoUi8SME8BUNOLjHMyDCest9HllgxWqQ7erUy48WmkUat3PsEWLOddLorLs
-         yduR91Kw9QgRdRi2ILdMStbdv2iRPMVfXXWSUEytP5PajG8EqID09rKTQ+RZLyebXSLO
-         N8eb5QFzELtj/CgFT1HUGJV9Szcirvb2KKxT9wEGsvPwVEvZ5u1ubGB3VAKxGDGUmr05
-         GSwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1716284727; x=1716889527;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jecFdq9XX1dTw2yUnC7PhQdscC925IcSiTTnqz+9Dko=;
-        b=sjqLqHTy/Y7cKmNatCl6i/2V2nI8bPbnZee/a8CqI/0PFRCZDiv7dn7sjyxMCihEcl
-         50xzgX7sepXvFrcm590uwlsPhvy1H/UNpFOzTOq+Ps2o4/mQ0f9paaqoXi4AUm9NE3D0
-         c9oB8FZLjOBl4xyCQfkfxLnMtMGwV68e5qvH+gD1YtW8Ztox8eUku7K4jLpk4WJIC5l2
-         aeQXpuCKnF4hx+0jDNTSHqBKPQvEOExbhBPzjxqNCkpRUE6zfGqqantjiKOKA2TzSoUo
-         VNrozebyJPWS3OlbF4bSsW4vUKiOaijGjAPCCbNIVpbSXc7RFHZCdHNBmKP2004XGqCj
-         SZtA==
-X-Gm-Message-State: AOJu0Yw+J+zMLVx0/IIpnjIdV6n6o4FBqVC6qYWPOPp3+//IVS0Dttjc
-	rM4hYUZ2A7mugVUjh0YcLjQY4/J8QwVJ0uwQocjWCTbFX8qR2MNOlrBX3PReKVk=
-X-Google-Smtp-Source: AGHT+IFTxQkrJDCzeLWrCudD84gAV/X79zi7LkAL7T4OG8XUDBbu4uZYig0wCSFlBu9Er2kpiaOZAg==
-X-Received: by 2002:a2e:4c0a:0:b0:2e6:cbe9:daf8 with SMTP id 38308e7fff4ca-2e6cbe9dc49mr129754251fa.6.1716284727368;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uutlqnz7GlxG5MMRoikdk+qop535bU307tyY8QMm6Qo=;
+        b=c/x594X3+dP2hdQR6yOFtfEsPtaQMQfCilIz5wWU/mRYTaLjbax4YWrVm89WAJfudB
+         ivVBJZIdMWVASteo4hqs3JQf1kfh1fuyINdXhHsf0uonHROChNsjQapVl0K/pf+5QJRI
+         WO7oPJF1kfIXkfj49ZedYaVzs4WOBR3zO3EKwvG2Rq1X8BT+G/Xr2QVsPNn0/rFq6Dl+
+         ldpi5gdQlhdt9KUfzbEYBeo/d6cNQNVBQhIqmj6Epk5lmoFk4OTY8axaMsXVAy8EMK1r
+         cfIR02YwmdNwQj5HgFnpC8XRi+WAIIQYWKp659m+RDg50HhPNiqKhAe9BD3jks5sLUac
+         qAzA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3R4WyRFhOKkTsYlQhV4/GtaE7qg28Yytn/FjWvXKpNN6/6WyOt8zM1yGEwXLK/Fi6AKrP7qbCg3gsvdpAsqW2FA9zpK2UahTvw0rx
+X-Gm-Message-State: AOJu0Ywy4aVC5budv7dWN4BgkMmJu5g/ZHCjSqGPq3kZz7HLyqcCgNHr
+	RyFR04dgOdgOwEJVzD+6/y+qBKO194/daB2/o3XXHvrTCI7ifmg7Xv4sx/MWOhp7qTUF8oGHh6D
+	J5M4JZ3+GbbwhDOVCc1Zfhw4CqUrr950mLTuQMr5XzVp00kSd5uInSTXFeMA4wQ==
+X-Received: by 2002:a17:906:b7d4:b0:a5a:1bd8:b7d9 with SMTP id a640c23a62f3a-a5a2d5ccac2mr2984489366b.46.1716284727352;
         Tue, 21 May 2024 02:45:27 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:45:27 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 21 May 2024 12:45:23 +0300
-Subject: [PATCH 03/12] soc: qcom: wcnss_ctrl: make use of QCOM_FW_HELPER
+X-Google-Smtp-Source: AGHT+IE15shLrDIA1bwGzpuKkQi1N9ZuJhZCcByks9Q2SL2bAm9EWYksBkA2ylT1GE1900zyIyzMcg==
+X-Received: by 2002:a17:906:b7d4:b0:a5a:1bd8:b7d9 with SMTP id a640c23a62f3a-a5a2d5ccac2mr2984487466b.46.1716284726874;
+        Tue, 21 May 2024 02:45:26 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01631sm1589870066b.153.2024.05.21.02.45.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 02:45:26 -0700 (PDT)
+Message-ID: <e55a1a36-8ed6-490e-b720-a25a0ad57afc@redhat.com>
+Date: Tue, 21 May 2024 11:45:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: other.c:undefined reference to `devm_led_classdev_register_ext'
+To: kernel test robot <lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <202405182256.FsKBjIzG-lkp@intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <202405182256.FsKBjIzG-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-qcom-firmware-name-v1-3-99a6d32b1e5e@linaro.org>
-References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
-In-Reply-To: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Loic Poulain <loic.poulain@linaro.org>, Kalle Valo <kvalo@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1682;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=mNFfoGKwazQZaJjxyTEqcayzLDaum8DceVCVSofmCS0=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0ytxCXD9qErfoBB4dLiYJqZd9eQQ5WqLLah
- hC2GzIGtE+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMgAKCRCLPIo+Aiko
- 1W0UB/0WIxQQuziOGJq6OrXgP3+CaPpTzT4eYVYq2Aqpda96s2TL+2HgwxZB/uhUg3keuJioam2
- 9FdpHEdSyzfmBX/Jtr9CO7KY6GIZWhdJl6J6hb0HwcBQn1Pc+048CtWwfaPTL9AHgEcL0Abd5Jz
- Q4YyqYvjEAhJachwYRntg0uKNHMtPR3FIUb+FMljvlT3tn6R+KYmD1vOiITNw5VB1wUcebPboDv
- EHCYLGaXllm97WQ3ntZTnb1F93Wse9ykyrTgR5tE22wbeGPehMr3Ze1RX8C8+ha6YnX/ImB072Z
- 9wkcz4k5PtVBXYjoAGylAC5zsPWVbvexxxHPusupRZJRWnvI
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Make the driver use qcom_fw_helper to autodetect the path to the
-calibration data file.
+Hi,
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/soc/qcom/Kconfig      | 1 +
- drivers/soc/qcom/wcnss_ctrl.c | 9 +++++++++
- 2 files changed, 10 insertions(+)
+On 5/18/24 4:09 PM, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   4b377b4868ef17b040065bd468668c707d2477a5
+> commit: 9426adb0326a87ed2fa9d010c4c18189047e0c11 platform/x86: x86-android-tablets: Create LED device for Xiaomi Pad 2 bottom bezel touch buttons
+> date:   4 days ago
+> config: i386-buildonly-randconfig-004-20240118 (https://download.01.org/0day-ci/archive/20240518/202405182256.FsKBjIzG-lkp@intel.com/config)
+> compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405182256.FsKBjIzG-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202405182256.FsKBjIzG-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    ld: drivers/platform/x86/x86-android-tablets/other.o: in function `xiaomi_mipad2_init':
+>>> other.c:(.init.text+0x97): undefined reference to `devm_led_classdev_register_ext'
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index b663774d65f8..3af3f15175e4 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -238,6 +238,7 @@ config QCOM_WCNSS_CTRL
- 	tristate "Qualcomm WCNSS control driver"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on RPMSG
-+	select QCOM_FW_HELPER
- 	help
- 	  Client driver for the WCNSS_CTRL SMD channel, used to download nv
- 	  firmware to a newly booted WCNSS chip.
-diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
-index 148bcbac332d..7d1a4536226a 100644
---- a/drivers/soc/qcom/wcnss_ctrl.c
-+++ b/drivers/soc/qcom/wcnss_ctrl.c
-@@ -12,6 +12,7 @@
- #include <linux/platform_device.h>
- #include <linux/rpmsg.h>
- #include <linux/soc/qcom/wcnss_ctrl.h>
-+#include <linux/soc/qcom/fw_helper.h>
- 
- #define WCNSS_REQUEST_TIMEOUT	(5 * HZ)
- #define WCNSS_CBC_TIMEOUT	(10 * HZ)
-@@ -214,11 +215,19 @@ static int wcnss_download_nv(struct wcnss_ctrl *wcnss, bool *expect_cbc)
- 	if (ret < 0 && ret != -EINVAL)
- 		goto free_req;
- 
-+	nvbin = qcom_get_board_fw(nvbin);
-+	if (!nvbin) {
-+		ret = -ENOMEM;
-+		goto free_req;
-+	}
-+
- 	ret = request_firmware(&fw, nvbin, dev);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to load nv file %s: %d\n", nvbin, ret);
-+		kfree(nvbin);
- 		goto free_req;
- 	}
-+	kfree(nvbin);
- 
- 	data = fw->data;
- 	left = fw->size;
+My bad config X86_ANDROID_TABLETS now needs a "select NEW_LEDS" + "select LEDS_CLASS"
+I'll submit a patch fixing this and include it in the first pdx86 fixes pull-request for 6.10.
 
--- 
-2.39.2
+Regards,
+
+Hans
+
 
