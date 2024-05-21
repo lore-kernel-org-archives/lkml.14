@@ -1,109 +1,102 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFA81E87C;
-	Tue, 21 May 2024 14:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF61E87C;
+	Tue, 21 May 2024 14:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716303394; cv=none; b=nDuDVjZPn5Gzc9/Z6pPqsL0VQ1nGlT6Vh92NprsyKuvrkV9d778uiiDfQLbJ5z7xllPZXjqPYHu4ROXJKt859icKZaxSYqPIeGFLqLLMAPnz5Mc2WNZHlY3u1tt2SbBspCiYalFzOSsQVRrGpw3gaU0XQzM6rTMnkQ+bS7HQpA0=
+	t=1716303493; cv=none; b=Z55epLVsv9RFCY3z/Cii8/VlmcxTV17oG3tCK6sCmzaW+ncFLMIT0pqlTAm1l5NtNkCb8yBvhBOrF2cE3nDMG+PXKsp1SRdOE6+Qp4GXGyeZOSr9dwewskIifv3VIksIgtar2wCMSZ61xH7WSyD7fRpKGEhkR/kumqJxGPmMvls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716303394; c=relaxed/simple;
-	bh=Sm/mlcq4N0CjbXbXms+PR2JhxxOwu8RQ4iQWhN0v6DE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rQSh1bYxH+o4DDe1/8W2qbwk53tEuGILq1ufjYEsGpoXDuud4Gi367PAWZnN7TjCZe/7ygIIYxSE7FexuoGgBlTZ0DXgbZpHn916Ac+6nDn17d0iQ3pxrZtmKS9OCRFjw21ojkfkdHFhe4Ef4P6RuHb3FlBnH1E3bRruJ7qEtLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=BkLcEJQC; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=BkLcEJQC; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="BkLcEJQC";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="BkLcEJQC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1716303389;
-	bh=Sm/mlcq4N0CjbXbXms+PR2JhxxOwu8RQ4iQWhN0v6DE=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=BkLcEJQCjQ/Tn8vfiRNAYOFowecqJtj5cpfdt5HhDPQW3fuYzexbBWDc/9e9lrDgW
-	 XE8/4mjeIc+DDEGe8Pav9v+Q5XzXPFmyb7wbKanJ2ARuzaEKCV1SzptbRYr3Be3MRt
-	 fWFykveWPfa6fGAq1a1J9+92QH3fjeozhsVnBQao=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id DDFC712813BC;
-	Tue, 21 May 2024 10:56:29 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id R_nsAii9qvM6; Tue, 21 May 2024 10:56:29 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1716303389;
-	bh=Sm/mlcq4N0CjbXbXms+PR2JhxxOwu8RQ4iQWhN0v6DE=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=BkLcEJQCjQ/Tn8vfiRNAYOFowecqJtj5cpfdt5HhDPQW3fuYzexbBWDc/9e9lrDgW
-	 XE8/4mjeIc+DDEGe8Pav9v+Q5XzXPFmyb7wbKanJ2ARuzaEKCV1SzptbRYr3Be3MRt
-	 fWFykveWPfa6fGAq1a1J9+92QH3fjeozhsVnBQao=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 4880F1280728;
-	Tue, 21 May 2024 10:56:28 -0400 (EDT)
-Message-ID: <0da89df455617f4dc1c7fdb8890e3219cfce4f7b.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: enable HMAC encryption for only x86-64 and aarch64
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
-Cc: keyrings@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>, Jason
- Gunthorpe <jgg@ziepe.ca>, Mimi Zohar <zohar@linux.ibm.com>, David Howells
- <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Date: Tue, 21 May 2024 10:56:26 -0400
-In-Reply-To: <D1FEC6TB7660.2XD9X21W46X7V@kernel.org>
-References: <20240521130921.15028-1-jarkko@kernel.org>
-	 <236606947b691049c650bdf82c37324084662147.camel@HansenPartnership.com>
-	 <D1FDMULT5YRK.GZOPJ9FZ325R@kernel.org>
-	 <854fa2e1634eb116b979dab499243e40917c637c.camel@HansenPartnership.com>
-	 <D1FE58VX0KL4.70F6U9Y6HPQC@kernel.org>
-	 <D1FEC6TB7660.2XD9X21W46X7V@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	s=arc-20240116; t=1716303493; c=relaxed/simple;
+	bh=qY9qPo3NRmBbi/V8Gj0FAiIWKBBNAyjG++HDaNkSY/I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YGG/ffn8R68WwwyaBNXKoIEQDrkJCD3HcI4UNWg5S8wr81tYV0WIxd+KSw2SMlvG6zjXWCYkGZiltSdb+Tf5bCnUDwzLRQlZYZMl8c056b0IeZXs8yVONwv1erYIgWQ/u7I6vpq/XGP8aB0MOMXVTxxSNWNPVi6f9JpB/YWAVAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5751bcb3139so5984506a12.1;
+        Tue, 21 May 2024 07:58:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716303490; x=1716908290;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9FXxkD2/lKUVaQGuLAgx7YvHLe5+oUAHOSstP23vnTE=;
+        b=cYVab177OBFkqdoWVkXypjhrmwnuvcAZN69rKL6AjCi7jR1+JBcIfkQExVJsQPIm1c
+         zRrzSaM1wEKmjz1M/SW7mFmvN1zdVNqlBXlvlPIIa6pIR8NVojAwebCyHSQwZRsWU3+k
+         IeIZIYj5GhxN+8wVVY7ABT94IOPugKPLCJMmONp0iuv72sYAuaWPEKVBJjXc1JjD0kBd
+         XeIeuIsWWiHw6LbymIL9WMSqvAW7/x1essgEzLFt7vSdJO+rL6lIAiBMnOX+pyTFxjje
+         Q9oDCp2uuhIGz6aHVaJWkdSf26PkufZm794RF77rm+jYtFBYzM9iDJuVuTwKHMQIQFAw
+         pSmA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3d9S4Wd9nrcn/1dZuTwkaXGIxjIRqhlLUeTsbmk68Yu9VjVjD6PTctFUu1MYfMPprualmcfCFs3KVX8Sf2RQClEyH31TIK3pfX2ixH+zwQ5WvZqbd/XMP+oDnAAt53dbGj1qFfd2Rry0=
+X-Gm-Message-State: AOJu0YwgS+oRLUGtR5cm4BHw1BYBQYpFSRU3xeHbwFP3hhYcG/13XVhu
+	XKHXVDzrAx4bvirZBHdNtz3mnbajDDAsJhag1CRdIvZyThrqiTlizF36fI1s
+X-Google-Smtp-Source: AGHT+IEtyGFPtFYyY/s/Auqg8Nw6iVcaLWz0FzqpSJAUsEZ93QNpIlcZajRQf+Ro0YsF6bCOvlwh+Q==
+X-Received: by 2002:a50:955c:0:b0:572:a16f:294 with SMTP id 4fb4d7f45d1cf-5734d67f7edmr22248777a12.30.1716303490296;
+        Tue, 21 May 2024 07:58:10 -0700 (PDT)
+Received: from [127.0.0.1] (p200300f6f709b700fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f709:b700:fa63:3fff:fe02:74c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574f6b8b9d7sm8912502a12.82.2024.05.21.07.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 07:58:08 -0700 (PDT)
+From: Johannes Thumshirn <jth@kernel.org>
+Subject: [PATCH v3 0/2] btrfs: zoned: always set aside a zone for
+ relocation
+Date: Tue, 21 May 2024 16:58:06 +0200
+Message-Id: <20240521-zoned-gc-v3-0-7db9742454c7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH62TGYC/22Myw6CMBBFf4XM2pq+oKkr/8O4gGGARtOa1jQq4
+ d8trDBxeW7uOTMkio4SnKoZImWXXPAF1KECnFo/EnN9YZBcal4LzT7BU89GZBLJWKVrS52Bcn9
+ EGtxrS12uhSeXniG+t3IW6/onkgXjTHA7iLZBo7U53yh6uh9DHGGtZLk3650piyk5GuysaRT2P
+ +ayLF/NBAlp2wAAAA==
+To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+ David Sterba <dsterba@suse.com>
+Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, linux-btrfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Naohiro Aota <naohiro.aota@wdc.com>, 
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>
+X-Mailer: b4 0.12.4
 
-On Tue, 2024-05-21 at 17:35 +0300, Jarkko Sakkinen wrote:
-> On Tue May 21, 2024 at 5:26 PM EEST, Jarkko Sakkinen wrote:
-> > On Tue May 21, 2024 at 5:13 PM EEST, James Bottomley wrote:
-> > > On Tue, 2024-05-21 at 17:02 +0300, Jarkko Sakkinen wrote:
-> > > > Secondly, it also roots to the null key if a parent is not
-> > > > given. So it covers all the basic features of the HMAC patch
-> > > > set.
-> > > 
-> > > I don't think that can work.  The key file would be wrapped to
-> > > the parent and the null seed (and hence the wrapping) changes
-> > > with every reboot.  If you want a permanent key, it has to be in
-> > > one of the accessible permanent hierarchies (storage ideally or
-> > > endorsement).
-> > 
-> > I'm fully aware that null seed is randomized per power cycle.
+For zoned filesytsems we heavily rely on relocation for garbage collecting
+as we cannot do any in-place updates of disk blocks.
 
-OK, as long as this gets documented, I'm OK with it
+But there can be situations where we're running out of space for doing the
+relocation.
 
-> > The fallback was inherited from James Prestwood's original code and
-> > I decided to keep it as a testing feature, and also to test HMAC
-> > changes.
-> > 
-> > If you look at the testing transcript in the cover letter, it
-> > should beobvious that a primary key is created in my basic test.
-> 
-> I think what could be done to it in v3 would be to return -EOPNOTSUPP
-> if parent is not defined. I.e. rationale here is that this way the
-> empty option is still usable for something in future kernel releases.
+To solve this, always have a zone reserved for relocation.
 
-You can absolutely have null derived parent keys (I use them for
-testing as well).  However, the spec says the parent handle in that
-case should be TPM_RH_NULL (i.e. 0x40000007) not zero:
+This is a subset of another approach to this problem I've submitted in 
+https://lore.kernel.org/r/20240328-hans-v1-0-4cd558959407@kernel.org
 
-https://www.hansenpartnership.com/draft-bottomley-tpm2-keys.html#name-parent
+---
+Changes in v3:
+- Rename btrfs_reserve_relocation_zone -> btrfs_reserve_relocation_bg
+- Bail out if we already have a relocation bg set
+- Link to v2: https://lore.kernel.org/r/20240515-zoned-gc-v2-0-20c7cb9763cd@kernel.org
 
-James
+Changes in v2:
+- Incorporate Naohiro's review
+- Link to v1: https://lore.kernel.org/r/20240514-zoned-gc-v1-0-109f1a6c7447@kernel.org
+
+---
+Johannes Thumshirn (2):
+      btrfs: zoned: reserve relocation block-group on mount
+      btrfs: reserve new relocation block-group after successful relocation
+
+ fs/btrfs/disk-io.c    |  2 ++
+ fs/btrfs/relocation.c |  7 ++++++
+ fs/btrfs/zoned.c      | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/btrfs/zoned.h      |  3 +++
+ 4 files changed, 77 insertions(+)
+---
+base-commit: d52875a6df98dc77933853e8427bd77f4598a9a7
+change-id: 20240514-zoned-gc-2ce793459eb7
+
+Best regards,
+-- 
+Johannes Thumshirn <jth@kernel.org>
 
