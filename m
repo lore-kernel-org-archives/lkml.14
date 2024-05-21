@@ -1,42 +1,65 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C834F5FE;
-	Tue, 21 May 2024 06:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AA347A76
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 06:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716274274; cv=none; b=RHsVMNkfo8aukFMuMRW2pxZa2BtLYrT2Xh4vgZt19hZ3R55AiL2wM5MD3wza3Fq9QmbmB5LuPtpZK6joAP1s/C6RdCutWHCy7Qbbdk8X2NDyW7F75Hjk7sUGr7BguRU20yjWKza013iyGssJgxlznMFBC/VY6w47/dk/EpNzd3Y=
+	t=1716274276; cv=none; b=JoJ/MTwgJtbR/9Rm/kKtvqTiR8CvqXnkL9SxR4m3U1Bhmwgf1Z48lsRw6g/R2taGAs51EVXA57OK7noZxxOWO14FsnCPlpokNDLFtpEKHHlbJwCboIHuLAJEesvbnheDqEap2yssJz+t36ctHA0NfpflYm8TUkK+fPu8S+sR36Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716274274; c=relaxed/simple;
-	bh=r9SLZk+qmYmVopqi1Vefj84gkaJ4TPfgggACgvy8Qtw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WDtN6f8zBvMpHEu5tRO+MJLwE+No5h6/y4dNl/ihPAgTD85/N4iZx82iGWRUbSWqvKuvhsr0fZlV94WrHqEVRj/a2MYSpwouUeDIf6sClM16+pQVOsWUdCcemiLypl+6EDM/Db24eeSOPLnGmDsft3Oqi3k5pusOUULDrRhRFrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=on4Z+a9X; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1716274276; c=relaxed/simple;
+	bh=FPAN5JneroMF+17jT/HJqgQ12pCIyCdlzPvjpoqycpc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GHm9tUh8JLvel6ZFncjvrKnRQVcBkc6rQaAERBRCyYRMheBklWhfqPd4VqTAcrIzg7TqO6kCPVqBR9iAMML15MmjDsPHUL6xeyaIOchYZNxA/714hdQq/5rmebS5MFBWOgZZGhOxzu34lxjzgrrlEzZpetv7gtWfk91sYQEmh30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=famkuEae; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="on4Z+a9X"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716274269; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=B+UpIk858p7Jg4dTAB8R6w5GVR5vcOnO8YQOEOKCJzo=;
-	b=on4Z+a9X1rA0MqtVuLHNioUHrybHrsyDAtgPofnfSebno9C9dvxqIc1aUIcEI4a/qZWE7dj0PFcKQsDmd4ooY/A4ksTU6n8td1gNoXBNuM7pHa5uc2OCPEmk7pkDW3dAbwMMRwBCyJPJMSZcsHYsTAw1IbIDblU5lX+PuszqXAU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W6wi3OD_1716274265;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6wi3OD_1716274265)
-          by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 14:51:07 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-erofs@lists.ozlabs.org,
-	Baokun Li <libaokun1@huawei.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 6.6.y 1/2] erofs: get rid of erofs_fs_context
-Date: Tue, 21 May 2024 14:50:52 +0800
-Message-Id: <20240521065053.4192636-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="famkuEae"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ed96772f92so96570595ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 23:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1716274274; x=1716879074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+6svnync0RfC0DOTaEmb8czwD+Bve7L6N10o2QQ8WLQ=;
+        b=famkuEae7iOT3yjztIAyhrPElIPyxrF7YXH9vPyYbGfXYGe7/7tTx395UXYNcc/XP+
+         CfL1rIn7ReDxIPNvmP3tC1XY9MxE4P567f+VBf2BfRhEEXLtwphFeGKY1Zz8DvAUdphg
+         sird7fsq8jevwWCruytlEmZfb8qkLGtaTmCr8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716274274; x=1716879074;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+6svnync0RfC0DOTaEmb8czwD+Bve7L6N10o2QQ8WLQ=;
+        b=wq2EZbuDoPcfXICuO2nLnzd3EhH6fYiWXPoYG/DveArMqb8dST7RYM7KylAwst90H2
+         qmXBv0MoPuTo03NTYNZ95wMd14W+ojcQ/CW5ltoY0Hlz8GV15kMo0J35iaYnKRMAhI2N
+         OYbz7PLCbx7JBNDGyTfQRPt4TD2sEh8yjfxqk/aFngRdC2byj2eLolohrHpL4kIMvTPW
+         d530mdai+CV0xsNxPKvsblZFoym5Du0D+Mdw/PqXqrlYG8PX9Cd4RbSOMZyldX6ov3g4
+         8tN1TK10LpWewCQ/o1xF4+KdyfFo1yP+Wnus90jaifZM4hfc3hSwlnL4EYawDX/dpdQr
+         WkHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUB2a0XKiNr+LJHwGI2FDNt8Do1EiDVddtO7M5NYeFjiJYhH0LN/qw145fM+mzOG/nR3r4nvRMkqnp8O5SXyNEIml/n+rOOx0Y9vA3m
+X-Gm-Message-State: AOJu0YyZzNi7QGUH48q9SsOtxwQh/p9O939Y9Gqokz7P6Z1rf8lin0Kt
+	qKaXxQ7s8U2/pgCuiR2M5tMOuh6HRYOLMwWGsYLeVGtsd0xi0rYTAkeJhzsIFw==
+X-Google-Smtp-Source: AGHT+IGBntgad+pBk71BTXd9vec3SRY2vdF7WUbaODGmZHm0TI1Oy4GbDTX3v072D8870aHsVC4znQ==
+X-Received: by 2002:a05:6a21:3391:b0:1af:59b9:e3ed with SMTP id adf61e73a8af0-1afde0a8d75mr33093129637.5.1716274274376;
+        Mon, 20 May 2024 23:51:14 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:f8a5:77aa:5a0d:e30c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f30644ad48sm23100985ad.169.2024.05.20.23.51.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 23:51:13 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Simon Glass <sjg@chromium.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH 0/2] scripts/make_fit fix and disabled compression for DTBs
+Date: Tue, 21 May 2024 14:51:03 +0800
+Message-ID: <20240521065107.30371-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.45.0.215.g3402c0e53f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,297 +68,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Baokun Li <libaokun1@huawei.com>
+Hi folks,
 
-commit 07abe43a28b2c660f726d66f5470f7f114f9643a upstream.
+Here are a couple changes for the FIT image packing script. While
+unreleated, they are sent together because the change context overlaps.
 
-Instead of allocating the erofs_sb_info in fill_super() allocate it during
-erofs_init_fs_context() and ensure that erofs can always have the info
-available during erofs_kill_sb(). After this erofs_fs_context is no longer
-needed, replace ctx with sbi, no functional changes.
+The first patch drops the compatible string property from the fdt image
+nodes. According to the FIT image spec, the compatible string in the
+(fdt/kernel) image node is used to specify special loading mechanisms,
+and is _not_ for identifying the DTB.
 
-Suggested-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Link: https://lore.kernel.org/r/20240419123611.947084-2-libaokun1@huawei.com
-[ Gao Xiang: trivial conflict due to a warning message. ]
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/internal.h |   7 ---
- fs/erofs/super.c    | 116 ++++++++++++++++++++------------------------
- 2 files changed, 53 insertions(+), 70 deletions(-)
+The second patch adds an option that disables compression for _just_ the
+included DTBs. This is needed for RK3399 and MT8173 based Chromebooks,
+whose firmware does not support decompressing DTBs, but does need kernel
+image compression to fit the image within their relatively small image
+size of 32 MiB.
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 1a4fe9f60295..787cc9ff9029 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -82,13 +82,6 @@ struct erofs_dev_context {
- 	bool flatdev;
- };
- 
--struct erofs_fs_context {
--	struct erofs_mount_opts opt;
--	struct erofs_dev_context *devs;
--	char *fsid;
--	char *domain_id;
--};
--
- /* all filesystem-wide lz4 configurations */
- struct erofs_sb_lz4_info {
- 	/* # of pages needed for EROFS lz4 rolling decompression */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index c9f9a43197db..ea9bb0ad2a7c 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -367,18 +367,18 @@ static int erofs_read_superblock(struct super_block *sb)
- 	return ret;
- }
- 
--static void erofs_default_options(struct erofs_fs_context *ctx)
-+static void erofs_default_options(struct erofs_sb_info *sbi)
- {
- #ifdef CONFIG_EROFS_FS_ZIP
--	ctx->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
--	ctx->opt.max_sync_decompress_pages = 3;
--	ctx->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
-+	sbi->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
-+	sbi->opt.max_sync_decompress_pages = 3;
-+	sbi->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
- #endif
- #ifdef CONFIG_EROFS_FS_XATTR
--	set_opt(&ctx->opt, XATTR_USER);
-+	set_opt(&sbi->opt, XATTR_USER);
- #endif
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
--	set_opt(&ctx->opt, POSIX_ACL);
-+	set_opt(&sbi->opt, POSIX_ACL);
- #endif
- }
- 
-@@ -423,17 +423,17 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
- static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
- {
- #ifdef CONFIG_FS_DAX
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 
- 	switch (mode) {
- 	case EROFS_MOUNT_DAX_ALWAYS:
- 		warnfc(fc, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
--		set_opt(&ctx->opt, DAX_ALWAYS);
--		clear_opt(&ctx->opt, DAX_NEVER);
-+		set_opt(&sbi->opt, DAX_ALWAYS);
-+		clear_opt(&sbi->opt, DAX_NEVER);
- 		return true;
- 	case EROFS_MOUNT_DAX_NEVER:
--		set_opt(&ctx->opt, DAX_NEVER);
--		clear_opt(&ctx->opt, DAX_ALWAYS);
-+		set_opt(&sbi->opt, DAX_NEVER);
-+		clear_opt(&sbi->opt, DAX_ALWAYS);
- 		return true;
- 	default:
- 		DBG_BUGON(1);
-@@ -448,7 +448,7 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
- static int erofs_fc_parse_param(struct fs_context *fc,
- 				struct fs_parameter *param)
- {
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 	struct fs_parse_result result;
- 	struct erofs_device_info *dif;
- 	int opt, ret;
-@@ -461,9 +461,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 	case Opt_user_xattr:
- #ifdef CONFIG_EROFS_FS_XATTR
- 		if (result.boolean)
--			set_opt(&ctx->opt, XATTR_USER);
-+			set_opt(&sbi->opt, XATTR_USER);
- 		else
--			clear_opt(&ctx->opt, XATTR_USER);
-+			clear_opt(&sbi->opt, XATTR_USER);
- #else
- 		errorfc(fc, "{,no}user_xattr options not supported");
- #endif
-@@ -471,16 +471,16 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 	case Opt_acl:
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
- 		if (result.boolean)
--			set_opt(&ctx->opt, POSIX_ACL);
-+			set_opt(&sbi->opt, POSIX_ACL);
- 		else
--			clear_opt(&ctx->opt, POSIX_ACL);
-+			clear_opt(&sbi->opt, POSIX_ACL);
- #else
- 		errorfc(fc, "{,no}acl options not supported");
- #endif
- 		break;
- 	case Opt_cache_strategy:
- #ifdef CONFIG_EROFS_FS_ZIP
--		ctx->opt.cache_strategy = result.uint_32;
-+		sbi->opt.cache_strategy = result.uint_32;
- #else
- 		errorfc(fc, "compression not supported, cache_strategy ignored");
- #endif
-@@ -502,27 +502,27 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 			kfree(dif);
- 			return -ENOMEM;
- 		}
--		down_write(&ctx->devs->rwsem);
--		ret = idr_alloc(&ctx->devs->tree, dif, 0, 0, GFP_KERNEL);
--		up_write(&ctx->devs->rwsem);
-+		down_write(&sbi->devs->rwsem);
-+		ret = idr_alloc(&sbi->devs->tree, dif, 0, 0, GFP_KERNEL);
-+		up_write(&sbi->devs->rwsem);
- 		if (ret < 0) {
- 			kfree(dif->path);
- 			kfree(dif);
- 			return ret;
- 		}
--		++ctx->devs->extra_devices;
-+		++sbi->devs->extra_devices;
- 		break;
- #ifdef CONFIG_EROFS_FS_ONDEMAND
- 	case Opt_fsid:
--		kfree(ctx->fsid);
--		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
--		if (!ctx->fsid)
-+		kfree(sbi->fsid);
-+		sbi->fsid = kstrdup(param->string, GFP_KERNEL);
-+		if (!sbi->fsid)
- 			return -ENOMEM;
- 		break;
- 	case Opt_domain_id:
--		kfree(ctx->domain_id);
--		ctx->domain_id = kstrdup(param->string, GFP_KERNEL);
--		if (!ctx->domain_id)
-+		kfree(sbi->domain_id);
-+		sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
-+		if (!sbi->domain_id)
- 			return -ENOMEM;
- 		break;
- #else
-@@ -578,8 +578,7 @@ static const struct export_operations erofs_export_ops = {
- static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
--	struct erofs_sb_info *sbi;
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	int err;
- 
- 	sb->s_magic = EROFS_SUPER_MAGIC;
-@@ -587,19 +586,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_maxbytes = MAX_LFS_FILESIZE;
- 	sb->s_op = &erofs_sops;
- 
--	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
--	if (!sbi)
--		return -ENOMEM;
--
--	sb->s_fs_info = sbi;
--	sbi->opt = ctx->opt;
--	sbi->devs = ctx->devs;
--	ctx->devs = NULL;
--	sbi->fsid = ctx->fsid;
--	ctx->fsid = NULL;
--	sbi->domain_id = ctx->domain_id;
--	ctx->domain_id = NULL;
--
- 	sbi->blkszbits = PAGE_SHIFT;
- 	if (erofs_is_fscache_mode(sb)) {
- 		sb->s_blocksize = PAGE_SIZE;
-@@ -703,9 +689,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 
- static int erofs_fc_get_tree(struct fs_context *fc)
- {
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
- 
--	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
- 		return get_tree_nodev(fc, erofs_fc_fill_super);
- 
- 	return get_tree_bdev(fc, erofs_fc_fill_super);
-@@ -715,19 +701,19 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
- {
- 	struct super_block *sb = fc->root->d_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *new_sbi = fc->s_fs_info;
- 
- 	DBG_BUGON(!sb_rdonly(sb));
- 
--	if (ctx->fsid || ctx->domain_id)
-+	if (new_sbi->fsid || new_sbi->domain_id)
- 		erofs_info(sb, "ignoring reconfiguration for fsid|domain_id.");
- 
--	if (test_opt(&ctx->opt, POSIX_ACL))
-+	if (test_opt(&new_sbi->opt, POSIX_ACL))
- 		fc->sb_flags |= SB_POSIXACL;
- 	else
- 		fc->sb_flags &= ~SB_POSIXACL;
- 
--	sbi->opt = ctx->opt;
-+	sbi->opt = new_sbi->opt;
- 
- 	fc->sb_flags |= SB_RDONLY;
- 	return 0;
-@@ -758,12 +744,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
- 
- static void erofs_fc_free(struct fs_context *fc)
- {
--	struct erofs_fs_context *ctx = fc->fs_private;
-+	struct erofs_sb_info *sbi = fc->s_fs_info;
-+
-+	if (!sbi)
-+		return;
- 
--	erofs_free_dev_context(ctx->devs);
--	kfree(ctx->fsid);
--	kfree(ctx->domain_id);
--	kfree(ctx);
-+	erofs_free_dev_context(sbi->devs);
-+	kfree(sbi->fsid);
-+	kfree(sbi->domain_id);
-+	kfree(sbi);
- }
- 
- static const struct fs_context_operations erofs_context_ops = {
-@@ -775,21 +764,22 @@ static const struct fs_context_operations erofs_context_ops = {
- 
- static int erofs_init_fs_context(struct fs_context *fc)
- {
--	struct erofs_fs_context *ctx;
-+	struct erofs_sb_info *sbi;
- 
--	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
--	if (!ctx)
-+	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+	if (!sbi)
- 		return -ENOMEM;
--	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
--	if (!ctx->devs) {
--		kfree(ctx);
-+
-+	sbi->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
-+	if (!sbi->devs) {
-+		kfree(sbi);
- 		return -ENOMEM;
- 	}
--	fc->fs_private = ctx;
-+	fc->s_fs_info = sbi;
- 
--	idr_init(&ctx->devs->tree);
--	init_rwsem(&ctx->devs->rwsem);
--	erofs_default_options(ctx);
-+	idr_init(&sbi->devs->tree);
-+	init_rwsem(&sbi->devs->rwsem);
-+	erofs_default_options(sbi);
- 	fc->ops = &erofs_context_ops;
- 	return 0;
- }
+Please take a look.
+
+
+Thanks
+ChenYu
+
+
+Chen-Yu Tsai (2):
+  scripts/make_fit: Drop fdt image entry compatible string
+  scripts/make_fit: Add option to disable compression for DTBs
+
+ scripts/Makefile.lib |  1 +
+ scripts/make_fit.py  | 14 +++++++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
 -- 
-2.39.3
+2.45.0.215.g3402c0e53f-goog
 
