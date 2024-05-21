@@ -1,83 +1,141 @@
-Received: from wilbur.contactoffice.com (wilbur.contactoffice.com [212.3.242.68])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B4F54BDB;
-	Tue, 21 May 2024 07:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.3.242.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0DE51C4F
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716277800; cv=none; b=b9fa944iDjhhJ6o09EG21BuY+8Fm1ivf8Prx5v58wb+dcHXOU2MrKltTntR5Hf1NhY44Z3CjUEEwwuWi2CfNXlD6naQItvDJHsUjncnE/NWHSLRjwd/qwAgw2kfGhniPWJMQnkBQFP+a7zsWszAx1uB67vTp/5BuIA9hnvFBXwM=
+	t=1716277819; cv=none; b=CyEJNnzqGgKr9Javdl/dCjDhMnw/o1i/RyI+ps8x6exkDcBDzpftKNE77eYaiNNst4yYcp2xk9JNAmTVWzURbwPZ7X7s3PwikB+ntUMrlioCPPsjaDUKxoRQIqjwaZOrRapR95aELVZD7vNmqSXv5grCrr5SewmGTUDPTtQDq5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716277800; c=relaxed/simple;
-	bh=ngJA16RR/OPoMkf7Y90IPOnKzfACzKGIQnec9KB66OI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qg36nT1+X4FA65KElU04xqqrpghMhVJdyFgcgIbEAIW8J3G5UfPMVb6mZYU5CJjC+qcDS906NEFwWmgNHnuu/n9qWtwGTcYFaGXGkpaKyySeFs1rUCcf5aym2VbBh9cUaw7XM7HONRxHGxx9edlxazhPCprmX1inqEN0nP7dB9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unstable.cc; spf=pass smtp.mailfrom=unstable.cc; dkim=pass (2048-bit key) header.d=unstable.cc header.i=a@unstable.cc header.b=n0Rr0caw; arc=none smtp.client-ip=212.3.242.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unstable.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unstable.cc
+	s=arc-20240116; t=1716277819; c=relaxed/simple;
+	bh=L/Vg3azzF1AwIKur+spgX2StqpWHdR2fCI0O12zbwSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N3Khy/qjOaiDwSLXsM3XNs54KqFOzJ5MKFqJNJ9YCUEyCx8EZWXqr1z4Rp0Zjg7gGzBL+cuImSWQte4FXDLUB1fyDc5XTkca58DcVuj7IvRGKfkWCWbRElIRc/g7nsACREIZp/aLi+Un/lYByh2JQwmDFjAYP/1oH/nlXpEfwX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AvpIwQgu; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unstable.cc header.i=a@unstable.cc header.b="n0Rr0caw"
-Received: from smtpauth2.co-bxl (smtpauth2.co-bxl [10.2.0.24])
-	by wilbur.contactoffice.com (Postfix) with ESMTP id 1C6E662B;
-	Tue, 21 May 2024 09:42:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1716277352;
-	s=20220809-q8oc; d=unstable.cc; i=a@unstable.cc;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	l=806; bh=bq5w2dOXUmXaYoJcODSZnEnefduxYXuMwA2eq9OQaUA=;
-	b=n0Rr0cawN+9kwK/ld4MhADhhB/ovjNsZrbSNOP/1cmqTKmB9LLbYztcKxx/iG45B
-	8BItVLyL5olFXnSfgXZ/OlPPqLbm2n3lWooU97HUgdBI6twWM1pTtD/6ecg5QumlISP
-	Lmkra4a2jae/+hlsnTg3RvdHCo8Vg1FjDy+jxdqhBV9QSPFQ+KQbWxnsT1VbDNg60y1
-	7VsQV4ymKsGkCn+u1vgGl93f3DXaWhZp3rfzc1xeOtbgA4iEvOx1fhqqrRxWdV5Hypw
-	hvI9iGdsGpg1IseQjzzHfRmHCvMafwlEVhbMYZr5bflQO/uhDvOt/GDwqkKYOuF9eOa
-	98nLFdfUNw==
-Received: by smtp.mailfence.com with ESMTPSA ; Tue, 21 May 2024 09:42:30 +0200 (CEST)
-Message-ID: <cef03d6c-7be8-4527-b38b-eadca2789f9b@unstable.cc>
-Date: Tue, 21 May 2024 09:43:56 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AvpIwQgu"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BAD0840E02A7;
+	Tue, 21 May 2024 07:50:13 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id AmG9K47KQcgt; Tue, 21 May 2024 07:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1716277810; bh=zhriVY1YS+s2GEj2LKPeJWhuxKvrjyAYCIq8RfPBJmc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AvpIwQguEOYipaAs1bqZf9/1aizrJp2VZs+MIa4qYBj8OM+yUXvGDzqwbtozuO5J2
+	 e8GQ9/s6/EwMPYkF/1Obts1F6p8npJwJ5j4YIGN1e+yQ4oRzr2yJsxPlQaCvz1tlxv
+	 EEAKPz9iPha0lY5n50fUVrunpcedc8+5guTc3niIZOp23OKhfYFpnqfNK+uXwpK2jC
+	 VITHotBZsh78UXx7GM+MZTwXVCdq1JvIvBk2i5Yqrbrjk4kprjZn3Oxdne3leiS7qO
+	 GTgLZDGUUYocUmxy7IXknRk4exZudgbFgsdtxr4vW1e+G2Vn95J6kQ+MVQT8/F3IAs
+	 CagJ9IdpDAoPgKGawFLI13NlBq/4FQT7D/3lvgCosJH5MF4nQSkX05FyIiF6j/gxJP
+	 1E98yMy/Cf+eV851+hB5NArK+xAjZR0+YqDofd1xChB5pNoF5qRObGfeJlbn10Tmzr
+	 MBsQN7HJrbE5uNNMhOkxs9tXGRTc1b4BRWwv1JQUOec5lxJcP2MwtI41jr59Qk2/Wf
+	 KiLhWj13UOGFUMfhQx4OLuTsg3J+vESA2prJt5cQ+6mrczjar1Nau+P+TgERTK6dYr
+	 aM8Q5CyXUc3z1eAsYBxp0Z5KfgwdMRVpYcTbVuOY2fkT+XZAAarm+RO5WYhkO2vVAa
+	 nW476cxFb6Hf+9IiueKkmAfw=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1859240E01A3;
+	Tue, 21 May 2024 07:49:55 +0000 (UTC)
+Date: Tue, 21 May 2024 09:49:47 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>,
+	Thomas Renninger <trenn@suse.de>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v6 02/49] x86/cpu: Fix x86_match_cpu() to match just
+ X86_VENDOR_INTEL
+Message-ID: <20240521074947.GAZkxSG_u08uLDqZ_m@fat_crate.local>
+References: <20240520224620.9480-1-tony.luck@intel.com>
+ <20240520224620.9480-3-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: cfg80211: Lock wiphy in cfg80211_get_station
-To: Remi Pommarel <repk@triplefau.lt>,
- Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, b.a.t.m.a.n@lists.open-mesh.org,
- linux-kernel@vger.kernel.org
-References: <983b24a6a176e0800c01aedcd74480d9b551cb13.1716046653.git.repk@triplefau.lt>
-Content-Language: en-US
-From: Antonio Quartulli <a@unstable.cc>
-In-Reply-To: <983b24a6a176e0800c01aedcd74480d9b551cb13.1716046653.git.repk@triplefau.lt>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-ContactOffice-Account: com:375058688
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240520224620.9480-3-tony.luck@intel.com>
 
-Hi,
+On Mon, May 20, 2024 at 03:45:33PM -0700, Tony Luck wrote:
+> Fixes: 644e9cbbe3fc ("Add driver auto probing for x86 features v4")
 
-On 18/05/2024 17:50, Remi Pommarel wrote:
-> Wiphy should be locked before calling rdev_get_station() (see lockdep
-> assert in ieee80211_get_station()).
+Do you really want to backport this to everything since 2012, as that
+patch is from then?
 
-Adding the lock is fine as nowadays it is taken in pre_doit and released 
-in post_doit (with some exceptions). Therefore when invoking 
-.get_station from a side path the lock should be taken too.
+> @@ -690,6 +690,7 @@ struct x86_cpu_id {
+>  	__u16 model;
+>  	__u16 steppings;
+>  	__u16 feature;	/* bit index */
+> +	__u16 flags;
+>  	kernel_ulong_t driver_data;
+>  };
+>  
+> @@ -700,6 +701,9 @@ struct x86_cpu_id {
+>  #define X86_STEPPING_ANY 0
+>  #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
+>  
+> +/* x86_cpu_id::flags */
+> +#define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
 
-It was actually a05829a7222e9d10c416dd2dbbf3929fe6646b89 that introduced 
-this requirement AFAICS.
+I would definitely not want to have those visible in userspace.
 
-> 
-> This fixes the following kernel NULL dereference:
+IOW, something like this:
 
-As already said by Johannes, I am not sure it truly fixes this NULL 
-dereference though.
-
-Have you checked where in ath10k_sta_statistics this is exactly 
-happening? Do you think some sta was partly released and thus fields 
-were NULLified?
-
-Regards,
-
+diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
+index 54a71c669ce9..b6325ee30871 100644
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -53,6 +53,9 @@
+ #define X86_CENTAUR_FAM6_C7_D		0xd
+ #define X86_CENTAUR_FAM6_NANO		0xf
+ 
++/* x86_cpu_id::flags */
++#define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
++
+ #define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
+ /**
+  * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index ca3468ad06ff..4338b1b4ac44 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -690,6 +690,7 @@ struct x86_cpu_id {
+ 	__u16 model;
+ 	__u16 steppings;
+ 	__u16 feature;	/* bit index */
++	/* Solely for kernel-internal use: DO NOT EXPORT to userspace! */
+ 	__u16 flags;
+ 	kernel_ulong_t driver_data;
+ };
+@@ -701,9 +702,6 @@ struct x86_cpu_id {
+ #define X86_STEPPING_ANY 0
+ #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
+ 
+-/* x86_cpu_id::flags */
+-#define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
+-
+ /*
+  * Generic table type for matching CPU features.
+  * @feature:	the bit number of the feature (0 - 65535)
 
 -- 
-Antonio Quartulli
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
