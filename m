@@ -1,115 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36091144D1C
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 15:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id E029C6BB5E
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 15:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716305711; cv=none; b=dl6Y4agPWDTtpdlRJqM0SfrIYbFAwRhbxCy50SI04c6AndW4WJiY1SmqLVoomvvDH3gR6wMl8tJFtsUSDhgN7yoptoP2pVFQxZ/qYqafRRDy2+UNxMCE7bgMcyXG5Ma3a9DjjUy6v2LkfTkANMajuW4ZNx/n+zW0ib1MDX0kEZc=
+	t=1716305779; cv=none; b=E21vGkQrYb68uQKJgMEQjtfism1AXxqQrC3NvpgUCpWp9NC8w8pcG30j9Z+ggVF5Be/5m/i+QMxnvpLpZWmrXw90C0CW/v38x4o3m15uDA1ouNyF2hcQSYHM0lJGyBGVvKhPKGFSQPbHwlH2jgTiUwIt0CUJonW+MK/8GmrnGpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716305711; c=relaxed/simple;
-	bh=yNK90+Fu3/Egv6BUzfR2b4UhSJudcMdn2qAYCS/ruB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WEJeDT09qEdc7yLoTd2yOwwXe3aB0i/SBZFTrQaGHtOQxJFNH+HoQriP1sjJYVQuzKuPGT3RExThFdq3fdzPWbFhn0cJF6hPLEyzkk0VKHhxAgnCn/I9IAeidDw7q2koP8CEnHSp7/FugogZ9kjRWqAO8+IixBVhWrgN4I2sH48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ItcG5UDS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItcG5UDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716305709;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dhL1Q+jWnYDABNtKHJSo7WSr7N/mSKlyJQWOyp5Mr2I=;
-	b=ItcG5UDSx+rE26ZZtec08EfjD6dZ73qx9Zux+fds6ZDdtQeCB9M3LXKkAX8m0DtP6tQXb+
-	bxvMFj1dOhxwcAQTnFKmMVXRev2WigkXnfKTyPiBeogfPOU2rv4iD6kkaxoERxewDOrRZZ
-	kffj09+RlrapifyFGTrCszWBKZVlrSQ=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-bxhxLZPLNo-28TOPEfOt2w-1; Tue, 21 May 2024 11:35:08 -0400
-X-MC-Unique: bxhxLZPLNo-28TOPEfOt2w-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2b364c4c4b0so12745318a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 08:35:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716305706; x=1716910506;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dhL1Q+jWnYDABNtKHJSo7WSr7N/mSKlyJQWOyp5Mr2I=;
-        b=vVRwSSQjHEt132YXWfjIVJVTi0Hws0MBifSZukE6Gxrw1YmvQve4nXq/XiEl5HSlS9
-         m6gjWqq8L3QARS/ciLDKUqIMyLJ5K/T+pIE0zo9XNvqLPrDoAG+ayi8wlZMkQ8Pjje0O
-         Hy6DsHKZY2QWYFzXejDAlLno6jDIQza7WlfnJ3ruDd7UrgqoBKSQEhI/PiysjhzIbVZu
-         iGp8BQyC5pPADe3r1q1q5JsX4LjIcabK4I31dW5jdyVkE4XroIsaRf5wBgGTuPK0CSWx
-         pvAZjE+1ueTKFAZdmgZ74oQMz/1qjOqUZFSJAqEcoybrvMz1xSn6lzfczOLCdeYROQxu
-         Kqxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPTVNYuNafbbO4RaC4e7SE/FxrSMEpWwDrKBa7rFcJ1+KTeWfPbh1sDewUOxiCGmDl0ZFUY50eIzm92tSngecI+AbEZoULVf3MBgrT
-X-Gm-Message-State: AOJu0YyszgsTCjIXLhR3u5HG6R9HqB6JLAajhLpsjBfbrtaEIDXUNyp/
-	B4gtHRFk0KSZ3K8W4qr5V4EULnKtDbCq6Zachg4K24Mc6BUIDzAscanUMWFxnPiZv1wFImU1fA2
-	cEA1ZKPJDQu+oRWpjsFkBo2xrF2Z+5BucjsOjt2RYfP7YZDeJC031UIkN8/Jdz9hLaxaMIthj
-X-Received: by 2002:a17:90a:17ef:b0:2b6:ab87:5434 with SMTP id 98e67ed59e1d1-2b6ccd9ec2amr34415214a91.35.1716305706380;
-        Tue, 21 May 2024 08:35:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG0tskduGSJKFC3yV7n4L+QWe03s7d30NZ0FNcJ84NxEFgxCHGmSxbxr/In+XYHJkoDv0vXpw==
-X-Received: by 2002:a17:90a:17ef:b0:2b6:ab87:5434 with SMTP id 98e67ed59e1d1-2b6ccd9ec2amr34415189a91.35.1716305705973;
-        Tue, 21 May 2024 08:35:05 -0700 (PDT)
-Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67158c30bsm21819678a91.39.2024.05.21.08.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 08:35:05 -0700 (PDT)
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-To: krzk@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syoshida@redhat.com
-Subject: [PATCH net v3] nfc: nci: Fix handling of zero-length payload packets in nci_rx_work()
-Date: Wed, 22 May 2024 00:34:42 +0900
-Message-ID: <20240521153444.535399-1-ryasuoka@redhat.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1716305779; c=relaxed/simple;
+	bh=fIDHjv/NCpoLSHsJ8mBwHvur7uwCdXS242ClZn3xmmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nm5STf2dD9sDZQJiQhD7TAhkKdGJ45haHU+MiTKswWMZQe27DJ86Jx/BPY4bc8Qb6yzCqDvtqyVRF2XcedLQ3s/nwQkj+PW9K7Xmw9SGIuaw5aBAjGNvXJZoXBzMWaQtaAHwT15z2Wd/mXzOwFl1RsMbNcmFxzgud9c5tzWJfEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 457861 invoked by uid 1000); 21 May 2024 11:36:10 -0400
+Date: Tue, 21 May 2024 11:36:10 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Cc: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>,
+  "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
+  linux-arch@vger.kernel.org, kernel-team@meta.com, parri.andrea@gmail.com,
+  boqun.feng@gmail.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+  Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: LKMM: Making RMW barriers explicit
+Message-ID: <4286e5b2-5954-4c77-a815-c1c2735d9509@rowland.harvard.edu>
+References: <72c804c8-2511-4349-a823-bc1de8bb729e@rowland.harvard.edu>
+ <e030f7a4-97e7-4e91-bbae-230ee5c97763@huaweicloud.com>
+ <a9bf972c-b5ee-f1c2-36bf-30ba62f419d7@huaweicloud.com>
+ <2f20e7cf-7c67-4ad3-8a0c-3c1d01257ae4@rowland.harvard.edu>
+ <0c309dd3-f8c1-4945-b8f1-154b2a775216@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0c309dd3-f8c1-4945-b8f1-154b2a775216@huaweicloud.com>
 
-When nci_rx_work() receives a zero-length payload packet, it should not
-discard the packet and exit the loop. Instead, it should continue
-processing subsequent packets.
+On Tue, May 21, 2024 at 11:57:29AM +0200, Jonas Oberhauser wrote:
+> 
+> 
+> Am 5/18/2024 um 2:31 AM schrieb Alan Stern:
+> > On Thu, May 16, 2024 at 10:44:05AM +0200, Hernan Ponce de Leon wrote:
+> > > On 5/16/2024 10:31 AM, Jonas Oberhauser wrote:
+> > > > 
+> > > > 
+> > > > Am 5/16/2024 um 3:43 AM schrieb Alan Stern:
+> > > > > Hernan and Jonas:
+> > > > > 
+> > > > > Can you explain more fully the changes you want to make to herd7 and/or
+> > > > > the LKMM?  The goal is to make the memory barriers currently implicit in
+> > > > > RMW operations explicit, but I couldn't understand how you propose to do
+> > > > > this.
+> > > > > 
+> > > > > Are you going to change herd7 somehow, and if so, how?  It seems like
+> > > > > you should want to provide sufficient information so that the .bell
+> > > > > and .cat files can implement the appropriate memory barriers associated
+> > > > > with each RMW operation.  What additional information is needed?  And
+> > > > > how (explained in English, not by quoting source code) will the .bell
+> > > > > and .cat files make use of this information?
+> > > > > 
+> > > > > Alan
+> > > > 
+> > > > 
+> > > > I don't know whether herd7 needs to be changed. Probably, herd7 does the
+> > > > following:
+> > > > - if a tag called Mb appears on an rmw instruction (by instruction I
+> > > > mean things like xchg(), atomic_inc_return_relaxed()), replace it with
+> > > > one of those things:
+> > > >     * full mb ; once (the rmw) ; full mb, if a value returning
+> > > > (successful) rmw
+> > > >     * once (the rmw)   otherwise
+> > > > - everything else gets translated 1:1 into some internal representation
+> > > 
+> > > This is my understanding from reading the source code of CSem.ml in herd7's
+> > > repo.
+> > > 
+> > > Also, this is exactly what dartagnan is currently doing.
+> > > 
+> > > > 
+> > > > What I'm proposing is:
+> > > > 1. remove this transpilation step,
+> > > > 2. and instead allow the Mb tag to actually appear on RMW instructions
+> > > > 3. change the cat file to explicitly define the behavior of the Mb tag
+> > > > on RMW instructions
+> > > 
+> > > These are the exact 3 things I changed in dartagnan for testing what Jonas
+> > > proposed.
+> > > 
+> > > I am not sure if further changes are needed for herd7.
 
-Fixes: d24b03535e5e ("nfc: nci: Fix uninit-value in nci_dev_up and nci_ntf_packet")
-Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
----
-v3
-- Remove inappropriate Reported-by tag
+What about failed RMW instructions?  IIRC, herd7 generates just an R for 
+these, not both R and W, but won't it still be annotated with an mb tag? 
+And wasn't this matter of failed RMWs one of the issues that the two of 
+you specifically wanted to make explicit in the memory model, rather 
+than implicit in the operation of herd7?
 
-v2
-- Fix commit msg to be clearer to say
-- Remove inappropriate Closes tag
+And wasn't another one of these issues the difference between 
+value-returning and non-value-returning RMWs?  As far as I can, nothing 
+in the .def file specifically mentions this.  There's the noreturn tag 
+in the .bell file, but nothing in the .def file says which instructions 
+it applies to.  Or are we supposed to know that it automatically applies 
+to all __atomic_op() instances?
 
- net/nfc/nci/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> > Okay, good.  This answers the first part of what I asked.  What about
+> > the second part?  That is, how will the changes to the .def, .bell, and
+> > .cat files achieve your goals?
+> > 
+> > Alan
+> 
+> 
+> Firstly, we'd allow 'mb as a barrier mode in events, e.g.
 
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index 7a9897fbf4f4..f456a5911e7d 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -1531,8 +1531,7 @@ static void nci_rx_work(struct work_struct *work)
- 
- 		if (!nci_valid_size(skb)) {
- 			kfree_skb(skb);
--			kcov_remote_stop();
--			break;
-+			continue;
- 		}
- 
- 		/* Process frame */
--- 
-2.44.0
+You mean as a mode in RMW events.  'mb already is a mode for F events.
 
+> instructions RMW[{'once,'acquire,'release,'mb}]
+> 
+> then the Mb tags would appear in the graph. And then I'd define the ordering
+> explicitly. One way is to say that an Mb tag orders all memory accesses
+> before(or at) the tag with all memory accesses after(or at) the tag, except
+> the accesses of the rmw with each other.
+
+I don't think you need to add very much.  The .cat file already defines 
+the mb relation as including the term:
+
+	([M] ; fencerel(Mb) ; [M])
+
+All that's needed is to replace the fencerel(Mb) with something more 
+general...
+
+> This is the same as the full fence before the read, which orders all memory
+> accesses before the read with every access after(or at) the read,
+> plus the full fence after the write, which orders all memory accesses
+> before(or at) the write with all accesses after the write.
+> 
+> That would be done by adding
+> 
+>      [M] ; (po \ rmw) & (po^?; [RMW_MB] ; po^?) ; [M]
+
+... like this.
+
+> to ppo.
+
+You need to update the definition of mb, not ppo.  And the RMW_MB above 
+looks wrong; shouldn't it be just Mb?
+
+Also, is the "\ rmw" part really necessary?  I don't think it makes any 
+difference; the memory model already knows that the read part of an RMW 
+has to happen before the write part.
+
+> One could also split it into two rules to keep with the "two full fences"
+> analogy. Maybe a good way would be like this:
+> 
+>      [M] ; po; [RMW_MB & R] ; po^? ; [M]
+> 
+>      [M] ; po^?; [RMW_MB & W] ; po ; [M]
+
+My preference is for the first approach.
+
+Alan
