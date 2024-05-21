@@ -1,96 +1,158 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA764776A;
-	Tue, 21 May 2024 09:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0259D2EB1D
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716282884; cv=none; b=GSGBBwyaXPcrwr+7BCqaYVwpqS/zdaSvbOwFDU1Q2f3gPvE9jG9VzxIMSaHimIFrjVOWQm35aeCe0eqhUzuDaIHRNMLDHhX9M4GFQ8Dy8p1sfmNiBhgdwZefJkjtvlmNGE/8IDZ2/8k6DdiyC6ggEacFUEIHS8EFDbYy+LEeGHg=
+	t=1716282947; cv=none; b=hhmerkIIjAlSHyPTrna/WYs37hXRo61zUGQ0wQj7/OEwjm6CHEkfjeo34/Z+hmCd5qXBPc61UESSJJJXIgpBZZ78k9KuR+V+q6/NyBfgKzpAkX2XkX2Ytdq4HT1ADb2NyMuxautgOd7Ara4FL/03KNb99ihEnA9ecitNUjNMAZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716282884; c=relaxed/simple;
-	bh=KFQK1c4PQyE7m3PzOehKHpBHvcc8reWa8UWw8E/vUj4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qz634UyzOZ3zvQWvjhozGmI1OQ0+1PR/kzA1cMzCtngY/OBcirWDDwjWhKrSIiQzPkif43ctWup9wZty4l+axtZzIcBIU6kEq0deewsAH/d1eJZip/QWzx/zYHC/1eoeJf1GFcpYwMN1r0n4anCKYT4Ttah1xRSa7qwxSVST8Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKf0BoTu; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716282947; c=relaxed/simple;
+	bh=738u05i+RA1sQlsPTWtQkV5juU/+Gq+MYt9q+6la/b8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vFBpLwwbl+EEGlhOvn4i2q+YvSi5diVHYliDbqlpQZRLu5q19djTdKFjx6S9GlZs+HzK5cDGSy/BB3BuFtkbMZWR6F0dr5ZJJsF8WVjrCdT6Bwzx+4t0a8WgdgjX0Mq9Sa9i7LnW30E45TFt7G8cFXEkQQVUTdpe1fQVisrqKVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QbZIE56D; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKf0BoTu"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a599c55055dso795095966b.0;
-        Tue, 21 May 2024 02:14:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QbZIE56D"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41fc5645bb1so26316845e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716282881; x=1716887681; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KFQK1c4PQyE7m3PzOehKHpBHvcc8reWa8UWw8E/vUj4=;
-        b=WKf0BoTuzHHlEtiB53BsfRqn4jEP0yEFSXBP7fOWvT5QWuC9RMQpIO10rkJ+Ft8+wZ
-         m7dv86j4LVOpU07HHbwdwRzeeqNcIuNgvYj2O6Ua5XnoMbUOmDcXdYvdk4HuqErdVWEO
-         PxivgHo5ePliVXKaaYUuQiDvZEInY9tePwGAJIhtR/Dayc0cFgbu9+4+B9KGkM3gsJdf
-         rPo4fVqamhlhlY0wbClUhiaIWRJdFxnEg78qLi+6eLa/fb1LMlHoAsKsOPTDKfAo0h+S
-         lbcK4S0vezdYGmUu6HPGvTY7+at//D/kJQ6TyAlnEQCW1fgP7Owl75AIhsAoYaxDh2tB
-         kCwQ==
+        d=linaro.org; s=google; t=1716282942; x=1716887742; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TAuNacbUrfIsXcQy73r+u5Bwh/Y65NcydJ7aOsSFKoI=;
+        b=QbZIE56DmpPmS9B/78GEJp9g9GGc9jYbpVqTtueShqG51jVNWXAsT0kkS4gpuD8uOQ
+         taIc5/TAZkjVBAQCKPhDJi27bt1fuWhKSTBHtC3GmdBPuITXhNAt96UnEhbbtz33FdJu
+         uor110BlKPm7qhPv2D6g7WCRC6gX2gkf1YqUjEeYMf2vvXx5qw1+5KE2Nkt97yfwG3Sv
+         YLCDbeonJraso7Htoq+JiIlFfDF+OcO3vL8b9ZappyoBdrSQRIsZ/lf5s1McFOBvBhPe
+         SJ0AOZzZ8E+HSNmQhf3/2eBKLpOtICuHE0dw/Xa9njmpKLUAdW9oOYyLzLzz0WAM2zSE
+         5ddg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716282881; x=1716887681;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KFQK1c4PQyE7m3PzOehKHpBHvcc8reWa8UWw8E/vUj4=;
-        b=XqDgMbh0xAurifUrqraS1DiiJxS91XtQSXZ5/zU2iQ7BZf0dNO5b7qunDn2dDPh/Hy
-         hlZbmBz9s6u4VJs8+kkhytGp5CclSo5JMtZ2H1S6MRFSIQ5NSEUq35OKncEskBZGS4uX
-         kVcD99JhiWD8PgYwLnaJLjvvpBxr92b8pajPVo12X3HdKM0gWNCrZBT4cJiS2yOEUJP0
-         VFiYN8xGwqT6uZAbawmSKTCihTowglfQbd3bdRebUzCD7tEtnT7NCfreRRoLMBr1kJUh
-         B/FxtTLacmIVruL/ViKkJ514FJvocU8WUETSHyYl8iiaMLQNzdqkN80jxgSgDKlLu49e
-         pGrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvdYxZ3Gek0fT/gVewyFLs/gcNYAyYH2qnNk0/GVyhaLzWL8T2xiblgRt0MtVe+Kklxdw12x+T61BBjPKGmnhepXjU2Xg9mtCd0LSJkx0g1wLDbpgNI1h1fXcQ5Ly/UkWtJ0uzKb31
-X-Gm-Message-State: AOJu0Yz+v25TrqmvENHWlXYLv1YTIiGXf7cySmAZJccqrVGmNzR+Sf00
-	QKMos1sklCqaJOCApF5kHEl7Cd84wCbWC0Yz9okvHHY0GNLcP3va
-X-Google-Smtp-Source: AGHT+IE/7gJpJG9wiUiEYW3ilUdR4829vb87RX4BE7XTz5YsALoI/o56dKfV0CPJZj/Y/y8iIT2EKQ==
-X-Received: by 2002:a17:906:f6ca:b0:a59:a0ec:e02d with SMTP id a640c23a62f3a-a5a2d53b08emr1739780166b.8.1716282881293;
-        Tue, 21 May 2024 02:14:41 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5ceb46c33fsm668469666b.142.2024.05.21.02.14.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:14:41 -0700 (PDT)
-Message-ID: <e1277a004b5aef8e6b407089ac1e3df6ff6fee50.camel@gmail.com>
-Subject: Re: [PATCH RFC 0/4] iio: add support for multiple scan types
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Julien Stephan
- <jstephan@baylibre.com>, Esteban Blanc <eblanc@baylibre.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 21 May 2024 11:18:24 +0200
-In-Reply-To: <20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
-References: 
-	<20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 
+        d=1e100.net; s=20230601; t=1716282942; x=1716887742;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TAuNacbUrfIsXcQy73r+u5Bwh/Y65NcydJ7aOsSFKoI=;
+        b=Itir/sWOVjrp7IzBXOzvO64CeNpI/c1AveI5R8Lweq5m0wgqanXXi8FAmC50xDtQ8J
+         UKkktxQgs80wmzwduopcwCRzV3hl9G1WmMx4fMpQO9Wux4ZcareuliaXp7OGOr2aNFLN
+         /85hxgJXWJgYB1aWndfYH6NUUDmKzdd32tuJx6/ar1/4R+xQmdgQI2IXiYepn1N6R++/
+         SpRpiIuHgeruVUEsFIBdcRH83XwbX+0GjZWNTvyked9z9qd/5ANBS8Y/PIugXO8NPMdg
+         ABZXQyy6yVcNA7skgbbX2q9KKmGBFyqZrlCeMCMT199f4RNt2PVA4AQdcX5r0oXiQ4yg
+         iJxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtvdvVY0Beupvzlbd3WSyEsgDx1KSAPHGJR/ty5Qa3PrNb+SdnuauzrFMon3s5SV5vzlKeFkmzcgpVCyTeaOUc0mBj8o2PCfle7PqP
+X-Gm-Message-State: AOJu0Yw2NUh8b9O3p8usqA9PMgn8o/cP6UW4X6n3ugMAJ2XU9h0iFsDu
+	bqIuwQWG9ISoXpOBJWLWZJGJRLKW9g2h11FG+4RISSFapKzx+Nz/eYyi5/14fnY=
+X-Google-Smtp-Source: AGHT+IFmL361KrmvARHIc8Ur1IZbGJ9/Yhj8qeOwqF7Tq9xi1hio7ApcD30sN5U5FqRFwOIbl1MzLQ==
+X-Received: by 2002:a05:600c:5101:b0:41a:aa6:b68c with SMTP id 5b1f17b1804b1-41fea93a0ccmr275427775e9.6.1716282942346;
+        Tue, 21 May 2024 02:15:42 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9335sm452898055e9.29.2024.05.21.02.15.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 02:15:41 -0700 (PDT)
+Message-ID: <3785f6e8-1067-4c99-b714-e67f9cf8209d@linaro.org>
+Date: Tue, 21 May 2024 11:15:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: soc: ti: am645-system-controller: add
+ AM654 syscon
+To: Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Roger Quadros
+ <rogerq@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240518-dt-bindings-ti-soc-mfd-v1-0-b3952f104c9a@linaro.org>
+ <20240518-dt-bindings-ti-soc-mfd-v1-2-b3952f104c9a@linaro.org>
+ <20240520-deskwork-unpinned-fb6b87cc7ffa@spud>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240520-deskwork-unpinned-fb6b87cc7ffa@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-05-07 at 14:02 -0500, David Lechner wrote:
-> Following up from this thread [1]...
->=20
-> Unless I've overlooked something important, I think adding support for
-> multiple scan types per channels should be rather trivial, at least in
-> the kernel. Userspace tools will need to learn to re-read buffer _type
-> attributes though. For example, it looks like libiio caches these values.
-> I had to restart iiod to get a proper capture with the iio-oscilloscope
-> after changing the scan type at runtime.
+On 20/05/2024 19:14, Conor Dooley wrote:
+> On Sat, May 18, 2024 at 10:07:17PM +0200, Krzysztof Kozlowski wrote:
+>> Add dedicated binding for the AM654 MCU SCM system controller registers,
+>> already used in the DTS to properly describe its children.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  .../soc/ti/ti,am654-system-controller.yaml         | 60 ++++++++++++++++++++++
+>>  1 file changed, 60 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+>> new file mode 100644
+>> index 000000000000..e79803e586ca
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+>> @@ -0,0 +1,60 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/soc/ti/ti,am654-system-controller.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI AM654 System Controller Registers R/W
+> 
+> "R/W"? Is that a copy-paste mistake from the register map for this SoC?
 
-No for now but to add more future fun, we may consider in having something
-similar as hwmon [1]. Hence, userspace could do things like poll(2) on the
-specific file rather than having to read it over and over...
+Other TI syscon bindings had it. I'll drop it.
 
-[1]: https://elixir.bootlin.com/linux/latest/source/drivers/hwmon/hwmon.c#L=
-649
-- Nuno S=C3=A1
-
+Best regards,
+Krzysztof
 
