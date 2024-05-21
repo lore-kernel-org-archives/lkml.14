@@ -1,30 +1,30 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F140B770E1
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1FC770F3
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716289426; cv=none; b=jyq30i0Vd7YfaREH8u8FILMhZsgt3Pda+rRTSpTJe0Sx/h9PoWNAvTTKJwIll+kzf1VjuU/0qGvfPyToyX3bxl3YH/xpvEBnixDuETkNSPO8c+WZ71G+GODcVcam1VcAWLLP7DkzzbDbqbie1v83K+fSgN4l87M3IpftWCEKd88=
+	t=1716289427; cv=none; b=dgC7KlT1aqnaGw1uL4py1opqInU4Hu1IqD3VLHdvGbuAxGRon9afJBuiNDf5jB3qQJbOd70l/k2wD/GgSw4bz8w0UNk4akzy5gtVuKygiitWBK4rY+wbZ8XrAmWSpFNWxE2cAHSbccDghaqEgiGOrKdCC8J+xJrGu2+uKkLQZCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716289426; c=relaxed/simple;
-	bh=x55X4hb+WDGyX98I9cJOxVIp/SSeNLmmTlFy+aZV4Jo=;
+	s=arc-20240116; t=1716289427; c=relaxed/simple;
+	bh=CkVLodKJ9ucWBi7mpVP2iJelihrLRHWS7bUyzqopUjM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S/NLvAU1Ood10InBiVVTA7BpKkY42inIKZbZno8AhB+b+oS34MNpLXU2dZavMuqAV4xDJErR47z6qKuHsO1lT6ur66BA3F0t5UmYCSN6Ff6SS30lgiA3HZ0yS94iyOOvyi3tVYRYgWMnEk8VZsz4vCSJ1jvbj8kj2a9MSF7RQRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=a0abYcVE; arc=none smtp.client-ip=115.124.30.131
+	 MIME-Version; b=vDLJ40h+i2eq07gOOgQD4zd2mAmzxnRjnbH/VyFW77bXMyYuRhOfdQo2QAAfRcuOFo6FB4Js3dyUPw8oHHFULgTwdAEaLR3ZhVY9bo5sXLKpFY/36xgD1HPdZj6zg6UxMUohRHfT7DPDh3zo5T+ZzqTFF1T6GUFdZKLgLNn4R50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fUJdX6hW; arc=none smtp.client-ip=115.124.30.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="a0abYcVE"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fUJdX6hW"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1716289417; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ArTvZKlaOes4XoFtzrKMEwLUH8CHPrOqCRPSPeGMt/g=;
-	b=a0abYcVElqGnhHB+0BarctgCnQwfetl3e4cTU2SDMdZg6QXiM3aff4nrNph168S8acADzcyo7xn/8G4ZLvhYctlWrNMdKetxd6kr96VgLnCFf5jjrqcrrspsbk4ewqh9OQuVcYFhvn5Z70qdgDnppgNdXGWqMk4KYkCj/NTA6KY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W6xeTCm_1716289415;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W6xeTCm_1716289415)
+	t=1716289423; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=/V3DnBye2LjO7u5ouBgBU8nPrUqi/2Egdsz3zKACdwM=;
+	b=fUJdX6hWqHjDussoPyT9DN3O/eSP1VyI5mUQHx5keTV89BRSE3o3E2RJsTSshV+b+JIGO0raC3TK6naifFHJpE+xUlla0YCYIdAlHHTmULJb9TCfZLgw+IdgmZpxUg6Xxo+TSVJ7llXpTFTP6/n/176rElMjaulhKZkoNGCxt34=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W6xl985_1716289419;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W6xl985_1716289419)
           by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 19:03:36 +0800
+          Tue, 21 May 2024 19:03:41 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -43,9 +43,9 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 4/8] mm: shmem: support large folio allocation for shmem_replace_folio()
-Date: Tue, 21 May 2024 19:03:14 +0800
-Message-Id: <73d93136d8469658715388878c947e8952164c53.1716285099.git.baolin.wang@linux.alibaba.com>
+Subject: [RFC PATCH 7/8] mm: shmem: use swap_free_nr() to free shmem swap entries
+Date: Tue, 21 May 2024 19:03:17 +0800
+Message-Id: <90fda314a9e966374fe837ae3ebd74708380479d.1716285099.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1716285099.git.baolin.wang@linux.alibaba.com>
 References: <cover.1716285099.git.baolin.wang@linux.alibaba.com>
@@ -57,47 +57,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To support large folio swapin for shmem in the following patches, add
-large folio allocation for the new replacement folio in shmem_replace_folio(),
-as well as updating statistics using the number of pages in the folio.
+As a preparation for supporting shmem large folio swapout, use swap_free_nr()
+to free some continuous swap entries of the shmem large folio when the
+large folio was swapped in from the swap cache.
 
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- mm/shmem.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ mm/shmem.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/mm/shmem.c b/mm/shmem.c
-index daab124c3e61..74821a7031b8 100644
+index b3e39d9cf42c..fdc71e14916c 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -1901,8 +1901,7 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
- 	 * limit chance of success by further cpuset and node constraints.
+@@ -1962,6 +1962,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	struct address_space *mapping = inode->i_mapping;
+ 	swp_entry_t swapin_error;
+ 	void *old;
++	int nr_pages;
+ 
+ 	swapin_error = make_poisoned_swp_entry();
+ 	old = xa_cmpxchg_irq(&mapping->i_pages, index,
+@@ -1970,6 +1971,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	if (old != swp_to_radix_entry(swap))
+ 		return;
+ 
++	nr_pages = folio_nr_pages(folio);
+ 	folio_wait_writeback(folio);
+ 	delete_from_swap_cache(folio);
+ 	/*
+@@ -1977,8 +1979,8 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+ 	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
+ 	 * in shmem_evict_inode().
  	 */
- 	gfp &= ~GFP_CONSTRAINT_MASK;
--	VM_BUG_ON_FOLIO(folio_test_large(old), old);
--	new = shmem_alloc_folio(gfp, info, index);
-+	new = shmem_alloc_hugefolio(gfp, info, index, folio_order(old));
- 	if (!new)
- 		return -ENOMEM;
+-	shmem_recalc_inode(inode, -1, -1);
+-	swap_free(swap);
++	shmem_recalc_inode(inode, -nr_pages, -nr_pages);
++	swap_free_nr(swap, nr_pages);
+ }
  
-@@ -1923,11 +1922,13 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
- 	xa_lock_irq(&swap_mapping->i_pages);
- 	error = shmem_replace_entry(swap_mapping, swap_index, old, new);
- 	if (!error) {
-+		int nr_pages = folio_nr_pages(old);
-+
- 		mem_cgroup_migrate(old, new);
--		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, 1);
--		__lruvec_stat_mod_folio(new, NR_SHMEM, 1);
--		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -1);
--		__lruvec_stat_mod_folio(old, NR_SHMEM, -1);
-+		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, nr_pages);
-+		__lruvec_stat_mod_folio(new, NR_SHMEM, nr_pages);
-+		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -nr_pages);
-+		__lruvec_stat_mod_folio(old, NR_SHMEM, -nr_pages);
+ /*
+@@ -1997,7 +1999,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	struct swap_info_struct *si;
+ 	struct folio *folio = NULL;
+ 	swp_entry_t swap;
+-	int error;
++	int error, nr_pages;
+ 
+ 	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+ 	swap = radix_to_swp_entry(*foliop);
+@@ -2044,6 +2046,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		goto failed;
  	}
- 	xa_unlock_irq(&swap_mapping->i_pages);
+ 	folio_wait_writeback(folio);
++	nr_pages = folio_nr_pages(folio);
  
+ 	/*
+ 	 * Some architectures may have to restore extra metadata to the
+@@ -2062,14 +2065,14 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	if (error)
+ 		goto failed;
+ 
+-	shmem_recalc_inode(inode, 0, -1);
++	shmem_recalc_inode(inode, 0, -nr_pages);
+ 
+ 	if (sgp == SGP_WRITE)
+ 		folio_mark_accessed(folio);
+ 
+ 	delete_from_swap_cache(folio);
+ 	folio_mark_dirty(folio);
+-	swap_free(swap);
++	swap_free_nr(swap, nr_pages);
+ 	put_swap_device(si);
+ 
+ 	*foliop = folio;
 -- 
 2.39.3
 
