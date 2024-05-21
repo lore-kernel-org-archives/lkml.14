@@ -1,168 +1,217 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2134.outbound.protection.partner.outlook.cn [139.219.146.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D14317545;
-	Tue, 21 May 2024 03:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716261132; cv=none; b=JlKKnGJX49Agx5DLv61e6d21ELo0IUUeOkzhus3ocfWVPHwwlx+uE5Ed8M7RBzgBniAb4wouB1yoQD3AxwzMOpGxFWzAIYgrkaI1gSiAKM1BJES/dxTNe1I/lpWBaJR8pmyoBVK4Qh1JZO9mUl8srKxgfFR2Icj6Ttc645UNFRk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716261132; c=relaxed/simple;
-	bh=Ztp8tWwtYacrLH0tcn1Oo/H+gJbLpHCIaW8drioba/4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=n1A3A495LVHFPTBei+V3JoxcmdncmaXorqDFpPTV0hXaxEiIHZgUfjpPkBKDHx1ua+xG47/ft9YouYsvPdF++ZG+8co42NhlyeqWafuM+SI4pJC2R7+1+7KFoeluF6J6g/OfkdDn9v9PJYItVmPxlgihf9FjE649y1d5C/LArGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VjzxH6Nlzz4f3m7J;
-	Tue, 21 May 2024 11:11:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 51BE71A0E8C;
-	Tue, 21 May 2024 11:11:58 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ75EExm7Yj4NA--.50760S3;
-	Tue, 21 May 2024 11:11:55 +0800 (CST)
-Subject: Re: [PATCH md-6.10 5/9] md: replace sysfs api sync_action with new
- helpers
-To: Oliver Sang <oliver.sang@intel.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-raid@vger.kernel.org,
- agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- xni@redhat.com, dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <202405202204.4e3dc662-oliver.sang@intel.com>
- <c9406496-7b97-a3c5-b48c-32f8248cee39@huaweicloud.com>
- <ZkwOpD8rjYeb+4eT@xsang-OptiPlex-9020>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <e822d3bb-ec27-5bc8-e9c2-bef6d0454918@huaweicloud.com>
-Date: Tue, 21 May 2024 11:11:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A2A1798F;
+	Tue, 21 May 2024 03:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716261198; cv=fail; b=R4a9PwMyG5n/DF/SkG24Y0eSkpTH9+Sqpj7QZFcap5F8M2pIcDbjrqeGpTC6ZJ5jEzAVCTfhBfsyTzmyyDQ3hB5HlMwXFUBEyjAE31Ns3u07azlKf8JUFT6wlToNAi9tO0u07v/Tw4j809VX8js8U/DyV0SWQa9etPwK6pR7f/o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716261198; c=relaxed/simple;
+	bh=cwBZIqwFnbBVnqchQn+V1mvzgSV+ixPy0mhnNJUILq8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tzeyfRn2eE7pl/43bgymdWog39r/gNNOB2u+1v/l+tiiA5qI6VZVc5sX0j8+h443g4gE8Zo5zUQKniv1Dnu9e8DictXvp/5LC49MnV816ZlRtVN3k+/nYLLESKeD3TYx49RDHgz0FPsshlOtAcWG4GPLjMJsEmLDhpebIKdzlrs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HXzKzeY9BZklV87c1b5xBD0l8wjagp303AR+vaigQwaaZfUnkADHbaFfkgRwmO172FZbA88VJ4ekagxEBOCf6I5dc6h6TGRprcZvrASI+LH2qjsn6H53LjzFRiYBvIu3Nr8qk6ZNdXX7vEOzHTLkdObSPMBf0DEejuLK18d61gqkQPE24dRdFw1qYZEziqHM2b4idHpQnU3hGcwsriusu+byjvqW8dtQz0yjrvs2375XmTR1VDyeEIcUVtINBi7/siL9DEUyj6V2ZG/FUuIJKivCC7H0T4iphrLKouxs72JgfqU7vAFQ7WsoVrRg+OgGDnnW49+86WRxXOM2lt1H0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W++pRmxoPDdJvPI/iKzomS2ZqHbsM40diYc7PmtnUCw=;
+ b=gSGIfEYif7lUR03QqYKRCCggKzyTg9H2UmxLcGdsLg11h4gEsoplEVIb+aNmguvvrptXHk7uafr6tFxXTNy7NeHEmyZS1wdg92v4pciXUUiqxlz4rAAmrXnAn6ZbagbDPW3Hk7hKKuyrlTMEUFU4t6rpSuKT9f0oW2l2mg0u/Uug3X6IF0s6L4hzfzgG0phwcURUSevRqF4gqM2gUPWQThDcsht2oDFoh66z3EPR5leVkR03mMM8lUqKP9NCwVkoINxl5gLaoxnuHbXgeQZ9ao/28DGVdci70/RhvlJYc+7ZO90pa4YVEWiZ0CQP/4h+tDKTw2J9AUS4MqYASjMmtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:c::7) by ZQ0PR01MB1255.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Tue, 21 May
+ 2024 02:58:31 +0000
+Received: from ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
+ ([fe80::39be:8ed9:67b7:adc6]) by
+ ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn ([fe80::39be:8ed9:67b7:adc6%6])
+ with mapi id 15.20.7472.044; Tue, 21 May 2024 02:58:31 +0000
+From: keith <keith.zhao@starfivetech.com>
+To: andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	hjc@rock-chips.com,
+	heiko@sntech.de,
+	andy.yan@rock-chips.com,
+	xingyu.wu@starfivetech.com,
+	p.zabel@pengutronix.de,
+	jack.zhu@starfivetech.com,
+	shengyang.chen@starfivetech.com
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	keith.zhao@starfivetech.com
+Subject: [PATCH v4 05/10] drm/vs: add vs mode config init
+Date: Tue, 21 May 2024 18:58:12 +0800
+Message-Id: <20240521105817.3301-6-keith.zhao@starfivetech.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240521105817.3301-1-keith.zhao@starfivetech.com>
+References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHXPR01CA0020.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1b::29) To ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:c::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZkwOpD8rjYeb+4eT@xsang-OptiPlex-9020>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHZQ75EExm7Yj4NA--.50760S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFW7CF45tFyDGFy8Wr1UAwb_yoWrWw45pw
-	4kX3Z0yF4rJFn0yF48Kw40va4Yqa1fJrn8W34DG340ya1qyrySyr1Sqr1a9r9FkrZ093y2
-	v3ykXry3Kw4qg3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
-	Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1047:EE_|ZQ0PR01MB1255:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b81af45-4ec3-4454-7cab-08dc7941e580
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|366007|41320700004|1800799015|7416005|52116005|921011|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	DyL5NCnOY0pZ9jUs94HsZMB4AfKxVdxVpf8lhra7JK0lKpMzKW0gajEeMhloBbVe4jOyWrnt8RZUnd4v+WoJgiclocmLDPNJe9ysD61QWofka7/r4L0wYo4orBAJcjqLvtHzYzSaSx6qIKnBkcv5LN1YPrN2At6jFpb4ROJlm68b4sqJbcSynBrMpD7S8uPZC8vNCjw/NVN4tP+btbmo6fGlhrCx0HY9a721W4WRlh1jo+FKxKWkZOOrVTvXrOFteHPNru9DVQNucgiOcfDqSz8j0rDyK5PiJcu3Hy70J03p4jxKBQ+nj4OYtIlsYseCQO/ToTrECxR4MgJv2W410shRtW4POGkq2m33JpF5kZhspBwOnBiOCNVgnNhmitN5c7De8/BMV+JkcwoH3vGDdJjGNLi9k0QPOlJYxl7A4EFqcePZSa07lQv+sHR1vCCS/HTUMyEZCiJhPsLNUcYmqj4BFTjsaXtqft0kwhRB+tNaWQWKE5iJaLaPbG3wwLzjwDcjtiLlBE5iYoCjSYhKyv/3P0Q1STbpIy9RsZsCxnl+Jy9nuSmiJcvySWUMWGZrtzJf/m2jddSKMEAY6Vt8t2PIxL2avI5vTrW1GI6qEB4qd3MyYeR4gh21aOlwGnGKyq34k7tLnWF9JipKaMeemQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(41320700004)(1800799015)(7416005)(52116005)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?DEG9ouOA7UQ5Kh72liSD6AWqlrqZHGRjmQ2BYBpxJF/OYjpKW8tfIwsABGl6?=
+ =?us-ascii?Q?RWSSG0ueXFNj3eYLSyfwkks2nx1VD6R0vnMxMck3GUtFhzdCD1/Zv3An97gM?=
+ =?us-ascii?Q?8xgs1ZqqytQ6x3OnanE/IoVNsMs+/jtrn3SLM+enxtkz7wmLr8xIt60lH8oM?=
+ =?us-ascii?Q?Y+aOJSTrhKlMkUOVpk3eyxl476KJmb4QuiBO/izOQxKJUfUkvN7fjmUklYa2?=
+ =?us-ascii?Q?OT1ISCe3Lgjv4mZM9KkwtQPUHa7Wg9G0evAMYsWjKGZgykQLnmNjle7rDDbY?=
+ =?us-ascii?Q?0GAuKUrSfYzss5G4dkqCxKy9vA+vQJaM2FBPB4TOmYMMtFvHxPF71kyOiEEQ?=
+ =?us-ascii?Q?PkGeJ1dBnF48RwJi0CGdS6Ktxwt795SXBPkoq8vxBdfstTDO5tWbIAZpa0yT?=
+ =?us-ascii?Q?fNQsZCEkP4B3qLio7Q0Vba8LvXeBfc2Qjw0HTE4Xgo0+vWu1jwwM9oB7CqQo?=
+ =?us-ascii?Q?tqmKjwNei/owOAOHaEVlAUYyacrvRlJqMFf0TImoevP4/r7b400ZKZkNMWtk?=
+ =?us-ascii?Q?vSk8Oo1/+6LvMQSl7qoiYZR/3dyufFoFBncUDj4TMo7Y1ZubGMrvXTbHPFR7?=
+ =?us-ascii?Q?GEdVAL9K3kJxUA/+9ZvH9Y0+6RvqtCsVxV7hQ3nZu0ZBIwktwylhX6hM+Ok6?=
+ =?us-ascii?Q?RCoPSywSET1eU5kLANSYOc5ZqgeSer6g+w68OjKfVSZi1wfKMCeTVxceKLUZ?=
+ =?us-ascii?Q?rFtBkrVVmuytvQCz6LB3bEFm2J3BDSvGzTcxQJQlRpzJYNnzW62fnNrq9rug?=
+ =?us-ascii?Q?jcy9pA2MJHoBFeLwJQSjHXpSYMIImz8EF48xfnYbKkzw3kuEbVMWfI/XZ7rj?=
+ =?us-ascii?Q?1PjQTMUNdzcx2fdyRLYr3jmUFdgcPuAcft0TyU/I0OhxS1kliA2fts18NsFM?=
+ =?us-ascii?Q?6OoYIILO0Fpjx6qZ46oWr8Ft+TIFhgQ/ZHhljFexPk2Cmq+l8L+DA22Vdbyb?=
+ =?us-ascii?Q?B5/asGvjx3bunP2hJvf6sMqH8kxZPunJBc0NtXvInhyGQJp8RfFBoxv9bRBs?=
+ =?us-ascii?Q?QxWjotby6kwsnfQ6170zrhfaJjtMi8mfO8rqF1s2bDnt/dW9OsxgSggbcvbS?=
+ =?us-ascii?Q?4VN1joRZf06sUsK3nZoTQHoAW9UZtxgsl/816WkG+9V5lKkfnEGb9mSuW7XQ?=
+ =?us-ascii?Q?BXeHVFEzVQqQq9pwQuDIVgp6/SbO/r7zMsIhX329YB5Tk+5Vy1UaDsTj9JeP?=
+ =?us-ascii?Q?tjRT1X9SevCpj93+t0hTI9melr4txQXT8CxL3huoUKnJcNNqm7u0vXEkXh3P?=
+ =?us-ascii?Q?n1sP6o5jltPhWl/D9dxPKE5vqrF70Mujszn6Ah5V8bGDlwKiD4SCd/ep3t7j?=
+ =?us-ascii?Q?Sr6jIUcZ9WfDNiMVRZQFzC9laP7QqSsHDdxmjzExfD5ui/Xge2NJioFXHXX3?=
+ =?us-ascii?Q?cuL7d6D81yDTkie+129puYvkWtwU6QhlD9hhd4tR364XVb3lhSOxMnaF3K4R?=
+ =?us-ascii?Q?CyL5cImOdENzJBr5sYGMdbO4bdftIEf3tzkCl25hkaReEJ1cGM/nw8GtcP0r?=
+ =?us-ascii?Q?d+XAYoZcZCPiTM33OvhdGCrnIPLAufojQnGSWarvmnm+ZuOj9AIrZOj646o2?=
+ =?us-ascii?Q?kP4CEeU4s5lgB3vpp9DhtmI49OT4XDCSyXecyMVbMM+t0uN4oij6aovAk3yN?=
+ =?us-ascii?Q?Bw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b81af45-4ec3-4454-7cab-08dc7941e580
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 02:58:31.1042
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a2v5yBDiymup/cVmt+I+9Z7lh1mcXel3zGYfkkCk1Fws14b0IBazE6jTkZwhxSf7ma8pZz21gvGk4LEhN+/MHCmM+g3LVOB5uO1Eq+fEbHo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1255
 
-Hi,
+add vs mode config base api
 
-在 2024/05/21 11:01, Oliver Sang 写道:
-> hi, Yu Kuai,
-> 
-> On Tue, May 21, 2024 at 10:20:54AM +0800, Yu Kuai wrote:
->> Hi,
->>
->> 在 2024/05/20 23:01, kernel test robot 写道:
->>>
->>>
->>> Hello,
->>>
->>> kernel test robot noticed "mdadm-selftests.07reshape5intr.fail" on:
->>>
->>> commit: 18effaab5f57ef44763e537c782f905e06f6c4f5 ("[PATCH md-6.10 5/9] md: replace sysfs api sync_action with new helpers")
->>> url: https://github.com/intel-lab-lkp/linux/commits/Yu-Kuai/md-rearrange-recovery_flage/20240509-093248
->>> base: https://git.kernel.org/cgit/linux/kernel/git/device-mapper/linux-dm.git for-next
->>> patch link: https://lore.kernel.org/all/20240509011900.2694291-6-yukuai1@huaweicloud.com/
->>> patch subject: [PATCH md-6.10 5/9] md: replace sysfs api sync_action with new helpers
->>>
->>> in testcase: mdadm-selftests
->>> version: mdadm-selftests-x86_64-5f41845-1_20240412
->>> with following parameters:
->>>
->>> 	disk: 1HDD
->>> 	test_prefix: 07reshape5intr
->>>
->>>
->>>
->>> compiler: gcc-13
->>> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4790T CPU @ 2.70GHz (Haswell) with 16G memory
->>>
->>> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>>
->>>
->>>
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <oliver.sang@intel.com>
->>> | Closes: https://lore.kernel.org/oe-lkp/202405202204.4e3dc662-oliver.sang@intel.com
->>>
->>> 2024-05-14 21:36:26 mkdir -p /var/tmp
->>> 2024-05-14 21:36:26 mke2fs -t ext3 -b 4096 -J size=4 -q /dev/sda1
->>> 2024-05-14 21:36:57 mount -t ext3 /dev/sda1 /var/tmp
->>> sed -e 's/{DEFAULT_METADATA}/1.2/g' \
->>> -e 's,{MAP_PATH},/run/mdadm/map,g'  mdadm.8.in > mdadm.8
->>> /usr/bin/install -D -m 644 mdadm.8 /usr/share/man/man8/mdadm.8
->>> /usr/bin/install -D -m 644 mdmon.8 /usr/share/man/man8/mdmon.8
->>> /usr/bin/install -D -m 644 md.4 /usr/share/man/man4/md.4
->>> /usr/bin/install -D -m 644 mdadm.conf.5 /usr/share/man/man5/mdadm.conf.5
->>> /usr/bin/install -D -m 644 udev-md-raid-creating.rules /lib/udev/rules.d/01-md-raid-creating.rules
->>> /usr/bin/install -D -m 644 udev-md-raid-arrays.rules /lib/udev/rules.d/63-md-raid-arrays.rules
->>> /usr/bin/install -D -m 644 udev-md-raid-assembly.rules /lib/udev/rules.d/64-md-raid-assembly.rules
->>> /usr/bin/install -D -m 644 udev-md-clustered-confirm-device.rules /lib/udev/rules.d/69-md-clustered-confirm-device.rules
->>> /usr/bin/install -D  -m 755 mdadm /sbin/mdadm
->>> /usr/bin/install -D  -m 755 mdmon /sbin/mdmon
->>> Testing on linux-6.9.0-rc2-00012-g18effaab5f57 kernel
->>> /lkp/benchmarks/mdadm-selftests/tests/07reshape5intr... FAILED - see /var/tmp/07reshape5intr.log and /var/tmp/fail07reshape5intr.log for detail
->> [root@fedora mdadm]# ./test --dev=loop --tests=07reshape5intr
->> test: skipping tests for multipath, which is removed in upstream 6.8+
->> kernels
->> test: skipping tests for linear, which is removed in upstream 6.8+ kernels
->> Testing on linux-6.9.0-rc2-00023-gf092583596a2 kernel
->> /root/mdadm/tests/07reshape5intr... FAILED - see /var/tmp/07reshape5intr.log
->> and /var/tmp/fail07reshape5intr.log for details
->>    (KNOWN BROKEN TEST: always fails)
->>
->> So, since this test is marked BROKEN.
->>
->> Please share the whole log, and is it possible to share the two logs?
-> 
-> 
-> we only captured one log as attached log-18effaab5f.
-> also attached parent log FYI.
-I mean please ignore the BROKEN test, and next time attach the two logs
-if possible:
+Signed-off-by: keith <keith.zhao@starfivetech.com>
+---
+ drivers/gpu/drm/verisilicon/Makefile     |  3 +-
+ drivers/gpu/drm/verisilicon/vs_modeset.c | 36 ++++++++++++++++++++++++
+ drivers/gpu/drm/verisilicon/vs_modeset.h | 10 +++++++
+ 3 files changed, 48 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.c
+ create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.h
 
-/var/tmp/07reshape5intr.log and /var/tmp/fail07reshape5intr.log
-
-Thanks for the test, we really need a per patch CI.
-Kuai
-
-> 
-> 
->>
->> Thanks,
->> Kuai
->>
->>>
->>>
->>>
->>> The kernel config and materials to reproduce are available at:
->>> https://download.01.org/0day-ci/archive/20240520/202405202204.4e3dc662-oliver.sang@intel.com
->>>
->>>
->>>
->>
+diff --git a/drivers/gpu/drm/verisilicon/Makefile b/drivers/gpu/drm/verisilicon/Makefile
+index 7da54b259940..536091f37378 100644
+--- a/drivers/gpu/drm/verisilicon/Makefile
++++ b/drivers/gpu/drm/verisilicon/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-vs_drm-objs := vs_dc_hw.o
++vs_drm-objs := vs_dc_hw.o \
++		vs_modeset.o
+ 
+ obj-$(CONFIG_DRM_VERISILICON_DC8200) += vs_drm.o
+diff --git a/drivers/gpu/drm/verisilicon/vs_modeset.c b/drivers/gpu/drm/verisilicon/vs_modeset.c
+new file mode 100644
+index 000000000000..c71fe0d32504
+--- /dev/null
++++ b/drivers/gpu/drm/verisilicon/vs_modeset.c
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 VeriSilicon Holdings Co., Ltd.
++ */
++#include <drm/drm_damage_helper.h>
++#include <drm/drm_fb_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
++
++#include "vs_modeset.h"
++
++static const struct drm_mode_config_funcs vs_mode_config_funcs = {
++	.fb_create			 = drm_gem_fb_create,
++	.atomic_check		 = drm_atomic_helper_check,
++	.atomic_commit		 = drm_atomic_helper_commit,
++};
++
++static struct drm_mode_config_helper_funcs vs_mode_config_helpers = {
++	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
++};
++
++void vs_mode_config_init(struct drm_device *dev)
++{
++	int ret;
++
++	ret = drmm_mode_config_init(dev);
++	if (ret)
++		return;
++
++	dev->mode_config.min_width  = 0;
++	dev->mode_config.min_height = 0;
++	dev->mode_config.max_width  = 4096;
++	dev->mode_config.max_height = 4096;
++
++	dev->mode_config.funcs = &vs_mode_config_funcs;
++	dev->mode_config.helper_private = &vs_mode_config_helpers;
++}
+diff --git a/drivers/gpu/drm/verisilicon/vs_modeset.h b/drivers/gpu/drm/verisilicon/vs_modeset.h
+new file mode 100644
+index 000000000000..bd04f81d2ad2
+--- /dev/null
++++ b/drivers/gpu/drm/verisilicon/vs_modeset.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020 VeriSilicon Holdings Co., Ltd.
++ */
++
++#ifndef __VS_MODESET_H__
++#define __VS_MODESET_H__
++
++void vs_mode_config_init(struct drm_device *dev);
++#endif /* __VS_FB_H__ */
+-- 
+2.27.0
 
