@@ -1,116 +1,130 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A30076035;
-	Tue, 21 May 2024 11:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FFA7710F
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292641; cv=none; b=sWJLgjIlFOopM1MGz6u33/W8Z9+qBMvWsJnR1k+JvO7Yw96lltquQLjv55hXGCoTwIWMfhYn8fBADHz3F2NT2uT3oEZeTI2INcOGWcEL+l3586t+Rb2sp2rgw/UPhNZpktZHtlU3wpu9EAfI3FYfmn4WM4johgJiSWAnKPZne/w=
+	t=1716292645; cv=none; b=nOUTpOwS2Aq16v394ydHVJVw+KRz8fxPOOFRVaiDrvFgoOi/nsNY08aZ45CcrcGhbyuyxaRGTJKWBeInoDKxMxgjE5KG3vNm+VZL1EvjUcWrOn893n5eywQSq9MIhJ/eFdlsuWmsC/MW+3XQQTOVk1lstLCkKHENlgXcGE89dfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292641; c=relaxed/simple;
-	bh=myNuxgtOJqDXVT+HSRgtuecaI5gwxkJHVxARIgcJq/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mBljf0STnfFvKKv/zCx7XKaO8QOHpQ1JUQYlg5vKWnfNei/drnMeQT/iQzbaHdCrIUfVpp3+oB8g8j7SXdr5BQ76DkYjhWf02KyBkToHh3UJbdtWb2M79WWMpPt9k7ZxGrrVhFv4CcpEWWk+XAxM6+VKoDMJqZzzpdS3LKnVa7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Sd76a240; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Sd76a240"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1716292614; x=1716897414; i=wahrenst@gmx.net;
-	bh=MKxjmztR/jHkdYlpsG3v22N+vXjLHvDaMqP5hmX66zU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Sd76a240RQLy/1ECWGoEKxh2IQ4HK02TpUyj+SKcx3EU3iOvkrk5TyBp/AIg2evQ
-	 anjIp0LmZYguOujWpFjRZJwlvEjHpWTojzzmo5zEt5YGCJzMDEC0XIKK22JhLmKfk
-	 FZAAPtOUGMTSfNt7VHuUWx1VDoffDDD+R888PdMbwFrazVhtLEKe3gsmD11d5NRUi
-	 3auJe4M3OwtABwsKnrBwib2yY6+3Mq8f5lvfY2kAy9CnxwbtdG7jICCt6zjwEIOQh
-	 qQ9zUN1KPCt0o9GQSS3aL/tuAoKrxuez+I3SuBnuVErLLzg1RLi0ZFwQGJqrziBgr
-	 m1gMlPJ4um/m2PTafA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.126] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MmDIu-1srHaI0niq-00i8j9; Tue, 21
- May 2024 13:56:54 +0200
-Message-ID: <bc1eb98c-9d49-4424-ab89-16be6c67c3f5@gmx.net>
-Date: Tue, 21 May 2024 13:56:52 +0200
+	s=arc-20240116; t=1716292645; c=relaxed/simple;
+	bh=bf3ANCvFz6G43u67m8NYWZRX5TZ8iz1p0YKTdXCKx5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Af+DUW61UDKDyw0LlhOhkyoCIsAUOjN5On0Md/yYa3JyUEWcHk8ULcY3wIRpe4DMGEj2dNWuhEO6NvJC+UGoSmLdjagPCLrVCr6x/DjAHhSBqqpPp0u5n+UHLAiwzc5DhEQ/vrc47Q8D6GlU1xvUOF0h3PKFwVvV7uw/EQvHATA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 64D505C0FA;
+	Tue, 21 May 2024 11:57:22 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D202413A21;
+	Tue, 21 May 2024 11:57:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2qi3MCGMTGZncgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 21 May 2024 11:57:21 +0000
+Date: Tue, 21 May 2024 13:57:20 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [RFC PATCH v2 01/20] mm: Provide pagesize to pmd_populate()
+Message-ID: <ZkyMIOs76sZI5GsV@localhost.localdomain>
+References: <cover.1715971869.git.christophe.leroy@csgroup.eu>
+ <91159d49bcbee0526ca6235ff7ef1ee7d378d013.1715971869.git.christophe.leroy@csgroup.eu>
+ <ZksRfAXja0fhNePD@localhost.localdomain>
+ <dc66eff8-4371-4685-9dd8-3dacd3744e73@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] dt-bindings: mmc: Add support for BCM2712 SD host
- controller
-To: Andrea della Porta <andrea.porta@suse.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Marc Zyngier <maz@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kamal Dasu <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org
-References: <cover.1716277695.git.andrea.porta@suse.com>
- <d7c8bc0143c6b8c8b313413860840ae5bf2dc22a.1716277695.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <d7c8bc0143c6b8c8b313413860840ae5bf2dc22a.1716277695.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RemX3IIs/au4ReeRx6ZGARXTRzVD7neD4wJdYjz7HTzsO8Ft2Ef
- XCUSPctDOQfm9J9h5aNR9coXl+VHWpZIUG0WIBSG2kfrJorlqdQ/Klkm3/M3iU10vDSwNm9
- eXgM6/Kt5gRB/+RMnUMQL1FpFI6qeSCHybbk0KdXjgFl1zCDxEt2CQRnUVYsJDgJSrJJLtW
- 2b1TUHSmwIOX134TEiYcA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc66eff8-4371-4685-9dd8-3dacd3744e73@csgroup.eu>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Q+I2IaHxwcs=;qn8CZNtHsTD/R40C4OBokdVT9hY
- N1fuyvGihk6k4pKUYgCUA2NT1ROWEHgqnRxQVJeWujQqUcGDfzbsozaFH5y4WD61Iu6ijpygI
- dKJdgvFkfJcCBd+F3SaFbEFYG5ITK/IlS0IS2/gEWAbLb5Brbji78QeBDERokpFAYg5mW7INa
- oKqOOOPYlT6sZiab4SXddeF/C4CpQur/9se1G5yXZYU8mwDNApaQPRuYDJLFlPWXsutgG2fvb
- PjjPY23b/LRM84yJG+7bc/WAlIbjidOn8lsRqgSzJY7YJiqnNamIVixzGkrc3HWgmPa2ay8f4
- e2YUOFgU7mbz8RDvTd393f2WMGi71DIfZzvG1MYa6mptauM8dlGp9fsC9/YNlEEF3OzDN06ap
- lhdrby2XltiAaeWMJK2Pr1Ob5FJf7+RD7EBrIsQY4rQ+0IxlC0NZn6dhUcN2hWYYhmHjSPcpI
- Cq5ri61rZwQxzl4p4/vRg1lS45hrKcF35xPKKptFHlyPofJbdiVlHEb80sKObh6oLULP/Mutp
- SwIWKpIs+ZV/ybZB/r4Wr7VsNzibjwQKOUQrvQNkTez6h6R0JA/pOI7QPSYyGmYxnoF0qmOFC
- aQoC04GYMwWgjXvs20kda/TgOm74QpH30JEAoJnR7+a96Keqt69c+j2LAPq8xET0e+/5QZ86k
- WXmeyzytWIf2jZdV4qtCtF1crIAwDrpbB9xjcxUQ9ltivyVm09X2l0aXFMi5D9weyFQs871/2
- 64OJn50lPAIIjtsMl0zYorsnzWeFkxzdQb7/tJPk5JpsaISt3bR4Oa1mOoF2JwFfJjNMsnvUc
- eA5VDIBNKWWQdVN2lvlMB44Wtt0m0OWlDrreNf7AioRV4=
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: 64D505C0FA
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
 
-Hi Andrea,
+On Mon, May 20, 2024 at 04:24:51PM +0000, Christophe Leroy wrote:
+> I had a quick look at that document and it seems to provide a good 
+> summary of MMU features and principles. However there are some 
+> theoritical information which is not fully right in practice. For 
+> instance when they say "Segment attributes. These fields define 
+> attributes common to all pages in this segment.". This is right in 
+> theory if you consider it from Linux page table topology point of view, 
+> hence what they call a segment is a PMD entry for Linux. However, in 
+> practice each page has its own L1 and L2 attributes and there is not 
+> requirement at HW level to have all L1 attributes of all pages of a 
+> segment the same.
 
-Am 21.05.24 um 10:35 schrieb Andrea della Porta:
-> The BCM2712 has an SDHCI capable host interface similar to the one found
-> in other STB chipsets. Add the relevant compatible string.
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->   Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.ya=
-ml b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-> index cbd3d6c6c77f..d584a7ea707a 100644
-> --- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-> @@ -13,6 +13,10 @@ maintainers:
->   properties:
->     compatible:
->       oneOf:
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm2712-sdhci
-> +          - const: brcm,sdhci-brcmstb
-sorry i didn't noticed in V2, but why can't we just extend the second
-items list?
->         - items:
->             - enum:
->                 - brcm,bcm7216-sdhci
+Thanks for taking the time Christophe, highly appreciated.
 
+ 
+> rlwimi = Rotate Left Word Immediate then Mask Insert. Here it rotates 
+> r10 by 23 bits to the left (or 9 to the right) then masks with 
+> _PMD_PAGE_512K and inserts it into r11.
+> 
+> It means _PAGE_HUGE bit is copied into lower bit of PS attribute.
+> 
+> PS takes the following values:
+> 
+> PS = 00 ==> Small page (4k or 16k)
+> PS = 01 ==> 512k page
+> PS = 10 ==> Undefined
+> PS = 11 ==> 8M page
+
+I see, thanks for the explanation.
+
+> That's a RFC, all ideas are welcome, I needed something to replace 
+> hugepd_populate()
+
+The only user interested in pmd_populate() having a sz parameter
+is 8xx because it will toggle _PMD_PAGE_8M in case of a 8MB mapping.
+
+Would it be possible for 8xx to encode the 'sz' in the *pmd pointer
+prior to calling down the chain? (something like as we do for PTR_ERR()).
+Then pmd_populate_{kernel_}size() from 8xx, would extract it like:
+
+ unsigned long sz = PTR_SIZE(pmd)
+
+Then we would not need all these 'sz' parameters scattered.
+
+Can that work?
+
+
+PD: Do you know a way to emulate a 8xx VM? qemu seems to not have
+support support.
+
+Thanks
+
+
+-- 
+Oscar Salvador
+SUSE Labs
