@@ -1,275 +1,213 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827DD1442F4
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 15:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716305110; cv=none; b=WOgkQkxdjnl1vDfv+CP92RVju4dpNqiqRZ0G2BYg2ob0AEhilTudjUiI9urpqbrngb0ZS19rhZpmDz/fPqW1i2fNwbFJK6TuuDj7UBx5VXSrtQcHCaHxMPiRwKvGNJ2OjbsIyZVR/6L0xmmbg3VyZ2hc3JzC7gUeZfFd6b193zI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716305110; c=relaxed/simple;
-	bh=N909/jYUBOF77kMTLcm6D6mBRd3K1pIODTOJI2DxZo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VfWPVFp40y4KsoeQ1c3eFB2GEnjTynCeMw58txNebhh4id9EIs2Ok66ycvP0GaHaHPEC52P1/yHS/pV7FQOymg7XmtPv8JGSJfUHxNxnFnx0j1NaeR7Jc2NntbYTTP1k09RAjzz37OAwsyvHyy9tjWwMj8pfpa19ifKHJA+PKZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k9kSksGw; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DA81FDD;
+	Tue, 21 May 2024 15:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716305170; cv=fail; b=C+8jteiLSN+q09yRPXc7d4oCEkjNEOeEPP9gYTbRlI0Hhuy7WC1Jfe1eDINIIS5xrWz0WWGbPS0IYRSe9LxJHknNlgrwSyzIq4K9MV8ztn4/Louc81yRjhEWkYVrhEMxDSXfoCF+dbqp3q6ERcbiRi7oCm1UYN51NpHM76cMwcM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716305170; c=relaxed/simple;
+	bh=opwiXITfGQDkVg57NYPhC+vPiPiHRcya+4JzMnLl+og=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jPS1L1ljzrqmsnPNvCdiCTL4sivK6IqgIq2L+z/CtG6RPa5LSdu+VRl7WIqFkRtQxlMseDVNSyurXgzEzy2/hLQGIiyWAf3ZIpLw4yR7I/CysahnwFfz1RMrym0q4eFccqyWNd2cXT5jdvRGCaHtEQPTx0/iZZHg1kt4w+KslJ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZ7+lHJC; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k9kSksGw"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51f40b5e059so5677332e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 08:25:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716305106; x=1716909906; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOC2cvHHsCfE/XZDQOspaP8vFm7DFyYrnaEnVeU9qAQ=;
-        b=k9kSksGw4rj2mUqweuu/mzXizEo1vXkmMfu9fDH7ncNb3+oNX8ilFSNqgEi0R5p2NL
-         sb05fGN21UnBQ/Hpg9AauAPTFIyEZBOk9zceJ9WwRyYiMMkJG1y7QAIezcEgNIYgVytv
-         MCfare1YdJcTp1eYiznj+zPqpOBRS1HmcwRCAh1OZrz2qowtZ5MKXFs+CcB+w2fqJTCc
-         K14TlEiZXgWktVSkPwh3K+j6hCZ3dbOBeXlmpqA+0RskQbdV6Q7LDRmuXIhkpmWiJgAJ
-         pDf1ixZajd9+uVYgH71hb169SfV1DTozS7g5aaTpHectkpvFn6xKsZwYMvAjSJ5zfDkd
-         c/mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716305106; x=1716909906;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rOC2cvHHsCfE/XZDQOspaP8vFm7DFyYrnaEnVeU9qAQ=;
-        b=Z2LqVpqO79lb5CyOyf9DtIzwY4+YsJk2iqTwFqNkkOXHJceA3hVrL4O0EYYI5iG8a9
-         GYi3bj7ooaDV5i3Kto8FGjBWAR5mPjfXMoIN8Se40kMrcM23QmjlYUupmbhhZ6hzcX2N
-         F8OSn0mZOzHrObCI+1o0kVJPuF9JQ8H3/Ow+rpZBeTlPxWdNbZUIQtmeJbQKJhwIscEU
-         KtksH1mCHkQ6+/T5OfKXKpAUWjOFtHj199hrWivYeTHGPbbYsbdgEP+MogG5U1/+z8Z8
-         8kO+00wj6PIYS/zAhEusxDBAdXowR4LoSvg3S4Z4vSnFr0NkWFHiGdlk1ykr9Ex3XFBf
-         mw0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVX1za1ULACwIUHyrY670eueyjTPfM7BXxNPVymM1ZczEk8PNnhjPPCxBM9cJGDp+wvNm98V9t+lTqfeJzGijvX5bKGFlrSNdsiO0U5
-X-Gm-Message-State: AOJu0Yy7zbcBdRM8xFsUdXetXEEFNBnmUxdEvv7K+/not677JqZCDlHp
-	oDpAf1g03dRgpluJO6PoFs6VcOvCadLsHvR6p0aeT3BQidmqN6w/hwsD38YX3sw=
-X-Google-Smtp-Source: AGHT+IEGx09qqQZGznwGLK2bUqHiwP3SooCwqZgFFp68n5i919CsAWusJO9RSDejXheh0g79t6XsdQ==
-X-Received: by 2002:a05:6512:3b0c:b0:51d:4af6:bb86 with SMTP id 2adb3069b0e04-5220f666ad9mr23745352e87.0.1716305105449;
-        Tue, 21 May 2024 08:25:05 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5238aba8438sm2540161e87.94.2024.05.21.08.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 08:25:04 -0700 (PDT)
-Date: Tue, 21 May 2024 18:25:02 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: keith <keith.zhao@starfivetech.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	daniel@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com, 
-	xingyu.wu@starfivetech.com, p.zabel@pengutronix.de, jack.zhu@starfivetech.com, 
-	shengyang.chen@starfivetech.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 10/10] drm/vs: add simple dsi encoder
-Message-ID: <cej2d72e6bacbjabyjecoqhjlhz4sxx4bgn2w43rgl3cfyyuwt@jq5kq4egj2wo>
-References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
- <20240521105817.3301-11-keith.zhao@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZ7+lHJC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716305169; x=1747841169;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=opwiXITfGQDkVg57NYPhC+vPiPiHRcya+4JzMnLl+og=;
+  b=DZ7+lHJCaaUAgmhp9mpuoRUCTxtoWE7arTKXC0D5onjyQsEMI2nlodGR
+   dCXNEFRtw4NLyqvLchbvrK4VcWfGpmHNjM7ya3syWxPQAOJwoBfCokeav
+   ZQ41ZSoP1aebS5szuBU9Ph0hHqmbXB6u3psniuFP83xZ219gZDoNVqowh
+   ncC5vYMrV1vtLbxOdEvXtwLeN9msLp93hqOSmlQmBcxBZfs9kxlz9tk4N
+   EEgD4fcQFOrUw/8poL+S95ique9GKXmHbEMgXaqt0VCOEx+qkaMAp6XF9
+   NREOncal8u79/Unzi+l0qWPfnSWAiamZMeI+xygwiGG1tKwY9pf9AnM69
+   w==;
+X-CSE-ConnectionGUID: 2/bLJGWaTKGnEN3obVWR2Q==
+X-CSE-MsgGUID: 8VIQF0c5QquLkd1JLRZJKg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="23115095"
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="23115095"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 08:26:08 -0700
+X-CSE-ConnectionGUID: Z8465AKPRjeHFdKWVhw61A==
+X-CSE-MsgGUID: h43v74roTOawDtb7Kqhvzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
+   d="scan'208";a="37455493"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 May 2024 08:26:09 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 21 May 2024 08:26:07 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 21 May 2024 08:26:07 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 21 May 2024 08:26:07 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 21 May 2024 08:26:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IgKVv2jI2kT99vozLQPKXcm3NIj2G8mAeWcprpxO83WiLVFfShueboOr5+n1a/iD0iACTJR2zlcTgyh8QlOBXGGXqmK2xXDub+3VLIHvFvnHKyIU4vdksf0CyRnK8LS6IDc4O5sCsy4Z9fajKOt6By702WYmNne732a8oHAw2Unhq2V09sIpFpuDj5crQNteG2vJbtSVOL2/0ptRJ5mkN6N6SBDjr1vs173mJD8TZaeShQWYPYCmjnx1/dbX+JhnhJl+YVAhNzje5R9MRT0FvxXdcbDSLNnKs6/2Rc41M2/xqsO5g5B7X6hpaEiyVYzzqPAKtd6xBxRI42SwUu4ykQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5KwZT+9BcJxcNSOSLoT0pm9oxZGSa3+6EYVzWeM4HTc=;
+ b=Hpq/Pu7fccPGHPlbM3mHb0k+CoR1MwicDS4C0NZPDEJ45VRE1a19KuXrf9KaZV+mU4XdE8V88727vp/h1xfeLfx6rLTpAiHdS9TwszoMB/hit/8+8hRmZuaLOIvdMHTiLdSoWnW9Bfd7zcgn2ZWIpV4n/9YaqGzobzFNeTpnLrgO3UB+BX5AoqBykRRqYDmUCZeuLqBdkMqdv065xHNQ/23crw8+wAc+e00wwv8OqZ4uIO/X2bkgG0PCdJzE0j+uFue7xsn/p6/URplVzGvS/GKpJRUpizrnEW12HdfvaEF8D4vw4NHhg3Y7IKRMYgAbxK7PZ1QA2xUSx+CvNZXMEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by IA0PR11MB7749.namprd11.prod.outlook.com (2603:10b6:208:442::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Tue, 21 May
+ 2024 15:26:03 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%4]) with mapi id 15.20.7587.030; Tue, 21 May 2024
+ 15:26:03 +0000
+Date: Tue, 21 May 2024 10:25:58 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: <nifan.cxl@gmail.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
+	<Jonathan.Cameron@huawei.com>
+CC: <linux-cxl@vger.kernel.org>, <a.manzanares@samsung.com>,
+	<dave@stgolabs.net>, <linux-kernel@vger.kernel.org>, <nifan.cxl@gmail.com>,
+	Fan Ni <fan.ni@samsung.com>
+Subject: Re: [PATCH] cxl/region: Add module license declaration to cxl region
+ module source code
+Message-ID: <664cbd06b5342_364af29491@iweiny-mobl.notmuch>
+References: <20240520193106.994172-1-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240520193106.994172-1-nifan.cxl@gmail.com>
+X-ClientProxiedBy: SJ0PR03CA0031.namprd03.prod.outlook.com
+ (2603:10b6:a03:33e::6) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521105817.3301-11-keith.zhao@starfivetech.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA0PR11MB7749:EE_
+X-MS-Office365-Filtering-Correlation-Id: b777b81a-4415-410b-6e15-08dc79aa5369
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?FkbQDyrJIssGYejBU1qZI6xKhndR7mqgquph4lWZKlZbpUZmLFv6bydbLWHF?=
+ =?us-ascii?Q?Su99n/PCIFWxsJqfZHdfhIDUMJu+jQgEOKvVa3lezyJxpBG01RyU/onm1pcS?=
+ =?us-ascii?Q?CYmopyWEkqaUqjNAAGp2kTNYxD3w8Z9b61dm2Pd6428r8T6cxjqMpfSnYt7G?=
+ =?us-ascii?Q?gbS4A/m5q1bKbZHIZfm+iFZ5eUv7Fjh3uelDUbgTy58zai8Dnx2NBK7nySKP?=
+ =?us-ascii?Q?+7PoraIZoo7XrpWhM4y2WSxRDiKk5Pzi6jMTTcmwDPowvmp7cav36i3x2lo7?=
+ =?us-ascii?Q?1VsGuKl96DhF+NHZeY8tZMuH4XNg1zfWRisoEo7zkwJw6K/EAxM/EbYtAHgG?=
+ =?us-ascii?Q?xU9L37laTpVt8o6NJn12jHPsSmccZX6mC5EELZacIa1sUK4vN303tz5V69jn?=
+ =?us-ascii?Q?6GpnLA2t51muuSdb1/uO0r4Lcz5mjs8hq6SduQPCPTmRVhzKp+aNAn/qqPEo?=
+ =?us-ascii?Q?YH1SM4DvayEhd3+YWKhBBK9PKvKGeEAFv0nAzLlEjoqtbUs2AbYCnkWE+WCe?=
+ =?us-ascii?Q?RPX8XGPO2ZPy1JDp+byknA8Ib/YwoOamkOCgEzVUlPvxzj6Dxmz+ElWYEYMe?=
+ =?us-ascii?Q?e8YkVgxEpG4cdckEPXsxhMKGRPRFzZIz6JFxtT2fQUKNzWt83eETkqPJqaFR?=
+ =?us-ascii?Q?KKNwEZtrSHSQZbFqcTxBurSjA/FIlHQtE/qt1NIFjGua+qaFCdr65cuLTDLr?=
+ =?us-ascii?Q?Nfre7lVk/q9TsX22em5gN1sDoi2OQWF92WdTniHxOXa88HkqIuOeCgKgRruP?=
+ =?us-ascii?Q?ydnRJPbwh9C0GSt+UXxazOTa1aQFd0LGMd9IvKjSYyAm3gcCS6mJzfVQlR/h?=
+ =?us-ascii?Q?LhSs77etCUbaFDSVojjH5ifUgzRgSK+vUoDtLAgx3g5qQWIZFB4fY4EUa8fo?=
+ =?us-ascii?Q?EpoPY6z+WHEbCyC+vHMb1GJc+aYkZcGxjdVuNLcJLXaFa+hlHlZK826xUlDr?=
+ =?us-ascii?Q?5MJPjCfSBqOLWhNnEk8ggDLvuGq23L0eXZiHZQzw72V+UwAnDPZqY8U0d56P?=
+ =?us-ascii?Q?glT0YvomrfZzsl4OFmf6J1iAZRolaFhfVsWcMBZ+k/lnl+1r/6J9qmu1gzUl?=
+ =?us-ascii?Q?euxE92VhmvxA2BHDKQdQziQYKZb+OUZGg9IKGJEpMDN7lM//lSLcYGMOVHgd?=
+ =?us-ascii?Q?RaPDkQA5kgnrgZIXVe/EBkQMtDW6KWZepBAV2c403DwLTdJ9d+BLeVb53G9n?=
+ =?us-ascii?Q?HtBemOyJzv7yrZEi30dVipz+3i6zD2n9LeNy3EmUWLM4YobQ3s4iYq2ar37x?=
+ =?us-ascii?Q?PUzG/dCypAhlfRVQITG0VuIK7XT90rRS0FA4Jn1p1w=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nvgpOuZhdHPZxHmlufE2JNcYAYnWiR1SzrOb6gSPfJDfLR3p5QG63zEBsFtV?=
+ =?us-ascii?Q?tXMHYHyeGAehQIy2LLEMzmbQZlHnGCv3/IxsGk+vqXhSiHAP1jyeZxpV8eqx?=
+ =?us-ascii?Q?/HNk9bUHf+HnARVeEpbaPkUsIbEBZdo/BqE32fBwbNEL3ExQU6Op7khkX4FF?=
+ =?us-ascii?Q?AK+pxAaHuTE4rJg3PG5+oZr5BXZyixpaahD/8xHsul3Vm7J4+2zFXwwC8sEp?=
+ =?us-ascii?Q?Sn8RCj78ZgK+Jfn9OT+0Qdgeh0LwL+xKkVPNtZmrgCNJ08UmICNcIHpI3NMV?=
+ =?us-ascii?Q?83kFLX6K88mQghIWYE4Rnod8ZlhcAJWoCwLaBue/71Zgk4MArv8/uSf9hZjI?=
+ =?us-ascii?Q?+9JStRwhvNl7lFBBBwVgw1YEiih0QBpil+jz5cEMyMg8iYDzJYL3nNW9ZIx0?=
+ =?us-ascii?Q?DY5slZ4cOGi6hGutuHzVyzwRc8Bifzsj9EvchkaqGrSTJ1H1tluB9qMO9JEP?=
+ =?us-ascii?Q?Evr1JrbLH8AdKsI0PemQ3Yr3Ebk0IO3slTSUZh5e3ZTK7Spf1jAGNc1qJfYP?=
+ =?us-ascii?Q?KeCki1GgVEsBcfkKYBeNr/26auX4NAybhpZZIilHrdfUwcY4j33+fWUH6dfT?=
+ =?us-ascii?Q?SHFZ3HY5XzGXjOBY6loO4+1d3AQarTaexseLOVczyPvFjdCCWLyJwVvlSGIF?=
+ =?us-ascii?Q?uoABV4t4cza5Enc8sAW+nmlEFKKanGUsTiQIJojpjX4IJcsQ9+KbR4+W+MMh?=
+ =?us-ascii?Q?1scCqFqJPxwMbVH4UYEIQGRAaRO7c5MsUTSybmL2R+yOSr3ic/BkjQuZ/SCo?=
+ =?us-ascii?Q?l8ngmKz9SdPr3EvHMw1XoMqZ6elTHkKGIj+McyXakrjNfsdWU7u2/2yxdcKT?=
+ =?us-ascii?Q?rBFMIbdiUzujKU7dbE/Kc96psnML5RFGPLezdcsNuMXweG0cHNmZ+dsmz01H?=
+ =?us-ascii?Q?ua/jdXKEbdths4ZH9kM9S4TSXzUI8n82MPwNZM5EhuluujMv6uLRpw0gWExv?=
+ =?us-ascii?Q?2dg3N61ncgA9wb/Xg3LdZF2mlxRB+oUYs5x2q2QFX8lBWxt+SlomcLEDnn/N?=
+ =?us-ascii?Q?ZVYJMrh1+5ochyuD7jU5skH6TOjCMZ85+9XGjjoWCLJ+CZdbtWo6pL2WY+dy?=
+ =?us-ascii?Q?X4+kyovt7xLjhcegO0VsH7SZN2jDTa6sF3Nu4qgYWcTaqO4k4TTjZbY6p61P?=
+ =?us-ascii?Q?Jq7/rnZbEkFizzeAaWfDy6d6L8JHQMuchUspPj6v6efjzIo92AESym6eVEjF?=
+ =?us-ascii?Q?1ryV7IWuxG8YOFtGEueZ5oaBZVkNeAvr4RdUwDVqJbL++jMrerT1fH+wMjGN?=
+ =?us-ascii?Q?Gchm9/iiJaXJoucgsmsl0+g5Oa6CECfPGtlswmN8cTtWMJamSGN6BBww+tks?=
+ =?us-ascii?Q?X09/0LEmGPPrIarme4rICmDeDJlqwX7gobRJWM21OTeW7awVy4xOuQJ4+oFT?=
+ =?us-ascii?Q?bCBmqNppcb9hYzJWB8t3rY5FlU5uIasxPCj2NC9ZXtEAK9jT9hbIs9bvIlGO?=
+ =?us-ascii?Q?ZaosJwyyrZHExHHM9kHwv5EjWA9ZQXfIcsCdhjmyg9W8TQMs2qSWKHt2yFJH?=
+ =?us-ascii?Q?cHElP7eZTn2iuqigo41j5I4a7Ac3vBYTsWRWYstPc/Wiytmpkjlkkv8o2meH?=
+ =?us-ascii?Q?HIQzhP0SZ4SEwRacCFfhg/00Gt9vzGa9ngyH/tf3?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b777b81a-4415-410b-6e15-08dc79aa5369
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 15:26:03.2975
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BDCmm99mOB7RpLIxDWptATrlsMfQ/gpzksKuw7T0O/VUs1xwOV8LCbsT3UvlxFhVnzglAVNcpiH4xRZKtG7LKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7749
+X-OriginatorOrg: intel.com
 
-On Tue, May 21, 2024 at 06:58:17PM +0800, keith wrote:
-> add encoder to match cdns dsi driver
+nifan.cxl@ wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> Signed-off-by: keith <keith.zhao@starfivetech.com>
+> This change explicitly specifies the licensing terms for the CXL region
+> module as GPL v2. This commit does not introduce any functional changes
+> to the behavior or functionality of the CXL region module.
+> It solely adds the MODULE_LICENSE declaration to the module source file.
 
-Please fix your git configuration to include your full name into the
-S-o-B and Author fields.
+Why is this needed?  The region code is added to cxl_core when built and
+that module already reports the correct module license.
 
+10:24:55 > modinfo cxl_core | grep lic
+license:        GPL v2
+
+Ira
+
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > ---
->  drivers/gpu/drm/verisilicon/Makefile        |   3 +-
->  drivers/gpu/drm/verisilicon/vs_drv.c        |   1 +
->  drivers/gpu/drm/verisilicon/vs_drv.h        |   1 +
->  drivers/gpu/drm/verisilicon/vs_simple_enc.c | 190 ++++++++++++++++++++
->  drivers/gpu/drm/verisilicon/vs_simple_enc.h |  25 +++
->  5 files changed, 219 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/verisilicon/vs_simple_enc.c
->  create mode 100644 drivers/gpu/drm/verisilicon/vs_simple_enc.h
+>  drivers/cxl/core/region.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/gpu/drm/verisilicon/Makefile b/drivers/gpu/drm/verisilicon/Makefile
-> index 2d02b4a3a567..c35ba9bd6f81 100644
-> --- a/drivers/gpu/drm/verisilicon/Makefile
-> +++ b/drivers/gpu/drm/verisilicon/Makefile
-> @@ -4,7 +4,8 @@ vs_drm-objs := vs_dc_hw.o \
->  		vs_modeset.o \
->  		vs_plane.o \
->  		vs_crtc.o \
-> -		vs_drv.o
-> +		vs_drv.o \
-> +		vs_simple_enc.o
->  
->  vs_drm-$(CONFIG_DRM_INNO_STARFIVE_HDMI) += inno_hdmi-starfive.o
->  obj-$(CONFIG_DRM_VERISILICON_DC8200) += vs_drm.o
-> diff --git a/drivers/gpu/drm/verisilicon/vs_drv.c b/drivers/gpu/drm/verisilicon/vs_drv.c
-> index 6f04102b05b3..2748d48f2c7e 100644
-> --- a/drivers/gpu/drm/verisilicon/vs_drv.c
-> +++ b/drivers/gpu/drm/verisilicon/vs_drv.c
-> @@ -612,6 +612,7 @@ static struct platform_driver *drm_sub_drivers[] = {
->  #ifdef CONFIG_DRM_INNO_STARFIVE_HDMI
->  	&starfive_hdmi_driver,
->  #endif
-> +	&simple_encoder_driver,
->  };
->  
->  static struct component_match *vs_add_external_components(struct device *dev)
-> diff --git a/drivers/gpu/drm/verisilicon/vs_drv.h b/drivers/gpu/drm/verisilicon/vs_drv.h
-> index c3c08ed5f8ac..f3f0f170777d 100644
-> --- a/drivers/gpu/drm/verisilicon/vs_drv.h
-> +++ b/drivers/gpu/drm/verisilicon/vs_drv.h
-> @@ -17,6 +17,7 @@
->  #include <drm/drm_managed.h>
->  
->  #include "vs_dc_hw.h"
-> +#include "vs_simple_enc.h"
->  
->  /*@pitch_alignment: buffer pitch alignment required by sub-devices.*/
->  struct vs_drm_device {
-> diff --git a/drivers/gpu/drm/verisilicon/vs_simple_enc.c b/drivers/gpu/drm/verisilicon/vs_simple_enc.c
-> new file mode 100644
-> index 000000000000..d0b1755d77d2
-> --- /dev/null
-> +++ b/drivers/gpu/drm/verisilicon/vs_simple_enc.c
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 VeriSilicon Holdings Co., Ltd.
-
-Now it is 2024, so the copyright should probably cover the range.
-
-> + */
-> +#include <linux/component.h>
-> +#include <linux/of_device.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/media-bus-format.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_of.h>
-> +
-> +#include "vs_crtc.h"
-> +#include "vs_simple_enc.h"
-> +
-> +static const struct simple_encoder_priv dsi_priv = {
-> +	.encoder_type = DRM_MODE_ENCODER_DSI
-
-So, is it 'simple' aka something generic or DSI? In the latter case,
-please rename it accordingly.
-
-> +};
-> +
-> +static inline struct vs_simple_encoder *to_simple_encoder(struct drm_encoder *enc)
-> +{
-> +	return container_of(enc, struct vs_simple_encoder, encoder);
-> +}
-> +
-> +static int encoder_parse_dt(struct device *dev)
-> +{
-> +	struct vs_simple_encoder *simple = dev_get_drvdata(dev);
-> +	unsigned int args[2];
-> +
-> +	simple->dss_regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node,
-> +								  "starfive,syscon",
-> +								  2, args);
-> +
-> +	if (IS_ERR(simple->dss_regmap)) {
-> +		return dev_err_probe(dev, PTR_ERR(simple->dss_regmap),
-> +				     "getting the regmap failed\n");
-> +	}
-> +
-> +	simple->offset = args[0];
-> +	simple->mask = args[1];
-
-Is the value that you've read platform dependent or use case dependent?
-What is the actual value being written? Why are you using syscon for it?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void vs_encoder_atomic_enable(struct drm_encoder *encoder, struct drm_atomic_state *state)
-> +{
-> +	struct vs_simple_encoder *simple = to_simple_encoder(encoder);
-> +
-> +	regmap_update_bits(simple->dss_regmap, simple->offset, simple->mask, simple->mask);
-
-
-A purist in me would ask to have separate mask and value to write.
-
-> +}
-
-Is it necessary to clear those bits when stopping the stream?
-
-
-[skipped the rest]
-
-> +
-> +
-> +struct platform_driver simple_encoder_driver = {
-> +	.probe = vs_encoder_probe,
-> +	.remove = vs_encoder_remove,
-> +	.driver = {
-> +		.name = "vs-simple-encoder",
-> +		.of_match_table = of_match_ptr(simple_encoder_dt_match),
-> +	},
-> +};
-> +
-> +MODULE_DESCRIPTION("Simple Encoder Driver");
-
-VeriSilicon DSI Encoder
-
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/gpu/drm/verisilicon/vs_simple_enc.h b/drivers/gpu/drm/verisilicon/vs_simple_enc.h
-> new file mode 100644
-> index 000000000000..73e356bfeb2c
-> --- /dev/null
-> +++ b/drivers/gpu/drm/verisilicon/vs_simple_enc.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2022 VeriSilicon Holdings Co., Ltd.
-> + */
-> +
-> +#ifndef __VS_SIMPLE_ENC_H_
-> +#define __VS_SIMPLE_ENC_H_
-> +
-> +#include <drm/drm_encoder.h>
-> +
-> +struct simple_encoder_priv {
-> +	unsigned char encoder_type;
-> +};
-> +
-> +struct vs_simple_encoder {
-> +	struct drm_encoder encoder;
-> +	struct device *dev;
-> +	const struct simple_encoder_priv *priv;
-> +	struct regmap *dss_regmap;
-> +	unsigned int offset;
-> +	unsigned int mask;
-> +};
-
-Is there a need for aheader for the encoder? Can you move the
-definitions to the source file?
-
-> +
-> +extern struct platform_driver simple_encoder_driver;
-> +#endif /* __VS_SIMPLE_ENC_H_ */
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 5c186e0a39b9..e299ddcbd1a2 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3204,3 +3204,4 @@ void cxl_region_exit(void)
+>  MODULE_IMPORT_NS(CXL);
+>  MODULE_IMPORT_NS(DEVMEM);
+>  MODULE_ALIAS_CXL(CXL_DEVICE_REGION);
+> +MODULE_LICENSE("GPL v2");
 > -- 
-> 2.27.0
+> 2.43.0
 > 
 
--- 
-With best wishes
-Dmitry
+
