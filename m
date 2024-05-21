@@ -1,79 +1,206 @@
-Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [178.154.239.144])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0779853816;
-	Tue, 21 May 2024 20:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F90353816
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 20:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716324201; cv=none; b=NH5Gz/jrp/xwFUjtJjeOwyBQua7J6f0B4pogNORlZOcKC5ZTj4X9Wraqs/rOKIjaVSMlQGeHtOpVgWCo7Bv7Q/Oc75XikctdkV3eGOr30OjnGi0q/zjrpZLVwqZfNJbIhQFNvNln2mD/apN1cFBDAYYYPdEUCksZXtaOlD0jtKw=
+	t=1716324218; cv=none; b=RV5BZVuCHBK3NeGIby0NAfEDE5bKh3rZXogNWPTf657To6H37UPn1LZuS2/73Q5TerxaMeq4PfB2GqhzyiR226BWFLm+OtmoU0fdhNzFZdDmHcYGZb2ikrSz2Ter9b5LnL055/WowigRPUfDBMUyCHOYH/HXKMo4/EtTMsvn65U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716324201; c=relaxed/simple;
-	bh=UJeYAx0s+riUtaDffRhQZniXYmFCQfIeCHnUNZFJ0/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KXLxz9oWhsS+xNVmezMv6wJMRn+JrlOidz8UXXIXDQ5jswXb+sY8E+ZwuTon3ZKAukSWdC5qEpsNjiAgcukHruNKUjVm2Gt9+uADzS1vtJQ3boVet07yBRLDUNjF/Y/V8H2wRSHSsyR1bPJ9f+oBBPFtef01woUaDuuhx/OTJuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=SKT3Wtix; arc=none smtp.client-ip=178.154.239.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1716324218; c=relaxed/simple;
+	bh=TzQgSTHgyU3RFoY2gln3DsZdwLETCJum6BNwDOVNJoU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iH9/R05O5RJss9CrQ4+6oZk0iHfkIFbMsF6EkCV9/aULkHHKTJt3fRTg7B6Yn+Vt7cGbexkmSN8aeCxaANbet9HkGxm/L/UFdGTQJpnHPIeBb2wSeEK1ZXMxAEcgqj9jWTBsFf1j5RfS3NHiHt09LU+TxTPKyAALr4VcXMtcENQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ElXeTZh+; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="SKT3Wtix"
-Received: from mail-nwsmtp-smtp-production-main-78.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-78.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:39ad:0:640:62fe:0])
-	by forward500b.mail.yandex.net (Yandex) with ESMTPS id A3851613DB;
-	Tue, 21 May 2024 23:35:18 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-78.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GZQB3w8oDmI0-W1EtqRHB;
-	Tue, 21 May 2024 23:35:17 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1716323717; bh=c7N6rlTa5ppx9RAeRPq2mB8w6Nw+lsRi9BsRkwM6uhE=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=SKT3Wtixr0847bCZuU1FA1EPajMmaeICi/K5joOm6b1Mz7LA/Cppwhwg8u2r4Ktya
-	 YpQ8xO8wgnibdHZKHCD+LE9aoIid3dWuSfUBaGb8QMRb4J2jjIZcxvZMsVyWzm8Y+v
-	 iqxosxvl1YnrIWLIPuRa48u/NAleBv8ge33M8tlA=
-Authentication-Results: mail-nwsmtp-smtp-production-main-78.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <125b6804-d9f8-4c36-83cd-36143ba1045d@yandex.ru>
-Date: Tue, 21 May 2024 23:35:16 +0300
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ElXeTZh+"
+X-Envelope-To: stern@rowland.harvard.edu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716324213;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Bef2r7PmAPGGh3unVAHDRXktGwmTTWv6IxMkhLqqDqQ=;
+	b=ElXeTZh+E3DhYrztaPCNXbyulyJAnRLZI3D5L4hTmCT2yONO9HkfS5P7cAoAPxZhxxGxJV
+	Mw7eReiwVSbBXJqU7HaukGpck4HYFNe9Z8td+7LwebFNn3b+sIRHWwqqJcDIKWQ2QGzIgW
+	JfcxbZ2oZr7Y5n6Dd2I8hELpKYS4tG0=
+X-Envelope-To: gregkh@linuxfoundation.org
+X-Envelope-To: andreyknvl@gmail.com
+X-Envelope-To: dvyukov@google.com
+X-Envelope-To: elver@google.com
+X-Envelope-To: glider@google.com
+X-Envelope-To: kasan-dev@googlegroups.com
+X-Envelope-To: penguin-kernel@i-love.sakura.ne.jp
+X-Envelope-To: tj@kernel.org
+X-Envelope-To: linux-usb@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: andrey.konovalov@linux.dev
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	kasan-dev@googlegroups.com,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Tejun Heo <tj@kernel.org>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kcov, usb: disable interrupts in kcov_remote_start_usb_softirq
+Date: Tue, 21 May 2024 22:43:24 +0200
+Message-Id: <20240521204324.479972-1-andrey.konovalov@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/3] implement OA2_CRED_INHERIT flag for openat2()
-Content-Language: en-US
-To: Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, Stefan Metzmacher <metze@samba.org>,
- Eric Biederman <ebiederm@xmission.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- Alexander Aring <alex.aring@gmail.com>,
- David Laight <David.Laight@aculab.com>, linux-fsdevel@vger.kernel.org,
- linux-api@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
- =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
-References: <20240427112451.1609471-1-stsp2@yandex.ru>
- <CAG48ez0rOch3wemsmrL-ocadG1YeJ6Lyhz1uLxJod22Unbb_GA@mail.gmail.com>
-From: stsp <stsp2@yandex.ru>
-In-Reply-To: <CAG48ez0rOch3wemsmrL-ocadG1YeJ6Lyhz1uLxJod22Unbb_GA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-21.05.2024 22:01, Jann Horn пишет:
-> On Sat, Apr 27, 2024 at 1:24 PM Stas Sergeev <stsp2@yandex.ru> wrote:
->> This patch-set implements the OA2_CRED_INHERIT flag for openat2() syscall.
->> It is needed to perform an open operation with the creds that were in
->> effect when the dir_fd was opened, if the dir was opened with O_CRED_ALLOW
->> flag. This allows the process to pre-open some dirs and switch eUID
->> (and other UIDs/GIDs) to the less-privileged user, while still retaining
->> the possibility to open/create files within the pre-opened directory set.
-> As Andy Lutomirski mentioned before, Linux already has Landlock
-> (https://docs.kernel.org/userspace-api/landlock.html) for unprivileged
-> filesystem sandboxing. What benefits does OA2_CRED_INHERIT have
-> compared to Landlock?
+From: Andrey Konovalov <andreyknvl@gmail.com>
 
-The idea is different.
-OA2_CRED_INHERIT was supposed to give you an additional access (to what 
-you can't access otherwise, after a priv drop), while landlock allows 
-you to explicitly restrict an access. OA2_CRED_INHERIT more answered 
-with idmapped mounts rather than the landlock, but idmapped mounts are 
-not fully unpriv'd.
+After commit 8fea0c8fda30 ("usb: core: hcd: Convert from tasklet to BH
+workqueue"), usb_giveback_urb_bh() runs in the BH workqueue with
+interrupts enabled.
+
+Thus, the remote coverage collection section in usb_giveback_urb_bh()->
+__usb_hcd_giveback_urb() might be interrupted, and the interrupt handler
+might invoke __usb_hcd_giveback_urb() again.
+
+This breaks KCOV, as it does not support nested remote coverage collection
+sections within the same context (neither in task nor in softirq).
+
+Update kcov_remote_start/stop_usb_softirq() to disable interrupts for the
+duration of the coverage collection section to avoid nested sections in
+the softirq context (in addition to such in the task context, which are
+already handled).
+
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Closes: https://lore.kernel.org/linux-usb/0f4d1964-7397-485b-bc48-11c01e2fcbca@I-love.SAKURA.ne.jp/
+Closes: https://syzkaller.appspot.com/bug?extid=0438378d6f157baae1a2
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 8fea0c8fda30 ("usb: core: hcd: Convert from tasklet to BH workqueue")
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@gmail.com>
+
+---
+
+Changes v1->v2:
+
+- Fix compiler error when CONFIG_KCOV=n.
+---
+ drivers/usb/core/hcd.c | 12 ++++++-----
+ include/linux/kcov.h   | 47 ++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 45 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index c0e005670d67..fb1aa0d4fc28 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -1623,6 +1623,7 @@ static void __usb_hcd_giveback_urb(struct urb *urb)
+ 	struct usb_hcd *hcd = bus_to_hcd(urb->dev->bus);
+ 	struct usb_anchor *anchor = urb->anchor;
+ 	int status = urb->unlinked;
++	unsigned long flags;
+ 
+ 	urb->hcpriv = NULL;
+ 	if (unlikely((urb->transfer_flags & URB_SHORT_NOT_OK) &&
+@@ -1640,13 +1641,14 @@ static void __usb_hcd_giveback_urb(struct urb *urb)
+ 	/* pass ownership to the completion handler */
+ 	urb->status = status;
+ 	/*
+-	 * This function can be called in task context inside another remote
+-	 * coverage collection section, but kcov doesn't support that kind of
+-	 * recursion yet. Only collect coverage in softirq context for now.
++	 * Only collect coverage in the softirq context and disable interrupts
++	 * to avoid scenarios with nested remote coverage collection sections
++	 * that KCOV does not support.
++	 * See the comment next to kcov_remote_start_usb_softirq() for details.
+ 	 */
+-	kcov_remote_start_usb_softirq((u64)urb->dev->bus->busnum);
++	flags = kcov_remote_start_usb_softirq((u64)urb->dev->bus->busnum);
+ 	urb->complete(urb);
+-	kcov_remote_stop_softirq();
++	kcov_remote_stop_softirq(flags);
+ 
+ 	usb_anchor_resume_wakeups(anchor);
+ 	atomic_dec(&urb->use_count);
+diff --git a/include/linux/kcov.h b/include/linux/kcov.h
+index b851ba415e03..1068a7318d89 100644
+--- a/include/linux/kcov.h
++++ b/include/linux/kcov.h
+@@ -55,21 +55,47 @@ static inline void kcov_remote_start_usb(u64 id)
+ 
+ /*
+  * The softirq flavor of kcov_remote_*() functions is introduced as a temporary
+- * work around for kcov's lack of nested remote coverage sections support in
+- * task context. Adding support for nested sections is tracked in:
+- * https://bugzilla.kernel.org/show_bug.cgi?id=210337
++ * workaround for KCOV's lack of nested remote coverage sections support.
++ *
++ * Adding support is tracked in https://bugzilla.kernel.org/show_bug.cgi?id=210337.
++ *
++ * kcov_remote_start_usb_softirq():
++ *
++ * 1. Only collects coverage when called in the softirq context. This allows
++ *    avoiding nested remote coverage collection sections in the task context.
++ *    For example, USB/IP calls usb_hcd_giveback_urb() in the task context
++ *    within an existing remote coverage collection section. Thus, KCOV should
++ *    not attempt to start collecting coverage within the coverage collection
++ *    section in __usb_hcd_giveback_urb() in this case.
++ *
++ * 2. Disables interrupts for the duration of the coverage collection section.
++ *    This allows avoiding nested remote coverage collection sections in the
++ *    softirq context (a softirq might occur during the execution of a work in
++ *    the BH workqueue, which runs with in_serving_softirq() > 0).
++ *    For example, usb_giveback_urb_bh() runs in the BH workqueue with
++ *    interrupts enabled, so __usb_hcd_giveback_urb() might be interrupted in
++ *    the middle of its remote coverage collection section, and the interrupt
++ *    handler might invoke __usb_hcd_giveback_urb() again.
+  */
+ 
+-static inline void kcov_remote_start_usb_softirq(u64 id)
++static inline unsigned long kcov_remote_start_usb_softirq(u64 id)
+ {
+-	if (in_serving_softirq())
++	unsigned long flags = 0;
++
++	if (in_serving_softirq()) {
++		local_irq_save(flags);
+ 		kcov_remote_start_usb(id);
++	}
++
++	return flags;
+ }
+ 
+-static inline void kcov_remote_stop_softirq(void)
++static inline void kcov_remote_stop_softirq(unsigned long flags)
+ {
+-	if (in_serving_softirq())
++	if (in_serving_softirq()) {
+ 		kcov_remote_stop();
++		local_irq_restore(flags);
++	}
+ }
+ 
+ #ifdef CONFIG_64BIT
+@@ -103,8 +129,11 @@ static inline u64 kcov_common_handle(void)
+ }
+ static inline void kcov_remote_start_common(u64 id) {}
+ static inline void kcov_remote_start_usb(u64 id) {}
+-static inline void kcov_remote_start_usb_softirq(u64 id) {}
+-static inline void kcov_remote_stop_softirq(void) {}
++static inline unsigned long kcov_remote_start_usb_softirq(u64 id)
++{
++	return 0;
++}
++static inline void kcov_remote_stop_softirq(unsigned long flags) {}
+ 
+ #endif /* CONFIG_KCOV */
+ #endif /* _LINUX_KCOV_H */
+-- 
+2.25.1
 
