@@ -1,103 +1,80 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8590C78289
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1C975818;
+	Tue, 21 May 2024 11:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716290436; cv=none; b=ZGz38FmmWxsGQLYDhixyQgmNN66jLrJuCflFxxSr2NVPsILEABc7RMYmnxbw29VPRKyXOlrDsXmW8e2TXIYgmxQm3ahcEUgylibInBE20FIVSnYyZeXAx9Sjqtm3nAaCPpLHo8VLva382nE+imB7fn93R17KZ8sJuTBJR85YVkg=
+	t=1716290441; cv=none; b=Zu8Z3X1t8DwH362/o45ZmLkB2Z/A1J2oX25BPzbgnJfyHjUUxmjCfjPQyZiX5S9x80L8dHrJVk/kYHoDSCquHWuLhcdtwaa4+I3gz6hyJh6xCiEKw0cXptC+APof/LgQ0+G9uco+myhO/il/7+aU20jIAu1LdkX74mI/CSolBhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716290436; c=relaxed/simple;
-	bh=50l4VbI1xWdiRaRa37BrTxRGrg6OdRl0O/hlOQNzMuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j3HMnch8z36mHzMPzbIG5VQmFnXE9fJxwQpI2ccDXrYrcgHPavlS1KAWKIzjhB/4aevmSI0oLC7ywA+sLs+3btiU3y9jry4T37bHPDS6JRCFhnmV+7GiCsTKq9Oni8vfDuo8hC/LcYsOCtH1ylVp1QJIqOKz29xcGL6IOkL1eps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VkBmy2HbZz4f3nKH
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 19:20:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BDCA71A08CA
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 19:20:28 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBF6g0xmG_0XNQ--.40701S5;
-	Tue, 21 May 2024 19:20:28 +0800 (CST)
-From: linan666@huaweicloud.com
-To: richard@nod.at,
-	miquel.raynal@bootlin.com,
-	vigneshr@ti.com,
-	axboe@kernel.dk,
-	chaitanya.kulkarni@wdc.com
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	chengzhihao1@huawei.com,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2 1/2] ubi: block: fix null-pointer-dereference in ubiblock_create()
-Date: Wed, 22 May 2024 03:13:46 +0800
-Message-Id: <20240521191347.413578-2-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240521191347.413578-1-linan666@huaweicloud.com>
-References: <20240521191347.413578-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1716290441; c=relaxed/simple;
+	bh=wWzpBfqS6gfocOcYq61FVsITwdyGEdoO2FcMClgUahs=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=TWwHmQTlzrbpOMxIlULvswZu9etAxP84lxAVHKvL50gO11i+6S6SdYWjpqw5fboh53EXALcsUuRfqdtKilKnLETSyz2MtDDJWrtinvjK8iUuDz64D8xrTAFHP/Bgr1PLfM6ybHrwreT9bzAmO4QIWzfQAQezu7Z3Gitnxin/7Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWtljR7C; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWtljR7C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065A1C2BD11;
+	Tue, 21 May 2024 11:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716290441;
+	bh=wWzpBfqS6gfocOcYq61FVsITwdyGEdoO2FcMClgUahs=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=CWtljR7CkZBF4Vz4fhIRTYAUQb9nXzsdaXgTiYY4i+cO9p9i0Ii+LmMUI6DkJqRA1
+	 kFX4MIEXkRG6My5WjKY3emmLMRtADTjc2pydbnYdgpaCEZWSNSajpqQPXAUjCUIE54
+	 uFO2gp5AvOfYsgEfNKwsqnO7VpPH1y+Z1235QczQQwNv8akbiz+6Qtfm89GzT8Lj7x
+	 teHOHdwJHJ8TWg3JnwWacb+BEd5MKrS6dUiJK94dNDmTBu7YsBxcme1Fo5z7pxOvVd
+	 A5oG/3JYqLQPZUOiSebj4gdmVlv/EZYu9SwQ0ftwqZN1lya9nLaxtI1A314yObZ8qt
+	 lncBLEW8P6ZRQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: neil.armstrong@linaro.org,  Bjorn Andersson <andersson@kernel.org>,
+  Konrad Dybcio <konrad.dybcio@linaro.org>,  Loic Poulain
+ <loic.poulain@linaro.org>,  Mathieu Poirier <mathieu.poirier@linaro.org>,
+  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,  linux-kernel@vger.kernel.org,
+  linux-arm-msm@vger.kernel.org,  wcn36xx@lists.infradead.org,
+  linux-wireless@vger.kernel.org,  linux-remoteproc@vger.kernel.org,
+  devicetree@vger.kernel.org,  Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 01/12] soc: qcom: add firmware name helper
+References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
+	<20240521-qcom-firmware-name-v1-1-99a6d32b1e5e@linaro.org>
+	<a45b53f3-b2a5-4094-af5a-1281e0f94d2f@linaro.org>
+	<CAA8EJprxYsoug0ipRHTmX45vaFLzJCUF0dQWOc=QLs4y6uZ1rA@mail.gmail.com>
+Date: Tue, 21 May 2024 14:20:36 +0300
+In-Reply-To: <CAA8EJprxYsoug0ipRHTmX45vaFLzJCUF0dQWOc=QLs4y6uZ1rA@mail.gmail.com>
+	(Dmitry Baryshkov's message of "Tue, 21 May 2024 13:01:45 +0300")
+Message-ID: <878r03csxn.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBF6g0xmG_0XNQ--.40701S5
-X-Coremail-Antispam: 1UD129KBjvdXoW7XrW7KFy3XF48trW3CrWruFg_yoWDuFcE9w
-	nYqr92grW8Cr1fC34YkayxZrWYkw4Fqr48CF13t39xWFWjgF97GrWDXr1DuFsrZa1jya45
-	Ja4UWr42yw4IqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbLAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r18M28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kI
-	II0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7
-	xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
-	z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4
-	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CE
-	c2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRK
-	mi_tUUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain
 
-From: Li Nan <linan122@huawei.com>
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> writes:
 
-Similar to commit adbf4c4954e3 ("ubi: block: fix memleak in
-ubiblock_create()"), 'dev->gd' is not assigned but dereferenced if
-blk_mq_alloc_tag_set() fails, and leading to a null-pointer-dereference.
-Thus pass the variable 'gd' to dev_err() directly.
+> On Tue, 21 May 2024 at 12:52, <neil.armstrong@linaro.org> wrote:
+>>
+>> On 21/05/2024 11:45, Dmitry Baryshkov wrote:
+>> > Qualcomm platforms have different sets of the firmware files, which
+>> > differ from platform to platform (and from board to board, due to the
+>> > embedded signatures). Rather than listing all the firmware files,
+>> > including full paths, in the DT, provide a way to determine firmware
+>> > path based on the root DT node compatible.
+>>
+>> Ok this looks quite over-engineered but necessary to handle the legacy,
+>> but I really think we should add a way to look for a board-specific path
+>> first and fallback to those SoC specific paths.
+>
+> Again, CONFIG_FW_LOADER_USER_HELPER => delays.
 
-Fixes: 77567b25ab9f ("ubi: use blk_mq_alloc_disk and blk_cleanup_disk")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/mtd/ubi/block.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+To me this also looks like very over-engineered, can you elaborate more
+why this is needed? Concrete examples would help to understand better.
 
-diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
-index f82e3423acb9..3b61196d387b 100644
---- a/drivers/mtd/ubi/block.c
-+++ b/drivers/mtd/ubi/block.c
-@@ -390,7 +390,7 @@ int ubiblock_create(struct ubi_volume_info *vi)
- 
- 	ret = blk_mq_alloc_tag_set(&dev->tag_set);
- 	if (ret) {
--		dev_err(disk_to_dev(dev->gd), "blk_mq_alloc_tag_set failed");
-+		dev_err(disk_to_dev(gd), "blk_mq_alloc_tag_set failed");
- 		goto out_free_dev;
- 	}
- 
 -- 
-2.39.2
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
