@@ -1,189 +1,160 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D74557C83
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6174F88A
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 10:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716287000; cv=none; b=izbvTQ7KdWctnSFjpBURTOj6x9r2YqSiKpSP07qqlsakBbxQHxbOGsd2R7gBjfi1ViRyL5Mq/8dt/Pty8WG0Qh7oQJYZvLOHNTKSpaL5/IHmcUOc15bugLFh9Oc4pTle2JrdsQkLfVlfS9IupVLmJmjdjjKmRJcnB3TLPaKrZ5k=
+	t=1716287025; cv=none; b=h2QDBSOu1gpy/GkOY15OHeYW3KD1HBxBUz+I6XbKBoP/ZHrf6LrNlRlYudzJrRURm80w+49lEj1oqcGzZqQwBTHInHC6yJVJIT14DZL2BzBuPE48bf+hNktEQ4eEkKtmOM0zex+NmAZOJ+POScx6rvcdSvHU8ybqtJ2hrrCHPak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716287000; c=relaxed/simple;
-	bh=lNI0Hg8IC9ycV+6uxxjEMkC5MeHystRDrTQLKIOejwQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BvihmSEvrXL8Puyku7YKBHVp4mD3lBZS11zB20rA7inK1GWUzt0YQ8xKwjSIAr4f+kIBAQYNXl5W/PoD6cOuBB2J3WBqzZbZKFtpsOrBWO/q0ixhiR0Z47v7chzlLtJ3MCnNktkwPRxl/muHgO+Ru7iI5MtxtyrnqgV61BnmUMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jngtXm0a; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716287025; c=relaxed/simple;
+	bh=+3FcXXUMwhjhiIYrECysvrpCu4cjXRCRft7zAMJgqxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nun3EUI7+SCLSP2wCkA8+/DPXsg5a6P1R4d6hCBHye2KSG8p+lMwfX3gINCv5pEHmxVOxtpKHOgzO+5juD9cHQ8MuKzk8EPRajMC/TP+gh04z15pd5Ysibg9ILtokIE7Gmu4dSl3rRwjso9/9T1NJL98xcPyDmHLPy4QSIM8U+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bA+zcWhS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qtc2fJWr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bA+zcWhS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qtc2fJWr; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jngtXm0a"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-df3dfcf7242so3485724276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716286997; x=1716891797; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eQal9jlDbLEH1BqRzTobfVTZmQmUTVx0/uC+Hwtv/IM=;
-        b=jngtXm0al9OXO5noZQIZwetNA7ZGfjFdE7rWdfSyq6QZxSeI7dN4F/Nh8EvN0ZPZSk
-         aCeHrqhN+7gO+hGx+RYVyAaMQ0eZ5b9gVlqyT4sYwrjJ3eyl1KuS8Yl3/VarGqQaCPQq
-         aLCHnbJ529IHLP3Je+Dldczz43NAlIP5sLMCZHUem13LigxRYUYTGjB7GiZkbYE2cTiV
-         3rkA0lDy1IEJ2iznYSe8LA21GaSmRbC1hjdfNY5HgdzgQn1csNWjmENNpY8n2GNLVD4e
-         LdWEVIZMttP2sdhqA+gQGd6koRTdUfDHJmPmbukwUo3mbdYNwCJAIjv+ZUvXVjdcfjAk
-         lBVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716286997; x=1716891797;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eQal9jlDbLEH1BqRzTobfVTZmQmUTVx0/uC+Hwtv/IM=;
-        b=HKPTOEB3KcKrtKHTT8tWXIQUFYiEET25jTAIgvt+cvEp8bi/qx4f3kjMXdWymvVeaJ
-         KuZn6WzGSa3iDZ0yZkJoDHRCI+JbTNIhtRvSNMASVHushEPL5CarizNjqDqeVTSOYxzY
-         KUuuWDYd98gYMKYqK9dt93aU7tedDanM+rw7No/Bn2iKTItsFTnXdAWCtlaj10sMnDUh
-         UsVzrLn2hQazYxTK+dYe1QhNjLFBaYT82KjY3souxy9qi/YgT+5b6vP6p/Wqv5d3YB3B
-         r9jlZGWM32P8WcGfjk6ualbp+r8lo/iKcpEzOonRsKVlcII9glziZlGvPH5K7jHBhktT
-         SELw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNeVqu6Z6jlqWwxdcxW5YCCtW6x+fV0iX+Ki2Yy2c7n5zGdtSPK8R3tKd3/6B+SSd3ssT40Pf9n39U30Xz3Zm8XWaE/uoGMTZTwRbD
-X-Gm-Message-State: AOJu0YwzNcU+8Oop7wTbgAZ5BQvcHZu4RHmXbcUTw1hkX1NuYG+nyddD
-	VfxGWs2mvfU47SQ8+s21gra1prGSaCVycNlEPyxFgam2FgKNrB+8Y4Ww7iSFWbR82tBzY/Ga/Yv
-	q3DTVII5FSusZSpJ/TXC/AY+l5gWJvHXe2sEVLw==
-X-Google-Smtp-Source: AGHT+IFusdwxmPQewGjPt+54YRS/caX7jsa//59b5F79W2aGKtmYSc/Hc4mM2ZuST8VV01w+uClOUSg1l5sjccug07M=
-X-Received: by 2002:a25:3619:0:b0:dee:9baa:7760 with SMTP id
- 3f1490d57ef6-dee9baa77e6mr22767700276.19.1716286997611; Tue, 21 May 2024
- 03:23:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bA+zcWhS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qtc2fJWr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bA+zcWhS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qtc2fJWr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EB815C04F;
+	Tue, 21 May 2024 10:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716287021; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2HWjoc4Tt+cW/CoaPn49Mt7pqUTZI4U/K0EbpV7waOA=;
+	b=bA+zcWhSIDcNye/11nLo8HBJPCP+jQIZHnK7XZm+RQ287e4dDSgP+rDdAo8Jkwvl0m7Tsp
+	NU5OE2AAqc8iH8N1BQ1vk+nYi/B1toEc7xKeGdNYuMswZzdeVpaxgs9Kpc0iZ+S3mUUfTu
+	wRjue0HXFIA7U7Ax0Gfbyvj6pUPbaq4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716287021;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2HWjoc4Tt+cW/CoaPn49Mt7pqUTZI4U/K0EbpV7waOA=;
+	b=qtc2fJWrnyG7/Nj9AxLSowPlE0yh2c6o19kOmIysaXwm9pH336r5KvhczNYDSxl0WUZE8O
+	Cgrolw9cplEHr6Dg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=bA+zcWhS;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=qtc2fJWr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716287021; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2HWjoc4Tt+cW/CoaPn49Mt7pqUTZI4U/K0EbpV7waOA=;
+	b=bA+zcWhSIDcNye/11nLo8HBJPCP+jQIZHnK7XZm+RQ287e4dDSgP+rDdAo8Jkwvl0m7Tsp
+	NU5OE2AAqc8iH8N1BQ1vk+nYi/B1toEc7xKeGdNYuMswZzdeVpaxgs9Kpc0iZ+S3mUUfTu
+	wRjue0HXFIA7U7Ax0Gfbyvj6pUPbaq4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716287021;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2HWjoc4Tt+cW/CoaPn49Mt7pqUTZI4U/K0EbpV7waOA=;
+	b=qtc2fJWrnyG7/Nj9AxLSowPlE0yh2c6o19kOmIysaXwm9pH336r5KvhczNYDSxl0WUZE8O
+	Cgrolw9cplEHr6Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DFF6C13A21;
+	Tue, 21 May 2024 10:23:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aiqhMyx2TGYyAwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 21 May 2024 10:23:40 +0000
+Date: Tue, 21 May 2024 12:23:35 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Muchun Song <muchun.song@linux.dev>,
+	Vishal Moola <vishal.moola@gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: Move vmf_anon_prepare upfront in hugetlb_wp
+Message-ID: <Zkx2JxmI8NsKtlRa@localhost.localdomain>
+References: <20240521073446.23185-1-osalvador@suse.de>
+ <338b4d56-7e5a-4d8f-8908-610f2c59e29e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1715396125-3724-1-git-send-email-shengjiu.wang@nxp.com>
-In-Reply-To: <1715396125-3724-1-git-send-email-shengjiu.wang@nxp.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 21 May 2024 12:22:41 +0200
-Message-ID: <CAPDyKFp4V8f0iyeRASSEu4YaCSz0m56=8ssBJ9ogSvqG1dzMZA@mail.gmail.com>
-Subject: Re: [PATCH v3] pmdomain: imx: gpcv2: Add delay after power up handshake
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: heiko@sntech.de, u.kleine-koenig@pengutronix.de, geert+renesas@glider.be, 
-	rafael@kernel.org, linux-pm@vger.kernel.org, abelvesa@kernel.org, 
-	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, imx@lists.linux.dev, shengjiu.wang@gmail.com, 
-	frank.li@nxp.com, mkl@pengutronix.de, linus.walleij@linaro.org, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <338b4d56-7e5a-4d8f-8908-610f2c59e29e@redhat.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 4EB815C04F
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,linux.dev,gmail.com];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email]
 
-On Sat, 11 May 2024 at 05:15, Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
->
-> AudioMix BLK-CTRL on i.MX8MP encountered an accessing register issue
-> after power up.
->
-> [    2.181035] Kernel panic - not syncing: Asynchronous SError Interrupt
-> [    2.181038] CPU: 1 PID: 48 Comm: kworker/u16:2 Not tainted 6.9.0-rc5-next-20240424-00003-g21cec88845c6 #171
-> [    2.181047] Hardware name: NXP i.MX8MPlus EVK board (DT)
-> [    2.181050] Workqueue: events_unbound deferred_probe_work_func
-> [    2.181064] Call trace:
-> [...]
-> [    2.181142]  arm64_serror_panic+0x6c/0x78
-> [    2.181149]  do_serror+0x3c/0x70
-> [    2.181157]  el1h_64_error_handler+0x30/0x48
-> [    2.181164]  el1h_64_error+0x64/0x68
-> [    2.181171]  clk_imx8mp_audiomix_runtime_resume+0x34/0x44
-> [    2.181183]  __genpd_runtime_resume+0x30/0x80
-> [    2.181195]  genpd_runtime_resume+0x110/0x244
-> [    2.181205]  __rpm_callback+0x48/0x1d8
-> [    2.181213]  rpm_callback+0x68/0x74
-> [    2.181224]  rpm_resume+0x468/0x6c0
-> [    2.181234]  __pm_runtime_resume+0x50/0x94
-> [    2.181243]  pm_runtime_get_suppliers+0x60/0x8c
-> [    2.181258]  __driver_probe_device+0x48/0x12c
-> [    2.181268]  driver_probe_device+0xd8/0x15c
-> [    2.181278]  __device_attach_driver+0xb8/0x134
-> [    2.181290]  bus_for_each_drv+0x84/0xe0
-> [    2.181302]  __device_attach+0x9c/0x188
-> [    2.181312]  device_initial_probe+0x14/0x20
-> [    2.181323]  bus_probe_device+0xac/0xb0
-> [    2.181334]  deferred_probe_work_func+0x88/0xc0
-> [    2.181344]  process_one_work+0x150/0x290
-> [    2.181357]  worker_thread+0x2f8/0x408
-> [    2.181370]  kthread+0x110/0x114
-> [    2.181381]  ret_from_fork+0x10/0x20
-> [    2.181391] SMP: stopping secondary CPUs
->
-> According to comments in power up handshake:
->
->         /* request the ADB400 to power up */
->         if (domain->bits.hskreq) {
->                 regmap_update_bits(domain->regmap, domain->regs->hsk,
->                                    domain->bits.hskreq, domain->bits.hskreq);
->
->                 /*
->                  * ret = regmap_read_poll_timeout(domain->regmap, domain->regs->hsk, reg_val,
->                  *                                (reg_val & domain->bits.hskack), 0,
->                  *                                USEC_PER_MSEC);
->                  * Technically we need the commented code to wait handshake. But that needs
->                  * the BLK-CTL module BUS clk-en bit being set.
->                  *
->                  * There is a separate BLK-CTL module and we will have such a driver for it,
->                  * that driver will set the BUS clk-en bit and handshake will be triggered
->                  * automatically there. Just add a delay and suppose the handshake finish
->                  * after that.
->                  */
->         }
->
-> The BLK-CTL module needs to add delay to wait for a handshake request finished.
-> For some BLK-CTL module (eg. AudioMix on i.MX8MP) doesn't have BUS clk-en
-> bit, it is better to add delay in this driver, as the BLK-CTL module doesn't
-> need to care about how it is powered up.
->
-> regmap_read_bypassed() is to make sure the above write IO transaction already
-> reaches target before udelay().
->
-> Fixes: 1496dd413b2e ("clk: imx: imx8mp: Add pm_runtime support for power saving")
-> Reported-by: Francesco Dolcini <francesco@dolcini.it>
-> Closes: https://lore.kernel.org/all/66293535.170a0220.21fe.a2e7@mx.google.com/
-> Suggested-by: Frank Li <frank.li@nxp.com>
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+On Tue, May 21, 2024 at 11:56:54AM +0200, David Hildenbrand wrote:
+> On 21.05.24 09:34, Oscar Salvador wrote:
+> > hugetlb_wp calls vmf_anon_prepare() after having allocated a page, which
+> > means that we might need to call restore_reserve_on_error() upon error.
+> > vmf_anon_prepare() releases the vma lock before returning, but
+> > restore_reserve_on_error() expects the vma lock to be held by the caller.
+> > 
+> > Fix it by calling vmf_anon_prepare() before allocating the page.
+> > 
+> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> > Fixes: 9acad7ba3e25 ("hugetlb: use vmf_anon_prepare() instead of anon_vma_prepare()")
+> > ---
+> > I did not hit this bug, I just spotted this because I was looking at hugetlb_wp
+> > for some other reason. And I did not want to get creative to see if I could
+> > trigger this so I could get a backtrace.
+> > My assumption is that we could trigger this if 1) this was a shared mapping,
+> > so no anon_vma and 2) we call in GUP code with FOLL_WRITE, which would cause
+> > the FLAG_UNSHARE to be passed, so we will end up in hugetlb_wp().
+> 
+> FOLL_WRITE should never result in FLAG_UNSHARE.
 
-Sorry for the delay!
+You are right.
+It was quite early when I looked at this and I managed to confuse myself when
+reading hugetlb_follow_page_mask().
+ 
+> The joy of hugetlb reservation code.
+> 
+> LGTM
 
-Applied for fixes, thanks!
+thanks David!
+ 
 
-Kind regards
-Uffe
-
-> ---
-> changes in v3:
-> - move change to gpcv2.c, as it is more reasonable to let power driver
->   to handle such power issue, suggested by Frank Li
->
-> changes in v2:
-> - reduce size of panic log in commit message
->
->  drivers/pmdomain/imx/gpcv2.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/pmdomain/imx/gpcv2.c b/drivers/pmdomain/imx/gpcv2.c
-> index 4b828d74a606..856eaac0ec14 100644
-> --- a/drivers/pmdomain/imx/gpcv2.c
-> +++ b/drivers/pmdomain/imx/gpcv2.c
-> @@ -393,6 +393,17 @@ static int imx_pgc_power_up(struct generic_pm_domain *genpd)
->                  * automatically there. Just add a delay and suppose the handshake finish
->                  * after that.
->                  */
-> +
-> +               /*
-> +                * For some BLK-CTL module (eg. AudioMix on i.MX8MP) doesn't have BUS
-> +                * clk-en bit, it is better to add delay here, as the BLK-CTL module
-> +                * doesn't need to care about how it is powered up.
-> +                *
-> +                * regmap_read_bypassed() is to make sure the above write IO transaction
-> +                * already reaches target before udelay()
-> +                */
-> +               regmap_read_bypassed(domain->regmap, domain->regs->hsk, &reg_val);
-> +               udelay(5);
->         }
->
->         /* Disable reset clocks for all devices in the domain */
-> --
-> 2.34.1
->
+-- 
+Oscar Salvador
+SUSE Labs
