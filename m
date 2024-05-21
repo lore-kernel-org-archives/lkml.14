@@ -1,141 +1,248 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0DE51C4F
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C425B5337D
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716277819; cv=none; b=CyEJNnzqGgKr9Javdl/dCjDhMnw/o1i/RyI+ps8x6exkDcBDzpftKNE77eYaiNNst4yYcp2xk9JNAmTVWzURbwPZ7X7s3PwikB+ntUMrlioCPPsjaDUKxoRQIqjwaZOrRapR95aELVZD7vNmqSXv5grCrr5SewmGTUDPTtQDq5s=
+	t=1716277883; cv=none; b=sd9rnpaWhppC6o6b+mypU2mUHW8VF7g28EekISUcv97z31nq2I+uUH0lCKCuL9W+mKfisIt+K1jUliWBOP2ftc5gVv9NCx+2cxiOO+mOnfRlyGfblfg7V8OO3IDj+P+QG5VxDcYNonEb65YNbL5ciFtSwpbDNI3LntnuIQFfDkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716277819; c=relaxed/simple;
-	bh=L/Vg3azzF1AwIKur+spgX2StqpWHdR2fCI0O12zbwSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N3Khy/qjOaiDwSLXsM3XNs54KqFOzJ5MKFqJNJ9YCUEyCx8EZWXqr1z4Rp0Zjg7gGzBL+cuImSWQte4FXDLUB1fyDc5XTkca58DcVuj7IvRGKfkWCWbRElIRc/g7nsACREIZp/aLi+Un/lYByh2JQwmDFjAYP/1oH/nlXpEfwX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AvpIwQgu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1716277883; c=relaxed/simple;
+	bh=tNcwUJFLX7BXbp1Qcrg2ogpxcmB/m5eICmF7z+JYRD8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kYCo7piInOO3Polatc/wxFU4l1kFp0kvcwYiTTrLiwJJ7AURFEtBvo+W1EYdx+k/lZEYwZZLlXNTDkkXv8xNkS6KkAKf9W0ha/wqqKQXztlSQRj/E7ZjRGy+1to6dKVO0Mut1JjbRi4yz2yfwDW17ktLsxDWgJWOOAj/VpptinM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=jkYkyCPZ reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AvpIwQgu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BAD0840E02A7;
-	Tue, 21 May 2024 07:50:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id AmG9K47KQcgt; Tue, 21 May 2024 07:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1716277810; bh=zhriVY1YS+s2GEj2LKPeJWhuxKvrjyAYCIq8RfPBJmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AvpIwQguEOYipaAs1bqZf9/1aizrJp2VZs+MIa4qYBj8OM+yUXvGDzqwbtozuO5J2
-	 e8GQ9/s6/EwMPYkF/1Obts1F6p8npJwJ5j4YIGN1e+yQ4oRzr2yJsxPlQaCvz1tlxv
-	 EEAKPz9iPha0lY5n50fUVrunpcedc8+5guTc3niIZOp23OKhfYFpnqfNK+uXwpK2jC
-	 VITHotBZsh78UXx7GM+MZTwXVCdq1JvIvBk2i5Yqrbrjk4kprjZn3Oxdne3leiS7qO
-	 GTgLZDGUUYocUmxy7IXknRk4exZudgbFgsdtxr4vW1e+G2Vn95J6kQ+MVQT8/F3IAs
-	 CagJ9IdpDAoPgKGawFLI13NlBq/4FQT7D/3lvgCosJH5MF4nQSkX05FyIiF6j/gxJP
-	 1E98yMy/Cf+eV851+hB5NArK+xAjZR0+YqDofd1xChB5pNoF5qRObGfeJlbn10Tmzr
-	 MBsQN7HJrbE5uNNMhOkxs9tXGRTc1b4BRWwv1JQUOec5lxJcP2MwtI41jr59Qk2/Wf
-	 KiLhWj13UOGFUMfhQx4OLuTsg3J+vESA2prJt5cQ+6mrczjar1Nau+P+TgERTK6dYr
-	 aM8Q5CyXUc3z1eAsYBxp0Z5KfgwdMRVpYcTbVuOY2fkT+XZAAarm+RO5WYhkO2vVAa
-	 nW476cxFb6Hf+9IiueKkmAfw=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1859240E01A3;
-	Tue, 21 May 2024 07:49:55 +0000 (UTC)
-Date: Tue, 21 May 2024 09:49:47 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Mateusz Guzik <mjguzik@gmail.com>,
-	Thomas Renninger <trenn@suse.de>, Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v6 02/49] x86/cpu: Fix x86_match_cpu() to match just
- X86_VENDOR_INTEL
-Message-ID: <20240521074947.GAZkxSG_u08uLDqZ_m@fat_crate.local>
-References: <20240520224620.9480-1-tony.luck@intel.com>
- <20240520224620.9480-3-tony.luck@intel.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="jkYkyCPZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=ite.com.tw; s=dkim;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rJA9OD/hotGu+pdBYSa5wol5mrcgE/6y01wA9gkNaok=;
+  b=jkYkyCPZj+YAIvNbRY5Cs5xD8fbAoOAB42BGJ4k1y7N4FzoWvAcIdbYb
+   tCPZ3zJFh8zt127AwRj3FyfXFRL2z1hSZE9veKyll+sxiigH/GLLgthpA
+   XsXvl5scqblpB3zYG65lvIpuVWMFXVVyZW7N8FSeZYwB/orrnoEO5Zv9M
+   s5B8nIcrgGlo1cISjxiB8fUJoJlsIiDgAvsCyJTXqoVDz0rPoxHsfNYk7
+   PuTPwulx6FCRqb6gVRg5FVaxeA35kjGAWMpGt9reqtm/QGXNtzhDVzBBK
+   yWCR/Xxxg12dNiyXSpLmPDJ22ENKNvPPjoJCzm73VVGfy81hcBe6eHtNm
+   A==;
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 21 May 2024 15:51:12 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
+	by mse.ite.com.tw with ESMTP id 44L7p9ME031040;
+	Tue, 21 May 2024 15:51:09 +0800 (GMT-8)
+	(envelope-from kuro.chung@ite.com.tw)
+Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 21 May 2024 15:51:08 +0800
+From: kuro <kuro.chung@ite.com.tw>
+To: Pin-yen Lin <treapking@chromium.org>,
+        Kenneth Haung
+	<kenneth.hung@ite.com.tw>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman
+	<jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Allen Chen
+	<allen.chen@ite.com.tw>, Hermes Wu <hermes.wu@ite.com.tw>,
+        AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>,
+        "open list:DRM DRIVERS"
+	<dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC: Kuro Chung <kuro.chung@ite.com.tw>
+Subject: [PATCH v12] drm/bridge: it6505: fix hibernate to resume no display issue
+Date: Tue, 21 May 2024 16:01:48 +0800
+Message-ID: <20240521080149.1047892-1-kuro.chung@ite.com.tw>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240520224620.9480-3-tony.luck@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP:
+	F9F34C0A94CA35CD4F5911CF8E0B2FE07EA2AA2D0DBBCFD05078346A7B31A6D02002:8
+X-MAIL:mse.ite.com.tw 44L7p9ME031040
 
-On Mon, May 20, 2024 at 03:45:33PM -0700, Tony Luck wrote:
-> Fixes: 644e9cbbe3fc ("Add driver auto probing for x86 features v4")
+From: Kuro Chung <kuro.chung@ite.com.tw>
 
-Do you really want to backport this to everything since 2012, as that
-patch is from then?
+When the system power resumes, the TTL input of IT6505 may experience
+some noise before the video signal stabilizes, necessitating a video
+reset. This patch is implemented to prevent a loop of video error
+interrupts, which can occur when a video reset in the video FIFO error
+interrupt triggers another such interrupt. The patch processes the SCDT
+and FIFO error interrupts simultaneously and ignores any video FIFO
+error interrupts caused by a video reset.
 
-> @@ -690,6 +690,7 @@ struct x86_cpu_id {
->  	__u16 model;
->  	__u16 steppings;
->  	__u16 feature;	/* bit index */
-> +	__u16 flags;
->  	kernel_ulong_t driver_data;
->  };
->  
-> @@ -700,6 +701,9 @@ struct x86_cpu_id {
->  #define X86_STEPPING_ANY 0
->  #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
->  
-> +/* x86_cpu_id::flags */
-> +#define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
+Fixes: b5c84a9edcd4 ("drm/bridge: add it6505 driver")
+Signed-off-by: Kuro Chung <kuro.chung@ite.com.tw>
+Signed-off-by: Hermes Wu <hermes.wu@ite.com.tw>
 
-I would definitely not want to have those visible in userspace.
+---
+V1->V3: update MAINTAINERS mail list
+V3->V4: remove function it6505_irq_video_fifo_error,it6505_irq_io_latch_fifo_overflow
+V4->V5: customer feedback again, update again, kernel build pass
+V5->V6: remove unrelated patch change, split into another patch
+V6->V7: modify code 0x02 to TX_FIFO_RESET by macro define
+V7->V8: fix merge conflict, change mail from 'cc' to 'to'
+V8->V9: modify patch description, patch summary
+V9->V10: modify patch summary, add Fixes
+V10->V11: modify patch description, add Signed-off-by
+V11->V12: moidfy patch description.
 
-IOW, something like this:
+---
+ drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
+ 1 file changed, 49 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
-index 54a71c669ce9..b6325ee30871 100644
---- a/arch/x86/include/asm/cpu_device_id.h
-+++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -53,6 +53,9 @@
- #define X86_CENTAUR_FAM6_C7_D		0xd
- #define X86_CENTAUR_FAM6_NANO		0xf
- 
-+/* x86_cpu_id::flags */
-+#define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index 469157341f3ab..5703fcf4b7b00 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -1307,9 +1307,15 @@ static void it6505_video_reset(struct it6505 *it6505)
+ 	it6505_link_reset_step_train(it6505);
+ 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_MUTE);
+ 	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00);
+-	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
 +
- #define X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
- /**
-  * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index ca3468ad06ff..4338b1b4ac44 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -690,6 +690,7 @@ struct x86_cpu_id {
- 	__u16 model;
- 	__u16 steppings;
- 	__u16 feature;	/* bit index */
-+	/* Solely for kernel-internal use: DO NOT EXPORT to userspace! */
- 	__u16 flags;
- 	kernel_ulong_t driver_data;
- };
-@@ -701,9 +702,6 @@ struct x86_cpu_id {
- #define X86_STEPPING_ANY 0
- #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
++	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, TX_FIFO_RESET);
++	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
++
+ 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_FIFO);
+ 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
++
++	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
++	usleep_range(1000, 2000);
+ 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
+ }
  
--/* x86_cpu_id::flags */
--#define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
+@@ -2245,12 +2251,11 @@ static void it6505_link_training_work(struct work_struct *work)
+ 	if (ret) {
+ 		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
+ 		it6505_link_train_ok(it6505);
+-		return;
+ 	} else {
+ 		it6505->auto_train_retry--;
++		it6505_dump(it6505);
+ 	}
+ 
+-	it6505_dump(it6505);
+ }
+ 
+ static void it6505_plugged_status_to_codec(struct it6505 *it6505)
+@@ -2471,31 +2476,53 @@ static void it6505_irq_link_train_fail(struct it6505 *it6505)
+ 	schedule_work(&it6505->link_works);
+ }
+ 
+-static void it6505_irq_video_fifo_error(struct it6505 *it6505)
++static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
+ {
+-	struct device *dev = it6505->dev;
 -
- /*
-  * Generic table type for matching CPU features.
-  * @feature:	the bit number of the feature (0 - 65535)
-
+-	DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
+-	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
+-	flush_work(&it6505->link_works);
+-	it6505_stop_hdcp(it6505);
+-	it6505_video_reset(it6505);
++	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
+ }
+ 
+-static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
++static void it6505_irq_video_handler(struct it6505 *it6505, const int *int_status)
+ {
+ 	struct device *dev = it6505->dev;
++	int reg_0d, reg_int03;
+ 
+-	DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
+-	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
+-	flush_work(&it6505->link_works);
+-	it6505_stop_hdcp(it6505);
+-	it6505_video_reset(it6505);
+-}
++	/*
++	 * When video SCDT change with video not stable,
++	 * Or video FIFO error, need video reset
++	 */
+ 
+-static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
+-{
+-	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
++	if ((!it6505_get_video_status(it6505) &&
++		(it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))) ||
++		(it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *) int_status)) ||
++		(it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *) int_status))) {
++
++		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
++		flush_work(&it6505->link_works);
++		it6505_stop_hdcp(it6505);
++		it6505_video_reset(it6505);
++
++		usleep_range(10000, 11000);
++
++		/*
++		 * Clear FIFO error IRQ to prevent fifo error -> reset loop
++		 * HW will trigger SCDT change IRQ again when video stable
++		 */
++
++		reg_int03 = it6505_read(it6505, INT_STATUS_03);
++		reg_0d = it6505_read(it6505, REG_SYSTEM_STS);
++
++		reg_int03 &= (BIT(INT_VID_FIFO_ERROR) | BIT(INT_IO_LATCH_FIFO_OVERFLOW));
++		it6505_write(it6505, INT_STATUS_03, reg_int03);
++
++		DRM_DEV_DEBUG_DRIVER(dev, "reg08 = 0x%02x", reg_int03);
++		DRM_DEV_DEBUG_DRIVER(dev, "reg0D = 0x%02x", reg_0d);
++
++		return;
++	}
++
++
++	if (it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))
++		it6505_irq_scdt(it6505);
+ }
+ 
+ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
+@@ -2508,15 +2535,12 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
+ 	} irq_vec[] = {
+ 		{ BIT_INT_HPD, it6505_irq_hpd },
+ 		{ BIT_INT_HPD_IRQ, it6505_irq_hpd_irq },
+-		{ BIT_INT_SCDT, it6505_irq_scdt },
+ 		{ BIT_INT_HDCP_FAIL, it6505_irq_hdcp_fail },
+ 		{ BIT_INT_HDCP_DONE, it6505_irq_hdcp_done },
+ 		{ BIT_INT_AUX_CMD_FAIL, it6505_irq_aux_cmd_fail },
+ 		{ BIT_INT_HDCP_KSV_CHECK, it6505_irq_hdcp_ksv_check },
+ 		{ BIT_INT_AUDIO_FIFO_ERROR, it6505_irq_audio_fifo_error },
+ 		{ BIT_INT_LINK_TRAIN_FAIL, it6505_irq_link_train_fail },
+-		{ BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
+-		{ BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_overflow },
+ 	};
+ 	int int_status[3], i;
+ 
+@@ -2546,6 +2570,7 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
+ 			if (it6505_test_bit(irq_vec[i].bit, (unsigned int *)int_status))
+ 				irq_vec[i].handler(it6505);
+ 		}
++		it6505_irq_video_handler(it6505, (unsigned int *) int_status);
+ 	}
+ 
+ 	pm_runtime_put_sync(dev);
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
