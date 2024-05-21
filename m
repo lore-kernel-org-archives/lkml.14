@@ -1,117 +1,233 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5EB7B3F3;
-	Tue, 21 May 2024 13:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F7B7F487
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 13:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716296764; cv=none; b=aaEw/6d0V7MQiB4t5jVKjec6vyC68+kDlMK6+ZvMT02aagIDIbD366CLt3NUtcxRP0GgXDnpIr/ben1dEedr13bHRowg5dmaGW7/vHQxxtxvbHwIrf2aLHaYcuOnPvqZct9q4bXXqUOOubatpKB3AtHu0DZZe16KFkHjRL5aTmU=
+	t=1716296765; cv=none; b=hQu3zQ6f5LycCYOT5wimhm9dmN0Oco590vdX0YxC+8HKyD4LTeTvFlKf+Rg6Q0rijJZCT29Pn4owemMIfylVszK7Wn4zq6PMqqCQisjTQnXKYu3am1g0ribMXyppdQAdEEN650Yi1tsDYghl0NJNFwcQbti8u9sQ/kBvl09gees=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716296764; c=relaxed/simple;
-	bh=OdGZx35Xq/K2qo+2VemsbuBTb2vtHnLZgwqnHGj6dHs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GILLvq71Ax03dbdu45AocppqC/GhNGARUw+5NuGS6f22qCs9hslsz704tR54m+wvitWpUW79tZ0hR/GJ+4G60RrDIyqyL3xJnErCavRB+/QMZDSOLdOjxnGelmtweKPKwEYplqhfTFff2z//wG9vUs4kMqr/UZZTW9/ay7V3lU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=hAuFPgbN; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Z/hUAcDu reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="hAuFPgbN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Z/hUAcDu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1716296762; x=1747832762;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=cyyRUEqHorrucwPwnV8fQCfXT5oEDfauIgMMG9jC7FM=;
-  b=hAuFPgbNbE6YxOzCaxidKU48CLM6k5JBbdVfJhpDvaPW6oUSStJDcZe9
-   IynwEwK1wKTW0cXqJuLGLaXXRe2oaxURPgzr7Y2XwzWf7UBGt0fJ2SYlj
-   yLRSKFIdq2+hsBJ5/ebv+cfY7miT4xbRtfRTKPCsL5xmdU2G0Jnb4U19g
-   4pV5ZTRWng4GvBpBoJG448x2xztwUG398VIaN8NPLu1FO6EvgZgNsOLyB
-   c1dulWIB3umG8broKycb4eV2Yapn6L+HotIH1QZsochv2XsYyCENOEx3f
-   lOfYyj5D0FuulxEHWMSn/wpdt/2+lEYJfp85qjqXkrDWEd/QJ+ZWeQnVw
-   Q==;
-X-CSE-ConnectionGUID: EzwhYIOMRsKrcBGmmEQETA==
-X-CSE-MsgGUID: sLkcEvnaQ2e3HC/gI/hpXA==
-X-IronPort-AV: E=Sophos;i="6.08,177,1712613600"; 
-   d="scan'208";a="36993994"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 21 May 2024 15:06:00 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4B2A9175C07;
-	Tue, 21 May 2024 15:05:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1716296756;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=cyyRUEqHorrucwPwnV8fQCfXT5oEDfauIgMMG9jC7FM=;
-	b=Z/hUAcDuc2Bbp1gD15KjQG8nmyP3JXEm7GkmbGTYEjj+OFm3AkjE/6QpHA4bAOkH5DxEok
-	BJVar5t6BbetcJboOylCuUoTE+imBIi0tcW64Y7l3SWCx7mcG6/o8LvS745VdRjKcdcDZ3
-	IKZWR/OX1bCeIqch1ykalhwPkq9k4kz2QVUmdzUvKs12gpbuLQQAc9DBrzcy1YhuLPumBS
-	sk3+jsjDnQfORPKnLStCsa3TTk9+GaWTn2ia2b07c2GVthB/7C+cs6teJ4tTKE4aA8QSpe
-	BMR1jQNTk1IHfhrYgNftyR00PLs18YeHMAuwpbhN8YzPVQy9E562qsomeCKNGQ==
-From: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Date: Tue, 21 May 2024 15:04:58 +0200
-Subject: [PATCH v3 8/8] dt-bindings: can: mcp251xfd: add gpio-controller
- property
+	s=arc-20240116; t=1716296765; c=relaxed/simple;
+	bh=Gm4Rfz371L48OCVFj/POrZrHcEmt4Wh36gFUtfw+L2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SX43S6+2WMRF2pqMwIdLJ3TvczSkZVhDSReVJAoB568SccRxi7Osbps86zthmq/JD+VWdD4mzRTSB24tk4p/05xDeKeaEjs9p2iDBq8w8Qt/dAyelNPvz2BpAwPdkBIuigCHQEeI/q9uxRHYyJ4d4xKTjD8rFVlqAvTRafEYu7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s9PBi-0000Dp-Ik; Tue, 21 May 2024 15:05:54 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s9PBh-002OPX-SC; Tue, 21 May 2024 15:05:53 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s9PBh-009TFH-2X;
+	Tue, 21 May 2024 15:05:53 +0200
+Date: Tue, 21 May 2024 15:05:53 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Clark Wang <xiaoning.wang@nxp.com>
+Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
+Message-ID: <xobmekjwqanow765yr42tsgknc5gc7szjublq6ywgbmoxovlr5@v3sofz5bmkol>
+References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
+ <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
+ <20240521100922.GF16345@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-mcp251xfd-gpio-feature-v3-8-7f829fefefc2@ew.tq-group.com>
-References: <20240521-mcp251xfd-gpio-feature-v3-0-7f829fefefc2@ew.tq-group.com>
-In-Reply-To: <20240521-mcp251xfd-gpio-feature-v3-0-7f829fefefc2@ew.tq-group.com>
-To: Marc Kleine-Budde <mkl@pengutronix.de>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Thomas Kopp <thomas.kopp@microchip.com>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux@ew.tq-group.com, gregor.herburger@ew.tq-group.com, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716296697; l=932;
- i=gregor.herburger@ew.tq-group.com; s=20230829; h=from:subject:message-id;
- bh=OdGZx35Xq/K2qo+2VemsbuBTb2vtHnLZgwqnHGj6dHs=;
- b=3ius/kJSj1KX4cPP4zFqWQVMTg2McgvCYpq90oozVXbiamCIH9N9OBoo4+Ow7AkCmHxlBsdBS
- 3RTlKrKcGoEAeovzC+nIf2LTBjDZz0oI+vDq9fhGFCyUntw+jS2MICX
-X-Developer-Key: i=gregor.herburger@ew.tq-group.com; a=ed25519;
- pk=+eRxwX7ikXwazcRjlOjj2/tbDmfVZdDLoW+xLZbQ4h4=
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kumwfefmbg4urjq2"
+Content-Disposition: inline
+In-Reply-To: <20240521100922.GF16345@pendragon.ideasonboard.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The mcp251xfd has two pins that can be used as gpio. Add gpio-controller
-property to binding description.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
----
- Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+--kumwfefmbg4urjq2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-index 2a98b26630cb..e9605a75c45b 100644
---- a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-@@ -49,6 +49,11 @@ properties:
-       Must be half or less of "clocks" frequency.
-     maximum: 20000000
- 
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
- required:
-   - compatible
-   - reg
+Hello,
 
--- 
-2.34.1
+[dropping Alexandru Ardelean from Cc as their address bounces]
 
+On Tue, May 21, 2024 at 01:09:22PM +0300, Laurent Pinchart wrote:
+> On Tue, May 21, 2024 at 10:51:26AM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
+> > > +	ret =3D regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
+> > > +				 ADP5585_OSC_EN, ADP5585_OSC_EN);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	return 0;
+> >=20
+> > The last four lines are equivalent to
+> >=20
+> > 	return ret;
+>=20
+> I prefer the existing code but can also change it.
+
+Well, I see the upside of your approach. If this was my only concern I
+wouldn't refuse to apply the patch.
+
+> > > +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
+> > > +			   ADP5585_OSC_EN, 0);
+> > > +}
+> > > +
+> > > +static int pwm_adp5585_apply(struct pwm_chip *chip,
+> > > +			     struct pwm_device *pwm,
+> > > +			     const struct pwm_state *state)
+> > > +{
+> > > +	struct adp5585_pwm_chip *adp5585_pwm =3D to_adp5585_pwm_chip(chip);
+> > > +	u32 on, off;
+> > > +	int ret;
+> > > +
+> > > +	if (!state->enabled) {
+> > > +		guard(mutex)(&adp5585_pwm->lock);
+> > > +
+> > > +		return regmap_update_bits(adp5585_pwm->regmap, ADP5585_PWM_CFG,
+> > > +					  ADP5585_PWM_EN, 0);
+> > > +	}
+> > > +
+> > > +	if (state->period < ADP5585_PWM_MIN_PERIOD_NS ||
+> > > +	    state->period > ADP5585_PWM_MAX_PERIOD_NS)
+> > > +		return -EINVAL;
+> >=20
+> > Make this:
+> >=20
+> > 	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
+> > 		return -EINVAL;
+> >=20
+> > 	period =3D min(ADP5585_PWM_MAX_PERIOD_NS, state->period)
+> > 	duty_cycle =3D min(period, state->period);
+>=20
+> I haven't been able to find documentation about the expected behaviour.
+> What's the rationale for returning an error if the period is too low,
+> but silently clamping it if it's too high ?
+
+Well, it's only implicitly documented in the implementation of
+PWM_DEBUG. The reasoning is a combination of the following thoughts:
+
+ - Requiring exact matches is hard to work with, so some deviation
+   between request and configured value should be allowed.
+ - Rounding in both directions has strange and surprising effects. The
+   corner cases (for all affected parties (=3Dconsumer, lowlevel driver
+   and pwm core)) are easier if you only round in one direction.
+   One ugly corner case in your suggested patch is:
+   ADP5585_PWM_MAX_PERIOD_NS corresponds to 0xffff clock ticks.
+   If the consumer requests period=3D64000.2 clock ticks, you configure
+   for 64000. If the consumer requests period=3D65535.2 clock ticks you
+   return -EINVAL.
+   Another strange corner case is: Consider a hardware that can
+   implement the following periods 499.7 ns, 500.2 ns, 500.3 ns and then
+   only values >502 ns.
+   If you configure for 501 ns, you'd get 500.3 ns. get_state() would
+   tell you it's running at 500 ns. If you then configure 500 ns you
+   won't get 500.3 ns any more.
+ - If you want to allow 66535.2 clock ticks (and return 65535), what
+   should be the maximal value that should yield 65535? Each cut-off
+   value is arbitrary, so using \infty looks reasonable (to me at
+   least).
+ - Rounding down is easier than rounding up, because that's what C's /
+   does. (Well, this is admittedly a bit arbitrary, because if you round
+   down in .apply() you have to round up in .get_state().)
+
+> > round-closest is wrong. Testing with PWM_DEBUG should point that out.
+> > The right algorithm is:
+> >=20
+> > 	on =3D duty_cycle / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+> > 	off =3D period / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on
+> >=20
+> >=20
+> > > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> > > +		swap(on, off);
+> >=20
+> > Uhh, no. Either you can do inverted polarity or you cannot. Don't claim
+> > you can.
+>=20
+> OK, but what's the rationale ? This is also an area where I couldn't
+> find documentation.
+
+I don't have a good rationale here. IMHO this inverted polarity stuff is
+only a convenience for consumers because the start of the period isn't
+visible from the output wave form (apart from (maybe) the moment where
+you change the configuration) and so
+
+	.period =3D 5000, duty_cycle =3D 1000, polarity =3D PWM_POLARITY_NORMAL
+
+isn't distinguishable from
+
+	.period =3D 5000, duty_cycle =3D 4000, polarity =3D PWM_POLARITY_INVERSED
+
+=2E But it's a historic assumption of the pwm core that there is a
+relevant difference between the two polarities and I want at least a
+consistent behaviour among the lowlevel drivers. BTW, this convenience
+is the reason I'm not yet clear how I want to implemement a duty_offset.
+
+> > > +	ret =3D devm_pwmchip_add(&pdev->dev, &adp5585_pwm->chip);
+> > > +	if (ret) {
+> > > +		mutex_destroy(&adp5585_pwm->lock);
+> > > +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void adp5585_pwm_remove(struct platform_device *pdev)
+> > > +{
+> > > +	struct adp5585_pwm_chip *adp5585_pwm =3D platform_get_drvdata(pdev);
+> > > +
+> > > +	mutex_destroy(&adp5585_pwm->lock);
+> >=20
+> > Huh, this is a bad idea. The mutex is gone while the pwmchip is still
+> > registered. AFAIK calling mutex_destroy() is optional, and
+> > adp5585_pwm_remove() can just be dropped. Ditto in the error paths of
+> > .probe().
+>=20
+> mutex_destroy() is a no-op when !CONFIG_DEBUG_MUTEXES. When the config
+> option is selected, it gets more useful. I would prefer moving away from
+> the devm_* registration, and unregister the pwm_chip in .remove()
+> manually, before destroying the mutex.
+
+In that case I'd prefer a devm_mutex_init()?!
+=20
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--kumwfefmbg4urjq2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZMnDAACgkQj4D7WH0S
+/k6cSgf9GGbNJK6nrF2obOZaaHxRDIpOYDcxw0EnZdOniUP0LlmCDHna8Awg+NAZ
+XMkcq0a60qCSMNDLSJqjm8mF4zwWmlUl9NLyRIjptLAM7g8D5N8MkPsxPIfXcA2o
+KeC8zxOriHRK5Pju5wMXdVg4Vkmre8i5GgWHqH4dGcJILfFtU+xiAy5J9S9RYfyU
+xI67jpvDLuAfknGQcNGpaHrS0Z1MkrcG7yr1IJdyfu6VTDiW7RvH6SUufd004lfL
+w1uO2vXMAHO9lmKgnTT8j6u2edjxyuWVLZPn71yVTqAZ5aPaWPAQCV5Qbyd3sgJY
+nTjKK/hJUb8bN5cFPij9tjhFMwlN2Q==
+=VRiY
+-----END PGP SIGNATURE-----
+
+--kumwfefmbg4urjq2--
