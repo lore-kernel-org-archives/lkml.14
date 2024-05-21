@@ -1,100 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A7513048D
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA62976410;
+	Tue, 21 May 2024 14:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716301462; cv=none; b=Ht/jXcPHQdXnyz/VpWOHmXc9sk3MQg4Si+HE8LOkLtXiH3zWw06x5gOoy6PHmq89pg6QcLcJgaw1qhkSs1Wg8REVcPydcmatA9OkVBKBQwh4G6i/tpybFflbzJ/j1TQ21w0PY01gud2IrnZlIcCNcxDU13+a8xVNQKTHDxeJlAs=
+	t=1716301600; cv=none; b=e+4dkdvmmRRX3F/2EX18tC/iMIg14JGfQOL9XVLEQm8MA0rpwkBSZsJeNDXFGPm6xaH91N5wngEaam1TpfhJAgP03VqCJibBxNg2EQXtPmC5LwMWS/GCAP+fMNTxo9zDuleejNdMyam8R7uuvz8GmwuO+uJCEBNcB46sy6MoT3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716301462; c=relaxed/simple;
-	bh=tfhs4G1UxiGQsBmQ8SRV1xtzgUc9WBEgAUO1utJnNF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d0QYPZbXNKaq+blMzroJiE6TbOCDg02pey+1svVaANYwNNTgLv0Hnpyb4sJ/v++tfJ5Pct4NLBaP+N9Ai5IoDHSnc47TSLP5Yylt/JtqiSDIuFSuujEDEHzHPSWmD4QyvWGBwPRE/h+kQbS82YhqIZdnmyQeVlV5Y5Cej68ASmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BcC+kn0q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716301600; c=relaxed/simple;
+	bh=aezd0TTdrfMJbiPLZd+W3AP1lc4sOj8uyi8Z1OsTQkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L2F+P19t2eEjlHL7SBCSfIwbqeGqp0AWTvr24OzQ2iwP8FrNl4BK8tsT0YKIJnKhKsVyD+9BrS3E5/K72eViZLuPpuHmFGYrgdKlXDFg3QtBjsdVuIZYrxRGH9T49k709VSFweq3I302Sbs4SnZuA1Lh0H2q0e7/vqcBm4R2ww4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=rQ62mlwO; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BcC+kn0q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716301460;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tfhs4G1UxiGQsBmQ8SRV1xtzgUc9WBEgAUO1utJnNF0=;
-	b=BcC+kn0qLh+yFfZiRhtW95a5JJbuKaawHXcJqc0+z6sHe8JkTErFJ8XCjcaV3yWpmra1iG
-	3hPXFN7oTIbX20HoiVCQBljJNEda23Okv/xZ5wY2xK/+tG62P5zFqwgsqJhadUb0sz0ftt
-	Pj07vfY7kfwkrNxFnQr7ss9eqgn42vU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-nhnsxC0UO6SnsoRjeBDPPg-1; Tue,
- 21 May 2024 10:24:12 -0400
-X-MC-Unique: nhnsxC0UO6SnsoRjeBDPPg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C79A11C03150;
-	Tue, 21 May 2024 14:23:53 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.64])
-	by smtp.corp.redhat.com (Postfix) with SMTP id CBF361C0948E;
-	Tue, 21 May 2024 14:23:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 21 May 2024 16:22:27 +0200 (CEST)
-Date: Tue, 21 May 2024 16:22:21 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCHv6 bpf-next 1/9] x86/shstk: Make return uprobe work with
- shadow stack
-Message-ID: <20240521142221.GA19434@redhat.com>
-References: <20240521104825.1060966-1-jolsa@kernel.org>
- <20240521104825.1060966-2-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="rQ62mlwO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=cUraUDEawq2r5fQTgzjxE+zRAfgloeEusZTs/w/sZEs=;
+	t=1716301596; x=1716733596; b=rQ62mlwOMaK0HkfokZpjugaGWENzbCKqmywAqZpwq/3crId
+	HJa6hssPqevmZrCgCZrQG0H7s0AymGChW+DEIh1C+2C6dMwXGkW8F9NJ4c/qf1eoMuyJNciqenO/y
+	yYG9eac1CHuwPDRy6iuR+y30PMSw6/ks1cKvxGGGSNM1X2v020RcCEPz+IgNfKTRvSXIwx0DxgkIk
+	kCFInSgi1QIRJZJJkXQHy2vqzV1NuamjtoSTL4cKIHf2RlTRCdBZgY4QcCTJlAxNl0fHhqo/o26vO
+	+0M1LgBVhwnDK7hcPUi36yNRGi6YVAAePQSgtO29CX1IkDS1b5FRZeF0UIdAY/6A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9QRk-0005rP-UG; Tue, 21 May 2024 16:26:33 +0200
+Message-ID: <c10a77b6-e7b1-43c0-af38-79092eeb34f1@leemhuis.info>
+Date: Tue, 21 May 2024 16:26:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521104825.1060966-2-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Laura Nao <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-acpi@vger.kernel.org,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "kernelci.org bot" <bot@kernelci.org>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+ <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+ <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+ <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716301596;c198fba9;
+X-HE-SMSGID: 1s9QRk-0005rP-UG
 
-On 05/21, Jiri Olsa wrote:
->
-> Currently the application with enabled shadow stack will crash
-> if it sets up return uprobe. The reason is the uretprobe kernel
-> code changes the user space task's stack, but does not update
-> shadow stack accordingly.
->
-> Adding new functions to update values on shadow stack and using
-> them in uprobe code to keep shadow stack in sync with uretprobe
-> changes to user stack.
+On 21.05.24 16:00, Andy Shevchenko wrote:
+> On Tue, May 21, 2024 at 12:01:17PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 13.05.24 12:02, Andy Shevchenko wrote:
+>>> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
+>>>> Following the relocation of the function call outside of
+>>>> __acpi_find_gpio(), move the ACPI device NULL check to
+>>>> acpi_can_fallback_to_crs().
+>>>
+>>> Thank you, I'll add this to my tree as we have already the release happened.
+>>> I will be available after v6.10-rc1 is out.
+>>
+>> Hmm, what exactly do you mean with that? It sounds as you only want to
+>> add this to the tree once -rc1 is out -- which seems likely at this
+>> point, as that patch is not yet in -next. If that's the case allow me to
+>> ask: why?
+> 
+> Because:
+> 
+> - that's the policy of Linux Next (do not include what's not supposed to be
+>   merged during merge window), Cc'ed to Stephen to clarify, it might be that
+>   I'm mistaken
+> 
+> - the process of how we maintain the branches is to have them based on top of
+>   rc1 (rarely on other rcX and never on an arbitrary commit from vanilla
 
-I don't think my ack has any value in this area but looks good to me.
+Something like that is what I feared. And yes, some of that is true. But
+the patch in this thread contains a Fixes: tag for commit 49c02f6e901c
+which was merged during this merge window -- and that patch thus ideally
+should (ideally after some testing in -next) be merge during the merge
+window as well, to ensure the problem does not even hit -rc1.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+That's something a lot of subsystem master all the time. The scheduler
+for example:
 
+https://git.kernel.org/torvalds/c/6e5a0c30b616bfff6926ecca5d88e3d06e6bf79a
+https://git.kernel.org/torvalds/c/8dde191aabba42e9c16c8d9c853a72a062db27ee
 
-> Fixes: 8b1c23543436 ("x86/shstk: Add return uprobe support")
+Other subsystems (perf, x86, net) do this, too. Not sure how they
+exactly do that with git; I think some (most?) have a dedicated -fixes
+branch (based on master and fast-forwarded after Linus merged from it)
+for that is also included in next in parallel to their "for-next"
+branch.  Stephen will know for sure.
 
-Hmm... Was this commit ever applied?
-
-Oleg.
-
+Ciao, Thorsten
