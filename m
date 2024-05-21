@@ -1,217 +1,122 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2134.outbound.protection.partner.outlook.cn [139.219.146.134])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A2A1798F;
-	Tue, 21 May 2024 03:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716261198; cv=fail; b=R4a9PwMyG5n/DF/SkG24Y0eSkpTH9+Sqpj7QZFcap5F8M2pIcDbjrqeGpTC6ZJ5jEzAVCTfhBfsyTzmyyDQ3hB5HlMwXFUBEyjAE31Ns3u07azlKf8JUFT6wlToNAi9tO0u07v/Tw4j809VX8js8U/DyV0SWQa9etPwK6pR7f/o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716261198; c=relaxed/simple;
-	bh=cwBZIqwFnbBVnqchQn+V1mvzgSV+ixPy0mhnNJUILq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tzeyfRn2eE7pl/43bgymdWog39r/gNNOB2u+1v/l+tiiA5qI6VZVc5sX0j8+h443g4gE8Zo5zUQKniv1Dnu9e8DictXvp/5LC49MnV816ZlRtVN3k+/nYLLESKeD3TYx49RDHgz0FPsshlOtAcWG4GPLjMJsEmLDhpebIKdzlrs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HXzKzeY9BZklV87c1b5xBD0l8wjagp303AR+vaigQwaaZfUnkADHbaFfkgRwmO172FZbA88VJ4ekagxEBOCf6I5dc6h6TGRprcZvrASI+LH2qjsn6H53LjzFRiYBvIu3Nr8qk6ZNdXX7vEOzHTLkdObSPMBf0DEejuLK18d61gqkQPE24dRdFw1qYZEziqHM2b4idHpQnU3hGcwsriusu+byjvqW8dtQz0yjrvs2375XmTR1VDyeEIcUVtINBi7/siL9DEUyj6V2ZG/FUuIJKivCC7H0T4iphrLKouxs72JgfqU7vAFQ7WsoVrRg+OgGDnnW49+86WRxXOM2lt1H0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W++pRmxoPDdJvPI/iKzomS2ZqHbsM40diYc7PmtnUCw=;
- b=gSGIfEYif7lUR03QqYKRCCggKzyTg9H2UmxLcGdsLg11h4gEsoplEVIb+aNmguvvrptXHk7uafr6tFxXTNy7NeHEmyZS1wdg92v4pciXUUiqxlz4rAAmrXnAn6ZbagbDPW3Hk7hKKuyrlTMEUFU4t6rpSuKT9f0oW2l2mg0u/Uug3X6IF0s6L4hzfzgG0phwcURUSevRqF4gqM2gUPWQThDcsht2oDFoh66z3EPR5leVkR03mMM8lUqKP9NCwVkoINxl5gLaoxnuHbXgeQZ9ao/28DGVdci70/RhvlJYc+7ZO90pa4YVEWiZ0CQP/4h+tDKTw2J9AUS4MqYASjMmtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:c::7) by ZQ0PR01MB1255.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Tue, 21 May
- 2024 02:58:31 +0000
-Received: from ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
- ([fe80::39be:8ed9:67b7:adc6]) by
- ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn ([fe80::39be:8ed9:67b7:adc6%6])
- with mapi id 15.20.7472.044; Tue, 21 May 2024 02:58:31 +0000
-From: keith <keith.zhao@starfivetech.com>
-To: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	hjc@rock-chips.com,
-	heiko@sntech.de,
-	andy.yan@rock-chips.com,
-	xingyu.wu@starfivetech.com,
-	p.zabel@pengutronix.de,
-	jack.zhu@starfivetech.com,
-	shengyang.chen@starfivetech.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	keith.zhao@starfivetech.com
-Subject: [PATCH v4 05/10] drm/vs: add vs mode config init
-Date: Tue, 21 May 2024 18:58:12 +0800
-Message-Id: <20240521105817.3301-6-keith.zhao@starfivetech.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240521105817.3301-1-keith.zhao@starfivetech.com>
-References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHXPR01CA0020.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1b::29) To ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:c::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A4517722
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716261232; cv=none; b=ERw32rF/hzVu+CwtxeO629RwUxGkYwJTqZ0hj8F1Glds6JJVuco8NimznxdUTNNkwbyNNBwtz6wK63yWYl5wnYibQUJO4wMiyEmHzgnU/hm7OCALGfqfLpqUw+amR7viN2avJBkb5FcfVl76fFZyD8s0S3l7qVNFMRXs+BwgzbQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716261232; c=relaxed/simple;
+	bh=L6WVvuL+gFvZL0110Lldc+1hgtwVEmdlAqsIL6YHMe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmFJET6qMG0or2Gz54e/wjK+cnC1UgveDuyHUQBUgij41PN2PSBpvXkmkaKtsRuD8JBQSW7rvry/u2dOrTInJsXgrm1xrIYVtodfCWNLbX2BxrusXv3l/n6RDj8yRGFcw+zK4GEkvq3HicMqSUwPkzK5QVgGzAAX5RBCklUIsQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MQvEDn+k; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQvEDn+k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716261230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3/HzK1apeoYY0DujLj2rbx8MJd+TQtas5Uof0p135Ck=;
+	b=MQvEDn+kYWtnJ7xzsJW9XzEZ+zBO5K30hu0Kv8OmZLZcmHyYnYR22WrrhmBUAPIQMsjlto
+	ei4wjpMAGH59qz4VeHZ5lSbzOuUPJePtXehfl3Rx87rDa6c/lEV2lN/dnk4S0RxQcKWjNr
+	6c6pvk3bT/4lA6ulnuMbGL6OykVmO+I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-141-ugmp0PizN2unNesMjqUHGA-1; Mon, 20 May 2024 23:13:48 -0400
+X-MC-Unique: ugmp0PizN2unNesMjqUHGA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2FE3C101A54F;
+	Tue, 21 May 2024 03:13:48 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.65])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 28DF440C6EB7;
+	Tue, 21 May 2024 03:13:46 +0000 (UTC)
+Date: Tue, 21 May 2024 11:13:43 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <ZkwRZxGw2dWStd1C@MiWiFi-R3L-srv>
+References: <20240425100434.198925-1-coxu@redhat.com>
+ <20240425100434.198925-2-coxu@redhat.com>
+ <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
+ <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1047:EE_|ZQ0PR01MB1255:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b81af45-4ec3-4454-7cab-08dc7941e580
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|41320700004|1800799015|7416005|52116005|921011|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	DyL5NCnOY0pZ9jUs94HsZMB4AfKxVdxVpf8lhra7JK0lKpMzKW0gajEeMhloBbVe4jOyWrnt8RZUnd4v+WoJgiclocmLDPNJe9ysD61QWofka7/r4L0wYo4orBAJcjqLvtHzYzSaSx6qIKnBkcv5LN1YPrN2At6jFpb4ROJlm68b4sqJbcSynBrMpD7S8uPZC8vNCjw/NVN4tP+btbmo6fGlhrCx0HY9a721W4WRlh1jo+FKxKWkZOOrVTvXrOFteHPNru9DVQNucgiOcfDqSz8j0rDyK5PiJcu3Hy70J03p4jxKBQ+nj4OYtIlsYseCQO/ToTrECxR4MgJv2W410shRtW4POGkq2m33JpF5kZhspBwOnBiOCNVgnNhmitN5c7De8/BMV+JkcwoH3vGDdJjGNLi9k0QPOlJYxl7A4EFqcePZSa07lQv+sHR1vCCS/HTUMyEZCiJhPsLNUcYmqj4BFTjsaXtqft0kwhRB+tNaWQWKE5iJaLaPbG3wwLzjwDcjtiLlBE5iYoCjSYhKyv/3P0Q1STbpIy9RsZsCxnl+Jy9nuSmiJcvySWUMWGZrtzJf/m2jddSKMEAY6Vt8t2PIxL2avI5vTrW1GI6qEB4qd3MyYeR4gh21aOlwGnGKyq34k7tLnWF9JipKaMeemQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(41320700004)(1800799015)(7416005)(52116005)(921011)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DEG9ouOA7UQ5Kh72liSD6AWqlrqZHGRjmQ2BYBpxJF/OYjpKW8tfIwsABGl6?=
- =?us-ascii?Q?RWSSG0ueXFNj3eYLSyfwkks2nx1VD6R0vnMxMck3GUtFhzdCD1/Zv3An97gM?=
- =?us-ascii?Q?8xgs1ZqqytQ6x3OnanE/IoVNsMs+/jtrn3SLM+enxtkz7wmLr8xIt60lH8oM?=
- =?us-ascii?Q?Y+aOJSTrhKlMkUOVpk3eyxl476KJmb4QuiBO/izOQxKJUfUkvN7fjmUklYa2?=
- =?us-ascii?Q?OT1ISCe3Lgjv4mZM9KkwtQPUHa7Wg9G0evAMYsWjKGZgykQLnmNjle7rDDbY?=
- =?us-ascii?Q?0GAuKUrSfYzss5G4dkqCxKy9vA+vQJaM2FBPB4TOmYMMtFvHxPF71kyOiEEQ?=
- =?us-ascii?Q?PkGeJ1dBnF48RwJi0CGdS6Ktxwt795SXBPkoq8vxBdfstTDO5tWbIAZpa0yT?=
- =?us-ascii?Q?fNQsZCEkP4B3qLio7Q0Vba8LvXeBfc2Qjw0HTE4Xgo0+vWu1jwwM9oB7CqQo?=
- =?us-ascii?Q?tqmKjwNei/owOAOHaEVlAUYyacrvRlJqMFf0TImoevP4/r7b400ZKZkNMWtk?=
- =?us-ascii?Q?vSk8Oo1/+6LvMQSl7qoiYZR/3dyufFoFBncUDj4TMo7Y1ZubGMrvXTbHPFR7?=
- =?us-ascii?Q?GEdVAL9K3kJxUA/+9ZvH9Y0+6RvqtCsVxV7hQ3nZu0ZBIwktwylhX6hM+Ok6?=
- =?us-ascii?Q?RCoPSywSET1eU5kLANSYOc5ZqgeSer6g+w68OjKfVSZi1wfKMCeTVxceKLUZ?=
- =?us-ascii?Q?rFtBkrVVmuytvQCz6LB3bEFm2J3BDSvGzTcxQJQlRpzJYNnzW62fnNrq9rug?=
- =?us-ascii?Q?jcy9pA2MJHoBFeLwJQSjHXpSYMIImz8EF48xfnYbKkzw3kuEbVMWfI/XZ7rj?=
- =?us-ascii?Q?1PjQTMUNdzcx2fdyRLYr3jmUFdgcPuAcft0TyU/I0OhxS1kliA2fts18NsFM?=
- =?us-ascii?Q?6OoYIILO0Fpjx6qZ46oWr8Ft+TIFhgQ/ZHhljFexPk2Cmq+l8L+DA22Vdbyb?=
- =?us-ascii?Q?B5/asGvjx3bunP2hJvf6sMqH8kxZPunJBc0NtXvInhyGQJp8RfFBoxv9bRBs?=
- =?us-ascii?Q?QxWjotby6kwsnfQ6170zrhfaJjtMi8mfO8rqF1s2bDnt/dW9OsxgSggbcvbS?=
- =?us-ascii?Q?4VN1joRZf06sUsK3nZoTQHoAW9UZtxgsl/816WkG+9V5lKkfnEGb9mSuW7XQ?=
- =?us-ascii?Q?BXeHVFEzVQqQq9pwQuDIVgp6/SbO/r7zMsIhX329YB5Tk+5Vy1UaDsTj9JeP?=
- =?us-ascii?Q?tjRT1X9SevCpj93+t0hTI9melr4txQXT8CxL3huoUKnJcNNqm7u0vXEkXh3P?=
- =?us-ascii?Q?n1sP6o5jltPhWl/D9dxPKE5vqrF70Mujszn6Ah5V8bGDlwKiD4SCd/ep3t7j?=
- =?us-ascii?Q?Sr6jIUcZ9WfDNiMVRZQFzC9laP7QqSsHDdxmjzExfD5ui/Xge2NJioFXHXX3?=
- =?us-ascii?Q?cuL7d6D81yDTkie+129puYvkWtwU6QhlD9hhd4tR364XVb3lhSOxMnaF3K4R?=
- =?us-ascii?Q?CyL5cImOdENzJBr5sYGMdbO4bdftIEf3tzkCl25hkaReEJ1cGM/nw8GtcP0r?=
- =?us-ascii?Q?d+XAYoZcZCPiTM33OvhdGCrnIPLAufojQnGSWarvmnm+ZuOj9AIrZOj646o2?=
- =?us-ascii?Q?kP4CEeU4s5lgB3vpp9DhtmI49OT4XDCSyXecyMVbMM+t0uN4oij6aovAk3yN?=
- =?us-ascii?Q?Bw=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b81af45-4ec3-4454-7cab-08dc7941e580
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1047.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 02:58:31.1042
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a2v5yBDiymup/cVmt+I+9Z7lh1mcXel3zGYfkkCk1Fws14b0IBazE6jTkZwhxSf7ma8pZz21gvGk4LEhN+/MHCmM+g3LVOB5uO1Eq+fEbHo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1255
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-add vs mode config base api
+On 05/21/24 at 09:58am, Coiby Xu wrote:
+> On Mon, May 20, 2024 at 02:16:43PM +0800, Baoquan He wrote:
+> > On 04/25/24 at 06:04pm, Coiby Xu wrote:
+> > > Currently, kexec_buf is placed in order which means for the same
+> > > machine, the info in the kexec_buf is always located at the same
+> > > position each time the machine is booted. This may cause a risk for
+> > > sensitive information like LUKS volume key. Now struct kexec_buf has a
+> > > new field random which indicates it's supposed to be placed in a random
+> > > position.
+> > 
+> > Do you want to randomize the key's position for both kdump and kexec
+> > rebooting? Assume you only want to do that for kdump. If so, we may need
+> > to make that more specific in code.
+> 
+> Thanks for the suggestion! Currently, no one has requested this feature
+> for kexec reboot so yes, I only have kdump in mind. But kdump depends
+> on kexec thus I'm not sure how we can make it kdump specfic. Do you have
+> a further suggestion?
 
-Signed-off-by: keith <keith.zhao@starfivetech.com>
----
- drivers/gpu/drm/verisilicon/Makefile     |  3 +-
- drivers/gpu/drm/verisilicon/vs_modeset.c | 36 ++++++++++++++++++++++++
- drivers/gpu/drm/verisilicon/vs_modeset.h | 10 +++++++
- 3 files changed, 48 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.c
- create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.h
+I remember you said kexec reboot doesn't need the key passed from 1st
+kernel to 2nd kernel because the 2nd kernel will calculate one during
+boot.
 
-diff --git a/drivers/gpu/drm/verisilicon/Makefile b/drivers/gpu/drm/verisilicon/Makefile
-index 7da54b259940..536091f37378 100644
---- a/drivers/gpu/drm/verisilicon/Makefile
-+++ b/drivers/gpu/drm/verisilicon/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--vs_drm-objs := vs_dc_hw.o
-+vs_drm-objs := vs_dc_hw.o \
-+		vs_modeset.o
- 
- obj-$(CONFIG_DRM_VERISILICON_DC8200) += vs_drm.o
-diff --git a/drivers/gpu/drm/verisilicon/vs_modeset.c b/drivers/gpu/drm/verisilicon/vs_modeset.c
-new file mode 100644
-index 000000000000..c71fe0d32504
---- /dev/null
-+++ b/drivers/gpu/drm/verisilicon/vs_modeset.c
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2023 VeriSilicon Holdings Co., Ltd.
-+ */
-+#include <drm/drm_damage_helper.h>
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+
-+#include "vs_modeset.h"
-+
-+static const struct drm_mode_config_funcs vs_mode_config_funcs = {
-+	.fb_create			 = drm_gem_fb_create,
-+	.atomic_check		 = drm_atomic_helper_check,
-+	.atomic_commit		 = drm_atomic_helper_commit,
-+};
-+
-+static struct drm_mode_config_helper_funcs vs_mode_config_helpers = {
-+	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
-+};
-+
-+void vs_mode_config_init(struct drm_device *dev)
-+{
-+	int ret;
-+
-+	ret = drmm_mode_config_init(dev);
-+	if (ret)
-+		return;
-+
-+	dev->mode_config.min_width  = 0;
-+	dev->mode_config.min_height = 0;
-+	dev->mode_config.max_width  = 4096;
-+	dev->mode_config.max_height = 4096;
-+
-+	dev->mode_config.funcs = &vs_mode_config_funcs;
-+	dev->mode_config.helper_private = &vs_mode_config_helpers;
-+}
-diff --git a/drivers/gpu/drm/verisilicon/vs_modeset.h b/drivers/gpu/drm/verisilicon/vs_modeset.h
-new file mode 100644
-index 000000000000..bd04f81d2ad2
---- /dev/null
-+++ b/drivers/gpu/drm/verisilicon/vs_modeset.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020 VeriSilicon Holdings Co., Ltd.
-+ */
-+
-+#ifndef __VS_MODESET_H__
-+#define __VS_MODESET_H__
-+
-+void vs_mode_config_init(struct drm_device *dev);
-+#endif /* __VS_FB_H__ */
--- 
-2.27.0
+kbuf has the information, the similar handling has been in
+kernel/kexec_file.c:
+
+#ifdef CONFIG_CRASH_DUMP
+        if (kbuf->image->type == KEXEC_TYPE_CRASH)
+                ....;
+#endif
+
+> 
+> 
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index 060835bb82d5..fc1e20d565d5 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+> >  * @buf_min:	The buffer can't be placed below this address.
+> >  * @buf_max:	The buffer can't be placed above this address.
+> >  * @top_down:	Allocate from top of memory.
+> > + * @random:	Place the buffer at a random position.
+> 
+> How about a comment here saying this is currently only used by kdump.
+
+No, it's not good. Please don't do this, let code tell it.
+
+By the way, can you rebase this series on the latest v6.9 and resend? I
+rebase my code and can't apply your patchset.
 
