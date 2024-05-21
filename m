@@ -1,127 +1,180 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A721DFE8;
-	Tue, 21 May 2024 19:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA0D1DFE8;
+	Tue, 21 May 2024 19:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716319899; cv=none; b=qENMt5DgZ39s/3xuAgrjanttFRr5kQkWkahRUx403Fq38XmnpqghU4awmttstyWAcTugERdM4fV7/4K6Y7eXv6jmIm2KFaWQhyn4OAV9m5WusiAKlRJ7Kg2Kw4Gtf12ICI7E3sYT0TbVBCR7uO9WQrgo5WxDO0o1nteABT+80YA=
+	t=1716319920; cv=none; b=KjHGywe+whT5XXi+wkQsLumt7dtmHe+pRUwNB1534XPLonS/z3ejkO/x3X0HdDMjmGI0vYt4qQ3tofaQliEbtXJeu4SMlYga+8LA42+wOTuCIn3Q9SpYJleLEqKUTab+DdqidJUeIbqLWdov7++x5aCrNANJVlTCc+PyKxO8GMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716319899; c=relaxed/simple;
-	bh=78K19Qcg2otxUfwNNuP0p0Mlmh93smXOvqGrf3iT4/A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DWgMPsFnZsFdl2pAbPCMGjWRXUjWncwHjwvzwKrFaa463lUuGJLPxpPHdeUaLS8tMQxWes9Z0YjUKyF4Ervb4s0Ly2cAkxqgrpZRHdcyiCeumXOt/AhqzmNZsgbRpNMcl3SrUzUhnKh3DfnukF4NFXpV+Lv39zpOjHtvVKUW4uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HhhHJnLL; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716319920; c=relaxed/simple;
+	bh=oDQXQs3+I0KevbjnesJf0FJvciTtn0Zm0YVg/mU5+44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bzOMXAGgkp/eDXHNJ4SChJmFEsKVkFCL9dpNjfrZitjox1p+Fa2dwzRnNO8X/HnUYOTJ8vmiX7dCM/Ss1L4RHGSst9C7l/ClbCvwm9XUf7KDwHZTceVFMoMzqTTl02w+K1X5X3qQhtZw+aUHyUKAwzTk4FU+tjlJh68KHfI6OP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Qa0PguJH; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=dfy7rXAx; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhhHJnLL"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5751bcb3139so6364648a12.1;
-        Tue, 21 May 2024 12:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716319896; x=1716924696; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=53Zorp8t5qnAddy2gdK2PGGiuFQcaDuK99jXkcIzJFE=;
-        b=HhhHJnLLUSlbNKHrnax2RKKWbuKt8iKMgB60v4nzY9hr4ArzQqvVg/ZZIYyFOuTbU3
-         TRoYXEdLq9/x/v1VeD+U0bipSp+zFyGkA7QwSZW+07zTHfTBZEWjs709zC/JzgOYceCW
-         UXZRcMqZy64yG7s1docvgIQQ/gloVSHK4lwcM7CKJHsmBbIf4xvkWuopGsdbLBMt3iC/
-         7m81OybyIOHxm++yD9iXpxYRm2hMh+P4lo2MpO/1tmzboIhzTZbFAmUj1R+YNFjHWzf3
-         IeM2AgNQjtrdwp5efrF16l5Zk+1F1R0zl3rgXA7X4vCXvl0EGoy0iQ0mn/8LF3oPAwhT
-         NcEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716319896; x=1716924696;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=53Zorp8t5qnAddy2gdK2PGGiuFQcaDuK99jXkcIzJFE=;
-        b=rSfZhPtrMpp37lQeduPxIqQP7laHuYqMYjzQ8fTXTnvh4DbMJyvD073uqqG8HQOOcR
-         Atl/GTegWpFL3/SKLjS5fpYj+TbboMwl6IM/l8swFPX7kBO+ZJhWArb1noHTdD+n02QL
-         tG1vGEC7CeDMpiz/UdNRRlVv+warQ0O/uKelpv5QfC/cW7lcchcCm1Hl18b7U1VCbnvO
-         U1FrEG2na5v+i9x0dXZqNnyR/AcpjdOmZ+tQRp0o5o46YFJY1OWSFgX6ZWs8q6Se+W2A
-         Xnj7jwOoxvkFMsmgJ6okUk8v69/6R1jjtzkW8i6KMuk8cdzeuxd4byVFRzl7r3zwsXdo
-         6f7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXKXem3OST+tEWYT9s0q8qswNvsEQqOhHwgynmoqAvP08GC1Dy2oGo5oJ2P2UMv+hvlLHhqJ+Xb3MP0fDUDdIaDP1hqUp36G8f0Qxti97dmBAEtY7oHEEvLiJspBlFye7LAxSYTq4425CJMug==
-X-Gm-Message-State: AOJu0YyFs+7lgZDH/cFaySWO36uVbiJV4Op7KGzsWPSiS/fa8Q3tDJip
-	3Jgh+z1mYj34OdzGgX3dEgZZn9Hye/C4BIVP8p+0VglfeuUzPT79pn+TxX137XsaW73BQYvJFL/
-	OwcdHEu1dRyKQh3Xf/RuQG8wToL4=
-X-Google-Smtp-Source: AGHT+IG9JDR+hmtIE8rrtTpMznEtqUQ6HnuawCJM0UbbL/mnbMYdyNsYaR2pFyINafRu0RKprDAF1I3xCSYuBg/pmQE=
-X-Received: by 2002:a50:8d16:0:b0:568:1882:651f with SMTP id
- 4fb4d7f45d1cf-5734d5cf95amr23347950a12.25.1716319896019; Tue, 21 May 2024
- 12:31:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Qa0PguJH";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="dfy7rXAx"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D79CA34926;
+	Tue, 21 May 2024 19:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1716319915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jqv5tIf2GMmwwVp9SIK+mTMvcMTD2xp5tSh2Rv/alOk=;
+	b=Qa0PguJHLId2cDcjdwweNHy70PGIXIoEPLZBbxycw2YbCCH8COgJDknk8BVtp5qgF/cuiD
+	gj5192Ta0rYQgnUaWzMK6hkzb4MgdZOEjz+RsmH3ERIUoZXGqS0iH8ywFj60NORfjGaIv8
+	7LNvBUirJiLl2Qnkc1jj88mEpdo+rjo=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=dfy7rXAx
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1716319914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jqv5tIf2GMmwwVp9SIK+mTMvcMTD2xp5tSh2Rv/alOk=;
+	b=dfy7rXAxw1PhGzKeIfUAm/jKom23MoWvbtWSmH6RFDRlsbbJkVtgJbZxZeWEJM7WtE/Ifx
+	WVjfcMTEJkmujyPaU/HEm3wzlKopMrlxitnLP1rP1xdpg0mefaEv6ANYy0hztKOZWov6p6
+	Rtocwsl0IsZ/DtcarWs/4m2M0p0Tte8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BBBD813685;
+	Tue, 21 May 2024 19:31:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kUDPKqr2TGaFaAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Tue, 21 May 2024 19:31:54 +0000
+Date: Tue, 21 May 2024 21:31:54 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: cve@kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-cve-announce@vger.kernel.org, Lee Jones <lee@kernel.org>
+Subject: Re: CVE-2024-26650: platform/x86: p2sb: Allow p2sb_bar() calls
+ during PCI device probe
+Message-ID: <Zkz2qpUP-HVROO1I@tiehlicka>
+References: <20240326175007.1388794-18-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240407072330.229076-1-pvkumar5749404@gmail.com> <Zkzz7PZUnU/xP/O2@hu-bjorande-lv.qualcomm.com>
-In-Reply-To: <Zkzz7PZUnU/xP/O2@hu-bjorande-lv.qualcomm.com>
-From: prabhav kumar <pvkumar5749404@gmail.com>
-Date: Wed, 22 May 2024 01:01:22 +0530
-Message-ID: <CAH8oh8UY9FkHy=RyMU2AOZr+1x_KyH4m166kVmQd6peRNvFVTw@mail.gmail.com>
-Subject: Re: [PATCH next] drivers: soc: qcom: Auto cleanup using __free(device_node)
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	julia.lawall@inria.fr, javier.carrasco@wolfvision.net, 
-	skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326175007.1388794-18-lee@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: D79CA34926
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -6.01
 
-On Wed, May 22, 2024 at 12:50=E2=80=AFAM Bjorn Andersson
-<quic_bjorande@quicinc.com> wrote:
->
-> On Sun, Apr 07, 2024 at 12:53:30PM +0530, Prabhav Kumar Vaish wrote:
-> > Use automated cleanup to replace of_node_put() in qcom_smem_resolve_mem=
-().
-> >
->
-> I don't find this easier to read or maintain.
-Should I change it , explaining the change ??
->
-> Also, your subject prefix does not match other changes to this driver.
-The patch is to add a __free function attribute to np pointer
-initialization ensuring
-the pointers are freed as soon as they go out of scope, thus removing
-the work to
-manually free them using of_node_put.
->
-> Regards,
-> Bjorn
->
-> > Signed-off-by: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
-> > ---
-> > drivers/soc/qcom/smem.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
-> > index 7191fa0c087f..ad1cf8dcc6ec 100644
-> > --- a/drivers/soc/qcom/smem.c
-> > +++ b/drivers/soc/qcom/smem.c
-> > @@ -1032,18 +1032,16 @@ static int qcom_smem_resolve_mem(struct qcom_sm=
-em *smem, const char *name,
-> >                                struct smem_region *region)
-> >  {
-> >       struct device *dev =3D smem->dev;
-> > -     struct device_node *np;
-> >       struct resource r;
-> >       int ret;
-> > +     struct device_node *np __free(device_node) =3D of_parse_phandle(d=
-ev->of_node, name, 0);
-> >
-> > -     np =3D of_parse_phandle(dev->of_node, name, 0);
-> >       if (!np) {
-> >               dev_err(dev, "No %s specified\n", name);
-> >               return -EINVAL;
-> >       }
-> >
-> >       ret =3D of_address_to_resource(np, 0, &r);
-> > -     of_node_put(np);
-> >       if (ret)
-> >               return ret;
-> >
-> > --
-> > 2.34.1
-> >
+This patch has been reverted in upstream by 03c6284df179 ("Revert
+"drm/amd/amdgpu: Fix potential ioremap() memory leaks in
+amdgpu_device_init()"") and based on the changelog the CVE should be
+rejected.
+
+On Tue 26-03-24 17:50:16, Lee Jones wrote:
+> Description
+> ===========
+> 
+> In the Linux kernel, the following vulnerability has been resolved:
+> 
+> platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+> 
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
+> 
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
+> 
+> Before operating the device at P2SB DEVFN for resource cache, check
+> that its device class is PCI_CLASS_MEMORY_OTHER 0x0580 that PCH
+> specifications define. This avoids unexpected operation to other devices
+> at the same DEVFN.
+> 
+> Tested-by Klara Modin <klarasmodin@gmail.com>
+> 
+> The Linux kernel CVE team has assigned CVE-2024-26650 to this issue.
+> 
+> 
+> Affected and fixed versions
+> ===========================
+> 
+> 	Issue introduced in 6.0 with commit 9745fb07474f and fixed in 6.1.76 with commit 2841631a0365
+> 	Issue introduced in 6.0 with commit 9745fb07474f and fixed in 6.6.15 with commit 847e1eb30e26
+> 	Issue introduced in 6.0 with commit 9745fb07474f and fixed in 6.7.3 with commit d281ac9a987c
+> 	Issue introduced in 6.0 with commit 9745fb07474f and fixed in 6.8 with commit 5913320eb0b3
+> 
+> Please see https://www.kernel.org for a full list of currently supported
+> kernel versions by the kernel community.
+> 
+> Unaffected versions might change over time as fixes are backported to
+> older supported kernel versions.  The official CVE entry at
+> 	https://cve.org/CVERecord/?id=CVE-2024-26650
+> will be updated if fixes are backported, please check that for the most
+> up to date information about this issue.
+> 
+> 
+> Affected files
+> ==============
+> 
+> The file(s) affected by this issue are:
+> 	drivers/platform/x86/p2sb.c
+> 
+> 
+> Mitigation
+> ==========
+> 
+> The Linux kernel CVE team recommends that you update to the latest
+> stable kernel version for this, and many other bugfixes.  Individual
+> changes are never tested alone, but rather are part of a larger kernel
+> release.  Cherry-picking individual commits is not recommended or
+> supported by the Linux kernel community at all.  If however, updating to
+> the latest release is impossible, the individual changes to resolve this
+> issue can be found at these commits:
+> 	https://git.kernel.org/stable/c/2841631a03652f32b595c563695d0461072e0de4
+> 	https://git.kernel.org/stable/c/847e1eb30e269a094da046c08273abe3f3361cf2
+> 	https://git.kernel.org/stable/c/d281ac9a987c553d93211b90fd4fe97d8eca32cd
+> 	https://git.kernel.org/stable/c/5913320eb0b3ec88158cfcb0fa5e996bf4ef681b
+
+-- 
+Michal Hocko
+SUSE Labs
