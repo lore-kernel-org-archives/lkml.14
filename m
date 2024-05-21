@@ -1,59 +1,33 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDA255C29
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8C951C5F;
+	Tue, 21 May 2024 07:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716278311; cv=none; b=igA0Rjvi6ZObCMIF8OjOY7H1rNWfJrKXr1nfZUjFpWP88gNuab57TvsKFCmrVRkUTKFuVXYQ8tXcuW2hu6y6TSw/E/jjPAl8VPjAGTv9J8126W9sB4mqvU7/U49TQVon7DCQRoCiCOElDiB11PviukXnl7aiJQqccnZCFYXZNEg=
+	t=1716278345; cv=none; b=PsWo2+Oht6ax8MCHIersHz9VKOiEoqNePowE44I2hqsYofO3VAIrclwAgohSRr2Bo+P0nVyTczyCDQtc+hoP+Ygfw8yQfCj/t31fQKmP05G5D5Jh90Z6YywKN2CUB7z0ZBeHjqVNamAOl84dFd6J8rIf02DkhuHtoXi2bVbRnb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716278311; c=relaxed/simple;
-	bh=YbW/ijAGccFQlQTqAfJm9lN3VLgscw+sw3OGEMReWk8=;
+	s=arc-20240116; t=1716278345; c=relaxed/simple;
+	bh=FS9DQ4RsdW/wKyzu3gL+ApzVoigUb1QeBR3iqUhplBA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JIHMETmBrAWXp1d98i5nuzJtBkrwq7PcxnhXSXLynwjwyeTP4lEX/a2J+MlYmidyEAiDfMKKaxzyJICr4Y1cXYEl5iQx6bsNCU98jtNV6wxNiApLGPFLM6xKP1Pik7EhnjkXT3S1M2jfZ34O7dbPEuGbCibqK58r1vJiNWQi4is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=tRSIHZVI; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 In-Reply-To:Content-Type; b=JU7d12E/Emgmd3p2rK3IfTlYxRUS9y+r8KPK60e0MAA7Jjr3cDaUiR3PHIgo2NBQhRsLFb9WSaQYoiU6HDriUCfZY3lJf9IDJK306tKg0NOvRkSBq5Os1mJXMJ6uv6h5PNjNxHYsa43CzpdmT0UkQNid0OqV5pQ8maMqCKdsJHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4ADaoeW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="tRSIHZVI"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-354c28d4e2aso53290f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 00:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716278307; x=1716883107; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GBb6iShuxHaV7v6bJv2LipIX1/0KjJPEPWALv2DbLcM=;
-        b=tRSIHZVIGlH4zuEM4xjxevPKjIjyEAC7TRQMEzuN/x7oZnnoRXErQdwagNObslHH9Q
-         4o/O20kCD3/rOzIDpSRuQBNHLC6F0eKPsWpJ+j2bkiBL5mY5DtjNMGfrbxOWWUN9J2f9
-         SiK0EvVLTRBDnq8+NF3PKD/iE9F0ztId7AlHJc/k8DbgtdSeAPcYAWvCBR+N4vQirYg9
-         3bQ4Aj19SyPzZo9Rh5lhxH4VhCsCEpv9kCyh985X/wmyy4hXj/tpiBZyu0pQIJShKUQf
-         D2bj4QGrUQzjNCBXlVGxfM7OHMnIIyfaUW9MNRMpvgFuDHLRDQ+eJTqTJAuMS0A2v+Mh
-         /Jrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716278307; x=1716883107;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GBb6iShuxHaV7v6bJv2LipIX1/0KjJPEPWALv2DbLcM=;
-        b=LAW4Wv4NdgvLzrf5QDcWiTg6B69G4p+dWOa/8gyfvmNdSU1U7CPiCF9BnMYMmHCaCU
-         E4ASUOA7Rh6gDPF067FGdYXKnuvpuJyqu0v/9mtOD85lQOIi+vH3C/GAOzjrAx+C6xwR
-         tRrymdlW28iLe1ZJGEGSmMkhDwwn7McOu+kOYlGQrTNv4kz+M98Q56m3FY7hXjetoAkv
-         +z/rAv0OV+H3Ss27vatkLlwuYYEHVwZ4i5ZCYaqodzDxtRSEoG53KhXtjCxr9U3ojJJr
-         rume8c4moIhbZWz4Yg2MSeWY9D5BRa3TIZG79fUjyVgzHiU4kX6bvJlguCsBUzMPHEZQ
-         YVKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDGUMXtLgzq4tzAEesn1jZ76FPcYhB/xXTfI3l+4eQ1F9kLYw7YrVNlmtjJK/c7VRzyFEQxZpEJjRFK/W0HOasY3IlSq8uPZTZHGC+
-X-Gm-Message-State: AOJu0YyPR2+BddhKnQqGm2cZY8Vt5e6+AbaECkm1RAGX17YhnzdA5cwk
-	hX0T8BsE2M1x99TP/38FegkSOYqt+ZHMFmDGuwUcydWyf+/TpNGWLWB3tpYLquY=
-X-Google-Smtp-Source: AGHT+IHfRRdzTlFAebZ7wRlj20qZMeakja/n64TG1vwKypRDd/Ir6iJk3WrsYiVjjhgxZ9RFdOvn+A==
-X-Received: by 2002:adf:eed1:0:b0:34d:7201:460a with SMTP id ffacd0b85a97d-3504a10f308mr21256806f8f.0.1716278307420;
-        Tue, 21 May 2024 00:58:27 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:999:a3a0:813a:5863:97f7:aca7? ([2a01:e0a:999:a3a0:813a:5863:97f7:aca7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbbefdsm31017829f8f.94.2024.05.21.00.58.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 00:58:26 -0700 (PDT)
-Message-ID: <6d2eb1ec-010d-4390-a25e-afd2fca0311d@rivosinc.com>
-Date: Tue, 21 May 2024 09:58:25 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4ADaoeW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 340CEC2BD11;
+	Tue, 21 May 2024 07:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716278344;
+	bh=FS9DQ4RsdW/wKyzu3gL+ApzVoigUb1QeBR3iqUhplBA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u4ADaoeW9KYO81+dk8O/RPfZbUlxYU1sC3CmI5IYqlMrTenR7GbfRFt5iXb+Fk+vU
+	 vA7MVcSDS0Dq3aQL484kTd0aIuV1VKzlXEOv9S5XDxaXnBxM6T+DQ53VlbEkBYh9sm
+	 isDbq4TrDixPxLoKp2Me3eG3NnhleNdi5tn6bSCXGGUq09oMZgDhp7AKxtKl1Mv3gU
+	 Dk6TOej3byUHBnsEaCtw1ed0gdDvbBpTO7TzNj0jCQKT0yY1/Q/lhRT11fovEOxtXm
+	 B7/Yqa86vMdnjmvMG7g2ezj51XbcZV0cW0ErRaYxs+13IGyXzEoPvp7vO3mmKCISxA
+	 zw83S48gfee3g==
+Message-ID: <a3c76bd2-f453-4320-8675-66ecb4bc6fc8@kernel.org>
+Date: Tue, 21 May 2024 09:59:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,63 +35,229 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/16] riscv: add ISA extensions validation callback
-To: Conor Dooley <conor@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
- Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
-References: <20240517145302.971019-1-cleger@rivosinc.com>
- <20240517145302.971019-8-cleger@rivosinc.com>
- <20240517-scrunch-palace-2f83aa8cc3ce@spud>
+Subject: Re: [PATCH 1/1] dt-bindings: rtc: Convert rtc-fsl-ftm-alarm.txt to
+ yaml format
+To: Frank Li <Frank.Li@nxp.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20240520214614.863539-1-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20240517-scrunch-palace-2f83aa8cc3ce@spud>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240520214614.863539-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 17/05/2024 18:44, Conor Dooley wrote:
-> On Fri, May 17, 2024 at 04:52:47PM +0200, Clément Léger wrote:
->> Since a few extensions (Zicbom/Zicboz) already needs validation and
->> future ones will need it as well (Zc*) add a validate() callback to
->> struct riscv_isa_ext_data. This require to rework the way extensions are
->> parsed and split it in two phases. First phase is isa string or isa
->> extension list parsing and consists in enabling all the extensions in a
->> temporary bitmask (source isa) without any validation. The second step
->> "resolves" the final isa bitmap, handling potential missing dependencies.
->> The mechanism is quite simple and simply validate each extension
->> described in the source bitmap before enabling it in the resolved isa
->> bitmap. validate() callbacks can return either 0 for success,
->> -EPROBEDEFER if extension needs to be validated again at next loop. A
->> previous ISA bitmap is kept to avoid looping multiple times if an
->> extension dependencies are never satisfied until we reach a stable
->> state. In order to avoid any potential infinite looping, allow looping
->> a maximum of the number of extension we handle. Zicboz and Zicbom
->> extensions are modified to use this validation mechanism.
+On 20/05/2024 23:46, Frank Li wrote:
+> Convert dt-binding doc "rtc-fsl-ftm-alarm.txt" to yaml format.
 > 
-> I wish we weren't doin' it at all, but since we have to, I think what
-> you've got here is good.
-
-Yup, this is what you got with a fast evolving architecture I guess ;)
-
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Change example's reg to 32bit address and length.
+> Remove unrelated rcpm@1e34040 in example.
 > 
-> Do you want me to send some patches for the F/V stuff we discussed
-> previously?
-
-Sure go ahead, I did not have anything written yet.
-
-Thanks,
-
-Clément
-
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
 > 
-> Cheers,
-> Conor.
+> Notes:
+>     make dt_binding_check DT_SCHEMA_FILES=rtc-fsl-ftm-alarm.yaml
+>       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>       CHKDT   Documentation/devicetree/bindings
+>       LINT    Documentation/devicetree/bindings
+>       DTEX    Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.example.dts
+>       DTC_CHK Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.example.dtb
+> 
+>  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 36 -----------
+>  .../bindings/rtc/rtc-fsl-ftm-alarm.yaml       | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> deleted file mode 100644
+> index fffac74999da6..0000000000000
+> --- a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -Freescale FlexTimer Module (FTM) Alarm
+> -
+> -Required properties:
+> -- compatible : Should be "fsl,<chip>-ftm-alarm", the
+> -	       supported chips include
+> -	       "fsl,ls1012a-ftm-alarm"
+> -	       "fsl,ls1021a-ftm-alarm"
+> -	       "fsl,ls1028a-ftm-alarm"
+> -	       "fsl,ls1043a-ftm-alarm"
+> -	       "fsl,ls1046a-ftm-alarm"
+> -	       "fsl,ls1088a-ftm-alarm"
+> -	       "fsl,ls208xa-ftm-alarm"
+> -	       "fsl,lx2160a-ftm-alarm"
+> -- reg : Specifies base physical address and size of the register sets for the
+> -  FlexTimer Module.
+> -- interrupts : Should be the FlexTimer Module interrupt.
+> -- fsl,rcpm-wakeup property and rcpm node : Please refer
+> -	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> -
+> -Optional properties:
+> -- big-endian: If the host controller is big-endian mode, specify this property.
+> -  The default endian mode is little-endian.
+> -
+> -Example:
+> -rcpm: rcpm@1e34040 {
+> -	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
+> -	reg = <0x0 0x1e34040 0x0 0x18>;
+> -	#fsl,rcpm-wakeup-cells = <6>;
+> -};
+> -
+> -ftm_alarm0: timer@2800000 {
+> -	compatible = "fsl,ls1088a-ftm-alarm";
+> -	reg = <0x0 0x2800000 0x0 0x10000>;
+> -	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
+> -	interrupts = <0 44 4>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.yaml b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.yaml
+> new file mode 100644
+> index 0000000000000..69b44e9920033
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.yaml
+
+fsl,ls-ftm-alarm.yaml
+
+or
+
+fsl,ls1012a-ftm-alarm.yaml
+
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/rtc-fsl-ftm-alarm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale FlexTimer Module (FTM) Alarm
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,ls1012a-ftm-alarm
+> +      - fsl,ls1021a-ftm-alarm
+> +      - fsl,ls1028a-ftm-alarm
+> +      - fsl,ls1043a-ftm-alarm
+> +      - fsl,ls1046a-ftm-alarm
+> +      - fsl,ls1088a-ftm-alarm
+> +      - fsl,ls208xa-ftm-alarm
+> +      - fsl,lx2160a-ftm-alarm
+> +
+> +  reg:
+> +    description:
+> +      Specifies base physical address and size of the register sets for the
+> +      FlexTimer Module.
+
+Drop description, redundant.
+
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Should be the FlexTimer Module interrupt.
+
+Drop description, redundant.
+
+
+> +    maxItems: 1
+> +
+> +  fsl,rcpm-wakeup:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+
+Please describe the items (see syscon-like phandles).
+
+> +    description:
+> +      phandle to rcpm node, Please refer
+> +      documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> +
+> +  big-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      If the host controller is big-endian mode, specify this property.
+> +      The default endian mode is little-endian.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - fsl,rcpm-wakeup
+> +
+
+Missing allOf with ref to rtc.yaml.
+
+> +unevaluatedProperties: false
+
+becauase otherwise above does not make much sense... unless this is not
+a RTC?
+
+> +
+> +examples:
+> +  - |
+> +    timer@2800000 {
+
+timer or rtc?
+
+> +        compatible = "fsl,ls1088a-ftm-alarm";
+> +        reg = <0x2800000 0x10000>;
+> +        fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
+> +        interrupts = <0 44 4>;
+
+Include proper header and use defines for GIC and flags.
+
+> +    };
+
+Best regards,
+Krzysztof
+
