@@ -1,66 +1,66 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B381B970
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499181BF24
 	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716259221; cv=none; b=d3HOF52+H+ooY/o51PWCX0b4BNmDJ4sQbr0Lmho1FI2YVqEC3KiuQZSmw65U3fxiDlKO/KNM/aVEYUXtTRPdQsSiWkNiM/hVOrhKRF2VOP12WwyH11JQ6nzHYHWeUDRATWc/fK/wrFYrWv1f9CzMeN2a35tkwJwYdg/ypE9JW3g=
+	t=1716259220; cv=none; b=h5QvZ3y4K+NXR6+S5zGDYoP5d2/UM3XuR4JUwlXH0v63ROHQZMCiErFnxpcTZqWyL8T9OzvEmvqQGuOKYeLODPs3geEoNccF8kBGQXDqNL7QmEhsdDkm/8zs1Vk6f2bAgcCx1El1OdglWWt4xD8FpqDCLuiaHgtDMlKq9jzmjGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716259221; c=relaxed/simple;
-	bh=WsZRGGNqmvBYXTDBYNGv+98AjYFP7QiwZGNsVDoedc4=;
+	s=arc-20240116; t=1716259220; c=relaxed/simple;
+	bh=im36wEU2WHavWkkRoWVAdzV3iT/tMu+qzFAlTzvfQ68=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=j5pQgERe+6yzNlG2iaHrvjc58vTWAXQ5O4oUJUWt841hMsgJ2CshZMUyj2R3CZQJ4FjnTOBaYZFzfe3Ftrdd7rVJs3BzYx0uTvsQd4a+LKNigGVHg4cpQQlWbkCkFSaVxv2eQC342Fxp9YJQKDXmjzoKML2KhqpsUIfeU6lt57w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ioKZ5v8+; arc=none smtp.client-ip=203.254.224.24
+	 Content-Type:References; b=dkjtkcouqXfg2VK8+BvapHivowc+AI1n4JKIMOgVPDSf0ZHFcnf4/oV3Gd52gcFh9R1XNgRhI1u98Y9lAKQbE55LqEs0Ge8nsPOC6cKSU9b+T7AqnlKIINrJWkniJ12RjOOaKzUIzr53G1D4taupXzce3y12h89B4GR+jfd26CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nmo4ySHF; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ioKZ5v8+"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nmo4ySHF"
 Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240521024010epoutp01f328d3c398ee331b2f946afb11797cb7~RYKiyaXTI1198511985epoutp01x
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240521024010epoutp03a8cd09909fd80acaf03a9f6c901ba881~RYKiqCAdB0915109151epoutp03L
 	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:40:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240521024010epoutp01f328d3c398ee331b2f946afb11797cb7~RYKiyaXTI1198511985epoutp01x
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240521024010epoutp03a8cd09909fd80acaf03a9f6c901ba881~RYKiqCAdB0915109151epoutp03L
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1716259210;
-	bh=3kKY9p5rX9c1bN2ssSLpLQuO2G9ldZSHB4ioCNHoa30=;
+	bh=PxYQXA34qCgfe8GO97dXEa7W4zQKRhqOk+fXrigSuB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ioKZ5v8+EiGjygozsgC5p+pkEgQD7JtEhkp4fN0M3y/s/D/L3qEG5YWaLeDKQDydR
-	 P9usUwGGq173W1LY+Ivw3z2D5R6Y4x9wCwreahs5irq2gx+TifrgR5xHU14xuEg8R7
-	 AJO7t7DQCYACPiabfKp742Xo0JJVZe3pYTeXjMnM=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240521024009epcas1p1cf3280cf33e9d6057ea5c4b3f7d01c0b~RYKiHzV952332223322epcas1p1j;
+	b=nmo4ySHFeHa1k8OqFW4m4SdJ1CA+2GltoaYHpQeo2QbBAq4L8KVMYNLvoXC7Z66OS
+	 fG1qVVh8mlTlloumnvo2K/Sqpbu8Mr/90g9qnxUiJqazMaX6opy6shNPGQnpfCQcVr
+	 7KEk5SYFKj2AKbfWKoZM9RNowTP9iDIL6mG/ms2A=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+	20240521024009epcas1p4c9f71380c8227e6c9d58ad4a55f15698~RYKiEKIk_2938729387epcas1p4a;
 	Tue, 21 May 2024 02:40:09 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.36.224]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4VjzDn48LTz4x9Q0; Tue, 21 May
+Received: from epsmges1p4.samsung.com (unknown [182.195.38.240]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VjzDn3hdbz4x9Q3; Tue, 21 May
 	2024 02:40:09 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AF.4F.09662.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+	epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E2.13.10158.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240521024009epcas1p20ddcabed3d037904a9c651d27f82c077~RYKhfz-vs0129801298epcas1p2n;
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240521024009epcas1p4451928c8f5b32bf84082a24c59ca7dd0~RYKhVWO221520715207epcas1p43;
 	Tue, 21 May 2024 02:40:09 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
 	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240521024009epsmtrp22b86ded1b29f1daf8837089c371f91f3~RYKhfM07S2496124961epsmtrp2q;
+	20240521024009epsmtrp28aac1566bc1d70947e63cddc2b6abc54~RYKhUfLwN2496224962epsmtrp2h;
 	Tue, 21 May 2024 02:40:09 +0000 (GMT)
-X-AuditID: b6c32a35-8da83a80000025be-a9-664c0989ddba
+X-AuditID: b6c32a38-b41fa700000027ae-08-664c09890d7b
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	AE.EA.09238.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	45.D3.19234.8890C466; Tue, 21 May 2024 11:40:08 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.253.104.99]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240521024009epsmtip24e01e0bac44534b743d22ec2b6b08031~RYKhVkH0A1233912339epsmtip2D;
-	Tue, 21 May 2024 02:40:09 +0000 (GMT)
+	20240521024008epsmtip211bad4828adbe078dc88acc85576b390~RYKhIrXH91232612326epsmtip2E;
+	Tue, 21 May 2024 02:40:08 +0000 (GMT)
 From: Jaewon Kim <jaewon31.kim@samsung.com>
 To: rppt@kernel.org, vbabka@suse.cz, akpm@linux-foundation.org
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
 	jaewon31.kim@gmail.com, Jaewon Kim <jaewon31.kim@samsung.com>
-Subject: [RESEND PATCH 05/10] memblock: track memblock changed at early
- param
-Date: Tue, 21 May 2024 11:39:52 +0900
-Message-Id: <20240521023957.2587005-6-jaewon31.kim@samsung.com>
+Subject: [RESEND PATCH 01/10] memblock: introduce memsize showing reserved
+ memory
+Date: Tue, 21 May 2024 11:39:48 +0900
+Message-Id: <20240521023957.2587005-2-jaewon31.kim@samsung.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240521023957.2587005-1-jaewon31.kim@samsung.com>
 Precedence: bulk
@@ -70,277 +70,353 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnk+LIzCtJLcpLzFFi42LZdlhTX7eT0yfN4PBpOYs569ewWXRvnslo
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdlhTT7eT0yfN4MhvcYs569ewWXRvnslo
 	0fv+FZPF5V1z2CzurfnPanFk/XYmi9mNfYwO7B47Z91l99i0qpPNY9OnSeweJ2b8ZvHo27KK
 	0ePMgiPsHp83yQWwR2XbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoq
 	ufgE6Lpl5gAdpKRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMCvQK07MLS7NS9fL
-	Sy2xMjQwMDIFKkzIztg4+zdrwX6rir69G1kbGG/qdTFycEgImEgcXGrSxcjFISSwg1HiwPEJ
-	jBDOJ0aJbztXs0A43xglmiYfZe9i5ATruPV6OxtEYi+jxPXj06CqPjNKnNv6ngWkik1AW+L9
-	gkmsILaIgJ3Et9kHwGxmgVKJt29OMIPYwgL+Es1b1rGB2CwCqhLLPk4D6+UVsJdoO7SQEWKb
-	vMTMS9/BNnMKOEjMn7KYHaJGUOLkzCcsEDPlJZq3zmaGqP/KLnFkfRqE7SKxc84hFghbWOLV
-	8S1QH0hJfH63lw3Czpe4cPEVEyQsaiQWTjSECNtL7Po6gxUkzCygKbF+lz7EJj6Jd197WCGq
-	eSU62oQgqtUkWp59ZYWwZST+/nsGZXtIXL/eDLZISGAyo8S/BZwTGOVnIbl/FpL7ZyEsW8DI
-	vIpRLLWgODc9tdiwwBAepcn5uZsYwSlSy3QH48S3H/QOMTJxMB5ilOBgVhLh3bTFM02INyWx
-	siq1KD++qDQntfgQoykwdCcyS4km5wOTdF5JvKGJpYGJmZGJhbGlsZmSOO+ZK2WpQgLpiSWp
-	2ampBalFMH1MHJxSDUxBweqVd2dt+R1S9Znl6YuEpLauBfxmf25dzFe4bVUw809f7eMzrzfb
-	2YetKn9Xd6f2/4OpBZPrjXtX5mw6MnFFcLbv5IUmfFu/LJRViJwwf/qewl4OeYZW0fDNrct8
-	u/4dm6kt7H3k3DslNp7EM84RxYd9Y/NM5Y5O5T1ee45/j5rtnR5b8T6mTyv1XnUHfp7272u4
-	9VJPdrdLJqY2La17H116LqIUuCx6Y/h2J8Pyt6uNeba7/OD3cnp5+3Fe7qWCW4b1iRXxL6Xr
-	Qo+KxuWxmObmrq2MUupn7Xp05sDXV9VPhSTubn2rGj0rZmJ6ppaA9AnzOdHHZY4la8lq+Is0
-	xgvG3v3to6Fl3zJhsRJLcUaioRZzUXEiAFLscDAaBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrALMWRmVeSWpSXmKPExsWy7bCSvG4np0+awYN/PBZz1q9hs+jePJPR
-	ovf9KyaLy7vmsFncW/Of1eLI+u1MFrMb+xgd2D12zrrL7rFpVSebx6ZPk9g9Tsz4zeLRt2UV
-	o8eZBUfYPT5vkgtgj+KySUnNySxLLdK3S+DK2Dj7N2vBfquKvr0bWRsYb+p1MXJySAiYSNx6
-	vZ2ti5GLQ0hgN6PEvedXWCESMhJvzj9l6WLkALKFJQ4fLoao+cgoMXPjRzaQGjYBbYn3CyaB
-	1YsIOElsuLKaBcRmFqiU+Hf7FlhcWMBXYnM7RJxFQFVi2cdpYDavgL1E26GFjBC75CVmXvrO
-	DmJzCjhIzJ+yGMwWAqo5c+k8K0S9oMTJmU+g5stLNG+dzTyBUWAWktQsJKkFjEyrGCVTC4pz
-	03OTDQsM81LL9YoTc4tL89L1kvNzNzGCA11LYwfjvfn/9A4xMnEwHmKU4GBWEuHdtMUzTYg3
-	JbGyKrUoP76oNCe1+BCjNAeLkjiv4YzZKUIC6YklqdmpqQWpRTBZJg5OqQYmfb3DTy/di7V6
-	m6a1UGd7vcG8afulHjjKcyZZrFc2vGsZeYJv2oW8LlYdCanDNVmrTrObNtge/5R48PGXVlmh
-	XjfZy54cUS4P55xfs+qgzbk25WPfqw5O+3kja7ZR1eWzEZMPse/Kr9t+pGmh0M+tk9W+fuHP
-	idXY0SzSpLbG23FG7MyDh84FK1/Z4hzhoOLQV5Rr1rxE8egR64gf/NPZ8+SLmoUltzat9bz7
-	YuU0G97bUa+nq2/P4Jd7t2Tp5sod8y8lCiVdOXZ69/YLS78t0vSsktedHKE2WW5i1s3816nb
-	A+e7rIj+F7Jc1ql4yYf6r99vnuXY56d6o20L1xMRnrt6kWVhwkX3BXjVUnnPKLEUZyQaajEX
-	FScCALkqXMfjAgAA
-X-CMS-MailID: 20240521024009epcas1p20ddcabed3d037904a9c651d27f82c077
+	Sy2xMjQwMDIFKkzIzvg19SVzwUnvirn7rrE3MB626WLk5JAQMJF4d+gHaxcjF4eQwA5Gib5P
+	k5ghnE+MEp+m7GWBc84++soO03Lu+VEmiMRORollU6dDVX1mlNj7+i4LSBWbgLbE+wWTWEFs
+	EQE7iW+zD4DZzAKlEm/fnGAGsYUFgiX+PFsKZrMIqErMOL8VzOYVsJdoW/4Oapu8xMxL38Fs
+	TgEHiflTFrND1AhKnJz5hAViprxE89bZYHdLCHxkl7h4/hUrRLOLxPznr6AGCUu8Or4FypaS
+	+PxuLxuEnS9x4eIroHc4gOwaiYUTDSHC9hK7vs5gBQkzC2hKrN+lD7GKT+Ld1x5WiGpeiY42
+	IYhqNYmWZ1+hlspI/P33DMr2kNi85TI0rCYzSrxYsZRpAqP8LCQfzELywSyEbQsYmVcxiqUW
+	FOempxYbFpjAYzU5P3cTIzhRalnsYJz79oPeIUYmDsZDjBIczEoivJu2eKYJ8aYkVlalFuXH
+	F5XmpBYfYjQFhu9EZinR5Hxgqs4riTc0sTQwMTMysTC2NDZTEuc9c6UsVUggPbEkNTs1tSC1
+	CKaPiYNTqoFJ99f/yOMcU1ZfaZ72wIzl5s2nMu5zdly7/kz1lkpl8+FncZMZ/peePP2Fe/ZX
+	3c2cPC4H/jro7fXmmPE3I0767ckpQeVs7NVlbcKqM3S3ZXdv5ebfke9Z8f9SSXl9kUZynPTU
+	FwaRmspbhWdIpfiVHQlrW5FtXnSQp0PYtYh1kptsutzs0itSX5N9irUOqTbLZ3LJ/tL4d2fx
+	XcarCw7YrZz1dVX74+bc+l3/S5Y/anj1LjQr/+bvHc+M5n1T7tqcyMy6oe/j+cagk1cd3rhJ
+	5N2TtHv3WmGHWsPXaZt4/BR4K2Ieqs15tJ45I/zCY47TExjr3ULV7qjkmy5b8tzo/M0o3TMf
+	zd/O4o5K7b+mxFKckWioxVxUnAgAhdToVx0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWy7bCSvG4Hp0+aQf9rG4s569ewWXRvnslo
+	0fv+FZPF5V1z2CzurfnPanFk/XYmi9mNfYwO7B47Z91l99i0qpPNY9OnSeweJ2b8ZvHo27KK
+	0ePMgiPsHp83yQWwR3HZpKTmZJalFunbJXBl/Jr6krngpHfF3H3X2BsYD9t0MXJySAiYSJx7
+	fpSpi5GLQ0hgO6PE27nNbBAJGYk355+ydDFyANnCEocPF0PUfGSUOPNkP1gNm4C2xPsFk1hB
+	bBEBJ4kNV1azgNjMApUS/27fAosLCwRKvFv3ByzOIqAqMeP8VmYQm1fAXqJt+Tt2iF3yEjMv
+	fQezOQUcJOZPWQxmCwHVnLl0nhWiXlDi5MwnUPPlJZq3zmaewCgwC0lqFpLUAkamVYyiqQXF
+	uem5yQWGesWJucWleel6yfm5mxjBAa4VtINx2fq/eocYmTgYDzFKcDArifBu2uKZJsSbklhZ
+	lVqUH19UmpNafIhRmoNFSZxXOaczRUggPbEkNTs1tSC1CCbLxMEp1cAkEmxWovrH48vF7S8a
+	7yr7/6xuCHGYFJwwLbd4H0t2jRSPvVzM99jVjOvnz786kZ9vd+qHP+wONaIXVm58yD/pYLCr
+	VgHD78rg0P/pk7xO6tX6bI43MD6/5eQDr3KFfYr3/4XMLXyxPXVK5EnlyQ1sZvtnmU3r6HO3
+	9r34ezL7j8lmO480l/WovBfk5XKY7JR34/u3s0ftzspZOE3M+iInxfB0hmVb2PW9/if7L/v8
+	d9g9yfO0wJcVURc2lIWY79p9hJF1vbHX7zVhqneOSrQzf4sXO/aQOWOntGnSzRWvz02pWHjq
+	4W7nftuC3ECzni6Ns+eDfdyehVifqbl44GzH9PsXepkVGG6Lci/nye9RYinOSDTUYi4qTgQA
+	Jn5UF98CAAA=
+X-CMS-MailID: 20240521024009epcas1p4451928c8f5b32bf84082a24c59ca7dd0
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240521024009epcas1p20ddcabed3d037904a9c651d27f82c077
+X-CMS-RootMailID: 20240521024009epcas1p4451928c8f5b32bf84082a24c59ca7dd0
 References: <20240521023957.2587005-1-jaewon31.kim@samsung.com>
-	<CGME20240521024009epcas1p20ddcabed3d037904a9c651d27f82c077@epcas1p2.samsung.com>
+	<CGME20240521024009epcas1p4451928c8f5b32bf84082a24c59ca7dd0@epcas1p4.samsung.com>
 
-In addition to reserved-memory in device tree, an option in cmdline may
-result in memblock allocation. This patch tries to distinguish memblock
-changes done at early param.
+Some of memory regions can be reserved for a specific purpose. They are
+usually defined through reserved-memory in device tree. If only size
+without address is specified in device tree, the address of the region
+will be determined at boot time.
 
-A region in memsize will be created with name as the param string. And
-the region size will be updated during the param function.
+We may find the address of the memory regions through booting log, but
+it does not show all. And it could be hard to catch the very beginning
+log. The memblock_dump_all shows all memblock status but it does not
+show region name and its information is difficult to summarize.
+
+This patch introduce a debugfs node, memblock/memsize, to see reserved
+memory easily.
+
+The first patch here will show the only reserved-memory in device tree
+like following example. The next patches will show more information.
+
+There is a case in which the reserved memory region name has @ staring
+string at the end. That information is not actually needed. Let's remove
+those string.
+
+$ cat debugfs/memblock/memsize
+0x0f9000000-0x0fb000000 0x02000000 (   32768 KB )   map reusable linux,cma
+0x0b1900000-0x0b1b00000 0x00200000 (    2048 KB ) nomap unusable test1
+0x0b0200000-0x0b0400000 0x00200000 (    2048 KB )   map unusable test2
+
+.unusable  :   4096 KB
+.reusable  :  32768 KB
 
 Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
 ---
- include/linux/memblock.h |  4 ++
- init/main.c              | 13 +++++-
- mm/memblock.c            | 94 +++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 107 insertions(+), 4 deletions(-)
+ drivers/of/fdt.c             |   3 +
+ drivers/of/of_reserved_mem.c |   9 ++-
+ include/linux/memblock.h     |   9 +++
+ kernel/dma/contiguous.c      |   2 +
+ mm/Kconfig                   |  16 +++++
+ mm/memblock.c                | 120 +++++++++++++++++++++++++++++++++++
+ 6 files changed, 156 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 049313871059..aef02c150f2c 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -618,11 +618,15 @@ extern void memblock_memsize_record(const char *name, phys_addr_t base,
- 				    phys_addr_t size, bool nomap,
- 				    bool reusable);
- extern void memblock_memsize_detect_hole(void);
-+extern void memblock_memsize_set_name(const char *name);
-+extern void memblock_memsize_unset_name(void);
- #else
- static inline void memblock_memsize_record(const char *name, phys_addr_t base,
- 				    phys_addr_t size, bool nomap,
- 				    bool reusable) { }
- static inline void memblock_memsize_detect_hole(void) { }
-+static inline void memblock_memsize_set_name(const char *name) { }
-+static inline void memblock_memsize_unset_name(void) { }
- #endif
- 
- #endif /* _LINUX_MEMBLOCK_H */
-diff --git a/init/main.c b/init/main.c
-index 206acdde51f5..17c751aac854 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -212,8 +212,15 @@ static bool __init obsolete_checksetup(char *line)
- 				pr_warn("Parameter %s is obsolete, ignored\n",
- 					p->str);
- 				return true;
--			} else if (p->setup_func(line + n))
--				return true;
-+			} else {
-+				int ret;
-+
-+				memblock_memsize_set_name(p->str);
-+				ret = p->setup_func(line + n);
-+				memblock_memsize_unset_name();
-+				if (ret)
-+					return true;
-+			}
- 		}
- 		p++;
- 	} while (p < __setup_end);
-@@ -758,8 +765,10 @@ static int __init do_early_param(char *param, char *val,
- 		    (strcmp(param, "console") == 0 &&
- 		     strcmp(p->str, "earlycon") == 0)
- 		) {
-+			memblock_memsize_set_name(p->str);
- 			if (p->setup_func(val) != 0)
- 				pr_warn("Malformed early option '%s'\n", param);
-+			memblock_memsize_unset_name();
- 		}
- 	}
- 	/* We accept everything at this stage. */
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 9b68ddc4af5e..edb2575967ab 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -178,6 +178,18 @@ static inline phys_addr_t memblock_cap_size(phys_addr_t base, phys_addr_t *size)
- 	return *size = min(*size, PHYS_ADDR_MAX - base);
- }
- 
-+#ifdef CONFIG_MEMBLOCK_MEMSIZE
-+static void memblock_memsize_record_add(struct memblock_type *type,
-+			phys_addr_t base, phys_addr_t size);
-+static void memblock_memsize_record_remove(struct memblock_type *type,
-+			phys_addr_t base, phys_addr_t size);
-+#else
-+static inline void memblock_memsize_record_add(struct memblock_type *type,
-+			phys_addr_t base, phys_addr_t size) { }
-+static inline void memblock_memsize_record_remove(struct memblock_type *type,
-+			phys_addr_t base, phys_addr_t size) { }
-+#endif /* CONFIG_MEMBLOCK_MEMSIZE */
-+
- /*
-  * Address comparison utilities
-  */
-@@ -595,6 +607,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
- 	phys_addr_t end = base + memblock_cap_size(base, &size);
- 	int idx, nr_new, start_rgn = -1, end_rgn;
- 	struct memblock_region *rgn;
-+	phys_addr_t new_size = 0;
- 
- 	if (!size)
- 		return 0;
-@@ -607,7 +620,8 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
- 		type->regions[0].flags = flags;
- 		memblock_set_region_node(&type->regions[0], nid);
- 		type->total_size = size;
--		return 0;
-+		new_size = size;
-+		goto done;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index a8a04f27915b..605c7f471908 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -502,6 +502,8 @@ static void __init fdt_reserve_elfcorehdr(void)
  	}
  
- 	/*
-@@ -654,6 +668,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
- 				memblock_insert_region(type, idx++, base,
- 						       rbase - base, nid,
- 						       flags);
-+				new_size += rbase - base;
+ 	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
++	memblock_memsize_record("elfcorehdr", elfcorehdr_addr, elfcorehdr_size,
++				false, false);
+ 
+ 	pr_info("Reserving %llu KiB of memory at 0x%llx for elfcorehdr\n",
+ 		elfcorehdr_size >> 10, elfcorehdr_addr);
+@@ -531,6 +533,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
+ 		if (!size)
+ 			break;
+ 		memblock_reserve(base, size);
++		memblock_memsize_record("memreserve", base, size, false, false);
+ 	}
+ 
+ 	fdt_init_reserved_mem();
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 46e1c3fbc769..ece678e07304 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -438,9 +438,10 @@ void __init fdt_init_reserved_mem(void)
+ 		struct reserved_mem *rmem = &reserved_mem[i];
+ 		unsigned long node = rmem->fdt_node;
+ 		int err = 0;
+-		bool nomap;
++		bool nomap, reusable;
+ 
+ 		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
++		reusable = of_get_flat_dt_prop(node, "reusable", NULL) != NULL;
+ 
+ 		if (rmem->size == 0)
+ 			err = __reserved_mem_alloc_size(node, rmem->name,
+@@ -457,14 +458,16 @@ void __init fdt_init_reserved_mem(void)
+ 							   rmem->size);
+ 			} else {
+ 				phys_addr_t end = rmem->base + rmem->size - 1;
+-				bool reusable =
+-					(of_get_flat_dt_prop(node, "reusable", NULL)) != NULL;
+ 
+ 				pr_info("%pa..%pa (%lu KiB) %s %s %s\n",
+ 					&rmem->base, &end, (unsigned long)(rmem->size / SZ_1K),
+ 					nomap ? "nomap" : "map",
+ 					reusable ? "reusable" : "non-reusable",
+ 					rmem->name ? rmem->name : "unknown");
++
++				memblock_memsize_record(rmem->name, rmem->base,
++							rmem->size, nomap,
++							reusable);
  			}
  		}
- 		/* area below @rend is dealt with, forget about it */
-@@ -669,6 +684,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
- 			end_rgn = idx + 1;
- 			memblock_insert_region(type, idx, base, end - base,
- 					       nid, flags);
-+			new_size += end - base;
- 		}
  	}
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index e2082240586d..9ccba9bb20cb 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -613,5 +613,14 @@ static inline void early_memtest(phys_addr_t start, phys_addr_t end) { }
+ static inline void memtest_report_meminfo(struct seq_file *m) { }
+ #endif
  
-@@ -687,8 +703,11 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
- 		goto repeat;
- 	} else {
- 		memblock_merge_regions(type, start_rgn, end_rgn);
--		return 0;
- 	}
-+done:
-+	if (new_size == size)
-+		memblock_memsize_record_add(type, obase, size);
-+	return 0;
- }
++#ifdef CONFIG_MEMBLOCK_MEMSIZE
++extern void memblock_memsize_record(const char *name, phys_addr_t base,
++				    phys_addr_t size, bool nomap,
++				    bool reusable);
++#else
++static inline void memblock_memsize_record(const char *name, phys_addr_t base,
++				    phys_addr_t size, bool nomap,
++				    bool reusable) { }
++#endif
  
- /**
-@@ -858,6 +877,7 @@ static int __init_memblock memblock_remove_range(struct memblock_type *type,
+ #endif /* _LINUX_MEMBLOCK_H */
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index 055da410ac71..437c85878280 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -286,6 +286,8 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
+ 	dma_contiguous_early_fixup(cma_get_base(*res_cma),
+ 				cma_get_size(*res_cma));
  
- 	for (i = end_rgn - 1; i >= start_rgn; i--)
- 		memblock_remove_region(type, i);
-+	memblock_memsize_record_remove(type, base, size);
++	memblock_memsize_record("dma_cma", cma_get_base(*res_cma),
++				cma_get_size(*res_cma), false, true);
  	return 0;
  }
  
-@@ -2039,6 +2059,7 @@ struct memsize_rgn_struct {
+diff --git a/mm/Kconfig b/mm/Kconfig
+index b4cb45255a54..7fd25088b9b8 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -476,6 +476,22 @@ config HAVE_GUP_FAST
+ 	depends on MMU
+ 	bool
  
- static struct memsize_rgn_struct memsize_rgn[CONFIG_MAX_MEMBLOCK_MEMSIZE] __initdata_memblock;
- static int memsize_rgn_count __initdata_memblock;
-+static const char *memblock_memsize_name __initdata_memblock;
- 
- static void __init_memblock memsize_get_valid_name(char *valid_name, const char *name)
- {
-@@ -2237,6 +2258,75 @@ void __init memblock_memsize_detect_hole(void)
- 		}
- 	}
- }
++config MAX_MEMBLOCK_MEMSIZE
++	int "Maximum number of tracking regions"
++	depends on MEMBLOCK_MEMSIZE
++	default 100
++	range 0 200
++	help
++	  This number sets maximum number of tracking regions. If this is set to
++	  0, nothing will be saved.
 +
-+/* assume that freeing region is NOT bigger than the previous region */
-+static void __init_memblock memblock_memsize_free(phys_addr_t free_base,
-+						  phys_addr_t free_size)
++config MEMBLOCK_MEMSIZE
++	bool "memblock based reserved memory profiling"
++	default n
++	help
++	  This patch introduce a node, memblock/memsize, to see reserved memory
++	  easily.
++
+ # Don't discard allocated memory used to track "memory" and "reserved" memblocks
+ # after early boot, so it can still be used to test for validity of memory.
+ # Also, memblocks are updated with memory hot(un)plug.
+diff --git a/mm/memblock.c b/mm/memblock.c
+index d09136e040d3..f05e7df2f8e1 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -19,6 +19,7 @@
+ 
+ #include <asm/sections.h>
+ #include <linux/io.h>
++#include <linux/sort.h>
+ 
+ #include "internal.h"
+ 
+@@ -2025,6 +2026,66 @@ static int __init early_memblock(char *p)
+ }
+ early_param("memblock", early_memblock);
+ 
++#ifdef CONFIG_MEMBLOCK_MEMSIZE
++
++#define NAME_SIZE	100
++struct memsize_rgn_struct {
++	phys_addr_t	base;
++	long		size;
++	bool		nomap;			/*  1/32 byte */
++	bool		reusable;		/*  1/32 byte */
++	char		name[NAME_SIZE];	/* 30/32 byte */
++};
++
++static struct memsize_rgn_struct memsize_rgn[CONFIG_MAX_MEMBLOCK_MEMSIZE] __initdata_memblock;
++static int memsize_rgn_count __initdata_memblock;
++
++static void __init_memblock memsize_get_valid_name(char *valid_name, const char *name)
++{
++	char *head, *tail, *found;
++	int val_size;
++
++	head = (char *)name;
++	tail = head + strlen(name);
++
++	/* get tail position after valid char */
++	found = strchr(name, '@');
++	if (found)
++		tail = found;
++
++	val_size = tail - head;
++	if (val_size > NAME_SIZE - 1)
++		val_size = NAME_SIZE - 1;
++	strscpy(valid_name, head, val_size);
++	valid_name[val_size] = '\0';
++}
++
++void __init_memblock memblock_memsize_record(const char *name, phys_addr_t base,
++			     phys_addr_t size, bool nomap, bool reusable)
++{
++	struct memsize_rgn_struct *rgn;
++	phys_addr_t end;
++
++	if (memsize_rgn_count == CONFIG_MAX_MEMBLOCK_MEMSIZE) {
++		pr_err("not enough space on memsize_rgn\n");
++		return;
++	}
++	rgn = &memsize_rgn[memsize_rgn_count++];
++	rgn->base = base;
++	rgn->size = size;
++	rgn->nomap = nomap;
++	rgn->reusable = reusable;
++
++	if (!name)
++		strscpy(rgn->name, "unknown", sizeof(rgn->name));
++	else
++		memsize_get_valid_name(rgn->name, name);
++	end = base + size - 1;
++	memblock_dbg("%s %pa..%pa nomap:%d reusable:%d\n",
++		     __func__, &base, &end, nomap, reusable);
++}
++#endif /* MEMBLOCK_MEMSIZE */
++
+ static void __init free_memmap(unsigned long start_pfn, unsigned long end_pfn)
+ {
+ 	struct page *start_pg, *end_pg;
+@@ -2289,6 +2350,61 @@ static int memblock_debug_show(struct seq_file *m, void *private)
+ }
+ DEFINE_SHOW_ATTRIBUTE(memblock_debug);
+ 
++#ifdef CONFIG_MEMBLOCK_MEMSIZE
++
++static int memsize_rgn_cmp(const void *a, const void *b)
++{
++	const struct memsize_rgn_struct *ra = a, *rb = b;
++
++	if (ra->base > rb->base)
++		return -1;
++
++	if (ra->base < rb->base)
++		return 1;
++
++	return 0;
++}
++
++static int memblock_memsize_show(struct seq_file *m, void *private)
 +{
 +	int i;
 +	struct memsize_rgn_struct *rgn;
-+	phys_addr_t free_end, end;
++	unsigned long reserved = 0, reusable = 0;
 +
-+	free_end = free_base + free_size - 1;
-+	memblock_dbg("%s %pa..%pa\n",
-+		     __func__, &free_base, &free_end);
-+
++	sort(memsize_rgn, memsize_rgn_count,
++	     sizeof(memsize_rgn[0]), memsize_rgn_cmp, NULL);
 +	for (i = 0; i < memsize_rgn_count; i++) {
++		phys_addr_t base, end;
++		long size;
++
 +		rgn = &memsize_rgn[i];
++		base = rgn->base;
++		size = rgn->size;
++		end = base + size;
 +
-+		end = rgn->base + rgn->size;
-+		if (free_base < rgn->base ||
-+		    free_base >= end)
-+			continue;
-+
-+		free_end = free_base + free_size;
-+		if (free_base == rgn->base) {
-+			rgn->size -= free_size;
-+			if (rgn->size != 0)
-+				rgn->base += free_size;
-+		} else if (free_end == end) {
-+			rgn->size -= free_size;
-+		} else {
-+			memblock_memsize_record(rgn->name, free_end,
-+				end - free_end, rgn->nomap, rgn->reusable);
-+			rgn->size = free_base - rgn->base;
-+		}
++		seq_printf(m, "0x%pK-0x%pK 0x%08lx ( %7lu KB ) %s %s %s\n",
++			   (void *)base, (void *)end,
++			   size, DIV_ROUND_UP(size, SZ_1K),
++			   rgn->nomap ? "nomap" : "  map",
++			   rgn->reusable ? "reusable" : "unusable",
++			   rgn->name);
++		if (rgn->reusable)
++			reusable += (unsigned long)rgn->size;
++		else
++			reserved += (unsigned long)rgn->size;
 +	}
++
++	seq_puts(m, "\n");
++	seq_printf(m, " .unusable  : %7lu KB\n",
++		   DIV_ROUND_UP(reserved, SZ_1K));
++	seq_printf(m, " .reusable  : %7lu KB\n",
++		   DIV_ROUND_UP(reusable, SZ_1K));
++	return 0;
 +}
 +
-+void __init memblock_memsize_set_name(const char *name)
-+{
-+	memblock_memsize_name = name;
-+}
++DEFINE_SHOW_ATTRIBUTE(memblock_memsize);
++#endif
 +
-+void __init memblock_memsize_unset_name(void)
-+{
-+	memblock_memsize_name = NULL;
-+}
-+
-+static void __init_memblock memblock_memsize_record_add(struct memblock_type *type,
-+				phys_addr_t base, phys_addr_t size)
-+{
-+	if (memblock_memsize_name) {
-+		if (type == &memblock.reserved)
-+			memblock_memsize_record(memblock_memsize_name,
-+						base, size, false, false);
-+		else if (type == &memblock.memory)
-+			memblock_memsize_free(base, size);
-+	}
-+}
-+
-+static void __init_memblock memblock_memsize_record_remove(struct memblock_type *type,
-+				phys_addr_t base, phys_addr_t size)
-+{
-+	if (memblock_memsize_name) {
-+		if (type == &memblock.reserved)
-+			memblock_memsize_free(base, size);
-+		else if (type == &memblock.memory)
-+			memblock_memsize_record(memblock_memsize_name,
-+						base, size, true, false);
-+	}
-+}
- #endif /* MEMBLOCK_MEMSIZE */
+ static int __init memblock_init_debugfs(void)
+ {
+ 	struct dentry *root = debugfs_create_dir("memblock", NULL);
+@@ -2301,6 +2417,10 @@ static int __init memblock_init_debugfs(void)
+ 	debugfs_create_file("physmem", 0444, root, &physmem,
+ 			    &memblock_debug_fops);
+ #endif
++#ifdef CONFIG_MEMBLOCK_MEMSIZE
++	debugfs_create_file("memsize", 0444, root,
++			    NULL, &memblock_memsize_fops);
++#endif
  
- static void __init free_memmap(unsigned long start_pfn, unsigned long end_pfn)
+ 	return 0;
+ }
 -- 
 2.25.1
 
