@@ -1,59 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09093BB32;
-	Tue, 21 May 2024 03:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDB73FB94
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 03:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716261439; cv=none; b=lyDGkfJpJJmHeLiVzYurx4DTT5kOx9Xc5zji2NVUh0rvG3Kaa33EO6rP1SvYIcQTksFv0s81hTLNkkeSTG+TpvwPTv5hXnzmWfcRKmwv+CkO/3c1Js6pXB9ZAMn8AnReGZWXNGmLZkwNApan6FvFxW3c6Tyamjg0eaE63eGOd28=
+	t=1716261445; cv=none; b=gfLDmu4+sg2hAE3xH49PHWxF8JSKJtRB4YURjhGGO1pQ7DsBoFm88JAc53X4icqX1DvPJlLMc9Dpr6teZSiFIK22Qt2FCspkQYbZr7/MfNldC9rDelalyGbjkQnNN7U7gNND9AF6NWpIck0Qc/taexxjnuJv7xdX04UFC1sswKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716261439; c=relaxed/simple;
-	bh=UAboRLGS7mPC957H6sOCjxTXDHuNsnoUR6E4ZLlnQfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RSaxncjtJ8W9xFc8MYYnP3hix6ngPqVENTuc4FHdalqXqXzdU93vvz25ZS3NxyPK3BRRv5RCs9HxQ0UEtIyzvZYFjyuIjaLz7viY5gEqod5iUVw5eUMOXNq0jRpbiUL2lJh8PtjWEYJYRwCOuNrMb2n216FJK/eIskG5APaGspM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BE+6tN+m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716261445; c=relaxed/simple;
+	bh=rmQ4T+nGAvY9sCmAPKBpE2xvlymeLhT8/MbFVAM0HMI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=huuR02qKvJoYJeCkhOlegj7Y2NLjF/h/gaoEx8Nq+0vlntX1TEXnp1n3SHhXKen/ZI70hcmu+N28NHPzcjw80CQAgjmz0hcBAdDyk0UknZftZMfqWctf+Jf6b/w9vQPBfwoUZw56so7WHWmfykSu2BcmWrc7A/To3MUvj8DtYaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=i8r4Us9G; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BE+6tN+m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D663EC2BD10;
-	Tue, 21 May 2024 03:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716261439;
-	bh=UAboRLGS7mPC957H6sOCjxTXDHuNsnoUR6E4ZLlnQfU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BE+6tN+m6fx9OgZToaDacpbDWg+pJj59hvxFVCDQEd+zb5xAE344zx6ST7EMNHWsB
-	 so/X2hKPVn3FuA0kkSjC0jZjpND0sNc6ne2LAtIOgkAKzfycTyiLSmglDudknOizHY
-	 If14J9oWy00jpVeGnKzaOAqQFyn1yHlueM0RwJJSsCTyKys0ZbunfqptVIMvdTnoY3
-	 Kgv16jgwi/KoB1jlWHOuIsUKU9ugR4YeH8b7+VCWOFQczT3oQDDf817ATCeSu68Rfc
-	 /7hQqB9zS9bT8SMWo1Jv2jjVc/sCPGkvZjFXaOsJoE+esLGSQAJgxzZepkX8QqMpUs
-	 uPSu9a0mFz5jQ==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	Andreas.Fuchs@infineon.com,
-	James Prestwood <prestwoj@gmail.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org (open list:CRYPTO API),
-	linux-kernel@vger.kernel.org (open list),
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM)
-Subject: [PATCH v2 5/6] tpm: tpm2_key: Extend parser to TPM_LoadableKey
-Date: Tue, 21 May 2024 06:16:30 +0300
-Message-ID: <20240521031645.17008-6-jarkko@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240521031645.17008-1-jarkko@kernel.org>
-References: <20240521031645.17008-1-jarkko@kernel.org>
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="i8r4Us9G"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ecd3867556so97637395ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2024 20:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=darkphysics.net; s=google; t=1716261442; x=1716866242; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FTRE2aAD7nMAx0mWWNU5WX8ozRRvU4vGs8kuCzV19R0=;
+        b=i8r4Us9GRiyeOyVPSEt2w7a32KEbiOgy5tJ1XFvN4S3QdeLXyeG2+z6P8NpYPIq8Z8
+         oKqnZCi6wqg7Ak2nESlXcfIolDWh/PckweczGSxq8hlWrGf/nWv/TaPc3m/Y5r46/TWR
+         kKUUwWEbCI+UwMXAzdFbvuqzaeEsDv1W/MgmwEbBG/1Ts1CfaG8s4zDpx2kiNfIuTArD
+         2SA+BO3G7EzYlph3rKpGBYyI/ZgVdvb3XDIiUxKiEAoY9WDhZw127wVJoSqlAqeK0fr4
+         Pr1RsWRXtt0zt/w4AXiIitm+j7aWAXEk4M7D0v+otLmvC9gXE6YiMFMRsRhTBUSwiNKF
+         0hHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716261442; x=1716866242;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FTRE2aAD7nMAx0mWWNU5WX8ozRRvU4vGs8kuCzV19R0=;
+        b=gAX3y/sJGFepyn6emoASFBJ0FtufKM6TLC4bK0UkWZtl+t1Y++1xe9JbKFEFnU6Do6
+         XvSt3OYfz1nQdbw6NFn3oszFH/l9WIQ6JFz20+QAm+ckWfpaU6wXB9uwcYfyx9HnN9cv
+         HnHAsXKrWf72tCW8Cju1OIRSrOJ43sWPdD6VIpQ4T9hXPRsnPLnf0ZdgrnvjahRnFaAz
+         iTwiXXO25ol7GuxSSLq3Vfe/vobiB6d0xsukqNzDK69kWVqrCNjeYYGgmv5QkNZZkeu0
+         +XGzZmkyih1SyP9diA0aHOl590Bxvb6VimM9sg/H1DWkO1akfioTEeQxtq8lujy2S+fv
+         FX+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUCOsR8fZonqFpcUeTPUNPL+96ySBGd7HzU/YgGy5qGgshdb72XF48sb70sOourffFZngo32bmgP/vAfxW1tgq/gXRcc1Vk7r4SVljl
+X-Gm-Message-State: AOJu0YypK8oK+dpkv3gjTL8VgD3TMZJIQN2J4hhlqIMwTUadPjfgsmtL
+	5RiMRa493igHVwbaOQRzgDsEFCtsbBfcyDnHPXqlvAwjMlcQ9gO2VkQF0OtKo7g=
+X-Google-Smtp-Source: AGHT+IFviQB0DFnx5N0Y7fin5e/l+PBKg41SVlyUvy91vBLvTO11XDubSEkoRXnQvu5lNy7nUz6N5A==
+X-Received: by 2002:a17:903:2986:b0:1f2:f0a5:5cf9 with SMTP id d9443c01a7336-1f2f0a561b7mr82883635ad.50.1716261441515;
+        Mon, 20 May 2024 20:17:21 -0700 (PDT)
+Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31a93sm214885415ad.134.2024.05.20.20.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 May 2024 20:17:21 -0700 (PDT)
+From: Tree Davies <tdavies@darkphysics.net>
+To: gregkh@linuxfoundation.org,
+	philipp.g.hortmann@gmail.com
+Cc: dan.carpenter@linaro.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tree Davies <tdavies@darkphysics.net>
+Subject: [PATCH v2 00/31] Staging: rtl8192e: rtllib_rx.c Rename camelcase variables
+Date: Mon, 20 May 2024 20:16:47 -0700
+Message-Id: <20240521031718.17852-1-tdavies@darkphysics.net>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,82 +69,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend parser to TPM_LoadableKey. Add field for oid to struct tpm2_key
-so that callers can differentiate different key types.
+This is v2 of series renaming camelcase variables to meet style
+guide requirements. Thank you in advance to reviewers.
+~ Tree
 
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- drivers/char/tpm/tpm2_key.c               | 14 +++++++++++---
- include/crypto/tpm2_key.h                 |  2 ++
- security/keys/trusted-keys/trusted_tpm2.c |  4 ++++
- 3 files changed, 17 insertions(+), 3 deletions(-)
+Changes:
+#16 Renamed plist to list
+#17 Renamed npadding_length to pad_len
+#19 Deleted ChkLength variable
 
-diff --git a/drivers/char/tpm/tpm2_key.c b/drivers/char/tpm/tpm2_key.c
-index 0112362e432e..59797dc232f1 100644
---- a/drivers/char/tpm/tpm2_key.c
-+++ b/drivers/char/tpm/tpm2_key.c
-@@ -32,16 +32,24 @@ int tpm2_key_type(void *context, size_t hdrlen,
- 		  const void *value, size_t vlen)
- {
- 	enum OID oid = look_up_OID(value, vlen);
--
--	if (oid != OID_TPMSealedData) {
-+	struct tpm2_key *key = context;
-+
-+	switch (oid) {
-+	case OID_TPMSealedData:
-+		pr_info("TPMSealedData\n");
-+		break;
-+	case OID_TPMLoadableKey:
-+		pr_info("TPMLodableKey\n");
-+		break;
-+	default:
- 		char buffer[50];
--
- 		sprint_oid(value, vlen, buffer, sizeof(buffer));
- 		pr_debug("OID is \"%s\" which is not TPMSealedData\n",
- 			 buffer);
- 		return -EINVAL;
- 	}
- 
-+	key->oid = oid;
- 	return 0;
- }
- 
-diff --git a/include/crypto/tpm2_key.h b/include/crypto/tpm2_key.h
-index acf41b2e0c92..2d2434233000 100644
---- a/include/crypto/tpm2_key.h
-+++ b/include/crypto/tpm2_key.h
-@@ -2,12 +2,14 @@
- #ifndef __LINUX_TPM2_KEY_H__
- #define __LINUX_TPM2_KEY_H__
- 
-+#include <linux/oid_registry.h>
- #include <linux/slab.h>
- 
- /*
-  * TPM2 ASN.1 key
-  */
- struct tpm2_key {
-+	enum OID oid;
- 	u32 parent;
- 	const u8 *blob;
- 	u32 blob_len;
-diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
-index f255388d32b8..ce4c667c3ee3 100644
---- a/security/keys/trusted-keys/trusted_tpm2.c
-+++ b/security/keys/trusted-keys/trusted_tpm2.c
-@@ -305,6 +305,10 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
- 		payload->old_format = 1;
- 	} else {
- 		blob = key.blob;
-+		if (key.oid != OID_TPMSealedData) {
-+			tpm2_key_destroy(&key);
-+			return -EINVAL;
-+		}
- 	}
- 
- 	if (!blob)
+Tree Davies (31):
+  Staging: rtl8192e: Rename variable IsPassiveChannel
+  Staging: rtl8192e: Rename variable CountryIeBuf
+  Staging: rtl8192e: Rename variable CountryIeLen
+  Staging: rtl8192e: Rename variable bWithAironetIE
+  Staging: rtl8192e: Rename variable bContainHTC
+  Staging: rtl8192e: Rename variable MBssid
+  Staging: rtl8192e: Rename variable MBssidMask
+  Staging: rtl8192e: Rename variable elementID
+  Staging: rtl8192e: Rename variable rtllib_rx_Monitor
+  Staging: rtl8192e: Rename variable rtllib_rx_InfraAdhoc
+  Staging: rtl8192e: Rename variable IsLegacyDataFrame
+  Staging: rtl8192e: Rename variable RxReorderIndicatePacket
+  Staging: rtl8192e: Rename variable RfdArray
+  Staging: rtl8192e: Rename variable Decrypted
+  Staging: rtl8192e: Rename variable AddReorderEntry
+  Staging: rtl8192e: Rename variable pList
+  Staging: rtl8192e: Rename variable nPadding_Length
+  Staging: rtl8192e: Rename variable LLCOffset
+  Staging: rtl8192e: Remove variable ChkLength
+  Staging: rtl8192e: Rename variable WinEnd
+  Staging: rtl8192e: Rename variable WinSize
+  Staging: rtl8192e: Rename variable IsDataFrame
+  Staging: rtl8192e: Rename variable bMatchWinStart
+  Staging: rtl8192e: Rename variable bMBssidValid
+  Staging: rtl8192e: Rename variable bWithCcxVerNum
+  Staging: rtl8192e: Rename variable Frame_QoSTID
+  Staging: rtl8192e: Rename variable CcxRmState
+  Staging: rtl8192e: Rename variable IsQoSDataFrame
+  Staging: rtl8192e: Rename variable RfdCnt
+  Staging: rtl8192e: Rename variable prxbIndicateArray
+  Staging: rtl8192e: Rename variable bPktInBuf
+
+ .../staging/rtl8192e/rtl8192e/r8192E_dev.c    |   2 +-
+ drivers/staging/rtl8192e/rtl819x_HTProc.c     |   2 +-
+ drivers/staging/rtl8192e/rtl819x_TSProc.c     |   8 +-
+ drivers/staging/rtl8192e/rtllib.h             |  36 ++--
+ drivers/staging/rtl8192e/rtllib_rx.c          | 183 +++++++++---------
+ drivers/staging/rtl8192e/rtllib_tx.c          |   4 +-
+ 6 files changed, 116 insertions(+), 119 deletions(-)
+
 -- 
-2.45.1
+2.30.2
 
