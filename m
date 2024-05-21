@@ -1,30 +1,30 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439F9481B9;
-	Tue, 21 May 2024 06:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C02D4F5E6;
+	Tue, 21 May 2024 06:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716274252; cv=none; b=d1UOX0Lr3yCKyERQL7/SaZFN4AdbXeRqbpN9yA0zu4GWfGEY6TSjm4b5U+PkwP8AMrmRTWfW1RyKhBljHOYKMo9HON34Gayp3NGhRIV9oXwJqdshdmJbt7DI5ELE8/H6BMbMrmETU9L/hVUCnI5454A7wBHYGJLkCUvlBj7lALE=
+	t=1716274275; cv=none; b=EnyWI4qP+xWTN2AZcncNjjF/+LeEe7HzM8lf1RpERoIbzhz3ZrYIYzwJFslBDOLhmkcQTIt3ygVkVP/poE2gxOkSlmQkKwHjDdtxCKGYz7tL6TWkp3ZcXNAfeu42QIgTXfKl1ZNaETrRFhBWiNAIANDCQ+0W/7ZOrwW6yC8Auf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716274252; c=relaxed/simple;
-	bh=Hizn4Dnh13RQ06Vwkn9Ezw8vptYpnecvk5Jv8JF9xiY=;
+	s=arc-20240116; t=1716274275; c=relaxed/simple;
+	bh=Hu63G6HieVsu3NRYaVKJ+LFwFCggNTekdAjaGlRHP1M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D+KoY4ES4oAUgJZ7SDdOwezuR+Z5JAuZm0ivJRkpGLVshnjd9JLLzUvInhrSNAIkNauHYbhKkysqfqeAmCKrM8+XywjsOPqlg/mYRzPX0rkXEqRtojxpS1d3GpkZXW2GrNEcXHDeI/BgcRjamvLaBIxFCZsXn2FjVbbCa6Hsb1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cLB2wVU7; arc=none smtp.client-ip=115.124.30.110
+	 MIME-Version; b=hiM/60SzIsauR5Nz1DvwitHdTcWFcEfdk9FIgGP0WyIUOZNYehEi+Et186+d+h2Xx8RdOVV9GvoyqDFC8DhmbkPXqOTk7uLKNHLVYZBSNeVHxfLGma1sYs70ZQWEFFGphoAObQ2793s8rivrTmRoRtNgDdAuw6+gDkG0imxbo4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EeSe0PQD; arc=none smtp.client-ip=115.124.30.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cLB2wVU7"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EeSe0PQD"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1716274241; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=JCING5sZygVmTb4vCd81GBYFm+lfeEpLIKLRnHa1e1E=;
-	b=cLB2wVU7RnymesKk+XihtZDxVpJgLh2DKV0G+1v+DTU79Vn20KcAiOOLANJqvvYVs8XcpI4T/VRO8z7/aZipf4eti1Spiv3uG0joqIl0yjA9LSB1ADWpxVG0LsqxzTbUtjaiBZHAWIfngzA9m9MCDJliOVuYpl5OHHK/RoNz7N8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W6wiTg-_1716274239;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6wiTg-_1716274239)
+	t=1716274271; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=YlJ85IoVGRgtAyGr1x5qdaIWxHz4yG8tHOeTj8CXgJM=;
+	b=EeSe0PQDCAXSUshW/dK1WNGG42gnGfp4CnDK4+g8+ZNSnVRmOAxQB5XHnPX1E41/7ZOis4BRPBll58b3ggV4oag1rYe9Q2lWf0zWQ+oSYq9DxaaTDHDg+02YHgSpi6W9BxPjlFOb/D2Bfq+DyS248s5x0wbtW6LwpOrkpSpJVsc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W6wi3PC_1716274267;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6wi3PC_1716274267)
           by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 14:50:40 +0800
+          Tue, 21 May 2024 14:51:10 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -35,12 +35,12 @@ Cc: linux-erofs@lists.ozlabs.org,
 	Jingbo Xu <jefflexu@linux.alibaba.com>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>,
 	Chao Yu <chao@kernel.org>
-Subject: [PATCH 6.8.y 2/2] erofs: reliably distinguish block based and fscache mode
-Date: Tue, 21 May 2024 14:50:32 +0800
-Message-Id: <20240521065032.4192363-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6.6.y 2/2] erofs: reliably distinguish block based and fscache mode
+Date: Tue, 21 May 2024 14:50:53 +0800
+Message-Id: <20240521065053.4192636-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240521065032.4192363-1-hsiangkao@linux.alibaba.com>
-References: <20240521065032.4192363-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240521065053.4192636-1-hsiangkao@linux.alibaba.com>
+References: <20240521065053.4192636-1-hsiangkao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,10 +89,10 @@ Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
  1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 8d7a3abb9c1b..a2fa74558570 100644
+index ea9bb0ad2a7c..113414e6f35b 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -790,17 +790,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+@@ -786,17 +786,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
  
  static void erofs_kill_sb(struct super_block *sb)
  {
