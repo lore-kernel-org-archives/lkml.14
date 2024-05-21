@@ -1,128 +1,137 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD6077112
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B299A74BED
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716300234; cv=none; b=bl+DEr6Ff5y2FyDEaKl/y/Q6no+fJk1qqp1ICgKL26T1zWbS/qx8YLYE5jKz7xI6fe5LMdnC5MHnAT2zwjMvblOBhAyTy5aWnALZJLEfDAuZ5Y1RQMa9CFmqffuJ4nMEnsJsja8Tgo/+wWy8nkuXgX8PyzPF+fqM7XceZogRgso=
+	t=1716300352; cv=none; b=DSiUir1ajKlX1MOVS+xmepIhAteblr0b3XlOGcQ47amILY1dmROlqw98cN+oka7RU0NVKvcfDA5+ht7m4RbcCDhUh7llCWE9+xdEwUS5p8rokt6h5ektnERZcQrq/P7YCDvXE1UHyGvr1c90XqasHD2sh5sRhfX8hlD7Cd8yIP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716300234; c=relaxed/simple;
-	bh=jD9lqUXVtwzsplzjO6LumEIjzZ8PUD4gwVqpPcQiLzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wftp5lA2c2nkkuuQK3bmCrB1YEDyA5TawUuCVxYo/oevOAvJi33ntYMsyymrnQGR3j6pMRWAA4oRhNZWayrymGZRlKfgXwkXX2qqDjA305zSl+pcM6l6wk10Qq3M6O1DNaGG4a7IXdWYoDpmO6W8lPRAAm3mOmz1Nyw+2gm0lxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FF5lPCJA; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716300352; c=relaxed/simple;
+	bh=JUfb8zY+izCRC4r50MixNaaw78CPvzL7Ajdm+ROpRS8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PoAyviB3Px+coX6L4zMQkQzprfjOSj6wLXeotDfJ4WDXjZZi4OFS9GCSmdqgBeGqxLwg/CirurgoBpIFb14op908COVdanWqpIDm1KdVya8p5/TAz0I2QZVICbQW2k1ZNApMJWs1YlCOpFCxV0+uYHYyXED+7n9J5RTruSB2JEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DU9lr3+2; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FF5lPCJA"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so759672166b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:03:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DU9lr3+2"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4200ee78f35so23426145e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716300230; x=1716905030; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xpCzsF2SjpoS+vP9sOIIVwewUFNHOIPX1cF6BrhM6sI=;
-        b=FF5lPCJAvLfgmJtSIfN6TUaF/cyilaBngzMtQ8wgEO7gD1RpTox8bX35i4a8LI4Tcz
-         twh7vkye+KfG8nXH4L5mYi0QzoCTQo7oYf2D+nihqlf0Uh5NbX79DdQSPUKahWD1A73U
-         78IMc75yde2DdRKirezXNP4mgMdDZRA3Nwn31dHTJovaMsXTJJDqW+MraVC9dIJbjzR0
-         HTvGrXFoV1LCHu1xjZIoNULyDkqnaX0yBaKuUVGtq2/Fmsx4lluAtcTDDzodAYCgUdj1
-         ADl9aUB6hTuU4Tz0cXDeXMA1FgmjMQWHWQ2d8VSO8ZEr4wAi3VETuGBJlMnj6SfIKCmv
-         lRKA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1716300348; x=1716905148; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgoKFoQ+1ZxeBSFvhA/0PLTmzF3XLdEhqXLatkcXB1c=;
+        b=DU9lr3+2kIuqImVBW4yXFS23y17jAcoca5xXNoQWC4u8T/DoFF9wjo3pg3Uu4y4DXP
+         F3U5x9+Nk4a3wa+WT3AGI2HVbjYp5x6r9IQUyr766cgqLYnCNafrl7oaGovwtNY3Cg2M
+         EGtnvms/o00PPTRju2eRofy7G4ftCvTbPoAGCcS9ZtEmdq6Glbp63/6l0j7Lb+eJ/0v8
+         R3RrbHg05mq773W0ppSzAmjabVQmu7w/npQ8SlImqPA2TguMXjm8MvarSULV6OQ32qq2
+         NqdA2XZpCBaUCCRWo6XfQBb6HQ4tqbv+WhAZZybG/PaKwNVNi9Ge65ygQApb+gdRPesE
+         iLWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716300230; x=1716905030;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xpCzsF2SjpoS+vP9sOIIVwewUFNHOIPX1cF6BrhM6sI=;
-        b=qevbqtVf0CJnEFrD/UB3TnO+Da7VzJ0wevcrIUlp/SzUkzK7Xm5L+VlBY+zIA0N6ko
-         jJHeICA4xW+BNhkPCah4P9bT+7IS1G6jsLEyPkHcmNq6TxI5PTQA+VBebZ4suiRorKyw
-         VQG5HNzEpUOQQuZLQ25syRRBxG10OUFrWQknK5V4efOuyHmK/qCi6+x+MZECB3BoQR2+
-         qIL5dd1UUejbbJaYS3xUJyB/tLtIf5OH1cizz9S+1z69jfw8yEr7QWrNkrOe3uxBO6xg
-         8QLESPcM/4vCE5m0pFsaIo3EEdacvsaXs3bqOfvQW5B2AzMBWeM/Jk0ZSvwmxZ3IUPyK
-         Wyvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXe7Qn5yXzpQt15JpWzrv00tvOipZ/ytxq4iQFF/QeL0ABaQUqAUGYD0eo5wnYaQwTaRhe4OKwZn1DkJqiKAANnKC8LjhTPU2iB6Nx2
-X-Gm-Message-State: AOJu0YwjSKpudlGNHsBf4yein3C4LT/bDlYe82FKseH7EjTTz+wMd+XB
-	Xivbd9iCaIXFehpJBQzqLCdEYwZgJqL3Ag4q5YyLOUqZDTqnISo0m7wMlDfi+yo=
-X-Google-Smtp-Source: AGHT+IG2bIy86vwiqfSU9GGrcx0KTTzCGWnAuIiXF26lYQRM7jgWytH2FgVjnrjwz0GNvh2Qrdq8UQ==
-X-Received: by 2002:a17:906:7fca:b0:a5c:e43a:2bd5 with SMTP id a640c23a62f3a-a5ce43a2fb9mr1375382266b.59.1716300230207;
-        Tue, 21 May 2024 07:03:50 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b1771bsm1603365066b.215.2024.05.21.07.03.49
+        d=1e100.net; s=20230601; t=1716300348; x=1716905148;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zgoKFoQ+1ZxeBSFvhA/0PLTmzF3XLdEhqXLatkcXB1c=;
+        b=i2tHmpqr3HGh8ev02nWIjPN7BFNuMJ8nLIVrRV/EOZHM0cYbUJp0x/S3K2FOFCPw5l
+         92m/5P88EDnC8nvRcUhL7m0BnYP09RquggmOeickSTBM+5aSuHYMYxn+A6Lzm/m9+GeZ
+         xHPjA+DrSf4h8jnPHkSXcfwtoBcYNaUKLC0iGXN2Usqcfb2LlCi4llMuQkAD2iKgYuFG
+         10daJzsHF3o+HwczlytyiJmRBiLumrnl3clUj30W9mf5JaqrM2+8A5XbNnT5DzgQSpRB
+         pUr3LseI8raYDz163lxf7RL0K9dyAPibG2Vg/S3vc00GGmWg5j6Ce3iF/jIuSAh02maK
+         ifRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBqMKjCEb1edZlEZUarxhPuiK0BVcWthe93/PpPhdRe3pQaYRNja8wl91WKxf5jai125Qi1JbXGmHBC04wWFFVi/cGrEEc+7enDGRg
+X-Gm-Message-State: AOJu0YyjIENYls62N8tGSLKKZh1zU4+g0ajxGkuxHad+Cp9RzRV0vv2e
+	1zXBS54WCkYrkXOo8tDn0SYDM+1RkoNLelYyIW2vR4spgRotqkTd1HKfrNCLRm7bRbl8ND/yNFI
+	I
+X-Google-Smtp-Source: AGHT+IFmqJnb4ObWiPzsVQuZAWrqnThUPe8ztSlw4PvCSGE0QT/f8sLOvVgkTo5aE0vFaVuHcCymvA==
+X-Received: by 2002:a05:600c:3592:b0:420:1a0d:f15d with SMTP id 5b1f17b1804b1-4201a0df409mr219365415e9.22.1716300347840;
+        Tue, 21 May 2024 07:05:47 -0700 (PDT)
+Received: from [127.0.1.1] (abordeaux-651-1-78-161.w90-5.abo.wanadoo.fr. [90.5.97.161])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42015deac1asm342085945e9.17.2024.05.21.07.05.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 07:03:49 -0700 (PDT)
-Date: Tue, 21 May 2024 16:03:48 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
-Subject: Re: [PATCH printk v5 29/30] rcu: Mark emergency sections in rcu
- stalls
-Message-ID: <ZkypxKBSPPGIo9Se@pathway.suse.cz>
-References: <20240502213839.376636-1-john.ogness@linutronix.de>
- <20240502213839.376636-30-john.ogness@linutronix.de>
+        Tue, 21 May 2024 07:05:47 -0700 (PDT)
+From: Julien Panis <jpanis@baylibre.com>
+Subject: [PATCH v4 0/4] Mediatek thermal sensor driver support for MT8186
+ and MT8188
+Date: Tue, 21 May 2024 16:05:34 +0200
+Message-Id: <20240521-mtk-thermal-mt818x-dtsi-v4-0-b91ee678411c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240502213839.376636-30-john.ogness@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC6qTGYC/x2Myw5AMBAAf0X2bJOqV/kVcSgWG1rSNiIR/65xm
+ znMPODJMXlokwccXez5sFGKNIFx1XYh5Ck6SCELUUqBJmwYVnJG75FVpm6cgmekUee1mpuh0gJ
+ ifTqa+f7PXf++H1oE/hRpAAAA
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Nicolas Pitre <npitre@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ Julien Panis <jpanis@baylibre.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716300346; l=1983;
+ i=jpanis@baylibre.com; s=20230526; h=from:subject:message-id;
+ bh=JUfb8zY+izCRC4r50MixNaaw78CPvzL7Ajdm+ROpRS8=;
+ b=Rv1gAaXrI9T1gUh79Yf80ndSE1qfUTglrDHcSeo8X96oSkWcD33mgOnC648Krl2/j+tLEWccz
+ CmXGPBXvimlD6ZQ+ofFFt6ktYgM86f2JCojX6rEzyAeR/IoO0YZIbF0
+X-Developer-Key: i=jpanis@baylibre.com; a=ed25519;
+ pk=8eSM4/xkiHWz2M1Cw1U3m2/YfPbsUdEJPCWY3Mh9ekQ=
 
-On Thu 2024-05-02 23:44:38, John Ogness wrote:
-> Mark emergency sections wherever multiple lines of
-> rcu stall information are generated. In an emergency
-> section the CPU will not perform console output for the
-> printk() calls. Instead, a flushing of the console
-> output is triggered when exiting the emergency section.
-> This allows the full message block to be stored as
-> quickly as possible in the ringbuffer.
->
-> --- a/kernel/rcu/tree_exp.h
-> +++ b/kernel/rcu/tree_exp.h
-> @@ -612,6 +616,7 @@ static void synchronize_rcu_expedited_wait(void)
->  			}
->  			pr_cont("\n");
->  		}
-> +		nbcon_cpu_emergency_flush();
+This is a bunch of patches to support the MT8186 and MT8188 thermal
+sensor configurations.
 
-It would make more sense to do the flush inside the cycle after each
-dump_cpu_task(). Something like:
+Since the patches of v3 were applied except those related to the SoC
+device trees, this series includes only patches for 'mt8186.dtsi' and
+'mt8188.dtsi'.
 
-		rcu_for_each_leaf_node(rnp) {
-			for_each_leaf_node_possible_cpu(rnp, cpu) {
-				mask = leaf_node_cpu_bit(rnp, cpu);
-				if (!(READ_ONCE(rnp->expmask) & mask))
-					continue;
-				preempt_disable(); // For smp_processor_id() in dump_cpu_task().
-				dump_cpu_task(cpu);
-				preempt_enable();
-+				nbcon_cpu_emergency_flush();
-			}
-			rcu_exp_print_detail_task_stall_rnp(rnp);
-		}
+Signed-off-by: Julien Panis <jpanis@baylibre.com>
+---
+Changes in v4:
+- Fix wrong thermal zone names.
+- Lower 'polling-delay-passive' values.
+- Set 'hysteresis' value to 0 for 'critical' trips.
+- Add a 'hot' trip point in between 'passive' and 'critical' trips.
+- Link to v3: https://lore.kernel.org/all/20240402032729.2736685-1-nico@fluxnic.net/
 
+Changes in v3:
+- use meaningful name for binding index definitions
+- reuse LVTS_COEFF_*_MT7988 on MT8186 per reviewer request
+- do similarly for MT8188 that now reuses LVTS_COEFF_*_MT8195
+- use thermal zone names the svs driver wants
+- adjust some DT node names and iospace length
+- remove variable .hw_tshut_temp as it is constant across all SOCs
+- Link to v2: https://lore.kernel.org/all/20240318212428.3843952-1-nico@fluxnic.net/
 
-Or maybe, it is limited onto to few CPUs by rcu_for_each_leaf_node(rnp)?
+Changes in v2:
+- renamed CPU cluster thermal zones in DT
+- fixed logic to cope with empty controller slots at the beginning
+- isolated bindings to their own patches
+- added MT8188 default thermal zones
+- Link to v1: https://lore.kernel.org/all/20240111223020.3593558-1-nico@fluxnic.net/T/
 
+---
+Nicolas Pitre (4):
+      arm64: dts: mediatek: mt8186: add lvts definitions
+      arm64: dts: mediatek: mt8186: add default thermal zones
+      arm64: dts: mediatek: mt8188: add lvts definitions
+      arm64: dts: mediatek: mt8188: add default thermal zones
 
->  		rcu_for_each_leaf_node(rnp) {
->  			for_each_leaf_node_possible_cpu(rnp, cpu) {
->  				mask = leaf_node_cpu_bit(rnp, cpu);
+ arch/arm64/boot/dts/mediatek/mt8186.dtsi | 309 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8188.dtsi | 467 +++++++++++++++++++++++++++++++
+ 2 files changed, 776 insertions(+)
+---
+base-commit: 632483ea8004edfadd035de36e1ab2c7c4f53158
+change-id: 20240520-mtk-thermal-mt818x-dtsi-eca378f9b6a0
 
-Otherwise, it looks good to me.
+Best regards,
+-- 
+Julien Panis <jpanis@baylibre.com>
 
-Best Regards,
-Petr
