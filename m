@@ -1,65 +1,66 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4524E1BC44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499481BF31
 	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716259220; cv=none; b=eYJeVQ9E/c4T5vAuW0nWonTJ96i/YVtd/9V7CYklTE+TidrqsDVf/n0aTP03uagCQtijqBhf7cZ0OdtM59VCugnhjcoZ/OOSt0J0wYmHG8f7rFZb2DIvoim9TVKY5FwBzvhpP2RbBmAclsRau6xmVH2R7hw/UeMxVp6KMPrHszg=
+	t=1716259222; cv=none; b=smC3yJhlpM/c30yUh4ryvecduRwsZ/vkLY3kObhjTmSQas8tZUna7PD+//eUbrT0rnrXOgkf2QjYkRjXtd//XHKb3KzxDTdoVG/Kbx+1cB31VkuPJUWfE5pGyc6sp0sN7rwQmpjHAN0G9tyRTCOtfRmkW4P7e7zO31UFQv00EuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716259220; c=relaxed/simple;
-	bh=7wEi5kE8bwfhHF2F14ATNE3WoMUPNN+o9yVSMVfW9YA=;
+	s=arc-20240116; t=1716259222; c=relaxed/simple;
+	bh=GxZiu9W2BHAsmvfw5Uzy8jR4QCk3bK6pa0zHWCgGO9U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=BI71oc5dK+NxkpeTWgyucAQaHgllq99Yj6+Dm4H2/ucx4bU0U6XryyJMrsYxLtfSyMe0mvGg+SBdczPo8cthfH6NHJUaz1HlER1484EfyC+WGxSLx7LxPSQU7Q4uYW4mep58UKui03P+dnScGJxzSVFn5ONiVHtJwqGImycS6uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=muSdhv+c; arc=none smtp.client-ip=203.254.224.24
+	 Content-Type:References; b=I+/XQpNI3Ubls0c7hxRBswnqo2s5P1HPUmZ9YUAnxY+jHFuR+XHBfiPQGY1Q39U+202+UoZZa2vzgMLD00iviFTp7zobOWvCuu36UsQGRtxwcb2y17+aKPAMtTzWy7Itq2S80qLOJJSOSiKXFjwQQQpGYF2xAEh8nwIqV5ubF/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bP52x+/A; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="muSdhv+c"
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240521024010epoutp0115aff65c3da2d0e7db486888c4b12239~RYKiwuE4J1173811738epoutp012
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bP52x+/A"
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240521024010epoutp032e0f783e794c226ae3ebea83818a34d2~RYKi3z_QS0914709147epoutp03H
 	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:40:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240521024010epoutp0115aff65c3da2d0e7db486888c4b12239~RYKiwuE4J1173811738epoutp012
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240521024010epoutp032e0f783e794c226ae3ebea83818a34d2~RYKi3z_QS0914709147epoutp03H
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1716259210;
-	bh=RvOy3FDyQQAo8yQO1IZqkwS+ImL75+nyHDK07TC3cHQ=;
+	bh=yVf68Cj1nmtMbTxmkx6CIgy96BRosJN2TQP/FPuQu/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=muSdhv+cDnjC2IoX2AQ+taOaMDnDYlA7gEy5suCiGSs+axutgrYlep5EjHuC7Sl5i
-	 8f+xm5eiqO63tEcH12evKerEfsXidQ+q8C/o1wrkHK4O8pS/8eS6bJKrbkWY3ePrYe
-	 ZSE0sfuhvHrprr5k4ygthfmFV4YR3A+hLArgBORQ=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240521024010epcas1p2ec24a0caf94e985d6606e0995b215200~RYKiZq-Vd0928709287epcas1p2E;
+	b=bP52x+/ApNVHBIzFM/4oYwo//UvPFD67XoOXBDj31FTLgcP111sQ/RlcWu9Fkgyam
+	 W9WMEnnmdph6iZBCEI0t1tEnA6mabO7o9BBdeeLew/1v/dSIjx07amZdjIlN/FXUQv
+	 ZbFtnW6NTHxOJtXyygLGARqqE3L9NVbhm6hM/BKM=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+	20240521024010epcas1p495284369abe490f8d94fdd6adcef2e70~RYKiZSNF71520715207epcas1p4A;
 	Tue, 21 May 2024 02:40:10 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.36.224]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4VjzDn6BCnz4x9Pq; Tue, 21 May
+Received: from epsmgec1p1.samsung.com (unknown [182.195.38.240]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4VjzDn6DFBz4x9Q7; Tue, 21 May
 	2024 02:40:09 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	20.5F.09662.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240521024009epcas1p3ccda7b2d9e6518b4575427c957e19377~RYKhnx8H90314503145epcas1p3c;
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	B1.13.09696.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240521024009epcas1p15a3290b675ee66339033c185a5a8c00b~RYKhv5DeV2349123491epcas1p1d;
 	Tue, 21 May 2024 02:40:09 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240521024009epsmtrp166705647a9d5dccc3e4a41573f7bf81e~RYKhmgNYK2362723627epsmtrp1K;
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240521024009epsmtrp29f58dea47f5a6d9d50601a9ccaf99022~RYKhvKn8k2496224962epsmtrp2m;
 	Tue, 21 May 2024 02:40:09 +0000 (GMT)
-X-AuditID: b6c32a35-053ff700000025be-aa-664c09894993
+X-AuditID: b6c32a36-7a9f9700000025e0-4b-664c09895e29
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F6.D3.19234.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9A.54.08390.9890C466; Tue, 21 May 2024 11:40:09 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.253.104.99]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240521024009epsmtip2fa7c3b4f548e6e646832f9ce331c5706~RYKhbz5Nr1132711327epsmtip2U;
+	20240521024009epsmtip29f70c066144ebfba9efa858ec7c443e2~RYKhlFy_t1233912339epsmtip2F;
 	Tue, 21 May 2024 02:40:09 +0000 (GMT)
 From: Jaewon Kim <jaewon31.kim@samsung.com>
 To: rppt@kernel.org, vbabka@suse.cz, akpm@linux-foundation.org
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
 	jaewon31.kim@gmail.com, Jaewon Kim <jaewon31.kim@samsung.com>
-Subject: [RESEND PATCH 07/10] memblock: track kernel size on memsize
-Date: Tue, 21 May 2024 11:39:54 +0900
-Message-Id: <20240521023957.2587005-8-jaewon31.kim@samsung.com>
+Subject: [RESEND PATCH 10/10] memblock: support memsize reusable to consider
+ as reusable
+Date: Tue, 21 May 2024 11:39:57 +0900
+Message-Id: <20240521023957.2587005-11-jaewon31.kim@samsung.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240521023957.2587005-1-jaewon31.kim@samsung.com>
 Precedence: bulk
@@ -69,289 +70,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZdlhTV7eT0yfNYOk5VYs569ewWXRvnslo
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgk+LIzCtJLcpLzFFi42LZdlhTT7eT0yfN4OR9PYs569ewWXRvnslo
 	0fv+FZPF5V1z2CzurfnPanFk/XYmi9mNfYwO7B47Z91l99i0qpPNY9OnSeweJ2b8ZvHo27KK
 	0ePMgiPsHp83yQWwR2XbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoq
 	ufgE6Lpl5gAdpKRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMCvQK07MLS7NS9fL
-	Sy2xMjQwMDIFKkzIzvjfxFuw2qFi1s3LbA2Mi0y7GDk4JARMJK7MDu9i5OIQEtjBKPGr9QMT
-	hPOJUWLNv0+scE77vRbmLkZOsI4JO3tYIBI7GSV+/r7PDOF8ZpS4+LSZFaSKTUBb4v2CSWC2
-	iICdxLfZB8BsZoFSibdvToBNEhZwkfg+s4cJxGYRUJVou9TBCHITr4C9xLGvYRDL5CVmXvrO
-	DmJzCjhIzJ+yGMzmFRCUODnzCQvESHmJ5q2zwW6QEHjLLvGw8S4bxG8uElO+e0LMEZZ4dXwL
-	O4QtJfGyvw3Kzpe4cPEVE0R5jcTCiYYQYXuJXV9nsIKEmQU0Jdbv0ofYxCfx7msPK0Q1r0RH
-	mxBEtZpEy7OvrBC2jMTff8+gbA+Jw7t/gtlCApMZJS4vz5nAKD8Lyf2zkNw/C2HZAkbmVYxi
-	qQXFuempxYYFhvAITc7P3cQITo9apjsYJ779oHeIkYmD8RCjBAezkgjvpi2eaUK8KYmVValF
-	+fFFpTmpxYcYTYGBO5FZSjQ5H5ig80riDU0sDUzMjEwsjC2NzZTEec9cKUsVEkhPLEnNTk0t
-	SC2C6WPi4JRqYFJI95Qqib0s+edG7+dHVQlqd2dP/Xro5JuUaU8WGvqHbuvLv2F/UETxUITx
-	80ad22umzb/JkHvmZEfwNPakjZeMDY8Lbww18uE5uGyi+B3jaGm9ZZ176j1NddxqeQ5M+vFv
-	luR7KdX57IFhxgFSKzgLLnSWPK7U52WQj/aaMN9+xcrOhW8XeuvayHjtiVZuZGkVTeDnrl3T
-	bZAsskfASeZZUuaWJ37JH87WOzyM+XrTr3wm3/RfZrv4y2cuuLikcOvyCruUq+3f0vdcPisT
-	ZJ8kvXDi32iO05fEcsKcrJ/OeVF35+5rvWXvXrr+7j77b8Kj7ClOmSJT+RL+npnbfSJdcOc2
-	OfPJTE3zqtwD+5RYijMSDbWYi4oTAWHeV3wYBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsWy7bCSvG4np0+aQcs+YYs569ewWXRvnslo
-	0fv+FZPF5V1z2CzurfnPanFk/XYmi9mNfYwO7B47Z91l99i0qpPNY9OnSeweJ2b8ZvHo27KK
-	0ePMgiPsHp83yQWwR3HZpKTmZJalFunbJXBl/G/iLVjtUDHr5mW2BsZFpl2MnBwSAiYSE3b2
-	sHQxcnEICWxnlNjTPoMdIiEj8eb8U6AEB5AtLHH4cDFEzUdGiTX7+9hAatgEtCXeL5jECmKL
-	CDhJbLiymgXEZhaolPh3+xZYXFjAReL7zB4mEJtFQFWi7VIHI8hMXgF7iWNfwyBWyUvMvPQd
-	bC2ngIPE/CmLwWwhoJIzl86DjeEVEJQ4OfMJ1Hh5ieats5knMArMQpKahSS1gJFpFaNoakFx
-	bnpucoGhXnFibnFpXrpecn7uJkZwcGsF7WBctv6v3iFGJg7GQ4wSHMxKIrybtnimCfGmJFZW
-	pRblxxeV5qQWH2KU5mBREudVzulMERJITyxJzU5NLUgtgskycXBKNTBJl9+TWb72fnL19NmT
-	XlRd05kVclicNYv9qoCuRNti/p8rHBTn9G4qa+bSOBt03OGSq7S7/IeIvsYTYf8Nom966KWr
-	arLJujtXGgsZLGTdMcf94Oq44DV/5CY+7nCvbjM0npEQPJ1NhPNB2g3F7vs5B41S+Cey/Jlc
-	2iu+Lph97qzVeev6vBPq9jeauhk2WJoZBZyo1r0fZZUxt6BjTWTiFwUvkeWiyckT+ldf/nL9
-	luzG9X/tuuLT0mzvVOSr7trw5Wj39O2Crg6HpRyvTNf+G9r4pFPu2OUZNRsfikvPqznH+eix
-	6JcH896eKTQ/+KswoYhngy3/43/zqi0CpLfpfb4hWpEu/yw5arr9EiWW4oxEQy3mouJEAAwD
-	K73dAgAA
-X-CMS-MailID: 20240521024009epcas1p3ccda7b2d9e6518b4575427c957e19377
+	Sy2xMjQwMDIFKkzIzvi0YCZ7QZdURc/uC2wNjG9Euxg5OSQETCSmL5/N0sXIxSEksINRYtrt
+	24wQzidGiSOn5rJBON8YJQ7un88O03LxWTMrRGIvUGLlNqiqz4wSB6Y+B6tiE9CWeL9gEiuI
+	LSJgJ/Ft9gEwm1mgVOLtmxPMXYwcHMICURKn95uAhFkEVCXeXD7CCGLzCjhIdH+5wAaxTF5i
+	5qXvYCM5geLzpyxmh6gRlDg58wkLxEh5ieats5lBbpAQ+MkusfrYRUaIZheJS2+7oa4Wlnh1
+	fAuULSXx+d1eqAX5EhcuvmICuUdCoEZi4URDiLC9xK6vM1hBwswCmhLrd+lDrOKTePe1hxWi
+	mleio00IolpNouXZV1YIW0bi779nUCUeElNXJ0ECZzKjxPxJv5knMMrPQvLALCQPzEJYtoCR
+	eRWjWGpBcW56arFhgRE8TpPzczcxgpOkltkOxklvP+gdYmTiYDzEKMHBrCTCu2mLZ5oQb0pi
+	ZVVqUX58UWlOavEhRlNg8E5klhJNzgem6bySeEMTSwMTMyMTC2NLYzMlcd4zV8pShQTSE0tS
+	s1NTC1KLYPqYODilGpiyXid0FS/8yMKXGpXhGrjzy5WMqfI+xne2Jfg8WCJ0+bNMx7JJNzQ0
+	L7Fa7rn2aIHJpPQtSpceqPMvyzyuHdW4LSvCzUphgfHZj5uefrpiYrfw9l8Z54PRr5WUFooE
+	LXJ+90jg9t207VIJLXb2zmL3k6vzLpVe2jSrc2W+hPJF5RSHRuM0Tt/P1V4lrtqP8htuH763
+	Tc0/fp2jMvuztSGbFrReE5I3PpE9RaDFfS0Tn1/BlJR/b35dve94W1LkZsJFhYff69mvKDe2
+	L2X1Xfyh97T7VMP/f/h2PPy0OqCdb9+E/gf9rnXMIdyh3g9Cd+1M/VJWz/002WXSNAEzk1DR
+	49a74qV3ic+N8fMymqvEUpyRaKjFXFScCAAQPK3jGwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSvG4np0+awaWPMhZz1q9hs+jePJPR
+	ovf9KyaLy7vmsFncW/Of1eLI+u1MFrMb+xgd2D12zrrL7rFpVSebx6ZPk9g9Tsz4zeLRt2UV
+	o8eZBUfYPT5vkgtgj+KySUnNySxLLdK3S+DK+LRgJntBl1RFz+4LbA2Mb0S7GDk5JARMJC4+
+	a2btYuTiEBLYzSgx/fJ7ZoiEjMSb809Zuhg5gGxhicOHiyFqPjJKLH74AqyGTUBb4v2CSawg
+	toiAk8SGK6tZQGxmgUqJf7dvsYL0CgtESGz9kAMSZhFQlXhz+QgjiM0r4CDR/eUCG8QqeYmZ
+	l76zg9icQPH5UxaD2UIC9hJnLp1nhagXlDg58wnUeHmJ5q2zmScwCsxCkpqFJLWAkWkVo2Rq
+	QXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZwmGtp7WDcs+qD3iFGJg7GQ4wSHMxKIrybtnim
+	CfGmJFZWpRblxxeV5qQWH2KU5mBREuf99ro3RUggPbEkNTs1tSC1CCbLxMEp1cC068Zstxnt
+	/dPPHGq8XygSeP7PjQN/898d+JK5y/6v1Kk2Dqk7Ofs2vmz6VhW5eCuHhXaNnUne7K6eso2V
+	0xudXj7cUb5vbdqkWZKbH6mLL74kMHPTScH9h/98yVih2ibEJh33dSVfxjLxhJ8yd95oNn1h
+	jXG51v/4v+gn2Vn1E26eipm0sofLYNHSxV8f5BTLOVvPe7Ox9M7EhMgHxQtcbrYx7kpzndD5
+	zOlbEpP45Jc8MYFq0+o3rmNK6zP2Kti5ckdV6z4d0cfF7sYR22zXZQiw5Uw4VHTkodwi8W3J
+	p17IGvi1bfz84qZTcVRL2t8pHZO/C6RduL/9VN7tj9w/5EpKHhbXXLj2YIKMw+KZhUosxRmJ
+	hlrMRcWJAAbDn7PiAgAA
+X-CMS-MailID: 20240521024009epcas1p15a3290b675ee66339033c185a5a8c00b
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240521024009epcas1p3ccda7b2d9e6518b4575427c957e19377
+X-CMS-RootMailID: 20240521024009epcas1p15a3290b675ee66339033c185a5a8c00b
 References: <20240521023957.2587005-1-jaewon31.kim@samsung.com>
-	<CGME20240521024009epcas1p3ccda7b2d9e6518b4575427c957e19377@epcas1p3.samsung.com>
+	<CGME20240521024009epcas1p15a3290b675ee66339033c185a5a8c00b@epcas1p1.samsung.com>
 
-Some memory regions are already being tracked by previous patches. But
-there are many memory allocations from memblock and frees to memblock
-during the boot time.
-
-This patch tracks the memblock size used for the common kernel. To to
-this, tracking memblock size is disabled for some memory handling logics
-like early param, device tree, and default cma size.
-
-For precise kernel size, this patch counts not actually freed size to
-buddy at boot time, and does not count freed size from ramdisk and init
-section.
-
-Additionally this patch does one important thing. This patch blocks
-memblock_add_range of memblock_remove_range not to update memsize if
-free pages were already released to the buddy allocator.
-
-This is an example. The kernel size is newly added by this patch.
-
- .kernel    :  135137 KB
- .unusable  :  788073 KB
- .reusable  :  294912 KB
+Sometimes we'd like to include some memory region as reusable even
+though it is actually not CMA type. In that case, add reusable in its
+device tree description, then memsize will consider it is reusuable and
+add its size to the system total memory size.
 
 Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
 ---
- drivers/of/fdt.c         |  6 ++++++
- include/linux/memblock.h |  6 ++++++
- kernel/dma/contiguous.c  |  7 ++++--
- mm/memblock.c            | 46 ++++++++++++++++++++++++++++++++++++++++
- mm/page_alloc.c          | 10 ++++++++-
- 5 files changed, 72 insertions(+), 3 deletions(-)
+ drivers/of/of_reserved_mem.c | 3 +++
+ include/linux/memblock.h     | 2 ++
+ mm/memblock.c                | 7 +++++++
+ 3 files changed, 12 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index da82e5afed01..08638673e106 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -524,6 +524,8 @@ void __init early_init_fdt_scan_reserved_mem(void)
- 	if (!initial_boot_params)
- 		return;
- 
-+	memblock_memsize_disable_tracking();
-+
- 	fdt_scan_reserved_mem();
- 	fdt_reserve_elfcorehdr();
- 
-@@ -537,6 +539,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index ece678e07304..7aedac213995 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -468,6 +468,9 @@ void __init fdt_init_reserved_mem(void)
+ 				memblock_memsize_record(rmem->name, rmem->base,
+ 							rmem->size, nomap,
+ 							reusable);
++				if (reusable &&
++				    !of_flat_dt_is_compatible(node, "shared-dma-pool"))
++					memblock_memsize_mod_reusable_size(rmem->size);
+ 			}
+ 		}
  	}
- 
- 	fdt_init_reserved_mem();
-+	memblock_memsize_enable_tracking();
- }
- 
- /**
-@@ -1189,12 +1192,15 @@ void __init early_init_dt_scan_nodes(void)
- 	if (rc)
- 		pr_warn("No chosen node found, continuing without\n");
- 
-+	memblock_memsize_disable_tracking();
-+
- 	/* Setup memory, calling early_init_dt_add_memory_arch */
- 	early_init_dt_scan_memory();
- 
- 	/* Handle linux,usable-memory-range property */
- 	early_init_dt_check_for_usable_mem_range();
- 
-+	memblock_memsize_enable_tracking();
- 	memblock_memsize_detect_hole();
- }
- 
 diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index aef02c150f2c..a83ad98ac252 100644
+index 7ab8b59bfbc1..0aa6202a7a6a 100644
 --- a/include/linux/memblock.h
 +++ b/include/linux/memblock.h
-@@ -620,6 +620,9 @@ extern void memblock_memsize_record(const char *name, phys_addr_t base,
- extern void memblock_memsize_detect_hole(void);
- extern void memblock_memsize_set_name(const char *name);
- extern void memblock_memsize_unset_name(void);
-+extern void memblock_memsize_enable_tracking(void);
-+extern void memblock_memsize_disable_tracking(void);
-+extern void memblock_memsize_mod_kernel_size(long size);
+@@ -626,6 +626,7 @@ extern void memblock_memsize_mod_kernel_size(long size);
+ extern void memblock_memsize_mod_memmap_size(long size);
+ extern void memblock_memsize_kernel_code_data(unsigned long code,
+ 		unsigned long data, unsigned long ro, unsigned long bss);
++extern void memblock_memsize_mod_reusable_size(long size);
  #else
  static inline void memblock_memsize_record(const char *name, phys_addr_t base,
  				    phys_addr_t size, bool nomap,
-@@ -627,6 +630,9 @@ static inline void memblock_memsize_record(const char *name, phys_addr_t base,
- static inline void memblock_memsize_detect_hole(void) { }
- static inline void memblock_memsize_set_name(const char *name) { }
- static inline void memblock_memsize_unset_name(void) { }
-+static inline void memblock_memsize_enable_tracking(void){ }
-+static inline void memblock_memsize_disable_tracking(void){ }
-+static inline void memblock_memsize_mod_kernel_size(long size) { }
+@@ -639,6 +640,7 @@ static inline void memblock_memsize_mod_kernel_size(long size) { }
+ static inline void memblock_memsize_mod_memmap_size(long size) { }
+ static inline void memblock_memsize_kernel_code_data(unsigned long code,
+ 		unsigned long data, unsigned long ro, unsigned long bss) { }
++static inline void memblock_memsize_mod_reusable_size(long size) { }
  #endif
  
  #endif /* _LINUX_MEMBLOCK_H */
-diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index 437c85878280..e9c68b1ee975 100644
---- a/kernel/dma/contiguous.c
-+++ b/kernel/dma/contiguous.c
-@@ -277,10 +277,11 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
- {
- 	int ret;
- 
-+	memblock_memsize_disable_tracking();
- 	ret = cma_declare_contiguous(base, size, limit, 0, 0, fixed,
- 					"reserved", res_cma);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	/* Architecture specific contiguous memory fixup. */
- 	dma_contiguous_early_fixup(cma_get_base(*res_cma),
-@@ -288,7 +289,9 @@ int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
- 
- 	memblock_memsize_record("dma_cma", cma_get_base(*res_cma),
- 				cma_get_size(*res_cma), false, true);
--	return 0;
-+out:
-+	memblock_memsize_enable_tracking();
-+	return ret;
- }
- 
- /**
 diff --git a/mm/memblock.c b/mm/memblock.c
-index de49e7ce74f1..bb033c20ec43 100644
+index 2fe0dc2575c5..a20d60d3bb40 100644
 --- a/mm/memblock.c
 +++ b/mm/memblock.c
-@@ -2060,6 +2060,23 @@ struct memsize_rgn_struct {
- static struct memsize_rgn_struct memsize_rgn[CONFIG_MAX_MEMBLOCK_MEMSIZE] __initdata_memblock;
- static int memsize_rgn_count __initdata_memblock;
- static const char *memblock_memsize_name __initdata_memblock;
-+static long memsize_kinit __initdata_memblock;
-+static bool memblock_memsize_tracking __initdata_memblock = true;
-+
-+void __init memblock_memsize_enable_tracking(void)
-+{
-+	memblock_memsize_tracking = true;
-+}
-+
-+void __init memblock_memsize_disable_tracking(void)
-+{
-+	memblock_memsize_tracking = false;
-+}
-+
-+void memblock_memsize_mod_kernel_size(long size)
-+{
-+	memsize_kinit += size;
-+}
+@@ -2066,6 +2066,7 @@ static unsigned long memsize_code __initdata_memblock;
+ static unsigned long memsize_data __initdata_memblock;
+ static unsigned long memsize_ro __initdata_memblock;
+ static unsigned long memsize_bss __initdata_memblock;
++static long memsize_reusable_size __initdata_memblock;
+ static bool memblock_memsize_tracking __initdata_memblock = true;
  
- static void __init_memblock memsize_get_valid_name(char *valid_name, const char *name)
+ void __init memblock_memsize_enable_tracking(void)
+@@ -2117,6 +2118,11 @@ static void __init_memblock memsize_get_valid_name(char *valid_name, const char
+ 	valid_name[val_size] = '\0';
+ }
+ 
++void memblock_memsize_mod_reusable_size(long size)
++{
++	memsize_reusable_size += size;
++}
++
+ static inline struct memsize_rgn_struct * __init_memblock memsize_get_new_rgn(void)
  {
-@@ -2313,6 +2330,12 @@ static void __init_memblock memblock_memsize_record_add(struct memblock_type *ty
- 						base, size, false, false);
- 		else if (type == &memblock.memory)
- 			memblock_memsize_free(base, size);
-+	} else if (memblock_memsize_tracking) {
-+		if (type == &memblock.reserved) {
-+			memblock_dbg("%s: kernel %lu %+ld\n", __func__,
-+				     memsize_kinit, (unsigned long)size);
-+			memsize_kinit += size;
-+		}
- 	}
- }
+ 	if (memsize_rgn_count == ARRAY_SIZE(memsize_rgn)) {
+@@ -2716,6 +2722,7 @@ static int memblock_memsize_show(struct seq_file *m, void *private)
+ 	etc -= memsize_code + memsize_data + memsize_ro + memsize_bss +
+ 		memsize_memap;
  
-@@ -2325,6 +2348,12 @@ static void __init_memblock memblock_memsize_record_remove(struct memblock_type
- 		else if (type == &memblock.memory)
- 			memblock_memsize_record(memblock_memsize_name,
- 						base, size, true, false);
-+	} else if (memblock_memsize_tracking) {
-+		if (type == &memblock.reserved) {
-+			memblock_dbg("%s: kernel %lu %+ld\n", __func__,
-+				     memsize_kinit, (unsigned long)size);
-+			memsize_kinit -= size;
-+		}
- 	}
- }
- #endif /* MEMBLOCK_MEMSIZE */
-@@ -2442,6 +2471,19 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
- 	unsigned long end_pfn = min_t(unsigned long,
- 				      PFN_DOWN(end), max_low_pfn);
- 
-+#ifdef CONFIG_MEMBLOCK_MEMSIZE
-+	unsigned long start_align_up = PFN_ALIGN(start);
-+	unsigned long end_align_down = PFN_PHYS(end_pfn);
-+
-+	if (start_pfn >= end_pfn) {
-+		memblock_memsize_mod_kernel_size(end - start);
-+	} else {
-+		if (start_align_up > start)
-+			memblock_memsize_mod_kernel_size(start_align_up - start);
-+		if (end_pfn != max_low_pfn && end_align_down < end)
-+			memblock_memsize_mod_kernel_size(end - end_align_down);
-+	}
-+#endif
- 	if (start_pfn >= end_pfn)
- 		return 0;
- 
-@@ -2546,6 +2588,8 @@ void __init memblock_free_all(void)
- 
- 	pages = free_low_memory_core_early();
- 	totalram_pages_add(pages);
-+
-+	memblock_memsize_disable_tracking();
- }
- 
- #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
-@@ -2672,6 +2716,8 @@ static int memblock_memsize_show(struct seq_file *m, void *private)
- 	}
- 
- 	seq_puts(m, "\n");
-+	seq_printf(m, " .kernel    : %7lu KB\n",
-+		   DIV_ROUND_UP(memsize_kinit, SZ_1K));
- 	seq_printf(m, " .unusable  : %7lu KB\n",
- 		   DIV_ROUND_UP(reserved, SZ_1K));
- 	seq_printf(m, " .reusable  : %7lu KB\n",
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2e22ce5675ca..a4c692635e9b 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -20,6 +20,7 @@
- #include <linux/highmem.h>
- #include <linux/interrupt.h>
- #include <linux/jiffies.h>
-+#include <linux/memblock.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/kasan.h>
-@@ -5776,8 +5777,15 @@ unsigned long free_reserved_area(void *start, void *end, int poison, const char
- 		free_reserved_page(page);
- 	}
- 
--	if (pages && s)
-+	if (pages && s) {
- 		pr_info("Freeing %s memory: %ldK\n", s, K(pages));
-+		if (!strcmp(s, "initrd") || !strcmp(s, "unused kernel")) {
-+			long size;
-+
-+			size = -1 * (long)(pages << PAGE_SHIFT);
-+			memblock_memsize_mod_kernel_size(size);
-+		}
-+	}
- 
- 	return pages;
- }
++	system += memsize_reusable_size;
+ 	sort(memsize_rgn, memsize_rgn_count,
+ 	     sizeof(memsize_rgn[0]), memsize_rgn_cmp, NULL);
+ 	for (i = 0; i < memsize_rgn_count; i++) {
 -- 
 2.25.1
 
