@@ -1,306 +1,256 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB54B78276
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 12:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545D21E48B
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 13:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716296256; cv=none; b=sDNnh1dQJV2tSisTRlYN+sjA4vlCMnEr7ZajZbvW+LMpJb8zhdH3ZpsBHR5xWtg8U+e1a9E/cgnYogwMo9gl7YCy2joJj6Ah+7JdrPAXS0Hk7wEcMQH45zcOuxTXwlK1I0kEXvBPYQpHNY1lnFyM6UOlzOT85lTN7WJKeVDry8U=
+	t=1716296403; cv=none; b=YGlon124/l1Xb5pM2ezyOBZXq4YZrmhZzlLhqISTyNpquTxu+OhDBApwFYRHy9jKdKo80sRLGjTQFLxQjV+un07uclEq3CORVoZflAuq2KdmTFiAOtIJHNuFX52IDOaoFmRwuoPyPcHwfOZEgDeKj+q23xvKoQSAeYYgmmuhqvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716296256; c=relaxed/simple;
-	bh=93AUZuHsMYdlo1uCf+dMfhqztW1LZUVjD9Bz+tQ7t3E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Pb5yLAGyhcm4+4y2CxpO9nUq6dNzS995jIQiT0MWoOXb0QEsjS2QP5Ai9obJQA9urjMrDQ0E4lgwLhGGH5jqM8w/e3siyjcjHT9D1GjuO8VYVQAI6zhn/BsFctVzRKPoCs+Wpo5pvnyimrF1kqZjo9UMC2cOvZW1WRhOHUSzEJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r4VZVDBk; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1716296403; c=relaxed/simple;
+	bh=DBUyQmvQh7vUb6oN302EO/ct8ueC5mznuotC02B36l0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4/iY35VNTl3SkYmYl8NTY2rGitgihc2YtUkICgQhELkmTV3CtbhcPBrd7gPJjorHJLCFOKaW6O6tVk7OmTROq8i9ZD6liRA7gYC5zepUpZLYCb29D+zY9joYQudoJT2TQ4CKCqAqF3oN/fGm/VNxOOryPopdwDIHoh6IhoJ72w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BAa02ckJ; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r4VZVDBk"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-41fc5c5cc95so56269615e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 05:57:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BAa02ckJ"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5d67064885so392352866b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 06:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716296253; x=1716901053; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bo9M5YTqR8tTEb+CFvSEPP+Md2sw1AJdmaK3l6GjkIM=;
-        b=r4VZVDBkUi/V/UvkoilKZWS5vujuxlln9IYOSCkUVeczJ4x42jLOeh2zyyXuYRuQKX
-         OtX7UVl0URAZu9Kc+c7ioGPlLcfmITyBvE573VVvMfvb2QNJMN0BoB7Gcgk3uuS/C0G/
-         CNsXV2KCraCWOW/5iRS5PCT73VMcL1KIeox3gMiG080s/xEsXShp7LDaC+l9hBxFHfPH
-         hUiIwMDBn0cLVXS/5d02YLIeSOB1zR6SnS8UFg/w9bVwPVk9zNlGcWsfyYlsRVF+Hg/X
-         c54QwI3oYibhrkL4ukuucmbvnERkqxNhVYan04AwfXpDBAqzJVrxrV684Y0ygi207NVk
-         vstw==
+        d=suse.com; s=google; t=1716296399; x=1716901199; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YN/7AOVfwDQ9fuglKdggECs2cWRXnj0qk72xVYmNKJg=;
+        b=BAa02ckJ1Mz52t3V7mhtzEiRIE+HnoFSUXoFf+jfFKSBjXOAewuoi81ZCvTCuDalBy
+         d7L7Kj8vx0w0QzfkAtYVkIkHNbYfBFj4U8L9PuCWDm24DbCEpw7UwJkAfyUpn2LbWdX6
+         E8RNpdJyxsw9jlOkUFdwxHyoRtjbgGfxTha5IaSkbnfr0Psv10gYKNx1KzCYANBQD06Q
+         47z64ghoSvl/2yZDRt0VUIJD3YdsyAi1xze8W5WNuEnSl7lqIKzTa6KhR5zkidmmxd9V
+         GR85krT4jJQugjlW7GhTumoo3x5AyiD6++TMTAbOxekk/JlT4h2xWMsKJgGC2LsPOUzz
+         x9KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716296253; x=1716901053;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bo9M5YTqR8tTEb+CFvSEPP+Md2sw1AJdmaK3l6GjkIM=;
-        b=w2Cs0B7idJ/ToHyk7rjaXEjRd5h7WUqBJXRVZ7rpAA35eX6z9rBH7vMYh1MZAYAVdr
-         8WvEm5/HTVgtq0mdjDZlSAZOqqnRWRfV0PnER0RylGDwbljFa3hkhiMXKI/RkPsDpwF0
-         klHr+Ra/In2Z8zHY3exgT+4I11vKu/nEHBCbRI6ujGqb4Xac96nm0sbWFyvrAvoUqtHM
-         z6nK9uT+EfzCCXDq35+fHpKHyoO38mrkqi1MWKjUD1tY3YsvwcUsPZVCtNraDlpeVMA5
-         P3zT5v8AsuKmrZ9aGVM1OnvCXc2FeDvv2VVCRUJyKqGBaEySCwdEczTpwpOxGyGJiap6
-         CnPg==
-X-Forwarded-Encrypted: i=1; AJvYcCViDrUWJ8+OXDt/A2VYpGekvnnn+qb8AK5GunPMvz6lJUJeTJz3CqUKx4dAmr6UirOl2ZudPUIm2HG+/+N92EVPbvMr6zH2QOJVQgl5
-X-Gm-Message-State: AOJu0Yx9D4lLJyEtZA+Hd52hWTmOW5Upki9avAckVThHoSopPOj8iWkL
-	mxAAeIzBQXpfIZGKHtfilz1vMEKe2weMSrHcQrvyWsimNdO4TkSHR6bQo40rV+g2Ss4tPelX8at
-	LOKp7497M2A==
-X-Google-Smtp-Source: AGHT+IEqtB7J+eET8jECP6dJaE/vZ4au8St4Y37qZzLM3Wd/fTYl0KhtmsX38BXBJE3VkkIRwseWYmA0Pv3/Xg==
-X-Received: from beeg.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:11db])
- (user=jackmanb job=sendgmr) by 2002:a05:600c:19c8:b0:418:ee30:3f9e with SMTP
- id 5b1f17b1804b1-41fea92770dmr2110535e9.2.1716296253380; Tue, 21 May 2024
- 05:57:33 -0700 (PDT)
-Date: Tue, 21 May 2024 12:57:19 +0000
-In-Reply-To: <20240521-mm-hotplug-sync-v1-0-6d53706c1ba8@google.com>
+        d=1e100.net; s=20230601; t=1716296399; x=1716901199;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YN/7AOVfwDQ9fuglKdggECs2cWRXnj0qk72xVYmNKJg=;
+        b=gv0fmRq3sYu+2fliM0VJjm00Je8lDkJmB/0FM74b31zU7voTSaVt+Mi/Yw6+Bbhio9
+         IR1kvBK3VB9L1DAC8BCGAnAkvxFUcwmTHljm1tYdIHcXAkViT+LpOCxJeexOaf5CQlMr
+         ThzGeDK3GDnI6/JCGICQiE13dvDx3xWAgyOBSOeeEH3xfdwymqzfcn5PsE75Nk0Jfx7a
+         G+yb3rbOyREo0rn0welkMzwd71Hj5YGqRM4E+mhhi1IRhumjGT+fN8Vr3g+VKjySzoA8
+         C+xp3PBeTGkmhVvOZTPEfhQ5SgBjFPLiiUU8CzxShrfMkCerMjg/tczUdH5dmwd8zfdn
+         L8/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVJj/f6R0mMLbsmtQg/CTVTRiMVqXHh+tG0/s+Rg7Vougq1AtkWHqWChHh3h3MmvukG59kInXuglBJdF8kOaBI8Slt2jBEaWcGjzFGB
+X-Gm-Message-State: AOJu0YwhE00MwN0NOj0NJ4Zh9CERt76CuRdqkorLxesw2sQFBOWDEU3K
+	jWjRJ1fP+gNGc1XDTAdvbFfcX4lC5R0WAaceE7hxAWaCnAOawn/54Q9T8lSZE5Q=
+X-Google-Smtp-Source: AGHT+IFjhxZDVLttBWKH935kkHgsg4zmcHt0zQ1giV2/zPz++FzpgzwbsrswxD91J1qdmWSrgzUpJw==
+X-Received: by 2002:a17:906:4882:b0:a59:a727:1e81 with SMTP id a640c23a62f3a-a5a2d57a381mr3123533366b.20.1716296398569;
+        Tue, 21 May 2024 05:59:58 -0700 (PDT)
+Received: from localhost (host-87-18-209-253.retail.telecomitalia.it. [87.18.209.253])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7ebcsm1601785066b.117.2024.05.21.05.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 05:59:58 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 21 May 2024 15:00:08 +0200
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] mmc: sdhci-brcmstb: Add BCM2712 support
+Message-ID: <Zkya2KXoHSV9ORCk@apocalypse>
+Mail-Followup-To: Stefan Wahren <wahrenst@gmx.net>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+References: <cover.1716277695.git.andrea.porta@suse.com>
+ <c413737f538d9bd403c30104a83a7fbb1ea7461d.1716277695.git.andrea.porta@suse.com>
+ <f27aaf92-8109-4cad-94ba-6f72cd9bdabf@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240521-mm-hotplug-sync-v1-0-6d53706c1ba8@google.com>
-X-Mailer: b4 0.14-dev
-Message-ID: <20240521-mm-hotplug-sync-v1-2-6d53706c1ba8@google.com>
-Subject: [PATCH 2/2] mm,memory_hotplug: {READ,WRITE}_ONCE unsynchronized zone data
-From: Brendan Jackman <jackmanb@google.com>
-To: David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f27aaf92-8109-4cad-94ba-6f72cd9bdabf@gmx.net>
 
-These fields are written by memory hotplug under mem_hotplug_lock but
-read without any lock. It seems like reader code is robust against the
-value being stale or "from the future", but we also need to account
-for:
+On 14:26 Tue 21 May     , Stefan Wahren wrote:
+> Hi Andrea,
+> 
+> Am 21.05.24 um 10:35 schrieb Andrea della Porta:
+> > Broadcom BCM2712 SoC has an SDHCI card controller using the SDIO CFG
+> > register block present on other STB chips. Add support for BCM2712
+> > SD capabilities of this chipset.
+> > The silicon is SD Express capable but this driver port does not currently
+> > include that feature yet.
+> > Based on downstream driver by raspberry foundation maintained kernel.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >   drivers/mmc/host/sdhci-brcmstb.c | 65 ++++++++++++++++++++++++++++++++
+> >   1 file changed, 65 insertions(+)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+> > index 9053526fa212..b349262da36e 100644
+> > --- a/drivers/mmc/host/sdhci-brcmstb.c
+> > +++ b/drivers/mmc/host/sdhci-brcmstb.c
+> > @@ -30,6 +30,21 @@
+> > 
+> >   #define SDHCI_ARASAN_CQE_BASE_ADDR		0x200
+> > 
+> > +#define SDIO_CFG_CQ_CAPABILITY			0x4c
+> > +#define SDIO_CFG_CQ_CAPABILITY_FMUL		GENMASK(13, 12)
+> > +
+> > +#define SDIO_CFG_CTRL				0x0
+> > +#define SDIO_CFG_CTRL_SDCD_N_TEST_EN		BIT(31)
+> > +#define SDIO_CFG_CTRL_SDCD_N_TEST_LEV		BIT(30)
+> > +
+> > +#define SDIO_CFG_MAX_50MHZ_MODE			0x1ac
+> > +#define SDIO_CFG_MAX_50MHZ_MODE_STRAP_OVERRIDE	BIT(31)
+> > +#define SDIO_CFG_MAX_50MHZ_MODE_ENABLE		BIT(0)
+> > +
+> > +#define MMC_CAP_HSE_MASK	(MMC_CAP2_HSX00_1_2V | MMC_CAP2_HSX00_1_8V)
+> > +/* Select all SD UHS type I SDR speed above 50MB/s */
+> > +#define MMC_CAP_UHS_I_SDR_MASK	(MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104)
+> > +
+> >   struct sdhci_brcmstb_priv {
+> >   	void __iomem *cfg_regs;
+> >   	unsigned int flags;
+> > @@ -38,6 +53,7 @@ struct sdhci_brcmstb_priv {
+> >   };
+> > 
+> >   struct brcmstb_match_priv {
+> > +	void (*cfginit)(struct sdhci_host *host);
+> >   	void (*hs400es)(struct mmc_host *mmc, struct mmc_ios *ios);
+> >   	struct sdhci_ops *ops;
+> >   	const unsigned int flags;
+> > @@ -168,6 +184,38 @@ static void sdhci_brcmstb_set_uhs_signaling(struct sdhci_host *host,
+> >   	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+> >   }
+> > 
+> > +static void sdhci_brcmstb_cfginit_2712(struct sdhci_host *host)
+> > +{
+> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> > +	struct sdhci_brcmstb_priv *brcmstb_priv = sdhci_pltfm_priv(pltfm_host);
+> > +	u32 reg, base_clk_mhz;
+> > +
+> > +	/*
+> > +	 * If we support a speed that requires tuning,
+> > +	 * then select the delay line PHY as the clock source.
+> > +	 */
+> > +	if ((host->mmc->caps & MMC_CAP_UHS_I_SDR_MASK) || (host->mmc->caps2 & MMC_CAP_HSE_MASK)) {
+> > +		reg = readl(brcmstb_priv->cfg_regs + SDIO_CFG_MAX_50MHZ_MODE);
+> > +		reg &= ~SDIO_CFG_MAX_50MHZ_MODE_ENABLE;
+> > +		reg |= SDIO_CFG_MAX_50MHZ_MODE_STRAP_OVERRIDE;
+> > +		writel(reg, brcmstb_priv->cfg_regs + SDIO_CFG_MAX_50MHZ_MODE);
+> > +	}
+> > +
+> > +	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE) ||
+> > +	    (host->mmc->caps & MMC_CAP_NEEDS_POLL)) {
+> > +		/* Force presence */
+> > +		reg = readl(brcmstb_priv->cfg_regs + SDIO_CFG_CTRL);
+> > +		reg &= ~SDIO_CFG_CTRL_SDCD_N_TEST_LEV;
+> > +		reg |= SDIO_CFG_CTRL_SDCD_N_TEST_EN;
+> > +		writel(reg, brcmstb_priv->cfg_regs + SDIO_CFG_CTRL);
+> > +	}
+> > +
+> > +	/* Guesstimate the timer frequency (controller base clock) */
+> > +	base_clk_mhz = max_t(u32, clk_get_rate(pltfm_host->clk) / (1000 * 1000), 1);
+> > +	reg = SDIO_CFG_CQ_CAPABILITY_FMUL | base_clk_mhz;
+> > +	writel(reg, brcmstb_priv->cfg_regs + SDIO_CFG_CQ_CAPABILITY);
+> This part assumes the clock isn't changed afterwards, see below ...
+> > +}
+> > +
+> >   static void sdhci_brcmstb_dumpregs(struct mmc_host *mmc)
+> >   {
+> >   	sdhci_dumpregs(mmc_priv(mmc));
+> > @@ -200,6 +248,14 @@ static struct sdhci_ops sdhci_brcmstb_ops = {
+> >   	.set_uhs_signaling = sdhci_set_uhs_signaling,
+> >   };
+> > 
+> > +static struct sdhci_ops sdhci_brcmstb_ops_2712 = {
+> > +	.set_clock = sdhci_set_clock,
+> > +	.set_power = sdhci_set_power_and_bus_voltage,
+> > +	.set_bus_width = sdhci_set_bus_width,
+> > +	.reset = sdhci_reset,
+> > +	.set_uhs_signaling = sdhci_set_uhs_signaling,
+> > +};
+> > +
+> >   static struct sdhci_ops sdhci_brcmstb_ops_7216 = {
+> >   	.set_clock = sdhci_brcmstb_set_clock,
+> >   	.set_bus_width = sdhci_set_bus_width,
+> > @@ -214,6 +270,11 @@ static struct sdhci_ops sdhci_brcmstb_ops_74165b0 = {
+> >   	.set_uhs_signaling = sdhci_brcmstb_set_uhs_signaling,
+> >   };
+> > 
+> > +static const struct brcmstb_match_priv match_priv_2712 = {
+> > +	.cfginit = sdhci_brcmstb_cfginit_2712,
+> > +	.ops = &sdhci_brcmstb_ops_2712,
+> > +};
+> > +
+> >   static struct brcmstb_match_priv match_priv_7425 = {
+> >   	.flags = BRCMSTB_MATCH_FLAGS_NO_64BIT |
+> >   	BRCMSTB_MATCH_FLAGS_BROKEN_TIMEOUT,
+> > @@ -238,6 +299,7 @@ static struct brcmstb_match_priv match_priv_74165b0 = {
+> >   };
+> > 
+> >   static const struct of_device_id __maybe_unused sdhci_brcm_of_match[] = {
+> > +	{ .compatible = "brcm,bcm2712-sdhci", .data = &match_priv_2712 },
+> >   	{ .compatible = "brcm,bcm7425-sdhci", .data = &match_priv_7425 },
+> >   	{ .compatible = "brcm,bcm7445-sdhci", .data = &match_priv_7445 },
+> >   	{ .compatible = "brcm,bcm7216-sdhci", .data = &match_priv_7216 },
+> > @@ -370,6 +432,9 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+> >   	    (host->mmc->caps2 & MMC_CAP2_HS400_ES))
+> >   		host->mmc_host_ops.hs400_enhanced_strobe = match_priv->hs400es;
+> > 
+> > +	if (match_priv->cfginit)
+> > +		match_priv->cfginit(host);
+> > +
+> I'm not sure this is the right place to call cfginit.
+> sdhci_brcmstb_cfginit_2712 retrives the current controller base clock,
+> but at the end of  sdhci_brcmstb_probe this clock frequency could be
+> adjusted by the device property "clock-frequency". So i'm not sure this
+> is intended.
 
-1. Load/store tearing (according to Linus[1], this really happens,
-   even when everything is aligned as you would hope).
+Some tests reveal that cfginit() must be called for certain type of UHS SD cards, 
+otherwise those cards do not work at all. This of course does not mean that the
+calling sequence is correctly ordererd and it may just work out of luck.
+I'm investigating...
 
-2. Invented loads[2] - the compiler can spill and re-read these fields
-   ([2] calls this "invented loads") and assume that they have not
-   changed.
+Many thanks,
+Andrea
 
-Note we don't need READ_ONCE in paths that have the mem_hotplug_lock
-for write, but we still need WRITE_ONCE to prevent store-tearing.
-
-[1] https://lore.kernel.org/all/CAHk-=wj2t+GK+DGQ7Xy6U7zMf72e7Jkxn4_-kGyfH3WFEoH+YQ@mail.gmail.com/T/#u
-    As discovered via the original big-bad article[2]
-[2] https://lwn.net/Articles/793253/
-
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
----
- include/linux/mmzone.h | 14 ++++++++++----
- mm/compaction.c        |  2 +-
- mm/memory_hotplug.c    | 20 ++++++++++++--------
- mm/mm_init.c           |  2 +-
- mm/page_alloc.c        |  2 +-
- mm/show_mem.c          |  8 ++++----
- mm/vmstat.c            |  4 ++--
- 7 files changed, 31 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 194ef7fed9d6..bdb3be76d10c 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1018,11 +1018,13 @@ static inline unsigned long zone_cma_pages(struct zone *zone)
- #endif
- }
- 
-+/* This is unstable unless you hold mem_hotplug_lock. */
- static inline unsigned long zone_end_pfn(const struct zone *zone)
- {
--	return zone->zone_start_pfn + zone->spanned_pages;
-+	return zone->zone_start_pfn + READ_ONCE(zone->spanned_pages);
- }
- 
-+/* This is unstable unless you hold mem_hotplug_lock. */
- static inline bool zone_spans_pfn(const struct zone *zone, unsigned long pfn)
- {
- 	return zone->zone_start_pfn <= pfn && pfn < zone_end_pfn(zone);
-@@ -1033,9 +1035,10 @@ static inline bool zone_is_initialized(struct zone *zone)
- 	return zone->initialized;
- }
- 
-+/* This is unstable unless you hold mem_hotplug_lock. */
- static inline bool zone_is_empty(struct zone *zone)
- {
--	return zone->spanned_pages == 0;
-+	return READ_ONCE(zone->spanned_pages) == 0;
- }
- 
- #ifndef BUILD_VDSO32_64
-@@ -1485,10 +1488,13 @@ static inline bool managed_zone(struct zone *zone)
- 	return zone_managed_pages(zone);
- }
- 
--/* Returns true if a zone has memory */
-+/*
-+ * Returns true if a zone has memory.
-+ * This is unstable unless you old mem_hotplug_lock.
-+ */
- static inline bool populated_zone(struct zone *zone)
- {
--	return zone->present_pages;
-+	return READ_ONCE(zone->present_pages);
- }
- 
- #ifdef CONFIG_NUMA
-diff --git a/mm/compaction.c b/mm/compaction.c
-index e731d45befc7..b8066d1fdcf5 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2239,7 +2239,7 @@ static unsigned int fragmentation_score_zone_weighted(struct zone *zone)
- {
- 	unsigned long score;
- 
--	score = zone->present_pages * fragmentation_score_zone(zone);
-+	score = READ_ONCE(zone->present_pages) * fragmentation_score_zone(zone);
- 	return div64_ul(score, zone->zone_pgdat->node_present_pages + 1);
- }
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 431b1f6753c0..71b5e3d314a2 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -463,6 +463,8 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 	int nid = zone_to_nid(zone);
- 
- 	if (zone->zone_start_pfn == start_pfn) {
-+		unsigned long old_end_pfn = zone_end_pfn(zone);
-+
- 		/*
- 		 * If the section is smallest section in the zone, it need
- 		 * shrink zone->zone_start_pfn and zone->zone_spanned_pages.
-@@ -470,13 +472,13 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 		 * for shrinking zone.
- 		 */
- 		pfn = find_smallest_section_pfn(nid, zone, end_pfn,
--						zone_end_pfn(zone));
-+						old_end_pfn);
- 		if (pfn) {
--			zone->spanned_pages = zone_end_pfn(zone) - pfn;
-+			WRITE_ONCE(zone->spanned_pages, old_end_pfn - pfn);
- 			zone->zone_start_pfn = pfn;
- 		} else {
- 			zone->zone_start_pfn = 0;
--			zone->spanned_pages = 0;
-+			WRITE_ONCE(zone->spanned_pages, 0);
- 		}
- 	} else if (zone_end_pfn(zone) == end_pfn) {
- 		/*
-@@ -488,10 +490,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
- 		pfn = find_biggest_section_pfn(nid, zone, zone->zone_start_pfn,
- 					       start_pfn);
- 		if (pfn)
--			zone->spanned_pages = pfn - zone->zone_start_pfn + 1;
-+			WRITE_ONCE(zone->spanned_pages,
-+				   pfn - zone->zone_start_pfn + 1);
- 		else {
- 			zone->zone_start_pfn = 0;
--			zone->spanned_pages = 0;
-+			WRITE_ONCE(zone->spanned_pages, 0);
- 		}
- 	}
- }
-@@ -710,7 +713,8 @@ static void __meminit resize_zone_range(struct zone *zone, unsigned long start_p
- 	if (zone_is_empty(zone) || start_pfn < zone->zone_start_pfn)
- 		zone->zone_start_pfn = start_pfn;
- 
--	zone->spanned_pages = max(start_pfn + nr_pages, old_end_pfn) - zone->zone_start_pfn;
-+	WRITE_ONCE(zone->spanned_pages,
-+		   max(start_pfn + nr_pages, old_end_pfn) - zone->zone_start_pfn);
- }
- 
- static void __meminit resize_pgdat_range(struct pglist_data *pgdat, unsigned long start_pfn,
-@@ -795,7 +799,7 @@ static void auto_movable_stats_account_zone(struct auto_movable_stats *stats,
- 					    struct zone *zone)
- {
- 	if (zone_idx(zone) == ZONE_MOVABLE) {
--		stats->movable_pages += zone->present_pages;
-+		stats->movable_pages += READ_ONCE(zone->present_pages);
- 	} else {
- 		stats->kernel_early_pages += zone->present_early_pages;
- #ifdef CONFIG_CMA
-@@ -1077,7 +1081,7 @@ void adjust_present_page_count(struct page *page, struct memory_group *group,
- 	 */
- 	if (early_section(__pfn_to_section(page_to_pfn(page))))
- 		zone->present_early_pages += nr_pages;
--	zone->present_pages += nr_pages;
-+	WRITE_ONCE(zone->present_pages, zone->present_pages + nr_pages);
- 	zone->zone_pgdat->node_present_pages += nr_pages;
- 
- 	if (group && movable)
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index c725618aeb58..ec66f2eadb95 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1540,7 +1540,7 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
- 	for (z = 0; z < MAX_NR_ZONES; z++) {
- 		struct zone *zone = pgdat->node_zones + z;
- 
--		zone->present_pages = 0;
-+		WRITE_ONCE(zone->present_pages, 0);
- 		zone_init_internals(zone, z, nid, 0);
- 	}
- }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 5116a2b9ea6e..1eb9000ec7d7 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5728,7 +5728,7 @@ __meminit void zone_pcp_init(struct zone *zone)
- 
- 	if (populated_zone(zone))
- 		pr_debug("  %s zone: %lu pages, LIFO batch:%u\n", zone->name,
--			 zone->present_pages, zone_batchsize(zone));
-+			 READ_ONCE(zone->present_pages), zone_batchsize(zone));
- }
- 
- void adjust_managed_page_count(struct page *page, long count)
-diff --git a/mm/show_mem.c b/mm/show_mem.c
-index bdb439551eef..667680a6107b 100644
---- a/mm/show_mem.c
-+++ b/mm/show_mem.c
-@@ -337,7 +337,7 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
- 			K(zone_page_state(zone, NR_ZONE_INACTIVE_FILE)),
- 			K(zone_page_state(zone, NR_ZONE_UNEVICTABLE)),
- 			K(zone_page_state(zone, NR_ZONE_WRITE_PENDING)),
--			K(zone->present_pages),
-+			K(READ_ONCE(zone->present_pages)),
- 			K(zone_managed_pages(zone)),
- 			K(zone_page_state(zone, NR_MLOCK)),
- 			K(zone_page_state(zone, NR_BOUNCE)),
-@@ -407,11 +407,11 @@ void __show_mem(unsigned int filter, nodemask_t *nodemask, int max_zone_idx)
- 
- 	for_each_populated_zone(zone) {
- 
--		total += zone->present_pages;
--		reserved += zone->present_pages - zone_managed_pages(zone);
-+		total += READ_ONCE(zone->present_pages);
-+		reserved += READ_ONCE(zone->present_pages) - zone_managed_pages(zone);
- 
- 		if (is_highmem(zone))
--			highmem += zone->present_pages;
-+			highmem += READ_ONCE(zone->present_pages);
- 	}
- 
- 	printk("%lu pages RAM\n", total);
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 8507c497218b..5a9c4b5768e5 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1708,8 +1708,8 @@ static void zoneinfo_show_print(struct seq_file *m, pg_data_t *pgdat,
- 		   min_wmark_pages(zone),
- 		   low_wmark_pages(zone),
- 		   high_wmark_pages(zone),
--		   zone->spanned_pages,
--		   zone->present_pages,
-+		   READ_ONCE(zone->spanned_pages),
-+		   READ_ONCE(zone->present_pages),
- 		   zone_managed_pages(zone),
- 		   zone_cma_pages(zone));
- 
-
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
-
+> >   	/*
+> >   	 * Supply the existing CAPS, but clear the UHS modes. This
+> >   	 * will allow these modes to be specified by device tree
+> 
