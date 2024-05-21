@@ -1,30 +1,30 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163D9745E7
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F140B770E1
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716289423; cv=none; b=e1u/AlW6ZpnOE2n3AaDH5WMVZOJjBrKgQehiORt+b/bvCFVC3T6NzqQfU2TqW6cARZFGjaBrVSeWd1SNN2Po4msZOwD9W5UagQXxc4A+p6fkv7RRFa2U45vjOX3nmCihsHuITFuluuVQCpDwb/WJjmXye5yfybFUDdWy6JHDeKg=
+	t=1716289426; cv=none; b=jyq30i0Vd7YfaREH8u8FILMhZsgt3Pda+rRTSpTJe0Sx/h9PoWNAvTTKJwIll+kzf1VjuU/0qGvfPyToyX3bxl3YH/xpvEBnixDuETkNSPO8c+WZ71G+GODcVcam1VcAWLLP7DkzzbDbqbie1v83K+fSgN4l87M3IpftWCEKd88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716289423; c=relaxed/simple;
-	bh=rc2tOhLkwkX3ybDr66V8237pfMfld4Tlo9Wq9wRfzIk=;
+	s=arc-20240116; t=1716289426; c=relaxed/simple;
+	bh=x55X4hb+WDGyX98I9cJOxVIp/SSeNLmmTlFy+aZV4Jo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tF7aMfd8EYYhmz4jF8xUzyRXGaJJ8Kx9CfAW0Ort78qQGPfZlM41zz7ve6EuAwMZmjcYzYryTas9khawoZa9ZwZZDr0nl0Qr2PxdOBVlZPI7U48gjyH2Pw8MybX8kLrVEjMpeKhBwAbfEopmB73jHdt6XcDtsHTsaWBR77MjHEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nzMjLmy3; arc=none smtp.client-ip=115.124.30.101
+	 MIME-Version; b=S/NLvAU1Ood10InBiVVTA7BpKkY42inIKZbZno8AhB+b+oS34MNpLXU2dZavMuqAV4xDJErR47z6qKuHsO1lT6ur66BA3F0t5UmYCSN6Ff6SS30lgiA3HZ0yS94iyOOvyi3tVYRYgWMnEk8VZsz4vCSJ1jvbj8kj2a9MSF7RQRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=a0abYcVE; arc=none smtp.client-ip=115.124.30.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nzMjLmy3"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="a0abYcVE"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1716289414; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=jRAtHbKubpnpADzITDXZT1b01GiilShGna80PhKpWSg=;
-	b=nzMjLmy3ZA00agnVzDjG7nRemJ2J8K1qo4r4yJKo11Qfu19C9apclBzd40rzTaPT2yAezGz2vfwbDH0BOb+qpjpeDP6f0oN0pcSJW615OhhuvP1NauobnslPGlGjbJt57/NMlghbBRlRWT6kPh5tCBlcQMFwqeEZzx8/U4WrYDk=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W6xeTAt_1716289410;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W6xeTAt_1716289410)
+	t=1716289417; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=ArTvZKlaOes4XoFtzrKMEwLUH8CHPrOqCRPSPeGMt/g=;
+	b=a0abYcVElqGnhHB+0BarctgCnQwfetl3e4cTU2SDMdZg6QXiM3aff4nrNph168S8acADzcyo7xn/8G4ZLvhYctlWrNMdKetxd6kr96VgLnCFf5jjrqcrrspsbk4ewqh9OQuVcYFhvn5Z70qdgDnppgNdXGWqMk4KYkCj/NTA6KY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W6xeTCm_1716289415;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W6xeTCm_1716289415)
           by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 19:03:31 +0800
+          Tue, 21 May 2024 19:03:36 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -43,9 +43,9 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/8] mm: fix shmem swapout statistic
-Date: Tue, 21 May 2024 19:03:11 +0800
-Message-Id: <f467d0e9a021f4bd95588b9d888f1740fab3e3bc.1716285099.git.baolin.wang@linux.alibaba.com>
+Subject: [RFC PATCH 4/8] mm: shmem: support large folio allocation for shmem_replace_folio()
+Date: Tue, 21 May 2024 19:03:14 +0800
+Message-Id: <73d93136d8469658715388878c947e8952164c53.1716285099.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1716285099.git.baolin.wang@linux.alibaba.com>
 References: <cover.1716285099.git.baolin.wang@linux.alibaba.com>
@@ -57,31 +57,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As we know, shmem not only supports the sharing of anonymous pages, but also
-the RAM-based temporary filesystem. Therefore, shmem swapouts should not be
-marked as anonymous swapout statistics. Fix it by adding folio_test_anon().
+To support large folio swapin for shmem in the following patches, add
+large folio allocation for the new replacement folio in shmem_replace_folio(),
+as well as updating statistics using the number of pages in the folio.
 
-Fixes: d0f048ac39f6 ("mm: add per-order mTHP anon_swpout and anon_swpout_fallback counters")
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- mm/page_io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/shmem.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 46c603dddf04..b181b81f39e3 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -217,7 +217,9 @@ static inline void count_swpout_vm_event(struct folio *folio)
- 		count_memcg_folio_events(folio, THP_SWPOUT, 1);
- 		count_vm_event(THP_SWPOUT);
- 	}
--	count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_SWPOUT);
+diff --git a/mm/shmem.c b/mm/shmem.c
+index daab124c3e61..74821a7031b8 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1901,8 +1901,7 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
+ 	 * limit chance of success by further cpuset and node constraints.
+ 	 */
+ 	gfp &= ~GFP_CONSTRAINT_MASK;
+-	VM_BUG_ON_FOLIO(folio_test_large(old), old);
+-	new = shmem_alloc_folio(gfp, info, index);
++	new = shmem_alloc_hugefolio(gfp, info, index, folio_order(old));
+ 	if (!new)
+ 		return -ENOMEM;
+ 
+@@ -1923,11 +1922,13 @@ static int shmem_replace_folio(struct folio **foliop, gfp_t gfp,
+ 	xa_lock_irq(&swap_mapping->i_pages);
+ 	error = shmem_replace_entry(swap_mapping, swap_index, old, new);
+ 	if (!error) {
++		int nr_pages = folio_nr_pages(old);
 +
-+	if (folio_test_anon(folio))
-+		count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_SWPOUT);
- #endif
- 	count_vm_events(PSWPOUT, folio_nr_pages(folio));
- }
+ 		mem_cgroup_migrate(old, new);
+-		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, 1);
+-		__lruvec_stat_mod_folio(new, NR_SHMEM, 1);
+-		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -1);
+-		__lruvec_stat_mod_folio(old, NR_SHMEM, -1);
++		__lruvec_stat_mod_folio(new, NR_FILE_PAGES, nr_pages);
++		__lruvec_stat_mod_folio(new, NR_SHMEM, nr_pages);
++		__lruvec_stat_mod_folio(old, NR_FILE_PAGES, -nr_pages);
++		__lruvec_stat_mod_folio(old, NR_SHMEM, -nr_pages);
+ 	}
+ 	xa_unlock_irq(&swap_mapping->i_pages);
+ 
 -- 
 2.39.3
 
