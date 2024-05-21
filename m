@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFD360279;
-	Tue, 21 May 2024 09:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD2B6BFB0;
+	Tue, 21 May 2024 09:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716283484; cv=none; b=NSpiOsJoB60THvO4kBxj/ADKvYFMYOWPCPXLZ6HvvVcXEy4kSdWWpaEiHY98eujWOESyYtqNPU5tn+gJDrc4GQq7YlnKY+Rnrinp0dCXidiWce8SRY1Lb2e+BFIAlpPkMqinEXjXAclsZnmG1RHeCz8Iose65WgNQNyFt5YJjLs=
+	t=1716283501; cv=none; b=pjw1zktIZlIpA7Q7xtBRvIX9QuWlWI2oTSpJdtYVCKyyECDoDvp280JnCInHh/jrnLj4XFEFC+rSNtGshM2rgCLSlGhTGxMnUgQTVk0mJ4zJ0mQcYWAVfF0F12ff29Z3Doy53TWknjKz5YiJXEMg21IKN+imRSzLlXJ5DSMTnSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716283484; c=relaxed/simple;
-	bh=jOR72qLIFTZ/1R7L4DUIJmbfyfVXT4jDz+9hdqwOnQo=;
+	s=arc-20240116; t=1716283501; c=relaxed/simple;
+	bh=7UjuBpo0nPk3k1xpFRXIl2Wu3JPp5WiyviZb9i6QPtQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SSHZiZcuuDXsize4h68MVgyBHJ0rjbGM7x6TrHLZwh/+Or2UyTZUguVp1ECF4Pve3G4JekksS9L2cag928mYppCTSoDfuPyEDMoZPC/3FMMdb1WCo7973kLMYhZ2VNUS/JNkOUat99Hpa1/2b7oL80wuRfiQF5PVN/O/WEF6Qc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G16UvPy1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZWMrJifSolcTohAZnzGUbf4h4yevsOQKV1Pm0LhWOq1rRdS+M9ZGv7YRSb/K4hktOqNlc/Ft5oCtzK8WVY4f2DbJfh2mMDSeDUfEF1Ez720BwWbmO6PRVbulu64vwrJU8XzyJlT1Hka2f6IR7iQP2IIWG9HLgTKLTtSgCxybztw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2EJwDQT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G16UvPy1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F726C4AF07;
-	Tue, 21 May 2024 09:24:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2EJwDQT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C49FC2BD11;
+	Tue, 21 May 2024 09:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716283483;
-	bh=jOR72qLIFTZ/1R7L4DUIJmbfyfVXT4jDz+9hdqwOnQo=;
+	s=k20201202; t=1716283501;
+	bh=7UjuBpo0nPk3k1xpFRXIl2Wu3JPp5WiyviZb9i6QPtQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G16UvPy1o/OSTi65gBTrTm2ySmNTyueORZGvpDL2GmZb0Rj1iszQm8ty63EUwfEgf
-	 ISHeAsq+V3ccTU3oir4H3Pl2muXc/xOjjO14FaeyJ+o7Elq3KZs4EpkwmpfPVdwXCJ
-	 AoEX/6qbu/Iw8q8LyeKDMh5ab6XuORwtVFMz+7e/3GfIJgFUf1+2j81+EsEyRUaVBq
-	 2CLvsEyiB1DQ/lxUNzKoba673j1X6VQFiV0+mJyQQde7XaF+ZnakRQy7EGZ8TqySzh
-	 YMmikC7fLkWPbaZ6CP1vU4ubBR7DsgBfhDc0/jJ/7NRBtryB6B8LrMMc5Sq491D6Hi
-	 6U29iQIwoCuiQ==
-Message-ID: <918ca28c-2498-4c98-a257-33e828134087@kernel.org>
-Date: Tue, 21 May 2024 11:24:39 +0200
+	b=N2EJwDQTWj924EnJGtlFf6VrSLnVM9Aof2AV+hmTqkyByd+LPhYlsof3tZx8U7QF3
+	 ZWbpWp/Y8PgDtq4MSD1rxoj6mF61DMDaPNqv3qKO0wyjBJahZJ4WrnSrPMs5mQHNO7
+	 JdhKNYNVsUTMOVcuVK9i/Pgb8WYPa1wS32hlQj0fxMpu2lOFG5xkYpQpbNgJJjqGjq
+	 So7TKSkkj49YHUiFikERpZlOFiYe10zxvfcVRGFp8EYU71vQ2YO/xQXBSsknXZURZf
+	 RQyvuNc8Z3lV+7KUE2BRxyC4bTx9EOLz/3kfogbo0tJFieUAgKADdhQMo+IY7hpcKF
+	 umg6YI3SW/HxA==
+Message-ID: <dfb3c96e-0684-4e61-b1c9-5a83f61e0418@kernel.org>
+Date: Tue, 21 May 2024 11:24:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: dma: Add reg-names to
- nvidia,tegra210-adma
-To: Sameer Pujar <spujar@nvidia.com>, vkoul@kernel.org,
- thierry.reding@gmail.com, dmaengine@vger.kernel.org
-Cc: jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, mkumard@nvidia.com, ldewangan@nvidia.com
-References: <20240520122351.1691058-1-spujar@nvidia.com>
- <20240520122351.1691058-2-spujar@nvidia.com>
+Subject: Re: [PATCH v5 2/7] dt-bindings: remoteproc: Add compatibility for TEE
+ support
+To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20240521081001.2989417-1-arnaud.pouliquen@foss.st.com>
+ <20240521081001.2989417-3-arnaud.pouliquen@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,24 +89,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240520122351.1691058-2-spujar@nvidia.com>
+In-Reply-To: <20240521081001.2989417-3-arnaud.pouliquen@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/05/2024 14:23, Sameer Pujar wrote:
-> From: Mohan Kumar <mkumard@nvidia.com>
+On 21/05/2024 10:09, Arnaud Pouliquen wrote:
+> The "st,stm32mp1-m4-tee" compatible is utilized in a system configuration
+> where the Cortex-M4 firmware is loaded by the Trusted execution Environment
+> (TEE).
+> For instance, this compatible is used in both the Linux and OP-TEE
+> device-tree:
+> - In OP-TEE, a node is defined in the device tree with the
+>   st,stm32mp1-m4-tee to support signed remoteproc firmware.
+>   Based on DT properties, OP-TEE authenticates, loads, starts, and stops
+>   the firmware.
+> - On Linux, when the compatibility is set, the Cortex-M resets should not
+>   be declared in the device tree.
 > 
-> For Non-Hypervisor mode, Tegra ADMA driver requires the register
-> resource range to include both global and channel page in the reg
-> entry. For Hypervisor more, Tegra ADMA driver requires only the
-> channel page and global page range is not allowed for access.
-> 
-> Add reg-names DT binding for Hypervisor mode to help driver to
-> differentiate the config between Hypervisor and Non-Hypervisor
-> mode of execution.
-> 
-> Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+
+Not tested.
 
 Please use scripts/get_maintainers.pl to get a list of necessary people
 and lists to CC. It might happen, that command when run on an older
