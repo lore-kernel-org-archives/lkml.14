@@ -1,325 +1,391 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E455173186;
-	Tue, 21 May 2024 11:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292099; cv=fail; b=lgDhnM8GNwHLa2o+cUbQaYwIahtIziKmQahWaVwh7dYYwvS492x2k7Uiw+VYsS74ebSsQbmHlCD/emiverRaXlJLw6XK1Impr6lh/wADM/RKNE8FrwSV9T7UVykV+eV41LjVChkECzsujFF1PuhjlZ9wq/FS1ZR3d2SIQ05UUE0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292099; c=relaxed/simple;
-	bh=bEa1TkrtqOd43/iCvhbZyGqI+hJefpGMh5Pkjkv126s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gjoEOuSTOj3nZt+v4HIV38nBypprDQPmdqwR3i6oeWpZlxGz/T0WL67jLoD4KVedHwBiNhW/IrByfiruzRCLDxDSEYK+hliiRneDPU1d1lQF0OnLZsg81ynt9fJVcxYWjLQEVUWnG0dzjmUStfvt54XDybFJToa5criEPFl/5EI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WDd2C73T; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NHtRRvwD; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227817580B
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716292126; cv=none; b=XeaJV39T87iZO13O9SLGfv71fo7HPVLb4uiP7xnwHLBd1BKTfO6JktTvgQ76lELBAGDuZbZb3JwPYgljMIKYEZyL5mNBFt+95BbKc/agJYW6S2m2NZlzFIJTuIR2xLB0Kvuwnpv/5rR6SW1a5IU6xvb1TVLkFJtksPbyzLy3sSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716292126; c=relaxed/simple;
+	bh=w74oySSkmlGhE0TfH1tB7F1tx4YTKjzIh/pSxeIstk8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GW3LnzU8eAtxTYWlLGsqWEY5MvcWGyNSW8++x41B2HH9nmoGlJycrDs0VMfdHb+GR5VXPrbp74QAd+Je+8gEHi4LsdVHwdOjM4pokVtp9YwiuWOugLTmzpZGfk7A1j+xwLxshMb8cfmreYthH7hFUh1FwwKRfgyUjzinoJ74ep0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7Y2msQB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WDd2C73T";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NHtRRvwD"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44L7x5TH025839;
-	Tue, 21 May 2024 11:47:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=EwfG6j3NFcThLcs5eNak9NREaIA9nzSbSntPGd/uvi0=;
- b=WDd2C73TrWc4AJP3/k3q41s8Xm4nd3uV5xkWplKocB0T3fcojga4S4dLReX60jAtakOr
- ptKe/nP1y/MpWC5Hqv2DieMjeG9M0102rsDQdsb6OCgBybA0B99OOLNqxcSn7klvejz/
- IcvAytz6C+MR+fsauL/i3AdFlw4fuZBi3GZIq7tkMIxGyM6jccGgQMVPHWwayW0quORx
- bRoQFIyB7OxBsJ+Noo+oRroC+tXkr10De6qfeoetYjKheuowZoroKkoi3CaeoTRgyGRY
- gXriXYQDwUrYoNDULVFQUCRC2R9R10Sw4xhd9rgrOXzAlnHtsauRgaAJJMa2M+mOCXmV Qg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6k4653tf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 May 2024 11:47:55 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44L9wgA4002693;
-	Tue, 21 May 2024 11:47:54 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6js7k4xh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 May 2024 11:47:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LXlLf39asHZga3pc/df91DYF/GH4TTmHr+oCb8yox3d0WW9zO90h1QM/UTQRqygjGvF0vwP0awILVQ+bspsiN/FRzZWa6MNJPK6yIg3rrNxw4bQNavAW63ubtiDnpePz6GIqMShb6i2PuhjqZyRqbl6lT0FnwhEgI8x0sK9t5F6xV3eAVDuTr9QYLuzdhr8e7wQ5Z99F66CsMlZivChLDXtVictRxreDMWo3jeRZn+S5dNya0dMOuqpwh5/EP+aYSsDSF42SZeqlEmjnPmOC2h8qDOWB8fu8RQ+FCEUgBonWU47uwCxcZAkDplefJznedYOF6UJqaZLqLD1wFR/hVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EwfG6j3NFcThLcs5eNak9NREaIA9nzSbSntPGd/uvi0=;
- b=G6NvHS0E1ZTbWi+uaU2wfkBoCIK/+0WHPwjgjSOrmXIiyMLQOzpj+ARTcj1DtCkHSt+kNe/REK1uDcQc+Uwbr68k3aiuAPrWVQei/lnADW6xImlLrQ9SNeEh+ktqT7Antm4F8SaKz5EdGOdXvWmNosehTrE4lAakyrO5KrhkAJSBSQBtBZuGyhOoJ4KOI0K7RcdSzSMeI5NaDpreCSbUK8SKj/un0VqZuU2fdjcutp03Htz+t9nwOWRT7QwLACdLtAm5ws5QJT7VOS/H8yV7mgK99IUr2Vq00ap7wfXxTJFZDtv4/KM62i29roUWx3eh0fw1nVkUBzeunGewu/wgZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EwfG6j3NFcThLcs5eNak9NREaIA9nzSbSntPGd/uvi0=;
- b=NHtRRvwDb/jBf7Xrq/WK7+01H2AzAvHhXIMK2iaY0oDcBES4mpq2DCtLhiIl1g4EBzWggBE573/NjzMoTOJXRW5bE6tV7lqAq4f4lFHbIE3Cjt+COCTGnZ9/xFWJgq5UYC3VLhBF+JJY0O4si8zFXqd6f8/BwdJ3Eg2q5euaWKA=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CYXPR10MB7899.namprd10.prod.outlook.com (2603:10b6:930:df::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Tue, 21 May
- 2024 11:47:52 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7587.035; Tue, 21 May 2024
- 11:47:52 +0000
-Message-ID: <afa06fba-43b4-4068-9639-ef4a6dfd3cef@oracle.com>
-Date: Tue, 21 May 2024 07:47:49 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] scsi: libsas: Fix exp-attached end device cannot be
- scanned in again after probe failed
-To: yangxingui <yangxingui@huawei.com>, yanaijie@huawei.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        damien.lemoal@opensource.wdc.com
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, prime.zeng@hisilicon.com,
-        chenxiang66@hisilicon.com, kangfenglong@huawei.com
-References: <20240424080807.8469-1-yangxingui@huawei.com>
- <c1835d80-ca48-766e-c174-d94a2d357925@huawei.com>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <c1835d80-ca48-766e-c174-d94a2d357925@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR16CA0006.namprd16.prod.outlook.com
- (2603:10b6:208:134::19) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7Y2msQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05DADC2BD11;
+	Tue, 21 May 2024 11:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716292125;
+	bh=w74oySSkmlGhE0TfH1tB7F1tx4YTKjzIh/pSxeIstk8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Z7Y2msQBI4viLlGJ0SpmMkYpvV3AS1iRehsdy1KRmCwEn7RV12UVquGp0XqkpYfNY
+	 v2aE1vjDmYa52XjWBtWrRfspwdE0jHGxK+PwYUvpFLIPi52dq2gHNp4JK79Az0x4Vl
+	 c9GvyfNDuZc9fnRcOAc2eza0B26LvqOJEZTA6tqIxXr0IKfjh3gc7Ry63ANlZxfqvE
+	 adAQpi119naNEOc24zn/tZAvOm++JqXSUymNnxV96y/k3esg9bWhzOiLbxRcuNBs5e
+	 odszu3eEZG+axxtfVKk9WsRbhNSkGYXY5+sARrQLydAe3LcYNsSrAFzJ4ITpn5qcE9
+	 GJUHONG2kQL6Q==
+From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	David Hildenbrand <david@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Oscar Salvador <osalvador@suse.de>
+Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Andrew Bresticker <abrestic@rivosinc.com>,
+	Chethan Seshadri <Chethan.Seshadri@catalinasystems.io>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Santosh Mamila <santosh.mamila@catalinasystems.io>,
+	Sivakumar Munnangi <siva.munnangi@catalinasystems.io>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 0/9] riscv: Memory Hot(Un)Plug support 
+Date: Tue, 21 May 2024 13:48:21 +0200
+Message-Id: <20240521114830.841660-1-bjorn@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CYXPR10MB7899:EE_
-X-MS-Office365-Filtering-Correlation-Id: cab91329-8fb0-4d0f-1d33-08dc798bd8ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?a2p2amtEeitSNEJuVFExREl0RVhTQXU0UU5GdmdaWkE2a0ZTNGh4QytHa25X?=
- =?utf-8?B?dlVuQVdGb1BZd1E3OVd3eGFLU2FubVhkVEE4VlpnbFJYTlpZNC9Wc2Y4T2Mr?=
- =?utf-8?B?eHdsM3UyZS8rUFFwSWQ3b2ZoMmtKSlJnYklzU2NMcUJUY3ZKeGZubTNXR0Np?=
- =?utf-8?B?NlZWNSt0OGpTblZVK3ptVXNoVS9YeUZOY01zNzlWUGVkdjlRV1A4N0xNTmdt?=
- =?utf-8?B?UmlMcGgwUUk2ZGl6RWZabHRPLzFaa3dCYkV1UDZoaStVZDVvL3ZzSGZic1Vh?=
- =?utf-8?B?T1UxMzg3L3lwTUloN1V0dXgyZDZrVXN3cVN1QUZsNCt1YlVORFdScDN2bDZG?=
- =?utf-8?B?NjQ4MFlpRkVWc3Z6bURYcml6ckhXMnNWdDJaWFlBK25wN09saGtlV2JDUmpN?=
- =?utf-8?B?ak5PVVY3SEgyQnAyYXVOSUVQczFnVDc4alpOZWRXci9wYXVlSUdzanNSNUlC?=
- =?utf-8?B?OTlRbGg5bGozUTBIa0xOTktnZGxUMUd4Rnd3R0kzR0NYNEw2b2RWUk1RR1Ez?=
- =?utf-8?B?bk1JU1N2WXM5Q2tJQzh3THBpRWlGU2s0YkQvUnJQcHAvM0hFOXErTEQxeHhP?=
- =?utf-8?B?NmFTU25oNUVtMHg4cG91OFhjMGx2N3VqRDFhd0ZSc2lhUGpMN1lFcCtheUVt?=
- =?utf-8?B?U1F3dXJUcDF2NGxBb0NZMDJmL1E0TGJBK1VsUVAzenZjYU1EMXRCeHhydnNj?=
- =?utf-8?B?aEtRYk9XSGhBVTFrVHkwSmlWd1RDdllHa0c0ampZSGtDMnhsY0xZMURFclBH?=
- =?utf-8?B?bjdyUFVpZDFsZGxPcXlqNkJwdnJGbXgrZUtTVnhFbWFEUXJ1VGYzT0NYQVdI?=
- =?utf-8?B?L0Z0V1pUMXVMSk4rU3pzSGlocFYzaW9uRWZTU3JVaFptNkMrYzhSeWQ5RUpn?=
- =?utf-8?B?cmpJTmFkZnlCVnRDNFV1THA2L1dvRzVvVDJ0V1N0aThTTlhNc29aUUVPb0hn?=
- =?utf-8?B?R1N2aTE0RExSY2J3eUJUYWVwRlRNaitERFhKYUFnbFBKMm55c0FudUZZWldj?=
- =?utf-8?B?VGpka2JVSml3emdZRytLeUliSm5TTGVyamwxS245SjRQbDNxMTJxL0tiZGlE?=
- =?utf-8?B?ajFLZExzb202VC91dmplNkVnT095NGh1UG5UREpDU0o4R2JOajlJTmhMRVM5?=
- =?utf-8?B?djJuTnJ0Zm51QlVPOUsrVSsycFhMRzVhalFuRHN1QzJYZUJMOCtrMGxGVUJQ?=
- =?utf-8?B?T3RLallka1pMZ2puK0syVFcremJsT1RPWHFxNkxKZkRFajljb1Z6MFVvRDlP?=
- =?utf-8?B?OXovdGRRT0xyQ0QyQlNjTUxvVzhqYVpNVXdSQ0xLTkVBZEZiQ0VmNXJkWkVI?=
- =?utf-8?B?bUs3ZEk3amxjT0Nwbk01Z3ZZZDZrYzMrWG9Ed2hvZWd1bkdLRFJKN2V1RU9W?=
- =?utf-8?B?VXRRYmhuSFk4L1YwNVNBaW93TUFQRTVmNU84dFpxY1R3cFdaRzZOaittOWQ0?=
- =?utf-8?B?K01USUUyMjNJcCsrVVNUVU1idjg3b0VYUXZ1MzdsTlRhQlVOUFRrUXJUWnlU?=
- =?utf-8?B?dS9EeXNCaDRwYjJvdHdCVkpodXhFTWNtU3Z6QklrdFFibC9HR2xPOTRFK0Rz?=
- =?utf-8?B?cktNM2NLYk4yUXU1ZmhNSkhZL1J2alZYeVpqc1NyNUk3aVNuMGZqKzFWUUtR?=
- =?utf-8?B?T0pCdjV3ZUtNQnNzZXk5UUUxQjhKblRoWkRUb3d6eFhybjFEMDNpS09QWEVD?=
- =?utf-8?B?b29PTXN6TllCSk4zRi9Hc1FoVktWRVdNdHA5SEJaSzN5NDY3bnlOL0V3PT0=?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?SWFkUFo4WW1ncUMybEExZHdlU0l6N2tNR0prckJnS3lEb3gwYk10U3FlL0pM?=
- =?utf-8?B?bnU1enFaRCtZYjZ5Nm5mSHdTYzJMekUxNmxmQnV0R3hiVjlHbHdxVDlJUHdY?=
- =?utf-8?B?M1MrTWRvQTVOUW5TZGRaRFhQempLUVhGVHdBb0ZEZVU4Tml1TFBSSmx4dzQ3?=
- =?utf-8?B?RktWYWEyVmdJNGs1MWZiVy9COVlQSkkzcDBrSUdsOTJ2dW0remlYeU8veERs?=
- =?utf-8?B?cmNYSTMyQzdMTjNqUE9QMHlQdTdVdGtFbURjUS8xTWlJRFQvZTZpaVZEQ2R1?=
- =?utf-8?B?M0tPSFZ3djBGM2syb3VUdTBaSE1tZkxrbHBqeVV0Ty9JYmovUjdJMjRhMjI3?=
- =?utf-8?B?Z1pYc0dQS01Dc1c0Wm5wNU4yU2dzRU9WcjU2QjNPM0l3b21hUWszS1dPNHFw?=
- =?utf-8?B?eGhiZndzeGFHditheERUY0dYeUdrSU1RQlRma1pPQ29lN1JjNGQrVXRkMDdp?=
- =?utf-8?B?akFpUXNEaUN3aFNZV2M3RkVndXV6Y3FWc0Z2MHNiL0NGeTBGaUZHQWpocG40?=
- =?utf-8?B?UUdEa1pzRzFTZmVNdi9VdzUwZCtnYWNyWHExNVI2VVNyRFpiSWthMXNzMmUr?=
- =?utf-8?B?YTRNYWJPNG1IY0NnVUFIaDNZWjFsS2Jxc2xacUJtK1JhVExnaFpKQWduY2kx?=
- =?utf-8?B?ZEErSHk3NDZSVWtYdkVEL25YMStBbU00KzFRckduTlpXS1lEY3VFMjBiQ0hw?=
- =?utf-8?B?ZjB3aWRIOGcxR0J6cmRDdGh2ME8xRTB2UkRCU1Z6RTlDaXNSb0dWczU2K2RO?=
- =?utf-8?B?ZTNlUnE4OElnMDMxN3FQa0doTzEwdUVZVVFFcWZxSTBHeDhYbHMrSEZUMlM3?=
- =?utf-8?B?QndDbU9lYkJmYlhKS2VTMDNCUyt1Vk54Zm1VRDl5NFBEaVg1NlIrQzk0RWZP?=
- =?utf-8?B?WUFLMExEREVuQndpM2djWldKOGNPZkNvNUlBZEs1UGl1elR6bGxYY3Zaa3Jk?=
- =?utf-8?B?MTdLZ2xjSDNkUkdUUnczNGhUeEt3eEh0MUp0MXN3RVRZRXVkR3JqLzhGb0JS?=
- =?utf-8?B?VlFSMGdhU3ZnTGRJd3dQbG9jRmNIb1BtbXlQVElnNDRnR3NUaXRKTmZ0STdS?=
- =?utf-8?B?cU0rcGJNZGIwL3JiQ0drRUkyUEFpc083bTJUNEd5c1BIRVBMT0hZZ0FjeTVj?=
- =?utf-8?B?WW5BeTBJTEVuZkxjNC9KMndDb2xlVHk3b1llR0lYMlRJZlVTcDRhdjVITmp6?=
- =?utf-8?B?NytyOHlUbEVxZUVxazQzTlFpOHM1TnI1UnEzc01oL0xnQlNVQmlNNGNyVkFn?=
- =?utf-8?B?ejNVZFE3Qnkra3FrUFkyN0RHY2tCSmd5eFhYQjhDRE5wRW5KV0p4c2ZuVjg5?=
- =?utf-8?B?Wis4R2NBaW1RZjVZNi8rSWF2RWtKNEcxN3NMa2Mrd2x3Zngwamd0NDBzRGJE?=
- =?utf-8?B?eklHUGZuZDJIemU1Y3BkLzIwaEVsc1dUVHVhS0RBRllDRnBkMDdSNUZTNktO?=
- =?utf-8?B?LzdUakl6K2RPZWNtVXlrYytKWEw1eXMwR3EwYVFZQWJ6cjZDUk0zUlI4WGRL?=
- =?utf-8?B?end5UElRbGx5SkJ2bUlINndaRWRUbGI0UlNlVXJhT3lzWmUzN0ROSmVnUHcx?=
- =?utf-8?B?T1FlU0x2SlhDNm93REpBMk1DOCtNeFlQOUlsdCtEanNoeWY2bUtIRWtVd2dx?=
- =?utf-8?B?eXZZTDROMUFsdXRUTVcwcWs2eG1TM0hpbzVwRXhCWXZkaFRuZXBpQW1JNTls?=
- =?utf-8?B?R2YyUGFZclFJSm44MENOTXBxSm04M3pIbDI4RWVURElZa2tJUWdnS1pVblRT?=
- =?utf-8?B?SmQ1c09iUWlDSXRDMjJ2RTB1cUJFclcxVVRQOFJiM2YzQ29uYWhxeEJKRk5E?=
- =?utf-8?B?eWx4S3Q3QXdVUXpOWjdlZlI0WncvWWFZZ0VnZVZBU0ZOK2xVQUpOUUtVeXE5?=
- =?utf-8?B?a0dabWtac080N2wwSHZGOExHeGZUVkNVOUF3d2pVZUgweVJ0NEw4ano2Qy9G?=
- =?utf-8?B?RGVlcFpJYWs5VDhIMURJUWRtRjJmejJ1eHkzcEJKQy8vVnR1YnFBYnNHOHU3?=
- =?utf-8?B?Nms1c05aRDdSKy80U1Q5bGJEOFdWWTNoUkdZeEJhVUQ5ejRxMWMxK0FNd3c3?=
- =?utf-8?B?UHlIdS8rRjN5dWYwU0dsL3ZVTDNTL3lhYXRpWGVsWTNHOFJkcVRrVUJhamV0?=
- =?utf-8?B?cWNDZ3BNcU93b0dmWDZKL3J4NnRqbm1qYjZzZ1RCMm0wakJLemxLMk9kdlBJ?=
- =?utf-8?B?elE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	m5qNL/glN4BXW8vmzzqvjllBY3CqYkq58dbPrkz4Zerolj3NwR7xKJTgn5VzViz9ngWx1r9KbvObMWAZICRT5OFzZkUeFU4mxFgkMTcFtjgidoFOiPr017MJfSti9cCRyYHVXYmHNLLWza+sn6+H+D80i3p+ehZKE2EuOcTYCIYBOa8Kusbheq6FaM2pmdpSEj9t2MtI+ISVwGH8YN+Imfra8uiTn7CAQ7ISXYN/FtfMX6PjyrMk2V9NvkpywRpI7UCyMB6Hg0jRwXRG9tYxPkd45VXd+KzCVpgfOsepQnBXH7XIYroLHsl/i7x8ihK4sfd67Mj4XCSmR3iOH5vDHfj+5avPpSjQJvSLWNx3rd9zqPwd5O+cCVhLqwOQVRcqDi46vawy6NPsbg+1TKV1g5B5mV9nLxWXEw/Tav/XuTo1UQYUhKE6mI6QrMYVVfeca29gsJBblFL1ic24nDMTYMF25x4JUrsZjye4q6Xdhaexx0hmnGivZQQEJ25pvP7ZttYvS/LiL6IWIjo01A82grkGnbtRT/AbjvAvlwfZhxpIx25VRZM4FxRb53Io32JQnSM63UhGob1LXJbGA0/+qmNS+PqUyDl/6gSstGQbXQk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cab91329-8fb0-4d0f-1d33-08dc798bd8ab
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2024 11:47:52.3418
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HiINGvyEso3uq6IJQKsfBaXXmE0gnSNl7kOL2J3ZK35FY22QU9pRlRoNpr4HZXr/nTcCi99B/nyDBtE1z+o+HQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR10MB7899
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_07,2024-05-21_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- suspectscore=0 spamscore=0 mlxscore=0 adultscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405210088
-X-Proofpoint-ORIG-GUID: S1flwL1-z1w2J7rQNp9wQU3COzZT8yhq
-X-Proofpoint-GUID: S1flwL1-z1w2J7rQNp9wQU3COzZT8yhq
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 20/05/2024 09:29, yangxingui wrote:
-> Friendly ping ...
+From: Björn Töpel <bjorn@rivosinc.com>
 
-I'll check when I return from vacation in a couple of days
+================================================================
+Memory Hot(Un)Plug support (and ZONE_DEVICE) for the RISC-V port
+================================================================
 
-> 
-> On 2024/4/24 16:08, Xingui Yang wrote:
->> We found that it is judged as broadcast flutter when the exp-attached end
->> device reconnects after probe failed, as follows:
->>
->> [78779.654026] sas: broadcast received: 0
->> [78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
->> [78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
->> [78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated 
->> BROADCAST(CHANGE)
->> [78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
->> [78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 
->> 500e004aaaaaaa05 (stp)
->> [78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
->> [78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
->> [78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
->> ...
->> [78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 
->> tries: 1
->> [78835.171344] sas: sas_probe_sata: for exp-attached device 
->> 500e004aaaaaaa05 returned -19
->> [78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
->> [78835.187487] sas: broadcast received: 0
->> [78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
->> [78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
->> [78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated 
->> BROADCAST(CHANGE)
->> [78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
->> [78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 
->> 500e004aaaaaaa05 (stp)
->> [78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
->> [78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
->>
->> The cause of the problem is that the related ex_phy's 
->> attached_sas_addr was
->> not cleared after the end device probe failed. In order to solve the 
->> above
->> problem, a function sas_ex_unregister_end_dev() is defined to clear the
->> ex_phy information and unregister the end device after the 
->> exp-attached end
->> device probe failed.
->>
->> As the sata device is an asynchronous probe, the sata device may probe
+Introduction
+============
 
-SATA, almost always capitalize acronyms
+To quote "Documentation/admin-guide/mm/memory-hotplug.rst": "Memory
+hot(un)plug allows for increasing and decreasing the size of physical
+memory available to a machine at runtime."
 
->> failed after done REVALIDATING DOMAIN. Then after its port is added to 
->> the
->> sas_port_del_list, the port will not be deleted until the end of the next
->> REVALIDATING DOMAIN and sas_destruct_ports() is called. A warning about
->> creating a duplicate port will occur in the new REVALIDATING DOMAIN when
->> the end device reconnects. Therefore, the previous destroy_list and
->> sas_port_del_list should be handled before REVALIDATING DOMAIN.
->>
->> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
->> ---
->> Changes since v1:
->> - Simplify the process of getting ex_phy id based on Jason's suggestion.
->> - Update commit information.
->> ---
->>   drivers/scsi/libsas/sas_discover.c | 2 ++
->>   drivers/scsi/libsas/sas_expander.c | 8 ++++++++
->>   drivers/scsi/libsas/sas_internal.h | 6 +++++-
->>   3 files changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/scsi/libsas/sas_discover.c 
->> b/drivers/scsi/libsas/sas_discover.c
->> index 8fb7c41c0962..aae90153f4c6 100644
->> --- a/drivers/scsi/libsas/sas_discover.c
->> +++ b/drivers/scsi/libsas/sas_discover.c
->> @@ -517,6 +517,8 @@ static void sas_revalidate_domain(struct 
->> work_struct *work)
->>       struct sas_ha_struct *ha = port->ha;
->>       struct domain_device *ddev = port->port_dev;
->> +    sas_destruct_devices(port);
->> +    sas_destruct_ports(port);
->>       /* prevent revalidation from finding sata links in recovery */
->>       mutex_lock(&ha->disco_mutex);
->>       if (test_bit(SAS_HA_ATA_EH_ACTIVE, &ha->state)) {
->> diff --git a/drivers/scsi/libsas/sas_expander.c 
->> b/drivers/scsi/libsas/sas_expander.c
->> index f6e6db8b8aba..45793c10009b 100644
->> --- a/drivers/scsi/libsas/sas_expander.c
->> +++ b/drivers/scsi/libsas/sas_expander.c
->> @@ -1856,6 +1856,14 @@ static void sas_unregister_devs_sas_addr(struct 
->> domain_device *parent,
->>       }
->>   }
->> +void sas_ex_unregister_end_dev(struct domain_device *dev)
->> +{
->> +    struct domain_device *parent = dev->parent;
->> +    struct sas_phy *phy = dev->phy;
->> +
->> +    sas_unregister_devs_sas_addr(parent, phy->number, true);
->> +}
->> +
->>   static int sas_discover_bfs_by_root_level(struct domain_device *root,
->>                         const int level)
->>   {
->> diff --git a/drivers/scsi/libsas/sas_internal.h 
->> b/drivers/scsi/libsas/sas_internal.h
->> index 3804aef165ad..434f928c2ed8 100644
->> --- a/drivers/scsi/libsas/sas_internal.h
->> +++ b/drivers/scsi/libsas/sas_internal.h
->> @@ -50,6 +50,7 @@ void sas_discover_event(struct asd_sas_port *port, 
->> enum discover_event ev);
->>   void sas_init_dev(struct domain_device *dev);
->>   void sas_unregister_dev(struct asd_sas_port *port, struct 
->> domain_device *dev);
->> +void sas_ex_unregister_end_dev(struct domain_device *dev);
->>   void sas_scsi_recover_host(struct Scsi_Host *shost);
->> @@ -145,7 +146,10 @@ static inline void sas_fail_probe(struct 
->> domain_device *dev, const char *func, i
->>           func, dev->parent ? "exp-attached" :
->>           "direct-attached",
->>           SAS_ADDR(dev->sas_addr), err);
->> -    sas_unregister_dev(dev->port, dev);
->> +    if (dev->parent && !dev_is_expander(dev->dev_type))
->> +        sas_ex_unregister_end_dev(dev);
->> +    else
->> +        sas_unregister_dev(dev->port, dev);
->>   }
->>   static inline void sas_fill_in_rphy(struct domain_device *dev,
->>
+This series adds memory hot(un)plugging, and ZONE_DEVICE support for
+the RISC-V Linux port.
+
+MM configuration
+================
+
+RISC-V MM has the following configuration:
+
+ * Memory blocks are 128M, analogous to x86-64. It uses PMD
+   ("hugepage") vmemmaps. From that follows that 2M (PMD) worth of
+   vmemmap spans 32768 pages á 4K which gets us 128M.
+
+ * The pageblock size is the minimum minimum virtio_mem size, and on
+   RISC-V it's 2M (2^9 * 4K).
+
+Implementation
+==============
+
+The PGD table on RISC-V is shared/copied between for all processes. To
+avoid doing page table synchronization, the first patch (patch 1)
+pre-allocated the PGD entries for vmemmap/direct map. By doing that
+the init_mm PGD will be fixed at kernel init, and synchronization can
+be avoided all together.
+
+The following two patches (patch 2-3) does some preparations, followed
+by the actual MHP implementation (patch 4-5). Then, MHP and virtio-mem
+are enabled (patch 6-7), and finally ZONE_DEVICE support is added
+(patch 8).
+
+MHP and locking
+===============
+
+TL;DR: The MHP does not step on any toes, except for ptdump.
+Additional locking is required for ptdump.
+
+Long version: For v2 I spent some time digging into init_mm
+synchronization/update. Here are my findings, and I'd love them to be
+corrected if incorrect.
+
+It's been a gnarly path...
+
+The `init_mm` structure is a special mm (perhaps not a "real" one).
+It's a "lazy context" that tracks kernel page table resources, e.g.,
+the kernel page table (swapper_pg_dir), a kernel page_table_lock (more
+about the usage below), mmap_lock, and such.
+
+`init_mm` does not track/contain any VMAs. Having the `init_mm` is
+convenient, so that the regular kernel page table walk/modify
+functions can be used.
+
+Now, `init_mm` being special means that the locking for kernel page
+tables are special as well.
+
+On RISC-V the PGD (top-level page table structure), similar to x86, is
+shared (copied) with user processes. If the kernel PGD is modified, it
+has to be synched to user-mode processes PGDs. This is avoided by
+pre-populating the PGD, so it'll be fixed from boot.
+
+The in-kernel pgd regions are documented in
+`Documentation/arch/riscv/vm-layout.rst`.
+
+The distinct regions are:
+ * vmemmap
+ * vmalloc/ioremap space
+ * direct mapping of all physical memory
+ * kasan
+ * modules, BPF
+ * kernel
+
+Memory hotplug is the process of adding/removing memory to/from the
+kernel.
+
+Adding is done in two phases:
+ 1. Add the memory to the kernel
+ 2. Online memory, making it available to the page allocator.
+
+Step 1 is partially architecture dependent, and updates the init_mm
+page table:
+ * Update the direct map page tables. The direct map is a linear map,
+   representing all physical memory: `virt = phys + PAGE_OFFSET`
+ * Add a `struct page` for each added page of memory. Update the
+   vmemmap (virtual mapping to the `struct page`, so we can easily
+   transform a kernel virtual address to a `struct page *` address.
+
+From an MHP perspective, there are two regions of the PGD that are
+updated:
+ * vmemmap
+ * direct mapping of all physical memory
+
+The `struct mm_struct` has a couple of locks in play:
+ * `spinlock_t page_table_lock` protects the page table, and some
+    counters
+ * `struct rw_semaphore mmap_lock` protect an mm's VMAs
+
+Note again that `init_mm` does not contain any VMAs, but still uses
+the mmap_lock in some places.
+
+The `page_table_lock` was originally used to to protect all pages
+tables, but more recently a split page table lock has been introduced.
+The split lock has a per-table lock for the PTE and PMD tables. If
+split lock is disabled, all tables are guarded by
+`mm->page_table_lock` (for user processes). Split page table locks are
+not used for init_mm.
+
+MHP operations is typically synchronized using
+`DEFINE_STATIC_PERCPU_RWSEM(mem_hotplug_lock)`.
+
+Actors
+------
+
+The following non-MHP actors in the kernel traverses (read), and/or
+modifies the kernel PGD.
+
+ * `ptdump`
+
+   Walks the entire `init_mm`, via `ptdump_walk_pgd()` with the
+   `mmap_write_lock(init_mm)` taken.
+
+   Observation: ptdump can race with MHP, and needs additional locking
+   to avoid crashes/races.
+
+ * `set_direct_*` / `arch/riscv/mm/pageattr.c`
+
+   The `set_direct_*` functionality is used to "synchronize" the
+   direct map to other kernel mappings, e.g. modules/kernel text. The
+   direct map is using "as large huge table mappings as possible",
+   which means that the `set_direct_*` might need to split the direct
+   map.
+
+  The `set_direct_*` functions operates with the
+  `mmap_write_lock(init_mm)` taken.
+
+  Observation: `set_direct_*` uses the direct map, but will never
+  modify the same entry as MHP. If there is a mapping, that entry will
+  never race with MHP. Further, MHP acts when memory is offline.
+
+ * HVO / `mm/hugetlb_vmemmap`
+
+   HVO optimizes the backing `struct page` for hugetlb pages, which
+   means changing the "vmemmap" region. HVO can split (merge?) a
+   vmemmap pmd. However, it will never race with MHP, since HVO only
+   operates at online memory. HVO cannot touch memory being MHP added
+   or removed.
+
+ * `apply_to_page_range`
+
+   Walks a range, creates pages and applies a callback (setting
+   permissions) for the page.
+
+   When creating a table, it might use `int __pte_alloc_kernel(pmd_t
+   *pmd)` which takes the `init_mm.page_table_lock` to synchronize pmd
+   populate.
+
+   Used by: `mm/vmalloc.c` and `mm/kasan/shadow.c`. The KASAN callback
+   takes the `init_mm.page_table_lock` to synchronize pte creation.
+
+   Observations: `apply_to_page_range` applies to the "vmalloc/ioremap
+   space" region, and "kasan" region. *Not* affected by MHP.
+
+ * `apply_to_existing_page_range`
+
+   Walks a range, applies a callback (setting permissions) for the
+   page (no page creation).
+
+   Used by: `kernel/bpf/arena.c` and `mm/kasan/shadow.c`. The KASAN
+   callback takes the `init_mm.page_table_lock` to synchronize pte
+   creation. *Not* affected by MHP regions.
+
+ * `apply_to_existing_page_range` applies to the "vmalloc/ioremap
+   space" region, and "kasan" region. *Not* affected by MHP regions.
+
+ *  `ioremap_page_range` and `vmap_page_range`
+
+    Uses the same internal function, and might create table entries at
+    the "vmalloc/ioremap space" region. Can call
+    `__pte_alloc_kernel()` which takes the `init_mm.page_table_lock`
+    synchronizing pmd populate in the region. *Not* affected by MHP
+    regions.
+
+Summary:
+  * MHP add will never modify the same page table entries, as any of
+    the other actors.
+  * MHP remove is done when memory is offlined, and will not clash
+    with any of the actors.
+  * Functions that walk the entire kernel page table need
+    synchronization
+
+  * It's sufficient to add the MHP lock ptdump.
+
+Testing
+=======
+
+This series adds basic DT supported hotplugging. There is a QEMU
+series enabling MHP for the RISC-V "virt" machine here: [1]
+
+ACPI/MSI support is still in the making for RISC-V, and prior proper
+(ACPI) PCI MSI support lands [2] and NUMA SRAT support [3], it hard to
+try it out.
+
+I've prepared a QEMU branch with proper ACPI GED/PC-DIMM support [4],
+and a this series with the required prerequisites [5] (AIA, ACPI AIA
+MADT, ACPI NUMA SRAT).
+
+
+To test with virtio-mem, e.g.:
+  | qemu-system-riscv64 \
+  |     -machine virt,aia=aplic-imsic \
+  |     -cpu rv64,v=true,vlen=256,elen=64,h=true,zbkb=on,zbkc=on,zbkx=on,zkr=on,zkt=on,svinval=on,svnapot=on,svpbmt=on \
+  |     -nodefaults \
+  |     -nographic -smp 8 -kernel rv64-u-boot.bin \
+  |     -drive file=rootfs.img,format=raw,if=virtio \
+  |     -device virtio-rng-pci \
+  |     -m 16G,slots=3,maxmem=32G \
+  |     -object memory-backend-ram,id=mem0,size=16G \
+  |     -numa node,nodeid=0,memdev=mem0 \
+  |     -serial chardev:char0 \
+  |     -mon chardev=char0,mode=readline \
+  |     -chardev stdio,mux=on,id=char0 \
+  |     -device pci-serial,id=serial0,chardev=char0 \
+  |     -object memory-backend-ram,id=vmem0,size=2G \
+  |     -device virtio-mem-pci,id=vm0,memdev=vmem0,node=0
+
+where "rv64-u-boot.bin" is U-boot with EFI/ACPI-support (use [6] if
+you're lazy).
+
+In the QEMU monitor:
+  | (qemu) info memory-devices
+  | (qemu) qom-set vm0 requested-size 1G
+
+...to test DAX/KMEM, use the follow QEMU parameters:
+  |  -object memory-backend-file,id=mem1,share=on,mem-path=virtio_pmem.img,size=4G \
+  |  -device virtio-pmem-pci,memdev=mem1,id=nv1
+
+and the regular ndctl/daxctl dance.
+
+If you're brave to try the ACPI branch, add "acpi=on" to "-machine
+virt", and test PC-DIMM MHP (in addition to virtio-{p},mem):
+
+In the QEMU monitor:
+  | (qemu) object_add memory-backend-ram,id=mem1,size=1G
+  | (qemu) device_add pc-dimm,id=dimm1,memdev=mem1
+
+You can also try hot-remove with some QEMU options, say:
+  | -object memory-backend-file,id=mem-1,size=256M,mem-path=/pagesize-2MB
+  | -device pc-dimm,id=mem1,memdev=mem-1
+  | -object memory-backend-file,id=mem-2,size=1G,mem-path=/pagesize-1GB
+  | -device pc-dimm,id=mem2,memdev=mem-2
+  | -object memory-backend-file,id=mem-3,size=256M,mem-path=/pagesize-2MB
+  | -device pc-dimm,id=mem3,memdev=mem-3
+
+Remove "acpi=on" to run with DT.
+
+Thanks to Alex, Andrew, David, and Oscar for all
+comments/tests/fixups.
+
+Changelog
+=========
+
+v2->v3:
+  Collect tags
+  0001-riscv-mm-Properly-forward-vmemmap_populate-altmap
+    * New patch, split from attribute change (Alex, Oscar)
+  0005-riscv-mm-Add-memory-hotplugging-support
+    * Fix page table free to take PG_reserved into consideration (David,
+      Oscar)
+    * Depend on SPARSE_VMEMMAP (Alex, David, Oscar)
+    * Proper TLB flushing (Alex)
+  0009-riscv-mm-Add-support-for-ZONE_DEVICE
+    * Fixed 32b build
+
+v1->v2:
+  Reviewed a lot of MHP locking scenarios
+  Various config build issues (e.g. build !CONFIG_MEMORY_HOTPLUG) (Andrew)
+  Added arch_get_mappable_range() implementation
+  Acquire MHP lock for ptdump, analogous to arm64
+  ACPI MHP tests
+  Add ZONE_DEVICE patch
+
+References
+==========
+
+[1] https://lore.kernel.org/qemu-devel/20240521105635.795211-1-bjorn@kernel.org/
+[2] https://lore.kernel.org/linux-riscv/20240501121742.1215792-1-sunilvl@ventanamicro.com/
+[3] https://lore.kernel.org/linux-riscv/cover.1713778236.git.haibo1.xu@intel.com/
+[4] https://github.com/bjoto/qemu/commits/virtio-mem-pc-dimm-mhp-acpi-v2/
+[5] https://github.com/bjoto/linux/commits/mhp-v3-next-acpi
+[6] https://github.com/bjoto/riscv-rootfs-utils/tree/acpi
+
+
+Thanks,
+Björn
+
+Björn Töpel (9):
+  riscv: mm: Properly forward vmemmap_populate() altmap parameter
+  riscv: mm: Pre-allocate vmemmap/direct map PGD entries
+  riscv: mm: Change attribute from __init to __meminit for page
+    functions
+  riscv: mm: Refactor create_linear_mapping_range() for memory hot add
+  riscv: mm: Add memory hotplugging support
+  riscv: mm: Take memory hotplug read-lock during kernel page table dump
+  riscv: Enable memory hotplugging for RISC-V
+  virtio-mem: Enable virtio-mem for RISC-V
+  riscv: mm: Add support for ZONE_DEVICE
+
+ arch/riscv/Kconfig                    |   3 +
+ arch/riscv/include/asm/kasan.h        |   4 +-
+ arch/riscv/include/asm/mmu.h          |   4 +-
+ arch/riscv/include/asm/pgtable-64.h   |  20 ++
+ arch/riscv/include/asm/pgtable-bits.h |   1 +
+ arch/riscv/include/asm/pgtable.h      |  19 +-
+ arch/riscv/mm/init.c                  | 339 +++++++++++++++++++++++---
+ arch/riscv/mm/ptdump.c                |   3 +
+ drivers/virtio/Kconfig                |   2 +-
+ 9 files changed, 349 insertions(+), 46 deletions(-)
+
+
+base-commit: 92cce91949a497a8a4615f9ba5813b03f7a1f1d5
+-- 
+2.40.1
 
