@@ -1,133 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCAA14884F
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3092414882B
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716316606; cv=none; b=gxYiSNokwDbnhrHBSSw90Zm6WWF2YHBnbKMv9mm6kgCX5oHjvoOLnUgE3GD5dqCY5dQShWq/cxLvT7kTEaraim8FR6MWz7I7LcniUpOUzWIXUhSmmhvYuCkWhKgQf0X8jbfuQF14c6W0Yh2NNs8WB3EJarrIBtne4J1STAjkFYQ=
+	t=1716316607; cv=none; b=LIYub0/BPRoxRIK4v/JeShuuyqnUP6eVWs+S9S/LctNMpST3XqMY6FSsJ6vUwov5RwE+68GwwJ6unRtBKVgmAxfIAJSDdmNKjqnrd98s9ppCI9lGriXe33z5E12FFHBff72oG229niLFVMkAGFxc/8/G+8TB8iCordyKTk880Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716316606; c=relaxed/simple;
-	bh=qvsdQhZ7BuP31Y2XO01pfGuDmUVoBr18WPXViDhgp8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SoSOnilIymtboAk750mnHDC3q2TCRE/oAlyIDWV9B1uAwUgwfj4YoX0RaziC5Cj82YRuODuczlwlRWxhWISroM3OsAK7lyhsJG21a5rJ+ZyV1GSezPZIuU0D2QukCICCd11t5rOT8URg5lUBpWJEGzY2LbLJR4/IzLpI9SXNlcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cANlZAMp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716316607; c=relaxed/simple;
+	bh=p9q2M+O7cnAZmwHeM1C7/2qwgRed7uafThFF3nvl9sE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RUNG7tTZyy1pEBqJVGgFQSpdFxEJVF5f231+n+O6ss9mTBoUjLju2Z0CBUkYY3DHlh1EPAYcZ6/sp9tEsNH2ejfgMqacvU6dyLsAMKbJ/JqQ0FwRneosi1nc1yTxLEp6KNT1Hud6qdN73Tngtf6q8JwRskAXZE5/8lZCgvHOnvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=O9zGi601; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cANlZAMp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716316603;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jevMKRBxb/R55R0RVyGAIvU9KnGm8nwwPq1TksVQuy8=;
-	b=cANlZAMpCaWVkzl7YhRboGpv/tZBDU6NydVl3uVF/Ine7bq1XBR2TWR3zf5GZc77MRkCfZ
-	rQNtUO+XaJQQxWhAzMqevI9vp2BY9JecVq0GNurHFIDwua0bj8XN5wXT0oUcA64piZd9ZZ
-	M9IrmICgX8PZnQUVlnBssRL525Ryxn4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-169-WGzUnwuvMqGDsep8lFp7og-1; Tue, 21 May 2024 14:36:40 -0400
-X-MC-Unique: WGzUnwuvMqGDsep8lFp7og-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-420eed123a2so13969015e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:36:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="O9zGi601"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59b58fe083so643796466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 11:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716316602; x=1716921402; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CLyU2aNbp4OgiW+TMwuCji93HtnrvdXX6qL+T9597uE=;
+        b=O9zGi601uwcyAL0VSIOZXru2Qqf/QZl7aRoVYRafixr0CRBYQLQwTDbKkB1gtUr4UL
+         i+wBiEwHEffX4lui6wPKT8CV+Scm/r7uiQ57pWTVxdbOmwM1uGOqcJPB4rpZHJyDCdHq
+         yLB6khEuh0OE41x5792Sn6NgJHOkeuXW5WcMTL50Zp1ivG33ZNol1EYWC/UYbIPdZ13d
+         WSSBYb2cqQ3H9iNIvH3eh3Igvra6B7JbbzW//ZZ7jX5fdtOsfO87/MuhUn6oWzEgeFuB
+         upZeuhp0y0sP5lzKpNe+FLgy1AdnEc8CsH6OIXQvltiT4J3agxogOlRFSuk0ZfKvmacB
+         GrtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716316599; x=1716921399;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jevMKRBxb/R55R0RVyGAIvU9KnGm8nwwPq1TksVQuy8=;
-        b=mB5YG6Ei47o7632S6/I1ESbH2nHIQaiMdVEzAhBkrNpvI4II46WkT9YH6gs5I8bajN
-         MxWKt8T89oaTNrH0cHiSytLOxaoa3S+68CwxilfGEWdvx8fTCQ1CCtI3JdPw2s1fc9pO
-         6xdG45teclX5qqPmjb0kymw8UHqpXDgrBNaRDEyGiNAP89/+JAzNGQlOGdOXiMqxn2Fq
-         6TExrpJsoGGGPLzFovodCBHzwoR3R6C9ryRsCAOUQ1dqYaIX8wlB2hGlDObW7KazydYe
-         SL7HJVOan1tEUIfu6vQ7+060M/bTVi2vUcAhOv5MKRpzHsRWz3M4hRI+Oec/8OEnRGMh
-         TsMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNvaW213K2zidewzH9ETzHFgspz5Onbhbi9d5rzV44A1WhB5M6KPVrmnz+aFaEMrNhfUsGwld7i5sdJKNyT5MBdeR0NwQJZWuQUdK5
-X-Gm-Message-State: AOJu0YxfEEvCJ8dy9gAV0CtaxUd5DYnTNz/nyPQAV0eF5hzEOqM0igwZ
-	e9Z2QtyxMfDXJQMwbxTWTcXefuov6YQBQmSWYS4erQnIrkSYm9TQTaf77zS0Qh7VgZU/dlWKkgW
-	Ea9LiFCCDVByJgCJuHObP8FBV4Fbo3CuCove0OcewNnpZ5aEMjYH+mgHJUPfIHg==
-X-Received: by 2002:a05:600c:3b23:b0:41b:f3b6:e5da with SMTP id 5b1f17b1804b1-41fead61b59mr287566365e9.36.1716316599618;
-        Tue, 21 May 2024 11:36:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGk76L37vIpOA5Y58eTWTGFIjiFF33BBGgA3nqwWyu66vAzg2d7meVl0CY1IrJMA1aWEsUH5A==
-X-Received: by 2002:a05:600c:3b23:b0:41b:f3b6:e5da with SMTP id 5b1f17b1804b1-41fead61b59mr287566195e9.36.1716316599179;
-        Tue, 21 May 2024 11:36:39 -0700 (PDT)
-Received: from pollux ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351b4af0b0asm25792883f8f.100.2024.05.21.11.36.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 11:36:38 -0700 (PDT)
-Date: Tue, 21 May 2024 20:36:36 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Philipp Stanner <pstanner@redhat.com>, wedsonaf@gmail.com
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, ajanulgu@redhat.com,
-	lyude@redhat.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem
- operations
-Message-ID: <ZkzptG6fJx-MJ_6s@pollux>
-References: <20240520172554.182094-1-dakr@redhat.com>
- <20240520172554.182094-11-dakr@redhat.com>
- <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
- <cf89c02d45545b67272aba933fbc8a8a0df83358.camel@redhat.com>
- <CANiq72k7H3Y0ksdquVsrAbRtj_5CqMCYfo79UrhSVcK5VwfG5Q@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1716316602; x=1716921402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CLyU2aNbp4OgiW+TMwuCji93HtnrvdXX6qL+T9597uE=;
+        b=MCA8qYkrWs34ADgM0W/GnFixpTdvLN9FHXl92s+fdq7QMMiAmuIuFNqoTN6ns7adJr
+         vq2c0wNFq5lJmagXWzDHCcc4/a3twH5SNkuIR5fK7kvnZOTIjmf90UACqlhjwa4cc/pc
+         qjsBOb5FvhStTPa1EyzD7IEmE5tfxwy1iBmDAdzJTHrkpwzf3ZjD6nnolv92+7BbtXxk
+         nrMTAy0ZY+S6/QMZZJGWFSvTZv5yx4JhACdTBJzcqhTWJ8qsNiZSuyak9BTYAoczFc4s
+         O9HeX6xKKa9V4ePAGuNLUBK/8+dxC2jNsILLX6qovgjmzFicyTK63SqziKa8/JqZYqwi
+         wk0w==
+X-Forwarded-Encrypted: i=1; AJvYcCX2AbPNIYvy+DTkxqNn4dYQQZ+ff2Ii6QBiHSQA1d4aT/Zebk8CRNW313i6ZJmTlqgCbIcoGWbbHjxlUkLnGjMlZTFjCSdQZK5sk9oE
+X-Gm-Message-State: AOJu0YwjCIq8a4MhWH3P/y0MMx9DgB8+WLOgMPPFCkjP8dbUJKXwjL3R
+	7aHcLUhom7g6wSz76K4lERsay8SN5U7yT071b9rngo3yfLzL1T0FAjx+nzDfu5O0yJDNbo30fSW
+	acl1RZgb5xZ62KDO1j4V3olgWCIBV/o3i527c3w==
+X-Google-Smtp-Source: AGHT+IH0TkrWekL947oxL52MJFhjwXzyz7BwC25c5dh4y5BPrRiD/+EoDq6AAoPxQg5Y2/xKIgyzXSkv/EJ86BIyTYc=
+X-Received: by 2002:a17:906:97c8:b0:a5a:a2b6:ba8b with SMTP id
+ a640c23a62f3a-a5aa2b6bf6fmr1215235666b.0.1716316602491; Tue, 21 May 2024
+ 11:36:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72k7H3Y0ksdquVsrAbRtj_5CqMCYfo79UrhSVcK5VwfG5Q@mail.gmail.com>
+References: <tencent_9D721BDDF88C04DBB5151D57711D62524209@qq.com> <tencent_338DF690631BAE788C4CC858233E9FBAE006@qq.com>
+In-Reply-To: <tencent_338DF690631BAE788C4CC858233E9FBAE006@qq.com>
+From: Evan Green <evan@rivosinc.com>
+Date: Tue, 21 May 2024 11:36:06 -0700
+Message-ID: <CALs-HssGcNso6vTfbcsiWX1h_46jgDDRcEWcfZCTpxXYnubcng@mail.gmail.com>
+Subject: Re: [PATCH 2/2] docs: riscv: hwprobe: Clarify misaligned keys are
+ values not bitmasks
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, Elliott Hughes <enh@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 11:18:04AM +0200, Miguel Ojeda wrote:
-> On Tue, May 21, 2024 at 9:36 AM Philipp Stanner <pstanner@redhat.com> wrote:
-> >
-> > Justified questions – it is public because the Drop implementation for
-> > pci::Bar requires the ioptr to pass it to pci_iounmap().
-> >
-> > The alternative would be to give pci::Bar a copy of ioptr (it's just an
-> > integer after all), but that would also not be exactly beautiful.
-> 
-> If by copy you mean keeping an actual copy elsewhere, then you could
-> provide an access method instead.
+On Sat, May 18, 2024 at 9:00=E2=80=AFAM Yangyu Chen <cyy@cyyself.name> wrot=
+e:
+>
+> The original documentation says hwprobe keys are bitmasks, but actually,
+> they are values. This patch clarifies this to avoid confusion.
+>
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 
-As mentioned earlier, given the context how we use IoMem, I think IoMem should
-just be a trait. And given that, maybe we'd want to name this trait differently
-then, something like `trait IoOps` maybe?
+Hm, we also have this problem in the code, since
+hwprobe_key_is_bitmask() returns true for KEY_CPUPERF_0. This results
+in wrong information being returned for queries using the WHICH_CPU
+flag. If usermode asked for the set of CPUs that was specifically SLOW
+or EMULATED, the returned cpuset would also include cpus that were
+FAST. I believe all other queries are okay.
 
-pub trait IoOps {
-   // INVARIANT: The implementation must ensure that the returned value is
-   // either an error code or a non-null and valid address suitable for  I/O
-   // operations of the given offset and length.
-   fn io_addr(&self, offset: usize, len: usize) -> Result<usize>;
+The one-liner fix is to just not return true for that key in
+hwprobe_key_is_bitmask(). But that's technically user-visible: if some
+software relied on the buggy behavior of FAST cpus being swept up in
+the query for SLOW or EMULATED cpus, this change would expose that.
+The grownups-eat-their-vegetables thing to do would be to define a new
+key that returns this same value, but doesn't return true in
+hwprobe_key_is_bitmask(). What do people think?
 
-   fn readb(&self, offset: usize) -> Result<u8> {
-      let addr = self.io_addr(offset, 1)?;
+-Evan
 
-      // SAFETY: `addr` is guaranteed to be valid as by the invariant required
-      // by `io_addr`.
-      Ok(unsafe { bindings::readb(addr as _) })
-   }
-
-   [...]
-}
-
-We can let the resource type (e.g. `pci::Bar`) track the base address and limit
-instead and just let pci::Bar implement `IoMem::io_addr`.
-
-As for the compile time size, this would be up the the actual resource then.
-`pci::Bar` can't make use of this optimization, while others might be able to.
-
-Does that sound reasonable?
-
-- Danilo
-
+> ---
+>  Documentation/arch/riscv/hwprobe.rst | 31 ++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 13 deletions(-)
+>
+> diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/ri=
+scv/hwprobe.rst
+> index 239be63f5089..4abfa3f9fe44 100644
+> --- a/Documentation/arch/riscv/hwprobe.rst
+> +++ b/Documentation/arch/riscv/hwprobe.rst
+> @@ -188,25 +188,30 @@ The following keys are defined:
+>         manual starting from commit 95cf1f9 ("Add changes requested by Ve=
+d
+>         during signoff")
+>
+> -* :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A bitmask that contains perfor=
+mance
+> +* :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A value that contains performa=
+nce
+>    information about the selected set of processors.
+>
+> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNKNOWN`: The performance of misa=
+ligned
+> -    scalar accesses is unknown.
+> +  * :c:macro:`RISCV_HWPROBE_MISALIGNED_MASK`: The bitmask of the misalig=
+ned
+> +    access performance field in the value of key `RISCV_HWPROBE_KEY_CPUP=
+ERF_0`.
+>
+> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_EMULATED`: Misaligned scalar acce=
+sses are
+> -    emulated via software, either in or below the kernel.  These accesse=
+s are
+> -    always extremely slow.
+> +    The following values (not bitmasks) in this field are defined:
+>
+> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned scalar accesses=
+ are
+> -    slower than equivalent byte accesses.  Misaligned accesses may be su=
+pported
+> -    directly in hardware, or trapped and emulated by software.
+> +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNKNOWN`: The performance of mi=
+saligned
+> +      scalar accesses is unknown.
+>
+> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned scalar accesses=
+ are
+> -    faster than equivalent byte accesses.
+> +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_EMULATED`: Misaligned scalar ac=
+cesses are
+> +      emulated via software, either in or below the kernel.  These acces=
+ses are
+> +      always extremely slow.
+>
+> -  * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned scalar a=
+ccesses
+> -    are not supported at all and will generate a misaligned address faul=
+t.
+> +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned scalar access=
+es are
+> +      slower than equivalent byte accesses.  Misaligned accesses may be =
+supported
+> +      directly in hardware, or trapped and emulated by software.
+> +
+> +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned scalar access=
+es are
+> +      faster than equivalent byte accesses.
+> +
+> +    * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned scalar=
+ accesses
+> +      are not supported at all and will generate a misaligned address fa=
+ult.
+>
+>  * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
+>    represents the size of the Zicboz block in bytes.
+> --
+> 2.43.0
+>
