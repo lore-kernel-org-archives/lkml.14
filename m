@@ -1,154 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F299C210E4;
-	Tue, 21 May 2024 04:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DE51DA53;
+	Tue, 21 May 2024 04:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716264920; cv=none; b=uoqiJEsZpvRdF6JZ7noRr8AsI3BsT55TtESX3bzSEw7jUGCAynOxOEn/DTJ0pqOw5CJyWgDDZUWSAyTv09seeYoBqTAQNOAsNbpW5WkmHqjwWzpN8AlbxPvaW0hj+N5xLUm0OhPjSY7ejrf6mTe7hni88lzgJFYRbG/rmdZ3OIE=
+	t=1716265001; cv=none; b=fFGEzmxyEyIwMLKSnK7AhdMaGvQ/5a7lXNQjHTOV+0vIoJMaDJGNl13ipFhITDBj18Up4iMVD2RBNhClkhuluqai1ESrdA/iDP3awWFD0DPrx5MmNVxDhFFFE/54gTySS3oOnnYc1322fDrhB5nY4ehP6WvDD7OPHKetJp+uC2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716264920; c=relaxed/simple;
-	bh=ZLMQim0b27vvKLlAakfM9liuAkhebuAx7GW5o3VAU5E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZgA/rJITsz0n1YC7SI/D9WToMlzv8dVP985elIKxdFQNJkTT7LObQ7/XSBT5t4l60eMtL+w15c7CZebb8rrZc5UD4ChNYZyVAmeqV3+spSy5UlMv+2rhxhezTH6yG8PBEF+JnBI2DqyvNZ/KoCH7Lb23q1TXAcwiTRiLpD7GU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AAvFdIIa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AAvFdIIa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97258C4AF0A;
-	Tue, 21 May 2024 04:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716264919;
-	bh=ZLMQim0b27vvKLlAakfM9liuAkhebuAx7GW5o3VAU5E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AAvFdIIa62aHZqk2WwB1k2rH7MSFFeheUO4UGa31iZgjxzWhnfzfbdXvWBSBaR/0k
-	 Wmxg7aUUOq2gBLZpar58Z1SqyIvbBIQpwGVWkehmuit1lmyJv3R68YfmzXu+kpuikJ
-	 2Ama4H4WnbU4knUSEKgX1bz6qRZ1l1LMZ5q9l3SNPaRxyxn3L+9fLJw171NSUsZZE4
-	 sbzaGjsN1CT8hARONz22tV1iCOrBpvAIUliy/CYiTtXdUDrrN2rcd6INRzGgzFgs+D
-	 60Xb4O0OXpCrQkuWQ/VkPlNyiK7mR1yeQaMHutZwyTEeW+S2IzuSs/HEdpzYb+An/V
-	 QDLrDR2qdgqhw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f72a29f13so4817248e87.3;
-        Mon, 20 May 2024 21:15:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX3vMowg2KmdYoy8UIro5/i+csXvasGcLITEiP/pJHcVJ6VpnSzM4nP6XvZ9UNusiGSOi9btNzA/abPKS0lOy6ovRhqXs4//cqHe6eVzKbOQzCoQX5jvsbRknncP2WNVDbdUjRpBh8Afz/fDuka9Ip+mNecKObCNV9ACW57VzrDT/JUzvAAMC9E3eY=
-X-Gm-Message-State: AOJu0YxI6xwMbU7Kjz2UxC/9R+8fI2+g21IePcQzl3FW9UEStBSFf00w
-	rkpjL3+jXhglsFqsFxx62d4kaQEIoISFiHiIbD8fEg0EOrL5AQDlMZ0/vgRT+WVoSmGL2FWcSAs
-	1Nvv03yRc7Wk0rDJPkKTA2jtDh/o=
-X-Google-Smtp-Source: AGHT+IFERR+XMF96W4SPi3XHkk3UQctvgLTXKkG1ygvj6FlJ+ABpgu+t9Zh29tpfT+a9yTz5hr7oL9PgCDtM3MhVShU=
-X-Received: by 2002:ac2:4209:0:b0:51f:567b:c398 with SMTP id
- 2adb3069b0e04-5221006fe6fmr18145163e87.28.1716264918252; Mon, 20 May 2024
- 21:15:18 -0700 (PDT)
+	s=arc-20240116; t=1716265001; c=relaxed/simple;
+	bh=8SrMCv0rwVNVT7qEZxTkQBKqwmbJBcICUOH07mFes1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MvqMVxdY9HKkVwh3TQF79SrfN5teKNzByRf/vZJDkeWlh6kRCF+Wo3MghsCVLtcEJgCD+tMmjZx72BfJ090YbeLeJ5SSELX3q3xAExPcKB+CONC9K8ZvwOyfzonESrxcC9Dd4FU9xX9P6GHYaI7119rJ5nFfRYlyjvQR/GBtLZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowAC3vxsOIExmzSh6Bg--.25702S2;
+	Tue, 21 May 2024 12:16:15 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	extja@kvaser.com,
+	carsten.schmidt-achim@t-online.de
+Cc: linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] can: kvaser_usb: fix return value for hif_usb_send_regout
+Date: Tue, 21 May 2024 12:10:20 +0800
+Message-Id: <20240521041020.1519416-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240519211235.589325-1-ojeda@kernel.org> <20240519211235.589325-2-ojeda@kernel.org>
-In-Reply-To: <20240519211235.589325-2-ojeda@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 21 May 2024 13:14:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATPx2wTEM=KDmGtcH8vVTB4suOhh-CUQKP54F8wtPWDiw@mail.gmail.com>
-Message-ID: <CAK7LNATPx2wTEM=KDmGtcH8vVTB4suOhh-CUQKP54F8wtPWDiw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kbuild: rust: apply `CONFIG_WERROR` to all Rust targets
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, linux-kbuild@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAC3vxsOIExmzSh6Bg--.25702S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrurWDAF1fZr4xZF1DJFWkWFg_yoW3Zwc_KF
+	y7Gw47Wry7Cry7Kw15Wa13Arn0y3WUZF4S9ayaqFyay347tr1jyr4ayrZ7G3sxWFy7XasF
+	9Fs3A348Jw1xZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoO
+	J5UUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mon, May 20, 2024 at 6:12=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Make all Rust code (i.e. not just kernel code) respect `CONFIG_WERROR`,
-> so that we keep everything warning clean.
+As the potential failure of usb_submit_urb(), it should be better to
+return the err variable to catch the error.
 
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rust started to do something different from C.
+diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
+index 8faf8a462c05..871cd83bcabc 100644
+--- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
++++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
+@@ -294,7 +294,7 @@ int kvaser_usb_send_cmd_async(struct kvaser_usb_net_priv *priv, void *cmd,
+ 	}
+ 	usb_free_urb(urb);
+ 
+-	return 0;
++	return err;
+ }
+ 
+ int kvaser_usb_can_rx_over_error(struct net_device *netdev)
+-- 
+2.25.1
 
-
-KBUILD_HOSTCFLAGS is not affected by any CONFIG option.
-
-The reason is because HOSTCC is needed for building Kconfig.
-If the flags for HOSTCC is changed by a CONFIG option,
-it would be a chicken-egg problem.
-Also, some host programs might be compiled even
-without .config at all. (e.g. scripts/unifdef)
-
-
-I know Rust will not become a part of the core infrastructure
-of the build system, but IMHO, host programs should not be
-affected by any CONFIG option.
-
-I do not like this patch.
-
-
-
-
-
-
->
-> In particular, this affects targets in `rust/` (`RUSTDOC H`, `RUSTC TL`,
-> `RUSTDOC T`, `RUSTC T` and `RUSTC P`), plus host programs and any others
-> we may add later.
->
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
-> This one requires the `rusttest` warning cleanup at
-> https://lore.kernel.org/rust-for-linux/20240519210735.587323-1-ojeda@kern=
-el.org/
->
->  Makefile                   | 4 ++--
->  scripts/Makefile.extrawarn | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index fba567a55607..2d0ea441cb9c 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -469,7 +469,7 @@ export rust_common_flags :=3D --edition=3D2021 \
->
->  KBUILD_HOSTCFLAGS   :=3D $(KBUILD_USERHOSTCFLAGS) $(HOST_LFS_CFLAGS) $(H=
-OSTCFLAGS)
->  KBUILD_HOSTCXXFLAGS :=3D -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
-> -KBUILD_HOSTRUSTFLAGS :=3D $(rust_common_flags) -O -Cstrip=3Ddebuginfo \
-> +KBUILD_HOSTRUSTFLAGS =3D $(rust_common_flags) -O -Cstrip=3Ddebuginfo \
->                         -Zallow-features=3D $(HOSTRUSTFLAGS)
->  KBUILD_HOSTLDFLAGS  :=3D $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
->  KBUILD_HOSTLDLIBS   :=3D $(HOST_LFS_LIBS) $(HOSTLDLIBS)
-> @@ -560,7 +560,7 @@ KBUILD_CFLAGS +=3D -fno-PIE
->  KBUILD_CFLAGS +=3D -fno-strict-aliasing
->
->  KBUILD_CPPFLAGS :=3D -D__KERNEL__
-> -KBUILD_RUSTFLAGS :=3D $(rust_common_flags) \
-> +KBUILD_RUSTFLAGS =3D $(rust_common_flags) \
->                     -Cpanic=3Dabort -Cembed-bitcode=3Dn -Clto=3Dn \
->                     -Cforce-unwind-tables=3Dn -Ccodegen-units=3D1 \
->                     -Csymbol-mangling-version=3Dv0 \
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 48114e91c386..990890821889 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -26,8 +26,8 @@ endif
->
->  KBUILD_CPPFLAGS-$(CONFIG_WERROR) +=3D -Werror
->  KBUILD_CPPFLAGS +=3D $(KBUILD_CPPFLAGS-y)
-> -KBUILD_RUSTFLAGS-$(CONFIG_WERROR) +=3D -Dwarnings
-> -KBUILD_RUSTFLAGS +=3D $(KBUILD_RUSTFLAGS-y)
-> +rust_common_flags-$(CONFIG_WERROR) +=3D -Dwarnings
-> +rust_common_flags +=3D $(rust_common_flags-y)
->
->  KBUILD_CFLAGS-$(CONFIG_CC_NO_ARRAY_BOUNDS) +=3D -Wno-array-bounds
->
-> --
-> 2.45.1
-
-
-
---
-Best Regards
-
-Masahiro Yamada
