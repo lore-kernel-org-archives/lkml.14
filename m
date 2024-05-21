@@ -1,61 +1,59 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987DA6D1A3
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3171B6BB5D
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 09:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716284732; cv=none; b=NM4vVvik9QhpT9LzfveZ7/gapsEOwfLyZIau5cksaSa/+n0yzfSKY9vOmwmIF+WZndhrIynQrGudKBnvoanVx2Kl41kWZRJsPRjgz+oOSuGZyA4K0CLcIqWqX1TkacY0atkkToYNNZx3YcRQDAnBKYIubtt7R8OY97F/R6WAntQ=
+	t=1716284733; cv=none; b=W/shXFPm2PS/CLwn9qtByMwsK392Bl+HepPbBQfeXtqnFwOqjB4zUd8fulqhJ4K3t40MqI32v/ySfGmHz7IQCPEDbpJRH0d2Dwsrv4SZNy2bT7iyuLkh9BCBg42ispCxZajE4m3OpG2wt2zFoqcYTRzedwCDfpvMuiBw4FGvYkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716284732; c=relaxed/simple;
-	bh=AFSw8YT67751JMyLAp98IxGcZ029778ZqkawJ08x+oE=;
+	s=arc-20240116; t=1716284733; c=relaxed/simple;
+	bh=mNFfoGKwazQZaJjxyTEqcayzLDaum8DceVCVSofmCS0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CMtdRflXrvVPpdL6YJeDDW+Lo8kgHM7KxG51lRGouo3D3DTa6QFF/gofl50jrW/6DeH9p4iyZMVHY7WD6c8QrYdxlzTFiH1So03E9Oi7cq98xq+snEeK62LvVV46CgTigoth2YhJO0fpK8aEyJT5wVI/Dy1gFdDrUcul0p6aEpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UHQYHGVT; arc=none smtp.client-ip=209.85.208.174
+	 In-Reply-To:To:Cc; b=Qhd58ZvZsxVwOtLM85RV+ObOEYsyWpF2tcbyRFWKypxM+ytrerx0KqV24d2IBG9NyfFcKhYtfr6hunp+NMUVjhZyas7/E2QcuXAfnADYo6pHsW6859DqqxP+5/A6cs6HNLinnZNgaIhG4ZBHKSzV2M5qpeAhaTS/aEE6X1DbOuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P6KVckUl; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHQYHGVT"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e576057c2bso75678981fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P6KVckUl"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e271acb015so66756611fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 02:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716284729; x=1716889529; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716284727; x=1716889527; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mLwvRgxzyiUA9P6PtePLoWn9ddMKovViLDQnxnmP0yc=;
-        b=UHQYHGVTxD+a0xllDLHfv+mjDIiMtUYRcRuWaNcN0FpQISogQsj1xnK9exUl53AJja
-         2b/U8N2HAK0B0T9FJYr+f0K9XHrnJ/MI2UZ/miRKsw+4bMuIK2YxItG2r+V5R4L4J3P3
-         EiQ74O2/mV5NPQb9gHLdvJyX8K1XKF+7MuODedLLixRKx3USX2ojcOCfGsZ6eqTX0oc3
-         cHXNnggXMDaWl8BEYvH2IUxjNKD58sV9lv8eMIdi1wT50mJIm8MFm0w4JIoeGxT6tnfx
-         JqZpnKN/Bri54ISOcBQvR628vyoXCVTqndYI2gw62nGjUOeDN5qf/SmlYPl+rdWEXy1N
-         pvcA==
+        bh=jecFdq9XX1dTw2yUnC7PhQdscC925IcSiTTnqz+9Dko=;
+        b=P6KVckUlQH26Z3m/xAvLTPVDJTWPfSQvu86u+pCTvjZ9mtqK2rfk5OinwouDpSSg1L
+         4vS1M2aPpDeFCf+Zb2Q+bLGtKJiOGaWuicXN4HQ+06tmFGI+geRdosiqx15WbsuHrzAW
+         BYEY3G/IUUoUi8SME8BUNOLjHMyDCest9HllgxWqQ7erUy48WmkUat3PsEWLOddLorLs
+         yduR91Kw9QgRdRi2ILdMStbdv2iRPMVfXXWSUEytP5PajG8EqID09rKTQ+RZLyebXSLO
+         N8eb5QFzELtj/CgFT1HUGJV9Szcirvb2KKxT9wEGsvPwVEvZ5u1ubGB3VAKxGDGUmr05
+         GSwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716284729; x=1716889529;
+        d=1e100.net; s=20230601; t=1716284727; x=1716889527;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mLwvRgxzyiUA9P6PtePLoWn9ddMKovViLDQnxnmP0yc=;
-        b=hbby3AaiByQGI0z6s7pwwRvEqK1feS3WI/oY70VzoxiAd93VIN1SSzNlYsRVcTVFcZ
-         FEfHxF64t7+MXb4pORYHIlOoGx2z/RGCV7/ZlMDk+Vo/TsbK/tBhEMQk3MV2xn5zZKtN
-         zKsrgt6Bu6zewxtGMPSSftXPTlPddLcyqIXjeL3d7FcD4gg3W8ByfTHEeSfwNgW5nX/k
-         xY4/07tUCjfjuVNqz7p+OiMwpwmMoMxCLFb5KLUlTTk59Ov4OMfSjOkw1lCC5X84lQ7S
-         IHhpgnmaaGwJ+9LIVehGjKjdtqPE/RBnazy/L+9jmnOqp5UXCGwaHQBBWc4h99LjxvfW
-         ZPaQ==
-X-Gm-Message-State: AOJu0YzM72M5Ub0voqFqjycHnNw+mxLF4KyVDWHiYPtxOOb7XTWcZYIr
-	DQFld585293Bbiy7TZbJ8BSlAy2MF8z1kUv0SLEXXt3e480QKWbqMF/mj7eEyhVgy4X8ebYVFJA
-	r
-X-Google-Smtp-Source: AGHT+IExtDU6eIGB/UhDwLpmGYGgqx7TmTkOXGGasOHtt5sJNIu6PQ+k6KYptjQOq6OpY/8WUsN8QQ==
-X-Received: by 2002:a2e:9695:0:b0:2e0:5d7:a3a6 with SMTP id 38308e7fff4ca-2e51fc3442emr243223051fa.9.1716284728901;
-        Tue, 21 May 2024 02:45:28 -0700 (PDT)
+        bh=jecFdq9XX1dTw2yUnC7PhQdscC925IcSiTTnqz+9Dko=;
+        b=sjqLqHTy/Y7cKmNatCl6i/2V2nI8bPbnZee/a8CqI/0PFRCZDiv7dn7sjyxMCihEcl
+         50xzgX7sepXvFrcm590uwlsPhvy1H/UNpFOzTOq+Ps2o4/mQ0f9paaqoXi4AUm9NE3D0
+         c9oB8FZLjOBl4xyCQfkfxLnMtMGwV68e5qvH+gD1YtW8Ztox8eUku7K4jLpk4WJIC5l2
+         aeQXpuCKnF4hx+0jDNTSHqBKPQvEOExbhBPzjxqNCkpRUE6zfGqqantjiKOKA2TzSoUo
+         VNrozebyJPWS3OlbF4bSsW4vUKiOaijGjAPCCbNIVpbSXc7RFHZCdHNBmKP2004XGqCj
+         SZtA==
+X-Gm-Message-State: AOJu0Yw+J+zMLVx0/IIpnjIdV6n6o4FBqVC6qYWPOPp3+//IVS0Dttjc
+	rM4hYUZ2A7mugVUjh0YcLjQY4/J8QwVJ0uwQocjWCTbFX8qR2MNOlrBX3PReKVk=
+X-Google-Smtp-Source: AGHT+IFTxQkrJDCzeLWrCudD84gAV/X79zi7LkAL7T4OG8XUDBbu4uZYig0wCSFlBu9Er2kpiaOZAg==
+X-Received: by 2002:a2e:4c0a:0:b0:2e6:cbe9:daf8 with SMTP id 38308e7fff4ca-2e6cbe9dc49mr129754251fa.6.1716284727368;
+        Tue, 21 May 2024 02:45:27 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.28
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e706ee0a65sm13906261fa.112.2024.05.21.02.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 02:45:28 -0700 (PDT)
+        Tue, 21 May 2024 02:45:27 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 21 May 2024 12:45:25 +0300
-Subject: [PATCH 05/12] remoteproc: qcom_q6v5_mss: make use of
- QCOM_FW_HELPER
+Date: Tue, 21 May 2024 12:45:23 +0300
+Subject: [PATCH 03/12] soc: qcom: wcnss_ctrl: make use of QCOM_FW_HELPER
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-qcom-firmware-name-v1-5-99a6d32b1e5e@linaro.org>
+Message-Id: <20240521-qcom-firmware-name-v1-3-99a6d32b1e5e@linaro.org>
 References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
 In-Reply-To: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -79,16 +77,16 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Arnd Bergmann <arnd@arndb.de>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1922;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1682;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=AFSw8YT67751JMyLAp98IxGcZ029778ZqkawJ08x+oE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0zGZpQHNbMeZOkJjcXVkAZVQriNGdtlZlml
- aDk9k8/t46JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMwAKCRCLPIo+Aiko
- 1Y7MB/sF+zRUmPQMKrXtX/YPgZdL4G5zOYWUCFIaS8soYxJVFrHzuqv0vhRVzxEImWBeTTRvwqt
- oyFljUHjrrmdVPkyPdR4rZHkPlu5DJoo4Opb+RkTwQFsyDgRbNXCzy1/ylM3ZsYRemWxxw8biMF
- UyES8aYOjeEVQWjNU+4PaSDxKJAu+tAGlT5v2qfDUqW8Yq4v+5kgCM4xRmNwWJsVwOm+gApLFGe
- 96dhfzWg6RBWsMrZ4lwGQLu5J8SYBJw0skYCMJvVsOZ/7WoYSdJ0UBcs/3butIUAyA5rLGsEx/w
- KlzDyJbnHl9KGtCug8ov3LoHbBXw8RoDT5NRiiImki+2AKQw
+ bh=mNFfoGKwazQZaJjxyTEqcayzLDaum8DceVCVSofmCS0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTG0ytxCXD9qErfoBB4dLiYJqZd9eQQ5WqLLah
+ hC2GzIGtE+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZkxtMgAKCRCLPIo+Aiko
+ 1W0UB/0WIxQQuziOGJq6OrXgP3+CaPpTzT4eYVYq2Aqpda96s2TL+2HgwxZB/uhUg3keuJioam2
+ 9FdpHEdSyzfmBX/Jtr9CO7KY6GIZWhdJl6J6hb0HwcBQn1Pc+048CtWwfaPTL9AHgEcL0Abd5Jz
+ Q4YyqYvjEAhJachwYRntg0uKNHMtPR3FIUb+FMljvlT3tn6R+KYmD1vOiITNw5VB1wUcebPboDv
+ EHCYLGaXllm97WQ3ntZTnb1F93Wse9ykyrTgR5tE22wbeGPehMr3Ze1RX8C8+ha6YnX/ImB072Z
+ 9wkcz4k5PtVBXYjoAGylAC5zsPWVbvexxxHPusupRZJRWnvI
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
@@ -97,59 +95,54 @@ calibration data file.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/remoteproc/Kconfig         |  1 +
- drivers/remoteproc/qcom_q6v5_mss.c | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ drivers/soc/qcom/Kconfig      | 1 +
+ drivers/soc/qcom/wcnss_ctrl.c | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 48845dc8fa85..884e1e69bbb6 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -202,6 +202,7 @@ config QCOM_Q6V5_MSS
- 	depends on RPMSG_QCOM_GLINK || RPMSG_QCOM_GLINK=n
- 	depends on QCOM_AOSS_QMP || QCOM_AOSS_QMP=n
- 	select MFD_SYSCON
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index b663774d65f8..3af3f15175e4 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -238,6 +238,7 @@ config QCOM_WCNSS_CTRL
+ 	tristate "Qualcomm WCNSS control driver"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	depends on RPMSG
 +	select QCOM_FW_HELPER
- 	select QCOM_MDT_LOADER
- 	select QCOM_PIL_INFO
- 	select QCOM_Q6V5_COMMON
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index eeaae2505352..1ccd5bb92952 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -26,6 +26,7 @@
- #include <linux/remoteproc.h>
- #include <linux/reset.h>
- #include <linux/soc/qcom/mdt_loader.h>
+ 	help
+ 	  Client driver for the WCNSS_CTRL SMD channel, used to download nv
+ 	  firmware to a newly booted WCNSS chip.
+diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
+index 148bcbac332d..7d1a4536226a 100644
+--- a/drivers/soc/qcom/wcnss_ctrl.c
++++ b/drivers/soc/qcom/wcnss_ctrl.c
+@@ -12,6 +12,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/rpmsg.h>
+ #include <linux/soc/qcom/wcnss_ctrl.h>
 +#include <linux/soc/qcom/fw_helper.h>
- #include <linux/iopoll.h>
- #include <linux/slab.h>
  
-@@ -1990,8 +1991,13 @@ static int q6v5_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ #define WCNSS_REQUEST_TIMEOUT	(5 * HZ)
+ #define WCNSS_CBC_TIMEOUT	(10 * HZ)
+@@ -214,11 +215,19 @@ static int wcnss_download_nv(struct wcnss_ctrl *wcnss, bool *expect_cbc)
+ 	if (ret < 0 && ret != -EINVAL)
+ 		goto free_req;
  
-+	mba_image = qcom_get_board_fw(mba_image);
-+	if (!mba_image)
-+		return -ENOMEM;
++	nvbin = qcom_get_board_fw(nvbin);
++	if (!nvbin) {
++		ret = -ENOMEM;
++		goto free_req;
++	}
 +
- 	rproc = devm_rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
- 				 mba_image, sizeof(*qproc));
-+	kfree(mba_image);
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
-@@ -2011,6 +2017,10 @@ static int q6v5_probe(struct platform_device *pdev)
- 		return ret;
+ 	ret = request_firmware(&fw, nvbin, dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to load nv file %s: %d\n", nvbin, ret);
++		kfree(nvbin);
+ 		goto free_req;
  	}
++	kfree(nvbin);
  
-+	qproc->hexagon_mdt_image = devm_qcom_get_board_fw(&pdev->dev, qproc->hexagon_mdt_image);
-+	if (!qproc->hexagon_mdt_image)
-+		return -ENOMEM;
-+
- 	platform_set_drvdata(pdev, qproc);
- 
- 	qproc->has_qaccept_regs = desc->has_qaccept_regs;
+ 	data = fw->data;
+ 	left = fw->size;
 
 -- 
 2.39.2
