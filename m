@@ -1,160 +1,173 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68395127E2F;
-	Tue, 21 May 2024 14:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC7112EBE8
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 14:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716301167; cv=none; b=Lo36q2foZXE4g/lXjPSBMsyWew+wyKFwrFZnZOi9/Uidb1pEvDkgdQVLOtYyG3PGvBoceIQB6wvfJpEy+LWBjJ5Ny5gNVkT9e5ooaj6HeZF66VHxd5w4r+Rn9YcJ0HBt1f1swHMZ48Emu2qsZLvUNvOu1juU9MBMrO0zkxTo1M0=
+	t=1716301239; cv=none; b=dTyGanhaeC2W18OwzPDYycEZj4Jim7hGjtwJFywBgJXxBsLHVmyLYfXFP1QW8vNzsgckTilajlSsYkXkcirx9KyQ9km7+eX77my3cK8m1rJetTDYHRPR8eN1vjNlPQsFkOrecYlVTvl0Lz+z30JzWiSyd72WF1LmrI72CiyxkVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716301167; c=relaxed/simple;
-	bh=azKC0Vfzh32+CSfRP2wDq5OaQ3ELUVlycMEY4NkDgU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tO+viTeAlk5NhIqO0qooacHk9kS+g7y3IidcOgkjt+Vvg4xCXeFdSrw+/mWeWlIOpW50br1NjhT1158hvXgyaD2tb+G6lI1PlYCzFBaWbZperTZvo3Dq4z9/vg4pgF5QBndf/V6ABEmXg3BCMi4AUbm4iJkAfDScMzjG5cMDbk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eZc1qmfA; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716301239; c=relaxed/simple;
+	bh=su20utJpl4Q5+4WEWl0JIpZRFLQjyxPG8Dy7FgaLppQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKrUIZ5B7injx3V67OE6DrecbuMAqo+/A66Yp9tVQRzXoDYUzDhqe1hNC89MXyN6cUrAKmn4V6wwmJK4t9uiXz9h45wzO4QAXLLcjVKbHQESFoRtaiBh5v2nQ7llXH7I6ZEidW+FJ23ktS+KRXrY0eTy1KiQl+VsOKQsOokwTJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rO2eJGX2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RLmDzPRI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rO2eJGX2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RLmDzPRI; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eZc1qmfA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716301161;
-	bh=azKC0Vfzh32+CSfRP2wDq5OaQ3ELUVlycMEY4NkDgU0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eZc1qmfAiQAaUmlDqAvO0MSkWkwr2IA9QonlE5eg8HeZqqeA3GfTJq7mUjPkKNtsS
-	 +QpkrquKWAYUXmDvsGAqBjOtYqz/Flpuzf8XhIZM5fCcxUcZqrJZcdvfFNkNyPShQ8
-	 VEymr8zDhfZE4lI7ufMIzoOqphgAJYU/p9JjP6PBxzHDNPpEpPsTNaHy7YhZE3ZXjr
-	 EgUbppA0xwqCxflZhyjhiAAJssRDVbI1mEyJJSx9PY3OByttbJUL8OiyNhNOb3TKLe
-	 2SZlpmoSEMq6VU4LYo/UvJzOEilVMMRQi9fjwq68seTj7c1uG7DTKfAEWWZo2/4ZHs
-	 69PvrMfxnbYdw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rO2eJGX2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RLmDzPRI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rO2eJGX2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RLmDzPRI"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8B65F3782137;
-	Tue, 21 May 2024 14:19:20 +0000 (UTC)
-Message-ID: <ff12e104-da8b-4800-bfbe-a006ffe1b840@collabora.com>
-Date: Tue, 21 May 2024 16:19:19 +0200
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 38F19342D8;
+	Tue, 21 May 2024 14:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716301234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D2gl6IIKZoaIcIf/VQk1wtsxiVEKAJnwFVp8xEUBBLc=;
+	b=rO2eJGX2DCJrhuV+yZ3rMgnlKH+er2PdvSaY9aJKC/k8tQiX0sB1kwl5fRblWX1Lpm2Nlf
+	grAAgFgARm88tcvB9VMdVY52e5DDA07n+cAxv6yUz9gShNiBcXKpDbotyF/HMvfjt9EXvl
+	fBq/X2Kyo2xaVnUhaLJq1R6MyAbqgKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716301234;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D2gl6IIKZoaIcIf/VQk1wtsxiVEKAJnwFVp8xEUBBLc=;
+	b=RLmDzPRIx+fhV+XYlKEzah51idE+LCMoIzIxbs59YgHiyMR7BXn6s/ds/Ll/ivLWuobT4k
+	UGFf0v2KQ4F3SXBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=rO2eJGX2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RLmDzPRI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716301234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D2gl6IIKZoaIcIf/VQk1wtsxiVEKAJnwFVp8xEUBBLc=;
+	b=rO2eJGX2DCJrhuV+yZ3rMgnlKH+er2PdvSaY9aJKC/k8tQiX0sB1kwl5fRblWX1Lpm2Nlf
+	grAAgFgARm88tcvB9VMdVY52e5DDA07n+cAxv6yUz9gShNiBcXKpDbotyF/HMvfjt9EXvl
+	fBq/X2Kyo2xaVnUhaLJq1R6MyAbqgKM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716301234;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D2gl6IIKZoaIcIf/VQk1wtsxiVEKAJnwFVp8xEUBBLc=;
+	b=RLmDzPRIx+fhV+XYlKEzah51idE+LCMoIzIxbs59YgHiyMR7BXn6s/ds/Ll/ivLWuobT4k
+	UGFf0v2KQ4F3SXBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4D5DE13A1E;
+	Tue, 21 May 2024 14:20:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yy4lELGtTGaZAQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 21 May 2024 14:20:33 +0000
+Date: Tue, 21 May 2024 16:20:31 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	David Hildenbrand <david@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Andrew Bresticker <abrestic@rivosinc.com>,
+	Chethan Seshadri <Chethan.Seshadri@catalinasystems.io>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Santosh Mamila <santosh.mamila@catalinasystems.io>,
+	Sivakumar Munnangi <siva.munnangi@catalinasystems.io>,
+	Sunil V L <sunilvl@ventanamicro.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 5/9] riscv: mm: Add memory hotplugging support
+Message-ID: <ZkytryG_cAhjLaQT@localhost.localdomain>
+References: <20240521114830.841660-1-bjorn@kernel.org>
+ <20240521114830.841660-6-bjorn@kernel.org>
+ <CAHVXubi_yQ6L5g4dODoHMNvgO6kHy8i6YskRXSPoTU4N2P8rUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] arm64: dts: mediatek: mt8188: add default thermal
- zones
-To: Julien Panis <jpanis@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Nicolas Pitre <npitre@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20240521-mtk-thermal-mt818x-dtsi-v4-0-b91ee678411c@baylibre.com>
- <20240521-mtk-thermal-mt818x-dtsi-v4-4-b91ee678411c@baylibre.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240521-mtk-thermal-mt818x-dtsi-v4-4-b91ee678411c@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHVXubi_yQ6L5g4dODoHMNvgO6kHy8i6YskRXSPoTU4N2P8rUA@mail.gmail.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 38F19342D8
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,eecs.berkeley.edu,redhat.com,dabbelt.com,sifive.com,lists.infradead.org,rivosinc.com,catalinasystems.io,gmail.com,ventanamicro.com,vger.kernel.org,kvack.org,lists.linux-foundation.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
 
-Il 21/05/24 16:05, Julien Panis ha scritto:
-> From: Nicolas Pitre <npitre@baylibre.com>
+On Tue, May 21, 2024 at 03:19:37PM +0200, Alexandre Ghiti wrote:
+> On Tue, May 21, 2024 at 1:49 PM Björn Töpel <bjorn@kernel.org> wrote:
+> > +       if (PageReserved(page)) {
+> > +               __ClearPageReserved(page);
 > 
-> Inspired by the vendor kernel but adapted to the upstream thermal
-> driver version.
-> 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> Signed-off-by: Julien Panis <jpanis@baylibre.com>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8188.dtsi | 432 +++++++++++++++++++++++++++++++
->   1 file changed, 432 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-> index a9f1b9db54a6..2b0f3e03acc1 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-> @@ -12,6 +12,8 @@
->   #include <dt-bindings/pinctrl/mediatek,mt8188-pinfunc.h>
->   #include <dt-bindings/power/mediatek,mt8188-power.h>
->   #include <dt-bindings/reset/mt8188-resets.h>
-> +#include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/thermal/mediatek,lvts-thermal.h>
->   
->   / {
->   	compatible = "mediatek,mt8188";
+> What's the difference between __ClearPageReserved() and
+> ClearPageReserved()? Because it seems like free_reserved_page() calls
+> the latter already, so why would you need to call
+> __ClearPageReserved() on the first page?
 
-..snip..
+__{Set,Clear}Page are the non-atomic version.
+Usually used when you know that no one else can fiddle with the page, which
+should be the case here since we are removing the memory.
 
-> +
-> +		gpu1-thermal {
+As to why we have __ClearPageReserved and then having
+free_reserved_page() call ClearPageReserved I do not really know.
+Looking at the history, it has always been like this.
 
-You forgot to implement my feedback to Nicolas - this must be gpu-thermal
+I remember I looked at this a few years ago but I cannot remember the outcome
+of that.
 
-> +			polling-delay = <1000>;
-> +			polling-delay-passive = <250>;
-> +			thermal-sensors = <&lvts_ap MT8188_AP_GPU1>;
-> +
-> +			trips {
-> +				gpu1_alert0: trip-alert0 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				gpu1_alert1: trip-alert1 {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "hot";
-> +				};
-> +
-> +				gpu1_crit: trip-crit {
-> +					temperature = <100000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		gpu2-thermal {
+Maybe David remembers better, but I think we could remove that
+__ClearPageReserved.
+Looking at powerpc implementation code, it does not do the
+__ClearPageReserved and relies only on free_reserved_page().
 
-...and for consistency with the other SoCs, this must be gpu1-thermal.
+I will have a look.
 
-> +			polling-delay = <1000>;
-> +			polling-delay-passive = <250>;
-> +			thermal-sensors = <&lvts_ap MT8188_AP_GPU2>;
-> +
-> +			trips {
-> +				gpu2_alert0: trip-alert0 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				gpu2_alert1: trip-alert1 {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "hot";
-> +				};
-> +
-> +				gpu2_crit: trip-crit {
-> +					temperature = <100000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		soc1-thermal {
-
-Any idea of what can "soc1" ever be? What measurement point is that?
-
-VPU? IMG? INFRA?
-
-soc1, soc2, soc3 make little sense.
-
-Regards,
-Angelo
-
-
+-- 
+Oscar Salvador
+SUSE Labs
