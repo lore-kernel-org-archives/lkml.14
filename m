@@ -1,112 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B72A7F49F;
-	Tue, 21 May 2024 20:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D2C7F49F;
+	Tue, 21 May 2024 20:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716324798; cv=none; b=DhC3TdeLy6r6mY5OSIp5RNqUdeA8D/n5L3Dhla5ohfl8kdRsWT6/Tab77+UD/1DPt/3gyqUPoEVvf0CpEm4KuCbiLFBI/Cg+30wqHtSxDgZqDxZEYwjZ/hXX53WjhTFGrwLi0OwCCGwh0s65fT4jMZTgazGXpPNqJ90yN66Dblk=
+	t=1716324883; cv=none; b=Exc5fpEEO6ibZO9gT8yGC+HqOELd0Yh+IHRUF3lxhZwCtJlM4fWXJe2hQcUt18zWp2hE7pP81AnzGGNDv2y1tvPhSk6h+FSxvTmgnMSMHwnF9hJ15/hxfPpIPrQT6JRmZAvV81ZNIyg9p/yGU9y01zM/SPfAa3YvwndHRttVvaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716324798; c=relaxed/simple;
-	bh=Nk2m5drImbAFQMh1gv5SA4MPVptzBY8LHz5L3E6IPO4=;
+	s=arc-20240116; t=1716324883; c=relaxed/simple;
+	bh=VTAL4Yq+4Yy+z4E1P9/Al5QouIguhAlWKRwZdyxg52M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaOVsQrCWhrP8t3iDVtgSv4bcPiYJHI0koUYN6ej8x5QE0060Y7bX2yE96bKp2GEs4IDAnUTWr0SLo7Sm4RbdKVb5SVOKp9EwlXJUc4VoXBT06afo/Md/9Udb1fo4tPlpIZyZj4lL7kuW06aHaaKHLtJYlg+LWUvFqhHzJ6Mpm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GPMGC4rc; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LgoOYfwjNTV6X+e1N4uzm9lBoe62enYByhJsIvrYKZFLey/6pWkDkte8uGfMfOhkdj5KsAmYUGWOFl7tVYyJWRa7K1tYjK4OG4IJ4JbDURnTtyZ1R1cheYs/suUu4ZPjMyCheA/YKJI8Ve35CohK2sqP3n2KdWyXUQ683/28HH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3R4WUv+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GPMGC4rc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716324797; x=1747860797;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nk2m5drImbAFQMh1gv5SA4MPVptzBY8LHz5L3E6IPO4=;
-  b=GPMGC4rcacZTBYqUmjHjHsdfJ+WG21uAyqekWFbTeyzdzgnLN8BrDTn4
-   nw3ShJS5HFaqhABtfnFvjaXdAMfaOcx7ye3wFi+q+QpKdGF92anCqk/99
-   RqacaRP/LSvlfvWMtZulS0aF5J4ilIQdz+R3TwR0nhrlTEy4hDyrrTH75
-   rBJ/isi2tSfxcNDO7RiRHud0OueDkGMKfpKijwOlVQdUhWUIZAzWZ4+gG
-   watrrpVHBKMfwFY1HeFN1Ludb/UPjDKw6XT2XfKuoHLC58MtlrZzgZTFf
-   wrp3aVAn3g06bK2gn0yLTft1Y5+iayJEy7ByL5SA1fm0V0QRsQC1e+w6h
-   w==;
-X-CSE-ConnectionGUID: m93Ff2DATz+RR1tkZdL84w==
-X-CSE-MsgGUID: CEGwIdCPRtSBRfqCucnNQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="30069560"
-X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="30069560"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 13:53:16 -0700
-X-CSE-ConnectionGUID: xGwXe5saR4eZACAD1ZMX5A==
-X-CSE-MsgGUID: Bh7ZAIoNSDSkYE0WYniw5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="37816431"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 21 May 2024 13:53:08 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s9WTa-0000ih-1m;
-	Tue, 21 May 2024 20:52:55 +0000
-Date: Wed, 22 May 2024 04:50:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: keith <keith.zhao@starfivetech.com>, andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	daniel@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
-	andy.yan@rock-chips.com, xingyu.wu@starfivetech.com,
-	p.zabel@pengutronix.de, jack.zhu@starfivetech.com,
-	shengyang.chen@starfivetech.com
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, keith.zhao@starfivetech.com
-Subject: Re: [PATCH v4 04/10] drm/vs: Add hardware funcs for vs.
-Message-ID: <202405220427.loHTDi8t-lkp@intel.com>
-References: <20240521105817.3301-5-keith.zhao@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3R4WUv+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36512C2BD11;
+	Tue, 21 May 2024 20:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716324882;
+	bh=VTAL4Yq+4Yy+z4E1P9/Al5QouIguhAlWKRwZdyxg52M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p3R4WUv+kc/24r928j3pVsWQOsB1N0CAxB+kS0SRf4sVQt1P9rmjuVCATNP0BskN1
+	 UZIVV9K7bwQUYHqrOXICo9acVb86X28vnucfNX8pN5GatbMsIk0f5sw8mE6fZMdbqG
+	 Qgsx526A/UNVH23sOavMMLmrVuc868S5NZG8jZXc6/g1op8sjrp/yITmzUKqMcUMVq
+	 NN5bbt5OxsyDoNO5lGYeauRkDgyHp1zkBlHteWrZqXlLzMckRJMjQZpFxLBl7kC0Yj
+	 HQuBnFAv+gOK+J4pyHzNRpgzudw1kYi1YZq7PuQsRtItIM2CJm2REQVv4DlgHov6YS
+	 bhwkDrRP2/m0Q==
+Date: Tue, 21 May 2024 22:54:36 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCHv6 9/9] man2: Add uretprobe syscall page
+Message-ID: <o5pkz3eenii6p6sm7dl2fsgy4fqqaq2qbn2rbxddhkvaarvwgm@dkjjknb44qp2>
+References: <20240521104825.1060966-1-jolsa@kernel.org>
+ <20240521104825.1060966-10-jolsa@kernel.org>
+ <j6qxudmvwccpqnle4evabxbswdygmx35bgqwhemuzsjs5iuydv@fk2iumwucifx>
+ <ZkyKKwfhNZxrGWsa@krava>
+ <Zk0C_vm3T2L79-_W@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ccdqohwx336ci7ml"
 Content-Disposition: inline
-In-Reply-To: <20240521105817.3301-5-keith.zhao@starfivetech.com>
+In-Reply-To: <Zk0C_vm3T2L79-_W@krava>
 
-Hi keith,
 
-kernel test robot noticed the following build warnings:
+--ccdqohwx336ci7ml
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCHv6 9/9] man2: Add uretprobe syscall page
+References: <20240521104825.1060966-1-jolsa@kernel.org>
+ <20240521104825.1060966-10-jolsa@kernel.org>
+ <j6qxudmvwccpqnle4evabxbswdygmx35bgqwhemuzsjs5iuydv@fk2iumwucifx>
+ <ZkyKKwfhNZxrGWsa@krava>
+ <Zk0C_vm3T2L79-_W@krava>
+MIME-Version: 1.0
+In-Reply-To: <Zk0C_vm3T2L79-_W@krava>
 
-[auto build test WARNING on drm-misc/drm-misc-next]
-[also build test WARNING on linus/master next-20240521]
-[cannot apply to robh/for-next rockchip/for-next v6.9]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hi Jirka,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/keith/dt-bindings-display-Add-YAML-schema-for-JH7110-display-pipeline/20240521-110316
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240521105817.3301-5-keith.zhao%40starfivetech.com
-patch subject: [PATCH v4 04/10] drm/vs: Add hardware funcs for vs.
-config: arc-kismet-CONFIG_DMA_CMA-CONFIG_DRM_VERISILICON_DC8200-0-0 (https://download.01.org/0day-ci/archive/20240522/202405220427.loHTDi8t-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240522/202405220427.loHTDi8t-lkp@intel.com/reproduce)
+On Tue, May 21, 2024 at 10:24:30PM GMT, Jiri Olsa wrote:
+> how about the change below?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405220427.loHTDi8t-lkp@intel.com/
+Much better.  I still have a few comments below.  :-)
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for DMA_CMA when selected by DRM_VERISILICON_DC8200
-   WARNING: unmet direct dependencies detected for DMA_CMA
-     Depends on [n]: HAVE_DMA_CONTIGUOUS [=n] && CMA [=y]
-     Selected by [y]:
-     - DRM_VERISILICON_DC8200 [=y] && HAS_IOMEM [=y] && DRM [=y]
+>=20
+> thanks,
+> jirka
+>=20
+>=20
+> ---
+> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
+> new file mode 100644
+> index 000000000000..959b7a47102b
+> --- /dev/null
+> +++ b/man/man2/uretprobe.2
+> @@ -0,0 +1,55 @@
+> +.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
+> +.\"
+> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
+> +.\"
+> +.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
+> +.SH NAME
+> +uretprobe \- execute pending return uprobes
+> +.SH SYNOPSIS
+> +.nf
+> +.B int uretprobe(void)
+> +.fi
+> +.SH DESCRIPTION
+> +The
+> +.BR uretprobe ()
+> +system call is an alternative to breakpoint instructions for triggering =
+return
+> +uprobe consumers.
+> +.P
+> +Calls to
+> +.BR uretprobe ()
+> +system call are only made from the user-space trampoline provided by the=
+ kernel.
+> +Calls from any other place result in a
+> +.BR SIGILL .
+> +.SH RETURN VALUE
+> +The
+> +.BR uretprobe ()
+> +system call return value is architecture-specific.
+> +.SH ERRORS
+> +.BR SIGILL
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This should be a tagged paragraph, preceeded with '.TP'.  See any manual
+page with an ERRORS section for an example.
+
+Also, BR is Bold alternating with Roman, but this is just bold, so it
+should use '.B'.
+
+=2ETP
+=2EB SIGILL
+
+> +The
+> +.BR uretprobe ()
+> +system call was called by user.
+> +.SH VERSIONS
+> +Details of the
+> +.BR uretprobe ()
+> +system call behavior vary across systems.
+> +.SH STANDARDS
+> +None.
+> +.SH HISTORY
+> +TBD
+> +.SH NOTES
+> +The
+> +.BR uretprobe ()
+> +system call was initially introduced for the x86_64 architecture where i=
+t was shown
+
+We have a strong-ish limit at column 80.  Please break after
+'architecture', which is a clause boundary.
+
+Have a lovely night!
+Alex
+
+> +to be faster than breakpoint traps.
+> +It might be extended to other architectures.
+> +.P
+> +The
+> +.BR uretprobe ()
+> +system call exists only to allow the invocation of return uprobe consume=
+rs.
+> +It should
+> +.B never
+> +be called directly.
+> +Details of the arguments (if any) passed to
+> +.BR uretprobe ()
+> +and the return value are architecture-specific.
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--ccdqohwx336ci7ml
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmZNCgsACgkQnowa+77/
+2zJIQQ/7BAgwH2hW3N8bbbBv85y8HA8GsAtUZDSO9flK1GsoZlmwsR8dbWJmbE1v
+395U8q21JqlOEGlk98ES9n2ssEsq5dLEx1eIPlYuADlc0+PFOEJRhBnXS/td1+mM
+ADJm+e9tyc8PIpuB1ysLeeRfmovWUDxEubm5q+qzJ+n1k5ZMiGmLPmDor5afLDyR
+iug3Yyv4+5g+FzqE23vudpJ5pcv6eRVVbYuZ8gwIpY7hfwVvQ4MQed339XL8bZun
+qa2mKy0dMME/SNc5rDKoJ4t0KvbfWGH6UKM9iXVEu8xZZuGnxyjmpwGBYNxBz4c1
+UN3ep5j+ufqlTydspd2vQYZEN6cOTRONd5bC0kH0ZAFJsbIlyxX7IOBtjbbKRv59
+o23M6bfUEpz7sfxdrODpP45gYV5JQTz3/GCRv8rGiDN1SlkCZl7wXK0Zigop5l+D
+VxDs+E57YtcLQYU1u8qHJpMQsjzEC6uIOtI6/0FBHMeoon6JKxBZZrYZO3YfmWwd
+8ZQSJctgTL//aQQRLc7a/fCuscWtWA03QWuCmFxy6020l9Hkkh43bzUyQRFRx543
+WdjLslYj0AQkvOmhxp1jEXEhqDCYQBDvyqoS24gIFOAEraSIlRYJK9bcDwhRVHcz
+IZKE8tzJ81Dtlkfzi2H59LciIAvVKXze40tjsHL2hWfhfgJVQgE=
+=lj6M
+-----END PGP SIGNATURE-----
+
+--ccdqohwx336ci7ml--
