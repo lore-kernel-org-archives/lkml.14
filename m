@@ -1,118 +1,144 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D1447A48;
-	Tue, 21 May 2024 08:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACAF4CE04
+	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 08:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716278565; cv=none; b=fdFt2Lctz+NBY8+gWSyl8ugEaVRMyxZsWhOSs5GPIwKwzA2LkolFBJtsiKdxQWrO6PQIqe4mGzot8WpcZlYM/NbJzG07ngi/JfpRjZD9Q4dmibrqc6fPhgPsyqv/jEQW1N6qz3w2jNPF+oNglLzypSTdtYzp50GB5TpBOVLgcKA=
+	t=1716278594; cv=none; b=VnB2zz67h9lsZcIZI0yal1HRlPFTci/hlF0jLbyY07jba3YqwRKenm4NmS+sxFP0ewtDcsu80Z35BHYbsEnLusPTSC6URUjftg/HFIy1mNZjgTnOZUIvbzDPrJvIqblF7ryohv5ihuf8MV7bvVZlGOBBKXS7k06cEOAQPbB03Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716278565; c=relaxed/simple;
-	bh=7Bg0EkekzT1leAOQM31BuKsgT0tR/z20yhvwOHsgw8M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ORefNZ9PK3aEjbODTQYllGylptCIkQbcNv0l9v0PwVlk1e3Dj0JLu0kcGfYAO8CyJ6NDr5SVX9S8qG8CSRJtAvQQMdNXsxvaK4oohIFKUk1ng+ZF5Lmhx2IFL+79Oh1QvrgEVSxK/BilgqySkC02i+0OTDhGVZQAw8QjRfXTfVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=irqOQyYa; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1716278594; c=relaxed/simple;
+	bh=P8i8lpZFDK9qhijLTo40alsf+/38zDsCsS5gsVu0+68=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PiOicvV7aqw6mn9cCwaZ3Lep1Pzft1JRNh4SnG9BJyorVEdc+UDOrMf5ouFyirnybxb+d/F9LfXFo/VBOlKpFlZe5LQDev81pwXhXKHZMHM+AbYAoRZVfsegMKyC/LgwshyW/HLpHeQbwc4toKibjmkyKI9ZF6MPeSqueULvJn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mvj+mzg7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="irqOQyYa"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44L2RvGh002296;
-	Tue, 21 May 2024 10:02:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=9dp1VLe
-	jRl1NLDB777JA8IKm3sHxNgriMqBjr0bCdkg=; b=irqOQyYamV00GN2VL6RTJlT
-	+vYAtKyMZZY9NCmfExD9dJq5DvPfFfCn9NJyhRkKZvSRTimcAfwBebWaQ/4c4KYB
-	31QLg+unoaEpGdu+t9ywWtVfoZ3NtlMPnwdJZIMF26JO/nDJT3EkLhxOEZs/LVsx
-	M68KMZ13/7TLoA6TvFvvCShD/2yNDCqcP3OdMpztcU7kTbEjtMc16OdbdTK0qidy
-	lECiIvs4dYZFN8QmYJpnkWE9hub/8bcQvT7qgLyb97/fc9LTU6RBD5o6NKBCS3lU
-	9uo9Q/k+dFy/3palvYP1qsw7gHRNEgZzbYaiWj0AyStyAsaAWi/fzpg4UdfG+kQ=
-	=
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y6n42av1n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 May 2024 10:02:16 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B023A4002D;
-	Tue, 21 May 2024 10:02:12 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AB402122E8;
-	Tue, 21 May 2024 10:01:38 +0200 (CEST)
-Received: from localhost (10.48.86.232) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 21 May
- 2024 10:01:38 +0200
-From: Pascal Paillet <p.paillet@foss.st.com>
-To: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <p.paillet@foss.st.com>
-Subject: [PATCH] arm64: dts: st: OP-TEE async notif on PPI 15 for stm32mp25
-Date: Tue, 21 May 2024 10:01:31 +0200
-Message-ID: <20240521080131.473447-1-p.paillet@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mvj+mzg7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716278592;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8i8lpZFDK9qhijLTo40alsf+/38zDsCsS5gsVu0+68=;
+	b=Mvj+mzg7YL3hKy7lak4bQJHkIZaDvvByuUOv2iKMeQtHkexe0GGeQ+aorZKfNYEFmvyMZZ
+	2t6LKl+PBGDc0fSyY62IEG0v6y8BYXnHwEv0X+E6FrZ/andTwdcmyvgDtp6mrTZknmNF24
+	y4+1+Ge8AfSnjFykjP5mxsY39sZ+UPs=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-448-XloFh_U5MiyXuqln0N7REw-1; Tue, 21 May 2024 04:03:10 -0400
+X-MC-Unique: XloFh_U5MiyXuqln0N7REw-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-572b374a4c8so814704a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 01:03:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716278589; x=1716883389;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P8i8lpZFDK9qhijLTo40alsf+/38zDsCsS5gsVu0+68=;
+        b=Ep392BZ30FJZ6IEbNov9fSJfswAsVQuYQOn8cqLGOjLeEUzxzB12G+bLoZtuEtMs2V
+         XPGuGJ7fqP8tfIYEb4EiRLH8Q2o/Og2NhhN09h9WgaPwvXXlilDbW8bGbLWk+CA9PXrA
+         rslmGUIdBbfHiTPPJtYwlMr+9pAU9tVgiFL5uwm0fAFfJyL+dEgigzv96XMV/GNPSBC6
+         ilmD2fXJPdlXQSBBaaoHlZxxNtF9SisyK29Ou1YXYYqvOvSpSQ+g0ehJosfOP3fxp7Z6
+         7dNa9jVOoj57qXgb0F9AWSL65SWwodaF7NT/Tx1+BA3kEtJ2ng+r1A9Mr8fXFmWubb2W
+         v6fg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4eJgTIiK7Vp8qOKPo4dcVEzPtTaQ6gTJQsADP6T74Q1a/bigARuMhwdl0lsf2NXDRA6evPTddUVL35Biq+32ImgUMsuErQYYOS+oy
+X-Gm-Message-State: AOJu0YzxVKmQmhP19FlkUrGEGjPktUtmo1NAbkJnmIfkGTD8/+B9pLtw
+	JlRfDe2HvGgwwBrQmZDvuh0BLouRhSm1nioE6b9HLhxHi9ZINb6+qs5HPXhjUJgM640neKGw3ZA
+	aSWdRTc8+pmpS3e+3Ht08ZF/0iGfJ9hewIQEk7mf2JidUVtyl2pl1YEeEGpl06w==
+X-Received: by 2002:a17:906:5a4a:b0:a59:bbd6:bb38 with SMTP id a640c23a62f3a-a5a2d6d1b90mr1909491366b.7.1716278589482;
+        Tue, 21 May 2024 01:03:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+r903jJsCsfgUxdSOggtSi2Aisrx2uTa8+qStRPyE+96/oWSWqcZCONUYZVQp3fx1iO7+SA==
+X-Received: by 2002:a17:906:5a4a:b0:a59:bbd6:bb38 with SMTP id a640c23a62f3a-a5a2d6d1b90mr1909489066b.7.1716278589063;
+        Tue, 21 May 2024 01:03:09 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781e97bsm1560827766b.32.2024.05.21.01.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 01:03:08 -0700 (PDT)
+Message-ID: <1c8bb8044bc1943ad8d19cd6fc84a2d886004163.camel@redhat.com>
+Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem
+ operations
+From: Philipp Stanner <pstanner@redhat.com>
+To: Wedson Almeida Filho <wedsonaf@gmail.com>, Dave Airlie
+ <airlied@gmail.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich
+ <dakr@redhat.com>, gregkh@linuxfoundation.org, rafael@kernel.org, 
+ bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+ boqun.feng@gmail.com,  gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me,  a.hindborg@samsung.com, aliceryhl@google.com,
+ fujita.tomonori@gmail.com,  lina@asahilina.net, ajanulgu@redhat.com,
+ lyude@redhat.com,  rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org
+Date: Tue, 21 May 2024 10:03:07 +0200
+In-Reply-To: <CANeycqpNeHFUu-RwSc6Ewa3r5TMhYYFDC6bO+sj3OZ398JfJ1A@mail.gmail.com>
+References: <20240520172554.182094-1-dakr@redhat.com>
+	 <20240520172554.182094-11-dakr@redhat.com>
+	 <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
+	 <CAPM=9txb5STBo05xiTy9+wF7=mMO=X2==BP4JVORPFAtX=nS0g@mail.gmail.com>
+	 <CANeycqpNeHFUu-RwSc6Ewa3r5TMhYYFDC6bO+sj3OZ398JfJ1A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-21_04,2024-05-21_01,2024-05-17_01
 
-From: Etienne Carriere <etienne.carriere@foss.st.com>
+On Tue, 2024-05-21 at 00:01 -0300, Wedson Almeida Filho wrote:
+> On Mon, 20 May 2024 at 23:07, Dave Airlie <airlied@gmail.com> wrote:
+> >=20
+> > >=20
+> > > Wedson wrote a similar abstraction in the past
+> > > (`rust/kernel/io_mem.rs` in the old `rust` branch), with a
+> > > compile-time `SIZE` -- it is probably worth taking a look.
+> > >=20
+> >=20
+> > Just on this point, we can't know in advance what size the IO BARs
+> > are
+> > at compile time.
+> >=20
+> > The old method just isn't useful for real devices with runtime IO
+> > BAR sizes.
+>=20
+> The compile-time `SIZE` in my implementation is a minimum size.
+>=20
+> Attempts to read/write with constants within that size (offset +
+> size)
+> were checked at compile time, that is, they would have zero
+> additional
+> runtime cost when compared to C. Reads/writes beyond the minimum
+> would
+> have to be checked at runtime.
+>=20
 
-Define GIC PPI 15 (aka GIC interrupt line 31) for OP-TEE asynchronous
-notification.
+We looked at this implementation
 
-Signed-off-by: Etienne Carriere <etienne.carriere@foss.st.com>
-Signed-off-by: Pascal Paillet <p.paillet@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 4 +++-
- arch/arm64/boot/dts/st/stm32mp253.dtsi | 4 ++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Its disadvantage is that it moves the responsibility for setting that
+minimum size to the driver programmer. Andreas Hindborg is using that
+currently for rnvme [1].
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index 4b48e4ed2d28..d0e10dda96b6 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -51,9 +51,11 @@ clk_rcbsec: clk-rcbsec {
- 	};
- 
- 	firmware {
--		optee {
-+		optee: optee {
- 			compatible = "linaro,optee-tz";
- 			method = "smc";
-+			interrupt-parent = <&intc>;
-+			interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
- 		};
- 
- 		scmi {
-diff --git a/arch/arm64/boot/dts/st/stm32mp253.dtsi b/arch/arm64/boot/dts/st/stm32mp253.dtsi
-index 029f88981961..69001f924d17 100644
---- a/arch/arm64/boot/dts/st/stm32mp253.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp253.dtsi
-@@ -28,3 +28,7 @@ timer {
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
-+
-+&optee {
-+	interrupts = <GIC_PPI 15 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
--- 
-2.34.1
+I believe that the driver programmer in Rust should not be responsible
+for controlling such sensitive parameters (one could far more easily
+provide invalid values), but the subsystem (e.g. PCI) should do it,
+because it knows about the exact resource lengths.
+
+The only way to set the actual, real value is through subsystem code.
+But when we (i.e., currently, the driver programmer) have to use that
+anyways, we can just use it from the very beginning and have the exact
+valid parameters.
+
+So driver programmers would always have correct IoMem and would have a
+harder time breaking stuff, and wouldn't have to think about minimum
+lengths and things like that.
+
+
+P.
+
+[1] https://github.com/metaspace/linux/blob/rnvme/drivers/block/rnvme.rs#L5=
+80
 
