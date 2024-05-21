@@ -1,113 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D4B6CDC4;
-	Tue, 21 May 2024 11:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BB96CDC4;
+	Tue, 21 May 2024 11:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292473; cv=none; b=b4zNdmHl5BCzGujZEHeTr3Ntvvn9kdMH3BX5zaVc8A6vl2zGS4fbHP/q//6/DNm45UhzSntDDl86/XIPqX5Yu7TGMTTRUksUCbF3t6SufH8rrzZNPP+AnUUoEiYLOjFOxPbnKtTytMjMuBIV6AoWDySu1A0rfEYa84VsKHdfbAM=
+	t=1716292624; cv=none; b=i3aGxXTE3Dq6WR+9oqDO6VY2p2ltqLaxxrSTfBVZyl5fmusfQto05uMAgMywap4Bwgt3gUAyPFT8Hnv1iSYDHJIgQvn6mVUWSkQTCw+HJXxxOMXH5mdRAi/3im0CXGeFxhjKyO9l7t2CYFE3N8hz/nI0x/UH5pgo/PAQYd1RYuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292473; c=relaxed/simple;
-	bh=4OhIZejYCjSPXM9z8wDdv4QtFL7DtFYeHk/qWRFsolw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YBqnC1DKsZHneRaoXRyZixuZ0eo829C6BWz19VK+pi0STp4NXBscrAXsTIZ/CLTFAK+s3kgjyGlCuSfLxnlEIhxvMttXrEOR+SuAwkUbuzscEMeZax7D+RHlRq0IRP75Cnz9tbSXaWYwxAsceI1/8yDIBP6gQxeHzSP+YHVPOvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adE6vLVc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716292624; c=relaxed/simple;
+	bh=Xrdr431T0DFBXM3LLa9LNptGoGbSvbG9e7q6cs2jaos=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=fKuvlWQyIq+XhZuzbk9bn2czR4PL1cT3btqng+NowL2jIyrt25Txw0NGZrdjlYLWslxAn6wi4MWKGeCmbLSIyBoUwR+9Mj4fTWWwWhe9KUMN+QuFOdsPe20RjIZuUN9TPZcBAjc53owRvBMLkgILIT9Jx0CQpWb9tTkJtoNbCY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j2koresz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kvToPjsn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adE6vLVc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEDEDC2BD11;
-	Tue, 21 May 2024 11:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716292473;
-	bh=4OhIZejYCjSPXM9z8wDdv4QtFL7DtFYeHk/qWRFsolw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=adE6vLVcdzyKVSr4Ye4HAfgZaCiR0M6Qeq3WHsu9HKjqU4c0TwBsZvU9myCxUt+V3
-	 qNtlXkZSpwNPaap7+YVhrjlYyloXFjW4scIRf0LJb4Td1WDLF4NYZw6e3ZpaKD/BV3
-	 u4bYxxMbSljKGemMh5Tu1s3ju7w6RjIeBC7OQLVhzuhFDB/iCf4vR6dJeZgyAq/kFP
-	 87y9ubPfMjGZaUsv8mo1QoOo5F7idjR4xRlwCwBGtIW6nwdJn6yNAy1k+TRl1ySN26
-	 BmX6GJQwF98qDbLyqvSSVs8QKY6C4GbYxXmUh3hYiFXiAobE3NUlfQt0fpG6PErYdC
-	 WLOUnteTC2iEw==
-Message-ID: <38517491-678e-4aba-ad5a-f7cb7519ef1c@kernel.org>
-Date: Tue, 21 May 2024 13:54:25 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j2koresz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kvToPjsn"
+Date: Tue, 21 May 2024 11:57:00 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716292621;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aEI4SdcRYabaSTOLSIeu7XfK6qRDcKJ8S+m9FjIEDsE=;
+	b=j2koresz79STAkDRiSELqUKw+gbjU3/99gHjPIdEEwn0uUfKhH+FSA5AVv3cBGxm+znhrr
+	MbMpBsY3P1AY/jltgSWFtMyv0XQkSPewypgXD9l3MlxWl4O4lP01xhmoLyCY1OPN0Ic5TP
+	H/JqsIuuRnvt0r79WnDwfM47dbsZugkePioerVIso/nq1dyN3CSZgF+V5bnLv5moAFDxj7
+	lIf3yYIcyD0no87zGEPke2TcYHlQyXb+9Kyo+oVwiJ6fMrZfNHNR8oO/rmIC8+yULSUISn
+	7Xb/7nuGXGHxLIEqeGuvkQ6SJke9zrs3qKN0tP/FrItIumGp/8PQ6HEmEEhkMQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716292621;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aEI4SdcRYabaSTOLSIeu7XfK6qRDcKJ8S+m9FjIEDsE=;
+	b=kvToPjsntBrKF4129XhctlOeddi12pjV5qcQrTcgNrR7WHECl+nSaCeMIlJKIVV2ckDabV
+	q/EazoIrJ7d9OUDg==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/boot: Use current_stack_pointer to avoid asm() in
+ init_heap()
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240520083011.135342-1-ubizjak@gmail.com>
+References: <20240520083011.135342-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/8] drivers: mtd: nand: Add qpic_common API file
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, broonie@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, miquel.raynal@bootlin.com,
- richard@nod.at, vigneshr@ti.com, manivannan.sadhasivam@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org
-Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com
-References: <20240521105532.1537845-1-quic_mdalam@quicinc.com>
- <20240521105532.1537845-5-quic_mdalam@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240521105532.1537845-5-quic_mdalam@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <171629262087.10875.8849677586858232819.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 21/05/2024 12:55, Md Sadre Alam wrote:
-> Add qpic_common.c file which hold all the common
-> qpic APIs which will be used by both qpic raw nand
-> driver and qpic spi nand driver.
-> 
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> ---
-> Change in [v6]
-> 
+The following commit has been merged into the x86/boot branch of tip:
 
-This is v6, but you still keep prefixing in the subject as "drivers".
-Drop it finally from all your patches.
+Commit-ID:     b855cc58fc93c175fd5bb868d5e3a45cb3e1a42b
+Gitweb:        https://git.kernel.org/tip/b855cc58fc93c175fd5bb868d5e3a45cb3e1a42b
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Mon, 20 May 2024 10:29:55 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 21 May 2024 13:36:36 +02:00
 
-Best regards,
-Krzysztof
+x86/boot: Use current_stack_pointer to avoid asm() in init_heap()
 
+Use current_stack_pointer to avoid asm() in the calculation of
+stack_end in init_heap(). The new code is more readable and
+results in exactly the same object file.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20240520083011.135342-1-ubizjak@gmail.com
+---
+ arch/x86/boot/main.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/boot/main.c b/arch/x86/boot/main.c
+index 9049f39..ac78f8c 100644
+--- a/arch/x86/boot/main.c
++++ b/arch/x86/boot/main.c
+@@ -119,9 +119,8 @@ static void init_heap(void)
+ 	char *stack_end;
+ 
+ 	if (boot_params.hdr.loadflags & CAN_USE_HEAP) {
+-		asm("leal %n1(%%esp),%0"
+-		    : "=r" (stack_end) : "i" (STACK_SIZE));
+-
++		stack_end = (char *)
++			(current_stack_pointer - STACK_SIZE);
+ 		heap_end = (char *)
+ 			((size_t)boot_params.hdr.heap_end_ptr + 0x200);
+ 		if (heap_end > stack_end)
