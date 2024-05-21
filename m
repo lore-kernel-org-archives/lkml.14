@@ -1,73 +1,33 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C425B5337D
-	for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 07:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 222E442056;
+	Tue, 21 May 2024 07:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716277883; cv=none; b=sd9rnpaWhppC6o6b+mypU2mUHW8VF7g28EekISUcv97z31nq2I+uUH0lCKCuL9W+mKfisIt+K1jUliWBOP2ftc5gVv9NCx+2cxiOO+mOnfRlyGfblfg7V8OO3IDj+P+QG5VxDcYNonEb65YNbL5ciFtSwpbDNI3LntnuIQFfDkQ=
+	t=1716277894; cv=none; b=DBueFVAw/ZIIj4Ifl2BqibnC3L88fHFMaTnyej14E4mSNSZsMVsArFnKa/MaYYEIqLqktuwF4sSdDrYB2vUAwF//s3jtg7lN+xH+K8dvrnEvTQvZGPrIHSjb25HnFO158KWNjvHrDSwE786Pw3o6qkGVqWsNZRVxHSqJMIY1zEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716277883; c=relaxed/simple;
-	bh=tNcwUJFLX7BXbp1Qcrg2ogpxcmB/m5eICmF7z+JYRD8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kYCo7piInOO3Polatc/wxFU4l1kFp0kvcwYiTTrLiwJJ7AURFEtBvo+W1EYdx+k/lZEYwZZLlXNTDkkXv8xNkS6KkAKf9W0ha/wqqKQXztlSQRj/E7ZjRGy+1to6dKVO0Mut1JjbRi4yz2yfwDW17ktLsxDWgJWOOAj/VpptinM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=jkYkyCPZ reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="jkYkyCPZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rJA9OD/hotGu+pdBYSa5wol5mrcgE/6y01wA9gkNaok=;
-  b=jkYkyCPZj+YAIvNbRY5Cs5xD8fbAoOAB42BGJ4k1y7N4FzoWvAcIdbYb
-   tCPZ3zJFh8zt127AwRj3FyfXFRL2z1hSZE9veKyll+sxiigH/GLLgthpA
-   XsXvl5scqblpB3zYG65lvIpuVWMFXVVyZW7N8FSeZYwB/orrnoEO5Zv9M
-   s5B8nIcrgGlo1cISjxiB8fUJoJlsIiDgAvsCyJTXqoVDz0rPoxHsfNYk7
-   PuTPwulx6FCRqb6gVRg5FVaxeA35kjGAWMpGt9reqtm/QGXNtzhDVzBBK
-   yWCR/Xxxg12dNiyXSpLmPDJ22ENKNvPPjoJCzm73VVGfy81hcBe6eHtNm
-   A==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 21 May 2024 15:51:12 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
-	by mse.ite.com.tw with ESMTP id 44L7p9ME031040;
-	Tue, 21 May 2024 15:51:09 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 21 May 2024 15:51:08 +0800
-From: kuro <kuro.chung@ite.com.tw>
-To: Pin-yen Lin <treapking@chromium.org>,
-        Kenneth Haung
-	<kenneth.hung@ite.com.tw>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil
- Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman
-	<jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Allen Chen
-	<allen.chen@ite.com.tw>, Hermes Wu <hermes.wu@ite.com.tw>,
-        AngeloGioacchino
- Del Regno <angelogioacchino.delregno@collabora.com>,
-        "open list:DRM DRIVERS"
-	<dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC: Kuro Chung <kuro.chung@ite.com.tw>
-Subject: [PATCH v12] drm/bridge: it6505: fix hibernate to resume no display issue
-Date: Tue, 21 May 2024 16:01:48 +0800
-Message-ID: <20240521080149.1047892-1-kuro.chung@ite.com.tw>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1716277894; c=relaxed/simple;
+	bh=GwBgZ6A2Vqzcd5K1LmY0jwLdyR/P2V7/O9bkM2fxAHE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AQHZtPUUCrScxJhGbXvrdJocaF41tgJ9Pu+TFtRRQUeuRHGJk1Lvzx/D7SUjtNZKJe4EE5bYWs5CcABO/u80Jv/LDhHIjKRkFi2X05rBXxgEjkmAc1m36zdKPX77zyHwu90opRbq2m4sECHOBEw0g+T/jjo2MiOhsiri59lKGtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from gui.. (unknown [115.206.161.197])
+	by mail-app3 (Coremail) with SMTP id cC_KCgD3T1ZkUkxmSGTSAA--.6741S4;
+	Tue, 21 May 2024 15:51:01 +0800 (CST)
+From: Lin Ma <linma@zju.edu.cn>
+To: johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Lin Ma <linma@zju.edu.cn>
+Subject: [PATCH v2 net] wifi: cfg80211: pmsr: use correct nla_get_uX functions
+Date: Tue, 21 May 2024 15:50:59 +0800
+Message-Id: <20240521075059.47999-1-linma@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,174 +35,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP:
-	F9F34C0A94CA35CD4F5911CF8E0B2FE07EA2AA2D0DBBCFD05078346A7B31A6D02002:8
-X-MAIL:mse.ite.com.tw 44L7p9ME031040
+X-CM-TRANSID:cC_KCgD3T1ZkUkxmSGTSAA--.6741S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF1fJF48Xw1DtF45Aw1fZwb_yoW5uFWkpa
+	1kta98tas8J348urykCw18WF9Fgr17Arn5CFW3WF1fCr4vga4Yy347ur4qq3WDA34kW395
+	tr1vy3y8Cw15trDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	tVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUb8hL5UUUU
+	U==
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
 
-From: Kuro Chung <kuro.chung@ite.com.tw>
+The commit 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM
+initiator API") defines four attributes NL80211_PMSR_FTM_REQ_ATTR_
+{NUM_BURSTS_EXP}/{BURST_PERIOD}/{BURST_DURATION}/{FTMS_PER_BURST} in
+following ways.
 
-When the system power resumes, the TTL input of IT6505 may experience
-some noise before the video signal stabilizes, necessitating a video
-reset. This patch is implemented to prevent a loop of video error
-interrupts, which can occur when a video reset in the video FIFO error
-interrupt triggers another such interrupt. The patch processes the SCDT
-and FIFO error interrupts simultaneously and ignores any video FIFO
-error interrupts caused by a video reset.
+static const struct nla_policy
+nl80211_pmsr_ftm_req_attr_policy[NL80211_PMSR_FTM_REQ_ATTR_MAX + 1] = {
+    ...
+    [NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP] =
+        NLA_POLICY_MAX(NLA_U8, 15),
+    [NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD] = { .type = NLA_U16 },
+    [NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION] =
+        NLA_POLICY_MAX(NLA_U8, 15),
+    [NL80211_PMSR_FTM_REQ_ATTR_FTMS_PER_BURST] =
+        NLA_POLICY_MAX(NLA_U8, 31),
+    ...
+};
 
-Fixes: b5c84a9edcd4 ("drm/bridge: add it6505 driver")
-Signed-off-by: Kuro Chung <kuro.chung@ite.com.tw>
-Signed-off-by: Hermes Wu <hermes.wu@ite.com.tw>
+That is, those attributes are expected to be NLA_U8 and NLA_U16 types.
+However, the consumers of these attributes in `pmsr_parse_ftm` blindly
+all use `nla_get_u32`, which is incorrect and causes functionality issues
+on little-endian platforms. Hence, fix them with the correct `nla_get_u8`
+and `nla_get_u16` functions.
 
+Fixes: 9bb7e0f24e7e ("cfg80211: add peer measurement with FTM initiator API")
+Signed-off-by: Lin Ma <linma@zju.edu.cn>
 ---
-V1->V3: update MAINTAINERS mail list
-V3->V4: remove function it6505_irq_video_fifo_error,it6505_irq_io_latch_fifo_overflow
-V4->V5: customer feedback again, update again, kernel build pass
-V5->V6: remove unrelated patch change, split into another patch
-V6->V7: modify code 0x02 to TX_FIFO_RESET by macro define
-V7->V8: fix merge conflict, change mail from 'cc' to 'to'
-V8->V9: modify patch description, patch summary
-V9->V10: modify patch summary, add Fixes
-V10->V11: modify patch description, add Signed-off-by
-V11->V12: moidfy patch description.
+V1->V2: add wifi prefix in title,
+        mention the policy that defines those attributes as suggested by johannes
 
----
- drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
+ net/wireless/pmsr.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index 469157341f3ab..5703fcf4b7b00 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1307,9 +1307,15 @@ static void it6505_video_reset(struct it6505 *it6505)
- 	it6505_link_reset_step_train(it6505);
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_MUTE);
- 	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00);
--	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, TX_FIFO_RESET);
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
-+
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_FIFO);
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
-+
-+	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+	usleep_range(1000, 2000);
- 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
- }
+diff --git a/net/wireless/pmsr.c b/net/wireless/pmsr.c
+index e106dcea3977..c569c37da317 100644
+--- a/net/wireless/pmsr.c
++++ b/net/wireless/pmsr.c
+@@ -56,7 +56,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
+ 	out->ftm.burst_period = 0;
+ 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD])
+ 		out->ftm.burst_period =
+-			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD]);
++			nla_get_u16(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_PERIOD]);
  
-@@ -2245,12 +2251,11 @@ static void it6505_link_training_work(struct work_struct *work)
- 	if (ret) {
- 		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
- 		it6505_link_train_ok(it6505);
--		return;
- 	} else {
- 		it6505->auto_train_retry--;
-+		it6505_dump(it6505);
- 	}
+ 	out->ftm.asap = !!tb[NL80211_PMSR_FTM_REQ_ATTR_ASAP];
+ 	if (out->ftm.asap && !capa->ftm.asap) {
+@@ -75,7 +75,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
+ 	out->ftm.num_bursts_exp = 0;
+ 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP])
+ 		out->ftm.num_bursts_exp =
+-			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP]);
++			nla_get_u8(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_BURSTS_EXP]);
  
--	it6505_dump(it6505);
- }
+ 	if (capa->ftm.max_bursts_exponent >= 0 &&
+ 	    out->ftm.num_bursts_exp > capa->ftm.max_bursts_exponent) {
+@@ -88,7 +88,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
+ 	out->ftm.burst_duration = 15;
+ 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION])
+ 		out->ftm.burst_duration =
+-			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION]);
++			nla_get_u8(tb[NL80211_PMSR_FTM_REQ_ATTR_BURST_DURATION]);
  
- static void it6505_plugged_status_to_codec(struct it6505 *it6505)
-@@ -2471,31 +2476,53 @@ static void it6505_irq_link_train_fail(struct it6505 *it6505)
- 	schedule_work(&it6505->link_works);
- }
+ 	out->ftm.ftms_per_burst = 0;
+ 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_FTMS_PER_BURST])
+@@ -107,7 +107,7 @@ static int pmsr_parse_ftm(struct cfg80211_registered_device *rdev,
+ 	out->ftm.ftmr_retries = 3;
+ 	if (tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES])
+ 		out->ftm.ftmr_retries =
+-			nla_get_u32(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES]);
++			nla_get_u8(tb[NL80211_PMSR_FTM_REQ_ATTR_NUM_FTMR_RETRIES]);
  
--static void it6505_irq_video_fifo_error(struct it6505 *it6505)
-+static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
- {
--	struct device *dev = it6505->dev;
--
--	DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
-+	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
- }
- 
--static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
-+static void it6505_irq_video_handler(struct it6505 *it6505, const int *int_status)
- {
- 	struct device *dev = it6505->dev;
-+	int reg_0d, reg_int03;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
--}
-+	/*
-+	 * When video SCDT change with video not stable,
-+	 * Or video FIFO error, need video reset
-+	 */
- 
--static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
--{
--	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
-+	if ((!it6505_get_video_status(it6505) &&
-+		(it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))) ||
-+		(it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *) int_status)) ||
-+		(it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *) int_status))) {
-+
-+		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
-+		flush_work(&it6505->link_works);
-+		it6505_stop_hdcp(it6505);
-+		it6505_video_reset(it6505);
-+
-+		usleep_range(10000, 11000);
-+
-+		/*
-+		 * Clear FIFO error IRQ to prevent fifo error -> reset loop
-+		 * HW will trigger SCDT change IRQ again when video stable
-+		 */
-+
-+		reg_int03 = it6505_read(it6505, INT_STATUS_03);
-+		reg_0d = it6505_read(it6505, REG_SYSTEM_STS);
-+
-+		reg_int03 &= (BIT(INT_VID_FIFO_ERROR) | BIT(INT_IO_LATCH_FIFO_OVERFLOW));
-+		it6505_write(it6505, INT_STATUS_03, reg_int03);
-+
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg08 = 0x%02x", reg_int03);
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg0D = 0x%02x", reg_0d);
-+
-+		return;
-+	}
-+
-+
-+	if (it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))
-+		it6505_irq_scdt(it6505);
- }
- 
- static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
-@@ -2508,15 +2535,12 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 	} irq_vec[] = {
- 		{ BIT_INT_HPD, it6505_irq_hpd },
- 		{ BIT_INT_HPD_IRQ, it6505_irq_hpd_irq },
--		{ BIT_INT_SCDT, it6505_irq_scdt },
- 		{ BIT_INT_HDCP_FAIL, it6505_irq_hdcp_fail },
- 		{ BIT_INT_HDCP_DONE, it6505_irq_hdcp_done },
- 		{ BIT_INT_AUX_CMD_FAIL, it6505_irq_aux_cmd_fail },
- 		{ BIT_INT_HDCP_KSV_CHECK, it6505_irq_hdcp_ksv_check },
- 		{ BIT_INT_AUDIO_FIFO_ERROR, it6505_irq_audio_fifo_error },
- 		{ BIT_INT_LINK_TRAIN_FAIL, it6505_irq_link_train_fail },
--		{ BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
--		{ BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_overflow },
- 	};
- 	int int_status[3], i;
- 
-@@ -2546,6 +2570,7 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 			if (it6505_test_bit(irq_vec[i].bit, (unsigned int *)int_status))
- 				irq_vec[i].handler(it6505);
- 		}
-+		it6505_irq_video_handler(it6505, (unsigned int *) int_status);
- 	}
- 
- 	pm_runtime_put_sync(dev);
+ 	out->ftm.request_lci = !!tb[NL80211_PMSR_FTM_REQ_ATTR_REQUEST_LCI];
+ 	if (out->ftm.request_lci && !capa->ftm.request_lci) {
 -- 
-2.25.1
+2.34.1
 
