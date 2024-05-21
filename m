@@ -1,167 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4778C6D;
-	Tue, 21 May 2024 10:14:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C54E71B4F;
+	Tue, 21 May 2024 10:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716286458; cv=none; b=R02r+U9TJbxc3XdzR+Slb8lRRHadYjYHMqEp7KTRDzNRRB3rW0iO5tqWEZj6vFNHKmA1/d/Z8vzxjFTtC++Jkvcv+imdsxoX5maIvHmMqw/1QNNSnEDP/y/18PtfrliatantZDOjo0yx/lEvARwkcVy2U7JV6magoGEcyR9FPh4=
+	t=1716286463; cv=none; b=F11vOt5+3xVEIuLIQFS8WrhfJ6IJDW4nWXXofYp/fa7lk942W9wEe/+GggRw9soAk5SRSzfjaCIACl3MbZobeIr3b7cTSVof/fqD2W4YdnUt46y4+jUFxoJ9EhDXSt/XSHaeH4Jjl+fmmyFJnQ6pWiznWJ3P0Z0esU3Q9l65AG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716286458; c=relaxed/simple;
-	bh=MbjlKvUpIH4Kpzei6mLsDD4DvZW2edzJFxhrN620Y6I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j+AVr3P9Mm7QQMNlmZ9lxKLD4xQca5+VuunnpjHPllwEjQtPLzT3EaqV5hTQ/e4VJgw9ScfGyTZ201VSxpAT5Qw5XkJsrJtXowKbQaJ7KYAMgRyDlqW6DyqB8Qv51wndps/sb3YYWUgGSRDiPfvUGOv/E7R8srC0DEcXRYH19FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQ+QhRXj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQ+QhRXj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82DF4C32782;
-	Tue, 21 May 2024 10:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716286457;
-	bh=MbjlKvUpIH4Kpzei6mLsDD4DvZW2edzJFxhrN620Y6I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bQ+QhRXjETRBMEW1Jixis+IvCqstdfj17kby0ee2viFGOlHb07Ez7aOSAHCK6VPxm
-	 duML0z7lRgNDskcQPc4XS2gzqmJnh71w/tdnyNYvLSAYiCTmH92OmWVCLa+IT6SUHB
-	 Jqj4zdDRVBt734vqSPCbaVyWPRD5sH9aBG/v9TCh8cOioMjKnOx439ZOkPrYcNEcKZ
-	 Ufnn1/F2Mni3ZghifFPrD2CbqzMJiquZhZv7Ero7XYKMwUELY4WNVsYVlEFYRKwfsx
-	 Ge3McauaxhU/G6MrcumRuHePIvQGKBPP6Q+Vxhyl8hkH1KJGUmhKaqRTNF6m15nGCZ
-	 TtyaVgGVs1FTw==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 21 May 2024 12:13:42 +0200
-Subject: [PATCH v14 09/28] drm/display: hdmi: Add HDMI compute clock helper
+	s=arc-20240116; t=1716286463; c=relaxed/simple;
+	bh=S+wZXg5uTKAmZeL4zCJdXSkIvMKrrXSNrng1U4wro3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzI0gtfirjkzaC6pnJfEOjPMXhTGT3DtJaNKv9sv/Da0mLEmaIT0li7jRj/U7PwYw0umKe3JunIo5eSghSAvZSkE969sk95TqZfaY0L95NdEnyVN1ZQ7RKehX7wYJbjzo36Af6PCXTO25lMvg3LrTTK5zIC8vFAxF9AafOXqAn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E364EC4AF09;
+	Tue, 21 May 2024 10:14:19 +0000 (UTC)
+Date: Tue, 21 May 2024 11:14:17 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v2 09/14] arm64: Enable memory encrypt for Realms
+Message-ID: <Zkxz-QfzUM_D0SAm@arm.com>
+References: <20240412084213.1733764-1-steven.price@arm.com>
+ <20240412084213.1733764-10-steven.price@arm.com>
+ <ZkOmrMIMFCgEKuVw@arm.com>
+ <5b2db977-7f0f-4c3a-b278-f195c7ddbd80@arm.com>
+ <ZkuABQlGgtbzyQFT@arm.com>
+ <SN6PR02MB41578D7BFEDE33BD2E8246EFD4E92@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-kms-hdmi-connector-state-v14-9-51950db4fedb@kernel.org>
-References: <20240521-kms-hdmi-connector-state-v14-0-51950db4fedb@kernel.org>
-In-Reply-To: <20240521-kms-hdmi-connector-state-v14-0-51950db4fedb@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3352; i=mripard@kernel.org;
- h=from:subject:message-id; bh=MbjlKvUpIH4Kpzei6mLsDD4DvZW2edzJFxhrN620Y6I=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDGk+xVce/5rGJZLqaKihpxgosKHLUeT2XAfVpfOsXY9+z
- HwQH1TaMZWFQZiTQVZMkeWJTNjp5e2LqxzsV/6AmcPKBDKEgYtTACZiWM7YcDrDRVbq9pojwSX+
- M4XkX07qnyZbtDq+s3/75/tGUgzfLJxFRYSyzmR9vN3ZWbUuvLqNsWH/VPOfGl5/Oz8zp9jHz55
- a21C9d4/Hrlm2xbYyZfc9BXcd29J7613z5GPfglzmMjlNUQQA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB41578D7BFEDE33BD2E8246EFD4E92@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-A lot of HDMI drivers have some variation of the formula to calculate
-the TMDS character rate from a mode, but few of them actually take all
-parameters into account.
+On Mon, May 20, 2024 at 08:32:43PM +0000, Michael Kelley wrote:
+> From: Catalin Marinas <catalin.marinas@arm.com> Sent: Monday, May 20, 2024 9:53 AM
+> > > > On Fri, Apr 12, 2024 at 09:42:08AM +0100, Steven Price wrote:
+> > > > >   static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+> > > > > @@ -41,6 +45,7 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+> > > > >   	pte = clear_pte_bit(pte, cdata->clear_mask);
+> > > > >   	pte = set_pte_bit(pte, cdata->set_mask);
+> > > > > +	/* TODO: Break before make for PROT_NS_SHARED updates */
+> > > > >   	__set_pte(ptep, pte);
+> > > > >   	return 0;
+[...]
+> > Thanks for the clarification on RIPAS states and behaviour in one of
+> > your replies. Thinking about this, since the page is marked as
+> > RIPAS_EMPTY prior to changing the PTE, the address is going to fault
+> > anyway as SEA if accessed. So actually breaking the PTE, TLBI, setting
+> > the new PTE would not add any new behaviour. Of course, this assumes
+> > that set_memory_decrypted() is never called on memory being currently
+> > accessed (can we guarantee this?).
+> 
+> While I worked on CoCo VM support on Hyper-V for x86 -- both AMD
+> SEV-SNP and Intel TDX, I haven't ramped up on the ARM64 CoCo
+> VM architecture yet.  With that caveat in mind, the assumption is that callers
+> of set_memory_decrypted() and set_memory_encrypted() ensure that
+> the target memory isn't currently being accessed.   But there's a big
+> exception:  load_unaligned_zeropad() can generate accesses that the
+> caller can't control.  If load_unaligned_zeropad() touches a page that is
+> in transition between decrypted and encrypted, a SEV-SNP or TDX architectural
+> fault could occur.  On x86, those fault handlers detect this case, and
+> fix things up.  The Hyper-V case requires a different approach, and marks
+> the PTEs as "not present" before initiating a transition between decrypted
+> and encrypted, and marks the PTEs "present" again after the transition.
 
-Let's create a helper to provide that rate taking all parameters into
-account.
+Thanks. The load_unaligned_zeropad() case is a good point. I thought
+we'd get away with this on arm64 since accessing such decrypted page
+would trigger a synchronous exception but looking at the code, the
+do_sea() path never calls fixup_exception(), so we just kill the whole
+kernel.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/display/drm_hdmi_helper.c | 57 +++++++++++++++++++++++++++++++
- include/drm/display/drm_hdmi_helper.h     |  4 +++
- 2 files changed, 61 insertions(+)
+> This approach causes a reference generated by load_unaligned_zeropad() 
+> to take the normal page fault route, and use the page-fault-based fixup for
+> load_unaligned_zeropad(). See commit 0f34d11234868 for the Hyper-V case.
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_helper.c b/drivers/gpu/drm/display/drm_hdmi_helper.c
-index faf5e9efa7d3..679eb3e81393 100644
---- a/drivers/gpu/drm/display/drm_hdmi_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_helper.c
-@@ -193,5 +193,62 @@ void drm_hdmi_avi_infoframe_content_type(struct hdmi_avi_infoframe *frame,
- 	}
- 
- 	frame->itc = conn_state->content_type != DRM_MODE_CONTENT_TYPE_NO_DATA;
- }
- EXPORT_SYMBOL(drm_hdmi_avi_infoframe_content_type);
-+
-+/**
-+ * drm_hdmi_compute_mode_clock() - Computes the TMDS Character Rate
-+ * @mode: Display mode to compute the clock for
-+ * @bpc: Bits per character
-+ * @fmt: Output Pixel Format used
-+ *
-+ * Returns the TMDS Character Rate for a given mode, bpc count and output format.
-+ *
-+ * RETURNS:
-+ * The TMDS Character Rate, in Hertz, or 0 on error.
-+ */
-+unsigned long long
-+drm_hdmi_compute_mode_clock(const struct drm_display_mode *mode,
-+			    unsigned int bpc, enum hdmi_colorspace fmt)
-+{
-+	unsigned long long clock = mode->clock * 1000ULL;
-+	unsigned int vic = drm_match_cea_mode(mode);
-+
-+	/*
-+	 * CTA-861-G Spec, section 5.4 - Color Coding and Quantization
-+	 * mandates that VIC 1 always uses 8 bpc.
-+	 */
-+	if (vic == 1 && bpc != 8)
-+		return 0;
-+
-+	if (fmt == HDMI_COLORSPACE_YUV422) {
-+		/*
-+		 * HDMI 1.4b Spec, section 6.2.3 - Pixel Encoding Requirements
-+		 * specifies that YUV422 is 36-bit only.
-+		 */
-+		if (bpc != 12)
-+			return 0;
-+
-+		/*
-+		 * HDMI 1.0 Spec, section 6.5 - Pixel Encoding
-+		 * specifies that YUV422 requires two 12-bits components per
-+		 * pixel clock, which is equivalent in our calculation to three
-+		 * 8-bits components
-+		 */
-+		bpc = 8;
-+	}
-+
-+	/*
-+	 * HDMI 2.0 Spec, Section 7.1 - YCbCr 4:2:0 Pixel Encoding
-+	 * specifies that YUV420 encoding is carried at a TMDS Character Rate
-+	 * equal to half the pixel clock rate.
-+	 */
-+	if (fmt == HDMI_COLORSPACE_YUV420)
-+		clock = clock / 2;
-+
-+	if (mode->flags & DRM_MODE_FLAG_DBLCLK)
-+		clock = clock * 2;
-+
-+	return DIV_ROUND_CLOSEST_ULL(clock * bpc, 8);
-+}
-+EXPORT_SYMBOL(drm_hdmi_compute_mode_clock);
-diff --git a/include/drm/display/drm_hdmi_helper.h b/include/drm/display/drm_hdmi_helper.h
-index 76d234826e22..57e3b18c15ec 100644
---- a/include/drm/display/drm_hdmi_helper.h
-+++ b/include/drm/display/drm_hdmi_helper.h
-@@ -22,6 +22,10 @@ drm_hdmi_infoframe_set_hdr_metadata(struct hdmi_drm_infoframe *frame,
- 				    const struct drm_connector_state *conn_state);
- 
- void drm_hdmi_avi_infoframe_content_type(struct hdmi_avi_infoframe *frame,
- 					 const struct drm_connector_state *conn_state);
- 
-+unsigned long long
-+drm_hdmi_compute_mode_clock(const struct drm_display_mode *mode,
-+			    unsigned int bpc, enum hdmi_colorspace fmt);
-+
- #endif
+I think for arm64 set_memory_decrypted() (and encrypted) would have to
+first make the PTE invalid, TLBI, set the RIPAS_EMPTY state, set the new
+PTE. Any page fault due to invalid PTE would be handled by the exception
+fixup in load_unaligned_zeropad(). This way we wouldn't get any
+synchronous external abort (SEA) in standard uses. Not sure we need to
+do anything hyper-v specific as in the commit above.
+
+> > (I did come across the hv_uio_probe() which, if I read correctly, it
+> > ends up calling set_memory_decrypted() with a vmalloc() address; let's
+> > pretend this code doesn't exist ;))
+> 
+> While the Hyper-V UIO driver is perhaps a bit of an outlier, the Hyper-V
+> netvsc driver also does set_memory_decrypted() on 16 Mbyte vmalloc()
+> allocations, and there's not really a viable way to avoid this. The
+> SEV-SNP and TDX code handles this case.   Support for this case will
+> probably also be needed for CoCo guests on Hyper-V on ARM64.
+
+Ah, I was hoping we can ignore it. So the arm64 set_memory_*() code will
+have to detect and change both the vmalloc map and the linear map.
+Currently this patchset assumes the latter only.
+
+Such buffers may end up in user space as well but I think at the
+set_memory_decrypted() call there aren't any such mappings and
+subsequent remap_pfn_range() etc. would handle the permissions properly
+through the vma->vm_page_prot attributes (assuming that someone set
+those pgprot attributes).
 
 -- 
-2.45.0
-
+Catalin
