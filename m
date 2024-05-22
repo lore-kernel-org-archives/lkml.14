@@ -1,74 +1,98 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA4F1946F
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B26A4A32
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716341812; cv=none; b=E4HCQ3+7I8qoh5qtGCovUGgYOmgbvN4L7f4WV5U94E8KTbOOQXXfkwa+UHeeJzxsmFmWbZzbxCsGJjlVk47DHG/tWNXaVDXVi6+OS4EUMunCSyBc0eAL/waukcRCJhEYZeoPoM24f4nqXAenwwgne459spdM4K4Xdky4RjVKCLA=
+	t=1716341910; cv=none; b=L/97B1XZDJmAQTBzSyyONBa52+ocS6MEuU7Cf0O+Qsx9MX7ugUxdDETgAGBD7KZFbbB7gzqaUp/XobcK4OPD1HePjzToiMNk6nRlsn3mCgJnbXh/fzorNF0JlGFIdAlaKsf58QBxp6c7unG1QsGX+EJRF7Yt0nNee9hvJ46uTGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716341812; c=relaxed/simple;
-	bh=uOp1wN2DfhSBAyIiZVfxcpEE4nMrRqzLGODorRKlTxw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=G/otVcomTOEmLOctqiy941woOgwmwzruvjZuO5MLQYHtp1OeOlgdjUOcg1IpHoWr6lKWKa2r/3UHErA9bqireFnBYGgzXcU9uCpuJypU0JeJtidMXriD1iGPcJSQQoyaac0j8+Mjh5Nm7UPnR1U/WIN22HhnD41Bpl5Qswy/Wm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Emplf75H; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1716341910; c=relaxed/simple;
+	bh=+mlG5M6yipBkInLeQL1LC41ZZD598ahquvQkC9kLD6I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Dr39KlV0kcZ8e06EZZZHcJLS38g6Fjjy/mTnnpjGem9dv+nZbU43GbpH8v9AO7HwkBCy/vSUVrx9VYhQCYOOprVxvD6Tbb0/TzaVM5flMgH3edfx+3B1QNXZYsnTm/LNLUjvnYPw+LDA9PmmD4P6vcUH7Pt/Jzz6ks3scOcr1Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=VuXbFkfn; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Emplf75H"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6ee089eedb7so13985574b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:36:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="VuXbFkfn"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ba0bbc7302so386706a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716341810; x=1716946610; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E5S3zXzDNy7OaqRCsEecoffZHoJSYB0z+yL5rqDfD/8=;
-        b=Emplf75HVOoTBKGz1WFCvLiYJ3vc9U0HDKIMxfvjyH/3Zcg3xdLIE3L3hAhjQfhzDt
-         NfzXEqGUOWUz9fd7VfgCWxYCpN/LrGyRtJH8cMRyIWn4m2D/lZfWXPDVVwa4Ji1ADWYT
-         B1Z7yBwbI8nWCYftgEh+nPUBwxanzRWC5ZQNYwCXdACor6jAQVQkeeLrXD3WVLgTJmv+
-         9fsgVnzVd3FNP0R0QAWARJzdKohfe2roTpMa4qlfQsujhA/T9FeZ8KQfZJi6+bpxSCoq
-         FUIujhrE2p0M7g4JKuRA97eK/Ad0fi1x3ub0qvgaUks4idEvxBiHZo7EMUhuHhrHe6m8
-         8y3w==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716341908; x=1716946708; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d+9UGtSjh9xn0Me1z2qK9sQ4BQmIY9y6+8dvOoPm3tY=;
+        b=VuXbFkfnFkyQyzaLqBbpBE3z3xgqva2pUJRxaBEIvBFg2TOH1DeiY7sdv2olwW1Msx
+         6cMU5jJO/oVU20QgyD9dQKq2+M7s42DMr8fhPioGtz/wIlRMQPmbe2/Ap67Q9stAs6j0
+         n3UdLNCRbxkSb/XwGDlaIUwyFK/UJL2VnWCVcbvpHJfej52NyQUNWHD7mVqxmIU2DZqq
+         bx2DuPOPyNL2zqercQGgkf9H7QrCep2fNWkyEF+8k4c4eOJJNmT778RIabVB2YAZGoq3
+         cQbq+9mseuzDRiU1WP9YDRqiTKXFZnhLE3tGIO1MPctMNhDOQqRD9lk+knSfB/zuQD50
+         hvzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716341810; x=1716946610;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E5S3zXzDNy7OaqRCsEecoffZHoJSYB0z+yL5rqDfD/8=;
-        b=Wy4tgtNyuizm8uQE1rDEjhM5KrCNk4B01im6b8C0YQxNjxPdgKN8Eg4ymXeKg25j21
-         4oILi+C5ive7lNOwBnr9fLg8sXSzQkSOyeujWLw3jJvD9sdsx6g8fx6Oc170ZqEShT8c
-         pRmEJakGdXOayIZuhYpsM9aDvQ7wWLzxaib6h0CHK5Dt66MH9vtNpO8g8CREFqMWuO1I
-         dWKS0lTcosLpFDbbzCB7ZRCxVdea+oiwXYU76Z5Eh9m/1Lyh0aweuSFaaggkms7JhcJX
-         4HieJ+q4QJmLDsrkhZoHimKL7dSzkMHMDSTpQ/ren58H7Wq4yLiAd9QG9NV70KO1W7HV
-         1bvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXk0DZp35ngnilUg6RjuOZj61dyBmSAPkFvi9R6GbNNhX55XNGhSqAF0EDVOhM+Ga9CHYLsn4HovvortJ7XC6hzGCSqK539oU7WDfLe
-X-Gm-Message-State: AOJu0YzG1qZpL2c5VH65PcweNAnGFV7pZL0t9t+4bPynib2MBu3Fx9DZ
-	V5Y+nD1LylHpw9v8vpDv3vZ5nNn8Ax/jlfU1kt34BlMW6O1Z56UN6wuxPkIpyQgs+Bp8IoDWFD6
-	0XQ==
-X-Google-Smtp-Source: AGHT+IHSwJQAi1yjFTuHmA1rC8UBSwdnDUj06ie59IvdpRhZGk46IaXZJ7WlmuD8kWJc3+ceeAiUtVHuyF4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2e8f:b0:6f3:f447:57e1 with SMTP id
- d2e1a72fcca58-6f6d6002b65mr9428b3a.1.1716341810176; Tue, 21 May 2024 18:36:50
- -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 21 May 2024 18:36:46 -0700
+        d=1e100.net; s=20230601; t=1716341908; x=1716946708;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d+9UGtSjh9xn0Me1z2qK9sQ4BQmIY9y6+8dvOoPm3tY=;
+        b=xB6Tsv5w4nkwPxXDiO75OHLWZuIIl0LKDKPu0uGpyI3iNYthDM8rtMh85ZRA9ybIra
+         HUdtuZDlgkbIPhCTm9MrbTLhi1ZuNtz5uN715zoG3G9KfVmRzLluJ2L0Us6homO2QnPt
+         h4OSdwmIVM9kthGg/gzI0xX88G6YTB4aYunGkoRH2QHf405ucyALpi4praeDe9+oxmPZ
+         SJh7/MV0Rp1Ek+G825BsXJhkdFJuDYgSjF2SI8APkKkoKb50m9YlPxIglu3zOOs88oCw
+         j9C9Et2Tsy8xuyFRmaaLOXrREJbaPFZKDX/pOoWJmF1Wi+s9+LrWPWFFCmNT4+vLmNiA
+         ei5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWH2wPpNzr8Zn7s83Z5OGuuM9ASfoR0hPFJy8yg0niNMYYqBdD6uoZGNrC+W4b4BmxNhK6JQUny2lM641A50pN64LZdZROS0kzA0ECw
+X-Gm-Message-State: AOJu0Yw/iBp+aMK3CtyNxXr7m3eQ9h2rjnwZOpZNrjczovFULhFxylHY
+	bfYjYXZLXQzz9Zz+wFznNl+vEnkNG6wKwYX60ySt/8Q+TLd8Rxw+hOaGe6yJVEo=
+X-Google-Smtp-Source: AGHT+IFfJ5agvxxUiwDDs5QIeTouHgFowXo7ajcP1fcRKYdmn7iofjWVDqVqIe5tZ1vqC/9UAh/M6Q==
+X-Received: by 2002:a17:90a:a617:b0:2b5:fce8:59ef with SMTP id 98e67ed59e1d1-2bd9f454b53mr781733a91.1.1716341907727;
+        Tue, 21 May 2024 18:38:27 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bd99fce5a7sm778694a91.12.2024.05.21.18.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 18:38:27 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: czhong@redhat.com, xni@redhat.com, yukuai3@huawei.com, 
+ Yu Kuai <yukuai1@huaweicloud.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ yi.zhang@huawei.com, yangerkun@huawei.com
+In-Reply-To: <20240521200308.983986-1-yukuai1@huaweicloud.com>
+References: <CAGVVp+UZ4stcktsHw0r8ks8LCfXvYJyT+zv93wEfGuuLswArnw@mail.gmail.com>
+ <20240521200308.983986-1-yukuai1@huaweicloud.com>
+Subject: Re: [PATCH -next] block: fix bio lost for plug enabeld bio based
+ device
+Message-Id: <171634190662.41601.17421238883193009305.b4-ty@kernel.dk>
+Date: Tue, 21 May 2024 19:38:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.215.g3402c0e53f-goog
-Message-ID: <20240522013647.1671968-1-seanjc@google.com>
-Subject: [ANNOUNCE] PUCK Agenda - 2024.05.22 - CANCELED
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-PUCK is canceled for tomorrow, as I will be offline (tomorrow until Tuesday,
-in case anyone cares).  Though if y'all want to meet without me, definitely
-feel free to do so.
 
-Future Schedule:
-May  29th - No Topic
-June  5th - No Topic
-June 12th - PV Scheduling
+On Wed, 22 May 2024 04:03:08 +0800, Yu Kuai wrote:
+> With the following two conditions, bio will be lost:
+> 
+> 1) blk plug is not enabled, for example, __blkdev_direct_IO_simple() and
+> __blkdev_direct_IO_async();
+> 2) bio plug is enabled, for example write IO for raid1/raid10 while
+> bitmap is enabled;
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] block: fix bio lost for plug enabeld bio based device
+      commit: 9a42891c35d50a8472b42c61256867b4dfcc1941
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
