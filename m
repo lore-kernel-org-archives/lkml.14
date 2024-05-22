@@ -1,142 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C273A1E4AB;
-	Wed, 22 May 2024 14:13:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734921DA24;
+	Wed, 22 May 2024 14:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716387226; cv=none; b=ilLYLiXq3yg8yJ+E7cHX8qb7xlXaVtC5v2c1vqDNlP2Z1+KFotSwcx2aIB0e6SPMVypTQaoYaIz4wEc4cOcYiHudZu5A9rJscVtNe3gyAa6uN7spygceuVFMuYLlS0Lj4chH7pr4nRJcdikgutB4p+xi7GGXQpEwI0acGbJlzFA=
+	t=1716387350; cv=none; b=hkFZpZzp9BG6vdmZUjGmG1PePvl6Q2gmlC5ku3vwJhhObD0LczVuJEwbH8dP4nddT0GSUdcx9CrP38N6ztDDDcbw9Z2bd/xCi2aaStX5gql2Mme/HHeqK2EqOaoYUYUpb48XMPXQGnF4vLcboyYDiMopT/CYlSA3bA3ANGOB7xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716387226; c=relaxed/simple;
-	bh=3+PkXwZXhStybi9etPbkY23fmwd4r7n5f4fGWVhcsr0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=u0ji0dWYZzXClDm0slv68k7NaW253/bhALSw/CkS14T6h4LRyf0cf+ocNjiHhoU0tqtGkdwS9HC/evFR4sO1DgoXorXOJto3SHNd+2+cid3hJ4O4ZjPOlmV80qnE+0FVo8sORSG6gfqFc5BEv7fv4YUW7wtaHBZpR/c8+vjGQYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+Q3750N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716387350; c=relaxed/simple;
+	bh=U/NjJb0xHLp/B0jItwl/jBx9LMFb6nr8u3NBLdLHYr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dMTTMFE4SIxdNkTs7iS9HcCxb4pPm1RxfhGfiWVxRsCP9UDFoyndgMdvE+/4Mj4c7pBJfVJ1/rO/YQgiFAVL4r21TH5szobwAAPuz7zvGpx1Cf2kEwL0qXoaYcgO05mHcqZFIOH834S7/Dbu9C1/Fh7EY2f3huM0UD4fe2w+/YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7uQkqK6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+Q3750N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69FFC2BBFC;
-	Wed, 22 May 2024 14:13:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7uQkqK6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C12FEC2BBFC;
+	Wed, 22 May 2024 14:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716387226;
-	bh=3+PkXwZXhStybi9etPbkY23fmwd4r7n5f4fGWVhcsr0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=U+Q3750N/mtGeGDtg27ep1MaI8KU1Lp9FV7E1wpcDVS97Oe9E78fE5wPCwzIKQRaY
-	 XXcGk3429FutzkLGl7+WR7Z/Nzut9Y8CcWGLBBdChxj3HKZlBmEk3wWTbvzFM3LOJK
-	 ZHZceBTszgPUZm+aHRDxdskFxRn+cK7g63v7rMifPnmCWPZAW3gTsq9ZaqT48KrzvV
-	 jaqGcyLgB684qFD6cI5lh7hYMcuSQYOrBP+QZ8wIEzFxeT94bAt058dAl2Df/z+Pr8
-	 TctS03IdMMYglE7ZyAY7+k+OIc4wzRcx0myCGNj7Yunut9SQmmeFKaNHNkfV8u9L0k
-	 asHKrpx377z/Q==
+	s=k20201202; t=1716387350;
+	bh=U/NjJb0xHLp/B0jItwl/jBx9LMFb6nr8u3NBLdLHYr4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m7uQkqK6c6mNvuylUP7zsSjrW5HysjxEwdhSLZgYIs2bRVySPQBSrdVNkQQLeCeeq
+	 U1Iff6G0L5rqgmZeLY173WtyQhKDPtkwxhocqLlQ+krQoVIa2OJwW4TWqbRTBquqdh
+	 /Np9yYi3FrzY53GLDsbXPsI5o1+Z4XRbQ1QpkKFq9x7G87jaoNMho4pYdsvyKaX1gt
+	 KRnqqaZNaO+zwcpV9L3ZXt6t7KPvamhyB22d+BQvo2PKexS++E+tfDNA+X7szO5hOA
+	 EoUxwIwMztkvRpfG4uj7HBia+e26W7Ka52BPry740lsxiJ/DsMi+xyyenbs9UcEZGH
+	 HcrREyWl2W5nA==
+Message-ID: <760012df-5b16-4cc6-b2e5-0a05294f6000@kernel.org>
+Date: Wed, 22 May 2024 16:15:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+To: Mithil <bavishimithil@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lopez Cruz <misael.lopez@ti.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240522075245.388-1-bavishimithil@gmail.com>
+ <bcc9999d-b912-417a-8ae8-f4e252d1bd8b@kernel.org>
+ <CAGzNGRkc5NJbJpZuUir7dv-C3A=6p_kxp56zrVp6N8+DviPkig@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAGzNGRkc5NJbJpZuUir7dv-C3A=6p_kxp56zrVp6N8+DviPkig@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 22 May 2024 17:13:41 +0300
-Message-Id: <D1G8HOCIDWTC.2ERVA0CYHLY0B@kernel.org>
-Cc: <keyrings@vger.kernel.org>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, "Mimi Zohar" <zohar@linux.ibm.com>, "David
- Howells" <dhowells@redhat.com>, "Paul Moore" <paul@paul-moore.com>, "James
- Morris" <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- <linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tpm: Disable TCG_TPM2_HMAC by default
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "James Bottomley" <James.Bottomley@HansenPartnership.com>, "Vitor
- Soares" <ivitro@gmail.com>, <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240519235122.3380-1-jarkko@kernel.org>
- <20240519235122.3380-2-jarkko@kernel.org>
- <850862655008f84ef0b6ecd99750e8dc395304d1.camel@gmail.com>
- <D1F4V8NMSUNZ.2VCTEKHZZ0LB@kernel.org>
- <17dc838120b56ce342c34611596c7b46dcd9ab5a.camel@HansenPartnership.com>
- <2dd8d49516ec9c7cb8c1182b5b8537b1e82d7067.camel@gmail.com>
- <17a5dcd7aceb356587ef7c8f45b0f6359b2d2a91.camel@HansenPartnership.com>
-In-Reply-To: <17a5dcd7aceb356587ef7c8f45b0f6359b2d2a91.camel@HansenPartnership.com>
+Content-Transfer-Encoding: 7bit
 
-On Wed May 22, 2024 at 4:35 PM EEST, James Bottomley wrote:
-> On Wed, 2024-05-22 at 09:18 +0100, Vitor Soares wrote:
-> > On Tue, 2024-05-21 at 08:33 -0400, James Bottomley wrote:
-> > > On Tue, 2024-05-21 at 10:10 +0300, Jarkko Sakkinen wrote:
-> > > > This benchmark could be done in user space using /dev/tpm0.
-> > >=20
-> > > Let's actually try that.=C2=A0 If you have the ibmtss installed, the
-> > > command to time primary key generation from userspace on your tpm
-> > > is
-> > >=20
-> > > time tsscreateprimary -hi n -ecc nistp256
-> > >=20
-> > >=20
-> > > And just for chuckles and grins, try it in the owner hierarchy as
-> > > well (sometimes slow TPMs cache this)
-> > >=20
-> > > time tsscreateprimary -hi o -ecc nistp256
-> > >=20
-> > > And if you have tpm2 tools, the above commands should be:
-> > >=20
-> > > time tpm2_createprimary -C n -G ecc256
-> > > time tpm2_createprimary -C o -G ecc256
-> > >=20
-> > > James
-> > >=20
-> > >=20
-> >=20
-> > Testing on an arm64 platform I get the following results.
-> >=20
-> > hmac disabled:
-> > =C2=A0 time modprobe tpm_tis_spi
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 0m2.776s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.006s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.015s
-> >=20
-> > =C2=A0 time tpm2_createprimary -C n -G ecc256
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 0m0.686s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.044s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.025s
-> >=20
-> > =C2=A0 time tpm2_createprimary -C o -G ecc256
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 0m0.638s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.048s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.009s
-> >=20
-> >=20
-> > hmac enabled:
-> > =C2=A0 time modprobe tpm_tis_spi
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 8m5.840s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.005s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.018s
-> >=20
-> >=20
-> > =C2=A0 time tpm2_createprimary -C n -G ecc256
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 5m27.678s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.059s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.009s
-> >=20
-> > =C2=A0 (after first command)
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 0m0.395s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.040s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.015s
-> >=20
-> > =C2=A0 time tpm2_createprimary -C o -G ecc256
-> > =C2=A0 real=C2=A0=C2=A0=C2=A0 0m0.418s
-> > =C2=A0 user=C2=A0=C2=A0=C2=A0 0m0.049s
-> > =C2=A0 sys=C2=A0=C2=A0=C2=A0=C2=A0 0m0.009s
->
-> That's interesting: it suggests the create primary is fast (as
-> expected) but that the TPM is blocked for some reason.  Is there
-> anything else in dmesg if you do
->
-> dmesg|grep -i tpm
->
-> ?
->
-> Unfortunately we don't really do timeouts on our end (we have the TPM
-> do it instead), but we could instrument your kernel with command and
-> time sent and returned.  That may tell us where the problem lies.
+On 22/05/2024 15:46, Mithil wrote:
+>> You are not making it easier for us to review:
+>> ====
+>> b4 diff '<20240522075245.388-1-bavishimithil@gmail.com>'
+>> Grabbing thread from
+>> lore.kernel.org/all/20240522075245.388-1-bavishimithil@gmail.com/t.mbox.gz
+>> Checking for older revisions
+>> Grabbing search results from lore.kernel.org
+>>   Added from v4: 2 patches
+>> ---
+>> Analyzing 15 messages in the thread
+>> WARNING: duplicate messages found at index 1
+>>    Subject 1: ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+>>    Subject 2: ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+>>   2 is not a reply... assume additional patch
+>> Preparing fake-am for v4: ASoC: dt-bindings: omap-mcpdm: Convert to DT
+>> schema
+>> ERROR: Could not fake-am version v4
+>> ---
+>> Could not create fake-am range for lower series v4
+>>
+>> ====
+>>
+> Hey, sorry about it, its my first time with lkml, could you explain
+> what seems to be the issue here?
 
-If there was possibility to use bpftrace it is trivial to get histogram
-of time used where. I can bake a script but I need to know first if it
-is available in the first place before going through that trouble.
+You sent multiple same versions, I think more than one v4. You can try
+by yourself - does b4 work on this patchset?
 
-BR, Jarkko
+Best regards,
+Krzysztof
+
