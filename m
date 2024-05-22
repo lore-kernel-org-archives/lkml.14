@@ -1,74 +1,42 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B0E1420C6;
-	Wed, 22 May 2024 18:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF0814658A;
+	Wed, 22 May 2024 18:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716404067; cv=none; b=YKeCTJLPOjMIF7B6GM85n3/QcjmGMvbwL+d/S+B+FAJBj/nYf1zN9TAJcD75kX50xD51Qxf5bwq23i+BsFeLFuJeGWwPyieGdSDm7PLQy2RyiryspFXMsAwz18CnFwcjmncM33mlMj3Zn72IlyRyWBhso1DgTHob49a9hG0muPE=
+	t=1716404068; cv=none; b=T33ioNX7A3b6t/nghDNeFeCaJw6Z6u8F1HWQfOMQHE+Xco67Y+E2lIBynbkCpNxB6f/ob+4SiBWUfuuC1nu+3azKBka3JbxtH1bbyfCXzIlhojodXw3jfznwcnXSvgVMiofDpyanMDsfaEbzf6Oh1RoE5rLvm8T0oTlRa2mYhmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716404067; c=relaxed/simple;
-	bh=zG6DmFSvOlwxNqFRYCCoNVfO0/oFcnar3wPos47WTUg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LNWw73OFeXQXwVN6zIGk4IibDcuzuj9Dqe6CXdfY+VE/gYW+K/83bP8/sTAgftV6qEM+yUNeYuh2uVOgwmw8283iTrBfjlLBSAph3Uh8ehcUTjXayb/z/oC93X4uAt5LdbWQJ64PRXvoMOR46w+EChrMrJOYyApm2vZDU+LjeEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZqZcOV9F; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716404068; c=relaxed/simple;
+	bh=DMRvf07peoglRNpptOpy9FxHymXTYhNp+h97lqVJS6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B24O3T/bFIlbYUFtbaLZ99hvL2755G7CjmXuBQnNCMfWEtasT7R+aeRcmk7BNIfaoivKS01LdHQ+b4RL1b6gZRejtmKUyF7C5HAXJZUbHaNj5i2i1/00azz5DlzSndJ4LNKwJhgdcIieIZpk71KScu5aTmb/QNV4irHcNE/Bu2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITzirOcR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqZcOV9F"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-23dd94111cfso3230736fac.2;
-        Wed, 22 May 2024 11:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716404065; x=1717008865; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=tA1Sbti/zXxCiItQT/p43hpVbiyvW9x3fEN/x9VummA=;
-        b=ZqZcOV9FE0wb6bhtVBX1cDPvHGQ9ySQsdSOV6Tn0g5t0M+8LGN2tCiY4Sq9TIf6Xfj
-         rdV1k6B8Xdvac4ffNB2lQQjMqr63HSIoa1xyG+4DzNWf+rfVOTgzZCudEpetvaCpqOb5
-         RvXfXj+Y6MOnHe4tC5BXGC7y/g6wSzcyCeCNyPp1LODSQ7hvrll+8FVHOK2JUviwbfx1
-         yIzmsbLfOqncwdeIqOClG3TPu9u27FH7+i9OicSwnekBiqKYyTanWnpy3tFCO+rcXESf
-         fP1nx+CcG6Tf+qf0Q9XQeuAGDydMrxTyZMClHu2srXWns7bgzV+uOZRCCkWC01z6g4fD
-         mvxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716404065; x=1717008865;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tA1Sbti/zXxCiItQT/p43hpVbiyvW9x3fEN/x9VummA=;
-        b=D9Lytqp5VQLEju34Bb5QcbYI9ZCtZfsfJFQg/VCHT9VLUEoCydaU4jCD8xv9CzihJ+
-         Gc4MojzS0JgyawUD2ewDR058uf8rCtXoghFTEZv179zAwWX3EGO74lpaULcwLkXekI+S
-         SA9x1eTFH3wcrBGy6loHt2adA697GLW64MQOHexEPMXrvAaw7JIo9RtvO0rtXyD8Nfvx
-         FaDYn8xDDa8lfcGj4LdWNpZVvFKf1SjgAh1LjJ3RKlSbViZ6yH/GXz1R54rhdL16TmgT
-         hwVcvp9yM+Xt1LVwSXr3Ud5+tzgDv7EqNc9XVMjEwGLKdJZhpHP4Y5ejAVfr6ZlpACyS
-         6y2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXfKaaJEpKNUYJwkaFlMQaaSIJ+sQ9G1RkDqfMtzjUAbSM3iHA4OBHewrTIXfWvVeftfWsOXxO18sDGpOgt3BoC/kCmk0a4NMsDWdqa5TvU9APMmwqzpphXtPi6ghV5EjcMlagncqTHug==
-X-Gm-Message-State: AOJu0YzGiTONGuzDmGon/luJhYN69ZObbqSeEEijyQ/izbTkRDYu9Oi4
-	aLpb9gkNKh9i1EZT/4ArekIgfaH6Bhd4gX0ZPKnXNO/hRQBU7TsV
-X-Google-Smtp-Source: AGHT+IH7JgZdAZmLwabI70Yi9CqaHBGi7W8WOVJdXpnbIcGSDoJHNF9GVVWCI9iFTCJBiWCAtrSgiQ==
-X-Received: by 2002:a05:6871:581e:b0:23c:2cf7:9ff9 with SMTP id 586e51a60fabf-24c68aeeeb5mr3242325fac.7.1716404063187;
-        Wed, 22 May 2024 11:54:23 -0700 (PDT)
-Received: from neuromancer. ([75.28.21.198])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-24c8227e303sm44531fac.30.2024.05.22.11.54.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 11:54:22 -0700 (PDT)
-Message-ID: <664e3f5e.050a0220.ae493.07d7@mx.google.com>
-X-Google-Original-Message-ID: <Zk4/Xcjv/KKYwuHu@neuromancer.>
-Date: Wed, 22 May 2024 13:54:21 -0500
-From: Chris Morgan <macroalpha82@gmail.com>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Ryan Walklin <ryan@testtoast.com>
-Subject: Re: [PATCH v2 4/5] mfd: axp20x: AXP717: Add support for boost
- regulator
-References: <20240418000736.24338-1-andre.przywara@arm.com>
- <20240418000736.24338-5-andre.przywara@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITzirOcR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6E3EC2BBFC;
+	Wed, 22 May 2024 18:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716404067;
+	bh=DMRvf07peoglRNpptOpy9FxHymXTYhNp+h97lqVJS6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ITzirOcR3vPpMjOihnD85nEB6qjNj0LyGkiC3ctz/sm6kRqyILGcgZY6wYaSz2VOL
+	 gCLJTYZI07xOeNOmByYrR8e9W43tyeSoeUXkXO02W97oilFT3fdhHmCfBvMjysz+SU
+	 6Ch1hoc5ezqFmnQ7sPf0vdek35wB+n1dZ7gj9KdEeEfEXLgoHdUqmK/x3C4y1EPtJg
+	 hByMMAkSl26FKlyUCo47qqlGcRFCCh5AHbufrUFwrgVegVj54wYFwdNqSfVCDo2D8R
+	 HovsY2XYjw40x7y74Pf/izyZ1Evib+57F1636U741gwc4Ied5S3N95EvR4CF6k9MeF
+	 VI734pkgVbnYw==
+Date: Wed, 22 May 2024 19:54:23 +0100
+From: Simon Horman <horms@kernel.org>
+To: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Cc: steve.glendinning@shawell.net, UNGLinuxDriver@microchip.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: smsc95xx: configure external LEDs function for
+ EVB-LAN8670-USB
+Message-ID: <20240522185423.GC883722@kernel.org>
+References: <20240522140817.409936-1-Parthiban.Veerasooran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,56 +45,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418000736.24338-5-andre.przywara@arm.com>
+In-Reply-To: <20240522140817.409936-1-Parthiban.Veerasooran@microchip.com>
 
-On Thu, Apr 18, 2024 at 01:07:35AM +0100, Andre Przywara wrote:
-> The AXP717 also contains a boost regulator, to provide the 5V USB VBUS
-> rail when running on battery.
+On Wed, May 22, 2024 at 07:38:17PM +0530, Parthiban Veerasooran wrote:
+> By default, LAN9500A configures the external LEDs to the below function.
+> nSPD_LED -> Speed Indicator
+> nLNKA_LED -> Link and Activity Indicator
+> nFDX_LED -> Full Duplex Link Indicator
 > 
-> Add the registers to the MFD description to be able to use them from the
-> regulator driver.
+> But, EVB-LAN8670-USB uses the below external LEDs function which can be
+> enabled by writing 1 to the LED Select (LED_SEL) bit in the LAN9500A.
+> nSPD_LED -> Speed Indicator
+> nLNKA_LED -> Link Indicator
+> nFDX_LED -> Activity Indicator
 > 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Reviewed-by: John Watts <contact@jookia.org>
+> Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
 > ---
->  drivers/mfd/axp20x.c       | 2 ++
->  include/linux/mfd/axp20x.h | 2 ++
->  2 files changed, 4 insertions(+)
+>  drivers/net/usb/smsc95xx.c | 12 ++++++++++++
+>  drivers/net/usb/smsc95xx.h |  1 +
+>  2 files changed, 13 insertions(+)
 > 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index d8ad4e120d379..02513b1eff2e8 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -209,6 +209,8 @@ static const struct regmap_access_table axp313a_volatile_table = {
->  };
->  
->  static const struct regmap_range axp717_writeable_ranges[] = {
-> +	regmap_reg_range(AXP717_MODULE_EN_CONTROL, AXP717_MODULE_EN_CONTROL),
-> +	regmap_reg_range(AXP717_BOOST_CONTROL, AXP717_BOOST_CONTROL),
->  	regmap_reg_range(AXP717_IRQ0_EN, AXP717_IRQ4_EN),
->  	regmap_reg_range(AXP717_IRQ0_STATE, AXP717_IRQ4_STATE),
->  	regmap_reg_range(AXP717_DCDC_OUTPUT_CONTROL, AXP717_CPUSLDO_CONTROL),
-> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-> index 8c0a33a2e9ce2..4dad54fdf67ee 100644
-> --- a/include/linux/mfd/axp20x.h
-> +++ b/include/linux/mfd/axp20x.h
-> @@ -115,6 +115,8 @@ enum axp20x_variants {
->  #define AXP313A_IRQ_STATE		0x21
->  
->  #define AXP717_ON_INDICATE		0x00
-> +#define AXP717_MODULE_EN_CONTROL	0x19
+> diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+> index cbea24666479..05975461bf10 100644
+> --- a/drivers/net/usb/smsc95xx.c
+> +++ b/drivers/net/usb/smsc95xx.c
+> @@ -1006,6 +1006,18 @@ static int smsc95xx_reset(struct usbnet *dev)
+>  	/* Configure GPIO pins as LED outputs */
+>  	write_buf = LED_GPIO_CFG_SPD_LED | LED_GPIO_CFG_LNK_LED |
+>  		LED_GPIO_CFG_FDX_LED;
+> +
+> +	/* Set LED Select (LED_SEL) bit for the external LED pins functionality
+> +	 * in the Microchip's EVB-LAN8670-USB 10BASE-T1S Ethernet device which
+> +	 * uses the below LED function.
+> +	 * nSPD_LED -> Speed Indicator
+> +	 * nLNKA_LED -> Link Indicator
+> +	 * nFDX_LED -> Activity Indicator
+> +	 */
+> +	if (dev->udev->descriptor.idVendor == 0x184F &&
+> +	    dev->udev->descriptor.idProduct == 0x0051)
 
-Could we name this register something like "AXP717_MODULE_EN_CONTROL_2"?
-We're going to need register 0x0b later for usb and battery, and that's
-also marked as a control register (control_1 per the datasheet).
+Hi Parthiban,
 
-Thank you,
-Chris
+There seems to be an endian missmatch here.
+The type of .idVendor and .idProduct is __le16,
+but here they are compared against host byte-order integers.
 
-> +#define AXP717_BOOST_CONTROL		0x1e
->  #define AXP717_IRQ0_EN			0x40
->  #define AXP717_IRQ1_EN			0x41
->  #define AXP717_IRQ2_EN			0x42
-> -- 
-> 2.35.8
-> 
+Flagged by Sparse.
+
+> +		write_buf |= LED_GPIO_CFG_LED_SEL;
+> +
+>  	ret = smsc95xx_write_reg(dev, LED_GPIO_CFG, write_buf);
+>  	if (ret < 0)
+>  		return ret;
+
+...
+
+-- 
+pw-bot: changes-requested
