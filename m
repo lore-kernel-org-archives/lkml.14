@@ -1,105 +1,83 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB4A405CC
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D237823CB
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716374449; cv=none; b=MKUiP47X6i6ngzCXgEAQaVCs86j8AxqgMnaiw2KTYC3cBgnqaJX3CPKsJmwh2/jJXKmU6pKJ1LKnxU7yRi9Y6RhrdhK6JVL3SVc8w7NfrVm24Pd4g2NbXfXez5x8Y+cWnZoBVy+6p6zJUMRElH5aT841tKTobeqebqh+IIrISoU=
+	t=1716374564; cv=none; b=fwU9SlJFT2Q/NM/gdPZH8E79zx3WD+HdYqwSSp9UeHE/fukTUsmnjDpYqTJtkAk3sDcDYUgkZNzdhmsA9//LknsznDvJ3smotsQsK3jNozMjyFWQoyK4lPf3zZWRpBVHN6ir9+KARveW9KdU85pkT1s+LiUiZYtWfJ8bhsxUHqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716374449; c=relaxed/simple;
-	bh=uX4+J3uUcRNkmNptKAAtEgtyDstamJlPig+t2ovpjig=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=aCNnr8+yZUsNgWa+/b5xXZIi6WA9H/2TLeguIclYXOns5kQTqfDwSXfCseM9VRzeYRrxpgbEx1hA+e/3ZWZmqKoMK3USRV0VRTiAO7BWXIU7jrH7NvKjimX+tkK881QDzi9ynHzhU6dPzppz9MnyOBhI7HezIi/XDclIbSV8hVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu; spf=none smtp.mailfrom=monstr.eu; dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b=TnlWbJpe; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=monstr.eu
+	s=arc-20240116; t=1716374564; c=relaxed/simple;
+	bh=Q7mt6SEDV74V/sWcKYgQGovQph+NX/2+dvUkxUuVVgQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=p01EDHmQ5OO4g6tPSKCa9KTQB6DFY8S0zb0TU3AoGYCeKu/9YENcAurJXdywsBgLNMwbohckLpZYEDwq6yQrhFt9TpOb+QnkdtLqSsTMbRpQtLulJ+ZhdyuVvDKNKtx5L3KKYts5V3jSJ9G92vL/jhc2CiCUwkg2YVvcshYuqPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ZiPHCXrT; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b="TnlWbJpe"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-df4e1f0f315so567732276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 03:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20230601.gappssmtp.com; s=20230601; t=1716374444; x=1716979244; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QF6Qtl+FDdU1JQjEZdECTWNBkzbNoZxUpBzWTpiOiU8=;
-        b=TnlWbJpeiohyiQqYTUn1Tx9//ydzkObu60ZosSyQmxVWGUEIFux8tSQOb2FrzuUqps
-         ShS3NA8j5uL3mT/I/m/dFdOUk/OQrp6R3CiRq+0kz9dTmw28J4ZipJxT+bfKs3oOO4gE
-         e9L37DcSPG0PiiRo1481XPJxnolDMGu5IdqgGfrinRGx8lRJS0d/HokSftMi072n6Gbh
-         IntUtuqogX9EfSD3+EGV9SOs5LP1HVSMDV82KVngOVV1V5P5n07STYySUeQivXQs9pSB
-         lHa533JJkh61XQsah0VJvDn8s0p0rD4uZaO8tSgpL3mbV/WKj6Cw/atOh7RtZwinE8Uh
-         w50A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716374444; x=1716979244;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QF6Qtl+FDdU1JQjEZdECTWNBkzbNoZxUpBzWTpiOiU8=;
-        b=Udj1gZ/Wm/47YBT9g089vlkVGASXoK+g/TakVADUyoKROaahciQIKYWkMePfNKeI9a
-         dwZSdt/I+P2iRvupAbvdT8zAcT/DkM+wj6ZcJPxeNsHDziJ0uExtkxMAoxFlonNYxyGR
-         szmHZyZmT5pk/QfqK1jrA5CQBtQ6Io2k+nPr76TRILNhuGS4tXrI3t4+ESoCplXj/64y
-         x2MJ8mFGuVtUT1I8f/Mj2RaeN1VG3XLB3J1pAnGFltFOYkLVnACH2T/ghEuVmiiYkJRh
-         JWrA5+CtvqODi+RNg0aKCYcZzMIu9TP3pRqFCC/CBOHiRshHyUKPUgN85g6uojlSQW8X
-         QFWw==
-X-Gm-Message-State: AOJu0YzYVtMzvCDIjpC2sNVw+t7lgoiag9jg2kciKTuhRtUPQ6nYisE0
-	S6Uq9PbdZR1kfP0fBbU61/BiKEdr1NTpDPXHuRiwg/6cWlhJgsPqTB7sY0AdPPqb0UXRAu34Ejk
-	13GebeXUqhKerfYeqFY2CRs9WjfpvySC/VUpqJnYYBqTcymnjccyb
-X-Google-Smtp-Source: AGHT+IF6C/SwIvqlbLxucTJYUAL2q8HkGrSMqR+5EetOG0QkPzGgAwWEWEPq1SwZlbWcXn50bAgww/+pBy3uBpg7Pls=
-X-Received: by 2002:a5b:c03:0:b0:de5:4c3a:5ab6 with SMTP id
- 3f1490d57ef6-df4e0a6e888mr1686719276.3.1716374444532; Wed, 22 May 2024
- 03:40:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ZiPHCXrT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1716374256; bh=//B4H6k4q2guLm8x+8aMNL7vMnHQ6Gcoas3TjGr/WV8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ZiPHCXrTwJJlV03QHpzEkdTHeHGvKsPj1jiqN1fgjwciWHyQ+SpnPfabYAEzWf7n5
+	 uL93fplRQMCekND9NhpqZn0HuuwPZUU9CRQ8wZqOLt3VoIOIOxA6gRvgsbqBsw01+u
+	 yyYJkUsm/JXene1TrLF61m2hyMtJprzFyNRRtiG0=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 963118D2; Wed, 22 May 2024 18:37:35 +0800
+X-QQ-mid: xmsmtpt1716374255tmbv1k070
+Message-ID: <tencent_768996EEEDAEDD0CB127C786D9D2CA064906@qq.com>
+X-QQ-XMAILINFO: MW5hkHoBpWXyN8YAOFjOboLa7ZM64hSbsfg+8j6OcTJVQ0nksqYGvyHKnxahiW
+	 EXsnU8miIawXsIMi26t0jcC55K3OfaH/is6hHFByM7KthkBlaqwcfT3Pc1E34wuQrg05d1/kjEPY
+	 PJedUcDIJaq7opSMknq4tlEOE01kNe7TMA5O4gY9C0zXuxd2xTD6njgvWDv/d/LTGG1nEUTdpreU
+	 225gIJdmHWJ4pCMcS/ud2SUVZg9VM1joEZfqtCrtZl+ix6O5HjNnLGCZSPYuSuSIWUv7IEZwl05h
+	 T4X0JC/Nd6ovFaF3bD60xI/RITYL4C9XZtYDjtwmPTQZdzPphbFRcgsmaU93jsUeZF4J82I65J6C
+	 eKnC39Gs+K24WF33bnbhh5Gt6dt0QT0VzRy2HEzoe6raR6IvTs3gR14VLMtXZX0W2AFjQsSEi3Wv
+	 xb7nzfTumrpT30YgAUclK9EVLwOiWunMjmvwPiaRWsPPgmk+3C5xnY/PuTEdbF2EhKaRjeGNNFyL
+	 RM+STueDe6STYjHJem8EyVrAbeVbZE1FZOpfl1BoFqRKtuLSBNemU9rQRFXZ0IgsC64ol4cfwWJd
+	 HzdX4ZET+pKdx5xDIiCbRpbSESuqoQ/FsWDvUNPPhmivzjcWHYLC5MwsedbaVCAJAki45bY1M3LF
+	 Ztz8UlwICZLUU2cx1UEvYbpioBy7XpYoQFnjgJ6UmyuvgzTW1JCg9IHU5B1CHNdZ4Ev6KOwi0L9I
+	 TLXDsyyg9NsqDmSIuSd74Eahz6VXXXLjK9sVCDJBTEl9NslZ2s7JfcilyxwoREUMhA34mTrVacoP
+	 TyVM8XALdA/6xFYDrBy+Upx+gjiCJb/N8xfSNxgAswB90WjWstI5AUTY2IL9ior6hN9uzNm1bhPl
+	 ltGGkoRxYON2zA2miKfH90MhgpRC52Lz3KmW4OOM+1RFX+SCAUMsP3OMi80RVk8KgQYbpb5G4mJk
+	 Xki1LEebw=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+Date: Wed, 22 May 2024 18:37:35 +0800
+X-OQ-MSGID: <20240522103734.2146269-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
+References: <0000000000002fd2de0618de2e65@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Michal Simek <monstr@monstr.eu>
-Date: Wed, 22 May 2024 12:40:33 +0200
-Message-ID: <CAHTX3dJaBOjpy6bkasrezjzydyMWAGEjqOcfhY18XWg=XDjHgw@mail.gmail.com>
-Subject: [GIT PULL] arch/microblaze patches for 6.10-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+please test null ptr in iter_file_splice_write
 
-please, pull these two patches to your tree. It is cleaning up code
-around early_printk support
-which was removed a long time ago.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
 
-Thanks,
-Michal
+diff --git a/fs/splice.c b/fs/splice.c
+index 60aed8de21f8..4dd684184572 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -751,9 +751,9 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ 
+ 		/* dismiss the fully eaten buffers, adjust the partial one */
+ 		tail = pipe->tail;
+-		while (ret) {
++		while (ret > 0) {
+ 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
+-			if (ret >= buf->len) {
++			if (ret >= (ssize_t)buf->len) {
+ 				ret -= buf->len;
+ 				buf->len = 0;
+ 				pipe_buf_release(pipe, buf);
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
-
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
-
-are available in the Git repository at:
-
-  git://git.monstr.eu/linux-2.6-microblaze.git tags/microblaze-v6.10
-
-for you to fetch changes up to 58d647506c92ccd3cfa0c453c68ddd14f40bf06f:
-
-  microblaze: Remove early printk call from cpuinfo-static.c
-(2024-04-24 10:27:31 +0200)
-
-----------------------------------------------------------------
-Microblaze patches for 6.10-rc1
-
-- Cleanup code around removed early_printk
-
-----------------------------------------------------------------
-Michal Simek (2):
-      microblaze: Remove gcc flag for non existing early_printk.c file
-      microblaze: Remove early printk call from cpuinfo-static.c
-
- arch/microblaze/kernel/Makefile             | 1 -
- arch/microblaze/kernel/cpu/cpuinfo-static.c | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
-
-
--- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
