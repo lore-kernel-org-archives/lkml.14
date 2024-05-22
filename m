@@ -1,106 +1,117 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E4C145B1D
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA19142E6A;
+	Wed, 22 May 2024 17:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716400040; cv=none; b=pZnLFg9IT+3m2dNffyb/Ngc6aF55LL6AX8txtz0NsNtI+SUzpc7fPhmTSFsHpeERhhHHFvig/pcOLLkRL5+atMbok9GjSIdE+rn4QQ94WXHATZK/0LSM6CqeqmbqBfT+Domxb2NaPex8IPJRgdWgu4WqSk8R+HBckUEunRyh9pA=
+	t=1716400052; cv=none; b=NOBbeIS+VoXsG9lTY4jQ9B7ODe2ouyAcjULur4fe9+1312fZ638ODvgunjFt4FFUuXLdstsOmj7p7pc25CsB7olVSBLC8rCpNBn28Gn0M6h/D4/BA9CuT698xecqiZTIue+Pf5/yvzqailB9rgf9d8qVI2Xpr/LWk+42mKmBPcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716400040; c=relaxed/simple;
-	bh=l/aqMP/pAxxQNkv1cpn6DL6g6yJONydNx3Emd5onJIQ=;
+	s=arc-20240116; t=1716400052; c=relaxed/simple;
+	bh=gjQFUkmKSj86HlJZV1l+XdpHTnwTikA3msRKm7inGks=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DsR+psKr8n2CrFArQ24SL18AKBd5Wpja2Y/ITHXhNSmchA7Q9O/8yQv6VZYhqIQnFiPjIsrMUnS8RMrOaYXR2m/Niy0QGLnL7EUfkSOXK6lQR72sqJTcQkifyUHioh1l7qO/W/5FmrneqnYrnMgM08CN44jg45jp/OBrOC559DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=akvgZ3UT; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=XvSd9dBfKqR8w6cMjRlnf499GMHIYfMD8VePkR/rlbiGCNabHHA8vMeKzObNTk6j4DNGrXGYSj7dELlOUAD6xoAkraDqfyG2YaRLiRm7KA4bzT7OO1wpGwTKwW0dQrfPMGOghSzSvEluuoYvdiuvdU2zsuYzUynKxr38WMlT51w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J497um/g; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="akvgZ3UT"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-572f6c56cdaso1420a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:47:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J497um/g"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5206a5854adso6040812e87.0;
+        Wed, 22 May 2024 10:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716400037; x=1717004837; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bxpzkj4h24ckPZbqXAVMFddkCZE0Xyra0TpA42yUw6Y=;
-        b=akvgZ3UTlTl9+ivduLm+K+kDJXBgX7m9rh6LWIoJ5H2KbLUZiAEB+xALqgtsTGcreC
-         /iGvWquaYv1hZkIID9rsWH+bYGPL6cSEsuu9vwcfp8yYhRq43Gc0JxhJxl5pavZeNLgf
-         V5pUTOKdLZycj5x8roYhHYzdODB4RXw2uQ5wRgrNK2r5wdpnM1rukZEcDTa7gomOZaIe
-         8gv/LNbpNsqpwDslxTRQeWL5ogIzMRe4J1F6OlwOJyEZK87fsy8x8cx251k/J+4mmtgv
-         CgJxGH85eI1EexL14QfqlkKsmNLAOqijklgJtii18KpWAe9UOs0ibb0ysTJhD2wrnZDm
-         6cPA==
+        d=gmail.com; s=20230601; t=1716400048; x=1717004848; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+HhzDlrygC3CKmNKNnlvvwQPnU1QbynOZdDkM/5OBAg=;
+        b=J497um/g8YwlJmRrAclrqlK8A/YDACqHn8JZjbqQDReVbponk3oTYCh0BmSX9dK65q
+         Os93v64aJDOUsizjxGMOxLE3BNZKXUfNo0WVTT/2Vvp1lw1vN29OKSVZCLVBsW8YAUwA
+         5GfuCc9i8e8d0rePWhuskYrx2RdsnLxwyH7vS6EqcLtitOp8Ka024pdkO67WuQkf4UJu
+         P1KYAAXj3Q/S/HzuaRw8Ch64nt4OltN+sMtIFMyhMU785e6y0/DXj6q4SLiaS53HcNCp
+         BNE6Nei+L1s+S6JQF3hxM4w2/AEyuvD1p2ME52z1Uswa4SuX2B5Y/oSUHTWEb27fCbXh
+         BY0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716400037; x=1717004837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bxpzkj4h24ckPZbqXAVMFddkCZE0Xyra0TpA42yUw6Y=;
-        b=rY1fkD9tL+uvq+1H7XaNcoAJgx20QdczpkQTJxw6nCvbH5xxBMg+h1Fv9Itkh3zymS
-         PEDPiT3V3SuZgsORV95cMU0s1kkQa9HKdLWe+kS4G3ZnQAaBYO734u5ZMc3gIM1ctW4n
-         VpqrIJOzLNtUBR5Ogx//o0tCfEReWBuP/kfFk+eEt/Casfh+/5iFGX9z7wPLr3OV7iAz
-         +adCvDkAoeb9MUSw4jMK0N/NGLE537QHxHDS/zOBItLGXVQ7s8F7QGa42EdRNlfTRLsI
-         w2H4nMAFu8JJaCbQEelkdbSe7hwer1zPCS3+INUby36fCzOrVkxp/2jx6ghyBBe+IU4R
-         9VQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFA3QaYaVMg6llXsz419r/ob+fX8fg0b31L1uoRAT4CVEVheY0qraAdPoVgxbfbfqaqnTX3rzJ3xq2IWVPQUkrCLTwoOiobrqnItwD
-X-Gm-Message-State: AOJu0YwJliiTxRfcqQlrXt38gbeJdgXQHGOMX/5RBvvvTxZt9aZZtJ8j
-	iTpaRuFFRvH15YwgazywegX3OmowwH+8QI5q5lXKB9T52n4mI0aYvykkazAL9Q1oNLO3smil4qV
-	d4OY9cHBi1MCyIrQdCcR9/qg10BvbQ4y7+2PI
-X-Google-Smtp-Source: AGHT+IEhvV3LATx35FZqHosI0UhkBDI1Niq/eTXGrnklxwDEu8dQhBOKQ05jw+yjdKEjHZAcrzgbp92SS4Zf1xFsuR0=
-X-Received: by 2002:a05:6402:50cf:b0:572:57d8:4516 with SMTP id
- 4fb4d7f45d1cf-5782f9f7e7bmr285506a12.2.1716400037143; Wed, 22 May 2024
- 10:47:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716400048; x=1717004848;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+HhzDlrygC3CKmNKNnlvvwQPnU1QbynOZdDkM/5OBAg=;
+        b=LfNc3cwm/V6bqEf9D5prQln3MKXzGrD0uoR2M6d1sjbHzMVk1u+PS9q5vDwsHlAvBZ
+         m3+h5hMcBP/0mSdHJV+A4rh7Wa5hLkRNTOgq8T0b5pLAiXPZaFqQIuYyZD8Hyk/H45Sp
+         giNMDpj6TXN4PnASjoX5uRC7It1gwhQSfBJaA0Z8Sz6v0RUbYcBPdCKjG5du9Mx72JCA
+         diKZnaCPtIRj+Ei+7to5NdbgeLub2Q3HcsFZCmRjgP5QAfZni3nRzrHmS5mbYBklZ8ub
+         eHA9v2X0Ff6QsgRHYUVG09pD9RVyMEdPs0MkeUBtEXO5GpWxT8LPCEmL2DTYcJDjTXFq
+         jmig==
+X-Forwarded-Encrypted: i=1; AJvYcCUQxqCfaqRxthHlDqUevGJ1lEmmHFpndBWScdpxrj77W6sJ0c82+/g1hfS3MfT+gU4qkTBuMgvOZ9Nci/dcPDlzrXeHcnTnPTfXHrUKykL8l/Mvun5aJGicRUUrL8c3L8FhIA47pGU1Kz1gIbdKUiOCTjeB2heBBgMpE/JOWfJgBfarN090
+X-Gm-Message-State: AOJu0Yx1qi87OsM7dj/SgRfcFiQnw1QfsEHtijq7mMhMpHgTQkT7W++Z
+	EvmMW8M2E6Rr6eqyThIH0qz1JBW1rvUGHoOQDf8BtT8abC8ft6RTsaOFIZ1L8APGwkdm4dKfeJ2
+	v2/Xi9CEWtutCJMifOVHUb6hzhr4=
+X-Google-Smtp-Source: AGHT+IFSpgb1R9JRzKeziRekZA8ENhVvYKjubDHK6juv356O4yEXmZixwV6hUWbStw3OL0qY6DzmQMO/fuak+bXr3y0=
+X-Received: by 2002:a05:6512:442:b0:523:c515:ecd9 with SMTP id
+ 2adb3069b0e04-526bd694358mr1646462e87.14.1716400048051; Wed, 22 May 2024
+ 10:47:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522005913.3540131-1-edliaw@google.com> <20240522005913.3540131-3-edliaw@google.com>
- <94b73291-5b8a-480d-942d-cfc72971c2f5@sirena.org.uk>
-In-Reply-To: <94b73291-5b8a-480d-942d-cfc72971c2f5@sirena.org.uk>
-From: Edward Liaw <edliaw@google.com>
-Date: Wed, 22 May 2024 10:46:50 -0700
-Message-ID: <CAG4es9WAASaSG+Xgp31-kLT3G8wpeT5vAqbCA4r=Z8G_zAF73w@mail.gmail.com>
-Subject: Re: [PATCH v5 02/68] kselftest: Desecalate reporting of missing _GNU_SOURCE
-To: Mark Brown <broonie@kernel.org>
-Cc: shuah@kernel.org, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Kees Cook <keescook@chromium.org>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kernel-team@android.com, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, bpf@vger.kernel.org
+References: <20240522075245.388-1-bavishimithil@gmail.com> <0594944d-c158-4840-8724-b3f2edaab1ca@gmail.com>
+ <4f722e53-011f-4176-b6af-080522165007@kernel.org> <bb44d588-9316-4509-b545-9bbaa2d240cb@gmail.com>
+ <3c6c5be1-fb8e-4bf0-9f58-cfb09672e8c1@kernel.org> <d999bc26-9bb1-44a8-92a3-bcbe14c5a1c3@gmail.com>
+ <58ada5ce-5c02-4ff5-8bdd-d6556c9d141f@kernel.org> <CAGzNGRm5i8zvnXiPzMg5=+tr9oyBcRA8LFvnmgGzE=MzSNTXug@mail.gmail.com>
+ <e384272a-4dfe-4653-8983-6426f8803c84@kernel.org> <CAGzNGRnsmRWzimUX5tEC2-Y44aa4i9Lbdp8YJ+oneV4ujs4qBA@mail.gmail.com>
+In-Reply-To: <CAGzNGRnsmRWzimUX5tEC2-Y44aa4i9Lbdp8YJ+oneV4ujs4qBA@mail.gmail.com>
+From: Mithil <bavishimithil@gmail.com>
+Date: Wed, 22 May 2024 23:17:15 +0530
+Message-ID: <CAGzNGRmTR_nK0SoWG8uqDfRzDShs7sR+Mc+44__SBi0CR5LKEg@mail.gmail.com>
+Subject: Re: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lopez Cruz <misael.lopez@ti.com>, linux-sound@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 22, 2024 at 4:21=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Wed, May 22, 2024 at 12:56:48AM +0000, Edward Liaw wrote:
->
-> > to make stopping builds early replace the static_assert() with a
-> > missing without making the error more severe than it already was.  This
-> > will be moot once the issue is fixed properly but reduces the disruptio=
-n
-> > while that happens.
-> >
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  tools/testing/selftests/kselftest_harness.h | 2 +-
->
-> You've not provided a Signed-off-by for this so people can't do anything
-> with it, please see Documentation/process/submitting-patches.rst for
-> details on what this is and why it's important.
+My apologies, misunderstood the error.
+Proposed changes for the next version,
+Add dma, dma-names, reg-names properties, and do the changes in
+example (rename node to mcpdm since it is different from generic pdm).
+  reg-names:
+    items:
+      - const: mpu
+      - const: dma
 
-Sorry, my mistake, I forgot to add it after cherry-picking.  If added
-in a reply like so would it suffice, or would I need to send another
-patch?
+  dmas:
+    maxItems: 2
 
-Signed-off-by: Edward Liaw <edliaw@google.com>
+  dma-names:
+    items:
+      - const: up_link
+      - const: dn_link
+
+examples:
+    - |
+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+    mcpdm@0 {
+      compatible = "ti,omap4-mcpdm";
+      reg = <0x0 0x7f>, /* MPU private access */
+            <0x49032000 0x7f>; /* L3 Interconnect */
+      reg-names = "mpu", "dma";
+      interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+      interrupt-parent = <&gic>;
+      dmas = <&sdma 65>,
+             <&sdma 66>;
+      dma-names = "up_link", "dn_link";
+      ti,hwmods = "mcpdm";
+      clocks = <&twl6040>;
+      clock-names = "pdmclk";
+    };
+
+Remove ti.hwmods from required since some dts like
+omap4-duovero-parlor, omap4-panda etc do not use it which causes
+dtbs_check to not pass.
+
+-- 
+Best Regards,
+Mithil
