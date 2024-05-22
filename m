@@ -1,66 +1,21 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E1356B72;
-	Wed, 22 May 2024 11:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC6282D6D;
+	Wed, 22 May 2024 11:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716377886; cv=none; b=Xy/7OeacX2bng/FDOiIGZ98gZwLGwubaDMtC2slju0neMq4YgiWCDLGSKfFN25bzh0fgauwSgLbrgvGPRHXmH71R0uhlOJ1FlLpWnXuhZjqRxmluxQQ9irfYPPpHxlFmE6vQjokksFk5v4oSeVQqVHnTXfgdbiFXVY2cHvQ1tIE=
+	t=1716377888; cv=none; b=dd0swZpb167MS+JA88rLrV9dfxRx+ufjeE6lOTbW0pliaxRRF6TYqDrvehbi36IxKULvYI9trkLaDe3j77d4VBXnrqQtxOYdAnA7nMoe7M7La8nqP2AEWv8NviuDZ7V5f0O66ZTYcvCX7Zx9Rq2RtQyujoq1wagsRsV1D5CQmHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716377886; c=relaxed/simple;
-	bh=j+W4GcZJGISa77lDIEBfrxFXmjiKU9BCqC2sLBGFabQ=;
+	s=arc-20240116; t=1716377888; c=relaxed/simple;
+	bh=2BJRm4wgEIkAM6We144klaRept7/E/Hts/VoRR5fcY8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n+jToij07stIaBg40NI60QgTrxjCrFF8JCT3NU78ijVQmA8UDxZvTvIqEN8KkCCIIAPp6yzGdh4mKllncAuR+/slRQ2J+vaalucOZvN7JWIZUPOw2iW1MqBmNLLgkKhkuDvybabMHnWHEJzmlq+YGCap5RWIdp2ktAnID5fT2aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=W96hvT8j; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="W96hvT8j"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44MBDjON004375;
-	Wed, 22 May 2024 11:37:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=tLtkLaJdZcABEuKym7kQ0uGy5iDx/Mdabykmq2f/jnw=;
- b=W96hvT8jTsH9kRl7AZDQ+nNDpUDzk3m954evYLx301G0VZel/cWErybTqmIh4ProGWGl
- dQGcdL8jFGKIgGUASAYCTZ7hZO0u8ozgeeRAV59Kq1alfSomqiWWljVjpw0kAsLuY+qm
- kx6ExyANJdff/8Rabx0tg6D00oM+ElKLWGKD6v5MpOuAcFnJfMGHHxwJnefc26HsYlEZ
- or43uwWG/wGmzEX6dOP4WiLERsDhwCDVAUpv40AVhfgn0LN54wb2qKpGoiKn3l/RwJj8
- YmfcZrbj/fNx7mglqcfzEjUtC2AmXZIxrPlcZRRpgdu6YDXOcNad+J6xtS+nrVyNukBe cQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9fmw022k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 11:37:36 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44MBbaA4009010;
-	Wed, 22 May 2024 11:37:36 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9fmw022f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 11:37:36 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44M8c9gK008090;
-	Wed, 22 May 2024 11:37:35 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y79c338t2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 11:37:35 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44MBbVUM48693692
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 11:37:33 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC51D2004B;
-	Wed, 22 May 2024 11:37:31 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75D4120043;
-	Wed, 22 May 2024 11:37:29 +0000 (GMT)
-Received: from [9.203.115.195] (unknown [9.203.115.195])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 May 2024 11:37:29 +0000 (GMT)
-Message-ID: <922473a0-7e74-45e8-9929-154d0590d124@linux.ibm.com>
-Date: Wed, 22 May 2024 17:07:28 +0530
+	 In-Reply-To:Content-Type; b=Yn8+rkcTrNecUiKuQXrTB/w0m3NZXgjwhLoYivZjLTcssyz+zW6zigPtZWLK89pVO6ZW+S1yPc89mpxt0K3/4L+RxD9T67Alldx7Vxfreb/8pP5j5/wreURfMTP45Ys37BV9F/b5vlhLe4UEMwQDiKAOpO6NP8DKKJJEypjweec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94602C2BD11;
+	Wed, 22 May 2024 11:38:04 +0000 (UTC)
+Message-ID: <ae3f4c13-9a4b-44e3-b793-f94aba59127f@xs4all.nl>
+Date: Wed, 22 May 2024 13:38:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,73 +23,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] powerpc64/bpf: jit support for unconditional byte
- swap
-To: Artem Savkov <asavkov@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240517075650.248801-1-asavkov@redhat.com>
- <20240517075650.248801-3-asavkov@redhat.com>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20240517075650.248801-3-asavkov@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v3 1/3] media: v4l2-ctrls: Add average qp control
+To: Ming Qian <ming.qian@nxp.com>, mchehab@kernel.org
+Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
+ tao.jiang_2@nxp.com, ming.qian@oss.nxp.com, imx@lists.linux.dev,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240506084918.799544-1-ming.qian@nxp.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20240506084918.799544-1-ming.qian@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: B1XldeUENKxGYq5S-5rVvIhGUSDaHHY-
-X-Proofpoint-GUID: X_i3t_4zqRLlNLATCKOrtc6kfWhvOpTC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_05,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 clxscore=1011 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405220077
 
-
-
-On 17/05/24 1:26 pm, Artem Savkov wrote:
-> Add jit support for unconditional byte swap. Tested using BSWAP tests
-> from test_bpf module.
+On 06/05/2024 10:49, Ming Qian wrote:
+> Add a control V4L2_CID_MPEG_VIDEO_AVERAGE_QP to report the average qp
+> value of current encoded frame. the value applies to the last dequeued
+> capture buffer.
 > 
-> Signed-off-by: Artem Savkov <asavkov@redhat.com>
+> Signed-off-by: Ming Qian <ming.qian@nxp.com>
+
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+
+Regards,
+
+	Hans
+
 > ---
->   arch/powerpc/net/bpf_jit_comp64.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> v3
+> - document the valid range of the new ctrl
 > 
-> diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
-> index 3071205782b15..97191cf091bbf 100644
-> --- a/arch/powerpc/net/bpf_jit_comp64.c
-> +++ b/arch/powerpc/net/bpf_jit_comp64.c
-> @@ -699,11 +699,12 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
->   		 */
->   		case BPF_ALU | BPF_END | BPF_FROM_LE:
->   		case BPF_ALU | BPF_END | BPF_FROM_BE:
+> v2
+>  - improve document description according Hans's comments
+>  - drop volatile flag
+> 
+>  .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 14 ++++++++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls-defs.c          |  5 +++++
+>  include/uapi/linux/v4l2-controls.h                 |  2 ++
+>  3 files changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index 2a165ae063fb..4a379bd9e3fb 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1653,6 +1653,20 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>      Quantization parameter for a P frame for FWHT. Valid range: from 1
+>      to 31.
+>  
+> +``V4L2_CID_MPEG_VIDEO_AVERAGE_QP (integer)``
+> +    This read-only control returns the average QP value of the currently
+> +    encoded frame. The value applies to the last dequeued capture buffer
+> +    (VIDIOC_DQBUF). Its valid range depends on the encoding format and parameters.
+> +    For H264, its valid range is from 0 to 51.
+> +    For HEVC, its valid range is from 0 to 51 for 8 bit and
+> +    from 0 to 63 for 10 bit.
+> +    For H263 and MPEG4, its valid range is from 1 to 31.
+> +    For VP8, its valid range is from 0 to 127.
+> +    For VP9, its valid range is from 0 to 255.
+> +    If the codec's MIN_QP and MAX_QP are set, then the QP will meet both requirements.
+> +    Codecs need to always use the specified range, rather then a HW custom range.
+> +    Applicable to encoders
+> +
+>  .. raw:: latex
+>  
+>      \normalsize
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+> index 8696eb1cdd61..1ea52011247a 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
+> @@ -970,6 +970,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_MPEG_VIDEO_LTR_COUNT:			return "LTR Count";
+>  	case V4L2_CID_MPEG_VIDEO_FRAME_LTR_INDEX:		return "Frame LTR Index";
+>  	case V4L2_CID_MPEG_VIDEO_USE_LTR_FRAMES:		return "Use LTR Frames";
+> +	case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:			return "Average QP Value";
+>  	case V4L2_CID_FWHT_I_FRAME_QP:				return "FWHT I-Frame QP Value";
+>  	case V4L2_CID_FWHT_P_FRAME_QP:				return "FWHT P-Frame QP Value";
+>  
+> @@ -1507,6 +1508,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  		*max = 0xffffffffffffLL;
+>  		*step = 1;
+>  		break;
+> +	case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:
+> +		*type = V4L2_CTRL_TYPE_INTEGER;
+> +		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +		break;
+>  	case V4L2_CID_PIXEL_RATE:
+>  		*type = V4L2_CTRL_TYPE_INTEGER64;
+>  		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 99c3f5e99da7..974fd254e573 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -898,6 +898,8 @@ enum v4l2_mpeg_video_av1_level {
+>  	V4L2_MPEG_VIDEO_AV1_LEVEL_7_3 = 23
+>  };
+>  
+> +#define V4L2_CID_MPEG_VIDEO_AVERAGE_QP  (V4L2_CID_CODEC_BASE + 657)
+> +
+>  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+>  #define V4L2_CID_CODEC_CX2341X_BASE				(V4L2_CTRL_CLASS_CODEC | 0x1000)
+>  #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE		(V4L2_CID_CODEC_CX2341X_BASE+0)
 
-> +		case BPF_ALU64 | BPF_END | BPF_FROM_LE:
-
-A comment here indicating this case does unconditional swap
-could improve readability.
-
-Other than this minor nit, the patchset looks good to me.
-Also, tested the changes with test_bpf module and selftests.
-For the series..
-
-Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
-
->   #ifdef __BIG_ENDIAN__
->   			if (BPF_SRC(code) == BPF_FROM_BE)
->   				goto emit_clear;
->   #else /* !__BIG_ENDIAN__ */
-> -			if (BPF_SRC(code) == BPF_FROM_LE)
-> +			if (BPF_CLASS(code) == BPF_ALU && BPF_SRC(code) == BPF_FROM_LE)
->   				goto emit_clear;
->   #endif
->   			switch (imm) {
