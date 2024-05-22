@@ -1,48 +1,50 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380BC145B1D;
-	Wed, 22 May 2024 18:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498E51487C5;
+	Wed, 22 May 2024 18:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716401138; cv=none; b=VXe+q0EJdEHIFtK/Zjhc63rcyUR0KrPGuUr3EzmVmUj+/PYJu4yPkkxvuK9dWPYwmI5v8+YyQsv2cWOJ23kgoLoj5bli9ohx5AHCXJj5phjo1PVxqK5+QRhf8CYj8yFivMyqbpjiP32uPK6VaHHwsYgUPyQjf+91rKxBN4zjZr8=
+	t=1716401153; cv=none; b=HGkgxTAZH92S3alPrj3tfccSk/Fl1WiBPwaNUVBEHhkTpF2BGbYRd6NtfHZourlBdjNAM2c/iGm2cGT4FV9WhlM9aHy5w+fcpnXutAen6s3OB9/W/Y2ZvtW9LDxQBBQU8t4qoi5lj6ZcJyeMyBWw1n/0fzSDvBWn1RRnzxlayUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716401138; c=relaxed/simple;
-	bh=luEwbZp5k3nkrHj86wxSaPapUg/Y1fNnfoeZAYeQvfo=;
+	s=arc-20240116; t=1716401153; c=relaxed/simple;
+	bh=rGKA2eDEvUItRMtWurjYPOOFfebKNdda5YnYlMMO0K4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=byQi1sB9fc5AKcPLDq4w9f1u8UcKVLZNgw1C/V/zR6PRsMusKYuMEqbb8vrwAdKmDHEvvCQCeUtzntRhNsTaTe1F4JcEbmHFkW6sD6fYhfkgxHuneehsRVVG+s0UlppZ3ZePoonh8xzhyyMt0PxJOwu9Q5GnHCEK4+ycbm7rjPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=w4GG+Zk5; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	 In-Reply-To:Content-Type; b=i71pUw42bwGenPseXGvE184AmDmkMgd9rg+Jlj2s2nWMqvuPXqzHRtcHJRIYN9a6yKQC7KmgZy/RB42kRGcRt+DGqK+qbeclxZPOp0X0q4yNos5jLUrag94EU6uZ6qrYtNvFNJUajFT7Vid15GEpHnj0CKOquQLkiZ1APPRDBIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KvaZcWE9; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="w4GG+Zk5"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Vkzk83zW8zlgMVN;
-	Wed, 22 May 2024 18:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1716401127; x=1718993128; bh=L/Z8Mp/V6Xlw6wkYa899vAJP
-	gD1/fbki4rEqLMN5kt0=; b=w4GG+Zk5K8I/0oN1UncHTyKd/Gk3/mstQgMKWu5t
-	Ny7lWh1SNsdH2k/eerNIDbR63ln2fHwadLSxbN26wlaOya/Eb7PeDC2wO1wQKjb9
-	3Kv/JR7I2jGtvACEHUtbbltKIsewEnPsGTXlFkdHY5VQDRMbOzG2Cwd8N6o6Kglt
-	VAATPhWT8TLmUPmX550QPPAX33B17Mu07oRnRQwIO7d7FhOlbWoNQaN1AFJr+alO
-	tSKLeozFvhzoY0vF+hxn0Q0phgYjUm0983n3BJ3WEMUeCawbvbeOWfDl6EKHKFRy
-	nODt7HOx9vbzAwF9c3bzRHWDHD+tlt4k1IYNX1Ev1w+wxg==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id F51LBj9xAtLQ; Wed, 22 May 2024 18:05:27 +0000 (UTC)
-Received: from [100.96.154.26] (unknown [104.132.0.90])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Vkzjx0WdLzlgMVL;
-	Wed, 22 May 2024 18:05:24 +0000 (UTC)
-Message-ID: <97966085-d7a4-4238-a413-4cdac77af8bd@acm.org>
-Date: Wed, 22 May 2024 11:05:24 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KvaZcWE9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716401151; x=1747937151;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rGKA2eDEvUItRMtWurjYPOOFfebKNdda5YnYlMMO0K4=;
+  b=KvaZcWE961W0HpTEUoRlyBnODHHJ2XgjjzvEtKzJTIlPKN0VLmmgo9Pe
+   RQ/2tRvx1Rnj4YEtiTvjd54ASLQriG1XCs/EKjMT6xs/FWdROvEfbCQ0F
+   HsZyuyABSKnpdlrv0L3iazPws+I3V9YNlWWJeVTqe4TZRXfu49N44i24y
+   wVw47fFTmvt2IgpLOfiBBPkCmFl71U+Wqaeq3HZz2P7ROU1Q6yyjF7u8D
+   StikRavZdObMAycx8jYdORGtFqj1bWLqTjTTwF0aMSiVuXi2/sFohup46
+   cJvS2Yj7VB6bkoJF7IPafULv3fzxan074PyX+gHOOlxLIn5YdhHfgi7AT
+   w==;
+X-CSE-ConnectionGUID: rI3Q7YFYT7upXEa0uqguBw==
+X-CSE-MsgGUID: RQ7DS5BbQze/LlIa5uwNGA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="23340835"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="23340835"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 11:05:50 -0700
+X-CSE-ConnectionGUID: ndMXfA3GRVWUmcf4dXcPeA==
+X-CSE-MsgGUID: bOIZU3NbTnCcVNh3qRuyAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="38164509"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.237]) ([10.125.109.237])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 11:05:50 -0700
+Message-ID: <7dc64418-6821-49c2-b9af-ee4ab148ba9f@intel.com>
+Date: Wed, 22 May 2024 11:05:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,56 +52,181 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-To: Nitesh Shetty <nj.shetty@samsung.com>, Jens Axboe <axboe@kernel.dk>,
- Jonathan Corbet <corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>,
- Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
- damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
- nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-fsdevel@vger.kernel.org
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
- <CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
- <20240520102033.9361-3-nj.shetty@samsung.com>
+Subject: Re: [PATCH 3/4] acpi/ghes, cxl/pci: Trace FW-First CXL Protocol
+ Errors
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
+References: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20240522150839.27578-4-Smita.KoralahalliChannabasappa@amd.com>
 Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240520102033.9361-3-nj.shetty@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240522150839.27578-4-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/20/24 03:20, Nitesh Shetty wrote:
-> We add two new opcode REQ_OP_COPY_DST, REQ_OP_COPY_SRC.
-> Since copy is a composite operation involving src and dst sectors/lba,
-> each needs to be represented by a separate bio to make it compatible
-> with device mapper.
-> We expect caller to take a plug and send bio with destination information,
-> followed by bio with source information.
-> Once the dst bio arrives we form a request and wait for source
-> bio. Upon arrival of source bio we merge these two bio's and send
-> corresponding request down to device driver.
-> Merging non copy offload bio is avoided by checking for copy specific
-> opcodes in merge function.
 
-Plugs are per task. Can the following happen?
-* Task A calls blk_start_plug()
-* Task B calls blk_start_plug()
-* Task A submits a REQ_OP_COPY_DST bio and a REQ_OP_COPY_SRC bio.
-* Task B submits a REQ_OP_COPY_DST bio and a REQ_OP_COPY_SRC bio.
-* Task A calls blk_finish_plug()
-* Task B calls blk_finish_plug()
-* The REQ_OP_COPY_DST bio from task A and the REQ_OP_COPY_SRC bio from
-   task B are combined into a single request.
-* The REQ_OP_COPY_DST bio from task B and the REQ_OP_COPY_SRC bio from
-   task A are combined into a single request.
 
-Thanks,
+On 5/22/24 8:08 AM, Smita Koralahalli wrote:
+> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
+> CPER records.
+> 
+> Reuse the existing work queue cxl_cper_work registered with GHES to notify
+> the CXL subsystem on a Protocol error.
+> 
+> The defined trace events cxl_aer_uncorrectable_error and
+> cxl_aer_correctable_error currently trace native CXL AER errors. Reuse
+> them to trace FW-First Protocol Errors.
+> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> ---
+>  drivers/acpi/apei/ghes.c  | 14 ++++++++++++++
+>  drivers/cxl/core/pci.c    | 24 ++++++++++++++++++++++++
+>  drivers/cxl/cxlpci.h      |  3 +++
+>  drivers/cxl/pci.c         | 34 ++++++++++++++++++++++++++++++++--
+>  include/linux/cxl-event.h |  1 +
+>  5 files changed, 74 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 1a58032770ee..a31bd91e9475 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -723,6 +723,20 @@ static void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
+>  
+>  	if (cxl_cper_handle_prot_err_info(gdata, &wd.p_err))
+>  		return;
+> +
+> +	guard(spinlock_irqsave)(&cxl_cper_work_lock);
+> +
+> +	if (!cxl_cper_work)
+> +		return;
+> +
+> +	wd.event_type = CXL_CPER_EVENT_PROT_ERR;
+> +
+> +	if (!kfifo_put(&cxl_cper_fifo, wd)) {
+> +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
+> +		return;
+> +	}
+> +
+> +	schedule_work(cxl_cper_work);
+>  }
+>  
+>  int cxl_cper_register_work(struct work_struct *work)
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 0df09bd79408..ef9438cb1dd6 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -686,6 +686,30 @@ void read_cdat_data(struct cxl_port *port)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+>  
+> +void cxl_trace_prot_err(struct cxl_dev_state *cxlds,
+> +			struct cxl_cper_prot_err *p_err)
+> +{
+> +	u32 status, fe;
+> +
+> +	if (p_err->severity == CXL_AER_CORRECTABLE) {
+> +		status = p_err->cxl_ras.cor_status & ~p_err->cxl_ras.cor_mask;
+> +
+> +		trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
+> +	} else {
+> +		status = p_err->cxl_ras.uncor_status & ~p_err->cxl_ras.uncor_mask;
+> +
+> +		if (hweight32(status) > 1)
+> +			fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK,
+> +					   p_err->cxl_ras.cap_control));
+> +		else
+> +			fe = status;
+> +
+> +		trace_cxl_aer_uncorrectable_error(cxlds->cxlmd, status, fe,
+> +						  p_err->cxl_ras.header_log);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_trace_prot_err, CXL);
+> +
+>  static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
+>  				 void __iomem *ras_base)
+>  {
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 93992a1c8eec..0ba3215786e1 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -130,4 +130,7 @@ void read_cdat_data(struct cxl_port *port);
+>  void cxl_cor_error_detected(struct pci_dev *pdev);
+>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  				    pci_channel_state_t state);
+> +struct cxl_cper_prot_err;
+> +void cxl_trace_prot_err(struct cxl_dev_state *cxlds,
+> +			struct cxl_cper_prot_err *p_err);
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 74876c9835e8..3e3c36983686 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -1011,12 +1011,42 @@ static void cxl_handle_cper_event(enum cxl_event_type ev_type,
+>  			       &uuid_null, &rec->event);
+>  }
+>  
+> +static void cxl_handle_prot_err(struct cxl_cper_prot_err *p_err)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) = NULL;
+> +	struct cxl_dev_state *cxlds;
+> +	unsigned int devfn;
+> +
+> +	devfn = PCI_DEVFN(p_err->device, p_err->function);
+> +	pdev = pci_get_domain_bus_and_slot(p_err->segment,
+> +					   p_err->bus, devfn);
+> +	if (!pdev)
+> +		return;
+> +
+> +	guard(device)(&pdev->dev);
+> +	if (pdev->driver != &cxl_pci_driver)
+> +		return;
+> +
+> +	cxlds = pci_get_drvdata(pdev);
+> +	if (!cxlds)
+> +		return;
+> +
+> +	if (((u64)p_err->upper_dw << 32 | p_err->lower_dw) != cxlds->serial)
+> +		pr_warn("CPER-reported device serial number does not match expected value\n");
 
-Bart.
+Given that we are operating on a device, perhaps dev_warn(&pdev->dev, ...) may be better served.
 
+DJ
+> +
+> +	cxl_trace_prot_err(cxlds, p_err);
+> +}
+> +
+>  static void cxl_cper_work_fn(struct work_struct *work)
+>  {
+>  	struct cxl_cper_work_data wd;
+>  
+> -	while (cxl_cper_kfifo_get(&wd))
+> -		cxl_handle_cper_event(wd.event_type, &wd.rec);
+> +	while (cxl_cper_kfifo_get(&wd)) {
+> +		if (wd.event_type == CXL_CPER_EVENT_PROT_ERR)
+> +			cxl_handle_prot_err(&wd.p_err);
+> +		else
+> +			cxl_handle_cper_event(wd.event_type, &wd.rec);
+> +	}
+>  }
+>  static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
+>  
+> diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+> index 9c7b69e076a0..5562844df850 100644
+> --- a/include/linux/cxl-event.h
+> +++ b/include/linux/cxl-event.h
+> @@ -122,6 +122,7 @@ struct cxl_event_record_raw {
+>  } __packed;
+>  
+>  enum cxl_event_type {
+> +	CXL_CPER_EVENT_PROT_ERR,
+>  	CXL_CPER_EVENT_GENERIC,
+>  	CXL_CPER_EVENT_GEN_MEDIA,
+>  	CXL_CPER_EVENT_DRAM,
