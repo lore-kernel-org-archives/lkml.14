@@ -1,93 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDF956B72;
-	Wed, 22 May 2024 11:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395947F7FD
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716377688; cv=none; b=RGMKwCUcjdQhiQoxwhckNEmppjXvvdRpfDZbjzJtANbbACXrm42mGYumcSrE6IeeiOHTjsjh+ZYBDmvgyaNLfTLZrDE3IR0FZy7EEu4xKK7mbWGgKv3PMqWcbZrmAoXc9h/rpIfGYkdSCavT2JjCBQcmj4lh7QHkfsd7AjcP7xE=
+	t=1716377746; cv=none; b=hhLHNbquuv2/mkgs7+CCgG2ACA4j1/L4TNAEWo4JeKC/nqQzrzL0FcbedZPqMAUifMLl2eUq+Hg3dDuSE70sISKe6d0J6l3ZiD27lx3F9JhgMgi27c7flIalhUWCqpG4diGyG0Shrgp6keC6A7VsHCBlj95TlXUPwkMwkPqc5rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716377688; c=relaxed/simple;
-	bh=SqZv+J0FOQDs0+Dw6WcXgcuK2MUV7Z4FZPlHttKhaq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3XSgyACU7WD7BJeho6P41VcaQx8EKyewb/xa9yDBLcOgxj4coST/NUWsfnCDiTzTtatJ+yfrYuH2n1dH+tMbot4sZYCG2i7tSIqwY7hfMsahaZIv2HQsVjlAPopR42jqjZVBte2NVOP2/7/9mJxF+OK1NFE8m0QJ84TBXZXilo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gk3ZfjmA; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716377746; c=relaxed/simple;
+	bh=6E1Vo14DL/WXabCdGMv+/2IzKovRUvGkCtlDlixUeCE=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Lq28O+Hhrd7pkuGErh7SOoh/Lit0tSnbbxlF0xAn/0FWOV7lcZDSJCWgPpc6rHjcFlsykCEvUHLB4NNB+AfelIOWWvTKoX6czk+eKNTvsxvuYL0HSJ0Xfy7/rXAAnH8BYpSs4eXX/nfhh3kRZeMzAA8JuFS7vzLDVesxCceeNEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rtBGiEx5; arc=none smtp.client-ip=203.205.221.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gk3ZfjmA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716377687; x=1747913687;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SqZv+J0FOQDs0+Dw6WcXgcuK2MUV7Z4FZPlHttKhaq0=;
-  b=gk3ZfjmA4x1NHT24yb7pw43BdE78t67e0fQU0PofxWvqyZJo33Yo9NAl
-   xpqficiV+SG5HrSWbxOB/vsUC1sEG9DjRmWMEtRG4DCHZ7k4HVbcgS4Gp
-   SKlGlRbFXOVXrO+JYJNiMc2Si3TiIJbrfb2QEW7shwYQ8eL9+lHLvfG/U
-   F5mP/KVmrgO0GlOqnGNRTn+qVkNiYU8ZLisdyE5APicoAEw8rC8rzUBQN
-   ps/ipk9vSHi/mjFhEctH77ngnnjkeAwXNRPIIwXVv6b8bqfs8zsEmwBwQ
-   kUcf+GDDyDUw7DNqNG4iOlZQd5oU/iD6pLaISqifWT43w+SloKBpjpbFN
-   A==;
-X-CSE-ConnectionGUID: 96KBdVvWQpuCP0dbYht1WQ==
-X-CSE-MsgGUID: hysNcxrITaGWbnG3Oc0heA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="16450062"
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="16450062"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 04:34:46 -0700
-X-CSE-ConnectionGUID: K5DYVZXATbK33baoP3EKVA==
-X-CSE-MsgGUID: tBt9SnjkQxyCPbbg6PBdMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="37841772"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 04:34:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s9kEy-00000009xO1-2DqT;
-	Wed, 22 May 2024 14:34:40 +0300
-Date: Wed, 22 May 2024 14:34:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH 1/2] device property: introduce
- fwnode_for_each_available_child_node_scoped()
-Message-ID: <Zk3YUJjJ34FYo5NJ@smile.fi.intel.com>
-References: <20240522-fwnode_for_each_available_child_node_scoped-v1-0-1188b0da12dc@gmail.com>
- <20240522-fwnode_for_each_available_child_node_scoped-v1-1-1188b0da12dc@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rtBGiEx5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1716377439; bh=myaU8osdTJYm8F/QtH9Tcbp5c5H+ZrqmTXVy/yDgt34=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=rtBGiEx5Fv0RNZ3HT1KiC4EDY5OdWdGAU+4TyyQdVGu7g6+IBnKM//F/drCq7T7QH
+	 69C+Y33si2Uj4YQTIS007S5/T3/h3uo9t5FHgxBii5OSBpK38bfsHcJZiGGc37qL5s
+	 CKA0F6e89cUZUVDayoQ+6AnQFgbN8RRckiPXfN5s=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 7A52684C; Wed, 22 May 2024 19:30:37 +0800
+X-QQ-mid: xmsmtpt1716377437t42779cgm
+Message-ID: <tencent_7BA1330A9E431B2B4B071B6B2518BA37BB08@qq.com>
+X-QQ-XMAILINFO: NioaTWkRhWwamOJ5gr9in613XOSg2x2ZTZ6AkkDXODq4RxIv188IOk4tfUNZKn
+	 ifsI4CkDqMz1P3XciuNQbU9wy6MfDdxn97NDvsXFF/kkyRo9wpyID3tjdpJ+z5ioGGLdKRwAvSN0
+	 u1HtUPMo6Rufjh1r36BC6bWnkw8+sXeYNaOzsqOuACoodCmtjQCVq178wQHS/6fVXDRNm2gP/tIf
+	 8wvyMRhW8r6EttYWDbrCdDoQ9vvxHF9y99mt5+Iagi9UsoVrZ820+R0T9pzx+mHiJIhZOclVst3H
+	 G56+2th8ez7CuU7HP/7R2JwIhQNETmkBIWChiGYzRfyGKXFFYK947b3YLpl4N2OjccX3TNHnHufY
+	 drDmenrdZ5sgwtDSV6Od3KxypwdWhycC/+a1YXX90RVfU5jklJg5KpUYnYP0CXs1BY4k0X+qezBi
+	 T8KLFiGr382VCcm64AxFVWiIncRlHkWJm3kjxTEDCIIQom0NXVrfBVgPsXsntW+hyqGnhYhkK1Na
+	 6LLtDHBJ3emkCKvk+pJmJG39OwCUPInXLS4gkbTyX2JBOr5pIUyy4CeqWe3AhCiY1K8rnKZMjMul
+	 8+Z2wYVfnMLum6PDKgihA3YfTewmpnqCF7rfKm3lr9q+whAUMao2qQ0ldRDgIgCe8OUtDagL552f
+	 HGHrgtOWESEDm0QCKG+DO8w4nK+y2GYvkSMb3WbbNdPwZ4sl77/phOrFlR27oaI7IoByFj/IkFRT
+	 6zYt5nCPAw7mWlxxUVO0QoStkZXXskhBCdpA8TorjODgIus9JawooCr1im3tgpQCV70ED6CZdaH4
+	 8M6M9jMG3VcNycNSsGWlT9pv5EzQv9UVv2kOfutOHk5cqNxJdKG1mFAtb1qEI2k4G9ZUKKeRCkqV
+	 MNY66QxSgHESj80EJUiCIPzeQIV93r2AFrXAhfrsuHkFB5Kf4CxcnmSG69ihU2eg2M+BFPlFOsPH
+	 +ic+CKzXg=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+Date: Wed, 22 May 2024 19:30:37 +0800
+X-OQ-MSGID: <20240522113036.2205322-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
+References: <0000000000002fd2de0618de2e65@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522-fwnode_for_each_available_child_node_scoped-v1-1-1188b0da12dc@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024 at 11:18:07AM +0200, Javier Carrasco wrote:
-> Add a scoped version of fwnode_for_each_available_child_node() following
-> the approach recently taken for other loops that handle child nodes like
-> for_each_child_of_node_scoped() or device_for_each_child_node_scoped(),
-> which are based on the __free() auto cleanup handler to remove the need
-> for fwnode_handle_put() on early loop exits.
+please test null ptr in iter_file_splice_write
 
-OK as long as we have users.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/fs/splice.c b/fs/splice.c
+index 60aed8de21f8..db66b8c5fe0d 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -751,21 +751,25 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ 
+ 		/* dismiss the fully eaten buffers, adjust the partial one */
+ 		tail = pipe->tail;
+-		while (ret) {
++		printk("ret: %ld, %s\n", ret, __func__);
++		while (ret > 0) {
+ 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
+-			if (ret >= buf->len) {
+-				ret -= buf->len;
+-				buf->len = 0;
+-				pipe_buf_release(pipe, buf);
+-				tail++;
+-				pipe->tail = tail;
+-				if (pipe->files)
+-					sd.need_wakeup = true;
+-			} else {
+-				buf->offset += ret;
+-				buf->len -= ret;
++			if (buf->len > 0) {
++				if (ret >= (ssize_t)buf->len) {
++					ret -= buf->len;
++					buf->len = 0;
++					pipe_buf_release(pipe, buf);
++					tail++;
++					pipe->tail = tail;
++					if (pipe->files)
++						sd.need_wakeup = true;
++				} else {
++					buf->offset += ret;
++					buf->len -= ret;
++					ret = 0;
++				}
++			} else
+ 				ret = 0;
+-			}
+ 		}
+ 	}
+ done:
 
