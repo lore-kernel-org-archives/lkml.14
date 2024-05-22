@@ -1,180 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2681B824AF;
-	Wed, 22 May 2024 11:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8E87E576
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716377375; cv=none; b=N0fNZhPXCEHnFglSUFc0rRD+u24tOpvAGwL6D6HJYfIfqD+NnEZKZrc45RU76HUaRjtl2pGRtDH/yZriAoaQrhwijDZgwWanAmVYnhuyrH7v6/yRxEjJpDIX4u2A9eL4Kv0hEi9Qjqd2yPgD8evRyrelEq32FlF2VBIoDNRw0R0=
+	t=1716377412; cv=none; b=FaSca4J4N6kvDSIDpxGXo8jufDp3r3gvGTK6s8vjF3wH/Khda7wBSEojnpcKbpDzb+1rDoZRty52pp0zC1t7h6KW8vgO2Eq52IwikOsBt9qybI9sLRLFVRNLEOBU8JAySNXNR8ePJa2kmhifbceY/ehKS6ReSSH6vLzGzhY+tEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716377375; c=relaxed/simple;
-	bh=v9sTb1YPD0eyXpGV9zrS8qJaIGoTzfld+AFYcRslwoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IwcQNaO0GZovIW+J+WfWM/9dH654BNvb8AFEa+jmH9R6nG60/1g6Uf4+sg84wcanb/ZQrSFFmdSxTIOPcEMhyoUk6f2MuRlSsyJPgjmpoD2/ZlKs29+W0RDMJucq5Gn6YMUQ8yXOpAXQKRZFbh+YQtI3uWJOwC6xA599CnuuiOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkReHIBR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716377412; c=relaxed/simple;
+	bh=bRrRWdcT1vEQ/NkN7+6mhIfe7t/y2q9qD8PTe3O9S/I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=G1X5oFKs033/2akRO/ww3U/bUQp4Shs+INFivAHH6TSAUTZzP3pg4f1PNsbkMfi9niX9/5DE9sascT43dQxJBC8ux2yRvmf+jg+VLKsQEP+uj2Co73Z4B3HAcFScSNTwid01pvn6bw7yUTTuOVcD77KhalwKe5SXOJ7xGUtLeoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ppKeuQOg; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkReHIBR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22119C2BD11;
-	Wed, 22 May 2024 11:29:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716377374;
-	bh=v9sTb1YPD0eyXpGV9zrS8qJaIGoTzfld+AFYcRslwoU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mkReHIBRSYEtmd3hIYMzBO5Heb3KH5Qr+Im/mlh9DIJsrSLTykHd7qfQE/JHSBDm1
-	 3wVerYYyHetfJdDZ0/YoJk5RPVzKaBTslonF+3clPkr+uQnX5hK622yBzUhvFOmqdz
-	 hL0WOk99Gzp722x6k7n41/QiexaYr10Zcw5ngeobOuvZXl/yszGgPXaAErOcpbMKpe
-	 6PacgvOkhZzeJbf04HbJfsLFj/7L0Py+ifxhU4rWk9Df+VRCyw2uLRNGyfMe2/JNV6
-	 A7xCOwhoszGy48oMvhKJX6oRnHGe2PSdYw5A5/BGbEoRbYJMsqw9UTwbKfuynsPqOi
-	 1iMkwHxx97KnQ==
-Message-ID: <774df64c-56a1-461a-82fa-a0340732b779@kernel.org>
-Date: Wed, 22 May 2024 13:29:30 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ppKeuQOg"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so864313766b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 04:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716377409; x=1716982209; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hq4L2X2KWQEpJApjySQzZvtfrY/x0TDF4kT6FwZYzPM=;
+        b=ppKeuQOgjEp+N4igWsekMRBEoUK0ivuPq6ItFdCjrhggclkjtnKKVpaMQMlOzLUy/a
+         MRq+UVtuASKE9wSFcpvwPi6z/76lG7nmATRWRpTIu93E1Wwm6vvoP8OLepqajWyvZLQF
+         P8eprUsbYtT4SLG576ooO1WMPCLMYOSzcnXh09BASQFNNS2d7fOGGpqLnmQ3V9dRnuoN
+         v1CqQuoosqmgW36YeUIyAWsi6dDVnsVsiRBn8sbwAPRXhrmP/jLRptqKJwJGsI0v7wEi
+         jXe5gQq7XCRMbVT18MwnmV+XDDlwjVBHw0OO3eKuMNjYLy/kdENAOjhoilndTbMCrEaf
+         9Oyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716377409; x=1716982209;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hq4L2X2KWQEpJApjySQzZvtfrY/x0TDF4kT6FwZYzPM=;
+        b=v5FuH86xFbObdpOnMAtbHKtOCRCP+c5k0gsr87IVKaS9aNiLS694Pod9Si1231xACj
+         rXoKA2UzpJvcciF/uQgSkiNCJh0ryNBuhiL5M14EyBBn8DZtKe2do7BWz2Y9z6QAkyui
+         nvdZZo+Zgg6qB67+c1rKYJB9FV4yzk/l8Oc6BjM0lWPe3BQFsO8Hs3AIgXr7dlD7fBxv
+         qpQ8GUIJPSkJt5O85FghFCdHr9f1mK/rLeO85VFu8fHYwdrC6n77HmfED2EcrLfbIDLq
+         WOtoCcbcpUCFS2a7aBtPV7kwV1wMGAuXyHSdW/USuf/5pcqQaAS6RiTwadWpTJeQl6XL
+         pHbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVv+HuNbFNE0uWnYWoyQySALIbANjrdMDBSNw4fz1E4OXcfahAOzHFABbkyaFTqdIwFmyz+YtSNRk9zX0Do5i/hTJhUik8k/kt77UWt
+X-Gm-Message-State: AOJu0Yy8ggjAnHbTdqs0QRJ0Fv7hUNz5p7hwfHyH+nynaaPq4RkxwY6s
+	EcCcspwZJ7J8KvQScCLA3MRtoAzrEq51kJqKMLzr0vmFBFW7S0q0+omL+pjejFk=
+X-Google-Smtp-Source: AGHT+IEkOqOZ+PmlgG3pPNruELWYRYHJ49f5/J0ysA4MlrgNX2XFOiAUfem8CdDZEHZl04/Kc/jveg==
+X-Received: by 2002:a17:906:c17:b0:a59:edbc:193d with SMTP id a640c23a62f3a-a62281e1a9cmr156921466b.55.1716377408960;
+        Wed, 22 May 2024 04:30:08 -0700 (PDT)
+Received: from [127.0.1.1] ([2a00:f41:c55:53ae:4d0a:75f4:a9ea:5025])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01652sm1768363066b.167.2024.05.22.04.30.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 04:30:08 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/2] PMC8380 PMIC pinctrl
+Date: Wed, 22 May 2024 13:30:03 +0200
+Message-Id: <20240522-topic-pmc8380_gpio-v1-0-7298afa9e181@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH 1/2] dt-bindings: dma: Add reg-names to
- nvidia,tegra210-adma
-To: Sameer Pujar <spujar@nvidia.com>, vkoul@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
- jonathanh@nvidia.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- ldewangan@nvidia.com, mkumard@nvidia.com
-References: <20240521110801.1692582-1-spujar@nvidia.com>
- <20240521110801.1692582-2-spujar@nvidia.com>
- <80b6e6e6-9805-4a85-97d5-38e1b2bf2dd0@kernel.org>
- <e6fab314-8d1e-4ed7-bb5a-025fd65e1494@nvidia.com>
- <56bf93ac-6c1e-48aa-89d0-7542ea707848@kernel.org>
- <f785f699-be50-4547-9411-d41a4e66a225@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <f785f699-be50-4547-9411-d41a4e66a225@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADvXTWYC/x3MQQqAIBBA0avErBN0LJGuEhFhU80iFY0IpLsnL
+ d/i/wKZElOGoSmQ6ObMwVeotgF3LH4nwWs1oMRO9ojiCpGdiKez2sp5jxwEmVVLa9RmDUINY6K
+ Nn386Tu/7AQt2P0pkAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14-dev
 
-On 22/05/2024 09:43, Sameer Pujar wrote:
-> 
-> 
-> On 22-05-2024 12:17, Krzysztof Kozlowski wrote:
->> On 22/05/2024 07:35, Sameer Pujar wrote:
->>> On 21-05-2024 17:23, Krzysztof Kozlowski wrote:
->>>> On 21/05/2024 13:08, Sameer Pujar wrote:
->>>>> From: Mohan Kumar <mkumard@nvidia.com>
->>>>>
->>>>> For Non-Hypervisor mode, Tegra ADMA driver requires the register
->>>>> resource range to include both global and channel page in the reg
->>>>> entry. For Hypervisor more, Tegra ADMA driver requires only the
->>>>> channel page and global page range is not allowed for access.
->>>>>
->>>>> Add reg-names DT binding for Hypervisor mode to help driver to
->>>>> differentiate the config between Hypervisor and Non-Hypervisor
->>>>> mode of execution.
->>>>>
->>>>> Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
->>>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>>>> ---
->>>>>    .../devicetree/bindings/dma/nvidia,tegra210-adma.yaml  | 10 ++++++++++
->>>>>    1 file changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
->>>>> index 877147e95ecc..ede47f4a3eec 100644
->>>>> --- a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
->>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
->>>>> @@ -29,8 +29,18 @@ properties:
->>>>>              - const: nvidia,tegra186-adma
->>>>>
->>>>>      reg:
->>>>> +    description: |
->>>>> +      For hypervisor mode, the address range should include a
->>>>> +      ADMA channel page address range, for non-hypervisor mode
->>>>> +      it starts with ADMA base address covering Global and Channel
->>>>> +      page address range.
->>>>>        maxItems: 1
->>>>>
->>>>> +  reg-names:
->>>>> +    description: only required for Hypervisor mode.
->>>> This does not work like that. I provide vm entry for non-hypervisor mode
->>>> and what? You claim it is virtualized?
->>>>
->>>> Drop property.
->>> With 'vm' entry added for hypervisor mode, the 'reg' address range needs
->>> to be updated to use channel specific region only. This is used to
->>> inform driver to skip global regions which is taken care by hypervisor.
->>> This is expected to be used in the scenario where Linux acts as a
->>> virtual machine (VM). May be the hypervisor mode gives a different
->>> impression here? Sorry, I did not understand what dropping the property
->>> exactly means here.
->> It was imperative. Drop it. Remove it. I provided explanation why.
-> 
-> The driver doesn't know if it is operated in a native config or in the 
-> hypervisor config based on the 'reg' address range alone. So 'vm' entry 
-> with restricted 'reg' range is used to differentiate here for the 
-> hypervisor config. Just adding 'vm' entry won't be enough, the 'reg' 
-> region must be updated as well to have expected behavior. Not sure how 
-> this dependency can be enforced in the schema.
+nothing special, just some boilerplate
 
-That's not a unusual problem, so please come with a solution for your
-entire subarch. We've been discussing similar topic in terms of SCMI
-controlled resources (see talk on Linaro Connect a week ago:
-https://www.kitefor.events/events/linaro-connect-24/submissions/161 I
-don't know where is recording or slides, see also discussions on mailing
-lists about it), which is not that far away from the problem here. Other
-platforms and maybe nvidia had as well changes in IO space for
-virtualized configuration.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (2):
+      dt-bindings: pinctrl: qcom,pmic-gpio: Document PMC8380
+      pinctrl: qcom: spmi: Add PMC8380
 
-Come with unified approach FOR ALL your devices, not only this one
-(that's kind of basic thing we keep repeating... don't solve only one
-your problem), do not abuse the regular property, because as I said:
-reg-names will be provided as well in non-vm case and then your entire
-logic is wrong. The purpose of reg-names is not to tell whether you have
-or have not virtualized environment.
-
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 1 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                      | 1 +
+ 2 files changed, 2 insertions(+)
+---
+base-commit: 8314289a8d50a4e05d8ece1ae0445a3b57bb4d3b
+change-id: 20240522-topic-pmc8380_gpio-e6d30861f862
 
 Best regards,
-Krzysztof
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
