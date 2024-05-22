@@ -1,196 +1,128 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6089637144;
-	Wed, 22 May 2024 04:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0C737144;
+	Wed, 22 May 2024 04:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716352993; cv=none; b=A5ePBtmNO1tvRstYk42X1Z0McGOTDrgGcxhvElKsTims2aW6qIPeBcU+fdFUk65g9M3tcY+L0es2QgB/IpBWpECXj7Tb2q1H2QzmmQGqZJfi4PbYBwo17jJq/q40RhnaNqjfJCbtbk6gyP72sd9vB8oxgtVYFEf9sBezuYy34ck=
+	t=1716353008; cv=none; b=scCt3F0bSNguTjMBWkOdkhTevQv8kvxzf5ZBcIVvwUWsnQxJfYJZMqhnz/zRUx3QUNtjFNbNm6AAQdQ7ioyU4vS+vPmBdFa3J3hmZX3W0VdPgqCysbOVM7SQ8+KpiZDfSZD0PHBTVGYaPfiLtzS0Eq28vOadzxaffImotmuu0NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716352993; c=relaxed/simple;
-	bh=jl24Sv7wbxESitZjVaa+8imt/4LFdBIPK5LZbx4b2fw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ytj2EtysVqOE+FFz193Q/3zUSpuDi1UabytsXFU0GqtZzouqRDDVo0EReBl68lC/4H31K3ttapI+XYLklNHwdvkPxPUNIk0mppC0Ro91NEdl3dreKBKpnoRYSeZzlm7yWnei0G0EBAcnzyc2rmZQ/Hq5BrqP14PckrON+pRIEao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.3] (unknown [95.90.241.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 70C4E61E5FE05;
-	Wed, 22 May 2024 06:42:55 +0200 (CEST)
-Message-ID: <1c194c94-54f1-4dfe-a790-913e3d9529c6@molgen.mpg.de>
-Date: Wed, 22 May 2024 06:42:54 +0200
+	s=arc-20240116; t=1716353008; c=relaxed/simple;
+	bh=rOjGBGJlpqLBibSals7NQDD+aW+xnPnJbgEyujc2IxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IzNx67rXad3Jv5Ck4bUBTywKv4Vwvohu2etq4iPdqyZudOdlrFttMDEE7xI6tDFUJSQ+p0nIismJlsgQBR7SPPgDFIXroMu6DjyVx+izWeOKKtMPYEnFU8QeUUEwpBCGBNLLwSu0ODo+YHUTyGd5SgqdJtUear67K5ZFmxLxKuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T7g07fsQ; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7g07fsQ"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-34dc8d3fbf1so3404566f8f.1;
+        Tue, 21 May 2024 21:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716353004; x=1716957804; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AmHrqywSLIqSjg1vJV1MQvzffoeBek4ngmT0+/XAH2s=;
+        b=T7g07fsQSBG21rtc6TgBz/57zSZ6nVH/6DBlAyiAdgqv51foi8w/zKGjQsEp4JwRWf
+         Epy2E/8tZVpWl+YOhruM4oeXWv+t6yZ9wIL2ge/xaMrHHEu1b/PnHzSZ1zhzMvNdLNMP
+         qOgoEmqO3+eLginj879ldk3tAaiGIGO0vEekuyS9DElAWmAxysKQfh9F50YGkBMfL6Q+
+         RYfrF7ZA90+DyPHBZbF9bBkOjHKoaup9pDBfrFVCeDEsbVJCTZbD3GCjzowvoFb43sb2
+         lHNdRTWSgRDVnsS8VGx+lWDiZYkQGdTlwcpxZ09lCVcSdoB97wWaPkSCqD+0DwE+PbZc
+         OE/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716353004; x=1716957804;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AmHrqywSLIqSjg1vJV1MQvzffoeBek4ngmT0+/XAH2s=;
+        b=mT7blln1H/n6mm27jcqCATNHkX42Dpn5EOxH7SsNhKP00iFrh1BVJozMW4UjNDumym
+         JzB8py6Bbon60MEInbNBgIwOamKa0uGJYUEfCjNEqJCV8KbMMR5l7sLEWxdxD5j6R2mu
+         YZJDFJDhfVLHT8WHhZXrYIff/yKda8NjFHkfBm9lGR/i7fc7Rlh2EwdACDLO/0D18xrs
+         QfOgvXov6smVRtwClKWXokVPioybPjGLxeHMNFKBRQApsQZEcmZUcXjGtl0PT/fwPi9B
+         mHwsoc/eW8p9Tko9iKLdm6rtLNtDKsYZBGEmxGE+mTaLLw2BLvw/DU+nBfBjfLIf5vv1
+         t66Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV5eiKdrYBlX8AXMd6lbwyF4dw+osOOerPwkR24IEFxCIO9p/dwy/xS9sVEHEKlPnKotth++MAVFmGIZl41m7A6CHb6G5x8wvkltRAT
+X-Gm-Message-State: AOJu0YzCS4m4tOfgo1nTEzWe2gFSCv7eGSGn/IJi7TbOL06+AHwFc5jT
+	RHHs7WQ9VqVmjltZZVJVezeeDPOAYlwKh7YluP+rokZUQanapMHdfDAWoA==
+X-Google-Smtp-Source: AGHT+IH9ikW4E4tHEicpzfvYHbvquTNq7PRR5DdZGtiEVgQbOy5637MdDZfAFOGp3f8I34KHrLqW4Q==
+X-Received: by 2002:adf:eeca:0:b0:34d:9e54:11ec with SMTP id ffacd0b85a97d-354d8c73f2cmr490258f8f.5.1716353004206;
+        Tue, 21 May 2024 21:43:24 -0700 (PDT)
+Received: from localhost.localdomain (249.red-88-10-56.dynamicip.rima-tde.net. [88.10.56.249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b89573csm33222744f8f.29.2024.05.21.21.43.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 21:43:23 -0700 (PDT)
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+To: devicetree@vger.kernel.org
+Cc: linux-pci@vger.kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	kw@linux.com,
+	lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	angelogioacchino.delregno@collabora.com,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] dt-bindings: PCI: mediatek,mt7621-pcie: add PCIe host topology ascii graph
+Date: Wed, 22 May 2024 06:43:21 +0200
+Message-Id: <20240522044321.3205160-1-sergio.paracuellos@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] Bluetooth: Apply HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER
- to CYW4373
-To: Nobuaki Tsunashima <nobuaki.tsunashima@infineon.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- Aditya Garg <gargaditya08@live.com>
-References: <20240522081735.469503-1-nobuaki.tsunashima@infineon.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240522081735.469503-1-nobuaki.tsunashima@infineon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Dear Nobuaki,
+MediaTek MT7621 PCIe subsys supports a single Root Complex (RC) with 3 Root
+Ports. Add PCIe host topology ascii graph to the binding for completeness.
 
+Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+---
+ .../bindings/pci/mediatek,mt7621-pcie.yaml    | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Thank you for your patch and addressing the comments. Please note, that 
-the time on the system you sent the patch from is in the future:
+diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+index 6fba42156db6..c41608863d6c 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+@@ -13,6 +13,35 @@ description: |+
+   MediaTek MT7621 PCIe subsys supports a single Root Complex (RC)
+   with 3 Root Ports. Each Root Port supports a Gen1 1-lane Link
+ 
++                          MT7621 PCIe HOST Topology
++
++                                   .-------.
++                                   |       |
++                                   |  CPU  |
++                                   |       |
++                                   '-------'
++                                       |
++                                       |
++                                       |
++                                       v
++                              .------------------.
++                  .-----------|  HOST/PCI Bridge |------------.
++                  |           '------------------'            | Type1
++             BUS0 |                     |                     | Access
++                  v                     v                     v On Bus0
++          .-------------.        .-------------.       .-------------.
++          | VIRTUAL P2P |        | VIRTUAL P2P |       | VIRTUAL P2P |
++          |    BUS0     |        |    BUS0     |       |    BUS0     |
++          |    DEV0     |        |    DEV1     |       |    DEV2     |
++          '-------------'        '-------------'       '-------------'
++    Type0        |          Type0       |         Type0       |
++   Access   BUS1 |         Access   BUS2|        Access   BUS3|
++   On Bus1       v         On Bus2      v        On Bus3      v
++           .----------.           .----------.          .----------.
++           | Device 0 |           | Device 0 |          | Device 0 |
++           |  Func 0  |           |  Func 0  |          |  Func 0  |
++           '----------'           '----------'          '----------'
++
+ allOf:
+   - $ref: /schemas/pci/pci-host-bridge.yaml#
+ 
+-- 
+2.25.1
 
-     Date: Wed, 22 May 2024 17:17:35 +0900
-
-But:
-
-     Received: from smtp9.infineon.com (smtp9.infineon.com [217.10.52.204])
-     	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-     	(No client certificate requested)
-     	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EC328EA;
-     	Wed, 22 May 2024 01:28:45 +0000 (UTC)
-
-Am 22.05.24 um 10:17 schrieb Nobuaki Tsunashima:
-> From: Nobuaki Tsunashima <Nobuaki.Tsunashima@infineon.com>
-
-I forgot to add btbcm in the summary:
-
-Bluetooth: btbcm: …
-
-> CYW4373 ROM FW has an issue that it claims LE_Read_Transmit_Power command
-> as supported in a response of Read_Local_Supported_Command command but
-> rejects the LE_Read_Transmit_Power command with "Unknown HCI Command"
-> status. Due to the issue, Bluetooth driver of 5.15 and later kernel fails
-> to hci up.
-
-As written in the other thread, it’d be great if you bisected the commit.
-
-> Especially in USB i/f case, it would be difficult to download patch FW that
-> includes Its fix unless hci is up.
-
-lowercase: its
-
-Which firmware versions are fixed?
-
-> The patch forces the driver to skip LE_Read_Transmit_Power Command when it
-> detects CYW4373 with ROM FW build.
-
-Maybe add something like:
-
-The driver already contains infrastructure to apply the quirk, but 
-currently it only supports DMI based matching. Add support to match by 
-chip id and baseline, which ….
-
-> Signed-off-by: Nobuaki Tsunashima <Nobuaki.Tsunashima@infineon.com>
-> ---
-> V2 -> V3: Fix a few coding style warnings and change the subject as more specific.
-> V1 -> V2: Fix several coding style warnings.
-> 
->   drivers/bluetooth/btbcm.c | 32 +++++++++++++++++++++++++++++++-
->   drivers/bluetooth/btusb.c |  4 ++++
->   2 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-> index 0a5445ac5e1b..c763e368d6ad 100644
-> --- a/drivers/bluetooth/btbcm.c
-> +++ b/drivers/bluetooth/btbcm.c
-> @@ -437,18 +437,48 @@ static const struct dmi_system_id disable_broken_read_transmit_power[] = {
->   	{ }
->   };
->   
-> +struct bcm_chip_version_table {
-> +	u8	chip_id;
-
-Please use one space. (Please also check the line below.)
-
-> +	u16 baseline;
-
-Add a comment above the struct, what baseline means?
-
-> +};
-> +#define BCM_ROMFW_BASELINE_NUM	0xFFFF
-> +static const struct bcm_chip_version_table disable_broken_read_transmit_power_by_chip_ver[] = {
-> +	{0x87, BCM_ROMFW_BASELINE_NUM}		/* CYW4373/4373E */
-
-Add one space after { and before }?
-
-> +};
-> +static bool btbcm_is_disable_broken_read_tx_power_by_chip_ver(u8 chip_id, u16 baseline)
-> +{
-> +	int i;
-> +	int table_size = ARRAY_SIZE(disable_broken_read_transmit_power_by_chip_ver);
-
-Use size_t?
-
-> +	const struct bcm_chip_version_table *entry =
-> +						&disable_broken_read_transmit_power_by_chip_ver[0];
-> +
-> +	for (i = 0 ; i < table_size ; i++, entry++)	{
-> +		if ((chip_id == entry->chip_id) && (baseline == entry->baseline))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->   static int btbcm_read_info(struct hci_dev *hdev)
->   {
->   	struct sk_buff *skb;
-> +	u8 chip_id;
-> +	u16 baseline;
->   
->   	/* Read Verbose Config Version Info */
->   	skb = btbcm_read_verbose_config(hdev);
->   	if (IS_ERR(skb))
->   		return PTR_ERR(skb);
-> -
-> +	chip_id = skb->data[1];
-> +	baseline = skb->data[3] | (skb->data[4] << 8);
->   	bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
->   	kfree_skb(skb);
->   
-> +	/* Check Chip ID and disable broken Read LE Min/Max Tx Power */
-> +	if (btbcm_is_disable_broken_read_tx_power_by_chip_ver(chip_id, baseline))
-> +		set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
-> +
-
-Commit 801b4c027b44 (Bluetooth: btbcm: disable read tx power for some 
-Macs with the T2 Security chip) added the check in 
-`btbcm_print_controller_features()`? No idea, where the best place is.
-
->   	return 0;
->   }
->   
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index d31edad7a056..52561c8d8828 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -142,6 +142,10 @@ static const struct usb_device_id btusb_table[] = {
->   	{ USB_VENDOR_AND_INTERFACE_INFO(0x04ca, 0xff, 0x01, 0x01),
->   	  .driver_info = BTUSB_BCM_PATCHRAM },
->   
-> +	/* Cypress devices with vendor specific id */
-> +	{ USB_VENDOR_AND_INTERFACE_INFO(0x04b4, 0xff, 0x01, 0x01),
-> +	  .driver_info = BTUSB_BCM_PATCHRAM },
-> +
-
-Order 0x04b4 before 0x04ca?
-
->   	/* Broadcom devices with vendor specific id */
->   	{ USB_VENDOR_AND_INTERFACE_INFO(0x0a5c, 0xff, 0x01, 0x01),
->   	  .driver_info = BTUSB_BCM_PATCHRAM },
-
-
-Kind regards,
-
-Paul
