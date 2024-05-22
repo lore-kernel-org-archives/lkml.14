@@ -1,179 +1,105 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7150A56444;
-	Wed, 22 May 2024 03:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A973B139B;
+	Wed, 22 May 2024 03:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716348496; cv=none; b=sQ7PLtdJ2IPxAO8oj+ZpicgtE/IlhaoB+pOr3nWSMxvx72py+O4fvkKzDooDqDot1b5TDVXXYXTYf5fskDh/cwPbqJbZ//gwaruVClkbO7OWPgt8RrzI3CpEUcP61xZIV4puV4BvmGvMqvEAnxCM+awcwobFR+ceLns/NqJkYwM=
+	t=1716348784; cv=none; b=j9QsirrPrXHNqCAAETOaH9Vi5OFqY56Fz81UvurqchNkI9lXrmeQNGbzqBttE0SvQYFAYFNROTMX+6YMjEerORqsaJWJymu+7vSONlEPO4Yagex+HB70G245PYMRzCUUE2I2PrVNSpyA/rJZ1sx4M4+THmdtrOFgRr2xoCd+QLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716348496; c=relaxed/simple;
-	bh=sKtlRUFYk2M0DBX97vIYY6yH/xEycq2nKAFqOke0pNY=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=FXjzeVcppdub4az9extWzvOoB+ldgOZljBAqcrBIVs2s5E3G0dVgewK+fvLKWH3/9av18ZRHCkOKQ+UaiwBHp9Uh2YTa7RgsbvoNwVohz6ChqaThi/ekdpeaMaFfE3VYGmB8w7JEJod9bSiYj7yEWEMWiSBmJYwjdDPD+ol2ufY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E20011A0E4D;
-	Wed, 22 May 2024 05:28:12 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A31D1A033A;
-	Wed, 22 May 2024 05:28:12 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 8E96F183B72B;
-	Wed, 22 May 2024 11:28:10 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shengjiu.wang@gmail.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 2/2] ASoC: fsl_mqs: Add i.MX95 platform support
-Date: Wed, 22 May 2024 11:08:25 +0800
-Message-Id: <1716347305-18457-3-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1716347305-18457-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1716347305-18457-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1716348784; c=relaxed/simple;
+	bh=LPR/3OUX7k4uodzrLlE9kM1YyY3naFlHqoeE6DgyglE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K9brh0qkIFuYBkUWaqVjssCsRIcCPbRdIps8aQxc79B9VSmfmQTujVuE7DmNVUOpbQN+Wv3Gxs1DyK+5wF8mSBLdGYUXOmdlNmilM/kRhf2mvPkPk89DxmPgA/8k0jr87purruoQ1s3+scZ55ohX/cDdePw3h5EJfXj17atXMrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oWQGm2jU; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oWQGm2jU"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44LJi1pS004574;
+	Wed, 22 May 2024 03:33:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=Wixmg3oAwvlEp7wraIn9B9q1PFisDmfBpVWJ4kNjCUY=;
+ b=oWQGm2jUv4hcNfvHEqyO8tAN5cHPXk4lab33Wlz54xpCYMlqp+ZdhawkRUCOXis8D/cP
+ PE1gffdLQC1lNsY/jlK0sK3mVczHMxVKe2PPW01w5nWlP6sqKzuVQMspioRxMopktiid
+ pvwSryJlUF6FfImZfQS3tm5dhkeBXA+OjzuyivVYJbyKWFNCbj0PIORyMespfjpbuyco
+ WfzArcjfBPuxMvX1HdgCZVnxCEEZir7Cwv/etpH3BkpgxZE19/BDyfbmKogD65+ssXUi
+ Pwe2n4JfJUZi48VD+V5Wz655dD212Rb3S05LN8ix3kZyQy7Xqy1STN6VE7YUenK/Sw7s IQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6kxv6scm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 03:33:01 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44M0XvaK038479;
+	Wed, 22 May 2024 03:33:00 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6jsem896-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 03:33:00 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44M3Txah038463;
+	Wed, 22 May 2024 03:33:00 GMT
+Received: from aakhoje-ol.in.oracle.com (dhcp-10-76-55-136.vpn.oracle.com [10.76.55.136])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3y6jsem88e-1;
+	Wed, 22 May 2024 03:32:59 +0000
+From: Anand Khoje <anand.a.khoje@oracle.com>
+To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: anand.a.khoje@oracle.com, rama.nichanamatlu@oracle.com,
+        manjunath.b.patil@oracle.com
+Subject: [PATCH 0/1] RDMA/mlx5: Release CPU for other processes in mlx5_free_cmd_msg() 
+Date: Wed, 22 May 2024 09:02:55 +0530
+Message-Id: <20240522033256.11960-1-anand.a.khoje@oracle.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0 Content-Type:
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_01,2024-05-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405220024
+X-Proofpoint-GUID: bHqx_4QwdUItVzMTZoVKOLzApzQ3fMxg
+X-Proofpoint-ORIG-GUID: bHqx_4QwdUItVzMTZoVKOLzApzQ3fMxg
 
-There are two MQS instances on the i.MX95 platform.
-The definition of bit positions in the control register are
-different. In order to support these MQS modules, define
-two compatible strings to distinguish them.
+FW pages are allocated and reclaimed through a worker pages_handler().  This
+worker allocates mlx5 mailbox messages to populate meta-data associated with the
+pages being allocated or reclaimed.  During reclaim of pages, after getting the
+meta-data of the pages to reclaim and releasing the pages, the dma pool
+associated with the mailbox message is freed using dma_pool_free(), where it
+tried to find the dma_page of this dma_pool by walking the page_list.  This is a
+slow approach and if the number of pages reclaimed is high, it takes a lot of
+time in execution of one work.  As a result, other critical processes are
+starved of CPU.
 
-Define different soc data according to compatible strings
+This patch checks if time spent in mlx5_free_cmd_msg() is more than 2 msec, it
+yields the CPU for other processes to use.
 
-On i.MX95 one instance in nect-mix is supported by this
-commit, another instance in always-on-mix is not supported,
-which depends on System Manager function readiness.
+In our tests, we were able to allocate around 3.4 million FW pages and tried to
+deallocate all of them at once, this resulted in the worker thread to yield the
+CPU many times.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_mqs.c | 46 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 6 deletions(-)
+May 21 04:39:28 kernel: mlx5_core 0000:17:00.0:
+mlx5_free_cmd_msg:1352:(pid 327407): Spent more than 2 msecs, yielding CPU
+May 21 04:39:28 kernel: mlx5_core 0000:17:00.0:
+mlx5_free_cmd_msg:1352:(pid 327407): Spent more than 2 msecs, yielding CPU
+May 21 04:39:29 kernel: mlx5_core 0000:17:00.0:
+mlx5_free_cmd_msg:1352:(pid 327407): Spent more than 2 msecs, yielding CPU
+May 21 04:39:29 kernel: mlx5_core 0000:17:00.0:
+mlx5_free_cmd_msg:1352:(pid 327407): Spent more than 2 msecs, yielding CPU
 
-diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
-index 60929c36a0e3..c95b84a54dc4 100644
---- a/sound/soc/fsl/fsl_mqs.c
-+++ b/sound/soc/fsl/fsl_mqs.c
-@@ -28,10 +28,16 @@
- #define MQS_CLK_DIV_MASK		(0xFF << 0)
- #define MQS_CLK_DIV_SHIFT		(0)
- 
-+enum reg_type {
-+	TYPE_REG_OWN,  /* module own register space */
-+	TYPE_REG_GPR,  /* register in GPR space */
-+	TYPE_REG_SM,   /* System Manager controls the register */
-+};
-+
- /**
-  * struct fsl_mqs_soc_data - soc specific data
-  *
-- * @use_gpr: control register is in General Purpose Register group
-+ * @type: control register space type
-  * @ctrl_off: control register offset
-  * @en_mask: enable bit mask
-  * @en_shift: enable bit shift
-@@ -43,7 +49,7 @@
-  * @div_shift: clock divider bit shift
-  */
- struct fsl_mqs_soc_data {
--	bool use_gpr;
-+	enum reg_type type;
- 	int  ctrl_off;
- 	int  en_mask;
- 	int  en_shift;
-@@ -200,7 +206,7 @@ static int fsl_mqs_probe(struct platform_device *pdev)
- 	 */
- 	mqs_priv->soc = of_device_get_match_data(&pdev->dev);
- 
--	if (mqs_priv->soc->use_gpr) {
-+	if (mqs_priv->soc->type == TYPE_REG_GPR) {
- 		gpr_np = of_parse_phandle(np, "gpr", 0);
- 		if (!gpr_np) {
- 			dev_err(&pdev->dev, "failed to get gpr node by phandle\n");
-@@ -304,7 +310,7 @@ static const struct dev_pm_ops fsl_mqs_pm_ops = {
- };
- 
- static const struct fsl_mqs_soc_data fsl_mqs_imx8qm_data = {
--	.use_gpr = false,
-+	.type = TYPE_REG_OWN,
- 	.ctrl_off = REG_MQS_CTRL,
- 	.en_mask  = MQS_EN_MASK,
- 	.en_shift = MQS_EN_SHIFT,
-@@ -317,7 +323,7 @@ static const struct fsl_mqs_soc_data fsl_mqs_imx8qm_data = {
- };
- 
- static const struct fsl_mqs_soc_data fsl_mqs_imx6sx_data = {
--	.use_gpr = true,
-+	.type = TYPE_REG_GPR,
- 	.ctrl_off = IOMUXC_GPR2,
- 	.en_mask  = IMX6SX_GPR2_MQS_EN_MASK,
- 	.en_shift = IMX6SX_GPR2_MQS_EN_SHIFT,
-@@ -330,7 +336,7 @@ static const struct fsl_mqs_soc_data fsl_mqs_imx6sx_data = {
- };
- 
- static const struct fsl_mqs_soc_data fsl_mqs_imx93_data = {
--	.use_gpr = true,
-+	.type = TYPE_REG_GPR,
- 	.ctrl_off = 0x20,
- 	.en_mask  = BIT(1),
- 	.en_shift = 1,
-@@ -342,10 +348,38 @@ static const struct fsl_mqs_soc_data fsl_mqs_imx93_data = {
- 	.div_shift = 8,
- };
- 
-+static const struct fsl_mqs_soc_data fsl_mqs_imx95_aon_data = {
-+	.type = TYPE_REG_SM,
-+	.ctrl_off = 0x88,
-+	.en_mask  = BIT(1),
-+	.en_shift = 1,
-+	.rst_mask = BIT(2),
-+	.rst_shift = 2,
-+	.osr_mask = BIT(3),
-+	.osr_shift = 3,
-+	.div_mask = GENMASK(15, 8),
-+	.div_shift = 8,
-+};
-+
-+static const struct fsl_mqs_soc_data fsl_mqs_imx95_netc_data = {
-+	.type = TYPE_REG_GPR,
-+	.ctrl_off = 0x0,
-+	.en_mask  = BIT(2),
-+	.en_shift = 2,
-+	.rst_mask = BIT(3),
-+	.rst_shift = 3,
-+	.osr_mask = BIT(4),
-+	.osr_shift = 4,
-+	.div_mask = GENMASK(16, 9),
-+	.div_shift = 9,
-+};
-+
- static const struct of_device_id fsl_mqs_dt_ids[] = {
- 	{ .compatible = "fsl,imx8qm-mqs", .data = &fsl_mqs_imx8qm_data },
- 	{ .compatible = "fsl,imx6sx-mqs", .data = &fsl_mqs_imx6sx_data },
- 	{ .compatible = "fsl,imx93-mqs", .data = &fsl_mqs_imx93_data },
-+	{ .compatible = "fsl,imx95-aonmix-mqs", .data = &fsl_mqs_imx95_aon_data },
-+	{ .compatible = "fsl,imx95-netcmix-mqs", .data = &fsl_mqs_imx95_netc_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_mqs_dt_ids);
--- 
-2.34.1
+
+Anand Khoje (1): RDMA/mlx5: Release CPU for other processes in
+mlx5_free_cmd_msg()
+
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 7 +++++++ 1 file changed, 7
+insertions(+)
+
+-- 1.8.3.1
 
