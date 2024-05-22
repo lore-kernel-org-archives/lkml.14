@@ -1,60 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2791B145B18;
-	Wed, 22 May 2024 18:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCCF8003B;
+	Wed, 22 May 2024 18:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716401107; cv=none; b=e/Ufl15w8tQWA1KSrcHE+vGx6EykzuYmj4UldDw0RTbiopAl3njNpmdvWv1Pjc8HEWgTBwimD4aY5THiH9Y2aI3twoSCREDzGzpwGypaMYP8eRqe5lbA7NNa6HRv9T/wigqyf2bQIZm+WBhMSAMmkVev80ndC0O/7yKZxeKEF14=
+	t=1716401113; cv=none; b=ZA629MMJrKsfdI/cAPjykl+URUjZwS66RVYSQRuCCK/X8hVaqpVkg7UJ7Q+uTolTUOKm+vt3zrZvP3yFdoDQVznRk4+yG+c6kwTqxIVCw95ZSHfeXwXiMEPau/ErGnZVirj4bgvSjL0w/OYjGA2TbCnUw2zvk4WPsBeWyvezpMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716401107; c=relaxed/simple;
-	bh=FM8Nun/+WZkrxgrM1AclrLTVTXF8t/mYHvLX/RNYsO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dlLyD7njd409mD1NKLwJNNm24EH3l3lX4f+4PWOGLpo3GvfetlYNZdIVRLHkCIaFVAlUCB/laV9W6WWMCCAzfx5naxS+D/DP7Jl7d1o72C+eZUzKqBlSoS/DueUTpDP+IvgETa4Mk/uyVJt6jUIutQFizvImpIC1Y6PfQKuibx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C60EC32781;
-	Wed, 22 May 2024 18:05:06 +0000 (UTC)
-Date: Wed, 22 May 2024 14:05:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH] tracefs: Remove unneeded buggy tracefs iput callback
-Message-ID: <20240522140548.40dbd49b@gandalf.local.home>
-In-Reply-To: <20240522124504.28982867@gandalf.local.home>
-References: <20240522124504.28982867@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1716401113; c=relaxed/simple;
+	bh=CeI2EzAoofDaKVhhYpNbdJogVjReiPBySX4uY/BCtN8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oUCFQtyF/tNcOJa0poHcJO+MQa76x/Ehez3DbXBpot5I5zaQCaiuQwHdAYEe7Of6MOUmUCt2xfYkTHyeJ2yNvGuL2iui9nseZyWaQ09rSx2NrV2wwu10ZUDLzV7EJJJ+gHTnnHSxOrRTGSpxxk0CnIGW2EEaJIxLSGrqa9n1/FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpjtqO6x; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpjtqO6x"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DA179C2BBFC;
+	Wed, 22 May 2024 18:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716401112;
+	bh=CeI2EzAoofDaKVhhYpNbdJogVjReiPBySX4uY/BCtN8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dpjtqO6x6XYXFWJvUnrmxuXu+AANuWcCt10senHjUYhZ5CLS7NHXI9KViGXJCy66i
+	 SeBj5PHys5BTwP7k3isqPwPCur9TpMgUuYphI/pl0O0/9JbbamJPH2AqLCyv0Oa81o
+	 Pd2VsYyF5YAPI3LTnWSho8UQDDiJQtOP6a3tRNkvji7U6XFo16FdSFXimmEj/IgnYC
+	 ynG/lG9npfodMEzusLPKXqhsHBTvriKq77J8pf6PJoTqSGtyzZ2cs6k2HUlvcrOcoU
+	 +t2chzxRsNLaK/h13eN8mW7fM0tlpfr/D4Z2oY0ZRVcFH9sp99ZRXWwdUQFcrGVXbs
+	 zbtl9k0UI15iQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D0FE1C43619;
+	Wed, 22 May 2024 18:05:12 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240522140504.4071402-1-chenhuacai@loongson.cn>
+References: <20240522140504.4071402-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20240522140504.4071402-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
+X-PR-Tracked-Commit-Id: 9cc1df421f00453afdcaf78b105d8e7fd03cce78
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4f05e82003d1c20da29fa593420b8d92e2c8d4e6
+Message-Id: <171640111284.25247.7584430807190924004.pr-tracker-bot@kernel.org>
+Date: Wed, 22 May 2024 18:05:12 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 22 May 2024 12:45:04 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The pull request you sent on Wed, 22 May 2024 22:05:04 +0800:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The iput callback was added because the remount could call into the
-> eventfs code and touch the ei->entry_attrs array, which could have been
-> freed when an eventfs directory is freed (via a synthetic event). But the
-> entry_attrs was freed incorrectly and since been fixed to be freed after
-> the last reference of the ei is done.
-> 
-> The iput clears the TRACEFS_EVENT_INODE flag of the tracefs_inode
-> preventing it from calling the eventfs_remount() function. But the iput
-> can be called after the last reference to the inode is done but the
-> eventfs_inode still exists, causing the eventfs_remount() not to be called
-> on an tracefs_inode when it should be.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
 
-Testing this more, I found that the iput is still needed, as the deletion
-of the eventfs inodes can happen before the inode is released.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4f05e82003d1c20da29fa593420b8d92e2c8d4e6
 
-Will produce a v2 that handles this properly.
+Thank you!
 
--- Steve
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
