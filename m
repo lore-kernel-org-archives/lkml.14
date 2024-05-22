@@ -1,344 +1,137 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BB5211C;
-	Wed, 22 May 2024 00:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242B917F3
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 00:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716337117; cv=none; b=IxqPC7nS5n+RRo7AJm0Bb0uF7rT1Z8cYZPouDIinr0tdNbf8qCp4XtWMkj3VafEfH1vfQ3PgLGEvx9Y2Z12PdF9LuEYBXIvNemKwj+d2WLek5WAn8ij2SlxHBxbuGxoDbRAGWIg1IHgXg3jS5hpaj5rtZeA0JAUwmtkhvScKwX4=
+	t=1716337767; cv=none; b=Xv63WlYvclYtmlntPfY6fccaQFn7VS5KLaz8fA9lJ521F1vSLrj+0XIXz5zTPpy39P53pMV40MpPN6CL0nJgdTRx+LKwQ6p8S9CtkOgtNMzEg6wAMW1HJsMAec5QQzsbJ8aYeHrekKWejNlHTpHuO1DPvh8ULwpZ2jlNQIDkQIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716337117; c=relaxed/simple;
-	bh=GCfPxjS62MPes7bE8n3K0J9OkyvqPqbTqm2qro2rvgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XybVSNoxDW7OGEXbxPkB+9WI1sQSAZJ8rrvx0lzwMFtg97QnPA+tkNxaqLq4vMDolgMeUXFb5o6ZCnvmBOFmTM2qnHUd653SJDHIo/tOCpkBp7sTJJsbIfniUcSRu+JgxSWEdABQ7RhMvMFOdcdB8bb2eG6qQNXcrGOn7btQHSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SiQN1wIw; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1716337767; c=relaxed/simple;
+	bh=065QhzrCX5JnH9ZKTv2IFHSh5FtfZPJhHSRgyW+FA9U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=AKe//4lGAbgompDgh/eTRCLHGqPWpurXcskeELsn/Vu/XByui90fxV9tj124qNX2YnWytI3NvoOi7V3EWXtGoLTk84bpKcjADKm/K9/jZjbxm7srNjBDlKuq1gR49MZNMUZIwD/uZz7w4fXsuxTwg/Av3af0XE5kPd+Nd+JgLRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4mOiNu4K; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SiQN1wIw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=bOPL78Q7e2BzOopov0hWyld/zbX4Tg07zjpNgZP7RQ8=; b=SiQN1wIw77G/t5/5EU4P5EcRv0
-	N7ywgRxUkrvIQte0OUiJZVyJzCS4OufGUXuG6DeUdNTmHN3jBqToxm9wL6FACuhhxfd/XVhZeX2Xf
-	nGonnSALLAiEXqETKWs4+9jtgbfRPi9QISukiELnlOFJsd6VFKFz/XRIGOUW8q5vyEULuhT69BUAs
-	n00Dnto6WLyakPsG5ygULI+HWIA3UijXkoFZZPmfZSzLI00ZImiGBLkNl5xGpjkm51NjttzAS85Dc
-	oNpIN7+fa2PYcrG+vHniKVpIF4ihJIp2GVMtWmxOGEvkMimxyH5bGLymMp5Xd3JhHEceSO+PG9z1Z
-	ZorO6T7w==;
-Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9ZgS-0000000081K-3LCC;
-	Wed, 22 May 2024 00:18:20 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9ZgS-00000002b5B-1tsO;
-	Wed, 22 May 2024 01:18:20 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paul Durrant <paul@xen.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jalliste@amazon.co.uk,
-	sveith@amazon.de,
-	zide.chen@intel.com,
-	Dongli Zhang <dongli.zhang@oracle.com>,
-	Chenyi Qiang <chenyi.qiang@intel.com>
-Subject: [RFC PATCH v3 15/21] KVM: x86: Allow KVM master clock mode when TSCs are offset from each other
-Date: Wed, 22 May 2024 01:17:10 +0100
-Message-ID: <20240522001817.619072-16-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240522001817.619072-1-dwmw2@infradead.org>
-References: <20240522001817.619072-1-dwmw2@infradead.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4mOiNu4K"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-622ccd54631so182989117b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 17:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716337765; x=1716942565; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bsmUPMzcjEYNnjrV6jC+TNo24OkPNWzkgU8xknZy10s=;
+        b=4mOiNu4Kqjfq2oql5wAyt2FDB5CNt9/bKO6987/RdVX7wHqcXDc3kUmEv0AooIqrbd
+         0I/kArKwOC2tSUfMBAH3JYuZX+WGIo9aPlohw4weFlbQIztOF1A0rRaWg1aUyLzwj6f5
+         k0bZm7nqmkMoMVdnKBBQm+PviYe7HTNlfYyZfWHBzzJ/yeS07ZquiFJVj0ZwIE2kPeko
+         DPaCJWtxD4UWcpzO1Yy6VdMM+jSKMnHg+37aHOJYTaTNBkNjg+mXy+loKfmMAV3I8azp
+         hq9QoqgO+5aEnBQl2JsLb5MlB3AZIejv3O1ppz5WA0aRUc27kVSOrmPzHzndWZNS/4gm
+         Awxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716337765; x=1716942565;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bsmUPMzcjEYNnjrV6jC+TNo24OkPNWzkgU8xknZy10s=;
+        b=sx4MF8tDJiDzmk8n45BPYq5lplIKAb5D5nYRLzltl27oUevpFbJEjqm9EScQQHPjWU
+         iYAwXSdF5Q5MrtVPaiB4jOKRUBixkz/bQPeWf/jkcYu9QoUHY7TehZrCjiq5VOlJxHHf
+         lPPDH8oFyYKkDOofHVPUECVy6wfUeLAtKB4sMxpJG/0er6Tl9sbcMSwefIJZixE2SNfn
+         VOBf0LM0DuJzlneFQhAaFQsn49naeTWuxWax5zrHfDloAYJ1H+XmZB5JUpRy/6LPwhGG
+         zTeWZhjC+zfyxAaGNhGJbfMhB14t5FagY+DM8C34Us4aPmO23rapzhGdm3M4X1AJP8Un
+         +Fjw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+3MNw/bwN4RzQ9LLSY7YHWloVkY6wGWirWn3GIUlT0zgTg3pmFhZ+oNV7x4cKdfaLL5bexF5l4hPqmFwoH/fqixOK2vukzuKXUpkO
+X-Gm-Message-State: AOJu0YxB97R9M2v6EysYR0ub3sh0I/daoJ93Jpq8573MCYAUH2e+lX+2
+	WIin4LngbC6ZRJxOdMDVCrRFMATeU3dsVc7713ZYbRZEnGLOvgOxAChF6jW3K28YHtSyYxWllFr
+	zAQ==
+X-Google-Smtp-Source: AGHT+IEZipaeLScBQ/yOVEF8019w+MhUQ4ANsEg/GlvCWrMAuAj/zYEgGqBNu9cWSRQU67UME9vy9poNbb8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:cad6:0:b0:61a:dcd0:5a61 with SMTP id
+ 00721157ae682-627e48a40camr1499797b3.7.1716337765200; Tue, 21 May 2024
+ 17:29:25 -0700 (PDT)
+Date: Tue, 21 May 2024 17:29:23 -0700
+In-Reply-To: <CABgObfaE+M5QuTfAZ01OjeB87vGmjRgDUH=rnNX8FHzc7t1Oag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Mime-Version: 1.0
+References: <20240518000430.1118488-1-seanjc@google.com> <20240518000430.1118488-10-seanjc@google.com>
+ <CABgObfYo3jR7b4ZkkuwKWbon-xAAn+Lvfux7ifQUXpDWJds1hg@mail.gmail.com>
+ <ZkzldN0SwEhstwEB@google.com> <CABgObfaE+M5QuTfAZ01OjeB87vGmjRgDUH=rnNX8FHzc7t1Oag@mail.gmail.com>
+Message-ID: <Zk08Yx-GCBqsIMcL@google.com>
+Subject: Re: [PATCH 9/9] KVM: x86: Disable KVM_INTEL_PROVE_VE by default
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+On Tue, May 21, 2024, Paolo Bonzini wrote:
+> On Tue, May 21, 2024 at 8:18=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> > > -          This should never be enabled in a production environment.
+> > > +          Note that #VE trapping appears to be buggy on some CPUs.
+> >
+> > I see where you're coming from, but I don't think "trapping" is much be=
+tter,
+> > e.g. it suggests there's something broken with the interception of #VEs=
+.  Ah,
+> > the entire help text is weird.
+>=20
+> Yeah, I didn't want to say #VE is broken altogether -
 
-There is no reason why the KVM clock cannot be in masterclock mode when
-the TSCs are not in sync, as long as they are at the same *frequency*.
+Ah, yeah, good call.  The #VE isn't broken per se, just spurious/unexpected=
+.
 
-Running at a different frequency would lead to a systemic skew between
-the clock(s) as observed by different vCPUs due to arithmetic precision
-in the scaling. So that should indeed force the clock to be based on the
-host's CLOCK_MONOTONIC_RAW instead of being in masterclock mode where it
-is defined by the (or 'a') guest TSC.
+> interception is where we saw issues,
 
-But when the vCPUs merely have a different TSC *offset*, that's not a
-problem. The offset is applied to that vCPU's kvmclock->tsc_timestamp
-field, and it all comes out in the wash.
+It's not an issue with interception, disabling #VE intercepts results in th=
+e #VE
+being delivered to the guest.
 
-So, remove ka->nr_vcpus_matched_tsc and replace it with a new field
-ka->all_vcpus_matched_tsc which is not only changed to a boolean, but
-also now tracks that the *frequency* matches, not the precise offset.
+Test suite: ept_access_test_not_present
+PTE[4] @ 109fff8 =3D 9fed0007
+PTE[3] @ 9fed0ff0 =3D 9fed1007
+PTE[2] @ 9fed1000 =3D 9fed2007
+VA PTE @ 9fed2000 =3D 8000000007
+Created EPT @ 9feca008 =3D 11d2007
+Created EPT @ 11d2000 =3D 11d3007
+Created EPT @ 11d3000 =3D 11d4007
+L1 hva =3D 40000000, hpa =3D 40000000, L2 gva =3D ffffffff80000000, gpa =3D=
+ 8000000000
+Unhandled exception 8 #DF at ip 0000000000410d39
+error_code=3D0000      rflags=3D00010097      cs=3D00000008
+rax=3Dffffffff80000000 rcx=3D0000000000000000 rdx=3D0000000000000000 rbx=3D=
+0000000000000000
+rbp=3D000000009fec6fe0 rsi=3D0000000000000000 rdi=3D0000000000000000
+ r8=3D0000000000000000  r9=3D0000000000000000 r10=3D0000000000000000 r11=3D=
+0000000000000000
+r12=3Dffffffff80000008 r13=3D0000000000000000 r14=3D0000000000000000 r15=3D=
+0000000000000000
+cr0=3D0000000080010031 cr2=3D0000000000000000 cr3=3D000000000109f000 cr4=3D=
+0000000000002020
+cr8=3D0000000000000000
+	STACK: @410d39 40144a 4002dd
 
-Using a *count* was always racy because a new vCPU could be being
-created *while* kvm_track_tsc_matching() was running and comparing with
-kvm->online_vcpus. That variable is only atomic with respect to itself.
-In particular, kvm_arch_vcpu_create() runs before kvm->online_vcpus is
-incremented for the new vCPU, and kvm_arch_vcpu_postcreate() runs later.
+> and #VE is used in production as far as I know (not just by TDX; at least=
+ Xen
+> and maybe Hyper-V use it for anti-malware purposes?).
 
-Repurpose kvm_track_tsc_matching() to be called from kvm_set_tsc_khz(),
-and kill the cur_tsc_generation/last_tsc_generation fields which tracked
-the precise TSC matching.
+Hmm, maybe a spurious #VE is benign?  Or it really is limited to A/D bits b=
+eing
+disabled?  Not that us speculating is going to change anything :-)
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/include/asm/kvm_host.h |   6 +-
- arch/x86/kvm/x86.c              | 130 +++++++++++++++++---------------
- 2 files changed, 71 insertions(+), 65 deletions(-)
+> Maybe "Note: there appear to be bugs in some CPUs that will trigger
+> the WARN, in particular with eptad=3D0 and/or nested virtualization"
+> covers all bases.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 7d06f389a607..52dbb2d7690b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -906,7 +906,6 @@ struct kvm_vcpu_arch {
- 	u64 tsc_offset_adjustment;
- 	u64 this_tsc_nsec;
- 	u64 this_tsc_write;
--	u64 this_tsc_generation;
- 	bool tsc_catchup;
- 	bool tsc_always_catchup;
- 	s8 virtual_tsc_shift;
-@@ -1354,11 +1353,10 @@ struct kvm_arch {
- 	u32 last_tsc_khz;
- 	u64 last_tsc_offset;
- 	u64 last_tsc_scaling_ratio;
--	u64 cur_tsc_generation;
--	int nr_vcpus_matched_tsc;
-+	bool all_vcpus_matched_tsc;
- 
--	u32 default_tsc_khz;
- 	bool user_set_tsc;
-+	u32 default_tsc_khz;
- 
- 	seqcount_raw_spinlock_t pvclock_sc;
- 	bool use_master_clock;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ab5d55071253..e21b8c075bf6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2493,40 +2493,6 @@ static int set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz, bool scale)
- 	return 0;
- }
- 
--static int kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
--{
--	u32 thresh_lo, thresh_hi;
--	int use_scaling = 0;
--
--	/* tsc_khz can be zero if TSC calibration fails */
--	if (user_tsc_khz == 0) {
--		/* set tsc_scaling_ratio to a safe value */
--		kvm_vcpu_write_tsc_multiplier(vcpu, kvm_caps.default_tsc_scaling_ratio);
--		return -1;
--	}
--
--	/* Compute a scale to convert nanoseconds in TSC cycles */
--	kvm_get_time_scale(user_tsc_khz * 1000LL, NSEC_PER_SEC,
--			   &vcpu->arch.virtual_tsc_shift,
--			   &vcpu->arch.virtual_tsc_mult);
--	vcpu->arch.virtual_tsc_khz = user_tsc_khz;
--
--	/*
--	 * Compute the variation in TSC rate which is acceptable
--	 * within the range of tolerance and decide if the
--	 * rate being applied is within that bounds of the hardware
--	 * rate.  If so, no scaling or compensation need be done.
--	 */
--	thresh_lo = adjust_tsc_khz(tsc_khz, -tsc_tolerance_ppm);
--	thresh_hi = adjust_tsc_khz(tsc_khz, tsc_tolerance_ppm);
--	if (user_tsc_khz < thresh_lo || user_tsc_khz > thresh_hi) {
--		pr_debug("requested TSC rate %u falls outside tolerance [%u,%u]\n",
--			 user_tsc_khz, thresh_lo, thresh_hi);
--		use_scaling = 1;
--	}
--	return set_tsc_khz(vcpu, user_tsc_khz, use_scaling);
--}
--
- static u64 compute_guest_tsc(struct kvm_vcpu *vcpu, s64 kernel_ns)
- {
- 	s64 delta = kernel_ns - vcpu->arch.this_tsc_nsec;
-@@ -2557,14 +2523,34 @@ static void kvm_track_tsc_matching(struct kvm_vcpu *vcpu)
- #ifdef CONFIG_X86_64
- 	struct kvm_arch *ka = &vcpu->kvm->arch;
- 	struct pvclock_gtod_data *gtod = &pvclock_gtod_data;
-+	struct kvm_vcpu *v;
-+	unsigned long i;
-+	bool matched = true;
-+
-+	lockdep_assert_held(&vcpu->kvm->arch.tsc_write_lock);
-+
-+	/*
-+	 * When called via kvm_arch_vcpu_create() for a new vCPU, the count
-+	 * in kvm->online_vcpus will not yet have been incremented and the
-+	 * kvm_for_each_vcpu() loop will not iterate over 'vcpu'.
-+	 *
-+	 * The right thing still happens in that case, because a match will
-+	 * be found only if the new vCPU's TSC is at the same rate as *all*
-+	 * the existing vCPUs' TSCs.
-+	 */
-+	kvm_for_each_vcpu(i, v, vcpu->kvm) {
-+		if (v->arch.virtual_tsc_khz != vcpu->arch.virtual_tsc_khz) {
-+			matched = false;
-+			break;
-+		}
-+	}
-+	ka->all_vcpus_matched_tsc = matched;
- 
- 	/*
- 	 * To use the masterclock, the host clocksource must be based on TSC
--	 * and all vCPUs must have matching TSCs.  Note, the count for matching
--	 * vCPUs doesn't include the reference vCPU, hence "+1".
-+	 * and all vCPUs must have matching TSC frequencies.
- 	 */
--	bool use_master_clock = (ka->nr_vcpus_matched_tsc + 1 ==
--				 atomic_read(&vcpu->kvm->online_vcpus)) &&
-+	bool use_master_clock = ka->all_vcpus_matched_tsc &&
- 				gtod_is_based_on_tsc(gtod->clock.vclock_mode);
- 
- 	/*
-@@ -2574,12 +2560,51 @@ static void kvm_track_tsc_matching(struct kvm_vcpu *vcpu)
- 	if ((ka->use_master_clock != use_master_clock))
- 		kvm_make_request(KVM_REQ_MASTERCLOCK_UPDATE, vcpu);
- 
--	trace_kvm_track_tsc(vcpu->vcpu_id, ka->nr_vcpus_matched_tsc,
-+	trace_kvm_track_tsc(vcpu->vcpu_id, ka->all_vcpus_matched_tsc,
- 			    atomic_read(&vcpu->kvm->online_vcpus),
- 		            ka->use_master_clock, gtod->clock.vclock_mode);
- #endif
- }
- 
-+static int kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
-+{
-+	u32 thresh_lo, thresh_hi;
-+	int use_scaling = 0;
-+
-+	/* tsc_khz can be zero if TSC calibration fails */
-+	if (user_tsc_khz == 0) {
-+		/* set tsc_scaling_ratio to a safe value */
-+		kvm_vcpu_write_tsc_multiplier(vcpu, kvm_caps.default_tsc_scaling_ratio);
-+		return -1;
-+	}
-+
-+	/* Compute a scale to convert nanoseconds in TSC cycles */
-+	kvm_get_time_scale(user_tsc_khz * 1000LL, NSEC_PER_SEC,
-+			   &vcpu->arch.virtual_tsc_shift,
-+			   &vcpu->arch.virtual_tsc_mult);
-+
-+	raw_spin_lock_irq(&vcpu->kvm->arch.tsc_write_lock);
-+	vcpu->arch.virtual_tsc_khz = user_tsc_khz;
-+	kvm_track_tsc_matching(vcpu);
-+	raw_spin_unlock_irq(&vcpu->kvm->arch.tsc_write_lock);
-+
-+	/*
-+	 * Compute the variation in TSC rate which is acceptable
-+	 * within the range of tolerance and decide if the
-+	 * rate being applied is within that bounds of the hardware
-+	 * rate.  If so, no scaling or compensation need be done.
-+	 */
-+	thresh_lo = adjust_tsc_khz(tsc_khz, -tsc_tolerance_ppm);
-+	thresh_hi = adjust_tsc_khz(tsc_khz, tsc_tolerance_ppm);
-+	if (user_tsc_khz < thresh_lo || user_tsc_khz > thresh_hi) {
-+		pr_debug("requested TSC rate %u falls outside tolerance [%u,%u]\n",
-+			 user_tsc_khz, thresh_lo, thresh_hi);
-+		use_scaling = 1;
-+	}
-+	return set_tsc_khz(vcpu, user_tsc_khz, use_scaling);
-+}
-+
-+
- /*
-  * Multiply tsc by a fixed point number represented by ratio.
-  *
-@@ -2725,29 +2750,13 @@ static void __kvm_synchronize_tsc(struct kvm_vcpu *vcpu, u64 offset, u64 tsc,
- 	kvm_vcpu_write_tsc_offset(vcpu, offset);
- 
- 	if (!matched) {
--		/*
--		 * We split periods of matched TSC writes into generations.
--		 * For each generation, we track the original measured
--		 * nanosecond time, offset, and write, so if TSCs are in
--		 * sync, we can match exact offset, and if not, we can match
--		 * exact software computation in compute_guest_tsc()
--		 *
--		 * These values are tracked in kvm->arch.cur_xxx variables.
--		 */
- 		kvm->arch.last_tsc_nsec = ns;
- 		kvm->arch.last_tsc_write = tsc;
--		kvm->arch.cur_tsc_generation++;
--		kvm->arch.nr_vcpus_matched_tsc = 0;
--	} else if (vcpu->arch.this_tsc_generation != kvm->arch.cur_tsc_generation) {
--		kvm->arch.nr_vcpus_matched_tsc++;
- 	}
- 
--	/* Keep track of which generation this VCPU has synchronized to */
--	vcpu->arch.this_tsc_generation = kvm->arch.cur_tsc_generation;
-+	/* Keep track of the point this VCPU has synchronized to */
- 	vcpu->arch.this_tsc_nsec = kvm->arch.last_tsc_nsec;
- 	vcpu->arch.this_tsc_write = kvm->arch.last_tsc_write;
--
--	kvm_track_tsc_matching(vcpu);
- }
- 
- static void kvm_synchronize_tsc(struct kvm_vcpu *vcpu, u64 *user_value)
-@@ -3074,11 +3083,9 @@ static void pvclock_update_vm_gtod_copy(struct kvm *kvm)
- 	struct kvm_arch *ka = &kvm->arch;
- 	uint64_t last_tsc_hz;
- 	int vclock_mode;
--	bool host_tsc_clocksource, vcpus_matched;
-+	bool host_tsc_clocksource;
- 
- 	lockdep_assert_held(&kvm->arch.tsc_write_lock);
--	vcpus_matched = (ka->nr_vcpus_matched_tsc + 1 ==
--			atomic_read(&kvm->online_vcpus));
- 
- 	/*
- 	 * If the host uses TSC clock, then passthrough TSC as stable
-@@ -3088,7 +3095,8 @@ static void pvclock_update_vm_gtod_copy(struct kvm *kvm)
- 					&ka->master_kernel_ns,
- 					&ka->master_cycle_now);
- 
--	ka->use_master_clock = host_tsc_clocksource && vcpus_matched
-+	ka->use_master_clock = host_tsc_clocksource
-+				&& ka->all_vcpus_matched_tsc
- 				&& !ka->backwards_tsc_observed
- 				&& !ka->boot_vcpu_runs_old_kvmclock;
- 
-@@ -3126,7 +3134,7 @@ static void pvclock_update_vm_gtod_copy(struct kvm *kvm)
- 
- 	vclock_mode = pvclock_gtod_data.clock.vclock_mode;
- 	trace_kvm_update_master_clock(ka->use_master_clock, vclock_mode,
--					vcpus_matched);
-+					ka->all_vcpus_matched_tsc);
- #endif
- }
- 
--- 
-2.44.0
+Works for me.  Maybe tweak it slightly to explain why the WARN is triggered=
+?
 
+  Note, some CPUs appear to generate spurious EPT Violations #VEs that trig=
+ger
+  KVM's WARN, in particular with eptad=3D0 and/or nested virtualization.
