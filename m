@@ -1,158 +1,191 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615C91422AE
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B906D76048
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716399323; cv=none; b=ggfh/YowLQkIyaVzPfNGuSEf1HxOsAJaQYKQQpSSUb8TkYMuf0FVTsN2ZgFmU+pVonKBRwggMgmPDdjAyMqKApb9werxGE9wrNgk4k/mdKrb0kHuNmIVoa5WxzvU9/59QgkvlZmtLfjMZe+7Gv5vnJiKkaE7NUuORDKelciLEZY=
+	t=1716399392; cv=none; b=dJlAFN2uvZtCRf07icOTotY0F+42WOuHmOb5+fB4656Gl0qkPEIyfa2BeGdys12yOko0XQgicNR78RCZOfSYF9jsPWy63wkgSYzITh0yGPQx+S7PpmUfmvmWWUakyaLk9Qu2Epk4e+5OymFlmgPwi/It2LAibhLSkjvcuBW07Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716399323; c=relaxed/simple;
-	bh=h4xDjoVBbGCwsS9xKPDSs0gCw1+IXJwG83x1dxLD/vE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNMo4hDKQHORzql0eFbZQP5XwGAUVw61GDpoZGl0JLfdokho5VO5OQcEBZERlGpA5ShsfRitbBOCxJ0Xg6s/fKPW+URGzsksi7yON6tNgHxl4uUG5H+qH3KkeXA8Lx3hHz9DQtcZbEDL3NmEPOBCn+v7qKQyXeMpYwchjrqmD5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=DAsC82GC; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1716399392; c=relaxed/simple;
+	bh=fuUqSxmunHH1O6NZ9IKpyd6lGt57Efd5eP0D1Dwu0bM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J8tEkCBZr0NU6FFfPbiJAlp2cLPK0X5nL5BSb8SeZaOcsyYp6mMNIf5yY6v/kuPnzb41iKOBfFh6evSfQ0satSgDcfRVB5TKTZ2kqMw39yQ7mDvwVGo13BOtdwAI72cv49i8RjhlSGT2Cq0VilAGan6H5RjO/xRghqZ6AbJTz2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Th+jRflB; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="DAsC82GC"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f6911d16b4so1900720b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:35:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Th+jRflB"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e52181c228so67050421fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1716399322; x=1717004122; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jtcwHXQhuywjWtHL8fvX3LFZZ/ytDiic4eCWATEojeU=;
-        b=DAsC82GCCi/9D+bWWykzRIg8kz1HH1AccNbltetZKDu2pJ+CJHlGbO7mm8hxJbP5bZ
-         AZHKm6y+UGpt+sCXnLKMAjkeTg3O2JZveMZJQY9GmMFzHjZ7ahOvFOEr9e7rTy86wqgs
-         Qwhpo8ryAuSdGCNMU7TRKJVI+VinDwA1CElmZOD26NxLQ22a6PWV0TLP1jdv7YGzsMKM
-         HShunNEKq4FD+t/LaccNSLEQra0YDuwDXndEVu4tUs0qK5CSfH29xf2gOtNwBlxshyaH
-         rfCUWuZLdfVgWGoLep1iTJ4psN7PkF6mjnixxg4fKpelWHJsfACTiHEdr6TXyIyfKxo9
-         czEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716399322; x=1717004122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1716399389; x=1717004189; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jtcwHXQhuywjWtHL8fvX3LFZZ/ytDiic4eCWATEojeU=;
-        b=Qy0hAB1QchZgHplCzuykk+6Sd2uAuI5I6G3vKQ8zasO9WnCnrcl+9fplvuc91tf2YI
-         tagQUhGTSQZJyNMtG8lqR1Jm0X957B2UgT+Fl+1fyXilbDjKbBUONRz3HG0e13HnhVix
-         IbNwPOPqd7dwV7kvH/yFpG8ziYJKqd8dFlRu1hSprtTnUhRlIfncelGsshIMoOs64DUo
-         +xWhcZHomVE/vZL9o9CKFw026CGtE2YGxaxLq90etRR9zGiYQJMYg7JOxl9yfzTq9qB5
-         81tv1kaTLJB8uMABm/eS2FOH/hm8bfmNeGqLmFNA+VQ4WzEhAjTiUM0vrLxSwNOVsXty
-         eC1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWEXKzs+94YfSIo4niLin+cxWTvZQeZAjl+dsKok7SaQJaH7Ddla0kh/yUNM2+C3YycGYeJJszj7nZ5yRaUmdCuEjEMwdacjUoHpvFi
-X-Gm-Message-State: AOJu0YxhsKfolV55kJy56eP1mGqWseKO3OiJ0y8eHwWzRu793QLyLoBv
-	bcwXc8ZK3iVEgm5SzSZZHGctNhOs5YKfahFVej5E6QyudAajiOIOSYaGa2OYpoU=
-X-Google-Smtp-Source: AGHT+IFnVExZ9w4FLsmZMki4aPDFIr85cfle6enyYjYsVAi4+pfoOCqX9NTQeS826YOJ4cg7meMOkA==
-X-Received: by 2002:a05:6a00:3cc7:b0:6f3:ecdc:220e with SMTP id d2e1a72fcca58-6f6d617a507mr3058370b3a.24.1716399321714;
-        Wed, 22 May 2024 10:35:21 -0700 (PDT)
-Received: from sunil-laptop ([106.51.188.31])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a9d976sm22673408b3a.89.2024.05.22.10.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 10:35:21 -0700 (PDT)
-Date: Wed, 22 May 2024 23:05:03 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Haibo Xu <haibo1.xu@intel.com>
-Cc: arnd@arndb.de, xiaobo55x@gmail.com, ajones@ventanamicro.com,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Guo Ren <guoren@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Zong Li <zong.li@sifive.com>,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
-	Chen Jiahao <chenjiahao16@huawei.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	James Morse <james.morse@arm.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Evan Green <evan@rivosinc.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ard Biesheuvel <ardb@kernel.org>, Tony Luck <tony.luck@intel.com>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v3 5/6] ACPI: NUMA: change the ACPI_NUMA to a hidden
- option
-Message-ID: <Zk4sxy4a5gy6ZfdJ@sunil-laptop>
-References: <cover.1713778236.git.haibo1.xu@intel.com>
- <5c3a005a67096010cf3c465f8e3362651763fe3b.1713778236.git.haibo1.xu@intel.com>
+        bh=+9AXmTCQB3YD9jnJ9PL31F6x/Rz3QbOUnFEu7HedaMM=;
+        b=Th+jRflBJF92aPy04+uYiS5UOBXMcGCE98/NWDn391WjRDzvnh26KOZTvUDH5PCbb3
+         pEZlamJv0FS2uQls97YCYp7v3lINE1CRYRza8srrRK3jDpv+E2f8NDm/bhp/sDt2khwi
+         zc9fxq3LOoaVXyegtDydoOPSjsoyu9pOLS0ak=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716399389; x=1717004189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+9AXmTCQB3YD9jnJ9PL31F6x/Rz3QbOUnFEu7HedaMM=;
+        b=vDq14QOG9LEolJ3jhE/wHsI5nng390wLDats5ganQbuWIRv7iApg9txVSlQIic8uJA
+         6onZHPjnrQmjeAWfA4bYq636gKudfBIe+6rfeAAVfPlO1tWBpb/wlqCcRU7b4lLTz5Hc
+         Pb8dE2NaE6FOaW/WPlYDX/5FtLD8nr2NujOSV7rA80J+zcbKu1C0Varj19Izg5iMH7C/
+         9dwRwoym8iO1EHAsABPGjOxUqmd+kvxx+H4FNTigkn3NNUGMt6CLuRh2iTwLib+jq/pw
+         7dw/4RqzX/hebsKq90RCRBoAw4HtOYSUmYz8wHdvvfIh12UK+OEfzIghdyj/FGNlTllU
+         FZ9g==
+X-Forwarded-Encrypted: i=1; AJvYcCW1I9T3Or5DCKGyWq3WLnK71sfZaZUrJMdc/4uWRWDs86F15ihzeTzqqfI+cJ0KLnGahkwV9NoKJu/ckZu1A53UbAXh4BcRVkGjlP9k
+X-Gm-Message-State: AOJu0YySLwpRe7uYzsCkfh1QNeypCaopUfE8M+Zx9TCJC982P8oha+Mu
+	PbbTEnNZ9gKCr9/DIVfxR3BVIkDmfznGt0kvOJlaEoLHaKzKBpG0tCc5rxV1soicH0vcEScoKVq
+	j3OakkFkoflaPjjvFB8j/wLAkdr38WEky+U4=
+X-Google-Smtp-Source: AGHT+IGybgsxNtIQ75t5hnME5BDWpfXscvL9SCeB8NHC7FKiB7YmMXnJH4nVtChLEyeUYJXPFzoyGimHRJgN9cCJQRo=
+X-Received: by 2002:a05:651c:216:b0:2e8:10ca:2437 with SMTP id
+ 38308e7fff4ca-2e94959368cmr17323691fa.50.1716399388780; Wed, 22 May 2024
+ 10:36:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c3a005a67096010cf3c465f8e3362651763fe3b.1713778236.git.haibo1.xu@intel.com>
+References: <20240516174357.26755-1-jim.cromie@gmail.com> <CALwA+NZxiapXe-BBY6CvpqT-Z1h_YyMQr=JBwybY55TWtDNiBA@mail.gmail.com>
+ <CAJfuBxw3oDbdAwporJw0DXGRbpLqVXxGaBQmOra4vMGDzH94jA@mail.gmail.com>
+In-Reply-To: <CAJfuBxw3oDbdAwporJw0DXGRbpLqVXxGaBQmOra4vMGDzH94jA@mail.gmail.com>
+From: =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>
+Date: Wed, 22 May 2024 19:36:15 +0200
+Message-ID: <CALwA+Nbr15Wd_kkMr3bJCON5zhM+JAuhxwgFG654yd+nemzzTw@mail.gmail.com>
+Subject: Re: [PATCH v8-RESEND 00/33] Fix CONFIG_DRM_USE_DYNAMIC_DEBUG=y regression
+To: jim.cromie@gmail.com
+Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk, joe@perches.com, 
+	mcgrof@kernel.org, daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, 
+	jani.nikula@intel.com, ville.syrjala@linux.intel.com, seanpaul@chromium.org, 
+	robdclark@gmail.com, groeck@google.com, yanivt@google.com, bleung@google.com, 
+	Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2024 at 01:46:25PM +0800, Haibo Xu wrote:
-> x86/arm64/loongarch would select ACPI_NUMA by default and riscv
-> would do the same thing, so change it to a hidden option and the
-> select statements except for the X86_64_ACPI_NUMA can also go away.
-> 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: Sunil V L <sunilvl@ventanamicro.com>
-> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> ---
->  arch/arm64/Kconfig        | 1 -
->  arch/loongarch/Kconfig    | 1 -
->  drivers/acpi/numa/Kconfig | 5 +----
->  3 files changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 7b11c98b3e84..c6c667898da6 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1439,7 +1439,6 @@ config HOTPLUG_CPU
->  config NUMA
->  	bool "NUMA Memory Allocation and Scheduler Support"
->  	select GENERIC_ARCH_NUMA
-> -	select ACPI_NUMA if ACPI
->  	select OF_NUMA
->  	select HAVE_SETUP_PER_CPU_AREA
->  	select NEED_PER_CPU_EMBED_FIRST_CHUNK
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index a5f300ec6f28..29d574a5c34c 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -465,7 +465,6 @@ config NR_CPUS
->  config NUMA
->  	bool "NUMA Support"
->  	select SMP
-> -	select ACPI_NUMA if ACPI
->  	help
->  	  Say Y to compile the kernel with NUMA (Non-Uniform Memory Access)
->  	  support.  This option improves performance on systems with more
-> diff --git a/drivers/acpi/numa/Kconfig b/drivers/acpi/numa/Kconfig
-> index 849c2bd820b9..f33194d1e43f 100644
-> --- a/drivers/acpi/numa/Kconfig
-> +++ b/drivers/acpi/numa/Kconfig
-> @@ -1,9 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  config ACPI_NUMA
-> -	bool "NUMA support"
-> -	depends on NUMA
-> -	depends on (X86 || ARM64 || LOONGARCH)
-> -	default y if ARM64
-> +	def_bool NUMA && !X86
->  
-LGTM.
+On Tue, May 21, 2024 at 9:11=E2=80=AFPM <jim.cromie@gmail.com> wrote:
+>
+> On Tue, May 21, 2024 at 5:41=E2=80=AFAM =C5=81ukasz Bartosik <ukaszb@chro=
+mium.org> wrote:
+> >
+> > On Thu, May 16, 2024 at 7:44=E2=80=AFPM Jim Cromie <jim.cromie@gmail.co=
+m> wrote:
+> > >
+> > > hi Greg, Jason,
+> > >
+> > > This patchset fixes the CONFIG_DRM_USE_DYNAMIC_DEBUG=3Dy regression,
+> > > Fixes: bb2ff6c27bc9 ("drm: Disable dynamic debug as broken")
+> > >
+> > > Im calling it v8, to keep consistent with previous labels.
+> > > v6 was what got committed, back in 9/2022.
+> > > v7 had at least 2 problems that blocked its submission:
+> > >
+> > >  https://lore.kernel.org/lkml/20231101002609.3533731-1-jim.cromie@gma=
+il.com/
+> > >  https://patchwork.freedesktop.org/series/125066/
+> > >
+> > > 1. missing __align(8) in METATDATA macro, giving too much placement
+> > > freedom to linker, caused weird segvs following non-ptr vals, but for
+> > > builtin modules only. found by lkp-test.
+> > >
+> > > 2. the main patch touched 2 subsystems at once, which would require
+> > > special handling.
+> > >
+> > > What was broken about DYNAMIC_DEBUG ?
+> > >
+> > > Booting a modular kernel with drm.debug=3D0x1ff enabled pr_debugs onl=
+y
+> > > in drm itself, not in the yet-to-be loaded driver + helpers.  Once
+> > > loaded, the driver's pr_debugs are properly enabled by:
+> > >
+> > >    echo 0x1ff > /sys/module/drm/parameters/debug  # still worked
+> > >
+> > > I had tested with scripts doing lots of modprobes with various
+> > > permutations of dyndbg=3D<> option, and I missed that I didn't test
+> > > without them.
+> > >
+> > > The deeper cause was my design error, a violation of the K&R rule:
+> > > "define once, refer many times".
+> > >
+> > > DECLARE_DYNDBG_CLASSMAP defined the classmap, and was used everywhere=
+,
+> > > re-declaring the same static classmap repeatedly. Jani Nikula actuall=
+y
+> > > picked up on this (iirc shortly after committed), but the problem
+> > > hadn't been seen yet in CI.  One patchset across 2 subsystems didn't
+> > > help either.
+> > >
+> >
+> > Could  you summarize classmaps from the beginning ?
+> >
+>
+> IMO, the best thing about dynamic-debug is that it uses
+> JUMP_LABELs / static-keys , so it is NOPs except when you want them.
+>
+> Classmaps 1st purpose is to bring that to DRM,
+> which has 10 mutually exclusive categories of debug output,
+> all controlled from bits in /sys/modules/drm/parameters/debug.
+> w/o dyndbg, __drm_debug is constantly checked during normal ops.
+>
+> verbose/relative is added for the other kind of debug levels
+>
+> classes =3D=3D=3D categories, with name change to avoid muddling
+> the 2 sides of the drm <=3D> dyndbg relation
+>
+> classmaps to contain the classes, and to not just take the "class" name,
+> which is way too generic a term.
+>
+> Since dyndbg's sole input is the >control file, the "class" keyword was a=
+dded.
+> the PARAM support constructs queries using class foo to effect its change=
+s.
+>
+>    # change classes by name
+>    echo class DRM_UT_CORE +p > /proc/dynamic_debug/control
+>    # this cant touch them
+>    echo  +p > /proc/dynamic_debug/control
+>
+> this syntax extension allows dyndbg to honor DRM's privacy expectations
+> DRM owns its categories via sysfs knob (only)
+> and should not tolerate things changing out from under it.
+> (your bank account isnt useful if everyone can withdraw from it)
+>
+> Also, the class'd pr-dbgs are only manipulable by their classname,
+> not by their corresponding class_id : a 64 value space, which is
+> shared across all classmaps in a module.
+> IOW a module could have 8 separate classmaps, each with 8 classes.
+>
+> >
+> > > So the revised classmap API "splits" it to def & ref:
+> > >
+> > > DYNDBG_CLASSMAP_DEFINE fixes & updates the busted macro, EXPORTing th=
+e
+> > > classmap instead.  It gets invoked once per subsystem, by the
+> > > parent/builtin, drm.ko for DRM.
+> > >
+> > > DYNDBG_CLASSMAP_USE in drivers and helpers refer to the classmap by
+> > > name, which links the 2 modules, (like a driver's dependency on exter=
+n
+> > > __drm_debug).
+>
+> Summarizing,
+> author(s) _DEFINE their categories / classes,
+> other author(s) _USE that definition.
+>
+> Both these tell dyndbg that it is allowed to manipulate those classnames
+> in the invoking module.
+>
+> Does that fill the gaps in the explanation / motivation ?
+>
 
-Reviewed-by: Sunil V L <sunilvl@ventanamicro.com>
+Yes it does. Thank you for elaborating on the topic.
+
+> thanks
+> ~jimc
