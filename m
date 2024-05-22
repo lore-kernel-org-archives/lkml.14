@@ -1,303 +1,244 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2058.outbound.protection.outlook.com [40.107.114.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C083D13D61A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6792013C9D8;
 	Wed, 22 May 2024 12:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716381641; cv=none; b=YpMkfFgP2ObeQwHhhzc1BI5erJ740Iitl0nSU8nZ8JR33xik/uAqHa5ipCrcXW7y9AR+6Sv7VeTMuO5q6dTtDuq4+pAhmQTrOUqi9v2nObEru8RXQeD3cIZ2c/SM0AmC1YEaGepvbeyEAbjJabcV4PJn9UqIdau8L+mF3zR0fuQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716381641; c=relaxed/simple;
-	bh=HWRRwi3ccbUGSDEuBLfvypPHdGVov7NeIQA1lGgI61g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWV/lswQvwtnMCNxE3TPkE3JiKFTlu6KC88+M0+Ft2XalaDa6sIp9vDzTKW72quTOlxwCe7Kzho5G7jOuNrWSRUUlqVNgcne5hzdP/8J20BHWVP5CHoK6KqC91UcvBY6ralfDqYoeiZp+mPg6dSRrpLlmanR/+SuxkxxYWdA5qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=hG2hnAnC; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716381643; cv=fail; b=jZXGdKUVURLOOlywFH9Bj0lf2sQGBLByQOFYAjBdgtOh3qIFhroxAQOYJDNnWYlmi1QlzwPZDnbkscxZ7UFiOpJLrIbZPFXZNj0cUpSX51gqaD4hnMPr9aFaTWvnec9nrWDMJPV9uH/oPb4xUEwHgqunL8QZMeZrJPT55MGiXWY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716381643; c=relaxed/simple;
+	bh=rsVUBK90x7VbAvSgMBEJ8d6/djL/PUjH47iPaxj8U7U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LOx8wYsIA3Ranh/mOUZNGlgTI/h429MfE9HzBA68yFdcfacM1XWinptU9uqP4XxT2mevX2nphrWMJJqkt3ijWu/d5N3QMxD3io33HezhEXtogC7bZsaCzwC7Gdqn11y1tHaIuN3Nbo6vE4Rp10MzHxoRcS2ipcJIsfcBX63/mok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=jyT7uUkp; arc=fail smtp.client-ip=40.107.114.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="hG2hnAnC"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44M75CC1011851;
-	Wed, 22 May 2024 08:40:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=DKIM;
-	 bh=m/4b11ulW92ZtW0QmJVH/fhK9uSDEPAoQ3Jgqoo0FxY=; b=hG2hnAnC5RGO
-	GHYB+NmgbMGUmOU5nu5IfZ7JEejXnkIXkN/30nEtSGa1SPozcDyETCuXzkqy0Ej6
-	IWeQ9J3v6L4vDbzXkdysq7i6VA+LJ6/WASvWmuRm9a2Ml/txvxYo4BfNcK+MloTt
-	68rAf3EKMZg8YKS1b/QSmhhfLFsx9aAq+eG29YFeVuBwao4AMXMi7fUIrO9t3xDg
-	B6GsWMX7XdkcBQban1HVbiFImqxXdJxz+Eyr5WIR9VUCU2MbfmZva3Ic2iy+UyKz
-	r2kivYCkZn/y8EWfdR3xEF6u/OGtNKE/I1XGaUSc5uufAJi0xMPxfA5CXS/1GCKz
-	trQMR4cUWw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3y87pwh4dn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 May 2024 08:40:26 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 44MCePH8013946
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 22 May 2024 08:40:25 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Wed, 22 May
- 2024 08:40:24 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 22 May 2024 08:40:24 -0400
-Received: from radu.ad.analog.com ([10.48.65.150])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 44MCe7Ib005879;
-	Wed, 22 May 2024 08:40:20 -0400
-From: Radu Sabau <radu.sabau@analog.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-hwmon@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Radu Sabau <radu.sabau@analog.com>
-Subject: [PATCH 1/2] drivers: hwmon: max31827: Add PEC support
-Date: Wed, 22 May 2024 15:39:22 +0300
-Message-ID: <20240522123923.22320-2-radu.sabau@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240522123923.22320-1-radu.sabau@analog.com>
-References: <20240522123923.22320-1-radu.sabau@analog.com>
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="jyT7uUkp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OywKBb1NdCkfaGnrspf4c7+7zi+1GkMLDtkMpW2Z01pxqYHuUlBpQQe9t+LAiPRodARYd81P6LmSWuIfktFR0S3FyT9FKBiCsrvZ5SEpAPRazm/g4xM9DWUMFWOzrZkssXVWwyjkH+2WJWmhj2YilNzktxTPvXdvPDTlSe7mTBPo5VBOXS/2j71q547kruUM9+c2LiVHkwxLKb+5BfWX01XPdELRFM5ptCHSIM+alAAjBbUCV7DqsxgS6t5XnKZQsx0AYIrBDwa2MyDNFd+6KijnBF7YlwwdjGhmEyVFiLMwpKLyYpGuEwf9oZjKwK9PSkHPTh5uzUuKQ8n2suD8eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rsVUBK90x7VbAvSgMBEJ8d6/djL/PUjH47iPaxj8U7U=;
+ b=DqubDPdBU634M9qyaSJjPvYCuReDzr3jFrPUGqtcfs5Djy/czKaCpRNO3qIIM0hUsbp55rY3vts9cKVz6bKoE2YodSDz/LmJmsIau3A3zXqyGdrPQKkKCmewPn2a2QWlKhIPHGfE7h2Kj0VoKBX7lEIiwvRVuHAi57bnk1XnYb2T9TjvwUc3UCiolbRlm2olz2ROUYWj4Hcceojl6Hg7jEUI56bEKr7bJGuDObbqlI5Q+Bdfh19krk/Awl5nBDKmH/qanXx0Hqq0R07Ga1HUP5GpqUyJIepJPP7ed/JOFLR6IunV13xhNY0msnU2F7Sgowogh0lvC2+uMsg9aVvZpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rsVUBK90x7VbAvSgMBEJ8d6/djL/PUjH47iPaxj8U7U=;
+ b=jyT7uUkpecKvJbWOKE58CBnYlKi1Ju29koD3RAxjdHtpTe/BGxd1LM1yTSKBRmdzm1NKHvwk8E+QEW859Ld/cPRd2ls4s18KEXqLExr1UjzmS8+YVxYTN9mOZ64JVJun5ua+t/NvY0nHmRW/LtFUWLP2+6NJCcAH6A2EXgNL/b0=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by OS0PR01MB6386.jpnprd01.prod.outlook.com (2603:1096:604:106::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Wed, 22 May
+ 2024 12:40:35 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.7587.035; Wed, 22 May 2024
+ 12:40:33 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: Prabhakar <prabhakar.csengg@gmail.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Magnus
+ Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Fabrizio Castro
+	<fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v2 06/13] pinctrl: renesas: pinctrl-rzg2l: Add function
+ pointers for locking/unlocking the PFC register
+Thread-Topic: [PATCH v2 06/13] pinctrl: renesas: pinctrl-rzg2l: Add function
+ pointers for locking/unlocking the PFC register
+Thread-Index: AQHalaf6G0YP7y+cRUaeSOrsRROeYLF2Jw2QgC0zRoCAAANGAA==
+Date: Wed, 22 May 2024 12:40:33 +0000
+Message-ID:
+ <TY3PR01MB11346281D111DB4C411E3333786EB2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423175900.702640-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TY3PR01MB113461F28EA97F494D831267C86112@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CAMuHMdUJXdEG-BQRYNbmhbGCtE+O1uWO0j-PkBaF7S_Qyp8M-Q@mail.gmail.com>
+In-Reply-To:
+ <CAMuHMdUJXdEG-BQRYNbmhbGCtE+O1uWO0j-PkBaF7S_Qyp8M-Q@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS0PR01MB6386:EE_
+x-ms-office365-filtering-correlation-id: aecb5e71-8a6f-4680-44d1-08dc7a5c5f20
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|366007|7416005|376005|1800799015|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dW9vMUFQL2JORXBXbFFyaWZLUTVsMU9iUXZBeWJXNU1paVArVWRETHRZc083?=
+ =?utf-8?B?emFlNkRZakpmM0FlUUhJV2cxUlpqMjNSTS81enFBdDBBMEFnZjNTS3lsQ3J0?=
+ =?utf-8?B?ZEhPM2Yvdm9sa1J6M3ZqREx6ZE1zNUpVRC91Wk03OGFLRSs3MlBpOUlYMUY5?=
+ =?utf-8?B?T3ZtTmsrdlNMajdqK2R0SFo4UmxZUUFtdUR2K2ppMmpaZnpSOFovaHFLUS9E?=
+ =?utf-8?B?eHJtNU11OCt4UThRa290U1pLb2pCamZKa3Y2NjhVemNNREc3aWpwbk5vc2xt?=
+ =?utf-8?B?UW1nVGlaMmVXZGR2aWlBdFNYWnB3OXlKWUZMZnJOLzRBNjdZK1piVlAvcnVo?=
+ =?utf-8?B?bm1uQlNuTUxmS0syeXdtZ0xUNE5YQk1RQzIvT3JMT2xJVU4wZVl2M2ttaXZD?=
+ =?utf-8?B?WnVXSlN6RmpzWXBWUEFUZjA3cTBOSEVIUGQ2RVFFcjdma3VvOEpGeUh0RlVZ?=
+ =?utf-8?B?UitmaHpDTDhsVTVlUTJuZ2tacmJRN1RmUk1IQjUrVERuUk9RQ2FReGJBQ2lS?=
+ =?utf-8?B?MVdGVCtBWUluWWNqWHlWS216eTBIODAzVzIwc0phVDBPM0grWjgzSjBZbTZV?=
+ =?utf-8?B?TFJOMnc2NG9oT0dycUZzaDdKRDlyanUxcmdjdUNMWHRBK2Z2M0FPcHQwRTlZ?=
+ =?utf-8?B?NlFsbmlaMmxyN1NlMlhXU1FQanhmWEpnTlVEaTU1OGl3Z3hWc1lSMHZTV1Zv?=
+ =?utf-8?B?ODVOQU1Eb3IvWlpFRTF0V2VHaU5GUnlabVRpWUpuWUtrVE5tUXFTYjRrUjBH?=
+ =?utf-8?B?QkN2MXJtSTdvYXBqandXM3BHYnFHeFBZTDR5NTNqcW9NcEVrOXFuSUZHN3Er?=
+ =?utf-8?B?eU8xNThjaFQxQzZaMExFTWlaRWNzamljRVlMY2huM0s3RGlQUFpMclc0bFlr?=
+ =?utf-8?B?bXVzMkFJRkF1RTkrMDBZMmx0b3JTOTJ4MmF1bThXOWVCZmpzckNTblpDQko4?=
+ =?utf-8?B?bHdjdmQrY0d6SnZSK3pwWEhmRGl3c1AvOTlJaStSYjUxbXdQdnNSUjhoQnUw?=
+ =?utf-8?B?NmY2Z01Wa3JIUFpBL1BwelJ4Q25IanRRM3JHNnU2Z1laMkkvb1o0WCsyOGJQ?=
+ =?utf-8?B?SWlxTU9UZUdmSFVZMGRKR3Z4NmR6RFVvd3F2U0xKL01sNTVST0plZG15Vjhu?=
+ =?utf-8?B?cTEwZ2ZkTFZUNTZhcnRyZklnNkJEV1VzRmtIRW5TOTIxd0p5RnNIRER5NkRw?=
+ =?utf-8?B?ckgwS1kvdFpiMmJwa3YrSjRNS05OblB2eUFIMUZ2SGp5SDE2K1dCSThLL2o4?=
+ =?utf-8?B?ZEx6eHhvSitjc1pvM3Eycnd4WXJVSlVrQWsyRGdSLzIrM1M0Ym13aVE4b1FO?=
+ =?utf-8?B?ZklmRVoxM2tDcFZKTTZZNEZGRTNYNTkzNXZnRFVXVWxPYnNwbTh0Yy8wYnFr?=
+ =?utf-8?B?SksxNVo1T094Rmw3WG4xUHlVTnFnVVFTK1VHcXp6c0hoaElEajVpczJOeG03?=
+ =?utf-8?B?cG82anlOMmh1emtYY2xodUQ4M2Y3RWhCU2NLWlc0S3lUVWJRckRJT2xXay8y?=
+ =?utf-8?B?M2I0bS9IWCtYNGtVL0VQd0ErbEJzWDVINHd2NGZYVVZuL25zcCtjNWhTdU0r?=
+ =?utf-8?B?OCs1M1RSempUbGY3a21wQk92VXE2RnI5ZFNHYnBpUkFOT3kxaDVhRERiWExH?=
+ =?utf-8?B?M2d0a2s0dkJ4cW82dE0waFVvd0lMdGtteFhoeDBIakxGVWtnVzdPc2sreStZ?=
+ =?utf-8?B?SktlVGJWSlpqZk80MzNUZ1phamRSQURZZW50cU84cGJNUTE0dTdBODBaYWsv?=
+ =?utf-8?B?WU5FL1FqTFQvclB0ckdrazRYMXRVbTREalhMelFDN2VId1ZxaTQ1L1BJRFRl?=
+ =?utf-8?B?MWxWUGVVWlY4Q3lxQnl4dz09?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZlJlcUVKWWszNUtncHl4NEJXYkhyNjdRYUhOWUo2NDhqa0t0UHFHd0lDVU94?=
+ =?utf-8?B?N0xITWRCMy9pQUIxWjZRaDZNeHN4Z1QvM2gyWGZjNVRteEgzOEVHWnAvRjI5?=
+ =?utf-8?B?R0Zvc2hRR3daQmJDL1AzKzZnODVOeGZmRkRBSnZ5SmlScmFXT0QydzhxUHo3?=
+ =?utf-8?B?RFJHV0pkRCtSSkxBS1hDU2JRZ21OOE1OclRvck1NdnNBQnd6SzdGa1JvdlRX?=
+ =?utf-8?B?VE9mdHZzQ3FMT2Z0cGJ3dU83TmR4aTgvZ0FaV2l0UWNES2tIWFNmT2tRbUI2?=
+ =?utf-8?B?aVFXVHNhY2d5anpldjhxTU1mTkwwSGdZUFAyV2hHU0Y3NFBYUHowM2ZSby80?=
+ =?utf-8?B?V05jQzVESERzMGM5ZEtqTTkweU8yT09SOVRhcjEzVzdIZzhoaHNNT1I2dnha?=
+ =?utf-8?B?ZDFDMlpIVGhuY3dWVnFCb21XQ3pSbC9hQW14Z2VzUXNEL1ZIdWpaMUR3L2RG?=
+ =?utf-8?B?ajJscVNyQ1lvaDFBalJZYzhBMFFKWFl6V2dHVGh2UVlHREtrSjFHRGNzaGlo?=
+ =?utf-8?B?ZDdyNnRVSVlkdUNXbFFqMllQYy9WMlhHMTIxcTdpU0Z6TU9SY2taVzFiRm1k?=
+ =?utf-8?B?aTUrdFN0UVpnSm1Ydk9nOVcrZVVGckpacnJJUVVRVGVQYUF6ZzhEc2gzaFZl?=
+ =?utf-8?B?dEk1ZVZFZkgxT1RsbHpVYkFFMlZicWxybFBPQVRKYVFWSFBIMzlQdUJ2SE4y?=
+ =?utf-8?B?UDQ1WVZvT2g4TksxOFJkT0U4TDZoU3pHdjU5MXYxdG1tMzVqLzlQc2NEN0hP?=
+ =?utf-8?B?cTNGT1RTTjlZbmlPUW1KWm9zRU5NM3BTS0laVlZ4Vm9lQUtGUjZGVXo1blA5?=
+ =?utf-8?B?Wm8yK09DR0hHQmxuMGRURGNOeVNZMXlvTWxCa2lJcTNlaGdHUTFsVDdEeGtL?=
+ =?utf-8?B?dWloU3ExWVQ1Z0UxYjJsTDNNbTRuSFg1U3lQanVtVFBlSGM3TSsrWEhjOXJi?=
+ =?utf-8?B?aE5FM3g5V1l4QzZUTVRUWXpNL3MzU0hvN2xuRHRMeW53bEtzbGxvKzFVdXJL?=
+ =?utf-8?B?K3FOdWtJMm9vdmlWbVBUTnd2QkZHaWx3V3h1VDV5cy9iWW1BY1pnWkdyUnhv?=
+ =?utf-8?B?bmtoYlQ5YUJwdjFXSDdhNlRweGUyZ2VNWkhTYVR1bjlFemtoanZzWnpLTEcy?=
+ =?utf-8?B?SjNQU3g4a3ZWQU5tWmpFeUkvcENjcTU2VCtLd2FNbTJRSjZCbisxMFRyQUJo?=
+ =?utf-8?B?cC9QSCt0VG9VeE5UZEdFTnFBUFZzWGx4cW9RT0ZoWUczMko2SFJEVjMvSGw1?=
+ =?utf-8?B?b0xyemIzVEorT2tUdkIxUmF6NGh4Y09uT0M4aFh1WDJuS0tlUE5yTklxcXhn?=
+ =?utf-8?B?bTdnaUNucE9zbUNkMFNHSkJTVFVFUlVla3RwN1hCUXlCZjNMNzJ0VU5OM2Yw?=
+ =?utf-8?B?SnlqUFJNTjJWNXM5TEsxczkvakxqdjJBdUl4eVVJVSs0S2J6aDhvMkhhT29y?=
+ =?utf-8?B?N0pqVVlBb25XWHI0TmdTQ2pqMVRpK2R3ZXZuMWU3MnMxcWpTR0pWek1Ia21F?=
+ =?utf-8?B?R2xzeFJsb0xpK0NpcXNNRTFpUkY4UUZnMW44WnFlRHcwRG04OUdFVVZPVUpm?=
+ =?utf-8?B?TnlDeWQwVXFHdEovcWtUVnpKZlRKSmJaS3pONmVWK2VNY3JnVmhsY3lJQi8y?=
+ =?utf-8?B?bFg3MlZWRUdLTEhuQ1VuQzVwUUFSc0x6WENqdDJhbVloQVljUDVnM21IcDA0?=
+ =?utf-8?B?VFMwUWFhMlJtaXRkTXRhZlo5THorTEZQUytIRWtqZDFsMjlnUDVJSEFqd0ll?=
+ =?utf-8?B?UzE0YnJIcEQzY0I5dFNSWUM0RWMzWUVDVkpFR2FQQVI1eVIvc2ZTdjlPam11?=
+ =?utf-8?B?SkJiSEhYZTRSeVowZkhzVnNGNTJna01DYU0yY0E4UXpuSDBpM2kzd0RnaU5u?=
+ =?utf-8?B?eFRMWmN6RlljNkxxQkE1bDU3cjgwN2F0S2RONFk3TUJpUnoxM1lraTE4TUx0?=
+ =?utf-8?B?NVVYd1BkZ3E2WnU5SThON1FHTmY4STZhYWhZWmoza0pJMnRhbHdlaVB5S1Fs?=
+ =?utf-8?B?a3c2QVNWZWhRMGlvaHFYQ2pIK25iUXJLNHlNamI4MUpjQitMOXJsV01acDZI?=
+ =?utf-8?B?cmo5dDFOYTI1bWFHelg1RFFhdWl3VURsNytFclk1L3Z2c2MvcENoaW10alh2?=
+ =?utf-8?B?aUxjWGQxTzV1UGZ6cHJxK1RaYWdRYXdnZEFMS3c3QVNCSWFhN25yVkE0MWpt?=
+ =?utf-8?B?Mnc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: SYLXcLj7rIfqmbU5NrXGBMWayJbXjA6F
-X-Proofpoint-GUID: SYLXcLj7rIfqmbU5NrXGBMWayJbXjA6F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_05,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 malwarescore=0 clxscore=1015 spamscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405220085
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aecb5e71-8a6f-4680-44d1-08dc7a5c5f20
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2024 12:40:33.1257
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yqImFncFVA+n7bj3frqICL2ZKzII6jGqwxbLQ8KjHCVXabVdLHRTiv2Ww3Xaj9w34v/kY43Sa045qACVdYBkaCnkwZZa4xGnn3a0SOU3u3I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0PR01MB6386
 
-Add support for PEC by attaching PEC attribute to the i2c device.
-Add pec_store and pec_show function for accesing the "pec" file.
-
-Signed-off-by: Radu Sabau <radu.sabau@analog.com>
----
- Documentation/hwmon/max31827.rst | 13 ++++-
- drivers/hwmon/max31827.c         | 95 +++++++++++++++++++++++++++-----
- 2 files changed, 92 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/hwmon/max31827.rst b/Documentation/hwmon/max31827.rst
-index 44ab9dc064cb..9c11a9518c67 100644
---- a/Documentation/hwmon/max31827.rst
-+++ b/Documentation/hwmon/max31827.rst
-@@ -131,7 +131,14 @@ The Fault Queue bits select how many consecutive temperature faults must occur
- before overtemperature or undertemperature faults are indicated in the
- corresponding status bits.
- 
--Notes
-------
-+PEC Support
-+-----------
-+
-+When reading a register value, the PEC byte is computed and sent by the chip.
-+
-+PEC on word data transaction respresents a signifcant increase in bandwitdh
-+usage (+33% for both write and reads) in normal conditions.
- 
--PEC is not implemented.
-+Since this operation implies there will be an extra delay to each
-+transaction, PEC can be disabled or enabled through sysfs.
-+Just write 1  to the "pec" file for enabling PEC and 0 for disabling it.
-diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
-index f8a13b30f100..16a1524413db 100644
---- a/drivers/hwmon/max31827.c
-+++ b/drivers/hwmon/max31827.c
-@@ -11,19 +11,20 @@
- #include <linux/hwmon.h>
- #include <linux/i2c.h>
- #include <linux/mutex.h>
--#include <linux/of_device.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/of_device.h>
- 
--#define MAX31827_T_REG			0x0
-+#define MAX31827_T_REG	0x0
- #define MAX31827_CONFIGURATION_REG	0x2
--#define MAX31827_TH_REG			0x4
--#define MAX31827_TL_REG			0x6
--#define MAX31827_TH_HYST_REG		0x8
--#define MAX31827_TL_HYST_REG		0xA
-+#define MAX31827_TH_REG	0x4
-+#define MAX31827_TL_REG 0x6
-+#define MAX31827_TH_HYST_REG	0x8
-+#define MAX31827_TL_HYST_REG	0xA
- 
- #define MAX31827_CONFIGURATION_1SHOT_MASK	BIT(0)
- #define MAX31827_CONFIGURATION_CNV_RATE_MASK	GENMASK(3, 1)
-+#define MAX31827_CONFIGURATION_PEC_EN_MASK	BIT(4)
- #define MAX31827_CONFIGURATION_TIMEOUT_MASK	BIT(5)
- #define MAX31827_CONFIGURATION_RESOLUTION_MASK	GENMASK(7, 6)
- #define MAX31827_CONFIGURATION_ALRM_POL_MASK	BIT(8)
-@@ -46,6 +47,8 @@
- #define MAX31827_M_DGR_TO_16_BIT(x)	(((x) << 4) / 1000)
- #define MAX31827_DEVICE_ENABLE(x)	((x) ? 0xA : 0x0)
- 
-+#define DEBUG_FS_DATA_MAX	16
-+
- enum chips { max31827 = 1, max31828, max31829 };
- 
- enum max31827_cnv {
-@@ -151,8 +154,8 @@ static int shutdown_write(struct max31827_state *st, unsigned int reg,
- 		goto unlock;
- 
- 	ret = regmap_update_bits(st->regmap, MAX31827_CONFIGURATION_REG,
--				 MAX31827_CONFIGURATION_CNV_RATE_MASK,
--				 cnv_rate);
-+				   MAX31827_CONFIGURATION_CNV_RATE_MASK,
-+				   cnv_rate);
- 
- unlock:
- 	mutex_unlock(&st->lock);
-@@ -344,7 +347,7 @@ static int max31827_write(struct device *dev, enum hwmon_sensor_types type,
- 		switch (attr) {
- 		case hwmon_temp_enable:
- 			if (val >> 1)
--				return -EINVAL;
-+				return -EOPNOTSUPP;
- 
- 			mutex_lock(&st->lock);
- 			/**
-@@ -384,7 +387,7 @@ static int max31827_write(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_chip:
- 		if (attr == hwmon_chip_update_interval) {
- 			if (!st->enable)
--				return -EINVAL;
-+				return -EOPNOTSUPP;
- 
- 			/*
- 			 * Convert the desired conversion rate into register
-@@ -472,11 +475,60 @@ static ssize_t temp1_resolution_store(struct device *dev,
- 
- 	return ret ? ret : count;
- }
--
- static DEVICE_ATTR_RW(temp1_resolution);
- 
-+static ssize_t pec_show(struct device *dev, struct device_attribute *devattr,
-+			char *buf)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", !!(client->flags & I2C_CLIENT_PEC));
-+}
-+
-+static ssize_t pec_store(struct device *dev, struct device_attribute *devattr,
-+			 const char *buf, size_t count)
-+{
-+	struct max31827_state *st = dev_get_drvdata(dev);
-+	struct i2c_client *client = to_i2c_client(dev);
-+	unsigned int val, val2;
-+	int err;
-+
-+	err = kstrtouint(buf, 10, &val);
-+	if (err < 0)
-+		return err;
-+
-+	val2 = FIELD_PREP(MAX31827_CONFIGURATION_PEC_EN_MASK, !!val);
-+
-+	switch (val) {
-+	case 0:
-+		err = regmap_update_bits(st->regmap, MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_PEC_EN_MASK,
-+					 val2);
-+		if (err)
-+			return err;
-+
-+		client->flags &= ~I2C_CLIENT_PEC;
-+		break;
-+	case 1:
-+		err = regmap_update_bits(st->regmap, MAX31827_CONFIGURATION_REG,
-+					 MAX31827_CONFIGURATION_PEC_EN_MASK,
-+					 val2);
-+		if (err)
-+			return err;
-+
-+		client->flags |= I2C_CLIENT_PEC;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(pec);
-+
- static struct attribute *max31827_attrs[] = {
- 	&dev_attr_temp1_resolution.attr,
-+	&dev_attr_pec.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(max31827);
-@@ -493,8 +545,8 @@ static int max31827_init_client(struct max31827_state *st,
- 				struct device *dev)
- {
- 	struct fwnode_handle *fwnode;
-+	unsigned int data, lsb_idx;
- 	unsigned int res = 0;
--	u32 data, lsb_idx;
- 	enum chips type;
- 	bool prop;
- 	int ret;
-@@ -578,6 +630,11 @@ static int max31827_init_client(struct max31827_state *st,
- 	return regmap_write(st->regmap, MAX31827_CONFIGURATION_REG, res);
- }
- 
-+static void max31827_remove_pec(void *dev)
-+{
-+	device_remove_file(dev, &dev_attr_pec);
-+}
-+
- static const struct hwmon_channel_info *max31827_info[] = {
- 	HWMON_CHANNEL_INFO(temp, HWMON_T_ENABLE | HWMON_T_INPUT | HWMON_T_MIN |
- 					 HWMON_T_MIN_HYST | HWMON_T_MIN_ALARM |
-@@ -627,6 +684,16 @@ static int max31827_probe(struct i2c_client *client)
- 	if (err)
- 		return err;
- 
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC)) {
-+		err = device_create_file(dev, &dev_attr_pec);
-+		if (err)
-+			return err;
-+
-+		err = devm_add_action_or_reset(dev, max31827_remove_pec, dev);
-+		if (err)
-+			return err;
-+	}
-+
- 	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name, st,
- 							 &max31827_chip_info,
- 							 max31827_groups);
-@@ -652,15 +719,17 @@ static const struct of_device_id max31827_of_match[] = {
- MODULE_DEVICE_TABLE(of, max31827_of_match);
- 
- static struct i2c_driver max31827_driver = {
-+	.class = I2C_CLASS_HWMON,
- 	.driver = {
- 		.name = "max31827",
- 		.of_match_table = max31827_of_match,
- 	},
--	.probe = max31827_probe,
-+	.probe_new = max31827_probe,
- 	.id_table = max31827_i2c_ids,
- };
- module_i2c_driver(max31827_driver);
- 
- MODULE_AUTHOR("Daniel Matyas <daniel.matyas@analog.com>");
-+MODULE_AUTHOR("Radu Sabau <radu.sabau@analog.com>");
- MODULE_DESCRIPTION("Maxim MAX31827 low-power temperature switch driver");
- MODULE_LICENSE("GPL");
--- 
-2.34.1
-
+SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
+VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogV2VkbmVzZGF5LCBN
+YXkgMjIsIDIwMjQgMToyMyBQTQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDA2LzEzXSBwaW5j
+dHJsOiByZW5lc2FzOiBwaW5jdHJsLXJ6ZzJsOiBBZGQgZnVuY3Rpb24gcG9pbnRlcnMgZm9yDQo+
+IGxvY2tpbmcvdW5sb2NraW5nIHRoZSBQRkMgcmVnaXN0ZXINCj4gDQo+IEhpIEJpanUsDQo+IA0K
+PiBPbiBUdWUsIEFwciAyMywgMjAyNCBhdCA4OjEy4oCvUE0gQmlqdSBEYXMgPGJpanUuZGFzLmp6
+QGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4gPiBGcm9tOiBQcmFiaGFrYXIgPHByYWJoYWthci5jc2VuZ2dAZ21haWwuY29tPg0KPiA+
+ID4gU2VudDogVHVlc2RheSwgQXByaWwgMjMsIDIwMjQgNjo1OSBQTQ0KPiA+ID4gU3ViamVjdDog
+W1BBVENIIHYyIDA2LzEzXSBwaW5jdHJsOiByZW5lc2FzOiBwaW5jdHJsLXJ6ZzJsOiBBZGQNCj4g
+PiA+IGZ1bmN0aW9uIHBvaW50ZXJzIGZvciBsb2NraW5nL3VubG9ja2luZyB0aGUgUEZDIHJlZ2lz
+dGVyDQo+ID4gPg0KPiA+ID4gRnJvbTogTGFkIFByYWJoYWthciA8cHJhYmhha2FyLm1haGFkZXYt
+bGFkLnJqQGJwLnJlbmVzYXMuY29tPg0KPiA+ID4NCj4gPiA+IE9uIHRoZSBSWi9HMkwgU29DLCB0
+aGUgUEZDV0UgYml0IGNvbnRyb2xzIHdyaXRpbmcgdG8gUEZDIHJlZ2lzdGVycy4NCj4gPiA+IEhv
+d2V2ZXIsIG9uIHRoZSBSWi9WMkgoUCkgU29DLCB0aGUgUEZDV0UgKFJFR1dFX0Egb24gUlovVjJI
+KSBiaXQNCj4gPiA+IGNvbnRyb2xzIHdyaXRpbmcgdG8gYm90aCBQRkMgYW5kIFBNQyByZWdpc3Rl
+cnMuIEFkZGl0aW9uYWxseSwgQklUKDcpDQo+ID4gPiBCMFdJIGlzIHVuZG9jdW1lbnRlZCBmb3Ig
+dGhlIFBXUFIgcmVnaXN0ZXIgb24gUlovVjJIKFApIFNvQy4gVG8NCj4gPiA+IGFjY29tbW9kYXRl
+IHRoZXNlIGRpZmZlcmVuY2VzIGFjcm9zcyBTb0MgdmFyaWFudHMsIGludHJvZHVjZSB0aGUNCj4g
+PiA+IHNldF9wZmNfbW9kZSgpIGFuZA0KPiA+ID4gcG1fc2V0X3BmYygpIGZ1bmN0aW9uIHBvaW50
+ZXJzLg0KPiA+ID4NCj4gPiA+IE5vdGUsIGluIHJ6ZzJsX3BpbmN0cmxfc2V0X3BmY19tb2RlKCkg
+dGhlIHB3cHJfcGZjX3VubG9jaygpIGNhbGwgaXMNCj4gPiA+IG5vdyBjYWxsZWQgYmVmb3JlIFBN
+QyByZWFkL3dyaXRlIGFuZCBwd3ByX3BmY19sb2NrKCkgY2FsbCBpcyBub3cNCj4gPiA+IGNhbGxl
+ZCBhZnRlciBQTUMgcmVhZC93cml0ZSB0aGlzIGlzIHRvIGtlZXAgY2hhbmdlcyBtaW5pbWFsIGZv
+ciBSWi9WMkgoUCkuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogTGFkIFByYWJoYWthcg0K
+PiA+ID4gPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4NCj4gPiA+IC0t
+LQ0KPiA+ID4gUkZDLT52Mg0KPiA+ID4gLSBJbnRyb2R1Y2VkIGZ1bmN0aW9uIHBvaW50ZXIgZm9y
+ICh1bilsb2NrDQo+IA0KPiA+ID4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3JlbmVzYXMvcGluY3Ry
+bC1yemcybC5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvcmVuZXNhcy9waW5jdHJsLXJ6
+ZzJsLmMNCj4gPiA+IEBAIC0yNjg4LDYgKzI2OTksOCBAQCBzdGF0aWMgc3RydWN0IHJ6ZzJsX3Bp
+bmN0cmxfZGF0YSByOWEwN2cwNDNfZGF0YSA9IHsNCj4gPiA+ICAgICAgIC52YXJpYWJsZV9waW5f
+Y2ZnID0gcjlhMDdnMDQzZl92YXJpYWJsZV9waW5fY2ZnLA0KPiA+ID4gICAgICAgLm5fdmFyaWFi
+bGVfcGluX2NmZyA9IEFSUkFZX1NJWkUocjlhMDdnMDQzZl92YXJpYWJsZV9waW5fY2ZnKSwNCj4g
+PiA+ICAjZW5kaWYNCj4gPiA+ICsgICAgIC5wd3ByX3BmY191bmxvY2sgPSAmcnpnMmxfcHdwcl9w
+ZmNfdW5sb2NrLA0KPiA+ID4gKyAgICAgLnB3cHJfcGZjX2xvY2sgPSAmcnpnMmxfcHdwcl9wZmNf
+bG9jaywNCj4gPiA+ICB9Ow0KPiA+ID4NCj4gPiA+ICBzdGF0aWMgc3RydWN0IHJ6ZzJsX3BpbmN0
+cmxfZGF0YSByOWEwN2cwNDRfZGF0YSA9IHsgQEAgLTI2OTksNg0KPiA+ID4gKzI3MTIsOCBAQCBz
+dGF0aWMgc3RydWN0IHJ6ZzJsX3BpbmN0cmxfZGF0YSByOWEwN2cwNDRfZGF0YSA9IHsNCj4gPiA+
+ICAgICAgIC5uX2RlZGljYXRlZF9waW5zID0gQVJSQVlfU0laRShyemcybF9kZWRpY2F0ZWRfcGlu
+cy5jb21tb24pICsNCj4gPiA+ICAgICAgICAgICAgICAgQVJSQVlfU0laRShyemcybF9kZWRpY2F0
+ZWRfcGlucy5yemcybF9waW5zKSwNCj4gPiA+ICAgICAgIC5od2NmZyA9ICZyemcybF9od2NmZywN
+Cj4gPiA+ICsgICAgIC5wd3ByX3BmY191bmxvY2sgPSAmcnpnMmxfcHdwcl9wZmNfdW5sb2NrLA0K
+PiA+ID4gKyAgICAgLnB3cHJfcGZjX2xvY2sgPSAmcnpnMmxfcHdwcl9wZmNfbG9jaywNCj4gPiA+
+ICB9Ow0KPiA+ID4NCj4gPiA+ICBzdGF0aWMgc3RydWN0IHJ6ZzJsX3BpbmN0cmxfZGF0YSByOWEw
+OGcwNDVfZGF0YSA9IHsgQEAgLTI3MDksNg0KPiA+ID4gKzI3MjQsOCBAQCBzdGF0aWMgc3RydWN0
+IHJ6ZzJsX3BpbmN0cmxfZGF0YSByOWEwOGcwNDVfZGF0YSA9IHsNCj4gPiA+ICAgICAgIC5uX3Bv
+cnRfcGlucyA9IEFSUkFZX1NJWkUocjlhMDhnMDQ1X2dwaW9fY29uZmlncykgKiBSWkcyTF9QSU5T
+X1BFUl9QT1JULA0KPiA+ID4gICAgICAgLm5fZGVkaWNhdGVkX3BpbnMgPSBBUlJBWV9TSVpFKHJ6
+ZzNzX2RlZGljYXRlZF9waW5zKSwNCj4gPiA+ICAgICAgIC5od2NmZyA9ICZyemczc19od2NmZywN
+Cj4gPiA+ICsgICAgIC5wd3ByX3BmY191bmxvY2sgPSAmcnpnMmxfcHdwcl9wZmNfdW5sb2NrLA0K
+PiA+ID4gKyAgICAgLnB3cHJfcGZjX2xvY2sgPSAmcnpnMmxfcHdwcl9wZmNfbG9jaywNCj4gPg0K
+PiA+IFNvbWUgbWVtb3J5IGNhbiBiZSBzYXZlZCBieSBhdm9pZGluZyBkdXBsaWNhdGlvbiBvZiBk
+YXRhIGJ5IHVzaW5nIGENCj4gPiBzaW5nbGUgcG9pbnRlciBmb3Igc3RydWN0dXJlIGNvbnRhaW5p
+bmcgZnVuY3Rpb24gcG9pbnRlcnM/Pw0KPiA+DQo+ID4gc3RydWN0IHJ6ZzJsX3BpbmN0cmxfZm5z
+IHsNCj4gPiAgICAgICAgIHZvaWQgKCpwd3ByX3BmY191bmxvY2spKHN0cnVjdCByemcybF9waW5j
+dHJsICpwY3RybCk7DQo+ID4gICAgICAgICB2b2lkICgqcHdwcl9wZmNfbG9jaykoc3RydWN0IHJ6
+ZzJsX3BpbmN0cmwgKnBjdHJsKTsgfQ0KPiANCj4gU28gdGhhdCB3b3VsZCByZXBsYWNlIDMgKDQg
+YWZ0ZXIgYWRkaW5nIFJaL1YySCBzdXBwb3J0KSB4IDIgcG9pbnRlcnMgaW4gcnpnMmxfcGluY3Ry
+bF9kYXRhDQo+IHN0cnVjdHVyZXMgYnkgMyAoNCkgcG9pbnRlcnMgaW4gcnpnMmxfcGluY3RybF9k
+YXRhIHN0cnVjdHVyZXMgKyAxICgyKSB4IDIgcG9pbnRlcnMgaW4NCj4gcnpnMmxfcGluY3RybF9m
+bnMgc3RydWN0dXJlcywgYW5kIGNvZGUgc2l6ZSB3b3VsZCBpbmNyZWFzZSBkdWUgdG8gZXh0cmEg
+cG9pbnRlciBkZXJlZmVyZW5jZXMgYmVmb3JlDQo+IGVhY2ggY2FsbC4NCj4gQW0gSSBtaXNzaW5n
+IHNvbWV0aGluZz8NCg0KQ3VycmVudCBjYXNlDQozICogMiBwb2ludGVycyA9IDYgcG9pbnRlcnMN
+Cg0KU3VnZ2VzdGlvbg0KMyAqIDEgcG9pbnRlciArIDEgKiAyIHBvaW50ZXIgPSA1IHBvaW50ZXJz
+DQoNCkFzIHlvdSBzYWlkLCAgY29kZSBzaXplIHdvdWxkIGluY3JlYXNlIGR1ZSB0byBleHRyYSBw
+b2ludGVyIGRlcmVmZXJlbmNlcyBiZWZvcmUNCmVhY2ggY2FsbC4NCg0KDQo+IA0KPiBNZXJnaW5n
+IHJ6ZzJsX3B3cHJfcGZjX3ssdW59bG9jaygpIGludG8gYSBzaW5nbGUgZnVuY3Rpb24gKHRha2lu
+ZyBhICJib29sIGxvY2siIGZsYWcpIG1pZ2h0IGJlIGENCj4gYmV0dGVyIHNvbHV0aW9uIHRvIHJl
+ZHVjZSByemcybF9waW5jdHJsX2RhdGEgc2l6ZS4NCg0KSSBhZ3JlZS4NCg0KQ2hlZXJzLA0KQmlq
+dQ0KDQoNCg==
