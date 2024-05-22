@@ -1,67 +1,70 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB7D7F7FD
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5357F7FD;
+	Wed, 22 May 2024 11:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716377841; cv=none; b=lUUVJ7bNay9e3QK+fqpgZhj6wSfe3acOZ6YK63ml0jt2tFQfg3r/5UarBkMG6lePyx2HlD/W7iemujqOxMRUynOJfmyESYehhLSogovxwXJ2pSgkdkAlfHW7NQZPRIhOhiA70384CtAcEG8N4GvAtXv5WQaz1PRtcxM+3s7yoAI=
+	t=1716377864; cv=none; b=N1b5mVhgf7ozRSR72ML6KtxtBkNJU7Gps2rlPAvSIYnrNJQJOpePw23RL159SIx8+7Vy1az4dKdxy941sGOVVt9LhwjOiPXPx2zTZl8GMtW0VJBTOGNs/E6Y0r5M3WpYFYDH9l6VLZYGxok1fqtZW362tGbZpv7ofLI1LgwdYvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716377841; c=relaxed/simple;
-	bh=ohpms8ssANJVFoaDki2np0GgbqsNCMxT9R6sKGwuFqQ=;
+	s=arc-20240116; t=1716377864; c=relaxed/simple;
+	bh=ncAhPReHQsINppuuHQJkanT4redij6dVT742FCMChbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kYKsj4yp4/L6zQUbNOCsH7rnXcJ3vyP2kPspG6eVPbcYfaEL1qlB3NZXbCVrqshWzxw5n3Srj+oZeC/w0KhDeb3QWvvWnpNlI19YnenxL4AMZiEdBbGBla1V2M7r6jhtDR3zRoY8U9qy8gVlHmFgJlrmad7NU5u3+QEXFReldBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CHuq6u2J; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lfClAPe0CPdmYSBZVACJcGUyh244JGQRAvl3KbR0znPH3Uc4m1cW6uah61evpHsrz/n0MJm8+N9eHX4tp3qR2Cc7Y3GVmqruTf8K9Z7v8oM/B2pMnjp0qbgUE31z/PLV1BMSI9y9IuICvauk4KbLthRY1ViS2FWmDd/bvgQdxC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEhmjH5f; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CHuq6u2J"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so13592557a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 04:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716377838; x=1716982638; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Ptb2sWzcgU+/pWuZsipU8bjPMNKPiOC3GCFAmIOk8I=;
-        b=CHuq6u2JY4JsBv01TIOR6O6dddh/pS876vZ2qtQsPChYsw5tzRLhDxZYqZBJcqkbx6
-         vnoPkpTxKOApGe6G8SEqBnWwMdASPRUEx46iSbPNupsRKqTlOK2y4yKia6Xo8v43dS+X
-         hCxHW7yrRkoxOlibokHT8twiKOs6AhdKgNQBm4MrtiW8QsHqsFUseflBuV5PDX/wSabU
-         lzNV3q50EHrIZflvrds58S8RlTuwc4XR1tUkuJFlwd0bkcbueQkmSqvkQipU1ylAOjhi
-         gCS0B54YIldyrRCfMoE9CLe+FcPDf8gY3YCHUq8eEhorHzNpeysqtoBBY1APAhkSqLVN
-         2r7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716377838; x=1716982638;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Ptb2sWzcgU+/pWuZsipU8bjPMNKPiOC3GCFAmIOk8I=;
-        b=n3VKEXA6AQKfARXesEnEu0WeoE6LixEaQbTkQ1e8I4Z0wXWYmXpvu8LSa/SfkagUE+
-         eOE2FMtt7B36Ny75xgIVByxgni/nwFPF6ywSUwa/t2LEeiCF4/qMNpsk0R/zcUKgfgw4
-         1/rBs+tcU4pWkx3NVz73sc0a2o0bU5bDnWIaopaYZQzjOpUQddHhW9zER6U+f6a7aKjf
-         OjarZDMf8+U2p+ggJw6+yUNQJvhYwi67GmN3L6GmZu3qun5ow9RdFOygD/JRQ0F1bVYE
-         uN3eBH5xeIOluKJMXl+TtvdxC3bF9i7icpMaECfrnDOclP8zJiSAubNsAYNC+jgpg7qj
-         SM5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWyzgBIzQXaYHvexjZTwHb5g8qshm2ryv5Gt13UB7RuHJfsXlh4y5cmIx9j0OICKZKlvFE+XLCWrKN6NHWczFqb233FkkSmlOiK1UQi
-X-Gm-Message-State: AOJu0YwAULky8cqC8+pwlXI+Eb76Jgu7tPiRSpB+7e/JZpxSqKsQcDu9
-	/t2HCBQ7Gpni8b/vkmloQyvDiF9VIqmiYRwtfswtNhx+uJkVfEaNLH6fPpJ1Rvk=
-X-Google-Smtp-Source: AGHT+IExl6EGuLlspJ3UkC1uRIX9L3WPWeeW1cTdzJEV7Da71NsJLbwitPi51l2QjtpfQ62N0ScZlg==
-X-Received: by 2002:a17:906:fa88:b0:a5a:2d0d:2aef with SMTP id a640c23a62f3a-a62280d4fdemr164881566b.21.1716377837646;
-        Wed, 22 May 2024 04:37:17 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a44f9581fsm1562314666b.196.2024.05.22.04.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 04:37:17 -0700 (PDT)
-Date: Wed, 22 May 2024 13:37:15 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Lukas Hruska <lhruska@suse.cz>
-Cc: mbenes@suse.cz, jpoimboe@kernel.org, joe.lawrence@redhat.com,
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, mpdesouza@suse.com,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH v2 4/6] livepatch: Add sample livepatch module
-Message-ID: <Zk3Y60KxKfbrVc9s@pathway.suse.cz>
-References: <20240516133009.20224-1-lhruska@suse.cz>
- <20240516133009.20224-5-lhruska@suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEhmjH5f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716377863; x=1747913863;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ncAhPReHQsINppuuHQJkanT4redij6dVT742FCMChbE=;
+  b=QEhmjH5fvx6tz/NdjFlLd+xVHBZr5o+3qO6BdBQz9cZ7ZSm2IbsZtZyd
+   0j/QqQanCJGWvHLx7GiZuEQ50X5zoG39QRxaZSDFjb9L+PiEEkror0H7I
+   Zuk3ZXP473XTqbZwVyH33kId/gMSw9WXeKoRvcvwRbZTgURZXu1DDkxPE
+   WPVg+5HLrDmh7kzyonoDgg65T+L5wNz5QkbjP/UrfA4eczJ2bZFLcIqaM
+   e3oCRXX/m+EUmxfaMK3rZgEesl7cc+sonFT0+gNLN4odW8X5333ykcC2p
+   GURYGs4bexH47qPOXMP/7Lw7zSR6Zw8JTRndDnnfAetV2gcwgxEZGgpgP
+   w==;
+X-CSE-ConnectionGUID: O0RureqgTnCmiXV+CWQSfg==
+X-CSE-MsgGUID: HHzPlGtkTuKRS14vD9wuWw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="16450460"
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="16450460"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 04:37:42 -0700
+X-CSE-ConnectionGUID: uXLZJLUITt2/WzQ36eXdfA==
+X-CSE-MsgGUID: O5as8n//Qre+NXSX2RI5UQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="37842814"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 04:37:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s9kHn-00000009xQt-44Tc;
+	Wed, 22 May 2024 14:37:35 +0300
+Date: Wed, 22 May 2024 14:37:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 2/2] hwmon: (ltc2992) use
+ fwnode_for_each_available_child_node_scoped()
+Message-ID: <Zk3Y_5B8lR0wHpD8@smile.fi.intel.com>
+References: <20240522-fwnode_for_each_available_child_node_scoped-v1-0-1188b0da12dc@gmail.com>
+ <20240522-fwnode_for_each_available_child_node_scoped-v1-2-1188b0da12dc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,60 +73,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240516133009.20224-5-lhruska@suse.cz>
+In-Reply-To: <20240522-fwnode_for_each_available_child_node_scoped-v1-2-1188b0da12dc@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu 2024-05-16 15:30:07, Lukas Hruska wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
+On Wed, May 22, 2024 at 11:18:08AM +0200, Javier Carrasco wrote:
+> The error path from a zero value of the "shunt-resistor-micro-ohms"
+> property does not decrement the refcount of the child node.
 > 
-> Add a new livepatch sample in samples/livepatch/ to make use of symbols
-> that must be post-processed to enable load-time relocation resolution.
-> As the new sample is to be used as an example, it is annotated with
-> KLP_RELOC_SYMBOL macro.
-> 
-> The livepatch sample updates the function cmdline_proc_show to print the
-> string referenced by the symbol saved_command_line appended by the
-> string "livepatch=1".
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Lukas Hruska <lhruska@suse.cz>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> ---
->  samples/livepatch/Makefile                  |  1 +
->  samples/livepatch/livepatch-extern-symbol.c | 84 +++++++++++++++++++++
->  2 files changed, 85 insertions(+)
->  create mode 100644 samples/livepatch/livepatch-extern-symbol.c
-> 
-> diff --git a/samples/livepatch/Makefile b/samples/livepatch/Makefile
-> index 9f853eeb6140..f2b41f4d6c16 100644
-> --- a/samples/livepatch/Makefile
-> +++ b/samples/livepatch/Makefile
-> @@ -6,3 +6,4 @@ obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-shadow-fix2.o
->  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-callbacks-demo.o
->  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-callbacks-mod.o
->  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-callbacks-busymod.o
-> +obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-annotated-sample.o
+> Instead of adding the missing fwnode_handle_put(), a safer fix for
+> future modifications is using the _scoped version of the macro,
+> which removes the need for fwnode_handle_put() in all error paths.
 
-It seems that the sample has been renamed without updating
-the Makefile rule. There should be:
+Not sure if the fix for easier backporting is better, up to Guenter and Greg.
+If the above is the case, you will need
 
-+obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-extern-symbol.o
+1) backportable fix;
+2) the patch 1 as of this series;
+3) conversion patch.
 
-Otherwise, I get:
+> The macro defines the child node internally, which removes the need for
+> the current child node declaration as well.
 
-make[4]: *** No rule to make target 'samples/livepatch/livepatch-annotated-sample.o', needed by 'samples/livepatch/'.  Stop.
-make[3]: *** [scripts/Makefile.build:485: samples/livepatch] Error 2
-make[2]: *** [scripts/Makefile.build:485: samples] Error 2
-make[1]: *** [/prace/kernel/linux/Makefile:1921: .] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+in case it will go the current way.
 
-> diff --git a/samples/livepatch/livepatch-extern-symbol.c b/samples/livepatch/livepatch-extern-symbol.c
-> new file mode 100644
-> index 000000000000..276a43d157b4
-> --- /dev/null
-> +++ b/samples/livepatch/livepatch-extern-symbol.c
-> @@ -0,0 +1,84 @@
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The test module works as expected after fixing the Makefile.
 
-Best Regards,
-Petr
