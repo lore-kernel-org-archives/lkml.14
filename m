@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE92B7F7D3;
-	Wed, 22 May 2024 23:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE4014D28B
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716421908; cv=none; b=fQppHZIhdS8YgGtF0AwR5XcB/fdnd3RbcBzxShMRB3NJqpfyqrRZwntFQ8s9l5mlkb4L17EUuJmycpFFYyTbyNkV91vCOpTFBvINUN8gkd2vpYch+WbjG3ojhkQXPMPO8t9/eg3yb67mJWebrt/rkU0mHSNriK1mrPJ8Rt6z+J8=
+	t=1716421908; cv=none; b=FZURcyvmbs05/dH3oP8ah8lPL+DmXeWtYfhAvARSm+aUBjwXEUvr65tGFR3omubgik7DxT4R+45r/LdwXqo65YAomcUCXgFaGXs3CLADSMYoN5C+Mefzd2liBo1t5XkIEbA645wmTWmpdTyoSlux/iK1uQa1VKXJEP1CYL2OGZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716421908; c=relaxed/simple;
-	bh=twsR8G5WscdioqUmw9Xs22RKtQ4/tW93gBPGJtFfYeg=;
+	bh=gqLUb9QwFmSI9zsPRr9h3j96reicOIQtoFbQZ+xpT4c=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=B7xNrXmE/LGDSJuF58FgcX2//wLOwg2VSyl0EaOTJ0Cs8eApY0FVg6EaNKbxxk7APPeet5wxXp+hfSynLEFL4by/kMUYVW6h2K9h6TcRBUgrUARWYPdgil3q54kdlNlFJdAuvIYx5Zzp2LKX23HaocOXcZVDLZCNH8TX0D4D09w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/Re7Mcm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nKFTMy51koiUjArj3e4/r4cnu4X6nMGUrXdNzVw3FRNNTsUmh1RI4FpXy8x66SkzkKbyvlAr1TVHkai66DlvACe6KdM8z/SFt4x9pvSKYLWX/1TCAuh9sP55WE/X8cetYZVkDo3C3VEqA8KklnBLRkFJmjcm4mEYK0i+y72Fr/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kY3Cpmni; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/Re7Mcm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E10EC32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kY3Cpmni"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E7C3EC4AF12;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716421907;
-	bh=twsR8G5WscdioqUmw9Xs22RKtQ4/tW93gBPGJtFfYeg=;
+	bh=gqLUb9QwFmSI9zsPRr9h3j96reicOIQtoFbQZ+xpT4c=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S/Re7Mcmf44ueE641qccxRstYMzUWUuLPF6G6uAihMTBn8k6uC8HXzNMOeVTxJLXr
-	 57ZSUx8tMD8oL8OH5yaO6fWkLlCcpyMg2J7h05jZF+MxFQZV4F8oV8YOVOiwcqi2Cx
-	 uq64ewRhX5oZg/Ac4FdduTh/SBcSFf14lQD4fvtaKfUNd+bUXaAUKEtLGdHzTPbmBX
-	 D85/yR8ZD9I5FEUrSlbknVz2BOR55UBRr+Q6BG+lcT6TFNMS7MGCVHyuObyBujs0ru
-	 BlFA/LVO0xgFBIdNQy//4zTL6s13+BKA/Fqs2j+9P86nFc5baicTdBiiqKgTWUQNzh
-	 MDiSasTEpCBcw==
+	b=kY3CpmniW4Xo04BbXZBNVtdDiX3zJFaVbuN7sRGtSwXGiPwZ/iO0HAQ+wqA307T2M
+	 sf8ing+ScWnGv/es/7MrZWsgs7DOPB8gOEFRzVW60YtPXR60VdNg8zYV+K9nOzCSer
+	 atj6e+cp87MEQP8vbJDBleLys/l0ItejflIL2t4R7NfcR/pOLZSDnlZcYbUpulHWTM
+	 faLgH3UnsWWbS/eyh0vGTpgFrv7CrmaXNXlh8KRQQlKJWOdbKc+eV01S2BnOQWgmZl
+	 q8iVdBpj7cLrOq3JT2X9R0g3RHE0A8BfzH5NZE0Yp3wb/24SPZIBGK873LwcVotaGK
+	 P3KNTxnPeYEHg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 790BDC4361A;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DCE91C43638;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: selftests: Add hwprobe binaries to .gitignore
+Subject: Re: [PATCH] Use bool value in set_cpu_online()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642190748.9409.11788212835891535911.git-patchwork-notify@kernel.org>
+ <171642190790.9409.1797871952115228181.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:51:47 +0000
-References: <20240425-gitignore_hwprobe_artifacts-v1-1-dfc5a20da469@rivosinc.com>
-In-Reply-To: <20240425-gitignore_hwprobe_artifacts-v1-1-dfc5a20da469@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, shuah@kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- ajones@ventanamicro.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
+References: <20240318065404.123668-1-ke.zhao@shingroup.cn>
+In-Reply-To: <20240318065404.123668-1-ke.zhao@shingroup.cn>
+To: Zhao Ke <ke.zhao@shingroup.cn>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, dawei.li@shingroup.cn,
+ shenghui.qu@shingroup.cn
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 25 Apr 2024 12:58:03 -0700 you wrote:
-> The cbo and which-cpu hwprobe selftests leave their artifacts in the
-> kernel tree and end up being tracked by git. Add the binaries to the
-> hwprobe selftest .gitignore so this no longer happens.
+On Mon, 18 Mar 2024 14:54:04 +0800 you wrote:
+> The declaration of set_cpu_online() takes a bool value. So replace
+> int here to make it consistent with the declaration.
 > 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Fixes: a29e2a48afe3 ("RISC-V: selftests: Add CBO tests")
-> Fixes: ef7d6abb2cf5 ("RISC-V: selftests: Add which-cpus hwprobe test")
-> 
-> [...]
+> Signed-off-by: Zhao Ke <ke.zhao@shingroup.cn>
+> ---
+>  arch/riscv/kernel/smpboot.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Here is the summary with links:
-  - riscv: selftests: Add hwprobe binaries to .gitignore
-    https://git.kernel.org/riscv/c/b1f4ad94cd12
+  - Use bool value in set_cpu_online()
+    https://git.kernel.org/riscv/c/07f23286451d
 
 You are awesome, thank you!
 -- 
