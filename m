@@ -1,313 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814D84C9A;
-	Wed, 22 May 2024 19:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DFC20DF4;
+	Wed, 22 May 2024 19:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716404715; cv=none; b=D11s/wacwHfhAItP1+GyIm36baVollfMz/ix1BZavc/+TTStdgCJKUzOFdKgOwHE658hyJewIgfzK/koY6/SSqwbwlP07cJk8NQVzW5IZJwUQqYtnbUPQsEJuKAIGaeZvb0NaWeXs4i8hsr4+cmV9lcJ663bPBIiwlSHN5ZmhcE=
+	t=1716404898; cv=none; b=Jl6SBMt9YpBZprZA3Cpno9JfhFOwz1amG5QTqoO5X3UIID2P65yJ+XCS7Uq68EvjMYj1byCqs0i4oSjbfa44kK3+WUJn1XxcDqE2rclkRWEbQYTbZIBHqB9C+l/KzwokjjfouaVqeDpX9sKrxS5+xJXJVpM8gb/FGGNlNLPoJAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716404715; c=relaxed/simple;
-	bh=OMsEdF706zMDc6DTElZgQu1W4GvOAtsxz+Uf9uiV0OI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oAVPFbcqRlDRyYrF6AkMpuBXzJRY8DtRx9Lix1K9EGuoiP7wl+jjFi5n4QWleVe184a08aURInOq+5AamBcjXgCjD4RgF1OWWQagDAJdLQdvmWAkCCdy0SlIlbCvYLY64HHMYsfQQ9Eukq1JYlfu2Jr6oT6q9NziA7IPgsgUa+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R/Tzk+5Z; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1716404898; c=relaxed/simple;
+	bh=srDestDcRngwkBYzq2+QVTUC/g+LpjcoHXg2XIj/WUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ee8aG5JWP7NFXYY8GcI4DKteNLuP4l2rsSkkgU5KzXzcKkW++EAgPnsLF9zdI8G52ekvsUEOSAxestSPvKq1G6q6wQsBEH7GpZsrnvMZQKgSQT905m8ssNi8J/zVCbl3Hvt9OV5XosfrOvf/a0CLY2sjXxeO59PECNhPfuDdrk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+NLAyyB; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R/Tzk+5Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716404714; x=1747940714;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OMsEdF706zMDc6DTElZgQu1W4GvOAtsxz+Uf9uiV0OI=;
-  b=R/Tzk+5Z1P40P7Rb43pYapCCETQW1EaDoFEMc9daO2eUazZ6SWY2X64T
-   z+59aSs6W/ajWZSCq2PnTc9ronQEszIw3TYwKWPYJIx27Phgf+ZLnI+t1
-   JGRaqrBXyB/j2OO4z8hnFxm3zPj5ZziXt8kqyfhlFbgXtNtNEimIu2hKR
-   GDENwxOjEth1gh8NfooBAurC1/FDpAB1YF4ZNX56c+B9ZUE2cdFyJq9of
-   02413D6AGu6WteJRPXChRkGzjXw14cBSTdIhRKxdTtWABfXW1BjxddZH9
-   xu25ldw/fSDGR2iTWc4DL/34G4u5bXo19UlXIB5WFzcgwhBu7ZtL0/sX/
-   g==;
-X-CSE-ConnectionGUID: 4ZFSyZKgRi+Ujp2mf9wBKg==
-X-CSE-MsgGUID: bGXJkCNsQ26c/osLCQExZw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12798886"
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="12798886"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 12:05:13 -0700
-X-CSE-ConnectionGUID: KVkmJbkoR9azi3BvcMfRhg==
-X-CSE-MsgGUID: 7OL0PhrpQRaRADgpNPRC3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="37971239"
-Received: from chang-linux-3.sc.intel.com ([172.25.66.177])
-  by fmviesa004.fm.intel.com with ESMTP; 22 May 2024 12:05:01 -0700
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
-To: ebiggers@kernel.org,
-	linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	herbert@gondor.apana.org.au,
-	ardb@kernel.org,
-	x86@kernel.org,
-	bernie.keany@intel.com,
-	chang.seok.bae@intel.com,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v9a 08/14] x86/PM/keylocker: Restore the wrapping key on the resume from ACPI S3/4
-Date: Wed, 22 May 2024 11:48:35 -0700
-Message-Id: <20240522184835.16839-1-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240329015346.635933-9-chang.seok.bae@intel.com>
-References: <20240329015346.635933-9-chang.seok.bae@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+NLAyyB"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f472d550cbso2586190b3a.1;
+        Wed, 22 May 2024 12:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716404896; x=1717009696; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=HHe0J+axw65labUCdXoK8uIN+8G/Ed6hXruWWV5tTq0=;
+        b=Z+NLAyyB/ku+YJIn8N32UXP7Y2duZc0rl54zZftT63XIGs/rJ6OQgWpipAfmnLgEuG
+         n3PO8IiqCsrt9z3YOZ+aqI1PMSorZwYeuYHZrGAiMZyXjrvMMMMdkpQTWWq5exsmQoCs
+         y493oWd2j8IJ/J2Sk3AqqJq9HSqQMVa54ofr3zaq1BHUFhdyr+tGufrCK7Zv9jxTf5Tx
+         it3+5fRbtlqvSs2rGCTJ1XbVuSaoGC7fLgM5B1UI06YddtPN0EqaVxESxeatJQe34fSy
+         D8L11ADPuaversVKobsYraYvca2fadEvY0GTpcfc5NQHeyoUWcLbjWBx8d7gArZb0RPk
+         fQEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716404896; x=1717009696;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HHe0J+axw65labUCdXoK8uIN+8G/Ed6hXruWWV5tTq0=;
+        b=CFDFpBtE8VbuEjW1rwtPiBIkzXvnLM3r9RlXvJwtYJauIym1QBSTVIDfwnn4wePTzC
+         2HwnXe/BFpJhv9ZDcXC+72F6dAo9RUFlRQuBlnLdGIgythMNIqfm8hnQoBsv4IIVqeH9
+         Pwqq6UkuTnxwjxz9hIK8JUdf47eByJSBHIo8q0VIZ1SCIwNj5aAl4tUyIUa/D0zgPbhs
+         i94QG9c5ZLPi+BHPswF468ByWW2f9rMCl4Pk+V6NvhZsv4YdXVhxC00FXculYZaxtfhx
+         fa/+RYC5KPr5tafggAzY/dnc2E55yXUsN3iYmhVmNB52p/EZgsxAlhFEk+zD9En1QWTP
+         xybg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmsJ+ENDhvHdYBau40Q1IBRVvHBiAYfVLowxjb0ak5Vk1vnKd/rh7tT9duhd8LgXxuRrJ/DS+3M4AYc5Zpcb5CZXEeOdWdpQjNxxHINLnLkqp84Z+u118HDMbYqfYOquxPvKNsd914OXQ=
+X-Gm-Message-State: AOJu0YyZDKLzgApXggaQ5+iyyhhkJF+vSwW0rVB84lhKN6RMyZad4MUt
+	WBvbMYtuxB53UGELcG6R5XOTiHJOWP1/sGXGF5EWKaCkJ01KHC/6
+X-Google-Smtp-Source: AGHT+IEipXKKTiG1L46xo/nJ3t/vVfMMPrtmKPX++7PZb3z6qzXlboeQk5rOYPt5CPWAWw9tdjdGPw==
+X-Received: by 2002:a05:6a20:9194:b0:1b1:ebf2:d767 with SMTP id adf61e73a8af0-1b1f8a3fd12mr4314194637.43.1716404895884;
+        Wed, 22 May 2024 12:08:15 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b2fb19sm22744023b3a.207.2024.05.22.12.08.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 12:08:14 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <57645247-fb14-4180-bef0-1638e9f522fe@roeck-us.net>
+Date: Wed, 22 May 2024 12:08:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] hwmon: (ltc2992) use
+ fwnode_for_each_available_child_node_scoped()
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Jean Delvare
+ <jdelvare@suse.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20240522-fwnode_for_each_available_child_node_scoped-v1-0-1188b0da12dc@gmail.com>
+ <20240522-fwnode_for_each_available_child_node_scoped-v1-2-1188b0da12dc@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240522-fwnode_for_each_available_child_node_scoped-v1-2-1188b0da12dc@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The primary use case for the feature is bare metal dm-crypt. The key
-needs to be restored properly on wakeup, as dm-crypt does not prompt
-for the key on resume from suspend. Even if the prompt performs for
-unlocking the volume, where the hibernation image is stored, it still
-expects to reuse the key handles within the hibernation image once it
-is loaded.
+On 5/22/24 02:18, Javier Carrasco wrote:
+> The error path from a zero value of the "shunt-resistor-micro-ohms"
+> property does not decrement the refcount of the child node.
+> 
+> Instead of adding the missing fwnode_handle_put(), a safer fix for
+> future modifications is using the _scoped version of the macro,
+> which removes the need for fwnode_handle_put() in all error paths.
+> 
+> The macro defines the child node internally, which removes the need for
+> the current child node declaration as well.
+> 
+> Fixes: 10b029020487 ("hwmon: (ltc2992) Avoid division by zero")
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-== Wrapping-key Restore ==
+I really don't like fixes which depend on an API change.
 
-To meet dm-crypt's expectations, the key handles in the suspend-image has
-to remain valid after resuming from an S-state. However, when the system
-enters ACPI S3 or S4 sleep states, the wrapping key is discarded.
+Guenter
 
-Key Locker provides a mechanism to back up the wrapping key in
-non-volatile storage. Therefore, upon boot, request a backup of the
-wrapping key and copy it back to each CPU upon wakeup. If the backup
-mechanism is unavailable, disable the feature unless CONFIG_SUSPEND=n.
-
-== Restore Failure ==
-
-In the event of a key restore failure, the kernel proceeds with an
-initialized wrapping key state. This action invalidates any key handles
-present in the suspend-image, leading to I/O errors in dm-crypt
-operations.
-
-However, data integrity remains intact, and access is restored with new
-handles created by the new wrapping key at the next boot. At least,
-manage a feature-specific flag to communicate with the crypto
-implementation, ensuring to stop using AES instructions upon the key
-restore failure, instead of abruptly disabling the feature.
-
-== Off-states ==
-
-While the backup may persist in non-volatile media across S5 and G3 "off"
-states, it is neither architecturally guaranteed nor expected by
-dm-crypt. Therefore, a reboot can address this scenario with a new
-wrapping key, as dm-crypt prompts for the key whenever the volume is
-started.
-
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-Change from v9:
-* Export valid_keylocker() again for the AES-KL module.
----
- arch/x86/include/asm/keylocker.h | 10 ++++
- arch/x86/kernel/cpu/common.c     |  4 +-
- arch/x86/kernel/keylocker.c      | 89 ++++++++++++++++++++++++++++++++
- arch/x86/power/cpu.c             |  2 +
- 4 files changed, 104 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/keylocker.h b/arch/x86/include/asm/keylocker.h
-index 1213d273c369..c93102101c41 100644
---- a/arch/x86/include/asm/keylocker.h
-+++ b/arch/x86/include/asm/keylocker.h
-@@ -28,5 +28,15 @@ struct iwkey {
- #define KEYLOCKER_CPUID_EBX_WIDE	BIT(2)
- #define KEYLOCKER_CPUID_EBX_BACKUP	BIT(4)
- 
-+#ifdef CONFIG_X86_KEYLOCKER
-+void setup_keylocker(void);
-+void restore_keylocker(void);
-+extern bool valid_keylocker(void);
-+#else
-+static inline void setup_keylocker(void) { }
-+static inline void restore_keylocker(void) { }
-+static inline bool valid_keylocker(void) { return false; }
-+#endif
-+
- #endif /*__ASSEMBLY__ */
- #endif /* _ASM_KEYLOCKER_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 605c26c009c8..85946d79cb96 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -62,6 +62,7 @@
- #include <asm/intel-family.h>
- #include <asm/cpu_device_id.h>
- #include <asm/fred.h>
-+#include <asm/keylocker.h>
- #include <asm/uv/uv.h>
- #include <asm/ia32.h>
- #include <asm/set_memory.h>
-@@ -1834,10 +1835,11 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	/* Disable the PN if appropriate */
- 	squash_the_stupid_serial_number(c);
- 
--	/* Set up SMEP/SMAP/UMIP */
-+	/* Setup various Intel-specific CPU security features */
- 	setup_smep(c);
- 	setup_smap(c);
- 	setup_umip(c);
-+	setup_keylocker();
- 
- 	/* Enable FSGSBASE instructions if available. */
- 	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
-diff --git a/arch/x86/kernel/keylocker.c b/arch/x86/kernel/keylocker.c
-index 8569b92971da..da0830e980ed 100644
---- a/arch/x86/kernel/keylocker.c
-+++ b/arch/x86/kernel/keylocker.c
-@@ -9,11 +9,26 @@
- 
- #include <asm/fpu/api.h>
- #include <asm/keylocker.h>
-+#include <asm/msr.h>
- #include <asm/processor.h>
- #include <asm/tlbflush.h>
- 
- static struct iwkey wrapping_key __initdata;
- 
-+/*
-+ * This flag is set when a wrapping key is successfully loaded. If a key
-+ * restoration fails, it is reset. This state is exported to the crypto
-+ * library, indicating whether Key Locker is usable. Thus, the feature
-+ * can be soft-disabled based on this flag.
-+ */
-+static bool valid_wrapping_key;
-+
-+bool valid_keylocker(void)
-+{
-+	return valid_wrapping_key;
-+}
-+EXPORT_SYMBOL_GPL(valid_keylocker);
-+
- static void __init generate_keylocker_data(void)
- {
- 	get_random_bytes(&wrapping_key.integrity_key, sizeof(wrapping_key.integrity_key));
-@@ -38,9 +53,69 @@ static void __init load_keylocker(struct work_struct *unused)
- 	kernel_fpu_end();
- }
- 
-+/**
-+ * copy_keylocker - Copy the wrapping key from the backup.
-+ *
-+ * Returns:	true if successful, otherwise false.
-+ */
-+static bool copy_keylocker(void)
-+{
-+	u64 status;
-+
-+	wrmsrl(MSR_IA32_COPY_IWKEY_TO_LOCAL, 1);
-+	rdmsrl(MSR_IA32_IWKEY_COPY_STATUS, status);
-+	return !!(status & BIT(0));
-+}
-+
-+/*
-+ * On wakeup, APs copy a wrapping key after the boot CPU verifies a valid
-+ * backup status through restore_keylocker(). Subsequently, they adhere
-+ * to the error handling protocol by invalidating the flag.
-+ */
-+void setup_keylocker(void)
-+{
-+	if (!valid_wrapping_key)
-+		return;
-+
-+	cr4_set_bits(X86_CR4_KEYLOCKER);
-+
-+	if (copy_keylocker())
-+		return;
-+
-+	pr_err_once("x86/keylocker: Invalid copy status.\n");
-+	valid_wrapping_key = false;
-+}
-+
-+/* The boot CPU restores the wrapping key in the first place on wakeup. */
-+void restore_keylocker(void)
-+{
-+	u64 backup_status;
-+
-+	if (!valid_wrapping_key)
-+		return;
-+
-+	rdmsrl(MSR_IA32_IWKEY_BACKUP_STATUS, backup_status);
-+	if (backup_status & BIT(0)) {
-+		if (copy_keylocker())
-+			return;
-+		pr_err("x86/keylocker: Invalid copy state.\n");
-+	} else {
-+		pr_err("x86/keylocker: The key backup access failed with %s.\n",
-+		       (backup_status & BIT(2)) ? "read error" : "invalid status");
-+	}
-+
-+	/*
-+	 * Invalidate the feature via this flag to indicate that the
-+	 * crypto code should voluntarily stop using the feature, rather
-+	 * than abruptly disabling it.
-+	 */
-+	valid_wrapping_key = false;
-+}
-+
- static int __init init_keylocker(void)
- {
- 	u32 eax, ebx, ecx, edx;
-+	bool backup_available;
- 
- 	if (!cpu_feature_enabled(X86_FEATURE_KEYLOCKER))
- 		goto disable;
-@@ -60,9 +135,23 @@ static int __init init_keylocker(void)
- 		goto clear_cap;
- 	}
- 
-+	/*
-+	 * The backup is critical for restoring the wrapping key upon
-+	 * wakeup.
-+	 */
-+	backup_available = !!(ebx & KEYLOCKER_CPUID_EBX_BACKUP);
-+	if (!backup_available && IS_ENABLED(CONFIG_SUSPEND)) {
-+		pr_debug("x86/keylocker: No key backup with possible S3/4.\n");
-+		goto clear_cap;
-+	}
-+
- 	generate_keylocker_data();
- 	schedule_on_each_cpu(load_keylocker);
- 	destroy_keylocker_data();
-+	valid_wrapping_key = true;
-+
-+	if (backup_available)
-+		wrmsrl(MSR_IA32_BACKUP_IWKEY_TO_PLATFORM, 1);
- 
- 	pr_info_once("x86/keylocker: Enabled.\n");
- 	return 0;
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index 63230ff8cf4f..e99be45354cd 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -27,6 +27,7 @@
- #include <asm/mmu_context.h>
- #include <asm/cpu_device_id.h>
- #include <asm/microcode.h>
-+#include <asm/keylocker.h>
- 
- #ifdef CONFIG_X86_32
- __visible unsigned long saved_context_ebx;
-@@ -264,6 +265,7 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
- 	x86_platform.restore_sched_clock_state();
- 	cache_bp_restore();
- 	perf_restore_debug_store();
-+	restore_keylocker();
- 
- 	c = &cpu_data(smp_processor_id());
- 	if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
--- 
-2.34.1
+> ---
+>   drivers/hwmon/ltc2992.c | 11 +++--------
+>   1 file changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/hwmon/ltc2992.c b/drivers/hwmon/ltc2992.c
+> index 229aed15d5ca..3feee400ecf8 100644
+> --- a/drivers/hwmon/ltc2992.c
+> +++ b/drivers/hwmon/ltc2992.c
+> @@ -855,24 +855,19 @@ static const struct regmap_config ltc2992_regmap_config = {
+>   static int ltc2992_parse_dt(struct ltc2992_state *st)
+>   {
+>   	struct fwnode_handle *fwnode;
+> -	struct fwnode_handle *child;
+>   	u32 addr;
+>   	u32 val;
+>   	int ret;
+>   
+>   	fwnode = dev_fwnode(&st->client->dev);
+>   
+> -	fwnode_for_each_available_child_node(fwnode, child) {
+> +	fwnode_for_each_available_child_node_scoped(fwnode, child) {
+>   		ret = fwnode_property_read_u32(child, "reg", &addr);
+> -		if (ret < 0) {
+> -			fwnode_handle_put(child);
+> +		if (ret < 0)
+>   			return ret;
+> -		}
+>   
+> -		if (addr > 1) {
+> -			fwnode_handle_put(child);
+> +		if (addr > 1)
+>   			return -EINVAL;
+> -		}
+>   
+>   		ret = fwnode_property_read_u32(child, "shunt-resistor-micro-ohms", &val);
+>   		if (!ret) {
+> 
 
