@@ -1,101 +1,138 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A121419B5
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 16:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121E1141987;
+	Wed, 22 May 2024 16:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716397074; cv=none; b=EwUpA3CNoAq8eSd7/1MJUV3CywIUkM4kZcEAg9PjvcQxuKU8+nn7lO8LbF7yp9H5xKbzwdJCrDRmUSBRVYgDHxEONhzZV/jWdX/D0uZ+Arx/oCbVY6KCcIy5ndLMVtdMnxhHMpvhB3Fc93kToSEI7UONRVK/RIwkfYQOrw2lrOU=
+	t=1716397087; cv=none; b=IQU82oJtIaZx0M+uVtVFVKJmBT2wZ1aeKPezgmus9inON4KFLb1GTu6eVTzZ2KFfWLnFpJLzmg/9OkFeWNJh9WJMmaDTr4IBnW3kmIpEx0gVntmzvgBmlfv8Jwy6tALpx0xJzGK53xAdUSNUWGvthXEprEnqHSDkVcgONE1g55s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716397074; c=relaxed/simple;
-	bh=x6ol8NNtqyR5N4adBohXI5DIsH4OG/KKUJhcyxsPiB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qOqhAF5c48ACmoYU+/j5kH4ZgPNoWmDmzDHB367j+FghthXTKAVgOVXtcJ1OYysGYOPPZgd67Wl5O1lLWQHtb1uTccqHRUT8y0+zA6u41xrcC5R/HC0vZVrV/yjEOCw6g0ET4o8Zr2OMFD52PwAY820ry3XqVWyXX4nzGbakHU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PslpeSsv; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1716397087; c=relaxed/simple;
+	bh=E5h3O5cIByDRNsZcFYywJBUlIQEj1GS7yrSXZ4mA3nM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hze7eP4sfLbtrBNkhviuvnbNePh9vEaZF+NhYkC5OzNV6/GXEEPlLZBQ0NrEBWV7WouC81GTiPbKXyvve3QWnzldlFgjaRHRHryh1WAnMM0B8omMF+oq2Mm1eErLLLgA/4owZ6T+HvKRAwMSpj41EJGqEWeyCSPueaTKuMUbGSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ibUtR13T; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PslpeSsv"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51fdc9af005so10112467e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1716397070; x=1717001870; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YVqQilWnEvaPMm9v3i+xshWzcKoqdVjetPe0efHlOEA=;
-        b=PslpeSsvPr+wJ6XlbzslXgcG1dsd0Tv+C46jiugDVvdTQTRLjrqb6fPaNyTyttdLGM
-         +2NnM5AIwI+Ieu2uV6rJ21ijHy5bBsvsvZDZam0bpBZWcGsGFRr/Sh7crn0MYqMDqDWO
-         XX2FvRBvbIDP+eP1FGqJvvy87eX2joocL1uN4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716397070; x=1717001870;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YVqQilWnEvaPMm9v3i+xshWzcKoqdVjetPe0efHlOEA=;
-        b=X9qWgxz24UHdHcGseBlyMgpbnluNSbc1XdSpm2bwU8kRFK+yCeo6nZrHrOwAvQU/iA
-         r5P34k66YpAv7nWKAwglqlzcCGfshXCQqhF+Yii++6XDs2eL7hsBiuqyebU8oHz5AHIB
-         vUAmeXPZOFevch589QfCRivrkYjrNHIp6Lb9th4mbucmlhfam1t/N4TEjKa/rsXCt9QF
-         9muEzJlb4XDf/aBUoXx+u985U5Mhle0/3TdnQ5FzDAtQnHA3vOsCF7W0dosQ6oBVzvSZ
-         8UqGvr4CZW71AoR2szuwRR840d5vp7wXnsvkTgk9TOU4noK+a6WyE39Vq8Q+DqgkMfmN
-         /O8w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/vAiP23zxTkPZnH5zK5NRXhJl3p9a+t7dHQYuug/DXdbQiInZtF5oXVzRDZRdM7EqFwUfv0qULjpot/1+SNallA9Nxh9Bwif/zgGv
-X-Gm-Message-State: AOJu0YxZBVMgCXZKNMJdTmneaa0OCXKu6eFkRFmio9vVEtkGoL0h/Vea
-	dkBcXPFVJIswBUTtQwUPJdh8usGrG3DtvAbE25/OPBFAUyQOAo5l4Sphr+A+MmOLBGDFfsGiOER
-	xV01WYKs7/gf58CzS0G8we6t+wrmCNnXS4ck=
-X-Google-Smtp-Source: AGHT+IGrptWSdMdPR63//GttFSx2aUNf30uQrwxec28DmTObbvHKZqGgtlSu6ewyMoM0P1HhEuZ0NmwvWHhLNI4pUjM=
-X-Received: by 2002:ac2:447a:0:b0:523:9003:88a0 with SMTP id
- 2adb3069b0e04-526bf82caffmr1833740e87.39.1716397070517; Wed, 22 May 2024
- 09:57:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ibUtR13T"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44M8PZhH027702;
+	Wed, 22 May 2024 16:58:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=
+	qcppdkim1; bh=tOmL9/AFDibhDK1zK16WjKaKvy/cUQ2rVwwdEQpirfg=; b=ib
+	UtR13TjYa/u1fx38Tpd0Gep3EXQeWTexkYtwe/m1eTVLgpMBLOlanUPiK42dan+Z
+	r4A6AFwvSNWCndgqC1oU472aC8g4dmNxo2I9mOLLHwTnRoCxfyPrUaMbirKlsl7K
+	ftiQoBwRWA7TBRseYyzhrTaaQ9x18oO2pi9HPpzQ/ENh+oWL+yZtwK5X/fYja4jB
+	NYkZLlLDc3GWwy1nFzk3Z39vwfAPjijziW9qRz8FI8xancMUHtOFSqFjjkTttsCy
+	K2OAA+wHOdz5aDgxaDfapJQ1nnB1B82JPGvBBwrGBGjO19SknoiwroxEFF5m6CIV
+	xEM1YDdROurqez1o322g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pq5hh5x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 16:58:00 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44MGvxhr014348
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 16:58:00 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 22 May 2024 09:57:59 -0700
+Date: Wed, 22 May 2024 09:57:58 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Shivnandan Kumar <quic_kshivnan@quicinc.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_rgottimu@quicinc.com>
+Subject: Re: [PATCH] soc: qcom: icc-bwmon: Update zone1_thres_count to 3
+Message-ID: <Zk4kFoM4wN5/BJuw@hu-bjorande-lv.qualcomm.com>
+References: <20240522081508.1488592-1-quic_kshivnan@quicinc.com>
+ <bc973b4f-fe8b-44e5-afbc-f3ce8a6fc873@linaro.org>
+ <baa55c1f-2670-4a3c-abcf-ea4e841e4a1e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240516174357.26755-1-jim.cromie@gmail.com> <20240516174357.26755-23-jim.cromie@gmail.com>
- <CALwA+Nb8EKBRk+1ejxWhRBhoYf=Arge5TvA-mPzDD95Am+7pYw@mail.gmail.com> <CAJfuBxxhTzOOBz_kTc9APGVw==r1fkyk+rdiri3wJAYJZSYoLQ@mail.gmail.com>
-In-Reply-To: <CAJfuBxxhTzOOBz_kTc9APGVw==r1fkyk+rdiri3wJAYJZSYoLQ@mail.gmail.com>
-From: =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>
-Date: Wed, 22 May 2024 18:57:39 +0200
-Message-ID: <CALwA+NaYPZY6956KG6u4t3WxN5YAWABitvhwYn30kcH_nrxeuA@mail.gmail.com>
-Subject: Re: [PATCH v8-RESEND 22/33] dyndbg: split multi-query strings with %
-To: jim.cromie@gmail.com
-Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk, joe@perches.com, 
-	mcgrof@kernel.org, daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, 
-	jani.nikula@intel.com, ville.syrjala@linux.intel.com, seanpaul@chromium.org, 
-	robdclark@gmail.com, groeck@google.com, yanivt@google.com, bleung@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <baa55c1f-2670-4a3c-abcf-ea4e841e4a1e@quicinc.com>
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: N8pLjYiFF5KKa0DlwwyVY8BanAQoQSr_
+X-Proofpoint-ORIG-GUID: N8pLjYiFF5KKa0DlwwyVY8BanAQoQSr_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_09,2024-05-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 clxscore=1011 mlxlogscore=999 mlxscore=0
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405220116
 
-On Tue, May 21, 2024 at 6:08=E2=80=AFPM <jim.cromie@gmail.com> wrote:
->
-> On Tue, May 21, 2024 at 5:58=E2=80=AFAM =C5=81ukasz Bartosik <ukaszb@chro=
-mium.org> wrote:
-> >
-> > On Thu, May 16, 2024 at 7:45=E2=80=AFPM Jim Cromie <jim.cromie@gmail.co=
-m> wrote:
-> > >
-> > > Multi-query strings have long allowed:
->
-> ... input like:  (Im using it like a verb)
->
-> > Missing been ?
->
-> this is an alternative.
+On Wed, May 22, 2024 at 02:35:21PM +0530, Shivnandan Kumar wrote:
+> 
+> 
+> On 5/22/2024 1:58 PM, Krzysztof Kozlowski wrote:
+> > On 22/05/2024 10:15, Shivnandan Kumar wrote:
+> > > Update zone1_thres_count to 3 from 16 so that
+> > > driver can reduce bus vote in 3 sample windows instead
+> > > of waiting for 16 windows. This is in line with downstream
+> > > implementation.
+> > > 
+> > 
+> > This might make bwmon quite jittery. I don't think downstream is the
+> > source of truth here. Please provide some measurements *on mainline tree*.
+> > 
+> 
+> Hi Krzysztof,
+> 
+> The 16-window (64 ms) waiting time is too long to reduce the bus vote.
+> At higher FPS, there will be multiple frames in 64ms e.g. 4 frames at 60FPS
+> in 64ms. Hence, delay of 64ms in decision making will lead to higher power
+> regression. I’ve tested this change for 4K video playback on mainline tree,
+> and there’s a significant power-saving.
+> 
 
-I see
+As requested by Krzysztof already, update your commit message to capture
+such motivation.
 
-> maybe s/strings/commands/ too
->
+Please read and follow this:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
 
-I like commands more
+> I propose to make it a tunable,so that user space can tune it
+> based on runtime depending on fps.
+> 
 
-> > >
-> > >   modprobe drm dyndbg=3D"class DRM_UT_CORE +p; class DRM_UT_KMS +p"
-> > >   modprobe drm dyndbg=3D<<EOX
-> > >      class DRM_UT_CORE +p
-> > >      class DRM_UT_KMS +p
-> > >   EOX
-> > >
+I presume that in e.g. Android there could be some sort of power HAL
+that tweaks this value dynamically? In a general purpose system, how do
+we make sure that this value stays relevant for multiple types of use
+cases?
+
+> USECASE                     zone1_thres_count=16     zone1_thres_count=3
+> 4K video playback           236.15 mA	             203.15 mA
+
+4k video playback is a fairly specific (and generally unusual) use case.
+Is there any impact (negative or positive) for other use
+cases/workloads?
+
+Regards,
+Bjorn
+
+> 
+> Thanks,
+> Shivnandan
+> 
+> > Best regards,
+> > Krzysztof
+> > 
