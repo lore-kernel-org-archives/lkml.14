@@ -1,101 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85934148836;
-	Wed, 22 May 2024 01:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A60148FE5
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716339638; cv=none; b=pQLM3oSrMjjB4YIZXw1f1qYApPMKd83wt/4sRyOjuouTHBSVCSJ+VIO0+VxHVbOmR8D1vodmCKNdyxzpg3uDY7CqsXgwqdxm9cbgyACUbtTc+0v9SMGnSFww3Z7a7KdPVQcZglWzwzWKlisZDBe8uUgy5YOMUR7i8U0XfkTXnrg=
+	t=1716339639; cv=none; b=JJs6GadNwjs1MBzIhCGTI+Y0WrTxZHpQQsbWIi9LDq0udxzQP4+MJ6s72DEQzZNAKHiMv1fb+LK5LbrRiQoABcysrLS147Q++0pDXU6Vy60N24/aejVj5Gk4/JrfDFBFwoXo5aeZPZ0pTGrVUM6V2ciDNT2ZG6fu38IdwW9D/zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716339638; c=relaxed/simple;
-	bh=MhYuz5hxHwEcA/J213/XoPQ9yIK3Rf2PtgNf8nNBVMU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q7QjImVIZn5R5vbCNvlsX87LifMhQfuan7QtzF5TRBtGduZ1qcFn90xNGkJe0Az/sdEb57DeTYEOh5bQrtO11h+NvV2CbqDVia1bDysTcWF19PIv9sOJC5zw+NYsH4VscmNes554pm+qd1Q4ltHU5SWL/98K2OIDMxXvh2vpnfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThGATGNl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716339639; c=relaxed/simple;
+	bh=JFhciCbc61MBa4XyewvFb1lKT00Bu3BgfLyFEhkBF2M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=W7/DmcgfA3afu72vt2FzfVXWQDLs+gEmNoByzbXnixqRQH/9FyRb3lIFWZcoqgny3RxYQUffbobGS4RWqmudlkhoelh4MVI3rlLGKJJt3JeFB6WKpex7BW2/m65ulnOP3uYmjMvRzK0Oi9DnpvRMyh+e51VYJMSEvK62tu1GLLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tJyjl3Ll; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThGATGNl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67309C2BD11;
-	Wed, 22 May 2024 01:00:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716339637;
-	bh=MhYuz5hxHwEcA/J213/XoPQ9yIK3Rf2PtgNf8nNBVMU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ThGATGNl5WdBJ6krO6ddFKa1Vi7Yud+Y+cNz7qeg8BLswYbqGv2hbq0COi3Ex+Ewr
-	 n2obnZQIZBYotClzBsXImUJrBjvivpy1hD8fu7Hu1SDIWwmQAH1syGKHP7wiBFkntK
-	 1FvNODkFWUc5Sy8IajSK/gdRWpECSXMTqzikGCUUHiNymyfOTMZXMijrzHAqzuWEI1
-	 pH2XExD+CQ4ccYEjCb8UslYH2GvgCaxPf8wngLj9shc/mmvhCZRbwikEGmNyQMNlRa
-	 VKSiL1LAk0eht4ivZdcrhabT5h7l+HBr+SinR4tUYmxC65yXomtTLO+DDXy2GBp1mo
-	 FV6G5hkWs+wRw==
-From: SeongJae Park <sj@kernel.org>
-To: Jonghyeon Kim <tome01@ajou.ac.kr>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/3] Add NUMA-aware DAMOS watermarks
-Date: Tue, 21 May 2024 18:00:34 -0700
-Message-Id: <20240522010034.79165-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240520143038.189061-1-tome01@ajou.ac.kr>
-References: 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tJyjl3Ll"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-62a379a7c80so229317a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1716339637; x=1716944437; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxajjTXnYYVOFD9uBYzEDwXtIEu/3Rsj0ndr4XzJYGw=;
+        b=tJyjl3LlC40c7l4MvoBWOON7OCzq0T3nLPe5vwJH9t2SN4J8/6rWW5ZI7jNkIi8/c7
+         gsoILil87wyJfIRMWhee+QD1eQ25BFMB/oNT7+xp2xDHmK5gvl7e1GNhnLQHMbGCelNY
+         Y4g+PXx/5Hd9R8Y+WTRzCgEAfDfLtK6oNbZiP6s4y/ma0sTVIGUk0yVjt59UxEOwd+H8
+         DqaVM+S/EaOOlp/AQDtrQAH5vOSSr8LM3g+Om7Y+bhPaZ4bX7P9mZwef34tMM8fQig5D
+         wz1ayQePg75RGvaxuxVDudCexW3ck2idYBGDSKJn4I252m0IyIwHJcvSZm8qNog/JkUS
+         MVGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716339637; x=1716944437;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxajjTXnYYVOFD9uBYzEDwXtIEu/3Rsj0ndr4XzJYGw=;
+        b=AV1CMYuIhguPdjArCnJp2i5Q3e5bW5lOrp1DspsUD38gxbXfAP4DJ+VBl61fU0P+w+
+         9D8dnl+JZ1LtE0QBoTBFJFE+PdHL79cuja8xqvgWEkgCtSPPqkQnsWyZQGCIXTXYoIPV
+         rQJczD3c3XnLTJHcdRJcMmzrKWXG1xS4ajao71BX5Y6wjpIPWemQyvtlumsAJIF4cgVD
+         AwCFADN1Ny8yvaJDurLsEjViOInkdgYmIdqt09PGHYyq0TMvMEi2XmpTqkiUWiFPfVtq
+         OtKxAPI/sOaqqQcSq3uAGYIAAe6OTNqRZa/Lt7qVYcCiRdfAkOMGVCKxTq7pbCqGJ4rT
+         GpOg==
+X-Gm-Message-State: AOJu0YyJHzvTXHMnsM+x1BuyqXohx2hKPMrtYRPxOAa0/VarZgzi842e
+	68InoZGe5mds4BtgUb91ytg/aoOnVewI3SbHsHO8GN/QBtJOEsUKTUF7hmfeoZglIr92A3zgXhA
+	ILw==
+X-Google-Smtp-Source: AGHT+IEnjqQT67JKIH5im85s2TXusw89Zmodc/cXnUeHwbA1PsuQIpfWppspP0Q6xlgu0hmLR6KjvP2VuXY=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6a02:59f:b0:658:7c4c:25b with SMTP id
+ 41be03b00d2f7-67601b5a4c7mr2750a12.4.1716339637230; Tue, 21 May 2024 18:00:37
+ -0700 (PDT)
+Date: Wed, 22 May 2024 00:57:10 +0000
+In-Reply-To: <20240522005913.3540131-1-edliaw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240522005913.3540131-1-edliaw@google.com>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240522005913.3540131-25-edliaw@google.com>
+Subject: [PATCH v5 24/68] selftests/ipc: Drop define _GNU_SOURCE
+From: Edward Liaw <edliaw@google.com>
+To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
+	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
+	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, Edward Liaw <edliaw@google.com>, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
+	John Hubbard <jhubbard@nvidia.com>, Muhammad Usama Anjum <usama.anjum@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jonghyeon,
+_GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
+redefinition warnings.
 
-On Mon, 20 May 2024 14:30:35 +0000 Jonghyeon Kim <tome01@ajou.ac.kr> wrote:
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Signed-off-by: Edward Liaw <edliaw@google.com>
+---
+ tools/testing/selftests/ipc/msgque.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> Current DAMOS schemes are not considered with multiple NUMA memory nodes.
-> For example, If we want to proactively reclaim memory of a one NUMA node,
-> DAMON_RECLAIM has to wake up kdamond before kswapd does reclaim memory.
-> However, since the DAMON watermarks are based on not a one NUMA memory
-> node but total system free memory, kdamond is not waked up before invoking
-> memory reclamation from kswapd of the target node.
-> 
-> These patches allow for DAMON to select monitoring target either total
-> memory or a specific NUMA memory node.
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index c75ea4094870..45aba6aa8e1d 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
-I feel such usage could exist, but my humble brain is not clearly imagining
-such realistic usage.  If you could further clarify the exampected usage, it
-would be very helpful for me to better understand the intention and pros/cons
-of this patchset.  Especially, I'm wondering why they would want to use the
-watermark feature, rather than manually checking the metric and turning DAMON
-on/off, or feeding the metric as a quota tuning goal.
-
-> 
-> ---
-> Changes from RFC PATCH v1
-> (https://lore.kernel.org/all/20220218102611.31895-1-tome01@ajou.ac.kr)
-> - Add new metric type for NUMA node, DAMOS_WMARK_NODE_FREE_MEM_RATE
-> - Drop commit about damon_start()
-> - Support DAMON_LRU_SORT
-> 
-> Jonghyeon Kim (3):
->   mm/damon: Add new metric type and target node for watermark
->   mm/damon: add module parameters for NUMA system
->   mm/damon: add NUMA-awareness to DAMON modules
-
-Following up to the above question, why they would want to use DAMON modules
-rather than manually controlling DAMON via DAMON sysfs interface?
-
-
-Thanks,
-SJ
-
-> 
->  include/linux/damon.h     | 11 +++++++++--
->  mm/damon/core.c           | 11 ++++++++---
->  mm/damon/lru_sort.c       | 14 ++++++++++++++
->  mm/damon/modules-common.h |  4 +++-
->  mm/damon/reclaim.c        | 14 ++++++++++++++
->  mm/damon/sysfs-schemes.c  | 35 +++++++++++++++++++++++++++++++++--
->  6 files changed, 81 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.34.1
