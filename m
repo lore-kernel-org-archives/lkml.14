@@ -1,203 +1,148 @@
-Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2289E502BB;
-	Wed, 22 May 2024 15:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716390500; cv=none; b=Q9pYYZNeUvTjw2a/ZH6csytlqIkvWlyEnntyf61SuiKMlaXWFd3/3bO2vvZZ+X2uKRPVyXrdEJLtLLC1Vn+eKgapKYfUwQGjsrp5/hoSkbYBA/pcsu2Ye3zHseO+Mk17bNicaNgu0Zc6ya1xUxRDoaOpg27Cak1yQVlA6Tn2ovA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716390500; c=relaxed/simple;
-	bh=WBXWn9DF64PWHy/GS7QgpNWwnjYvO9xO1VVoediKDPU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=X0309CXS2HHtCulkPW4wRKCtkE084/cEVmk01anyJ4sZ4UVO7hHtnmZv/K0tD15GMSLQ1ia/GG7KvmJfL00Yh4Tc1nKms++7jJMbu2Vbx/mSisVGjx1AMT2tpQsxB1X+m3anaqFy8gv2t06PAzibFEyD5vZHGZpgx+HyGYbbDKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ZFfRwpi3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jx4WIM/k; arc=none smtp.client-ip=64.147.123.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCE72942D;
+	Wed, 22 May 2024 15:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716390538; cv=fail; b=jLt06OZHwhhJSiqjD9xFYPWonm+VZwcPSRf8TIsO90t7lcTc6c3y/euYD1fjmXYfIwFIGrf16zcTMyS46OmcLm1lU/EZEawmOSsGIpN15kKrYysDEKDuZcWx8aah2+gkPdJ/AOb/NIcoFceR0xOC/dFYbHWmUu/4ycRemWYma4U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716390538; c=relaxed/simple;
+	bh=oP4R/tpiyqd2rosVrWbMWHScizgRRqwmxEsuIUHf3Jg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bsDPw1nhZ+qxkxPPKqZJIGWxfDjlRN6y/+d3Hy/PGZHXTvYSxQVhcKjpF/HNnlks8otbD1+IbaP2uHxej93ytTeFNxmiPcRafUsXg4eA4oR3ZfjdEGEzvj2peJm0FVLNafNcLg4AzjJYQe3zkBWtSFI7w5Dx2+/KEL3SFKoFEUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=j+ejNDKH; arc=fail smtp.client-ip=40.107.92.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ZFfRwpi3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jx4WIM/k"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 07B271800158;
-	Wed, 22 May 2024 11:08:16 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Wed, 22 May 2024 11:08:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1716390496;
-	 x=1716476896; bh=WBXWn9DF64PWHy/GS7QgpNWwnjYvO9xO1VVoediKDPU=; b=
-	ZFfRwpi3IXavn3EK5rm0cfzBzvdvkwBbYkz+UlMh0SJ1x8POl5dCNb+ec50HAkRD
-	gfW+nV0em4vlP5gzLtmDCbIkO7BtMRSkXJP6NsaErFuPgiRr0+CfCGqqVl5gUr+J
-	YJEa+eEnAqZGbjibs8lrYYMfJXmBf7PfOfip1W+0fdA6lQzB4KVzSUdQccEgJCEs
-	IB69KqvcBNl7gjXwqk5Opr2GrJwRu5Q2wRpf6buU7txfVBtvvj+o41w3WVwHvfuK
-	sCrRw7e09HdnKRfBnh0ixLk23q9tnnAES8IAV8h3WwFfvVOMzeNihOgNfQFiOzZs
-	YvwfBuoWbTjf9ZreMhmF5Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716390496; x=
-	1716476896; bh=WBXWn9DF64PWHy/GS7QgpNWwnjYvO9xO1VVoediKDPU=; b=j
-	x4WIM/kur8rVyPPpTX6nlnmxAM1VS1W9jYDk9B2JKHYWl7C2yfsUM0INfkTfNwsB
-	aYoOGK88inxHoBqwiNGcshyTNFunpyVG8OCpUUxb1ZColTwt3UtL427yEyYZ408y
-	kvdCc+bY08ymQR96gbHKxvtbfLHAdCvsB0k6D+V1EvGYWlcNUXfI9RGywLN/W7PP
-	JcRhoh9vecVImWLNY5fM2Td9W2RIZFvVGcEGjZmJ7fX4NhhA42Px34aLknvOurS7
-	iizQuzlA+Hrbc80BbIR47gLzLJLKBVfrWT+SzzvO1RgEYDB+GsulRMEq3bWdBVT4
-	WpWuQzZc5wgen6P1NURDg==
-X-ME-Sender: <xms:YApOZmg3XU0Bm_J4L_152xo4H-M1MVnFbSGLEsgxggBeIzYinpxtjQ>
-    <xme:YApOZnAjTjwi0bz5QaOrkd8wf5qqdgUxH3pjGqceHOuqXT79vBFukY-S4HQYKolgX
-    G9Zlvl6kJWGeNMsEyc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeigedgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpeekleevffehtdeigfekfefhffdtudffvdeuvedtffet
-    heeuiefhgfetleekleekjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdih
-    rghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:YApOZuEOvKNNwS4K-FM_ND0ScK1AVTK76dgEY_LCcoAPdCETbr4EOA>
-    <xmx:YApOZvTnv8ZJya5hdVxrXAD0VkOahc4A1bPrWm7WWJS1VOsqBVIL5g>
-    <xmx:YApOZjy_TrPDrjqpnUkIIgNLFL-ySN0fMkZkhGZkSmISV31Xwn8w_A>
-    <xmx:YApOZt7wjey5NX8RAL2wTGuHJVz_nifnPdKSo8VNJaBsQxG7Ao-r-Q>
-    <xmx:YApOZj9UpD6SIdFZjQcDDUBOhlT1iJkHI7OlR6BFaU4aFK2RkDZoTbgv>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 209A136A0078; Wed, 22 May 2024 11:08:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-480-g515a2f54a-fm-20240515.001-g515a2f54
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="j+ejNDKH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eXZj9xRkg86KD8ykOjCd/eQ3cKzfXiQE68KDt1Jf2u1p/iCcFiZk4f5C5afO7yw2MREqolTsw62yomdti9kD7nvSbsaLdAPWm8A1Xi4tK54+WNs9sZdV6+rIrTyJ/iE5TIlfClQ+zrrz71y+NfCAGWf6JkKjGT8CEuuRKdzFApAglA5g4n/2cSLIF+Olxyot+L+uE9mZJr8m2iI/DC4bXzMxVBy2hF5GD+6NMU0WA2d8IzjOeRTtSK2rbfalL/jCb8/U2GzSagmUei3lgctXGmz/0dnz7Qsu840zvTW4SFPjp6LmKfFSosq7TT6VOC3RoFsH9BwrRsbuEr9C9stBiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FqqeIBP6dghrqcO6p9Ojgm1CLshDcGlvjVbPqQBKzd0=;
+ b=CK9RH28Cep1qp4NtJ4yxFD6k2RcYfMRHF3k3u+Mfa5KQ05F0Zpj9bv6CtzBthc23JAtIZVxvBUz/K/fqcK1IYCWfKZHKeNSMkKnz8oefz0NUzKpj97T/KHjjsWxWesi/EccahNW8VDFYPdLHA5+OEaxz685pB0NDpndeqJ4K/s8FF/eG8xQByNhXf2lrgk1fXHi8ixf40FyC3x79nf/z8gHmwke6sM7KSlmx57YRIXX/n1i0eAdqRvVg7WrvDWmgF6pgOCISqFfP834BSAUHZWO/1W3WP+QgCGbtSZzhvWYXHQ3c4ry7CjufzpVaFiUMm2BuR37P7SYOq+e32gAmdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FqqeIBP6dghrqcO6p9Ojgm1CLshDcGlvjVbPqQBKzd0=;
+ b=j+ejNDKHkp3fNc/3tsSdrKQT1MVui9SiuB3FTlADxi7qENM97dMqjVYcRtO51pL/CXmSIzmcZ+YQmOFiNuNstzGmvja3CBPnooyB7jwa3KTfYLhl4MVDxbNMuiCm5RwJ2xVLgfxH8q4dZM3FB8VcSOUEHozGga1cH4lG2PdyPVM=
+Received: from BN6PR17CA0042.namprd17.prod.outlook.com (2603:10b6:405:75::31)
+ by CY5PR12MB6345.namprd12.prod.outlook.com (2603:10b6:930:22::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Wed, 22 May
+ 2024 15:08:51 +0000
+Received: from BL6PEPF00022570.namprd02.prod.outlook.com
+ (2603:10b6:405:75:cafe::f5) by BN6PR17CA0042.outlook.office365.com
+ (2603:10b6:405:75::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19 via Frontend
+ Transport; Wed, 22 May 2024 15:08:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF00022570.mail.protection.outlook.com (10.167.249.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7611.14 via Frontend Transport; Wed, 22 May 2024 15:08:51 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 22 May
+ 2024 10:08:50 -0500
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>
+Subject: [PATCH 0/4] acpi/ghes, cper, cxl: Trace FW-First CXL Protocol Errors
+Date: Wed, 22 May 2024 15:08:35 +0000
+Message-ID: <20240522150839.27578-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a62c1c0b-0b2a-4b3f-85df-da586e103fcb@app.fastmail.com>
-In-Reply-To: <13aa508f-6830-4d52-87fd-5063f737c990@app.fastmail.com>
-References: <20240502-mips_debug_ll-v3-0-3b61f30e484c@flygoat.com>
- <3dcf3ac1-5494-482a-a80a-df4126e6ae59@app.fastmail.com>
- <3d6883ed-f8f4-44e5-a184-e5499c44f0f7@app.fastmail.com>
- <Zk2mt/FsgltvhVzf@alpha.franken.de>
- <13aa508f-6830-4d52-87fd-5063f737c990@app.fastmail.com>
-Date: Wed, 22 May 2024 16:07:37 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [PATCH v3 0/9] MIPS: Unify low-level debugging functionalities
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022570:EE_|CY5PR12MB6345:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0830fc8-9715-410c-30e0-08dc7a7116b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|1800799015|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/Wct0gw2QI4YraDoPk/JRdqJe0pIFiGRltTM3+lSyIXvP7aOY3NoC6/GfUIk?=
+ =?us-ascii?Q?nutVkpyjibOxa0Noh6+wU3+UUszWontoW0E8ejr09Y6W677bUv5rBukmtnDn?=
+ =?us-ascii?Q?ETqIdV6ZsQZEOgUv4SAuJ85c8yhv6Z/vOIAh9eMihPeneixVGPSNJq5c3FSR?=
+ =?us-ascii?Q?pFWZ+YB4w3Cz+lf8t7JV3QtK0TtUL2OH1A37bWzdn705CyjsejSbiK2Nn+Su?=
+ =?us-ascii?Q?38YPjbjk+9+io5+XWauLh7mgkXU3sWXlHnCKJZRBffX/qMZNIvmw+KdFN1uY?=
+ =?us-ascii?Q?aRNhHhZTB/kqAk8UPrfp2E9/8x2+C58AuRGVFd3JM5m90UpXFTQslybV6Wkb?=
+ =?us-ascii?Q?kWOPuxJJ/dq+wYT8FFjDaxSGE6g4vMFt1dunuqNFFkUkCK4/PYpyQjlJwyQc?=
+ =?us-ascii?Q?oV+HYaBmj0IQMOCVIFyfI3bdSzzq/YAu4rGOpoViZgktfsReF5xTpPds2ucq?=
+ =?us-ascii?Q?3bQWy7V4JfUwWiphpodUWln9JzJPq4+ALZ8Vt8OyhuZ3lZunKXNj2HwK4sTj?=
+ =?us-ascii?Q?XXAgmxfR1TiNtt6kcq/RVcUhunip9SrH/k2RqR5kkEECALinTuBBBT1FAMBb?=
+ =?us-ascii?Q?uYLFNcGhLx3B3KZnmgOdcB/9Ee64AR6r3UcEhUjtKciIPNMTXcGgUcyWCmFI?=
+ =?us-ascii?Q?Ji9zBJsBoELvcjvRja8P2ZzmHQo+8yRgS8Z3ZWlEHgxom/F0ceWJnQSY3v5z?=
+ =?us-ascii?Q?2afl4/0KXrrkE7jqQ737roVFGWdvTbqzF9js52fma4EztmRL5VrnqHY9ratj?=
+ =?us-ascii?Q?Rx42wnE8c+jHeFCFul7qZegj7vLl+4QSPhjdC0LRFJdci0ky02uoZ3mGTZp4?=
+ =?us-ascii?Q?WTX3yG3OR6ZH/iG9izK4orQGv9oUA9DuRkiDmgll1A97LeUh1FZDVo88lZl4?=
+ =?us-ascii?Q?UTt/i1LJh4dGbi9m3NdJtCEm/8RcHHMdk+S1VCIHOW+9pKESyD3V6B7bmwgr?=
+ =?us-ascii?Q?WR9vSN+n31IdmCfraXtRSc8nDiV2elvFiBpih3PqzSUs3sDKC8iB6SPgmka5?=
+ =?us-ascii?Q?x/1VACp6s3GmL4GNx+fllr5A84aM4T33PX01XRNPTVzeTIz1mx+UgKf9H/lU?=
+ =?us-ascii?Q?hQhfvil+M23vg2NOZA9dMJa76efoDX81GfXiBJdg/zRXLvS6ugqVAbns/ZM5?=
+ =?us-ascii?Q?2D5HgYoavJZVgkHCqIcMUAR073ZzdTB9Bt0hGrsEWGeBMNNYu78eBj9iGCZt?=
+ =?us-ascii?Q?whCIP4q5wf+7kW7nMbqYtZMH/8xs9o+6oItQt/DiLj+pCj3CXyC6nJ29Q1Wy?=
+ =?us-ascii?Q?tX6ud/6Ut25vJiojC693uJaWM6KhwWdLCbYzTYv7ZfPEmLRM3zuF0Pj57WLr?=
+ =?us-ascii?Q?sFwG4njkH3GaGz5Iid0uYqQTEu4l/y7dFRuKVYEUd7SPxTi5Cbq3nJpZtDfk?=
+ =?us-ascii?Q?QGBNEs0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(1800799015)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 15:08:51.0296
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0830fc8-9715-410c-30e0-08dc7a7116b7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00022570.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6345
 
+This patchset adds trace event support for FW-First Protocol Errors.
 
+Reworked the patchset to reuse the work item written by Ira for handling
+CPER events.
 
-=E5=9C=A82024=E5=B9=B45=E6=9C=8822=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8A=E5=
-=8D=889:28=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
-> =E5=9C=A82024=E5=B9=B45=E6=9C=8822=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8A=
-=E5=8D=889:03=EF=BC=8CThomas Bogendoerfer=E5=86=99=E9=81=93=EF=BC=9A
-> [...]
->>
->> hmmm, I thought I was clear enough on version 1 of this series.
->>
->> I don't want an additional printk like debug interface, There is
->> prom_putchar() and early printk console, which always got me past
->> any boot issue.
->
-> So it's not an additional printk like debug interface, it actually
-> merged 3 existing debug interfaces, the first being zboot's assembly
-> print routines, the second being CPS's assembly print routines, the
-> third being some platform specific early printk. I think they are
-> all essential for debugging early faults, for zboot that's the only
-> way to print something at decompressing stage, for CPS as other cores
-> are booting in non-coherent state we can't safely use any kernel
-> functions, for early_printk that can help us *reduce* the amount
-> of early printk code by just adding UART base to config.
->
-> The only thing being added is the ability to debug very early exceptio=
-n,
-> even that is partially ported from existing CPS assembly debugging rou=
-tines.
->
-> Please let me know your thoughts.
+Smita Koralahalli (4):
+  efi/cper, cxl: Make definitions and structures global
+  acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
+  acpi/ghes, cxl/pci: Trace FW-First CXL Protocol Errors
+  cxl/pci: Define a common function get_cxl_dev()
 
-That being said, have you noticed that prom_putchar and early_printk is
-a non-extant on generic mach, ingenic, ralink etc? That's because we
-really don't want to introduce any platform specific UART code for
-early debugging on new platforms. With DEBUG_LL introduced by Arm it's
-only a Kconfig option to do the trick.
+ drivers/acpi/apei/ghes.c        | 24 ++++++++++
+ drivers/cxl/core/pci.c          | 24 ++++++++++
+ drivers/cxl/cxlpci.h            |  3 ++
+ drivers/cxl/pci.c               | 60 ++++++++++++++++++-------
+ drivers/firmware/efi/cper_cxl.c | 77 ++++++++++++++++++++++++++++-----
+ drivers/firmware/efi/cper_cxl.h |  7 +--
+ include/linux/cper.h            |  4 ++
+ include/linux/cxl-event.h       | 38 ++++++++++++++++
+ 8 files changed, 206 insertions(+), 31 deletions(-)
 
-I've got review tags in PATCH v2, that means not only me feeling that
-this series is reasonable.
+-- 
+2.17.1
 
-arm64 / riscv doesn't need that because they are well standardized
-and it's almost guaranteed that kernel can boot into earlycon without
-much drama. For MIPS that's not the case, there are too many things that
-may go wrong, from zboot decompressor to cpu-probe and memblock. We real=
-ly
-lacks a way to debug things early, we need something that is available
-at 1st instruction at kernel entry. Furthermore, many MIPS processors
-don't come with JTAG or alike debugging support, that makes debugging
-even harder, there is no way to debug an early exception if your firmware
-doesn't handle it. That's all the motivation behind the series.
-
-Besides, I think our communication needs to be improved. At PATCH v1
-you made your point in reply, that's fair. So I also replied twice for
-clarification. I heard nothing back, so I assume you want to see how
-would it develop to address your concern. Then I posted PATCH v2 and
-v3 to further improve the series, after that I pinged twice on PATCH v3.
-
-That's in a 6-month timeframe with multiple transactions, you need to
-inform us your intention, even if it's a NAK or you don't want to engage
-on this topic further.
-
-Quoting the maintainer handbook [1]: "If the review process or validation
-for a particular change will take longer than the expected review timeli=
-ne
-for the subsystem, maintainer should reply to the submission indicating
-that the work is being done, and when to expect full results." Radio sil=
-ence
-won't help anything, it's wasting time for both of us. Please, give a
-shout if it's possible.
-
-I can see some other series being slipped away this way, like I6500
-multi-cluster patch, which is sent even earlier and respined many times
-over. I can recall Mobileye series had a hard time on getting your
-attention, luckily we went through it.
-
-Quoting the maintainer handbook [1]: "Nonetheless when the work does
-arrive (in form of patches which need review, user bug reports etc.)
-it has to be acted upon promptly.". I understand Linux/MIPS is not
-your day job, also you need to take breaks or go on holidays. Sometimes
-you may burn out from your maintainer duties. That's fine, we are all
-human beings. I'm not expecting a 1-week SLA or something, but 6 months
-or longer to expect an action is appalling to me.
-
-I'd strongly recommend you to look for a secondary maintainer, as mentio=
-ned
-in maintainer handbook [1]: "Modern best practices dictate that there sh=
-ould
-be at least two maintainers for any piece of code, no matter how trivial=
-".
-I understand you reject the idea once when Paul handed maintainership to
-you, but there are clear evidences to show that something needs to be do=
-ne.
-You might need a hand on handling stuff promptly and understanding some
-modern MIPS stuff.
-
-I have many, many tiny improvements to MIPS kernel locally. Furthermore,
-I do bring-up for both new and ancient MIPS systems. I never got a chance
-to send them out because I want you prioritise on those fundamental seri=
-es.
-
-Apologise for potential aggressive tone in this email. I just can't clam
-down when I think back about your reply, and I think we really need to
-talk about it.
-
-Thanks
-
-[1]: https://docs.kernel.org/maintainer/feature-and-driver-maintainers.h=
-tml
---=20
-- Jiaxun
