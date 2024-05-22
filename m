@@ -1,95 +1,124 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88A37D408;
-	Wed, 22 May 2024 09:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D4282E2
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716369231; cv=none; b=GdU9kPQ+BLgFdBRLkBVf9N6gbFL3W7d/Ni7hXSi0Lzs2yKuLapw8NHlxB2UMZ4XflTjPaFFyG+XpETr3WhCcCNiRA4+ywz6s0roaDaLpu7jnmmf5MXKu3UR98ItrdYk8Eq7/iwCvhf8tilVbWwsbqrTMEDhO6J6pBLYpMXEiDdo=
+	t=1716369446; cv=none; b=tBZ/RqOnrr/9rG7syKwH4SAQOhVT/uRF49MMyn5rNnS6xRxy4SCo/obZBBLpYSI8MnP9B+OPU/YR8U59bSdU+RKMtneNqOHrsX9T2nDyYE+wKYnP0m+s8xEDHzIR2vU1Xi8YNET9FlBt2VT5A/c2BVAVvg7Pg6nqpztFYDX0Zug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716369231; c=relaxed/simple;
-	bh=AuSfgrk24FDMN+9WMVPugcETHuqlogourrnVh9GS8OM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TACpjJDmruGG2kxBghEF4/7Gvd0gCJYdFoO6WVH4mt3+Fs5I80hjgscyQOXEMiB6JYAzvfkvB0bv1s6D1GbHpSk+WrpqwRz2YSq1Qq1/UioslOtjgnITygvcZVsoeXQPVB9yK+MbMh38m2lZ/Z4NHru9gHckxGeJyVh9iK/SoVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6181d032bf9so6515757b3.3;
-        Wed, 22 May 2024 02:13:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716369228; x=1716974028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D77FJbeI7zjBlfIfP+J1Pj7HEl2BfXUwLgE2ROEWK+Y=;
-        b=fQ326npfEYoisciei2bQozNSciD3C4ryiReBNyT/HwNuJPX0y9KnFFc/vvGDyd0q9U
-         KXiphSoVvVTAMyM1nsmsRnt735q1jL9+jR6ilaVEN9qrjtmaElXx2r3g0vGzAmE90ji/
-         Wx6nQTeguFWNWvRTdzc//y8WchiyO97bin25qenrECkuBQJ6f8XFLbym+hZTOpiC5/Uq
-         T0tmaTRTtDU1Cyc41M1OWrYsQrqm66jFcApHoH0NNBGmiuRNhkWyP8VgEL8hFCMko3Qd
-         3rZfRSQhIS9UoySR4QA4ybne+ROX9XXxhvotsXqR0DD4dDWBlygNdaGAi5HGT7VJISYN
-         iFTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJaGEu3n7nQbQ3lhaTybXw5DcQVyC1aOtso3mKEV6EM1zBsvAZn/iJYl2HZr+Dg4/vhC2q7kfaBdcodThWDbn5/AUhbHadWsU5yqU/aCuK4ZrgYyV3NIMXVHK1AuelNQb/mvJyufTylA==
-X-Gm-Message-State: AOJu0YyAphjyOKVuY2L2M0vM8feV9efZiAH2a7Z04HazgMzDofyJirQ4
-	GVoJPnnW60MC1Da7KO2OYnH28gZ5eyAKURqnJKkYSAeDT/fk4E1iAIRmuFQK
-X-Google-Smtp-Source: AGHT+IH2nYMeEKK/rI2XXzH79//ViJ8zpyThV+wi2SJJbuC3yc67ntWVoeAioMlly2jeA5clnJ2b7Q==
-X-Received: by 2002:a0d:db08:0:b0:61b:1bf5:67a9 with SMTP id 00721157ae682-627e46df502mr14757867b3.22.1716369228463;
-        Wed, 22 May 2024 02:13:48 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6209e346042sm58273877b3.83.2024.05.22.02.13.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 02:13:48 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df4d5d0b8d0so1171560276.2;
-        Wed, 22 May 2024 02:13:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXO4xOIoSndmeyfDdGayQUROv/XQHizoycBN8eN7TB77JjCxKz3RcL+DfSMT/Mm1MIS8lBRdwzV+8k23lka4o1CbCS5y4Z84dw5cwrjlqHSvZVpFXORVL54r803ZIhcddHrRRkOcXF7Pw==
-X-Received: by 2002:a25:8c03:0:b0:deb:cad4:796c with SMTP id
- 3f1490d57ef6-df4e0abcc3cmr1418661276.22.1716369227968; Wed, 22 May 2024
- 02:13:47 -0700 (PDT)
+	s=arc-20240116; t=1716369446; c=relaxed/simple;
+	bh=a9rZwqydI1aQAaaRK5TAty9KhRdJBcpy2zVgXfiWn90=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AjzpGkJNlTLhez2UjwpD0ycvjnqieUQ8gTpnKLEVTewwwkg7cKb0YlDPMi+nqJFhi9OZdDHZEmpVjf6Z7b3ewDpb216MDwwWVX6mtJo3rzOj4zLYKvj2P4sTx64bvB+UWbLfu2c+XV7d9q+LgwuadGsIp0nnC2ABNUmuew54+T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vkm0V2ghZz4f3jkd
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:17:14 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2CAD51A017F
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 17:17:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxAeuE1mwmtsNQ--.57500S4;
+	Wed, 22 May 2024 17:17:19 +0800 (CST)
+From: linan666@huaweicloud.com
+To: richard@nod.at,
+	miquel.raynal@bootlin.com,
+	vigneshr@ti.com,
+	chaitanya.kulkarni@wdc.com,
+	axboe@kernel.dk
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	chengzhihao1@huawei.com,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v3] ubi: block: fix null-pointer-dereference in ubiblock_create()
+Date: Thu, 23 May 2024 01:10:35 +0800
+Message-Id: <20240522171035.3776026-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240515091925.24353-2-wsa+renesas@sang-engineering.com> <nsozpsifnhpmsbrzvpttmiu775mhm2oq54hycjvc2wa3qtoukh@wpigcux5tkyr>
-In-Reply-To: <nsozpsifnhpmsbrzvpttmiu775mhm2oq54hycjvc2wa3qtoukh@wpigcux5tkyr>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 May 2024 11:13:36 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUEGK_=89YNgZSeGJki6ibdtkdP0PmX2L-ony2=L3x+=A@mail.gmail.com>
-Message-ID: <CAMuHMdUEGK_=89YNgZSeGJki6ibdtkdP0PmX2L-ony2=L3x+=A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: gray-hawk-single: add aliases for
- I2C busses
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxAeuE1mwmtsNQ--.57500S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr18uw48Gr4kWrW7Kr18uFg_yoW8ZFW3pa
+	yvg3yYy3ykGFyqgF4DXa1kCFy5Xw18W34rGF47uw4SvryrJryIkrs0qry5JF4IyF97JanI
+	qFn5GFW8C3WxC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+	0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
+	wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2
+	x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI
+	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7s
+	REiiSDUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Hi Wolfram,
+From: Li Nan <linan122@huawei.com>
 
-On Wed, May 15, 2024 at 10:43=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> On Wed, May 15, 2024 at 11:18:51AM +0200, Wolfram Sang wrote:
-> > They are numbered like this in the schematics, so keep the names in
-> > Linux the same.
-> >
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> Hmmm, Spider and WhiteHawk are also missing this. Shall I send v2 with
-> these included or incremental patches?
+Similar to commit adbf4c4954e3 ("ubi: block: fix memleak in
+ubiblock_create()"), 'dev->gd' is not assigned but dereferenced if
+blk_mq_alloc_tag_set() fails, and leading to a null-pointer-dereference.
+Fix it by using pr_err() and variable 'dev' to print error log.
 
-Please send incremental patches.
+Additionally, the log in the error handle path of idr_alloc() has
+been improved by using pr_err(), too. Before initializing device
+name, using dev_err() will print error log with 'null' instead of
+the actual device name, like this:
+  block (null): ...
+        ~~~~~~
+It is unclear. Using pr_err() can print more details of the device.
+The improved log is:
+  ubiblock0_0: ...
 
-Gr{oetje,eeting}s,
+Fixes: 77567b25ab9f ("ubi: use blk_mq_alloc_disk and blk_cleanup_disk")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+v3: spliting this patch into two in v2 is not a good idea. This version
+is consistent with v1, but only optimizes the commit message.
 
-                        Geert
+ drivers/mtd/ubi/block.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
+index f82e3423acb9..bf7308e8ec2f 100644
+--- a/drivers/mtd/ubi/block.c
++++ b/drivers/mtd/ubi/block.c
+@@ -390,7 +390,8 @@ int ubiblock_create(struct ubi_volume_info *vi)
+ 
+ 	ret = blk_mq_alloc_tag_set(&dev->tag_set);
+ 	if (ret) {
+-		dev_err(disk_to_dev(dev->gd), "blk_mq_alloc_tag_set failed");
++		pr_err("ubiblock%d_%d: blk_mq_alloc_tag_set failed\n",
++			dev->ubi_num, dev->vol_id);
+ 		goto out_free_dev;
+ 	}
+ 
+@@ -407,8 +408,8 @@ int ubiblock_create(struct ubi_volume_info *vi)
+ 	gd->minors = 1;
+ 	gd->first_minor = idr_alloc(&ubiblock_minor_idr, dev, 0, 0, GFP_KERNEL);
+ 	if (gd->first_minor < 0) {
+-		dev_err(disk_to_dev(gd),
+-			"block: dynamic minor allocation failed");
++		pr_err("ubiblock%d_%d: block: dynamic minor allocation failed\n",
++			dev->ubi_num, dev->vol_id);
+ 		ret = -ENODEV;
+ 		goto out_cleanup_disk;
+ 	}
+-- 
+2.39.2
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
