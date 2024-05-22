@@ -1,170 +1,291 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E7113D53C;
-	Wed, 22 May 2024 12:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1FF13D53C;
+	Wed, 22 May 2024 12:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716380612; cv=none; b=XltLHjdJntRdUjFxapCcGxQY9lkz3O1sDg5BildvDtC80tHjyZ8P1Ze1gOetOpvP5OVspmPsK2w4uZSyx2rtmKQa/EcH5VYnEAL+rfsKJktM1nMBFU8Ka/Wh8bm99YkKEXfyHk2IvYmUbEQrkX9s2ZglJQw65GAwAjtnkvRLwT8=
+	t=1716380629; cv=none; b=ZxSnEPEH7roAmvzLuRtxFaUL7l9yxPkJCYDe8XT8R/xxfp6xEM/7Fx6dgPzZlufW/HBLpuwNZTAJVH1iNgwPceoUSktT0txfTX4gt0XCQz24BhIH/NOoOty7HWwO9S9tdCKKYD7OcuIpZGQ/ZWzikPirkKYz5EAnHxAbZl8/vMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716380612; c=relaxed/simple;
-	bh=f7UV5LG/YkpTVm/G2i2AIoasyTYxmJXZyGOBNA4LSfE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LBqOY/Zcs3Vb2zuIYx5F4m0G97XA8muNsxR77JYdrIzyJzzukuHDdlxKhqND0oezVGriNdTFNez/1U6YUfEiPDhzxuHlaB1KQCP5rWWSMtHT9ZsTsy5y0umRdFfh8CUgQ7G03mxjCqB88iCGOTRDn6AlVfdIeRYDoWzEJiXjkR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-627eb38eb1bso3668857b3.1;
-        Wed, 22 May 2024 05:23:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716380609; x=1716985409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qCfEoQ0TfMCCeRei+I4ry2wFGGRpaFJL/1F+/uzvOoA=;
-        b=wS5ssvDyXRiBAZbIOeQV+478khi13qlHj7qWjJpk94A59/ZtIkL1rvCM7WGBnDcC1l
-         JERlEURuuo2vCwhthPh/UVmWWwNo+9+eO73gySgyOtXuV8NeVFZqMKiVSNmsvr0sEKTw
-         SnncbqqIrKSEU/WVhgv3qesCoiI56MAEprwery/VjEZQSgRb/XfHu9vXDgoNmgGh8jAw
-         MRGlv/kCRq/2CkyrYRrmbrbugWA0yisC2iTVyNTNaqPIJ2czlW81X26ynSXeLWViRyyp
-         2W+2ixNgTgrPCpBxrUIMKc/ppwMdBWJH5UHYyVy3oEQu7VX+ZLBAbizSeN7ORv1xxE98
-         S42g==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ907P/er9TVeiDTB146ROH2VE/Q4ImdHV85pt7LLPMyxq1efinQjYvd5fBG+zwT8STSkiygzNUkBKxzLT42GzKR/flEWMHmB3FkGWS+dw1ht8SDO5sDRvwgQK3SRA+ZyHWTJNqE7A1PV11aEwiB5/fMkXooBx6jwN5fWKr4FvTb++A/T/L5mSxgZ09Ags7ctzRKMmmiR/8xOKGQknmJDiFshZswn3NQ==
-X-Gm-Message-State: AOJu0YxSb3uVMQDc777JMqgiLuBJjQzrMS4X+n4DuirfUv56yGjmUu5Q
-	xTe8c2wBVTTX2dK7PoRsayYrz8h+DlgB4Fiw5/yvC6HF9LXhVBxjPcdwA1SD
-X-Google-Smtp-Source: AGHT+IH9u2nIV9mhADnIJzE+WCDgjLwC0xtz4Z6LzzRyb1iE4MYmPJqCASUFEFcIJZPRE2P0ks+zbA==
-X-Received: by 2002:a81:520a:0:b0:627:8791:5b3 with SMTP id 00721157ae682-627e487d4e8mr16693857b3.44.1716380609189;
-        Wed, 22 May 2024 05:23:29 -0700 (PDT)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6209e349e0csm57584897b3.79.2024.05.22.05.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 05:23:28 -0700 (PDT)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-622f5a0badcso53352027b3.2;
-        Wed, 22 May 2024 05:23:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW0+faY9Jv9zLzZjN7oQ3/0W6P9d6ht2FfZWpsObD48dpgqj6oPecan7q046t5AgfVWYEYu7GGu2Y82braQlUXxjFC3Qml+Y/NEDEKW2o20k/6xB68ea6lMpBTO5TCEMLSiu73YMNX476fHosAdxg5o0NI0KgdXoBECbdt/d0lKbuPCrX5bAl3wg/WV7EHe6oc2/llq4mnBszf03ODt6BdNuo4WWGDhqQ==
-X-Received: by 2002:a05:690c:60c7:b0:627:a382:a0fa with SMTP id
- 00721157ae682-627e4880150mr20956997b3.52.1716380608278; Wed, 22 May 2024
- 05:23:28 -0700 (PDT)
+	s=arc-20240116; t=1716380629; c=relaxed/simple;
+	bh=phyztzXqZHdPHKrf8rO419t6Fa+vJzO/hs+BEbFz/nw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pMAoafK2Plg1u9895u/VtFFwHLfax7yrgBYHZ7SUjb0Wnczfslw/EDCXRVlAbg1W+DKeU/WuX9wo+YzS7UDVbLU3y+qFbDWO394ss0vyCQbNt+xXtV8gN/D+pu3as1IQ2/v7dZxF1v+059LZvlOuePvgb6QH+6xBtnCcjeeD8vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wGtt6tJ8; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wGtt6tJ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716380626;
+	bh=phyztzXqZHdPHKrf8rO419t6Fa+vJzO/hs+BEbFz/nw=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=wGtt6tJ8efObrlDVvEey44Szoh4c08bH3fMQfohugPaeRsm9KFwFA3jOqdSYSEAv+
+	 maoxRUVow1+2xlQCMMNQRPb3s4feJW1s9UewOa7ShgHaVdchpVZLJzwTI8ddNHGK0t
+	 HFcDYGDmTRixht+2huS7tt9hol7Nba0lW/E955CPt5wBqw1Dg6nYD2i4eCvzVugZ8J
+	 OL67a6QxlMHhfrCyx4kmP7taxCzYJNnZs+dvkrgOJu36Z5E+Hmha3AzGoQPYgT9CkB
+	 ilqG4Xc8xR9PKDEqJDo0aG7ymp/DWMUg5Q4w+W6nUzziwB8qDtvhft9Zg6bV9cnU5o
+	 LoW7f8jvWkuWQ==
+Received: from [100.95.196.182] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: andrzej.p)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 40C6F37821A0;
+	Wed, 22 May 2024 12:23:45 +0000 (UTC)
+Message-ID: <b76dc54f-ca33-4851-9999-72740cd22060@collabora.com>
+Date: Wed, 22 May 2024 14:23:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240423175900.702640-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB113461F28EA97F494D831267C86112@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY3PR01MB113461F28EA97F494D831267C86112@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 May 2024 14:23:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUJXdEG-BQRYNbmhbGCtE+O1uWO0j-PkBaF7S_Qyp8M-Q@mail.gmail.com>
-Message-ID: <CAMuHMdUJXdEG-BQRYNbmhbGCtE+O1uWO0j-PkBaF7S_Qyp8M-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 06/13] pinctrl: renesas: pinctrl-rzg2l: Add function
- pointers for locking/unlocking the PFC register
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: Re: [PATCH v6,09/24] media: mediatek: vcodec: allocate tee share
+ memory
+To: Yunfei Dong <yunfei.dong@mediatek.com>,
+ Jeffrey Kardatzke <jkardatzke@google.com>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ Nathan Hebert <nhebert@chromium.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Sebastian Fricke <sebastian.fricke@collabora.com>,
+ Tomasz Figa <tfiga@chromium.org>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
+ Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+ Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Brian Starkey
+ <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T . J . Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
+ <20240516122102.16379-10-yunfei.dong@mediatek.com>
+Content-Language: en-US
+In-Reply-To: <20240516122102.16379-10-yunfei.dong@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Biju,
+Hi Yunfei,
 
-On Tue, Apr 23, 2024 at 8:12=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
-> > -----Original Message-----
-> > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: Tuesday, April 23, 2024 6:59 PM
-> > Subject: [PATCH v2 06/13] pinctrl: renesas: pinctrl-rzg2l: Add function=
- pointers for
-> > locking/unlocking the PFC register
-> >
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > On the RZ/G2L SoC, the PFCWE bit controls writing to PFC registers.
-> > However, on the RZ/V2H(P) SoC, the PFCWE (REGWE_A on RZ/V2H) bit contro=
-ls writing to both PFC and
-> > PMC registers. Additionally, BIT(7) B0WI is undocumented for the PWPR r=
-egister on RZ/V2H(P) SoC. To
-> > accommodate these differences across SoC variants, introduce the set_pf=
-c_mode() and
-> > pm_set_pfc() function pointers.
-> >
-> > Note, in rzg2l_pinctrl_set_pfc_mode() the pwpr_pfc_unlock() call is now=
- called before PMC
-> > read/write and pwpr_pfc_lock() call is now called after PMC read/write =
-this is to keep changes
-> > minimal for RZ/V2H(P).
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > RFC->v2
-> > - Introduced function pointer for (un)lock
+W dniu 16.05.2024 o 14:20, Yunfei Dong pisze:
+> Allocate two share memory for each lat and core hardware used to share
+> information with optee-os. Msg buffer used to send ipi command and get ack
+> command with optee-os, data buffer used to store vsi information which
+> used for hardware decode.
+> 
+> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> ---
+>   .../vcodec/decoder/mtk_vcodec_dec_optee.c     | 80 ++++++++++++++++++-
+>   .../vcodec/decoder/mtk_vcodec_dec_optee.h     | 32 ++++++++
+>   2 files changed, 111 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
+> index 38d9c1c1785a..611fb0e56480 100644
+> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
+> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.c
+> @@ -47,13 +47,69 @@ int mtk_vcodec_dec_optee_private_init(struct mtk_vcodec_dec_dev *vcodec_dev)
+>   }
+>   EXPORT_SYMBOL_GPL(mtk_vcodec_dec_optee_private_init);
+>   
+> +static void mtk_vcodec_dec_optee_deinit_memref(struct mtk_vdec_optee_ca_info *ca_info,
+> +					       enum mtk_vdec_optee_data_index data_index)
+> +{
+> +	tee_shm_free(ca_info->shm_memref[data_index].msg_shm);
+> +}
+> +
+> +static int mtk_vcodec_dec_optee_init_memref(struct tee_context *tee_vdec_ctx,
+> +					    struct mtk_vdec_optee_ca_info *ca_info,
+> +					    enum mtk_vdec_optee_data_index data_index)
+> +{
+> +	struct mtk_vdec_optee_shm_memref *shm_memref;
+> +	int alloc_size = 0, err = 0;
+> +	u64 shm_param_type = 0;
+> +	bool copy_buffer;
+> +
+> +	switch (data_index) {
+> +	case OPTEE_MSG_INDEX:
+> +		shm_param_type = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
+> +		alloc_size = MTK_VDEC_OPTEE_MSG_SIZE;
+> +		copy_buffer = true;
+> +		break;
+> +	case OPTEE_DATA_INDEX:
+> +		shm_param_type = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
+> +		alloc_size = MTK_VDEC_OPTEE_HW_SIZE;
+> +		copy_buffer = false;
+> +		break;
+> +	default:
+> +		pr_err(MTK_DBG_VCODEC_STR "tee invalid data_index: %d.\n", data_index);
+> +		return -EINVAL;
+> +	}
+> +
+> +	shm_memref = &ca_info->shm_memref[data_index];
+> +
+> +	/* Allocate dynamic shared memory with decoder TA */
+> +	shm_memref->msg_shm_size = alloc_size;
+> +	shm_memref->param_type = shm_param_type;
+> +	shm_memref->copy_to_ta = copy_buffer;
+> +	shm_memref->msg_shm = tee_shm_alloc_kernel_buf(tee_vdec_ctx, shm_memref->msg_shm_size);
+> +	if (IS_ERR(shm_memref->msg_shm)) {
+> +		pr_err(MTK_DBG_VCODEC_STR "tee alloc buf fail: data_index:%d.\n", data_index);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	shm_memref->msg_shm_ca_buf = tee_shm_get_va(shm_memref->msg_shm, 0);
+> +	if (IS_ERR(shm_memref->msg_shm_ca_buf)) {
+> +		pr_err(MTK_DBG_VCODEC_STR "tee get shm va fail: data_index:%d.\n", data_index);
+> +		err = PTR_ERR(shm_memref->msg_shm_ca_buf);
+> +		goto err_get_msg_va;
+> +	}
+> +
+> +	return err;
 
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -2688,6 +2699,8 @@ static struct rzg2l_pinctrl_data r9a07g043_data =
-=3D {
-> >       .variable_pin_cfg =3D r9a07g043f_variable_pin_cfg,
-> >       .n_variable_pin_cfg =3D ARRAY_SIZE(r9a07g043f_variable_pin_cfg),
-> >  #endif
-> > +     .pwpr_pfc_unlock =3D &rzg2l_pwpr_pfc_unlock,
-> > +     .pwpr_pfc_lock =3D &rzg2l_pwpr_pfc_lock,
-> >  };
-> >
-> >  static struct rzg2l_pinctrl_data r9a07g044_data =3D { @@ -2699,6 +2712=
-,8 @@ static struct
-> > rzg2l_pinctrl_data r9a07g044_data =3D {
-> >       .n_dedicated_pins =3D ARRAY_SIZE(rzg2l_dedicated_pins.common) +
-> >               ARRAY_SIZE(rzg2l_dedicated_pins.rzg2l_pins),
-> >       .hwcfg =3D &rzg2l_hwcfg,
-> > +     .pwpr_pfc_unlock =3D &rzg2l_pwpr_pfc_unlock,
-> > +     .pwpr_pfc_lock =3D &rzg2l_pwpr_pfc_lock,
-> >  };
-> >
-> >  static struct rzg2l_pinctrl_data r9a08g045_data =3D { @@ -2709,6 +2724=
-,8 @@ static struct
-> > rzg2l_pinctrl_data r9a08g045_data =3D {
-> >       .n_port_pins =3D ARRAY_SIZE(r9a08g045_gpio_configs) * RZG2L_PINS_=
-PER_PORT,
-> >       .n_dedicated_pins =3D ARRAY_SIZE(rzg3s_dedicated_pins),
-> >       .hwcfg =3D &rzg3s_hwcfg,
-> > +     .pwpr_pfc_unlock =3D &rzg2l_pwpr_pfc_unlock,
-> > +     .pwpr_pfc_lock =3D &rzg2l_pwpr_pfc_lock,
->
-> Some memory can be saved by avoiding duplication of data by using
-> a single pointer for structure containing function pointers??
->
-> struct rzg2l_pinctrl_fns {
->         void (*pwpr_pfc_unlock)(struct rzg2l_pinctrl *pctrl);
->         void (*pwpr_pfc_lock)(struct rzg2l_pinctrl *pctrl);
-> }
+Anything other than a zero possible here? In error-free exectution the return
+value of zero is set far away from here. And then both error-free execution
+and error recovery end in "return err;" which looks kind of weird to me.
+Maybe that's just my personal preference, but I'd prefer "return 0;" here.
+Alternatively, maybe rename "err" as "ret"? This applies to all patches.
 
-So that would replace 3 (4 after adding RZ/V2H support) x 2 pointers in
-rzg2l_pinctrl_data structures by 3 (4) pointers in rzg2l_pinctrl_data
-structures + 1 (2) x 2 pointers in rzg2l_pinctrl_fns structures, and
-code size would increase due to extra pointer dereferences before
-each call.
-Am I missing something?
+I wouldn't mind a blank line here to visually separate the error recovery path
+from error-free execution. This applies to all patches.
 
-Merging rzg2l_pwpr_pfc_{,un}lock() into a single function (taking a
-"bool lock" flag) might be a better solution to reduce rzg2l_pinctrl_data s=
-ize.
+> +err_get_msg_va:
+> +	tee_shm_free(shm_memref->msg_shm);
+> +	return err;
+> +}
+> +
+>   static int mtk_vcodec_dec_optee_init_hw_info(struct mtk_vdec_optee_private *optee_private,
+>   					     enum mtk_vdec_hw_id hardware_index)
+>   {
+>   	struct device *dev = &optee_private->vcodec_dev->plat_dev->dev;
+>   	struct tee_ioctl_open_session_arg session_arg;
+>   	struct mtk_vdec_optee_ca_info *ca_info;
+> -	int err = 0, session_func;
+> +	int err, i, j, session_func;
+>   
+>   	/* Open lat and core session with vdec TA. */
+>   	switch (hardware_index) {
+> @@ -87,6 +143,24 @@ static int mtk_vcodec_dec_optee_init_hw_info(struct mtk_vdec_optee_private *opte
+>   	dev_dbg(dev, MTK_DBG_VCODEC_STR "open vdec tee session hw_id:%d session_id=%x.\n",
+>   		hardware_index, ca_info->vdec_session_id);
+>   
+> +	/* Allocate dynamic shared memory with decoder TA */
+> +	for (i = 0; i < OPTEE_MAX_INDEX; i++) {
+> +		err = mtk_vcodec_dec_optee_init_memref(optee_private->tee_vdec_ctx, ca_info, i);
+> +		if (err) {
+> +			dev_err(dev, MTK_DBG_VCODEC_STR "init vdec memref failed: %d.\n", i);
+> +			goto err_init_memref;
+> +		}
+> +	}
+> +
+> +	return err;
+> +err_init_memref:
+> +	if (i != 0) {
 
-Gr{oetje,eeting}s,
+Isn't i now equal to the index at which init memref failed?
 
-                        Geert
+> +		for (j = 0; j < i; j++)
+> +			mtk_vcodec_dec_optee_deinit_memref(ca_info, j);
+> +	}
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+So instead of the above maybe:
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+	--i;
+	while (i >= 0)
+		mtk_vcodec_dec_optee_deinit_memref(ca_info, i--);
+
+after --i the i points to the last successfully initialized memref unless < 0.
+This way you can eliminate the j.
+
+> +
+> +	tee_client_close_session(optee_private->tee_vdec_ctx, ca_info->vdec_session_id);
+> +
+>   	return err;
+>   }
+>   
+> @@ -94,12 +168,16 @@ static void mtk_vcodec_dec_optee_deinit_hw_info(struct mtk_vdec_optee_private *o
+>   						enum mtk_vdec_hw_id hw_id)
+>   {
+>   	struct mtk_vdec_optee_ca_info *ca_info;
+> +	int i;
+>   
+>   	if (hw_id == MTK_VDEC_LAT0)
+>   		ca_info = &optee_private->lat_ca;
+>   	else
+>   		ca_info = &optee_private->core_ca;
+>   
+> +	for (i = 0; i < OPTEE_MAX_INDEX; i++)
+> +		mtk_vcodec_dec_optee_deinit_memref(ca_info, i);
+> +
+>   	tee_client_close_session(optee_private->tee_vdec_ctx, ca_info->vdec_session_id);
+>   }
+>   
+> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
+> index 8b1dca49331e..24aa63af9887 100644
+> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
+> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_optee.h
+> @@ -18,16 +18,48 @@
+>   
+>   #define MTK_OPTEE_MAX_TEE_PARAMS 4
+>   
+> +#define MTK_VDEC_OPTEE_MSG_SIZE     128
+> +#define MTK_VDEC_OPTEE_HW_SIZE      (8 * SZ_1K)
+> +
+> +/**
+> + * struct mtk_vdec_optee_shm_memref - share memory reference params
+
+maybe s/share/shared ? Applies to other occurences as well.
+
+Regards,
+
+Andrzej
+
+> + * @msg_shm:        message shared with TA in TEE.
+> + * @msg_shm_ca_buf: ca buffer.
+> + *
+> + * @msg_shm_size:   share message size.
+> + * @param_type:     each tee param types.
+> + * @copy_to_ta:     need to copy data from ca to share memory.
+> + */
+> +struct mtk_vdec_optee_shm_memref {
+> +	struct tee_shm *msg_shm;
+> +	u8 *msg_shm_ca_buf;
+> +
+> +	u32 msg_shm_size;
+> +	u64 param_type;
+> +	bool copy_to_ta;
+> +};
+> +
+>   /**
+>    * struct mtk_vdec_optee_ca_info - ca related param
+>    * @vdec_session_id:   optee TA session identifier.
+>    * @hw_id:             hardware index.
+>    * @vdec_session_func: trusted application function id used specific to the TA.
+> + * @shm_memref:        share memory reference params.
+>    */
+>   struct mtk_vdec_optee_ca_info {
+>   	u32 vdec_session_id;
+>   	enum mtk_vdec_hw_id hw_id;
+>   	u32 vdec_session_func;
+> +	struct mtk_vdec_optee_shm_memref shm_memref[MTK_OPTEE_MAX_TEE_PARAMS];
+> +};
+> +
+> +/*
+> + * enum mtk_vdec_optee_data_index - used to indentify each share memory information
+> + */
+> +enum mtk_vdec_optee_data_index {
+> +	OPTEE_MSG_INDEX = 0,
+> +	OPTEE_DATA_INDEX,
+> +	OPTEE_MAX_INDEX,
+>   };
+>   
+>   /**
+
