@@ -1,143 +1,88 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD657BB06;
-	Wed, 22 May 2024 07:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD47D7BAF7;
+	Wed, 22 May 2024 07:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716362054; cv=none; b=I2878wXc2Eco237WnPt8VpgINa2PuvqxhQeaf3O3QVSw5OrKvD9Jkwd0grcBi3SVkbf9Hr1M0FPkGXVttnCxQZq55Gl8AZMzze+/Fs8VwNSE0EDlZcUqaq7lyrUX6jeoRFnAEk7V+Qx6KXyLnDeAz1vTtuN42TEHCvVESIqyBEg=
+	t=1716362072; cv=none; b=OtynCIumofW9ft4nVC+2Zv8t+gBnAsSErWvhhP4Z1Wk39znpjNAhfYbMw0uJUFo8/tHvOSajaFzFde3Bp4qxJAdjquI1qK+2mHbL4TRXjSnbgYyd76jw+f9CXqKXiHWIyUCmXixjowAaLX/UjF/jWcmThd4TiB68BlCu9VjdU6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716362054; c=relaxed/simple;
-	bh=TlQ0uuVIHzbHxyVEL3n6tWns0j3sTNIMm88GfvOupfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cZpojh45O6s96FLqwN7OuwOzQ+mEG4y0ega0JW1xI2DWmWkHB0Qf/EBZU6oqtZ1a9BYga6lrdLKbIxFi2BxHDeFsnSw2v3waNEro7SLyDDWmKYM4B1ufYHq3nndMBKdW5mUtMxTAm6u4ue3U7KH/yFr6TlMmYW+WxG9wR9SLeB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nCo5Kpl8; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716362072; c=relaxed/simple;
+	bh=o7FelwEYe06bUj5gigSKOWEN1hyHxbXUGTMgm7PhL9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h1O/f4ypO85NuEnv9Q6up9NtvMkJ1HkNgqo+WbDIBHyo7FoU1u6QnN9XGupjfsdi3UXw4537iE9SEn6LRxUfMIe4i1F5TDQlcNhHLU7jeHRJKMhsctgtyRYMfEUEVMrbWYoS7HQdA89hm3YT9OMPoiRK/jlDOAju4G8/WJyEf9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxUDh4A7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCo5Kpl8"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a5d67064885so499399266b.1;
-        Wed, 22 May 2024 00:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716362051; x=1716966851; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kIdChEw5DvBFSfSpnHNPUpxstFzR4q/9Q7FfD5YW1qs=;
-        b=nCo5Kpl8Fc+kIrTNuH+YNv0p01Cs5iAvWsVM5UBHcDxyRiQD6c2vZSQ9euazVar53D
-         0UbZ+i/Io3L8w7HI9V4R33vAHAfSIWHxQIN7iCbftzHOFSHiJT8uBq78yfAQqdnHJH8R
-         thXSZtEgR90dbd0IS2itPrZuVwcroPsos5Dok2wE8sPsLuPoKUPOgVHOjFcVlW3OBgju
-         GbGQb04YzlRv+x/+D50XMiFw8ugXVBNO3vEVqskhA1g/8J98E2Y395NAZ5E9XCqjQjW8
-         TLrID+/1E6HQ+zQ8a5XFYlTGRbv33ZFYpMd/PLABazj9g+inK5r9xHdcgb9PNVBJSdBX
-         GdqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716362051; x=1716966851;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kIdChEw5DvBFSfSpnHNPUpxstFzR4q/9Q7FfD5YW1qs=;
-        b=qsdRSrn1TiyFQ5799tCDezgE6oivQE0Gm5U/1iBvUxsdTzI9A8MRfjjeRzltH/3A1p
-         fMpl/a/oJmj+LnxDWR4LDBhksHUqKZkf68XG21pXPV2ycz45NpMKosCf3a/hEpxyJcrI
-         s854H15+uP7EbG66MY+kmgTnr14ZYjtc52hV4OyN4x92Z4bkDWIXFYRF7OxzCMJufrIH
-         Pff1lqvBM+t5r64DxSjj+OCccYlfO/3Ag/jAKux/6WMFTkFgCSP3SjmHjgLYJv4Uzigf
-         ac0zpQJGv5+LXBqhKX2z2CUQgD4gn++W6G+SaGpkSYPFDQOlWx8SC/3KxoFZTaiywzn8
-         1N+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVVAzKLes1RrNTgLwuAr+wlBYas31OwUEifMxjOyfQ+AimK9rdPh3xUZAU54mqWZMnrEaMN9uQQzbRwT5f/1fohSaMjsL1vZjyukNUJAOfhlCKhsNeypzYwJyoKXQBmWtyJIHAdWLSWxH39yel+Av4RPvhj0nfBSjHJWchbfUCXI27ElnzGot1eLwgNSbQWNdtZDZ/di+01eXmxf+wzmfEhg7Zi
-X-Gm-Message-State: AOJu0YwjA9FEvCuoaAFcJpiwBo/DqjVHAzc9v5QKbW2oH66WSEuMQPY/
-	1g3GWeNisDPG+So/Hm5eUgOb1KV9oFJJ3J1uk47tUGYYMHDlAmGowhhRhL/xYD6ZpbMZisq3pzB
-	BeIAmA5yj7i0p51ahqpPg+XNlTc8=
-X-Google-Smtp-Source: AGHT+IFT21FczkEAvOPstRxTfY9A4JXSOIuGuffflPE6NOhSwYFu+h1M0zhqA2RK5KD36M+OtRmfX/EDdu2IzgO9xXk=
-X-Received: by 2002:a17:906:31c6:b0:a5a:7d28:54aa with SMTP id
- a640c23a62f3a-a62280d6175mr117645766b.23.1716362050534; Wed, 22 May 2024
- 00:14:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxUDh4A7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8693DC2BD11;
+	Wed, 22 May 2024 07:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716362071;
+	bh=o7FelwEYe06bUj5gigSKOWEN1hyHxbXUGTMgm7PhL9Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KxUDh4A73NHTC6Uo8h5Ypzmu20FS3YX6acckvMWdiTXlPRBjHCRk0EBbJl9S64aw7
+	 fvi2zjqqoHjbD8jQyI1RMGX+yQx0yPJAEnWSLlpK9yTT0aatU/SRonCaKuyKmVGbNH
+	 3HqrddQuCxvyfWafJoMknIMWKMebVIPmr5pz3n4sa9urXda/xmbnk9J8jWy3L7ypdD
+	 V1UvaZyoATvDw+yBeJObfOx70Af9oi6mTC5NVQw+byDXa4FRe2gG5/Hu+oF/RQiMBr
+	 aYar/GPGVKNDfbmSkaX4NWa83bKOiAMWu4xVSJI4C1GotroqgvH+ILaWPJpAEHlyM1
+	 es738P4O+j5QQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Steve French <stfrench@microsoft.com>,
+	David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Enzo Matsumiya <ematsumiya@suse.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Matthew Wilcox <willy@infradead.org>,
+	netfs@lists.linux.dev,
+	v9fs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfs: Fix setting of BDP_ASYNC from iocb flags
+Date: Wed, 22 May 2024 09:14:20 +0200
+Message-ID: <20240522-weltmeere-rammt-70f03e24b8b4@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <316306.1716306586@warthog.procyon.org.uk>
+References: <316306.1716306586@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-12-johan+linaro@kernel.org> <ZjktIrsZS-T7cm-A@surfacebook.localdomain>
- <ZjyafGz_1pY4J9C7@hovoldconsulting.com> <CAHp75VfP2AB45mn6gB3suCAO9iT3bOWZ=7m9U7E087Lac0P3gg@mail.gmail.com>
- <Zk2VX5JRzmePxG4N@hovoldconsulting.com>
-In-Reply-To: <Zk2VX5JRzmePxG4N@hovoldconsulting.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 22 May 2024 10:13:33 +0300
-Message-ID: <CAHp75Vcs3DvBK3P058gU6L-24Q9PTrPg_hLujxaUGHNB=JCW0A@mail.gmail.com>
-Subject: Re: [PATCH 11/13] mfd: pm8008: rework driver
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
-	Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1256; i=brauner@kernel.org; h=from:subject:message-id; bh=o7FelwEYe06bUj5gigSKOWEN1hyHxbXUGTMgm7PhL9Q=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT5zvZ/VJrSsYxv51y3TfmcQte5fa4UZafWckj9j9mw2 PJaYfO/jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIlUrWD4n5pi88L397Z6Xbv2 O1r3t/Z9dXA+H9T4a6/78o9nxIPZgxkZWj89LFFMex2/tuIsx+tL+ZE/tl/mFI60cZxvEvT/lTY 7AwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024 at 9:49=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
-te:
-> On Fri, May 10, 2024 at 04:15:43PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 9, 2024 at 12:42=E2=80=AFPM Johan Hovold <johan@kernel.org>=
- wrote:
-> > > On Mon, May 06, 2024 at 10:18:58PM +0300, Andy Shevchenko wrote:
-> > > > Mon, May 06, 2024 at 05:08:28PM +0200, Johan Hovold kirjoitti:
+On Tue, 21 May 2024 16:49:46 +0100, David Howells wrote:
+> Fix netfs_perform_write() to set BDP_ASYNC if IOCB_NOWAIT is set rather
+> than if IOCB_SYNC is not set.  It reflects asynchronicity in the sense of
+> not waiting rather than synchronicity in the sense of not returning until
+> the op is complete.
+> 
+> Without this, generic/590 fails on cifs in strict caching mode with a
+> complaint that one of the writes fails with EAGAIN.  The test can be
+> distilled down to:
+> 
+> [...]
 
-...
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-> > > > > +static void devm_irq_domain_fwnode_release(void *res)
-> > > > > +{
-> > > >
-> > > > > +   struct fwnode_handle *fwnode =3D res;
-> > > >
-> > > > Unneeded line, can be
-> > > >
-> > > > static void devm_irq_domain_fwnode_release(void *fwnode)
-> > > >
-> > > > > +   irq_domain_free_fwnode(fwnode);
-> > > > > +}
-> > >
-> > > I think I prefer it this way for clarity and for type safety in the
-> > > unlikely even that the argument to irq_domain_free_fwnode() would eve=
-r
-> > > change.
-> >
-> > If it ever changes, the allocation part most likely would need an
-> > update and since devm_add_action() takes this type of function, I
-> > don't believe the argument would ever change from void * to something
-> > else. With this it just adds an additional burden on the conversion.
->
-> I was referring to the irq_domain_free_fwnode() prototype.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-And I also referred to that one. The release callback, i.e. the type
-of the parameter, is solely defined by a caller of devm_add_action()
-end friends, and in this case it means that if ever the type changes
-(this is your argument why you want to have explicit line for that,
-necessity of which I oppose) the devm_add_action() arguments also has
-to be changed, it can't be done _just_ there, in
-irq_domain_free_fwnode().
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-> > > > > +   name =3D devm_kasprintf(dev, GFP_KERNEL, "%pOF-internal", dev=
-->of_node);
-> > > >
-> > > > You are using fwnode for IRQ domain and IRQ domain core uses fwnode=
-, why OF here?
-> > > >
-> > > >       name =3D devm_kasprintf(dev, GFP_KERNEL, "%pfw-internal", dev=
-_fwnode(dev));
-> > >
-> > > This driver only support OF so why bother.
-> >
-> > Sure, but it makes a bit of inconsistency.
->
-> No, I don't consider this an inconsistency. Again, *this* is an OF
-> driver, other subsystems need to deal with ACPI and use fwnode.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-OK.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+[1/1] netfs: Fix setting of BDP_ASYNC from iocb flags
+      https://git.kernel.org/vfs/vfs/c/33c9d7477ef1
