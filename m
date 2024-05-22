@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCCF8003B;
-	Wed, 22 May 2024 18:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56F9145FF6
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716401113; cv=none; b=ZA629MMJrKsfdI/cAPjykl+URUjZwS66RVYSQRuCCK/X8hVaqpVkg7UJ7Q+uTolTUOKm+vt3zrZvP3yFdoDQVznRk4+yG+c6kwTqxIVCw95ZSHfeXwXiMEPau/ErGnZVirj4bgvSjL0w/OYjGA2TbCnUw2zvk4WPsBeWyvezpMM=
+	t=1716401119; cv=none; b=TlaxCh0mn8Tdv8qEE00dN3nx5dwvEP00F1C4YmPDJeYXctAliPypRSk/6e6w7mx4YC+npwmtG/LNiwyMVSDF1bfUBazaroPa3BP1J1MjFKQ0eiDW+mnPnDF0cr6pleO/qZNsVDgxLIf9JRDJ08Q9xW5IkWiikEX8EtRDU4DphFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716401113; c=relaxed/simple;
-	bh=CeI2EzAoofDaKVhhYpNbdJogVjReiPBySX4uY/BCtN8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oUCFQtyF/tNcOJa0poHcJO+MQa76x/Ehez3DbXBpot5I5zaQCaiuQwHdAYEe7Of6MOUmUCt2xfYkTHyeJ2yNvGuL2iui9nseZyWaQ09rSx2NrV2wwu10ZUDLzV7EJJJ+gHTnnHSxOrRTGSpxxk0CnIGW2EEaJIxLSGrqa9n1/FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpjtqO6x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716401119; c=relaxed/simple;
+	bh=PPQw1gxL2GOznc7DFjtGyWShLS22Gau0OkpK0c+8qlE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YNVGhOnylvCmfg5eX2p1Nzf+iHkCjUWMY8YJDIMbzc1l9i2KAM+XNNdQL5O3oJKZoPZo1lsl6Kx+o3LhtPnRY9EZ+6fZnRYSsvDiSNUtvvO6tE0McAW/pmDaUCxBJweuGN/O7RHJZtV1BvaXutsVUzR7UdybQUKjt72jZGP+N6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDTnCkd5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpjtqO6x"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA179C2BBFC;
-	Wed, 22 May 2024 18:05:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDTnCkd5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 62026C2BBFC;
+	Wed, 22 May 2024 18:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716401112;
-	bh=CeI2EzAoofDaKVhhYpNbdJogVjReiPBySX4uY/BCtN8=;
+	s=k20201202; t=1716401119;
+	bh=PPQw1gxL2GOznc7DFjtGyWShLS22Gau0OkpK0c+8qlE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=dpjtqO6x6XYXFWJvUnrmxuXu+AANuWcCt10senHjUYhZ5CLS7NHXI9KViGXJCy66i
-	 SeBj5PHys5BTwP7k3isqPwPCur9TpMgUuYphI/pl0O0/9JbbamJPH2AqLCyv0Oa81o
-	 Pd2VsYyF5YAPI3LTnWSho8UQDDiJQtOP6a3tRNkvji7U6XFo16FdSFXimmEj/IgnYC
-	 ynG/lG9npfodMEzusLPKXqhsHBTvriKq77J8pf6PJoTqSGtyzZ2cs6k2HUlvcrOcoU
-	 +t2chzxRsNLaK/h13eN8mW7fM0tlpfr/D4Z2oY0ZRVcFH9sp99ZRXWwdUQFcrGVXbs
-	 zbtl9k0UI15iQ==
+	b=CDTnCkd5U89BaAVtW5mslkolkFWf/xyZB7ok9ziJ03LVBgtLIVbKRUmRfgLGA6B9a
+	 ni1FEOC0cPhJ7BZNbUgUZUQSTmSRJM0/Vf/7MgvddkjySUhumbj9OEHGMFJS6qFV25
+	 KsoHUKeD5RZMbqAGHZdbQPhaR2dr7ce+rrJx0H/++VL0drwMXAOhDk8Co7+tqTquO8
+	 dUz0UuQY7ZtSxevM1HGt0AlYB5eDnDjKQpPhD8okS4JeqRs/8XuA7RQ0jO+a8rjy2/
+	 8KPt8Ups1Uq2/jBjl6ZULBTyDu97yIExPa9qBDYsTB0FxHPeZW4QDBvBRP3ohO6ayI
+	 g78PwsCxXPUzg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D0FE1C43619;
-	Wed, 22 May 2024 18:05:12 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.10
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5A1D0C43619;
+	Wed, 22 May 2024 18:05:19 +0000 (UTC)
+Subject: Re: [GIT PULL] MFD for v6.10
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240522140504.4071402-1-chenhuacai@loongson.cn>
-References: <20240522140504.4071402-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20240522140504.4071402-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
-X-PR-Tracked-Commit-Id: 9cc1df421f00453afdcaf78b105d8e7fd03cce78
+In-Reply-To: <20240522100253.GB6035@google.com>
+References: <20240522100253.GB6035@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240522100253.GB6035@google.com>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/mfd tags/mfd-next-6.10
+X-PR-Tracked-Commit-Id: 1482489b5196f4203576ae1dc2ba4ce3ada381c7
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4f05e82003d1c20da29fa593420b8d92e2c8d4e6
-Message-Id: <171640111284.25247.7584430807190924004.pr-tracker-bot@kernel.org>
-Date: Wed, 22 May 2024 18:05:12 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+X-PR-Merge-Commit-Id: a85629f435a4e724c414a6ae3e2f327272ab11af
+Message-Id: <171640111936.25247.6782204308733763092.pr-tracker-bot@kernel.org>
+Date: Wed, 22 May 2024 18:05:19 +0000
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 22 May 2024 22:05:04 +0800:
+The pull request you sent on Wed, 22 May 2024 11:02:53 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.10
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/mfd tags/mfd-next-6.10
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4f05e82003d1c20da29fa593420b8d92e2c8d4e6
+https://git.kernel.org/torvalds/c/a85629f435a4e724c414a6ae3e2f327272ab11af
 
 Thank you!
 
