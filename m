@@ -1,501 +1,221 @@
 Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1942843158
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EB0BA2F
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716339772; cv=none; b=Y/muS50XCJKZO47QZgPCtCTUTU8fY6mV06Pqpi20FHFXtlolT6z4JzkFbZHKgHQL3ztEF18rivEoqTt9KahPN4suX9kReb78mTizvNS1i9jKEuh/fYR+XkKqHjH0hgxq45N51m22MuxZh+plFJqjLziewqsym/HF9Z0i8gpmARg=
+	t=1716339788; cv=none; b=r0K/NK6GF0Q2lX2/nlvvhhSoOr7rgxPAPfLYIS9nmCOB2IUasR9iW9twn7VbwSV4KclvhPb7sQI5XO2+S7bw/SEYJNgiyYn4Ql+Jlf1blM5eTN3Hzhew4WjjIzIyTyGOnwlKrxRXShPosVZPl/UjFS2+/X4V3o3PYIUhse22haY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716339772; c=relaxed/simple;
-	bh=sKWYLwJAJz8eWIrk7JnWJgWYDH6z52HySt5sAgH/Bso=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UaFYu1vgP46VhPO5VK41gpSCiqzSc4jbDNQLSM7n1lYAuw6YCHQ7gZIE35vJrpHTGI46L94CkC+R/lqnvmdwypZmKZ/M4GO3loojXUCk9p85Uc8QkrXvl5W5kZmPTaW73QxbO3VNqAfmOjwUBSFzL/4cL2nFuok6B4uZKrtLhMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Htmk7vsq; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1716339788; c=relaxed/simple;
+	bh=dt+HjkdjSlkJT9aF6qvhLbzVRK6aMxCNpDcmFRwXO/o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fKa08Q6MmDG5082lLrOIo9fNR9IoBrrdRr4HPs6jOg8dT/5JGAj3LOaxlWBMgH0oqMXU7oU84s2tBel0TBYeNLGtTyLKwHlt/GQ6mafwKaceYnYzmkzKidncsaU8ZJwoYdDTEwbsNRzjHkX0IfkkyJKRl0QB9dOigPwQRY+OCFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jDbLjKPY; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Htmk7vsq"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6f4574f6bffso10492329b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:02:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jDbLjKPY"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6f475e364b7so7244117b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 18:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716339770; x=1716944570; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pJALbJf7ZzkOZows6Y3539RInRdAQzTeZML6lGtFemU=;
-        b=Htmk7vsqjhcrFyl79bF7WGQYI75nIpkIVepfNLvN+Yf4hs/lb5zsCvLk7RYQmtaGJy
-         n+ePYue+bSvEF5klJzh7M5psPNByDtWwOKxIwLqxTJepyBPfy6YiEux13igyrk+k799V
-         lpfyeFuNSjpw873TWEomZC8cUzBgc45t7JtMJhxQZ8ofdXMR+bKxWi2Od8DT3QyoRI9X
-         PNbCOTRMrRf1y6OILy73BlRiQgT1lNYwR8s9M1TaFFKXtMm/lNfm1CxPixQbK0DBEgtq
-         +SyjoLJNY3HmpiOpe0PThdYEph5p1R1K+LeOgPYLYNuDDdnogaU4NJO0VV9wNNRGFPYF
-         /YEQ==
+        d=google.com; s=20230601; t=1716339786; x=1716944586; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HwclbEARXJEfzAMj1ocJrX5kIt6/+X6ICBIFzrsnIj4=;
+        b=jDbLjKPYekPJEm42JP5PWXMJIAQVwyNzq2TbD5IOSqVi7vj1/nJa0UyoXwFMIxE8S/
+         91tuwQlZspP4+8YD9PWdpnx68AFYF5wGNJhNc/3jt2e08FAELxgSWpeOqVoLSaQwl5Is
+         VHagWLuOV+b1RJeE0KHE9gdATTSewgsxPCIX9RzQHBuJ9fhVPvZnxjs7F6l3UNSYaqvI
+         W4TzyWNi8bKtRwHSec9F3ADoYUJtSiypePT+lLbG0u+A5/QExs3YvS5qSYc0FpocA+ib
+         IObwdOhLCjP9hY08NGYn75FYtJOBkftz2aQWdYRohb/Nfi7bkBofIUCTHKOnKuSoSIfc
+         yOVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716339770; x=1716944570;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pJALbJf7ZzkOZows6Y3539RInRdAQzTeZML6lGtFemU=;
-        b=ijHDN7FWvHFUOhgleVJO0Tb9zwpHyODYoBTbRoLjLfyi1ExK7Yt0AN8qHPlaBzIbSK
-         B6yeER/BUSjPSrTj/Z+otA8wPLXCZLV/Mxh46Y8mWOo9VEWkjqJPA6MxiMMTM8jzB3aN
-         oJRI1JevAD5+Xl7Ez/g78r35nbQGv6aqpy08a2Bsg7WJPpLzNPCU0NXVti9+nCIJmEia
-         PgrsC1e5MrY2DilnEEVOIOByUzF6eR5pt2GQntCVxpPhFeGvUkno3Oh+mRcTAcPCONfT
-         bokmIx+Sxip6vkwZeTyptnRcwp0yvNsejjEWfTfFCluL7F/VrAcjP4aX0Bv9SJOmTAJD
-         zUdw==
-X-Gm-Message-State: AOJu0Yyy+8kXLCTB3ghfZl7ZDnjmJuTrs+L3paPx38AjxfqbXAji3qTk
-	hdU03Qoc8BBSR6F/JdEwguYVM/CHMeZ+KCJOh+0evoRqrqv4fbcaysGJm+K2BSGBPnLHS3qwaha
-	Mdw==
-X-Google-Smtp-Source: AGHT+IGsUdFdzFV3H5qkfDQKMQ91K3EjjIQawhERTmxc0zUw5YGZNBjf239GhoVFhPRZmZkqVFT2UGOXNdI=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a05:6a00:3a18:b0:6f4:133:f5a5 with SMTP id
- d2e1a72fcca58-6f6d645c526mr21798b3a.4.1716339770525; Tue, 21 May 2024
- 18:02:50 -0700 (PDT)
-Date: Wed, 22 May 2024 00:57:54 +0000
-In-Reply-To: <20240522005913.3540131-1-edliaw@google.com>
+        d=1e100.net; s=20230601; t=1716339786; x=1716944586;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HwclbEARXJEfzAMj1ocJrX5kIt6/+X6ICBIFzrsnIj4=;
+        b=r0PdGfYLJZqhhI3WfUExf5dvV2rgfBBLtF6xCtnE9kxmxT3CkA9+UnRxcq10oaxWFU
+         6YsRQMlWPvDW5zLR2jXJJrGS0iiDSwg5zetnlsmrnO9jsL1brH+ZVyLcPJaT9HD8poW7
+         J88pqk28oyqdT2jkDpriqVSM2+GlRjW36kSftA+hIJng6cUONobnaLckW6FILfmYrgDq
+         FTcEPqU0hsAn/jAZ7Exx6HXQi+KT7BgcRhWSBuQmiPUgdGkpvENcNlS9S1/gSox1yaH3
+         2kXJDNTA4cd6ayklRqQXwsqHLqGAMB+C/Fr0OplX1UwxSKc2BfN080oHbZRNlqEmWris
+         C2Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+Ghg+rOoavT9JcspdOkA9LX27kYHspOwXAS3UDIjYw3Zpa3hdm1n+8C1fLuNDCF9VjRp+CVCqjYgOzYpr/vNQDKegIuxjZ/5zoTi+
+X-Gm-Message-State: AOJu0Yy7pcoDGG9BzWZroDXSTRcGo26LGJvDuHRXR8TyLGKtntPoy75t
+	DDGv9fZFM+VVnjE9AOMWs+cY/AezA4aEHU4cti2Lde9l2sI15eaiZw4tu7jCIvAFQMgsjPAF+Zr
+	1Ug==
+X-Google-Smtp-Source: AGHT+IFdZeLXYEa7a5kPS3tjJMRfVxMjMYj5V/vemDMKNlWVJfsCOupgo8wNUUxaVEp5n/l+9BlMf8LeKKM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:3915:b0:6ec:f266:d214 with SMTP id
+ d2e1a72fcca58-6f6d6477b74mr22476b3a.4.1716339786070; Tue, 21 May 2024
+ 18:03:06 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 21 May 2024 18:03:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240522005913.3540131-1-edliaw@google.com>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240522005913.3540131-69-edliaw@google.com>
-Subject: [PATCH v5 68/68] selftests/x86: Drop define _GNU_SOURCE
-From: Edward Liaw <edliaw@google.com>
-To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
-	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, Edward Liaw <edliaw@google.com>, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
-	John Hubbard <jhubbard@nvidia.com>, Muhammad Usama Anjum <usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.45.0.215.g3402c0e53f-goog
+Message-ID: <20240522010304.1650603-1-seanjc@google.com>
+Subject: [PATCH] KVM: x86: Drop support for hand tuning APIC timer advancement
+ from userspace
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Shuling Zhou <zhoushuling@huawei.com>, Marcelo Tosatti <mtosatti@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-_GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
-redefinition warnings.
+Remove support for specifying a static local APIC timer advancement value,
+and instead present a read-only boolean parameter to let userspace enable
+or disable KVM's dynamic APIC timer advancement.  Realistically, it's all
+but impossible for userspace to specify an advancement that is more
+precise than what KVM's adaptive tuning can provide.  E.g. a static value
+needs to be tuned for the exact hardware and kernel, and if KVM is using
+hrtimers, likely requires additional tuning for the exact configuration of
+the entire system.
 
-Drop #define __USE_GNU too, as it is bad practice and the GNU extensions
-aren't actually being used in test_FCMOV, etc. where it is being defined.
+Dropping support for a userspace provided value also fixes several flaws
+in the interface.  E.g. KVM interprets a negative value other than -1 as a
+large advancement, toggling between a negative and positive value yields
+unpredictable behavior as vCPUs will switch from dynamic to static
+advancement, changing the advancement in the middle of VM creation can
+result in different values for vCPUs within a VM, etc.  Those flaws are
+mostly fixable, but there's almost no justification for taking on yet more
+complexity (it's minimal complexity, but still non-zero).
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: Edward Liaw <edliaw@google.com>
+The only arguments against using KVM's adaptive tuning is if a setup needs
+a higher maximum, or if the adjustments are too reactive, but those are
+arguments for letting userspace control the absolute max advancement and
+the granularity of each adjustment, e.g. similar to how KVM provides knobs
+for halt polling.
+
+Link: https://lore.kernel.org/all/20240520115334.852510-1-zhoushuling@huawei.com
+Cc: Shuling Zhou <zhoushuling@huawei.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/x86/amx.c                     | 2 --
- tools/testing/selftests/x86/check_initial_reg_state.c | 3 ---
- tools/testing/selftests/x86/corrupt_xstate_header.c   | 3 ---
- tools/testing/selftests/x86/entry_from_vm86.c         | 3 ---
- tools/testing/selftests/x86/fsgsbase.c                | 2 --
- tools/testing/selftests/x86/fsgsbase_restore.c        | 2 --
- tools/testing/selftests/x86/ioperm.c                  | 2 --
- tools/testing/selftests/x86/iopl.c                    | 2 --
- tools/testing/selftests/x86/lam.c                     | 1 -
- tools/testing/selftests/x86/ldt_gdt.c                 | 2 --
- tools/testing/selftests/x86/mov_ss_trap.c             | 2 --
- tools/testing/selftests/x86/nx_stack.c                | 2 --
- tools/testing/selftests/x86/ptrace_syscall.c          | 2 --
- tools/testing/selftests/x86/sigaltstack.c             | 2 --
- tools/testing/selftests/x86/sigreturn.c               | 3 ---
- tools/testing/selftests/x86/single_step_syscall.c     | 3 ---
- tools/testing/selftests/x86/syscall_arg_fault.c       | 3 ---
- tools/testing/selftests/x86/syscall_numbering.c       | 3 ---
- tools/testing/selftests/x86/sysret_rip.c              | 3 ---
- tools/testing/selftests/x86/sysret_ss_attrs.c         | 3 ---
- tools/testing/selftests/x86/test_FCMOV.c              | 4 ----
- tools/testing/selftests/x86/test_FCOMI.c              | 4 ----
- tools/testing/selftests/x86/test_FISTTP.c             | 4 ----
- tools/testing/selftests/x86/test_mremap_vdso.c        | 1 -
- tools/testing/selftests/x86/test_shadow_stack.c       | 3 ---
- tools/testing/selftests/x86/test_syscall_vdso.c       | 4 ----
- tools/testing/selftests/x86/test_vsyscall.c           | 3 ---
- tools/testing/selftests/x86/unwind_vdso.c             | 3 ---
- tools/testing/selftests/x86/vdso_restorer.c           | 3 ---
- 29 files changed, 77 deletions(-)
+ arch/x86/kvm/lapic.c | 39 +++++++++++++++++++++------------------
+ arch/x86/kvm/lapic.h |  2 +-
+ arch/x86/kvm/x86.c   | 11 +----------
+ 3 files changed, 23 insertions(+), 29 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
-index 95aad6d8849b..3259362a7117 100644
---- a/tools/testing/selftests/x86/amx.c
-+++ b/tools/testing/selftests/x86/amx.c
-@@ -1,6 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--
--#define _GNU_SOURCE
- #include <err.h>
- #include <errno.h>
- #include <pthread.h>
-diff --git a/tools/testing/selftests/x86/check_initial_reg_state.c b/tools/testing/selftests/x86/check_initial_reg_state.c
-index 3bc95f3ed585..0129cdae8abe 100644
---- a/tools/testing/selftests/x86/check_initial_reg_state.c
-+++ b/tools/testing/selftests/x86/check_initial_reg_state.c
-@@ -3,9 +3,6 @@
-  * check_initial_reg_state.c - check that execve sets the correct state
-  * Copyright (c) 2014-2016 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
--
- #include <stdio.h>
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index ebf41023be38..acd7d48100a1 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -59,7 +59,17 @@
+ #define MAX_APIC_VECTOR			256
+ #define APIC_VECTORS_PER_REG		32
  
- unsigned long ax, bx, cx, dx, si, di, bp, sp, flags;
-diff --git a/tools/testing/selftests/x86/corrupt_xstate_header.c b/tools/testing/selftests/x86/corrupt_xstate_header.c
-index cf9ce8fbb656..d2c746149678 100644
---- a/tools/testing/selftests/x86/corrupt_xstate_header.c
-+++ b/tools/testing/selftests/x86/corrupt_xstate_header.c
-@@ -4,9 +4,6 @@
-  *
-  * Based on analysis and a test case from Thomas Gleixner.
-  */
--
--#define _GNU_SOURCE
--
- #include <stdlib.h>
- #include <stdio.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/entry_from_vm86.c b/tools/testing/selftests/x86/entry_from_vm86.c
-index d1e919b0c1dc..9fa9d4a847ac 100644
---- a/tools/testing/selftests/x86/entry_from_vm86.c
-+++ b/tools/testing/selftests/x86/entry_from_vm86.c
-@@ -5,9 +5,6 @@
-  *
-  * This exercises a few paths that need to special-case vm86 mode.
-  */
--
--#define _GNU_SOURCE
--
- #include <assert.h>
- #include <stdlib.h>
- #include <sys/syscall.h>
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 8c780cce941d..348134d2cefc 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -3,8 +3,6 @@
-  * fsgsbase.c, an fsgsbase test
-  * Copyright (c) 2014-2016 Andy Lutomirski
-  */
--
--#define _GNU_SOURCE
- #include <stdio.h>
- #include <stdlib.h>
- #include <stdbool.h>
-diff --git a/tools/testing/selftests/x86/fsgsbase_restore.c b/tools/testing/selftests/x86/fsgsbase_restore.c
-index 6fffadc51579..88dce47ab8e6 100644
---- a/tools/testing/selftests/x86/fsgsbase_restore.c
-+++ b/tools/testing/selftests/x86/fsgsbase_restore.c
-@@ -12,8 +12,6 @@
-  *
-  * This is not part of fsgsbase.c, because that test is 64-bit only.
-  */
--
--#define _GNU_SOURCE
- #include <stdio.h>
- #include <stdlib.h>
- #include <stdbool.h>
-diff --git a/tools/testing/selftests/x86/ioperm.c b/tools/testing/selftests/x86/ioperm.c
-index 57ec5e99edb9..07b7c10f8d39 100644
---- a/tools/testing/selftests/x86/ioperm.c
-+++ b/tools/testing/selftests/x86/ioperm.c
-@@ -3,8 +3,6 @@
-  * ioperm.c - Test case for ioperm(2)
-  * Copyright (c) 2015 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
- #include <err.h>
- #include <stdio.h>
- #include <stdint.h>
-diff --git a/tools/testing/selftests/x86/iopl.c b/tools/testing/selftests/x86/iopl.c
-index 7e3e09c1abac..baa691154905 100644
---- a/tools/testing/selftests/x86/iopl.c
-+++ b/tools/testing/selftests/x86/iopl.c
-@@ -3,8 +3,6 @@
-  * iopl.c - Test case for a Linux on Xen 64-bit bug
-  * Copyright (c) 2015 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
- #include <err.h>
- #include <stdio.h>
- #include <stdint.h>
-diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
-index 0ea4f6813930..cbfb19d546fa 100644
---- a/tools/testing/selftests/x86/lam.c
-+++ b/tools/testing/selftests/x86/lam.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#define _GNU_SOURCE
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/ldt_gdt.c b/tools/testing/selftests/x86/ldt_gdt.c
-index 3a29346e1452..3b4237a85a12 100644
---- a/tools/testing/selftests/x86/ldt_gdt.c
-+++ b/tools/testing/selftests/x86/ldt_gdt.c
-@@ -3,8 +3,6 @@
-  * ldt_gdt.c - Test cases for LDT and GDT access
-  * Copyright (c) 2015 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
- #include <err.h>
- #include <stdio.h>
- #include <stdint.h>
-diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
-index cc3de6ff9fba..47ecc63220b7 100644
---- a/tools/testing/selftests/x86/mov_ss_trap.c
-+++ b/tools/testing/selftests/x86/mov_ss_trap.c
-@@ -19,8 +19,6 @@
-  *
-  * This should mostly cover CVE-2018-1087 and CVE-2018-8897.
-  */
--#define _GNU_SOURCE
--
- #include <stdlib.h>
- #include <sys/ptrace.h>
- #include <sys/types.h>
-diff --git a/tools/testing/selftests/x86/nx_stack.c b/tools/testing/selftests/x86/nx_stack.c
-index ea4a4e246879..97c5b34096cc 100644
---- a/tools/testing/selftests/x86/nx_stack.c
-+++ b/tools/testing/selftests/x86/nx_stack.c
-@@ -23,8 +23,6 @@
-  * Regular stack is completely overwritten before testing.
-  * Test doesn't exit SIGSEGV handler after first fault at INT3.
-  */
--#undef _GNU_SOURCE
--#define _GNU_SOURCE
- #undef NDEBUG
- #include <assert.h>
- #include <signal.h>
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 12aaa063196e..bdc81c8bd1a7 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -1,6 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#define _GNU_SOURCE
--
- #include <sys/ptrace.h>
- #include <sys/types.h>
- #include <sys/wait.h>
-diff --git a/tools/testing/selftests/x86/sigaltstack.c b/tools/testing/selftests/x86/sigaltstack.c
-index f689af75e979..7f41c3a4268b 100644
---- a/tools/testing/selftests/x86/sigaltstack.c
-+++ b/tools/testing/selftests/x86/sigaltstack.c
-@@ -1,6 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0-only
--
--#define _GNU_SOURCE
- #include <signal.h>
- #include <stdio.h>
- #include <stdbool.h>
-diff --git a/tools/testing/selftests/x86/sigreturn.c b/tools/testing/selftests/x86/sigreturn.c
-index 5d7961a5f7f6..2054f729b2c2 100644
---- a/tools/testing/selftests/x86/sigreturn.c
-+++ b/tools/testing/selftests/x86/sigreturn.c
-@@ -24,9 +24,6 @@
-  *
-  * Do not run on outdated, unpatched kernels at risk of nasty crashes.
-  */
--
--#define _GNU_SOURCE
--
- #include <sys/time.h>
- #include <time.h>
- #include <stdlib.h>
-diff --git a/tools/testing/selftests/x86/single_step_syscall.c b/tools/testing/selftests/x86/single_step_syscall.c
-index 9a30f443e928..375f3b50a0b5 100644
---- a/tools/testing/selftests/x86/single_step_syscall.c
-+++ b/tools/testing/selftests/x86/single_step_syscall.c
-@@ -9,9 +9,6 @@
-  * immediately issues #DB from CPL 0.  This requires special handling in
-  * the kernel.
-  */
--
--#define _GNU_SOURCE
--
- #include <sys/time.h>
- #include <time.h>
- #include <stdlib.h>
-diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
-index 461fa41a4d02..10eee1bcd015 100644
---- a/tools/testing/selftests/x86/syscall_arg_fault.c
-+++ b/tools/testing/selftests/x86/syscall_arg_fault.c
-@@ -3,9 +3,6 @@
-  * syscall_arg_fault.c - tests faults 32-bit fast syscall stack args
-  * Copyright (c) 2015 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
--
- #include <stdlib.h>
- #include <stdio.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/syscall_numbering.c b/tools/testing/selftests/x86/syscall_numbering.c
-index 991591718bb0..c72fc8aaa4d3 100644
---- a/tools/testing/selftests/x86/syscall_numbering.c
-+++ b/tools/testing/selftests/x86/syscall_numbering.c
-@@ -5,9 +5,6 @@
-  *
-  * Copyright (c) 2018 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
--
- #include <stdlib.h>
- #include <stdio.h>
- #include <stdbool.h>
-diff --git a/tools/testing/selftests/x86/sysret_rip.c b/tools/testing/selftests/x86/sysret_rip.c
-index 84d74be1d902..24bc219358a5 100644
---- a/tools/testing/selftests/x86/sysret_rip.c
-+++ b/tools/testing/selftests/x86/sysret_rip.c
-@@ -3,9 +3,6 @@
-  * sigreturn.c - tests that x86 avoids Intel SYSRET pitfalls
-  * Copyright (c) 2014-2016 Andrew Lutomirski
-  */
--
--#define _GNU_SOURCE
--
- #include <stdlib.h>
- #include <unistd.h>
- #include <stdio.h>
-diff --git a/tools/testing/selftests/x86/sysret_ss_attrs.c b/tools/testing/selftests/x86/sysret_ss_attrs.c
-index 5f3d4fca440f..f8b9e0b2a0c5 100644
---- a/tools/testing/selftests/x86/sysret_ss_attrs.c
-+++ b/tools/testing/selftests/x86/sysret_ss_attrs.c
-@@ -7,9 +7,6 @@
-  * the hidden attributes set to an unusable state.  Make sure the kernel
-  * doesn't let this happen.
-  */
--
--#define _GNU_SOURCE
--
- #include <stdlib.h>
- #include <unistd.h>
- #include <stdio.h>
-diff --git a/tools/testing/selftests/x86/test_FCMOV.c b/tools/testing/selftests/x86/test_FCMOV.c
-index 6b5036fbb735..0c9431ba7d31 100644
---- a/tools/testing/selftests/x86/test_FCMOV.c
-+++ b/tools/testing/selftests/x86/test_FCMOV.c
-@@ -1,8 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#undef _GNU_SOURCE
--#define _GNU_SOURCE 1
--#undef __USE_GNU
--#define __USE_GNU 1
- #include <unistd.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/test_FCOMI.c b/tools/testing/selftests/x86/test_FCOMI.c
-index aec6692c6dcf..ba186665918d 100644
---- a/tools/testing/selftests/x86/test_FCOMI.c
-+++ b/tools/testing/selftests/x86/test_FCOMI.c
-@@ -1,8 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#undef _GNU_SOURCE
--#define _GNU_SOURCE 1
--#undef __USE_GNU
--#define __USE_GNU 1
- #include <unistd.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/test_FISTTP.c b/tools/testing/selftests/x86/test_FISTTP.c
-index 09789c0ce3e9..95580cdaaa32 100644
---- a/tools/testing/selftests/x86/test_FISTTP.c
-+++ b/tools/testing/selftests/x86/test_FISTTP.c
-@@ -1,8 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#undef _GNU_SOURCE
--#define _GNU_SOURCE 1
--#undef __USE_GNU
--#define __USE_GNU 1
- #include <unistd.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/tools/testing/selftests/x86/test_mremap_vdso.c
-index d53959e03593..34f199b0d615 100644
---- a/tools/testing/selftests/x86/test_mremap_vdso.c
-+++ b/tools/testing/selftests/x86/test_mremap_vdso.c
-@@ -9,7 +9,6 @@
-  * Can be built statically:
-  * gcc -Os -Wall -static -m32 test_mremap_vdso.c
-  */
--#define _GNU_SOURCE
- #include <stdio.h>
- #include <errno.h>
- #include <unistd.h>
-diff --git a/tools/testing/selftests/x86/test_shadow_stack.c b/tools/testing/selftests/x86/test_shadow_stack.c
-index ee909a7927f9..ca1c13e89d8d 100644
---- a/tools/testing/selftests/x86/test_shadow_stack.c
-+++ b/tools/testing/selftests/x86/test_shadow_stack.c
-@@ -7,9 +7,6 @@
-  * special glibc shadow stack support (longjmp(), swapcontext(), etc). Just
-  * stick to the basics and hope the compiler doesn't do anything strange.
-  */
--
--#define _GNU_SOURCE
--
- #include <sys/syscall.h>
- #include <asm/mman.h>
- #include <sys/mman.h>
-diff --git a/tools/testing/selftests/x86/test_syscall_vdso.c b/tools/testing/selftests/x86/test_syscall_vdso.c
-index 8965c311bd65..5cd13279bba5 100644
---- a/tools/testing/selftests/x86/test_syscall_vdso.c
-+++ b/tools/testing/selftests/x86/test_syscall_vdso.c
-@@ -8,10 +8,6 @@
-  * Can be built statically:
-  * gcc -Os -Wall -static -m32 test_syscall_vdso.c thunks_32.S
-  */
--#undef _GNU_SOURCE
--#define _GNU_SOURCE 1
--#undef __USE_GNU
--#define __USE_GNU 1
- #include <unistd.h>
- #include <stdlib.h>
- #include <string.h>
-diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
-index d4c8e8d79d38..8e879263412d 100644
---- a/tools/testing/selftests/x86/test_vsyscall.c
-+++ b/tools/testing/selftests/x86/test_vsyscall.c
-@@ -1,7 +1,4 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--
--#define _GNU_SOURCE
--
- #include <stdio.h>
- #include <sys/time.h>
- #include <time.h>
-diff --git a/tools/testing/selftests/x86/unwind_vdso.c b/tools/testing/selftests/x86/unwind_vdso.c
-index 4c311e1af4c7..754f5d4d425a 100644
---- a/tools/testing/selftests/x86/unwind_vdso.c
-+++ b/tools/testing/selftests/x86/unwind_vdso.c
-@@ -5,9 +5,6 @@
-  *
-  * This tests __kernel_vsyscall's unwind info.
-  */
--
--#define _GNU_SOURCE
--
- #include <features.h>
- #include <stdio.h>
+-static bool lapic_timer_advance_dynamic __read_mostly;
++/*
++ * Enable local APIC timer advancement (tscdeadline mode only) with adaptive
++ * tuning.  When enabled, KVM programs the host timer event to fire early, i.e.
++ * before the deadline expires, to account for the delay between taking the
++ * VM-Exit (to inject the guest event) and the subsequent VM-Enter to resume
++ * the guest, i.e. so that the interrupt arrives in the guest with minimal
++ * latency relative to the deadline programmed by the guest.
++ */
++static bool lapic_timer_advance __read_mostly = true;
++module_param(lapic_timer_advance, bool, 0444);
++
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MIN	100	/* clock cycles */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MAX	10000	/* clock cycles */
+ #define LAPIC_TIMER_ADVANCE_NS_INIT	1000
+@@ -1854,16 +1864,14 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+ 	trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
  
-diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
-index fe99f2434155..8193de22a390 100644
---- a/tools/testing/selftests/x86/vdso_restorer.c
-+++ b/tools/testing/selftests/x86/vdso_restorer.c
-@@ -10,9 +10,6 @@
-  * 64-bit userspace has never supported sa_restorer == NULL, so this is
-  * 32-bit only.
-  */
+-	if (lapic_timer_advance_dynamic) {
+-		adjust_lapic_timer_advance(vcpu, guest_tsc - tsc_deadline);
+-		/*
+-		 * If the timer fired early, reread the TSC to account for the
+-		 * overhead of the above adjustment to avoid waiting longer
+-		 * than is necessary.
+-		 */
+-		if (guest_tsc < tsc_deadline)
+-			guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+-	}
++	adjust_lapic_timer_advance(vcpu, guest_tsc - tsc_deadline);
++
++	/*
++	 * If the timer fired early, reread the TSC to account for the overhead
++	 * of the above adjustment to avoid waiting longer than is necessary.
++	 */
++	if (guest_tsc < tsc_deadline)
++		guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+ 
+ 	if (guest_tsc < tsc_deadline)
+ 		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+@@ -2812,7 +2820,7 @@ static enum hrtimer_restart apic_timer_fn(struct hrtimer *data)
+ 		return HRTIMER_NORESTART;
+ }
+ 
+-int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
++int kvm_create_lapic(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_lapic *apic;
+ 
+@@ -2845,13 +2853,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+ 	hrtimer_init(&apic->lapic_timer.timer, CLOCK_MONOTONIC,
+ 		     HRTIMER_MODE_ABS_HARD);
+ 	apic->lapic_timer.timer.function = apic_timer_fn;
+-	if (timer_advance_ns == -1) {
++	if (lapic_timer_advance)
+ 		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_NS_INIT;
+-		lapic_timer_advance_dynamic = true;
+-	} else {
+-		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+-		lapic_timer_advance_dynamic = false;
+-	}
+ 
+ 	/*
+ 	 * Stuff the APIC ENABLE bit in lieu of temporarily incrementing
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 0a0ea4b5dd8c..a69e706b9080 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -85,7 +85,7 @@ struct kvm_lapic {
+ 
+ struct dest_map;
+ 
+-int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns);
++int kvm_create_lapic(struct kvm_vcpu *vcpu);
+ void kvm_free_lapic(struct kvm_vcpu *vcpu);
+ 
+ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index d750546ec934..fa064864ad2c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -164,15 +164,6 @@ module_param(kvmclock_periodic_sync, bool, 0444);
+ static u32 __read_mostly tsc_tolerance_ppm = 250;
+ module_param(tsc_tolerance_ppm, uint, 0644);
+ 
+-/*
+- * lapic timer advance (tscdeadline mode only) in nanoseconds.  '-1' enables
+- * adaptive tuning starting from default advancement of 1000ns.  '0' disables
+- * advancement entirely.  Any other value is used as-is and disables adaptive
+- * tuning, i.e. allows privileged userspace to set an exact advancement time.
+- */
+-static int __read_mostly lapic_timer_advance_ns = -1;
+-module_param(lapic_timer_advance_ns, int, 0644);
 -
--#define _GNU_SOURCE
--
- #include <err.h>
- #include <stdio.h>
- #include <dlfcn.h>
+ static bool __read_mostly vector_hashing = true;
+ module_param(vector_hashing, bool, 0444);
+ 
+@@ -12177,7 +12168,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	if (r < 0)
+ 		return r;
+ 
+-	r = kvm_create_lapic(vcpu, lapic_timer_advance_ns);
++	r = kvm_create_lapic(vcpu);
+ 	if (r < 0)
+ 		goto fail_mmu_destroy;
+ 
+
+base-commit: 4aad0b1893a141f114ba40ed509066f3c9bc24b0
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.45.0.215.g3402c0e53f-goog
 
