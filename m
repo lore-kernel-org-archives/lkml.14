@@ -1,199 +1,99 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B0F84DED
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820AC8249E
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716375073; cv=none; b=T6gc89ykvZ1PrLbzGXAPzdSJFJ9H0SbLYd2W5KWWFqN5U/RFoPdfg7duCwUWYBOH9xdWtpc8aQhWCQqpyQCaXSTjBCsLgRVN+ATFe+w0XfYojHASPqqL1+t7HYaXJsfk+hoEJAZAE73hGKuhWZnMGvnuoRpAlihBdLqoIPUv+xE=
+	t=1716375128; cv=none; b=XP7rpEMJ1TfGwN19Ey0KNxwEs6+PyXNN15It348OoI6ZehoHhc7hCKOazOjM+hQyViNYimgWpT0Rwad603PjNRHiKm0yyMdQHp8HtZZwSyyyTH1ObUk5CRm6zQBiozCxBDpdBdqXJA0IWdvwWSBpbPuenShtYubob9TTVY5qiyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716375073; c=relaxed/simple;
-	bh=fN+A3/6vCyYk379OydAiduI6v5ThmuLGAylNRut8Q0Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SuvrlfY/gbf85EYfHUkQESEbDmJ6DN/4t0IzuqxF/biaO17NpUVp26OGgCkbTX+BYWQenDORUmKZWegSgenbgfBHA6KUWxHmxX2GP0M4z7GiHZ1lyGyyzHZAkoZ5lG15v4x/OAY6wPsisw3y4qc5SWeGoY5KspGRE5ssa4RwWHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lcrFIY3b; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcrFIY3b"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5206a5854adso5464152e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 03:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716375068; x=1716979868; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kQt039iK/MLUHKrg6kdB48KBLBfk/G02HtDymVf9/cs=;
-        b=lcrFIY3bS3ZxBTvyycSzuQE6zBdzZEytlpFNNw/FUjrRDXBTedjg9GOLQnrp3vvvmU
-         rRXcX8gNAPJWktAjCKViKW2arA4o59tx0XvJ4sqgoK7lKw/Qn9K0e80/9fjgRbF86YA+
-         hn4uLo0XoLZveeRCnrRzb1LiLnOC2M7uj8kZasip5h8fxzkdaQSKToADl4Vg9SvGSNzr
-         y+1UTzL1sEG05dR7CukUFPIxuz4rxIyuzpt8p1jvgB0UP+8+hk5iVlOyE+sNO2mBC9Ap
-         sxIatAdnyllrry0er9bCJyw4ckrgklO+QCQXiO2+St3iLg+RhKhUSIN4yu4S1A6zuIMP
-         FBow==
+	s=arc-20240116; t=1716375128; c=relaxed/simple;
+	bh=Gfe1zauU7zE0SZTCKbwkP1teRyttZxutx/5efnInLmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VJlSnLU63pLGj9motzKwkw9mfspz9G+PObjf0eGcYc0+Jq0R1r8Nrbf81Mox3xRdzkvc4U6NRTuHv5oZcuZ4gJzA9yCLW1bHJZYfrvA9Q+ydqwpVhBKmMfuGQNqwzFl1rnVQurQbnaBwpt6JQlY5sCRxvQ1mu4fG02p2kB8WROA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-354cc708ac9so166263f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 03:52:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716375068; x=1716979868;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kQt039iK/MLUHKrg6kdB48KBLBfk/G02HtDymVf9/cs=;
-        b=OlJUrJh9KB8YcMyV1IkYGsD6t9t4uF9nAXe19nmw+4QUyxlNfLTlW5zxvcvc47/opr
-         esIHdf8NyXQhlVMtRRuqSgUINnXuqsFrtWDBmgthvciTENXTv48mvS4PO6GAWGiurlYT
-         eFWONi2f6X8cxtN1NCr4aYP2sveiZAwWbbNCIv3x6Z6KGCTTBY/uMyrPAYJEnxBVO/5R
-         sjpg6duMOtYo48lyH7JYuAQEZgTYPeVaj9PicEzeK7REwHN9v96gDUrpivAPYbc1+ynG
-         kxkSEdqsx5uYf1kZXvKFg2mZe7T1aPrR3taDcuKGpJ5SyiR6jGNqXg03snxf9aGiTbcC
-         X4tw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6MzgX4WdSy4GnWN8EZxrkmU/Is0yHAJvt2MOseKC1FGvuTO1SQ9VxaE2JRm/trxJCaEbmV0mFI6RJu8dOtpQyBD/4jZrucWNlwh9E
-X-Gm-Message-State: AOJu0YwmHjKOel+vIvq1xbdbcaxSMHNuLYcRtNG59DlYsf9YQlyHqA9D
-	tjIHej62Syu/m2eagV15NnjUJ2bKukHW6W4yO7oIprZ4jgiZcQd7/O/ZlB8Ielw=
-X-Google-Smtp-Source: AGHT+IE19pPXGyC8uaae6hqcH2EPzGBxyhrTv79BSBeUBvyS8uz/EAWUerDg6ffy+uQkeB6O0oM3xw==
-X-Received: by 2002:a05:6512:3707:b0:523:d1ba:6431 with SMTP id 2adb3069b0e04-526bfcf72d6mr829466e87.66.1716375068296;
-        Wed, 22 May 2024 03:51:08 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52431778ec8sm1279126e87.194.2024.05.22.03.51.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 03:51:07 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 22 May 2024 13:51:05 +0300
-Subject: [PATCH v2 13/14] drm/msm/hdmi: ensure that HDMI is one if HPD is
- requested
+        d=1e100.net; s=20230601; t=1716375125; x=1716979925;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n56g6uLn9XHCQVlQi59pqGIFNFw6rViiab33YGUq9tI=;
+        b=n6dinq9Oqd7+tPs81JBk1EkK1UZIaCmmZ/VtTZtQ6C+ZmLKJdZMSfpDa3VyLFpKS3k
+         Xk4zSBs0kGi0lpdHQgFXNBDBhpRbkJF++v5jfqTFQdSrkv9XM8ipZZo8vpf5rLVdqFw/
+         p17GmP3jF+LIZkTy3FFp60aqiCzYOstXo8dAEpRpPvban2dP0u8d3ynWDUOH9g+D3t0A
+         1WfuDozfuNsUb9iQ9Ztro4GcHhtZZoGwE2x4MlCyv04VQX5c4s3cJ448FRWIkH+8fxwj
+         ddUrDN4yTxnlv+PaodjfNDJ3xAKPi3cstr7vfsEz21hFLiseo1ABUwduT0Rw6W6qv3Lc
+         iMAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnJzqjdhslpwDn6eiT4JHNhtoAbDqRb2s6CjhvQND+Qm8k76wTnYxVF7ohso5jEIYKCtGGBgingk08kdSRCcOlm5RPVk1PgeU92EO9
+X-Gm-Message-State: AOJu0Yy3XWpecS4aEmN87oU/iKPqStt2D0TtmhG3FOwmBoEiISa/ibTn
+	vLB5PDeOJW0tJY4DUfLYgTnC49SQL7KcHK2cWVMAFxnaWY4bSMDw
+X-Google-Smtp-Source: AGHT+IEZJBgVSrF/9DB5H155p+7sN7q4DxBtkVsX5am/DrbLl8psEfn4k669Y88n9u6iZh/wjeiBXA==
+X-Received: by 2002:a05:6000:4021:b0:34f:42d5:1897 with SMTP id ffacd0b85a97d-354d8d8de53mr1418462f8f.3.1716375124688;
+        Wed, 22 May 2024 03:52:04 -0700 (PDT)
+Received: from [10.50.4.180] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbbbf9esm33855151f8f.91.2024.05.22.03.52.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 03:52:04 -0700 (PDT)
+Message-ID: <b4302ee2-584d-48b1-b0fe-77035879c15e@grimberg.me>
+Date: Wed, 22 May 2024 13:52:03 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240522-fd-hdmi-hpd-v2-13-c30bdb7c5c7e@linaro.org>
-References: <20240522-fd-hdmi-hpd-v2-0-c30bdb7c5c7e@linaro.org>
-In-Reply-To: <20240522-fd-hdmi-hpd-v2-0-c30bdb7c5c7e@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3672;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=fN+A3/6vCyYk379OydAiduI6v5ThmuLGAylNRut8Q0Y=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmTc4RpzFy/RBa6wu+q9FeHDiKrwkox2DFhaeHF
- 4v2WsPp4GaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZk3OEQAKCRCLPIo+Aiko
- 1Vh7B/95PEKsWeIEL8mDIfKMXBJryYqmCBX/RF1wUhr6eSzA/642guxhiuaaYf6UpvEodW9nitX
- B5kvWRDkiDFyZy65fYhKFZ+9HIC8VZdpA6iR4/OHYwrV8FuvaljFy1tvDz9VvpkfCgYxN/HfTvc
- dflfpD25FK19tPRsaer+FbKMFcNqYmLpo6ta5ZrNMw2LPHsPAPfW8JBNOBgzw2USJZ59EOqNAR8
- XeJteZAPLcLS5o0EUrRYn5ob0Z1oCVT8Ksa26Q6HZSKEXedF/V20TD4ByYIkW4CHQHCnM8MJx+G
- hSkEKjEqMj5dmZ+WNiuSzZHnvnwFadD6TI4pJFEh+6T2uBLZ
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] nvme: multipath: Implemented new iopolicy
+ "queue-depth"
+To: Nilay Shroff <nilay@linux.ibm.com>, John Meneghini <jmeneghi@redhat.com>,
+ kbusch@kernel.org, hch@lst.de, emilne@redhat.com
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jrani@purestorage.com, randyj@purestorage.com, hare@kernel.org
+References: <20240520202045.427110-1-jmeneghi@redhat.com>
+ <20240520202045.427110-2-jmeneghi@redhat.com>
+ <945416af-3f8b-40b5-9681-49973beb2cb2@linux.ibm.com>
+ <3b8d33db-f2c3-469a-bfa0-8fc52594f243@grimberg.me>
+ <95fe3168-ec39-4932-b9fc-26484de49191@linux.ibm.com>
+ <da35bc8b-6813-42c8-b446-8a07b08db156@grimberg.me>
+ <073ae18a-a80e-4a95-a093-36210a3bb230@grimberg.me>
+ <ba2a6973-ba58-492c-9785-31e50ab40957@grimberg.me>
+ <8f5ad047-be0b-471c-a708-f2bc464d29ef@redhat.com>
+ <b3ea2812-1110-47f6-88f0-0e9c028c350f@linux.ibm.com>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <b3ea2812-1110-47f6-88f0-0e9c028c350f@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The HDMI block needs to be enabled to properly generate HPD events. Make
-sure it is not turned off in the disable paths if HPD delivery is enabled.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/msm/hdmi/hdmi.c        | 1 +
- drivers/gpu/drm/msm/hdmi/hdmi.h        | 2 ++
- drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 8 +++++++-
- drivers/gpu/drm/msm/hdmi/hdmi_hpd.c    | 9 ++++++++-
- 4 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
-index a9437054c015..2890196857f8 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
-@@ -409,6 +409,7 @@ static int msm_hdmi_dev_probe(struct platform_device *pdev)
- 	hdmi->pdev = pdev;
- 	hdmi->config = config;
- 	spin_lock_init(&hdmi->reg_lock);
-+	mutex_init(&hdmi->state_mutex);
- 
- 	ret = drm_of_find_panel_or_bridge(pdev->dev.of_node, 1, 0, NULL, &hdmi->next_bridge);
- 	if (ret && ret != -ENODEV)
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.h b/drivers/gpu/drm/msm/hdmi/hdmi.h
-index 268ff8604423..7f0ca5252018 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi.h
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi.h
-@@ -42,6 +42,8 @@ struct hdmi {
- 
- 	/* video state: */
- 	bool power_on;
-+	bool hpd_enabled;
-+	struct mutex state_mutex; /* protects two booleans */
- 	unsigned long int pixclock;
- 
- 	void __iomem *mmio;
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-index cddba640d292..104107ed47d0 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-@@ -117,11 +117,13 @@ static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
- 
- 	DBG("power up");
- 
-+	mutex_lock(&hdmi->state_mutex);
- 	if (!hdmi->power_on) {
- 		msm_hdmi_phy_resource_enable(phy);
- 		msm_hdmi_power_on(bridge);
- 		hdmi->power_on = true;
- 	}
-+	mutex_unlock(&hdmi->state_mutex);
- 
- 	if (hdmi->hdmi_mode) {
- 		msm_hdmi_config_avi_infoframe(hdmi);
-@@ -147,7 +149,10 @@ static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
- 		msm_hdmi_hdcp_off(hdmi->hdcp_ctrl);
- 
- 	DBG("power down");
--	msm_hdmi_set_mode(hdmi, false);
-+
-+	/* Keep the HDMI enabled if the HPD is enabled */
-+	mutex_lock(&hdmi->state_mutex);
-+	msm_hdmi_set_mode(hdmi, hdmi->hpd_enabled);
- 
- 	msm_hdmi_phy_powerdown(phy);
- 
-@@ -158,6 +163,7 @@ static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
- 			msm_hdmi_audio_update(hdmi);
- 		msm_hdmi_phy_resource_disable(phy);
- 	}
-+	mutex_unlock(&hdmi->state_mutex);
- }
- 
- static void msm_hdmi_bridge_mode_set(struct drm_bridge *bridge,
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_hpd.c b/drivers/gpu/drm/msm/hdmi/hdmi_hpd.c
-index d3353c6148ed..cb89e9e2c6ea 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi_hpd.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi_hpd.c
-@@ -73,10 +73,14 @@ int msm_hdmi_hpd_enable(struct drm_bridge *bridge)
- 	if (ret)
- 		return ret;
- 
-+	mutex_lock(&hdmi->state_mutex);
- 	msm_hdmi_set_mode(hdmi, false);
- 	msm_hdmi_phy_reset(hdmi);
- 	msm_hdmi_set_mode(hdmi, true);
- 
-+	hdmi->hpd_enabled = true;
-+	mutex_unlock(&hdmi->state_mutex);
-+
- 	hdmi_write(hdmi, REG_HDMI_USEC_REFTIMER, 0x0001001b);
- 
- 	/* enable HPD events: */
-@@ -106,7 +110,10 @@ void msm_hdmi_hpd_disable(struct hdmi *hdmi)
- 	/* Disable HPD interrupt */
- 	hdmi_write(hdmi, REG_HDMI_HPD_INT_CTRL, 0);
- 
--	msm_hdmi_set_mode(hdmi, false);
-+	mutex_lock(&hdmi->state_mutex);
-+	hdmi->hpd_enabled = false;
-+	msm_hdmi_set_mode(hdmi, hdmi->power_on);
-+	mutex_unlock(&hdmi->state_mutex);
- 
- 	pm_runtime_put(dev);
- }
+On 22/05/2024 13:48, Nilay Shroff wrote:
+>
+> On 5/21/24 20:14, John Meneghini wrote:
+>> On 5/21/24 06:16, Sagi Grimberg wrote:
+>>>>> Exactly, nvme_mpath_init_ctrl resets the counter.
+>>>> Except you're right, the counter reset needs to move to nvme_mpath_init_identify()
+>>>> or some place that is called on every controller reset.
+>>> This however raises the question of how much failover/reset tests this patch has seen...
+>> I has received quite a bit of testing with failover and controller resets.  I shared some of the testing that was done at LSFMM last week.
+>>
+>> It has received enough testing to make me confident that this code is safe.  That is: it won't panic, corrupt data, or otherwise do any harm.  We believe the error paths will not be affected by this change... but I agree that running the error paths could negatively impact the accuracy of the nr_active counters... which could lead to an inaccurate outcome with the queue-depth policy.
+>>
+>> I agree the nr_counter initialize should move to nvme_mpath_init_identify(), or maybe be done there in addition to in nvme_mpath_init_ctrl(). I'm will to make that change now... if that's what people want.  I don't think it would require any extensive retesting.
+>>
+>> /John
+>>
+>>
+> I think with Keith's recent proposed patch for fixing io accounting on failover, the
+> nvme_mpath_end_request() would be called even for cancelled IO and so the nr_active
+> counter shall be adjusted correctly for cancelled IO requests. Having said that, IMO
+> you shall consider moving initialization of nr_active counter to nvme_mpath_init_identify()
+> as that's common function invoked from regular controller initialization code path as well
+> the reset code path.
 
--- 
-2.39.2
-
+Yes, and preferably with a comment explaining why its there (despite 
+having nothing to do with identify...)
