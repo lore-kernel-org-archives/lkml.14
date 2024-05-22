@@ -1,196 +1,54 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4042819470;
-	Wed, 22 May 2024 07:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68DE37153;
+	Wed, 22 May 2024 07:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716363188; cv=none; b=RRP0AlbTqRjU8kl9DCpmYcL5eGyNLSczo9BAciLSGZ2oYwtWmTyUVLURqUyn/7hu6fMg/yiwmtedwblqhXet5xlDxKLXoQvnPMvn5wiZ5/UgBtBvA5UOkZGrFytO/DAU6zls1TkUQmlDMTsj0maz8zHOi20qavhh6bmCi/9mDjg=
+	t=1716363293; cv=none; b=S+KiFsK3EIJ4voyT0hIe76PkcOIXoa1W7B5cmdfYQZzsUmW2F0w7YDDZgkdy+VWlVod9WOyiAer2EXa6JrWMgUp5X6460PN62mvAJzf3W0sESLe6feTJPWFk+k+d14sosLkYdisPJ1AEbgIQu2H0ghMsxgNKtOQyzsPeGwaiWWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716363188; c=relaxed/simple;
-	bh=/CP+fbgEX5XFpkxvApNtr2U9BrvlM+4DperW6OziTxQ=;
+	s=arc-20240116; t=1716363293; c=relaxed/simple;
+	bh=LtjISD2lbLxp70hQc5Z5mwe0ZOQisKZWMR0MnHX+DdY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WfkTSYvyN8BZHbhhQ1z4oKk7OywSlbGF25PFA5+u3cQk/VI22fWaI0XkrIG+e2WX2RCsCleQ339QbZ+k0WA0DWlgdmtiUVPNdQ7WNWM+GwnJwMR3uHC5kqXX+3zLyyHGF5a03M9t4Eo1Oz/ZdNF1adVHgY+s7N4ZyRwPShGMtUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=FG7iqI6d; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aGdSwNGaHLNyS5rQU7xLyCXOxTRzgi/gHWmxKyy8+kXo7FIFh/ZWfhY2z1BogD9bkPXXouAgsZl5mBNx65vhE41FX8CBViZOs56XW5INM0lpIDTNdl0lAkhGI+MUn5vL6z7Y2tii9bMErv3PDbLjPDLQT0CnB/PLXSn0mmRue4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BxgOc/Tx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FG7iqI6d"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 05152581;
-	Wed, 22 May 2024 09:32:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716363171;
-	bh=/CP+fbgEX5XFpkxvApNtr2U9BrvlM+4DperW6OziTxQ=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BxgOc/Tx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBB2C32789;
+	Wed, 22 May 2024 07:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716363293;
+	bh=LtjISD2lbLxp70hQc5Z5mwe0ZOQisKZWMR0MnHX+DdY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FG7iqI6d6LiRahUeHDB38CN5sHl/Q3UAaiplBz/Pit6ghjpZHChzof2jV2Rh/Jf7v
-	 FENvCM2RsExg7/C1GxV5pxbvo+wJKsLPOtoGdMPXkdk+/3IUH0axyxIvZRG1bs8HMJ
-	 KY92D21Kq9loYMC8EazNLkHHhchWDzEmMZN71Y54=
-Date: Wed, 22 May 2024 10:32:53 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Keith Zhao <keith.zhao@starfivetech.com>
-Cc: Alex Bee <knaerzche@gmail.com>,
-	"andrzej.hajda@intel.com" <andrzej.hajda@intel.com>,
-	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
-	"rfoss@kernel.org" <rfoss@kernel.org>,
-	"jonas@kwiboo.se" <jonas@kwiboo.se>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"hjc@rock-chips.com" <hjc@rock-chips.com>,
-	"heiko@sntech.de" <heiko@sntech.de>,
-	"andy.yan@rock-chips.com" <andy.yan@rock-chips.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Shengyang Chen <shengyang.chen@starfivetech.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v4 02/10] drm/bridge: add common api for inno hdmi
-Message-ID: <20240522073253.GF8863@pendragon.ideasonboard.com>
-References: <20240521105817.3301-1-keith.zhao@starfivetech.com>
- <20240521105817.3301-3-keith.zhao@starfivetech.com>
- <58ddfc8f-1995-4f41-9d63-35a00c6f92b9@gmail.com>
- <20240521154206.GA1935@pendragon.ideasonboard.com>
- <NTZPR01MB1050CA92FFE17AE1C9E38BF8EEEB2@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
+	b=BxgOc/TxWHWxC1u6UuRvtFj8/x7TDPLrM/vfrnpL8WcPDoQPNyH1BbNoMT2GSPGKy
+	 2vhHB0knam2E8y/dDNXVJ3CsuSZhQTYmX4UC+hSAEqJ5dHYvUql9JGBl/dLzdD6h5l
+	 FGT7Yudg0JXPKFjPGf3sWi8mE/JemTDMKlgAlxDQ=
+Date: Wed, 22 May 2024 09:34:50 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Shichao Lai <phyhac@gmail.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org,
+	syzkaller@googlegroups.com
+Subject: Re: divide error in alauda_transport
+Message-ID: <2024052224-motion-perish-82cd@gregkh>
+References: <CAEk6kZszgHVYN8r-AsPw9YtGGf459j0uDMYLdOoTixhE3YJCKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <NTZPR01MB1050CA92FFE17AE1C9E38BF8EEEB2@NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn>
+In-Reply-To: <CAEk6kZszgHVYN8r-AsPw9YtGGf459j0uDMYLdOoTixhE3YJCKw@mail.gmail.com>
 
-Hi Keith,
+On Wed, May 22, 2024 at 03:28:01PM +0800, Shichao Lai wrote:
+> Hello Dear maintainer!
+> A new bug was found by our modified syzkaller.
 
-On Wed, May 22, 2024 at 05:58:00AM +0000, Keith Zhao wrote:
-> Hi Alex, Laurent:
-> 
-> I want to make as few changes as possible on the current basis, and add bridge_fun, 
-> 
-> On 2024年5月21日 23:42, Laurent Pinchart wrote:
-> > On Tue, May 21, 2024 at 05:36:43PM +0200, Alex Bee wrote:
-> > > Hi Keith,
-> > >
-> > > thanks a lot for working on this. See some general remarks below
-> > >
-> > > Am 21.05.24 um 12:58 schrieb keith:
-> > > > Add INNO common api so that it can be used by vendor drivers which
-> > > > implement vendor specific extensions to Innosilicon HDMI.
-> > > >
-> > > > Signed-off-by: keith <keith.zhao@starfivetech.com>
-> > > > ---
-> > > >   MAINTAINERS                                   |   2 +
-> > > >   drivers/gpu/drm/bridge/Kconfig                |   2 +
-> > > >   drivers/gpu/drm/bridge/Makefile               |   1 +
-> > > >   drivers/gpu/drm/bridge/innosilicon/Kconfig    |   6 +
-> > > >   drivers/gpu/drm/bridge/innosilicon/Makefile   |   2 +
-> > > >   .../gpu/drm/bridge/innosilicon/inno-hdmi.c    | 587 ++++++++++++++++++
-> > > >   .../gpu/drm/bridge/innosilicon/inno-hdmi.h    |  97 +++
-> > > >   include/drm/bridge/inno_hdmi.h                |  69 ++
-> > > >   8 files changed, 766 insertions(+)
-> > > >   create mode 100644 drivers/gpu/drm/bridge/innosilicon/Kconfig
-> > > >   create mode 100644 drivers/gpu/drm/bridge/innosilicon/Makefile
-> > > >   create mode 100644 drivers/gpu/drm/bridge/innosilicon/inno-hdmi.c
-> > > >   create mode 100644 drivers/gpu/drm/bridge/innosilicon/inno-hdmi.h
-> > > >   create mode 100644 include/drm/bridge/inno_hdmi.h
-> > > >
-> > > ....
-> > >
-> > > > +	drm_encoder_helper_add(encoder, pdata->helper_private);
-> > > > +
-> > > > +	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
-> > > > +
-> > > > +	drm_connector_helper_add(&hdmi->connector,
-> > > > +				 &inno_hdmi_connector_helper_funcs);
-> > > > +
-> > > > +	drmm_connector_init(drm, &hdmi->connector,
-> > > > +			    &inno_hdmi_connector_funcs,
-> > > > +			    DRM_MODE_CONNECTOR_HDMIA,
-> > > > +			    hdmi->ddc);
-> > > > +
-> > >
-> > > I really don't want to anticipate bridge maintainer's feedback, but
-> > > new bridge drivers must not contain connector creation. That must
-> > > happen somewhere else.
-> > 
-> > You're absolutely right :-) Connector creation should be handled by the
-> > drm_bridge_connector helper. The HDMI bridge driver should focus on the
-> > HDMI bridge itself.
-> 
-> static int inno_bridge_attach(struct drm_bridge *bridge,
-> 				 enum drm_bridge_attach_flags flags)
-> {
-> 	struct inno_hdmi *hdmi = bridge_to_inno(bridge);
-> 
-> 	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR) {
-> 		DRM_ERROR("Fix bridge driver to make connector optional!");
-> 		return -EINVAL;
-> 	}
+Nice, do you have a proposed fix for this issue so that we can give you
+the credit for resolving the issue?
 
-This kind of code was added to existing bridge drivers when we
-transitioned to the new model where bridges don't create the connectors,
-because we couldn't fix all the existing bridges in one go. New bridges
-must do the opposite. See imx8qxp-pixel-link.c for instance, it has this
-code instead in its attach function:
+thanks,
 
-	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
-		DRM_DEV_ERROR(pl->dev,
-			      "do not support creating a drm_connector\n");
-		return -EINVAL;
-	}
-
-(I would personally drop the DRM_DEV_ERROR message)
-
-> 	hdmi->connector.polled = DRM_CONNECTOR_POLL_HPD;
-> 
-> 	drm_connector_helper_add(&hdmi->connector,
-> 				 &inno_hdmi_connector_helper_funcs);
-> 
-> 	drmm_connector_init(drm, &hdmi->connector,
-> 			    &inno_hdmi_connector_funcs,
-> 			    DRM_MODE_CONNECTOR_HDMIA,
-> 			    hdmi->ddc);
-> 
-> 	drm_connector_attach_encoder(&hdmi->connector, encoder);
-> }
-> 
-> static const struct drm_bridge_funcs inno_bridge_attach = {
-> 	.attach = inno_bridge_attach,
-> };
-> 
-> Connector creation is handled by the drm_bridge_funcs ->attach.
-> Is it ok?
-
-No, the connector should be created by the display controller driver by
-calling drm_brige_connector_init(). It should not be created by the
-bridge driver. The bridge driver should provide the bridge functions
-(drm_bridge_funcs), but not create any connector.
-
-> > > Also I'm neither seeing any drm_brige struct nor drm_bridge_funcs,
-> > > which are both essential for a bridge driver. I don't think moving a
-> > > part of a driver to .../drm/bridge/ makes it a bridge driver.
-> > >
-> > > > +	drm_connector_attach_encoder(&hdmi->connector, encoder);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > ....
-> > >
-
--- 
-Regards,
-
-Laurent Pinchart
+greg k-h
