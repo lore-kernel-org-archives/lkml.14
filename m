@@ -1,161 +1,187 @@
-Received: from sonic317-39.consmr.mail.ne1.yahoo.com (sonic317-39.consmr.mail.ne1.yahoo.com [66.163.184.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2041.outbound.protection.outlook.com [40.107.237.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A75175A6
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.184.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716343088; cv=none; b=J8oKI4/sor4KdzeTLGYslDOrgCfRudBjtmmf9Zt+UAjkEVH/tQD1kaDUYPLs76m7STC60HRN/1kQtRa+7Hz6elPduHnRXxnYny0jO7kVO56FERSiexGHi+KJju5msPXFIs1ughZlwgi4SKWjJFmRJyfpe5JlD6GsKocM7I8g2RM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716343088; c=relaxed/simple;
-	bh=MZVe26BMPdvP8BLcp/KzGhheqUTEjkEcZE0Q5/XFoOo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TEK6eOSwDU2yxjoaPnRu1pKkIvPLGOPX1iT3S/fK7vzxFKjZlEWERqzQGlTn3vRWPy2sS26tfAm5+y0Bdty3FcboXUFhm/IKf2iK3ryzG1J3zyE7QKfJPLOVMXaIT7Gj/4Gk7th3U/7o1dvonCWkignfIAwxBB1pYY/UUcRmflY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ehtuahhv; arc=none smtp.client-ip=66.163.184.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD9DAD59;
+	Wed, 22 May 2024 01:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716343179; cv=fail; b=KuXaWK13SLP4SS6SPdECpT9hxJzmoJQceIAPevGqYx+6K05rY18ANQlmbaIoCyEg2zO1XkJsWYMCxFlhh3yriy/lU3QIJoRlwUTHxqJh/RzQSiiKpeDmtbO7YR5NmdxepKsilXHeZSR1OeCGxDrd6SOEEE+p30f721wQztsqhqM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716343179; c=relaxed/simple;
+	bh=Q3VxjgWtv1P6PjXnFYNhw1pHOehZR4StsEveeoi2+ss=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e55tqOcYUygHAqfu5x9uy7FBIgTYzOOJZ94oYXSJO6zXvzPyT8++b34kY0AdW7kd+2W0KYh3oaMz8rpPgUVyL63jJDHkQH6VSUq6IdaSP3lIUJnU4h1KUHuYDSj4BY3w8SCtH3KlZQ3L89sRUBVWH5V+Pd3ZjQvECOY/nkhmrt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EKbJM84S; arc=fail smtp.client-ip=40.107.237.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ehtuahhv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1716343085; bh=K4ceCAMUd3OOguRCiqyTBlmv17C7zQy/D1e8nEr4anQ=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=ehtuahhv7Gn4i84xK2JWfFkiHLHKZeZnUDC3/nrPQOoEffrbZXJ/6qXS4bXataj6MrybpsjL52kJ2Vnr7rtPD3u0vUHUkWVvi9szuA/3TXnYBoNZTWBXq4ee93BIrzsy2QDfXuo6QSrnEdWxe1HjLzu7H8Fr45kSJ6yY82rXgCgYk0N3UkyE1aIrmcUYBBOVMjrnpeks6yDNEOKontob49N3t7hyIsUiG/zW4fwqmlyKUMjJ7zea++/xv1yucXxwNkbGHod7NvQH+p+ighM2pgEbm0wFk2+CdXVPIm0kKEb+ThkD6ytMYIFWuOmwXFV2+/4Xj05G5KuH05KuxX7Fvw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1716343085; bh=8xEsIleLcz9Nq7T00HYBqMxe9bmp2v/Wc1uU+PnRiXW=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=UMJ4SQtjP2+p6n4jzws7g3QmrVmBqETo4Ju2IT5a/RP+qs7mgY0sO/jCOZpO5JnBoqRg4D7eutRImSTClHxXlIypU5bHWPPTSaHlCqQvFs0T8qNgyXNpC8BcNhMIf5nUCMQwW93dzDdDetPeBbsSZ2eimnnhHdYkjL8S0gjuauLxqiVmoydvX30KQj7HoStSDlkjoy1nC9CzTy62mK4w0PMEld+jcj0uuF9wSHAUnhdodBdNrzNEHEDAX0G0DGHT+yBZaujX5rSUtEgbzOI3y5T9tkcMxcfTLarYcooZAGgo4KYEZ6WpJos4fUdstXiPeZ6iho7NUE8pXdkQuV1XoQ==
-X-YMail-OSG: rb2W.CAVM1nn7ILuoqlSMVNWYt6G71IbQJ9C1HKd_egYmcdPyshvCQkau2uqHmg
- V3gDzX4MCvbm1s3h6dFstKiJHo0AzxprRnuQDGqR483yok1wJxyctaKFnTfm0G1M4mkfQ9MtlHs2
- kufxSKI0RMU6ZQoe4qnH.AKFJKZZa2j5pHTqs6fg1BHsCVmwJCSQVJcc2csAXuUIXrv4S9PrOzPy
- lY0h1fX9_UCOjjwOTwlp7k0RFzjHJ68s5Xn8SwQFuG7dBQS5zv3Jj7F_I3fgMO4GB1d7G3y_en4K
- LJjY7l7t1esBBF5EmWPkjJP_SzercipYtoBQEicP3BbaVoxj.muoG854TuB7sW77ujQsXY_bxAET
- rECUYPx_CAi8aRCZmQAv8UUuForZc5i2wG3_OCpysheSebAy.m0lEMecot8ONlajAC70zJyyImFa
- 4eHazUYGu9LxQWkht1UJ4talEPeFlQkqHYQmfrI2l6Fw.5Mk8tTnslGtAXC1RY7mb63ZlMKgMCPc
- enELx11AEdl4KjqV58inLw4bKXi6IGG2g8kApCArEXNC3d8n0VedAcFEVFzD2RtXgOWhSQ4xEvoK
- qC3V74GmO8FxOyvaWtAwvof2CYFvK1uYvYrLDmRBUPmWkDC6hexAUKCMtY6L8spNW.q.5vveN.9E
- QAvp2CGyy3izc9wVa6CApmhNucVpKP2_UsQQU6ZhFXGff8d_ahQ.qwuvrV1yBhdGv9i7lShD34Hl
- JCmhyobP9uMtNmcHNyHnwBCfcaxi5q7JBz7XlyBkTFYSi.c8R4deeSgUbv4SJ728RrGHDFrs0McL
- w3tg4xv9cr32JOq3CVhooyneAwu6pdKP2e4EvrOAkq3cXYdt6c09klBaQAuzhGfUWRfxne_K9bT4
- TCAX4IXb2A7Fox.ZKLsg3U.NY.7_1Rd5udexmFFP60nuxfGak6MaoAzL0We06kJ9ZXOszkJ7H.r1
- kYeZ5UxHsU0vrDYAqYIML2q9xuLhvZkHQJ.5J9f43t8wjt4QROThQLxzTYAx6QykkKaT0ElOwQ83
- 4HT42bO02OXfhvqDWBtq4XTUIxlI4x03ku8Bf8Q6VX0h9i5v_9UBOWlQ8_o.45KN.IJ52JX7u7qI
- q1T8_oR03xpxggBH1k4uUPLK_ZbyAcNIAStrSQbMGdx4VCM_g_FsFpmq3RBBNLa.QYrb142GelY8
- h27qRCIz8dL.CZQU0Kvfow5mPV8UKc54mdOZG9RLaynwuFgKG7EF5Gcldg3LgISLFH4cYR35YitR
- g2mhUEKgYpOauWAVQAN2wt03pxI_dFOUZwh5D2PN0Y62xh8.z8Uad_nZGZk3vsMCQQ7trvTyNWZG
- DJZd9jetcMZJRmhPoGWFH8QbA7Y_0mny4K88VoF1rrEl5nqtGIVqLPejPtMblyq8MLkAaVS_hVjo
- LPyJmrbjeUgJZTTPTi14kUmIBES9Q0HIpRbKoGnHiukGzLCtrunI5CRTkKBeK7e2CBth82UX_8mS
- WvvB_Hvgu3EBTLm9GJaVZUks4tpiXQ80ci1zVFtC8sOHXlSJreGDOvEnJl_jg2QLPEkgx9D36qox
- n19FmHxMmOnUlGWWkJFwRMLbhuYJTAsDVYDFVA69nPqXQ8ePmWDzRA_TgBQV7iL7P1.V_gk3o5Fs
- tvNkkhxECcdszebEhteGYlzYsh14.DIfNkYEppJ1TcEkzcHn6HRrJMZ10jOAGCJXQALPu_pWCExa
- rT7oIcsJV5sPD3C6hi3s34.mFwd0kVtnF00FrM2V49EiRKahMv5HSjNYFom66BHBUKhwWTDzEyl.
- hfKXEZAbrk0pLHvQwmEJWzRjeS8wCMTaXYJ.fKT5F_.q36xr_Q1fK5wmyg8nh6YxkuTqP2sVaQWe
- sOH9YFmIIftB156jy8tl_7C6N8d4ffx.q5JEkMgK7xLoZ1Ul6rd8hAJvNDxx3diEXVzUny1FpmJL
- rqLLJYx5vUdHrlk_j2aw_5LW8xM2Zwta29e0ilFkmZETh6un35X_ZaJD3cMNZZzaKCGGS1xrtdu.
- RDwOU8FqtbX9PNBSTHux7VPqC7w5cQRzJPnS9cvpMH8w0tMaNWLIxG5rtB1MFaU8rbeD50RtnATp
- 4WJRrFDWcU0dBPRAUhBT4HmuK54i0CHcFBEdzRaqhlothLGEh_8GIPWP9k8jKz7tABormleib9Py
- Eeq6myb.haTs3APIir3NRVM1Vmnnh8aNvOq1pVq.tv.qWdUmreoDdRduI6ITot6zI3JfN.6w.g1G
- DMgP4TTiohcV8.SfNoFmh7yhU8MNRLlb4bYX9Z5GVYxQGZt9JIwCb..y.bdJ5Z8ZM
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 47ee3241-7a52-4eda-bec9-01823c7c6fd7
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.ne1.yahoo.com with HTTP; Wed, 22 May 2024 01:58:05 +0000
-Received: by hermes--production-gq1-59c575df44-8sqjb (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 95637bea4982e23cda54aebcf40e6a2a;
-          Wed, 22 May 2024 01:37:49 +0000 (UTC)
-Message-ID: <ce499a0d-fc35-40cd-aa6e-c100551d137c@schaufler-ca.com>
-Date: Tue, 21 May 2024 18:37:46 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EKbJM84S"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SNKCcUlaZ28yurEXmEMWGrPUYsVYqV5NO5CsCXVhmy94errBAmwqEL37i8NbJKAIxRdRzqPVUWN3OmJ6D3jybE+a8Sc8cqGfz/xDmpHQi7llt99caxhg98jYGEYySZiqi4WsIQz1wuVagJHMe6u2SKoy7FnwhH9/etLLN9aSPYqSIu3Pg7lLq5oeVYRPGeF2ZHXf0h0454qDWIcB7M+CC2CPnFWJYr5o5S4Yubv9s2508aGDnKJk5woxbbDqbTMu0AhotvMAmwFCYAjlDEHerpaPat77JEH7hGzjzda/6YN30xIQrtH+h+OKqgfwYLllITekTcqswCyOdXPK7N6SfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/vj6jjxlf6VLToN2OE4gB0UVRjxY3UREOqUl9487+pE=;
+ b=ed/vafJ8C2ego4qsXjXWfaHRc0Eapz/ohFLAtQEr5nYgxUCd2Iou2foSBTX2JT2ajL0B/QIaHxPtRypnfFIWy2HePQeTNp98Dfy+MQA3iBnHSJuMhpGs4NgHQnFaGVQ+0wV/2N5rqqsU1kNHry23l5O4LbUCD1fel04gbakPAJ6dg6TLr+5GF2SutEvFWMVv64ftJlOrdyGjuLTCAelGU5COmIANPlaInkBs/k5CfuTEXMy50Beo348FXdPb0RvMZTD+8WzgLApAB8Nmfxbm4lljcgOrWT2s9Qg09bz+4cnrSH+RqU1YM7wOAyeJgUWn0DgJ82xZBjXvib4XG+xYIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/vj6jjxlf6VLToN2OE4gB0UVRjxY3UREOqUl9487+pE=;
+ b=EKbJM84SWZf20bLzG79JP827LuUJYhXDX/e7ZPx0311yYelKH5yLNWvyreEKiBMxacBEe4cHUW0HFaHmOQzZ3EjGpW5oNXRR/PXmEz7PBUvPel27/Wbi1emHnjnzOCzn0ebpF9Y6sxufcG6Fw7Q1bm9Jtl5pgEdkH8sbUION64uJkq7raJG081ABYw6yH69CfwqFhi3OVZ73TdGhzcPLC9gShRyxeCcKxFdgNI9oMcw2I8CHVA2zpB+ibjIVhJR+6G9c8Y3Ld/4DUQA/hy/HqMwSvVLklc+lhMq/wWefGTHlRuRaeIRXu9slKXTzBOkeENzgfo4vvXorPBkH2xialg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN0PR12MB5954.namprd12.prod.outlook.com (2603:10b6:208:37d::15)
+ by DS0PR12MB9276.namprd12.prod.outlook.com (2603:10b6:8:1a0::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 22 May
+ 2024 01:59:34 +0000
+Received: from MN0PR12MB5954.namprd12.prod.outlook.com
+ ([fe80::883a:d386:a572:80c7]) by MN0PR12MB5954.namprd12.prod.outlook.com
+ ([fe80::883a:d386:a572:80c7%6]) with mapi id 15.20.7587.030; Wed, 22 May 2024
+ 01:59:34 +0000
+From: "Matthew R. Ochs" <mochs@nvidia.com>
+To: peterhuewe@gmx.de,
+	jarkko@kernel.org,
+	jgg@ziepe.ca,
+	kyarlagadda@nvidia.com,
+	linux-tegra@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: va@nvidia.com,
+	csoto@nvidia.com,
+	mochs@nvidia.com
+Subject: [PATCH v2] tpm_tis_spi: Account for SPI header when allocating TPM SPI xfer buffer
+Date: Tue, 21 May 2024 18:59:32 -0700
+Message-Id: <20240522015932.3742421-1-mochs@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240521154028.3339742-1-mochs@nvidia.com>
+References: <20240521154028.3339742-1-mochs@nvidia.com>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0078.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::23) To MN0PR12MB5954.namprd12.prod.outlook.com
+ (2603:10b6:208:37d::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 27/68] selftests/lsm: Drop define _GNU_SOURCE
-To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- Christian Brauner <brauner@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, linux-security-module@vger.kernel.org,
- netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
- bpf@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>
-References: <20240522005913.3540131-1-edliaw@google.com>
- <20240522005913.3540131-28-edliaw@google.com>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <20240522005913.3540131-28-edliaw@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.22356 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB5954:EE_|DS0PR12MB9276:EE_
+X-MS-Office365-Filtering-Correlation-Id: 997f2cb2-76f9-4e47-b804-08dc7a02d3f7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FmwIVz2sgyyIAZC668z3j6ghIWPz65mMn9CaLN8CralLeH2bq6VGnRqPZszQ?=
+ =?us-ascii?Q?L6mT6ZuTkkdKsKGr4x2YqRdHYzdUQuaavEPwkRBEsbwBVGnHzUWHYkE1FK7y?=
+ =?us-ascii?Q?xWeFjZjfNeNt9t5uACGqlq82ES9v9g+2GuqYs09RrQ84xI8a16V7Wjw//LHY?=
+ =?us-ascii?Q?Resj09TMCDoIgaGwiMFWntn0gcczzOT5GrhVjExRnGycoBKdanv768V1U1gd?=
+ =?us-ascii?Q?gTLPW9HorP9rOMQGr7EXmGrRp9hw6kIU5Ozhw2d+BAHpK6A8KA1nVdw42Hss?=
+ =?us-ascii?Q?VCLNDGTpJpSCtOlD+KhCg/LAMJOeBhTxhYiAqXVXCXU6iaM3S/Az9uccm952?=
+ =?us-ascii?Q?mwtIXEEve3zcdhY5aateuh3edpulIirFlF3p0MogAd8Wa01f0vsSQ5RAPBlF?=
+ =?us-ascii?Q?WXm4aRoKgRAZo5Zyr4rpwSH3KPjpu0hqhCtAgOum8Dq2F6IYYs20NWzRs8d4?=
+ =?us-ascii?Q?6gTkwTucEbEPdyFDkz/cdg77YWKZhF7Tvqi4LV9A5ShwjNjqJW34VYqgIKV+?=
+ =?us-ascii?Q?vL2f9ZGH+XEHfhFAcZ+mtikXpP8/Xf3m2G1H49LIj25/DIA7T0wqxkhAAxY5?=
+ =?us-ascii?Q?BC9qJMdMhNE6K/MqG+Nm8u6v7FoJGCStrIV0M6vq6SDF5+uzymTznO6RhOfX?=
+ =?us-ascii?Q?uAuiQXPBdfkZUjkRvUUrued31JvOB8xZ72cC0pj8f2fz6njc9T0Os+y/rD2X?=
+ =?us-ascii?Q?GwaQPyxH0oVG3oPIZAspLm+t8ud3Bmzyz974vxTs/0mwE8fTpa36O9ag6/+l?=
+ =?us-ascii?Q?Zlvt6CC06rkRNunQ/nI3zuLTgPjWtGHPgIMrGYS7iSRJSZkzGun4WEGdMqy3?=
+ =?us-ascii?Q?RHPtRfPm9K8lWsNdhP4MwqcsMOMXk/efd44Af+1ncHlr/73vkRj1OyVgoPj/?=
+ =?us-ascii?Q?pQa55XMi79U92zNCNKHpBxa9EUxpC56u2Y6JM5f0PGxyywWXwGWgjl91Lcce?=
+ =?us-ascii?Q?IYNz6Yv5HTDJg7P8WfxWBGo773znOSI95SO+t0Ra0yxYc3hpxEjgRQmDEesq?=
+ =?us-ascii?Q?cdAghROX9WerSw+zvLyoXwwJ4A7XoLxWNmXcj9FnmBEtQHfY29fDGffdYNr4?=
+ =?us-ascii?Q?PImNmITRSQKN5b8J+I+ZA9eIR7GMe3t3gjh0peJPwEVnK7+vfOEzz69zRmoq?=
+ =?us-ascii?Q?uy2OzQgtD9Gz3pDWs1ejwyge1nhjWUlhBdd35uQ0PonOJ1SWOe3aIotMmwgr?=
+ =?us-ascii?Q?ccf7Mof2yLuS57o78SabGI2eRW4QmTzADSOyyKyCIrzUIkQTs/XlLQX1Xv1I?=
+ =?us-ascii?Q?HDjzTvP+iL4NJO55QokEGfCBwCnJNl9VYwQVTY6eAA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5954.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?iESwovLYbaN/9Mrh9OwgknlEbAMB4w/M5yb3dXfGOY+v2eKT0krNKnNo3ZOh?=
+ =?us-ascii?Q?Fkj0fZZUaue5QmBA23BaffVR/ibfx6rKR2rsDNaUtnX8n91V5C4WJr/YcuPg?=
+ =?us-ascii?Q?eI2eNXi43IsGF4PzWOUWgajMhwpQ060AprAsWRmPbWngcZfbjxmW11HmcgH9?=
+ =?us-ascii?Q?48Qj6VtIYYLVfaQgNCT1j3ChJWJIxL3/Jmz9whZg5R8NAaEGA8RW1HBamNko?=
+ =?us-ascii?Q?DCZKjvw2jP3Z3SAa8i4DVi4hiMf3kny78wMrUqoRqSBl39d3lp0dzo+7LE9v?=
+ =?us-ascii?Q?kpCPczOIqoRBq/EDcXVZKaFXfL4I4Rab9PN4D+Jp42Nvp4V0thU1F46lpJIa?=
+ =?us-ascii?Q?yVjMi208BuDpJEaRLdOXS7a8ed/Y29ZzDY/CYBu8slSiLiIv87R0cjES7Lnt?=
+ =?us-ascii?Q?p4ls/hGiiHT6CuU5Fob2k6hrkCUR+UVaBDhOcregIxsnVYgzu99cux0AKqTZ?=
+ =?us-ascii?Q?NWZqINOndt9nnHwai3WGXJJLmGfo/udbYTnqDbx4eD7YtDoCVlIsayTzZkEW?=
+ =?us-ascii?Q?4V6ZJL5cQJBshQZqzZ9zqvmRFPM7+pc+77XHcZjy1BRWJGjkW7Lbrw9ncyne?=
+ =?us-ascii?Q?q8UJ+FXGUHi8HJJngBXzSwi79tuNQ0xk3XIDlJVl0dKkPaGD+Gdh4OYHEOcz?=
+ =?us-ascii?Q?EFtyDaNdsbny21KMsYf5+OOsw+0cBfRopk7QU4Ic6NIMl/pgFpN6ah3sRGdq?=
+ =?us-ascii?Q?RlwXw4YBkon7kzgy3kfd8EzdcT87h4jIbC2ZF3i5qqxHwR3sojkqWxeu+ZcU?=
+ =?us-ascii?Q?L14LwY04spyo0n/nUDmAqT5wsq/n/FwsMrRYfR74zp9+zWhMaSOpZeioey7S?=
+ =?us-ascii?Q?Q4am2p+5vE8DJlaWoVnBcNhTWflLuBo+ER4C1849uc9qSWL/Z8E2SRTStrrn?=
+ =?us-ascii?Q?EEM+hTvP/+En40pWgyqtYSt02mxqROkXvITnzX+Tbmi4laMGeOXN4DmVjLS0?=
+ =?us-ascii?Q?u13EgW3DyjTsJEh2UzRk0fsHC7d40phPjAue0ZEkbyLKdq6uUZo9ErsEANDo?=
+ =?us-ascii?Q?4slFxrnAOdWt5eA5jTIqUGcXWA57cgS3iLMWVPXXkWzj/1JVmlIU+zbj4eHN?=
+ =?us-ascii?Q?9rogy/EckTAWeIMUTMaX3z45PtsEVcQdIDT/KmRHsM1O/5kLD7+h9HXnfDwD?=
+ =?us-ascii?Q?a63WeAlC//jLziqBGS7TF2SZ8r1JtItewzeql54CDZjpvO0S8vJvfgXZ/bxv?=
+ =?us-ascii?Q?CDlBOmVIJACg5o5xGGxhGC3Pq9OFEjNB3Hx3f+Qf8wFA9JEXEfRIJ99nTQf/?=
+ =?us-ascii?Q?eqrrXy/ICNGGxTo5GwHFzcquiHD9NdI6ei+fcsx/G2WK6xwTMmNr5HNmnnkm?=
+ =?us-ascii?Q?4aUgxrxPcxXz8grRJuMQq7Bidl3Gjct3Qp3fMsE0e180loV3oRYL8bL8vW62?=
+ =?us-ascii?Q?PPvy2Z0hj8rgWsH9dwT33KS1YTddFOip7qZt4+crzD2TfPPLpLg9aAH84nh+?=
+ =?us-ascii?Q?HAlUOakBptuLSOAduFTA9DzOkwll8j0Us6qv3sXUNYh7M+OtXRnd2ISwnIeX?=
+ =?us-ascii?Q?wVujCwiMzNyyDlk/0E1fgY5fbnvFkpWUTL7+Z77g/USZwgUCdTUWXPkLOxOr?=
+ =?us-ascii?Q?6Uy7qak2MsfdxofcorAGRAtW/xnt69a/iaiwOuAw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 997f2cb2-76f9-4e47-b804-08dc7a02d3f7
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5954.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 01:59:34.5570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mdEIjPqKooctc2DG57IV3A0DxIwR57ogt/2eH8stJO1UKBqz1PR5aXsECHh7kl/81MyDd/ES2eShVaVDk3R1bA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9276
 
-On 5/21/2024 5:57 PM, Edward Liaw wrote:
-> _GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
-> redefinition warnings.
->
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> Signed-off-by: Edward Liaw <edliaw@google.com>
+The TPM SPI transfer mechanism uses MAX_SPI_FRAMESIZE for computing the
+maximum transfer length and the size of the transfer buffer. As such, it
+does not account for the 4 bytes of header that prepends the SPI data
+frame. This can result in out-of-bounds accesses and was confirmed with
+KASAN.
 
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+Introduce SPI_HDRSIZE to account for the header and use to allocate the
+transfer buffer.
 
-> ---
->  tools/testing/selftests/lsm/common.c                 | 2 --
->  tools/testing/selftests/lsm/lsm_get_self_attr_test.c | 2 --
->  tools/testing/selftests/lsm/lsm_list_modules_test.c  | 2 --
->  tools/testing/selftests/lsm/lsm_set_self_attr_test.c | 2 --
->  4 files changed, 8 deletions(-)
->
-> diff --git a/tools/testing/selftests/lsm/common.c b/tools/testing/selftests/lsm/common.c
-> index 9ad258912646..1b18aac570f1 100644
-> --- a/tools/testing/selftests/lsm/common.c
-> +++ b/tools/testing/selftests/lsm/common.c
-> @@ -4,8 +4,6 @@
->   *
->   * Copyright © 2023 Casey Schaufler <casey@schaufler-ca.com>
->   */
-> -
-> -#define _GNU_SOURCE
->  #include <linux/lsm.h>
->  #include <fcntl.h>
->  #include <string.h>
-> diff --git a/tools/testing/selftests/lsm/lsm_get_self_attr_test.c b/tools/testing/selftests/lsm/lsm_get_self_attr_test.c
-> index df215e4aa63f..7465bde3f922 100644
-> --- a/tools/testing/selftests/lsm/lsm_get_self_attr_test.c
-> +++ b/tools/testing/selftests/lsm/lsm_get_self_attr_test.c
-> @@ -5,8 +5,6 @@
->   *
->   * Copyright © 2022 Casey Schaufler <casey@schaufler-ca.com>
->   */
-> -
-> -#define _GNU_SOURCE
->  #include <linux/lsm.h>
->  #include <fcntl.h>
->  #include <string.h>
-> diff --git a/tools/testing/selftests/lsm/lsm_list_modules_test.c b/tools/testing/selftests/lsm/lsm_list_modules_test.c
-> index 06d24d4679a6..a6b44e25c21f 100644
-> --- a/tools/testing/selftests/lsm/lsm_list_modules_test.c
-> +++ b/tools/testing/selftests/lsm/lsm_list_modules_test.c
-> @@ -5,8 +5,6 @@
->   *
->   * Copyright © 2022 Casey Schaufler <casey@schaufler-ca.com>
->   */
-> -
-> -#define _GNU_SOURCE
->  #include <linux/lsm.h>
->  #include <string.h>
->  #include <stdio.h>
-> diff --git a/tools/testing/selftests/lsm/lsm_set_self_attr_test.c b/tools/testing/selftests/lsm/lsm_set_self_attr_test.c
-> index 66dec47e3ca3..110c6a07e74c 100644
-> --- a/tools/testing/selftests/lsm/lsm_set_self_attr_test.c
-> +++ b/tools/testing/selftests/lsm/lsm_set_self_attr_test.c
-> @@ -5,8 +5,6 @@
->   *
->   * Copyright © 2022 Casey Schaufler <casey@schaufler-ca.com>
->   */
-> -
-> -#define _GNU_SOURCE
->  #include <linux/lsm.h>
->  #include <string.h>
->  #include <stdio.h>
+Fixes: a86a42ac2bd6 ("tpm_tis_spi: Add hardware wait polling")
+Signed-off-by: Matthew R. Ochs <mochs@nvidia.com>
+Tested-by: Carol Soto <csoto@nvidia.com>
+---
+v2: Removed MAX_SPI_BUFSIZE in favor of open coding the buffer allocation
+---
+ drivers/char/tpm/tpm_tis_spi_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/char/tpm/tpm_tis_spi_main.c b/drivers/char/tpm/tpm_tis_spi_main.c
+index 3f9eaf27b41b..c9eca24bbad4 100644
+--- a/drivers/char/tpm/tpm_tis_spi_main.c
++++ b/drivers/char/tpm/tpm_tis_spi_main.c
+@@ -37,6 +37,7 @@
+ #include "tpm_tis_spi.h"
+ 
+ #define MAX_SPI_FRAMESIZE 64
++#define SPI_HDRSIZE 4
+ 
+ /*
+  * TCG SPI flow control is documented in section 6.4 of the spec[1]. In short,
+@@ -247,7 +248,7 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
+ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
+ 		     int irq, const struct tpm_tis_phy_ops *phy_ops)
+ {
+-	phy->iobuf = devm_kmalloc(&spi->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
++	phy->iobuf = devm_kmalloc(&spi->dev, SPI_HDRSIZE + MAX_SPI_FRAMESIZE, GFP_KERNEL);
+ 	if (!phy->iobuf)
+ 		return -ENOMEM;
+ 
+-- 
+2.25.1
+
