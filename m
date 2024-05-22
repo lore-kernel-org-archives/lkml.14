@@ -1,200 +1,131 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FD1360;
-	Wed, 22 May 2024 00:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716336847; cv=fail; b=mcEy0bNCPXbc0vDc/xy/oyLughnJEFuYzNjcQ7QHZZf9TFJ6q01wihTSVqYvEI+2DDVEIaTuAsoG4nLxzambBQ7Xw2kerpt5G41t1uxWj3YeqOdGv92UpnGS7Hes8sZelpP4HbGA4akFCcVbBGluo34uUAAgNjNChoqNDP8dGAE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716336847; c=relaxed/simple;
-	bh=69w8G1kPmvZZOnSRgGGihU1ccTd56a15DVrRlyhCy/k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wmpq9Kub+1ebbbP+XmgF07lri7SjTWUsbhY1dNdsne9GOjl5UFg5dBkneIhQxIPwj5DcQm6oxpo5TaVq6eRaV05v8MS2AfH/UTpofQLf81t/VzKpXVpr42kKCF8yldI5BMWl/VOJxhbrzGYUTfwhWXCwBYKkDEtk4AL/s/pHOVs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O2pmAO4F; arc=fail smtp.client-ip=40.107.243.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8551B1848;
+	Wed, 22 May 2024 00:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716337115; cv=none; b=SjhNWmOf5CE+yEPFUlRsQdYnORK7JERNsAh/BSh/fveasEdcmc9/me4IMWGEgNmHDw/Ah6kIxfx981peHMfr7j//Mx04UiWwdxa7hK66O5C+KvdhS6xoM+cbZz25p3DzufdZF4yULToNGJyz9RtVAGarmZWsLI3VVWRPbzQ08bg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716337115; c=relaxed/simple;
+	bh=iOmvqV+vbYDKZG4Z0hPkoNLgaOP2tzUKcwotb2WDGfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AKHNtDJ96WJD7VTb+7rqArw8aEiBrxcLKxhfNXLZHxMRsTJLEwL1cRblt+/yjhZsql7gegOfWphz1HVyRzxNnlNlSr1X4GgHJiVHJwU15A/BmVAlkWYK7J9wLjKNSzjNeTcADrb3nki4cyqNxc4UOtfe6LlUZGTDvZ2SFlmBH0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VWElfcsH; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O2pmAO4F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A6pKEURBjJ/gpouMW4G+sj+TcyKpPrWZB2kKtYZcygRfn6U7jzWL9vjxMZE+vlTjnkO5vSzWK0BoznTTO8vykEvucnjAW/LIZ+gjOxb9spWQPfJMY3GiTDaZDajHv2HgbAXJdfXyPhmx38T4IQp+OyEu7GUG4rzQk8xJlOtQyJAIKzkEcwL12TcSWonLvG7mxQWJ+TpCA8dVISKmbCF5aJCqC/U9It/dkRVOJTWdENtSIyKFwX+VT4GHAnPkoXYkE/IYa9/0eqQ9Ot6ChsKgNaRYv7uf5MAgR584GcRiZhfySTTNRHh/jqDF60CZJk01dkA2hkhSVz8pmwEmAIZbVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YmN3OeyLwKZKU36nOy4NyEaoEB3HZIlQUUAQyS1fY1E=;
- b=FCetXeRvSZm2IbwCZJpn2tZTPKj5LXlLRKPchUNPVBSavIs+GIqfMq0hq3ZyDYz8bp0gi+/Mlmt+lLiw820aA2b4GVcNtWKFxgvU8FB+yr9zUJomsnfLxe9wMz/sTrNuDwIJctNPjFOSyO8LbXW13KL/Nah5oxwm+AMslDSGlYZ9Gv+SH10Is8brqG3tu6o3B49fdyVXiPoMBokPsttyuAVd+4epQipOPkafSaAVSvTa7dMS8A21JhT8d6YbnD4HLtsUKSzV9HW3oCPyDX+4XkUGQRfDkJXzpd4W4qaNt0BahNXSPAHD7Ckq0YewOUZKrOTexyspYC51vwLTyRVuVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YmN3OeyLwKZKU36nOy4NyEaoEB3HZIlQUUAQyS1fY1E=;
- b=O2pmAO4FDfhkzxLoPwCgEjoksMFa43iHctjBWaK2+aDRJf73Qtf/uTVkigOsnqctTpZgIzJ0DOjyQ4hvRWGcd+LlTnt/NB+0K/oTX2zgmSifMSVlVtDnNQnw4GJC+aCK54+tJaH/7uWWq4aW8NH1eDG/WOJgZAX2+PYYYTe1hoN+s64cp5Z5Ik9OzRC8DFw7nRKKCAwDz0C9ZgfBDTT0DktxIZ6DAoWcaHsoeLv7qYRk4G3wnvCCM/chJiDjZQR1AQ0ZXfsp+fTlTh6C3lWwHMlpjZplwwaL/hwp/hTxxYkswCsu6TzTBRejumjtPSUh0XkpqY92CSEIfY0I0MoqhQ==
-Received: from DM6PR12CA0021.namprd12.prod.outlook.com (2603:10b6:5:1c0::34)
- by DS7PR12MB5982.namprd12.prod.outlook.com (2603:10b6:8:7d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Wed, 22 May
- 2024 00:14:02 +0000
-Received: from DS2PEPF0000343B.namprd02.prod.outlook.com
- (2603:10b6:5:1c0:cafe::ad) by DM6PR12CA0021.outlook.office365.com
- (2603:10b6:5:1c0::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19 via Frontend
- Transport; Wed, 22 May 2024 00:14:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- DS2PEPF0000343B.mail.protection.outlook.com (10.167.18.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7611.14 via Frontend Transport; Wed, 22 May 2024 00:14:01 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 21 May
- 2024 17:13:57 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 21 May 2024 17:13:56 -0700
-Received: from nvidia.com (10.127.8.10) by mail.nvidia.com (10.126.190.180)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
- Transport; Tue, 21 May 2024 17:13:52 -0700
-Date: Tue, 21 May 2024 17:13:50 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: <will@kernel.org>, <robin.murphy@arm.com>, <kevin.tian@intel.com>,
-	<suravee.suthikulpanit@amd.com>, <joro@8bytes.org>,
-	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
-	<yi.l.liu@intel.com>, <eric.auger@redhat.com>, <vasant.hegde@amd.com>,
-	<jon.grimm@amd.com>, <santosh.shukla@amd.com>, <Dhaval.Giani@amd.com>,
-	<shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH RFCv1 05/14] iommufd: Add IOMMUFD_OBJ_VIOMMU and
- IOMMUFD_CMD_VIOMMU_ALLOC
-Message-ID: <Zk04vnqJPKsVtrdY@nvidia.com>
-References: <cover.1712978212.git.nicolinc@nvidia.com>
- <3aa9bc1df6a2ee58a03c6ea6ededbc210a2d23a8.1712978212.git.nicolinc@nvidia.com>
- <ZkDR4Rp57cy9qSqP@nvidia.com>
- <ZkGYN36N7sh2vUmv@nvidia.com>
- <ZkOFkfHhG2h2fv/c@nvidia.com>
- <ZkQNxkYv23z7i6e0@nvidia.com>
- <20240521180555.GM20229@nvidia.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VWElfcsH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=vQRg8jTSE/w84X85rubENd1tTskSzNXDiSVdMmVU2k0=; b=VWElfcsH1gVcVWSD8m79ulCmcC
+	SGzPWQVxKrr69y8bkhK2I8P2x2S5EpH2XhMnIszSk6TSU89Jbhx2Nzv81fUQ0mVCP6I6G3bkUf48Q
+	D/G0oUFQYxDuOyyNtUUwc7ippw+t6lMdXXjJq78s+3SAplzr/YZzvTs0lgO39dJXcrT54yuL2qcMX
+	APSYp9VQX7z+adjGQ7Kee0hKMlctaZZKI7om07gEPjpoZW9Uvv2xppQp1XpTJC63nm5pqIXZl93W1
+	eN5OvncA92UCDBvEff3qYcUQkOTmUw+jDW2A4QUdS47xTZj2SVsNCNP9C+SlRRiIma+FZRud95kxF
+	2vQz6RLw==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s9ZgS-000000080jM-3oHr;
+	Wed, 22 May 2024 00:18:23 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s9ZgR-00000002b4Y-3dFS;
+	Wed, 22 May 2024 01:18:19 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paul Durrant <paul@xen.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jalliste@amazon.co.uk,
+	sveith@amazon.de,
+	zide.chen@intel.com,
+	Dongli Zhang <dongli.zhang@oracle.com>,
+	Chenyi Qiang <chenyi.qiang@intel.com>
+Subject: [RFC PATCH v3 06/21] KVM: x86: Explicitly disable TSC scaling without CONSTANT_TSC
+Date: Wed, 22 May 2024 01:17:01 +0100
+Message-ID: <20240522001817.619072-7-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240522001817.619072-1-dwmw2@infradead.org>
+References: <20240522001817.619072-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240521180555.GM20229@nvidia.com>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF0000343B:EE_|DS7PR12MB5982:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75a76fa5-793a-44c3-8dad-08dc79f4159d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|1800799015|7416005|36860700004|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EkkbsSUwZEoiV7kGQbfnOnrMn7ZNli8E2uhUqdD6mrHi/2worLEWoWU3YOQZ?=
- =?us-ascii?Q?cp+zOor1Bjd3Qqxv+gokbyFL2tiSraWre7FerWEuqcA/SUXYTV9Vw77yIevP?=
- =?us-ascii?Q?hR/ph764PeYPRNPawPrVZ7/nNoQjR6do37shfu79MwgkQLsCmvDbUy3JzeAy?=
- =?us-ascii?Q?OGx8VCGvip+bU69p9V3OzYjM0Kumd3FMLuuslRk7QhKTRc05gm41vodq0LeF?=
- =?us-ascii?Q?1AzxcngNzlpDjtA07IjAwuUZYnisE7isvPFkmG99stJCcTkg/y84vxHwscr5?=
- =?us-ascii?Q?6X9oGo+wcqoY7xHm4JOquJrPfN83xP4aIon4JE02/izZ4DQUGm0MQy0JOuCo?=
- =?us-ascii?Q?sZ76kT+PXdKL/QM/fsEE1S5rq3Ow9IlBBIpo/CUDzcJX3rWdZl33Yc4OU/8n?=
- =?us-ascii?Q?AoWxY/Ygq7MQ33KGzcO0fDZTFBw88w/4i1ktXjnHDrZpKVe8DQotP+oslofZ?=
- =?us-ascii?Q?39+3Y49u+JXtH/0QAOywjO2GO5NHBCo+bsdGoD1P3HJffZP+pCzWMuLIqSHB?=
- =?us-ascii?Q?C7kPaBsB1Y+8QtehsK3cu1h4f+ODIhmEZUruOshOh6mcbF2FZDxPX8VuTV1T?=
- =?us-ascii?Q?Cn+vJxBgMtaV8ysCsjQl90LFOvH+SAw3FS990HQdroiTfaF2Ch6brBY43H3/?=
- =?us-ascii?Q?DZ+7E/AnmMNcRme8g1kgABVI/0PgUx5yIq+Nx028+gUpf+efKVqxKA7Agkbb?=
- =?us-ascii?Q?XlY3UXJ5IJyGtoLfTRC/GSQVV9dC5F1UmLC0OKoA3CKe+z4dDsxLUlg87zm8?=
- =?us-ascii?Q?9qw12Gts4dEvzK/Uurea/drn18fGKaXf/RNnwAVCVf0wUOLpMB0kWoQJZ8b8?=
- =?us-ascii?Q?WgGNpVSJtBt5YdzvqP0q5DHxtGNIrIxRDNJjhH9rmNF3o4n7Y7Vv8b+P65wi?=
- =?us-ascii?Q?yvh2crdp6D9hTWMe1aDnOaX6/YM78AVHNv19slw3J9wBt8cULocs9sFxv9Ed?=
- =?us-ascii?Q?jGYLjO0pBKUL9h4teJiE/gpeKnlTQoMTfQHi061DmTtei1CGLSA9w4KXRqI3?=
- =?us-ascii?Q?k1D77J3Chd3cFeBDDybOMlKsKh62hsTRncrnBPAmKmDagsFttBbQ/dmFZH5Y?=
- =?us-ascii?Q?ptllyg9OyrM7s02FBW9TI7Rq0DVX1yIFY9qU7hJ8pxXF5mCukf088u59rzlA?=
- =?us-ascii?Q?I9qorU8/kNIAUPOqI9VssZcO4bBZ4SA1n+Lp5bpNDH1Sr1fGhndi4SaHcvh3?=
- =?us-ascii?Q?75tiD//77LM6PrGruhQz8bxgLfG1FfoA7WqYosvEGqak1iLKa9yexCuUZ+sA?=
- =?us-ascii?Q?tuBMjKWLZcz/HVR93mtw5UeUIJkQCWeNfvReZBKC0OD2Ni4CeC+TR+yWA+nW?=
- =?us-ascii?Q?kkRq+W0y0RR4k+zBYKGp7ryT27J7wy3on19GhH5tDp/f4z6YmQMxkHQ10vOw?=
- =?us-ascii?Q?yStgws2H3TYFv0SI7EAQRTpHru7y?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 00:14:01.9989
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75a76fa5-793a-44c3-8dad-08dc79f4159d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF0000343B.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5982
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, May 21, 2024 at 03:05:55PM -0300, Jason Gunthorpe wrote:
-> On Tue, May 14, 2024 at 06:20:06PM -0700, Nicolin Chen wrote:
-> > > I suspect 0 should be reserved as a non-set value for some
-> > > basic sanity in all these driver type enums.
-> > 
-> > We have an IOMMU_HWPT_DATA_NONE for HWPT_ALLOC to compatible
-> > with an S2 hwpt, since it doesn't need a data.
-> > 
-> > Maybe we can have an IOMMU_VIOMMU_TYPE_DEFAULT to be 0, for
-> > an IOMMU driver (e.g. VT-d) that doesn't need to handle nor
-> > be aware of any viommu object?
-> 
-> Seems like a good practice, and perhaps userspace will find value in a
-> generic viommu object that is always present.
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Yea. VMM is always allowed to create a viommu to wrap an S2
-HWPT. Then, I assume iommufd in this case should allocate a
-viommu object if !domain_ops->viommu_alloc.
+KVM does make an attempt to cope with non-constant TSC, and has notifiers
+to handle host TSC frequency changes. However, it *only* adjusts the KVM
+clock, and doesn't adjust TSC frequency scaling when the host changes.
 
-> > That makes a lot sense. I'd need to go through QEMU code and
-> > see how we will accommodate these two more naturally: likely
-> > the QEMU core should allocate an S2 HWPT for a VM, while the
-> > viommu code should allocate a VIOMMU for each instance.
-> 
-> I'd suggest that core qemu should allocate the S2 IOAS and pass that
-> to the qemu viommu driver
->
-> The qemu viommu driver should create the hwpt and then the viommu and
-> perhaps return the viommu or hwpt back to the core code.
->
-> If the vSTE flow above is used for identity then the qemu viommu
-> driver would also have to go an create vSTEs for identity and attach
-> them to all devices before the VM starts up. Then when the OS
-> activates the SMMU it would have to mirror the real vSTE from guest
-> memory to the kernel.
+This is presumably because non-constant TSCs were fixed in hardware long
+before TSC scaling was implemented, so there should never be real CPUs
+which have TSC scaling but *not* CONSTANT_TSC.
 
-The entire flow makes sense to me.
+Such a combination could potentially happen in some odd L1 nesting
+environment, but it isn't worth trying to support it. Just make the
+dependency explicit.
 
-> Not sure there is value in having the core qemu code directly access
-> the hwpt/viommu?
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Reviewed-by: Paul Durrant <paul@xen.org>
+---
+ arch/x86/kvm/svm/svm.c | 3 ++-
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-I think so, though here might be some complication here.
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 0f3b59da0d4a..4d3ec1c3231e 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -5202,7 +5202,8 @@ static __init int svm_hardware_setup(void)
+ 		kvm_enable_efer_bits(EFER_FFXSR);
+ 
+ 	if (tsc_scaling) {
+-		if (!boot_cpu_has(X86_FEATURE_TSCRATEMSR)) {
++		if (!boot_cpu_has(X86_FEATURE_TSCRATEMSR) ||
++		    !boot_cpu_has(X86_FEATURE_CONSTANT_TSC)) {
+ 			tsc_scaling = false;
+ 		} else {
+ 			pr_info("TSC scaling supported\n");
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 6780313914f8..bee830adf744 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8428,7 +8428,7 @@ __init int vmx_hardware_setup(void)
+ 	if (!enable_apicv || !cpu_has_vmx_ipiv())
+ 		enable_ipiv = false;
+ 
+-	if (cpu_has_vmx_tsc_scaling())
++	if (cpu_has_vmx_tsc_scaling() && boot_cpu_has(X86_FEATURE_CONSTANT_TSC))
+ 		kvm_caps.has_tsc_control = true;
+ 
+ 	kvm_caps.max_tsc_scaling_ratio = KVM_VMX_TSC_MULTIPLIER_MAX;
+-- 
+2.44.0
 
-On one side, it may not be straightforward for a qemu viommu
-driver to hold a shared S2 hwpt, as the driver is typically
-per instance, though I think it can keep viommu to its own.
-So passing the S2 hwpt back to qemu core and tie to iommufd
-handler (ictx) makes sense.
-
-On the other side, there can be some future HW potentially
-supporting two+ kinds of IO page tables so a VM may have two+
-S2 hwpts? Then the core would hold a list of S2 hwpts and the
-viommu driver would need to try-n-allocate viommu against the
-list..
-
-Thanks
-Nicolin
