@@ -1,180 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC50F7E572
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DB48172A;
+	Wed, 22 May 2024 10:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716372267; cv=none; b=BJ6tmTglY8M3N4zF/H9ysACsnRTepLoFBBfmH8HOloeMhuEBewpiobpmFlN4epelErSYWsWI0PBABQiBxxZGpRuOFCQeYVyZBZYbdpCwo3Lx9TQgFndjbFVqYLu574RrmoAA/86uGURGb7tF/VNaOzcI7O5frFct14r9i1werko=
+	t=1716372303; cv=none; b=QmTNqQQ4e1QF8lBRfk3B6zBpFwwrBNblWNJ101jrEAVqn4PvjcLWR1P51ebtufNmc14JtM31PndARr95IOT2oDSdtRakzZ73NYnBamlzgGf2+8HdIeAMLKyYZwrLpwB2TltCm3tHAEI/SaQIWW26v05UcevBuDkgwp++/bkXMgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716372267; c=relaxed/simple;
-	bh=r2aTjwr63X9DEKuVZ3pWPxsKeT7TlJApCdsq8TPv88Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PgE3hr7ZTBAujGrUt1jXRxfR10zlroevYAesSj30vaJi5kf5EPlFmj2o1U5QX3LCJxypaGKW7c2Tbu5cglxcCxQaqJ6oC1YuC1uxLA2ztTRH7aIZNdOqCpgg1NK9CJ6xoNPsSKAhnXTBt+AIxKpvsDBtHFKjD/Gf5M4iKWeqZ/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGch9krJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716372303; c=relaxed/simple;
+	bh=96lDSFPE2HzXlib3zI3ULsk4mWza6pXfJP5k0lPy1ac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EP5zG90o7PxSmzn5J6qIL38u1Tr5UMqVtiHn8t4enwER59hS0jE8ZZQhPDht8rntgjQi5ZTrAt65cMKZX2Mz9HU6DBO7oVucJzvSv0yukoeB5LW+G9wOoDf2NnbXX2SJiaUklrHRN2v5rl4NwxZOGXgZfz6S80iXGHK3ANgGWUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwAbFeLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGch9krJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAD5C2BD11;
-	Wed, 22 May 2024 10:04:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwAbFeLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E425BC2BD11;
+	Wed, 22 May 2024 10:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716372267;
-	bh=r2aTjwr63X9DEKuVZ3pWPxsKeT7TlJApCdsq8TPv88Y=;
-	h=Date:From:To:Cc:Subject:From;
-	b=oGch9krJcdMaGxQoxvjCupdPwWwsSCrkOLXU2PBC2cdBiwt0FQ4HLbcRKRIwFxakR
-	 wRvV/O2Vlg9aPThoLMMGnajBgD1CrUpUhpHhIgiY6T1TANeHiQThPBoGZlHM4gfsMU
-	 Gd8Rm0JufaoxZogEUx5bjdFp9ZIDTtIp0mSgVBP5XQ59qNSVB//yDlwnhm+zAZumeP
-	 rdfkN0cXG6my4kr+Fd+dTUXgTfO/4QcXJ2JiSfPBFuQkb2ZrSVR/ApF+6b1xpHqLw9
-	 7jfxFV9SAQzR8NcbUrSvv6hRp0o3/wH2O5ajyGlKDSCnnMPExJSFM5HfxpVYNEN6wE
-	 4u+Vret6OrP/w==
-Date: Wed, 22 May 2024 11:04:23 +0100
-From: Lee Jones <lee@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [GIT PULL] Backlight for v6.10
-Message-ID: <20240522100423.GC6035@google.com>
+	s=k20201202; t=1716372303;
+	bh=96lDSFPE2HzXlib3zI3ULsk4mWza6pXfJP5k0lPy1ac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fwAbFeLpbxtH2RT5GKWheKAK+izlrUi40FUBrVXg+YdtkeerhjP/nGFnLP2xQ2IV/
+	 6xWXNM2RQdKXH9BdftuD5OaJOzamSZV8BodXf0Jvn8xPlt5gWAlCaVvqWlYYHOE6ji
+	 3hhgIU4O56c9iXuymL59CGEyWoWtPJmmFZNf5zzKA31gQkFZsBYkH9a84pyuM3xhMT
+	 raZEHTQ2EK4fXHR1khtazcFIi1yAiyjzQMAZfibNNOPW+lbLIZkeCT54H0S8Xoc1Pr
+	 fDfb5TWg0KfWbdnY/uKbrHbZN/Ps5LcIwsHYY3i6xI6n/eW9KsQjNWbFNejBObM+/+
+	 eHL5I0IgtwYEQ==
+Message-ID: <d5996571-7dbd-4e8e-ab33-bfadafa86ff4@kernel.org>
+Date: Wed, 22 May 2024 12:04:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Add Radxa ROCK S0
+To: Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240521212247.1240226-1-jonas@kwiboo.se>
+ <20240521212247.1240226-2-jonas@kwiboo.se>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240521212247.1240226-2-jonas@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Good morning Linus,
+On 21/05/2024 23:22, Jonas Karlman wrote:
+> Add devicetree binding for the Radxa ROCK S0 board.
+> 
+> Radxa ROCK S0 is a single-board computer based on the Rockchip RK3308B
+> SoC in an ultra-compact form factor.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+Best regards,
+Krzysztof
 
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/lee/backlight tags/backlight-next-6.10
-
-for you to fetch changes up to 1fd949f653ee1a3c1776ef8a5295ae072c9b67f2:
-
-  backlight: sky81452-backlight: Remove unnecessary call to of_node_get() (2024-05-10 15:44:29 +0100)
-
-----------------------------------------------------------------
- - Fix-ups
-   - FB Backlight interaction overhaul
-   - Remove superfluous code and simplify overall
-   - Constify various structs and struct attributes
-
- - Bug Fixes
-   - Repair LED flickering
-   - Fix signedness bugs
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      backlight: mp3309c: Fix signedness bug in mp3309c_parse_fwnode()
-
-Flavio Suligoi (1):
-      backlight: mp3309c: Fix LEDs flickering in PWM mode
-
-Krzysztof Kozlowski (20):
-      backlight: lcd: Constify lcd_ops
-      backlight: ams369fg06: Constify lcd_ops
-      backlight: corgi_lcd: Constify lcd_ops
-      backlight: hx8357: Constify lcd_ops
-      backlight: ili922x: Constify lcd_ops
-      backlight: ili9320: Constify lcd_ops
-      backlight: jornada720_lcd: Constify lcd_ops
-      backlight: l4f00242t03: Constify lcd_ops
-      backlight: lms283gf05: Constify lcd_ops
-      backlight: lms501kf03: Constify lcd_ops
-      backlight: ltv350qv: Constify lcd_ops
-      backlight: otm3225a: Constify lcd_ops
-      backlight: platform_lcd: Constify lcd_ops
-      backlight: tdo24m: Constify lcd_ops
-      HID: picoLCD: Constify lcd_ops
-      fbdev: clps711x: Constify lcd_ops
-      fbdev: imx: Constify lcd_ops
-      fbdev: omap: lcd_ams_delta: Constify lcd_ops
-      const_structs.checkpatch: add lcd_ops
-      backlight: otm3225a: Drop driver owner assignment
-
-Lee Jones (1):
-      Merge branches 'ib-backlight-auxdisplay-staging-omap-6.9', 'ib-backlight-auxdisplay-hid-fb-6.9' and 'ib-backlight-hid-fbdev-lcd-scripts-6.10' into ibs-for-backlight-merged
-
-Ricardo B. Marliere (2):
-      backlight: Make backlight_class constant
-      backlight: lcd: Make lcd_class constant
-
-Shresth Prasad (1):
-      backlight: sky81452-backlight: Remove unnecessary call to of_node_get()
-
-Thomas Zimmermann (16):
-      backlight: Match backlight device against struct fb_info.bl_dev
-      auxdisplay: ht16k33: Remove struct backlight_ops.check_fb
-      hid: hid-picolcd: Fix initialization order
-      hid: hid-picolcd: Remove struct backlight_ops.check_fb
-      backlight: aat2870-backlight: Remove struct backlight.check_fb
-      backlight: pwm-backlight: Remove struct backlight_ops.check_fb
-      fbdev: sh_mobile_lcdc_fb: Remove struct backlight_ops.check_fb
-      fbdev: ssd1307fb: Init backlight before registering framebuffer
-      fbdev: ssd1307fb: Remove struct backlight_ops.check_fb
-      backlight: Add controls_device callback to struct backlight_ops
-      auxdisplay: ht16k33: Replace use of fb_blank with backlight helper
-      backlight: omap1: Remove unused struct omap_backlight_config.set_power
-      backlight: omap1: Replace FB_BLANK_ states with simple on/off
-      fbdev: omap2/omapfb: Replace use of fb_blank with backlight helpers
-      staging: fbtft: Remove reference to fb_blank
-      backlight: Remove fb_blank from struct backlight_properties
-
-Uwe Kleine-König (1):
-      backlight: lp8788: Drop support for platform data
-
- drivers/auxdisplay/ht16k33.c                       |  15 +-
- drivers/hid/hid-picolcd_backlight.c                |   7 -
- drivers/hid/hid-picolcd_core.c                     |  14 +-
- drivers/hid/hid-picolcd_fb.c                       |   6 +
- drivers/hid/hid-picolcd_lcd.c                      |   2 +-
- drivers/staging/fbtft/fb_ssd1351.c                 |   4 +-
- drivers/staging/fbtft/fbtft-core.c                 |   5 +-
- drivers/video/backlight/aat2870_bl.c               |   7 -
- drivers/video/backlight/ams369fg06.c               |   2 +-
- drivers/video/backlight/backlight.c                |  39 +++---
- drivers/video/backlight/bd6107.c                   |  12 +-
- drivers/video/backlight/corgi_lcd.c                |   2 +-
- drivers/video/backlight/gpio_backlight.c           |  12 +-
- drivers/video/backlight/hx8357.c                   |   2 +-
- drivers/video/backlight/ili922x.c                  |   2 +-
- drivers/video/backlight/ili9320.c                  |   2 +-
- drivers/video/backlight/jornada720_lcd.c           |   2 +-
- drivers/video/backlight/l4f00242t03.c              |   2 +-
- drivers/video/backlight/lcd.c                      |  27 ++--
- drivers/video/backlight/lms283gf05.c               |   2 +-
- drivers/video/backlight/lms501kf03.c               |   2 +-
- drivers/video/backlight/lp8788_bl.c                | 151 ++-------------------
- drivers/video/backlight/ltv350qv.c                 |   2 +-
- drivers/video/backlight/lv5207lp.c                 |  12 +-
- drivers/video/backlight/mp3309c.c                  |   9 +-
- drivers/video/backlight/omap1_bl.c                 |  47 +++----
- drivers/video/backlight/otm3225a.c                 |   3 +-
- drivers/video/backlight/platform_lcd.c             |   2 +-
- drivers/video/backlight/pwm_bl.c                   |  12 --
- drivers/video/backlight/sky81452-backlight.c       |   8 +-
- drivers/video/backlight/tdo24m.c                   |   2 +-
- drivers/video/fbdev/atmel_lcdfb.c                  |   1 -
- drivers/video/fbdev/clps711x-fb.c                  |   2 +-
- drivers/video/fbdev/core/fb_backlight.c            |   6 +
- drivers/video/fbdev/imxfb.c                        |   2 +-
- drivers/video/fbdev/omap/lcd_ams_delta.c           |   2 +-
- .../fbdev/omap2/omapfb/displays/panel-dsi-cm.c     |   7 +-
- .../omap2/omapfb/displays/panel-sony-acx565akm.c   |  10 +-
- drivers/video/fbdev/sh_mobile_lcdcfb.c             |   7 -
- drivers/video/fbdev/ssd1307fb.c                    |  31 ++---
- include/linux/backlight.h                          |  41 ++----
- include/linux/fb.h                                 |   9 ++
- include/linux/lcd.h                                |   6 +-
- include/linux/mfd/lp8788.h                         |  36 -----
- include/linux/platform_data/omap1_bl.h             |   1 -
- include/linux/pwm_backlight.h                      |   1 -
- scripts/const_structs.checkpatch                   |   1 +
- 47 files changed, 161 insertions(+), 418 deletions(-)
-
--- 
-Lee Jones [李琼斯]
