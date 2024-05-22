@@ -1,59 +1,59 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA3A145FF0;
-	Wed, 22 May 2024 18:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF9823CB;
+	Wed, 22 May 2024 18:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716403422; cv=none; b=LT3x+fIIlSKpnQuEbXu0hILCGbIxG/2aePMVwDkxy1pIaMqGH79rt/F1BD5IFry6GeHpoqWSldYp3zEkaKI6sby9Q3apdFBpVO1cs6kLs7Hp1L88UI+Ky+LiUTxg2pzNmMQakDNEfOqUoo7q9HCn4p7rt/1171RtAi4r5bPwqc4=
+	t=1716403739; cv=none; b=gbO1UXI+nr18CSZemGhjhTPa2D+X7lEsrOOuEDj5ecFgC28sTTGoIrsjULBpwirk4haIvaf+HCkHToMdnhgLSYpV4LuvA9Jz3HN1GvzOx/4OEo9XxUKixRbxa582XLZGW4Ahsy9av01UcjfYp8z9q7ZlLG3hMD/uAgMEbAJPYlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716403422; c=relaxed/simple;
-	bh=D3Mc9dD9ZOhKmY7p/6kIkyWB2rwy+XPsptNUB2wu9gE=;
+	s=arc-20240116; t=1716403739; c=relaxed/simple;
+	bh=oDR35NfNsRBH2fJ/xX+R+OSAGEUDe+MKHboG8nW8crg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kLKFyk1whc/aTO0T8dpN4wQZEZwg3wSoJ/GRsgdH9T/IjaGdnM8pqNWZNF1YwsordUSl2Mv6SHQkTmti2uOgeQqpXagZU0bUO2MDgVEeb+Fum3gFQE3YRDe32FIYGrm0EMwv8Y1C8qWfQeIa3RIGlwuTsi3Ptz0CYcEJsmQiyBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRA6S2SN; arc=none smtp.client-ip=209.85.208.41
+	 In-Reply-To:Content-Type; b=jo71Rr5WgAmazweCjqAsEfqC6qj5I4pq6wFwN9+B5Tsm4MbPSr+wgldjJ32sWf7Bz4i+JQqiVYTq6zT7d/obq4MJjWkWRTIXApQdK3b4NXr63jzYvmKS5K/0VclCTNtRxwnimkeR4eC93+XiSPbwBtlnq8vUZv2HGCyW0DSQkRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEy4071S; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRA6S2SN"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so14454321a12.2;
-        Wed, 22 May 2024 11:43:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEy4071S"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e6792ea67fso84164881fa.1;
+        Wed, 22 May 2024 11:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716403419; x=1717008219; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1716403736; x=1717008536; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4X92RNyaocOQ9jeaX09e1iKmMV7MiGKGnZ+Dic7jjso=;
-        b=QRA6S2SNdNnn0lxLV4MzSnum0OepHJyRWsIRb+FHziDL/dgMY9uRV2l+sPR1xAXpm6
-         WynVzNaGscq/e2vJkut/pOqlshaYqfkHDePUloCx88eyHP1KxDREcgrw+UGic1lR8dlk
-         y85Eq6pf4s4SFocLQKdDQB+qoZ2vdjjkONuDWWs6WlsgWvWMKcR5j66ZKZvDjwJHJBTT
-         h/qsipIsF0FYq7z47VJzzfKYG069FQXy6XLNhkD25jmq2zt3qimKybOmjvH0L8+3DHQc
-         atxm5/t64JQ6z72SEPrK9+s+1q7hsvkpCnkCeKlwH+eNOerDQatdW180veNR16tRVf1z
-         +Q7g==
+        bh=DTzDmERoVHEg6js4vRxidK21RXEZ4WiJHQmiaHh1F4s=;
+        b=MEy4071SPVz7gVoH1xigDk2BN9ZW2hu4JXnzkFA9Rp+7SYKqkMuJmdKUTtLPwEe8Jz
+         bu0YP9cntN8VM04v3viZLIqkf3dXNXhl5WOF2PtxYdUAfuzgDm03mzws+bm4ouOIS/2u
+         m2123+axOf5aNEkbnqwTAZTbxUvgZTed90WUHlNsc7pza0L0GN1RFWcqIJFu6mst2fIx
+         O+gNc5jLnE9p2BO2F8CbL6t0qMMv4D/kp0xMoKW7vgKHnes361UJ8mi3uBv81PAQuf9+
+         dMpglePw+TOLkxNCtVvlV2bH3M4BDJlGQzwXtw0/1TPEHqOS+GQhHU4g+g4qbISfzOFf
+         2TUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716403419; x=1717008219;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1716403736; x=1717008536;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4X92RNyaocOQ9jeaX09e1iKmMV7MiGKGnZ+Dic7jjso=;
-        b=Jm6AGMa5D/vH1b5VpUVNNpZKdm/QbZIbng9YVIH7GakdO1K9DSLue+0RzZIfbbHW2l
-         z2Qq9XIsfQaUjBFqxt0HE9fkGwsUDoZraKeTALo2pyW0YlhMF6Rqgf90Tqfu3ukbr5Td
-         3JcrIkRNLTFqmxW2lPOpgTWdvRAntDwad4yXF0jMwXBcEPy4xmtj56DVKAzGD6zzB90D
-         4ntAxRcde+hk9YEukX6v77JZYl/Y24RU4YsoDVgBugL045yNUdYJjY6r9Hpis4Sa2CZY
-         z1Nh6psz0J0ZYxecyF6KvGl3xmzum1qb7A2jo7Cn8KjY2Ox3cuS+qlKohFN0IFJj9ljt
-         07zg==
-X-Forwarded-Encrypted: i=1; AJvYcCVa7zPyeE0O5fa+NiGoiyW8/WR0aG3QYraeavPc219oP7C3KIELojzc8WRGDoQ4vEoXiOPdWkwNWklKrIWNHrwOtNwsnzDJ6FYC4p6wyGjOL4Tk/VP273fS871DWyhXVrxltU9gTet6pQ==
-X-Gm-Message-State: AOJu0YxU7zw0rSZO13MpOJe4zx1jKNCxLwPxtjYd86wJtEi9J5+0Y6r7
-	bSHfrZ93ESb2L270egFX1zPKBNTnAdY8FOGdJMnNPcyCugRqfK1V
-X-Google-Smtp-Source: AGHT+IGN0pFDJpoxG2Grv/YFh/MhqqsO4GibeJdmlSjDyMjLmGY31Vxcn3drvjikcwZeQyVyTrLosA==
-X-Received: by 2002:a50:ab0d:0:b0:572:664c:83f2 with SMTP id 4fb4d7f45d1cf-57832bee6c5mr2410990a12.27.1716403419377;
-        Wed, 22 May 2024 11:43:39 -0700 (PDT)
-Received: from ?IPV6:2a02:2f00:503:7c00:503d:ca7a:1fd6:cd63? ([2a02:2f00:503:7c00:503d:ca7a:1fd6:cd63])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57421480d99sm16875505a12.8.2024.05.22.11.43.37
+        bh=DTzDmERoVHEg6js4vRxidK21RXEZ4WiJHQmiaHh1F4s=;
+        b=m3cKCTMZZDl8bvqiA/mTKU+TiuR7zq/0cdavU8dzCcCpC4J6SfFyM4eD0txiIdycOo
+         O6gHJVY9nmNcX7pHFs62p3myoMke+Q4x7DV3CKB+SKd8/gC1kz7KrrV9EX+WootzccsY
+         0b8BsrE179DRv8GNt5FRujrJDLtKvdVloSEg7LpfGXevc6GLkYDM6c7+5o8dW4+OXhav
+         9GFu+NZW3uL5QRh5d9VvAGdsaEiXdfJ+8KaH3MnzpIXy3YOtkwzqVrTeJD899A/LAuj/
+         Z4fbN9NmHBLk9JfKFO2UNEoAYo1LJdLCn1n71rHvIvU5Qnsm1ZiRo+DfH4eL7DX/x0Np
+         w3/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVzRhyMMGHYewzBcQoPOY3I3rlQNWdjJ3/AcpkoA/vgCLPLOe1RJVX/8SgO7TgM7q5QFLteSvDPgObnObN0iK52c6wMnQD/OMU1uyk6ZCvB5ZrkxKneWx9RVUXUAIl4CIC5Xa5vEHMHqfIX8al+ISlU7HGXFdJjqER94s8/cUuf0zesfimi
+X-Gm-Message-State: AOJu0YzctEWg163dlGRuLodpg7dmY5aGlUjD+lvG+jtIO/kRILJINdEt
+	1ijrYnlbo7fRVyI7ACMFsx06fWf5FfCktdQTu31oV420rdoMN1b2
+X-Google-Smtp-Source: AGHT+IHVOa4KArOmWO1iKvBvgvxFQ+i+ezI4L0bfGrkS09VtQN+XR7jRD5LAMkItjfmSkvlNNtymIQ==
+X-Received: by 2002:a2e:be06:0:b0:2e5:87c1:e845 with SMTP id 38308e7fff4ca-2e949650e42mr19384361fa.48.1716403735959;
+        Wed, 22 May 2024 11:48:55 -0700 (PDT)
+Received: from [10.0.0.100] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e4d18344f4sm40455991fa.136.2024.05.22.11.48.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 11:43:38 -0700 (PDT)
-Message-ID: <6b9b959e-9a03-420c-9f61-adaae05bc5eb@gmail.com>
-Date: Wed, 22 May 2024 21:43:37 +0300
+        Wed, 22 May 2024 11:48:55 -0700 (PDT)
+Message-ID: <bcbe109d-5974-428d-b74e-c29bec9f68b0@gmail.com>
+Date: Wed, 22 May 2024 21:49:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,96 +61,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: reset: add schema for imx8ulp SIM reset
+Subject: Re: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+To: Mithil <bavishimithil@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lopez Cruz <misael.lopez@ti.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240522075245.388-1-bavishimithil@gmail.com>
+ <0594944d-c158-4840-8724-b3f2edaab1ca@gmail.com>
+ <4f722e53-011f-4176-b6af-080522165007@kernel.org>
+ <bb44d588-9316-4509-b545-9bbaa2d240cb@gmail.com>
+ <3c6c5be1-fb8e-4bf0-9f58-cfb09672e8c1@kernel.org>
+ <d999bc26-9bb1-44a8-92a3-bcbe14c5a1c3@gmail.com>
+ <58ada5ce-5c02-4ff5-8bdd-d6556c9d141f@kernel.org>
+ <CAGzNGRm5i8zvnXiPzMg5=+tr9oyBcRA8LFvnmgGzE=MzSNTXug@mail.gmail.com>
+ <e384272a-4dfe-4653-8983-6426f8803c84@kernel.org>
+ <CAGzNGRnsmRWzimUX5tEC2-Y44aa4i9Lbdp8YJ+oneV4ujs4qBA@mail.gmail.com>
+ <CAGzNGRmTR_nK0SoWG8uqDfRzDShs7sR+Mc+44__SBi0CR5LKEg@mail.gmail.com>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
 Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Liu Ying <victor.liu@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- laurentiu.mihalcea@nxp.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240516204031.171920-1-laurentiumihalcea111@gmail.com>
- <20240516204031.171920-2-laurentiumihalcea111@gmail.com>
- <20240517195943.GA2854624-robh@kernel.org>
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-In-Reply-To: <20240517195943.GA2854624-robh@kernel.org>
+In-Reply-To: <CAGzNGRmTR_nK0SoWG8uqDfRzDShs7sR+Mc+44__SBi0CR5LKEg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
+On 22/05/2024 20:47, Mithil wrote:
+> My apologies, misunderstood the error.
+> Proposed changes for the next version,
+> Add dma, dma-names, reg-names properties, and do the changes in
+> example (rename node to mcpdm since it is different from generic pdm).
+>   reg-names:
+>     items:
+>       - const: mpu
+>       - const: dma
+> 
+>   dmas:
+>     maxItems: 2
+> 
+>   dma-names:
+>     items:
+>       - const: up_link
+>       - const: dn_link
+> 
+> examples:
+>     - |
+>     #include <dt-bindings/interrupt-controller/arm-gic.h>
+>     mcpdm@0 {
+>       compatible = "ti,omap4-mcpdm";
+>       reg = <0x0 0x7f>, /* MPU private access */
+>             <0x49032000 0x7f>; /* L3 Interconnect */
+>       reg-names = "mpu", "dma";
+>       interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+>       interrupt-parent = <&gic>;
+>       dmas = <&sdma 65>,
+>              <&sdma 66>;
+These can be in one line to make it nice and tidy
 
-On 5/17/2024 10:59 PM, Rob Herring wrote:
-> On Thu, May 16, 2024 at 11:40:28PM +0300, Laurentiu Mihalcea wrote:
->> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->>
->> Add schema for imx8ulp's SIM reset controller.
->>
->> Signed-off-by: Liu Ying <victor.liu@nxp.com>
->> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->> ---
->>  .../bindings/reset/nxp,imx8ulp-sim-reset.yaml | 43 +++++++++++++++++++
->>  1 file changed, 43 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/nxp,imx8ulp-sim-reset.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/reset/nxp,imx8ulp-sim-reset.yaml b/Documentation/devicetree/bindings/reset/nxp,imx8ulp-sim-reset.yaml
->> new file mode 100644
->> index 000000000000..ec9a5c73e83c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/nxp,imx8ulp-sim-reset.yaml
->> @@ -0,0 +1,43 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/reset/nxp,imx8ulp-sim-reset.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: NXP i.MX8ULP System Integration Module Reset Controller
->> +
->> +maintainers:
->> +  - Liu Ying <victor.liu@nxp.com>
->> +
->> +description: |
->> +  Some instances of i.MX8ULP's SIM may offer control over the
->> +  reset of some components of a certain domain (e.g: AVD-SIM).
->> +  As far as the DT is concerned, this means that the reset
->> +  controller needs to be a child of the SIM node.
->> +
->> +properties:
->> +  compatible:
->> +    const: nxp,imx8ulp-avd-sim-reset
->> +
->> +  '#reset-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - '#reset-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/imx8ulp-clock.h>
->> +    syscon@2da50000 {
->> +      compatible = "nxp,imx8ulp-avd-sim", "syscon";
->> +      reg = <0x2da50000 0x38>;
->> +      clocks = <&pcc5 IMX8ULP_CLK_AVD_SIM>;
->> +
->> +      reset-controller {
->> +        compatible = "nxp,imx8ulp-avd-sim-reset";
->> +        #reset-cells = <1>;
->> +      };
->> +    };
-> Why do you need a child node here? No DT resources or anything for this 
-> 'sub-block'. Just put "#reset-cells" in the parent node.
-You're right, we don't need the child here. In fact, the reset controller will never
-get probed anyways since "simple-mfd" was removed from the compatible
-list of the parent. Will remove it and turn the parent into a syscon + reset controller
-in V2.
->
-> (Note that examples for MFDs like this go in the MFD binding rather than 
-> having incomplete examples here.)
->
-> Rob
-Noted, thank you!
+>       dma-names = "up_link", "dn_link";
+>       ti,hwmods = "mcpdm";
+
+The ti,hwmods no longer needed since the sysc conversion
+
+>       clocks = <&twl6040>;
+>       clock-names = "pdmclk";
+>     };
+> 
+> Remove ti.hwmods from required since some dts like
+> omap4-duovero-parlor, omap4-panda etc do not use it which causes
+> dtbs_check to not pass.
+> 
+
+-- 
+Péter
