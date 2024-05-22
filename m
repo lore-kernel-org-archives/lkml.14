@@ -1,175 +1,114 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743ED199B0;
-	Wed, 22 May 2024 16:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716396506; cv=fail; b=sECHbPvNRc2r6wg9DGitss0RwLrcPHOOHhZ/qNZkGBipT7Pj0kJx9dvnSRk27EjeXodlIPQj81QeA9wWsaltdlfYkPXKYceceApszZowt6EhcCyqqaNSQYUVZj3n5GG3W5SfY9KtvA3ki0GHT7S0DRNTE2OOq+h8ApbDET98Q6E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716396506; c=relaxed/simple;
-	bh=EU49AnnWVn8BVyO7/8tqKNhu/JjtyqQWPIZxUXXQANc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=a8HFSfTQrarBn7eSg4HYR8eGK/oFrxDbtfFLhTAn7ARIzjVLwWqtRhXkekK6ju153x9C30MyUjbE/i/M8GNCKeBbj9Ljd42ypztGN5HYuCv7FmkXTfq2YIo4rZWPSEgbp5/rPkCHuHC1/FQVXSHvkDLOStNR2nD/j3AniqiYeG8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Anvz1tSK; arc=fail smtp.client-ip=40.107.243.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B531420D1;
+	Wed, 22 May 2024 16:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716396512; cv=none; b=IdF5xRT+HHrJKI1+INmiB5g6kIKwceC9wpagicGXHexiD/AagHT5bJSPN4bf/viwGbVGx8D6X/kChGuv9I+8E4VR4ejlsY4xkqyiZNpa6uzV3JsEcoc0aabV69mqZi4xyutRwb7Fh/GEnhqIxD/j5GfURpb2PjNALDzcbudc0cI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716396512; c=relaxed/simple;
+	bh=jqaMzYloGJC1p36Hu/Ki1EJd/LTPfFtj7hWey5jm20M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RORXfuHLhNEcDYCi7V/rbVDazxcaZE2Wsb7FjkQx4524MMOz6MchOaOIV9xWXVoDLaxFJHyXVwJuxSA0rVDw3BAiyVky2X50qDVcmHxllnXiQTa6NYdvTM4yxJRArcCCmzcuFQXrP+58wIg4Lzw86Ox1FxlWw+Fsr5qvhs5Sb+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JguZ4ulF; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Anvz1tSK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TNMbztvMedKgJmv4puPY8qdQTcj/3PjM48u+2egatdLiMUL6QN/HTVoRcpginMHstZpJigk5dnuXzhOI5gyiDe/P87vX3ZMBCKWo8sWRg1nnVer5jbGMg5R67QoCGV15UsP2yKT4V+tdjXRBMUkdp/behWXLFID0Fh4sQXc0TNj1zWQRvRYo/DasGuveeXJONH3GSxLAPONTEaep6/OfLgReFqeAwZcCKjqczoibxoBcbZEQPmn+tQFaN8hJIirjnVYuzKiPU8+dwc3exMVF3jMzmmfDA9TrhoipsPF+FOSx7SkFQJfNN3exKltV8v3K5//S23srbD/EbLMpptZr+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kjYxnXO92hKV5ulLAd5n7xBXvqpCXtz3bzbEpH+N4Bo=;
- b=fnp8UHufAgdQYJzepXAzORKTU/0R9mr1hgtnCemG53JvhF4AqgW8pIoXG4C9ijlE6XJ3fB/ej/ND0NmKUgUvRSH0CVgFnnvVdh4Wk3Os9nAd2ZmlWl/nsUNUpIw6rOuqrOZ+1eb38qrgxgvajU54SLlLA/ff5HwUDdznzVETVOUsc6trUrWLkgLMAMqxhrZRKyarIrQlX0RlPIuehxsJ+ldIMMCcGEJX7tQGennBXuPQQO6YpFt/wjWpBecUnejb/6KLUN8kzxYyPBSbAPYdVoRIubj8Qeb2UCWWymSuv+Sr906h+oVIUL75rXq/9DlgrglSQPaUdvIic8T8DMmQ6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kjYxnXO92hKV5ulLAd5n7xBXvqpCXtz3bzbEpH+N4Bo=;
- b=Anvz1tSKOFPktAPsHHumt38zN3P6HPTUxZGtxYIFm+7wsK0bmUE7drGTXBqm4QHoOIt9MYH84Bod7o+dBE9AkkZiccq+z7KfBzsj/HM+zFtOEUf+xIvGs3MaZ3fcMO9G2706NZMF0BZOFdvuFGhlDdkG9gfAlSZfb12POls3jL2ovp8yYxYWjDO8hqfmmE7YVMw81+tDKBf99rI/BSXoMz1NAGZHK9bX2cvC2aDs0t3rMUvX2ABPSNX6Vvh+RyidZC00yJ8GL1+o2r//OcHh5Rb6fse0WZRPH9QMJlWTrnp+/qjxx7a9EtB93MHKhC5VD6I7Ae6RZzmJBZeE+tKtvQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by BY5PR12MB4307.namprd12.prod.outlook.com (2603:10b6:a03:20c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Wed, 22 May
- 2024 16:48:20 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7587.035; Wed, 22 May 2024
- 16:48:20 +0000
-Date: Wed, 22 May 2024 13:48:18 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-	"Liu, Yi L" <yi.l.liu@intel.com>,
-	"eric.auger@redhat.com" <eric.auger@redhat.com>,
-	"vasant.hegde@amd.com" <vasant.hegde@amd.com>,
-	"jon.grimm@amd.com" <jon.grimm@amd.com>,
-	"santosh.shukla@amd.com" <santosh.shukla@amd.com>,
-	"Dhaval.Giani@amd.com" <Dhaval.Giani@amd.com>,
-	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH RFCv1 00/14] Add Tegra241 (Grace) CMDQV Support (part 2/2)
-Message-ID: <20240522164818.GB20229@nvidia.com>
-References: <cover.1712978212.git.nicolinc@nvidia.com>
- <BN9PR11MB527641C15DD88FB0C44323D08CEB2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB527641C15DD88FB0C44323D08CEB2@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BL1PR13CA0386.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::31) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JguZ4ulF"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51f174e316eso6268497e87.0;
+        Wed, 22 May 2024 09:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716396509; x=1717001309; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8C8W8zCXK+dAO5cwNPCwrKE66eqW6f105qpnTPFwu8o=;
+        b=JguZ4ulFhPw7UmEF58iMc6TlUB19JroegETA+/d40PhtvuV3+rlHnvR8DhrftQrkQg
+         MX+tG/qzD6ImIEnT9hvZBFxVhZX7QGn+JwpabqntuzeQ9+Li3GK8hV7dvYiwEXwunoxy
+         mFb1vrB5YW22ViU6p0eyemYeNUJXd/HyzGEC16KWSYOLR80GZ8lZkR1bJTaTYALsW3o9
+         /3WaDYnD6xDYGImLgkhCs4ebLzfinID2w8btukf4Ngsfc2BhZYUGcdcJdOxzVk2G68zl
+         euhgU7G3QJTdKfyriK43cu0omyamVMX1sOmeLuuhVonP6V0XO3yuzVY2btURaLH38DAd
+         JOrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716396509; x=1717001309;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8C8W8zCXK+dAO5cwNPCwrKE66eqW6f105qpnTPFwu8o=;
+        b=I0/DKqIelNHq3Yj2z4Za1/F38AhOeiAyjHgH/jhXGcGuG8/HamLnbAok+xqC73c4M7
+         bE7MMDo++w9rymbo+ND37SWsEaS4xQgYc+oOsE498sl4khP0AYb1Uqv2zDf3sg9/ANa9
+         /Ezf6KKN0NGloQjGRhK8F30zIpaCiSx1f1WFSxmTFy1QzUavHjwJ/pKHIbTvNzoJUDxW
+         n3mFGt4ONxiTHFYoD880QsKAlmCiYMXZJmWLET5O8f2LH/ss/oIi1GliotS4MwVoc/kg
+         tTS0afJxvH55Tw1MApJd0ejn4TI9Mv+tv+mc6P1Q8YObphpUvg5uI1xurb4b6LeQq5cy
+         xeKg==
+X-Forwarded-Encrypted: i=1; AJvYcCW70GvwVjXWeWXnotI8ERZzip0ceMnr5eJQ6aw6FyctOtxl2v+RX04qnQ7kNhn6ICbbTDi9N15470Emw9yYya6FnOOvHZiF9swDd57CAga1ZKE23qSkBz6E+JFCDohfyZ8OBM7EryanGw==
+X-Gm-Message-State: AOJu0Yw7iRX+0a+O5kDOhJegHwzE/2/lh1a23Fzi4E29nr+ICWaZxUIa
+	i6mtLCidjaf/sCg0MdAXe5w3OzHsyMkv0Gf2NJ3pje+FVvztZLeL
+X-Google-Smtp-Source: AGHT+IGFLQQAPPpvRXfa9xhEU5F9dI5rhT/wm4s1J9CSmmHq4iONdEXYR41VSlkn5CpM3n/278Iu8w==
+X-Received: by 2002:ac2:5986:0:b0:51a:c8bb:fcf7 with SMTP id 2adb3069b0e04-526bebb4cefmr1600047e87.3.1716396508382;
+        Wed, 22 May 2024 09:48:28 -0700 (PDT)
+Received: from localhost (host-95-246-50-43.retail.telecomitalia.it. [95.246.50.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17733sm1797951766b.195.2024.05.22.09.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 09:48:28 -0700 (PDT)
+From: Matteo Martelli <matteomartelli3@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Daniel Drake <drake@endlessm.com>,
+	Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+	Matteo Martelli <matteomartelli3@gmail.com>
+Cc: linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] ASoC: codecs: add support for everest-semi es8311 codec
+Date: Wed, 22 May 2024 18:46:54 +0200
+Message-ID: <20240522164722.954656-1-matteomartelli3@gmail.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|BY5PR12MB4307:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b87ef55-fc5c-4afe-ab45-08dc7a7efcde
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007|7416005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rjUsYkWTZ4y/OdKyYV7TIWHwHjOVmyOrfUWcNKZ0vRsO8/rWOysWcyqpzZYU?=
- =?us-ascii?Q?K5jYl/BNpp9VeZT3DN3aejwDnwNvlbqCQcmxrogQMdEB2bqfP4mKfvFtHvmE?=
- =?us-ascii?Q?RPuOBnntw/nXhxxMWiKJV1ap9+yQ65rRDn8Ei7+fwY79S/a73ekcc1ZwW96a?=
- =?us-ascii?Q?7+LBi+6yWNQKUbFQDE249i7QSviP8qoAHd7WZNaLZKYv+qpK9XKEhrDc3v/y?=
- =?us-ascii?Q?ZFQiS+sVoXD/5wBl5gwiJSVbSqDIljjkWjoQMVZ1ntw3ob855guo4WKrfPKD?=
- =?us-ascii?Q?NsxdzubPF0FmmVTMspC6Ape/zfCYPxJ0TLbzVMqFfr/mG6qqbNR9oAFZ7b1D?=
- =?us-ascii?Q?fNThKk7WpRzVZDzxQXM9KGBsNtutHvlf1Cu7FmGMcxlYoVLrD+FD0te0HVvs?=
- =?us-ascii?Q?cwNrLsy2hEy9kd+RtnbdaY2ShBzEDbmEfxFfngMwl+MR+/d2IxE05cdRXhTB?=
- =?us-ascii?Q?7ZWx8ClQ16aQ3TDMfl3f7QoRG14PHJvcgvt4//5CzJXl4Ctoq560PjOQqmsf?=
- =?us-ascii?Q?eyxUb4Gd8s9GgRx+2O96Mm3dNZEVqad9/O6im8fzOOKTAbNCQ5Xs9KdkbI5P?=
- =?us-ascii?Q?qNF2Qi/foh2JeWiO4KzUvYtQTFmdIBVpAwhBSnlcmdvjmqGgIQZdFUMkwnFs?=
- =?us-ascii?Q?KpeGQuPJJGQwXx/t3kGml2zF/oRYZBeFLGED7WcjyIrYURXHwm2RLk3mlnQa?=
- =?us-ascii?Q?k3+LuLkQgGH8w/VTIlI4MNlawoymjEaOgufpx0tyL6H2PdcaUvZeLAN1dOR/?=
- =?us-ascii?Q?GhALodanzEbxPeTvBC0XnlznFRLnmHUcvH1wf+mf8WdNglpUpF9rm4L+tYzs?=
- =?us-ascii?Q?KuWP4aGJy9iZTI1JgfaYOpOj/YjRC8UwaKi5CJOBcII9KScJ1mwTHqdEnl00?=
- =?us-ascii?Q?0EewD2m3vsv+yPysgsUO6tt0f3+ldxnm66fEktASmmjUjuiQB5vtsWhcxcqw?=
- =?us-ascii?Q?bu7xLuxDrnCDZkVcFUaI+dCMbAQUs/ThZgdpTQ14ISIXqWIPKplvGbMni/RR?=
- =?us-ascii?Q?9nkxmzG80tNAyR8zKSJ012SB4B3vdBrW9CdOM9BBZkYRYC3hBKRFSt0Ck8aS?=
- =?us-ascii?Q?eNTWaLAoMXzdxcHmbLiZ/NXYwrpHPdaJEvONWTU0qFnnzvDsNQZ8aj4ygbH8?=
- =?us-ascii?Q?tRPG+I+WkQS0pz4DI0tFAKysifKlil9NPa57/eSZUUB9P0yHareanCl8JRtH?=
- =?us-ascii?Q?FygUdKyluo7JSdA5RMW3+tmHT0f5FKPP1D7SDEP+pQCh6s6yP/Z9WnrLXFx+?=
- =?us-ascii?Q?U/msBKsHBYcHRmj6Qj9NYUq+EmundkHvzJA8oee6zQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xpmic/1U6haKO26vPmwLJFgbnsxdG+dt247By8h2KPOgfimlr1Kkz0Q69Vk1?=
- =?us-ascii?Q?7r22YK4nzrqjMMTIZENBf53xCMTS0a45wuVmmQEoKAGjvpOGtXOgvZG+milO?=
- =?us-ascii?Q?5idUfqCzETYUaYcpYTE7SKSVgzG5ggXr3zsmh4B17KWfbVKVSVb6HEaSq3l3?=
- =?us-ascii?Q?hWtXnNI22+ggbChZ37kbgQS3Y4su19J4NvoVuvBQptbQvjLtqKIUDxYA/sln?=
- =?us-ascii?Q?sD67GwRSSvKmafGbTIy5py10LJTQfH8yytPanAI6hIDs2hr6isx0Fu1WO1vw?=
- =?us-ascii?Q?BD0J+5qPJjKC0kdRYVphiqpzgguKuXBKISoL0rb5SkhMKewZuw/f55DrWZaV?=
- =?us-ascii?Q?dsOTeRSplBCsMf9ovIHpCDVaqUfljmg1f7RdEP16tmxAKY5A3K415lCigyl/?=
- =?us-ascii?Q?K/WIPOuHVvk7HqoJMUuJugeGOg6mDXOhpz+mG+rwo9YEYuygng0ygSgtwDVL?=
- =?us-ascii?Q?8RUzwdeasHILopNjnD6UnW5qIwXzPft9b0+Vsqi4PZduqhfj+2ZIU+cenC5R?=
- =?us-ascii?Q?RAvZ4KvACd9PbpvR7BYSff9mLl2bStc4cNCmj/t/knbjhF+Bj4SydoSSERux?=
- =?us-ascii?Q?TA4IXpfkXyb/1c6MI8e60++ycRHAbn02/Ovjnza+FGBogilUhgyRDfsWDQ5+?=
- =?us-ascii?Q?k64gaJCT9NUbPCfoCmQmnTo2dVw3UMXPUNO5UHiKHzds8NOQP0lmlGdj2Pfp?=
- =?us-ascii?Q?4pcvnsovz9Ypy+qb9ehG39v7H5vdfu06Ikcwaz6+zQ8qOEAffZH8NsizYphO?=
- =?us-ascii?Q?C8SlTxiPc4RAhct9OV9oMr67zgOoszWMDjZUP2xNcAcJrXXS1BOLpS6XWTnt?=
- =?us-ascii?Q?ph2gK0WZcukjpIcm/8bqHzeWTHzwtPaTXyottiC8KRjgfOD9hirLeZyIqHiT?=
- =?us-ascii?Q?OEFMGfLvIu8FVZzQM3mg6d8gavEZevlHdxX0fCmDJjPV30HWRsSFE3aRsuVs?=
- =?us-ascii?Q?H7B8ghawLBrUoZWk6l+ZC0Q7Q3ieE4UbQqDiZWzId2e5pEpucWkPUsyzLvb/?=
- =?us-ascii?Q?jA1RRfOps4jW0lR7XYZ4XKFn5rGEtNm6Ik855aJ6mBeg+doC2RQZJMtUufTC?=
- =?us-ascii?Q?q2QEAS8HFKnI7oZ/yor4hcvd9If2+UcAs8+WbHfTdD7xmYNgk+3SSVvmMY+b?=
- =?us-ascii?Q?9AcUDUfQZtOGUrEbYKvxHfEhc+XqF7c1tlWU5MSpHdlyzypYssgIkp+unpbI?=
- =?us-ascii?Q?rfkgsoK1lJYUr3XAbX1V/kpe5JBlhSZnDbdOgwkq0xS0iINF7ZESrydaCBJz?=
- =?us-ascii?Q?vaIW0YfA/CzRhQfCt/vAmsohKxDLYLzi2WmWRoYO7nb/BK8GJdSo++WeA7wQ?=
- =?us-ascii?Q?0vYVgo3Jf7Ue1WiGkN8KFbvaa1GenJEfc0a3y8gmt6DIVDDgwDIM+wSdumCh?=
- =?us-ascii?Q?M8HU6ls5EkbxP+HaKuSEx00ksnjx9t5qwEmuEqLkGu2RkovHQ9S3IRURXpz0?=
- =?us-ascii?Q?bjfhMbU3zo73hASWEw4maxsJzRbejw7WJN99waAjSzjFcI0Y0oWfsS6rAeIz?=
- =?us-ascii?Q?80XhV9fJBSQfvq9Q8RHQ0RVmJKYo/9dxqFYwfZhShymmQlW7r2u78x5AUGkc?=
- =?us-ascii?Q?moZhCjwjmjUv4yYH4zo=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b87ef55-fc5c-4afe-ab45-08dc7a7efcde
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 16:48:20.7954
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cK5MTYaGRQ0eoiNmWgDXuPuoyapJasXqX9FAYO9ZgpNJrUWoL5v2Y0A6rQHTt7Eu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4307
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024 at 08:40:00AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Saturday, April 13, 2024 11:47 AM
-> > 
-> > This is an experimental RFC series for VIOMMU infrastructure, using NVIDIA
-> > Tegra241 (Grace) CMDQV as a test instance.
-> > 
-> > VIOMMU obj is used to represent a virtual interface (iommu) backed by an
-> > underlying IOMMU's HW-accelerated feature for virtualizaion: for example,
-> > NVIDIA's VINTF (v-interface for CMDQV) and AMD"s vIOMMU.
-> > 
-> > VQUEUE obj is used to represent a virtual command queue (buffer) backed
-> > by
-> > an underlying IOMMU command queue to passthrough for VMs to use
-> > directly:
-> > for example, NVIDIA's Virtual Command Queue and AMD's Command Buffer.
-> > 
-> 
-> is VCMDQ more accurate? AMD also supports fault queue passthrough
-> then VQUEUE sounds broader than a cmd queue...
+This patch set adds support for the Everest-semi ES8311 codec.
 
-Is there a reason VQUEUE couldn't handle the fault/etc queues too? The
-only difference is direction, there is still a doorbell/etc.
+Everest-semi ES8311 codec is a low-power mono audio codec with I2S audio
+interface and I2C control.
 
-Jason
+Implemented and tested most of the codec features, with few limitations
+listed in the driver commit message. The test setup was composed of a
+ESP32-LyraT-Mini board, which embeds the codec, connected via I2C and
+I2S to a Raspberry Pi Zero W host board. Some tests were also performed
+on a Pine64 A64 host board (e.g. to test the suspend/resume not
+supported by the rpi). The codec driver was bound with the simple-card
+driver running on kernel v6.9-rc7.
+---
+Changes in v3:
+- Rebased on for-next of broonie/sound.git
+- Link to v2: https://lore.kernel.org/all/20240516154800.125284-1-matteomartelli3@gmail.com/
+Changes in v2:
+- dt-bindings: removed wrong es8311 schema file
+- dt-bindings: added es8311 into existing es8316 schema file
+- Link to v1: https://lore.kernel.org/all/20240510131238.1319333-1-matteomartelli3@gmail.com/
+---
+Matteo Martelli (2):
+  ASoC: es8311: dt-bindings: add everest es8311 codec
+  ASoC: codecs: es8311: add everest es8311 codec support
+
+ .../bindings/sound/everest,es8316.yaml        |   7 +-
+ sound/soc/codecs/Kconfig                      |   4 +
+ sound/soc/codecs/Makefile                     |   2 +
+ sound/soc/codecs/es8311.c                     | 970 ++++++++++++++++++
+ sound/soc/codecs/es8311.h                     | 162 +++
+ 5 files changed, 1143 insertions(+), 2 deletions(-)
+ create mode 100644 sound/soc/codecs/es8311.c
+ create mode 100644 sound/soc/codecs/es8311.h
+---
+base-commit: 47d09270d7776e46858a161f94b735640b2fb056
+-- 
