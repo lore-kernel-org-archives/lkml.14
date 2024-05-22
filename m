@@ -1,139 +1,102 @@
-Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66B2513D601;
-	Wed, 22 May 2024 12:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.99.105.149
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496627EF1F;
+	Wed, 22 May 2024 12:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716380073; cv=none; b=IOHy4lGcHwKLJxJqe0+vuRapm8+ZttWYGCnX2AlBW6zXvwplfg3Q0GycPKx2ivfLQFpgs64D3ePaMAdNQkJnzoGNfElbyeR1UY45zAFLS2k0iSM3iTJFxWW9slEeezaObBaysJ3LTH1ELGCrmo9iGZvhH8pk/2vay1FehjQ45hM=
+	t=1716380255; cv=none; b=ItcMM+A7X5FVMGKN9vWyWH+FNo3hJ4w1jzPu6dodsrjfRYbMB5A0BnpIw5SXtJxHpIsKrM4cy9xp480HWfVSmBLEjFnncmobNs+etac65BkNNs1xcsw+Cc2MrNgQ5j+j95GmxOSLDt0CnTcKfz0EmrA1lfR0hEu86U60sMTROBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716380073; c=relaxed/simple;
-	bh=TogI2bRC0Pp1s19nef/8ZVhxHbCXO4z+Zxw7U1tHTws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cN4ii3IgJkswd1ObV0GXmtCA0rmksVdEqg2QbwBjRZpDcLXcXYf1pKvNActiJuYSO/KOnrzJmTqbN1Ep3dK2OsjoN99NQ2UrqcUcQsyKZHPObao4EetlnLOpInQAB+1LCFRN8pPcgkqG8rm94pE8tdCdBMJ7Jp+ZEgrDnemdeLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bosc.ac.cn; spf=pass smtp.mailfrom=bosc.ac.cn; arc=none smtp.client-ip=167.99.105.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bosc.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bosc.ac.cn
-Received: from [172.38.8.164] (unknown [219.141.235.82])
-	by mail (Coremail) with SMTP id AQAAfwA36Nhu4U1mKeeuAA--.46576S2;
-	Wed, 22 May 2024 20:13:36 +0800 (CST)
-Message-ID: <665202d7-46be-4dc8-a6be-3579e1ec078f@bosc.ac.cn>
-Date: Wed, 22 May 2024 20:13:34 +0800
+	s=arc-20240116; t=1716380255; c=relaxed/simple;
+	bh=5XqgxJ4s4obLjU3RH1Hcac8iajNl61h552vrzAtJlLo=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=clKrt7HQIBH2i3PopCYzQJ6Pe7tcEyfuL9nYc/2VXtZVe026asFBmdsktu/u7pWtdGhVJBX2Y6d9N9enM10FeR/H2sZyW9HVVZ+prNcMB0MIYwbVX9Tr6Qua9Ic162/VFe35M7QHmfa/SM5mtXrZv/vY4lRCXmbyIaNhkwh7vC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=ckFXKomN; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="ckFXKomN"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A5A25DB440;
+	Wed, 22 May 2024 14:10:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1716379804; h=from:subject:date:message-id:to:mime-version:content-type;
+	bh=I99HSrXGOWc4gQITzBBfFSgceACHwqV/lEW4REQuRGY=;
+	b=ckFXKomNanJ1UCvpfwEMFId+iGHzd3jWn1EiT8VWS8ErrBJLBOBnMq2O6g3A0yAgL3mSxc
+	lDdA4TAA/gLtsAOeJjexCpLDx15Mprp+fPqyRHXQj4Xa1pFmxcdCyVJLSvZd3b8e+A89MM
+	K0GDI3rbQQjaX/apuTg66Zs3xYpmV82tOjvU7AD4Xvr6XDJ0K12BaEF7rxaPGTxJR8/Co+
+	RhTUDtqg+HxYKk8bjZG+lgQgUx6fXGjhZxKgSiOe7+GSr1HHczuS37jrknjs2E/a+K4KwS
+	mFqZpEnTUXli9BQAlTv1ayyaMC0FsVdexV7NHXkNfDEveW/ZvT4Ql/u3T8PEfw==
+Date: Wed, 22 May 2024 14:09:55 +0200
+From: Daniel Wagner <wagi@monom.org>
+To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org, 
+	stable-rt@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Tom Zanussi <tom.zanussi@linux.intel.com>, Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.19.312-rt134
+Message-ID: <171637952997.5572.1871863446768796282@beryllium.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v5,3/3] drm/mediatek: Implement OF graphs support for display
- paths
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- chunkuang.hu@kernel.org
-Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com,
- ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- wenst@chromium.org, kernel@collabora.com,
- Alexandre Mergnat <amergnat@baylibre.com>
-References: <20240521075717.50330-4-angelogioacchino.delregno@collabora.com>
-Content-Language: en-US, en-AU
-From: Sui Jingfeng <suijingfeng@bosc.ac.cn>
-Organization: bosc
-In-Reply-To: <20240521075717.50330-4-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAfwA36Nhu4U1mKeeuAA--.46576S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFW3CFWkXFy5Ww4kur1xZrb_yoW8Aw1Dpr
-	WUWFZxArWj9r47Wr4vqF45Aryq9r40v3y3X34UWa4Ik3Z8XFyfZr1Ig34Yvw4fKrZ7ua48
-	Aa1ktan8W3y8trDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
-	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU0wL05UUUUU==
-X-CM-SenderInfo: xvxlyxpqjiv03j6e02nfoduhdfq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi,
+Hello RT-list!
 
+I'm pleased to announce the 4.19.312-rt134 stable release.
 
-On 5/21/24 15:57, AngeloGioacchino Del Regno wrote:
-> +static int mtk_drm_of_get_ddp_comp_type(struct device_node *node, enum mtk_ddp_comp_type *ctype)
-> +{
-> +	const struct of_device_id *of_id = of_match_node(mtk_ddp_comp_dt_ids, node);
-> +
-> +	if (!of_id)
-> +		return -EINVAL;
-> +
-> +	*ctype = (enum mtk_ddp_comp_type)((uintptr_t)of_id->data);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_drm_of_get_ddp_ep_cid(struct device_node *node,
-> +				     int output_port, enum mtk_crtc_path crtc_path,
-> +				     struct device_node **next, unsigned int *cid)
-> +{
-> +	struct device_node *ep_dev_node, *ep_out;
-> +	enum mtk_ddp_comp_type comp_type;
-> +	int ret;
-> +
-> +	ep_out = of_graph_get_endpoint_by_regs(node, output_port, crtc_path);
-> +	if (!ep_out)
-> +		return -ENOENT;
-> +
-> +	ep_dev_node = of_graph_get_remote_port_parent(ep_out);
+This updates the rt-stable branch to the upstream stable v4.19.312
+release. This took a bit longer because there were some more complex
+merge conflict . Stable backported one of the preempt-rt preparation
+patches which v4.19-rt already shipped. Sebastian helped out to get this
+merge correct, thanks a lot!
 
-below here, 'ep_out' will not be used anymore.
+Cheers,
+Daniel
 
-of_node_put(ep_out);
+You can get this release via the git tree at:
 
-Maybe we should call it under a error handling tag?
-But this is trivial problem.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-> +	if (!ep_dev_node)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Pass the next node pointer regardless of failures in the later code
-> +	 * so that if this function is called in a loop it will walk through all
-> +	 * of the subsequent endpoints anyway.
-> +	 */
-> +	*next = ep_dev_node;
-> +
-> +	if (!of_device_is_available(ep_dev_node))
-> +		return -ENODEV;
-> +
-> +	ret = mtk_drm_of_get_ddp_comp_type(ep_dev_node, &comp_type);
-> +	if (ret) {
-> +		if (mtk_ovl_adaptor_is_comp_present(ep_dev_node)) {
-> +			*cid = (unsigned int)DDP_COMPONENT_DRM_OVL_ADAPTOR;
-> +			return 0;
-> +		}
-> +		return ret;
-> +	}
-> +
-> +	ret = mtk_ddp_comp_get_id(ep_dev_node, comp_type);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* All ok! Pass the Component ID to the caller. */
-> +	*cid = (unsigned int)ret;
-> +
-> +	return 0;
-> +}
-> +
+  branch: v4.19-rt
+  Head SHA1: 1c3b7281e2711af8488ce40c9202ad19f3eeb557
 
--- 
-Best regards
-Sui Jingfeng
+Or to build 4.19.312-rt134 directly, the following patches should be applied:
 
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.312.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/older/patch-4.19.312-rt134.patch.xz
+
+Signing key fingerprint:
+
+  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
+
+All keys used for the above files and repositories can be found on the
+following git repository:
+
+   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
+
+Enjoy!
+Daniel
+
+Changes from v4.19.307-rt133:
+---
+
+Daniel Wagner (1):
+      Linux 4.19.312-rt134
+---
+localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+---
+diff --git a/localversion-rt b/localversion-rt
+index c2c7e0fb6685..6067da4c8c99 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt133
++-rt134
