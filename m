@@ -1,190 +1,79 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440331F17B;
-	Wed, 22 May 2024 17:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C041F17B;
+	Wed, 22 May 2024 17:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716397671; cv=none; b=OL8GoAoH8KVvJjiZ9gL3LjwEfnfw4t0HK4a+PwM+xDernQq/q/WOS2aodf9OF7acTqRhhOIVP5vnQqbIisb9Kq3AE5pcH2u4F2YQvJn2Pcl1c73/IjRU/NPJy3BczqoWqQ/ExKx4OtngHiZpQrQGiMu9zy0ki/05uiiiK7sMiH0=
+	t=1716397828; cv=none; b=VCyZ04ztHIBIIalIb0sToPaxsxH/fu2V47BqOxnB/pj/IJhjeYghx+ZXJWofPwhmEqt25tPPQ3sCDVX/k9dz/+ho0irVLURst8chgqiJoabpk6XFYX/hbY0Z0OHF9dRmTpSVxdH0l5sF+2AOXhtAHiNtTtFe8QzY2yjp9hZG9Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716397671; c=relaxed/simple;
-	bh=Q5eimIUAh2hCMIAuK6asuJ6RF1m3Dp6LF57HRl79KzI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dda0wf6AnjUEkaMlkNOFd96HjmVT4q3Z1Al5TBAL5IPTp2Qmw9SF7jg+E4b9xspXOylrtT16RO5D9yMDujCpOxBv/EhupfXz2vQIZ1RP/UP7lCtSsxhzCAib0E3Rblr2MJHV9+efaKXZy0SpP7GDRfAJVZDoEidumsusHcEEzIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Al5qSITR; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716397828; c=relaxed/simple;
+	bh=EDYiEPwBiLwANwrOE2xUCd+SiLuSIGHn2RhSnXDlKR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oaM6oRk1N7yTZlXgsP29CSYhHlo259BFL350NLaG9BR6D7+ejf4xkTNNFE03qpfJxn/fy7ORxvvM3k6NHg7gIuvxTx/42ccZ1ncMkuM2iT3TQaFhokCWfYhElzRAlbDu/hTa7DCVu/Q3VzT8K0PN3VRCDBZk3rk8NcYlPYdf1fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ady4lhI9; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Al5qSITR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716397668;
-	bh=Q5eimIUAh2hCMIAuK6asuJ6RF1m3Dp6LF57HRl79KzI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Al5qSITRus5LO4elT1QOmpA0adoZ7FmZokOzdLcJ2nxwJeh+wY5QbDoYL922by/zM
-	 NLCeEwaMvqozCpO5yEn1UHUoJTtm8yPovJuAcSaClpTd3HN3d7oqO969Lgqp8kVphG
-	 w7CrOWAXhJattII5moPUfnahfF0xKiM1RVlh/vm/87Ke8Z5H2/8sRK4hU+8BConVca
-	 4+bMiKYyInLtx43Hp7HyigTsKAw4snt7Gho8T6b/4ZVV/xev4iYeHp1N9GbiwXXslz
-	 y0D1H2sWzQ0hgtPdTLQkJjex7qaTPxMk7Yy98T7UscCS4U+LuU25lcQ3TtfwALpZLF
-	 R5jSbBmNcKefw==
-Received: from localhost.localdomain (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 37668378216B;
-	Wed, 22 May 2024 17:07:47 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: kernel@collabora.com,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ady4lhI9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716397827; x=1747933827;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EDYiEPwBiLwANwrOE2xUCd+SiLuSIGHn2RhSnXDlKR8=;
+  b=ady4lhI9LILHOE/0K4dY3959e1vgabz9sgJVbAQMAU7doEair+GpSXCT
+   j58KU59s5jILKgwG8VMZWoF4ZfnJFXIMrPXmI3YG+EUcYtRqBfUDiUuCI
+   FRsGW6loap3qfMSbX2PdXvDSLr8p8OEe2gZYUhU6nGeXvMNoSUUWb/Lkj
+   B2+OG6ij+I4U3B4T3ccT+D7HEKwqm3WBocJbVDQljwgzY2775QDNwimSv
+   9Uo2iH+G/Eo4wIEKEsEkT2cnQArVahra7CgiqUlL36uyRTNtzyvfS0c/x
+   VxsXR3DJ17azOLzqLzqflD7Pxz6KK5AfOXxXdzQT1LPNdPghJCEk2HsOh
+   A==;
+X-CSE-ConnectionGUID: 5U8/LgfhRf27qev5gENk9Q==
+X-CSE-MsgGUID: E4SF7rPmR9mlGI8f0of+Pw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="35180060"
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="35180060"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 10:10:27 -0700
+X-CSE-ConnectionGUID: wcIOMKQ5RWKK0DxwWFVjEQ==
+X-CSE-MsgGUID: uTyT67bdQPWk99Itli993Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
+   d="scan'208";a="38204819"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 22 May 2024 10:10:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 17FC3179; Wed, 22 May 2024 20:10:23 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] selftests/thermel/intel: conform the test to TAP output
-Date: Wed, 22 May 2024 10:06:49 -0700
-Message-Id: <20240522170655.2879712-2-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240522170655.2879712-1-usama.anjum@collabora.com>
-References: <20240522170655.2879712-1-usama.anjum@collabora.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/2] soi: Don't call DMA sync API when not needed
+Date: Wed, 22 May 2024 20:09:48 +0300
+Message-ID: <20240522171018.3362521-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Conform the layout, informational and status messages to TAP. No
-functional change is intended other than the layout of output messages.
+A couple of fixes to avoid calling DMA sync API when it's not needed.
+This doesn't stop from discussing if IOMMU code is doing the right thing,
+i.e. dereferences SG list when orig_nents == 0, but this is a separate
+story.
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- .../intel/power_floor/power_floor_test.c      | 68 ++++++++-----------
- 1 file changed, 28 insertions(+), 40 deletions(-)
+Andy Shevchenko (2):
+  spi: Don't mark message DMA mapped when no transfer in it is
+  spi: Check if transfer is mapped before calling DMA sync APIs
 
-diff --git a/tools/testing/selftests/thermal/intel/power_floor/power_floor_test.c b/tools/testing/selftests/thermal/intel/power_floor/power_floor_test.c
-index 0326b39a11b91..1626c6d92e621 100644
---- a/tools/testing/selftests/thermal/intel/power_floor/power_floor_test.c
-+++ b/tools/testing/selftests/thermal/intel/power_floor/power_floor_test.c
-@@ -9,6 +9,7 @@
- #include <fcntl.h>
- #include <poll.h>
- #include <signal.h>
-+#include "../../../kselftest.h"
- 
- #define POWER_FLOOR_ENABLE_ATTRIBUTE "/sys/bus/pci/devices/0000:00:04.0/power_limits/power_floor_enable"
- #define POWER_FLOOR_STATUS_ATTRIBUTE  "/sys/bus/pci/devices/0000:00:04.0/power_limits/power_floor_status"
-@@ -20,17 +21,13 @@ void power_floor_exit(int signum)
- 	/* Disable feature via sysfs knob */
- 
- 	fd = open(POWER_FLOOR_ENABLE_ATTRIBUTE, O_RDWR);
--	if (fd < 0) {
--		perror("Unable to open power floor enable file\n");
--		exit(1);
--	}
-+	if (fd < 0)
-+		ksft_exit_fail_perror("Unable to open power floor enable file");
- 
--	if (write(fd, "0\n", 2) < 0) {
--		perror("Can' disable power floor notifications\n");
--		exit(1);
--	}
-+	if (write(fd, "0\n", 2) < 0)
-+		ksft_exit_fail_perror("Can' disable power floor notifications");
- 
--	printf("Disabled power floor notifications\n");
-+	ksft_print_msg("Disabled power floor notifications\n");
- 
- 	close(fd);
- }
-@@ -41,6 +38,9 @@ int main(int argc, char **argv)
- 	char status_str[3];
- 	int fd, ret;
- 
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
- 	if (signal(SIGINT, power_floor_exit) == SIG_IGN)
- 		signal(SIGINT, SIG_IGN);
- 	if (signal(SIGHUP, power_floor_exit) == SIG_IGN)
-@@ -50,57 +50,45 @@ int main(int argc, char **argv)
- 
- 	/* Enable feature via sysfs knob */
- 	fd = open(POWER_FLOOR_ENABLE_ATTRIBUTE, O_RDWR);
--	if (fd < 0) {
--		perror("Unable to open power floor enable file\n");
--		exit(1);
--	}
-+	if (fd < 0)
-+		ksft_exit_fail_perror("Unable to open power floor enable file");
- 
--	if (write(fd, "1\n", 2) < 0) {
--		perror("Can' enable power floor notifications\n");
--		exit(1);
--	}
-+	if (write(fd, "1\n", 2) < 0)
-+		ksft_exit_fail_perror("Can' enable power floor notifications");
- 
- 	close(fd);
- 
--	printf("Enabled power floor notifications\n");
-+	ksft_print_msg("Enabled power floor notifications\n");
- 
- 	while (1) {
- 		fd = open(POWER_FLOOR_STATUS_ATTRIBUTE, O_RDONLY);
--		if (fd < 0) {
--			perror("Unable to power floor status file\n");
--			exit(1);
--		}
-+		if (fd < 0)
-+			ksft_exit_fail_perror("Unable to power floor status file");
- 
--		if ((lseek(fd, 0L, SEEK_SET)) < 0) {
--			fprintf(stderr, "Failed to set pointer to beginning\n");
--			exit(1);
--		}
-+		if ((lseek(fd, 0L, SEEK_SET)) < 0)
-+			ksft_exit_fail_perror("Failed to set pointer to beginning\n");
- 
- 		if (read(fd, status_str, sizeof(status_str)) < 0) {
--			fprintf(stderr, "Failed to read from:%s\n",
--			POWER_FLOOR_STATUS_ATTRIBUTE);
--			exit(1);
--		}
-+			ksft_exit_fail_perror(stderr, "Failed to read from: power_floor_status");
- 
- 		ufd.fd = fd;
- 		ufd.events = POLLPRI;
- 
- 		ret = poll(&ufd, 1, -1);
- 		if (ret < 0) {
--			perror("poll error");
--			exit(1);
-+			ksft_exit_fail_msg("Poll error\n");
- 		} else if (ret == 0) {
--			printf("Poll Timeout\n");
-+			ksft_print_msg("Poll Timeout\n");
- 		} else {
--			if ((lseek(fd, 0L, SEEK_SET)) < 0) {
--				fprintf(stderr, "Failed to set pointer to beginning\n");
--				exit(1);
--			}
-+			if ((lseek(fd, 0L, SEEK_SET)) < 0)
-+				ksft_exit_fail_msg("Failed to set pointer to beginning\n");
- 
--			if (read(fd, status_str, sizeof(status_str)) < 0)
--				exit(0);
-+			if (read(fd, status_str, sizeof(status_str)) < 0) {
-+				ksft_test_result_pass("Successfully read\n");
-+				ksft_finished();
-+			}
- 
--			printf("power floor status: %s\n", status_str);
-+			ksft_print_msg("power floor status: %s\n", status_str);
- 		}
- 
- 		close(fd);
+ drivers/spi/spi.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
 -- 
-2.39.2
+2.43.0.rc1.1336.g36b5255a03ac
 
