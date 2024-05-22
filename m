@@ -1,70 +1,56 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B012B9C3
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 15:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B3B1864C
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 15:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716391098; cv=none; b=KPvxcs6W/yA4sBinr+F+tMHhyPnaSyfKD3ZaPilnw419rInYVc5uzfSUvxm5rq8bXaFcoTGRm4+qkq4B9Sm9z7kvbE9Q+hkyN3Tds5g+/hgIX8WkBfFR9sfl/4vrzG6aNAAJduYm2vPokcYqYBeisbBzWpQDMg0lWsUkW2nyv34=
+	t=1716391161; cv=none; b=iytQ4g+jloNga5A1XYNZnrFBB3GdkIc0dHI+shFTHNeSTUY6TZzF40VZnLdpLaWE89EUCfoWvY7AOmNEMdwe20QTb89cP6vZU+lUGIN1MSSGQAlohd6AqfCEf01bdKZ9OqbXMQHMA5uZ+R9sagYafo8CqRtvEn7STrRVRghGkYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716391098; c=relaxed/simple;
-	bh=sYIrj0Iso+GkGLJvhkjsCdF5mUygCRp/pk2z46+PRps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nadJnM7WKMuBfjVTeinaOXqruFH8rQtvpxr3R1r1zpdI+3p+HrcNMYQtlX93inOm8OW7OPPrgY3pQ8wXzLPOFAdMjcwFU8ts2uSqmP7opGwIqKTCFyt4hCZlA0FY1rKEVXQGupofudFNuaWnmoJ/8TGKiUn7cXQY0IhzbMTo6Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O5agnHKn; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1716391161; c=relaxed/simple;
+	bh=KE+pBnv5zt5vI85uRoqvndQzOv24txGQzt4kJaLXgxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j24wlAldR3iuUNlBqMgyLLVo8m0ZLATOU73SpcDT+gNgEXNrY7vbQ4LWGPz7S3PdyMwOm7I49fh+IuU60Dk6N+f69eLW0wfKReTnhYmKbDsq2DgGrqdCej9BdmnEL5QoAVQo0J69lzmSYmYXQsOPe+kqVaQkFz8aFdMgB/D8Sag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VDL0+Mng; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O5agnHKn"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so8323887a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 08:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1716391095; x=1716995895; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/VaHGLRs/J+Fd8zTYkJgbyVxa4bOKjtKO0wVzh6qgxg=;
-        b=O5agnHKn6hK6uZz19BkSlwfKfZF/bIBLNaxr9/rZSo3TimocCvdv2jd/A22G9gotqU
-         xOxscx4ry2cv57rz7lAwTy80hcRH+J1fDHzvME/d9Ou7ZvSAXU3rxWA9X+35LHg7Zz87
-         pszvcsErJy/gdYhexy6WF2z8CJC8A833Y+0zXYEFSXs31UHMy0z8vL5rWiOx+PZIauM2
-         zEkkijD9zzLgXf+M8lohCBGAkS+j3iz0mjxCAOIUkWA4SUCkxUxBJViasHYMY0UKOeGr
-         J92K0nTT8TCMq77igMot+zOPlc4BHVuwg6+V5BZYVdrH8VP/k/xscQcz1p0iY9ygbHmc
-         J/4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716391095; x=1716995895;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/VaHGLRs/J+Fd8zTYkJgbyVxa4bOKjtKO0wVzh6qgxg=;
-        b=ObBe+6Jyd7xCdaWX4ZNaedWn7/t7RpYkK0QLku9NBDt7vcYmGYMKFYEJ9A+L4QAVNm
-         divUAC/dqPC39lB20F43RlsAJz+fhQVIynqQOWehOBdo7M9WgZ7G0VS4gkpHR8SSI3+j
-         vkw+/KB3NKL5aqW0mRcTyLfgVMRCgM9T64VXvExs0Za6yUeJ8fD2j+A0quGot2moAU5F
-         jH4rhFnIdrAk2pqEaOoYGmqf4kIL3ezehWMxonRVg/0YqvFqoDuodx0j3D0PqwD7jHnQ
-         WY0HdmHrrO72IVvowa6ey/VGSlTOIz2jUx0bomQnf1/sYshux3ClS+ZbvLhBVQBSUljO
-         ru5g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7ut2CQ8PD4aAmyVAz3TWf5o+MWNmUMB+pscJ96D8nWpppeqfu+JxP0Gil1+RjmeGuG4nLJBrIeFGAh42lhRXbW/z9HUcKA01bBWO8
-X-Gm-Message-State: AOJu0YwkO8LqRAiJMNZLwa1UXG5+7RvSdKMB58/34g92OSjVWbHIypMV
-	yRvZMUqGYIBAddEnhMBuEYqcEDVrgzqbFcnNe92NUR07guzNMIbbBuQDDYWzsVM=
-X-Google-Smtp-Source: AGHT+IGhVrh0vkrvTvfbs3er6vrivFWDI/IQXfXpBK+NV3F9Nmm1m/IafyZ6ElTvE9ivt0/9AaegMg==
-X-Received: by 2002:a17:906:cc12:b0:a61:42ce:bbe4 with SMTP id a640c23a62f3a-a62280d6253mr228842666b.27.1716391095199;
-        Wed, 22 May 2024 08:18:15 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d6bfsm1789227566b.31.2024.05.22.08.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 08:18:14 -0700 (PDT)
-Date: Wed, 22 May 2024 17:18:13 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Sreenath Vijayan <sreenath.vijayan@sony.com>
-Cc: john.ogness@linutronix.de, corbet@lwn.net, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
-	senozhatsky@chromium.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
-	anandakumar.balasubramaniam@sony.com
-Subject: Re: [PATCH v6 1/2] printk: Add function to replay kernel log on
- consoles
-Message-ID: <Zk4MtXxbzGrQhSFA@pathway.suse.cz>
-References: <cover.1710220326.git.sreenath.vijayan@sony.com>
- <90ee131c643a5033d117b556c0792de65129d4c3.1710220326.git.sreenath.vijayan@sony.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VDL0+Mng"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716391156;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=KgxuixhVGqDyCfxB1A2ol2Z4DoFFfMEDKYX2HE53EHo=;
+	b=VDL0+MngEmvbxzA/j3pbmsfWpPTVHiMxGKHg0hmLyHpXV1pl++ZKbsnx10qtlscoz+6vwk
+	GVwUNu+ySX4O2rGvqS/ZoegmUX/gmcDxvM8cPU80kXucwOOG0XqqnHWyuebUcVy+/ej9/U
+	xcBh/Wo1wDG94M2iOzTGaI9aYY996as=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-59-HxHP_9ETOiGOPAEBCaa9zA-1; Wed, 22 May 2024 11:19:12 -0400
+X-MC-Unique: HxHP_9ETOiGOPAEBCaa9zA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15B25185A78E;
+	Wed, 22 May 2024 15:19:12 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.153])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 117C2492BC6;
+	Wed, 22 May 2024 15:19:09 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 22 May 2024 17:17:45 +0200 (CEST)
+Date: Wed, 22 May 2024 17:17:42 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Chris von Recklinghausen <crecklin@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: sched/isolation: tick_take_do_timer_from_boot() calls
+ smp_call_function_single() with irqs disabled
+Message-ID: <20240522151742.GA10400@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,70 +59,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90ee131c643a5033d117b556c0792de65129d4c3.1710220326.git.sreenath.vijayan@sony.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
+After the recent comment 5097cbcb38e6 ("sched/isolation: Prevent boot crash
+when the boot CPU is nohz_full") the kernel no longer crashes, but there is
+another problem.
 
-On Wed 2024-03-13 15:50:52, Sreenath Vijayan wrote:
-> Add a generic function console_replay_all() for replaying
-> the kernel log on consoles, in any context. It would allow
-> viewing the logs on an unresponsive terminal via sysrq.
-> 
-> Reuse the existing code from console_flush_on_panic() for
-> resetting the sequence numbers, by introducing a new helper
-> function __console_rewind_all(). It is safe to be called
-> under console_lock().
-> 
-> Try to acquire lock on the console subsystem without waiting.
-> If successful, reset the sequence number to oldest available
-> record on all consoles and call console_unlock() which will
-> automatically flush the messages to the consoles.
-> 
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -4259,6 +4271,23 @@ void kmsg_dump_rewind(struct kmsg_dump_iter *iter)
->  }
->  EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
->  
-> +/**
-> + * console_replay_all - replay kernel log on consoles
+In this case tick_setup_device() does tick_take_do_timer_from_boot() to
+update tick_do_timer_cpu and this triggers WARN_ON_ONCE(irqs_disabled())
+in smp_call_function_single().
 
-It should rather be called "console_try_replay_all()" to make it clear
-that it is just the best effort.
+I don't understand this code even remotely, I failed to find the fix.
 
-> + *
-> + * Try to obtain lock on console subsystem and replay all
-> + * available records in printk buffer on the consoles.
-> + * Does nothing if lock is not obtained.
-> + *
-> + * Context: Any context.
+Perhaps we can use smp_call_function_single_async() as a workaround ?
 
-This should be:
+But I don't even understand why exactly we need smp_call_function()...
+Lets suppose we change
 
- * Context: Any, except for NMI
+	--- a/kernel/time/tick-common.c
+	+++ b/kernel/time/tick-common.c
+	@@ -231,9 +231,9 @@ static void tick_setup_device(struct tick_device *td,
+	 
+			} else if (tick_do_timer_boot_cpu != -1 &&
+							!tick_nohz_full_cpu(cpu)) {
+	-			tick_take_do_timer_from_boot();
+	+//			tick_take_do_timer_from_boot();
+				tick_do_timer_boot_cpu = -1;
+	-			WARN_ON(READ_ONCE(tick_do_timer_cpu) != cpu);
+	+			WRITE_ONCE(tick_do_timer_cpu), cpu);
+	 #endif
+			}
 
-Basically only lockless code is safe in NMI which is not the case here.
+Can anyone explain what exactly can go wrong?
 
-> + */
-> +void console_replay_all(void)
-> +{
-> +	if (console_trylock()) {
-> +		__console_rewind_all();
-> +		/* Consoles are flushed as part of console_unlock(). */
-> +		console_unlock();
-> +	}
-> +}
->  #endif
+Race with tick_nohz_stop_tick() on boot CPU which can set
+tick_do_timer_cpu = TICK_DO_TIMER_NONE? Is it really bad?
 
-Otherwise, it looks good. With the two changes:
+Something else?
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Please help, I don't think I can find a sane solution :/
 
-I am sorry for the late review. I have been snowed under tasks.
-Also I had healthy problems.
+Oleg.
 
-I have seen a mail that Greg has queued the patch in tty-next.
-I am not sure if it still can be fixed. It will be perfectly fine
-to change this by a followup patch.
-
-Best Regards,
-Petr
