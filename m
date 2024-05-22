@@ -1,164 +1,145 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2103.outbound.protection.partner.outlook.cn [139.219.146.103])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB955FBBA;
-	Wed, 22 May 2024 02:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.103
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716346105; cv=fail; b=cCBSXnzzOYpquv8DSaeLiUUq8zeslO4xwd+ouXpfknz7KkQ1AphDf8jRcFMUvYsjT8Dc3Pg/rsJKeGTvTQHL5BmCGwaqRSvwcZbL9povmf6xulRHxiD/ydaGKg5TjRawSz0Hec3STr5lx3d/iBNctyBf2G1rCYFbXoSNpwby1zo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716346105; c=relaxed/simple;
-	bh=xwYIroQPCN0+m3yp1U8/UACwW01/gen7ooDs4+6yrW0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nCdLl6H971OklFZ17s6qUEqQVt8hjJ6WldhC8722TlGxqejCLxX4E/iHgAdamVwILSf8UidH+55xX0GY3DTvTLQiUeFPy9dUXL5awqs0/fMxPQTg0KALsjL4CQeXI+czaf6ZyUpa/BKaQWBjibJYeB9tQ3I1mFWPxCoGe4Bgrhw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JN4KUno7j8ypLInNVliwQm37UZVsxSWKhcxpJUQU+06FKRXf7XX0xzE2JbXLYugECMj04ZgeDNtG7tCeXIrOg91mz8F2ZRBzWwmDsQZNhEwZrzyyO8AoKtRCnEH4p+TOCdgcwYLDfno7tXty9/4xBHzxN29TBELGwtD1dFGnYdI5CDlfMw9UB99vVw5C8LQbZGm03iwQ5TV6qBvitz3uaOKBQbG+YDSSaEKMlaFQWUeSXNoqLCziM0LcKBkEBGO1VSVOxJWqm9rUHlOpUA+/5SvLYwZvKb11q3rvKxQplI5umAMipvjY6jIsF/ZBES8yRbNB48CvcfmW34bm84TvGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f98g7p1kqgM4DA46Y1BKwM0baIzCBPoANJUTi7qC4ZI=;
- b=mMFk7tSkOf0jWKtFnMYK3FbSewXJBRB0ycQCzgk6sH1ssCjTqoXUan/PRU6DwTTdUeRtZbpGMRcEqPYQx+ST2oEpYp09pB47a0RWQVw2rtlxP4YArN26SKJO9y3ALNH8h7AVdwuTjSMkrHlUx2UPnkhl6bssSSfAY/dBvsr2bovy7kYNiITN2oXHao2pVLmtpjeT5P/pLC1DHunoQ5l9Xt1ciYxuTcjmSRAsCN01PCxA5Th/pP46p6fhIgwDJY7dm2fm3aQawg+cauiQzaFXyUQfy3wnyuaPaGU59AbGQCbvsreXQlp7nyeLvHAxehQfNDqGyFGK7oE9MiSSbfIlHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1081.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:9::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 22 May
- 2024 02:33:29 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::e903:99a6:10b7:304d]) by
- NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
- with mapi id 15.20.7472.044; Wed, 22 May 2024 02:33:29 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, Claudiu Beznea
-	<Claudiu.Beznea@microchip.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: RE: [PATCH v3 2/2] ASoC: cdns: Add drivers of Cadence Multi-Channel
- I2S Controller
-Thread-Topic: [PATCH v3 2/2] ASoC: cdns: Add drivers of Cadence Multi-Channel
- I2S Controller
-Thread-Index: AQHaoRXwCwwKaFEsIkWyZsjjo8jatrGimlbA
-Date: Wed, 22 May 2024 02:33:29 +0000
-Message-ID:
- <NTZPR01MB0956937A2D3D8B97DB1C8E079FEB2@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
-References: <20240508070406.286159-1-xingyu.wu@starfivetech.com>
- <20240508070406.286159-3-xingyu.wu@starfivetech.com>
-In-Reply-To: <20240508070406.286159-3-xingyu.wu@starfivetech.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: NTZPR01MB0956:EE_|NTZPR01MB1081:EE_
-x-ms-office365-filtering-correlation-id: df8d8ff4-9a12-4696-3fab-08dc7a0790be
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 0dw3zhB2hC23R676M/ICjmawahHJNUakHhcU2g8h957mDzcNBy8G+XJZCfUxdDb/ZfGqLNYIpNtOF10TIxNjfQ/emGbFIu1jKJFjYMuTN+ZotE5E7tniyM4P/ysoSREbOuKwsTnvJZPOKi2xj9r8+xtmlZ4ehLwmZZ26dyM7GbnW60DlXZhC1hZuuHbu+SBvW13w+j2LSy8OwrZn1p85tC64dlf9zCuG0QvfOUQNGhJWds5neWCCj7D7pN5NODTh/y1MjMY8w9o9i0jNlMY4NS17ZB1jXGDmX957W00jCiZF+yIESwouEbQ/gPvQTpP7IuJQMgZXlRk8k4SZ06/QbO0ArXJRGSEJWfMbuO/W8Z/hEO0o3EGsnel+2TmSc92/+T51vntbQx+zYV46PUYou+AYlFgOQXdFMbmU5ZcZCQnaKVwiV/dt72FgGKF2KS9W0Al+gS2zCjsMvCcdr23S6Hnub926FyoJV1mz1MfarD+NvK5CdAwLH8TWmIFuPRQobY06RJetXW3iPmMLqwX0V9Hf91pktDoy3wXL7tt57Re0lJI7subcW1vPKjBxXba4R/8vQbev0f6qP05PAL6qGws9bQQRR0v/P50NstMKa8EPcSS26pZIyAP3LnhAkI1x
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(41320700004)(7416005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?WV8UHLEtFbGRIaRfNTgkWXUx9Y37Z4MJzZ1k2YguYbupz9ZEyTDMGYBDgL9d?=
- =?us-ascii?Q?XYG1P3sM/YTPRX1jZWr01AqM5gwdlnPe/AVhvFKycCwz32ekNzw677SrPB/u?=
- =?us-ascii?Q?p11wRqGhUSUN9N/NRKQVntio66SMhvSI012wDZa43gjRzfjOafZ5mx9wlTzX?=
- =?us-ascii?Q?5eq3Ly4tvLGrVK6BWMlgJRkta5ioiGru+V4Ef4QZbO2JmZCH997RHi4+wnTy?=
- =?us-ascii?Q?45DXGMf0MiVAVoZa3WBHCZjFUha0Wn6oh4/SZTodYe/v6bAcnsw6HhtHaMqR?=
- =?us-ascii?Q?OJy+xwwKgxaPYejLGqIjZCMTv/WfOJefcz5XUvYIOZa7gW6haOYimJJt8qQ7?=
- =?us-ascii?Q?8XxG31MKCF6zqUc2yTR61moOXcM6fqHyi5seoCf7Scggkhn6TvrNK6MN94uS?=
- =?us-ascii?Q?4D5c8SVjVzmoyHmbqfuMyO8bEbUinTmRwS/qc2C08D6P1oQlNfS7QvjB060P?=
- =?us-ascii?Q?mkLZefFeZKZlTe3nVCR6GglBrHjxEm2gc07vM3+e13XuZCKZTkLU9JWKWpe+?=
- =?us-ascii?Q?NUKDixR6ZTFVWIWGw/xqhSPqu7trcek/TRAcMr34b1JdF9Pc8RIuCmBIC/Ad?=
- =?us-ascii?Q?aQUBP+T7wMMIh+23QLHbY/t7qn2m9QgmzHeXPBxqdCnMFYlbhkMnGm2qegGJ?=
- =?us-ascii?Q?wAxUApsXeRIOUkb4vTVG+AC7c/M+meiuOkH4gfYiNiJTo/ZKauFfcIvOfQQ7?=
- =?us-ascii?Q?mXL7L+bYdibb52kowTbSR9f8k8Z0Q3HS9dWIBrjNjAVwyL15dZNMprROysXo?=
- =?us-ascii?Q?6cfqBxttaF+O/XcVANBiq8z2IMvcBc3rzu9a5U8d3xq8cg3Ef5Yb1g0l7Qib?=
- =?us-ascii?Q?rkbzNlwMBXldsimjz3+TAJyQ/0cdKAaFtjgLScmjvolcbiFTvmZTbBAADK/X?=
- =?us-ascii?Q?cHemOLq6raTmTVEuCXMPKE0kQ/QJ8i87+atgiSjfnEBYHU4yKoPW37uGAx94?=
- =?us-ascii?Q?26Y1Hn5s69Qo8f4bHEB6dZ1m4KGTwW9/GuLwi0p42LokWh9uy5w33os+YfBV?=
- =?us-ascii?Q?Ul99dsG+JOK721eG3rWZBdLzogLzIjNGcwXdi9spOcuewy4xMdo/uUaAwSAi?=
- =?us-ascii?Q?S8/oXW9yyRtd+Y9MkYO34lOmUkXAJqRvQKk5ZxwOW8OlotED/dSkIhxhKY43?=
- =?us-ascii?Q?wtcrE0ybc25B5eJqMLRmN/eeQXyf8xyP6qbEmXBGPLUnifIbx0xBlvClRQNt?=
- =?us-ascii?Q?e57FO1nr2iegGUehYfVZ5TRaqr8kKuWEXUVhYPM+sFHGdqcWw3tvGw1vCcSi?=
- =?us-ascii?Q?crw/b3pfe3C2C3ujw0kIGDM3iBIJgjnHrK46n6wkHD5/ssVgRHDYTPFQQ+vZ?=
- =?us-ascii?Q?JkBvSlG08BxBIZvCAdF2o83xdwi+QpD65KwTqL+yLO+A5doLhTva1cD9ndLk?=
- =?us-ascii?Q?X3j4oLn7PSf7tLTT++fNec+/HoZbXKO6uKZPLwN4tzzyL+Ji0Vt0R9m1jEW8?=
- =?us-ascii?Q?bWGjPLsNXVIbrxFCxNY5c5NnMoC6VZF76ckCs47eIwb+EJFsEG2aGpfnkSvR?=
- =?us-ascii?Q?tjanbhWyc+J68SSbCWwkJY6Wix6qdR45cNuZ0/CqpPR4N7ykuN0mm+g8gZSW?=
- =?us-ascii?Q?VIYoYHiOy08C6g9b9pLSsuzPQvayxjsUvh7ZCiFP?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78C55234
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 02:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716346138; cv=none; b=U0JyjWCGuX2pT37yCx0qkuWoH3g5LXy7T1iDz6ucaP9G4+wdr9VIeJOqRYZcInc1YBE0Pt1srf5OnbyVVkPeyVmW0bQFe6VDp4lNaV9Jzs24r1YLT4+TnLbo4zxFY1MX9CkCTH8tvn7Cx3AB4EznPE5fMB2TZ4EGVHN0J6qaFko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716346138; c=relaxed/simple;
+	bh=FXn+sW2b8pPqs9iRjnbpeOqZcaBe8BKOgcf5H+CLA1c=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TzkHCsxNo8DrW7ziLwbaUFzwFrqJA3MtHCmtzCmoa/fVaToicjNiwa2medSqRcXONDhdwMwlTcfiEmHKI/Emuc0fRjIYEnusNUXiifrrA10HBrGnaaaNa0rGdMDE6ghYTibixEAXBHabszWF8jjRU99BluAqDh040a/+iF9TuKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bqnYvvHF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bqnYvvHF"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44M2acGh024457;
+	Wed, 22 May 2024 02:48:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=KZVjtFqG2zUl61nuJqUPa
+	eabQtJxILRk3ZoCdA3MJaI=; b=bqnYvvHFfHKvH8mKNYQRLlM/NtZBpx65nS4/D
+	nEHoAdwtPScIvQwXuv4kpT21FH6iUxgWBj2AYQZAv/VNkUSN1BmkbrS6Sa5vglAh
+	8Z2FTDXSGzVhdw+HgoMml1Pcw+2IfGFE76Lc3eNKmHbWKZ7xjfVto6RtARf55ilX
+	JVwod/ojiQEZiwPO/MLgREdh+qQBxLp7Y7PmNW3uRig1lshbYmaG1NQg7p52Y0wQ
+	G4NGAlWAYlx1D/qJKSSBiNA+AwT0pHDkdfl1rkZZkbtApB/zvADFGbkEEZxa5INv
+	/zTGg5OcbFqtpsCV7u6AL8TC/mb+np7p8P2rH2UFvc6HY2mCw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6psnfemw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 02:48:51 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44M2moHl016238
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 02:48:50 GMT
+Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 21 May 2024 19:48:50 -0700
+Date: Tue, 21 May 2024 19:48:50 -0700
+From: Elliot Berman <quic_eberman@quicinc.com>
+To: Xiong Nandi <xndchn@gmail.com>
+CC: <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <quic_bjorande@quicinc.com>, <cmllamas@google.com>
+Subject: Re: [PATCH] scripts/decode_stacktrace.sh: better support to ARM32
+ module stack trace
+Message-ID: <20240521194010043-0700.eberman@hu-eberman-lv.qualcomm.com>
+References: <20240521005649.12144-1-xndchn@gmail.com>
+ <20240522010559.10551-1-xndchn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: df8d8ff4-9a12-4696-3fab-08dc7a0790be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2024 02:33:29.1357
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uqFK5Nbp64/YQv9519GbZxsR59EOEwzOqfRFJiVFMdAu5Eww677rDAL2lviuNI8qqW+euFdr2CqlQnRlBNR3KcxvKyGCzrawvI3+sthBUFk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1081
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240522010559.10551-1-xndchn@gmail.com>
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: GJw0aVTj1GalgJdFY1fA86zvO109Ynwd
+X-Proofpoint-ORIG-GUID: GJw0aVTj1GalgJdFY1fA86zvO109Ynwd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_01,2024-05-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 phishscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=675 clxscore=1011 priorityscore=1501 suspectscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405220019
 
-> Subject: [PATCH v3 2/2] ASoC: cdns: Add drivers of Cadence Multi-Channel =
-I2S
-> Controller
->=20
-> Add the drivers of Cadence Multi-Channel I2S Controller.
->=20
-> The Cadence I2S Controller implements a function of the multi-channel (up=
- to 8-
-> channel) bus. Each stereo channel combines functions of a transmitter and=
- a
-> receiver. Each channel has independent and internal gating, clock and
-> interruption control. It alos support some of these channels are used as =
-playback
-> and others can also be used as record in the same time.
->=20
-> The I2S-MC is used on the StarFive JH8100 SoC and add the compatible for =
-this.
->=20
-> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+On Wed, May 22, 2024 at 09:05:59AM +0800, Xiong Nandi wrote:
+> Sorry about the name, it is some kind of abbreviation. So I re-post here:
 > ---
->  MAINTAINERS                      |   6 +
->  sound/soc/Kconfig                |   1 +
->  sound/soc/Makefile               |   1 +
->  sound/soc/cdns/Kconfig           |  18 +
->  sound/soc/cdns/Makefile          |   3 +
->  sound/soc/cdns/cdns-i2s-mc-pcm.c | 285 +++++++++++++
->  sound/soc/cdns/cdns-i2s-mc.c     | 704 +++++++++++++++++++++++++++++++
->  sound/soc/cdns/cdns-i2s-mc.h     | 151 +++++++
->  8 files changed, 1169 insertions(+)
->  create mode 100644 sound/soc/cdns/Kconfig  create mode 100644
-> sound/soc/cdns/Makefile  create mode 100644 sound/soc/cdns/cdns-i2s-mc-
-> pcm.c  create mode 100644 sound/soc/cdns/cdns-i2s-mc.c  create mode 10064=
-4
-> sound/soc/cdns/cdns-i2s-mc.h
->=20
+> Since System.map is generated by cross-compile nm tool, we should use it
+> here too. Otherwise host nm may not recognize thumb2 function address well.
+> 
+> Beside, sometimes special characters around module name, such as ARM32
+> with BACKTRACE_VERBOSE in "(%pS)" format, such as:
+> [<806e4845>] (dump_stack_lvl) from [<7f806013>] (hello_init+0x13/0x1000 [test])
+> 
+> After stripping other characters around "[module]", it can be finally decoded:
+> (dump_stack_lvl) from hello_init (/foo/test.c:10) test
+> 
+> Signed-off-by: Xiong Nandi <xndchn@gmail.com>
+> ---
+>  scripts/decode_stacktrace.sh | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+> index fa5be6f57b00..324e4a6c260a 100755
+> --- a/scripts/decode_stacktrace.sh
+> +++ b/scripts/decode_stacktrace.sh
+> @@ -30,6 +30,7 @@ fi
+>  
+>  READELF=${UTIL_PREFIX}readelf${UTIL_SUFFIX}
+>  ADDR2LINE=${UTIL_PREFIX}addr2line${UTIL_SUFFIX}
+> +NM=${UTIL_PREFIX}nm${UTIL_SUFFIX}
+>  
+>  if [[ $1 == "-r" ]] ; then
+>  	vmlinux=""
+> @@ -158,7 +159,7 @@ parse_symbol() {
+>  	if [[ $aarray_support == true && "${cache[$module,$name]+isset}" == "isset" ]]; then
+>  		local base_addr=${cache[$module,$name]}
+>  	else
+> -		local base_addr=$(nm "$objfile" 2>/dev/null | awk '$3 == "'$name'" && ($2 == "t" || $2 == "T") {print $1; exit}')
+> +		local base_addr=$(${NM} "$objfile" 2>/dev/null | awk '$3 == "'$name'" && ($2 == "t" || $2 == "T") {print $1; exit}')
 
-Hi Mark,
+The nm parts should be a separate patch.
 
-Could you please help to review and give your comment about this I2S driver=
-?
-Thank you very much!
+>  		if [[ $base_addr == "" ]] ; then
+>  			# address not found
+>  			return
+> @@ -282,8 +283,8 @@ handle_line() {
+>  
+>  	if [[ ${words[$last]} =~ \[([^]]+)\] ]]; then
+>  		module=${words[$last]}
+> -		module=${module#\[}
+> -		module=${module%\]}
+> +		module=${module#*\[}
+> +		module=${module%\]*}
 
-Best regards,
-Xingyu Wu
+I need to get a moment to play with it. Is my understanding correct that
+the problem is that the last word ($module) is:
+
+[test])
+
+and after the existing strip logic, $module becomes test]) whereas
+expecting just "test"? Your change is to strip any leading/trailing
+characters before/after the [ / ] respectively? Isn't this a problem for
+$symbol as well -- it would be "(hello_init+0x13/0x1000" in the example.
+
+- Elliot
+
+>  		modbuildid=${module#* }
+>  		module=${module% *}
+>  		if [[ $modbuildid == $module ]]; then
+> -- 
+> 2.25.1
+> 
