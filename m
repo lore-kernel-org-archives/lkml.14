@@ -1,111 +1,109 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53011420C9;
-	Wed, 22 May 2024 16:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24FF13D63D
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 16:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716395713; cv=none; b=s1BOqKPZtn30DiKECE78zGwHZyocGM/KwzPHqbIkvr/bkCehSc7wuFs/5hM+gvjN9qFaBd8BcEiJdN4a8aA6EJMSrOJQhrSV9Sid0YS0p8289L32RXk/xz9ro3SVK7VzaxHC0DaAIgEobM/CxqWiWmbYcluhNa02OjOSn6dXTlM=
+	t=1716395741; cv=none; b=Y9s2JpmU8blh4yTCEtLX5lMyEypanPZkjkKwP0drf5Oe0Ws4RFcmxq/kwb3w/oaCHP8i/O9ZpAvxMvIM2jlbHdi6Cu+J13uIyh/qsRKfhpK5/fAd/NPpxVgkgzIgYiyCU9rhCiFGEcFqGprd+ItBfJ9/v8C/uYVLqPEveQAGOw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716395713; c=relaxed/simple;
-	bh=HwrtFMkpSDt9VbB+n06nlRftl6YZbhM7iR+8tjiKkcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n/ZrjpqJljIsADyJyIp7ntkFWu8B0Z1Rl+3j2Ce6sEQfSmwONWjCYaaaQvHejHcZpJg+dBE0qH3otUVxxJ7sJEToxIEwalkhXgcs4DXYTBdQzX34B9iBd/DQGD4MdJG6yfcjCL1t1rxFsDjgUj2gC1Bj1s0qoP9nOsW/iTFNKS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bs9d+264; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716395741; c=relaxed/simple;
+	bh=ecV+Oyo2l55T+lgG4gHLU7xjXVBi1+Yif2LgyDcmDxw=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=OQC/bhrndU0dID0mODGTiZJr/SHvmmhjGISN15rVbQHEp7hrjE+bREddWYr4Fk6NRHuCnLnXUDZFyrFW8qrUjXpBy7Ip/pJHJZ9EBHWF1+2RAJjuauq4ONkGW2M3lhqFzI7eJNrzrMVkG4Bn++DFsr4znVNpoLvuYXEVEdTG65o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=HtrmE6xM; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bs9d+264"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-df4f31e963dso35455276.0;
-        Wed, 22 May 2024 09:35:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="HtrmE6xM"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6f467fb2e66so2662169b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 09:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716395710; x=1717000510; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HwrtFMkpSDt9VbB+n06nlRftl6YZbhM7iR+8tjiKkcc=;
-        b=Bs9d+264S92vqA7ZwVMOAzWdqwXw0rmFr9ti+80IdSngKY0nB3A/ujTkNCb8dXMAQo
-         58fzcygoMeiRZOHtxXEbNt5FpDepTMF4qmAV9uEROhLSvkxyUJiDOqdP9a2jsueIy3ti
-         fuEMK4MUxB181QkXz05OC2JrYCtjUV7Cqqc/loFhR24TL4ZUquv8F2YcMD6EOuH9WkaH
-         x/PvSSpVfpcx+rF6icSgYDoUwX6okY9eIXzdRdC5OhdDPHD21LmxF9k9ERDovmxu2bv2
-         PaodPwX9h9AwSh6oPdyo3cODluEBhoJaabClUr7j5P+rb5c0IkaBll7n7eCPD6eSyJYU
-         MQjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716395710; x=1717000510;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1716395739; x=1717000539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HwrtFMkpSDt9VbB+n06nlRftl6YZbhM7iR+8tjiKkcc=;
-        b=EVaFuVhxoXN4DygUV1AjA0oQivJ7vSHXi4iaQEdqBMLWNKIYxeCjK0TlrdKAm6gvVP
-         e1fpxol5YeaALqtC59sk1qsiaLZsY9x8HgE1mEI/4xXcN+8uvt4R+GqwDN1EjSF1CDNC
-         M2FzfZCnhqkXHhVRRstfNnRWytLNl/TEnIjds+k8ik9yDjCoFMsjUBhgrggYHW0zaY5L
-         jUDdy6MbkkfMd+mncAy4hDMiFWJDurKwSlyGyPnqrWwTjih0JtdADTansrTwPsvoSLm8
-         Ql5jLK7skZ57ywNgrbhVUBUaoUzFec03PuLM2aPt1LjXNj10Ufd2J36D/xnMN7u62vcN
-         oexA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG/XyT8168tRtseQDKqgttj27PyoaGj7CzAPfCz6W+WzJwJnDdG0k67rru2fWcFFpC+ptuMerMrqRr7TXChDryZEaMMngJADNaI4TENSxz8F2/64EpRH+HFh6V3p8J7mQAnSOIgjvpmYRRVmi5SFQPcGs22JLQV8XxYjGiqhBY18q1Lg==
-X-Gm-Message-State: AOJu0YzBBeinyuuknNjCTP7qMKR4gsDr2YT/bdEWgT2ZekNhkHrTBxXo
-	HlLHZk4Y4Ia+Q0wbG8yWx1Cn53bQU/tWCOeCKa/wplzaB5hJ+mn7wJh6j3gNtlxC+7EnldHFs3L
-	kPxJ2Y1yQNCjGSIA2BzvdK7ry6O0=
-X-Google-Smtp-Source: AGHT+IHTSs1INlTP/I9mKiFoUjrWofSCk/KeTJ4YOYLi5YbSbKts7y2jk9BRDKrvtm+jktdyKAvGR9JjbnfiPI3UwwM=
-X-Received: by 2002:a25:86cd:0:b0:dcc:6894:4ac0 with SMTP id
- 3f1490d57ef6-df4e0e612c4mr1846106276.20.1716395710484; Wed, 22 May 2024
- 09:35:10 -0700 (PDT)
+        bh=zqGp54J8ESCUs+m4e0ISGDjXBHl6d8o9SoEATv+WGEw=;
+        b=HtrmE6xMZTdFEhKgt13YIQEDrqCI4ETA+mjN5Zapn5pq8wH5H/bTFaH4dEZ1vgAdxq
+         CKNgUjZg0rFvTd1D5hpKDQhBF4OtHTmUfuGQb5hxa72Y1gKFGCwtL3IsJ/UOO1At5J3n
+         VSNKPScxudu36ZAMKQdJH+yuQzzRb0OxvcSFEzsgxcr1i8t/Xd3JTxghdlwb1IjJLIF9
+         rUVIt9sjaLUq8QdGO+Hbv0eqxNOisT1unXxBkmSi1WRN7y27Y9mOJCUZYPHC9I9xIruW
+         F1VxBtsdn1H0RwoNz+hpHDR+jldkP8oAalp+tkpE+OVcM9p+qsUztnZJZkDn+ut/WIfm
+         qeeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716395739; x=1717000539;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zqGp54J8ESCUs+m4e0ISGDjXBHl6d8o9SoEATv+WGEw=;
+        b=iROPh3GbzjZInoHlb6NDEh646R14MHiElgq+egjoj0fGlKwWPJkHH9ymzPEgtgqw0e
+         bjn/NiQ633G+kO4h9KNrybVYmQeTh5iWNhz4YMNNalDR8ouVZNWGMewTO7injWXQ1LS8
+         2BisS5pMydmMDXAnjshWB8/QTRMi3frIFTd61twMWeZoZu0nb7LXpH1fET+g94e6mmoJ
+         +z0j48s00W09U9XU2PR9IpM76pdC5WhqyrWg5BvT4zKri2cDrf3Fjx+Fq0h4wr7vZAH8
+         OdOngwxiNSUb4vAgGJCCDl6IjAEbsN51Hz1gua+5SHa96YGyf29J1sJmG3jYTFBk0SAM
+         Hz5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBsGKtTBUBb0uJ9GK3S0HhRSmcg8jvSlFUA7y5CbQhUxWJLZ8NtFgBhF+NXf4hwZB/tPVzEpH/twBLtOwjg5WxyP+oZgtnr8d47R4v
+X-Gm-Message-State: AOJu0YxODwkWTgXC3glNV/SMmoj37075MhWrWdDYvYWX/cqaoyQPiQoA
+	bRamCYZyZnMDDFIVafVV5/05bREX++0hAVmu9c7Rk3J8XLAAOUD5oztDBusi6lQ=
+X-Google-Smtp-Source: AGHT+IHNg4G/+FrYZDK16ARdepdZLQp6DOCEY9we0rv5z5/42V7Fb/cT4nWy7dXR6Rb1X80XjYbanA==
+X-Received: by 2002:a05:6a00:4f8b:b0:6f3:ef3d:60eb with SMTP id d2e1a72fcca58-6f6d62200f1mr2432509b3a.34.1716395738743;
+        Wed, 22 May 2024 09:35:38 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a82896sm22664747b3a.69.2024.05.22.09.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 09:35:38 -0700 (PDT)
+Date: Wed, 22 May 2024 09:35:38 -0700 (PDT)
+X-Google-Original-Date: Wed, 22 May 2024 09:35:36 PDT (-0700)
+Subject:     Re: [PATCH v2 0/7] riscv: Various text patching improvements
+In-Reply-To: <20240327160520.791322-1-samuel.holland@sifive.com>
+CC: Bjorn Topel <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, samuel.holland@sifive.com, Ard Biesheuvel <ardb@kernel.org>,
+  daniel@iogearbox.net, jbaron@akamai.com, jpoimboe@kernel.org, peterz@infradead.org,
+  rostedt@goodmis.org, bpf@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: samuel.holland@sifive.com
+Message-ID: <mhng-0ba9a35d-4bf6-4331-9c58-67305b5b56ad@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240509192411.2432066-1-tmaimon77@gmail.com> <20240509192411.2432066-5-tmaimon77@gmail.com>
- <20240513155330.GA2676859-robh@kernel.org> <CAP6Zq1hRw6xfNKKfBFGuKbZk0su3ys6+hnMzqRWrZeKzDoKLEw@mail.gmail.com>
-In-Reply-To: <CAP6Zq1hRw6xfNKKfBFGuKbZk0su3ys6+hnMzqRWrZeKzDoKLEw@mail.gmail.com>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Wed, 22 May 2024 19:34:59 +0300
-Message-ID: <CAP6Zq1gKp+Hu93CK=78chvNk70WtKMKUv8ny0Mzkw47wn7Af2g@mail.gmail.com>
-Subject: Re: [PATCH v24 4/4] dt-binding: clock: remove nuvoton npcm845-clk bindings
-To: Rob Herring <robh@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, 
-	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Rob,
+On Wed, 27 Mar 2024 09:04:39 PDT (-0700), samuel.holland@sifive.com wrote:
+> Here are a few changes to minimize calls to stop_machine() and
+> flush_icache_*() in the various text patching functions, as well as
+> to simplify the code.
+>
+> This series is based on "[PATCH v3 0/2] riscv: fix patching with IPI"[1].
+>
+> [1]: https://lore.kernel.org/linux-riscv/20240229121056.203419-1-alexghiti@rivosinc.com/
+>
+> Changes in v2:
+>  - Remove unnecessary line wrapping
+>  - Further simplify patch_insn_set()/patch_insn_write() loop conditions
+>  - Use min() instead of min_t() since both sides are unsigned long
+>
+> Samuel Holland (7):
+>   riscv: jump_label: Batch icache maintenance
+>   riscv: jump_label: Simplify assembly syntax
+>   riscv: kprobes: Use patch_text_nosync() for insn slots
+>   riscv: Simplify text patching loops
+>   riscv: Pass patch_text() the length in bytes
+>   riscv: Use offset_in_page() in text patching functions
+>   riscv: Remove extra variable in patch_text_nosync()
+>
+>  arch/riscv/include/asm/jump_label.h |  4 +-
+>  arch/riscv/include/asm/patch.h      |  2 +-
+>  arch/riscv/kernel/jump_label.c      | 16 +++++--
+>  arch/riscv/kernel/patch.c           | 69 ++++++++++++++---------------
+>  arch/riscv/kernel/probes/kprobes.c  | 19 ++++----
+>  arch/riscv/net/bpf_jit_comp64.c     |  7 +--
+>  6 files changed, 63 insertions(+), 54 deletions(-)
 
-Kind reminder about the question in the mail thread below.
-Your response would be greatly appreciated.
-
-Thanks,
-
-Tomer
-
-On Thu, 16 May 2024 at 12:44, Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> Hi Rob,
->
-> Thanks for your comment.
->
-> On Mon, 13 May 2024 at 18:53, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, May 09, 2024 at 10:24:11PM +0300, Tomer Maimon wrote:
-> > > Remove nuvoton,npcm845-clk binding since the NPCM8xx clock driver
-> > > using the auxiliary device framework and not the device tree framework.
-> >
-> > Again, this is an ABI break. Changing driver architecture for 1 OS is
-> > not a reason to change DT.
-> Is it an ABI break even if the NPCM8xx clock driver hasn't upstream
-> the kernel vanilla yet?
->
-> I thought that since the NPCM8xx clock driver hasn't upstream the
-> kernel vanilla yet and and in the latest NPCM8xx clock driver patch
-> the NPCM8xx clock driver.
-> using auxiliary device framework instead of DT we should remove the
-> nuvoton,npcm845-clk.yaml file.
-> https://patchwork.kernel.org/project/linux-clk/patch/20240509192411.2432066-4-tmaimon77@gmail.com/
->
-> >
-> > Rob
->
-> Thanks,
->
-> Tomer
+I don't have any issues with this, but given that we've run into some 
+possible text patching bug with this ftrace thing I'm just going to hold 
+off until 6.11 for these.  Maybe that's a bit too conservative, but with 
+the bug only manifesting on HW it might be tough to sort out.
