@@ -1,71 +1,100 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E74757FD
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488C757FD;
+	Wed, 22 May 2024 11:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716378966; cv=none; b=iuNHc1I/w22ssZxB73NyWaic89lFjT1x2jiAZbdMVU1Lzb9R6bDyrX7csYFFqRC4zl4F4i4CUyhA3T7f7IABZkW4MkhqnLI0L02E2/WBh+bfnH6967UVUhjtTw3u0vLYxUuGj0BwYZwHssOvwwIEqLhw0ptMjMKCyc+wiXY2HpM=
+	t=1716379184; cv=none; b=f/52TquhnAuNeFI9XGI9/PRih+qtoiPcjikzmwK0Ry5vsfDMCYsCMbxshQ0E/X1v9s+Agzi8uZCP7MwwyTcri+TVPfxfm7NUSNOGXM0Ye0pS0uKyeZsK/ZHJXporLMIUgYZPIgX1+GBnt1AXXb5HPAjPfMQ5N9ejvbAA421azEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716378966; c=relaxed/simple;
-	bh=/uxNzhuEpEuNDt2jpdc27me5iRGt1/3VuDrhzDVcBoI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=MB+xLNe+6sNrqulTxO4OUZQoVIs66kGyCNG0hTzJK9oKivYE3asRFLKI6rc/YkneIm5D5KySMHdQXjUlhxkCHrUIku7ARmFHq82TTzFMbh2prxXsOu9upnxm+qTReav2uP5eDSCWDIz6uJmBNogy1xmYOiARF0UaGfnXXep8HEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7dabc125bddso16754839f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 04:56:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716378964; x=1716983764;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGSGt5zkHSQc1VjNVftzodvlANt3bWCgcnLgMe4H7pg=;
-        b=aj6cG1Zlv1Hidx7R6DLo53hjjQDrZpUR9nO/qe9RPXzmFwNt6ZL5I8stTIMvDexPx1
-         lIJz4Wyj/q0FkbAHrRsUz7JXoIopINRyUPT8F0RzOJ0U4VNOboK0dgnMByWfPdIVXvlh
-         pILPq4XTlFwWx/2LwD53q4yO63eG5wLLXNRfr++Fj+eWbYWDUmkHQ6RRlC4lfZLCxIaA
-         GNebwIqYTHvkjQPf3ESjFqzDBFeXEu+2EXV/RHp8/XABmrdFKc+zJ45suxWSnII1j8v3
-         2sYJl9xbK2sP8vISv1L4PhLrfadI4kJ7/OjHszLTlRDw9weM+NeROa6+4yc7SD/aJP+z
-         ACKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZCZUt1OOQxNFrrZlKHMfDX7D9GwvTL76gvT1Dhs+314XyMHE/a0qi8QZkut4ytVCRCesWPS8KeCTPPWNZ3PThBlkvb/LoYFZJpNuX
-X-Gm-Message-State: AOJu0YwCL5h24Z7qUjeOV7CbOhzA8rpWJEGbhOlzNESL1zkx/iw1MA8w
-	uFohNWjjeD3N196kfcc7tzT5WlxyXJx++PZ56rfiXmxMb9OCDqGlJXXDatTrbn/s5nzW/YLcNNa
-	3+0El2oTatV//rAU+VirY9l6eMf98/CVia4A/Rm3pEevHhOCUMFmRPF4=
-X-Google-Smtp-Source: AGHT+IFaQR/wwwjXbBcPunurewHyTe2Ekd6xHwwWmKJKFeUo5uMbGdlyh35IOS3lAzg8WzKW5qfXqTcnk2nIT5Tm0aLNAO/iYIoN
+	s=arc-20240116; t=1716379184; c=relaxed/simple;
+	bh=cuGc8Pu9YBooy2bz94a0RDTpxwgjGmzp7A3RCV71uBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l8WiGbyaSQBixlFRWV/WMnWU/81VurSjDfzE40kSygx/S0OfSUD9jI0B9iPcO5oHpdFszktQKZM1WIuzWZ+n1lC8506D0gfXXF7TLmyw5l7SqHxRoZGeYW16ZVuvgcCW8vRJzDy1BgaNI8FOKd6zSycQNIa5aF8JwQPxzoq6sUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcnbO8mX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcnbO8mX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B298C4AF0E;
+	Wed, 22 May 2024 11:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716379184;
+	bh=cuGc8Pu9YBooy2bz94a0RDTpxwgjGmzp7A3RCV71uBY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hcnbO8mXFpIc91wErXvGslZ3sgAyS68n+Y5nJuYxtxXdpA92NNES6C4Rd2jaQr4Ye
+	 XerDk0Wk7MSFONF2RF7Pq/6qN5F4Gk6qI72QMSHhTOOiqyLurtWb6KtAEQpCo5FvW3
+	 SQmEGrFlAHZ5ZvVCrjv8l2LEssQWura3MVi+J2W/yc60fhDk12N4LC/M6MSmx73uyl
+	 XXbX1O6HEZ32+bBS+kL2DewIh+hJdSORh5Yw2DdMYi3wBu44suBRmMLpU5oxWH63Qx
+	 RRC9WChlu4vOeiYIjRAfssZC1fzcVO7Xfn3fXNdnlXpBnS4O8pNuDo0rzLz+/40/oW
+	 mn3THbRU1bZ+Q==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e3b1b6e9d1so75567341fa.2;
+        Wed, 22 May 2024 04:59:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVeqQQFtj9EcIDpg2KdDFI5/5JA/Fz9dGZIFsBwNymOHLHhElZju/3GiUodwLj5etdumDr/+kZ3EG8u/DwJNVlCAQg+a0ULOcwnJ38Q5ARoeKtlWX2D7TGAFp6dGGaWNR9SdPTptxXTz//VRQ17UL/bopV9AroMDgHTAnJ7A1xa2yRVzBp/9S7JAbc=
+X-Gm-Message-State: AOJu0YxJsLh7f6T5NiwU+/rEFKYQTsvfNs5sQdAZRfb3PYJFL2vsOJEO
+	9ZVhZOIE0u5zuPhe6lodrPNS9Jk8Jzpd4biPqyRrYN3ryKiG9Pewd1TuKsXLHmKe6dsgC6RxYMe
+	qGdzX6dwMC0szPA28obafC7syQKU=
+X-Google-Smtp-Source: AGHT+IFPDTl0Xas48io8ucKnx9sinCtylTniInZ1t2wKyn685dcWLc2Vn6GNhQryETbGWnVDTr0biA4YngfFKpJz2nY=
+X-Received: by 2002:a2e:8904:0:b0:2e7:1bb6:2e8b with SMTP id
+ 38308e7fff4ca-2e949540f5dmr11986731fa.35.1716379182789; Wed, 22 May 2024
+ 04:59:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3f87:b0:7e2:2c72:c60f with SMTP id
- ca18e2360f4ac-7e39df9d37cmr6970039f.3.1716378963666; Wed, 22 May 2024
- 04:56:03 -0700 (PDT)
-Date: Wed, 22 May 2024 04:56:03 -0700
-In-Reply-To: <tencent_7BA1330A9E431B2B4B071B6B2518BA37BB08@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006df71c0619099e75@google.com>
-Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
-From: syzbot <syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20240519211235.589325-1-ojeda@kernel.org> <20240519211235.589325-2-ojeda@kernel.org>
+ <CAK7LNATPx2wTEM=KDmGtcH8vVTB4suOhh-CUQKP54F8wtPWDiw@mail.gmail.com>
+ <CANiq72mcdtNie=t=HHhZnjQa7gQiDZin+TYP_7Rgi4kL83H2BA@mail.gmail.com>
+ <CAK7LNASYYYsiZUaA1StD9kWO0WBC0PBPtfY7u32g94WtOPFZgw@mail.gmail.com> <CANiq72mzTaKYJqNcv1qT3nXEbh_t7CwaAqxCuYNcx9eHOZf7wQ@mail.gmail.com>
+In-Reply-To: <CANiq72mzTaKYJqNcv1qT3nXEbh_t7CwaAqxCuYNcx9eHOZf7wQ@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 22 May 2024 20:58:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQkUik_VW7j-d56Pr4NnExxDnjMfWSwtxvijH4q4Onctg@mail.gmail.com>
+Message-ID: <CAK7LNAQkUik_VW7j-d56Pr4NnExxDnjMfWSwtxvijH4q4Onctg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kbuild: rust: apply `CONFIG_WERROR` to all Rust targets
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, linux-kbuild@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, May 22, 2024 at 7:52=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Wed, May 22, 2024 at 12:14=E2=80=AFPM Masahiro Yamada <masahiroy@kerne=
+l.org> wrote:
+> >
+> > What does "everything else" mean exactly?
+>
+> Everything but the host programs. Or as many targets as possible, if
+> you think there are other cases that we should avoid.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Reported-and-tested-by: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+You can do this if rebuilding makes sense
+when any CONFIG option is changed.
 
-Tested on:
 
-commit:         33e02dc6 Merge tag 'sound-6.10-rc1' of git://git.kerne..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=15025ca4980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=25544a2faf4bae65
-dashboard link: https://syzkaller.appspot.com/bug?extid=d2125fcb6aa8c4276fd2
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10592b58980000
 
-Note: testing is done by a robot and is best-effort only.
+> > Why is the .config required for generating documentation?
+>
+> `rustdoc` sees the code in a similar way as the compiler (it uses
+> parts of the compiler); in particular, it processes conditional
+> compilation like the compiler. So we need a given configuration to
+> generate it.
+
+Surprising.
+
+It potentially generates different documentations
+depending on the .config file.
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
