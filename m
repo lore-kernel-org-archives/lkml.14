@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5B4824B1
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17C47D3E6;
+	Wed, 22 May 2024 23:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716420743; cv=none; b=Tqlj2UIw9UK8eQpmeztzCf4gZ+XaaaZgcYsNZQULZR9fLANndkySJwn0aYQDmfj8ztDAyHANuIDRSU8BitCx1DDtrDhPG0Z/YnCcDvM3S2TyulqWdW8b+Dt0/JOBcO3zFXh+21C8R5benBTrHWB1LPIxgdiAltQKqKXXIReClO0=
+	t=1716420743; cv=none; b=os7zvh+B21puGfAPBQNjlWh+jAkirutsbxOf6MHFhrE9q31IdWqTlak6NJlYRx7a0o1UDeWi9LLi2fLiHHTndkRB71mjgqtlW2d+UPCqtjmAqDPNZZ4g0j23a5AqV/8cMxF8PHD4vH9vaFFIC8/CE+kezT4kPWwnvh0SFuA3sGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716420743; c=relaxed/simple;
-	bh=dk9pVUnyAXEkAZ3CS3QWH3/LfWwm2NEOko5OfoNSiqA=;
+	bh=tEHrjijHfI1dW0qehjRUeQTBRs2hxXM4LHxZP9ugrHc=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=WVSVL+w+h4GVj5BGo1ybHbjFRS3xaDaEHWuRTQlC7mJSMgon7DQTLfuvr0RbWN1rHJhnW3C43x1RHNRxyqbYXWx97X763thePX3jSoJVMD9pybbnsNAp47Ef7U/JRbpzRzZl4wb2w8GMjEykJnvcabZTVb8zuLeCNiPXDFQSsZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gX2P1k1P; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=LLn3zWCk+fmhfWWJe196RfWi4/Fi9ews2tqcRuWCpKiINh4Np1oSOvK6ewDq5G+pA+zAok5Hyk6oD9eu6VFg9HpJjK+mAP48ddAV3JPw1JoYGkNrcI7UyJUO2szT52X4y4Gs7PYy/tlfCJKslq4J8Fg9m9CwkMHAsQmH9lVrLeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMFLPMK/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gX2P1k1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 912A8C32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMFLPMK/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0791C4AF0D;
 	Wed, 22 May 2024 23:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716420743;
-	bh=dk9pVUnyAXEkAZ3CS3QWH3/LfWwm2NEOko5OfoNSiqA=;
+	bh=tEHrjijHfI1dW0qehjRUeQTBRs2hxXM4LHxZP9ugrHc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gX2P1k1Pt7ouqmvIokRlYaaKhrLTzlp5byzhP8JFki7MIS/WW6fAeKLc6Kte/q5Ur
-	 EBvlEIEqRyZmCj8USgKhZBF/G/RcUkNVumFTp2KFzao2Vr79mjCNbcTugUhOMpzvuj
-	 gujUZv17sahQDPdcOOxx4nw/VsLaU8VgRPcRIynyffaMgrt+KnB6yjA0DIMx/KPFBo
-	 ChFViNFrLRsHpmFn2zo32YEVBa9JbeMKS06Xlf/5ku7aQCUgHnM02/WNxicJx/OOVg
-	 G892RztcXP3LYCInz+DMGWOAhPCG/H2FvKWnhXh5HsSIitkjwmlkAAzieGZFm741dK
-	 5Gs9XwpVJT6Ww==
+	b=bMFLPMK/srok+FyjdHtbHkP+ZgL5XHdr2nMDlz3R/AiQk7J6GWWuCYpHf6Hc4QEGj
+	 YNcTJfbYyYqyQ/EOjlGQ1OMPsBJbP24gN7+b5fQQ/ips+o4jGvIAuhfLhP0bq0ZnRK
+	 aXdQzA+eTgDk/wDII14GbvuaUNUCDV+HRTY9EE9DoygEw7sZAFKeBWAa5eixwP+5R+
+	 9VPI/VbwsXbg4rvK2YNLfNWmwwbukxfZzhhVp6Iwe42YwN4L48ri9oMXnAXM74UT2K
+	 Vu5P2+0QxQDzzp9AZzwBuTI9w24o/w9wSD4DshN1zkLczfdE4YXrco0sduX6a+/S7+
+	 hHEXqgLYa4siA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 84E9EC43618;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8DAFAC4361C;
 	Wed, 22 May 2024 23:32:23 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.10 Merge Window, Part 1
+Subject: Re: [PATCH v1 0/5] BeagleV Fire support
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642074353.9409.8682770780548365463.git-patchwork-notify@kernel.org>
+ <171642074357.9409.6131755278467232949.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:32:23 +0000
-References: <mhng-e73e59bf-92fc-4122-9f9e-a329d20eba55@palmer-ri-x1c9>
-In-Reply-To: <mhng-e73e59bf-92fc-4122-9f9e-a329d20eba55@palmer-ri-x1c9>
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
- linux-kernel@vger.kernel.org
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, conor.dooley@microchip.com,
+ daire.mcnamara@microchip.com, jamie.gibbons@microchip.com,
+ valentina.fernandezalanis@microchip.com, linus.walleij@linaro.org,
+ brgl@bgdev.pl, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 
 Hello:
 
-This pull request was applied to riscv/linux.git (fixes)
-by Linus Torvalds <torvalds@linux-foundation.org>:
+This series was applied to riscv/linux.git (fixes)
+by Rob Herring (Arm) <robh@kernel.org>:
 
-On Wed, 22 May 2024 09:13:28 -0700 (PDT) you wrote:
-> The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+On Wed, 27 Mar 2024 12:24:35 +0000 you wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
->   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+> Yo,
 > 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.10-mw1
+> Wee series adding support for the BeagleV Fire. I've had a dts sitting
+> locally for this for over a year for testing Auto Update and I meant to
+> submit something to mainline once the board got announced publicly, but
+> only got around to that now.
 > 
 > [...]
 
 Here is the summary with links:
-  - [GIT,PULL] RISC-V Patches for the 6.10 Merge Window, Part 1
-    https://git.kernel.org/riscv/c/0bfbc914d943
+  - [v1,1/5] dt-bindings: riscv: microchip: document beaglev-fire
+    (no matching commit)
+  - [v1,2/5] dt-bindings: gpio: mpfs: add coreGPIO support
+    https://git.kernel.org/riscv/c/6e12a52c1459
+  - [v1,3/5] dt-bindings: gpio: mpfs: allow gpio-line-names
+    https://git.kernel.org/riscv/c/f752a52d34cb
+  - [v1,4/5] dt-bindings: PCI: microchip: increase number of items in ranges property
+    https://git.kernel.org/riscv/c/649bad67d4b1
+  - [v1,5/5] riscv: dts: microchip: add an initial devicetree for the BeagleV Fire
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
