@@ -1,89 +1,121 @@
-Received: from relay06.th.seeweb.it (relay06.th.seeweb.it [5.144.164.167])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BB243AAB
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 14:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E96F43AAB;
+	Wed, 22 May 2024 14:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386915; cv=none; b=JXUYnIYs21aYy+kqvQ7lYtMvwzIoUIsf/VtzGAkbx2bnBUf+SQzxHIrjqASdVpBqghSZ64+gmk8+AQZq6yhnw+sKijUt6aJjDOeYXknTbYuhpIkkxg36cf1/x0Ps3XAEb1wVfR/QfXuGq8enhXMMgwXKmDyXRXAKVHoVo0oXH/k=
+	t=1716386991; cv=none; b=B8XfHu4K/Zhjx/Mwqhe3QjnP/j3GHLIfv4xqGjB0YgCh9VM0ToWY+7cgT9LI13Xi69BeDNry90XY4qbwk/aSv0EX8nx2VRJx7o96wJFrAuEJDm6VkLhfwEhgyegzCeu/WD6d6adqZ3iw2hOrJU9Nlzy+8ew8716hpc51fczYV3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716386915; c=relaxed/simple;
-	bh=KHwsZDEiIGJ2DyJzOBSHb0eWPfnlHZGZQg0MlCtoSSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bmkcOB0Dmg+RDiF3/smQtguPO9DTs/0wWBE9rLQFFjrx2Fj5cS8j8tYnd21+fXmJU5+jw78mD0DV+JpWh3T8swa8SWdVOozZJjgRWFaF6xACtuz23My3vNcFp6iy4HoT6AS5fjDxYJ2ARu9QC1Rh4KVUvJiI0+v7iAnybzCyMTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 57C2F4081E;
-	Wed, 22 May 2024 15:51:31 +0200 (CEST)
-Date: Wed, 22 May 2024 15:51:29 +0200
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, Vinod Koul <vkoul@kernel.org>, 
-	Caleb Connolly <caleb@connolly.tech>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 2/3] drm/panel/lg-sw43408: select
- CONFIG_DRM_DISPLAY_DP_HELPER
-Message-ID: <lpguauybi5xs5hy7vglqvaloy4yykgejdhreeqp6fioeuelav6@pj2ap6eat3cy>
-References: <20240522-panel-sw43408-fix-v3-0-6902285adcc0@linaro.org>
- <20240522-panel-sw43408-fix-v3-2-6902285adcc0@linaro.org>
+	s=arc-20240116; t=1716386991; c=relaxed/simple;
+	bh=mDWoM0y/9NZiwZeSsw6wupj4kpFKNhJbzUYHPgjsHrc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sWYv2LHrgnOYdhdxBglOjhFQmzbzJZ7nA3N/pCmXWvw4Hxasbu24LdaZWyLj8hb/vX7qKBkB8OuvDHZop7yKI9Sm0WyjaMoVuGHXNiqVsxfF6JC/b4T6hD/NUrYihPkCPzsE4pnuCLsyago65p5jJLZAyeHCd+RzyTdOBVLrakQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=MaazTArG; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="MaazTArG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1716386989; x=1747922989;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mDWoM0y/9NZiwZeSsw6wupj4kpFKNhJbzUYHPgjsHrc=;
+  b=MaazTArGUOYa1Euz8VBENkEZXIdY5Vyd51ridQcYBT+4dBe4iypfW/yy
+   HlwfZRO5wwc7/r+giHglMb+HRJsuwvkJLuUJX0rx6s7KypAvp2LWwLRSo
+   IfpqDQ1nRV475I8y0P8UHbjXzvgj9k/8A38wgBI0JaTYYxKSh7layKFuV
+   bariD9bnduHq/DwGmLBpIFi41QXzOqu2DZwxX+DRcBQyIRBJibSRUHdya
+   kN6+BsCsX61aqPUe4T+Bhny9kPk6VOxLQ2UOYfCKWQ8bL9No+RlFL2b7d
+   YfW3dM3g05bBIJ0NR0X68zUkEECZMg28uxoLUyHwnzr71R+GwmcVLq73W
+   g==;
+X-CSE-ConnectionGUID: YDHWVVWpTDmNhpERICjMxw==
+X-CSE-MsgGUID: TeHhQJ9vQwif+nar/DGvUg==
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="25744430"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 May 2024 07:08:40 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 22 May 2024 07:08:26 -0700
+Received: from che-ll-i17164.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 22 May 2024 07:08:22 -0700
+From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+To: <steve.glendinning@shawell.net>, <UNGLinuxDriver@microchip.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Parthiban Veerasooran
+	<Parthiban.Veerasooran@microchip.com>
+Subject: [PATCH] net: usb: smsc95xx: configure external LEDs function for EVB-LAN8670-USB
+Date: Wed, 22 May 2024 19:38:17 +0530
+Message-ID: <20240522140817.409936-1-Parthiban.Veerasooran@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522-panel-sw43408-fix-v3-2-6902285adcc0@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 2024-05-22 09:25:54, Dmitry Baryshkov wrote:
-> This panel driver uses DSC PPS functions and as such depends on the
-> DRM_DISPLAY_DP_HELPER. Select this symbol to make required functions
+By default, LAN9500A configures the external LEDs to the below function.
+nSPD_LED -> Speed Indicator
+nLNKA_LED -> Link and Activity Indicator
+nFDX_LED -> Full Duplex Link Indicator
 
-Here and in the title: maybe this is a remnant from v2, but you split out a
-DRM_DISPLAY_DSC_HELPER and shouldn't be enabling DP for a DSI panel now.
+But, EVB-LAN8670-USB uses the below external LEDs function which can be
+enabled by writing 1 to the LED Select (LED_SEL) bit in the LAN9500A.
+nSPD_LED -> Speed Indicator
+nLNKA_LED -> Link Indicator
+nFDX_LED -> Activity Indicator
 
-- Marijn
+Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+---
+ drivers/net/usb/smsc95xx.c | 12 ++++++++++++
+ drivers/net/usb/smsc95xx.h |  1 +
+ 2 files changed, 13 insertions(+)
 
-> available to the driver.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404200800.kYsRYyli-lkp@intel.com/
-> Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/gpu/drm/panel/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index 4a2f621433ef..3e3f63479544 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -340,6 +340,8 @@ config DRM_PANEL_LG_SW43408
->  	depends on OF
->  	depends on DRM_MIPI_DSI
->  	depends on BACKLIGHT_CLASS_DEVICE
-> +	select DRM_DISPLAY_DSC_HELPER
-> +	select DRM_DISPLAY_HELPER
->  	help
->  	  Say Y here if you want to enable support for LG sw43408 panel.
->  	  The panel has a 1080x2160@60Hz resolution and uses 24 bit RGB per
-> 
-> -- 
-> 2.39.2
-> 
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index cbea24666479..05975461bf10 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1006,6 +1006,18 @@ static int smsc95xx_reset(struct usbnet *dev)
+ 	/* Configure GPIO pins as LED outputs */
+ 	write_buf = LED_GPIO_CFG_SPD_LED | LED_GPIO_CFG_LNK_LED |
+ 		LED_GPIO_CFG_FDX_LED;
++
++	/* Set LED Select (LED_SEL) bit for the external LED pins functionality
++	 * in the Microchip's EVB-LAN8670-USB 10BASE-T1S Ethernet device which
++	 * uses the below LED function.
++	 * nSPD_LED -> Speed Indicator
++	 * nLNKA_LED -> Link Indicator
++	 * nFDX_LED -> Activity Indicator
++	 */
++	if (dev->udev->descriptor.idVendor == 0x184F &&
++	    dev->udev->descriptor.idProduct == 0x0051)
++		write_buf |= LED_GPIO_CFG_LED_SEL;
++
+ 	ret = smsc95xx_write_reg(dev, LED_GPIO_CFG, write_buf);
+ 	if (ret < 0)
+ 		return ret;
+diff --git a/drivers/net/usb/smsc95xx.h b/drivers/net/usb/smsc95xx.h
+index 013bf42e27f2..134f3c2fddd9 100644
+--- a/drivers/net/usb/smsc95xx.h
++++ b/drivers/net/usb/smsc95xx.h
+@@ -114,6 +114,7 @@
+ 
+ /* LED General Purpose IO Configuration Register */
+ #define LED_GPIO_CFG		(0x24)
++#define LED_GPIO_CFG_LED_SEL	BIT(31)		/* Separate Link/Act LEDs */
+ #define LED_GPIO_CFG_SPD_LED	(0x01000000)	/* GPIOz as Speed LED */
+ #define LED_GPIO_CFG_LNK_LED	(0x00100000)	/* GPIOy as Link LED */
+ #define LED_GPIO_CFG_FDX_LED	(0x00010000)	/* GPIOx as Full Duplex LED */
+
+base-commit: 4b377b4868ef17b040065bd468668c707d2477a5
+-- 
+2.34.1
+
