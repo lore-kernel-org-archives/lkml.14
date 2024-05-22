@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE4014D28B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDB114D29C
 	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 23:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716421908; cv=none; b=FZURcyvmbs05/dH3oP8ah8lPL+DmXeWtYfhAvARSm+aUBjwXEUvr65tGFR3omubgik7DxT4R+45r/LdwXqo65YAomcUCXgFaGXs3CLADSMYoN5C+Mefzd2liBo1t5XkIEbA645wmTWmpdTyoSlux/iK1uQa1VKXJEP1CYL2OGZo=
+	t=1716421908; cv=none; b=ufkVBH/xH6EfaoK8GIZCk1Yzn9pMjXF0gtBYUzC8/LjOYYGA3DkSzfcH0azdCGPhl7JOR5blxEecTNvnLQkamDKkazFCWOh5mEgpv+kp1JIwT850mzUzqKp7fz+UPcNajxeblYNFx78RPivOvKgXZO8KEFm0FxcgGV9zca91In8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716421908; c=relaxed/simple;
-	bh=gqLUb9QwFmSI9zsPRr9h3j96reicOIQtoFbQZ+xpT4c=;
+	bh=Nty+d0O2k+tcTQfotqrEHDSwCA3ilUGE7inQCe2W3o8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nKFTMy51koiUjArj3e4/r4cnu4X6nMGUrXdNzVw3FRNNTsUmh1RI4FpXy8x66SkzkKbyvlAr1TVHkai66DlvACe6KdM8z/SFt4x9pvSKYLWX/1TCAuh9sP55WE/X8cetYZVkDo3C3VEqA8KklnBLRkFJmjcm4mEYK0i+y72Fr/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kY3Cpmni; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UrJImT7N9eZ/OMN3qtftOBmgRZiStfPzY06v3VcanRxDbapfn5foFfNLSEpwzw9h4t4pNUCBI8mVUlqrt1f9beNenKoBKtcxc5dp7iwKqU20Vk87MKosTlvg+GKpV0y3xiOGaiIi2Ey9jz2k2WKuPDUGxJvwhh2a6OTIevyj+4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJ6yeDJp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kY3Cpmni"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E7C3EC4AF12;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJ6yeDJp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C7C00C4AF0C;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1716421907;
-	bh=gqLUb9QwFmSI9zsPRr9h3j96reicOIQtoFbQZ+xpT4c=;
+	bh=Nty+d0O2k+tcTQfotqrEHDSwCA3ilUGE7inQCe2W3o8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kY3CpmniW4Xo04BbXZBNVtdDiX3zJFaVbuN7sRGtSwXGiPwZ/iO0HAQ+wqA307T2M
-	 sf8ing+ScWnGv/es/7MrZWsgs7DOPB8gOEFRzVW60YtPXR60VdNg8zYV+K9nOzCSer
-	 atj6e+cp87MEQP8vbJDBleLys/l0ItejflIL2t4R7NfcR/pOLZSDnlZcYbUpulHWTM
-	 faLgH3UnsWWbS/eyh0vGTpgFrv7CrmaXNXlh8KRQQlKJWOdbKc+eV01S2BnOQWgmZl
-	 q8iVdBpj7cLrOq3JT2X9R0g3RHE0A8BfzH5NZE0Yp3wb/24SPZIBGK873LwcVotaGK
-	 P3KNTxnPeYEHg==
+	b=eJ6yeDJpb7x/wkFNd67nxJKK7wx+jMvay4iawRRiXNsVYNj970j+MzX2xuGFszMqW
+	 1O0K4M9HvcWxvoSaHBSt+ojD8yVfNKiNim163ETs9khkxu45zF7R3AuHD+CDdvrf+h
+	 NeXBi2k9LKvuxIyS9E7ie/ALv2xe5Ch/1aNaVCcUAIA+BLe3bSlggJDmDJ3VnSRE52
+	 e3Kr37DsFP3a51mEEY3nvzQXTW/2LKZUizTBPNOlIghfpdPLrjcsNV4poUmxN+rwmL
+	 W/aWZd4FdHnoTrr5FUF/P93yy9WvcRbksmc3D+2DpXIcNRP8v5KULbee2tn+qav5kr
+	 /2Jse6KsKlVgQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DCE91C43638;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B99FEC43618;
 	Wed, 22 May 2024 23:51:47 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,35 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Use bool value in set_cpu_online()
+Subject: Re: [PATCH] riscv: uaccess: Relax the threshold for fast path
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171642190790.9409.1797871952115228181.git-patchwork-notify@kernel.org>
+ <171642190775.9409.16917538511707082083.git-patchwork-notify@kernel.org>
 Date: Wed, 22 May 2024 23:51:47 +0000
-References: <20240318065404.123668-1-ke.zhao@shingroup.cn>
-In-Reply-To: <20240318065404.123668-1-ke.zhao@shingroup.cn>
-To: Zhao Ke <ke.zhao@shingroup.cn>
+References: <20240313091929.4029960-1-xiao.w.wang@intel.com>
+In-Reply-To: <20240313091929.4029960-1-xiao.w.wang@intel.com>
+To: Xiao Wang <xiao.w.wang@intel.com>
 Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, dawei.li@shingroup.cn,
- shenghui.qu@shingroup.cn
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, jerry.shih@sifive.com,
+ nick.knight@sifive.com, ajones@ventanamicro.com, bjorn@rivosinc.com,
+ andy.chiu@sifive.com, viro@zeniv.linux.org.uk, cleger@rivosinc.com,
+ alexghiti@rivosinc.com, haicheng.li@intel.com, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Mon, 18 Mar 2024 14:54:04 +0800 you wrote:
-> The declaration of set_cpu_online() takes a bool value. So replace
-> int here to make it consistent with the declaration.
+On Wed, 13 Mar 2024 17:19:29 +0800 you wrote:
+> The bytes copy for unaligned head would cover at most SZREG-1 bytes, so
+> it's better to set the threshold as >= (SZREG-1 + word_copy stride size)
+> which equals to 9*SZREG-1.
 > 
-> Signed-off-by: Zhao Ke <ke.zhao@shingroup.cn>
+> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
 > ---
->  arch/riscv/kernel/smpboot.c | 2 +-
+>  arch/riscv/lib/uaccess.S | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Here is the summary with links:
-  - Use bool value in set_cpu_online()
-    https://git.kernel.org/riscv/c/07f23286451d
+  - riscv: uaccess: Relax the threshold for fast path
+    https://git.kernel.org/riscv/c/e8c7995ea148
 
 You are awesome, thank you!
 -- 
