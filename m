@@ -1,164 +1,97 @@
-Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2140.outbound.protection.outlook.com [40.92.63.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FE4EC0;
-	Wed, 22 May 2024 12:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.63.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716382119; cv=fail; b=Iy7A19MZA7j6szSA58fyGbcMf00ZGx1Geba6cg+ojQHoqfqsmvDGhIvYmuCxqgRiFWFV/ctfDZjB3/k40tVlTevd1Gfx97Kx3pDRy/T/HXh/sNEXtMW/rHj5OL7YE/kObKVMPsDwcz8hJuIZ7trteLICCakoFjNqwbeanssShXw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716382119; c=relaxed/simple;
-	bh=aQ9kUq2MEhfAb/16TRyiUro9Kp/ae5UjQxkFpoBobVg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ms05uQ7S+smpemVMMU8r0HlcKbmB8EhgAJqbWuo0+/5Hx5Ng+OPKZ2CdLkSNZF/zWDfYru2yJwkPpGRqF9ttUcIpoAqevLLVKzTT3jPKypGc+o2rBYZcn91tRPQCtnhbMJvanKuEf+DOfIH+FXKDC6a2rr4bTGkJ+VlMog9Us0k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LZqF8H3D; arc=fail smtp.client-ip=40.92.63.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LZqF8H3D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rs9BdcXOQWTwWHWS6GiGPm0XcYHfYoIOORsjkYBGgbVVdX3RxSB17sGpwxzpHt+uJ7H9LIMBp7XFUIHAWMy9r4TqY2fJyFUbVQQ2RS+GRca4P+JY4kaEcEIfbn1DsANmgtfhJfjvmfpaIQ1DwyudiYTa6/Bfi1fsGbgY2Ta4WwtLpcwe2ek3zfQFs8cOgsalYqu83gw0tTUc1qh9yI3pfeiXPKkS0FbR8rRBqNBuCwWF3gIB1T8zpju1PLBvB7G6+1d1fA42GXST7p+kff3Be7Q6jJshRmdQ0V/LKvXqD6omD1Rq8d8GrPr+mBlogag87cuORxdEBtDiG8n6HK0Bxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x6GMX8euwPtGkw65psqU9W5Dd/PIjEg0c+oI/rtFnbE=;
- b=fqLajYOMplpeEsdC+rdhzQuXijUuioMIwDBifJzRSOt0Pd5AO/YEqOHmnnRLMBUDdQwgA++jfy5XbPOvr+ECrYxME30ZYQucG8sqhpeRVHW+ZdGN2KDIqdufdUVFP1YohgaaayDEou9In3RdBtQ9vP+jXgyBzzRiU6rVCFyUgXmnDUaS/dKmXL2zis0D5NwSV1NDVO6+yuFYdWzqPBibSK0ZCQtfTssKAl7bQb6E/vpOfb9MMdt8pIlSJ1IKlXyojaZaEd//YnmdHw2QXp3/1rjz+C0I/qDDLuIq4KH+V7HW9DMxBBy9zXqNbsEEfaINyMNjvmrbwXJfJYMYQu6NKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x6GMX8euwPtGkw65psqU9W5Dd/PIjEg0c+oI/rtFnbE=;
- b=LZqF8H3DkKrpGiRa8Qruyk8D3l4rNg+ql+eR+wIgZ5W7n3nRQOVO9uSmOgfwyMtMjdA+47GjoCivnsl/NGsnIkQcgbBPG1/m9hIr/iH7cRNZ8Wm+u33QZQrHsEfIC1bGcXOF3fsbW7PqZWwXFXpXCkuPEyYhO8BkG/dVUNbtdKuwokGNDsbtm+ETRDItPKV5JiUNXcbBaZTVowc2yt6DULwlPYEcOG7DpYD0fCfVgpxZxtxjED7UG3UUoXiY9d7eX5fKt/ZY4/NQVN7NTJ8cHYzSOsV6yMRj1XZNglfRGM3uETvvjwoBGpjGktci4WuPqlE8VJeaAWZo5bHLqZeJrQ==
-Received: from ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:228::21)
- by ME3P282MB1169.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:85::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Wed, 22 May
- 2024 12:48:32 +0000
-Received: from ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
- ([fe80::d384:a02f:2370:f33e]) by ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
- ([fe80::d384:a02f:2370:f33e%7]) with mapi id 15.20.7587.035; Wed, 22 May 2024
- 12:48:32 +0000
-From: mu001999 <mu001999@outlook.com>
-To: ojeda@kernel.org,
-	boqun.feng@gmail.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mu001999 <mu001999@outlook.com>
-Subject: [PATCH] rust: kernel: make impl_has_work compatible with more complex generics
-Date: Wed, 22 May 2024 20:48:21 +0800
-Message-ID:
- <ME0P282MB4890D938E60E706E937F9207CCEB2@ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [y91LmgdPfvkQHY0yoRC1NAo586N1uZcC]
-X-ClientProxiedBy: SG2PR02CA0029.apcprd02.prod.outlook.com
- (2603:1096:3:18::17) To ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:228::21)
-X-Microsoft-Original-Message-ID:
- <20240522124821.287360-1-mu001999@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B34EC7;
+	Wed, 22 May 2024 12:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716382305; cv=none; b=hyB6U5tnTi9v0XFgRiTZLRO5WqscKCCm5q/LVlYXrvxdoTWKQ8aApc+E18Q8AGsoa6+Va1vyM7acMFejC7EgCynHRnEe+3Ws3atmk2Qwwm3yYmu6TFjOQ2+XnRbOJFpi2bl4ncT8meqWEyGNU3KxvVBM01s2LNeCmz8+/TvRPbg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716382305; c=relaxed/simple;
+	bh=xx7vlOS3eoQRwVtkzrylouSI4VFOYntzau4o1P2SHTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XMC2DGNQfDe+Tlc0EFyn+WxPcDncKblQTyQZzR4Nd/PrRLkzL9lu6oW+mFyMaKUeNjzRtNWnYgN8HHkAyHE3ddokpB6PG2OOasUUhzQjeCAMqvVDq+ZCopvngg6UUZ40IlX8tyjPr79iM5i/fXAUs7W1Nos7gC3sBSvyarhi+I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-df4e40a3cb6so592668276.0;
+        Wed, 22 May 2024 05:51:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716382301; x=1716987101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q6bXjieqcNyS0/OchHiuO2tjxnibClzMky7Vem1Q5JQ=;
+        b=tTwWJP3JGO4jUpqdQ5FYJWnz0imDOsNcb3il/SB0x7eXMNgApWOoEPGEPrXfXhyNv4
+         IUcnSDJY3v8KedBXa73lqyt0061FN6W6/zrSMBLhaC9bYdOWr96jPnupvbQF7CTDZTgc
+         VBSJSKtRPxgHoNsRXGMLf+WqMjpwZ7hu3URuiIiPU+/Lj5NROlvcWpKE2BLQacaend7s
+         Lgd/y7suDIXVdm3jaiVbvavIkXrWldq0220UTobm+yDOyFCZ5t1Q0dIHlyV+01j35p3e
+         2h0gyrrV1jwgSEAvXPfqjmslfGm/s2d7Gvv9z8xSctowq7+eINgaBjkjEw7Ph8x8yQDg
+         iISQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjlfj2U4idwYs6UXNuCrkoucb3wjS8B/LWUdVmT1b1jfei2Qlu12sTIprLUpAeDct6XX69mdp1ePjTUAPEwcPEjHLxU/yGmRwRyPlVpwYvctlRJzTAjAUtpb8aN4EOcBTFa2Uyrz/lJHKwVqHWm8fndkXc54+1ssYtA3fNUmxWtYRXic45amcYrp6mY1YQ0bSFQWvEjQpCEof4wQixgJ1b/XnOgsQkWQ==
+X-Gm-Message-State: AOJu0YzXKwHV0rbwCqa/mHPlSI1WPLk6sytuvFXT2wdmDXSpaxn+GOON
+	Dm8GUIk7UIHfty8vR8AWxT7eCINM4das7QQSdcpZ6Mlex1vGQNgmTQMZ7fdu
+X-Google-Smtp-Source: AGHT+IG5Qt7KV619CeF21y3L6R4VynGqOpRJ5wx8Ef6AgNzS++rjDlpbioyIDTbDh7vQlSyI+Z69AQ==
+X-Received: by 2002:a05:6902:4c4:b0:df4:b3ca:d322 with SMTP id 3f1490d57ef6-df4e0aae398mr1923995276.17.1716382301398;
+        Wed, 22 May 2024 05:51:41 -0700 (PDT)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-df4ebc02362sm73032276.55.2024.05.22.05.51.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 05:51:40 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-622f5a0badcso53731937b3.2;
+        Wed, 22 May 2024 05:51:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKOAuNz/K0oLhNukW7J27q64YWUg/5LekM+w37gCqEd27BX0/mFLOwu+vbkgMrSrcz9PGwYOf70Zi3wwvlRYGlxsRxxbWyTjpx+WtKbA24ovAbQ/SJZWork/LJcEcb0F55g22ADfV892O7IPnm+VBNyh8bAaXZfnMLrAFYyrBwPDuDda+qQJyBE/KEB0AtjPKvRAGAMYXF2QiyoCWy7iE6VRJ5uq+PqA==
+X-Received: by 2002:a81:6c10:0:b0:61a:e48c:38b7 with SMTP id
+ 00721157ae682-627e486570dmr20655057b3.41.1716382300769; Wed, 22 May 2024
+ 05:51:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ME0P282MB4890:EE_|ME3P282MB1169:EE_
-X-MS-Office365-Filtering-Correlation-Id: e36875a1-fca0-4692-5d5b-08dc7a5d7c83
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|3430499023|440099019|3412199016|1602099003|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	SzPyWaxtWnl3rfe78Vp+raL8Mqvkplq7UniWXDcx2vdD/DlwlkXRlby42NFClFJDtWdBsNKvkqYZCU/S6tkY8aFIEQdhBEN575ZX/0JucdYGVc9CpWySnhl++mPuxoGdv95HetHNFSgwiTbb4ZiDPUtangdfdWSA7Rmd1AQkitOsolN9JN7TbX3doVjFzIhiFF5HV0Fy6fkvM4kCBqGqH8q6csRyswQG3JUoNL7SM1dcNhiEPQhU14koQ+n/AoBMLKZK71kCPIA6pukNJATT4phIRmoSQGq8gRKVkUuPIACvF/gcsdCJMcFqTWv5ZoBjHbIF/gpD8fN8mwLP7AG/J3PdNTlgRCPDjpp8cBfD3VKbAH3ahrv1i3/wgopM2T62SHgspIIgkO0mKEISyFhITKaYHNr7ICKSp8qUllTgjwrXucITLIxdQVOXStuh2dgxYDj+wDy8BF/2jdDuUzW+oh2XRC0l1hLYG8+/0A1EismRukxDGCtXyfDhgE4YZ0AEGEWygYBAXWBnC10LUXmcyKJ+t+Q3n38JOhSKi/aGeCp5CpRuSmFBovCCcyXnXkfuVzHO43ozFQhOUtbJrXiKbgnczTmRaq+q6Viz2wUoKoiRCxtKBxqDtlQtrgepOgkNNIu2vTIMiF85l3STVE501Sx5xzDp3i61J/bDUtY5tHOI5HsmOBFeyWHfkd6Fz/dx
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FarGbBMqrt4jVqFfKntCsFyNZeOqpzrI16bl1Li8EVVZX85z3gNqXn0OIVWj?=
- =?us-ascii?Q?RE+Gk8patC9FM5YUZhh06rG2D+I5X3HyL6h3wqfP8zoWNFLrySKKSLLeu4Zi?=
- =?us-ascii?Q?I2EFVPXHFMkz5Num5PPLZj510rm9eCrP1oGAgXpmmeIt1ckWG3DXELgRP+4l?=
- =?us-ascii?Q?y2cn4xMuhEqhXzzjQA2tLn2Aw/vve0vFU5OnndPqtPSZPqlWPTWUQNJIAfWl?=
- =?us-ascii?Q?AQwqlY05gtH0U0z+7kp3HO/o7tk0KNEgSgTmckxAarLWQNRY1S08BqZlbnlA?=
- =?us-ascii?Q?83H6aMjq+oh/qLwwJW4X8oKcAKsM3jvSHDWQEElslFQQJCWrZTjWWKA4sB4O?=
- =?us-ascii?Q?CpdY62fLXK6X1ptE1M8t8nlE8a5oye0io3O2LwkBaXbjjCZQ2ZBSscQIn3Dn?=
- =?us-ascii?Q?56K5L5koRo8SrLBWZswkHjkDps3HaqFilR2akB8EHe7AzvK90TocW5r1gIVX?=
- =?us-ascii?Q?jR6OomRP7wGSg8UJBG8pEeEttLSEtbVfl19n4WNYI2R6ygXULwYXBBKwYbkl?=
- =?us-ascii?Q?jvMqx12/pEfqEwLx4t2o4xTV3kKNixWMVZlg0jwu+b9C48iL8G1XOFbZWwIQ?=
- =?us-ascii?Q?I04f/LX1Frw9+jJtqh1onYbepxlRo2lCxne2wWvLI3l2/7afGfPKcJ5dYkXM?=
- =?us-ascii?Q?IDOQKL9Aa2YmRf2qy/jE4qoKVn9EI7JqtCBZ/SFGkQWtGptSK62EMCBA/Gr9?=
- =?us-ascii?Q?SgDbvG/hIqpn2a5hwLOYBILolaBf/kMqC/0OybyNruaaajK3d5RZpEtZnAcm?=
- =?us-ascii?Q?EQ2KweLxzHAzInS5jnHmdkB9dplI0THs4ZBFN9m+5JXOl2l+aUzBHpGXdm03?=
- =?us-ascii?Q?2DlXgJWI6sOGRncxyU2T5kqAWZ2YXxi6D0s4NFLJCr5iWjRD45ndUokTzEP5?=
- =?us-ascii?Q?YvUJF+t5+C+0Tgg3xuQLxDeKXKrKKlHc3aV0caa705uWMxhfhOp/aG6wA/60?=
- =?us-ascii?Q?B621Fpzu5cjBVpOcn0g40Tux+qwB4/yA0Dr9LUUn59ccmktiyY/qmT6Kp+Lk?=
- =?us-ascii?Q?hiDsudkTNGsruVgMtdz+jMkmiVKEu2rn6HM9riTISmXhacZ1tZR2xsZt6ZCM?=
- =?us-ascii?Q?HmWQPicfHp2v4h1JSdyKf5yuDqA7c8qiBycKmKjRNN7MfGI3U9oFYw5Z4vK8?=
- =?us-ascii?Q?nTvz/NAxshDObgkSG29sfDBe2pgy2jUY5/a69hM679RuWv2ZV0TQ1iUjoEET?=
- =?us-ascii?Q?Dhpw4SAy/OO2/16PetMiVpmojr1ws8NyZP0u5Pt2J0ScVhJN8E9vX7yUMaM?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e36875a1-fca0-4692-5d5b-08dc7a5d7c83
-X-MS-Exchange-CrossTenant-AuthSource: ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2024 12:48:32.1261
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME3P282MB1169
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240423175900.702640-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240423175900.702640-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 22 May 2024 14:51:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVW-0+XbvUpCq_k7qevuDd9Jo46ngDJMMk+CFzw4DwSEA@mail.gmail.com>
+Message-ID: <CAMuHMdVW-0+XbvUpCq_k7qevuDd9Jo46ngDJMMk+CFzw4DwSEA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/13] pinctrl: renesas: pinctrl-rzg2l: Add support to
+ configure the slew-rate
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Make the impl_has_work macro compatible with more complex generics such as lifetimes and const generic arguments.
-See more in https://github.com/Rust-for-Linux/linux/issues/1077
+On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add support to configure slew-rate property of the pin.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> RFC->v2
+> - New patch
 
-Signed-off-by: mu001999 <mu001999@outlook.com>
----
- rust/kernel/workqueue.rs | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-index 1cec63a2aea8..1ff81d88b61d 100644
---- a/rust/kernel/workqueue.rs
-+++ b/rust/kernel/workqueue.rs
-@@ -482,24 +482,25 @@ unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
- /// use kernel::sync::Arc;
- /// use kernel::workqueue::{self, impl_has_work, Work};
- ///
--/// struct MyStruct {
--///     work_field: Work<MyStruct, 17>,
-+/// struct MyStruct<'a, T, const N: usize> {
-+///     work_field: Work<MyStruct<'a, T, N>, 17>,
-+///     f: fn(&'a [T; N]),
- /// }
- ///
- /// impl_has_work! {
--///     impl HasWork<MyStruct, 17> for MyStruct { self.work_field }
-+///     impl{'a, T, const N: usize} HasWork<MyStruct<'a, T, N>, 17> for MyStruct<'a, T, N> { self.work_field }
- /// }
- /// ```
- #[macro_export]
- macro_rules! impl_has_work {
--    ($(impl$(<$($implarg:ident),*>)?
-+    ($(impl$({$($generics:tt)*})?
-        HasWork<$work_type:ty $(, $id:tt)?>
--       for $self:ident $(<$($selfarg:ident),*>)?
-+       for $self:ty
-        { self.$field:ident }
-     )*) => {$(
-         // SAFETY: The implementation of `raw_get_work` only compiles if the field has the right
-         // type.
--        unsafe impl$(<$($implarg),*>)? $crate::workqueue::HasWork<$work_type $(, $id)?> for $self $(<$($selfarg),*>)? {
-+        unsafe impl$(<$($generics)+>)? $crate::workqueue::HasWork<$work_type $(, $id)?> for $self {
-             const OFFSET: usize = ::core::mem::offset_of!(Self, $field) as usize;
- 
-             #[inline]
-@@ -515,7 +516,7 @@ unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_typ
- pub use impl_has_work;
- 
- impl_has_work! {
--    impl<T> HasWork<Self> for ClosureWork<T> { self.work }
-+    impl{T} HasWork<Self> for ClosureWork<T> { self.work }
- }
- 
- unsafe impl<T, const ID: u64> WorkItemPointer<ID> for Arc<T>
--- 
-2.34.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
