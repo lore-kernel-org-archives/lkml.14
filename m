@@ -1,158 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCC01103;
-	Wed, 22 May 2024 03:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9A3537E9;
+	Wed, 22 May 2024 04:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716350260; cv=none; b=ZJ6yyMU0xFnNUhrv63BvSag1yhBO2BH4ehWeBa+VhO3ZuMxVJpjj5ykv4dNXwMD6BWz0fjBucO1VBD8oRsqhxktl0f+e2ciJ6Rb8Gpqu0tz6fArq+I5F+5KtQA2vSC3lQOkUES0iYyOdVoAuQOp1fKywbqnZTNM5kVVk6P2dYVI=
+	t=1716350762; cv=none; b=Rzryq4IZj4wXY3Q7S0DODCbpQPz93ydX8tP8qC8ZVsS6yYuc1lMZhHjf5UP7rWkcasvVZ+jEfBbaBWtXNaOsOeejf1H4zsZip0KBR3Vsu/0anRNtJ5FKK6/4rRaiUxPFkd9By0moeMh9emO61BLYXMx/wSgjreQ27bKmH8jJIW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716350260; c=relaxed/simple;
-	bh=a0m5ZolAVAaZbZQuEnj6RnJJAsiZSt0L4UXVzUod3Q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0FenzxwEj8p1yvguozKAzvS6R5ake8eFJp0BOmM43DqvV5FrHo0PmTO7fhlcEubonbXCsr2I5Ff7gcridxPOW6KfcGYPmf7oluZQ50TtqkPPfqpkwYoaXo9PgY8yqsA1FMPPZwJ/arNSUJgvgVhygiwbCgFkAVQHJ9Q5VS5OqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WzeDVk3+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WzeDVk3+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E29EC2BD11;
-	Wed, 22 May 2024 03:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716350260;
-	bh=a0m5ZolAVAaZbZQuEnj6RnJJAsiZSt0L4UXVzUod3Q8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WzeDVk3+35GefszjCmGhsDU5jVwMz10kcAPHA25V9OtDQy8l0OuwaLjRAmgbb1irt
-	 byghPd4DQLNSjGiicGEOsbEuiNVDxQgS9u60KM7GV9rJ7dXFcNZTYhEX/aNH2DXq2k
-	 q5x8kqF969k2/zAwS5BNEQ4+mZ9+B1NNR0JIRS8w=
-Date: Wed, 22 May 2024 05:57:38 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2024-35906: drm/amd/display: Send DTBCLK disable message on
- first commit
-Message-ID: <2024052243-napping-coastal-3306@gregkh>
-References: <2024051954-CVE-2024-35906-1c6f@gregkh>
- <ZkxbObACcnUMZ3LA@tiehlicka>
- <2024052136-cubbyhole-ecologist-5b68@gregkh>
- <ZkzREEA5_N_xfqED@tiehlicka>
- <2024052110-grasp-liking-22c0@gregkh>
- <ZkzgZoxF_RD50PdW@tiehlicka>
+	s=arc-20240116; t=1716350762; c=relaxed/simple;
+	bh=6XI1XN34NW4rt/zFdE8AebS1urwUF5nF67y/z3rb7U8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WX+ngq8I5RRRWVZJvQTdogDgHFAoM2mJouw5P7Eacvt3WyeoYYrckwJGBPUceZE19QMxIbUJJhiF7eYlwf1C1aOEix3YUNS3ZAOwl5x26LgQwftHdbXtQ3yOeoRXqNss/E0D8HgxpS5hvZHi5b4j2AYSVWJ5Gr8irhh3gFW5hQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vkd5650dFz4f3m76;
+	Wed, 22 May 2024 12:05:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2DA7D1A0199;
+	Wed, 22 May 2024 12:05:57 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHZQ4ib01ms1VYNQ--.24441S5;
+	Wed, 22 May 2024 12:05:56 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: netfs@lists.linux.dev,
+	dhowells@redhat.com,
+	jlayton@kernel.org
+Cc: hsiangkao@linux.alibaba.com,
+	jefflexu@linux.alibaba.com,
+	zhujia.zj@bytedance.com,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	libaokun@huaweicloud.com,
+	yangerkun@huawei.com,
+	houtao1@huawei.com,
+	yukuai3@huawei.com,
+	wozizhi@huawei.com,
+	Baokun Li <libaokun1@huawei.com>
+Subject: [PATCH RESEND 1/5] netfs, fscache: export fscache_put_volume() and add fscache_try_get_volume()
+Date: Wed, 22 May 2024 19:59:07 +0800
+Message-Id: <20240522115911.2403021-2-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240522115911.2403021-1-libaokun@huaweicloud.com>
+References: <20240522115911.2403021-1-libaokun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZkzgZoxF_RD50PdW@tiehlicka>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHZQ4ib01ms1VYNQ--.24441S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw17ur1rJw1kWw1rCr1rWFg_yoW5Cr1Dp3
+	srCrn7KF48Xw1xGw45Xw47Zrn3Z3yDKan7G3y8Gw15Cw4xJr15XF12yw15AF13A34UJrWI
+	yF1Utryjgw1UZr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zV
+	CS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY
+	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRPfQMDUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-On Tue, May 21, 2024 at 07:56:54PM +0200, Michal Hocko wrote:
-> On Tue 21-05-24 19:03:58, Greg KH wrote:
-> > On Tue, May 21, 2024 at 06:51:28PM +0200, Michal Hocko wrote:
-> [...]
-> > And really, in the end, if you have a "CVE and fix for CVE" in the same
-> > release, applying both doesn't hurt anyone, so this is a "fail secure"
-> > mode for everyone, right?
-> 
-> Look Greg, we have been through this discussion at several occasions and
-> I do not want to repeat that again. Stable tree users probably do not
-> care because they are getting all these patches, including regressions
-> and patches they do not need or even want, anyway. They are getting what
-> they are _paying_ for. Marking them CVE doesn't make any difference. But
-> stable tree backporting model is simply not a good fit for _many_ users.
+From: Baokun Li <libaokun1@huawei.com>
 
-I understand you feel this way, but I can still disagree that it results
-in a secure system for users.  But let's ignore that for now...
+Export fscache_put_volume() and add fscache_try_get_volume()
+helper function to allow cachefiles to get/put fscache_volume
+via linux/fscache-cache.h.
 
-> Now, for $reasons, people _do_ care about CVEs and that is why there is
-> an engineering cost on downstreams to review them. Exactly because
-> applying all of them blindly is a _risk_. Exactly because the stable
-> backporting model/policy and CVE assigning policy is simply incompatible
-> with the stability/correctness/performance/$other requirements. 
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/netfs/fscache_volume.c     | 14 ++++++++++++++
+ fs/netfs/internal.h           |  2 --
+ include/linux/fscache-cache.h |  6 ++++++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-That's your business decision, NOT mine.
+diff --git a/fs/netfs/fscache_volume.c b/fs/netfs/fscache_volume.c
+index cdf991bdd9de..cb75c07b5281 100644
+--- a/fs/netfs/fscache_volume.c
++++ b/fs/netfs/fscache_volume.c
+@@ -27,6 +27,19 @@ struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
+ 	return volume;
+ }
+ 
++struct fscache_volume *fscache_try_get_volume(struct fscache_volume *volume,
++					      enum fscache_volume_trace where)
++{
++	int ref;
++
++	if (!__refcount_inc_not_zero(&volume->ref, &ref))
++		return NULL;
++
++	trace_fscache_volume(volume->debug_id, ref + 1, where);
++	return volume;
++}
++EXPORT_SYMBOL(fscache_try_get_volume);
++
+ static void fscache_see_volume(struct fscache_volume *volume,
+ 			       enum fscache_volume_trace where)
+ {
+@@ -420,6 +433,7 @@ void fscache_put_volume(struct fscache_volume *volume,
+ 			fscache_free_volume(volume);
+ 	}
+ }
++EXPORT_SYMBOL(fscache_put_volume);
+ 
+ /*
+  * Relinquish a volume representation cookie.
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index 95e281a8af78..2a071b8010fa 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -353,8 +353,6 @@ extern const struct seq_operations fscache_volumes_seq_ops;
+ 
+ struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
+ 					  enum fscache_volume_trace where);
+-void fscache_put_volume(struct fscache_volume *volume,
+-			enum fscache_volume_trace where);
+ bool fscache_begin_volume_access(struct fscache_volume *volume,
+ 				 struct fscache_cookie *cookie,
+ 				 enum fscache_access_trace why);
+diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
+index bdf7f3eddf0a..4c91a019972b 100644
+--- a/include/linux/fscache-cache.h
++++ b/include/linux/fscache-cache.h
+@@ -19,6 +19,7 @@
+ enum fscache_cache_trace;
+ enum fscache_cookie_trace;
+ enum fscache_access_trace;
++enum fscache_volume_trace;
+ 
+ enum fscache_cache_state {
+ 	FSCACHE_CACHE_IS_NOT_PRESENT,	/* No cache is present for this name */
+@@ -97,6 +98,11 @@ extern void fscache_withdraw_cookie(struct fscache_cookie *cookie);
+ 
+ extern void fscache_io_error(struct fscache_cache *cache);
+ 
++extern struct fscache_volume *
++fscache_try_get_volume(struct fscache_volume *volume,
++		       enum fscache_volume_trace where);
++extern void fscache_put_volume(struct fscache_volume *volume,
++			       enum fscache_volume_trace where);
+ extern void fscache_end_volume_access(struct fscache_volume *volume,
+ 				      struct fscache_cookie *cookie,
+ 				      enum fscache_access_trace why);
+-- 
+2.39.2
 
-> I completely do get why you do not care about that downstream
-> engineering cost but generating bogus CVEs on top of a huge pile of
-> dubious ones is less than useful, don't you think?
-
-How is this a "bogus" CVE on their own?  Both issues involved here
-classify as such, the only issue is that the fix/revert showed up in the
-same release.  And yes, as such, it does not qualify under the CVE rules
-as they want to see the bug in a release, and so our tools normally
-catch this type of thing.
-
-BUT if you have a model of "I cherry-pick what I want", you WILL miss
-things like this that could be considered serious.  So note that by us
-not classifying stuff like this as a CVE, YOU run the risk of missing
-this and maybe ending up with a bug in your system (i.e. you took the
-bug, but not the fix.)
-
-That's your risk, yes, and your business decision to do so, the commits
-here in question being marked as a CVE make your life easier, not
-harder, so while I will go revoke these, realize this means that you now
-need to do more work, not less, for the future.  Sorry about that.
-
-> Seriously, we can disagree whether something is a security threat that
-> is worth marking by a CVE. But making the CVE generation process mostly
-> unattended script driven process without any _serious_ review in place
-> is burning a lot of man power that could be used in a much more
-> productive way. This is not the way how to convince people to use stable
-> kernels.
-
-To think that any of this is an "unattended script without any _serious_
-review" is slandering all of the people who put in their free time to do
-this work for you and the community.  This is ANYTHING BUT an unattended
-script.  Personally I have "wasted" weeks, if not months, of development
-time I could have spent in review of kernel patches, or writing kernel
-fixes, in order to get this all working properly, having meetings, going
-through "CVE CNA training", writing bash scripts, writing tests for bash
-scripts, fixing bash scripts based on horrible data in free-form
-changelog commits, and most importantly, reviewing 100+ commits a week
-yet-again.
-
-Then there is the other developers here doing this work, it's not just
-me.  For every CVE you see assigned, it has been reviewed and agreed
-apon by at LEAST 2 different independent people.  Usually 3.  That is
-anything but "unattended".  If you wanted "unattended", I would just
-crank out a CVE for every stable commit that is added to the tree, but
-that's not what is happening.  We are manually reviewing every commit to
-see if it matches up with the CVE vulnerability guidelines and
-classifying it as such.  To tell people that the work they do is not
-even happening is rude.
-
-Also, this is work ostensibly that you are also already doing for your
-day-job, right?  Surely you also are reviewing each and every commit
-that ends up in the stable kernels at the very least to evaluate if they
-are security or just bug fixes for your corporate offerings, right?  So
-you already have this work done, why does it matter if a CVE is assigned
-to a commit or not, you all already know if it is relevent or not for
-your kernels before that assignment happens, so you can trivially just
-match up the ids to see if perhaps you missed something or not, right?
-
-So along those lines, why not help us out and provide us with a list of
-commits that you feel _should_ be assigned CVEs, and an annotated list
-of those that you feel _should not_ be assigned, like we are currently
-doing today as part of our review process?  We already have external
-people helping us out already, sending us patches for our review lists
-and providing a fourth and fifth set of review eyes on things for where
-we miss stuff, OR where we get things wrong (hey, we are human, we will
-do both as this is NOT automated.)
-
-I appreciate your reviews so far of "hey, this shouldn't really be a
-CVE, right?"  That's a lot of help and is making things better, but to
-insinuate that somehow we don't know what the hell we are doing, or that
-we are doing nothing other than a simple "assign everything!" process
-here is extremely insulting to me and to the other developers here
-working on this.
-
-So again, I welcome your help, and I understand your frustration that
-somehow you feel we are now making you do more work than before, but if
-that really is the case, then you really weren't actually looking at the
-patch stream of fixes that you should have been looking at, and I doubt
-that's something you want to admit to in public :)
-
-thanks,
-
-greg k-h
