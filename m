@@ -1,134 +1,229 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2255F78C6E
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 08:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CDA7FBDF;
+	Wed, 22 May 2024 08:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716366536; cv=none; b=jjvwL2U0QDycTKcFJxca7WngcZMFxAqEc8FjNOrZDOLg35vdFrEDzBpjJ/2VBgort9W1/6m8IB1nibSejVVGRaPXjBUTYOKjiPAlNLLlBpewc6ETzn0yyZgXwI1lMWgUkqAjyYmtrdA77LvgFD1CjfgI45kUbyll6RcgCdIBxaY=
+	t=1716366555; cv=none; b=CQmZUz+Xf2Le6Bh6S4JAD988ECIxN/XKFIqoKcibdwi0ZYWBtuMbpd/NcbvruIxiz/li1NqVfDVCKzADwWOxW1pQar6KrIOToVY9BQ+AzCUixs38Wvzq9pj7Veg+4oHELVdVfTl9s65m+DAnpTTTyi77BXpcnxd4VKi6W529JTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716366536; c=relaxed/simple;
-	bh=U6HzOuGXbSXHu/VEZTBDBAataVvHsUHclMz+/uTMyBQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cj6ZI6qLdiZuogd/RsO+SXmSQdIqrWxnvTi1/c2FMDRWrA/peoxBeZTC5GAZFmfHIjehTzh2P8GQlGq0rtU/ciO+kE3kgSbN34JGszanHXPOF694vmWxuyJeEsvaDOU5HZ89XQKsMa5CWfT9oVfR/I8CbiAW7AmjzRuZdQ6BOfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QATkBnza; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716366555; c=relaxed/simple;
+	bh=P0M8N4UnDcSqP0HJAK6Ke6QdLE32raiQx0Yb8gP5ReU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hzHFj810o+frTgTTiLd1dWwgSYV7wL+rbvXXp++Qj/KwC1YI87+XMFPEJ9TMEFQ/PHEp0w7sk5bm52tS0KVdPsv4wASKmnzRiT9HuPJlGQ91suYRNaQTQSSMcv4h9kKLeqTDPdVpKCMa5/os23d1xWmKE84gHRXzGNitxXihdVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pylsohzq; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QATkBnza"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4200ee78f33so5298785e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 01:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716366533; x=1716971333; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=dyRXwAbr3cWA3+MZ0nmGTO3HkhhGGwxYI+BsxiJrIv0=;
-        b=QATkBnzaIz0VDTlIJmWKN94pIVKnbBqs9O1qBtUYgvG6FHKmpvOHSKl1At0tKiNAnj
-         UlQQqnkXBx1o/X3jzMT7+eU4f3zGQD4g1QpYNdT8q0guSC6uufTbOEyyqo0YtdGeC7qx
-         jZ/MND5EmvoRhtFdpmKwawm5AQA9RNB8FTZiN9Cuvvs29QPhRFrwfDMhP/mLvu8prNCD
-         U2QbKM0zql76UZc+uySdpDQz4aeb2TIQxWBo+ipJhgqMrUqywbicwK+EbLv2yBAlUJin
-         F2gXv14tjdOR7745xrc6sleCWmblUqy3N6QkFFaeMTeZw5BeVmCTtOwMZ22nlVkAXrXs
-         kt2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716366533; x=1716971333;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dyRXwAbr3cWA3+MZ0nmGTO3HkhhGGwxYI+BsxiJrIv0=;
-        b=lij/QGyO5rpmEK+G/q2BvLYRPdEHAzr/xIJModYgFQDFKgPBEmkoEqxlX6OfWjqcIl
-         sywGnPCNybdRz6ZYnaakfG5WzdJ9jOtBd8OSaDCOVDRAa/y3KnXtmnE5FsmnlSfkfXaM
-         N5NZWfd9GrcrElgXYgtlz0cez/WUhZKc0Yrq3ibyuEwJcO51BKTB3FrnVLPeZExxBXMc
-         pB48dWPUGNjAXYMT19YDJE6juNRu+Y15FXiN2As7msll2+Yb8FfIsecpctA2HH3ey8ll
-         pfPcLjN/FXfEYFanGyZZVt1ouX/QH/Y3u+qnE+0V3wEPx2RvurfxVUZeBLtWknPuycG0
-         1TzA==
-X-Forwarded-Encrypted: i=1; AJvYcCV809QODIfV62qdVn9sjdHZ5Ov0uAIMbkXsg91tGpGFNFkF4pCKOM/sHCLy69UymqZgNb0daR8YdO3d5wz5jHXhAejc6tzUICmUTsFb
-X-Gm-Message-State: AOJu0Yxd/42H4lkZL6nxX+rIX7oNOvVHbLOZ432vQCGKHhQfYMDjuTiG
-	L7shlgurxcQhPwA4VjmKmLGIYTRut1WGW+WrDmYZLOn59O929eytYnAWbQUUFAM=
-X-Google-Smtp-Source: AGHT+IGtd5mhIns9+dKeaSONPFVKiPTPNHd93FF0zu+PgXSuseURLxclJNdYNqgwYGu8isWyziuoPw==
-X-Received: by 2002:a05:600c:6a15:b0:420:1551:96a9 with SMTP id 5b1f17b1804b1-420fd37f192mr8929895e9.39.1716366533470;
-        Wed, 22 May 2024 01:28:53 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4202d81104esm231947535e9.16.2024.05.22.01.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 01:28:52 -0700 (PDT)
-Message-ID: <bc973b4f-fe8b-44e5-afbc-f3ce8a6fc873@linaro.org>
-Date: Wed, 22 May 2024 10:28:51 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pylsohzq"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44M7b7XW031016;
+	Wed, 22 May 2024 08:28:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=fYoR7iiLcArZtU74aSNT/rc2QYYoMKNLjO+XV8CNcUo=;
+ b=pylsohzqdyFVQwiM+iERvLNd2+IDMezd1NgPPVRzxu0n4HvX5Iw9ul8TwMlElOnlrUOY
+ wKn895KEQuUj+WGzkUWvvNzIXTjIR+EyGwqxCP4QPWCXRWDxWB2oMLNtbJ5FQLYGRiEH
+ 4BtkcPhCVeDfdv+dHqrg/BjvIq2Y1yXDkLi7gFzog6+6dn1nlDOc8/Va6Lgx3yUDVXLl
+ QV/FVCZfrsbcSm/A3REEyL5CmEqiyuT3Kbj1HbTBH4QE+K4Zf3AgP4ENqK52W8IdwdJU
+ 6JAlpKjSQqJr5mUOfxn7HUApiNWw+QzQ26wXeSErTA8VwW+mIcJLsdi4G/FORE7VQJ6S Ow== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9c1xg739-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 08:28:54 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44M8ORQP010376;
+	Wed, 22 May 2024 08:28:54 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y9c1xg736-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 08:28:54 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44M73xHZ023565;
+	Wed, 22 May 2024 08:28:53 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y77npawv0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 08:28:53 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44M8Sl3D50528600
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 May 2024 08:28:49 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 531642004D;
+	Wed, 22 May 2024 08:28:47 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 297FD20040;
+	Wed, 22 May 2024 08:28:45 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 22 May 2024 08:28:44 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, corbet@lwn.net
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] arch/powerpc/kvm: Fix doorbell emulation by adding DPDES support
+Date: Wed, 22 May 2024 13:58:20 +0530
+Message-ID: <20240522082838.121769-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: icc-bwmon: Update zone1_thres_count to 3
-To: Shivnandan Kumar <quic_kshivnan@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_rgottimu@quicinc.com
-References: <20240522081508.1488592-1-quic_kshivnan@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240522081508.1488592-1-quic_kshivnan@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: grk0eM8ItSChuzW7eKwq1BlMjSNV81hm
+X-Proofpoint-GUID: Im1o3r3rcrkjg4qz4uyhGHNhWtcAIdWz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_03,2024-05-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=586
+ adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405220060
 
-On 22/05/2024 10:15, Shivnandan Kumar wrote:
-> Update zone1_thres_count to 3 from 16 so that
-> driver can reduce bus vote in 3 sample windows instead
-> of waiting for 16 windows. This is in line with downstream
-> implementation.
-> 
+Doorbell emulation is broken for KVM on PowerVM guests as support for
+DPDES was not added in the initial patch series. Due to this, a KVM on
+PowerVM guest cannot be booted with the XICS interrupt controller as
+doorbells are to be setup in the initial probe path when using XICS
+(pSeries_smp_probe()). Add DPDES support in the host KVM code to fix
+doorbell emulation.
 
-This might make bwmon quite jittery. I don't think downstream is the
-source of truth here. Please provide some measurements *on mainline tree*.
+Fixes: 6ccbbc33f06a ("KVM: PPC: Add helper library for Guest State Buffers")
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+---
+ Documentation/arch/powerpc/kvm-nested.rst     |  4 +++-
+ arch/powerpc/include/asm/guest-state-buffer.h |  3 ++-
+ arch/powerpc/include/asm/kvm_book3s.h         |  1 +
+ arch/powerpc/kvm/book3s_hv.c                  | 14 +++++++++++++-
+ arch/powerpc/kvm/book3s_hv_nestedv2.c         |  7 +++++++
+ arch/powerpc/kvm/test-guest-state-buffer.c    |  2 +-
+ 6 files changed, 27 insertions(+), 4 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/arch/powerpc/kvm-nested.rst b/Documentation/arch/powerpc/kvm-nested.rst
+index 630602a8aa00..5defd13cc6c1 100644
+--- a/Documentation/arch/powerpc/kvm-nested.rst
++++ b/Documentation/arch/powerpc/kvm-nested.rst
+@@ -546,7 +546,9 @@ table information.
+ +--------+-------+----+--------+----------------------------------+
+ | 0x1052 | 0x08  | RW |   T    | CTRL                             |
+ +--------+-------+----+--------+----------------------------------+
+-| 0x1053-|       |    |        | Reserved                         |
++| 0x1053 | 0x08  | RW |   T    | DPDES                            |
+++--------+-------+----+--------+----------------------------------+
++| 0x1054-|       |    |        | Reserved                         |
+ | 0x1FFF |       |    |        |                                  |
+ +--------+-------+----+--------+----------------------------------+
+ | 0x2000 | 0x04  | RW |   T    | CR                               |
+diff --git a/arch/powerpc/include/asm/guest-state-buffer.h b/arch/powerpc/include/asm/guest-state-buffer.h
+index 808149f31576..d107abe1468f 100644
+--- a/arch/powerpc/include/asm/guest-state-buffer.h
++++ b/arch/powerpc/include/asm/guest-state-buffer.h
+@@ -81,6 +81,7 @@
+ #define KVMPPC_GSID_HASHKEYR			0x1050
+ #define KVMPPC_GSID_HASHPKEYR			0x1051
+ #define KVMPPC_GSID_CTRL			0x1052
++#define KVMPPC_GSID_DPDES			0x1053
+ 
+ #define KVMPPC_GSID_CR				0x2000
+ #define KVMPPC_GSID_PIDR			0x2001
+@@ -110,7 +111,7 @@
+ #define KVMPPC_GSE_META_COUNT (KVMPPC_GSE_META_END - KVMPPC_GSE_META_START + 1)
+ 
+ #define KVMPPC_GSE_DW_REGS_START KVMPPC_GSID_GPR(0)
+-#define KVMPPC_GSE_DW_REGS_END KVMPPC_GSID_CTRL
++#define KVMPPC_GSE_DW_REGS_END KVMPPC_GSID_DPDES
+ #define KVMPPC_GSE_DW_REGS_COUNT \
+ 	(KVMPPC_GSE_DW_REGS_END - KVMPPC_GSE_DW_REGS_START + 1)
+ 
+diff --git a/arch/powerpc/include/asm/kvm_book3s.h b/arch/powerpc/include/asm/kvm_book3s.h
+index 3e1e2a698c9e..10618622d7ef 100644
+--- a/arch/powerpc/include/asm/kvm_book3s.h
++++ b/arch/powerpc/include/asm/kvm_book3s.h
+@@ -594,6 +594,7 @@ static inline u##size kvmppc_get_##reg(struct kvm_vcpu *vcpu)		\
+ 
+ 
+ KVMPPC_BOOK3S_VCORE_ACCESSOR(vtb, 64, KVMPPC_GSID_VTB)
++KVMPPC_BOOK3S_VCORE_ACCESSOR(dpdes, 64, KVMPPC_GSID_DPDES)
+ KVMPPC_BOOK3S_VCORE_ACCESSOR_GET(arch_compat, 32, KVMPPC_GSID_LOGICAL_PVR)
+ KVMPPC_BOOK3S_VCORE_ACCESSOR_GET(lpcr, 64, KVMPPC_GSID_LPCR)
+ KVMPPC_BOOK3S_VCORE_ACCESSOR_SET(tb_offset, 64, KVMPPC_GSID_TB_OFFSET)
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 35cb014a0c51..cf285e5153ba 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -4116,6 +4116,11 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	int trap;
+ 	long rc;
+ 
++	if (vcpu->arch.doorbell_request) {
++		vcpu->arch.doorbell_request = 0;
++		kvmppc_set_dpdes(vcpu, 1);
++	}
++
+ 	io = &vcpu->arch.nestedv2_io;
+ 
+ 	msr = mfmsr();
+@@ -4278,9 +4283,16 @@ static int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	if (kvmhv_on_pseries()) {
+ 		if (kvmhv_is_nestedv1())
+ 			trap = kvmhv_vcpu_entry_p9_nested(vcpu, time_limit, lpcr, tb);
+-		else
++		else {
+ 			trap = kvmhv_vcpu_entry_nestedv2(vcpu, time_limit, lpcr, tb);
+ 
++			/* Remember doorbell if it is pending  */
++			if (kvmppc_get_dpdes(vcpu)) {
++				vcpu->arch.doorbell_request = 1;
++				kvmppc_set_dpdes(vcpu, 0);
++			}
++		}
++
+ 		/* H_CEDE has to be handled now, not later */
+ 		if (trap == BOOK3S_INTERRUPT_SYSCALL && !nested &&
+ 		    kvmppc_get_gpr(vcpu, 3) == H_CEDE) {
+diff --git a/arch/powerpc/kvm/book3s_hv_nestedv2.c b/arch/powerpc/kvm/book3s_hv_nestedv2.c
+index 8e6f5355f08b..36863fff2a99 100644
+--- a/arch/powerpc/kvm/book3s_hv_nestedv2.c
++++ b/arch/powerpc/kvm/book3s_hv_nestedv2.c
+@@ -311,6 +311,10 @@ static int gs_msg_ops_vcpu_fill_info(struct kvmppc_gs_buff *gsb,
+ 			rc = kvmppc_gse_put_u64(gsb, iden,
+ 						vcpu->arch.vcore->vtb);
+ 			break;
++		case KVMPPC_GSID_DPDES:
++			rc = kvmppc_gse_put_u64(gsb, iden,
++						vcpu->arch.vcore->dpdes);
++			break;
+ 		case KVMPPC_GSID_LPCR:
+ 			rc = kvmppc_gse_put_u64(gsb, iden,
+ 						vcpu->arch.vcore->lpcr);
+@@ -543,6 +547,9 @@ static int gs_msg_ops_vcpu_refresh_info(struct kvmppc_gs_msg *gsm,
+ 		case KVMPPC_GSID_VTB:
+ 			vcpu->arch.vcore->vtb = kvmppc_gse_get_u64(gse);
+ 			break;
++		case KVMPPC_GSID_DPDES:
++			vcpu->arch.vcore->dpdes = kvmppc_gse_get_u64(gse);
++			break;
+ 		case KVMPPC_GSID_LPCR:
+ 			vcpu->arch.vcore->lpcr = kvmppc_gse_get_u64(gse);
+ 			break;
+diff --git a/arch/powerpc/kvm/test-guest-state-buffer.c b/arch/powerpc/kvm/test-guest-state-buffer.c
+index 4720b8dc8837..91ae660cfe21 100644
+--- a/arch/powerpc/kvm/test-guest-state-buffer.c
++++ b/arch/powerpc/kvm/test-guest-state-buffer.c
+@@ -151,7 +151,7 @@ static void test_gs_bitmap(struct kunit *test)
+ 		i++;
+ 	}
+ 
+-	for (u16 iden = KVMPPC_GSID_GPR(0); iden <= KVMPPC_GSID_CTRL; iden++) {
++	for (u16 iden = KVMPPC_GSID_GPR(0); iden <= KVMPPC_GSID_DPDES; iden++) {
+ 		kvmppc_gsbm_set(&gsbm, iden);
+ 		kvmppc_gsbm_set(&gsbm1, iden);
+ 		KUNIT_EXPECT_TRUE(test, kvmppc_gsbm_test(&gsbm, iden));
+-- 
+2.45.0
 
