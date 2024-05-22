@@ -1,156 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BF181AD0
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D63B405CC
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 10:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716374248; cv=none; b=YBVLrNiALPOvczuRA6r+qABFHAodMJhg4tLqWtvUnXkPykfTFh2Pz3g1PQwQlXZrrRHR5KbocXQc/xC/DN6ikZDoxTzQdt6pwu7LQ+bg0Ouy7fMFJBJCXMA+hPNnsHZ0Ix95j+UHRDos/nibt/DlpQ5wfcYF3yX9mo1EbTs1Ej8=
+	t=1716374331; cv=none; b=qeQXtZfeZpAwxJPoiZyHmQ5bROZXdGbba9CsPhTbngrULuOITkQiRe/TWioZM0tX3OF7DAECG4X6vbX3ddQ8TuYVJszNdsUw/dRixQhDiPaH35ScQTivrwhDgIXQTNitzZpi+VMVBc1Qb5yeorG3jg9FvkBXkcazUKek+/1v1YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716374248; c=relaxed/simple;
-	bh=185f0o6YDmbz706gEp2Bii2A0Jvx4E2azYwh4YHvJYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfslLp1lHa1vd/aMzUO3Y+v5Hy4Dliv9rmwOgq2inOAE4TixjoHtefSlz2LM+dlb4UJF9VHucb2ieEKYWAXalDcVf6MD1Qg9Lnvwpsb8NCFs1Z2brtTk3jOjTZP9W/lN2Lu3ANgvS2jR+Y1fCq2NdAbiJeurNnnS1tqCag0HxY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LUa7dBDq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716374331; c=relaxed/simple;
+	bh=dvZ4Vz1vz3Nu6kSflezdJ6kz7KHr3aXXTyHZga4SfAg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=m6yr+yvaVV+IMq8XMHUhJ2YfUl0OJj/zYAeZ74/Z4ToPCufqQICdD6UBXbdoKk4vYh8rRnsSnL6TL3GTisl7ROn2V/vFbc7fJEvwEztvYXBju0FEoTEC5Jbrti9G/8rclr+F5Mzd1OQCJ3weBvBy1Pdt8VTp0L9iFMxz1gq9BtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=t9ZHGlVb; arc=none smtp.client-ip=91.26.50.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LUa7dBDq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716374246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qjwu+eNI3aOAn+mZ1TrRaNTzlfb5xAKe2wZ2Oqksc9A=;
-	b=LUa7dBDqq2W2oNuTskBDJz+AVuRriYPKh6O5QIxuc13BJb80okyMyOSToUcld6ObjrbdO/
-	4RSYVxlSXbDD2vprI8gPj4yVj+UC57Me5loBsL0U1uG9c9IgF4+0E3sT9+o1LGp9VmHgxw
-	9/nikQU0z/LitTX6CJWqs04kpScRDhM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-368-VfUvVcVxMO2zVkq0ql-odQ-1; Wed,
- 22 May 2024 06:37:21 -0400
-X-MC-Unique: VfUvVcVxMO2zVkq0ql-odQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 755521C29EA7;
-	Wed, 22 May 2024 10:37:20 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.153])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 7D4F2C15BB1;
-	Wed, 22 May 2024 10:37:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 22 May 2024 12:35:54 +0200 (CEST)
-Date: Wed, 22 May 2024 12:35:51 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrei Vagin <avagin@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Jens Axboe <axboe@kernel.dk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] seccomp: release task filters when the task exits
-Message-ID: <20240522103531.GA28435@redhat.com>
-References: <20240514175551.297237-1-avagin@google.com>
- <20240514175551.297237-3-avagin@google.com>
- <20240515125113.GC6821@redhat.com>
- <CAEWA0a5dBvRwGAnztL56i=JV-WGGiaTd-GdJYdOxZmq1c+bdpg@mail.gmail.com>
- <20240516093427.GA19105@redhat.com>
- <20240516130913.GB19105@redhat.com>
- <CAEWA0a7NGbv32RG3DE=RwuvEUZsjQsfAB=i1f82Rr5oj8drOPA@mail.gmail.com>
- <CAEWA0a6Z+jGKtz1Bdc2tP4YwR6u1zeEhoYY1hYZqdxCZMcgjcg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="t9ZHGlVb"
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
+	q=dns/txt; i=@phytec.de; t=1716373418; x=1718965418;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=dvZ4Vz1vz3Nu6kSflezdJ6kz7KHr3aXXTyHZga4SfAg=;
+	b=t9ZHGlVbPtK/P3ecnsXvBuMC+GHwRRaH4PWN6oznpLN1ejtrpx3ibd6+ad0mTHsX
+	qVYeyWDZdLXQCg+naXTY6jMZNRkSKPS/2gxGI3miX3p4LgsoylOveJgioCmfOzvQ
+	q2/yQ1vKPvyZtEsdrlB8MIcmxeAl6I26RfrnA8KK4fs=;
+X-AuditID: ac14000a-03e52700000021bc-a5-664dc7aa83ff
+Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
+	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 32.42.08636.AA7CD466; Wed, 22 May 2024 12:23:38 +0200 (CEST)
+Received: from Berlix.phytec.de (172.25.0.12) by Berlix.phytec.de
+ (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Wed, 22 May
+ 2024 12:23:37 +0200
+Received: from Berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4]) by
+ berlix.phytec.de ([fe80::197e:d26b:2ca:c7b4%4]) with mapi id 15.01.2507.006;
+ Wed, 22 May 2024 12:23:37 +0200
+From: Dominik Haller <D.Haller@phytec.de>
+To: "Laurent.pinchart@ideasonboard.com" <Laurent.pinchart@ideasonboard.com>,
+	"andrzej.hajda@intel.com" <andrzej.hajda@intel.com>,
+	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"tomi.valkeinen@ideasonboard.com" <tomi.valkeinen@ideasonboard.com>,
+	"jyri.sarha@iki.fi" <jyri.sarha@iki.fi>, "rfoss@kernel.org"
+	<rfoss@kernel.org>, "airlied@gmail.com" <airlied@gmail.com>,
+	"a-bhatia1@ti.com" <a-bhatia1@ti.com>, "jonas@kwiboo.se" <jonas@kwiboo.se>,
+	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>, "mripard@kernel.org"
+	<mripard@kernel.org>, "maarten.lankhorst@linux.intel.com"
+	<maarten.lankhorst@linux.intel.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC: "devarsht@ti.com" <devarsht@ti.com>, "u-kumar1@ti.com" <u-kumar1@ti.com>,
+	"sam@ravnborg.org" <sam@ravnborg.org>, "j-choudhary@ti.com"
+	<j-choudhary@ti.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "j-luthra@ti.com" <j-luthra@ti.com>,
+	"boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nm@ti.com"
+	<nm@ti.com>, "vigneshr@ti.com" <vigneshr@ti.com>,
+	"kieran.bingham+renesas@ideasonboard.com"
+	<kieran.bingham+renesas@ideasonboard.com>, "treding@nvidia.com"
+	<treding@nvidia.com>, "praneeth@ti.com" <praneeth@ti.com>
+Subject: Re: [EXTERNAL] [PATCH 3/7] drm/bridge: cdns-dsi: Wait for Clk and
+ Data Lanes to be ready
+Thread-Topic: [EXTERNAL] [PATCH 3/7] drm/bridge: cdns-dsi: Wait for Clk and
+ Data Lanes to be ready
+Thread-Index: AQHao7lwY8evdberYUusC/uCJpv4BbGi+zyA
+Date: Wed, 22 May 2024 10:23:37 +0000
+Message-ID: <f45daf0d6c0ab8a225277621b6e6b373929d145a.camel@phytec.de>
+References: <20240511153051.1355825-1-a-bhatia1@ti.com>
+	 <20240511153051.1355825-4-a-bhatia1@ti.com>
+In-Reply-To: <20240511153051.1355825-4-a-bhatia1@ti.com>
+Accept-Language: en-DE, de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4A62AE1C102C2C4C8F0DEFD6D381EC3C@phytec.de>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEWA0a6Z+jGKtz1Bdc2tP4YwR6u1zeEhoYY1hYZqdxCZMcgjcg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUxTQRiFnbtTrY6lygAKETVRI+BCzDy4vYhjjAkuT2qCDb1YUkQouAAv
+	RBRLcSmijVRAK1URcSugYFqMYAIIDYkWUBZxC9gEBAVkUUQv1cjb958zZ/4zyQi0wsn6CTFx
+	SaIuThUbxMmYEt8Zs4KLa3dErxo/OQdbc29RuK71OoW7CgcZXPXiPIMnH2XT+JajhMGu4X4O
+	91pyaewwfOBwz9V7ANf3NjP43WkHjb+1ZAGcmW3l8asneRy2fC1ncEbmTRb3V7YB3DvqpPDP
+	D24OXyh4w+KisXKAG/OHedz+YzYu681msclxmcaTzgF+sz8pKEklju/XGFJp7uTJFX0uS2qG
+	LQwptLspYivO5Eid8SVFOlrsHCmo30m6smopcjb9C0espmaOlDakktrXjykyaAuIgHtl69Vi
+	bMxRURe68YBMk28qZeKLfI/feKvn04ALGYCXgGAYcg80sQYgExTQSqFThU95z9AFUFFx91/n
+	AUBW42dainBwOXJfap8ylNDFoneDfZQ00HCMQcbJZ5x0yhtGIeNoDiOxEqrR6QwD5eE1aLSi
+	m5eYgUtR2ZUcYACCIIfhaMIy1UkBo9H1niFekr0gRhfPrJRkAJegdvc4kJiGPsjWPcJ6ngCR
+	1d5Ee3gecn/89VcPRHVtJkq6hv7T+f6TUE8Uo8oTWZyHF6GLWe+nysjhXFSf+4kxAh/ztA3m
+	/2nztLR5Wto8LX0NsMVAcSgmSivqYrQh8ZrkJDEqRC3agPTllDNkFeBcHqkGlACqARLoIKV8
+	3+0d0Qq5WpWcIuoOR+qOxIqJ1cBfYIJ85Hf0u0UFPKhKErWiGC/q/rmU4OWXBowdC2rsloQN
+	8aW79tdMKI89vH33uBqFrdt6KXV+YPDXh8Pc9pDFi3HEsgOmgI/Odi9X1RDvbmxYuPmsc0Cv
+	fewd3jpSvsdPtY4P8H7u79A/DRuQ+4+DyFmmLWpNxejMsWf1CTVrt5WlG/uqNqXY7mbcdLfV
+	jSySa7jVnc61rh9RQUyiRrV6Ba1LVP0Gv6vKkGADAAA=
 
-On 05/22, Andrei Vagin wrote:
->
-> > On Thu, May 16, 2024 at 6:10 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> > >
-> > > On 05/16, Oleg Nesterov wrote:
-> > > >
-> > > > On 05/15, Andrei Vagin wrote:
-> > > > >
-> > > > > seccomp_sync_threads and seccomp_can_sync_threads should be considered too.
-> > > >
-> > > > Yes. But we only need to consider them in the multi-thread case, right?
-> > > > In this case exit_signals() sets PF_EXITING under ->siglock, so they can't
-> > > > miss this flag, seccomp_filter_release() doesn't need to take siglock.
-> > >                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->
-> PF_EXITING is set without holding ->siglock if tsk->signal has the
-> SIGNAL_GROUP_EXIT flag. I think it can be a case when one thread is in
-> seccomp_sync_threads and others are exiting.
-
-Yes, I forgot this.
-
-> > > Hmm. I thought we have something smp_mb__after_unlock(), but it seems we
-> > > don't. So we can't add a fast-path
->
-> We have smp_mb__after_unlock_lock in include/linux/rcupdate.h.
-
-This is another thing.
-
-But sorry for confusion, this doesn't really matter, we could you a plain mb().
-I mean, I was thinking about something like
-
-	seccomp_filter_release:
-
-		smp_mb();
-		if (!READ_ONCE(tsk->seccomp.filter))
-			return;
-
-		spin_lock_irq(siglock);
-		orig = tsk->seccomp.filter;
-		...
-
-but then seccomp_sync_threads() should do something like
-
-
-		orig = READ_ONCE(thread->seccomp.filter);
-
-		smp_store_release(&thread->seccomp.filter,
-				  caller->seccomp.filter);
-
-		smp_mb(); // pairs with mb() in seccomp_filter_release()
-
-		if (READ_ONCE(thread->flags) & PF_EXITING) {
-			WRITE_ONCE(thread->seccomp.filter, orig);
-			continue;
-		}
-		__seccomp_filter_release(orig);
-
-		...
-
-too subtle even _if_ correct, and I am not sure at all this would be correct.
-
-> > > Cough... Now that I look at seccomp_can_sync_threads() I think it too
-> > > doesn't need the PF_EXITING check.
-> > >
-> > > If it is called before seccomp_filter_release(), this doesn't really
-> > > differ from the case when it is called before do_exit/exit_signals.
-> > >
-> > > If it is called after seccomp_filter_release(), then is_ancestor()
-> > > must be true.
-> > >
-> > > But perhaps I missed something, I won't insist, up to you.
-> > >
->
-> You are right, this check isn't required in seccomp_can_sync_threads, but
-> I decided that it is better to be consistent with seccomp_sync_threads.
-
-OK, agreed.
-
-Oleg.
-
+SGkgQXJhZGh5YSwNCg0KdGhpcyBmaXhlcyB0aGUgY29sb3Itc2hpZnQgYnVnIG9uIG91ciBzZXR1
+cDoNCmo3MjFzMiAtPiB0aSxzbjY1ZHNpODMgLT4gZWR0LGV0bWwxMDEwZzNkcmENCg0KDQoNClRl
+c3RlZC1ieTogRG9taW5payBIYWxsZXIgPGQuaGFsbGVyQHBoeXRlYy5kZT4NCg0KDQpPbiBTYXQs
+IDIwMjQtMDUtMTEgYXQgMjE6MDAgKzA1MzAsIEFyYWRoeWEgQmhhdGlhIHdyb3RlOg0KPiBPbmNl
+IHRoZSBEU0kgTGluayBhbmQgRFNJIFBoeSBhcmUgaW5pdGlhbGl6ZWQsIHRoZSBjb2RlIG5lZWRz
+IHRvIHdhaXQNCj4gZm9yIENsayBhbmQgRGF0YSBMYW5lcyB0byBiZSByZWFkeSwgYmVmb3JlIGNv
+bnRpbnVpbmcgY29uZmlndXJhdGlvbi4NCj4gVGhpcyBpcyBpbiBhY2NvcmRhbmNlIHdpdGggdGhl
+IERTSSBTdGFydC11cCBwcm9jZWR1cmUsIGZvdW5kIGluIHRoZQ0KPiBUZWNobmljYWwgUmVmZXJl
+bmNlIE1hbnVhbCBvZiBUZXhhcyBJbnN0cnVtZW50J3MgSjcyMUUgU29DWzBdIHdoaWNoDQo+IGhv
+dXNlcyB0aGlzIERTSSBUWCBjb250cm9sbGVyLg0KPiANCj4gSWYgdGhlIHByZXZpb3VzIGJyaWRn
+ZSAob3IgY3J0Yy9lbmNvZGVyKSBhcmUgY29uZmlndXJlZCBwcmUtbWF0dXJlbHksDQo+IHRoZSBp
+bnB1dCBzaWduYWwgRklGTyBnZXRzIGNvcnJ1cHQuIFRoaXMgaW50cm9kdWNlcyBhIGNvbG9yLXNo
+aWZ0IG9uDQo+IHRoZQ0KPiBkaXNwbGF5Lg0KPiANCj4gQWxsb3cgdGhlIGRyaXZlciB0byB3YWl0
+IGZvciB0aGUgY2xrIGFuZCBkYXRhIGxhbmVzIHRvIGdldCByZWFkeQ0KPiBkdXJpbmcNCj4gRFNJ
+IGVuYWJsZS4NCj4gDQo+IEZpeGVzOiBlMTkyMzM5NTVkOWUgKCJkcm0vYnJpZGdlOiBBZGQgQ2Fk
+ZW5jZSBEU0kgZHJpdmVyIikNCj4gU2lnbmVkLW9mZi1ieTogQXJhZGh5YSBCaGF0aWEgPGEtYmhh
+dGlhMUB0aS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jYWRlbmNlL2Nk
+bnMtZHNpLWNvcmUuYyB8IDEzICsrKysrKysrKysrKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMiBp
+bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9jYWRlbmNlL2NkbnMtZHNpLWNvcmUuYw0KPiBiL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvY2FkZW5jZS9jZG5zLWRzaS1jb3JlLmMNCj4gaW5kZXggNTU3YjAzN2JiYzY3Li4w
+NWQyZjRjYzUwZGEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2FkZW5j
+ZS9jZG5zLWRzaS1jb3JlLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jYWRlbmNl
+L2NkbnMtZHNpLWNvcmUuYw0KPiBAQCAtNzYxLDcgKzc2MSw3IEBAIHN0YXRpYyB2b2lkIGNkbnNf
+ZHNpX2JyaWRnZV9lbmFibGUoc3RydWN0DQo+IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4gIAlzdHJ1
+Y3QgcGh5X2NvbmZpZ3VyZV9vcHRzX21pcGlfZHBoeSAqcGh5X2NmZyA9ICZvdXRwdXQtDQo+ID5w
+aHlfb3B0cy5taXBpX2RwaHk7DQo+ICAJdW5zaWduZWQgbG9uZyB0eF9ieXRlX3BlcmlvZDsNCj4g
+IAlzdHJ1Y3QgY2Ruc19kc2lfY2ZnIGRzaV9jZmc7DQo+IC0JdTMyIHRtcCwgcmVnX3dha2V1cCwg
+ZGl2Ow0KPiArCXUzMiB0bXAsIHJlZ193YWtldXAsIGRpdiwgc3RhdHVzOw0KPiAgCWludCBubGFu
+ZXM7DQo+ICANCj4gIAlpZiAoV0FSTl9PTihwbV9ydW50aW1lX2dldF9zeW5jKGRzaS0+YmFzZS5k
+ZXYpIDwgMCkpDQo+IEBAIC03NzgsNiArNzc4LDE3IEBAIHN0YXRpYyB2b2lkIGNkbnNfZHNpX2Jy
+aWRnZV9lbmFibGUoc3RydWN0DQo+IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4gIAljZG5zX2RzaV9p
+bml0X2xpbmsoZHNpKTsNCj4gIAljZG5zX2RzaV9oc19pbml0KGRzaSk7DQo+ICANCj4gKwkvKg0K
+PiArCSAqIE5vdyB0aGF0IHRoZSBEU0kgTGluayBhbmQgRFNJIFBoeSBhcmUgaW5pdGlhbGl6ZWQs
+DQo+ICsJICogd2FpdCBmb3IgdGhlIENMSyBhbmQgRGF0YSBMYW5lcyB0byBiZSByZWFkeS4NCj4g
+KwkgKi8NCj4gKwl0bXAgPSBDTEtfTEFORV9SRFk7DQo+ICsJZm9yIChpbnQgaSA9IDA7IGkgPCBu
+bGFuZXM7IGkrKykNCj4gKwkJdG1wIHw9IERBVEFfTEFORV9SRFkoaSk7DQo+ICsNCj4gKwlXQVJO
+X09OX09OQ0UocmVhZGxfcG9sbF90aW1lb3V0KGRzaS0+cmVncyArIE1DVExfTUFJTl9TVFMsDQo+
+IHN0YXR1cywNCj4gKwkJCQkJc3RhdHVzICYgdG1wLCAxMDAsIDApKTsNCj4gKw0KPiAgCXdyaXRl
+bChIQlBfTEVOKGRzaV9jZmcuaGJwKSB8IEhTQV9MRU4oZHNpX2NmZy5oc2EpLA0KPiAgCSAgICAg
+ICBkc2ktPnJlZ3MgKyBWSURfSFNJWkUxKTsNCj4gIAl3cml0ZWwoSEZQX0xFTihkc2lfY2ZnLmhm
+cCkgfCBIQUNUX0xFTihkc2lfY2ZnLmhhY3QpLA0K
