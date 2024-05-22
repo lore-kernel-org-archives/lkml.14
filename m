@@ -1,93 +1,99 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F4513E032
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 14:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C8B1422A5
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 14:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716387084; cv=none; b=ZVj8R9hD4Tr5jHmz9UGgTDYkaZZcxkw4PQcHC/zYB5MzXDCojEzVcCoGFI7W2wGwOXyQfRW6eDMviG2zP0TtLeRy+4FftjvV2YpBzI3JQI4PYXapCQuWCBL3XDIFGVNP1F0RruX5ChbNj6zl1501hl6wqAVrC8eE2BP8pPAloEA=
+	t=1716387091; cv=none; b=MnJr1rZX60AeYaJHwvlxp0/9Qc/YSvHrzapHXuiw9u4ScgBycH8VFdmTWCxtMvJ4t6yXIqlMtGy+BZ7QmVVL6kEqxOW3jm1GJWEj+uP1oSJSziUqgvpbAUNET6uG4zaGcN3yYZFnqzWsM1MUqe0XMx+k0F7JmWRTozQU6p7Ma9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716387084; c=relaxed/simple;
-	bh=mB+z1WJTnDOP5umMPhoDS2Hqz2swaB21VPGIyfjdkYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uFzFWueOr0RE0yofEdO0K1PUkX6AVUYrRYHfw8dfkl9hUq+2xzh5VpcAj0sPJvAtP8oA6/mRdKFNSqO7oeIuIVzabm/ao3EIOC6F/aPmmc/fA+xeZm8rISslbFHTbVUqT7OPNkORfRjeglKiTfrrtolJ+V3RxsIgrZfgs6PrSek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XeRZYuNU; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1716387091; c=relaxed/simple;
+	bh=NN3bGfD5HUdZVm9jelXlObF+mJFT5hj3fmxuh8giNFs=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=qyqHIstvJJBBHBcUJ1CItlh5fKcuyyDZxKGJMjJlInW8xgFLPDKU772RF3AUG90qZCEOaEMNwgEPMf81KApW6HN99CTkU+f7bHuz2CKxlP6eVC5vyBldibZi2C45yyKFvY3YxkBYQWf6vt9qobuysZIBcD1G1CTyOV+xTrLT/hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tT/4bmVd; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XeRZYuNU"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42012c85e61so69205e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 07:11:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716387081; x=1716991881; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QM+xcKa0epHmHEloutgnT4H/ozOswfIIuchelOYu74w=;
-        b=XeRZYuNUjCewlPaBVkGagf3uWj4CtvfxBPJxsLQJgB6x44GJXNA+50oQzPpWi7inIq
-         6qXgE5QoukoCpqifOGMsX5CtQgdCGtOLWJcQkQXXAhSVMM4Kk6eITRvAN08KB4gcYbiO
-         GXUHfT+MLDI/4CtEI5RqjkUohxTdlsuqfEbdpi6mMTzoEHv2xU/N5IGVv7EvcKwICNy1
-         k3gS11sYoKv993oNktYvEI9GMrJDAi+Tssqs6LCeQuAg9ulbymshszmGBPR5lsuh73SU
-         nlayXy+mnjc5K1zLgeOPge4ajwaCt2xz/LSElUzixrrWUQ02T2eY6J7X18sXe59P+JPg
-         zg9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716387081; x=1716991881;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QM+xcKa0epHmHEloutgnT4H/ozOswfIIuchelOYu74w=;
-        b=YeceHecHpf56xzM6B/qS5TGgaCDLkDJLMdO/8JeR0QoRb0uqjvRcAWiuyX76pZCpcZ
-         qhpFWpCzPIRhtd7RJ/gUdNgdgHY8AzxVwnX3y2S/KDR70k9nuYUn8kjsBnTMpMza77k8
-         JuJ7fk0DZKn5aZ8WCdGRDjia2SnNZ+fXwryNcgr25lDaqHbR6vhptfCjThg8Cm+QkroY
-         s48GbwHF79I3z3aQ+A0wEqp0Dr3Nw3quTJ1SR+HogmOEaADxT7nRza5zsdX/OXXXtH/2
-         d6XxqLqVFJ4F8D7OqcttvdnIcJ0TXXqZqs9A5R1sP/gofPPw1zJguafOKfLf94b5zPUK
-         2LDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Av9fvXqCxgIomR5QDcCNmFgEm/uzaYAYvSNssMH7YwUWhfoMJxZs7O1iMZ5t0FrhHPWrMUWG09zYhUno51I0KqsTVsICuuGzw1uE
-X-Gm-Message-State: AOJu0YzzyGebLI38Rw1420Zr97w7LFxarPxqxJK6rw8Iu3bRqwjDMfMq
-	8LKAWe+k1d8DgWlURqheKgg7FM5ewyPZS4fPkNUA1BbZMDeUlXONNPJQ5vWitw==
-X-Google-Smtp-Source: AGHT+IEJ3MhUQcTeh130i9WzgPZysqUdwC1FQQtsNs5WxRtT4pVNSGX3TbtXm1lxCv6uk6PzFEy6rA==
-X-Received: by 2002:a05:600c:1e84:b0:41f:a15d:2228 with SMTP id 5b1f17b1804b1-420fc411ee8mr2068775e9.0.1716387081018;
-        Wed, 22 May 2024 07:11:21 -0700 (PDT)
-Received: from google.com (49.240.189.35.bc.googleusercontent.com. [35.189.240.49])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a78e8sm34775615f8f.61.2024.05.22.07.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 07:11:20 -0700 (PDT)
-Date: Wed, 22 May 2024 14:11:16 +0000
-From: Brendan Jackman <jackmanb@google.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: {READ,WRITE}_ONCE unsynchronized
- zone data
-Message-ID: <Zk39BD7NPbP7WJOz@google.com>
-References: <20240521-mm-hotplug-sync-v1-0-6d53706c1ba8@google.com>
- <20240521-mm-hotplug-sync-v1-2-6d53706c1ba8@google.com>
- <9c23d824-f2c7-4f9a-ade2-e8dd3a0d30af@redhat.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tT/4bmVd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1716387081; bh=uRU8T4+XNtOKOsNn+AMyx5lkYAGIGFMDmfGPdOTBEns=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=tT/4bmVdTEtPObKfC9BeaFOa2xucNsH1aI374QM0NmnL/vty9skU1hHYPt4ifpp2/
+	 4t25I0Rw+dKC3aNsYBvjpUEZOFEcdztaezZkvbZ5rD41oamd2gBDCAvPEtAP5yplRI
+	 c/NB9Ll9ChLYFWWuYGv9NUt7jUb9xyfCKppIDjjA=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
+	id 149A4881; Wed, 22 May 2024 22:05:09 +0800
+X-QQ-mid: xmsmtpt1716386709ti7wb44jx
+Message-ID: <tencent_DD0A3C9B37F697D637C04A3A7509762F6609@qq.com>
+X-QQ-XMAILINFO: M3L8BpKHwdnKWUUxNVKzJZ2FMNBk/gajo5UZHciuJPHqIFhWjgpNFcpj4mmTk+
+	 q83bn8QcqcyKllvRgBZj+yRdED9XCiw2I65F/bzErf0svFg54l3Kyrsn6EQBDAuIDe3QR4f53L7H
+	 Xmz6tqM5onJDqANXLaT7SyO0lKiX9PPs9f7/lR1PoK7/niXadJxCMBGYKISrrPtRp/41Lg7nri9F
+	 B5l53d9+bBvlVp80sKmJ+DdeOKihbncRC/nLoKOUcNzJqQCfPK8+K8razRvMSRkfDKbmPTDQxBfL
+	 EQqgx3xa5xSzrAova6mnB0+gKM4YMeIlgnHT/q4dUGt9NWzRURYgp7K2L2cbIJL8taOU6oyU41kk
+	 l8Hx7A9gJLYpKLrBKtHXjLWGFNBV4DvB8T4+Hq5YEoWGXbJ1zziHcSHtlR0eiDgaCM9ds9y+86oU
+	 kuNbg4Zsd1ie5fKMUhUTg7pKgeiSRS1unTkFeuCzMbiFkCswiELPqATdMdZNBoCO5Vd4E61Bhm1l
+	 vBempRXkXzIOV7Xw+ZKBFN6yDrvrTNWXFVW/jY061ggkPI8CS86ZbpcRoDdjoKwO43Rh8J3UjSir
+	 YUP2wi3gCOBjrspT6DpPRepb6RUDAsTLbWeUpWoQbd1yfmErqnXEcEx3sBa9BvW3kafEAkFmK8nS
+	 geOLO1wqWuewVfp0jI6vJyjPwdJe64kHLFqTJxC1pXjVpJJFsNQvI5CHIReAll6Excw4seg6T6HT
+	 GhsMEh5Ib4sF3Qga4bKVihYGofXyMFmCpFomwTUfGd/4ZCcnm+Qti08Ap31F9SHAR2lkWZJZ8gk6
+	 6sxSvIqvDdHfcGioA5SxG+qvX2jgB2WxpXCRmgYT255tFY5Zi2Y1ysJrLp6voiScxl5Gyv+HumIP
+	 OvCIrhPuRhuNBj7HIyBO1JNfyqAsG71bqKsM7Ia6ashKk6iIm7u2DJlC4gd66Fx/DgMxIIODUt8n
+	 CXWWlqwlhAHAa+WpzHvS0My/4T1Fnu
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d2125fcb6aa8c4276fd2@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] general protection fault in iter_file_splice_write
+Date: Wed, 22 May 2024 22:05:10 +0800
+X-OQ-MSGID: <20240522140509.2406912-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000002fd2de0618de2e65@google.com>
+References: <0000000000002fd2de0618de2e65@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c23d824-f2c7-4f9a-ade2-e8dd3a0d30af@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024 at 04:05:12PM +0200, David Hildenbrand wrote:
-> On 21.05.24 14:57, Brendan Jackman wrote:
-> > +	return zone->zone_start_pfn + READ_ONCE(zone->spanned_pages);
-> 
-> It's weird to apply that logic only to spanned_pages, whereby zone_start_pfn
-> can (and will) similarly change when onlining/offlining memory.
-> 
-Oh, yep. For some reason I had decided that zone_start_pfn was fixed
-but that is (actually very obviously) not true!
+please test null ptr in iter_file_splice_write
 
-Will take a closer look and extend v2 to cover that too, unless
-someone finds a reason this whole patch is nonsense.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 33e02dc69afb
 
-Thanks for the review.
+diff --git a/fs/splice.c b/fs/splice.c
+index 60aed8de21f8..a6b44c10b08c 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -751,16 +751,25 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ 
+ 		/* dismiss the fully eaten buffers, adjust the partial one */
+ 		tail = pipe->tail;
+-		while (ret) {
++		n = 0;
++		while (ret > 0 && n < nbufs) {
+ 			struct pipe_buffer *buf = &pipe->bufs[tail & mask];
+-			if (ret >= buf->len) {
++			printk("ret: %d, nbufs: %d,  buf len: %lu, n: %d, %s\n", ret, nbufs, buf->len, n,  __func__);
++			n++;
++			if (!buf->len) {
++				tail++;
++				continue;
++			}
++			if (ret >= (ssize_t)buf->len) {
+ 				ret -= buf->len;
++				printk("ret: %d, nbufs: %d,  buf len: %lu, n: %d, %s\n", ret, nbufs, buf->len, n,  __func__);
+ 				buf->len = 0;
+ 				pipe_buf_release(pipe, buf);
+ 				tail++;
+ 				pipe->tail = tail;
+ 				if (pipe->files)
+ 					sd.need_wakeup = true;
++				BUG_ON(1);
+ 			} else {
+ 				buf->offset += ret;
+ 				buf->len -= ret;
+
