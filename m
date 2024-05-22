@@ -1,98 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout04.t-online.de (mailout04.t-online.de [194.25.134.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF3A1420D2;
-	Wed, 22 May 2024 18:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071BA145B1D;
+	Wed, 22 May 2024 18:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.25.134.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716403018; cv=none; b=a/xmiSZ5BykzE8nXoa3GtQjkqQTQaeYq70X/0Wx15toYMJrht7APxcquNS6cgqZObAAiQT9eX0XXS3C8Ev8JPJIHy/PfBz0kR5NpHGkpxMwZf1tSBiWSikWVSmTH5Z02t+tp/Nr6quOAcpcBG2BP/9cnGHyJ2i0sslKSrE/2xyM=
+	t=1716403132; cv=none; b=K8eeR1VN55t1m0EWNwFvJBjATVqmFFt2Tm6mmgcdqMjIrfnXDN23Q1c6Lh8vux8ZiwtfyXArCt5gH4KjixQlHU1tItZWUCHidEnFGfhgSxr6V19/7an+PTH40HHjgMwx2bomPvlKI2WzJs0Zoy+5TKbSx7aQC4ZcmF04ILfE9uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716403018; c=relaxed/simple;
-	bh=pm2LG6gbp5LE1G0v9capLG0PDlIdlD4dHLPWVqoM9FQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GAw2qE7YqxUCzEzKnr7asQ7GHmC1ZSLG4QFZZetb3BJqYOpbrhSY8qknzJgpGCiOtQrZmvjWMjVadCLl8lInIjkIxfEoDhybn/TeAHl6pIQ8dY4vKC7pIxOcY9gU0OY1E/aoDLMTb/5KXovpVb6cCbB+sERQ/fOa6Z5c4aRviPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i222VVEL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i222VVEL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79659C32781;
-	Wed, 22 May 2024 18:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716403017;
-	bh=pm2LG6gbp5LE1G0v9capLG0PDlIdlD4dHLPWVqoM9FQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i222VVELKO76b1cxP5EzXelJXJhsTmDw1T3QE/sKjy3vdB3BChX8VXvn6Z+HYPrkZ
-	 3W8UF997qT9s+tuonalvNU64CFdwb/sMewdOtzR7Ecyj0hB2bLm9WMXnJQDu4mOCfB
-	 8OtQ+Bkidkkegm/bNzNYzLW3vrKn3qgLkFHifRLSrNt5pgSP8bd0L3rnlmhzl31Ek9
-	 TvIsB41yST5ADHdkoqD5pqGoS0f+WrxJF457pNmMR1XRBekwWh+vIcDlpBvvLlPxpD
-	 xL0bKjEEnOlb+YmY2ggraUrG52p3EPKj7ilpZERyXm5UaUGBliPwRHFdk+UZeNXpeM
-	 H8rCmvMR+ZcOg==
-Date: Wed, 22 May 2024 19:36:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: DT schema bindings conversion mentorships (was Re: [PATCH v5]
- ASoC: dt-bindings: omap-mcpdm: Convert to DT schema)
-Message-ID: <20240522-unpleased-morally-4dfdee2193af@spud>
-References: <20240522075245.388-1-bavishimithil@gmail.com>
- <0594944d-c158-4840-8724-b3f2edaab1ca@gmail.com>
- <4f722e53-011f-4176-b6af-080522165007@kernel.org>
- <bb44d588-9316-4509-b545-9bbaa2d240cb@gmail.com>
- <3c6c5be1-fb8e-4bf0-9f58-cfb09672e8c1@kernel.org>
- <d999bc26-9bb1-44a8-92a3-bcbe14c5a1c3@gmail.com>
- <58ada5ce-5c02-4ff5-8bdd-d6556c9d141f@kernel.org>
- <60989c44-6d16-4698-bf3f-b3c5dcd7b3e0@kernel.org>
+	s=arc-20240116; t=1716403132; c=relaxed/simple;
+	bh=GgTdux9gYeqRKqacAiPHtF3+mAjRSMmb0GCGIwvLtfY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=taMaHdibzxWze1h9LOADiNIWm7Oz1ph/ffAcOr/D57E5Rl0GncZusbyJ0xaLY3qPauaaOj9WJ9DIjo3dMEdtwuA/agTHbEw2kAk6twLrCtpawr1imDb+lLa4aT6NVJP3KuZB3Or7gu68ETo3IWdo29aLCYCj2HQWYFlxf1MqV1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de; spf=pass smtp.mailfrom=t-online.de; arc=none smtp.client-ip=194.25.134.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-online.de
+Received: from fwd85.aul.t-online.de (fwd85.aul.t-online.de [10.223.144.111])
+	by mailout04.t-online.de (Postfix) with SMTP id 8226B84B3;
+	Wed, 22 May 2024 20:29:13 +0200 (CEST)
+Received: from dino2.dhome ([77.47.123.226]) by fwd85.t-online.de
+	with (TLSv1.3:TLS_AES_256_GCM_SHA384 encrypted)
+	esmtp id 1s9qi6-0rGXNR0; Wed, 22 May 2024 20:29:10 +0200
+From: Alois Fertl <a.fertl@t-online.de>
+To: a.zummo@towertech.it
+Cc: alexandre.belloni@bootlin.com,
+	wens@csie.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org,
+	linux-rtc@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	andre.przywara@arm.com,
+	Alois Fertl <a.fertl@t-online.de>
+Subject: [PATCH v4 1/1] drivers/rtc: rtc-sun6i: AutoCal Internal OSC
+Date: Wed, 22 May 2024 20:28:26 +0200
+Message-Id: <20240522182826.6824-1-a.fertl@t-online.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jx+3ZNiSsvvmJVwf"
-Content-Disposition: inline
-In-Reply-To: <60989c44-6d16-4698-bf3f-b3c5dcd7b3e0@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-TOI-EXPURGATEID: 150726::1716402550-F28FED0F-6FFADA25/0/0 CLEAN NORMAL
+X-TOI-MSGID: 45263082-cff6-49c7-a496-925ce572f1eb
 
+I have a M98-8K PLUS Magcubic TV-Box based on the Allwinner H618 SOC.
+On board is a Sp6330 wifi/bt module that requires a 32kHz clock to
+operate correctly. Without this change the clock from the SOC is
+~29kHz and BT module does not start up. The patch enables the Internal
+OSC Clock Auto Calibration of the H616/H618 which than provides the
+necessary 32kHz and the BT module initializes successfully.
+Add a flag and set it for H6.
+Also the code is developed on the H618 board it only modifies the H6 as
+there is no support for H616/H618 in the current code.
 
---jx+3ZNiSsvvmJVwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Alois Fertl <a.fertl@t-online.de>
+---
 
-On Wed, May 22, 2024 at 07:05:24PM +0200, Krzysztof Kozlowski wrote:
+v1->v2
+- add flag and activate for H6 AND H616
 
-> Dear Daniel,
->=20
-> I see some contributions regarding Devicetree bindings which look like
-> efforts of some mentorship programs.
+v2->v3
+- correct findings from review
 
-I noticed that the 2024 dt-bindings gsoc wiki suggests using the wrong
-dual license for bindings:
-https://wiki.linuxfoundation.org/gsoc/2024-gsoc-device-tree-bindings#propos=
-al_1convert_device_tree_bindings_to_dt_schema
+v3->v4
+- adjust to mainline tree
 
-The correct dual license is "GPL-2.0-only OR BSD-2-Clause", not
-BSD-3-Clause.
+I have also tried to test this using the new driver in sunxi-ng
+manually injecting the reverted patch
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=60d9f050da63b
+The code in drivers/clk/sunxi-ng/ccu-sun6i-rtc.c is being called and it
+initializes the relevant registers to the same values as the old driver,
+but the change ends up with a system that often hangs during booting and
+only ocasionally reaches the login state (one out of 10).
+The main difference I see adhoc is that the old drivers init is done
+using CLK_OF_DECLARE_DRIVER so initialization is done very early.
+The new driver does the initialisation via probe which is quite some
+time later.
+Can't tell if this is the cause for the problems.
 
-Thanks,
-Conor.
+---
+ drivers/rtc/rtc-sun6i.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---jx+3ZNiSsvvmJVwf
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+index 8e0c66906..57aa52d3b 100644
+--- a/drivers/rtc/rtc-sun6i.c
++++ b/drivers/rtc/rtc-sun6i.c
+@@ -42,6 +42,11 @@
+ 
+ #define SUN6I_LOSC_CLK_PRESCAL			0x0008
+ 
++#define SUN6I_LOSC_CLK_AUTO_CAL			0x000c
++#define SUN6I_LOSC_CLK_AUTO_CAL_16MS		BIT(2)
++#define SUN6I_LOSC_CLK_AUTO_CAL_ENABLE		BIT(1)
++#define SUN6I_LOSC_CLK_AUTO_CAL_SEL_CAL		BIT(0)
++
+ /* RTC */
+ #define SUN6I_RTC_YMD				0x0010
+ #define SUN6I_RTC_HMS				0x0014
+@@ -126,7 +131,6 @@
+  *     registers (R40, H6)
+  *   - SYS power domain controls (R40)
+  *   - DCXO controls (H6)
+- *   - RC oscillator calibration (H6)
+  *
+  * These functions are not covered by this driver.
+  */
+@@ -137,6 +141,7 @@ struct sun6i_rtc_clk_data {
+ 	unsigned int has_out_clk : 1;
+ 	unsigned int has_losc_en : 1;
+ 	unsigned int has_auto_swt : 1;
++	unsigned int has_auto_cal : 1;
+ };
+ 
+ #define RTC_LINEAR_DAY	BIT(0)
+@@ -267,6 +272,14 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+ 	}
+ 	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+ 
++	if (rtc->data->has_auto_cal) {
++		/* Enable internal OSC clock auto calibration */
++		reg = SUN6I_LOSC_CLK_AUTO_CAL_16MS |
++			SUN6I_LOSC_CLK_AUTO_CAL_ENABLE |
++			SUN6I_LOSC_CLK_AUTO_CAL_SEL_CAL;
++		writel(reg, rtc->base + SUN6I_LOSC_CLK_AUTO_CAL);
++	}
++
+ 	/* Yes, I know, this is ugly. */
+ 	sun6i_rtc = rtc;
+ 
+@@ -374,6 +387,7 @@ static const struct sun6i_rtc_clk_data sun50i_h6_rtc_data = {
+ 	.has_out_clk = 1,
+ 	.has_losc_en = 1,
+ 	.has_auto_swt = 1,
++	.has_auto_cal = 1,
+ };
+ 
+ static void __init sun50i_h6_rtc_clk_init(struct device_node *node)
+-- 
+2.39.2
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZk47RQAKCRB4tDGHoIJi
-0qOyAPwLqd/JJspMHeekSg1VxAHTewHeZ8YZLplMr9vs7N66xwD+KfNAXW9sKiaz
-GPxTB47Xhsox5m0ATtFEIFYrvhrbhwI=
-=51/Z
------END PGP SIGNATURE-----
-
---jx+3ZNiSsvvmJVwf--
