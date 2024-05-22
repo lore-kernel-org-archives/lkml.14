@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1127710C;
-	Wed, 22 May 2024 03:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BAD78B50;
+	Wed, 22 May 2024 03:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716349805; cv=none; b=oz5uE5keIO6Vx9Ff/G+AHmJJ8M7kpJktfP3Zwgngxw/DN/YNWbU7C5vtM+qG7jWdlRTgDvhLxNOSV/jbuaGjd7b5gJVhpIdpbvf7kHshBEXBC7FBi3ocfopP1wmA2W1hCf+5LaTf8toL3sYgrmfkGrIB2wtNM3rABkLbyxu02lE=
+	t=1716349806; cv=none; b=kVT2qofBW2zLiEYqQKB6bz+Gcg9RLewl8cq2+lMYLgwoI/CACsOGt+FRtvwrHAVUGaSjN46nbOk7i+WZSOFZT3V8Xo7l9+dwXbDnP6TO/xf1VIbR6nRPBF7yg0hIoq+c6+f1mHmK5vte+71gvSP2A1VTl9RaexKNYSK2ul3dsBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716349805; c=relaxed/simple;
-	bh=WMP43Nhkjw6tr3NT+HpRSczoh3A+6E4rMITc5OlgyjQ=;
+	s=arc-20240116; t=1716349806; c=relaxed/simple;
+	bh=KGhLjDE6mjYa1JN2Te7dwSeDKaLR124ro7acF+e5Tec=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rDh2tKEA3VutieqBgYXhbiWR+ga3cAoGfBla9DRYK/0GU2GbohSwfFsVdmTU6ZOmCrCFP3VYJQ1lhKWQ0NLkveZ+4HYs39NPGbsWZjmRSNU+dwaOdCC5tzdm8vjeyCrjeo7ZZMQiuRzaXKr2hLLweOW6yttPlLz26Q/LCopQBf8=
+	 MIME-Version; b=DI2bCA/ez2G7OmASU7+d9GEU8fn4AsTjC2pxZGPZgrQ8D59cdRC5WmE6ylKCC+gVgkyXpMuQBAdS+RkkKY86hdug+3qw4ITeSRgke+CQPWYSGc0ycCj4Lrs6UdVZKDOqqUYNpwfZLlNDVrVzL3r9BYPsOD9utB95nBQMgqpupuQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vkckk1wd5z4f3m7G;
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vkckk16vNz4f3jkP;
 	Wed, 22 May 2024 11:49:50 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B69571A016E;
-	Wed, 22 May 2024 11:50:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id EA4141A0199;
+	Wed, 22 May 2024 11:49:55 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBFea01mxlBXNQ--.57627S14;
-	Wed, 22 May 2024 11:50:00 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBFea01mxlBXNQ--.57627S6;
+	Wed, 22 May 2024 11:49:55 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev,
 	dhowells@redhat.com,
@@ -39,9 +39,9 @@ Cc: hsiangkao@linux.alibaba.com,
 	yukuai3@huawei.com,
 	wozizhi@huawei.com,
 	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v3 10/12] cachefiles: Set object to close if ondemand_id < 0 in copen
-Date: Wed, 22 May 2024 19:43:06 +0800
-Message-Id: <20240522114308.2402121-11-libaokun@huaweicloud.com>
+Subject: [PATCH v3 02/12] cachefiles: remove requests from xarray during flushing requests
+Date: Wed, 22 May 2024 19:42:58 +0800
+Message-Id: <20240522114308.2402121-3-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240522114308.2402121-1-libaokun@huaweicloud.com>
 References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
@@ -52,78 +52,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBFea01mxlBXNQ--.57627S14
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zry8Wry8Jr4Utr4xtr4UCFg_yoW8ZrWDpF
-	WakFW3Kry8Wr129r97Jw1kA3y8C3ykZFnxWrZIq348Arn8Xrn5Zr1Utr1UZF1UZ3yftr43
-	Jr18Kr9Iga4qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:cCh0CgBHGBFea01mxlBXNQ--.57627S6
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1rJr1fKr43CrW8urykKrg_yoW8Ar4xpF
+	WSk3W7KFykWr4jkr1kAFyrJryxJ348XF17XF17Xr1kZrn8Zrn5Zr4Sy340gr98ArWktFW3
+	tr1UCF9rX34Ut3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQ014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
-	0E87I2jVAFwI0_JF0E3s1l82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0
-	rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6x
-	IIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xv
-	wVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFc
-	xC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_
-	Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2
-	IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRupB-UUUUU
+	0E87I2jVAFwI0_Jryl82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2
+	F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjx
+	v20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2
+	z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
+	IFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRtb18UUUUU
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-From: Zizhi Wo <wozizhi@huawei.com>
+From: Baokun Li <libaokun1@huawei.com>
 
-If copen is maliciously called in the user mode, it may delete the request
-corresponding to the random id. And the request may have not been read yet.
+Even with CACHEFILES_DEAD set, we can still read the requests, so in the
+following concurrency the request may be used after it has been freed:
 
-Note that when the object is set to reopen, the open request will be done
-with the still reopen state in above case. As a result, the request
-corresponding to this object is always skipped in select_req function, so
-the read request is never completed and blocks other process.
+     mount  |   daemon_thread1    |    daemon_thread2
+------------------------------------------------------------
+ cachefiles_ondemand_init_object
+  cachefiles_ondemand_send_req
+   REQ_A = kzalloc(sizeof(*req) + data_len)
+   wait_for_completion(&REQ_A->done)
+            cachefiles_daemon_read
+             cachefiles_ondemand_daemon_read
+                                  // close dev fd
+                                  cachefiles_flush_reqs
+                                   complete(&REQ_A->done)
+   kfree(REQ_A)
+              xa_lock(&cache->reqs);
+              cachefiles_ondemand_select_req
+                req->msg.opcode != CACHEFILES_OP_READ
+                // req use-after-free !!!
+              xa_unlock(&cache->reqs);
+                                   xa_destroy(&cache->reqs)
 
-Fix this issue by simply set object to close if its id < 0 in copen.
+Hence remove requests from cache->reqs when flushing them to avoid
+accessing freed requests.
 
-Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
 Acked-by: Jeff Layton <jlayton@kernel.org>
 Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- fs/cachefiles/ondemand.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/cachefiles/daemon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 6f815e7c5086..922cab1a314b 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -182,6 +182,7 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 	xas_store(&xas, NULL);
- 	xa_unlock(&cache->reqs);
- 
-+	info = req->object->ondemand;
- 	/* fail OPEN request if copen format is invalid */
- 	ret = kstrtol(psize, 0, &size);
- 	if (ret) {
-@@ -201,7 +202,6 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 		goto out;
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 6465e2574230..ccb7b707ea4b 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -159,6 +159,7 @@ static void cachefiles_flush_reqs(struct cachefiles_cache *cache)
+ 	xa_for_each(xa, index, req) {
+ 		req->error = -EIO;
+ 		complete(&req->done);
++		__xa_erase(xa, index);
  	}
+ 	xa_unlock(xa);
  
--	info = req->object->ondemand;
- 	spin_lock(&info->lock);
- 	/*
- 	 * The anonymous fd was closed before copen ? Fail the request.
-@@ -241,6 +241,11 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
- 	wake_up_all(&cache->daemon_pollwq);
- 
- out:
-+	spin_lock(&info->lock);
-+	/* Need to set object close to avoid reopen status continuing */
-+	if (info->ondemand_id == CACHEFILES_ONDEMAND_ID_CLOSED)
-+		cachefiles_ondemand_set_object_close(req->object);
-+	spin_unlock(&info->lock);
- 	complete(&req->done);
- 	return ret;
- }
 -- 
 2.39.2
 
