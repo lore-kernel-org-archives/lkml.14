@@ -1,67 +1,59 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB302143C5B
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E92F1BF2A
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 18:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716404089; cv=none; b=c1QtN4pABYK6xyqnXdKVek2kp6rtLWI1Y5SS11jMxDLl5ZMqiOoHlZOOuLQ7VGFaaLnFK9cAxFaidU2zD2iO2V84x5c4/cp6FI7UVpGJeQDjvrAnOchyrDM5+iD8Ym4FCFPHDPgdCmA4RSXJeoP1PV8GkGZKe/0x0eESFgGV1dc=
+	t=1716404168; cv=none; b=bx1ue7ztAKSrAVbPzxU0Ah/21qK1UAQgETg9Jm5BdxU/bgMcK486xfbl626O6RoDhas2iBAjItyJtwHLc1NgG5fPCTRpF7WwHw1eKrqbEVYuluxGFJbUYvtPWpqOgwim4NKVFmRp3qgnVk7tRIuabhye91A29g9Nrzs9TVZ78NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716404089; c=relaxed/simple;
-	bh=Vi9DFTwatCAsZzZscB9uKauVl3qhNxSUs3JBSABQJPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GHrW98clHTThEYeJ8C7NA7pqFKMxnWoV8O+DBvcRlFGwOV947WHdKDQw++6G0neDF5HbgkhWuZvMHU9gEfV/I0cVABSelZIjIk7VhDM92aiUpNaNFJUcdu88k0l4MqHWtW1e9WdnoneweRfqV89OU7MFqr4vo0sI9+0UYXuuA8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EquQbhP7; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716404168; c=relaxed/simple;
+	bh=xSNNEFl/Or2oWrm6xKX/wFgWrfyMQSIVuBPLnP2I2FY=;
+	h=Subject:Date:Message-ID:MIME-Version:Cc:From:To; b=Yatdi8TQLRLIjl/qZyeS0JpsCWgSbtSX4yv6eHXoxIGn0qf63uF5KVdQ7ofjPceUQ0MLsiG/uRyRN+RrGRfNF5Q6aBd3s1cHlR8oYJn8QjrKekSckEvXgd2//IjppxR8fndsrR4dOFp6g751ZcaDLFjtJx/vlFxWuFcUiGqHoXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=DNbBbZK2; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EquQbhP7"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so14471877a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:54:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="DNbBbZK2"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2b4a7671abaso1416972a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 11:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716404086; x=1717008886; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hNDn38cEa80EVnk6aX9NYeZhhjh+9i1BJ/R1mRMwIHY=;
-        b=EquQbhP71b+2p/uuI5NN5ig6NhK2eeu0/HSQtP85HZko7yV+uR+ka1LqCAy66hUYE3
-         JEYkfQ5Wmn/XYY+F+l3d7IFUuwdjKPE9E0Ym8/Td8c1uPoC7Uw496W+AtdAS675TTcAN
-         aYWJ5HQKzRBITKjEeY1hSu06v+CQEf+mFiJ6L6Hf+qw1A8W7irhz2F+ONjUOP12mZJHq
-         /p/aAiyoLPJdjebDoN56h0OM5/jWu/FVFuwXySLuf3lJ5bwGfjNhQfvAMeUWzRBVugRU
-         qJq+3GDs9OTULBMHlL8yqLGnWjtZ7cpMFxSkkwe1R+h8YDEqpJeRPpJNmoQD6sQ+48s1
-         l5OQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716404165; x=1717008965; darn=vger.kernel.org;
+        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=dnzy+P27CG9g1SjT29AHyztBT8s8Vr6GnIB5bhcdo10=;
+        b=DNbBbZK2fAtW/apXXzUe8erLqW49i2mF9hILN2Lw4ZI7QzhLVnXz7yhy4/IL+kgA0A
+         CTyplxgsnnIugM6frU4+cKo1ZKBUVURg1z+4IDmZcNFfcldagqfDZhVKMh7ZllS7LEgl
+         oYt6ZD+GnejFctU4gaXJNWP3CCiqGQI2UsNPd2Iq+GElpRtxNmjcWrYm7L5cOpwZKBAK
+         uJlwgVHdL88dLnLVklZHx8zs+EKpzv7hAbQz6GpfMtnu9udj7AvxFNokh+OkLRHSY52A
+         xXMxv57Ro4YMVyvz2sH/EBoA/X16e7Pj4vAIuJ+vC20zkVAMABOv5WTjFQNMPLEdbnr+
+         XYhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716404086; x=1717008886;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1716404165; x=1717008965;
+        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hNDn38cEa80EVnk6aX9NYeZhhjh+9i1BJ/R1mRMwIHY=;
-        b=ilDGopZjLks3hbeeI7GdgSj7yBXF9t/qtIj9082lEy4RaBujFE11ekRAVR2GVXC+2r
-         +P2VMCcymqKJ2pWrK86Zg3GYF2EFvXaTCqc3mBfr0fv6Vsg1FDrsKa3O1Lheys/v+lCc
-         P8PUjNAhIHHHNnf8EFrpgm5hX83MyyB529Pjbm96DXPHzGJGwR1flnwTb//S6OsnNZOP
-         PwWjoDIxnLL9XAmrnxAf3FX/mECXoPKrNr5oFBrgYXf4wEIRhIm40ZHHK3zzROxFdH0t
-         pI/eLAh6yF91Idya8gXXJ/YbZ/nTvz5BY9cIAsdat2PvxglEiEhS9rjha4FrDNBfunHW
-         zUEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJfubadKnkE3Yl/5alADnk1jbL9LG20CqRyUHU98lvNNJDqYTO4oDSoKY4wTGjg2I8kIbcNRe1scbCACoNd3B/0qH/b4QgNB2WU5ya
-X-Gm-Message-State: AOJu0Yw+qMDHUldoP9pzlCLcOolFt6msg/1IM4lAIYHT4wnsRCeP6saM
-	UBlPJsxHg6uOLBlQNJszsotMMvcEHn7mEWRS5w3/PYM2pkeLKj22
-X-Google-Smtp-Source: AGHT+IHFhfdm8S8hnJxiL1+33zmX8kFcIX8huxUkbefY+/1cpVAZi1uwrF4Tx5K2sxB/NcCD8y3YRg==
-X-Received: by 2002:a50:9ec9:0:b0:56e:7722:553 with SMTP id 4fb4d7f45d1cf-57832a3b8fdmr2743928a12.24.1716404085920;
-        Wed, 22 May 2024 11:54:45 -0700 (PDT)
-Received: from f.. (cst-prg-19-178.cust.vodafone.cz. [46.135.19.178])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bea6a36sm18638275a12.12.2024.05.22.11.54.43
+        bh=dnzy+P27CG9g1SjT29AHyztBT8s8Vr6GnIB5bhcdo10=;
+        b=M9CCYGjc4J/3L0VWiruAbqV5Zx9NeESW7RKd5B0VZaoIqKh8sTSY4ffyR7UnoxOoOl
+         wqg1mj5tKjS/A+iyctOcxEyWc1y1M8+DraIphZk0ntT0LcPZ4GTP6is+113++ICbBs9e
+         cuyuTSNT4yr+vHeaj8Dpsgt8OKZzW5U3nCox6p702eAeD6MavziwBIv9R5k0jxuyQQ2n
+         8jnH/jqUt4dBPUXNfgy6wBVm7BSoV57PwZMycpogTWqRDAz1R9hB6lCNobFbO12P4UVN
+         u37B5LcMu5wIuM46pk7AqwbxDcTVCoDeiTffbYWquyuIhIm/Mf5YkN4D1zQyzPjelFuE
+         0dFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEe1o0rqortM6DqdFyeQNPdAlFl5EwOGWfuS6pbtYVSzJx9MUaVtEn7KrHvbNokXpssrV51hukvECmPSYY0k41AQ1Qh8aDMUVmI2co
+X-Gm-Message-State: AOJu0YzM6EVqzI1D9D3ZWzylGLSEMfYQWQBCGCs5jhZe6HW9E0CGrSU4
+	jazzOlB0aapY2chjjNmGA+C0lFZko3i3UxduJg+t/RLmI9fFJk2gkTsAQc/mcck=
+X-Google-Smtp-Source: AGHT+IGu2YOuF8nlRehcHho+rj9d+wag8HDJWVH5TjU1gb3maLVKxYpE3+bvJ1t/Oj/1dk5a004niQ==
+X-Received: by 2002:a17:90a:4315:b0:2bd:4759:46dd with SMTP id 98e67ed59e1d1-2bd9f59ec18mr3032141a91.37.1716404165448;
+        Wed, 22 May 2024 11:56:05 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdd9ed3812sm115120a91.11.2024.05.22.11.56.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 11:54:45 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: longman@redhat.com
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	boqun.feng@gmail.com,
-	linux-kernel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH] locking/rwsem: cpu_relax before re-reading owner in rwsem_spin_on_owner
-Date: Wed, 22 May 2024 20:54:21 +0200
-Message-ID: <20240522185421.424344-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Wed, 22 May 2024 11:56:04 -0700 (PDT)
+Subject: [PATCH] irqchip: riscv-imsic: Fixup riscv_ipi_set_virq_range() conflict
+Date: Wed, 22 May 2024 11:49:55 -0700
+Message-ID: <20240522184953.28531-3-palmer@rivosinc.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,47 +61,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Cc: anup@brainfault.org, tglx@linutronix.de,
+  Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
+  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+  Tomasz Jeznach <tjeznach@rivosinc.com>
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: tglx@linutronix.de
 
-The function starts with establishing whether there is an owner it can
-spin waiting on and proceeds to immediately do it again when entering
-the loop, adding another lock word access and possibly an avoidable
-cacheline bounce. Subsequent iterations don't have this problem.
+From: Palmer Dabbelt <palmer@rivosinc.com>
 
-The sound thing to do is to cpu_relax() first.
+There was a semantic conflict between 21a8f8a0eb35 ("irqchip: Add RISC-V
+incoming MSI controller early driver") and dc892fb44322 ("riscv: Use
+IPIs for remote cache/TLB flushes by default") due to an API change.
+This manifests as a build failure post-merge.
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+Reported-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+Link: https://lore.kernel.org/all/mhng-10b71228-cf3e-42ca-9abf-5464b15093f1@palmer-ri-x1c9/
+Fixes: 0bfbc914d943 ("Merge tag 'riscv-for-linus-6.10-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux")
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 ---
+Sorry I wasn't clear about this one, but looks like it got dropped as
+part of the merge.  I'm happy to pick this up via the RISC-V tree if
+folks want, but I'll keep it stashed off to the side for now as it's
+just touching irqchip.  I'm planning on sending some more stuff on
+Friday morning, so just LMK.
+---
+ drivers/irqchip/irq-riscv-imsic-early.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is a borderline cosmetic patch I did not bother benchmarking.
-If you don't like it that's fine with me, I'm not going to fight for it.
-
-Cheers.
-
- kernel/locking/rwsem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index c6d17aee4209..a6c5bb68920e 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -758,6 +758,8 @@ rwsem_spin_on_owner(struct rw_semaphore *sem)
- 		return state;
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
+index 886418ec06cb..4fbb37074d29 100644
+--- a/drivers/irqchip/irq-riscv-imsic-early.c
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -49,7 +49,7 @@ static int __init imsic_ipi_domain_init(void)
+ 		return virq < 0 ? virq : -ENOMEM;
  
- 	for (;;) {
-+		cpu_relax();
-+
- 		/*
- 		 * When a waiting writer set the handoff flag, it may spin
- 		 * on the owner as well. Once that writer acquires the lock,
-@@ -784,8 +786,6 @@ rwsem_spin_on_owner(struct rw_semaphore *sem)
- 			state = OWNER_NONSPINNABLE;
- 			break;
- 		}
--
--		cpu_relax();
- 	}
+ 	/* Set vIRQ range */
+-	riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
++	riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI);
  
- 	return state;
+ 	/* Announce that IMSIC is providing IPIs */
+ 	pr_info("%pfwP: providing IPIs using interrupt %d\n", imsic->fwnode, IMSIC_IPI_ID);
 -- 
-2.39.2
+2.45.0
 
