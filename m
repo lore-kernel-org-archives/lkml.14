@@ -1,107 +1,210 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A3B1448CD;
-	Wed, 22 May 2024 13:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717FD142621;
+	Wed, 22 May 2024 13:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386130; cv=none; b=tJw+Obc/f0xkjdxdAWhXLWPahxvuGx6xveZkS7Wnujkl3aup77SQN/otbG28oTDEV/MBN0OCmLdhdu/Sj2mYc5CtEQfHlkve/6RiZAIuZxnwEbBGd+Ejj4u8uWIKg20YbS1xUKv9jvLowfaktPVeKkwY5PqFTTdrbJe+g6VrKLU=
+	t=1716386130; cv=none; b=hto83nu22Ut/I4LImq9vndOEu7pDpExhB9g+F9UWLMxw6dAoMYSiTOzw9rL2GLT23ijQp1ebZPt1Q7zMP4cST7XSKk13LohjH64h6TzyQ9U5rqf+WqUVczPceP/y5+AtocFSQqm2uMxjSzPtjdsf7dSBOmpz89w0+a3ZPsxUTks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716386130; c=relaxed/simple;
-	bh=/eLrnUv/ccO8hCexIgcoaF5RL3XvRmL0xNirt8amung=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ol5zZPKjf3+I0O1NwCks9cEO71hElUJkQTibvTWPMlDAqF4u2autijMJ8/PBrXS+0Z6I7JhKat9TndT0JVtcMLQweZBly+yXqUmykUpb84AAbOPQYaTo9jatdNwON+2cm4M0wBbyZquIKPs3y8CG4/jklmgHxGxXsVkzuBWvZi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CbYRpL5y; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	bh=yWtD7LU9AB3Gr4Ry22fCWQp4b/WwuVx7H2lTfntgmkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PjNGNNjKYtWp73MmVramXWlVIEAbaXALIfPW6WUy8YangQA/kADvPrfNoOyXtiZ+jL2Cy+lcy3YVdMmaxkn9QJcQg2Tb44o58dDaphWF8VL84ANA0lkB9u1qa/7dJdZML1eJxLYxsXu9xP2dN8QOKCawOZXPzsSk5H2cy6pGieo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1kGclyo; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CbYRpL5y"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44MCqrDU006158;
-	Wed, 22 May 2024 13:54:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=pbtxMEpfCRIbFycrHWd/2ZSkuy58mLEqJ5dDgR/gKoM=;
- b=CbYRpL5y+nKEXK1yOZjHvafkW9Kq5lh/eUXva9Fk1Pj2m4heQlj3jcaOOcJVaX8CBrER
- ZpnssTftW/SH5FLbYCCaRtbA7F3Jlte/ER5FproHJagOgHmMUQknm2J4rwwqVTjMZWXU
- jfpKcqJbx1AMpii/o/5oYivrkmj2s7sXo6Rnmm3CrO9fbwbunMIejVb3SyDRF+d/LPE7
- Wu1mfCtOX2A04JGM6ZZ0YKhZqpTG/4rzgQYK71l6K+sxAwsZrGNCd9XqP4AdQjQQXf5f
- PdWN/YU1lEWxINMeT3VkSEwpxr0OajzL65ROxxvyhqZ7iBAM5lJnIU/Q/JjPqS2V6oYy 4g== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y6k8d7qqh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 13:54:53 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44MCJjar019632;
-	Wed, 22 May 2024 13:54:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3y6js98sy2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 13:54:52 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44MDsm2n016070;
-	Wed, 22 May 2024 13:54:51 GMT
-Received: from lab61.no.oracle.com (lab61.no.oracle.com [10.172.144.82])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3y6js98su1-2;
-	Wed, 22 May 2024 13:54:51 +0000
-From: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Allison Henderson <allison.henderson@oracle.com>,
-        Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Mark Zhang <markzhang@nvidia.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Yang Li <yang.lee@linux.alibaba.com>
-Subject: [PATCH v3 1/6] Orabug_list: Drop 36459425
-Date: Wed, 22 May 2024 15:54:33 +0200
-Message-Id: <20240522135444.1685642-2-haakon.bugge@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240522135444.1685642-1-haakon.bugge@oracle.com>
-References: <20240522135444.1685642-1-haakon.bugge@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1kGclyo"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52232d0e5ceso6722028e87.0;
+        Wed, 22 May 2024 06:55:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716386126; x=1716990926; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8YaBKPvnOJzmUbDriM6HGEGAHRgnlTqVjaXWE1TlkEM=;
+        b=L1kGclyob/dqB3opxGY/z1vIqZW8HfW6IdSeFzoFoCrhhUjrB5+qUNj4VkDkB3HVd7
+         b6cp39DSg1K61CXm+AAzMVKHAZmYJfeL9DY/9AEt2Y54N7SssJ7XreKOzmwYTyyaFk4e
+         vKLMRs/WSKsDyDj09FnbBmvPKXNHYoFePp0QJEIjpGUMsjj6S7TxsIY7u+GeC8Ej51C5
+         YGLmHlHRCrcEeOHJTD0ABkkppNRQAWr4OFtMoK+9dLC55jksNGbECFnG4nNId+0OAmIU
+         I5djIVu/kGBlNj1pmPbODvN0gdvs8TUJ+j2xwFDe4SNacn5h9UKmdfUpwr4HdijzedKO
+         Kk3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716386126; x=1716990926;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8YaBKPvnOJzmUbDriM6HGEGAHRgnlTqVjaXWE1TlkEM=;
+        b=KiVbd4NKji/Z6qEXqLXdfl+zg1Y58I385MhWtGvRCxqGr3Rd7vhylpxCe/9KCz7MFs
+         w31Lx8ErIUQilfA0d7KMq6Yf07nGnX23jQ9XlESD3vFryN4cduYhJiICYCfewnsrOoQA
+         GMHJXuIjM/JTuKHwRH+/IdX+rvEWTc837dxvrx5F5nyhGsXbAP/L+yqkkNbRlFo8v981
+         +2AgLamIWFFeED6tAcPhwbW1EoYR78tDdq3ozNZzXTfiSY9Fe+n/sQO+mbkgCKZPxyQO
+         DPBKqigZvcVhdaP2jDLqKgBIGLugiYELR5M79WhsB3c+lQe+8HqwnPHi7i3o12qTIszc
+         /XLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9NfRKcezEAeO/wVWowGBB7bnzybdQHUFe5PJuYnesGJVWAdo1piIqgxCdjBs5DuSy6cWI7XCVEf/iOn/ze7IHm2X45p8o0by2PShzwwreTaK+6cUqtABgBFwJo2/4IEWkOjFdYRYX+iLU//7TWCF4NstKzOhpeypT8j9uK1sU3GdcO9jY
+X-Gm-Message-State: AOJu0Yy5ntEMddQ2P12YF1WWD/Eb7xDvnB+DvP6xdPqJxCb30vYUfpxE
+	t4ZULPmuMj5qjKdWANy+c3JdoXqEmS3Pi/sf7YEazumbA2F9RHf+
+X-Google-Smtp-Source: AGHT+IFYqdG84I5n5HcpYSBsCPuvwJ923qQSxWRG46QsFjunGCiBYTTXJVQLt9pT91rp3cKva6gh8Q==
+X-Received: by 2002:a05:6512:3f19:b0:518:c057:6ab1 with SMTP id 2adb3069b0e04-526c130bba8mr1350705e87.66.1716386126290;
+        Wed, 22 May 2024 06:55:26 -0700 (PDT)
+Received: from [10.0.0.100] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d2f1dsm4967366e87.264.2024.05.22.06.55.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 06:55:25 -0700 (PDT)
+Message-ID: <0594944d-c158-4840-8724-b3f2edaab1ca@gmail.com>
+Date: Wed, 22 May 2024 16:56:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+To: Mighty <bavishimithil@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lopez Cruz <misael.lopez@ti.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240522075245.388-1-bavishimithil@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20240522075245.388-1-bavishimithil@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-22_07,2024-05-22_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- adultscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405220093
-X-Proofpoint-GUID: YPkwUK80X36BWKf91leWaqnaAkeuaLAx
-X-Proofpoint-ORIG-GUID: YPkwUK80X36BWKf91leWaqnaAkeuaLAx
 
-From: luci <vijayendra.suman@oracle.com>
+Hi,
 
-Build fix for 6.9 LUCI
+On 22/05/2024 10:52, Mighty wrote:
+> From: Mithil Bavishi <bavishimithil@gmail.com>
+> 
+> Convert the OMAP4+ McPDM bindings to DT schema.
+> 
+> Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
+> ---
+> Changelog v5:
+> - Add imports for constants
+> - Add desc to ti,hwmods
+> 
+>  .../devicetree/bindings/sound/omap-mcpdm.txt  | 30 ---------
+>  .../bindings/sound/ti,omap4-mcpdm.yaml        | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt b/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+> deleted file mode 100644
+> index ff98a0cb5..000000000
+> --- a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -* Texas Instruments OMAP4+ McPDM
+> -
+> -Required properties:
+> -- compatible: "ti,omap4-mcpdm"
+> -- reg: Register location and size as an array:
+> -       <MPU access base address, size>,
+> -       <L3 interconnect address, size>;
+> -- interrupts: Interrupt number for McPDM
+> -- ti,hwmods: Name of the hwmod associated to the McPDM
+> -- clocks:  phandle for the pdmclk provider, likely <&twl6040>
+> -- clock-names: Must be "pdmclk"
+> -
+> -Example:
+> -
+> -mcpdm: mcpdm@40132000 {
+> -	compatible = "ti,omap4-mcpdm";
+> -	reg = <0x40132000 0x7f>, /* MPU private access */
+> -	      <0x49032000 0x7f>; /* L3 Interconnect */
+> -	interrupts = <0 112 0x4>;
+> -	interrupt-parent = <&gic>;
+> -	ti,hwmods = "mcpdm";
+> -};
+> -
+> -In board DTS file the pdmclk needs to be added:
+> -
+> -&mcpdm {
+> -	clocks = <&twl6040>;
+> -	clock-names = "pdmclk";
+> -	status = "okay";
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml b/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+> new file mode 100644
+> index 000000000..966406078
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/ti,omap4-mcpdm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: OMAP McPDM
+> +
+> +maintainers:
+> +  - Misael Lopez Cruz <misael.lopez@ti.com>
+> +
+> +description:
+> +  OMAP ALSA SoC DAI driver using McPDM port used by TWL6040
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,omap4-mcpdm
+> +
+> +  reg:
+> +    items:
+> +      - description: MPU access base address
+> +      - description: L3 interconnect address
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  ti,hwmods:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [mcpdm]
+> +    description: Name of the hwmod associated to the McPDM, likely "mcpdm"
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pdmclk
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - ti,hwmods
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pdm@40132000 {
 
-Signed-off-by: Luci Bot <fajita_us@oracle.com>
----
- uek-rpm/.Orabug_list | 1 +
- 1 file changed, 1 insertion(+)
+The original label and name is preferred to be used.
 
-diff --git a/uek-rpm/.Orabug_list b/uek-rpm/.Orabug_list
-index c5b31288c668c..7becf1b0a9be7 100644
---- a/uek-rpm/.Orabug_list
-+++ b/uek-rpm/.Orabug_list
-@@ -2,3 +2,4 @@
- 34116060 # LUCI Maintainer: Disable OpenSSL 3.0 warnings for v5.18
- 35455153 # [UEK-NEXT] Manage Original OL Signing Keys
- 35641429 # Add uek_kabi.h to LUCI and update check-kabi scripts
-+36459425 # Build fix for 6.9 LUCI
+> +      compatible = "ti,omap4-mcpdm";
+> +      reg = <0x40132000 0x7f>, /* MPU private access */
+> +            <0x49032000 0x7f>; /* L3 Interconnect */
+> +      interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> +      interrupt-parent = <&gic>;
+> +      ti,hwmods = "mcpdm";
+> +      clocks = <&twl6040>;
+> +      clock-names = "pdmclk";
+
+The clocks cannot be added at the time when the node is defined, it is
+board specific. This way you imply that it is OK to have it in main dtsi
+file. It is not.
+
+> +    };
+
 -- 
-2.31.1
-
+Péter
