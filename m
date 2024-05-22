@@ -1,68 +1,71 @@
-Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB30D7E0F0;
-	Wed, 22 May 2024 07:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEAA7F7FF;
+	Wed, 22 May 2024 07:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716364370; cv=none; b=VgCa33IE1UfarLA9XVIuc78wY/9SnakmQDX/Xf6IgXAnMmPW8x8P7fc49qKzlirG7SUbHmTlD6VqN5dyA2YrJhg6/2jhCDX+r3eF9s/Wq1FvBKJgQ7NXo3GHghv0JS2OhtDpU+Dxz7ZV8aPbjg0RWgcxCflgpbZcHv4gLxEHuTk=
+	t=1716364379; cv=none; b=dOMcFTgT+nDpjTaUY4h+Hpt4Kf7iUhVsXFig1XmA5c59PL1JR/seuJ331zhQnNgFQHNe2AKfQmw4a9ixoughXoHSSfqa2F2PDvWMBfl2NXDADh9li83KIaZ8ctxsH8H46DdrE4YWRiq72ifMvpCa+bZw0diXhWrOowpUtBLUpm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716364370; c=relaxed/simple;
-	bh=IKy+zTTzSSpk4fAxmWNXR+x9NuiTAQFTb+sFDX5r7yA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y7ATKoUhUMHYFFVUGkVo1auk/JmTY7fn+tyVxhY6VBVRFEkBWEMgVqDbG0xrki8clFHVVaPjM/U32W8iJ2hRqxHR2Eul5zQqDTobthnM2Khia10ol7Wpd8Vy/cN+eq8fGXSxRRe4qpEPA3OlmFGe36OJB/BsiyqPKxcO4GMNC0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=cwCrN5se; arc=none smtp.client-ip=211.125.140.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1716364379; c=relaxed/simple;
+	bh=zOtFi+77WdrckOeoDk0EekiaDHgdaiNscqDbmPY/Rlo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mKgdcxGp6CDW7+mvITIHaGfywbzS5VJMF9YA6htlG5I0hT6CH3/rAUS0FZLhy1kSR5JIHPxKQW0Pm6JTpuAIRq/jZ3vwH2xe6SwwGVf8Wpc8QL40VDARTrloLyWtRQwYvplvn4nQhs4ulGhGajwUhdhOVWxi5U2915Mw4VYcSgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QCvavQVI; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="cwCrN5se"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCvavQVI"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-656d8b346d2so1919709a12.2;
+        Wed, 22 May 2024 00:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1716364368; x=1747900368;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fEJZJoUQxZzm94uJY/1EEHDB0Lg694TXdalLxZehOls=;
-  b=cwCrN5seEVInnFrKlkAjDk3dVQV1Cf7TU9jNnrp4sQqbMLg18yZO/1Go
-   zjs0DU9E7FRWp4Kx5gcDlYl3eqY+5iDoxrMevwaitpZhWLWJj+xWZqPFW
-   9kzeh9rUMM0mlFmhHrWisvYNVR6CeQ02JjQTDsJDgHtd0gjv7JBDkXnH9
-   g4vFuMt1Zd/RBaTG6jdAlHHH9GvkMaQGmVVlXCszQeE0WGTnsxpIncH9K
-   ge9C7j/7qRQLDFF585Det/9+Swp8Zj5+28WohUWrowQutvLBhNSADCHe9
-   hGTosay//KQf6iF+lAhlrC9Sro57BdzO5rZs1FuXbNQAXBcW3O/T3RgK/
-   w==;
-Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
-  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 16:42:34 +0900
-X-IronPort-AV: E=Sophos;i="6.08,179,1712588400"; 
-   d="scan'208";a="390840546"
-Received: from unknown (HELO OptiPlex-7080..) ([IPv6:2001:cf8:1:5f1:0:dddd:6fe5:f4d0])
-  by jpmta-ob02.noc.sony.co.jp with ESMTP; 22 May 2024 16:42:34 +0900
-From: Sukrit Bhatnagar <Sukrit.Bhatnagar@sony.com>
-To: Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	Sukrit.Bhatnagar@sony.com
-Subject: [PATCH 1/2] mm: printk: introduce new format %pGs for slab flags
-Date: Wed, 22 May 2024 16:46:28 +0900
-Message-Id: <20240522074629.2420423-2-Sukrit.Bhatnagar@sony.com>
+        d=gmail.com; s=20230601; t=1716364377; x=1716969177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xR9Ht3CQdBGvtndjJsShMiO9FjAlBRZ2HivTlX4+0zY=;
+        b=QCvavQVIvuf3SQyeZBW7iOw5rVScIAqqZe48JknuzYR2+9n523Po/3MnCNI+gE2yie
+         mxwbTLmsfTROClWx/odjSu+K/UtoJyip/CpAJFpKxOnqBc60G6ZMEv8e7iAYYJV+Ndkp
+         w0bu7fpYAnLZRNkvnVk9vaUD9jmE/wUCRM7RCrp2ZREHBswJ+EaQsl1KDJnY5SFBl2jY
+         bxKkO0USFVpfo72rEEWAzmDeqw8We4fcofYgxUFacYjQPmoNJhwea66BKjWB7XcdFHqN
+         exDsmK+bJHJZeGkB5pjrbJv++zxMmiXCivJmSKlzBzh9UrmOMvXvhEV0tApF6kq0V8sn
+         iv4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716364377; x=1716969177;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xR9Ht3CQdBGvtndjJsShMiO9FjAlBRZ2HivTlX4+0zY=;
+        b=HM4OR8+ev/8M4QBiNo6dHUzUcbWsE3/pmhJdZbXjblkxtp+MAtYC8TpMsUQm+SkEsg
+         Ao8glOFlBq5Zk1bYmq7R55lrCepFROTe/HT0RogM6uYaOKSjrExlqbTZLVJgNXMlWtXP
+         cD1F89yPXq26CZ8iZ07hRg8g5QmYj7xsNOWN7NrHryNliyjFUKJ76Z9IYsNOFcGPbo7f
+         KvGGwwac7tNSjc9rdlkHGnfFu/KjS4kkPacozRA6xLXpqYJ7d+zFf4U6mmMiswjS8wGg
+         yvYN2LCHI7n66TcrCi9QgTwISl/HL1T+EEfnY92yAIkM4umJYPTun/cPbkOL9Eyt4CKT
+         cY8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWM2n4kbHA2DQo/nJgtP2+hF2DB83ht88BI+Seas5h19BS4+WjlXvZ/Js9Hw92FF/jEgf6vXkvwor3f7IHY4f6PNetePpDoCOdt3yy68gfQ1pLt1ze8MyqVTduLurUAo4oqDM9ahwlHU4E08173e4NDC7bIpBMv9CP3R858SM9j6U3Lbke2
+X-Gm-Message-State: AOJu0YzpcvJIJVoUvO24VG5uVDAAMiqsBP+bEZMpMW+lR1MZN9jGX8sd
+	BTB6NcFDdA7TZbi4yOlowLiWCVuvor1/UY6flRwhg9iGa9hX1pYA
+X-Google-Smtp-Source: AGHT+IGt5hUedJgq2tvzHeKcHMluAEaiOFJypIgtXd2oVgcIFh2hk73oE1nEKq5wammTtgyc/bcBLA==
+X-Received: by 2002:a17:90b:e90:b0:2bd:6f39:b0ea with SMTP id 98e67ed59e1d1-2bd9f5a5c03mr1260668a91.42.1716364376872;
+        Wed, 22 May 2024 00:52:56 -0700 (PDT)
+Received: from localhost.localdomain ([120.88.183.31])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67158c39dsm22931318a91.35.2024.05.22.00.52.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 00:52:55 -0700 (PDT)
+From: Mighty <bavishimithil@gmail.com>
+To: 
+Cc: Mithil Bavishi <bavishimithil@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lopez Cruz <misael.lopez@ti.com>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+Date: Wed, 22 May 2024 13:22:45 +0530
+Message-Id: <20240522075245.388-1-bavishimithil@gmail.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240522074629.2420423-1-Sukrit.Bhatnagar@sony.com>
-References: <20240522074629.2420423-1-Sukrit.Bhatnagar@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,238 +74,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The slab pages have their own flags (apart from PG_slab set in struct page),
-kept in the kmem_cache's flag field. These flags are visible to the users of
-slab cache and are needed when creating one. It will be useful to be able to
-print these slab flags, mainly for debugging purposes, if the folio tests true
-for slab.
+From: Mithil Bavishi <bavishimithil@gmail.com>
 
-Add printk format specifier for kmem_cache flags.
+Convert the OMAP4+ McPDM bindings to DT schema.
 
-Signed-off-by: Sukrit Bhatnagar <Sukrit.Bhatnagar@sony.com>
+Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
 ---
- Documentation/core-api/printk-formats.rst |  2 +
- include/linux/slab.h                      |  5 ++
- include/trace/events/mmflags.h            | 67 +++++++++++++++++++++++
- lib/test_printf.c                         | 13 +++++
- lib/vsprintf.c                            | 22 ++++++++
- mm/debug.c                                |  5 ++
- mm/internal.h                             |  1 +
- 7 files changed, 115 insertions(+)
+Changelog v5:
+- Add imports for constants
+- Add desc to ti,hwmods
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index 4451ef501936..060af5df7a2c 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -583,6 +583,7 @@ Flags bitfields such as page flags, page_type, gfp_flags
- 
- 	%pGp	0x17ffffc0002036(referenced|uptodate|lru|active|private|node=0|zone=2|lastcpupid=0x1fffff)
- 	%pGt	0xffffff7f(buddy)
-+	%pGs	0x10310(HWCACHE_ALIGN|PANIC|TYPESAFE_BY_RCU|CMPXCHG_DOUBLE)
- 	%pGg	GFP_USER|GFP_DMA32|GFP_NOWARN
- 	%pGv	read|exec|mayread|maywrite|mayexec|denywrite
- 
-@@ -592,6 +593,7 @@ character. Currently supported are:
- 
-         - p - [p]age flags, expects value of type (``unsigned long *``)
-         - t - page [t]ype, expects value of type (``unsigned int *``)
-+        - s - [s]lab flags, expects value of type (``slab_flags_t *``)
-         - v - [v]ma_flags, expects value of type (``unsigned long *``)
-         - g - [g]fp_flags, expects value of type (``gfp_t *``)
- 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 7247e217e21b..b1ca372f5ee1 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -21,6 +21,10 @@
- #include <linux/cleanup.h>
- #include <linux/hash.h>
- 
-+/*
-+ * In case of any changes, please don't forget to update the flags
-+ * in include/linux/events/mmflags.h
-+ */
- enum _slab_flag_bits {
- 	_SLAB_CONSISTENCY_CHECKS,
- 	_SLAB_RED_ZONE,
-@@ -64,6 +68,7 @@ enum _slab_flag_bits {
- 
- #define __SLAB_FLAG_BIT(nr)	((slab_flags_t __force)(1U << (nr)))
- #define __SLAB_FLAG_UNUSED	((slab_flags_t __force)(0U))
-+#define SLAB_FLAG_MASK		((slab_flags_t __force)(1U << _SLAB_FLAGS_LAST_BIT) - 1)
- 
- /*
-  * Flags to pass to kmem_cache_create().
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index e46d6e82765e..1457bc23206f 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -141,6 +141,73 @@ IF_HAVE_PG_ARCH_X(arch_3)
- 	DEF_PAGETYPE_NAME(table),					\
- 	DEF_PAGETYPE_NAME(buddy)
- 
-+#ifdef CONFIG_DEBUG_OBJECTS
-+#define IF_HAVE_SLAB_DEBUG_OBJECTS(_name) {1UL << _SLAB_##_name, __stringify(_name)},
-+#else
-+#define IF_HAVE_SLAB_DEBUG_OBJECTS(_name)
-+#endif
+ .../devicetree/bindings/sound/omap-mcpdm.txt  | 30 ---------
+ .../bindings/sound/ti,omap4-mcpdm.yaml        | 61 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt b/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+deleted file mode 100644
+index ff98a0cb5..000000000
+--- a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-* Texas Instruments OMAP4+ McPDM
+-
+-Required properties:
+-- compatible: "ti,omap4-mcpdm"
+-- reg: Register location and size as an array:
+-       <MPU access base address, size>,
+-       <L3 interconnect address, size>;
+-- interrupts: Interrupt number for McPDM
+-- ti,hwmods: Name of the hwmod associated to the McPDM
+-- clocks:  phandle for the pdmclk provider, likely <&twl6040>
+-- clock-names: Must be "pdmclk"
+-
+-Example:
+-
+-mcpdm: mcpdm@40132000 {
+-	compatible = "ti,omap4-mcpdm";
+-	reg = <0x40132000 0x7f>, /* MPU private access */
+-	      <0x49032000 0x7f>; /* L3 Interconnect */
+-	interrupts = <0 112 0x4>;
+-	interrupt-parent = <&gic>;
+-	ti,hwmods = "mcpdm";
+-};
+-
+-In board DTS file the pdmclk needs to be added:
+-
+-&mcpdm {
+-	clocks = <&twl6040>;
+-	clock-names = "pdmclk";
+-	status = "okay";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml b/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+new file mode 100644
+index 000000000..966406078
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/ti,omap4-mcpdm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#ifdef CONFIG_FAILSLAB
-+#define IF_HAVE_SLAB_FAILSLAB(_name) {1U << _SLAB_##_name, __stringify(_name)},
-+#else
-+#define IF_HAVE_SLAB_FAILSLAB(_name)
-+#endif
++title: OMAP McPDM
 +
-+#ifdef CONFIG_MEMCG_KMEM
-+#define IF_HAVE_SLAB_MEMCG_KMEM(_name) {1U << _SLAB_##_name, __stringify(_name)},
-+#else
-+#define IF_HAVE_SLAB_MEMCG_KMEM(_name)
-+#endif
++maintainers:
++  - Misael Lopez Cruz <misael.lopez@ti.com>
 +
-+#ifdef CONFIG_KASAN_GENERIC
-+#define IF_HAVE_SLAB_KASAN_GENERIC(_name) {1UL << _SLAB_##_name, __stringify(_name)},
-+#else
-+#define IF_HAVE_SLAB_KASAN_GENERIC(_name)
-+#endif
++description:
++  OMAP ALSA SoC DAI driver using McPDM port used by TWL6040
 +
-+#ifdef CONFIG_KFENCE
-+#define IF_HAVE_SLAB_KFENCE(_name) {1UL << _SLAB_##_name, __stringify(_name)},
-+#else
-+#define IF_HAVE_SLAB_KFENCE(_name)
-+#endif
++properties:
++  compatible:
++    const: ti,omap4-mcpdm
 +
-+#ifdef CONFIG_SLUB_TINY
-+#define IF_HAVE_SLAB_SLUB_TINY(_name) {1UL << _SLAB_##_name, __stringify(_name)}
-+#else
-+#define IF_HAVE_SLAB_SLUB_TINY(_name)
-+#endif
++  reg:
++    items:
++      - description: MPU access base address
++      - description: L3 interconnect address
 +
-+#define DEF_SLABFLAG_NAME(_name) { 1UL <<  _SLAB_##_name, __stringify(_name) }
++  interrupts:
++    maxItems: 1
 +
-+#define __def_slabflag_names						\
-+	DEF_SLABFLAG_NAME(CONSISTENCY_CHECKS),				\
-+	DEF_SLABFLAG_NAME(RED_ZONE),					\
-+	DEF_SLABFLAG_NAME(POISON),					\
-+	DEF_SLABFLAG_NAME(KMALLOC),					\
-+	DEF_SLABFLAG_NAME(HWCACHE_ALIGN),				\
-+	DEF_SLABFLAG_NAME(CACHE_DMA),					\
-+	DEF_SLABFLAG_NAME(CACHE_DMA32),					\
-+	DEF_SLABFLAG_NAME(STORE_USER),					\
-+	DEF_SLABFLAG_NAME(PANIC),					\
-+	DEF_SLABFLAG_NAME(TYPESAFE_BY_RCU),				\
-+	DEF_SLABFLAG_NAME(TRACE),					\
-+IF_HAVE_SLAB_DEBUG_OBJECTS(DEBUG_OBJECTS)				\
-+	DEF_SLABFLAG_NAME(NOLEAKTRACE),					\
-+	DEF_SLABFLAG_NAME(NO_MERGE),					\
-+IF_HAVE_SLAB_FAILSLAB(FAILSLAB)						\
-+IF_HAVE_SLAB_MEMCG_KMEM(MEMCG_KMEM)					\
-+IF_HAVE_SLAB_KASAN_GENERIC(KASAN_GENERIC)				\
-+	DEF_SLABFLAG_NAME(NO_USER_FLAGS),				\
-+IF_HAVE_SLAB_KFENCE(KFENCE)						\
-+IF_HAVE_SLAB_SLUB_TINY(SLUB_TINY)					\
-+	DEF_SLABFLAG_NAME(OBJECT_POISON),				\
-+	DEF_SLABFLAG_NAME(CMPXCHG_DOUBLE)
++  ti,hwmods:
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [mcpdm]
++    description: Name of the hwmod associated to the McPDM, likely "mcpdm"
 +
-+#define show_slab_flags(flags)						\
-+	(flags) ? __print_flags(flags, "|",				\
-+	__def_slabflag_names						\
-+	) : "none"
++  clocks:
++    maxItems: 1
 +
- #if defined(CONFIG_X86)
- #define __VM_ARCH_SPECIFIC_1 {VM_PAT,     "pat"           }
- #elif defined(CONFIG_PPC)
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 69b6a5e177f2..37f3f837bcbf 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -681,6 +681,19 @@ flags(void)
- 	flags = VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
- 	test("read|exec|mayread|maywrite|mayexec", "%pGv", &flags);
- 
-+	flags = 0;
-+	scnprintf(cmp_buffer, BUF_SIZE, "%#x(%s)", (unsigned int) flags, "");
-+	test(cmp_buffer, "%pGs", &flags);
++  clock-names:
++    items:
++      - const: pdmclk
 +
-+	flags = 1U << _SLAB_FLAGS_LAST_BIT;
-+	scnprintf(cmp_buffer, BUF_SIZE, "%#x(%s)", (unsigned int) flags, "");
-+	test(cmp_buffer, "%pGs", &flags);
++required:
++  - compatible
++  - reg
++  - interrupts
++  - ti,hwmods
++  - clocks
++  - clock-names
 +
-+	flags = SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_NO_USER_FLAGS;
-+	scnprintf(cmp_buffer, BUF_SIZE, "%#x(%s)", (unsigned int) flags,
-+		  "HWCACHE_ALIGN|PANIC|NO_USER_FLAGS");
-+	test(cmp_buffer, "%pGs", &flags);
++additionalProperties: false
 +
- 	gfp = GFP_TRANSHUGE;
- 	test("GFP_TRANSHUGE", "%pGg", &gfp);
- 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 552738f14275..67f3584db58c 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -2054,6 +2054,25 @@ char *format_page_flags(char *buf, char *end, unsigned long flags)
- 	return buf;
- }
- 
-+static
-+char *format_slab_flags(char *buf, char *end, unsigned int flags)
-+{
-+	buf = number(buf, end, flags, default_flag_spec);
-+	if (buf < end)
-+		*buf = '(';
-+	buf++;
-+
-+	flags &= SLAB_FLAG_MASK;
-+	if (flags)
-+		buf = format_flags(buf, end, (__force unsigned long)flags, slabflag_names);
-+
-+	if (buf < end)
-+		*buf = ')';
-+	buf++;
-+
-+	return buf;
-+}
-+
- static
- char *format_page_type(char *buf, char *end, unsigned int page_type)
- {
-@@ -2088,6 +2107,9 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
- 		return format_page_flags(buf, end, *(unsigned long *)flags_ptr);
- 	case 't':
- 		return format_page_type(buf, end, *(unsigned int *)flags_ptr);
-+	case 's':
-+		flags = (__force unsigned int)(*(slab_flags_t *)flags_ptr);
-+		return format_slab_flags(buf, end, flags);
- 	case 'v':
- 		flags = *(unsigned long *)flags_ptr;
- 		names = vmaflag_names;
-diff --git a/mm/debug.c b/mm/debug.c
-index 69e524c3e601..2ef516f310e8 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -41,6 +41,11 @@ const struct trace_print_flags pagetype_names[] = {
- 	{0, NULL}
- };
- 
-+const struct trace_print_flags slabflag_names[] = {
-+	__def_slabflag_names,
-+	{0, NULL}
-+};
-+
- const struct trace_print_flags gfpflag_names[] = {
- 	__def_gfpflag_names,
- 	{0, NULL}
-diff --git a/mm/internal.h b/mm/internal.h
-index 2adabe369403..6a15f4937db8 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1123,6 +1123,7 @@ static inline void flush_tlb_batched_pending(struct mm_struct *mm)
- 
- extern const struct trace_print_flags pageflag_names[];
- extern const struct trace_print_flags pagetype_names[];
-+extern const struct trace_print_flags slabflag_names[];
- extern const struct trace_print_flags vmaflag_names[];
- extern const struct trace_print_flags gfpflag_names[];
- 
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    pdm@40132000 {
++      compatible = "ti,omap4-mcpdm";
++      reg = <0x40132000 0x7f>, /* MPU private access */
++            <0x49032000 0x7f>; /* L3 Interconnect */
++      interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-parent = <&gic>;
++      ti,hwmods = "mcpdm";
++      clocks = <&twl6040>;
++      clock-names = "pdmclk";
++    };
 -- 
 2.34.1
 
