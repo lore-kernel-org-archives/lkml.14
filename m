@@ -1,41 +1,48 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE6B171C4
-	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 19:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA04D51E;
+	Wed, 22 May 2024 19:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716405652; cv=none; b=TuWNPeVL8HykIvTGmSmPgR50Dmxz2VPhVFS33TuYnxEaVXxLBsP4MuzWYngD9dA01YrVqaRhyBg3CouqrFwrji9lrzZTvedbvZVY6zikQzGC5bsdUEPktMNO/o2w1fD0NBhlJgpghHIZJrJEeWdwkLMXs1PVFoo0LpOmv229Tsg=
+	t=1716405738; cv=none; b=UC2EoYqIh8pLw/ourwgQgXLxVn1l/n0xbYwz0f4N+QJpk+alJOuBOH4lNpIE6v8aDJxw+ok2lnhC1lpdhEKXShYWPS5W1OWpFfMRyeJhsHAEKggB3+NEkpsXMkK64RnB/VgHdkOq09/VBAUHhOhI/SNbYlfQH/Jp3g7lTN/tX5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716405652; c=relaxed/simple;
-	bh=Tje/Q6oLYQsxHBdYnETsFi19LcO/P5qcbUtLM8YCos4=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=HCrMv4SP9pUCdA3FRoCrZf1d7qIDw6pF9fqSOU+s2aO/vFs3VYSDEjQp0GO/igaQE2mN0eeNPRAUBVf5LOrz2kP/WPmH07gECvn6Y/+UNE0eYM9gtr5vwGp/fB6PZUPdDsjWKYtTYpt8bhaZArY9oPmRNeNoDX5uFt91dO4qAw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net; spf=pass smtp.mailfrom=malaika-12.net; dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b=CVB91L3W; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=malaika-12.net
+	s=arc-20240116; t=1716405738; c=relaxed/simple;
+	bh=0+7xrxHcIqXbOHoXrH88X8Y9k/W+g9wVdubBgA6njtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=anp9vaEcf6CkQ6UF7QVpO2Jq8gg1q10m7y0aTw8hlzvKCSiNfLk2nqyDSsjZE1sClkhnOXJc22zAnIF2Ia2qBOmbgkcHc51YLfy1/RdHdGOAZhjj+uu0lqR287BDY+6SZBmLRPkTjyyQO6GOldX6BerMHgLcu9z6TIHlTtE0tU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GvZ1JmSf; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b="CVB91L3W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=malaika-12.net; s=ds202404; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Sz5UwloeVFFAv1VCWD/Hv/KM6THtj35f4mpqeOTJLYs=; b=CVB91L3WHBwZ82uC7jQELxmF14
-	E3dlY+WoXjfBVV/NRXpoXWXvZbq8hU+lSN/4A8vtjGamLVv0ogAnpC18AFmp1ex81sgTfFFMpoSfo
-	FpW6s4FTqSs201LxWjn9fj3Dnn7+/Zo5k1cte8zed1io30xCB+xBPUYr3O9V9IsGOiH6pMWjM7Fme
-	6unspfu6nldx+3H730OPzqsQpOW8QlWxcZAZrP1lnsgcx2sw6zPdjD3f+tSSUnH1Ac0KMnE5AAlaB
-	QPirbYYFcWq2prwyLU8k4MK4/fl3yQ2H9slghda7nXqixXDiqNWf6CLaIPjLnC5Ic98/dDVgvVtof
-	eJHINbiQ==;
-Received: from [2a02:fe1:7001:f100:e8f7:294a:c7de:596f] (port=57523)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <BIT@malaika-12.net>)
-	id 1s9r3q-00Bjep-76
-	for linux-kernel@vger.kernel.org;
-	Wed, 22 May 2024 20:51:38 +0200
-Message-ID: <3ba2f9c6-3e9e-4e34-a913-198eae5dccd2@malaika-12.net>
-Date: Wed, 22 May 2024 20:51:37 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GvZ1JmSf"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44MAGZHn010057;
+	Wed, 22 May 2024 19:22:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=7Y/RN1PFOa+6BTPyCnx/ocDE9nnxvEeXbmZ9MEkrzO4=; b=Gv
+	Z1JmSfS1vvNVPQTnLGqdl+x9gxWcNFS4ntVe5Eq94REbmTW454DnozK9aOC3zrgC
+	88C413A/v/akbbc2Wo9pS+4jteqrVNTEfZbtmOMRLty7NPxRMI2K0M2yYrbYLRGE
+	qobUyNBFTHj+I9b+S/LrkWX9vxZX+H91rsJrB3/DjkANzM9iqgJeAD/cvtndKmU2
+	9DLHOlmOz7OPuzgzM0dfRv7wTiO/EmaI3865ZeOwliasLDLmzqg/j9bWe9MfmYua
+	2+HU8WMIhgKXBuGqmxn1rDhyYVSj5JvWbEM6X/zBOqYkVv41s+jmp3MbVmecBi8E
+	s49B9m5b37OUOxrWufzg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n4ghuht-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 19:22:01 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44MJLx7C018637
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 May 2024 19:21:59 GMT
+Received: from [10.110.17.44] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 22 May
+ 2024 12:21:58 -0700
+Message-ID: <a553622c-7576-4662-abac-68abe7ea7918@quicinc.com>
+Date: Wed, 22 May 2024 12:21:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,31 +50,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <BIT@malaika-12.net>
-Subject: The Vast (for inner loop programming, fair pay compliant) X
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 09/12] remoteproc: qcom_wcnss: make use of QCOM_FW_HELPER
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Loic
+ Poulain <loic.poulain@linaro.org>, Kalle Valo <kvalo@kernel.org>,
+        Mathieu
+ Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <wcn36xx@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Arnd
+ Bergmann <arnd@arndb.de>
+References: <20240521-qcom-firmware-name-v1-0-99a6d32b1e5e@linaro.org>
+ <20240521-qcom-firmware-name-v1-9-99a6d32b1e5e@linaro.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240521-qcom-firmware-name-v1-9-99a6d32b1e5e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6Cd_Uw9DlpwQ2Q_X57Sv7uAZhpOsr7NT
+X-Proofpoint-ORIG-GUID: 6Cd_Uw9DlpwQ2Q_X57Sv7uAZhpOsr7NT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-22_10,2024-05-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405220134
 
-The Vast
+On 5/21/2024 2:45 AM, Dmitry Baryshkov wrote:
+> Make the driver use qcom_fw_helper to autodetect the path to the
+> calibration data file.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/remoteproc/qcom_wcnss.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+> index 421a3943a90d..45fc578ae30b 100644
+> --- a/drivers/remoteproc/qcom_wcnss.c
+> +++ b/drivers/remoteproc/qcom_wcnss.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/remoteproc.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+> +#include <linux/soc/qcom/fw_helper.h>
+>  #include <linux/soc/qcom/smem.h>
+>  #include <linux/soc/qcom/smem_state.h>
+>  
+> @@ -555,8 +556,13 @@ static int wcnss_probe(struct platform_device *pdev)
+>  	if (ret < 0 && ret != -EINVAL)
+>  		return ret;
+>  
+> +	fw_name = qcom_get_board_fw(fw_name);
+> +	if (!fw_name)
+> +		return -ENOMEM;
+> +
+>  	rproc = devm_rproc_alloc(&pdev->dev, pdev->name, &wcnss_ops,
+>  				 fw_name, sizeof(*wcnss));
+> +	kfree(fw_name);
+>  	if (!rproc) {
+>  		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+>  		return -ENOMEM;
+> 
 
-The Vast is a name I know through research on the computer Bit.
-
-It is optimal for inner loop programming, and coherent code.
-
-It is reflected in the computer industry.
-
-And particulary Mark Shuttleworth journey to space, is a symbolic 
-support of The Vast.
-
-The Vast is even reflected in the name Microsoft Satya Nadella.
-
-Information hereby released into the public domain, for general benefit.
-
-Encouraging The Vast X. With full support of fair pay politics.
-
-More: https://the-vast-x.net/Bit/BIT.html
-
-Hail ALA, The Grand, The Good.
-
-The Light Be With You,
+can you cleanly bisect to this patch? seems it depends upon patch 10.
+should 09 & 10 be swapped, or perhaps squashed?
