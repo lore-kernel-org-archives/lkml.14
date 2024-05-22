@@ -1,104 +1,80 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713D637144;
-	Wed, 22 May 2024 04:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE7529CA;
+	Wed, 22 May 2024 04:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716350763; cv=none; b=tyZBvUmfGrdmnnb9hAYMZNY6agzJT6fq4cnNC+Nty0DIFiHBMZ33sDcHxtU+uJ7MbGCXjPqnee8KlGnabIdEv3BnrPSJJ/Dmq8fsKjrDS55i0MrUmmLFQdx8kMeHNp1pwwcOT0TfTItpo4FfFpwLrF+3JflYsW0CZhq1gYmro3s=
+	t=1716351012; cv=none; b=tn5CHwltDchdwNhmaj73VTL6V9p8uHr7bzA6s6/Dvl2sFEOlsRouRCd9K0xO3Ttp18i20GFHxUZRgDeQNtM+CnbttAO7DJ+o4oA0xXHNlp0eHWIjw3CG0ADA4KXE7RWLZZCoVVxNh3jqtThme61CbcwCM6wXARuyq4l3GVFSop0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716350763; c=relaxed/simple;
-	bh=eYmI2UoND9NW9g+AeXxMK4ItoLkzH/5fFHbVVsjmXDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=thmga0iNjnzVyxi1WF3Eb/YEQD1dc4dGnh/IWiI5g/To+pLDeiTp1MmxXgLXXyi2B+Ni9FwFZphD7KMAwqjIJ1aMX+Ri8RJrviWjkc1ChK4PK2WM9lR7kPybw/PNb9Gs8erZKjg9m4xHCOTt57DEI41tqoUMuvVM/2Dp1OUuNHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vkd5B4Ggqz4f3jdN;
-	Wed, 22 May 2024 12:05:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 877851A04C2;
-	Wed, 22 May 2024 12:05:59 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ4ib01ms1VYNQ--.24441S9;
-	Wed, 22 May 2024 12:05:59 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev,
-	dhowells@redhat.com,
-	jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com,
-	jefflexu@linux.alibaba.com,
-	zhujia.zj@bytedance.com,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	libaokun@huaweicloud.com,
-	yangerkun@huawei.com,
-	houtao1@huawei.com,
-	yukuai3@huawei.com,
-	wozizhi@huawei.com,
-	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH RESEND 5/5] cachefiles: correct the return value of cachefiles_check_auxdata()
-Date: Wed, 22 May 2024 19:59:11 +0800
-Message-Id: <20240522115911.2403021-6-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240522115911.2403021-1-libaokun@huaweicloud.com>
-References: <20240522115911.2403021-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1716351012; c=relaxed/simple;
+	bh=cJhYFMnB5TSGX6JKW79V6GTSgqLPCROk9zU1RYmQlwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8kTQEsQp1cF89hhtg5DFDrDBX/mXMqv6b9VFAeFq5WbOvpU//YCOK7wY83oizfE9XzrW2x8k87xnLktoL0qF1QTH6H+/2YRYboEKy2NIYU3TJoC5cbGbEAfAGs2gUrw6uQou3bAwEB8vw7uVUfEyTEIny0g3cmgJAG82glKpRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PNEXbRle; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PNEXbRle"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE612C2BD11;
+	Wed, 22 May 2024 04:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1716351011;
+	bh=cJhYFMnB5TSGX6JKW79V6GTSgqLPCROk9zU1RYmQlwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PNEXbRle4Uj35lOXLaPnRFCFVPgImUiQFDGpM40gcXe65Y7QUZIVkw3k7iQntWppc
+	 uuFn1vmB3KL+ePWc2CGk758NQEg06u0zQf3IoUuAFP439M0FAVTE7v6nnSBSX6tDbU
+	 ugzYxVb4/JOFozzCL8ltCkr8q2/VTwFKr2m0695s=
+Date: Wed, 22 May 2024 06:10:09 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org, Lee Jones <lee@kernel.org>
+Subject: Re: CVE-2024-26650: platform/x86: p2sb: Allow p2sb_bar() calls
+ during PCI device probe
+Message-ID: <2024052216-detest-whiff-15e3@gregkh>
+References: <20240326175007.1388794-18-lee@kernel.org>
+ <Zkz2qpUP-HVROO1I@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHZQ4ib01ms1VYNQ--.24441S9
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFykurWUAF4kCF4DAr4xWFg_yoWfKFX_uF
-	Z7Ar4xXr4fGr4kJwsrA3y2qrWvqr1xAwn8Kr1Fgry2yw1aqFZ8XFWDtr98Ar1UWr4UK3WD
-	trZ7ZF13WF9FgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbmkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28IrcIa0xkI8V
-	A2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJ
-	M28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2I
-	x0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK
-	6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
-	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sREMKZDUUUUU==
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zkz2qpUP-HVROO1I@tiehlicka>
 
-From: Baokun Li <libaokun1@huawei.com>
+On Tue, May 21, 2024 at 09:31:54PM +0200, Michal Hocko wrote:
+> This patch has been reverted in upstream by 03c6284df179 ("Revert
+> "drm/amd/amdgpu: Fix potential ioremap() memory leaks in
+> amdgpu_device_init()"") and based on the changelog the CVE should be
+> rejected.
 
-Pass the error code to ret when xlen < 0 to avoid misleading the caller.
+Ok, the original commit here happened in these releases:
+	6.1.76 6.6.15 6.7.3 6.8
+while the revert is only in these releases:
+	6.1.86 6.6.27 6.8.6 6.9
+but there are also commits in these releases that reference the original
+commit and also say they fix it:
+	6.1.84 6.6.23 6.7.11
+i.e. commit aec7d25b497c ("platform/x86: p2sb: On Goldmont only cache
+P2SB and SPI devfn BAR") so that commit is also needed in order to make
+this commit work properly, in other words, the original isn't totally
+invalid on it's own.
 
-Fixes: 72b957856b0c ("cachefiles: Implement metadata/coherency data storage in xattrs")
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/cachefiles/xattr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+So the revert is a fix for the original patch, and needs to keep being a
+CVE, but you think that the original should not be because it was
+reverted, right?
 
-diff --git a/fs/cachefiles/xattr.c b/fs/cachefiles/xattr.c
-index 20e4a4391090..4dd8a993c60a 100644
---- a/fs/cachefiles/xattr.c
-+++ b/fs/cachefiles/xattr.c
-@@ -110,9 +110,11 @@ int cachefiles_check_auxdata(struct cachefiles_object *object, struct file *file
- 	if (xlen == 0)
- 		xlen = vfs_getxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache, buf, tlen);
- 	if (xlen != tlen) {
--		if (xlen < 0)
-+		if (xlen < 0) {
-+			ret = xlen;
- 			trace_cachefiles_vfs_error(object, file_inode(file), xlen,
- 						   cachefiles_trace_getxattr_error);
-+		}
- 		if (xlen == -EIO)
- 			cachefiles_io_error_obj(
- 				object,
--- 
-2.39.2
+That kind of makes sense, but at the time, the original was a valid CVE,
+so we were correct to assign that, what do we do about the "middle" one
+here, ignore it?  Without both of them, you might have a problem still
+but I guess that's up to the systems that cherry-pick to work out,
+right?
 
+Should we be searching the database for assigned CVEs to the commits
+that new ones are marked as "Fixes:" for and think about how to revoke
+those original ones at the same time?
+
+thanks,
+
+greg k-h
