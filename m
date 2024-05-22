@@ -1,163 +1,217 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E455B626CB;
-	Wed, 22 May 2024 04:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EE74C62
+	for <linux-kernel@vger.kernel.org>; Wed, 22 May 2024 04:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716353022; cv=none; b=QO5DXLbXUHyW2GgCAvIL2ZrbRbpfWKtgAe5pQJy+isB2d1B8V52gNN2tm3NZrLElxkxo9L0GE6bUuNg+R2JqVQZcSiwBzFI/prnF2p8bn2/K5u0LvL0fCmuVb7VH4Glf/xq9YZBmkKN1zxc46d7+NEzxo/P5XgiP2b/FPTtt7KY=
+	t=1716353959; cv=none; b=nw0yITrcv/FYL6Hm02u4OWjehICGeZs2TjBQCalY78e5umE4vqN5pDJIqpb7nJgxVvwi+A+8O2m8Tv95xKOu8SZSxKMDZ89eV9GZBE+OdbVN6fJbtY9wVySYVXVD86mY7ahKvkT3yuhtJfSstZIknCbGuoZcmkusLX7NH4fVKaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716353022; c=relaxed/simple;
-	bh=GifwPNjkmdSh84BrObBoXhtNIvv2Uc6L8fR11qFS1AI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=if2AJP/jkyAuar9n82Ms3ej47w90V0VEhELFlBurtZ7/JWRBhuVrMqCOx2r++4o7CS7g8t/r5bygdzZqxVzvVEw0k9G1Nv+ncYH+ImtcjeHHUkkbo/KynFYG0q+RjrITXGnJy59NnWxwNEuBUUsoF/vU1T1B88/QPWeQzTezu5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 44M4hCIa93476326, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 44M4hCIa93476326
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 May 2024 12:43:12 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 22 May 2024 12:43:12 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 22 May 2024 12:43:11 +0800
-Received: from RTEXMBS03.realtek.com.tw ([fe80::b9ff:7c04:a2d:c266]) by
- RTEXMBS03.realtek.com.tw ([fe80::b9ff:7c04:a2d:c266%2]) with mapi id
- 15.01.2507.035; Wed, 22 May 2024 12:43:11 +0800
-From: Larry Chiu <larry.chiu@realtek.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Justin Lai <justinlai0215@realtek.com>,
-        "kuba@kernel.org"
-	<kuba@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com"
-	<pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "horms@kernel.org" <horms@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>
-Subject: RE: [PATCH net-next v19 01/13] rtase: Add pci table supported in this module
-Thread-Topic: [PATCH net-next v19 01/13] rtase: Add pci table supported in
- this module
-Thread-Index: AQHaqC9Rjgvgl8xidUGsWwGzPtgZ5LGa66SAgAZDQWCAAA0PoP//58SAgAGQINA=
-Date: Wed, 22 May 2024 04:43:11 +0000
-Message-ID: <f9133a36bbae41138c3080f8f6282bfd@realtek.com>
-References: <20240517075302.7653-1-justinlai0215@realtek.com>
- <20240517075302.7653-2-justinlai0215@realtek.com>
- <d840e007-c819-42df-bc71-536328d4f5d7@lunn.ch>
- <e5d7a77511f746bdb0b38b6174ef5de4@realtek.com>
- <97e30c5f-1656-46d0-b06c-3607a90ec96f@lunn.ch>
-In-Reply-To: <97e30c5f-1656-46d0-b06c-3607a90ec96f@lunn.ch>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1716353959; c=relaxed/simple;
+	bh=EZUgvT50EiG0noTA0PwEaevnx2DYm3VP9zfDMF3tH2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LqMLuFUULoAuqM/tnTEl4iCAb8eH+s0ZnGCFBGL0WWyoDxUe73OmbiUhdXAhnIuThksxv9B2LtEo+uZOJZ46W2Zh9gKh+mqBce5Ci4OK6ERondQPHSfYVrOPBPx52UD896yblnJJJ69pua38dzR+8P21ofWfzUGSFnSo6nCSI4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9DZrJGi; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9DZrJGi"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57342829409so926681a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2024 21:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716353956; x=1716958756; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=39bxPhPVcA85UbzZ3VjWUXERVKdx/CAHlqDcF/RAs0Q=;
+        b=B9DZrJGi5oboN+XviEEgy7IUhqVDzeJ90ZgiHWsVxTj/1h/6jToqaZoOZFEFQJmtW0
+         ZbClyQMa14a4ubNHWrmZGRvu7Bdbj1/JtQqPM6p53RkOWBp5C5n/c7mQQmc8+H98EwNr
+         0vjN9kr8/F/SBcUQn1JzJ06L0ogvQkRFw8gRTh382rEo2V9G6Aacn/UVKQ+WmIJN6tfN
+         U9iwzuqc4nrLQli5MAg4uBVdCMf0twcAdli1/uN5y4rQAdFrfKisqOorAZaEvGZjiNiV
+         tVg3M3nq3+oPGmp0X0NtsOj38zJbnAe3QEzjY5CQU9TJhObvUfc2oqk3QB3IwgkPcc2U
+         MiIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716353956; x=1716958756;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=39bxPhPVcA85UbzZ3VjWUXERVKdx/CAHlqDcF/RAs0Q=;
+        b=THuI4uO5arIuO+txiJQhEFdEAfz9rStO1Z8JuKjOYsqBpkiR8IfQlBp1CxUw8zEO7v
+         y4dfjT2H8TDUo9e57j7vYTMpoL6zp0fM/+dDjuj28pmcQBVc3ARss1/Dbr8N0yLLg9kY
+         eUUJxx/zcoFsgOfnd9fO+6gThx6Y4gCP8e+oVCQxQpm6Euwya0SFHsWZuQ/nq6eklSes
+         IHpicLOjna8zGqrA6u9OVFlSCA5AUEYteVJtIbX06Xx6HHwBQeClIUca2/vjuq9H4nZv
+         BfpCCxhjoWytk4QUcTwhzGZLW61I5hljCA/W+VyVqO7Uwo7tgDqdJ2sO7K7OohgMb4YU
+         AdBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3HU2xjN1awMGiRpf95wRL0jxiwJiW9AYxLd9W83miXpMeTK9f6s/+O842lfN6ijdPbTZXoN5OPcIT/9RR03k+7Q6618MzQblaHvPg
+X-Gm-Message-State: AOJu0Yx9gbMIPVEvKI6I8PTAENtaMAh+4PBaoApRyg2oTZmNMQKhJiKc
+	75RaBxLpOb67fhJFfbIHoxm+RNaS8KSMXYbuuywwfJuHwXS5B/DE8Onom4VcayVFpheORDWQtMz
+	oYzwfMOux4oCTEvunBUpqnkUuXoo=
+X-Google-Smtp-Source: AGHT+IGa+13CEFwmy5GAjmwiCyxL7oM9UfZgNMhWLRQ0BlkBOC5alvxMemPCt+VCIkYC9kd+4eTQUKoxh5bxNUxKbRE=
+X-Received: by 2002:a50:c044:0:b0:572:7014:230a with SMTP id
+ 4fb4d7f45d1cf-5752b4c8d66mr9496526a12.14.1716353955662; Tue, 21 May 2024
+ 21:59:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240521233100.358002-1-mjguzik@gmail.com> <Zk1HsDYKwxpzeBjq@snowbird>
+In-Reply-To: <Zk1HsDYKwxpzeBjq@snowbird>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 22 May 2024 06:59:02 +0200
+Message-ID: <CAGudoHGpiJwuNX5MEj_RGdc+vVo_3u3hSv9wWSRm6ZrmAi65NA@mail.gmail.com>
+Subject: Re: [PATCH v3] percpu_counter: add a cmpxchg-based _add_batch variant
+To: Dennis Zhou <dennis@kernel.org>
+Cc: tj@kernel.org, hughd@google.com, akpm@linux-foundation.org, vbabka@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-> On Tue, May 21, 2024 at 06:20:04AM +0000, Larry Chiu wrote:
+On Wed, May 22, 2024 at 3:17=E2=80=AFAM Dennis Zhou <dennis@kernel.org> wro=
+te:
+>
+> Hi Mateusz,
+>
+> On Wed, May 22, 2024 at 01:31:00AM +0200, Mateusz Guzik wrote:
+> > Interrupt disable/enable trips are quite expensive on x86-64 compared t=
+o
+> > a mere cmpxchg (note: no lock prefix!) and percpu counters are used
+> > quite often.
 > >
-> > >> + *  Below is a simplified block diagram of the chip and its relevan=
-t
-> interfaces.
-> > >> + *
-> > >> + *               *************************
-> > >> + *               *                       *
-> > >> + *               *  CPU network device   *
-> > >> + *               *                       *
-> > >> + *               *   +-------------+     *
-> > >> + *               *   |  PCIE Host  |     *
-> > >> + *               ***********++************
-> > >> + *                          ||
-> > >> + *                         PCIE
-> > >> + *                          ||
-> > >> + *      ********************++**********************
-> > >> + *      *            | PCIE Endpoint |             *
-> > >> + *      *            +---------------+             *
-> > >> + *      *                | GMAC |                  *
-> > >> + *      *                +--++--+  Realtek         *
-> > >> + *      *                   ||     RTL90xx Series  *
-> > >> + *      *                   ||                     *
-> > >> + *      *     +-------------++----------------+    *
-> > >> + *      *     |           | MAC |             |    *
-> > >> + *      *     |           +-----+             |    *
-> > >> + *      *     |                               |    *
-> > >> + *      *     |     Ethernet Switch Core      |    *
-> > >> + *      *     |                               |    *
-> > >> + *      *     |   +-----+           +-----+   |    *
-> > >> + *      *     |   | MAC |...........| MAC |   |    *
-> > >> + *      *     +---+-----+-----------+-----+---+    *
-> > >> + *      *         | PHY |...........| PHY |        *
-> > >> + *      *         +--++-+           +--++-+        *
-> > >> + *      *************||****************||***********
-> > >> + *
-> > >> + *  The block of the Realtek RTL90xx series is our entire chip
-> > >> + architecture,
-> > >> + *  the GMAC is connected to the switch core, and there is no PHY i=
-n
-> between.
-> > >
-> > >Given this architecture, this driver cannot be used unless there is a =
-switch
-> > >driver as well. This driver is nearly ready to be merged. So what are =
-your
-> > >plans for the switch driver? Do you have a first version you can post?=
- That
-> > >will reassure us you do plan to release a switch driver, and not use a=
- SDK in
-> > >userspace.
-> > >
-> > >        Andrew
+> > With this change I get a bump of 1% ops/s for negative path lookups,
+> > plugged into will-it-scale:
 > >
-> > Hi Andrew,
-> > This GMAC is configured after the switch is boot-up and does not requir=
-e a
-> > switch driver to work.
->=20
-> But if you cannot configure the switch, it is pointless passing the switc=
-h
-> packets. The Linux architecture is that Linux needs to be able to control=
- the
-> switch somehow. There needs to be a driver with the switchdev API on its
-> upper side which connects it to the Linux network stack. Ideally the lowe=
-r
-> side of this driver can directly write switch registers. Alternatively it=
- can make
-> some sort of RPC to firmware which configures the switch.
->=20
-> Before committing this MAC driver, we will want to be convinced there is =
-a
-> switchdev driver for the switch.
->=20
->         Andrew
+> > void testcase(unsigned long long *iterations, unsigned long nr)
+> > {
+> >         while (1) {
+> >                 int fd =3D open("/tmp/nonexistent", O_RDONLY);
+> >                 assert(fd =3D=3D -1);
+> >
+> >                 (*iterations)++;
+> >         }
+> > }
+> >
+> > The win would be higher if it was not for other slowdowns, but one has
+> > to start somewhere.
+>
+> This is cool!
+>
+> >
+> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > ---
+> >
+> > v3:
+> > - add a missing word to the new comment
+> >
+> > v2:
+> > - dodge preemption
+> > - use this_cpu_try_cmpxchg
+> > - keep the old variant depending on CONFIG_HAVE_CMPXCHG_LOCAL
+> >
+> >  lib/percpu_counter.c | 44 +++++++++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 39 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+> > index 44dd133594d4..c3140276bb36 100644
+> > --- a/lib/percpu_counter.c
+> > +++ b/lib/percpu_counter.c
+> > @@ -73,17 +73,50 @@ void percpu_counter_set(struct percpu_counter *fbc,=
+ s64 amount)
+> >  EXPORT_SYMBOL(percpu_counter_set);
+> >
+> >  /*
+> > - * local_irq_save() is needed to make the function irq safe:
+> > - * - The slow path would be ok as protected by an irq-safe spinlock.
+> > - * - this_cpu_add would be ok as it is irq-safe by definition.
+> > - * But:
+> > - * The decision slow path/fast path and the actual update must be atom=
+ic, too.
+> > + * Add to a counter while respecting batch size.
+> > + *
+> > + * There are 2 implementations, both dealing with the following proble=
+m:
+> > + *
+> > + * The decision slow path/fast path and the actual update must be atom=
+ic.
+> >   * Otherwise a call in process context could check the current values =
+and
+> >   * decide that the fast path can be used. If now an interrupt occurs b=
+efore
+> >   * the this_cpu_add(), and the interrupt updates this_cpu(*fbc->counte=
+rs),
+> >   * then the this_cpu_add() that is executed after the interrupt has co=
+mpleted
+> >   * can produce values larger than "batch" or even overflows.
+> >   */
+> > +#ifdef CONFIG_HAVE_CMPXCHG_LOCAL
+> > +/*
+> > + * Safety against interrupts is achieved in 2 ways:
+> > + * 1. the fast path uses local cmpxchg (note: no lock prefix)
+> > + * 2. the slow path operates with interrupts disabled
+> > + */
+> > +void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, =
+s32 batch)
+> > +{
+> > +     s64 count;
+> > +     unsigned long flags;
+> > +
+> > +     count =3D this_cpu_read(*fbc->counters);
+>
+> Should this_cpu_read() be inside the do {} while in case the extreme
+> case that we get preempted after the read and before the cmpxchg AND
+> count + amount < batch on both the previous and next cpu?
+>
+
+this_cpu_try_cmpxchg updates the local value on failure (hence &), so
+from semantic pov this is equivalent to having this_cpu_read in the
+loop. I'm using it the same way as mod_zone_state.
+
+> > +     do {
+> > +             if (unlikely(abs(count + amount)) >=3D batch) {
+> > +                     raw_spin_lock_irqsave(&fbc->lock, flags);
+> > +                     /*
+> > +                      * Note: by now we might have migrated to another=
+ CPU
+> > +                      * or the value might have changed.
+> > +                      */
+> > +                     count =3D __this_cpu_read(*fbc->counters);
+> > +                     fbc->count +=3D count + amount;
+> > +                     __this_cpu_sub(*fbc->counters, count);
+> > +                     raw_spin_unlock_irqrestore(&fbc->lock, flags);
+> > +                     return;
+> > +             }
+> > +     } while (!this_cpu_try_cmpxchg(*fbc->counters, &count, count + am=
+ount));
+> > +}
+> > +#else
+> > +/*
+> > + * local_irq_save() is used to make the function irq safe:
+> > + * - The slow path would be ok as protected by an irq-safe spinlock.
+> > + * - this_cpu_add would be ok as it is irq-safe by definition.
+> > + */
+> >  void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount, =
+s32 batch)
+> >  {
+> >       s64 count;
+> > @@ -101,6 +134,7 @@ void percpu_counter_add_batch(struct percpu_counter=
+ *fbc, s64 amount, s32 batch)
+> >       }
+> >       local_irq_restore(flags);
+> >  }
+> > +#endif
+> >  EXPORT_SYMBOL(percpu_counter_add_batch);
+> >
+> >  /*
+> > --
+> > 2.39.2
+> >
+>
+> Thanks,
+> Dennis
 
 
-I know what you mean.
-But actually this GMAC works like a NIC connected to an Ethernet Switch not=
- a=20
-management port, its packets communicating with other ports.
 
-The PCIe Endpoint is a multi-function device, the other function is used to=
-=20
-control the switch register, we are still working on where to put this driv=
-er in=20
-Linux. We thought it should be separated into different device drivers, or =
-you=20
-think we should register two pcie functions in this driver.
-
-Larry
+--=20
+Mateusz Guzik <mjguzik gmail.com>
